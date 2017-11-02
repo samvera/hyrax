@@ -26,27 +26,5 @@ module Hyrax
     def self.actor
       @work_middleware_stack ||= actor_factory.build(Actors::Terminator.new)
     end
-
-    # NOTE: I don't know why this middleware doesn't use the BaseActor - Justin
-    # @return [#create] an actor for creating the FileSet
-    def self.file_set_create_actor
-      @file_set_create_actor ||= begin
-        stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
-          middleware.use Actors::InterpretVisibilityActor
-        end
-        stack.build(Actors::Terminator.new)
-      end
-    end
-
-    # @return [#update] an actor for updating the FileSet
-    def self.file_set_update_actor
-      @file_set_update_actor ||= begin
-        stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
-          middleware.use Actors::InterpretVisibilityActor
-          middleware.use Actors::BaseActor
-        end
-        stack.build(Actors::Terminator.new)
-      end
-    end
   end
 end
