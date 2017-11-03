@@ -29,6 +29,8 @@ Lint/AmbiguousBlockAssociation:
 
 Metrics/LineLength:
   Max: 200
+  Exclude:
+    - 'spec/support/stub_tika.rb'
 
 Metrics/AbcSize:
   Max: 26

@@ -1,6 +1,10 @@
 # This tests the FileSet model that is inserted into the host app by hyrax:models
 # It includes the Hyrax::FileSetBehavior module and nothing else
 # So this test covers both the FileSetBehavior module and the generated FileSet model
+
+require 'rails_helper'
+include ActionDispatch::TestProcess
+
 RSpec.describe FileSet do
   include Hyrax::FactoryHelpers
 
@@ -79,6 +83,40 @@ RSpec.describe FileSet do
 
     it 'redefines to_param to make redis keys more recognizable' do
       expect(subject.to_param).to eq subject.id
+    end
+
+    describe 'file_nodes' do
+      let(:storage_adapter) { Valkyrie.config.storage_adapter }
+      let(:file_set) do
+        create_for_repository(:file_set, content: file)
+      end
+      let(:file) { fixture_file_upload('world.png', 'image/png') }
+      let(:file_node) do
+        Hyrax::FileNode.for(file: file).new(id: 'test_id')
+      end
+      let(:uploaded_file) do
+        storage_adapter.upload(file: file,
+                               original_filename: file.original_filename,
+                               resource: file_node)
+      end
+
+      before do
+        file_node.file_identifiers = uploaded_file.id
+        file_node.checksum = Hyrax::MultiChecksum.for(uploaded_file)
+        file_node.size = uploaded_file.size
+        persister.save(resource: file_node)
+
+        subject.file_nodes = file_node
+        persister.save(resource: subject)
+      end
+
+      it 'responds to file_nodes' do
+        expect(subject).to respond_to(:file_nodes)
+      end
+
+      it 'stores an array of file_nodes' do
+        expect(subject.file_nodes.first.id.to_s).to eq 'test_id'
+      end
     end
 
     describe 'that have been saved' do
