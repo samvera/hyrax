@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :collection_branding_info do
     collection_id "1"
     role "banner"

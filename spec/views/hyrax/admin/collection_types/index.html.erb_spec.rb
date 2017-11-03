@@ -3,10 +3,10 @@ require 'spec_helper'
 RSpec.describe 'hyrax/admin/collection_types/index.html.erb', type: :view, clean_repo: true do
   before do
     assign(:collection_types, [
-             FactoryGirl.create(:user_collection_type),
-             FactoryGirl.create(:admin_set_collection_type),
-             FactoryGirl.create(:collection_type, title: 'Test Title 1'),
-             FactoryGirl.create(:collection_type, title: 'Test Title 2')
+             FactoryBot.create(:user_collection_type),
+             FactoryBot.create(:admin_set_collection_type),
+             FactoryBot.create(:collection_type, title: 'Test Title 1'),
+             FactoryBot.create(:collection_type, title: 'Test Title 2')
            ])
     render
   end

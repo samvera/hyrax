@@ -1,6 +1,6 @@
 RSpec.describe Hyrax::TrophyHelper, type: :helper do
   describe "#display_trophy_link" do
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
     let(:id) { '9999' }
 
     let(:text_attributes) { '[data-add-text="Highlight Work on Profile"][data-remove-text="Unhighlight Work"]' }

@@ -8,7 +8,7 @@ RSpec.describe 'CollectionAbility' do
   let(:current_user) { user }
 
   context 'when admin user' do
-    let(:user) { FactoryGirl.create(:admin) }
+    let(:user) { FactoryBot.create(:admin) }
     let(:collection_type) { create(:collection_type) }
 
     it 'allows all abilities' do

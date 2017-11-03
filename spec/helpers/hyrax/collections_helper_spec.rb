@@ -55,7 +55,7 @@ RSpec.describe Hyrax::CollectionsHelper do
 
   describe "button_for_remove_from_collection" do
     let(:item) { double(id: 'changeme:123') }
-    let(:collection) { FactoryGirl.create(:collection) }
+    let(:collection) { FactoryBot.create(:collection) }
 
     it "generates a form that can remove the item" do
       str = button_for_remove_from_collection collection, item
@@ -92,7 +92,7 @@ RSpec.describe Hyrax::CollectionsHelper do
   end
 
   describe "button_for_remove_selected_from_collection" do
-    let(:collection) { FactoryGirl.create(:collection) }
+    let(:collection) { FactoryBot.create(:collection) }
 
     it "creates a button to the collections delete path" do
       str = button_for_remove_selected_from_collection collection
@@ -115,7 +115,7 @@ RSpec.describe Hyrax::CollectionsHelper do
 
   describe "collection_type_label" do
     context "when the CollectionType is found" do
-      let(:test_collection_type) { FactoryGirl.create(:collection_type) }
+      let(:test_collection_type) { FactoryBot.create(:collection_type) }
 
       it "returns the CollectionType title" do
         expect(collection_type_label(test_collection_type.gid)).to match %r{^Title \d+$}
