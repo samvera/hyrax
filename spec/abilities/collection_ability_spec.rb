@@ -9,7 +9,7 @@ RSpec.describe 'CollectionAbility' do
   let(:collection_type_gid) { create(:collection_type).gid }
 
   context 'when admin user' do
-    let(:user) { FactoryGirl.create(:admin) }
+    let(:user) { FactoryBot.create(:admin) }
     let!(:collection) { create(:collection, id: 'col_au', with_permission_template: true, collection_type_gid: collection_type_gid) }
     let!(:solr_document) { SolrDocument.new(collection.to_solr) }
 

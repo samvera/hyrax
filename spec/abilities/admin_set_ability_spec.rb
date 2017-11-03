@@ -16,7 +16,7 @@ RSpec.describe 'AdminSetAbility' do
   end
 
   context 'when admin user' do
-    let(:user) { FactoryGirl.create(:admin) }
+    let(:user) { FactoryBot.create(:admin) }
     let!(:solr_document) { SolrDocument.new(admin_set.to_solr) }
 
     it 'allows all abilities' do # rubocop:disable RSpec/ExampleLength

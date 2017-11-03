@@ -1,9 +1,9 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :collection do
     # @example let(:collection) { build(:collection, collection_type_settings: [:not_nestable, :discoverable, :sharable, :allow_multiple_membership]) }
 
     transient do
-      user { FactoryGirl.create(:user) }
+      user { FactoryBot.create(:user) }
       # allow defaulting to default user collection
       collection_type_settings nil
       with_permission_template false
@@ -13,7 +13,7 @@ FactoryGirl.define do
     after(:build) do |collection, evaluator|
       collection.apply_depositor_metadata(evaluator.user.user_key)
       if evaluator.collection_type_settings.present?
-        collection.collection_type = FactoryGirl.create(:collection_type, *evaluator.collection_type_settings)
+        collection.collection_type = FactoryBot.create(:collection_type, *evaluator.collection_type_settings)
       end
     end
 
@@ -61,14 +61,14 @@ FactoryGirl.define do
 
   factory :user_collection, class: Collection do
     transient do
-      user { FactoryGirl.create(:user) }
+      user { FactoryBot.create(:user) }
     end
 
     sequence(:title) { |n| ["Title #{n}"] }
 
     after(:build) do |collection, evaluator|
       collection.apply_depositor_metadata(evaluator.user.user_key)
-      collection_type = FactoryGirl.create(:user_collection_type)
+      collection_type = FactoryBot.create(:user_collection_type)
       collection.collection_type_gid = collection_type.gid
     end
   end
@@ -76,7 +76,7 @@ FactoryGirl.define do
   factory :typeless_collection, class: Collection do
     # should not have a collection type assigned
     transient do
-      user { FactoryGirl.create(:user) }
+      user { FactoryBot.create(:user) }
     end
 
     sequence(:title) { |n| ["Title #{n}"] }

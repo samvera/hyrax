@@ -19,7 +19,7 @@ RSpec.describe 'PermissionTemplateAbility' do
   end
 
   context 'when admin user' do
-    let(:user) { FactoryGirl.create(:admin) }
+    let(:user) { FactoryBot.create(:admin) }
 
     it 'allows all template abilities' do
       is_expected.to be_able_to(:manage, Hyrax::PermissionTemplate)

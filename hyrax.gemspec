@@ -88,7 +88,7 @@ EOF
   spec.add_development_dependency 'capybara-maleficent', '~> 0.2'
   spec.add_development_dependency "chromedriver-helper"
   spec.add_development_dependency "selenium-webdriver"
-  spec.add_development_dependency "factory_girl_rails", '~> 4.4'
+  spec.add_development_dependency "factory_bot_rails", '~> 4.4'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "jasmine", '~> 2.3'
   # Pin rubocop and rubocop-rspec tightly. Minor-level version bumps

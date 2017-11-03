@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :collection_type, class: Hyrax::CollectionType do
     sequence(:title) { |n| "Title #{n}" }
 

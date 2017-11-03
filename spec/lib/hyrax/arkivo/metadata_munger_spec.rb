@@ -1,7 +1,7 @@
 RSpec.describe Hyrax::Arkivo::MetadataMunger do
   subject { described_class.new(metadata) }
 
-  let(:metadata) { JSON.parse(FactoryGirl.json(:post_item))['metadata'] }
+  let(:metadata) { JSON.parse(FactoryBot.json(:post_item))['metadata'] }
 
   it 'makes camelCase symbols into underscored strings' do
     expect(metadata).to include('resourceType', 'dateCreated', 'basedNear')
