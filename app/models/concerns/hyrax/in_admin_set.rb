@@ -3,7 +3,7 @@ module Hyrax
     extend ActiveSupport::Concern
 
     included do
-      attribute :admin_set_id, Valkyrie::Types::Set
+      attribute :admin_set_id, Valkyrie::Types::ID.optional
     end
 
     def active_workflow
