@@ -250,9 +250,22 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         allow(File).to receive(:split).with(any_args).and_return(["banner.gif"])
         allow(FileUtils).to receive(:cp).with(any_args).and_return(nil)
 
-        put :update, params: { id: collection, banner_files: [1], collection: { creator: ['Emily'] } }
+        put :update, params: { id: collection, banner_files: [1], collection: { creator: ['Emily'] }, update_collection: true }
         collection.reload
         expect(CollectionBrandingInfo.where(collection_id: collection.id, role: "banner").where("local_path LIKE '%banner.gif'")).to exist
+      end
+
+      it "don't save banner metadata" do
+        val = double("/public/banner.gif")
+        allow(val).to receive(:file_url).and_return("/public/banner.gif")
+        allow(Hyrax::UploadedFile).to receive(:find).with(["1"]).and_return([val])
+
+        allow(File).to receive(:split).with(any_args).and_return(["banner.gif"])
+        allow(FileUtils).to receive(:cp).with(any_args).and_return(nil)
+
+        put :update, params: { id: collection, banner_files: [1], collection: { creator: ['Emily'] } }
+        collection.reload
+        expect(CollectionBrandingInfo.where(collection_id: collection.id, role: "banner").where("local_path LIKE '%banner.gif'")).not_to exist
       end
 
       it "saves logo metadata" do
@@ -263,7 +276,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         allow(File).to receive(:split).with(any_args).and_return(["logo.gif"])
         allow(FileUtils).to receive(:cp).with(any_args).and_return(nil)
 
-        put :update, params: { id: collection, logo_files: [1], alttext: ["Logo alt Text"], linkurl: ["http://abc.com"], collection: { creator: ['Emily'] } }
+        put :update, params: { id: collection, logo_files: [1], alttext: ["Logo alt Text"], linkurl: ["http://abc.com"], collection: { creator: ['Emily'] }, update_collection: true }
         collection.reload
 
         expect(CollectionBrandingInfo.where(collection_id: collection.id, role: "logo", alt_text: "Logo alt Text", target_url: "http://abc.com").where("local_path LIKE '%logo.gif'")).to exist

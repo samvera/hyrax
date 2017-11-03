@@ -148,8 +148,11 @@ module Hyrax
       end
 
       def update
-        process_banner_input
-        process_logo_input
+        unless params[:update_collection].nil?
+          process_banner_input
+          process_logo_input
+        end
+
         process_member_changes
         @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
         visiblity_updated = (@collection.visibility != collection_params[:visibility])
