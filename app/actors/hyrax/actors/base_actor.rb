@@ -20,7 +20,7 @@ module Hyrax
         yield env.change_set if block_given?
         return unless env.change_set.validate(env.attributes)
         saved_record = save(env)
-        saved_record && next_actor.create(env) &&
+        saved_record && next_actor.create(duplicate_env(env, saved_record)) &&
           run_callbacks(:after_create_concern, saved_record, env.user)
       end
 
@@ -48,6 +48,14 @@ module Hyrax
       end
 
       private
+
+        def duplicate_env(env, saved_work)
+          Environment.new(env.change_set,
+                          env.change_set_persister,
+                          env.current_ability,
+                          env.attributes,
+                          resource: saved_work)
+        end
 
         def solr_persister
           @solr_persister ||= Valkyrie::MetadataAdapter.find(:index_solr).persister
