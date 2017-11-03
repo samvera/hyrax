@@ -125,7 +125,7 @@ module Hyrax
           @current_ability ||= ::Ability.new(user)
         end
 
-        # @return [Hash<String, Array>] a list of properties to set on the work. Keys must be strings in order for them to correctly merge with the values from arkivio (in `@item`)
+        # @return [Hash<String, Array>] a list of properties to set on the work. Keys must be strings in order for them to correctly merge with the values from arkivo (in `@item`)
         # rubocop:disable Metrics/MethodLength
         def default_attributes
           {
