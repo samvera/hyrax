@@ -15,6 +15,7 @@ module Hyrax
     property :identifier, multiple: true, required: false
     property :based_near, multiple: true, required: false
     property :related_url, multiple: true, required: false
+    property :visibility, multiple: true, required: false
 
     # A list of IDs to perform a batch operation on
     property :batch_document_ids, virtual: true, multiple: true, required: false
@@ -27,6 +28,12 @@ module Hyrax
         @names = []
         @combined_attributes = initialize_combined_fields
       end
+    end
+
+    def terms
+      [:creator, :contributor, :description, :keyword, :resource_type,
+       :license, :publisher, :date_created, :subject, :language,
+       :identifier, :based_near, :related_url]
     end
 
     private
@@ -42,7 +49,7 @@ module Hyrax
           work = find_resource(doc_id)
           (schema.keys - ['batch_document_ids', 'append_id']).each do |field|
             fields[field] ||= []
-            fields[field] = (fields[field] + work[field].to_a).uniq
+            fields[field] = (Array(fields[field]) + Array(work[field])).uniq
           end
           names << work.to_s
         end
