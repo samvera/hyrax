@@ -65,7 +65,7 @@ RSpec.describe 'batch', type: :feature, clean_repo: true, js: true do
   describe 'deleting' do
     it 'destroys the selected works' do
       accept_confirm { click_button 'Delete Selected' }
-      expect(GenericWork.count).to be_zero
+      expect(Hyrax::Queries.find_all_of_model(model: ::GenericWork).size).to be_zero
     end
   end
 end
