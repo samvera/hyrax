@@ -69,19 +69,37 @@ module Hyrax
         end
         # rubocop:enable Naming/PredicateName
 
+        # Extact a singleton collection id from the collection attributes and save it in env.  Later in the actor stack,
+        # in apply_permission_template_actor.rb, `env.attributes[:collection_id]` will be used to apply the
+        # permissions of the collection to the created work.  With one and only one collection, the work is seen as
+        # being created directly in that collection.  The permissions will not be applied to the work if the collection
+        # type is configured not to allow that or if the work is being created in more than one collection.
+        #
+        # @param [Hash] attributes_collection which was extracted from env[:member_of_collections_attributes] in create().
+        # e.g.
+        #   'attributes_collection' => {
+        #     '0' => { 'id' = '12312412'},
+        #   }
+        #
         # Given an array of collection_attributes when it is size:
         # * 0 do not set `env.attributes[:collection_id]`
         # * 1 set `env.attributes[:collection_id]` to the one and only one collection
-        # * 2 do not set `env.attributes[:collection_id]`
+        # * 2+ do not set `env.attributes[:collection_id]`
         #
-        # Later on in apply_permission_template_actor.rb, `env.attributes[:collection_id]` will be used to apply the
-        # permissions of the collection to the created work.  With one and only one collection, the work is seen as
-        # being created directly in that collection.
-        #
-        # NOTE: Only called from create.  All collections are being added as parents.  None are being removed.
+        # NOTE: Only called from create.  All collections are being added as parents of a work.  None are being removed.
         def extract_collection_id(env, attributes_collection)
+          # Determine if the work is being created in one and only one collection.
           return unless attributes_collection && attributes_collection.size == 1
-          env.attributes[:collection_id] = attributes_collection.first.second['id']
+
+          # Extract the collection id from attributes_collection,
+          collection_id = attributes_collection.first.second['id']
+
+          # Do not apply permissions to work if collection type is configured not to
+          collection = ::Collection.find(collection_id)
+          return unless collection.share_applies_to_new_works?
+
+          # Save the collection id in env for use in apply_permission_template_actor
+          env.attributes[:collection_id] = collection_id
         end
 
         def valid_membership?(env, attributes_collection)

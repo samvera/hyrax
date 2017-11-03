@@ -488,6 +488,13 @@ en:
         works_in_collection: "Works"
         subcollection_count: "Subcollections"
         no_visible_subcollections: "There are no visible subcollections."
+    collection_type:
+      default_title: "User Collection"
+      admin_set_title: "Admin Set"
+    collection_types:
+      create_service:
+        default_description: "A User Collection can be created by any user to organize their works."
+        admin_set_description: "An aggregation of works that is intended to help with administrative control. Admin Sets provide a way of defining behaviors and policies around a set of works."
     contact_form:
       button_label: "Send"
       email_label: "Your Email"
@@ -566,6 +573,7 @@ en:
             agent_name: "User/Group"
             empty: "No managers have been added to this collection."
             help: "Managers of this collection can add to and remove works from the collection, modify collection metadata, and delete the collection."
+            help_with_works: "For collections of type %{type_title}, when works are created directly in this collection, the managers are given edit access to the new work."
             remove: "Remove"
             title: "Managers"
             type: "Type"
@@ -574,6 +582,7 @@ en:
             agent_name: "User/Group"
             empty: "No viewers have been added to this collection."
             help: "Viewers of this collection can view it even if the visibility permissions of the collection otherwise would not permit them to view it."
+            help_with_works: "For collections of type %{type_title}, when works are created directly in this collection, the viewers are given read access to the new work."
             remove: "Remove"
             title: "Viewers"
             type: "Type"
@@ -1066,6 +1075,7 @@ en:
         nestable: "Allow collections of this type to be nested (a collection can contain other collections)"
         require_membership: "A work must belong to at least one collection of this type"
         sharable: "Allow users to assign collection managers, depositors, and viewers for collections they manage"
+        share_applies_to_new_works: "When new works are created directly in the collection, grant sharing users and groups permissions for the new work according to their collection roles."
       defaults:
         based_near: "A place name related to the work, such as its site of publication, or the city, state, or country the work contents are about. Calls upon the <a href='http://www.geonames.org'>GeoNames web service</a>."
         contributor: "A person or group you want to recognize for playing a role in the creation of the work, but not the primary role."
@@ -1094,6 +1104,7 @@ en:
         nestable: "NESTABLE"
         require_membership: "REQUIRE MEMBERSHIP"
         sharable: "SHARING"
+        share_applies_to_new_works: "APPLY TO NEW WORKS"
         title: "Type name"
       defaults:
         admin_set_id:              "Administrative Set"

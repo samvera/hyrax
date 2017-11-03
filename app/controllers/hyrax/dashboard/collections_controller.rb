@@ -114,11 +114,8 @@ module Hyrax
         @collection.attributes = collection_params.except(:members, :parent_id)
         @collection.apply_depositor_metadata(current_user.user_key)
         add_members_to_collection unless batch.empty?
-        @collection.collection_type_gid = params[:collection_type_gid] if params[:collection_type_gid]
-        # TODO: There has to be a better way to handle a missing gid than setting to User Collection.
-        # TODO: Via UI, there should always be one defined.  It is missing right now because the modal isn't implemented yet
-        # TODO: But perhaps this is needed for the case when it gets called outside the context of the UI?
-        @collection.collection_type_gid ||= default_collection_type_gid
+        # Assumes collections without a collection_type_gid were migrated from Hyrax 2.0.0 or earlier.  Set it to the default User Collection type.
+        @collection.collection_type_gid = params[:collection_type_gid].presence || default_collection_type_gid
         @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
         if @collection.save
           after_create
@@ -448,7 +445,8 @@ module Hyrax
         end
 
         def set_default_permissions
-          Collections::PermissionsCreateService.create_default(collection: @collection, creating_user: current_user, grants: @participants)
+          additional_grants = @participants # Grants converted from older versions (< Hyrax 2.1.0) where share was edit or read access instead of managers, depositors, and viewers
+          Collections::PermissionsCreateService.create_default(collection: @collection, creating_user: current_user, grants: additional_grants)
         end
 
         def query_collection_members

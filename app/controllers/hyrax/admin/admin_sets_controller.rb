@@ -20,7 +20,6 @@ module Hyrax
     self.admin_set_create_service = AdminSetCreateService
 
     def show
-      add_breadcrumb t(:'hyrax.controls.home'), root_path
       add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
       add_breadcrumb t(:'hyrax.dashboard.my.collections'), hyrax.my_collections_path
       add_breadcrumb presenter.to_s, request.path

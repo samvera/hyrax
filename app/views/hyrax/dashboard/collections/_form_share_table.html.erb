@@ -1,5 +1,6 @@
                   <h3><%= t(".#{access}.title") %></h3>
                   <p><%= t(".#{access}.help") %></p>
+                  <p><%= t(".#{access}.help_with_works", type_title: @collection.collection_type.title) if @collection.share_applies_to_new_works? && access != 'depositors' %></p>
                   <% if @form.permission_template.access_grants.select(&filter).any? %>
                     <table class="table table-striped share-status">
                       <thead>

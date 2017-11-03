@@ -192,6 +192,7 @@ RSpec.describe Collection, type: :model do
     it { is_expected.to delegate_method(:nestable?).to(:collection_type) }
     it { is_expected.to delegate_method(:discoverable?).to(:collection_type) }
     it { is_expected.to delegate_method(:sharable?).to(:collection_type) }
+    it { is_expected.to delegate_method(:share_applies_to_new_works?).to(:collection_type) }
     it { is_expected.to delegate_method(:allow_multiple_membership?).to(:collection_type) }
     it { is_expected.to delegate_method(:require_membership?).to(:collection_type) }
     it { is_expected.to delegate_method(:assigns_workflow?).to(:collection_type) }
@@ -207,7 +208,8 @@ RSpec.describe Collection, type: :model do
 
   describe '#update_access_controls!' do
     let!(:user) { build(:user) }
-    let!(:collection) { create(:collection, user: user) }
+    let(:collection_type) { create(:collection_type) }
+    let!(:collection) { create(:collection, user: user, collection_type_gid: collection_type.gid) }
     let!(:permission_template) { build(:permission_template) }
 
     before do
