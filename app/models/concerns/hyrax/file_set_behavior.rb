@@ -24,13 +24,15 @@ module Hyrax
       self.human_readable_type = 'File'
 
       attribute :file_identifiers, Valkyrie::Types::Set
+      attribute :file_nodes, Valkyrie::Types::Set.member(FileNode.optional)
       attribute :member_ids, Valkyrie::Types::Array
+
+      delegate :width, :height, :mime_type, :size, to: :original_file, allow_nil: true
+      delegate :md5, :sha1, :sha256, to: :original_file_checksum, allow_nil: true
     end
 
     def original_file
-      return if member_ids.empty?
-      # TODO: we should be checking the use predicate here
-      Hyrax::Queries.find_by(id: member_ids.first)
+      file_nodes.find(&:original_file?)
     end
 
     def representative_id
