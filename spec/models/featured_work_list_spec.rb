@@ -1,6 +1,7 @@
 RSpec.describe FeaturedWorkList, type: :model do
   let(:work1) { create_for_repository(:work) }
   let(:work2) { create_for_repository(:work) }
+  let(:persister) { Valkyrie::MetadataAdapter.find(:indexing_persister).persister }
 
   describe 'featured_works' do
     before do
@@ -17,14 +18,14 @@ RSpec.describe FeaturedWorkList, type: :model do
 
     context 'when one of the files is deleted' do
       before do
-        work1.destroy
+        persister.delete(resource: work1)
       end
 
       it 'is a list of the remaining featured work objects, each with the generic_work\'s solr_doc' do
         expect(subject.featured_works.size).to eq 1
         presenter = subject.featured_works.first.presenter
         expect(presenter).to be_kind_of Hyrax::WorkShowPresenter
-        expect(presenter.id).to eq work2.id
+        expect(presenter.id).to eq work2.id.to_s
       end
     end
   end
