@@ -16,7 +16,7 @@ RSpec.describe Hyrax::SingleUseLinksViewerController do
   let(:download_link_hash) { download_link.downloadKey }
 
   describe "GET 'download'" do
-    let(:expected_content) { file.original_file.content }
+    let(:expected_content) { content.tempfile.read }
 
     it "downloads the file and deletes the link from the database" do
       expect(controller).to receive(:send_file_headers!).with(filename: 'world.png', disposition: 'attachment', type: 'image/png')
