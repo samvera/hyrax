@@ -5,21 +5,23 @@ module Hyrax
       # For the given target and :action
       # - Find the appropriate "function" to call
       # - Then call that function. If the function returns a truthy value, then save the target
-      def self.handle_action_taken(target:, action:, comment:, user:)
+      def self.handle_action_taken(target:, action:, comment:, user:, persister:)
         new(target: target,
             action: action,
             comment: comment,
-            user: user).call
+            user: user,
+            persister: persister).call
       end
 
-      def initialize(target:, action:, comment:, user:)
+      def initialize(target:, action:, comment:, user:, persister:)
         @target = target
         @action = action
         @comment = comment
         @user = user
+        @persister = persister
       end
 
-      attr_reader :action, :target, :comment, :user
+      attr_reader :action, :target, :comment, :user, :persister
 
       # Calls all the workflow methods for this action. Stops calling methods if any return falsy
       # @return [Boolean] true if all methods returned a truthy result
@@ -31,7 +33,10 @@ module Hyrax
           status
         end
 
-        return target.save if success
+        if success
+          persister.save(resource: target)
+          return true
+        end
         Rails.logger.error "Not all workflow methods were successful, so not saving (#{target.id})"
         false
       end

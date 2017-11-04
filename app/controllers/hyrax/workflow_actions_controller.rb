@@ -1,6 +1,8 @@
 module Hyrax
   class WorkflowActionsController < ApplicationController
     before_action :authenticate_user!
+    class_attribute :persister
+    self.persister = Valkyrie::MetadataAdapter.find(:indexing_persister)
 
     def update
       if workflow_action_form.save
@@ -23,7 +25,8 @@ module Hyrax
         @workflow_action_form ||= Hyrax::Forms::WorkflowActionForm.new(
           current_ability: current_ability,
           work: resource,
-          attributes: workflow_action_params
+          attributes: workflow_action_params,
+          persister: persister
         )
       end
 
