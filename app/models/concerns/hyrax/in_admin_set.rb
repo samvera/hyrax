@@ -7,7 +7,7 @@ module Hyrax
     end
 
     def active_workflow
-      Sipity::Workflow.find_active_workflow_for(admin_set_id: admin_set_id)
+      Sipity::Workflow.find_active_workflow_for(admin_set_id: admin_set_id.to_s)
     end
   end
 end
