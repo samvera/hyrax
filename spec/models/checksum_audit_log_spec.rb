@@ -1,19 +1,11 @@
 include ActionDispatch::TestProcess
 
 RSpec.describe ChecksumAuditLog do
-  let(:files) { [fixture_file_upload('world.png', 'image/png')] }
+  let(:file) { fixture_file_upload('world.png', 'image/png') }
   let(:persister) { Valkyrie.config.metadata_adapter.persister }
   let(:storage_adapter) { Valkyrie.config.storage_adapter }
-
-  let(:file_node) {}
-  let(:f) do
-    file = FileSet.new do |fs|
-      fs.apply_depositor_metadata('mjg36')
-      fs.member_ids = [file_node.id]
-    end
-    persister.save(resource: file)
-    file
-  end
+  let(:user) { create(:user) }
+  let(:f) { create_for_repository(:file_set, user: user, content: file) }
 
   let(:version_uri) do
     Hyrax::VersioningService.create(f.original_file)
