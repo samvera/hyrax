@@ -2,17 +2,29 @@ module Hyrax
   module Workflow
     # Responsible for coordinating the behavior of an action taken within a workflow
     class WorkflowActionService
-      def self.run(subject:, action:, comment: nil)
-        new(subject: subject, action: action, comment: comment).run
+      # @param subject
+      # @param action
+      # @param comment
+      # @param persister [Valkyrie::MetadataAdapter]
+      def self.run(subject:, action:, comment: nil, persister:)
+        new(subject: subject,
+            action: action,
+            comment: comment,
+            persister: persister).run
       end
 
-      def initialize(subject:, action:, comment:)
+      # @param subject
+      # @param action
+      # @param comment
+      # @param persister [Valkyrie::MetadataAdapter]
+      def initialize(subject:, action:, comment:, persister:)
         @subject = subject
         @action = action
         @comment_text = comment
+        @persister = persister
       end
 
-      attr_reader :subject, :action, :comment_text
+      attr_reader :subject, :action, :comment_text, :persister
 
       def run
         update_sipity_workflow_state
@@ -53,7 +65,8 @@ module Hyrax
             target: subject.work,
             comment: comment,
             action: action,
-            user: subject.user
+            user: subject.user,
+            persister: persister
           )
         end
     end

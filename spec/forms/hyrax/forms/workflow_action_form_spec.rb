@@ -8,7 +8,8 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm, no_clean: true do
   let(:form) do
     described_class.new(current_ability: current_ability,
                         work: work,
-                        attributes: { name: 'an_action', comment: 'a_comment' })
+                        attributes: { name: 'an_action', comment: 'a_comment' },
+                        persister: Valkyrie::MetadataAdapter.find(:indexing_persister).persister)
   end
 
   let(:an_action) do
@@ -116,7 +117,8 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm, no_clean: true do
     let(:form) do
       described_class.new(current_ability: current_ability,
                           work: work,
-                          attributes: { comment: '' })
+                          attributes: { comment: '' },
+                          persister: Valkyrie::MetadataAdapter.find(:indexing_persister).persister)
     end
 
     it 'will be invalid' do
