@@ -42,8 +42,8 @@ RSpec.describe Hyrax::DownloadsController do
       before { sign_in user }
 
       it 'sends the original file' do
-        get :show, params: { id: file_set }
-        expect(response.body).to eq file_set.original_file.content
+        get :show, params: { id: file_set.to_param }
+        expect(response.body).to eq file.tempfile.read
       end
 
       context "with an alternative file" do
@@ -56,7 +56,7 @@ RSpec.describe Hyrax::DownloadsController do
           end
 
           it 'sends requested file content' do
-            get :show, params: { id: file_set, file: 'thumbnail' }
+            get :show, params: { id: file_set.to_param, file: 'thumbnail' }
             expect(response).to be_success
             expect(response.body).to eq content
             expect(response.headers['Content-Length']).to eq "4218"
@@ -65,23 +65,23 @@ RSpec.describe Hyrax::DownloadsController do
 
           it 'retrieves the thumbnail without contacting Fedora' do
             expect(ActiveFedora::Base).not_to receive(:find).with(file_set.id)
-            get :show, params: { id: file_set, file: 'thumbnail' }
+            get :show, params: { id: file_set.to_param, file: 'thumbnail' }
           end
         end
 
         context "that isn't persisted" do
           it "raises an error if the requested file does not exist" do
             expect do
-              get :show, params: { id: file_set, file: 'thumbnail' }
-            end.to raise_error ActiveFedora::ObjectNotFoundError
+              get :show, params: { id: file_set.to_param, file: 'thumbnail' }
+            end.to raise_error Hyrax::ObjectNotFoundError
           end
         end
       end
 
       it "raises an error if the requested association does not exist" do
         expect do
-          get :show, params: { id: file_set, file: 'non-existant' }
-        end.to raise_error ActiveFedora::ObjectNotFoundError
+          get :show, params: { id: file_set.to_param, file: 'non-existant' }
+        end.to raise_error Hyrax::ObjectNotFoundError
       end
     end
   end
