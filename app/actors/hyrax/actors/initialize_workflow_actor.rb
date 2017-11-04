@@ -19,7 +19,10 @@ module Hyrax
 
         # @return [TrueClass]
         def create_workflow(env)
-          workflow_factory.create(env.curation_concern, env.attributes, env.user)
+          workflow_factory.create(env.curation_concern,
+                                  env.attributes,
+                                  env.user,
+                                  persister: env.change_set_persister.metadata_adapter.persister)
         end
     end
   end
