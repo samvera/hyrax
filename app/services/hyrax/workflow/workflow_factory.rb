@@ -17,22 +17,22 @@ module Hyrax
       # @param work [#to_global_id]
       # @param attributes [Hash]
       # @param user [User]
+      # @param persister [Valkyrie::MetadataAdapter]
       # @return [TrueClass]
-      def self.create(work, attributes, user)
-        new(work, attributes, user).create
+      def self.create(work, attributes, user, persister:)
+        new(work, attributes, user, persister: persister).create
       end
 
       # @param work [#to_global_id, #active_workflow]
       # @param user [User]
       # @param attributes [Hash]
-      def initialize(work, attributes, user)
+      # @param persister [Valkyrie::MetadataAdapter]
+      def initialize(work, attributes, user, persister:)
         @work = work
         @attributes = attributes
         @user = user
+        @persister = persister
       end
-
-      attr_reader :work, :attributes, :user
-      private :work, :attributes, :user
 
       # Creates a Sipity::Entity for the work.
       # The Sipity::Entity acts as a proxy to a work within a workflow
@@ -45,6 +45,8 @@ module Hyrax
       end
 
       private
+
+        attr_reader :work, :attributes, :user, :persister
 
         def create_workflow_entity!
           Sipity::Entity.create!(proxy_for_global_id: work.to_global_id.to_s,
@@ -62,7 +64,8 @@ module Hyrax
         def run_workflow_action!
           subject = WorkflowActionInfo.new(work, user)
           Workflow::WorkflowActionService.run(subject: subject,
-                                              action: find_deposit_action)
+                                              action: find_deposit_action,
+                                              persister: persister)
         end
 
         # Find an action that has no starting state. This is the deposit action.
