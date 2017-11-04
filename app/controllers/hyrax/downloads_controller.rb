@@ -10,16 +10,13 @@ module Hyrax
     # Otherwise renders the file.
     def show
       case file
-      when ActiveFedora::File
-        # For original files that are stored in fedora
-        super
-      when String
+      when String, File
         # For derivatives stored on the local file system
         response.headers['Accept-Ranges'] = 'bytes'
         response.headers['Content-Length'] = File.size(file).to_s
         send_file file, derivative_download_options
       else
-        raise ActiveFedora::ObjectNotFoundError
+        raise Hyrax::ObjectNotFoundError
       end
     end
 
@@ -70,8 +67,7 @@ module Hyrax
                                  else
                                    DownloadsController.default_content_path
                                  end
-        association = dereference_file(default_file_reference)
-        association.reader if association
+        dereference_file(default_file_reference)
       end
 
       def mime_type_for(file)
@@ -80,8 +76,15 @@ module Hyrax
 
       def dereference_file(file_reference)
         return false if file_reference.nil?
-        association = asset.association(file_reference.to_sym)
-        association if association && association.is_a?(ActiveFedora::Associations::SingularAssociation)
+        return false unless asset.respond_to?(file_reference)
+        file_node = asset.send(file_reference)
+        file = Valkyrie::StorageAdapter.find_by(id: file_node.file_identifiers.first)
+        file.io
+      end
+
+      # Overrides Hydra::Controller::DownloadBehavior#asset
+      def asset
+        @asset ||= Hyrax::Queries.find_by(id: Valkyrie::ID.new(params[asset_param_key]))
       end
   end
 end
