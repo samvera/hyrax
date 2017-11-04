@@ -16,21 +16,23 @@ module Hyrax
       include ActiveModel::Validations
       extend ActiveModel::Translation
 
-      def initialize(current_ability:, work:, attributes: {})
+      def initialize(current_ability:, work:, attributes: {}, persister:)
         @current_ability = current_ability
         @work = work
         @name = attributes.fetch(:name, false)
         @comment = attributes.fetch(:comment, nil)
+        @persister = persister
         convert_to_sipity_objects!
       end
 
-      attr_reader :current_ability, :work, :name, :comment
+      attr_reader :current_ability, :work, :name, :comment, :persister
 
       def save
         return false unless valid?
         Workflow::WorkflowActionService.run(subject: subject,
                                             action: sipity_workflow_action,
-                                            comment: comment)
+                                            comment: comment,
+                                            persister: persister)
         true
       end
 
