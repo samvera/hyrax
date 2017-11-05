@@ -20,7 +20,7 @@ RSpec.describe 'ControlledVocabularyInput', type: :input do
 
     subject { input.send(:collection) }
 
-    it { is_expected.to all(be_an(Hyrax::ControlledVocabularies::Location)) }
+    it { is_expected.to all(be_a(RDF::URI)) }
   end
 
   describe '#build_field' do
@@ -41,7 +41,7 @@ RSpec.describe 'ControlledVocabularyInput', type: :input do
   describe "#build_options" do
     subject { input.send(:build_options, value, index, options) }
 
-    let(:value) { Hyrax::ControlledVocabularies::Location.new }
+    let(:value) { double('value 1', rdf_label: ['Item 1'], rdf_subject: 'http://example.org/1', node?: false) }
     let(:index) { 0 }
     let(:options) { {} }
 
