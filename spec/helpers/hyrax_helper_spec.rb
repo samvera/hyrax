@@ -10,7 +10,7 @@ RSpec.describe HyraxHelper, type: :helper do
     context "when work is canceled" do
       let(:request) do
         instance_double(ProxyDepositRequest,
-                        deleted_work?: false,
+                        work_exists?: true,
                         canceled?: true,
                         to_s: 'Test work')
       end
