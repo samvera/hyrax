@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::PagesController, type: :controller do
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { create(:user) }
 
   before do
     sign_in user
@@ -34,16 +34,16 @@ RSpec.describe Hyrax::PagesController, type: :controller do
   end
   context 'when editing pages' do
     let!(:about_page) do
-      FactoryBot.create(:content_block, name: 'about_page')
+      create(:content_block, name: 'about_page')
     end
     let!(:help_page) do
-      FactoryBot.create(:content_block, name: 'help_page')
+      create(:content_block, name: 'help_page')
     end
     let!(:agreement_page) do
-      FactoryBot.create(:content_block, name: 'agreement_page')
+      create(:content_block, name: 'agreement_page')
     end
     let!(:terms_page) do
-      FactoryBot.create(:content_block, name: 'terms_page')
+      create(:content_block, name: 'terms_page')
     end
 
     context 'with an unprivileged user' do
@@ -63,7 +63,7 @@ RSpec.describe Hyrax::PagesController, type: :controller do
     end
 
     context 'with an administrator' do
-      let(:user) { FactoryBot.create(:admin) }
+      let(:user) { create(:admin) }
 
       describe "GET #edit" do
         it "renders breadcrumbs and dashboard layout" do

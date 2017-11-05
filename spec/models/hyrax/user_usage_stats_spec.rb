@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::UserUsageStats do
-  subject { FactoryBot.create(:user) }
+  subject { create(:user) }
 
   describe 'with cached stats' do
     let!(:stat_1_day_ago) { UserStat.create!(user_id: subject.id, date: 1.day.ago, file_views: 3, file_downloads: 2, work_views: 5) }

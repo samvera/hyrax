@@ -1,6 +1,6 @@
 RSpec.feature "Notifications page", type: :feature do
   before do
-    sign_in FactoryBot.create(:user_with_mail)
+    sign_in create(:user_with_mail)
     visit "/notifications"
   end
 

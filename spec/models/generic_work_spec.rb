@@ -24,7 +24,7 @@ RSpec.describe GenericWork do
   end
 
   describe "to_sipity_entity" do
-    let(:state) { FactoryBot.create(:workflow_state) }
+    let(:state) { create(:workflow_state) }
     let(:work) { create(:work) }
 
     before do
