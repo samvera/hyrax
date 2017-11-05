@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :work, aliases: [:generic_work, :private_generic_work], class: GenericWork do
     transient do
-      user { FactoryBot.create(:user) }
+      user { create(:user) }
       # Set to true (or a hash) if you want to create an admin set
       with_admin_set false
     end
@@ -37,45 +37,45 @@ FactoryBot.define do
 
     factory :work_with_one_file do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryBot.create(:file_set, user: evaluator.user, title: ['A Contained FileSet'], label: 'filename.pdf')
+        work.ordered_members << create(:file_set, user: evaluator.user, title: ['A Contained FileSet'], label: 'filename.pdf')
       end
     end
 
     factory :work_with_files do
-      before(:create) { |work, evaluator| 2.times { work.ordered_members << FactoryBot.create(:file_set, user: evaluator.user) } }
+      before(:create) { |work, evaluator| 2.times { work.ordered_members << create(:file_set, user: evaluator.user) } }
     end
 
     factory :work_with_ordered_files do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryBot.create(:file_set, user: evaluator.user)
-        work.ordered_member_proxies.insert_target_at(0, FactoryBot.create(:file_set, user: evaluator.user))
+        work.ordered_members << create(:file_set, user: evaluator.user)
+        work.ordered_member_proxies.insert_target_at(0, create(:file_set, user: evaluator.user))
       end
     end
 
     factory :work_with_one_child do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryBot.create(:generic_work, user: evaluator.user, title: ['A Contained Work'])
+        work.ordered_members << create(:work, user: evaluator.user, title: ['A Contained Work'])
       end
     end
 
     factory :work_with_two_children do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryBot.create(:generic_work, user: evaluator.user, title: ['A Contained Work'], id: "BlahBlah1")
-        work.ordered_members << FactoryBot.create(:generic_work, user: evaluator.user, title: ['Another Contained Work'], id: "BlahBlah2")
+        work.ordered_members << create(:work, user: evaluator.user, title: ['A Contained Work'], id: "BlahBlah1")
+        work.ordered_members << create(:work, user: evaluator.user, title: ['Another Contained Work'], id: "BlahBlah2")
       end
     end
 
     factory :work_with_representative_file do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryBot.create(:file_set, user: evaluator.user, title: ['A Contained FileSet'])
+        work.ordered_members << create(:file_set, user: evaluator.user, title: ['A Contained FileSet'])
         work.representative_id = work.members[0].id
       end
     end
 
     factory :work_with_file_and_work do
       before(:create) do |work, evaluator|
-        work.ordered_members << FactoryBot.create(:file_set, user: evaluator.user)
-        work.ordered_members << FactoryBot.create(:generic_work, user: evaluator.user)
+        work.ordered_members << create(:file_set, user: evaluator.user)
+        work.ordered_members << create(:work, user: evaluator.user)
       end
     end
 
@@ -90,7 +90,7 @@ FactoryBot.define do
       end
       factory :embargoed_work_with_files do
         after(:build) { |work, evaluator| work.apply_embargo(evaluator.embargo_date, evaluator.current_state, evaluator.future_state) }
-        after(:create) { |work, evaluator| 2.times { work.ordered_members << FactoryBot.create(:file_set, user: evaluator.user) } }
+        after(:create) { |work, evaluator| 2.times { work.ordered_members << create(:file_set, user: evaluator.user) } }
       end
     end
 
@@ -105,7 +105,7 @@ FactoryBot.define do
       end
       factory :leased_work_with_files do
         after(:build) { |work, evaluator| work.apply_lease(evaluator.lease_date, evaluator.current_state, evaluator.future_state) }
-        after(:create) { |work, evaluator| 2.times { work.ordered_members << FactoryBot.create(:file_set, user: evaluator.user) } }
+        after(:create) { |work, evaluator| 2.times { work.ordered_members << create(:file_set, user: evaluator.user) } }
       end
     end
   end
@@ -113,6 +113,6 @@ FactoryBot.define do
   # Doesn't set up any edit_users
   factory :work_without_access, class: GenericWork do
     title ['Test title']
-    depositor { FactoryBot.create(:user).user_key }
+    depositor { create(:user).user_key }
   end
 end

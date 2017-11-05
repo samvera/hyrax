@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::WorkflowActionsController, type: :controller do
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { create(:user) }
   let(:generic_work) { stub_model(GenericWork, id: '123') }
   let(:form) { instance_double(Hyrax::Forms::WorkflowActionForm) }
 

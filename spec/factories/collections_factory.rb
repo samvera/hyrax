@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :collection do
     transient do
-      user { FactoryBot.create(:user) }
+      user { create(:user) }
     end
     sequence(:title) { |n| ["Title #{n}"] }
 

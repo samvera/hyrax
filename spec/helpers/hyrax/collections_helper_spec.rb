@@ -55,7 +55,7 @@ RSpec.describe Hyrax::CollectionsHelper do
 
   describe "button_for_remove_from_collection" do
     let(:item) { double(id: 'changeme:123') }
-    let(:collection) { FactoryBot.create(:collection) }
+    let(:collection) { create(:collection) }
 
     it "generates a form that can remove the item" do
       str = button_for_remove_from_collection collection, item
@@ -92,7 +92,7 @@ RSpec.describe Hyrax::CollectionsHelper do
   end
 
   describe "button_for_remove_selected_from_collection" do
-    let(:collection) { FactoryBot.create(:collection) }
+    let(:collection) { create(:collection) }
 
     it "creates a button to the collections delete path" do
       str = button_for_remove_selected_from_collection collection

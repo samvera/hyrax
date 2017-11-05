@@ -213,7 +213,7 @@ RSpec.describe FileSet do
     end
 
     context 'when there are related files' do
-      let(:parent_work)   { FactoryBot.create(:work_with_files) }
+      let(:parent_work)   { create(:work_with_files) }
       let(:f1)            { parent_work.file_sets.first }
       let(:f2)            { parent_work.file_sets.last }
 

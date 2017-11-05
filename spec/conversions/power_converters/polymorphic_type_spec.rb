@@ -7,7 +7,7 @@ RSpec.describe 'PowerConverter', no_clean: true do
       expect(PowerConverter.convert_to_polymorphic_type(object)).to eq(:symbol)
     end
     it 'will convert an ActiveRecord::Base object' do
-      user = FactoryBot.build(:user)
+      user = build(:user)
       expect(PowerConverter.convert_to_polymorphic_type(user)).to eq(user.class)
     end
     it 'will convert an object that responds to #base_class' do
