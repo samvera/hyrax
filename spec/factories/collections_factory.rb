@@ -15,16 +15,18 @@ FactoryBot.define do
     end
 
     factory :public_collection, traits: [:public]
+    factory :private_collection, traits: [:private]
+    factory :institution_collection, traits: [:institution]
 
     trait :public do
       visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
     end
 
-    factory :private_collection do
+    trait :private do
       visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
     end
 
-    factory :institution_collection do
+    trait :institution do
       visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
     end
 
