@@ -16,6 +16,10 @@ module Hyrax
 
         private
 
+          def point(min, max)
+            relation.where(query(min, max)).count
+          end
+
           def relation
             ::User.registered
           end
