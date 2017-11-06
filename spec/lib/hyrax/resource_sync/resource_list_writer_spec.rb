@@ -1,7 +1,7 @@
 RSpec.describe Hyrax::ResourceSync::ResourceListWriter, :clean_repo do
   let(:sitemap) { 'http://www.sitemaps.org/schemas/sitemap/0.9' }
-  let!(:private_collection) { create(:private_collection) }
-  let!(:public_collection) { create(:public_collection) }
+  let!(:private_collection) { create_for_repository(:collection, :private) }
+  let!(:public_collection) { create_for_repository(:collection, :public) }
   let!(:public_work) { create_for_repository(:work, :public) }
   let!(:private_work) { create_for_repository(:work) }
   let!(:file_set) { create_for_repository(:file_set, :public) }
