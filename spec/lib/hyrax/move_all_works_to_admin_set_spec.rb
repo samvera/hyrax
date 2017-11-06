@@ -8,6 +8,7 @@ RSpec.describe MoveAllWorksToAdminSet, :clean_repo do
 
   it "moves the work into the admin set" do
     subject
-    expect(work.reload.admin_set).to eq admin_set
+    reloaded = Hyrax::Queries.find_by(id: work.id)
+    expect(reloaded.admin_set_id).to eq admin_set.id
   end
 end

@@ -33,6 +33,8 @@ module Hyrax
     collection :permissions, virtual: true
     collection :work_members, virtual: true
 
+    property :admin_set_id, virtual: false
+
     validate :validate_lease
     validate :validate_embargo
     validate :validate_release_type
