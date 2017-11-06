@@ -49,8 +49,8 @@ RSpec.describe 'PowerConverter' do
       let(:object) { double }
 
       it 'will raise an error if it cannot convert' do
-         expect { subject }.to raise_error PowerConverter::ConversionError
-       end
+        expect { subject }.to raise_error PowerConverter::ConversionError
+      end
     end
   end
 end
