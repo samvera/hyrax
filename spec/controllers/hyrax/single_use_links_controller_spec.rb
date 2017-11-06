@@ -58,7 +58,7 @@ RSpec.describe Hyrax::SingleUseLinksController, type: :controller do
 
   describe "logged in user without edit permission" do
     let(:other_user) { create(:user) }
-    let(:file) { create_for_repository(:file_set, user: user, read_users: [other_user]) }
+    let(:file) { create_for_repository(:file_set, user: user, read_users: [other_user.user_key]) }
 
     before { sign_in other_user }
     subject { response }
