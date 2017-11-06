@@ -8,7 +8,7 @@ module Hyrax
       # zero to just get the facet information
       # @param solr_parameters the current solr parameters
       def include_suppressed_facet(solr_parameters)
-        solr_parameters[:"facet.field"].concat([IndexesWorkflow.suppressed_field])
+        solr_parameters[:"facet.field"].concat([Hyrax::IndexWorkflow.suppressed_field])
         solr_parameters[:'facet.missing'] = true
 
         # we only want the facet counts not the actual data
