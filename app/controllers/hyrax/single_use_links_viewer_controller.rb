@@ -14,7 +14,6 @@ module Hyrax
 
     def download
       raise not_found_exception unless single_use_link.path == hyrax.download_path(id: @asset)
-      # send_content
       # TODO: copied from DownloadsController#show and isn't handling HEAD or range requests
       response.headers['Accept-Ranges'] = 'bytes'
       response.headers['Content-Length'] = File.size(file).to_s
