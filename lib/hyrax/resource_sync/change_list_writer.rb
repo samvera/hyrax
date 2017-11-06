@@ -7,8 +7,10 @@ module Hyrax
     # items, so if we require more than that, we must have multiple Change
     # lists and add a Change List Index to point to all of them.
     class ChangeListWriter
+      include Blacklight::SearchHelper
+
       attr_reader :resource_host, :capability_list_url
-      MODIFIED_DATE_FIELD = 'system_modified_dtsi'.freeze
+      MODIFIED_DATE_FIELD = 'timestamp'.freeze
       BEGINNING_OF_TIME = '1970-01-01T00:00:00Z'.freeze
 
       def initialize(resource_host:, capability_list_url:)
@@ -21,6 +23,8 @@ module Hyrax
       end
 
       private
+
+        delegate :blacklight_config, to: CatalogController
 
         def builder
           Nokogiri::XML::Builder.new do |xml|
@@ -36,27 +40,29 @@ module Hyrax
         # return the earliest change. Otherwise BEGINNING_OF_TIME
         def from
           @from ||= begin
-                      results = relation.search_with_conditions(public_access, rows: 1, sort: MODIFIED_DATE_FIELD + ' asc')
-                      if results.present?
-                        results.first.fetch(MODIFIED_DATE_FIELD)
+                      query = search_builder.query
+                      query["fq"] << public_access
+                      query["rows"] = 1
+                      query["sort"] = MODIFIED_DATE_FIELD + ' asc'
+                      result = repository.search(query).response["docs"].first
+                      if result.present?
+                        result.fetch(MODIFIED_DATE_FIELD)
                       else
                         BEGINNING_OF_TIME
                       end
                     end
         end
 
-        def sort
-          { sort: MODIFIED_DATE_FIELD + ' desc' }
-        end
-
-        def relation
-          @relation ||= Hyrax::ExposedModelsRelation.new
+        def search_builder
+          Hyrax::ExposedModelsSearchBuilder.new(self)
         end
 
         def build_changes(xml)
-          relation.search_in_batches(public_access, sort) do |doc_set|
-            build_resources(xml, doc_set)
-          end
+          query = search_builder.query
+          query["fq"] << public_access
+          query["sort"] = MODIFIED_DATE_FIELD + ' desc'
+          results = repository.search(query).response["docs"]
+          build_resources(xml, results)
         end
 
         def build_resources(xml, doc_set)
@@ -95,7 +101,7 @@ module Hyrax
         delegate :collection_url, to: :routes
 
         def public_access
-          { Hydra.config.permissions.read.group => 'public' }
+          "{!terms f=#{Hydra.config.permissions.read.group}}public"
         end
     end
   end

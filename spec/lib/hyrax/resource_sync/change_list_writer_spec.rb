@@ -1,6 +1,6 @@
 RSpec.describe Hyrax::ResourceSync::ChangeListWriter, :clean_repo do
   let(:sitemap) { 'http://www.sitemaps.org/schemas/sitemap/0.9' }
-  let(:public_collection) { create(:public_collection) }
+  let(:public_collection) { create_for_repository(:collection, :public) }
   let(:public_work) { create_for_repository(:work, :public) }
   let(:file_set) { create_for_repository(:file_set, :public) }
   let(:capability_list) { 'http://example.com/capabilityList.xml' }
@@ -38,13 +38,13 @@ RSpec.describe Hyrax::ResourceSync::ChangeListWriter, :clean_repo do
       expect(capability).to eq capability_list
 
       expect(location(1)).to eq "http://example.com/concern/file_sets/#{file_set.id}"
-      expect(change(1)).to eq "created"
+      expect(change(1)).to eq "updated"
 
       expect(location(2)).to eq "http://example.com/concern/generic_works/#{public_work.id}"
-      expect(change(2)).to eq "created"
+      expect(change(2)).to eq "updated"
 
       expect(location(3)).to eq "http://example.com/collections/#{public_collection.id}"
-      expect(change(3)).to eq "created"
+      expect(change(3)).to eq "updated"
 
       expect(url_list.count).to eq 3
     end
