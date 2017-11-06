@@ -5,6 +5,8 @@ module Hyrax
     # items, so if we require more than that, we must have multiple Resource
     # lists and add a Resource List Index to point to all of them.
     class ResourceListWriter
+      include Blacklight::SearchHelper
+
       attr_reader :resource_host, :capability_list_url
 
       def initialize(resource_host:, capability_list_url:)
@@ -17,6 +19,8 @@ module Hyrax
       end
 
       private
+
+        delegate :blacklight_config, to: CatalogController
 
         def builder
           Nokogiri::XML::Builder.new do |xml|
@@ -32,21 +36,24 @@ module Hyrax
         end
 
         def build_collections(xml)
-          Collection.search_in_batches(public_access) do |doc_set|
-            build_resources(xml, doc_set, hyrax_routes)
-          end
+          query = CollectionSearchBuilder.new([:filter_models], self).query
+          query["fq"] << public_access
+          doc_set = repository.search(query).response["docs"]
+          build_resources(xml, doc_set, hyrax_routes)
         end
 
         def build_works(xml)
-          Hyrax::WorkRelation.new.search_in_batches(public_access) do |doc_set|
-            build_resources(xml, doc_set, main_app_routes)
-          end
+          query = WorksSearchBuilder.new([:filter_models], self).query
+          query["fq"] << public_access
+          doc_set = repository.search(query).response["docs"]
+          build_resources(xml, doc_set, main_app_routes)
         end
 
         def build_files(xml)
-          ::FileSet.search_in_batches(public_access) do |doc_set|
-            build_resources(xml, doc_set, main_app_routes)
-          end
+          query = FileSetsSearchBuilder.new([:filter_models], self).query
+          query["fq"] << public_access
+          doc_set = repository.search(query).response["docs"]
+          build_resources(xml, doc_set, main_app_routes)
         end
 
         def build_resources(xml, doc_set, routes)
@@ -77,7 +84,7 @@ module Hyrax
         delegate :collection_url, to: :routes
 
         def public_access
-          { Hydra.config.permissions.read.group => 'public' }
+          "{!terms f=#{Hydra.config.permissions.read.group}}public"
         end
     end
   end
