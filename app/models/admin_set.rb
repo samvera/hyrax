@@ -80,13 +80,16 @@ class AdminSet < Valkyrie::Resource
   # Calculate and update who should have edit access based on who
   # has "manage" access in the PermissionTemplateAccess
   def update_access_controls!
-    update!(edit_users: permission_template.agent_ids_for(access: 'manage', agent_type: 'user'),
-            edit_groups: permission_template.agent_ids_for(access: 'manage', agent_type: 'group'))
+    self.edit_users = permission_template.agent_ids_for(access: 'manage', agent_type: 'user')
+    self.edit_groups = permission_template.agent_ids_for(access: 'manage', agent_type: 'group')
+    persister.save(resource: self)
   end
 
   private
 
-    def query_service
-      Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
+    delegate :query_service, :persister, to: :metadata_adapter
+
+    def metadata_adapter
+      Valkyrie::MetadataAdapter.find(:indexing_persister)
     end
 end
