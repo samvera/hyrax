@@ -9,8 +9,9 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm, no_clean: true do
     described_class.new(current_ability: current_ability,
                         work: work,
                         attributes: { name: 'an_action', comment: 'a_comment' },
-                        persister: Valkyrie::MetadataAdapter.find(:indexing_persister).persister)
+                        persister: persister)
   end
+  let(:persister) { Valkyrie::MetadataAdapter.find(:indexing_persister).persister }
 
   let(:an_action) do
     instance_double(Sipity::WorkflowAction,
@@ -103,7 +104,7 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm, no_clean: true do
 
       it 'will send the #handle_action_taken message to Hyrax::Workflow::ActionTakenService' do
         expect(Hyrax::Workflow::ActionTakenService).to(
-          receive(:handle_action_taken).with(target: work, comment: kind_of(Sipity::Comment), action: an_action, user: user)
+          receive(:handle_action_taken).with(target: work, comment: kind_of(Sipity::Comment), action: an_action, user: user, persister: persister)
         )
         subject
       end
