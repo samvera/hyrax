@@ -54,7 +54,8 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
           end.to change { Hyrax::PermissionTemplateAccess.count }.by(-1)
           expect(response).to redirect_to(hyrax.edit_admin_admin_set_path(admin_set_id, locale: 'en', anchor: 'participants'))
           expect(flash[:notice]).to eq(I18n.t('participants', scope: 'hyrax.admin.admin_sets.form.permission_update_notices'))
-          expect(admin_set.reload.edit_users).to be_empty
+          reloaded = Hyrax::Queries.find_by(id: admin_set.id)
+          expect(reloaded.edit_users).to be_empty
         end
       end
     end
