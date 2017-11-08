@@ -61,8 +61,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:iiif_image_size_default) }
   it { is_expected.to respond_to(:iiif_image_size_default=) }
   it { is_expected.to respond_to(:libreoffice_path) }
-  it { is_expected.to respond_to(:registered_linked_data_resource) }
-  it { is_expected.to respond_to(:registered_linked_data_resource=) }
+  it { is_expected.to respond_to(:registered_linked_data_resources) }
+  it { is_expected.to respond_to(:registered_linked_data_resources=) }
   it { is_expected.to respond_to(:license_service_class) }
   it { is_expected.to respond_to(:license_service_class=) }
   it { is_expected.to respond_to(:max_days_between_fixity_checks=) }
