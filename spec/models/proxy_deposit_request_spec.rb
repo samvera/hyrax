@@ -146,29 +146,27 @@ RSpec.describe ProxyDepositRequest, type: :model do
 
   describe '#work' do
     let(:request) { described_class.new(work_id: work.id) }
-    let(:work) { build(:work, id: Valkyrie::ID.new(work_id)) }
+    let(:work) { create_for_repository(:work) }
 
     subject { request.work.id }
 
     context 'when it exists' do
-      before { allow(Hyrax::Queries).to receive(:find_by).with(id: Valkyrie::ID.new(request.work_id)).and_return(work) }
       it { is_expected.to eq work.id }
     end
   end
 
   describe '#to_s' do
-    let(:request) { described_class.new(work_id: work.id) }
-    let(:work) { build(:work, id: Valkyrie::ID.new(work_id), title: ["Test work"]) }
-
     subject { request.to_s }
 
     context 'when the work is deleted' do
-      before { allow(Hyrax::Queries).to receive(:exists?).with(Valkyrie::ID.new(request.work_id)).and_return(false) }
+      let(:request) { described_class.new(work_id: 'non-existant') }
+
       it { is_expected.to eq('work not found') }
     end
 
     context 'when the work is not deleted' do
-      before { allow(Hyrax::Queries).to receive(:find_by).with(id: Valkyrie::ID.new(request.work_id)).and_return(work) }
+      let(:request) { described_class.new(work_id: work.id) }
+      let(:work) { create_for_repository(:work, title: ["Test work"]) }
 
       it 'will retrieve the SOLR document and use the #to_s method of that' do
         expect(subject).to eq(work.title.first)
