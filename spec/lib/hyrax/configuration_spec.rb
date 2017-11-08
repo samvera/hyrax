@@ -51,8 +51,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:google_analytics_id?) }
   it { is_expected.to respond_to(:google_analytics_id) }
   it { is_expected.to respond_to(:libreoffice_path) }
-  it { is_expected.to respond_to(:registered_linked_data_resource) }
-  it { is_expected.to respond_to(:registered_linked_data_resource=) }
+  it { is_expected.to respond_to(:registered_linked_data_resources) }
+  it { is_expected.to respond_to(:registered_linked_data_resources=) }
   it { is_expected.to respond_to(:max_days_between_fixity_checks=) }
   it { is_expected.to respond_to(:max_days_between_fixity_checks) }
   it { is_expected.to respond_to(:max_notifications_for_dashboard) }
