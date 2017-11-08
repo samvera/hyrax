@@ -1,4 +1,14 @@
 module Sipity
+  # When a Sipity::Action is taken, each Sipity::Method is loaded and
+  # it's service_name is instantiated and called (all of this done via
+  # the Hyrax::Workflow::ActionTakenService).
+  #
+  # @note
+  #   When a user takes the "deposit a work" action, call the "Lookup
+  #   the corresponding Reviewer for the given Department and assign
+  #   that person or group the Reviewer role for the given work (but
+  #   not all of the works of the workflow)"
+  #
   # This is responsible for mapping the Sipity::WorkflowAction to an object that
   # responds to .call
   #
