@@ -494,6 +494,7 @@ en:
       authorize_proxies:        "Authorize Proxies"
       breadcrumbs:
         admin:                  "Administration"
+        dashboard:              "Dashboard"
       collections:
         edit:
           header: "Edit %{type_title}: %{title}"

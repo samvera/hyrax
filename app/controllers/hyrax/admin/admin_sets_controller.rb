@@ -22,10 +22,14 @@ module Hyrax
     self.admin_set_create_service = AdminSetCreateService
 
     def show
-      add_breadcrumb t(:'hyrax.controls.home'), root_path
-      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
-      add_breadcrumb t(:'hyrax.admin.sidebar.admin_sets'), hyrax.admin_admin_sets_path
-      add_breadcrumb t(:'hyrax.admin.admin_sets.show.breadcrumb'), request.path
+      byebug
+      #add_breadcrumb t(:'hyrax.controls.home'), root_path
+      #add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.dashboard'), hyrax.dashboard_path
+      #add_breadcrumb t(:'hyrax.admin.sidebar.admin_sets'), hyrax.admin_admin_sets_path
+      add_breadcrumb t('hyrax.dashboard.my.collections'), hyrax.my_collections_path
+      #add_breadcrumb t(:'hyrax.admin.admin_sets.show.breadcrumb'), request.path
+      add_breadcrumb @admin_set.title.first, "#"
       super
     end
 
