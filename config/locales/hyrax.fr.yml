@@ -478,6 +478,7 @@ fr:
           detail_label: Afficher les détails sommaires de
           listing: Liste des éléments que vous avez déposés dans
           press_to: Appuyez sur pour
+          results_per_page: Nombre de résultats à afficher par page
           show_label: Afficher tous les détails de
         works: Vos travaux
       no_activity: L'utilisateur n'a aucune activité récente
