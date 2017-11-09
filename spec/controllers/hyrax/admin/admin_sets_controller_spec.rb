@@ -184,6 +184,20 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
           expect(AdminSet.exists?(admin_set.id)).to be true
         end
       end
+
+      context "with a referer" do
+        before do
+          request.env['HTTP_REFERER'] = 'http://test.host/foo'
+        end
+
+        it "sets breadcrumbs" do
+          expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Your Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with(/Title/, '#')
+          get :show, params: { id: admin_set }
+          expect(response).to be_successful
+        end
+      end
     end
   end
 end
