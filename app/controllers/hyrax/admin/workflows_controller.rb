@@ -2,7 +2,7 @@ module Hyrax
   # Presents a list of works in workflow
   class Admin::WorkflowsController < ApplicationController
     before_action :ensure_authorized!
-    layout 'dashboard'
+    with_themed_layout 'dashboard'
     class_attribute :deposited_workflow_state_name
 
     # Works that are in this workflow state (see workflow json template) are excluded from the

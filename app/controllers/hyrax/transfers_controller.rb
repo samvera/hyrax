@@ -5,7 +5,7 @@ module Hyrax
     load_and_authorize_resource :proxy_deposit_request, parent: false, except: :index
     before_action :authorize_depositor_by_id, only: [:new, :create]
 
-    layout 'dashboard'
+    with_themed_layout 'dashboard'
 
     # Catch permission errors
     # TODO: Isn't this already handled?

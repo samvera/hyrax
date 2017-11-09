@@ -5,7 +5,7 @@ module Hyrax
       include Blacklight::AccessControls::Catalog
       include Blacklight::Base
       include BreadcrumbsForCollections
-      layout 'dashboard'
+      with_themed_layout 'dashboard'
 
       before_action :filter_docs_with_read_access!, except: :show
       before_action :remove_select_something_first_flash, except: :show
