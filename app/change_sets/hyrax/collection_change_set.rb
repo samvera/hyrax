@@ -82,8 +82,9 @@ module Hyrax
     end
 
     def thumbnail_title
-      return unless model.thumbnail
-      model.thumbnail.title.first
+      return unless model.thumbnail_id
+      thumbnail = Hyrax::Queries.find_references_by(resource: model, property: :thumbnail_id).first
+      thumbnail && thumbnail.title.first
     end
 
     # We just need to respond to this method so that the rails nested form builder will work.
