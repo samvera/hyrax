@@ -478,6 +478,7 @@ de:
           detail_label: Zusammenfassungsdetails anzeigen
           listing: Auflistung der Artikel, die Sie deponiert haben
           press_to: Drücken Sie auf
+          results_per_page: Anzahl der Ergebnisse pro Seite
           show_label: Zeige alle Details von
         works: Ihre Arbeiten
       no_activity: Benutzer hat keine aktuellen Aufgaben
