@@ -2,7 +2,7 @@ module Hyrax
   module Admin
     class AppearancesController < ApplicationController
       before_action :require_permissions
-      layout 'dashboard'
+      with_themed_layout 'dashboard'
       class_attribute :form_class
       self.form_class = Hyrax::Forms::Admin::Appearance
 

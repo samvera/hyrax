@@ -73,7 +73,7 @@ RSpec.describe Hyrax::PagesController, type: :controller do
           expect(controller).to receive(:add_breadcrumb).with('Pages', edit_pages_path)
           get :edit
           expect(response).to have_http_status(200)
-          expect(response).to render_template('layouts/dashboard')
+          expect(response).to render_template('layouts/hyrax/dashboard')
         end
       end
 
