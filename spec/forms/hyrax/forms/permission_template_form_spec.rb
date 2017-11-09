@@ -17,6 +17,111 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     expect(form.workflow_id).to eq(workflow.id)
   end
 
+  describe 'integration tests' do
+    let(:permission_template) { create(:permission_template, with_admin_set: true, with_workflows: true) }
+
+    subject do
+      form.update(
+        ActionController::Parameters.new(
+          access_grants_attributes: [
+            ActionController::Parameters.new(agent_type: "user",
+                                             agent_id: user.user_key,
+                                             access: access_level).permit!
+          ]
+        ).permit!
+      )
+    end
+
+    before do
+      # Create MANAGING role manually
+      Sipity::Role[Hyrax::RoleRegistry::MANAGING]
+    end
+
+    def count_template_accesses_for(user, access_level)
+      Hyrax::PermissionTemplateAccess.where(
+        agent_id: user.user_key,
+        access: access_level
+      ).count
+    end
+
+    def count_workflow_responsibilities_for(user)
+      Sipity::WorkflowResponsibility.where(agent: user.to_sipity_agent).count
+    end
+
+    it 'starts with no PTAs' do
+      expect(permission_template.access_grants).to be_empty
+    end
+
+    context 'with manager users' do
+      let(:user) { create(:user) }
+      let(:access_level) { 'manage' }
+
+      it 'adds the expected permission template accesses and workflow responsibilities' do
+        expect { subject }.to change {
+          count_template_accesses_for(user, access_level)
+        }.from(0).to(1).and change {
+          count_workflow_responsibilities_for(user)
+        }.from(0).to(6)
+      end
+
+      it 'removes workflow responsibilities' do
+        subject
+        expect do
+          form.remove_access!(
+            permission_template.access_grants.find_by(agent_id: user.user_key, access: access_level)
+          )
+        end.to change { count_workflow_responsibilities_for(user) }
+          .from(6).to(0)
+      end
+    end
+
+    context 'with depositor users' do
+      let(:user) { create(:user) }
+      let(:access_level) { 'deposit' }
+
+      it 'adds the expected permission template accesses and workflow responsibilities' do
+        expect { subject }.to change {
+          count_template_accesses_for(user, access_level)
+        }.from(0).to(1).and change {
+          count_workflow_responsibilities_for(user)
+        }.from(0).to(2)
+      end
+
+      it 'removes workflow responsibilities' do
+        subject
+        expect do
+          form.remove_access!(
+            permission_template.access_grants.find_by(agent_id: user.user_key, access: access_level)
+          )
+        end.to change { count_workflow_responsibilities_for(user) }
+          .from(2).to(0)
+      end
+    end
+
+    context 'with viewer users' do
+      let(:user) { create(:user) }
+      let(:access_level) { 'view' }
+
+      it 'adds the expected permission template accesses and workflow responsibilities' do
+        expect { subject }.to change {
+          count_template_accesses_for(user, access_level)
+        }.from(0).to(1).and change {
+          count_workflow_responsibilities_for(user)
+        }.by(0)
+      end
+
+      it 'does nothing (yet)' do
+        subject
+        expect do
+          form.remove_access!(
+            permission_template.access_grants.find_by(agent_id: user.user_key, access: access_level)
+          )
+        end.to change { count_workflow_responsibilities_for(user) }
+          .by(0)
+      end
+    end
+  end
+
   describe "#update" do
     subject { form.update(input_params) }
 
@@ -237,7 +342,10 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   end
 
   describe "#grant_workflow_roles" do
-    subject { form.send(:grant_workflow_roles, attributes) }
+    subject do
+      form.attributes = attributes
+      form.send(:grant_workflow_roles)
+    end
 
     let(:attributes) { { workflow_id: workflow.id } }
     let(:workflow) { create(:workflow, permission_template: permission_template, active: true) }
@@ -316,6 +424,13 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
       describe 'no delay' do
         let(:release_period) { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY }
+
+        it_behaves_like 'valid attributes'
+      end
+
+      describe 'varies, with depositor choice' do
+        let(:release_period) { '' }
+        let(:release_varies) { '' }
 
         it_behaves_like 'valid attributes'
       end
@@ -424,7 +539,10 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   describe "#permission_template_update_params" do
     let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
 
-    subject { form.send(:permission_template_update_params, input_params) }
+    subject do
+      form.attributes = input_params
+      form.send(:permission_template_update_params)
+    end
 
     context "with release varies by date selected" do
       let(:input_params) do

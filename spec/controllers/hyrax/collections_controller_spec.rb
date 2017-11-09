@@ -31,6 +31,7 @@ RSpec.describe Hyrax::CollectionsController do
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         get :show, params: { id: collection }
         expect(response).to be_successful
+        expect(response).to render_template("layouts/hyrax/1_column")
         expect(assigns[:presenter]).to be_kind_of Hyrax::CollectionPresenter
         expect(assigns[:presenter].title).to match_array collection.title
         expect(assigns[:member_docs].map(&:id)).to match_array [asset1, asset2, asset3].map { |asset| asset.id.to_s }

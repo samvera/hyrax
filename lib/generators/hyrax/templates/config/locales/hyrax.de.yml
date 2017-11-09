@@ -4,7 +4,7 @@ de:
     search:
       fields:
         facet:
-          based_near_sim: Ort
+          based_near_label_sim: Ort
           creator_sim: Schöpfer
           file_format_sim: Format
           generic_type_sim: Art

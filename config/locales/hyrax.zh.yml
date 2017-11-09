@@ -78,6 +78,7 @@ zh:
           header: 编辑管理集
         form:
           cancel: 取消
+          note: 授予新角色的用户只能在授予该角色后存储的作品获得角色。
           permission_destroy_errors:
             admin_group: 无法删除存储库管理员组
           permission_update_errors:
@@ -139,6 +140,7 @@ zh:
             no_delay: 没有延迟 -- 所有作品一旦存储即可发布
             title: 发布
             varies:
+              any: 允许存款人决定
               between: 在'现在'之间
               description: '可变的 -- 存储者可以设置一件作品的发布日期:'
               embargo:
@@ -147,6 +149,7 @@ zh:
                 3yrs: 存储三年之后
                 6mos: 存储六个月之后
                 select: 选择时滞期限..
+              period: 存款人可以选择禁运期限：
           visibility:
             description: '发布日期之后, 管理集内的作品可以被发现和下载:'
             everyone: 每个人 -- 管理集内的所有作品会公开
@@ -431,6 +434,7 @@ zh:
           works_in_collection: 在这个集合的作品
       create_work: 创建作品
       current_proxies: 目前代理
+      delete_notification: 删除通知
       heading_actions:
         close: 关闭
         create_work: 创建作品
@@ -482,6 +486,7 @@ zh:
       no_transfer_requests: 您没有收到任何在作品转让请求
       no_transfers: 您没有转让任何作品
       proxy_activity: 代理活动
+      proxy_delete: 删除代理
       proxy_user: 代理用户
       show_admin:
         new_visitors: 新访问者

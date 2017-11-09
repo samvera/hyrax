@@ -14,10 +14,16 @@
                   </div>
                   <div id="release-varies" class="radio">
                     <label>
-                      <%= f.radio_button :release_period, '', checked: !f.object.release_varies.blank? %>
+                      <%= f.radio_button :release_period, '', checked: f.object.release_period.blank? || !f.object.release_varies.blank? %>
                       <%= t('.release.varies.description') %>
                     </label>
                     <ul>
+                      <li class="radio form-inline">
+                        <label>
+                          <%= f.radio_button :release_varies, '' %>
+                          <%= t('.release.varies.any') %>
+                        </label>
+                      </li>
                       <li class="radio form-inline">
                         <label>
                           <%= f.radio_button :release_varies, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE %>
@@ -28,7 +34,7 @@
                       <li class="radio form-inline">
                         <label>
                           <%= f.radio_button :release_varies, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO  %>
-                          <%= t('.release.varies.between') %>
+                          <%= t('.release.varies.period') %>
                           <%= f.collection_select :release_embargo, f.object.embargo_options, :first, :last, prompt: t('.release.varies.embargo.select') %>
                         </label>
                       </li>

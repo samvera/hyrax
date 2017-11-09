@@ -4,8 +4,8 @@ RSpec.describe Hyrax::FeaturedWorkListsController, type: :controller do
       expect(controller).to receive(:authorize!).with(:update, FeaturedWork)
     end
 
-    let(:feature1) { FactoryGirl.create(:featured_work) }
-    let(:feature2) { FactoryGirl.create(:featured_work) }
+    let(:feature1) { FactoryBot.create(:featured_work) }
+    let(:feature2) { FactoryBot.create(:featured_work) }
 
     it "is successful" do
       post :create, params: {

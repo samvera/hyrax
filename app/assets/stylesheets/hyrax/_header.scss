@@ -20,3 +20,9 @@
 .nav > li > .notify-number {
   padding-right: 0;
 }
+
+.dropdown-toggle:focus {
+  outline: 2px auto  Highlight; // FireFox
+  outline: 5px auto -webkit-focus-ring-color; // Chrome, Safari
+  outline: -2px;
+}

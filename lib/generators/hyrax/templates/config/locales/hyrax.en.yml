@@ -3,7 +3,7 @@ en:
     search:
       fields:
         facet:
-          based_near_sim: Location
+          based_near_label_sim: Location
           creator_sim: Creator
           file_format_sim: Format
           generic_type_sim: Type

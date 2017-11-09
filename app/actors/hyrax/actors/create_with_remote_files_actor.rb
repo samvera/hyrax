@@ -1,6 +1,10 @@
 module Hyrax
   module Actors
-    # Attaches remote files to the work
+    # If there is a key `:remote_files' in the attributes, it attaches the files at the specified URIs
+    # to the work. e.g.:
+    #     attributes[:remote_files] = filenames.map do |name|
+    #       { url: "https://example.com/file/#{name}", file_name: name }
+    #     end
     class CreateWithRemoteFilesActor < Hyrax::Actors::AbstractActor
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if create was successful

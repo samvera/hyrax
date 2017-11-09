@@ -88,7 +88,7 @@ EOF
   spec.add_development_dependency 'capybara-maleficent', '~> 0.2'
   spec.add_development_dependency "chromedriver-helper"
   spec.add_development_dependency "selenium-webdriver"
-  spec.add_development_dependency "factory_girl_rails", '~> 4.4'
+  spec.add_development_dependency "factory_bot_rails", '~> 4.4'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "jasmine", '~> 2.3'
   # Pin rubocop and rubocop-rspec tightly. Minor-level version bumps
@@ -104,7 +104,7 @@ EOF
   spec.add_development_dependency 'rubocop', '~> 0.49.1'
   spec.add_development_dependency 'rubocop-rspec', '~> 1.16.0'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
-  spec.add_development_dependency 'rails-controller-testing', '~> 0'
+  spec.add_development_dependency 'rails-controller-testing', '~> 1'
   spec.add_development_dependency 'webmock'
   spec.add_development_dependency 'i18n-debug' if ENV['I18N_DEBUG']
   spec.add_development_dependency 'i18n_yaml_sorter' unless ENV['TRAVIS']

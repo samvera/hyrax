@@ -260,7 +260,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
     end
 
     context 'with nil in_works_ids' do
-      let(:parent) { FactoryGirl.create_for_repository(:work) }
+      let(:parent) { create_for_repository(:work) }
       let(:attributes) do
         attributes_for(:work).merge(
           member_of_collection_ids: nil

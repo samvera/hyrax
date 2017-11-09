@@ -72,6 +72,7 @@ pt-BR:
           header: Editar Conjunto Administrativo
         form:
           cancel: Cancelar
+          note: Os usuários que receberam uma nova função só ganharão o papel nas obras que são depositadas depois que essa função foi concedida.
           permission_destroy_errors:
             admin_group: O grupo de administradores do repositório não pode ser removido
           permission_update_errors:
@@ -133,6 +134,7 @@ pt-BR:
             no_delay: Sem atraso - liberte todos os trabalhos assim que eles são depositados
             title: Lançamento
             varies:
+              any: Permitir que o depositante decida
               between: Entre "agora" e
               description: 'Varia - os depositantes podem definir a data de lançamento para um trabalho individual:'
               embargo:
@@ -141,6 +143,7 @@ pt-BR:
                 3yrs: 3 anos após o depósito
                 6mos: 6 meses após o depósito
                 select: Selecione o período de embargo ...
+              period: 'O depositante pode escolher o período de embargo até:'
           visibility:
             description: 'Após a data de lançamento, os trabalhos deste conjunto podem ser descobertos e baixados por:'
             everyone: Todos - todos os trabalhos neste conjunto serão públicos
@@ -430,6 +433,7 @@ pt-BR:
           works_in_collection: Funciona nesta coleção
       create_work: Criar trabalho
       current_proxies: Proxies atuais
+      delete_notification: Eliminar Notificação
       heading_actions:
         close: Fechar
         create_work: Criar trabalho
@@ -481,6 +485,7 @@ pt-BR:
       no_transfer_requests: Você não recebeu nenhum pedido de transferência de trabalho
       no_transfers: Você não transferiu nenhum trabalho
       proxy_activity: Atividade de proxy
+      proxy_delete: Eliminar Proxy
       proxy_user: Usuário Proxy
       show_admin:
         new_visitors: Novos visitantes

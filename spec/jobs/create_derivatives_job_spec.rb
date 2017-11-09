@@ -83,11 +83,10 @@ RSpec.describe CreateDerivativesJob do
         .with(/test\.pdf/, outputs: [{ label: :thumbnail,
                                        format: 'jpg',
                                        size: '338x493',
-                                       url: String }])
+                                       url: String,
+                                       layer: 0 }])
       expect(Hydra::Derivatives::FullTextExtract).to receive(:create)
-        .with(/test\.pdf/, outputs: [{ url: RDF::URI,
-                                       container: "extracted_text" }])
-
+        .with(/test\.pdf/, outputs: [{ url: RDF::URI, container: "extracted_text" }])
       described_class.perform_now(file_set, file.id)
     end
   end

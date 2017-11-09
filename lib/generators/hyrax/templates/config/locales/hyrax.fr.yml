@@ -4,7 +4,7 @@ fr:
     search:
       fields:
         facet:
-          based_near_sim: Emplacement
+          based_near_label_sim: Emplacement
           creator_sim: Créateur
           file_format_sim: Format
           generic_type_sim: Type
@@ -25,7 +25,9 @@ fr:
           keyword_tesim: Mot-clé
           language_tesim: La langue
           license_statement_tesim: Licence
+          license_tesim: Licence
           publisher_tesim: Éditeur
+          rights_statement_tesim: Déclaration des droits
           rights_tesim: Droits
           subject_tesim: Assujettir
         show:
@@ -41,7 +43,9 @@ fr:
           keyword_tesim: Mot-clé
           language_tesim: La langue
           license_statement_tesim: Licence
+          license_tesim: Licence
           publisher_tesim: Éditeur
+          rights_statement_tesim: Déclaration des droits
           rights_tesim: Droits
           subject_tesim: Assujettir
           title_tesim: Titre

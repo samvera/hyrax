@@ -72,6 +72,7 @@ de:
           header: Admin-Set bearbeiten
         form:
           cancel: Abbrechen
+          note: Benutzern, denen eine neue Rolle zugewiesen wurde, wird nur die Rolle zugewiesen, die nach der Gewährung dieser Rolle hinterlegt wurde.
           permission_destroy_errors:
             admin_group: Die Gruppe der Administratoren des Repositoriums kann nicht entfernt werden
           permission_update_errors:
@@ -133,6 +134,7 @@ de:
             no_delay: Keine Verzögerung - Freigabe aller Arbeiten, sobald sie hinterlegt sind
             title: Freigabe
             varies:
+              any: Dem Deponierer erlauben, sich zu entscheiden
               between: Zwischen "jetzt" und
               description: 'Variabel - Deponenten können den Freigabedatum für eine einzelne Arbeit festlegen:'
               embargo:
@@ -141,6 +143,7 @@ de:
                 3yrs: 3 Jahre nach der Deponierung
                 6mos: 6 Monate nach der Deponierung
                 select: Wählen Sie die Sperrfrist aus.
+              period: 'Der Einlieferer kann eine Embargo-Frist bis zu:'
           visibility:
             description: 'Nach dem Release-Datum können die Arbeiten in diesem Admin-Set eingesehen und heruntergeladen werden durch:'
             everyone: Jeder - alle Arbeiten in diesem Admin-Set werden öffentlich sein
@@ -169,8 +172,8 @@ de:
         index:
           action: Aktion
           description: Beschreibung
-          feature: Charakteristisch
-          header: Charakteristik
+          feature: Features
+          header: Features
       sidebar:
         activity: Aktivität
         admin_sets: Admin-Sets
@@ -430,6 +433,7 @@ de:
           works_in_collection: Arbeiten in dieser Sammlung
       create_work: Arbeien erstellen
       current_proxies: Aktuelle Proxies
+      delete_notification: Benachrichtigung löschen
       heading_actions:
         close: Schließen
         create_work: Arbeit erstellen
@@ -481,6 +485,7 @@ de:
       no_transfer_requests: Sie haben keine Arbeitsübertragungsanforderungen erhalten
       no_transfers: Sie haben keine Arbeit übertragen
       proxy_activity: Proxy-Aktivität
+      proxy_delete: Proxy löschen
       proxy_user: Proxy-Benutzer
       show_admin:
         new_visitors: Neue Besucher

@@ -72,6 +72,7 @@ it:
           header: Modifica impostazione amministrativa
         form:
           cancel: Annulla
+          note: Gli utenti che hanno assegnato un nuovo ruolo avranno solo il ruolo di opere che vengono depositate dopo che tale ruolo è stato concesso.
           permission_destroy_errors:
             admin_group: Impossibile rimuovere il gruppo amministratori di repository
           permission_update_errors:
@@ -133,6 +134,7 @@ it:
             no_delay: Nessun ritardo - rilasciare tutti i lavori non appena vengono depositati
             title: Liberare
             varies:
+              any: Consentire al depositante di decidere
               between: Tra "ora" e "
               description: 'Varia - i depositanti possono impostare la data di rilascio per un lavoro individuale:'
               embargo:
@@ -141,6 +143,7 @@ it:
                 3yrs: 3 anni dopo il deposito
                 6mos: 6 mesi dopo il deposito
                 select: Seleziona il periodo di embargo ..
+              period: 'Depositor può scegliere il periodo di embargo fino a:'
           visibility:
             description: 'Dopo la data di rilascio, i lavori in questo set possono essere scoperti e scaricati da:'
             everyone: Tutti - tutti i lavori in questo set saranno pubblici
@@ -430,6 +433,7 @@ it:
           works_in_collection: Funziona in questa collezione
       create_work: Crea lavoro
       current_proxies: Proxy attuali
+      delete_notification: Elimina notifica
       heading_actions:
         close: Vicino
         create_work: Crea lavoro
@@ -481,6 +485,7 @@ it:
       no_transfer_requests: Non hai ricevuto richieste di trasferimento di lavoro
       no_transfers: Non hai trasferito alcun lavoro
       proxy_activity: Attività proxy
+      proxy_delete: Elimina proxy
       proxy_user: Utente Proxy
       show_admin:
         new_visitors: Nuovi visitatori

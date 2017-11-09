@@ -21,7 +21,7 @@ if coverage_needed?
   SimpleCov.command_name 'spec'
 end
 
-require 'factory_girl'
+require 'factory_bot'
 require 'engine_cart'
 EngineCart.load_application!
 
@@ -89,7 +89,7 @@ end
 
 class JsonStrategy
   def initialize
-    @strategy = FactoryGirl.strategy_by_name(:create).new
+    @strategy = FactoryBot.strategy_by_name(:create).new
   end
 
   delegate :association, to: :@strategy
@@ -99,9 +99,9 @@ class JsonStrategy
   end
 end
 
-FactoryGirl.register_strategy(:json, JsonStrategy)
-FactoryGirl.definition_file_paths = [File.expand_path("../factories", __FILE__)]
-FactoryGirl.find_definitions
+FactoryBot.register_strategy(:json, JsonStrategy)
+FactoryBot.definition_file_paths = [File.expand_path("../factories", __FILE__)]
+FactoryBot.find_definitions
 
 module EngineRoutes
   def self.included(base)
@@ -197,7 +197,7 @@ RSpec.configure do |config|
 
   config.include Capybara::RSpecMatchers, type: :input
   config.include InputSupport, type: :input
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
 
   config.infer_spec_type_from_file_location!
 

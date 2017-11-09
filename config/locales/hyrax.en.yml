@@ -71,6 +71,7 @@ en:
           header:         "Edit Administrative Set"
         form:
           cancel:               "Cancel"
+          note:                 "Users granted a new role will only gain the role on works that are deposited after that role has been granted."
           permission_destroy_errors:
             admin_group:        "The repository administrators group cannot be removed"
           permission_update_notices:
@@ -80,7 +81,6 @@ en:
             visibility:         "The administrative set's release & visibility settings have been updated."
             workflow:           "The administrative set's workflow has been updated."
           permission_update_errors:
-            varies:             "Release option 'Varies' requires a date or embargo period."
             no_date:            "A date is required for the selected release option."
             no_embargo:         "An embargo period is required for the selected option."
             nothing:            "Select release options before pressing save."
@@ -125,15 +125,17 @@ en:
           current_participants: "Current Participants"
         form_visibility:
           cancel:               "Cancel"
-          page_description:     "Release and visibility settings control when works added to this set are made available for discovery and download and who can discover and download them."
+          page_description:     "Release and visibility settings determine the options available to depositors when submitting a work to this administrative set. Changes to these settings do not affect previously deposited works."
           release:
-            description:        "You can impose a delay (embargo) before works in this administrative set are released for discovery and download."
-            fixed:              "Fixed -- delay release of all works until"
-            no_delay:           "No delay -- release all works as soon as they are deposited"
+            description:        "Set embargoes and lease polices for this administrative set."
+            fixed:              "Depositor must choose embargo -- delay release of all works until"
+            no_delay:           "Do not allow embargoes or leases"
             title:              "Release"
             varies:
-              between:          "Between \"now\" and"
-              description:      "Varies -- depositors can set the release date for an individual work:"
+              any:              "Depositor can choose any embargo length; leases are allowed"
+              between:          "Depositor can choose embargo up to date:"
+              period:           "Depositor can choose embargo period up to:"
+              description:      "Allow depositor to choose settings:"
               embargo:
                 1yr:            "1 year after deposit"
                 2yrs:           "2 years after deposit"
@@ -141,12 +143,12 @@ en:
                 6mos:           "6 months after deposit"
                 select:         "Select embargo period.."
           visibility:
-            description:        "After its release date, works in this set can be discovered and downloaded by:"
-            everyone:           "Everyone -- all works in this set will be public"
-            institution:        "Institution -- all works will be visible only to authenticated users of this institution"
-            restricted:         "Restricted -- all works will be visible only to repository managers and managers and reviewers of this administrative set"
+            description:        "Set visibility policies for the administrative set. Setting honors embargo policies above."
+            everyone:           "Public - depositor can only choose public visibility setting"
+            institution:        "Institution -- depositor can only select institution visibility setting"
+            restricted:         "Private -- depositor can only select private for visibility. Access is restricted to repository administrators, managers, and viewers of the set. Must be used with \"No embargo\" setting above."
             title:              "Visibility"
-            varies:             "Varies -- default is public, but depositors can restrict the visibility of individual works"
+            varies:             "All settings allowed -- depositor can choose. Must use this option to allow leases."
         form_workflow:
           cancel:               "Cancel"
           no_workflows:         "There are no workflows to select."
@@ -458,14 +460,17 @@ en:
           detail_label:     "Display summary details of"
           listing:          "Listing of items you have deposited in"
           press_to:         "Press to"
+          results_per_page: "Number of results to display per page"
           show_label:       "Display all details of"
         works:        "Your Works"
       no_activity:              "User has no recent activity"
       no_notifications:         "User has no notifications"
+      delete_notification:      "Delete Notification"
       no_transfer_requests:     "You haven't received any work transfer requests"
       no_transfers:             "You haven't transferred any work"
       proxy_activity:           "Proxy Activity"
       proxy_user:               "Proxy User"
+      proxy_delete:              "Delete Proxy"
       show_admin:
         new_visitors:       "New Visitors"
         registered_users:   "Registered users"

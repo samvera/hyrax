@@ -72,6 +72,7 @@ fr:
           header: Modifier l'ensemble administratif
         form:
           cancel: Annuler
+          note: Les utilisateurs auxquels un nouveau rôle est attribué n'acquièrent un rôle que sur les œuvres déposées après l'attribution de ce rôle.
           permission_destroy_errors:
             admin_group: Le groupe des administrateurs du référentiel ne peut pas être supprimé
           permission_update_errors:
@@ -133,6 +134,7 @@ fr:
             no_delay: Pas de retard - libère tous les travaux dès qu'ils sont déposés
             title: Libération
             varies:
+              any: Permettre au déposant de décider
               between: Entre «maintenant» et
               description: 'Variable - les déposants peuvent définir la date de sortie pour un travail individuel:'
               embargo:
@@ -141,6 +143,7 @@ fr:
                 3yrs: 3 ans après le dépôt
                 6mos: 6 mois après le dépôt
                 select: Sélectionnez la période d'embargo ...
+              period: 'Le déposant peut choisir la période d''embargo jusqu''à:'
           visibility:
             description: 'Après sa date de sortie, les travaux de cet ensemble peuvent être découverts et téléchargés par:'
             everyone: Tout le monde - tout fonctionne dans cet ensemble sera public
@@ -430,6 +433,7 @@ fr:
           works_in_collection: Fonctionne dans cette collection
       create_work: Créer un travail
       current_proxies: Proxies actuelles
+      delete_notification: Supprimer la notification
       heading_actions:
         close: Fermer
         create_work: Créer un travail
@@ -481,6 +485,7 @@ fr:
       no_transfer_requests: Vous n'avez reçu aucune demande de transfert de travail
       no_transfers: Vous n'avez transféré aucun travail
       proxy_activity: Activité de procuration
+      proxy_delete: Supprimer le proxy
       proxy_user: Utilisateur proxy
       show_admin:
         new_visitors: Nouveaux visiteurs

@@ -92,7 +92,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
     end
 
     context "with featured works" do
-      let!(:my_work) { FactoryGirl.create_for_repository(:work, user: user) }
+      let!(:my_work) { create_for_repository(:work, user: user) }
 
       before do
         FeaturedWork.create!(work_id: my_work.id)
