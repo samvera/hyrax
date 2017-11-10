@@ -7,7 +7,7 @@ RSpec.describe 'hyrax/base/_form_relationships.html.erb', type: :view do
   let(:presenter) { instance_double Hyrax::AdminSetOptionsPresenter, select_options: [] }
   let(:form_template) do
     %(
-      <%= simple_form_for [main_app, @form] do |f| %>
+      <%= simple_form_for @change_set do |f| %>
         <%= render "hyrax/base/form_relationships", f: f %>
       <% end %>
     )

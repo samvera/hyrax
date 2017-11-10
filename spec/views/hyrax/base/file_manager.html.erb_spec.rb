@@ -21,7 +21,7 @@ RSpec.describe "hyrax/base/file_manager.html.erb" do
                           label: ["work"])
   end
 
-  let(:parent) { build(:work) }
+  let(:parent) { create_for_repository(:work) }
 
   let(:change_set) do
     GenericWorkChangeSet.new(parent)
@@ -29,11 +29,7 @@ RSpec.describe "hyrax/base/file_manager.html.erb" do
 
   before do
     allow(parent).to receive(:etag).and_return("123456")
-    allow(parent).to receive(:persisted?).and_return(true)
-    allow(parent).to receive(:id).and_return('resource')
-
-    allow(work).to receive(:thumbnail_path).and_return('/test/image/path.jpg')
-    allow(file_set).to receive(:thumbnail_path).and_return('/test/image/path.jpg')
+    allow(Hyrax::ThumbnailPathService).to receive(:call).and_return('/test/image/path.jpg')
 
     allow(change_set).to receive(:member_presenters).and_return([file_set_presenter, member])
     assign(:change_set, change_set)
@@ -62,7 +58,7 @@ RSpec.describe "hyrax/base/file_manager.html.erb" do
     expect(rendered).to have_selector('a[href="/concern/file_sets/test"]')
 
     # has a link back to parent
-    expect(rendered).to have_link "Test title", href: hyrax_generic_work_path(id: "resource")
+    expect(rendered).to have_link "Test title", href: hyrax_generic_work_path(parent.id)
 
     # has thumbnails for each resource
     expect(rendered).to have_selector("img[src='/test/image/path.jpg']")
