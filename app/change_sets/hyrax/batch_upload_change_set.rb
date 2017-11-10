@@ -2,15 +2,43 @@ module Hyrax
   class BatchUploadChangeSet < WorkChangeSet
     # include HydraEditor::Form::Permissions
 
-    self.exclude_fields = [:title, :resource_type]
+    property :creator, multiple: true, required: true
+    property :keyword, multiple: true, required: true
+    property :rights_statement, required: true
+
+    property :created_at
+    property :updated_at
+    property :depositor
+    property :date_uploaded
+    property :date_modified
+    property :proxy_depositor
+    property :on_behalf_of
+    property :label
+    property :relative_path
+    property :contributor
+    property :description
+    property :license
+    property :publisher
+    property :date_created
+    property :subject
+    property :language
+    property :identifier
+    property :related_url
+    property :source
+    property :based_near
+    property :arkivo_checksum
+
+    property :admin_set_id
+    property :member_of_collection_ids
+    property :member_ids
+    property :thumbnail_id
+    property :representative_id
 
     attr_accessor :payload_concern # a Class name: what is form creating a batch of?
 
     def self.work_klass
       ::BatchUploadItem
     end
-
-    autocreate_fields!
 
     # On the batch upload, title is set per-file.
     def primary_terms
