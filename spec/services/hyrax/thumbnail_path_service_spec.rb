@@ -33,17 +33,16 @@ RSpec.describe Hyrax::ThumbnailPathService do
 
   context "with a Work" do
     context "that has a thumbnail" do
-      let(:object)         { GenericWork.new(thumbnail_id: '999') }
-      let(:representative) { build(:file_set, id: '999') }
+      let(:object)         { create_for_repository(:work, thumbnail_id: representative.id) }
+      let(:representative) { create_for_repository(:file_set) }
       let(:original_file)  { mock_file_factory(mime_type: 'image/jpeg') }
 
       before do
         allow(File).to receive(:exist?).and_return(true)
-        allow(ActiveFedora::Base).to receive(:find).with('999').and_return(representative)
         allow(representative).to receive(:original_file).and_return(original_file)
       end
 
-      it { is_expected.to eq '/downloads/999?file=thumbnail' }
+      it { is_expected.to eq "/downloads/#{representative.id}?file=thumbnail" }
     end
 
     context "that doesn't have a representative" do
