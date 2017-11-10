@@ -78,7 +78,7 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
       expect(rendered).to have_selector("tr#document_#{id}")
       expect(rendered).to have_link 'AdminSet Title', href: '#'
       expect(rendered).to have_link 'View collection', href: hyrax.admin_admin_set_path(id)
-      expect(rendered).to have_link 'Edit collection', href: hyrax.admin_admin_set_path(id)
+      expect(rendered).to have_link 'Edit collection', href: hyrax.edit_admin_admin_set_path(id)
       expect(rendered).to have_link 'Delete collection', href: hyrax.admin_admin_set_path(id)
       expect(rendered).to have_link 'Add to collection' if Hyrax::CollectionType.any_nestable?
       expect(rendered).to have_css '.collection_type', text: 'Admin Set'

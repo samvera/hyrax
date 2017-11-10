@@ -14,7 +14,7 @@
     </li>
     <% if can? :edit, admin_set_presenter.solr_document %>
       <li role="menuitem" tabindex="-1">
-        <%= link_to hyrax.admin_admin_set_path(id),
+        <%= link_to hyrax.edit_admin_admin_set_path(id),
                     class: 'itemicon itemedit',
                     title: t("hyrax.dashboard.my.action.edit_admin_set") do %>
           <%= t("hyrax.dashboard.my.action.edit_admin_set") %>
