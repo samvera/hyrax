@@ -24,10 +24,11 @@ module Hyrax
     def create
       @change_set = change_set_class.new(resource_class.new)
       authorize! :create, @change_set.resource
-      if actor.create(actor_environment)
+      @resource = actor.create(actor_environment)
+      if @resource
         after_create_success(@resource, @change_set)
       else
-        after_create_error(@resource, @change_set)
+        after_create_error(@change_set.resource, @change_set)
       end
     end
 
@@ -94,6 +95,28 @@ module Hyrax
 
       def actor_environment
         Actors::Environment.new(@change_set, change_set_persister, current_ability, resource_params)
+      end
+
+      def resource_params
+        attributes = super
+        # If they selected a BrowseEverything file, but then clicked the
+        # remove button, it will still show up in `selected_files`, but
+        # it will no longer be in uploaded_files. By checking the
+        # intersection, we get the files they added via BrowseEverything
+        # that they have not removed from the upload widget.
+        uploaded_files = params.fetch(:uploaded_files, [])
+        selected_files = params.fetch(:selected_files, {}).values
+        browse_everything_urls = uploaded_files &
+                                 selected_files.map { |f| f[:url] }
+
+        # we need the hash of files with url and file_name
+        browse_everything_files = selected_files
+                                  .select { |v| uploaded_files.include?(v[:url]) }
+        attributes[:remote_files] = browse_everything_files
+        # Strip out any BrowseEverthing files from the regular uploads.
+        attributes[:uploaded_files] = uploaded_files -
+                                      browse_everything_urls
+        attributes
       end
 
       def after_create_error(_obj, _change_set)
