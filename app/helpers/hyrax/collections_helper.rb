@@ -22,12 +22,25 @@ module Hyrax
       params[:cq].present?
     end
 
-    def button_for_remove_from_collection(collection, document, label = 'Remove From Collection')
-      render 'hyrax/dashboard/collections/button_remove_from_collection', collection: collection, label: label, document: document
+    # button for removing a batch from a collection
+    # @param change_set [Hyrax::CollectionChangeSet] ChangeSet to be updated
+    # @param document [SolrDocument]
+    # @param label [String] button label
+    def button_for_remove_from_collection(change_set, document, label = 'Remove From Collection')
+      form_for change_set, url: hyrax.dashboard_collection_path(change_set), method: :put, as: 'collection' do |f|
+        single_item_action_remove_form_fields(f, document)
+        f.submit label, class: "btn btn-primary collection-remove"
+      end
     end
 
-    def button_for_remove_selected_from_collection(collection, label = 'Remove From Collection')
-      render 'hyrax/dashboard/collections/button_for_remove_selected_from_collection', collection: collection, label: label
+    # button for removing a batch from a collection
+    # @param change_set [Hyrax::CollectionChangeSet] ChangeSet to be updated
+    # @param label [String] button label
+    def button_for_remove_selected_from_collection(change_set, label = 'Remove From Collection')
+      form_for change_set, url: hyrax.dashboard_collection_path(change_set.id), method: :put do |f|
+        f.hidden_field :members, value: "remove"
+        f.submit label, class: "btn btn-primary collection-remove-selected submits-batches"
+      end
     end
 
     # add hidden fields to a form for removing a single document from a collection
