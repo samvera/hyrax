@@ -135,7 +135,7 @@ Hyrax = {
     // Per Page select will submit its form to change records shown
     perPage: function () {
         var PerPage = require('hyrax/per_page');
-        $('#per_page').each(function () {
+        $('#sort, #per_page').each(function () {
             new PerPage($(this));
         });
     },
