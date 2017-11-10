@@ -31,7 +31,7 @@ module Hyrax
         # @return [#each] an enumerable object of tuples (status and count)
         def results
           facet_results = repository.search(search_builder)
-          facet_results.facet_fields[IndexesWorkflow.suppressed_field].each_slice(2)
+          facet_results.facet_fields[IndexWorkflow.suppressed_field].each_slice(2)
         end
     end
   end
