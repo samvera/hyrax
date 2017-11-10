@@ -1,6 +1,6 @@
 module Hyrax
   class WorkChangeSet < Valkyrie::ChangeSet
-    class_attribute :workflow_class, :exclude_fields, :primary_terms, :secondary_terms
+    class_attribute :workflow_class, :primary_terms, :secondary_terms
     delegate :human_readable_type, to: :resource
 
     # Which fields show above the fold.
@@ -8,9 +8,6 @@ module Hyrax
     self.secondary_terms = [:contributor, :description, :license, :publisher,
                             :date_created, :subject, :language, :identifier,
                             :based_near, :related_url, :source]
-
-    # Don't create accessors for these fields
-    self.exclude_fields = [:internal_resource, :id, :read_groups, :read_users, :edit_users, :edit_groups]
 
     # Used for searching
     property :search_context, virtual: true, multiple: false, required: false
@@ -43,10 +40,6 @@ module Hyrax
     class << self
       def work_klass
         name.sub(/ChangeSet$/, '').constantize
-      end
-
-      def autocreate_fields!
-        self.fields = work_klass.schema.keys + [:resource_type] - [:internal_resource, :id, :read_groups, :read_users, :edit_users, :edit_groups]
       end
     end
 
