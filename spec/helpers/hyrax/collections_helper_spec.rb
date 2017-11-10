@@ -55,10 +55,11 @@ RSpec.describe Hyrax::CollectionsHelper do
 
   describe "button_for_remove_from_collection" do
     let(:item) { double(id: 'changeme:123') }
+    let(:change_set) { Hyrax::CollectionChangeSet.new(collection) }
     let(:collection) { create_for_repository(:collection) }
 
     it "generates a form that can remove the item" do
-      str = button_for_remove_from_collection collection, item
+      str = button_for_remove_from_collection change_set, item
       doc = Nokogiri::HTML(str)
       form = doc.xpath('//form').first
       expect(form.attr('action')).to eq hyrax.dashboard_collection_path(collection)
@@ -83,7 +84,7 @@ RSpec.describe Hyrax::CollectionsHelper do
       end
 
       it "generates a form that can remove the item" do
-        str = button_for_remove_from_collection collection, item
+        str = button_for_remove_from_collection change_set, item
         doc = Nokogiri::HTML(str)
         form = doc.xpath('//form').first
         expect(form.attr('action')).to eq hyrax.dashboard_collection_path(collection)
@@ -95,9 +96,10 @@ RSpec.describe Hyrax::CollectionsHelper do
 
   describe "button_for_remove_selected_from_collection" do
     let(:collection) { create_for_repository(:collection) }
+    let(:change_set) { Hyrax::CollectionChangeSet.new(collection) }
 
     it "creates a button to the collections delete path" do
-      str = button_for_remove_selected_from_collection collection
+      str = button_for_remove_selected_from_collection change_set
       doc = Nokogiri::HTML(str)
       form = doc.xpath('//form').first
       expect(form.attr('action')).to eq hyrax.dashboard_collection_path(collection)
@@ -107,7 +109,7 @@ RSpec.describe Hyrax::CollectionsHelper do
     end
 
     it "creates a button with my text" do
-      str = button_for_remove_selected_from_collection collection, "Remove My Button"
+      str = button_for_remove_selected_from_collection change_set, "Remove My Button"
       doc = Nokogiri::HTML(str)
       form = doc.css('form').first
       expect(form.attr('action')).to eq hyrax.dashboard_collection_path(collection)
