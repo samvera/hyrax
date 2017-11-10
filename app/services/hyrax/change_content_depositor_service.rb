@@ -18,7 +18,7 @@ module Hyrax
 
     def call
       work.proxy_depositor = work.depositor
-      work.permissions = [] if reset
+      reset_permssions if reset
       work.apply_depositor_metadata(user)
       file_sets.each do |fs|
         update_file_set(fs, user)
@@ -34,6 +34,13 @@ module Hyrax
       def update_file_set(file_set, user)
         file_set.apply_depositor_metadata(user)
         persister.save(resource: file_set)
+      end
+
+      def reset_permissions
+        work.edit_users = []
+        work.read_users = []
+        work.read_groups = []
+        work.edit_groups = []
       end
 
       def file_sets
