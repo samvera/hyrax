@@ -20,12 +20,12 @@
           <div class="row m-t-3">
             <h2 class="col-xs-12 col-sm-6"><%= t('hyrax.collection.edit.manage_items') %></h2>
             <div class="col-xs-12 col-sm-6">
-              <%= render 'hyrax/collections/search_form', presenter: @collection %>
+              <%= render 'hyrax/collections/search_form', presenter: @change_set %>
             </div>
           </div>
           <%= render 'hyrax/my/did_you_mean' %>
           <%= render 'hyrax/my/facet_selected' %>
-          <%= render 'sort_and_per_page', collection: @collection if show_sort_and_per_page? %>
+          <%= render 'sort_and_per_page', change_set: @change_set if show_sort_and_per_page? %>
           <%= render 'document_list', documents: @member_docs, document_list_format: "dashboard" %>
           <%= render 'hyrax/collections/paginate' %>
         </div>

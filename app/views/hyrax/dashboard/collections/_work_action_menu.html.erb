@@ -10,7 +10,7 @@
 
     <li role="menuitem" tabindex="-1">
       <%# this includes the fields in a form necessary for removing a single item from a collection %>
-      <%= form_for @collection, url: hyrax.dashboard_collection_path(@collection), method: :put, as: 'collection' do |f| %>
+      <%= form_for @change_set, url: hyrax.dashboard_collection_path(@change_set), method: :put, as: 'collection' do |f| %>
         <%= f.hidden_field :members, value: 'remove' %>
         <%= hidden_field :batch_document_ids, '', { value: document.id } %>
         <%= f.submit 'Remove from Collection', class: "btn btn-primary collection-remove" %>
