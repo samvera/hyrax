@@ -33,7 +33,7 @@ module Sipity
         end.to raise_error(ActiveRecord::RecordNotFound)
       end
       context 'with :workflow_id keyword' do
-        it 'toggles current active workflows for the permission_template' do
+        it 'activates the specified workflow and deactivates the unspecified workflow for the permission_template' do
           active_workflow_wrong_template = create(:workflow, active: true, permission_template_id: other_permission_template.id)
           inactive_workflow = create(:workflow, permission_template_id: permission_template.id)
 
@@ -44,7 +44,7 @@ module Sipity
         end
       end
       context 'with :workflow_name keyword' do
-        it 'toggles current active workflows for the permission_template' do
+        it 'activates the specified workflow and deactivates the unspecified workflow for the permission_template' do
           active_workflow_wrong_template = create(:workflow, active: true, permission_template_id: other_permission_template.id)
           inactive_workflow = create(:workflow, permission_template_id: permission_template.id)
 
