@@ -6,6 +6,7 @@
   <% @document_list = documents %>
   <% @disable_select_all = (@document_list.count <= 1) %>
   <% if params[:action] == "edit" %>
+    <!-- TODO: verify then remove? this branch and lower partials shouldn't be getting executed any longer -->
     <%= render 'form_default_group', documents: documents, docs: documents %>
   <% else %>
     <%= render 'show_document_list', documents: documents %>

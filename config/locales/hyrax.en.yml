@@ -555,7 +555,7 @@ en:
               label: "Logo"
               description: "One or more images to be displayed at the top of the collection pate.  For best results, upload an image (JPG, GIF orPNG) taht is 40 pixels in height.  Larger images will be resized to 40 pixels in height."
         form_relationships:
-          add_other_collections_as_sub_collections_description: "You can add other collections as sub-collections of this collection."
+          add_other_collections_as_sub_collections_description: "You can manage the sub-collections of this collection on the show page."
           add_sub_collection: "Add sub-collection"
           buttons:
             create_new_collection_as_sub_collection: "Create new collection as sub-collection"
@@ -573,7 +573,7 @@ en:
           table:
             action: "Action"
             collection_title: "Collection Title"
-          this_collection_in_other_collections_description: "You can add this collection to other collections as a sub-collection."
+          this_collection_in_other_collections_description: "You can add this collection to other collections as a sub-collection from their show pages."
         new:
           header: "New %{type_title}"
         show:
