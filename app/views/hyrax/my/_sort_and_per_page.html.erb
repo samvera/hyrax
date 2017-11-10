@@ -1,5 +1,5 @@
+<% if @response.response['numFound'] > 1 %>
   <div class="sort-toggle">
-    <% if @response.response['numFound'] > 1 %>
       <%= form_tag search_action_for_dashboard, method: :get, class: 'per_page form-inline' do %>
             <div class="form-group">
               <fieldset class="col-xs-12">
@@ -13,5 +13,5 @@
             </div>
 
       <% end %>
-    <% end %>
   </div>
+<% end %>
