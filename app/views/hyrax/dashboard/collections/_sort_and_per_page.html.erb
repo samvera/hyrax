@@ -1,16 +1,18 @@
+<% # change_set is a Hyrax::CollectionChangeSet or a Hyrax::CollectionPresenter %>
+
 <div class="batch-info">
   <%= render 'form_for_select_collection', user_collections: @user_collections %>
 
   <% if params[:action] == "edit" && show_sort_and_per_page? %>
-    <div class="batch-toggle">
-      <% session[:batch_edit_state] = "on" %>
-      <%= button_for_remove_selected_from_collection collection %>
-    </div>
+  <div class="batch-toggle">
+    <% session[:batch_edit_state] = "on" %>
+    <%= button_for_remove_selected_from_collection(change_set) %>
+  </div>
   <% end %>
 
   <% if show_sort_and_per_page? && active_sort_fields.many? %>
     <div class="sort-toggle">
-        <%= form_tag dashboard_collection_path(collection), method: :get, class: 'per_page form-horizontal' do %>
+        <%= form_tag collection_path(change_set), method: :get, class: 'per_page form-horizontal' do %>
              <div class="form-group form-group-lg">
                <fieldset class="col-xs-12 col-sm-9 col-md-8 col-lg-10">
                  <legend class="sr-only"><%= t('hyrax.sort_label') %></legend>
