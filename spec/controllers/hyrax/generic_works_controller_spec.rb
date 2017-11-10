@@ -189,9 +189,15 @@ RSpec.describe Hyrax::GenericWorksController do
   end
 
   describe '#create' do
-    context 'when create is successful' do
-      let(:work) { stub_model(GenericWork) }
+    let(:actor) { double(create: create_result) }
+    let(:create_result) { work }
+    let(:work) { stub_model(GenericWork) }
 
+    before do
+      allow(Hyrax::CurationConcern).to receive(:actor).and_return(actor)
+    end
+
+    context 'when create is successful' do
       it 'creates a work' do
         allow(GenericWork).to receive(:new).and_return(work)
         post :create, params: { generic_work: { title: ['a title'] } }
@@ -200,9 +206,7 @@ RSpec.describe Hyrax::GenericWorksController do
     end
 
     context 'when create fails' do
-      before do
-        allow_any_instance_of(GenericWorkChangeSet).to receive(:validate).and_return(false)
-      end
+      let(:create_result) { false }
 
       it 'draws the form again' do
         post :create, params: { generic_work: { title: ['a title'] } }
@@ -224,6 +228,11 @@ RSpec.describe Hyrax::GenericWorksController do
 
     context "with files" do
       it "attaches files" do
+        expect(actor).to receive(:create)
+          .with(Hyrax::Actors::Environment) do |env|
+            expect(env.attributes.keys).to include('uploaded_files')
+          end
+                     .and_return(work)
         post :create, params: {
           generic_work: {
             title: ["First title"],
@@ -234,11 +243,7 @@ RSpec.describe Hyrax::GenericWorksController do
         expect(flash[:notice]).to eq "Your files are being processed by Hyrax in the background. " \
                                      "The metadata and access controls you specified are being applied. " \
                                      "You may need to refresh this page to see these updates."
-        expect(response).to be_redirect
-        id = response.location.gsub("http://test.host/concern/generic_works/", "").gsub(/\?.*$/, '')
-        work = Hyrax::Queries.find_by(id: Valkyrie::ID.new(id))
-        members = Hyrax::Queries.find_members(resource: work)
-        expect(members.size).to eq 2
+        expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
       end
 
       context "from browse everything" do
@@ -256,41 +261,24 @@ RSpec.describe Hyrax::GenericWorksController do
           browse_everything_params.values.map { |v| v['url'] }
         end
 
-        context "For a batch upload" do
-          # TODO: move this to batch_uploads controller
-          it "ingests files from provide URLs" do
-            skip "Creating a FileSet without a parent work is not yet supported"
-            expect(ImportUrlJob).to receive(:perform_later).twice
-            expect do
-              post :create, params: { selected_files: browse_everything_params, file_set: {} }
-            end.to change(FileSet, :count).by(2)
-            created_files = Hyrax::Queries.find_all_of_model(model: FileSet)
-            expect(created_files.map(&:import_url)).to include(url1, url2)
-            expect(created_files.map(&:label)).to include("filepicker-demo.txt.txt", "Getting+Started.pdf")
+        it "records the work" do
+          # TODO: ensure the actor stack, called with these params
+          # makes one work, two file sets and calls ImportUrlJob twice.
+          expect(actor).to receive(:create).with(Hyrax::Actors::Environment) do |env|
+            expect(env.attributes['uploaded_files']).to eq []
+            expect(env.attributes['remote_files']).to eq browse_everything_params.values
+            work
           end
-        end
+          post :create, params: {
+            selected_files: browse_everything_params,
+            uploaded_files: uploaded_files,
+            generic_work: { title: ['First title'] }
+          }
+          expect(flash[:notice]).to eq "Your files are being processed by Hyrax in the background. " \
+                                       "The metadata and access controls you specified are being applied. " \
+                                       "You may need to refresh this page to see these updates."
 
-        context "when a work id is passed" do
-          let(:work) do
-            create_for_repository(:work, user: user, title: ['test title'])
-          end
-
-          it "records the work" do
-            post :create, params: {
-              selected_files: browse_everything_params,
-              uploaded_files: uploaded_files,
-              parent_id: work.id,
-              generic_work: { title: ['First title'] }
-            }
-            expect(flash[:notice]).to eq "Your files are being processed by Hyrax in the background. " \
-                                         "The metadata and access controls you specified are being applied. " \
-                                         "You may need to refresh this page to see these updates."
-            expect(response).to be_redirect
-            id = response.location.gsub("http://test.host/concern/generic_works/", "").gsub(/\?.*$/, '')
-            parent = Hyrax::Queries.find_by(id: work.id)
-            members = Hyrax::Queries.find_members(resource: parent)
-            expect(members.map(&:id)).to eq Valkyrie::ID.new(id)
-          end
+          expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
         end
       end
     end
