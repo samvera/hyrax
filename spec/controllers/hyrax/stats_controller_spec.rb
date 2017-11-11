@@ -16,7 +16,7 @@ RSpec.describe Hyrax::StatsController do
       end
 
       it 'renders the stats view' do
-        expect(Hyrax::FileUsage).to receive(:new).with(file_set.id).and_return(usage)
+        expect(Hyrax::FileUsage).to receive(:new).with(file_set.id.to_s).and_return(usage)
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.file_set.browse_view'), Rails.application.routes.url_helpers.hyrax_file_set_path(file_set, locale: 'en'))
@@ -59,7 +59,7 @@ RSpec.describe Hyrax::StatsController do
     end
 
     it 'renders the stats view' do
-      expect(Hyrax::WorkUsage).to receive(:new).with(work.id).and_return(usage)
+      expect(Hyrax::WorkUsage).to receive(:new).with(work.id.to_s).and_return(usage)
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
       expect(controller).to receive(:add_breadcrumb).with('Test title', main_app.hyrax_generic_work_path(work, locale: 'en'))
