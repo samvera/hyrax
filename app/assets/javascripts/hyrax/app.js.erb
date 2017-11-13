@@ -14,7 +14,7 @@ Hyrax = {
         this.collectionEditor();
         this.adminStatisticsGraphs();
         this.tinyMCE();
-        this.perPage();
+        this.sortAndPerPage();
         this.sidebar();
         this.batchSelect();
     },
@@ -133,10 +133,10 @@ Hyrax = {
     },
 
     // Per Page select will submit its form to change records shown
-    perPage: function () {
-        var PerPage = require('hyrax/per_page');
-        $('#per_page').each(function () {
-            new PerPage($(this));
+    sortAndPerPage: function () {
+        var SortAndPerPage = require('hyrax/sort_and_per_page');
+        $('#sort, #per_page').each(function () {
+            new SortAndPerPage($(this));
         });
     },
 

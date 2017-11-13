@@ -91,7 +91,7 @@
 //= require hyrax/file_manager
 //= require hyrax/workflow_actions_affix
 //= require hyrax/authority_select
-//= require hyrax/per_page
+//= require hyrax/sort_and_per_page
 //= require hyrax/thumbnail_select
 //= require hyrax/batch_select
 
