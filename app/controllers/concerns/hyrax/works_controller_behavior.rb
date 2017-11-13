@@ -35,10 +35,11 @@ module Hyrax
     def update
       @change_set = change_set_class.new(find_resource(params[:id]))
       authorize! :update, @change_set.resource
-      if actor.update(actor_environment)
-        after_update_success(@change_set.resource, @change_set)
+      @resource = actor.update(actor_environment)
+      if @resource
+        after_update_success(@resource, @change_set)
       else
-        after_update_error(@change_set.resource, @change_set)
+        after_update_error(@resource, @change_set)
       end
     end
 
@@ -226,6 +227,8 @@ module Hyrax
         end
       end
 
+      # @param obj [Valkyrie::Resource]
+      # @param change_set [Valkyrie::ChangeSet]
       def after_update_success(obj, change_set)
         # TODO: we could optimize by making a new query that just returns true if any exist.
         if Hyrax::Queries.find_members(resource: obj, model: ::FileSet).present?
