@@ -362,16 +362,16 @@ RSpec.describe GenericWorkChangeSet do
 
     # rubocop:disable RSpec/ExampleLength
     it do
-      is_expected.to eq ["created_at", "updated_at", "depositor", "title",
-                         "date_uploaded", "date_modified", "admin_set_id",
-                         "state", "proxy_depositor", "on_behalf_of",
-                         "arkivo_checksum", "member_of_collection_ids",
-                         "member_ids", "thumbnail_id", "representative_id",
-                         "label", "relative_path", "resource_type", "creator",
-                         "contributor", "description", "keyword", "license",
-                         "rights_statement",
-                         "publisher", "date_created", "subject", "language",
-                         "identifier", "related_url", "source", "based_near"]
+      is_expected.to contain_exactly(
+        "created_at", "updated_at", "depositor", "title", "date_uploaded",
+        "date_modified", "admin_set_id", "state", "proxy_depositor",
+        "on_behalf_of", "arkivo_checksum", "member_of_collection_ids",
+        "member_ids", "thumbnail_id", "representative_id", "import_url",
+        "label", "relative_path", "resource_type", "creator",
+        "contributor", "description", "keyword", "license",
+        "rights_statement", "publisher", "date_created", "subject",
+        "language", "identifier", "related_url", "source", "based_near"
+      )
     end
     # rubocop:enable RSpec/ExampleLength
   end
