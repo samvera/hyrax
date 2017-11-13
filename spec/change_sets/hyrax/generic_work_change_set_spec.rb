@@ -360,7 +360,6 @@ RSpec.describe GenericWorkChangeSet do
   describe "#fields" do
     subject { change_set.fields.keys }
 
-    # rubocop:disable RSpec/ExampleLength
     it do
       is_expected.to contain_exactly(
         "created_at", "updated_at", "depositor", "title", "date_uploaded",
@@ -373,7 +372,6 @@ RSpec.describe GenericWorkChangeSet do
         "language", "identifier", "related_url", "source", "based_near"
       )
     end
-    # rubocop:enable RSpec/ExampleLength
   end
 
   describe "#primary_terms" do
@@ -391,6 +389,30 @@ RSpec.describe GenericWorkChangeSet do
                                  :embargo_release_date, :visibility_after_embargo,
                                  :visibility_during_lease, :lease_expiration_date,
                                  :visibility_after_lease, :collection_ids)
+    end
+  end
+
+  describe "#title" do
+    it "is required" do
+      expect(change_set.required?('title')).to be true
+    end
+  end
+
+  describe "#creator" do
+    it "is required" do
+      expect(change_set.required?('creator')).to be true
+    end
+  end
+
+  describe "#keyword" do
+    it "is required" do
+      expect(change_set.required?('keyword')).to be true
+    end
+  end
+
+  describe "#rights_statement" do
+    it "is required" do
+      expect(change_set.required?('rights_statement')).to be true
     end
   end
 
