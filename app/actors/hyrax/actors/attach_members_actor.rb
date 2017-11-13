@@ -13,7 +13,7 @@ module Hyrax
     # writes changes, not the full ordered list.
     class AttachMembersActor < Hyrax::Actors::AbstractActor
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if update was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if update was successful
       def update(env)
         attributes_collection = env.attributes.delete(:work_members_attributes)
         assign_nested_attributes_for_collection(env, attributes_collection) &&
