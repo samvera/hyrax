@@ -2,14 +2,14 @@ module Hyrax
   module Actors
     class AddToWorkActor < AbstractActor
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if create was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if create was successful
       def create(env)
         work_ids = env.attributes.delete(:in_works_ids)
         next_actor.create(env) && add_to_works(env, work_ids)
       end
 
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if update was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if update was successful
       def update(env)
         work_ids = env.attributes.delete(:in_works_ids)
         add_to_works(env, work_ids) && next_actor.update(env)

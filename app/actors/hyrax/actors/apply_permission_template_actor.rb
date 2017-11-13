@@ -4,7 +4,7 @@ module Hyrax
     # @see Hyrax::AdminSetService for release_date interaction
     class ApplyPermissionTemplateActor < Hyrax::Actors::AbstractActor
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if create was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if create was successful
       def create(env)
         add_edit_users(env)
         next_actor.create(env)
