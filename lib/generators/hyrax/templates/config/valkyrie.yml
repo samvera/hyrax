@@ -1,11 +1,11 @@
 development:
-  metadata_adapter: <%= ENV['VALKYRIE_METADATA'] || 'postgres' %>
-  storage_adapter: <%= ENV['VALKYRIE_STORAGE'] || 'disk' %>
+  metadata_adapter: <%= ENV['VALKYRIE_METADATA'] || 'fedora' %>
+  storage_adapter: <%= ENV['VALKYRIE_STORAGE'] || 'fedora' %>
 
 test:
   metadata_adapter: <%= ENV['VALKYRIE_METADATA'] || 'memory' %>
   storage_adapter: <%= ENV['VALKYRIE_STORAGE'] || 'memory' %>
 
 production:
-  metadata_adapter: <%= ENV['VALKYRIE_METADATA'] || 'postgres' %>
-  storage_adapter: <%= ENV['VALKYRIE_STORAGE'] || 'disk' %>
+  metadata_adapter: <%= ENV['VALKYRIE_METADATA'] || 'fedora' %>
+  storage_adapter: <%= ENV['VALKYRIE_STORAGE'] || 'fedora' %>
