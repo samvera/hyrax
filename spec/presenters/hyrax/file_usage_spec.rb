@@ -53,7 +53,7 @@ RSpec.describe Hyrax::FileUsage, type: :model do
     allow_any_instance_of(FileSet).to receive(:create_date).and_return((Time.zone.today - 4.days).to_s)
     allow(FileDownloadStat).to receive(:ga_statistics).and_return(sample_download_statistics)
     allow(FileViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
-    described_class.new(file.id)
+    described_class.new(file.id.to_s)
   end
 
   describe "#initialize" do
@@ -107,7 +107,7 @@ RSpec.describe Hyrax::FileUsage, type: :model do
       describe "create date before earliest date set" do
         let(:usage) do
           allow_any_instance_of(FileSet).to receive(:create_date).and_return(create_date.to_s)
-          described_class.new(file.id)
+          described_class.new(file.id.to_s)
         end
 
         it "sets the created date to the earliest date not the created date" do
@@ -119,7 +119,7 @@ RSpec.describe Hyrax::FileUsage, type: :model do
         let(:usage) do
           allow_any_instance_of(FileSet).to receive(:create_date).and_return((Time.zone.today - 4.days).to_s)
           Hyrax.config.analytic_start_date = earliest
-          described_class.new(file.id)
+          described_class.new(file.id.to_s)
         end
 
         it "sets the created date to the earliest date not the created date" do
@@ -136,7 +136,7 @@ RSpec.describe Hyrax::FileUsage, type: :model do
 
       let(:usage) do
         allow_any_instance_of(FileSet).to receive(:create_date).and_return(create_date.to_s)
-        described_class.new(file.id)
+        described_class.new(file.id.to_s)
       end
 
       it "sets the created date to the earliest date not the created date" do
@@ -152,7 +152,7 @@ RSpec.describe Hyrax::FileUsage, type: :model do
     end
 
     let(:usage) do
-      described_class.new(file_migrated.id)
+      described_class.new(file_migrated.id.to_s)
     end
 
     it "uses the date_uploaded for analytics" do
