@@ -3,14 +3,14 @@ module Hyrax
     # Adds membership to and removes membership from collections
     class CollectionsMembershipActor < AbstractActor
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if create was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if create was successful
       def create(env)
         collection_ids = env.attributes.delete(:member_of_collection_ids)
         assign_collections(env, collection_ids) && next_actor.create(env)
       end
 
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if update was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if update was successful
       def update(env)
         collection_ids = env.attributes.delete(:member_of_collection_ids)
         assign_collections(env, collection_ids) && next_actor.update(env)
