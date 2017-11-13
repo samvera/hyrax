@@ -14,7 +14,7 @@ module Hyrax
     # @see Hyrax::Actor::AbstractActor
     class BaseActor < AbstractActor
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if create was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if create was successful
       def create(env)
         assign_modified_date(env)
         yield env.change_set if block_given?
@@ -25,12 +25,14 @@ module Hyrax
       end
 
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if update was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if update was successful
       def update(env)
         assign_modified_date(env)
         return unless env.change_set.validate(env.attributes)
-        next_actor.update(env) && save(env) &&
-          run_callbacks(:after_update_metadata, env.resource, env.user)
+        next_actor.update(env) &&
+          (saved_resource = save(env)) &&
+          run_callbacks(:after_update_metadata, env.resource, env.user) &&
+          saved_resource
       end
 
       # @param [Hyrax::Actors::Environment] env
