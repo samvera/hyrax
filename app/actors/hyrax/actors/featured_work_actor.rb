@@ -11,7 +11,7 @@ module Hyrax
       end
 
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if update was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if update was successful
       def update(env)
         check_featureability(env.curation_concern)
         next_actor.update(env)
