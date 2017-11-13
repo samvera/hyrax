@@ -1,7 +1,7 @@
 <div class="batch-info">
-   <div class="sort-toggle">
-     <%# kind of hacky way to get this to work on catalog and folder controllers.  May be able to simple do {action: "index"} but I'm not sure -%>
-     <% if @response.response['numFound'] > 1 && !sort_fields.empty? %>
+  <%# kind of hacky way to get this to work on catalog and folder controllers.  May be able to simple do {action: "index"} but I'm not sure -%>
+  <% if @response.response['numFound'] > 1 && !sort_fields.empty? %>
+    <div class="sort-toggle">
         <%= form_tag collection_path(collection), method: :get, class: 'per_page form-horizontal' do %>
              <div class="form-group form-group-lg">
                <fieldset class="col-xs-12 col-sm-9 col-md-8 col-lg-10">
@@ -19,6 +19,6 @@
                <%= render 'view_type_group' %>
              </div>
          <% end %>
-      <% end %>
-   </div>
+    </div>
+  <% end %>
 </div>
