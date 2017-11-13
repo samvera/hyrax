@@ -3,13 +3,13 @@ module Hyrax
     # This is a proxy for the model specific actor
     class ModelActor < AbstractActor
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if update was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if update was successful
       def update(env)
         model_actor(env).update(env)
       end
 
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if create was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if create was successful
       def create(env)
         model_actor(env).create(env)
       end

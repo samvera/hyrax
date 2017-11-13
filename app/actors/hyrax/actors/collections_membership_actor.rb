@@ -10,7 +10,7 @@ module Hyrax
     #
     class CollectionsMembershipActor < AbstractActor
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if create was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if create was successful
       def create(env)
         attributes_collection = env.attributes.delete(:member_of_collections_attributes)
         assign_nested_attributes_for_collection(env, attributes_collection) &&
@@ -18,7 +18,7 @@ module Hyrax
       end
 
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if update was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if update was successful
       def update(env)
         attributes_collection = env.attributes.delete(:member_of_collections_attributes)
         assign_nested_attributes_for_collection(env, attributes_collection) &&
