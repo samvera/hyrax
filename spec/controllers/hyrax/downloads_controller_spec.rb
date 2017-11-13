@@ -2,9 +2,9 @@ RSpec.describe Hyrax::DownloadsController do
   routes { Hyrax::Engine.routes }
 
   describe '#show' do
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { create(:user) }
     let(:file_set) do
-      FactoryBot.create(:file_with_work, user: user, content: File.open(fixture_path + '/image.png'))
+      create(:file_with_work, user: user, content: File.open(fixture_path + '/image.png'))
     end
     let(:default_image) { ActionController::Base.helpers.image_path 'default.png' }
 
@@ -15,7 +15,7 @@ RSpec.describe Hyrax::DownloadsController do
     end
 
     context "when user doesn't have access" do
-      let(:another_user) { FactoryBot.create(:user) }
+      let(:another_user) { create(:user) }
 
       before { sign_in another_user }
 

@@ -98,7 +98,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
     end
 
     context "with featured works" do
-      let!(:my_work) { FactoryBot.create(:work, user: user) }
+      let!(:my_work) { create(:work, user: user) }
 
       before do
         FeaturedWork.create!(work_id: my_work.id)

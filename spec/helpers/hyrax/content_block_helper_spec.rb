@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::ContentBlockHelper, type: :helper do
-  let(:content_block) { FactoryBot.create(:content_block, value: "<p>foo bar</p>") }
+  let(:content_block) { create(:content_block, value: "<p>foo bar</p>") }
 
   describe '#displayable_content_block' do
     let(:options) { {} }

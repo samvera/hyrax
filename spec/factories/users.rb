@@ -5,7 +5,7 @@ FactoryBot.define do
 
     transient do
       # Allow for custom groups when a user is instantiated.
-      # @example FactoryBot.create(:user, groups: 'avacado')
+      # @example create(:user, groups: 'avacado')
       groups []
     end
 

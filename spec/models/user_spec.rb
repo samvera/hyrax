@@ -1,10 +1,10 @@
 RSpec.describe User, type: :model do
-  let(:user) { FactoryBot.build(:user) }
-  let(:another_user) { FactoryBot.build(:user) }
+  let(:user) { build(:user) }
+  let(:another_user) { build(:user) }
 
   describe 'verifying factories' do
     describe ':user' do
-      let(:user) { FactoryBot.build(:user) }
+      let(:user) { build(:user) }
 
       it 'will, by default, have no groups' do
         expect(user.groups).to eq([])
@@ -13,7 +13,7 @@ RSpec.describe User, type: :model do
         expect(user.class.find(user.id).groups).to eq([])
       end
       it 'will allow for override of groups' do
-        user = FactoryBot.build(:user, groups: 'chicken')
+        user = build(:user, groups: 'chicken')
         expect(user.groups).to eq(['chicken'])
         user.save!
         # Ensuring that we can refind it and have the correct groups
@@ -21,7 +21,7 @@ RSpec.describe User, type: :model do
       end
     end
     describe ':admin' do
-      let(:admin_user) { FactoryBot.create(:admin) }
+      let(:admin_user) { create(:admin) }
 
       it 'will have an "admin" group' do
         expect(admin_user.groups).to eq(['admin'])
@@ -236,8 +236,8 @@ RSpec.describe User, type: :model do
     end
   end
   describe "scope Users" do
-    let!(:basic_user) { FactoryBot.create(:user) }
-    let!(:guest_user) { FactoryBot.create(:user, :guest) }
+    let!(:basic_user) { create(:user) }
+    let!(:guest_user) { create(:user, :guest) }
     let!(:audit_user) { User.audit_user }
     let!(:batch_user) { User.batch_user }
 
