@@ -14,6 +14,7 @@ This generator makes the following changes to your application:
   # Setup the database migrations
   def copy_migrations
     rake 'hyrax:install:migrations'
+    rake 'valkyrie_engine:install:migrations'
   end
 
   # Add behaviors to the user model
