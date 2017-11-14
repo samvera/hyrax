@@ -89,10 +89,6 @@ module Hyrax
                                                               presenter_args: current_ability).first
     end
 
-    def fixity_check_service
-      @fixity_check_service ||= Hyrax::FileSetFixityCheckService.new(id)
-    end
-
     private
 
       def link_presenter_class
