@@ -1,17 +1,17 @@
 module Hyrax
   module LinkedDataResources
-    # Do not Extend BaseResource For Geonames.
     # We can get richer information from the JSON API, so let's do that instead.
-    class GeonamesResource
+    class GeonamesResource < BaseResource
       attr_reader :rdf_subject
 
       def initialize(rdf_subject)
-        @rdf_subject = rdf_subject
+        @rdf_subject = RDF::URI(rdf_subject)
       end
 
-      # @return [String] rdf_label
-      def fetch_external
-        fetch_value
+      # Override rdf_label
+      # @return [Array] rdf_label
+      def rdf_label
+        @rdf_label ||= [rdf_subject.to_s]
       end
 
       private
@@ -21,7 +21,7 @@ module Hyrax
           Rails.logger.info "Fetching #{rdf_subject} from the authorative source."
           response = Faraday.get build_json_uri(rdf_subject)
           return rdf_subject.to_s if response.status != 200
-          label(response.body)
+          @rdf_label = [label(response.body)]
         rescue IOError, Faraday::ConnectionFailed, ArgumentError => e
           # IOError could result from a 500 error on the remote server
           # Faraday::ConnectionFailed results if there is no server to connect to
