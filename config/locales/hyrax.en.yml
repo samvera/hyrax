@@ -288,10 +288,6 @@ en:
         thumbnail: Thumbnail
         title: Title
         visibility: Visibility
-      metadata:
-        attribute_name_label: Attribute Name
-        attribute_values_label: Values
-        header: Descriptions
       relationships:
         empty: "This %{type} is not currently in any collections."
         header: Relationships

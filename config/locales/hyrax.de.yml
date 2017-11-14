@@ -295,10 +295,6 @@ de:
         thumbnail: Miniaturansicht
         title: Titel
         visibility: Sichtbarkeit
-      metadata:
-        attribute_name_label: Attributname
-        attribute_values_label: Werte
-        header: Beschreibungen
       relationships:
         empty: Diese %{type} ist derzeit noch keiner Sammlungen zugeordnet.
         header: Beziehungen
