@@ -5,7 +5,7 @@ module Hyrax
     # is an error elsewhere in the actor stack.
     class TransactionalRequest < Actors::AbstractActor
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if create was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if create was successful
       def create(env)
         ActiveRecord::Base.transaction do
           next_actor.create(env)
@@ -13,7 +13,7 @@ module Hyrax
       end
 
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if update was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if update was successful
       def update(env)
         ActiveRecord::Base.transaction do
           next_actor.update(env)

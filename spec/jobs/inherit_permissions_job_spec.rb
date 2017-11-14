@@ -1,40 +1,31 @@
 RSpec.describe InheritPermissionsJob do
   let(:user) { create(:user) }
-  let(:work) { create(:work_with_one_file, user: user) }
-
-  before do
-    work.permissions.build(name: name, type: type, access: access)
-    work.save
-  end
+  let(:file_set) { create_for_repository(:file_set, user: user) }
 
   context "when edit people change" do
-    let(:name) { 'abc@123.com' }
-    let(:type) { 'person' }
-    let(:access) { 'edit' }
+    let(:work) { create_for_repository(:work, user: user, edit_users: ['abc@123.com'], member_ids: [file_set.id]) }
 
     it 'copies permissions to its contained files' do
       # files have the depositor as the edit user to begin with
-      expect(work.file_sets.first.edit_users).to eq [user.to_s]
+      expect(file_set.edit_users).to eq [user.to_s]
 
       described_class.perform_now(work)
-      work.reload.file_sets.each do |file|
+      reloaded = Hyrax::Queries.find_by(id: work.id)
+      reloaded.file_sets.each do |file|
         expect(file.edit_users).to match_array [user.to_s, "abc@123.com"]
       end
     end
 
     context "when people should be removed" do
-      before do
-        file_set = work.file_sets.first
-        file_set.permissions.build(name: "remove_me", type: type, access: access)
-        file_set.save
-      end
+      let(:file_set) { create_for_repository(:file_set, user: user, edit_users: ['remove_me']) }
 
       it 'copies permissions to its contained files' do
         # files have the depositor as the edit user to begin with
-        expect(work.file_sets.first.edit_users).to eq [user.to_s, "remove_me"]
+        expect(file_set.edit_users).to match_array [user.to_s, "remove_me"]
 
         described_class.perform_now(work)
-        work.reload.file_sets.each do |file|
+        reloaded = Hyrax::Queries.find_by(id: work.id)
+        reloaded.file_sets.each do |file|
           expect(file.edit_users).to match_array [user.to_s, "abc@123.com"]
         end
       end
@@ -42,16 +33,15 @@ RSpec.describe InheritPermissionsJob do
   end
 
   context "when read people change" do
-    let(:name) { 'abc@123.com' }
-    let(:type) { 'person' }
-    let(:access) { 'read' }
+    let(:work) { create_for_repository(:work, user: user, read_users: ['abc@123.com'], member_ids: [file_set.id]) }
 
     it 'copies permissions to its contained files' do
       # files have the depositor as the edit user to begin with
-      expect(work.file_sets.first.read_users).to eq []
+      expect(file_set.read_users).to eq []
 
       described_class.perform_now(work)
-      work.reload.file_sets.each do |file|
+      reloaded = Hyrax::Queries.find_by(id: work.id)
+      reloaded.file_sets.each do |file|
         expect(file.read_users).to match_array ["abc@123.com"]
         expect(file.edit_users).to match_array [user.to_s]
       end
@@ -59,16 +49,15 @@ RSpec.describe InheritPermissionsJob do
   end
 
   context "when read groups change" do
-    let(:name) { 'my_read_group' }
-    let(:type) { 'group' }
-    let(:access) { 'read' }
+    let(:work) { create_for_repository(:work, user: user, read_groups: ['my_read_group'], member_ids: [file_set.id]) }
 
     it 'copies permissions to its contained files' do
       # files have the depositor as the edit user to begin with
-      expect(work.file_sets.first.read_groups).to eq []
+      expect(file_set.read_groups).to eq []
 
       described_class.perform_now(work)
-      work.reload.file_sets.each do |file|
+      reloaded = Hyrax::Queries.find_by(id: work.id)
+      reloaded.file_sets.each do |file|
         expect(file.read_groups).to match_array ["my_read_group"]
         expect(file.edit_users).to match_array [user.to_s]
       end
@@ -76,16 +65,15 @@ RSpec.describe InheritPermissionsJob do
   end
 
   context "when edit groups change" do
-    let(:name) { 'my_edit_group' }
-    let(:type) { 'group' }
-    let(:access) { 'edit' }
+    let(:work) { create_for_repository(:work, user: user, edit_groups: ['my_edit_group'], member_ids: [file_set.id]) }
 
     it 'copies permissions to its contained files' do
       # files have the depositor as the edit user to begin with
-      expect(work.file_sets.first.read_groups).to eq []
+      expect(file_set.read_groups).to eq []
 
       described_class.perform_now(work)
-      work.reload.file_sets.each do |file|
+      reloaded = Hyrax::Queries.find_by(id: work.id)
+      reloaded.file_sets.each do |file|
         expect(file.edit_groups).to match_array ["my_edit_group"]
         expect(file.edit_users).to match_array [user.to_s]
       end

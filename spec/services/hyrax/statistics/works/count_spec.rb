@@ -4,15 +4,16 @@ RSpec.describe Hyrax::Statistics::Works::Count do
     let(:yesterday) { 1.day.ago }
 
     before do
-      build(:public_generic_work, user: user1, id: "pdf1223").update_index
-      build(:public_generic_work, user: user1, id: "wav1223").update_index
-      build(:public_generic_work, user: user1, id: "mp31223", create_date: [2.days.ago]).update_index
-      build(:registered_generic_work, user: user1, id: "reg1223").update_index
-      build(:generic_work, user: user1, id: "private1223").update_index
-      Collection.new(id: "ccc123") do |c|
-        c.apply_depositor_metadata(user1)
-        c.update_index
+      create_for_repository(:work, :public, user: user1)
+      create_for_repository(:work, :public, user: user1)
+      create_for_repository(:work, :public, user: user1).tap do |work|
+        work.created_at = 2.days.ago
+        persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+        persister.save(resource: work)
       end
+      create_for_repository(:registered_generic_work, user: user1)
+      create_for_repository(:work, user: user1)
+      create_for_repository(:collection, user: user1)
     end
 
     # Consolidated these tests as they are rather slow when run in sequence

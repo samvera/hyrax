@@ -10,12 +10,10 @@ module Hyrax
         middleware.use Hyrax::Actors::CollectionsMembershipActor
         middleware.use Hyrax::Actors::AddToWorkActor
         middleware.use Hyrax::Actors::AttachMembersActor
-        middleware.use Hyrax::Actors::ApplyOrderActor
         middleware.use Hyrax::Actors::InterpretVisibilityActor
         middleware.use Hyrax::Actors::TransferRequestActor
         middleware.use Hyrax::Actors::DefaultAdminSetActor
         middleware.use Hyrax::Actors::ApplyPermissionTemplateActor
-        middleware.use Hyrax::Actors::CleanupFileSetsActor
         middleware.use Hyrax::Actors::CleanupTrophiesActor
         middleware.use Hyrax::Actors::FeaturedWorkActor
         middleware.use Hyrax::Actors::ModelActor

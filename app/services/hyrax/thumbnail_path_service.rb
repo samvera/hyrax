@@ -4,7 +4,7 @@ module Hyrax
       # @param [Work, FileSet] object - to get the thumbnail for
       # @return [String] a path to the thumbnail
       def call(object)
-        return default_image unless object.thumbnail_id
+        return default_image(object) unless object.thumbnail_id
 
         thumb = fetch_thumbnail(object)
         return unless thumb
@@ -14,7 +14,7 @@ module Hyrax
         elsif thumbnail?(thumb)
           thumbnail_path(thumb)
         else
-          default_image
+          default_image(object)
         end
       end
 
@@ -22,8 +22,8 @@ module Hyrax
 
         def fetch_thumbnail(object)
           return object if object.thumbnail_id == object.id
-          ::ActiveFedora::Base.find(object.thumbnail_id)
-        rescue ActiveFedora::ObjectNotFoundError
+          find_resource(object.thumbnail_id)
+        rescue Valkyrie::Persistence::ObjectNotFoundError
           Rails.logger.error("Couldn't find thumbnail #{object.thumbnail_id} for #{object.id}")
           nil
         end
@@ -35,7 +35,8 @@ module Hyrax
                                                          file: 'thumbnail')
         end
 
-        def default_image
+        def default_image(object)
+          return ActionController::Base.helpers.image_path 'collection.png' if object.is_a? Collection
           ActionController::Base.helpers.image_path 'default.png'
         end
 
@@ -52,6 +53,14 @@ module Hyrax
         # @param [FileSet] thumb - the object that is the thumbnail
         def thumbnail_filepath(thumb)
           Hyrax::DerivativePath.derivative_path_for_reference(thumb, 'thumbnail')
+        end
+
+        def find_resource(id)
+          query_service.find_by(id: Valkyrie::ID.new(id.to_s))
+        end
+
+        def query_service
+          Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
         end
     end
   end

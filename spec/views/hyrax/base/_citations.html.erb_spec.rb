@@ -7,7 +7,7 @@ RSpec.describe 'hyrax/base/_citations.html.erb', type: :view do
     SolrDocument.new(
       id: '999',
       object_profile_ssm: object_profile,
-      has_model_ssim: ['GenericWork'],
+      Valkyrie::Persistence::Solr::Queries::MODEL => ['GenericWork'],
       human_readable_type_tesim: ['Generic Work'],
       contributor_tesim: contributor,
       creator_tesim: creator,

@@ -1,7 +1,8 @@
 RSpec.describe Hyrax::LeasesController do
   let(:user) { create(:user) }
-  let(:a_work) { create(:generic_work, user: user) }
-  let(:not_my_work) { create(:generic_work) }
+  let(:a_work) { create_for_repository(:work, user: user) }
+  let(:not_my_work) { create_for_repository(:work) }
+  let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
   before { sign_in user }
 
@@ -62,10 +63,7 @@ RSpec.describe Hyrax::LeasesController do
       end
 
       context 'with files' do
-        before do
-          a_work.members << create(:file_set)
-          a_work.save!
-        end
+        let(:a_work) { create_for_repository(:work_with_one_file, user: user) }
 
         it 'deactivates the lease and redirects' do
           expect(actor).to receive(:destroy)
@@ -78,17 +76,17 @@ RSpec.describe Hyrax::LeasesController do
 
   describe '#update' do
     context 'when I have permission to edit the object' do
-      let(:file_set) { create(:file_set, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
+      let(:file_set) { create_for_repository(:file_set, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
       let(:expiration_date) { Time.zone.today + 2 }
 
       before do
-        a_work.members << file_set
+        a_work.member_ids += [file_set.id]
         a_work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         a_work.visibility_during_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         a_work.visibility_after_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         a_work.lease_expiration_date = expiration_date.to_s
-        a_work.lease.save(validate: false)
-        a_work.save(validate: false)
+        persister.save(resource: a_work.lease)
+        persister.save(resource: a_work)
       end
 
       context 'with an expired lease' do

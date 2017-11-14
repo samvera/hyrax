@@ -10,9 +10,9 @@ RSpec.describe 'hyrax/dashboard/collections/_form_for_select_collection.html.erb
   let(:solr_collections) do
     collections.map do |c|
       doc = { id: c[:id],
-              "has_model_ssim" => ["Collection"],
+              Valkyrie::Persistence::Solr::Queries::MODEL => ["Collection"],
               "title_tesim" => ["Title 1"],
-              "system_create_dtsi" => c[:create_date].to_s }
+              "created_at_dtsi" => c[:create_date].to_s }
       SolrDocument.new(doc)
     end
   end

@@ -2,7 +2,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
   let(:user) { create(:user) }
 
   describe '.create_default_admin_set', :clean_repo do
-    let(:admin_set) { AdminSet.find(AdminSet::DEFAULT_ID) }
+    let(:admin_set) { Hyrax::Queries.find_by(id: Valkyrie::ID.new(AdminSet::DEFAULT_ID)) }
 
     # It is important to test the side-effects as a default admin set is a fundamental assumption for Hyrax.
     it 'creates AdminSet, Hyrax::PermissionTemplate, Sipity::Workflow(s), and activates a Workflow', slow: true do
@@ -74,23 +74,29 @@ RSpec.describe Hyrax::AdminSetCreateService do
         end
         # rubocop:enable RSpec/AnyInstance
 
-        it "creates an AdminSet, PermissionTemplate, Workflows, activates the default workflow, and sets access" do
-          expect(Sipity::Workflow).to receive(:activate!).with(permission_template: kind_of(Hyrax::PermissionTemplate), workflow_name: Hyrax.config.default_active_workflow_name)
-          expect do
-            expect(subject).to be true
-          end.to change { admin_set.persisted? }.from(false).to(true)
-                                                .and change { Sipity::WorkflowResponsibility.count }.by(12)
+        it "creates an AdminSet, PermissionTemplate, Workflows" do
+          expect { subject }.to  change { Sipity::WorkflowResponsibility.count }.by(12).and change { Hyrax::Queries.find_all_of_model(model: AdminSet).count }.by(1)
           # 12 responsibilities because:
           #  * 2 agents (user + admin group), multiplied by
           #  * 2 available workflows, multiplied by
           #  * 3 roles (from Hyrax::RoleRegistry), equals
           #  * 12
-          expect(admin_set.read_groups).not_to include('public')
-          expect(admin_set.edit_groups).to eq ['admin']
-          expect(admin_set.creator).to eq [user.user_key]
           expect(workflow_importer).to have_received(:call).with(permission_template: permission_template)
           expect(permission_template).to be_persisted
           expect(grants.count).to eq 2
+        end
+        it "activates the default workflow" do
+          expect(Sipity::Workflow).to receive(:activate!).with(permission_template: kind_of(Hyrax::PermissionTemplate), workflow_name: Hyrax.config.default_active_workflow_name)
+          subject
+        end
+        it "sets access on the created admin set" do
+          reloaded_admin_set = Hyrax::Queries.find_by(id: subject.id)
+          expect(reloaded_admin_set.read_groups).not_to include('public')
+          expect(reloaded_admin_set.edit_groups).to eq ['admin']
+          expect(reloaded_admin_set.creator).to eq [user.user_key]
+        end
+        it "sets access grants" do
+          subject
           expect(grants.pluck(:agent_type)).to include('group', 'user')
           expect(grants.pluck(:agent_id)).to include('admin', user.user_key)
           expect(grants.pluck(:access)).to include('manage')

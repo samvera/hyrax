@@ -17,15 +17,15 @@ RSpec.describe GenericWork do
     it { is_expected.to eq 'hyrax_generic_work' }
   end
 
-  describe ".properties" do
-    subject { described_class.properties.keys }
+  describe ".attributes" do
+    subject { described_class.attribute_names }
 
-    it { is_expected.to include("has_model", "create_date", "modified_date") }
+    it { is_expected.to include(:internal_resource, :created_at, :updated_at) }
   end
 
   describe "to_sipity_entity" do
     let(:state) { create(:workflow_state) }
-    let(:work) { create(:work) }
+    let(:work) { create_for_repository(:work) }
 
     before do
       Sipity::Entity.create!(proxy_for_global_id: work.to_global_id.to_s,
@@ -41,9 +41,9 @@ RSpec.describe GenericWork do
     let(:work) { described_class.new(state: inactive) }
     let(:inactive) { ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#inactive') }
 
-    it 'is inactive' do
-      expect(work.state.rdf_subject).to eq inactive
-    end
+    subject { work.state }
+
+    it { is_expected.to eq inactive }
 
     it 'allows state to be set to ActiveTriples::Resource' do
       other_work = described_class.new(state: work.state)
@@ -91,6 +91,16 @@ RSpec.describe GenericWork do
       expect(work).to respond_to(:depositor)
       expect(work.proxy_depositor).to eq proxy_depositor.user_key
     end
+  end
+
+  it "can persist the object to fedora with a schema" do
+    adapter = Valkyrie::MetadataAdapter.find(:fedora)
+    subject.depositor = "test"
+    output = adapter.persister.save(resource: subject)
+    expect(output.depositor).to eq ["test"]
+    expect(output.id).not_to be_blank
+    graph = adapter.resource_factory.from_resource(resource: output)
+    expect(graph.graph.query([nil, RDF::URI("http://id.loc.gov/vocabulary/relators/dpt"), nil]).first.object).to eq "test"
   end
 
   describe "metadata" do

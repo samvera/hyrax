@@ -25,7 +25,9 @@ module Hyrax
     autoload :Arkivo
     autoload :Collections
     autoload :Configuration
-    autoload :ControlledVocabularies
+    autoload :FedoraSchema
+    autoload :LinkedDataResourceFactory
+    autoload :LinkedDataResources
     autoload :RedisEventStore
     autoload :ResourceSync
     autoload :Zotero

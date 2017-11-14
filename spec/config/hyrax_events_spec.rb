@@ -1,5 +1,5 @@
 RSpec.describe "hyrax_events using Hyrax callbacks" do
-  let(:curation_concern) { create(:work) }
+  let(:curation_concern) { create_for_repository(:work) }
   let(:file_set) { create(:file_set) }
   let(:user) { create(:user) }
 
@@ -37,7 +37,7 @@ RSpec.describe "hyrax_events using Hyrax callbacks" do
     let(:id) { curation_concern.id }
 
     it "queues a ContentDeleteEventJob" do
-      expect(ContentDeleteEventJob).to receive(:perform_later).with(id, user)
+      expect(ContentDeleteEventJob).to receive(:perform_later).with(id.to_s, user)
       Hyrax.config.callback.run(:after_destroy, id, user)
     end
   end

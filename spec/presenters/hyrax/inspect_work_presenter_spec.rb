@@ -2,7 +2,7 @@ RSpec.describe Hyrax::InspectWorkPresenter, no_clean: true do
   let(:solr_document) { SolrDocument.new(attributes) }
   let(:attributes) do
     { "id" => '888888',
-      "has_model_ssim" => ["GenericWork"] }
+      Valkyrie::Persistence::Solr::Queries::MODEL => ["GenericWork"] }
   end
 
   let(:user) { create(:user) }

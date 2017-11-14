@@ -7,12 +7,12 @@ RSpec.feature "display a work as its owner" do
 
   context "as the work owner" do
     let(:work) do
-      create(:work_with_one_file,
-             with_admin_set: true,
-             title: ["Magnificent splendor"],
-             source: ["The Internet"],
-             based_near: ["USA"],
-             user: user)
+      create_for_repository(:work_with_one_file,
+                            with_admin_set: true,
+                            title: ["Magnificent splendor"],
+                            source: ["The Internet"],
+                            based_near: ["USA"],
+                            user: user)
     end
     let(:user) { create(:user) }
 
@@ -35,7 +35,7 @@ RSpec.feature "display a work as its owner" do
   end
 
   context "as a user who is not logged in" do
-    let(:work) { create(:public_generic_work, title: ["Magnificent splendor"], source: ["The Internet"], based_near: ["USA"]) }
+    let(:work) { create_for_repository(:work, :public, title: ["Magnificent splendor"], source: ["The Internet"], based_near: ["USA"]) }
 
     before do
       visit work_path

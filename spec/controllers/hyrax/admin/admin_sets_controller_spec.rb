@@ -21,7 +21,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
       context "a public admin set" do
         # Even though the user can view this admin set, the should not be able to view
         # it on the admin page.
-        let(:admin_set) { create(:admin_set, read_groups: ['public']) }
+        let(:admin_set) { create_for_repository(:admin_set, read_groups: ['public']) }
 
         it 'is unauthorized' do
           get :show, params: { id: admin_set }
@@ -31,7 +31,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
     end
 
     describe "#files" do
-      let(:admin_set) { create(:admin_set) }
+      let(:admin_set) { create_for_repository(:admin_set) }
 
       it 'is unauthorized' do
         get :files, params: { id: admin_set }, format: :json
@@ -62,31 +62,22 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
     end
 
     describe "#create" do
-      before do
-        controller.admin_set_create_service = service
-      end
-
       context "when it's successful" do
-        let(:service) do
-          lambda do |admin_set:, **_kargs|
-            admin_set.id = 123
-            # https://github.com/samvera/active_fedora/issues/1251
-            allow(admin_set).to receive(:persisted?).and_return(true)
-            true
-          end
-        end
-
         it 'creates file sets' do
           post :create, params: { admin_set: { title: 'Test title',
                                                description: 'test description',
                                                workflow_name: 'default' } }
-          admin_set = assigns(:admin_set)
+          admin_set = assigns(:resource)
           expect(response).to redirect_to(edit_admin_admin_set_path(admin_set))
         end
       end
 
       context "when it fails" do
         let(:service) { ->(**_kargs) { false } }
+
+        before do
+          controller.admin_set_create_service = service
+        end
 
         it 'shows the new form' do
           post :create, params: { admin_set: { title: 'Test title',
@@ -98,33 +89,33 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
 
     describe "#show" do
       context "when it's successful" do
-        let(:admin_set) { create(:admin_set, edit_users: [user]) }
+        let(:admin_set) { create_for_repository(:admin_set, edit_users: [user.user_key]) }
 
         before do
-          create(:work, :public, admin_set: admin_set)
+          create_for_repository(:work, :public, admin_set_id: admin_set.id)
         end
 
         it 'defines a presenter' do
           get :show, params: { id: admin_set }
           expect(response).to be_success
           expect(assigns[:presenter]).to be_kind_of Hyrax::AdminSetPresenter
-          expect(assigns[:presenter].id).to eq admin_set.id
+          expect(assigns[:presenter].id).to eq admin_set.id.to_s
         end
       end
     end
 
     describe "#edit" do
-      let(:admin_set) { create(:admin_set, edit_users: [user]) }
+      let(:admin_set) { create_for_repository(:admin_set, edit_users: [user.user_key]) }
 
       it 'defines a form' do
         get :edit, params: { id: admin_set }
         expect(response).to be_success
-        expect(assigns[:form]).to be_kind_of Hyrax::Forms::AdminSetForm
+        expect(assigns[:change_set]).to be_kind_of Hyrax::AdminSetChangeSet
       end
     end
 
     describe "#files" do
-      let(:admin_set) { create(:admin_set, edit_users: [user]) }
+      let(:admin_set) { create_for_repository(:admin_set, edit_users: [user.user_key]) }
 
       it 'shows a list of member files' do
         get :files, params: { id: admin_set }, format: :json
@@ -133,18 +124,18 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
     end
 
     describe "#update" do
-      let(:admin_set) { create(:admin_set, edit_users: [user]) }
+      let(:admin_set) { create_for_repository(:admin_set, edit_users: [user.user_key]) }
 
       it 'updates a record' do
         patch :update, params: { id: admin_set,
                                  admin_set: { title: "Improved title" } }
         expect(response).to redirect_to(edit_admin_admin_set_path)
-        expect(assigns[:admin_set].title).to eq ['Improved title']
+        expect(assigns[:resource].title).to eq ['Improved title']
       end
     end
 
     describe "#destroy" do
-      let(:admin_set) { create(:admin_set, edit_users: [user]) }
+      let(:admin_set) { create_for_repository(:admin_set, edit_users: [user.user_key]) }
 
       context "with empty admin set" do
         it "deletes the admin set" do
@@ -152,36 +143,32 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
           expect(response).to have_http_status(:found)
           expect(response).to redirect_to(admin_admin_sets_path)
           expect(flash[:notice]).to eq "Administrative set successfully deleted"
-          expect(AdminSet.exists?(admin_set.id)).to be false
+          expect(Hyrax::Queries.exists?(admin_set.id)).to be false
         end
       end
 
       context "with a non-empty admin set" do
-        let(:work) { create(:generic_work, user: user) }
+        let!(:work) { create_for_repository(:work, user: user, admin_set_id: admin_set.id) }
 
-        before do
-          admin_set.members << work
-          admin_set.reload
-        end
         it "doesn't delete the admin set (or work)" do
           delete :destroy, params: { id: admin_set }
           expect(response).to have_http_status(:found)
           expect(response).to redirect_to(admin_admin_set_path(admin_set))
           expect(flash[:alert]).to eq "Administrative set cannot be deleted as it is not empty"
-          expect(AdminSet.exists?(admin_set.id)).to be true
-          expect(GenericWork.exists?(work.id)).to be true
+          expect(Hyrax::Queries.exists?(admin_set.id)).to be true
+          expect(Hyrax::Queries.exists?(work.id)).to be true
         end
       end
 
       context "with the default admin set" do
-        let(:admin_set) { create(:admin_set, edit_users: [user], id: AdminSet::DEFAULT_ID) }
+        let(:admin_set) { create_for_repository(:admin_set, edit_users: [user.user_key], id: AdminSet::DEFAULT_ID) }
 
         it "doesn't delete the admin set" do
           delete :destroy, params: { id: admin_set }
           expect(response).to have_http_status(:found)
           expect(response).to redirect_to(admin_admin_set_path(admin_set))
           expect(flash[:alert]).to eq "Administrative set cannot be deleted as it is the default set"
-          expect(AdminSet.exists?(admin_set.id)).to be true
+          expect(Hyrax::Queries.exists?(admin_set.id)).to be true
         end
       end
     end

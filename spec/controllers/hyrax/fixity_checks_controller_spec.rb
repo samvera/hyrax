@@ -1,11 +1,14 @@
 RSpec.describe Hyrax::FixityChecksController do
   routes { Hyrax::Engine.routes }
   let(:user) { create(:user) }
-  let(:file_set) { create(:file_set, user: user) }
-  let(:binary) { File.open(fixture_path + '/world.png') }
-  let(:file) { Hydra::Derivatives::IoDecorator.new(binary, 'image/png', 'world.png') }
+  let(:file_set) { create_for_repository(:file_set, user: user) }
+  let(:binary) { fixture_file_upload('world.png', 'image/png') }
+  let(:file) { ActionDispatch::Http::UploadedFile.new(tempfile: binary, type: 'image/png', filename: 'world.png') }
+  let(:storage) { Valkyrie::StorageAdapter.find(:disk) }
 
-  before { Hydra::Works::UploadFileToFileSet.call(file_set, file) }
+  before do
+    storage.upload(file: file, resource: file_set)
+  end
 
   context "when signed in" do
     describe "POST create" do

@@ -24,7 +24,7 @@ class ImportUrlJob < Hyrax::ApplicationJob
     #       copying the file here. This will be gnarly.
     copy_remote_file(uri) do |f|
       # reload the FileSet once the data is copied since this is a long running task
-      file_set.reload
+      file_set = Hyrax::Queries.find_by(id: file_set.id)
 
       # FileSetActor operates synchronously so that this tempfile is available.
       # If asynchronous, the job might be invoked on a machine that did not have this temp file on its file system!

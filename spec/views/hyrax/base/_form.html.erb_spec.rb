@@ -2,10 +2,9 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
   let(:work) do
     stub_model(GenericWork, id: '456')
   end
-  let(:ability) { double }
 
-  let(:form) do
-    Hyrax::GenericWorkForm.new(work, ability, controller)
+  let(:change_set) do
+    GenericWorkChangeSet.new(work)
   end
   let(:options_presenter) { double(select_options: []) }
   let(:page) do
@@ -16,18 +15,16 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
   before do
     allow(Hyrax::AdminSetOptionsPresenter).to receive(:new).and_return(options_presenter)
     stub_template('hyrax/base/_form_progress.html.erb' => 'Progress')
-    # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
-    allow(work).to receive(:new_record?).and_return(true)
     allow(work).to receive(:member_ids).and_return([1, 2])
     allow(view).to receive(:curation_concern).and_return(work)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
-    assign(:form, form)
+    assign(:change_set, change_set)
     allow(controller).to receive(:controller_name).and_return('batch_uploads')
     allow(controller).to receive(:action_name).and_return('new')
     allow(controller).to receive(:repository).and_return(Hyrax::GenericWorksController.new.repository)
     allow(controller).to receive(:blacklight_config).and_return(Hyrax::GenericWorksController.new.blacklight_config)
-    allow(form).to receive(:collections_for_select).and_return([])
-    allow(form).to receive(:permissions).and_return([])
+    allow(change_set).to receive(:collections_for_select).and_return([])
+    allow(change_set).to receive(:permissions).and_return([])
   end
 
   context "for a new object" do
@@ -81,13 +78,13 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
   end
 
   context "for a persisted object" do
-    let(:work) { stub_model(GenericWork, id: '456') }
+    let(:work) { stub_model(GenericWork, id: Valkyrie::ID.new('456')) }
 
     before do
       # Add an error to the work
-      work.errors.add :base, 'broken'
-      work.errors.add :visibility, 'visibility_error'
-      allow(form).to receive(:select_files).and_return([])
+      change_set.errors.add :base, 'broken'
+      change_set.errors.add :visibility, 'visibility_error'
+      allow(change_set).to receive(:select_files).and_return([])
     end
 
     it "draws the page" do

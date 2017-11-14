@@ -3,14 +3,14 @@ module Hyrax
     # Adds membership to and removes membership from collections
     class CollectionsMembershipActor < AbstractActor
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if create was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if create was successful
       def create(env)
         collection_ids = env.attributes.delete(:member_of_collection_ids)
         assign_collections(env, collection_ids) && next_actor.create(env)
       end
 
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if update was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if update was successful
       def update(env)
         collection_ids = env.attributes.delete(:member_of_collection_ids)
         assign_collections(env, collection_ids) && next_actor.update(env)
@@ -23,12 +23,12 @@ module Hyrax
           return true unless collection_ids
           # grab/save collections this user has no edit access to
           other_collections = collections_without_edit_access(env)
-          env.curation_concern.member_of_collections = ::Collection.find(collection_ids)
-          env.curation_concern.member_of_collections.concat other_collections
+          env.curation_concern.member_of_collection_ids = collection_ids
+          env.curation_concern.member_of_collection_ids.concat other_collections
         end
 
         def collections_without_edit_access(env)
-          env.curation_concern.member_of_collections.select { |coll| env.current_ability.cannot?(:edit, coll) }
+          env.curation_concern.member_of_collection_ids.select { |id| env.current_ability.cannot?(:edit, id) }
         end
     end
   end

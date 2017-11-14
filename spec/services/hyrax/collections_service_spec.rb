@@ -13,19 +13,19 @@ RSpec.describe Hyrax::CollectionsService do
   describe "#search_results", :clean_repo do
     subject { service.search_results(access) }
 
-    let!(:collection1) { create(:collection, :public, title: ['foo']) }
-    let!(:collection2) { create(:collection, :public, title: ['bar']) }
-    let!(:collection3) { create(:collection, :public, edit_users: [user.user_key], title: ['baz']) }
+    let!(:collection1) { create_for_repository(:collection, :public, title: ['foo']) }
+    let!(:collection2) { create_for_repository(:collection, :public, title: ['bar']) }
+    let!(:collection3) { create_for_repository(:collection, :public, edit_users: [user.user_key], title: ['baz']) }
 
     before do
-      create(:admin_set, read_groups: ['public']) # this should never be returned.
+      create_for_repository(:admin_set, read_groups: ['public']) # this should never be returned.
     end
 
     context "with read access" do
       let(:access) { :read }
 
       it "returns three collections" do
-        expect(subject.map(&:id)).to match_array [collection1.id, collection2.id, collection3.id]
+        expect(subject.map(&:id)).to match_array [collection1.id.to_s, collection2.id.to_s, collection3.id.to_s]
       end
     end
 
@@ -33,7 +33,7 @@ RSpec.describe Hyrax::CollectionsService do
       let(:access) { :edit }
 
       it "returns one collections" do
-        expect(subject.map(&:id)).to match_array [collection3.id]
+        expect(subject.map(&:id)).to match_array [collection3.id.to_s]
       end
     end
   end

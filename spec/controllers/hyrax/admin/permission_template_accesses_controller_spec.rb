@@ -27,7 +27,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
                agent_id: agent_id)
       end
       let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
-      let(:admin_set) { create(:admin_set, edit_users: ['Liz']) }
+      let(:admin_set) { create_for_repository(:admin_set, edit_users: ['Liz']) }
 
       context 'when deleting the admin users group' do
         let(:agent_type) { 'group' }
@@ -54,7 +54,8 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
           end.to change { Hyrax::PermissionTemplateAccess.count }.by(-1)
           expect(response).to redirect_to(hyrax.edit_admin_admin_set_path(admin_set_id, locale: 'en', anchor: 'participants'))
           expect(flash[:notice]).to eq(I18n.t('participants', scope: 'hyrax.admin.admin_sets.form.permission_update_notices'))
-          expect(admin_set.reload.edit_users).to be_empty
+          reloaded = Hyrax::Queries.find_by(id: admin_set.id)
+          expect(reloaded.edit_users).to be_empty
         end
       end
     end

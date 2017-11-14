@@ -19,7 +19,7 @@ module Hyrax
     private
 
       def form
-        @form ||= form_class.new(@collection, current_ability, repository)
+        @form ||= change_set_class.new(@collection, current_ability, repository)
       end
 
       def decide_layout

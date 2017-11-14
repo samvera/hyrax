@@ -55,9 +55,11 @@ module Hyrax
         attribute :collection_ids, Solr::Array, 'collection_ids_tesim'
         attribute :admin_set, Solr::Array, solr_name('admin_set')
         attribute :member_of_collection_ids, Solr::Array, solr_name('member_of_collection_ids', :symbol)
+        attribute :member_ids, Solr::Array, Valkyrie::Persistence::Solr::Queries::MEMBER_IDS
         attribute :description, Solr::Array, solr_name('description')
         attribute :title, Solr::Array, solr_name('title')
         attribute :contributor, Solr::Array, solr_name('contributor')
+        attribute :creator, Solr::Array, solr_name('creator')
         attribute :subject, Solr::Array, solr_name('subject')
         attribute :publisher, Solr::Array, solr_name('publisher')
         attribute :language, Solr::Array, solr_name('language')
@@ -79,7 +81,7 @@ module Hyrax
 
         attribute :date_modified, Solr::Date, solr_name('date_modified', :stored_sortable, type: :date)
         attribute :date_uploaded, Solr::Date, solr_name('date_uploaded', :stored_sortable, type: :date)
-        attribute :create_date, Solr::Date, solr_name('system_create', :stored_sortable, type: :date)
+        attribute :create_date, Solr::Date, solr_name('created_at', :stored_sortable, type: :date)
         attribute :embargo_release_date, Solr::Date, Hydra.config.permissions.embargo.release_date
         attribute :lease_expiration_date, Solr::Date, Hydra.config.permissions.lease.expiration_date
       end

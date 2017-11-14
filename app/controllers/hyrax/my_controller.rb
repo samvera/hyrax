@@ -8,7 +8,7 @@ module Hyrax
       blacklight_config.facet_fields = {}
       configure_blacklight do |config|
         # TODO: add a visibility facet (requires visibility to be indexed)
-        config.add_facet_field IndexesWorkflow.suppressed_field, helper_method: :suppressed_to_status
+        config.add_facet_field IndexWorkflow.suppressed_field, helper_method: :suppressed_to_status
         config.add_facet_field solr_name("admin_set", :facetable), limit: 5
         config.add_facet_field solr_name("resource_type", :facetable), limit: 5
       end
@@ -22,7 +22,6 @@ module Hyrax
     configure_facets
 
     before_action :authenticate_user!
-    load_and_authorize_resource only: :show, instance_name: :collection
 
     # include the render_check_all view helper method
     helper Hyrax::BatchEditsHelper

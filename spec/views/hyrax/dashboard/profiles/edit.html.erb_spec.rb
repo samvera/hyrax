@@ -38,7 +38,7 @@ RSpec.describe 'hyrax/dashboard/profiles/edit.html.erb', type: :view do
   end
 
   context "with trophy" do
-    let(:solr_document) { SolrDocument.new(id: 'abc123', has_model_ssim: 'GenericWork', title_tesim: ['Title']) }
+    let(:solr_document) { SolrDocument.new(id: 'abc123', Valkyrie::Persistence::Solr::Queries::MODEL => 'GenericWork', title_tesim: ['Title']) }
     let(:page) { Capybara::Node::Simple.new(rendered) }
 
     before do

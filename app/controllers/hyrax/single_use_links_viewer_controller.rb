@@ -14,7 +14,11 @@ module Hyrax
 
     def download
       raise not_found_exception unless single_use_link.path == hyrax.download_path(id: @asset)
-      send_content
+      # TODO: copied from DownloadsController#show and isn't handling HEAD or range requests
+      response.headers['Accept-Ranges'] = 'bytes'
+      response.headers['Content-Length'] = File.size(file).to_s
+      response_options = derivative_download_options.tap { |options| options[:disposition] = 'attachment' }
+      send_file file, response_options
     end
 
     def show
@@ -59,7 +63,15 @@ module Hyrax
       end
 
       def asset
-        @asset ||= ActiveFedora::Base.find(single_use_link.itemId)
+        @asset ||= find_resource(single_use_link.itemId)
+      end
+
+      def find_resource(id)
+        query_service.find_by(id: Valkyrie::ID.new(id.to_s))
+      end
+
+      def query_service
+        Valkyrie::MetadataAdapter.find(:indexing_persister).query_service
       end
 
       def current_ability
@@ -87,8 +99,8 @@ module Hyrax
           return unless single_use_link
 
           @single_use_link = single_use_link
-          can :read, [ActiveFedora::Base, ::SolrDocument] do |obj|
-            single_use_link.valid? && single_use_link.itemId == obj.id && single_use_link.destroy!
+          can :read, [Valkyrie::Resource, ::SolrDocument] do |obj|
+            single_use_link.valid? && single_use_link.itemId == obj.id.to_s && single_use_link.destroy!
           end
         end
       end

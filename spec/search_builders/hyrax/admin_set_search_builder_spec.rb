@@ -15,7 +15,7 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
     let(:solr_params) { { fq: [] } }
 
     it 'adds AdminSet to query' do
-      expect(solr_params[:fq].first).to include('{!terms f=has_model_ssim}AdminSet')
+      expect(solr_params[:fq].first).to include("{!terms f=#{Valkyrie::Persistence::Solr::Queries::MODEL}}AdminSet")
     end
   end
 
@@ -24,7 +24,7 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
 
     context "when access is :deposit" do
       let(:access) { :deposit }
-      let(:admin_set) { create(:admin_set) }
+      let(:admin_set) { create_for_repository(:admin_set) }
       let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
 
       context "and user has access" do
@@ -77,7 +77,7 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
         expect(subject['fq']).to eq ["edit_access_person_ssim:#{user.user_key} OR " \
                                        "discover_access_person_ssim:#{user.user_key} OR " \
                                        "read_access_person_ssim:#{user.user_key}",
-                                     "{!terms f=has_model_ssim}AdminSet"]
+                                     "{!terms f=#{Valkyrie::Persistence::Solr::Queries::MODEL}}AdminSet"]
       end
     end
 
@@ -107,7 +107,7 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
       end
 
       it 'is successful' do
-        expect(subject['fq']).to eq ["{!terms f=id}7,8", "{!terms f=has_model_ssim}AdminSet"]
+        expect(subject['fq']).to eq ["{!terms f=id}7,8", "{!terms f=#{Valkyrie::Persistence::Solr::Queries::MODEL}}AdminSet"]
       end
     end
   end

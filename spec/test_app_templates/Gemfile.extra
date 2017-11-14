@@ -1,4 +1,6 @@
 # Use this file to reference specific commits of gems.
+gem 'valkyrie', github: 'samvera-labs/valkyrie'
+gem 'hooks', github: 'jcoyne/hooks', branch: 'patch-1'
 
 group :development do
   gem 'better_errors'
