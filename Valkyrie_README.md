@@ -19,12 +19,16 @@
 
 ## TODO:
 
-* Map to RDF (in progress?)
-* Persist as PCDM
-* WebAC
-* Presenters -> Draper Decorators?
-* remove_representative_relationship should go into a change set (when you delete a FileSet that is a representative)
-* Versioning
-* paranoid_edit_permissions moves to ChangeSet
-* Noid integration
-* Embargo and Lease - Where should these be persisted
+* Phase 2 (Dec 2017-Jan 2018)
+  * finish up getting test suite green
+  * Versioning
+  * Noid integration
+  * Embargo and Lease - Where should these be persisted
+  * paranoid_edit_permissions moves to ChangeSet
+  * remove_representative_relationship should go into a change set (when you delete a FileSet that is a representative)
+* Phase 3 (spring 2018)
+  * Persist as PCDM (as migration path from Hyrax 2 to Hyrax 3)
+    * Read from PCDM (migration path)
+    * Write to PCDM (no migration at all)
+  * WebAC
+  * Presenters: Use Draper decorators?
