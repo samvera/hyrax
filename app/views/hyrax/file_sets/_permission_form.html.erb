@@ -1,7 +1,4 @@
 <% depositor = f.object.depositor %>
-<% public_perm = f.object.permissions.map { |perm| perm.access if perm.agent_name == "public"}.compact.first %>
-<% public_perm = true if params[:controller] == 'batch' %>
-<% registered_perm = f.object.permissions.map { |perm| perm.access if perm.agent_name == "registered"}.compact.first %>
 
 <h2 id="permissions_display"><% if params[:controller] == 'batch' %>Bulk <% end %>Permissions <% if params[:controller] == 'batch' %>
       <small>(applied to all files just uploaded)</small><% end %>
@@ -81,7 +78,7 @@
     </td>
   </tr>
   <%= f.fields_for :permissions do |permission_fields| %>
-    <%# skip the public, penn state (aka registered), and depositor perms as they are displayed first at the top %>
+    <%# skip the public, registered, and depositor perms as they are displayed first at the top %>
     <% next if ['public', 'registered', depositor].include? permission_fields.object.agent_name.downcase %>
     <tr>
       <td><%= permission_fields.label :agent_name, class: "control-label" do %>
