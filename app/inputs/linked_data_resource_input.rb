@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ControlledVocabularyInput < MultiValueInput
+class LinkedDataResourceInput < MultiValueInput
   # # Overriding so that the class is correct and the javascript for will activate for this element.
   # # See https://github.com/samvera/hydra-editor/blob/4da9c0ea542f7fde512a306ec3cc90380691138b/app/assets/javascripts/hydra-editor/field_manager.es6#L61
   # def input_type
@@ -12,7 +12,7 @@ class ControlledVocabularyInput < MultiValueInput
     def build_field(value, index)
       options = input_html_options.dup
       value = value.resource if value.is_a? ActiveFedora::Base
-
+      value = Hyrax::LinkedDataResourceFactory.for(attribute_name, value)
       build_options(value, index, options) if value.respond_to?(:rdf_label)
       options[:required] = nil if @rendered_first_element
       options[:class] ||= []
@@ -79,9 +79,9 @@ class ControlledVocabularyInput < MultiValueInput
 
     def collection
       @collection ||= begin
-                        val = object[attribute_name]
-                        col = val.respond_to?(:to_ary) ? val.to_ary : val
-                        col.reject { |value| value.to_s.strip.blank? }
-                      end
+        val = object[attribute_name]
+        col = val.respond_to?(:to_ary) ? val.to_ary : val
+        col.reject { |value| value.to_s.strip.blank? }
+      end
     end
 end
