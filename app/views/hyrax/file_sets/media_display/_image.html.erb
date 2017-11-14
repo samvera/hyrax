@@ -6,7 +6,7 @@
                     alt: "",
                     role: "presentation" %>
       <%= link_to hyrax.download_path(file_set),
-                  data: { turbolinks: false, label: file_set.id },
+                  data: { turbolinks: false, label: file_set.id.to_s },
                   target: :_blank,
                   id: "file_download",
                   class: "btn btn-default" do %>
