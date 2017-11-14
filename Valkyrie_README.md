@@ -19,7 +19,7 @@
 
 ## TODO:
 
-* Phase 2 (Nov/Dec 2017)
+* Phase 2 (Dec 2017-Jan 2018)
   * finish up getting test suite green
   * Versioning
   * Noid integration
