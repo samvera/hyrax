@@ -43,7 +43,14 @@ RSpec.describe GenericWork do
 
     subject { work.state }
 
-    it { is_expected.to eq inactive }
+    it 'is inactive' do
+      expect(work.state.rdf_subject).to eq inactive
+    end
+
+    it 'allows state to be set to ActiveTriples::Resource' do
+      other_work = described_class.new(state: work.state)
+      expect(other_work.state.rdf_subject).to eq inactive
+    end
   end
 
   describe '#suppressed?' do

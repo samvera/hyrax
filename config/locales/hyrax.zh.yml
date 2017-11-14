@@ -479,6 +479,7 @@ zh:
           detail_label: 展示概括细节
           listing: 您存储细项列单
           press_to: 按击
+          results_per_page: 每页显示的结果数量
           show_label: 展示所有细节
         works: 您的作品
       no_activity: 用户最近没有活动

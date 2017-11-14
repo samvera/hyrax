@@ -478,6 +478,7 @@ it:
           detail_label: Visualizza dettagli riepilogo di
           listing: Elenco di articoli che hai depositato
           press_to: Premere per
+          results_per_page: Numero di risultati da visualizzare per pagina
           show_label: Visualizza tutti i dettagli di
         works: Le tue opere
       no_activity: L'utente non ha attività recenti
