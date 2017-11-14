@@ -1,4 +1,4 @@
-<table class="table-borderless <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
+<table class="table table-borderless <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
   <tbody>
     <%= render 'attribute_rows', presenter: presenter %>
     <%= presenter.attribute_to_html(:embargo_release_date, render_as: :date) %>

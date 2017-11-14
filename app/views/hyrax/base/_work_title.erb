@@ -2,15 +2,15 @@
   <div class="row">
     <div class="col-sm-8">
       <% if index == 0 %>
-        <h4><%= title %>
-        <%= presenter.permission_badge %> <%= presenter.workflow.badge %>
-      </h4>
+        <h2><%= title %>
+          <small class="text-muted"><%= presenter.permission_badge %> <%= presenter.workflow.badge %></small>
+        </h2>
       <% else %>
-          <h1><%= title %></h1>
+        <h2><%= title %></h2>
       <% end %>
     </div>
     <div class="col-sm-4 text-right">
-      <%= render "show_actions", presenter: @presenter %>
+      <%= render "show_actions", presenter: presenter %>
     </div>
   </div>
 <% end %>

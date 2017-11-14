@@ -139,7 +139,7 @@ module Hyrax
     end
 
     def model
-      solr_document['has_model_ssim'].first.underscore
+      solr_document.to_model.model_name.singular
     end
 
     delegate :member_presenters, :file_set_presenters, :work_presenters, to: :member_presenter_factory

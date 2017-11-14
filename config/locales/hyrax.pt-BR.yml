@@ -295,10 +295,6 @@ pt-BR:
         thumbnail: Miniatura
         title: Título
         visibility: Visibilidade
-      metadata:
-        attribute_name_label: Nome do Atributo
-        attribute_values_label: Valores
-        header: Descrições
       relationships:
         empty: Este %{type} atualmente não está em nenhuma coleção.
         header: Relacionamentos
