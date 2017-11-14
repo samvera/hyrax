@@ -19,6 +19,7 @@ module Hyrax
     #   ActiveTriples::RDFSource#default_labels and thus to respond to rdf_label
     class BaseResource < ActiveTriples::Resource
       # @return [String] rdf_label
+      # @todo fetch from solr, if the term is already indexed
       def fetch_external
         fetch_value
         rdf_label.first.to_s
