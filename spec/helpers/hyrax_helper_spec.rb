@@ -82,7 +82,6 @@ RSpec.describe HyraxHelper, type: :helper do
           car_link   = search_catalog_path(f: { 'vehicle_type_sim' => ['car'] })
           truck_link = search_catalog_path(f: { 'vehicle_type_sim' => ['truck'] })
           expect(subject).to eq "<a href=\"#{car_link}\">car</a>, <a href=\"#{truck_link}\">truck</a>"
-          expect(subject).to be_a ActiveSupport::SafeBuffer
           expect(subject).to be_html_safe
         end
       end
@@ -92,8 +91,6 @@ RSpec.describe HyraxHelper, type: :helper do
 
         it "shows the default text" do
           expect(subject).to eq "No value entered"
-          expect(subject).to be_a ActiveSupport::SafeBuffer
-          expect(subject).to be_html_safe
         end
       end
     end

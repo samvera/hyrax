@@ -33,12 +33,14 @@ module Hyrax
     end
 
     def orcid_label(style_class = '')
-      "#{image_tag 'orcid.png', alt: t('hyrax.user_profile.orcid.alt'), class: style_class} #{t('hyrax.user_profile.orcid.label')}".html_safe
+      safe_join([image_tag('orcid.png', alt: t('hyrax.user_profile.orcid.alt'), class: style_class),
+                 t('hyrax.user_profile.orcid.label')], ' ')
     end
 
     def zotero_label(opts = {})
       html_class = opts[:html_class] || ''
-      "#{image_tag 'zotero.png', alt: t('hyrax.user_profile.zotero.alt'), class: html_class} #{t('hyrax.user_profile.zotero.label')}".html_safe
+      safe_join([image_tag('zotero.png', alt: t('hyrax.user_profile.zotero.alt'), class: html_class),
+                 t('hyrax.user_profile.zotero.label')], ' ')
     end
 
     def zotero_profile_url(zotero_user_id)
@@ -84,7 +86,7 @@ module Hyrax
     # @param empty_message [String] message to display if no values are passed in
     # @param separator [String] value to join with
     # @return [ActiveSupport::SafeBuffer] the html_safe link
-    def link_to_facet_list(values, solr_field, empty_message = "No value entered".html_safe, separator = ", ")
+    def link_to_facet_list(values, solr_field, empty_message = "No value entered", separator = ", ")
       return empty_message if values.blank?
       facet_field = Solrizer.solr_name(solr_field, :facetable)
       safe_join(values.map { |item| link_to_facet(item, facet_field) }, separator)
@@ -200,7 +202,7 @@ module Hyrax
     # @return [ActiveSupport::SafeBuffer] license links, html_safe
     def license_links(options)
       service = Hyrax::LicenseService.new
-      options[:value].map { |right| link_to service.label(right), right }.to_sentence.html_safe
+      to_sentence(options[:value].map { |right| link_to service.label(right), right })
     end
 
     # A Blacklight index field helper_method
@@ -208,7 +210,7 @@ module Hyrax
     # @return [ActiveSupport::SafeBuffer] rights statement links, html_safe
     def rights_statement_links(options)
       service = Hyrax::RightsStatementService.new
-      options[:value].map { |right| link_to service.label(right), right }.to_sentence.html_safe
+      to_sentence(options[:value].map { |right| link_to service.label(right), right })
     end
 
     def link_to_telephone(user)
