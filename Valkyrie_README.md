@@ -19,12 +19,14 @@
 
 ## TODO:
 
-* Map to RDF (in progress?)
-* Persist as PCDM
-* WebAC
-* Presenters -> Draper Decorators?
-* remove_representative_relationship should go into a change set (when you delete a FileSet that is a representative)
-* Versioning
-* paranoid_edit_permissions moves to ChangeSet
-* Noid integration
-* Embargo and Lease - Where should these be persisted
+* Phase 2 (Nov/Dec 2017)
+  * remove_representative_relationship should go into a change set (when you delete a FileSet that is a representative)
+  * Versioning
+  * paranoid_edit_permissions moves to ChangeSet
+  * Noid integration
+  * Embargo and Lease - Where should these be persisted
+* Phase 3 (spring 2018)
+  * Map to RDF (in progress?)
+  * Persist as PCDM
+  * WebAC
+  * Presenters -> Draper Decorators?
