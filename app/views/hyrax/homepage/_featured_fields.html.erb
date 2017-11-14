@@ -4,7 +4,8 @@
     <h3><%= link_to featured.title.first, [main_app, featured] %></h3>
   </div>
   <div class="featured-item-depositor">
-    <span class="featured-label"><%= t('hyrax.homepage.featured_works.document.depositor_label') %>:</span> <%= link_to_profile featured.depositor(t('hyrax.homepage.featured_works.document.depositor_missing')) %>
+    <span class="featured-label"><%= t('hyrax.homepage.featured_works.document.depositor_label') %>:</span>
+    <%= link_to_profile(featured.depositor || t('hyrax.homepage.featured_works.document.depositor_missing')) %>
   </div>
   <div class="featured-item-keywords">
     <span class="featured-label"><%= t('hyrax.homepage.featured_works.document.keyword_label') %>:</span> <%= link_to_facet_list(featured.keyword, 'keyword', t('hyrax.homepage.featured_works.document.keyword_missing')) %>
