@@ -1,7 +1,7 @@
 RSpec.describe 'hyrax/dashboard/collections/edit.html.erb', type: :view do
   let(:collection) { stub_model(Collection, id: 'xyz123z4', title: ["Make Collections Great Again"]) }
   let(:form) { Hyrax::Forms::CollectionForm.new(collection, double, double) }
-  let(:solr_response) { double(response: { 'numFound' => 0 }) }
+  let(:solr_response) { instance_double(Blacklight::Solr::Response, empty?: true) }
 
   before do
     allow(view).to receive(:has_collection_search_parameters?).and_return(false)

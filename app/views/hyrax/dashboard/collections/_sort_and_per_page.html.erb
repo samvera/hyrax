@@ -1,22 +1,21 @@
 <div class="batch-info">
   <%= render 'form_for_select_collection', user_collections: @user_collections %>
 
-  <% if params[:action] == "edit" && @response.response['numFound'] > 1 %>
-  <div class="batch-toggle">
-    <% session[:batch_edit_state] = "on" %>
-    <%= button_for_remove_selected_from_collection collection %>
-  </div>
+  <% if params[:action] == "edit" && show_sort_and_per_page? %>
+    <div class="batch-toggle">
+      <% session[:batch_edit_state] = "on" %>
+      <%= button_for_remove_selected_from_collection collection %>
+    </div>
   <% end %>
 
-  <%# kind of hacky way to get this to work on catalog and folder controllers.  May be able to simple do {action: "index"} but I'm not sure -%>
-  <% if @response.response['numFound'] > 1 && !sort_fields.empty? %>
+  <% if show_sort_and_per_page? && active_sort_fields.many? %>
     <div class="sort-toggle">
         <%= form_tag dashboard_collection_path(collection), method: :get, class: 'per_page form-horizontal' do %>
              <div class="form-group form-group-lg">
                <fieldset class="col-xs-12 col-sm-9 col-md-8 col-lg-10">
                  <legend class="sr-only"><%= t('hyrax.sort_label') %></legend>
                  <%= label_tag(:sort, "<span>Sort By:</span>".html_safe) %>
-                 <%= select_tag(:sort, options_for_select(sort_fields, h(params[:sort]))) %>
+                 <%= select_tag(:sort, options_for_select(active_sort_fields, h(params[:sort]))) %>
                  <%= label_tag(:per_page) do %>
                      Show <%= select_tag(:per_page, options_for_select(['10', '20', '50', '100'], h(params[:per_page])), title: "Number of results to display per page") %>
                      per page

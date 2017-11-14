@@ -36,7 +36,7 @@ EOF
   spec.add_dependency 'hydra-works', '~> 0.16'
   spec.add_dependency 'hydra-derivatives', '~> 3.3'
   spec.add_dependency 'browse-everything', '>= 0.10.5'
-  spec.add_dependency 'blacklight', '~> 6.9'
+  spec.add_dependency 'blacklight', '~> 6.11', '>= 6.11.2'
   spec.add_dependency 'blacklight-gallery', '~> 0.7'
   spec.add_dependency 'tinymce-rails', '~> 4.1'
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
