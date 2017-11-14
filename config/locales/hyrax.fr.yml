@@ -293,10 +293,6 @@ fr:
         thumbnail: La vignette
         title: Titre
         visibility: Visibilité
-      metadata:
-        attribute_name_label: Nom d'attribut
-        attribute_values_label: Valeurs
-        header: Descriptions
       relationships:
         empty: Ce %{type} ne se trouve actuellement dans aucune collection.
         header: Des relations

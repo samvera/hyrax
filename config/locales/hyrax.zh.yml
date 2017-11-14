@@ -294,10 +294,6 @@ zh:
         thumbnail: 缩略图
         title: 标题
         visibility: 公开度
-      metadata:
-        attribute_name_label: 属性名称
-        attribute_values_label: 属性值
-        header: 描述
       relationships:
         empty: 该 %{type} 目前未纳入任何收藏集内。
         header: 关联

@@ -293,10 +293,6 @@ it:
         thumbnail: Thumbnail
         title: Titolo
         visibility: Visibilità
-      metadata:
-        attribute_name_label: nome attributo
-        attribute_values_label: Valori
-        header: descrizioni
       relationships:
         empty: Questo %{type} non è in una raccolta.
         header: Le relazioni
