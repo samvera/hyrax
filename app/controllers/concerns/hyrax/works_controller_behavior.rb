@@ -5,14 +5,13 @@ module Hyrax
     include Blacklight::AccessControls::Catalog
 
     included do
-      layout :decide_layout
+      with_themed_layout :decide_layout
       copy_blacklight_config_from(::CatalogController)
 
       class_attribute :_curation_concern_type, :show_presenter, :work_form_service, :search_builder_class
       self.show_presenter = Hyrax::WorkShowPresenter
       self.work_form_service = Hyrax::WorkFormService
       self.search_builder_class = WorkSearchBuilder
-      self.theme = 'hyrax/1_column'
       attr_accessor :curation_concern
       helper_method :curation_concern, :contextual_path
 
@@ -216,12 +215,13 @@ module Hyrax
       end
 
       def decide_layout
-        case action_name
-        when 'show'
-          theme
-        else
-          'dashboard'
-        end
+        layout = case action_name
+                 when 'show'
+                   '1_column'
+                 else
+                   'dashboard'
+                 end
+        File.join(theme, layout)
       end
 
       # Add uploaded_files to the parameters received by the actor.

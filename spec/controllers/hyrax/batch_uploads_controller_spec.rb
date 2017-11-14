@@ -32,7 +32,7 @@ RSpec.describe Hyrax::BatchUploadsController do
       get :new
       expect(response).to be_successful
       expect(assigns[:form]).to be_kind_of Hyrax::Forms::BatchUploadForm
-      expect(response).to render_template('dashboard')
+      expect(response).to render_template('hyrax/dashboard')
     end
   end
 

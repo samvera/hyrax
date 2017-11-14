@@ -4,7 +4,9 @@ module Hyrax
     include Breadcrumbs
     include SingularSubresourceController
 
-    layout :decide_layout
+    # Overrides decide_layout from WorksControllerBehavior
+    with_themed_layout '1_column'
+
     before_action :build_breadcrumbs, only: [:work, :file]
 
     def work
@@ -24,17 +26,6 @@ module Hyrax
 
       def show_presenter
         WorkShowPresenter
-      end
-
-      def decide_layout
-        case action_name
-        when 'work', 'file'
-          theme
-        else
-          # Not currently used in this controller, but left here to
-          # support dashboard-based work views which are ticketed
-          'dashboard'
-        end
       end
   end
 end

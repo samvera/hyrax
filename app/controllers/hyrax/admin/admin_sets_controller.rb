@@ -7,7 +7,7 @@ module Hyrax
     before_action :ensure_manager!
     load_and_authorize_resource
 
-    layout 'dashboard'
+    with_themed_layout 'dashboard'
     self.presenter_class = Hyrax::AdminSetPresenter
     self.form_class = Hyrax::Forms::AdminSetForm
 

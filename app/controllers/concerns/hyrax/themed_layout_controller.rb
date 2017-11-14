@@ -12,7 +12,10 @@ module Hyrax
 
     module ClassMethods
       def with_themed_layout(view_name = nil)
-        if view_name
+        case view_name
+        when Symbol
+          layout proc { |controller| controller.send(view_name) }
+        when String
           layout("#{theme}/#{view_name}")
         else
           layout(theme)

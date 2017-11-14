@@ -14,7 +14,7 @@ module Hyrax
       end
     end
 
-    layout 'dashboard'
+    with_themed_layout 'dashboard'
 
     include Blacklight::Configurable
 
