@@ -36,7 +36,6 @@ module Hyrax
         file_node = create_file_node(file: file, use: use)
         file_set.member_ids += [file_node.id]
         persister.save(resource: file_set)
-        # TODO: Hyrax::VersioningService.create(repository_file, user)
         # TODO: Derivatives
       end
 

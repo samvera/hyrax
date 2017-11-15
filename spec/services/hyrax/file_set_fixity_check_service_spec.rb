@@ -16,7 +16,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
 
       context 'when a file has two versions' do
         before do
-          Hyrax::VersioningService.create(f.original_file) # create a second version -- the factory creates the first version when it attaches +content+
+          # Hyrax::VersioningService.create(f.original_file) # create a second version -- the factory creates the first version when it attaches +content+
         end
         specify 'returns two log results' do
           expect(subject.values.flatten.length).to eq(2)
@@ -35,7 +35,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
         let(:service_by_object) { described_class.new(f, async_jobs: false, max_days_between_fixity_checks: -1) }
         let(:service_by_id)     { described_class.new(f.id, async_jobs: false, max_days_between_fixity_checks: -1) }
         let!(:existing_record) do
-          ChecksumAuditLog.create!(passed: true, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: f.original_file.id)
+          ChecksumAuditLog.create!(passed: true, file_set_id: f.id, checked_uri: f.original_file.file_identifiers.first, file_id: f.original_file.id)
         end
 
         it "re-checks" do
@@ -48,7 +48,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
     end
 
     describe '#fixity_check_file' do
-      subject { service_by_object.send(:fixity_check_file, f.original_file) }
+      subject { service_by_object.send(:fixity_check_file, f.original_file.file_identifiers.first) }
 
       specify 'returns a single result' do
         expect(subject.length).to eq(1)
@@ -56,7 +56,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
     end
 
     describe '#fixity_check_file_version' do
-      subject { service_by_object.send(:fixity_check_file_version, f.original_file.id, f.original_file.uri.to_s) }
+      subject { service_by_object.send(:fixity_check_file_version, f.original_file.id, f.original_file.file_identifiers.first) }
 
       specify 'returns a single ChecksumAuditLog for the given file' do
         expect(subject).to be_kind_of ChecksumAuditLog
@@ -85,7 +85,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
 
       context "when no fixity check is passing" do
         before do
-          ChecksumAuditLog.create!(passed: true, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file')
+          ChecksumAuditLog.create!(passed: true, file_set_id: f.id, checked_uri: f.original_file.file_identifiers.first, file_id: 'original_file')
         end
 
         it "reports the fixity check result" do
@@ -95,8 +95,8 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
 
       context "when most recent fixity check is passing" do
         before do
-          ChecksumAuditLog.create!(passed: false, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file', created_at: 1.day.ago)
-          ChecksumAuditLog.create!(passed: true, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file')
+          ChecksumAuditLog.create!(passed: false, file_set_id: f.id, checked_uri: f.original_file.file_identifiers.first, file_id: 'original_file', created_at: 1.day.ago)
+          ChecksumAuditLog.create!(passed: true, file_set_id: f.id, checked_uri: f.original_file.file_identifiers.first, file_id: 'original_file')
         end
 
         it "records the fixity check result" do
@@ -108,7 +108,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
         subject { service_by_id.logged_fixity_status }
 
         before do
-          ChecksumAuditLog.create!(passed: true, file_set_id: f.id, checked_uri: f.original_file.versions.first.label, file_id: 'original_file')
+          ChecksumAuditLog.create!(passed: true, file_set_id: f.id, checked_uri: f.original_file.file_identifiers.first, file_id: 'original_file')
         end
 
         it "records the fixity result" do

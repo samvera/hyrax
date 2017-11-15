@@ -39,8 +39,18 @@ class FixityCheckJob < Hyrax::ApplicationJob
 
   private
 
+    def service_for(uri)
+      adapter = Valkyrie::StorageAdapter.adapter_for(id: Valkyrie::ID.new(uri))
+      case adapter
+      when Valkyrie::Storage::Disk
+        raise "No fixity check service has been registered for #{adapter.class}"
+      else
+        ActiveFedora::FixityService.new(uri)
+      end
+    end
+
     def run_check(file_set_id, file_id, uri)
-      service = ActiveFedora::FixityService.new(uri)
+      service = service_for(uri)
       begin
         fixity_ok = service.check
         expected_result = service.expected_message_digest

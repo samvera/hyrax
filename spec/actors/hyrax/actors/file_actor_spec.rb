@@ -64,7 +64,6 @@ RSpec.describe Hyrax::Actors::FileActor do
     it 'has two versions' do
       expect(versions.all.count).to eq 2
       # the current version
-      expect(Hyrax::VersioningService.latest_version_of(file_set.reload.original_file).label).to eq 'version2'
       expect(file_set.original_file.mime_type).to eq 'text/plain'
       expect(file_set.original_file.original_name).to eq 'small_file.txt'
       expect(file_set.original_file.content).to eq fixture2.open.read
@@ -82,7 +81,6 @@ RSpec.describe Hyrax::Actors::FileActor do
     it 'when the file is available' do
       allow(file_set).to receive(:save).and_return(true)
       allow(file_set).to receive(relation).and_return(pcdmfile)
-      expect(Hyrax::VersioningService).to receive(:create).with(pcdmfile, user)
       expect(CharacterizeJob).to receive(:perform_later).with(FileSet, pcdmfile.id, huf.uploader.path)
       actor.ingest_file(io)
     end
@@ -98,7 +96,6 @@ RSpec.describe Hyrax::Actors::FileActor do
     before do
       allow(pcdmfile).to receive(:restore_version).with(revision_id)
       allow(file_set).to receive(relation).and_return(pcdmfile)
-      expect(Hyrax::VersioningService).to receive(:create).with(pcdmfile, user)
       expect(CharacterizeJob).to receive(:perform_later).with(file_set, pcdmfile.id)
     end
 
