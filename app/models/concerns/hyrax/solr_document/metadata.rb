@@ -25,7 +25,7 @@ module Hyrax
         class String
           # @return [String]
           def self.coerce(input)
-            ::Array.wrap(input).first
+            ::Array.wrap(input).first.to_s
           end
         end
 
@@ -39,6 +39,15 @@ module Hyrax
             rescue ArgumentError
               Rails.logger.info "Unable to parse date: #{field.first.inspect}"
             end
+          end
+        end
+
+        class Boolean
+          # @return [Boolean]
+          def self.coerce(input)
+            field = String.coerce(input)
+            return if field.blank?
+            field == 'true'
           end
         end
       end
@@ -77,7 +86,7 @@ module Hyrax
         attribute :thumbnail_path, Solr::String, CatalogController.blacklight_config.index.thumbnail_field
         attribute :label, Solr::String, solr_name('label')
         attribute :file_format, Solr::String, solr_name('file_format')
-        attribute :suppressed?, Solr::String, solr_name('suppressed', Solrizer::Descriptor.new(:boolean, :stored, :indexed))
+        attribute :suppressed?, Solr::Boolean, solr_name('suppressed', Solrizer::Descriptor.new(:boolean, :stored, :indexed))
 
         attribute :date_modified, Solr::Date, solr_name('date_modified', :stored_sortable, type: :date)
         attribute :date_uploaded, Solr::Date, solr_name('date_uploaded', :stored_sortable, type: :date)
