@@ -1,0 +1,28 @@
+<div class="modal fade" id="add-subcollection-modal-<%= id %>" tabindex="-1" role="dialog" aria-labelledby="add-subcollection-label">
+<% collection = Collection.find id %>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <%= form_tag(hyrax.dashboard_create_subcollection_under_path(collection.id)) do %>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('hyrax.dashboard.heading_actions.close') %>"><span aria-hidden="true">&times;</span></button>
+          <h2 class="modal-title" id="add-subcollection-label"><%= t('hyrax.collection.actions.nest_collections.modal_title') %></h2>
+        </div>
+        <div class="modal-body">
+          <label><%= t('hyrax.collection.actions.nest_collections.select_label') %></label>
+          <input type="hidden" name="source" value="<%= source %>"></input>
+          <select name="child_id">
+            <option value="none"><%= t("hyrax.dashboard.my.action.select") %></option>
+            <% colls = Hyrax::Collections::NestedCollectionQueryService.available_child_collections(parent: collection, scope: controller, limit_to_id: nil) %>
+            <% colls.each {|coll| %>
+              <option  value="<%= coll.id %>"><%= coll.title.first %></option>
+            <% } %>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('helpers.action.cancel') %></button>
+          <input type="submit" class="btn btn-primary" value="<%= t('hyrax.collection.actions.nest_collections.button_label') %>">
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

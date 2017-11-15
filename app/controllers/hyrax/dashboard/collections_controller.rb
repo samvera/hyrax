@@ -90,6 +90,7 @@ module Hyrax
       def after_create
         form
         set_default_permissions
+        link_parent_collection(params[:parent_id]) unless params[:parent_id].nil?
         respond_to do |format|
           ActiveFedora::SolrService.instance.conn.commit
           format.html { redirect_to edit_dashboard_collection_path(@collection), notice: "Collection was successfully created." }
@@ -111,7 +112,7 @@ module Hyrax
         # collection is saved without a value for `has_model.`
         @collection = ::Collection.new
         authorize! :create, @collection
-        @collection.attributes = collection_params.except(:members)
+        @collection.attributes = collection_params.except(:members, :parent_id)
         @collection.apply_depositor_metadata(current_user.user_key)
         add_members_to_collection unless batch.empty?
         @collection.collection_type_gid = params[:collection_type_gid] if params[:collection_type_gid]
@@ -213,6 +214,11 @@ module Hyrax
       end
 
       private
+
+        def link_parent_collection(parent_id)
+          parent = ActiveFedora::Base.find(parent_id)
+          Hyrax::Collections::NestedCollectionPersistenceService.persist_nested_collection_for(parent: parent, child: @collection)
+        end
 
         def uploaded_files(uploaded_file_ids)
           return [] if uploaded_file_ids.empty?

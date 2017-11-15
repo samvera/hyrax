@@ -6,37 +6,41 @@
     <p><%= t('.this_collection_in_other_collections_description') %></p>
 
     <article class="form-inline select-wrapper">
-      <div class="form-group">
-        <label for="exampleInputName2"><strong><%= t('hyrax.dashboard.my.action.add_to_collection') %>:</strong></label>
-        <select class="form-control" id="add_to_collection_selection">
-          <option><%= t('.select_a_collection') %></option>
-        </select>
-      </div>
-      <button class="btn btn-primary"><%= t('helpers.action.add') %></button>
+      <%= button_tag '',
+        class: 'btn btn-primary add-to-collection',
+        onclick: "$('#add-to-collection-modal-#{@form.collection.id}').modal('show');",
+        title: t('hyrax.collection.actions.nested_subcollection.desc'),
+        type: 'button',
+        data: { nestable: @form.nestable?,
+                hasaccess: true } do %>
+        <%= t('hyrax.collection.actions.nested_subcollection.button_label') %>
+      <% end %>
     </article>
 
     <article class="collection-list-wrapper">
-      <p><strong><%= t('.collection_is_subcollection_description') %></strong></p>
-      <table class="table table-striped table-condensed">
-        <thead>
-          <tr>
-            <th><%= t('.table.collection_title') %></th>
-            <th><%= t('.table.action') %></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><a href="#">Butterfiles: Our Favorites!</a></td>
-            <td><button class="btn btn-sm btn-danger remove-from-collection-button"><%= t('.buttons.remove_from_collection') %></button></td>
-          </tr>
-          <tr>
-            <td><a href="#">Recent Published Research Publications and Data On Macrolepidopteran Clade</a></td>
-            <td><button class="btn btn-sm btn-danger remove-from-collection-button"><%= t('.buttons.remove_from_collection') %></button></td>
-          </tr>
-        </tbody>
-      </table>
-    </p>
-
+      <% if @form.list_parent_collections.any? %>
+        <p><strong><%= t('.collection_is_subcollection_description') %></strong></p>
+        <table class="table table-striped table-condensed">
+          <thead>
+            <tr>
+              <th><%= t('.table.collection_title') %></th>
+              <th><%= t('.table.action') %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @form.list_parent_collections.each do |document| %>
+              <tr>
+                <td>
+                  <%= link_to document, [hyrax, :dashboard, document], id: "src_copy_link_#{document.id}" %>
+                </td>
+                <td><button class="btn btn-sm btn-danger remove-from-collection-button"><%= t('.buttons.remove_from_collection') %></button></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+        </p>
+      <% end %>
+    </article>
   </section>
 
   <%# Other Collections in This Collection %>
@@ -45,39 +49,48 @@
     <p><%= t('.add_other_collections_as_sub_collections_description') %></p>
 
     <article class="form-inline select-wrapper">
-      <div class="form-group">
-        <label for="exampleInputName2"><strong><%= t('.add_sub_collection') %>:</strong></label>
-        <select class="form-control" id="add_to_collection_selection">
-          <option>Select a collection...</option>
-        </select>
-      </div>
-      <button class="btn btn-primary"><%= t('helpers.action.add') %></button>
+      <%= button_tag '',
+        class: 'btn btn-primary add-subcollection',
+        onclick: "$('#add-subcollection-modal-#{@form.collection.id}').modal('show');",
+        title: t('hyrax.collection.actions.nest_collections.desc'),
+        type: 'button',
+        data: { nestable: @form.nestable?,
+                hasaccess: true } do %>
+        <%= t('hyrax.collection.actions.nest_collections.button_label') %>
+      <% end %>
     </article>
 
-    <p>
-      <button class="btn btn-primary"><%= t('.buttons.create_new_collection_as_sub_collection') %></button>
-    </p>
+    <article class="form-inline select-wrapper">
+      <%= link_to t('hyrax.collection.actions.add_new_nested_collection.label'),
+        hyrax.dashboard_new_subcollection_under_path(parent_id: @form.collection.id),
+        title: t('hyrax.collection.actions.add_new_nested_collection.desc'),
+        class: 'btn btn-primary',
+        data: { turbolinks: false } %>
+    </article>
 
     <article class="collection-list-wrapper">
-      <p><strong><%= t('.sub_collections_of_collection_description') %></strong></p>
-      <table class="table table-striped table-condensed">
-        <thead>
-          <tr>
-            <th><%= t('.table.collection_title') %></th>
-            <th><%= t('.table.action') %></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><a href="#">Butterfly images from the Standford Digital Repository</a></td>
-            <td><button class="btn btn-sm btn-danger remove-sub-collection-button"><%= t('.buttons.remove_this_sub_collection') %></button></td>
-          </tr>
-          <tr>
-            <td><a href="#">Laboratory Experiments involving Lepidoptera</a></td>
-            <td><button class="btn btn-sm btn-danger remove-sub-collection-button"><%= t('.buttons.remove_this_sub_collection') %></button></td>
-          </tr>
-        </tbody>
-      </table>
+      <% if @form.list_child_collections.any? %>
+        <p><strong><%= t('.sub_collections_of_collection_description') %></strong></p>
+        <table class="table table-striped table-condensed">
+          <thead>
+            <tr>
+              <th><%= t('.table.collection_title') %></th>
+              <th><%= t('.table.action') %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @form.list_child_collections.each do |document| %>
+              <tr>
+                <td>
+                  <%= link_to document, [hyrax, :dashboard, document], id: "src_copy_link_#{document.id}" %>
+                </td>
+                <td><button class="btn btn-sm btn-danger remove-sub-collection-button"><%= t('.buttons.remove_this_sub_collection') %></button></td>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
     </article>
 
   </section>
@@ -85,4 +98,6 @@
   <%# Render modals %>
   <%= render 'modal_remove_from_collection' %>
   <%= render 'modal_remove_sub_collection' %>
+  <%= render 'modal_add_to_collection', id: @form.collection.id, source: 'edit' %>
+  <%= render 'modal_add_subcollection', id: @form.collection.id, source: 'edit' %>
 </div>

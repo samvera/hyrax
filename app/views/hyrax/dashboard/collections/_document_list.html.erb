@@ -5,9 +5,5 @@
 <% else %>
   <% @document_list = documents %>
   <% @disable_select_all = (@document_list.count <= 1) %>
-  <% if params[:action] == "edit" %>
-    <%= render 'form_default_group', documents: documents, docs: documents %>
-  <% else %>
-    <%= render 'show_document_list', documents: documents %>
-  <% end %>
+  <%= render 'show_document_list', documents: documents %>
 <% end %>

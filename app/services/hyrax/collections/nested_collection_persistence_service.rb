@@ -16,8 +16,8 @@ module Hyrax
       #       using an RDBM.
       #       See https://wiki.duraspace.org/display/samvera/Samvera+Tech+Call+2017-08-23 for tech discussion.
       def self.persist_nested_collection_for(parent:, child:)
-        parent.members << child
-        parent.save
+        child.member_of_collections << parent
+        child.save
       end
     end
   end

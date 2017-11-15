@@ -1,9 +1,19 @@
 <% if can? :edit, presenter.solr_document %>
   <div class="sr-only">Add a nested collection</div>
   <div class="actions-controls-collections">
-    <%= link_to t('hyrax.collection.actions.nest_collections.label'),
-                hyrax.dashboard_new_nest_collection_within_path(child_id: presenter.id),
-                title: t('hyrax.collection.actions.nest_collections.desc'),
-                class: 'btn btn-default pull-right' %>
+    <%= button_tag '',
+                  class: 'btn btn-default pull-right add-subcollection',
+                  onclick: "$('#add-subcollection-modal-#{presenter.id}').modal('show');",
+                  title: t('hyrax.collection.actions.nest_collections.desc'),
+                  type: 'button',
+                  data: { nestable: true,
+                          hasaccess: true } do %>
+                  <%= t('hyrax.collection.actions.nest_collections.button_label') %>
+                <% end %>
+    <%= link_to t('hyrax.collection.actions.add_new_nested_collection.label'),
+      hyrax.dashboard_new_subcollection_under_path(parent_id: presenter.id),
+      title: t('hyrax.collection.actions.add_new_nested_collection.desc'),
+      class: 'btn btn-default pull-right',
+      data: { turbolinks: false } %>
   </div>
 <% end %>

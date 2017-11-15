@@ -8,6 +8,17 @@
                         method: :delete } %>
 <% end %>
 <% if can? :edit, presenter.solr_document %>
+    <% if presenter.collection_type_is_nestable? %>
+    <%= button_tag '',
+                  class: 'btn btn-default pull-right add-to-collection',
+                  onclick: "$('#add-to-collection-modal-#{presenter.id}').modal('show');",
+                  title: t("hyrax.collection.actions.nested_subcollection.desc"),
+                  type: 'button',
+                  data: { nestable: true,
+                          hasaccess: true } do %>
+                  <%= t('hyrax.collection.actions.nested_subcollection.button_label') %>
+                <% end %>
+    <% end %>
     <%= link_to t('hyrax.collection.actions.edit.label'),
                 hyrax.edit_dashboard_collection_path(presenter),
                 title: t('hyrax.collection.actions.edit.desc'),

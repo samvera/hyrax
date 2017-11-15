@@ -132,9 +132,10 @@ Hyrax::Engine.routes.draw do
         put :remove_member
       end
     end
-    get 'collections/:child_id/within', controller: 'nest_collections', action: 'new_within', as: 'new_nest_collection_within'
+    # get 'collections/:child_id/within', controller: 'nest_collections', action: 'new_within', as: 'new_nest_collection_within'
     post 'collections/:child_id/within', controller: 'nest_collections', action: 'create_within', as: 'create_nest_collection_within'
-    post 'collections/:child_id/process_nesting', controller: 'nest_collections', action: 'process_nesting', as: 'nest_collection_process'
+    get 'collections/:parent_id/under', controller: 'nest_collections', action: 'new_under', as: 'new_subcollection_under'
+    post 'collections/:parent_id/under', controller: 'nest_collections', action: 'create_under', as: 'create_subcollection_under'
     resources :profiles, only: [:show, :edit, :update]
   end
 

@@ -408,6 +408,9 @@ en:
         add_existing_works:
           desc: "Add existing works to this Collection"
           label: "Add existing works"
+        add_new_nested_collection:
+          desc: "Add new collection to this Collection"
+          label: "Create new collection as subcollection"
         add_new_work:
           desc: "Add new work to this Collection"
           label: "Add new work"
@@ -419,9 +422,16 @@ en:
           desc: "Edit this collection"
           label: "Edit"
         header: "Actions"
-        nest_collections:
+        nest_collections: # this collection is parent, modal "add-subcollection"
           desc: "Nest other collections within this Collection"
-          label: "Add existing collection"
+          button_label: "Add a subcollection"
+          modal_title: "Add a Subcollection to Collection"
+          select_label: "Select subcollection"
+        nested_subcollection: # this collection is child, modal "add-to-collection"
+          desc: "Nest this collection within another collection"
+          button_label: "Nest this Collection"
+          modal_title: "Add this Collection Within Another"
+          select_label: "Select collection"
       browse_view: "Browse View"
       document_list:
         edit: "Edit"
@@ -555,10 +565,8 @@ en:
               label: "Logo"
               description: "One or more images to be displayed at the top of the collection pate.  For best results, upload an image (JPG, GIF orPNG) taht is 40 pixels in height.  Larger images will be resized to 40 pixels in height."
         form_relationships:
-          add_other_collections_as_sub_collections_description: "You can add other collections as sub-collections of this collection."
-          add_sub_collection: "Add sub-collection"
+          add_other_collections_as_sub_collections_description: "You can manage the sub-collections of this collection."
           buttons:
-            create_new_collection_as_sub_collection: "Create new collection as sub-collection"
             remove_from_collection: "Remove from collection"
             remove_this_sub_collection: "Remove this sub-collection"
           collection_is_subcollection_description: "This collection is currently a sub-collection of these collections"
@@ -568,7 +576,6 @@ en:
           modals:
             remove_from_collection_description: "Removing this collection will not remove it from the repository, only from this parent collection.  Are you sure you want to remove this collection?"
             remove_from_sub_collection_description: "Removing this sub-collection will not remove it from the repository, only from this parent collection.  Are you sure you want to remove this sub-collection?"
-          select_a_collection: "Select a collection..."
           sub_collections_of_collection_description: "These collections are currently sub-collections of this collection"
           table:
             action: "Action"
@@ -615,7 +622,6 @@ en:
           nesting_permission_denied: "You do not have sufficient privileges to add this collection to another collection."
           select:                  "Select"
           select_all:              "Select Current Page"
-          select_collection:       "Select a collection"
           select_none:             "Select None"
           transfer:                "Transfer Ownership of Work"
           unhighlight:             "Unhighlight Work"
@@ -656,7 +662,9 @@ en:
           show_label:       "Display all details of"
         works:        "Your Works"
       nest_collections_form:
-        create_within:          "%{child_title} has been added to %{parent_title}"
+        create_within:          "'%{child_title}' has been added to '%{parent_title}'"
+        create_under:          "'%{child_title}' has been added to '%{parent_title}'"
+        create_under_failed:   "'%{child_title}' has cannot be added to '%{parent_title}'"
       no_activity:              "User has no recent activity"
       no_notifications:         "User has no notifications"
       delete_notification:      "Delete Notification"

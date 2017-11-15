@@ -100,6 +100,29 @@ RSpec.describe Hyrax::Forms::CollectionForm do
     it { is_expected.to eq ['9999'] }
   end
 
+  describe "#available_child_collections" do
+    subject { form.available_child_collections }
+
+    before do
+      available_subcollections = double(available_member_subcollections: double(documents: ["blob"]))
+      allow(form).to receive(:collection_member_service).and_return(available_subcollections)
+    end
+
+    it { is_expected.to eq(["blob"]) }
+  end
+
+  describe "#available_parent_collections" do
+    subject { form.available_parent_collections }
+
+    let(:parent) { build(:public_collection) }
+
+    before do
+      allow(collection).to receive(:member_of_collections).and_return([parent])
+    end
+
+    it { is_expected.to eq([parent]) }
+  end
+
   describe ".build_permitted_params" do
     subject { described_class.build_permitted_params }
 
