@@ -60,7 +60,11 @@ class ChecksumAuditLog < ActiveRecord::Base
 
   # All logs for a particular file or version in a give file set, sorted
   # by date descending.
+  # @param file_set_id [Valkyrie::ID]
+  # @param checked_uri [Valkyrie::ID]
+  # @return [ActiveRecord::Relation]
   def self.logs_for(file_set_id, checked_uri:)
-    ChecksumAuditLog.where(file_set_id: file_set_id.to_s, checked_uri: checked_uri).order('created_at desc, id desc')
+    ChecksumAuditLog.where(file_set_id: file_set_id.to_s, checked_uri: checked_uri.to_s)
+                    .order('created_at desc, id desc')
   end
 end
