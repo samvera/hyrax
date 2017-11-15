@@ -13,16 +13,50 @@ class TestAppGenerator < Rails::Generators::Base
     generate 'hyrax:work GenericWork'
   end
 
-  def create_atlas_work
-    # ActiveSupport interprets "atlas" as plural which causes
-    # counter-intuitive route paths. Add an inflection to correct
-    # these paths
-    append_file 'config/initializers/inflections.rb' do
-      "ActiveSupport::Inflector.inflections(:en) do |inflect|\n" \
-      "  inflect.irregular 'atlas', 'atlases'\n" \
-      "end\n"
+  def create_nested_work
+    generate 'hyrax:work NamespacedWorks::NestedWork'
+    gsub_file 'app/models/namespaced_works/nested_work.rb',
+              'include ::Hyrax::WorkBehavior',
+              <<-EOS.strip_heredoc
+                property :created, predicate: ::RDF::Vocab::DC.created, class_name: TimeSpan
+                  include ::Hyrax::WorkBehavior
+              EOS
+
+    gsub_file 'app/models/namespaced_works/nested_work.rb',
+              'include ::Hyrax::BasicMetadata',
+              <<-EOS.strip_heredoc
+                include ::Hyrax::BasicMetadata
+                  accepts_nested_attributes_for :created
+              EOS
+  end
+
+  def create_time_span
+    create_file 'app/models/time_span.rb' do
+      <<-EOS.strip_heredoc
+      class TimeSpan < ActiveTriples::Resource
+        def initialize(uri = RDF::Node.new, _parent = ActiveTriples::Resource.new)
+          uri = if uri.try(:node?)
+                  RDF::URI(\"#timespan_\#{uri.to_s.gsub('_:', '')}\")
+                elsif uri.to_s.include?('#')
+                  RDF::URI(uri)
+                end
+          super
+        end
+
+        def persisted?
+          !new_record?
+        end
+
+        def new_record?
+          id.start_with?('#')
+        end
+
+        configure type: ::RDF::Vocab::EDM.TimeSpan
+        property :start, predicate: ::RDF::Vocab::EDM.begin
+        property :finish, predicate: ::RDF::Vocab::EDM.end
+      end
+      EOS
     end
-    generate 'hyrax:work RareBooks/Atlas'
   end
 
   def comment_out_web_console
@@ -40,13 +74,14 @@ class TestAppGenerator < Rails::Generators::Base
 
   def add_analytics_config
     append_file 'config/analytics.yml' do
-      "\n" +
-        "analytics:\n" +
-        "  app_name: My App Name\n" +
-        "  app_version: 0.0.1\n" +
-        "  privkey_path: /tmp/privkey.p12\n" +
-        "  privkey_secret: s00pers3kr1t\n" +
-        "  client_email: oauth@example.org\n"
+      <<-EOS.strip_heredoc
+        analytics:
+          app_name: My App Name
+          app_version: 0.0.1
+          privkey_path: /tmp/privkey.p12
+          privkey_secret: s00pers3kr1t
+          client_email: oauth@example.org
+      EOS
     end
   end
 
