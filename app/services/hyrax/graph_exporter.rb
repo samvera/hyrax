@@ -8,6 +8,7 @@ module Hyrax
       @solr_document = solr_document
       @request = request
       @additional_resources = []
+      @visited_subresources = Set.new
     end
 
     attr_reader :solr_document, :request, :additional_resources
@@ -15,9 +16,7 @@ module Hyrax
     # @return [RDF::Graph]
     def fetch
       clean_graph_repository.find(solr_document.id).tap do |g|
-        additional_resources.uniq.each do |stmt|
-          g << stmt
-        end
+        additional_resources.each { |subgraph| g << subgraph }
       end
     rescue Ldp::NotFound
       # this error is handled with a 404 page.
@@ -54,12 +53,13 @@ module Hyrax
       def subresource_replacer(resource_id, parent_klass)
         parent_id, local = resource_id.split('/', 2)
 
-        # OPTIMIZE: we only need to fetch each subresource once.
-        additional_resources << ListSourceExporter.new(
-          resource_id,
-          request,
-          subject_replacer(parent_klass, parent_id)
-        ).fetch
+        if @visited_subresources.add?(resource_id)
+          additional_resources << ListSourceExporter.new(
+            resource_id,
+            request,
+            subject_replacer(parent_klass, parent_id)
+          ).fetch
+        end
 
         parent = subject_replacer(parent_klass, parent_id)
         "#{parent}/#{local}"
