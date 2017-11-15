@@ -36,7 +36,6 @@ module Hyrax
 
       def attach_uploaded_file(file:, file_set:, use:)
         create_file_node(file: file, use: use, file_set: file_set)
-        # TODO: Hyrax::VersioningService.create(repository_file, user)
         # TODO: Derivatives
       end
 

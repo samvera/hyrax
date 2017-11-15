@@ -60,8 +60,6 @@ RSpec.describe Hyrax::Actors::FileActor do
     it 'has two versions' do
       expect(versions.all.count).to eq 2
       # the current version
-      reloaded = Hyrax::Queries.find_by(id: file_set.id)
-      expect(Hyrax::VersioningService.latest_version_of(reloaded.original_file).label).to eq 'version2'
       expect(file_set.original_file.mime_type).to eq 'text/plain'
       expect(file_set.original_file.original_name).to eq 'small_file.txt'
       expect(file_set.original_file.content).to eq fixture2.open.read
@@ -73,7 +71,6 @@ RSpec.describe Hyrax::Actors::FileActor do
 
   describe '#ingest_file' do
     it 'when the file is available' do
-      expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileNode, user)
       expect(CharacterizeJob).to receive(:perform_later)
       actor.ingest_file(io)
       reloaded = Hyrax::Queries.find_by(id: file_set.id)
@@ -81,7 +78,6 @@ RSpec.describe Hyrax::Actors::FileActor do
     end
     # rubocop:disable RSpec/AnyInstance
     it 'returns false when save fails' do
-      expect(Hyrax::VersioningService).not_to receive(:create).with(Hyrax::FileNode, user)
       expect(CharacterizeJob).not_to receive(:perform_later)
       allow_any_instance_of(Hyrax::FileNodeBuilder).to receive(:create).and_raise(StandardError)
       expect(actor.ingest_file(io)).to be_falsey
@@ -96,7 +92,6 @@ RSpec.describe Hyrax::Actors::FileActor do
       allow(file_node).to receive(:restore_version).with(revision_id)
       allow(file_set).to receive(:original_file).and_return(file_node)
       allow(file_set).to receive(:member_by).with(use: relation).and_return(file_node)
-      expect(Hyrax::VersioningService).to receive(:create).with(file_node, user)
       expect(CharacterizeJob).to receive(:perform_later).with(file_node.id.to_s)
     end
 
