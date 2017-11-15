@@ -1,7 +1,7 @@
 module Hyrax
   class WorkChangeSet < Valkyrie::ChangeSet
     class_attribute :workflow_class, :primary_terms, :secondary_terms
-    delegate :human_readable_type, to: :resource
+    delegate :human_readable_type, :to_s, to: :resource
 
     # Which fields show above the fold.
     self.primary_terms = [:title, :creator, :keyword, :rights_statement]
