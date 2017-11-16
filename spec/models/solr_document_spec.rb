@@ -27,6 +27,12 @@ RSpec.describe ::SolrDocument, type: :model do
 
     it { is_expected.to eq Date.parse('2013-03-14') }
 
+    context "when a Time is provided" do
+      let(:attributes) { { 'date_uploaded_dtsi' => Time.new(2013, 3, 14).utc } }
+
+      it { is_expected.to eq Date.parse('2013-03-14') }
+    end
+
     context "when an invalid type is provided" do
       let(:attributes) { { 'date_uploaded_dtsi' => 'Test' } }
 
@@ -54,6 +60,12 @@ RSpec.describe ::SolrDocument, type: :model do
     subject { document.create_date }
 
     it { is_expected.to eq Date.parse('2013-03-14') }
+
+    context "when a Time is provided" do
+      let(:attributes) { { 'system_create_dtsi' => Time.new(2013, 3, 14).utc } }
+
+      it { is_expected.to eq Date.parse('2013-03-14') }
+    end
 
     context "when an invalid type is provided" do
       let(:attributes) { { 'system_create_dtsi' => 'Test' } }
