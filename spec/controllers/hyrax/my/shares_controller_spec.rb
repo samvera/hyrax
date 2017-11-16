@@ -27,7 +27,7 @@ RSpec.describe Hyrax::My::SharesController, type: :controller do
                               user: other_user,
                               edit_users: [someone_else.user_key, other_user.user_key])
       end
-      let!(:my_collection) { create(:public_collection, user: user) }
+      let!(:my_collection) { create_for_repository(:collection, :public, user: user) }
 
       it "responds with success" do
         get :index

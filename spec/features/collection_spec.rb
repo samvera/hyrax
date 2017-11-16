@@ -1,12 +1,12 @@
 RSpec.describe 'collection', type: :feature do
   let(:user) { create(:user) }
 
-  let(:collection1) { create(:public_collection, user: user) }
-  let(:collection2) { create(:public_collection, user: user) }
+  let(:collection1) { create_for_repository(:collection, :public, user: user) }
+  let(:collection2) { create_for_repository(:collection, :public, user: user) }
 
   describe 'collection show page' do
     let(:collection) do
-      create_for_repository(:public_collection, user: user, description: ['collection description'])
+      create_for_repository(:collection, :public, user: user, description: ['collection description'])
     end
     let!(:work1) { create_for_repository(:work, title: ["King Louie"], member_of_collection_ids: [collection.id], user: user) }
     let!(:work2) { create_for_repository(:work, title: ["King Kong"], member_of_collection_ids: [collection.id], user: user) }
