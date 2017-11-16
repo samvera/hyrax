@@ -52,8 +52,8 @@ RSpec.describe Hyrax::Statistics::Depositors::Depositor, :clean_repo do
   end
 
   describe "#collections" do
-    let!(:collection1) { create_for_repository(:public_collection, user: user1) }
-    let!(:collection2) { create_for_repository(:public_collection, user: user2) }
+    let!(:collection1) { create_for_repository(:collection, :public, user: user1) }
+    let!(:collection2) { create_for_repository(:collection, :public, user: user2) }
 
     subject { service.collections }
 
