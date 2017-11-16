@@ -44,7 +44,7 @@ class LinkedDataResourceInput < MultiValueInput
     def hidden_id_field(value, index)
       name = name_for(attribute_name, index, 'id')
       id = id_for(attribute_name, index, 'id')
-      hidden_value = value.node? ? '' : value.rdf_subject
+      hidden_value = value.rdf_subject.to_s
       @builder.hidden_field(attribute_name, name: name, id: id, value: hidden_value, data: { id: 'remote' })
     end
 
@@ -53,7 +53,7 @@ class LinkedDataResourceInput < MultiValueInput
       options[:data] ||= {}
       options[:data][:attribute] = attribute_name
       options[:id] = id_for_hidden_label(index)
-      if value.node?
+      if value.rdf_subject.blank?
         build_options_for_new_row(attribute_name, index, options)
       else
         build_options_for_existing_row(attribute_name, index, value, options)
@@ -75,13 +75,5 @@ class LinkedDataResourceInput < MultiValueInput
 
     def id_for(attribute_name, index, field)
       [@builder.object_name, "#{attribute_name}_attributes", index, field].join('_')
-    end
-
-    def collection
-      @collection ||= begin
-        val = object[attribute_name]
-        col = val.respond_to?(:to_ary) ? val.to_ary : val
-        col.reject { |value| value.to_s.strip.blank? }
-      end
     end
 end
