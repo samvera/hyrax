@@ -8,7 +8,7 @@
         'hyrax/file_manager', 'hyrax/form-progress', 'hyrax/positioning',
         'hyrax/fixedsticky', 'hyrax/file_upload', 'hyrax/representative-media',
         'hyrax/footer', 'hyrax/select_work_type', 'hyrax/users', 'hyrax/dashboard',
-        'hyrax/sidebar', 'hyrax/controlled_vocabulary', 'hyrax/work_editor';
+        'hyrax/sidebar', 'hyrax/linked_data_resource', 'hyrax/work_editor';
 @import 'typeahead';
 @import 'sharing_buttons';
 
@@ -25,6 +25,6 @@
   display: inline-block;
 }
 
-.controlled_vocabulary {
+.linked_data_resource {
   @extend .multi_value;
 }
