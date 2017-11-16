@@ -14,10 +14,6 @@ FactoryBot.define do
       persister.save(resource: instance)
     end
 
-    factory :public_collection, traits: [:public]
-    factory :private_collection, traits: [:private]
-    factory :institution_collection, traits: [:institution]
-
     trait :public do
       visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
     end
