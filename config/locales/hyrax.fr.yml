@@ -301,7 +301,7 @@ fr:
       relationships_parent_row:
         label: 'Dans %{type}:'
       show:
-        last_modified: 'Dernière modification: %{value}'
+        last_modified: 'Dernière modification'
       social_media:
         facebook: Facebook
         google: Google+
