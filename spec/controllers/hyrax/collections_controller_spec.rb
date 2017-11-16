@@ -4,7 +4,7 @@ RSpec.describe Hyrax::CollectionsController do
   let(:other) { build(:user) }
 
   let(:collection) do
-    create_for_repository(:public_collection,
+    create_for_repository(:collection, :public,
                           title: ["My collection"],
                           description: ["My incredibly detailed description of the collection"],
                           user: user)
