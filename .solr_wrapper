@@ -1,9 +1,0 @@
-# Place any default configuration for solr_wrapper here
-
-# Automatically determining solr version was failing frequently on Travis.
-# so here we hard code the version:
-version: 7.1.0 
-collection:
-  persist: true
-  dir: solr/config/
-  name: hydra-development
