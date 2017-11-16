@@ -36,7 +36,7 @@ RSpec.describe CatalogController, type: :controller do
     end
 
     context 'with collections' do
-      let(:collection) { create_for_repository(:public_collection, keyword: ['rocks']) }
+      let(:collection) { create_for_repository(:collection, :public, keyword: ['rocks']) }
 
       # Create fixtures
       before { [collection, rocks, clouds] }
