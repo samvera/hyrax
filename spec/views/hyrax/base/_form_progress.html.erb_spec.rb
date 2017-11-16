@@ -9,6 +9,7 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
     end
     Capybara::Node::Simple.new(rendered)
   end
+  let(:work) { GenericWork.new }
 
   before do
     allow(controller).to receive(:current_user).and_return(user)
@@ -18,8 +19,6 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
 
   context "for a new object" do
     before { assign(:change_set, change_set) }
-
-    let(:work) { GenericWork.new }
 
     context "with options for proxy" do
       let(:proxies) { [stub_model(User, email: 'bob@example.com')] }
@@ -102,12 +101,14 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
 
   context "when the work has been saved before" do
     before do
+      allow(change_set).to receive(:agreement_accepted).and_return(true)
+      allow(change_set).to receive(:version).and_return('123456')
       assign(:change_set, change_set)
       allow(Hyrax.config).to receive(:active_deposit_agreement_acceptance)
         .and_return(true)
     end
 
-    let(:work) { stub_model(GenericWork, id: '456', etag: '123456') }
+    let(:work) { stub_model(GenericWork, id: '456') }
 
     it "renders the deposit agreement already checked and the version" do
       expect(page).to have_selector("#agreement[checked]")
