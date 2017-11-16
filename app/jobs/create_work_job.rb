@@ -16,14 +16,35 @@ class CreateWorkJob < Hyrax::ApplicationJob
   def perform(user, model, attributes, operation)
     operation.performing!
     work = model.constantize.new
-    current_ability = Ability.new(user)
-    env = Hyrax::Actors::Environment.new(work, current_ability, attributes)
-    status = work_actor.create(env)
+    change_set = change_set_class(model).new(work, attributes)
+    status = work_actor.create(actor_env(change_set, user, attributes))
     return operation.success! if status
-    operation.fail!(work.errors.full_messages.join(' '))
+    operation.fail!(change_set.errors.full_messages.join(' '))
   end
 
   private
+
+    def actor_env(change_set, user, attributes)
+      Hyrax::Actors::Environment.new(change_set,
+                                     persister,
+                                     current_ability(user),
+                                     attributes)
+    end
+
+    def current_ability(user)
+      Ability.new(user)
+    end
+
+    def persister
+      Hyrax::ChangeSetPersister.new(
+        metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister),
+        storage_adapter: Valkyrie.config.storage_adapter
+      )
+    end
+
+    def change_set_class(model)
+      "#{model}ChangeSet".constantize
+    end
 
     def work_actor
       Hyrax::CurationConcern.actor
