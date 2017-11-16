@@ -16,6 +16,8 @@
   `GenericWorksController.resource_class = GenericWork`
 * You must switch to postgres (if you want to use the database adapter)
 * `rake valkyrie_engine:install:migrations; rake db:migrate`
+* Improve Tika File Characterization to allow for either use of the default Tika or with a pass to an external service
+* Implement a characterization service that uses MediaInfo
 
 ## TODO:
 
