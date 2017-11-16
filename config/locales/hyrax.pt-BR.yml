@@ -301,7 +301,7 @@ pt-BR:
       relationships_parent_row:
         label: 'Em %{type}:'
       show:
-        last_modified: 'Última modificação: %{value}'
+        last_modified: 'Última modificação'
       social_media:
         facebook: Facebook
         google: Google+
