@@ -1,7 +1,7 @@
 RSpec.describe 'LinkedDataResourceInput', type: :input do
   let(:work) { GenericWork.new }
   let(:builder) { SimpleForm::FormBuilder.new(:generic_work, work, view, {}) }
-  let(:input) { LinkedDataResourceInput.new(builder, :based_near, nil, :multi_value, {}) }
+  let(:input) { LinkedDataResourceInput.new(builder, :based_near, nil, :linked_data_resource, {}) }
 
   describe '#input' do
     before { allow(work).to receive(:[]).with(:based_near).and_return([item1, item2]) }
@@ -11,16 +11,17 @@ RSpec.describe 'LinkedDataResourceInput', type: :input do
     it 'renders multi-value' do
       expect(input).to receive(:build_field).with(item1, 0)
       expect(input).to receive(:build_field).with(item2, 1)
+      expect(input).to receive(:build_field).with('', 2)
       input.input({})
     end
   end
 
   describe '#collection' do
-    let(:work) { GenericWork.new(based_near: [::RDF::URI('http://example.org/1')]) }
+    let(:work) { GenericWork.new(based_near: ['http://example.org/1']) }
 
     subject { input.send(:collection) }
 
-    it { is_expected.to all(be_a(RDF::URI)) }
+    it { is_expected.to all(be_a(String)) }
   end
 
   describe '#build_field' do
@@ -30,7 +31,7 @@ RSpec.describe 'LinkedDataResourceInput', type: :input do
       let(:value) { 'http://example.org/1' }
 
       it 'renders multi-value' do
-        expect(subject).to have_selector('input.generic_work_based_near.multi_value')
+        expect(subject).to have_selector('input.generic_work_based_near.linked_data_resource')
         # without fetching_external (resource intensive) or retrieving existing labels via solr (not yet implemented) the label will be the rdf_subject
         expect(subject).to have_field('generic_work[based_near_attributes][0][hidden_label]', with: 'http://example.org/1')
         expect(subject).to have_selector('input[name="generic_work[based_near_attributes][0][id]"][value="http://example.org/1"]', visible: false)
