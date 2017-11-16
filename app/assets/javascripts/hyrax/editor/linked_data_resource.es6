@@ -4,7 +4,7 @@ import { FieldManager } from 'hydra-editor/field_manager'
 import Handlebars from 'handlebars'
 import Autocomplete from 'hyrax/autocomplete'
 
-export default class ControlledVocabulary extends FieldManager {
+export default class LinkedDataResource extends FieldManager {
 
   constructor(element, paramKey) {
       let options = {
@@ -17,7 +17,7 @@ export default class ControlledVocabulary extends FieldManager {
         fieldWrapperClass: '.field-wrapper',
         warningClass:      '.has-warning',
         listClass:         '.listing',
-        inputTypeClass:    '.controlled_vocabulary',
+        inputTypeClass:    '.linked_data_resource',
 
         addHtml:           '<button type=\"button\" class=\"btn btn-link add\"><span class=\"glyphicon glyphicon-plus\"></span><span class="controls-add-text"></span></button>',
         addText:           'Add another',
@@ -74,7 +74,7 @@ export default class ControlledVocabulary extends FieldManager {
       let row =  $(rowTemplate({ "paramKey": this.paramKey,
                                  "name": this.fieldName,
                                  "index": index,
-                                 "class": "controlled_vocabulary" }))
+                                 "class": "linked_data_resource" }))
                   .append(controls)
       return row
   }
