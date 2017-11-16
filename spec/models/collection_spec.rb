@@ -1,5 +1,5 @@
 RSpec.describe Collection do
-  let(:collection) { build(:public_collection) }
+  let(:collection) { build(:collection, :public) }
   let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
   it "has open visibility" do
