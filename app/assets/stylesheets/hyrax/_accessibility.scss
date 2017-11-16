@@ -1,0 +1,16 @@
+// This stylesheet is a place to apply styling changes for improving the
+// accessibility of Hyrax vanilla
+// Use https://github.com/samvera/hyrax/blob/master/app/assets/stylesheets/_bootstrap-default-overrides.scss
+// for overriding bootstrap variables
+
+// NOTE: This isn't an ideal fix. We're using select2-rails v3.5
+// for styling dropdowns. This can be fixed by updating to select2-rails
+// v4.0.3 but it throws an uncaught error and fails to
+// display the dropdown at all.
+// TODO: I opened an issue that we should follow up on later
+// https://github.com/argerim/select2-rails/issues/176
+// Darkens the 'Search for a user' text in dropdown on 'Dashboard page'
+// Meets WCAG AA and AAA compliance standard
+.select2-default {
+  color: #4c4c4c !important;
+}
