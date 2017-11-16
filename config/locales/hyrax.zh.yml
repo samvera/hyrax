@@ -300,7 +300,7 @@ zh:
       relationships_parent_row:
         label: '属于 %{type}:'
       show:
-        last_modified: '最新修改: %{value}'
+        last_modified: '最新修改'
       social_media:
         facebook: Facebook
         google: Google+

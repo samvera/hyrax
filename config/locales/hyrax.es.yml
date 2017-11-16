@@ -294,7 +294,7 @@ es:
       relationships_parent_row:
         label: 'En %{type}:'
       show:
-        last_modified: 'Última modificación: %{value}'
+        last_modified: 'Última modificación'
       social_media:
         facebook: Facebook
         google: Google+

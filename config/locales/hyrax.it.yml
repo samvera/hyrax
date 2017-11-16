@@ -299,7 +299,7 @@ it:
       relationships_parent_row:
         label: 'In %{type}:'
       show:
-        last_modified: 'Ultima modifica: %{value}'
+        last_modified: 'Ultima modifica'
       social_media:
         facebook: Facebook
         google: Google+
