@@ -22,7 +22,6 @@ module Hyrax
 
     included do
       attr_accessor :file
-      self.human_readable_type = 'File'
     end
 
     def representative_id
