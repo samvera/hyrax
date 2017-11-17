@@ -76,9 +76,7 @@ module Hyrax
       end
 
       def resource_params
-        raw_params = params[resource_class.model_name.param_key]
-        return {} unless raw_params
-        ::Hyrax::BatchUploadChangeSet.model_attributes(raw_params)
+        params[resource_class.model_name.param_key] || {}
       end
   end
 end
