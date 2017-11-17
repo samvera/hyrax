@@ -70,6 +70,17 @@ module Hyrax
                         end
     end
 
+    # Set the current visibility to match what is described in the lease.
+    # @param lease [Hyrax::Lease] the lease visibility to copy to this work.
+    def assign_lease_visibility(lease)
+      return unless lease.lease_expiration_date
+      self.visibility = if lease.active?
+                          lease.visibility_during_lease
+                        else
+                          lease.visibility_after_lease
+                        end
+    end
+
     module ClassMethods
       # This governs which partial to draw when you render this type of object
       def _to_partial_path #:nodoc:
