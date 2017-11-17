@@ -143,7 +143,7 @@ de:
                 3yrs: 3 Jahre nach der Deponierung
                 6mos: 6 Monate nach der Deponierung
                 select: Wählen Sie die Sperrfrist aus.
-              period: 'Der Einlieferer kann eine Embargo-Frist bis zu:'
+              period: 'Der Deponierer kann eine Embargo-Frist bis zu:'
           visibility:
             description: 'Nach dem Release-Datum können die Arbeiten in diesem Admin-Set eingesehen und heruntergeladen werden durch:'
             everyone: Jeder - alle Arbeiten in diesem Admin-Set werden öffentlich sein
@@ -701,7 +701,7 @@ de:
     sort_label: Sortieren Sie die Auflistung der Artikel
     toolbar:
       dashboard:
-        menu: Instrumententafel
+        menu: Mein Dashboard
       language_switch: Sprache wechseln
       notifications:
         many: Sie haben %{count} ungelesene Benachrichtigungen
