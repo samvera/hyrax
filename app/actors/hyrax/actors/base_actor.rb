@@ -19,9 +19,11 @@ module Hyrax
         assign_modified_date(env)
         yield env.change_set if block_given?
         return unless env.change_set.validate(env.attributes)
-        saved_record = save(env)
-        saved_record && next_actor.create(duplicate_env(env, saved_record)) &&
-          run_callbacks(:after_create_concern, saved_record, env.user)
+        saved_resource = save(env)
+        saved_resource &&
+          next_actor.create(duplicate_env(env, saved_resource)) &&
+          run_callbacks(:after_create_concern, saved_resource, env.user) &&
+          saved_resource
       end
 
       # @param [Hyrax::Actors::Environment] env
