@@ -1,8 +1,9 @@
 RSpec.describe Hyrax::ChangeContentDepositorService do
   let!(:depositor) { create(:user) }
   let!(:receiver) { create(:user) }
+  let!(:file_set) { create_for_repository(:file_set, user: depositor) }
   let!(:work) do
-    create_for_repository(:work_with_one_file, title: ['Test work'], user: depositor)
+    create_for_repository(:work, user: depositor, member_ids: [file_set.id])
   end
 
   before do
@@ -20,7 +21,7 @@ RSpec.describe Hyrax::ChangeContentDepositorService do
     end
 
     it "changes the depositor of the child file sets" do
-      reloaded = Hyrax::Queries.find_by(id: work.id)
+      reloaded = Hyrax::Queries.find_by(id: file_set.id)
       expect(reloaded.depositor).to eq receiver.user_key
       expect(reloaded.edit_users).to include(receiver.user_key, depositor.user_key)
     end
@@ -37,7 +38,7 @@ RSpec.describe Hyrax::ChangeContentDepositorService do
     end
 
     it "changes the depositor of the child file sets" do
-      reloaded = Hyrax::Queries.find_by(id: file.id)
+      reloaded = Hyrax::Queries.find_by(id: file_set.id)
       expect(reloaded.depositor).to eq receiver.user_key
       expect(reloaded.edit_users).to include(receiver.user_key, depositor.user_key)
     end
