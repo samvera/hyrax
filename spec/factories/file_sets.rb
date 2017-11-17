@@ -14,10 +14,9 @@ FactoryBot.define do
         persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
         node_builder = Hyrax::FileNodeBuilder.new(storage_adapter: storage_adapter,
                                                   persister: persister)
-
         node = Hyrax::FileNode.for(file: evaluator.content)
         file_node = node_builder.create(file: evaluator.content, node: node)
-        file_set.member_ids += [file_node.id]
+        file_set.file_nodes += [file_node]
       end
     end
 

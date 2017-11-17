@@ -19,6 +19,10 @@ module Hyrax
       new(label: file.original_filename, original_filename: file.original_filename, mime_type: file.content_type, use: file.try(:use) || [Valkyrie::Vocab::PCDMUse.OriginalFile])
     end
 
+    def original_file?
+      use.include?(Valkyrie::Vocab::PCDMUse.OriginalFile)
+    end
+
     def work?
       false
     end
@@ -33,7 +37,7 @@ module Hyrax
 
     def valid?
       file = Valkyrie::StorageAdapter.find_by(id: file_identifiers.first)
-      file.valid?(size: size.first, digests: { sha256: checksum.first })
+      file.valid?(size: size.first, digests: { sha256: checksum.first.sha256 })
     end
   end
 end
