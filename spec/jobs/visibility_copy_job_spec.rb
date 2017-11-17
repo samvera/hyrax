@@ -1,14 +1,15 @@
 RSpec.describe VisibilityCopyJob do
   describe 'an open access work' do
     let(:work) { create_for_repository(:work_with_files) }
+    let(:persister) { Valkyrie::MetadataAdapter.find(:indexing_persister).persister }
 
     it 'copies visibility to its contained files' do
       # files are private at the outset
       expect(work.file_sets.first.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
 
       work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-      work.save
-      described_class.perform_now(work)
+      persister.save(resource: work)
+      described_class.perform_now(work.id)
       work.reload.file_sets.each do |file|
         expect(file.visibility).to eq 'open'
       end
@@ -23,7 +24,7 @@ RSpec.describe VisibilityCopyJob do
       expect(work.visibility).to eq 'restricted'
       expect(work).to be_under_embargo
       expect(work.file_sets.first).not_to be_under_embargo
-      described_class.perform_now(work)
+      described_class.perform_now(work.id)
       work.reload
     end
 
@@ -41,7 +42,7 @@ RSpec.describe VisibilityCopyJob do
       expect(work.visibility).to eq 'open'
       expect(work).to be_active_lease
       expect(work.file_sets.first).not_to be_active_lease
-      described_class.perform_now(work)
+      described_class.perform_now(work.id)
       work.reload
     end
 
