@@ -35,8 +35,8 @@ module Hyrax
       #     file_actor.ingest_file(wrapper!(file: file, relation: relation))
       #     # Copy visibility and permissions from parent (work) to
       #     # FileSets even if they come in from BrowseEverything
-      #     VisibilityCopyJob.perform_later(saved_file.parent)
-      #     InheritPermissionsJob.perform_later(saved_file.parent)
+      #     VisibilityCopyJob.perform_later(saved_file.parent.id)
+      #     InheritPermissionsJob.perform_later(saved_file.parent.id)
       #   else
       #     IngestJob.perform_later(wrapper!(file: file, relation: relation))
       #   end
