@@ -51,7 +51,7 @@ RSpec.describe Hyrax::LeasesController do
       let(:actor) { double('lease actor') }
 
       before do
-        allow(Hyrax::Actors::LeaseActor).to receive(:new).with(a_work).and_return(actor)
+        allow(Hyrax::Actors::LeaseActor).to receive(:new).with(GenericWork).and_return(actor)
       end
 
       context 'that has no files' do

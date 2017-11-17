@@ -1,36 +1,39 @@
 RSpec.describe Hyrax::Actors::EmbargoActor do
   let(:actor) { described_class.new(work) }
-
+  let(:embargo) do
+    create_for_repository(:embargo,
+                          visibility_during_embargo: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED,
+                          visibility_after_embargo: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
+                          embargo_release_date: [release_date])
+  end
   let(:work) do
-    GenericWork.new do |work|
-      work.apply_depositor_metadata 'foo'
-      work.title = ["test"]
-      work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-      work.visibility_during_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-      work.visibility_after_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-      work.embargo_release_date = release_date.to_s
-      work.save(validate: false)
-    end
+    create_for_repository(:work,
+                          visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED,
+                          embargo_id: embargo.id)
   end
 
   describe "#destroy" do
     context "with an active embargo" do
-      let(:release_date) { Time.zone.today + 2 }
+      let(:release_date) { 2.days.from_now }
 
       it "removes the embargo" do
         actor.destroy
-        expect(work.reload.embargo_release_date).to be_nil
-        expect(work.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+        reloaded = Hyrax::Queries.find_by(id: work.id)
+        embargo_reloaded = Hyrax::Queries.find_by(id: reloaded.embargo_id)
+        expect(embargo_reloaded.embargo_release_date).to be_nil
+        expect(reloaded.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
       end
     end
 
     context 'with an expired embargo' do
-      let(:release_date) { Time.zone.today - 2 }
+      let(:release_date) { 2.days.ago }
 
       it "removes the embargo" do
         actor.destroy
-        expect(work.reload.embargo_release_date).to be_nil
-        expect(work.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+        reloaded = Hyrax::Queries.find_by(id: work.id)
+        embargo_reloaded = Hyrax::Queries.find_by(id: reloaded.embargo_id)
+        expect(embargo_reloaded.embargo_release_date).to be_nil
+        expect(reloaded.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
       end
     end
   end

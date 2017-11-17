@@ -16,7 +16,6 @@ module Hyrax
     include CoreMetadata
     include Hyrax::BasicMetadata
     include Naming
-    # include Hydra::AccessControls::Embargoable
     include GlobalID::Identification
 
     included do
@@ -24,6 +23,7 @@ module Hyrax
 
       attribute :file_identifiers, Valkyrie::Types::Set
       attribute :member_ids, Valkyrie::Types::Array
+      attribute :embargo_id, Valkyrie::Types::ID.optional
     end
 
     def original_file
