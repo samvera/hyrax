@@ -12,8 +12,8 @@ module Hyrax
     end
 
     def new
-      @change_set = build_change_set(new_resource).prepopulate!
       authorize! :create, resource_class
+      @change_set = build_change_set(new_resource).prepopulate!
     end
 
     def new_resource
