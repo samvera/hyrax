@@ -25,7 +25,7 @@ module Hyrax
     delegate :user, to: :search_context
 
     def sync
-      if permissions_attributes
+      if permissions
         self.edit_users = permission('edit', 'person') + [user.user_key]
         self.edit_groups = permission('edit', 'group')
         self.read_users = permission('read', 'person')
