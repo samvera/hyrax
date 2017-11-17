@@ -12,7 +12,6 @@ module Hyrax
     include Naming
     include CoreMetadata
     include InAdminSet
-    # include Hydra::AccessControls::Embargoable
     include GlobalID::Identification
     include NestedWorks
     include Suppressible
@@ -34,6 +33,9 @@ module Hyrax
       attribute :thumbnail_id, Valkyrie::Types::ID.optional
       # Points at a file that displays something about this work. Could be an image or a video.
       attribute :representative_id, Valkyrie::Types::ID.optional
+
+      attribute :embargo_id, Valkyrie::Types::ID.optional
+      attribute :lease_id, Valkyrie::Types::ID.optional
     end
 
     # TODO: Move this into ActiveFedora
@@ -55,6 +57,17 @@ module Hyrax
     # @return [Boolean] whether this instance is a Hydra::Works::FileSet.
     def file_set?
       false
+    end
+
+    # Set the current visibility to match what is described in the embargo.
+    # @param embargo [Hyrax::Embargo] the embargo visibility to copy to this work.
+    def assign_embargo_visibility(embargo)
+      return unless embargo.embargo_release_date
+      self.visibility = if embargo.active?
+                          embargo.visibility_during_embargo
+                        else
+                          embargo.visibility_after_embargo
+                        end
     end
 
     module ClassMethods
