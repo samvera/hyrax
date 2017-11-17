@@ -12,8 +12,8 @@ module Hyrax
     def destroy
       @curation_concern = find_resource(params[:id])
       authorize! :destroy, @curation_concern
-      Hyrax::Actors::LeaseActor.new(@curation_concern).destroy
-      flash[:notice] = @curation_concern.lease_history.last
+      lease = Hyrax::Actors::LeaseActor.new(@curation_concern).destroy
+      flash[:notice] = lease.lease_history.last
       if @curation_concern.work? && @curation_concern.file_sets.present?
         redirect_to confirm_permission_path
       else

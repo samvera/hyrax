@@ -24,6 +24,7 @@ module Hyrax
       attribute :file_identifiers, Valkyrie::Types::Set
       attribute :member_ids, Valkyrie::Types::Array
       attribute :embargo_id, Valkyrie::Types::ID.optional
+      attribute :lease_id, Valkyrie::Types::ID.optional
     end
 
     def original_file

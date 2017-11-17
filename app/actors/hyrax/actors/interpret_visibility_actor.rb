@@ -60,14 +60,14 @@ module Hyrax
                                :visibility_after_embargo)
           end
 
-          def sanitize_embargo_params
+          def sanitize_lease_params
             @attributes.except(:visibility,
                                :lease_expiration_date,
                                :visibility_during_lease,
                                :visibility_after_lease)
           end
 
-          def sanitize_lease_params
+          def sanitize_embargo_params
             @attributes.except(:visibility,
                                :embargo_release_date,
                                :visibility_during_embargo,
@@ -116,9 +116,15 @@ module Hyrax
         # If they want a lease, we can assume it's valid
         def apply_lease(env, intention)
           return true unless intention.wants_lease?
-          env.curation_concern.apply_lease(*intention.lease_params)
-          return unless env.curation_concern.lease
-          env.curation_concern.lease.save # see https://github.com/samvera/hydra-head/issues/226
+          lease = find_or_initialize_lease(env.curation_concern)
+
+          lease.lease_expiration_date = [DateTime.parse(intention.lease_params[0]).in_time_zone]
+          lease.visibility_during_lease = intention.lease_params[1]
+          lease.visibility_after_lease = intention.lease_params[2]
+          saved = env.change_set_persister.persister.save(resource: lease)
+
+          env.curation_concern.lease_id = saved.id
+          env.curation_concern.assign_lease_visibility(lease)
         end
 
         # If they want an embargo, we can assume it's valid
@@ -140,6 +146,14 @@ module Hyrax
             Hyrax::Queries.find_by(id: work.embargo_id)
           else
             Hyrax::Embargo.new
+          end
+        end
+
+        def find_or_initialize_lease(work)
+          if work.lease_id
+            Hyrax::Queries.find_by(id: work.lease_id)
+          else
+            Hyrax::Lease.new
           end
         end
     end
