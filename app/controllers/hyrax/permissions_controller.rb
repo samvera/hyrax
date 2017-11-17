@@ -8,7 +8,7 @@ module Hyrax
 
     def copy
       authorize! :edit, curation_concern
-      VisibilityCopyJob.perform_later(curation_concern)
+      VisibilityCopyJob.perform_later(curation_concern.id)
       flash_message = 'Updating file permissions. This may take a few minutes. You may want to refresh your browser or return to this record later to see the updated file permissions.'
       redirect_to [main_app, curation_concern], notice: flash_message
     end
@@ -20,10 +20,10 @@ module Hyrax
     def copy_access
       authorize! :edit, curation_concern
       # copy visibility
-      VisibilityCopyJob.perform_later(curation_concern)
+      VisibilityCopyJob.perform_later(curation_concern.id)
 
       # copy permissions
-      InheritPermissionsJob.perform_later(curation_concern)
+      InheritPermissionsJob.perform_later(curation_concern.id)
       redirect_to [main_app, curation_concern], notice: I18n.t("hyrax.upload.change_access_flash_message")
     end
 
