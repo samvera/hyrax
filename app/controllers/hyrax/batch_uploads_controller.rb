@@ -75,10 +75,8 @@ module Hyrax
         params.fetch(hash_key_for_curation_concern).key?(:on_behalf_of)
       end
 
-      def attributes_for_actor
-        raw_params = params[hash_key_for_curation_concern]
-        return {} unless raw_params
-        ::Hyrax::BatchUploadChangeSet.model_attributes(raw_params)
+      def resource_params
+        params[resource_class.model_name.param_key] || {}
       end
   end
 end
