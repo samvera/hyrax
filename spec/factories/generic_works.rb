@@ -90,15 +90,29 @@ FactoryBot.define do
 
     factory :with_embargo_date do
       transient do
-        embargo_date { Date.tomorrow.to_s }
+        embargo_date { DateTime.current + 1 }
         current_state { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
         future_state { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
       end
       factory :embargoed_work do
-        after(:build) { |work, evaluator| work.apply_embargo(evaluator.embargo_date, evaluator.current_state, evaluator.future_state) }
+        after(:build) do |work, evaluator|
+          embargo = create_for_repository(:embargo,
+                                          embargo_release_date: evaluator.embargo_date,
+                                          visibility_during_embargo: evaluator.current_state,
+                                          visibility_after_embargo: evaluator.future_state)
+          work.embargo_id = embargo.id
+          work.assign_embargo_visibility(embargo)
+        end
       end
       factory :embargoed_work_with_files do
-        after(:build) { |work, evaluator| work.apply_embargo(evaluator.embargo_date, evaluator.current_state, evaluator.future_state) }
+        after(:build) do |work, evaluator|
+          embargo = create_for_repository(:embargo,
+                                          embargo_release_date: evaluator.embargo_date,
+                                          visibility_during_embargo: evaluator.current_state,
+                                          visibility_after_embargo: evaluator.future_state)
+          work.embargo_id = embargo.id
+          work.assign_embargo_visibility(embargo)
+        end
         after(:create) do |work, evaluator|
           2.times { work.member_ids += [create_for_repository(:file_set, user: evaluator.user).id] }
         end

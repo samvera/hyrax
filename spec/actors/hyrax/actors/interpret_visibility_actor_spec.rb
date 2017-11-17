@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
@@ -33,12 +35,13 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
       context 'with a valid embargo date (and no template requirements)' do
         let(:date) { Time.zone.today + 2 }
+        let(:embargo) { Hyrax::Queries.find_by(id: saved.embargo_id) }
+        let!(:saved) { subject.create(env) }
 
         it 'interprets and apply embargo and lease visibility settings' do
-          subject.create(env)
-          expect(curation_concern.visibility_during_embargo).to eq 'authenticated'
-          expect(curation_concern.visibility_after_embargo).to eq 'open'
-          expect(curation_concern.visibility).to eq 'authenticated'
+          expect(embargo.visibility_during_embargo).to eq 'authenticated'
+          expect(embargo.visibility_after_embargo).to eq 'open'
+          expect(saved.visibility).to eq 'authenticated'
         end
       end
     end
