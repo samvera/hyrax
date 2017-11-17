@@ -4,7 +4,6 @@ module Hyrax
   class PermissionTemplateAccess < ActiveRecord::Base
     self.table_name = 'permission_template_accesses'
     belongs_to :permission_template
-    before_destroy :check_if_admin_group
 
     VIEW = 'view'.freeze
     DEPOSIT = 'deposit'.freeze
@@ -33,13 +32,5 @@ module Hyrax
     def admin_group?
       agent_type == 'group' && agent_id == ::Ability.admin_group_name
     end
-
-    private
-
-      def check_if_admin_group
-        return true unless admin_group?
-        errors[:base] << I18n.t('hyrax.admin.admin_sets.form.permission_destroy_errors.admin_group')
-        throw :abort
-      end
   end
 end
