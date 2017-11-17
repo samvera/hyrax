@@ -57,13 +57,14 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
       context 'with a valid lease date' do
         let(:date) { Time.zone.today + 2 }
+        let(:lease) { Hyrax::Queries.find_by(id: saved.lease_id) }
+        let!(:saved) { subject.create(env) }
 
         it 'interprets and apply embargo and lease visibility settings' do
-          subject.create(env)
-          expect(curation_concern.embargo_release_date).to be_nil
-          expect(curation_concern.visibility_during_lease).to eq 'open'
-          expect(curation_concern.visibility_after_lease).to eq 'restricted'
-          expect(curation_concern.visibility).to eq 'open'
+          expect(saved.embargo_id).to be_nil
+          expect(lease.visibility_during_lease).to eq 'open'
+          expect(lease.visibility_after_lease).to eq 'restricted'
+          expect(saved.visibility).to eq 'open'
         end
       end
     end

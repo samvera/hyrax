@@ -1,41 +1,57 @@
-RSpec.describe Hyrax::LeaseService do
-  subject { described_class }
+RSpec.describe Hyrax::LeaseService, :clean_repo do
+  let(:service) { described_class }
 
   let(:future_date) { 2.days.from_now }
   let(:past_date) { 2.days.ago }
 
-  let!(:work_with_expired_lease1) { create_for_repository(:work, lease_expiration_date: past_date.to_s) }
-  let!(:work_with_expired_lease2) { create_for_repository(:work, lease_expiration_date: past_date.to_s) }
-  let!(:work_with_lease_in_effect) { create_for_repository(:work, lease_expiration_date: future_date.to_s) }
+  let(:expired_lease) do
+    create_for_repository(:lease, lease_expiration_date: [past_date])
+  end
+  let(:current_lease) do
+    create_for_repository(:lease, lease_expiration_date: [future_date])
+  end
+  let!(:work_with_expired_lease1) do
+    create_for_repository(:work, lease_id: expired_lease.id)
+  end
+  let!(:work_with_expired_lease2) do
+    create_for_repository(:work, lease_id: expired_lease.id)
+  end
+  let!(:work_with_lease_in_effect) do
+    create_for_repository(:work, lease_id: current_lease.id)
+  end
   let!(:work_without_lease) { create_for_repository(:work) }
-  let(:persister) { Valkyrie::MetadataAdapter.find(:indexing_persister).persister }
 
   describe '#assets_with_expired_leases' do
+    subject { service.assets_with_expired_leases.map(&:id) }
+
     it 'returns an array of assets with expired lease' do
-      returned_pids = subject.assets_with_expired_leases.map(&:id)
-      expect(returned_pids).to include work_with_expired_lease1.id, work_with_expired_lease2.id
-      expect(returned_pids).not_to include work_with_lease_in_effect.id, work_without_lease.id
+      expect(subject).to contain_exactly(
+        work_with_expired_lease1.id.to_s,
+        work_with_expired_lease2.id.to_s
+      )
     end
   end
 
   describe '#assets_under_lease' do
+    subject { service.assets_under_lease.map(&:id) }
+
     it 'returns an array of assets with active leases' do
-      returned_pids = subject.assets_under_lease.map(&:id)
-      expect(returned_pids).to include work_with_expired_lease1.id, work_with_expired_lease2.id, work_with_lease_in_effect.id
-      expect(returned_pids).not_to include work_without_lease.id
+      expect(subject).to contain_exactly(
+        work_with_expired_lease1.id.to_s,
+        work_with_expired_lease2.id.to_s,
+        work_with_lease_in_effect.id.to_s
+      )
     end
   end
 
   describe '#assets_with_deactivated_leases' do
-    before do
-      work_with_expired_lease1.deactivate_lease!
-      persister.save(resource: work_with_expired_lease1)
-      work_with_lease_in_effect.deactivate_lease!
-      persister.save(resource: work_with_lease_in_effect)
-    end
+    subject { service.assets_with_deactivated_leases.map(&:id) }
+
+    let(:expired_lease) { create_for_repository(:lease, lease_history: ['this is inactive']) }
+    let(:current_lease) { create_for_repository(:lease, lease_history: ['also inactive']) }
+
     it 'returns an array of assets with deactivated leases' do
-      returned_pids = subject.assets_with_deactivated_leases.map(&:id)
-      expect(returned_pids).to include work_with_expired_lease1.id, work_with_lease_in_effect.id
+      expect(subject).to include work_with_expired_lease1.id.to_s, work_with_lease_in_effect.id.to_s
     end
   end
 end

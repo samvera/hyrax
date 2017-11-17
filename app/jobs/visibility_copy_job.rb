@@ -5,7 +5,7 @@
 # * embargo
 class VisibilityCopyJob < Hyrax::ApplicationJob
   # @api public
-  # @param [#file_sets, #visibility, #lease, #embargo] work - a Work model
+  # @param work_id [String] the identifier for a work
   def perform(work_id)
     work = Hyrax::Queries.find_by(id: Valkyrie::ID.new(work_id))
     work.file_sets.each do |file|
@@ -22,13 +22,15 @@ class VisibilityCopyJob < Hyrax::ApplicationJob
 
     def copy_lease(work:, file:)
       return unless work.lease_id
-      work_lease = Hyrax::Queries.find_id(id: work.lease_id)
+      work_lease = Hyrax::Queries.find_by(id: work.lease_id)
       file_lease = if file.lease_id
-                     Hyrax::Queries.find_id(id: file.lease_id)
+                     Hyrax::Queries.find_by(id: file.lease_id)
                    else
                      Hyrax::Lease.new
                    end
-      file_lease.attributes = work_lease.attributes
+      file_lease.lease_expiration_date = work_lease.lease_expiration_date
+      file_lease.visibility_during_lease = work_lease.visibility_during_lease
+      file_lease.visibility_after_lease = work_lease.visibility_after_lease
       saved = persister.save(resource: file_lease)
       file.lease_id = saved.id
     end
@@ -37,7 +39,7 @@ class VisibilityCopyJob < Hyrax::ApplicationJob
       return unless work.embargo_id
       work_embargo = Hyrax::Queries.find_by(id: work.embargo_id)
       file_embargo = if file.embargo_id
-                       Hyrax::Queries.find_id(id: file.embargo_id)
+                       Hyrax::Queries.find_by(id: file.embargo_id)
                      else
                        Hyrax::Embargo.new
                      end
