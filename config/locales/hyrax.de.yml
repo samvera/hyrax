@@ -72,7 +72,7 @@ de:
           header: Admin-Set bearbeiten
         form:
           cancel: Abbrechen
-          note: Benutzern, denen eine neue Rolle zugewiesen wurde, wird nur die Rolle zugewiesen, die nach der Gewährung dieser Rolle hinterlegt wurde.
+          note: Benutzern, denen eine neue Rolle zugewiesen wurde, können die damit verbundenen Rollenrechte nur auf jene Arbeiten übertragen, die nach der Gewährung dieser Rolle deponiert wurden.
           permission_destroy_errors:
             admin_group: Die Gruppe der Administratoren des Repositoriums kann nicht entfernt werden
           permission_update_errors:
