@@ -112,8 +112,6 @@ FactoryBot.define do
                                           visibility_after_embargo: evaluator.future_state)
           work.embargo_id = embargo.id
           work.assign_embargo_visibility(embargo)
-        end
-        after(:create) do |work, evaluator|
           2.times { work.member_ids += [create_for_repository(:file_set, user: evaluator.user).id] }
         end
       end
@@ -121,16 +119,28 @@ FactoryBot.define do
 
     factory :with_lease_date do
       transient do
-        lease_date { Date.tomorrow.to_s }
+        lease_date { DateTime.current + 1 }
         current_state { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
         future_state { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
       end
       factory :leased_work do
-        after(:build) { |work, evaluator| work.apply_lease(evaluator.lease_date, evaluator.current_state, evaluator.future_state) }
+        after(:build) do |work, evaluator|
+          lease = create_for_repository(:lease,
+                                        lease_expiration_date: evaluator.lease_date,
+                                        visibility_during_lease: evaluator.current_state,
+                                        visibility_after_lease: evaluator.future_state)
+          work.lease_id = lease.id
+          work.assign_lease_visibility(lease)
+        end
       end
       factory :leased_work_with_files do
-        after(:build) { |work, evaluator| work.apply_lease(evaluator.lease_date, evaluator.current_state, evaluator.future_state) }
-        after(:create) do |work, evaluator|
+        after(:build) do |work, evaluator|
+          lease = create_for_repository(:lease,
+                                        lease_expiration_date: evaluator.lease_date,
+                                        visibility_during_lease: evaluator.current_state,
+                                        visibility_after_lease: evaluator.future_state)
+          work.lease_id = lease.id
+          work.assign_lease_visibility(lease)
           2.times { work.member_ids += [create_for_repository(:file_set, user: evaluator.user).id] }
         end
       end
