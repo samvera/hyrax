@@ -12,13 +12,18 @@ module Hyrax
     # Write the thumbnail paths into the solr_document
     # @return [Hash] solr_document the solr document with the thumbnail field
     def to_solr
-      return {} if resource.is_a? Hyrax::FileNode
+      return {} unless acceptable_type?
       { thumbnail_field => thumbnail_path }
     end
 
     private
 
       attr_reader :resource
+
+      # filter out objects like Embargos and FileNodes
+      def acceptable_type?
+        @resource.respond_to?(:thumbnail_id) && @resource.thumbnail_id
+      end
 
       # Returns the value for the thumbnail path to put into the solr document
       def thumbnail_path

@@ -48,14 +48,15 @@ RSpec.describe Hyrax::EmbargoesController do
 
     context 'when I have permission to edit the object' do
       before do
-        expect(Hyrax::Actors::EmbargoActor).to receive(:new).with(a_work).and_return(actor)
+        expect(Hyrax::Actors::EmbargoActor).to receive(:new).with(GenericWork).and_return(actor)
       end
 
       let(:actor) { double }
+      let(:embargo) { instance_double(Hyrax::Embargo, embargo_history: ['it gone']) }
 
       context 'that has no files' do
         it 'deactivates embargo and redirects' do
-          expect(actor).to receive(:destroy)
+          expect(actor).to receive(:destroy).and_return(embargo)
           get :destroy, params: { id: a_work }
           expect(response).to redirect_to edit_embargo_path(a_work)
         end
@@ -65,7 +66,7 @@ RSpec.describe Hyrax::EmbargoesController do
         let(:a_work) { create_for_repository(:work_with_one_file, user: user) }
 
         it 'deactivates embargo and checks to see if we want to copy the visibility to files' do
-          expect(actor).to receive(:destroy)
+          expect(actor).to receive(:destroy).and_return(embargo)
           get :destroy, params: { id: a_work }
           expect(response).to redirect_to confirm_permission_path(a_work)
         end
@@ -76,25 +77,29 @@ RSpec.describe Hyrax::EmbargoesController do
   describe '#update' do
     context 'when I have permission to edit the object' do
       let(:file_set) { create_for_repository(:file_set, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED) }
-      let(:release_date) { Time.zone.today + 2 }
-
-      before do
-        a_work.member_ids += [file_set.id]
-        a_work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-        a_work.visibility_during_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-        a_work.visibility_after_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-        a_work.embargo_release_date = release_date.to_s
-        a_work.embargo.save(validate: false)
-        a_work.save(validate: false)
+      let(:embargo) do
+        create_for_repository(:embargo,
+                              visibility_during_embargo: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED,
+                              visibility_after_embargo: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
+                              embargo_release_date: [release_date])
+      end
+      let(:a_work) do
+        create_for_repository(:work,
+                              user: user,
+                              member_ids: [file_set.id],
+                              visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED,
+                              embargo_id: embargo.id)
       end
 
       context 'with an expired embargo' do
-        let(:release_date) { Time.zone.today - 2 }
+        let(:release_date) { DateTime.current - 2 }
+        let(:reloaded_work) { Hyrax::Queries.find_by(id: a_work.id) }
+        let(:reloaded_file_set) { Hyrax::Queries.find_by(id: file_set.id) }
 
         it 'deactivates embargo, update the visibility and redirect' do
           patch :update, params: { batch_document_ids: [a_work.id], embargoes: { '0' => { copy_visibility: a_work.id } } }
-          expect(a_work.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-          expect(file_set.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+          expect(reloaded_work.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+          expect(reloaded_file_set.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
           expect(response).to redirect_to embargoes_path
         end
       end

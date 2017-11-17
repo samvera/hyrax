@@ -5,8 +5,6 @@ module Hyrax
     included do
       attr_accessor :curation_concern
       helper_method :curation_concern
-      before_action :load_resource, only: [:destroy, :update]
-      authorize_resource instance_name: :curation_concern, only: [:destroy, :update]
     end
 
     # This is an override of Hyrax::ApplicationController
@@ -14,13 +12,12 @@ module Hyrax
       redirect_to root_path, alert: exception.message
     end
 
-    def edit; end
+    def edit
+      @curation_concern = find_resource(params[:id])
+      authorize! :edit, @curation_concern
+    end
 
     private
-
-      def load_resource
-        @curation_concern = find_resource(params[:id])
-      end
 
       def find_resource(id)
         query_service.find_by(id: Valkyrie::ID.new(id.to_s))
