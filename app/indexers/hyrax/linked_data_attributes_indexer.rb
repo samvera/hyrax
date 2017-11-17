@@ -23,7 +23,8 @@ module Hyrax
     end
 
     def to_solr
-      return {} unless @resource.work?
+      return {} unless acceptable_type?
+
       linked_data_attributes.each do |ld_attribute_name|
         next unless resource.try(ld_attribute_name)
         stored_searchable_and_facetable(
@@ -34,6 +35,11 @@ module Hyrax
     end
 
     private
+
+      # Only allow work objects.
+      def acceptable_type?
+        @resource.respond_to?(:work?) && @resource.work?
+      end
 
       # Fetch the labels and add data to the solr_hash Store as stored_searchable (_tesim) and facetable (_sim)
       def stored_searchable_and_facetable(ld_attribute_name)
