@@ -1,4 +1,5 @@
 module Hyrax
+  # Finds the keys/values used for indexing the Embargo (if one exists) for a work
   class EmbargoIndexer
     def initialize(resource:)
       @resource = resource
