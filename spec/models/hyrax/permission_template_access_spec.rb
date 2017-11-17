@@ -153,4 +153,28 @@ RSpec.describe Hyrax::PermissionTemplateAccess do
       end
     end
   end
+
+  describe "duplicate records" do
+    let(:permission_template) { create(:permission_template) }
+    let(:agent_type) { 'user' }
+    let(:agent_id) { 'foobar' }
+
+    before do
+      create(:permission_template_access,
+             :view,
+             permission_template: permission_template,
+             agent_type: agent_type,
+             agent_id: agent_id)
+    end
+
+    subject do
+      build(:permission_template_access,
+            :view,
+            permission_template: permission_template,
+            agent_type: agent_type,
+            agent_id: agent_id)
+    end
+
+    it { is_expected.not_to be_valid }
+  end
 end
