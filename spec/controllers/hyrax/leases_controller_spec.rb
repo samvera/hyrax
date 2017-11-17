@@ -2,7 +2,6 @@ RSpec.describe Hyrax::LeasesController do
   let(:user) { create(:user) }
   let(:a_work) { create_for_repository(:work, user: user) }
   let(:not_my_work) { create_for_repository(:work) }
-  let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
   before { sign_in user }
 
@@ -49,6 +48,7 @@ RSpec.describe Hyrax::LeasesController do
 
     context 'when I have permission to edit the object' do
       let(:actor) { double('lease actor') }
+      let(:lease) { instance_double(Hyrax::Lease, lease_history: ['it gone']) }
 
       before do
         allow(Hyrax::Actors::LeaseActor).to receive(:new).with(GenericWork).and_return(actor)
@@ -56,7 +56,7 @@ RSpec.describe Hyrax::LeasesController do
 
       context 'that has no files' do
         it 'deactivates the lease and redirects' do
-          expect(actor).to receive(:destroy)
+          expect(actor).to receive(:destroy).and_return(lease)
           get :destroy, params: { id: a_work }
           expect(response).to redirect_to edit_lease_path(a_work)
         end
@@ -66,7 +66,7 @@ RSpec.describe Hyrax::LeasesController do
         let(:a_work) { create_for_repository(:work_with_one_file, user: user) }
 
         it 'deactivates the lease and redirects' do
-          expect(actor).to receive(:destroy)
+          expect(actor).to receive(:destroy).and_return(lease)
           get :destroy, params: { id: a_work }
           expect(response).to redirect_to confirm_permission_path(a_work)
         end
@@ -77,25 +77,29 @@ RSpec.describe Hyrax::LeasesController do
   describe '#update' do
     context 'when I have permission to edit the object' do
       let(:file_set) { create_for_repository(:file_set, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) }
-      let(:expiration_date) { Time.zone.today + 2 }
-
-      before do
-        a_work.member_ids += [file_set.id]
-        a_work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-        a_work.visibility_during_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-        a_work.visibility_after_lease = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-        a_work.lease_expiration_date = expiration_date.to_s
-        persister.save(resource: a_work.lease)
-        persister.save(resource: a_work)
+      let(:lease) do
+        create_for_repository(:lease,
+                              visibility_during_lease: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
+                              visibility_after_lease: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED,
+                              lease_expiration_date: [expiration_date])
+      end
+      let(:a_work) do
+        create_for_repository(:work,
+                              user: user,
+                              member_ids: [file_set.id],
+                              visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED,
+                              lease_id: lease.id)
       end
 
       context 'with an expired lease' do
-        let(:expiration_date) { Time.zone.today - 2 }
+        let(:expiration_date) { 2.days.ago }
+        let(:reloaded_work) { Hyrax::Queries.find_by(id: a_work.id) }
+        let(:reloaded_file_set) { Hyrax::Queries.find_by(id: file_set.id) }
 
         it 'deactivates lease, update the visibility and redirect' do
           patch :update, params: { batch_document_ids: [a_work.id], leases: { '0' => { copy_visibility: a_work.id } } }
-          expect(a_work.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-          expect(file_set.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+          expect(reloaded_work.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+          expect(reloaded_file_set.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
           expect(response).to redirect_to leases_path
         end
       end
