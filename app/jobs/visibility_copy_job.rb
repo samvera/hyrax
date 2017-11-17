@@ -6,7 +6,8 @@
 class VisibilityCopyJob < Hyrax::ApplicationJob
   # @api public
   # @param [#file_sets, #visibility, #lease, #embargo] work - a Work model
-  def perform(work)
+  def perform(work_id)
+    work = Hyrax::Queries.find_by(id: Valkyrie::ID.new(work_id))
     work.file_sets.each do |file|
       file.visibility = work.visibility # visibility must come first, because it can clear an embargo/lease
       copy_visibility_modifier(work: work, file: file, modifier: :lease)
