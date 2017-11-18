@@ -79,6 +79,14 @@ module Hyrax
         model.thumbnail.title.first
       end
 
+      def available_child_collections
+        load_child_collections
+      end
+
+      def available_parent_collections
+        load_parent_collections
+      end
+
       private
 
         def all_files_with_access
@@ -92,13 +100,23 @@ module Hyrax
         end
 
         def collection_member_service
-          @collection_member_service ||= membership_service_class.new(scope: self, collection: collection, params: nil)
+          @collection_member_service ||= membership_service_class.new(scope: self, collection: collection, params: blacklight_config.default_solr_params)
         end
 
         def member_presenters(member_ids)
           PresenterFactory.build_for(ids: member_ids,
                                      presenter_class: WorkShowPresenter,
                                      presenter_args: [nil])
+        end
+
+        # For the given parent, what are all of the subcollections?
+        def load_child_collections
+          collection_member_service.available_member_subcollections.documents
+        end
+
+        # For the given child, what are all of the parent collections?
+        def load_parent_collections
+          collection.member_of_collections
         end
     end
   end
