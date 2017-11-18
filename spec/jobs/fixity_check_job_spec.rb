@@ -13,7 +13,7 @@ RSpec.describe FixityCheckJob do
     let(:log_record) { described_class.perform_now(uri, file_set_id: file_set.id, file_id: file_id) }
 
     describe 'fixity check the content' do
-      let(:uri) { file_set.original_file.uri }
+      let(:uri) { file_set.original_file.id }
 
       it 'passes' do
         expect(log_record).to be_passed
