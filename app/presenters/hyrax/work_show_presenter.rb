@@ -139,7 +139,7 @@ module Hyrax
     end
 
     def model
-      solr_document.to_model.model_name.singular
+      solr_document.to_model
     end
 
     delegate :member_presenters, :file_set_presenters, :work_presenters, to: :member_presenter_factory

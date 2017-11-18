@@ -65,5 +65,4 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:extract_full_text?) }
   it { is_expected.to respond_to(:whitelisted_ingest_dirs) }
   it { is_expected.to respond_to(:whitelisted_ingest_dirs=) }
-  it { is_expected.to respond_to(:display_work_icon?) }
 end
