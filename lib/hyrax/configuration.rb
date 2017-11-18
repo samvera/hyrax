@@ -419,12 +419,6 @@ module Hyrax
                     end
     end
 
-    attr_writer :display_work_icon
-    def display_work_icon?
-      return @display_work_icon unless @display_work_icon.nil?
-      @display_work_icon = true
-    end
-
     private
 
       # @param [Symbol, #to_s] model_name - symbol representing the model
