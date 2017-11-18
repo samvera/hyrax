@@ -21,14 +21,14 @@ class FixityCheckJob < Hyrax::ApplicationJob
   # record recording the check.
   #
   # @param uri [String] uri - of the specific file/version to fixity check
-  # @param file_set_id [FileSet] the id for FileSet parent object of URI being checked.
+  # @param file_set_id [Valkyrie::ID] the id for FileSet parent object of URI being checked.
   # @param file_id [String] File#id, used for logging/reporting.
   def perform(uri, file_set_id:, file_id:)
     uri = uri.to_s # sometimes we get an RDF::URI gah
     log = run_check(file_set_id, file_id, uri)
 
     if log.failed? && Hyrax.config.callback.set?(:after_fixity_check_failure)
-      file_set = Queries.find_by(id: file_set_id)
+      file_set = Hyrax::Queries.find_file_set(id: file_set_id)
       Hyrax.config.callback.run(:after_fixity_check_failure,
                                 file_set,
                                 checksum_audit_log: log)
@@ -40,24 +40,17 @@ class FixityCheckJob < Hyrax::ApplicationJob
   private
 
     def run_check(file_set_id, file_id, uri)
-      service = ActiveFedora::FixityService.new(uri)
-      begin
-        fixity_ok = service.check
-        expected_result = service.expected_message_digest
-      rescue Ldp::NotFound
-        # Either the #check or #expected_message_digest could raise this exception
-        error_msg = 'resource not found'
-      end
+      file_node = Hyrax::Queries.find_by(id: file_id)
+      stored_file = Valkyrie::StorageAdapter.find_by(id: file_node.file_identifiers[0])
+      # TODO: determine which digest to work with: sha1 vs sha256
+      fixity_ok = stored_file.valid?(size: file_node.size.first, digests: { sha256: file_node.checksum.first })
+      expected_result = file_node.checksum.first
 
-      log = ChecksumAuditLog.create_and_prune!(passed: fixity_ok, file_set_id: file_set_id, checked_uri: uri, file_id: file_id, expected_result: expected_result)
+      log = ChecksumAuditLog.create_and_prune!(passed: fixity_ok, file_set_id: file_set_id.to_s, checked_uri: uri, file_id: file_id.to_s, expected_result: expected_result)
       # Note that the after_fixity_check_failure will be called if the fixity check fail. This
       # logging is for additional information related to the failure. Wondering if we should
       # also include the error message?
-      logger.error "FIXITY CHECK FAILURE: Fixity failed for #{uri} #{error_msg}: #{log}" unless fixity_ok
+      Rails.logger.error "FIXITY CHECK FAILURE: Fixity failed for #{uri} #{error_msg}: #{log}" unless fixity_ok
       log
-    end
-
-    def logger
-      ActiveFedora::Base.logger
     end
 end
