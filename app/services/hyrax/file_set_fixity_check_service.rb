@@ -55,7 +55,7 @@ module Hyrax
     #
     # If async_jobs is true (default), just returns nil, stuff is still going on.
     def fixity_check
-      results = file_set.files.collect { |f| fixity_check_file(f) }
+      results = file_nodes.collect { |f| fixity_check_file(f.file_identifiers.first) }
 
       return if async_jobs
 
@@ -71,16 +71,21 @@ module Hyrax
 
     private
 
+      def file_nodes
+        Hyrax::Queries.find_members(resource: file_set, model: Hyrax::FileNode)
+      end
+
       # Retrieve or generate the fixity check for a file
       # (all versions are checked for versioned files unless latest_version_only set)
-      # @param [ActiveFedora::File] file to fixity check
+      # @param [Valkyrie::ID] id of file to fixity check
       # @param [Array] log container for messages
-      def fixity_check_file(file)
-        versions = file.has_versions? ? file.versions.all : [file]
+      def fixity_check_file(id)
+        adapter = Valkyrie::StorageAdapter.adapter_for(id: id)
+        versions = adapter.supports_versions? ? adapter.versions(id: id) : [id]
 
-        versions = [versions.max_by(&:created)] if latest_version_only
+        versions = [versions.first] if latest_version_only
 
-        versions.collect { |v| fixity_check_file_version(file.id, v.uri.to_s) }.flatten
+        versions.collect { |v| fixity_check_file_version(id, v) }.flatten
       end
 
       # Retrieve or generate the fixity check for a specific version of a file
@@ -91,9 +96,9 @@ module Hyrax
         return latest_fixity_check unless needs_fixity_check?(latest_fixity_check)
 
         if async_jobs
-          FixityCheckJob.perform_later(version_uri.to_s, file_set_id: file_set.id, file_id: file_id)
+          FixityCheckJob.perform_later(version_uri, file_set_id: file_set.id, file_id: file_id)
         else
-          FixityCheckJob.perform_now(version_uri.to_s, file_set_id: file_set.id, file_id: file_id)
+          FixityCheckJob.perform_now(version_uri, file_set_id: file_set.id, file_id: file_id)
         end
       end
 

@@ -14,6 +14,9 @@ module Hyrax
     # @return [FileNode] the persisted metadata node that represents the file
     def create(file:, node:)
       saved_node = persister.save(resource: node)
+      # TODO: modify the storage_adapter to record:
+      #    VersionCommitter.create(version_id: version.uri, committer_login: user_key)
+
       stored_file = storage_adapter.upload(file: file,
                                            original_filename: node.original_filename.first,
                                            resource: saved_node)

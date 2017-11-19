@@ -27,7 +27,7 @@ RSpec.describe FixityCheckJob do
     end
 
     describe 'fixity check a version of the content' do
-      let(:uri) { Hyrax::VersioningService.latest_version_of(file_set.original_file).uri }
+      # let(:uri) { Hyrax::VersioningService.latest_version_of(file_set.original_file).uri }
 
       it 'passes' do
         expect(log_record).to be_passed
@@ -38,7 +38,7 @@ RSpec.describe FixityCheckJob do
     end
 
     describe 'fixity check an invalid version of the content' do
-      let(:uri) { Hyrax::VersioningService.latest_version_of(file_set.original_file).uri + 'bogus' }
+      # let(:uri) { Hyrax::VersioningService.latest_version_of(file_set.original_file).uri + 'bogus' }
 
       it 'fails' do
         expect(log_record).to be_failed
