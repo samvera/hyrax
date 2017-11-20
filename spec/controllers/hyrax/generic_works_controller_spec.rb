@@ -184,7 +184,7 @@ RSpec.describe Hyrax::GenericWorksController do
         expect(assigns[:form].depositor).to eq user.user_key
         expect(assigns[:curation_concern]).to be_kind_of GenericWork
         expect(assigns[:curation_concern].depositor).to eq user.user_key
-        expect(response).to render_template("layouts/dashboard")
+        expect(response).to render_template("layouts/hyrax/dashboard")
       end
     end
   end
@@ -342,7 +342,7 @@ RSpec.describe Hyrax::GenericWorksController do
         get :edit, params: { id: work }
         expect(response).to be_success
         expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkForm
-        expect(response).to render_template("layouts/dashboard")
+        expect(response).to render_template("layouts/hyrax/dashboard")
       end
     end
 

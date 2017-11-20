@@ -1,7 +1,7 @@
 module Hyrax
   class NotificationsController < ApplicationController
     before_action :authenticate_user!
-    layout 'dashboard'
+    with_themed_layout 'dashboard'
 
     def index
       add_breadcrumb t(:'hyrax.controls.home'), root_path

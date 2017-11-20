@@ -16,7 +16,7 @@ module Sipity
     end
 
     describe '#proxy_for' do
-      let(:work) { FactoryBot.create(:generic_work) }
+      let(:work) { create(:generic_work) }
       let(:entity) { Sipity::Entity.new(proxy_for_global_id: work.to_global_id) }
 
       it 'will retrieve based on a GlobalID of the object' do

@@ -5,19 +5,19 @@ RSpec.describe Hyrax::EmbargoService do
   let(:past_date) { 2.days.ago }
 
   let!(:work_with_expired_embargo1) do
-    FactoryBot.build(:generic_work, embargo_release_date: past_date.to_s).tap do |work|
+    build(:work, embargo_release_date: past_date.to_s).tap do |work|
       work.save(validate: false)
     end
   end
 
   let!(:work_with_expired_embargo2) do
-    FactoryBot.build(:generic_work, embargo_release_date: past_date.to_s).tap do |work|
+    build(:work, embargo_release_date: past_date.to_s).tap do |work|
       work.save(validate: false)
     end
   end
 
-  let!(:work_with_embargo_in_effect) { FactoryBot.create(:generic_work, embargo_release_date: future_date.to_s) }
-  let!(:work_without_embargo) { FactoryBot.create(:generic_work) }
+  let!(:work_with_embargo_in_effect) { create(:work, embargo_release_date: future_date.to_s) }
+  let!(:work_without_embargo) { create(:generic_work) }
 
   describe '#assets_with_expired_embargoes' do
     it 'returns an array of assets with expired embargoes' do

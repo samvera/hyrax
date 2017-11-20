@@ -1,4 +1,4 @@
-export default class PerPage {
+export default class SortAndPerPage {
   /**
    * Initializes the class in the context of an individual select element,
    * and bind its change event to submit the form it is contained within.

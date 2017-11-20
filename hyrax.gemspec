@@ -36,7 +36,7 @@ EOF
   spec.add_dependency 'hydra-works', '~> 0.16'
   spec.add_dependency 'hydra-derivatives', '~> 3.3'
   spec.add_dependency 'browse-everything', '>= 0.10.5'
-  spec.add_dependency 'blacklight', '~> 6.9'
+  spec.add_dependency 'blacklight', '~> 6.11', '>= 6.11.2'
   spec.add_dependency 'blacklight-gallery', '~> 0.7'
   spec.add_dependency 'tinymce-rails', '~> 4.1'
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
@@ -72,7 +72,7 @@ EOF
   spec.add_dependency 'dry-struct', '~> 0.1'
   spec.add_dependency 'redlock', '>= 0.1.2'
   spec.add_dependency 'retriable', '>= 2.9', '< 4.0'
-  spec.add_dependency 'active-fedora', '>= 11.3.1'
+  spec.add_dependency 'active-fedora', '~> 11.5', '>= 11.5.2'
   spec.add_dependency 'samvera-nesting_indexer', '~> 0.8'
   spec.add_dependency 'linkeddata' # Required for getting values from geonames
 

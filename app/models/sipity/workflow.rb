@@ -37,14 +37,16 @@ module Sipity
     # @api public
     #
     # Within the given permission_template scope:
-    #   * Deactivate the current active workflow (if one exists)
-    #   * Activate the specified workflow_id
+    #   * Activate the specified workflow_id or workflow_name
+    #   * Deactivate the other workflows
+    #
+    # TODO: Resolve https://github.com/samvera/hyrax/issues/2151 as the documentation is aspirational and not reality
     #
     # @param permission_template [Hyrax::PermissionTemplate] The scope for activation of the workflow id
     # @param workflow_id [Integer] The workflow_id within the given permission_template that should be activated
     # @param workflow_name [String] The name of the workflow within the given permission template that should be activated
     # @return [TrueClass]
-    # @raise [ActiveRecord::RecordNotFound] When we have a mismatch on permission template and workflow id
+    # @raise [ActiveRecord::RecordNotFound] When we have a mismatch on permission template and workflow id or workflow name
     # @raise [RuntimeError] When you don't specify a workflow_id or workflow_name
     def self.activate!(permission_template:, workflow_id: nil, workflow_name: nil)
       raise "You must specify a workflow_id or workflow_name to activate!" if workflow_id.blank? && workflow_name.blank?

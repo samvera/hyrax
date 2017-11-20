@@ -47,9 +47,13 @@ RSpec.describe AdminSet, type: :model do
   end
 
   describe '.after_destroy' do
-    it 'will destroy the associated permission template' do
+    let(:permission_template_access) { create(:permission_template_access) }
+
+    it 'will destroy the associated permission template and permission template access' do
       admin_set = create(:admin_set, with_permission_template: true)
-      expect { admin_set.destroy }.to change { Hyrax::PermissionTemplate.count }.by(-1)
+      permission_template_access.permission_template_id = admin_set.permission_template.id
+      permission_template_access.save
+      expect { admin_set.destroy }.to change { Hyrax::PermissionTemplate.count }.by(-1).and change { Hyrax::PermissionTemplateAccess.count }.by(-1)
     end
   end
 
