@@ -28,9 +28,11 @@
   * Embargo and Lease - Where should these be persisted
   * paranoid_edit_permissions moves to ChangeSet
   * remove_representative_relationship should go into a change set (when you delete a FileSet that is a representative)
+  * Get UI to a functional state
 * Phase 3 (spring 2018)
   * Persist as PCDM (as migration path from Hyrax 2 to Hyrax 3)
     * Read from PCDM (migration path)
     * Write to PCDM (no migration at all)
   * WebAC
   * Presenters: Use Draper decorators?
+
