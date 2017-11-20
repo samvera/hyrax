@@ -81,7 +81,7 @@ RSpec.describe Hyrax::UsersController, type: :controller do
       end
 
       it "uses the base query" do
-        u3 = FactoryBot.create(:user)
+        u3 = create(:user)
         allow(controller).to receive(:base_query).and_return(["email == \"#{u3.email}\""])
         get :index
         expect(assigns[:users]).to include(u3)

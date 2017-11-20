@@ -1,12 +1,12 @@
 RSpec.describe Hyrax::ContentBlocksController, type: :controller do
   let!(:announcement_text) do
-    FactoryBot.create(:content_block, name: 'announcement_text')
+    create(:content_block, name: 'announcement_text')
   end
   let!(:marketing_text) do
-    FactoryBot.create(:content_block, name: 'marketing_text')
+    create(:content_block, name: 'marketing_text')
   end
   let!(:featured_researcher) do
-    FactoryBot.create(:content_block, name: 'featured_researcher')
+    create(:content_block, name: 'featured_researcher')
   end
 
   before do
@@ -14,7 +14,7 @@ RSpec.describe Hyrax::ContentBlocksController, type: :controller do
   end
 
   context 'with an unprivileged user' do
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { create(:user) }
 
     describe "GET #edit" do
       it "denies the request" do
@@ -32,7 +32,7 @@ RSpec.describe Hyrax::ContentBlocksController, type: :controller do
   end
 
   context 'with an administrator' do
-    let(:user) { FactoryBot.create(:admin) }
+    let(:user) { create(:admin) }
 
     describe "GET #edit" do
       it "renders breadcrumbs" do

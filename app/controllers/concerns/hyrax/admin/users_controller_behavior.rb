@@ -5,7 +5,7 @@ module Hyrax
       include Blacklight::SearchContext
       included do
         before_action :ensure_admin!
-        layout 'dashboard'
+        with_themed_layout 'dashboard'
       end
 
       # Display admin menu list of users

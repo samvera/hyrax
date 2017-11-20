@@ -15,7 +15,7 @@ module Hyrax
     # We use BatchUploadItem as a null stand-in curation_concern_type.
     # The actual permission is checked dynamically during #create.
 
-    layout 'dashboard'
+    with_themed_layout 'dashboard'
 
     # The permissions to create a batch are not as important as the permissions for the concern being batched.
     # @note we don't call `authorize!` directly, since `authorized_models` already checks `user.can? :create, ...`

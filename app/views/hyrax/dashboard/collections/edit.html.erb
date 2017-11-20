@@ -26,7 +26,7 @@
           </div>
           <%= render 'hyrax/my/did_you_mean' %>
           <%= render 'hyrax/my/facet_selected' %>
-          <%= render 'sort_and_per_page', collection: @collection if @response.response['numFound'] > 0 %>
+          <%= render 'sort_and_per_page', collection: @collection if show_sort_and_per_page? %>
           <%= render 'document_list', documents: @member_docs, document_list_format: "dashboard" %>
           <%= render 'hyrax/collections/paginate' %>
         </div>

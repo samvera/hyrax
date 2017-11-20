@@ -5,7 +5,7 @@ module Hyrax
     end
     before_action :set_collection_type, only: [:edit, :update, :destroy]
 
-    layout 'dashboard'
+    with_themed_layout 'dashboard'
     class_attribute :form_class
     self.form_class = Hyrax::Forms::Admin::CollectionTypeForm
     load_resource class: Hyrax::CollectionType, except: [:index, :show, :create], instance_name: :collection_type

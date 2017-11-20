@@ -8,6 +8,7 @@ module Hyrax
       @solr_document = solr_document
       @request = request
       @additional_resources = []
+      @visited_subresources = Set.new
     end
 
     attr_reader :solr_document, :request, :additional_resources
@@ -15,9 +16,7 @@ module Hyrax
     # @return [RDF::Graph]
     def fetch
       clean_graph_repository.find(solr_document.id).tap do |g|
-        additional_resources.uniq.each do |stmt|
-          g << stmt
-        end
+        additional_resources.each { |subgraph| g << subgraph }
       end
     rescue Ldp::NotFound
       # this error is handled with a 404 page.
@@ -38,30 +37,35 @@ module Hyrax
       def replacer
         lambda do |resource_id, graph|
           url = ActiveFedora::Base.id_to_uri(resource_id)
-          result = graph.query([RDF::URI(url), ActiveFedora::RDF::Fcrepo::Model.hasModel, nil]).first
-          if result
-            subject_replacer(result, resource_id)
+          klass = graph.query([:s, ActiveFedora::RDF::Fcrepo::Model.hasModel, :o]).first.object.to_s.constantize
+
+          # if the subject URL matches
+          if graph.query([RDF::URI(url), ActiveFedora::RDF::Fcrepo::Model.hasModel, nil]).first
+            subject_replacer(klass, resource_id)
           elsif resource_id.start_with? solr_document.id
-            subresource_replacer(resource_id, graph)
+            subresource_replacer(resource_id, klass)
           else
             object_replacer(resource_id, graph)
           end
         end
       end
 
-      def subresource_replacer(resource_id, graph)
+      def subresource_replacer(resource_id, parent_klass)
         parent_id, local = resource_id.split('/', 2)
-        parent_url = ActiveFedora::Base.id_to_uri(parent_id)
-        result = graph.query([RDF::URI(parent_url), ActiveFedora::RDF::Fcrepo::Model.hasModel, nil]).first
 
-        # OPTIMIZE: we only need to fetch each subresource once.
-        additional_resources << ListSourceExporter.new(resource_id, request, subject_replacer(result, parent_id)).fetch
-        parent = subject_replacer(result, parent_id)
+        if @visited_subresources.add?(resource_id)
+          additional_resources << ListSourceExporter.new(
+            resource_id,
+            request,
+            subject_replacer(parent_klass, parent_id)
+          ).fetch
+        end
+
+        parent = subject_replacer(parent_klass, parent_id)
         "#{parent}/#{local}"
       end
 
-      def subject_replacer(result, resource_id, anchor = nil)
-        klass = result.object.to_s.constantize
+      def subject_replacer(klass, resource_id, anchor = nil)
         route_key = if Hyrax.config.curation_concerns.include?(klass)
                       klass.model_name.singular_route_key
                     else

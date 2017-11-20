@@ -131,7 +131,7 @@ RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller, clean
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.admin.collection_types.index.breadcrumb'), admin_collection_types_path)
         get :index
         expect(response).to be_success
-        expect(response).to render_template "layouts/dashboard"
+        expect(response).to render_template "layouts/hyrax/dashboard"
       end
     end
 
@@ -174,7 +174,7 @@ RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller, clean
           expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.admin.collection_types.new.header'), new_admin_collection_type_path)
           post :create, params: { collection_type: { title: collection_type.title } }, session: valid_session
           expect(response).to be_success
-          expect(response).to render_template "layouts/dashboard"
+          expect(response).to render_template "layouts/hyrax/dashboard"
         end
 
         it 'defines a form' do
@@ -199,7 +199,7 @@ RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller, clean
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.admin.collection_types.new.header'), new_admin_collection_type_path)
         get :new
         expect(response).to be_success
-        expect(response).to render_template "layouts/dashboard"
+        expect(response).to render_template "layouts/hyrax/dashboard"
       end
 
       it 'defines a form' do
@@ -223,7 +223,7 @@ RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller, clean
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.admin.collection_types.edit.header'), edit_admin_collection_type_path(collection_type.to_param))
         get :edit, params: { id: collection_type.to_param }
         expect(response).to be_success
-        expect(response).to render_template "layouts/dashboard"
+        expect(response).to render_template "layouts/hyrax/dashboard"
       end
 
       it 'defines a form' do
@@ -277,7 +277,7 @@ RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller, clean
           expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.admin.collection_types.edit.header'), edit_admin_collection_type_path(collection_type.to_param))
           put :update, params: { id: collection_type.to_param, collection_type: invalid_attributes }, session: valid_session
           expect(response).to be_success
-          expect(response).to render_template "layouts/dashboard"
+          expect(response).to render_template "layouts/hyrax/dashboard"
         end
 
         it 'defines a form' do

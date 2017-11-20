@@ -51,7 +51,7 @@ module Hyrax
 
         # The color for links in the footer
         def footer_link_color
-          block_for('footer_link_color', '#e27800')
+          block_for('footer_link_color', '#ffebcd')
         end
 
         # The background color for "primary" buttons

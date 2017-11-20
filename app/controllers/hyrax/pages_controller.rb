@@ -45,7 +45,7 @@ module Hyrax
       end
 
       def pages_layout
-        action_name == 'show' ? 'homepage' : 'dashboard'
+        action_name == 'show' ? 'homepage' : 'hyrax/dashboard'
       end
   end
 end

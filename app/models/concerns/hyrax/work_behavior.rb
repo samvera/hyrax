@@ -29,7 +29,7 @@ module Hyrax
       self.indexer = WorkIndexer
     end
 
-    # TODO: Move this into ActiveFedora
+    # TODO: This can be removed when we upgrade to ActiveFedora 12.0
     def etag
       raise "Unable to produce an etag for a unsaved object" unless persisted?
       ldp_source.head.etag

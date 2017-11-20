@@ -51,7 +51,7 @@ You should also add yourself to the `CONTRIBUTORS.md` file in the root of the pr
   * Please avoid working directly on the `master` branch.
   * You may find the [hub suite of commands](https://github.com/defunkt/hub) helpful
 * Make sure you have added sufficient tests and documentation for your changes.
-  * Test functionality with RSpec; est features / UI with Capybara.
+  * Test functionality with RSpec; Test features / UI with Capybara.
 * Run _all_ the tests to assure nothing else was accidentally broken.
 
 ### Documenting Code

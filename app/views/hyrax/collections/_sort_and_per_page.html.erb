@@ -1,11 +1,10 @@
-<%# kind of hacky way to get this to work on catalog and folder controllers.  May be able to simple do {action: "index"} but I'm not sure -%>
-<% if @response.response['numFound'] > 1 && !sort_fields.empty? %>
+<% if show_sort_and_per_page? && active_sort_fields.many? %>
 	<%= form_tag collection_path(collection), method: :get, class: 'per_page form-horizontal' do %>
     <%= render 'view_type_group' %>
 		<fieldset class="pull-left">
 			<legend class="sr-only"><%= t('hyrax.sort_label') %></legend>
 			<%= label_tag(:sort, '<span>Sort by:</span>'.html_safe) %>
-			<%= select_tag(:sort, options_for_select(sort_fields, h(params[:sort]))) %>
+			<%= select_tag(:sort, options_for_select(active_sort_fields, h(params[:sort]))) %>
 			<%= label_tag(:per_page) do %>
 		    <span class="tiny-nudge">Results per page:</span>
 				<%= select_tag(:per_page, options_for_select(['10', '20', '50', '100'], h(params[:per_page])), title: "Number of results to display per page") %>

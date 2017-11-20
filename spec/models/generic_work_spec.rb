@@ -24,7 +24,7 @@ RSpec.describe GenericWork do
   end
 
   describe "to_sipity_entity" do
-    let(:state) { FactoryBot.create(:workflow_state) }
+    let(:state) { create(:workflow_state) }
     let(:work) { create(:work) }
 
     before do
@@ -41,9 +41,14 @@ RSpec.describe GenericWork do
     let(:work) { described_class.new(state: inactive) }
     let(:inactive) { ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#inactive') }
 
-    subject { work.state.rdf_subject }
+    it 'is inactive' do
+      expect(work.state.rdf_subject).to eq inactive
+    end
 
-    it { is_expected.to eq inactive }
+    it 'allows state to be set to ActiveTriples::Resource' do
+      other_work = described_class.new(state: work.state)
+      expect(other_work.state.rdf_subject).to eq inactive
+    end
   end
 
   describe '#suppressed?' do

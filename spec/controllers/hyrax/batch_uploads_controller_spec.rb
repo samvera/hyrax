@@ -32,7 +32,7 @@ RSpec.describe Hyrax::BatchUploadsController do
       get :new
       expect(response).to be_successful
       expect(assigns[:form]).to be_kind_of Hyrax::Forms::BatchUploadForm
-      expect(response).to render_template('dashboard')
+      expect(response).to render_template('hyrax/dashboard')
     end
   end
 
@@ -97,7 +97,7 @@ RSpec.describe Hyrax::BatchUploadsController do
     context "when submitting works on behalf of other user" do
       let(:batch_upload_item) do
         {
-          payload_concern: RareBooks::Atlas,
+          payload_concern: NamespacedWorks::NestedWork,
           permissions_attributes: [
             { type: "group", name: "public", access: "read" }
           ],

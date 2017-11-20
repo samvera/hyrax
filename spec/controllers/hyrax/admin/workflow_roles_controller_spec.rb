@@ -12,7 +12,7 @@ RSpec.describe Hyrax::Admin::WorkflowRolesController do
         get :index
         expect(response).to be_success
         expect(assigns[:presenter]).to be_kind_of Hyrax::Admin::WorkflowRolesPresenter
-        expect(response).to render_template('dashboard')
+        expect(response).to render_template('hyrax/dashboard')
       end
     end
 

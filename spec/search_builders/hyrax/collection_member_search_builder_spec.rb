@@ -21,7 +21,7 @@ RSpec.describe Hyrax::CollectionMemberSearchBuilder do
   end
 
   describe '#models' do
-    let(:work_classes) { [GenericWork, RareBooks::Atlas] }
+    let(:work_classes) { [GenericWork] }
     let(:collection_classes) { [Collection] }
     let(:subject) { builder.models }
 

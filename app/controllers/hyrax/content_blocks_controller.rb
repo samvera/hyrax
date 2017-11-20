@@ -1,7 +1,7 @@
 module Hyrax
   class ContentBlocksController < ApplicationController
     load_and_authorize_resource
-    layout 'dashboard'
+    with_themed_layout 'dashboard'
 
     def edit
       add_breadcrumb t(:'hyrax.controls.home'), root_path

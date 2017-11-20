@@ -478,6 +478,7 @@ pt-BR:
           detail_label: Exibir detalhes resumidos de
           listing: Listagem de itens que você depositou em
           press_to: Pressione para
+          results_per_page: Número de resultados a serem exibidos por página
           show_label: Exibir todos os detalhes de
         works: Seus trabalhos
       no_activity: O usuário não tem atividade recente
