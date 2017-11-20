@@ -272,8 +272,14 @@ pt-BR:
         header: 'Citações:'
       form_files:
         dropzone: Largue os arquivos aqui.
-        external_upload: Provedores de nuvem
-        local_upload: Adicionar arquivos locais
+        local_upload_html: <p>Você pode adicionar um ou mais arquivos para associar a este trabalho.</p>
+        local_upload_browse_everything_html:
+          <p>Você pode adicionar um ou mais arquivos para associar a este
+          trabalho.</p>
+          <p>Por favor, note que, se você carregar uma grande quantidade de
+          arquivos dentro de um curto período de tempo, o fornecedor da nuvem
+          pode não ser capaz de acomodar sua solicitação. Se você tiver algum
+          erro ao carregar da nuvem, avise-nos através do %{contact_href}.<p>
       form_permission_under_embargo:
         help_html: "<strong>Este trabalho está sob embargo.</strong> Você pode alterar as configurações do embargo aqui, ou você pode visitar o %{edit_link} para desativá-lo."
         legend_html: Visibilidade <small>Quem deve poder visualizar ou fazer o download desse conteúdo?</small>
@@ -736,7 +742,6 @@ pt-BR:
       change_access_no_message: Não. Vou atualizá-lo manualmente.
       change_access_yes_message: Sim por favor.
       change_permissions_message_html: "<p> Você alterou as permissões neste %{curation_concern_human_readable_type}, <i>%{curation_concern}</i> , tornando-o visível para o <b>%{visibility_badge}</b> . </p><p> Você gostaria de mudar todos os arquivos dentro do %{curation_concern_human_readable_type} para <b>%{visibility_badge}</b> também? </p>"
-      cloud_timeout_message_html: Por favor, note que, se você carregar uma grande quantidade de arquivos dentro de um curto período de tempo, o fornecedor da nuvem pode não ser capaz de acomodar sua solicitação. Se você tiver algum erro ao carregar da nuvem, avise-nos através do %{contact_href}.
       local_ingest:
         tab_label: Localização de rede / servidor
       my_computer:

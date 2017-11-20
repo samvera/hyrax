@@ -273,8 +273,11 @@ zh:
         header: '引文:'
       form_files:
         dropzone: 请将文件拖放此处。
-        external_upload: 云供应商
-        local_upload: 添加本地文件
+        local_upload_html: <p>您可以添加一个或多个文件与该工作相关联。</p>
+        local_upload_browse_everything_html: |
+          <p>您可以添加一个或多个文件与该工作相关联。</p>
+          <p>请注意如果您在短时间内上传了大量文件, 云提供商可能不能满足您的请求。
+           如果您上传中遇到问题，请用%{contact_href}报告。</p>
       form_permission_under_embargo:
         help_html: "<strong>这项工作受到禁运。</strong>您可以在此更改禁令的设置，也可以访问%{edit_link}以停用它。"
         legend_html: 可见性<small>谁可以查看或下载此内容？</small>
@@ -739,7 +742,6 @@ zh:
       change_access_no_message: 不用。 我会手动更新。
       change_access_yes_message: 是的, 请做同样的更新。
       change_permissions_message_html: "<p>您改变了对%{curation_concern_human_readable_type}, <i>%{curation_concern}</i>的权限，使它对<b>%{visibility_badge}</b>公开。</p><p> 您需要对%{curation_concern_human_readable_type}中所有文件对<b>%{visibility_badge}</b>的权限做同样的改变吗？</p>"
-      cloud_timeout_message_html: 请注意如果您在短时间内上传了大量文件, 云提供商可能不能满足您的请求。 如果您上传中遇到问题，请用%{contact_href}报告。
       local_ingest:
         tab_label: 网络/服务器地点
       my_computer:
