@@ -12,14 +12,14 @@
             <li role="presentation">
           <% end %>
               <a href="#<%= tab %>" aria-controls="<%= tab %>" role="tab" data-toggle="tab">
-                <i class="fa icon-<%= tab %>"></i> <%= t("hyrax.works.form.tab.#{tab}") %>
+                <%= t("hyrax.works.form.tab.#{tab}") %>
               </a>
             </li>
         <% end %>
 
         <li role="presentation" id="tab-share" class="hidden">
           <a href="#share" aria-controls="share" role="tab" data-toggle="tab">
-            <i class="fa icon-share"></i> <%= t("hyrax.works.form.tab.share") %>
+            <%= t("hyrax.works.form.tab.share") %>
           </a>
         </li>
       </ul>
