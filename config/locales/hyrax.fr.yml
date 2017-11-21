@@ -272,8 +272,14 @@ fr:
         header: 'Citations:'
       form_files:
         dropzone: Déposez les fichiers ici.
-        external_upload: Cloud Providers
-        local_upload: Ajouter des fichiers locaux
+        local_upload_html: <p>Vous pouvez ajouter un ou plusieurs fichiers à associer à ce travail.</p>
+        local_upload_browse_everything_html: |
+          <p>Vous pouvez ajouter un ou plusieurs fichiers à associer à ce travail.</p> 
+          <p>Notez que si vous téléchargez un grand nombre de fichiers dans un
+          court laps de temps, le fournisseur de cloud risque de ne pas pouvoir
+          répondre à votre demande. Si vous rencontrez des erreurs de
+          téléchargement depuis le nuage, faites-nous savoir via le
+          %{contact_href}.</p>
       form_permission_under_embargo:
         help_html: "<strong>Ce travail est sous embargo.</strong> Vous pouvez modifier les paramètres de l'embargo ici, ou vous pouvez visiter le %{edit_link} pour le désactiver."
         legend_html: Visibilité <small>Qui devrait pouvoir afficher ou télécharger ce contenu?</small>
@@ -732,7 +738,6 @@ fr:
       change_access_no_message: Non. Je vais le mettre à jour manuellement.
       change_access_yes_message: Oui s'il vous plaît.
       change_permissions_message_html: "<p> Vous avez modifié les autorisations sur ce %{curation_concern_human_readable_type}, <i>%{curation_concern}</i> , ce qui le rend visible pour <b>%{visibility_badge}</b> . </p><p> Voulez-vous changer tous les fichiers dans %{curation_concern_human_readable_type} à <b>%{visibility_badge}</b> aussi? </p>"
-      cloud_timeout_message_html: Notez que si vous téléchargez un grand nombre de fichiers dans un court laps de temps, le fournisseur de cloud risque de ne pas pouvoir répondre à votre demande. Si vous rencontrez des erreurs de téléchargement depuis le nuage, faites-nous savoir via le %{contact_href}.
       local_ingest:
         tab_label: Emplacement du réseau / serveur
       my_computer:

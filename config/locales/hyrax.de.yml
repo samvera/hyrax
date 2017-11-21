@@ -272,8 +272,15 @@ de:
         header: 'Zitate:'
       form_files:
         dropzone: Dateien hier hinziehen.
-        external_upload: Cloud-Provider
-        local_upload: Lokale Dateien hinzufügen
+        local_upload_html: <p>Sie können eine oder mehr Dateien hinzufügen, mit dieser Arbeit zu verknüpfen.</p>
+        local_upload_browse_everything_html: |
+          <p>Sie können eine oder mehr Dateien hinzufügen, mit dieser Arbeit zu
+          verknüpfen.</p>
+          <p>Bitte beachten Sie, dass, wenn Sie eine große Anzahl von Dateien
+          innerhalb einer kurzen Zeitspanne hochladen, der Cloud-Anbieter
+          möglicherweise nicht in der Lage, Ihrer Anfrage nachzukommen. Wenn Sie
+          irgendwelche Fehler beim Upload aus der Cloud erhalten, lassen Sie uns
+          dies über %{contact_href} wissen.</p>
       form_permission_under_embargo:
         help_html: "<strong>Diese Arbeit ist unter Embargo.</strong> Hier können Sie die Einstellungen des Embargos ändern, oder Sie können den %{edit_link} besuchen, um ihn zu deaktivieren."
         legend_html: Sichtbarkeit <small>Wer sollte in der Lage sein, diesen Inhalt anzusehen oder herunterzuladen?</small>
@@ -732,7 +739,6 @@ de:
       change_access_no_message: Nein. Ich werde es manuell aktualisieren.
       change_access_yes_message: Ja bitte.
       change_permissions_message_html: "<p> Sie haben die Berechtigungen für diese %{curation_concern_human_readable_type}, <i>%{curation_concern} geändert</i> , so dass es sichtbar für <b>%{visibility_badge}</b> . </p><p> Möchten Sie alle Dateien im %{curation_concern_human_readable_type} auch auf <b>%{visibility_badge} ändern</b> ? </p>"
-      cloud_timeout_message_html: Bitte beachten Sie, dass, wenn Sie eine große Anzahl von Dateien innerhalb einer kurzen Zeitspanne hochladen, der Cloud-Anbieter möglicherweise nicht in der Lage, Ihrer Anfrage nachzukommen. Wenn Sie irgendwelche Fehler beim Upload aus der Cloud erhalten, lassen Sie uns dies über %{contact_href} wissen.
       local_ingest:
         tab_label: Netzwerk / Server Standort
       my_computer:
