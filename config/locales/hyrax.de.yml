@@ -852,7 +852,7 @@ de:
         size: Größe
         total_items: Arbeiten gesamt
       defaults:
-        admin_set_id: Als Mitglied des Admin-Sets hinzufügen
+        admin_set_id: Admin-Set
         based_near: Ort
         creator: Schöpfer
         date_created: Erstellungsdatum

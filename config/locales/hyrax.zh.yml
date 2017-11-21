@@ -851,7 +851,7 @@ zh:
         size: 大小
         total_items: 总作品
       defaults:
-        admin_set_id: 添加管理集成员
+        admin_set_id: 在行政
         based_near: 地点
         creator: 创建者
         date_created: 创建日期
