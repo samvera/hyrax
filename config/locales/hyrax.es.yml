@@ -792,7 +792,7 @@ es:
         breadcrumb: Editar
       form:
         additional_fields: Campos adicionales
-        in_collections: Este Trabajo en Colecciones
+        in_collections: Colecciones
         in_other_works: Este Trabajo en otros Trabajos
         in_this_work: Otros Trabaos en este Trabajo
         tab:
@@ -857,7 +857,7 @@ es:
         keyword: Palabra Clave
         lease_expiration_date: hasta
         license: Licencia
-        member_of_collection_ids: Añadir como miembro de la colección
+        member_of_collection_ids: Añadir a la colección
         related_url: URL relacionada
         title: Título
         visibility_after_embargo: luego abrirlo a

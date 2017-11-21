@@ -795,7 +795,7 @@ it:
         breadcrumb: Modifica
       form:
         additional_fields: Campi aggiuntivi
-        in_collections: Questo lavoro nelle collezioni
+        in_collections: Collezioni
         in_other_works: Questo lavoro in altre opere
         in_this_work: Altri lavori in questo lavoro
         tab:
@@ -860,7 +860,7 @@ it:
         keyword: Parola chiave
         lease_expiration_date: fino a
         license: Licenza
-        member_of_collection_ids: Aggiungi come membro della collezione
+        member_of_collection_ids: Aggiungere alla collezione
         related_url: URL correlato
         title: Titolo
         visibility_after_embargo: Poi aprila fino a
