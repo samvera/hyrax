@@ -56,3 +56,23 @@ ul.tabular {
   margin-bottom: 18px;
   margin-top: -8px;
 }
+
+.panel-workflow {
+  border-color: #e0e0e0;
+
+  .panel-heading {
+    background-color: #E6AB5F;
+    color: #ffffff;
+    a {
+      color: #ffffff;
+    }
+  }
+
+  .panel-body {
+    background-color: #F2F1EB;
+  }
+}
+
+.workflow-actions {
+  background-color: #F8F8F8;
+}
