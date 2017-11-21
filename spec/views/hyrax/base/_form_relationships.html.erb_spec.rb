@@ -33,7 +33,7 @@ RSpec.describe 'hyrax/base/_form_relationships.html.erb', type: :view do
     end
 
     it "draws the page" do
-      expect(page).to have_content('Add as member of administrative set')
+      expect(page).to have_content('Administrative Set')
       expect(page).to have_selector('select#generic_work_admin_set_id')
     end
   end
