@@ -35,19 +35,20 @@
       <%= link_to "#",
             class: 'itemicon itemtrash delete-collection-button',
              title: t("hyrax.dashboard.my.action.delete_collection"),
-             data: { totalitems: collection_presenter.total_items , 
+             data: { totalitems: collection_presenter.total_items ,
                      membership: collection_presenter.collection_type_is_require_membership? ,
                      hasaccess: (can? :edit, collection_presenter.solr_document) } do %>
          <%= t("hyrax.dashboard.my.action.delete_collection") %>
        <% end %>
-    </li>    
+    </li>
     <% if Hyrax::CollectionType.any_nestable? %>
+<!-- The user should have deposit access to the parent we are adding, and read access to the child (the collection we are linking here). -->
       <li role="menuitem" tabindex="-1">
         <%= link_to "#",
           class: 'itemicon add-to-collection',
           title: t("hyrax.dashboard.my.action.add_to_collection"),
-          data: { nestable: collection_presenter.collection_type_is_nestable? , 
-                  hasaccess: (can? :deposit, collection_presenter.solr_document) } do %>
+          data: { nestable: collection_presenter.collection_type_is_nestable? ,
+                  hasaccess: (can? :read, collection_presenter.solr_document) } do %>
           <%= t("hyrax.dashboard.my.action.add_to_collection") %>
         <% end %>
       </li>

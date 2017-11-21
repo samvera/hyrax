@@ -38,11 +38,12 @@
 </div>
 
 <% if @presenter.collection_type_is_nestable? %>
-
   <div class="row">
     <div class="col-md-12 h2">
       <%= t('.subcollection_count') %> (<%= @subcollection_count %>)
+    <article class="form-inline select-wrapper">
       <%= render 'show_subcollection_actions', presenter: @presenter %>
+    <article>
     </div>
   </div>
   <%= render 'subcollection_list', collection: @subcollection_docs %>
@@ -60,3 +61,8 @@
   <%= render_document_index @member_docs %>
   <%= render 'hyrax/collections/paginate' %>
 </div>
+
+<% if @presenter.collection_type_is_nestable? %>
+  <%= render 'hyrax/my/collections/modal_add_to_collection', id: @presenter.id, source: 'show' %>
+  <%= render 'hyrax/my/collections/modal_add_subcollection', id: @presenter.id, source: 'show' %>
+<% end %>

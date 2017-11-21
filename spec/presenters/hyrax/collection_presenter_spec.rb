@@ -284,6 +284,26 @@ RSpec.describe Hyrax::CollectionPresenter do
     it { is_expected.to eq '0 Bytes' }
   end
 
+  describe "#user_can_nest_collection?" do
+    before do
+      allow(ability).to receive(:can?).with(:deposit, collection.id).and_return(true)
+    end
+
+    subject { presenter.user_can_nest_collection? }
+
+    it { is_expected.to eq true }
+  end
+
+  describe "#user_can_create_new_nest_collection?" do
+    before do
+      allow(ability).to receive(:can?).with(:create_collection_of_type, collection.collection_type).and_return(true)
+    end
+
+    subject { presenter.user_can_create_new_nest_collection? }
+
+    it { is_expected.to eq true }
+  end
+
   describe '#show_path' do
     subject { presenter.show_path }
 

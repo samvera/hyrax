@@ -13,6 +13,7 @@ RSpec.describe 'hyrax/dashboard/collections/_show_actions.html.erb', type: :view
     allow(view).to receive(:can?).with(:edit, solr_document).and_return(can_edit)
     allow(view).to receive(:can?).with(:destroy, solr_document).and_return(can_destroy)
   end
+
   describe 'when user can edit the document' do
     let(:can_edit) { true }
 
@@ -29,6 +30,23 @@ RSpec.describe 'hyrax/dashboard/collections/_show_actions.html.erb', type: :view
       expect(rendered).not_to have_link('Edit this collection', href: '/path/to/edit')
     end
   end
+
+  describe 'nesting the collection within another collection' do
+    context 'with nestable collection' do
+      it 'renders add parent collection link' do
+        allow(presenter).to receive(:collection_type_is_nestable?).and_return true
+        render
+        expect(rendered).to have_button('Nest this collection')
+      end
+    end
+    context 'with non-nestable collection' do
+      it 'does not render add parent collection link' do
+        render
+        expect(rendered).not_to have_button('Nest this collection')
+      end
+    end
+  end
+
   describe 'when user can destroy the document' do
     it 'renders a link to destroy the document' do
       render

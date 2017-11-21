@@ -4,9 +4,10 @@ module Hyrax
       include HydraEditor::Form
       include HydraEditor::Form::Permissions
       # Used by the search builder
-      attr_accessor :current_ability, :repository
+      attr_reader :scope
 
-      delegate :id, :depositor, :permissions, to: :model
+      delegate :id, :depositor, :permissions, :human_readable_type, :member_ids, :nestable?, to: :model
+
       class_attribute :membership_service_class
 
       # Required for search builder (FIXME)
@@ -16,7 +17,6 @@ module Hyrax
 
       self.membership_service_class = Collections::CollectionMemberService
 
-      delegate :human_readable_type, :member_ids, to: :model
       delegate :blacklight_config, to: Hyrax::CollectionsController
 
       self.terms = [:resource_type, :title, :creator, :contributor, :description,
@@ -26,13 +26,18 @@ module Hyrax
 
       self.required_fields = [:title]
 
+      ProxyScope = Struct.new(:current_ability, :repository, :blacklight_config) do
+        def can?(*args)
+          current_ability.can?(*args)
+        end
+      end
+
       # @param model [Collection] the collection model that backs this form
       # @param current_ability [Ability] the capabilities of the current user
       # @param repository [Blacklight::Solr::Repository] the solr repository
       def initialize(model, current_ability, repository)
         super(model)
-        @current_ability = current_ability
-        @repository = repository
+        @scope = ProxyScope.new(current_ability, repository, blacklight_config)
       end
 
       def permission_template
@@ -79,6 +84,14 @@ module Hyrax
         model.thumbnail.title.first
       end
 
+      def list_parent_collections
+        collection.member_of_collections
+      end
+
+      def list_child_collections
+        collection_member_service.available_member_subcollections.documents
+      end
+
       private
 
         def all_files_with_access
@@ -92,7 +105,7 @@ module Hyrax
         end
 
         def collection_member_service
-          @collection_member_service ||= membership_service_class.new(scope: self, collection: collection, params: nil)
+          @collection_member_service ||= membership_service_class.new(scope: scope, collection: collection, params: blacklight_config.default_solr_params)
         end
 
         def member_presenters(member_ids)
