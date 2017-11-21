@@ -118,3 +118,18 @@ form.button-to {
 .required-tag {
   vertical-align: super;
 }
+
+.permission-add-user,
+.permission-add-group {
+  margin-bottom: 1em;
+  margin-left: 0;
+}
+
+.permissions-add-user-label,
+.permissions-add-group-label {
+  border: 0;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 0;
+  padding: 7px 15px;
+}

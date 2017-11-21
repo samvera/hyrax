@@ -57,7 +57,7 @@
                   <% end %>
                 <% end %>
 
-                <fieldset>
+                <fieldset class="admin-set-participants">
                   <legend><%= t(".current_participants") %></legend>
                   <%= render 'form_participant_table', access: 'managers', filter: :manage? %>
                   <%= render 'form_participant_table', access: 'depositors', filter: :deposit? %>

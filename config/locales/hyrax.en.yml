@@ -286,6 +286,10 @@ en:
         required_files:        Add files
         required_agreement:    Check deposit agreement
         requirements:          Requirements
+      form_share:
+        add_sharing: Add Sharing
+        currently_sharing: Currently Shared With
+        directions: Regardless of the visibility settings for this work, you can also share it with other users and groups.
       items:
         actions: Actions
         date_uploaded: "Date Uploaded"
@@ -801,7 +805,7 @@ en:
           files:         "Files"
           metadata:      "Descriptions"
           relationships: "Relationships"
-          share:         "Share"
+          share:         "Sharing"
       progress:
         header: "Save Work"
       show:
