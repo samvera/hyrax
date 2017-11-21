@@ -49,7 +49,7 @@ RSpec.describe Hyrax::CollectionPresenter do
 
       it 'finds the collection type based on the solr_document#collection_type_gid if one exists' do
         expect(solr_doc).to be_key('collection_type_gid_ssim')
-        expect(solr_doc).to receive(:fetch).with('collection_type_gid_ssim', []).and_return(collection_type.gid)
+        expect(solr_doc).to receive(:fetch).with('collection_type_gid_ssim', Array).and_return(collection_type.gid)
         expect(presenter.collection_type).to eq(collection_type)
       end
     end
@@ -59,7 +59,7 @@ RSpec.describe Hyrax::CollectionPresenter do
 
       it "finds the collection's collection type of the solr document's id if the document does not have a collection_type_gid" do
         expect(solr_doc).not_to receive(:collection_type_gid)
-        expect { presenter.collection_type }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(presenter.collection_type).to eq(Hyrax::CollectionType.find_or_create_default_collection_type)
       end
     end
   end

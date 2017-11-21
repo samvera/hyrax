@@ -40,7 +40,7 @@ module Hyrax
     def collection_type_label(collection_type_gid)
       CollectionType.find_by_gid!(collection_type_gid).title
     rescue ActiveRecord::RecordNotFound, URI::BadURIError
-      collection_type_gid
+      CollectionType.find_or_create_default_collection_type.title
     end
 
     private

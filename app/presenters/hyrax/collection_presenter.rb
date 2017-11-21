@@ -21,7 +21,7 @@ module Hyrax
     delegate(*Hyrax::CollectionType.collection_type_settings_methods, to: :collection_type, prefix: :collection_type_is)
 
     def collection_type
-      gid = Array.wrap(solr_document.fetch('collection_type_gid_ssim', [])).first
+      gid = Array.wrap(solr_document.fetch('collection_type_gid_ssim', [Hyrax::CollectionType.find_or_create_default_collection_type.gid])).first
       @collection_type ||= CollectionType.find_by_gid!(gid)
     end
 
