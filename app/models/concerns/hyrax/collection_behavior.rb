@@ -25,6 +25,8 @@ module Hyrax
         index.as(*index_collection_type_gid_as)
       end
 
+      after_find { |col| load_collection_type_instance(col) } # lazy migrate older collections to have collection type gid
+
       # validates that collection_type_gid is present
       validates :collection_type_gid, presence: true
       after_initialize :ensure_collection_type_gid
@@ -141,6 +143,15 @@ module Hyrax
     end
 
     private
+
+      def load_collection_type_instance(collection)
+        if collection.collection_type_gid.nil?
+          collection.collection_type_gid = Hyrax::CollectionType.find_or_create_default_collection_type.gid
+          collection.save # do this one time on the first read by saving the gid in the collection object
+        else
+          collection.collection_type = Hyrax::CollectionType.find_by_gid!(collection.collection_type_gid)
+        end
+      end
 
       def visibility_group
         return [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC] if visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
