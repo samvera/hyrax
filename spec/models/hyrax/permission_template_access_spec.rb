@@ -1,9 +1,9 @@
 RSpec.describe Hyrax::PermissionTemplateAccess do
-  let(:admin_set) { create(:admin_set, with_permission_template: true) }
+  let(:permission_template) { create(:permission_template) }
   let(:permission_template_access) do
     create(:permission_template_access,
            :manage,
-           permission_template: admin_set.permission_template,
+           permission_template: permission_template,
            agent_type: agent_type,
            agent_id: agent_id)
   end
@@ -62,7 +62,7 @@ RSpec.describe Hyrax::PermissionTemplateAccess do
     let(:permission_template_access) do
       create(:permission_template_access,
              :view,
-             permission_template: admin_set.permission_template,
+             permission_template: permission_template,
              agent_type: agent_type,
              agent_id: agent_id)
     end
@@ -95,7 +95,7 @@ RSpec.describe Hyrax::PermissionTemplateAccess do
     let(:permission_template_access) do
       create(:permission_template_access,
              :deposit,
-             permission_template: admin_set.permission_template,
+             permission_template: permission_template,
              agent_type: agent_type,
              agent_id: agent_id)
     end
@@ -128,7 +128,7 @@ RSpec.describe Hyrax::PermissionTemplateAccess do
     let(:permission_template_access) do
       create(:permission_template_access,
              :manage,
-             permission_template: admin_set.permission_template,
+             permission_template: permission_template,
              agent_type: agent_type,
              agent_id: agent_id)
     end
