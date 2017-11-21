@@ -1,4 +1,6 @@
-<h2>Sharing With</h2>
+<p><%= t('.directions') %></p>
+<h2><%= t('.add_sharing') %></h2>
+
 <% depositor = f.object.depositor %>
 
 <div class="alert alert-info hidden" id="save_perm_note">Permissions are
@@ -7,6 +9,47 @@
 <div class="alert alert-warning hidden" role="alert" id="permissions_error">
   <span id="permissions_error_text"></span>
 </div>
+
+
+<p class="sr-only">Use the add button to give access to one <%=t('hyrax.account_label') %> at a time (it will be added to the list below).
+  Select the user, by name or <%= t('hyrax.account_label') %>. Then select the access level you wish to grant and click on Add this
+  <%= t('hyrax.account_label') %> to complete adding the permission.
+</p>
+
+<fieldset class="form-group row permission-add-group">
+  <legend class="col-sm-3 permissions-add-group-label">
+    <%= t('hyrax.admin.admin_sets.form_participants.add_group') %>
+  </legend>
+  <div class="col-sm-9 form-inline">
+    <label for="new_group_name_skel" class="sr-only">Group</label>
+    <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + current_user.groups), class: 'form-control' %>
+    <label for="new_group_permission_skel" class="sr-only">Access type to grant</label>
+    <%= select_tag 'new_group_permission_skel', options_for_select(Hyrax.config.permission_options), class: 'form-control' %>
+
+    <button class="btn btn-default" id="add_new_group_skel">
+      <span>Add<span class="sr-only"> this group</span></span>
+    </button>
+    <br /><span id="directory_group_result"></span>
+  </div>
+</fieldset>
+
+<fieldset class="form-group row permission-add-user">
+  <legend class="col-sm-3 permissions-add-user-label">
+    <%= t('hyrax.admin.admin_sets.form_participants.add_user') %>
+  </legend>
+  <div class="col-sm-9 form-inline">
+    <label for="new_user_name_skel" class="sr-only"><%= t('hyrax.account_label') %> (without the <%= t('hyrax.directory.suffix') %> part)</label>
+    <%= text_field_tag 'new_user_name_skel', nil %>
+    <label for="new_user_permission_skel" class="sr-only">Access type to grant</label>
+    <%= select_tag 'new_user_permission_skel', options_for_select(Hyrax.config.permission_options), class: 'form-control' %>
+    <button class="btn btn-default" id="add_new_user_skel">
+      <span>Add<span class="sr-only"> this <%= t('hyrax.account_label') %></span></span>
+    </button>
+    <br /> <span id="directory_user_result"></span>
+  </div>
+</fieldset>
+
+<h2><%= t('.currently_sharing') %></h2>
 
 <table class="table">
   <tr id="file_permissions">
@@ -36,46 +79,6 @@
   <% end %>
 </table>
 
-<h2>Share work with other users</h2>
-<p class="sr-only">Use the add button to give access to one <%=t('hyrax.account_label') %> at a time (it will be added to the list below).
-  Select the user, by name or <%= t('hyrax.account_label') %>. Then select the access level you wish to grant and click on Add this
-  <%= t('hyrax.account_label') %> to complete adding the permission.
-</p>
-<div class="form-group row">
-  <div class="col-sm-5">
-    <label for="new_user_name_skel" class="sr-only"><%= t('hyrax.account_label') %> (without the <%= t('hyrax.directory.suffix') %> part)</label>
-    <%= text_field_tag 'new_user_name_skel', nil %>
-  </div>
-  <div class="col-sm-4">
-    <label for="new_user_permission_skel" class="sr-only">Access type to grant</label>
-    <%= select_tag 'new_user_permission_skel', options_for_select(Hyrax.config.permission_options), class: 'form-control' %>
-  </div>
-  <div class="col-sm-3">
-    <button class="btn btn-default" id="add_new_user_skel">
-      <span class="sr-only">Add this <%= t('hyrax.account_label') %></span>
-      <span aria-hidden="true"><i class="glyphicon glyphicon-plus"></i></span>
-    </button>
-    <br /> <span id="directory_user_result"></span>
-  </div>
-</div>
-
-<h2>Share work with groups of users</h2>
-<p class="sr-only">Use the add button to give access to one group at a time (it will be added to the list below).</p>
-<div class="form-group row">
-  <div class="col-sm-5">
-    <label for="new_group_name_skel" class="sr-only">Group</label>
-    <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + current_user.groups), class: 'form-control' %>
-  </div>
-  <div class="col-sm-4">
-    <label for="new_group_permission_skel" class="sr-only">Access type to grant</label>
-    <%= select_tag 'new_group_permission_skel', options_for_select(Hyrax.config.permission_options), class: 'form-control' %>
-  </div>
-  <div class="col-sm-3">
-    <span class="sr-only">Add this group</span>
-    <button class="btn btn-default" id="add_new_group_skel"><i class="glyphicon glyphicon-plus"></i></button>
-    <br /><span id="directory_group_result"></span>
-  </div>
-</div>
 
 <script type="text/x-tmpl" id="tmpl-work-grant">
 <tr>

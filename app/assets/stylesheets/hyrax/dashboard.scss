@@ -87,7 +87,7 @@ body.dashboard {
    * Without this the contents of that tab flow off the right-hand side of the screen
    * (The other containers on that page have `float: left` except for the fieldset.)
    */
-  fieldset {
+  .admin-set-participants {
     float: left;
   }
 
