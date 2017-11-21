@@ -124,7 +124,7 @@ require 'active_fedora/cleaner'
 RSpec.configure do |config|
   config.disable_monkey_patching!
   config.include Shoulda::Matchers::ActiveRecord, type: :model
-
+  config.full_backtrace = true if ENV['TRAVIS']
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
