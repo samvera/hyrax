@@ -796,7 +796,7 @@ fr:
         breadcrumb: modifier
       form:
         additional_fields: Champs supplémentaires
-        in_collections: Ce travail dans les collections
+        in_collections: Collections
         in_other_works: Ce travail dans d'autres ouvrages
         in_this_work: Autres travaux dans ce travail
         tab:
@@ -861,7 +861,7 @@ fr:
         keyword: Mot-clé
         lease_expiration_date: jusqu'à
         license: Licence
-        member_of_collection_ids: Ajouter en tant que membre de la collection
+        member_of_collection_ids: Ajouter à la collection
         related_url: URL associée
         title: Titre
         visibility_after_embargo: Puis ouvrez-le jusqu'à
