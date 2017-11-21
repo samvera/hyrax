@@ -22,7 +22,7 @@ module Hyrax
 
     def collection_type
       gid = Array.wrap(solr_document.fetch('collection_type_gid_ssim', [])).first
-      @collection_type ||= CollectionType.find_by_gid!(gid)
+      @collection_type ||= CollectionType.find_by_gid!(gid, true)
     end
 
     # Metadata Methods

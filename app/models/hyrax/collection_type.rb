@@ -33,9 +33,11 @@ module Hyrax
 
     # Find the collection type associated with the Global Identifier (gid)
     # @param [String] gid - Global Identifier for this collection_type (e.g. gid://internal/hyrax-collectiontype/3)
+    # @param [True|False] allow_default - if true, and gid is blank or missing, it will return the default collection type (default=false)
     # @return [Hyrax::CollectionType] if record matching gid is found, an instance of Hyrax::CollectionType with id = the model_id portion of the gid (e.g. 3)
     # @return [False] if record matching gid is not found
-    def self.find_by_gid(gid)
+    def self.find_by_gid(gid, allow_default=false)
+      return find_or_create_default_collection_type if allow_default && !gid.present?
       find(GlobalID.new(gid).model_id)
     rescue ActiveRecord::RecordNotFound, URI::InvalidURIError
       false
@@ -43,10 +45,11 @@ module Hyrax
 
     # Find the collection type associated with the Global Identifier (gid)
     # @param [String] gid - Global Identifier for this collection_type (e.g. gid://internal/hyrax-collectiontype/3)
+    # @param [True|False] allow_default - if true, and gid is blank or missing, it will return the default collection type (default=false)
     # @return [Hyrax::CollectionType] an instance of Hyrax::CollectionType with id = the model_id portion of the gid (e.g. 3)
     # @raise [ActiveRecord::RecordNotFound] if record matching gid is not found
-    def self.find_by_gid!(gid)
-      result = find_by_gid(gid)
+    def self.find_by_gid!(gid, allow_default=false)
+      result = find_by_gid(gid, allow_default)
       raise ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID '#{gid}'" unless result
       result
     end

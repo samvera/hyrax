@@ -38,7 +38,7 @@ module Hyrax
     # @param collection_type_gid [String] The gid of the CollectionType to be looked up
     # @return [String] The CollectionType's title if found, else the gid
     def collection_type_label(collection_type_gid)
-      CollectionType.find_by_gid!(collection_type_gid).title
+      CollectionType.find_by_gid!(collection_type_gid, true).title
     rescue ActiveRecord::RecordNotFound, URI::BadURIError
       collection_type_gid
     end
