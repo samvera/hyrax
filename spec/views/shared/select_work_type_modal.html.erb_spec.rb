@@ -9,10 +9,9 @@ RSpec.describe 'shared/_select_work_type_modal.html.erb', type: :view do
 
   before do
     allow(presenter).to receive(:each).and_yield(row1).and_yield(row2)
-    allow(view).to receive(:create_work_presenter).and_return(presenter)
     # Because there is no i18n set up for this work type
     allow(row2).to receive(:name).and_return('Nested Work')
-    render
+    render 'shared/select_work_type_modal', create_work_presenter: presenter
   end
 
   it 'draws the modal' do

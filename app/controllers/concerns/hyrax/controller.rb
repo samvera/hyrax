@@ -2,25 +2,16 @@ module Hyrax::Controller
   extend ActiveSupport::Concern
 
   included do
-    class_attribute :create_work_presenter_class
-    self.create_work_presenter_class = Hyrax::SelectTypeListPresenter
     self.search_state_class = Hyrax::SearchState
 
     # Adds Hydra behaviors into the application controller
     include Hydra::Controller::ControllerBehavior
-    helper_method :create_work_presenter
     before_action :set_locale
   end
 
   # Provide a place for Devise to send the user to after signing in
   def user_root_path
     hyrax.dashboard_path
-  end
-
-  # A presenter for selecting a work type to create
-  # this is needed here because the selector is in the header on every page
-  def create_work_presenter
-    @create_work_presenter ||= create_work_presenter_class.new(current_user)
   end
 
   # Ensure that the locale choice is persistent across requests
