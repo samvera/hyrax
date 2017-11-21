@@ -4,35 +4,33 @@
 
 <div class="row work-type">
   <div class="col-xs-12">
-      <%= render 'work_type', presenter: @presenter %>
+    <%= render 'work_type', presenter: @presenter %>
   </div>
-</div>
-
-<div itemscope itemtype="http://schema.org/CreativeWork" class="row">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <%= render 'work_title', presenter: @presenter %>
-    </div>
-    <div class="panel-body">
-      <div class="row">
-        <div class="col-sm-3 text-center">
-          <%= render 'representative_media', presenter: @presenter %>
-          <%= render 'citations', presenter: @presenter %>
-          <%= render 'social_media' %>
-        </div>
-        <div class="col-sm-9">
-          <%= render 'work_description', presenter: @presenter %>
-          <%= render 'metadata', presenter: @presenter %>
-        </div>
+  <div class="col-xs-12">&nbsp;</div>
+  <div itemscope itemtype="http://schema.org/CreativeWork" class="col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <%= render 'work_title', presenter: @presenter %>
       </div>
-      <div class="row">
-        <div class="col-sm-12">
-          <%= render 'relationships', presenter: @presenter %>
-          <%= render 'items', presenter: @presenter %>
-          <%= render 'workflow_actions_widget', presenter: @presenter %>
-          <%# TODO: we may consider adding these partials in the future %>
-          <%#= render 'sharing_with', presenter: @presenter %>
-          <%#= render 'user_activity', presenter: @presenter %>
+      <div class="panel-body">
+          <div class="row">
+          <div class="col-sm-3 text-center">
+            <%= render 'representative_media', presenter: @presenter %>
+            <%= render 'citations', presenter: @presenter %>
+            <%= render 'social_media' %>
+          </div>
+          <div class="col-sm-9">
+            <%= render 'work_description', presenter: @presenter %>
+            <%= render 'metadata', presenter: @presenter %>
+          </div>
+          <div class="col-sm-12">
+            <%= render 'relationships', presenter: @presenter %>
+            <%= render 'items', presenter: @presenter %>
+            <%= render 'workflow_actions_widget', presenter: @presenter %>
+            <%# TODO: we may consider adding these partials in the future %>
+            <%#= render 'sharing_with', presenter: @presenter %>
+            <%#= render 'user_activity', presenter: @presenter %>
+          </div>
         </div>
       </div>
     </div>
