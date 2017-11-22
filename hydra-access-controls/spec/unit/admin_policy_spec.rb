@@ -43,16 +43,19 @@ describe Hydra::AdminPolicy do
       expect(subject.default_permissions.map(&:to_hash)).to eq [{:type=>'person', :access=>'discover', :name=>'user1'},
                                    {:type=>'person', :access=>'discover', :name=>'user2'}]
     end
-    it "should update permissions on existing users" do
+
+    it "updates permissions on existing users" do
       subject.default_permissions.build({:name=>'user1', :access=>'discover', :type=>'person'})
-      subject.default_permissions.first.mode = Hydra::AccessControls::Mode.new(::ACL.Write)
+      subject.default_permissions.first.mode = [Hydra::AccessControls::Mode.new(::ACL.Write)]
       expect(subject.default_permissions.map(&:to_hash)).to eq [{:type=>'person', :access=>'edit', :name=>'user1'}]
     end
-    it "should update permissions on existing groups" do
+
+    it "updates permissions on existing groups" do
       subject.default_permissions.build({:name=>'group1', :access=>'discover', :type=>'group'})
-      subject.default_permissions.first.mode = Hydra::AccessControls::Mode.new(::ACL.Write)
+      subject.default_permissions.first.mode = [Hydra::AccessControls::Mode.new(::ACL.Write)]
       expect(subject.default_permissions.map(&:to_hash)).to eq [{:type=>'group', :access=>'edit', :name=>'group1'}]
     end
+
     it "should assign user permissions when :type == 'person'" do
       subject.default_permissions.build({:name=>'user1', :access=>'discover', :type=>'person'})
       expect(subject.default_permissions.map(&:to_hash)).to eq [{:type=>'person', :access=>'discover', :name=>'user1'}]

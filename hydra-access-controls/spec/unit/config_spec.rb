@@ -14,7 +14,7 @@ describe Hydra::Config do
                 individual: ActiveFedora.index_field_mapper.solr_name("edit_access_person", :symbol)},
         owner: ActiveFedora.index_field_mapper.solr_name("depositor", :symbol),
       }
-      config.permissions.embargo.release_date = ActiveFedora.index_field_mapper.solr_name("embargo_release_date", Solrizer::Descriptor.new(:date, :stored, :indexed))
+      config.permissions.embargo.release_date = ActiveFedora.index_field_mapper.solr_name("embargo_release_date", ActiveFedora::Indexing::Descriptor.new(:date, :stored, :indexed))
 
       # specify the user model
       config[:user_model] = 'User'
