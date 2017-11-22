@@ -3,7 +3,8 @@ class TestAppGenerator < Rails::Generators::Base
   source_root File.expand_path("../../../../spec/test_app_templates", __FILE__)
 
   def install_blacklight
-    generate 'blacklight:install --devise'
+    # we can skip solr because the activefedora installer will also do it (in the hydra:head generator)
+    generate 'blacklight:install --devise --skip-solr'
   end
 
   # if you need to generate any additional configuration
