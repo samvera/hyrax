@@ -3,6 +3,7 @@ RSpec.describe 'hyrax/my/_collection_action_menu.html.erb' do
   let(:collection) { create(:collection, id: id) }
   let(:collection_doc) { SolrDocument.new(id: id, has_model_ssim: 'Collection') }
   let(:collection_type) { create(:collection_type) }
+  let(:user_collection_type) { create(:user_collection_type) }
   let(:user) { build(:user) }
   let(:ability) { instance_double("Ability") }
   let(:collection_presenter) { Hyrax::CollectionPresenter.new(collection_doc, ability, nil) }
@@ -10,7 +11,7 @@ RSpec.describe 'hyrax/my/_collection_action_menu.html.erb' do
   before do
     allow(view).to receive(:current_user).and_return(user)
     allow(view).to receive(:collection_presenter).and_return(collection_presenter)
-    allow(collection_doc).to receive(:fetch).with('collection_type_gid_ssim', []).and_return(collection_type.gid)
+    allow(collection_doc).to receive(:fetch).with('collection_type_gid_ssim', [user_collection_type.gid]).and_return(collection_type.gid)
     allow(collection_presenter).to receive(:id).and_return(id)
     allow(collection_presenter).to receive(:solr_document).and_return(collection_doc)
     allow(view).to receive(:can?).with(:deposit, collection_doc).and_return(true)
