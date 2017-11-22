@@ -1,6 +1,3 @@
-        <div class="form-instructions">
-          <p>The more descriptive information you provide the better we can serve your needs.</p>
-        </div>
         <div class="base-terms">
           <% f.object.primary_terms.each do |term| %>
             <%= render_edit_field_partial(term, f: f) %>

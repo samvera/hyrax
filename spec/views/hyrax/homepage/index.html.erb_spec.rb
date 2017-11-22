@@ -1,14 +1,19 @@
 RSpec.describe "hyrax/homepage/index.html.erb", type: :view do
   let(:groups) { [] }
   let(:ability) { instance_double("Ability", can?: false) }
-  let(:presenter) { instance_double(Hyrax::HomepagePresenter) }
-  let(:type_presenter) { instance_double(Hyrax::SelectTypeListPresenter, many?: true) }
+  let(:presenter) do
+    instance_double(Hyrax::HomepagePresenter,
+                    create_work_presenter: type_presenter,
+                    create_many_work_types?: true,
+                    draw_select_work_modal?: true)
+  end
+  let(:type_presenter) { instance_double(Hyrax::SelectTypeListPresenter) }
 
   before do
-    allow(view).to receive(:create_work_presenter).and_return(type_presenter)
     allow(view).to receive(:signed_in?).and_return(signed_in)
     allow(controller).to receive(:current_ability).and_return(ability)
     assign(:presenter, presenter)
+    stub_template 'shared/_select_work_type_modal.html.erb' => 'modal'
     stub_template "hyrax/homepage/_marketing.html.erb" => "marketing"
     stub_template "hyrax/homepage/_home_content.html.erb" => "home content"
   end
@@ -97,8 +102,12 @@ RSpec.describe "hyrax/homepage/index.html.erb", type: :view do
         end
 
         context "and there is a single work type" do
-          let(:type_presenter) do
-            instance_double(Hyrax::SelectTypeListPresenter, many?: false, first_model: GenericWork)
+          let(:presenter) do
+            instance_double(Hyrax::HomepagePresenter,
+                            create_work_presenter: type_presenter,
+                            create_many_work_types?: false,
+                            draw_select_work_modal?: true,
+                            first_work_type: GenericWork)
           end
 
           it "displays a link to create that work type" do

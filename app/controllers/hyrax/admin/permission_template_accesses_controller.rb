@@ -5,18 +5,29 @@ module Hyrax
 
       def destroy
         ActiveRecord::Base.transaction do
-          @permission_template_access.destroy
+          @permission_template_access.destroy if valid_delete?
           remove_access!
         end
 
         if @permission_template_access.destroyed?
-          redirect_to_edit_path
+          after_destroy_success
         else
-          redirect_to_edit_path_with_error
+          after_destroy_error
         end
       end
 
       private
+
+        # This is a controller validation rather than a model validation
+        # because we don't want to prevent the ability to remove the whole
+        # PermissionTemplate and all of its associated PermissionTemplateAccesses
+        # @return [Boolean] true if it's valid
+        def valid_delete?
+          return true unless @permission_template_access.admin_group?
+          @permission_template_access.errors[:base] <<
+            t('hyrax.admin.admin_sets.form.permission_destroy_errors.admin_group')
+          false
+        end
 
         # @return [String] the identifier for the AdminSet for the currently loaded resource
         def source_id
@@ -27,7 +38,7 @@ module Hyrax
           Forms::PermissionTemplateForm.new(@permission_template_access.permission_template).update_access(manage_changed: manage_changed)
         end
 
-        def redirect_to_edit_path
+        def after_destroy_success
           if source_type == 'admin_set'
             redirect_to hyrax.edit_admin_admin_set_path(source_id,
                                                         anchor: 'participants'),
@@ -39,7 +50,7 @@ module Hyrax
           end
         end
 
-        def redirect_to_edit_path_with_error
+        def after_destroy_error
           if source_type == 'admin_set'
             redirect_to hyrax.edit_admin_admin_set_path(source_id,
                                                         anchor: 'participants'),

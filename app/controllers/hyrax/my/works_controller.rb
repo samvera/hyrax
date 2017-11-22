@@ -1,6 +1,9 @@
 module Hyrax
   module My
     class WorksController < MyController
+      class_attribute :create_work_presenter_class
+      self.create_work_presenter_class = Hyrax::SelectTypeListPresenter
+
       # Search builder for a list of works that belong to me
       # Override of Blacklight::RequestBuilders
       def search_builder_class
@@ -12,6 +15,7 @@ module Hyrax
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
         add_breadcrumb t(:'hyrax.admin.sidebar.works'), hyrax.my_works_path
         managed_works_count
+        @create_work_presenter = create_work_presenter_class.new(current_user)
         super
       end
 

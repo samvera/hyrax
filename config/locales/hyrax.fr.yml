@@ -272,8 +272,14 @@ fr:
         header: 'Citations:'
       form_files:
         dropzone: Déposez les fichiers ici.
-        external_upload: Cloud Providers
-        local_upload: Ajouter des fichiers locaux
+        local_upload_html: <p>Vous pouvez ajouter un ou plusieurs fichiers à associer à ce travail.</p>
+        local_upload_browse_everything_html: |
+          <p>Vous pouvez ajouter un ou plusieurs fichiers à associer à ce travail.</p>
+          <p>Notez que si vous téléchargez un grand nombre de fichiers dans un
+          court laps de temps, le fournisseur de cloud risque de ne pas pouvoir
+          répondre à votre demande. Si vous rencontrez des erreurs de
+          téléchargement depuis le nuage, faites-nous savoir via le
+          %{contact_href}.</p>
       form_permission_under_embargo:
         help_html: "<strong>Ce travail est sous embargo.</strong> Vous pouvez modifier les paramètres de l'embargo ici, ou vous pouvez visiter le %{edit_link} pour le désactiver."
         legend_html: Visibilité <small>Qui devrait pouvoir afficher ou télécharger ce contenu?</small>
@@ -295,17 +301,13 @@ fr:
         thumbnail: La vignette
         title: Titre
         visibility: Visibilité
-      metadata:
-        attribute_name_label: Nom d'attribut
-        attribute_values_label: Valeurs
-        header: Descriptions
       relationships:
         empty: Ce %{type} ne se trouve actuellement dans aucune collection.
         header: Des relations
       relationships_parent_row:
         label: 'Dans %{type}:'
       show:
-        last_modified: 'Dernière modification: %{value}'
+        last_modified: 'Dernière modification'
       social_media:
         facebook: Facebook
         google: Google+
@@ -736,7 +738,6 @@ fr:
       change_access_no_message: Non. Je vais le mettre à jour manuellement.
       change_access_yes_message: Oui s'il vous plaît.
       change_permissions_message_html: "<p> Vous avez modifié les autorisations sur ce %{curation_concern_human_readable_type}, <i>%{curation_concern}</i> , ce qui le rend visible pour <b>%{visibility_badge}</b> . </p><p> Voulez-vous changer tous les fichiers dans %{curation_concern_human_readable_type} à <b>%{visibility_badge}</b> aussi? </p>"
-      cloud_timeout_message_html: Notez que si vous téléchargez un grand nombre de fichiers dans un court laps de temps, le fournisseur de cloud risque de ne pas pouvoir répondre à votre demande. Si vous rencontrez des erreurs de téléchargement depuis le nuage, faites-nous savoir via le %{contact_href}.
       local_ingest:
         tab_label: Emplacement du réseau / serveur
       my_computer:
@@ -795,7 +796,7 @@ fr:
         breadcrumb: modifier
       form:
         additional_fields: Champs supplémentaires
-        in_collections: Ce travail dans les collections
+        in_collections: Collections
         in_other_works: Ce travail dans d'autres ouvrages
         in_this_work: Autres travaux dans ce travail
         tab:
@@ -850,7 +851,7 @@ fr:
         size: Taille
         total_items: Total travaux
       defaults:
-        admin_set_id: Ajouter en tant que membre de l'ensemble administratif
+        admin_set_id: L'ensemble Administratif
         based_near: Emplacement
         creator: Créateur
         date_created: date créée
@@ -860,7 +861,7 @@ fr:
         keyword: Mot-clé
         lease_expiration_date: jusqu'à
         license: Licence
-        member_of_collection_ids: Ajouter en tant que membre de la collection
+        member_of_collection_ids: Ajouter à la collection
         related_url: URL associée
         title: Titre
         visibility_after_embargo: Puis ouvrez-le jusqu'à

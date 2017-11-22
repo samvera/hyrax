@@ -22,7 +22,7 @@ RSpec.feature "display a work as its owner" do
     end
 
     it "shows a work" do
-      expect(page).to have_selector 'h1', text: 'Magnificent splendor'
+      expect(page).to have_selector 'h2', text: 'Magnificent splendor'
       expect(page).to have_selector 'li', text: 'The Internet'
       expect(page).to have_selector 'th', text: 'Location'
       expect(page).not_to have_selector 'th', text: 'Based near'
@@ -42,7 +42,7 @@ RSpec.feature "display a work as its owner" do
     end
 
     it "shows a work" do
-      expect(page).to have_selector 'h1', text: 'Magnificent splendor'
+      expect(page).to have_selector 'h2', text: 'Magnificent splendor'
       expect(page).to have_selector 'li', text: 'The Internet'
       expect(page).to have_selector 'th', text: 'Location'
       expect(page).not_to have_selector 'th', text: 'Based near'

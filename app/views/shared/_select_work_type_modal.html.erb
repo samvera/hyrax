@@ -1,35 +1,33 @@
 <% # TODO: This should not live in views/shared.  It does not need to be included on every page. %>
 <div class="modal worktypes fade" id="worktypes-to-create" tabindex="-1" role="dialog" aria-labelledby="select-worktype-label">
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
+    <form class="modal-content new-work-select">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('hyrax.dashboard.heading_actions.close') %>"><span aria-hidden="true">&times;</span></button>
         <h2 class="modal-title" id="select-worktype-label"><%= t('hyrax.dashboard.heading_actions.select_type_of_work') %></h2>
       </div>
-      <form class="new-work-select">
-        <div class="modal-body">
-          <% create_work_presenter.each do |row_presenter| %>
-            <div class="select-worktype">
-              <label>
-                <input type="radio" name="payload_concern" value="<%= row_presenter.concern %>"
-                                                             data-single="<%= row_presenter.switch_to_new_work_path(route_set: main_app, params: params) %>"
-                                                             data-batch="<%= row_presenter.switch_to_batch_upload_path(route_set: hyrax, params: params) %>">
-                <div class="select-work-icon">
-                  <span class="<%= row_presenter.icon_class %>"></span>
-                </div>
-                <div class="select-work-description">
-                  <h3 class="work-type-title"><%= row_presenter.name %></h3>
-                  <p><%= row_presenter.description %></p>
-                </div>
-              </label>
-            </div>
-          <% end %>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('hyrax.dashboard.heading_actions.close') %></button>
-          <input type="submit" class="btn btn-primary" value="<%= t('hyrax.dashboard.heading_actions.create_work') %>">
-        </div>
-      </form>
-    </div>
+      <div class="modal-body">
+        <% create_work_presenter.each do |row_presenter| %>
+          <div class="select-worktype">
+            <label>
+              <input type="radio" name="payload_concern" value="<%= row_presenter.concern %>"
+                                                           data-single="<%= row_presenter.switch_to_new_work_path(route_set: main_app, params: params) %>"
+                                                           data-batch="<%= row_presenter.switch_to_batch_upload_path(route_set: hyrax, params: params) %>">
+              <div class="select-work-icon">
+                <span class="<%= row_presenter.icon_class %>"></span>
+              </div>
+              <div class="select-work-description">
+                <h3 class="work-type-title"><%= row_presenter.name %></h3>
+                <p><%= row_presenter.description %></p>
+              </div>
+            </label>
+          </div>
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('hyrax.dashboard.heading_actions.close') %></button>
+        <input type="submit" class="btn btn-primary" value="<%= t('hyrax.dashboard.heading_actions.create_work') %>">
+      </div>
+    </form>
   </div>
 </div>

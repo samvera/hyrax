@@ -36,6 +36,12 @@
   }
 }
 
+// Global progress bar
+.fileupload-progress {
+  margin-top: 10px;
+}
+
+// Individual file progress bar
 .files .progress {
   width: 200px;
 }

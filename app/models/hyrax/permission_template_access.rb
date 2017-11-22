@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 
 module Hyrax
+  # Models a single grant of access to an agent (user or group) on a PermissionTemplate
   class PermissionTemplateAccess < ActiveRecord::Base
     self.table_name = 'permission_template_accesses'
     belongs_to :permission_template
+
+    # An agent should only have any particular level of access once.
+    validates :access, uniqueness: {
+      scope: [:agent_id, :agent_type, :permission_template_id]
+    }
 
     VIEW = 'view'.freeze
     DEPOSIT = 'deposit'.freeze
