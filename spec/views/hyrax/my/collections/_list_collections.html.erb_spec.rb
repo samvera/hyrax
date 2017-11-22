@@ -87,4 +87,47 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
       expect(rendered).to include Date.parse(modified_date).to_formatted_s(:standard)
     end
   end
+
+  context "check for legacy collections (<= Hyrax 2.0)" do
+    let(:attributes) do # missing collection_type_gid indicates collection is <= Hyrax 2.0
+      {
+        id: id,
+        "has_model_ssim" => ["Collection"],
+        "title_tesim" => ["Collection Title"],
+        "description_tesim" => ["Collection Description"],
+        "system_modified_dtsi" => modified_date
+      }
+    end
+
+    let(:doc) { SolrDocument.new(attributes) }
+    let(:collection) { mock_model(Collection) }
+    let(:collection_type) { create(:collection_type) }
+    let(:collection_presenter) { Hyrax::CollectionPresenter.new(doc, Ability.new(build(:user)), nil) }
+
+    before do
+      allow(view).to receive(:current_user).and_return(stub_model(User))
+      allow(view).to receive(:can?).with(:edit, doc).and_return(true)
+      allow(view).to receive(:can?).with(:deposit, doc).and_return(true)
+      allow(doc).to receive(:to_model).and_return(stub_model(Collection, id: id))
+      allow(Collection).to receive(:find).with(id).and_return(collection)
+      allow(collection).to receive(:id).and_return(id)
+      allow(collection).to receive(:member_of_collection_ids).and_return(["abc", "123"])
+      allow(collection_presenter).to receive(:collection_type_badge).and_return("User Collection")
+      view.lookup_context.prefixes.push 'hyrax/my'
+
+      render 'hyrax/my/collections/list_collections', collection_presenter: collection_presenter
+    end
+
+    it 'the line item displays the work and its actions' do
+      expect(rendered).to have_selector("tr#document_#{id}")
+      expect(rendered).to have_link 'Collection Title', href: hyrax.dashboard_collection_path(id)
+      expect(rendered).to have_link 'Edit collection', href: hyrax.edit_dashboard_collection_path(id)
+      expect(rendered).to have_link 'Delete collection', href: hyrax.dashboard_collection_path(id)
+      expect(rendered).to have_css 'a.visibility-link', text: 'Private'
+      expect(rendered).to have_css '.collection_type', text: 'User Collection'
+      expect(rendered).to have_selector '.expanded-details', text: 'Collection Description'
+      expect(rendered).not_to include '<span class="fa fa-cubes collection-icon-small"></span></a>'
+      expect(rendered).to include Date.parse(modified_date).to_formatted_s(:standard)
+    end
+  end
 end

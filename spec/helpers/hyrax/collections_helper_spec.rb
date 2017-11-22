@@ -123,10 +123,8 @@ RSpec.describe Hyrax::CollectionsHelper do
     end
 
     context "when the CollectionType cannot be found" do
-      let(:fake_gid) { "gid://app/CollectionType/fake-id" }
-
       it "returns the input gid unchanged" do
-        expect(collection_type_label(fake_gid)).to eq fake_gid
+        expect(collection_type_label(nil)).to eq "User Collection"
       end
     end
   end
