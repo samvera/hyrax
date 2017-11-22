@@ -25,15 +25,15 @@ zh:
           contributor: 贡献者
           keyword: 关键词
       filters:
-        title: '过滤:'
+        title: '筛选:'
       rss_feed: RSS Feed
-      start_over: 清除过滤
+      start_over: 清除筛选
   errors:
     messages:
       carrierwave_download_error: 图片不能下载。
       carrierwave_integrity_error: 不是图片。
       carrierwave_processing_error: 图片大小不能调整。
-      extension_blacklist_error: "%{extension} 的文件不能上传, 禁止上传的扩展类型: %{prohibited_types}"
+      extension_blacklist_error: "%{extension} 的文件不能上传, 限制上传的扩展类型: %{prohibited_types}"
       extension_whitelist_error: "%{extension} 的文件不能上传, 可上传的扩展类型: %{allowed_types}"
   helpers:
     action:
@@ -72,8 +72,8 @@ zh:
           notification: 管理集删除成功
         document_list:
           edit: 编辑
-          no_works: 管理集中不包含任何作品。
-          title: 管理集中的项目列表
+          no_works: 管理集不包含任何作品
+          title: 管理集清单
         edit:
           header: 编辑管理集
         form:
@@ -140,21 +140,21 @@ zh:
             no_delay: 没有延迟 -- 所有作品一旦存储即可发布
             title: 发布
             varies:
-              any: 允许存款人决定
-              between: 在'现在'之间
-              description: '可变的 -- 存储者可以设置一件作品的发布日期:'
+              any: 存储者可以选择任何延迟发布时间
+              between: 存储者可以选择最近时间
+              period: 存储者可以选择延迟发布期限：
+              description: '允许存储者设置发布日期:'
               embargo:
                 1yr: 存储一年之后
                 2yrs: 存储两年之后
                 3yrs: 存储三年之后
                 6mos: 存储六个月之后
-                select: 选择时滞期限..
-              period: 存款人可以选择禁运期限：
+                select: 选择延迟发布期限..
           visibility:
             description: '发布日期之后, 管理集内的作品可以被发现和下载:'
-            everyone: 每个人 -- 管理集内的所有作品会公开
+            everyone: 公开 -- 管理集内的所有作品会公开
             institution: 机构 -- 所有作品只对机构内的认证用户公开
-            restricted: 有限制的 -- 所有作品只会对存储库的管理者和此管理集的管理者与评审者公开
+            restricted: 私有 -- 所有作品只会对存储库的管理员和此管理集的管理员与评审员公开
             title: 公开度
             varies: 可变的 -- 默认值是公开, 但是存储者可以限制个别作品的公开度
         form_workflow:
@@ -220,7 +220,7 @@ zh:
           headers:
             main: 工作统计
             total: 总作品：
-            visibility: 总计可见度
+            visibility: 总计公开度
       users:
         index:
           access_label: 上次访问
@@ -249,7 +249,7 @@ zh:
             under_review: 在审查中
     api:
       accepted:
-        default: 您的请求已被接受，正在处理中。参见？？See job for more info。
+        default: 您的请求已被接受，还在处理中，详细信息请见后台作业。
       bad_request:
         default: 不能处理您的请求，参见错误信息。
       deleted:
@@ -257,15 +257,15 @@ zh:
       forbidden:
         default: 您无权访问此内容。
       internal_error:
-        default: 服务器遇到错误。
+        default: 服务器遇到问题。
       not_found:
         default: 找不到您要求的文件
       success:
         default: 您的请求已被成功处理。
       unauthorized:
-        default: 您必须要先登录才可以做这一点!
+        default: 您必须要先登录才可以做!
       unprocessable_entity:
-        default: 您试着要修改的资源按照您的请求是不能被修改。
+        default: 您试着要修改的资源按照您的请求无法被修改。
         empty_file: 您上传的文件无内容。
     background_attribution_html: ''
     base:
@@ -276,13 +276,13 @@ zh:
         external_upload: 云供应商
         local_upload: 添加本地文件
       form_permission_under_embargo:
-        help_html: "<strong>这项工作受到禁运。</strong>您可以在此更改禁令的设置，也可以访问%{edit_link}以停用它。"
-        legend_html: 可见性<small>谁可以查看或下载此内容？</small>
-        management_page: 禁运管理页面
+        help_html: <strong>这件作品限制公开。</strong>您可以在此更改设置，也可以访问%{edit_link}以取消限制。
+        legend_html: 公开度<small>谁可以查看或下载此内容？</small>
+        management_page: 限制管理页面
       form_permission_under_lease:
-        help_html: "<strong>这项工作正在进行中。</strong>您可以在此处更改租约的设置，也可以访问%{edit_link}以停用该租约。"
-        legend_html: 可见性<small>谁可以查看或下载此内容？</small>
-        management_page: 租赁管理页面
+        help_html: <strong>这件作品被租借。</strong>您可以在此处更改租借的设置，也可以访问%{edit_link}以停用该租约。
+        legend_html: 公开度<small>谁可以查看或下载此内容？</small>
+        management_page: 租约管理页面
       form_progress:
         required_agreement: 核对存储协议
         required_descriptions: 描述您的作品
@@ -317,11 +317,11 @@ zh:
         resource_type: 您可以选择适用于所有文件的多种类型
         title: 文件名将作为默认标题。请提供更有意义的标题，文件名将会在系统内保留。
     batch_uploads:
-      disabled: 功能由管理员禁用
+      disabled: 功能被管理员禁用
       files:
-        button_label: 添加新作品
         instructions: 上传的每份文件都会分别按新作品生成。
-        upload_type_instructions: 如果建立一件作品包括所有文件，请去
+        upload_type_instructions: 创建一件包括所有文件的作品，请去
+        button_label: 添加新作品
       new:
         header: 批量建立新作品
         in_collections: 这些作品包括在收藏集中
@@ -369,15 +369,15 @@ zh:
         tabs:
           description: 描述
           sharing: 分享
-          visibility: 能见度
+          visibility: 公开度
       new:
         header: 新系列
       search_form:
-        button_label: 走
+        button_label: 去
         label: 搜索收藏集 %{title}
         placeholder: 搜索收藏集
       show:
-        works_in_collection: 作品在此集合
+        works_in_collection: 作品在此收藏集
     contact_form:
       button_label: 发送
       email_label: 您的邮件
@@ -422,16 +422,16 @@ zh:
         admin: 管理
       collections:
         edit:
-          header: 编辑集合：%{title}
+          header: 编辑收藏集：%{title}
         form:
           tabs:
             description: 描述
             sharing: 分享
             visibility: 能见度
         new:
-          header: 创建新集合
+          header: 创建新收藏集
         show:
-          works_in_collection: 在这个集合的作品
+          works_in_collection: 在这个收藏集的作品
       create_work: 创建作品
       current_proxies: 目前代理
       delete_notification: 删除通知
@@ -442,18 +442,18 @@ zh:
       manage_proxies: 管理代理
       my:
         action:
-          collection_confirmation: 从%{application_name}删除是永久性的。点击 OK 从%{application_name}删除此收藏集，或取消删除。
+          collection_confirmation: 删除收藏集, 从%{application_name}删除收藏集是永久性的。从%{application_name}点击'OK'删除此收藏集，或点击'取消'取消操作。
           delete_collection: 删除收藏集
           delete_work: 删除作品
           edit_collection: 编辑收藏集
           edit_work: 编辑作品
-          highlight: 突出工作在配置文件
-          select: 选择行动
+          highlight: 在个人资料栏加重点作品
+          select: 选择
           select_all: 选择当前页面
-          select_none: 选择无
+          select_none: 选择没有
           transfer: 转让作品所有权
-          unhighlight: 从工作中删除高亮
-          work_confirmation: 从%{application_name}删除作品是永久性的。点击 OK 从%{application_name}删除此作品，或取消删除。
+          unhighlight: 删除重点作品
+          work_confirmation: 删除作品，从%{application_name}删除作品是永久性的。从%{application_name}点击'OK'删除此收藏集，或点击'取消'取消操作。
         collection_list:
           description: 描述：
           edit_access: 编辑访问：
@@ -461,20 +461,20 @@ zh:
           users: '用户:'
         collections: 你的收藏集
         facet_label:
-          collections: '过滤您的收藏集:'
-          highlighted: '过滤您的收藏精品:'
-          shared: '过滤您分享:'
-          works: '过滤作品:'
+          collections: '筛选您的收藏集:'
+          highlighted: '筛选您的收藏精品:'
+          shared: '筛选您的分享:'
+          works: '筛选作品:'
         heading:
           action: 行动
           date_uploaded: 上传日期
-          highlighted: 突出
+          highlighted: 重点
           title: 标题
           visibility: 公开度
         highlighted: 我的重点
         shared: 与我分享的作品
         sr:
-          batch_checkbox: 点击向收藏集添加或者编辑列表
+          batch_checkbox: 点击向收藏集添加或者编辑清单
           check_all_label: 选择添加或编辑所有文件
           detail_label: 展示概括细节
           listing: 您存储细项列单
@@ -518,38 +518,40 @@ zh:
       user_activity: 用户活动
       user_notifications: 用户通知
       view_files: 阅览文件
+    directory:
+      suffix:         '@example.org'
     document_language: zh
     edit_profile: 编辑个人资料
     embargoes:
       edit:
-        embargo_apply: 申请禁运
-        embargo_cancel: 取消并管理所有禁运
-        embargo_deactivate: 停用禁运
-        embargo_false_html: "<strong>这个%{cc}目前没有受到禁运。</strong>如果您想申请禁运，请在此处提供信息。"
+        embargo_apply: 申请限制
+        embargo_cancel: 取消并管理所有限制
+        embargo_deactivate: 停用限制
+        embargo_false_html: "<strong>这个%{cc}目前没有受到限制。</strong>如果您想申请限制，请在此处提供信息。"
         embargo_return: 返回编辑这个%{cc}
-        embargo_true_html: "<strong>这个%{cc}受到禁运。</strong>"
-        embargo_update: 更新禁运
+        embargo_true_html: "<strong>这个%{cc}受到限制。</strong>"
+        embargo_update: 更新限制
         header:
-          current: 当前禁运
-          past: 过去的禁运
-        history_empty: 这个%{cc}没有应用先前的禁运。
-        manage_embargoes_html: 管理%{cc} <span class='human_readable_type'>（%{cc_type}）的</span>禁运
+          current: 当前限制
+          past: 过去的限制
+        history_empty: 这个%{cc}没有先前的限制。
+        manage_embargoes_html: 管理%{cc} <span class='human_readable_type'>（%{cc_type}）的</span>限制
       index:
-        active: 所有主动禁运
-        deactivated: 停用的禁运
-        expired: 过期主动禁运
-        manage_embargoes: 管理禁运
+        active: 所有主动限制
+        deactivated: 停用的限制
+        expired: 过期主动限制
+        manage_embargoes: 管理限制
       list_expired_active_embargoes:
         change_all: 将%{cc}中的所有文件更改为
-        deactivate: 停用禁运
-        deactivate_selected: 停用选定的禁运
-        missing: 目前没有有效的禁运。
+        deactivate: 停用限制
+        deactivate_selected: 停用选定的限制
+        missing: 目前没有有效的限制。
       table_headers:
-        release_date: 禁运发布日期
+        release_date: 限制发布日期
         title: 标题
         type: 什么样的工作
-        viz_after: 可见度将更改为
-        viz_current: 当前可见度
+        viz_after: 公开度将更改为
+        viz_current: 当前公开度
     featured_researchers: 特色研究者
     file_manager:
       link_text: 文件管理员
@@ -565,21 +567,19 @@ zh:
           pdf_link: 下载PDF文件
     file_sets:
       groups_description:
-        description_html: '"标有‘选择一个群’的下拉框内是您所属的一组用户管理群的列表。您可以选择一个特定的群，指定对%{application_name}中文件的访问级别，类似于添加用户访问级别。"
-
-'
+        description_html: '标有"选择一个群"的下拉框内是您所属的一组用户管理群的清单。您可以选择一个特定的群，指定对%{application_name}中文件的访问级别，类似于添加用户访问级别。'
     help:
-      header: User Support
-      override_text: 用 app/views/static/help.html.erb 覆盖此文件。
+      header: 用户支持
+      override_text: 用 app/views/static/help.html.erb 取代此文件。
     homepage:
       admin_sets:
         link: 查看所有收藏
         tab_label: 探索收藏集
         title: 探索收藏集
       featured_researcher:
-        missing: 没有研究人员被特色。
-        tab_label: 特色研究者
-        title: 特色研究者
+        missing: 没有特色研究员。
+        tab_label: 特色研究员
+        title: 特色研究员
       featured_works:
         drag: 拖
         no_works: 没有特色作品
@@ -597,33 +597,33 @@ zh:
     leases:
       edit:
         header:
-          current: 目前租赁
-          past: 过去租赁
+          current: 目前租借
+          past: 过去租借
         history_empty: 这个%{cc}没有应用之前的租约。
-        lease_apply: 申请租赁
-        lease_cancel: 取消并管理所有租赁
-        lease_deactivate: 停用租赁
-        lease_false_html: "<strong>这个%{cc}目前不在租赁中。</strong>如果您想申请租赁，请在此处提供信息。"
+        lease_apply: 申请租借
+        lease_cancel: 取消并管理所有租借
+        lease_deactivate: 停用租借
+        lease_false_html: "<strong>这个%{cc}目前不在租借中。</strong>如果您想申请租借，请在此处提供信息。"
         lease_return: 返回编辑这个%{cc}
-        lease_true_html: "<strong>这个%{cc}是租赁的。</strong>"
-        lease_update: 更新租赁
-        manage_leases_html: 管理%{cc} <span class='human_readable_type'>（%{cc_type}）的</span>租赁
+        lease_true_html: "<strong>这个%{cc}是租借的。</strong>"
+        lease_update: 更新租借
+        manage_leases_html: 管理%{cc} <span class='human_readable_type'>（%{cc_type}）的</span>租借
       index:
-        active: 所有活跃租赁
-        deactivated: 停用租赁
-        expired: 过期活跃租赁
-        manage_leases: 管理租赁
+        active: 所有在使用的租借
+        deactivated: 停用租借
+        expired: 过期使用的租借
+        manage_leases: 管理租借
       list_expired_active_leases:
         change_all: 将%{cc}中的所有文件更改为
-        deactivate: 停用租赁
-        deactivate_selected: 停用选定的租赁
-        missing: 目前没有到期的租赁期限。
+        deactivate: 停用租借
+        deactivate_selected: 停用选定的租借
+        missing: 目前没有到期的租借期限。
       table_headers:
-        release_date: 租赁发布日期
+        release_date: 租借发布日期
         title: 标题
         type: 什么样的工作
-        viz_after: 可见度将更改为
-        viz_current: 当前可见度
+        viz_after: 公开度将更改为
+        viz_current: 当前公开度
     mailbox:
       date: 日期
       delete: 删除讯息
@@ -701,7 +701,7 @@ zh:
         link: 链接
         no_links: 链接未生成
       title: 单次使用链接
-    sort_label: 对列表中单件排序
+    sort_label: 对清单中单件排序
     toolbar:
       dashboard:
         menu: 控件板
@@ -717,10 +717,10 @@ zh:
         sr_target: 个人资料
     transfers:
       new:
-        confirm: 您确定要将此作品的所有权转让给其他使用者吗？ 单击确定转移或取消返回到传输屏幕
+        confirm: 您确定要将此作品的所有权转让给其他使用者吗？单击确定转移或取消返回到转让页面
         header: 所有权转让
         placeholder: 搜索用户
-        sr_only_description: 选择要传输 “％{work_title}” 的用户，添加可选注释，然后按传输。
+        sr_only_description: 选择要转让 “％{work_title}” 的用户，添加可选注释，然后按转让。
         title: 转让所有权 "%{work_title}"
     upload:
       alert:
@@ -753,7 +753,7 @@ zh:
         alt: ORCID 图标
         label: ORCID 资料
       tab_activity: 活动
-      tab_highlighted: Highlighted
+      tab_highlighted: 重点
       tab_profile: 个人资料
       zotero:
         alt: Zotero 图标
@@ -762,27 +762,23 @@ zh:
         unlinked: 与Zotero链接
     visibility:
       authenticated:
-        note_html: 访问仅限于%{institution} 的用户
+        note_html: 访问仅限于%{institution}
         text: "%{institution}"
       embargo:
         note_html: 设定日后发布。
-        text: 时滞期限
+        text: 限制运用
       lease:
         note_html: 设置日期以减少访问。
         text: 租约
       open:
-        note_html: 各位请注意， 如果您计划申请专利或在期刊上发表您的%{type}，请在<a href='http://www.sherpa.ac.uk/romeo/'>SHERPA/RoMEO</a> 查看相关出版社的版权政策
-        text: 上市
+        note_html: 向所有人公开
+        text: 公开
         warning_html: <p><strong>请注意</strong>, 在此公开(例如，加上%{label}标记)会被视作已出版，从而影响:</p><ul><li>为您的作品申请专利</li><li>在期刊上发表您的作品</li></ul><p>请在<a href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a>查看相关出版社的版权政策。</p>
       open_title_attr: 修改此资源的公开度
-      private:
-        note_html: 只有指定用户有权访问"共享"内容。
-        text: 私人的
-      private_title_attr: 修改此资源的公开度
       restricted:
-        note_html: 只有在“分享到”部分中被赋予特定访问权限的用户和/或组。
+        note_html: 非公开保留分享权限。
         text: 非公开
-      restricted_title_attr: 更改此资源的可见性
+      restricted_title_attr: 更改此资源的公开度
     workflow:
       default:
         deposit: 存储
@@ -806,7 +802,7 @@ zh:
           metadata: 描述
           relationships: 关联
           share: 分享
-        visibility_until: 直到
+        visibility_until: 一直到
       progress:
         header: 保存作品
       show:
@@ -827,10 +823,10 @@ zh:
         identifier: 一个独特的句柄用于标识收藏集。 例如用于标识期刊文章的DOI，或者标识一本书的ISBN或者OCLC系统编号。
         keyword: 用于描述和检索收藏集内容的的词或词组。
         language: 收藏集内容使用的语言。
-        license: 用于管理收藏集访问权限的许可与发布信息。 可从下拉列表中选择。
         publisher: 出版收藏集的个人或团体。 一般来说是机构单位。
         related_url: 相关链接，用于链接与收藏集相关的网页或其它具体内容(音频、视频、PDF文件)。例如一个研究项目的网址，收藏集是此研究项目的成果
         resource_type: 预定类型用于描述上传内容类型，例如&quot;文章&quot; or &quot;数据集。&quot; 可以选择多项类型。
+        license: 用于管理收藏集访问权限的许可与发布信息。 可从下拉清单中选择。
         subject: 用于描述收藏集的主题词或索引词,需要选自现存的词汇表。
         title: 用于帮助识别收藏集的名称。
       defaults:
@@ -842,16 +838,16 @@ zh:
         identifier: 一个独特的句柄用于标识作品。 例如用于标识期刊文章的DOI，或者标识一本书的ISBN或者OCLC系统编号。
         keyword: 用于描述和搜索作品内容的的词或词组。
         language: 作品内容使用的语言。
-        license: 用于管理作品访问权限的许可与发布信息。 可从下拉列表中选择。
         publisher: 出版作品的个人或团体，一般来说是机构单位。
         related_url: 相关链接，用于链接与作品相关的网页或其它具体内容(音频、视频、PDF文件)。例如一个研究项目的网址，作品是此研究项目的成果。
         resource_type: 预定类型用于描述上传内容类型，例如&quot;文章&quot; or &quot;数据集。&quot; 可以选择多项类型。
+        license: 用于管理作品访问权限的许可与发布信息。 可从下拉清单中选择。
         subject: 用于描述作品的主题词或索引词,需要选自现存的词汇表。
         title: 用于帮助识别作品的名称。
     labels:
       collection:
         size: 大小
-        total_items: 总作品
+        total_items: 总件数
       defaults:
         admin_set_id: 添加管理集成员
         based_near: 地点
@@ -871,7 +867,7 @@ zh:
         visibility_during_embargo: 仅限
         visibility_during_lease: 可使用
       proxy_deposit_request:
-        sender_comment: 注释
         transfer_to: 用户
+        sender_comment: 注释
     required:
       html: <span class="label label-info required-tag">需要的</span>
