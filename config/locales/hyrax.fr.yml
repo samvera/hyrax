@@ -274,7 +274,7 @@ fr:
         dropzone: Déposez les fichiers ici.
         local_upload_html: <p>Vous pouvez ajouter un ou plusieurs fichiers à associer à ce travail.</p>
         local_upload_browse_everything_html: |
-          <p>Vous pouvez ajouter un ou plusieurs fichiers à associer à ce travail.</p> 
+          <p>Vous pouvez ajouter un ou plusieurs fichiers à associer à ce travail.</p>
           <p>Notez que si vous téléchargez un grand nombre de fichiers dans un
           court laps de temps, le fournisseur de cloud risque de ne pas pouvoir
           répondre à votre demande. Si vous rencontrez des erreurs de
@@ -851,7 +851,7 @@ fr:
         size: Taille
         total_items: Total travaux
       defaults:
-        admin_set_id: Ajouter en tant que membre de l'ensemble administratif
+        admin_set_id: L'ensemble Administratif
         based_near: Emplacement
         creator: Créateur
         date_created: date créée

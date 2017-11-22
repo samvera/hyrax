@@ -851,7 +851,7 @@ pt-BR:
         size: Tamanho
         total_items: Total de trabalhos
       defaults:
-        admin_set_id: Adicionar como membro do conjunto administrativo
+        admin_set_id: Conjunto Administrativo
         based_near: Localização
         creator: O Criador
         date_created: Data Criada

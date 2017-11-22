@@ -850,7 +850,7 @@ it:
         size: Dimensione
         total_items: Totale opere
       defaults:
-        admin_set_id: Aggiungi come membro del set amministrativo
+        admin_set_id: Set Amministrativo
         based_near: luogo
         creator: Creatore
         date_created: data di creazione

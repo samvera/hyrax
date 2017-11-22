@@ -852,7 +852,7 @@ en:
         size:                      "Size"
         total_items:               "Total works"
       defaults:
-        admin_set_id:              "Add as member of administrative set"
+        admin_set_id:              "Administrative Set"
         based_near:                "Location"
         creator:                   "Creator"
         date_created:              "Date Created"
