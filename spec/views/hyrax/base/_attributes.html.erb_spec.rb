@@ -7,7 +7,7 @@ RSpec.describe 'hyrax/base/_attributes.html.erb' do
   let(:solr_document) { SolrDocument.new(attributes) }
   let(:attributes) do
     {
-      Solrizer.solr_name('has_model', :symbol) => ["GenericWork"],
+      ActiveFedora.index_field_mapper.solr_name('has_model', :symbol) => ["GenericWork"],
       subject_tesim: subject,
       contributor_tesim: contributor,
       creator_tesim: creator,

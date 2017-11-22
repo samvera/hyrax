@@ -9,7 +9,7 @@ module Hyrax
         solr_doc['member_ids_ssim'] = object.member_ids
         solr_doc['member_of_collections_ssim']    = object.member_of_collections.map(&:first_title)
         solr_doc['member_of_collection_ids_ssim'] = object.member_of_collections.map(&:id)
-        Solrizer.set_field(solr_doc, 'generic_type', 'Work', :facetable)
+        ActiveFedora.index_field_mapper.set_field(solr_doc, 'generic_type', 'Work', :facetable)
 
         # This enables us to return a Work when we have a FileSet that matches
         # the search query.  While at the same time allowing us not to return Collections

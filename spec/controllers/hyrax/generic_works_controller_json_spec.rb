@@ -41,7 +41,7 @@ RSpec.describe Hyrax::GenericWorksController do
       end
 
       it "returns 201, renders show template sets location header" do
-        # Ensure that @curation_concern is set for jbuilder template to use
+        # Ensure that @curatiocn_concern is set for jbuilder template to use
         expect(assigns[:curation_concern]).to be_instance_of GenericWork
         expect(controller).to render_template('hyrax/base/show')
         expect(response.code).to eq "201"

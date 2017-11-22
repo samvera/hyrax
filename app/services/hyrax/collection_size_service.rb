@@ -30,7 +30,7 @@ module Hyrax
     end
 
     def size_field
-      Solrizer.solr_name(:file_size, :symbol)
+      ActiveFedora.index_field_mapper.solr_name(:file_size, :symbol)
     end
 
     def max_collection_size
