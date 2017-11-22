@@ -1,5 +1,7 @@
 module Hyrax
   class HomepagePresenter
+    class_attribute :create_work_presenter_class
+    self.create_work_presenter_class = Hyrax::SelectTypeListPresenter
     attr_reader :current_ability, :collections
 
     def initialize(current_ability, collections)
@@ -13,6 +15,24 @@ module Hyrax
     def display_share_button?
       (user_unregistered? && Hyrax.config.display_share_button_when_not_logged_in?) ||
         current_ability.can_create_any_work?
+    end
+
+    # A presenter for selecting a work type to create
+    # this is needed here because the selector is in the header on every page
+    def create_work_presenter
+      @create_work_presenter ||= create_work_presenter_class.new(current_ability.current_user)
+    end
+
+    def create_many_work_types?
+      create_work_presenter.many?
+    end
+
+    def draw_select_work_modal?
+      display_share_button? && create_many_work_types?
+    end
+
+    def first_work_type
+      create_work_presenter.first_model
     end
 
     private

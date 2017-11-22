@@ -272,8 +272,15 @@ de:
         header: 'Zitate:'
       form_files:
         dropzone: Dateien hier hinziehen.
-        external_upload: Cloud-Provider
-        local_upload: Lokale Dateien hinzufügen
+        local_upload_html: <p>Sie können eine oder mehr Dateien hinzufügen, mit dieser Arbeit zu verknüpfen.</p>
+        local_upload_browse_everything_html: |
+          <p>Sie können eine oder mehr Dateien hinzufügen, mit dieser Arbeit zu
+          verknüpfen.</p>
+          <p>Bitte beachten Sie, dass, wenn Sie eine große Anzahl von Dateien
+          innerhalb einer kurzen Zeitspanne hochladen, der Cloud-Anbieter
+          möglicherweise nicht in der Lage, Ihrer Anfrage nachzukommen. Wenn Sie
+          irgendwelche Fehler beim Upload aus der Cloud erhalten, lassen Sie uns
+          dies über %{contact_href} wissen.</p>
       form_permission_under_embargo:
         help_html: "<strong>Diese Arbeit ist unter Embargo.</strong> Hier können Sie die Einstellungen des Embargos ändern, oder Sie können den %{edit_link} besuchen, um ihn zu deaktivieren."
         legend_html: Sichtbarkeit <small>Wer sollte in der Lage sein, diesen Inhalt anzusehen oder herunterzuladen?</small>
@@ -295,17 +302,13 @@ de:
         thumbnail: Miniaturansicht
         title: Titel
         visibility: Sichtbarkeit
-      metadata:
-        attribute_name_label: Attributname
-        attribute_values_label: Werte
-        header: Beschreibungen
       relationships:
         empty: Diese %{type} ist derzeit noch keiner Sammlungen zugeordnet.
         header: Beziehungen
       relationships_parent_row:
         label: 'In %{type}:'
       show:
-        last_modified: 'Zuletzt geändert: %{value}'
+        last_modified: 'Zuletzt geändert'
       social_media:
         facebook: Facebook
         google: Google+
@@ -736,7 +739,6 @@ de:
       change_access_no_message: Nein. Ich werde es manuell aktualisieren.
       change_access_yes_message: Ja bitte.
       change_permissions_message_html: "<p> Sie haben die Berechtigungen für diese %{curation_concern_human_readable_type}, <i>%{curation_concern} geändert</i> , so dass es sichtbar für <b>%{visibility_badge}</b> . </p><p> Möchten Sie alle Dateien im %{curation_concern_human_readable_type} auch auf <b>%{visibility_badge} ändern</b> ? </p>"
-      cloud_timeout_message_html: Bitte beachten Sie, dass, wenn Sie eine große Anzahl von Dateien innerhalb einer kurzen Zeitspanne hochladen, der Cloud-Anbieter möglicherweise nicht in der Lage, Ihrer Anfrage nachzukommen. Wenn Sie irgendwelche Fehler beim Upload aus der Cloud erhalten, lassen Sie uns dies über %{contact_href} wissen.
       local_ingest:
         tab_label: Netzwerk / Server Standort
       my_computer:
@@ -795,7 +797,7 @@ de:
         breadcrumb: Bearbeiten
       form:
         additional_fields: Zusätzliche Felder
-        in_collections: Diese Arbeit in Sammlungen
+        in_collections: Sammlungen
         in_other_works: Diese Arbeit in anderen Arbeiten
         in_this_work: Andere Arbeiten in dieser Arbeit
         tab:
@@ -850,7 +852,7 @@ de:
         size: Größe
         total_items: Arbeiten gesamt
       defaults:
-        admin_set_id: Als Mitglied des Admin-Sets hinzufügen
+        admin_set_id: Admin-Set
         based_near: Ort
         creator: Schöpfer
         date_created: Erstellungsdatum
@@ -860,7 +862,7 @@ de:
         keyword: Stichwort
         lease_expiration_date: bis
         license: Lizenz
-        member_of_collection_ids: Als Mitglied der Sammlung hinzufügen
+        member_of_collection_ids: Zur Sammlung hinzufügen
         related_url: Zugehörige URL
         title: Titel
         visibility_after_embargo: Dann öffnen sie es bis zu

@@ -346,8 +346,14 @@ en:
         header: 'Citations:'
       form_files:
         dropzone: "Drop files here."
-        external_upload: Cloud Providers
-        local_upload: Add Local Files
+        local_upload_html: <p>You can add one or more files to associate with this work.</p>
+        local_upload_browse_everything_html: |
+          <p>You can add one or more files to associate with this work. Add files
+          from your local system or a cloud provider.</p>
+          <p>Note that if you use a cloud provider to upload a large number of
+          files within a short period of time, the provider may not be able to
+          accommodate your request. If you experience errors uploading from the
+          cloud, let us know via the %{contact_href}.</p>
       form_permission_under_embargo:
         legend_html: Visibility <small>Who should be able to view or download this content?</small>
         help_html: "<strong>This work is under embargo.</strong> You can change the settings of the embargo here, or you can visit the %{edit_link} to deactivate it."
@@ -361,6 +367,10 @@ en:
         required_files:        Add files
         required_agreement:    Check deposit agreement
         requirements:          Requirements
+      form_share:
+        add_sharing: Add Sharing
+        currently_sharing: Currently Shared With
+        directions: Regardless of the visibility settings for this work, you can also share it with other users and groups.
       items:
         actions: Actions
         date_uploaded: "Date Uploaded"
@@ -369,17 +379,13 @@ en:
         thumbnail: Thumbnail
         title: Title
         visibility: Visibility
-      metadata:
-        attribute_name_label: Attribute Name
-        attribute_values_label: Values
-        header: Descriptions
       relationships:
         empty: "This %{type} is not currently in any collections."
         header: Relationships
       relationships_parent_row:
         label: "In %{type}:"
       show:
-        last_modified: "Last modified: %{value}"
+        last_modified: "Last modified"
       social_media:
         facebook: 'Facebook'
         google: 'Google+'
@@ -910,7 +916,7 @@ en:
         partial_fail_html: "One or more files did not upload successfully. To continue using the files that uploaded %{metadata_href}. <br /> Use the %{contact_href} to report the error if it persists."
         partial_fail_metadata_href_text: "edit their metadata"
       browse_everything:
-        browse_files_button: "Browse cloud files"
+        browse_files_button: "Add cloud files..."
         files_selected: "files selected"
         sr_tab_label: "Access Files from"
         tab_label: "Cloud Providers"
@@ -919,7 +925,6 @@ en:
       change_access_no_message: "No. I'll update it manually."
       change_access_yes_message: "Yes please."
       change_permissions_message_html: "<p>You have changed the permissions on this %{curation_concern_human_readable_type}, <i>%{curation_concern}</i>, making it visible to <b>%{visibility_badge}</b>.</p><p>Would you like change all of the files within the %{curation_concern_human_readable_type} to <b>%{visibility_badge}</b> as well?</p>"
-      cloud_timeout_message_html: "Please note that if you upload a large number of files within a short period of time, the cloud provider may not be able to accommodate your request. If you experience any errors uploading from the cloud, let us know via the %{contact_href}."
       local_ingest:
         tab_label: "Network/Server Location"
       my_computer:
@@ -986,7 +991,7 @@ en:
         breadcrumb: 'Edit'
       form:
         additional_fields: "Additional fields"
-        in_collections: This Work in Collections
+        in_collections: Collections
         in_other_works: This Work in Other Works
         in_this_work: Other Works in this Work
         visibility_until: 'until'
@@ -994,7 +999,7 @@ en:
           files:         "Files"
           metadata:      "Descriptions"
           relationships: "Relationships"
-          share:         "Share"
+          share:         "Sharing"
       progress:
         header: "Save Work"
       show:
@@ -1061,7 +1066,7 @@ en:
         sharable: "SHARING"
         title: "Type name"
       defaults:
-        admin_set_id:              "Add as member of administrative set"
+        admin_set_id:              "Administrative Set"
         based_near:                "Location"
         creator:                   "Creator"
         date_created:              "Date Created"
@@ -1071,7 +1076,7 @@ en:
         keyword:                   "Keyword"
         lease_expiration_date:     'until'
         license:                   "License"
-        member_of_collection_ids:  "Add as member of collection"
+        member_of_collection_ids:  "Add to collection"
         related_url:               "Related URL"
         title:                     "Title"
         visibility_after_embargo:  'then open it up to'

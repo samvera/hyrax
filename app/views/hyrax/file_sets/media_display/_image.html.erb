@@ -5,13 +5,11 @@
                     class: "representative-media",
                     alt: "",
                     role: "presentation" %>
-      <%= link_to hyrax.download_path(file_set),
+      <%= link_to t('hyrax.file_set.show.downloadable_content.image_link'),
+                  hyrax.download_path(file_set),
                   data: { turbolinks: false, label: file_set.id },
                   target: :_blank,
-                  id: "file_download",
-                  class: "btn btn-default" do %>
-          <%= t('hyrax.file_set.show.downloadable_content.image_link') %>
-      <% end %>
+                  id: "file_download" %>
     </div>
 <% else %>
     <div>

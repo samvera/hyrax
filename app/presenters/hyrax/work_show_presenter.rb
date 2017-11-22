@@ -138,6 +138,10 @@ module Hyrax
       Hyrax::Engine.routes.url_helpers.stats_work_path(self)
     end
 
+    def model
+      solr_document.to_model
+    end
+
     delegate :member_presenters, :file_set_presenters, :work_presenters, to: :member_presenter_factory
 
     private

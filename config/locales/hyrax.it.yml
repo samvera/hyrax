@@ -272,8 +272,13 @@ it:
         header: 'citazioni:'
       form_files:
         dropzone: Drop file qui.
-        external_upload: Fornitori di nubi
-        local_upload: Aggiungere file locali
+        local_upload_html: <p>È possibile aggiungere uno o più file da associare a questo lavoro.</p>
+        local_upload_browse_everything_html: |
+          <p>È possibile aggiungere uno o più file da associare a questo lavoro.</p>
+          <p>Tieni presente che se carichi un gran numero di file in un breve
+          periodo di tempo, il provider di cloud potrebbe non essere in grado di
+          accogliere la tua richiesta. Se si verificano errori di caricamento
+          dalla nube, fateci sapere tramite %{contact_href}.</p>
       form_permission_under_embargo:
         help_html: "<strong>Questo lavoro è sotto embargo.</strong> È possibile modificare le impostazioni dell'embargo qui oppure è possibile visitare lo %{edit_link} per disattivarlo."
         legend_html: Visibilità <small>Chi dovrebbe essere in grado di visualizzare o scaricare questo contenuto?</small>
@@ -295,17 +300,13 @@ it:
         thumbnail: Thumbnail
         title: Titolo
         visibility: Visibilità
-      metadata:
-        attribute_name_label: nome attributo
-        attribute_values_label: Valori
-        header: descrizioni
       relationships:
         empty: Questo %{type} non è in una raccolta.
         header: Le relazioni
       relationships_parent_row:
         label: 'In %{type}:'
       show:
-        last_modified: 'Ultima modifica: %{value}'
+        last_modified: 'Ultima modifica'
       social_media:
         facebook: Facebook
         google: Google+
@@ -736,7 +737,6 @@ it:
       change_access_no_message: No. Lo aggiornerò manualmente.
       change_access_yes_message: Sì grazie.
       change_permissions_message_html: "<p> Hai modificato le autorizzazioni di questo %{curation_concern_human_readable_type}, <i>%{curation_concern}</i> , <i>rendendolo</i> visibile a <b>%{visibility_badge}</b> . </p><p> Vuoi cambiare tutti i file all'interno di <b>%{curation_concern_human_readable_type}</b> anche <b>%{visibility_badge}</b> ? </p>"
-      cloud_timeout_message_html: Tieni presente che se carichi un gran numero di file in un breve periodo di tempo, il provider di cloud potrebbe non essere in grado di accogliere la tua richiesta. Se si verificano errori di caricamento dalla nube, fateci sapere tramite %{contact_href}.
       local_ingest:
         tab_label: Posizione rete / server
       my_computer:
@@ -795,7 +795,7 @@ it:
         breadcrumb: Modifica
       form:
         additional_fields: Campi aggiuntivi
-        in_collections: Questo lavoro nelle collezioni
+        in_collections: Collezioni
         in_other_works: Questo lavoro in altre opere
         in_this_work: Altri lavori in questo lavoro
         tab:
@@ -850,7 +850,7 @@ it:
         size: Dimensione
         total_items: Totale opere
       defaults:
-        admin_set_id: Aggiungi come membro del set amministrativo
+        admin_set_id: Set Amministrativo
         based_near: luogo
         creator: Creatore
         date_created: data di creazione
@@ -860,7 +860,7 @@ it:
         keyword: Parola chiave
         lease_expiration_date: fino a
         license: Licenza
-        member_of_collection_ids: Aggiungi come membro della collezione
+        member_of_collection_ids: Aggiungere alla collezione
         related_url: URL correlato
         title: Titolo
         visibility_after_embargo: Poi aprila fino a

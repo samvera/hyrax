@@ -128,7 +128,7 @@ RSpec.configure do |config|
   config.include Shoulda::Matchers::ActiveRecord, type: :model
   config.include Shoulda::Matchers::ActiveModel, type: :form
   config.include Shoulda::Callback::Matchers::ActiveModel
-
+  config.full_backtrace = true if ENV['TRAVIS']
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end

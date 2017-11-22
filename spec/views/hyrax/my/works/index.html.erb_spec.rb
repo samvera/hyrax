@@ -3,9 +3,10 @@ RSpec.describe 'hyrax/my/works/index.html.erb', type: :view do
     allow(view).to receive(:current_ability).and_return(ability)
     allow(view).to receive(:provide).and_yield
     allow(view).to receive(:provide).with(:page_title, String)
-    allow(view).to receive(:create_work_presenter).and_return(presenter)
+    assign(:create_work_presenter, presenter)
     allow(view).to receive(:can?).and_return(true)
     allow(Flipflop).to receive(:batch_upload?).and_return(batch_enabled)
+    stub_template 'shared/_select_work_type_modal.html.erb' => 'modal'
     stub_template 'hyrax/my/works/_tabs.html.erb' => 'tabs'
     stub_template 'hyrax/my/works/_search_header.html.erb' => 'search'
     stub_template 'hyrax/my/works/_document_list.html.erb' => 'list'
