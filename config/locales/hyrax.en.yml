@@ -797,7 +797,7 @@ en:
         breadcrumb: 'Edit'
       form:
         additional_fields: "Additional fields"
-        in_collections: This Work in Collections
+        in_collections: Collections
         in_other_works: This Work in Other Works
         in_this_work: Other Works in this Work
         visibility_until: 'until'
@@ -862,7 +862,7 @@ en:
         keyword:                   "Keyword"
         lease_expiration_date:     'until'
         license:                   "License"
-        member_of_collection_ids:  "Add as member of collection"
+        member_of_collection_ids:  "Add to collection"
         related_url:               "Related URL"
         title:                     "Title"
         visibility_after_embargo:  'then open it up to'

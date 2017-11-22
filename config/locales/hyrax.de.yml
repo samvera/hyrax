@@ -797,7 +797,7 @@ de:
         breadcrumb: Bearbeiten
       form:
         additional_fields: Zusätzliche Felder
-        in_collections: Diese Arbeit in Sammlungen
+        in_collections: Sammlungen
         in_other_works: Diese Arbeit in anderen Arbeiten
         in_this_work: Andere Arbeiten in dieser Arbeit
         tab:
@@ -862,7 +862,7 @@ de:
         keyword: Stichwort
         lease_expiration_date: bis
         license: Lizenz
-        member_of_collection_ids: Als Mitglied der Sammlung hinzufügen
+        member_of_collection_ids: Zur Sammlung hinzufügen
         related_url: Zugehörige URL
         title: Titel
         visibility_after_embargo: Dann öffnen sie es bis zu
