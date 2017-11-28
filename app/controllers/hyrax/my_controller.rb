@@ -31,10 +31,6 @@ module Hyrax
     helper_method :suppressed_to_status
 
     def index
-      # The user's collections for the "add to collection" form
-      # TODO: could this be only on the My::WorksController?
-      @user_collections = collections_service.search_results(:edit)
-
       @user = current_user
       (@response, @document_list) = query_solr
       prepare_instance_variables_for_batch_control_display
@@ -56,10 +52,6 @@ module Hyrax
     end
 
     private
-
-      def collections_service
-        Hyrax::CollectionsService.new(self)
-      end
 
       # TODO: Extract a presenter object that wrangles all of these instance variables.
       def prepare_instance_variables_for_batch_control_display

@@ -11,6 +11,9 @@ module Hyrax
       end
 
       def index
+        # The user's collections for the "add to collection" form
+        @user_collections = collections_service.search_results(:edit)
+
         add_breadcrumb t(:'hyrax.controls.home'), root_path
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
         add_breadcrumb t(:'hyrax.admin.sidebar.works'), hyrax.my_works_path
@@ -19,6 +22,10 @@ module Hyrax
       end
 
       private
+
+        def collections_service
+          Hyrax::CollectionsService.new(self)
+        end
 
         def search_action_url(*args)
           hyrax.my_works_url(*args)
