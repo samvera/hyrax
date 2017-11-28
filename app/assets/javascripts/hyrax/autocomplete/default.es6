@@ -1,3 +1,4 @@
+// This script initializes a jquery-ui autocomplete widget
 export default class Default {
   constructor(element, url) {
     this.url = url;
@@ -10,7 +11,6 @@ export default class Default {
       minLength: 2,
 
       source: (request, response) => {
-        console.log("Requesting " + this.url)
         $.getJSON(this.url, {
           q: request.term
         }, response );

@@ -2,7 +2,8 @@ import RegistryEntry from './registry_entry'
 export default class Registry {
   /**
    * Initialize the registry
-   * @param {jQuery} element the jquery selector for the permissions container
+   * @param {jQuery} element the jquery selector for the permissions container.
+   *                         must be a table with a tbody element.
    * @param {String} object_name the name of the object, for constructing form fields (e.g. 'generic_work')
    * @param {String} templateId the the identifier of the template for the added elements
    */
@@ -15,24 +16,24 @@ export default class Registry {
     this.element = element
 
     // the remove button is only on preexisting grants
-    element.find('[data-behavior="remove-relationship"]').on('click', (evt) => this.removeWork(evt))
+    element.find('[data-behavior="remove-relationship"]').on('click', (evt) => this.removeResource(evt))
   }
 
   // Return an index for the hidden field when adding a new row.
-  // This makes the assumption that all the tr elements represent a work except
-  // for the final one, which is the "add another" form
+  // A large random will probably avoid collisions.
   nextIndex() {
-      return this.element.find('tbody').children('tr').length - 1;
+    return Math.floor(Math.random() * 1000000000000000)
   }
 
-  addWork(work) {
-    work.index = this.nextIndex()
-    this.items.push(new RegistryEntry(work, this, this.element.find('tr:last'), this.templateId))
-    this.showSaveNote();
+  // Adds the resource to the first row of the tbody
+  addResource(resource) {
+      resource.index = this.nextIndex()
+      this.items.push(new RegistryEntry(resource, this, this.element, this.templateId))
+      this.showSaveNote();
   }
 
   // removes a row that has been persisted
-  removeWork(evt) {
+  removeResource(evt) {
      evt.preventDefault();
      let button = $(evt.target);
      let container = button.closest('tr');
@@ -54,7 +55,7 @@ export default class Registry {
   }
 
   showSaveNote() {
-    // TODO: we may want to reveal a note that changes aren't active until the work is saved
+    // TODO: we may want to reveal a note that changes aren't active until the resource is saved
   }
 
 }

@@ -1,19 +1,23 @@
 import Registry from './registry'
-import Work from './work'
-
+import Resource from './resource'
+/**
+ * This depends on the passed in element containing `data-autocomplete="work'"`
+ * that is also a select2 element.
+*/
 export default class RelationshipsControl {
 
   /**
    * Initializes the class in the context of an individual table element
-   * @param {jQuery} element the table element that this class represents
+   * @param {jQuery} element the table element that this class represents. This
+   *                         element must have an attribute called data-param-key set.
+   * @param {String} paramKey the key for the type of object we're submitting (e.g. 'generic_work')
    * @param {String} property the property to submit
    * @param {String} templateId the template identifier for new rows
    */
-  constructor(element, property, templateId) {
+  constructor(element, paramKey, property, templateId) {
     this.element = element
-    this.registry = new Registry(this.element, this.element.data('paramKey'), property, templateId)
-
-    this.input = this.element.find("[data-autocomplete='work']")
+    this.registry = new Registry(this.element.find('tbody'), paramKey, property, templateId)
+    this.input = this.element.find(`[data-autocomplete]`)
     this.warning = this.element.find(".message.has-warning")
     this.addButton = this.element.find("[data-behavior='add-relationship']")
     this.errors = null
@@ -40,7 +44,7 @@ export default class RelationshipsControl {
   }
 
   attemptToAddRow() {
-      // Display an error when the input field is empty, or if the work ID is already related,
+      // Display an error when the input field is empty, or if the resource ID is already related,
       // otherwise clone the row and set appropriate styles
       if (this.isValid()) {
         this.addRow()
@@ -52,7 +56,7 @@ export default class RelationshipsControl {
   addRow() {
     this.hideWarningMessage()
     let data = this.searchData()
-    this.registry.addWork(new Work(data.id, data.text))
+    this.registry.addResource(new Resource(data.id, data.text))
 
     // finally, empty the "add" row input value
     this.clearSearch();

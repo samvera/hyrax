@@ -1,35 +1,70 @@
 module Hyrax
   module Actors
-    # Adds membership to and removes membership from collections
+    # Adds membership to and removes membership from collections.
+    # This decodes parameters that follow the rails nested parameters conventions:
+    # e.g.
+    #   'member_of_collections_attributes' => {
+    #     '0' => { 'id' = '12312412'},
+    #     '1' => { 'id' = '99981228', '_destroy' => 'true' }
+    #   }
+    #
     class CollectionsMembershipActor < AbstractActor
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if create was successful
       def create(env)
-        collection_ids = env.attributes.delete(:member_of_collection_ids)
-        assign_collections(env, collection_ids) && next_actor.create(env)
+        attributes_collection = env.attributes.delete(:member_of_collections_attributes)
+        assign_nested_attributes_for_collection(env, attributes_collection) &&
+          next_actor.create(env)
       end
 
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if update was successful
       def update(env)
-        collection_ids = env.attributes.delete(:member_of_collection_ids)
-        assign_collections(env, collection_ids) && next_actor.update(env)
+        attributes_collection = env.attributes.delete(:member_of_collections_attributes)
+        assign_nested_attributes_for_collection(env, attributes_collection) &&
+          next_actor.update(env)
       end
 
       private
 
-        # Maps from collection ids to collection objects
-        def assign_collections(env, collection_ids)
-          return true unless collection_ids
-          # grab/save collections this user has no edit access to
-          other_collections = collections_without_edit_access(env)
-          env.curation_concern.member_of_collections = ::Collection.find(collection_ids)
-          env.curation_concern.member_of_collections.concat other_collections
+        # Attaches any unattached members.  Deletes those that are marked _delete
+        # @param [Hash<Hash>] a collection of members
+        def assign_nested_attributes_for_collection(env, attributes_collection)
+          return true unless attributes_collection
+          attributes_collection = attributes_collection.sort_by { |i, _| i.to_i }.map { |_, attributes| attributes }
+          # checking for existing works to avoid rewriting/loading works that are
+          # already attached
+          existing_collections = env.curation_concern.member_of_collection_ids
+          attributes_collection.each do |attributes|
+            next if attributes['id'].blank?
+            if existing_collections.include?(attributes['id'])
+              remove(env.curation_concern, attributes['id']) if has_destroy_flag?(attributes)
+            else
+              add(env, attributes['id'])
+            end
+          end
         end
 
-        def collections_without_edit_access(env)
-          env.curation_concern.member_of_collections.select { |coll| env.current_ability.cannot?(:edit, coll) }
+        # Adds the item to the ordered members so that it displays in the items
+        # along side the FileSets on the show page
+        def add(env, id)
+          member = Collection.find(id)
+          return unless env.current_ability.can?(:edit, member)
+          env.curation_concern.member_of_collections << member
         end
+
+        # Remove the object from the members set and the ordered members list
+        def remove(curation_concern, id)
+          member = Collection.find(id)
+          curation_concern.member_of_collections.delete(member)
+        end
+
+        # Determines if a hash contains a truthy _destroy key.
+        # rubocop:disable Style/PredicateName
+        def has_destroy_flag?(hash)
+          ActiveFedora::Type::Boolean.new.cast(hash['_destroy'])
+        end
+      # rubocop:enable Style/PredicateName
     end
   end
 end

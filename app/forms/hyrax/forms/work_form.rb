@@ -10,13 +10,14 @@ module Hyrax
       # This is required so that fields_for will draw a nested form.
       # See ActionView::Helpers#nested_attributes_association?
       #   https://github.com/rails/rails/blob/v5.0.2/actionview/lib/action_view/helpers/form_helper.rb#L1890
-      delegate :work_members_attributes=, to: :model
+      delegate :work_members_attributes=, :member_of_collections_attributes=, to: :model
+
       delegate :human_readable_type, :open_access?, :authenticated_only_access?,
                :open_access_with_embargo_release_date?, :private_access?,
                :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo,
                :visibility_during_lease, :lease_expiration_date, :visibility_after_lease,
                :visibility, :in_works_ids, :depositor, :on_behalf_of, :permissions,
-               :member_ids, :member_of_collection_ids, to: :model
+               :member_ids, to: :model
 
       attr_reader :agreement_accepted
 
@@ -39,6 +40,14 @@ module Hyrax
         @agreement_accepted = !model.new_record?
         @controller = controller
         super(model)
+      end
+
+      # when the add_works_to_collection parameter is set, they mean to create
+      # a new work and add it to that collection.
+      def member_of_collections
+        base = model.member_of_collections
+        return base unless @controller.params[:add_works_to_collection]
+        base + [Collection.find(@controller.params[:add_works_to_collection])]
       end
 
       # @return [String] an etag representing the current version of this form
@@ -104,12 +113,7 @@ module Hyrax
         service = Hyrax::CollectionsService.new(@controller)
         CollectionOptionsPresenter.new(service).select_options(:edit)
       end
-
-      # Select collection(s) based on passed-in params and existing memberships.
-      # @return [Array] a list of collection identifiers
-      def member_of_collections(collection_ids)
-        (member_of_collection_ids + Array.wrap(collection_ids)).uniq
-      end
+      deprecation_deprecate collections_for_select: "will be removed in Hyrax 3"
 
       # Sanitize the parameters coming from the form. This ensures that the client
       # doesn't send us any more parameters than we expect.
@@ -132,8 +136,9 @@ module Hyrax
           :version,
           :add_works_to_collection,
           {
-            work_members_attributes: [:id, :_destroy],
-            based_near_attributes: [:id, :_destroy]
+            based_near_attributes: [:id, :_destroy],
+            member_of_collections_attributes: [:id, :_destroy],
+            work_members_attributes: [:id, :_destroy]
           }
         ]
       end

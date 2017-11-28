@@ -1,8 +1,56 @@
+<%# Form UI behavior code and details;
+Code:
+  app/assets/javascripts/hyrax/relationships
+CSS:
+  [data-behavior="remove-relationship"] : Button to remove its parent TR from the table
+  [data-behavior="add-relationship"] : Button to clone its parent TR and inject a new row into the table
+  .message.has-warning : Used to display UI errors related to input values and server errors
+HTML Properties:
+  table:
+    [data-behavior="child-relationships"] : allows the javascript to be initialized
+    data-param-key : the parameter key value for this model type
+%>
 <h2><%= t("hyrax.works.form.in_collections") %></h2>
-<div id="collection-widget">
-  <%= f.input :member_of_collection_ids,
-              as: :select,
-              collection: f.object.collections_for_select,
-              selected: f.object.member_of_collections(params[:add_works_to_collection]),
-              input_html: { class: 'form-control', multiple: true } %>
+
+<div class="form-group multi_value optional managed" data-behavior="collection-relationships" data-param-key="<%= f.object.model_name.param_key %>">
+
+  <div class="form-inline">
+      <%= f.label :member_of_collection_ids %>
+      <%= f.input_field :member_of_collection_ids,
+                  prompt: :translate,
+                  data: {
+                    autocomplete: 'collection',
+                    'autocomplete-url' => Rails.application.routes.url_helpers.qa_path + '/search/collections?access=edit'
+                  } %>
+      <a class="btn btn-primary" data-behavior="add-relationship">Add</a>
+  </div>
+
+  <table class="table table-striped" data-param-key="<%= f.object.model_name.param_key %>">
+    <caption><%= t('.caption') %></caption>
+    <thead>
+    <tr>
+      <th><%= t('.header.title') %></th>
+      <th><%= t('.header.actions') %></th>
+    </tr>
+    </thead>
+    <tbody>
+    <%= f.fields_for :member_of_collections do |row| %>
+        <tr>
+          <td>
+            <%= link_to row.object.to_s, row.object %>
+          </td>
+          <td>
+            <a class="btn btn-danger" data-behavior="remove-relationship" data-index="<%= row.index %>"><%= t('.actions.remove') %></a>
+          </td>
+        </tr>
+    <% end %>
+    </tbody>
+  </table>
 </div>
+
+<script type="text/x-tmpl" id="tmpl-collection">
+<tr>
+  <td>{%= o.title %}</td>
+  <td><button class="btn btn-danger" data-behavior="remove-relationship"><%= t('.actions.remove') %></button></td>
+</tr>
+</script>
