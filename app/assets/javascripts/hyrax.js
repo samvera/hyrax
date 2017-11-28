@@ -78,8 +78,8 @@
 //= require hyrax/permissions
 //= require hyrax/autocomplete
 //= require hyrax/autocomplete/default
-//= require hyrax/autocomplete/work
 //= require hyrax/autocomplete/linked_data
+//= require hyrax/autocomplete/resource
 //= require hyrax/relationships
 //= require hyrax/select_work_type
 //= require hyrax/collections

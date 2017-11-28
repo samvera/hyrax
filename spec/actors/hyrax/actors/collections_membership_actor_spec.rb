@@ -1,7 +1,7 @@
 RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
-  let(:curation_concern) { GenericWork.new }
+  let(:curation_concern) { build(:work) }
   let(:attributes) { {} }
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
@@ -16,11 +16,14 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
 
   describe 'the next actor' do
     let(:attributes) do
-      { member_of_collection_ids: ['123'], title: ['test'] }
+      {
+        member_of_collections_attributes: { '0' => { id: '123' } },
+        title: ['test']
+      }
     end
 
     before do
-      allow(Collection).to receive(:find).with(['123'])
+      allow(Collection).to receive(:find).with('123')
       allow(curation_concern).to receive(:member_of_collections=)
     end
 
@@ -33,9 +36,12 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
   end
 
   describe 'create' do
-    let(:collection) { create(:collection) }
+    let(:collection) { create(:collection, edit_users: [user.user_key]) }
     let(:attributes) do
-      { member_of_collection_ids: [collection.id], title: ['test'] }
+      {
+        member_of_collections_attributes: { '0' => { id: collection.id } },
+        title: ['test']
+      }
     end
 
     it 'adds it to the collection' do
@@ -43,13 +49,15 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
       expect(collection.reload.member_objects).to eq [curation_concern]
     end
 
-    describe "when work is in user's own collection" do
+    describe "when work is in user's own collection and destroy is passed" do
       let(:collection) { create(:collection, user: user, title: ['A good title']) }
-      let(:attributes) { { member_of_collection_ids: [] } }
+      let(:attributes) do
+        { member_of_collections_attributes: { '0' => { id: collection.id, _destroy: 'true' } } }
+      end
 
       before do
-        subject.create(Hyrax::Actors::Environment.new(curation_concern, ability,
-                                                      member_of_collection_ids: [collection.id], title: ['test']))
+        curation_concern.member_of_collections = [collection]
+        curation_concern.save!
       end
 
       it "removes the work from that collection" do
@@ -59,13 +67,13 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
     end
 
     describe "when work is in another user's collection" do
-      let(:other_user) { create(:user) }
-      let(:collection) { create(:collection, user: other_user, title: ['A good title']) }
+      let(:other_collection) { create(:collection, title: ['A good title']) }
+      let!(:curation_concern) { create_for_repository(:work, member_of_collection_ids: [other_collection.id]) }
 
-      it "doesn't remove the work from that collection" do
+      it "doesn't remove the work from the other user's collection" do
         subject.create(env)
         expect(subject.create(env)).to be true
-        expect(curation_concern.member_of_collections).to eq [collection]
+        expect(curation_concern.member_of_collections).to match_array [collection, other_collection]
       end
     end
   end
