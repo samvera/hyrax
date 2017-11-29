@@ -15,7 +15,9 @@ export default class {
     this.paramKey = element.data('paramKey') // The work type
     this.adminSetWidget = new AdminSetWidget(element.find('select[id$="_admin_set_id"]'))
     this.sharingTabElement = $('#tab-share')
+  }
 
+  init() {
     this.autocomplete()
     this.controlledVocabularies()
     this.sharingTab()
@@ -78,17 +80,21 @@ export default class {
   }
 
   relationshipsControl() {
-      let works = this.element.find('[data-behavior="child-relationships"]')
-      new RelationshipsControl(this.element.find('[data-behavior="child-relationships"]'),
-                               works.data('paramKey'),
-                               'work_members_attributes',
-                               'tmpl-child-work')
-
       let collections = this.element.find('[data-behavior="collection-relationships"]')
-      new RelationshipsControl(collections,
-                               works.data('paramKey'),
-                               'member_of_collections_attributes',
-                               'tmpl-collection')
+      collections.each((_idx, element) =>
+          new RelationshipsControl(element,
+                                   collections.data('members'),
+                                   collections.data('paramKey'),
+                                   'member_of_collections_attributes',
+                                   'tmpl-collection').init())
+
+      let works = this.element.find('[data-behavior="child-relationships"]')
+      works.each((_idx, element) =>
+          new RelationshipsControl(element,
+                                   works.data('members'),
+                                   works.data('paramKey'),
+                                   'work_members_attributes',
+                                   'tmpl-child-work').init())
   }
 
   saveWorkControl() {

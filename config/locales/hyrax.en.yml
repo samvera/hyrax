@@ -278,16 +278,24 @@ en:
           remove: Remove from this work
         attach_new_work: Deposit new work as child of this work
         caption: This work currently contains these child works
+        confirm:
+          cancel: Cancel
+          remove: Remove
+          text: "Removing this child work will not remove it from the repository, only from this parent work.  Are you sure you want to remove this work from this parent work?"
         header:
-          title: Work title
           actions: Action
+          title: Work title
       form_member_of_collections:
         actions:
           remove: Remove from collection
         caption: This work is currently in these collections
+        confirm:
+          cancel: Cancel
+          remove: Remove
+          text: "Removing this work will not remove it from the repository, only from this collection. Are you sure you want to remove this work from the collection?"
         header:
-          title: Collection title
           actions: Action
+          title: Collection title
       form_permission_under_embargo:
         legend_html: Visibility <small>Who should be able to view or download this content?</small>
         help_html: "<strong>This work is under embargo.</strong> You can change the settings of the embargo here, or you can visit the %{edit_link} to deactivate it."
