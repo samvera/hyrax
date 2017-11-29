@@ -274,14 +274,20 @@ en:
           accommodate your request. If you experience errors uploading from the
           cloud, let us know via the %{contact_href}.</p>
       form_child_work_relationships:
+        actions:
+          remove: Remove from this work
         attach_new_work: Deposit new work as child of this work
+        caption: This work currently contains these child works
+        header:
+          title: Work title
+          actions: Action
       form_member_of_collections:
         actions:
           remove: Remove from collection
         caption: This work is currently in these collections
         header:
           title: Collection title
-          actions: Actions
+          actions: Action
       form_permission_under_embargo:
         legend_html: Visibility <small>Who should be able to view or download this content?</small>
         help_html: "<strong>This work is under embargo.</strong> You can change the settings of the embargo here, or you can visit the %{edit_link} to deactivate it."
@@ -884,5 +890,6 @@ en:
     placeholders:
       defaults:
         member_of_collection_ids: 'Select a collection…'
+        find_child_work: 'Search for a work…'
     required:
       html: '<span class="label label-info required-tag">required</span>'

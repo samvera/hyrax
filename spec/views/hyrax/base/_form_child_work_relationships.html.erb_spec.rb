@@ -15,11 +15,6 @@ RSpec.describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view
     end
   end
 
-  let(:page) do
-    render
-    Capybara::Node::Simple.new(rendered)
-  end
-
   before do
     # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
     allow(work).to receive(:new_record?).and_return(false)
@@ -29,7 +24,6 @@ RSpec.describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view
     allow(view).to receive(:f).and_return(f)
     allow(f).to receive(:object).and_return(form)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
-    stub_template '_find_work_widget.html.erb' => "<input class='finder'/>"
     assign(:form, form)
   end
 
@@ -37,15 +31,16 @@ RSpec.describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view
     context "and no children works are present" do
       before do
         allow(form).to receive(:work_members).and_return([])
+        render
       end
 
       it "draws the page" do
         # remove button is not present
-        expect(page).not_to have_selector("[data-behavior='remove-relationship']")
+        expect(rendered).not_to have_selector("[data-behavior='remove-relationship']")
 
         # input with add button
-        expect(page).to have_selector("input.finder")
-        expect(page).to have_selector("[data-behavior='add-relationship']")
+        expect(rendered).to have_selector('input[data-autocomplete-url="/authorities/search/find_works"]')
+        expect(rendered).to have_selector("[data-behavior='add-relationship']")
       end
     end
 
@@ -56,22 +51,23 @@ RSpec.describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view
 
       before do
         allow(form).to receive(:work_members).and_return([work_2])
+        render
       end
 
       it "draws the page" do
         # input with add button
-        expect(page).to have_selector("input.finder")
-        expect(page).to have_selector("[data-behavior='add-relationship']")
+        expect(rendered).to have_selector('input[data-autocomplete-url="/authorities/search/find_works"]')
+        expect(rendered).to have_selector("[data-behavior='add-relationship']")
 
         # an input box that is filled in with the child id
-        expect(page).to have_selector("input[value='#{work_2.id}']", visible: false)
+        expect(rendered).to have_selector("input[value='#{work_2.id}']", visible: false)
 
         # generate a link for the child work's title
-        expect(page).to have_link("Test Child Work")
+        expect(rendered).to have_link("Test Child Work")
 
         # a remove button
         within "tr" do
-          expect(page).to have_selector("[data-behavior='remove-relationship']")
+          expect(rendered).to have_selector("[data-behavior='remove-relationship']")
         end
       end
     end
