@@ -1,5 +1,5 @@
 module Sipity
-  RSpec.describe WorkflowState, type: :model, no_clean: true do
+  RSpec.describe WorkflowState, type: :model do
     subject { described_class }
 
     its(:column_names) { is_expected.to include("workflow_id") }

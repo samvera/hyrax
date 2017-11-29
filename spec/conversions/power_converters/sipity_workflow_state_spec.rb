@@ -1,4 +1,4 @@
-RSpec.describe 'PowerConverter', no_clean: true do
+RSpec.describe 'PowerConverter' do
   context 'sipity_workflow_state' do
     let(:workflow_state) { Sipity::WorkflowState.new(id: 1, name: 'hello') }
     let(:workflow) { create(:workflow) }
