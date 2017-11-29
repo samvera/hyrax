@@ -89,7 +89,6 @@
 //= require hyrax/file_manager/save_manager
 //= require hyrax/file_manager/member
 //= require hyrax/file_manager
-//= require hyrax/workflow_actions_affix
 //= require hyrax/authority_select
 //= require hyrax/sort_and_per_page
 //= require hyrax/thumbnail_select
