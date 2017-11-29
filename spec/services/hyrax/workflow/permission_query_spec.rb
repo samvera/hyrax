@@ -1,6 +1,6 @@
 module Hyrax
   module Workflow
-    RSpec.describe PermissionQuery, slow_test: true, no_clean: true do
+    RSpec.describe PermissionQuery, slow_test: true do
       let(:reviewing_user) { create(:user) }
       let(:completing_user) { create(:user) }
       let(:workflow_config) do
@@ -174,7 +174,7 @@ module Hyrax
         end
       end
 
-      describe '.scope_processing_agents_for', no_clean: true do
+      describe '.scope_processing_agents_for' do
         context 'when user is not persisted' do
           subject { described_class.scope_processing_agents_for(user: ::User.new) }
 

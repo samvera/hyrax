@@ -1,4 +1,4 @@
-RSpec.describe 'PowerConverter', no_clean: true do
+RSpec.describe 'PowerConverter' do
   context 'role' do
     it "converts Sipity::Role" do
       object = Sipity::Role.new

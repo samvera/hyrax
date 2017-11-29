@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::ApplicationCable::Channel, no_clean: true do
+RSpec.describe Hyrax::ApplicationCable::Channel do
   subject { described_class.new(connection, identifier) }
 
   let(:connection) { double('connection', identifiers: []) }

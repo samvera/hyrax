@@ -1,6 +1,6 @@
 module Hyrax
   module Workflow
-    RSpec.describe 'WorkflowSchema', no_clean: true do
+    RSpec.describe 'WorkflowSchema' do
       let(:valid_data) do
         {
           workflows: [
