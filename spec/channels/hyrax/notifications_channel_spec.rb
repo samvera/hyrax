@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::NotificationsChannel, no_clean: true do
+RSpec.describe Hyrax::NotificationsChannel do
   subject { described_class.new(connection, nil) }
 
   let(:connection) { Hyrax::ApplicationCable::Connection.new(server, {}) }

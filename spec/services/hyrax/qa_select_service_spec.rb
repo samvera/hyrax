@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::QaSelectService, no_clean: true do
+RSpec.describe Hyrax::QaSelectService do
   let(:authority) do
     # Implementing an ActiveRecord interface as required for this spec
     # rubocop:disable RSpec/InstanceVariable

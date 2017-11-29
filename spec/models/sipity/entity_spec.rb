@@ -1,6 +1,6 @@
 module Sipity
   RSpec.describe Entity, type: :model do
-    describe 'database configuration', no_clean: true do
+    describe 'database configuration' do
       subject { described_class }
 
       its(:column_names) { is_expected.to include("proxy_for_global_id") }
@@ -10,7 +10,7 @@ module Sipity
 
     subject { described_class.new }
 
-    describe 'delegations', no_clean: true do
+    describe 'delegations' do
       it { is_expected.to delegate_method(:workflow_state_name).to(:workflow_state).as(:name) }
       it { is_expected.to delegate_method(:workflow_name).to(:workflow).as(:name) }
     end

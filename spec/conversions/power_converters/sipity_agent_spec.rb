@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe 'PowerConverter', no_clean: true do
+RSpec.describe 'PowerConverter' do
   context '#convert_to_sipity_agent' do
     it 'will convert a Sipity::Agent' do
       object = Sipity::Agent.new

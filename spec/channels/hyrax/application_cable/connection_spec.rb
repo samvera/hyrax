@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::ApplicationCable::Connection, no_clean: true do
+RSpec.describe Hyrax::ApplicationCable::Connection do
   subject { described_class.new(server, env) }
 
   let(:server) { ActionCable::Server::Base.new }
