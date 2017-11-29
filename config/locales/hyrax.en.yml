@@ -273,6 +273,8 @@ en:
           files within a short period of time, the provider may not be able to
           accommodate your request. If you experience errors uploading from the
           cloud, let us know via the %{contact_href}.</p>
+      form_child_work_relationships:
+        attach_new_work: Deposit new work as child of this work
       form_member_of_collections:
         actions:
           remove: Remove from collection
