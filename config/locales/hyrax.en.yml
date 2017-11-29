@@ -273,6 +273,13 @@ en:
           files within a short period of time, the provider may not be able to
           accommodate your request. If you experience errors uploading from the
           cloud, let us know via the %{contact_href}.</p>
+      form_member_of_collections:
+        actions:
+          remove: Remove from collection
+        caption: This work is currently in these collections
+        header:
+          title: Collection title
+          actions: Actions
       form_permission_under_embargo:
         legend_html: Visibility <small>Who should be able to view or download this content?</small>
         help_html: "<strong>This work is under embargo.</strong> You can change the settings of the embargo here, or you can visit the %{edit_link} to deactivate it."
@@ -872,5 +879,8 @@ en:
       proxy_deposit_request:
         transfer_to:              "User"
         sender_comment:           "Comments"
+    placeholders:
+      defaults:
+        member_of_collection_ids: 'Select a collection…'
     required:
       html: '<span class="label label-info required-tag">required</span>'

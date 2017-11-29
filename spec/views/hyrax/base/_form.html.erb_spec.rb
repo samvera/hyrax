@@ -23,7 +23,6 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
     allow(controller).to receive(:repository).and_return(Hyrax::GenericWorksController.new.repository)
     allow(controller).to receive(:blacklight_config).and_return(Hyrax::GenericWorksController.new.blacklight_config)
 
-    allow(form).to receive(:collections_for_select).and_return([])
     allow(form).to receive(:permissions).and_return([])
     allow(form).to receive(:visibility).and_return('public')
     stub_template 'hyrax/base/_form_files.html.erb' => 'files'

@@ -7,7 +7,7 @@ describe 'RelationshipsControl', ->
   beforeEach ->
     fixture = setFixtures(test_fixtures.relationships_table.html)
     element = $("table")
-    target = new RelationshipsControl(element, 'work_members_attributes', 'tmpl-child-work')
+    target = new RelationshipsControl(element, 'generic_work', 'work_members_attributes', 'tmpl-child-work')
     jasmine.Ajax.install()
 
   afterEach ->
@@ -21,7 +21,7 @@ describe 'RelationshipsControl', ->
     it 'creates a row when something is selected', ->
       spyOn(target.input, 'val').and.returnValue('123')
       spyOn(target, 'searchData').and.returnValue({ id: '123', text: 'foo bar' })
-      expect(target.registry.nextIndex()).toEqual(0)
+      expect(target.registry.items.length).toEqual(0)
       target.attemptToAddRow()
       expect(target.errors).toBeNull()
-      expect(target.registry.nextIndex()).toEqual(1)
+      expect(target.registry.items.length).toEqual(1)

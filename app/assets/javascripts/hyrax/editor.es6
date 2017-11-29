@@ -78,9 +78,17 @@ export default class {
   }
 
   relationshipsControl() {
+      let works = this.element.find('[data-behavior="child-relationships"]')
       new RelationshipsControl(this.element.find('[data-behavior="child-relationships"]'),
+                               works.data('paramKey'),
                                'work_members_attributes',
                                'tmpl-child-work')
+
+      let collections = this.element.find('[data-behavior="collection-relationships"]')
+      new RelationshipsControl(collections,
+                               works.data('paramKey'),
+                               'member_of_collections_attributes',
+                               'tmpl-collection')
   }
 
   saveWorkControl() {
