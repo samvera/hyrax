@@ -49,6 +49,10 @@ Metrics/BlockLength:
 Metrics/MethodLength:
   Max: 13
 
+Naming/FileName: # https://github.com/bbatsov/rubocop/issues/2973
+  Exclude:
+    - 'Gemfile'
+
 Style/AsciiComments:
   Enabled: false
 
@@ -59,10 +63,6 @@ Style/CollectionMethods:
     inject: 'reduce'
     detect: 'find'
     find_all: 'select'
-
-Style/FileName: # https://github.com/bbatsov/rubocop/issues/2973
-  Exclude:
-    - 'Gemfile'
 
 Style/MethodMissing:
   Exclude:
@@ -139,6 +139,9 @@ RSpec/DescribeClass:
     - 'spec/javascripts/jasmine_spec.rb'
     - 'spec/tasks/rake_spec.rb'
     - 'spec/views/**/*'
+
+RSpec/ContextWording:
+  Enabled: false
 
 # By default RSpec/MessageSpies has the following:
 #   Prefer have_received for setting message expectations. Setup form as a spy using allow or instance_spy.

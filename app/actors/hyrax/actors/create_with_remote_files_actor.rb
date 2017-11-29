@@ -32,7 +32,7 @@ module Hyrax
         # @param uri [URI] the uri fo the resource to import
         def validate_remote_url(uri)
           if uri.scheme == 'file'
-            path = File.absolute_path(URI.decode(uri.path))
+            path = File.absolute_path(CGI.unescape(uri.path))
             whitelisted_ingest_dirs.any? do |dir|
               path.start_with?(dir) && path.length > dir.length
             end

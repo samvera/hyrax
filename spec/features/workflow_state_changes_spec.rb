@@ -1,4 +1,4 @@
-RSpec.feature "Workflow state changes", type: :feature do
+RSpec.describe "Workflow state changes", type: :feature do
   let(:workflow_name) { 'with_comment' }
   let(:approving_user) { create(:admin) }
   let(:depositing_user) { create(:admin) }

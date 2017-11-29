@@ -1,4 +1,4 @@
-RSpec.feature 'leases' do
+RSpec.describe 'leases' do
   let(:user) { create(:user) }
 
   before do

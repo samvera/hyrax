@@ -21,7 +21,7 @@ RSpec.describe Hyrax::FixityChecksController do
         #   { file_id => [{ "checked_uri" => "...4-4d71-83ba-1bc52a5e4300/fcr:versions/version1", "passed" => true },
         #                 { "checked_uri" => ".../version2", "passed" => false },
         #                 ...] }
-        json_response.each do |_file_id, array_of_checks|
+        json_response.each_value do |array_of_checks|
           array_of_checks.each do |check_hash|
             expect(check_hash.keys).to include("file_set_id", "file_id", "checked_uri", "passed", "expected_result", "created_at")
             expect(check_hash["passed"]).to be_in([true, false])

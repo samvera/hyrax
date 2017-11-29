@@ -10,7 +10,7 @@ module Hyrax
     include ActionView::Helpers::TextHelper
     include ActionView::Helpers::OutputSafetyHelper
 
-    attr_reader :file_set_id, :relevant_log_records
+    attr_reader :file_set_id
     # Note this takes a file_set_id NOT a FileSet, easy use from either solr
     # or AF object.
     def initialize(file_set_id)
@@ -75,7 +75,7 @@ module Hyrax
       # Should be all _latest_ ChecksumAuditLog about different files/versions
       # currently existing in specified FileSet.
       def relevant_log_records
-        @relevant_log_records = ChecksumAuditLog.latest_for_file_set_id(file_set_id)
+        @relevant_log_records ||= ChecksumAuditLog.latest_for_file_set_id(file_set_id)
       end
 
       def num_checked_files

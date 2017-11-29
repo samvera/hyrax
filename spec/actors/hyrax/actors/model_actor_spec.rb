@@ -1,5 +1,3 @@
-# coding: utf-8
-
 module MusicalWork
   class Cover < ActiveFedora::Base
   end

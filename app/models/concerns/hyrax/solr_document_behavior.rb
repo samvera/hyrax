@@ -1,5 +1,3 @@
-# -*- encoding : utf-8 -*-
-
 module Hyrax
   module SolrDocumentBehavior
     extend ActiveSupport::Concern
