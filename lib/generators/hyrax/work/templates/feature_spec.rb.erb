@@ -12,9 +12,17 @@ RSpec.feature 'Create a <%= class_name %>', js: false do
     let(:user) do
       User.new(user_attributes) { |u| u.save(validate: false) }
     end
+    let(:admin_set_id) { AdminSet.find_or_create_default_admin_set_id }
+    let(:permission_template) { Hyrax::PermissionTemplate.find_or_create_by!(admin_set_id: admin_set_id) }
 
     before do
-      AdminSet.find_or_create_default_admin_set_id
+      # Grant the user access to deposit into the admin set.
+      Hyrax::PermissionTemplateAccess.create!(
+        permission_template_id: permission_template.id,
+        agent_type: 'user',
+        agent_id: user.user_key,
+        access: 'deposit'
+      )
       login_as user
     end
 
