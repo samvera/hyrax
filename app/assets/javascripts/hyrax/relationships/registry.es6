@@ -14,40 +14,43 @@ export default class Registry {
     this.templateId = templateId
     this.items = []
     this.element = element
-
-    // the remove button is only on preexisting grants
-    element.find('[data-behavior="remove-relationship"]').on('click', (evt) => this.removeResource(evt))
+    element.closest('form').on('submit', (evt) => {
+        this.serializeToForm()
+    });
   }
 
   // Return an index for the hidden field when adding a new row.
   // A large random will probably avoid collisions.
   nextIndex() {
-    return Math.floor(Math.random() * 1000000000000000)
+      return Math.floor(Math.random() * 1000000000000000)
+  }
+
+  export() {
+      return this.items.map(item => item.export())
+  }
+
+  serializeToForm() {
+      this.export().forEach((item, index) => {
+          this.addHiddenField(index, 'id', item.id)
+          this.addHiddenField(index, '_destroy', item['_destroy'])
+      })
+  }
+
+  addHiddenField(index, key, value) {
+      $('<input>').attr({
+          type: 'hidden',
+          name: `${this.fieldPrefix(index)}[${key}]`,
+          value: value
+      }).appendTo(this.element);
   }
 
   // Adds the resource to the first row of the tbody
   addResource(resource) {
       resource.index = this.nextIndex()
-      this.items.push(new RegistryEntry(resource, this, this.element, this.templateId))
-      this.showSaveNote();
-  }
-
-  // removes a row that has been persisted
-  removeResource(evt) {
-     evt.preventDefault();
-     let button = $(evt.target);
-     let container = button.closest('tr');
-     container.addClass('hidden'); // do not show the block
-     this.addDestroyField(container, button.attr('data-index'));
-     this.showSaveNote();
-  }
-
-  addDestroyField(element, index) {
-      $('<input>').attr({
-          type: 'hidden',
-          name: `${this.fieldPrefix(index)}[_destroy]`,
-          value: 'true'
-      }).appendTo(element);
+      let entry = new RegistryEntry(resource, this, this.templateId)
+      this.items.push(entry)
+      this.element.prepend(entry.view)
+      this.showSaveNote()
   }
 
   fieldPrefix(counter) {
@@ -57,5 +60,4 @@ export default class Registry {
   showSaveNote() {
     // TODO: we may want to reveal a note that changes aren't active until the resource is saved
   }
-
 }

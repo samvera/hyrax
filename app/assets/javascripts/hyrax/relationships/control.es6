@@ -8,26 +8,37 @@ export default class RelationshipsControl {
 
   /**
    * Initializes the class in the context of an individual table element
-   * @param {jQuery} element the table element that this class represents. This
-   *                         element must have an attribute called data-param-key set.
+   * @param {HTMLElement} element the table element that this class represents.
+   * @param {Array} members the members to display in the table
    * @param {String} paramKey the key for the type of object we're submitting (e.g. 'generic_work')
    * @param {String} property the property to submit
    * @param {String} templateId the template identifier for new rows
    */
-  constructor(element, paramKey, property, templateId) {
-    this.element = element
+  constructor(element, members, paramKey, property, templateId) {
+    this.element = $(element)
+    this.members = this.element.data('members')
     this.registry = new Registry(this.element.find('tbody'), paramKey, property, templateId)
     this.input = this.element.find(`[data-autocomplete]`)
     this.warning = this.element.find(".message.has-warning")
     this.addButton = this.element.find("[data-behavior='add-relationship']")
     this.errors = null
+  }
+
+  init() {
     this.bindAddButton();
+    this.displayMembers();
   }
 
   validate() {
     if (this.input.val() === "") {
       this.errors = ['ID cannot be empty.']
     }
+  }
+
+  displayMembers() {
+    this.members.forEach((elem) =>
+      this.registry.addResource(new Resource(elem.id, elem.label))
+    )
   }
 
   isValid() {

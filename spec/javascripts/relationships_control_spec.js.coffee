@@ -7,7 +7,7 @@ describe 'RelationshipsControl', ->
   beforeEach ->
     fixture = setFixtures(test_fixtures.relationships_table.html)
     element = $("table")
-    target = new RelationshipsControl(element, 'generic_work', 'work_members_attributes', 'tmpl-child-work')
+    target = new RelationshipsControl(element, [], 'generic_work', 'work_members_attributes', 'tmpl-child-work')
     jasmine.Ajax.install()
 
   afterEach ->

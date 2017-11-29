@@ -59,6 +59,26 @@ module Hyrax
       # @return [NilClass]
       def find_child_work; end
 
+      def member_of_collections_json
+        member_of_collections.map do |coll|
+          {
+            id: coll.id,
+            label: coll.to_s,
+            path: @controller.url_for(coll)
+          }
+        end.to_json
+      end
+
+      def work_members_json
+        work_members.map do |child|
+          {
+            id: child.id,
+            label: child.to_s,
+            path: @controller.url_for(child)
+          }
+        end.to_json
+      end
+
       # The value for some fields should not be set to the defaults ([''])
       # because it should be an empty array instead
       def initialize_field(key)

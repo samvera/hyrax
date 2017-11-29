@@ -12,7 +12,7 @@ HTML Properties:
 %>
 <h2><%= t("hyrax.works.form.in_collections") %></h2>
 
-<div class="form-group" data-behavior="collection-relationships" data-param-key="<%= f.object.model_name.param_key %>">
+<div class="form-group" data-behavior="collection-relationships" data-param-key="<%= f.object.model_name.param_key %>" data-members="<%= f.object.member_of_collections_json %>">
 
   <div class="form-inline">
       <%= f.label :member_of_collection_ids %>
@@ -34,16 +34,6 @@ HTML Properties:
     </tr>
     </thead>
     <tbody>
-    <%= f.fields_for :member_of_collections do |row| %>
-        <tr>
-          <td>
-            <%= link_to row.object.to_s, row.object %>
-          </td>
-          <td>
-            <a class="btn btn-danger" data-behavior="remove-relationship" data-index="<%= row.index %>"><%= t('.actions.remove') %></a>
-          </td>
-        </tr>
-    <% end %>
     </tbody>
   </table>
 </div>
@@ -51,6 +41,6 @@ HTML Properties:
 <script type="text/x-tmpl" id="tmpl-collection">
 <tr>
   <td>{%= o.title %}</td>
-  <td><button class="btn btn-danger" data-behavior="remove-relationship"><%= t('.actions.remove') %></button></td>
+  <td><button class="btn btn-danger" data-behavior="remove-relationship" data-confirm-text="<%= t('.confirm.text') %>" data-confirm-cancel="<%= t('.confirm.cancel') %>" data-confirm-remove="<%= t('.confirm.remove') %>"><%= t('.actions.remove') %></button></td>
 </tr>
 </script>
