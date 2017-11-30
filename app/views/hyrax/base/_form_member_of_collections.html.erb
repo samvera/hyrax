@@ -12,7 +12,7 @@ HTML Properties:
 %>
 <h2><%= t("hyrax.works.form.in_collections") %></h2>
 
-<div class="form-group multi_value optional managed" data-behavior="collection-relationships" data-param-key="<%= f.object.model_name.param_key %>">
+<div class="form-group" data-behavior="collection-relationships" data-param-key="<%= f.object.model_name.param_key %>">
 
   <div class="form-inline">
       <%= f.label :member_of_collection_ids %>
@@ -25,7 +25,7 @@ HTML Properties:
       <a class="btn btn-primary" data-behavior="add-relationship">Add</a>
   </div>
 
-  <table class="table table-striped" data-param-key="<%= f.object.model_name.param_key %>">
+  <table class="table table-striped">
     <caption><%= t('.caption') %></caption>
     <thead>
     <tr>

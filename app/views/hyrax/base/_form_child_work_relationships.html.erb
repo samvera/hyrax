@@ -10,14 +10,29 @@ HTML Properties:
     [data-behavior="child-relationships"] : allows the javascript to be initialized
     data-param-key : the parameter key value for this model type
 %>
-<div class="form-group multi_value optional managed">
-  <%= link_to "Attach New Work", polymorphic_path([main_app, :new, :hyrax, :parent, curation_concern.model_name.singular], parent_id: curation_concern.id), target: "_blank", class: 'btn btn-primary' %>
-
-  <table class="table table-striped related-files" data-behavior="child-relationships" data-param-key="<%= f.object.model_name.param_key %>">
+<div class="form-group" data-behavior="child-relationships" data-param-key="<%= f.object.model_name.param_key %>">
+  <div class="form-inline">
+      <%= f.label :find_child_work %>
+      <%= f.input_field :find_child_work,
+                        prompt: :translate,
+                        autocomplete: 'off',
+                        data: {
+                          autocomplete: 'work',
+                          'autocomplete-url' => Rails.application.routes.url_helpers.qa_path + '/search/find_works',
+                          'exclude-work': f.object.model.id # exclude this item from the result set.
+                        } %>
+      <a class="btn btn-primary" data-behavior="add-relationship">Add</a>
+  </div>
+  <div class="message has-warning hidden"></div>
+  <div style="margin-top: 10px">
+    <%= link_to t('.attach_new_work'), polymorphic_path([main_app, :new, :hyrax, :parent, curation_concern.model_name.singular], parent_id: curation_concern.id), target: "_blank", class: 'btn btn-primary' %>
+  </div>
+  <table class="table table-striped">
+    <caption><%= t('.caption') %></caption>
     <thead>
     <tr>
-      <th>Child Work</th>
-      <th>Actions</th>
+      <th><%= t('.header.title') %></th>
+      <th><%= t('.header.actions') %></th>
     </tr>
     </thead>
     <tbody>
@@ -28,21 +43,10 @@ HTML Properties:
             <%= link_to row.object.title.first, [main_app, row.object] %>
           </td>
           <td>
-            <a class="btn btn-danger" data-behavior="remove-relationship" data-index="<%= row.index %>">Remove</a>
+            <a class="btn btn-danger" data-behavior="remove-relationship" data-index="<%= row.index %>"><%= t('.actions.remove') %></a>
           </td>
         </tr>
     <% end %>
-    <tr>
-      <td>
-        <%= render "find_work_widget", f: f,
-                                       name: 'child_work',
-                                       id: f.object.model.id %>
-        <div class="message has-warning hidden"></div>
-      </td>
-      <td>
-        <a class="btn btn-primary" data-behavior="add-relationship">Add</a>
-      </td>
-    </tr>
     </tbody>
   </table>
 </div>
@@ -50,6 +54,6 @@ HTML Properties:
 <script type="text/x-tmpl" id="tmpl-child-work">
 <tr>
   <td>{%= o.title %}</td>
-  <td><button class="btn btn-danger" data-behavior="remove-relationship">Remove</button></td>
+  <td><button class="btn btn-danger" data-behavior="remove-relationship"><%= t('.actions.remove') %></button></td>
 </tr>
 </script>

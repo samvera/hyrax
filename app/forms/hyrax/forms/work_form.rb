@@ -55,6 +55,10 @@ module Hyrax
         model.etag
       end
 
+      # backs the child work search element
+      # @return [NilClass]
+      def find_child_work; end
+
       # The value for some fields should not be set to the defaults ([''])
       # because it should be an empty array instead
       def initialize_field(key)
