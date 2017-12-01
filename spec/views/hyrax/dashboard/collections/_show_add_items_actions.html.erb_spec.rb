@@ -5,7 +5,8 @@ RSpec.describe 'hyrax/dashboard/collections/_show_add_items_actions.html.erb', t
 
   before do
     allow(view).to receive(:presenter).and_return(presenter)
-
+    allow(presenter).to receive(:create_many_work_types?).and_return(true)
+    assign(:presenter, presenter)
     allow(view).to receive(:can?).with(:edit, solr_document).and_return(can_edit) # TODO: probably should be :deposit -- dependency on collection participants
   end
   describe 'when user can edit the document' do

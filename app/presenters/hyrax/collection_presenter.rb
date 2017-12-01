@@ -5,6 +5,9 @@ module Hyrax
     include ActionView::Helpers::NumberHelper
     attr_accessor :solr_document, :current_ability, :request, :collection_type
 
+    class_attribute :create_work_presenter_class
+    self.create_work_presenter_class = Hyrax::SelectTypeListPresenter
+
     # @param [SolrDocument] solr_document
     # @param [Ability] current_ability
     # @param [ActionDispatch::Request] request the http request context
@@ -111,6 +114,20 @@ module Hyrax
         logo_info << { file: logo_file, file_location: file_location, alttext: alttext, linkurl: linkurl }
       end
       logo_info
+    end
+
+    # A presenter for selecting a work type to create
+    # this is needed here because the selector is in the header on every page
+    def create_work_presenter
+      @create_work_presenter ||= create_work_presenter_class.new(current_ability.current_user)
+    end
+
+    def create_many_work_types?
+      create_work_presenter.many?
+    end
+
+    def draw_select_work_modal?
+      create_many_work_types?
     end
   end
 end
