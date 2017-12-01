@@ -1,7 +1,7 @@
 module Hyrax
   module Actors
     ##
-    # `Hyrax::AbstractActor` implements the base (no-op) case for Hyrax Actor
+    # `Hyrax::Actors::AbstractActor` implements the base (no-op) case for Hyrax Actor
     # middleware. Concrete implementations may override any or all of the three
     # primary actions:
     #
