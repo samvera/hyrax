@@ -7,6 +7,18 @@
                 data: { confirm: t('hyrax.collection.actions.delete.confirmation'),
                         method: :delete } %>
 <% end %>
+<% if presenter.collection_type_is_nestable? %>
+<!-- The user should have deposit access to the parent and read access to the child (the collection we are already showing, so no test is necessary). -->
+    <%= button_tag '',
+                  class: 'btn btn-default pull-right add-to-collection',
+                  onclick: "$('#add-to-collection-modal-#{presenter.id}').modal('show');",
+                  title: t("hyrax.collection.actions.nested_subcollection.desc"),
+                  type: 'button',
+                  data: { nestable: presenter.collection_type_is_nestable?,
+                          hasaccess: true } do %>
+                  <%= t('hyrax.collection.actions.nested_subcollection.button_label') %>
+                <% end %>
+<% end %>
 <% if can? :edit, presenter.solr_document %>
     <%= link_to t('hyrax.collection.actions.edit.label'),
                 hyrax.edit_dashboard_collection_path(presenter),

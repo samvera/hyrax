@@ -26,7 +26,7 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
   end
 
   it 'is invalid if child cannot be nested within the parent' do
-    expect(query_service).to receive(:parent_and_child_can_nest?).with(parent: parent, child: child, context: context).and_return(false)
+    expect(query_service).to receive(:parent_and_child_can_nest?).with(parent: parent, child: child, scope: context).and_return(false)
     subject.valid?
     expect(subject.errors[:parent]).to eq(["cannot have child nested within it"])
     expect(subject.errors[:child]).to eq(["cannot nest within parent"])
@@ -78,7 +78,7 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
     subject { form.available_child_collections }
 
     it 'delegates to the underlying query_service' do
-      expect(query_service).to receive(:available_child_collections).with(parent: parent, context: context).and_return(:results)
+      expect(query_service).to receive(:available_child_collections).with(parent: parent, scope: context).and_return(:results)
       expect(subject).to eq(:results)
     end
   end
@@ -86,8 +86,27 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
     subject { form.available_parent_collections }
 
     it 'delegates to the underlying query_service' do
-      expect(query_service).to receive(:available_parent_collections).with(child: child, context: context).and_return(:results)
+      expect(query_service).to receive(:available_parent_collections).with(child: child, scope: context).and_return(:results)
       expect(subject).to eq(:results)
+    end
+  end
+
+  describe '#validate_add' do
+    context 'when not valid' do
+      let(:parent) { double(nestable?: false) }
+
+      it 'validates the parent can contain nested subcollections' do
+        subject.validate_add
+        expect(subject.errors[:parent]).to eq(["cannot have child nested within it"])
+      end
+    end
+
+    context 'when valid' do
+      let(:parent) { double(nestable?: true) }
+
+      it 'validates the parent can contain nested subcollections' do
+        expect(subject.validate_add).to eq true
+      end
     end
   end
 end

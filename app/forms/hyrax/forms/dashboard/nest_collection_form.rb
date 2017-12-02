@@ -36,13 +36,18 @@ module Hyrax
         # For the given parent, what are all of the available collections that
         # can be added as sub-collection of the parent.
         def available_child_collections
-          query_service.available_child_collections(parent: parent, context: context)
+          query_service.available_child_collections(parent: parent, scope: context)
         end
 
         # For the given child, what are all of the available collections to
         # which the child can be added as a sub-collection.
         def available_parent_collections
-          query_service.available_parent_collections(child: child, context: context)
+          query_service.available_parent_collections(child: child, scope: context)
+        end
+
+        def validate_add
+          return true if parent.try(:nestable?)
+          errors.add(:parent, :cannot_have_child_nested)
         end
 
         private
@@ -51,7 +56,7 @@ module Hyrax
 
           def parent_and_child_can_be_nested
             if parent.try(:nestable?) && child.try(:nestable?)
-              return true if query_service.parent_and_child_can_nest?(parent: parent, child: child, context: context)
+              return true if query_service.parent_and_child_can_nest?(parent: parent, child: child, scope: context)
               errors.add(:parent, :cannot_have_child_nested)
               errors.add(:child, :cannot_nest_in_parent)
             else

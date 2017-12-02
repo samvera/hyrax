@@ -107,6 +107,20 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       end
     end
 
+    context "when params includes parent_id" do
+      let(:parent_collection) { create(:collection, title: ['Parent']) }
+
+      it "creates a collection as a subcollection of parent" do
+        parent_collection
+        expect do
+          post :create, params: {
+            collection: collection_attrs, parent_id: parent_collection.id
+          }
+        end.to change { Collection.count }.by(1)
+        expect(assigns[:collection].member_of_collections).to eq [parent_collection]
+      end
+    end
+
     context "when create fails" do
       let(:collection) { Collection.new }
 

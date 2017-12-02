@@ -7,8 +7,8 @@ RSpec.describe Hyrax::Collections::NestedCollectionPersistenceService do
 
     it 'creates the relationship between parent and child' do
       subject
-      expect(parent.members).to eq([child])
-      expect(child.member_of).to eq([parent])
+      expect(parent.member_objects).to eq([child])
+      expect(child.member_of_collections).to eq([parent])
     end
   end
 end

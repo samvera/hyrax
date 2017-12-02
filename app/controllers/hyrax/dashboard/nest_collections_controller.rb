@@ -2,39 +2,42 @@ module Hyrax
   module Dashboard
     class NestCollectionsController < ApplicationController
       include Blacklight::Base
-      class_attribute :form_class
+      class_attribute :form_class, :new_collection_form_class
       self.form_class = Hyrax::Forms::Dashboard::NestCollectionForm
+      self.new_collection_form_class = Hyrax::Forms::CollectionForm
 
-      def new_within
-        @form = build_within_form
-      end
-
-      def create_within
+      # Add this collection as a subcollection within another existing collection
+      def create_relationship_within
         @form = build_within_form
         if @form.save
-          notice = I18n.t('create_within', scope: 'hyrax.dashboard.nest_collections_form', child_title: @form.child.title, parent_title: @form.parent.title)
-          redirect_to dashboard_collection_path(@form.child), notice: notice
+          notice = I18n.t('create_within', scope: 'hyrax.dashboard.nest_collections_form', child_title: @form.child.title.first, parent_title: @form.parent.title.first)
+          redirect_to redirect_path(item: @form.child), notice: notice
         else
-          render 'new_within'
+          flash[:error] = @form.errors.full_messages
+          redirect_to redirect_path(item: @form.child)
         end
       end
 
-      def process_nesting
-        notice = "No mapping took place"
-        unless params[:parent_id] == "none"
-          parent_coll = Collection.find params[:parent_id]
-          child_coll = Collection.find params[:child_id]
-
-          child_coll.member_of_collections << parent_coll
-          child_coll.save!
-
-          notice = "Collections were mapped!"
-        end
-
-        if params[:source] == "my"
-          redirect_to my_collections_path, notice: notice
+      # create and link a NEW subcollection under this collection, with this collection as parent
+      def create_collection_under
+        @form = build_create_collection_form
+        if @form.validate_add
+          redirect_to new_dashboard_collection_path(collection_type_id: @form.parent.collection_type.id, parent_id: @form.parent)
         else
-          redirect_to dashboard_collections_path, notice: notice
+          flash[:error] = @form.errors.full_messages
+          redirect_to redirect_path(item: @form.parent)
+        end
+      end
+
+      # link this collection as parent by adding existing collection as subcollection under this one
+      def create_relationship_under
+        @form = build_under_form
+        if @form.save
+          notice = I18n.t('create_under', scope: 'hyrax.dashboard.nest_collections_form', child_title: @form.child.title.first, parent_title: @form.parent.title.first)
+          redirect_to redirect_path(item: @form.parent), notice: notice
+        else
+          flash[:error] = @form.errors.full_messages
+          redirect_to redirect_path(item: @form.parent)
         end
       end
 
@@ -45,6 +48,34 @@ module Hyrax
           authorize! :edit, child
           parent = params.key?(:parent_id) ? Collection.find(params[:parent_id]) : nil
           form_class.new(child: child, parent: parent, context: self)
+        end
+
+        def build_under_form
+          parent = Collection.find(params.fetch(:parent_id))
+          authorize! :edit, parent
+          child = params.key?(:child_id) ? Collection.find(params[:child_id]) : nil
+          form_class.new(child: child, parent: parent, context: self)
+        end
+
+        def build_create_collection_form
+          parent = Collection.find(params.fetch(:parent_id))
+          authorize! :edit, parent
+          form_class.new(child: nil, parent: parent, context: self)
+        end
+
+        # determine appropriate redirect location depending on specified source
+        def redirect_path(item:)
+          from = params[:source] || 'none'
+          case from
+          when "my"
+            my_collections_path
+          when "show"
+            dashboard_collection_path(item)
+          when "edit"
+            edit_dashboard_collection_path(item, anchor: 'relationships')
+          else
+            dashboard_collection_path(item)
+          end
         end
     end
   end

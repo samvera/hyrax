@@ -145,7 +145,6 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         fill_in('Related URL', with: 'http://example.com/')
 
         click_button("Save")
-        expect(page).to have_content 'Items'
         expect(page).to have_content title
         expect(page).to have_content description
       end
@@ -172,7 +171,6 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         fill_in('Related URL', with: 'http://example.com/')
 
         click_button("Save")
-        expect(page).to have_content 'Items'
         expect(page).to have_content title
         expect(page).to have_content description
       end
@@ -658,38 +656,6 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           expect(page).not_to have_link('Sharing', href: '#sharing')
         end
       end
-    end
-  end
-
-  describe "Removing works from a collection" do
-    let(:collection) { create(:named_collection, user: user, with_permission_template: true) }
-    let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
-    let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
-
-    before do
-      sign_in user
-      visit "/dashboard/collections/#{collection.id}/edit"
-    end
-
-    it "removes one works out of two", with_nested_reindexing: true do
-      within("#document_#{work1.id}") do
-        first('button.dropdown-toggle').click
-        click_button('Remove from Collection')
-      end
-      expect(page).to have_content(collection.title.first)
-      expect(page).to have_content(collection.description.first)
-      expect(page).not_to have_content(work1.title.first)
-      expect(page).to have_content(work2.title.first)
-    end
-
-    xit "removes all works", :js do
-      # TODO: skipping - see Hyrax issue #1488
-      first('input#check_all').click
-      click_button('Remove From Collection')
-      expect(page).to have_content(collection.title.first)
-      expect(page).to have_content(collection.description.first)
-      expect(page).not_to have_content(work1.title.first)
-      expect(page).not_to have_content(work2.title.first)
     end
   end
 end

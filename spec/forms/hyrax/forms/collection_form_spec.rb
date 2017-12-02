@@ -73,6 +73,29 @@ RSpec.describe Hyrax::Forms::CollectionForm do
     end
   end
 
+  context "nested relationships" do
+    let(:child_collection) { build(:collection) }
+    let(:parent_collection) { build(:collection) }
+    let(:service_object) { double(available_member_subcollections: double(documents: [child_collection])) }
+
+    before do
+      allow(collection).to receive(:member_of_collections).and_return([parent_collection])
+      allow(form).to receive(:collection_member_service).and_return(service_object)
+    end
+
+    describe "#list_parent_collections" do
+      subject { form.list_parent_collections }
+
+      it { is_expected.to eq([parent_collection]) }
+    end
+
+    describe "#list_child_collections" do
+      subject { form.list_child_collections }
+
+      it { is_expected.to eq([child_collection]) }
+    end
+  end
+
   describe "#id" do
     subject { form.id }
 

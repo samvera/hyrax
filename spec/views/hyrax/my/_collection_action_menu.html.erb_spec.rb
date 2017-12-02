@@ -14,7 +14,7 @@ RSpec.describe 'hyrax/my/_collection_action_menu.html.erb' do
     allow(collection_doc).to receive(:fetch).with('collection_type_gid_ssim', [user_collection_type.gid]).and_return(collection_type.gid)
     allow(collection_presenter).to receive(:id).and_return(id)
     allow(collection_presenter).to receive(:solr_document).and_return(collection_doc)
-    allow(view).to receive(:can?).with(:deposit, collection_doc).and_return(true)
+    allow(view).to receive(:can?).with(:read, collection_doc).and_return(true)
     allow(view).to receive(:can?).with(:edit, collection_doc).and_return(true)
   end
 
