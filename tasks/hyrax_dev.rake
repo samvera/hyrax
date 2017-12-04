@@ -22,7 +22,9 @@ end
 desc "Sort locales keys in alphabetic order."
 task :i18n_sorter do
   require 'i18n_yaml_sorter'
-  locales = Dir.glob(File.expand_path('../../config/locales/**/*.yml', __FILE__))
+  locales = Dir.glob(File.expand_path('../../config/locales/**/*.yml', __FILE__)) +
+            Dir.glob(File.expand_path('../../lib/generators/hyrax/templates/config/locales/**/*.yml', __FILE__)) +
+            Dir.glob(File.expand_path('../../lib/generators/hyrax/work/templates//locale.*.yml.erb', __FILE__))
   locales.each do |locale_path|
     sorted_contents = File.open(locale_path) { |f| I18nYamlSorter::Sorter.new(f).sort }
     File.open(locale_path, 'w') { |f| f << sorted_contents }
