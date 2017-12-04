@@ -72,7 +72,7 @@ EOF
   spec.add_dependency 'dry-struct', '~> 0.1'
   spec.add_dependency 'redlock', '>= 0.1.2'
   spec.add_dependency 'retriable', '>= 2.9', '< 4.0'
-  spec.add_dependency 'active-fedora', '~> 11.5', '>= 11.5.2'
+  spec.add_dependency 'active-fedora', '>= 11.5.2', '< 13.0'
   spec.add_dependency 'linkeddata' # Required for getting values from geonames
 
   spec.add_development_dependency 'engine_cart', '~> 1.2'
