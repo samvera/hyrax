@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::Workflow::ActionTakenService do
-  context 'class methods' do
+  describe 'class methods' do
     subject { described_class }
 
     it { is_expected.to respond_to(:handle_action_taken) }
@@ -14,11 +14,13 @@ RSpec.describe Hyrax::Workflow::ActionTakenService do
   let(:work) { instance_double(GenericWork, id: '9999') }
   let(:action) { instance_double(Sipity::WorkflowAction, triggered_methods: triggered_methods_rel) }
   let(:user) { User.new }
+  let(:persister) { Valkyrie::MetadataAdapter.find(:indexing_persister).persister }
   let(:instance) do
     described_class.new(target: work,
                         action: action,
                         comment: "A pleasant read",
-                        user: user)
+                        user: user,
+                        persister: persister)
   end
 
   describe "#call" do
@@ -35,14 +37,14 @@ RSpec.describe Hyrax::Workflow::ActionTakenService do
 
       context "and the method succeedes" do
         it "calls the method and saves the object" do
-          expect(work).to receive(:save)
+          expect(persister).to receive(:save)
           expect(FooBar).to receive(:call).with(target: work, user: user, comment: "A pleasant read").and_return(true)
           subject
         end
       end
       context "and the method fails" do
         it "calls the method and saves the object" do
-          expect(work).not_to receive(:save)
+          expect(persister).not_to receive(:save)
           expect(FooBar).to receive(:call).with(target: work, user: user, comment: "A pleasant read").and_return(false)
           expect(Rails.logger).to receive(:error).with("Not all workflow methods were successful, so not saving (9999)")
           subject
