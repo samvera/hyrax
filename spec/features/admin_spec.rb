@@ -12,15 +12,14 @@ RSpec.describe "The admin dashboard", :clean_repo do
   end
 
   before do
-    create_for_repository(:work_with_two_children, title: ["Work A"], admin_set_id: admin_set_1.id, edit_users: [user])
-    create_for_repository(:work_with_one_child, title: ["Work B"], admin_set_id: admin_set_2.id, edit_users: [user])
-    create_for_repository(:work_with_two_children, title: ["Work C"], admin_set_id: admin_set_2.id, edit_users: [user])
+    create_for_repository(:work_with_two_children, title: ["Work A"], admin_set_id: admin_set_1.id, edit_users: [user.user_key])
+    create_for_repository(:work_with_one_child, title: ["Work B"], admin_set_id: admin_set_2.id, edit_users: [user.user_key])
+    create_for_repository(:work_with_two_children, title: ["Work C"], admin_set_id: admin_set_2.id, edit_users: [user.user_key])
   end
 
   scenario do
     login_as(user, scope: :user)
     visit '/dashboard'
-
     expect(find('tr', text: 'First Admin Set').find('td:eq(2)')).to have_content(1)
     expect(find('tr', text: 'First Admin Set').find('td:eq(3)')).to have_content(2)
 
