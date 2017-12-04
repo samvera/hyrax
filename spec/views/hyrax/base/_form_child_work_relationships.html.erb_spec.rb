@@ -45,12 +45,8 @@ RSpec.describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view
     end
 
     context "and child works are present" do
-      let(:work_2) do
-        stub_model(GenericWork, id: '567', title: ["Test Child Work"])
-      end
-
       before do
-        allow(form).to receive(:work_members).and_return([work_2])
+        allow(form).to receive(:work_members_json).and_return('stub-data')
         render
       end
 
@@ -59,11 +55,8 @@ RSpec.describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view
         expect(rendered).to have_selector('input[data-autocomplete-url="/authorities/search/find_works"]')
         expect(rendered).to have_selector("[data-behavior='add-relationship']")
 
-        # an input box that is filled in with the child id
-        expect(rendered).to have_selector("input[value='#{work_2.id}']", visible: false)
-
-        # generate a link for the child work's title
-        expect(rendered).to have_link("Test Child Work")
+        # generate the json to drive the script
+        expect(rendered).to have_selector('div[data-members="stub-data"]')
 
         # a remove button
         within "tr" do
