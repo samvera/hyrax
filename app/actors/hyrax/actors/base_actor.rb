@@ -98,6 +98,24 @@ module Hyrax
         def multivalued_form_attributes(attributes)
           attributes.select { |_, v| v.respond_to?(:select) && !v.respond_to?(:read) }
         end
+
+        # If any single-valued attributes are empty strings make them nil
+        # e.g.:
+        #   self.attributes = { 'single_valued' => '' }
+        #   remove_empty_string_attributes!
+        #   self.attributes
+        # => { 'single_valued' => nil }
+        # Return the hash of attributes that are multivalued and not uploaded files
+        def remove_empty_string_attributes!(attributes)
+          empty_string_form_attributes(attributes).each_with_object(attributes) do |(k, _), h|
+            h[k] = nil
+          end
+        end
+
+        # Return all attributes that are an empty string
+        def empty_string_form_attributes(attributes)
+          attributes.select { |_, v| v == '' }.keys.map { |k| k }
+        end
     end
   end
 end
