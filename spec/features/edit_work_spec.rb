@@ -1,6 +1,6 @@
 RSpec.feature 'Editing a work', type: :feature do
   let(:user) { create(:user) }
-  let(:persister) { Valkyrie.config.metadata_adapter.persister }
+  let(:persister) { Valkyrie::MetadataAdapter.find(:indexing_persister).persister }
   let(:file_set) { create_for_repository(:file_set, user: user, title: ['ABC123xyz']) }
   let(:work) do
     w = build(:work, user: user)
