@@ -448,6 +448,73 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       expect(page).to have_content(work1.title.first)
       expect(page).not_to have_content(work2.title.first)
     end
+
+    context 'adding existing works to a collection', js: true do
+      before do
+        collection1 # create collections by referencing them
+        collection2
+        sign_in user
+      end
+
+      it "preselects the collection we are adding works to and adds the selected works" do
+        visit "/dashboard/collections/#{collection1.id}"
+        click_link 'Add existing works'
+        first('input#check_all').click
+        click_button "Add to Collection"
+        expect(page).to have_css("input#id_#{collection1.id}[checked='checked']")
+        expect(page).not_to have_css("input#id_#{collection2.id}[checked='checked']")
+
+        visit "/dashboard/collections/#{collection2.id}"
+        click_link 'Add existing works'
+        first('input#check_all').click
+        click_button "Add to Collection"
+        expect(page).not_to have_css("input#id_#{collection1.id}[checked='checked']")
+        expect(page).to have_css("input#id_#{collection2.id}[checked='checked']")
+
+        click_button "Save changes"
+        expect(page).to have_content(work1.title.first)
+        expect(page).to have_content(work2.title.first)
+      end
+    end
+
+    context 'adding a new works to a collection', js: true do
+      before do
+        collection1 # create collections by referencing them
+        collection2
+        sign_in user
+      end
+
+      it "preselects the collection we are adding works to and adds the new work" do
+        visit "/dashboard/collections/#{collection1.id}"
+        click_link 'Add new work'
+        choose "payload_concern", option: "GenericWork"
+        click_button 'Create work'
+
+        # verify the collection is pre-selected
+        click_link "Relationships" # switch tab
+        expect(page).to have_select("generic_work_member_of_collection_ids", selected: collection1.title.first)
+        expect(page).not_to have_select("generic_work_member_of_collection_ids", selected: collection2.title.first)
+        # add required file
+        click_link "Files" # switch tab
+        within('span#addfiles') do
+          attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/image.jp2", visible: false)
+        end
+        # set required metadata
+        click_link "Descriptions" # switch tab
+        fill_in('Title', with: 'New Work for Collection')
+        fill_in('Creator', with: 'Doe, Jane')
+        fill_in('Keyword', with: 'testing')
+        select('In Copyright', from: 'Rights statement')
+        # check required acceptance
+        check('agreement')
+
+        click_on('Save')
+
+        # verify new work was added to collection1
+        visit "/dashboard/collections/#{collection1.id}"
+        expect(page).to have_content("New Work for Collection")
+      end
+    end
   end
 
   # TODO: this is just like the block above. Merge them.
@@ -475,30 +542,6 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         click_link("Display all details of collection title")
       end
       expect(page).to have_css(".pager")
-    end
-  end
-
-  describe 'add works to collection' do
-    before do
-      collection1 # create collections by referencing them
-      collection2
-      sign_in user
-    end
-
-    it "preselects the collection we are adding works to" do
-      visit "/dashboard/collections/#{collection1.id}"
-      click_link 'Add existing works'
-      first('input#check_all').click
-      click_button "Add to Collection"
-      expect(page).to have_css("input#id_#{collection1.id}[checked='checked']")
-      expect(page).not_to have_css("input#id_#{collection2.id}[checked='checked']")
-
-      visit "/dashboard/collections/#{collection2.id}"
-      click_link 'Add existing works'
-      first('input#check_all').click
-      click_button "Add to Collection"
-      expect(page).not_to have_css("input#id_#{collection1.id}[checked='checked']")
-      expect(page).to have_css("input#id_#{collection2.id}[checked='checked']")
     end
   end
 

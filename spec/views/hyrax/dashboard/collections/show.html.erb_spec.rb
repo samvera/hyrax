@@ -9,10 +9,13 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
   let(:collection_type) { double }
 
   before do
+    user = stub_model(User)
     allow(document).to receive(:hydra_model).and_return(::Collection)
-    allow(controller).to receive(:current_user).and_return(stub_model(User))
+    allow(view).to receive(:current_user).and_return(user)
     allow(view).to receive(:can?).with(:edit, document).and_return(true)
     allow(view).to receive(:can?).with(:destroy, document).and_return(true)
+    allow(view).to receive(:current_ability).and_return(ability)
+    allow(ability).to receive(:current_user).and_return(user)
 
     allow(presenter).to receive(:total_items).and_return(0)
     allow(presenter).to receive(:collection_type).and_return(collection_type)
