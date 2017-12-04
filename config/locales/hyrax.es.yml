@@ -3,6 +3,7 @@ es:
   activefedora:
     models:
       batch_upload_item: Trabajos por Lote
+      file_set: Archivo
   activemodel:
     errors:
       messages:
@@ -265,15 +266,38 @@ es:
     base:
       citations:
         header: 'Citaciones:'
+      form_child_work_relationships:
+        actions:
+          remove: Eliminar de este trabajo
+        attach_new_work: Depositar nuevo trabajo como hijo de este trabajo
+        caption: Este trabajo actualmente contiene estos trabajos infantiles
+        confirm:
+          cancel: Cancelar
+          remove: retirar
+          text: La eliminación de este trabajo secundario no lo eliminará del repositorio, solo de este trabajo principal. ¿Seguro que quieres eliminar este trabajo de este trabajo principal?
+        header:
+          actions: Acción
+          title: Título de trabajo
       form_files:
         dropzone: Soltar archivos aquí.
-        local_upload_html: <p>Puede agregar uno o más archivos para asociar con esta obra.</p>
         local_upload_browse_everything_html: |
           <p>Puede agregar uno o más archivos para asociar con esta obra.</p>
           <p>En caso de subir una gran cantidad de archivos en un corto periodo
           de tiempo, el proveedor en la nube podría no ser capaz de resolver la
           petición. Si se experimentan errores durante la carga, por favor,
           comuníquese con nosotros a través de %{contact_href}.</p>
+        local_upload_html: "<p>Puede agregar uno o más archivos para asociar con esta obra.</p>"
+      form_member_of_collections:
+        actions:
+          remove: Eliminar de la colección
+        caption: Este trabajo se encuentra actualmente en estas colecciones
+        confirm:
+          cancel: Cancelar
+          remove: retirar
+          text: La eliminación de este trabajo no lo eliminará del repositorio, solo de esta colección. ¿Seguro que quieres eliminar este trabajo de la colección?
+        header:
+          actions: Acción
+          title: Título de la colección
       form_permission_under_embargo:
         help_html: "<strong>Esta obra está bajo embargo.</strong> Puede cambiar la configuración del embargo aquí, o puede visitar el %{edit_link} para desactivarlo."
         legend_html: Visibilidad <small>¿Quién debería ser capaz de ver o descargar este contenido?</small>
@@ -287,6 +311,10 @@ es:
         required_descriptions: Describa su trabajo
         required_files: Añadir archivos
         requirements: Requisitos
+      form_share:
+        add_sharing: Agregar Compartir
+        currently_sharing: Actualmente compartido con
+        directions: Independientemente de la configuración de visibilidad para este trabajo, también puede compartirlo con otros usuarios y grupos.
       items:
         actions: Acciones
         date_uploaded: Fecha de subida
@@ -301,7 +329,7 @@ es:
       relationships_parent_row:
         label: 'En %{type}:'
       show:
-        last_modified: 'Última modificación'
+        last_modified: Última modificación
       social_media:
         facebook: Facebook
         google: Google+
@@ -867,5 +895,9 @@ es:
       proxy_deposit_request:
         sender_comment: Comentarios
         transfer_to: Usuario
+    placeholders:
+      defaults:
+        find_child_work: Busque un trabajo ...
+        member_of_collection_ids: Seleccione una colección ...
     required:
       html: <span class="label label-info required-tag">obligatorio</span>

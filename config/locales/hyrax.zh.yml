@@ -3,6 +3,7 @@ zh:
   activefedora:
     models:
       batch_upload_item: 批量上传的作品
+      file_set: 文件
   activemodel:
     errors:
       messages:
@@ -142,7 +143,6 @@ zh:
             varies:
               any: 存储者可以选择任何延迟发布时间
               between: 存储者可以选择最近时间
-              period: 存储者可以选择延迟发布期限：
               description: '允许存储者设置发布日期:'
               embargo:
                 1yr: 存储一年之后
@@ -150,6 +150,7 @@ zh:
                 3yrs: 存储三年之后
                 6mos: 存储六个月之后
                 select: 选择延迟发布期限..
+              period: 存储者可以选择延迟发布期限：
           visibility:
             description: '发布日期之后, 管理集内的作品可以被发现和下载:'
             everyone: 公开 -- 管理集内的所有作品会公开
@@ -271,19 +272,42 @@ zh:
     base:
       citations:
         header: '引文:'
+      form_child_work_relationships:
+        actions:
+          remove: 从这个工作中删除
+        attach_new_work: 作为这项工作的孩子存入新的工作
+        caption: 这项工作目前包含这些儿童作品
+        confirm:
+          cancel: 取消
+          remove: 去掉
+          text: 删除这个孩子的工作将不会将其从存储库中删除，只能从这个父母的工作。你确定要从这项家务中删除这项工作吗？
+        header:
+          actions: 行动
+          title: 职称
       form_files:
         dropzone: 请将文件拖放此处。
-        local_upload_html: <p>您可以添加一个或多个文件与该工作相关联。</p>
         local_upload_browse_everything_html: |
           <p>您可以添加一个或多个文件与该工作相关联。</p>
           <p>请注意如果您在短时间内上传了大量文件, 云提供商可能不能满足您的请求。
            如果您上传中遇到问题，请用%{contact_href}报告。</p>
+        local_upload_html: "<p>您可以添加一个或多个文件与该工作相关联。</p>"
+      form_member_of_collections:
+        actions:
+          remove: 从收藏中删除
+        caption: 这项工作目前在这些收藏
+        confirm:
+          cancel: 取消
+          remove: 去掉
+          text: 删除这项工作不会将其从存储库中删除，只能从这个集合中删除。你确定你想从集合中删除这项工作吗？
+        header:
+          actions: 行动
+          title: 集合标题
       form_permission_under_embargo:
-        help_html: <strong>这件作品限制公开。</strong>您可以在此更改设置，也可以访问%{edit_link}以取消限制。
+        help_html: "<strong>这件作品限制公开。</strong>您可以在此更改设置，也可以访问%{edit_link}以取消限制。"
         legend_html: 公开度<small>谁可以查看或下载此内容？</small>
         management_page: 限制管理页面
       form_permission_under_lease:
-        help_html: <strong>这件作品被租借。</strong>您可以在此处更改租借的设置，也可以访问%{edit_link}以停用该租约。
+        help_html: "<strong>这件作品被租借。</strong>您可以在此处更改租借的设置，也可以访问%{edit_link}以停用该租约。"
         legend_html: 公开度<small>谁可以查看或下载此内容？</small>
         management_page: 租约管理页面
       form_progress:
@@ -291,6 +315,10 @@ zh:
         required_descriptions: 描述您的作品
         required_files: 添加文件
         requirements: 必要条件
+      form_share:
+        add_sharing: 添加共享
+        currently_sharing: 目前与...共享
+        directions: 无论此工作的可见性设置如何，您也可以与其他用户和组共享。
       items:
         actions: 行动
         date_uploaded: 上传日期
@@ -305,7 +333,7 @@ zh:
       relationships_parent_row:
         label: '属于 %{type}:'
       show:
-        last_modified: '最新修改'
+        last_modified: 最新修改
       social_media:
         facebook: Facebook
         google: Google+
@@ -318,9 +346,9 @@ zh:
     batch_uploads:
       disabled: 功能被管理员禁用
       files:
+        button_label: 添加新作品
         instructions: 上传的每份文件都会分别按新作品生成。
         upload_type_instructions: 创建一件包括所有文件的作品，请去
-        button_label: 添加新作品
       new:
         header: 批量建立新作品
         in_collections: 这些作品包括在收藏集中
@@ -517,8 +545,6 @@ zh:
       user_activity: 用户活动
       user_notifications: 用户通知
       view_files: 阅览文件
-    directory:
-      suffix:         '@example.org'
     document_language: zh
     edit_profile: 编辑个人资料
     embargoes:
@@ -566,7 +592,7 @@ zh:
           pdf_link: 下载PDF文件
     file_sets:
       groups_description:
-        description_html: '标有"选择一个群"的下拉框内是您所属的一组用户管理群的清单。您可以选择一个特定的群，指定对%{application_name}中文件的访问级别，类似于添加用户访问级别。'
+        description_html: 标有"选择一个群"的下拉框内是您所属的一组用户管理群的清单。您可以选择一个特定的群，指定对%{application_name}中文件的访问级别，类似于添加用户访问级别。
     help:
       header: 用户支持
       override_text: 用 app/views/static/help.html.erb 取代此文件。
@@ -821,10 +847,10 @@ zh:
         identifier: 一个独特的句柄用于标识收藏集。 例如用于标识期刊文章的DOI，或者标识一本书的ISBN或者OCLC系统编号。
         keyword: 用于描述和检索收藏集内容的的词或词组。
         language: 收藏集内容使用的语言。
+        license: 用于管理收藏集访问权限的许可与发布信息。 可从下拉清单中选择。
         publisher: 出版收藏集的个人或团体。 一般来说是机构单位。
         related_url: 相关链接，用于链接与收藏集相关的网页或其它具体内容(音频、视频、PDF文件)。例如一个研究项目的网址，收藏集是此研究项目的成果
         resource_type: 预定类型用于描述上传内容类型，例如&quot;文章&quot; or &quot;数据集。&quot; 可以选择多项类型。
-        license: 用于管理收藏集访问权限的许可与发布信息。 可从下拉清单中选择。
         subject: 用于描述收藏集的主题词或索引词,需要选自现存的词汇表。
         title: 用于帮助识别收藏集的名称。
       defaults:
@@ -836,10 +862,10 @@ zh:
         identifier: 一个独特的句柄用于标识作品。 例如用于标识期刊文章的DOI，或者标识一本书的ISBN或者OCLC系统编号。
         keyword: 用于描述和搜索作品内容的的词或词组。
         language: 作品内容使用的语言。
+        license: 用于管理作品访问权限的许可与发布信息。 可从下拉清单中选择。
         publisher: 出版作品的个人或团体，一般来说是机构单位。
         related_url: 相关链接，用于链接与作品相关的网页或其它具体内容(音频、视频、PDF文件)。例如一个研究项目的网址，作品是此研究项目的成果。
         resource_type: 预定类型用于描述上传内容类型，例如&quot;文章&quot; or &quot;数据集。&quot; 可以选择多项类型。
-        license: 用于管理作品访问权限的许可与发布信息。 可从下拉清单中选择。
         subject: 用于描述作品的主题词或索引词,需要选自现存的词汇表。
         title: 用于帮助识别作品的名称。
     labels:
@@ -865,7 +891,11 @@ zh:
         visibility_during_embargo: 仅限
         visibility_during_lease: 可使用
       proxy_deposit_request:
-        transfer_to: 用户
         sender_comment: 注释
+        transfer_to: 用户
+    placeholders:
+      defaults:
+        find_child_work: 搜索工作...
+        member_of_collection_ids: 选择一个集合...
     required:
       html: <span class="label label-info required-tag">需要的</span>
