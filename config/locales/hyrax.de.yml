@@ -3,6 +3,7 @@ de:
   activefedora:
     models:
       batch_upload_item: Arbeiten im Batch-Upload
+      file_set: Datei
   activemodel:
     errors:
       messages:
@@ -270,9 +271,20 @@ de:
     base:
       citations:
         header: 'Zitate:'
+      form_child_work_relationships:
+        actions:
+          remove: Entferne diese Arbeit
+        attach_new_work: Hinterlegen Sie neue Arbeit als Kind dieser Arbeit
+        caption: Diese Arbeit enthält derzeit diese Kinderarbeiten
+        confirm:
+          cancel: Stornieren
+          remove: Löschen
+          text: Durch das Entfernen dieser untergeordneten Arbeit wird sie nicht nur aus dieser übergeordneten Arbeit aus dem Repository entfernt. Möchten Sie diese Arbeit wirklich aus dieser übergeordneten Arbeit entfernen?
+        header:
+          actions: Aktion
+          title: Arbeitstitel
       form_files:
         dropzone: Dateien hier hinziehen.
-        local_upload_html: <p>Sie können eine oder mehr Dateien hinzufügen, mit dieser Arbeit zu verknüpfen.</p>
         local_upload_browse_everything_html: |
           <p>Sie können eine oder mehr Dateien hinzufügen, mit dieser Arbeit zu
           verknüpfen.</p>
@@ -281,6 +293,18 @@ de:
           möglicherweise nicht in der Lage, Ihrer Anfrage nachzukommen. Wenn Sie
           irgendwelche Fehler beim Upload aus der Cloud erhalten, lassen Sie uns
           dies über %{contact_href} wissen.</p>
+        local_upload_html: "<p>Sie können eine oder mehr Dateien hinzufügen, mit dieser Arbeit zu verknüpfen.</p>"
+      form_member_of_collections:
+        actions:
+          remove: Aus der Sammlung entfernen
+        caption: Diese Arbeit befindet sich derzeit in diesen Sammlungen
+        confirm:
+          cancel: Stornieren
+          remove: Löschen
+          text: Durch das Entfernen dieser Arbeit wird sie nicht nur aus dieser Sammlung aus dem Repository entfernt. Möchten Sie diese Arbeit wirklich aus der Sammlung entfernen?
+        header:
+          actions: Aktion
+          title: Sammlungstitel
       form_permission_under_embargo:
         help_html: "<strong>Diese Arbeit ist unter Embargo.</strong> Hier können Sie die Einstellungen des Embargos ändern, oder Sie können den %{edit_link} besuchen, um ihn zu deaktivieren."
         legend_html: Sichtbarkeit <small>Wer sollte in der Lage sein, diesen Inhalt anzusehen oder herunterzuladen?</small>
@@ -294,6 +318,10 @@ de:
         required_descriptions: Beschreiben Sie Ihre Arbeit
         required_files: Dateien hinzufügen
         requirements: Bedarf
+      form_share:
+        add_sharing: Hinzufügen von Teilen
+        currently_sharing: Derzeit freigegeben mit
+        directions: Unabhängig von den Sichtbarkeitseinstellungen für diese Arbeit können Sie sie auch für andere Benutzer und Gruppen freigeben.
       items:
         actions: Aktionen
         date_uploaded: Datum Upload
@@ -308,7 +336,7 @@ de:
       relationships_parent_row:
         label: 'In %{type}:'
       show:
-        last_modified: 'Zuletzt geändert'
+        last_modified: Zuletzt geändert
       social_media:
         facebook: Facebook
         google: Google+
@@ -872,5 +900,9 @@ de:
       proxy_deposit_request:
         sender_comment: Bemerkungen
         transfer_to: Benutzer
+    placeholders:
+      defaults:
+        find_child_work: Suche nach einer Arbeit ...
+        member_of_collection_ids: Wählen Sie eine Sammlung ...
     required:
       html: <span class="label label-info required-tag">erforderlich</span>

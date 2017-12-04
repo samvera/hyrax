@@ -3,6 +3,7 @@ fr:
   activefedora:
     models:
       batch_upload_item: Travaux par lot
+      file_set: Fichier
   activemodel:
     errors:
       messages:
@@ -270,9 +271,20 @@ fr:
     base:
       citations:
         header: 'Citations:'
+      form_child_work_relationships:
+        actions:
+          remove: Supprimer de ce travail
+        attach_new_work: Déposer un nouveau travail en tant qu'enfant de ce travail
+        caption: Ce travail contient actuellement ces travaux d'enfants
+        confirm:
+          cancel: Annuler
+          remove: Retirer
+          text: Supprimer ce travail enfant ne le supprimera pas du référentiel, uniquement à partir de ce travail parent. Êtes-vous sûr de vouloir supprimer ce travail de ce travail parent?
+        header:
+          actions: action
+          title: Titre du travail
       form_files:
         dropzone: Déposez les fichiers ici.
-        local_upload_html: <p>Vous pouvez ajouter un ou plusieurs fichiers à associer à ce travail.</p>
         local_upload_browse_everything_html: |
           <p>Vous pouvez ajouter un ou plusieurs fichiers à associer à ce travail.</p>
           <p>Notez que si vous téléchargez un grand nombre de fichiers dans un
@@ -280,6 +292,18 @@ fr:
           répondre à votre demande. Si vous rencontrez des erreurs de
           téléchargement depuis le nuage, faites-nous savoir via le
           %{contact_href}.</p>
+        local_upload_html: "<p>Vous pouvez ajouter un ou plusieurs fichiers à associer à ce travail.</p>"
+      form_member_of_collections:
+        actions:
+          remove: Supprimer de la collection
+        caption: Ce travail est actuellement dans ces collections
+        confirm:
+          cancel: Annuler
+          remove: Retirer
+          text: La suppression de ce travail ne le supprimera pas du référentiel, mais seulement de cette collection. Êtes-vous sûr de vouloir supprimer ce travail de la collection?
+        header:
+          actions: action
+          title: Titre de la collection
       form_permission_under_embargo:
         help_html: "<strong>Ce travail est sous embargo.</strong> Vous pouvez modifier les paramètres de l'embargo ici, ou vous pouvez visiter le %{edit_link} pour le désactiver."
         legend_html: Visibilité <small>Qui devrait pouvoir afficher ou télécharger ce contenu?</small>
@@ -293,6 +317,10 @@ fr:
         required_descriptions: Décrivez votre travail
         required_files: Ajouter des fichiers
         requirements: Exigences
+      form_share:
+        add_sharing: Ajouter un partage
+        currently_sharing: Actuellement partagé avec
+        directions: Indépendamment des paramètres de visibilité pour ce travail, vous pouvez également le partager avec d'autres utilisateurs et groupes.
       items:
         actions: actes
         date_uploaded: Date de téléchargement
@@ -307,7 +335,7 @@ fr:
       relationships_parent_row:
         label: 'Dans %{type}:'
       show:
-        last_modified: 'Dernière modification'
+        last_modified: Dernière modification
       social_media:
         facebook: Facebook
         google: Google+
@@ -871,5 +899,9 @@ fr:
       proxy_deposit_request:
         sender_comment: commentaires
         transfer_to: Utilisateur
+    placeholders:
+      defaults:
+        find_child_work: Rechercher un travail ...
+        member_of_collection_ids: Sélectionnez une collection ...
     required:
       html: <span class="label label-info required-tag">Champs obligatoires</span>
