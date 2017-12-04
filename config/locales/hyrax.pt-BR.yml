@@ -3,6 +3,7 @@ pt-BR:
   activefedora:
     models:
       batch_upload_item: Obras por lote
+      file_set: Arquivo
   activemodel:
     errors:
       messages:
@@ -270,16 +271,33 @@ pt-BR:
     base:
       citations:
         header: 'Citações:'
+      form_child_work_relationships:
+        actions:
+          remove: Retire deste trabalho
+        attach_new_work: Deposite o novo trabalho como filho desse trabalho
+        caption: Este trabalho atualmente contém esses trabalhos infantis
+        confirm:
+          cancel: Cancelar
+          remove: Remover
+          text: A remoção deste trabalho infantil não o removerá do repositório, apenas deste trabalho pai. Tem certeza de que deseja remover esse trabalho desse trabalho pai?
+        header:
+          actions: Açao
+          title: Título do trabalho
       form_files:
         dropzone: Largue os arquivos aqui.
-        local_upload_html: <p>Você pode adicionar um ou mais arquivos para associar a este trabalho.</p>
-        local_upload_browse_everything_html:
-          <p>Você pode adicionar um ou mais arquivos para associar a este
-          trabalho.</p>
-          <p>Por favor, note que, se você carregar uma grande quantidade de
-          arquivos dentro de um curto período de tempo, o fornecedor da nuvem
-          pode não ser capaz de acomodar sua solicitação. Se você tiver algum
-          erro ao carregar da nuvem, avise-nos através do %{contact_href}.<p>
+        local_upload_browse_everything_html: "<p>Você pode adicionar um ou mais arquivos para associar a este trabalho.</p> <p>Por favor, note que, se você carregar uma grande quantidade de arquivos dentro de um curto período de tempo, o fornecedor da nuvem pode não ser capaz de acomodar sua solicitação. Se você tiver algum erro ao carregar da nuvem, avise-nos através do %{contact_href}.<p>"
+        local_upload_html: "<p>Você pode adicionar um ou mais arquivos para associar a este trabalho.</p>"
+      form_member_of_collections:
+        actions:
+          remove: Remover da coleção
+        caption: Este trabalho está atualmente nessas coleções
+        confirm:
+          cancel: Cancelar
+          remove: Remover
+          text: A remoção deste trabalho não o removerá do repositório, apenas dessa coleção. Tem certeza de que deseja remover esse trabalho da coleção?
+        header:
+          actions: Açao
+          title: Título da coleção
       form_permission_under_embargo:
         help_html: "<strong>Este trabalho está sob embargo.</strong> Você pode alterar as configurações do embargo aqui, ou você pode visitar o %{edit_link} para desativá-lo."
         legend_html: Visibilidade <small>Quem deve poder visualizar ou fazer o download desse conteúdo?</small>
@@ -293,6 +311,10 @@ pt-BR:
         required_descriptions: Descreva seu trabalho
         required_files: Adicionar arquivos
         requirements: Requisitos
+      form_share:
+        add_sharing: Adicionar compartilhamento
+        currently_sharing: Atualmente compartilhado com
+        directions: Independentemente das configurações de visibilidade para este trabalho, você também pode compartilhá-lo com outros usuários e grupos.
       items:
         actions: Ações
         date_uploaded: Data carregada
@@ -307,7 +329,7 @@ pt-BR:
       relationships_parent_row:
         label: 'Em %{type}:'
       show:
-        last_modified: 'Última modificação'
+        last_modified: Última modificação
       social_media:
         facebook: Facebook
         google: Google+
@@ -871,5 +893,9 @@ pt-BR:
       proxy_deposit_request:
         sender_comment: Comentários
         transfer_to: Do utilizador
+    placeholders:
+      defaults:
+        find_child_work: Procure um trabalho ...
+        member_of_collection_ids: Selecione uma coleção ...
     required:
       html: <span class="label label-info required-tag">requeridos</span>
