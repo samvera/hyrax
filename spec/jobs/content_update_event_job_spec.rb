@@ -1,7 +1,7 @@
 RSpec.describe ContentUpdateEventJob do
   let(:user) { create(:user) }
   let(:mock_time) { Time.zone.at(1) }
-  let(:curation_concern) { create(:file_set, title: ['Hamlet'], user: user) }
+  let(:curation_concern) { create_for_repository(:file_set, title: ['Hamlet'], user: user) }
   let(:event) do
     {
       action: "User <a href=\"/users/#{user.to_param}\">#{user.user_key}</a> has updated <a href=\"/concern/file_sets/#{curation_concern.id}\">Hamlet</a>",

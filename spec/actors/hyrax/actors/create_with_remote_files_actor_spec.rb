@@ -8,7 +8,7 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
   end
   let(:user) { create(:user) }
   let(:ability) { Ability.new(user) }
-  let(:work) { create(:generic_work, user: user) }
+  let(:work) { create_for_repository(:work, user: user) }
   let(:url1) { "https://dl.dropbox.com/fake/blah-blah.filepicker-demo.txt.txt" }
   let(:url2) { "https://dl.dropbox.com/fake/blah-blah.Getting%20Started.pdf" }
   let(:file) { "file:///local/file/here.txt" }
@@ -22,7 +22,9 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
        file_name: "Getting+Started.pdf" }]
   end
   let(:attributes) { { remote_files: remote_files } }
-  let(:environment) { Hyrax::Actors::Environment.new(work, ability, attributes) }
+  let(:change_set) { GenericWorkChangeSet.new(work) }
+  let(:change_set_persister) { double }
+  let(:environment) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
 
   before do
     allow(terminator).to receive(:create).and_return(true)

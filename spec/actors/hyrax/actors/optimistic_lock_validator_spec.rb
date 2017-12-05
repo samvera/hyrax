@@ -1,10 +1,11 @@
 RSpec.describe Hyrax::Actors::OptimisticLockValidator do
-  let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
+  let(:change_set) { GenericWorkChangeSet.new(work) }
+  let(:change_set_persister) { double }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
   let(:ability) { ::Ability.new(depositor) }
-
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:depositor) { create(:user) }
-  let(:work) { create(:generic_work) }
+  let(:work) { create_for_repository(:work) }
 
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|

@@ -18,7 +18,7 @@ module Hyrax
       copy_blacklight_config_from(::CatalogController)
 
       class_attribute :presenter_class,
-                      :form_class,
+                      :change_set_class,
                       :single_item_search_builder_class,
                       :member_search_builder_class
 

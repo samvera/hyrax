@@ -12,12 +12,11 @@ module Hyrax
     end
 
     def find_parent_by_id
-      ActiveFedora::Base.find(parent_id)
+      Hyrax::Queries.find_by(id: parent_id)
     end
 
     def lookup_parent_from_child
-      # in_objects method is inherited from Hydra::PCDM::ObjectBehavior
-      return curation_concern.in_objects.first if curation_concern
+      return find_parent_objects(curation_concern).first if curation_concern
       return ParentService.parent_for(@presenter.id) if @presenter
       raise "no child"
     end
@@ -30,6 +29,10 @@ module Hyrax
 
       def new_or_create?
         %w[create new].include? action_name
+      end
+
+      def find_parent_objects(curation_concern)
+        Hyrax::Queries.find_inverse_references_by(resource: curation_concern, property: :member_ids)
       end
   end
 end

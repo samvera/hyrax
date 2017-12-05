@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Hyrax::Workflow::WorkflowFactory do
   describe '.create' do
-    let(:work) { create(:work, with_admin_set: { with_permission_template: true }) }
-    let(:permission_template) { Hyrax::PermissionTemplate.find_by!(admin_set_id: work.admin_set_id) }
+    let(:work) { create_for_repository(:work, with_admin_set: { with_permission_template: true }) }
+    let(:permission_template) { Hyrax::PermissionTemplate.find_by!(admin_set_id: work.admin_set_id.to_s) }
     let(:workflow) { create(:workflow, active: true, permission_template: permission_template) }
     let(:attributes) { {} }
     let(:user) { create(:user) }

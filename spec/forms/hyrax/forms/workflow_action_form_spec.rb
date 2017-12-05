@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::Forms::WorkflowActionForm do
-  let(:work) { create(:work) }
+  let(:work) { create_for_repository(:work) }
   let(:sipity_entity) do
     create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s, workflow_state_id: 2)
   end
@@ -8,8 +8,10 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm do
   let(:form) do
     described_class.new(current_ability: current_ability,
                         work: work,
-                        attributes: { name: 'an_action', comment: 'a_comment' })
+                        attributes: { name: 'an_action', comment: 'a_comment' },
+                        persister: persister)
   end
+  let(:persister) { Valkyrie::MetadataAdapter.find(:indexing_persister).persister }
 
   let(:an_action) do
     instance_double(Sipity::WorkflowAction,
@@ -65,16 +67,13 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm do
     end
 
     describe '#save' do
-      before do
-        allow(work).to receive(:update_index)
-      end
       subject { form.save }
 
       it { is_expected.to be true }
 
       context 'and the action has a resulting_workflow_state_id' do
         it 'will update the state of the given work and index it' do
-          expect(work).to receive(:update_index)
+          expect_any_instance_of(Valkyrie::MetadataAdapter.find(:index_solr).persister.class).to receive(:save).with(resource: form.work)
           expect { subject }.to change { sipity_entity.reload.workflow_state_id }.from(2).to(an_action.resulting_workflow_state_id)
         end
       end
@@ -105,7 +104,7 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm do
 
       it 'will send the #handle_action_taken message to Hyrax::Workflow::ActionTakenService' do
         expect(Hyrax::Workflow::ActionTakenService).to(
-          receive(:handle_action_taken).with(target: work, comment: kind_of(Sipity::Comment), action: an_action, user: user)
+          receive(:handle_action_taken).with(target: work, comment: kind_of(Sipity::Comment), action: an_action, user: user, persister: persister)
         )
         subject
       end
@@ -119,7 +118,8 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm do
     let(:form) do
       described_class.new(current_ability: current_ability,
                           work: work,
-                          attributes: { comment: '' })
+                          attributes: { comment: '' },
+                          persister: Valkyrie::MetadataAdapter.find(:indexing_persister).persister)
     end
 
     it 'will be invalid' do

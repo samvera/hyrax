@@ -24,25 +24,34 @@ module Hyrax
     # This performs a two pass query, first getting the AdminSets
     # and then getting the work and file counts
     # @param [Symbol] access :read or :edit
-    # @param join_field [String] how are we joining the admin_set ids (by default "isPartOf_ssim")
+    # @param join_field [String] how are we joining the admin_set ids (by default "admin_set_id_ssim")
     # @return [Array<Hyrax::AdminSetService::SearchResultForWorkCount>] a list with document, then work and file count
-    def search_results_with_work_count(access, join_field: "isPartOf_ssim")
+    def search_results_with_work_count(access, join_field: "admin_set_id_ssim")
       admin_sets = search_results(access)
-      ids = admin_sets.map(&:id).join(',')
-      query = "{!terms f=#{join_field}}#{ids}"
       results = ActiveFedora::SolrService.instance.conn.get(
         ActiveFedora::SolrService.select_path,
-        params: { fq: query,
+        params: { fq: solr_query(admin_sets, join_field: join_field),
                   'facet.field' => join_field }
       )
       counts = results['facet_counts']['facet_fields'][join_field].each_slice(2).to_h
-      file_counts = count_files(results)
+      file_counts = count_files(results, join_field: join_field)
       admin_sets.map do |admin_set|
-        SearchResultForWorkCount.new(admin_set, counts[admin_set.id].to_i, file_counts[admin_set.id].to_i)
+        SearchResultForWorkCount.new(admin_set,
+                                     counts[to_solr_id(admin_set.id)].to_i,
+                                     file_counts[to_solr_id(admin_set.id)].to_i)
       end
     end
 
     private
+
+      def solr_query(admin_sets, join_field:)
+        ids = admin_sets.map { |admin_set| to_solr_id(admin_set.id) }.join(',')
+        "{!terms f=#{join_field}}#{ids}"
+      end
+
+      def to_solr_id(id)
+        "id-#{id}"
+      end
 
       # @param [Symbol] access :read or :edit
       def builder(access)
@@ -52,14 +61,12 @@ module Hyrax
       # Count number of files from admin set works
       # @param [Array] results Solr search result
       # @return [Hash] admin set id keys and file count values
-      def count_files(results)
-        file_counts = Hash.new(0)
-        results['response']['docs'].each do |doc|
-          doc['isPartOf_ssim'].each do |id|
-            file_counts[id] += doc.fetch('file_set_ids_ssim', []).length
+      def count_files(results, join_field:)
+        results['response']['docs'].each_with_object(Hash.new(0)) do |doc, file_counts|
+          doc[join_field].each do |id|
+            file_counts[id] += doc.fetch('member_ids_ssim', []).length
           end
         end
-        file_counts
       end
   end
 end

@@ -2,6 +2,11 @@ require_dependency 'hyrax/name'
 module Hyrax
   module Naming
     extend ActiveSupport::Concern
+    include ActiveModel::Naming
+
+    included do
+      delegate :model_name, to: :class
+    end
 
     module ClassMethods
       # Override of ActiveModel::Model name that allows us to use our custom name class

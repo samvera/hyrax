@@ -64,7 +64,7 @@ RSpec.describe Hyrax::Dashboard::ProfilesController do
         get :edit, params: { id: user.user_key }
         expect(response).to be_success
         expect(assigns[:trophies]).to all(be_kind_of Hyrax::TrophyPresenter)
-        expect(assigns[:trophies].map(&:id)).to match_array [work1.id, work2.id, work3.id]
+        expect(assigns[:trophies].map(&:id)).to match_array [work1.id.to_s, work2.id.to_s, work3.id.to_s]
       end
     end
   end
@@ -138,14 +138,14 @@ RSpec.describe Hyrax::Dashboard::ProfilesController do
     end
 
     context "when removing a trophy" do
-      let(:work) { create(:generic_work, title: ["w1"], user: user) }
+      let(:work) { create_for_repository(:work, title: ["w1"], user: user) }
 
       before do
         user.trophies.create!(work_id: work.id)
       end
       it "removes a trophy" do
         expect do
-          post :update, params: { id: user.user_key, 'remove_trophy_' + work.id => 'yes' }
+          post :update, params: { id: user.user_key, 'remove_trophy_' + work.id.to_s => 'yes' }
         end.to change { user.trophies.count }.by(-1)
         expect(response).to redirect_to(routes.url_helpers.dashboard_profile_path(user.to_param, locale: 'en'))
         expect(flash[:notice]).to include("Your profile has been updated")

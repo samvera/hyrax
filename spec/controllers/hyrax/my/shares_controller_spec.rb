@@ -10,12 +10,24 @@ RSpec.describe Hyrax::My::SharesController, type: :controller do
       let(:other_user)   { create(:user) }
       let(:someone_else) { create(:user) }
 
-      let!(:my_work)                  { create(:work, user: user) }
-      let!(:unshared_work)            { create(:work, user: other_user) }
-      let!(:shared_with_me)           { create(:work, user: other_user, edit_users: [user, other_user]) }
-      let!(:read_shared_with_me)      { create(:work, user: other_user, read_users: [user, other_user]) }
-      let!(:shared_with_someone_else) { create(:work, user: other_user, edit_users: [someone_else, other_user]) }
-      let!(:my_collection)            { create(:public_collection, user: user) }
+      let!(:my_work)       { create_for_repository(:work, user: user) }
+      let!(:unshared_work) { create_for_repository(:work, user: other_user) }
+      let!(:shared_with_me) do
+        create_for_repository(:work,
+                              user: other_user,
+                              edit_users: [user.user_key, other_user.user_key])
+      end
+      let!(:read_shared_with_me) do
+        create_for_repository(:work,
+                              user: other_user,
+                              read_users: [user.user_key, other_user.user_key])
+      end
+      let!(:shared_with_someone_else) do
+        create_for_repository(:work,
+                              user: other_user,
+                              edit_users: [someone_else.user_key, other_user.user_key])
+      end
+      let!(:my_collection) { create_for_repository(:collection, :public, user: user) }
 
       it "responds with success" do
         get :index
@@ -23,7 +35,11 @@ RSpec.describe Hyrax::My::SharesController, type: :controller do
       end
 
       context "with multiple pages of results" do
-        before { 2.times { create(:work, user: other_user, edit_users: [user, other_user]) } }
+        before do
+          2.times do
+            create_for_repository(:work, user: other_user, edit_users: [user.user_key, other_user.user_key])
+          end
+        end
         it "paginates" do
           get :index, params: { per_page: 2 }
           expect(assigns[:document_list].length).to eq 2
@@ -34,7 +50,7 @@ RSpec.describe Hyrax::My::SharesController, type: :controller do
 
       it "shows only documents that are shared with me via edit access" do
         get :index
-        expect(assigns[:document_list].map(&:id)).to contain_exactly(shared_with_me.id)
+        expect(assigns[:document_list].map(&:id)).to contain_exactly(shared_with_me.id.to_s)
       end
     end
   end

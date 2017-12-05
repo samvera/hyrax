@@ -361,6 +361,13 @@ module Hyrax
     end
     alias google_analytics_id? google_analytics_id
 
+    attr_writer :registered_linked_data_resources
+    def registered_linked_data_resources
+      @registered_linked_data_resources ||= {
+        based_near: Hyrax::LinkedDataResources::GeonamesResource
+      }
+    end
+
     # Defaulting analytic start date to whenever the file was uploaded by leaving it blank
     attr_writer :analytic_start_date
     attr_reader :analytic_start_date
@@ -418,6 +425,8 @@ module Hyrax
                       default_uploader_config
                     end
     end
+
+    delegate :fedora_schema, :fedora_schema=, to: Hyrax::FedoraSchema
 
     private
 

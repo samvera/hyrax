@@ -11,18 +11,13 @@ RSpec.describe Hyrax::My::HighlightsController, type: :controller do
       end
 
       let(:other_user) { create(:user) }
-      let(:highlighted_work) { create(:generic_work, user: user) }
-      let!(:normal_work) { create(:generic_work, user: user) }
-      let(:unrelated_highlighted_work) do
-        create(:generic_work, user: other_user).tap do |r|
-          r.edit_users += [user.user_key]
-          r.save!
-        end
-      end
+      let(:highlighted_work) { create_for_repository(:work, user: user) }
+      let!(:normal_work) { create_for_repository(:work, user: user) }
+      let(:unrelated_highlighted_work) { create_for_repository(:work, user: other_user, edit_users: [user.user_key]) }
 
       it "paginates" do
-        work1 = create(:work, user: user)
-        work2 = create(:work, user: user)
+        work1 = create_for_repository(:work, user: user)
+        work2 = create_for_repository(:work, user: user)
         user.trophies.create!(work_id: work1.id)
         user.trophies.create!(work_id: work2.id)
         get :index, params: { per_page: 2 }
@@ -35,11 +30,11 @@ RSpec.describe Hyrax::My::HighlightsController, type: :controller do
         get :index
         expect(response).to be_successful
         # shows documents I've highlighted
-        expect(assigns[:document_list].map(&:id)).to include(highlighted_work.id)
+        expect(assigns[:document_list].map(&:id)).to include(highlighted_work.id.to_s)
         # doesn't show non-highlighted files
-        expect(assigns[:document_list].map(&:id)).not_to include(normal_work.id)
+        expect(assigns[:document_list].map(&:id)).not_to include(normal_work.id.to_s)
         # doesn't show other users' highlighted files
-        expect(assigns[:document_list].map(&:id)).not_to include(unrelated_highlighted_work.id)
+        expect(assigns[:document_list].map(&:id)).not_to include(unrelated_highlighted_work.id.to_s)
       end
     end
 

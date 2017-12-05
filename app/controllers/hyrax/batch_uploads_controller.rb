@@ -3,17 +3,8 @@ module Hyrax
     include Hydra::Controller::ControllerBehavior
     include Hyrax::WorksControllerBehavior
 
-    # Gives the class of the form.
-    class BatchUploadFormService < Hyrax::WorkFormService
-      def self.form_class(_ = nil)
-        ::Hyrax::Forms::BatchUploadForm
-      end
-    end
-
-    self.work_form_service = BatchUploadFormService
-    self.curation_concern_type = work_form_service.form_class.model_class # includes CanCan side-effects
-    # We use BatchUploadItem as a null stand-in curation_concern_type.
-    # The actual permission is checked dynamically during #create.
+    # We use BatchUploadItem as a null stand-in resource_type.
+    self.resource_class = BatchUploadItem
 
     with_themed_layout 'dashboard'
 
@@ -42,9 +33,9 @@ module Hyrax
         end
       end
 
-      def build_form
+      def build_change_set
         super
-        @form.payload_concern = params[:payload_concern]
+        @change_set.payload_concern = params[:payload_concern]
       end
 
       def handle_payload_concern!
@@ -76,7 +67,7 @@ module Hyrax
                                      params[:title].permit!.to_h,
                                      params.fetch(:resource_type, {}).permit!.to_h,
                                      params[:uploaded_files],
-                                     attributes_for_actor.to_h.merge!(model: klass),
+                                     resource_params.to_h.merge!(model: klass),
                                      operation)
       end
 
@@ -84,10 +75,8 @@ module Hyrax
         params.fetch(hash_key_for_curation_concern).key?(:on_behalf_of)
       end
 
-      def attributes_for_actor
-        raw_params = params[hash_key_for_curation_concern]
-        return {} unless raw_params
-        work_form_service.form_class(curation_concern).model_attributes(raw_params)
+      def resource_params
+        params[resource_class.model_name.param_key] || {}
       end
   end
 end

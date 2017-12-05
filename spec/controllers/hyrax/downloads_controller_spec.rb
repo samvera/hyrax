@@ -3,8 +3,9 @@ RSpec.describe Hyrax::DownloadsController do
 
   describe '#show' do
     let(:user) { create(:user) }
+    let(:file) { fixture_file_upload('image.png', 'image/png') }
     let(:file_set) do
-      create(:file_with_work, user: user, content: File.open(fixture_path + '/image.png'))
+      create_for_repository(:file_set, user: user, content: file)
     end
     let(:default_image) { ActionController::Base.helpers.image_path 'default.png' }
 
@@ -20,20 +21,20 @@ RSpec.describe Hyrax::DownloadsController do
       before { sign_in another_user }
 
       it 'redirects to the default image' do
-        get :show, params: { id: file_set.to_param }
+        get :show, params: { id: file_set }
         expect(response).to redirect_to default_image
       end
     end
 
     context "when user isn't logged in" do
       it 'redirects to the default image' do
-        get :show, params: { id: file_set.to_param }
+        get :show, params: { id: file_set }
         expect(response).to redirect_to default_image
       end
 
       it 'authorizes the resource using only the id' do
-        expect(controller).to receive(:authorize!).with(:download, file_set.id)
-        get :show, params: { id: file_set.to_param }
+        expect(controller).to receive(:authorize!).with(:download, file_set.id.to_s)
+        get :show, params: { id: file_set }
       end
     end
 
@@ -42,13 +43,13 @@ RSpec.describe Hyrax::DownloadsController do
 
       it 'sends the original file' do
         get :show, params: { id: file_set }
-        expect(response.body).to eq file_set.original_file.content
+        expect(response.body).to eq file.tempfile.read
       end
 
       context "with an alternative file" do
         context "that is persisted" do
-          let(:file) { File.open(fixture_path + '/world.png', 'rb') }
-          let(:content) { file.read }
+          let(:file) { fixture_file_upload('world.png', 'image/png') }
+          let(:content) { File.open(fixture_path + '/world.png', 'rb').read }
 
           before do
             allow(Hyrax::DerivativePath).to receive(:derivative_path_for_reference).and_return(fixture_path + '/world.png')
@@ -72,7 +73,7 @@ RSpec.describe Hyrax::DownloadsController do
           it "raises an error if the requested file does not exist" do
             expect do
               get :show, params: { id: file_set, file: 'thumbnail' }
-            end.to raise_error ActiveFedora::ObjectNotFoundError
+            end.to raise_error Hyrax::ObjectNotFoundError
           end
         end
       end
@@ -80,7 +81,7 @@ RSpec.describe Hyrax::DownloadsController do
       it "raises an error if the requested association does not exist" do
         expect do
           get :show, params: { id: file_set, file: 'non-existant' }
-        end.to raise_error ActiveFedora::ObjectNotFoundError
+        end.to raise_error Hyrax::ObjectNotFoundError
       end
     end
   end

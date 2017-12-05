@@ -1,0 +1,16 @@
+# Generated via
+#  `rails generate hyrax:work <%= class_name %>`
+require 'rails_helper'
+
+RSpec.describe <%= class_name %>ChangeSet do
+  subject(:change_set) { described_class.new(form_resource) }
+
+  let(:work) { <%= class_name %>.new }
+  let(:form_resource) { work }
+
+  describe 'validations' do
+    it 'is valid by default' do
+      expect(change_set).to be_valid
+    end
+  end
+end

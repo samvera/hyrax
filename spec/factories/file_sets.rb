@@ -5,13 +5,25 @@ FactoryBot.define do
       content nil
     end
     after(:build) do |fs, evaluator|
-      fs.apply_depositor_metadata evaluator.user.user_key
+      fs.apply_depositor_metadata evaluator.user.user_key if evaluator.user
     end
 
-    after(:create) do |file, evaluator|
+    before(:create) do |file_set, evaluator|
       if evaluator.content
-        Hydra::Works::UploadFileToFileSet.call(file, evaluator.content)
+        storage_adapter = Valkyrie::StorageAdapter.find(:disk)
+        persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+        node_builder = Hyrax::FileNodeBuilder.new(storage_adapter: storage_adapter,
+                                                  persister: persister)
+
+        node = Hyrax::FileNode.for(file: evaluator.content)
+        file_node = node_builder.create(file: evaluator.content, node: node)
+        file_set.member_ids += [file_node.id]
       end
+    end
+
+    to_create do |instance|
+      persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+      persister.save(resource: instance)
     end
 
     trait :public do
@@ -20,18 +32,6 @@ FactoryBot.define do
 
     trait :registered do
       read_groups ["registered"]
-    end
-
-    factory :file_with_work do
-      after(:build) do |file, _evaluator|
-        file.title = ['testfile']
-      end
-      after(:create) do |file, evaluator|
-        if evaluator.content
-          Hydra::Works::UploadFileToFileSet.call(file, evaluator.content)
-        end
-        create(:work, user: evaluator.user).members << file
-      end
     end
   end
 end

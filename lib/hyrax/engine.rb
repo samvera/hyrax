@@ -44,7 +44,6 @@ module Hyrax
 
     initializer 'requires' do
       require 'hydra/derivatives'
-      require 'hyrax/controller_resource'
       require 'hyrax/search_state'
       require 'hyrax/errors'
       require 'power_converters'
@@ -75,6 +74,10 @@ module Hyrax
         ActiveFedora::Noid.config.minter_class = c.noid_minter_class
         ActiveFedora::Noid.config.statefile = c.minter_statefile
       end
+    end
+
+    initializer 'valkyrie_global_id' do
+      GlobalID::Locator.use(GlobalID.app, Hyrax::ValkyrieLocator.new)
     end
 
     initializer 'hyrax.assets.precompile' do |app|

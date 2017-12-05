@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::WorkUsage, type: :model do
-  let!(:work) { create(:work, id: 'abc12345xy') }
+  let!(:work) { create_for_repository(:work, id: 'abc12345xy') }
 
   let(:dates) do
     ldates = []
@@ -35,12 +35,12 @@ RSpec.describe Hyrax::WorkUsage, type: :model do
   let(:usage) do
     allow_any_instance_of(GenericWork).to receive(:create_date).and_return((Time.zone.today - 4.days).to_s)
     allow(WorkViewStat).to receive(:ga_statistics).and_return(sample_pageview_statistics)
-    described_class.new(work.id)
+    described_class.new(work.id.to_s)
   end
 
   describe "#initialize" do
     it "sets the model" do
-      expect(usage.model).to eq work
+      expect(usage.model.id).to eq work.id
     end
 
     it "sets the created date" do
@@ -49,7 +49,7 @@ RSpec.describe Hyrax::WorkUsage, type: :model do
   end
 
   describe "#to_s" do
-    let(:work) { create(:work, title: ['Butter sculpture']) }
+    let(:work) { create_for_repository(:work, title: ['Butter sculpture']) }
 
     subject { usage.to_s }
 
@@ -93,7 +93,7 @@ RSpec.describe Hyrax::WorkUsage, type: :model do
       describe "create date before earliest date set" do
         let(:usage) do
           allow_any_instance_of(GenericWork).to receive(:create_date).and_return(create_date.to_s)
-          described_class.new(work.id)
+          described_class.new(work.id.to_s)
         end
 
         it "sets the created date to the earliest date not the created date" do
@@ -105,7 +105,7 @@ RSpec.describe Hyrax::WorkUsage, type: :model do
         let(:usage) do
           allow_any_instance_of(GenericWork).to receive(:create_date).and_return((Time.zone.today - 4.days).to_s)
           Hyrax.config.analytic_start_date = earliest
-          described_class.new(work.id)
+          described_class.new(work.id.to_s)
         end
 
         it "sets the created date to the earliest date not the created date" do
@@ -120,7 +120,7 @@ RSpec.describe Hyrax::WorkUsage, type: :model do
 
       let(:usage) do
         allow_any_instance_of(GenericWork).to receive(:create_date).and_return(create_date.to_s)
-        described_class.new(work.id)
+        described_class.new(work.id.to_s)
       end
 
       it "sets the created date to the earliest date not the created date" do
@@ -131,10 +131,10 @@ RSpec.describe Hyrax::WorkUsage, type: :model do
 
   describe "on a migrated work" do
     let(:date_uploaded) { "2014-12-31" }
-    let(:work_migrated) { create(:work, id: '678901234', date_uploaded: date_uploaded) }
+    let(:work_migrated) { create_for_repository(:work, id: '678901234', date_uploaded: date_uploaded) }
 
     let(:usage) do
-      described_class.new(work_migrated.id)
+      described_class.new(work_migrated.id.to_s)
     end
 
     it "uses the date_uploaded for analytics" do

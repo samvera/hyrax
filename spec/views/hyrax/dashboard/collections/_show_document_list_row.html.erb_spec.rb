@@ -2,10 +2,14 @@ RSpec.describe 'hyrax/dashboard/collections/_show_document_list_row.html.erb', t
   let(:user) { create(:user) }
 
   let(:work) do
-    create(:work, user: user, creator: ["ggm"], title: ['One Hundred Years of Solitude'])
+    create_for_repository(:work,
+                          user: user,
+                          creator: ["ggm"],
+                          title: ['One Hundred Years of Solitude'],
+                          member_of_collection_ids: [collection.id])
   end
 
-  let(:collection) { mock_model(Collection, title: 'My awesome collection', members: [work]) }
+  let(:collection) { create_for_repository(:collection, title: 'My awesome collection') }
 
   context 'when not logged in' do
     before do

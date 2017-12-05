@@ -4,7 +4,7 @@ RSpec.describe AttachFilesToWorkJob do
     let(:file2) { File.open(fixture_path + '/image.jp2') }
     let(:uploaded_file1) { build(:uploaded_file, file: file1) }
     let(:uploaded_file2) { build(:uploaded_file, file: file2) }
-    let(:generic_work) { create(:public_generic_work) }
+    let(:generic_work) { create_for_repository(:work, :public) }
 
     shared_examples 'a file attacher' do
       it 'attaches files, copies visibility and permissions and updates the uploaded files' do
@@ -19,10 +19,8 @@ RSpec.describe AttachFilesToWorkJob do
     end
 
     context "with uploaded files on the filesystem" do
-      before do
-        generic_work.permissions.build(name: 'userz@bbb.ddd', type: 'person', access: 'edit')
-        generic_work.save
-      end
+      let(:generic_work) { create_for_repository(:work, :public, edit_users: ['userz@bbb.ddd']) }
+
       it_behaves_like 'a file attacher' do
         it 'records the depositor(s) in edit_users' do
           expect(generic_work.file_sets.map(&:edit_users)).to all(match_array([generic_work.depositor, 'userz@bbb.ddd']))

@@ -6,10 +6,11 @@ module Hyrax
       # @param [#read_users=, #read_users] target (likely an ActiveRecord::Base) to which we are adding edit_users for the depositor
       # @return void
       def self.call(target:, **)
-        target.edit_users += [target.depositor]
+        depositor = Array(target.depositor).first
+        target.edit_users += [depositor]
         # If there are a lot of members, granting access to each could take a
         # long time. Do this work in the background.
-        GrantEditToMembersJob.perform_later(target, target.depositor)
+        GrantEditToMembersJob.perform_later(target, depositor)
       end
     end
   end

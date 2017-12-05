@@ -3,19 +3,25 @@ module Hyrax
     # Creates a work and attaches files to the work
     class CreateWithFilesActor < Hyrax::Actors::AbstractActor
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if create was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if create was successful
       def create(env)
         uploaded_file_ids = filter_file_ids(env.attributes.delete(:uploaded_files))
         files = uploaded_files(uploaded_file_ids)
-        validate_files(files, env) && next_actor.create(env) && attach_files(files, env)
+        return false unless validate_files(files, env)
+        saved = next_actor.create(env)
+        return saved if saved && attach_files(files, env)
+        false
       end
 
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if update was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if update was successful
       def update(env)
         uploaded_file_ids = filter_file_ids(env.attributes.delete(:uploaded_files))
         files = uploaded_files(uploaded_file_ids)
-        validate_files(files, env) && next_actor.update(env) && attach_files(files, env)
+        return false unless validate_files(files, env)
+        saved = next_actor.update(env)
+        return saved if saved && attach_files(files, env)
+        false
       end
 
       private

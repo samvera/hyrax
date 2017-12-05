@@ -2,7 +2,9 @@ require 'redlock'
 
 RSpec.describe Hyrax::Actors::GenericWorkActor do
   include ActionDispatch::TestProcess
-  let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
+  let(:change_set) { GenericWorkChangeSet.new(curation_concern) }
+  let(:change_set_persister) { Hyrax::ChangeSetPersister.new(metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister), storage_adapter: Valkyrie.config.storage_adapter) }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
   let(:admin_set) { build(:admin_set, with_permission_template: { with_active_workflow: true }) }
@@ -17,7 +19,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
   subject { Hyrax::CurationConcern.actor }
 
   describe '#create' do
-    let(:curation_concern) { create(:generic_work, user: user) }
+    let(:curation_concern) { create_for_repository(:work, user: user) }
     let(:xmas) { DateTime.parse('2014-12-25 11:30').iso8601 }
     let(:attributes) { {} }
     let(:file) { fixture_file_upload('/world.png', 'image/png') }
@@ -39,13 +41,16 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
     end
 
     context 'failure' do
+      let(:persister) { double }
+
       before do
         allow(middleware).to receive(:attach_files).and_return(true)
+        allow(change_set_persister).to receive(:buffer_into_index).and_yield(persister)
       end
 
       # The clean is here because this test depends on the repo not having an AdminSet/PermissionTemplate created yet
       it 'returns false', :clean_repo do
-        expect(curation_concern).to receive(:save).and_return(false)
+        expect(persister).to receive(:save).and_return(false)
         expect(middleware.create(env)).to be false
       end
     end
@@ -98,29 +103,9 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         end
       end
 
-      context 'with in_work_ids' do
-        let(:parent) { create(:generic_work, user: user) }
-        let(:attributes) do
-          attributes_for(:generic_work, visibility: visibility, admin_set_id: admin_set.id).merge(
-            in_works_ids: [parent.id]
-          )
-        end
-
-        it "attaches the parent" do
-          allow_any_instance_of(Hyrax::Actors::AddToWorkActor).to receive(:can_edit_both_works?).and_return(true)
-          expect(middleware.create(env)).to be true
-          expect(curation_concern.reload.in_works).to eq [parent]
-        end
-        it "does not attach the parent" do
-          allow_any_instance_of(Hyrax::Actors::AddToWorkActor).to receive(:can_edit_both_works?).and_return(false)
-          expect(middleware.create(env)).to be false
-          expect(curation_concern.reload.in_works).to eq []
-        end
-      end
-
       context 'with a file' do
         let(:attributes) do
-          attributes_for(:generic_work, admin_set_id: admin_set.id, visibility: visibility).tap do |a|
+          attributes_for(:work, admin_set_id: admin_set.id, visibility: visibility).tap do |a|
             a[:uploaded_files] = [uploaded_file.id]
           end
         end
@@ -158,7 +143,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         let(:file_actor) { double }
         let(:uploaded_file2) { Hyrax::UploadedFile.create(file: file, user: user) }
         let(:attributes) do
-          attributes_for(:generic_work, admin_set_id: admin_set.id, visibility: visibility).tap do |a|
+          attributes_for(:work, admin_set_id: admin_set.id, visibility: visibility).tap do |a|
             a[:uploaded_files] = [uploaded_file.id, uploaded_file2.id]
           end
         end
@@ -189,7 +174,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
       context 'with a present and a blank title' do
         let(:attributes) do
-          attributes_for(:generic_work, admin_set_id: admin_set.id, title: ['this is present', ''])
+          attributes_for(:work, admin_set_id: admin_set.id, title: ['this is present', ''])
         end
 
         it 'stamps each link with the access rights' do
@@ -202,13 +187,19 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
   end
 
   describe '#update' do
-    let(:curation_concern) { create(:generic_work, user: user, admin_set_id: admin_set.id) }
+    let(:persister) { Valkyrie.config.metadata_adapter.persister }
+    let(:curation_concern) { create_for_repository(:work, user: user, admin_set_id: admin_set.id) }
 
     context 'failure' do
       let(:attributes) { {} }
+      let(:persister) { double }
+
+      before do
+        allow(change_set_persister).to receive(:buffer_into_index).and_yield(persister)
+      end
 
       it 'returns false' do
-        expect(curation_concern).to receive(:save).and_return(false)
+        expect(persister).to receive(:save).and_return(false)
         expect(subject.update(env)).to be false
       end
     end
@@ -224,96 +215,85 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
     end
 
     context 'with in_works_ids' do
-      let(:parent) { create(:generic_work, user: user) }
-      let(:old_parent) { create(:generic_work, user: user) }
+      let(:parent) { create_for_repository(:work, user: user) }
+      let(:old_parent) { create_for_repository(:work, user: user) }
       let(:attributes) do
-        attributes_for(:generic_work).merge(
-          in_works_ids: [parent.id]
+        attributes_for(:work).merge(
+          member_of_collection_ids: [parent.id]
         )
       end
 
       before do
-        old_parent.ordered_members << curation_concern
-        old_parent.save!
+        old_parent.member_ids += [curation_concern.id]
+        persister.save(resource: old_parent)
       end
+
       it "attaches the parent" do
         expect(subject.update(env)).to be true
-        expect(curation_concern.in_works).to eq [parent]
+        expect(curation_concern.in_works_ids).to eq [parent.id]
         expect(old_parent.reload.members).to eq []
       end
     end
 
     context 'without in_works_ids' do
-      let(:old_parent) { create(:generic_work) }
+      let(:old_parent) { create_for_repository(:work) }
       let(:attributes) do
-        attributes_for(:generic_work).merge(
-          in_works_ids: []
+        attributes_for(:work).merge(
+          member_of_collection_ids: []
         )
       end
 
       before do
         curation_concern.apply_depositor_metadata(user.user_key)
-        curation_concern.save!
-        old_parent.ordered_members << curation_concern
-        old_parent.save!
+        persister.save(resource: curation_concern)
+        old_parent.member_ids += [curation_concern.id]
+        persister.save(resource: old_parent)
       end
+
       it "removes the old parent" do
         allow(curation_concern).to receive(:depositor).and_return(old_parent.depositor)
         expect(subject.update(env)).to be true
-        expect(curation_concern.in_works).to eq []
-        expect(old_parent.reload.members).to eq []
+        expect(curation_concern.in_works_ids).to eq []
+        reloaded = Hyrax::Queries.find_by(id: old_parent.id)
+        expect(reloaded.member_ids).to eq []
       end
     end
 
     context 'with nil in_works_ids' do
-      let(:parent) { create(:generic_work) }
+      let(:parent) { create_for_repository(:work) }
       let(:attributes) do
-        attributes_for(:generic_work).merge(
-          in_works_ids: nil
+        attributes_for(:work).merge(
+          member_of_collection_ids: nil
         )
       end
 
       before do
         curation_concern.apply_depositor_metadata(user.user_key)
-        curation_concern.save!
-        parent.ordered_members << curation_concern
-        parent.save!
+        persister.save(resource: curation_concern)
+        parent.member_ids += [curation_concern.id]
+        persister.save(resource: parent)
       end
+
       it "does nothing" do
         expect(subject.update(env)).to be true
-        expect(curation_concern.in_works).to eq [parent]
+        expect(curation_concern.in_works_ids).to eq [parent.id]
       end
     end
 
     context 'with multiple file sets' do
-      let(:file_set1) { create(:file_set) }
-      let(:file_set2) { create(:file_set) }
-      let(:curation_concern) { create(:generic_work, user: user, ordered_members: [file_set1, file_set2], admin_set_id: admin_set.id) }
+      let(:file_set1) { create_for_repository(:file_set) }
+      let(:file_set2) { create_for_repository(:file_set) }
+      let(:curation_concern) { create_for_repository(:work, user: user, member_ids: [file_set1.id, file_set2.id], admin_set_id: admin_set.id) }
       let(:attributes) do
-        attributes_for(:generic_work, ordered_member_ids: [file_set2.id, file_set1.id])
+        attributes_for(:work, member_ids: [file_set2.id, file_set1.id])
       end
 
       it 'updates the order of file sets' do
-        expect(curation_concern.ordered_members.to_a).to eq [file_set1, file_set2]
+        expect(curation_concern.member_ids).to eq [file_set1.id, file_set2.id]
         expect(subject.update(env)).to be true
+        reloaded = Hyrax::Queries.find_by(id: curation_concern.id)
 
-        curation_concern.reload
-        expect(curation_concern.ordered_members.to_a).to eq [file_set2, file_set1]
-      end
-      ## Is this something we want to support?
-      context "when told to stop ordering a file set" do
-        let(:attributes) do
-          attributes_for(:generic_work, ordered_member_ids: [file_set2.id])
-        end
-
-        it "works" do
-          expect(curation_concern.ordered_members.to_a).to eq [file_set1, file_set2]
-
-          expect(subject.update(env)).to be true
-
-          curation_concern.reload
-          expect(curation_concern.ordered_members.to_a).to eq [file_set2]
-        end
+        expect(reloaded.member_ids).to eq [file_set2.id, file_set1.id]
       end
     end
   end
