@@ -22,7 +22,7 @@ module Hyrax
     end
 
     def create
-      @change_set = change_set_class.new(resource_class.new)
+      @change_set = build_change_set(resource_class.new)
       authorize! :create, @change_set.resource
       @resource = actor.create(actor_environment)
       if @resource
@@ -33,7 +33,7 @@ module Hyrax
     end
 
     def update
-      @change_set = change_set_class.new(find_resource(params[:id]))
+      @change_set = build_change_set(find_resource(params[:id]))
       authorize! :update, @change_set.resource
       @resource = actor.update(actor_environment)
       if @resource
@@ -44,7 +44,7 @@ module Hyrax
     end
 
     def destroy
-      @change_set = change_set_class.new(find_resource(params[:id]))
+      @change_set = build_change_set(find_resource(params[:id]))
       authorize! :destroy, @change_set.resource
       env = Actors::Environment.new(@change_set, change_set_persister, current_ability, {})
       return unless actor.destroy(env)
@@ -134,6 +134,7 @@ module Hyrax
       def after_update_error(_obj, change_set)
         respond_to do |wants|
           wants.html do
+            @change_set.prepopulate!
             render 'edit', status: :unprocessable_entity
           end
           wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: change_set.errors }) }
