@@ -14,6 +14,7 @@ module ActionDispatch::Routing
           namespaced_resources curation_concern_name, except: [:index], &block
           namespaced_resources curation_concern_name, only: [] do
             member do
+              get :manifest
               get :file_manager
               get :inspect_work
             end

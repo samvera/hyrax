@@ -206,6 +206,10 @@ RSpec.describe 'Routes', type: :routing do
       it 'routes to inspect_work' do
         expect(get: 'concern/generic_works/6/inspect_work').to route_to(controller: 'hyrax/generic_works', action: 'inspect_work', id: '6')
       end
+
+      it 'routes to manifest' do
+        expect(get: 'concern/generic_works/6/manifest').to route_to(controller: 'hyrax/generic_works', action: 'manifest', id: '6')
+      end
     end
   end
 end

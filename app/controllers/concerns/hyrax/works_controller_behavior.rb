@@ -1,3 +1,5 @@
+require 'iiif_manifest'
+
 module Hyrax
   module WorksControllerBehavior
     extend ActiveSupport::Concern
@@ -20,7 +22,7 @@ module Hyrax
 
     class_methods do
       def curation_concern_type=(curation_concern_type)
-        load_and_authorize_resource class: curation_concern_type, instance_name: :curation_concern, except: [:show, :file_manager, :inspect_work]
+        load_and_authorize_resource class: curation_concern_type, instance_name: :curation_concern, except: [:show, :file_manager, :inspect_work, :manifest]
 
         # Load the fedora resource to get the etag.
         # No need to authorize for the file manager, because it does authorization via the presenter.
@@ -126,12 +128,19 @@ module Hyrax
       presenter
     end
 
-    #    attr_writer :actor
+    def manifest
+      headers['Access-Control-Allow-Origin'] = '*'
+      render json: manifest_builder.to_h
+    end
 
     private
 
       def build_form
         @form = work_form_service.build(curation_concern, current_ability, self)
+      end
+
+      def manifest_builder
+        ::IIIFManifest::ManifestFactory.new(presenter)
       end
 
       def actor
