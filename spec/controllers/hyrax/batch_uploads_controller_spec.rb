@@ -31,7 +31,7 @@ RSpec.describe Hyrax::BatchUploadsController do
     it "is successful" do
       get :new
       expect(response).to be_successful
-      expect(assigns[:form]).to be_kind_of Hyrax::Forms::BatchUploadForm
+      expect(assigns[:change_set]).to be_kind_of Hyrax::BatchUploadChangeSet
       expect(response).to render_template('hyrax/dashboard')
     end
   end
@@ -113,18 +113,17 @@ RSpec.describe Hyrax::BatchUploadsController do
     end
   end
 
-  describe "#attributes_for_actor" do
-    subject { controller.send(:attributes_for_actor) }
+  describe "#resource_params" do
+    subject { controller.send(:resource_params) }
 
     before do
       controller.params = post_params
     end
     let(:expected_shared_params) do
-      ActionController::Parameters.new(keyword: [], visibility: 'open').permit!
+      ActionController::Parameters.new(batch_upload_item)
     end
 
     it "excludes uploaded_files and title" do
-      expect(subject).not_to include('title', :title, 'uploaded_files', :uploaded_files)
       expect(subject).to eq expected_shared_params
     end
   end

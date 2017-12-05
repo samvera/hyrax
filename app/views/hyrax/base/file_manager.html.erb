@@ -1,11 +1,11 @@
 <h1><%= t("hyrax.file_manager.link_text") %></h1>
 <ul class="breadcrumb">
   <li>
-    Back to <%= link_to @form.to_s, [main_app, @form] %>
+    Back to <%= link_to @change_set.to_s, [main_app, @change_set] %>
   </li>
 </ul>
 
-<% if !@form.member_presenters.empty? %>
+<% if !@change_set.member_presenters.empty? %>
   <div data-action="file-manager">
     <div class="col-md-3" id="file-manager-tools">
       <h2>Toolbar</h2>

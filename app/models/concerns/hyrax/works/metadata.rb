@@ -1,9 +1,10 @@
 module Hyrax::Works
+  # Optional metadata for Work objects
   module Metadata
     extend ActiveSupport::Concern
 
     included do
-      property :arkivo_checksum, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#arkivoChecksum'), multiple: false
+      attribute :arkivo_checksum, Valkyrie::Types::String
     end
   end
 end

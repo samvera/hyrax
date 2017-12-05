@@ -10,17 +10,19 @@ module Hyrax
     # url property, it may have spaces, and not be a valid URI.
     class CreateWithRemoteFilesActor < Hyrax::Actors::AbstractActor
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if create was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if create was successful
       def create(env)
         remote_files = env.attributes.delete(:remote_files)
         next_actor.create(env) && attach_files(env, remote_files)
       end
 
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if update was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if update was successful
       def update(env)
         remote_files = env.attributes.delete(:remote_files)
-        next_actor.update(env) && attach_files(env, remote_files)
+        saved = next_actor.update(env)
+        return saved if saved && attach_files(env, remote_files)
+        false
       end
 
       private
@@ -67,7 +69,7 @@ module Hyrax
             actor = Hyrax::Actors::FileSetActor.new(fs, env.user)
             actor.create_metadata(visibility: env.curation_concern.visibility)
             actor.attach_to_work(env.curation_concern)
-            fs.save!
+            Valkyrie::MetadataAdapter.find(:indexing_persister).persister(resource: fs)
             if uri.scheme == 'file'
               # Turn any %20 into spaces.
               file_path = CGI.unescape(uri.path)

@@ -22,11 +22,15 @@ module Hyrax
       # @todo create a job to monitor the temp directory (or in a multi-worker system, directories!) to prune old files that have made it into the repo
       def ingest_file(io)
         # Skip versioning because versions will be minted by VersionCommitter as necessary during save_characterize_and_record_committer.
-        Hydra::Works::AddFileToFileSet.call(file_set,
-                                            io,
-                                            relation,
-                                            versioning: false)
-        return false unless file_set.save
+        storage_adapter = Valkyrie::StorageAdapter.find(:disk)
+        persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+        node_builder = Hyrax::FileNodeBuilder.new(storage_adapter: storage_adapter,
+                                                  persister: persister)
+
+        file_node = node_builder.create(file: io.file, node: io.to_file_node)
+        file_set.member_ids += [file_node.id]
+        persister.save(resource: file_set)
+
         repository_file = related_file
         Hyrax::VersioningService.create(repository_file, user)
         pathhint = io.uploaded_file.uploader.path if io.uploaded_file # in case next worker is on same filesystem
@@ -37,9 +41,10 @@ module Hyrax
       # @param [String] revision_id
       # @return [CharacterizeJob, FalseClass] spawned job on success, false on failure
       def revert_to(revision_id)
+        persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
         repository_file = related_file
         repository_file.restore_version(revision_id)
-        return false unless file_set.save
+        return false unless persister.save(resource: file_set)
         Hyrax::VersioningService.create(repository_file, user)
         CharacterizeJob.perform_later(file_set, repository_file.id)
       end

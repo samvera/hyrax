@@ -7,7 +7,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
     { "id" => '888888',
       "title_tesim" => ['foo', 'bar'],
       "human_readable_type_tesim" => ["Generic Work"],
-      "has_model_ssim" => ["GenericWork"],
+      Valkyrie::Persistence::Solr::Queries::MODEL => ["GenericWork"],
       "date_created_tesim" => ['an unformatted date'],
       "depositor_tesim" => user_key }
   end
@@ -40,8 +40,9 @@ RSpec.describe Hyrax::WorkShowPresenter do
   describe '#stats_path' do
     let(:user) { 'sarah' }
     let(:ability) { double "Ability" }
-    let(:work) { build(:generic_work, id: '123abc') }
-    let(:attributes) { work.to_solr }
+    let(:work) { create_for_repository(:work, id: '123abc') }
+    let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: work) }
+    let(:solr_document) { SolrDocument.new(document) }
 
     before do
       # https://github.com/samvera/active_fedora/issues/1251
@@ -52,8 +53,9 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe '#itemtype' do
-    let(:work) { build(:generic_work, resource_type: type) }
-    let(:attributes) { work.to_solr }
+    let(:work) { create_for_repository(:work, resource_type: type) }
+    let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: work) }
+    let(:solr_document) { SolrDocument.new(document) }
     let(:ability) { double "Ability" }
 
     subject { presenter.itemtype }
@@ -134,8 +136,9 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#work_presenters" do
-    let(:obj) { create(:work_with_file_and_work) }
-    let(:attributes) { obj.to_solr }
+    let(:work) { create_for_repository(:work_with_file_and_work) }
+    let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: work) }
+    let(:solr_document) { SolrDocument.new(document) }
 
     it "filters out members that are file sets" do
       expect(presenter.work_presenters.size).to eq 1
@@ -144,8 +147,9 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#member_presenters" do
-    let(:obj) { create(:work_with_file_and_work) }
-    let(:attributes) { obj.to_solr }
+    let(:work) { create_for_repository(:work_with_file_and_work) }
+    let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: work) }
+    let(:solr_document) { SolrDocument.new(document) }
 
     it "returns appropriate classes for each" do
       expect(presenter.member_presenters.size).to eq 2
@@ -155,8 +159,9 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#file_set_presenters" do
-    let(:obj) { create(:work_with_ordered_files) }
-    let(:attributes) { obj.to_solr }
+    let(:work) { create_for_repository(:work_with_one_file) }
+    let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: work) }
+    let(:solr_document) { SolrDocument.new(document) }
 
     it "displays them in order" do
       expect(presenter.file_set_presenters.map(&:id)).to eq obj.ordered_member_ids
@@ -173,11 +178,12 @@ RSpec.describe Hyrax::WorkShowPresenter do
     end
 
     context "when some of the members are not file sets" do
-      let(:another_work) { create(:work) }
+      let(:another_work) { create_for_repository(:work) }
+      let(:persister) { Valkyrie.config.metadata_adapter.persister }
 
       before do
-        obj.ordered_members << another_work
-        obj.save!
+        work.member_ids += [another_work.id]
+        persister.save(resource: work)
       end
 
       it "filters out members that are not file sets" do
@@ -187,12 +193,13 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#representative_presenter" do
-    let(:obj) { create(:work_with_representative_file) }
-    let(:attributes) { obj.to_solr }
+    let(:work) { create_for_repository(:work_with_representative_file) }
+    let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: work) }
+    let(:solr_document) { SolrDocument.new(document) }
 
     it "has a representative" do
       expect(Hyrax::PresenterFactory).to receive(:build_for)
-        .with(ids: [obj.members[0].id],
+        .with(ids: [work.member_ids[0]],
               presenter_class: Hyrax::CompositePresenterFactory,
               presenter_args: [ability, request])
         .and_return ["abc"]
@@ -203,16 +210,17 @@ RSpec.describe Hyrax::WorkShowPresenter do
   describe "#download_url" do
     subject { presenter.download_url }
 
-    let(:solr_document) { SolrDocument.new(work.to_solr) }
+    let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: work) }
+    let(:solr_document) { SolrDocument.new(document) }
 
     context "with a representative" do
-      let(:work) { create(:work_with_representative_file) }
+      let(:work) { create_for_repository(:work_with_representative_file) }
 
       it { is_expected.to eq "http://#{request.host}/downloads/#{work.representative_id}" }
     end
 
     context "without a representative" do
-      let(:work) { create(:work) }
+      let(:work) { create_for_repository(:work) }
 
       it { is_expected.to eq '' }
     end

@@ -57,7 +57,7 @@ class JobIoWrapper < ApplicationRecord
   end
 
   def file_set
-    FileSet.find(file_set_id)
+    Hyrax::Queries.find_by(id: Valkyrie::ID.new(file_set_id))
   end
 
   def file_actor
@@ -66,6 +66,19 @@ class JobIoWrapper < ApplicationRecord
 
   def ingest_file
     file_actor.ingest_file(self)
+  end
+
+  def to_file_node
+    Hyrax::FileNode.new(label: original_name,
+                        original_filename: original_name,
+                        mime_type: mime_type,
+                        use: [Valkyrie::Vocab::PCDMUse.OriginalFile])
+  end
+
+  # The magic that switches *once* between local filepath and CarrierWave file
+  # @return [File, StringIO, #read] File-like object ready to #read
+  def file
+    @file ||= (file_from_path || file_from_uploaded_file!)
   end
 
   private
@@ -78,12 +91,6 @@ class JobIoWrapper < ApplicationRecord
 
     def extracted_mime_type
       uploaded_file ? uploaded_file.uploader.content_type : Hydra::PCDM::GetMimeTypeForFile.call(original_name)
-    end
-
-    # The magic that switches *once* between local filepath and CarrierWave file
-    # @return [File, StringIO, #read] File-like object ready to #read
-    def file
-      @file ||= (file_from_path || file_from_uploaded_file!)
     end
 
     # @return [File, StringIO] depending on CarrierWave configuration

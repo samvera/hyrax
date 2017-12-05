@@ -1,0 +1,37 @@
+# Generated via
+#  `rails generate hyrax:work <%= class_name %>`
+class <%= class_name %>ChangeSet < Hyrax::WorkChangeSet
+  property :title, multiple: true, required: true
+  property :creator, multiple: true, required: true
+  property :keyword, multiple: true, required: true
+  property :rights_statement, required: true
+
+  property :created_at
+  property :updated_at
+  property :depositor
+  property :date_uploaded
+  property :date_modified
+  property :proxy_depositor
+  property :on_behalf_of
+  property :label
+  property :relative_path
+  property :resource_type
+  property :contributor
+  property :description
+  property :license
+  property :publisher
+  property :date_created
+  property :subject
+  property :language
+  property :identifier
+  property :related_url
+  property :source
+  property :based_near
+  property :arkivo_checksum
+
+  property :admin_set_id
+  property :member_of_collection_ids
+  property :member_ids
+  property :thumbnail_id
+  property :representative_id
+end

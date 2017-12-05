@@ -3,9 +3,9 @@ RSpec.describe 'hyrax/admin/admin_sets/_form_visibility.html.erb', type: :view d
   let(:pt_form) { Hyrax::Forms::PermissionTemplateForm.new(template) }
 
   before do
-    @form = instance_double(Hyrax::Forms::AdminSetForm,
-                            to_model: stub_model(AdminSet),
-                            permission_template: pt_form)
+    @change_set = instance_double(Hyrax::AdminSetChangeSet,
+                                  to_model: stub_model(AdminSet),
+                                  permission_template: pt_form)
     render
   end
 

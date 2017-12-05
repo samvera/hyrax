@@ -10,9 +10,9 @@ RSpec.describe Hyrax::UserProfilePresenter do
   end
 
   describe "trophies" do
-    let(:work1) { create(:work, user: user) }
-    let(:work2) { create(:work, user: user) }
-    let(:work3) { create(:work, user: user) }
+    let(:work1) { create_for_repository(:work, user: user) }
+    let(:work2) { create_for_repository(:work, user: user) }
+    let(:work3) { create_for_repository(:work, user: user) }
     let!(:trophy1) { user.trophies.create!(work_id: work1.id) }
     let!(:trophy2) { user.trophies.create!(work_id: work2.id) }
     let!(:trophy3) { user.trophies.create!(work_id: work3.id) }

@@ -1,15 +1,19 @@
-RSpec.feature 'Deleting a work', type: :feature do
+RSpec.describe 'Deleting a work', type: :feature do
+  include ActionDispatch::TestProcess
   let(:user) { create(:user) }
-  let(:work) { build(:work, user: user) }
-  let(:file_set) { create(:file_set, user: user, title: ['ABC123xyz']) }
-  let(:file) { File.open(fixture_path + '/world.png') }
+  let(:file_set) do
+    create_for_repository(:file_set,
+                          user: user,
+                          title: ['ABC123xyz'],
+                          content: file)
+  end
+  let(:file) { fixture_file_upload('/world.png', 'image/png') }
+  let(:work) do
+    create_for_repository(:work, user: user, member_ids: [file_set.id])
+  end
 
   before do
     sign_in user
-    Hydra::Works::AddFileToFileSet.call(file_set, file, :original_file)
-    work.ordered_members << file_set
-    work.read_groups = []
-    work.save!
   end
 
   context 'After deleting a work from the work show page' do

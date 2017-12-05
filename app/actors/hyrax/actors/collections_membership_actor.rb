@@ -10,7 +10,7 @@ module Hyrax
     #
     class CollectionsMembershipActor < AbstractActor
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if create was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if create was successful
       def create(env)
         attributes_collection = env.attributes.delete(:member_of_collections_attributes)
         assign_nested_attributes_for_collection(env, attributes_collection) &&
@@ -18,7 +18,7 @@ module Hyrax
       end
 
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if update was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if update was successful
       def update(env)
         attributes_collection = env.attributes.delete(:member_of_collections_attributes)
         assign_nested_attributes_for_collection(env, attributes_collection) &&
@@ -48,15 +48,13 @@ module Hyrax
         # Adds the item to the ordered members so that it displays in the items
         # along side the FileSets on the show page
         def add(env, id)
-          member = Collection.find(id)
-          return unless env.current_ability.can?(:edit, member)
-          env.curation_concern.member_of_collections << member
+          return unless env.current_ability.can?(:edit, id)
+          env.curation_concern.member_of_collection_ids.concat << id
         end
 
         # Remove the object from the members set and the ordered members list
         def remove(curation_concern, id)
-          member = Collection.find(id)
-          curation_concern.member_of_collections.delete(member)
+          curation_concern.member_of_collection_ids.delete(id)
         end
 
         # Determines if a hash contains a truthy _destroy key.

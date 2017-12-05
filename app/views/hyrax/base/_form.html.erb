@@ -1,7 +1,7 @@
-<%= simple_form_for [main_app, @form],
+<%= simple_form_for [main_app, @change_set],
                     html: {
                       data: { behavior: 'work-form',
-                              'param-key' => @form.model_name.param_key },
+                              'param-key' => @change_set.model_name.param_key },
                       multipart: true
                     } do |f| %>
   <% if f.object.errors.any? %>
@@ -13,7 +13,7 @@
       <%= render 'form_visibility_error', f: f %>
     </div>
   <% end %>
-  <% if Flipflop.batch_upload? && f.object.new_record? %>
+  <% if Flipflop.batch_upload? && !f.object.persisted? %>
     <% provide :metadata_tab do %>
       <p class="switch-upload-type">To create a separate work for each of the files, go to <%= link_to "Batch upload", hyrax.new_batch_upload_path %></p>
     <% end %>

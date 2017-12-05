@@ -1,6 +1,6 @@
 RSpec.describe Hyrax::GraphExporter do
-  let(:work) { create(:work_with_one_file, visibility: 'open') }
-  let(:document) { double(id: work.id) }
+  let(:work) { create_for_repository(:work_with_one_file, visibility: 'open') }
+  let(:document) { double(id: work.id.to_s) }
   let(:request) { double(host: 'localhost') }
   let(:service) { described_class.new(document, request) }
 

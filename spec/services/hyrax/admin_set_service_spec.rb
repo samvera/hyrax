@@ -11,19 +11,19 @@ RSpec.describe Hyrax::AdminSetService do
   describe "#search_results", :clean_repo do
     subject { service.search_results(access) }
 
-    let!(:as1) { create(:admin_set, read_groups: ['public'], title: ['foo']) }
-    let!(:as2) { create(:admin_set, read_groups: ['public'], title: ['bar']) }
-    let!(:as3) { create(:admin_set, edit_users: [user.user_key], title: ['baz']) }
+    let!(:as1) { create_for_repository(:admin_set, read_groups: ['public'], title: ['foo']) }
+    let!(:as2) { create_for_repository(:admin_set, read_groups: ['public'], title: ['bar']) }
+    let!(:as3) { create_for_repository(:admin_set, edit_users: [user.user_key], title: ['baz']) }
 
     before do
-      create(:collection, :public) # this should never be returned.
+      create_for_repository(:collection, :public) # this should never be returned.
     end
 
     context "with read access" do
       let(:access) { :read }
 
       it "returns three admin sets" do
-        expect(subject.map(&:id)).to match_array [as1.id, as2.id, as3.id]
+        expect(subject.map(&:id)).to match_array [as1.id.to_s, as2.id.to_s, as3.id.to_s]
       end
     end
 
@@ -31,7 +31,7 @@ RSpec.describe Hyrax::AdminSetService do
       let(:access) { :edit }
 
       it "returns one admin set" do
-        expect(subject.map(&:id)).to match_array [as3.id]
+        expect(subject.map(&:id)).to match_array [as3.id.to_s]
       end
     end
   end

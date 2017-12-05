@@ -6,14 +6,14 @@ RSpec.describe Hyrax::Workflow::StatusListService do
     let!(:sipity_entity) { create(:sipity_entity) }
     let(:document) do
       { id: '33333',
-        has_model_ssim: ['GenericWork'],
+        Valkyrie::Persistence::Solr::Queries::MODEL => ['GenericWork'],
         actionable_workflow_roles_ssim: ["foobar-generic_work-approving", "foobar-generic_work-rejecting"],
         workflow_state_name_ssim: ["initial"],
         title_tesim: ['Hey dood!'] }
     end
     let(:ability) do
       { id: '44444',
-        has_model_ssim: ['GenericWork'],
+        Valkyrie::Persistence::Solr::Queries::MODEL => ['GenericWork'],
         title_tesim: ['bad result'] }
     end
     let(:workflow_role) { instance_double(Sipity::Role, name: 'approving') }

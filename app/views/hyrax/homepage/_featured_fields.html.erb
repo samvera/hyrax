@@ -4,7 +4,7 @@
 </h3>
 <div>
   <span class="sr-only">Depositor</span>
-  <%= link_to_profile featured.depositor("no depositor value") %>
+  <%= link_to_profile(featured.depositor || "no depositor value") %>
 </div>
 <div>
   <span class="sr-only">File type</span>

@@ -10,7 +10,7 @@ module Hyrax
       self.workflow_factory = ::Hyrax::Workflow::WorkflowFactory
 
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if create was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if create was successful
       def create(env)
         next_actor.create(env) && create_workflow(env)
       end
@@ -19,7 +19,10 @@ module Hyrax
 
         # @return [TrueClass]
         def create_workflow(env)
-          workflow_factory.create(env.curation_concern, env.attributes, env.user)
+          workflow_factory.create(env.curation_concern,
+                                  env.attributes,
+                                  env.user,
+                                  persister: env.change_set_persister.metadata_adapter.persister)
         end
     end
   end

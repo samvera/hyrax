@@ -3,7 +3,7 @@
     <li class="active">
       <a href="#description" role="tab" data-toggle="tab"><%= t('.tabs.description') %></a>
     </li>
-    <% if @form.persisted? %>
+    <% if @change_set.persisted? %>
       <li>
         <a href="#visibility" role="tab" data-toggle="tab"><%= t('.tabs.visibility') %></a>
       </li>
@@ -12,7 +12,7 @@
       </li>
     <% end %>
   </ul>
-  <%= simple_form_for @form, url: [hyrax, :dashboard, @form], html: { class: 'editor' } do |f| %>
+  <%= simple_form_for @change_set, url: [hyrax, :dashboard, @change_set], html: { class: 'editor' } do |f| %>
 
   <div class="tab-content">
       <div id="description" class="tab-pane active">

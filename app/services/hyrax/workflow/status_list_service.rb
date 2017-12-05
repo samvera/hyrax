@@ -2,6 +2,8 @@ module Hyrax
   module Workflow
     # Finds a list of works that we can perform a workflow action on
     class StatusListService
+      include Blacklight::SearchHelper
+
       # @param context [#current_user, #logger]
       # @param filter_condition [String] a solr filter
       def initialize(context, filter_condition)
@@ -28,8 +30,9 @@ module Hyrax
       private
 
         delegate :logger, to: :context
+        delegate :blacklight_config, to: CatalogController
 
-        # @return [Hash<String,SolrDocument>] a hash of id to solr document
+        # @return [Array<SolrDocument>] array of matching solr documents
         def solr_documents
           search_solr.map { |result| ::SolrDocument.new(result) }
         end
@@ -38,7 +41,11 @@ module Hyrax
           actionable_roles = roles_for_user
           logger.debug("Actionable roles for #{user.user_key} are #{actionable_roles}")
           return [] if actionable_roles.empty?
-          WorkRelation.new.search_with_conditions(query(actionable_roles), rows: 1000, method: :post)
+          work_query = WorksSearchBuilder.new([:filter_models], self).query
+          work_query["fq"] += query(actionable_roles)
+          work_query["rows"] = 1000
+          # TODO: can we make this use a POST?
+          repository.search(work_query).response["docs"]
         end
 
         def query(actionable_roles)

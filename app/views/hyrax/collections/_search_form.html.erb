@@ -1,3 +1,6 @@
+<% # this template is used by Hyrax::CollectionsController and Hyrax::Dashboard::CollectionsController %>
+<% # in the former case presenter is a Hyrax::CollectionPresenter %>
+<% # and the latter it's a Hyrax::CollectionChangeSet %>
   <%= form_for presenter, method: :get, class: "well form-search" do |f| %>
       <label class="sr-only"><%= t('hyrax.collections.search_form.label', title: presenter.to_s) %></label>
       <div class="input-group">

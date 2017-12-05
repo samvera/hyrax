@@ -3,6 +3,8 @@ module Hyrax
     # An abstract class for generating cumulative graphs
     # you must provide a `relation` method in the concrete class
     class OverTime
+      include Blacklight::SearchHelper
+
       # @param [Fixnum] delta_x change in x (in days)
       # @param [Time] x_min minimum date
       # @param [Time] x_max max date
@@ -30,8 +32,12 @@ module Hyrax
 
       private
 
+        delegate :blacklight_config, to: CatalogController
+
         def point(min, max)
-          relation.where(query(min, max)).count
+          query = search_builder.query
+          query["fq"] << query(min, max)
+          repository.search(query).response["numFound"]
         end
 
         def query(min, max)
@@ -47,8 +53,8 @@ module Hyrax
           ((@x_max - @x_min) / @delta_x.days.to_i).ceil
         end
 
-        def relation
-          raise NotImplementedError, "Implement the relation method in a concrete class"
+        def search_builder
+          raise NotImplementedError, "Implement the search_builder method in a concrete class"
         end
     end
   end

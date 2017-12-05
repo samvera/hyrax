@@ -8,8 +8,8 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
   end
 
   describe "#edit" do
-    let(:one) { create(:work, creator: ["Fred"], title: ["abc"], language: ['en']) }
-    let(:two) { create(:work, creator: ["Wilma"], title: ["abc2"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar']) }
+    let(:one) { create_for_repository(:work, creator: ["Fred"], title: ["abc"], language: ['en']) }
+    let(:two) { create_for_repository(:work, creator: ["Wilma"], title: ["abc2"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar']) }
 
     before do
       controller.batch = [one.id, two.id]
@@ -22,18 +22,18 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
       get :edit
       expect(response).to be_successful
-      expect(assigns[:form].model.creator).to match_array ["Fred", "Wilma"]
+      expect(assigns[:change_set].creator).to match_array ["Fred", "Wilma"]
     end
   end
 
   describe "update" do
     let(:user) { build(:user) }
     let!(:one) do
-      create(:generic_work, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
+      create_for_repository(:work, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
     end
 
     let!(:two) do
-      create(:generic_work, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
+      create_for_repository(:work, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
     end
     let(:mycontroller) { "hyrax/my/works" }
 
@@ -47,8 +47,8 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
     it "is successful" do
       put :update, params: { update_type: "delete_all" }
       expect(response).to redirect_to(dashboard_path(locale: 'en'))
-      expect { GenericWork.find(one.id) }.to raise_error(Ldp::Gone)
-      expect { GenericWork.find(two.id) }.to raise_error(Ldp::Gone)
+      expect { Hyrax::Queries.find_by(id: one.id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
+      expect { Hyrax::Queries.find_by(id: two.id) }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
     end
 
     it "redirects to the return controller" do
@@ -59,15 +59,15 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
     it "updates the records" do
       put :update, params: { update_type: "update", generic_work: { subject: ["zzz"] } }
       expect(response).to be_redirect
-      expect(GenericWork.find(one.id).subject).to eq ["zzz"]
-      expect(GenericWork.find(two.id).subject).to eq ["zzz"]
+      expect(Hyrax::Queries.find_by(id: one.id).subject).to eq ["zzz"]
+      expect(Hyrax::Queries.find_by(id: two.id).subject).to eq ["zzz"]
     end
 
     it "updates permissions" do
       put :update, params: { update_type: "update", visibility: "authenticated" }
       expect(response).to be_redirect
-      expect(GenericWork.find(one.id).visibility).to eq "authenticated"
-      expect(GenericWork.find(two.id).visibility).to eq "authenticated"
+      expect(Hyrax::Queries.find_by(id: one.id).visibility).to eq "authenticated"
+      expect(Hyrax::Queries.find_by(id: two.id).visibility).to eq "authenticated"
     end
   end
 end

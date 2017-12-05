@@ -1,8 +1,8 @@
 RSpec.describe 'collection', type: :feature do
   let(:user) { create(:user) }
 
-  let(:collection1) { create(:public_collection, user: user) }
-  let(:collection2) { create(:public_collection, user: user) }
+  let(:collection1) { create_for_repository(:collection, :public, user: user) }
+  let(:collection2) { create_for_repository(:collection, :public, user: user) }
 
   describe 'create collection' do
     before do
@@ -34,8 +34,8 @@ RSpec.describe 'collection', type: :feature do
 
   describe "adding works to a collection", skip: "we need to define a dashboard/works path" do
     let!(:collection) { create!(:collection, title: ["Barrel of monkeys"], user: user) }
-    let!(:work1) { create(:work, title: ["King Louie"], user: user) }
-    let!(:work2) { create(:work, title: ["King Kong"], user: user) }
+    let!(:work1) { create_for_repository(:work, title: ["King Louie"], user: user) }
+    let!(:work2) { create_for_repository(:work, title: ["King Kong"], user: user) }
 
     before do
       sign_in user
@@ -56,7 +56,7 @@ RSpec.describe 'collection', type: :feature do
   end
 
   describe 'delete collection' do
-    let!(:collection) { create(:public_collection, user: user) }
+    let!(:collection) { create_for_repository(:collection, :public, user: user) }
 
     before do
       sign_in user
@@ -65,7 +65,7 @@ RSpec.describe 'collection', type: :feature do
 
     it "deletes a collection" do
       expect(page).to have_content(collection.title.first)
-      within('#document_' + collection.id) do
+      within('#document_' + collection.id.to_s) do
         first('button.dropdown-toggle').click
         first(".itemtrash").click
       end
@@ -75,10 +75,10 @@ RSpec.describe 'collection', type: :feature do
 
   describe 'collection show page' do
     let(:collection) do
-      create(:public_collection, user: user, description: ['collection description'])
+      create_for_repository(:collection, :public, user: user, description: ['collection description'])
     end
-    let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
-    let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
+    let!(:work1) { create_for_repository(:work, title: ["King Louie"], member_of_collection_ids: [collection.id], user: user) }
+    let!(:work2) { create_for_repository(:work, title: ["King Kong"], member_of_collection_ids: [collection.id], user: user) }
 
     before do
       sign_in user
@@ -91,7 +91,7 @@ RSpec.describe 'collection', type: :feature do
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       expect(page).to have_content(collection.title.first)
-      within('#document_' + collection.id) do
+      within('#document_' + collection.id.to_s) do
         click_link("Display all details of #{collection.title.first}")
       end
       expect(page).to have_content(collection.title.first)
@@ -139,7 +139,7 @@ RSpec.describe 'collection', type: :feature do
   describe 'show pages of a collection' do
     before do
       docs = (0..12).map do |n|
-        { "has_model_ssim" => ["GenericWork"], :id => "zs25x871q#{n}",
+        { Valkyrie::Persistence::Solr::Queries::MODEL => ["GenericWork"], :id => "zs25x871q#{n}",
           "depositor_ssim" => [user.user_key],
           "suppressed_bsi" => false,
           "member_of_collection_ids_ssim" => [collection.id],
@@ -149,12 +149,12 @@ RSpec.describe 'collection', type: :feature do
 
       sign_in user
     end
-    let(:collection) { create(:named_collection, user: user) }
+    let(:collection) { create_for_repository(:named_collection, user: user) }
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       visit '/dashboard/my/collections'
       expect(page).to have_content(collection.title.first)
-      within('#document_' + collection.id) do
+      within('#document_' + collection.id.to_s) do
         # Now go to the collection show page
         click_link("Display all details of collection title")
       end
@@ -187,9 +187,9 @@ RSpec.describe 'collection', type: :feature do
   end
 
   describe 'edit collection' do
-    let(:collection) { create(:named_collection, user: user) }
-    let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
-    let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
+    let(:collection) { create_for_repository(:named_collection, user: user) }
+    let!(:work1) { create_for_repository(:work, title: ["King Louie"], member_of_collection_ids: [collection], user: user) }
+    let!(:work2) { create_for_repository(:work, title: ["King Kong"], member_of_collection_ids: [collection], user: user) }
 
     before do
       sign_in user
@@ -229,9 +229,9 @@ RSpec.describe 'collection', type: :feature do
   end
 
   describe "Removing works from a collection" do
-    let(:collection) { create(:named_collection, user: user) }
-    let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
-    let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
+    let(:collection) { create_for_repository(:named_collection, user: user) }
+    let!(:work1) { create_for_repository(:work, title: ["King Louie"], member_of_collection_ids: [collection.id], user: user) }
+    let!(:work2) { create_for_repository(:work, title: ["King Kong"], member_of_collection_ids: [collection.id], user: user) }
 
     before do
       sign_in user

@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::PermissionTemplate do
-  let(:admin_set) { create(:admin_set) }
+  let(:admin_set) { create_for_repository(:admin_set) }
   let(:permission_template) { described_class.new(attributes) }
   let(:attributes) { { admin_set_id: admin_set.id } }
 
@@ -17,7 +17,7 @@ RSpec.describe Hyrax::PermissionTemplate do
       end
       it 'will not persist an AdminSet when false (or not given)' do
         permission_template = create(:permission_template, with_admin_set: false)
-        expect { permission_template.admin_set }.to raise_error(ActiveFedora::ObjectNotFoundError)
+        expect { permission_template.admin_set }.to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
       end
     end
 
@@ -52,9 +52,8 @@ RSpec.describe Hyrax::PermissionTemplate do
   end
 
   describe "#admin_set" do
-    it 'leverages AdminSet.find for the given permission_template' do
-      expect(AdminSet).to receive(:find).with(permission_template.admin_set_id).and_return(admin_set)
-      expect(permission_template.admin_set).to eq(admin_set)
+    it 'leverages Hyrax::Queries.find_by for the given permission_template' do
+      expect(permission_template.admin_set.id).to eq(admin_set.id)
     end
   end
 

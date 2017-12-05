@@ -1,7 +1,7 @@
 import RelationshipsControl from 'hyrax/relationships/control'
 import SaveWorkControl from 'hyrax/save_work/save_work_control'
 import AdminSetWidget from 'hyrax/editor/admin_set_widget'
-import ControlledVocabulary from 'hyrax/editor/controlled_vocabulary'
+import LinkedDataResource from 'hyrax/editor/linked_data_resource'
 import Autocomplete from 'hyrax/autocomplete'
 import AuthoritySelect from 'hyrax/authority_select'
 
@@ -19,7 +19,7 @@ export default class {
 
   init() {
     this.autocomplete()
-    this.controlledVocabularies()
+    this.linkedDataResources()
     this.sharingTab()
     this.relationshipsControl()
     this.saveWorkControl()
@@ -57,10 +57,10 @@ export default class {
       })
   }
 
-  // initialize any controlled vocabulary widgets
-  controlledVocabularies() {
-    this.element.find('.controlled_vocabulary.form-group').each((_idx, controlled_field) =>
-      new ControlledVocabulary(controlled_field, this.paramKey)
+  // initialize any linked_data_resource widgets
+  linkedDataResources() {
+    this.element.find('.linked_data_resource.form-group').each((_idx, controlled_field) =>
+      new LinkedDataResource(controlled_field, this.paramKey)
     )
   }
 

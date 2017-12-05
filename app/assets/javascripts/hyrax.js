@@ -72,7 +72,7 @@
 //= require hyrax/collections/editor
 //= require hyrax/editor
 //= require hyrax/editor/admin_set_widget
-//= require hyrax/editor/controlled_vocabulary
+//= require hyrax/editor/linked_data_resource
 //= require hyrax/admin/graphs
 //= require hyrax/save_work
 //= require hyrax/permissions

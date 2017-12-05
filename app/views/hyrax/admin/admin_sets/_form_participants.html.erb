@@ -3,8 +3,8 @@
               <div class="panel-body">
                 <h2><%= t('.add_participants') %></h2>
                 <% access_options = options_for_select([['Manager', 'manage'], ['Depositor', 'deposit'], ['Viewer', 'view']]) %>
-                <%= simple_form_for @form.permission_template,
-                                    url: [hyrax, :admin, @form, :permission_template],
+                <%= simple_form_for @change_set.permission_template,
+                                    url: [hyrax, :admin, @change_set, :permission_template],
                                     html: { id: 'group-participants-form' } do |f| %>
                   <div class="clearfix spacer">
                   <%= f.fields_for 'access_grants_attributes',
@@ -31,8 +31,8 @@
                   </div>
                 <% end %>
 
-                <%= simple_form_for @form.permission_template,
-                                    url: [hyrax, :admin, @form, :permission_template],
+                <%= simple_form_for @change_set.permission_template,
+                                    url: [hyrax, :admin, @change_set, :permission_template],
                                     html: { id: 'user-participants-form' } do |f| %>
                   <%= f.fields_for 'access_grants_attributes',
                                    f.object.access_grants.build(agent_type: 'user'),
