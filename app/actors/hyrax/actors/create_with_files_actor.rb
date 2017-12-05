@@ -7,7 +7,10 @@ module Hyrax
       def create(env)
         uploaded_file_ids = filter_file_ids(env.attributes.delete(:uploaded_files))
         files = uploaded_files(uploaded_file_ids)
-        validate_files(files, env) && next_actor.create(env) && attach_files(files, env)
+        return false unless validate_files(files, env)
+        saved = next_actor.create(env)
+        return saved if saved && attach_files(files, env)
+        false
       end
 
       # @param [Hyrax::Actors::Environment] env
@@ -17,8 +20,8 @@ module Hyrax
         files = uploaded_files(uploaded_file_ids)
         return false unless validate_files(files, env)
         saved = next_actor.update(env)
-        return false unless saved && attach_files(files, env)
-        saved
+        return saved if saved && attach_files(files, env)
+        false
       end
 
       private
