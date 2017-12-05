@@ -13,7 +13,9 @@ module Hyrax
       # @return [Valkyrie::Resource,FalseClass] the saved resource if create was successful
       def create(env)
         remote_files = env.attributes.delete(:remote_files)
-        next_actor.create(env) && attach_files(env, remote_files)
+        saved = next_actor.create(env)
+        return saved if saved && attach_files(env, remote_files)
+        false
       end
 
       # @param [Hyrax::Actors::Environment] env

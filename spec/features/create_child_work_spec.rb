@@ -27,12 +27,13 @@ RSpec.feature 'Creating a new child Work', :workflow do
       fill_in('Title', with: work_title)
       click_on('Save')
     end
+    # Now when we visit the parent page we should see this as an attached work
     visit "/concern/generic_works/#{parent.id}"
     expect(page).to have_content work_title
   end
 
   context "when it's being updated" do
-    let(:persister) { Valkyrie.config.metadata_adapter.persister }
+    let(:persister) { Valkyrie::MetadataAdapter.find(:indexing_persister).persister }
     let(:curation_concern) { create_for_repository(:work, user: user) }
     let(:new_parent) { create_for_repository(:work, user: user) }
     let!(:cc_sipity_entity) do
@@ -58,12 +59,11 @@ RSpec.feature 'Creating a new child Work', :workflow do
     it "doesn't lose other memberships" do
       new_parent.member_ids += [curation_concern.id]
       persister.save(resource: new_parent)
-
       visit "/concern/parent/#{parent.id}/generic_works/#{curation_concern.id}/edit"
       click_on "Save"
 
-      reloaded = Hyrax::Queries.find_by(id: parent.id)
-      expect(reloaded.member_ids.length).to eq 1
+      parent_reloaded = Hyrax::Queries.find_by(id: parent.id)
+      expect(parent_reloaded.member_ids.length).to eq 1
 
       new_parent_reloaded = Hyrax::Queries.find_by(id: new_parent.id)
       expect(new_parent_reloaded.member_ids.length).to eq 1

@@ -34,6 +34,7 @@ module Hyrax
     collection :work_members, virtual: true
 
     property :admin_set_id, virtual: false
+    property :in_works_ids, virtual: true
 
     validate :validate_lease
     validate :validate_embargo
@@ -50,6 +51,7 @@ module Hyrax
       prepopulate_permissions
       prepopulate_admin_set_id
       prepopulate_work_members
+      prepopulate_in_works_ids
       super.tap do
         @_changes = Disposable::Twin::Changed::Changes.new
       end
@@ -86,9 +88,36 @@ module Hyrax
     end
 
     # Select collection(s) based on passed-in params and existing memberships.
-    # @return [Array] a list of collection identifiers
-    def member_of_collections(collection_ids)
-      (member_of_collection_ids + Array.wrap(collection_ids)).uniq
+    # When the add_works_to_collection parameter is set, they mean to create
+    # a new work and add it to that collection.
+    def member_of_collections
+      base = Hyrax::Queries.find_references_by(resource: model, property: :member_of_collection_ids)
+      return base unless add_works_to_collection
+      base + [Hyrax::Queries.find_collection(id: add_works_to_collection)]
+    end
+
+    # backs the child work search element
+    # @return [NilClass]
+    def find_child_work; end
+
+    def member_of_collections_json
+      member_of_collections.map do |coll|
+        {
+          id: coll.id,
+          label: coll.to_s,
+          path: Hyrax::Engine.routes.url_helpers.url_for(coll)
+        }
+      end.to_json
+    end
+
+    def work_members_json
+      work_members.map do |child|
+        {
+          id: child.id,
+          label: child.to_s,
+          path: Hyrax::Engine.routes.url_helpers.url_for(child)
+        }
+      end.to_json
     end
 
     private
@@ -122,6 +151,12 @@ module Hyrax
                            resource.read_users.map { |key| PermissionChangeSet.new(Permission.new, agent_name: key, access: 'read', type: 'person') } +
                            resource.edit_groups.map { |key| PermissionChangeSet.new(Permission.new, agent_name: key, access: 'edit', type: 'group') } +
                            resource.read_groups.map { |key| PermissionChangeSet.new(Permission.new, agent_name: key, access: 'read', type: 'group') }
+      end
+
+      # Includes any parent works.
+      # @return [Array<String>] a list of identifiers
+      def prepopulate_in_works_ids
+        self.in_works_ids = (resource.in_works_ids.map(&:to_s) + [append_id]).uniq
       end
 
       def validate_lease
@@ -208,37 +243,5 @@ module Hyrax
 
         errors.add(:visibility, 'Visibility specified does not match permission template visibility requirement for selected AdminSet.')
       end
-  end
-
-  # when the add_works_to_collection parameter is set, they mean to create
-  # a new work and add it to that collection.
-  def member_of_collections
-    base = Hyrax::Queries.find_references_by(resource: model, property: :member_of_collection_ids)
-    return base unless add_works_to_collection
-    base + [Hyrax::Queries.find_collection(id: add_works_to_collection)]
-  end
-
-  # backs the child work search element
-  # @return [NilClass]
-  def find_child_work; end
-
-  def member_of_collections_json
-    member_of_collections.map do |coll|
-      {
-        id: coll.id,
-        label: coll.to_s,
-        path: @controller.url_for(coll)
-      }
-    end.to_json
-  end
-
-  def work_members_json
-    work_members.map do |child|
-      {
-        id: child.id,
-        label: child.to_s,
-        path: @controller.url_for(child)
-      }
-    end.to_json
   end
 end
