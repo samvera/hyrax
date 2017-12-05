@@ -22,7 +22,7 @@ class TestAppGenerator < Rails::Generators::Base
     gsub_file 'app/models/namespaced_works/nested_work.rb',
               'include ::Hyrax::WorkBehavior',
               <<-EOS.strip_heredoc
-                property :created, predicate: ::RDF::Vocab::DC.created, class_name: TimeSpan
+                # property :created, predicate: ::RDF::Vocab::DC.created, class_name: TimeSpan
                   include ::Hyrax::WorkBehavior
               EOS
 
@@ -30,7 +30,7 @@ class TestAppGenerator < Rails::Generators::Base
               'include ::Hyrax::BasicMetadata',
               <<-EOS.strip_heredoc
                 include ::Hyrax::BasicMetadata
-                  accepts_nested_attributes_for :created
+                  # accepts_nested_attributes_for :created
               EOS
   end
 
