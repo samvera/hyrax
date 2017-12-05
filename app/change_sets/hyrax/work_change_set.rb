@@ -1,7 +1,7 @@
 module Hyrax
   class WorkChangeSet < Valkyrie::ChangeSet
     class_attribute :workflow_class, :primary_terms, :secondary_terms
-    delegate :human_readable_type, :to_s, to: :resource
+    delegate :human_readable_type, :to_s, :in_works_ids, to: :resource
 
     # Which fields show above the fold.
     self.primary_terms = [:title, :creator, :keyword, :rights_statement]
@@ -20,6 +20,9 @@ module Hyrax
     property :visibility_after_embargo, virtual: true
     property :visibility_during_lease, virtual: true
     property :visibility_after_lease, virtual: true
+
+    # A collection to add this work to after it's created
+    property :add_works_to_collection, virtual: true
 
     # TODO: this should be validated
     property :agreement_accepted, virtual: true
@@ -84,8 +87,36 @@ module Hyrax
 
     # Select collection(s) based on passed-in params and existing memberships.
     # @return [Array] a list of collection identifiers
-    def member_of_collections(collection_ids)
-      (member_of_collection_ids + Array.wrap(collection_ids)).uniq
+    def member_of_collections
+      base = Hyrax::Queries.find_references_by(resource: model, property: :member_of_collection_ids)
+      return base unless add_works_to_collection
+      base + [Hyrax::Queries.find_collection(id: add_works_to_collection)]
+    end
+
+    # backs the child work search element
+    # @return [NilClass]
+    def find_child_work; end
+
+    # @return [String] json that backs the new/edit form for which collections this could be added to.
+    def member_of_collections_json
+      member_of_collections.map do |coll|
+        {
+          id: coll.id,
+          label: coll.to_s,
+          path: Hyrax::Engine.routes.url_helpers..url_for(coll)
+        }
+      end.to_json
+    end
+
+    # @return [String] json that backs the new/edit form for which collections this could be added to.
+    def work_members_json
+      work_members.map do |child|
+        {
+          id: child.id,
+          label: child.to_s,
+          path: Hyrax::Engine.routes.url_helpers..url_for(child)
+        }
+      end.to_json
     end
 
     private

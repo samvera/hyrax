@@ -25,7 +25,7 @@ module Hyrax
           return true if new_work_ids.nil?
           cleanup_ids_to_remove_from_curation_concern(env, new_work_ids)
           add_new_work_ids_not_already_in_curation_concern(env, new_work_ids)
-          env.curation_concern.errors[:in_works_ids].empty?
+          env.change_set.errors[:in_works_ids].empty?
         end
 
         def cleanup_ids_to_remove_from_curation_concern(env, new_work_ids)
@@ -44,7 +44,7 @@ module Hyrax
               work.member_ids += [env.curation_concern.id]
               persister.save(resource: work)
             else
-              env.curation_concern.errors[:in_works_ids] << "Works can only be related to each other if user has ability to edit both."
+              env.change_set.errors[:in_works_ids] << "Works can only be related to each other if user has ability to edit both."
             end
           end
         end
