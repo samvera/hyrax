@@ -42,24 +42,29 @@ RSpec.describe Hyrax::BatchEditChangeSet do
     subject { change_set.fields.keys }
 
     it do
-      is_expected.to eq ['batch_document_ids',
-                         'creator',
-                         'contributor',
-                         'description',
-                         'keyword',
-                         'resource_type',
-                         'license',
-                         'publisher',
-                         'date_created',
-                         'subject',
-                         'language',
-                         'identifier',
-                         'based_near',
-                         'related_url']
+      is_expected.to contain_exactly('batch_document_ids',
+                                     'creator',
+                                     'contributor',
+                                     'description',
+                                     'keyword',
+                                     'resource_type',
+                                     'license',
+                                     'publisher',
+                                     'date_created',
+                                     'subject',
+                                     'language',
+                                     'identifier',
+                                     'based_near',
+                                     'related_url',
+                                     'visibility')
     end
   end
 
   describe "#model" do
+    before do
+      change_set.prepopulate!
+    end
+
     it "combines the models in the batch" do
       expect(change_set.creator).to match_array ["Wilma", "Fred"]
       expect(change_set.contributor).to match_array ["contributor1", "contributor2"]
