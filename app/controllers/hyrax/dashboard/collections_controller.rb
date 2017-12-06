@@ -31,12 +31,6 @@ module Hyrax
                       :single_item_search_builder_class,
                       :member_search_builder_class
 
-      alias collection_search_builder_class single_item_search_builder_class
-      deprecation_deprecate collection_search_builder_class: "use single_item_search_builder_class instead"
-
-      alias collection_member_search_builder_class member_search_builder_class
-      deprecation_deprecate collection_member_search_builder_class: "use member_search_builder_class instead"
-
       self.presenter_class = Hyrax::CollectionPresenter
 
       self.form_class = Hyrax::Forms::CollectionForm
@@ -217,17 +211,11 @@ module Hyrax
           single_item_search_builder_class.new(self).with(params.except(:q, :page))
         end
 
-        alias collection_search_builder single_item_search_builder
-        deprecation_deprecate collection_search_builder: "use single_item_search_builder instead"
-
         # Instantiates the search builder that builds a query for items that are
         # members of the current collection. This is used in the show view.
         def member_search_builder
           @member_search_builder ||= member_search_builder_class.new(self)
         end
-
-        alias collection_member_search_builder member_search_builder
-        deprecation_deprecate collection_member_search_builder: "use member_search_builder instead"
 
         def collection_params
           form_class.model_attributes(params[:collection])
