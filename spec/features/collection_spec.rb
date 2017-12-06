@@ -59,14 +59,14 @@ RSpec.describe 'collection', type: :feature do
         { Valkyrie::Persistence::Solr::Queries::MODEL => ["GenericWork"], :id => "zs25x871q#{n}",
           "depositor_ssim" => [user.user_key],
           "suppressed_bsi" => false,
-          "member_of_collection_ids_ssim" => [collection.id],
+          "member_of_collection_ids_ssim" => ["id-#{collection.id}"],
           "edit_access_person_ssim" => [user.user_key] }
       end
       ActiveFedora::SolrService.add(docs, commit: true)
 
       sign_in user
     end
-    let(:collection) { create(:named_collection, user: user) }
+    let(:collection) { create_for_repository(:named_collection, user: user) }
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       visit "/collections/#{collection.id}"
