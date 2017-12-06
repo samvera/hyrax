@@ -9,7 +9,7 @@ module Hyrax
         files = uploaded_files(uploaded_file_ids)
         return false unless validate_files(files, env)
         saved = next_actor.create(env)
-        return saved if saved && attach_files(files, env)
+        return saved if saved && attach_files(files, saved, env.attributes)
         false
       end
 
@@ -20,7 +20,7 @@ module Hyrax
         files = uploaded_files(uploaded_file_ids)
         return false unless validate_files(files, env)
         saved = next_actor.update(env)
-        return saved if saved && attach_files(files, env)
+        return saved if saved && attach_files(files, saved, env.attributes)
         false
       end
 
@@ -43,9 +43,9 @@ module Hyrax
         end
 
         # @return [TrueClass]
-        def attach_files(files, env)
+        def attach_files(files, work, attributes)
           return true if files.blank?
-          AttachFilesToWorkJob.perform_later(env.curation_concern, files, env.attributes.to_h.symbolize_keys)
+          AttachFilesToWorkJob.perform_later(work, files, attributes.to_h.symbolize_keys)
           true
         end
 
