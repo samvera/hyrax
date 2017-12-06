@@ -27,14 +27,10 @@ module Hyrax
         node_builder = Hyrax::FileNodeBuilder.new(storage_adapter: storage_adapter,
                                                   persister: persister)
 
-        file_node = node_builder.create(file: io.file, node: io.to_file_node)
-        file_set.member_ids += [file_node.id]
-        persister.save(resource: file_set)
+        node_builder.create(file: io.file, node: io.to_file_node, file_set: file_set)
 
         repository_file = related_file
         Hyrax::VersioningService.create(repository_file, user)
-        pathhint = io.uploaded_file.uploader.path if io.uploaded_file # in case next worker is on same filesystem
-        CharacterizeJob.perform_later(file_set, repository_file.id, pathhint || io.path)
       end
 
       # Reverts file and spawns async job to characterize and create derivatives.

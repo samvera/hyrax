@@ -11,15 +11,19 @@ module Hyrax
 
     # @param file [ActionDispatch::Http::UploadedFile]
     # @param node [FileNode] the metadata to represent the file
+    # @param file_set [FileNode] the associated FileSet
     # @return [FileNode] the persisted metadata node that represents the file
-    def create(file:, node:)
-      saved_node = persister.save(resource: node)
+    def create(file:, node:, file_set:)
       stored_file = storage_adapter.upload(file: file,
                                            original_filename: node.original_filename.first,
-                                           resource: saved_node)
-      saved_node.file_identifiers = saved_node.file_identifiers + [stored_file.id]
-      saved_node = Valkyrie::FileCharacterizationService.for(file_node: saved_node, persister: persister).characterize(save: false)
-      persister.save(resource: saved_node)
+                                           resource: node)
+      node.file_identifiers = node.file_identifiers + [stored_file.id]
+      saved_node = persister.save(resource: node)
+      file_set.member_ids += [saved_node.id]
+      file_set = persister.save(resource: file_set)
+      CharacterizeJob.perform_later(file_set.id.to_s)
+      # note the returned saved_node does not yet contain the characterization done in the async job
+      saved_node
     end
   end
 end
