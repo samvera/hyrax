@@ -32,6 +32,8 @@ module Hyrax
     # When the batch operation is 'move', what collection to move to:
     property :destination_collection_id, virtual: true, multiple: false, required: false
 
+    property :edit_users, multiple: true, required: false
+    property :user, virtual: true
     collection :permissions, virtual: true
 
     validates :title, presence: true
@@ -73,6 +75,12 @@ module Hyrax
          :visibility]
       end
       # rubocop:enable Metrics/MethodLength
+    end
+
+    # Give the depositor edit access
+    def sync
+      self.edit_users = [user.user_key]
+      super
     end
 
     # Do not display additional fields if there are no secondary terms

@@ -22,14 +22,13 @@ module Hyrax
       params[:cq].present?
     end
 
-
     # button for removing a batch from a collection
     # @param change_set [Hyrax::CollectionChangeSet] ChangeSet to be updated
     # @param label [String] button label
     def button_for_remove_selected_from_collection(change_set, label = 'Remove From Collection')
       form_for change_set, url: hyrax.dashboard_collection_path(change_set.id), method: :put do |f|
-        f.hidden_field :members, value: "remove"
-        f.submit label, class: "btn btn-primary collection-remove-selected submits-batches"
+        concat f.hidden_field :members, value: "remove"
+        concat f.submit label, class: "btn btn-primary collection-remove-selected submits-batches"
       end
     end
   end

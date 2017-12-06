@@ -69,7 +69,7 @@ RSpec.describe 'collection', type: :feature do
         first('button.dropdown-toggle').click
         first(".itemtrash").click
       end
-      expect(page).not_to have_content(collection.title.first)
+      expect(page).to have_content("Deleted #{collection.title.first}")
     end
   end
 
@@ -85,12 +85,12 @@ RSpec.describe 'collection', type: :feature do
       visit '/dashboard/my/collections'
     end
 
-    it "has creation date for collections" do
-      expect(page).to have_content(collection1.create_date.to_date.to_formatted_s(:standard))
-    end
-
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       expect(page).to have_content(collection.title.first)
+
+      # Show the collection created date:
+      expect(page).to have_content(collection.created_at.to_date.to_formatted_s(:standard))
+
       within('#document_' + collection.id.to_s) do
         click_link("Display all details of #{collection.title.first}")
       end
@@ -101,6 +101,7 @@ RSpec.describe 'collection', type: :feature do
       expect(page).not_to have_css('.metadata-collections', text: collection.description.first)
       # Should not have Collection Descriptive metadata table
       expect(page).to have_content("Descriptions")
+
       # Should have search results / contents listing
       expect(page).to have_content(work1.title.first)
       expect(page).to have_content(work2.title.first)
@@ -142,7 +143,7 @@ RSpec.describe 'collection', type: :feature do
         { Valkyrie::Persistence::Solr::Queries::MODEL => ["GenericWork"], :id => "zs25x871q#{n}",
           "depositor_ssim" => [user.user_key],
           "suppressed_bsi" => false,
-          "member_of_collection_ids_ssim" => [collection.id],
+          "member_of_collection_ids_ssim" => ["id-#{collection.id}"],
           "edit_access_person_ssim" => [user.user_key] }
       end
       ActiveFedora::SolrService.add(docs, commit: true)
@@ -188,8 +189,8 @@ RSpec.describe 'collection', type: :feature do
 
   describe 'edit collection' do
     let(:collection) { create_for_repository(:named_collection, user: user) }
-    let!(:work1) { create_for_repository(:work, title: ["King Louie"], member_of_collection_ids: [collection], user: user) }
-    let!(:work2) { create_for_repository(:work, title: ["King Kong"], member_of_collection_ids: [collection], user: user) }
+    let!(:work1) { create_for_repository(:work, title: ["King Louie"], member_of_collection_ids: [collection.id], user: user) }
+    let!(:work2) { create_for_repository(:work, title: ["King Kong"], member_of_collection_ids: [collection.id], user: user) }
 
     before do
       sign_in user
