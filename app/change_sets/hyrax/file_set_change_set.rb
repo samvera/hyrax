@@ -7,7 +7,6 @@ module Hyrax
     property :depositor
 
     # delegate :depositor, :permissions, to: :model
-    property :search_context, virtual: true
     # self.required_fields = [:title, :creator, :keyword, :license]
     property :title, multiple: true, required: true
 
@@ -22,7 +21,7 @@ module Hyrax
     property :visibility_during_lease, virtual: true
     property :visibility_after_lease, virtual: true
 
-    delegate :user, to: :search_context
+    property :user, virtual: true
 
     def sync
       if permissions
