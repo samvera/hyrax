@@ -14,13 +14,11 @@ module Hyrax
     def self.find_by_user(user)
       work_ids = user.trophies.pluck(:work_id)
       results = work_ids.collect { |id| find_work(id) }.compact
-      results.map { |result| TrophyPresenter.new(document_model.new(result)) }
+      results.map { |result| TrophyPresenter.new(result) }
     end
 
     def self.find_work(id)
-      Hyrax::Queries.find_work(id: Valkyrie::ID.new(id))
-    rescue Valkyrie::Persistence::ObjectNotFoundError, Hyrax::ObjectNotFoundError
-      nil
+      document_model.find(id)
     end
     private_class_method :find_work
 
