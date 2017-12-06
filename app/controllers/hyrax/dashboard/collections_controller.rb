@@ -157,6 +157,11 @@ module Hyrax
 
       private
 
+        # Supply the user so that the depositor can be granted edit access
+        def build_change_set(resource)
+          change_set_class.new(resource, user: current_user)
+        end
+
         # this is the parameters passed into the ChangeSet
         def resource_params
           super.merge(batch: batch, destination_collection_id: params[:destination_collection_id])
