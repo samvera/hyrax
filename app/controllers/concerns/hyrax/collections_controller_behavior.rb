@@ -5,12 +5,6 @@ module Hyrax
     include Blacklight::Base
 
     included do
-      before_action :filter_docs_with_read_access!, except: :show
-
-      include Hyrax::Collections::AcceptsBatches
-
-      # include the render_check_all view helper method
-      helper Hyrax::BatchEditsHelper
       # include the display_trophy_link view helper method
       helper Hyrax::TrophyHelper
 
