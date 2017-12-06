@@ -8,7 +8,7 @@ FactoryBot.define do
       fs.apply_depositor_metadata evaluator.user.user_key if evaluator.user
     end
 
-    before(:create) do |file_set, evaluator|
+    after(:create) do |file_set, evaluator|
       if evaluator.content
         storage_adapter = Valkyrie::StorageAdapter.find(:disk)
         persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
@@ -16,8 +16,7 @@ FactoryBot.define do
                                                   persister: persister)
 
         node = Hyrax::FileNode.for(file: evaluator.content)
-        file_node = node_builder.create(file: evaluator.content, node: node)
-        file_set.member_ids += [file_node.id]
+        node_builder.create(file: evaluator.content, node: node, file_set: file_set)
       end
     end
 

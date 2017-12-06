@@ -35,22 +35,20 @@ module Hyrax
       end
 
       def attach_uploaded_file(file:, file_set:, use:)
-        file_node = create_file_node(file: file, use: use)
-        file_set.member_ids += [file_node.id]
-        persister.save(resource: file_set)
+        create_file_node(file: file, use: use, file_set: file_set)
         # TODO: Hyrax::VersioningService.create(repository_file, user)
         # TODO: Derivatives
       end
 
       # Creates a Hyrax::FileNode and stores the file.
-      def create_file_node(file:, use:)
+      def create_file_node(file:, use:, file_set:)
         original_name = file.original_filename
         node = Hyrax::FileNode.new(label: original_name,
                                    original_filename: original_name,
                                    mime_type: file.content_type,
                                    use: [use])
         # Characterization happens in the node builder
-        node_builder.create(file: file, node: node)
+        node_builder.create(file: file, node: node, file_set: file_set)
       end
   end
 end
