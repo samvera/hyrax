@@ -2,4 +2,5 @@
 <%= f.input :rights_statement,
     collection: rights_statements.select_active_options,
     include_blank: true,
+    required: true,
     input_html: { class: 'form-control' } %>

@@ -36,6 +36,9 @@ module Hyrax
     property :admin_set_id, virtual: false
     property :in_works_ids, virtual: true
 
+    # The lookup field for collection relationships
+    property :member_of_collection_ids, virtual: true, required: false
+
     validate :validate_lease
     validate :validate_embargo
     validate :validate_release_type
@@ -156,7 +159,8 @@ module Hyrax
       # Includes any parent works.
       # @return [Array<String>] a list of identifiers
       def prepopulate_in_works_ids
-        self.in_works_ids = (resource.in_works_ids.map(&:to_s) + [append_id]).uniq
+        work_ids = resource.persisted? ? resource.in_works_ids.map(&:to_s) : []
+        self.in_works_ids = (work_ids + [append_id]).uniq
       end
 
       def validate_lease

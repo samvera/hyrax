@@ -67,6 +67,10 @@ module Hyrax
 
     private
 
+      def build_change_set(resource)
+        change_set_class.new(resource, user: current_user)
+      end
+
       # Returns a FileUploadChangeSet if they have created or updated a file
       def change_set_class
         #   curation_concern.relative_path = params[:relative_path] if params[:relative_path]
