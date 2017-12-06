@@ -21,16 +21,18 @@ module Hyrax
     included do
       attr_accessor :file
 
-      attribute :file_identifiers, Valkyrie::Types::Set
       attribute :member_ids, Valkyrie::Types::Array
       attribute :embargo_id, Valkyrie::Types::ID.optional
       attribute :lease_id, Valkyrie::Types::ID.optional
+
+      delegate :width, :height, :mime_type, :size, to: :original_file, allow_nil: true
     end
 
+    # @return [Hyrax::FileNode] with use Valkyrie::Vocab::PCDMUse.OriginalFile
     def original_file
       return if member_ids.empty?
       # TODO: we should be checking the use predicate here
-      Hyrax::Queries.find_by(id: member_ids.first)
+      Hyrax::Queries.find_by(id: Valkyrie::ID.new(member_ids.first))
     end
 
     def representative_id
