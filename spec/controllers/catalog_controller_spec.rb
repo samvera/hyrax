@@ -131,5 +131,5 @@ RSpec.describe CatalogController, type: :controller do
         expect(assigns(:document_list).map(&:id)).to contain_exactly(work1[:id])
       end
     end
-  end # describe "#index"
+  end
 end

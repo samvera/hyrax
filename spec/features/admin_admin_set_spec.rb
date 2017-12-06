@@ -11,7 +11,7 @@ RSpec.describe "The admin sets, through the admin dashboard" do
     Hyrax::PermissionTemplate.create!(admin_set_id: admin_set.id)
   end
 
-  scenario do
+  it do
     login_as(user, scope: :user)
     visit '/dashboard'
     click_link "Administrative Sets"

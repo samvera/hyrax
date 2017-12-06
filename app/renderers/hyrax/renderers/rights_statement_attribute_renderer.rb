@@ -11,7 +11,7 @@ module Hyrax
         def attribute_value_to_html(value)
           begin
             parsed_uri = URI.parse(value)
-          rescue
+          rescue URI::InvalidURIError
             nil
           end
           if parsed_uri.nil?

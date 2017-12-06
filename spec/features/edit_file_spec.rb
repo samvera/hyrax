@@ -1,4 +1,4 @@
-RSpec.feature "Editing a file:", type: :feature do
+RSpec.describe "Editing a file:", type: :feature do
   let(:user) { create(:user) }
   let(:file_title) { 'Some kind of title' }
   let(:work) { build(:work, user: user) }

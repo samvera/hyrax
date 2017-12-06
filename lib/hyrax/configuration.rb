@@ -79,8 +79,7 @@ module Hyrax
       @feature_config_path ||= Rails.root.join('config', 'features.yml')
     end
 
-    attr_accessor :temp_file_base, :enable_local_ingest,
-                  :analytics, :analytic_start_date
+    attr_accessor :temp_file_base, :enable_local_ingest
 
     attr_writer :display_microdata
     def display_microdata?
@@ -266,6 +265,7 @@ module Hyrax
     end
 
     attr_writer :analytics
+    attr_reader :analytics
     def analytics?
       @analytics ||= false
     end

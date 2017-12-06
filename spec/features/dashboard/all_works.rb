@@ -5,7 +5,7 @@ RSpec.describe "As an admin user I should be able to see all works" do
   before do
     sign_in create(:admin)
   end
-  scenario do
+  it do
     visit '/dashboard/works'
     expect(page).to have_content 'Works'
     expect(page).to have_content 'Testing #1'
