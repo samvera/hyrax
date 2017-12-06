@@ -57,7 +57,7 @@
                   <% end %>
                 <% end %>
 
-                <fieldset>
+                <fieldset class="collection-sharing">
                   <legend><%= t(".current_shared") %></legend>
                   <%= render 'form_share_table', access: 'managers', filter: :manage? %>
                   <%= render 'form_share_table', access: 'depositors', filter: :deposit? %>
