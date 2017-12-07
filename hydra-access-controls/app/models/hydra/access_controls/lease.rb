@@ -27,11 +27,11 @@ module Hydra::AccessControls
     def to_hash
       {}.tap do |doc|
         date_field_name = Hydra.config.permissions.lease.expiration_date.sub(/_dtsi/, '')
-        Solrizer.insert_field(doc, date_field_name, lease_expiration_date, :stored_sortable)
+        ActiveFedora::Indexing::Inserter.insert_field(doc, date_field_name, lease_expiration_date, :stored_sortable)
 
-        doc[::Solrizer.solr_name("visibility_during_lease", :symbol)] = visibility_during_lease unless visibility_during_lease.nil?
-        doc[::Solrizer.solr_name("visibility_after_lease", :symbol)] = visibility_after_lease unless visibility_after_lease.nil?
-        doc[::Solrizer.solr_name("lease_history", :symbol)] = lease_history unless lease_history.nil?
+        doc[ActiveFedora.index_field_mapper.solr_name("visibility_during_lease", :symbol)] = visibility_during_lease unless visibility_during_lease.nil?
+        doc[ActiveFedora.index_field_mapper.solr_name("visibility_after_lease", :symbol)] = visibility_after_lease unless visibility_after_lease.nil?
+        doc[ActiveFedora.index_field_mapper.solr_name("lease_history", :symbol)] = lease_history unless lease_history.nil?
       end
     end
 

@@ -80,18 +80,18 @@ module Hydra::AccessControls
     end
 
     def build_agent_resource(prefix, name)
-      Agent.new(::RDF::URI.new("#{prefix}##{URI.encode(name)}"))
+      [Agent.new(::RDF::URI.new("#{prefix}##{URI.encode(name)}"))]
     end
 
     def build_access(access)
       raise "Can't build access #{inspect}" unless access
       self.mode = case access
                   when 'read'
-                    Mode.new(::ACL.Read)
+                    [Mode.new(::ACL.Read)]
                   when 'edit'
-                    Mode.new(::ACL.Write)
+                    [Mode.new(::ACL.Write)]
                   when 'discover'
-                    Mode.new(Hydra::ACL.Discover)
+                    [Mode.new(Hydra::ACL.Discover)]
                   else
                     raise ArgumentError, "Unknown access #{access.inspect}"
                   end

@@ -28,10 +28,10 @@ module Hydra::AccessControls
     def to_hash
       {}.tap do |doc|
         date_field_name = Hydra.config.permissions.embargo.release_date.sub(/_dtsi/, '')
-        Solrizer.insert_field(doc, date_field_name, embargo_release_date, :stored_sortable)
-        doc[::Solrizer.solr_name("visibility_during_embargo", :symbol)] = visibility_during_embargo unless visibility_during_embargo.nil?
-        doc[::Solrizer.solr_name("visibility_after_embargo", :symbol)] = visibility_after_embargo unless visibility_after_embargo.nil?
-        doc[::Solrizer.solr_name("embargo_history", :symbol)] = embargo_history unless embargo_history.nil?
+        ActiveFedora::Indexing::Inserter.insert_field(doc, date_field_name, embargo_release_date, :stored_sortable)
+        doc[ActiveFedora.index_field_mapper.solr_name("visibility_during_embargo", :symbol)] = visibility_during_embargo unless visibility_during_embargo.nil?
+        doc[ActiveFedora.index_field_mapper.solr_name("visibility_after_embargo", :symbol)] = visibility_after_embargo unless visibility_after_embargo.nil?
+        doc[ActiveFedora.index_field_mapper.solr_name("embargo_history", :symbol)] = embargo_history unless embargo_history.nil?
       end
     end
     protected
