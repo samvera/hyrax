@@ -66,6 +66,14 @@ module Hyrax
         .map { |attr| attr['name'] }
     end
 
+    def page_title
+      if resource.persisted?
+        [resource.to_s, "#{resource.human_readable_type} [#{resource.to_param}]"]
+      else
+        ["New #{resource.human_readable_type}"]
+      end
+    end
+
     private
 
       def prepopulate_permissions
