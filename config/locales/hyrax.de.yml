@@ -266,7 +266,6 @@ de:
         default: Sie müssen eingeloggt sein!
       unprocessable_entity:
         default: Es ist nicht möglich, die Ressource entsprechend Ihrer Anfrage, zu ändern.
-        empty_file: Die hochgeladene Datei hat keinen Inhalt.
     background_attribution_html: ''
     base:
       citations:

@@ -266,7 +266,6 @@ pt-BR:
         default: Você deve estar logado para fazer isso!
       unprocessable_entity:
         default: O recurso que você tentou modificar não pode ser modificado de acordo com sua solicitação.
-        empty_file: O arquivo que você enviou não possui conteúdo.
     background_attribution_html: ''
     base:
       citations:

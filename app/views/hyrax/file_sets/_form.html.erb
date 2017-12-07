@@ -9,10 +9,10 @@
   <div class="row">
     <div class="col-md-12 form-actions">
       <%= f.submit(
-        (curation_concern.persisted? ? "Update Attached File" : %(Attach to #{parent.human_readable_type})),
+        (curation_concern.persisted? ? "Update Attached File" : %(Attach to #{@parent.human_readable_type})),
         class: 'btn btn-primary'
       ) %>
-      <%= link_to 'Cancel', parent_path(parent), class: 'btn btn-link' %>
+      <%= link_to 'Cancel', parent_path(@parent), class: 'btn btn-link' %>
     </div>
   </div>
 <% end %>

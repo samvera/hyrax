@@ -36,7 +36,6 @@ module ActionDispatch::Routing
             post :copy
           end
         end
-        resources :file_sets, only: [:new, :create], path: 'container/:parent_id/file_sets'
         resources :file_sets, only: [:show, :edit, :update, :destroy] do
           member do
             get :versions

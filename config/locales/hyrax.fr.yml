@@ -266,7 +266,6 @@ fr:
         default: Vous devez être connecté pour faire cela!
       unprocessable_entity:
         default: La ressource que vous avez tenté de modifier ne peut pas être modifiée selon votre demande.
-        empty_file: Le fichier que vous avez téléchargé n'a aucun contenu.
     background_attribution_html: ''
     base:
       citations:

@@ -258,7 +258,6 @@ en:
         default: "You must be logged in to do that!"
       unprocessable_entity:
         default: "The resource you attempted to modify cannot be modified according to your request."
-        empty_file: "The file you uploaded has no content."
     background_attribution_html: ''
     base:
       citations:

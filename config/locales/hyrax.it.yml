@@ -266,7 +266,6 @@ it:
         default: Devi essere autenticato per farlo!
       unprocessable_entity:
         default: La risorsa che hai tentato di modificare non può essere modificata in base alla tua richiesta.
-        empty_file: Il file che hai caricato non ha alcun contenuto.
     background_attribution_html: ''
     base:
       citations:
