@@ -9,7 +9,12 @@
   <ul role="menu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu_<%= document.id %>">
 
     <li role="menuitem" tabindex="-1">
-      <%= button_for_remove_from_collection(@collection, document, 'Remove from Collection') %>
+      <%# this includes the fields in a form necessary for removing a single item from a collection %>
+      <%= form_for @collection, url: hyrax.dashboard_collection_path(@collection), method: :put, as: 'collection' do |f| %>
+        <%= f.hidden_field :members, value: 'remove' %>
+        <%= hidden_field :batch_document_ids, '', { value: document.id } %>
+        <%= f.submit 'Remove from Collection', class: "btn btn-primary collection-remove" %>
+      <% end %>
     </li>
 
     <li role="menuitem" tabindex="-1">
