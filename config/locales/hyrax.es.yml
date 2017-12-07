@@ -12,8 +12,7 @@ es:
     search:
       fields:
         facet:
-          admin_set_sim: Colección
-          resource_type_sim: Tipo de recurso
+          resource_type_ssim: Tipo de recurso
           suppressed_bsi: Estado
         show:
           admin_set: 'En Conjunto Administrativo:'
