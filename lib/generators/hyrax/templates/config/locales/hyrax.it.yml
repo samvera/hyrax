@@ -4,14 +4,14 @@ it:
     search:
       fields:
         facet:
-          based_near_label_sim: luogo
-          creator_sim: Creatore
-          file_format_sim: Formato
+          based_near_label_ssim: luogo
+          creator_ssim: Creatore
+          file_format_ssim: Formato
           generic_type_sim: Tipo
-          keyword_sim: Parola chiave
-          language_sim: Lingua
-          publisher_sim: Editore
-          subject_sim: Soggetto
+          keyword_ssim: Parola chiave
+          language_ssim: Lingua
+          publisher_ssim: Editore
+          subject_ssim: Soggetto
         index:
           based_near_tesim: luogo
           contributor_tesim: Collaboratore

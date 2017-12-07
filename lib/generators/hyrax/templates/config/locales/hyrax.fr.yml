@@ -4,14 +4,14 @@ fr:
     search:
       fields:
         facet:
-          based_near_label_sim: Emplacement
-          creator_sim: Créateur
-          file_format_sim: Format
+          based_near_label_ssim: Emplacement
+          creator_ssim: Créateur
+          file_format_ssim: Format
           generic_type_sim: Type
-          keyword_sim: Mot-clé
-          language_sim: La langue
-          publisher_sim: Éditeur
-          subject_sim: Assujettir
+          keyword_ssim: Mot-clé
+          language_ssim: La langue
+          publisher_ssim: Éditeur
+          subject_ssim: Assujettir
         index:
           based_near_tesim: Emplacement
           contributor_tesim: Donateur

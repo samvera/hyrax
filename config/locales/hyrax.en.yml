@@ -12,8 +12,7 @@ en:
     search:
       fields:
         facet:
-          admin_set_sim: Collection
-          resource_type_sim: Resource type
+          resource_type_ssim: Resource type
           suppressed_bsi: Status
         show:
           admin_set: 'In Administrative Set:'

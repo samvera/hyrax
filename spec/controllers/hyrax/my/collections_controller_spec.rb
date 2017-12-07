@@ -23,9 +23,9 @@ RSpec.describe Hyrax::My::CollectionsController, type: :controller do
   end
 
   describe "#search_facet_path" do
-    subject { controller.send(:search_facet_path, id: 'keyword_sim') }
+    subject { controller.send(:search_facet_path, id: 'keyword_ssim') }
 
-    it { is_expected.to eq "/dashboard/my/collections/facet/keyword_sim?locale=en" }
+    it { is_expected.to eq "/dashboard/my/collections/facet/keyword_ssim?locale=en" }
   end
 
   describe "#search_builder_class" do
