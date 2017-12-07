@@ -1,10 +1,9 @@
 RSpec.describe 'hyrax/file_sets/_versioning.html.erb', type: :view do
   let(:file_set) { stub_model(FileSet) }
+  let(:change_set) { Hyrax::FileSetChangeSet.new(file_set) }
 
   before do
-    allow(view).to receive(:curation_concern).and_return(file_set)
-    assign(:version_list, [])
-    render
+    render 'hyrax/file_sets/versioning', change_set: change_set
   end
 
   context "without additional users" do
