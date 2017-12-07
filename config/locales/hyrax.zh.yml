@@ -12,8 +12,7 @@ zh:
     search:
       fields:
         facet:
-          admin_set_sim: 集
-          resource_type_sim: 资源类型
+          resource_type_ssim: 资源类型
           suppressed_bsi: 状况
         show:
           admin_set: '管理集内:'
