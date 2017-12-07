@@ -41,11 +41,6 @@ module Hyrax
       to_param
     end
 
-    # Cast to a SolrDocument by querying from Solr
-    def to_presenter
-      CatalogController.new.fetch(id).last
-    end
-
     # @return [Boolean] whether this instance is a Hydra::Works Collection.
     def collection?
       false
