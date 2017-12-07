@@ -54,13 +54,7 @@ RSpec.describe Hyrax::FileSetsController do
         get :edit, params: { id: file_set }
 
         expect(response).to be_success
-<<<<<<< HEAD
-        expect(assigns[:file_set]).to eq file_set
-        expect(assigns[:version_list]).to be_kind_of Hyrax::VersionListPresenter
-        expect(assigns[:parent]).to eq parent
-=======
         expect(assigns[:change_set]).to be_kind_of Hyrax::FileSetChangeSet
->>>>>>> Update the file_set_controller to use ChangeSets
         expect(response).to render_template(:edit)
       end
     end
