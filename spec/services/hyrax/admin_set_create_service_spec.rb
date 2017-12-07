@@ -71,11 +71,15 @@ RSpec.describe Hyrax::AdminSetCreateService do
           allow_any_instance_of(Hyrax::PermissionTemplate).to receive(:available_workflows).and_return(available_workflows)
           # Load expected Sipity roles, which were likely cleaned by DatabaseCleaner
           Hyrax.config.persist_registered_roles!
+          allow(Sipity::Workflow).to receive(:activate!)
         end
         # rubocop:enable RSpec/AnyInstance
 
         it "creates an AdminSet, PermissionTemplate, Workflows" do
-          expect { subject }.to  change { Sipity::WorkflowResponsibility.count }.by(12).and change { Hyrax::Queries.find_all_of_model(model: AdminSet).count }.by(1)
+          expect { subject }.to change { Sipity::WorkflowResponsibility.count }
+            .by(12)
+            .and change { Hyrax::Queries.find_all_of_model(model: AdminSet).count }
+            .by(1)
           # 12 responsibilities because:
           #  * 2 agents (user + admin group), multiplied by
           #  * 2 available workflows, multiplied by
@@ -85,31 +89,24 @@ RSpec.describe Hyrax::AdminSetCreateService do
           expect(permission_template).to be_persisted
           expect(grants.count).to eq 2
         end
+
         it "activates the default workflow" do
-          expect(Sipity::Workflow).to receive(:activate!).with(permission_template: kind_of(Hyrax::PermissionTemplate), workflow_name: Hyrax.config.default_active_workflow_name)
           subject
+          expect(Sipity::Workflow).to have_received(:activate!).with(permission_template: kind_of(Hyrax::PermissionTemplate), workflow_name: Hyrax.config.default_active_workflow_name)
         end
+
         it "sets access on the created admin set" do
           reloaded_admin_set = Hyrax::Queries.find_by(id: subject.id)
           expect(reloaded_admin_set.read_groups).not_to include('public')
           expect(reloaded_admin_set.edit_groups).to eq ['admin']
           expect(reloaded_admin_set.creator).to eq [user.user_key]
         end
+
         it "sets access grants" do
           subject
           expect(grants.pluck(:agent_type)).to include('group', 'user')
           expect(grants.pluck(:agent_id)).to include('admin', user.user_key)
           expect(grants.pluck(:access)).to include('manage')
-        end
-      end
-
-      context "when the admin_set is invalid" do
-        let(:admin_set) { AdminSet.new } # Missing title
-
-        it { is_expected.to be false }
-        it 'will not call the workflow_importer' do
-          subject
-          expect(workflow_importer).not_to have_received(:call)
         end
       end
     end
