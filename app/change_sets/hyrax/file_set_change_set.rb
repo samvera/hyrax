@@ -74,7 +74,16 @@ module Hyrax
       end
     end
 
+    # Cast to a SolrDocument by querying from Solr
+    def to_presenter
+      document_model.find(id)
+    end
+
     private
+
+      def document_model
+        CatalogController.blacklight_config.document_model
+      end
 
       def prepopulate_permissions
         self.permissions = resource.edit_users.map { |key| PermissionChangeSet.new(Permission.new, agent_name: key, access: 'edit', type: 'person') } +
