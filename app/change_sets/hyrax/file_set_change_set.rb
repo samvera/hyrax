@@ -66,7 +66,24 @@ module Hyrax
         .map { |attr| attr['name'] }
     end
 
+    def page_title
+      if resource.persisted?
+        [resource.to_s, "#{resource.human_readable_type} [#{resource.to_param}]"]
+      else
+        ["New #{resource.human_readable_type}"]
+      end
+    end
+
+    # Cast to a SolrDocument by querying from Solr
+    def to_presenter
+      document_model.find(id)
+    end
+
     private
+
+      def document_model
+        CatalogController.blacklight_config.document_model
+      end
 
       def prepopulate_permissions
         self.permissions = resource.edit_users.map { |key| PermissionChangeSet.new(Permission.new, agent_name: key, access: 'edit', type: 'person') } +

@@ -9,7 +9,7 @@ RSpec.feature "Editing a file:", type: :feature do
                           content: file)
   end
   let(:file) { fixture_file_upload('/world.png', 'image/png') }
-  let(:work) do
+  let!(:work) do
     create_for_repository(:work, user: user, member_ids: [file_set.id])
   end
 

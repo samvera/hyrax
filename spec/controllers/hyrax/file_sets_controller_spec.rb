@@ -347,9 +347,10 @@ RSpec.describe Hyrax::FileSetsController do
       persister.save(resource: parent)
       file_set
     end
+    let(:change_set) { Hyrax::FileSetChangeSet.new(file_set) }
 
     before do
-      allow(controller).to receive(:curation_concern).and_return(file_set)
+      controller.instance_variable_set(:@change_set, change_set)
     end
 
     it 'finds a parent' do
