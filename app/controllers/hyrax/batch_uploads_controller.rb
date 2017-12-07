@@ -5,6 +5,7 @@ module Hyrax
 
     # We use BatchUploadItem as a null stand-in resource_type.
     self.resource_class = BatchUploadItem
+    self.change_set_class = BatchUploadChangeSet
 
     with_themed_layout 'dashboard'
 
@@ -33,9 +34,10 @@ module Hyrax
         end
       end
 
-      def build_change_set
-        super
-        @change_set.payload_concern = params[:payload_concern]
+      def build_change_set(resource)
+        super.tap do |change_set|
+          change_set.payload_concern = params[:payload_concern]
+        end
       end
 
       def handle_payload_concern!
