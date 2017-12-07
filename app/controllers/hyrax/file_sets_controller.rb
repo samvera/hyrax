@@ -10,7 +10,6 @@ module Hyrax
     # provides the help_text view method
     helper PermissionsHelper
 
-    helper_method :curation_concern
     copy_blacklight_config_from(::CatalogController)
 
     class_attribute :show_presenter, :change_set_class
@@ -20,16 +19,6 @@ module Hyrax
       metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister),
       storage_adapter: Valkyrie.config.storage_adapter
     )
-
-    # A little bit of explanation, CanCan(Can) sets the @file_set via the .load_and_authorize_resource
-    # method. However the interface for various CurationConcern modules leverages the #curation_concern method
-    # Thus we have file_set and curation_concern that are aliases for each other.
-    attr_accessor :file_set
-    alias curation_concern file_set
-    private :file_set=
-    alias curation_concern= file_set=
-    private :curation_concern=
-    helper_method :file_set
 
     # routed to /files/:id
     def show
