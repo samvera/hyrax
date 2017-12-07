@@ -28,8 +28,8 @@ module Hyrax
     # @param label [String] button label
     def button_for_remove_from_collection(change_set, document, label = 'Remove From Collection')
       form_for change_set, url: hyrax.dashboard_collection_path(change_set), method: :put, as: 'collection' do |f|
-        single_item_action_remove_form_fields(f, document)
-        f.submit label, class: "btn btn-primary collection-remove"
+        concat single_item_action_remove_form_fields(f, document)
+        concat f.submit label, class: "btn btn-primary collection-remove"
       end
     end
 
@@ -38,8 +38,8 @@ module Hyrax
     # @param label [String] button label
     def button_for_remove_selected_from_collection(change_set, label = 'Remove From Collection')
       form_for change_set, url: hyrax.dashboard_collection_path(change_set.id), method: :put do |f|
-        f.hidden_field :members, value: "remove"
-        f.submit label, class: "btn btn-primary collection-remove-selected submits-batches"
+        concat f.hidden_field :members, value: "remove"
+        concat f.submit label, class: "btn btn-primary collection-remove-selected submits-batches"
       end
     end
 
