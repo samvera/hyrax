@@ -12,8 +12,7 @@ de:
     search:
       fields:
         facet:
-          admin_set_sim: Sammlung
-          resource_type_sim: Ressourcentyp
+          resource_type_ssim: Ressourcentyp
           suppressed_bsi: Status
         show:
           admin_set: 'Im Admin-Set:'

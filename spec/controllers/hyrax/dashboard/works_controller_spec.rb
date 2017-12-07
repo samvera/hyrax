@@ -6,8 +6,8 @@ RSpec.describe Hyrax::Dashboard::WorksController, type: :controller do
   end
 
   describe "#search_facet_path" do
-    subject { controller.send(:search_facet_path, id: 'keyword_sim') }
+    subject { controller.send(:search_facet_path, id: 'keyword_ssim') }
 
-    it { is_expected.to eq "/dashboard/works/facet/keyword_sim?locale=en" }
+    it { is_expected.to eq "/dashboard/works/facet/keyword_ssim?locale=en" }
   end
 end

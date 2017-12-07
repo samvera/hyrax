@@ -24,7 +24,6 @@ RSpec.describe "Browse catalog:", type: :feature do
       expect(page).to have_content 'Search Results'
       expect(page).to have_content jills_work.title.first
       expect(page).to have_content jacks_work.title.first
-
       click_link "Keyword"
       click_link "more Keywords »"
       within('.bottom') do
