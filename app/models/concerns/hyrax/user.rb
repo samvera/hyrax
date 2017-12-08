@@ -112,9 +112,10 @@ module Hyrax::User
     { id: user_key, text: display_name ? "#{display_name} (#{user_key})" : user_key }
   end
 
+  ##
+  # @return [String] a name for the user
   def name
-    return display_name.titleize if display_name
-    user_key
+    display_name || user_key
   end
 
   # Redefine this for more intuitive keys in Redis
