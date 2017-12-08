@@ -122,12 +122,12 @@ module Hyrax
         attributes
       end
 
-      def after_create_error(_obj, _change_set)
+      def after_create_error(_obj, change_set)
         respond_to do |wants|
           wants.html do
             render 'new', status: :unprocessable_entity
           end
-          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: change_set.errors }) }
         end
       end
 
