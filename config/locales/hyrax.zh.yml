@@ -267,7 +267,6 @@ zh:
         default: 您必须要先登录才可以做!
       unprocessable_entity:
         default: 您试着要修改的资源按照您的请求无法被修改。
-        empty_file: 您上传的文件无内容。
     background_attribution_html: ''
     base:
       citations:

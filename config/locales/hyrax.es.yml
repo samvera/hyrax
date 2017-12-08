@@ -261,7 +261,6 @@ es:
         default: "¡Debe iniciar sesión para hacer eso!"
       unprocessable_entity:
         default: El recurso que intentó modificar no se puede modificar de acuerdo a su solicitud.
-        empty_file: El archivo que subió no tiene contenido.
     background_attribution_html: ''
     base:
       citations:

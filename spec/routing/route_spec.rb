@@ -30,16 +30,6 @@ RSpec.describe 'Routes', type: :routing do
     context "main app routes" do
       routes { Rails.application.routes }
 
-      context "with a file_set" do
-        it 'routes to create' do
-          expect(post: '/concern/container/12/file_sets').to route_to(controller: 'hyrax/file_sets', action: 'create', parent_id: '12')
-        end
-
-        it 'routes to new' do
-          expect(get: '/concern/container/12/file_sets/new').to route_to(controller: 'hyrax/file_sets', action: 'new', parent_id: '12')
-        end
-      end
-
       it 'routes to edit' do
         expect(get: '/concern/file_sets/3/edit').to route_to(controller: 'hyrax/file_sets', action: 'edit', id: '3')
       end
