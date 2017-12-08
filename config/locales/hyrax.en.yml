@@ -28,6 +28,7 @@ en:
       carrierwave_processing_error: "Cannot resize image."
       extension_blacklist_error: "You are not allowed to upload %{extension} files, prohibited types: %{prohibited_types}"
       extension_whitelist_error: "You are not allowed to upload %{extension} files, allowed types: %{allowed_types}"
+      missing_title: "Your %{model} must have a title."
   helpers:
     action:
       admin_set:

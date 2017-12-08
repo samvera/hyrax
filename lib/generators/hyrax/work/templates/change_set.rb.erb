@@ -34,4 +34,7 @@ class <%= class_name %>ChangeSet < Hyrax::WorkChangeSet
   property :member_ids
   property :thumbnail_id
   property :representative_id
+
+  # The work must have at least one title
+  validates_with Hyrax::HasOneTitleValidator
 end
