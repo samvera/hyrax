@@ -148,7 +148,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
           end
         end
 
-        context 'authenticated visibility' do
+        context 'and with authenticated visibility' do
           before do
             allow(Hyrax::TimeService).to receive(:time_in_utc) { xmas }
             allow(Hyrax::Actors::FileActor).to receive(:new).and_return(file_actor)
@@ -157,7 +157,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
           it 'stamps each file with the access rights' do
             expect(file_actor).to receive(:ingest_file).and_return(true).twice
 
-            expect(middleware.create(env)).to be true
+            expect(middleware.create(env)).to be_instance_of GenericWork
             curation_concern.reload
             expect(curation_concern).to be_persisted
             expect(curation_concern.date_uploaded).to eq xmas
@@ -178,7 +178,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         end
 
         it 'stamps each link with the access rights' do
-          expect(middleware.create(env)).to be true
+          expect(middleware.create(env)).to be_instance_of GenericWork
           expect(curation_concern).to be_persisted
           expect(curation_concern.title).to eq ['this is present']
         end
@@ -252,7 +252,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
       it "removes the old parent" do
         allow(curation_concern).to receive(:depositor).and_return(old_parent.depositor)
-        expect(subject.update(env)).to be true
+        expect(subject.update(env)).to be_instance_of GenericWork
         expect(curation_concern.in_works_ids).to eq []
         reloaded = Hyrax::Queries.find_by(id: old_parent.id)
         expect(reloaded.member_ids).to eq []
@@ -275,7 +275,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       end
 
       it "does nothing" do
-        expect(subject.update(env)).to be true
+        expect(subject.update(env)).to be_instance_of GenericWork
         expect(curation_concern.in_works_ids).to eq [parent.id]
       end
     end
@@ -290,7 +290,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
       it 'updates the order of file sets' do
         expect(curation_concern.member_ids).to eq [file_set1.id, file_set2.id]
-        expect(subject.update(env)).to be true
+        expect(subject.update(env)).to be_instance_of GenericWork
         reloaded = Hyrax::Queries.find_by(id: curation_concern.id)
 
         expect(reloaded.member_ids).to eq [file_set2.id, file_set1.id]

@@ -19,12 +19,16 @@ RSpec.describe Hyrax::Actors::TransferRequestActor do
     stack.build(terminator)
   end
 
+  before do
+    allow(terminator).to receive(:create).and_return(work)
+  end
+
   describe "create" do
     context "when on_behalf_of is blank" do
       let(:proxied_to) { '' }
 
       it "returns true" do
-        expect(middleware.create(env)).to be true
+        expect(middleware.create(env)).to be_instance_of GenericWork
       end
     end
 
@@ -33,12 +37,11 @@ RSpec.describe Hyrax::Actors::TransferRequestActor do
 
       before do
         create(:user, email: proxied_to)
-        allow(terminator).to receive(:create).and_return(true)
       end
 
       it "adds the template users to the work" do
         expect(ContentDepositorChangeEventJob).to receive(:perform_later).with(work, User)
-        expect(middleware.create(env)).to be true
+        expect(middleware.create(env)).to be_instance_of GenericWork
       end
     end
   end
