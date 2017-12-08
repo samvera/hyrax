@@ -229,8 +229,8 @@ module Hyrax
 
     # A configuration point for changing the behavior of the rights statement service.
     #
-    # @!attribute [w] license_service_class
-    #   A configuration point for changing the behavior of the license service.
+    # @!attribute [w] rights_statement_service_class
+    #   A configuration point for changing the behavior of the rights statement service.
     #
     #   @see Hyrax::RightsStatementService for implementation details
     attr_writer :rights_statement_service_class
@@ -347,6 +347,60 @@ module Hyrax
     def cache_path
       @cache_path ||= ->() { Rails.root + 'tmp' + 'uploads' + 'cache' }
     end
+
+    # Enable IIIF image service. This is required to use the
+    # UniversalViewer-enabled show page
+    #
+    # If you have run the hyrax:riiif generator, an embedded riiif service
+    # will be used to deliver images via IIIF. If you have not, you will
+    # need to configure the following other configuration values to work
+    # with your image server.
+    #
+    # @see config.iiif_image_url_builder
+    # @see config.iiif_info_url_builder
+    # @see config.iiif_image_compliance_level_uri
+    # @see config.iiif_image_size_default
+    #
+    # @note Default is false
+    #
+    # @return [Boolean] true to enable, false to disable
+    def iiif_image_server?
+      return @iiif_image_server unless @iiif_image_server.nil?
+      @iiif_image_server = false
+    end
+    attr_writer :iiif_image_server
+
+    # URL that resolves to an image provided by a IIIF image server
+    #
+    # @return [#call] lambda/proc that generates a URL to an image
+    def iiif_image_url_builder
+      @iiif_image_url_builder ||= ->(file_id, base_url, _size) { "#{base_url}/downloads/#{file_id.split('/').first}" }
+    end
+    attr_writer :iiif_image_url_builder
+
+    # URL that resolves to an info.json file provided by a IIIF image server
+    #
+    # @return [#call] lambda/proc that generates a URL to image info
+    def iiif_info_url_builder
+      @iiif_info_url_builder ||= ->(_file_id, _base_url) { '' }
+    end
+    attr_writer :iiif_info_url_builder
+
+    # URL that indicates your IIIF image server compliance level
+    #
+    # @return [String] valid IIIF image compliance level URI
+    def iiif_image_compliance_level_uri
+      @iiif_image_compliance_level_uri ||= 'http://iiif.io/api/image/2/level2.json'
+    end
+    attr_writer :iiif_image_compliance_level_uri
+
+    # IIIF image size default
+    #
+    # @return [#String] valid IIIF image size parameter
+    def iiif_image_size_default
+      @iiif_image_size_default ||= '600,'
+    end
+    attr_writer :iiif_image_size_default
 
     # Should a button with "Share my work" show on the front page to users who are not logged in?
     attr_writer :display_share_button_when_not_logged_in

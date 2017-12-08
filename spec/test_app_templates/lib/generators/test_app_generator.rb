@@ -9,6 +9,10 @@ class TestAppGenerator < Rails::Generators::Base
     generate 'hyrax:install', '-f'
   end
 
+  def browse_everything_install
+    generate "browse_everything:install --skip-assets"
+  end
+
   def create_generic_work
     generate 'hyrax:work GenericWork'
   end
@@ -59,17 +63,13 @@ class TestAppGenerator < Rails::Generators::Base
     end
   end
 
+  def banner
+    say_status("info", "ADDING OVERRIDES FOR TEST ENVIRONMENT", :blue)
+  end
+
   def comment_out_web_console
     gsub_file "Gemfile",
               "gem 'web-console'", "# gem 'web-console'"
-  end
-
-  def browse_everything_install
-    generate "browse_everything:install --skip-assets"
-  end
-
-  def banner
-    say_status("info", "ADDING OVERRIDES FOR TEST ENVIRONMENT", :blue)
   end
 
   def add_analytics_config
@@ -87,7 +87,12 @@ class TestAppGenerator < Rails::Generators::Base
 
   def enable_analytics
     gsub_file "config/initializers/hyrax.rb",
-              "config.analytics = false", "config.analytics = true"
+              "# config.analytics = false", "config.analytics = true"
+  end
+
+  def enable_riiif_image_server
+    gsub_file "config/initializers/hyrax.rb",
+              "# config.iiif_image_server = false", "config.iiif_image_server = true"
   end
 
   def enable_i18n_translation_errors

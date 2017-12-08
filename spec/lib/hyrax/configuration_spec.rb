@@ -42,6 +42,16 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:feature_config_path) }
   it { is_expected.to respond_to(:google_analytics_id?) }
   it { is_expected.to respond_to(:google_analytics_id) }
+  it { is_expected.to respond_to(:iiif_image_server?) }
+  it { is_expected.to respond_to(:iiif_image_server=) }
+  it { is_expected.to respond_to(:iiif_image_url_builder) }
+  it { is_expected.to respond_to(:iiif_image_url_builder=) }
+  it { is_expected.to respond_to(:iiif_info_url_builder) }
+  it { is_expected.to respond_to(:iiif_info_url_builder=) }
+  it { is_expected.to respond_to(:iiif_image_compliance_level_uri) }
+  it { is_expected.to respond_to(:iiif_image_compliance_level_uri=) }
+  it { is_expected.to respond_to(:iiif_image_size_default) }
+  it { is_expected.to respond_to(:iiif_image_size_default=) }
   it { is_expected.to respond_to(:libreoffice_path) }
   it { is_expected.to respond_to(:license_service_class) }
   it { is_expected.to respond_to(:license_service_class=) }

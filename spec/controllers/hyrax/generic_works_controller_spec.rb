@@ -524,4 +524,24 @@ RSpec.describe Hyrax::GenericWorksController do
       expect(assigns(:form)).not_to be_blank
     end
   end
+
+  describe '#manifest' do
+    let(:work) { create(:work_with_one_file, user: user) }
+    let(:file_set) { work.ordered_members.to_a.first }
+    let(:manifest_factory) { double(to_h: { test: 'manifest' }) }
+
+    before do
+      Hydra::Works::AddFileToFileSet.call(file_set,
+                                          File.open(fixture_path + '/world.png'),
+                                          :original_file)
+      allow(IIIFManifest::ManifestFactory).to receive(:new)
+        .with(Hyrax::WorkShowPresenter)
+        .and_return(manifest_factory)
+    end
+
+    it "produces a manifest" do
+      get :manifest, params: { id: work, format: :json }
+      expect(response.body).to eq "{\"test\":\"manifest\"}"
+    end
+  end
 end

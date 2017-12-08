@@ -50,6 +50,7 @@ SUMMARY
   spec.add_dependency 'hydra-editor', '~> 3.3'
   spec.add_dependency 'hydra-head', '>= 10.5.0'
   spec.add_dependency 'hydra-works', '~> 0.16'
+  spec.add_dependency 'iiif_manifest', '~> 0.3.0'
   spec.add_dependency 'jquery-datatables-rails', '~> 3.4'
   spec.add_dependency 'jquery-ui-rails', '~> 5.0'
   spec.add_dependency 'json-schema' # for Arkivo

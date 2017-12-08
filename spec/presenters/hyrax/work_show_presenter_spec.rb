@@ -1,6 +1,6 @@
 RSpec.describe Hyrax::WorkShowPresenter do
   let(:solr_document) { SolrDocument.new(attributes) }
-  let(:request) { double(host: 'example.org') }
+  let(:request) { double(host: 'example.org', base_url: 'http://example.org') }
   let(:user_key) { 'a_user_key' }
 
   let(:attributes) do
@@ -35,6 +35,12 @@ RSpec.describe Hyrax::WorkShowPresenter do
     subject { presenter.model_name }
 
     it { is_expected.to be_kind_of ActiveModel::Name }
+  end
+
+  describe '#manifest_url' do
+    subject { presenter.manifest_url }
+
+    it { is_expected.to eq 'http://example.org/concern/generic_works/888888/manifest' }
   end
 
   describe '#stats_path' do
