@@ -12,11 +12,12 @@ module Hyrax
 
     copy_blacklight_config_from(::CatalogController)
 
-    class_attribute :show_presenter, :change_set_class
+    class_attribute :show_presenter, :change_set_class, :metadata_adapter
     self.show_presenter = Hyrax::FileSetPresenter
     self.resource_class = ::FileSet
+    self.metadata_adapter = Valkyrie::MetadataAdapter.find(:indexing_persister)
     self.change_set_persister = Hyrax::FileSetChangeSetPersister.new(
-      metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister),
+      metadata_adapter: metadata_adapter,
       storage_adapter: Valkyrie.config.storage_adapter
     )
 
@@ -73,9 +74,9 @@ module Hyrax
       end
 
       def change_set_persister
-        if change_set_class == RevertFileChangeSet
+        if wants_to_revert?
           return Hyrax::RevertFileChangeSetPersister.new(
-            metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister),
+            metadata_adapter: metadata_adapter,
             storage_adapter: Valkyrie.config.storage_adapter
           )
         end
@@ -160,7 +161,9 @@ module Hyrax
       end
 
       def wants_to_revert?
-        params.key?(:revision) && params[:revision] != curation_concern.latest_content_version.label
+        @wants_revert ||= if params[:id] && params.key?(:revision)
+                            params[:revision] != find_resource(params[:id]).latest_content_version.label
+                          end
       end
 
       # Override this method to add additional response formats to your local app
