@@ -47,7 +47,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
     end
 
     it 'adds it to the collection' do
-      expect(subject.create(env)).to be true
+      expect(subject.create(env)).to be_instance_of GenericWork
       reloaded = Hyrax::Queries.find_by(id: collection.id)
       expect(reloaded.member_object_ids).to eq [curation_concern.id]
     end
@@ -64,7 +64,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
       end
 
       it "removes the work from that collection" do
-        expect(subject.create(env)).to be true
+        expect(subject.create(env)).to be_instance_of GenericWork
         expect(curation_concern.member_of_collection_ids).to eq []
       end
     end
@@ -75,7 +75,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
 
       it "doesn't remove the work from the other user's collection" do
         subject.create(env)
-        expect(subject.create(env)).to be true
+        expect(subject.create(env)).to be_instance_of GenericWork
         expect(curation_concern.member_of_collection_ids).to match_array [collection.id, other_collection.id]
       end
     end
