@@ -70,6 +70,12 @@ module Hyrax
       # nop
     end
 
+    # The possible values for the representative_id dropdown
+    # @return [Hash] All file sets in the collection, file.to_s is the key, file.id is the value
+    def select_files
+      Hash[file_presenters.map { |file| [file.to_s, file.id] }]
+    end
+
     def page_title
       if resource.persisted?
         [resource.to_s, "#{resource.human_readable_type} [#{resource.to_param}]"]
@@ -123,7 +129,26 @@ module Hyrax
       end.to_json
     end
 
+    def permissions_changed?
+      changed.include?('edit_users') ||
+        changed.include?('edit_groups') ||
+        changed.include?('read_users') ||
+        changed.include?('read_groups')
+    end
+
+    def visibility_changed?
+      changed['visibility']
+    end
+
     private
+
+      # @return [Array<FileSetPresenter>] presenters for the file sets in order of the ids
+      def file_presenters
+        @file_sets ||=
+          Hyrax::PresenterFactory.build_for(ids: resource.member_ids,
+                                            presenter_class: FileSetPresenter,
+                                            presenter_args: search_context.ability)
+      end
 
       def wants_lease?
         visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE
