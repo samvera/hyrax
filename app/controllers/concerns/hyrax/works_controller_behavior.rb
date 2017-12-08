@@ -58,8 +58,8 @@ module Hyrax
         wants.html { presenter && parent_presenter }
         wants.json do
           # load and authorize @curation_concern manually because it's skipped for html
-          @curation_concern = Hyrax::Queries.find_by(id: Valkyrie::ID.new(params[:id])) unless curation_concern
-          authorize! :show, @curation_concern
+          @resource = Hyrax::Queries.find_by(id: Valkyrie::ID.new(params[:id]))
+          authorize! :show, @resource
           render :show, status: :ok
         end
         additional_response_formats(wants)
@@ -122,12 +122,12 @@ module Hyrax
         attributes
       end
 
-      def after_create_error(_obj, _change_set)
+      def after_create_error(_obj, change_set)
         respond_to do |wants|
           wants.html do
             render 'new', status: :unprocessable_entity
           end
-          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: change_set.errors }) }
         end
       end
 
