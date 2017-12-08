@@ -4,7 +4,8 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
 
   # @param [ActiveFedora::Base] work - the work object
   # @param [Array<Hyrax::UploadedFile>] uploaded_files - an array of files to attach
-  def perform(work, uploaded_files, **work_attributes)
+  # rubocop:disable Metrics/MethodLength
+  def perform(work, uploaded_files, **_work_attributes)
     validate_files!(uploaded_files)
     user = User.find_by_user_key(work.depositor) # BUG? file depositor ignored
     edit_users = work.edit_users
@@ -12,7 +13,7 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
     edit_groups = work.edit_groups
     read_groups = work.read_groups
 
-    metadata = visibility_attributes(work_attributes)
+    # metadata = visibility_attributes(work_attributes)
     uploaded_files.each do |uploaded_file|
       change_set = build_change_set(user: user,
                                     edit_users: edit_users,
