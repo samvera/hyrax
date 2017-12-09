@@ -71,7 +71,7 @@ module Hyrax
 
     def destroy
       if @admin_set.destroy
-        redirect_to hyrax.admin_admin_sets_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
+        after_delete_success
       else
         redirect_to hyrax.admin_admin_set_path(@admin_set), alert: @admin_set.errors.full_messages.to_sentence
       end
@@ -139,6 +139,16 @@ module Hyrax
 
       def repository_class
         blacklight_config.repository_class
+      end
+
+      def after_delete_success
+        if request.referer.include? "my/collections"
+          redirect_to hyrax.my_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
+        elsif request.referer.include? "collections"
+          redirect_to hyrax.dashboard_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
+        else
+          redirect_to hyrax.my_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
+        end
       end
   end
 end

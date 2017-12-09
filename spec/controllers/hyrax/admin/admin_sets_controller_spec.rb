@@ -148,9 +148,35 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
 
       context "with empty admin set" do
         it "deletes the admin set" do
+          controller.request.set_header("HTTP_REFERER", "/admin/admin_sets")
           delete :destroy, params: { id: admin_set }
+
           expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(admin_admin_sets_path)
+          expect(response).to redirect_to(my_collections_path)
+          expect(flash[:notice]).to eq "Administrative set successfully deleted"
+          expect(AdminSet.exists?(admin_set.id)).to be false
+        end
+      end
+
+      context "with empty admin set and referrer from the my/collections dashboard" do
+        it "deletes the admin set" do
+          controller.request.set_header("HTTP_REFERER", "/my/collections")
+          delete :destroy, params: { id: admin_set }
+
+          expect(response).to have_http_status(:found)
+          expect(response).to redirect_to(my_collections_path)
+          expect(flash[:notice]).to eq "Administrative set successfully deleted"
+          expect(AdminSet.exists?(admin_set.id)).to be false
+        end
+      end
+
+      context "with empty admin set and referrer from the /collections dashboard" do
+        it "deletes the admin set" do
+          controller.request.set_header("HTTP_REFERER", "/collections")
+          delete :destroy, params: { id: admin_set }
+
+          expect(response).to have_http_status(:found)
+          expect(response).to redirect_to(dashboard_collections_path)
           expect(flash[:notice]).to eq "Administrative set successfully deleted"
           expect(AdminSet.exists?(admin_set.id)).to be false
         end
