@@ -19,7 +19,9 @@ module Hyrax
       end
 
       def save_notification(change_set:, resource:)
-        return if change_set.respond_to?(:files) # This is an update metadata action
+        return if change_set.respond_to?(:files) # This is an update files action
+        # One of the workflow updates like GrantReadToDepositor, GrantEditToDepositor or RevokeEditFromDepositor
+        return if change_set.user.nil?
         Hyrax.config.callback.run(:after_update_metadata, resource, change_set.user)
       end
 
