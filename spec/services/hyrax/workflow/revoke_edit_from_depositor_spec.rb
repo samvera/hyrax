@@ -20,7 +20,6 @@ RSpec.describe Hyrax::Workflow::RevokeEditFromDepositor do
 
       it "removes edit access" do
         expect { subject }.to change { work.edit_users }.from([depositor.user_key]).to([])
-        expect(work).to be_valid
       end
     end
 
@@ -30,7 +29,6 @@ RSpec.describe Hyrax::Workflow::RevokeEditFromDepositor do
 
       it "removes edit access" do
         expect { subject }.to change { work.edit_users }.from([depositor.user_key, editor.user_key]).to([editor.user_key])
-        expect(work).to be_valid
       end
     end
 
@@ -41,7 +39,6 @@ RSpec.describe Hyrax::Workflow::RevokeEditFromDepositor do
       it "removes edit access" do
         # We need to reload, because this work happens in a background job
         expect { subject }.to change { file_set.reload.edit_users }.from([depositor.user_key]).to([])
-        expect(work).to be_valid
       end
     end
   end
