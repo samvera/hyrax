@@ -30,7 +30,7 @@ module Hyrax
 
     # A bit of an analogue for a `belongs_to :admin_set` as it crosses from Fedora to the DB
     # @return [AdminSet]
-    # @raise [ActiveFedora::ObjectNotFoundError] when the we cannot find the AdminSet
+    # @raise [Valkyrie::Persistence::ObjectNotFoundError] when the we cannot find the AdminSet
     def admin_set
       Hyrax::Queries.find_by(id: Valkyrie::ID.new(admin_set_id))
     end

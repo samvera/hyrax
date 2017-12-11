@@ -64,7 +64,7 @@ RSpec.describe Hyrax::DownloadsController do
           end
 
           it 'retrieves the thumbnail without contacting Fedora' do
-            expect(ActiveFedora::Base).not_to receive(:find).with(file_set.id)
+            expect(Valkyrie::StorageAdapter).not_to receive(:find_by).with(file_set.id)
             get :show, params: { id: file_set, file: 'thumbnail' }
           end
         end

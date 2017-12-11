@@ -28,9 +28,10 @@ RSpec.describe Hyrax::Workflow::StatusListService do
     let(:workflow_role) { instance_double(Sipity::Role, name: 'approving') }
     let(:workflow_roles) { [instance_double(Sipity::WorkflowRole, role: workflow_role)] }
     let(:results) { service.each.to_a }
+    let(:solr) { Valkyrie::MetadataAdapter.find(:index_solr).connection }
 
     before do
-      ActiveFedora::SolrService.add([document, ability], commit: true)
+      solr.add([document, ability], params: { commit: true })
     end
 
     context "when user has roles" do

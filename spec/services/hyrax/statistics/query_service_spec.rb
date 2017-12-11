@@ -90,7 +90,7 @@ RSpec.describe Hyrax::Statistics::QueryService, :clean_repo do
 
     it "runs a query" do
       allow(service).to receive(:build_date_query).with(start_date, end_date).and_return('date query')
-      expect(ActiveFedora::SolrService).to receive(:count)
+      expect(service).to receive(:count_from_solr)
         .with("date query AND _query_:\"{!field f=read_access_group_ssim}registered\" AND " \
               "(_query_:\"{!raw f=internal_resource_ssim}GenericWork\" OR _query_:\"{!raw f=internal_resource_ssim}RareBooks::Atlas\")")
       service.count_registered_in_date_range(start_date, end_date)
@@ -103,7 +103,7 @@ RSpec.describe Hyrax::Statistics::QueryService, :clean_repo do
 
     it "is a relation" do
       allow(service).to receive(:build_date_query).with(start_date, end_date).and_return('date query')
-      expect(ActiveFedora::SolrService).to receive(:count)
+      expect(service).to receive(:count_from_solr)
         .with("date query AND _query_:\"{!field f=read_access_group_ssim}public\" AND " \
               "(_query_:\"{!raw f=internal_resource_ssim}GenericWork\" OR _query_:\"{!raw f=internal_resource_ssim}RareBooks::Atlas\")")
       service.count_public_in_date_range(start_date, end_date)

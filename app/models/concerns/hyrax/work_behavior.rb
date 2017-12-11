@@ -38,10 +38,9 @@ module Hyrax
       attribute :lease_id, Valkyrie::Types::ID.optional
     end
 
-    # TODO: This can be removed when we upgrade to ActiveFedora 12.0
+    # generates a weak etag
     def etag
-      raise "Unable to produce an etag for a unsaved object" unless persisted?
-      ldp_source.head.etag
+      "W/\"#{Digest::SHA256.hexdigest(attributes.to_s)}\""
     end
 
     # @return [Boolean] whether this instance is a Hydra::Works Collection.

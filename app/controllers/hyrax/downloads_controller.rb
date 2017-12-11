@@ -52,7 +52,7 @@ module Hyrax
       # Loads the file specified by the HTTP parameter `:file`.
       # If this object does not have a file by that name, return the default file
       # as returned by {#default_file}
-      # @return [ActiveFedora::File, String, NilClass] Returns the file from the repository or a path to a file on the local file system, if it exists.
+      # @return [String, NilClass] Returns the file from the repository or a path to a file on the local file system, if it exists.
       def load_file
         file_reference = params[:file]
         return default_file unless file_reference

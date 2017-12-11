@@ -43,7 +43,7 @@ module Hyrax
               [
                 "<p>".html_safe,
                 "ChecksumAuditLog id: #{log.id}; ",
-                content_tag("a", "file", href: "#{Hydra::PCDM::File.translate_id_to_uri.call(log.file_id)}/fcr:metadata") + "; ",
+                content_tag("a", "file", href: "#{log.file_id}/fcr:metadata") + "; ",
                 content_tag("a", "checked_uri", href: "#{log.checked_uri}/fcr:metadata") + "; ",
                 "date: #{log.created_at}; ",
                 "expected_result: #{log.expected_result}",

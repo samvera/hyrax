@@ -204,7 +204,7 @@ module Hyrax
       # removes edit access for the depositor.
       def trophy_abilities
         can [:create, :destroy], Trophy do |t|
-          doc = ActiveFedora::Base.search_by_id(t.work_id, fl: 'depositor_ssim')
+          doc = ::SolrDocument.find(t.work_id)
           current_user.user_key == doc.fetch('depositor_ssim').first
         end
       end

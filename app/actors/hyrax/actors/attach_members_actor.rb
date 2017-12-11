@@ -55,7 +55,7 @@ module Hyrax
         # Determines if a hash contains a truthy _destroy key.
         # rubocop:disable Naming/PredicateName
         def has_destroy_flag?(hash)
-          ActiveFedora::Type::Boolean.new.cast(hash['_destroy'])
+          ActiveRecord::Type::Boolean.new.cast(hash['_destroy'])
         end
         # rubocop:enable Naming/PredicateName
 

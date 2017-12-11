@@ -1,5 +1,5 @@
 en:
-  activefedora:
+  valkyrie:
     models:
       batch_upload_item: 'Works by Batch'
       file_set: 'File'
