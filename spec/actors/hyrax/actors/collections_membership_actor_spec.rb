@@ -28,7 +28,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
       allow(curation_concern).to receive(:member_of_collections=)
     end
 
-    it 'does not receive the member_of_collection_ids' do
+    it 'does not receive the member_of_collections_attributes' do
       expect(terminator).to receive(:create).with(Hyrax::Actors::Environment) do |k|
         expect(k.attributes).to eq("title" => ["test"])
       end
@@ -95,7 +95,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
       it "doesn't remove the work from the other user's collection" do
         subject.create(env)
         expect(subject.create(env)).to be true
-        expect(curation_concern.member_of_collections).to match_array [collection, other_collection] # TODO: Seems wrong that collection is included.  I don't see where this test adds the work to collection.
+        expect(curation_concern.member_of_collections).to match_array [collection, other_collection]
       end
     end
 
@@ -111,14 +111,17 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
 
       context "when only one collection" do
         let(:attributes) do
-          { member_of_collection_ids: [collection.id], title: ['test'] }
+          {
+            member_of_collections_attributes: { '0' => { id: collection.id } },
+            title: ['test']
+          }
         end
 
         it "removes member_of_collection_ids and adds collection_id to env" do
-          expect(env.attributes).to have_key(:member_of_collection_ids)
-          expect(env.attributes[:member_of_collection_ids].size).to eq 1
+          expect(env.attributes).to have_key(:member_of_collections_attributes)
+          expect(env.attributes[:member_of_collections_attributes].size).to eq 1
           expect(subject.create(env)).to be true
-          expect(env.attributes).not_to have_key(:member_of_collection_ids)
+          expect(env.attributes).not_to have_key(:member_of_collections_attributes)
           expect(env.attributes).to have_key(:collection_id)
           expect(env.attributes[:collection_id]).to eq collection.id
         end
@@ -127,14 +130,20 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
       context "when more than one collection" do
         let(:collection2) { create(:collection) }
         let(:attributes) do
-          { member_of_collection_ids: [collection.id, collection2.id], title: ['test'] }
+          {
+            member_of_collections_attributes: {
+              '0' => { id: collection.id },
+              '1' => { id: collection2.id }
+            },
+            title: ['test']
+          }
         end
 
         it "removes member_of_collection_ids and does NOT add collection_id" do
-          expect(env.attributes).to have_key(:member_of_collection_ids)
-          expect(env.attributes[:member_of_collection_ids].size).to eq 2
+          expect(env.attributes).to have_key(:member_of_collections_attributes)
+          expect(env.attributes[:member_of_collections_attributes].size).to eq 2
           expect(subject.create(env)).to be true
-          expect(env.attributes).not_to have_key(:member_of_collection_ids)
+          expect(env.attributes).not_to have_key(:member_of_collections_attributes)
           expect(env.attributes).not_to have_key(:collection_id)
         end
       end

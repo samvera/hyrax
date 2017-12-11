@@ -32,7 +32,7 @@ module Hyrax
         # @param [Hash<Hash>] a collection of members
         def assign_nested_attributes_for_collection(env, attributes_collection)
           return true unless attributes_collection
-          return false unless valid_membership? attributes_collection
+          return false unless valid_membership?(env, attributes_collection)
 
           attributes_collection = attributes_collection.sort_by { |i, _| i.to_i }.map { |_, attributes| attributes }
           # checking for existing works to avoid rewriting/loading works that are
@@ -79,12 +79,12 @@ module Hyrax
         # being created directly in that collection.
         #
         # NOTE: Only called from create.  All collections are being added as parents.  None are being removed.
-        def extract_collection_id(env, collection_attributes)
-          return unless collection_attributes && collection_attributes.size == 1
-          env.attributes[:collection_id] = collection_attributes.first['id']
+        def extract_collection_id(env, attributes_collection)
+          return unless attributes_collection && attributes_collection.size == 1
+          env.attributes[:collection_id] = attributes_collection.first.second['id']
         end
 
-        def valid_membership? attributes_collection
+        def valid_membership?(env, attributes_collection)
           collection_ids = attributes_collection.map { |_, attributes| attributes['id'] }
           multiple_memberships = Hyrax::MultipleMembershipChecker.new(item: env.curation_concern).check(collection_ids: collection_ids)
           if multiple_memberships

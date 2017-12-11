@@ -364,7 +364,7 @@ module Hyrax
         def single_item_search_builder
           single_item_search_builder_class.new(self).with(params.except(:q, :page))
         end
-      
+
         def collection_params
           @participants = extract_old_style_permission_attributes(params[:collection])
           form_class.model_attributes(params[:collection])

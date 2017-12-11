@@ -492,8 +492,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
         # verify the collection is pre-selected
         click_link "Relationships" # switch tab
-        expect(page).to have_select("generic_work_member_of_collection_ids", selected: collection1.title.first)
-        expect(page).not_to have_select("generic_work_member_of_collection_ids", selected: collection2.title.first)
+        expect(page).to have_selector("table tr", text: collection1.title.first)
+        expect(page).not_to have_selector("table tr", text: collection2.title.first)
+
         # add required file
         click_link "Files" # switch tab
         within('span#addfiles') do

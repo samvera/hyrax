@@ -102,10 +102,10 @@ SUMMARY
   # minor-level version bump in a dependency comes out.
   spec.add_development_dependency 'i18n-debug' if ENV['I18N_DEBUG']
   spec.add_development_dependency 'i18n_yaml_sorter' unless ENV['TRAVIS']
-  spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
   spec.add_development_dependency 'rails-controller-testing', '~> 1'
   spec.add_development_dependency 'rubocop', '~> 0.51.0'
   spec.add_development_dependency 'rubocop-rspec', '~> 1.20.1'
+  spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'webmock'
 end

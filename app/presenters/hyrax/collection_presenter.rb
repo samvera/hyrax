@@ -3,7 +3,8 @@ module Hyrax
     include ModelProxy
     include PresentsAttributes
     include ActionView::Helpers::NumberHelper
-    attr_accessor :solr_document, :current_ability, :request, :collection_type
+    attr_accessor :solr_document, :current_ability, :request
+    attr_writer :collection_type
 
     class_attribute :create_work_presenter_class
     self.create_work_presenter_class = Hyrax::SelectTypeListPresenter
