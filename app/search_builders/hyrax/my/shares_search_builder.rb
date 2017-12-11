@@ -7,7 +7,7 @@ class Hyrax::My::SharesSearchBuilder < Hyrax::SearchBuilder
   def show_only_shared_files(solr_parameters)
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] += [
-      "-" + ActiveFedora::SolrQueryBuilder.construct_query_for_rel(depositor: current_user_key)
+      "-_query_:\"{!raw f=depositor_ssim}#{current_user_key}\""
     ]
   end
 end

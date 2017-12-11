@@ -1,7 +1,7 @@
 # coding: utf-8
 
 module MusicalWork
-  class Cover < ActiveFedora::Base
+  class Cover < Valkyrie::Resource
   end
 end
 

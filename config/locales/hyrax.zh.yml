@@ -1,6 +1,6 @@
 ---
 zh:
-  activefedora:
+  valkyrie:
     models:
       batch_upload_item: 批量上传的作品
       file_set: 文件

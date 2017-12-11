@@ -37,7 +37,7 @@ RSpec.describe ::SolrDocument, type: :model do
       let(:attributes) { { 'date_uploaded_dtsi' => 'Test' } }
 
       it "logs parse errors" do
-        expect(ActiveFedora::Base.logger).to receive(:info).with(/Unable to parse date.*/)
+        expect(Rails.logger).to receive(:info).with(/Unable to parse date.*/)
         subject
       end
     end
@@ -71,7 +71,7 @@ RSpec.describe ::SolrDocument, type: :model do
       let(:attributes) { { 'created_at_dtsi' => 'Test' } }
 
       it "logs parse errors" do
-        expect(ActiveFedora::Base.logger).to receive(:info).with(/Unable to parse date.*/)
+        expect(Rails.logger).to receive(:info).with(/Unable to parse date.*/)
         subject
       end
     end

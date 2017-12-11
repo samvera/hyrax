@@ -390,16 +390,6 @@ module Hyrax
                                 "Edit" => "edit" }
     end
 
-    attr_writer :translate_uri_to_id
-    def translate_uri_to_id
-      @translate_uri_to_id ||= ActiveFedora::Noid.config.translate_uri_to_id
-    end
-
-    attr_writer :translate_id_to_uri
-    def translate_id_to_uri
-      @translate_id_to_uri ||= ActiveFedora::Noid.config.translate_id_to_uri
-    end
-
     attr_writer :contact_email
     def contact_email
       @contact_email ||= "repo-admin@example.org"

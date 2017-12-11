@@ -91,7 +91,7 @@ RSpec.describe Hyrax::AdminSetService do
 
     before do
       allow(service).to receive(:search_results).and_return(documents)
-      allow(ActiveFedora::SolrService.instance).to receive(:conn).and_return(connection)
+      allow(Valkyrie::MetadataAdapter.find(:index_solr)).to receive(:connection).and_return(connection)
       allow(connection).to receive(:get).with("select", params: { fq: "{!terms f=admin_set_id_ssim}id-xyz123,id-yyx123,id-zxy123",
                                                                   "facet.field" => "admin_set_id_ssim" }).and_return(results)
     end

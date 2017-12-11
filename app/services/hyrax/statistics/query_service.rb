@@ -28,7 +28,7 @@ module Hyrax
       end
 
       def count(clauses = [])
-        ActiveFedora::SolrService.count(query(clauses))
+        count_from_solr(query(clauses))
       end
 
       def build_date_query(start_datetime, end_datetime)
@@ -42,6 +42,14 @@ module Hyrax
       end
 
       private
+
+        def count_from_solr(q)
+          solr = Valkyrie::MetadataAdapter.find(:index_solr).connection
+          results = solr.get('select', params: { q: q,
+                                                 rows: 0,
+                                                 qt: 'standard' })
+          results['response']['numFound'].to_i
+        end
 
         def where_public
           where_access_is 'public'

@@ -28,11 +28,10 @@ module Hyrax
     # @return [Array<Hyrax::AdminSetService::SearchResultForWorkCount>] a list with document, then work and file count
     def search_results_with_work_count(access, join_field: "admin_set_id_ssim")
       admin_sets = search_results(access)
-      results = ActiveFedora::SolrService.instance.conn.get(
-        ActiveFedora::SolrService.select_path,
-        params: { fq: solr_query(admin_sets, join_field: join_field),
-                  'facet.field' => join_field }
-      )
+      conn = Valkyrie::MetadataAdapter.find(:index_solr).connection
+      results = conn.get('select',
+                         params: { fq: solr_query(admin_sets, join_field: join_field),
+                                   'facet.field' => join_field })
       counts = results['facet_counts']['facet_fields'][join_field].each_slice(2).to_h
       file_counts = count_files(results, join_field: join_field)
       admin_sets.map do |admin_set|

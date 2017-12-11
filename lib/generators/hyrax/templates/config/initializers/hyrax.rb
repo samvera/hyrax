@@ -190,10 +190,6 @@ Hyrax.config do |config|
   # How long to hold the lock in milliseconds
   # config.lock_time_to_live = 60_000
 
-  ## Do not alter unless you understand how ActiveFedora handles URI/ID translation
-  # config.translate_id_to_uri = ActiveFedora::Noid.config.translate_id_to_uri
-  # config.translate_uri_to_id = ActiveFedora::Noid.config.translate_uri_to_id
-
   ## Fedora import/export tool
   #
   # Path to the Fedora import export tool jar file

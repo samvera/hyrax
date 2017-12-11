@@ -4,10 +4,11 @@ RSpec.describe Hyrax::CollectionSizeService do
   end
 
   let(:coll1) { SolrDocument.new(coll1_attrs) }
+  let(:solr) { Valkyrie::MetadataAdapter.find(:index_solr).connection }
 
   before do
-    ActiveFedora::SolrService.add(coll1_attrs)
-    ActiveFedora::SolrService.commit
+    solr.add(coll1_attrs)
+    solr.commit
   end
 
   describe "#run" do
@@ -28,11 +29,11 @@ RSpec.describe Hyrax::CollectionSizeService do
       let(:works) { [work1.id, work2.id] }
 
       before do
-        ActiveFedora::SolrService.add(file1_attrs)
-        ActiveFedora::SolrService.add(work1_attrs)
-        ActiveFedora::SolrService.add(file2_attrs)
-        ActiveFedora::SolrService.add(work2_attrs)
-        ActiveFedora::SolrService.commit
+        solr.add(file1_attrs)
+        solr.add(work1_attrs)
+        solr.add(file2_attrs)
+        solr.add(work2_attrs)
+        solr.commit
       end
 
       context "that have files" do
