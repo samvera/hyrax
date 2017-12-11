@@ -16,7 +16,7 @@ RSpec.describe Hyrax::Workflow::GrantReadToDepositor do
     end
 
     context "with no additional viewers" do
-      let(:work) { create_for_repository(:work_without_access, depositor: depositor.user_key) }
+      let(:work) { create_for_repository(:work_without_access, depositor: [depositor.user_key]) }
 
       it "adds read access" do
         expect { subject }.to change { work.read_users }.from([]).to([depositor.user_key])
@@ -25,7 +25,7 @@ RSpec.describe Hyrax::Workflow::GrantReadToDepositor do
 
     context "with an additional viewers" do
       let(:viewer) { create(:user) }
-      let(:work) { create_for_repository(:work_without_access, depositor: depositor.user_key, read_users: [viewer.user_key]) }
+      let(:work) { create_for_repository(:work_without_access, depositor: [depositor.user_key], read_users: [viewer.user_key]) }
 
       it "adds read access" do
         expect { subject }.to change { work.read_users }.from([viewer.user_key]).to([viewer.user_key, depositor.user_key])

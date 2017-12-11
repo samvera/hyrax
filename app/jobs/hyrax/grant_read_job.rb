@@ -1,5 +1,5 @@
 module Hyrax
-  # Grants the user's read access on the provided FileSet
+  # Grants the user read access to the provided FileSet
   class GrantReadJob < ApplicationJob
     queue_as Hyrax.config.ingest_queue_name
 

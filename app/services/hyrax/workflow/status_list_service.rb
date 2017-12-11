@@ -30,7 +30,14 @@ module Hyrax
       private
 
         delegate :logger, to: :context
-        delegate :blacklight_config, to: CatalogController
+
+        # Make this service use a POST to Solr, because the list of
+        # actionable roles could overrun the maximum URL size.
+        def blacklight_config
+          CatalogController.blacklight_config.dup.tap do |conf|
+            conf.http_method = :post
+          end
+        end
 
         # @return [Array<SolrDocument>] array of matching solr documents
         def solr_documents
@@ -44,7 +51,6 @@ module Hyrax
           work_query = WorksSearchBuilder.new([:filter_models], self).query
           work_query["fq"] += query(actionable_roles)
           work_query["rows"] = 1000
-          # TODO: can we make this use a POST?
           repository.search(work_query).response["docs"]
         end
 
