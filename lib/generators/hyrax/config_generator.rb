@@ -1,5 +1,3 @@
-# -*- encoding : utf-8 -*-
-
 require 'rails/generators'
 
 class Hyrax::ConfigGenerator < Rails::Generators::Base

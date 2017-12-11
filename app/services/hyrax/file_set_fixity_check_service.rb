@@ -22,7 +22,7 @@ module Hyrax
   # `max_days_between_fixity_checks` arg, which defaults to config'd
   # `Hyrax.config.max_days_between_fixity_checks`
   class FileSetFixityCheckService
-    attr_reader :file_set, :id, :latest_version_only,
+    attr_reader :id, :latest_version_only,
                 :async_jobs, :max_days_between_fixity_checks
 
     # @param file_set [ActiveFedora::Base, String] file_set

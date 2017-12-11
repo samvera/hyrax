@@ -1,4 +1,4 @@
-RSpec.feature 'embargo' do
+RSpec.describe 'embargo' do
   let(:user) { create(:user) }
 
   before do

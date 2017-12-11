@@ -2,8 +2,6 @@ module Hyrax
   class Admin::AdminSetsController < ApplicationController
     include Hyrax::CollectionsControllerBehavior
 
-    # added skip to allow flash notices. see https://github.com/samvera/hyrax/issues/202
-    skip_before_action :filter_docs_with_read_access!
     before_action :ensure_manager!
     load_and_authorize_resource
 

@@ -1,4 +1,4 @@
-RSpec.feature 'proxy', type: :feature do
+RSpec.describe 'proxy', type: :feature do
   let(:user) { create(:user) }
   let(:second_user) { create(:user) }
 

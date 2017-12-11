@@ -4,6 +4,7 @@ module Hyrax
     include PresentsAttributes
     include CharacterizationBehavior
     include WithEvents
+    include DisplaysImage
 
     attr_accessor :solr_document, :current_ability, :request
 

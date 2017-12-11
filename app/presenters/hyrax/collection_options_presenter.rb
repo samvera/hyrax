@@ -4,6 +4,7 @@ module Hyrax
     # @param [Hyrax::CollectionsService] service
     def initialize(service)
       @service = service
+      Deprecation.warn(self, 'CollectionOptionsPresenter is deprecated and will be removed in Hyrax 3')
     end
 
     # Return Collection selectbox options based on access type

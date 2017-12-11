@@ -1,4 +1,6 @@
 RSpec.describe Hyrax::CollectionOptionsPresenter do
+  before { allow(Deprecation).to receive(:warn) }
+
   let(:instance) { described_class.new(service) }
   let(:doc1) { instance_double(SolrDocument, id: 4, to_s: 'Title 1') }
   let(:doc2) { instance_double(SolrDocument, id: 2, to_s: 'Other Title 1') }

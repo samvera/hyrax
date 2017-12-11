@@ -285,34 +285,6 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       end
     end
 
-    context 'adding to collections' do
-      let!(:collection1) { create(:collection, user: user) }
-      let!(:collection2) { create(:collection, user: user) }
-      let(:attributes) do
-        attributes_for(:generic_work, member_of_collection_ids: [collection2.id])
-      end
-
-      before do
-        curation_concern.apply_depositor_metadata(user.user_key)
-        curation_concern.member_of_collections = [collection1]
-        curation_concern.save!
-      end
-
-      it 'remove from the old collection and adds to the new collection' do
-        curation_concern.reload
-        expect(curation_concern.member_of_collection_ids).to eq [collection1.id]
-        # before running actor.update, the work is in collection1
-
-        expect(subject.update(env)).to be true
-
-        curation_concern.reload
-        expect(curation_concern.identifier).to be_blank
-        expect(curation_concern).to be_persisted
-        # after running actor.update, the work is in collection2 and no longer in collection1
-        expect(curation_concern.member_of_collections).to eq [collection2]
-      end
-    end
-
     context 'with multiple file sets' do
       let(:file_set1) { create(:file_set) }
       let(:file_set2) { create(:file_set) }

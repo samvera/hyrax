@@ -54,6 +54,10 @@ module Hyrax
       Hyrax::Engine.routes.url_helpers.download_url(representative_presenter, host: request.host)
     end
 
+    def manifest_url
+      manifest_helper.polymorphic_url([:manifest, self])
+    end
+
     # @return FileSetPresenter presenter for the representative FileSets
     def representative_presenter
       return nil if representative_id.blank?
@@ -151,6 +155,10 @@ module Hyrax
           @featured = FeaturedWork.where(work_id: solr_document.id).exists?
         end
         @featured
+      end
+
+      def manifest_helper
+        @manifest_helper ||= ManifestHelper.new(request.base_url)
       end
 
       def user_can_feature_works?

@@ -1,5 +1,5 @@
 module Sipity
-  RSpec.describe Workflow, type: :model, no_clean: true do
+  RSpec.describe Workflow, type: :model do
     context 'class configuration' do
       subject { described_class }
 

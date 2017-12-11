@@ -1,5 +1,5 @@
 module Sipity
-  RSpec.describe Role, type: :model, no_clean: true do
+  RSpec.describe Role, type: :model do
     context 'class methods' do
       subject { described_class }
 

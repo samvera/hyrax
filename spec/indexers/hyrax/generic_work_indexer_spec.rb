@@ -98,14 +98,14 @@ RSpec.describe GenericWorkIndexer do
   end
 
   describe "with a remote resource (based near)" do
-    mpls = <<EOF.strip_heredoc
+    mpls = <<RDFXML.strip_heredoc
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
           <rdf:RDF xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:gn="http://www.geonames.org/ontology#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
           <gn:Feature rdf:about="http://sws.geonames.org/5037649/">
           <gn:name>Minneapolis</gn:name>
           </gn:Feature>
           </rdf:RDF>
-EOF
+RDFXML
 
     before do
       allow(service).to receive(:rdf_service).and_return(Hyrax::DeepIndexingService)

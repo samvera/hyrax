@@ -105,6 +105,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
 
         it { is_expected.to be false }
         it 'will not call the workflow_importer' do
+          subject
           expect(workflow_importer).not_to have_received(:call)
         end
       end

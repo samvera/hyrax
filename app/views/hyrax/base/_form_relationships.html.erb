@@ -10,6 +10,6 @@
 <%= render 'form_member_of_collections', f: f %>
 
 <% if f.object.persisted? %>
-  <h3><%= t("hyrax.works.form.in_this_work") %></h3>
+  <h2><%= t("hyrax.works.form.in_this_work") %></h2>
   <%= render 'form_child_work_relationships', f: f  %>
 <% end %>

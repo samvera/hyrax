@@ -1,5 +1,3 @@
-# -*- encoding : utf-8 -*-
-
 require 'rails/generators'
 
 class Hyrax::AssetsGenerator < Rails::Generators::Base
@@ -20,10 +18,10 @@ class Hyrax::AssetsGenerator < Rails::Generators::Base
   def inject_js
     return if hyrax_javascript_installed?
     insert_into_file 'app/assets/javascripts/application.js', after: '//= require_tree .' do
-      <<-EOF.strip_heredoc
+      <<-JS.strip_heredoc
 
         //= require hyrax
-      EOF
+      JS
     end
   end
 

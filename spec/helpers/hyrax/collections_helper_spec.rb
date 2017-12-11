@@ -53,44 +53,6 @@ RSpec.describe Hyrax::CollectionsHelper do
     end
   end
 
-  describe "button_for_remove_from_collection" do
-    let(:item) { double(id: 'changeme:123') }
-    let(:collection) { create(:collection) }
-
-    it "generates a form that can remove the item" do
-      str = button_for_remove_from_collection collection, item
-      doc = Nokogiri::HTML(str)
-      form = doc.xpath('//form').first
-      expect(form.attr('action')).to eq hyrax.dashboard_collection_path(collection)
-      expect(form.css('input#collection_members[type="hidden"][value="remove"]')).not_to be_empty
-      expect(form.css('input[type="hidden"][name="batch_document_ids[]"][value="changeme:123"]')).not_to be_empty
-    end
-
-    describe "for a collection of another name" do
-      before do
-        class OtherCollection < ActiveFedora::Base
-          include Hyrax::CollectionBehavior
-          include Hydra::Works::WorkBehavior
-        end
-      end
-
-      let!(:collection) { OtherCollection.create!(title: ['foo']) }
-
-      after do
-        Object.send(:remove_const, :OtherCollection)
-      end
-
-      it "generates a form that can remove the item" do
-        str = button_for_remove_from_collection collection, item
-        doc = Nokogiri::HTML(str)
-        form = doc.xpath('//form').first
-        expect(form.attr('action')).to eq hyrax.dashboard_collection_path(collection)
-        expect(form.css('input#collection_members[type="hidden"][value="remove"]')).not_to be_empty
-        expect(form.css('input[type="hidden"][name="batch_document_ids[]"][value="changeme:123"]')).not_to be_empty
-      end
-    end
-  end
-
   describe "button_for_remove_selected_from_collection" do
     let(:collection) { create(:collection) }
 

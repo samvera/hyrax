@@ -1,4 +1,4 @@
-RSpec.feature 'Deleting a work', type: :feature do
+RSpec.describe 'Deleting a work', type: :feature do
   let(:user) { create(:user) }
   let(:work) { build(:work, user: user) }
   let(:file_set) { create(:file_set, user: user, title: ['ABC123xyz']) }

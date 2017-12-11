@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe 'PowerConverter', no_clean: true do
+RSpec.describe 'PowerConverter' do
   describe '#convert_to_polymorphic_type' do
     it 'will convert an object that responds to #to_polymorphic_type' do
       object = double(to_polymorphic_type: :symbol)

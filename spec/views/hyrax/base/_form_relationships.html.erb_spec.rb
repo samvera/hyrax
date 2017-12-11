@@ -21,7 +21,6 @@ RSpec.describe 'hyrax/base/_form_relationships.html.erb', type: :view do
   end
 
   before do
-    allow(form).to receive(:collections_for_select).and_return([])
     allow(view).to receive(:action_name).and_return('new')
     allow(Hyrax::AdminSetService).to receive(:new).with(controller).and_return(service)
     allow(Hyrax::AdminSetOptionsPresenter).to receive(:new).with(service).and_return(presenter)

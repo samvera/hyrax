@@ -1,4 +1,4 @@
-// Autocomplete for linked data elements
+// Autocomplete for linked data elements using a select2 autocomplete widget
 // After selecting something, the seleted item is immutable
 export default class LinkedData {
   constructor(element, url) {

@@ -1,5 +1,5 @@
 module Sipity
-  RSpec.describe EntitySpecificResponsibility, type: :model, no_clean: true do
+  RSpec.describe EntitySpecificResponsibility, type: :model do
     subject { described_class }
 
     its(:column_names) { is_expected.to include('workflow_role_id') }

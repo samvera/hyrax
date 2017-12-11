@@ -1,5 +1,5 @@
 module Sipity
-  RSpec.describe NotificationRecipient, type: :model, no_clean: true do
+  RSpec.describe NotificationRecipient, type: :model do
     subject { described_class.new }
 
     it 'will raise an ArgumentError if you provide an invalid recipient_strategy' do

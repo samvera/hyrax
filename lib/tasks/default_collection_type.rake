@@ -7,12 +7,12 @@ namespace :hyrax do
       if Hyrax::CollectionType.exists?(machine_id: default.machine_id)
         puts "Default collection type is #{default.machine_id}"
       else
-        $stderr.puts "ERROR: A default collection type did not get created."
+        warn "ERROR: A default collection type did not get created."
       end
       if Hyrax::CollectionType.exists?(machine_id: admin_set.machine_id)
         puts "Default collection type is #{admin_set.machine_id}"
       else
-        $stderr.puts "ERROR: The Admin Set collection type did not get created."
+        warn "ERROR: The Admin Set collection type did not get created."
       end
     end
   end

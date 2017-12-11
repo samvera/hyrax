@@ -12,105 +12,6 @@ RSpec.describe Hyrax::FileSetsController do
       allow(CreateDerivativesJob).to receive(:perform_later)
     end
 
-    describe '#create' do
-      let(:parent) do
-        create(:generic_work, :public, edit_users: [user.user_key])
-      end
-      let(:file) { fixture_file_upload('image.png', 'image/png') }
-      let(:file_path) { fixture_path + '/small_file.txt' }
-
-      context 'on the happy path' do
-        let(:expected_params) do
-          { files: [file],
-            title: ['test title'],
-            visibility: 'restricted' }
-        end
-
-        it 'calls the actor to create metadata and content' do
-          expect(actor).to receive(:create_metadata).with(ActionController::Parameters) do |ac_params|
-            expect(ac_params['files'].map(&:class)).to eq [ActionDispatch::Http::UploadedFile]
-            expect(ac_params['title']).to eq expected_params[:title]
-            expect(ac_params['visibility']).to eq expected_params[:visibility]
-          end
-          expect(actor).to receive(:attach_to_work).with(parent).and_return(true)
-          expect(actor).to receive(:create_content).with(ActionDispatch::Http::UploadedFile).and_return(true)
-
-          post :create, xhr: true, params: { parent_id: parent,
-                                             file_set: {
-                                               files: [file],
-                                               title: ['test title'],
-                                               visibility: 'restricted'
-                                             } }
-          expect(response).to be_success
-          expect(flash[:error]).to be_nil
-        end
-      end
-
-      context "on something that isn't a file" do
-        # Note: This is a duplicate of coverage in file_sets_controller_json_spec.rb
-        it 'renders error' do
-          post :create, xhr: true, params: { parent_id: parent,
-                                             file_set: { files: ['hello'] },
-                                             permission: { group: { 'public' => 'read' } },
-                                             terms_of_service: '1' }
-          expect(response.status).to eq 400
-          msg = JSON.parse(response.body)['message']
-          expect(msg).to match(/No file uploaded/i)
-        end
-      end
-
-      subject { create(:file_set) }
-
-      context 'when the file has a virus' do
-        before do
-          allow(subject).to receive(:warn) # suppress virus warnings
-          allow(Hydra::Works::VirusCheckerService).to receive(:file_has_virus?) { true }
-          of = subject.build_original_file
-          of.content = File.open(file_path)
-        end
-        it 'populates the errors hash during validation' do
-          expect(subject).not_to be_valid
-          expect(subject.errors.messages[:base].first).to eq "Failed to verify uploaded file is not a virus"
-        end
-      end
-
-      context 'when solr is down' do
-        before do
-          allow(actor).to receive(:create_metadata)
-          allow(actor).to receive(:attach_to_work)
-          allow(actor).to receive(:create_content).and_raise(RSolr::Error::Http.new({}, {}))
-        end
-
-        it 'errors out of create after on continuous rsolr error' do
-          post :create, xhr: true, params: {
-            parent_id: parent,
-            file_set: { files: [file] },
-            permission: { group: { 'public' => 'read' } },
-            terms_of_service: '1'
-          }
-          expect(response.body).to include('Error occurred while creating a FileSet.')
-        end
-      end
-
-      context 'when the file is not created' do
-        before do
-          allow(controller.send(:actor)).to receive(:create_metadata)
-          allow(controller.send(:actor)).to receive(:attach_to_work)
-          allow(controller.send(:actor)).to receive(:create_content).and_return(false)
-        end
-
-        it 'errors out of create after on continuous rsolr error' do
-          post :create, xhr: true, params: {
-            parent_id: parent,
-            file_set: { files: [file] },
-            permission: { group: { 'public' => 'read' } },
-            terms_of_service: '1'
-          }
-          expect(response.body).to include('Error creating file image.png')
-        end
-      end
-    end
-
     describe "#destroy" do
       context "file_set with a parent" do
         let(:file_set) do
@@ -138,8 +39,14 @@ RSpec.describe Hyrax::FileSetsController do
     end
 
     describe "#edit" do
+      let(:parent) do
+        create(:work, :public, user: user)
+      end
       let(:file_set) do
-        create(:file_set, user: user)
+        create(:file_set, user: user).tap do |file_set|
+          parent.ordered_members << file_set
+          parent.save!
+        end
       end
 
       before do
@@ -157,6 +64,7 @@ RSpec.describe Hyrax::FileSetsController do
         expect(response).to be_success
         expect(assigns[:file_set]).to eq file_set
         expect(assigns[:version_list]).to be_kind_of Hyrax::VersionListPresenter
+        expect(assigns[:parent]).to eq parent
         expect(response).to render_template(:edit)
       end
     end
@@ -404,42 +312,6 @@ RSpec.describe Hyrax::FileSetsController do
         get :show, params: { id: public_file_set }
         expect(response).to be_success
       end
-    end
-
-    describe '#new' do
-      let(:parent) do
-        create(:generic_work, :public)
-      end
-
-      it 'does not let the user submit' do
-        get :new, params: { parent_id: parent }
-        expect(response).to fail_redirect_and_flash(main_app.new_user_session_path, 'You need to sign in or sign up before continuing.')
-      end
-    end
-  end
-
-  context 'finds parents' do
-    let(:parent) do
-      create(:generic_work, :public, edit_users: [user.user_key])
-    end
-
-    let(:file_set) do
-      file_set = create(:file_set, user: user)
-      parent.ordered_members << file_set
-      parent.save
-      file_set
-    end
-
-    before do
-      allow(controller).to receive(:curation_concern).and_return(file_set)
-    end
-
-    it 'finds a parent' do
-      expect(controller.parent).to eq(parent)
-    end
-
-    it 'finds a parent id' do
-      expect(controller.parent_id).to eq(parent.id)
     end
   end
 end
