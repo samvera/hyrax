@@ -155,6 +155,6 @@ FactoryBot.define do
     end
 
     title ['Test title']
-    depositor { create(:user).user_key }
+    depositor { [create(:user).user_key] }
   end
 end

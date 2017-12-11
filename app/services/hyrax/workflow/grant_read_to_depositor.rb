@@ -3,10 +3,10 @@ module Hyrax
     # This is a built in function for workflow, so that a workflow action can be created that
     # grants the creator the ability to view their work.
     module GrantReadToDepositor
-      # @param [#read_users=, #read_users] target (likely an ActiveRecord::Base) to which we are adding read_users for the depositor
+      # @param [#read_users=, #depositor] target (likely a work) to which we are adding read_users for the depositor
       # @return void
       def self.call(target:, **)
-        depositor = Array(target.depositor).first
+        depositor = target.depositor.first
         target.read_users += [depositor]
         # If there are a lot of members, granting access to each could take a
         # long time. Do this work in the background.
