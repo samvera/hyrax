@@ -1,8 +1,17 @@
 RSpec.describe Hyrax::Workflow::StatusListService do
+  let(:user) { create(:user) }
+  let(:context) { double(current_user: user, logger: double(debug: nil)) }
+  let(:service) { described_class.new(context, "workflow_state_name_ssim:initial") }
+
+  describe '#repository' do
+    let(:repository) { service.repository }
+
+    it 'queries Solr via HTTP POST method' do
+      expect(repository.blacklight_config.http_method).to eq :post
+    end
+  end
+
   describe "#each" do
-    let(:user) { create(:user) }
-    let(:context) { double(current_user: user, logger: double(debug: nil)) }
-    let(:service) { described_class.new(context, "workflow_state_name_ssim:initial") }
     let!(:sipity_entity) { create(:sipity_entity) }
     let(:document) do
       { id: '33333',
@@ -40,18 +49,6 @@ RSpec.describe Hyrax::Workflow::StatusListService do
         expect(results.first).to be_kind_of(SolrDocument)
         expect(results.first.to_s).to eq 'Hey dood!'
         expect(results.first.workflow_state).to eq 'initial'
-      end
-
-      describe '#search_solr' do
-        let(:mock_response) { { 'response' => { 'docs' => [{}, {}, {}] } } }
-
-        it 'queries Solr via HTTP POST method' do
-          allow(ActiveFedora::SolrService).to receive(:post).and_return(mock_response)
-          allow(ActiveFedora::SolrService).to receive(:get)
-          service.send(:search_solr)
-          expect(ActiveFedora::SolrService).to have_received(:post)
-          expect(ActiveFedora::SolrService).not_to have_received(:get)
-        end
       end
     end
 
