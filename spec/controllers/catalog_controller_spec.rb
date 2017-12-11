@@ -88,7 +88,7 @@ RSpec.describe CatalogController, type: :controller do
       end
     end
 
-    context 'works by file metadata' do
+    context 'works by file metadata', :clean_repo do
       let!(:work1) do
         create_for_repository(:work, :public, title: ["me too"], member_ids: [file1.id.to_s, file2.id.to_s])
       end
