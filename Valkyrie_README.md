@@ -18,6 +18,7 @@
 * `rake valkyrie_engine:install:migrations; rake db:migrate`
 * Improve Tika File Characterization to allow for either use of the default Tika or with a pass to an external service
 * Implement a characterization service that uses MediaInfo
+* Change the activefedora i18n key to valkyrie
 
 ## TODO:
 
@@ -35,4 +36,3 @@
     * Write to PCDM (no migration at all)
   * WebAC
   * Presenters: Use Draper decorators?
-

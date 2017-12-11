@@ -19,9 +19,10 @@ module Hyrax
       admin_set = AdminSet.new(id: admin_set_id, title: Array.wrap(title))
       begin
         new(admin_set: admin_set, creating_user: nil).create
-      rescue ActiveFedora::IllegalOperation
+      rescue ActiveRecord::RecordNotUnique
+        # See https://github.com/samvera-labs/valkyrie/issues/328
         # It is possible that another thread created the AdminSet just before this method
-        # was called, so ActiveFedora will raise IllegalOperation. In this case we can safely
+        # was called, so Valkyrie will raise RecordNotUnique. In this case we can safely
         # ignore the error.
         Rails.logger.error("AdminSet ID=#{AdminSet::DEFAULT_ID} may or may not have been created due to threading issues.")
       end

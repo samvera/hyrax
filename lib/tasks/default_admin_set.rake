@@ -10,9 +10,8 @@ namespace :hyrax do
           "You could manually create the permission template in the rails console" \
           " (non-destructive):\n\n" \
           "    Hyrax::PermissionTemplate.create!(admin_set_id: AdminSet::DEFAULT_ID)\n\n" \
-          "OR you could start fresh by clearing Fedora and Solr (destructive):\n\n" \
-          "    require 'active_fedora/cleaner'\n" \
-          "    ActiveFedora::Cleaner.clean!\n\n"
+          "OR you could start fresh by clearing Valkyrie (destructive):\n\n" \
+          "    Valkyrie::MetadataAdapter.find(:indexing_persister).persister.wipe!\n\n"
       end
     end
   end

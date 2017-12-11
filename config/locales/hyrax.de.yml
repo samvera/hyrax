@@ -1,6 +1,6 @@
 ---
 de:
-  activefedora:
+  valkyrie:
     models:
       batch_upload_item: Arbeiten im Batch-Upload
       file_set: Datei

@@ -1,6 +1,6 @@
 ---
 es:
-  activefedora:
+  valkyrie:
     models:
       batch_upload_item: Trabajos por Lote
       file_set: Archivo

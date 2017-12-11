@@ -53,9 +53,9 @@ RSpec.describe Hyrax::Dashboard::ProfilesController do
     end
 
     context "when the user has trophies" do
-      let(:work1) { create(:work, title: ["w1"], user: user) }
-      let(:work2) { create(:work, title: ["w2"], user: user) }
-      let(:work3) { create(:work, title: ["w3"], user: user) }
+      let(:work1) { create_for_repository(:work, title: ["w1"], user: user) }
+      let(:work2) { create_for_repository(:work, title: ["w2"], user: user) }
+      let(:work3) { create_for_repository(:work, title: ["w3"], user: user) }
       let!(:trophy1) { user.trophies.create!(work_id: work1.id) }
       let!(:trophy2) { user.trophies.create!(work_id: work2.id) }
       let!(:trophy3) { user.trophies.create!(work_id: work3.id) }

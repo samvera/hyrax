@@ -222,15 +222,6 @@ Hyrax.config do |config|
   # How long to hold the lock in milliseconds
   # config.lock_time_to_live = 60_000
 
-  ## Do not alter unless you understand how ActiveFedora handles URI/ID translation
-  # config.translate_id_to_uri = lambda do |uri|
-  #                                baseparts = 2 + [(Noid::Rails::Config.template.gsub(/\.[rsz]/, '').length.to_f / 2).ceil, 4].min
-  #                                uri.to_s.sub(baseurl, '').split('/', baseparts).last
-  #                              end
-  # config.translate_uri_to_id = lambda do |id|
-  #                                "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/#{Noid::Rails.treeify(id)}"
-  #                              end
-
   ## Fedora import/export tool
   #
   # Path to the Fedora import export tool jar file

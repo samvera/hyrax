@@ -1,7 +1,11 @@
 module Hyrax
   class AdminSetPresenter < CollectionPresenter
     def total_items
-      ActiveFedora::SolrService.count("{!field f=isPartOf_ssim}#{id}")
+      solr = Valkyrie::MetadataAdapter.find(:index_solr).connection
+      results = solr.get('select', params: { q: "{!field f=admin_set_id_ssim}id-#{id}",
+                                             rows: 0,
+                                             qt: 'standard' })
+      results['response']['numFound'].to_i
     end
 
     # AdminSet cannot be deleted if default set or non-empty
