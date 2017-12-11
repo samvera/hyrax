@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::InspectWorkPresenter, no_clean: true do
+RSpec.describe Hyrax::InspectWorkPresenter do
   let(:solr_document) { SolrDocument.new(attributes) }
   let(:attributes) do
     { "id" => '888888',

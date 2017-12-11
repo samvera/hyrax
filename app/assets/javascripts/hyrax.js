@@ -80,8 +80,8 @@
 //= require hyrax/permissions
 //= require hyrax/autocomplete
 //= require hyrax/autocomplete/default
-//= require hyrax/autocomplete/work
 //= require hyrax/autocomplete/linked_data
+//= require hyrax/autocomplete/resource
 //= require hyrax/relationships
 //= require hyrax/select_work_type
 //= require hyrax/collections
@@ -94,7 +94,6 @@
 //= require hyrax/file_manager/save_manager
 //= require hyrax/file_manager/member
 //= require hyrax/file_manager
-//= require hyrax/workflow_actions_affix
 //= require hyrax/authority_select
 //= require hyrax/sort_and_per_page
 //= require hyrax/thumbnail_select

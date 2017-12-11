@@ -1,4 +1,4 @@
-RSpec.feature "display a work as its owner" do
+RSpec.describe "display a work as its owner" do
   let(:work_path) { "/concern/generic_works/#{work.id}" }
 
   before do

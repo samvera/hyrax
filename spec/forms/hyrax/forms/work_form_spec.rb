@@ -1,7 +1,8 @@
 RSpec.describe Hyrax::Forms::WorkForm do
   let(:work) { GenericWork.new }
-  let(:form) { described_class.new(work, nil, nil) }
+  let(:form) { described_class.new(work, nil, controller) }
   let(:works) { [GenericWork.new, FileSet.new, GenericWork.new] }
+  let(:controller) { instance_double(Hyrax::GenericWorksController) }
 
   # This class is an abstract class, so we have to set model_class
   # TODO: merge with generic_work_form_spec
@@ -30,26 +31,34 @@ RSpec.describe Hyrax::Forms::WorkForm do
   end
 
   describe '#member_of_collections' do
-    subject { form.member_of_collections(args) }
+    subject { form.member_of_collections }
+
+    before do
+      allow(controller).to receive(:params).and_return(add_works_to_collection: collection_id)
+    end
 
     context 'when passed nil' do
-      let(:args) { nil }
+      let(:collection_id) { nil }
 
       it { is_expected.to be_empty }
     end
-    context 'when passed a string' do
-      let(:args) { 'foobar' }
 
-      it { is_expected.to match_array([args]) }
+    context 'when passed a string' do
+      let(:collection) { create(:collection) }
+      let(:collection_id) { collection.id }
+
+      it { is_expected.to match_array([collection]) }
     end
+
     context 'when member of other collections' do
-      let(:args) { 'bar' }
+      let(:collection) { create(:collection) }
+      let(:collection_id) { collection.id }
 
       before do
-        allow(work).to receive(:member_of_collection_ids).and_return(['foo'])
+        allow(work).to receive(:member_of_collections).and_return(['foo'])
       end
 
-      it { is_expected.to match_array(['foo', args]) }
+      it { is_expected.to match_array(['foo', collection]) }
     end
   end
 
@@ -80,8 +89,9 @@ RSpec.describe Hyrax::Forms::WorkForm do
                                :version,
                                :on_behalf_of,
                                { permissions_attributes: [:type, :name, :access, :id, :_destroy] },
-                               work_members_attributes: [:id, :_destroy],
-                               based_near_attributes: [:id, :_destroy])
+                               based_near_attributes: [:id, :_destroy],
+                               member_of_collections_attributes: [:id, :_destroy],
+                               work_members_attributes: [:id, :_destroy])
       }
     end
   end

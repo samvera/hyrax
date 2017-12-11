@@ -33,9 +33,6 @@ module Hyrax
                       :single_item_search_builder_class,
                       :membership_service_class
 
-      alias collection_search_builder_class single_item_search_builder_class
-      deprecation_deprecate collection_search_builder_class: "use single_item_search_builder_class instead"
-
       self.presenter_class = Hyrax::CollectionPresenter
 
       self.form_class = Hyrax::Forms::CollectionForm
@@ -367,10 +364,7 @@ module Hyrax
         def single_item_search_builder
           single_item_search_builder_class.new(self).with(params.except(:q, :page))
         end
-
-        alias collection_search_builder single_item_search_builder
-        deprecation_deprecate collection_search_builder: "use single_item_search_builder instead"
-
+      
         def collection_params
           @participants = extract_old_style_permission_attributes(params[:collection])
           form_class.model_attributes(params[:collection])

@@ -1,6 +1,6 @@
 module Hyrax
   module Workflow
-    RSpec.describe NotificationGenerator, no_clean: true do
+    RSpec.describe NotificationGenerator do
       let(:workflow) { create(:workflow) }
       let(:recipients) { { to: 'creating_user', cc: 'advising', bcc: "data_observing" } }
 

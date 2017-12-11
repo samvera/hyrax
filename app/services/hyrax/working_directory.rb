@@ -19,14 +19,6 @@ module Hyrax
         copy_repository_resource_to_working_directory(repository_file, id)
       end
 
-      # @param [File, ActionDispatch::Http::UploadedFile] file
-      # @param [String] id the identifier of the FileSet
-      # @return [String] path of the working file
-      def copy_file_to_working_directory(file, id)
-        file_name = file.respond_to?(:original_filename) ? file.original_filename : ::File.basename(file)
-        copy_stream_to_working_directory(id, file_name, file)
-      end
-
       # @param [ActiveFedora::File] file the resource in the repo
       # @param [String] id the identifier of the FileSet
       # @return [String] path of the working file

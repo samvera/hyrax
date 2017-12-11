@@ -14,7 +14,7 @@ module Hyrax
 
       # Spawns asynchronous IngestJob unless ingesting from URL
       # Called from FileSetsController, AttachFilesToWorkJob, IngestLocalFileJob, ImportUrlJob
-      # @param [Hyrax::UploadedFile, File, ActionDigest::HTTP::UploadedFile] file the file uploaded by the user
+      # @param [Hyrax::UploadedFile, File] file the file uploaded by the user
       # @param [Symbol, #to_s] relation
       # @return [IngestJob, FalseClass] false on failure, otherwise the queued job
       def create_content(file, relation = :original_file, from_url: false)
@@ -130,8 +130,6 @@ module Hyrax
         def label_for(file)
           if file.is_a?(Hyrax::UploadedFile) # filename not present for uncached remote file!
             file.uploader.filename.present? ? file.uploader.filename : File.basename(Addressable::URI.parse(file.file_url).path)
-          elsif file.respond_to?(:original_filename) # e.g. ActionDispatch::Http::UploadedFile, CarrierWave::SanitizedFile
-            file.original_filename
           elsif file.respond_to?(:original_name) # e.g. Hydra::Derivatives::IoDecorator
             file.original_name
           elsif file_set.import_url.present?

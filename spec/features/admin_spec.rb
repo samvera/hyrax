@@ -17,7 +17,7 @@ RSpec.describe "The admin dashboard", :clean_repo do
     create(:work_with_two_children, title: ["Work C"], admin_set_id: admin_set_2.id, edit_users: [user])
   end
 
-  scenario do
+  it do
     login_as(user, scope: :user)
     visit '/dashboard'
 

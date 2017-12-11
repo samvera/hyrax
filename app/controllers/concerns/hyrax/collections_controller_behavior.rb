@@ -5,12 +5,6 @@ module Hyrax
     include Blacklight::Base
 
     included do
-      before_action :filter_docs_with_read_access!, except: :show
-
-      include Hyrax::Collections::AcceptsBatches
-
-      # include the render_check_all view helper method
-      helper Hyrax::BatchEditsHelper
       # include the display_trophy_link view helper method
       helper Hyrax::TrophyHelper
 
@@ -21,9 +15,6 @@ module Hyrax
                       :form_class,
                       :single_item_search_builder_class,
                       :membership_service_class
-
-      alias_method :collection_search_builder_class, :single_item_search_builder_class
-      deprecation_deprecate collection_search_builder_class: "use single_item_search_builder_class instead"
 
       self.presenter_class = Hyrax::CollectionPresenter
 
@@ -60,9 +51,6 @@ module Hyrax
       def single_item_search_builder
         single_item_search_builder_class.new(self).with(params.except(:q, :page))
       end
-
-      alias collection_search_builder single_item_search_builder
-      deprecation_deprecate collection_search_builder: "use single_item_search_builder instead"
 
       def collection_params
         form_class.model_attributes(params[:collection])

@@ -3,3 +3,18 @@ $brand-danger: #d33a35 !default;
 $brand-success: #387f38 !default;
 $brand-info: #2c76c7 !default;
 $brand-warning: #565653 !default;
+
+// Overrides for accessibility compliance
+// Testing: WAVE evaluation tool: http://wave.webaim.org/
+// Chrome has a WAVE extension that you can toggle on/off for testing
+
+// Bootsrap upto v4.0 has poor styling for color-contrast that causes the WAVE
+// tool to throw contrast errors
+// Read more: https://getbootstrap.com/docs/4.0/getting-started/accessibility/#color-contrast
+// These changes meet WCAG AA and AAA compliance standard
+// I'm passing values to bootstrap variables as listed here:
+// https://getbootstrap.com/docs/3.3/customize/#less-variables
+// * Darkens the text for active breadcrumb on every page. Meets WCAG AA and AAA
+// * Darkens the text for disabled pagination buttons on every page.
+$breadcrumb-active-color: #4c4c4c;
+$pagination-disabled-color: #4c4c4c;

@@ -1,6 +1,6 @@
 module Hyrax
   module Workflow
-    RSpec.describe NotificationConfigurationParameter, no_clean: true do
+    RSpec.describe NotificationConfigurationParameter do
       describe '#build_from_workflow_action_configuration' do
         let(:config) do
           {

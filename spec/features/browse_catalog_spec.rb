@@ -1,5 +1,3 @@
-# coding: utf-8
-
 RSpec.describe "Browse catalog:", type: :feature, clean_repo: true do
   let!(:jills_work) do
     GenericWork.new do |work|

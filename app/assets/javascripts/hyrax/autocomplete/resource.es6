@@ -1,8 +1,14 @@
-export default class Work {
-  // Autocomplete for finding possible related works.
-  constructor(element, url, excludeWorkId) {
+export default class Resource {
+  /**
+   * Autocomplete for finding possible related works.
+   * @param {jQuery} element - The input field to add autocompete to
+   * @param {string} url - The url for the autocompete search endpoint
+   * @param {Object} options - optional arguments
+   * @param {string} options.excluding - The id to exclude from the search
+   */
+  constructor(element, url, options = {}) {
     this.url = url;
-    this.excludeWorkId = excludeWorkId;
+    this.excludeWorkId = options.excluding;
     this.initUI(element)
   }
 

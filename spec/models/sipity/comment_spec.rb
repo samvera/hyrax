@@ -1,5 +1,5 @@
 module Sipity
-  RSpec.describe Comment, type: :model, no_clean: true do
+  RSpec.describe Comment, type: :model do
     context 'database configuration' do
       subject { described_class }
 

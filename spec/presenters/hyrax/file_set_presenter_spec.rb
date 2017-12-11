@@ -1,3 +1,5 @@
+require 'iiif_manifest'
+
 RSpec.describe Hyrax::FileSetPresenter do
   let(:solr_document) { SolrDocument.new(attributes) }
   let(:ability) { double "Ability" }
@@ -262,6 +264,111 @@ RSpec.describe Hyrax::FileSetPresenter do
 
           it { is_expected.to contain_exactly("1440") }
         end
+      end
+    end
+  end
+
+  describe 'IIIF integration' do
+    let(:file_set) { create(:file_set) }
+    let(:solr_document) { SolrDocument.new(file_set.to_solr) }
+    let(:request) { double(base_url: 'http://test.host') }
+    let(:presenter) { described_class.new(solr_document, nil, request) }
+    let(:id) { CGI.escape(file_set.original_file.id) }
+
+    describe "#display_image" do
+      subject { presenter.display_image }
+
+      context 'without a file' do
+        let(:id) { 'bogus' }
+
+        it { is_expected.to be_nil }
+      end
+
+      context 'with a file' do
+        before do
+          Hydra::Works::AddFileToFileSet.call(file_set,
+                                              file_path, :original_file)
+        end
+
+        context "when the file is not an image" do
+          let(:file_path) { File.open(fixture_path + '/hyrax_generic_stub.txt') }
+
+          it { is_expected.to be_nil }
+        end
+
+        context "when the file is an image" do
+          let(:file_path) { File.open(fixture_path + '/world.png') }
+
+          it { is_expected.to be_instance_of IIIFManifest::DisplayImage }
+          its(:url) { is_expected.to eq "http://test.host/images/#{id}/full/600,/0/default.jpg" }
+
+          context 'with custom image size default' do
+            let(:custom_image_size) { '666,' }
+
+            around do |example|
+              default_image_size = Hyrax.config.iiif_image_size_default
+              Hyrax.config.iiif_image_size_default = custom_image_size
+              example.run
+              Hyrax.config.iiif_image_size_default = default_image_size
+            end
+
+            it { is_expected.to be_instance_of IIIFManifest::DisplayImage }
+            its(:url) { is_expected.to eq "http://test.host/images/#{id}/full/#{custom_image_size}/0/default.jpg" }
+          end
+
+          context 'with custom image url builder' do
+            let(:id) { file_set.original_file.id }
+            let(:custom_builder) do
+              ->(file_id, base_url, _size) { "#{base_url}/downloads/#{file_id.split('/').first}" }
+            end
+
+            around do |example|
+              default_builder = Hyrax.config.iiif_image_url_builder
+              Hyrax.config.iiif_image_url_builder = custom_builder
+              example.run
+              Hyrax.config.iiif_image_url_builder = default_builder
+            end
+
+            it { is_expected.to be_instance_of IIIFManifest::DisplayImage }
+            its(:url) { is_expected.to eq "http://test.host/downloads/#{id.split('/').first}" }
+          end
+        end
+      end
+    end
+
+    describe "#iiif_endpoint" do
+      subject { presenter.send(:iiif_endpoint, file_set.original_file.id) }
+
+      before do
+        allow(Hyrax.config).to receive(:iiif_image_server?).and_return(riiif_enabled)
+        Hydra::Works::AddFileToFileSet.call(file_set,
+                                            File.open(fixture_path + '/world.png'), :original_file)
+      end
+
+      context 'with iiif_image_server enabled' do
+        let(:riiif_enabled) { true }
+
+        its(:url) { is_expected.to eq "http://test.host/images/#{id}" }
+        its(:profile) { is_expected.to eq 'http://iiif.io/api/image/2/level2.json' }
+
+        context 'with a custom iiif image profile' do
+          let(:custom_profile) { 'http://iiif.io/api/image/2/level1.json' }
+
+          around do |example|
+            default_profile = Hyrax.config.iiif_image_compliance_level_uri
+            Hyrax.config.iiif_image_compliance_level_uri = custom_profile
+            example.run
+            Hyrax.config.iiif_image_compliance_level_uri = default_profile
+          end
+
+          its(:profile) { is_expected.to eq custom_profile }
+        end
+      end
+
+      context 'with iiif_image_server disabled' do
+        let(:riiif_enabled) { false }
+
+        it { is_expected.to be nil }
       end
     end
   end

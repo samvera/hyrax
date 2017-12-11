@@ -86,19 +86,19 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
     end
 
     it "accepts file: urls in whitelisted directories" do
-      expect(actor.send(:validate_remote_url, "file:///local/file/test.txt")).to be true
-      expect(actor.send(:validate_remote_url, "file:///local/file/subdirectory/test.txt")).to be true
-      expect(actor.send(:validate_remote_url, "file:///test/test.txt")).to be true
+      expect(actor.send(:validate_remote_url, URI('file:///local/file/test.txt'))).to be true
+      expect(actor.send(:validate_remote_url, URI('file:///local/file/subdirectory/test.txt'))).to be true
+      expect(actor.send(:validate_remote_url, URI('file:///test/test.txt'))).to be true
     end
 
     it "rejects file: urls outside whitelisted directories" do
-      expect(actor.send(:validate_remote_url, "file:///tmp/test.txt")).to be false
-      expect(actor.send(:validate_remote_url, "file:///test/../tmp/test.txt")).to be false
-      expect(actor.send(:validate_remote_url, "file:///test/")).to be false
+      expect(actor.send(:validate_remote_url, URI('file:///tmp/test.txt'))).to be false
+      expect(actor.send(:validate_remote_url, URI('file:///test/../tmp/test.txt'))).to be false
+      expect(actor.send(:validate_remote_url, URI('file:///test/'))).to be false
     end
 
     it "accepts other types of urls" do
-      expect(actor.send(:validate_remote_url, "https://example.com/test.txt")).to be true
+      expect(actor.send(:validate_remote_url, URI('https://example.com/test.txt'))).to be true
     end
   end
 end

@@ -77,7 +77,6 @@ RSpec.describe Hyrax::Actors::FileActor do
   describe '#ingest_file' do
     before do
       expect(Hydra::Works::AddFileToFileSet).to receive(:call).with(file_set, io, relation, versioning: false)
-      expect(Hyrax::WorkingDirectory).not_to receive(:copy_file_to_working_directory)
     end
     it 'when the file is available' do
       allow(file_set).to receive(:save).and_return(true)

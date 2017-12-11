@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 module Hyrax
   module TrophyHelper
     # rubocop:disable Metrics/MethodLength

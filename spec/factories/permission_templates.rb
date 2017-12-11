@@ -11,7 +11,7 @@ FactoryBot.define do
           if source_id.present?
             begin
               AdminSet.find(source_id)
-            rescue
+            rescue ActiveFedora::ObjectNotFoundError
               create(:admin_set, id: source_id)
             end
           else

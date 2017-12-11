@@ -1,5 +1,5 @@
 module Sipity
-  RSpec.describe Notification, type: :model, no_clean: true do
+  RSpec.describe Notification, type: :model do
     subject { described_class.new }
 
     it 'will raise an ArgumentError if you provide an invalid #notification_type' do

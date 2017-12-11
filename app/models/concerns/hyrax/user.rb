@@ -16,13 +16,17 @@ module Hyrax::User
     acts_as_messageable
 
     # Set up proxy-related relationships
-    has_many :proxy_deposit_requests, foreign_key: 'receiving_user_id'
+    has_many :proxy_deposit_requests,
+             foreign_key: 'receiving_user_id',
+             dependent: :destroy
     has_many :deposit_rights_given, foreign_key: 'grantor_id', class_name: 'ProxyDepositRights', dependent: :destroy
     has_many :can_receive_deposits_from, through: :deposit_rights_given, source: :grantee
     has_many :deposit_rights_received, foreign_key: 'grantee_id', class_name: 'ProxyDepositRights', dependent: :destroy
     has_many :can_make_deposits_for, through: :deposit_rights_received, source: :grantor
 
-    has_many :job_io_wrappers, inverse_of: 'user'
+    has_many :job_io_wrappers,
+             inverse_of: 'user',
+             dependent: :destroy
 
     scope :guests, ->() { where(guest: true) }
     scope :registered, ->() { where(guest: false) }
@@ -39,7 +43,8 @@ module Hyrax::User
     # Add token to authenticate Arkivo API calls
     after_initialize :set_arkivo_token, unless: :persisted? if Hyrax.config.arkivo_api?
 
-    has_many :trophies
+    has_many :trophies,
+             dependent: :destroy
     has_one :sipity_agent, as: :proxy_for, dependent: :destroy, class_name: 'Sipity::Agent'
   end
 
@@ -107,10 +112,10 @@ module Hyrax::User
     { id: user_key, text: display_name ? "#{display_name} (#{user_key})" : user_key }
   end
 
+  ##
+  # @return [String] a name for the user
   def name
-    display_name.titleize || raise
-  rescue
-    user_key
+    display_name || user_key
   end
 
   # Redefine this for more intuitive keys in Redis

@@ -1,4 +1,4 @@
-RSpec.feature "Notifications page", type: :feature do
+RSpec.describe "Notifications page", type: :feature do
   before do
     sign_in create(:user_with_mail)
     visit "/notifications"

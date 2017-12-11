@@ -46,7 +46,7 @@ module Hyrax
 
         # The color links
         def link_color
-          block_for('link_color', '#337ab7')
+          block_for('link_color', '#2e74b2')
         end
 
         # The color for links in the footer

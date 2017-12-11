@@ -14,6 +14,7 @@ module ActionDispatch::Routing
           namespaced_resources curation_concern_name, except: [:index], &block
           namespaced_resources curation_concern_name, only: [] do
             member do
+              get :manifest
               get :file_manager
               get :inspect_work
             end
@@ -36,7 +37,6 @@ module ActionDispatch::Routing
             post :copy
           end
         end
-        resources :file_sets, only: [:new, :create], path: 'container/:parent_id/file_sets'
         resources :file_sets, only: [:show, :edit, :update, :destroy] do
           member do
             get :versions

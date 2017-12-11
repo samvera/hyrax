@@ -1,5 +1,5 @@
 module Sipity
-  RSpec.describe WorkflowResponsibility, type: :model, no_clean: true do
+  RSpec.describe WorkflowResponsibility, type: :model do
     subject { described_class }
 
     its(:column_names) { is_expected.to include('agent_id') }

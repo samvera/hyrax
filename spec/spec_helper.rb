@@ -198,6 +198,7 @@ RSpec.configure do |config|
   end
 
   config.include EngineRoutes, type: :controller
+  config.include Warden::Test::Helpers, type: :request
   config.include Warden::Test::Helpers, type: :feature
   config.after(:each, type: :feature) do
     Warden.test_reset!

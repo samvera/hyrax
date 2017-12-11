@@ -249,11 +249,19 @@ You may wish to [customize your work type](https://github.com/samvera/hyrax/wiki
 
 Hyrax 2 uses a WebSocket-based user notifications system, which requires Redis. To enable user notifications, make sure that you have configured ActionCable to use Redis as the adapter in your application's `config/cable.yml`. E.g., for the `development` Rails environment:
 
-``` yaml
+```yaml
 development:
   adapter: redis
   url: redis://localhost:6379
 ```
+
+Using Rails up to version 5.1.4, ActionCable will not work with the 4.x series of the `redis` gem, so you will also need to pin your application to a 3.x release by adding this to your `Gemfile`:
+
+```ruby
+gem 'redis', '~> 3.0'
+```
+
+And then run `bundle update redis`.
 
 Note that the Hyrax Management Guide contains additional information on [how to configure ActionCable in production environments](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide#notifications).
 

@@ -1,7 +1,11 @@
 module Hyrax
   class Install < Rails::Generators::Base
     source_root File.expand_path('../templates', __FILE__)
+
     argument :model_name, type: :string, default: "user", desc: "Model name for User model (primarily passed to devise, but also used elsewhere)"
+
+    class_option :'skip-riiif', type: :boolean, default: false, desc: "Skip generating RIIIF image service."
+
     desc """
   This generator makes the following changes to your application:
   1. Runs installers for blacklight & hydra-head (which also install & configure devise)
@@ -25,6 +29,7 @@ module Hyrax
   15. Installs Blacklight gallery (and removes it's scss)
   16. Install jquery-datatables
   17. Initializes the active-fedora_noid database-backed minter
+  18. Generates RIIIF image server implementation
          """
 
     def run_required_generators
@@ -162,6 +167,10 @@ module Hyrax
 
     def af_noid_database_minter_initialize
       generate 'active_fedora:noid:install'
+    end
+
+    def riiif_image_server
+      generate 'hyrax:riiif' unless options[:'skip-riiif']
     end
   end
 end
