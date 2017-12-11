@@ -62,7 +62,7 @@ RSpec.describe 'collection', type: :feature do
           "member_of_collection_ids_ssim" => ["id-#{collection.id}"],
           "edit_access_person_ssim" => [user.user_key] }
       end
-      ActiveFedora::SolrService.add(docs, commit: true)
+      Valkyrie::MetadataAdapter.find(:index_solr).connection.add(docs, params: { commit: true })
 
       sign_in user
     end

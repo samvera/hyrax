@@ -15,10 +15,6 @@ RSpec.describe Hyrax::My::SharesSearchBuilder do
 
     # This prevents any generated classes from interfering with this test:
     allow(builder).to receive(:work_classes).and_return([GenericWork])
-
-    allow(ActiveFedora::SolrQueryBuilder).to receive(:construct_query_for_rel)
-      .with(depositor: me.user_key)
-      .and_return("depositor")
   end
 
   subject { builder.to_hash['fq'] }
@@ -27,6 +23,6 @@ RSpec.describe Hyrax::My::SharesSearchBuilder do
     expect(subject).to eq ["access_filter1 OR access_filter2",
                            "{!terms f=#{Valkyrie::Persistence::Solr::Queries::MODEL}}GenericWork,Collection",
                            "-suppressed_bsi:true",
-                           "-depositor"]
+                           "-_query_:\"{!raw f=depositor_ssim}#{me.user_key}\""]
   end
 end

@@ -63,7 +63,7 @@ module Hyrax
           "#{title} (#{link_to work_id, document_path}) was advanced in the workflow by #{user.user_key} and is awaiting approval #{comment}"
         end
 
-        # @return [ActiveFedora::Base] the document (work) the the Abstract WorkFlow is creating a notification for
+        # @return [Valkyrie::Resource] the document (work) the the Abstract WorkFlow is creating a notification for
         def document
           @entity.proxy_for
         end

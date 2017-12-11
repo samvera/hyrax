@@ -9,32 +9,8 @@ RSpec.describe Hyrax::GraphExporter do
 
     let(:ttl) { subject.dump(:ntriples) }
 
-    it "transforms suburis to hashcodes" do
-      expect(ttl).to match %r{<http://localhost/concern/generic_works/#{work.id}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://projecthydra.org/works/models#Work>}
+    it "transforms to rdf" do
       expect(ttl).to match %r{<http://purl\.org/dc/terms/title> "Test title"}
-      expect(ttl).to match %r{<http://www\.w3\.org/ns/auth/acl#accessControl> <http://localhost/catalog/}
-
-      query = subject.query([RDF::URI("http://localhost/concern/generic_works/#{work.id}"),
-                             RDF::URI("http://www.iana.org/assignments/relation/first"),
-                             nil])
-      proxy = query.to_a.first.object
-
-      expect(proxy.to_s).to match %r{http://localhost/concern/generic_works/#{work.id}/list_source#g\d+}
-
-      # It includes the list nodes on the graph
-      expect(subject.query([proxy, nil, nil]).count).to eq 2
-    end
-
-    context "when a Ldp::NotFound is raised" do
-      let(:mock_service) { instance_double(Hydra::ContentNegotiation::CleanGraphRepository) }
-
-      before do
-        allow(service).to receive(:clean_graph_repository).and_return(mock_service)
-        allow(mock_service).to receive(:find).and_raise(Ldp::NotFound)
-      end
-      it "raises a error that the controller catches and handles" do
-        expect { subject }.to raise_error ActiveFedora::ObjectNotFoundError
-      end
     end
   end
 end

@@ -11,7 +11,6 @@ class LinkedDataResourceInput < MultiValueInput
 
     def build_field(value, index)
       options = input_html_options.dup
-      value = value.resource if value.is_a? ActiveFedora::Base
       value = Hyrax::LinkedDataResourceFactory.for(attribute_name, value)
       build_options(value, index, options) if value.respond_to?(:rdf_label)
       options[:required] = nil if @rendered_first_element

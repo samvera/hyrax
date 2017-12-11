@@ -4,6 +4,7 @@ module Hyrax
 
     self.fedora_schema = {
       # basic metadata
+      internal_resource: ActiveFedora::RDF::Fcrepo::Model.hasModel,
       label: ActiveFedora::RDF::Fcrepo::Model.downloadFilename, # AF alert!
       relative_path: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#relativePath'),
       import_url: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#importUrl'),

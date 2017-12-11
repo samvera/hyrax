@@ -3,7 +3,7 @@ module Hyrax
   class GrantEditToMembersJob < ApplicationJob
     queue_as Hyrax.config.ingest_queue_name
 
-    # @param [ActiveFedora::Base] work - the work object
+    # @param [Valkyrie::Resource] work - the work object
     # @param [String] user_key - the user to add
     def perform(work, user_key)
       # Iterate over ids because reifying objects is slow.

@@ -444,22 +444,6 @@ module Hyrax
                                 "Edit" => "edit" }
     end
 
-    attr_writer :translate_uri_to_id
-
-    def translate_uri_to_id
-      @translate_uri_to_id ||= lambda do |uri|
-        baseparts = 2 + [(::Noid::Rails.config.template.gsub(/\.[rsz]/, '').length.to_f / 2).ceil, 4].min
-        uri.to_s.sub("#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}", '').split('/', baseparts).last
-      end
-    end
-
-    attr_writer :translate_id_to_uri
-    def translate_id_to_uri
-      @translate_id_to_uri ||= lambda do |id|
-        "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/#{::Noid::Rails.treeify(id)}"
-      end
-    end
-
     attr_writer :contact_email
     def contact_email
       @contact_email ||= "repo-admin@example.org"
