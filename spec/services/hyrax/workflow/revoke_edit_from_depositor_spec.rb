@@ -34,11 +34,13 @@ RSpec.describe Hyrax::Workflow::RevokeEditFromDepositor do
 
     context "with attached FileSets" do
       let(:work) { create_for_repository(:work_with_one_file, user: depositor) }
-      let(:file_set) { work.members.first }
+      let(:file_set_id) { work.member_ids.first }
 
       it "removes edit access" do
+        subject
         # We need to reload, because this work happens in a background job
-        expect { subject }.to change { file_set.reload.edit_users }.from([depositor.user_key]).to([])
+        reloaded = Hyrax::Queries.find_by(id: file_set_id)
+        expect(reloaded.edit_users).to eq []
       end
     end
   end
