@@ -137,8 +137,9 @@ module Hyrax
       end
 
       # Renders a JSON response with a list of files in this collection
-      # This is used by the change set to populate the thumbnail_id dropdown
+      # This is used by the html form to populate the thumbnail_id dropdown
       def files
+        @change_set = build_change_set(find_resource(params[:id]))
         result = @change_set.select_files.map do |label, id|
           { id: id, text: label }
         end
