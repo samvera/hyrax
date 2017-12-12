@@ -67,9 +67,9 @@ module Hyrax
         Hydra::Derivatives.enable_ffmpeg  = c.enable_ffmpeg
         Hydra::Derivatives.libreoffice_path = c.libreoffice_path
 
-        ActiveFedora::Noid.config.template = c.noid_template
-        ActiveFedora::Noid.config.minter_class = c.noid_minter_class
-        ActiveFedora::Noid.config.statefile = c.minter_statefile
+        Noid::Rails.config.template = c.noid_template
+        Noid::Rails.config.minter_class = c.noid_minter_class
+        Noid::Rails.config.statefile = c.minter_statefile
       end
     end
 
