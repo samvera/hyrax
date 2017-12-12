@@ -111,7 +111,7 @@ module Hyrax
 
     attr_writer :noid_minter_class
     def noid_minter_class
-      @noid_minter_class ||= ActiveFedora::Noid::Minter::Db
+      @noid_minter_class ||= Noid::Rails::Minter::Db
     end
 
     attr_writer :minter_statefile
@@ -388,16 +388,6 @@ module Hyrax
       @permission_options ||= { "Choose Access" => "none",
                                 "View/Download" => "read",
                                 "Edit" => "edit" }
-    end
-
-    attr_writer :translate_uri_to_id
-    def translate_uri_to_id
-      @translate_uri_to_id ||= ActiveFedora::Noid.config.translate_uri_to_id
-    end
-
-    attr_writer :translate_id_to_uri
-    def translate_id_to_uri
-      @translate_id_to_uri ||= ActiveFedora::Noid.config.translate_id_to_uri
     end
 
     attr_writer :contact_email

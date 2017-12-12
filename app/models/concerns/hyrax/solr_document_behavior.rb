@@ -60,7 +60,7 @@ module Hyrax
       end
     end
     ##
-    # Offer the source (ActiveFedora-based) model to Rails for some of the
+    # Offer the source (Valkyrie-based) model to Rails for some of the
     # Rails methods (e.g. link_to).
     # @example
     #   link_to '...', SolrDocument(:id => 'bXXXXXX5').new => <a href="/dams_object/bXXXXXX5">...</a>
@@ -72,7 +72,7 @@ module Hyrax
       hydra_model == ::Collection
     end
 
-    # Method to return the ActiveFedora model
+    # Method to return the Valkyrie::Resource model
     def hydra_model
       first(Valkyrie::Persistence::Solr::Queries::MODEL).constantize
     end

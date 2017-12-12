@@ -1,5 +1,5 @@
 # There is an interplay between an AdminSet and a PermissionTemplate. Given
-# that AdminSet is an ActiveFedora::Base and PermissionTemplate is ActiveRecord::Base
+# that AdminSet is a Valkyrie::Resource and PermissionTemplate is ActiveRecord::Base
 # we don't have the usual :has_many or :belongs_to methods to assist in defining that
 # relationship. However, from a conceptual standpoint:
 #

@@ -1,6 +1,6 @@
 ---
 it:
-  activefedora:
+  valkyrie:
     models:
       batch_upload_item: Opere per Batch
       file_set: File

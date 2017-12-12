@@ -81,9 +81,11 @@ module Hyrax
     end
 
     def parent
-      ids = ActiveFedora::SolrService.query("{!field f=member_ids_ssim}id-#{id}",
-                                            fl: ActiveFedora.id_field)
-                                     .map { |x| x.fetch(ActiveFedora.id_field) }
+      solr = Valkyrie::MetadataAdapter.find(:index_solr).connection
+      results = solr.get('select', params: { q: "{!field f=member_ids_ssim}id-#{id}",
+                                             fl: 'id',
+                                             qt: 'standard' })
+      ids = results['response']['docs'].map { |x| x.fetch('id') }
       @parent_presenter ||= Hyrax::PresenterFactory.build_for(ids: ids,
                                                               presenter_class: WorkShowPresenter,
                                                               presenter_args: current_ability).first

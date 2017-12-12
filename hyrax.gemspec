@@ -61,7 +61,7 @@ EOF
   spec.add_dependency 'rdf-rdfxml' # controlled vocabulary importer
   spec.add_dependency 'clipboard-rails', '~> 1.5'
   spec.add_dependency 'rails_autolink', '~> 1.1'
-  spec.add_dependency 'active_fedora-noid', '~> 2.0', '>= 2.0.2'
+  spec.add_dependency 'noid-rails', '~> 2.0'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
   spec.add_dependency 'breadcrumbs_on_rails', '~> 3.0'
   # Pin more tightly because 0.x gems are potentially unstable
@@ -72,7 +72,6 @@ EOF
   spec.add_dependency 'dry-struct', '~> 0.1'
   spec.add_dependency 'redlock', '>= 0.1.2'
   spec.add_dependency 'retriable', '>= 2.9', '< 4.0'
-  spec.add_dependency 'active-fedora', '~> 11.5', '>= 11.5.2'
   spec.add_dependency 'linkeddata' # Required for getting values from geonames
   spec.add_dependency 'hooks', '>= 0.4.1'
 

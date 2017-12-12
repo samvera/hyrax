@@ -1,13 +1,13 @@
 module Hyrax
   class ChangeContentDepositorService
-    # @param [ActiveFedora::Base] work
+    # @param [Valkyrie::Resource] work
     # @param [User] user
     # @param [TrueClass, FalseClass] reset
     def self.call(work, user, reset)
       new(work, user, reset).call
     end
 
-    # @param [ActiveFedora::Base] work
+    # @param [Valkyrie::Resource] work
     # @param [User] user
     # @param [TrueClass, FalseClass] reset
     def initialize(work, user, reset)

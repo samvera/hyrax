@@ -24,9 +24,10 @@ RSpec.describe Hyrax::CollectionsHelper do
       let(:coll2_attrs) { { id: coll_ids[1], title_tesim: [coll_titles[1]], child_object_ids_ssim: [work_doc.id, 'abc123'] } }
 
       before do
-        ActiveFedora::SolrService.add(coll1_attrs)
-        ActiveFedora::SolrService.add(coll2_attrs)
-        ActiveFedora::SolrService.commit
+        solr = Valkyrie::MetadataAdapter.find(:index_solr).connection
+        solr.add(coll1_attrs)
+        solr.add(coll2_attrs)
+        solr.commit
       end
 
       it 'renders a list of links to the collections' do

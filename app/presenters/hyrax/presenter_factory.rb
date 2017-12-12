@@ -61,7 +61,7 @@ module Hyrax
       def query(query, args = {})
         args[:q] = query
         args[:qt] = 'standard'
-        conn = ActiveFedora::SolrService.instance.conn
+        conn = Valkyrie::MetadataAdapter.find(:index_solr).connection
         result = conn.post('select', data: args)
         result.fetch('response').fetch('docs')
       end

@@ -25,7 +25,7 @@ module Hyrax
     attr_reader :file_set, :id, :latest_version_only,
                 :async_jobs, :max_days_between_fixity_checks
 
-    # @param file_set [ActiveFedora::Base, String] file_set
+    # @param file_set [Valkyrie::Resource, String] file_set
     # @param async_jobs [Boolean] Run actual fixity checks in background. Default true.
     # @param max_days_between_fixity_checks [int] if an exisitng fixity check is
     #   recorded within this window, no new one will be created. Default

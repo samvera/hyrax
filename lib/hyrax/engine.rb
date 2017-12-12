@@ -21,7 +21,7 @@ module Hyrax
     ]
 
     config.action_dispatch.rescue_responses.merge!(
-      "ActiveFedora::ObjectNotFoundError" =>     :not_found, # We can remove this when we use ActiveFedora 11.2
+      "Valkyrie::Persistence::ObjectNotFoundError" => :not_found,
       "Blacklight::Exceptions::RecordNotFound" => :not_found
     )
 
@@ -67,12 +67,9 @@ module Hyrax
         Hydra::Derivatives.enable_ffmpeg  = c.enable_ffmpeg
         Hydra::Derivatives.libreoffice_path = c.libreoffice_path
 
-        ActiveFedora::Base.translate_uri_to_id = c.translate_uri_to_id
-        ActiveFedora::Base.translate_id_to_uri = c.translate_id_to_uri
-
-        ActiveFedora::Noid.config.template = c.noid_template
-        ActiveFedora::Noid.config.minter_class = c.noid_minter_class
-        ActiveFedora::Noid.config.statefile = c.minter_statefile
+        Noid::Rails.config.template = c.noid_template
+        Noid::Rails.config.minter_class = c.noid_minter_class
+        Noid::Rails.config.statefile = c.minter_statefile
       end
     end
 
