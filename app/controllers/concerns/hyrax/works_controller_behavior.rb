@@ -87,6 +87,16 @@ module Hyrax
       render json: manifest_builder.to_h
     end
 
+    def file_manager
+      resource = find_resource(params[:id])
+      @change_set = change_set_class.new(resource, search_context: search_context)
+      @change_set.prepopulate!
+      authorize! :file_manager, @change_set.resource
+      @children = query_service.find_members(resource: @change_set).map do |x|
+        change_set_class.new(x).prepopulate!
+      end.to_a
+    end
+
     private
 
       def manifest_builder
