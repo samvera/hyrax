@@ -177,15 +177,13 @@ RSpec.describe Hyrax::GenericWorksController do
     end
 
     describe '#new' do
-      context 'my work' do
-        it 'shows me the page' do
-          get :new
-          expect(response).to be_success
-          expect(assigns[:change_set]).to be_kind_of GenericWorkChangeSet
-          expect(assigns[:change_set].depositor).to eq user.user_key
-          expect(assigns[:change_set].resource).to be_kind_of GenericWork
-          expect(response).to render_template("layouts/hyrax/dashboard")
-        end
+      it 'shows me the page' do
+        get :new
+        expect(response).to be_success
+        expect(assigns[:change_set]).to be_kind_of GenericWorkChangeSet
+        expect(assigns[:change_set].depositor).to eq [user.user_key]
+        expect(assigns[:change_set].resource).to be_kind_of GenericWork
+        expect(response).to render_template("layouts/hyrax/dashboard")
       end
     end
 
