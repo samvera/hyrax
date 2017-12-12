@@ -80,6 +80,16 @@ module Hyrax
       presenter
     end
 
+    def file_manager
+      resource = find_resource(params[:id])
+      @change_set = change_set_class.new(resource, search_context: search_context)
+      @change_set.prepopulate!
+      authorize! :file_manager, @change_set.resource
+      @children = query_service.find_members(resource: @change_set).map do |x|
+        change_set_class.new(x).prepopulate!
+      end.to_a
+    end
+
     private
 
       # Overridden to provide add_works_to_collection (create new work in a collection)
