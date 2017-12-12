@@ -52,6 +52,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:iiif_image_compliance_level_uri=) }
   it { is_expected.to respond_to(:iiif_image_size_default) }
   it { is_expected.to respond_to(:iiif_image_size_default=) }
+  it { is_expected.to respond_to(:iiif_metadata_fields) }
+  it { is_expected.to respond_to(:iiif_metadata_fields=) }
   it { is_expected.to respond_to(:libreoffice_path) }
   it { is_expected.to respond_to(:license_service_class) }
   it { is_expected.to respond_to(:license_service_class=) }
@@ -64,6 +66,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:persistent_hostpath) }
   it { is_expected.to respond_to(:realtime_notifications?) }
   it { is_expected.to respond_to(:realtime_notifications=) }
+  it { is_expected.to respond_to(:rendering_predicate) }
+  it { is_expected.to respond_to(:rendering_predicate=) }
   it { is_expected.to respond_to(:rights_statement_service_class) }
   it { is_expected.to respond_to(:rights_statement_service_class=) }
   it { is_expected.to respond_to(:redis_namespace) }
