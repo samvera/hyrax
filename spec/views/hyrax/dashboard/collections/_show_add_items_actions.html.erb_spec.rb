@@ -29,4 +29,16 @@ RSpec.describe 'hyrax/dashboard/collections/_show_add_items_actions.html.erb', t
       expect(rendered).not_to have_css(".actions-controls-collections .btn[href='#{hyrax.my_works_path(add_works_to_collection: presenter.id)}']")
     end
   end
+
+  describe 'when there is only one work type' do
+    let(:can_edit) { true }
+
+    it 'renders add_new_work_to_collection link' do
+      allow(presenter).to receive(:create_many_work_types?).and_return(false)
+      allow(presenter).to receive(:first_work_type).and_return(GenericWork)
+
+      render
+      expect(rendered).to have_link("Add new work")
+    end
+  end
 end
