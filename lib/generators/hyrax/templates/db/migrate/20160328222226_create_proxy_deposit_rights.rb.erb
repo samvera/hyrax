@@ -1,0 +1,13 @@
+class CreateProxyDepositRights < ActiveRecord::Migration<%= migration_version %>
+  def change
+    create_table :proxy_deposit_rights do |t|
+      t.references :grantor
+      t.references :grantee
+      t.timestamps null: false
+    end
+    <% if migration_version.to_s < '5.1' %>
+    add_index :proxy_deposit_rights, :grantor_id
+    add_index :proxy_deposit_rights, :grantee_id
+    <% end %>
+  end
+end
