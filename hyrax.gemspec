@@ -61,7 +61,7 @@ EOF
   spec.add_dependency 'rdf-rdfxml' # controlled vocabulary importer
   spec.add_dependency 'clipboard-rails', '~> 1.5'
   spec.add_dependency 'rails_autolink', '~> 1.1'
-  spec.add_dependency 'noid-rails', '~> 2.0'
+  spec.add_dependency 'noid-rails', '~> 3.0.0.a'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
   spec.add_dependency 'breadcrumbs_on_rails', '~> 3.0'
   # Pin more tightly because 0.x gems are potentially unstable
