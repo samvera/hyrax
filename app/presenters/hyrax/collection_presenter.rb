@@ -130,5 +130,9 @@ module Hyrax
     def draw_select_work_modal?
       create_many_work_types?
     end
+
+    def first_work_type
+      create_work_presenter.first_model
+    end
   end
 end
