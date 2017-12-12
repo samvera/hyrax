@@ -11,7 +11,7 @@ module Hyrax
         instance.hmset("events:#{event_id}", "action", action, "timestamp", timestamp)
         event_id
       rescue Redis::CommandError => e
-        logger.error("unable to create event: #{e}")
+        logger.error("unable to create event: #{e}") if logger
         nil
       end
 
