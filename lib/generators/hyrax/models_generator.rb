@@ -1,12 +1,12 @@
 class Hyrax::ModelsGenerator < Rails::Generators::Base
   source_root File.expand_path('../templates', __FILE__)
   argument :model_name, type: :string, default: 'user'
-  desc '
-This generator makes the following changes to your application:
- 1. Injects the user behavior onto the user models.
- 2. Creates the file_set.rb and collection.rb models.
- 3. Generates the clam anti-virus configuration.
-       '
+  desc 'This generator makes the following changes to your application:
+      1. Copies database migrations
+      2. Injects the user behavior onto the user models.
+      3. Creates the file_set.rb and collection.rb models.
+      4. Generates the clam anti-virus configuration.'
+
   def banner
     say_status('info', 'GENERATING HYRAX MODELS', :blue)
   end
