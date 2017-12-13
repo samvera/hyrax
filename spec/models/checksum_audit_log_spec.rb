@@ -8,7 +8,8 @@ RSpec.describe ChecksumAuditLog do
   let(:f) { create_for_repository(:file_set, user: user, content: file) }
 
   let(:version_uri) do
-    Hyrax::VersioningService.create(f.original_file)
+    # Hyrax::VersioningService.create(f.original_file)
+    # TODO grab version from storage_adapter
     f.original_file.versions.first.uri
   end
   let(:content_id) { f.original_file.id }
