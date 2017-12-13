@@ -29,13 +29,8 @@ module Hyrax
           false
         end
 
-        # @return [String] the identifier for the AdminSet for the currently loaded resource
-        def source_id
-          @source_id ||= @permission_template_access.permission_template.source_id
-        end
-
         def update_access(manage_changed:)
-          Forms::PermissionTemplateForm.new(@permission_template_access.permission_template).update_access(manage_changed: manage_changed)
+          permission_template_form.update_access(manage_changed: manage_changed)
         end
 
         def after_destroy_success
@@ -62,13 +57,18 @@ module Hyrax
           end
         end
 
-        def source_type
-          Hyrax::PermissionTemplate.find(@permission_template_access.permission_template_id).source_type
-        end
+        delegate :source_type, :source_id, to: :permission_template
 
         def remove_access!
-          Forms::PermissionTemplateForm.new(@permission_template_access.permission_template)
-                                       .remove_access!(@permission_template_access)
+          permission_template_form.remove_access!(@permission_template_access)
+        end
+
+        def permission_template_form
+          @permission_template_form ||= Forms::PermissionTemplateForm.new(permission_template)
+        end
+
+        def permission_template
+          @permission_template ||= @permission_template_access.permission_template
         end
     end
   end
