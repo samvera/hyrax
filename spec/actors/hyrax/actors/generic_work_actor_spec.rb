@@ -93,8 +93,9 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
           it "applies embargo to attached files" do
             allow(CharacterizeJob).to receive(:perform_later).and_return(true)
             middleware.create(env)
-            curation_concern.reload
-            file_set = curation_concern.file_sets.first
+            reloaded = Hyrax::Queries.find_by(id: curation_concern.id)
+
+            file_set = reloaded.file_sets.first
             expect(file_set).to be_persisted
             expect(file_set.visibility_during_embargo).to eq 'authenticated'
             expect(file_set.visibility_after_embargo).to eq 'open'
@@ -124,16 +125,16 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
             expect(file_actor).to receive(:ingest_file).and_return(true)
             expect(middleware.create(env)).to be true
-            curation_concern.reload
-            expect(curation_concern).to be_persisted
-            expect(curation_concern.date_uploaded).to eq xmas
-            expect(curation_concern.date_modified).to eq xmas
-            expect(curation_concern.depositor).to eq user.user_key
-            expect(curation_concern.representative).not_to be_nil
-            expect(curation_concern.file_sets.size).to eq 1
-            expect(curation_concern).to be_authenticated_only_access
+            reloaded = Hyrax::Queries.find_by(id: curation_concern.id)
+            expect(reloaded).to be_persisted
+            expect(reloaded.date_uploaded).to eq xmas
+            expect(reloaded.date_modified).to eq xmas
+            expect(reloaded.depositor).to eq user.user_key
+            expect(reloaded.representative).not_to be_nil
+            expect(reloaded.file_sets.size).to eq 1
+            expect(reloaded).to be_authenticated_only_access
             # Sanity test to make sure the file_set has same permission as parent.
-            file_set = curation_concern.file_sets.first
+            file_set = reloaded.file_sets.first
             expect(file_set).to be_authenticated_only_access
           end
         end
@@ -158,16 +159,16 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
             expect(file_actor).to receive(:ingest_file).and_return(true).twice
 
             expect(middleware.create(env)).to be_instance_of GenericWork
-            curation_concern.reload
-            expect(curation_concern).to be_persisted
-            expect(curation_concern.date_uploaded).to eq xmas
-            expect(curation_concern.date_modified).to eq xmas
-            expect(curation_concern.depositor).to eq user.user_key
+            reloaded = Hyrax::Queries.find_by(id: curation_concern.id)
+            expect(reloaded).to be_persisted
+            expect(reloaded.date_uploaded).to eq xmas
+            expect(reloaded.date_modified).to eq xmas
+            expect(reloaded.depositor).to eq user.user_key
 
-            expect(curation_concern.file_sets.size).to eq 2
+            expect(reloaded.file_sets.size).to eq 2
             # Sanity test to make sure the file we uploaded is stored and has same permission as parent.
 
-            expect(curation_concern).to be_authenticated_only_access
+            expect(reloaded).to be_authenticated_only_access
           end
         end
       end
@@ -231,7 +232,8 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       it "attaches the parent" do
         expect(subject.update(env)).to be true
         expect(curation_concern.in_works_ids).to eq [parent.id]
-        expect(old_parent.reload.members).to eq []
+        reloaded = Hyrax::Queries.find_by(id: old_parent.id)
+        expect(reloaded.members).to eq []
       end
     end
 
