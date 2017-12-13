@@ -13,11 +13,11 @@ module Hyrax
 
     validate :validate_files
 
-    # rubocop:disable Style/PredicateName
+    # rubocop:disable Naming/PredicateName
     def has_file?
       !file.nil?
     end
-    # rubocop:enable Style/PredicateName
+    # rubocop:enable Naming/PredicateName
 
     def sync
       self.label ||= label_for(file)
