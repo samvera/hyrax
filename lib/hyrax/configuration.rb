@@ -110,7 +110,7 @@ module Hyrax
 
     attr_writer :noid_minter_class
     def noid_minter_class
-      @noid_minter_class ||= ActiveFedora::Noid::Minter::Db
+      @noid_minter_class ||= Noid::Rails::Minter::Db
     end
 
     attr_writer :minter_statefile
@@ -438,13 +438,19 @@ module Hyrax
     end
 
     attr_writer :translate_uri_to_id
+
     def translate_uri_to_id
-      @translate_uri_to_id ||= ActiveFedora::Noid.config.translate_uri_to_id
+      @translate_uri_to_id ||= lambda do |uri|
+        baseparts = 2 + [(::Noid::Rails.config.template.gsub(/\.[rsz]/, '').length.to_f / 2).ceil, 4].min
+        uri.to_s.sub("#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}", '').split('/', baseparts).last
+      end
     end
 
     attr_writer :translate_id_to_uri
     def translate_id_to_uri
-      @translate_id_to_uri ||= ActiveFedora::Noid.config.translate_id_to_uri
+      @translate_id_to_uri ||= lambda do |id|
+        "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/#{::Noid::Rails.treeify(id)}"
+      end
     end
 
     attr_writer :contact_email

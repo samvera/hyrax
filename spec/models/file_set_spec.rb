@@ -227,12 +227,12 @@ RSpec.describe FileSet do
   end
 
   describe 'noid integration', :clean_repo do
-    let(:service) { instance_double(ActiveFedora::Noid::Service, mint: noid) }
+    let(:service) { instance_double(::Noid::Rails::Service, mint: noid) }
     let(:noid) { 'wd3763094' }
     let!(:default) { Hyrax.config.enable_noids? }
 
     before do
-      allow(ActiveFedora::Noid::Service).to receive(:new).and_return(service)
+      allow(::Noid::Rails::Service).to receive(:new).and_return(service)
     end
 
     after { Hyrax.config.enable_noids = default }
