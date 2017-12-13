@@ -5,8 +5,8 @@ module Hyrax
     property :title, multiple: true, required: false
     property :label, multiple: true, required: false
 
-    # Holds our current_ability and Blacklight repository
-    property :search_context, virtual: true
+    # The user property is referenced by FileSetChangeSetPersister#ingest_file
+    property :user, virtual: true
 
     # Necessary for BrowseEverything?  This should probably move to a new change_set.
     property :import_url, virtual: true
@@ -18,8 +18,6 @@ module Hyrax
       !file.nil?
     end
     # rubocop:enable Style/PredicateName
-
-    delegate :user, to: :search_context
 
     def sync
       self.label ||= label_for(file)
