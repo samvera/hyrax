@@ -1,5 +1,3 @@
-require 'active_fedora/noid'
-
 module Hyrax
   module Noid
     extend ActiveSupport::Concern
@@ -13,7 +11,7 @@ module Hyrax
     private
 
       def service
-        @service ||= ActiveFedora::Noid::Service.new
+        @service ||= ::Noid::Rails::Service.new
       end
   end
 end
