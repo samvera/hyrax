@@ -9,14 +9,9 @@ module Hyrax
       # @param ability [Ability] the ability coming from cancan ability check
       # @param source_type [String] 'collection', 'admin_set', or nil to get all types
       # @return [Array<String>] IDs of collections and admin sets for which the user has specified roles
-      # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
       def self.source_ids_for_user(access:, ability:, source_type: nil)
-        scope = PermissionTemplateAccess.joins(:permission_template)
-                                        .where(user_where(access: access, ability: ability))
-                                        .or(
-                                          PermissionTemplateAccess.joins(:permission_template)
-                                            .where(group_where(access: access, ability: ability))
-                                        )
+        scope = PermissionTemplateAccess.for_user(ability: ability, access: access)
+                                        .joins(:permission_template)
         scope = scope.where(permission_templates: { source_type: source_type }) if source_type
         scope.pluck('DISTINCT source_id')
       end
@@ -116,42 +111,6 @@ module Hyrax
       def self.collection_ids_for_manage(ability:)
         source_ids_for_manage(ability: ability, source_type: 'collection')
       end
-
-      # @api private
-      #
-      # Generate the user where clause hash for joining the permissions tables
-      #
-      # @param access [Array<String>] one or more types of access (e.g. Hyrax::PermissionTemplateAccess::MANAGE, Hyrax::PermissionTemplateAccess::DEPOSIT, Hyrax::PermissionTemplateAccess::VIEW)
-      # @param ability [Ability] the cancan ability
-      # @return [Hash] the where clause hash to pass to joins for users
-      # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
-      #   If calling from Abilities, pass the ability.  If you try to get the ability from the user, you end up in an infinit loop.
-      def self.user_where(access:, ability:)
-        where_clause = {}
-        where_clause[:agent_type] = 'user'
-        where_clause[:agent_id] = ability.current_user.user_key
-        where_clause[:access] = access
-        where_clause
-      end
-      private_class_method :user_where
-
-      # @api private
-      #
-      # Generate the group where clause hash for joining the permissions tables
-      #
-      # @param access [Array<String>] one or more types of access (e.g. Hyrax::PermissionTemplateAccess::MANAGE, Hyrax::PermissionTemplateAccess::DEPOSIT, Hyrax::PermissionTemplateAccess::VIEW)
-      # @param ability [Ability] the cancan ability
-      # @return [Hash] the where clause hash to pass to joins for groups
-      # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
-      #   If calling from Abilities, pass the ability.  If you try to get the ability from the user, you end up in an infinit loop.
-      def self.group_where(access:, ability:)
-        where_clause = {}
-        where_clause[:agent_type] = 'group'
-        where_clause[:agent_id] = ability.user_groups
-        where_clause[:access] = access
-        where_clause
-      end
-      private_class_method :group_where
 
       # @api public
       #
