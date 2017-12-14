@@ -25,7 +25,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
     end
 
     before do
-      allow(Collection).to receive(:find).with(['123'])
+      allow(ability).to receive(:can?).and_return(false)
       allow(curation_concern).to receive(:member_of_collection_ids=)
     end
 
@@ -41,42 +41,40 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
     let(:collection) { create_for_repository(:collection, edit_users: [user.user_key]) }
     let(:attributes) do
       {
-        member_of_collections_attributes: { '0' => { id: collection.id } },
+        member_of_collections_attributes: { '0' => { id: collection.id.to_s } },
         title: ['test']
       }
     end
 
     it 'adds it to the collection' do
       expect(subject.create(env)).to be_instance_of GenericWork
-      reloaded = Hyrax::Queries.find_by(id: collection.id)
-      expect(reloaded.member_object_ids).to eq [curation_concern.id]
+      reloaded = Hyrax::Queries.find_by(id: curation_concern.id)
+      expect(reloaded.member_of_collection_ids).to eq [collection.id]
     end
 
     describe "when work is in user's own collection and destroy is passed" do
       let(:collection) { create_for_repository(:collection, user: user, title: ['A good title']) }
       let(:attributes) do
-        { member_of_collections_attributes: { '0' => { id: collection.id, _destroy: 'true' } } }
+        { member_of_collections_attributes: { '0' => { id: collection.id.to_s, _destroy: 'true' } } }
       end
-
-      before do
-        curation_concern.member_of_collections = [collection]
-        curation_concern.save!
-      end
+      let!(:curation_concern) { create_for_repository(:work, member_of_collection_ids: [collection.id]) }
 
       it "removes the work from that collection" do
         expect(subject.create(env)).to be_instance_of GenericWork
-        expect(curation_concern.member_of_collection_ids).to eq []
+        reloaded = Hyrax::Queries.find_by(id: curation_concern.id)
+        expect(reloaded.member_of_collection_ids).to eq []
       end
     end
 
     describe "when work is in another user's collection" do
-      let(:other_collection) { create(:collection, title: ['A good title']) }
+      let(:other_collection) { create_for_repository(:collection, title: ['A good title']) }
       let(:curation_concern) { create_for_repository(:work, member_of_collection_ids: [other_collection.id]) }
 
       it "doesn't remove the work from the other user's collection" do
         subject.create(env)
         expect(subject.create(env)).to be_instance_of GenericWork
-        expect(curation_concern.member_of_collection_ids).to match_array [collection.id, other_collection.id]
+        reloaded = Hyrax::Queries.find_by(id: curation_concern.id)
+        expect(reloaded.member_of_collection_ids).to match_array [collection.id, other_collection.id]
       end
     end
   end
