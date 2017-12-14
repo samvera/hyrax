@@ -10,12 +10,11 @@ module Hyrax
     #
     # @return [IIIFManifest::DisplayImage] the display image required by the manifest builder.
     def display_image
-      return nil unless ::FileSet.exists?(id) && solr_document.image?
-      # @todo this is slow, find a better way (perhaps index iiif url):
-      original_file = ::FileSet.find(id).original_file
+      return nil unless solr_document.image?
+      original_file_id = solr_document.member_ids.first.sub(/^id-/, '')
 
       url = Hyrax.config.iiif_image_url_builder.call(
-        original_file.id,
+        original_file_id,
         request.base_url,
         Hyrax.config.iiif_image_size_default
       )
@@ -23,7 +22,7 @@ module Hyrax
       IIIFManifest::DisplayImage.new(url,
                                      width: 640,
                                      height: 480,
-                                     iiif_endpoint: iiif_endpoint(original_file.id))
+                                     iiif_endpoint: iiif_endpoint(original_file_id))
     end
 
     private

@@ -486,14 +486,19 @@ RSpec.describe Hyrax::GenericWorksController do
   end
 
   describe '#manifest' do
-    let(:work) { create(:work_with_one_file, user: user) }
-    let(:file_set) { work.ordered_members.to_a.first }
     let(:manifest_factory) { double(to_h: { test: 'manifest' }) }
 
+    let(:file_set) do
+      create_for_repository(:file_set,
+                            user: user,
+                            content: file)
+    end
+    let(:file) { fixture_file_upload('/world.png', 'image/png') }
+    let(:work) do
+      create_for_repository(:work, user: user, member_ids: [file_set.id])
+    end
+
     before do
-      Hydra::Works::AddFileToFileSet.call(file_set,
-                                          File.open(fixture_path + '/world.png'),
-                                          :original_file)
       allow(IIIFManifest::ManifestFactory).to receive(:new)
         .with(Hyrax::WorkShowPresenter)
         .and_return(manifest_factory)
