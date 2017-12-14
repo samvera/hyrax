@@ -56,7 +56,7 @@ module Hyrax
     def can_create_any_work?
       Hyrax.config.curation_concerns.any? do |curation_concern_type|
         can?(:create, curation_concern_type)
-      end && Hyrax::Collections::PermissionsService.admin_set_ids_for_user(user: current_user, access: ['deposit', 'manage'], ability: self).any?
+      end && admin_set_with_deposit?
     end
 
     # Override this method in your ability model if you use a different group
@@ -66,6 +66,11 @@ module Hyrax
     end
 
     private
+
+      # @return [Boolean] true if the user has at least one admin set they can deposit into.
+      def admin_set_with_deposit?
+        Hyrax::Collections::PermissionsService.admin_set_ids_for_user(access: ['deposit', 'manage'], ability: self).any?
+      end
 
       # This overrides hydra-head, (and restores the method from blacklight-access-controls)
       def download_permissions

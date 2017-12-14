@@ -1,7 +1,7 @@
 RSpec.describe Hyrax::Collections::PermissionsService do
   let(:user) { create(:user) }
 
-  let(:ability) { double }
+  let(:ability) { Ability.new(user) }
 
   context 'collection specific methods' do
     let(:collection) { create(:collection) }
@@ -11,10 +11,7 @@ RSpec.describe Hyrax::Collections::PermissionsService do
 
     before do
       allow(Hyrax::PermissionTemplate).to receive(:find_by!).with(source_id: collection.id).and_return(col_permission_template)
-      allow(ability).to receive(:current_user).and_return(user)
       allow(ability).to receive(:user_groups).and_return(['public', 'registered'])
-      allow(described_class).to receive(:user_admin?).with(user, nil).and_return(false)
-      allow(user).to receive(:ability).and_return(ability)
     end
 
     context 'when manage user' do
@@ -30,10 +27,10 @@ RSpec.describe Hyrax::Collections::PermissionsService do
       subject { described_class }
 
       it ".can_deposit_in_collection? returns true" do
-        expect(subject.can_deposit_in_collection?(collection_id: collection.id, user: user)).to be true
+        expect(subject.can_deposit_in_collection?(collection_id: collection.id, ability: ability)).to be true
       end
       it ".can_view_admin_show_for_collection? returns true" do
-        expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, user: user)).to be true
+        expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, ability: ability)).to be true
       end
     end
 
@@ -50,10 +47,10 @@ RSpec.describe Hyrax::Collections::PermissionsService do
       subject { described_class }
 
       it ".can_deposit_in_collection? returns true" do
-        expect(subject.can_deposit_in_collection?(collection_id: collection.id, user: user)).to be true
+        expect(subject.can_deposit_in_collection?(collection_id: collection.id, ability: ability)).to be true
       end
       it ".can_view_admin_show_for_collection? returns true" do
-        expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, user: user)).to be true
+        expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, ability: ability)).to be true
       end
     end
 
@@ -70,10 +67,10 @@ RSpec.describe Hyrax::Collections::PermissionsService do
       subject { described_class }
 
       it ".can_deposit_in_collection? returns true" do
-        expect(subject.can_deposit_in_collection?(collection_id: collection.id, user: user)).to be false
+        expect(subject.can_deposit_in_collection?(collection_id: collection.id, ability: ability)).to be false
       end
       it ".can_view_admin_show_for_collection? returns true" do
-        expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, user: user)).to be true
+        expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, ability: ability)).to be true
       end
     end
 
@@ -81,10 +78,10 @@ RSpec.describe Hyrax::Collections::PermissionsService do
       subject { described_class }
 
       it ".can_deposit_in_collection? returns true" do
-        expect(subject.can_deposit_in_collection?(collection_id: collection.id, user: user)).to be false
+        expect(subject.can_deposit_in_collection?(collection_id: collection.id, ability: ability)).to be false
       end
       it ".can_view_admin_show_for_collection? returns true" do
-        expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, user: user)).to be false
+        expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, ability: ability)).to be false
       end
     end
   end
@@ -127,136 +124,200 @@ RSpec.describe Hyrax::Collections::PermissionsService do
 
     describe '.admin_set_ids_for_user' do
       it 'returns admin set ids where user has manage access' do
-        expect(described_class.admin_set_ids_for_user(access: 'manage', user: user)).to match_array [as_mu.id, as_mg.id]
+        expect(described_class.admin_set_ids_for_user(access: 'manage', ability: ability)).to match_array [as_mu.id, as_mg.id]
       end
       it 'returns admin set ids where user has deposit access' do
-        expect(described_class.admin_set_ids_for_user(access: 'deposit', user: user)).to match_array [as_du.id, as_dg.id]
+        expect(described_class.admin_set_ids_for_user(access: 'deposit', ability: ability)).to match_array [as_du.id, as_dg.id]
       end
       it 'returns admin set ids where user has view access' do
-        expect(described_class.admin_set_ids_for_user(access: 'view', user: user)).to match_array [as_vu.id, as_vg.id]
+        expect(described_class.admin_set_ids_for_user(access: 'view', ability: ability)).to match_array [as_vu.id, as_vg.id]
       end
       it 'returns admin set ids where user has manage, deposit, or view access' do
         all = [as_mu.id, as_mg.id, as_du.id, as_dg.id, as_vu.id, as_vg.id]
-        expect(described_class.admin_set_ids_for_user(access: ['manage', 'deposit', 'view'], user: user)).to match_array all
+        expect(described_class.admin_set_ids_for_user(access: ['manage', 'deposit', 'view'], ability: ability)).to match_array all
       end
-      it 'returns empty array when user has no access' do
-        expect(described_class.admin_set_ids_for_user(access: ['manage', 'deposit', 'view'], user: user2)).to match_array []
+
+      context 'when user has no access' do
+        let(:ability) { Ability.new(user2) }
+
+        it 'returns empty array' do
+          expect(described_class.admin_set_ids_for_user(access: ['manage', 'deposit', 'view'], ability: ability)).to match_array []
+        end
       end
     end
+    
     describe '.collection_ids_for_user' do
       it 'returns collection ids where user has manage access' do
-        expect(described_class.collection_ids_for_user(access: 'manage', user: user)).to match_array [col_mu.id, col_mg.id]
+        expect(described_class.collection_ids_for_user(access: 'manage', ability: ability)).to match_array [col_mu.id, col_mg.id]
       end
       it 'returns collection ids where user has deposit access' do
-        expect(described_class.collection_ids_for_user(access: 'deposit', user: user)).to match_array [col_du.id, col_dg.id]
+        expect(described_class.collection_ids_for_user(access: 'deposit', ability: ability)).to match_array [col_du.id, col_dg.id]
       end
       it 'returns collection ids where user has view access' do
-        expect(described_class.collection_ids_for_user(access: 'view', user: user)).to match_array [col_vu.id, col_vg.id]
+        expect(described_class.collection_ids_for_user(access: 'view', ability: ability)).to match_array [col_vu.id, col_vg.id]
       end
       it 'returns collection ids where user has manage, deposit, or view access' do
         all = [col_mu.id, col_mg.id, col_du.id, col_dg.id, col_vu.id, col_vg.id]
-        expect(described_class.collection_ids_for_user(access: ['manage', 'deposit', 'view'], user: user)).to match_array all
+        expect(described_class.collection_ids_for_user(access: ['manage', 'deposit', 'view'], ability: ability)).to match_array all
       end
-      it 'returns empty array when user has no access' do
-        expect(described_class.collection_ids_for_user(access: ['manage', 'deposit', 'view'], user: user2)).to match_array []
+
+      context 'when user has no access' do
+        let(:ability) { Ability.new(user2) }
+
+        it 'returns empty array' do
+          expect(described_class.collection_ids_for_user(access: ['manage', 'deposit', 'view'], ability: ability)).to match_array []
+        end
       end
     end
 
     describe '.source_ids_for_manage' do
       it 'returns collection and admin set ids where user has manage access' do
-        expect(described_class.source_ids_for_manage(user: user)).to match_array [col_mu.id, col_mg.id, as_mu.id, as_mg.id]
+        expect(described_class.source_ids_for_manage(ability: ability)).to match_array [col_mu.id, col_mg.id, as_mu.id, as_mg.id]
       end
       it 'returns collection ids where user has manage access' do
-        expect(described_class.source_ids_for_manage(user: user, source_type: 'collection')).to match_array [col_mu.id, col_mg.id]
+        expect(described_class.source_ids_for_manage(ability: ability, source_type: 'collection')).to match_array [col_mu.id, col_mg.id]
       end
       it 'returns admin set ids where user has manage access' do
-        expect(described_class.source_ids_for_manage(user: user, source_type: 'admin_set')).to match_array [as_mu.id, as_mg.id]
+        expect(described_class.source_ids_for_manage(ability: ability, source_type: 'admin_set')).to match_array [as_mu.id, as_mg.id]
       end
-      it 'returns empty array when user has no access' do
-        expect(described_class.source_ids_for_manage(user: user2)).to match_array []
+
+      context 'when user has no access' do
+        let(:ability) { Ability.new(user2) }
+
+        it 'returns empty array' do
+          expect(described_class.source_ids_for_manage(ability: ability)).to match_array []
+        end
       end
     end
+
     describe '.admin_set_ids_for_manage' do
       it 'returns admin set ids where user has manage access' do
-        expect(described_class.admin_set_ids_for_manage(user: user)).to match_array [as_mu.id, as_mg.id]
+        expect(described_class.admin_set_ids_for_manage(ability: ability)).to match_array [as_mu.id, as_mg.id]
       end
-      it 'returns empty array when user has no access' do
-        expect(described_class.admin_set_ids_for_manage(user: user2)).to match_array []
+
+      context 'when user has no access' do
+        let(:ability) { Ability.new(user2) }
+
+        it 'returns empty array' do
+          expect(described_class.admin_set_ids_for_manage(ability: ability)).to match_array []
+        end
       end
     end
+
     describe '.collection_ids_for_manage' do
       it 'returns collection ids where user has manage access' do
-        expect(described_class.collection_ids_for_manage(user: user)).to match_array [col_mu.id, col_mg.id]
+        expect(described_class.collection_ids_for_manage(ability: ability)).to match_array [col_mu.id, col_mg.id]
       end
-      it 'returns empty array when user has no access' do
-        expect(described_class.collection_ids_for_manage(user: user2)).to match_array []
+
+      context 'when user has no access' do
+        let(:ability) { Ability.new(user2) }
+
+        it 'returns empty array' do
+          expect(described_class.collection_ids_for_manage(ability: ability)).to match_array []
+        end
       end
     end
 
     describe '.source_ids_for_deposit' do
       it 'returns collection and admin set ids where user has deposit access' do
-        expect(described_class.source_ids_for_deposit(user: user)).to match_array [col_du.id, col_dg.id, col_mu.id, col_mg.id, as_du.id, as_dg.id, as_mu.id, as_mg.id]
+        expect(described_class.source_ids_for_deposit(ability: ability)).to match_array [col_du.id, col_dg.id, col_mu.id, col_mg.id, as_du.id, as_dg.id, as_mu.id, as_mg.id]
       end
       it 'returns collection ids where user has deposit access' do
-        expect(described_class.source_ids_for_deposit(user: user, source_type: 'collection')).to match_array [col_du.id, col_dg.id, col_mu.id, col_mg.id]
+        expect(described_class.source_ids_for_deposit(ability: ability, source_type: 'collection')).to match_array [col_du.id, col_dg.id, col_mu.id, col_mg.id]
       end
       it 'returns admin set ids where user has deposit access' do
-        expect(described_class.source_ids_for_deposit(user: user, source_type: 'admin_set')).to match_array [as_du.id, as_dg.id, as_mu.id, as_mg.id]
+        expect(described_class.source_ids_for_deposit(ability: ability, source_type: 'admin_set')).to match_array [as_du.id, as_dg.id, as_mu.id, as_mg.id]
       end
-      it 'returns empty array when user has no access' do
-        expect(described_class.source_ids_for_deposit(user: user2)).to match_array []
+
+      context 'when user has no access' do
+        let(:ability) { Ability.new(user2) }
+
+        it 'returns empty array' do
+          expect(described_class.source_ids_for_deposit(ability: ability)).to match_array []
+        end
       end
     end
     describe '.collection_ids_for_deposit' do
       it 'returns collection ids where user has manage access' do
-        expect(described_class.collection_ids_for_deposit(user: user)).to match_array [col_du.id, col_dg.id, col_mu.id, col_mg.id]
+        expect(described_class.collection_ids_for_deposit(ability: ability)).to match_array [col_du.id, col_dg.id, col_mu.id, col_mg.id]
       end
-      it 'returns empty array when user has no access' do
-        expect(described_class.collection_ids_for_deposit(user: user2)).to match_array []
+
+      context 'when user has no access' do
+        let(:ability) { Ability.new(user2) }
+
+        it 'returns empty array' do
+          expect(described_class.collection_ids_for_deposit(ability: ability)).to match_array []
+        end
       end
     end
+
     describe '.admin_set_ids_for_deposit' do
       it 'returns admin set ids where user has manage access' do
-        expect(described_class.admin_set_ids_for_deposit(user: user)).to match_array [as_du.id, as_dg.id, as_mu.id, as_mg.id]
+        expect(described_class.admin_set_ids_for_deposit(ability: ability)).to match_array [as_du.id, as_dg.id, as_mu.id, as_mg.id]
       end
-      it 'returns empty array when user has no access' do
-        expect(described_class.admin_set_ids_for_deposit(user: user2)).to match_array []
+
+      context 'when user has no access' do
+        let(:ability) { Ability.new(user2) }
+
+        it 'returns empty array' do
+          expect(described_class.admin_set_ids_for_deposit(ability: ability)).to match_array []
+        end
       end
     end
 
     describe '.can_manage_any_collection?' do
       it 'returns true when user has manage access to at least one collection' do
-        expect(described_class.can_manage_any_collection?(user: user)).to be true
+        expect(described_class.can_manage_any_collection?(ability: ability)).to be true
       end
-      it 'returns false when user does not have manage access to any collections' do
-        expect(described_class.can_manage_any_collection?(user: user2)).to be false
+
+      context 'when user has no access' do
+        let(:ability) { Ability.new(user2) }
+
+        it 'returns false' do
+          expect(described_class.can_manage_any_collection?(ability: ability)).to be false
+        end
       end
     end
 
     describe '.can_manage_any_admin_set?' do
       it 'returns true when user has manage access to at least one admin set' do
-        expect(described_class.can_manage_any_admin_set?(user: user)).to be true
+        expect(described_class.can_manage_any_admin_set?(ability: ability)).to be true
       end
-      it 'returns false when user does not have manage access to any admin sets' do
-        expect(described_class.can_manage_any_admin_set?(user: user2)).to be false
+
+      context 'when user has no access' do
+        let(:ability) { Ability.new(user2) }
+
+        it 'returns false' do
+          expect(described_class.can_manage_any_admin_set?(ability: ability)).to be false
+        end
       end
     end
 
     describe '.can_view_admin_show_for_any_collection?' do
       it 'returns true when user has manage, deposit, or view access to at least one collection' do
-        expect(described_class.can_view_admin_show_for_any_collection?(user: user)).to be true
+        expect(described_class.can_view_admin_show_for_any_collection?(ability: ability)).to be true
       end
-      it 'returns false when user does not have manage, deposit, or view access to any collections' do
-        expect(described_class.can_view_admin_show_for_any_collection?(user: user2)).to be false
+
+      context 'when user has no access' do
+        let(:ability) { Ability.new(user2) }
+
+        it 'returns false' do
+          expect(described_class.can_view_admin_show_for_any_collection?(ability: ability)).to be false
+        end
       end
     end
 
     describe '.can_view_admin_show_for_any_admin set?' do
       it 'returns true when user has manage, deposit, or view access to at least one admin set' do
-        expect(described_class.can_view_admin_show_for_any_admin_set?(user: user)).to be true
+        expect(described_class.can_view_admin_show_for_any_admin_set?(ability: ability)).to be true
       end
-      it 'returns false when user does not have manage, deposit, or view access to any admin sets' do
-        expect(described_class.can_view_admin_show_for_any_admin_set?(user: user2)).to be false
+
+      context 'when user has no access' do
+        let(:ability) { Ability.new(user2) }
+
+        it 'returns false' do
+          expect(described_class.can_view_admin_show_for_any_admin_set?(ability: ability)).to be false
+        end
       end
     end
   end
