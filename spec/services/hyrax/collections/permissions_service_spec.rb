@@ -125,50 +125,6 @@ RSpec.describe Hyrax::Collections::PermissionsService do
       allow(user).to receive(:groups).and_return(['view_group', 'deposit_group', 'manage_group'])
     end
 
-    describe '.source_ids_for_user' do
-      it 'returns collection and admin set ids where user has manage access' do
-        expect(described_class.source_ids_for_user(access: 'manage', user: user)).to match_array [col_mu.id, col_mg.id, as_mu.id, as_mg.id]
-      end
-      it 'returns collection ids where user has manage access' do
-        expect(described_class.source_ids_for_user(access: 'manage', user: user, source_type: 'collection')).to match_array [col_mu.id, col_mg.id]
-      end
-      it 'returns admin set ids where user has manage access' do
-        expect(described_class.source_ids_for_user(access: 'manage', user: user, source_type: 'admin_set')).to match_array [as_mu.id, as_mg.id]
-      end
-      it 'returns collection and admin set ids where user has deposit access' do
-        expect(described_class.source_ids_for_user(access: 'deposit', user: user)).to match_array [col_du.id, col_dg.id, as_du.id, as_dg.id]
-      end
-      it 'returns collection ids where user has deposit access' do
-        expect(described_class.source_ids_for_user(access: 'deposit', user: user, source_type: 'collection')).to match_array [col_du.id, col_dg.id]
-      end
-      it 'returns admin set ids where user has deposit access' do
-        expect(described_class.source_ids_for_user(access: 'deposit', user: user, source_type: 'admin_set')).to match_array [as_du.id, as_dg.id]
-      end
-      it 'returns collection and admin set ids where user has view access' do
-        expect(described_class.source_ids_for_user(access: 'view', user: user)).to match_array [col_vu.id, col_vg.id, as_vu.id, as_vg.id]
-      end
-      it 'returns collection ids where user has view access' do
-        expect(described_class.source_ids_for_user(access: 'view', user: user, source_type: 'collection')).to match_array [col_vu.id, col_vg.id]
-      end
-      it 'returns admin set ids where user has view access' do
-        expect(described_class.source_ids_for_user(access: 'view', user: user, source_type: 'admin_set')).to match_array [as_vu.id, as_vg.id]
-      end
-      it 'returns collection and admin set ids where user has manage, deposit, or view access' do
-        all = [col_mu.id, col_mg.id, col_du.id, col_dg.id, col_vu.id, col_vg.id, as_mu.id, as_mg.id, as_du.id, as_dg.id, as_vu.id, as_vg.id]
-        expect(described_class.source_ids_for_user(access: ['manage', 'deposit', 'view'], user: user)).to match_array all
-      end
-      it 'returns collection ids where user has manage, deposit, or view access' do
-        all = [col_mu.id, col_mg.id, col_du.id, col_dg.id, col_vu.id, col_vg.id]
-        expect(described_class.source_ids_for_user(access: ['manage', 'deposit', 'view'], user: user, source_type: 'collection')).to match_array all
-      end
-      it 'returns admin set ids where user has manage, deposit, or view access' do
-        all = [as_mu.id, as_mg.id, as_du.id, as_dg.id, as_vu.id, as_vg.id]
-        expect(described_class.source_ids_for_user(access: ['manage', 'deposit', 'view'], user: user, source_type: 'admin_set')).to match_array all
-      end
-      it 'returns empty array when user has no access' do
-        expect(described_class.source_ids_for_user(access: ['manage', 'deposit', 'view'], user: user2)).to match_array []
-      end
-    end
     describe '.admin_set_ids_for_user' do
       it 'returns admin set ids where user has manage access' do
         expect(described_class.admin_set_ids_for_user(access: 'manage', user: user)).to match_array [as_mu.id, as_mg.id]

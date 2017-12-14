@@ -1,7 +1,7 @@
 module Hyrax
   module Collections
     class PermissionsService # rubocop:disable Metrics/ClassLength
-      # @api public
+      # @api private
       #
       # IDs of collections/or admin_sets a user can access based on participant roles.
       #
@@ -25,6 +25,7 @@ module Hyrax
                                   ).pluck('DISTINCT source_id')
         end
       end
+      private_class_method :source_ids_for_user
 
       # @api public
       #
