@@ -43,6 +43,58 @@ RSpec.describe Hyrax::WorkShowPresenter do
     it { is_expected.to eq 'http://example.org/concern/generic_works/888888/manifest' }
   end
 
+  describe '#universal_viewer?' do
+    let(:id_present) { false }
+    let(:representative_presenter) { double('representative', present?: false) }
+    let(:image_boolean) { false }
+    let(:iiif_enabled) { false }
+
+    before do
+      allow(presenter).to receive(:representative_id).and_return(id_present)
+      allow(presenter).to receive(:representative_presenter).and_return(representative_presenter)
+      allow(representative_presenter).to receive(:image?).and_return(image_boolean)
+      allow(Hyrax.config).to receive(:iiif_image_server?).and_return(iiif_enabled)
+    end
+
+    subject { presenter.universal_viewer? }
+
+    context 'with no representative_id' do
+      it { is_expected.to be false }
+    end
+
+    context 'with no representative_presenter' do
+      let(:id_present) { true }
+
+      it { is_expected.to be false }
+    end
+
+    context 'with non-image representative_presenter' do
+      let(:id_present) { true }
+      let(:representative_presenter) { double('representative', present?: true) }
+      let(:image_boolean) { true }
+
+      it { is_expected.to be false }
+    end
+
+    context 'with IIIF image server turned off' do
+      let(:id_present) { true }
+      let(:representative_presenter) { double('representative', present?: true) }
+      let(:image_boolean) { true }
+      let(:iiif_enabled) { false }
+
+      it { is_expected.to be false }
+    end
+
+    context 'with representative image and IIIF turned on' do
+      let(:id_present) { true }
+      let(:representative_presenter) { double('representative', present?: true) }
+      let(:image_boolean) { true }
+      let(:iiif_enabled) { true }
+
+      it { is_expected.to be true }
+    end
+  end
+
   describe '#stats_path' do
     let(:user) { 'sarah' }
     let(:ability) { double "Ability" }

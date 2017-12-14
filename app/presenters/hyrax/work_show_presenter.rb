@@ -58,6 +58,14 @@ module Hyrax
       manifest_helper.polymorphic_url([:manifest, self])
     end
 
+    # @return [Boolean] render the UniversalViewer
+    def universal_viewer?
+      representative_id.present? &&
+        representative_presenter.present? &&
+        representative_presenter.image? &&
+        Hyrax.config.iiif_image_server?
+    end
+
     # @return FileSetPresenter presenter for the representative FileSets
     def representative_presenter
       return nil if representative_id.blank?
