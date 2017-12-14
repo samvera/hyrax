@@ -11,16 +11,12 @@ module Hyrax
       # @return [Array<String>] IDs of collections and admin sets for which the user has specified roles
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
       def self.source_ids_for_user(access:, ability:, source_type: nil)
-        if ability.admin?
-          PermissionTemplate.all.pluck('DISTINCT source_id')
-        else
-          PermissionTemplateAccess.joins(:permission_template)
-                                  .where(user_where(access: access, ability: ability, source_type: source_type))
-                                  .or(
-                                    PermissionTemplateAccess.joins(:permission_template)
-                                      .where(group_where(access: access, ability: ability, source_type: source_type))
-                                  ).pluck('DISTINCT source_id')
-        end
+        PermissionTemplateAccess.joins(:permission_template)
+                                .where(user_where(access: access, ability: ability, source_type: source_type))
+                                .or(
+                                  PermissionTemplateAccess.joins(:permission_template)
+                                    .where(group_where(access: access, ability: ability, source_type: source_type))
+                                ).pluck('DISTINCT source_id')
       end
       private_class_method :source_ids_for_user
 
