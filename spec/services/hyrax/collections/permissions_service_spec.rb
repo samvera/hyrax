@@ -145,7 +145,7 @@ RSpec.describe Hyrax::Collections::PermissionsService do
         end
       end
     end
-    
+
     describe '.collection_ids_for_user' do
       it 'returns collection ids where user has manage access' do
         expect(described_class.collection_ids_for_user(access: 'manage', ability: ability)).to match_array [col_mu.id, col_mg.id]
@@ -186,34 +186,6 @@ RSpec.describe Hyrax::Collections::PermissionsService do
 
         it 'returns empty array' do
           expect(described_class.source_ids_for_manage(ability: ability)).to match_array []
-        end
-      end
-    end
-
-    describe '.admin_set_ids_for_manage' do
-      it 'returns admin set ids where user has manage access' do
-        expect(described_class.admin_set_ids_for_manage(ability: ability)).to match_array [as_mu.id, as_mg.id]
-      end
-
-      context 'when user has no access' do
-        let(:ability) { Ability.new(user2) }
-
-        it 'returns empty array' do
-          expect(described_class.admin_set_ids_for_manage(ability: ability)).to match_array []
-        end
-      end
-    end
-
-    describe '.collection_ids_for_manage' do
-      it 'returns collection ids where user has manage access' do
-        expect(described_class.collection_ids_for_manage(ability: ability)).to match_array [col_mu.id, col_mg.id]
-      end
-
-      context 'when user has no access' do
-        let(:ability) { Ability.new(user2) }
-
-        it 'returns empty array' do
-          expect(described_class.collection_ids_for_manage(ability: ability)).to match_array []
         end
       end
     end

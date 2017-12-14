@@ -1,6 +1,6 @@
 module Hyrax
   module Collections
-    class PermissionsService # rubocop:disable Metrics/ClassLength
+    class PermissionsService
       # @api private
       #
       # IDs of collections/or admin_sets a user can access based on participant roles.
@@ -87,29 +87,6 @@ module Hyrax
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
       def self.collection_ids_for_deposit(ability:)
         source_ids_for_deposit(ability: ability, source_type: 'collection')
-      end
-
-      # @api public
-      #
-      # IDs of admin sets that a user can manage.
-      #
-      # @param ability [Ability] the ability coming from cancan ability check
-      # @return [Array<String>] IDs of admin sets that the user can manage
-      # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
-      #   If calling from Abilities, pass the ability.  If you try to get the ability from the user, you end up in an infinit loop.
-      def self.admin_set_ids_for_manage(ability:)
-        source_ids_for_manage(ability: ability, source_type: 'admin_set')
-      end
-
-      # @api public
-      #
-      # IDs of collections that a user can manage.
-      #
-      # @param ability [Ability] the ability coming from cancan ability check
-      # @return [Array<String>] IDs of collections that the user can manage
-      # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
-      def self.collection_ids_for_manage(ability:)
-        source_ids_for_manage(ability: ability, source_type: 'collection')
       end
 
       # @api public
