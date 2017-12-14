@@ -34,11 +34,12 @@ module Hyrax
           attributes_collection = attributes_collection.sort_by { |i, _| i.to_i }.map { |_, attributes| attributes }
           # checking for existing works to avoid rewriting/loading works that are
           # already attached
-          existing_collections = env.curation_concern.member_of_collection_ids
+          existing_collections = env.curation_concern.member_of_collection_ids.map(&:to_s)
           attributes_collection.each do |attributes|
             next if attributes['id'].blank?
+
             if existing_collections.include?(attributes['id'])
-              remove(env.curation_concern, attributes['id']) if has_destroy_flag?(attributes)
+              remove(env, attributes['id']) if has_destroy_flag?(attributes)
             else
               add(env, attributes['id'])
             end
@@ -49,12 +50,12 @@ module Hyrax
         # along side the FileSets on the show page
         def add(env, id)
           return unless env.current_ability.can?(:edit, id)
-          env.curation_concern.member_of_collection_ids << id
+          env.change_set.member_of_collection_ids += [Valkyrie::ID.new(id)]
         end
 
         # Remove the object from the members set and the ordered members list
-        def remove(curation_concern, id)
-          curation_concern.member_of_collection_ids.delete(id)
+        def remove(env, id)
+          env.change_set.member_of_collection_ids.delete(Valkyrie::ID.new(id))
         end
 
         # Determines if a hash contains a truthy _destroy key.
