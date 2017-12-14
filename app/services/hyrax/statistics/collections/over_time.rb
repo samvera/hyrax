@@ -4,8 +4,8 @@ module Hyrax
       class OverTime < Statistics::OverTime
         private
 
-          def relation
-            Collection
+          def search_builder
+            Hyrax::CollectionSearchBuilder.new([:filter_models], self)
           end
       end
     end

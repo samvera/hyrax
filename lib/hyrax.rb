@@ -8,7 +8,7 @@ require 'font-awesome-rails'
 require 'tinymce-rails'
 require 'blacklight'
 require 'blacklight/gallery'
-require 'active_fedora/noid'
+require 'noid-rails'
 require 'hydra/head'
 require 'hydra-editor'
 require 'browse-everything'
@@ -25,7 +25,9 @@ module Hyrax
     autoload :Arkivo
     autoload :Collections
     autoload :Configuration
-    autoload :ControlledVocabularies
+    autoload :FedoraSchema
+    autoload :LinkedDataResourceFactory
+    autoload :LinkedDataResources
     autoload :RedisEventStore
     autoload :ResourceSync
     autoload :Zotero
@@ -47,6 +49,6 @@ module Hyrax
   end
 
   def self.primary_work_type
-    Hyrax::WorkRelation::DummyModel.primary_concern
+    Hyrax.config.curation_concerns.first
   end
 end

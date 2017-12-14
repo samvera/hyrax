@@ -1,26 +1,26 @@
 RSpec.describe 'records/edit_fields/_description.html.erb', type: :view do
   let(:work) { GenericWork.new }
-  let(:form) { Hyrax::GenericWorkForm.new(work, nil, controller) }
+  let(:change_set) { GenericWorkChangeSet.new(work) }
   let(:form_template) do
     %(
-      <%= simple_form_for [main_app, @form] do |f| %>
+      <%= simple_form_for [main_app, @change_set] do |f| %>
         <%= render "records/edit_fields/description", f: f, key: 'description' %>
       <% end %>
     )
   end
 
   before do
-    assign(:form, form)
+    assign(:change_set, change_set)
   end
 
   context "when single valued" do
     before do
-      expect(form).to receive(:multiple?).and_return(false)
+      expect(change_set).to receive(:multiple?).and_return(false)
     end
 
     context "when not required" do
       before do
-        expect(form).to receive(:required?).and_return(false)
+        expect(change_set).to receive(:required?).and_return(false)
       end
       it 'has text area' do
         render inline: form_template
@@ -30,7 +30,7 @@ RSpec.describe 'records/edit_fields/_description.html.erb', type: :view do
 
     context "when required" do
       before do
-        expect(form).to receive(:required?).and_return(true)
+        expect(change_set).to receive(:required?).and_return(true)
       end
       it 'has text area' do
         render inline: form_template
@@ -41,12 +41,12 @@ RSpec.describe 'records/edit_fields/_description.html.erb', type: :view do
 
   context "when multi valued" do
     before do
-      expect(form).to receive(:multiple?).and_return(true)
+      expect(change_set).to receive(:multiple?).and_return(true)
     end
 
     context "when not required" do
       before do
-        expect(form).to receive(:required?).and_return(false)
+        expect(change_set).to receive(:required?).and_return(false)
       end
       it 'has text area' do
         render inline: form_template
@@ -56,7 +56,7 @@ RSpec.describe 'records/edit_fields/_description.html.erb', type: :view do
 
     context "when required" do
       before do
-        expect(form).to receive(:required?).and_return(true)
+        expect(change_set).to receive(:required?).and_return(true)
       end
       it 'has text area' do
         render inline: form_template

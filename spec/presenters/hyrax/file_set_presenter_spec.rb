@@ -1,17 +1,17 @@
 require 'iiif_manifest'
 
 RSpec.describe Hyrax::FileSetPresenter do
-  let(:solr_document) { SolrDocument.new(attributes) }
+  let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: file_set) }
+  let(:solr_document) { SolrDocument.new(document) }
   let(:ability) { double "Ability" }
   let(:presenter) { described_class.new(solr_document, ability) }
-  let(:attributes) { file.to_solr }
-  let(:file) do
-    build(:file_set,
-          id: '123abc',
-          user: user,
-          title: ["File title"],
-          depositor: user.user_key,
-          label: "filename.tif")
+  let(:file_set) do
+    create_for_repository(:file_set,
+                          id: '123abc',
+                          user: user,
+                          title: ["File title"],
+                          depositor: user.user_key,
+                          label: "filename.tif")
   end
   let(:user) { double(user_key: 'sarah') }
 
@@ -269,11 +269,10 @@ RSpec.describe Hyrax::FileSetPresenter do
   end
 
   describe 'IIIF integration' do
-    let(:file_set) { create(:file_set) }
-    let(:solr_document) { SolrDocument.new(file_set.to_solr) }
+    let(:solr_document) { SolrDocument.find(file_set.id) }
     let(:request) { double(base_url: 'http://test.host') }
     let(:presenter) { described_class.new(solr_document, nil, request) }
-    let(:id) { CGI.escape(file_set.original_file.id) }
+    let(:id) { CGI.escape(file_set.original_file.id.to_s) }
 
     describe "#display_image" do
       subject { presenter.display_image }
@@ -285,19 +284,25 @@ RSpec.describe Hyrax::FileSetPresenter do
       end
 
       context 'with a file' do
-        before do
-          Hydra::Works::AddFileToFileSet.call(file_set,
-                                              file_path, :original_file)
+        let(:file_set) do
+          create_for_repository(:file_set,
+                                user: user,
+                                content: file)
         end
 
         context "when the file is not an image" do
-          let(:file_path) { File.open(fixture_path + '/hyrax_generic_stub.txt') }
+          before do
+            ruby_mock = instance_double(RubyTikaApp, to_json: "{}")
+            allow(RubyTikaApp).to receive(:new).and_return(ruby_mock)
+          end
+
+          let(:file) { fixture_file_upload('/hyrax_generic_stub.txt', 'plain/text') }
 
           it { is_expected.to be_nil }
         end
 
         context "when the file is an image" do
-          let(:file_path) { File.open(fixture_path + '/world.png') }
+          let(:file) { fixture_file_upload('/world.png', 'image/png') }
 
           it { is_expected.to be_instance_of IIIFManifest::DisplayImage }
           its(:url) { is_expected.to eq "http://test.host/images/#{id}/full/600,/0/default.jpg" }
@@ -319,7 +324,7 @@ RSpec.describe Hyrax::FileSetPresenter do
           context 'with custom image url builder' do
             let(:id) { file_set.original_file.id }
             let(:custom_builder) do
-              ->(file_id, base_url, _size) { "#{base_url}/downloads/#{file_id.split('/').first}" }
+              ->(file_id, base_url, _size) { "#{base_url}/downloads/#{file_id}" }
             end
 
             around do |example|
@@ -330,19 +335,25 @@ RSpec.describe Hyrax::FileSetPresenter do
             end
 
             it { is_expected.to be_instance_of IIIFManifest::DisplayImage }
-            its(:url) { is_expected.to eq "http://test.host/downloads/#{id.split('/').first}" }
+            its(:url) { is_expected.to eq "http://test.host/downloads/#{id}" }
           end
         end
       end
     end
 
     describe "#iiif_endpoint" do
-      subject { presenter.send(:iiif_endpoint, file_set.original_file.id) }
+      subject { presenter.send(:iiif_endpoint, file_node_id) }
+
+      let(:file_set) do
+        create_for_repository(:file_set,
+                              user: user,
+                              content: file)
+      end
+      let(:file) { fixture_file_upload('/world.png', 'image/png') }
+      let(:file_node_id) { file_set.member_ids.first }
 
       before do
         allow(Hyrax.config).to receive(:iiif_image_server?).and_return(riiif_enabled)
-        Hydra::Works::AddFileToFileSet.call(file_set,
-                                            File.open(fixture_path + '/world.png'), :original_file)
       end
 
       context 'with iiif_image_server enabled' do

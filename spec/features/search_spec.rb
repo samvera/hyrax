@@ -2,14 +2,15 @@ RSpec.describe 'searching' do
   let(:user) { create :user }
   let(:subject_value) { 'mustache' }
   let!(:work) do
-    create(:public_work,
-           title: ["Toothbrush"],
-           keyword: [subject_value, 'taco'],
-           user: user)
+    create_for_repository(:work, :public,
+                          title: ["Toothbrush"],
+                          keyword: [subject_value, 'taco'],
+                          user: user,
+                          member_of_collection_ids: [collection.id])
   end
 
   let!(:collection) do
-    create(:public_collection, title: ['collection title abc'], description: [subject_value], user: user, members: [work])
+    create_for_repository(:collection, :public, title: ['collection title abc'], description: [subject_value], user: user)
   end
 
   context "as a public user", :clean_repo do
@@ -48,8 +49,8 @@ RSpec.describe 'searching' do
       expect(page).to have_content('collection title abc')
       expect(page).to have_css("span.collection-icon-search")
 
-      expect(page.body).to include "<span itemprop=\"keywords\"><a href=\"/catalog?f%5Bkeyword_sim%5D%5B%5D=taco&amp;locale=en\">taco</a></span>"
-      expect(page.body).to include "<span itemprop=\"keywords\"><a href=\"/catalog?f%5Bkeyword_sim%5D%5B%5D=mustache&amp;locale=en\">mustache</a></span>"
+      expect(page.body).to include "<span itemprop=\"keywords\"><a href=\"/catalog?f%5Bkeyword_ssim%5D%5B%5D=taco&amp;locale=en\">taco</a></span>"
+      expect(page.body).to include "<span itemprop=\"keywords\"><a href=\"/catalog?f%5Bkeyword_ssim%5D%5B%5D=mustache&amp;locale=en\">mustache</a></span>"
     end
 
     it "does not display search options for dashboard files" do

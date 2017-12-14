@@ -23,7 +23,8 @@ RSpec.describe Hyrax::CollectionPresenter do
   end
   let(:ability) { double }
   let(:presenter) { described_class.new(solr_doc, ability) }
-  let(:solr_doc) { SolrDocument.new(collection.to_solr) }
+  let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: collection) }
+  let(:solr_doc) { SolrDocument.new(document) }
 
   # Mock bytes so collection does not have to be saved.
   before { allow(collection).to receive(:bytes).and_return(0) }
@@ -98,11 +99,12 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
 
     context "collection with work" do
-      let(:work) { create(:work, title: ['unimaginitive title']) }
+      let(:work) { create_for_repository(:work, title: ['unimaginitive title']) }
+      let(:persister) { Valkyrie::MetadataAdapter.find(:indexing_persister).persister }
 
       before do
-        work.member_of_collections << collection
-        work.save!
+        work.member_of_collection_ids << collection.id
+        persister.save(resource: work)
       end
 
       it { is_expected.to eq 1 }

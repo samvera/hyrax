@@ -3,10 +3,10 @@ RSpec.describe Hyrax::UserStatImporter do
     allow(Hyrax.config).to receive(:analytic_start_date) { dates[0] }
 
     allow(FileViewStat).to receive(:ga_statistics) do |_date, file|
-      case file
-      when bilbo_file_1
+      case file.id
+      when bilbo_file_1.id
         bilbo_file_1_pageview_stats
-      when bilbo_file_2
+      when bilbo_file_2.id
         bilbo_file_2_pageview_stats
       else
         frodo_file_1_pageview_stats
@@ -14,10 +14,10 @@ RSpec.describe Hyrax::UserStatImporter do
     end
 
     allow(FileDownloadStat).to receive(:ga_statistics) do |_date, file|
-      case file
-      when bilbo_file_1
+      case file.id
+      when bilbo_file_1.id
         bilbo_file_1_download_stats
-      when bilbo_file_2
+      when bilbo_file_2.id
         bilbo_file_2_download_stats
       else
         frodo_file_1_download_stats
@@ -25,10 +25,10 @@ RSpec.describe Hyrax::UserStatImporter do
     end
 
     allow(WorkViewStat).to receive(:ga_statistics) do |_date, work|
-      case work
-      when bilbo_work_1
+      case work.id
+      when bilbo_work_1.id
         bilbo_work_1_pageview_stats
-      when bilbo_work_2
+      when bilbo_work_2.id
         bilbo_work_2_pageview_stats
       else
         frodo_work_1_pageview_stats
@@ -41,28 +41,28 @@ RSpec.describe Hyrax::UserStatImporter do
   let!(:gollum) { create(:user, email: 'gollum@example.com') }
 
   let!(:bilbo_file_1) do
-    create(:file_set, id: 'xyzbilbo1', user: bilbo)
+    create_for_repository(:file_set, id: 'xyzbilbo1', user: bilbo)
   end
 
   let!(:bilbo_file_2) do
-    create(:file_set, id: 'xyzbilbo2', user: bilbo)
+    create_for_repository(:file_set, id: 'xyzbilbo2', user: bilbo)
   end
 
   let!(:frodo_file_1) do
-    create(:file_set, id: 'xyzfrodo1', user: frodo)
+    create_for_repository(:file_set, id: 'xyzfrodo1', user: frodo)
   end
 
   # work
   let!(:bilbo_work_1) do
-    create(:work, id: 'xyzbilbowork1', user: bilbo)
+    create_for_repository(:work, id: 'xyzbilbowork1', user: bilbo)
   end
 
   let!(:bilbo_work_2) do
-    create(:work, id: 'xyzbilbowork2', user: bilbo)
+    create_for_repository(:work, id: 'xyzbilbowork2', user: bilbo)
   end
 
   let!(:frodo_work_1) do
-    create(:work, id: 'xyzfrodowork1', user: frodo)
+    create_for_repository(:work, id: 'xyzfrodowork1', user: frodo)
   end
 
   let(:dates) do

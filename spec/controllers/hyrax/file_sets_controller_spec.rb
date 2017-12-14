@@ -2,6 +2,7 @@ RSpec.describe Hyrax::FileSetsController do
   routes { Rails.application.routes }
   let(:user) { create(:user) }
   let(:actor) { controller.send(:actor) }
+  let(:persister) { Valkyrie::MetadataAdapter.find(:indexing_persister).persister }
 
   context "when signed in" do
     before do
@@ -15,43 +16,34 @@ RSpec.describe Hyrax::FileSetsController do
     describe "#destroy" do
       context "file_set with a parent" do
         let(:file_set) do
-          create(:file_set, user: user)
+          create_for_repository(:file_set, user: user)
         end
-        let(:work) do
-          create(:work, title: ['test title'], user: user)
+        let!(:work) do
+          create_for_repository(:work, title: ['test title'], user: user, member_ids: [file_set.id])
         end
 
         let(:delete_message) { double('delete message') }
 
-        before do
-          work.ordered_members << file_set
-          work.save!
-        end
-
         it "deletes the file" do
-          expect(ContentDeleteEventJob).to receive(:perform_later).with(file_set.id, user)
+          expect(ContentDeleteEventJob).to receive(:perform_later).with(file_set.id.to_s, user)
           expect do
             delete :destroy, params: { id: file_set }
-          end.to change { FileSet.exists?(file_set.id) }.from(true).to(false)
+          end.to change { Hyrax::Queries.exists?(file_set.id) }.from(true).to(false)
           expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
         end
       end
     end
 
     describe "#edit" do
-      let(:parent) do
-        create(:work, :public, user: user)
+      let!(:parent) do
+        create_for_repository(:work, :public, user: user, member_ids: [file_set.id])
       end
+      let(:file) { fixture_file_upload('/world.png', 'image/png') }
       let(:file_set) do
-        create(:file_set, user: user).tap do |file_set|
-          parent.ordered_members << file_set
-          parent.save!
-        end
+        create_for_repository(:file_set, user: user, content: file)
       end
 
       before do
-        binary = StringIO.new("hey")
-        Hydra::Works::AddFileToFileSet.call(file_set, binary, :original_file, versioning: true)
         request.env['HTTP_REFERER'] = 'http://test.host/foo'
       end
 
@@ -62,21 +54,19 @@ RSpec.describe Hyrax::FileSetsController do
         get :edit, params: { id: file_set }
 
         expect(response).to be_success
-        expect(assigns[:file_set]).to eq file_set
-        expect(assigns[:version_list]).to be_kind_of Hyrax::VersionListPresenter
-        expect(assigns[:parent]).to eq parent
+        expect(assigns[:change_set]).to be_kind_of Hyrax::FileSetChangeSet
         expect(response).to render_template(:edit)
       end
     end
 
     describe "#update" do
       let(:file_set) do
-        create(:file_set, user: user)
+        create_for_repository(:file_set, user: user)
       end
 
       context "when updating metadata" do
         it "spawns a content update event job" do
-          expect(ContentUpdateEventJob).to receive(:perform_later).with(file_set, user)
+          expect(ContentUpdateEventJob).to receive(:perform_later).with(::FileSet, user)
           post :update, params: {
             id: file_set,
             file_set: {
@@ -92,18 +82,10 @@ RSpec.describe Hyrax::FileSetsController do
       end
 
       context "when updating the attached file" do
-        let(:actor) { double }
-
-        before do
-          allow(Hyrax::Actors::FileActor).to receive(:new).and_return(actor)
-        end
-
         it "spawns a ContentNewVersionEventJob" do
-          expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
-          expect(actor).to receive(:ingest_file).with(JobIoWrapper).and_return(true)
+          expect(ContentNewVersionEventJob).to receive(:perform_later).with(::FileSet, user)
           file = fixture_file_upload('/world.png', 'image/png')
-          post :update, params: { id: file_set, filedata: file, file_set: { keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] } }
-          post :update, params: { id: file_set, file_set: { files: [file], keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] } }
+          post :update, params: { id: file_set, file_set: { files: [file] } }
         end
       end
 
@@ -112,12 +94,14 @@ RSpec.describe Hyrax::FileSetsController do
         let(:file2)       { "image.jpg" }
         let(:second_user) { create(:user) }
         let(:version1)    { "version1" }
-        let(:actor1)      { Hyrax::Actors::FileSetActor.new(file_set, user) }
-        let(:actor2)      { Hyrax::Actors::FileSetActor.new(file_set, second_user) }
+
+        # let(:actor1)      { Hyrax::Actors::FileSetActor.new(file_set, user) }
+        # let(:actor2)      { Hyrax::Actors::FileSetActor.new(file_set, second_user) }
 
         before do
-          actor1.create_content(fixture_file_upload(file1))
-          actor2.create_content(fixture_file_upload(file2))
+          # TODO: how do we make versions?
+          # actor1.create_content(fixture_file_upload(file1))
+          # actor2.create_content(fixture_file_upload(file2))
         end
 
         describe "restoring a previous version" do
@@ -165,13 +149,14 @@ RSpec.describe Hyrax::FileSetsController do
                       ] }
         }
 
-        expect(assigns[:file_set].read_groups).to eq ["group1"]
-        expect(assigns[:file_set].edit_users).to include("user1", user.user_key)
+        expect(assigns[:resource].read_groups).to eq ["group1"]
+        expect(assigns[:resource].edit_users).to include("user1", user.user_key)
       end
 
       it "updates existing groups and users" do
         file_set.edit_groups = ['group3']
-        file_set.save
+        persister.save(resource: file_set)
+
         post :update, params: {
           id: file_set,
           file_set: { keyword: [''],
@@ -185,34 +170,22 @@ RSpec.describe Hyrax::FileSetsController do
 
       context "when there's an error saving" do
         let(:file_set) do
-          create(:file_set, user: user)
+          create_for_repository(:file_set, user: user)
         end
 
-        before do
-          allow(FileSet).to receive(:find).and_return(file_set)
-        end
         it "draws the edit page" do
-          expect(file_set).to receive(:valid?).and_return(false)
+          allow_any_instance_of(Hyrax::FileSetChangeSet).to receive(:validate).and_return(false)
           post :update, params: { id: file_set, file_set: { keyword: [''] } }
           expect(response.code).to eq '422'
           expect(response).to render_template('edit')
-          expect(assigns[:file_set]).to eq file_set
+          expect(assigns[:change_set]).to be_kind_of Hyrax::FileSetChangeSet
         end
       end
     end
 
     describe "#edit" do
       let(:file_set) do
-        create(:file_set, read_groups: ['public'])
-      end
-
-      let(:file) do
-        Hydra::Derivatives::IoDecorator.new(File.open(fixture_path + '/world.png'),
-                                            'image/png', 'world.png')
-      end
-
-      before do
-        Hydra::Works::UploadFileToFileSet.call(file_set, file)
+        create_for_repository(:file_set, read_groups: ['public'])
       end
 
       context "someone else's files" do
@@ -226,7 +199,7 @@ RSpec.describe Hyrax::FileSetsController do
 
     describe "#show" do
       let(:file_set) do
-        create(:file_set, title: ['test file'], user: user)
+        create_for_repository(:file_set, title: ['test file'], user: user)
       end
 
       context "without a referer" do
@@ -236,7 +209,7 @@ RSpec.describe Hyrax::FileSetsController do
           expect(response).to be_successful
           expect(flash).to be_empty
           expect(assigns[:presenter]).to be_kind_of Hyrax::FileSetPresenter
-          expect(assigns[:presenter].id).to eq file_set.id
+          expect(assigns[:presenter].id).to eq file_set.id.to_s
           expect(assigns[:presenter].events).to be_kind_of Array
           expect(assigns[:presenter].fixity_check_status).to eq 'Fixity checks have not yet been run on this object'
         end
@@ -244,16 +217,16 @@ RSpec.describe Hyrax::FileSetsController do
 
       context "with a referer" do
         let(:work) do
-          create(:generic_work, :public,
-                 title: ['test title'],
-                 user: user)
+          create_for_repository(:work, :public,
+                                title: ['test title'],
+                                user: user)
         end
 
         before do
           request.env['HTTP_REFERER'] = 'http://test.host/foo'
-          work.ordered_members << file_set
-          work.save!
-          file_set.save!
+          work.member_ids += [file_set.id]
+          persister.save(resource: work)
+          persister.save(resource: file_set) # Is this necessary?
         end
 
         it "shows me the breadcrumbs" do
@@ -269,7 +242,7 @@ RSpec.describe Hyrax::FileSetsController do
 
     context 'someone elses (public) files' do
       let(:creator) { create(:user, email: 'archivist1@example.com') }
-      let(:public_file_set) { create(:file_set, user: creator, read_groups: ['public']) }
+      let(:public_file_set) { create_for_repository(:file_set, user: creator, read_groups: ['public']) }
 
       before { sign_in user }
 
@@ -291,8 +264,8 @@ RSpec.describe Hyrax::FileSetsController do
   end
 
   context 'when not signed in' do
-    let(:private_file_set) { create(:file_set) }
-    let(:public_file_set) { create(:file_set, read_groups: ['public']) }
+    let(:private_file_set) { create_for_repository(:file_set) }
+    let(:public_file_set) { create_for_repository(:file_set, read_groups: ['public']) }
 
     describe '#edit' do
       it 'requires login' do

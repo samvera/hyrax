@@ -1,9 +1,11 @@
 RSpec.describe Hyrax::Actors::CleanupTrophiesActor do
   let(:ability) { ::Ability.new(depositor) }
-  let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
+  let(:change_set) { GenericWorkChangeSet.new(work) }
+  let(:change_set_persister) { double }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:depositor) { create(:user) }
-  let(:work) { create(:work) }
+  let(:work) { create_for_repository(:work) }
   let(:attributes) { {} }
 
   subject(:middleware) do
@@ -19,7 +21,7 @@ RSpec.describe Hyrax::Actors::CleanupTrophiesActor do
     let!(:trophy) { Trophy.create(user_id: depositor.id, work_id: work.id) }
 
     it 'removes all the trophies' do
-      expect { middleware.destroy(env) }.to change { Trophy.where(work_id: work.id).count }.from(1).to(0)
+      expect { middleware.destroy(env) }.to change { Trophy.where(work_id: work.id.to_s).count }.from(1).to(0)
     end
   end
 end

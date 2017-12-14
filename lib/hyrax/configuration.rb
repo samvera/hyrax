@@ -110,7 +110,7 @@ module Hyrax
 
     attr_writer :noid_minter_class
     def noid_minter_class
-      @noid_minter_class ||= ActiveFedora::Noid::Minter::Db
+      @noid_minter_class ||= Noid::Rails::Minter::Db
     end
 
     attr_writer :minter_statefile
@@ -415,6 +415,13 @@ module Hyrax
     end
     alias google_analytics_id? google_analytics_id
 
+    attr_writer :registered_linked_data_resources
+    def registered_linked_data_resources
+      @registered_linked_data_resources ||= {
+        based_near: Hyrax::LinkedDataResources::GeonamesResource
+      }
+    end
+
     # Defaulting analytic start date to whenever the file was uploaded by leaving it blank
     attr_writer :analytic_start_date
     attr_reader :analytic_start_date
@@ -435,16 +442,6 @@ module Hyrax
       @permission_options ||= { "Choose Access" => "none",
                                 "View/Download" => "read",
                                 "Edit" => "edit" }
-    end
-
-    attr_writer :translate_uri_to_id
-    def translate_uri_to_id
-      @translate_uri_to_id ||= ActiveFedora::Noid.config.translate_uri_to_id
-    end
-
-    attr_writer :translate_id_to_uri
-    def translate_id_to_uri
-      @translate_id_to_uri ||= ActiveFedora::Noid.config.translate_id_to_uri
     end
 
     attr_writer :contact_email
@@ -472,6 +469,8 @@ module Hyrax
                       default_uploader_config
                     end
     end
+
+    delegate :fedora_schema, :fedora_schema=, to: Hyrax::FedoraSchema
 
     private
 

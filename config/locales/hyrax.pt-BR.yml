@@ -1,6 +1,6 @@
 ---
 pt-BR:
-  activefedora:
+  valkyrie:
     models:
       batch_upload_item: Obras por lote
       file_set: Arquivo
@@ -12,8 +12,7 @@ pt-BR:
     search:
       fields:
         facet:
-          admin_set_sim: Coleção
-          resource_type_sim: Tipo de recurso
+          resource_type_ssim: Tipo de recurso
           suppressed_bsi: Status
         show:
           admin_set: 'No conjunto administrativo:'

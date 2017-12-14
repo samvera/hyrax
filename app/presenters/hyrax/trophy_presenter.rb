@@ -13,12 +13,14 @@ module Hyrax
     # @return [Array<TrophyPresenter>] a list of all the trophy presenters for the user
     def self.find_by_user(user)
       work_ids = user.trophies.pluck(:work_id)
-      query = ActiveFedora::SolrQueryBuilder.construct_query_for_ids(work_ids)
-      results = Hyrax::WorkRelation.new.search_with_conditions(query)
-      results.map { |result| TrophyPresenter.new(document_model.new(result)) }
-    rescue RSolr::Error::ConnectionRefused
-      []
+      results = work_ids.collect { |id| find_work(id) }.compact
+      results.map { |result| TrophyPresenter.new(result) }
     end
+
+    def self.find_work(id)
+      document_model.find(id)
+    end
+    private_class_method :find_work
 
     def self.document_model
       CatalogController.blacklight_config.document_model

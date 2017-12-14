@@ -1,22 +1,8 @@
 # Responsible for persisting the ownership transfer requests and the state of each request.
 # @see ProxyDepositRequest.enum(:status)
-# @see ProxyDepositRequest.work_query_service_class for configuration (defaults to Hyrax::WorkQueryService)
-# @see Hyrax::WorkQueryService
+
 class ProxyDepositRequest < ActiveRecord::Base
   include ActionView::Helpers::UrlHelper
-
-  class_attribute :work_query_service_class
-  self.work_query_service_class = Hyrax::WorkQueryService
-
-  delegate :deleted_work?, :work, :to_s, to: :work_query_service
-
-  private
-
-    def work_query_service
-      @work_query_service ||= work_query_service_class.new(id: work_id)
-    end
-
-  public
 
   belongs_to :receiving_user, class_name: 'User'
   belongs_to :sending_user, class_name: 'User'
@@ -26,7 +12,7 @@ class ProxyDepositRequest < ActiveRecord::Base
   # @note We are iterating through the found objects and querying SOLR each time. Assuming we are rendering this result in a view,
   #       this is reasonable. In the view we will render the #to_s of the associated work. So we may as well preload the SOLR document.
   def self.incoming_for(user:)
-    where(receiving_user: user).reject(&:deleted_work?)
+    where(receiving_user: user).select(&:work_exists?)
   end
 
   # @param [User] user - the person who requested that a work be transfer to someone else
@@ -128,6 +114,20 @@ class ProxyDepositRequest < ActiveRecord::Base
 
   def cancel!
     fulfill!(status: CANCELED)
+  end
+
+  def to_s
+    work.to_s
+  rescue Valkyrie::Persistence::ObjectNotFoundError, Hyrax::ObjectNotFoundError
+    'work not found'
+  end
+
+  def work_exists?
+    Hyrax::Queries.exists?(Valkyrie::ID.new(work_id))
+  end
+
+  def work
+    Hyrax::Queries.find_work(id: Valkyrie::ID.new(work_id))
   end
 
   private

@@ -13,6 +13,11 @@ module Hyrax
       ResourceTypesService.microdata_type(types.first)
     end
 
+    # Cast to a Valkyrie model
+    def resource
+      @resource ||= Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.to_resource(object: to_h)
+    end
+
     def title_or_label
       return label if title.blank?
       title.join(', ')
@@ -53,7 +58,7 @@ module Hyrax
       end
     end
     ##
-    # Offer the source (ActiveFedora-based) model to Rails for some of the
+    # Offer the source (Valkyrie-based) model to Rails for some of the
     # Rails methods (e.g. link_to).
     # @example
     #   link_to '...', SolrDocument(:id => 'bXXXXXX5').new => <a href="/dams_object/bXXXXXX5">...</a>
@@ -65,23 +70,14 @@ module Hyrax
       hydra_model == ::Collection
     end
 
-    # Method to return the ActiveFedora model
+    # Method to return the Valkyrie::Resource model
     def hydra_model
-      first(Solrizer.solr_name('has_model', :symbol)).constantize
+      first(Valkyrie::Persistence::Solr::Queries::MODEL).constantize
     end
 
     def depositor(default = '')
       val = first(Solrizer.solr_name('depositor'))
       val.present? ? val : default
-    end
-
-    def creator
-      descriptor = if hydra_model == AdminSet
-                     hydra_model.index_config[:creator].behaviors.first
-                   else
-                     :stored_searchable
-                   end
-      fetch(Solrizer.solr_name('creator', descriptor), [])
     end
 
     def visibility

@@ -11,11 +11,11 @@ module Hyrax
         instance.hmset("events:#{event_id}", "action", action, "timestamp", timestamp)
         event_id
       rescue Redis::CommandError => e
-        logger.error("unable to create event: #{e}")
+        logger.error("unable to create event: #{e}") if logger
         nil
       end
 
-      delegate :logger, to: ActiveFedora::Base
+      delegate :logger, to: Rails
 
       def instance
         if Redis.current.is_a? Redis::Namespace

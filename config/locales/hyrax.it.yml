@@ -1,6 +1,6 @@
 ---
 it:
-  activefedora:
+  valkyrie:
     models:
       batch_upload_item: Opere per Batch
       file_set: File
@@ -12,8 +12,7 @@ it:
     search:
       fields:
         facet:
-          admin_set_sim: Collezione
-          resource_type_sim: Tipo di risorsa
+          resource_type_ssim: Tipo di risorsa
           suppressed_bsi: Stato
         show:
           admin_set: 'In Impostazione amministrativa:'

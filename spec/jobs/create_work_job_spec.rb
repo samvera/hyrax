@@ -17,8 +17,9 @@ RSpec.describe CreateWorkJob do
         resource_type: ['Article'] }
     end
     let(:errors) { double(full_messages: ["It's broke!"]) }
-    let(:work) { double(errors: errors) }
+    let(:work) { GenericWork.new }
     let(:actor) { double(curation_concern: work) }
+    let(:change_set) { double('Change set', errors: errors, resource: work) }
 
     subject do
       described_class.perform_later(user,
@@ -29,7 +30,7 @@ RSpec.describe CreateWorkJob do
 
     before do
       allow(Hyrax::CurationConcern).to receive(:actor).and_return(actor)
-      allow(GenericWork).to receive(:new).and_return(work)
+      allow(GenericWorkChangeSet).to receive(:new).and_return(change_set)
     end
 
     context "when the update is successful" do

@@ -2,13 +2,13 @@ RSpec.describe Hyrax::FileSetCSVService do
   let(:mock_file) do
     Hydra::PCDM::File.new
   end
+  let(:user) { build(:user, email: 'jilluser@example.com') }
   let(:file) do
-    FileSet.new(id: '123abc', title: ['My Title'], creator: ['Von, Creator'],
-                resource_type: ['Book', 'Other'], license: ['Mine']) do |f|
-      f.apply_depositor_metadata('jilluser@example.com')
-    end
+    create_for_repository(:file_set, user: user, id: '123abc', title: ['My Title'], creator: ['Von, Creator'],
+                                     resource_type: ['Book', 'Other'], license: ['Mine'])
   end
-  let(:solr_document) { SolrDocument.new(file.to_solr) }
+  let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: file) }
+  let(:solr_document) { SolrDocument.new(document) }
 
   before do
     allow(mock_file).to receive(:mime_type).and_return('application/pdf')

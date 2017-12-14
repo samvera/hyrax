@@ -14,18 +14,14 @@ RSpec.describe Hyrax::My::WorksSearchBuilder do
     before do
       # This prevents any generated classes from interfering with this test:
       allow(builder).to receive(:work_classes).and_return([GenericWork])
-
-      allow(ActiveFedora::SolrQueryBuilder).to receive(:construct_query_for_rel)
-        .with(depositor: me.user_key)
-        .and_return("depositor")
     end
 
     subject { builder.to_hash['fq'] }
 
     it "filters works that we are the depositor of" do
-      expect(subject).to eq ["{!terms f=has_model_ssim}GenericWork",
+      expect(subject).to eq ["{!terms f=#{Valkyrie::Persistence::Solr::Queries::MODEL}}GenericWork",
                              "-suppressed_bsi:true",
-                             "depositor"]
+                             "_query_:\"{!raw f=depositor_ssim}#{me.user_key}\""]
     end
   end
 

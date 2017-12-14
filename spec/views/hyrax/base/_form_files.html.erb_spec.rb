@@ -1,7 +1,7 @@
 RSpec.describe 'hyrax/base/_form_files.html.erb', type: :view do
   let(:model) { stub_model(GenericWork) }
-  let(:form) { Hyrax::GenericWorkForm.new(model, double, controller) }
-  let(:f) { double(object: form) }
+  let(:change_set) { GenericWorkChangeSet.new(model) }
+  let(:f) { double(object: change_set) }
 
   before do
     stub_template 'hyrax/uploads/_js_templates.html.erb' => 'templates'
@@ -32,7 +32,7 @@ RSpec.describe 'hyrax/base/_form_files.html.erb', type: :view do
 
     it 'shows user timing warning' do
       expect(rendered).to have_content 'Note that if you use a cloud provider to upload a large number of files'
-      expect(rendered).to have_selector("button[id='browse-btn'][data-target='#edit_generic_work_#{form.model.id}']")
+      expect(rendered).to have_selector("button[id='browse-btn'][data-target='#edit_generic_work_#{model.id}']")
     end
   end
 end

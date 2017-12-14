@@ -7,12 +7,8 @@ module Hyrax::TitleHelper
     (elements.flatten.compact + [application_name]).join(' // ')
   end
 
-  def curation_concern_page_title(curation_concern)
-    if curation_concern.persisted?
-      construct_page_title(curation_concern.to_s, "#{curation_concern.human_readable_type} [#{curation_concern.to_param}]")
-    else
-      construct_page_title("New #{curation_concern.human_readable_type}")
-    end
+  def curation_concern_page_title(change_set)
+    construct_page_title(*change_set.page_title)
   end
 
   def default_page_title

@@ -2,27 +2,43 @@ module Hyrax
   module Workflow
     # Responsible for coordinating the behavior of an action taken within a workflow
     class WorkflowActionService
-      def self.run(subject:, action:, comment: nil)
-        new(subject: subject, action: action, comment: comment).run
+      # @param subject
+      # @param action
+      # @param comment
+      # @param persister [Valkyrie::MetadataAdapter]
+      def self.run(subject:, action:, comment: nil, persister:)
+        new(subject: subject,
+            action: action,
+            comment: comment,
+            persister: persister).run
       end
 
-      def initialize(subject:, action:, comment:)
+      # @param subject
+      # @param action
+      # @param comment
+      # @param persister [Valkyrie::MetadataAdapter]
+      def initialize(subject:, action:, comment:, persister:)
         @subject = subject
         @action = action
         @comment_text = comment
+        @persister = persister
       end
 
-      attr_reader :subject, :action, :comment_text
+      attr_reader :subject, :action, :comment_text, :persister
 
       def run
         update_sipity_workflow_state
         comment = create_sipity_comment
         handle_sipity_notifications(comment: comment)
         handle_additional_sipity_workflow_action_processing(comment: comment)
-        subject.work.update_index # So that the new actions and state are written into solr.
+        solr_persister.save(resource: subject.work) # So that the new actions and state are written into solr.
       end
 
       private
+
+        def solr_persister
+          @solr_persister ||= Valkyrie::MetadataAdapter.find(:index_solr).persister
+        end
 
         def update_sipity_workflow_state
           return true if action.resulting_workflow_state_id.blank?
@@ -49,7 +65,8 @@ module Hyrax
             target: subject.work,
             comment: comment,
             action: action,
-            user: subject.user
+            user: subject.user,
+            persister: persister
           )
         end
     end

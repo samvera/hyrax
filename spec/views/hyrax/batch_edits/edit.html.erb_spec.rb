@@ -1,22 +1,19 @@
 RSpec.describe 'hyrax/batch_edits/edit.html.erb', type: :view do
-  let(:generic_work) { stub_model(GenericWork, id: '999', depositor: 'bob', license: ['']) }
-  let(:batch) { ['999'] }
-  let(:form) { Hyrax::Forms::BatchEditForm.new(generic_work, nil, batch) }
+  let(:work) { create_for_repository(:work) }
+  let(:change_set) { Hyrax::BatchEditChangeSet.new(work, batch_document_ids: [work.id.to_s]).prepopulate! }
 
   before do
-    allow(ActiveFedora::Base).to receive(:find).and_return(generic_work)
-    # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
-    allow(generic_work).to receive(:new_record?).and_return(false)
+    allow(Hyrax::Queries).to receive(:find_by).and_return(work)
     # this prevents AF from hitting Fedora (permissions is a related object)
-    allow(generic_work).to receive(:permissions_attributes=)
+    allow(work).to receive(:permissions_attributes=)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
-    allow(form).to receive(:model).and_return(generic_work)
-    allow(form).to receive(:names).and_return(['title 1', 'title 2'])
-    allow(form).to receive(:terms).and_return([:description, :license])
-    allow(generic_work).to receive(:visibility).and_return('open')
-    allow(generic_work).to receive(:permissions).and_return([])
+    allow(change_set).to receive(:model).and_return(work)
+    allow(change_set).to receive(:names).and_return(['title 1', 'title 2'])
+    allow(change_set).to receive(:terms).and_return([:description, :license])
+    allow(work).to receive(:visibility).and_return('open')
+    allow(work).to receive(:permissions).and_return([])
 
-    assign :form, form
+    assign :change_set, change_set
     view.extend Hyrax::PermissionsHelper
     view.lookup_context.prefixes.push "hyrax/base"
     render

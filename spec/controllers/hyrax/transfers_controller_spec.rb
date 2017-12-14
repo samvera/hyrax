@@ -27,7 +27,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
     end
 
     describe "#new" do
-      let(:work) { create(:work, user: user) }
+      let(:work) { create_for_repository(:work, user: user) }
 
       context 'when user is the depositor' do
         it "is successful" do
@@ -35,15 +35,15 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
           sign_in user
           get :new, params: { id: work.id }
           expect(response).to be_success
-          expect(assigns[:work]).to eq(work)
+          expect(assigns[:work].id).to eq(work.id)
           expect(assigns[:proxy_deposit_request]).to be_kind_of ProxyDepositRequest
-          expect(assigns[:proxy_deposit_request].work_id).to eq(work.id)
+          expect(assigns[:proxy_deposit_request].work_id).to eq(work.id.to_s)
         end
       end
     end
 
     describe "#create" do
-      let(:work) { create(:work, user: user) }
+      let(:work) { create_for_repository(:work, user: user) }
 
       it "is successful" do
         expect do
@@ -58,7 +58,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
         expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
         expect(flash[:notice]).to eq('Transfer request created')
         proxy_request = another_user.proxy_deposit_requests.first
-        expect(proxy_request.work_id).to eq(work.id)
+        expect(proxy_request.work_id).to eq(work.id.to_s)
         expect(proxy_request.sending_user).to eq(user)
         expect(proxy_request.sender_comment).to eq 'Hi mom!'
         # AND A NOTIFICATION SHOULD HAVE BEEN CREATED
@@ -81,9 +81,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
     describe "#accept" do
       context "when I am the receiver" do
         let!(:incoming_work) do
-          GenericWork.new(title: ['incoming']) do |w|
-            w.apply_depositor_metadata(another_user.user_key)
-            w.save!
+          create_for_repository(:work, title: ['incoming'], user: another_user).tap do |w|
             w.request_transfer_to(user)
           end
         end
@@ -93,14 +91,16 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
           expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
           expect(flash[:notice]).to eq("Transfer complete")
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
-          expect(incoming_work.reload.edit_users).to match_array [another_user.user_key, user.user_key]
+          reloaded = Hyrax::Queries.find_by(id: incoming_work.id)
+          expect(reloaded.edit_users).to match_array [another_user.user_key, user.user_key]
         end
         it "is successful when resetting access rights" do
           put :accept, params: { id: user.proxy_deposit_requests.first, reset: true }
           expect(response).to redirect_to routes.url_helpers.transfers_path(locale: 'en')
           expect(flash[:notice]).to eq("Transfer complete")
           expect(assigns[:proxy_deposit_request].status).to eq('accepted')
-          expect(incoming_work.reload.edit_users).to eq([user.user_key])
+          reloaded = Hyrax::Queries.find_by(id: incoming_work.id)
+          expect(reloaded.edit_users).to eq([user.user_key])
         end
         it "handles sticky requests" do
           put :accept, params: { id: user.proxy_deposit_requests.first, sticky: true }
@@ -113,9 +113,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
 
       context "accepting one that isn't mine" do
         let!(:incoming_work) do
-          GenericWork.new(title: ['incoming']) do |w|
-            w.apply_depositor_metadata(user.user_key)
-            w.save!
+          create_for_repository(:work, title: ['incoming'], user: user).tap do |w|
             w.request_transfer_to(another_user)
           end
         end
@@ -131,9 +129,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
     describe "#reject" do
       context "when I am the receiver" do
         let!(:incoming_work) do
-          GenericWork.new(title: ['incoming']) do |w|
-            w.apply_depositor_metadata(another_user.user_key)
-            w.save!
+          create_for_repository(:work, title: ['incoming'], user: another_user).tap do |w|
             w.request_transfer_to(user)
           end
         end
@@ -148,9 +144,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
 
       context "accepting one that isn't mine" do
         let!(:incoming_work) do
-          GenericWork.new(title: ['incoming']) do |w|
-            w.apply_depositor_metadata(user.user_key)
-            w.save!
+          create_for_repository(:work, title: ['incoming'], user: user).tap do |w|
             w.request_transfer_to(another_user)
           end
         end
@@ -166,9 +160,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
     describe "#destroy" do
       context "when I am the sender" do
         let!(:incoming_work) do
-          GenericWork.new(title: ['incoming']) do |w|
-            w.apply_depositor_metadata(user.user_key)
-            w.save!
+          create_for_repository(:work, title: ['incoming'], user: user).tap do |w|
             w.request_transfer_to(another_user)
           end
         end
@@ -182,9 +174,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
 
       context "accepting one that isn't mine" do
         let!(:incoming_work) do
-          GenericWork.new(title: ['incoming']) do |w|
-            w.apply_depositor_metadata(another_user.user_key)
-            w.save!
+          create_for_repository(:work, title: ['incoming'], user: another_user).tap do |w|
             w.request_transfer_to(user)
           end
         end

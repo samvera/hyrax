@@ -132,7 +132,7 @@ RSpec.describe 'Hyrax::Ability', type: :model do
     let(:permission_template) { build(:permission_template, admin_set_id: admin_set.id) }
     let(:permission_template_access) { build(:permission_template_access, permission_template: permission_template) }
     let(:user) { create(:user) }
-    let(:admin_set) { create(:admin_set) }
+    let(:admin_set) { create_for_repository(:admin_set) }
 
     RSpec.shared_examples 'A user with additional access' do
       it { is_expected.to be_able_to(:edit, admin_set) }
@@ -152,7 +152,7 @@ RSpec.describe 'Hyrax::Ability', type: :model do
     end
 
     describe 'via AdminSet-specific edit_users' do
-      let(:admin_set) { create(:admin_set, with_permission_template: true, edit_users: [user]) }
+      let(:admin_set) { create_for_repository(:admin_set, with_permission_template: true, edit_users: [user.user_key]) }
 
       it '#admin? is false' do
         expect(ability).not_to be_admin

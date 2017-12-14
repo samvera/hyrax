@@ -1,7 +1,6 @@
 RSpec.describe 'hyrax/batch_uploads/_form.html.erb', type: :view do
   let(:work) { GenericWork.new }
-  let(:ability) { double('ability', current_user: user) }
-  let(:form) { Hyrax::Forms::BatchUploadForm.new(work, ability, controller) }
+  let(:change_set) { Hyrax::BatchUploadChangeSet.new(work) }
   let(:user) { stub_model(User) }
   let(:page) do
     render
@@ -10,7 +9,7 @@ RSpec.describe 'hyrax/batch_uploads/_form.html.erb', type: :view do
 
   before do
     stub_template "hyrax/base/_guts4form.html.erb" => "Form guts"
-    assign(:form, form)
+    assign(:change_set, change_set)
   end
 
   it "draws the page" do

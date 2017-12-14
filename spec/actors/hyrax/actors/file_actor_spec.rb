@@ -36,7 +36,8 @@ RSpec.describe Hyrax::Actors::FileActor do
     it 'uses the relation from the actor' do
       expect(CharacterizeJob).to receive(:perform_later).with(FileSetWithExtras, String, huf.uploader.path)
       actor.ingest_file(io)
-      expect(file_set.reload.remastered.mime_type).to eq 'image/png'
+      reloaded = Hyrax::Queries.find_by(id: file_set.id)
+      expect(reloaded.remastered.mime_type).to eq 'image/png'
     end
   end
 
@@ -44,7 +45,8 @@ RSpec.describe Hyrax::Actors::FileActor do
     allow(fixture).to receive(:content_type).and_return('image/gif')
     expect(CharacterizeJob).to receive(:perform_later).with(FileSet, String, huf.uploader.path)
     actor.ingest_file(io)
-    expect(file_set.reload.original_file.mime_type).to eq 'image/gif'
+    reloaded = Hyrax::Queries.find_by(id: file_set.id)
+    expect(reloaded.original_file.mime_type).to eq 'image/gif'
   end
 
   context 'with two existing versions from different users' do
@@ -53,7 +55,10 @@ RSpec.describe Hyrax::Actors::FileActor do
     let(:io2) { JobIoWrapper.new(file_set_id: file_set.id, user: user2, uploaded_file: huf2) }
     let(:user2) { create(:user) }
     let(:actor2) { described_class.new(file_set, relation, user2) }
-    let(:versions) { file_set.reload.original_file.versions }
+    let(:versions) do
+      reloaded = Hyrax::Queries.find_by(id: file_set.id)
+      reloaded.original_file.versions
+    end
 
     before do
       allow(Hydra::Works::CharacterizationService).to receive(:run).with(any_args)
@@ -64,7 +69,8 @@ RSpec.describe Hyrax::Actors::FileActor do
     it 'has two versions' do
       expect(versions.all.count).to eq 2
       # the current version
-      expect(Hyrax::VersioningService.latest_version_of(file_set.reload.original_file).label).to eq 'version2'
+      reloaded = Hyrax::Queries.find_by(id: file_set.id)
+      expect(Hyrax::VersioningService.latest_version_of(reloaded.original_file).label).to eq 'version2'
       expect(file_set.original_file.mime_type).to eq 'text/plain'
       expect(file_set.original_file.original_name).to eq 'small_file.txt'
       expect(file_set.original_file.content).to eq fixture2.open.read

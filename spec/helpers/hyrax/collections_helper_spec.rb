@@ -24,9 +24,10 @@ RSpec.describe Hyrax::CollectionsHelper do
       let(:coll2_attrs) { { id: coll_ids[1], title_tesim: [coll_titles[1]], child_object_ids_ssim: [work_doc.id, 'abc123'] } }
 
       before do
-        ActiveFedora::SolrService.add(coll1_attrs)
-        ActiveFedora::SolrService.add(coll2_attrs)
-        ActiveFedora::SolrService.commit
+        solr = Valkyrie::MetadataAdapter.find(:index_solr).connection
+        solr.add(coll1_attrs)
+        solr.add(coll2_attrs)
+        solr.commit
       end
 
       it 'renders a list of links to the collections' do
@@ -54,10 +55,11 @@ RSpec.describe Hyrax::CollectionsHelper do
   end
 
   describe "button_for_remove_selected_from_collection" do
-    let(:collection) { create(:collection) }
+    let(:collection) { create_for_repository(:collection) }
+    let(:change_set) { Hyrax::CollectionChangeSet.new(collection) }
 
     it "creates a button to the collections delete path" do
-      str = button_for_remove_selected_from_collection collection
+      str = button_for_remove_selected_from_collection change_set
       doc = Nokogiri::HTML(str)
       form = doc.xpath('//form').first
       expect(form.attr('action')).to eq hyrax.dashboard_collection_path(collection)
@@ -67,7 +69,7 @@ RSpec.describe Hyrax::CollectionsHelper do
     end
 
     it "creates a button with my text" do
-      str = button_for_remove_selected_from_collection collection, "Remove My Button"
+      str = button_for_remove_selected_from_collection change_set, "Remove My Button"
       doc = Nokogiri::HTML(str)
       form = doc.css('form').first
       expect(form.attr('action')).to eq hyrax.dashboard_collection_path(collection)

@@ -1,6 +1,6 @@
 ---
 zh:
-  activefedora:
+  valkyrie:
     models:
       batch_upload_item: 批量上传的作品
       file_set: 文件
@@ -17,8 +17,7 @@ zh:
         more_html: 更多 <span class="sr-only">%{field_name}</span> »
       fields:
         facet:
-          admin_set_sim: 集
-          resource_type_sim: 资源类型
+          resource_type_ssim: 资源类型
           suppressed_bsi: 状况
         show:
           admin_set: '管理集内:'

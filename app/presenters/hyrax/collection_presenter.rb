@@ -52,7 +52,11 @@ module Hyrax
     end
 
     def total_items
-      ActiveFedora::Base.where("member_of_collection_ids_ssim:#{id}").count
+      solr = Valkyrie::MetadataAdapter.find(:index_solr).connection
+      results = solr.get('select', params: { q: "member_of_collection_ids_ssim:#{id}",
+                                             rows: 0,
+                                             qt: 'standard' })
+      results['response']['numFound'].to_i
     end
   end
 end

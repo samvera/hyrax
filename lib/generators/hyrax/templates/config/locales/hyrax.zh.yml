@@ -4,14 +4,14 @@ zh:
     search:
       fields:
         facet:
-          based_near_label_sim: 位置
-          creator_sim: 创造者
-          file_format_sim: 文件格式
+          based_near_label_ssim: 位置
+          creator_ssim: 创造者
+          file_format_ssim: 文件格式
           generic_type_sim: 类型
-          keyword_sim: 关键词
-          language_sim: 语言
-          publisher_sim: 出版者
-          subject_sim: 学科
+          keyword_ssim: 关键词
+          language_ssim: 语言
+          publisher_ssim: 出版者
+          subject_ssim: 学科
         index:
           based_near_tesim: 位置
           contributor_tesim: 贡献者

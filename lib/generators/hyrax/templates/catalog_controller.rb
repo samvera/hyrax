@@ -6,11 +6,11 @@ class CatalogController < ApplicationController
   before_action :enforce_show_permissions, only: :show
 
   def self.uploaded_field
-    solr_name('system_create', :stored_sortable, type: :date)
+    solr_name('created_at', :stored_sortable, type: :date)
   end
 
   def self.modified_field
-    solr_name('system_modified', :stored_sortable, type: :date)
+    'timestamp'
   end
 
   configure_blacklight do |config|
@@ -29,26 +29,26 @@ class CatalogController < ApplicationController
 
     # solr field configuration for document/show views
     config.index.title_field = solr_name("title", :stored_searchable)
-    config.index.display_type_field = solr_name("has_model", :symbol)
+    config.index.display_type_field = Valkyrie::Persistence::Solr::Queries::MODEL
     config.index.thumbnail_field = 'thumbnail_path_ss'
 
     # solr fields that will be treated as facets by the blacklight application
     #   The ordering of the field names is the order of the display
-    config.add_facet_field solr_name("human_readable_type", :facetable), label: "Type", limit: 5
-    config.add_facet_field solr_name("resource_type", :facetable), label: "Resource Type", limit: 5
-    config.add_facet_field solr_name("creator", :facetable), limit: 5
-    config.add_facet_field solr_name("contributor", :facetable), label: "Contributor", limit: 5
-    config.add_facet_field solr_name("keyword", :facetable), limit: 5
-    config.add_facet_field solr_name("subject", :facetable), limit: 5
-    config.add_facet_field solr_name("language", :facetable), limit: 5
-    config.add_facet_field solr_name("based_near_label", :facetable), limit: 5
-    config.add_facet_field solr_name("publisher", :facetable), limit: 5
-    config.add_facet_field solr_name("file_format", :facetable), limit: 5
-    config.add_facet_field solr_name('member_of_collections', :symbol), limit: 5, label: 'Collections'
+    config.add_facet_field 'human_readable_type_sim', limit: 5
+    config.add_facet_field 'resource_type_ssim', limit: 5
+    config.add_facet_field 'creator_ssim', limit: 5
+    config.add_facet_field 'contributor_ssim', limit: 5
+    config.add_facet_field 'keyword_ssim', limit: 5
+    config.add_facet_field 'subject_ssim', limit: 5
+    config.add_facet_field 'language_ssim', limit: 5
+    config.add_facet_field 'based_near_label_ssim', limit: 5
+    config.add_facet_field 'publisher_ssim', limit: 5
+    config.add_facet_field 'file_format_ssim', limit: 5
+    config.add_facet_field 'member_of_collections_ssim', limit: 5
 
     # The generic_type isn't displayed on the facet list
     # It's used to give a label to the filter that comes from the user profile
-    config.add_facet_field solr_name("generic_type", :facetable), if: false
+    config.add_facet_field Hyrax::GenericTypeIndexer.generic_type_field, if: false
 
     # Have BL send all facet field names to Solr, which has been the default
     # previously. Simply remove these lines if you'd rather use Solr request
@@ -59,22 +59,22 @@ class CatalogController < ApplicationController
     #   The ordering of the field names is the order of the display
     config.add_index_field solr_name("title", :stored_searchable), label: "Title", itemprop: 'name', if: false
     config.add_index_field solr_name("description", :stored_searchable), itemprop: 'description', helper_method: :iconify_auto_link
-    config.add_index_field solr_name("keyword", :stored_searchable), itemprop: 'keywords', link_to_search: solr_name("keyword", :facetable)
-    config.add_index_field solr_name("subject", :stored_searchable), itemprop: 'about', link_to_search: solr_name("subject", :facetable)
-    config.add_index_field solr_name("creator", :stored_searchable), itemprop: 'creator', link_to_search: solr_name("creator", :facetable)
-    config.add_index_field solr_name("contributor", :stored_searchable), itemprop: 'contributor', link_to_search: solr_name("contributor", :facetable)
+    config.add_index_field solr_name("keyword", :stored_searchable), itemprop: 'keywords', link_to_search: 'keyword_ssim'
+    config.add_index_field solr_name("subject", :stored_searchable), itemprop: 'about', link_to_search: 'subject_ssim'
+    config.add_index_field solr_name("creator", :stored_searchable), itemprop: 'creator', link_to_search: 'creator_ssim'
+    config.add_index_field solr_name("contributor", :stored_searchable), itemprop: 'contributor', link_to_search: 'contributor_ssim'
     config.add_index_field solr_name("proxy_depositor", :symbol), label: "Depositor", helper_method: :link_to_profile
     config.add_index_field solr_name("depositor"), label: "Owner", helper_method: :link_to_profile
-    config.add_index_field solr_name("publisher", :stored_searchable), itemprop: 'publisher', link_to_search: solr_name("publisher", :facetable)
-    config.add_index_field solr_name("based_near_label", :stored_searchable), itemprop: 'contentLocation', link_to_search: solr_name("based_near_label", :facetable)
-    config.add_index_field solr_name("language", :stored_searchable), itemprop: 'inLanguage', link_to_search: solr_name("language", :facetable)
+    config.add_index_field solr_name("publisher", :stored_searchable), itemprop: 'publisher', link_to_search: 'publisher_ssim'
+    config.add_index_field solr_name("based_near_label", :stored_searchable), itemprop: 'contentLocation', link_to_search: 'based_near_label_ssim'
+    config.add_index_field solr_name("language", :stored_searchable), itemprop: 'inLanguage', link_to_search: 'language_ssim'
     config.add_index_field solr_name("date_uploaded", :stored_sortable, type: :date), itemprop: 'datePublished', helper_method: :human_readable_date
     config.add_index_field solr_name("date_modified", :stored_sortable, type: :date), itemprop: 'dateModified', helper_method: :human_readable_date
     config.add_index_field solr_name("date_created", :stored_searchable), itemprop: 'dateCreated'
     config.add_index_field solr_name("rights_statement", :stored_searchable), helper_method: :rights_statement_links
     config.add_index_field solr_name("license", :stored_searchable), helper_method: :license_links
-    config.add_index_field solr_name("resource_type", :stored_searchable), label: "Resource Type", link_to_search: solr_name("resource_type", :facetable)
-    config.add_index_field solr_name("file_format", :stored_searchable), link_to_search: solr_name("file_format", :facetable)
+    config.add_index_field solr_name("resource_type", :stored_searchable), label: "Resource Type", link_to_search: 'resource_type_ssim'
+    config.add_index_field solr_name("file_format", :stored_searchable), link_to_search: 'file_format_ssim'
     config.add_index_field solr_name("identifier", :stored_searchable), helper_method: :index_field_link, field_name: 'identifier'
     config.add_index_field solr_name("embargo_release_date", :stored_sortable, type: :date), label: "Embargo release date", helper_method: :human_readable_date
     config.add_index_field solr_name("lease_expiration_date", :stored_sortable, type: :date), label: "Lease expiration date", helper_method: :human_readable_date
