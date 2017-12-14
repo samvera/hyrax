@@ -39,6 +39,7 @@ Rails.application.config.to_prepare do
         Hyrax::GenericTypeIndexer,
         Hyrax::EmbargoIndexer,
         Hyrax::LeaseIndexer,
+        Hyrax::IndexMimeType,
         # TODO: we may want Hyrax::IndexVisibility,
         # TODO: we may want Hyrax::IndexAdminSetLabel,
         # TODO: we may want file_size, height, width, mime-type for FileSets

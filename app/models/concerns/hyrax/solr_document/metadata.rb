@@ -78,7 +78,7 @@ module Hyrax
         attribute :date_created, Solr::Array, solr_name('date_created')
         attribute :rights_statement, Solr::Array, solr_name('rights_statement')
 
-        attribute :mime_type, Solr::String, solr_name('mime_type', :stored_sortable)
+        attribute :mime_type, Solr::String, solr_name('mime_type', :symbol)
         attribute :workflow_state, Solr::String, solr_name('workflow_state_name', :symbol)
         attribute :human_readable_type, Solr::String, solr_name('human_readable_type', :stored_searchable)
         attribute :representative_id, Solr::String, solr_name('hasRelatedMediaFragment', :symbol)
