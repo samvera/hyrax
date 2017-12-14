@@ -96,7 +96,7 @@ module Hyrax
       # and to provide depositor (used on app/views/hyrax/base/_form_share.html.erb)
       def build_change_set(resource)
         change_set_class.new(resource,
-                             depositor: current_user.user_key,
+                             depositor: [current_user.user_key],
                              append_id: params[:parent_id],
                              add_works_to_collection: params[:add_works_to_collection],
                              search_context: search_context)

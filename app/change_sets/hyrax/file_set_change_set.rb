@@ -12,6 +12,7 @@ module Hyrax
 
     collection :permissions, virtual: true
 
+    delegate :embargo_id, :lease_id, to: :resource
     # TODO: Figure out where to persist these fields
     property :embargo_release_date, virtual: true
     property :lease_expiration_date, virtual: true

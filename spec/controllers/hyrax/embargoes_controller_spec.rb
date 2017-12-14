@@ -1,6 +1,5 @@
 RSpec.describe Hyrax::EmbargoesController do
   let(:user) { create(:user) }
-  let(:a_work) { create_for_repository(:work, user: user) }
   let(:not_my_work) { create_for_repository(:work) }
 
   before { sign_in user }
@@ -30,7 +29,10 @@ RSpec.describe Hyrax::EmbargoesController do
         expect(flash[:alert]).to eq 'You are not authorized to access this page.'
       end
     end
+
     context 'when I have permission to edit the object' do
+      let(:a_work) { create_for_repository(:embargoed_work, user: user) }
+
       it 'shows me the page' do
         get :edit, params: { id: a_work }
         expect(response).to be_success
@@ -55,6 +57,8 @@ RSpec.describe Hyrax::EmbargoesController do
       let(:embargo) { instance_double(Hyrax::Embargo, embargo_history: ['it gone']) }
 
       context 'that has no files' do
+        let(:a_work) { create_for_repository(:work, user: user) }
+
         it 'deactivates embargo and redirects' do
           expect(actor).to receive(:destroy).and_return(embargo)
           get :destroy, params: { id: a_work }

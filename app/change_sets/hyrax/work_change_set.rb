@@ -1,7 +1,7 @@
 module Hyrax
   class WorkChangeSet < Valkyrie::ChangeSet
     class_attribute :workflow_class, :primary_terms, :secondary_terms
-    delegate :human_readable_type, :to_s, to: :resource
+    delegate :human_readable_type, :to_s, :lease_id, :embargo_id, to: :resource
 
     # Which fields show above the fold.
     self.primary_terms = [:title, :creator, :keyword, :rights_statement]
@@ -35,6 +35,7 @@ module Hyrax
 
     property :admin_set_id, virtual: false
     property :in_works_ids, virtual: true
+    property :depositor
 
     # The lookup field for collection relationships
     property :member_of_collection_ids, virtual: true, required: false

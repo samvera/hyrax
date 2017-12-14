@@ -1,6 +1,5 @@
 RSpec.describe Hyrax::LeasesController do
   let(:user) { create(:user) }
-  let(:a_work) { create_for_repository(:work, user: user) }
   let(:not_my_work) { create_for_repository(:work) }
 
   before { sign_in user }
@@ -31,6 +30,8 @@ RSpec.describe Hyrax::LeasesController do
       end
     end
     context 'when I have permission to edit the object' do
+      let(:a_work) { create_for_repository(:leased_work, user: user) }
+
       it 'shows me the page' do
         get :edit, params: { id: a_work }
         expect(response).to be_success
@@ -55,6 +56,8 @@ RSpec.describe Hyrax::LeasesController do
       end
 
       context 'that has no files' do
+        let(:a_work) { create_for_repository(:work, user: user) }
+
         it 'deactivates the lease and redirects' do
           expect(actor).to receive(:destroy).and_return(lease)
           get :destroy, params: { id: a_work }
