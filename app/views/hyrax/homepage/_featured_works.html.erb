@@ -13,7 +13,7 @@
     <%= f.submit("Save order", class: 'btn btn-default') %>
   <% end %>
 <% else %>
-  <ol id="featured_works">
+  <ol class="list-group list-group-striped" id="featured_works">
     <%= render partial: 'featured', collection: @featured_work_list.featured_works %>
   </ol>
 <% end %>
