@@ -1,6 +1,6 @@
 require 'open3'
 
-class ImportExportJob < ActiveJob::Base
+class ImportExportJob < ApplicationJob
   include Open3
 
   # @param resource [String] uri of the resource
