@@ -337,11 +337,11 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     let(:restored_content) { file_set.reload.original_file }
 
     before do
-      original_adapter = ActiveJob::Base.queue_adapter
-      ActiveJob::Base.queue_adapter = :inline
+      original_adapter = ApplicationJob.queue_adapter
+      ApplicationJob.queue_adapter = :inline
       actor.create_content(fixture_file_upload(file1))
       actor.create_content(fixture_file_upload('hyrax_generic_stub.txt'))
-      ActiveJob::Base.queue_adapter = original_adapter
+      ApplicationJob.queue_adapter = original_adapter
       actor.file_set.reload
     end
 
