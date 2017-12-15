@@ -1,15 +1,15 @@
-<% cc_type = curation_concern.human_readable_type %>
+<% cc_type = @change_set.human_readable_type %>
 
 <% provide :page_header do %>
-  <h1><%= t('.manage_embargoes_html', cc: curation_concern, cc_type: cc_type) %></h1>
+  <h1><%= t('.manage_embargoes_html', cc: @change_set.to_s, cc_type: cc_type) %></h1>
 <% end %>
 
 <h2><%= t('.header.current') %></h2>
-<%= simple_form_for [main_app, curation_concern] do |f| %>
+<%= simple_form_for @change_set, url: [main_app, @change_set.parent_resource] do |f| %>
   <fieldset class="set-access-controls">
     <section class="help-block">
       <p>
-        <% if curation_concern.embargo_release_date %>
+        <% if @change_set.embargo_release_date %>
           <%= t('.embargo_true_html',  cc: cc_type) %>
         <% else %>
           <%= t('.embargo_false_html', cc: cc_type) %>
@@ -19,27 +19,27 @@
 
     <div class="form-group">
       <input type="hidden" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO %>" />
-      <%= render 'hyrax/base/form_permission_embargo', curation_concern: curation_concern, f: f  %>
+      <%= render 'hyrax/base/form_permission_embargo', f: f  %>
     </div>
   </fieldset>
 
   <div class="row">
     <div class="col-md-12 form-actions">
-      <% if curation_concern.embargo_release_date %>
+      <% if @change_set.embargo_release_date %>
         <%= f.submit t('.embargo_update'), class: 'btn btn-primary' %>
-        <%= link_to t('.embargo_deactivate'), embargo_path(curation_concern), method: :delete, class: 'btn btn-danger' %>
+        <%= link_to t('.embargo_deactivate'), embargo_path(@change_set.parent_resource), method: :delete, class: 'btn btn-danger' %>
       <% else %>
         <%= f.submit t('.embargo_apply'), class: 'btn btn-primary' %>
       <% end %>
       <%= link_to t('.embargo_cancel'), embargoes_path, class: 'btn btn-default' %>
-      <%= link_to t('.embargo_return', cc: cc_type), edit_polymorphic_path([main_app, curation_concern]), class: 'btn btn-default' %>
+      <%= link_to t('.embargo_return', cc: cc_type), edit_polymorphic_path([main_app, @change_set.parent_resource]), class: 'btn btn-default' %>
     </div>
   </div>
 <% end %>
 
 <h2><%= t('.header.past') %></h2>
-<% if curation_concern.embargo_history.empty? %>
+<% if @change_set.embargo_history.empty? %>
   <%= t('.history_empty', cc: cc_type) %>
 <% else %>
-  <%= render partial: "embargo_history", object: curation_concern.embargo_history %>
+  <%= render partial: "embargo_history", object: @change_set.embargo_history %>
 <% end %>
