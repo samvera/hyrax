@@ -41,12 +41,12 @@ module Hyrax
       end
 
       def handle_payload_concern!
-        unsafe_pc = params.fetch(:batch_upload_item, {})[:payload_concern]
+        unsafe_pc = resource_params.delete(:payload_concern)
         # Calling constantize on user params is disfavored (per brakeman), so we sanitize by matching it against an authorized model.
         safe_pc = Hyrax::SelectTypeListPresenter.new(current_user).authorized_models.map(&:to_s).find { |x| x == unsafe_pc }
         raise CanCan::AccessDenied, "Cannot create an object of class '#{unsafe_pc}'" unless safe_pc
         # authorize! :create, safe_pc
-        create_update_job(safe_pc)
+        create_job(safe_pc)
       end
 
       def redirect_after_update!
@@ -61,7 +61,7 @@ module Hyrax
 
       # @param [String] klass the name of the Hyrax Work Class being created by the batch
       # @note Cannot use a proper Class here because it won't serialize
-      def create_update_job(klass)
+      def create_job(klass)
         operation = BatchCreateOperation.create!(user: current_user,
                                                  operation_type: "Batch Create")
         # ActionController::Parameters are not serializable, so cast to a hash
@@ -69,16 +69,29 @@ module Hyrax
                                      params[:title].permit!.to_h,
                                      params.fetch(:resource_type, {}).permit!.to_h,
                                      params[:uploaded_files],
-                                     attributes_for_actor.to_h.merge!(model: klass),
+                                     create_attributes(klass),
                                      operation)
       end
 
       def uploading_on_behalf_of?
-        params.fetch(hash_key_for_curation_concern).key?(:on_behalf_of)
+        resource_params.key?(:on_behalf_of)
       end
 
       def resource_params
-        params[resource_class.model_name.param_key] || {}
+        @resource_params ||= params[resource_class.model_name.param_key] || {}
+      end
+
+      # Strip out any blank spaces and add the model.
+      # @example:
+      #   params[:title]
+      #   # => { title: [''] }
+      #   create_attributes(GenericWork)
+      #   # => { title: [], model: GenericWork }
+      def create_attributes(klass)
+        resource_params
+          .to_unsafe_h
+          .each_value { |v| v.delete('') }
+          .merge(model: klass)
       end
   end
 end
