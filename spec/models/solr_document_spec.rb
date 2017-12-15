@@ -125,7 +125,7 @@ RSpec.describe ::SolrDocument, type: :model do
 
     Mimes.office_document_mime_types.each do |type|
       context "when mime-type is #{type}" do
-        let(:attributes) { { 'mime_type_ssi' => type } }
+        let(:attributes) { { 'mime_type_ssim' => type } }
 
         subject { document }
 
@@ -135,7 +135,7 @@ RSpec.describe ::SolrDocument, type: :model do
 
     Mimes.video_mime_types.each do |type|
       context "when mime-type is #{type}" do
-        let(:attributes) { { 'mime_type_ssi' => type } }
+        let(:attributes) { { 'mime_type_ssim' => type } }
 
         subject { document }
 
