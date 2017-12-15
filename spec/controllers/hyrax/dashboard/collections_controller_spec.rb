@@ -18,7 +18,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
   let(:collection_attrs) do
     { title: ['My First Collection'], description: ["The Description\r\n\r\nand more"] }
   end
-  let(:persister) { Valkyrie.config.metadata_adapter.persister }
+  let(:persister) { Valkyrie::MetadataAdapter.find(:indexing_persister).persister }
 
   describe '#new' do
     before { sign_in user }
@@ -44,8 +44,8 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
           )
         }
       end.to change { Hyrax::Queries.find_all_of_model(model: Collection).size }.by(1)
-      expect(assigns[:change_set].resource.visibility).to eq 'open'
-      expect(assigns[:change_set].resource.edit_users).to contain_exactly "archivist1", user.email
+      expect(assigns[:resource].visibility).to eq 'open'
+      expect(assigns[:resource].edit_users).to contain_exactly "archivist1", user.email
     end
 
     it "removes blank strings from params before creating Collection" do
@@ -54,19 +54,19 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
           collection: collection_attrs.merge(creator: [''])
         }
       end.to change { Hyrax::Queries.find_all_of_model(model: Collection).size }.by(1)
-      expect(assigns[:change_set].resource.title).to eq ["My First Collection"]
-      expect(assigns[:change_set].resource.creator).to eq []
+      expect(assigns[:resource].title).to eq ["My First Collection"]
+      expect(assigns[:resource].creator).to eq []
     end
 
-    context "with files I can access" do
-      it "creates a collection using only the accessible files" do
+    context 'with files I can access' do
+      it 'creates a collection using only the accessible files' do
         expect do
           post :create, params: {
             collection: collection_attrs,
             batch_document_ids: [asset1.id, asset2.id, unowned_asset.id]
           }
         end.to change { Hyrax::Queries.find_all_of_model(model: Collection).size }.by(1)
-        expect(assigns[:change_set].resource.member_objects).to match_array [asset1, asset2]
+        expect(assigns[:resource].member_object_ids).to match_array [asset1, asset2].map(&:id)
       end
 
       it "adds docs to the collection and adds the collection id to the documents in the collection" do
@@ -163,24 +163,31 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
             creator: [""]
           }
         }
-        expect(assigns[:change_set].resource.title).to eq ["My Next Collection "]
-        expect(assigns[:change_set].resource.creator).to eq []
+        expect(assigns[:resource].title).to eq ["My Next Collection "]
+        expect(assigns[:resource].creator).to eq []
       end
     end
 
-    context "when update fails" do
-      let(:collection) { Collection.new(id: '12345') }
+    context 'when update fails' do
+      let(:collection) { Collection.new }
+      let(:change_set) do
+        instance_double(Hyrax::CollectionChangeSet,
+                        id: '1234abc',
+                        validate: false,
+                        resource: collection)
+      end
       let(:repository) { instance_double(Blacklight::Solr::Repository, search: result) }
       let(:result) { double(documents: []) }
 
       before do
         allow(controller).to receive(:authorize!)
-        allow(Collection).to receive(:find).and_return(collection)
-        allow(collection).to receive(:update).and_return(false)
         allow(controller).to receive(:repository).and_return(repository)
+        allow(controller).to receive(:find_resource).and_return(collection)
+        allow(Hyrax::CollectionChangeSet).to receive(:new).and_return(change_set)
+        allow(change_set).to receive(:prepopulate!).and_return(change_set)
       end
 
-      it "renders the form again" do
+      it 'renders the form again' do
         put :update, params: {
           id: collection,
           collection: collection_attrs
@@ -208,7 +215,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
         expect(response).to be_successful
         expect(assigns[:presenter]).to be_kind_of Hyrax::CollectionPresenter
         expect(assigns[:presenter].title).to match_array collection.title
-        expect(assigns[:member_docs].map(&:id)).to match_array [asset1, asset2, asset3].map(&:id)
+        expect(assigns[:member_docs].map(&:id)).to match_array [asset1, asset2, asset3].map(&:id).map(&:to_s)
       end
 
       context "and searching" do
@@ -216,7 +223,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
           # "/dashboard/collections/4m90dv529?utf8=%E2%9C%93&cq=King+Louie&sort="
           get :show, params: { id: collection, cq: "Third" }
           expect(assigns[:presenter]).to be_kind_of Hyrax::CollectionPresenter
-          expect(assigns[:member_docs].map(&:id)).to match_array [asset3].map(&:id)
+          expect(assigns[:member_docs].map(&:id)).to eq [asset3.id.to_s]
         end
       end
 
