@@ -59,6 +59,7 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
     end
   end
 
+  # @todo
   describe '.each_preservation_document' do
     xit 'iterates through each preservation document'
   end
@@ -68,8 +69,22 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
     let(:index_document_class) { Samvera::NestingIndexer::Documents::IndexDocument }
     let(:parent) { { id: document.id } }
     let(:document) { index_document_class.new(id: 'parent-1', pathnames: ['parent-1'], parent_ids: [], ancestors: []) }
-    let(:children) { [{ id: 'child-1', ancestors_key => [document.id] }, { id: 'child-2', ancestors_key => [document.id] }] }
-    let(:not_my_children) { [{ id: 'youre-not-my-dad-1', ancestors_key => ['parent-2'] }, { id: 'i-am-your-grandchild', ancestors_key => ['parent-1/parent-3'] }] }
+    let(:children) do
+      [{ id: 'child-1',
+         member_of_collection_ids_ssim: [document.id],
+         ancestors_key => [document.id] },
+       { id: 'child-2',
+         member_of_collection_ids_ssim: [document.id],
+         ancestors_key => [document.id] }]
+    end
+    let(:not_my_children) do
+      [{ id: 'youre-not-my-dad-1',
+         member_of_collection_ids_ssim: ['parent-2'],
+         ancestors_key => ['parent-2'] },
+       { id: 'i-am-your-grandchild',
+         member_of_collection_ids_ssim: ['parent-3'],
+         ancestors_key => ['parent-1/parent-3'] }]
+    end
 
     before do
       ([parent] + children + not_my_children).each do |doc|

@@ -35,7 +35,7 @@ module Hyrax
       # @return Samvera::NestingIndexer::Documents::IndexDocument
       def self.find_index_document_by(id:)
         solr_document = find_solr_document_by(id: id)
-        coerce_solr_document_to_index_document(document: solr_document, id: id)
+        coerce_solr_document_to_index_document(original_solr_document: solr_document, id: id)
       end
 
       # @api public
@@ -86,7 +86,7 @@ module Hyrax
       # @yield Samvera::NestingIndexer::Documents::IndexDocument
       def self.each_child_document_of(document:, &block)
         raw_child_solr_documents_of(parent_document: document).each do |solr_document|
-          child_document = coerce_solr_document_to_index_document(document: solr_document, id: solr_document.fetch('id'))
+          child_document = coerce_solr_document_to_index_document(original_solr_document: solr_document, id: solr_document.fetch('id'))
           block.call(child_document)
         end
       end
@@ -96,12 +96,13 @@ module Hyrax
 
       # @api private
       # @todo Need to implement retrieving parent_ids, pathnames, and ancestors from the given document
-      def self.coerce_solr_document_to_index_document(document:, id:)
+      def self.coerce_solr_document_to_index_document(original_solr_document:, id:)
         Samvera::NestingIndexer::Documents::IndexDocument.new(
           id: id,
-          parent_ids: document.fetch(solr_field_name_for_storing_parent_ids) { [] },
-          pathnames: document.fetch(solr_field_name_for_storing_pathnames) { [] },
-          ancestors: document.fetch(solr_field_name_for_storing_ancestors) { [] }
+          parent_ids: original_solr_document.fetch(solr_field_name_for_storing_parent_ids) { [] },
+          pathnames: original_solr_document.fetch(solr_field_name_for_storing_pathnames) { [] },
+          ancestors: original_solr_document.fetch(solr_field_name_for_storing_ancestors) { [] }
+          # original_solr_document: original_solr_document
         )
       end
       private_class_method :coerce_solr_document_to_index_document
@@ -129,10 +130,9 @@ module Hyrax
       # @return [Hash] A raw response document from SOLR
       # @todo What is the appropriate suffix to apply to the solr_field_name?
       def self.raw_child_solr_documents_of(parent_document:)
-        pathname_query = parent_document.pathnames.map do |pathname|
-          ActiveFedora::SolrQueryBuilder.construct_query(solr_field_name_for_storing_ancestors => pathname.gsub('"', '\"'))
-        end.join(" OR ")
-        ActiveFedora::SolrService.query(pathname_query)
+        # query Solr for all of the documents included as a member_of_collection parent.
+        child_query = ActiveFedora::SolrQueryBuilder.construct_query(member_of_collection_ids_ssim: parent_document.id)
+        ActiveFedora::SolrService.query(child_query)
       end
       private_class_method :raw_child_solr_documents_of
 
