@@ -1,6 +1,4 @@
 class IngestJob < Hyrax::ApplicationJob
-  queue_as Hyrax.config.ingest_queue_name
-
   after_perform do |job|
     # We want the lastmost Hash, if any.
     opts = job.arguments.reverse.detect { |x| x.is_a? Hash } || {}

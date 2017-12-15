@@ -1,6 +1,4 @@
 class BatchCreateJob < Hyrax::ApplicationJob
-  queue_as Hyrax.config.ingest_queue_name
-
   before_enqueue do |job|
     operation = job.arguments.last
     operation.pending_job(self)
