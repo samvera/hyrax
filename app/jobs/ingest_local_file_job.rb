@@ -1,6 +1,4 @@
 class IngestLocalFileJob < Hyrax::ApplicationJob
-  queue_as Hyrax.config.ingest_queue_name
-
   # @param [FileSet] file_set
   # @param [String] path
   # @param [User] user

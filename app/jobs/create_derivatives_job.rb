@@ -1,6 +1,4 @@
 class CreateDerivativesJob < Hyrax::ApplicationJob
-  queue_as Hyrax.config.ingest_queue_name
-
   # @param [FileSet] file_set
   # @param [String] file_id identifier for a Hydra::PCDM::File
   # @param [String, NilClass] filepath the cached file within the Hyrax.config.working_path

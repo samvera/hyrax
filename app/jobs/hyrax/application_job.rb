@@ -3,5 +3,6 @@ module Hyrax
   # This allows downstream applications to manipulate all the hyrax jobs by
   # including modules on this class.
   class ApplicationJob < ActiveJob::Base
+    queue_as Hyrax.config.ingest_queue_name
   end
 end

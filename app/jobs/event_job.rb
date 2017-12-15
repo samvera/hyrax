@@ -8,7 +8,6 @@ class EventJob < Hyrax::ApplicationJob
   # For link_to_profile
   include HyraxHelper
 
-  queue_as Hyrax.config.ingest_queue_name
   attr_reader :depositor
 
   # @param [User] depositor the user to create the event for
