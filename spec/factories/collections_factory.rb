@@ -25,7 +25,7 @@ FactoryBot.define do
       # permissions).  Nested indexing requires that the user's permissions be saved on the Fedora object... if simply in
       # local memory, they are lost when the adapter pulls the object from Fedora to reindex.
       if evaluator.with_permission_template || evaluator.create_access || RSpec.current_example.metadata[:with_nested_reindexing]
-        attributes = { source_id: collection.id, source_type: 'collection' }
+        attributes = { source_id: collection.id }
         attributes[:manage_users] = CollectionFactoryHelper.user_managers(evaluator.with_permission_template, evaluator.user,
                                                                           (evaluator.create_access || RSpec.current_example.metadata[:with_nested_reindexing]))
         attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
@@ -85,7 +85,7 @@ FactoryBot.define do
       collection.apply_depositor_metadata(evaluator.user.user_key)
       collection.save(validate: false) if evaluator.do_save || evaluator.with_permission_template
       if evaluator.with_permission_template
-        attributes = { source_id: collection.id, source_type: 'collection' }
+        attributes = { source_id: collection.id }
         attributes[:manage_users] = [evaluator.user] if evaluator.create_access
         attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
         create(:permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)

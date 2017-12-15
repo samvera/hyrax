@@ -41,7 +41,7 @@ module Hyrax
 
         # Creates a Hyrax::PermissionTemplate for the given AdminSet
         def create_permission_template!(source_id:)
-          Hyrax::PermissionTemplate.create!(source_id: source_id, source_type: 'admin_set')
+          Hyrax::PermissionTemplate.create!(source_id: source_id)
         end
     end
   end

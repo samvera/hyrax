@@ -12,12 +12,27 @@ module Hyrax
       def self.source_ids_for_user(access:, ability:, source_type: nil)
         scope = PermissionTemplateAccess.for_user(ability: ability, access: access)
                                         .joins(:permission_template)
-        scope = scope.where(permission_templates: { source_type: source_type }) if source_type
-        scope.pluck('DISTINCT source_id')
+        ids = scope.pluck('DISTINCT source_id')
+        return ids unless source_type
+        filter_source(source_type: source_type, ids: ids)
       end
       private_class_method :source_ids_for_user
 
-      # @api public
+      def self.filter_source(source_type:, ids:)
+        return [] if ids.empty?
+        id_clause = "{!terms f=id}#{ids.join(',')}"
+        query = case source_type
+                when 'admin_set'
+                  "_query_:\"{!raw f=has_model_ssim}AdminSet\""
+                when 'collection'
+                  "_query_:\"{!raw f=has_model_ssim}Collection\""
+                end
+        query += " AND #{id_clause}"
+        ActiveFedora::SolrService.query(query, fl: 'id').map { |hit| hit['id'] }
+      end
+      private_class_method :filter_source
+
+      # @api private
       #
       # IDs of admin sets a user can access based on participant roles.
       #
@@ -25,9 +40,11 @@ module Hyrax
       # @param ability [Ability] the ability coming from cancan ability check
       # @return [Array<String>] IDs of admin sets for which the user has specified roles
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
+      # TODO: MOVE TO ABILITY
       def self.admin_set_ids_for_user(access:, ability:)
         source_ids_for_user(access: access, ability: ability, source_type: 'admin_set')
       end
+      private_class_method :admin_set_ids_for_user
 
       # @api public
       #
@@ -69,17 +86,6 @@ module Hyrax
 
       # @api public
       #
-      # IDs of admin_sets into which a user can deposit.
-      #
-      # @param ability [Ability] the ability coming from cancan ability check
-      # @return [Array<String>] IDs of admin_sets into which the user can deposit
-      # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
-      def self.admin_set_ids_for_deposit(ability:)
-        source_ids_for_deposit(ability: ability, source_type: 'admin_set')
-      end
-
-      # @api public
-      #
       # IDs of collections into which a user can deposit.
       #
       # @param ability [Ability] the ability coming from cancan ability check
@@ -109,6 +115,7 @@ module Hyrax
       # @param ability [Ability] the ability coming from cancan ability check
       # @return [Boolean] true if the user has permission to view the admin show page for at least one admin_set
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
+      # TODO: MOVE TO ABILITY
       def self.can_view_admin_show_for_any_admin_set?(ability:)
         admin_set_ids_for_user(ability: ability, access: [Hyrax::PermissionTemplateAccess::MANAGE,
                                                           Hyrax::PermissionTemplateAccess::DEPOSIT,
@@ -133,6 +140,8 @@ module Hyrax
       # @param ability [Ability] the ability coming from cancan ability check
       # @return [Boolean] true if the user has permission to manage at least one admin_set
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
+      # TODO: MOVE TO ABILITY
+
       def self.can_manage_any_admin_set?(ability:)
         admin_set_ids_for_user(ability: ability, access: [Hyrax::PermissionTemplateAccess::MANAGE]).present?
       end

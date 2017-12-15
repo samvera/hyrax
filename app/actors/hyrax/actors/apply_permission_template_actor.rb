@@ -19,14 +19,14 @@ module Hyrax
 
         def add_admin_set_participants(env)
           return if env.attributes[:admin_set_id].blank?
-          template = Hyrax::PermissionTemplate.find_by!(source_id: env.attributes[:admin_set_id], source_type: 'admin_set')
+          template = Hyrax::PermissionTemplate.find_by!(source_id: env.attributes[:admin_set_id])
           set_curation_concern_access(env, template)
         end
 
         def add_collection_participants(env)
           return if env.attributes[:collection_id].blank?
           collection_id = env.attributes.delete(:collection_id) # delete collection_id from attributes because works do not have a collection_id property
-          template = Hyrax::PermissionTemplate.find_by!(source_id: collection_id, source_type: 'collection')
+          template = Hyrax::PermissionTemplate.find_by!(source_id: collection_id)
           set_curation_concern_access(env, template)
         end
 
