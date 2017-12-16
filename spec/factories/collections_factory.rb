@@ -7,6 +7,7 @@ FactoryBot.define do
       # allow defaulting to default user collection
       collection_type_settings nil
       with_permission_template false
+      create_access false
     end
     sequence(:title) { |n| ["Title #{n}"] }
 
@@ -14,6 +15,8 @@ FactoryBot.define do
       collection.apply_depositor_metadata(evaluator.user.user_key)
       if evaluator.collection_type_settings.present?
         collection.collection_type = create(:collection_type, *evaluator.collection_type_settings)
+      elsif collection.collection_type_gid.nil?
+        collection.collection_type = create(:user_collection_type)
       end
     end
 
@@ -23,20 +26,14 @@ FactoryBot.define do
       # permissions).
       if evaluator.with_permission_template || RSpec.current_example.metadata[:with_nested_reindexing]
         attributes = { source_id: collection.id, source_type: 'collection' }
+        attributes[:manage_users] = [evaluator.user] if evaluator.create_access || RSpec.current_example.metadata[:with_nested_reindexing]
         attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
         create(:permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)
       end
       # Nested indexing requires that the user's permissions be saved
       # on the Fedora object... if simply in local memory, they are
       # lost when the adapter pulls the object from Fedora to reindex.
-      if RSpec.current_example.metadata[:with_nested_reindexing]
-        create(:permission_template_access,
-               :manage,
-               permission_template: collection.permission_template,
-               agent_type: 'user',
-               agent_id: evaluator.user.user_key)
-        collection.update_access_controls!
-      end
+      collection.update_access_controls! if RSpec.current_example.metadata[:with_nested_reindexing]
     end
 
     factory :public_collection, traits: [:public]
@@ -74,15 +71,27 @@ FactoryBot.define do
   end
 
   factory :typeless_collection, class: Collection do
-    # should not have a collection type assigned
+    # To create a pre-Hyrax 2.1.0 collection without a collection type gid...
+    #   col = build(:typeless_collection, ...)
+    #   col.save(validate: false)
     transient do
       user { create(:user) }
+      with_permission_template false
+      create_access false
+      do_save false
     end
 
     sequence(:title) { |n| ["Title #{n}"] }
 
     after(:build) do |collection, evaluator|
       collection.apply_depositor_metadata(evaluator.user.user_key)
+      collection.save(validate: false) if evaluator.do_save || evaluator.with_permission_template
+      if evaluator.with_permission_template
+        attributes = { source_id: collection.id, source_type: 'collection' }
+        attributes[:manage_users] = [evaluator.user] if evaluator.create_access
+        attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
+        create(:permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)
+      end
     end
   end
 end

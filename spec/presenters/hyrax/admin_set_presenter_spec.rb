@@ -58,7 +58,7 @@ RSpec.describe Hyrax::AdminSetPresenter do
 
     subject { presenter.collection_type }
 
-    it { is_expected.to eq(Hyrax::CollectionType.find_or_create_admin_set_type) }
+    it { is_expected.to eq(create(:admin_set_collection_type)) }
   end
 
   describe '#show_path' do

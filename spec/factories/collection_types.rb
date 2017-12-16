@@ -95,55 +95,10 @@ FactoryBot.define do
   end
 
   factory :user_collection_type, class: Hyrax::CollectionType do
-    title 'User Collection'
-    description 'A user oriented collection type'
-
-    nestable true
-    discoverable true
-    sharable true
-    share_applies_to_new_works false
-    allow_multiple_membership true
-    require_membership false
-    assigns_workflow false
-    assigns_visibility false
-
-    after(:create) do |collection_type, _evaluator|
-      attributes = { hyrax_collection_type_id: collection_type.id,
-                     access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS,
-                     agent_id: ::Ability.registered_group_name,
-                     agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
-      create(:collection_type_participant, attributes)
-      attributes = { hyrax_collection_type_id: collection_type.id,
-                     access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS,
-                     agent_id: ::Ability.admin_group_name,
-                     agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
-      create(:collection_type_participant, attributes)
-    end
+    initialize_with { Hyrax::CollectionType.find_or_create_default_collection_type }
   end
 
   factory :admin_set_collection_type, class: Hyrax::CollectionType do
-    title 'Admin Set'
-    description 'An administrative set collection type'
-    nestable false
-    discoverable false
-    sharable true
-    share_applies_to_new_works true
-    allow_multiple_membership false
-    require_membership true
-    assigns_workflow true
-    assigns_visibility true
-
-    after(:create) do |collection_type, _evaluator|
-      attributes = { hyrax_collection_type_id: collection_type.id,
-                     access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS,
-                     agent_id: ::Ability.admin_group_name,
-                     agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
-      create(:collection_type_participant, attributes)
-      attributes = { hyrax_collection_type_id: collection_type.id,
-                     access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS,
-                     agent_id: ::Ability.admin_group_name,
-                     agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
-      create(:collection_type_participant, attributes)
-    end
+    initialize_with { Hyrax::CollectionType.find_or_create_admin_set_type }
   end
 end

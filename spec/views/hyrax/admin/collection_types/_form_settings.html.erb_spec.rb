@@ -69,7 +69,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form_settings.html.erb', type: :vi
   end
 
   context 'for admin set collection type' do
-    let(:collection_type) { build(:admin_set_collection_type) }
+    let(:collection_type) { create(:admin_set_collection_type) }
 
     before do
       collection_type_form.collection_type = collection_type
@@ -87,7 +87,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form_settings.html.erb', type: :vi
   end
 
   context 'for user collection type' do
-    let(:collection_type) { build(:user_collection_type) }
+    let(:collection_type) { create(:user_collection_type) }
 
     before do
       collection_type_form.collection_type = collection_type

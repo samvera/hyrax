@@ -45,6 +45,10 @@ FactoryBot.define do
         workflow = create(:workflow, active: true, permission_template: permission_template)
         create(:workflow_action, workflow: workflow) # Need to create a single action that can be taken
       end
+      if evaluator.manage_users.present?
+        AccessHelper.create_access(permission_template, 'user', :manage, evaluator.manage_users)
+      end
+      # TODO: add support for manage_groups, depositor_users/groups, viewer_users/groups and update tests to use the factory instead of creating access in the test
     end
 
     transient do
@@ -52,6 +56,20 @@ FactoryBot.define do
       with_collection false
       with_workflows false
       with_active_workflow false
+      manage_users nil
+      # TODO: add support for manage_groups, depositor_users/groups, viewer_users/groups and update tests to use the factory instead of creating access in the test
+    end
+  end
+
+  class AccessHelper
+    def self.create_access(permission_template_id, agent_type, access, agent_ids)
+      agent_ids.each do |agent_id|
+        FactoryBot.create(:permission_template_access,
+                          access,
+                          permission_template: permission_template_id,
+                          agent_type: agent_type,
+                          agent_id: agent_id)
+      end
     end
   end
 end
