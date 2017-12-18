@@ -155,8 +155,12 @@ RSpec.configure do |config|
     # using :workflow is preferable to :clean_repo, use the former if possible
     # It's important that this comes after DatabaseCleaner.start
     ensure_deposit_available_for(user) if example.metadata[:workflow]
-    ActiveFedora::Cleaner.clean! if example.metadata[:clean_repo]
-
+    if example.metadata[:clean_repo]
+      ActiveFedora::Cleaner.clean!
+      # The JS is executed in a different thread, so that other thread
+      # may think the root path has already been created:
+      ActiveFedora.fedora.connection.send(:init_base_path) if example.metadata[:js]
+    end
     Hyrax.config.nested_relationship_reindexer = if example.metadata[:with_nested_reindexing]
                                                    # Use the default relationship reindexer (and the cascading reindexing of child documents)
                                                    Hyrax.config.default_nested_relationship_reindexer
