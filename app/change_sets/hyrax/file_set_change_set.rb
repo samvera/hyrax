@@ -80,6 +80,13 @@ module Hyrax
       document_model.find(id)
     end
 
+    def parent
+      solr = Valkyrie::MetadataAdapter.find(:index_solr).connection
+      results = solr.get('select', params: { q: "{!field f=member_ids_ssim}id-#{id}",
+                                             qt: 'standard' })
+      ::SolrDocument.new(results['response']['docs'].first)
+    end
+
     private
 
       def document_model
