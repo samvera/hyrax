@@ -222,14 +222,6 @@ Hyrax.config do |config|
   # How long to hold the lock in milliseconds
   # config.lock_time_to_live = 60_000
 
-  ## Fedora import/export tool
-  #
-  # Path to the Fedora import export tool jar file
-  # config.import_export_jar_file_path = "tmp/fcrepo-import-export.jar"
-  #
-  # Location where BagIt files should be exported
-  # config.bagit_dir = "tmp/descriptions"
-
   # If browse-everything has been configured, load the configs.  Otherwise, set to nil.
   begin
     if defined? BrowseEverything
