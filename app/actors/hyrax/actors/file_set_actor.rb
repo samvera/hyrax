@@ -63,7 +63,7 @@ module Hyrax
       #   yield(file_set) if block_given?
       # end
 
-      # Adds a FileSet to the work using ore:Aggregations.
+      # Adds a FileSet to the work.
       # Locks to ensure that only one process is operating on the list at a time.
       def attach_to_work(work, file_set_params = {})
         acquire_lock_for(work.id) do
@@ -77,6 +77,7 @@ module Hyrax
           # Save the work so the association between the work and the file_set is persisted (head_id)
           # NOTE: the work may not be valid, in which case this save doesn't do anything.
           persister.save(resource: work)
+          # TODO: move this callback into the persister?
           Hyrax.config.callback.run(:after_create_fileset, file_set, user)
         end
       end

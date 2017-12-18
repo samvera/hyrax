@@ -91,12 +91,15 @@ module Hyrax
           params = { label: item['file']['filename'],
                      files: [file],
                      search_context: search_context }
-          change_set = file_set_change_set_class.new(::FileSet.new, append_id: work.id)
+          change_set = file_set_change_set_class.new(::FileSet.new,
+                                                     user: user)
           raise "Unable to create file set. #{change_set.errors.messages}" unless change_set.validate(params)
           change_set.sync
+          file_set = nil
           file_set_change_set_persister.buffer_into_index do |buffered_changeset_persister|
-            _saved_file_set = buffered_changeset_persister.save(change_set: change_set)
+            file_set = buffered_changeset_persister.save(change_set: change_set)
           end
+          Hyrax::Actors::FileSetActor.new(file_set, user).attach_to_work(work)
         end
 
         def update_work(work)
@@ -111,7 +114,7 @@ module Hyrax
         end
 
         def update_file_set(file_set)
-          change_set = file_set_change_set_class.new(file_set)
+          change_set = file_set_change_set_class.new(file_set, user: user)
           file_set_params = { files: [file],
                               search_context: search_context }
           raise "Unable to create file set. #{change_set.errors.messages}" unless change_set.validate(file_set_params)
@@ -119,10 +122,6 @@ module Hyrax
           file_set_change_set_persister.buffer_into_index do |buffered_changeset_persister|
             _saved_file_set = buffered_changeset_persister.save(change_set: change_set)
           end
-        end
-
-        def current_ability
-          @current_ability ||= ::Ability.new(user)
         end
 
         # @return [Hash<String, Array>] a list of properties to set on the work. Keys must be strings in order for them to correctly merge with the values from arkivo (in `@item`)
