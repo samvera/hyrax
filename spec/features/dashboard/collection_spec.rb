@@ -69,7 +69,7 @@ RSpec.describe 'collection', type: :feature do
         first('button.dropdown-toggle').click
         first(".itemtrash").click
       end
-      expect(page).to have_content("Deleted #{collection.title.first}")
+      expect(page).to have_content("Collection #{collection.title.first} was successfully deleted")
     end
   end
 
