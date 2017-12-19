@@ -90,7 +90,7 @@ module Hyrax
       end
 
       def collection_type_params
-        params.require(:collection_type).permit(:title, :description, :nestable, :discoverable, :sharable,
+        params.require(:collection_type).permit(:title, :description, :nestable, :discoverable, :sharable, :share_applies_to_new_works,
                                                 :allow_multiple_membership, :require_membership, :assigns_workflow, :assigns_visibility)
       end
   end

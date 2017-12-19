@@ -25,6 +25,7 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     expect(collection_type).to be_nestable
     expect(collection_type).to be_discoverable
     expect(collection_type).to be_sharable
+    expect(collection_type).to be_share_applies_to_new_works
     expect(collection_type).to allow_multiple_membership
     expect(collection_type).not_to require_membership
     expect(collection_type).not_to assign_workflow

@@ -418,7 +418,6 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
         it 'trigger error from #update' do
           expect(response).to eq(content_tab: "visibility", updated: false, error_code: error_code)
-          # TODO: elr - does this error message need to be generalized?
           expect(I18n.t(response[:error_code], scope: 'hyrax.admin.admin_sets.form.permission_update_errors')).not_to include('translation missing')
         end
       end

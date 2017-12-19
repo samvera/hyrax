@@ -64,13 +64,16 @@ module Hyrax
       end
       # rubocop:enable Metrics/MethodLength
 
-      # Copy this access to the edit permissions of the Admin Set or Collection and to
+      # Copy this access to the permissions of the Admin Set or Collection and to
       # the WorkflowResponsibilities of the active workflow if this is an Admin Set
       def update_access(remove_agent: false)
         update_access_controls!
         update_workflow_responsibilities(remove_agent: remove_agent) if source_model.is_a?(AdminSet)
       end
 
+      # This method is used to revoke access to a Collection or Admin Set and its workflows
+      #
+      # @return [Void]
       def remove_access!(permission_template_access)
         construct_attributes_from_template_access!(permission_template_access)
         update_access(remove_agent: true)
@@ -111,7 +114,7 @@ module Hyrax
           update_access(remove_agent: false)
         end
 
-        # Grant workflow approve roles for any admin set managers based on access specified
+        # Grant appropriate workflow roles based on access specified
         def update_workflow_responsibilities(remove_agent: false)
           return unless available_workflows
           roles = roles_for_agent

@@ -114,6 +114,7 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
         expect(page).to have_checked_field('collection_type_nestable')
         expect(page).to have_checked_field('collection_type_discoverable')
         expect(page).to have_checked_field('collection_type_sharable')
+        expect(page).to have_checked_field('collection_type_share_applies_to_new_works')
         expect(page).to have_checked_field('collection_type_allow_multiple_membership')
 
         # confirm all admin_set only checkboxes are off and disabled
@@ -124,14 +125,27 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
         # change settings
         page.uncheck('NESTABLE')
         page.uncheck('DISCOVERY')
-        page.uncheck('SHARING')
+        page.check('APPLY TO NEW WORKS')
         page.uncheck('MULTIPLE MEMBERSHIP')
 
         # confirm all non-admin_set checkboxes are now off
         expect(page).to have_unchecked_field('collection_type_nestable')
         expect(page).to have_unchecked_field('collection_type_discoverable')
-        expect(page).to have_unchecked_field('collection_type_sharable')
+        expect(page).to have_checked_field('collection_type_sharable')
+        expect(page).to have_checked_field('collection_type_share_applies_to_new_works')
         expect(page).to have_unchecked_field('collection_type_allow_multiple_membership')
+
+        # uncheck sharable should disable sharable options
+        page.uncheck('SHARING')
+
+        expect(page).to have_unchecked_field('collection_type_sharable')
+        expect(page).to have_unchecked_field('collection_type_share_applies_to_new_works', disabled: true)
+
+        # check sharable should enable sharable options
+        page.check('SHARING')
+
+        expect(page).to have_checked_field('collection_type_sharable')
+        expect(page).to have_unchecked_field('collection_type_share_applies_to_new_works', disabled: false)
 
         click_link('Participants')
 
@@ -157,6 +171,7 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
         expect(page).to have_field('collection_type_nestable', disabled: true)
         expect(page).to have_field('collection_type_discoverable', disabled: true)
         expect(page).to have_field('collection_type_sharable', disabled: true)
+        expect(page).to have_field('collection_type_share_applies_to_new_works', disabled: true)
         expect(page).to have_field('collection_type_allow_multiple_membership', disabled: true)
         expect(page).to have_field('collection_type_require_membership', disabled: true)
         expect(page).to have_field('collection_type_assigns_workflow', disabled: true)

@@ -6,10 +6,12 @@ RSpec.describe 'hyrax/dashboard/collections/_form_share.html.erb', type: :view d
                     to_key: template.to_key,
                     access_grants: template.access_grants)
   end
+  let(:collection) { create(:collection, collection_type_settings: :sharable_no_work_permissions) }
 
   before do
+    assign(:collection, collection)
     @form = instance_double(Hyrax::Forms::CollectionForm,
-                            to_model: stub_model(Collection),
+                            to_model: collection,
                             permission_template: pt_form)
     render
   end
