@@ -1,6 +1,6 @@
 RSpec.describe Hyrax::FileSetHelper do
   describe '#media_display' do
-    let(:file_set) { SolrDocument.new(mime_type_ssi: mime_type) }
+    let(:file_set) { SolrDocument.new(mime_type_ssim: mime_type) }
     let(:mime_type) { 'image/tiff' }
 
     before do
@@ -24,7 +24,7 @@ RSpec.describe Hyrax::FileSetHelper do
   describe '#media_display_partial' do
     subject { helper.media_display_partial(file_set) }
 
-    let(:file_set) { SolrDocument.new(mime_type_ssi: mime_type) }
+    let(:file_set) { SolrDocument.new(mime_type_ssim: mime_type) }
 
     context "with an image" do
       let(:mime_type) { 'image/tiff' }
