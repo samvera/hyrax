@@ -19,6 +19,7 @@
 * Improve Tika File Characterization to allow for either use of the default Tika or with a pass to an external service
 * Implement a characterization service that uses MediaInfo
 * Change the activefedora i18n key to valkyrie
+* ImportExportJob has gone away. It was not used elsewhere in Hyrax
 
 ## TODO:
 
