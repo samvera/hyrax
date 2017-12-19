@@ -477,38 +477,38 @@ RSpec.describe Hyrax::GenericWorksController do
         expect(assigns(:change_set)).not_to be_blank
       end
     end
+
+    describe '#manifest' do
+      let(:manifest_factory) { double(to_h: { test: 'manifest' }) }
+
+      let(:file_set) do
+        create_for_repository(:file_set,
+                              user: user,
+                              content: file)
+      end
+      let(:file) { fixture_file_upload('/world.png', 'image/png') }
+      let(:work) do
+        create_for_repository(:work, user: user, member_ids: [file_set.id])
+      end
+
+      before do
+        allow(IIIFManifest::ManifestFactory).to receive(:new)
+          .with(Hyrax::WorkShowPresenter)
+          .and_return(manifest_factory)
+      end
+
+      it "produces a manifest" do
+        get :manifest, params: { id: work, format: :json }
+        expect(response.body).to eq "{\"test\":\"manifest\"}"
+      end
+    end
   end
 
-  describe 'logged out user' do
+  context 'with a logged out user' do
     it 'shows unauthorized message' do
       get :new
       expect(response).to redirect_to main_app.new_user_session_path(locale: 'en')
       expect(flash[:alert]).to eq "You are not authorized to access this page."
-    end
-  end
-
-  describe '#manifest' do
-    let(:manifest_factory) { double(to_h: { test: 'manifest' }) }
-
-    let(:file_set) do
-      create_for_repository(:file_set,
-                            user: user,
-                            content: file)
-    end
-    let(:file) { fixture_file_upload('/world.png', 'image/png') }
-    let(:work) do
-      create_for_repository(:work, user: user, member_ids: [file_set.id])
-    end
-
-    before do
-      allow(IIIFManifest::ManifestFactory).to receive(:new)
-        .with(Hyrax::WorkShowPresenter)
-        .and_return(manifest_factory)
-    end
-
-    it "produces a manifest" do
-      get :manifest, params: { id: work, format: :json }
-      expect(response.body).to eq "{\"test\":\"manifest\"}"
     end
   end
 end
