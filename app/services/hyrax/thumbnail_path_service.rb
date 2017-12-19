@@ -21,7 +21,7 @@ module Hyrax
       private
 
         def fetch_thumbnail(object)
-          return object if object.thumbnail_id == object.id
+          return object if object.thumbnail_id == object.id.to_s
           find_resource(object.thumbnail_id)
         rescue Valkyrie::Persistence::ObjectNotFoundError
           Rails.logger.error("Couldn't find thumbnail #{object.thumbnail_id} for #{object.id}")
