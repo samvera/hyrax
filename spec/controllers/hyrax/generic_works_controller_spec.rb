@@ -6,7 +6,7 @@ RSpec.describe Hyrax::GenericWorksController do
   let(:hyrax) { Hyrax::Engine.routes.url_helpers }
   let(:user) { create(:user) }
 
-  describe 'with a logged in user' do
+  context 'with a logged in user' do
     before { sign_in user }
 
     describe 'integration test for suppressed documents' do
@@ -351,18 +351,20 @@ RSpec.describe Hyrax::GenericWorksController do
           before do
             allow(work).to receive(:file_sets).and_return(double(present?: true))
           end
+
           it 'updates the work' do
             patch :update, params: { id: work, generic_work: {} }
             expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
           end
         end
 
+        # TODO: this test should move to the ModelActor spec
         context 'when members are set' do
           let(:file_set) { create_for_repository(:file_set) }
 
           it 'can update file membership' do
             patch :update, params: { id: work, generic_work: { member_ids: [file_set.id.to_s] } }
-            expect(work.member_ids).to eq [file_set.id]
+            expect(assigns[:resource].member_ids).to eq [file_set.id]
           end
         end
 
@@ -475,38 +477,38 @@ RSpec.describe Hyrax::GenericWorksController do
         expect(assigns(:change_set)).not_to be_blank
       end
     end
+
+    describe '#manifest' do
+      let(:manifest_factory) { double(to_h: { test: 'manifest' }) }
+
+      let(:file_set) do
+        create_for_repository(:file_set,
+                              user: user,
+                              content: file)
+      end
+      let(:file) { fixture_file_upload('/world.png', 'image/png') }
+      let(:work) do
+        create_for_repository(:work, user: user, member_ids: [file_set.id])
+      end
+
+      before do
+        allow(IIIFManifest::ManifestFactory).to receive(:new)
+          .with(Hyrax::WorkShowPresenter)
+          .and_return(manifest_factory)
+      end
+
+      it "produces a manifest" do
+        get :manifest, params: { id: work, format: :json }
+        expect(response.body).to eq "{\"test\":\"manifest\"}"
+      end
+    end
   end
 
-  describe 'logged out user' do
+  context 'with a logged out user' do
     it 'shows unauthorized message' do
       get :new
       expect(response).to redirect_to main_app.new_user_session_path(locale: 'en')
       expect(flash[:alert]).to eq "You are not authorized to access this page."
-    end
-  end
-
-  describe '#manifest' do
-    let(:manifest_factory) { double(to_h: { test: 'manifest' }) }
-
-    let(:file_set) do
-      create_for_repository(:file_set,
-                            user: user,
-                            content: file)
-    end
-    let(:file) { fixture_file_upload('/world.png', 'image/png') }
-    let(:work) do
-      create_for_repository(:work, user: user, member_ids: [file_set.id])
-    end
-
-    before do
-      allow(IIIFManifest::ManifestFactory).to receive(:new)
-        .with(Hyrax::WorkShowPresenter)
-        .and_return(manifest_factory)
-    end
-
-    it "produces a manifest" do
-      get :manifest, params: { id: work, format: :json }
-      expect(response.body).to eq "{\"test\":\"manifest\"}"
     end
   end
 end
