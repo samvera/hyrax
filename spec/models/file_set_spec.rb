@@ -77,10 +77,6 @@ RSpec.describe FileSet do
       expect(subject).to respond_to(:creator)
     end
 
-    it 'redefines to_param to make redis keys more recognizable' do
-      expect(subject.to_param).to eq subject.id
-    end
-
     describe 'that have been saved' do
       before { subject.apply_depositor_metadata('jcoyne') }
 
