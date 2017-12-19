@@ -31,7 +31,7 @@ class <%= class_name %>ChangeSet < Hyrax::WorkChangeSet
 
   property :admin_set_id
   property :member_of_collection_ids
-  property :member_ids
+  property :member_ids, type: Types::Strict::Array.member(Valkyrie::Types::ID)
   property :thumbnail_id
   property :representative_id
 
