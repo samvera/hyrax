@@ -6,7 +6,7 @@ RSpec.describe Hyrax::GenericWorksController do
   let(:hyrax) { Hyrax::Engine.routes.url_helpers }
   let(:user) { create(:user) }
 
-  describe 'with a logged in user' do
+  context 'with a logged in user' do
     before { sign_in user }
 
     describe 'integration test for suppressed documents' do
@@ -351,18 +351,20 @@ RSpec.describe Hyrax::GenericWorksController do
           before do
             allow(work).to receive(:file_sets).and_return(double(present?: true))
           end
+
           it 'updates the work' do
             patch :update, params: { id: work, generic_work: {} }
             expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
           end
         end
 
+        # TODO: this test should move to the ModelActor spec
         context 'when members are set' do
           let(:file_set) { create_for_repository(:file_set) }
 
           it 'can update file membership' do
             patch :update, params: { id: work, generic_work: { member_ids: [file_set.id.to_s] } }
-            expect(work.member_ids).to eq [file_set.id]
+            expect(assigns[:resource].member_ids).to eq [file_set.id]
           end
         end
 
