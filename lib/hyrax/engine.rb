@@ -51,6 +51,7 @@ module Hyrax
       require 'dry/struct'
       require 'dry/equalizer'
       require 'dry/validation'
+      require 'pul_uv_rails'
     end
 
     initializer 'routing' do
