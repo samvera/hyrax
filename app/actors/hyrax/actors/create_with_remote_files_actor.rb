@@ -59,27 +59,49 @@ module Hyrax
               Rails.logger.error "User #{env.user.user_key} attempted to ingest file from url #{file_info[:url]}, which doesn't pass validation"
               return false
             end
-            create_file_from_url(env, uri, file_info[:file_name])
+            file_set = create_file_from_url(env.user, uri, file_info[:file_name])
+            Hyrax::Actors::FileSetActor.new(file_set, env.user).attach_to_work(env.curation_concern)
           end
           true
         end
 
         # Generic utility for creating FileSet from a URL
         # Used in to import files using URLs from a file picker like browse_everything
-        def create_file_from_url(env, uri, file_name)
-          ::FileSet.new(import_url: uri.to_s, label: file_name) do |fs|
-            actor = Hyrax::Actors::FileSetActor.new(fs, env.user)
-            actor.create_metadata(visibility: env.curation_concern.visibility)
-            actor.attach_to_work(env.curation_concern)
-            Valkyrie::MetadataAdapter.find(:indexing_persister).persister(resource: fs)
-            if uri.scheme == 'file'
-              # Turn any %20 into spaces.
-              file_path = CGI.unescape(uri.path)
-              IngestLocalFileJob.perform_later(fs, file_path, env.user)
-            else
-              ImportUrlJob.perform_later(fs, operation_for(user: actor.user))
-            end
+        # @return [FileSet] the persisted FileSet
+        def create_file_from_url(user, uri, file_name)
+          change_set = build_change_set(user: user,
+                                        import_url: uri.to_s,
+                                        label: file_name)
+          file_set = nil
+          change_set_persister.buffer_into_index do |buffered_changeset_persister|
+            file_set = buffered_changeset_persister.save(change_set: change_set)
           end
+
+          if uri.scheme == 'file'
+            # Turn any %20 into spaces.
+            file_path = CGI.unescape(uri.path)
+            IngestLocalFileJob.perform_later(file_set, file_path, user)
+          else
+            # TODO: should we just pass the uri?
+            ImportUrlJob.perform_later(file_set, operation_for(user: user))
+          end
+
+          file_set
+        end
+
+        def build_change_set(attributes)
+          Hyrax::FileSetChangeSet.new(::FileSet.new, attributes).tap(&:sync)
+        end
+
+        def change_set_persister
+          Hyrax::FileSetChangeSetPersister.new(
+            metadata_adapter: metadata_adapter,
+            storage_adapter: Valkyrie.config.storage_adapter
+          )
+        end
+
+        def metadata_adapter
+          Valkyrie::MetadataAdapter.find(:indexing_persister)
         end
 
         def operation_for(user:)
