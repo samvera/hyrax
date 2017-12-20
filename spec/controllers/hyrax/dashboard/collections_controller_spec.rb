@@ -294,7 +294,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
         delete :destroy, params: { id: collection }
         expect(response).to have_http_status(:found)
         expect(response).to redirect_to(Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
-        expect(flash[:notice]).to eq "Collection #{collection.id} was successfully deleted"
+        expect(flash[:notice]).to eq "Collection My collection was successfully deleted"
       end
 
       it "returns json" do
