@@ -1,8 +1,8 @@
 require 'iiif_manifest'
 
 RSpec.describe Hyrax::FileSetPresenter do
-  let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: file_set) }
-  let(:solr_document) { SolrDocument.new(document) }
+  let(:attributes) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: file_set) }
+  let(:solr_document) { SolrDocument.new(attributes) }
   let(:ability) { double "Ability" }
   let(:presenter) { described_class.new(solr_document, ability) }
   let(:file_set) do
