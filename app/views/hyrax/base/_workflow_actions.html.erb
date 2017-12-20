@@ -12,7 +12,7 @@
         <% presenter.workflow.actions.each do |key, label| %>
           <div class="radio">
             <label>
-              <%= radio_button_tag 'workflow_action[name]', key, :checked => 'checked' %>
+              <%= radio_button_tag 'workflow_action[name]', key, key == 'comment_only' %>
               <%= label %>
             </label>
           </div>
