@@ -45,6 +45,7 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
   before do
     allow(presenter).to receive(:workflow).and_return(workflow_presenter)
     allow(presenter).to receive(:representative_presenter).and_return(representative_presenter)
+    allow(presenter).to receive(:representative_id).and_return('123')
     allow(presenter).to receive(:tweeter).and_return("@#{depositor.twitter_handle}")
     allow(controller).to receive(:current_user).and_return(depositor)
     allow(User).to receive(:find_by_user_key).and_return(depositor.user_key)
@@ -54,7 +55,6 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
     stub_template 'hyrax/base/_metadata.html.erb' => ''
     stub_template 'hyrax/base/_relationships.html.erb' => ''
     stub_template 'hyrax/base/_show_actions.html.erb' => ''
-    stub_template 'hyrax/base/_representative_media.html.erb' => ''
     stub_template 'hyrax/base/_social_media.html.erb' => ''
     stub_template 'hyrax/base/_citations.html.erb' => ''
     stub_template 'hyrax/base/_items.html.erb' => ''
@@ -66,6 +66,29 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
 
   it 'shows workflow badge' do
     expect(page).to have_content 'Foobar'
+  end
+
+  describe 'UniversalViewer integration' do
+    before do
+      allow(presenter).to receive(:universal_viewer?).and_return(viewer_enabled)
+      render template: 'hyrax/base/show.html.erb'
+    end
+
+    context 'when presenter says it is enabled' do
+      let(:viewer_enabled) { true }
+
+      it 'renders the UniversalViewer' do
+        expect(page).to have_selector 'div.viewer'
+      end
+    end
+
+    context 'when presenter says it is enabled' do
+      let(:viewer_enabled) { false }
+
+      it 'omits the UniversalViewer' do
+        expect(page).not_to have_selector 'div.viewer'
+      end
+    end
   end
 
   describe 'google scholar' do

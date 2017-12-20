@@ -51,6 +51,7 @@ module Hyrax
       require 'dry/struct'
       require 'dry/equalizer'
       require 'dry/validation'
+      require 'pul_uv_rails'
     end
 
     initializer 'routing' do
@@ -71,9 +72,9 @@ module Hyrax
         ActiveFedora::Base.translate_uri_to_id = c.translate_uri_to_id
         ActiveFedora::Base.translate_id_to_uri = c.translate_id_to_uri
 
-        ActiveFedora::Noid.config.template = c.noid_template
-        ActiveFedora::Noid.config.minter_class = c.noid_minter_class
-        ActiveFedora::Noid.config.statefile = c.minter_statefile
+        Noid::Rails.config.template = c.noid_template
+        Noid::Rails.config.minter_class = c.noid_minter_class
+        Noid::Rails.config.statefile = c.minter_statefile
       end
     end
 

@@ -3,12 +3,8 @@
   <p><%= t('.no_public') %></p>
 <% else %>
   <div id="recent_docs">
-    <table class="table table-bordered table-striped">
-      <tr>
-        <th scope="col"><%= t('.depositor') %></th>
-        <th scope="col"><%= t('.details') %></th>
-      </tr>
+    <ol class="list-group list-group-striped recent_uploads">
       <%= render partial: "recent_document", collection: recent_documents %>
-    </table>
+    </ol>
   </div>
 <% end %>

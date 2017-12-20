@@ -117,3 +117,13 @@ div#announcement {
 .highlights-list {
   margin-top: 20px;
 }
+
+ol.list-group.list-group-striped {
+  li:nth-of-type(odd) {
+    background: $table-bg-accent;
+  }
+
+  li:nth-of-type(even) {
+    background: $body-bg;
+  }
+}

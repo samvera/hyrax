@@ -65,7 +65,7 @@ require 'byebug' unless ENV['TRAVIS']
 Capybara.default_driver = :rack_test # This is a faster driver
 Capybara.javascript_driver = :selenium_chrome_headless # This is slower
 
-ActiveJob::Base.queue_adapter = :inline
+ApplicationJob.queue_adapter = :inline
 
 # require 'http_logger'
 # HttpLogger.logger = Logger.new(STDOUT)

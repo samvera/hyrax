@@ -36,7 +36,6 @@ module Hyrax
     helper Hyrax::BatchEditsHelper
     # include the display_trophy_link view helper method
     helper Hyrax::TrophyHelper
-    helper_method :suppressed_to_status
 
     def index
       @user = current_user
@@ -47,15 +46,6 @@ module Hyrax
         format.html {}
         format.rss  { render layout: false }
         format.atom { render layout: false }
-      end
-    end
-
-    def suppressed_to_status(value)
-      case value
-      when "false"
-        "Published"
-      else
-        "In review"
       end
     end
 
