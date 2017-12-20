@@ -7,8 +7,9 @@ RSpec.describe GenericWorkChangeSet do
 
   describe "validations" do
     let(:date) { Time.zone.today + 2 }
+    let(:attributes) { { title: ['Jane Eyre'] } }
 
-    it "is valid by default" do
+    it "is valid when it has a title" do
       expect(change_set).to be_valid
     end
 
@@ -17,7 +18,8 @@ RSpec.describe GenericWorkChangeSet do
         { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
           visibility_during_embargo: 'restricted',
           visibility_after_embargo: 'open',
-          embargo_release_date: date.to_s }
+          embargo_release_date: date.to_s,
+          title: ['Jane Eyre'] }
       end
 
       it 'is valid' do
@@ -32,7 +34,11 @@ RSpec.describe GenericWorkChangeSet do
                  release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY,
                  visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
         end
-        let(:attributes) { { title: ['New embargo'], admin_set_id: admin_set.id.to_s, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC } }
+        let(:attributes) do
+          { title: ['New embargo'],
+            admin_set_id: admin_set.id.to_s,
+            visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
+        end
 
         it "is invalid and logs an error on visibility field" do
           expect(change_set).not_to be_valid
@@ -47,7 +53,11 @@ RSpec.describe GenericWorkChangeSet do
                  release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY,
                  visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
         end
-        let(:attributes) { { title: ['New embargo'], admin_set_id: admin_set.id.to_s, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC } }
+        let(:attributes) do
+          { title: ['New embargo'],
+            admin_set_id: admin_set.id.to_s,
+            visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
+        end
 
         it "is valid" do
           expect(change_set).to be_valid
@@ -62,7 +72,8 @@ RSpec.describe GenericWorkChangeSet do
         { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
           visibility_during_embargo: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE,
           visibility_after_embargo: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
-          embargo_release_date: date.to_s }
+          embargo_release_date: date.to_s,
+          title: ['Jane Eyre'] }
       end
 
       it 'is valid' do
@@ -293,7 +304,8 @@ RSpec.describe GenericWorkChangeSet do
         { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE,
           visibility_during_lease: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE,
           visibility_after_lease: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
-          lease_expiration_date: date.to_s }
+          lease_expiration_date: date.to_s,
+          title: ['Jane Eyre'] }
       end
 
       it 'is valid' do
