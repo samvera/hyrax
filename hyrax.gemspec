@@ -30,7 +30,6 @@ SUMMARY
   spec.add_dependency 'rails', '~> 5.0'
 
   spec.add_dependency 'active-fedora', '~> 11.5', '>= 11.5.2'
-  spec.add_dependency 'active_fedora-noid', '~> 2.0', '>= 2.0.2'
   spec.add_dependency 'almond-rails', '~> 0.1'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
   spec.add_dependency 'blacklight', '~> 6.11', '>= 6.11.2'
@@ -52,7 +51,7 @@ SUMMARY
   spec.add_dependency 'hydra-works', '~> 0.16'
   spec.add_dependency 'iiif_manifest', '~> 0.3.0'
   spec.add_dependency 'jquery-datatables-rails', '~> 3.4'
-  spec.add_dependency 'jquery-ui-rails', '~> 5.0'
+  spec.add_dependency 'jquery-ui-rails', '~> 6.0'
   spec.add_dependency 'json-schema' # for Arkivo
   # Pin more tightly because 0.x gems are potentially unstable
   spec.add_dependency 'kaminari_route_prefix', '~> 0.1.1'
@@ -60,10 +59,12 @@ SUMMARY
   spec.add_dependency 'linkeddata' # Required for getting values from geonames
   spec.add_dependency 'mailboxer', '~> 0.12'
   spec.add_dependency 'nest', '~> 2.0'
+  spec.add_dependency 'noid-rails', '~> 3.0.0'
   spec.add_dependency 'oauth'
   spec.add_dependency 'oauth2', '~> 1.2'
   spec.add_dependency 'posix-spawn'
   spec.add_dependency 'power_converter', '~> 0.1', '>= 0.1.2'
+  spec.add_dependency 'pul_uv_rails', '~> 2.0'
   spec.add_dependency 'qa', '~> 2.0' # questioning_authority
   spec.add_dependency 'rails_autolink', '~> 1.1'
   spec.add_dependency 'rdf-rdfxml' # controlled vocabulary importer

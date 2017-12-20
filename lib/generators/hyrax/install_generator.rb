@@ -28,7 +28,7 @@ module Hyrax
   14. Updates simple_form to use browser validations
   15. Installs Blacklight gallery (and removes it's scss)
   16. Install jquery-datatables
-  17. Initializes the active-fedora_noid database-backed minter
+  17. Initializes the noid-rails database-backed minter
   18. Generates RIIIF image server implementation
          """
 
@@ -165,8 +165,8 @@ module Hyrax
       end
     end
 
-    def af_noid_database_minter_initialize
-      generate 'active_fedora:noid:install'
+    def noid_rails_database_minter_initialize
+      generate 'noid:rails:install'
     end
 
     def riiif_image_server

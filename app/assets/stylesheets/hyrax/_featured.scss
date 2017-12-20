@@ -6,11 +6,27 @@ ol#featured_works {
 
 /* don't nest .featured-item in the ol, because it's detached from the list when being dragged */
 .featured-item {
+  border-top: 1px solid #ddd;
+  font-size: 0.9em;
+  min-height: 100px;
+  padding: 8px;
+
   h3 {
+    font-size: 1.1em;
     margin-top: 0;
   }
+
+  img {
+    width: 90px;
+  }
+
   .main {
     padding: $padding-small-vertical;
+  }
+
+  .featured-label {
+    color: $gray;
+    font-weight: bold;
   }
 }
 

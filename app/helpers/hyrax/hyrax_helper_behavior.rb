@@ -213,6 +213,18 @@ module Hyrax
       to_sentence(options[:value].map { |right| link_to service.label(right), right })
     end
 
+    # A Blacklight facet field helper_method
+    # @param [String] value from blacklight helper_method invocation.
+    # @return [String] the decoded meaning of the boolean field
+    def suppressed_to_status(value)
+      case value
+      when 'false'
+        t('hyrax.admin.workflows.index.tabs.published')
+      else
+        t('hyrax.admin.workflows.index.tabs.under_review')
+      end
+    end
+
     def link_to_telephone(user)
       return unless user
       link_to user.telephone, "wtai://wp/mc;#{user.telephone}" if user.telephone

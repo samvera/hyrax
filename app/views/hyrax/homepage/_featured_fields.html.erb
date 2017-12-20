@@ -1,16 +1,12 @@
-<h3>
-  <span class="sr-only">Title</span>
-  <%= link_to truncate(featured.title.first, length: 28, separator: ' '), [main_app, featured] %>
-</h3>
 <div>
-  <span class="sr-only">Depositor</span>
-  <%= link_to_profile featured.depositor("no depositor value") %>
-</div>
-<div>
-  <span class="sr-only">File type</span>
-  <%= link_to_facet_list(featured.resource_type, 'resource_type', 'no resource specified') %>
-</div>
-<div>
-  <span class="sr-only">Keywords</span>
-  <%= link_to_facet_list(featured.keyword, 'keyword', 'no keywords specified') %>
+  <div class="featured-item-title">
+    <span class="sr-only"><%= t('hyrax.homepage.featured_works.document.title_label') %></span>
+    <h3><%= link_to featured.title.first, [main_app, featured] %></h3>
+  </div>
+  <div class="featured-item-depositor">
+    <span class="featured-label"><%= t('hyrax.homepage.featured_works.document.depositor_label') %>:</span> <%= link_to_profile featured.depositor(t('hyrax.homepage.featured_works.document.depositor_missing')) %>
+  </div>
+  <div class="featured-item-keywords">
+    <span class="featured-label"><%= t('hyrax.homepage.featured_works.document.keyword_label') %>:</span> <%= link_to_facet_list(featured.keyword, 'keyword', t('hyrax.homepage.featured_works.document.keyword_missing')) %>
+  </div>
 </div>
