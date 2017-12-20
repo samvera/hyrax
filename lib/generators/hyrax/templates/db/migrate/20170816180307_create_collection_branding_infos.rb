@@ -1,4 +1,4 @@
-class CreateCollectionBrandingInfos < ActiveRecord::Migration[5.0]
+class CreateCollectionBrandingInfos < ActiveRecord::Migration<%= migration_version %>
   def change
     create_table :collection_branding_infos do |t|
       t.string :collection_id
