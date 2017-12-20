@@ -1,6 +1,7 @@
 module Hyrax
   module FileSetBehavior
     extend ActiveSupport::Concern
+    include ActiveModel::Conversion # provides _to_partial_path
     include Hyrax::WithEvents
     # include Hydra::Works::FileSetBehavior
     include Hydra::Works::MimeTypes
