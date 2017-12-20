@@ -19,7 +19,7 @@ module Hyrax
         #                   if it matches the current object version.
         def validate_lock(env, version)
           return true if version.blank? || version == env.curation_concern.etag
-          env.curation_concern.errors.add(:base, :conflict)
+          env.change_set.errors.add(:base, :conflict)
           false
         end
 
