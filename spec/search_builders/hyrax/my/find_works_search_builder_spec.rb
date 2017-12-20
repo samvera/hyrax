@@ -45,7 +45,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
                                              fl: "member_ids_ssim",
                                              qt: 'standard' })
       ids = results['response']['docs'].flat_map { |x| x.fetch("member_ids_ssim", []) }
-      expect(solr_params[:fq]).to eq ["-{!terms f=id}#{ids.first}"]
+      expect(solr_params[:fq]).to eq ["-{!terms f=id}#{ids.first.sub(/^id-/, '')}"]
     end
   end
 
