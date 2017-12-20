@@ -28,8 +28,10 @@ class Hyrax::My::FindWorksSearchBuilder < Hyrax::My::SearchBuilder
                                            fl: 'member_ids_ssim',
                                            rows: 10_000,
                                            qt: 'standard' })
+
     ids = results['response']['docs'].flat_map { |x| x.fetch('member_ids_ssim', []) }
     return if ids.empty?
+    ids = ids.map { |x| x.sub(/^id-/, '') }
     solr_parameters[:fq] ||= []
     solr_parameters[:fq]  += ["-{!terms f=id}#{ids.join(',')}"]
   end
