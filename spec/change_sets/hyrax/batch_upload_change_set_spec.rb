@@ -37,27 +37,38 @@ RSpec.describe Hyrax::BatchUploadChangeSet do
   end
 
   describe "#fields" do
-    subject { change_set.fields }
+    subject { change_set.fields.keys }
 
     it do
-      is_expected.to eq("resource_type" => [],
-                        "created_at" => [],
-                        "creator" => [],
-                        "description" => [],
-                        "updated_at" => [],
-                        "label" => [],
-                        "relative_path" => [],
-                        "contributor" => [],
-                        "date_created" => [],
-                        "keyword" => [],
-                        'rights_statement' => [],
-                        "subject" => [],
-                        "language" => [],
-                        "license" => [],
-                        "publisher" => [],
-                        "identifier" => [],
-                        "related_url" => [],
-                        "based_near" => [])
+      is_expected.to match_array ['creator',
+                                  'keyword',
+                                  'rights_statement',
+                                  'created_at',
+                                  'updated_at',
+                                  'depositor',
+                                  'date_uploaded',
+                                  'date_modified',
+                                  'proxy_depositor',
+                                  'on_behalf_of',
+                                  'label',
+                                  'relative_path',
+                                  'contributor',
+                                  'description',
+                                  'license',
+                                  'publisher',
+                                  'date_created',
+                                  'subject',
+                                  'language',
+                                  'identifier',
+                                  'related_url',
+                                  'source',
+                                  'based_near',
+                                  'arkivo_checksum',
+                                  'admin_set_id',
+                                  'member_of_collection_ids',
+                                  'member_ids',
+                                  'thumbnail_id',
+                                  'representative_id']
     end
   end
 end
