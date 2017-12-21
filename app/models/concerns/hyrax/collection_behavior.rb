@@ -27,7 +27,6 @@ module Hyrax
 
       # validates that collection_type_gid is present
       validates :collection_type_gid, presence: true
-      after_initialize :ensure_collection_type_gid
 
       # Need to define here in order to override setter defined by ActiveTriples
       def collection_type_gid=(new_collection_type_gid)
@@ -146,11 +145,6 @@ module Hyrax
         return [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC] if visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
         return [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED] if visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
         []
-      end
-
-      # act like the default collection type until persisted
-      def ensure_collection_type_gid
-        self.collection_type_gid = Hyrax::CollectionType.find_or_create_default_collection_type.gid if collection_type_gid.blank?
       end
 
       # Calculate the size of all the files in the work

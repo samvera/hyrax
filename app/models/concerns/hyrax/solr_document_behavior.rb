@@ -101,5 +101,9 @@ module Hyrax
                         Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
                       end
     end
+
+    def collection_type_gid
+      first('collection_type_gid_ssim')
+    end
   end
 end

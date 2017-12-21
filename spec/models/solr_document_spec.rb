@@ -194,4 +194,12 @@ RSpec.describe ::SolrDocument, type: :model do
 
     it { is_expected.to be_collection }
   end
+
+  describe "#collection_type_gid?" do
+    let(:attributes) { { 'collection_type_gid_ssim' => 'gid://internal/hyrax-collectiontype/5' } }
+
+    subject { document.collection_type_gid }
+
+    it { is_expected.to eq 'gid://internal/hyrax-collectiontype/5' }
+  end
 end

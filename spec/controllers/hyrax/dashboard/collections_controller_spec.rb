@@ -2,6 +2,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
   routes { Hyrax::Engine.routes }
   let(:user)  { create(:user) }
   let(:other) { build(:user) }
+  let(:collection_type_gid) { create(:user_collection_type).gid }
 
   let(:collection) do
     create(:public_collection, title: ["My collection"],
@@ -17,7 +18,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
   let(:unowned_asset)  { create(:work, user: other) }
 
   let(:collection_attrs) do
-    { title: ['My First Collection'], description: ["The Description\r\n\r\nand more"] }
+    { title: ['My First Collection'], description: ["The Description\r\n\r\nand more"], collection_type_gid: [collection_type_gid] }
   end
 
   describe '#new' do
@@ -185,11 +186,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       let(:asset1) { create(:generic_work, user: user) }
       let(:asset2) { create(:generic_work, user: user) }
       let(:asset3) { create(:generic_work, user: user) }
-      let(:collection2) do
-        Collection.create(title: ['Some Collection']) do |col|
-          col.apply_depositor_metadata(user.user_key)
-        end
-      end
+      let(:collection2) { create(:collection, title: ['Some Collection'], user: user) }
 
       before do
         [asset1, asset2, asset3].each do |asset|

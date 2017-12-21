@@ -111,28 +111,11 @@ RSpec.describe Collection, type: :model do
     end
 
     let(:member) { Member.create }
-    let(:collection) { OtherCollection.create(title: ['test title']) }
+    let(:collection) { OtherCollection.create(title: ['test title'], collection_type_gid: create(:user_collection_type).gid) }
 
     it "have members that know about the collection", clean_repo: true do
       member.reload
       expect(member.member_of_collections).to eq [collection]
-    end
-  end
-
-  describe 'after_initialize' do
-    let(:collection_type) { create(:collection_type) }
-
-    it 'sets collection_type_gid to default collection type if not already set' do
-      expect(described_class.new.collection_type_gid).to eq Hyrax::CollectionType.find_or_create_default_collection_type.gid
-    end
-
-    it 'does not set collection_type_gid if passed in to initializer' do
-      expect(described_class.new(collection_type_gid: collection_type.gid).collection_type_gid).to eq collection_type.gid
-    end
-
-    it 'does not override preexisting collection_type_gid' do
-      collection = create(:collection, collection_type_gid: collection_type.gid)
-      expect(described_class.find(collection.id).collection_type_gid).to eq collection_type.gid
     end
   end
 
@@ -165,7 +148,7 @@ RSpec.describe Collection, type: :model do
     end
 
     it 'updates the collection_type instance variable' do
-      expect { collection.collection_type_gid = collection_type.gid }.to change { collection.collection_type }.from(Hyrax::CollectionType.find_or_create_default_collection_type).to(collection_type)
+      expect { collection.collection_type_gid = collection_type.gid }.to change { collection.collection_type }.from(create(:user_collection_type)).to(collection_type)
     end
 
     it 'throws ArgumentError if collection has already been persisted with a collection type' do

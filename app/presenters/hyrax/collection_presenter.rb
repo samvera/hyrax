@@ -25,15 +25,14 @@ module Hyrax
     delegate(*Hyrax::CollectionType.collection_type_settings_methods, to: :collection_type, prefix: :collection_type_is)
 
     def collection_type
-      gid = Array.wrap(solr_document.fetch('collection_type_gid_ssim', [Hyrax::CollectionType.find_or_create_default_collection_type.gid])).first
-      @collection_type ||= CollectionType.find_by_gid!(gid)
+      @collection_type ||= Hyrax::CollectionType.find_by_gid!(collection_type_gid)
     end
 
     # Metadata Methods
     delegate :title, :description, :creator, :contributor, :subject, :publisher, :keyword, :language,
              :embargo_release_date, :lease_expiration_date, :license, :date_created,
              :resource_type, :based_near, :related_url, :identifier, :thumbnail_path,
-             :title_or_label, :collection_type_gid_ssim, :create_date, :modified_date, :visibility, :edit_groups,
+             :title_or_label, :collection_type_gid, :create_date, :modified_date, :visibility, :edit_groups,
              :edit_people,
              to: :solr_document
 

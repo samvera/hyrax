@@ -183,7 +183,7 @@ RSpec.describe 'CollectionAbility' do
 
     context 'when there are collection types that have create access' do
       before do
-        Hyrax::CollectionType.find_or_create_default_collection_type
+        create(:user_collection_type)
       end
 
       it 'allows create_any' do
