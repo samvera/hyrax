@@ -173,7 +173,7 @@ RSpec.describe Hyrax::FileSetPresenter do
       end
 
       context "when file_format is set" do
-        let(:attributes) { { file_format_tesim: ['format'] } }
+        let(:attributes) { { file_format_ssim: ['format'] } }
 
         it { is_expected.to be_characterized }
       end
