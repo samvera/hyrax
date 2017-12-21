@@ -76,7 +76,16 @@ module Hyrax
           change_set_persister.buffer_into_index do |buffered_changeset_persister|
             file_set = buffered_changeset_persister.save(change_set: change_set)
           end
+          ingest_file_later(file_set, uri, user)
 
+          file_set
+        end
+
+        # @param file_set [FileSet] the persisted FileSet
+        # @param uri [URI] the path to the file
+        # @param user [User] the user who is doing the import
+        # @return [Void]
+        def ingest_file_later(file_set, uri, user)
           if uri.scheme == 'file'
             # Turn any %20 into spaces.
             file_path = CGI.unescape(uri.path)
@@ -85,8 +94,6 @@ module Hyrax
             # TODO: should we just pass the uri?
             ImportUrlJob.perform_later(file_set, operation_for(user: user))
           end
-
-          file_set
         end
 
         def build_change_set(attributes)
