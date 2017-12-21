@@ -5,19 +5,19 @@ describe Hydra::LeaseService do
   let(:past_date) { 2.days.ago }
 
   let!(:work_with_expired_lease1) do
-    FactoryGirl.build(:asset, lease_expiration_date: past_date.to_s).tap do |work|
+    FactoryBot.build(:asset, lease_expiration_date: past_date.to_s).tap do |work|
       work.save(validate: false)
     end
   end
 
   let!(:work_with_expired_lease2) do
-    FactoryGirl.build(:asset, lease_expiration_date: past_date.to_s).tap do |work|
+    FactoryBot.build(:asset, lease_expiration_date: past_date.to_s).tap do |work|
       work.save(validate: false)
     end
   end
 
-  let!(:work_with_lease_in_effect) { FactoryGirl.create(:asset, lease_expiration_date: future_date.to_s)}
-  let!(:work_without_lease) { FactoryGirl.create(:asset)}
+  let!(:work_with_lease_in_effect) { FactoryBot.create(:asset, lease_expiration_date: future_date.to_s)}
+  let!(:work_without_lease) { FactoryBot.create(:asset)}
 
   describe "#assets_with_expired_leases" do
     it "returns an array of assets with expired embargoes" do

@@ -35,7 +35,7 @@ ActiveSupport::Dependencies.autoload_paths += relative_load_paths
 require 'support/mods_asset'
 require 'support/solr_document'
 require "support/user"
-require "factory_girl"
+require "factory_bot"
 require 'rspec/mocks'
 require 'rspec/its'
 require "factories"

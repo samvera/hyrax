@@ -92,7 +92,7 @@ describe Hydra::PolicyAwareAccessControlsEnforcement do
 
   let(:current_ability) { Ability.new(user) }
   subject { PolicyMockSearchBuilder.new(current_ability) }
-  let(:user) { FactoryGirl.build(:sara_student) }
+  let(:user) { FactoryBot.build(:sara_student) }
 
   before do
     @solr_parameters = {}

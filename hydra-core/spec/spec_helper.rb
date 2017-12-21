@@ -7,7 +7,7 @@ EngineCart.load_application! path
 require 'bundler/setup'
 require 'rspec/rails'
 require 'hydra-core'
-require "factory_girl"
+require "factory_bot"
 require "factories"
 
 if ENV['COVERAGE']

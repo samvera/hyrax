@@ -123,7 +123,7 @@ describe Hydra::AdminPolicy do
   # Policy-based Access Controls
   #
   describe "When accessing assets with Policies associated" do
-    let(:user) { FactoryGirl.build(:martia_morocco) }
+    let(:user) { FactoryBot.build(:martia_morocco) }
 
     before do
       allow(user).to receive(:groups).and_return(["faculty", "africana-faculty"])
