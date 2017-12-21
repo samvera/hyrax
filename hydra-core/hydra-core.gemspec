@@ -22,7 +22,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'hydra-access-controls', version
 
   gem.add_development_dependency 'sqlite3', '~> 1.3'
-  gem.add_development_dependency 'yard', '~> 0.8.7'
   gem.add_development_dependency 'rspec-rails', '~> 3.1'
   gem.add_development_dependency 'factory_girl_rails', '~> 4.2'
 end
