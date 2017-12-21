@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Hyrax
   class IndexThumbnails
     class_attribute :thumbnail_path_service
     self.thumbnail_path_service = ThumbnailPathService
     class_attribute :thumbnail_field
-    self.thumbnail_field = 'thumbnail_path_ss'.freeze
+    self.thumbnail_field = 'thumbnail_path_ss'
 
     def initialize(resource:)
       @resource = resource

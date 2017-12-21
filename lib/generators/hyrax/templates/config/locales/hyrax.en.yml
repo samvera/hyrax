@@ -22,7 +22,7 @@ en:
           date_modified_dtsi: Date Modified
           date_uploaded_dtsi: Date Uploaded
           description_tesim: Description
-          file_format_tesim: File Format
+          file_format_ssim: File Format
           identifier_tesim: Identifier
           keyword_tesim: Keyword
           language_tesim: Language
@@ -38,7 +38,7 @@ en:
           date_modified_dtsi: Date Modified
           date_uploaded_dtsi: Date Uploaded
           description_tesim: Description
-          file_format_tesim: File Format
+          file_format_ssim: File Format
           identifier_tesim: Identifier
           keyword_tesim: Keyword
           language_tesim: Language
