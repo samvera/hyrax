@@ -1,17 +1,17 @@
 language: ruby
 sudo: false
-rvm: 2.4.1
+rvm: 2.4.2
 
 matrix:
   include:
-    - rvm: 2.3.4
-      env: "BLACKLIGHT_VERSION=5.17.2"
+    - env: "RAILS_VERION=5.1.4"
+    - rvm: 2.3.5
+      env: "BLACKLIGHT_VERSION=5.17.2 RAILS_VERSION=5.0.6"
 
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
-    - RAILS_VERSION=5.0.2
-    - BLACKLIGHT_VERSION=6.9.0
+    - BLACKLIGHT_VERSION=6.12.0
 before_install:
   - gem update --system
 
