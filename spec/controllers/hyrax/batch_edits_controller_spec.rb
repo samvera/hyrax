@@ -10,11 +10,13 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
   describe "#edit" do
     let(:one) { create(:work, creator: ["Fred"], title: ["abc"], language: ['en']) }
     let(:two) { create(:work, creator: ["Wilma"], title: ["abc2"], publisher: ['Rand McNally'], language: ['en'], resource_type: ['bar']) }
+    let(:three) { create(:work, creator: ["Dino"], title: ["abc3"]) }
 
     before do
-      controller.batch = [one.id, two.id]
+      controller.batch = [one.id, two.id, three.id]
       expect(controller).to receive(:can?).with(:edit, one.id).and_return(true)
       expect(controller).to receive(:can?).with(:edit, two.id).and_return(true)
+      expect(controller).to receive(:can?).with(:edit, three.id).and_return(false)
     end
 
     it "is successful" do
@@ -29,19 +31,25 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
   describe "update" do
     let(:user) { build(:user) }
     let!(:one) do
-      create(:generic_work, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
+      create(:work, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
     end
 
     let!(:two) do
-      create(:generic_work, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
+      create(:work, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
     end
+
+    let!(:three) do
+      create(:work, creator: ["Fred"], title: ["abc"], language: ['en'])
+    end
+
     let(:mycontroller) { "hyrax/my/works" }
 
     before do
       # TODO: why aren't we just submitting batch_document_ids[] as a parameter?
-      controller.batch = [one.id, two.id]
+      controller.batch = [one.id, two.id, three.id]
       expect(controller).to receive(:can?).with(:edit, one.id).and_return(true)
       expect(controller).to receive(:can?).with(:edit, two.id).and_return(true)
+      expect(controller).to receive(:can?).with(:edit, three.id).and_return(false)
     end
 
     it "is successful" do
@@ -49,6 +57,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       expect(response).to redirect_to(dashboard_path(locale: 'en'))
       expect { GenericWork.find(one.id) }.to raise_error(Ldp::Gone)
       expect { GenericWork.find(two.id) }.to raise_error(Ldp::Gone)
+      expect(GenericWork).to exist(three.id)
     end
 
     it "redirects to the return controller" do
@@ -61,6 +70,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       expect(response).to be_redirect
       expect(GenericWork.find(one.id).subject).to eq ["zzz"]
       expect(GenericWork.find(two.id).subject).to eq ["zzz"]
+      expect(GenericWork.find(three.id).subject).to be_empty
     end
 
     it "updates permissions" do
@@ -68,6 +78,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       expect(response).to be_redirect
       expect(GenericWork.find(one.id).visibility).to eq "authenticated"
       expect(GenericWork.find(two.id).visibility).to eq "authenticated"
+      expect(GenericWork.find(three.id).visibility).to eq "restricted"
     end
   end
 

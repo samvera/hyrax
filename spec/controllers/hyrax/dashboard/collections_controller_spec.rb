@@ -74,7 +74,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
       it "adds docs to the collection and adds the collection id to the documents in the collection" do
         post :create, params: {
-          batch_document_ids: [asset1.id],
+          batch_document_ids: [asset1.id, unowned_asset.id],
           collection: collection_attrs
         }
 
