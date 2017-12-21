@@ -23,7 +23,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'solr_wrapper', '~> 0.18'
   s.add_development_dependency 'fcrepo_wrapper', '~> 0.6'
   s.add_development_dependency 'engine_cart', '~> 1.0'
-  s.add_development_dependency 'yard'
   s.add_development_dependency 'rspec-rails'
-  s.add_development_dependency 'factory_girl_rails'
+  s.add_development_dependency 'factory_bot_rails'
 end

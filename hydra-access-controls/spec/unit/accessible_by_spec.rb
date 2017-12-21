@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 describe "active_fedora/accessible_by" do
-  let(:user) {FactoryGirl.build(:ira_instructor)}
+  let(:user) {FactoryBot.build(:ira_instructor)}
   let(:ability) {Ability.new(user)}
-  let(:private_obj) {FactoryGirl.create(:asset)}
-  let(:public_obj) {FactoryGirl.create(:asset)}
-  let(:editable_obj) {FactoryGirl.create(:asset)}
+  let(:private_obj) {FactoryBot.create(:asset)}
+  let(:public_obj) {FactoryBot.create(:asset)}
+  let(:editable_obj) {FactoryBot.create(:asset)}
 
   before do
     private_obj.permissions_attributes = [{ name: "joe_creator", access: "edit", type: "person" }]

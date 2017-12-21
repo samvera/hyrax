@@ -62,7 +62,7 @@ describe Hydra::AccessControls::Permission do
 
     context 'with a User instance passed as :name argument' do
       let(:permission) { described_class.new(type: 'person', name: user, access: 'read') }
-      let(:user) { FactoryGirl.build(:archivist, email: 'archivist1@example.com') }
+      let(:user) { FactoryBot.build(:archivist, email: 'archivist1@example.com') }
 
       it "uses string and escape agent when building" do
         expect(permission.agent.first.rdf_subject.to_s).to eq 'http://projecthydra.org/ns/auth/person#archivist1@example.com'
