@@ -20,7 +20,7 @@ it:
           date_modified_dtsi: Data modificata
           date_uploaded_dtsi: Data caricata
           description_tesim: Descrizione
-          file_format_tesim: Formato del file
+          file_format_ssim: Formato del file
           identifier_tesim: Identifier
           keyword_tesim: Parola chiave
           language_tesim: Lingua
@@ -36,7 +36,7 @@ it:
           date_modified_dtsi: Data modificata
           date_uploaded_dtsi: Data caricata
           description_tesim: Descrizione
-          file_format_tesim: Formato del file
+          file_format_ssim: Formato del file
           identifier_tesim: Identifier
           keyword_tesim: Parola chiave
           language_tesim: Lingua
