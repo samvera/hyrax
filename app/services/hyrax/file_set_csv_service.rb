@@ -2,7 +2,7 @@ module Hyrax
   #
   # Generates CSV from a FileSet
   #
-  # @attr_reader [FileSet] file_set file that will be examined to generate the CSVs
+  # @attr_reader [SolrDocument] file_set the solr document representing the FileSet that will be examined to generate the CSVs
   # @attr_reader [Array] terms list of terms that will be output in CSV form
   # @attr_reader [String] multi_value_separator separator for terms that have more than one value
   class FileSetCSVService

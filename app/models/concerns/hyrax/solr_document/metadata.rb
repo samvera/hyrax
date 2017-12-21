@@ -85,7 +85,7 @@ module Hyrax
         attribute :thumbnail_id, Solr::String, solr_name('hasRelatedImage', :symbol)
         attribute :thumbnail_path, Solr::String, CatalogController.blacklight_config.index.thumbnail_field
         attribute :label, Solr::String, solr_name('label')
-        attribute :file_format, Solr::String, solr_name('file_format')
+        attribute :file_format, Solr::String, Hyrax::IndexMimeType.file_format_field
         attribute :suppressed?, Solr::Boolean, solr_name('suppressed', Solrizer::Descriptor.new(:boolean, :stored, :indexed))
 
         attribute :date_modified, Solr::Date, solr_name('date_modified', :stored_sortable, type: :date)
