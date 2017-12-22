@@ -18,6 +18,8 @@ module Hyrax
     include ProxyDeposit
     include Works::Metadata
     include WithEvents
+    include Embargoable
+    include Leasable
 
     included do
       # property :owner, predicate: RDF::URI.new('http://opaquenamespace.org/ns/hydra/owner'), multiple: false
@@ -56,28 +58,6 @@ module Hyrax
     # @return [Boolean] whether this instance is a Hydra::Works::FileSet.
     def file_set?
       false
-    end
-
-    # Set the current visibility to match what is described in the embargo.
-    # @param embargo [Hyrax::Embargo] the embargo visibility to copy to this work.
-    def assign_embargo_visibility(embargo)
-      return unless embargo.embargo_release_date
-      self.visibility = if embargo.active?
-                          embargo.visibility_during_embargo
-                        else
-                          embargo.visibility_after_embargo
-                        end
-    end
-
-    # Set the current visibility to match what is described in the lease.
-    # @param lease [Hyrax::Lease] the lease visibility to copy to this work.
-    def assign_lease_visibility(lease)
-      return unless lease.lease_expiration_date
-      self.visibility = if lease.active?
-                          lease.visibility_during_lease
-                        else
-                          lease.visibility_after_lease
-                        end
     end
 
     module ClassMethods
