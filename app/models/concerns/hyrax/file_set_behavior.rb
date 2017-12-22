@@ -17,6 +17,8 @@ module Hyrax
     include Hyrax::BasicMetadata
     include Naming
     include GlobalID::Identification
+    include Embargoable
+    include Leasable
 
     included do
       attr_accessor :file

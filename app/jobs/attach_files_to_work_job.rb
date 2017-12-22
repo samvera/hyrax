@@ -5,21 +5,13 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
   # @param [Valkyrie::Resource] work - the work object
   # @param [Array<Hyrax::UploadedFile>] uploaded_files - an array of files to attach
   # rubocop:disable Metrics/MethodLength
-  def perform(work, uploaded_files, **_work_attributes)
+  def perform(work, uploaded_files, **work_attributes)
     validate_files!(uploaded_files)
-    user = User.find_by_user_key(work.depositor) # BUG? file depositor ignored
-    edit_users = work.edit_users
-    read_users = work.read_users
-    edit_groups = work.edit_groups
-    read_groups = work.read_groups
 
-    # metadata = visibility_attributes(work_attributes)
+    metadata = visibility_attributes(work, work_attributes)
     uploaded_files.each do |uploaded_file|
-      change_set = build_change_set(user: user,
-                                    edit_users: edit_users,
-                                    read_user: read_users,
-                                    edit_groups: edit_groups,
-                                    read_groups: read_groups)
+      change_set = build_change_set(work, metadata)
+
       file_set = nil
       change_set_persister.buffer_into_index do |buffered_changeset_persister|
         file_set = buffered_changeset_persister.save(change_set: change_set)
@@ -38,11 +30,14 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
   private
 
     # The attributes used for visibility - sent as initial params to created FileSets.
-    def visibility_attributes(attributes)
-      attributes.slice(:visibility, :visibility_during_lease,
-                       :visibility_after_lease, :lease_expiration_date,
-                       :embargo_release_date, :visibility_during_embargo,
-                       :visibility_after_embargo)
+    def visibility_attributes(work, attributes)
+      attributes.merge(
+        user: User.find_by_user_key(work.depositor), # BUG? file depositor ignored
+        edit_users: work.edit_users,
+        read_users: work.read_users,
+        edit_groups: work.edit_groups,
+        read_groups: work.read_groups
+      )
     end
 
     def validate_files!(uploaded_files)
@@ -52,8 +47,23 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
       end
     end
 
-    def build_change_set(attributes)
-      Hyrax::FileSetChangeSet.new(FileSet.new, attributes).tap(&:sync)
+    def build_change_set(work, attributes)
+      change_set = Hyrax::FileSetChangeSet.new(FileSet.new, attributes).tap(&:sync)
+      if work.embargo_id
+        # create a copy of the embargo for the FileSet
+        Hyrax::EmbargoService.apply_embargo(resource: change_set.resource,
+                                            embargo_params: [attributes[:embargo_release_date],
+                                                             attributes[:visibility_during_embargo],
+                                                             attributes[:visibility_after_embargo]])
+      end
+
+      if work.lease_id
+        Hyrax::LeaseService.apply_lease(resource: change_set.resource,
+                                        lease_params: [attributes[:lease_expiration_date],
+                                                       attributes[:visibility_during_lease],
+                                                       attributes[:visibility_after_lease]])
+      end
+      change_set
     end
 
     def change_set_persister
