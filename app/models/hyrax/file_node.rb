@@ -42,8 +42,11 @@ module Hyrax
     end
 
     def valid?
-      file = Valkyrie::StorageAdapter.find_by(id: file_identifiers.first)
       file.valid?(size: size.first, digests: { sha256: checksum.first.sha256 })
+    end
+
+    def file
+      Valkyrie::StorageAdapter.find_by(id: file_identifiers.first)
     end
   end
 end
