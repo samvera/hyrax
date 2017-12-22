@@ -220,7 +220,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       let(:old_parent) { create_for_repository(:work, user: user) }
       let(:attributes) do
         attributes_for(:work).merge(
-          member_of_collection_ids: [parent.id]
+          in_works_ids: [parent.id]
         )
       end
 
@@ -229,11 +229,13 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         persister.save(resource: old_parent)
       end
 
-      it "attaches the parent" do
-        expect(subject.update(env)).to be true
+      # clean_repo is required so that it will create the default AdminSet
+      # and its PermissionTemplates
+      it "attaches the parent", :clean_repo do
+        expect(subject.update(env)).to be_kind_of GenericWork
         expect(curation_concern.in_works_ids).to eq [parent.id]
         reloaded = Hyrax::Queries.find_by(id: old_parent.id)
-        expect(reloaded.members).to eq []
+        expect(reloaded.member_ids).to eq []
       end
     end
 
@@ -241,7 +243,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       let(:old_parent) { create_for_repository(:work) }
       let(:attributes) do
         attributes_for(:work).merge(
-          member_of_collection_ids: []
+          in_works_ids: []
         )
       end
 
@@ -252,7 +254,9 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         persister.save(resource: old_parent)
       end
 
-      it "removes the old parent" do
+      # clean_repo is required so that it will create the default AdminSet
+      # and its PermissionTemplates
+      it "removes the old parent", :clean_repo do
         allow(curation_concern).to receive(:depositor).and_return(old_parent.depositor)
         expect(subject.update(env)).to be_instance_of GenericWork
         expect(curation_concern.in_works_ids).to eq []
@@ -265,7 +269,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       let(:parent) { create_for_repository(:work) }
       let(:attributes) do
         attributes_for(:work).merge(
-          member_of_collection_ids: nil
+          in_works_ids: nil
         )
       end
 
@@ -276,7 +280,9 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         persister.save(resource: parent)
       end
 
-      it "does nothing" do
+      # clean_repo is required so that it will create the default AdminSet
+      # and its PermissionTemplates
+      it "does nothing", :clean_repo do
         expect(subject.update(env)).to be_instance_of GenericWork
         expect(curation_concern.in_works_ids).to eq [parent.id]
       end
@@ -290,7 +296,9 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         attributes_for(:work, member_ids: [file_set2.id, file_set1.id])
       end
 
-      it 'updates the order of file sets' do
+      # clean_repo is required so that it will create the default AdminSet
+      # and its PermissionTemplates
+      it 'updates the order of file sets', :clean_repo do
         expect(curation_concern.member_ids).to eq [file_set1.id, file_set2.id]
         expect(subject.update(env)).to be_instance_of GenericWork
         reloaded = Hyrax::Queries.find_by(id: curation_concern.id)
