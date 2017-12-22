@@ -12,14 +12,16 @@ module Hyrax
       # @param [Hyrax::Actors::Environment] env
       # @return [Valkyrie::Resource,FalseClass] the saved resource if create was successful
       def create(env)
-        next_actor.create(env) && create_workflow(env)
+        saved = next_actor.create(env)
+        return false unless saved
+        create_workflow(saved, env)
       end
 
       private
 
         # @return [TrueClass]
-        def create_workflow(env)
-          workflow_factory.create(env.curation_concern,
+        def create_workflow(saved, env)
+          workflow_factory.create(saved,
                                   env.attributes,
                                   env.user,
                                   persister: env.change_set_persister.metadata_adapter.persister)
