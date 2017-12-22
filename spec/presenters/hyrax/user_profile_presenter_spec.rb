@@ -22,7 +22,7 @@ RSpec.describe Hyrax::UserProfilePresenter do
 
     it "has an array of presenters" do
       expect(subject).to all(be_kind_of Hyrax::TrophyPresenter)
-      expect(subject.map(&:id)).to match_array [work1.id, work2.id, work3.id]
+      expect(subject.map(&:id)).to match_array [work1, work2, work3].map(&:id).map(&:to_s)
     end
   end
 end
