@@ -6,6 +6,7 @@ module Hyrax
     attribute :id, Valkyrie::Types::ID.optional
     attribute :label, Valkyrie::Types::Set
     attribute :mime_type, Valkyrie::Types::Set
+    attribute :format_label, Valkyrie::Types::Set # e.g. "JPEG Image"
     attribute :height, Valkyrie::Types::Set
     attribute :width, Valkyrie::Types::Set
     attribute :checksum, Valkyrie::Types::Set
