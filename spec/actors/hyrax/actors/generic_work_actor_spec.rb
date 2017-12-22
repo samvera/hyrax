@@ -97,8 +97,9 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
             file_set = reloaded.file_sets.first
             expect(file_set).to be_persisted
-            expect(file_set.visibility_during_embargo).to eq 'authenticated'
-            expect(file_set.visibility_after_embargo).to eq 'open'
+            embargo = Hyrax::Queries.find_by(id: Valkyrie::ID.new(file_set.embargo_id))
+            expect(embargo.visibility_during_embargo).to eq 'authenticated'
+            expect(embargo.visibility_after_embargo).to eq 'open'
             expect(file_set.visibility).to eq 'authenticated'
           end
         end

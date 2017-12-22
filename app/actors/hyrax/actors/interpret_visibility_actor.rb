@@ -116,45 +116,17 @@ module Hyrax
         # If they want a lease, we can assume it's valid
         def apply_lease(env, intention)
           return true unless intention.wants_lease?
-          lease = find_or_initialize_lease(env.curation_concern)
-
-          lease.lease_expiration_date = [DateTime.parse(intention.lease_params[0]).in_time_zone]
-          lease.visibility_during_lease = intention.lease_params[1]
-          lease.visibility_after_lease = intention.lease_params[2]
-          saved = env.change_set_persister.persister.save(resource: lease)
-
-          env.curation_concern.lease_id = saved.id
-          env.curation_concern.assign_lease_visibility(lease)
+          LeaseService.apply_lease(resource: env.curation_concern,
+                                   lease_params: intention.lease_params)
+          true
         end
 
         # If they want an embargo, we can assume it's valid
         def apply_embargo(env, intention)
           return true unless intention.wants_embargo?
-          embargo = find_or_initialize_embargo(env.curation_concern)
-
-          embargo.embargo_release_date = [DateTime.parse(intention.embargo_params[0]).in_time_zone]
-          embargo.visibility_during_embargo = intention.embargo_params[1]
-          embargo.visibility_after_embargo = intention.embargo_params[2]
-          saved = env.change_set_persister.persister.save(resource: embargo)
-
-          env.curation_concern.embargo_id = saved.id
-          env.curation_concern.assign_embargo_visibility(embargo)
-        end
-
-        def find_or_initialize_embargo(work)
-          if work.embargo_id
-            Hyrax::Queries.find_by(id: work.embargo_id)
-          else
-            Hyrax::Embargo.new
-          end
-        end
-
-        def find_or_initialize_lease(work)
-          if work.lease_id
-            Hyrax::Queries.find_by(id: work.lease_id)
-          else
-            Hyrax::Lease.new
-          end
+          EmbargoService.apply_embargo(resource: env.curation_concern,
+                                       embargo_params: intention.embargo_params)
+          true
         end
     end
   end
