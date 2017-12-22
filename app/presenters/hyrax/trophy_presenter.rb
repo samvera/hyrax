@@ -19,6 +19,8 @@ module Hyrax
 
     def self.find_work(id)
       document_model.find(id)
+    rescue Blacklight::Exceptions::RecordNotFound
+      nil
     end
     private_class_method :find_work
 
