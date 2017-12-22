@@ -2,11 +2,15 @@ module Hyrax
   # Responsible for creating and cleaning up the derivatives of a file_set
   class FileSetDerivativesService
     attr_reader :file_set
-    delegate :uri, :mime_type, to: :file_set
 
-    # @param file_set [Hyrax::FileSet] At least for this class, it must have #uri and #mime_type
+    # @param file_set [Hyrax::FileSet] At least for this class, it must have #original_file and #mime_type
     def initialize(file_set)
       @file_set = file_set
+    end
+
+    # The FileSet#mime_type returns an Array, but we only want one.
+    def mime_type
+      file_set.mime_type.first
     end
 
     def cleanup_derivatives
@@ -19,13 +23,13 @@ module Hyrax
       supported_mime_types.include?(mime_type)
     end
 
-    def create_derivatives(filename)
+    def create_derivatives(pathname)
       case mime_type
-      when *file_set.class.pdf_mime_types             then create_pdf_derivatives(filename)
-      when *file_set.class.office_document_mime_types then create_office_document_derivatives(filename)
-      when *file_set.class.audio_mime_types           then create_audio_derivatives(filename)
-      when *file_set.class.video_mime_types           then create_video_derivatives(filename)
-      when *file_set.class.image_mime_types           then create_image_derivatives(filename)
+      when *file_set.class.pdf_mime_types             then create_pdf_derivatives(pathname)
+      when *file_set.class.office_document_mime_types then create_office_document_derivatives(pathname)
+      when *file_set.class.audio_mime_types           then create_audio_derivatives(pathname)
+      when *file_set.class.video_mime_types           then create_video_derivatives(pathname)
+      when *file_set.class.image_mime_types           then create_image_derivatives(pathname)
       end
     end
 
@@ -55,7 +59,7 @@ module Hyrax
                                                     url: derivative_url('thumbnail'),
                                                     layer: 0
                                                   }])
-        extract_full_text(filename, uri)
+        extract_full_text(filename)
       end
 
       def create_office_document_derivatives(filename)
@@ -66,7 +70,7 @@ module Hyrax
                                                          url: derivative_url('thumbnail'),
                                                          layer: 0
                                                        }])
-        extract_full_text(filename, uri)
+        extract_full_text(filename)
       end
 
       def create_audio_derivatives(filename)
@@ -99,9 +103,9 @@ module Hyrax
       # Calls the Hydra::Derivates::FulltextExtraction unless the extract_full_text
       # configuration option is set to false
       # @param [String] filename of the object to be used for full text extraction
-      # @param [String] uri to the file set (deligated to file_set)
-      def extract_full_text(filename, uri)
+      def extract_full_text(filename)
         return unless Hyrax.config.extract_full_text?
+        uri = file_set.original_file.file_identifiers.first.id
         Hydra::Derivatives::FullTextExtract.create(filename,
                                                    outputs: [{ url: uri, container: "extracted_text" }])
       end
