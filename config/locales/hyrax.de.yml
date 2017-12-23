@@ -7,7 +7,7 @@ de:
   activemodel:
     errors:
       messages:
-        conflict: Ihre Änderungen konnten nicht gespeichert werden, da ein anderer Benutzer (oder Hintergrundjob) dieses %{model} aktualisiert hat, nachdem Sie mit der Bearbeitung begonnen haben. Bitte stellen Sie sicher, dass alle Dateianlagen erfolgreich abgeschlossen sind und versuchen Sie es erneut. Dieses Formular hat sich mit der letzten gespeicherten Kopie der %{model} aktualisiert.
+        conflict: Ihre Änderungen konnten nicht gespeichert werden, da ein anderer Benutzer (oder Hintergrundjob) dieses %{model} aktualisiert hat, nachdem Sie mit der Bearbeitung begonnen haben. Bitte stellen Sie sicher, dass alle Dateianlagen erfolgreich abgeschlossen sind und versuchen Sie es erneut. Dieses Formular hat sich mit der letzten gespeicherten Kopie der/des %{model} aktualisiert.
   blacklight:
     search:
       fields:
@@ -272,13 +272,13 @@ de:
         header: 'Zitate:'
       form_child_work_relationships:
         actions:
-          remove: Entferne diese Arbeit
-        attach_new_work: Hinterlegen Sie neue Arbeit als Kind dieser Arbeit
-        caption: Diese Arbeit enthält derzeit diese Kinderarbeiten
+          remove: Diese Arbeit entfernen
+        attach_new_work: Hinterlegen Sie eine neue, untergeordnete Arbeit zu dieser Arbeit
+        caption: Diese Arbeit enthält derzeit diese untergeordneten Arbeiten
         confirm:
           cancel: Stornieren
           remove: Löschen
-          text: Durch das Entfernen dieser untergeordneten Arbeit wird sie nicht nur aus dieser übergeordneten Arbeit aus dem Repository entfernt. Möchten Sie diese Arbeit wirklich aus dieser übergeordneten Arbeit entfernen?
+          text: Durch das Entfernen dieser untergeordneten Arbeit wird diese nur aus der ihr übergeordneten Arbeit entfernt, nicht aber aus dem Repository. Möchten Sie diese Arbeit wirklich aus dieser übergeordneten Arbeit entfernen?
         header:
           actions: Aktion
           title: Arbeitstitel
@@ -522,15 +522,15 @@ de:
         new_visitors: Neue Besucher
         registered_users: Registrierte Benutzer
         repository_growth:
-          subtitle: Vergangenheit 90 Tage
-          title: Repository Wachstum
+          subtitle: Letzte 90 Tage
+          title: Repositoriums- wachstum
         repository_objects:
           subtitle: Aktueller Status
-          title: Repository-Objekte
-        returning_visitors: Rückkehr Besucher
-        total_visitors: Insgesamt Besucher
+          title: Repositoriums- objekte
+        returning_visitors: Besucher wiedergekeht
+        total_visitors: Besucher insgesammt 
         user_activity:
-          subtitle: Neue Benutzer-Anmeldungen
+          subtitle: Benutzer- neuanmeldungen
           title: Benutzeraktivität
       stats:
         collections: Sammlungen erstellt
@@ -624,17 +624,17 @@ de:
     leases:
       edit:
         header:
-          current: Aktuelle Leasing
-          past: Vergangene Mietverträge
-        history_empty: Diese %{cc} hat keine vorherigen Mietverträge angewendet.
-        lease_apply: Bewerben Lease
-        lease_cancel: Abbrechen und verwalten alle Leasingverhältnisse
-        lease_deactivate: Lease deaktivieren
-        lease_false_html: "<strong>Diese %{cc} ist derzeit nicht unter Leasing.</strong> Wenn Sie einen Mietvertrag anwenden möchten, geben Sie hier die Informationen an."
+          current: Aktuelle Leasingverhältnisse
+          past: Vergangene Leasingverhältnisse
+        history_empty: Auf diese %{cc} wurden keine vorherigen Leasingverhältnisse angewendet.
+        lease_apply: Leasingverhältniss aktivieren
+        lease_cancel: Abbrechen und Verwalten aller Leasingverhältnisse
+        lease_deactivate: Leasingverhältniss deaktivieren
+        lease_false_html: "<strong>Diese %{cc} ist derzeit nicht geleast.</strong> Wenn Sie einen Leasingvertrag anwenden möchten, geben Sie hier die Informationen an."
         lease_return: Zurück zur Bearbeitung dieses %{cc}
-        lease_true_html: "<strong>Dieser %{cc} ist unter Leasing.</strong>"
-        lease_update: Update Lease
-        manage_leases_html: Lease für %{cc} <span class='human_readable_type'>(%{cc_type})</span>
+        lease_true_html: "<strong>Dieser %{cc} ist zur Zeit geleast.</strong>"
+        lease_update: Update Leasing
+        manage_leases_html: Leasing für %{cc} <span class='human_readable_type'>(%{cc_type})</span>
       index:
         active: Alle aktiven Leasingverhältnisse
         deactivated: Deaktivierte Leasingverhältnisse
@@ -642,13 +642,13 @@ de:
         manage_leases: Leasing verwalten
       list_expired_active_leases:
         change_all: Ändern Sie alle Dateien in %{cc} zu
-        deactivate: Lease deaktivieren
-        deactivate_selected: Deaktivieren Sie Leases für Selected
+        deactivate: Leasing deaktivieren
+        deactivate_selected: Deaktivieren Sie das Leaseing für die Auswahl
         missing: Es sind zu diesem Zeitpunkt keine abgelaufenen Leasingverhältnisse vorhanden.
       table_headers:
-        release_date: Lease Release Datum
+        release_date: Leasing Freigabedatum
         title: Titel
-        type: Art von Arbeit
+        type: Art der Arbeit
         viz_after: Sichtbarkeit wird geändert
         viz_current: Aktuelle Sichtbarkeit
     mailbox:
@@ -677,12 +677,12 @@ de:
       cancel: Stornieren
       tabs:
         about_page: Über Seite
-        agreement_page: Einzahlungsvertrag
+        agreement_page: Deponierungsvereinbarung
         help_page: Hilfe Seite
         terms_page: Nutzungsbedingungen
       updated: Seiten aktualisiert.
-    passive_consent_to_agreement: Durch das Speichern dieser Arbeit stimme ich der
-    search:
+    passive_consent_to_agreement: Durch das Speichern dieser Arbeit stimme ich der ... zu.
+      search:
       button:
         html: <span class="glyphicon glyphicon-search"></span> Gehen
         text: Suche
@@ -704,7 +704,7 @@ de:
           label: Suche %{application_name}
           placeholder: Suchbegriffe eingeben
     select_type:
-      description: Allzweckarbeitstyp
+      description: Allzweckarbeit-Typ
       name: Arbeit
     share_button: Teilen Sie Ihre Arbeit
     single_use_links:
@@ -716,7 +716,7 @@ de:
       download:
         type: Herunterladen
       expiration:
-        lesser_time: In weniger als einer stunde
+        lesser_time: In weniger als einer Stunde
         time: In %{value} Stunden
       expiration_message: Link %{link} läuft %{time} ab
       show:
