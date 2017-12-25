@@ -682,7 +682,7 @@ de:
         terms_page: Nutzungsbedingungen
       updated: Seiten aktualisiert.
     passive_consent_to_agreement: Durch das Speichern dieser Arbeit stimme ich der ... zu.
-      search:
+    search:
       button:
         html: <span class="glyphicon glyphicon-search"></span> Gehen
         text: Suche
