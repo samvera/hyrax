@@ -22,8 +22,10 @@
       <%= button_to "Edit Selected", hyrax.edit_batch_edits_path, method: :get, class: "btn btn-update btn-primary hidden submits-batches", data: { behavior: 'batch-edit' }, id: 'batch-edit' %>
     </div>
     <%= batch_delete %>
-    <%= button_tag "Add to Collection", class: 'btn btn-primary submits-batches submits-batches-add',
-        data: { toggle: "modal", target: "#collection-list-container" } %>
+    <%# if can? :deposit_any, Collection %>
+      <%= button_tag "Add to Collection", class: 'btn btn-primary submits-batches submits-batches-add',
+          data: { toggle: "modal", target: "#collection-list-container" } %>
+    <%# end %>
   </div>
 </div>
 <% end %>

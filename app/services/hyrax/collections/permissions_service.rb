@@ -42,6 +42,19 @@ module Hyrax
 
       # @api public
       #
+      # Determine if the given user has permissions to deposit at least one collection
+      #
+      # @param user [User] user (required if ability is nil)
+      # @param ability [Ability] the ability coming from cancan ability check (default: nil) (required if user is nil)
+      # @return [Boolean] true if the user has permission to deposit in at least one collection
+      # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
+      #   If calling from Abilities, pass the ability.  If you try to get the ability from the user, you end up in an infinit loop.
+      def self.can_deposit_any_collection?(user: nil, ability: nil)
+        collection_ids_for_user(user: user, ability: ability, access: [Hyrax::PermissionTemplateAccess::MANAGE, Hyrax::PermissionTemplateAccess::DEPOSIT]).present?
+      end
+
+      # @api public
+      #
       # IDs of collections a user can access based on participant roles.
       #
       # @param access [Array<String>] one or more types of access (e.g. Hyrax::PermissionTemplateAccess::MANAGE, Hyrax::PermissionTemplateAccess::DEPOSIT, Hyrax::PermissionTemplateAccess::VIEW)
@@ -107,6 +120,7 @@ module Hyrax
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
       #   If calling from Abilities, pass the ability.  If you try to get the ability from the user, you end up in an infinit loop.
       def self.collection_ids_for_deposit(user: nil, ability: nil)
+        return ["bv73c0402"]
         source_ids_for_deposit(user: user, ability: ability, source_type: 'collection')
       end
 
