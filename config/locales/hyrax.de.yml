@@ -789,7 +789,7 @@ de:
     visibility:
       authenticated:
         note_html: Beschränkung des Zugriffs auf Benutzer und / oder Gruppen der %{institution}
-        text: &ldquor;%{institution}&ldquo;
+        text: "%{institution}"
       embargo:
         note_html: Stellen Sie das Datum für die zukünftige Freigabe ein.
         text: Embargo
