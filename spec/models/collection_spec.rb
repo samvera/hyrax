@@ -231,13 +231,43 @@ RSpec.describe Collection, type: :model do
   end
 
   context 'collection factory' do
-    describe 'when creating permission templates' do
-      it 'will create a permission_template when one is requested' do
+    let(:user) { build(:user) }
+
+    describe 'permission template' do
+      it 'will be created when with_permission_template is true' do
         expect { create(:collection, with_permission_template: true) }.to change { Hyrax::PermissionTemplate.count }.by(1)
       end
 
-      it 'will not create a permission_template by default' do
+      it 'will be created when with_permission_template is set to attributes identifying access' do
+        expect { create(:collection, with_permission_template: { manage_users: [user] }) }.to change { Hyrax::PermissionTemplate.count }.by(1)
+        expect { create(:collection, with_permission_template: { manage_users: [user], deposit_users: [user] }) }.to change { Hyrax::PermissionTemplate.count }.by(1)
+      end
+
+      it 'will be created when create_access is true' do
+        expect { create(:collection, create_access: true) }.to change { Hyrax::PermissionTemplate.count }.by(1)
+      end
+
+      it 'will not be created by default' do
         expect { create(:collection) }.not_to change { Hyrax::PermissionTemplate.count }
+      end
+    end
+
+    describe 'permission template access' do
+      it 'will not be created when with_permission_template is true' do
+        expect { create(:collection, with_permission_template: true) }.not_to change { Hyrax::PermissionTemplateAccess.count }
+      end
+
+      it 'will be created when with_permission_template is set to attributes identifying access' do
+        expect { create(:collection, with_permission_template: { manage_users: [user] }) }.to change { Hyrax::PermissionTemplateAccess.count }.by(1)
+        expect { create(:collection, with_permission_template: { manage_users: [user], deposit_users: [user] }) }.to change { Hyrax::PermissionTemplateAccess.count }.by(2)
+      end
+
+      it 'will be created when create_access is true' do
+        expect { create(:collection, user: user, create_access: true) }.to change { Hyrax::PermissionTemplate.count }.by(1)
+      end
+
+      it 'will not be created by default' do
+        expect { create(:collection) }.not_to change { Hyrax::PermissionTemplateAccess.count }
       end
     end
 

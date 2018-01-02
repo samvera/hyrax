@@ -21,19 +21,17 @@ FactoryBot.define do
     end
 
     after(:create) do |collection, evaluator|
-      # create the permission template if it was requested, OR if
-      # nested reindexing is included (so we can apply the user's
-      # permissions).
-      if evaluator.with_permission_template || RSpec.current_example.metadata[:with_nested_reindexing]
+      # create the permission template if it was requested, OR if nested reindexing is included (so we can apply the user's
+      # permissions).  Nested indexing requires that the user's permissions be saved on the Fedora object... if simply in
+      # local memory, they are lost when the adapter pulls the object from Fedora to reindex.
+      if evaluator.with_permission_template || evaluator.create_access || RSpec.current_example.metadata[:with_nested_reindexing]
         attributes = { source_id: collection.id, source_type: 'collection' }
-        attributes[:manage_users] = [evaluator.user] if evaluator.create_access || RSpec.current_example.metadata[:with_nested_reindexing]
+        attributes[:manage_users] = CollectionFactoryHelper.user_managers(evaluator.with_permission_template, evaluator.user,
+                                                                          (evaluator.create_access || RSpec.current_example.metadata[:with_nested_reindexing]))
         attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
         create(:permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)
+        collection.update_access_controls!
       end
-      # Nested indexing requires that the user's permissions be saved
-      # on the Fedora object... if simply in local memory, they are
-      # lost when the adapter pulls the object from Fedora to reindex.
-      collection.update_access_controls! if RSpec.current_example.metadata[:with_nested_reindexing]
     end
 
     factory :public_collection, traits: [:public]
@@ -92,6 +90,16 @@ FactoryBot.define do
         attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
         create(:permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)
       end
+    end
+  end
+
+  class CollectionFactoryHelper
+    def self.user_managers(permission_template_attributes, creator_user, include_creator = false)
+      managers = []
+      managers << creator_user.user_key if include_creator
+      return managers unless permission_template_attributes.respond_to?(:merge)
+      return managers unless permission_template_attributes.key?(:manage_users)
+      managers + permission_template_attributes[:manage_users]
     end
   end
 end
