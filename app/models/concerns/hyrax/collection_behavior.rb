@@ -122,13 +122,16 @@ module Hyrax
       Hyrax::PermissionTemplate.find_by!(source_id: id)
     end
 
-    # Calculate and update who should have edit access based on who
-    # has "manage" access in the PermissionTemplateAccess
+    # Calculate and update who should have read/edit access to the collections based on who
+    # has access in PermissionTemplateAccess
     def update_access_controls!
       edit_users = permission_template.agent_ids_for(access: 'manage', agent_type: 'user')
       edit_groups = permission_template.agent_ids_for(access: 'manage', agent_type: 'group')
-      read_users = permission_template.agent_ids_for(access: 'view', agent_type: 'user')
-      read_groups = (permission_template.agent_ids_for(access: 'view', agent_type: 'group') + visibility_group).uniq
+      read_users = permission_template.agent_ids_for(access: 'view', agent_type: 'user') +
+                   permission_template.agent_ids_for(access: 'deposit', agent_type: 'user')
+      read_groups = (permission_template.agent_ids_for(access: 'view', agent_type: 'group') +
+                     permission_template.agent_ids_for(access: 'deposit', agent_type: 'group') +
+                     visibility_group).uniq
       update!(edit_users: edit_users,
               edit_groups: edit_groups,
               read_users: read_users,

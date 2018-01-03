@@ -197,16 +197,18 @@ RSpec.describe Collection, type: :model do
 
     before do
       allow(collection).to receive(:permission_template).and_return(permission_template)
-      allow(permission_template).to receive(:agent_ids_for).with(access: 'manage', agent_type: 'user').and_return(['mgr1.ex.com', 'mgr2.ex.com', user.user_key])
+      allow(permission_template).to receive(:agent_ids_for).with(access: 'manage', agent_type: 'user').and_return(['mgr1@ex.com', 'mgr2@ex.com', user.user_key])
       allow(permission_template).to receive(:agent_ids_for).with(access: 'manage', agent_type: 'group').and_return(['managers', ::Ability.admin_group_name])
-      allow(permission_template).to receive(:agent_ids_for).with(access: 'view', agent_type: 'user').and_return(['vw1.ex.com', 'vw2.ex.com'])
+      allow(permission_template).to receive(:agent_ids_for).with(access: 'deposit', agent_type: 'user').and_return(['dep1@ex.com', 'dep2@ex.com'])
+      allow(permission_template).to receive(:agent_ids_for).with(access: 'deposit', agent_type: 'group').and_return(['depositors', ::Ability.admin_group_name])
+      allow(permission_template).to receive(:agent_ids_for).with(access: 'view', agent_type: 'user').and_return(['vw1@ex.com', 'vw2@ex.com'])
       allow(permission_template).to receive(:agent_ids_for).with(access: 'view', agent_type: 'group').and_return(['viewers', ::Ability.admin_group_name])
     end
 
     it 'updates user edit access' do
       expect(collection.edit_users).to match_array([user.user_key])
       collection.update_access_controls!
-      expect(collection.edit_users).to match_array([user.user_key, 'mgr1.ex.com', 'mgr2.ex.com'])
+      expect(collection.edit_users).to match_array([user.user_key, 'mgr1@ex.com', 'mgr2@ex.com'])
     end
 
     it 'updates group edit access' do
@@ -218,13 +220,13 @@ RSpec.describe Collection, type: :model do
     it 'updates user read access' do
       expect(collection.read_users).to match_array([])
       collection.update_access_controls!
-      expect(collection.read_users).to match_array(['vw1.ex.com', 'vw2.ex.com'])
+      expect(collection.read_users).to match_array(['vw1@ex.com', 'vw2@ex.com', 'dep1@ex.com', 'dep2@ex.com'])
     end
 
     it 'updates group read access' do
       expect(collection.read_groups).to match_array([])
       collection.update_access_controls!
-      expect(collection.read_groups).to match_array(['viewers', ::Ability.admin_group_name])
+      expect(collection.read_groups).to match_array(['viewers', 'depositors', ::Ability.admin_group_name])
     end
   end
 
