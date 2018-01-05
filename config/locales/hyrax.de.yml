@@ -7,7 +7,7 @@ de:
   activemodel:
     errors:
       messages:
-        conflict: Ihre Änderungen konnten nicht gespeichert werden, da ein anderer Benutzer (oder Hintergrundjob) dieses %{model} aktualisiert hat, nachdem Sie mit der Bearbeitung begonnen haben. Bitte stellen Sie sicher, dass alle Dateianlagen erfolgreich abgeschlossen sind und versuchen Sie es erneut. Dieses Formular hat sich mit der letzten gespeicherten Kopie der %{model} aktualisiert.
+        conflict: Ihre Änderungen konnten nicht gespeichert werden, da ein anderer Benutzer (oder Hintergrundjob) dieses %{model} aktualisiert hat, nachdem Sie mit der Bearbeitung begonnen haben. Bitte stellen Sie sicher, dass alle Dateianlagen erfolgreich abgeschlossen sind und versuchen Sie es erneut. Dieses Formular hat sich mit der letzten gespeicherten Kopie der/des %{model} aktualisiert.
   blacklight:
     search:
       fields:
@@ -136,7 +136,7 @@ de:
             title: Freigabe
             varies:
               any: Dem Deponierer erlauben, sich zu entscheiden
-              between: Zwischen "jetzt" und
+              between: Zwischen &ldquor; jetzt &ldquo; und
               description: 'Variabel - Deponenten können den Freigabedatum für eine einzelne Arbeit festlegen:'
               embargo:
                 1yr: 1 Jahr nach der Deponierung
@@ -272,13 +272,13 @@ de:
         header: 'Zitate:'
       form_child_work_relationships:
         actions:
-          remove: Entferne diese Arbeit
-        attach_new_work: Hinterlegen Sie neue Arbeit als Kind dieser Arbeit
-        caption: Diese Arbeit enthält derzeit diese Kinderarbeiten
+          remove: Diese Arbeit entfernen
+        attach_new_work: Hinterlegen Sie eine neue, untergeordnete Arbeit zu dieser Arbeit
+        caption: Diese Arbeit enthält derzeit diese untergeordneten Arbeiten
         confirm:
           cancel: Stornieren
           remove: Löschen
-          text: Durch das Entfernen dieser untergeordneten Arbeit wird sie nicht nur aus dieser übergeordneten Arbeit aus dem Repository entfernt. Möchten Sie diese Arbeit wirklich aus dieser übergeordneten Arbeit entfernen?
+          text: Durch das Entfernen dieser untergeordneten Arbeit wird diese nur aus der ihr übergeordneten Arbeit entfernt, nicht aber aus dem Repository. Möchten Sie diese Arbeit wirklich aus dieser übergeordneten Arbeit entfernen?
         header:
           actions: Aktion
           title: Arbeitstitel
@@ -324,7 +324,7 @@ de:
       items:
         actions: Aktionen
         date_uploaded: Datum Upload
-        empty: Diese %{type} hat keine Dateien zugeordnet. Klicken Sie auf "Bearbeiten", um weitere Dateien hinzuzufügen.
+        empty: Diese %{type} hat keine Dateien zugeordnet. Klicken Sie auf &ldquor; Bearbeiten &ldquo; , um weitere Dateien hinzuzufügen.
         header: Artikel
         thumbnail: Miniaturansicht
         title: Titel
@@ -522,15 +522,15 @@ de:
         new_visitors: Neue Besucher
         registered_users: Registrierte Benutzer
         repository_growth:
-          subtitle: Vergangenheit 90 Tage
-          title: Repository Wachstum
+          subtitle: Letzte 90 Tage
+          title: Repositoriums- wachstum
         repository_objects:
           subtitle: Aktueller Status
-          title: Repository-Objekte
-        returning_visitors: Rückkehr Besucher
-        total_visitors: Insgesamt Besucher
+          title: Repositoriums- objekte
+        returning_visitors: Besucher wiedergekeht
+        total_visitors: Besucher insgesammt 
         user_activity:
-          subtitle: Neue Benutzer-Anmeldungen
+          subtitle: Benutzer- neuanmeldungen
           title: Benutzeraktivität
       stats:
         collections: Sammlungen erstellt
@@ -594,7 +594,7 @@ de:
           pdf_link: PDF Herunterladen
     file_sets:
       groups_description:
-        description_html: Die Liste der Gruppen in der Dropdown-Liste markiert "Wählen Sie eine Gruppe" ist eine Liste der User Managed Groups, denen Sie Mitglied sind. Sie können eine bestimmte Gruppe auswählen und eine Zugriffsebene für eine Datei innerhalb von %{application_name} zuweisen, ähnlich wie das Hinzufügen von Benutzerzugriffsebenen.
+        description_html: Die Liste der Gruppen in der Dropdown-Liste markiert &ldquor; Wählen Sie eine Gruppe &ldquor; ist eine Liste der User Managed Groups, denen Sie Mitglied sind. Sie können eine bestimmte Gruppe auswählen und eine Zugriffsebene für eine Datei innerhalb von %{application_name} zuweisen, ähnlich wie das Hinzufügen von Benutzerzugriffsebenen.
     help:
       header: Benutzer-Support
       override_text: Verwenden Sie app / views / static / help.html.erb, um diese Datei zu überschreiben.
@@ -624,17 +624,17 @@ de:
     leases:
       edit:
         header:
-          current: Aktuelle Leasing
-          past: Vergangene Mietverträge
-        history_empty: Diese %{cc} hat keine vorherigen Mietverträge angewendet.
-        lease_apply: Bewerben Lease
-        lease_cancel: Abbrechen und verwalten alle Leasingverhältnisse
-        lease_deactivate: Lease deaktivieren
-        lease_false_html: "<strong>Diese %{cc} ist derzeit nicht unter Leasing.</strong> Wenn Sie einen Mietvertrag anwenden möchten, geben Sie hier die Informationen an."
+          current: Aktuelle Leasingverhältnisse
+          past: Vergangene Leasingverhältnisse
+        history_empty: Auf diese %{cc} wurden keine vorherigen Leasingverhältnisse angewendet.
+        lease_apply: Leasingverhältniss aktivieren
+        lease_cancel: Abbrechen und Verwalten aller Leasingverhältnisse
+        lease_deactivate: Leasingverhältniss deaktivieren
+        lease_false_html: "<strong>Diese %{cc} ist derzeit nicht geleast.</strong> Wenn Sie einen Leasingvertrag anwenden möchten, geben Sie hier die Informationen an."
         lease_return: Zurück zur Bearbeitung dieses %{cc}
-        lease_true_html: "<strong>Dieser %{cc} ist unter Leasing.</strong>"
-        lease_update: Update Lease
-        manage_leases_html: Lease für %{cc} <span class='human_readable_type'>(%{cc_type})</span>
+        lease_true_html: "<strong>Dieser %{cc} ist zur Zeit geleast.</strong>"
+        lease_update: Update Leasing
+        manage_leases_html: Leasing für %{cc} <span class='human_readable_type'>(%{cc_type})</span>
       index:
         active: Alle aktiven Leasingverhältnisse
         deactivated: Deaktivierte Leasingverhältnisse
@@ -642,13 +642,13 @@ de:
         manage_leases: Leasing verwalten
       list_expired_active_leases:
         change_all: Ändern Sie alle Dateien in %{cc} zu
-        deactivate: Lease deaktivieren
-        deactivate_selected: Deaktivieren Sie Leases für Selected
+        deactivate: Leasing deaktivieren
+        deactivate_selected: Deaktivieren Sie das Leaseing für die Auswahl
         missing: Es sind zu diesem Zeitpunkt keine abgelaufenen Leasingverhältnisse vorhanden.
       table_headers:
-        release_date: Lease Release Datum
+        release_date: Leasing Freigabedatum
         title: Titel
-        type: Art von Arbeit
+        type: Art der Arbeit
         viz_after: Sichtbarkeit wird geändert
         viz_current: Aktuelle Sichtbarkeit
     mailbox:
@@ -677,11 +677,11 @@ de:
       cancel: Stornieren
       tabs:
         about_page: Über Seite
-        agreement_page: Einzahlungsvertrag
+        agreement_page: Deponierungsvereinbarung
         help_page: Hilfe Seite
         terms_page: Nutzungsbedingungen
       updated: Seiten aktualisiert.
-    passive_consent_to_agreement: Durch das Speichern dieser Arbeit stimme ich der
+    passive_consent_to_agreement: Durch das Speichern dieser Arbeit stimme ich der ... zu.
     search:
       button:
         html: <span class="glyphicon glyphicon-search"></span> Gehen
@@ -704,7 +704,7 @@ de:
           label: Suche %{application_name}
           placeholder: Suchbegriffe eingeben
     select_type:
-      description: Allzweckarbeitstyp
+      description: Allzweckarbeit-Typ
       name: Arbeit
     share_button: Teilen Sie Ihre Arbeit
     single_use_links:
@@ -716,7 +716,7 @@ de:
       download:
         type: Herunterladen
       expiration:
-        lesser_time: In weniger als einer stunde
+        lesser_time: In weniger als einer Stunde
         time: In %{value} Stunden
       expiration_message: Link %{link} läuft %{time} ab
       show:
@@ -747,8 +747,8 @@ de:
         confirm: Sind Sie sicher, dass Sie das Eigentum an dieser Arbeit an einen anderen Benutzer übertragen möchten? Klicken Sie auf OK, um zu übertragen oder auf Abbrechen, um zum Übertragungsbildschirm zurückzukehren
         header: Eigentum übertragen
         placeholder: Suche nach einem Benutzer
-        sr_only_description: Wählen Sie einen Benutzer aus, um "%{work_title}" zu senden, fügen Sie optionale Kommentare hinzu und drücken Sie dann die Übertragung.
-        title: Übertragung des Eigentums von "%{work_title}"
+        sr_only_description: Wählen Sie einen Benutzer aus, um &ldquor;%{work_title}&ldquo; zu senden, fügen Sie optionale Kommentare hinzu und drücken Sie dann die Übertragung.
+        title: Übertragung des Eigentums von &ldquor;%{work_title}&ldquo;
     upload:
       alert:
         contact_href_text: Kontakt Formular
@@ -802,11 +802,11 @@ de:
         warning_html: '<p> <strong>Bitte beachten Sie</strong> , dass etwas, das für die Welt sichtbar ist (dh das Markieren dieses als %{label}), als Publikation angesehen werden kann, die Ihre Fähigkeit beeinflussen könnte: </p><ul><li> Patent Ihre Arbeit </li><li> Veröffentlichen Sie Ihre Arbeit in einer Zeitschrift </li></ul><p> Überprüfen Sie <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> für weitere Informationen über Urheberrechtsrichtlinien des Publishers. </p>'
       open_title_attr: Ändern Sie die Sichtbarkeit dieser Ressource
       private:
-        note_html: Nur Benutzer und / oder Gruppen, denen im Abschnitt "Freigeben" einen bestimmten Zugriff gewährt wurde.
+        note_html: Nur Benutzer und / oder Gruppen, denen im Abschnitt &ldquor;Freigeben&ldquo; einen bestimmten Zugriff gewährt wurde.
         text: Privat
       private_title_attr: Ändern Sie die Sichtbarkeit dieser Ressource
       restricted:
-        note_html: Nur Benutzer und / oder Gruppen, denen im Abschnitt "Freigeben" einen bestimmten Zugriff gewährt wurde.
+        note_html: Nur Benutzer und / oder Gruppen, denen im Abschnitt &ldquor;Freigeben&ldquo; einen bestimmten Zugriff gewährt wurde.
         text: Privat
       restricted_title_attr: Ändern Sie die Sichtbarkeit dieser Ressource
     workflow:
@@ -842,12 +842,12 @@ de:
   simple_form:
     hints:
       admin_set:
-        description: Eine kurze übergreifende Beschreibung, die für alle in diesem Admin-Set gesammelten Werke gilt. Zum Beispiel, "Thesen und ergänzende Dateien, welche von den Absolventen der Geowissenschaften erstellt wurden."
+        description: Eine kurze übergreifende Beschreibung, die für alle in diesem Admin-Set gesammelten Werke gilt. Zum Beispiel,  &ldquor;Thesen und ergänzende Dateien, welche von den Absolventen der Geowissenschaften erstellt wurden. &ldquo;
         title: Ein Name zur erleichterten Identifizierung des Admin-Sets und zur Unterscheidung von anderen Admin-Sets im Repositorium.
       collection:
         based_near: Ein Ortsname im Zusammenhang mit der Sammlung, wie die Website der Veröffentlichung, oder die Stadt, Staat oder Land, welches Inhalt der Sammlung sind. Ruft die Seite <a href='http://www.geonames.org'> GeoNames Web Service </a> auf.
         contributor: Eine Person oder Gruppe, die Sie für eine Rolle bei der Erstellung der Sammlung kenntlich machen wollen, die aber nicht die primäre Rolle besitzen.
-        creator: Die Person oder Gruppe, welche verantwortlich für die Sammlung ist. In der Regel ist dies der Autor des Inhalts. Persönliche Namen sollten zuerst mit dem Nachnamen eingegeben werden, z.B. & Ldquor; Smith, John ".
+        creator: Die Person oder Gruppe, welche verantwortlich für die Sammlung ist. In der Regel ist dies der Autor des Inhalts. Persönliche Namen sollten zuerst mit dem Nachnamen eingegeben werden, z.B. &ldquor; Smith, John &ldquo; .
         date_created: Das Datum, an dem die Sammlung erstellt wurde.
         description: Freitextnoten über die Sammlung. Beispiel hierfür sind Kurzfassungen (Abstracts) eines wissenschaftlichen Aufsatzes in Zeitschriftenartikeln.
         identifier: Eine eindeutige Kennung, der die Sammlung identifiziert. Ein Beispiel wäre ein DOI für einen Zeitschriftenartikel oder eine ISBN- oder OCLC-Nummer für ein Buch.
@@ -856,13 +856,13 @@ de:
         license: Lizenz- und Verbreitungsinformationen für den Zugang zur Sammlung. Wählen Sie aus der mitgelieferten Dropdown-Liste aus.
         publisher: Die Person oder Gruppe, die die Sammlung zur Verfügung stellt. Im Allgemeinen ist das die Institution.
         related_url: Ein Link zu einer Website oder anderen spezifischen Inhalten (Audio, Video, PDF Dokument) im Zusammenhang mit der Sammlung. Ein Beispiel ist die URL eines Forschungsprojektes, aus dem die Sammlung abgeleitet wurde.
-        resource_type: Vordefinierte Kategorien, um die Art des hochgeladenen Inhalts zu beschreiben, wie beispielsweise "Artikel" Oder & ldquor; Datensatz " Es können mehr als ein Typ ausgewählt werden.
+        resource_type: Vordefinierte Kategorien, um die Art des hochgeladenen Inhalts zu beschreiben, wie beispielsweise &ldquor;Artikel&ldquo; oder &ldquor;Datensatz&ldquo; . Es können mehr als ein Typ ausgewählt werden.
         subject: Überschriften oder Indexbegriffe, die beschreiben, was die Sammlung betrifft; Diese müssen sich an ein bestehendes Vokabular anpassen.
         title: Ein Name, der bei der Identifizierung einer Sammlung hilft.
       defaults:
         based_near: Ein Ortsname in Bezug auf die Arbeit, wie ihre Website der Veröffentlichung, oder die Stadt, Staat oder Land die Inhalt der Arbeit sind. Ruft die Seite <a href='http://www.geonames.org'> GeoNames Web Service </a> auf.
         contributor: Eine Person oder Gruppe, die Sie für eine Rolle bei der Schaffung der Arbeit kenntlich machen wollen, aber nicht die primäre Rolle besitzen.
-        creator: Die Person oder Gruppe, welche verantwortlich für die Arbeit ist. In der Regel ist dies der Autor des Inhalts. Persönliche Namen sollten zuerst mit dem Nachnamen eingegeben werden, z.B. & Ldquor; Smith, John ".
+        creator: Die Person oder Gruppe, welche verantwortlich für die Arbeit ist. In der Regel ist dies der Autor des Inhalts. Persönliche Namen sollten zuerst mit dem Nachnamen eingegeben werden, z.B. &ldquor; Smith, John &ldquo; .
         date_created: Das Datum, an dem die Arbeit erstellt wurde.
         description: Freitextnoten über die Arbeit. Beispiel hierfür sind Kurzfassungen (Abstracts) eines wissenschaftlichen Aufsatzes in Zeitschriftenartikeln.
         identifier: Eine eindeutige Kennung, der die Arbeit identifiziert. Ein Beispiel wäre ein DOI für einen Zeitschriftenartikel oder eine ISBN- oder OCLC-Nummer für ein Buch.
@@ -871,7 +871,7 @@ de:
         license: Lizenz- und Verbreitungsinformationen für den Zugang zur Arbeit. Wählen Sie aus der mitgelieferten Dropdown-Liste aus.
         publisher: Die Person oder Gruppe, die die Arbeit zur Verfügung stellt. Im Allgemeinen ist das die Institution.
         related_url: Ein Link zu einer Website oder anderen spezifischen Inhalten (Audio, Video, PDF-Dokument) im Zusammenhang mit der Arbeit. Ein Beispiel ist die URL eines Forschungsprojekts, aus dem die Arbeit abgeleitet wurde.
-        resource_type: Vordefinierte Kategorien, um die Art des hochgeladenen Inhalts zu beschreiben, wie beispielsweise "Artikel" Oder & ldquor; Datensatz " Es können mehr als ein Typ ausgewählt werden.
+        resource_type: Vordefinierte Kategorien, um die Art des hochgeladenen Inhalts zu beschreiben, wie beispielsweise &ldquor;Artikel&ldquo; oder &ldquor;Datensatz&ldquo;. Es können mehr als ein Typ ausgewählt werden.
         subject: Überschriften oder Indexbegriffe, die beschreiben, worum es bei der Arbeit geht; Diese müssen sich an ein bestehendes Vokabular anpassen.
         title: Ein Titel, um bei der Identifizierung eines Werkes zu helfen.
     labels:
