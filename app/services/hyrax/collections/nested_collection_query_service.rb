@@ -39,7 +39,10 @@ module Hyrax
         query_builder = Hyrax::Dashboard::NestedCollectionsSearchBuilder.new(access: access, collection: collection, scope: scope)
         # No sense returning everything, just limit to a single entry
         query_builder.where(id: limit_to_id) if limit_to_id
-        scope.repository.search(query_builder.query).documents
+        # TODO: Need to investigate further to understand why this particular query fails if prepended with `{!lucene}` when all others work with the prepend
+        query = query_builder.query.to_hash
+        query['q'].gsub!('{!lucene}', '') if query.key? 'q'
+        scope.repository.search(query).documents
       end
       private_class_method :query_solr
 
