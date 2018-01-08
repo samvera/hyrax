@@ -5,7 +5,7 @@ RSpec.describe Hyrax::Actors::TransferRequestActor do
   let(:change_set) { GenericWorkChangeSet.new(work) }
   let(:change_set_persister) { double }
   let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
-  let(:terminator) { Hyrax::Actors::Terminator.new }
+  let(:model_actor) { instance_double(Hyrax::Actors::ModelActor) }
   let(:depositor) { create(:user) }
   let(:work) do
     build(:work, on_behalf_of: proxied_to)
@@ -16,11 +16,11 @@ RSpec.describe Hyrax::Actors::TransferRequestActor do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
       middleware.use described_class
     end
-    stack.build(terminator)
+    stack.build(model_actor)
   end
 
   before do
-    allow(terminator).to receive(:create).and_return(work)
+    allow(model_actor).to receive(:create).and_return(work)
   end
 
   describe "create" do

@@ -15,6 +15,7 @@ module Hyrax
         saved = next_actor.create(env)
         return false unless saved
         create_workflow(saved, env)
+        saved
       end
 
       private

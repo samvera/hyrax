@@ -3,7 +3,6 @@ RSpec.describe Hyrax::Actors::ApplyPermissionTemplateActor do
   let(:change_set) { GenericWorkChangeSet.new(work) }
   let(:change_set_persister) { double }
   let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
-  let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:depositor) { create(:user) }
   let(:work) do
     build(:work,
@@ -18,7 +17,7 @@ RSpec.describe Hyrax::Actors::ApplyPermissionTemplateActor do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
       middleware.use described_class
     end
-    stack.build(terminator)
+    stack.build(instance_double(Hyrax::Actors::ModelActor, create: true))
   end
 
   describe "create" do
@@ -54,7 +53,6 @@ RSpec.describe Hyrax::Actors::ApplyPermissionTemplateActor do
                permission_template: permission_template,
                agent_type: 'group',
                agent_id: 'readers')
-        allow(terminator).to receive(:create).and_return(true)
       end
 
       it "adds the template users to the work" do

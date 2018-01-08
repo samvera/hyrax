@@ -3,8 +3,7 @@ RSpec.describe Hyrax::Actors::OptimisticLockValidator do
   let(:change_set_persister) { double }
   let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
   let(:ability) { ::Ability.new(depositor) }
-
-  let(:terminator) { Hyrax::Actors::Terminator.new }
+  let(:model_actor) { instance_double(Hyrax::Actors::ModelActor) }
   let(:depositor) { create(:user) }
   let(:work) { create_for_repository(:work) }
 
@@ -12,12 +11,12 @@ RSpec.describe Hyrax::Actors::OptimisticLockValidator do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
       middleware.use described_class
     end
-    stack.build(terminator)
+    stack.build(model_actor)
   end
 
   describe "update" do
     before do
-      allow(terminator).to receive(:update).and_return(true)
+      allow(model_actor).to receive(:update).and_return(true)
     end
 
     subject { middleware.update(env) }
@@ -33,7 +32,7 @@ RSpec.describe Hyrax::Actors::OptimisticLockValidator do
         let(:attributes) { { 'version' => work.etag } }
 
         it "returns true and calls the next actor without the version attribute" do
-          expect(terminator).to receive(:update).with(Hyrax::Actors::Environment) do |k|
+          expect(model_actor).to receive(:update).with(Hyrax::Actors::Environment) do |k|
             expect(k.attributes).to eq({})
             true
           end

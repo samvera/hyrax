@@ -70,9 +70,8 @@ module Hyrax
     #   end
     #
     #   env = Hyrax::Actors::Environment.new(change_set, persister, ability, attributes)
-    #   last_actor = Hyrax::Actors::Terminator.new
     #
-    #   stack.build(last_actor).create(env) # or `#update/#destroy`
+    #   stack.build {}.create(env) # or `#update/#destroy`
     #
     # @see ActionDispatch::MiddlewareStack
     # @see Hyrax::DefaultMiddlewareStack
