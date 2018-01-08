@@ -81,7 +81,6 @@ fr:
             no_date: Une date est requise pour l'option de publication sélectionnée.
             no_embargo: Une période d'embargo est requise pour l'option sélectionnée.
             nothing: Sélectionnez les options de libération avant d'appuyer sur Enregistrer.
-            varies: L'option de libération «Variable» nécessite une date ou une période d'embargo.
           permission_update_notices:
             new_admin_set: L'ensemble administratif '%{name}' a été créé. Utilisez les onglets supplémentaires pour définir d'autres aspects de l'ensemble administratif.
             participants: Les droits des participants au service administratif ont été mis à jour
@@ -201,7 +200,6 @@ fr:
           end_label: Fin [par défaut pour maintenant]
           heading: 'Afficher les fichiers déposés:'
           start_label: Début
-        registered: Inscrit
         repository_objects:
           series:
             published: Publié
@@ -242,11 +240,6 @@ fr:
           tabs:
             published: Publié
             under_review: À l'étude
-    admin_sets:
-      index:
-        header: Toutes les collections
-      show:
-        header: Collection
     api:
       accepted:
         default: Votre demande a été acceptée pour traitement, mais le traitement n'est pas complet. Consultez le travail pour plus d'informations.
@@ -391,15 +384,6 @@ fr:
         title: Ajouter à la collection
         update: Mise à jour de la collection
     collections:
-      edit:
-        header: 'Modifier la Collection: %{title}'
-      form:
-        tabs:
-          description: La description
-          sharing: Partage
-          visibility: Visibilité
-      new:
-        header: Nouvelle Collection
       search_form:
         button_label: Aller
         label: Rechercher Collection %{title}
@@ -607,13 +591,24 @@ fr:
         tab_label: Chercheur en vedette
         title: Chercheur en vedette
       featured_works:
+        document:
+          depositor_label: Déposant
+          depositor_missing: pas de valeur de déposant
+          keyword_label: Mots clés
+          keyword_missing: aucun mot-clé spécifié
+          title_label: Titre
         drag: Traîne
         no_works: Aucun travail n'a été présenté
         tab_label: Travaux en vedette
         title: Travaux en vedette
       recently_uploaded:
-        depositor: Déposant
         details: Détails
+        document:
+          depositor_label: Déposant
+          depositor_missing: pas de valeur de déposant
+          keyword_label: Mots clés
+          keyword_missing: aucun mot-clé spécifié
+          title_label: Titre
         no_public: Aucun travail public n'a été apporté.
         tab_label: Chargé récemment
         title: Chargé récemment
@@ -800,10 +795,6 @@ fr:
         text: Public
         warning_html: '<p> <strong>Notez</strong> que faire apparaître une chose visible dans le monde (c.-à-d. Marquer cela comme %{label}) peut être considérée comme une publication qui pourrait avoir une incidence sur votre capacité à: </p><ul><li> Prenez connaissance de votre travail </li><li> Publiez votre travail dans un journal </li></ul><p> Consultez <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> pour plus d''informations sur les politiques de copyright des éditeurs. </p>'
       open_title_attr: Changez la visibilité de cette ressource
-      private:
-        note_html: Seuls les utilisateurs et / ou les groupes ayant reçu un accès spécifique dans la section "Partager avec".
-        text: Privé
-      private_title_attr: Changez la visibilité de cette ressource
       restricted:
         note_html: Seuls les utilisateurs et / ou les groupes ayant reçu un accès spécifique dans la section "Partager avec".
         text: Privé

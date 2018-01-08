@@ -81,7 +81,6 @@ de:
             no_date: Für die gewählte Release-Option ist ein Datum erforderlich.
             no_embargo: Für die gewählte Option ist ein Embargo-Zeitraum erforderlich.
             nothing: Wählen Sie eine Freigabeoption aus, um zu speichern.
-            varies: Release-Option 'Variiert' erfordert eine Datums- oder Embargo-Periode.
           permission_update_notices:
             new_admin_set: Das Admin-Set '%{name}' wurde angelegt. Verwenden Sie die zusätzlichen Reiter, um andere Aspekte des Sets zu definieren.
             participants: Die Benutzerrechte in diesem Admin-Set wurden aktualisiert
@@ -201,7 +200,6 @@ de:
           end_label: Ende [Voreinstellung]
           heading: 'Angezeigte Dateien:'
           start_label: Beginn
-        registered: Registriert
         repository_objects:
           series:
             published: Veröffentlicht
@@ -242,11 +240,6 @@ de:
           tabs:
             published: Veröffentlicht
             under_review: Unter Begutachtung
-    admin_sets:
-      index:
-        header: Alle Sammlungen
-      show:
-        header: Sammlung
     api:
       accepted:
         default: Ihre Anfrage wurde zur Bearbeitung angenommen, aber die Verarbeitung ist nicht abgeschlossen. Siehe Job für mehr Info.
@@ -392,15 +385,6 @@ de:
         title: Zur Sammlung hinzufügen
         update: Update-Sammlung
     collections:
-      edit:
-        header: 'Sammlung Bearbeiten: %{title}'
-      form:
-        tabs:
-          description: Beschreibung
-          sharing: Teilen
-          visibility: Sichtbarkeit
-      new:
-        header: Neue Sammlung
       search_form:
         button_label: Suche
         label: Suche Sammlung %{title}
@@ -528,7 +512,7 @@ de:
           subtitle: Aktueller Status
           title: Repositoriums- objekte
         returning_visitors: Besucher wiedergekeht
-        total_visitors: Besucher insgesammt 
+        total_visitors: Besucher insgesammt
         user_activity:
           subtitle: Benutzer- neuanmeldungen
           title: Benutzeraktivität
@@ -608,13 +592,24 @@ de:
         tab_label: Ausgewählter Forscher
         title: Ausgewählter Forscher
       featured_works:
+        document:
+          depositor_label: Einzahler
+          depositor_missing: kein Einzahlerwert
+          keyword_label: Schlüsselwörter
+          keyword_missing: keine Schlüsselwörter angegeben
+          title_label: Titel
         drag: Ziehen
         no_works: Es wurden keine Werke vorgestellt
         tab_label: Ausgewählte Werke
         title: Ausgewählte Werke
       recently_uploaded:
-        depositor: Depositor
         details: Details
+        document:
+          depositor_label: Einzahler
+          depositor_missing: kein Einzahlerwert
+          keyword_label: Schlüsselwörter
+          keyword_missing: keine Schlüsselwörter angegeben
+          title_label: Titel
         no_public: Es wurde keine öffentliche Arbeit geleistet.
         tab_label: Zuletzt hochgeladen
         title: Zuletzt hochgeladen
@@ -801,10 +796,6 @@ de:
         text: Öffentlichkeit
         warning_html: '<p> <strong>Bitte beachten Sie</strong> , dass etwas, das für die Welt sichtbar ist (dh das Markieren dieses als %{label}), als Publikation angesehen werden kann, die Ihre Fähigkeit beeinflussen könnte: </p><ul><li> Patent Ihre Arbeit </li><li> Veröffentlichen Sie Ihre Arbeit in einer Zeitschrift </li></ul><p> Überprüfen Sie <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> für weitere Informationen über Urheberrechtsrichtlinien des Publishers. </p>'
       open_title_attr: Ändern Sie die Sichtbarkeit dieser Ressource
-      private:
-        note_html: Nur Benutzer und / oder Gruppen, denen im Abschnitt &ldquor;Freigeben&ldquo; einen bestimmten Zugriff gewährt wurde.
-        text: Privat
-      private_title_attr: Ändern Sie die Sichtbarkeit dieser Ressource
       restricted:
         note_html: Nur Benutzer und / oder Gruppen, denen im Abschnitt &ldquor;Freigeben&ldquo; einen bestimmten Zugriff gewährt wurde.
         text: Privat
