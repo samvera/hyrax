@@ -528,7 +528,7 @@ de:
           subtitle: Aktueller Status
           title: Repositoriums- objekte
         returning_visitors: Besucher wiedergekeht
-        total_visitors: Besucher insgesammt 
+        total_visitors: Besucher insgesammt
         user_activity:
           subtitle: Benutzer- neuanmeldungen
           title: Benutzeraktivität
@@ -608,6 +608,12 @@ de:
         tab_label: Ausgewählter Forscher
         title: Ausgewählter Forscher
       featured_works:
+        document:
+          depositor_label: Einzahler
+          depositor_missing: kein Einzahlerwert
+          keyword_label: Schlüsselwörter
+          keyword_missing: keine Schlüsselwörter angegeben
+          title_label: Titel
         drag: Ziehen
         no_works: Es wurden keine Werke vorgestellt
         tab_label: Ausgewählte Werke
@@ -615,6 +621,12 @@ de:
       recently_uploaded:
         depositor: Depositor
         details: Details
+        document:
+          depositor_label: Einzahler
+          depositor_missing: kein Einzahlerwert
+          keyword_label: Schlüsselwörter
+          keyword_missing: keine Schlüsselwörter angegeben
+          title_label: Titel
         no_public: Es wurde keine öffentliche Arbeit geleistet.
         tab_label: Zuletzt hochgeladen
         title: Zuletzt hochgeladen

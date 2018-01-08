@@ -606,6 +606,12 @@ it:
         tab_label: Ricercatore in primo piano
         title: Ricercatore in primo piano
       featured_works:
+        document:
+          depositor_label: Depositante
+          depositor_missing: nessun valore del depositante
+          keyword_label: parole
+          keyword_missing: nessuna parola chiave specificata
+          title_label: Titolo
         drag: Trascinare
         no_works: Nessun lavoro è stato descritto
         tab_label: Opere in primo piano
@@ -613,6 +619,12 @@ it:
       recently_uploaded:
         depositor: Depositante
         details: Dettagli
+        document:
+          depositor_label: Depositante
+          depositor_missing: nessun valore del depositante
+          keyword_label: parole
+          keyword_missing: nessuna parola chiave specificata
+          title_label: Titolo
         no_public: Nessun lavoro pubblico è stato contribuito.
         tab_label: Recentemente caricati
         title: Recentemente caricati

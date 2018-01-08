@@ -607,6 +607,12 @@ fr:
         tab_label: Chercheur en vedette
         title: Chercheur en vedette
       featured_works:
+        document:
+          depositor_label: Déposant
+          depositor_missing: pas de valeur de déposant
+          keyword_label: Mots clés
+          keyword_missing: aucun mot-clé spécifié
+          title_label: Titre
         drag: Traîne
         no_works: Aucun travail n'a été présenté
         tab_label: Travaux en vedette
@@ -614,6 +620,12 @@ fr:
       recently_uploaded:
         depositor: Déposant
         details: Détails
+        document:
+          depositor_label: Déposant
+          depositor_missing: pas de valeur de déposant
+          keyword_label: Mots clés
+          keyword_missing: aucun mot-clé spécifié
+          title_label: Titre
         no_public: Aucun travail public n'a été apporté.
         tab_label: Chargé récemment
         title: Chargé récemment

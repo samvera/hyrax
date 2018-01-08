@@ -601,6 +601,12 @@ pt-BR:
         tab_label: Pesquisador em destaque
         title: Pesquisador em destaque
       featured_works:
+        document:
+          depositor_label: Depositante
+          depositor_missing: nenhum valor depositante
+          keyword_label: Palavras-chave
+          keyword_missing: sem palavras-chave especificadas
+          title_label: Título
         drag: Arrastar
         no_works: Nenhum trabalho foi apresentado
         tab_label: Trabalhos em destaque
@@ -608,6 +614,12 @@ pt-BR:
       recently_uploaded:
         depositor: Depositante
         details: Detalhes
+        document:
+          depositor_label: Depositante
+          depositor_missing: nenhum valor depositante
+          keyword_label: Palavras-chave
+          keyword_missing: sem palavras-chave especificadas
+          title_label: Título
         no_public: Nenhum trabalho público foi contribuído.
         tab_label: Carregado recentemente
         title: Carregado recentemente

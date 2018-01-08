@@ -603,6 +603,12 @@ es:
         tab_label: Investigador destacado
         title: Investigador destacado
       featured_works:
+        document:
+          depositor_label: Depositor
+          depositor_missing: sin valor para el depositante
+          keyword_label: Palabras clave
+          keyword_missing: no palabras clave especificadas
+          title_label: Título
         drag: Arrastrar
         no_works: No hay trabajos destacados
         tab_label: Trabajos destacados
@@ -610,6 +616,12 @@ es:
       recently_uploaded:
         depositor: Depositante
         details: Detalles
+        document:
+          depositor_label: Depositor
+          depositor_missing: sin valor para el depositante
+          keyword_label: Palabras clave
+          keyword_missing: no palabras clave especificadas
+          title_label: Título
         no_public: No hay trabajos públicos.
         tab_label: Subidos recientemente
         title: Subidos recientemente
