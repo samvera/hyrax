@@ -81,7 +81,6 @@ pt-BR:
             no_date: É necessária uma data para a opção de lançamento selecionada.
             no_embargo: É necessário um período de embargo para a opção selecionada.
             nothing: Selecione as opções de lançamento antes de pressionar salvar.
-            varies: A opção de liberação "Varia" requer uma data ou período de embargo.
           permission_update_notices:
             new_admin_set: O conjunto administrativo '%{name}' foi criado. Use as guias adicionais para definir outros aspectos do conjunto administrativo.
             participants: Os direitos dos participantes do conjunto administrativo foram atualizados
@@ -201,7 +200,6 @@ pt-BR:
           end_label: Terminar [padrão para agora]
           heading: 'Exibir arquivos depositados:'
           start_label: Começar
-        registered: Registrado
         repository_objects:
           series:
             published: Publicados
@@ -242,11 +240,6 @@ pt-BR:
           tabs:
             published: Publicados
             under_review: Sob revisão
-    admin_sets:
-      index:
-        header: Todas as coleções
-      show:
-        header: Coleção
     api:
       accepted:
         default: Seu pedido foi aceito para processamento, mas o processamento não está completo. Veja emprego para mais informações.
@@ -385,15 +378,6 @@ pt-BR:
         title: Adicionar a coleção
         update: Coleção de Atualizações
     collections:
-      edit:
-        header: 'Editar Coleção: %{title}'
-      form:
-        tabs:
-          description: Descrição
-          sharing: Compartilhando
-          visibility: Visibilidade
-      new:
-        header: Nova Coleção
       search_form:
         button_label: Ir
         label: Pesquisar Collection %{title}
@@ -612,7 +596,6 @@ pt-BR:
         tab_label: Trabalhos em destaque
         title: Trabalhos em destaque
       recently_uploaded:
-        depositor: Depositante
         details: Detalhes
         document:
           depositor_label: Depositante
@@ -806,10 +789,6 @@ pt-BR:
         text: Público
         warning_html: '<p> <strong>Por favor</strong> , <strong>note que</strong> fazer algo visível para o mundo (ou seja, marcar isso como %{label}) pode ser visto como uma publicação que pode afetar sua capacidade de: </p><ul><li> Patente seu trabalho </li><li> Publique seu trabalho em um diário </li></ul><p> Confira <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> para obter mais informações sobre políticas de direitos autorais do editor. </p>'
       open_title_attr: Mude a visibilidade desse recurso
-      private:
-        note_html: Apenas usuários e / ou grupos que receberam acesso específico na seção "Compartilhar com".
-        text: Privado
-      private_title_attr: Mude a visibilidade desse recurso
       restricted:
         note_html: Apenas usuários e / ou grupos que receberam acesso específico na seção "Compartilhar com".
         text: Privado

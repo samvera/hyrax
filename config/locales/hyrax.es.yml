@@ -81,7 +81,6 @@ es:
             no_date: Se requiere una fecha para la opción de lanzamiento seleccionada.
             no_embargo: Se requiere un período de embargo para la opción seleccionada.
             nothing: Seleccione opciones de lanzamiento antes de guardar.
-            varies: La opción de lanzamiento 'Varía' requiere una fecha o período de embargo.
           permission_update_notices:
             new_admin_set: Se ha creado el conjunto administrativo '%{name}'. Utilice las pestañas adicionales para definir otros aspectos del conjunto administrativo.
             participants: Se han actualizado los derechos de participante del conjunto administrativo
@@ -201,7 +200,6 @@ es:
           end_label: Finalizando [el momento actual es el valor predeterminado]
           heading: 'Ver Archivos Depositados:'
           start_label: Comenzando
-        registered: Registrado
         repository_objects:
           series:
             published: Publicado
@@ -385,15 +383,6 @@ es:
         title: Añadir a la colección
         update: Actualizar Colección
     collections:
-      edit:
-        header: 'Editar Colección: %{title}'
-      form:
-        tabs:
-          description: Descripción
-          sharing: Compartir
-          visibility: Visibilidad
-      new:
-        header: Nueva Colección
       search_form:
         button_label: Ir
         label: Buscar Colección %{title}
@@ -614,7 +603,6 @@ es:
         tab_label: Trabajos destacados
         title: Trabajos destacados
       recently_uploaded:
-        depositor: Depositante
         details: Detalles
         document:
           depositor_label: Depositor
@@ -808,10 +796,6 @@ es:
         text: Público
         warning_html: '<p> <strong>Tenga en cuenta</strong>, hacer algo visible para el mundo (es decir, marcar esto como %{label}) puede ser visto como una publicación, lo que podría afectar su capacidad de: </p> <ul> <li>Patentar su trabajo</li> <li>Publicar su trabajo en una revista</li> </ul> <p> Eche un vistazo a <a href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a> para más información sobre las políticas de copyright del editor. </p>'
       open_title_attr: Cambiar la visibilidad de este recurso
-      private:
-        note_html: Sólo los usuarios y/o grupos a los que se les ha dado acceso específico en la sección "Compartir con".
-        text: Privado
-      private_title_attr: Cambiar la visibilidad de este recurso
       restricted:
         note_html: Sólo los usuarios y / o grupos a los que se les ha dado acceso específico en la sección "Compartir con".
         text: Privado

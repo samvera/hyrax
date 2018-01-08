@@ -81,7 +81,6 @@ it:
             no_date: È necessaria una data per l'opzione di rilascio selezionata.
             no_embargo: È necessario un periodo di embargo per l'opzione selezionata.
             nothing: Selezionare le opzioni di rilascio prima di salvare.
-            varies: L'opzione di rilascio "Varia" richiede una data o un periodo di embargo.
           permission_update_notices:
             new_admin_set: È stato creato il set amministrativo '%{name}'. Utilizza le schede aggiuntive per definire altri aspetti dell'insieme amministrativo.
             participants: I diritti partecipanti del set di amministratori sono stati aggiornati
@@ -201,7 +200,6 @@ it:
           end_label: Fine [impostazione predefinita]
           heading: 'Visualizza i file depositati:'
           start_label: Inizio
-        registered: Registrato
         repository_objects:
           series:
             published: Pubblicato
@@ -242,11 +240,6 @@ it:
           tabs:
             published: Pubblicato
             under_review: In corso di revisione
-    admin_sets:
-      index:
-        header: Tutte le collezioni
-      show:
-        header: Collezione
     api:
       accepted:
         default: La tua richiesta è stata accettata per l'elaborazione, ma l'elaborazione non è completa. Vedere il lavoro per ulteriori informazioni.
@@ -390,15 +383,6 @@ it:
         title: Aggiungere alla collezione
         update: Aggiorna Collezione
     collections:
-      edit:
-        header: 'Modifica Collezione: %{title}'
-      form:
-        tabs:
-          description: Descrizione
-          sharing: compartecipazione
-          visibility: Visibilità
-      new:
-        header: Nuova Collezione
       search_form:
         button_label: Partire
         label: Cerca la raccolta %{title}
@@ -617,7 +601,6 @@ it:
         tab_label: Opere in primo piano
         title: Opere in primo piano
       recently_uploaded:
-        depositor: Depositante
         details: Dettagli
         document:
           depositor_label: Depositante
@@ -811,10 +794,6 @@ it:
         text: Pubblico
         warning_html: '<p> <strong>Si prega di notare</strong> che facendo qualcosa di visibile al mondo (vale a dire marcatura come %{label}) può essere considerata come pubblicazione che potrebbe influenzare la tua capacità di: </p><ul><li> Brevetti il ​​tuo lavoro </li><li> Pubblica il tuo lavoro in un diario </li></ul><p> <a href="http://www.sherpa.ac.uk/romeo/">Controlla SHERPA / RoMEO</a> per ulteriori informazioni sulle norme del copyright dei publisher. </p>'
       open_title_attr: Modificare la visibilità di questa risorsa
-      private:
-        note_html: Solo utenti e / o gruppi che hanno ricevuto l'accesso specifico nella sezione "Condividi con".
-        text: Privato
-      private_title_attr: Modificare la visibilità di questa risorsa
       restricted:
         note_html: Solo utenti e / o gruppi che hanno ricevuto l'accesso specifico nella sezione "Condividi con".
         text: Privato

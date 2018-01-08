@@ -9,12 +9,7 @@ zh:
       messages:
         conflict: 您的更改无法保存，因为另一用户(或后台作业）在您开始编辑后更新了%{model}。 请确保所有文件附件已成功完成之后再试一次。这已经是最新刷新后保存的副本%{model}
   blacklight:
-    application_name: Blacklight
     search:
-      atom_feed: Atom Feed
-      facets:
-        count: Count
-        more_html: 更多 <span class="sr-only">%{field_name}</span> »
       fields:
         facet:
           admin_set_sim: 集
@@ -27,7 +22,6 @@ zh:
           keyword: 关键词
       filters:
         title: '筛选:'
-      rss_feed: RSS Feed
       start_over: 清除筛选
   errors:
     messages:
@@ -87,7 +81,6 @@ zh:
             no_date: 所选发布项需要一个日期。
             no_embargo: 所选项需要一个时滞期限。
             nothing: 保存之前请选择发布选项。
-            varies: 发布选项 '变动' 需要选择一个日期或时滞期限。
           permission_update_notices:
             new_admin_set: 管理集 '%{name}' 已建立。 请用附加标签定义管理集中的其他方面。
             participants: 管理集的参与者权限已更新
@@ -207,7 +200,6 @@ zh:
           end_label: 结束 [默认到此刻]
           heading: '展示存储的文件:'
           start_label: 开始
-        registered: 已注册
         repository_objects:
           series:
             published: 出版品
@@ -389,15 +381,6 @@ zh:
         title: 添加到新收藏集
         update: 更新收藏集
     collections:
-      edit:
-        header: '编辑收藏: %{title}'
-      form:
-        tabs:
-          description: 描述
-          sharing: 分享
-          visibility: 公开度
-      new:
-        header: 新系列
       search_form:
         button_label: 去
         label: 搜索收藏集 %{title}
@@ -616,7 +599,6 @@ zh:
         tab_label: 特色作品
         title: 特色作品
       recently_uploaded:
-        depositor: 存储者
         details: 细节
         document:
           depositor_label: 储户
