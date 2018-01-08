@@ -7,15 +7,14 @@ RSpec.describe Hyrax::Actors::DefaultAdminSetActor do
   let(:change_set) { GenericWorkChangeSet.new(work) }
   let(:change_set_persister) { double }
   let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
+  let(:model_actor) { instance_double(Hyrax::Actors::ModelActor) }
 
   describe "create" do
-    let(:terminator) { Hyrax::Actors::Terminator.new }
-
     subject(:middleware) do
       stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
         middleware.use described_class
       end
-      stack.build(terminator)
+      stack.build(model_actor)
     end
 
     context "when admin_set_id is blank" do
@@ -23,7 +22,7 @@ RSpec.describe Hyrax::Actors::DefaultAdminSetActor do
       let(:default_id) { AdminSet::DEFAULT_ID }
 
       it "creates the default AdminSet with a PermissionTemplate and an ActiveWorkflow then calls the next actor with the default admin set id" do
-        expect(terminator).to receive(:create).with(Hyrax::Actors::Environment) do |k|
+        expect(model_actor).to receive(:create).with(Hyrax::Actors::Environment) do |k|
           expect(k.attributes).to eq("admin_set_id" => default_id)
           true
         end
@@ -36,7 +35,7 @@ RSpec.describe Hyrax::Actors::DefaultAdminSetActor do
       let(:attributes) { { admin_set_id: admin_set.id } }
 
       it "uses the provided id, ensures a permission template, and returns true" do
-        expect(terminator).to receive(:create).with(Hyrax::Actors::Environment) do |k|
+        expect(model_actor).to receive(:create).with(Hyrax::Actors::Environment) do |k|
           expect(k.attributes).to eq("admin_set_id" => admin_set.id)
           true
         end

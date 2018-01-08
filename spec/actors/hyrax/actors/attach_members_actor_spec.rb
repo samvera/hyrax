@@ -3,7 +3,6 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
   let(:change_set) { GenericWorkChangeSet.new(work) }
   let(:change_set_persister) { double }
   let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
-  let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:depositor) { create(:user) }
   let(:work) { create_for_repository(:work) }
   let(:attributes) { HashWithIndifferentAccess.new(work_members_attributes: { '0' => { id: id } }) }
@@ -12,7 +11,7 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
       middleware.use described_class
     end
-    stack.build(terminator)
+    stack.build(instance_double(Hyrax::Actors::ModelActor, create: true, update: true))
   end
 
   describe "#update" do
