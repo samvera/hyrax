@@ -7,20 +7,19 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
   let(:attributes) { { admin_set_id: admin_set.id } }
   let(:admin_set) { create_for_repository(:admin_set) }
   let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
-  let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:one_year_from_today) { Time.zone.today + 1.year }
   let(:two_years_from_today) { Time.zone.today + 2.years }
   let(:date) { Time.zone.today + 2 }
   let(:change_set) { GenericWorkChangeSet.new(curation_concern) }
   let(:change_set_persister) { Hyrax::ChangeSetPersister.new(metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister), storage_adapter: Valkyrie.config.storage_adapter) }
   let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
+  let(:model_actor) { Hyrax::Actors::GenericWorkActor.new(nil) }
 
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
       middleware.use described_class
-      middleware.use Hyrax::Actors::GenericWorkActor
     end
-    stack.build(terminator)
+    stack.build(model_actor)
   end
 
   describe 'create' do

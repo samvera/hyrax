@@ -1,6 +1,6 @@
 RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
-  let(:terminator) { Hyrax::Actors::Terminator.new }
-  let(:actor) { stack.build(terminator) }
+  let(:actor) { stack.build(instance_double(Hyrax::Actors::ModelActor, create: true)) }
+
   let(:stack) do
     ActionDispatch::MiddlewareStack.new.tap do |middleware|
       middleware.use described_class
@@ -25,10 +25,6 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
   let(:change_set) { GenericWorkChangeSet.new(work) }
   let(:change_set_persister) { double }
   let(:environment) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
-
-  before do
-    allow(terminator).to receive(:create).and_return(true)
-  end
 
   context "with source uris that are remote" do
     let(:remote_files) do

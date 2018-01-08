@@ -3,17 +3,16 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
   let(:ability) { ::Ability.new(user) }
   let(:curation_concern) { create_for_repository(:work) }
   let(:attributes) { {} }
-  let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:change_set) { GenericWorkChangeSet.new(curation_concern) }
   let(:change_set_persister) { Hyrax::ChangeSetPersister.new(metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister), storage_adapter: Valkyrie.config.storage_adapter) }
   let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
+  let(:model_actor) { Hyrax::Actors::GenericWorkActor.new(nil) }
 
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
       middleware.use described_class
-      middleware.use Hyrax::Actors::GenericWorkActor
     end
-    stack.build(terminator)
+    stack.build(model_actor)
   end
 
   describe 'the next actor' do
@@ -30,7 +29,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
     end
 
     it 'does not receive the member_of_collection_ids' do
-      expect(terminator).to receive(:create).with(Hyrax::Actors::Environment) do |k|
+      expect(model_actor).to receive(:create).with(Hyrax::Actors::Environment) do |k|
         expect(k.attributes).to eq("title" => ["test"])
       end
       subject.create(env)

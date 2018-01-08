@@ -2,7 +2,7 @@ module Hyrax
   module Actors
     ##
     # Defines the basic save/destroy and callback behavior, intended to run
-    # near the bottom of the actor stack.
+    # as the very last frame of the actor stack.
     #
     # @example Defining a base actor for a custom work type
     #   module Hyrax
@@ -21,7 +21,6 @@ module Hyrax
         return unless env.change_set.validate(env.attributes)
         saved_resource = save(env)
         saved_resource &&
-          next_actor.create(duplicate_env(env, saved_resource)) &&
           run_callbacks(:after_create_concern, saved_resource, env.user) &&
           saved_resource
       end
@@ -31,8 +30,7 @@ module Hyrax
       def update(env)
         assign_modified_date(env)
         return unless env.change_set.validate(env.attributes)
-        next_actor.update(env) &&
-          (saved_resource = save(env)) &&
+        (saved_resource = save(env)) &&
           run_callbacks(:after_update_metadata, env.resource, env.user) &&
           saved_resource
       end
@@ -52,14 +50,6 @@ module Hyrax
       end
 
       private
-
-        def duplicate_env(env, saved_work)
-          Environment.new(env.change_set,
-                          env.change_set_persister,
-                          env.current_ability,
-                          env.attributes,
-                          resource: saved_work)
-        end
 
         def solr_persister
           @solr_persister ||= Valkyrie::MetadataAdapter.find(:index_solr).persister
