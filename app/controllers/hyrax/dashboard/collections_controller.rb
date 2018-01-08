@@ -76,10 +76,6 @@ module Hyrax
       end
 
       def edit
-        # Get banner and logo data ready for display
-        determine_banner_data
-        determine_logo_data
-
         member_works
         # this is used to populate the "add to a collection" action for the members
         @user_collections = find_collections_for_form
@@ -227,29 +223,6 @@ module Hyrax
         def update_referer
           return edit_dashboard_collection_path(@collection) + (params[:referer_anchor] || '') if params[:stay_on_edit]
           dashboard_collection_path(@collection)
-        end
-
-        def determine_banner_data
-          # Find Banner filename
-          banner_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "banner")
-          banner_file = File.split(banner_info.first.local_path).last unless banner_info.empty?
-          file_location = banner_info.first.local_path unless banner_info.empty?
-          relative_path = "/" + banner_info.first.local_path.split("/")[-4..-1].join("/") unless banner_info.empty?
-          @banner_info = { file: banner_file, full_path: file_location, relative_path: relative_path }
-        end
-
-        def determine_logo_data
-          @logo_info = []
-          # Find Logo filename, alttext, linktext
-          logos_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "logo")
-          return if logos_info.empty?
-          logos_info.each do |logo_info|
-            logo_file = File.split(logo_info.local_path).last
-            relative_path = "/" + logo_info.local_path.split("/")[-4..-1].join("/")
-            alttext = logo_info.alt_text
-            linkurl = logo_info.target_url
-            @logo_info << { file: logo_file, full_path: logo_info.local_path, relative_path: relative_path, alttext: alttext, linkurl: linkurl }
-          end
         end
 
         def process_banner_input

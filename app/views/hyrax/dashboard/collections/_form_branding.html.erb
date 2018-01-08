@@ -34,12 +34,12 @@
     <div class="row branding-banner-list">
       <div class="col-xs-12">
         <div class="container">
-        <% if @banner_info[:file] %>
+        <% if f.object.banner_info[:file] %>
           <div id="banner">
             <div class="row branding-banner-row">
               <div class="col-sm-3">
                 <span class="name">
-                  <span><%= @banner_info[:file] %></span>
+                  <span><%= f.object.banner_info[:file] %></span>
                   <input type="hidden" name="banner_unchanged" value="true">
                 </span>
               </div>
@@ -56,16 +56,18 @@
               </div> <!-- end col-sm-2 -->
             </div> <!-- row branding-banner-row -->
 
-            <% if @banner_info[:relative_path] %>
+            <% if f.object.banner_info[:relative_path] %>
             <div class="banner-image" >
-              <i><%= image_tag( @banner_info[:relative_path], size: "800x100", alt: "Unable to display banner: #{@banner_info[:file]}") %></i>
+              <i><%= image_tag(f.object.banner_info[:relative_path],
+                               size: "800x100",
+                               alt: "Unable to display banner: #{f.object.banner_info[:file]}") %></i>
             </div>
             <% end %>
           </div> <!-- end banner -->
           <div role="presentation" class="table table-striped"><span class="files"></span></div>
         <% else %>
           <div role="presentation" class="table table-striped"><span class="files"></span></div>
-        <% end # if @banner_info[:file] %>
+        <% end %>
 
           <!-- The global file processing state -->
           <span class="fileupload-process"></span>
@@ -109,43 +111,38 @@
     <div class="row branding-logo-list">
       <div class="col-xs-12">
         <div class="container">
-        <% if @logo_info %>
           <% i = 0 %>
-          <% @logo_info.each { | linfo |  %>
-            <% i += 1 %>
-            <div class="row branding-logo-row" id="logorow<%=i%>">
+          <% f.object.logo_info.each_with_index do |linfo, i| %>
+            <div class="row branding-logo-row" id="logorow_<%= i %>">
               <div class="col-sm-3">
                 <span class="name">
-                  <span><%=linfo[:file]%></span>
-                <input type="hidden" name="logo_files[]" value="<%=linfo[:full_path]%>">
+                  <span><%= linfo[:file] %></span>
+                <input type="hidden" name="logo_files[]" value="<%= linfo[:full_path] %>">
                 </span>
               </div>
 
               <div class="col-sm-4 branding-logo-input">
-                <label for="linkurl">Link URL:
-                  <input id="linkurl" class="branding-logo-input" type="text" name="linkurl[]" value="<%= linfo[:linkurl] %>"></input>
+                <label for="linkurl_<%= i %>">Link URL:
+                  <input id="linkurl_<%= i %>" class="branding-logo-input" type="text" name="linkurl[]" value="<%= linfo[:linkurl] %>"></input>
                 </label>
-                <label for="alttext">Alt Text:
-                  <input id="alttext" class="branding-logo-input" type="text" name="alttext[]" value="<%= linfo[:alttext] %>"></input>
+                <label for="alttext_<%= i %>">Alt Text:
+                  <input id="alttext_<%= i %>" class="branding-logo-input" type="text" name="alttext[]" value="<%= linfo[:alttext] %>"></input>
                 </label>
               </div>
 
               <div class="col-sm-2">
-                <button class="btn btn-danger delete branding-logo-remove" data-type="DELETE" data-url="/" onclick=$("#logorow<%=i%>").remove(); >
+                <button class="btn btn-danger delete branding-logo-remove" data-type="DELETE" data-url="/" onclick=$("#logorow_<%= i %>").remove(); >
                   <span class="glyphicon glyphicon-remove"></span>
                   <span class="controls-remove-text">Remove</span>
                    <span class="sr-only">
                     previous
-                    <span class="controls-field-name-text">Remove Logo <%= i %></span>
+                    <span class="controls-field-name-text">Remove Logo <%= i + 1 %></span>
                   </span>
                 </button>
               </div> <!-- end col-sm-2 -->
             </div> <!-- row logorow -->
-          <% } # end @logo_info.each %>
+          <% end %>
           <span class="files"></span>
-        <% else %>
-          <span class="files"></span>
-        <% end # if @logo_info %>
         </div> <!-- end container -->
 
         <!-- The global file processing state -->
