@@ -20,6 +20,10 @@
 * Implement a characterization service that uses MediaInfo
 * Change the activefedora i18n key to valkyrie
 * ImportExportJob has gone away. It was not used elsewhere in Hyrax
+* Update config/initializers/riiif.rb
+  * set `Riiif::Image.file_resolver = Hyrax::Riiif::ValkyrieFileResolver.new`
+  * Remove the `Riiif::Image.file_resolver.id_to_uri = lambda do |id| ... end `
+
 
 ## TODO:
 
