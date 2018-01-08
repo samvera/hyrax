@@ -24,20 +24,15 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
     let(:attributes) { {} }
     let(:file) { fixture_file_upload('/world.png', 'image/png') }
     let(:uploaded_file) { Hyrax::UploadedFile.create(file: file, user: user) }
-    let(:terminator) { Hyrax::Actors::Terminator.new }
+    let(:model_actor) { described_class.new(nil) }
 
     subject(:middleware) do
       stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
         middleware.use Hyrax::Actors::CreateWithFilesActor
         middleware.use Hyrax::Actors::AddToWorkActor
         middleware.use Hyrax::Actors::InterpretVisibilityActor
-        middleware.use described_class
       end
-      stack.build(terminator)
-    end
-
-    before do
-      allow(terminator).to receive(:create).and_return(true)
+      stack.build(model_actor)
     end
 
     context 'failure' do
