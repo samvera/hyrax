@@ -270,14 +270,16 @@ RSpec.describe Hyrax::FileSetsController do
     describe '#edit' do
       it 'requires login' do
         get :edit, params: { id: public_file_set }
-        expect(response).to fail_redirect_and_flash(main_app.new_user_session_path, 'You need to sign in or sign up before continuing.')
+        expect(response).to redirect_to(main_app.new_user_session_path)
+        expect(flash[:alert]).to eq 'You need to sign in or sign up before continuing.'
       end
     end
 
     describe '#show' do
       it 'denies access to private files' do
         get :show, params: { id: private_file_set }
-        expect(response).to fail_redirect_and_flash(main_app.new_user_session_path(locale: 'en'), 'You are not authorized to access this page.')
+        expect(response).to redirect_to(main_app.new_user_session_path(locale: 'en'))
+        expect(flash[:alert]).to eq 'You are not authorized to access this page.'
       end
 
       it 'allows access to public files' do

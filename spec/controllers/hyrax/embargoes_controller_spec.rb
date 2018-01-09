@@ -25,7 +25,7 @@ RSpec.describe Hyrax::EmbargoesController do
     context 'when I do not have edit permissions for the object' do
       it 'redirects' do
         get :edit, params: { id: not_my_work }
-        expect(response.status).to eq 302
+        expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq 'You are not authorized to access this page.'
       end
     end
@@ -44,7 +44,8 @@ RSpec.describe Hyrax::EmbargoesController do
     context 'when I do not have edit permissions for the object' do
       it 'denies access' do
         get :destroy, params: { id: not_my_work }
-        expect(response).to fail_redirect_and_flash(root_path, 'You are not authorized to access this page.')
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to eq 'You are not authorized to access this page.'
       end
     end
 
