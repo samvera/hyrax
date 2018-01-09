@@ -14,6 +14,7 @@ module Hyrax
     require 'clipboard/rails'
     require 'legato'
     require 'pul_uv_rails'
+    require 'reform/rails'
 
     # Force these models to be added to Legato's registry in development mode
     config.eager_load_paths += %W[
