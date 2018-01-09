@@ -45,9 +45,9 @@ RSpec.describe GenericWork do
 
     it { is_expected.to eq inactive }
 
-    it 'allows state to be set to ActiveTriples::Resource' do
+    it 'allows state to be set to a URI' do
       other_work = described_class.new(state: work.state)
-      expect(other_work.state.rdf_subject).to eq inactive
+      expect(other_work.state).to eq inactive
     end
   end
 
