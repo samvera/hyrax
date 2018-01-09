@@ -26,7 +26,7 @@ class <%= class_name %>ChangeSet < Hyrax::WorkChangeSet
   property :identifier
   property :related_url
   property :source
-  property :based_near
+  collection :based_near
   property :arkivo_checksum
 
   property :admin_set_id
@@ -37,4 +37,11 @@ class <%= class_name %>ChangeSet < Hyrax::WorkChangeSet
 
   # The work must have at least one title
   validates_with Hyrax::HasOneTitleValidator
+
+  # @todo make a class method to generate this
+  # Coerce the form data into a hash of uris
+  # @param collection [Array<Hash>] this is the data from the form
+  def based_near=(v)
+    super v.map { |hsh| hsh['id'] }
+  end
 end

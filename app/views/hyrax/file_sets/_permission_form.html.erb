@@ -77,6 +77,7 @@
       <%= Hyrax.config.owner_permission_levels.keys[0] %>
     </td>
   </tr>
+
   <%= f.fields_for :permissions do |permission_fields| %>
     <%# skip the public, registered, and depositor perms as they are displayed first at the top %>
     <% next if ['public', 'registered', depositor].include? permission_fields.object.agent_name.downcase %>
