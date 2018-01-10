@@ -52,6 +52,18 @@ module Hyrax
         end
       end
 
+      # How should we be doing this? Ex: There is already a conversion that happens if using the ORMConverter:
+      # https://github.com/samvera-labs/valkyrie/blob/82c2dac448ad57b5693ee218172b8e34ed07b19a/lib/valkyrie/persistence/solr/orm_converter.rb#L39
+      module Valkyrie
+        class Id
+          # @return [Id]
+          def self.coerce(input)
+            field = ::Array.wrap(input).first.to_s
+            field.blank? ? nil : field.sub(/^id-/, '')
+          end
+        end
+      end
+
       included do
         attribute :identifier, Solr::Array, solr_name('identifier')
         attribute :based_near, Solr::Array, solr_name('based_near')
@@ -64,7 +76,7 @@ module Hyrax
         attribute :collection_ids, Solr::Array, 'collection_ids_tesim'
         attribute :admin_set, Solr::Array, solr_name('admin_set')
         attribute :member_of_collection_ids, Solr::Array, solr_name('member_of_collection_ids', :symbol)
-        attribute :member_ids, Solr::Array, Valkyrie::Persistence::Solr::Queries::MEMBER_IDS
+        attribute :member_ids, Solr::Array, ::Valkyrie::Persistence::Solr::Queries::MEMBER_IDS
         attribute :description, Solr::Array, solr_name('description')
         attribute :title, Solr::Array, solr_name('title')
         attribute :contributor, Solr::Array, solr_name('contributor')
@@ -81,7 +93,7 @@ module Hyrax
         attribute :mime_type, Solr::String, solr_name('mime_type', :symbol)
         attribute :workflow_state, Solr::String, solr_name('workflow_state_name', :symbol)
         attribute :human_readable_type, Solr::String, solr_name('human_readable_type', :stored_searchable)
-        attribute :representative_id, Solr::String, solr_name('hasRelatedMediaFragment', :symbol)
+        attribute :representative_id, Valkyrie::Id, solr_name('representative_id', :symbol)
         attribute :thumbnail_id, Solr::String, solr_name('hasRelatedImage', :symbol)
         attribute :thumbnail_path, Solr::String, CatalogController.blacklight_config.index.thumbnail_field
         attribute :label, Solr::String, solr_name('label')

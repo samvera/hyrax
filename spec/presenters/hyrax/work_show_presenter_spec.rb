@@ -165,17 +165,22 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#file_set_presenters" do
-    let(:work) { create_for_repository(:work_with_one_file) }
+    let(:work) { create_for_repository(:work_with_files) }
     let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: work) }
     let(:solr_document) { SolrDocument.new(document) }
 
     it "displays them in order" do
-      expect(presenter.file_set_presenters.map(&:id)).to eq obj.ordered_member_ids
+      expect(presenter.file_set_presenters.map(&:id)).to eq work.member_ids.map(&:id)
     end
 
     context "solr query" do
       before do
-        expect(ActiveFedora::SolrService).to receive(:query).twice.with(anything, hash_including(rows: 10_000)).and_return([])
+        # Make sure the work is created before setting the expectation since both
+        # the factory and the presenter now use the same RSolr::Client#post
+        work
+        expect(Valkyrie::MetadataAdapter.find(:index_solr).connection).to receive(:post)
+          .with(anything, hash_including(data: hash_including(rows: 1000)))
+          .and_return("response" => { "docs" => [] })
       end
 
       it "requests >10 rows" do
@@ -205,7 +210,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
     it "has a representative" do
       expect(Hyrax::PresenterFactory).to receive(:build_for)
-        .with(ids: [work.member_ids[0]],
+        .with(ids: [work.member_ids[0].id],
               presenter_class: Hyrax::CompositePresenterFactory,
               presenter_args: [ability, request])
         .and_return ["abc"]
