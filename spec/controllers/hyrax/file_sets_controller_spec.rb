@@ -72,9 +72,9 @@ RSpec.describe Hyrax::FileSetsController do
             file_set: {
               title: ['new_title'],
               keyword: [''],
-              permissions_attributes: [{ type: 'person',
-                                         name: 'archivist1',
-                                         access: 'edit' }]
+              permissions_attributes: { '0' => { type: 'person',
+                                                 agent_name: 'archivist1',
+                                                 access: 'edit' } }
             }
           }
           expect(response).to redirect_to main_app.hyrax_file_set_path(file_set, locale: 'en')
@@ -143,10 +143,10 @@ RSpec.describe Hyrax::FileSetsController do
         post :update, params: {
           id: file_set,
           file_set: { keyword: [''],
-                      permissions_attributes: [
-                        { type: 'person', name: 'user1', access: 'edit' },
-                        { type: 'group', name: 'group1', access: 'read' }
-                      ] }
+                      permissions_attributes: {
+                        '0' => { type: 'person', agent_name: 'user1', access: 'edit' },
+                        '1' => { type: 'group', agent_name: 'group1', access: 'read' }
+                      } }
         }
 
         expect(assigns[:resource].read_groups).to eq ["group1"]
@@ -160,12 +160,12 @@ RSpec.describe Hyrax::FileSetsController do
         post :update, params: {
           id: file_set,
           file_set: { keyword: [''],
-                      permissions_attributes: [
-                        { id: file_set.permissions.last.id, type: 'group', name: 'group3', access: 'read' }
-                      ] }
+                      permissions_attributes: {
+                        '0' => { id: 'group3-group', type: 'group', agent_name: 'group3', access: 'read' }
+                      } }
         }
 
-        expect(assigns[:file_set].read_groups).to eq(["group3"])
+        expect(assigns[:resource].read_groups).to eq(["group3"])
       end
 
       context "when there's an error saving" do
