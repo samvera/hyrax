@@ -23,7 +23,7 @@
 * Update config/initializers/riiif.rb
   * set `Riiif::Image.file_resolver = Hyrax::Riiif::ValkyrieFileResolver.new`
   * Remove the `Riiif::Image.file_resolver.id_to_uri = lambda do |id| ... end `
-
+* There have been changes to the solr document schema, so all documents will need to be reindexed
 
 ## TODO:
 
@@ -41,3 +41,5 @@
     * Write to PCDM (no migration at all)
   * WebAC
   * Presenters: Use Draper decorators?
+* Phase ?
+  * Finish removing direct dependency on Solr
