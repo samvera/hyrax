@@ -15,7 +15,7 @@ before_install:
   - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 
 rvm:
-  - 2.4.2
+  - 2.5.0
 
 env:
   global:
