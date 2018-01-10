@@ -29,10 +29,31 @@ RSpec.describe Hyrax::EmbargoService do
 
   describe '#assets_under_embargo' do
     it 'returns all assets with embargo release date set' do
-      subject.assets_under_embargo
       returned_pids = subject.assets_under_embargo.map(&:id)
       expect(returned_pids).to include work_with_expired_embargo1.id, work_with_expired_embargo2.id, work_with_embargo_in_effect.id
       expect(returned_pids).not_to include work_without_embargo.id
+    end
+  end
+
+  describe '#assets_with_deactivated_embargoes' do
+    let(:id) { Noid::Rails::Service.new.mint }
+    let(:attributes) do
+      { 'embargo_history_ssim' => ['This is in the past'],
+        'id' => id }
+    end
+
+    before do
+      ActiveFedora::SolrService.add(attributes)
+      ActiveFedora::SolrService.commit
+    end
+
+    it 'returns all assets with embargo history set' do
+      returned_pids = subject.assets_with_deactivated_embargoes.map(&:id)
+      expect(returned_pids).to include id
+      expect(returned_pids).not_to include(work_without_embargo.id,
+                                           work_with_expired_embargo1.id,
+                                           work_with_expired_embargo2.id,
+                                           work_with_embargo_in_effect.id)
     end
   end
 end
