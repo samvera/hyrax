@@ -8,16 +8,22 @@ module Hyrax
       self.class.name
     end
 
-    def event_store
-      RedisEventStore
-    end
-
     def events(size = -1)
-      event_store.for(stream[:event]).fetch(size)
+      event_stream.fetch(size)
     end
 
     def log_event(event_id)
-      event_store.for(stream[:event]).push(event_id)
+      event_stream.push(event_id)
     end
+
+    private
+
+      def event_store
+        RedisEventStore
+      end
+
+      def event_stream
+        event_store.for(stream[:event])
+      end
   end
 end
