@@ -16,21 +16,18 @@ module Hyrax
 
       # Persists file as part of file_set and spawns async job to characterize and create derivatives.
       # @param [JobIoWrapper] io the file to save in the repository, with mime_type and original_name
-      # @return [CharacterizeJob, FalseClass] spawned job on success, false on failure
+      # @return [TrueClass]
       # @note Instead of calling this method, use IngestJob to avoid synchronous execution cost
       # @see IngestJob
       # @todo create a job to monitor the temp directory (or in a multi-worker system, directories!) to prune old files that have made it into the repo
       def ingest_file(io)
-        # Skip versioning because versions will be minted by VersionCommitter as necessary during save_characterize_and_record_committer.
         storage_adapter = Valkyrie::StorageAdapter.find(:disk)
         persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
         node_builder = Hyrax::FileNodeBuilder.new(storage_adapter: storage_adapter,
                                                   persister: persister)
 
         node_builder.create(file: io.file, node: io.to_file_node, file_set: file_set)
-
-        repository_file = related_file
-        Hyrax::VersioningService.create(repository_file, user)
+        true
       end
 
       # Reverts file and spawns async job to characterize and create derivatives.
@@ -41,7 +38,6 @@ module Hyrax
         repository_file = related_file
         repository_file.restore_version(revision_id)
         return false unless persister.save(resource: file_set)
-        Hyrax::VersioningService.create(repository_file, user)
         CharacterizeJob.perform_later(file_set, repository_file.id)
       end
 
