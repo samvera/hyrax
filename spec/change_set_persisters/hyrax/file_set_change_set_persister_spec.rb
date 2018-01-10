@@ -10,6 +10,7 @@ RSpec.describe Hyrax::FileSetChangeSetPersister, type: :model do
   let(:file) { fixture_file_upload('world.png', 'image/png') }
   let(:change_set) { Hyrax::FileUploadChangeSet.new(file_set, files: [file]) }
   let(:user) { create(:user) }
+  let(:tika_output) { tika_png_output }
 
   before do
     allow(change_set).to receive(:user).and_return(user)
