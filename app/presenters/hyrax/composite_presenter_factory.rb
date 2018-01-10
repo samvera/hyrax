@@ -12,7 +12,7 @@ module Hyrax
 
     def new(*args)
       obj = args.first
-      if file_set_ids.include?(obj.id)
+      if file_set_ids.include?(Valkyrie::ID.new(obj.id))
         file_set_presenter_class.new(*args)
       else
         work_presenter_class.new(*args)
