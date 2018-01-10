@@ -12,7 +12,7 @@ module Hyrax
 
       def index
         # The user's collections for the "add to collection" form
-        @user_collections = collections_service.search_results(:edit)
+        @user_collections = collections_service.search_results(:deposit)
 
         add_breadcrumb t(:'hyrax.controls.home'), root_path
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path

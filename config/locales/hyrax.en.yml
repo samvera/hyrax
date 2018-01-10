@@ -45,6 +45,7 @@ en:
         new: "New Collection"
       delete: "Delete"
       edit: "Edit"
+      refresh: "Refresh"
       remove: "Remove"
       work:
         new: "Add new work"
@@ -436,28 +437,29 @@ en:
       actions:
         add_existing_works:
           desc: "Add existing works to this Collection"
-          label: "Add existing works"
+          label: "Add existing works to this collection"
         add_new_nested_collection:
           desc: "Add new collection to this Collection"
           label: "Create new collection as subcollection"
         add_new_work:
-          desc: "Add new work to this Collection"
-          label: "Add new work"
+          desc: "Deposit new work through this collection"
+          label: "Deposit new work through this collection"
         delete:
           confirmation: "Delete this collection?"
           desc: "Delete this collection"
-          label: "Delete"
+          label: "Delete collection"
         edit:
           desc: "Edit this collection"
-          label: "Edit"
+          label: "Edit collection"
         header: "Actions"
         nest_collections: # this collection is parent, modal "add-subcollection"
           desc: "Nest other collections within this Collection"
           button_label: "Add a subcollection"
+          label: "Add existing collections to this collection"
           modal_title: "Add a Subcollection to Collection"
           select_label: "Select subcollection"
         nested_subcollection: # this collection is child, modal "add-to-collection"
-          desc: "Nest this collection within another collection"
+          desc: "Add existing collections to this collection"
           button_label: "Add to collection"
           modal_title: "Add this Collection Within Another Collection"
           select_label: "Select collection"
@@ -483,7 +485,7 @@ en:
       search_form:
         button_label: Go
         label: "Search Collection %{title}"
-        placeholder: "Search Collection"
+        placeholder: "Search subcollections and works in this collection"
       show:
         works_in_collection: "Works"
         subcollection_count: "Subcollections"
@@ -816,7 +818,7 @@ en:
           depositor_label:  'Depositor'
           depositor_missing: 'no depositor value'
           keyword_label:    'Keywords'
-          keyword_missing:  'no keywords specified'          
+          keyword_missing:  'no keywords specified'
       recently_uploaded:
         depositor:          'Depositor'
         details:            'Details'

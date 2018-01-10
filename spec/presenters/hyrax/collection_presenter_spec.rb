@@ -276,7 +276,7 @@ RSpec.describe Hyrax::CollectionPresenter do
 
   describe "#user_can_nest_collection?" do
     before do
-      allow(ability).to receive(:can?).with(:deposit, collection.id).and_return(true)
+      allow(ability).to receive(:can?).with(:deposit, solr_doc).and_return(true)
     end
 
     subject { presenter.user_can_nest_collection? }

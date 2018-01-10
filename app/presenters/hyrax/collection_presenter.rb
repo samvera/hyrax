@@ -84,7 +84,7 @@ module Hyrax
     end
 
     def user_can_nest_collection?
-      current_ability.can?(:deposit, id)
+      current_ability.can?(:deposit, solr_document)
     end
 
     def user_can_create_new_nest_collection?
