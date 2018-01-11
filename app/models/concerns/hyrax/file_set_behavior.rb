@@ -33,9 +33,12 @@ module Hyrax
 
     # @return [Hyrax::FileNode] with use Valkyrie::Vocab::PCDMUse.OriginalFile
     def original_file
+      member_by(use: Valkyrie::Vocab::PCDMUse.OriginalFile)
+    end
+
+    def member_by(use:)
       return if member_ids.empty?
-      # TODO: we should be checking the use predicate here
-      Hyrax::Queries.find_by(id: Valkyrie::ID.new(member_ids.first))
+      Hyrax::Queries.find_members(resource: self, model: Hyrax::FileNode).find { |f| f.use.first == use }
     end
 
     def representative_id
