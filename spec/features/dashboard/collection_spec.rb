@@ -620,12 +620,6 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
     context 'from dashboard -> collections action menu' do
       before do
-        # TODO: The following allow_any_instance_of statement avoids an error that occurs due to nesting of forms on the
-        #       collection edit form.  This line should be removed when Issue #2457 is complete.
-        # rubocop:disable RSpec/AnyInstance
-        allow_any_instance_of(ActiveRecord::Associations::CollectionProxy).to receive(:select).with(any_args).and_return([])
-        # rubocop:enable RSpec/AnyInstance
-
         sign_in user
         visit '/dashboard/my/collections'
       end
