@@ -17,7 +17,7 @@ RSpec.describe JobIoWrapper, type: :model do
 
   describe '.create_with_wrapped_params!' do
     let(:local_file) { File.open(path) }
-    let(:relation) { :remastered }
+    let(:relation) { RDF::URI.new("http://pcdm.org/use#remastered") }
 
     subject { described_class.create_with_varied_file_handling!(user: user, file_set: file_set, file: file, relation: relation) }
 
@@ -114,12 +114,14 @@ RSpec.describe JobIoWrapper, type: :model do
   end
 
   describe '#relation' do
+    let(:remastered_relation) { RDF::URI.new("http://pcdm.org/use#remastered") }
+
     it 'has default value' do
-      expect(subject.relation).to eq('original_file')
+      expect(subject.relation).to eq(Valkyrie::Vocab::PCDMUse.OriginalFile.to_s)
     end
     it 'accepts new value' do
-      subject.relation = 'remastered'
-      expect(subject.relation).to eq('remastered')
+      subject.relation = remastered_relation
+      expect(subject.relation).to eq(remastered_relation.to_s)
     end
   end
 

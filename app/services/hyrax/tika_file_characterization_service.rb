@@ -7,7 +7,7 @@ module Hyrax
   class TikaFileCharacterizationService
     attr_reader :file_node, :persister
     def initialize(file_node:, persister:)
-      @file_set = file_node
+      @file_node = file_node
       @persister = persister
     end
 
@@ -16,19 +16,24 @@ module Hyrax
     # @example characterize a file and persist the changes
     #   Valkyrie::FileCharacterizationService.for(file_node, persister).characterize
     def characterize
+      new_file_node = @file_node.new(characterization_attributes)
+      @persister.save(resource: new_file_node)
+      Hyrax::Queries.find_parents(resource: @file_node).each do |fs|
+        fs.member_ids = fs.member_ids.reject { |x| x == new_file_node.id } + [new_file_node.id]
+        @persister.save(resource: fs)
+      end
+      new_file_node
+    end
+
+    def characterization_attributes
       result = JSON.parse(json_output)
-      @file_characterization_attributes = {
+      {
         width: result['tiff:ImageWidth'],
         height: result['tiff:ImageLength'],
         mime_type: result['Content-Type'],
         checksum: MultiChecksum.for(file_object),
         size: result['Content-Length']
       }
-      new_file_node = original_file.new(@file_characterization_attributes.to_h)
-      @file_set.member_ids = @file_set.member_ids.reject { |x| x == new_file_node.id } + [new_file_node.id]
-      @persister.save(resource: new_file_node)
-      @persister.save(resource: @file_set)
-      @file_set
     end
 
     def json_output
@@ -44,12 +49,7 @@ module Hyrax
     # Provides the file attached to the file_node
     # @return [Valkyrie::StorageAdapter::File]
     def file_object
-      @file_object ||= Valkyrie::StorageAdapter.find_by(id: original_file.file_identifiers[0])
-    end
-
-    # @return [Hyrax::FileNode]
-    def original_file
-      @file_set.original_file
+      @file_object ||= Valkyrie::StorageAdapter.find_by(id: @file_node.file_identifiers[0])
     end
 
     # @return [Boolean] conforms to Valkyrie shared spec
