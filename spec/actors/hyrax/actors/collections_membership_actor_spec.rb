@@ -1,7 +1,7 @@
 RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
-  let(:curation_concern) { build(:work) }
+  let(:curation_concern) { build(:work, user: user) }
   let(:attributes) { {} }
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
@@ -16,7 +16,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
   end
 
   describe 'the next actor' do
-    let(:collection) { create(:collection) }
+    let(:collection) { create(:collection, create_access: true) }
     let(:attributes) do
       {
         member_of_collections_attributes: { '0' => { id: '123' } },
@@ -38,7 +38,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
   end
 
   describe 'create' do
-    let(:collection) { create(:collection, collection_type_settings: [:discoverable], edit_users: [user.user_key]) }
+    let(:collection) { create(:collection, collection_type_settings: [:discoverable], user: user, create_access: true) }
     let(:attributes) do
       {
         member_of_collections_attributes: { '0' => { id: collection.id } },
@@ -68,7 +68,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
     end
 
     context "when work is in user's own collection and destroy is passed" do
-      let(:collection) { create(:collection, user: user, title: ['A good title']) }
+      let(:collection) { create(:collection, user: user, title: ['A good title'], create_access: true) }
       let(:attributes) do
         { member_of_collections_attributes: { '0' => { id: collection.id, _destroy: 'true' } } }
       end
@@ -86,7 +86,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
 
     context "when work is in another user's collection" do
       let(:other_user) { create(:user) }
-      let(:other_collection) { create(:collection, user: other_user, title: ['A good title']) }
+      let(:other_collection) { create(:collection, user: other_user, title: ['A good title'], create_access: true) }
 
       before do
         curation_concern.member_of_collections = [other_collection]
@@ -102,7 +102,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
 
     context "updates env" do
       let!(:collection_type) { create(:collection_type) }
-      let!(:collection) { create(:collection, collection_type_gid: collection_type.gid) }
+      let!(:collection) { create(:collection, collection_type_gid: collection_type.gid, create_access: true) }
 
       subject(:middleware) do
         stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
@@ -135,7 +135,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
         end
 
         context "when more than one collection" do
-          let(:collection2) { create(:collection) }
+          let(:collection2) { create(:collection, create_access: true) }
           let(:attributes) do
             {
               member_of_collections_attributes: {

@@ -52,7 +52,7 @@ module Hyrax
         # along side the FileSets on the show page
         def add(env, id)
           member = Collection.find(id)
-          return unless env.current_ability.can?(:edit, member)
+          return unless env.current_ability.can?(:deposit, member)
           env.curation_concern.member_of_collections << member
         end
 

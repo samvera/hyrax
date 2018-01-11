@@ -8,9 +8,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   # Setting Title on admin sets to avoid false positive matches with collections.
   let(:admin_set_a) { create(:admin_set, creator: [admin_user.user_key], title: ['Set A'], with_permission_template: true) }
   let(:admin_set_b) { create(:admin_set, creator: [user.user_key], title: ['Set B'], edit_users: [user.user_key], with_permission_template: true) }
-  let(:collection1) { create(:public_collection, user: user, collection_type_gid: collection_type.gid, with_permission_template: true) }
-  let(:collection2) { create(:public_collection, user: user, collection_type_gid: collection_type.gid, with_permission_template: true) }
-  let(:collection3) { create(:public_collection, user: admin_user, collection_type_gid: collection_type.gid, with_permission_template: true) }
+  let(:collection1) { create(:public_collection, user: user, collection_type_gid: collection_type.gid, create_access: true) }
+  let(:collection2) { create(:public_collection, user: user, collection_type_gid: collection_type.gid, create_access: true) }
+  let(:collection3) { create(:public_collection, user: admin_user, collection_type_gid: collection_type.gid, create_access: true) }
 
   describe 'Your Collections tab' do
     context 'when non-admin user' do
@@ -213,8 +213,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   end
 
   describe 'delete collection' do
-    let!(:empty_collection) { create(:public_collection, title: ['Empty Collection'], user: user, with_permission_template: true) }
-    let!(:collection) { create(:public_collection, title: ['Collection with Work'], user: user, with_permission_template: true) }
+    let!(:empty_collection) { create(:public_collection, title: ['Empty Collection'], user: user, create_access: true) }
+    let!(:collection) { create(:public_collection, title: ['Collection with Work'], user: user, create_access: true) }
     let!(:admin_user) { create(:admin) }
     let!(:empty_adminset) { create(:admin_set, title: ['Empty Admin Set'], creator: [admin_user.user_key], with_permission_template: true) }
     let!(:adminset) { create(:admin_set, title: ['Admin Set with Work'], creator: [admin_user.user_key], with_permission_template: true) }
@@ -392,7 +392,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
   describe 'collection show page', with_nested_reindexing: true do
     let(:collection) do
-      create(:public_collection, user: user, description: ['collection description'], with_permission_template: true)
+      create(:public_collection, user: user, description: ['collection description'], create_access: true)
     end
     let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
     let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
@@ -535,7 +535,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
       sign_in user
     end
-    let(:collection) { create(:named_collection, user: user, with_permission_template: true) }
+    let(:collection) { create(:named_collection, user: user, create_access: true) }
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       visit '/dashboard/my/collections'
@@ -590,7 +590,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   end
 
   describe 'edit collection' do
-    let(:collection) { create(:named_collection, user: user, with_permission_template: true) }
+    let(:collection) { create(:named_collection, user: user, create_access: true) }
     let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
     let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
 
@@ -620,6 +620,12 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
     context 'from dashboard -> collections action menu' do
       before do
+        # TODO: The following allow_any_instance_of statement avoids an error that occurs due to nesting of forms on the
+        #       collection edit form.  This line should be removed when Issue #2457 is complete.
+        # rubocop:disable RSpec/AnyInstance
+        allow_any_instance_of(ActiveRecord::Associations::CollectionProxy).to receive(:select).with(any_args).and_return([])
+        # rubocop:enable RSpec/AnyInstance
+
         sign_in user
         visit '/dashboard/my/collections'
       end
@@ -648,6 +654,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         new_title = "Altered Title"
         new_description = "Completely new Description text."
         creators = ["Dorje Trollo", "Vajrayogini"]
+
         fill_in('Title', with: new_title)
         fill_in('Abstract or Summary', with: new_description)
         fill_in('Creator', with: creators.first)
@@ -674,8 +681,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       context 'with discoverable set' do
-        let(:discoverable_collection_id) { create(:collection, user: user, collection_type_settings: [:discoverable], with_permission_template: true).id }
-        let(:not_discoverable_collection_id) { create(:collection, user: user, collection_type_settings: [:not_discoverable], with_permission_template: true).id }
+        let(:discoverable_collection_id) { create(:collection, user: user, collection_type_settings: [:discoverable], create_access: true).id }
+        let(:not_discoverable_collection_id) { create(:collection, user: user, collection_type_settings: [:not_discoverable], create_access: true).id }
 
         it 'to true, it shows Discovery tab' do
           visit "/dashboard/collections/#{discoverable_collection_id}/edit"
@@ -689,8 +696,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       context 'with sharable set' do
-        let(:sharable_collection_id) { create(:collection, user: user, collection_type_settings: [:sharable], with_permission_template: true).id }
-        let(:not_sharable_collection_id) { create(:collection, user: user, collection_type_settings: [:not_sharable], with_permission_template: true).id }
+        let(:sharable_collection_id) { create(:collection, user: user, collection_type_settings: [:sharable], create_access: true).id }
+        let(:not_sharable_collection_id) { create(:collection, user: user, collection_type_settings: [:not_sharable], create_access: true).id }
 
         it 'to true, it shows Sharable tab' do
           visit "/dashboard/collections/#{sharable_collection_id}/edit"
