@@ -24,11 +24,9 @@ fr:
           identifier_tesim: Identificateur
           keyword_tesim: Mot-clé
           language_tesim: La langue
-          license_statement_tesim: Licence
           license_tesim: Licence
           publisher_tesim: Éditeur
           rights_statement_tesim: Déclaration des droits
-          rights_tesim: Droits
           subject_tesim: Assujettir
         show:
           based_near_tesim: Emplacement
@@ -42,11 +40,9 @@ fr:
           identifier_tesim: Identificateur
           keyword_tesim: Mot-clé
           language_tesim: La langue
-          license_statement_tesim: Licence
           license_tesim: Licence
           publisher_tesim: Éditeur
           rights_statement_tesim: Déclaration des droits
-          rights_tesim: Droits
           subject_tesim: Assujettir
           title_tesim: Titre
   hyrax:
