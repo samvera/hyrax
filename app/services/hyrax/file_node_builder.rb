@@ -20,8 +20,8 @@ module Hyrax
       node.file_identifiers = node.file_identifiers + [stored_file.id]
       saved_node = persister.save(resource: node)
       file_set.member_ids += [saved_node.id]
-      file_set = persister.save(resource: file_set)
-      CharacterizeJob.perform_later(file_set.id.to_s)
+      persister.save(resource: file_set)
+      CharacterizeJob.perform_later(saved_node.id.to_s)
       # note the returned saved_node does not yet contain the characterization done in the async job
       saved_node
     end

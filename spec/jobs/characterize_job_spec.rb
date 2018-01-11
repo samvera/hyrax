@@ -18,7 +18,7 @@ RSpec.describe CharacterizeJob do
     end
 
     it "invokes Valkyrie::FileCharacterizationService" do
-      described_class.perform_now(file_set.id)
+      described_class.perform_now(file_id)
       # because once in the factory
       expect(char).to have_received(:characterize).twice
     end
