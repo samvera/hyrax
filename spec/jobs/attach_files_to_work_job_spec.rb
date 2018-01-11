@@ -8,7 +8,6 @@ RSpec.describe AttachFilesToWorkJob do
   shared_examples 'a file attacher' do
     it 'attaches files, copies visibility and permissions and updates the uploaded files' do
       expect(ImportUrlJob).not_to receive(:perform_later)
-      expect(CharacterizeJob).to receive(:perform_later).twice
       described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2])
       reloaded_work = Hyrax::Queries.find_by(id: generic_work.id)
       expect(reloaded_work.file_sets.count).to eq 2
@@ -20,14 +19,28 @@ RSpec.describe AttachFilesToWorkJob do
   context "with uploaded files on the filesystem" do
     let(:generic_work) { create_for_repository(:work, :public, edit_users: ['userz@bbb.ddd']) }
 
-    it_behaves_like 'a file attacher' do
-      it 'records the depositor(s) in edit_users' do
-        reloaded_work = Hyrax::Queries.find_by(id: generic_work.id)
-        expect(reloaded_work.file_sets.map(&:edit_users)).to all(match_array([generic_work.depositor, 'userz@bbb.ddd']))
+    it_behaves_like 'a file attacher'
+
+    before do
+      expect(CharacterizeJob).to receive(:perform_later).twice
+      expect(Hyrax::VersioningService).to receive(:create).twice
+    end
+
+    it 'records the depositor(s) in edit_users' do
+      described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2])
+      reloaded_work = Hyrax::Queries.find_by(id: generic_work.id)
+      expect(reloaded_work.file_sets.map(&:edit_users)).to all(match_array([generic_work.depositor, 'userz@bbb.ddd'].flatten))
+    end
+    it 'creates file nodes' do
+      described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2])
+      reloaded_work = Hyrax::Queries.find_by(id: generic_work.id)
+      reloaded_work.file_sets.each do |file_set|
+        expect(Hyrax::Queries.find_members(resource: file_set, model: Hyrax::FileNode).count).to eq 1
       end
     end
   end
 
+  # rubocop:disable RSpec/AnyInstance
   context "with uploaded files at remote URLs" do
     let(:url1) { 'https://example.com/my/img.png' }
     let(:url2) { URI('https://example.com/other/img.png') }
@@ -37,8 +50,10 @@ RSpec.describe AttachFilesToWorkJob do
     before do
       allow(uploaded_file1.file).to receive(:file).and_return(fog_file1)
       allow(uploaded_file2.file).to receive(:file).and_return(fog_file2)
+      allow_any_instance_of(Hyrax::Actors::FileActor).to receive(:ingest_file)
     end
 
     it_behaves_like 'a file attacher'
   end
+  # rubocop:enable RSpec/AnyInstance
 end
