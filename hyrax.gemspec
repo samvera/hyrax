@@ -58,7 +58,7 @@ SUMMARY
   spec.add_dependency 'legato', '~> 0.3'
   spec.add_dependency 'linkeddata' # Required for getting values from geonames
   spec.add_dependency 'mailboxer', '~> 0.12'
-  spec.add_dependency 'nest', '~> 2.0'
+  spec.add_dependency 'nest', '~> 3.1'
   spec.add_dependency 'noid-rails', '~> 3.0.0'
   spec.add_dependency 'oauth'
   spec.add_dependency 'oauth2', '~> 1.2'
