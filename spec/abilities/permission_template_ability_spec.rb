@@ -45,7 +45,7 @@ RSpec.describe 'PermissionTemplateAbility' do
              permission_template: permission_template,
              agent_type: 'user',
              agent_id: user.user_key)
-      collection.update_access_controls!
+      collection.reset_access_controls!
     end
 
     it 'allows most template abilities' do
@@ -78,7 +78,7 @@ RSpec.describe 'PermissionTemplateAbility' do
              permission_template: permission_template,
              agent_type: 'user',
              agent_id: user.user_key)
-      collection.update_access_controls!
+      collection.reset_access_controls!
     end
 
     it 'denies all template abilities' do
@@ -105,7 +105,7 @@ RSpec.describe 'PermissionTemplateAbility' do
              permission_template: permission_template,
              agent_type: 'user',
              agent_id: user.user_key)
-      collection.update_access_controls!
+      collection.reset_access_controls!
     end
 
     it 'denies all template abilities' do

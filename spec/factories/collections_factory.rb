@@ -30,7 +30,7 @@ FactoryBot.define do
                                                                           (evaluator.create_access || RSpec.current_example.metadata[:with_nested_reindexing]))
         attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
         create(:permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)
-        collection.update_access_controls!
+        collection.reset_access_controls!
       end
     end
 
