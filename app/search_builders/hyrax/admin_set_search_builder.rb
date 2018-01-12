@@ -33,7 +33,10 @@ module Hyrax
       ["{!terms f=id}#{admin_set_ids_for_deposit.join(',')}"]
     end
 
-    delegate :admin_set_ids_for_deposit, to: :current_ability
-    private :admin_set_ids_for_deposit
+    private
+
+      def admin_set_ids_for_deposit
+        Hyrax::Collections::PermissionsService.admin_set_ids_for_deposit(ability: current_ability)
+      end
   end
 end

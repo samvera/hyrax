@@ -1,7 +1,7 @@
 // makes it so images don't bleed into the content on the right
 .catalog img {
   max-width: 100%;
-  max-height: auto;
+  height: auto;
 }
 
 .document-thumbnail {
@@ -15,8 +15,95 @@
     width: 30%;
     float: left;
   }
+
   .metadata {
     width: 70%;
     display: inline-block;
+  }
+}
+
+// Styles added to help with newly implemented
+// Bootstrap row / column setup for search results
+.search-result-wrapper {
+  padding-bottom: 30px;
+
+  .search-results-title-row {
+    align-items: center;
+    display: flex;
+    padding: 0 0 10px;
+
+    .search-result-title {
+      display: inline-block;
+      margin: 0 15px;
+    }
+
+    @media (max-width: 768px) {
+      display: block;
+
+      > .search-result-title {
+        display: block;
+        padding-bottom: 5px;
+      }
+
+      .label {
+        margin-left: 15px;
+      }
+    }
+  }
+
+  .list-thumbnail {
+    float: none;
+    width: 100%;
+  }
+
+  .metadata {
+    width: 100%;
+  }
+
+  .metadata-row {
+
+    > div:first-child {
+      font-weight: bold;
+      padding-right: 0;
+      text-align: right;
+
+      @media (max-width: 768px) {
+        text-align: left;
+      }
+    }
+  }
+
+  .collection-counts-wrapper {
+    text-align: right;
+
+    @media (max-width: 768px) {
+      text-align: left;
+    }
+
+    .collection-counts-item {
+      background-color: #f5f5f5;
+      display: inline-block;
+      margin-left: 10px;
+      padding: 8px;
+      text-align: center;
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      span {
+        display: block;
+        font-size: 18px;
+        line-height: 1;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding-bottom: 20px;
+
+    > div {
+      padding-bottom: 10px;
+    }
   }
 }

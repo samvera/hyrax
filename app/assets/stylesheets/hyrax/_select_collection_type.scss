@@ -1,0 +1,45 @@
+.collectiontypes {
+  .modal-body {
+    padding: 0;
+  }
+
+  .modal-title {
+    font-size: $font-size-h3;
+  }
+}
+
+.select-collectiontype:first-child {
+  border-top: 0;
+}
+
+.select-collectiontype {
+  border-top: 1px solid $table-border-color;
+  padding: 15px 15px 0;
+
+  label {
+    margin: 0;
+    width: 100%;
+  }
+
+  input[type="radio"] {
+    float: left;
+    position: relative;
+    width: 30px;
+  }
+
+  .select-collectiontype-description {
+    float: left;
+    font-weight: normal;
+    position: relative;
+    width: 80%;
+
+    .collectiontype-title {
+      font-size: $font-size-h4;
+      margin-top: 0;
+    }
+  }
+}
+
+.new-collection-select {
+  clear: both;
+}

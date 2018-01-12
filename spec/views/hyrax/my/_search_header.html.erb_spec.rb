@@ -16,19 +16,21 @@ RSpec.describe 'hyrax/my/_search_header.html.erb', type: :view do
       render 'hyrax/my/search_header', current_tab: 'works'
     end
     it "has buttons" do
+      expect(rendered).to have_selector('input[value="Delete Selected"]')
       expect(rendered).to have_selector('button', text: 'Add to Collection')
       expect(rendered).to have_selector('input[value="Edit Selected"]')
     end
   end
 
-  context "not on my works page (i.e. Works shared with me)" do
+  context "not on my works page (i.e. one of the collections index pages)" do
     before do
       allow(view).to receive(:on_my_works?).and_return(false)
       render 'hyrax/my/search_header', current_tab: 'shared'
     end
     it "has buttons" do
+      expect(rendered).not_to have_selector('input[value="Delete Selected"]')
       expect(rendered).not_to have_selector('button', text: 'Add to Collection')
-      expect(rendered).to have_selector('input[value="Edit Selected"]')
+      expect(rendered).not_to have_selector('input[value="Edit Selected"]')
     end
   end
 end

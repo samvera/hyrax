@@ -73,6 +73,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:upload_path) }
   it { is_expected.to respond_to(:work_requires_files?) }
   it { is_expected.to respond_to(:extract_full_text?) }
+  it { is_expected.to respond_to(:nested_relationship_reindexer) }
+  it { is_expected.to respond_to(:default_nested_relationship_reindexer) }
   it { is_expected.to respond_to(:whitelisted_ingest_dirs) }
   it { is_expected.to respond_to(:whitelisted_ingest_dirs=) }
 end

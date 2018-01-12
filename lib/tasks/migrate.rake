@@ -26,5 +26,13 @@ namespace :hyrax do
         end
       end
     end
+
+    task add_collection_type_and_permissions_to_collections: :environment do
+      # Run collection migration which sets the collection_type of legacy collections to User Collection and adds
+      # a permission template assigning users/groups with edit_access to the Manager role and users/groups with
+      # read_access to the Viewer role.  Legacy collections are those created prior to collections extensions
+      # added in Hyrax 2.1.0
+      Hyrax::Collections::MigrationService.migrate_all_collections
+    end
   end
 end

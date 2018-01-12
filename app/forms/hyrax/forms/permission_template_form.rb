@@ -6,11 +6,12 @@ module Hyrax
       self.model_class = PermissionTemplate
       self.terms = []
       delegate :access_grants, :access_grants_attributes=, :release_date, :release_period, :visibility, to: :model
-      delegate :available_workflows, :active_workflow, :admin_set, to: :model
+      delegate :available_workflows, :active_workflow, :source_model, to: :model
 
-      # @return [#to_s] the primary key of the associated admin_set
-      # def admin_set_id (because you might come looking for this method)
-      delegate :id, to: :admin_set, prefix: :admin_set
+      # @return [#to_s] the primary key of the associated admin_set or collection
+      # def source_id (because you might come looking for this method)
+      delegate :id, to: :source_model, prefix: :source
+      delegate :update_access_controls!, to: :source_model
 
       # Stores which radio button under release "Varies" option is selected
       attr_accessor :release_varies
@@ -63,18 +64,19 @@ module Hyrax
       end
       # rubocop:enable Metrics/MethodLength
 
-      def update_management
-        admin_set.update_access_controls!
-        update_workflow_responsibilities
+      # Copy this access to the permissions of the Admin Set or Collection and to
+      # the WorkflowResponsibilities of the active workflow if this is an Admin Set
+      def update_access(remove_agent: false)
+        update_access_controls!
+        update_workflow_responsibilities(remove_agent: remove_agent) if source_model.is_a?(AdminSet)
       end
 
-      # This method is used to revoke access to an Admin Set and its workflows
+      # This method is used to revoke access to a Collection or Admin Set and its workflows
       #
       # @return [Void]
       def remove_access!(permission_template_access)
         construct_attributes_from_template_access!(permission_template_access)
-        admin_set.update_access_controls!
-        update_workflow_responsibilities(remove_agent: true)
+        update_access(remove_agent: true)
       end
 
       private
@@ -109,9 +111,7 @@ module Hyrax
         # @return [Void]
         def update_participants_options
           update_permission_template
-          update_workflow_responsibilities
-          # if managers were added or removed, recalculate update the access controls on the AdminSet
-          admin_set.update_access_controls! if managers_updated?
+          update_access(remove_agent: false)
         end
 
         # Grant appropriate workflow roles based on access specified
