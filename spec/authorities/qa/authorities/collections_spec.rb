@@ -1,41 +1,76 @@
 RSpec.describe Qa::Authorities::Collections, :clean_repo do
   let(:controller) { Qa::TermsController.new }
-  let(:user1) { create(:user) }
-  let(:user2) { create(:user) }
+  let(:user1) { build(:user) }
+  let(:user2) { build(:user) }
+  let(:ability) { Ability.new(user1) }
   let(:q) { "foo" }
   let(:service) { described_class.new }
-  let!(:collection1) { create(:private_collection, id: 'col-1-own', title: ['foo foo'], user: user1, create_access: true) }
-  let!(:collection2) { create(:private_collection, id: 'col-2-own', title: ['bar'], user: user1, create_access: true) }
-  let!(:collection3) { create(:private_collection, id: 'col-3-own', title: ['another foo'], user: user1, create_access: true) }
-  let!(:collection4) { create(:private_collection, id: 'col-4-none', title: ['foo foo foo'], user: user2, create_access: true) }
-  let!(:collection5) do
-    create(:private_collection, id: 'col-5-mgr', title: ['foo for you'], user: user2,
-                                with_permission_template: { manage_users: [user1] }, create_access: true)
+
+  let(:col1_doc) do
+    { "has_model_ssim" => ["Collection"], id: "col-1-own", "title_tesim" => ["foo foo"], "title_sim" => ["foo foo"],
+      "edit_access_person_ssim" => [user1.user_key] }
   end
-  let!(:collection6) do
-    create(:private_collection, id: 'col-6-dep', title: ['foo too'], user: user2,
-                                with_permission_template: { deposit_users: [user1] }, create_access: true)
+  let!(:col1_pt) { create(:permission_template, source_id: col1_doc[:id], source_type: 'collection', manage_users: [user1.user_key]) }
+  let(:col2_doc) do
+    { "has_model_ssim" => ["Collection"], id: "col-2-own", "title_tesim" => ["bar"], "title_sim" => ["bar"],
+      "edit_access_person_ssim" => [user1.user_key] }
   end
-  let!(:collection7) do
-    create(:private_collection, id: 'col-7-view', title: ['foo bar baz'], user: user2,
-                                with_permission_template: { view_users: [user1] }, create_access: true)
+  let!(:col2_pt) { create(:permission_template, source_id: col2_doc[:id], source_type: 'collection', manage_users: [user1.user_key]) }
+  let(:col3_doc) do
+    { "has_model_ssim" => ["Collection"], id: "col-3-own", "title_tesim" => ["another foo"], "title_sim" => ["another foo"],
+      "edit_access_person_ssim" => [user1.user_key] }
   end
-  let!(:collection8) do
-    create(:private_collection, id: 'col-8-mgr', title: ['bar for you'], user: user2,
-                                with_permission_template: { manage_users: [user1] }, create_access: true)
+  let!(:col3_pt) { create(:permission_template, source_id: col3_doc[:id], source_type: 'collection', manage_users: [user1.user_key]) }
+  let(:col4_doc) do
+    { "has_model_ssim" => ["Collection"], id: "col-4-none", "title_tesim" => ["foo foo foo"], "title_sim" => ["foo foo foo"],
+      "edit_access_person_ssim" => [user2.user_key] }
   end
-  let!(:collection9) do
-    create(:private_collection, id: 'col-9-dep', title: ['bar too'], user: user2,
-                                with_permission_template: { deposit_users: [user1] }, create_access: true)
+  let(:col5_doc) do
+    { "has_model_ssim" => ["Collection"], id: "col-5-mgr", "title_tesim" => ["foo for you"], "title_sim" => ["foo for you"],
+      "edit_access_person_ssim" => [user1.user_key, user2.user_key] }
   end
-  let!(:collection10) do
-    create(:private_collection, id: 'col-10-view', title: ['bar bar baz'], user: user2,
-                                with_permission_template: { view_users: [user1] }, create_access: true)
+  let!(:col5_pt) { create(:permission_template, source_id: col5_doc[:id], source_type: 'collection', manage_users: [user1.user_key]) }
+  let(:col6_doc) do
+    { "has_model_ssim" => ["Collection"], id: "col-6-dep", "title_tesim" => ["foo too"], "title_sim" => ["foo too"],
+      "edit_access_person_ssim" => [user2.user_key], "read_access_person_ssim" => [user1.user_key] }
   end
+  let!(:col6_pt) { create(:permission_template, source_id: col6_doc[:id], source_type: 'collection', manage_users: [user2.user_key], deposit_users: [user1.user_key]) }
+  let(:col7_doc) do
+    { "has_model_ssim" => ["Collection"], id: "col-7-view", "title_tesim" => ["foo bar baz"], "title_sim" => ["foo bar baz"],
+      "edit_access_person_ssim" => [user2.user_key], "read_access_person_ssim" => [user1.user_key] }
+  end
+  let!(:col7_pt) { create(:permission_template, source_id: col7_doc[:id], source_type: 'collection', manage_users: [user2.user_key], view_users: [user1.user_key]) }
+  let(:col8_doc) do
+    { "has_model_ssim" => ["Collection"], id: "col-8-mgr", "title_tesim" => ["bar for you"], "title_sim" => ["bar for you"],
+      "edit_access_person_ssim" => [user1.user_key, user2.user_key] }
+  end
+  let!(:col8_pt) { create(:permission_template, source_id: col8_doc[:id], source_type: 'collection', manage_users: [user2.user_key, user1.user_key]) }
+  let(:col9_doc) do
+    { "has_model_ssim" => ["Collection"], id: "col-9-dep", "title_tesim" => ["bar too"], "title_sim" => ["bar too"],
+      "edit_access_person_ssim" => [user2.user_key], "read_access_person_ssim" => [user1.user_key] }
+  end
+  let!(:col9_pt) { create(:permission_template, source_id: col9_doc[:id], source_type: 'collection', manage_users: [user2.user_key], deposit_users: [user1.user_key]) }
+  let(:col10_doc) do
+    { "has_model_ssim" => ["Collection"], id: "col-10-view", "title_tesim" => ["bar bar baz"], "title_sim" => ["bar bar baz"],
+      "edit_access_person_ssim" => [user2.user_key], "read_access_person_ssim" => [user1.user_key] }
+  end
+  let!(:col10_pt) { create(:permission_template, source_id: col10_doc[:id], source_type: 'collection', manage_users: [user2.user_key], view_users: [user1.user_key]) }
 
   before do
+    ActiveFedora::SolrService.add(col1_doc, commit: true)
+    ActiveFedora::SolrService.add(col2_doc, commit: true)
+    ActiveFedora::SolrService.add(col3_doc, commit: true)
+    ActiveFedora::SolrService.add(col4_doc, commit: true)
+    ActiveFedora::SolrService.add(col5_doc, commit: true)
+    ActiveFedora::SolrService.add(col6_doc, commit: true)
+    ActiveFedora::SolrService.add(col7_doc, commit: true)
+    ActiveFedora::SolrService.add(col8_doc, commit: true)
+    ActiveFedora::SolrService.add(col9_doc, commit: true)
+    ActiveFedora::SolrService.add(col10_doc, commit: true)
+
     allow(controller).to receive(:params).and_return(params)
     allow(controller).to receive(:current_user).and_return(user1)
+    allow(controller).to receive(:current_ability).and_return(ability)
   end
 
   subject { service.search(q, controller) }
@@ -45,7 +80,7 @@ RSpec.describe Qa::Authorities::Collections, :clean_repo do
       let(:params) { ActionController::Parameters.new(q: q, access: 'read') }
 
       it 'displays a list of read collections for the current user' do
-        expect(subject.map { |result| result[:id] }).to match_array [collection1.id, collection3.id, collection5.id, collection6.id, collection7.id]
+        expect(subject.map { |result| result[:id] }).to match_array [col1_doc[:id], col3_doc[:id], col5_doc[:id], col6_doc[:id], col7_doc[:id]]
       end
     end
 
@@ -53,7 +88,7 @@ RSpec.describe Qa::Authorities::Collections, :clean_repo do
       let(:params) { ActionController::Parameters.new(q: q, access: 'edit') }
 
       it 'displays a list of edit collections for the current user' do
-        expect(subject.map { |result| result[:id] }).to match_array [collection1.id, collection3.id, collection5.id]
+        expect(subject.map { |result| result[:id] }).to match_array [col1_doc[:id], col3_doc[:id], col5_doc[:id]]
       end
     end
 
@@ -61,7 +96,7 @@ RSpec.describe Qa::Authorities::Collections, :clean_repo do
       let(:params) { ActionController::Parameters.new(q: q, access: 'deposit') }
 
       it 'displays a list of edit and deposit collections for the current user' do
-        expect(subject.map { |result| result[:id] }).to match_array [collection1.id, collection3.id, collection5.id, collection6.id]
+        expect(subject.map { |result| result[:id] }).to match_array [col1_doc[:id], col3_doc[:id], col5_doc[:id], col6_doc[:id]]
       end
     end
   end
