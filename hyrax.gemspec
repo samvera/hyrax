@@ -71,7 +71,7 @@ SUMMARY
   spec.add_dependency 'redis-namespace', '~> 1.5'
   spec.add_dependency 'redlock', '>= 0.1.2'
   spec.add_dependency 'retriable', '>= 2.9', '< 4.0'
-  spec.add_dependency 'samvera-nesting_indexer', '~> 0.8'
+  spec.add_dependency 'samvera-nesting_indexer', '~> 1.0'
   spec.add_dependency 'select2-rails', '~> 3.5'
   spec.add_dependency 'signet'
   spec.add_dependency 'tinymce-rails', '~> 4.1'

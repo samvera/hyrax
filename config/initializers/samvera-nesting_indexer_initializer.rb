@@ -1,6 +1,6 @@
-# rubocop:disable Style/FileName
+# rubocop:disable Naming/FileName
 require 'samvera/nesting_indexer'
-# rubocop:enable Style/FileName
+# rubocop:enable Naming/FileName
 
 Samvera::NestingIndexer.configure do |config|
   # How many layers of nesting are allowed for collections

@@ -59,6 +59,7 @@ module Hyrax
       # rubocop:enable Lint/UnusedMethodArgument
 
       # @api public
+      # @deprecated
       #
       # From the given parameters, we will need to add them to the underlying SOLR document for the object
       #
@@ -67,15 +68,28 @@ module Hyrax
       # @param ancestors [Array<String>]
       # @param pathnames [Array<String>]
       # @return Hash - the attributes written to the indexing layer
-      def self.write_document_attributes_to_index_layer(id:, parent_ids:, ancestors:, pathnames:)
+      # rubocop:disable Lint/UnusedMethodArgument
+      def self.write_document_attributes_to_index_layer(id:, parent_ids:, ancestors:, pathnames:, deepest_nested_depth:)
+        raise NotImplementedError, "This method is deprecated as of v1.0.0 of samvera-nesting_indexer, prefer instead .write_nesting_document_to_index_layer"
+      end
+      # rubocop:enable Lint/UnusedMethodArgument
+
+      # @api public
+      #
+      # From the nesting_document, we will need to add the nesting attributes to the underlying SOLR document for the object
+      #
+      # @param nesting_document [Samvera::NestingIndexer::Documents::IndexDocument]
+      # @return Hash - the attributes written to the indexing layer
+      def self.write_nesting_document_to_index_layer(nesting_document:)
         solr_doc = ActiveFedora::Base.uncached do
-          ActiveFedora::Base.find(id).to_solr # What is the current state of the solr document
+          ActiveFedora::Base.find(nesting_document.id).to_solr # What is the current state of the solr document
         end
 
         # Now add the details from the nesting indexor to the document
-        solr_doc[solr_field_name_for_storing_ancestors] = ancestors
-        solr_doc[solr_field_name_for_storing_parent_ids] = parent_ids
-        solr_doc[solr_field_name_for_storing_pathnames] = pathnames
+        solr_doc[solr_field_name_for_storing_ancestors] = nesting_document.ancestors
+        solr_doc[solr_field_name_for_storing_parent_ids] = nesting_document.parent_ids
+        solr_doc[solr_field_name_for_storing_pathnames] = nesting_document.pathnames
+        solr_doc[solr_field_name_for_deepest_nested_depth] = nesting_document.deepest_nested_depth
         ActiveFedora::SolrService.add(solr_doc, commit: true)
         solr_doc
       end
@@ -123,6 +137,13 @@ module Hyrax
 
       class << self
         delegate :solr_field_name_for_storing_pathnames, :solr_field_name_for_storing_ancestors, :solr_field_name_for_storing_parent_ids, to: :nesting_configuration
+      end
+
+      # <dynamicField name="*_isi" type="int" stored="true" indexed="true" multiValued="false"/>
+      SOLR_FIELD_NAME_FOR_DEEPEST_NESTED_DEPTH = 'nesting_collection__deepest_nested_depth_isi'.freeze
+
+      def self.solr_field_name_for_deepest_nested_depth
+        SOLR_FIELD_NAME_FOR_DEEPEST_NESTED_DEPTH
       end
 
       # @api private

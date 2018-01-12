@@ -105,41 +105,68 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
     end
   end
 
-  describe '.write_document_attributes_to_index_layer' do
+  describe '.write_nesting_document_to_index_layer' do
     let(:work) { create(:work) }
     let(:query_for_works_solr_document) { ->(id:) { ActiveFedora::SolrService.query(ActiveFedora::SolrQueryBuilder.construct_query_for_ids([id])).first } }
 
     # rubocop:disable RSpec/ExampleLength
-    it 'will append parent_ids, ancestors, and pathnames' do
+    it 'will append parent_ids, ancestors, pathnames, and deepest_nested_depth to the SOLR document' do
       previous_solr_keys = work.to_solr.keys
       expect(previous_solr_keys).not_to include(described_class.solr_field_name_for_storing_ancestors)
       expect(previous_solr_keys).not_to include(described_class.solr_field_name_for_storing_parent_ids)
       expect(previous_solr_keys).not_to include(described_class.solr_field_name_for_storing_pathnames)
+      expect(previous_solr_keys).not_to include(described_class.solr_field_name_for_deepest_nested_depth)
 
       existing_queried_solr_document = query_for_works_solr_document.call(id: work.id)
       expect(existing_queried_solr_document).not_to be_key(described_class.solr_field_name_for_storing_ancestors)
       expect(existing_queried_solr_document).not_to be_key(described_class.solr_field_name_for_storing_parent_ids)
       expect(existing_queried_solr_document).not_to be_key(described_class.solr_field_name_for_storing_pathnames)
+      expect(existing_queried_solr_document).not_to be_key(described_class.solr_field_name_for_deepest_nested_depth)
 
-      kwargs = { id: work.id, parent_ids: ['123'], pathnames: ["123/#{work.id}"], ancestors: ['123'] }
-      returned_solr_document = described_class.write_document_attributes_to_index_layer(**kwargs)
+      nesting_document = Samvera::NestingIndexer::Documents::IndexDocument.new(
+        id: work.id,
+        parent_ids: ['123'],
+        pathnames: ["123#{Samvera::NestingIndexer::Documents::ANCESTOR_AND_PATHNAME_DELIMITER}#{work.id}"],
+        ancestors: ['123']
+      )
+      returned_solr_document = described_class.write_nesting_document_to_index_layer(nesting_document: nesting_document)
 
-      expect(returned_solr_document.fetch(described_class.solr_field_name_for_storing_ancestors)).to eq(kwargs.fetch(:ancestors))
-      expect(returned_solr_document.fetch(described_class.solr_field_name_for_storing_parent_ids)).to eq(kwargs.fetch(:parent_ids))
-      expect(returned_solr_document.fetch(described_class.solr_field_name_for_storing_pathnames)).to eq(kwargs.fetch(:pathnames))
+      expect(returned_solr_document.fetch(described_class.solr_field_name_for_storing_ancestors)).to eq(nesting_document.ancestors)
+      expect(returned_solr_document.fetch(described_class.solr_field_name_for_storing_parent_ids)).to eq(nesting_document.parent_ids)
+      expect(returned_solr_document.fetch(described_class.solr_field_name_for_storing_pathnames)).to eq(nesting_document.pathnames)
+      expect(returned_solr_document.fetch(described_class.solr_field_name_for_deepest_nested_depth)).to eq(nesting_document.deepest_nested_depth)
 
       newly_queried_solr_document = query_for_works_solr_document.call(id: work.id)
-      expect(newly_queried_solr_document.fetch(described_class.solr_field_name_for_storing_ancestors)).to eq(kwargs.fetch(:ancestors))
-      expect(newly_queried_solr_document.fetch(described_class.solr_field_name_for_storing_parent_ids)).to eq(kwargs.fetch(:parent_ids))
-      expect(newly_queried_solr_document.fetch(described_class.solr_field_name_for_storing_pathnames)).to eq(kwargs.fetch(:pathnames))
+      expect(newly_queried_solr_document.fetch(described_class.solr_field_name_for_storing_ancestors)).to eq(nesting_document.ancestors)
+      expect(newly_queried_solr_document.fetch(described_class.solr_field_name_for_storing_parent_ids)).to eq(nesting_document.parent_ids)
+      expect(newly_queried_solr_document.fetch(described_class.solr_field_name_for_storing_pathnames)).to eq(nesting_document.pathnames)
+      expect(newly_queried_solr_document.fetch(described_class.solr_field_name_for_deepest_nested_depth)).to eq(nesting_document.deepest_nested_depth)
     end
     # rubocop:enable RSpec/ExampleLength
+  end
+
+  describe '.write_document_attributes_to_index_layer' do
+    it 'is not implemented and deprecated' do
+      expect do
+        described_class.write_document_attributes_to_index_layer(
+          id: 1, parent_ids: 2, ancestors: 3, pathnames: 4, deepest_nested_depth: 5
+        )
+      end.to raise_error(NotImplementedError)
+    end
   end
 
   describe '.solr_field_name_for_storing_ancestors' do
     subject { described_class.solr_field_name_for_storing_ancestors }
 
     it { is_expected.to match(/_ssim$/) }
+  end
+
+  describe '.solr_field_name_for_deepest_nested_depth' do
+    subject { described_class.solr_field_name_for_deepest_nested_depth }
+
+    it 'is expected to be a single value integer' do
+      expect(subject).to match(/_isi$/)
+    end
   end
 
   describe '.solr_field_name_for_storing_parent_ids' do
