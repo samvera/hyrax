@@ -117,16 +117,28 @@ RSpec.describe Hyrax::FileSetPresenter do
     it { is_expected.to eq 'FileSet' }
   end
 
-  describe "#events" do
+  describe '#events' do
     subject(:events) { presenter.events }
 
-    let(:store) { double }
+    let(:event_stream) { double }
     let(:response) { double }
 
-    it "calls the event store" do
-      expect(Hyrax::RedisEventStore).to receive(:for).with('FileSet:123abc:event').and_return(store)
-      allow(store).to receive(:fetch).with(100).and_return(response)
+    before do
+      allow(presenter).to receive(:event_stream).and_return(event_stream)
+    end
+
+    it 'calls the event store' do
+      allow(event_stream).to receive(:fetch).with(100).and_return(response)
       expect(events).to eq response
+    end
+  end
+
+  describe '#event_stream' do
+    let(:object_stream) { double }
+
+    it 'returns a Nest stream' do
+      expect(Hyrax::RedisEventStore).to receive(:for).with(Nest).and_return(object_stream)
+      presenter.send(:event_stream)
     end
   end
 

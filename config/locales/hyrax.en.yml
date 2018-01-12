@@ -817,6 +817,7 @@ en:
           keyword_label:    'Keywords'
           keyword_missing:  'no keywords specified'          
       recently_uploaded:
+        depositor:          'Depositor'
         details:            'Details'
         no_public:          'No public work has been contributed.'
         tab_label:          'Recently Uploaded'
@@ -827,7 +828,6 @@ en:
           depositor_missing: 'no depositor value'
           keyword_label:    'Keywords'
           keyword_missing:  'no keywords specified'
-
     icons:
       collection:       'fa fa-cubes'
       default:          'fa fa-cube'
