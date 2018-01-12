@@ -1,5 +1,7 @@
 module MusicalWork
   class Cover < Valkyrie::Resource
+    include ::Hyrax::WorkBehavior
+    include ::Hyrax::BasicMetadata
   end
 end
 
