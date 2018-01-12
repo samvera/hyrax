@@ -7,7 +7,7 @@ module Hyrax
         after_update_response
       else
         respond_to do |wants|
-          wants.html { render 'hyrax/base/unauthorized', status: :unauthorized }
+          wants.html { respond_to_html }
           wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
         end
       end
@@ -35,6 +35,14 @@ module Hyrax
         respond_to do |wants|
           wants.html { redirect_to [main_app, curation_concern], notice: "The #{curation_concern.human_readable_type} has been updated." }
           wants.json { render 'hyrax/base/show', status: :ok, location: polymorphic_path([main_app, curation_concern]) }
+        end
+      end
+
+      def respond_to_html
+        if workflow_action_form.authorized_for_processing
+          redirect_to [main_app, curation_concern], alert: "Invalid submission: comment required."
+        else
+          render 'hyrax/base/unauthorized', status: :unauthorized
         end
       end
   end

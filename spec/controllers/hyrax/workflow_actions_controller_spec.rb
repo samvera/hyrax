@@ -8,6 +8,7 @@ RSpec.describe Hyrax::WorkflowActionsController, type: :controller do
   before do
     allow(ActiveFedora::Base).to receive(:find).with(generic_work.to_param).and_return(generic_work)
     allow(generic_work).to receive(:persisted?).and_return(true)
+    allow(form).to receive(:authorized_for_processing).and_return(true)
     allow(Hyrax::Forms::WorkflowActionForm).to receive(:new).and_return(form)
   end
 
@@ -18,11 +19,20 @@ RSpec.describe Hyrax::WorkflowActionsController, type: :controller do
     end
 
     it 'will render :unauthorized when action is not valid for the given user' do
+      expect(form).to receive(:authorized_for_processing).and_return(false)
       expect(form).to receive(:save).and_return(false)
       sign_in(user)
 
       put :update, params: { id: generic_work.to_param, workflow_action: { name: 'advance', comment: '' } }
       expect(response).to be_unauthorized
+    end
+
+    it 'will present an error message when a comment is not entered' do
+      expect(form).to receive(:save).and_return(false)
+      sign_in(user)
+
+      put :update, params: { id: generic_work.to_param, workflow_action: { name: 'advance', comment: '' } }
+      expect(flash[:alert]).to be_present
     end
 
     it 'will redirect when the form is successfully save' do

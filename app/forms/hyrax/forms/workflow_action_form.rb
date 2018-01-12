@@ -35,6 +35,8 @@ module Hyrax
       end
 
       validates :name, presence: true
+      validate :valid_comment
+
       validate :authorized_for_processing
 
       def authorized_for_processing
@@ -53,6 +55,10 @@ module Hyrax
         def convert_to_sipity_objects!
           @subject = WorkflowActionInfo.new(work, current_user)
           @sipity_workflow_action = PowerConverter.convert_to_sipity_action(name, scope: subject.entity.workflow) { nil }
+        end
+
+        def valid_comment
+          errors.add(:base, :missing_comment) if comment.blank? && name != 'approve'
         end
 
         attr_reader :subject, :sipity_workflow_action

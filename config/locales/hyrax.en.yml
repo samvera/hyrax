@@ -321,6 +321,17 @@ en:
         thumbnail: Thumbnail
         title: Title
         visibility: Visibility
+        workflow:
+          review: Review and Approval
+          action: Actions
+          actions:
+            request_changes: Request Changes
+            approve: Approve
+            comment_only: Comment Only
+            leave_a_comment: Leave a Comment
+          comment_label: Review comment
+          comment_error: You must enter some text before submitting a comment.
+          previous: Previous
       relationships:
         empty: This %{type} is not currently in any collections.
         header: Relationships
