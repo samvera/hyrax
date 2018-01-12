@@ -14,7 +14,7 @@
 
 <% if on_my_works? %>
 <div class="batch-info">
-  <%= render 'hyrax/dashboard/collections/form_for_select_collection', user_collections: @user_collections %>
+  <%= render 'hyrax/dashboard/collections/form_for_select_collection', user_collections: @user_collections if params[:controller] != 'hyrax/my/collections' %>
 
   <div class="batch-toggle">
     <% session[:batch_edit_state] = "on" %>

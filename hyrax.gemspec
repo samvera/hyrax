@@ -32,7 +32,7 @@ SUMMARY
   spec.add_dependency 'active-fedora', '~> 11.5', '>= 11.5.2'
   spec.add_dependency 'almond-rails', '~> 0.1'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
-  spec.add_dependency 'blacklight', '~> 6.11', '>= 6.11.2'
+  spec.add_dependency 'blacklight', '~> 6.14'
   spec.add_dependency 'blacklight-gallery', '~> 0.7'
   spec.add_dependency 'breadcrumbs_on_rails', '~> 3.0'
   spec.add_dependency 'browse-everything', '>= 0.10.5'
@@ -58,7 +58,7 @@ SUMMARY
   spec.add_dependency 'legato', '~> 0.3'
   spec.add_dependency 'linkeddata' # Required for getting values from geonames
   spec.add_dependency 'mailboxer', '~> 0.12'
-  spec.add_dependency 'nest', '~> 2.0'
+  spec.add_dependency 'nest', '~> 3.1'
   spec.add_dependency 'noid-rails', '~> 3.0.0'
   spec.add_dependency 'oauth'
   spec.add_dependency 'oauth2', '~> 1.2'
