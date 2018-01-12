@@ -23,6 +23,8 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
       # actor.attach_to_work(work)
       work.member_ids += [file_set.id]
       uploaded_file.update(file_set_uri: file_set.to_global_id)
+      io = JobIoWrapper.create_with_varied_file_handling!(user: uploaded_file.user, file: uploaded_file, file_set: file_set, relation: Valkyrie::Vocab::PCDMUse.OriginalFile)
+      io.file_actor.ingest_file(io)
     end
     metadata_adapter.persister.save(resource: work)
   end
