@@ -54,7 +54,7 @@ module Hyrax
         collection.collection_type_gid = Hyrax::CollectionType.find_or_create_default_collection_type.gid
         permission_template = Hyrax::PermissionTemplate.find_by(source_id: collection.id)
         if permission_template.present?
-          collection.update_access_controls!
+          collection.reset_access_controls!
         else
           create_permissions(collection)
         end

@@ -11,7 +11,7 @@ module Hyrax
       # @return [#to_s] the primary key of the associated admin_set or collection
       # def source_id (because you might come looking for this method)
       delegate :id, to: :source_model, prefix: :source
-      delegate :update_access_controls!, to: :source_model
+      delegate :reset_access_controls!, to: :source_model
 
       # Stores which radio button under release "Varies" option is selected
       attr_accessor :release_varies
@@ -67,7 +67,7 @@ module Hyrax
       # Copy this access to the permissions of the Admin Set or Collection and to
       # the WorkflowResponsibilities of the active workflow if this is an Admin Set
       def update_access(remove_agent: false)
-        update_access_controls!
+        reset_access_controls!
         update_workflow_responsibilities(remove_agent: remove_agent) if source_model.is_a?(AdminSet)
       end
 

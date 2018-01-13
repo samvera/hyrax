@@ -49,7 +49,7 @@ RSpec.describe 'AdminSetAbility' do
              permission_template: admin_set.permission_template,
              agent_type: 'user',
              agent_id: user.user_key)
-      admin_set.update_access_controls!
+      admin_set.reset_access_controls!
     end
 
     it 'allows most abilities' do # rubocop:disable RSpec/ExampleLength
@@ -85,7 +85,7 @@ RSpec.describe 'AdminSetAbility' do
              permission_template: admin_set.permission_template,
              agent_type: 'user',
              agent_id: user.user_key)
-      admin_set.update_access_controls!
+      admin_set.reset_access_controls!
     end
 
     it 'allows deposit related abilities' do
@@ -121,7 +121,7 @@ RSpec.describe 'AdminSetAbility' do
              permission_template: admin_set.permission_template,
              agent_type: 'user',
              agent_id: user.user_key)
-      admin_set.update_access_controls!
+      admin_set.reset_access_controls!
     end
 
     it 'allows viewing only ability' do

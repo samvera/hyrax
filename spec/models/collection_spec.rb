@@ -189,7 +189,7 @@ RSpec.describe Collection, type: :model do
     end
   end
 
-  describe '#update_access_controls!' do
+  describe '#reset_access_controls!' do
     let!(:user) { build(:user) }
     let(:collection_type) { create(:collection_type) }
     let!(:collection) { create(:collection, user: user, collection_type_gid: collection_type.gid) }
@@ -205,27 +205,27 @@ RSpec.describe Collection, type: :model do
       allow(permission_template).to receive(:agent_ids_for).with(access: 'view', agent_type: 'group').and_return(['viewers', ::Ability.admin_group_name])
     end
 
-    it 'updates user edit access' do
+    it 'resets user edit access' do
       expect(collection.edit_users).to match_array([user.user_key])
-      collection.update_access_controls!
+      collection.reset_access_controls!
       expect(collection.edit_users).to match_array([user.user_key, 'mgr1@ex.com', 'mgr2@ex.com'])
     end
 
-    it 'updates group edit access' do
+    it 'resets group edit access' do
       expect(collection.edit_groups).to match_array([])
-      collection.update_access_controls!
+      collection.reset_access_controls!
       expect(collection.edit_groups).to match_array(['managers', ::Ability.admin_group_name])
     end
 
-    it 'updates user read access' do
+    it 'resets user read access' do
       expect(collection.read_users).to match_array([])
-      collection.update_access_controls!
+      collection.reset_access_controls!
       expect(collection.read_users).to match_array(['vw1@ex.com', 'vw2@ex.com', 'dep1@ex.com', 'dep2@ex.com'])
     end
 
-    it 'updates group read access' do
+    it 'resets group read access' do
       expect(collection.read_groups).to match_array([])
-      collection.update_access_controls!
+      collection.reset_access_controls!
       expect(collection.read_groups).to match_array(['viewers', 'depositors', ::Ability.admin_group_name])
     end
   end

@@ -43,7 +43,7 @@ RSpec.describe 'CollectionAbility' do
              permission_template: collection.permission_template,
              agent_type: 'user',
              agent_id: user.user_key)
-      collection.update_access_controls!
+      collection.reset_access_controls!
     end
 
     it 'allows most abilities' do # rubocop:disable RSpec/ExampleLength
@@ -78,7 +78,7 @@ RSpec.describe 'CollectionAbility' do
              permission_template: collection.permission_template,
              agent_type: 'user',
              agent_id: user.user_key)
-      collection.update_access_controls!
+      collection.reset_access_controls!
     end
 
     it 'allows deposit related abilities' do
@@ -113,7 +113,7 @@ RSpec.describe 'CollectionAbility' do
              permission_template: collection.permission_template,
              agent_type: 'user',
              agent_id: user.user_key)
-      collection.update_access_controls!
+      collection.reset_access_controls!
     end
 
     it 'allows viewing only ability' do
