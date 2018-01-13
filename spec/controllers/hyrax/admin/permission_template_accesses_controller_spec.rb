@@ -29,7 +29,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
       end
 
       context 'when source is an admin set' do
-        let(:permission_template) { create(:permission_template, source_id: admin_set.id, source_type: 'admin_set') }
+        let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
         let(:admin_set) { create(:admin_set, edit_users: ['Liz']) }
 
         context 'when deleting the admin users group' do
@@ -64,7 +64,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
       end
 
       context 'when source is a collection' do
-        let(:permission_template) { create(:permission_template, source_id: collection.id, source_type: 'collection') }
+        let(:permission_template) { create(:permission_template, source_id: collection.id) }
         let(:collection) { create(:collection, edit_users: ['Liz']) }
 
         context 'when deleting the admin users group' do

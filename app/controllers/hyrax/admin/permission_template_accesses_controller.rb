@@ -34,11 +34,11 @@ module Hyrax
         end
 
         def after_destroy_success
-          if source_type == 'admin_set'
+          if source.admin_set?
             redirect_to hyrax.edit_admin_admin_set_path(source_id,
                                                         anchor: 'participants'),
                         notice: translate('participants', scope: 'hyrax.admin.admin_sets.form.permission_update_notices')
-          elsif source_type == 'collection'
+          elsif source.collection?
             redirect_to hyrax.edit_dashboard_collection_path(source_id,
                                                              anchor: 'sharing'),
                         notice: translate('sharing', scope: 'hyrax.dashboard.collections.form.permission_update_notices')
@@ -46,18 +46,22 @@ module Hyrax
         end
 
         def after_destroy_error
-          if source_type == 'admin_set'
+          if source.admin_set?
             redirect_to hyrax.edit_admin_admin_set_path(source_id,
                                                         anchor: 'participants'),
                         alert: @permission_template_access.errors.full_messages.to_sentence
-          elsif source_type == 'collection'
+          elsif source.collection?
             redirect_to hyrax.edit_dashboard_collection_path(source_id,
                                                              anchor: 'sharing'),
                         alert: @permission_template_access.errors.full_messages.to_sentence
           end
         end
 
-        delegate :source_type, :source_id, to: :permission_template
+        delegate :source_id, to: :permission_template
+
+        def source
+          @source ||= ::SolrDocument.find(source_id)
+        end
 
         def remove_access!
           permission_template_form.remove_access!(@permission_template_access)

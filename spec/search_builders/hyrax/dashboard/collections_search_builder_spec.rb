@@ -52,7 +52,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsSearchBuilder do
     subject { builder.gated_discovery_filters }
 
     let(:collection) { create(:collection) }
-    let(:permission_template) { create(:permission_template, source_id: collection.id, source_type: 'collection') }
+    let(:permission_template) { create(:permission_template, source_id: collection.id) }
 
     context "user has deposit access" do
       before do

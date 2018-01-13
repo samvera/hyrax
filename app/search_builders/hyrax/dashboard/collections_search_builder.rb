@@ -24,7 +24,7 @@ module Hyrax
         solr_parameters[:fq] += ["(#{clauses.join(' OR ')})"]
       end
 
-      # Include all admin sets the user has deposit permission for.
+      # Include all admin sets and collections the user has deposit permission for.
       # @return [Array{String}] values are lucence syntax term queries suitable for :fq
       def apply_collection_deposit_permissions(_permission_types, _ability = current_ability)
         collection_ids = collection_ids_for_deposit
@@ -35,7 +35,7 @@ module Hyrax
       private
 
         def collection_ids_for_deposit
-          Hyrax::Collections::PermissionsService.collection_ids_for_deposit(ability: current_ability)
+          Hyrax::Collections::PermissionsService.source_ids_for_deposit(ability: current_ability)
         end
     end
   end

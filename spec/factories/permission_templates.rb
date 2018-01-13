@@ -18,7 +18,6 @@ FactoryBot.define do
             create(:admin_set)
           end
         permission_template.source_id = admin_set.id
-        permission_template.source_type = 'admin_set'
       elsif evaluator.with_collection
         source_id = permission_template.source_id
         collection =
@@ -32,7 +31,6 @@ FactoryBot.define do
             create(:collection)
           end
         permission_template.source_id = collection.id
-        permission_template.source_type = 'collection'
       end
     end
 

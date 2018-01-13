@@ -69,7 +69,12 @@ module Hyrax
 
       # @return [Boolean] true if the user has at least one admin set they can deposit into.
       def admin_set_with_deposit?
-        Hyrax::Collections::PermissionsService.admin_set_ids_for_user(access: ['deposit', 'manage'], ability: self).any?
+        ids = PermissionTemplateAccess.for_user(ability: self,
+                                                access: ['deposit', 'manage'])
+                                      .joins(:permission_template)
+                                      .pluck('DISTINCT source_id')
+        query = "_query_:\"{!raw f=has_model_ssim}AdminSet\" AND {!terms f=id}#{ids.join(',')}"
+        ActiveFedora::SolrService.count(query) > 0
       end
 
       # This overrides hydra-head, (and restores the method from blacklight-access-controls)
