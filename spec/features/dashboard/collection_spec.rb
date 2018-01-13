@@ -201,7 +201,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     it "attaches the works", :js do
       visit '/dashboard/my/works'
       first('input#check_all').click
-      click_button "Add to Collection" # opens the modal
+      click_button "Add to collection" # opens the modal
       # since there is only one collection, it's not necessary to choose a radio button
       click_button "Update Collection"
       expect(page).to have_content "Works in this Collection"
@@ -460,14 +460,14 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         visit "/dashboard/collections/#{collection1.id}"
         click_link 'Add existing works'
         first('input#check_all').click
-        click_button "Add to Collection"
+        click_button "Add to collection"
         expect(page).to have_css("input#id_#{collection1.id}[checked='checked']")
         expect(page).not_to have_css("input#id_#{collection2.id}[checked='checked']")
 
         visit "/dashboard/collections/#{collection2.id}"
         click_link 'Add existing works'
         first('input#check_all').click
-        click_button "Add to Collection"
+        click_button "Add to collection"
         expect(page).not_to have_css("input#id_#{collection1.id}[checked='checked']")
         expect(page).to have_css("input#id_#{collection2.id}[checked='checked']")
 

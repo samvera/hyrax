@@ -655,6 +655,7 @@ en:
           edit_admin_set:          "Edit collection" # use same term for admin sets and collections
           edit_collection:         "Edit collection"
           edit_collection_deny:    "You do not have sufficient privileges to edit this collection."
+          edit_selected:           "Edit Selected"
           edit_work:               "Edit Work"
           highlight:               "Highlight Work on Profile"
           nesting_not_allowed:     "Collections of this type do not support nesting."
