@@ -44,14 +44,14 @@
 
   <td class="collection_type"><%= collection_presenter.collection_type_badge %></td>
 
-  <td class="text-center">
+  <td>
     <%= render_visibility_link(collection_presenter.solr_document) %>
   </td>
 
   <td><%=collection_presenter.total_viewable_items%></td>
 
-  <td class="text-center date"><%=collection_presenter.modified_date.try(:to_formatted_s, :standard) %> </td>
-  <td class="text-center">
+  <td class="date"><%=collection_presenter.modified_date.try(:to_formatted_s, :standard) %> </td>
+  <td>
     <% if collection_presenter.solr_document.admin_set? %>
       <%= render '/hyrax/my/admin_set_action_menu', admin_set_presenter: collection_presenter %>
       <%= render 'modal_delete_empty_admin_set', id: id %>
@@ -60,7 +60,7 @@
       <%= render 'hyrax/my/collection_action_menu', collection_presenter: collection_presenter %>
       <!-- Render delete modal -->
       <%= render 'modal_add_to_collection', id: id, source: "my" %>
-      <%= render 'modal_delete_collection', id: id %>      
+      <%= render 'modal_delete_collection', id: id %>
       <%= render 'modal_delete_empty_collection', id: id %>
     <% end %>
    </td>

@@ -133,6 +133,10 @@ button.branding-banner-remove:hover {
         text-align: left;
       }
     }
+
+    .modal {
+      text-align: left;
+    }
   }
 
   // Datatable overwrites
@@ -206,6 +210,13 @@ button.branding-banner-remove:hover {
 
     .collection-type-title {
       margin-top: 0;
+    }
+
+    // List of radio inputs in modal window
+    .radio-button-list {
+      h4 {
+        margin-top: 2px;
+      }
     }
   }
 }
