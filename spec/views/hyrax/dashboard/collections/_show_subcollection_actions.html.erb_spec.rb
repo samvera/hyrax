@@ -23,7 +23,7 @@ RSpec.describe 'hyrax/dashboard/collections/_show_subcollection_actions.html.erb
 
     it 'renders a links to nest subcollection options' do
       expect(rendered).to have_button(I18n.t('hyrax.collection.actions.nest_collections.desc'))
-      expect(rendered).to have_css(".actions-controls-collections .btn[href='#{hyrax.dashboard_create_subcollection_under_path(parent_id: presenter.id)}']")
+      expect(rendered).to have_css(".btn[href='#{hyrax.dashboard_create_subcollection_under_path(parent_id: presenter.id)}']")
     end
   end
 

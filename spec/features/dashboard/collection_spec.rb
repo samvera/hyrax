@@ -488,7 +488,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
       it "preselects the collection we are adding works to and adds the new work" do
         visit "/dashboard/collections/#{collection1.id}"
-        click_link 'Add new work'
+        click_link 'Deposit new work through this collection'
         choose "payload_concern", option: "GenericWork"
         click_button 'Create work'
 
