@@ -103,7 +103,7 @@ RSpec.describe Hyrax::CollectionPresenter do
       let(:persister) { Valkyrie::MetadataAdapter.find(:indexing_persister).persister }
 
       before do
-        work.member_of_collection_ids << collection.id
+        work.member_of_collection_ids += [collection.id]
         persister.save(resource: work)
       end
 
