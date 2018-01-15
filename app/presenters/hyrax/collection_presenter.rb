@@ -48,12 +48,12 @@ module Hyrax
     end
 
     def size
-      number_to_human_size(@solr_document['bytes_lts'])
+      number_to_human_size(@solr_document['bytes_lts']) || '0 Bytes'
     end
 
     def total_items
       solr = Valkyrie::MetadataAdapter.find(:index_solr).connection
-      results = solr.get('select', params: { q: "member_of_collection_ids_ssim:#{id}",
+      results = solr.get('select', params: { q: "member_of_collection_ids_ssim:id-#{id}",
                                              rows: 0,
                                              qt: 'standard' })
       results['response']['numFound'].to_i
