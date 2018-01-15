@@ -3,6 +3,11 @@ module Hydra::Catalog
   include Blacklight::Catalog
   include Blacklight::AccessControls::Catalog
 
+  # This will work for BL 6, but will need to move to SearchService in BL 7
+  def search_builder
+    Hydra::AccessControls::SearchBuilder.new(self, ability: current_ability)
+  end
+
   # Action-specific enforcement
   # Controller "before" filter for enforcing access controls on show actions
   # @param [Hash] opts (optional, not currently used)

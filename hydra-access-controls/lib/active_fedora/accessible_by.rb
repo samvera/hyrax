@@ -1,8 +1,5 @@
 ActiveFedora::QueryMethods.module_eval do
   extend ActiveSupport::Concern
-  included do
-    include Hydra::AccessControlsEnforcement
-  end
 
   def accessible_by(ability, action = :index)
     permission_types = case action
@@ -14,6 +11,15 @@ ActiveFedora::QueryMethods.module_eval do
     filters = gated_discovery_filters(permission_types, ability).join(" OR ")
     spawn.where!(filters)
   end
+
+  private
+
+    def gated_discovery_filters(types, ability)
+      search_builder = Hydra::AccessControls::SearchBuilder.new(self,
+                                                                ability: ability,
+                                                                permission_types: types)
+      search_builder.send(:gated_discovery_filters)
+    end
 end
 
 ActiveFedora::Querying.module_eval do
