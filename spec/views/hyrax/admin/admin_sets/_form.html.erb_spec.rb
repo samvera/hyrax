@@ -10,7 +10,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_form.html.erb', type: :view do
     stub_template('hyrax/admin/admin_sets/_form_visibility.html.erb' => 'visibility tab')
     stub_template('hyrax/admin/admin_sets/_form_workflow.html.erb' => 'workflow tab')
     allow(change_set).to receive(:thumbnail_title).and_return("James Joyce")
-    allow(admin_set).to receive(:member_ids).and_return(['123', '456'])
+    allow(change_set).to receive(:member_ids).and_return(['123', '456'])
     render
   end
 
