@@ -44,7 +44,7 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
 
       before do
         controller.form_class = form_class_with_failed_save
-        allow(controller).to receive(:authorize!).with(:edit, child).and_return(true)
+        allow(controller).to receive(:authorize!).with(:read, child).and_return(true)
         allow(controller.form_class).to receive(:errors)
         allow(controller.form_class.errors).to receive(:full_messages).and_return(['huge mistake'])
       end
@@ -73,7 +73,7 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
 
       before do
         controller.form_class = form_class_with_successful_save
-        allow(controller).to receive(:authorize!).with(:edit, child).and_return(true)
+        allow(controller).to receive(:authorize!).with(:read, child).and_return(true)
       end
 
       it 'authorizes, flashes a notice, and redirects' do
@@ -111,7 +111,7 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
 
       before do
         controller.form_class = form_class_with_failed_validation
-        allow(controller).to receive(:authorize!).with(:edit, parent).and_return(true)
+        allow(controller).to receive(:authorize!).with(:deposit, parent).and_return(true)
         allow(controller.form_class).to receive(:errors)
         allow(controller.form_class.errors).to receive(:full_messages).and_return(['huge mistake'])
       end
@@ -140,7 +140,7 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
 
       before do
         controller.form_class = form_class_with_successful_validation
-        allow(controller).to receive(:authorize!).with(:edit, parent).and_return(true)
+        allow(controller).to receive(:authorize!).with(:deposit, parent).and_return(true)
       end
 
       it 'authorizes, flashes a notice, and redirects' do
@@ -177,7 +177,7 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
 
     before do
       controller.form_class = form_class_with_failed_save
-      allow(controller).to receive(:authorize!).with(:edit, parent).and_return(true)
+      allow(controller).to receive(:authorize!).with(:deposit, parent).and_return(true)
       allow(controller.form_class).to receive(:errors)
       allow(controller.form_class.errors).to receive(:full_messages).and_return(['huge mistake'])
     end
@@ -206,7 +206,7 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
 
     before do
       controller.form_class = form_class_with_successful_save
-      allow(controller).to receive(:authorize!).with(:edit, parent).and_return(true)
+      allow(controller).to receive(:authorize!).with(:deposit, parent).and_return(true)
     end
 
     it 'authorizes, flashes a notice, and redirects' do
