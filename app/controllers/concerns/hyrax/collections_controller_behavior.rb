@@ -65,6 +65,7 @@ module Hyrax
       def query_collection_members
         member_works
         member_subcollections if collection.collection_type.nestable?
+        parent_collections if collection.collection_type.nestable?
       end
 
       # Instantiate the membership query service
@@ -76,6 +77,13 @@ module Hyrax
         @response = collection_member_service.available_member_works
         @member_docs = @response.documents
         @members_count = @response.total
+      end
+
+      def parent_collections
+        col = @collection
+        col = Collection.find(collection.id) if col.blank?
+        @parent_collections = col.member_of_collections
+        @parent_collection_count = @parent_collections.size
       end
 
       def member_subcollections

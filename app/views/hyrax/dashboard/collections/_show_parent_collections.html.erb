@@ -1,0 +1,15 @@
+<% if @parent_collections.nil? || @parent_collections.empty? %>
+    <div class="alert alert-warning" role="alert"><%= t('hyrax.collections.show.no_visible_parent_collections') %></div>
+<% else %>
+    <div class="media-body">
+      <h4 class="media-heading">
+        <% @parent_collections.each do |document| %>
+            <ul>
+              <li>
+                <%= link_to document, [hyrax, :dashboard, document], id: "src_copy_link_#{document.id}" %>
+              </li>
+            </ul>
+        <% end %>
+      </h4>
+    </div>
+<% end %>

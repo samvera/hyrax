@@ -487,9 +487,11 @@ en:
         label: "Search Collection %{title}"
         placeholder: "Search subcollections and works in this collection"
       show:
-        works_in_collection: "Works"
-        subcollection_count: "Subcollections"
+        no_visible_parent_collections: "There are no visible parent collections."
         no_visible_subcollections: "There are no visible subcollections."
+        parent_collection_header: "Parent Collections"
+        subcollection_count: "Subcollections"
+        works_in_collection: "Works"
     collection_type:
       default_title: "User Collection"
       admin_set_title: "Admin Set"
@@ -626,6 +628,7 @@ en:
         show:
           header: "Collection"
           item_count: "Works"
+          parent_collection_header: "Parent Collections"
           public_view_label: "Public view of Collection"
           search_results: "Search Results within this Collection"
           subcollection_count: "Subcollections"
@@ -1109,7 +1112,7 @@ en:
     labels:
       collection:
         size:                      "Size"
-        total_items:               "Total works"
+        total_items:               "Total items"
       collection_type:
         allow_multiple_membership: "MULTIPLE MEMBERSHIP"
         assigns_workflow: "WORKFLOW"

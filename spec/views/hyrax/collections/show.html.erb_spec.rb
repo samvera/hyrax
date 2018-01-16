@@ -15,6 +15,7 @@ RSpec.describe 'hyrax/collections/show.html.erb', type: :view do
     allow(presenter).to receive(:collection_type_is_nestable?).and_return(true)
     allow(presenter).to receive(:total_items).and_return(0)
     assign(:subcollection_count, 0)
+    assign(:parent_collection_count, 0)
     assign(:members_count, 0)
     allow(presenter).to receive(:banner_file).and_return("banner.gif")
     allow(presenter).to receive(:logo_record).and_return([{ linkurl: "logo link url", alttext: "logo alt text", file_location: "logo.gif" }])
