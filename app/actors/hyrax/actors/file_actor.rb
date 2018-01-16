@@ -41,12 +41,8 @@ module Hyrax
       # @param [String] revision_id
       # @return [FileNode, FalseClass] reverted file node on success, false on failure
       def revert_to(revision_id)
-        persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
         repository_file = related_file
-        repository_file.restore_version(revision_id)
-        return false unless persister.save(resource: file_set)
-        Hyrax::VersioningService.create(repository_file, user)
-        CharacterizeJob.perform_later(repository_file.id.to_s)
+        repository_file = Hyrax::VersioningService.restore_version(file_set, repository_file, revision_id, user)
         repository_file
       end
 

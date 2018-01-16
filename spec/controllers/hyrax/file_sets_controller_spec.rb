@@ -94,6 +94,10 @@ RSpec.describe Hyrax::FileSetsController do
         let(:file2)       { "image.jpg" }
         let(:second_user) { create(:user) }
         let(:version1)    { "version1" }
+        let(:huf) { Hyrax::UploadedFile.new(user: user, file: fixture_file_upload(file1)) }
+        let(:huf2) { Hyrax::UploadedFile.new(user: second_user, file: fixture_file_upload(file2)) }
+        let(:io) { JobIoWrapper.new(file_set_id: file_set.id, user: user, uploaded_file: huf, path: huf.uploader.path) }
+        let(:io2) { JobIoWrapper.new(file_set_id: file_set.id, user: second_user, uploaded_file: huf2, path: huf2.uploader.path) }
 
         # let(:actor1)      { Hyrax::Actors::FileSetActor.new(file_set, user) }
         # let(:actor2)      { Hyrax::Actors::FileSetActor.new(file_set, second_user) }
@@ -102,6 +106,8 @@ RSpec.describe Hyrax::FileSetsController do
           # TODO: how do we make versions?
           # actor1.create_content(fixture_file_upload(file1))
           # actor2.create_content(fixture_file_upload(file2))
+          Hyrax::Actors::FileActor.new(file_set, Valkyrie::Vocab::PCDMUse.OriginalFile, user).ingest_file(io)
+          Hyrax::Actors::FileActor.new(file_set, Valkyrie::Vocab::PCDMUse.OriginalFile, second_user).ingest_file(io2)
         end
 
         describe "restoring a previous version" do
@@ -111,17 +117,17 @@ RSpec.describe Hyrax::FileSetsController do
               post :update, params: { id: file_set, revision: version1 }
             end
 
-            let(:restored_content) { file_set.reload.original_file }
+            let(:restored_content) { Hyrax::Queries.find_by(id: file_set.id).original_file }
             let(:versions)         { restored_content.versions }
             let(:latest_version)   { Hyrax::VersioningService.latest_version_of(restored_content) }
 
             it "restores the first versions's content and metadata" do
               # expect(restored_content.mime_type).to eq "image/png"
-              expect(restored_content).to be_a(Hydra::PCDM::File)
-              expect(restored_content.original_name).to eq file1
-              expect(versions.all.count).to eq 3
+              expect(restored_content).to be_a(Hyrax::FileNode)
+              expect(versions.count).to eq 3
+              expect(restored_content.original_filename).to eq [file1]
               expect(versions.last.label).to eq latest_version.label
-              expect(Hyrax::VersionCommitter.where(version_id: versions.last.uri).pluck(:committer_login)).to eq [user.user_key]
+              expect(Hyrax::VersionCommitter.where(version_id: versions.last.id.to_s).pluck(:committer_login)).to eq [user.user_key]
             end
           end
 

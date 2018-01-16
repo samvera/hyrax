@@ -4,7 +4,11 @@ module Hyrax
     # @param [ActiveFedora::File] content
     # @param [User, String] user
     def self.create(content, user = nil)
-      content.create_version
+      new_version = content.new(id: nil)
+      new_version.label = "version#{content.member_ids.length + 1}"
+      new_version = indexing_adapter.persister.save(resource: new_version)
+      content.member_ids = content.member_ids + [new_version.id]
+      content = indexing_adapter.persister.save(resource: content)
       record_committer(content, user) if user
     end
 
@@ -20,7 +24,18 @@ module Hyrax
       user_key = user_key.user_key if user_key.respond_to?(:user_key)
       version = latest_version_of(content)
       return if version.nil?
-      VersionCommitter.create(version_id: version.uri, committer_login: user_key)
+      VersionCommitter.create(version_id: version.id.to_s, committer_login: user_key)
+    end
+
+    def self.restore_version(file_set, content, revision_id, user = nil)
+      found_version = content.versions.find { |x| x.label == Array.wrap(revision_id) }
+      return unless found_version
+      node = Hyrax::FileNodeBuilder.new(storage_adapter: nil, persister: indexing_adapter.persister).attach_file_node(node: found_version, file_set: file_set)
+      create(node, user)
+    end
+
+    def self.indexing_adapter
+      Valkyrie::MetadataAdapter.find(:indexing_persister)
     end
   end
 end

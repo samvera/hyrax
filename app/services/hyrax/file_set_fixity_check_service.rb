@@ -55,7 +55,8 @@ module Hyrax
     #
     # If async_jobs is true (default), just returns nil, stuff is still going on.
     def fixity_check
-      results = file_set.files.collect { |f| fixity_check_file(f) }
+      results = [fixity_check_file(file_set.original_file)]
+      # results = file_set.files.collect { |f| fixity_check_file(f) }
 
       return if async_jobs
 
@@ -76,11 +77,11 @@ module Hyrax
       # @param [ActiveFedora::File] file to fixity check
       # @param [Array] log container for messages
       def fixity_check_file(file)
-        versions = file.has_versions? ? file.versions.all : [file]
+        versions = file.versions.present? ? file.versions : [file]
 
-        versions = [versions.max_by(&:created)] if latest_version_only
+        versions = [versions.max_by(&:created_at)] if latest_version_only
 
-        versions.collect { |v| fixity_check_file_version(file.id, v.uri.to_s) }.flatten
+        versions.collect { |v| fixity_check_file_version(file.id, v.id.to_s) }.flatten
       end
 
       # Retrieve or generate the fixity check for a specific version of a file
