@@ -9,14 +9,14 @@ RSpec.describe Hyrax::VersioningService do
       subject { described_class.latest_version_of(file.original_file).label }
 
       context 'with one version' do
-        it { is_expected.to eq 'version1' }
+        it { is_expected.to eq ['version1'] }
       end
 
       context 'with two versions' do
         before do
-          file.original_file.create_version
+          described_class.create(file.original_file)
         end
-        it { is_expected.to eq 'version2' }
+        it { is_expected.to eq ['version2'] }
       end
     end
   end

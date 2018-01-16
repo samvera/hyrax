@@ -14,6 +14,7 @@ module Hyrax
     attribute :original_filename, Valkyrie::Types::Set
     attribute :file_identifiers, Valkyrie::Types::Set
     attribute :use, Valkyrie::Types::Set
+    attribute :member_ids, Valkyrie::Types::Set
 
     # @param [ActionDispatch::Http::UploadedFile] file
     def self.for(file:)
@@ -48,6 +49,10 @@ module Hyrax
 
     def file
       Valkyrie::StorageAdapter.find_by(id: file_identifiers.first)
+    end
+
+    def versions
+      Hyrax::Queries.find_members(resource: self, model: Hyrax::FileNode).to_a
     end
   end
 end
