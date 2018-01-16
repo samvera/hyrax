@@ -16,6 +16,7 @@ module Hyrax
       # @param [Hyrax::Actors::Environment] env
       # @return [Valkyrie::Resource,FalseClass] the saved resource if create was successful
       def create(env)
+        assign_deposit_date(env)
         assign_modified_date(env)
         yield env.change_set if block_given?
         return unless env.change_set.validate(env.attributes)
@@ -71,7 +72,11 @@ module Hyrax
         end
 
         def assign_modified_date(env)
-          env.curation_concern.date_modified = TimeService.time_in_utc
+          env.change_set.date_modified = TimeService.time_in_utc
+        end
+
+        def assign_deposit_date(env)
+          env.change_set.date_uploaded = TimeService.time_in_utc
         end
     end
   end
