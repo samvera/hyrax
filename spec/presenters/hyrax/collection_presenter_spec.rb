@@ -274,6 +274,130 @@ RSpec.describe Hyrax::CollectionPresenter do
     it { is_expected.to eq '0 Bytes' }
   end
 
+  describe "#parent_collection_count" do
+    subject { presenter.parent_collection_count }
+
+    context('when parent_collections is nil') do
+      before do
+        allow(presenter).to receive(:parent_collections).and_return(nil)
+      end
+
+      it { is_expected.to eq 0 }
+    end
+
+    context('when parent_collections is has no collections') do
+      before do
+        allow(presenter).to receive(:parent_collections).and_return([])
+      end
+
+      it { is_expected.to eq 0 }
+    end
+
+    context('when parent_collections is has collections') do
+      let(:collection1) { build(:collection, title: ['col1']) }
+      let(:collection2) { build(:collection, title: ['col2']) }
+      let!(:parent_collections) { [collection1, collection2] }
+
+      before do
+        presenter.parent_collections = parent_collections
+      end
+
+      it { is_expected.to eq 2 }
+    end
+  end
+
+  describe "#more_parent_collections?" do
+    subject { presenter.more_parent_collections? }
+
+    context('when parent_collections is has no collections') do
+      before do
+        allow(presenter).to receive(:parent_collection_count).and_return(0)
+      end
+
+      it { is_expected.to eq false }
+    end
+
+    context('when parent_collections has less than or equal to show limit') do
+      before do
+        allow(presenter).to receive(:parent_collection_count).and_return(3)
+      end
+
+      it { is_expected.to eq false }
+    end
+
+    context('when parent_collections has more than show limit') do
+      before do
+        allow(presenter).to receive(:parent_collection_count).and_return(4)
+      end
+
+      it { is_expected.to eq true }
+    end
+  end
+
+  describe "#visible_parent_collections" do
+    subject { presenter.visible_parent_collections }
+
+    let(:collection1) { build(:collection, title: ['col1']) }
+    let(:collection2) { build(:collection, title: ['col2']) }
+    let(:collection3) { build(:collection, title: ['col3']) }
+    let(:collection4) { build(:collection, title: ['col4']) }
+    let(:collection5) { build(:collection, title: ['col5']) }
+
+    before do
+      presenter.parent_collections = parent_collections
+    end
+
+    context('when parent_collections is nil') do
+      let(:parent_collections) { nil }
+
+      it { is_expected.to eq [] }
+    end
+
+    context('when parent_collections has less than or equal to show limit') do
+      let(:parent_collections) { [collection1, collection2, collection3] }
+
+      it { is_expected.to include(collection1, collection2, collection3) }
+    end
+
+    context('when parent_collections has more than show limit') do
+      let(:parent_collections) { [collection1, collection2, collection3, collection4, collection5] }
+
+      it { is_expected.to include(collection1, collection2, collection3) }
+    end
+  end
+
+  describe "#more_parent_collections" do
+    subject { presenter.more_parent_collections }
+
+    let(:collection1) { build(:collection, title: ['col1']) }
+    let(:collection2) { build(:collection, title: ['col2']) }
+    let(:collection3) { build(:collection, title: ['col3']) }
+    let(:collection4) { build(:collection, title: ['col4']) }
+    let(:collection5) { build(:collection, title: ['col5']) }
+
+    before do
+      presenter.parent_collections = parent_collections
+    end
+
+    context('when parent_collections is nil') do
+      let(:parent_collections) { nil }
+
+      it { is_expected.to eq [] }
+    end
+
+    context('when parent_collections has less than or equal to show limit') do
+      let(:parent_collections) { [collection1, collection2, collection3] }
+
+      it { is_expected.to eq [] }
+    end
+
+    context('when parent_collections has more than show limit') do
+      let(:parent_collections) { [collection1, collection2, collection3, collection4, collection5] }
+
+      it { is_expected.to include(collection4, collection5) }
+    end
+  end
+
   describe "#user_can_nest_collection?" do
     before do
       allow(ability).to receive(:can?).with(:deposit, solr_doc).and_return(true)

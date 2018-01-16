@@ -80,10 +80,13 @@ module Hyrax
       end
 
       def parent_collections
-        col = @collection
-        col = Collection.find(collection.id) if col.blank?
-        @parent_collections = col.member_of_collections
+        @parent_collections = collection_object.member_of_collections
         @parent_collection_count = @parent_collections.size
+        collection.parent_collections = @parent_collections if action_name == 'show'
+      end
+
+      def collection_object
+        action_name == 'show' ? Collection.find(collection.id) : collection
       end
 
       def member_subcollections

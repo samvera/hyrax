@@ -96,4 +96,16 @@ Blacklight.onLoad(function () {
       $('#collections-to-delete-deny-modal').modal('show');
     }
   });
+
+  $('#show-more-parent-collections').on('click', function () {
+    $(this).hide();
+    $("#more-parent-collections").show();
+    $("#show-less-parent-collections").show();
+  });
+
+  $('#show-less-parent-collections').on('click', function () {
+    $(this).hide();
+    $("#more-parent-collections").hide();
+    $("#show-more-parent-collections").show();
+  });
 });
