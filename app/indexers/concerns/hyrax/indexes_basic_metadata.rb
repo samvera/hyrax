@@ -1,5 +1,6 @@
 module Hyrax
   module IndexesBasicMetadata
+    extend ActiveSupport::Concern
     extend Deprecation
 
     included do
