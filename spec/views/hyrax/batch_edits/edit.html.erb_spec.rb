@@ -1,5 +1,5 @@
 RSpec.describe 'hyrax/batch_edits/edit.html.erb', type: :view do
-  let(:work) { create_for_repository(:work) }
+  let(:work) { create_for_repository(:work, :public) }
   let(:change_set) { Hyrax::BatchEditChangeSet.new(work, batch_document_ids: [work.id.to_s]).prepopulate! }
 
   before do
@@ -10,7 +10,12 @@ RSpec.describe 'hyrax/batch_edits/edit.html.erb', type: :view do
     allow(change_set).to receive(:model).and_return(work)
     allow(change_set).to receive(:names).and_return(['title 1', 'title 2'])
     allow(change_set).to receive(:terms).and_return([:description, :license])
-    allow(work).to receive(:visibility).and_return('open')
+    allow(work).to receive(:visibility_during_embargo).and_return(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
+    allow(work).to receive(:visibility_after_embargo).and_return(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
+    allow(work).to receive(:embargo_release_date).and_return(Time.zone.today.to_s)
+    allow(work).to receive(:visibility_during_lease).and_return(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
+    allow(work).to receive(:visibility_after_lease).and_return(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
+    allow(work).to receive(:lease_expiration_date).and_return(Time.zone.today.to_s)
     allow(work).to receive(:permissions).and_return([])
 
     assign :change_set, change_set
