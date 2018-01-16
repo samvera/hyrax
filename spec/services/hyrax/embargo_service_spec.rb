@@ -57,7 +57,7 @@ RSpec.describe Hyrax::EmbargoService, :clean_repo do
     end
 
     it 'returns all assets with embargo history set' do
-      returned_pids = subject.assets_with_deactivated_embargoes.map(&:id)
+      returned_pids = service.assets_with_deactivated_embargoes.map(&:id)
       expect(returned_pids).to include id
       expect(returned_pids).not_to include(work_without_embargo.id,
                                            work_with_expired_embargo1.id,
