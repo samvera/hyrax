@@ -3,7 +3,7 @@ RSpec.describe 'hyrax/base/show.json.jbuilder' do
 
   before do
     allow(curation_concern).to receive(:etag).and_return('W/"87f79d2244ded4239ad1f0e822c8429b1e72b66c"')
-    assign(:curation_concern, curation_concern)
+    assign(:resource, curation_concern)
     render
   end
 
