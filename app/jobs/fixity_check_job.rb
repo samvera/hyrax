@@ -40,17 +40,21 @@ class FixityCheckJob < Hyrax::ApplicationJob
   private
 
     def run_check(file_set_id, file_id, uri)
-      file_node = Hyrax::Queries.find_by(id: file_id)
-      stored_file = Valkyrie::StorageAdapter.find_by(id: file_node.file_identifiers[0])
-      # TODO: determine which digest to work with: sha1 vs sha256
-      fixity_ok = stored_file.valid?(size: file_node.size.first, digests: { sha256: file_node.checksum.first })
-      expected_result = file_node.checksum.first
-
+      begin
+        file_node = Hyrax::Queries.find_by(id: Valkyrie::ID.new(uri.to_s))
+        stored_file = Valkyrie::StorageAdapter.find_by(id: file_node.file_identifiers[0])
+        # TODO: determine which digest to work with: sha1 vs sha256
+        fixity_ok = stored_file.valid?(size: file_node.size.first, digests: { sha256: file_node.checksum.first.sha256 })
+        expected_result = file_node.checksum.first.sha256
+      rescue Valkyrie::Persistence::ObjectNotFoundError
+        fixity_ok = false
+        expected_result = "0"
+      end
       log = ChecksumAuditLog.create_and_prune!(passed: fixity_ok, file_set_id: file_set_id.to_s, checked_uri: uri, file_id: file_id.to_s, expected_result: expected_result)
       # Note that the after_fixity_check_failure will be called if the fixity check fail. This
       # logging is for additional information related to the failure. Wondering if we should
       # also include the error message?
-      Rails.logger.error "FIXITY CHECK FAILURE: Fixity failed for #{uri} #{error_msg}: #{log}" unless fixity_ok
+      Rails.logger.error "FIXITY CHECK FAILURE: Fixity failed for #{uri}: #{log}" unless fixity_ok
       log
     end
 end

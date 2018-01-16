@@ -13,7 +13,7 @@ module Hyrax
     end
 
     def message
-      uri = file_set.original_file.uri.to_s
+      uri = file_set.original_file.id.to_s
       file_title = file_set.title.first
       "The fixity check run at #{log_date} for #{file_title} (#{uri}) failed."
     end

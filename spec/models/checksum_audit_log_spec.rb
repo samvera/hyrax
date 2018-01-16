@@ -9,7 +9,7 @@ RSpec.describe ChecksumAuditLog do
 
   let(:version_uri) do
     Hyrax::VersioningService.create(f.original_file)
-    f.original_file.versions.first.uri
+    f.original_file.versions.first.id.to_s
   end
   let(:content_id) { f.original_file.id }
   let(:old) { described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: true, created_at: 2.minutes.ago) }

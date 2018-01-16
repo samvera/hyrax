@@ -17,6 +17,7 @@ FactoryBot.define do
 
         node = Hyrax::FileNode.for(file: evaluator.content)
         node_builder.create(file: evaluator.content, node: node, file_set: file_set)
+        Hyrax::VersioningService.create(file_set.original_file)
       end
     end
 

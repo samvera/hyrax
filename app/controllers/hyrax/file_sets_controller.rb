@@ -58,7 +58,7 @@ module Hyrax
     private
 
       def build_change_set(resource)
-        change_set_class.new(resource, user: current_user)
+        change_set_class.new(resource, user: current_user, revision: params[:revision])
       end
 
       # Returns a FileUploadChangeSet if they have created or updated a file
@@ -162,7 +162,7 @@ module Hyrax
 
       def wants_to_revert?
         @wants_revert ||= if params[:id] && params.key?(:revision)
-                            params[:revision] != find_resource(params[:id]).latest_content_version.label
+                            params[:revision] != Hyrax::VersioningService.latest_version_of(find_resource(params[:id]).original_file).label.first
                           end
       end
 
