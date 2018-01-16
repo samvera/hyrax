@@ -159,12 +159,12 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
             expect(reloaded).to be_persisted
             expect(reloaded.date_uploaded).to eq xmas
             expect(reloaded.date_modified).to eq xmas
-            expect(reloaded.depositor).to eq user.user_key
+            expect(reloaded.depositor).to eq [user.user_key]
 
             expect(reloaded.file_sets.size).to eq 2
             # Sanity test to make sure the file we uploaded is stored and has same permission as parent.
 
-            expect(reloaded).to be_authenticated_only_access
+            expect(reloaded.read_groups).to eq ['registered']
           end
         end
       end
