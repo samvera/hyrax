@@ -21,7 +21,6 @@ module Hyrax
       # @see IngestJob
       # @todo create a job to monitor the temp directory (or in a multi-worker system, directories!) to prune old files that have made it into the repo
       def ingest_file(io)
-        # Skip versioning because versions will be minted by VersionCommitter as necessary during save_characterize_and_record_committer.
         storage_adapter = Valkyrie::StorageAdapter.find(:disk)
         persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
         node_builder = Hyrax::FileNodeBuilder.new(storage_adapter: storage_adapter,
@@ -33,7 +32,6 @@ module Hyrax
         rescue StandardError # Handle error persisting file node
           return false
         end
-        Hyrax::VersioningService.create(saved_node, user)
         saved_node
       end
 
@@ -45,7 +43,6 @@ module Hyrax
         repository_file = related_file
         repository_file.restore_version(revision_id)
         return false unless persister.save(resource: file_set)
-        Hyrax::VersioningService.create(repository_file, user)
         CharacterizeJob.perform_later(repository_file.id.to_s)
         repository_file
       end
