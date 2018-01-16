@@ -117,21 +117,22 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
           end
 
           it 'stamps each file with the access rights and runs callbacks' do
+            expect(Hyrax.config.callback).to receive(:run).with(:after_update_metadata, FileSet, user)
             expect(Hyrax.config.callback).to receive(:run).with(:after_create_fileset, FileSet, user)
 
             expect(file_actor).to receive(:ingest_file).and_return(true)
-            expect(middleware.create(env)).to be true
+            expect(middleware.create(env)).to be_kind_of GenericWork
             reloaded = Hyrax::Queries.find_by(id: curation_concern.id)
             expect(reloaded).to be_persisted
             expect(reloaded.date_uploaded).to eq xmas
             expect(reloaded.date_modified).to eq xmas
-            expect(reloaded.depositor).to eq user.user_key
-            expect(reloaded.representative).not_to be_nil
+            expect(reloaded.depositor).to eq [user.user_key]
+            expect(reloaded.representative_id).not_to be_nil
             expect(reloaded.file_sets.size).to eq 1
-            expect(reloaded).to be_authenticated_only_access
+            expect(reloaded.read_groups).to eq ['registered']
             # Sanity test to make sure the file_set has same permission as parent.
             file_set = reloaded.file_sets.first
-            expect(file_set).to be_authenticated_only_access
+            expect(file_set.read_groups).to eq ['registered']
           end
         end
       end

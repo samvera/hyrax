@@ -21,12 +21,11 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
       # actor.create_metadata(metadata)
       # actor.create_content(uploaded_file)
       # actor.attach_to_work(work)
-      work.member_ids += [file_set.id]
+      add_to_work(work, file_set, uploaded_file.user)
       uploaded_file.update(file_set_uri: file_set.to_global_id)
       io = JobIoWrapper.create_with_varied_file_handling!(user: uploaded_file.user, file: uploaded_file, file_set: file_set, relation: Valkyrie::Vocab::PCDMUse.OriginalFile)
       io.file_actor.ingest_file(io)
     end
-    metadata_adapter.persister.save(resource: work)
   end
 
   private
@@ -66,6 +65,17 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
                                                        attributes[:visibility_after_lease]])
       end
       change_set
+    end
+
+    # TODO: This is duplicating FileSetActor#attach_to_work
+    #       but skipping the permissions copying and work locking
+    def add_to_work(work, file_set, user)
+      work.member_ids += [file_set.id]
+      work.representative_id = file_set.id if work.representative_id.blank?
+      work.thumbnail_id = file_set.id if work.thumbnail_id.blank?
+      metadata_adapter.persister.save(resource: work)
+      # TODO: move this callback into the persister?
+      Hyrax.config.callback.run(:after_create_fileset, file_set, user)
     end
 
     def change_set_persister
