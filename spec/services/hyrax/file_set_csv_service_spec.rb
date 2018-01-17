@@ -11,7 +11,7 @@ RSpec.describe Hyrax::FileSetCSVService do
   let(:solr_document) { SolrDocument.new(document) }
 
   before do
-    allow(mock_file).to receive(:mime_type).and_return('application/pdf')
+    allow(mock_file).to receive(:mime_type).and_return(['application/pdf'])
     allow(file).to receive(:resource_type).and_return(['Book', 'Other'])
     allow(file).to receive(:original_file).and_return(mock_file)
   end
