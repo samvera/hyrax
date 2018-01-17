@@ -4,7 +4,9 @@ module Hyrax
     include PresentsAttributes
     include ActionView::Helpers::NumberHelper
     attr_accessor :solr_document, :current_ability, :request
-    attr_writer :collection_type
+    attr_writer :collection_type, :parent_collections
+
+    NUM_PARENTS_TO_SHOW = 3
 
     class_attribute :create_work_presenter_class
     self.create_work_presenter_class = Hyrax::SelectTypeListPresenter
@@ -29,19 +31,16 @@ module Hyrax
     end
 
     # Metadata Methods
-    delegate :title, :description, :creator, :contributor, :subject, :publisher, :keyword, :language,
-             :embargo_release_date, :lease_expiration_date, :license, :date_created,
-             :resource_type, :based_near, :related_url, :identifier, :thumbnail_path,
-             :title_or_label, :collection_type_gid, :create_date, :modified_date, :visibility, :edit_groups,
-             :edit_people,
+    delegate :title, :description, :creator, :contributor, :subject, :publisher, :keyword, :language, :embargo_release_date,
+             :lease_expiration_date, :license, :date_created, :resource_type, :based_near, :related_url, :identifier, :thumbnail_path,
+             :title_or_label, :collection_type_gid, :create_date, :modified_date, :visibility, :edit_groups, :edit_people,
              to: :solr_document
 
     # Terms is the list of fields displayed by
     # app/views/collections/_show_descriptions.html.erb
     def self.terms
-      [:total_items, :size, :resource_type, :creator, :contributor, :keyword,
-       :license, :publisher, :date_created, :subject, :language, :identifier,
-       :based_near, :related_url]
+      [:total_items, :size, :resource_type, :creator, :contributor, :keyword, :license, :publisher, :date_created, :subject,
+       :language, :identifier, :based_near, :related_url]
     end
 
     def terms_with_values
@@ -81,6 +80,24 @@ module Hyrax
 
     def collection_type_badge
       collection_type.title
+    end
+
+    def parent_collection_count
+      @parent_collections.blank? ? 0 : @parent_collections.size
+    end
+
+    def more_parent_collections?
+      parent_collection_count > NUM_PARENTS_TO_SHOW
+    end
+
+    def visible_parent_collections
+      return @parent_collections[0..NUM_PARENTS_TO_SHOW - 1] if more_parent_collections?
+      @parent_collections || []
+    end
+
+    def more_parent_collections
+      return @parent_collections[NUM_PARENTS_TO_SHOW..parent_collection_count - 1] if more_parent_collections?
+      []
     end
 
     def user_can_nest_collection?

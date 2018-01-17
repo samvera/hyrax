@@ -428,6 +428,7 @@ module Hyrax
         def query_collection_members
           member_works
           member_subcollections if collection.collection_type.nestable?
+          parent_collections if collection.collection_type.nestable?
         end
 
         # Instantiate the membership query service
@@ -445,6 +446,16 @@ module Hyrax
           results = collection_member_service.available_member_subcollections
           @subcollection_docs = results.documents
           @subcollection_count = results.total
+        end
+
+        def parent_collections
+          @parent_collections = collection_object.member_of_collections
+          @parent_collection_count = @parent_collections.size
+          collection.parent_collections = @parent_collections if action_name == 'show'
+        end
+
+        def collection_object
+          action_name == 'show' ? Collection.find(collection.id) : collection
         end
 
         # You can override this method if you need to provide additional

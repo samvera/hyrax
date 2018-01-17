@@ -55,6 +55,18 @@
 	<div class="row hyc-body">
 		<div class="col-md-8 hyc-description">
 			<%= render 'collection_description', presenter: @presenter %>
+
+			<% if @presenter.collection_type_is_nestable? && @presenter.parent_collection_count > 0 %>
+					<div class="hyc-blacklight hyc-bl-title">
+						<h2>
+							<%= t('.parent_collection_header') %> (<%= @presenter.parent_collection_count %>)
+						</h2>
+					</div>
+					<div class="hyc-blacklight hyc-bl-results">
+						<%= render 'show_parent_collections', presenter: @presenter %>
+					</div>
+			<% end %>
+
 		</div>
 		<div class="col-md-4 hyc-metadata">
 			<% unless has_collection_search_parameters? %>

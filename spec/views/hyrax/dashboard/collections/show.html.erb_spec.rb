@@ -37,6 +37,7 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
     stub_template '_show_actions.html.erb' => '<div class="stubbed-actions">THE COLLECTION ACTIONS</div>'
     stub_template '_show_subcollection_actions.html.erb' => '<div class="stubbed-actions">THE SUBCOLLECTION ACTIONS</div>'
     stub_template '_show_add_items_actions.html.erb' => '<div class="stubbed-actions">THE ADD ITEMS ACTIONS</div>'
+    stub_template '_show_parent_collections.html.erb' => '<div class="stubbed-actions">THE PARENT COLLECTIONS LIST</div>'
     stub_template 'hyrax/collections/_paginate.html.erb' => 'paginate'
     stub_template 'hyrax/collections/_media_display.html.erb' => '<span class="fa fa-cubes collection-icon-search"></span>'
     stub_template 'hyrax/my/collections/_modal_add_to_collection.html.erb' => 'modal add as subcollection'
