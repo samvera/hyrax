@@ -32,9 +32,7 @@ module Hyrax
     # When the batch operation is 'move', what collection to move to:
     property :destination_collection_id, virtual: true, multiple: false, required: false
 
-    property :edit_users, multiple: true, required: false
-    property :user, virtual: true
-    collection :permissions, virtual: true
+    include FormWithPermissions
 
     validates :title, presence: true
 
@@ -77,10 +75,14 @@ module Hyrax
       # rubocop:enable Metrics/MethodLength
     end
 
-    # Give the depositor edit access
     def sync
-      self.edit_users = [user.user_key]
-      super
+      # Give the depositor edit access
+      self.edit_users += [user.user_key]
+      super.tap do |result|
+        # ensure visibility is set after read_groups has been copied to the object
+        # this prevents read_groups from overwriting the values visibility= sets
+        result.visibility = visibility
+      end
     end
 
     # Do not display additional fields if there are no secondary terms
@@ -95,9 +97,9 @@ module Hyrax
       thumbnail && thumbnail.title.first
     end
 
-    # We just need to respond to this method so that the rails nested form builder will work.
-    def permissions_attributes=
-      # nop
+    def prepopulate!
+      prepopulate_permissions
+      self
     end
 
     private

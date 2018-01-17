@@ -30,12 +30,12 @@ module Hyrax
     # TODO: how do we get an etag?
     property :version, virtual: true
 
-    collection :permissions, virtual: true
+    include FormWithPermissions
+
     collection :work_members, virtual: true
 
     property :admin_set_id, virtual: false
     property :in_works_ids, virtual: true
-    property :depositor
 
     # The lookup field for collection relationships
     property :member_of_collection_ids, virtual: true, required: false
@@ -59,11 +59,6 @@ module Hyrax
       super.tap do
         @_changes = Disposable::Twin::Changed::Changes.new
       end
-    end
-
-    # We just need to respond to this method so that the rails nested form builder will work.
-    def permissions_attributes=
-      # nop
     end
 
     # We just need to respond to this method so that the rails nested form builder will work.
@@ -130,13 +125,6 @@ module Hyrax
       end.to_json
     end
 
-    def permissions_changed?
-      changed.include?('edit_users') ||
-        changed.include?('edit_groups') ||
-        changed.include?('read_users') ||
-        changed.include?('read_groups')
-    end
-
     def visibility_changed?
       changed['visibility']
     end
@@ -173,13 +161,6 @@ module Hyrax
 
       def prepopulate_work_members
         self.work_members = Hyrax::Queries.find_members(resource: resource).select(&:work?)
-      end
-
-      def prepopulate_permissions
-        self.permissions = resource.edit_users.map { |key| PermissionChangeSet.new(Permission.new, agent_name: key, access: 'edit', type: 'person') } +
-                           resource.read_users.map { |key| PermissionChangeSet.new(Permission.new, agent_name: key, access: 'read', type: 'person') } +
-                           resource.edit_groups.map { |key| PermissionChangeSet.new(Permission.new, agent_name: key, access: 'edit', type: 'group') } +
-                           resource.read_groups.map { |key| PermissionChangeSet.new(Permission.new, agent_name: key, access: 'read', type: 'group') }
       end
 
       # Includes any parent works.

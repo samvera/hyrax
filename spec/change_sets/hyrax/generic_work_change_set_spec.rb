@@ -380,6 +380,7 @@ RSpec.describe GenericWorkChangeSet do
                                   "representative_id", "label", "relative_path", "resource_type",
                                   "creator", "contributor", "description", "keyword", "license",
                                   "rights_statement", "publisher", "date_created", "subject",
+                                  'edit_users', 'edit_groups', 'read_users', 'read_groups',
                                   "language", "identifier", "related_url", "source", "based_near"]
     end
   end

@@ -111,6 +111,9 @@ module Hyrax
               env.curation_concern.visibility = env.attributes[:visibility]
             end
           end
+
+          # Copy any visibility changes to the ChangeSet
+          env.change_set.read_groups = env.curation_concern.read_groups
         end
 
         # If they want a lease, we can assume it's valid
