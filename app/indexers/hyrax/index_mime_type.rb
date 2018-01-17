@@ -28,13 +28,21 @@ module Hyrax
         resource.is_a? ::FileSet
       end
 
+      def mime_type?
+        resource.mime_type.present? && resource.mime_type.any?
+      end
+
+      def format_label?
+        resource.format_label.present? && resource.format_label.any?
+      end
+
       def file_format
-        if resource.mime_type.present? && resource.format_label.present?
-          "#{resource.mime_type.split('/').last} (#{resource.format_label.join(', ')})"
-        elsif resource.mime_type.present?
-          resource.mime_type.split('/').last
-        elsif resource.format_label.present?
-          resource.format_label
+        if mime_type? && format_label?
+          "#{resource.mime_type.first.split('/').last} (#{resource.format_label.join(', ')})"
+        elsif mime_type?
+          resource.mime_type.first.split('/').last
+        elsif format_label?
+          resource.format_label.first
         end
       end
   end

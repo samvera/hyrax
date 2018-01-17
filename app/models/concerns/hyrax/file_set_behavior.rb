@@ -28,7 +28,7 @@ module Hyrax
       attribute :embargo_id, Valkyrie::Types::ID.optional
       attribute :lease_id, Valkyrie::Types::ID.optional
 
-      delegate :width, :height, :mime_type, :size, to: :original_file, allow_nil: true
+      delegate :width, :height, :mime_type, :size, :format_label, :format_label=, to: :original_file, allow_nil: true
     end
 
     # @return [Hyrax::FileNode] with use Valkyrie::Vocab::PCDMUse.OriginalFile
