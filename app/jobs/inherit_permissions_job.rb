@@ -5,7 +5,7 @@ class InheritPermissionsJob < Hyrax::ApplicationJob
   #
   # @param work containing access level and filesets
   def perform(work_id)
-    work = Hyrax::Queries.find_by(id: work_id)
+    work = Hyrax::Queries.find_by(id: Valkyrie::ID.new(work_id))
     file_sets = Hyrax::Queries.find_members(resource: work, model: ::FileSet)
     change_set_persister.buffer_into_index do |persister|
       file_sets.each do |file_set|
