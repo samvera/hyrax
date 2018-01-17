@@ -2,7 +2,7 @@ RSpec.describe Hyrax::MemberPresenterFactory do
   describe "#file_set_presenters" do
     describe "getting presenters from factory" do
       let(:solr_document) { SolrDocument.new(attributes) }
-      let(:attributes) { {} }
+      let(:attributes) { { id: "id-fileset", created_at_dtsi: "2018-01-16T18:56:36Z", internal_resource_ssim: ["FileSet"] } }
       let(:ability) { double }
       let(:request) { double }
       let(:factory) { described_class.new(solr_document, ability, request) }
