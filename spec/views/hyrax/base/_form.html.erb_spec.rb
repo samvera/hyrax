@@ -59,6 +59,7 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
       change_set.errors.add :base, 'broken'
       change_set.errors.add :visibility, 'visibility_error'
       allow(change_set).to receive(:select_files).and_return([])
+      allow(change_set).to receive(:work_members).and_return([])
       render
     end
 
