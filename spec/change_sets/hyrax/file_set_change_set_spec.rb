@@ -24,7 +24,7 @@ RSpec.describe Hyrax::FileSetChangeSet do
       change_set.prepopulate!
     end
     it 'initializes multivalued fields' do
-      expect(subject.title).to eq ['']
+      expect(subject.title).to eq []
     end
   end
 
