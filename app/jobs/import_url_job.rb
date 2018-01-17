@@ -26,20 +26,51 @@ class ImportUrlJob < Hyrax::ApplicationJob
       # reload the FileSet once the data is copied since this is a long running task
       file_set = Hyrax::Queries.find_by(id: file_set.id)
 
-      # FileSetActor operates synchronously so that this tempfile is available.
-      # If asynchronous, the job might be invoked on a machine that did not have this temp file on its file system!
-      # NOTE: The return status may be successful even if the content never attaches.
-      if Hyrax::Actors::FileSetActor.new(file_set, user).create_content(f, from_url: true)
+      if create_content(file_set: file_set, file: f, user: user)
         operation.success!
       else
         # send message to user on download failure
         Hyrax.config.callback.run(:after_import_url_failure, file_set, user)
-        operation.fail!(file_set.errors.full_messages.join(' '))
+        operation.fail!("Failed to attach file at '#{uri}' to <FileSet id='#{file_set.id}'>'")
       end
     end
   end
 
   private
+
+    # @param file_set [FileSet]
+    # @param file [File]
+    # @param user [User]
+    # @return [Boolean] true if successfully saved the file.
+    def create_content(file_set:, file:, user:)
+      # If the file set doesn't have a title or label assigned, set a default.
+      update_file_set_title_and_label(file_set: file_set)
+
+      wrapper = JobIoWrapper.create_with_varied_file_handling!(user: user,
+                                                               file: file,
+                                                               relation: Valkyrie::Vocab::PCDMUse.OriginalFile.to_s,
+                                                               file_set: file_set)
+      file_node = wrapper.ingest_file
+      return false unless file_node
+      # Copy visibility and permissions from parent (work) to FileSets
+      parent_id = file_set.parent.id.to_s
+      VisibilityCopyJob.perform_later(parent_id)
+      InheritPermissionsJob.perform_later(parent_id)
+      true
+    end
+
+    def update_file_set_title_and_label(file_set:)
+      return unless file_set.label.nil? || file_set.title.blank?
+      file_set.label ||= File.basename(Addressable::URI.parse(file_set.import_url).path)
+      file_set.title = [file_set.label] if file_set.title.blank?
+
+      # Save the updated title and label
+      persister.save(resource: file_set)
+    end
+
+    def persister
+      Valkyrie::MetadataAdapter.find(:indexing_persister).persister
+    end
 
     # Download file from uri, yields a block with a file in a temporary directory.
     # It is important that the file on disk has the same file name as the URL,

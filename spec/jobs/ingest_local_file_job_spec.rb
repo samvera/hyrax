@@ -2,7 +2,7 @@ RSpec.describe IngestLocalFileJob do
   let(:user) { create(:user) }
 
   let(:file_set) { FileSet.new }
-  let(:actor) { double }
+  let(:actor) { instance_double(Hyrax::Actors::FileSetActor) }
 
   before do
     allow(Hyrax::Actors::FileSetActor).to receive(:new).with(file_set, user).and_return(actor)

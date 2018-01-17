@@ -4,6 +4,10 @@ RSpec.describe ImportUrlJob do
   let(:file_path) { fixture_path + '/world.png' }
   let(:file_hash) { '/673467823498723948237462429793840923582' }
 
+  let!(:work) do
+    create_for_repository(:work, member_ids: [file_set.id])
+  end
+
   let(:file_set) do
     create_for_repository(:file_set,
                           import_url: "http://example.org#{file_hash}",
@@ -13,10 +17,10 @@ RSpec.describe ImportUrlJob do
   end
 
   let(:operation) { create(:operation) }
-  let(:actor) { instance_double(Hyrax::Actors::FileSetActor, create_content: true) }
+  let(:wrapper) { instance_double(JobIoWrapper, ingest_file: true) }
 
   before do
-    allow(Hyrax::Actors::FileSetActor).to receive(:new).with(FileSet, user).and_return(actor)
+    allow(JobIoWrapper).to receive(:create_with_varied_file_handling!).and_return(wrapper)
 
     response_headers = { 'Content-Type' => 'image/png', 'Content-Length' => File.size(File.expand_path(file_path, __FILE__)) }
 
@@ -31,7 +35,7 @@ RSpec.describe ImportUrlJob do
 
   context 'after running the job' do
     it 'creates the content and updates the associated operation' do
-      expect(actor).to receive(:create_content).with(File, from_url: true).and_return(true)
+      expect(wrapper).to receive(:ingest_file).and_return(true)
       described_class.perform_now(file_set, operation)
       expect(operation).to be_success
     end

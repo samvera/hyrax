@@ -64,6 +64,7 @@ class JobIoWrapper < ApplicationRecord
     Hyrax::Actors::FileActor.new(file_set, RDF::URI.new(relation), user)
   end
 
+  # @return [FileNode, FalseClass] the created file node on success, false on failure
   def ingest_file
     file_actor.ingest_file(self)
   end
