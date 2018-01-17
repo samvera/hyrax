@@ -20,9 +20,8 @@ module Hyrax
         attr_accessor :workflow, :role, :admin_set_id
 
         def admin_set_label(id)
-          result = ActiveFedora::Base.search_by_id(id, fl: 'title_tesim')
-          result['title_tesim'].first
-        rescue ActiveFedora::ObjectNotFoundError
+          ::SolrDocument.find(id).title
+        rescue Blacklight::Exceptions::RecordNotFound
           "[AdminSet ID=#{id}]"
         end
     end

@@ -7,14 +7,14 @@ RSpec.describe 'catalog searching', type: :feature do
 
   context 'with works and collections' do
     let!(:jills_work) do
-      create(:public_work, title: ["Jill's Research"], keyword: ['jills_keyword', 'shared_keyword'])
+      create_for_repository(:work, :public, title: ["Jill's Research"], keyword: ['jills_keyword', 'shared_keyword'])
     end
 
     let!(:jacks_work) do
-      create(:public_work, title: ["Jack's Research"], keyword: ['jacks_keyword', 'shared_keyword'])
+      create_for_repository(:work, :public, title: ["Jack's Research"], keyword: ['jacks_keyword', 'shared_keyword'])
     end
 
-    let!(:collection) { create(:public_collection, keyword: ['collection_keyword', 'shared_keyword']) }
+    let!(:collection) { create_for_repository(:collection, :public, keyword: ['collection_keyword', 'shared_keyword']) }
 
     it 'performing a search' do
       within('#search-form-header') do

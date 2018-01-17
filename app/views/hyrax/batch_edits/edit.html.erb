@@ -1,8 +1,8 @@
 <h2 class="non lower">Batch Edit Descriptions &nbsp;&nbsp;&nbsp;<small>Click on labels below to edit work descriptions.</small> </h2>
 
 <div class="scrollx scrolly fileHeight"> <!-- original values -->
-  <h3> <b>Changes will be applied to: (<%= @form.names.size %> works) </b></h3>
-   <%= @form.names.join(", ").html_safe %>
+  <h3> <b>Changes will be applied to: (<%= @change_set.names.size %> works) </b></h3>
+   <%= @change_set.names.join(", ").html_safe %>
 </div> <!-- /original values -->
 
 <div >
@@ -14,16 +14,16 @@
     </ul>
     <div class="tab-content">
       <div class="tab-pane active" id="descriptions_display">
-        <% @form.terms.each do |term| %>
+        <% @change_set.terms.each do |term| %>
           <div class="row">
-            <%= simple_form_for @form,
+            <%= simple_form_for @change_set,
                                 url: hyrax.batch_edits_path,
                                 method: :put,
                                 remote: true,
                                 builder: Hyrax::FormBuilder,
                                 html: { id: "form_#{term.to_s}",
                                         class: "ajax-form" },
-                                data: { model: @form.model_name.param_key } do |f| %>
+                                data: { model: @change_set.model_name.param_key } do |f| %>
               <div class="col-xs-12 col-sm-4">
                 <a class="accordion-toggle grey glyphicon-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_<%= term %>" id="expand_link_<%=term.to_s%>">
                   <%= f.input_label term %> <span class="chevron"></span>
@@ -34,7 +34,7 @@
                   <%= hidden_field_tag('key', term.to_s) %>
                   <%# TODO we don't need to show required %>
                   <%= render_edit_field_partial(term, f: f) %>
-                  <% @form.batch_document_ids.each do |batch_id| %>
+                  <% @change_set.batch_document_ids.each do |batch_id| %>
                     <%= hidden_field_tag "batch_document_ids[]", batch_id %>
                   <% end %>
                   <div>
@@ -49,18 +49,18 @@
       </div><!-- #descriptions_display -->
 
     <div id="permissions_display" class="tab-pane">
-      <%= simple_form_for @form.model,
+      <%= simple_form_for @change_set.model,
                           url: hyrax.batch_edits_path,
                           method: :put,
                           remote: true,
                           html: { id: "form_permissions", class: "ajax-form"},
-                          data: { 'param-key' => @form.model_name.param_key } do |f| %>
+                          data: { 'param-key' => @change_set.model_name.param_key } do |f| %>
         <%= hidden_field_tag('update_type', 'update') %>
         <%= hidden_field_tag('key', 'permissions') %>
         <%= render "hyrax/base/form_permission", f: f %>
         <%= render "hyrax/base/form_share", f: f %>
 
-        <% @form.batch_document_ids.each do |batch_id| %>
+        <% @change_set.batch_document_ids.each do |batch_id| %>
           <%= hidden_field_tag "batch_document_ids[]", batch_id %>
         <% end %>
         <div class="row">

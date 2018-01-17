@@ -65,7 +65,7 @@ module Hyrax
       private
 
         def solr_connection
-          ActiveFedora::SolrService.instance.conn
+          Valkyrie::MetadataAdapter.find(:index_solr).connection
         end
     end
   end

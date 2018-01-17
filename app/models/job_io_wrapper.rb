@@ -29,7 +29,7 @@ class JobIoWrapper < ApplicationRecord
   #
   # @param [User] user - The user requesting to create this instance
   # @param [#path, Hyrax::UploadedFile] file - The file that is to be uploaded
-  # @param [String] relation
+  # @param [RDF::URI] relation
   # @param [FileSet] file_set - The associated file set
   # @return [JobIoWrapper]
   # @raise ActiveRecord::RecordInvalid - if the instance is not valid
@@ -57,15 +57,28 @@ class JobIoWrapper < ApplicationRecord
   end
 
   def file_set
-    FileSet.find(file_set_id)
+    Hyrax::Queries.find_by(id: Valkyrie::ID.new(file_set_id))
   end
 
   def file_actor
-    Hyrax::Actors::FileActor.new(file_set, relation.to_sym, user)
+    Hyrax::Actors::FileActor.new(file_set, RDF::URI.new(relation), user)
   end
 
   def ingest_file
     file_actor.ingest_file(self)
+  end
+
+  def to_file_node
+    Hyrax::FileNode.new(label: original_name,
+                        original_filename: original_name,
+                        mime_type: mime_type,
+                        use: [Valkyrie::Vocab::PCDMUse.OriginalFile])
+  end
+
+  # The magic that switches *once* between local filepath and CarrierWave file
+  # @return [File, StringIO, #read] File-like object ready to #read
+  def file
+    @file ||= (file_from_path || file_from_uploaded_file!)
   end
 
   private
@@ -78,12 +91,6 @@ class JobIoWrapper < ApplicationRecord
 
     def extracted_mime_type
       uploaded_file ? uploaded_file.uploader.content_type : Hydra::PCDM::GetMimeTypeForFile.call(original_name)
-    end
-
-    # The magic that switches *once* between local filepath and CarrierWave file
-    # @return [File, StringIO, #read] File-like object ready to #read
-    def file
-      @file ||= (file_from_path || file_from_uploaded_file!)
     end
 
     # @return [File, StringIO] depending on CarrierWave configuration
@@ -100,6 +107,6 @@ class JobIoWrapper < ApplicationRecord
     end
 
     def static_defaults
-      self.relation ||= 'original_file'
+      self.relation ||= Valkyrie::Vocab::PCDMUse.OriginalFile.to_s
     end
 end

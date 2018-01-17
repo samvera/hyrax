@@ -1,11 +1,11 @@
-<% provide :page_title, curation_concern_page_title(curation_concern) %>
+<% provide :page_title, curation_concern_page_title(@change_set) %>
 <% provide :page_header do %>
-  <h1 class="lower">Edit <%= curation_concern %></h1>
+  <h1 class="lower">Edit <%= @change_set %></h1>
 <% end %>
 
 <div class="row">
   <div class="col-xs-12 col-sm-4">
-    <%= media_display curation_concern.to_presenter %>
+    <%= media_display @change_set.to_presenter %>
   </div>
   <div class="col-xs-12 col-sm-8">
     <ul class="nav nav-tabs" role="tablist">
@@ -24,8 +24,8 @@
         <h2>Descriptions </h2>
         <%= render "form" %>
       </div>
-      <%= render "permission", file_set: curation_concern %>
-      <%= render "versioning", file_set: curation_concern %>
+      <%= render "permission", change_set: @change_set %>
+      <%= render "versioning", change_set: @change_set %>
     </div>
   </div><!-- /.col-sm-8 -->
 </div><!-- /.row -->

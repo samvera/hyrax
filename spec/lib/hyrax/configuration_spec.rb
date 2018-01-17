@@ -15,6 +15,12 @@ RSpec.describe Hyrax::Configuration do
     it { is_expected.to eq('default') }
   end
 
+  describe "fedora_schema" do
+    subject { described_class.new.fedora_schema[:title] }
+
+    it { is_expected.to eq RDF::Vocab::DC.title }
+  end
+
   it { is_expected.to respond_to(:active_deposit_agreement_acceptance?) }
   it { is_expected.to respond_to(:active_deposit_agreement_acceptance=) }
   it { is_expected.to respond_to(:activity_to_show_default_seconds_since_now) }
@@ -40,6 +46,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:display_share_button_when_not_logged_in=) }
   it { is_expected.to respond_to(:enable_noids?) }
   it { is_expected.to respond_to(:feature_config_path) }
+  it { is_expected.to respond_to(:fedora_schema) }
+  it { is_expected.to respond_to(:fedora_schema=) }
   it { is_expected.to respond_to(:google_analytics_id?) }
   it { is_expected.to respond_to(:google_analytics_id) }
   it { is_expected.to respond_to(:iiif_image_server?) }
@@ -53,6 +61,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:iiif_image_size_default) }
   it { is_expected.to respond_to(:iiif_image_size_default=) }
   it { is_expected.to respond_to(:libreoffice_path) }
+  it { is_expected.to respond_to(:registered_linked_data_resources) }
+  it { is_expected.to respond_to(:registered_linked_data_resources=) }
   it { is_expected.to respond_to(:license_service_class) }
   it { is_expected.to respond_to(:license_service_class=) }
   it { is_expected.to respond_to(:max_days_between_fixity_checks=) }
@@ -68,8 +78,6 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:rights_statement_service_class=) }
   it { is_expected.to respond_to(:redis_namespace) }
   it { is_expected.to respond_to(:subject_prefix) }
-  it { is_expected.to respond_to(:translate_id_to_uri) }
-  it { is_expected.to respond_to(:translate_uri_to_id) }
   it { is_expected.to respond_to(:upload_path) }
   it { is_expected.to respond_to(:work_requires_files?) }
   it { is_expected.to respond_to(:extract_full_text?) }

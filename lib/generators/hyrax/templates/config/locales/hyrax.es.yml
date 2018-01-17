@@ -4,14 +4,14 @@ es:
     search:
       fields:
         facet:
-          based_near_label_sim: Ubicación
-          creator_sim: Creador
-          file_format_sim: Formato
+          based_near_label_ssim: Ubicación
+          creator_ssim: Creador
+          file_format_ssim: Formato
           generic_type_sim: Tipo
-          keyword_sim: Palabra clave
-          language_sim: Idioma
-          publisher_sim: Editor
-          subject_sim: Tema
+          keyword_ssim: Palabra clave
+          language_ssim: Idioma
+          publisher_ssim: Editor
+          subject_ssim: Tema
         index:
           based_near_tesim: Ubicación
           contributor_tesim: Contribuidor
@@ -20,7 +20,7 @@ es:
           date_modified_dtsi: Fecha Modificada
           date_uploaded_dtsi: Fecha de Subida
           description_tesim: Descripción
-          file_format_tesim: Formato de Archivo
+          file_format_ssim: Formato de Archivo
           identifier_tesim: Identificador
           keyword_tesim: Palabra clave
           language_tesim: Idioma
@@ -36,7 +36,7 @@ es:
           date_modified_dtsi: Fecha Modificada
           date_uploaded_dtsi: Fecha de Subida
           description_tesim: Descripción
-          file_format_tesim: Formato de Archivo
+          file_format_ssim: Formato de Archivo
           identifier_tesim: Identificador
           keyword_tesim: Palabra clave
           language_tesim: Idioma

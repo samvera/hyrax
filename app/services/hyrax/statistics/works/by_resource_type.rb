@@ -5,7 +5,7 @@ module Hyrax
         private
 
           def index_key
-            Solrizer.solr_name("resource_type", :facetable)
+            'resource_type_ssim'
           end
       end
     end

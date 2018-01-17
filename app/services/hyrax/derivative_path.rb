@@ -4,20 +4,20 @@ module Hyrax
 
     class << self
       # Path on file system where derivative file is stored
-      # @param [ActiveFedora::Base or String] object either the AF object or its id
+      # @param [Valkyrie::Resource,Valkyrie::ID] object either the Valkyrie resource or its id
       # @param [String] destination_name
       def derivative_path_for_reference(object, destination_name)
         new(object, destination_name).derivative_path
       end
 
-      # @param [ActiveFedora::Base or String] object either the AF object or its id
+      # @param [Valkyrie::Resource,Valkyrie::ID] object either the Valkyrie resource or its id
       # @return [Array<String>] Array of paths to derivatives for this object.
       def derivatives_for_reference(object)
         new(object).all_paths
       end
     end
 
-    # @param [ActiveFedora::Base, String] object either the AF object or its id
+    # @param [Valkyrie::Resource,Valkyrie::ID] object either the Valkyrie resource or its id
     # @param [String] destination_name
     def initialize(object, destination_name = nil)
       @id = object.is_a?(String) ? object : object.id
@@ -47,7 +47,7 @@ module Hyrax
       end
 
       def pair_path
-        id.split('').each_slice(2).map(&:join).join('/')
+        id.to_s.split('').each_slice(2).map(&:join).join('/')
       end
 
       def file_name

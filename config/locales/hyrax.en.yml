@@ -1,6 +1,6 @@
 ---
 en:
-  activefedora:
+  valkyrie:
     models:
       batch_upload_item: Works by Batch
       file_set: File
@@ -12,8 +12,7 @@ en:
     search:
       fields:
         facet:
-          admin_set_sim: Collection
-          resource_type_sim: Resource type
+          resource_type_ssim: Resource type
           suppressed_bsi: Status
         show:
           admin_set: 'In Administrative Set:'
@@ -30,6 +29,7 @@ en:
       carrierwave_processing_error: Cannot resize image.
       extension_blacklist_error: 'You are not allowed to upload %{extension} files, prohibited types: %{prohibited_types}'
       extension_whitelist_error: 'You are not allowed to upload %{extension} files, allowed types: %{allowed_types}'
+      missing_title: 'Your %{model} must have a title.'
   helpers:
     action:
       admin_set:

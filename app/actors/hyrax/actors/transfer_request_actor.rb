@@ -4,17 +4,19 @@ module Hyrax
     # deposit on their behalf
     class TransferRequestActor < AbstractActor
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if create was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if create was successful
       def create(env)
-        next_actor.create(env) && create_proxy_deposit_request(env)
+        created = next_actor.create(env)
+        return created if created && create_proxy_deposit_request(created)
+        false
       end
 
       private
 
-        def create_proxy_deposit_request(env)
-          proxy = env.curation_concern.on_behalf_of
+        def create_proxy_deposit_request(work)
+          proxy = work.on_behalf_of
           return true if proxy.blank?
-          ContentDepositorChangeEventJob.perform_later(env.curation_concern,
+          ContentDepositorChangeEventJob.perform_later(work,
                                                        ::User.find_by_user_key(proxy))
           true
         end

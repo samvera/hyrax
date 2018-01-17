@@ -14,29 +14,31 @@ class Hyrax::My::FindWorksSearchBuilder < Hyrax::My::SearchBuilder
 
   def filter_on_title(solr_parameters)
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] += [ActiveFedora::SolrQueryBuilder.construct_query(title_tesim: @q)]
+    solr_parameters[:fq] += ["_query_:\"{!field f=title_tesim}#{@q}\""]
   end
 
   def show_only_other_works(solr_parameters)
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] += [
-      "-" + ActiveFedora::SolrQueryBuilder.construct_query_for_ids([@id])
-    ]
+    solr_parameters[:fq] += ["-{!field f=id}#{@id}"]
   end
 
   def show_only_works_not_child(solr_parameters)
-    ids = ActiveFedora::SolrService.query("{!field f=id}#{@id}", fl: "member_ids_ssim", rows: 10_000).flat_map { |x| x.fetch("member_ids_ssim", []) }
+    solr = Valkyrie::MetadataAdapter.find(:index_solr).connection
+    results = solr.get('select', params: { q: "{!field f=id}#{@id}",
+                                           fl: 'member_ids_ssim',
+                                           rows: 10_000,
+                                           qt: 'standard' })
+
+    ids = results['response']['docs'].flat_map { |x| x.fetch('member_ids_ssim', []) }
+    return if ids.empty?
+    ids = ids.map { |x| x.sub(/^id-/, '') }
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq]  += [
-      "-" + ActiveFedora::SolrQueryBuilder.construct_query_for_ids(ids)
-    ]
+    solr_parameters[:fq]  += ["-{!terms f=id}#{ids.join(',')}"]
   end
 
   def show_only_works_not_parent(solr_parameters)
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq]  += [
-      "-" + ActiveFedora::SolrQueryBuilder.construct_query(member_ids_ssim: @id)
-    ]
+    solr_parameters[:fq]  += ["-_query_:\"{!field f=member_ids_ssim}id-#{@id}\""]
   end
 
   def only_works?

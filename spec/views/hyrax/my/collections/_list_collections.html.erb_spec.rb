@@ -3,7 +3,7 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
   let(:attributes) do
     {
       id: id,
-      "has_model_ssim" => ["Collection"],
+      Valkyrie::Persistence::Solr::Queries::MODEL => ["Collection"],
       "title_tesim" => ["Collection Title"],
       "description_tesim" => ["Collection Description"]
     }

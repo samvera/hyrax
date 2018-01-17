@@ -10,7 +10,7 @@ module Hyrax
     #
     class CollectionsMembershipActor < AbstractActor
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if create was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if create was successful
       def create(env)
         attributes_collection = env.attributes.delete(:member_of_collections_attributes)
         assign_nested_attributes_for_collection(env, attributes_collection) &&
@@ -18,7 +18,7 @@ module Hyrax
       end
 
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if update was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if update was successful
       def update(env)
         attributes_collection = env.attributes.delete(:member_of_collections_attributes)
         assign_nested_attributes_for_collection(env, attributes_collection) &&
@@ -34,11 +34,12 @@ module Hyrax
           attributes_collection = attributes_collection.sort_by { |i, _| i.to_i }.map { |_, attributes| attributes }
           # checking for existing works to avoid rewriting/loading works that are
           # already attached
-          existing_collections = env.curation_concern.member_of_collection_ids
+          existing_collections = env.curation_concern.member_of_collection_ids.map(&:to_s)
           attributes_collection.each do |attributes|
             next if attributes['id'].blank?
+
             if existing_collections.include?(attributes['id'])
-              remove(env.curation_concern, attributes['id']) if has_destroy_flag?(attributes)
+              remove(env, attributes['id']) if has_destroy_flag?(attributes)
             else
               add(env, attributes['id'])
             end
@@ -48,21 +49,19 @@ module Hyrax
         # Adds the item to the ordered members so that it displays in the items
         # along side the FileSets on the show page
         def add(env, id)
-          member = Collection.find(id)
-          return unless env.current_ability.can?(:edit, member)
-          env.curation_concern.member_of_collections << member
+          return unless env.current_ability.can?(:edit, id)
+          env.change_set.member_of_collection_ids += [Valkyrie::ID.new(id)]
         end
 
         # Remove the object from the members set and the ordered members list
-        def remove(curation_concern, id)
-          member = Collection.find(id)
-          curation_concern.member_of_collections.delete(member)
+        def remove(env, id)
+          env.change_set.member_of_collection_ids.delete(Valkyrie::ID.new(id))
         end
 
         # Determines if a hash contains a truthy _destroy key.
         # rubocop:disable Naming/PredicateName
         def has_destroy_flag?(hash)
-          ActiveFedora::Type::Boolean.new.cast(hash['_destroy'])
+          ActiveRecord::Type::Boolean.new.cast(hash['_destroy'])
         end
       # rubocop:enable Naming/PredicateName
     end

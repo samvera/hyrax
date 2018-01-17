@@ -97,6 +97,17 @@ Hyrax.config do |config|
   # Stream realtime notifications to users in the browser
   # config.realtime_notifications = true
 
+  # Configure the fedora_schema
+  # Add new or change existing predicates with
+  #   config.fedora_schema[:new_predicate] = RDF::URI.new('http://www.example.com/new_predicate')
+  # Replace the whole thing with
+  #   config.fedora_schema = { }
+
+  # Register new linked_data_resource classes; used to define special behavior for retrieving a label from an
+  #   external service for the given attribute.
+  #   @example :based_near is already registerd to use Hyrax::LinkedDataResources::GeonamesResource
+  # config.registered_registered_linked_data_resources[:my_new_attribute] = MyClass
+
   # Location autocomplete uses geonames to search for named regions
   # Username for connecting to geonames
   # config.geonames_username = ''
@@ -210,23 +221,6 @@ Hyrax.config do |config|
   #
   # How long to hold the lock in milliseconds
   # config.lock_time_to_live = 60_000
-
-  ## Do not alter unless you understand how ActiveFedora handles URI/ID translation
-  # config.translate_id_to_uri = lambda do |uri|
-  #                                baseparts = 2 + [(Noid::Rails::Config.template.gsub(/\.[rsz]/, '').length.to_f / 2).ceil, 4].min
-  #                                uri.to_s.sub(baseurl, '').split('/', baseparts).last
-  #                              end
-  # config.translate_uri_to_id = lambda do |id|
-  #                                "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/#{Noid::Rails.treeify(id)}"
-  #                              end
-
-  ## Fedora import/export tool
-  #
-  # Path to the Fedora import export tool jar file
-  # config.import_export_jar_file_path = "tmp/fcrepo-import-export.jar"
-  #
-  # Location where BagIt files should be exported
-  # config.bagit_dir = "tmp/descriptions"
 
   # If browse-everything has been configured, load the configs.  Otherwise, set to nil.
   begin

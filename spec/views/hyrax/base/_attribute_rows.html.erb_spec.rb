@@ -2,12 +2,9 @@ RSpec.describe 'hyrax/base/_attribute_rows.html.erb', type: :view do
   let(:url) { "http://example.com" }
   let(:rights_statement_uri) { 'http://rightsstatements.org/vocab/InC/1.0/' }
   let(:ability) { double }
-  let(:work) do
-    stub_model(GenericWork,
-               related_url: [url],
-               rights_statement: [rights_statement_uri])
-  end
-  let(:solr_document) { SolrDocument.new(work.to_solr) }
+  let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: work) }
+  let(:solr_document) { SolrDocument.new(document) }
+  let(:work) { create_for_repository(:work, related_url: [url], rights_statement: [rights_statement_uri]) }
   let(:presenter) { Hyrax::WorkShowPresenter.new(solr_document, ability) }
 
   let(:page) do

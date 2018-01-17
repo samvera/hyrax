@@ -2,8 +2,9 @@
 # and prepares it for visualization in /app/views/stats/file.html.erb
 module Hyrax
   class FileUsage < StatsUsagePresenter
+    # @param id [String]
     def initialize(id)
-      self.model = ::FileSet.find(id)
+      self.model = Queries.find_by(id: Valkyrie::ID.new(id))
     end
 
     alias file model

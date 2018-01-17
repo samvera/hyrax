@@ -5,7 +5,7 @@ RSpec.describe Hyrax::FixityCheckFailureService do
   let(:file) { Hydra::PCDM::File.new }
   let(:version_uri) { "#{file.uri}/fcr:versions/version1" }
   let(:file_set) do
-    create(:file_set, user: depositor, title: ["World Icon"]).tap { |fs| fs.original_file = file }
+    create_for_repository(:file_set, user: depositor, title: ["World Icon"]).tap { |fs| fs.original_file = file }
   end
 
   let(:checksum_audit_log) do

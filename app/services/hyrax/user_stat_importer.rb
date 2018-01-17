@@ -2,6 +2,8 @@ module Hyrax
   # Cache work view, file view & file download stats for all users
   # this is called by 'rake hyrax:stats:user_stats'
   class UserStatImporter
+    include Blacklight::SearchHelper
+
     UserRecord = Struct.new("UserRecord", :id, :user_key, :last_stats_update)
 
     def initialize(options = {})
@@ -48,7 +50,7 @@ module Hyrax
 
       def process_files(stats, user, start_date)
         file_ids_for_user(user).each do |file_id|
-          file = ::FileSet.find(file_id)
+          file = Hyrax::Queries.find_file_set(id: Valkyrie::ID.new(file_id))
           view_stats = extract_stats_for(object: file, from: FileViewStat, start_date: start_date, user: user)
           stats = tally_results(view_stats, :views, stats) if view_stats.present?
           delay
@@ -60,7 +62,7 @@ module Hyrax
 
       def process_works(stats, user, start_date)
         work_ids_for_user(user).each do |work_id|
-          work = Hyrax::WorkRelation.new.find(work_id)
+          work = Hyrax::Queries.find_work(id: Valkyrie::ID.new(work_id))
           work_stats = extract_stats_for(object: work, from: WorkViewStat, start_date: start_date, user: user)
           stats = tally_results(work_stats, :work_views, stats) if work_stats.present?
           delay
@@ -95,20 +97,18 @@ module Hyrax
         end
       end
 
+      delegate :blacklight_config, to: CatalogController
+
       def file_ids_for_user(user)
-        ids = []
-        ::FileSet.search_in_batches("#{depositor_field}:\"#{user.user_key}\"", fl: "id") do |group|
-          ids.concat group.map { |doc| doc["id"] }
-        end
-        ids
+        builder = FileSetsSearchBuilder.new([:by_depositor, :filter_models], self).with(depositor: user.user_key)
+        results = repository.search(builder.query)
+        results.response["docs"].map { |result| result["id"] }
       end
 
       def work_ids_for_user(user)
-        ids = []
-        Hyrax::WorkRelation.new.search_in_batches("#{depositor_field}:\"#{user.user_key}\"", fl: "id") do |group|
-          ids.concat group.map { |doc| doc["id"] }
-        end
-        ids
+        builder = WorksSearchBuilder.new([:by_depositor, :filter_models], self).with(depositor: user.user_key)
+        results = repository.search(builder.query)
+        results.response["docs"].map { |result| result["id"] }
       end
 
       # For each date, add the view and download counts for this file to the view & download sub-totals for that day.

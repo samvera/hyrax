@@ -6,7 +6,7 @@ RSpec.describe 'hyrax/base/relationships', type: :view do
     Hyrax::WorkShowPresenter.new(
       SolrDocument.new(
         id: '456',
-        has_model_ssim: ['GenericWork'],
+        Valkyrie::Persistence::Solr::Queries::MODEL => ['GenericWork'],
         title_tesim: ['Containing work']
       ),
       ability
@@ -17,7 +17,7 @@ RSpec.describe 'hyrax/base/relationships', type: :view do
     Hyrax::CollectionPresenter.new(
       SolrDocument.new(
         id: '345',
-        has_model_ssim: ['Collection'],
+        Valkyrie::Persistence::Solr::Queries::MODEL => ['Collection'],
         title_tesim: ['Containing collection']
       ),
       ability

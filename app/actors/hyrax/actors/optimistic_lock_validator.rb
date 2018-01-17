@@ -8,7 +8,7 @@ module Hyrax
       self.version_field = 'version'
 
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if update was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if update was successful
       def update(env)
         validate_lock(env, version_attribute(env.attributes)) && next_actor.update(env)
       end
@@ -19,7 +19,7 @@ module Hyrax
         #                   if it matches the current object version.
         def validate_lock(env, version)
           return true if version.blank? || version == env.curation_concern.etag
-          env.curation_concern.errors.add(:base, :conflict)
+          env.change_set.errors.add(:base, :conflict)
           false
         end
 

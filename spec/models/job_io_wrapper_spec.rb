@@ -2,7 +2,8 @@ RSpec.describe JobIoWrapper, type: :model do
   let(:user) { build(:user) }
   let(:path) { fixture_path + '/world.png' }
   let(:file_set_id) { 'bn999672v' }
-  let(:file_set) { instance_double(FileSet, id: file_set_id, uri: 'http://127.0.0.1/rest/fake/bn/99/96/72/bn999672v') }
+  let(:uri) { 'http://127.0.0.1/rest/fake/bn/99/96/72/bn999672v' }
+  let(:file_set) { instance_double(FileSet, id: file_set_id) }
   let(:args) { { file_set_id: file_set_id, user: user, path: path } }
 
   subject(:wrapper) { described_class.new(args) }
@@ -16,7 +17,7 @@ RSpec.describe JobIoWrapper, type: :model do
 
   describe '.create_with_wrapped_params!' do
     let(:local_file) { File.open(path) }
-    let(:relation) { :remastered }
+    let(:relation) { RDF::URI.new("http://pcdm.org/use#remastered") }
 
     subject { described_class.create_with_varied_file_handling!(user: user, file_set: file_set, file: file, relation: relation) }
 
@@ -41,7 +42,7 @@ RSpec.describe JobIoWrapper, type: :model do
     end
 
     context 'with Hyrax::UploadedFile' do
-      let(:file) { Hyrax::UploadedFile.new(user: user, file_set_uri: file_set.uri, file: local_file) }
+      let(:file) { Hyrax::UploadedFile.new(user: user, file_set_uri: uri, file: local_file) }
 
       it 'creates a JobIoWrapper' do
         expected_create_args = { user: user, relation: relation.to_s, file_set_id: file_set.id, uploaded_file: file, path: file.uploader.path }
@@ -53,7 +54,7 @@ RSpec.describe JobIoWrapper, type: :model do
 
   describe 'uploaded_file' do
     let(:other_path) { fixture_path + '/image.jpg' }
-    let(:uploaded_file) { Hyrax::UploadedFile.new(user: user, file_set_uri: file_set.uri, file: File.new(other_path)) }
+    let(:uploaded_file) { Hyrax::UploadedFile.new(user: user, file_set_uri: uri, file: File.new(other_path)) }
 
     # context 'path only' is the rest of this file
 
@@ -113,12 +114,14 @@ RSpec.describe JobIoWrapper, type: :model do
   end
 
   describe '#relation' do
+    let(:remastered_relation) { RDF::URI.new("http://pcdm.org/use#remastered") }
+
     it 'has default value' do
-      expect(subject.relation).to eq('original_file')
+      expect(subject.relation).to eq(Valkyrie::Vocab::PCDMUse.OriginalFile.to_s)
     end
     it 'accepts new value' do
-      subject.relation = 'remastered'
-      expect(subject.relation).to eq('remastered')
+      subject.relation = remastered_relation
+      expect(subject.relation).to eq(remastered_relation.to_s)
     end
   end
 
@@ -152,7 +155,7 @@ RSpec.describe JobIoWrapper, type: :model do
     let(:file_actor) { Hyrax::Actors::FileActor.new(file_set, subject.relation, user) }
 
     it 'produces an appropriate FileActor' do
-      allow(FileSet).to receive(:find).with(file_set_id).and_return(file_set)
+      allow(Hyrax::Queries).to receive(:find_by).and_return(file_set)
       expect(subject.file_actor).to eq(file_actor)
     end
   end

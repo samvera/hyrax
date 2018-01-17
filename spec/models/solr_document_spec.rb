@@ -27,11 +27,17 @@ RSpec.describe ::SolrDocument, type: :model do
 
     it { is_expected.to eq Date.parse('2013-03-14') }
 
+    context "when a Time is provided" do
+      let(:attributes) { { 'date_uploaded_dtsi' => Time.new(2013, 3, 14).utc } }
+
+      it { is_expected.to eq Date.parse('2013-03-14') }
+    end
+
     context "when an invalid type is provided" do
       let(:attributes) { { 'date_uploaded_dtsi' => 'Test' } }
 
       it "logs parse errors" do
-        expect(ActiveFedora::Base.logger).to receive(:info).with(/Unable to parse date.*/)
+        expect(Rails.logger).to receive(:info).with(/Unable to parse date.*/)
         subject
       end
     end
@@ -49,17 +55,23 @@ RSpec.describe ::SolrDocument, type: :model do
   end
 
   describe "create_date" do
-    let(:attributes) { { 'system_create_dtsi' => '2013-03-14T00:00:00Z' } }
+    let(:attributes) { { 'created_at_dtsi' => '2013-03-14T00:00:00Z' } }
 
     subject { document.create_date }
 
     it { is_expected.to eq Date.parse('2013-03-14') }
 
+    context "when a Time is provided" do
+      let(:attributes) { { 'created_at_dtsi' => Time.new(2013, 3, 14).utc } }
+
+      it { is_expected.to eq Date.parse('2013-03-14') }
+    end
+
     context "when an invalid type is provided" do
-      let(:attributes) { { 'system_create_dtsi' => 'Test' } }
+      let(:attributes) { { 'created_at_dtsi' => 'Test' } }
 
       it "logs parse errors" do
-        expect(ActiveFedora::Base.logger).to receive(:info).with(/Unable to parse date.*/)
+        expect(Rails.logger).to receive(:info).with(/Unable to parse date.*/)
         subject
       end
     end
@@ -113,7 +125,7 @@ RSpec.describe ::SolrDocument, type: :model do
 
     Mimes.office_document_mime_types.each do |type|
       context "when mime-type is #{type}" do
-        let(:attributes) { { 'mime_type_ssi' => type } }
+        let(:attributes) { { 'mime_type_ssim' => type } }
 
         subject { document }
 
@@ -123,7 +135,7 @@ RSpec.describe ::SolrDocument, type: :model do
 
     Mimes.video_mime_types.each do |type|
       context "when mime-type is #{type}" do
-        let(:attributes) { { 'mime_type_ssi' => type } }
+        let(:attributes) { { 'mime_type_ssim' => type } }
 
         subject { document }
 

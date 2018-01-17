@@ -3,13 +3,19 @@ RSpec.describe Hyrax::IIIFAuthorizationService do
   let(:ability) { Ability.new(user) }
   let(:controller) { double(current_ability: ability) }
   let(:service) { described_class.new(controller) }
-  let(:file_set_id) { 'mp48sc763' }
-  let(:image_id) { "#{file_set_id}/files/0b957460-99b4-4c31-902f-0fc23eefb972" }
+  let(:image_id) { '0b957460-99b4-4c31-902f-0fc23eefb972' }
   let(:image) { Riiif::Image.new(image_id) }
+  let(:file_node) { instance_double(Hyrax::FileNode) }
+  let(:file_set) { instance_double(FileSet) }
 
-  describe "#can?" do
+  before do
+    allow(Hyrax::Queries).to receive(:find_by).with(id: Valkyrie::ID.new(image_id)).and_return(file_node)
+    allow(Hyrax::Queries).to receive(:find_parents).with(resource: file_node).and_return(file_set)
+  end
+
+  describe '#can?' do
     context "when the user has read access to the FileSet" do
-      before { allow(ability).to receive(:test_read).with(file_set_id).and_return(true) }
+      before { allow(ability).to receive(:can?).with(:show, file_set).and_return(true) }
 
       context "info" do
         subject { service.can?(:info, image) }
@@ -25,7 +31,7 @@ RSpec.describe Hyrax::IIIFAuthorizationService do
     end
 
     context "when the user doesn't have read access to the FileSet" do
-      before { allow(ability).to receive(:test_read).with(file_set_id).and_return(false) }
+      before { allow(ability).to receive(:can?).with(:show, file_set).and_return(false) }
 
       context "info" do
         subject { service.can?(:info, image) }

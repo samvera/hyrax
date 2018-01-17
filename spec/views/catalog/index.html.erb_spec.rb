@@ -1,6 +1,7 @@
 RSpec.describe 'catalog/index.html.erb', type: :view do
-  let(:collection) { build(:collection, id: "abc123") }
-  let(:doc) { SolrDocument.new(collection.to_solr) }
+  let(:collection) { create_for_repository(:collection, id: '123abc') }
+  let(:document) { Valkyrie::MetadataAdapter.find(:index_solr).resource_factory.from_resource(resource: collection) }
+  let(:doc) { SolrDocument.new(document) }
 
   before do
     view.extend Hyrax::CollectionsHelper

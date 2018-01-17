@@ -16,10 +16,13 @@ RSpec.describe Hyrax::Actors::TransactionalRequest do
   end
 
   let(:ability) { ::Ability.new(depositor) }
-  let(:env) { Hyrax::Actors::Environment.new(work, ability, attributes) }
-  let(:terminator) { Hyrax::Actors::Terminator.new }
+  let(:change_set) { instance_double(GenericWorkChangeSet, resource: work) }
+  let(:change_set_persister) { double }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
+  let(:model_actor) { instance_double(Hyrax::Actors::ModelActor) }
   let(:depositor) { instance_double(User, new_record?: true, guest?: true, id: nil, user_key: nil) }
-  let(:work) { double(:work) }
+  let(:work) { instance_double(GenericWork) }
+  let(:attributes) { {} }
 
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
@@ -27,18 +30,17 @@ RSpec.describe Hyrax::Actors::TransactionalRequest do
       middleware.use bad_actor
       middleware.use good_actor
     end
-    stack.build(terminator)
+    stack.build(model_actor)
   end
 
-  describe "create" do
-    let(:attributes) { {} }
+  describe 'create' do
+    RSpec::Matchers.define_negated_matcher :not_change, :change
 
     subject { middleware.create(env) }
 
-    it "rolls back any database changes" do
-      expect do
-        expect { subject }.to raise_error 'boom'
-      end.not_to change { User.count } # Note the above good actor creates a user
+    it 'rolls back any database changes' do
+      expect { subject }.to raise_error('boom')
+        .and not_change { User.count } # Note the above good actor creates a user
     end
   end
 end

@@ -11,19 +11,19 @@ RSpec.describe Hyrax::AdminSetService do
   describe "#search_results", :clean_repo do
     subject { service.search_results(access) }
 
-    let!(:as1) { create(:admin_set, read_groups: ['public'], title: ['foo']) }
-    let!(:as2) { create(:admin_set, read_groups: ['public'], title: ['bar']) }
-    let!(:as3) { create(:admin_set, edit_users: [user.user_key], title: ['baz']) }
+    let!(:as1) { create_for_repository(:admin_set, read_groups: ['public'], title: ['foo']) }
+    let!(:as2) { create_for_repository(:admin_set, read_groups: ['public'], title: ['bar']) }
+    let!(:as3) { create_for_repository(:admin_set, edit_users: [user.user_key], title: ['baz']) }
 
     before do
-      create(:collection, :public) # this should never be returned.
+      create_for_repository(:collection, :public) # this should never be returned.
     end
 
     context "with read access" do
       let(:access) { :read }
 
       it "returns three admin sets" do
-        expect(subject.map(&:id)).to match_array [as1.id, as2.id, as3.id]
+        expect(subject.map(&:id)).to match_array [as1.id.to_s, as2.id.to_s, as3.id.to_s]
       end
     end
 
@@ -31,7 +31,7 @@ RSpec.describe Hyrax::AdminSetService do
       let(:access) { :edit }
 
       it "returns one admin set" do
-        expect(subject.map(&:id)).to match_array [as3.id]
+        expect(subject.map(&:id)).to match_array [as3.id.to_s]
       end
     end
   end
@@ -60,16 +60,16 @@ RSpec.describe Hyrax::AdminSetService do
     let(:doc2) { SolrDocument.new(id: 'yyx123') }
     let(:doc3) { SolrDocument.new(id: 'zxy123') }
     let(:connection) { instance_double(RSolr::Client) }
-    let(:facets) { { 'isPartOf_ssim' => [doc1.id, 8, doc2.id, 2] } }
+    let(:facets) { { 'admin_set_id_ssim' => ['id-xyz123', 8, 'id-yyx123', 2] } }
     let(:document_list) do
       [
         {
-          'isPartOf_ssim' => ['xyz123'],
-          'file_set_ids_ssim' => ['aaa']
+          'admin_set_id_ssim' => ['id-xyz123'],
+          'member_ids_ssim' => ['id-aaa']
         },
         {
-          'isPartOf_ssim' => ['xyz123', 'yyx123'],
-          'file_set_ids_ssim' => ['bbb', 'ccc']
+          'admin_set_id_ssim' => ['id-xyz123', 'id-yyx123'],
+          'member_ids_ssim' => ['id-bbb', 'id-ccc']
         }
       ]
     end
@@ -91,9 +91,9 @@ RSpec.describe Hyrax::AdminSetService do
 
     before do
       allow(service).to receive(:search_results).and_return(documents)
-      allow(ActiveFedora::SolrService.instance).to receive(:conn).and_return(connection)
-      allow(connection).to receive(:get).with("select", params: { fq: "{!terms f=isPartOf_ssim}xyz123,yyx123,zxy123",
-                                                                  "facet.field" => "isPartOf_ssim" }).and_return(results)
+      allow(Valkyrie::MetadataAdapter.find(:index_solr)).to receive(:connection).and_return(connection)
+      allow(connection).to receive(:get).with("select", params: { fq: "{!terms f=admin_set_id_ssim}id-xyz123,id-yyx123,id-zxy123",
+                                                                  "facet.field" => "admin_set_id_ssim" }).and_return(results)
     end
 
     context "when there are works in the admin set" do
@@ -106,10 +106,10 @@ RSpec.describe Hyrax::AdminSetService do
       let(:document_list) do
         [
           {
-            'isPartOf_ssim' => ['xyz123']
+            'admin_set_id_ssim' => ['id-xyz123']
           },
           {
-            'isPartOf_ssim' => ['xyz123', 'yyx123']
+            'admin_set_id_ssim' => ['id-xyz123', 'id-yyx123']
           }
         ]
       end

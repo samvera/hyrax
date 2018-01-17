@@ -8,10 +8,12 @@ RSpec.describe Hyrax::CollectionMemberService, :clean_repo do
   let(:work) { SolrDocument.new(work_attrs) }
 
   before do
-    ActiveFedora::SolrService.add(coll1_attrs)
-    ActiveFedora::SolrService.add(coll2_attrs)
-    ActiveFedora::SolrService.add(coll3_attrs)
-    ActiveFedora::SolrService.commit
+    solr = Valkyrie::MetadataAdapter.find(:index_solr).connection
+
+    solr.add(coll1_attrs)
+    solr.add(coll2_attrs)
+    solr.add(coll3_attrs)
+    solr.commit
   end
 
   describe "#run" do

@@ -1,6 +1,8 @@
 module Hyrax
   class WorkflowActionsController < ApplicationController
     before_action :authenticate_user!
+    class_attribute :persister
+    self.persister = Valkyrie::MetadataAdapter.find(:indexing_persister)
 
     def update
       if workflow_action_form.save
@@ -8,22 +10,23 @@ module Hyrax
       else
         respond_to do |wants|
           wants.html { render 'hyrax/base/unauthorized', status: :unauthorized }
-          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: 'unable to update workflow' }) }
         end
       end
     end
 
     private
 
-      def curation_concern
-        @curation_concern ||= ActiveFedora::Base.find(params[:id])
+      def resource
+        @resource ||= find_resource(params[:id])
       end
 
       def workflow_action_form
         @workflow_action_form ||= Hyrax::Forms::WorkflowActionForm.new(
           current_ability: current_ability,
-          work: curation_concern,
-          attributes: workflow_action_params
+          work: resource,
+          attributes: workflow_action_params,
+          persister: persister
         )
       end
 
@@ -33,9 +36,13 @@ module Hyrax
 
       def after_update_response
         respond_to do |wants|
-          wants.html { redirect_to [main_app, curation_concern], notice: "The #{curation_concern.human_readable_type} has been updated." }
-          wants.json { render 'hyrax/base/show', status: :ok, location: polymorphic_path([main_app, curation_concern]) }
+          wants.html { redirect_to [main_app, resource], notice: "The #{resource.human_readable_type} has been updated." }
+          wants.json { render 'hyrax/base/show', status: :ok, location: polymorphic_path([main_app, resource]) }
         end
+      end
+
+      def find_resource(id)
+        Hyrax::Queries.find_by(id: Valkyrie::ID.new(id))
       end
   end
 end

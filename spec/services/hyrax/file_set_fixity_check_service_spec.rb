@@ -1,5 +1,9 @@
+# frozen_string_literal: true
+
+include ActionDispatch::TestProcess
+
 RSpec.describe Hyrax::FileSetFixityCheckService do
-  let(:f)                 { create(:file_set, content: File.open(fixture_path + '/world.png')) }
+  let(:f)                 { create_for_repository(:file_set, content: fixture_file_upload('world.png', 'image/png')) }
   let(:service_by_object) { described_class.new(f) }
   let(:service_by_id)     { described_class.new(f.id) }
 
@@ -52,12 +56,12 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
     end
 
     describe '#fixity_check_file_version' do
-      subject { service_by_object.send(:fixity_check_file_version, f.original_file.id, f.original_file.uri.to_s) }
+      subject { service_by_object.send(:fixity_check_file_version, f.original_file.id, f.original_file.id.to_s) }
 
       specify 'returns a single ChecksumAuditLog for the given file' do
         expect(subject).to be_kind_of ChecksumAuditLog
-        expect(subject.file_set_id).to eq(f.id)
-        expect(subject.checked_uri).to eq(f.original_file.uri)
+        expect(subject.file_set_id).to eq(f.id.to_s)
+        expect(subject.checked_uri).to eq(f.original_file.id.to_s)
       end
     end
   end

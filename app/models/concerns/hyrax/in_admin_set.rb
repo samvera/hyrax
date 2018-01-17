@@ -3,11 +3,11 @@ module Hyrax
     extend ActiveSupport::Concern
 
     included do
-      belongs_to :admin_set, predicate: Hyrax.config.admin_set_predicate
+      attribute :admin_set_id, Valkyrie::Types::ID.optional
     end
 
     def active_workflow
-      Sipity::Workflow.find_active_workflow_for(admin_set_id: admin_set_id)
+      Sipity::Workflow.find_active_workflow_for(admin_set_id: admin_set_id.to_s)
     end
   end
 end

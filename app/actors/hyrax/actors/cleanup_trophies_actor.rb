@@ -13,7 +13,7 @@ module Hyrax
       private
 
         def cleanup_trophies(env)
-          Trophy.where(work_id: env.curation_concern.id).destroy_all
+          Trophy.where(work_id: env.curation_concern.id.to_s).destroy_all
         end
     end
   end

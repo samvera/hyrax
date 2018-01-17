@@ -10,17 +10,21 @@ module Hyrax
     # url property, it may have spaces, and not be a valid URI.
     class CreateWithRemoteFilesActor < Hyrax::Actors::AbstractActor
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if create was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if create was successful
       def create(env)
         remote_files = env.attributes.delete(:remote_files)
-        next_actor.create(env) && attach_files(env, remote_files)
+        saved = next_actor.create(env)
+        return saved if saved && attach_files(env, remote_files)
+        false
       end
 
       # @param [Hyrax::Actors::Environment] env
-      # @return [Boolean] true if update was successful
+      # @return [Valkyrie::Resource,FalseClass] the saved resource if update was successful
       def update(env)
         remote_files = env.attributes.delete(:remote_files)
-        next_actor.update(env) && attach_files(env, remote_files)
+        saved = next_actor.update(env)
+        return saved if saved && attach_files(env, remote_files)
+        false
       end
 
       private
@@ -55,27 +59,56 @@ module Hyrax
               Rails.logger.error "User #{env.user.user_key} attempted to ingest file from url #{file_info[:url]}, which doesn't pass validation"
               return false
             end
-            create_file_from_url(env, uri, file_info[:file_name])
+            file_set = create_file_from_url(env.user, uri, file_info[:file_name])
+            Hyrax::Actors::FileSetActor.new(file_set, env.user).attach_to_work(env.curation_concern)
           end
           true
         end
 
         # Generic utility for creating FileSet from a URL
         # Used in to import files using URLs from a file picker like browse_everything
-        def create_file_from_url(env, uri, file_name)
-          ::FileSet.new(import_url: uri.to_s, label: file_name) do |fs|
-            actor = Hyrax::Actors::FileSetActor.new(fs, env.user)
-            actor.create_metadata(visibility: env.curation_concern.visibility)
-            actor.attach_to_work(env.curation_concern)
-            fs.save!
-            if uri.scheme == 'file'
-              # Turn any %20 into spaces.
-              file_path = CGI.unescape(uri.path)
-              IngestLocalFileJob.perform_later(fs, file_path, env.user)
-            else
-              ImportUrlJob.perform_later(fs, operation_for(user: actor.user))
-            end
+        # @return [FileSet] the persisted FileSet
+        def create_file_from_url(user, uri, file_name)
+          change_set = build_change_set(user: user,
+                                        import_url: uri.to_s,
+                                        label: file_name)
+          file_set = nil
+          change_set_persister.buffer_into_index do |buffered_changeset_persister|
+            file_set = buffered_changeset_persister.save(change_set: change_set)
           end
+          ingest_file_later(file_set, uri, user)
+
+          file_set
+        end
+
+        # @param file_set [FileSet] the persisted FileSet
+        # @param uri [URI] the path to the file
+        # @param user [User] the user who is doing the import
+        # @return [Void]
+        def ingest_file_later(file_set, uri, user)
+          if uri.scheme == 'file'
+            # Turn any %20 into spaces.
+            file_path = CGI.unescape(uri.path)
+            IngestLocalFileJob.perform_later(file_set, file_path, user)
+          else
+            # TODO: should we just pass the uri?
+            ImportUrlJob.perform_later(file_set, operation_for(user: user))
+          end
+        end
+
+        def build_change_set(attributes)
+          Hyrax::FileSetChangeSet.new(::FileSet.new, attributes).tap(&:sync)
+        end
+
+        def change_set_persister
+          Hyrax::FileSetChangeSetPersister.new(
+            metadata_adapter: metadata_adapter,
+            storage_adapter: Valkyrie.config.storage_adapter
+          )
+        end
+
+        def metadata_adapter
+          Valkyrie::MetadataAdapter.find(:indexing_persister)
         end
 
         def operation_for(user:)

@@ -4,7 +4,7 @@
     <p/><%= link_to t('hyrax.file_set.show.download'),
       hyrax.download_path(file_set),
       id: "file_download",
-      data: { label: file_set.id },
+      data: { label: file_set.id.to_s },
       target: "_new" %>
   <% end %>
 </div>

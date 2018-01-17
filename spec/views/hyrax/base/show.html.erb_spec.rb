@@ -4,7 +4,7 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
                      title_tesim: ['My Title'],
                      creator_tesim: ['Doe, John', 'Doe, Jane'],
                      date_modified_dtsi: '2011-04-01',
-                     has_model_ssim: ['GenericWork'],
+                     Valkyrie::Persistence::Solr::Queries::MODEL => ['GenericWork'],
                      depositor_tesim: depositor.user_key,
                      description_tesim: ['Lorem ipsum lorem ipsum.'],
                      keyword_tesim: ['bacon', 'sausage', 'eggs'],

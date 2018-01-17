@@ -28,7 +28,7 @@ module Hyrax
     end
 
     def index
-      links = SingleUseLink.where(itemId: params[:id]).map { |link| show_presenter.new(link) }
+      links = SingleUseLink.where(itemId: params[:id].to_s).map { |link| show_presenter.new(link) }
       render partial: 'hyrax/file_sets/single_use_link_rows', locals: { single_use_links: links }
     end
 
@@ -40,7 +40,7 @@ module Hyrax
     private
 
       def authorize_user!
-        authorize! :edit, params[:id]
+        authorize! :edit, params[:id].to_s
       end
 
       def asset_show_path

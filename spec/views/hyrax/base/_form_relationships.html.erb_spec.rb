@@ -1,21 +1,20 @@
 RSpec.describe 'hyrax/base/_form_relationships.html.erb', type: :view do
-  let(:ability) { double }
   let(:work) { GenericWork.new }
-  let(:form) do
-    Hyrax::GenericWorkForm.new(work, ability, controller)
+  let(:change_set) do
+    GenericWorkChangeSet.new(work)
   end
   let(:service) { instance_double Hyrax::AdminSetService }
   let(:presenter) { instance_double Hyrax::AdminSetOptionsPresenter, select_options: [] }
   let(:form_template) do
     %(
-      <%= simple_form_for [main_app, @form] do |f| %>
+      <%= simple_form_for @change_set do |f| %>
         <%= render "hyrax/base/form_relationships", f: f %>
       <% end %>
     )
   end
 
   let(:page) do
-    assign(:form, form)
+    assign(:change_set, change_set)
     render inline: form_template
     Capybara::Node::Simple.new(rendered)
   end

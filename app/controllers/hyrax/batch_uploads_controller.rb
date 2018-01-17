@@ -3,17 +3,9 @@ module Hyrax
     include Hydra::Controller::ControllerBehavior
     include Hyrax::WorksControllerBehavior
 
-    # Gives the class of the form.
-    class BatchUploadFormService < Hyrax::WorkFormService
-      def self.form_class(_ = nil)
-        ::Hyrax::Forms::BatchUploadForm
-      end
-    end
-
-    self.work_form_service = BatchUploadFormService
-    self.curation_concern_type = work_form_service.form_class.model_class # includes CanCan side-effects
-    # We use BatchUploadItem as a null stand-in curation_concern_type.
-    # The actual permission is checked dynamically during #create.
+    # We use BatchUploadItem as a null stand-in resource_type.
+    self.resource_class = BatchUploadItem
+    self.change_set_class = BatchUploadChangeSet
 
     with_themed_layout 'dashboard'
 
@@ -42,18 +34,19 @@ module Hyrax
         end
       end
 
-      def build_form
-        super
-        @form.payload_concern = params[:payload_concern]
+      def build_change_set(resource)
+        super.tap do |change_set|
+          change_set.payload_concern = params[:payload_concern]
+        end
       end
 
       def handle_payload_concern!
-        unsafe_pc = params.fetch(:batch_upload_item, {})[:payload_concern]
+        unsafe_pc = resource_params.delete(:payload_concern)
         # Calling constantize on user params is disfavored (per brakeman), so we sanitize by matching it against an authorized model.
         safe_pc = Hyrax::SelectTypeListPresenter.new(current_user).authorized_models.map(&:to_s).find { |x| x == unsafe_pc }
         raise CanCan::AccessDenied, "Cannot create an object of class '#{unsafe_pc}'" unless safe_pc
         # authorize! :create, safe_pc
-        create_update_job(safe_pc)
+        create_job(safe_pc)
       end
 
       def redirect_after_update!
@@ -68,7 +61,7 @@ module Hyrax
 
       # @param [String] klass the name of the Hyrax Work Class being created by the batch
       # @note Cannot use a proper Class here because it won't serialize
-      def create_update_job(klass)
+      def create_job(klass)
         operation = BatchCreateOperation.create!(user: current_user,
                                                  operation_type: "Batch Create")
         # ActionController::Parameters are not serializable, so cast to a hash
@@ -76,18 +69,29 @@ module Hyrax
                                      params[:title].permit!.to_h,
                                      params.fetch(:resource_type, {}).permit!.to_h,
                                      params[:uploaded_files],
-                                     attributes_for_actor.to_h.merge!(model: klass),
+                                     create_attributes(klass),
                                      operation)
       end
 
       def uploading_on_behalf_of?
-        params.fetch(hash_key_for_curation_concern).key?(:on_behalf_of)
+        resource_params.key?(:on_behalf_of)
       end
 
-      def attributes_for_actor
-        raw_params = params[hash_key_for_curation_concern]
-        return {} unless raw_params
-        work_form_service.form_class(curation_concern).model_attributes(raw_params)
+      def resource_params
+        @resource_params ||= params[resource_class.model_name.param_key] || {}
+      end
+
+      # Strip out any blank spaces and add the model.
+      # @example:
+      #   params[:title]
+      #   # => { title: [''] }
+      #   create_attributes(GenericWork)
+      #   # => { title: [], model: GenericWork }
+      def create_attributes(klass)
+        resource_params
+          .to_unsafe_h
+          .each_value { |v| v.delete('') }
+          .merge(model: klass)
       end
   end
 end

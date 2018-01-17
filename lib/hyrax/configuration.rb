@@ -161,20 +161,6 @@ module Hyrax
       @ingest_queue_name ||= :default
     end
 
-    # @!attribute [w] import_export_jar_file_path
-    #   Path to the jar file for the Fedora import/export tool
-    attr_writer :import_export_jar_file_path
-    def import_export_jar_file_path
-      @import_export_jar_file_path ||= "tmp/fcrepo-import-export.jar"
-    end
-
-    # @!attribute [w] bagit_dir
-    #   Location where BagIt files are exported
-    attr_writer :bagit_dir
-    def bagit_dir
-      @bagit_dir ||= "tmp/descriptions"
-    end
-
     # @!attribute [w] whitelisted_ingest_dirs
     #   List of directories which can be used for local file system ingestion.
     attr_writer :whitelisted_ingest_dirs
@@ -415,6 +401,13 @@ module Hyrax
     end
     alias google_analytics_id? google_analytics_id
 
+    attr_writer :registered_linked_data_resources
+    def registered_linked_data_resources
+      @registered_linked_data_resources ||= {
+        based_near: Hyrax::LinkedDataResources::GeonamesResource
+      }
+    end
+
     # Defaulting analytic start date to whenever the file was uploaded by leaving it blank
     attr_writer :analytic_start_date
     attr_reader :analytic_start_date
@@ -435,22 +428,6 @@ module Hyrax
       @permission_options ||= { "Choose Access" => "none",
                                 "View/Download" => "read",
                                 "Edit" => "edit" }
-    end
-
-    attr_writer :translate_uri_to_id
-
-    def translate_uri_to_id
-      @translate_uri_to_id ||= lambda do |uri|
-        baseparts = 2 + [(::Noid::Rails.config.template.gsub(/\.[rsz]/, '').length.to_f / 2).ceil, 4].min
-        uri.to_s.sub("#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}", '').split('/', baseparts).last
-      end
-    end
-
-    attr_writer :translate_id_to_uri
-    def translate_id_to_uri
-      @translate_id_to_uri ||= lambda do |id|
-        "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/#{::Noid::Rails.treeify(id)}"
-      end
     end
 
     attr_writer :contact_email
@@ -478,6 +455,8 @@ module Hyrax
                       default_uploader_config
                     end
     end
+
+    delegate :fedora_schema, :fedora_schema=, to: Hyrax::FedoraSchema
 
     private
 

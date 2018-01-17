@@ -1,15 +1,15 @@
 RSpec.describe 'collection', type: :feature do
   let(:user) { create(:user) }
 
-  let(:collection1) { create(:public_collection, user: user) }
-  let(:collection2) { create(:public_collection, user: user) }
+  let(:collection1) { create_for_repository(:collection, :public, user: user) }
+  let(:collection2) { create_for_repository(:collection, :public, user: user) }
 
   describe 'collection show page' do
     let(:collection) do
-      create(:public_collection, user: user, description: ['collection description'])
+      create_for_repository(:collection, :public, user: user, description: ['collection description'])
     end
-    let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
-    let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
+    let!(:work1) { create_for_repository(:work, title: ["King Louie"], member_of_collection_ids: [collection.id], user: user) }
+    let!(:work2) { create_for_repository(:work, title: ["King Kong"], member_of_collection_ids: [collection.id], user: user) }
 
     before do
       sign_in user
@@ -56,17 +56,17 @@ RSpec.describe 'collection', type: :feature do
   describe 'show pages of a collection' do
     before do
       docs = (0..12).map do |n|
-        { "has_model_ssim" => ["GenericWork"], :id => "zs25x871q#{n}",
+        { Valkyrie::Persistence::Solr::Queries::MODEL => ["GenericWork"], :id => "zs25x871q#{n}",
           "depositor_ssim" => [user.user_key],
           "suppressed_bsi" => false,
-          "member_of_collection_ids_ssim" => [collection.id],
+          "member_of_collection_ids_ssim" => ["id-#{collection.id}"],
           "edit_access_person_ssim" => [user.user_key] }
       end
-      ActiveFedora::SolrService.add(docs, commit: true)
+      Valkyrie::MetadataAdapter.find(:index_solr).connection.add(docs, params: { commit: true })
 
       sign_in user
     end
-    let(:collection) { create(:named_collection, user: user) }
+    let(:collection) { create_for_repository(:named_collection, user: user) }
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       visit "/collections/#{collection.id}"

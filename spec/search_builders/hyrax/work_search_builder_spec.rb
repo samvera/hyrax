@@ -20,7 +20,7 @@ RSpec.describe Hyrax::WorkSearchBuilder do
   describe "#query" do
     subject { builder.query }
 
-    let(:doc) { instance_double(SolrDocument) }
+    let(:doc) { SolrDocument.new(Valkyrie::Persistence::Solr::Queries::MODEL => 'GenericWork') }
 
     before do
       allow(SolrDocument).to receive(:find).and_return(doc)
@@ -37,7 +37,7 @@ RSpec.describe Hyrax::WorkSearchBuilder do
 
         it "filters for id, access, suppressed and type" do
           expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
-                                      "{!terms f=has_model_ssim}GenericWork,Collection",
+                                      "{!terms f=#{Valkyrie::Persistence::Solr::Queries::MODEL}}GenericWork",
                                       "{!raw f=id}123abc"]
         end
       end
@@ -46,7 +46,7 @@ RSpec.describe Hyrax::WorkSearchBuilder do
 
         it "filters for id, access, suppressed and type" do
           expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
-                                      "{!terms f=has_model_ssim}GenericWork,Collection",
+                                      "{!terms f=#{Valkyrie::Persistence::Solr::Queries::MODEL}}GenericWork",
                                       "-suppressed_bsi:true",
                                       "{!raw f=id}123abc"]
         end
@@ -60,7 +60,7 @@ RSpec.describe Hyrax::WorkSearchBuilder do
       end
       it "filters for id, access, suppressed and type" do
         expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
-                                    "{!terms f=has_model_ssim}GenericWork,Collection",
+                                    "{!terms f=#{Valkyrie::Persistence::Solr::Queries::MODEL}}GenericWork",
                                     "-suppressed_bsi:true",
                                     "{!raw f=id}123abc"]
       end

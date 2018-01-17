@@ -1,17 +1,18 @@
 RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
-  let(:curation_concern) { build(:work) }
+  let(:curation_concern) { create_for_repository(:work) }
   let(:attributes) { {} }
-  let(:terminator) { Hyrax::Actors::Terminator.new }
-  let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
+  let(:change_set) { GenericWorkChangeSet.new(curation_concern) }
+  let(:change_set_persister) { Hyrax::ChangeSetPersister.new(metadata_adapter: Valkyrie::MetadataAdapter.find(:indexing_persister), storage_adapter: Valkyrie.config.storage_adapter) }
+  let(:env) { Hyrax::Actors::Environment.new(change_set, change_set_persister, ability, attributes) }
+  let(:model_actor) { Hyrax::Actors::GenericWorkActor.new(nil) }
 
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
       middleware.use described_class
-      middleware.use Hyrax::Actors::GenericWorkActor
     end
-    stack.build(terminator)
+    stack.build(model_actor)
   end
 
   describe 'the next actor' do
@@ -23,12 +24,12 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
     end
 
     before do
-      allow(Collection).to receive(:find).with('123')
-      allow(curation_concern).to receive(:member_of_collections=)
+      allow(ability).to receive(:can?).and_return(false)
+      allow(curation_concern).to receive(:member_of_collection_ids=)
     end
 
     it 'does not receive the member_of_collection_ids' do
-      expect(terminator).to receive(:create).with(Hyrax::Actors::Environment) do |k|
+      expect(model_actor).to receive(:create).with(Hyrax::Actors::Environment) do |k|
         expect(k.attributes).to eq("title" => ["test"])
       end
       subject.create(env)
@@ -36,48 +37,43 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
   end
 
   describe 'create' do
-    let(:collection) { create(:collection, edit_users: [user.user_key]) }
+    let(:collection) { create_for_repository(:collection, edit_users: [user.user_key]) }
     let(:attributes) do
       {
-        member_of_collections_attributes: { '0' => { id: collection.id } },
+        member_of_collections_attributes: { '0' => { id: collection.id.to_s } },
         title: ['test']
       }
     end
 
     it 'adds it to the collection' do
-      expect(subject.create(env)).to be true
-      expect(collection.reload.member_objects).to eq [curation_concern]
+      expect(subject.create(env)).to be_instance_of GenericWork
+      reloaded = Hyrax::Queries.find_by(id: curation_concern.id)
+      expect(reloaded.member_of_collection_ids).to eq [collection.id]
     end
 
     describe "when work is in user's own collection and destroy is passed" do
-      let(:collection) { create(:collection, user: user, title: ['A good title']) }
+      let(:collection) { create_for_repository(:collection, user: user, title: ['A good title']) }
       let(:attributes) do
-        { member_of_collections_attributes: { '0' => { id: collection.id, _destroy: 'true' } } }
+        { member_of_collections_attributes: { '0' => { id: collection.id.to_s, _destroy: 'true' } } }
       end
-
-      before do
-        curation_concern.member_of_collections = [collection]
-        curation_concern.save!
-      end
+      let!(:curation_concern) { create_for_repository(:work, member_of_collection_ids: [collection.id]) }
 
       it "removes the work from that collection" do
-        expect(subject.create(env)).to be true
-        expect(curation_concern.member_of_collections).to eq []
+        expect(subject.create(env)).to be_instance_of GenericWork
+        reloaded = Hyrax::Queries.find_by(id: curation_concern.id)
+        expect(reloaded.member_of_collection_ids).to eq []
       end
     end
 
     describe "when work is in another user's collection" do
-      let(:other_collection) { create(:collection, title: ['A good title']) }
-
-      before do
-        curation_concern.member_of_collections = [other_collection]
-        curation_concern.save!
-      end
+      let(:other_collection) { create_for_repository(:collection, title: ['A good title']) }
+      let(:curation_concern) { create_for_repository(:work, member_of_collection_ids: [other_collection.id]) }
 
       it "doesn't remove the work from the other user's collection" do
         subject.create(env)
-        expect(subject.create(env)).to be true
-        expect(curation_concern.member_of_collections).to match_array [collection, other_collection]
+        expect(subject.create(env)).to be_instance_of GenericWork
+        reloaded = Hyrax::Queries.find_by(id: curation_concern.id)
+        expect(reloaded.member_of_collection_ids).to match_array [collection.id, other_collection.id]
       end
     end
   end

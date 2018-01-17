@@ -1,0 +1,277 @@
+module Hyrax
+  class WorkChangeSet < Valkyrie::ChangeSet
+    class_attribute :workflow_class, :primary_terms, :secondary_terms
+    delegate :human_readable_type, :to_s, :lease_id, :embargo_id, to: :resource
+
+    # Which fields show above the fold.
+    self.primary_terms = [:title, :creator, :keyword, :rights_statement]
+    self.secondary_terms = [:contributor, :description, :license, :publisher,
+                            :date_created, :subject, :language, :identifier,
+                            :based_near, :related_url, :source, :resource_type]
+
+    # Used for searching
+    property :search_context, virtual: true, multiple: false, required: false
+
+    # A collection to add this work to after it's created
+    property :add_works_to_collection, virtual: true
+
+    # TODO: Figure out where to persist these fields
+    property :embargo_release_date, virtual: true
+    property :lease_expiration_date, virtual: true
+    property :visibility, virtual: true
+    property :visibility_during_embargo, virtual: true
+    property :visibility_after_embargo, virtual: true
+    property :visibility_during_lease, virtual: true
+    property :visibility_after_lease, virtual: true
+
+    # TODO: this should be validated
+    property :agreement_accepted, virtual: true
+
+    # TODO: how do we get an etag?
+    property :version, virtual: true
+
+    collection :permissions, virtual: true
+    collection :work_members, virtual: true
+
+    property :admin_set_id, virtual: false
+    property :in_works_ids, virtual: true
+    property :depositor
+
+    # The lookup field for collection relationships
+    property :member_of_collection_ids, virtual: true, required: false
+
+    validate :validate_lease
+    validate :validate_embargo
+    validate :validate_release_type
+    validate :validate_visibility
+
+    class << self
+      def work_klass
+        name.sub(/ChangeSet$/, '').constantize
+      end
+    end
+
+    def prepopulate!
+      prepopulate_permissions
+      prepopulate_admin_set_id
+      prepopulate_work_members
+      prepopulate_in_works_ids
+      super.tap do
+        @_changes = Disposable::Twin::Changed::Changes.new
+      end
+    end
+
+    # We just need to respond to this method so that the rails nested form builder will work.
+    def permissions_attributes=
+      # nop
+    end
+
+    # We just need to respond to this method so that the rails nested form builder will work.
+    def work_members_attributes=
+      # nop
+    end
+
+    # The possible values for the representative_id dropdown
+    # @return [Hash] All file sets in the collection, file.to_s is the key, file.id is the value
+    def select_files
+      Hash[file_presenters.map { |file| [file.to_s, file.id] }]
+    end
+
+    def page_title
+      if resource.persisted?
+        [resource.to_s, "#{resource.human_readable_type} [#{resource.to_param}]"]
+      else
+        ["New #{resource.human_readable_type}"]
+      end
+    end
+
+    # Do not display additional fields if there are no secondary terms
+    # @return [Boolean] display additional fields on the form?
+    def display_additional_fields?
+      secondary_terms.any?
+    end
+
+    # Get a list of collection id/title pairs for the select form
+    def collections_for_select
+      collection_service = CollectionsService.new(search_context)
+      CollectionOptionsPresenter.new(collection_service).select_options(:edit)
+    end
+
+    # Select collection(s) based on passed-in params and existing memberships.
+    # When the add_works_to_collection parameter is set, they mean to create
+    # a new work and add it to that collection.
+    def member_of_collections
+      base = Hyrax::Queries.find_references_by(resource: model, property: :member_of_collection_ids)
+      return base unless add_works_to_collection
+      base + [Hyrax::Queries.find_collection(id: add_works_to_collection)]
+    end
+
+    # backs the child work search element
+    # @return [NilClass]
+    def find_child_work; end
+
+    def member_of_collections_json
+      member_of_collections.map do |coll|
+        {
+          id: coll.id,
+          label: coll.to_s,
+          path: Hyrax::Engine.routes.url_helpers.url_for(coll)
+        }
+      end.to_json
+    end
+
+    def work_members_json
+      work_members.map do |child|
+        {
+          id: child.id,
+          label: child.to_s,
+          path: Hyrax::Engine.routes.url_helpers.url_for(child)
+        }
+      end.to_json
+    end
+
+    def permissions_changed?
+      changed.include?('edit_users') ||
+        changed.include?('edit_groups') ||
+        changed.include?('read_users') ||
+        changed.include?('read_groups')
+    end
+
+    def visibility_changed?
+      changed['visibility']
+    end
+
+    private
+
+      # @return [Array<FileSetPresenter>] presenters for the file sets in order of the ids
+      def file_presenters
+        @file_sets ||=
+          Hyrax::PresenterFactory.build_for(ids: resource.member_ids,
+                                            presenter_class: FileSetPresenter,
+                                            presenter_args: search_context.ability)
+      end
+
+      def wants_lease?
+        visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE
+      end
+
+      def wants_embargo?
+        visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO
+      end
+
+      def template
+        @template ||= PermissionTemplate.find_by!(admin_set_id: admin_set_id) if admin_set_id.present?
+      end
+
+      # admin_set_id is required on the client, otherwise simple_form renders a blank option.
+      # however it isn't a required field for someone to submit via json.
+      # Set the first admin_set they have access to.
+      def prepopulate_admin_set_id
+        admin_set = Hyrax::AdminSetService.new(search_context).search_results(:deposit).first
+        self.admin_set_id = admin_set && admin_set.id
+      end
+
+      def prepopulate_work_members
+        self.work_members = Hyrax::Queries.find_members(resource: resource).select(&:work?)
+      end
+
+      def prepopulate_permissions
+        self.permissions = resource.edit_users.map { |key| PermissionChangeSet.new(Permission.new, agent_name: key, access: 'edit', type: 'person') } +
+                           resource.read_users.map { |key| PermissionChangeSet.new(Permission.new, agent_name: key, access: 'read', type: 'person') } +
+                           resource.edit_groups.map { |key| PermissionChangeSet.new(Permission.new, agent_name: key, access: 'edit', type: 'group') } +
+                           resource.read_groups.map { |key| PermissionChangeSet.new(Permission.new, agent_name: key, access: 'read', type: 'group') }
+      end
+
+      # Includes any parent works.
+      # @return [Array<String>] a list of identifiers
+      def prepopulate_in_works_ids
+        work_ids = resource.persisted? ? resource.in_works_ids.map(&:to_s) : []
+        self.in_works_ids = (work_ids + [append_id]).uniq
+      end
+
+      def validate_lease
+        # Validate that a lease is allowed by AdminSet's PermissionTemplate
+        return unless wants_lease?
+
+        # Leases are only allowable if a template doesn't require a release period or have any specific visibility requirement
+        # (Note: permission template release/visibility options do not support leases)
+        unless template.present? && (template.release_period.present? || template.visibility.present?)
+          date = parse_date(lease_expiration_date)
+          return if valid_future_date?(date, attribute_name: :lease_expiration_date)
+          errors.add(:visibility, 'When setting visibility to "lease" you must also specify lease expiration date.')
+        end
+
+        errors.add(:visibility, 'Lease option is not allowed by permission template for selected AdminSet.')
+      end
+
+      # When specified, validate embargo is a future date that complies with AdminSet template requirements (if any)
+      def validate_embargo
+        return unless wants_embargo?
+        date = parse_date(embargo_release_date)
+
+        # When embargo is required, date must be in future AND match any template requirements
+        return if valid_future_date?(date) &&
+                  valid_template_embargo_date?(date) &&
+                  valid_template_visibility_after_embargo?
+
+        errors.add(:visibility, 'When setting visibility to "embargo" you must also specify embargo release date.') if date.blank?
+      end
+
+      # Validate an date attribute is in the future
+      def valid_future_date?(date, attribute_name: :embargo_release_date)
+        return true if date.present? && date.future?
+
+        errors.add(attribute_name, "Must be a future date.")
+        false
+      end
+
+      # Validate an embargo date against permission template restrictions
+      def valid_template_embargo_date?(date)
+        return true if template.blank?
+
+        # Validate against template's release_date requirements
+        return true if template.valid_release_date?(date)
+
+        errors.add(:embargo_release_date, "Release date specified does not match permission template release requirements for selected AdminSet.")
+        false
+      end
+
+      # Validate the post-embargo visibility against permission template requirements (if any)
+      def valid_template_visibility_after_embargo?
+        # Validate against template's visibility requirements
+        return true if validate_template_visibility(visibility_after_embargo)
+
+        errors.add(:visibility_after_embargo, "Visibility after embargo does not match permission template visibility requirements for selected AdminSet.")
+        false
+      end
+
+      # Validate that a given visibility value satisfies template requirements
+      def validate_template_visibility(visibility)
+        return true if template.blank?
+
+        template.valid_visibility?(visibility)
+      end
+
+      # Parse date from string. Returns nil if date_string is not a valid date
+      def parse_date(date_string)
+        datetime = Time.zone.parse(date_string) if date_string.present?
+        return datetime.to_date unless datetime.nil?
+        nil
+      end
+
+      # Validate the selected release settings against template, checking for when embargoes/leases are not allowed
+      def validate_release_type
+        # It's valid as long as embargo is not specified when a template requires no release delays
+        return unless wants_embargo? && template.present? && template.release_no_delay?
+
+        errors.add(:visibility, 'Visibility specified does not match permission template "no release delay" requirement for selected AdminSet.')
+      end
+
+      # Validate visibility complies with AdminSet template requirements
+      def validate_visibility
+        return if visibility.blank? || wants_embargo? || wants_lease? || validate_template_visibility(visibility)
+
+        errors.add(:visibility, 'Visibility specified does not match permission template visibility requirement for selected AdminSet.')
+      end
+  end
+end
