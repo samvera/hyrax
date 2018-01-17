@@ -38,9 +38,9 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
         post :create, params: {
           collection: collection_attrs.merge(
             visibility: 'open',
-            permissions_attributes: [{ type: 'person',
-                                       name: 'archivist1',
-                                       access: 'edit' }]
+            permissions_attributes: { '0' => { type: 'person',
+                                               agent_name: 'archivist1',
+                                               access: 'edit' } }
           )
         }
       end.to change { Hyrax::Queries.find_all_of_model(model: Collection).size }.by(1)

@@ -50,6 +50,7 @@ RSpec.describe Hyrax::BatchUploadChangeSet do
                                   'date_modified',
                                   'proxy_depositor',
                                   'on_behalf_of',
+                                  "edit_groups", "edit_users", "read_groups", "read_users",
                                   'label',
                                   'relative_path',
                                   'contributor',
