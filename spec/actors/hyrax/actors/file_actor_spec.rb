@@ -50,24 +50,25 @@ RSpec.describe Hyrax::Actors::FileActor do
     end
 
     before do
-      expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileNode, user)
-      expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileNode, user2)
-      expect(CharacterizeJob).to receive(:perform_later)
+      # expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileNode, user)
+      # expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileNode, user2)
+      # expect(CharacterizeJob).to receive(:perform_later)
+      allow(CharacterizeJob).to receive(:perform_later)
       actor.ingest_file(io)
       actor2.ingest_file(io2)
     end
 
     it 'has two versions' do
-      expect(versions.all.count).to eq 2
+      expect(versions.count).to eq 2
       # the current version
       reloaded = Hyrax::Queries.find_by(id: file_set.id)
-      expect(Hyrax::VersioningService.latest_version_of(reloaded.original_file).label).to eq 'version2'
-      expect(file_set.original_file.mime_type).to eq 'text/plain'
-      expect(file_set.original_file.original_name).to eq 'small_file.txt'
-      expect(file_set.original_file.content).to eq fixture2.open.read
-      # the user for each version
-      expect(Hyrax::VersionCommitter.where(version_id: versions.first.uri).pluck(:committer_login)).to eq [user.user_key]
-      expect(Hyrax::VersionCommitter.where(version_id: versions.last.uri).pluck(:committer_login)).to eq [user2.user_key]
+      expect(Hyrax::VersioningService.latest_version_of(reloaded.original_file).label).to eq ['version2']
+      expect(file_set.original_file.mime_type).to eq ['text/plain']
+      expect(file_set.original_file.original_filename).to eq ['small_file.txt']
+      expect(file_set.original_file.file.read).to eq fixture2.open.read
+      # the user for each versioe
+      expect(Hyrax::VersionCommitter.where(version_id: versions.first.id.to_s).pluck(:committer_login)).to eq [user.user_key]
+      expect(Hyrax::VersionCommitter.where(version_id: versions.last.id.to_s).pluck(:committer_login)).to eq [user2.user_key]
     end
   end
 

@@ -7,7 +7,7 @@ module Hyrax
     self.primary_terms = [:title, :creator, :keyword, :rights_statement]
     self.secondary_terms = [:contributor, :description, :license, :publisher,
                             :date_created, :subject, :language, :identifier,
-                            :based_near, :related_url, :source]
+                            :based_near, :related_url, :source, :resource_type]
 
     # Used for searching
     property :search_context, virtual: true, multiple: false, required: false

@@ -13,7 +13,7 @@ RSpec.describe FixityCheckJob do
     let(:log_record) { described_class.perform_now(uri, file_set_id: file_set.id, file_id: file_id) }
 
     describe 'fixity check the content' do
-      let(:uri) { file_set.original_file.id }
+      let(:uri) { file_set.original_file.id.to_s }
 
       it 'passes' do
         expect(log_record).to be_passed
@@ -21,13 +21,13 @@ RSpec.describe FixityCheckJob do
       it "returns a ChecksumAuditLog" do
         expect(log_record).to be_kind_of ChecksumAuditLog
         expect(log_record.checked_uri).to eq uri
-        expect(log_record.file_id).to eq file_id
-        expect(log_record.file_set_id).to eq file_set.id
+        expect(log_record.file_id).to eq file_id.to_s
+        expect(log_record.file_set_id).to eq file_set.id.to_s
       end
     end
 
     describe 'fixity check a version of the content' do
-      let(:uri) { Hyrax::VersioningService.latest_version_of(file_set.original_file).uri }
+      let(:uri) { Hyrax::VersioningService.latest_version_of(file_set.original_file).id.to_s }
 
       it 'passes' do
         expect(log_record).to be_passed
@@ -38,7 +38,7 @@ RSpec.describe FixityCheckJob do
     end
 
     describe 'fixity check an invalid version of the content' do
-      let(:uri) { Hyrax::VersioningService.latest_version_of(file_set.original_file).uri + 'bogus' }
+      let(:uri) { Hyrax::VersioningService.latest_version_of(file_set.original_file).id.to_s + 'bogus' }
 
       it 'fails' do
         expect(log_record).to be_failed

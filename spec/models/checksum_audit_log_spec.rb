@@ -9,7 +9,7 @@ RSpec.describe ChecksumAuditLog do
 
   let(:version_uri) do
     Hyrax::VersioningService.create(f.original_file)
-    f.original_file.versions.first.uri
+    f.original_file.versions.first.id.to_s
   end
   let(:content_id) { f.original_file.id }
   let(:old) { described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: true, created_at: 2.minutes.ago) }
@@ -122,8 +122,8 @@ RSpec.describe ChecksumAuditLog do
     # versions, but that's great since I couldn't figure out a reasonable
     # way to create them. Note you need to #all here, or you get
     # really confusing stuff.
-    let(:verisons_uri) { f.original_file.versions.all.first.uri }
-    let(:version_uri2) { f.original_file.versions.all.second.uri }
+    let(:verisons_uri) { f.original_file.versions.first.id.to_s }
+    let(:version_uri2) { f.original_file.versions.second.id.to_s }
 
     before do
       described_class.create(file_set_id: f.id, file_id: content_id, checked_uri: version_uri, passed: true, created_at: 2.days.ago)
@@ -153,7 +153,7 @@ RSpec.describe ChecksumAuditLog do
           described_class.where(checked_uri: version_uri).order("created_at desc").first,
           described_class.where(checked_uri: version_uri2).order("created_at desc").first
         ]
-        expect(described_class.latest_for_file_set_id(f.id)).to match_array(expected)
+        expect(described_class.latest_for_file_set_id(f.id.to_s)).to match_array(expected)
       end
     end
   end
