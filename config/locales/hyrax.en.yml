@@ -650,12 +650,18 @@ en:
       manage_proxies:           "Manage Proxies"
       my:
         action:
-          add_to_collection:        "Add to collection"
+          add_to_collection:       "Add to collection"
+          add_to_collection_only:  "Allowed actions are limited to adding members"
           admin_set_confirmation:  "Deleting an admin set from %{application_name} is permanent. Click OK to delete this admin set from %{application_name}, or Cancel to cancel this operation"
-          delete_admin_set_deny:   "This collection is defined as an %{type_name} and is not empty. To delete an %{type_name}, you must first remove (delete or move to another %{type_name} collection) all items from the %{type_name}."
+          collection_create_success: "Collection was successfully created."
+          collection_delete_fail:    "Collection %{id} could not be deleted"
+          collection_delete_success: "Collection %{id} was successfully deleted"
+          collection_deny_add_members: "You do not have sufficient privileges to add members to the collection"
+          collection_update_success: "Collection was successfully updated."
           collections_confirmation_html: "Deleting <span class='pluralized'>this collection</span> will permanently remove <span class='pluralized'>this collection</span> from the repository.  Items in <span class='pluralized'>this collection</span> will remain in the repository.  Are you sure you want to delete <span class='pluralized'>this collection</span>?"
           collections_confirmation_no_items_html: "Are you sure you want to delete this collection? This action cannot be undone."
           delete_admin_set:        "Delete collection" # use same term for admin sets and collections
+          delete_admin_set_deny:   "This collection is defined as an %{type_name} and is not empty. To delete an %{type_name}, you must first remove (delete or move to another %{type_name} collection) all items from the %{type_name}."
           delete_collection:       "Delete collection"
           delete_collections:      "Delete collections"
           delete_collection_deny:  "You do not have sufficient privileges to delete this document."
@@ -667,6 +673,7 @@ en:
           edit_selected:           "Edit Selected"
           edit_work:               "Edit Work"
           highlight:               "Highlight Work on Profile"
+          members_no_access: "You do not have sufficient privileges to any of the selected members"
           nesting_not_allowed:     "Collections of this type do not support nesting."
           nesting_permission_denied: "You do not have sufficient privileges to add this collection to another collection."
           select:                  "Select"

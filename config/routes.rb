@@ -132,6 +132,7 @@ Hyrax::Engine.routes.draw do
         put :remove_member
       end
     end
+    post 'collections/:id', controller: 'collection_members', action: :update_members
     post 'collections/:child_id/within', controller: 'nest_collections', action: 'create_relationship_within', as: 'create_nest_collection_within'
     get 'collections/:parent_id/under', controller: 'nest_collections', action: 'create_collection_under', as: 'create_subcollection_under'
     post 'collections/:parent_id/under', controller: 'nest_collections', action: 'create_relationship_under', as: 'create_nest_collection_under'

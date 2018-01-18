@@ -90,7 +90,7 @@ module Hyrax
         link_parent_collection(params[:parent_id]) unless params[:parent_id].nil?
         respond_to do |format|
           ActiveFedora::SolrService.instance.conn.commit
-          format.html { redirect_to edit_dashboard_collection_path(@collection), notice: "Collection was successfully created." }
+          format.html { redirect_to edit_dashboard_collection_path(@collection), notice: t('hyrax.dashboard.my.action.collection_create_success') }
           format.json { render json: @collection, status: :created, location: dashboard_collection_path(@collection) }
         end
       end
@@ -125,7 +125,7 @@ module Hyrax
 
       def after_update
         respond_to do |format|
-          format.html { redirect_to update_referer, notice: 'Collection was successfully updated.' }
+          format.html { redirect_to update_referer, notice: t('hyrax.dashboard.my.action.collection_update_success') }
           format.json { render json: @collection, status: :updated, location: dashboard_collection_path(@collection) }
         end
       end
@@ -163,7 +163,7 @@ module Hyrax
         respond_to do |format|
           format.html do
             redirect_to my_collections_path,
-                        notice: "Collection #{id} was successfully deleted"
+                        notice: t('hyrax.dashboard.my.action.collection_delete_success', id: id)
           end
           format.json { head :no_content, location: my_collections_path }
         end
@@ -172,7 +172,7 @@ module Hyrax
       def after_destroy_error(id)
         respond_to do |format|
           format.html do
-            flash[:notice] = "Collection #{id} could not be deleted"
+            flash[:notice] = t('hyrax.dashboard.my.action.collection_delete_fail', id: id)
             render :edit, status: :unprocessable_entity
           end
           format.json { render json: { id: id }, status: :unprocessable_entity, location: dashboard_collection_path(@collection) }

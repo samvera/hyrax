@@ -51,15 +51,15 @@ module Hyrax
         # Adds the item to the ordered members so that it displays in the items
         # along side the FileSets on the show page
         def add(env, id)
-          member = Collection.find(id)
-          return unless env.current_ability.can?(:deposit, member)
-          env.curation_concern.member_of_collections << member
+          collection = Collection.find(id)
+          return unless env.current_ability.can?(:deposit, collection)
+          env.curation_concern.member_of_collections << collection
         end
 
         # Remove the object from the members set and the ordered members list
         def remove(curation_concern, id)
-          member = Collection.find(id)
-          curation_concern.member_of_collections.delete(member)
+          collection = Collection.find(id)
+          curation_concern.member_of_collections.delete(collection)
         end
 
         # Determines if a hash contains a truthy _destroy key.
