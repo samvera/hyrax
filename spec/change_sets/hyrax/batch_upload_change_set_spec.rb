@@ -62,6 +62,7 @@ RSpec.describe Hyrax::BatchUploadChangeSet do
                                   'identifier',
                                   'related_url',
                                   'source',
+                                  'resource_type',
                                   'based_near',
                                   'arkivo_checksum',
                                   'admin_set_id',
