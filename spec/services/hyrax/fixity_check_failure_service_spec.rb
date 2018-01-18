@@ -1,12 +1,15 @@
+include ActionDispatch::TestProcess
+
 RSpec.describe Hyrax::FixityCheckFailureService do
   let!(:depositor) { create(:user) }
   let!(:log_date) { '2015-07-15 03:06:59' }
   let(:inbox) { depositor.mailbox.inbox }
-  let(:file) { Hydra::PCDM::File.new }
-  let(:version_uri) { "#{file.uri}/fcr:versions/version1" }
-  let(:file_set) do
-    create_for_repository(:file_set, user: depositor, title: ["World Icon"]).tap { |fs| fs.original_file = file }
+  let(:file) { fixture_file_upload('world.png', 'image/png') }
+  let(:version_uri) do
+    Hyrax::VersioningService.create(file_set.original_file)
+    file_set.original_file.versions.first.id.to_s
   end
+  let(:file_set) { create_for_repository(:file_set, user: depositor, title: ["World Icon"], content: file) }
 
   let(:checksum_audit_log) do
     ChecksumAuditLog.new(file_set_id: file_set.id,
