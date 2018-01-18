@@ -8,10 +8,7 @@ module Hyrax
       @file_set = file_set
     end
 
-    # The FileSet#mime_type returns an Array, but we only want one.
-    def mime_type
-      file_set.mime_type.first
-    end
+    delegate :mime_type, to: :file_set
 
     def cleanup_derivatives
       derivative_path_factory.derivatives_for_reference(file_set).each do |path|
