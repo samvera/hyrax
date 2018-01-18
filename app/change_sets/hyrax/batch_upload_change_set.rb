@@ -25,6 +25,7 @@ module Hyrax
     property :identifier
     property :related_url
     property :source
+    property :resource_type
     property :based_near
     property :arkivo_checksum
 
