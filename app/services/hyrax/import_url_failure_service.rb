@@ -1,7 +1,7 @@
 module Hyrax
   class ImportUrlFailureService < AbstractMessageService
     def message
-      file_set.errors.full_messages.join(', ')
+      "There was a problem importing from #{file_set.import_url}"
     end
 
     def subject
