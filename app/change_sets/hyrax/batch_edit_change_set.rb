@@ -2,6 +2,12 @@
 
 module Hyrax
   class BatchEditChangeSet < Valkyrie::ChangeSet
+    include FormWithPermissions
+
+    delegate :embargo_id, :lease_id, to: :resource
+    property :embargo_release_date, virtual: true
+    property :lease_expiration_date, virtual: true
+
     property :creator, multiple: true, required: false
     property :contributor, multiple: true, required: false
     property :description, multiple: true, required: false
@@ -15,10 +21,28 @@ module Hyrax
     property :identifier, multiple: true, required: false
     property :based_near, multiple: true, required: false
     property :related_url, multiple: true, required: false
+
     property :visibility, multiple: true, required: false
+    property :visibility_during_embargo, virtual: true
+    property :visibility_after_embargo, virtual: true
+    property :visibility_during_lease, virtual: true
+    property :visibility_after_lease, virtual: true
 
     # A list of IDs to perform a batch operation on
     property :batch_document_ids, virtual: true, multiple: true, required: false
+    property :depositor
+
+    class_attribute :do_not_initialize
+    self.do_not_initialize = ['batch_document_ids',
+                              'append_id',
+                              'visibility_during_embargo',
+                              'visibility_after_embargo',
+                              'visibility_during_lease',
+                              'visibility_after_lease',
+                              'embargo_release_date',
+                              'lease_expiration_date',
+                              'permissions',
+                              'user']
 
     # Contains a list of titles of all the works in the batch
     attr_accessor :names
@@ -47,7 +71,7 @@ module Hyrax
         # Optimize: https://github.com/samvera-labs/valkyrie/issues/284
         batch_document_ids.each do |doc_id|
           work = find_resource(doc_id)
-          (schema.keys - ['batch_document_ids', 'append_id']).each do |field|
+          (schema.keys - do_not_initialize).each do |field|
             fields[field] ||= []
             fields[field] = (Array(fields[field]) + Array(work[field])).uniq
           end
