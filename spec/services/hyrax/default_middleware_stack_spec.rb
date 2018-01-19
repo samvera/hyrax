@@ -9,6 +9,7 @@ RSpec.describe Hyrax::DefaultMiddlewareStack do
       expect(subject.middlewares).to eq [
         Hyrax::Actors::TransactionalRequest,
         Hyrax::Actors::OptimisticLockValidator,
+        Hyrax::Actors::GrantEditToDepositorActor,
         Hyrax::Actors::CreateWithRemoteFilesActor,
         Hyrax::Actors::CreateWithFilesActor,
         Hyrax::Actors::CollectionsMembershipActor,

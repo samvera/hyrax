@@ -10,6 +10,9 @@ module Hyrax
         # Ensure you are mutating the most recent version
         middleware.use Hyrax::Actors::OptimisticLockValidator
 
+        # Give the depositor edit access
+        middleware.use Hyrax::Actors::GrantEditToDepositorActor
+
         # Attach files from a URI (for BrowseEverything)
         middleware.use Hyrax::Actors::CreateWithRemoteFilesActor
 
