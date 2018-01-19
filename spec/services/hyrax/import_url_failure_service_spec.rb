@@ -5,14 +5,15 @@ RSpec.describe Hyrax::ImportUrlFailureService do
   let(:file) do
     create_for_repository(:file_set, user: depositor)
   end
+  let(:change_set) { Hyrax::FileSetChangeSet.new(file) }
 
   before do
-    allow(file.errors).to receive(:full_messages).and_return(['huge mistake'])
+    allow(change_set.errors).to receive(:full_messages).and_return(['huge mistake'])
   end
 
   describe "#call" do
     before do
-      described_class.new(file, depositor).call
+      described_class.new(change_set, depositor).call
     end
 
     it "sends failing mail" do
