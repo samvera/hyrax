@@ -21,13 +21,25 @@ RSpec.shared_context "Tika output" do
       {"Content-Encoding":"ISO-8859-1", "Content-Length":"6", "Content-Type":"text/plain; charset=ISO-8859-1", "X-Parsed-By":["org.apache.tika.parser.DefaultParser", "org.apache.tika.parser.txt.TXTParser"], "resourceName":"small_file.txt"}
     JSON
   end
-  let(:tika_output) { tika_tiff_output }
 end
 
 RSpec.configure do |config|
   config.include_context "Tika output"
   config.before do
-    ruby_mock = instance_double(RubyTikaApp, to_json: tika_output)
-    allow(RubyTikaApp).to receive(:new).and_return(ruby_mock)
+    allow(RubyTikaApp).to receive(:new) do |file_path|
+      ext = File.extname(file_path)
+      case ext
+      when ".tif"
+        instance_double(RubyTikaApp, to_json: tika_tiff_output)
+      when ".png"
+        instance_double(RubyTikaApp, to_json: tika_png_output)
+      when ".jpg"
+        instance_double(RubyTikaApp, to_json: tika_jpg_output)
+      when ".txt"
+        instance_double(RubyTikaApp, to_json: tika_txt_output)
+      else
+        instance_double(RubyTikaApp, to_json: tika_tiff_output)
+      end
+    end
   end
 end

@@ -7,7 +7,7 @@ RSpec.describe Hyrax::FileNode do
   let(:storage_adapter) { Valkyrie.config.storage_adapter }
   let(:file) { fixture_file_upload('world.png', 'image/png') }
   let(:file_node) do
-    described_class.for(file: file).new(id: 'test_id')
+    described_class.for(file: file).new(id: 'test_id', format_label: 'test_format_label')
   end
   let(:uploaded_file) do
     storage_adapter.upload(file: file,
@@ -27,6 +27,7 @@ RSpec.describe Hyrax::FileNode do
     expect(file_node.label).to contain_exactly('world.png')
     expect(file_node.original_filename).to contain_exactly('world.png')
     expect(file_node.mime_type).to contain_exactly('image/png')
+    expect(file_node.format_label).to contain_exactly('test_format_label')
     expect(file_node.use).to contain_exactly(Valkyrie::Vocab::PCDMUse.OriginalFile)
   end
 
