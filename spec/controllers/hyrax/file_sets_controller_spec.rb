@@ -99,13 +99,8 @@ RSpec.describe Hyrax::FileSetsController do
         let(:io) { JobIoWrapper.new(file_set_id: file_set.id, user: user, uploaded_file: huf, path: huf.uploader.path) }
         let(:io2) { JobIoWrapper.new(file_set_id: file_set.id, user: second_user, uploaded_file: huf2, path: huf2.uploader.path) }
 
-        # let(:actor1)      { Hyrax::Actors::FileSetActor.new(file_set, user) }
-        # let(:actor2)      { Hyrax::Actors::FileSetActor.new(file_set, second_user) }
-
         before do
           # TODO: how do we make versions?
-          # actor1.create_content(fixture_file_upload(file1))
-          # actor2.create_content(fixture_file_upload(file2))
           Hyrax::Actors::FileActor.new(file_set, Valkyrie::Vocab::PCDMUse.OriginalFile, user).ingest_file(io)
           Hyrax::Actors::FileActor.new(file_set, Valkyrie::Vocab::PCDMUse.OriginalFile, second_user).ingest_file(io2)
         end
