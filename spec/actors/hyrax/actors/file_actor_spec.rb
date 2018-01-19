@@ -89,36 +89,4 @@ RSpec.describe Hyrax::Actors::FileActor do
     end
     # rubocop:enable RSpec/AnyInstance
   end
-
-  describe '#revert_to' do
-    let(:revision_id) { 'asdf1234' }
-
-    before do
-      allow(file_node).to receive(:restore_version).with(revision_id)
-      allow(file_set).to receive(:original_file).and_return(file_node)
-      allow(file_set).to receive(:member_by).with(use: relation).and_return(file_node)
-      expect(Hyrax::VersioningService).to receive(:create).with(file_node, user)
-      expect(CharacterizeJob).to receive(:perform_later).with(file_node.id.to_s)
-    end
-
-    it 'reverts to a previous version of a file' do
-      expect(actor.relation).to eq(relation)
-      actor.revert_to(revision_id)
-    end
-
-    describe 'for a different relation' do
-      let(:relation) { RDF::URI.new("http://pcdm.org/use#remastered") }
-
-      it 'reverts to a previous version of a file' do
-        expect(actor.relation).to eq(relation)
-        actor.revert_to(revision_id)
-      end
-      it 'does not rely on the default relation' do
-        pending "Hydra::Works::VirusCheck must support other relations: https://github.com/samvera/hyrax/issues/1187"
-        expect(actor.relation).to eq(relation)
-        expect(file_set).not_to receive(:original_file)
-        actor.revert_to(revision_id)
-      end
-    end
-  end
 end
