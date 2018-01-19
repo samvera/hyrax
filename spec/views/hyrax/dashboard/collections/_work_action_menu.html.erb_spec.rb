@@ -2,11 +2,12 @@ require 'spec_helper'
 
 RSpec.describe 'hyrax/dashboard/collections/_work_action_menu.html.erb', type: :view do
   let(:item) { stub_model(GenericWork) }
-  let(:collection) { stub_model(Collection) }
+  let(:collection) { stub_model(Collection, id: 'xyz123z4', title: ["Make Collections Great Again"]) }
+  let(:change_set) { Hyrax::CollectionChangeSet.new(collection) }
 
   before do
     allow(view).to receive(:display_trophy_link)
-    assign(:collection, collection)
+    assign(:change_set, change_set)
     render 'hyrax/dashboard/collections/work_action_menu', document: item
   end
 
