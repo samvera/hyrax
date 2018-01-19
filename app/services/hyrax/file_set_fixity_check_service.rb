@@ -55,8 +55,8 @@ module Hyrax
     #
     # If async_jobs is true (default), just returns nil, stuff is still going on.
     def fixity_check
-      results = [fixity_check_file(file_set.original_file)]
-      # results = file_set.files.collect { |f| fixity_check_file(f) }
+      files = Hyrax::Queries.find_members(resource: file_set, model: Hyrax::FileNode)
+      results = files.collect { |f| fixity_check_file(f) }
 
       return if async_jobs
 

@@ -7,14 +7,14 @@ RSpec.describe Hyrax::FixityChecksController do
   let(:storage) { Valkyrie::StorageAdapter.find(:disk) }
 
   before do
-    storage.upload(file: file, resource: file_set)
+    storage.upload(file: file, resource: file_set, original_filename: file.original_filename)
   end
 
   context "when signed in" do
     describe "POST create" do
       before do
         sign_in user
-        post :create, params: { file_set_id: file_set }, xhr: true
+        post :create, params: { file_set_id: file_set.id }, xhr: true
       end
       let(:json_response) { JSON.parse(response.body) }
 
