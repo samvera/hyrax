@@ -14,7 +14,8 @@ module Hyrax
         @user = user
       end
 
-      # Persists file as part of file_set and spawns async job to characterize and create derivatives.
+      # Persists file as part of file_set and records a new version.
+      # Also spawns an async job to characterize and create derivatives.
       # @param [JobIoWrapper] io the file to save in the repository, with mime_type and original_name
       # @return [FileNode, FalseClass] the created file node on success, false on failure
       # @todo create a job to monitor the temp directory (or in a multi-worker system, directories!) to prune old files that have made it into the repo
@@ -35,28 +36,12 @@ module Hyrax
         saved_node
       end
 
-      # Reverts file and spawns async job to characterize and create derivatives.
-      # @param [String] revision_id
-      # @return [FileNode, FalseClass] reverted file node on success, false on failure
-      def revert_to(revision_id)
-        repository_file = related_file
-        repository_file = Hyrax::VersioningService.restore_version(file_set, repository_file, revision_id, user)
-        repository_file
-      end
-
       # @note FileSet comparison is limited to IDs, but this should be sufficient, given that
       #   most operations here are on the other side of async retrieval in Jobs (based solely on ID).
       def ==(other)
         return false unless other.is_a?(self.class)
         file_set.id == other.file_set.id && relation == other.relation && user == other.user
       end
-
-      private
-
-        # @return [Hydra::PCDM::File] the file referenced by relation
-        def related_file
-          file_set.member_by(use: relation) || raise("No #{relation} returned for FileSet #{file_set.id}")
-        end
     end
   end
 end
