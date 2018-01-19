@@ -10,59 +10,6 @@ module Hyrax
         @user = user
       end
 
-      # @!group Asynchronous Operations
-
-      # Spawns asynchronous IngestJob unless ingesting from URL
-      # Called from FileSetsController, AttachFilesToWorkJob, IngestLocalFileJob, ImportUrlJob
-      # @param [Hyrax::UploadedFile, File] file the file uploaded by the user
-      # @param [Symbol, #to_s] relation
-      # @return [IngestJob, FalseClass] false on failure, otherwise the queued job
-      # def create_content(file, relation = :original_file, from_url: false)
-      #   # If the file set doesn't have a title or label assigned, set a default.
-      #   file_set.label ||= label_for(file)
-      #   file_set.title = [file_set.label] if file_set.title.blank?
-      #
-      #   persister = Valkyrie::MetadataAdapter.find(:indexing_persister).persister
-      #   # Need to save to get an id
-      #   saved_file = persister.save(resource: file_set)
-      #   return unless saved_file
-      #
-      #   if from_url
-      #     # If ingesting from URL, don't spawn an IngestJob; instead
-      #     # reach into the FileActor and run the ingest with the file instance in
-      #     # hand. Do this because we don't have the underlying UploadedFile instance
-      #     file_actor = build_file_actor(relation)
-      #     file_actor.ingest_file(wrapper!(file: file, relation: relation))
-      #     # Copy visibility and permissions from parent (work) to
-      #     # FileSets even if they come in from BrowseEverything
-      #     VisibilityCopyJob.perform_later(saved_file.parent.id)
-      #     InheritPermissionsJob.perform_later(saved_file.parent.id)
-      #   else
-      #     IngestJob.perform_later(wrapper!(file: file, relation: relation))
-      #   end
-      # end
-
-      # @!endgroup
-
-      # Adds the appropriate metadata, visibility and relationships to file_set
-      # @note In past versions of Hyrax this method did not perform a save because it is mainly used in conjunction with
-      #   create_content, which also performs a save.  However, due to the relationship between Hydra::PCDM objects,
-      #   we have to save both the parent work and the file_set in order to record the "metadata" relationship between them.
-      # @param [Hash] file_set_params specifying the visibility, lease and/or embargo of the file set.
-      #   Without visibility, embargo_release_date or lease_expiration_date, visibility will be copied from the parent.
-      # def create_metadata(file_set_params = {})
-      #   file_set.apply_depositor_metadata(user)
-      #   now = TimeService.time_in_utc
-      #   file_set.date_uploaded = now
-      #   file_set.date_modified = now
-      #   file_set.creator = [user.user_key]
-      #   if assign_visibility?(file_set_params)
-      #     env = Actors::Environment.new(file_set, nil, ability, file_set_params)
-      #     CurationConcern.file_set_create_actor.create(env)
-      #   end
-      #   yield(file_set) if block_given?
-      # end
-
       # Adds a FileSet to the work.
       # Locks to ensure that only one process is operating on the list at a time.
       def attach_to_work(work, file_set_params = {})

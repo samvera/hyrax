@@ -17,16 +17,16 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
         file_set = buffered_changeset_persister.save(change_set: change_set)
       end
       # TODO: do we need to do the FileUploadChangeSet?
-      # actor = Hyrax::Actors::FileSetActor.new(file_set, user)
-      # actor.create_metadata(metadata)
-      # actor.create_content(uploaded_file)
-      # actor.attach_to_work(work)
       add_to_work(work, file_set, uploaded_file.user)
       uploaded_file.update(file_set_uri: file_set.to_global_id)
-      io = JobIoWrapper.create_with_varied_file_handling!(user: uploaded_file.user, file: uploaded_file, file_set: file_set, relation: Valkyrie::Vocab::PCDMUse.OriginalFile)
-      io.file_actor.ingest_file(io)
+      io = JobIoWrapper.create_with_varied_file_handling!(user: uploaded_file.user,
+                                                          file: uploaded_file,
+                                                          file_set: file_set,
+                                                          relation: Valkyrie::Vocab::PCDMUse.OriginalFile)
+      io.ingest_file
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
   private
 
@@ -48,6 +48,7 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
       end
     end
 
+    # rubocop:disable Metrics/MethodLength
     def build_change_set(work, attributes)
       change_set = Hyrax::FileSetChangeSet.new(FileSet.new, attributes).tap(&:sync)
       if work.embargo_id
@@ -66,6 +67,7 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
       end
       change_set
     end
+    # rubocop:enable Metrics/MethodLength
 
     # TODO: This is duplicating FileSetActor#attach_to_work
     #       but skipping the permissions copying and work locking

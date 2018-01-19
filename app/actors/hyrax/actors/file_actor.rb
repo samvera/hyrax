@@ -17,8 +17,6 @@ module Hyrax
       # Persists file as part of file_set and spawns async job to characterize and create derivatives.
       # @param [JobIoWrapper] io the file to save in the repository, with mime_type and original_name
       # @return [FileNode, FalseClass] the created file node on success, false on failure
-      # @note Instead of calling this method, use IngestJob to avoid synchronous execution cost
-      # @see IngestJob
       # @todo create a job to monitor the temp directory (or in a multi-worker system, directories!) to prune old files that have made it into the repo
       def ingest_file(io)
         # Skip versioning because versions will be minted by VersionCommitter as necessary during save_characterize_and_record_committer.
