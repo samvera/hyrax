@@ -44,7 +44,7 @@ class ImportUrlJob < Hyrax::ApplicationJob
     # @return [Boolean] true if successfully saved the file.
     def create_content(file_set:, file:, user:)
       # If the file set doesn't have a title or label assigned, set a default.
-      update_file_set_title_and_label(file_set: file_set)
+      update_file_set_title_and_label(file_set: file_set, uri: file_set.import_url)
 
       wrapper = JobIoWrapper.create_with_varied_file_handling!(user: user,
                                                                file: file,
@@ -59,9 +59,9 @@ class ImportUrlJob < Hyrax::ApplicationJob
       true
     end
 
-    def update_file_set_title_and_label(file_set:)
+    def update_file_set_title_and_label(file_set:, uri:)
       return unless file_set.label.nil? || file_set.title.blank?
-      file_set.label ||= File.basename(Addressable::URI.parse(file_set.import_url).path)
+      file_set.label ||= File.basename(Addressable::URI.parse(uri).path)
       file_set.title = [file_set.label] if file_set.title.blank?
 
       # Save the updated title and label

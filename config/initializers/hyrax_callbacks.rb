@@ -11,8 +11,6 @@ Hyrax.config.callback.set(:after_revert_content) do |file_set, user, revision|
   ContentRestoredVersionEventJob.perform_later(file_set, user, revision)
 end
 
-# :after_update_content callback replaced by after_perform block in IngestJob
-
 Hyrax.config.callback.set(:after_update_metadata) do |curation_concern, user|
   ContentUpdateEventJob.perform_later(curation_concern, user)
 end
