@@ -1,7 +1,7 @@
 module Hyrax
   class VersioningService
     # Make a version and record the version committer
-    # @param [ActiveFedora::File] content
+    # @param [Hyrax::FileNode] content
     # @param [User, String] user
     def self.create(content, user = nil)
       new_version = content.new(id: nil)
@@ -12,13 +12,13 @@ module Hyrax
       record_committer(content, user) if user
     end
 
-    # @param [ActiveFedora::File] file
+    # @param [Hyrax::FileNode] file
     def self.latest_version_of(file)
       file.versions.last
     end
 
     # Record the version committer of the last version
-    # @param [ActiveFedora::File] content
+    # @param [Hyrax::FileNode] content
     # @param [User, String] user_key
     def self.record_committer(content, user_key)
       user_key = user_key.user_key if user_key.respond_to?(:user_key)
@@ -27,6 +27,10 @@ module Hyrax
       VersionCommitter.create(version_id: version.id.to_s, committer_login: user_key)
     end
 
+    # @param [FileSet] file_set
+    # @param [Hyrax::FileNode] content
+    # @param [String] revision_id
+    # @param [User, String] user
     def self.restore_version(file_set, content, revision_id, user = nil)
       found_version = content.versions.find { |x| x.label == Array.wrap(revision_id) }
       return unless found_version
@@ -37,5 +41,6 @@ module Hyrax
     def self.indexing_adapter
       Valkyrie::MetadataAdapter.find(:indexing_persister)
     end
+    private_class_method :indexing_adapter
   end
 end
