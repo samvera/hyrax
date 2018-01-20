@@ -8,7 +8,9 @@ module Hyrax
       @file_set = file_set
     end
 
-    delegate :mime_type, to: :file_set
+    def mime_type
+      Array(file_set.mime_type).first
+    end
 
     def cleanup_derivatives
       derivative_path_factory.derivatives_for_reference(file_set).each do |path|
