@@ -12,4 +12,8 @@ RSpec.describe 'Dashboard Routes', type: :routing do
   it 'routes POST /dashboard/collections/:child_id/within' do
     expect(post: '/dashboard/collections/child1/within').to route_to(controller: 'hyrax/dashboard/nest_collections', action: 'create_relationship_within', child_id: 'child1')
   end
+
+  it 'routes POST /dashboard/collections/:id' do
+    expect(post: '/dashboard/collections/id').to route_to(controller: 'hyrax/dashboard/collection_members', action: 'update_members', id: 'id')
+  end
 end
