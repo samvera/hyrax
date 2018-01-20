@@ -21,6 +21,16 @@ RSpec.shared_context "Tika output" do
       {"Content-Encoding":"ISO-8859-1", "Content-Length":"6", "Content-Type":"text/plain; charset=ISO-8859-1", "X-Parsed-By":["org.apache.tika.parser.DefaultParser", "org.apache.tika.parser.txt.TXTParser"], "resourceName":"small_file.txt"}
     JSON
   end
+  let(:tika_wav_output) do
+    <<-JSON
+      {"Content-Length":"784512","Content-Type":"audio/x-wav","X-Parsed-By":["org.apache.tika.parser.DefaultParser","org.apache.tika.parser.audio.AudioParser"],"bits":"16","channels":"2","encoding":"PCM_SIGNED","resourceName":"piano_note.wav","samplerate":"44100.0","xmpDM:audioSampleRate":"44100","xmpDM:audioSampleType":"16Int"}
+    JSON
+  end
+  let(:tika_pdf_output) do
+    <<-JSON
+      {"Author":"carlos","Content-Length":"218882","Content-Type":"application/pdf","Creation-Date":"2010-10-09T10:29:55Z","Last-Modified":"2010-10-09T10:29:55Z","Last-Save-Date":"2010-10-09T10:29:55Z","X-Parsed-By":["org.apache.tika.parser.DefaultParser","org.apache.tika.parser.pdf.PDFParser"],"access_permission:assemble_document":"true","access_permission:can_modify":"true","access_permission:can_print":"true","access_permission:can_print_degraded":"true","access_permission:extract_content":"true","access_permission:extract_for_accessibility":"true","access_permission:fill_in_form":"true","access_permission:modify_annotations":"true","created":"Sat Oct 09 06:29:55 EDT 2010","creator":"carlos","date":"2010-10-09T10:29:55Z","dc:creator":"carlos","dc:format":"application/pdf; version\u003d1.4","dc:title":"Microsoft Word - sample.pdf.docx","dcterms:created":"2010-10-09T10:29:55Z","dcterms:modified":"2010-10-09T10:29:55Z","meta:author":"carlos","meta:creation-date":"2010-10-09T10:29:55Z","meta:save-date":"2010-10-09T10:29:55Z","modified":"2010-10-09T10:29:55Z","pdf:PDFVersion":"1.4","pdf:encrypted":"false","producer":"GPL Ghostscript 8.15","resourceName":"hyrax_test4.pdf","title":"Microsoft Word - sample.pdf.docx","xmp:CreatorTool":"PScript5.dll Version 5.2.2","xmpTPg:NPages":"1"}
+    JSON
+  end
 end
 
 RSpec.configure do |config|
@@ -37,6 +47,10 @@ RSpec.configure do |config|
         instance_double(RubyTikaApp, to_json: tika_jpg_output)
       when ".txt"
         instance_double(RubyTikaApp, to_json: tika_txt_output)
+      when ".wav"
+        instance_double(RubyTikaApp, to_json: tika_wav_output)
+      when ".pdf"
+        instance_double(RubyTikaApp, to_json: tika_pdf_output)
       else
         instance_double(RubyTikaApp, to_json: tika_tiff_output)
       end
