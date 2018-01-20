@@ -80,5 +80,51 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
         expect(curation_concern.member_of_collections).to match_array [collection, other_collection]
       end
     end
+
+    context 'when passing `member_of_collection_ids`' do
+      let(:attributes) { { member_of_collection_ids: [collection.id], title: ['test'] } }
+
+      it 'adds it to the collection' do
+        skip 'this behavior past its deprecation sunset time and can be removed' if
+          Hyrax::VERSION.split('.').first.to_i >= 3
+
+        expect(subject.create(env)).to be true
+        expect(collection.reload.member_objects).to eq [curation_concern]
+      end
+
+      context "when work is in user's own collection" do
+        let(:attributes) { { member_of_collection_ids: [] } }
+
+        it "removes the work from that collection" do
+          skip 'this behavior past its deprecation sunset time and can be removed' if
+            Hyrax::VERSION.split('.').first.to_i >= 3
+
+          expect(subject.create(env)).to be true
+          expect(collection.reload.member_objects).to be_empty
+        end
+      end
+
+      describe "when work is in another user's collection" do
+        let(:other_user)    { create(:user) }
+        let(:collection)    { create(:collection, user: other_user, title: ['A good title']) }
+        let(:my_collection) { create(:collection, title: ['My good title']) }
+
+        let(:attributes) { { member_of_collection_ids: [my_collection.id] } }
+
+        before do
+          curation_concern.member_of_collections = [collection]
+          curation_concern.save!
+        end
+
+        it "doesn't remove the work from the other user's collection" do
+          skip 'this behavior past its deprecation sunset time and can be removed' if
+            Hyrax::VERSION.split('.').first.to_i >= 3
+
+          expect(subject.create(env)).to be true
+          expect(curation_concern.member_of_collections)
+            .to contain_exactly(collection, my_collection)
+        end
+      end
+    end
   end
 end
