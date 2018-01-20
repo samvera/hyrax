@@ -49,7 +49,7 @@
       </div><!-- #descriptions_display -->
 
     <div id="permissions_display" class="tab-pane">
-      <%= simple_form_for @change_set.model,
+      <%= simple_form_for @change_set,
                           url: hyrax.batch_edits_path,
                           method: :put,
                           remote: true,

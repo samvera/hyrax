@@ -56,7 +56,12 @@ RSpec.describe Hyrax::BatchEditChangeSet do
                                      'identifier',
                                      'based_near',
                                      'related_url',
-                                     'visibility')
+                                     'visibility',
+                                     "depositor",
+                                     "edit_groups",
+                                     "edit_users",
+                                     "read_groups",
+                                     "read_users")
     end
   end
 
