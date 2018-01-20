@@ -30,7 +30,7 @@ RSpec.describe Hyrax::DerivativeService do
     context "when a FileSet matches the requirements of a service" do
       let(:file_set) do
         FileSet.new.tap do |f|
-          allow(f).to receive(:mime_type).and_return(FileSet.image_mime_types.first)
+          allow(f).to receive(:mime_type).and_return([FileSet.image_mime_types.first])
         end
       end
 

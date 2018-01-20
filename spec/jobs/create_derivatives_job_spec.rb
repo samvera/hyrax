@@ -1,4 +1,6 @@
 RSpec.describe CreateDerivativesJob do
+  include ActionDispatch::TestProcess
+
   around do |example|
     ffmpeg_enabled = Hyrax.config.enable_ffmpeg
     Hyrax.config.enable_ffmpeg = true
@@ -17,7 +19,6 @@ RSpec.describe CreateDerivativesJob do
   end
 
   context "with an audio file" do
-    let(:file_set) { create_for_repository(:file_set, content: content) }
     let(:content) { fixture_file_upload('piano_note.wav', mime_type) }
     let(:mime_type) { 'audio/x-wav' }
     let(:reloaded) { double('the reloaded file set', id: file_set.id, parent: parent) }
