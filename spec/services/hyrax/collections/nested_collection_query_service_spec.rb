@@ -3,7 +3,9 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
   let(:repository) { Blacklight::Solr::Repository.new(blacklight_config) }
 
   # The admin spec short circuits much of the query
-  let(:current_ability) { instance_double(Ability, admin?: true) }
+  let(:user) { create(:user) }
+  let(:ability) { ::Ability.new(user) }
+  let(:current_ability) { ability }
   let(:scope) { double('Scope', can?: true, current_ability: current_ability, repository: repository, blacklight_config: blacklight_config) }
   let(:collection_type) { create(:collection_type) }
   let(:another_collection_type) { create(:collection_type) }
@@ -28,14 +30,14 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
 
       describe 'and cannot edit the parent' do
         it 'returns an empty array' do
-          expect(scope).to receive(:can?).with(:edit, parent).and_return(false)
+          expect(scope).to receive(:can?).with(:deposit, parent).and_return(false)
           expect(described_class).not_to receive(:query_solr)
           expect(subject).to eq([])
         end
       end
 
       it 'returns an array of collections of the same collection type excluding the given collection' do
-        expect(scope).to receive(:can?).with(:edit, parent).and_return(true)
+        expect(scope).to receive(:can?).with(:deposit, parent).and_return(true)
         expect(described_class).to receive(:query_solr).with(collection: parent, access: :read, scope: scope, limit_to_id: nil).and_call_original
         expect(subject.map(&:id)).to eq([another.id])
       end
@@ -51,9 +53,9 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
     end
 
     describe 'given child is nestable?', clean_repo: true do
-      let!(:child) { create(:public_collection, collection_type_gid: collection_type.gid) }
-      let!(:another) { create(:public_collection, collection_type_gid: collection_type.gid) }
-      let!(:wrong_type) { create(:public_collection, collection_type_gid: another_collection_type.gid) }
+      let!(:child) { create(:public_collection, collection_type_gid: collection_type.gid, user: user, create_access: true) }
+      let!(:another) { create(:public_collection, collection_type_gid: collection_type.gid, user: user, create_access: true) }
+      let!(:wrong_type) { create(:public_collection, collection_type_gid: another_collection_type.gid, user: user, create_access: true) }
 
       before do
         allow(child).to receive(:nestable?).and_return(true)
@@ -70,7 +72,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
       describe 'and can read the child' do
         it 'returns an array of collections of the same collection type excluding the given collection' do
           expect(scope).to receive(:can?).with(:read, child).and_return(true)
-          expect(described_class).to receive(:query_solr).with(collection: child, access: :edit, scope: scope, limit_to_id: nil).and_call_original
+          expect(described_class).to receive(:query_solr).with(collection: child, access: :deposit, scope: scope, limit_to_id: nil).and_call_original
           expect(subject.map(&:id)).to eq([another.id])
         end
       end
@@ -89,8 +91,8 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
         it { is_expected.to eq(false) }
       end
       describe 'and are of the same collection type' do
-        let!(:child) { create(:public_collection, collection_type_gid: collection_type.gid) }
-        let!(:parent) { create(:public_collection, collection_type_gid: collection_type.gid) }
+        let!(:child) { create(:public_collection, collection_type_gid: collection_type.gid, user: user, create_access: true) }
+        let!(:parent) { create(:public_collection, collection_type_gid: collection_type.gid, user: user, create_access: true) }
 
         it { is_expected.to eq(true) }
       end

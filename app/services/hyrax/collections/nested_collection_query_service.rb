@@ -11,7 +11,7 @@ module Hyrax
       # @return [Array<SolrDocument>]
       def self.available_child_collections(parent:, scope:, limit_to_id: nil)
         return [] unless parent.try(:nestable?)
-        return [] unless scope.can?(:edit, parent)
+        return [] unless scope.can?(:deposit, parent)
         query_solr(collection: parent, access: :read, scope: scope, limit_to_id: limit_to_id)
       end
 
@@ -26,7 +26,7 @@ module Hyrax
       def self.available_parent_collections(child:, scope:, limit_to_id: nil)
         return [] unless child.try(:nestable?)
         return [] unless scope.can?(:read, child)
-        query_solr(collection: child, access: :edit, scope: scope, limit_to_id: limit_to_id)
+        query_solr(collection: child, access: :deposit, scope: scope, limit_to_id: limit_to_id)
       end
 
       # @api private
