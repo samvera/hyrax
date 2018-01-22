@@ -31,10 +31,8 @@ module Hyrax
 
     def version_list
       @version_list ||= begin
-        [] # TODO: remove when we have versions
-
-        # original = resource.original_file
-        # Hyrax::VersionListPresenter.new(original ? original.versions.all : [])
+        original = resource.original_file
+        Hyrax::VersionListPresenter.new(original ? original.versions.all : [])
       end
     end
 
