@@ -82,7 +82,7 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
       end
     end
 
-    context 'when presenter says it is enabled' do
+    context 'when presenter says it is disabled' do
       let(:viewer_enabled) { false }
 
       it 'omits the UniversalViewer' do
