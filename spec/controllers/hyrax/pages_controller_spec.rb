@@ -80,28 +80,28 @@ RSpec.describe Hyrax::PagesController, type: :controller do
       describe "PATCH #update" do
         it "updates the about page" do
           patch :update, params: { id: about_page.id, content_block: { about: 'This is a new page about us!' } }
-          expect(response).to redirect_to(edit_pages_path)
+          expect(response).to redirect_to("#{edit_pages_path}#about")
           expect(flash[:notice]).to include 'Pages updated'
           expect(ContentBlock.for(:about).value).to eq "This is a new page about us!"
         end
 
         it "updates the help page" do
           patch :update, params: { id: help_page.id, content_block: { help: 'This page will provide more of the help you need.' } }
-          expect(response).to redirect_to(edit_pages_path)
+          expect(response).to redirect_to("#{edit_pages_path}#help")
           expect(flash[:notice]).to include 'Pages updated'
           expect(ContentBlock.for(:help).value).to eq 'This page will provide more of the help you need.'
         end
 
         it "updates the agreement page" do
           patch :update, params: { id: agreement_page.id, content_block: { agreement: 'Here is the deposit agreement' } }
-          expect(response).to redirect_to(edit_pages_path)
+          expect(response).to redirect_to("#{edit_pages_path}#agreement")
           expect(flash[:notice]).to include 'Pages updated'
           expect(ContentBlock.for(:agreement).value).to eq 'Here is the deposit agreement'
         end
 
         it "updates the terms page" do
           patch :update, params: { id: terms_page.id, content_block: { terms: 'Terms of Use are good' } }
-          expect(response).to redirect_to(edit_pages_path)
+          expect(response).to redirect_to("#{edit_pages_path}#terms")
           expect(flash[:notice]).to include 'Pages updated'
           expect(ContentBlock.for(:terms).value).to eq 'Terms of Use are good'
         end
