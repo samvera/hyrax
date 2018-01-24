@@ -5,7 +5,11 @@
   <% display_facet.items.each do |item| -%>
     <li>
       <span class="facet-values">
-        <%= render_facet_item(item.field, item) %>
+        <% # This prevents model Collection from being shown as a second filter along with the collection type. %>
+        <% item.fq= {} if subfacet %>
+
+        <% # The unless prevents Collection from being included in the select list for the Collection Type filter. %>
+        <%= render_facet_item(item.field, item) unless subfacet != true && item.value == "Collection" %>
       </span>
 
       <% unless item.items.blank? %>

@@ -3,6 +3,7 @@ module Hyrax
     include Hydra::Catalog
     include Hyrax::Collections::AcceptsBatches
 
+    # Define filter facets that apply to all repository objects.
     def self.configure_facets
       # clear facet's copied from the CatalogController
       blacklight_config.facet_fields = {}
@@ -14,11 +15,6 @@ module Hyrax
         config.add_facet_field IndexesWorkflow.suppressed_field, helper_method: :suppressed_to_status
         config.add_facet_field solr_name("admin_set", :facetable), limit: 5
         config.add_facet_field solr_name("resource_type", :facetable), limit: 5
-        # Name of pivot facet must match field name that uses helper_method
-        config.add_facet_field Collection.collection_type_gid_document_field_name,
-                               helper_method: :collection_type_label, limit: 5,
-                               pivot: ['has_model_ssim', Collection.collection_type_gid_document_field_name],
-                               label: I18n.t('hyrax.dashboard.my.heading.type')
       end
     end
 

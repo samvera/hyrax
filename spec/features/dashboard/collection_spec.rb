@@ -3,7 +3,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   let(:admin_user) { create(:admin) }
   let(:collection_type) { create(:collection_type, creator_user: user) }
   let(:user_collection_type) { create(:user_collection_type) }
-  let(:solr_gid) { Collection.collection_type_gid_document_field_name }
+  let(:solr_gid_field) { Collection.collection_type_gid_document_field_name }
+  let(:solr_model_field) { 'has_model_ssim' }
 
   # Setting Title on admin sets to avoid false positive matches with collections.
   let(:admin_set_a) { create(:admin_set, creator: [admin_user.user_key], title: ['Set A'], with_permission_template: true) }
@@ -11,6 +12,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   let(:collection1) { create(:public_collection, user: user, collection_type_gid: collection_type.gid, create_access: true) }
   let(:collection2) { create(:public_collection, user: user, collection_type_gid: collection_type.gid, create_access: true) }
   let(:collection3) { create(:public_collection, user: admin_user, collection_type_gid: collection_type.gid, create_access: true) }
+  let(:collection4) { create(:public_collection, user: admin_user, collection_type_gid: user_collection_type.gid, create_access: true) }
 
   describe 'Your Collections tab' do
     context 'when non-admin user' do
@@ -18,6 +20,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         user
         admin_user
         admin_set_a
+        admin_set_b
         create(:permission_template_access,
                :manage,
                permission_template: admin_set_b.permission_template,
@@ -26,6 +29,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         collection1
         collection2
         collection3
+        collection4
         sign_in user
         visit '/dashboard/my/collections'
       end
@@ -40,12 +44,29 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         expect(page).not_to have_link(collection3.title.first)
         expect(page).not_to have_link(admin_set_a.title.first)
       end
+
+      it "has collection type and visibility filters" do
+        expect(page).to have_button 'Visibility'
+        expect(page).to have_link 'Public',
+                                  href: /visibility_ssi.+#{Regexp.escape(CGI.escape(collection3.visibility))}/
+        expect(page).to have_button 'Collection Type'
+        expect(page).to have_link collection_type.title,
+                                  href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(collection_type.gid))}/
+        expect(page).to have_link 'AdminSet',
+                                  href: /#{solr_model_field}.+#{Regexp.escape('AdminSet')}/
+        expect(page).not_to have_link user_collection_type.title,
+                                      href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.gid))}/
+        expect(page).not_to have_link 'Collection',
+                                      href: /#{solr_model_field}.+#{Regexp.escape('Collection')}/
+      end
     end
 
     context 'when admin user' do
       before do
         user
         admin_user
+        admin_set_a
+        admin_set_b
         create(:permission_template_access,
                :manage,
                permission_template: admin_set_a.permission_template,
@@ -59,6 +80,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         collection1
         collection2
         collection3
+        collection4
         sign_in admin_user
         visit '/dashboard/my/collections'
       end
@@ -68,6 +90,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         expect(page).to have_link 'All Collections'
         expect(page).to have_link 'Your Collections'
         expect(page).to have_link(collection3.title.first)
+        expect(page).to have_link(collection4.title.first)
         expect(page).to have_link(admin_set_a.title.first)
         expect(page).not_to have_link(collection1.title.first)
         expect(page).not_to have_link(collection2.title.first)
@@ -78,9 +101,15 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         expect(page).to have_button 'Visibility'
         expect(page).to have_link 'Public',
                                   href: /visibility_ssi.+#{Regexp.escape(CGI.escape(collection3.visibility))}/
-        expect(page).to have_button 'Type'
+        expect(page).to have_button 'Collection Type'
         expect(page).to have_link collection_type.title,
-                                  href: /#{solr_gid}.+#{Regexp.escape(CGI.escape(collection_type.gid))}/
+                                  href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(collection_type.gid))}/
+        expect(page).to have_link user_collection_type.title,
+                                  href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.gid))}/
+        expect(page).to have_link 'AdminSet',
+                                  href: /#{solr_model_field}.+#{Regexp.escape('AdminSet')}/
+        expect(page).not_to have_link 'Collection',
+                                      href: /#{solr_model_field}.+#{Regexp.escape('Collection')}/
       end
     end
   end
@@ -92,6 +121,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       collection1
       collection2
       collection3
+      collection4
+      admin_set_a
+      admin_set_b
       sign_in admin_user
       visit '/dashboard/my/collections'
     end
@@ -102,15 +134,24 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       expect(page).to have_link(collection1.title.first)
       expect(page).to have_link(collection2.title.first)
       expect(page).to have_link(collection3.title.first)
+      expect(page).to have_link(collection4.title.first)
+      expect(page).to have_link(admin_set_a.title.first)
+      expect(page).to have_link(admin_set_b.title.first)
     end
 
     it 'has a collection type filter' do
       expect(page).to have_button 'Visibility'
       expect(page).to have_link 'Public',
                                 href: /visibility_ssi.+#{Regexp.escape(CGI.escape(collection1.visibility))}/
-      expect(page).to have_button 'Type'
+      expect(page).to have_button 'Collection Type'
       expect(page).to have_link collection_type.title,
-                                href: /#{solr_gid}.+#{Regexp.escape(CGI.escape(collection_type.gid))}/
+                                href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(collection_type.gid))}/
+      expect(page).to have_link user_collection_type.title,
+                                href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.gid))}/
+      expect(page).to have_link 'AdminSet',
+                                href: /#{solr_model_field}.+#{Regexp.escape('AdminSet')}/
+      expect(page).not_to have_link 'Collection',
+                                    href: /#{solr_model_field}.+#{Regexp.escape('Collection')}/
     end
   end
 
