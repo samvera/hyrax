@@ -23,19 +23,19 @@
     <% else %>
       <li role="menuitem" tabindex="-1">
         <%= link_to "#",
-            class: 'itemicon itemedit edit-collection-deny-button',
-            title: t("hyrax.dashboard.my.action.edit_collection") do %>
+                    class: 'itemicon itemedit edit-collection-deny-button',
+                    title: t("hyrax.dashboard.my.action.edit_collection") do %>
           <%= t("hyrax.dashboard.my.action.edit_collection") %>
         <% end %>
       </li>
     <% end %>
     <li role="menuitem" tabindex="-1">
       <%= link_to "#",
-                     class: 'itemicon itemtrash delete-collection-button',
-                     title: t("hyrax.dashboard.my.action.delete_admin_set"),       
-                     data: { totalitems: admin_set_presenter.total_items , 
-                             membership: admin_set_presenter.collection_type_is_require_membership? ,
-                             hasaccess: (can? :edit, admin_set_presenter.solr_document) } do %>
+                  class: 'itemicon itemtrash delete-collection-button',
+                  title: t("hyrax.dashboard.my.action.delete_admin_set"),
+                  data: { totalitems: admin_set_presenter.total_items ,
+                          membership: admin_set_presenter.collection_type_is_require_membership? ,
+                          hasaccess: (can?(:edit, admin_set_presenter.solr_document)) } do %>
         <%= t("hyrax.dashboard.my.action.delete_admin_set") %>
       <% end %>
     </li>
@@ -45,7 +45,7 @@
                       class: 'itemicon add-to-collection',
                       title: t("hyrax.dashboard.my.action.add_to_collection"),
                       data: { nestable: false,
-                              hasaccess: (can? :deposit, admin_set_presenter.solr_document) } do %>
+                              hasaccess: (can?(:deposit, admin_set_presenter.solr_document)) } do %>
               <%= t("hyrax.dashboard.my.action.add_to_collection") %>
           <% end %>
         </li>
