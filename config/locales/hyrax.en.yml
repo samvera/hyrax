@@ -705,6 +705,7 @@ en:
           last_modified:  "Last modified"
           title:          "Title"
           type:           "Type"
+          collection_type: "Collection Type"
           visibility:     "Visibility"
         highlighted:  "My Highlights"
         shared:       "Works Shared with Me"

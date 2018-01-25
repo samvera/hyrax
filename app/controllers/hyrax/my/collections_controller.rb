@@ -1,6 +1,22 @@
 module Hyrax
   module My
     class CollectionsController < MyController
+      # Define collection specific filter facets.
+      def self.configure_facets
+        configure_blacklight do |config|
+          # Name of pivot facet must match field name that uses helper_method
+          config.add_facet_field Collection.collection_type_gid_document_field_name,
+                                 helper_method: :collection_type_label, limit: 5,
+                                 pivot: ['has_model_ssim', Collection.collection_type_gid_document_field_name],
+                                 label: I18n.t('hyrax.dashboard.my.heading.collection_type')
+          # This causes AdminSets to also be shown with the Collection Type label
+          config.add_facet_field 'has_model_ssim',
+                                 label: I18n.t('hyrax.dashboard.my.heading.collection_type'),
+                                 limit: 5, show: false
+        end
+      end
+      configure_facets
+
       def search_builder_class
         Hyrax::My::CollectionsSearchBuilder
       end
