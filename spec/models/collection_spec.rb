@@ -271,7 +271,7 @@ RSpec.describe Collection, type: :model do
       end
     end
 
-    describe 'when including nesting indexing', with_nested_indexing: true do
+    describe 'when including nesting indexing', with_nested_reindexing: true do
       # Nested indexing requires that the user's permissions be saved
       # on the Fedora object... if simply in local memory, they are
       # lost when the adapter pulls the object from Fedora to reindex.
@@ -280,6 +280,38 @@ RSpec.describe Collection, type: :model do
 
       it 'will authorize the creating user' do
         expect(user.can?(:edit, collection)).to be true
+      end
+    end
+
+    describe 'when including with_nesting_attributes' do
+      let(:collection_type) { create(:collection_type) }
+      let(:blacklight_config) { CatalogController.blacklight_config }
+      let(:repository) { Blacklight::Solr::Repository.new(blacklight_config) }
+      let(:current_ability) { instance_double(Ability, admin?: true) }
+      let(:scope) { double('Scope', can?: true, current_ability: current_ability, repository: repository, blacklight_config: blacklight_config) }
+
+      context 'when building a collection' do
+        let(:coll123) do
+          build(:collection,
+                id: 'Collection123',
+                collection_type_gid: collection_type.gid,
+                with_nesting_attributes:
+                { ancestors: ['Parent_1'],
+                  parent_ids: ['Parent_1'],
+                  pathnames: ['Parent_1/Collection123'],
+                  depth: 2 })
+        end
+        let(:nesting_attributes) do
+          Hyrax::Collections::NestedCollectionQueryService::NestingAttributes.new(id: coll123.id, scope: scope)
+        end
+
+        it 'will persist a queryable solr document with the given attributes' do
+          expect(nesting_attributes.id).to eq('Collection123')
+          expect(nesting_attributes.parents).to eq(['Parent_1'])
+          expect(nesting_attributes.pathnames).to eq(['Parent_1/Collection123'])
+          expect(nesting_attributes.ancestors).to eq(['Parent_1'])
+          expect(nesting_attributes.depth).to eq(2)
+        end
       end
     end
   end

@@ -6,6 +6,7 @@ en:
   activemodel:
     errors:
       messages:
+        exceeds_maximum_nesting_depth: "nesting exceeds the allowed maximum nesting depth."
         is_not_nestable: "is not nestable"
         cannot_have_child_nested: "cannot have child nested within it"
         cannot_nest_in_parent: "cannot nest within parent"

@@ -1,10 +1,12 @@
 RSpec.describe Hyrax::Dashboard::NestedCollectionsSearchBuilder do
-  let(:collection) { double(id: '123', collection_type_gid: 'gid/abc') }
+  let(:collection) { double(id: 'Collection_123', collection_type_gid: 'gid/abc') }
   let(:scope) { double(current_ability: ability, blacklight_config: CatalogController.blacklight_config) }
-  let(:builder) { described_class.new(scope: scope, access: access, collection: collection) }
   let(:access) { :read }
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
+  let(:nesting_attributes) { double(parents: ['Parent_1', 'Parent_2'], pathnames: ['Parent_1/Collection_123', 'Parent_2/Collection_123'], ancestors: ['Parent_1', 'Parent_2'], depth: 2) }
+  let(:test_nest_direction) { :as_parent }
+  let(:builder) { described_class.new(scope: scope, access: access, collection: collection, nesting_attributes: nesting_attributes, nest_direction: test_nest_direction) }
 
   describe '#query' do
     subject { builder.query }
@@ -24,9 +26,33 @@ RSpec.describe Hyrax::Dashboard::NestedCollectionsSearchBuilder do
 
     subject { builder.show_only_other_collections_of_the_same_collection_type(solr_params) }
 
-    it 'will exclude the given collection' do
-      subject
-      expect(solr_params.fetch(:fq)).to eq(["-{!terms f=id}#{collection.id}", "_query_:\"{!field f=collection_type_gid_ssim}#{collection.collection_type_gid}\""])
+    context 'when nesting :as_parent' do
+      let(:test_nest_direction) { :as_parent }
+
+      it 'will exclude the given collection and its parents' do
+        subject
+        expect(solr_params.fetch(:fq)).to contain_exactly(
+          "-{!terms f=id}#{collection.id},#{nesting_attributes.parents.first},#{nesting_attributes.parents.last}",
+          "_query_:\"{!field f=collection_type_gid_ssim}#{collection.collection_type_gid}\"",
+          "-_query_:\"{!lucene df=nesting_collection__pathnames_ssim}*#{collection.id}*\""
+        )
+      end
+    end
+
+    context 'when nesting :as_child' do
+      let(:test_nest_direction) { :as_child }
+
+      it 'will build the search for valid children' do
+        subject
+        # rubocop:disable Metrics/LineLength
+        expect(solr_params.fetch(:fq)).to contain_exactly(
+          "-{!terms f=id}#{collection.id}",
+          "_query_:\"{!field f=collection_type_gid_ssim}#{collection.collection_type_gid}\"",
+          "-_query_:\"{!lucene q.op=OR df=nesting_collection__pathnames_ssim}#{nesting_attributes.pathnames.first} #{nesting_attributes.pathnames.last} #{nesting_attributes.ancestors.first} #{nesting_attributes.ancestors.last}\"",
+          "-_query_:\"{!field f=nesting_collection__parent_ids_ssim}#{collection.id}\""
+        )
+        # rubocop:enable Metrics/LineLength
+      end
     end
   end
 
