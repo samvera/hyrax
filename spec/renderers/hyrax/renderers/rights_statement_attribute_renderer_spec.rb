@@ -16,5 +16,14 @@ RSpec.describe Hyrax::Renderers::RightsStatementAttributeRenderer do
 
     it { expect(renderer).not_to be_microdata(field) }
     it { expect(subject).to be_equivalent_to(expected) }
+
+    context 'with off-authority term' do
+      let(:renderer) { described_class.new(field, [value]) }
+      let(:value)    { 'moomin' }
+
+      it 'renders a value' do
+        expect(subject.to_s).to include value
+      end
+    end
   end
 end
