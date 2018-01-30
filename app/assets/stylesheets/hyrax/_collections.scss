@@ -200,6 +200,10 @@ button.branding-banner-remove:hover {
   .expanded-details {
     display: none;
     padding-top: 10px;
+
+    dd {
+      text-align: left;
+    }
   }
 
   .modal {
@@ -278,7 +282,7 @@ button.branding-banner-remove:hover {
       }
 
       .label {
-        margin: 0 5px;
+        margin-left: 5px;
       }
     }
 

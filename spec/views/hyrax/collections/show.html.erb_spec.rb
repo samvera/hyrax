@@ -1,10 +1,12 @@
 RSpec.describe 'hyrax/collections/show.html.erb', type: :view do
   let(:document) do
     SolrDocument.new(id: 'xyz123z4',
+                     'collection_type_gid_ssim' => [collection_type.gid],
                      'title_tesim' => ['Make Collections Great Again'],
                      'rights_tesim' => ["http://creativecommons.org/licenses/by-sa/3.0/us/"])
   end
   let(:ability) { double }
+  let(:collection_type) { create(:collection_type) }
   let(:presenter) { Hyrax::CollectionPresenter.new(document, ability) }
 
   before do

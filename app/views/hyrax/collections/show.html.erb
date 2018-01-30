@@ -11,7 +11,7 @@
 
 			<div class="hyc-title">
 				<h1><%=@presenter.title.first%></h1>
-				<span class="label label-success">Collection</span>
+				<span class="label label-success"><%= @presenter.collection_type_badge %></span>
 				<%= @presenter.permission_badge %>
 			</div>
 
@@ -76,56 +76,49 @@
 		</div>
 	</div>
 
+	<% if @members_count > 0 %>
+		<div class="hyc-blacklight hyc-bl-title">
+			<h2>
+				<% if has_collection_search_parameters? %>
+						<%= t('hyrax.dashboard.collections.show.search_results') %>
+				<% end %>
+			</h2>
+		</div>
+	<% end %>
+
+	<!-- Search bar -->
+	<div class="hyc-blacklight hyc-bl-search hyc-body row">
+		<div class="col-sm-8">
+			<%= render 'search_form', presenter: @presenter %>
+		</div>
+	</div>
+
+	<!-- Subcollections -->
 	<% if @presenter.collection_type_is_nestable? && @subcollection_count > 0 %>
-			<div class="row hyc-blacklight hyc-bl-title">
-				<div class="col-md-12">
-					<h2>
-						<%= t('.subcollection_count') %> (<%= @subcollection_count %>)
-					</h2>
-				</div>
+			<div class="hyc-blacklight hyc-bl-title">
+				<h4><%= t('.subcollection_count') %> (<%= @subcollection_count %>)</h4>
 			</div>
-			<div class="row hyc-blacklight hyc-bl-results">
-				<div class="col-md-12">
-					<%= render 'subcollection_list', collection: @subcollection_docs %>
-				</div>
+			<div class="hyc-blacklight hyc-bl-results">
+				<%= render 'subcollection_list', collection: @subcollection_docs %>
 			</div>
 	<% end %>
 
+	<!-- Works -->
 	<% if @members_count > 0 %>
-			<div class="row hyc-blacklight hyc-bl-title">
-				<div class="col-md-12">
-					<h2>
-						<% if has_collection_search_parameters? %>
-								<%= t('hyrax.dashboard.collections.show.search_results') %>
-						<% else %>
-								<%= t('.works_in_collection') %> (<%= @members_count %>)
-						<% end %>
-					</h2>
-				</div>
+			<div class="hyc-blacklight hyc-bl-title">
+				<h4><%= t('.works_in_collection') %> (<%= @members_count %>)</h4>
 			</div>
 
-			<div class="row hyc-blacklight hyc-bl-search">
-				<div class="col-md-6 col-md-offset-6">
-					<%= render 'search_form', presenter: @presenter %>
-				</div>
+			<div class="hyc-blacklight hyc-bl-sort">
+				<%= render 'sort_and_per_page', collection: @presenter %>
 			</div>
 
-			<div class="row hyc-blacklight hyc-bl-sort">
-				<div class="col-md-12">
-					<%= render 'sort_and_per_page', collection: @presenter %>
-				</div>
+			<div class="hyc-blacklight hyc-bl-results">
+				<%= render_document_index @member_docs %>
 			</div>
 
-			<div class="row hyc-blacklight hyc-bl-results">
-				<div class="col-md-12">
-					<%= render_document_index @member_docs %>
-				</div>
-			</div>
-
-			<div class="row hyc-blacklight hyc-bl-pager">
-				<div class="col-md-12">
-					<%= render 'paginate' %>
-				</div>
+			<div class="hyc-blacklight hyc-bl-pager">
+				<%= render 'paginate' %>
 			</div>
 	<% end # if @members_count > 0 %>
 </div>

@@ -31,7 +31,7 @@
         <div class="panel panel-default labels">
           <div class="panel-body">
 
-            <h2 class="non lower"><%= t('hyrax.collection.form.description') %></h2>
+            <h3 class="non lower"><%= t('hyrax.collection.form.description') %></h3>
             <div id="base-terms">
               <% f.object.primary_terms.each do |term| %>
                 <%= render_edit_field_partial(term, f: f) %>
