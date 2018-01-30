@@ -74,4 +74,20 @@ RSpec.describe Hyrax::CollectionsHelper do
       expect(form.css('input[type="submit"]').attr('value').value).to eq "Remove My Button"
     end
   end
+
+  describe "collection_type_label" do
+    context "when the CollectionType is found" do
+      let(:test_collection_type) { FactoryBot.create(:collection_type) }
+
+      it "returns the CollectionType title" do
+        expect(collection_type_label(test_collection_type.gid)).to match %r{^Title \d+$}
+      end
+    end
+
+    context "when the CollectionType cannot be found" do
+      it "returns the input gid unchanged" do
+        expect(collection_type_label(nil)).to eq "User Collection"
+      end
+    end
+  end
 end

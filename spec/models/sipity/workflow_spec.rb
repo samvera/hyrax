@@ -57,18 +57,18 @@ module Sipity
     end
 
     context '.find_active_workflow_for' do
-      let(:admin_set_id) { 1234 }
-      let(:permission_template) { create(:permission_template, admin_set_id: admin_set_id) }
+      let(:source_id) { 1234 }
+      let(:permission_template) { create(:permission_template, source_id: source_id) }
 
       it 'returns the active workflow for the permission template' do
         active_workflow = create(:workflow, active: true, permission_template: permission_template)
         _inactive_workflow = create(:workflow, active: false, permission_template: permission_template)
-        expect(described_class.find_active_workflow_for(admin_set_id: admin_set_id)).to eq(active_workflow)
+        expect(described_class.find_active_workflow_for(admin_set_id: source_id)).to eq(active_workflow)
       end
 
       it 'raises an exception when none exists' do
         create(:workflow, active: false, permission_template: permission_template)
-        expect { described_class.find_active_workflow_for(admin_set_id: admin_set_id) }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { described_class.find_active_workflow_for(admin_set_id: source_id) }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end

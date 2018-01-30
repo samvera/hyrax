@@ -18,8 +18,8 @@ RSpec.describe Hyrax::AdminSetOptionsPresenter do
 
       before do
         allow(presenter).to receive(:workflow) { nil }
-        create(:permission_template, admin_set_id: '123', visibility: 'open')
-        create(:permission_template, admin_set_id: '345', visibility: 'restricted')
+        create(:permission_template, source_id: '123', visibility: 'open')
+        create(:permission_template, source_id: '345', visibility: 'restricted')
       end
 
       it do
@@ -38,10 +38,10 @@ RSpec.describe Hyrax::AdminSetOptionsPresenter do
 
       before do
         allow(presenter).to receive(:workflow) { nil }
-        create(:permission_template, admin_set_id: '123', release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED, release_date: today + 2.days)
-        create(:permission_template, admin_set_id: '345', release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY)
-        create(:permission_template, admin_set_id: '567', release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR)
-        create(:permission_template, admin_set_id: '789', release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE, release_date: today + 1.month)
+        create(:permission_template, source_id: '123', release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED, release_date: today + 2.days)
+        create(:permission_template, source_id: '345', release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY)
+        create(:permission_template, source_id: '567', release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR)
+        create(:permission_template, source_id: '789', release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE, release_date: today + 1.month)
       end
 
       it do
@@ -57,7 +57,7 @@ RSpec.describe Hyrax::AdminSetOptionsPresenter do
       let(:results) { [solr_doc1] }
 
       before do
-        create(:permission_template, admin_set_id: '567')
+        create(:permission_template, source_id: '567')
       end
 
       it { is_expected.to eq [['Empty Template Set', '123', {}]] }

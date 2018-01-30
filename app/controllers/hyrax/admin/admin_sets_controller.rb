@@ -12,18 +12,17 @@ module Hyrax
     # Used for the show action
     self.single_item_search_builder_class = Hyrax::SingleAdminSetSearchBuilder
 
-    # Used to get the members for the show action
-    self.member_search_builder_class = Hyrax::AdminAdminSetMemberSearchBuilder
+    # The search builder to find the admin set's members
+    self.membership_service_class = Hyrax::AdminSetMemberService
 
     # Used to create the admin set
     class_attribute :admin_set_create_service
     self.admin_set_create_service = AdminSetCreateService
 
     def show
-      add_breadcrumb t(:'hyrax.controls.home'), root_path
-      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
-      add_breadcrumb t(:'hyrax.admin.sidebar.admin_sets'), hyrax.admin_admin_sets_path
-      add_breadcrumb t(:'hyrax.admin.admin_sets.show.breadcrumb'), request.path
+      add_breadcrumb t(:'hyrax.dashboard.title'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.dashboard.my.collections'), hyrax.admin_admin_sets_path
+      add_breadcrumb @admin_set.title.first
       super
     end
 
@@ -45,15 +44,13 @@ module Hyrax
     # Renders a JSON response with a list of files in this admin set.
     # This is used by the edit form to populate the thumbnail_id dropdown
     def files
-      result = form.select_files.map do |label, id|
-        { id: id, text: label }
-      end
+      result = form.select_files.map { |label, id| { id: id, text: label } }
       render json: result
     end
 
     def update
       if @admin_set.update(admin_set_params)
-        redirect_to hyrax.edit_admin_admin_set_path(@admin_set), notice: I18n.t('updated_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
+        redirect_to update_referer, notice: I18n.t('updated_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
       else
         setup_form
         render :edit
@@ -71,7 +68,7 @@ module Hyrax
 
     def destroy
       if @admin_set.destroy
-        redirect_to hyrax.admin_admin_sets_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
+        after_delete_success
       else
         redirect_to hyrax.admin_admin_set_path(@admin_set), alert: @admin_set.errors.full_messages.to_sentence
       end
@@ -89,6 +86,10 @@ module Hyrax
 
     private
 
+      def update_referer
+        hyrax.edit_admin_admin_set_path(@admin_set) + (params[:referer_anchor] || '')
+      end
+
       def ensure_manager!
         # Even though the user can view this admin set, they may not be able to view
         # it on the admin page.
@@ -102,7 +103,7 @@ module Hyrax
       def setup_form
         add_breadcrumb t(:'hyrax.controls.home'), root_path
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
-        add_breadcrumb t(:'hyrax.admin.sidebar.admin_sets'), hyrax.admin_admin_sets_path
+        add_breadcrumb t(:'hyrax.dashboard.my.collections'), hyrax.my_collections_path
         add_breadcrumb action_breadcrumb, request.path
         form
       end
@@ -135,6 +136,16 @@ module Hyrax
 
       def repository_class
         blacklight_config.repository_class
+      end
+
+      def after_delete_success
+        if request.referer.include? "my/collections"
+          redirect_to hyrax.my_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
+        elsif request.referer.include? "collections"
+          redirect_to hyrax.dashboard_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
+        else
+          redirect_to hyrax.my_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
+        end
       end
   end
 end

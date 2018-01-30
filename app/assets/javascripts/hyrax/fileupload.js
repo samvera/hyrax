@@ -4,4 +4,5 @@
 Blacklight.onLoad(function() {
   var options = {};
   $('#fileupload').hyraxUploader(options);
+  $('#fileuploadlogo').hyraxUploader({downloadTemplateId: 'logo-template-download'});
 });

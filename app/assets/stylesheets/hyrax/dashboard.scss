@@ -83,11 +83,16 @@ body.dashboard {
     }
   }
 
-  /* This is needed in Chrome for the admin/admin_sets edit view to render the participants tab
+  /* This is needed in Chrome for the admin/admin_sets edit view AND the collection
+   * sharing edit view to render the participants tab
    * Without this the contents of that tab flow off the right-hand side of the screen
    * (The other containers on that page have `float: left` except for the fieldset.)
    */
   .admin-set-participants {
+    float: left;
+  }
+
+  .collection-sharing {
     float: left;
   }
 

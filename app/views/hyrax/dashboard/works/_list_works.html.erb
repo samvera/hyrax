@@ -1,5 +1,9 @@
 <tr id="document_<%= document.id %>">
   <td>
+    <label for="batch_document_<%= document.id %>" class="sr-only"><%=t("hyrax.dashboard.my.sr.batch_checkbox")%></label>
+    <%= render 'hyrax/batch_select/add_button', document: document %>&nbsp;
+  </td>
+  <td>
     <div class='media'>
       <%= link_to [main_app, document], class: 'media-left', 'aria-hidden' => true do %>
         <%= render_thumbnail_tag document, { class: 'hidden-xs file_listing_thumbnail' }, { suppress_link: true } %>

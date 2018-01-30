@@ -44,6 +44,7 @@ Metrics/BlockLength:
     - 'lib/generators/hyrax/templates/catalog_controller.rb'
     - 'lib/generators/hyrax/templates/config/initializers/simple_form_bootstrap.rb'
     - 'lib/hyrax/rails/routes.rb'
+    - 'lib/tasks/*.rake'
     - 'spec/**/*.rb'
 
 Metrics/MethodLength:

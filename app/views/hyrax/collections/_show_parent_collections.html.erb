@@ -1,0 +1,32 @@
+<% if presenter.parent_collection_count <= 0 %>
+		<div class="alert alert-warning" role="alert"><%= t('hyrax.collections.show.no_visible_parent_collections') %></div>
+<% else %>
+		<div class="media-body">
+			<h4 class="media-heading">
+				<div class="less-parent-collections-block" id="less-parent-collections">
+					<% presenter.visible_parent_collections.each do |document| %>
+						<ul>
+							<li>
+								<%= link_to document, [hyrax, document], id: "src_copy_link_#{document.id}" %>
+							</li>
+						</ul>
+					<% end %>
+					<% if presenter.more_parent_collections? %>
+							<button id="show-more-parent-collections" class="btn show-more-parent-collections-btn"><%= t("hyrax.collections.show.show_more_parent_collections") %></button>
+					<% end %>
+				</div>
+				<% if presenter.more_parent_collections? %>
+					<div class="more-parent-collections-block" id="more-parent-collections">
+						<% presenter.more_parent_collections.each do |document| %>
+							<ul>
+								<li>
+									<%= link_to document, [hyrax, document], id: "src_copy_link_#{document.id}" %>
+								</li>
+							</ul>
+							<button id="show-less-parent-collections" class="btn show-less-parent-collections-btn"><%= t("hyrax.collections.show.show_less_parent_collections") %></button>
+						<% end %>
+					</div>
+				<% end %>
+			</h4>
+		</div>
+<% end %>

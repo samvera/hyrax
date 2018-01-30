@@ -41,7 +41,7 @@ RSpec.describe Hyrax::Forms::AdminSetForm do
     end
 
     context "when the PermissionTemplate exists" do
-      let(:permission_template) { Hyrax::PermissionTemplate.find_by(admin_set_id: model.id) }
+      let(:permission_template) { Hyrax::PermissionTemplate.find_by(source_id: model.id) }
       let(:model) { create(:admin_set, with_permission_template: true) }
 
       it "uses the existing template" do

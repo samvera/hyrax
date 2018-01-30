@@ -1,0 +1,26 @@
+<% if presenter.collection_type_is_nestable? %>
+  <!-- The user should have deposit access to the parent (the collection we are showing) and read access to the child -->
+  <% if presenter.user_can_nest_collection? %>
+    <div class="text-right">
+      <div>
+        <div class="sr-only"><% t('hyrax.collection.actions.nest_collections.desc') %></div>
+        <%= button_tag t('hyrax.collection.actions.nest_collections.button_label'),
+              class: 'btn btn-primary add-subcollection',
+              title: t('hyrax.collection.actions.nest_collections.desc'),
+              data: { nestable: true,
+                      hasaccess: true,
+                      presenter_id: presenter.id } %>
+      </div>
+      <div>
+        <!-- The user should must have the ability to create a new collection of parent's type -->
+        <% if presenter.user_can_create_new_nest_collection? %>
+          <div class="sr-only"><% t('hyrax.collection.actions.add_new_nested_collection.desc') %></div>
+          <%= link_to t('hyrax.collection.actions.add_new_nested_collection.label'),
+            hyrax.dashboard_create_subcollection_under_path(parent_id: presenter.id),
+            title: t('hyrax.collection.actions.add_new_nested_collection.desc'),
+            class: 'btn btn-link side-arrows' %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>
