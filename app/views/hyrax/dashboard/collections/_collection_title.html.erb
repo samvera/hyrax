@@ -1,4 +1,11 @@
-<section class="collection-title-row-wrapper">
+<% id = presenter.id %>
+
+<section class="collection-title-row-wrapper"
+  data-source="my"
+  data-id="<%= id %>"
+  data-colls-hash="<%= presenter.available_parent_collections(scope: controller) %>"
+  data-post-url="<%= hyrax.dashboard_create_nest_collection_within_path(id) %>"
+  data-post-delete-url="<%= hyrax.dashboard_collection_path(id) %>">
   <% presenter.title.each_with_index do |title, index| %>
     <% if index == 0 %>
       <div class="collection-title-row-content">

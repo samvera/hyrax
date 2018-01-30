@@ -261,6 +261,25 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     let!(:adminset) { create(:admin_set, title: ['Admin Set with Work'], creator: [admin_user.user_key], with_permission_template: true) }
     let!(:work) { create(:work, title: ["King Louie"], admin_set: adminset, member_of_collections: [collection], user: user) }
 
+    # check table row has appropriate data attributes added
+    def check_tr_data_attributes(id, type)
+      url_fragment = get_url_fragment(type)
+      expect(page).to have_selector("tr[data-id='#{id}'][data-colls-hash]")
+      expect(page).to have_selector("tr[data-post-url='/dashboard/collections/#{id}/within?locale=en']")
+      expect(page).to have_selector("tr[data-post-delete-url='/#{url_fragment}/#{id}?locale=en']")
+    end
+
+    # check data attributes have been transferred from table row to the modal
+    def check_modal_data_attributes(id, type)
+      url_fragment = get_url_fragment(type)
+      expect(page).to have_selector("div[data-id='#{id}']")
+      expect(page).to have_selector("div[data-post-delete-url='/#{url_fragment}/#{id}?locale=en']")
+    end
+
+    def get_url_fragment(type)
+      (type == 'admin_set' ? 'admin/admin_sets' : 'dashboard/collections')
+    end
+
     context 'when user created the collection' do
       before do
         user
@@ -271,25 +290,34 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       context 'and collection is empty' do
         it 'and user confirms delete, deletes the collection', :js do
           expect(page).to have_content(empty_collection.title.first)
+          check_tr_data_attributes(empty_collection.id, 'collection')
+          # check that modal data attributes haven't been added yet
+          expect(page).not_to have_selector("div[data-id='#{empty_collection.id}']")
           within('#document_' + empty_collection.id) do
             first('button.dropdown-toggle').click
             first('.itemtrash').click
           end
-          expect(page).to have_selector("div#collection-empty-to-delete-modal-#{empty_collection.id}", visible: true)
-          within("div#collection-empty-to-delete-modal-#{empty_collection.id}") do
-            click_link('Delete')
+          expect(page).to have_selector("div#collection-empty-to-delete-modal", visible: true)
+          check_modal_data_attributes(empty_collection.id, 'collection')
+          within("div#collection-empty-to-delete-modal") do
+            click_button('Delete')
           end
           expect(page).not_to have_content(empty_collection.title.first)
         end
 
         it 'and user cancels, does NOT delete the collection', :js do
           expect(page).to have_content(empty_collection.title.first)
+          check_tr_data_attributes(empty_collection.id, 'collection')
+          # check that modal data attributes haven't been added yet
+          expect(page).not_to have_selector("div[data-id='#{empty_collection.id}']")
           within("#document_#{empty_collection.id}") do
             first('button.dropdown-toggle').click
             first('.itemtrash').click
           end
-          expect(page).to have_selector("div#collection-empty-to-delete-modal-#{empty_collection.id}", visible: true)
-          within("div#collection-empty-to-delete-modal-#{empty_collection.id}") do
+          expect(page).to have_selector("div#collection-empty-to-delete-modal", visible: true)
+          check_modal_data_attributes(empty_collection.id, 'collection')
+
+          within("div#collection-empty-to-delete-modal") do
             click_button('Cancel')
           end
           expect(page).to have_content(empty_collection.title.first)
@@ -299,13 +327,15 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       context 'and collection is not empty' do
         it 'and user confirms delete, deletes the collection', :js do
           expect(page).to have_content(collection.title.first)
+          check_tr_data_attributes(collection.id, 'collection')
           within("#document_#{collection.id}") do
             first('button.dropdown-toggle').click
             first('.itemtrash').click
           end
-          expect(page).to have_selector("div#collection-to-delete-modal-#{collection.id}", visible: true)
-          within("div#collection-to-delete-modal-#{collection.id}") do
-            click_link('Delete')
+          expect(page).to have_selector("div#collection-to-delete-modal", visible: true)
+          check_modal_data_attributes(collection.id, 'collection')
+          within("div#collection-to-delete-modal") do
+            find('button.modal-delete-button').click
           end
           expect(page).not_to have_content(collection.title.first)
         end
@@ -316,8 +346,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
             first('button.dropdown-toggle').click
             first('.itemtrash').click
           end
-          expect(page).to have_selector("div#collection-to-delete-modal-#{collection.id}", visible: true)
-          within("div#collection-to-delete-modal-#{collection.id}") do
+          expect(page).to have_selector("div#collection-to-delete-modal", visible: true)
+
+          within("div#collection-to-delete-modal") do
             click_button('Cancel')
           end
           expect(page).to have_content(collection.title.first)
@@ -340,6 +371,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
       it 'does not allow delete collection' do
         expect(page).to have_content(collection.title.first)
+        check_tr_data_attributes(collection.id, 'collection')
         within("#document_#{collection.id}") do
           first('button.dropdown-toggle').click
           first('.itemtrash').click
@@ -361,25 +393,29 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       context 'and admin set is empty' do
         it 'and user confirms delete, deletes the admin set', :js do
           expect(page).to have_content(empty_adminset.title.first)
+          check_tr_data_attributes(empty_adminset.id, 'admin_set')
           within('#document_' + empty_adminset.id) do
             first('button.dropdown-toggle').click
             first('.itemtrash').click
           end
-          expect(page).to have_selector("div#collection-admin-set-empty-to-delete-modal-#{empty_adminset.id}", visible: true)
-          within("div#collection-admin-set-empty-to-delete-modal-#{empty_adminset.id}") do
-            click_link('Delete')
+          expect(page).to have_selector("div#collection-empty-to-delete-modal", visible: true)
+          check_modal_data_attributes(empty_adminset.id, 'admin_set')
+          within("div#collection-empty-to-delete-modal") do
+            find('button.modal-delete-button').click
           end
           expect(page).not_to have_content(empty_adminset.title.first)
         end
 
         it 'and user cancels, does NOT delete the admin set', :js do
           expect(page).to have_content(empty_adminset.title.first)
+          check_tr_data_attributes(empty_adminset.id, 'admin_set')
           within("#document_#{empty_adminset.id}") do
             first('button.dropdown-toggle').click
             first('.itemtrash').click
           end
-          expect(page).to have_selector("div#collection-admin-set-empty-to-delete-modal-#{empty_adminset.id}", visible: true)
-          within("div#collection-admin-set-empty-to-delete-modal-#{empty_adminset.id}") do
+          expect(page).to have_selector("div#collection-empty-to-delete-modal", visible: true)
+          check_modal_data_attributes(empty_adminset.id, 'admin_set')
+          within("div#collection-empty-to-delete-modal") do
             click_button('Cancel')
           end
           expect(page).to have_content(empty_adminset.title.first)
@@ -389,12 +425,13 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       context 'and admin set is not empty' do
         it 'does not allow delete admin set' do
           expect(page).to have_content(adminset.title.first)
+          check_tr_data_attributes(adminset.id, 'admin_set')
           within("#document_#{adminset.id}") do
             first('button.dropdown-toggle').click
             first('.itemtrash').click
           end
-          expect(page).to have_selector("div#collection-admin-set-delete-deny-modal-#{adminset.id}", visible: true)
-          within("div#collection-admin-set-delete-deny-modal-#{adminset.id}") do
+          expect(page).to have_selector("div#collection-admin-set-delete-deny-modal", visible: true)
+          within("div#collection-admin-set-delete-deny-modal") do
             click_button('Close')
           end
           expect(page).to have_content(adminset.title.first)

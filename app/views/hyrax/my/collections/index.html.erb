@@ -48,13 +48,16 @@
   </div>
 
   <!-- Render Modals -->
+  <%= render 'modal_add_to_collection', source: "my" %>
   <%= render 'modal_add_to_collection_deny' %>
   <%= render 'modal_add_to_collection_permission_deny' %>
   <%= render 'modal_collection_types_to_create' %>
-  <%= render 'modal_delete_deny' %>
-  <%= render 'modal_delete_selected_collections' %>
+  <%= render 'modal_delete_admin_set_deny' %>
+  <%= render 'modal_delete_collection' %>
   <%= render 'modal_delete_collection_deny' %>
+  <%= render 'modal_delete_deny' %>
+  <%= render 'modal_delete_empty_collection' %>
+  <%= render 'modal_delete_selected_collections' %>
   <%= render 'modal_edit_deny' %>
-
 
 </div><!-- /collections-wrapper -->

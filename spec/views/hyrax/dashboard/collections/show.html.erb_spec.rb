@@ -5,6 +5,7 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
                      'rights_tesim' => ["http://creativecommons.org/licenses/by-sa/3.0/us/"])
   end
   let(:ability) { double }
+  let(:collection) { mock_model(Collection) }
   let(:presenter) { Hyrax::CollectionPresenter.new(document, ability) }
   let(:collection_type) { double }
 
@@ -16,6 +17,8 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
     allow(view).to receive(:can?).with(:destroy, document).and_return(true)
     allow(view).to receive(:current_ability).and_return(ability)
     allow(ability).to receive(:current_user).and_return(user)
+
+    allow(Collection).to receive(:find).with(document.id).and_return(collection)
 
     allow(presenter).to receive(:total_items).and_return(0)
     allow(presenter).to receive(:collection_type).and_return(collection_type)

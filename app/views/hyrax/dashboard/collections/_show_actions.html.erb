@@ -11,7 +11,6 @@
 <!-- The user should have deposit access to the parent and read access to the child (the collection we are already showing, so no test is necessary). -->
     <%= button_tag '',
                   class: 'btn btn-primary add-to-collection',
-                  onclick: "$('#add-to-collection-modal-#{presenter.id}').modal('show');",
                   title: t("hyrax.collection.actions.nested_subcollection.desc"),
                   type: 'button',
                   data: { nestable: presenter.collection_type_is_nestable?,

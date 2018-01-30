@@ -2,9 +2,9 @@ RSpec.describe 'hyrax/dashboard/collections/_form_relationships.html.erb', type:
   let(:collection) { create(:collection, id: '1234') }
 
   let(:collection_type) { double('Hyrax::CollectionType', nestable?: true) }
-  let(:ability) { Ability.new(create(:user)) }
+  let(:user) { create(:user) }
+  let(:ability) { Ability.new(user) }
   let(:repository) { double }
-  # let(:blacklight_config) { double(default_solr_params: nil) }
   let(:form) { Hyrax::Forms::CollectionForm.new(collection, ability, repository) }
   let(:can_deposit) { true }
   let(:can_create_collection_of_type) { true }
@@ -23,6 +23,7 @@ RSpec.describe 'hyrax/dashboard/collections/_form_relationships.html.erb', type:
     allow(collection).to receive(:collection_type).and_return(collection_type)
     allow(view).to receive(:can?).with(:deposit, collection).and_return(can_deposit)
     allow(view).to receive(:can?).with(:create_collection_of_type, collection_type).and_return(can_create_collection_of_type)
+    allow(controller).to receive(:current_user).and_return(user)
   end
 
   context "when parent & sub-collections exist" do
@@ -54,7 +55,6 @@ RSpec.describe 'hyrax/dashboard/collections/_form_relationships.html.erb', type:
       stub_template 'modal_remove_from_collection' => 'modal remove parent'
       stub_template 'modal_remove_sub_collection' => 'modal remove subcollection'
       render
-
       expect(rendered).not_to have_content(I18n.t('hyrax.dashboard.collections.form_relationships.collection_is_subcollection_description'))
       expect(rendered).not_to have_content(I18n.t('hyrax.dashboard.collections.form_relationships.sub_collections_of_collection_description'))
     end
@@ -63,6 +63,10 @@ RSpec.describe 'hyrax/dashboard/collections/_form_relationships.html.erb', type:
   context 'with limited access' do
     let(:can_deposit) { false }
     let(:can_create_collection_of_type) { false }
+
+    before do
+      allow(controller).to receive(:current_user).and_return(user)
+    end
 
     it "does not allow show subcollection buttons without access rights" do
       stub_template 'hyrax/my/collections/_modal_add_to_collection.html.erb' => 'modal add as subcollection'

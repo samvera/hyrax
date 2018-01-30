@@ -1,4 +1,4 @@
-<table class="table table-striped collections-list-table">
+<table id="collections-list-table" class="table table-striped collections-list-table">
   <caption class="sr-only"><%= t("hyrax.dashboard.my.sr.listing") %> <%= application_name %></caption>
   <thead>
   <tr>
@@ -21,7 +21,7 @@
                               else
                                 Hyrax::CollectionPresenter.new(document, current_ability, nil)
                               end %>
-    <%= render 'list_collections', collection_presenter: collection_presenter, counter: counter %>
+    <%= render 'list_collections', collection_presenter: collection_presenter, counter: counter, is_admin_set: document.admin_set? %>
   <% end %>
   </tbody>
 </table>

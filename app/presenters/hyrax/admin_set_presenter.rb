@@ -26,5 +26,9 @@ module Hyrax
     def show_path
       Hyrax::Engine.routes.url_helpers.admin_admin_set_path(id)
     end
+
+    def available_parent_collections(*)
+      []
+    end
   end
 end
