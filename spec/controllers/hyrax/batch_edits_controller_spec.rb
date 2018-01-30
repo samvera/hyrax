@@ -85,6 +85,10 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
   describe "#destroy_collection" do
     let(:user) { create(:user) }
 
+    let!(:empty_adminset) { create(:admin_set, title: ['Empty Admin Set'], edit_users: [user], creator: [user.user_key], with_permission_template: true) }
+    let!(:adminset) { create(:admin_set, title: ['Admin Set with Work'], edit_users: [user], creator: [user.user_key], with_permission_template: true) }
+    let!(:work) { create(:work, title: ["King Louie"], admin_set: adminset, user: user) }
+
     let(:collection1) do
       create(:public_collection, title: ["My First Collection"],
                                  description: ["My incredibly detailed description of the collection"],
@@ -104,11 +108,26 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
     let(:curation_concern) { create(:work1, user: user) }
 
     context 'when user has edit access' do
-      it "deletes collections with and without works in it" do
-        controller.batch = [collection1.id, collection2.id]
+      it "deletes collections with and without works in it and an empty admin set." do
+        controller.batch = [collection1.id, collection2.id, empty_adminset.id]
         delete :destroy_collection, params: { update_type: "delete_all" }
         expect { Collection.find(collection1.id) }.to raise_error(Ldp::Gone)
         expect { Collection.find(collection2.id) }.to raise_error(Ldp::Gone)
+        expect { AdminSet.find(empty_adminset.id) }.to raise_error(Ldp::Gone)
+
+        expect(flash[:notice]).to eq("Batch delete complete")
+      end
+    end
+
+    context 'when user has edit access' do
+      it "deletes collections with and without works in it and a none empty admin set is not deleted." do
+        controller.batch = [collection1.id, collection2.id, adminset.id]
+        delete :destroy_collection, params: { update_type: "delete_all" }
+        expect { Collection.find(collection1.id) }.to raise_error(Ldp::Gone)
+        expect { Collection.find(collection2.id) }.to raise_error(Ldp::Gone)
+        expect { AdminSet.find(adminset.id) }.not_to raise_error(Ldp::Gone)
+
+        expect(flash[:notice]).to include("One or more of the selected collections could not be deleted")
       end
     end
 
@@ -125,19 +144,23 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
         allow(controller).to receive(:current_user).and_return(user2)
       end
 
-      it "fails to delete collections when user does not have edit access" do
-        controller.batch = [collection1.id, collection3.id]
+      it "fails to delete collections, and admin sets when user does not have edit access" do
+        controller.batch = [collection1.id, collection2.id, adminset.id, empty_adminset.id]
         delete :destroy_collection, params: { update_type: "delete_all" }
         expect { Collection.find(collection1.id) }.not_to raise_error(Ldp::Gone)
         expect { Collection.find(collection2.id) }.not_to raise_error(Ldp::Gone)
+        expect { AdminSet.find(adminset.id) }.not_to raise_error(Ldp::Gone)
+        expect { AdminSet.find(empty_adminset.id) }.not_to raise_error(Ldp::Gone)
+        expect(flash[:notice]).to include("One or more of the selected collections could not be deleted")
       end
 
       it "deletes collections where user has edit access, failing to delete those where user does not have edit access" do
-        controller.batch = [collection1.id, collection3.id]
+        controller.batch = [collection1.id, collection2.id, collection3.id]
         delete :destroy_collection, params: { update_type: "delete_all" }
         expect { Collection.find(collection1.id) }.not_to raise_error(Ldp::Gone)
         expect { Collection.find(collection2.id) }.not_to raise_error(Ldp::Gone)
         expect { Collection.find(collection3.id) }.to raise_error(Ldp::Gone)
+        expect(flash[:notice]).to include("One or more of the selected collections could not be deleted")
       end
     end
   end

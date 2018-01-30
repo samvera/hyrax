@@ -7,7 +7,7 @@ module Hyrax
       include BreadcrumbsForCollections
       with_themed_layout 'dashboard'
 
-      before_action :filter_docs_with_read_access!, except: [:show, :edit]
+      before_action :filter_docs_with_read_access!, except: [:show, :edit, :index]
       before_action :remove_select_something_first_flash, except: :show
 
       include Hyrax::Collections::AcceptsBatches

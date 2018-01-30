@@ -419,6 +419,10 @@ en:
       help:
         resource_type: "You may select multiple types to apply to all files"
         title: "Filename will be the default title. Please provide a more meaningful title, and filenames will still be preserved by the system."
+    batch_edit:
+      delete_complete:
+        type_error: "One or more of the selected collections could not be deleted. You cannot delete a collection for which you have read-only access. In addition, you cannot delete a collection of the type \"%{admin_set_name}\" unless that collection is empty."
+        success: "Batch delete complete"
     batch_uploads:
       disabled: Feature disabled by administrator
       files:

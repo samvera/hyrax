@@ -6,7 +6,7 @@ module Hyrax
 
     before_action :build_breadcrumbs, only: :edit
     before_action :filter_docs_with_access!, only: [:edit, :update, :destroy_collection]
-    before_action :check_for_empty!, only: [:edit, :update, :destroy_collection]
+    before_action :check_for_empty!, only: [:edit, :update]
 
     # provides the help_text view method
     helper PermissionsHelper
@@ -35,11 +35,19 @@ module Hyrax
     end
 
     def destroy_collection
+      # This flag is especially useful to catch non empty admin sets.
+      success = true
       batch.each do |doc_id|
         obj = ActiveFedora::Base.find(doc_id, cast: true)
-        obj.destroy
+        success = false if obj.destroy == false
       end
-      flash[:notice] = "Batch delete complete"
+
+      admin_set_type_name = Hyrax::CollectionType.find_or_create_admin_set_type.title
+      flash[:notice] = if flash[:notice].nil? && success
+                         I18n.t('hyrax.batch_edit.delete_complete.success')
+                       else
+                         I18n.t('hyrax.batch_edit.delete_complete.type_error', admin_set_name: admin_set_type_name)
+                       end
       after_destroy_collection
     end
 
