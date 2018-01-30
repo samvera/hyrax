@@ -163,9 +163,9 @@ options = { title: 'Non-Nestable Collection', description: 'Sample collection ty
 _nonnestable_gid = create_collection_type('nonnestable_collection', options).gid
 
 puts 'Create collections for collection nesting ad hoc testing'
-pnc = create_public_collection(user, nestable_gid, 'pnc1', title: ['Public Nestable Collection'], description: ['Public nestable collection for use in ad hoc tests.'])
-pc = create_public_collection(user, nestable_gid, 'pc1', title: ['A Parent Collection'], description: ['Public collection that will be a parent of another collection.'])
-cc = create_public_collection(user, nestable_gid, 'cc1', title: ['A Child Collection'], description: ['Public collection that will be a child of another collection.'])
+pnc = create_public_collection(user, nestable_gid, 'public_nestable', title: ['Public Nestable Collection'], description: ['Public nestable collection for use in ad hoc tests.'])
+pc = create_public_collection(user, nestable_gid, 'parent_nested', title: ['A Parent Collection'], description: ['Public collection that will be a parent of another collection.'])
+cc = create_public_collection(user, nestable_gid, 'child_nested', title: ['A Child Collection'], description: ['Public collection that will be a child of another collection.'])
 Hyrax::Collections::NestedCollectionPersistenceService.persist_nested_collection_for(parent: pc, child: cc)
 
 puts 'Create works for collection nesting ad hoc testing'
