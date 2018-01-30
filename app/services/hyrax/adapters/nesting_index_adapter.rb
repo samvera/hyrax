@@ -85,11 +85,29 @@ module Hyrax
           ActiveFedora::Base.find(nesting_document.id).to_solr # What is the current state of the solr document
         end
 
-        # Now add the details from the nesting indexor to the document
-        solr_doc[solr_field_name_for_storing_ancestors] = nesting_document.ancestors
-        solr_doc[solr_field_name_for_storing_parent_ids] = nesting_document.parent_ids
-        solr_doc[solr_field_name_for_storing_pathnames] = nesting_document.pathnames
-        solr_doc[solr_field_name_for_deepest_nested_depth] = nesting_document.deepest_nested_depth
+        # Now add the details from the nesting indexer to the document
+        add_nesting_attributes(
+          solr_doc: solr_doc,
+          ancestors: nesting_document.ancestors,
+          parent_ids: nesting_document.parent_ids,
+          pathnames: nesting_document.pathnames,
+          depth: nesting_document.deepest_nested_depth
+        )
+      end
+
+      # @api public
+      #
+      # @param solr_doc [SolrDocument]
+      # @param ancestors [Array]
+      # @param parent_ids [Array]
+      # @param pathnames [Array]
+      # @param depth [Array] the object's deepest nesting depth
+      # @return solr_doc [SolrDocument]
+      def self.add_nesting_attributes(solr_doc:, ancestors:, parent_ids:, pathnames:, depth:)
+        solr_doc[solr_field_name_for_storing_ancestors] = ancestors
+        solr_doc[solr_field_name_for_storing_parent_ids] = parent_ids
+        solr_doc[solr_field_name_for_storing_pathnames] = pathnames
+        solr_doc[solr_field_name_for_deepest_nested_depth] = depth
         ActiveFedora::SolrService.add(solr_doc, commit: true)
         solr_doc
       end

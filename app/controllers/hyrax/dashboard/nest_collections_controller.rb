@@ -13,8 +13,7 @@ module Hyrax
           notice = I18n.t('create_within', scope: 'hyrax.dashboard.nest_collections_form', child_title: @form.child.title.first, parent_title: @form.parent.title.first)
           redirect_to redirect_path(item: @form.child), notice: notice
         else
-          flash[:error] = @form.errors.full_messages
-          redirect_to redirect_path(item: @form.child)
+          redirect_to redirect_path(item: @form.child), error: @form.errors.full_messages
         end
       end
 
@@ -24,8 +23,7 @@ module Hyrax
         if @form.validate_add
           redirect_to new_dashboard_collection_path(collection_type_id: @form.parent.collection_type.id, parent_id: @form.parent)
         else
-          flash[:error] = @form.errors.full_messages
-          redirect_to redirect_path(item: @form.parent)
+          redirect_to redirect_path(item: @form.parent), error: @form.errors.full_messages
         end
       end
 
@@ -36,8 +34,7 @@ module Hyrax
           notice = I18n.t('create_under', scope: 'hyrax.dashboard.nest_collections_form', child_title: @form.child.title.first, parent_title: @form.parent.title.first)
           redirect_to redirect_path(item: @form.parent), notice: notice
         else
-          flash[:error] = @form.errors.full_messages
-          redirect_to redirect_path(item: @form.parent)
+          redirect_to redirect_path(item: @form.parent), error: @form.errors.full_messages
         end
       end
 

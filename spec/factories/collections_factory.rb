@@ -1,6 +1,18 @@
 FactoryBot.define do
   factory :collection do
-    # @example let(:collection) { build(:collection, collection_type_settings: [:not_nestable, :discoverable, :sharable, :allow_multiple_membership]) }
+    # rubocop:disable Metrics/LineLength
+    # @example let(:collection) { build(:collection, collection_type_settings: [:not_nestable, :discoverable, :sharable, :allow_multiple_membership], with_nesting_attributes: {ancestors: [], parent_ids: [], pathnames: [], depth: 1}) }
+    # rubocop:enable Metrics/LineLength
+
+    # Regarding testing nested collections:
+    # To get the nested collection solr fields in the solr document for query purposes there are two options:
+    # => 1) use create(:collection) and add "with_nested_reindexing: true" to the spec will force the collection to be
+    #       created and run through the entire indexing.
+    #    => when you need a permission template AND nesting fields in the solr_document
+    #    => certain ability tests (:discover, for example) require the permission template be created
+    # => 2) use build(:collection) and add with_nesting_attributes: {ancestors: [], parent_ids: [], pathnames: [], depth: 1}
+    #       to the build the collection and create a solr document using the given nesting attributes
+    #    => this can be used to speed up the specs when a made-up solr document is adequate and no permission template is required
 
     transient do
       user { create(:user) }
@@ -8,6 +20,7 @@ FactoryBot.define do
       collection_type_settings nil
       with_permission_template false
       create_access false
+      with_nesting_attributes nil
     end
     sequence(:title) { |n| ["Title #{n}"] }
 
@@ -17,6 +30,19 @@ FactoryBot.define do
         collection.collection_type = create(:collection_type, *evaluator.collection_type_settings)
       elsif collection.collection_type_gid.nil?
         collection.collection_type = create(:user_collection_type)
+      end
+
+      # if requested, create a solr document and add the nesting fields into it
+      # when a nestable collection is built. This reduces the need to use
+      # create and :with_nested_indexing for nested collection testing
+      if evaluator.with_nesting_attributes.present? && collection.nestable?
+        Hyrax::Adapters::NestingIndexAdapter.add_nesting_attributes(
+          solr_doc: evaluator.to_solr,
+          ancestors: evaluator.with_nesting_attributes[:ancestors],
+          parent_ids: evaluator.with_nesting_attributes[:parent_ids],
+          pathnames: evaluator.with_nesting_attributes[:pathnames],
+          depth: evaluator.with_nesting_attributes[:depth]
+        )
       end
     end
 
