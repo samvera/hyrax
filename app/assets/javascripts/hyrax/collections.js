@@ -1,30 +1,121 @@
 Blacklight.onLoad(function () {
 
+  /**
+   * Sync collection data attributes to the singular instance of the modal so it knows what data to post
+   * @param {string} modalId - The id of modal to target, ie. #add_collection_modal
+   * @param {[string]} dataAttributes - An string array of "data-xyz" data attributes WITHOUT
+   * the "data-" prefix. ie. ['id', 'some-var']
+   * @param {jquery Object} $tr - jQuery object reference to a table row
+   * @return {void}
+   */
+  function addDataAttributesToModal(modalId, dataAttributes, $dataEl) {
+    // Remove and add new data attributes
+    dataAttributes.forEach(function(attribute) {
+      $(modalId).removeAttr('data-' + attribute).attr('data-' + attribute, $dataEl.data(attribute));
+    });
+  }
+
+  /**
+   * Build <option>s markup for add collection to collection
+   * @param  {[objects]} collsHash An array of objects representing a needed data from Collection(s)
+   * @return {string} <options> string markup which will populate the <select> element
+   */
+  function buildSelectMarkup(collsHash) {
+    var options = collsHash.map(function(col) {
+      return '<option value="' + col.id + '">' + col.title_first + '</option>';
+    });
+    markup = options.join('');
+    return markup;
+  }
+
+  /**
+   * Handle "add to collection" element click event.
+   * @param  {Mouseevent} e
+   * @return {void}
+   */
+  function handleAddToCollection(e) {
+    e.preventDefault();
+    var $self = $(this),
+      $dataEl = (
+        $self.closest('#collections-list-table').length > 0 ?
+        $self.closest('tr') :
+        $self.closest('section')
+      ),
+      selectMarkup = '',
+      $firstOption = null;
+
+    // Show deny modal
+    if ($self.data('nestable') === false) {
+      $('#add-to-collection-deny-modal').modal('show');
+      return;
+    }
+    // Show modal permission denied
+    if ($self.data('hasaccess') === false) {
+      $('#add-to-collection-permission-deny-modal').modal('show');
+      return;
+    }
+    // Show add to collection modal below
+    addDataAttributesToModal('#add-to-collection-modal', ['id', 'post-url'], $dataEl);
+    // Grab reference to the default <option> in modal
+    $firstOption = $('#add-to-collection-modal').find('select[name="parent_id"] option');
+    // Remove all previous <options>s
+    $firstOption.not(':first').remove();
+    // Build new <option>s markup and put on DOM
+    selectMarkup = buildSelectMarkup($dataEl.data('collsHash'));
+    $(selectMarkup).insertAfter($firstOption);
+    // Show modal
+    $('#add-to-collection-modal').modal('show');
+  }
+
+  /**
+   * Handle "delete collection" button click event
+   * @param  {Mouseevent} e
+   * @return {void}
+   */
+  function handleDeleteCollection(e) {
+    e.preventDefault();
+    var $self = $(this),
+      $tr = $self.parents('tr'),
+      totalitems = $self.data('totalitems'),
+      // membership set to true indicates admin_set
+      membership = $self.data('membership') === true,
+      collectionId = $tr.data('id'),
+      modalId = '';
+
+    // Permissions denial
+    if ($(this).data('hasaccess') !== true) {
+      $('#collection-to-delete-deny-modal').modal('show');
+      return;
+    }
+    // Admin set with child items
+    if (totalitems > 0 && membership) {
+      $('#collection-admin-set-delete-deny-modal').modal('show');
+      return;
+    }
+    modalId = (totalitems > 0 ?
+      '#collection-to-delete-modal' :
+      '#collection-empty-to-delete-modal'
+    );
+    addDataAttributesToModal(modalId, ['id', 'post-delete-url'], $tr);
+    $(modalId).modal('show');
+  }
+
   // change the action based which collection is selected
   // This expects the form to have a path that includes the string 'collection_replace_id'
   $('[data-behavior="updates-collection"]').on('click', function() {
-      var string_to_replace = "collection_replace_id"
-      var form = $(this).closest("form");
-      var collection_id = $(".collection-selector:checked")[0].value;
+      var string_to_replace = "collection_replace_id",
+        form = $(this).closest("form"),
+        collection_id = $(".collection-selector:checked")[0].value;
+
       form[0].action = form[0].action.replace(string_to_replace, collection_id);
       form.append('<input type="hidden" value="add" name="collection[members]"></input>');
   });
 
-  // Show add collection to collection modal window
-  $('#documents').find('.add-to-collection').on('click', function(e) {
-      e.preventDefault();
-      var notNestable = $(this).data('nestable') === false;
-      var hasAccess = $(this).data('hasaccess') === true;
-      var collectionId = $(this).parents('tr')[0].id.split('_')[1];
 
-      if (notNestable) {
-        $('#add-to-collection-deny-modal').modal('show');
-      } else if (hasAccess) {
-        $('#add-to-collection-modal-' + collectionId).modal('show');
-      } else {
-        $('#add-to-collection-permission-deny-modal').modal('show');
-      }
-  });
+  // Set up click listeners for collections buttons which initiate modal action windows
+  $('.add-to-collection').on('click', handleAddToCollection);
+  $('.delete-collection-button').on('click', handleDeleteCollection);
+
 
   // Display access deny for edit request.
   $('#documents').find('.edit-collection-deny-button').on('click', function (e) {
@@ -32,35 +123,6 @@ Blacklight.onLoad(function () {
     $('#collections-to-edit-deny-modal').modal('show');
   });
 
-  // Delete collection button click from within a collection row
-  $('#documents').find('.delete-collection-button').on('click', function (e) {
-    e.preventDefault();
-
-    var totalitems = $(this).data('totalitems');
-    // membership set to true indicates admin_set
-    var membership = $(this).data('membership') === true;
-    var hasaccess = $(this).data('hasaccess') === true;    
-
-    var collectionId = $(this).parents('tr')[0].id.split('_')[1];
-    
-    if (hasaccess === false) {
-      $('#collection-to-delete-deny-modal').modal('show');
-    } else if (totalitems > 0) {
-      if (membership) {
-         $('#collection-admin-set-delete-deny-modal-' + collectionId).modal('show');
-      }
-      else{
-         $('#collection-to-delete-modal-' + collectionId).modal('show')
-      }
-    } else {
-      if (membership) {
-        $('#collection-admin-set-empty-to-delete-modal-' + collectionId).modal('show');
-      }
-      else {
-        $('#collection-empty-to-delete-modal-' + collectionId).modal('show');
-      }
-    }
-  });
 
   // Delete selected collections button click
   $('#delete-collections-button').on('click', function () {

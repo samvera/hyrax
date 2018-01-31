@@ -1,14 +1,20 @@
+<% id = @form.collection.id %>
+
 <div class="set-access-controls collections-forms relationships">
 
   <%# This Collection in Other Collections %>
-  <section>
+  <section data-source="edit"
+    data-id="<%= id %>"
+    data-colls-hash="<%= @form.available_parent_collections(scope: controller) %>"
+    data-post-url="<%= hyrax.dashboard_create_nest_collection_within_path(id) %>"
+    data-post-delete-url="<%= hyrax.dashboard_collection_path(id) %>">
+
     <h3><%= t('.headlines.this_collection_in_other_collections') %></h3>
     <p><%= t('.this_collection_in_other_collections_description') %></p>
 <!-- The user should have deposit access to the parent and read access to the child (the collection we are showing). No additional testing is needed here because edit access implies read access -->
     <article class="form-inline select-wrapper">
       <%= button_tag '',
         class: 'btn btn-primary add-to-collection',
-        onclick: "$('#add-to-collection-modal-#{@form.collection.id}').modal('show');",
         title: t('hyrax.collection.actions.nested_subcollection.desc'),
         type: 'button',
         data: { nestable: @form.nestable?,
@@ -102,6 +108,6 @@
   <%# Render modals %>
   <%= render 'modal_remove_from_collection' %>
   <%= render 'modal_remove_sub_collection' %>
-  <%= render 'hyrax/my/collections/modal_add_to_collection', id: @form.collection.id, source: 'edit' %>
+  <%= render 'hyrax/my/collections/modal_add_to_collection', source: 'edit' %>
   <%= render 'hyrax/my/collections/modal_add_subcollection', id: @form.collection.id, source: 'edit' %>
 </div>

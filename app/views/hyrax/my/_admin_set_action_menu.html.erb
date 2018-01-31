@@ -18,7 +18,7 @@
                     class: 'itemicon itemedit',
                     title: t("hyrax.dashboard.my.action.edit_admin_set") do %>
           <%= t("hyrax.dashboard.my.action.edit_admin_set") %>
-        <% end %>         
+        <% end %>
       </li>
     <% else %>
       <li role="menuitem" tabindex="-1">
@@ -31,11 +31,11 @@
     <% end %>
     <li role="menuitem" tabindex="-1">
       <%= link_to "#",
-                  class: 'itemicon itemtrash delete-collection-button',
-                  title: t("hyrax.dashboard.my.action.delete_admin_set"),
-                  data: { totalitems: admin_set_presenter.total_items ,
-                          membership: admin_set_presenter.collection_type_is_require_membership? ,
-                          hasaccess: (can?(:edit, admin_set_presenter.solr_document)) } do %>
+                     class: 'itemicon itemtrash delete-collection-button',
+                     title: t("hyrax.dashboard.my.action.delete_admin_set"),
+                     data: { totalitems: admin_set_presenter.total_items ,
+                             membership: admin_set_presenter.collection_type_is_require_membership? ,
+                             hasaccess: (can?(:edit, admin_set_presenter.solr_document)) } do %>
         <%= t("hyrax.dashboard.my.action.delete_admin_set") %>
       <% end %>
     </li>

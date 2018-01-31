@@ -1,5 +1,6 @@
 module Hyrax
   module Forms
+    # rubocop:disable Metrics/ClassLength
     class CollectionForm
       include HydraEditor::Form
       include HydraEditor::Form::Permissions
@@ -117,6 +118,17 @@ module Hyrax
         collection_member_service.available_member_subcollections.documents
       end
 
+      def available_parent_collections(scope:)
+        return @available_parents if @available_parents.present?
+
+        collection = Collection.find(id)
+        colls = Hyrax::Collections::NestedCollectionQueryService.available_parent_collections(child: collection, scope: scope, limit_to_id: nil)
+        @available_parents = colls.map do |col|
+          { "id" => col.id, "title_first" => col.title.first }
+        end
+        @available_parents.to_json
+      end
+
       private
 
         def all_files_with_access
@@ -139,5 +151,6 @@ module Hyrax
                                      presenter_args: [nil])
         end
     end
+    # rubocop:enable ClassLength
   end
 end

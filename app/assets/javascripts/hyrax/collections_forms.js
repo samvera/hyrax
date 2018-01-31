@@ -1,9 +1,9 @@
 Blacklight.onLoad(function () {
 
   // Post modal data via Ajax to avoid nesting <forms> in edit collections tabs screen
-  function submitModalAjax(url, data, $self) {
+  function submitModalAjax(url, type, data, $self) {
     $.ajax({
-      type: 'POST',
+      type: type,
       url: url,
       data: data
     }).done(function(response) {
@@ -22,6 +22,17 @@ Blacklight.onLoad(function () {
     return el;
   }
 
+  function handleDeleteCollection() {
+    var $self = $(this),
+      $modal = $self.closest('.modal'),
+      url = $modal.data('postDeleteUrl'),
+      data = {};
+    if (url.length === 0) {
+      return;
+    }
+    submitModalAjax(url, 'DELETE', data, $self);
+  }
+
   // Remove from collection button clicked
   $('#collection-controls').find('.remove-from-collection-button').on('click', function (e) {
     e.preventDefault();
@@ -35,18 +46,24 @@ Blacklight.onLoad(function () {
   });
 
   // Add to collection modal form post
-  $('[id^="add-to-collection-modal-"]').find('.modal-add-button').on('click', function (e) {
-    var url = $(this).data('postUrl'),
-      parentId = $(this).closest('.modal').find('[name="parent_id"]').val(),
-      $self = $(this),
+  $('#add-to-collection-modal').find('.modal-add-button').on('click', function (e) {
+    var $self = $(this),
+      $modal = $self.closest('.modal'),
+      url = $modal.data('postUrl'),
+      parentId = $modal.find('[name="parent_id"]').val(),
       data = {
-      parent_id: parentId,
-      source: $(this).data('source')
-    };
+        parent_id: parentId,
+        source: $self.data('source')
+      };
     if (url.length === 0) {
       return;
     }
-    submitModalAjax(url, data, $self);
+    submitModalAjax(url, 'POST', data, $self);
+  });
+
+  // Handle delete collection modal submit button click event
+  ['#collection-to-delete-modal', '#collection-empty-to-delete-modal'].forEach(function(id) {
+    $(id).find('.modal-delete-button').on('click', handleDeleteCollection);
   });
 
   // Add sub collection to collection form post
@@ -60,7 +77,7 @@ Blacklight.onLoad(function () {
     if (url.length === 0) {
       return;
     }
-    submitModalAjax(url, data);
+    submitModalAjax(url, 'POST', data, $(this));
   });
 
   // Handle add a subcollection button click on the collections show page

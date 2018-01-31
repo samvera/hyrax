@@ -1,5 +1,4 @@
-<div class="modal fade" id="add-to-collection-modal-<%= id %>" tabindex="-1" role="dialog" aria-labelledby="add-to-collection-label">
-<% collection = Collection.find id %>
+<div class="modal fade" id="add-to-collection-modal" tabindex="-1" role="dialog" aria-labelledby="add-to-collection-label">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
 
@@ -14,20 +13,12 @@
         <input type="hidden" name="source" value="<%= source %>"></input>
         <select name="parent_id">
           <option value="none"><%= t("hyrax.dashboard.my.action.select") %></option>
-          <% colls = Hyrax::Collections::NestedCollectionQueryService.available_parent_collections(child: collection, scope: controller, limit_to_id: nil) %>
-          <% ids = collection.member_of_collection_ids %>
-          <% colls.each {|coll| %>
-               <% unless ids.include?(coll.id) %>
-                 <option  value="<%= coll.id %>"><%= coll.title.first %></option>
-               <% end %>
-          <% } %>
         </select>
       </div>
 
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('helpers.action.cancel') %></button>
         <button type="button" class="btn btn-primary modal-add-button"
-          data-post-url="<%= hyrax.dashboard_create_nest_collection_within_path(collection.id) %>"
           data-source="<%= source %>">
           <%= t('hyrax.collection.actions.nested_subcollection.button_label') %>
         </button>

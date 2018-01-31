@@ -662,7 +662,7 @@ en:
           collections_confirmation_html: "Deleting <span class='pluralized'>this collection</span> will permanently remove <span class='pluralized'>this collection</span> from the repository.  Items in <span class='pluralized'>this collection</span> will remain in the repository.  Are you sure you want to delete <span class='pluralized'>this collection</span>?"
           collections_confirmation_no_items_html: "Are you sure you want to delete this collection? This action cannot be undone."
           delete_admin_set:        "Delete collection" # use same term for admin sets and collections
-          delete_admin_set_deny:   "This collection is defined as an %{type_name} and is not empty. To delete an %{type_name}, you must first remove (delete or move to another %{type_name} collection) all items from the %{type_name}."
+          delete_admin_set_deny:   "This collection is defined as Admin Set and is not empty. To delete this Admin Set, you must first remove (delete or move to another Admin Set collection) all items from the Admin Set."
           delete_collection:       "Delete collection"
           delete_collections:      "Delete collections"
           delete_collection_deny:  "You do not have sufficient privileges to delete this document."
