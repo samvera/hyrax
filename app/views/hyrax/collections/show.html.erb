@@ -76,6 +76,7 @@
 		</div>
 	</div>
 
+	<!-- Search results label -->
 	<% if @members_count > 0 %>
 		<div class="hyc-blacklight hyc-bl-title">
 			<h2>
@@ -89,7 +90,7 @@
 	<!-- Search bar -->
 	<div class="hyc-blacklight hyc-bl-search hyc-body row">
 		<div class="col-sm-8">
-			<%= render 'search_form', presenter: @presenter %>
+			<%= render 'search_form', presenter: @presenter, url: hyrax.collection_path(@presenter.id) %>
 		</div>
 	</div>
 
