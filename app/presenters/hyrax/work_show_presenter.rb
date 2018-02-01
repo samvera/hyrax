@@ -72,6 +72,7 @@ module Hyrax
       @representative_presenter ||=
         begin
           result = member_presenters([representative_id]).first
+          return nil if result.try(:id) == id
           if result.respond_to?(:representative_presenter)
             result.representative_presenter
           else
