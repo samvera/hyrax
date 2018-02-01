@@ -379,4 +379,40 @@ RSpec.describe Hyrax::WorkShowPresenter do
       end
     end
   end
+
+  describe "#manifest" do
+    let(:work) { create(:work_with_one_file) }
+    let(:solr_document) { SolrDocument.new(work.to_solr) }
+
+    describe "#sequence_rendering" do
+      subject do
+        presenter.sequence_rendering
+      end
+
+      before do
+        Hydra::Works::AddFileToFileSet.call(work.file_sets.first,
+                                            File.open(fixture_path + '/world.png'), :original_file)
+      end
+
+      it "returns a hash containing the rendering information" do
+        work.rendering_ids = [work.file_sets.first.id]
+        expect(subject).to be_an Array
+      end
+    end
+
+    describe "#manifest_metadata" do
+      subject do
+        presenter.manifest_metadata
+      end
+
+      before do
+        work.title = ['Test title', 'Another test title']
+      end
+
+      it "returns an array of metadata values" do
+        expect(subject[0]['label']).to eq('Title')
+        expect(subject[0]['value']).to include('Test title', 'Another test title')
+      end
+    end
+  end
 end

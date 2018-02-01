@@ -321,6 +321,13 @@ module Hyrax
       @admin_set_predicate ||= ::RDF::Vocab::DC.isPartOf
     end
 
+    # Set predicate for rendering to dc:hasFormat as defined in
+    #   IIIF Presentation API context:  http://iiif.io/api/presentation/2/context.json
+    attr_writer :rendering_predicate
+    def rendering_predicate
+      @rendering_predicate ||= ::RDF::Vocab::DC.hasFormat
+    end
+
     attr_writer :work_requires_files
     def work_requires_files?
       return true if @work_requires_files.nil?
@@ -401,6 +408,14 @@ module Hyrax
       @iiif_image_size_default ||= '600,'
     end
     attr_writer :iiif_image_size_default
+
+    # IIIF metadata - fields to display in the metadata section
+    #
+    # @return [#Array] fields
+    def iiif_metadata_fields
+      @iiif_metadata_fields ||= Hyrax::Forms::WorkForm.required_fields
+    end
+    attr_writer :iiif_metadata_fields
 
     # Should a button with "Share my work" show on the front page to users who are not logged in?
     attr_writer :display_share_button_when_not_logged_in
