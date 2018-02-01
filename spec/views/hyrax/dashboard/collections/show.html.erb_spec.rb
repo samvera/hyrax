@@ -22,6 +22,9 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
 
     allow(presenter).to receive(:total_items).and_return(0)
     allow(presenter).to receive(:collection_type).and_return(collection_type)
+    assign(:subcollection_count, 0)
+    assign(:parent_collection_count, 0)
+    assign(:members_count, 0)
 
     allow(collection_type).to receive(:nestable?).and_return(true)
     allow(collection_type).to receive(:title).and_return("User Collection")

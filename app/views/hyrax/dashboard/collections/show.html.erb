@@ -38,17 +38,25 @@
         </div>
       </section>
 
-      <!-- Search -->
+      <!-- Search results label -->
+      <% if @members_count > 0 %>
+          <div class="hyc-blacklight hyc-bl-title">
+            <h2>
+              <% if has_collection_search_parameters? %>
+                  <%= t('hyrax.dashboard.collections.show.search_results') %>
+              <% end %>
+            </h2>
+          </div>
+      <% end %>
+
+      <!-- Search bar -->
       <section class="collections-search-wrapper">
         <div class="row">
           <div class="col-sm-8">
             <%# TODO: leaving this as it was causes rerouting to the public show page. needs work %>
-            <%= render 'hyrax/collections/search_form', presenter: @presenter %>
+            <%= render 'hyrax/collections/search_form', presenter: @presenter, url: hyrax.dashboard_collection_path(@presenter.id) %>
           </div>
         </div>
-        <% if has_collection_search_parameters? %>
-            <%= t('.search_results') %>
-        <% end %>
       </section>
 
       <!-- Subcollections -->
@@ -59,9 +67,11 @@
             <div class="col-sm-6">
               <%= render 'subcollection_list', collection: @subcollection_docs %>
             </div>
-            <div class="col-sm-6">
-              <%= render 'show_subcollection_actions', presenter: @presenter %>
-            </div>
+            <% unless has_collection_search_parameters? %>
+              <div class="col-sm-6">
+                <%= render 'show_subcollection_actions', presenter: @presenter %>
+              </div>
+            <% end %>
           </div>
         </section>
       <% end %>
@@ -69,7 +79,9 @@
       <!-- Works -->
       <section class="works-wrapper">
         <h4><%= t('.item_count') %> (<%= @members_count %>)</h4>
-        <%= render 'show_add_items_actions', presenter: @presenter %>
+        <% unless has_collection_search_parameters? %>
+          <%= render 'show_add_items_actions', presenter: @presenter %>
+        <% end %>
 
         <%= render 'sort_and_per_page', collection: @presenter %>
         <%= render_document_index @member_docs %>
@@ -80,9 +92,11 @@
   </section><!-- /collections-panel-wrapper -->
 </div><!-- /collections-wrapper -->
 
-<% if @presenter.collection_type_is_nestable? %>
+<% if @presenter.collection_type_is_nestable? && !has_collection_search_parameters? %>
   <%= render 'hyrax/my/collections/modal_add_to_collection', source: 'show' %>
   <%= render 'hyrax/my/collections/modal_add_subcollection', id: @presenter.id, source: 'show' %>
 <% end %>
 
-<%= render '/shared/select_work_type_modal', create_work_presenter: @presenter.create_work_presenter if @presenter.draw_select_work_modal? %>
+<% unless has_collection_search_parameters? %>
+  <%= render '/shared/select_work_type_modal', create_work_presenter: @presenter.create_work_presenter if @presenter.draw_select_work_modal? %>
+<% end %>
