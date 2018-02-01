@@ -77,7 +77,7 @@
 	</div>
 
 	<!-- Search results label -->
-	<% if @members_count > 0 %>
+	<% if @members_count > 0 || @subcollection_count > 0 %>
 		<div class="hyc-blacklight hyc-bl-title">
 			<h2>
 				<% if has_collection_search_parameters? %>

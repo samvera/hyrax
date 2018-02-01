@@ -48,13 +48,53 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
     stub_template 'hyrax/collections/_media_display.html.erb' => '<span class="fa fa-cubes collection-icon-search"></span>'
     stub_template 'hyrax/my/collections/_modal_add_to_collection.html.erb' => 'modal add as subcollection'
     stub_template 'hyrax/my/collections/_modal_add_subcollection.html.erb' => 'modal add as parent'
-    render
   end
 
   it 'draws the page' do
+    render
     # Making sure that we are verifying that the _show_actions.html.erb is rendering
     expect(rendered).to have_css('.stubbed-actions', text: 'THE COLLECTION ACTIONS')
+    expect(rendered).to have_css('.stubbed-actions', text: 'THE SUBCOLLECTION ACTIONS')
     expect(rendered).to have_css('.stubbed-actions', text: 'THE ADD ITEMS ACTIONS')
     expect(rendered).to match '<span class="fa fa-cubes collection-icon-search"></span>'
+    expect(rendered).not_to have_text('Search Results within this Collection')
+  end
+
+  context 'when search results exist' do
+    before do
+      # rubocop:disable RSpec/AnyInstance
+      allow_any_instance_of(Hyrax::CollectionsHelper).to receive(:has_collection_search_parameters?).and_return(true)
+      # rubocop:enable RSpec/AnyInstance
+    end
+
+    context 'and only works are in search results' do
+      before do
+        assign(:subcollection_count, 0)
+        assign(:members_count, 1)
+        render
+      end
+
+      it 'shows results header' do
+        expect(rendered).to have_text('Search Results within this Collection')
+        expect(rendered).to have_css('.stubbed-actions', text: 'THE COLLECTION ACTIONS')
+        expect(rendered).not_to have_css('.stubbed-actions', text: 'THE SUBCOLLECTION ACTIONS')
+        expect(rendered).not_to have_css('.stubbed-actions', text: 'THE ADD ITEMS ACTIONS')
+      end
+    end
+
+    context ' and only subcollections are in search results' do
+      before do
+        assign(:subcollection_count, 1)
+        assign(:members_count, 0)
+        render
+      end
+
+      it 'shows results header' do
+        expect(rendered).to have_text('Search Results within this Collection')
+        expect(rendered).to have_css('.stubbed-actions', text: 'THE COLLECTION ACTIONS')
+        expect(rendered).not_to have_css('.stubbed-actions', text: 'THE SUBCOLLECTION ACTIONS')
+        expect(rendered).not_to have_css('.stubbed-actions', text: 'THE ADD ITEMS ACTIONS')
+      end
+    end
   end
 end
