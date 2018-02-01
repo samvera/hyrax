@@ -20,7 +20,7 @@
           <div class="col-sm-9 collection-description-wrapper">
             <!-- Parent Collection(s) -->
             <% if @presenter.collection_type_is_nestable? && @presenter.parent_collection_count > 0 %>
-                <h3><%= t('.parent_collection_header') %> (<%= @presenter.parent_collection_count %>)</h3>
+                <h4><%= t('.parent_collection_header') %> (<%= @presenter.parent_collection_count %>)</h4>
                 <section class="parent-collections-wrapper">
                 <%= render 'hyrax/dashboard/collections/show_parent_collections', presenter: @presenter %>
               </section>
@@ -54,7 +54,7 @@
       <!-- Subcollections -->
       <% if @presenter.collection_type_is_nestable? %>
         <section class="sub-collections-wrapper">
-          <h3><%= t('.subcollection_count') %> (<%= @subcollection_count %>)</h3>
+          <h4><%= t('.subcollection_count') %> (<%= @subcollection_count %>)</h4>
           <div class="row">
             <div class="col-sm-6">
               <%= render 'subcollection_list', collection: @subcollection_docs %>
@@ -68,7 +68,7 @@
 
       <!-- Works -->
       <section class="works-wrapper">
-        <h3><%= t('.item_count') %> (<%= @members_count %>)</h3>
+        <h4><%= t('.item_count') %> (<%= @members_count %>)</h4>
         <%= render 'show_add_items_actions', presenter: @presenter %>
 
         <%= render 'sort_and_per_page', collection: @presenter %>

@@ -2,7 +2,7 @@
             <div class="panel panel-default labels">
               <div class="panel-body">
                 <p><%= t('.note') %></p>
-                <h2><%= t('.add_sharing') %></h2>
+                <h3><%= t('.add_sharing') %></h3>
                 <% access_options = options_for_select([['Manager', 'manage'], ['Depositor', 'deposit'], ['Viewer', 'view']]) %>
                 <%= simple_form_for @form.permission_template,
                                     url: [hyrax, :dashboard, @form, :permission_template],
