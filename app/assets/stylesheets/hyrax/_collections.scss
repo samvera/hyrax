@@ -351,8 +351,55 @@ button.branding-banner-remove:hover {
   text-align: left;
 }
 
-// Styles for collection public landing page
+// Edit Collections - Sharing Tab
+.edit-sharing-tab {
 
+  .section-add-sharing {
+    padding-bottom: 40px;
+
+    .form-inline {
+      label,
+      input,
+      span,
+      select {
+        margin: 2px 10px;
+      }
+
+      label {
+        padding-right: 5px;
+        text-align: right;
+        width: 100px;
+      }
+
+      input,
+      select {
+        width: 200px;
+      }
+
+      .btn {
+        width: 75px;
+      }
+    }
+  }
+
+  .section-collection-sharing {
+
+    legend {
+      margin-bottom: 0;
+    }
+
+    .share-status {
+      th,
+      td {
+        &:last-of-type {
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+// Styles for collection public landing page
 .hyc-header {
 
   margin-bottom: 2em;
