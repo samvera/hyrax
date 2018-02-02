@@ -140,6 +140,8 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     end
 
     it 'has a collection type filter' do
+      expect(page).to have_link 'All Collection'
+      click_link 'All Collections'
       expect(page).to have_button 'Visibility'
       expect(page).to have_link 'Public',
                                 href: /visibility_ssi.+#{Regexp.escape(CGI.escape(collection1.visibility))}/
@@ -150,6 +152,67 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
                                 href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.gid))}/
       expect(page).to have_link 'AdminSet',
                                 href: /#{solr_model_field}.+#{Regexp.escape('AdminSet')}/
+      expect(page).not_to have_link 'Collection',
+                                    href: /#{solr_model_field}.+#{Regexp.escape('Collection')}/
+    end
+  end
+
+  describe 'Managed Collections tab (for non-admin users with shared access' do
+    let(:user2) { create(:user) }
+
+    before do
+      user
+      admin_user
+      collection1
+      collection2
+      collection3
+      collection4
+      create(:permission_template_access,
+             :manage,
+             permission_template: collection1.permission_template,
+             agent_type: 'user',
+             agent_id: user2.user_key)
+      collection1.reset_access_controls!
+      create(:permission_template_access,
+             :deposit,
+             permission_template: collection2.permission_template,
+             agent_type: 'user',
+             agent_id: user2.user_key)
+      collection2.reset_access_controls!
+      create(:permission_template_access,
+             :view,
+             permission_template: collection4.permission_template,
+             agent_type: 'user',
+             agent_id: user2.user_key)
+      collection4.reset_access_controls!
+      sign_in user2
+      visit '/dashboard/my/collections'
+    end
+
+    it 'lists managed collections only for user2' do
+      expect(page).to have_link 'Managed Collections'
+      click_link 'Managed Collections'
+      expect(page).to have_link(collection1.title.first)
+      expect(page).to have_link(collection2.title.first)
+      expect(page).not_to have_link(collection3.title.first)
+      expect(page).to have_link(collection4.title.first)
+      expect(page).not_to have_link(admin_set_a.title.first)
+      expect(page).not_to have_link(admin_set_b.title.first)
+    end
+
+    it 'has a collection type filter' do
+      expect(page).to have_link 'Managed Collections'
+      click_link 'Managed Collections'
+      expect(page).to have_button 'Visibility'
+      expect(page).to have_link 'Public',
+                                href: /visibility_ssi.+#{Regexp.escape(CGI.escape(collection1.visibility))}/
+      expect(page).to have_button 'Collection Type'
+      expect(page).to have_link collection_type.title,
+                                href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(collection_type.gid))}/
+      expect(page).to have_link user_collection_type.title,
+                                href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.gid))}/
+      expect(page).not_to have_link 'AdminSet',
+                                    href: /#{solr_model_field}.+#{Regexp.escape('AdminSet')}/
       expect(page).not_to have_link 'Collection',
                                     href: /#{solr_model_field}.+#{Regexp.escape('Collection')}/
     end
