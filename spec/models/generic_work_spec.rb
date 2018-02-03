@@ -22,7 +22,7 @@ describe GenericWork do
   end
 
   describe "to_sipity_entity" do
-    let(:state) { FactoryGirl.create(:workflow_state) }
+    let(:state) { FactoryBot.create(:workflow_state) }
     let(:work) { create(:work) }
     before do
       Sipity::Entity.create!(proxy_for_global_id: work.to_global_id.to_s,

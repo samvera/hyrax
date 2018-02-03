@@ -105,7 +105,7 @@ RSpec.describe "hyrax/dashboard/index.html.erb", type: :view do
 
     context "with notifications" do
       before do
-        assign(:notifications, FactoryGirl.create(:user_with_mail).mailbox.inbox)
+        assign(:notifications, FactoryBot.create(:user_with_mail).mailbox.inbox)
       end
 
       it "shows a link to all notifications" do

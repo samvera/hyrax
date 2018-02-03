@@ -1,11 +1,11 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :user do
     sequence(:email) { |n| "user#{n}@example.com" }
     password 'password'
 
     transient do
       # Allow for custom groups when a user is instantiated.
-      # @example FactoryGirl.create(:user, groups: 'avacado')
+      # @example FactoryBot.create(:user, groups: 'avacado')
       groups []
     end
 

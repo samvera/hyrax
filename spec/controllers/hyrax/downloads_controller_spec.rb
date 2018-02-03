@@ -4,9 +4,9 @@ describe Hyrax::DownloadsController do
   routes { Hyrax::Engine.routes }
 
   describe '#show' do
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
     let(:file_set) do
-      FactoryGirl.create(:file_with_work, user: user, content: File.open(fixture_path + '/image.png'))
+      FactoryBot.create(:file_with_work, user: user, content: File.open(fixture_path + '/image.png'))
     end
     let(:default_image) { ActionController::Base.helpers.image_path 'default.png' }
     it 'calls render_404 if the object does not exist' do
@@ -15,7 +15,7 @@ describe Hyrax::DownloadsController do
     end
 
     context "when user doesn't have access" do
-      let(:another_user) { FactoryGirl.create(:user) }
+      let(:another_user) { FactoryBot.create(:user) }
       before { sign_in another_user }
 
       it 'redirects to the default image' do

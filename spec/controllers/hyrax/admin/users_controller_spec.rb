@@ -1,12 +1,12 @@
 describe Hyrax::Admin::UsersController, type: :controller do
-  let!(:user) { FactoryGirl.create(:user) }
+  let!(:user) { FactoryBot.create(:user) }
   before do
     expect(controller).to receive(:authorize!).with(:read, :admin_dashboard).and_return(true)
   end
-  let!(:admin_user) { FactoryGirl.create(:user, groups: 'admin') }
+  let!(:admin_user) { FactoryBot.create(:user, groups: 'admin') }
   let!(:audit_user) { User.audit_user }
   let!(:batch_user) { User.batch_user }
-  let!(:guest_user) { FactoryGirl.create(:user, :guest) }
+  let!(:guest_user) { FactoryBot.create(:user, :guest) }
 
   describe "#index" do
     it "is successful" do

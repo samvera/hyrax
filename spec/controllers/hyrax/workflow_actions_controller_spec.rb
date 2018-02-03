@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Hyrax::WorkflowActionsController, type: :controller do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   let(:generic_work) { GenericWork.new(id: '123') }
   let(:form) { instance_double(Hyrax::Forms::WorkflowActionForm) }
   routes { Rails.application.routes }

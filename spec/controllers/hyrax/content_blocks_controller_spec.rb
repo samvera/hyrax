@@ -1,6 +1,6 @@
 describe Hyrax::ContentBlocksController, type: :controller do
   describe "#update" do
-    let(:content_block) { FactoryGirl.create(:content_block) }
+    let(:content_block) { FactoryBot.create(:content_block) }
     before { request.env["HTTP_REFERER"] = "whence_i_came" }
 
     context "when not logged in" do
@@ -30,7 +30,7 @@ describe Hyrax::ContentBlocksController, type: :controller do
     end
 
     context "when logged in" do
-      let(:user) { FactoryGirl.create(:user) }
+      let(:user) { FactoryBot.create(:user) }
       before { allow(controller).to receive_messages(current_user: user) }
 
       context "as a user in the admin group" do
