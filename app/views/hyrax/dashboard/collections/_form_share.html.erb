@@ -9,54 +9,58 @@
         <% access_options = options_for_select([['Manager', 'manage'], ['Depositor', 'deposit'], ['Viewer', 'view']]) %>
 
         <%= simple_form_for @form.permission_template,
-          url: [hyrax, :dashboard, @form, :permission_template],
-          html: { id: 'group-participants-form' } do |f| %>
+                            url: [hyrax, :dashboard, @form, :permission_template],
+                            html: { id: 'group-participants-form' } do |f| %>
 
           <%= f.fields_for 'access_grants_attributes',
-            f.object.access_grants.build(agent_type: 'group'),
-            index: 0 do |builder| %>
+                           f.object.access_grants.build(agent_type: 'group'),
+                           index: 0 do |builder| %>
 
             <div class="form-inline add-sharing-form">
-              <div class="form-group">
-                <label><%= t('.add_group') %>:</label>
+              <div class="form-group col-md-10 col-xs-8">
+                <label class="col-md-2 col-xs-4 control-label"><%= t('.add_group') %>:</label>
                 <%= builder.hidden_field :agent_type %>
-                <%= builder.text_field :agent_id, placeholder: "Search for a group...", class: 'form-control search-input' %>
+                <%= builder.text_field :agent_id,
+                                       placeholder: "Search for a group...",
+                                       class: 'form-control search-input' %>
                 as
-                <%= builder.select :access, access_options,
-                { prompt: "Select a role..." },
-                class: 'form-control' %>
+                <%= builder.select :access,
+                                   access_options,
+                                   { prompt: "Select a role..." },
+                                   class: 'form-control' %>
 
                 <%= f.submit t('helpers.submit.hyrax_permission_template_access.create'), class: 'btn btn-info' %>
               </div>
             </div>
-
           <% end %>
         <% end %>
 
         <%= simple_form_for @form.permission_template,
-          url: [hyrax, :dashboard, @form, :permission_template],
-          html: { id: 'user-participants-form' } do |f| %>
+                            url: [hyrax, :dashboard, @form, :permission_template],
+                            html: { id: 'user-participants-form' } do |f| %>
 
           <%= f.fields_for 'access_grants_attributes',
-          f.object.access_grants.build(agent_type: 'user'),
-          index: 0 do |builder| %>
+                           f.object.access_grants.build(agent_type: 'user'),
+                           index: 0 do |builder| %>
 
           <div class="form-inline add-users">
-            <div class="form-group">
-              <label><%= t('.add_user') %>:</label>
+            <div class="form-group col-md-10 col-xs-8">
+              <label class="col-md-2 col-xs-4 control-label"><%= t('.add_user') %>:</label>
               <%= builder.hidden_field :agent_type %>
-              <%= builder.text_field :agent_id, placeholder: "Search for a user...", class: 'form-control search-input' %>
+              <%= builder.text_field :agent_id,
+                                     placeholder: "Search for a user..." %>
               as
               <%= builder.select :access,
-              access_options,
-              { prompt: "Select a role..." },
-              class: 'form-control' %>
+                                 access_options,
+                                 { prompt: "Select a role..." },
+                                 class: 'form-control' %>
 
               <%= f.submit t('helpers.submit.hyrax_permission_template_access.create'), class: 'btn btn-info' %>
             </div>
           </div>
           <% end %>
         <% end %>
+        <p class="help-block"><%= t('hyrax.admin.admin_sets.form.note')%></p>
       </section>
 
       <section class="section-collection-sharing">
