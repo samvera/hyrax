@@ -80,7 +80,7 @@ EOF
   spec.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0'
   spec.add_development_dependency "capybara", '~> 2.4'
   spec.add_development_dependency "poltergeist", "~> 1.5"
-  spec.add_development_dependency "factory_girl_rails", '~> 4.4'
+  spec.add_development_dependency "factory_bot_rails", '~> 4.4'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "jasmine", '~> 2.3'
   spec.add_development_dependency 'rubocop', '~> 0.47.0'

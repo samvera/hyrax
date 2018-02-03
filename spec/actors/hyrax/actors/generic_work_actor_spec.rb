@@ -85,7 +85,7 @@ describe Hyrax::Actors::GenericWorkActor do
       context 'with in_work_ids' do
         let(:parent) { create(:generic_work, user: user) }
         let(:attributes) do
-          FactoryGirl.attributes_for(:generic_work, visibility: visibility, admin_set_id: admin_set.id).merge(
+          FactoryBot.attributes_for(:generic_work, visibility: visibility, admin_set_id: admin_set.id).merge(
             in_works_ids: [parent.id]
           )
         end
@@ -103,7 +103,7 @@ describe Hyrax::Actors::GenericWorkActor do
 
       context 'with a file' do
         let(:attributes) do
-          FactoryGirl.attributes_for(:generic_work, admin_set_id: admin_set.id, visibility: visibility).tap do |a|
+          FactoryBot.attributes_for(:generic_work, admin_set_id: admin_set.id, visibility: visibility).tap do |a|
             a[:files] = file
           end
         end
@@ -138,7 +138,7 @@ describe Hyrax::Actors::GenericWorkActor do
       context 'with multiple files' do
         let(:file_actor) { double }
         let(:attributes) do
-          FactoryGirl.attributes_for(:generic_work, admin_set_id: admin_set.id, visibility: visibility).tap do |a|
+          FactoryBot.attributes_for(:generic_work, admin_set_id: admin_set.id, visibility: visibility).tap do |a|
             a[:files] = [file, file]
           end
         end
@@ -168,7 +168,7 @@ describe Hyrax::Actors::GenericWorkActor do
 
       context 'with a present and a blank title' do
         let(:attributes) do
-          FactoryGirl.attributes_for(:generic_work, admin_set_id: admin_set.id, title: ['this is present', ''])
+          FactoryBot.attributes_for(:generic_work, admin_set_id: admin_set.id, title: ['this is present', ''])
         end
 
         it 'stamps each link with the access rights' do
@@ -204,7 +204,7 @@ describe Hyrax::Actors::GenericWorkActor do
       let(:parent) { create(:generic_work, user: user) }
       let(:old_parent) { create(:generic_work, user: user) }
       let(:attributes) do
-        FactoryGirl.attributes_for(:generic_work).merge(
+        FactoryBot.attributes_for(:generic_work).merge(
           in_works_ids: [parent.id]
         )
       end
@@ -219,9 +219,9 @@ describe Hyrax::Actors::GenericWorkActor do
       end
     end
     context 'without in_works_ids' do
-      let(:old_parent) { FactoryGirl.create(:generic_work) }
+      let(:old_parent) { FactoryBot.create(:generic_work) }
       let(:attributes) do
-        FactoryGirl.attributes_for(:generic_work).merge(
+        FactoryBot.attributes_for(:generic_work).merge(
           in_works_ids: []
         )
       end
@@ -239,9 +239,9 @@ describe Hyrax::Actors::GenericWorkActor do
       end
     end
     context 'with nil in_works_ids' do
-      let(:parent) { FactoryGirl.create(:generic_work) }
+      let(:parent) { FactoryBot.create(:generic_work) }
       let(:attributes) do
-        FactoryGirl.attributes_for(:generic_work).merge(
+        FactoryBot.attributes_for(:generic_work).merge(
           in_works_ids: nil
         )
       end
@@ -260,7 +260,7 @@ describe Hyrax::Actors::GenericWorkActor do
       let!(:collection1) { create(:collection, user: user) }
       let!(:collection2) { create(:collection, user: user) }
       let(:attributes) do
-        FactoryGirl.attributes_for(:generic_work, member_of_collection_ids: [collection2.id])
+        FactoryBot.attributes_for(:generic_work, member_of_collection_ids: [collection2.id])
       end
       before do
         curation_concern.apply_depositor_metadata(user.user_key)
@@ -288,7 +288,7 @@ describe Hyrax::Actors::GenericWorkActor do
       let(:file_set2) { create(:file_set) }
       let(:curation_concern) { create(:generic_work, user: user, ordered_members: [file_set1, file_set2], admin_set_id: admin_set.id) }
       let(:attributes) do
-        FactoryGirl.attributes_for(:generic_work, ordered_member_ids: [file_set2.id, file_set1.id])
+        FactoryBot.attributes_for(:generic_work, ordered_member_ids: [file_set2.id, file_set1.id])
       end
       it 'updates the order of file sets' do
         expect(curation_concern.ordered_members.to_a).to eq [file_set1, file_set2]
@@ -300,7 +300,7 @@ describe Hyrax::Actors::GenericWorkActor do
       ## Is this something we want to support?
       context "when told to stop ordering a file set" do
         let(:attributes) do
-          FactoryGirl.attributes_for(:generic_work, ordered_member_ids: [file_set2.id])
+          FactoryBot.attributes_for(:generic_work, ordered_member_ids: [file_set2.id])
         end
         it "works" do
           expect(curation_concern.ordered_members.to_a).to eq [file_set1, file_set2]

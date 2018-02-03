@@ -8,7 +8,7 @@ describe 'hyrax/base/items', type: :view do
   let(:solr_doc) { double(id: '123', human_readable_type: 'Work') }
   let(:solr_doc_file) do
     SolrDocument.new(
-      FactoryGirl.build(:file_set).to_solr.merge(
+      FactoryBot.build(:file_set).to_solr.merge(
         id: "file",
         title_tesim: ["Child File"],
         label_tesim: ["ChildFile.pdf"]
@@ -17,7 +17,7 @@ describe 'hyrax/base/items', type: :view do
   end
   let(:solr_doc_work) do
     SolrDocument.new(
-      FactoryGirl.build(:generic_work).to_solr.merge(
+      FactoryBot.build(:generic_work).to_solr.merge(
         id: "work",
         title_tesim: ["Child Work"]
       )

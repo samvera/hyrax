@@ -1,5 +1,5 @@
 describe Hyrax::UsersController, type: :controller do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   before do
     sign_in user
     allow_any_instance_of(User).to receive(:groups).and_return([])
@@ -86,7 +86,7 @@ describe Hyrax::UsersController, type: :controller do
       end
 
       it "uses the base query" do
-        u3 = FactoryGirl.create(:user)
+        u3 = FactoryBot.create(:user)
         allow(controller).to receive(:base_query).and_return(["email == \"#{u3.email}\""])
         get :index
         expect(assigns[:users]).to include(u3)
@@ -105,7 +105,7 @@ describe Hyrax::UsersController, type: :controller do
     end
 
     context "when user attempts to edit another profile" do
-      let(:another_user) { FactoryGirl.create(:user) }
+      let(:another_user) { FactoryBot.create(:user) }
       context 'with default abilities' do
         it "redirects to show profile" do
           expect_any_instance_of(Ability).to receive(:can?).with(:edit, another_user).and_return(false)
@@ -146,7 +146,7 @@ describe Hyrax::UsersController, type: :controller do
 
   describe "#update" do
     context "the profile of another user" do
-      let(:another_user) { FactoryGirl.create(:user) }
+      let(:another_user) { FactoryBot.create(:user) }
       it "does not allow other users to update" do
         post :update, params: { id: another_user.user_key, user: { avatar: nil } }
         expect(response).to redirect_to(routes.url_helpers.profile_path(another_user.to_param, locale: 'en'))

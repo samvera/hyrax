@@ -1,6 +1,6 @@
 RSpec.feature 'show admin set' do
-  let(:admin_set) { FactoryGirl.create(:admin_set) }
-  let(:admin) { FactoryGirl.create(:admin) }
+  let(:admin_set) { FactoryBot.create(:admin_set) }
+  let(:admin) { FactoryBot.create(:admin) }
 
   scenario "show admin set" do
     login_as admin

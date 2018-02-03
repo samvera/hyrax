@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :single_use_link do
     factory :show_link do
       itemId 'fs-id'

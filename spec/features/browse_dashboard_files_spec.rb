@@ -1,8 +1,8 @@
 describe "Browse Dashboard", type: :feature do
-  let(:user) { FactoryGirl.create(:user) }
-  let!(:dissertation) { FactoryGirl.create(:public_work, user: user, title: ["Fake PDF Title"], subject: %w(lorem ipsum dolor sit amet)) }
-  let!(:mp3_work) { FactoryGirl.create(:public_work, user: user, title: ["Test Document MP3"], subject: %w(consectetur adipisicing elit)) }
-  let!(:audio_work) { FactoryGirl.create(:public_work, user: user, title: ["Fake Wav Files"], subject: %w(sed do eiusmod tempor incididunt ut labore)) }
+  let(:user) { FactoryBot.create(:user) }
+  let!(:dissertation) { FactoryBot.create(:public_work, user: user, title: ["Fake PDF Title"], subject: %w(lorem ipsum dolor sit amet)) }
+  let!(:mp3_work) { FactoryBot.create(:public_work, user: user, title: ["Test Document MP3"], subject: %w(consectetur adipisicing elit)) }
+  let!(:audio_work) { FactoryBot.create(:public_work, user: user, title: ["Fake Wav Files"], subject: %w(sed do eiusmod tempor incididunt ut labore)) }
 
   before do
     sign_in user

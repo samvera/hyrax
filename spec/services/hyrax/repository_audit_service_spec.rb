@@ -1,5 +1,5 @@
 describe Hyrax::RepositoryAuditService do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   let!(:file) do
     FileSet.create! do |file|
       file.add_file(File.open(fixture_path + '/world.png'), path: 'content', original_name: 'world.png')

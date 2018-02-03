@@ -2,7 +2,7 @@ describe Hyrax::TinymceAssetsController, type: :controller do
   let(:file) { fixture_file_upload('/world.png', 'image/png') }
 
   context "when logged in" do
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
     before { sign_in user }
 
     context "as a user who can upload" do

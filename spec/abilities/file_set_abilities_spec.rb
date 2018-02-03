@@ -26,7 +26,7 @@ describe 'User' do
       end
 
       describe 'as a repository manager' do
-        let(:manager_user) { FactoryGirl.create(:admin) }
+        let(:manager_user) { FactoryBot.create(:admin) }
         let(:creating_user) { user }
         let(:current_user) { manager_user }
         it do
@@ -39,7 +39,7 @@ describe 'User' do
       end
 
       describe 'another authenticated user' do
-        let(:creating_user) { FactoryGirl.create(:user) }
+        let(:creating_user) { FactoryBot.create(:user) }
         let(:current_user) { user }
 
         it do
@@ -52,7 +52,7 @@ describe 'User' do
       end
 
       describe 'a nil user' do
-        let(:creating_user) { FactoryGirl.create(:user) }
+        let(:creating_user) { FactoryBot.create(:user) }
         let(:current_user) { nil }
         it do
           is_expected.not_to be_able_to(:create, FileSet.new)
