@@ -13,7 +13,7 @@ class IngestFileJob < ActiveJob::Base
     # Wrap in an IO decorator to attach passed-in options
     local_file = Hydra::Derivatives::IoDecorator.new(File.open(filepath, "rb"))
     local_file.mime_type = opts.fetch(:mime_type, nil)
-    local_file.original_name = opts.fetch(:filename, File.basename(filepath))
+    local_file.original_filename = opts.fetch(:filename, File.basename(filepath))
 
     # Tell AddFileToFileSet service to skip versioning because versions will be minted by
     # VersionCommitter when necessary during save_characterize_and_record_committer.

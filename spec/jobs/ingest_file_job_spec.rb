@@ -69,7 +69,7 @@ describe IngestFileJob do
       expect(Hyrax::VersioningService.latest_version_of(file_set.reload.original_file).label).to eq 'version2'
       expect(file_set.original_file.content).to eq File.open(file2).read
       expect(file_set.original_file.mime_type).to eq 'text/plain'
-      expect(file_set.original_file.original_name).to eq 'small_file.txt'
+      expect(file_set.original_file.original_filename).to eq 'small_file.txt'
 
       # the user for each version
       expect(Hyrax::VersionCommitter.where(version_id: versions.first.uri).pluck(:committer_login)).to eq [user.user_key]

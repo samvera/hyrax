@@ -15,7 +15,7 @@ module Hyrax
       remote_file = retrieve_remote_file(file_set, directives)
       remote_file.content = file
       remote_file.mime_type = determine_mime_type(file)
-      remote_file.original_name = determine_original_name(file)
+      remote_file.original_filename = determine_original_name(file)
       file_set.save
     end
 

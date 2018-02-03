@@ -8,7 +8,7 @@ describe CharacterizeJob do
   let(:file) do
     Hydra::PCDM::File.new.tap do |f|
       f.content = 'foo'
-      f.original_name = 'picture.png'
+      f.original_filename = 'picture.png'
       f.save!
     end
   end

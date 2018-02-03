@@ -15,7 +15,7 @@ describe CreateDerivativesJob do
     let(:file) do
       Hydra::PCDM::File.new.tap do |f|
         f.content = 'foo'
-        f.original_name = 'picture.png'
+        f.original_filename = 'picture.png'
         f.save!
       end
     end
@@ -70,7 +70,7 @@ describe CreateDerivativesJob do
     let(:file) do
       Hydra::PCDM::File.new do |f|
         f.content = File.open(File.join(fixture_path, "hyrax/hyrax_test4.pdf"))
-        f.original_name = 'test.pdf'
+        f.original_filename = 'test.pdf'
         f.mime_type = 'application/pdf'
       end
     end
