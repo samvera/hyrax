@@ -8,9 +8,9 @@ module Hyrax
       def find_or_retrieve(repository_file_id, id, filepath = nil)
         return filepath if filepath && File.exist?(filepath)
         repository_file = Hydra::PCDM::File.find(repository_file_id)
-        working_path = full_filename(id, repository_file.original_name)
+        working_path = full_filename(id, repository_file.original_filename)
         if File.exist?(working_path)
-          Rails.logger.debug "#{repository_file.original_name} already exists in the working directory at #{working_path}"
+          Rails.logger.debug "#{repository_file.original_filename} already exists in the working directory at #{working_path}"
           return working_path
         end
         copy_repository_resource_to_working_directory(repository_file, id)
@@ -28,9 +28,9 @@ module Hyrax
       # @param [String] id the identifier of the FileSet
       # @return [String] path of the working file
       def copy_repository_resource_to_working_directory(file, id)
-        Rails.logger.debug "Loading #{file.original_name} (#{file.id}) from the repository to the working directory"
+        Rails.logger.debug "Loading #{file.original_filename} (#{file.id}) from the repository to the working directory"
         # TODO: this causes a load into memory, which we'd like to avoid
-        copy_stream_to_working_directory(id, file.original_name, StringIO.new(file.content))
+        copy_stream_to_working_directory(id, file.original_filename, StringIO.new(file.content))
       end
 
       private

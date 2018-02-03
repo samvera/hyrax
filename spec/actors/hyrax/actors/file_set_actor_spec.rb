@@ -342,7 +342,7 @@ describe Hyrax::Actors::FileSetActor do
 
     it "restores the first versions's content and metadata" do
       actor.revert_content(version1)
-      expect(restored_content.original_name).to eq file1
+      expect(restored_content.original_filename).to eq file1
     end
   end
 end
