@@ -151,6 +151,97 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
 
         # TODO: Test adding participants
       end
+
+      context 'when editing default user collection type' do
+        let(:title_old) { user_collection_type.title }
+        let(:description_old) { user_collection_type.description }
+        let(:title_new) { 'User Collection modified' }
+        let(:description_new) { 'Change in description for user collection type.' }
+
+        before do
+          user_collection_type
+          sign_in admin_user
+          visit "/admin/collection_types/#{user_collection_type.id}/edit"
+        end
+
+        it 'allows editing of metadata, but not settings', :js do
+          expect(page).to have_content "Edit Collection Type: #{title_old}"
+
+          # confirm metadata fields have original values
+          expect(page).to have_selector "input#collection_type_title[value='#{title_old}']"
+          expect(page).to have_selector 'textarea#collection_type_description', text: description_old
+
+          # set values and save
+          fill_in('Type name', with: title_new)
+          fill_in('Type description', with: description_new)
+
+          click_button('Save changes')
+
+          expect(page).to have_content "Edit Collection Type: #{title_new}"
+
+          # confirm values were set
+          expect(page).to have_selector "input#collection_type_title[value='#{title_new}']"
+          expect(page).to have_selector 'textarea#collection_type_description', text: description_new
+
+          click_link('Settings', href: '#settings')
+
+          # confirm default user collection checkboxes are set to appropriate values
+          expect(page).to have_checked_field('collection_type_nestable', disabled: true)
+          expect(page).to have_checked_field('collection_type_discoverable', disabled: true)
+          expect(page).to have_checked_field('collection_type_sharable', disabled: true)
+          expect(page).to have_unchecked_field('collection_type_share_applies_to_new_works', disabled: true)
+          expect(page).to have_checked_field('collection_type_allow_multiple_membership', disabled: true)
+
+          # confirm all admin_set only checkboxes are off and disabled
+          expect(page).to have_unchecked_field('collection_type_require_membership', disabled: true)
+          expect(page).to have_unchecked_field('collection_type_assigns_workflow', disabled: true)
+          expect(page).to have_unchecked_field('collection_type_assigns_visibility', disabled: true)
+        end
+      end
+
+      context 'when editing admin set collection type' do
+        let(:title_old) { admin_set_type.title }
+        let(:description_old) { admin_set_type.description }
+        let(:description_new) { 'Change in description for admin set collection type.' }
+
+        before do
+          admin_set_type
+          sign_in admin_user
+          visit "/admin/collection_types/#{admin_set_type.id}/edit"
+        end
+
+        it 'allows editing of metadata except title, but not settings', :js do
+          expect(page).to have_content "Edit Collection Type: #{title_old}"
+
+          # confirm metadata fields have original values
+          expect(page).to have_field("collection_type_title", disabled: true)
+          expect(page).to have_selector 'textarea#collection_type_description', text: description_old
+
+          # set values and save
+          fill_in('Type description', with: description_new)
+
+          click_button('Save changes')
+
+          expect(page).to have_content "Edit Collection Type: #{title_old}"
+
+          # confirm values were set
+          expect(page).to have_selector 'textarea#collection_type_description', text: description_new
+
+          click_link('Settings', href: '#settings')
+
+          # confirm default user collection checkboxes are set to appropriate values
+          expect(page).to have_unchecked_field('collection_type_nestable', disabled: true)
+          expect(page).to have_unchecked_field('collection_type_discoverable', disabled: true)
+          expect(page).to have_checked_field('collection_type_sharable', disabled: true)
+          expect(page).to have_checked_field('collection_type_share_applies_to_new_works', disabled: true)
+          expect(page).to have_unchecked_field('collection_type_allow_multiple_membership', disabled: true)
+
+          # confirm all admin_set only checkboxes are off and disabled
+          expect(page).to have_checked_field('collection_type_require_membership', disabled: true)
+          expect(page).to have_checked_field('collection_type_assigns_workflow', disabled: true)
+          expect(page).to have_checked_field('collection_type_assigns_visibility', disabled: true)
+        end
+      end
     end
 
     context 'when collections exist of this type' do
