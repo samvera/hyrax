@@ -33,7 +33,7 @@ export default class {
         }
     }
     else {
-        // if sharable is not selected, then share_applies_to_enw_works must be unchecked and disabled so it cannot be changed
+        // if sharable is not selected, then share_applies_to_new_works must be unchecked and disabled so it cannot be changed
         this.applies_to_new_works.prop("checked", false)
         this.applies_to_new_works.prop("disabled", true)
         this.addDisabledClasses()

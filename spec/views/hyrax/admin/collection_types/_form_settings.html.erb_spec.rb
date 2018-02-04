@@ -42,7 +42,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form_settings.html.erb', type: :vi
 
       INPUT_IDS.each do |id|
         it "renders the #{id} checkbox to be enabled" do
-          match = rendered.match(/(<input.*id="#{id}".*>)/)
+          match = rendered.match(/(<input.*id="#{id}".*)/)
           expect(match).not_to be_nil
           expect(match[1].index('disabled="disabled"')).to be_nil
         end
@@ -60,7 +60,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form_settings.html.erb', type: :vi
 
       INPUT_IDS.each do |id|
         it "renders the #{id} checkbox to be disabled" do
-          match = rendered.match(/(<input.*id="#{id}".*>)/)
+          match = rendered.match(/(<input.*id="#{id}".*)/)
           expect(match).not_to be_nil
           expect(match[1].index('disabled="disabled"')).not_to be_nil
         end
@@ -79,7 +79,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form_settings.html.erb', type: :vi
 
     INPUT_IDS.each do |id|
       it "renders the #{id} checkbox to be disabled" do
-        match = rendered.match(/(<input.*id="#{id}".*>)/)
+        match = rendered.match(/(<input.*id="#{id}".*)/)
         expect(match).not_to be_nil
         expect(match[1].index('disabled="disabled"')).not_to be_nil
       end
@@ -97,7 +97,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form_settings.html.erb', type: :vi
 
     INPUT_IDS.each do |id|
       it "renders the #{id} checkbox to be disabled" do
-        match = rendered.match(/(<input.*id="#{id}".*>)/)
+        match = rendered.match(/(<input.*id="#{id}".*)/)
         expect(match).not_to be_nil
         expect(match[1].index('disabled="disabled"')).not_to be_nil
       end
