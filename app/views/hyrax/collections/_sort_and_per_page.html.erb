@@ -4,7 +4,7 @@
 		<fieldset class="pull-left">
 			<legend class="sr-only"><%= t('hyrax.sort_label') %></legend>
 			<%= label_tag(:sort, '<span>Sort by:</span>'.html_safe) %>
-			<%= select_tag(:sort, options_for_select(active_sort_fields, h(params[:sort]))) %>
+			<%= select_tag(:sort, options_from_collection_for_select(active_sort_fields, 'first', lambda {|field| field.last.label}, h(params[:sort]))) %>
 			<%= label_tag(:per_page) do %>
 		    <span class="tiny-nudge">Results per page:</span>
 				<%= select_tag(:per_page, options_for_select(['10', '20', '50', '100'], h(params[:per_page])), title: "Number of results to display per page") %>

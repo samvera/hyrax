@@ -391,10 +391,19 @@ en:
         required_descriptions: Describe your work
         required_files:        Add files
         requirements:          Requirements
+      form_representative:
+        legend_html:           Representative Media
+        help_html:             "Select the file with media that represents this work."
+      form_rendering:
+        legend_html:           Rendering
+        help_html:             "Select file(s) to be offered as a download for every image in Universal Viewer, for example a PDF of the whole work."
       form_share:
         add_sharing: Add Sharing
         currently_sharing: Currently Shared With
         directions: Regardless of the visibility settings for this work, you can also share it with other users and groups.
+      form_thumbnail:
+        legend_html:           Thumbnail
+        help_html:             "Select the file to be used as the thumbnail for this work."
       items:
         actions: Actions
         date_uploaded: "Date Uploaded"
@@ -745,6 +754,7 @@ en:
           subtitle:         New user signups
           title:            User Activity
       stats:
+<<<<<<< HEAD
         collections:        "Collections created"
         file_downloads:     "Download"
         file_views:         "View"
@@ -763,6 +773,27 @@ en:
       suffix:           "@example.org"
     document_language:  "en"
     edit_profile:       "Edit Profile"
+=======
+        collections: Collections created
+        file_downloads: Download
+        file_views: View
+        files: Files deposited
+        heading: Your Statistics
+        works: Works created
+      title: My Dashboard
+      transfer_of_ownership: Transfers of Ownership
+      transfer_works_link: Select works to transfer
+      transfers_received: Transfers Received
+      transfers_sent: Transfers Sent
+      user_activity: User Activity
+      user_notifications: User Notifications
+      view_files: View Files
+    document_language: en
+    edit_profile: Edit Profile
+    manifest:
+      download_text: Download whole resource
+      unknown_mime_text: unknown mime type
+>>>>>>> master
     embargoes:
       edit:
         embargo_apply: Apply Embargo
@@ -1138,6 +1169,7 @@ en:
         share_applies_to_new_works: "APPLY TO NEW WORKS"
         title: "Type name"
       defaults:
+<<<<<<< HEAD
         admin_set_id:              "Administrative Set"
         based_near:                "Location"
         creator:                   "Creator"
@@ -1155,6 +1187,26 @@ en:
         visibility_after_lease:    'then restrict it to'
         visibility_during_embargo: 'Restricted to'
         visibility_during_lease:   'Is available to'
+=======
+        admin_set_id: Administrative Set
+        based_near: Location
+        creator: Creator
+        date_created: Date Created
+        description: Abstract or Summary
+        embargo_release_date: until
+        files: Upload a file
+        keyword: Keyword
+        lease_expiration_date: until
+        license: License
+        member_of_collection_ids: Add to collection
+        related_url: Related URL
+        rights_statement: Rights statement
+        title: Title
+        visibility_after_embargo: then open it up to
+        visibility_after_lease: then restrict it to
+        visibility_during_embargo: Restricted to
+        visibility_during_lease: Is available to
+>>>>>>> master
       proxy_deposit_request:
         sender_comment:           "Comments"
         transfer_to:              "User"

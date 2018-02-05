@@ -9,6 +9,7 @@ module Hyrax
     include Hydra::WithDepositor
     include Solrizer::Common
     include HasRepresentative
+    include HasRendering
     include WithFileSets
     include Naming
     include CoreMetadata

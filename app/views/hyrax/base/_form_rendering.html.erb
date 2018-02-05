@@ -1,0 +1,14 @@
+<div class="row">
+  <div class="col-md-12">
+    <fieldset id="representative-media">
+      <legend>
+        <%= t("hyrax.base.form_rendering.legend_html") %>
+      </legend>
+      <p><%= t("hyrax.base.form_rendering.help_html") %></p>
+      <%= f.select :rendering_ids,
+                   f.object.select_files,
+                   { include_blank: true },
+                   { class: 'form-control', multiple: true } %>
+    </fieldset>
+  </div>
+</div>

@@ -16,6 +16,11 @@ Hyrax.config do |config|
   # avoid clashes if you plan to use the default (dct:isPartOf) for other relations.
   # config.admin_set_predicate = ::RDF::DC.isPartOf
 
+  # Which RDF term should be used to relate objects to a rendering?
+  # If this is a new repository, you may want to set a custom predicate term here to
+  # avoid clashes if you plan to use the default (dct:hasFormat) for other relations.
+  # config.rendering_predicate = ::RDF::DC.hasFormat
+
   # Email recipient of messages sent via the contact form
   # config.contact_email = "repo-admin@example.org"
 
@@ -142,6 +147,9 @@ Hyrax.config do |config|
 
   # Returns a IIIF image size default
   # config.iiif_image_size_default = '600,'
+
+  # Fields to display in the IIIF metadata section; default is the required fields
+  # config.iiif_metadata_fields = Hyrax::Forms::WorkForm.required_fields
 
   # Should a button with "Share my work" show on the front page to all users (even those not logged in)?
   # config.display_share_button_when_not_logged_in = true

@@ -20,7 +20,8 @@ module Hyrax
     def update
       respond_to do |format|
         if @page.update(value: update_value_from_params)
-          format.html { redirect_to hyrax.edit_pages_path, notice: t(:'hyrax.pages.updated') }
+          redirect_path = "#{hyrax.edit_pages_path}##{params[:content_block].keys.first}"
+          format.html { redirect_to redirect_path, notice: t(:'hyrax.pages.updated') }
         else
           format.html { render :edit }
         end
