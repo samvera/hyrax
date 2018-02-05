@@ -39,7 +39,9 @@ module Hyrax
           return assign_for_collection_ids(env) unless attributes_collection
 
           emit_deprecation if env.attributes.delete(:member_of_collection_ids)
-          return false unless valid_membership?(env, attributes_collection)
+
+          return false unless
+            valid_membership?(env, collection_ids: attributes_collection.map { |_, attributes| attributes['id'] })
 
           attributes_collection = attributes_collection.sort_by { |i, _| i.to_i }.map { |_, attributes| attributes }
           # checking for existing works to avoid rewriting/loading works that are already attached
@@ -70,6 +72,8 @@ module Hyrax
         # @deprecated supports old :member_of_collection_ids arguments
         def assign_for_collection_ids(env)
           collection_ids = env.attributes.delete(:member_of_collection_ids)
+
+          return false unless valid_membership?(env, collection_ids: collection_ids)
 
           if collection_ids
             Deprecation.warn(self, ':member_of_collection_ids has been deprecated for removal in Hyrax 3.0. ' \
@@ -133,11 +137,17 @@ module Hyrax
           attributes_collection =
             env.attributes.fetch(:member_of_collections_attributes) { nil }
 
-          # Determine if the work is being created in one and only one collection.
-          return unless attributes_collection && attributes_collection.size == 1
+          if attributes_collection
+            # Determine if the work is being created in one and only one collection.
+            return unless attributes_collection && attributes_collection.size == 1
 
-          # Extract the collection id from attributes_collection,
-          collection_id = attributes_collection.first.second['id']
+            # Extract the collection id from attributes_collection,
+            collection_id = attributes_collection.first.second['id']
+          else
+            collection_ids = env.attributes.fetch(:member_of_collection_ids) { [] }
+            return unless collection_ids.size == 1
+            collection_id = collection_ids.first
+          end
 
           # Do not apply permissions to work if collection type is configured not to
           collection = ::Collection.find(collection_id)
@@ -147,8 +157,7 @@ module Hyrax
           env.attributes[:collection_id] = collection_id
         end
 
-        def valid_membership?(env, attributes_collection)
-          collection_ids = attributes_collection.map { |_, attributes| attributes['id'] }
+        def valid_membership?(env, collection_ids:)
           multiple_memberships = Hyrax::MultipleMembershipChecker.new(item: env.curation_concern).check(collection_ids: collection_ids)
           if multiple_memberships
             env.curation_concern.errors.add(:collections, multiple_memberships)
