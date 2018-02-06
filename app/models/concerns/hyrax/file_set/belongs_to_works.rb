@@ -3,10 +3,6 @@ module Hyrax
     module BelongsToWorks
       extend ActiveSupport::Concern
 
-      included do
-        before_destroy :remove_representative_relationship
-      end
-
       def parents
         in_works
       end
@@ -33,17 +29,6 @@ module Hyrax
           end
         end
       end
-
-      # If any parent objects are pointing at this object as their
-      # representative, remove that pointer.
-      def remove_representative_relationship
-        parent_objects = parents
-        return if parent_objects.empty?
-        parent_objects.each do |work|
-          work.update(representative_id: nil) if work.representative_id == id
-        end
-      end
     end
   end
 end
-\

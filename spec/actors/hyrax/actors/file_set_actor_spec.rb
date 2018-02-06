@@ -237,7 +237,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       expect { file_set.reload }.to raise_error ActiveFedora::ObjectNotFoundError
     end
 
-    context "representative and thumbnail of a work" do
+    context "representative, renderings and thumbnail of a work" do
       let!(:work) do
         work = create(:generic_work)
         # this is not part of a block on the create, since the work must be saved
@@ -245,11 +245,12 @@ RSpec.describe Hyrax::Actors::FileSetActor do
         work.ordered_members << file_set
         work.representative = file_set
         work.thumbnail = file_set
+        work.renderings = [file_set]
         work.save
         work
       end
 
-      it "removes representative, thumbnail, and the proxy association" do
+      it "removes representative, renderings, thumbnail, and the proxy association" do
         gw = GenericWork.find(work.id)
         expect(gw.representative_id).to eq(file_set.id)
         expect(gw.thumbnail_id).to eq(file_set.id)
@@ -257,6 +258,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
         gw.reload
         expect(gw.representative_id).to be_nil
         expect(gw.thumbnail_id).to be_nil
+        expect(gw.rendering_ids).to eq([])
       end
     end
   end

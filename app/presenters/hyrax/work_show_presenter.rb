@@ -2,6 +2,7 @@ module Hyrax
   class WorkShowPresenter
     include ModelProxy
     include PresentsAttributes
+
     attr_accessor :solr_document, :current_ability, :request
 
     class_attribute :collection_presenter_class
@@ -38,7 +39,7 @@ module Hyrax
     delegate :title, :date_created, :description,
              :creator, :contributor, :subject, :publisher, :language, :embargo_release_date,
              :lease_expiration_date, :license, :source, :rights_statement, :thumbnail_id, :representative_id,
-             :member_of_collection_ids, to: :solr_document
+             :rendering_ids, :member_of_collection_ids, to: :solr_document
 
     def workflow
       @workflow ||= WorkflowPresenter.new(solr_document, current_ability)
@@ -52,10 +53,6 @@ module Hyrax
     def download_url
       return '' if representative_presenter.nil?
       Hyrax::Engine.routes.url_helpers.download_url(representative_presenter, host: request.host)
-    end
-
-    def manifest_url
-      manifest_helper.polymorphic_url([:manifest, self])
     end
 
     # @return [Boolean] render the UniversalViewer
@@ -156,17 +153,50 @@ module Hyrax
 
     delegate :member_presenters, :file_set_presenters, :work_presenters, to: :member_presenter_factory
 
+    def manifest_url
+      manifest_helper.polymorphic_url([:manifest, self])
+    end
+
+    # IIIF rendering linking property for inclusion in the manifest
+    #  Called by the `iiif_manifest` gem to add a 'rendering' (eg. a link a download for the resource)
+    #
+    # @return [Array] array of rendering hashes
+    def sequence_rendering
+      renderings = []
+      if solr_document.rendering_ids.present?
+        solr_document.rendering_ids.each do |file_set_id|
+          renderings << manifest_helper.build_rendering(file_set_id)
+        end
+      end
+      renderings.flatten
+    end
+
+    # IIIF metadata for inclusion in the manifest
+    #  Called by the `iiif_manifest` gem to add metadata
+    #
+    # @return [Array] array of metadata hashes
+    def manifest_metadata
+      metadata = []
+      Hyrax.config.iiif_metadata_fields.each do |field|
+        metadata << {
+          'label' => I18n.t("simple_form.labels.defaults.#{field}"),
+          'value' => Array.wrap(send(field))
+        }
+      end
+      metadata
+    end
+
     private
+
+      def manifest_helper
+        @manifest_helper ||= ManifestHelper.new(request.base_url)
+      end
 
       def featured?
         if @featured.nil?
           @featured = FeaturedWork.where(work_id: solr_document.id).exists?
         end
         @featured
-      end
-
-      def manifest_helper
-        @manifest_helper ||= ManifestHelper.new(request.base_url)
       end
 
       def user_can_feature_works?

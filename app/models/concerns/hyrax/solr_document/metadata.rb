@@ -71,6 +71,8 @@ module Hyrax
         attribute :workflow_state, Solr::String, solr_name('workflow_state_name', :symbol)
         attribute :human_readable_type, Solr::String, solr_name('human_readable_type', :stored_searchable)
         attribute :representative_id, Solr::String, solr_name('hasRelatedMediaFragment', :symbol)
+        # extract the term name from the rendering_predicate (it might be after the final / or #)
+        attribute :rendering_ids, Solr::Array, solr_name(Hyrax.config.rendering_predicate.value.split(/#|\/|,/).last, :symbol)
         attribute :thumbnail_id, Solr::String, solr_name('hasRelatedImage', :symbol)
         attribute :thumbnail_path, Solr::String, CatalogController.blacklight_config.index.thumbnail_field
         attribute :label, Solr::String, solr_name('label')
