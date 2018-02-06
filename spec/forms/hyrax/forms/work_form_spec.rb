@@ -185,6 +185,45 @@ RSpec.describe Hyrax::Forms::WorkForm do
     it { is_expected.to eq 'restricted' }
   end
 
+  describe '#primary_terms' do
+    it 'contains the required fields' do
+      expect(form.primary_terms).to include(*form.required_fields)
+    end
+
+    context 'with a field that is not in terms' do
+      let(:bad_term) { :BadWorkFormSpecTerm }
+
+      before { form.class.required_fields += [bad_term] }
+      after  { form.class.required_fields -= [bad_term] }
+
+      it 'logs a warning' do
+        expect(Rails.logger).to receive(:warn).with(/#{bad_term}/)
+        form.primary_terms
+      end
+
+      it 'does not include the errant term' do
+        expect(form.primary_terms).not_to include bad_term
+      end
+    end
+  end
+
+  describe '#secondary_terms' do
+    it 'does not contain the primary terms' do
+      expect(form.secondary_terms).not_to include(*form.primary_terms)
+    end
+
+    context 'with a new non-primary term' do
+      let(:new_term) { :WorkFormSpecTerm }
+
+      before { form.class.terms += [new_term] }
+      after  { form.class.terms -= [new_term] }
+
+      it 'adds the term to secondary' do
+        expect(form.secondary_terms).to include new_term
+      end
+    end
+  end
+
   describe '#human_readable_type' do
     subject { form.human_readable_type }
 
