@@ -754,7 +754,6 @@ en:
           subtitle:         New user signups
           title:            User Activity
       stats:
-<<<<<<< HEAD
         collections:        "Collections created"
         file_downloads:     "Download"
         file_views:         "View"
@@ -773,27 +772,9 @@ en:
       suffix:           "@example.org"
     document_language:  "en"
     edit_profile:       "Edit Profile"
-=======
-        collections: Collections created
-        file_downloads: Download
-        file_views: View
-        files: Files deposited
-        heading: Your Statistics
-        works: Works created
-      title: My Dashboard
-      transfer_of_ownership: Transfers of Ownership
-      transfer_works_link: Select works to transfer
-      transfers_received: Transfers Received
-      transfers_sent: Transfers Sent
-      user_activity: User Activity
-      user_notifications: User Notifications
-      view_files: View Files
-    document_language: en
-    edit_profile: Edit Profile
     manifest:
       download_text: Download whole resource
       unknown_mime_text: unknown mime type
->>>>>>> master
     embargoes:
       edit:
         embargo_apply: Apply Embargo
@@ -1169,25 +1150,6 @@ en:
         share_applies_to_new_works: "APPLY TO NEW WORKS"
         title: "Type name"
       defaults:
-<<<<<<< HEAD
-        admin_set_id:              "Administrative Set"
-        based_near:                "Location"
-        creator:                   "Creator"
-        date_created:              "Date Created"
-        description:               "Abstract or Summary"
-        embargo_release_date:      'until'
-        files:                     'Upload a file'
-        keyword:                   "Keyword"
-        lease_expiration_date:     'until'
-        license:                   "License"
-        member_of_collection_ids:  "Add to collection"
-        related_url:               "Related URL"
-        title:                     "Title"
-        visibility_after_embargo:  'then open it up to'
-        visibility_after_lease:    'then restrict it to'
-        visibility_during_embargo: 'Restricted to'
-        visibility_during_lease:   'Is available to'
-=======
         admin_set_id: Administrative Set
         based_near: Location
         creator: Creator
@@ -1206,7 +1168,6 @@ en:
         visibility_after_lease: then restrict it to
         visibility_during_embargo: Restricted to
         visibility_during_lease: Is available to
->>>>>>> master
       proxy_deposit_request:
         sender_comment:           "Comments"
         transfer_to:              "User"
