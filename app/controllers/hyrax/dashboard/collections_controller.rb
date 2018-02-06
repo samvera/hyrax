@@ -109,10 +109,10 @@ module Hyrax
         @collection.collection_type_gid = params[:collection_type_gid].presence || default_collection_type.gid
         @collection.attributes = collection_params.except(:members, :parent_id, :collection_type_gid)
         @collection.apply_depositor_metadata(current_user.user_key)
-        add_members_to_collection unless batch.empty?
         @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
         if @collection.save
-          after_create
+          add_members_to_collection unless batch.empty?
+          @collection.errors.empty? ? after_create : after_create_error
         else
           after_create_error
         end

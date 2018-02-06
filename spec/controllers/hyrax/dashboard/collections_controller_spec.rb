@@ -137,6 +137,27 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         expect(response).to render_template(:new)
       end
     end
+
+    context "when a doc already belongs to a single membership collection" do
+      let(:collection) { create(:collection, collection_type_settings: [:not_allow_multiple_membership]) }
+      let(:collection_type_gid) { collection.collection_type.gid }
+      before do
+        collection.add_member_objects([asset1.id])
+      end
+
+      it "does not add doc to the collection and rerenders the form with a flash error" do
+        post :create, params: {
+          batch_document_ids: [asset1.id],
+          collection: collection_attrs, collection_type_gid: collection_type_gid
+        }
+
+        expect(assigns[:collection].member_objects).to be_empty
+        expect(assigns[:collection].errors).not_to be_empty
+        expect(asset1.reload.member_of_collection_ids).to eq [collection.id]
+        expect(response).to be_successful
+        expect(response).to render_template(:new)
+      end
+    end
   end
 
   describe "#update" do

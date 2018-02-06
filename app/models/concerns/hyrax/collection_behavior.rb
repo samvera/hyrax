@@ -64,7 +64,11 @@ module Hyrax
         #       method, I am not sure it's worth the effort to rejigger things
         #       such that this information bubbles up to the controller and
         #       view.
-        next if Hyrax::MultipleMembershipChecker.new(item: member).check(collection_ids: id, include_current_members: true)
+        message = Hyrax::MultipleMembershipChecker.new(item: member).check(collection_ids: [id], include_current_members: true)
+        if message
+          errors.add(:collections, message)
+          next
+        end
         member.member_of_collections << self
         member.save!
       end
