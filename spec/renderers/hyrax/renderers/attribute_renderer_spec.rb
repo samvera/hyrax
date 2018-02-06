@@ -23,8 +23,8 @@ RSpec.describe Hyrax::Renderers::AttributeRenderer do
       end
       let(:tr_content) do
         "<tr><th>Name</th>\n" \
-         "<td><ul class='tabular'><li class=\"attribute name\">Bob</li>\n" \
-         "<li class=\"attribute name\">Jessica</li>\n" \
+         "<td><ul class='tabular'><li class=\"attribute attribute-name\">Bob</li>\n" \
+         "<li class=\"attribute attribute-name\">Jessica</li>\n" \
          "</ul></td></tr>"
       end
 
@@ -37,7 +37,7 @@ RSpec.describe Hyrax::Renderers::AttributeRenderer do
       let(:renderer) { described_class.new(field, [567]) }
       let(:tr_content) do
         "<tr><th>Height</th>\n" \
-         "<td><ul class='tabular'><li class=\"attribute height\">567</li>\n" \
+         "<td><ul class='tabular'><li class=\"attribute attribute-height\">567</li>\n" \
          "</ul></td></tr>"
       end
 
@@ -47,9 +47,9 @@ RSpec.describe Hyrax::Renderers::AttributeRenderer do
     context 'with microdata enabled' do
       let(:tr_content) do
         "<tr><th>Name</th>\n" \
-         "<td><ul class='tabular'><li class=\"attribute name\" itemscope itemtype=\"http://schema.org/Person\" itemprop=\"name\">" \
+         "<td><ul class='tabular'><li class=\"attribute attribute-name\" itemscope itemtype=\"http://schema.org/Person\" itemprop=\"name\">" \
          "<span itemprop=\"firstName\">Bob</span></li>\n" \
-         "<li class=\"attribute name\" itemscope itemtype=\"http://schema.org/Person\" itemprop=\"name\">" \
+         "<li class=\"attribute attribute-name\" itemscope itemtype=\"http://schema.org/Person\" itemprop=\"name\">" \
          "<span itemprop=\"firstName\">Jessica</span></li>\n" \
          "</ul></td></tr>"
       end
@@ -63,7 +63,7 @@ RSpec.describe Hyrax::Renderers::AttributeRenderer do
       let(:renderer) { described_class.new(field, ['Foo < Bar http://www.example.com. & More Text']) }
       let(:tr_content) do
         "<tr><th>Description</th>\n" \
-         "<td><ul class='tabular'><li class=\"attribute description\">" \
+         "<td><ul class='tabular'><li class=\"attribute attribute-description\">" \
          "<span itemprop=\"description\">Foo &lt; Bar " \
          "<a href=\"http://www.example.com\">http://www.example.com</a>. &amp; More Text</span></li>\n" \
          "</ul></td></tr>"
