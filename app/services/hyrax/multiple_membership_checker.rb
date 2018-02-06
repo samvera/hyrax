@@ -33,23 +33,23 @@ module Hyrax
     # @return [nil, String] nil if no conflicts; an error message string if so
     def check(collection_ids:, include_current_members: false)
       # short-circuit if no single membership types have been created
-      return if single_membership_types.empty?
+      return if single_membership_types.blank?
       # short-circuit if no new single_membership_collections passed in
       new_single_membership_collections = single_membership_collections(collection_ids)
-      return if new_single_membership_collections.empty?
+      return if new_single_membership_collections.blank?
       collections_to_check = new_single_membership_collections
       # No need to check current members when coming in from the ActorStack, which does a wholesale collection membership replacement
       collections_to_check |= single_membership_collections(item.member_of_collection_ids) if include_current_members
       problematic_collections = collections_to_check.group_by(&:collection_type_gid)
                                                     .select { |_gid, list| list.count > 1 }
-      return if problematic_collections.empty?
+      return if problematic_collections.blank?
       build_error_message(problematic_collections)
     end
 
     private
 
       def single_membership_collections(collection_ids)
-        return [] if collection_ids.empty?
+        return [] if collection_ids.blank?
         Collection.where(id: collection_ids, collection_type_gid_ssim: single_membership_types.join(','))
       end
 
