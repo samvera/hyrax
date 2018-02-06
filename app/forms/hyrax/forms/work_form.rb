@@ -106,12 +106,27 @@ module Hyrax
         Hash[file_presenters.map { |file| [file.to_s, file.id] }]
       end
 
+      ##
       # Fields that are automatically drawn on the page above the fold
+      #
+      # @return [Enumerable<Symbol>] symbols representing each primary term
       def primary_terms
-        required_fields
+        primary = (required_fields & terms)
+
+        (required_fields - primary).each do |missing|
+          Rails.logger.warn("The form field #{missing} is configured as a " \
+                            'required field, but not as a term. This can lead ' \
+                            'to unexpected behavior. Did you forget to add it ' \
+                            "to `#{self.class}#terms`?")
+        end
+
+        primary
       end
 
+      ##
       # Fields that are automatically drawn on the page below the fold
+      #
+      # @return [Enumerable<Symbol>]
       def secondary_terms
         terms - primary_terms -
           [:files, :visibility_during_embargo, :embargo_release_date,
