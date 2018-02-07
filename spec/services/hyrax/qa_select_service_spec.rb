@@ -55,7 +55,13 @@ RSpec.describe Hyrax::QaSelectService do
     end
     context 'for item without a "term" property' do
       it 'will raise KeyError' do
-        expect { qa_select_service.label('active-no-term-id') }.to raise_error(KeyError)
+        expect { qa_select_service.label('active-no-term-id') }
+          .to raise_error(KeyError)
+      end
+
+      it 'accepts a block for a backup value' do
+        expect(qa_select_service.label('active-no-term-id') { :backup })
+          .to eq :backup
       end
     end
   end
