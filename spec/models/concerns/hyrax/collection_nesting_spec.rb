@@ -35,6 +35,7 @@ RSpec.describe Hyrax::CollectionNesting do
     it { is_expected.to callback(:update_child_nested_collection_relationship_indices).after(:destroy) }
     it { is_expected.to respond_to(:update_nested_collection_relationship_indices) }
     it { is_expected.to respond_to(:update_child_nested_collection_relationship_indices) }
+    it { is_expected.to respond_to(:use_nested_reindexing?) }
 
     context 'after_update_index callback' do
       describe '#update_nested_collection_relationship_indices' do

@@ -43,7 +43,6 @@ module Hyrax
       # @yield Samvera::NestingIndexer::Document::PreservationDocument
       # rubocop:disable Lint/UnusedMethodArgument
       def self.each_preservation_document(&block)
-        # TODO: Enable Lint/UnusedMethodArgument once implemented
         raise NotImplementedError
       end
       # rubocop:enable Lint/UnusedMethodArgument
@@ -51,10 +50,23 @@ module Hyrax
       # @api public
       # @yieldparam id [String]
       # @yieldparam parent_id [Array<String>]
+      # Samvera::NestingIndexer.reindex_all!
       # rubocop:disable Lint/UnusedMethodArgument
       def self.each_perservation_document_id_and_parent_ids(&block)
-        # TODO: Enable Lint/UnusedMethodArgument once implemented
-        raise NotImplementedError
+        ActiveFedora::Base.descendant_uris(ActiveFedora.fedora.base_uri, exclude_uri: true).each do |uri|
+          id = ActiveFedora::Base.uri_to_id(uri)
+          object = ActiveFedora::Base.find(id)
+          parent_ids = object.try(:member_of_collection_ids) || []
+
+          # note: we do not yield when the object has parents. Calling the nested indexer for the
+          # top id will reindex all descendants as well.
+          if object.try(:use_nested_reindexing?)
+            yield(id, parent_ids) if parent_ids.empty?
+          else
+            Rails.logger.info "Re-indexing via to_solr ... #{id}"
+            ActiveFedora::SolrService.add(object.to_solr, commit: true)
+          end
+        end
       end
       # rubocop:enable Lint/UnusedMethodArgument
 
@@ -134,7 +146,6 @@ module Hyrax
           parent_ids: original_solr_document.fetch(solr_field_name_for_storing_parent_ids) { [] },
           pathnames: original_solr_document.fetch(solr_field_name_for_storing_pathnames) { [] },
           ancestors: original_solr_document.fetch(solr_field_name_for_storing_ancestors) { [] }
-          # original_solr_document: original_solr_document
         )
       end
       private_class_method :coerce_solr_document_to_index_document

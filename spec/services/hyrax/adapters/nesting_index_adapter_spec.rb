@@ -59,9 +59,23 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
     end
   end
 
-  # @todo
-  describe '.each_preservation_document' do
-    xit 'iterates through each preservation document'
+  describe '.each_perservation_document_id_and_parent_ids', clean_repo: true do
+    let!(:nested_parent) { create(:collection, member_of_collections: []) }
+    let!(:nested_with_parent) { create(:collection, member_of_collections: [nested_parent]) }
+    let!(:work) { create(:generic_work) }
+    let(:count_of_items) { ActiveFedora::Base.descendant_uris(ActiveFedora.fedora.base_uri, exclude_uri: true).count }
+
+    it 'uses direct add to Solr on non-nested objects but yields the document and parent_ids to allow nesting logic to fire' do
+      # The two collections and the work are handled via the nesting indexer.
+      # we expect remaining repository objects to reindex via to_solr.
+      expect(ActiveFedora::SolrService).to receive(:add).exactly(count_of_items - 3).times
+      yielded = []
+      described_class.each_perservation_document_id_and_parent_ids do |document_id, parent_ids|
+        yielded << [document_id, parent_ids]
+      end
+      # collections or works with parents do not yield, so parent_ids should always be an empty array, and nested_with_parent is not yielded.
+      expect(yielded).to contain_exactly([work.id, []], [nested_parent.id, []])
+    end
   end
 
   describe '.each_child_document_of', clean_repo: true do

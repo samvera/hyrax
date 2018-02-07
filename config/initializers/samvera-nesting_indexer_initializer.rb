@@ -1,5 +1,6 @@
 # rubocop:disable Naming/FileName
 require 'samvera/nesting_indexer'
+require 'hyrax/repository_reindexer'
 # rubocop:enable Naming/FileName
 
 Samvera::NestingIndexer.configure do |config|
