@@ -10,7 +10,7 @@ RSpec.describe Hyrax::Renderers::RightsStatementAttributeRenderer do
     let(:tr_content) do
       "<tr><th>Rights statement</th>\n" \
        "<td><ul class='tabular'>" \
-       "<li class=\"attribute rights_statement\"><a href=\"http://rightsstatements.org/vocab/InC/1.0/\" target=\"_blank\">In Copyright</a></li>" \
+       "<li class=\"attribute attribute-rights_statement\"><a href=\"http://rightsstatements.org/vocab/InC/1.0/\" target=\"_blank\">In Copyright</a></li>" \
        "</ul></td></tr>"
     end
 
