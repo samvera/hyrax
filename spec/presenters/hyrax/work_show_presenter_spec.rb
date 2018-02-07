@@ -256,6 +256,27 @@ RSpec.describe Hyrax::WorkShowPresenter do
         .and_return ["abc"]
       expect(presenter.representative_presenter).to eq("abc")
     end
+
+    context 'without a representative' do
+      let(:obj) { create(:work) }
+
+      it 'has a nil presenter' do
+        expect(presenter.representative_presenter).to be_nil
+      end
+    end
+
+    context 'when it is its own representative' do
+      let(:obj) { create(:work) }
+
+      before do
+        obj.representative_id = obj.id
+        obj.save
+      end
+
+      it 'has a nil presenter; avoids infinite loop' do
+        expect(presenter.representative_presenter).to be_nil
+      end
+    end
   end
 
   describe "#download_url" do
