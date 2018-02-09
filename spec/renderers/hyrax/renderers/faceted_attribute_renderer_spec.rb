@@ -11,8 +11,8 @@ RSpec.describe Hyrax::Renderers::FacetedAttributeRenderer do
       %(
       <tr><th>Name</th>
       <td><ul class='tabular'>
-      <li class="attribute name"><a href="/catalog?f%5Bname_sim%5D%5B%5D=Bob">Bob</a></li>
-      <li class="attribute name"><a href="/catalog?f%5Bname_sim%5D%5B%5D=Jessica">Jessica</a></li>
+      <li class="attribute attribute-name"><a href="/catalog?f%5Bname_sim%5D%5B%5D=Bob">Bob</a></li>
+      <li class="attribute attribute-name"><a href="/catalog?f%5Bname_sim%5D%5B%5D=Jessica">Jessica</a></li>
       </ul></td></tr>
     )
     end

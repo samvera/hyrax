@@ -17,7 +17,8 @@ module Hyrax
           if parsed_uri.nil?
             ERB::Util.h(value)
           else
-            %(<a href=#{ERB::Util.h(value)} target="_blank">#{Hyrax.config.rights_statement_service_class.new.label(value)}</a>)
+            label = Hyrax.config.rights_statement_service_class.new.label(value) { value }
+            %(<a href=#{ERB::Util.h(value)} target="_blank">#{label}</a>)
           end
         end
     end
