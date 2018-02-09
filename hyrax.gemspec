@@ -93,21 +93,11 @@ SUMMARY
   spec.add_development_dependency 'rspec-rails', '~> 3.1'
   spec.add_development_dependency "selenium-webdriver"
   spec.add_development_dependency 'solr_wrapper', '~> 1.1'
-  # Pin rubocop and rubocop-rspec tightly. Minor-level version bumps
-  # in these gems cause Rubocop violations, and those violations cause
-  # continuous integration builds to fail, and those failures prevent
-  # us from merging pull requests. As a community, we have decided
-  # that it is not reasonable to manage style violations to be dealt
-  # with in a pull request *unless* said pull request's intent is to
-  # bring the codebase in further alignment with community style
-  # conventions. This allows us to take a managed approach to code
-  # style -- we choose to update style when we wish, not when a
-  # minor-level version bump in a dependency comes out.
   spec.add_development_dependency 'i18n-debug' if ENV['I18N_DEBUG']
   spec.add_development_dependency 'i18n_yaml_sorter' unless ENV['TRAVIS']
   spec.add_development_dependency 'rails-controller-testing', '~> 1'
-  spec.add_development_dependency 'rubocop', '~> 0.51.0'
-  spec.add_development_dependency 'rubocop-rspec', '~> 1.20.1'
+  # the hyrax style guide is based on `bixby`. see `.rubocop.yml`
+  spec.add_development_dependency 'bixby', '~> 1.0.0'
   spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'webmock'

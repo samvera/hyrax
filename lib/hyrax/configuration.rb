@@ -206,9 +206,7 @@ module Hyrax
     # @param [Array<Symbol>,Symbol] curation_concern_types
     def register_curation_concern(*curation_concern_types)
       Array.wrap(curation_concern_types).flatten.compact.each do |cc_type|
-        unless @registered_concerns.include?(cc_type)
-          @registered_concerns << cc_type
-        end
+        @registered_concerns << cc_type unless @registered_concerns.include?(cc_type)
       end
     end
 

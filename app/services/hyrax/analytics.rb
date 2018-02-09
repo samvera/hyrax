@@ -57,9 +57,7 @@ module Hyrax
     end
 
     def self.auth_client(scope)
-      unless File.exist?(config.privkey_path)
-        raise "Private key file for Google analytics was expected at '#{config.privkey_path}', but no file was found."
-      end
+      raise "Private key file for Google analytics was expected at '#{config.privkey_path}', but no file was found." unless File.exist?(config.privkey_path)
       private_key = File.read(config.privkey_path)
       Signet::OAuth2::Client.new token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
                                  audience: 'https://accounts.google.com/o/oauth2/token',

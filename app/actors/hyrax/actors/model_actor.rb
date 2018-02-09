@@ -2,6 +2,9 @@ module Hyrax
   module Actors
     # This is a proxy for the model specific actor
     class ModelActor < AbstractActor
+      # See: https://github.com/bbatsov/rubocop/issues/5393
+      # rubocop:disable Rails/Delegate
+
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if update was successful
       def update(env)
@@ -19,6 +22,7 @@ module Hyrax
       def destroy(env)
         model_actor(env).destroy(env)
       end
+      # rubocop:enable Rails/Delegate
 
       private
 

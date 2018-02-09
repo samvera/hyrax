@@ -17,9 +17,7 @@ module Hyrax
       return false if state.nil?
       # This is a clumsy check only needed under RDF < 2.0 where there
       # is a bug with `AT::Resource#==`
-      if RDF::VERSION.to_s < '2.0'
-        return state.rdf_subject == Vocab::FedoraResourceStatus.inactive
-      end
+      return state.rdf_subject == Vocab::FedoraResourceStatus.inactive if RDF::VERSION.to_s < '2.0'
       state == Vocab::FedoraResourceStatus.inactive
     end
 

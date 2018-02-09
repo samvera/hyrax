@@ -147,7 +147,6 @@ module Hyrax
         # Must clear the fileset from the thumbnail_id, representative_id and rendering_ids fields on the work
         #   and force it to be re-solrized.
         # Although ActiveFedora clears the children nodes it leaves those fields in Solr populated.
-        # rubocop:disable Metrics/AbcSize
         # rubocop:disable Metrics/CyclomaticComplexity
         def unlink_from_work
           work = file_set.parent

@@ -38,8 +38,6 @@ class AdminSet < ActiveFedora::Base
   property :creator, predicate: ::RDF::Vocab::DC11.creator do |index|
     index.as :symbol
   end
-
-  # rubocop:disable Rails/HasManyOrHasOneDependent
   has_many :members,
            predicate:  Hyrax.config.admin_set_predicate,
            class_name: 'ActiveFedora::Base'
@@ -58,9 +56,7 @@ class AdminSet < ActiveFedora::Base
 
   # Creates the default AdminSet and an associated PermissionTemplate with workflow
   def self.find_or_create_default_admin_set_id
-    unless exists?(DEFAULT_ID)
-      Hyrax::AdminSetCreateService.create_default_admin_set(admin_set_id: DEFAULT_ID, title: DEFAULT_TITLE)
-    end
+    Hyrax::AdminSetCreateService.create_default_admin_set(admin_set_id: DEFAULT_ID, title: DEFAULT_TITLE) unless exists?(DEFAULT_ID)
     DEFAULT_ID
   end
 

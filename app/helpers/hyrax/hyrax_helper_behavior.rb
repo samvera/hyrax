@@ -273,7 +273,6 @@ module Hyrax
         end
       end
 
-      # rubocop:disable Metrics/MethodLength
       def search_action_for_dashboard
         case params[:controller]
         when "hyrax/my/collections"
