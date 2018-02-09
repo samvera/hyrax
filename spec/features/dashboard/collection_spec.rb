@@ -560,7 +560,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       # Should have search results / contents listing
       expect(page).to have_content(work1.title.first)
       expect(page).to have_content(work2.title.first)
-      expect(page).not_to have_css(".pager")
+      expect(page).not_to have_css(".pagination")
 
       click_link "Gallery"
       expect(page).to have_content(work1.title.first)
@@ -685,7 +685,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         # Now go to the collection show page
         click_link("Display all details of collection title")
       end
-      expect(page).to have_css(".pager")
+      expect(page).to have_css(".pagination")
     end
   end
 

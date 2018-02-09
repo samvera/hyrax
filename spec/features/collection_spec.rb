@@ -30,7 +30,7 @@ RSpec.describe 'collection', type: :feature, with_nested_reindexing: true do
       expect(page).to have_content(work2.title.first)
       expect(page).to have_content(col1.title.first)
       expect(page).to have_content(col2.title.first)
-      expect(page).not_to have_css(".pager")
+      expect(page).not_to have_css(".pagination")
 
       click_link "Gallery"
       expect(page).to have_content(work1.title.first)
@@ -56,7 +56,7 @@ RSpec.describe 'collection', type: :feature, with_nested_reindexing: true do
   end
 
   # TODO: this is just like the block above. Merge them.
-  describe 'show pages of a collection' do
+  describe 'show work pages of a collection' do
     before do
       docs = (0..12).map do |n|
         { "has_model_ssim" => ["GenericWork"], :id => "zs25x871q#{n}",
@@ -74,7 +74,29 @@ RSpec.describe 'collection', type: :feature, with_nested_reindexing: true do
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       visit "/collections/#{collection.id}"
-      expect(page).to have_css(".pager")
+      expect(page).to have_css(".pagination")
+    end
+  end
+
+  describe 'show subcollection pages of a collection' do
+    before do
+      docs = (0..12).map do |n|
+        { "has_model_ssim" => ["Collection"], :id => "zs25x871q#{n}",
+          "depositor_ssim" => [user.user_key],
+          "suppressed_bsi" => false,
+          "member_of_collection_ids_ssim" => [collection.id],
+          "nesting_collection__parent_ids_ssim" => [collection.id],
+          "edit_access_person_ssim" => [user.user_key] }
+      end
+      ActiveFedora::SolrService.add(docs, commit: true)
+
+      sign_in user
+    end
+    let(:collection) { create(:named_collection, user: user) }
+
+    it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
+      visit "/collections/#{collection.id}"
+      expect(page).to have_css(".pagination")
     end
   end
 end

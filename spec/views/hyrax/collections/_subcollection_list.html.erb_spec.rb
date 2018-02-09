@@ -1,4 +1,5 @@
 RSpec.describe 'hyrax/collections/_subcollection_list.html.erb', type: :view do
+  let(:subject) { render('subcollection_list.html.erb', collection: subcollection) }
   let(:collection) { build(:named_collection, id: '123') }
 
   context 'when subcollection list is empty' do
@@ -20,18 +21,19 @@ RSpec.describe 'hyrax/collections/_subcollection_list.html.erb', type: :view do
     before do
       assign(:subcollection_docs, subcollection)
       assign(:document, collection)
-    end
-
-    it "posts the collection's title with a link to the collection" do
       allow(collection).to receive(:title_or_label).and_return(collection.title)
       # make the collection "persisted" so the route returned is valid for show
       allow(collection).to receive(:persisted?).and_return true
-      render('subcollection_list.html.erb', collection: subcollection)
+      stub_template "hyrax/collections/_paginate" => "<div>paginate</div>"
+    end
+
+    it "posts the collection's title with a link to the collection" do
+      subject
       expect(rendered).to have_link(collection.title.to_s)
     end
 
-    xit 'includes a count of the subcollection members' do
-      # TODO: add test when actual count is added to page
+    it 'renders pagination' do
+      expect(subject).to render_template("hyrax/collections/_paginate")
     end
   end
 end
