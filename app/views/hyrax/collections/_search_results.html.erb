@@ -2,11 +2,9 @@
 
 <% @page_title = t('blacklight.search.title', :application_name => application_name) %>
 
-
 <% content_for(:head) do -%>
   <%= render_opensearch_response_metadata %>
 <% end -%>
-
 
 <%= render 'search_header' %>
 

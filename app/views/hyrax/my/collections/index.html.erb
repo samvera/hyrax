@@ -1,5 +1,4 @@
 <% provide :page_title, t("hyrax.admin.sidebar.collections") %>
-
 <% provide :head do %>
   <%= rss_feed_link_tag route_set: hyrax %>
   <%= atom_feed_link_tag route_set: hyrax %>
@@ -11,28 +10,54 @@
 
 <% provide :page_header do %>
   <h1><span class="fa fa-folder-open"></span> <%= t("hyrax.admin.sidebar.collections") %></h1>
-  <div class="pull-right">
-    <% if can?(:create, Collection) %>
-      <%= link_to(
-            t(:'helpers.action.collection.new'),
-            hyrax.new_dashboard_collection_path,
-            class: 'btn btn-primary'
-          ) %>
-    <% end %>
-  </div>
 <% end %>
 
-<div class="row">
-  <div class="col-md-12">
-    <div class="panel panel-default<%= ' tabs' if can?(:read, :admin_dashboard) %>">
-      <%= render 'tabs' if can?(:read, :admin_dashboard) %>
-      <div class="panel-body">
-        <%= render 'search_header' %>
-        <h2 class="sr-only">Collections listing</h2>
-        <%= render 'hyrax/my/document_list' %>
+<div class="collections-wrapper">
+  <section class="tabs-row">
+    <!-- Page tabs -->
+    <nav><%= render 'tabs' if @managed_collection_count > 0 %></nav>
 
-        <%= render 'results_pagination' %>
-      </div>
+    <% if can?(:create_any, Collection) && @collection_type_list_presenter.any? %>
+      <% if @collection_type_list_presenter.many? %>
+        <% # modal to select type %>
+        <button type="button"
+          class="btn btn-primary"
+          data-toggle="modal"
+          data-target="#collectiontypes-to-create"
+          data-behavior="select-collection">
+          <%= t(:'helpers.action.collection.new')%>
+        </button>
+      <% else @collection_type_list_presenter.any? %>
+        <% # link directly to create collection form with type %>
+        <%= link_to(t('helpers.action.collection.new'), "#{new_dashboard_collection_path}&collection_type_id=#{@collection_type_list_presenter.first_collection_type.id}", class: 'btn btn-primary') %>
+      <% end %>
+    <% end %>
+  </section>
+
+  <%# Collections list %>
+  <div class="panel panel-default collections-panel-wrapper">
+    <div class="panel-heading">
+      <h3 class="panel-title"><strong><%= @response.docs.count %> collections</strong> in the repository</h3>
+    </div>
+    <div class="panel-body">
+      <h2 class="sr-only">Collections listing</h2>
+      <%= render 'search_header' %>
+      <%= render 'hyrax/my/document_list' %>
+      <%= render 'results_pagination' %>
     </div>
   </div>
-</div>
+
+  <!-- Render Modals -->
+  <%= render 'modal_add_to_collection', source: "my" %>
+  <%= render 'modal_add_to_collection_deny' %>
+  <%= render 'modal_add_to_collection_permission_deny' %>
+  <%= render 'modal_collection_types_to_create' %>
+  <%= render 'modal_delete_admin_set_deny' %>
+  <%= render 'modal_delete_collection' %>
+  <%= render 'modal_delete_collection_deny' %>
+  <%= render 'modal_delete_deny' %>
+  <%= render 'modal_delete_empty_collection' %>
+  <%= render 'modal_delete_selected_collections' %>
+  <%= render 'modal_edit_deny' %>
+
+</div><!-- /collections-wrapper -->

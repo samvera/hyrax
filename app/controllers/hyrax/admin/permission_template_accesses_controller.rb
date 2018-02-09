@@ -29,26 +29,50 @@ module Hyrax
           false
         end
 
+        def update_access(manage_changed:)
+          permission_template_form.update_access(manage_changed: manage_changed)
+        end
+
         def after_destroy_success
-          redirect_to hyrax.edit_admin_admin_set_path(admin_set_id,
-                                                      anchor: 'participants'),
-                      notice: t('participants', scope: 'hyrax.admin.admin_sets.form.permission_update_notices')
+          if source.admin_set?
+            redirect_to hyrax.edit_admin_admin_set_path(source_id,
+                                                        anchor: 'participants'),
+                        notice: translate('participants', scope: 'hyrax.admin.admin_sets.form.permission_update_notices')
+          elsif source.collection?
+            redirect_to hyrax.edit_dashboard_collection_path(source_id,
+                                                             anchor: 'sharing'),
+                        notice: translate('sharing', scope: 'hyrax.dashboard.collections.form.permission_update_notices')
+          end
         end
 
         def after_destroy_error
-          redirect_to hyrax.edit_admin_admin_set_path(admin_set_id,
-                                                      anchor: 'participants'),
-                      alert: @permission_template_access.errors.full_messages.to_sentence
+          if source.admin_set?
+            redirect_to hyrax.edit_admin_admin_set_path(source_id,
+                                                        anchor: 'participants'),
+                        alert: @permission_template_access.errors.full_messages.to_sentence
+          elsif source.collection?
+            redirect_to hyrax.edit_dashboard_collection_path(source_id,
+                                                             anchor: 'sharing'),
+                        alert: @permission_template_access.errors.full_messages.to_sentence
+          end
         end
 
-        # @return [String] the identifier for the AdminSet for the currently loaded resource
-        def admin_set_id
-          @admin_set_id ||= @permission_template_access.permission_template.admin_set_id
+        delegate :source_id, to: :permission_template
+
+        def source
+          @source ||= ::SolrDocument.find(source_id)
         end
 
         def remove_access!
-          Forms::PermissionTemplateForm.new(@permission_template_access.permission_template)
-                                       .remove_access!(@permission_template_access)
+          permission_template_form.remove_access!(@permission_template_access)
+        end
+
+        def permission_template_form
+          @permission_template_form ||= Forms::PermissionTemplateForm.new(permission_template)
+        end
+
+        def permission_template
+          @permission_template ||= @permission_template_access.permission_template
         end
     end
   end

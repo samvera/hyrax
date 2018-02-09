@@ -24,31 +24,13 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
 
     context "when access is :deposit" do
       let(:access) { :deposit }
-      let(:admin_set) { create(:admin_set) }
-      let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
 
       context "and user has access" do
         before do
-          create(:permission_template_access,
-                 permission_template: permission_template,
-                 agent_type: 'user',
-                 agent_id: user.user_key,
-                 access: 'deposit')
+          allow(Hyrax::Collections::PermissionsService).to receive(:source_ids_for_deposit).and_return([7, 8])
         end
 
-        it { is_expected.to eq ["{!terms f=id}#{admin_set.id}"] }
-      end
-
-      context "and group has access" do
-        before do
-          create(:permission_template_access,
-                 permission_template: permission_template,
-                 agent_type: 'group',
-                 agent_id: 'registered',
-                 access: 'deposit')
-        end
-
-        it { is_expected.to eq ["{!terms f=id}#{admin_set.id}"] }
+        it { is_expected.to eq ["{!terms f=id}7,8"] }
       end
 
       context "and user has no access" do
@@ -60,7 +42,7 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
   describe ".default_processor_chain" do
     subject { described_class.default_processor_chain }
 
-    it { is_expected.to include :filter_models }
+    it { is_expected.to include(:filter_models, :add_access_controls_to_solr_params) }
   end
 
   describe "#to_h" do
@@ -83,27 +65,9 @@ RSpec.describe Hyrax::AdminSetSearchBuilder do
 
     context "when searching for deposit access" do
       let(:access) { :deposit }
-      let(:permission_template1) { create(:permission_template, admin_set_id: 7) }
-      let(:permission_template2) { create(:permission_template, admin_set_id: 8) }
-      let(:permission_template3) { create(:permission_template, admin_set_id: 9) }
 
       before do
-        create(:permission_template_access,
-               :manage,
-               permission_template: permission_template1,
-               agent_type: 'user',
-               agent_id: user.user_key,
-               access: 'deposit')
-        create(:permission_template_access,
-               :manage,
-               permission_template: permission_template2,
-               agent_type: 'user',
-               agent_id: user.user_key)
-        create(:permission_template_access,
-               :view,
-               permission_template: permission_template3,
-               agent_type: 'user',
-               agent_id: user.user_key)
+        allow(Hyrax::Collections::PermissionsService).to receive(:source_ids_for_deposit).and_return([7, 8])
       end
 
       it 'is successful' do

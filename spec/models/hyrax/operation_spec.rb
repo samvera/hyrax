@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::Operation do
-  context '#status' do
+  describe '#status' do
     it 'is protected by enum enforcement' do
       expect { described_class.new(status: 'not_valid') }.to raise_error(ArgumentError)
     end
@@ -9,6 +9,32 @@ RSpec.describe Hyrax::Operation do
       create(:operation, :pending)
       values = described_class.connection.execute("SELECT * FROM #{described_class.quoted_table_name}")
       expect(values.first.fetch('status')).to eq(described_class::PENDING)
+    end
+  end
+
+  describe '#rollup_messages' do
+    subject { operation.rollup_messages }
+
+    context 'with no message and no children' do
+      let(:operation) { create(:operation, :failing, message: nil) }
+
+      it { is_expected.to eq [] }
+    end
+    context 'with a message and no children' do
+      let(:operation) { create(:operation, :failing, message: 'A bad thing!') }
+
+      it { is_expected.to eq ['A bad thing!'] }
+    end
+    context 'with a message and children with messages' do
+      let(:operation) { create(:operation, :failing, message: 'A bad thing!') }
+      let(:child1) { create(:operation, :failing, message: 'Foo!') }
+      let(:child2) { create(:operation, :failing, message: 'Bar!') }
+
+      before do
+        allow(operation).to receive(:children).and_return([child1, child2])
+      end
+
+      it { is_expected.to match_array ['A bad thing!', 'Foo!', 'Bar!'] }
     end
   end
 

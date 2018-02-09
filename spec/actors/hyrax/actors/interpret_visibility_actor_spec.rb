@@ -4,7 +4,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
   let(:curation_concern) { GenericWork.new }
   let(:attributes) { { admin_set_id: admin_set.id } }
   let(:admin_set) { create(:admin_set) }
-  let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
+  let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:one_year_from_today) { Time.zone.today + 1.year }
   let(:two_years_from_today) { Time.zone.today + 2.years }
@@ -152,7 +152,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       end
 
       context "embargo with date = one year from today, and required embargo of 6 months or less" do
-        let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id, release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_6_MONTHS) }
+        let(:permission_template) { create(:permission_template, source_id: admin_set.id, release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_6_MONTHS) }
         let(:attributes) do
           { title: ['New embargo'],
             admin_set_id: admin_set.id,
@@ -170,7 +170,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       context "embargo with date = one year from today, and required embargo of 1 year or less" do
         let(:permission_template) do
           create(:permission_template,
-                 admin_set_id: admin_set.id,
+                 source_id: admin_set.id,
                  release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR)
         end
         let(:attributes) do
@@ -189,7 +189,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       context "embargo with date that doesn't match a required, fixed date" do
         let(:permission_template) do
           create(:permission_template,
-                 admin_set_id: admin_set.id,
+                 source_id: admin_set.id,
                  release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED,
                  release_date: one_year_from_today.to_s)
         end
@@ -210,7 +210,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       context "embargo with date matching the required, fixed date" do
         let(:permission_template) do
           create(:permission_template,
-                 admin_set_id: admin_set.id,
+                 source_id: admin_set.id,
                  release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED,
                  release_date: two_years_from_today.to_s)
         end
@@ -230,7 +230,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       context "embargo with valid embargo date and invalid post-embargo visibility" do
         let(:permission_template) do
           create(:permission_template,
-                 admin_set_id: admin_set.id,
+                 source_id: admin_set.id,
                  release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR,
                  visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
         end
@@ -252,7 +252,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       context "embargo with valid embargo date and valid post-embargo visibility" do
         let(:permission_template) do
           create(:permission_template,
-                 admin_set_id: admin_set.id,
+                 source_id: admin_set.id,
                  release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR,
                  visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
         end
@@ -273,7 +273,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       context "embargo with public visibility and public visibility required (no specified release_period in template)" do
         let(:permission_template) do
           create(:permission_template,
-                 admin_set_id: admin_set.id,
+                 source_id: admin_set.id,
                  visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
         end
         let(:attributes) do
@@ -293,7 +293,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       context "embargo with public visibility and authenticated visibility required (no specified release_period in template)" do
         let(:permission_template) do
           create(:permission_template,
-                 admin_set_id: admin_set.id,
+                 source_id: admin_set.id,
                  visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
         end
         let(:attributes) do
@@ -314,7 +314,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       context "embargo when no release delays are allowed" do
         let(:permission_template) do
           create(:permission_template,
-                 admin_set_id: admin_set.id,
+                 source_id: admin_set.id,
                  release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY)
         end
         let(:attributes) do
@@ -332,7 +332,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       end
 
       context "no embargo/lease when no release delays are allowed" do
-        let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id, release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY) }
+        let(:permission_template) { create(:permission_template, source_id: admin_set.id, release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY) }
         let(:attributes) { { title: ['New embargo'], admin_set_id: admin_set.id, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC } }
 
         it "returns true" do
@@ -344,7 +344,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       context "visibility public (no embargo) when visibility required to be authenticated" do
         let(:permission_template) do
           create(:permission_template,
-                 admin_set_id: admin_set.id,
+                 source_id: admin_set.id,
                  release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY,
                  visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
         end
@@ -360,7 +360,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       context "visibility public (no embargo) and visibility required to be public" do
         let(:permission_template) do
           create(:permission_template,
-                 admin_set_id: admin_set.id,
+                 source_id: admin_set.id,
                  release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY,
                  visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
         end
@@ -375,7 +375,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       context "lease specified with any release/visibility requirements" do
         let(:permission_template) do
           create(:permission_template,
-                 admin_set_id: admin_set.id,
+                 source_id: admin_set.id,
                  release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_1_YEAR,
                  visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
         end
@@ -395,7 +395,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       end
 
       context "lease specified with NO release/visibility requirements" do
-        let(:permission_template) { create(:permission_template, admin_set_id: admin_set.id) }
+        let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
         let(:attributes) do
           { title: ['New embargo'],
             admin_set_id: admin_set.id,

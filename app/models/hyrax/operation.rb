@@ -41,6 +41,18 @@ module Hyrax
       end
     end
 
+    # Roll up messages for an operation and all of its children
+    def rollup_messages
+      [].tap do |messages|
+        messages << message if message.present?
+        if children
+          children.pluck(:message).uniq.each do |child_message|
+            messages << child_message if child_message.present?
+          end
+        end
+      end
+    end
+
     # Mark this operation as a SUCCESS. If this is a child operation, roll up to
     # the parent any failures.
     #
@@ -58,10 +70,10 @@ module Hyrax
     # Mark this operation as a FAILURE. If this is a child operation, roll up to
     # the parent any failures.
     #
-    # @param [String, nil] message - record any failure message
+    # @param [String, nil] message record any failure message
     # @see Hyrax::Operation::FAILURE
     # @see #rollup_status
-    # @note This will run any registered :success callbacks
+    # @note This will run any registered :failure callbacks
     # @todo Where are these callbacks defined? Document this
     def fail!(message = nil)
       run_callbacks :failure do

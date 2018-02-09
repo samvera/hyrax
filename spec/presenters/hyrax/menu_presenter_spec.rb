@@ -19,6 +19,11 @@ RSpec.describe Hyrax::MenuPresenter do
 
       it { is_expected.to be true }
     end
+    context "for the CollectionTypesController" do
+      let(:controller_name) { Hyrax::Admin::CollectionTypesController.controller_name }
+
+      it { is_expected.to be true }
+    end
   end
 
   describe "#collapsable_section" do

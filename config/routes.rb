@@ -132,6 +132,10 @@ Hyrax::Engine.routes.draw do
         put :remove_member
       end
     end
+    post 'collections/:id', controller: 'collection_members', action: :update_members
+    post 'collections/:child_id/within', controller: 'nest_collections', action: 'create_relationship_within', as: 'create_nest_collection_within'
+    get 'collections/:parent_id/under', controller: 'nest_collections', action: 'create_collection_under', as: 'create_subcollection_under'
+    post 'collections/:parent_id/under', controller: 'nest_collections', action: 'create_relationship_under', as: 'create_nest_collection_under'
     resources :profiles, only: [:show, :edit, :update]
   end
 
@@ -155,6 +159,15 @@ Hyrax::Engine.routes.draw do
     get '/shares',            controller: 'my/shares', action: :index, as: 'dashboard_shares'
     get '/shares/page/:page', controller: 'my/shares', action: :index
     get '/shares/facet/:id',  controller: 'my/shares', action: :facet, as: 'dashboard_shares_facet'
+    scope :collections do
+      get '/permission_template/new' => 'admin/permission_templates#new', as: :new_dashboard_collection_permission_template
+      get '/:collection_id/permission_template/edit' => 'admin/permission_templates#edit', as: :edit_dashboard_collection_permission_template
+      get '/:collection_id/permission_template' => 'admin/permission_templates#show', as: :dashboard_collection_permission_template
+      patch '/:collection_id/permission_template' => 'admin/permission_templates#update'
+      put '/:collection_id/permission_template' => 'admin/permission_templates#update'
+      delete '/:collection_id/permission_template' => 'admin/permission_templates#destroy'
+      post '/:collection_id/permission_template' => 'admin/permission_templates#create'
+    end
   end
 
   # Contact form routes
@@ -222,6 +235,8 @@ Hyrax::Engine.routes.draw do
     resources :workflows
     resources :workflow_roles
     resource :appearance
+    resources :collection_types, except: :show
+    resources :collection_type_participants, only: [:create, :destroy]
   end
 
   resources :content_blocks, only: [] do

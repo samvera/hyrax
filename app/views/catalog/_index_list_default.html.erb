@@ -1,15 +1,30 @@
-    <div class="metadata">
-      <table class="table">
-        <% doc_presenter = index_presenter(document) %>
-        <% index_fields(document).each do |field_name, field| -%>
-          <% if should_render_index_field? document, field %>
-            <tr>
-              <th><span class="attribute-label h4"><%= render_index_field_label document, field: field_name %></span></th>
-              <td><%= doc_presenter.field_value field_name %></td>
-            </tr>
-          <% end %>
-        <% end %>
-      </table>
+<div class="col-sm-5">
+  <div class="metadata">
+    <% doc_presenter = index_presenter(document) %>
+    <% index_fields(document).each do |field_name, field| -%>
+      <% if should_render_index_field? document, field %>
+        <div class="row metadata-row">
+          <div class="col-sm-4">
+            <%= render_index_field_label document, field: field_name %>
+          </div>
+          <div class="col-sm-8">
+            <%= doc_presenter.field_value field_name %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+<% if(doc_presenter.field_value('has_model_ssim') == 'Collection') %>
+    <% collection_presenter = Hyrax::CollectionPresenter.new(document, current_ability) %>
+<div class="col-sm-4">
+  <div class="collection-counts-wrapper">
+    <div class="collection-counts-item">
+      <span><%= collection_presenter.total_viewable_collections %></span>Collections
     </div>
-
-    <div class="clearfix"></div>
+    <div class="collection-counts-item">
+      <span><%= collection_presenter.total_viewable_works %></span>Works
+    </div>
+  </div>
+</div>
+<% end %>

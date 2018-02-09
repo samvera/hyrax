@@ -4,10 +4,6 @@ module Hyrax
       params[:controller].match(%r{^hyrax/dashboard|hyrax/my})
     end
 
-    def on_my_works?
-      params[:controller].match(%r{^hyrax/my/works})
-    end
-
     def number_of_works(user = current_user)
       Hyrax::WorkRelation.new.where(DepositSearchBuilder.depositor_field => user.user_key).count
     rescue RSolr::Error::ConnectionRefused

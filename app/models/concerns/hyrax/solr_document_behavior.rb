@@ -65,6 +65,10 @@ module Hyrax
       hydra_model == ::Collection
     end
 
+    def admin_set?
+      hydra_model == ::AdminSet
+    end
+
     # Method to return the ActiveFedora model
     def hydra_model
       first(Solrizer.solr_name('has_model', :symbol)).constantize
@@ -96,6 +100,10 @@ module Hyrax
                       else
                         Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
                       end
+    end
+
+    def collection_type_gid
+      first('collection_type_gid_ssim')
     end
   end
 end

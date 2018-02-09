@@ -67,8 +67,15 @@ h4 .small {
   cursor: pointer;
 }
 
-.batch-info .sort-toggle {
-  height: 5.1em;
+.batch-info {
+
+  .sort-toggle {
+    height: 5.1em;
+
+    button {
+      margin-left: 10px;
+    }
+  }
 }
 
 .caret.up {

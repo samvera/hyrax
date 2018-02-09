@@ -18,6 +18,10 @@ FactoryBot.define do
       end
     end
 
+    after(:create) do |work, _evaluator|
+      work.save! if work.member_of_collections.present?
+    end
+
     title ["Test title"]
     visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
 
@@ -29,6 +33,10 @@ FactoryBot.define do
 
     trait :public do
       visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+    end
+
+    factory :private_work do
+      visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
     end
 
     factory :registered_generic_work do

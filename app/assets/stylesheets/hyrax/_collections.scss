@@ -17,23 +17,6 @@ header {
   }
 }
 
-.metadata-collections {
-  dt {
-    color: $file-show-term-color;
-  }
-  dd {
-    word-wrap: break-word;
-  }
-  dt::after {
-    content: ':';
-  }
-  -moz-column-count: 2;
-  -webkit-column-count: 2;
-  column-count: 2;
-  -moz-column-width: 20em;
-  -webkit-column-width: 20em;
-  column-width: 20em;
-}
 
 .collection-icon,
 .collection-icon-search {
@@ -62,6 +45,10 @@ header {
 .actions-controls-collections {
   display: block;
   margin: 1em 0 0 1em;
+
+  .deposit-new-work-through-collection {
+    margin-bottom: 8px;
+  }
 }
 
 .label-default a:link,
@@ -71,7 +58,7 @@ header {
   text-align: center;
 }
 
-.edit_collection {
+.dropdown-menu .edit_collection {
   margin-top: 2 * $padding-large-vertical;
 }
 
@@ -79,9 +66,616 @@ div.view-type {
   padding-left: 0;
 }
 
-form.per_page {
-  fieldset {
-    margin-bottom: 1em;
-    padding-left: 0;
+input.branding-logo-input,
+input.branding-banner-input {
+  width: 250px;
+}
+
+div.branding-logo-input,
+div.branding-banner-input {
+  text-align: right;
+}
+
+div.branding-logo-row,
+div.branding-banner-row {
+  border-top: solid 1px #dddddd;
+  padding-top: 10px;
+}
+
+div.branding-logo-progress,
+div.branding-banner-progress {
+  margin-top: -25px;
+}
+
+button.branding-logo-remove,
+button.branding-logo-remove:hover,
+button.branding-banner-remove,
+button.branding-banner-remove:hover {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: $brand-danger;
+  font-weight: normal;
+  text-decoration: underline;
+}
+
+.dashboard .collections-wrapper {
+  .panel {
+    .panel-title {
+      font-weight: 300;
+    }
   }
+}
+
+// Styles wrapped in a selector class initially intended
+// for the Collections index list page
+.collections-wrapper {
+  padding-top: 20px;
+
+  #documents {
+    .collections-list-table {
+      td {
+        vertical-align: top;
+      }
+    }
+  }
+
+  .collections-list-table {
+
+    th,
+    td {
+      text-align: center;
+      vertical-align: top;
+
+      &:nth-child(2) {
+        text-align: left;
+      }
+    }
+
+    .modal {
+      text-align: left;
+    }
+
+    &.collection-works-table {
+
+      .title-column {
+        width: 40%;
+      }
+    }
+  }
+
+  // Datatable overwrites
+  .dataTable {
+
+    thead {
+      .sorting::after,
+      .sorting_asc::after,
+      .sorting_desc::after {
+        right: 0;
+      }
+    }
+  }
+
+  .create-collection-button {
+    margin-bottom: 10px;
+  }
+
+  .delete-collections-button {
+    margin-bottom: 20px;
+  }
+
+  .inline-dropdowns {
+    select {
+      margin-left: 10px;
+    }
+  }
+
+  .thumbnail-title-wrapper {
+    align-items: normal;
+    display: flex;
+
+    .thumbnail-wrapper {
+      width: 50px;
+
+      > img {
+        height: 30px;
+        width: auto;
+      }
+    }
+
+    .glyphicon {
+      margin: 4px 0 0 4px;
+    }
+  }
+
+  .tabs-row {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    .nav-tabs {
+      margin-top: 0;
+    }
+  }
+
+  .expanded-details {
+    display: none;
+    padding-top: 10px;
+
+    dd {
+      text-align: left;
+    }
+  }
+
+  .modal {
+    .select-collectiontype-label {
+      float: right;
+      margin-left: 15px;
+
+      p {
+        font-weight: normal;
+      }
+    }
+
+    .collection-type-title {
+      margin-top: 0;
+    }
+
+    // List of radio inputs in modal window
+    .radio-button-list {
+      h4 {
+        margin-top: 2px;
+      }
+    }
+  }
+
+  .side-arrows::after {
+    content: "»";
+    font-size: 18px;
+    line-height: 1;
+    padding-left: 3px;
+  }
+}
+
+// Admin show page
+.admin-show-page {
+
+  .panel-body > section {
+    border-top: 1px solid #efefef;
+    margin-bottom: 40px;
+
+    &:first-child {
+      border: 0;
+    }
+  }
+
+  .panel-heading {
+    vertical-align: middle;
+
+    .btn {
+      margin-left: 5px;
+    }
+  }
+
+  // This class wraps the collection title row, which includes labels plus show action buttons
+  .collection-title-row-wrapper {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    @media (max-width: 768px) {
+      display: block;
+    }
+
+    .collection-title-row-content {
+      align-items: center;
+      display: flex;
+
+      @media (max-width: 768px) {
+        display: block;
+        margin-bottom: 10px;
+
+        .btn {
+          display: block;
+          margin: 0 0 5px;
+          width: 100%;
+        }
+      }
+
+      .label {
+        margin-left: 5px;
+      }
+    }
+
+    .collection-title {
+      display: inline-block;
+      margin: 0;
+    }
+  }
+
+  .collection-description-wrapper {
+    section {
+      margin-bottom: 30px;
+    }
+  }
+
+  .parent-collections-count {
+    font-weight: bold;
+  }
+
+  // Search collections section
+  .collections-search-wrapper {
+    border: 0;
+  }
+
+  // Works section
+  .works-wrapper {
+    > div:first-of-type {
+      margin-bottom: 20px;
+    }
+  }
+}
+
+// Selector for Collections forms
+.collections-forms {
+
+  // Relationships tab
+  &.relationships {
+
+    table {
+      border-top: 1px solid #ddd;
+    }
+
+    th,
+    td {
+
+      &:nth-child(1) {
+        width: 70%;
+      }
+
+      &:nth-child(2) {
+        text-align: center;
+      }
+    }
+
+    .collection-list-wrapper {
+      margin: 30px 0;
+    }
+
+    .select-wrapper {
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.delete-admin-set-collection-form {
+  text-align: left;
+}
+
+// Edit Collections - Sharing Tab
+.edit-sharing-tab {
+
+  .section-add-sharing {
+    padding-bottom: 40px;
+
+    .form-inline {
+      label {
+        padding-right: 5px;
+        text-align: right;
+        width: 100px;
+      }
+
+      input,
+      select {
+        width: 200px;
+      }
+
+      .btn {
+        width: 75px;
+      }
+    }
+  }
+
+  .section-collection-sharing {
+
+    legend {
+      margin-bottom: 0;
+    }
+
+    .share-status {
+      th,
+      td {
+        &:last-of-type {
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+// Styles for collection public landing page
+.hyc-header {
+
+  margin-bottom: 2em;
+
+}
+
+.hyc-body {
+
+  margin-bottom: 2em;
+
+}
+
+.hyc-banner {
+
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 1em;
+  min-height: 120px;
+  position: relative;
+  width: 100%;
+
+  .hyc-title {
+
+    padding: 1em;
+
+    h1 {
+      color: #fff;
+      display: inline-block;
+      font-size: 2.5em;
+      margin: 0;
+      padding: 0;
+      text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .label {
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);
+      margin-left: 0.5em;
+      vertical-align: 100%;
+    }
+
+  }
+
+  .hyc-logos {
+
+    padding: 0 1em;
+
+    a {
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    img {
+      display: inline-block;
+      height: 50px;
+      padding: 0 1em 1em 0;
+      width: auto;
+    }
+
+  }
+
+  .hyc-bugs {
+
+    div {
+      color: #fff;
+      font-size: 1em;
+      padding: 1em;
+      position: absolute;
+      text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .hyc-item-count {
+      background: rgba(255, 255, 255, 0.75);
+      border-radius: 0.5em;
+      color: #333;
+      margin: 1em;
+      padding: 0.5em 1em;
+      right: 0;
+      text-align: center;
+      text-shadow: none;
+      top: 0;
+    }
+
+    .hyc-created-by {
+      bottom: 0;
+      left: 0;
+    }
+
+    .hyc-last-updated {
+      bottom: 0;
+      right: 0;
+    }
+
+  }
+
+}
+
+.hyc-generic {
+
+  .hyc-title {
+
+    h1 {
+      display: inline-block;
+      font-size: 2.5em;
+      margin: 0;
+      padding: 0;
+    }
+
+    .label {
+      margin-left: 0.5em;
+      vertical-align: 100%;
+    }
+
+  }
+
+  .hyc-logos {
+
+    padding: 0;
+
+    a {
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    img {
+      display: inline-block;
+      height: 60px;
+      padding: 1em 1em 1em 0;
+      width: auto;
+    }
+
+  }
+
+  .hyc-bugs {
+    display: flex;
+
+    div {
+      font-size: 0.9em;
+      margin: 0;
+      padding: 0;
+    }
+
+    .hyc-item-count::after {
+      content: "\00a0\00a0•\00a0\00a0";
+    }
+
+    .hyc-created-by::after {
+      content: "\00a0\00a0•\00a0\00a0";
+    }
+
+  }
+
+}
+
+.hyc-description {
+  padding: 0 1em 0 2em;
+  text-align: justify;
+  text-justify: kashida;
+}
+
+.hyc-metadata {
+
+  padding: 0 2em 0 1em;
+
+  h2 {
+    font-size: 1.25em;
+    margin: 0 0 0.5em;
+  }
+
+  dl {
+    border-top: 1px solid #ddd;
+    width: 100%;
+  }
+
+  div {
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    padding: 3px;
+
+    dt {
+      flex-basis: 115px;
+      font-weight: bold;
+    }
+
+    dd {
+      flex-basis: auto;
+    }
+
+  }
+
+}
+
+.hyc-blacklight {
+
+  padding: 0 1em;
+
+}
+
+.hyc-bl-title {
+
+  h2 {
+    font-size: 1.5em;
+    margin: 0 0 0.5em;
+  }
+
+}
+
+.hyc-bl-sort {
+
+  margin-bottom: 1em;
+  margin-top: 1em;
+
+  form {
+
+    fieldset {
+      margin: 0;
+    }
+
+  }
+
+  .view-type {
+    margin-left: 1em;
+  }
+
+  label {
+    font-weight: normal;
+  }
+
+}
+
+.hyc-bl-results {
+
+  margin: 0 0 2em;
+
+  .alert {
+    margin: 0;
+  }
+
+  th {
+    white-space: nowrap;
+  }
+
+}
+
+.hyc-bl-pager {
+
+  margin-bottom: 2em;
+
+  .pager {
+    margin: 0;
+    padding: 0;
+  }
+
+  .pagination {
+
+    display: block;
+    margin: 0;
+    padding: 0;
+
+    li a,
+    .active span {
+      border-radius: 3px;
+      margin-right: 3px;
+    }
+
+  }
+
+}
+
+.tiny-nudge {
+
+  margin-left: 0.5em;
+
+}
+
+.more-parent-collections-block {
+  display: none;
+}
+
+.show-more-parent-collections-btn,
+.show-less-parent-collections-btn {
+  color: #8598b7;
+  font-size: 0.8em;
+  margin-left: 10px;
 }

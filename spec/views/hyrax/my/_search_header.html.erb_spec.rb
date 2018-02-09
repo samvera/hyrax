@@ -12,23 +12,23 @@ RSpec.describe 'hyrax/my/_search_header.html.erb', type: :view do
 
   context "on my works page" do
     before do
-      allow(view).to receive(:on_my_works?).and_return(true)
+      view.lookup_context.prefixes.push "hyrax/my/works"
       render 'hyrax/my/search_header', current_tab: 'works'
     end
     it "has buttons" do
-      expect(rendered).to have_selector('button', text: 'Add to Collection')
+      expect(rendered).to have_selector('input[value="Delete Selected"]')
+      expect(rendered).to have_selector('button', text: 'Add to collection')
       expect(rendered).to have_selector('input[value="Edit Selected"]')
     end
   end
 
-  context "not on my works page (i.e. Works shared with me)" do
+  context "on my collections page" do
     before do
-      allow(view).to receive(:on_my_works?).and_return(false)
+      view.lookup_context.prefixes.push "hyrax/my/collections"
       render 'hyrax/my/search_header', current_tab: 'shared'
     end
     it "has buttons" do
-      expect(rendered).not_to have_selector('button', text: 'Add to Collection')
-      expect(rendered).to have_selector('input[value="Edit Selected"]')
+      expect(rendered).to have_selector('button', text: 'Delete collections')
     end
   end
 end
