@@ -78,13 +78,13 @@ module Hyrax
 
         # @api private
         #
-        # TODO: paging is linked between both works and collections member searches due
-        # to blacklight constraints, so I've deactivated paging here, and selected
-        # a large result number to hopefully get everything.
         # Blacklight pagination still needs to be overridden and set up for the subcollections.
         # @return <Hash> the additional inputs required for the subcollection member search builder
         def params_for_subcollections
-          params.merge(rows: 50).except(:page)
+          # To differentiate current page for works vs subcollections, we have to use a sub_collection_page
+          # param. Map this to the page param before querying for subcollections, if it's present
+          params[:page] = params.delete(:sub_collection_page)
+          params
         end
     end
   end

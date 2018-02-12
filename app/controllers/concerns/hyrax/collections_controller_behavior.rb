@@ -91,6 +91,7 @@ module Hyrax
 
       def member_subcollections
         results = collection_member_service.available_member_subcollections
+        @subcollection_solr_response = results
         @subcollection_docs = results.documents
         @subcollection_count = results.total
       end

@@ -168,6 +168,24 @@ pc = create_public_collection(user, nestable_gid, 'parent_nested', title: ['A Pa
 cc = create_public_collection(user, nestable_gid, 'child_nested', title: ['A Child Collection'], description: ['Public collection that will be a child of another collection.'])
 Hyrax::Collections::NestedCollectionPersistenceService.persist_nested_collection_for(parent: pc, child: cc)
 
+puts 'Create collection with many child collections and works'
+mpc = create_public_collection(
+  user,
+  nestable_gid,
+  'parent_nested_many',
+  title: ['A Parent Collection with many Child Collections'],
+  description: ['Public collection that will be a parent of many collections.']
+)
+21.times do |i|
+  mcc = create_public_collection(user, nestable_gid, "child_nested_#{i}", title: ["Child Collection #{i}"], description: ['Public collection that will be a child of another collection.'])
+  Hyrax::Collections::NestedCollectionPersistenceService.persist_nested_collection_for(parent: mpc, child: mcc)
+  create_public_work(user, "pub_mgw_#{i}",
+                     title: ["Public #{i}"],
+                     description: ["Public work #{i} being added to the Public Nested Collection"],
+                     creator: ['Joan Smith'], keyword: ['test'], rights_statement: 'http://rightsstatements.org/vocab/InC/1.0/',
+                     member_of_collections_attributes: collection_attributes_for([mpc.id]))
+end
+
 puts 'Create works for collection nesting ad hoc testing'
 3.times do |i|
   create_public_work(user, "pub_gw_#{i}",
