@@ -50,7 +50,7 @@ module Hyrax
 
       def single_membership_collections(collection_ids)
         return [] if collection_ids.blank?
-        Collection.where(id: collection_ids, collection_type_gid_ssim: single_membership_types.join(','))
+        Collection.where(id: collection_ids, collection_type_gid_ssim: single_membership_types)
       end
 
       def single_membership_types
