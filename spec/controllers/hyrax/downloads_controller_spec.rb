@@ -19,16 +19,20 @@ RSpec.describe Hyrax::DownloadsController do
 
       before { sign_in another_user }
 
-      it 'redirects to the default image' do
+      it 'returns :unauthorized status with image content' do
         get :show, params: { id: file_set.to_param }
-        expect(response).to redirect_to default_image
+        expect(response).to have_http_status(:unauthorized)
+        expect(response).not_to redirect_to default_image
+        expect(response.content_type).to eq 'image/png'
       end
     end
 
     context "when user isn't logged in" do
-      it 'redirects to the default image' do
+      it 'returns :unauthorized status with image content' do
         get :show, params: { id: file_set.to_param }
-        expect(response).to redirect_to default_image
+        expect(response).to have_http_status(:unauthorized)
+        expect(response).not_to redirect_to default_image
+        expect(response.content_type).to eq 'image/png'
       end
 
       it 'authorizes the resource using only the id' do
