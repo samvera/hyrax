@@ -19,4 +19,31 @@
     <%= menu.nav_link(hyrax.leases_path) do %>
       <span class="fa fa-flag"></span> <span class="sidebar-action-text"><%= t('hyrax.leases.index.manage_leases') %></span>
     <% end %>
+
+    <% if Flipflop.analytics_redesign? %>
+      <li>
+        <%= menu.collapsable_section t('hyrax.admin.sidebar.statistics'),
+          icon_class: 'fa fa-bar-chart',
+          id: 'collapseReports',
+          open: menu.admin_reports_section? do %>
+          <li>
+            <%= menu.collapsable_section t('hyrax.admin.sidebar.works'),
+              icon_class: 'fa fa-file',
+              id: 'collapseWorkReports',
+              open: menu.admin_reports_works_section? do %>
+
+              <%= menu.nav_link(hyrax.status_admin_reports_works_path, also_active_for: nil, class: 'nest') do %>
+                <span class="fa fa-check"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.status') %></span>
+              <% end %>
+              <%= menu.nav_link(hyrax.attributes_admin_reports_works_path, also_active_for: nil, class: 'nest') do %>
+                <span class="fa fa-sort"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.attributes') %></span>
+              <% end %>
+              <%= menu.nav_link(hyrax.activity_admin_reports_works_path, also_active_for: nil, class: 'nest') do %>
+                <span class="fa fa-level-up"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.activity') %></span>
+              <% end %>
+            <% end %>
+          </li>
+        <% end %>
+      </li>
+    <% end %>
   <% end %>
