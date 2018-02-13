@@ -49,15 +49,16 @@ class ImportUrlJob < Hyrax::ApplicationJob
     # @yield [IO] the stream to write to
     def copy_remote_file(uri)
       filename = File.basename(uri.path)
-      Dir.mktmpdir do |dir|
-        File.open(File.join(dir, filename), 'wb') do |f|
-          retriever = BrowseEverything::Retriever.new
-          retriever.retrieve('url' => uri) do |chunk|
-            f.write(chunk)
-          end
-          f.rewind
-          yield f
+      dir = Dir.mktmpdir
+      Rails.logger.debug("ImportUrlJob: Copying <#{uri}> to #{dir}")
+      File.open(File.join(dir, filename), 'wb') do |f|
+        retriever = BrowseEverything::Retriever.new
+        retriever.retrieve('url' => uri) do |chunk|
+          f.write(chunk)
         end
+        f.rewind
+        yield f
       end
+      Rails.logger.debug("ImportUrlJob: Closing #{File.join(dir, filename)}")
     end
 end
