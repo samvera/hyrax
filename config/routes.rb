@@ -229,6 +229,15 @@ Hyrax::Engine.routes.draw do
     resources :users, only: [:index]
     resources :permission_template_accesses, only: :destroy
     resource 'stats', only: [:show]
+    namespace :reports do
+      resource :works, only: [] do
+        member do
+          get 'status'
+          get 'attributes'
+          get 'activity'
+        end
+      end
+    end
     resources :features, only: [:index] do
       resources :strategies, only: [:update, :destroy]
     end

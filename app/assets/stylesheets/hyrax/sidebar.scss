@@ -39,6 +39,10 @@ $gutter-width: $grid-gutter-width/2;
     .nav-pills > li {
       a {
         padding-left: 24px;
+
+        &.nest {
+          padding-left: 76px;
+        }
       }
       ul > li a {
         padding-left: 52px;
@@ -105,6 +109,7 @@ $gutter-width: $grid-gutter-width/2;
     li .fa {
       margin-right: $padding-base-horizontal;
     }
+
   }
 
   .nav-pills > li > a {
