@@ -50,6 +50,7 @@ RSpec.describe "Browse Dashboard", type: :feature do
     first('input#check_all').click
     expect do
       accept_confirm { click_button('Delete Selected') }
+      expect(page).to have_content('Batch delete complete')
     end.to change { GenericWork.count }.by(-3)
   end
 end
