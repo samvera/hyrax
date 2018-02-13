@@ -40,12 +40,31 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
   context 'with a user who can read the admin dash' do
     let(:read_admin_dashboard) { true }
 
-    before { render }
     subject { rendered }
 
     it { is_expected.to have_link t('hyrax.admin.sidebar.statistics') }
     it { is_expected.to have_link t('hyrax.embargoes.index.manage_embargoes') }
     it { is_expected.to have_link t('hyrax.leases.index.manage_leases') }
+
+    context "without the analytics_redesign" do
+      before do
+        allow(Flipflop).to receive(:analytics_redesign?).and_return(false)
+        render
+      end
+
+      it { is_expected.to have_link t('hyrax.admin.sidebar.statistics') }
+      it { is_expected.not_to have_link t('hyrax.admin.sidebar.attributes') }
+    end
+
+    context 'with the new analytics_redesign' do
+      before do
+        allow(Flipflop).to receive(:analytics_redesign?).and_return(true)
+        render
+      end
+
+      it { is_expected.to have_link t('hyrax.admin.sidebar.statistics') }
+      it { is_expected.to have_link t('hyrax.admin.sidebar.attributes') }
+    end
   end
 
   context 'with a user who can review submissions' do
