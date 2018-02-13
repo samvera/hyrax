@@ -261,6 +261,7 @@ en:
       sidebar:
         activity: Activity
         appearance: Appearance
+        attributes: Attributes
         collection_types: Collection Types
         collections: Collections
         configuration: Configuration

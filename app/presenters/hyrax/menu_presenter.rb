@@ -42,6 +42,18 @@ module Hyrax
       end
     end
 
+    # @return [Boolean] true if the current controller happens to be one of the controllers that deals
+    # with admin reports. This is used to keep the parent section on the sidebar open
+    def admin_reports_section?
+      %w[works].include?(controller_name) && %w[status attributes activity].include?(action_name)
+    end
+
+    # @return [Boolean] true if the current controller happens to be one of the controllers that deals
+    # with admin work reports. This is used to keep the parent section on the sidebar open
+    def admin_reports_works_section?
+      controller.is_a? Hyrax::Admin::Reports::WorksController
+    end
+
     # Draw a collaspable menu section. The passed block should contain <li> items.
     def collapsable_section(text, id:, icon_class:, open:, &block)
       CollapsableSectionPresenter.new(view_context: view_context,
