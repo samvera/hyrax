@@ -258,6 +258,7 @@ en:
       sidebar:
         activity:           "Activity"
         appearance:         "Appearance"
+        attributes:         "Attributes"
         collection_types:   "Collection types"
         collections:        "Collections"
         collection_types:   "Collection Types"
@@ -269,6 +270,7 @@ en:
         repository_objects: "Repository Contents"
         settings:           "Settings"
         statistics:         "Reports"
+        status:             "Status"
         tasks:              "Tasks"
         technical:          "Features"
         transfers:          "Transfers"
