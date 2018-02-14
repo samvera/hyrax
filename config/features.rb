@@ -30,4 +30,8 @@ Flipflop.configure do
   feature :batch_upload,
           default: true,
           description: "Enable uploading batches of works"
+
+  feature :analytics_redesign,
+          default: false,
+          description: "Display new reporting features. *Very Experimental*"
 end
