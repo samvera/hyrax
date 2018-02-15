@@ -63,6 +63,10 @@ Blacklight.onLoad(function () {
     // Build new <option>s markup and put on DOM
     selectMarkup = buildSelectMarkup($dataEl.data('collsHash'));
     $(selectMarkup).insertAfter($firstOption);
+
+    // Disable the submit button in modal by default
+    $('#add-to-collection-modal').find('.modal-submit-button').prop('disabled', true);
+    
     // Show modal
     $('#add-to-collection-modal').modal('show');
   }

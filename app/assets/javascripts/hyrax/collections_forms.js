@@ -33,6 +33,27 @@ Blacklight.onLoad(function () {
     submitModalAjax(url, 'DELETE', data, $self);
   }
 
+  /**
+   * Generically disable modal submit buttons unless their select element
+   * has a valid value.
+   *
+   * To Use:
+   * 1.) Put the '.disable-unless-selected' class on the '.modal' element you wish to protect.
+   * 2.) Add the 'disabled' attribute to your protected submit button ie. <button disabled ...>.
+   * 3.) Put the '.modal-submit-button' class on whichever button you wish to disable for an invalid
+   * <select> value ie. <button disabled class="... modal-submit-button" ...>
+   *
+   * @return {void}
+   */
+  $('.modal.disable-unless-selected select').on('change', function() {
+    var selectValue = $(this).val(),
+      emptyValues = ['', 'none'],
+      selectHasAValue = emptyValues.indexOf(selectValue) === -1,
+      $submitButton = $(this).parents('.modal').find('.modal-submit-button');
+
+    $submitButton.prop('disabled', !selectHasAValue);
+  })
+
   // Remove from collection button clicked
   $('#collection-controls').find('.remove-from-collection-button').on('click', function (e) {
     e.preventDefault();
