@@ -19,8 +19,8 @@
           </div>
           <div class="col-sm-9 collection-description-wrapper">
             <!-- Parent Collection(s) -->
-            <% if @presenter.collection_type_is_nestable? && @presenter.parent_collection_count > 0 %>
-                <h4><%= t('.parent_collection_header') %> (<%= @presenter.parent_collection_count %>)</h4>
+            <% if @presenter.collection_type_is_nestable? && @presenter.total_parent_collections > 0 %>
+                <h4><%= t('.parent_collection_header') %> (<%= @presenter.total_parent_collections %>)</h4>
                 <section class="parent-collections-wrapper">
                 <%= render 'hyrax/dashboard/collections/show_parent_collections', presenter: @presenter %>
               </section>

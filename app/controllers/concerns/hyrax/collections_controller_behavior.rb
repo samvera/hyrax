@@ -65,7 +65,7 @@ module Hyrax
       def query_collection_members
         member_works
         member_subcollections if collection.collection_type.nestable?
-        parent_collections if collection.collection_type.nestable?
+        parent_collections if collection.collection_type.nestable? && action_name == 'show'
       end
 
       # Instantiate the membership query service
@@ -80,9 +80,9 @@ module Hyrax
       end
 
       def parent_collections
-        @parent_collections = collection_object.member_of_collections
-        @parent_collection_count = @parent_collections.size
-        collection.parent_collections = @parent_collections if action_name == 'show'
+        page = params[:parent_collection_page].to_i
+        query = Hyrax::Collections::NestedCollectionQueryService
+        collection.parent_collections = query.parent_collections(child: collection_object, scope: self, page: page)
       end
 
       def collection_object
