@@ -1,4 +1,6 @@
 RSpec.describe Hyrax::Analytics do
+  let(:config_file_path) { File.join(fixture_path, 'config', 'analytics.yml') }
+
   before do
     described_class.send(:remove_instance_variable, :@config) if described_class.send(:instance_variable_defined?, :@config)
   end
@@ -7,6 +9,9 @@ RSpec.describe Hyrax::Analytics do
     let(:config) { described_class.send(:config) }
 
     context "When the yaml file has values" do
+      before do
+        allow(File).to receive(:read).and_return(File.read(config_file_path))
+      end
       it "is valid" do
         expect(config).to be_valid
       end
@@ -47,6 +52,9 @@ RSpec.describe Hyrax::Analytics do
     subject { described_class.profile }
 
     context "when the private key file is missing" do
+      before do
+        allow(File).to receive(:read).and_return(File.read(config_file_path))
+      end
       it "raises an error" do
         expect { subject }.to raise_error RuntimeError, "Private key file for Google analytics was expected at '/tmp/privkey.p12', but no file was found."
       end
