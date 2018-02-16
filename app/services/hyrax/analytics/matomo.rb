@@ -2,7 +2,7 @@ require 'piwik'
 
 module Hyrax
   module Analytics
-    class Matomo < Base
+    class Matomo < Hyrax::Analytics::Base
       def self.connection
         return unless config.valid?
         # an ||= to setup Matomo
