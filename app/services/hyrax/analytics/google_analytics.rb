@@ -1,6 +1,6 @@
 module Hyrax
   module Analytics
-    class GoogleAnalytics < Connector
+    class GoogleAnalytics < Hyrax::Analytics::Base
       def self.connection
         return unless config.valid?
         # an ||= to setup the GA connection using JSON
