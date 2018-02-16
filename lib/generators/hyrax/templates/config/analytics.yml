@@ -7,3 +7,8 @@
 #   privkey_path: GOOGLE_OAUTH_PRIVATE_KEY_PATH
 #   privkey_secret: GOOGLE_OAUTH_PRIVATE_KEY_SECRET
 #   client_email: GOOGLE_OAUTH_CLIENT_EMAIL
+#
+# Updated Google Analytics structure:
+# analytics:
+#   view_id: 'XXXXXXXXX'
+#   privkey_path: /path/to/key_file.json
