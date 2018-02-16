@@ -111,4 +111,12 @@ SUMMARY
   spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'webmock'
+
+  ########################################################
+  # Temporarily pinned dependencies. INCLUDE EXPLANATIONS.
+  #
+  # simple_form 3.5.1 broke local and Travis builds in bad ways for unknown reasons
+  spec.add_dependency 'simple_form', '=3.5.0'
+  # parser 2.5.0.0 broke local and Travis rubocop checks due to a change in parsing
+  spec.add_development_dependency 'parser', '< 2.5'
 end
