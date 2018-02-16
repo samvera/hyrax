@@ -72,19 +72,6 @@ class TestAppGenerator < Rails::Generators::Base
               "gem 'web-console'", "# gem 'web-console'"
   end
 
-  def add_analytics_config
-    append_file 'config/analytics.yml' do
-      <<-EOS.strip_heredoc
-        analytics:
-          app_name: My App Name
-          app_version: 0.0.1
-          privkey_path: /tmp/privkey.p12
-          privkey_secret: s00pers3kr1t
-          client_email: oauth@example.org
-      EOS
-    end
-  end
-
   def enable_analytics
     gsub_file "config/initializers/hyrax.rb",
               "# config.analytics = false", "config.analytics = true"
