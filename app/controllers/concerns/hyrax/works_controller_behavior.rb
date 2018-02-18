@@ -154,10 +154,10 @@ module Hyrax
       end
 
       def parent_presenter
+        return @parent_presenter unless params[:parent_id]
+
         @parent_presenter ||=
-          begin
-            @parent_presenter ||= show_presenter.new(search_result_document(id: params[:parent_id]), current_ability, request) if params[:parent_id]
-          end
+          show_presenter.new(search_result_document(id: params[:parent_id]), current_ability, request)
       end
 
       # Include 'hyrax/base' in the search path for views, while prefering
