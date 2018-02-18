@@ -197,7 +197,7 @@ FactoryBot.define do
     # @returns array of user keys
     def self.user_managers(permission_template_attributes, creator_user)
       managers = permission_from_template(permission_template_attributes, :manage_users)
-      managers << creator_user.user_key
+      managers << creator_user
       managers
     end
 
