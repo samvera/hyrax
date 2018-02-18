@@ -15,9 +15,7 @@ module Hyrax
     # Override this method if you have some criteria by which records should not display in the search results.
     def suppressed?
       return false if state.nil?
-      # This is a clumsy check only needed under RDF < 2.0 where there
-      # is a bug with `AT::Resource#==`
-      return state.rdf_subject == Vocab::FedoraResourceStatus.inactive if RDF::VERSION.to_s < '2.0'
+
       state == Vocab::FedoraResourceStatus.inactive
     end
 
