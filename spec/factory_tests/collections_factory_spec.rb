@@ -49,8 +49,10 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
     it 'will create a permission template and access for each user specified when it is set to attributes identifying access' do
       expect { build(:collection_lw, with_permission_template: { manage_users: [user_mgr] }) }.to change { Hyrax::PermissionTemplate.count }.by(1)
       expect { build(:collection_lw, with_permission_template: { manage_users: [user_mgr] }) }.to change { Hyrax::PermissionTemplateAccess.count }.by(2)
-      expect { build(:collection_lw, with_permission_template: { manage_users: [user_mgr], deposit_users: [user_dep] }) }.to change { Hyrax::PermissionTemplate.count }.by(1)
-      expect { build(:collection_lw, with_permission_template: { manage_users: [user_mgr], deposit_users: [user_dep] }) }.to change { Hyrax::PermissionTemplateAccess.count }.by(3)
+      expect { build(:collection_lw, with_permission_template: { manage_users: [user_mgr], deposit_users: [user_dep], view_users: [user_vw] }) }
+        .to change { Hyrax::PermissionTemplate.count }.by(1)
+      expect { build(:collection_lw, with_permission_template: { manage_users: [user_mgr], deposit_users: [user_dep], view_users: [user_vw] }) }
+        .to change { Hyrax::PermissionTemplateAccess.count }.by(4)
     end
   end
 

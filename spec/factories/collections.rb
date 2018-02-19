@@ -110,7 +110,7 @@ FactoryBot.define do
       end
     end
 
-    factory :public_collection_lw, traits: [:public]
+    factory :public_collection_lw, traits: [:public_lw]
 
     factory :private_collection_lw do
       visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE

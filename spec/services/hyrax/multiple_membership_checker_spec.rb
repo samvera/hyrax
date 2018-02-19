@@ -47,7 +47,7 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
     end
 
     context 'when multiple single-membership collection instances are not in the list' do
-      let(:collection) { create(:collection, collection_type: collection_type) }
+      let(:collection) { build(:collection_lw, id: 'collection0', collection_type: collection_type, with_solr_document: true) }
       let(:collections) { [collection] }
       let(:collection_ids) { collections.map(&:id) }
 
@@ -59,10 +59,15 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
     end
 
     context 'when multiple single-membership collection instances are in the list, not including current members' do
-      let(:collection1) { create(:collection, title: ['Foo'], collection_type: collection_type) }
-      let(:collection2) { create(:collection, title: ['Bar'], collection_type: collection_type) }
+      let(:collection1) { build(:collection_lw, id: 'collection1', title: ['Foo'], collection_type: collection_type, with_solr_document: true) }
+      let(:collection2) { build(:collection_lw, id: 'collection2', title: ['Bar'], collection_type: collection_type, with_solr_document: true) }
       let(:collections) { [collection1, collection2] }
       let(:collection_ids) { collections.map(&:id) }
+
+      before do
+        allow(Collection).to receive(:find).with(collection1.id).and_return(collection1)
+        allow(Collection).to receive(:find).with(collection2.id).and_return(collection2)
+      end
 
       it 'returns an error' do
         expect(item).not_to receive(:member_of_collection_ids)
@@ -78,15 +83,15 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
         it 'returns an error' do
           expect(item).not_to receive(:member_of_collection_ids)
           expect(checker).to receive(:single_membership_collections).with(collection_ids).once.and_call_original
-          expect(Collection).to receive(:where).with(id: collection_ids, collection_type_gid_ssim: collection_types).once.and_call_original
+          expect(Collection).to receive(:where).with(id: collection_ids, collection_type_gid_ssim: collection_types).once.and_return(collections)
           expect(subject).to eq 'Error: You have specified more than one of the same single-membership collection types: Greedy (Foo and Bar)'
         end
       end
     end
 
     context 'when multiple single-membership collection instances are in the list, including current members' do
-      let(:collection1) { create(:collection, title: ['Foo'], collection_type: collection_type) }
-      let(:collection2) { create(:collection, title: ['Bar'], collection_type: collection_type) }
+      let(:collection1) { build(:collection_lw, id: 'collection1', title: ['Foo'], collection_type: collection_type, with_solr_document: true) }
+      let(:collection2) { build(:collection_lw, id: 'collection2', title: ['Bar'], collection_type: collection_type, with_solr_document: true) }
       let(:collections) { [collection1] }
       let(:collection_ids) { collections.map(&:id) }
       let(:included) { true }
@@ -108,16 +113,16 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
 
         it 'returns an error' do
           expect(item).to receive(:member_of_collection_ids)
-          expect(Collection).to receive(:where).with(id: collection_ids, collection_type_gid_ssim: collection_types).once.and_call_original
-          expect(Collection).to receive(:where).with(id: [collection2.id], collection_type_gid_ssim: collection_types).once.and_call_original
+          expect(Collection).to receive(:where).with(id: collection_ids, collection_type_gid_ssim: collection_types).once.and_return(collections)
+          expect(Collection).to receive(:where).with(id: [collection2.id], collection_type_gid_ssim: collection_types).once.and_return([collection2])
           expect(subject).to eq 'Error: You have specified more than one of the same single-membership collection types: Greedy (Foo and Bar)'
         end
       end
     end
 
     context 'when multiple single-membership collection instances are in the list, but are different collection types' do
-      let(:collection1) { create(:collection, title: ['Foo'], collection_type: collection_type) }
-      let(:collection2) { create(:collection, title: ['Bar'], collection_type: collection_type_2) }
+      let(:collection1) { build(:collection_lw, title: ['Foo'], collection_type: collection_type, with_solr_document: true) }
+      let(:collection2) { build(:collection_lw, title: ['Bar'], collection_type: collection_type_2, with_solr_document: true) }
       let(:collections) { [collection1, collection2] }
       let(:collection_ids) { collections.map(&:id) }
       let(:collection_type_2) { create(:collection_type, title: 'Doc', allow_multiple_membership: false) }
@@ -126,7 +131,7 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
       it 'returns nil' do
         expect(item).not_to receive(:member_of_collection_ids)
         expect(checker).to receive(:single_membership_collections).with(collection_ids).once.and_call_original
-        expect(Collection).to receive(:where).with(id: collection_ids, collection_type_gid_ssim: collection_types).once.and_call_original
+        expect(Collection).to receive(:where).with(id: collection_ids, collection_type_gid_ssim: collection_types).once.and_return(collections)
         expect(subject).to be nil
       end
 
@@ -140,8 +145,8 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
 
         it 'returns nil' do
           expect(item).to receive(:member_of_collection_ids)
-          expect(Collection).to receive(:where).with(id: collection_ids, collection_type_gid_ssim: collection_types).once.and_call_original
-          expect(Collection).to receive(:where).with(id: [collection2.id], collection_type_gid_ssim: collection_types).once.and_call_original
+          expect(Collection).to receive(:where).with(id: collection_ids, collection_type_gid_ssim: collection_types).once.and_return(collections)
+          expect(Collection).to receive(:where).with(id: [collection2.id], collection_type_gid_ssim: collection_types).once.and_return([collection2])
           expect(subject).to be nil
         end
       end

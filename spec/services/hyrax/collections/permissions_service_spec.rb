@@ -1,11 +1,11 @@
 RSpec.describe Hyrax::Collections::PermissionsService do
-  let(:user) { create(:user) }
+  let(:user) { create(:user, email: 'user@example.com') }
 
   let(:ability) { Ability.new(user) }
 
   context 'collection specific methods' do
-    let(:collection) { create(:collection) }
-    let(:admin_set) { create(:admin_set) }
+    let(:collection) { build(:collection_lw, id: 'collection_1') }
+    let(:admin_set) { build(:admin_set, id: 'adminset_1') }
     let(:col_permission_template) { create(:permission_template, source_id: collection.id) }
     let(:as_permission_template) { create(:permission_template, source_id: admin_set.id) }
 
@@ -87,31 +87,42 @@ RSpec.describe Hyrax::Collections::PermissionsService do
   end
 
   context 'methods returning ids' do
-    let(:user) { create(:user) }
-    let(:user2) { create(:user) }
+    let(:user1) { create(:user, email: 'user1@example.com') }
+    let(:user2) { create(:user, email: 'user2@example.com') }
 
-    let(:col_vu) { create(:collection, id: 'col_vu', with_permission_template: true) }
-    let(:col_vg) { create(:collection, id: 'col_vg', with_permission_template: true) }
-    let(:col_mu) { create(:collection, id: 'col_mu', with_permission_template: true) }
-    let(:col_mg) { create(:collection, id: 'col_mg', with_permission_template: true) }
-    let(:col_du) { create(:collection, id: 'col_du', with_permission_template: true) }
-    let(:col_dg) { create(:collection, id: 'col_dg', with_permission_template: true) }
+    let!(:col_vu) do
+      build(:collection_lw, id: 'collection_vu', user: user1, with_solr_document: true,
+                            with_permission_template: { view_users: [user] })
+    end
+    let!(:col_vg) do
+      build(:collection_lw, id: 'collection_vg', user: user1, with_solr_document: true,
+                            with_permission_template: { view_groups: ['view_group'] })
+    end
+    let!(:col_mu) do
+      build(:collection_lw, id: 'collection_mu', user: user1, with_solr_document: true,
+                            with_permission_template: { manage_users: [user] })
+    end
+    let!(:col_mg) do
+      build(:collection_lw, id: 'collection_mg', user: user1, with_solr_document: true,
+                            with_permission_template: { manage_groups: ['manage_group'] })
+    end
+    let!(:col_du) do
+      build(:collection_lw, id: 'collection_du', user: user1, with_solr_document: true,
+                            with_permission_template: { deposit_users: [user] })
+    end
+    let!(:col_dg) do
+      build(:collection_lw, id: 'collection_dg', user: user1, with_solr_document: true,
+                            with_permission_template: { deposit_groups: ['deposit_group'] })
+    end
 
-    let(:as_vu) { create(:admin_set, id: 'as_vu', with_permission_template: true) }
-    let(:as_vg) { create(:admin_set, id: 'as_vg', with_permission_template: true) }
-    let(:as_mu) { create(:admin_set, id: 'as_mu', with_permission_template: true) }
-    let(:as_mg) { create(:admin_set, id: 'as_mg', with_permission_template: true) }
-    let(:as_du) { create(:admin_set, id: 'as_du', with_permission_template: true) }
-    let(:as_dg) { create(:admin_set, id: 'as_dg', with_permission_template: true) }
+    let(:as_vu) { create(:admin_set, id: 'adminset_vu', with_permission_template: true) }
+    let(:as_vg) { create(:admin_set, id: 'adminset_vg', with_permission_template: true) }
+    let(:as_mu) { create(:admin_set, id: 'adminset_mu', with_permission_template: true) }
+    let(:as_mg) { create(:admin_set, id: 'adminset_mg', with_permission_template: true) }
+    let(:as_du) { create(:admin_set, id: 'adminset_du', with_permission_template: true) }
+    let(:as_dg) { create(:admin_set, id: 'adminset_dg', with_permission_template: true) }
 
     before do
-      source_access(col_vu.permission_template, 'user', user.user_key, :view)
-      source_access(col_vg.permission_template, 'group', 'view_group', :view)
-      source_access(col_mu.permission_template, 'user', user.user_key, :manage)
-      source_access(col_mg.permission_template, 'group', 'manage_group', :manage)
-      source_access(col_du.permission_template, 'user', user.user_key, :deposit)
-      source_access(col_dg.permission_template, 'group', 'deposit_group', :deposit)
-
       source_access(as_vu.permission_template, 'user', user.user_key, :view)
       source_access(as_vg.permission_template, 'group', 'view_group', :view)
       source_access(as_mu.permission_template, 'user', user.user_key, :manage)
@@ -185,6 +196,7 @@ RSpec.describe Hyrax::Collections::PermissionsService do
         end
       end
     end
+
     describe '.collection_ids_for_deposit' do
       it 'returns collection ids where user has manage access' do
         expect(described_class.collection_ids_for_deposit(ability: ability)).to match_array [col_du.id, col_dg.id, col_mu.id, col_mg.id]
