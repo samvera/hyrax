@@ -22,8 +22,8 @@ FactoryBot.define do
   #   let(:collection) { build(:collection_lw, with_permission_template: true)
   #
   # @example Build a collection with only a permission template created.  Permissions are set based on
-  #          attributes set for with_permission_template.  Middle weight.
-  #   # permissions passed thru with_permission_template can be any of the following in any combination
+  #          attributes set for `with_permission_template`.  Middle weight.
+  #   # permissions passed thru `with_permission_template` can be any of the following in any combination
   #   let(:permissions) { { manage_users: [user.user_key],  # multiple users can be listed
   #                         deposit_users: [user.user_key],
   #                         view_users: [user.user_key],
@@ -33,9 +33,9 @@ FactoryBot.define do
   #   let(:collection) { build(:collection_lw, user: , with_permission_template: permissions)
   #
   # @example Build a collection with permission template and solr-document created.  Permissions are set based on
-  #          attributes set for with_permission_template.  Solr-document includes read/edit access defined based
-  #          on attributes passed thru with_permission_template.  Middle weight.
-  #   # permissions passed thru with_permission_template can be any of the following in any combination
+  #          attributes set for `with_permission_template`.  Solr-document includes read/edit access defined based
+  #          on attributes passed thru `with_permission_template`.  Middle weight.
+  #   # permissions passed thru `with_permission_template` can be any of the following in any combination
   #   let(:permissions) { { manage_users: [user.user_key],  # multiple users can be listed
   #                         deposit_users: [user.user_key],
   #                         view_users: [user.user_key],
@@ -45,8 +45,8 @@ FactoryBot.define do
   #   let(:collection) { build(:collection_lw, user: , with_permission_template: permissions, with_solr_document: true)
   #
   # @example Build a collection generating its collection type with specific settings. Light Weight.
-  #          NOTE: Do not use this method if you need access to the collection type in the test.
-  #          DEFAULT: If collection_type_settings and collection_type_gid are not specified, then the default
+  #          NOTE: Do not use this approach if you need access to the collection type in the test.
+  #          DEFAULT: If `collection_type_settings` and `collection_type_gid` are not specified, then the default
   #          User Collection type will be used.
   #   # Any not specified default to ON.  At least one setting should be specified.
   #   let(:settings) { [
@@ -57,8 +57,8 @@ FactoryBot.define do
   #                    ] }
   #   let(:collection) { build(:collection_lw, collection_type_settings: settings) }
   #
-  # @example Create a collection using the passed in collection type.  Light Weight.
-  #          NOTE: Use this method if you need access to the collection type in the test.
+  # @example Build a collection using the passed in collection type.  Light Weight.
+  #          NOTE: Use this approach if you need access to the collection type in the test.
   #   # Any not specified default to ON.  At least one setting should be specified.
   #   let(:settings) { [
   #                      :nestable,                  # OR :not_nestable,
@@ -69,17 +69,34 @@ FactoryBot.define do
   #   let(:collection_type) { create(:collection_lw_type, settings)}
   #   let(:collection) { build(:collection_lw, collection_type_gid: collection_type.gid)}
   #
-  # @example Build a collection with nesting fields set in the solr document.  Heavy weight.  Runs nesting indexer.
+  # @example Build a collection with nesting fields set in the solr document.  Light weight.
+  #          NOTE: The property `with_nesting_attributes` is only supported for building collections.  The attributes will
+  #                be overwritten by the save process when creating a collection, thus effectively ignoring this property.
   #   let(:collection) { build(:collection_lw, with_nesting_attributes: true)
   #
   # @example Create a collection with everything.  Extreme heavy weight.  This is very slow and should be avoided.
+  #          NOTE: Everything gets created.
+  #          NOTE: Build options effect created collections as follows...
+  #                 * `with_permission_template` can specify user/group permissions.  A permission template is always created.
+  #                 * `collection_type_settings` can specify to create a collection type with specific settings
+  #                 * `with_solr_document` is ignored.  A solr document is always created.
+  #                 * `with_nested_attributes` is ignored.
+  #          NOTE: Additional process is required for testing nested collections with Fedora objects.  See next example.
   #   let(:collection) { create(:collection_lw)
+  #
+  # @example Create collections for use with nested collection index testing.
+  #          NOTE: For light weight nested collection testing using solr documents only, see `with_nested_attributes` above
+  #          NOTE: Full indexed nested collections with solr documents and Fedora objects are created by...
+  #                 * creating multiple collections (expensive)
+  #                 * nesting them and saving - causing reindex of the Fedora objects (expensive)
+  #                For tests of nesting functionality requiring the Fedora object and reindexing, in the test itself
+  #                include `:with_nested_reindexing`
+  #    it "returns the collection and its members", :with_nested_reindexing do
 
   factory :collection_lw, class: Collection do
     transient do
       user { create(:user) }
 
-      # build options
       collection_type_settings nil
       with_permission_template false
       with_nesting_attributes nil
@@ -96,18 +113,9 @@ FactoryBot.define do
       CollectionLwFactoryHelper.process_with_nesting_attributes(collection, evaluator)
     end
 
-    after(:create) do |collection, evaluator|
-      # TODO: -- elr -- Make create do everything
-      # create the permission template if it was requested, OR if nested reindexing is included (so we can apply the user's
-      # permissions).  Nested indexing requires that the user's permissions be saved on the Fedora object... if simply in
-      # local memory, they are lost when the adapter pulls the object from Fedora to reindex.
-      if evaluator.with_permission_template || RSpec.current_example.metadata[:with_nested_reindexing]
-        attributes = { source_id: collection.id }
-        attributes[:manage_users] = CollectionLwFactoryHelper.user_managers(evaluator.with_permission_template, evaluator.user)
-        attributes = evaluator.with_permission_template.merge(attributes) if evaluator.with_permission_template.respond_to?(:merge)
-        create(:permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)
-        collection.reset_access_controls!
-      end
+    before(:create) do |collection, evaluator|
+      # force create a permission template if it doesn't exist for the newly created collection
+      CollectionLwFactoryHelper.process_with_permission_template(collection, evaluator, true) unless evaluator.with_permission_template
     end
 
     factory :public_collection_lw, traits: [:public_lw]
@@ -252,8 +260,9 @@ FactoryBot.define do
     #   of with_permission_template (created by the permission_template factory)
     # @param [Collection] collection object being built/created by the factory
     # @param [Class] evaluator holding the transient properties for the current build/creation process
-    def self.process_with_permission_template(collection, evaluator)
-      return unless evaluator.with_permission_template || RSpec.current_example.metadata[:with_nested_reindexing]
+    # @param [Boolean] if true, force the permission template to be created
+    def self.process_with_permission_template(collection, evaluator, force = false)
+      return unless force || evaluator.with_permission_template || RSpec.current_example.metadata[:with_nested_reindexing]
       collection.id ||= FactoryBot.generate(:object_id)
       attributes = { source_id: collection.id }
       attributes[:manage_users] = user_managers(evaluator.with_permission_template, evaluator.user)
@@ -279,13 +288,13 @@ FactoryBot.define do
     end
 
     # Process the with_nesting_attributes transient property such that...
-    # * TODO: -- elr -- describe what happens
+    # * adds nesting related solr-document fields for ancestors, parent_ids, pathnames, and depth
     # @param [Collection] collection object being built/created by the factory
     # @param [Class] evaluator holding the transient properties for the current build/creation process
     def self.process_with_nesting_attributes(collection, evaluator)
       return unless evaluator.with_nesting_attributes.present? && collection.nestable?
       Hyrax::Adapters::NestingIndexAdapter.add_nesting_attributes(
-        solr_doc: evaluator.to_solr,
+        solr_doc: collection.to_solr,
         ancestors: evaluator.with_nesting_attributes[:ancestors],
         parent_ids: evaluator.with_nesting_attributes[:parent_ids],
         pathnames: evaluator.with_nesting_attributes[:pathnames],
