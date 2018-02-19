@@ -44,6 +44,8 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
     subject { rendered }
 
     it { is_expected.to have_link t('hyrax.admin.sidebar.statistics') }
+    it { is_expected.to have_link t('hyrax.embargoes.index.manage_embargoes') }
+    it { is_expected.to have_link t('hyrax.leases.index.manage_leases') }
   end
 
   context 'with a user who can review submissions' do
