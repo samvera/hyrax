@@ -1,4 +1,4 @@
-<div class="modal fade" id="add-subcollection-modal-<%= id %>" tabindex="-1" role="dialog" aria-labelledby="add-subcollection-label">
+<div class="modal fade disable-unless-selected" id="add-subcollection-modal-<%= id %>" tabindex="-1" role="dialog" aria-labelledby="add-subcollection-label">
 <% collection = Collection.find id %>
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -23,7 +23,10 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('helpers.action.cancel') %></button>
-        <button type="button" class="btn btn-primary modal-add-button"
+        <button
+          disabled
+          type="button"
+          class="btn btn-primary modal-add-button modal-submit-button"
           data-post-url="<%= dashboard_create_nest_collection_under_path(collection.id) %>"
           data-source="<%= source %>">
           <%= t('hyrax.collection.actions.nest_collections.button_label') %>

@@ -1,4 +1,4 @@
-<div class="modal fade" id="add-to-collection-modal" tabindex="-1" role="dialog" aria-labelledby="add-to-collection-label">
+<div class="modal fade disable-unless-selected" id="add-to-collection-modal" tabindex="-1" role="dialog" aria-labelledby="add-to-collection-label">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
 
@@ -18,7 +18,10 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('helpers.action.cancel') %></button>
-        <button type="button" class="btn btn-primary modal-add-button"
+        <button
+          disabled
+          type="button"
+          class="btn btn-primary modal-add-button modal-submit-button"
           data-source="<%= source %>">
           <%= t('hyrax.collection.actions.nested_subcollection.button_label') %>
         </button>
