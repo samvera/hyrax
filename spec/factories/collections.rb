@@ -72,7 +72,10 @@ FactoryBot.define do
   # @example Build a collection with nesting fields set in the solr document.  Light weight.
   #          NOTE: The property `with_nesting_attributes` is only supported for building collections.  The attributes will
   #                be overwritten by the save process when creating a collection, thus effectively ignoring this property.
-  #   let(:collection) { build(:collection_lw, with_nesting_attributes: true)
+  #   let(:collection) { build(:collection_lw, with_nesting_attributes: { ancestors: ['Parent_1'],
+  #                                                                       parent_ids: ['Parent_1'],
+  #                                                                       pathnames: ['Parent_1/Collection123'],
+  #                                                                       depth: 2 })
   #
   # @example Create a collection with everything.  Extreme heavy weight.  This is very slow and should be avoided.
   #          NOTE: Everything gets created.
@@ -116,6 +119,10 @@ FactoryBot.define do
     before(:create) do |collection, evaluator|
       # force create a permission template if it doesn't exist for the newly created collection
       CollectionLwFactoryHelper.process_with_permission_template(collection, evaluator, true) unless evaluator.with_permission_template
+    end
+
+    after(:create) do |collection, _evaluator|
+      collection.reset_access_controls!
     end
 
     factory :public_collection_lw, traits: [:public_lw]
@@ -270,23 +277,6 @@ FactoryBot.define do
       FactoryBot.create(:permission_template, attributes) unless Hyrax::PermissionTemplate.find_by(source_id: collection.id)
     end
 
-    # Process the with_solr_document transient property such that...
-    # * a solr document is created for the collection
-    # * permissions identified by with_permission_template, if any, are added to the solr fields
-    # @param [Collection] collection object being built/created by the factory
-    # @param [Class] evaluator holding the transient properties for the current build/creation process
-    def self.process_with_solr_document(collection, evaluator)
-      return unless evaluator.with_solr_document || RSpec.current_example.metadata[:with_nested_reindexing]
-      collection.id ||= FactoryBot.generate(:object_id)
-      collection.edit_users = user_managers(evaluator.with_permission_template, evaluator.user)
-      collection.edit_groups = group_managers(evaluator.with_permission_template)
-      collection.read_users = user_viewers(evaluator.with_permission_template) +
-                              user_depositors(evaluator.with_permission_template)
-      collection.read_groups = group_viewers(evaluator.with_permission_template) +
-                               group_depositors(evaluator.with_permission_template)
-      ActiveFedora::SolrService.add(collection.to_solr, commit: true)
-    end
-
     # Process the with_nesting_attributes transient property such that...
     # * adds nesting related solr-document fields for ancestors, parent_ids, pathnames, and depth
     # @param [Collection] collection object being built/created by the factory
@@ -294,12 +284,40 @@ FactoryBot.define do
     def self.process_with_nesting_attributes(collection, evaluator)
       return unless evaluator.with_nesting_attributes.present? && collection.nestable?
       Hyrax::Adapters::NestingIndexAdapter.add_nesting_attributes(
-        solr_doc: collection.to_solr,
+        solr_doc: solr_document_with_permissions(collection, evaluator),
         ancestors: evaluator.with_nesting_attributes[:ancestors],
         parent_ids: evaluator.with_nesting_attributes[:parent_ids],
         pathnames: evaluator.with_nesting_attributes[:pathnames],
         depth: evaluator.with_nesting_attributes[:depth]
       )
     end
+
+    # Process the with_solr_document transient property such that...
+    # * a solr document is created for the collection
+    # * permissions identified by with_permission_template, if any, are added to the solr fields
+    # @param [Collection] collection object being built/created by the factory
+    # @param [Class] evaluator holding the transient properties for the current build/creation process
+    def self.process_with_solr_document(collection, evaluator)
+      return unless evaluator.with_solr_document
+      return if evaluator.with_nesting_attributes.present? && collection.nestable? # will create the solr document there instead
+      ActiveFedora::SolrService.add(solr_document_with_permissions(collection, evaluator), commit: true)
+    end
+
+    # Return the collection's solr document with permissions added, such that...
+    # * permissions identified by with_permission_template, if any, are added to the solr fields
+    # @param [Collection] collection object being built/created by the factory
+    # @param [Class] evaluator holding the transient properties for the current build/creation process
+    # @returns the collection's solr document with permissions added
+    def self.solr_document_with_permissions(collection, evaluator)
+      collection.id ||= FactoryBot.generate(:object_id)
+      collection.edit_users = user_managers(evaluator.with_permission_template, evaluator.user)
+      collection.edit_groups = group_managers(evaluator.with_permission_template)
+      collection.read_users = user_viewers(evaluator.with_permission_template) +
+                              user_depositors(evaluator.with_permission_template)
+      collection.read_groups = group_viewers(evaluator.with_permission_template) +
+                               group_depositors(evaluator.with_permission_template)
+      collection.to_solr
+    end
+    private_class_method :solr_document_with_permissions
   end
 end

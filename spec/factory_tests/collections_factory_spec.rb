@@ -63,22 +63,35 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
         expect(col.id).to eq nil # no real way to confirm a solr document wasn't created if the collection doesn't have an id
       end
 
-      it 'will be created when with_solr_document is true' do
-        col = build(:collection_lw, with_solr_document: true)
-        solr_doc = ActiveFedora::SolrService.get("id:#{col.id}")["response"]["docs"].first
-        expect(solr_doc["id"]).to eq col.id
-        expect(solr_doc["has_model_ssim"].first).to eq "Collection"
-        expect(solr_doc["edit_access_person_ssim"]).not_to be_blank
+      context 'true' do
+        let(:col) { build(:collection_lw, with_solr_document: true) }
+
+        subject { ActiveFedora::SolrService.get("id:#{col.id}")["response"]["docs"].first }
+
+        it 'will created a solr document' do
+          expect(subject["id"]).to eq col.id
+          expect(subject["has_model_ssim"].first).to eq "Collection"
+          expect(subject["edit_access_person_ssim"]).not_to be_blank
+        end
       end
 
-      it 'will be created and have access defined when with_solr_document is true' do
-        col = build(:collection_lw, user: user, with_solr_document: true,
-                                    with_permission_template: { manage_users: [user_mgr], deposit_users: [user_dep], view_users: [user_vw] })
-        solr_doc = ActiveFedora::SolrService.get("id:#{col.id}")["response"]["docs"].first
-        expect(solr_doc["id"]).to eq col.id
-        expect(solr_doc["has_model_ssim"].first).to eq "Collection"
-        expect(solr_doc["edit_access_person_ssim"]).to include(user.user_key, user_mgr.user_key)
-        expect(solr_doc["read_access_person_ssim"]).to include(user_dep.user_key, user_vw.user_key)
+      context 'true and with_permission_template defines additional access' do
+        let(:col) do
+          build(:collection_lw, user: user,
+                                with_solr_document: true,
+                                with_permission_template: { manage_users: [user_mgr],
+                                                            deposit_users: [user_dep],
+                                                            view_users: [user_vw] })
+        end
+
+        subject { ActiveFedora::SolrService.get("id:#{col.id}")["response"]["docs"].first }
+
+        it 'will created a solr document' do
+          expect(subject["id"]).to eq col.id
+          expect(subject["has_model_ssim"].first).to eq "Collection"
+          expect(subject["edit_access_person_ssim"]).to include(user.user_key, user_mgr.user_key)
+          expect(subject["read_access_person_ssim"]).to include(user_dep.user_key, user_vw.user_key)
+        end
       end
     end
 
@@ -88,20 +101,19 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
       let(:repository) { Blacklight::Solr::Repository.new(blacklight_config) }
       let(:current_ability) { instance_double(Ability, admin?: true) }
       let(:scope) { double('Scope', can?: true, current_ability: current_ability, repository: repository, blacklight_config: blacklight_config) }
+      let(:solr_doc) { ActiveFedora::SolrService.get("id:#{col.id}")["response"]["docs"].first }
+      let(:nesting_attributes) do
+        Hyrax::Collections::NestedCollectionQueryService::NestingAttributes.new(id: col.id, scope: scope)
+      end
 
-      context 'when building a collection' do
-        let(:coll123) do
-          build(:collection_lw,
-                id: 'Collection123',
-                collection_type_gid: collection_type.gid,
-                with_nesting_attributes:
-                    { ancestors: ['Parent_1'],
-                      parent_ids: ['Parent_1'],
-                      pathnames: ['Parent_1/Collection123'],
-                      depth: 2 })
-        end
-        let(:nesting_attributes) do
-          Hyrax::Collections::NestedCollectionQueryService::NestingAttributes.new(id: coll123.id, scope: scope)
+      context 'without additional permissions' do
+        let(:col) do
+          build(:collection_lw, id: 'Collection123',
+                                collection_type_gid: collection_type.gid,
+                                with_nesting_attributes: { ancestors: ['Parent_1'],
+                                                           parent_ids: ['Parent_1'],
+                                                           pathnames: ['Parent_1/Collection123'],
+                                                           depth: 2 })
         end
 
         it 'will persist a queryable solr document with the given attributes' do
@@ -110,6 +122,62 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
           expect(nesting_attributes.pathnames).to eq(['Parent_1/Collection123'])
           expect(nesting_attributes.ancestors).to eq(['Parent_1'])
           expect(nesting_attributes.depth).to eq(2)
+          expect(solr_doc["id"]).to eq col.id
+          expect(solr_doc["has_model_ssim"].first).to eq "Collection"
+          expect(solr_doc["edit_access_person_ssim"]).to include(col.depositor)
+        end
+      end
+
+      context ' and with_permission_template' do
+        let(:col) do
+          build(:collection_lw, id: 'Collection123',
+                                collection_type_gid: collection_type.gid,
+                                with_nesting_attributes: { ancestors: ['Parent_1'],
+                                                           parent_ids: ['Parent_1'],
+                                                           pathnames: ['Parent_1/Collection123'],
+                                                           depth: 2 },
+                                with_permission_template: { manage_users: [user_mgr],
+                                                            deposit_users: [user_dep],
+                                                            view_users: [user_vw] })
+        end
+
+        it 'will persist a queryable solr document with the given attributes' do
+          expect(nesting_attributes.id).to eq('Collection123')
+          expect(nesting_attributes.parents).to eq(['Parent_1'])
+          expect(nesting_attributes.pathnames).to eq(['Parent_1/Collection123'])
+          expect(nesting_attributes.ancestors).to eq(['Parent_1'])
+          expect(nesting_attributes.depth).to eq(2)
+          expect(solr_doc["id"]).to eq col.id
+          expect(solr_doc["has_model_ssim"].first).to eq "Collection"
+          expect(solr_doc["edit_access_person_ssim"]).to include(col.depositor, user_mgr.user_key)
+          expect(solr_doc["read_access_person_ssim"]).to include(user_dep.user_key, user_vw.user_key)
+        end
+      end
+
+      context 'and with_permission_template and with_solr_document' do
+        let(:col) do
+          build(:collection_lw, id: 'Collection123',
+                                collection_type_gid: collection_type.gid,
+                                with_nesting_attributes: { ancestors: ['Parent_1'],
+                                                           parent_ids: ['Parent_1'],
+                                                           pathnames: ['Parent_1/Collection123'],
+                                                           depth: 2 },
+                                with_permission_template: { manage_users: [user_mgr],
+                                                            deposit_users: [user_dep],
+                                                            view_users: [user_vw] },
+                                with_solr_document: true)
+        end
+
+        it 'will persist a queryable solr document with the given attributes' do
+          expect(nesting_attributes.id).to eq('Collection123')
+          expect(nesting_attributes.parents).to eq(['Parent_1'])
+          expect(nesting_attributes.pathnames).to eq(['Parent_1/Collection123'])
+          expect(nesting_attributes.ancestors).to eq(['Parent_1'])
+          expect(nesting_attributes.depth).to eq(2)
+          expect(solr_doc["id"]).to eq col.id
+          expect(solr_doc["has_model_ssim"].first).to eq "Collection"
+          expect(solr_doc["edit_access_person_ssim"]).to include(col.depositor, user_mgr.user_key)
+          expect(solr_doc["read_access_person_ssim"]).to include(user_dep.user_key, user_vw.user_key)
         end
       end
     end
@@ -133,7 +201,7 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
       # on the Fedora object... if simply in local memory, they are
       # lost when the adapter pulls the object from Fedora to reindex.
       let(:user) { create(:user) }
-      let(:collection) { build(:collection_lw, user: user) }
+      let(:collection) { create(:collection_lw, user: user) }
 
       it 'will authorize the creating user' do
         expect(user.can?(:edit, collection)).to be true
