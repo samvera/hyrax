@@ -277,6 +277,8 @@ RSpec.describe Hyrax::CollectionPresenter do
   describe "#parent_collection_count" do
     subject { presenter.parent_collection_count }
 
+    let(:parent_collections) { double(Object, documents: parent_docs, response: { "numFound" => parent_docs.size }, total_pages: 1) }
+
     context('when parent_collections is nil') do
       before do
         allow(presenter).to receive(:parent_collections).and_return(nil)
@@ -286,9 +288,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
 
     context('when parent_collections is has no collections') do
-      before do
-        allow(presenter).to receive(:parent_collections).and_return([])
-      end
+      let(:parent_docs) { [] }
 
       it { is_expected.to eq 0 }
     end
@@ -296,7 +296,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     context('when parent_collections is has collections') do
       let(:collection1) { build(:collection, title: ['col1']) }
       let(:collection2) { build(:collection, title: ['col2']) }
-      let!(:parent_collections) { [collection1, collection2] }
+      let!(:parent_docs) { [collection1, collection2] }
 
       before do
         presenter.parent_collections = parent_collections
@@ -342,6 +342,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     let(:collection3) { build(:collection, title: ['col3']) }
     let(:collection4) { build(:collection, title: ['col4']) }
     let(:collection5) { build(:collection, title: ['col5']) }
+    let(:parent_collections) { double(Object, documents: parent_docs, response: { "numFound" => parent_docs.size }, total_pages: 1) }
 
     before do
       presenter.parent_collections = parent_collections
@@ -354,13 +355,13 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
 
     context('when parent_collections has less than or equal to show limit') do
-      let(:parent_collections) { [collection1, collection2, collection3] }
+      let(:parent_docs) { [collection1, collection2, collection3] }
 
       it { is_expected.to include(collection1, collection2, collection3) }
     end
 
     context('when parent_collections has more than show limit') do
-      let(:parent_collections) { [collection1, collection2, collection3, collection4, collection5] }
+      let(:parent_docs) { [collection1, collection2, collection3, collection4, collection5] }
 
       it { is_expected.to include(collection1, collection2, collection3) }
     end
@@ -374,6 +375,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     let(:collection3) { build(:collection, title: ['col3']) }
     let(:collection4) { build(:collection, title: ['col4']) }
     let(:collection5) { build(:collection, title: ['col5']) }
+    let(:parent_collections) { double(Object, documents: parent_docs, response: { "numFound" => parent_docs.size }, total_pages: 1) }
 
     before do
       presenter.parent_collections = parent_collections
@@ -385,14 +387,20 @@ RSpec.describe Hyrax::CollectionPresenter do
       it { is_expected.to eq [] }
     end
 
+    context('when parent_collections is empty') do
+      let(:parent_docs) { [] }
+
+      it { is_expected.to eq [] }
+    end
+
     context('when parent_collections has less than or equal to show limit') do
-      let(:parent_collections) { [collection1, collection2, collection3] }
+      let(:parent_docs) { [collection1, collection2, collection3] }
 
       it { is_expected.to eq [] }
     end
 
     context('when parent_collections has more than show limit') do
-      let(:parent_collections) { [collection1, collection2, collection3, collection4, collection5] }
+      let(:parent_docs) { [collection1, collection2, collection3, collection4, collection5] }
 
       it { is_expected.to include(collection4, collection5) }
     end

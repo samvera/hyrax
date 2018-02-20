@@ -186,6 +186,25 @@ mpc = create_public_collection(
                      member_of_collections_attributes: collection_attributes_for([mpc.id]))
 end
 
+puts 'Create collections with many parent collections'
+# Pool of collections that will be used as parents of the collections
+parent_pool = Array.new(12) do |i|
+  create_public_collection(user,
+                           nestable_gid,
+                           "col_shared_parents_#{i}",
+                           title: ["Shared Parent collection #{i}"],
+                           description: ['Collection that shares children with multiple parents.'])
+end
+# 2 parent collection
+col_two_parents = create_public_collection(user, nestable_gid, "col_two_parents", title: ["Collection - 2 parents"], description: ['Collection that has two parents.'])
+2.times { |i| Hyrax::Collections::NestedCollectionPersistenceService.persist_nested_collection_for(parent: parent_pool[i], child: col_two_parents) }
+# 6 parent collection
+col_six_parents = create_public_collection(user, nestable_gid, "col_six_parents", title: ["Collection - 6 parents"], description: ['Collection that has six parents.'])
+6.times { |i| Hyrax::Collections::NestedCollectionPersistenceService.persist_nested_collection_for(parent: parent_pool[i], child: col_six_parents) }
+# 12 parent collection
+col_twelve_parents = create_public_collection(user, nestable_gid, "col_twelve_parents", title: ["Collection - 12 parents"], description: ['Collection that has twelve parents.'])
+12.times { |i| Hyrax::Collections::NestedCollectionPersistenceService.persist_nested_collection_for(parent: parent_pool[i], child: col_twelve_parents) }
+
 puts 'Create works for collection nesting ad hoc testing'
 3.times do |i|
   create_public_work(user, "pub_gw_#{i}",

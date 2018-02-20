@@ -35,7 +35,7 @@ module Hyrax
       def self.available_child_collections(parent:, scope:, limit_to_id: nil)
         return [] unless parent.try(:nestable?)
         return [] unless scope.can?(:deposit, parent)
-        query_solr(collection: parent, access: :read, scope: scope, limit_to_id: limit_to_id, nest_direction: :as_child)
+        query_solr(collection: parent, access: :read, scope: scope, limit_to_id: limit_to_id, nest_direction: :as_child).documents
       end
 
       # @api public
@@ -49,7 +49,23 @@ module Hyrax
       def self.available_parent_collections(child:, scope:, limit_to_id: nil)
         return [] unless child.try(:nestable?)
         return [] unless scope.can?(:read, child)
-        query_solr(collection: child, access: :deposit, scope: scope, limit_to_id: limit_to_id, nest_direction: :as_parent)
+        query_solr(collection: child, access: :deposit, scope: scope, limit_to_id: limit_to_id, nest_direction: :as_parent).documents
+      end
+
+      # @api public
+      #
+      # What collections is the given child nested within?
+      #
+      # @param child [Collection]
+      # @param scope [Object] Typically a controller object that responds to `repository`, `can?`, `blacklight_config`, `current_ability`
+      # @param page [Integer] Starting page for pagination
+      # @param limit [Integer] Limit to number of collections for pagination
+      # @return [Blacklight::Solr::Response]
+      def self.parent_collections(child:, scope:, page: 1)
+        return [] unless child.try(:nestable?)
+        query_builder = Hyrax::NestedCollectionsParentSearchBuilder.new(scope: scope, child: child, page: page)
+        query = clean_lucene_error(builder: query_builder)
+        scope.repository.search(query)
       end
 
       # @api private
@@ -71,7 +87,7 @@ module Hyrax
 
         query_builder.where(id: limit_to_id) if limit_to_id
         query = clean_lucene_error(builder: query_builder)
-        scope.repository.search(query).documents
+        scope.repository.search(query)
       end
       private_class_method :query_solr
 
