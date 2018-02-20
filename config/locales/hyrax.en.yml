@@ -746,10 +746,15 @@ en:
         new_visitors:       "New Visitors"
         registered_users:   "Registered users"
         repository_growth:
-          subtitle:         Past 90 days
+          subtitle:         Past
+          subtitle_30_days: 30 days
+          subtitle_90_days: 90 days
+          subtitle_1_year:  1 year
           title:            Repository Growth
         repository_objects:
-          subtitle:         Current Status
+          subtitle_visible: Visibility
+          subtitle_work:    Works
+          subtitle_resource: Resources
           title:            Repository Objects
         returning_visitors: "Returning Visitors"
         total_visitors:     "Total Visitors"

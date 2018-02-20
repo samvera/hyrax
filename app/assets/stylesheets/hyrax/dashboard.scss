@@ -249,4 +249,16 @@ body.dashboard {
   .spacer {
     margin-bottom: 5px;
   }
+
+  .chart-timeframe {
+    li:not(:last-child) {
+      border-right: 1px solid $panel-default-border;
+    }
+  }
+
+  .stats-selected {
+    color: $gray-base;
+    text-decoration: none;
+    cursor: default;
+  }
 }
