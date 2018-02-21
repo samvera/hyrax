@@ -441,7 +441,7 @@ module Hyrax
           results = collection_member_service.available_member_subcollections
           @subcollection_solr_response = results
           @subcollection_docs = results.documents
-          @subcollection_count = results.total
+          @subcollection_count = @presenter.nil? ? 0 : @subcollection_count = @presenter.subcollection_count = results.total
         end
 
         def parent_collections

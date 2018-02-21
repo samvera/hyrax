@@ -93,7 +93,7 @@ module Hyrax
         results = collection_member_service.available_member_subcollections
         @subcollection_solr_response = results
         @subcollection_docs = results.documents
-        @subcollection_count = results.total
+        @subcollection_count = @presenter.subcollection_count = results.total
       end
 
       # You can override this method if you need to provide additional inputs to the search

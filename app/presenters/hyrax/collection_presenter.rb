@@ -4,6 +4,7 @@ module Hyrax
     include PresentsAttributes
     include ActionView::Helpers::NumberHelper
     attr_accessor :solr_document, :current_ability, :request
+    attr_reader :subcollection_count
     attr_accessor :parent_collections # This is expected to be a Blacklight::Solr::Response with all of the parent collections
     attr_writer :collection_type
 
@@ -19,6 +20,7 @@ module Hyrax
       @solr_document = solr_document
       @current_ability = current_ability
       @request = request
+      @subcollection_count = 0
     end
 
     # CurationConcern methods
@@ -175,6 +177,10 @@ module Hyrax
         { "id" => col.id, "title_first" => col.title.first }
       end
       @available_parents.to_json
+    end
+
+    def subcollection_count=(total)
+      @subcollection_count = total unless total.nil?
     end
   end
 end
