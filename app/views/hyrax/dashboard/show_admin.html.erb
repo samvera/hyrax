@@ -56,13 +56,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="h3 panel-title"><%= t('.repository_growth.title') %></div>
-        <div class="admin-repo-charts">
-          <ul id="growth-graph" class="list-unstyled list-inline chart-timeframe">
-            <li><%= t('.repository_growth.subtitle') %> <%= link_to t('.repository_growth.subtitle_30_days') , "#", id: "days-30", remote: true %></li>
-            <li><%= link_to t('.repository_growth.subtitle_90_days') , "#", id: "days-90", class: "stats-selected", remote: true %></li>
-            <li><%= link_to t('.repository_growth.subtitle_1_year') , "#", id: "days-365", remote: true %></a></li>
-          </ul>
-        </div>
+        <%= render 'analytics_growth' %>
       </div>
       <div class="panel-body text-center">
         <div id="dashboard-growth" style="height: 200px"><%= javascript_tag "Hyrax.statistics.repositoryGrowth = #{@presenter.repository_growth.to_json}" %></div>
@@ -74,13 +68,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="h3 panel-title"><%= t('.repository_objects.title') %></div>
-        <div class="admin-repo-charts">
-          <ul id="objects-graph" class="list-unstyled list-inline chart-timeframe">
-            <li><%= link_to t('.repository_objects.subtitle_visible'), "#", id: "total-visibility", remote: true %></li>
-            <li><%= link_to t('.repository_objects.subtitle_work'), "#", id: "total-works", class: "stats-selected", remote: true %></li>
-            <li><%= link_to t('.repository_objects.subtitle_resource'), "#", id: "total-resources", remote: true %></li>
-          </ul>
-        </div>
+        <%= render 'analytics_object_counts' %>
       </div>
       <div class="panel-body text-center">
         <div id="dashboard-repository-objects" style="height: 200px"><%= javascript_tag "Hyrax.statistics.repositoryObjects = #{@presenter.repository_objects.to_json}" %></div>
