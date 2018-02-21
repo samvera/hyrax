@@ -47,7 +47,6 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
       expect(rendered).to have_link 'Edit collection', href: hyrax.edit_dashboard_collection_path(id)
       expect(rendered).to have_link 'Delete collection'
       expect(rendered).to have_link 'Add to collection'
-      expect(rendered).to have_css 'a.visibility-link', text: 'Private'
       expect(rendered).to have_css '.collection_type', text: 'User Collection'
       expect(rendered).to have_selector '.expanded-details', text: 'Collection Description'
       expect(rendered).not_to include '<span class="fa fa-cubes collection-icon-small"></span></a>'
