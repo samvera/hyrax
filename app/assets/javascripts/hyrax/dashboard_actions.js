@@ -32,4 +32,33 @@ Blacklight.onLoad(function() {
     return false;
   });
 
+  // Transition between time periods or object type
+  $('.admin-repo-charts').on('click', function(e) {
+     e.preventDefault();
+
+     var type_id = e.target.id;
+     var type = type_id.split('-')[1];
+     var url;
+
+     if (/^\d/.test(type)) {
+         url = '/dashboard/repository_growth.json';
+     } else {
+         url = '/dashboard/repository_object_counts.json';
+     }
+
+     $.getJSON(url, { type_value: type } )
+         .done(function(json) {
+             console.log(json)
+             var field = $('#' + type_id);
+             var clicked_chart = field.parents().filter('ul').attr('id');
+
+             $('#' + clicked_chart + ' a').removeClass('stats-selected');
+             field.addClass('stats-selected');
+         })
+         .fail(function(jqxhr, textStatus, error ) {
+             var err = textStatus + ", " + error;
+             console.log( "Request Failed: " + err );
+         });
+  });
+
 });

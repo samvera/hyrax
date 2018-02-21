@@ -108,6 +108,8 @@ Hyrax::Engine.routes.draw do
   resource :dashboard, controller: 'dashboard', only: [:show]
   resources :dashboard, only: [] do
     collection do
+      get 'repository_growth', action: :repository_growth
+      get 'repository_object_counts', action: :repository_object_counts
       get 'activity', action: :activity, as: :dashboard_activity
       resources :transfers, only: [:index, :destroy] do
         member do

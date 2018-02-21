@@ -16,5 +16,19 @@ module Hyrax
         render 'show_user'
       end
     end
+
+    def repository_growth
+      if can? :read, :admin_dashboard
+        @presenter = Hyrax::Admin::RepositoryGrowthPresenter.new(params[:type_value])
+        render json: @presenter
+      end
+    end
+
+    def repository_object_counts
+      if can? :read, :admin_dashboard
+        @presenter = Hyrax::Admin::RepositoryObjectPresenter.new(params[:type_value])
+        render json: @presenter
+      end
+    end
   end
 end
