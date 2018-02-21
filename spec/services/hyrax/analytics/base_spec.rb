@@ -17,9 +17,9 @@ RSpec.describe Hyrax::Analytics::Base do
     end
   end
 
-  describe '.visitors' do
+  describe '.unique_visitors' do
     it 'is unimplemented' do
-      expect { described_class.visitors("2018-02-16") }.to raise_error NotImplementedError
+      expect { described_class.unique_visitors("2018-02-16") }.to raise_error NotImplementedError
     end
   end
 

@@ -6,7 +6,7 @@ module Hyrax
         # an ||= to setup the GA connection using JSON
       end
 
-      def self.visitors(start_date)
+      def self.unique_visitors(start_date)
         # yanked as examplar https://github.com/google/google-api-ruby-client/blob/master/samples/cli/lib/samples/analytics.rb
         dimensions = ['ga:date']
         metrics = ['ga:sessions', 'ga:users', 'ga:newUsers', 'ga:percentNewSessions',
