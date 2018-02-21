@@ -11,7 +11,7 @@ RSpec.describe Hyrax::Analytics::Matomo do
     it 'is a pending example'
   end
 
-  describe '.visitors' do
+  describe '.unique_visitors' do
     it 'is a pending example'
   end
 
