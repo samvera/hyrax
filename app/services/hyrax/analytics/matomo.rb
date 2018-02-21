@@ -11,8 +11,8 @@ module Hyrax
         # site = Piwik::Site.load(config.site)
       end
 
-      def self.visitors(start_date)
-        Piwik::VisitsSummary.getVisits(idSite: config.site, period: :range, date: "#{start_date},#{Time.zone.today}")
+      def self.unique_visitors(start_date)
+        Piwik::VisitsSummary.getUniqueVisitors(idSite: config.site, period: :range, date: "#{start_date},#{Time.zone.today}")
         # Manipulate `result` to an agreed upon data structure
       end
 
