@@ -58,10 +58,9 @@
         <div class="h3 panel-title"><%= t('.repository_growth.title') %></div>
         <div class="admin-repo-charts">
           <ul id="growth-graph" class="list-unstyled list-inline chart-timeframe">
-            <li><%= t('.repository_growth.subtitle') %> <a id="days-30" href="#"><%= t('.repository_growth.subtitle_30_days') %></a></li>
-            <li><a class="stats-selected" id="days-90" href="#"><%= t('.repository_growth.subtitle_90_days') %></a></li>
-            <li><a id="days-365" href="#"><%= t('.repository_growth.subtitle_1_year') %></a></li>
-            <%= link_to t('.repository_growth.subtitle_1_year') , "#", id: "days-365", remote: true %>
+            <li><%= t('.repository_growth.subtitle') %> <%= link_to t('.repository_growth.subtitle_30_days') , "#", id: "days-30", remote: true %></li>
+            <li><%= link_to t('.repository_growth.subtitle_90_days') , "#", id: "days-90", class: "stats-selected", remote: true %></li>
+            <li><%= link_to t('.repository_growth.subtitle_1_year') , "#", id: "days-365", remote: true %></a></li>
           </ul>
         </div>
       </div>
@@ -77,9 +76,9 @@
         <div class="h3 panel-title"><%= t('.repository_objects.title') %></div>
         <div class="admin-repo-charts">
           <ul id="objects-graph" class="list-unstyled list-inline chart-timeframe">
-            <li><%= link_to t('.repository_objects.subtitle_visible'), @article, { remote: true, id: "total-visibility" }%></li>
-            <li><a class="stats-selected" id="total-works" href="#"><%= t('.repository_objects.subtitle_work') %></a></li>
-            <li><a id="total-resources" href="#"><%= t('.repository_objects.subtitle_resource') %></a></li>
+            <li><%= link_to t('.repository_objects.subtitle_visible'), "#", id: "total-visibility", remote: true %></li>
+            <li><%= link_to t('.repository_objects.subtitle_work'), "#", id: "total-works", class: "stats-selected", remote: true %></li>
+            <li><%= link_to t('.repository_objects.subtitle_resource'), "#", id: "total-resources", remote: true %></li>
           </ul>
         </div>
       </div>
