@@ -254,6 +254,10 @@ body.dashboard {
     li:not(:last-child) {
       border-right: 1px solid $panel-default-border;
     }
+
+    li.analytics-borderless {
+      border: none;
+    }
   }
 
   .stats-selected {

@@ -37,7 +37,12 @@
     </div>
 </div>
 
-<%= render 'admin_sets' %>
+<% if Flipflop.analytics_redesign? %>
+  <%= render 'analytics_collections' %>
+  <%= render 'analytics_works' %>
+<% else %>
+  <%= render 'admin_sets' %>
+<% end %>
 
 <div class="row">
   <div class="col-md-4">

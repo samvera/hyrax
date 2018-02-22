@@ -1,0 +1,38 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= t('.title') %></h3>
+        <div>
+          <ul id="analytics-collections" class="list-unstyled list-inline analytics-options">
+            <li><%= link_to t('.recently_updated') , "#", id: "recently-updated", remote: true %></li>
+            <li class="analytics-borderless"><%= link_to t('.pinned') , "#", id: "pinned", class: "stats-selected", remote: true %></li>
+            <li class="pull-right"><%= t('.collection_count') %></li>
+          </ul>
+        </div>
+      </div>
+      <div class="panel-body">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th><%= t('.collection') %></th>
+            <th><%= t('.last_updated') %></th>
+            <th><%= t('.works') %></th>
+            <th><%= t('.files') %></th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @collection_rows.each do |row| %>
+            <tr>
+              <td><%= row.collection %></td>
+              <td><%= row.last_modified %></td>
+              <td><%= row.work_count %></td>
+              <td><%= row.file_count %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

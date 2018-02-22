@@ -1,0 +1,40 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= t('.title') %></h3>
+        <div>
+          <ul id="analytics-works" class="list-unstyled list-inline analytics-options">
+            <li><%= link_to t('.newest') , "#", id: "newest", remote: true %></li>
+            <li class="analytics-borderless"><%= link_to t('.most_viewed') , "#", id: "most-viewed", class: "stats-selected", remote: true %></li>
+            <li class="pull-right"><%= t('.work_count') %></li>
+          </ul>
+        </div>
+      </div>
+      <div class="panel-body">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th><%= t('.work_title') %></th>
+            <th><%= t('.deposited') %></th>
+            <th><%= t('.views') %></th>
+            <th><%= t('.work_type') %></th>
+            <th><%= t('.visibility') %></th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @work_rows.each do |row| %>
+            <tr>
+              <td><%= row.work %></td>
+              <td><%= row.last_modified %></td>
+              <td><%= row.views %></td>
+              <td><%= row.work_type %></td>
+              <td><%= row.visibility %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
