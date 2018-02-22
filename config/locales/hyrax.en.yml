@@ -561,7 +561,8 @@ en:
         collection:             "Collection Title"
         files:                  "Files"
         works:                  "Works"
-        collection_count:       "collections in repository"
+        collection:             "collection"
+        collection_count:       "in repository"
       analytics_growth:
         repository_growth:
           subtitle:         "Past"
@@ -577,6 +578,7 @@ en:
           subtitle_resource: "Resources"
       analytics_works:
         title:                  "Works"
+        work:                   "work"
         newest:                 "Newest"
         most_viewed:            "Most Viewed"
         work_title:             "Work title"

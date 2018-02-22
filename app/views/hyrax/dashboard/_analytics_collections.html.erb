@@ -3,11 +3,11 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title"><%= t('.title') %></h3>
-        <div>
+        <div class="admin-repo-charts">
           <ul id="analytics-collections" class="list-unstyled list-inline analytics-options">
             <li><%= link_to t('.recently_updated') , "#", id: "recently-updated", remote: true %></li>
             <li class="analytics-borderless"><%= link_to t('.pinned') , "#", id: "pinned", class: "stats-selected", remote: true %></li>
-            <li class="pull-right"><%= t('.collection_count') %></li>
+            <li class="pull-right"><%= pluralize(@collection_rows.length, t('.collection'))%>  <%= t('.collection_count') %></li>
           </ul>
         </div>
       </div>
@@ -24,8 +24,8 @@
           <tbody>
           <% @collection_rows.each do |row| %>
             <tr>
-              <td><%= row.collection %></td>
-              <td><%= row.last_modified %></td>
+              <td><%= row.collection_name %></td>
+              <td><%= row.updated %></td>
               <td><%= row.work_count %></td>
               <td><%= row.file_count %></td>
             </tr>
