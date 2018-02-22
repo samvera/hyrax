@@ -28,9 +28,9 @@ module Hyrax
         members = collection.add_member_objects batch_ids
         messages = members.collect { |member| member.errors.full_messages }.flatten
         if messages.size == members.size
-          after_update_error(messages.join(', '))
+          after_update_error(messages.uniq.join(', '))
         elsif messages.present?
-          flash[:error] = messages.join(', ')
+          flash[:error] = messages.uniq.join(', ')
           after_update
         else
           after_update
