@@ -62,5 +62,15 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
         expect(rendered).to have_link 'File Manager'
       end
     end
+
+    context "when there are valid_child_concerns" do
+      before do
+        allow(presenter).to receive(:member_presenters).and_return([])
+        render 'hyrax/base/show_actions.html.erb', presenter: presenter
+      end
+      it "creates a link to add child work" do
+        expect(rendered).to have_link 'Attach Generic Work', href: "/concern/parent/#{presenter.id}/generic_works/new"
+      end
+    end
   end
 end
