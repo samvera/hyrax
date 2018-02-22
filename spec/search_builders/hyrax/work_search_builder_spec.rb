@@ -44,11 +44,29 @@ RSpec.describe Hyrax::WorkSearchBuilder do
       context "and the current user doesn't have a role" do
         let(:roles) { [] }
 
-        it "filters for id, access, suppressed and type" do
-          expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
-                                      "{!terms f=has_model_ssim}GenericWork,Collection",
-                                      "-suppressed_bsi:true",
-                                      "{!raw f=id}123abc"]
+        context "and the current user is not the depositor" do
+          before do
+            allow(builder).to receive(:depositor?).and_return(false)
+          end
+
+          it "filters for id, access, suppressed and type" do
+            expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
+                                        "{!terms f=has_model_ssim}GenericWork,Collection",
+                                        "-suppressed_bsi:true",
+                                        "{!raw f=id}123abc"]
+          end
+        end
+
+        context "and the current user is the depositor" do
+          before do
+            allow(builder).to receive(:depositor?).and_return(true)
+          end
+
+          it "filters for id, access, suppressed and type" do
+            expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
+                                        "{!terms f=has_model_ssim}GenericWork,Collection",
+                                        "{!raw f=id}123abc"]
+          end
         end
       end
     end
@@ -58,11 +76,30 @@ RSpec.describe Hyrax::WorkSearchBuilder do
         expect(Hyrax::Workflow::PermissionQuery).to receive(:scope_permitted_workflow_actions_available_for_current_state)
           .and_raise(PowerConverter::ConversionError.new(double, {}))
       end
-      it "filters for id, access, suppressed and type" do
-        expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
-                                    "{!terms f=has_model_ssim}GenericWork,Collection",
-                                    "-suppressed_bsi:true",
-                                    "{!raw f=id}123abc"]
+
+      context "and the current user is not the depositor" do
+        before do
+          allow(builder).to receive(:depositor?).and_return(false)
+        end
+
+        it "filters for id, access, suppressed and type" do
+          expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
+                                      "{!terms f=has_model_ssim}GenericWork,Collection",
+                                      "-suppressed_bsi:true",
+                                      "{!raw f=id}123abc"]
+        end
+      end
+
+      context "and the current user is the depositor" do
+        before do
+          allow(builder).to receive(:depositor?).and_return(true)
+        end
+
+        it "filters for id, access, suppressed and type" do
+          expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
+                                      "{!terms f=has_model_ssim}GenericWork,Collection",
+                                      "{!raw f=id}123abc"]
+        end
       end
     end
   end
