@@ -553,6 +553,15 @@ en:
       all:
         collections:            "All Collections"
         works:                  "All Works"
+      analytics_collections:
+        title:                  "Collections"
+        recently_updated:       "Most recently updated"
+        pinned:                 "Pinned"
+        last_updated:           "Last Updated"
+        collection:             "Collection Title"
+        files:                  "Files"
+        works:                  "Works"
+        collection_count:       "collections in repository"
       analytics_growth:
         repository_growth:
           subtitle:         "Past"
@@ -566,6 +575,16 @@ en:
           subtitle_visible: "Visibility"
           subtitle_work:    "Works"
           subtitle_resource: "Resources"
+      analytics_works:
+        title:                  "Works"
+        newest:                 "Newest"
+        most_viewed:            "Most Viewed"
+        work_title:             "Work title"
+        deposited:              "Deposited"
+        views:                  "Views"
+        work_count:             "works in repository"
+        work_type:              "Work type"
+        visibility:             "Visibility"
       managed:
         collections:            "Managed Collections"
         works:                  "Managed Works"
