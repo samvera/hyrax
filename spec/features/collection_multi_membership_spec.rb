@@ -30,6 +30,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
         expect(page).to have_content new_collection.title.first
         expect(page).to have_content 'Works (1)'
         expect(page).to have_content work.title.first
+        expect(page).to have_selector '.alert-success', text: 'Collection was successfully updated.'
       end
     end
 
@@ -50,6 +51,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
         expect(page).to have_content new_collection.title.first
         expect(page).to have_content 'Works (1)'
         expect(page).to have_content work.title.first
+        expect(page).to have_selector '.alert-success', text: 'Collection was successfully updated.'
       end
     end
   end
@@ -74,6 +76,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
         expect(page).to have_content new_collection.title.first
         expect(page).to have_content 'Works (1)'
         expect(page).to have_content work.title.first
+        expect(page).to have_selector '.alert-success', text: 'Collection was successfully updated.'
       end
     end
 
@@ -93,7 +96,10 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
           # forwards to collections index page and shows flash message
           expect(page).to have_link 'All Collections'
           expect(page).to have_link 'Your Collections'
-          expect(page).to have_selector '.alert', text: "Error: You have specified more than one of the same single-membership collection types: Single-membership 1 (#{new_collection.title.first} and #{old_collection.title.first})"
+
+          err_message = "Error: You have specified more than one of the same single-membership collection types: " \
+                        "Single-membership 1 (#{new_collection.title.first} and #{old_collection.title.first})"
+          expect(page).to have_selector '.alert', text: err_message
         end
 
         it "from the work's edit form Relationships tab" do
@@ -106,7 +112,10 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
           # forwards to work index page and shows flash message
           expect(page).to have_link 'All Works'
           expect(page).to have_link 'Your Works'
-          expect(page).to have_selector '.alert', text: 'Error: You have specified more than one of the same single-membership collection types: Single-membership 1 (Collection 1 for SM1)'
+
+          err_message = "Error: You have specified more than one of the same single-membership collection types: " \
+                        "Single-membership 1 (Collection 1 for SM1)"
+          expect(page).to have_selector '.alert', text: err_message
         end
 
         it "from the collection's show page Add to collection" do
@@ -122,8 +131,57 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
           # forwards to collections index page and shows flash message
           expect(page).to have_link 'All Collections'
           expect(page).to have_link 'Your Collections'
-          expect(page).to have_selector '.alert', text: "Error: You have specified more than one of the same single-membership collection types: Single-membership 1 (#{new_collection.title.first} and #{old_collection.title.first})"
+
+          err_message = "Error: You have specified more than one of the same single-membership collection types: " \
+                        "Single-membership 1 (#{new_collection.title.first} and #{old_collection.title.first})"
+          expect(page).to have_selector '.alert', text: err_message
         end
+      end
+    end
+  end
+
+  describe 'when adding a work already in a collection' do
+    let!(:work) { create(:generic_work, user: admin_user, member_of_collections: [old_collection], title: ['The highly valued work that everyone wants in their collection']) }
+
+    context 'allowing multi-membership' do
+      let(:old_collection) { create(:collection_lw, user: admin_user, collection_type_gid: multi_membership_type_1.gid) }
+      let!(:new_collection) { old_collection }
+
+      it 'then the add is treated as a success' do
+        # Re-add to same multi-membership collection
+        visit '/dashboard/my/works'
+        check 'check_all'
+        click_button 'Add to collection' # opens the modal
+        within('div#collection-list-container') do
+          choose new_collection.title.first # selects the collection
+          click_button 'Save changes'
+        end
+        # forwards to collection show page
+        expect(page).to have_content new_collection.title.first
+        expect(page).to have_content 'Works (1)'
+        expect(page).to have_content work.title.first
+        expect(page).to have_selector '.alert-success', text: 'Collection was successfully updated.'
+      end
+    end
+
+    context 'requiring single-membership' do
+      let(:old_collection) { create(:collection_lw, user: admin_user, collection_type_gid: single_membership_type_1.gid) }
+      let!(:new_collection) { old_collection }
+
+      it 'then the add is treated as a success' do
+        # Re-add to same single-membership collection
+        visit '/dashboard/my/works'
+        check 'check_all'
+        click_button 'Add to collection' # opens the modal
+        within('div#collection-list-container') do
+          choose new_collection.title.first # selects the collection
+          click_button 'Save changes'
+        end
+        # forwards to collection show page
+        expect(page).to have_content new_collection.title.first
+        expect(page).to have_content 'Works (1)'
+        expect(page).to have_content work.title.first
+        expect(page).to have_selector '.alert-success', text: 'Collection was successfully updated.'
       end
     end
   end

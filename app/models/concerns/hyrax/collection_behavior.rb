@@ -59,7 +59,7 @@ module Hyrax
     def add_member_objects(new_member_ids)
       Array(new_member_ids).collect do |member_id|
         member = ActiveFedora::Base.find(member_id)
-        message =  Hyrax::MultipleMembershipChecker.new(item: member).check(collection_ids: id, include_current_members: true)
+        message = Hyrax::MultipleMembershipChecker.new(item: member).check(collection_ids: id, include_current_members: true)
         if message
           member.errors.add(:collections, message)
         else
