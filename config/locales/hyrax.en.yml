@@ -77,7 +77,7 @@ en:
           no_works: "The administrative set does not contain any works."
           title:    "List of items in this administrative set"
         edit:
-          header:         "Edit Administrative Set"
+          header:             "Edit Administrative Set: %{title}"
         form:
           cancel:               "Cancel"
           note:                 "Users granted a new role will only gain the role on works that are deposited after that role has been granted."

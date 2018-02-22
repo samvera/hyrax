@@ -760,48 +760,70 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     end
 
     context 'from dashboard -> collections action menu' do
-      before do
-        sign_in user
-        visit '/dashboard/my/collections'
+      context 'for a collection' do
+        before do
+          sign_in user
+          visit '/dashboard/my/collections'
+        end
+
+        it "edits and update collection metadata" do
+          # URL: /dashboard/my/collections
+          expect(page).to have_content(collection.title.first)
+          within("#document_#{collection.id}") do
+            find('button.dropdown-toggle').click
+            click_link('Edit collection')
+          end
+          # URL: /dashboard/collections/collection-id/edit
+          expect(page).to have_selector('h1', text: "Edit User Collection: #{collection.title.first}")
+
+          expect(page).to have_field('collection_title', with: collection.title.first)
+          expect(page).to have_field('collection_description', with: collection.description.first)
+
+          # TODO: These two expectations require the spec to include with_nested_reindexing: true.
+          # However, adding nested indexing causes this spec to fail to go through the update method
+          # in the controller unless js: true is also included. Including javascript greatly increases
+          # the time required for the spec to complete, so for now, I am simply commenting out these
+          # two expectations, as these are not integral to the function being tested.
+          # expect(page).to have_content(work1.title.first)
+          # expect(page).to have_content(work2.title.first)
+
+          new_title = "Altered Title"
+          new_description = "Completely new Description text."
+          creators = ["Dorje Trollo", "Vajrayogini"]
+
+          fill_in('Title', with: new_title)
+          fill_in('Abstract or Summary', with: new_description)
+          fill_in('Creator', with: creators.first)
+          within('.panel-footer') do
+            click_button('Save changes')
+          end
+          # URL: /dashboard/collections/collection-id/edit
+          expect(page).not_to have_field('collection_title', with: collection.title.first)
+          expect(page).not_to have_field('collection_description', with: collection.description.first)
+          expect(page).to have_field('collection_title', with: new_title)
+          expect(page).to have_field('collection_description', with: new_description)
+          expect(page).to have_field('collection_creator', with: creators.first)
+        end
       end
 
-      it "edits and update collection metadata" do
-        # URL: /dashboard/my/collections
-        expect(page).to have_content(collection.title.first)
-        within("#document_#{collection.id}") do
-          find('button.dropdown-toggle').click
-          click_link('Edit collection')
+      context 'for an admin set' do
+        before do
+          admin_user
+          admin_set_a
+          sign_in admin_user
+          visit '/dashboard/my/collections'
         end
-        # URL: /dashboard/collections/collection-id/edit
-        expect(page).to have_selector('h1', text: "Edit User Collection: #{collection.title.first}")
 
-        expect(page).to have_field('collection_title', with: collection.title.first)
-        expect(page).to have_field('collection_description', with: collection.description.first)
-
-        # TODO: These two expectations require the spec to include with_nested_reindexing: true.
-        # However, adding nested indexing causes this spec to fail to go through the update method
-        # in the controller unless js: true is also included. Including javascript greatly increases
-        # the time required for the spec to complete, so for now, I am simply commenting out these
-        # two expectations, as these are not integral to the function being tested.
-        # expect(page).to have_content(work1.title.first)
-        # expect(page).to have_content(work2.title.first)
-
-        new_title = "Altered Title"
-        new_description = "Completely new Description text."
-        creators = ["Dorje Trollo", "Vajrayogini"]
-
-        fill_in('Title', with: new_title)
-        fill_in('Abstract or Summary', with: new_description)
-        fill_in('Creator', with: creators.first)
-        within('.panel-footer') do
-          click_button('Save changes')
+        it 'edits admin set', :js do
+          # URL: /dashboard/my/collections
+          expect(page).to have_content(admin_set_a.title.first)
+          within("#document_#{admin_set_a.id}") do
+            find('button.dropdown-toggle').click
+            click_link('Edit collection')
+          end
+          # URL: /dashboard/collections/collection-id/edit
+          expect(page).to have_selector('h1', text: "Edit Administrative Set: #{admin_set_a.title.first}")
         end
-        # URL: /dashboard/collections/collection-id/edit
-        expect(page).not_to have_field('collection_title', with: collection.title.first)
-        expect(page).not_to have_field('collection_description', with: collection.description.first)
-        expect(page).to have_field('collection_title', with: new_title)
-        expect(page).to have_field('collection_description', with: new_description)
-        expect(page).to have_field('collection_creator', with: creators.first)
       end
     end
 
