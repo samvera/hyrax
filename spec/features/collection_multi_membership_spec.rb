@@ -90,10 +90,10 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
             choose new_collection.title.first # selects the collection
             click_button 'Save changes'
           end
-          # forwards to work index page and shows flash message
-          expect(page).to have_link 'All Works'
-          expect(page).to have_link 'Your Works'
-          expect(page).to have_selector '.alert', text: 'Error: You have specified more than one of the same single-membership collection types: Single-membership 1 (Collection 1 for SM1)'
+          # forwards to collections index page and shows flash message
+          expect(page).to have_link 'All Collections'
+          expect(page).to have_link 'Your Collections'
+          expect(page).to have_selector '.alert', text: "Error: You have specified more than one of the same single-membership collection types: Single-membership 1 (#{new_collection.title.first} and #{old_collection.title.first})"
         end
 
         it "from the work's edit form Relationships tab" do
@@ -119,12 +119,10 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
             choose new_collection.title.first # selects the collection
             click_button 'Save changes'
           end
-          # forwards to work index page and shows flash message
-          # TODO: I'm not sure if this should be forwarding back to the collection show page and showing the flash message
-          #       or to the works index.  Ideally, it would go back to the collection show page.
-          expect(page).to have_link 'All Works'
-          expect(page).to have_link 'Your Works'
-          expect(page).to have_selector '.alert', text: 'Error: You have specified more than one of the same single-membership collection types: Single-membership 1 (Collection 1 for SM1)'
+          # forwards to collections index page and shows flash message
+          expect(page).to have_link 'All Collections'
+          expect(page).to have_link 'Your Collections'
+          expect(page).to have_selector '.alert', text: "Error: You have specified more than one of the same single-membership collection types: Single-membership 1 (#{new_collection.title.first} and #{old_collection.title.first})"
         end
       end
     end
