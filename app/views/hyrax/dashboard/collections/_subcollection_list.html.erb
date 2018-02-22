@@ -1,15 +1,21 @@
 <% if @subcollection_docs.nil? || @subcollection_docs.empty? %>
   <div class="alert alert-warning" role="alert"><%= t('hyrax.collections.show.no_visible_subcollections') %></div>
 <% else %>
-<% @subcollection_docs.each do |document| %>
+<div id="remove_subcollection">
   <ul>
-   <li>
-     <strong>
-      <% id = document.id %>
-      <%= link_to document.title_or_label, [hyrax, :dashboard, document], id: "src_copy_link_#{id}" %> <%# TODO: Get count for sub-collection %>
-      </strong>
-    </li>
-  </ul>
-<% end %>
+    <% @subcollection_docs.each do |document| %>
+     <li style="margin: 5px 0">
+   	   <%# TODO: move styling into CSS %>
+       <strong>
+        <%= link_to document.title_or_label, [hyrax, :dashboard, document], id: "src_copy_link_#{document.id}" %>
+        </strong>
+         <% if can? :edit, id %>
+          <button class="btn btn-xs btn-danger remove-subcollection-button pull-right"><%= t('hyrax.collections.show.buttons.remove_this_sub_collection') %></button>
+          <%= render 'modal_remove_sub_collection', parent_id: id, child_id: document.id %>
+         <% end %>
+      </li>
+    <% end %>
+  <ul>
+</div>
 <%= render 'hyrax/collections/paginate', solr_response: @subcollection_solr_response, page_param_name: :sub_collection_page  %>
 <% end %>

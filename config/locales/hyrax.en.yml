@@ -10,6 +10,7 @@ en:
         is_not_nestable: "is not nestable"
         cannot_have_child_nested: "cannot have child nested within it"
         cannot_nest_in_parent: "cannot nest within parent"
+        cannot_remove_relationship: "permission is inadequate for removal of nesting relationship"
         conflict: "Your changes could not be saved because another user (or background job) updated this %{model} after you began editing. Please make sure all file attachments have completed successfully and try again. This form has refreshed with the most recent saved copy of the %{model}."
   blacklight:
     search:
@@ -504,6 +505,9 @@ en:
         show_more_parent_collections: "show more..."
         subcollection_count: "Subcollections"
         works_in_collection: "Works"
+        buttons:
+          remove_from_collection: "Remove"
+          remove_this_sub_collection: "Remove"
     collection_type:
       default_title: "User Collection"
       admin_set_title: "Admin Set"
@@ -621,15 +625,15 @@ en:
         form_relationships:
           add_other_collections_as_sub_collections_description: "You can manage the sub-collections of this collection."
           buttons:
-            remove_from_collection: "Remove from collection"
-            remove_this_sub_collection: "Remove this sub-collection"
+            remove_from_collection: "Remove"
+            remove_this_sub_collection: "Remove"
           collection_is_subcollection_description: "This collection is currently a sub-collection of these collections"
           headlines:
             other_collections_in_this_collection: "Other Collections in This Collection"
             this_collection_in_other_collections: "This Collection in Other Collections"
           modals:
-            remove_from_collection_description: "Removing this collection will not remove it from the repository, only from this parent collection.  Are you sure you want to remove this collection?"
-            remove_from_sub_collection_description: "Removing this sub-collection will not remove it from the repository, only from this parent collection.  Are you sure you want to remove this sub-collection?"
+            remove_from_collection_description: "Removing this collection will not remove it from the repository, only as a parent of this collection.  Are you sure you want to remove this collection?"
+            remove_this_sub_collection_description: "Removing this sub-collection will not remove it from the repository, only from this parent collection.  Are you sure you want to remove this sub-collection?"
           sub_collections_of_collection_description: "These collections are currently sub-collections of this collection"
           table:
             action: "Action"
@@ -730,8 +734,8 @@ en:
         works:        "Your Works"
       nest_collections_form:
         create_within:          "'%{child_title}' has been added to '%{parent_title}'"
-        create_under:          "'%{child_title}' has been added to '%{parent_title}'"
-        create_under_failed:   "'%{child_title}' cannot be added to '%{parent_title}'"
+        create_under:           "'%{child_title}' has been added to '%{parent_title}'"
+        removed_relationship:   "'%{child_title}' has been removed from '%{parent_title}'"
       no_activity:              "User has no recent activity"
       no_notifications:         "User has no notifications"
       no_transfer_requests:     "You haven't received any work transfer requests"

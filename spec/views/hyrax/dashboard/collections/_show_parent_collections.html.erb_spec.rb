@@ -11,14 +11,15 @@ RSpec.describe 'hyrax/dashboard/collections/_show_parent_collections.html.erb', 
   let(:ability) { double }
   let(:solr_document) { SolrDocument.new(collection_doc) }
   let(:presenter) { Hyrax::CollectionPresenter.new(solr_document, ability) }
-  let(:collection1) { build(:collection, id: 'col1', title: ['col1']) }
-  let(:collection2) { build(:collection, id: 'col2', title: ['col2']) }
-  let(:collection3) { build(:collection, id: 'col3', title: ['col3']) }
-  let(:collection4) { build(:collection, id: 'col4', title: ['col4']) }
-  let(:collection5) { build(:collection, id: 'col5', title: ['col5']) }
+  let(:collection1) { double('Collection') }
+  let(:collection2) { double('Collection') }
+  let(:collection3) { double('Collection') }
+  let(:collection4) { double('Collection') }
+  let(:collection5) { double('Collection') }
   let(:parent_collections) { double(Object, documents: parent_docs, response: { "numFound" => parent_docs.size }, total_pages: 1) }
 
   before do
+    stub_template "hyrax/dashboard/collections/_show_parent_collection_row.html.erb" => "parent collection"
     assign(:presenter, presenter)
     presenter.parent_collections = parent_collections
 
@@ -35,6 +36,7 @@ RSpec.describe 'hyrax/dashboard/collections/_show_parent_collections.html.erb', 
     it "posts a warning message" do
       subject
       expect(rendered).to have_text("There are no visible parent collections.")
+      expect(subject).not_to render_template("_show_parent_collection_row")
     end
 
     it 'does not render pagination' do
@@ -48,6 +50,7 @@ RSpec.describe 'hyrax/dashboard/collections/_show_parent_collections.html.erb', 
     it "posts a warning message" do
       subject
       expect(rendered).to have_text("There are no visible parent collections.")
+      expect(subject).not_to render_template("_show_parent_collection_row")
     end
 
     it 'does not render pagination' do
@@ -59,15 +62,12 @@ RSpec.describe 'hyrax/dashboard/collections/_show_parent_collections.html.erb', 
     let(:parent_docs) { [collection1, collection2, collection3] }
 
     it "posts the collection's title with a link to the collection" do
+      assign(:events, parent_docs)
       subject
-      expect(rendered).to have_link(collection1.title.first, visible: true)
-      expect(rendered).to have_link(collection2.title.first, visible: true)
-      expect(rendered).to have_link(collection3.title.first, visible: true)
-      expect(rendered).not_to have_button('show more...')
-    end
 
-    xit 'includes a count of the parent collections' do
-      # TODO: add test when actual count is added to page
+      expect(subject).to render_template("_show_parent_collection_row")
+      expect(view).to render_template(partial: "_show_parent_collection_row", count: 3)
+      expect(rendered).not_to have_button('show more...')
     end
 
     it 'does not render pagination' do
@@ -79,12 +79,9 @@ RSpec.describe 'hyrax/dashboard/collections/_show_parent_collections.html.erb', 
     let(:parent_docs) { [collection1, collection2, collection3, collection4, collection5] }
 
     it "posts the collection's title with a link to the collection" do
+      assign(:events, parent_docs)
       subject
-      expect(rendered).to have_link(collection1.title.first, visible: true)
-      expect(rendered).to have_link(collection2.title.first, visible: true)
-      expect(rendered).to have_link(collection3.title.first, visible: true)
-      expect(rendered).to have_link(collection4.title.first, visible: false)
-      expect(rendered).to have_link(collection5.title.first, visible: false)
+      expect(view).to render_template(partial: "_show_parent_collection_row", count: 5)
       expect(rendered).to have_button('show more...', visible: true)
       expect(rendered).to have_button('...show less', visible: false)
     end
@@ -99,16 +96,13 @@ RSpec.describe 'hyrax/dashboard/collections/_show_parent_collections.html.erb', 
     let(:parent_collections) { double(Object, documents: parent_docs, response: { "numFound" => parent_docs.size }, total_pages: 2) }
 
     before do
-      stub_template "hyrax/collections/_paginate" => "paginate"
+      stub_template "hyrax/collections/_paginate.html.erb" => "paginate"
+      assign(:events, parent_docs)
     end
 
-    it "renders a link to all collections" do
+    it "renders a row for each collection" do
       subject
-      expect(rendered).to have_link(collection1.title.first, visible: true)
-      expect(rendered).to have_link(collection2.title.first, visible: true)
-      expect(rendered).to have_link(collection3.title.first, visible: true)
-      expect(rendered).to have_link(collection4.title.first, visible: false)
-      expect(rendered).to have_link(collection5.title.first, visible: false)
+      expect(view).to render_template(partial: "_show_parent_collection_row", count: 5)
     end
 
     it "does not render the more/less buttons" do

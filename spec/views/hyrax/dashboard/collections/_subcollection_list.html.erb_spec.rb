@@ -1,6 +1,6 @@
 RSpec.describe 'hyrax/dashboard/collections/_subcollection_list.html.erb', type: :view do
-  let(:subject) { render('subcollection_list.html.erb', collection: subcollection) }
   let(:collection) { build(:named_collection, id: '123') }
+  let(:subject) { render('subcollection_list.html.erb', id: collection.id, collection: subcollection) }
 
   context 'when subcollection list is empty' do
     let(:subcollection) { nil }
@@ -19,6 +19,7 @@ RSpec.describe 'hyrax/dashboard/collections/_subcollection_list.html.erb', type:
     let(:subcollection) { [collection] }
 
     before do
+      stub_template '_modal_remove_sub_collection.html.erb' => 'Remove button'
       assign(:subcollection_docs, subcollection)
       assign(:document, collection)
       allow(collection).to receive(:title_or_label).and_return(collection.title)
@@ -27,13 +28,36 @@ RSpec.describe 'hyrax/dashboard/collections/_subcollection_list.html.erb', type:
       stub_template "hyrax/collections/_paginate" => "<div>paginate</div>"
     end
 
-    it "posts the collection's title with a link to the collection" do
-      subject
-      expect(rendered).to have_link(collection.title.to_s)
+    context 'when user has edit access to the collection' do
+      before do
+        allow(controller).to receive(:can?).with(:edit, collection.id).and_return true
+      end
+
+      it "includes link to the collection and remove button" do
+        subject
+        expect(rendered).to have_link(collection.title.to_s)
+        expect(subject).to render_template('_modal_remove_sub_collection')
+      end
+
+      it 'renders pagination' do
+        expect(subject).to render_template("hyrax/collections/_paginate")
+      end
     end
 
-    it 'renders pagination' do
-      expect(subject).to render_template("hyrax/collections/_paginate")
+    context 'when user has no edit access to the collection' do
+      before do
+        allow(controller).to receive(:can?).with(:edit, collection.id).and_return false
+      end
+
+      it "includes link to the collection and no remove button" do
+        subject
+        expect(rendered).to have_link(collection.title.to_s)
+        expect(subject).not_to render_template('_modal_remove_sub_collection')
+      end
+
+      it 'renders pagination' do
+        expect(subject).to render_template("hyrax/collections/_paginate")
+      end
     end
   end
 end

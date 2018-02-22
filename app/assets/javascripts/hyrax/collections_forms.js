@@ -55,15 +55,15 @@ Blacklight.onLoad(function () {
   })
 
   // Remove from collection button clicked
-  $('#collection-controls').find('.remove-from-collection-button').on('click', function (e) {
+  $('#remove_parent_collection').find('.remove-from-collection-button').on('click', function (e) {
     e.preventDefault();
     $('#collection-remove-from-collection').modal('show');
   });
 
   // Remove this sub-collection button clicked
-  $('#collection-controls').find('.remove-sub-collection-button').on('click', function (e) {
+  $('#remove_subcollection').find('.remove-subcollection-button').on('click', function (e) {
     e.preventDefault();
-    $('#collection-remove-sub-collection').modal('show');
+    $('#collection-remove-subcollection').modal('show');
   });
 
   // Add to collection modal form post

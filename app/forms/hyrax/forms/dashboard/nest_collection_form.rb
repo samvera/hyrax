@@ -58,6 +58,15 @@ module Hyrax
           end
         end
 
+        def remove
+          if context.can? :edit, parent
+            persistence_service.remove_nested_relationship_for(parent: parent, child: child)
+          else
+            errors.add(:parent, :cannot_remove_relationship)
+            false
+          end
+        end
+
         private
 
           attr_accessor :query_service, :persistence_service, :context, :collection

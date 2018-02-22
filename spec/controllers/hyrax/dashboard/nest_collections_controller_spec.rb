@@ -85,7 +85,7 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
   end
 
   describe 'GET #create_collection_under' do
-    subject { get 'create_collection_under', params: { child_id: nil, parent_id: parent.id, source: 'edit' } }
+    subject { get 'create_collection_under', params: { child_id: nil, parent_id: parent.id, source: 'show' } }
 
     before do
       allow(Collection).to receive(:find).with(parent.id).and_return(parent)
@@ -118,7 +118,7 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
 
       it 'authorizes then renders the form again' do
         subject
-        expect(response).to redirect_to(edit_dashboard_collection_path(parent.id, anchor: 'relationships'))
+        expect(response).to redirect_to(dashboard_collection_path(parent.id))
       end
     end
 
@@ -150,69 +150,211 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
     end
   end
 
-  subject { post 'create_relationship_under', params: { child_id: child_id, parent_id: parent.id, source: 'show' } }
+  describe 'POST #create_relationship_under' do
+    subject { post 'create_relationship_under', params: { child_id: child_id, parent_id: parent.id, source: 'show' } }
 
-  before do
-    allow(Collection).to receive(:find).with(child_id).and_return(child)
-    allow(Collection).to receive(:find).with(parent.id).and_return(parent)
-  end
+    before do
+      allow(Collection).to receive(:find).with(child_id).and_return(child)
+      allow(Collection).to receive(:find).with(parent.id).and_return(parent)
+    end
 
-  describe 'when save fails' do
-    let(:form_class_with_failed_save) do
-      Class.new do
-        attr_reader :child, :parent
-        def initialize(parent:, child:, context:)
-          @parent = parent
-          @child = child
-          @context = context
+    describe 'when save fails' do
+      let(:form_class_with_failed_save) do
+        Class.new do
+          attr_reader :child, :parent
+          def initialize(parent:, child:, context:)
+            @parent = parent
+            @child = child
+            @context = context
+          end
+
+          def save
+            false
+          end
+
+          def errors; end
         end
+      end
 
-        def save
-          false
-        end
+      before do
+        controller.form_class = form_class_with_failed_save
+        allow(controller).to receive(:authorize!).with(:deposit, parent).and_return(true)
+        allow(controller.form_class).to receive(:errors)
+        allow(controller.form_class.errors).to receive(:full_messages).and_return(['huge mistake'])
+      end
 
-        def errors; end
+      it 'authorizes then renders the form again' do
+        subject
+        expect(response).to redirect_to(dashboard_collection_path(parent))
       end
     end
 
-    before do
-      controller.form_class = form_class_with_failed_save
-      allow(controller).to receive(:authorize!).with(:deposit, parent).and_return(true)
-      allow(controller.form_class).to receive(:errors)
-      allow(controller.form_class.errors).to receive(:full_messages).and_return(['huge mistake'])
-    end
+    describe 'when save succeeds' do
+      let(:form_class_with_successful_save) do
+        Class.new do
+          attr_reader :child, :parent
+          def initialize(parent:, child:, context:)
+            @parent = parent
+            @child = child
+            @context = context
+          end
 
-    it 'authorizes then renders the form again' do
-      subject
-      expect(response).to redirect_to(dashboard_collection_path(parent))
+          def save
+            true
+          end
+        end
+      end
+
+      before do
+        controller.form_class = form_class_with_successful_save
+        allow(controller).to receive(:authorize!).with(:deposit, parent).and_return(true)
+      end
+
+      it 'authorizes, flashes a notice, and redirects' do
+        subject
+        expect(response).to redirect_to(dashboard_collection_path(parent))
+        expect(flash[:notice]).to be_a(String)
+      end
     end
   end
 
-  describe 'when save succeeds' do
-    let(:form_class_with_successful_save) do
-      Class.new do
-        attr_reader :child, :parent
-        def initialize(parent:, child:, context:)
-          @parent = parent
-          @child = child
-          @context = context
-        end
+  describe 'POST #remove_relationship_above' do
+    subject { post 'remove_relationship_above', params: { child_id: child_id, parent_id: parent.id } }
 
-        def save
-          true
+    before do
+      allow(Collection).to receive(:find).with(child_id).and_return(child)
+      allow(Collection).to receive(:find).with(parent.id).and_return(parent)
+    end
+
+    describe 'when remove fails' do
+      let(:form_class_remove_fails) do
+        Class.new do
+          attr_reader :child, :parent
+          def initialize(parent:, child:, context:)
+            @parent = parent
+            @child = child
+            @context = context
+          end
+
+          def remove
+            false
+          end
+
+          def errors; end
         end
+      end
+
+      before do
+        controller.form_class = form_class_remove_fails
+        allow(controller).to receive(:authorize!).with(:edit, parent).and_return(false)
+        allow(controller.form_class).to receive(:errors)
+        allow(controller.form_class.errors).to receive(:full_messages).and_return(['unauthorized'])
+      end
+
+      it 'authorizes then renders the form again' do
+        subject
+        expect(response).to redirect_to(dashboard_collection_path(child))
       end
     end
 
+    describe 'when remove succeeds' do
+      let(:form_class_removed) do
+        Class.new do
+          attr_reader :child, :parent
+          def initialize(parent:, child:, context:)
+            @parent = parent
+            @child = child
+            @context = context
+          end
+
+          def remove
+            true
+          end
+
+          def errors; end
+        end
+      end
+
+      before do
+        controller.form_class = form_class_removed
+        allow(controller).to receive(:authorize!).with(:edit, parent).and_return(true)
+      end
+
+      it 'authorizes, flashes a notice, and redirects' do
+        subject
+        expect(response).to redirect_to(dashboard_collection_path(child))
+        expect(flash[:notice]).to be_a(String)
+      end
+    end
+  end
+
+  describe 'POST #remove_relationship_under' do
+    subject { post 'remove_relationship_under', params: { child_id: child_id, parent_id: parent.id } }
+
     before do
-      controller.form_class = form_class_with_successful_save
-      allow(controller).to receive(:authorize!).with(:deposit, parent).and_return(true)
+      allow(Collection).to receive(:find).with(child_id).and_return(child)
+      allow(Collection).to receive(:find).with(parent.id).and_return(parent)
     end
 
-    it 'authorizes, flashes a notice, and redirects' do
-      subject
-      expect(response).to redirect_to(dashboard_collection_path(parent))
-      expect(flash[:notice]).to be_a(String)
+    describe 'when remove fails' do
+      let(:form_class_remove_fails) do
+        Class.new do
+          attr_reader :child, :parent
+          def initialize(parent:, child:, context:)
+            @parent = parent
+            @child = child
+            @context = context
+          end
+
+          def remove
+            false
+          end
+
+          def errors; end
+        end
+      end
+
+      before do
+        controller.form_class = form_class_remove_fails
+        allow(controller).to receive(:authorize!).with(:edit, parent).and_return(false)
+        allow(controller.form_class).to receive(:errors)
+        allow(controller.form_class.errors).to receive(:full_messages).and_return(['unauthorized'])
+      end
+
+      it 'authorizes then renders the form again' do
+        subject
+        expect(response).to redirect_to(dashboard_collection_path(parent))
+      end
+    end
+
+    describe 'when remove succeeds' do
+      let(:form_class_removed) do
+        Class.new do
+          attr_reader :child, :parent
+          def initialize(parent:, child:, context:)
+            @parent = parent
+            @child = child
+            @context = context
+          end
+
+          def remove
+            true
+          end
+
+          def errors; end
+        end
+      end
+
+      before do
+        controller.form_class = form_class_removed
+        allow(controller).to receive(:authorize!).with(:edit, parent).and_return(true)
+      end
+
+      it 'authorizes, flashes a notice, and redirects' do
+        subject
+        expect(response).to redirect_to(dashboard_collection_path(parent))
+        expect(flash[:notice]).to be_a(String)
+      end
     end
   end
 end
