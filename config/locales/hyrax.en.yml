@@ -543,6 +543,7 @@ en:
       help:             "Help"
       home:             "Home"
     dashboard:
+      pagination_next:          "for"
       additional_notifications: "See all notifications"
       admin_sets:
         admin_set:              "Administrative Set"

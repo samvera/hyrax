@@ -7,7 +7,7 @@
           <ul id="analytics-collections" class="list-unstyled list-inline analytics-options">
             <li><%= link_to t('.recently_updated') , "#", id: "recently-updated", remote: true %></li>
             <li class="analytics-borderless"><%= link_to t('.pinned') , "#", id: "pinned", class: "stats-selected", remote: true %></li>
-            <li class="pull-right"><%= pluralize(@collection_rows.length, t('.collection'))%>  <%= t('.collection_count') %></li>
+            <li class="pull-right"><%= pluralize(number_with_delimiter(@collection_rows.total_count), t('.collection'))%>  <%= t('.collection_count') %></li>
           </ul>
         </div>
       </div>
@@ -32,6 +32,11 @@
           <% end %>
           </tbody>
         </table>
+        <div class="pagination, pull-right">
+          <%= page_entries_info @collection_rows %> <%= t('hyrax.dashboard.pagination_next') %>
+          <%= pluralize(number_with_delimiter(@collection_rows.total_pages), t('.collection'))%>  <%= t('.collection_count') %>
+          <%= paginate @collection_rows, remote: true %>
+        </div>
       </div>
     </div>
   </div>
