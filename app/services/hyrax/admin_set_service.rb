@@ -25,5 +25,20 @@ module Hyrax
         SearchResultForWorkCount.new(admin_set, counts[admin_set.id].to_i, file_counts[admin_set.id].to_i)
       end
     end
+
+    private
+
+    # Count number of files from works
+    # @param [Array] results Solr search result
+    # @return [Hash] admin set id keys and file count values
+    def count_files(results)
+      file_counts = Hash.new(0)
+      results['response']['docs'].each do |doc|
+        doc['isPartOf_ssim'].each do |id|
+          file_counts[id] += doc.fetch('file_set_ids_ssim', []).length
+        end
+      end
+      file_counts
+    end
   end
 end
