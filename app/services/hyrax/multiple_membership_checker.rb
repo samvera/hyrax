@@ -40,7 +40,8 @@ module Hyrax
       collections_to_check = new_single_membership_collections
       # No need to check current members when coming in from the ActorStack, which does a wholesale collection membership replacement
       collections_to_check |= single_membership_collections(item.member_of_collection_ids) if include_current_members
-      problematic_collections = collections_to_check.group_by(&:collection_type_gid)
+      problematic_collections = collections_to_check.uniq(&:id)
+                                                    .group_by(&:collection_type_gid)
                                                     .select { |_gid, list| list.count > 1 }
       return if problematic_collections.blank?
       build_error_message(problematic_collections)
