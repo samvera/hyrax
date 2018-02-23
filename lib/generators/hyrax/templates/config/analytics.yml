@@ -12,3 +12,9 @@
 # analytics:
 #   view_id: 'XXXXXXXXX'
 #   privkey_path: /path/to/key_file.json
+#
+# New Matomo structure:
+# analytics:
+#   matomo_site_id: 'XXXX'
+#   matomo_token: 'XXXX'
+#   matomo_url: 'http://demo.piwik.org'
