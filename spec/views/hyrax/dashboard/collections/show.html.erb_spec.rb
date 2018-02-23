@@ -22,7 +22,7 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
 
     allow(presenter).to receive(:total_items).and_return(0)
     allow(presenter).to receive(:collection_type).and_return(collection_type)
-    assign(:subcollection_count, 0)
+    allow(presenter).to receive(:subcollection_count).and_return(0)
     assign(:parent_collection_count, 0)
     assign(:members_count, 0)
 
@@ -30,7 +30,6 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
     allow(collection_type).to receive(:title).and_return("User Collection")
 
     assign(:presenter, presenter)
-
     # Stub route because view specs don't handle engine routes
     allow(view).to receive(:edit_dashboard_collection_path).and_return("/dashboard/collection/123/edit")
     allow(view).to receive(:dashboard_collection_path).and_return("/dashboard/collection/123")
@@ -60,6 +59,22 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
     expect(rendered).not_to have_text('Search Results within this Collection')
   end
 
+  context 'with a not-nested collection_type' do
+    before do
+      allow(presenter).to receive(:subcollection_count).and_return(0)
+      render
+    end
+    it 'draws the page' do
+      allow(collection_type).to receive(:nestable?).and_return(false)
+      # Making sure that we are verifying that the _show_actions.html.erb is rendering
+      expect(rendered).to have_css('.stubbed-actions', text: 'THE COLLECTION ACTIONS')
+      expect(rendered).to have_css('.stubbed-actions', text: 'THE SUBCOLLECTION ACTIONS')
+      expect(rendered).to have_css('.stubbed-actions', text: 'THE ADD ITEMS ACTIONS')
+      expect(rendered).to match '<span class="fa fa-cubes collection-icon-search"></span>'
+      expect(rendered).not_to have_text('Search Results within this Collection')
+    end
+  end
+
   context 'when search results exist' do
     before do
       # rubocop:disable RSpec/AnyInstance
@@ -69,7 +84,6 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
 
     context 'and only works are in search results' do
       before do
-        assign(:subcollection_count, 0)
         assign(:members_count, 1)
         render
       end
@@ -84,7 +98,7 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
 
     context ' and only subcollections are in search results' do
       before do
-        assign(:subcollection_count, 1)
+        allow(presenter).to receive(:subcollection_count).and_return(1)
         assign(:members_count, 0)
         render
       end
