@@ -33,8 +33,7 @@
           </tbody>
         </table>
         <div class="pagination, pull-right">
-          <%= page_entries_info @collection_rows %> <%= t('hyrax.dashboard.pagination_next') %>
-          <%= pluralize(number_with_delimiter(@collection_rows.total_pages), t('.collection'))%>  <%= t('.collection_count') %>
+          <%= page_entries_info @collection_rows %> 
           <%= paginate @collection_rows, remote: true %>
         </div>
       </div>
