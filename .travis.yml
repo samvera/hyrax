@@ -40,5 +40,7 @@ jobs:
       - SKIP_FEATURE_TESTS=false
 
 stages:
+  - name: test
+  if: env(TRAVIS_EVENT_TYPE) != cron
   - name: feature
   if: env(TRAVIS_EVENT_TYPE) = cron
