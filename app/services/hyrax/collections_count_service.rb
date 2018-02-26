@@ -19,26 +19,26 @@ module Hyrax
       )
       counts = results['facet_counts']['facet_fields'][join_field].each_slice(2).to_h
       file_counts = count_files(results)
+      last_update = last_updated(results)
       collections.map do |collection|
-        SearchResultForWorkCount.new(collection, '', counts[collection.id].to_i, file_counts[collection.id].to_i)
+        SearchResultForWorkCount.new(collection, last_update, counts[collection.id].to_i, file_counts[collection.id].to_i)
       end
     end
 
     private
-
-    # Count number of files from works
-    # @param [Array] results Solr search result
-    # @return [Hash] collection id keys and file count values
-    def count_files(results)
-      file_counts = Hash.new(0)
-      results['response']['docs'].each do |doc|
-        unless doc['member_of_collection_ids_ssim'].nil?
-          doc['member_of_collection_ids_ssim'].each do |id|
-            file_counts[id] += doc.fetch('file_set_ids_ssim', []).length
+      # Count number of files from works
+      # @param [Array] results Solr search result
+      # @return [Hash] collection id keys and file count values
+      def count_files(results)
+        file_counts = Hash.new(0)
+        results['response']['docs'].each do |doc|
+          unless doc['member_of_collection_ids_ssim'].nil?
+            doc['member_of_collection_ids_ssim'].each do |id|
+              file_counts[id] += doc.fetch('file_set_ids_ssim', []).length
+            end
           end
         end
+        file_counts
       end
-      file_counts
-    end
   end
 end
