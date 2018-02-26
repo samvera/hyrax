@@ -8,7 +8,7 @@ module Hyrax
     # @param [Symbol] access :read or :edit
     # @param join_field [String] how are we joining the collection ids (by default "isPartOf_ssim")
     # @return [Array<Hyrax::CollectionsService::SearchResultForWorkCount>] a list with document, then work and file count
-    def search_results_with_work_count(access, join_field: "member_of_collection_ids_ssim")
+    def search_results_with_work_count(access, sort_field = 'system_modified_dtsi', join_field: "member_of_collection_ids_ssim")
       collections = search_results(access)
       ids = collections.map(&:id).join(',')
       query = "{!terms f=#{join_field}}#{ids}"
@@ -19,8 +19,8 @@ module Hyrax
       )
       counts = results['facet_counts']['facet_fields'][join_field].each_slice(2).to_h
       file_counts = count_files(results)
-      last_update = last_updated(results)
       collections.map do |collection|
+        last_update = last_updated(results, collection)
         SearchResultForWorkCount.new(collection, last_update, counts[collection.id].to_i, file_counts[collection.id].to_i)
       end
     end
