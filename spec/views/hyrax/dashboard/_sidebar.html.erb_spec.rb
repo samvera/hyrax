@@ -54,6 +54,7 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
 
       it { is_expected.to have_link t('hyrax.admin.sidebar.statistics') }
       it { is_expected.not_to have_link t('hyrax.admin.sidebar.attributes') }
+      it { is_expected.not_to have_link t('hyrax.admin.sidebar.repository_activity') }
     end
 
     context 'with the new analytics_redesign' do
@@ -62,6 +63,7 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
         render
       end
 
+      it { is_expected.to have_link t('hyrax.admin.sidebar.repository_activity') }
       it { is_expected.to have_link t('hyrax.admin.sidebar.statistics') }
       it { is_expected.to have_link t('hyrax.admin.sidebar.attributes') }
     end
