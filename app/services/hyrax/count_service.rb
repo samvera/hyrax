@@ -18,12 +18,21 @@ module Hyrax
     end
 
     protected
+      def last_updated(results)
+        dates = []
 
-    # @param [Symbol] access :read or :edit
-    def builder(access)
-      search_builder.new(context, access, @model).rows(100)
-    end
+        results['response']['docs'].each do |doc|
+          # dates << DateTime.parse(doc['date_modified_dtsi']).strftime("%Y-%m-%d")
+          dates << DateTime.parse(doc['system_modified_dtsi']).strftime("%Y-%m-%d")
+        end
+
+        dates.sort!
+        dates.last
+      end
+
+      # @param [Symbol] access :read or :edit
+      def builder(access)
+        search_builder.new(context, access, @model).rows(100)
+      end
   end
 end
-
-# member_of_collections_ssim
