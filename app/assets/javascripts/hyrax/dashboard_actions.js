@@ -32,4 +32,19 @@ Blacklight.onLoad(function() {
     return false;
   });
 
+  // Transition between time periods or object type via ajax request
+  $('.admin-repo-charts').on('click', function(e) {
+    e.preventDefault();
+
+    var type_id = e.target.id;
+    var field = $('#' + type_id);
+
+    $(field).on('ajax:success', function(e, data) {
+      var clicked_chart = field.parents().filter('ul').attr('id');
+
+      $('#' + clicked_chart + '-table tbody').html(data.rows);
+      $('#' + clicked_chart + ' a').removeClass('stats-selected');
+      field.addClass('stats-selected');
+    });
+  });
 });
