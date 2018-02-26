@@ -1,0 +1,55 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4>Customize Report</h4>
+  </div>
+    <!-- form -->
+    <div class="panel-body">
+      <div class="row">
+        <%= form_for "stats_filters", url: hyrax.status_admin_reports_works_path, method: "GET" do |f| %>
+        <div class="col-xs-3 form-group">
+          <%= f.label "Select Date Range" %>
+          <%= f.date_field :start_date, wrapper: :inline, class: 'datepicker form-control' %>
+          <%= f.date_field :end_date, wrapper: :inline, class: 'datepicker form-control' %>
+        </div>
+        <div class="col-xs-3 form-group">
+          <%= f.label "Filter" %>
+          <%= f.select :work_type, @presenter.current_work_types, { prompt: 'Work type' }, { class: 'form-control', wrapper: :inline }  %>
+          <%= f.select :status, options_for_select(@presenter.statuses.map{|s| [s.humanize, s]}), { prompt: 'Status' }, { class: 'form-control', wrapper: :inline } %>
+          <%= f.select :visibility, @presenter.visibilities, { prompt: 'Visibility' }, { class: 'form-control', wrapper: :inline } %>
+        </div>
+        <div class="col-xs-3 form-group">
+          <%= f.label "Sort" %>
+          <%= f.select :sort_by, @presenter.sort_by, {}, { class: 'form-control', wrapper: :inline } %>
+        </div>
+        <div class="col-xs-3 form-group">
+          <%= f.label "Display" %>
+          <span class="radio">
+            <%= f.radio_button :display_type, "summary", { class: "radio" } %>
+            <%= label :display_type_summary, "Summary table", { class: "radio" } %>
+          </span>
+          <span class="radio">
+            <%= f.radio_button :display_type, "monthly", { class: "radio-inline" } %>
+            <%= label :display_type_monthly, "Month-by-month totals", { class: "radio" } %>
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <hr />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-4"></div>
+        <div class="col-xs-2">
+          <%= f.submit "Generate Report", { class: 'btn btn-primary text-center' } %>
+        </div>
+        <div class="col-xs-2">
+          <a href="#" class="text-center">Clear selections</a>
+        </div>
+        <div class="col-xs-4"></div>
+      </div>
+      <%- end %>
+    </div>
+    <!-- end form -->
+  </div>
+</div>
