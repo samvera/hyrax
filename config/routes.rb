@@ -110,6 +110,7 @@ Hyrax::Engine.routes.draw do
   resources :dashboard, only: [] do
     collection do
       get 'activity', action: :activity, as: :dashboard_activity
+      get 'update_collections', action: :update_collections, as: :update_collections
       resources :transfers, only: [:index, :destroy] do
         member do
           put 'accept'
