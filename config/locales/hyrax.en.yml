@@ -557,6 +557,19 @@ en:
       all:
         collections: All Collections
         works: All Works
+      analytics_collections:
+        title: Collections
+        recently_updated: Most recently updated
+        pinned: Pinned
+        last_updated: Last Updated
+        collection: Collection Title
+        files: Files
+        works: Works
+        collection: collection
+        collection_count: in repository
+      managed:
+        collections: Managed Collections
+        works: Managed Works
       authorize_proxies: Authorize Proxies
       breadcrumbs:
         admin: Dashboard
