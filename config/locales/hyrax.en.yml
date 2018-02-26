@@ -267,6 +267,7 @@ en:
         notifications:      "Notifications"
         pages:              "Pages"
         profile:            "Profile"
+        repository_activity: "Repository activity"
         repository_objects: "Repository Contents"
         settings:           "Settings"
         statistics:         "Reports"
