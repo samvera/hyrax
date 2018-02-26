@@ -70,17 +70,20 @@ module Hyrax
         #
         # downloads sample data row (note only date/totalEvents used for DB write in `combined_stats`):
         # <OpenStruct eventCategory="Files", eventAction="Downloaded", eventLabel="j67313767", date="20180212", totalEvents="1">
-        #
-        # TODO: A new critical requirement requires "unique visitors", what does that look like? Legato can't do it:
-        # https://github.com/tpitale/legato#session-level-segments
-        #
-        def remote_stats(start_date, object, _event_type)
+
+        def remote_stats(start_date, object, event_type)
           # right now event_type is either `:pageviews` or `:totalEvents` (meaning downloads)
           # as in "old" ga_statistics, pageviews could be the default where required
 
           case Hyrax.config.analytics
-          when 'google' # rubocop:disable Lint/EmptyWhen
-            # TODO: if - else on event_type, calling e.g. Hyrax::Analytic::GoogleAnalytics.pageviews
+          when 'google'
+            if event_type == :pageviews
+              Hyrax::Analytics::GoogleAnalytics.pageviews(start_date, object)
+            elsif event_type == :totalEvents
+              Hyrax::Analytics::GoogleAnalytics.downloads(start_date, object)
+            else
+              []
+            end
           when 'matomo' # rubocop:disable Lint/EmptyWhen
             # TODO: if - else on event_type, calling e.g. Hyrax::Analytic::Matomo.pageviews
           else
