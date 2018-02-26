@@ -248,4 +248,20 @@ body.dashboard {
   .spacer {
     margin-bottom: 5px;
   }
+
+  .analytics-options {
+    li:not(:last-child) {
+      border-right: 1px solid $panel-default-border;
+    }
+
+    li.analytics-borderless {
+      border: none;
+    }
+  }
+
+  .stats-selected {
+    color: $gray-base;
+    text-decoration: none;
+    cursor: default;
+  }
 }
