@@ -18,12 +18,14 @@ module Hyrax
     end
 
     protected
-      def last_updated(results)
+      def last_updated(results, collection)
         dates = []
 
-        results['response']['docs'].each do |doc|
-          # dates << DateTime.parse(doc['date_modified_dtsi']).strftime("%Y-%m-%d")
-          dates << DateTime.parse(doc['system_modified_dtsi']).strftime("%Y-%m-%d")
+        results['response']['docs'].each do |coll|
+          if coll['member_of_collections_ssim'].include? collection.to_s
+            # dates << DateTime.parse(coll['date_modified_dtsi']).strftime("%Y-%m-%d")
+            dates << DateTime.parse(coll['system_modified_dtsi']).strftime("%Y-%m-%d")
+          end
         end
 
         dates.sort!
