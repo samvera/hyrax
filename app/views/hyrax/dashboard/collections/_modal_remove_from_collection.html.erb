@@ -1,13 +1,15 @@
 <div class="modal fade" id="collection-remove-from-collection" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
-    <div class="modal-content adam">
+    <div class="modal-content">
       <div class="delete-collection-form">
         <div class="modal-body">
           <p><%= t('hyrax.dashboard.collections.form_relationships.modals.remove_from_collection_description') %></p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('helpers.action.cancel') %></button>
-          <button type="button" class="btn btn-danger"><%= t('helpers.action.remove') %></button>
+          <%= form_tag dashboard_remove_parent_relationship_above_path(child_id, parent_id) do |f| %>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('helpers.action.cancel') %></button>
+            <%= submit_tag t('helpers.action.remove'), class: "btn btn-danger" %>
+          <% end %>
         </div>
       </div>
     </div>

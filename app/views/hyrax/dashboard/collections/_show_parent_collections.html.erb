@@ -1,41 +1,37 @@
 <% if presenter.total_parent_collections <= 0 %>
 		<div class="alert alert-warning" role="alert"><%= t('hyrax.collections.show.no_visible_parent_collections') %></div>
 <% else %>
-  <% if presenter.use_parent_more_less? %>
-  	<div class="less-parent-collections-block" id="less-parent-collections">
-  		<% presenter.visible_parent_collections.each do |document| %>
-  			<ul>
-  				<li>
-  					<strong><%= link_to document, [hyrax, :dashboard, document], id: "src_copy_link_#{document.id}" %></strong>
-  				</li>
-  			</ul>
-  		<% end %>
-  		<% if presenter.more_parent_collections? %>
-  				<button id="show-more-parent-collections" class="btn show-more-parent-collections-btn"><%= t("hyrax.collections.show.show_more_parent_collections") %></button>
-  		<% end %>
-  	</div>
-  	<% if presenter.more_parent_collections? %>
-  		<div class="more-parent-collections-block" id="more-parent-collections">
-  			<% presenter.more_parent_collections.each do |document| %>
-  				<ul>
-  					<li>
-  						<strong><%= link_to document, [hyrax, :dashboard, document], id: "src_copy_link_#{document.id}" %></strong>
-  					</li>
-  				</ul>
-  			<% end %>
-  			<button id="show-less-parent-collections" class="btn show-less-parent-collections-btn"><%= t("hyrax.collections.show.show_less_parent_collections") %></button>
-  		</div>
-  	<% end %>
-  <% else %>
-		<% presenter.parent_collections.documents.each do |document| %>
+	<div id="remove_parent_collection">
+	  <% if presenter.use_parent_more_less? %>
+	  	<div class="less-parent-collections-block" id="less-parent-collections">
+				<ul>
+		  		<% presenter.visible_parent_collections.each do |document| %>
+		      	<%= render 'hyrax/dashboard/collections/show_parent_collection_row', id: presenter.id, document: document %>
+		  		<% end %>
+				</ul>
+	  		<% if presenter.more_parent_collections? %>
+	  				<button id="show-more-parent-collections" class="btn show-more-parent-collections-btn"><%= t("hyrax.collections.show.show_more_parent_collections") %></button>
+	  		<% end %>
+	  	</div>
+	  	<% if presenter.more_parent_collections? %>
+	  		<div class="more-parent-collections-block" id="more-parent-collections">
+					<ul>
+		  			<% presenter.more_parent_collections.each do |document| %>
+		      		<%= render 'hyrax/dashboard/collections/show_parent_collection_row', id: presenter.id, document: document %>
+		  			<% end %>
+					</ul>
+	  			<button id="show-less-parent-collections" class="btn show-less-parent-collections-btn"><%= t("hyrax.collections.show.show_less_parent_collections") %></button>
+	  		</div>
+	  	<% end %>
+	  <% else %>
 			<ul>
-				<li>
-					<strong><%= link_to document, [hyrax, :dashboard, document], id: "src_copy_link_#{document.id}" %></strong>
-				</li>
+				<% presenter.parent_collections.documents.each do |document| %>
+		    	<%= render 'hyrax/dashboard/collections/show_parent_collection_row', id: presenter.id, document: document %>
+				<% end %>
 			</ul>
-		<% end %>
-    <div class="row">
-      <%= render 'hyrax/collections/paginate', solr_response: presenter.parent_collections, page_param_name: :parent_collection_page  %>
-    </div>
-  <% end %>
+	    <div class="row">
+	      <%= render 'hyrax/collections/paginate', solr_response: presenter.parent_collections, page_param_name: :parent_collection_page  %>
+	    </div>
+	  <% end %>
+	<div>
 <% end %>

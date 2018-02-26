@@ -13,7 +13,7 @@ module Hyrax
           notice = I18n.t('create_within', scope: 'hyrax.dashboard.nest_collections_form', child_title: @form.child.title.first, parent_title: @form.parent.title.first)
           redirect_to redirect_path(item: @form.child), notice: notice
         else
-          redirect_to redirect_path(item: @form.child), error: @form.errors.full_messages
+          redirect_to redirect_path(item: @form.child), flash: { error: @form.errors.full_messages }
         end
       end
 
@@ -23,7 +23,7 @@ module Hyrax
         if @form.validate_add
           redirect_to new_dashboard_collection_path(collection_type_id: @form.parent.collection_type.id, parent_id: @form.parent)
         else
-          redirect_to redirect_path(item: @form.parent), error: @form.errors.full_messages
+          redirect_to redirect_path(item: @form.parent), flash: { error: @form.errors.full_messages }
         end
       end
 
@@ -34,7 +34,29 @@ module Hyrax
           notice = I18n.t('create_under', scope: 'hyrax.dashboard.nest_collections_form', child_title: @form.child.title.first, parent_title: @form.parent.title.first)
           redirect_to redirect_path(item: @form.parent), notice: notice
         else
-          redirect_to redirect_path(item: @form.parent), error: @form.errors.full_messages
+          redirect_to redirect_path(item: @form.parent), flash: { error: @form.errors.full_messages }
+        end
+      end
+
+      # remove a parent collection relationship from this collection
+      def remove_relationship_above
+        @form = build_remove_form
+        if @form.remove
+          notice = I18n.t('removed_relationship', scope: 'hyrax.dashboard.nest_collections_form', child_title: @form.child.title.first, parent_title: @form.parent.title.first)
+          redirect_to redirect_path(item: @form.child), notice: notice
+        else
+          redirect_to redirect_path(item: @form.child), flash: { error: @form.errors.full_messages }
+        end
+      end
+
+      # remove a subcollection relationship from this collection
+      def remove_relationship_under
+        @form = build_remove_form
+        if @form.remove
+          notice = I18n.t('removed_relationship', scope: 'hyrax.dashboard.nest_collections_form', child_title: @form.child.title.first, parent_title: @form.parent.title.first)
+          redirect_to redirect_path(item: @form.parent), notice: notice
+        else
+          redirect_to redirect_path(item: @form.parent), flash: { error: @form.errors.full_messages }
         end
       end
 
@@ -60,6 +82,13 @@ module Hyrax
           form_class.new(child: nil, parent: parent, context: self)
         end
 
+        def build_remove_form
+          child = Collection.find(params.fetch(:child_id))
+          parent = Collection.find(params.fetch(:parent_id))
+          authorize! :edit, parent
+          form_class.new(child: child, parent: parent, context: self)
+        end
+
         # determine appropriate redirect location depending on specified source
         def redirect_path(item:)
           from = params[:source] || 'none'
@@ -68,8 +97,6 @@ module Hyrax
             my_collections_path
           when "show"
             dashboard_collection_path(item)
-          when "edit"
-            edit_dashboard_collection_path(item, anchor: 'relationships')
           else
             dashboard_collection_path(item)
           end

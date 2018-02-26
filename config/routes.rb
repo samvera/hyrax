@@ -136,6 +136,8 @@ Hyrax::Engine.routes.draw do
     post 'collections/:child_id/within', controller: 'nest_collections', action: 'create_relationship_within', as: 'create_nest_collection_within'
     get 'collections/:parent_id/under', controller: 'nest_collections', action: 'create_collection_under', as: 'create_subcollection_under'
     post 'collections/:parent_id/under', controller: 'nest_collections', action: 'create_relationship_under', as: 'create_nest_collection_under'
+    post 'collections/:child_id/remove_parent/:parent_id', controller: 'nest_collections', action: 'remove_relationship_above', as: 'remove_parent_relationship_above'
+    post 'collections/:parent_id/remove_child/:child_id', controller: 'nest_collections', action: 'remove_relationship_under', as: 'remove_child_relationship_under'
     resources :profiles, only: [:show, :edit, :update]
   end
 
