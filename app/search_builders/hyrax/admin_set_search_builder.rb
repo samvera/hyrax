@@ -6,14 +6,15 @@ module Hyrax
 
     # @param [#repository,#blacklight_config,#current_ability] context
     # @param [Symbol] access one of :edit, :read, or :deposit
-    def initialize(context, access)
+    def initialize(context, access, model = ::AdminSet)
       @access = access
+      @model = model
       super(context)
     end
 
     # This overrides the models in FilterByType
     def models
-      [::AdminSet]
+      [@model]
     end
 
     # Overrides Hydra::AccessControlsEnforcement
