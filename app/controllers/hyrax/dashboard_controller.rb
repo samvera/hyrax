@@ -21,9 +21,9 @@ module Hyrax
       end
     end
 
-    def update_collections(sort_type = 'pinned')
+    def update_collections
       @collections = Hyrax::CollectionsCountService.new(self, Hyrax::AdminSetSearchBuilder, ::Collection).search_results_with_work_count(:read)
-      @collections.sort_by { |coll| coll[sort_type].to_s }.reverse!
+      @collections.sort_by { |coll| coll[params[:sort_type]].to_s }.reverse!
       @collection_rows = Kaminari.paginate_array(@collections).page(params[:page]).per(10)
 
       render json: { rows: render_to_string('hyrax/dashboard/_analytics_collections_ajax', layout: false, locals: { collection_rows: @collection_rows}) }
