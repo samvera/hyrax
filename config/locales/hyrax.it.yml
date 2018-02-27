@@ -252,7 +252,6 @@ it:
           header: Caratteristiche
       sidebar:
         activity: Attività
-        admin_sets: Set amministrativi
         appearance: Aspetto
         collection_types: Tipi di raccolta
         collections: collezioni
@@ -448,9 +447,6 @@ it:
         add_new_work:
           desc: Deposita un nuovo lavoro attraverso questa raccolta
           label: Deposita un nuovo lavoro attraverso questa raccolta
-        add_works:
-          desc: Aggiungi opere a questa raccolta
-          label: Aggiungi opere
         delete:
           confirmation: Cancellare questa collezione?
           desc: Elimina questa raccolta
@@ -572,7 +568,6 @@ it:
             discovery: Scoperta
             relationships: Le relazioni
             sharing: compartecipazione
-            visibility: Visibilità
         form_branding:
           banner:
             description: Un'immagine da visualizzare nella parte superiore della pagina di raccolta. Per risultati ottimali, carica un'immagine (JPG, GIF o PNG) di almeno 120 pixel di altezza e 1200 pixel di larghezza.
@@ -648,7 +643,6 @@ it:
           show_less_parent_collections: "...mostra meno"
           show_more_parent_collections: mostra di più...
           subcollection_count: sottoraccolte
-          works_in_collection: Funziona in questa collezione
       create_work: Crea lavoro
       current_proxies: Proxy attuali
       delete_notification: Elimina notifica
@@ -665,7 +659,6 @@ it:
           add_to_collection: Aggiungere alla collezione
           add_to_collection_only: Le azioni consentite sono limitate all'aggiunta di membri
           admin_set_confirmation: L'eliminazione di un set di amministratori da %{application_name} è permanente. Fare clic su OK per eliminare questo set di amministratori da %{application_name}, o Annulla per annullare questa operazione
-          collection_confirmation: La cancellazione di una raccolta da %{application_name} è permanente. Fare clic su OK per eliminare questa raccolta da %{application_name} oppure Annulla per annullare questa operazione
           collection_create_success: La raccolta è stata creata con successo.
           collection_delete_fail: Collezione %{id} non può essere cancellata
           collection_delete_success: La raccolta %{id} è stata cancellata con successo

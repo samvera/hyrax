@@ -252,7 +252,6 @@ fr:
           header: Caractéristiques
       sidebar:
         activity: Activité
-        admin_sets: Ensembles administratifs
         appearance: Apparence
         collection_types: Types de collection
         collections: Collections
@@ -449,9 +448,6 @@ fr:
         add_new_work:
           desc: Déposez du nouveau travail grâce à cette collection
           label: Déposez du nouveau travail grâce à cette collection
-        add_works:
-          desc: Ajouter des œuvres à cette collection
-          label: Ajouter des travaux
         delete:
           confirmation: Supprimez cette collection?
           desc: Supprimer cette collection
@@ -573,7 +569,6 @@ fr:
             discovery: Découverte
             relationships: Des relations
             sharing: Partage
-            visibility: Visibilité
         form_branding:
           banner:
             description: Une image à afficher en haut de la page de collection. Pour de meilleurs résultats, téléchargez une image (JPG, GIF ou PNG) d'une hauteur d'au moins 120 pixels et d'une largeur de 1200 pixels.
@@ -649,7 +644,6 @@ fr:
           show_less_parent_collections: "...montre moins"
           show_more_parent_collections: montre plus...
           subcollection_count: Sous-collections
-          works_in_collection: Fonctionne dans cette collection
       create_work: Créer un travail
       current_proxies: Proxies actuelles
       delete_notification: Supprimer la notification
@@ -666,7 +660,6 @@ fr:
           add_to_collection: Ajouter à la collection
           add_to_collection_only: Les actions autorisées sont limitées à l'ajout de membres
           admin_set_confirmation: La suppression d'un ensemble d'administrateurs à partir de %{application_name} est permanente. Cliquez sur OK pour supprimer cet ensemble d'administrateurs de %{application_name}, ou sur Annuler pour annuler cette opération
-          collection_confirmation: Supprimer une collection de %{application_name} est permanent. Cliquez sur OK pour supprimer cette collection de %{application_name} ou sur Annuler pour annuler cette opération
           collection_create_success: La collection a été créée avec succès.
           collection_delete_fail: La collection %{id} n'a pas pu être supprimée
           collection_delete_success: La collection %{id} a été supprimée avec succès

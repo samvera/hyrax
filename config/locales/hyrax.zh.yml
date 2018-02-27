@@ -252,7 +252,6 @@ zh:
           header: 特征
       sidebar:
         activity: 活动
-        admin_sets: 管理集
         appearance: 表面
         collection_types: 集合类型
         collections: 收藏
@@ -446,9 +445,6 @@ zh:
         add_new_work:
           desc: 通过这个集合存放新作品
           label: 通过这个集合存放新作品
-        add_works:
-          desc: 向收藏集添加作品
-          label: 添加作品
         delete:
           confirmation: 删除此收藏集？
           desc: 删除此收藏集？
@@ -570,7 +566,6 @@ zh:
             discovery: 发现
             relationships: 关系
             sharing: 分享
-            visibility: 能见度
         form_branding:
           banner:
             description: 要显示在收集页面顶部的图像。为获得最佳效果，请上传至少120像素高，1200像素宽的图像（JPG，GIF或PNG）。
@@ -646,7 +641,6 @@ zh:
           show_less_parent_collections: "...显示较少"
           show_more_parent_collections: 展示更多...
           subcollection_count: 子集合
-          works_in_collection: 在这个收藏集的作品
       create_work: 创建作品
       current_proxies: 目前代理
       delete_notification: 删除通知
@@ -663,7 +657,6 @@ zh:
           add_to_collection: 添加到收藏
           add_to_collection_only: 允许的操作仅限于添加成员
           admin_set_confirmation: 从%{application_name}删除管理员集合是永久性的。单击确定从%{application_name}删除此管理集，或单击取消取消此操作
-          collection_confirmation: 删除收藏集, 从%{application_name}删除收藏集是永久性的。从%{application_name}点击'OK'删除此收藏集，或点击'取消'取消操作。
           collection_create_success: 收集已成功创建。
           collection_delete_fail: 收藏%{id}无法删除
           collection_delete_success: 收藏夹%{id}已成功删除

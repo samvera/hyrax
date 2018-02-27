@@ -252,7 +252,6 @@ de:
           header: Features
       sidebar:
         activity: Aktivität
-        admin_sets: Admin-Sets
         appearance: Design
         collection_types: Sammlungsarten
         collections: Sammlungen
@@ -450,9 +449,6 @@ de:
         add_new_work:
           desc: Hinterlegen Sie neue Arbeit durch diese Sammlung
           label: Hinterlegen Sie neue Arbeit durch diese Sammlung
-        add_works:
-          desc: Fügen Sie Arbeiten zu dieser Sammlung hinzu
-          label: Hinzufügen von Arbeiten
         delete:
           confirmation: Diese Sammlung löschen?
           desc: Löschen Sie diese Sammlung
@@ -574,7 +570,6 @@ de:
             discovery: Entdeckung
             relationships: Beziehungen
             sharing: Teilen
-            visibility: Sichtbarkeit
         form_branding:
           banner:
             description: Ein Bild, das am oberen Rand der Sammlungsseite angezeigt werden soll. Für beste Ergebnisse laden Sie ein Bild (JPG, GIF oder PNG) hoch, das mindestens 120 Pixel groß und 1200 Pixel breit ist.
@@ -650,7 +645,6 @@ de:
           show_less_parent_collections: "...zeige weniger"
           show_more_parent_collections: Zeig mehr...
           subcollection_count: Untersammlungen
-          works_in_collection: Arbeiten in dieser Sammlung
       create_work: Arbeien erstellen
       current_proxies: Aktuelle Proxies
       delete_notification: Benachrichtigung löschen
@@ -667,7 +661,6 @@ de:
           add_to_collection: Zur Sammlung hinzufügen
           add_to_collection_only: Erlaubte Aktionen sind auf das Hinzufügen von Mitgliedern beschränkt
           admin_set_confirmation: Löschen eines Admin-Set von %{application_name} ist dauerhaft. Klicken Sie auf OK, um diesen Adminsatz aus %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
-          collection_confirmation: Das Löschen einer Sammlung von %{application_name} ist unumkehrbar. Klicken Sie auf OK, um diese Sammlung aus %{application_name} dauerhaft zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
           collection_create_success: Die Sammlung wurde erfolgreich erstellt.
           collection_delete_fail: Sammlung %{id} konnte nicht gelöscht werden
           collection_delete_success: Sammlung %{id} wurde erfolgreich gelöscht
