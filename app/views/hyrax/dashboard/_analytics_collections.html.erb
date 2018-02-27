@@ -6,7 +6,7 @@
         <div class="admin-repo-charts">
           <ul id="analytics-collections" class="list-unstyled list-inline analytics-options">
             <li><%= link_to t('.recently_updated') , update_collections_dashboard_index_path(sort_type: "updated"), id: "recently-updated", remote: true %></li>
-            <li class="analytics-borderless"><%= link_to t('.pinned') , update_collections_dashboard_index_path("pinned"), id: "pinned", class: "stats-selected", remote: true %></li>
+            <li class="analytics-borderless"><%= link_to t('.pinned') , update_collections_dashboard_index_path(sort_type: "pinned"), id: "pinned", class: "stats-selected", remote: true %></li>
             <li class="pull-right"><%= pluralize(number_with_delimiter(@collection_rows.total_count), t('.collection'))%>  <%= t('.collection_count') %></li>
           </ul>
         </div>
