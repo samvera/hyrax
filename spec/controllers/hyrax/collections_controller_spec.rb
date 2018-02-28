@@ -30,7 +30,7 @@ RSpec.describe Hyrax::CollectionsController do
         end
       end
 
-      it "returns the collection and its members", :with_nested_reindexing do # rubocop:disable RSpec/ExampleLength
+      it "returns the collection and its members" do # rubocop:disable RSpec/ExampleLength
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         get :show, params: { id: collection }
         expect(response).to be_successful
@@ -43,7 +43,7 @@ RSpec.describe Hyrax::CollectionsController do
         expect(assigns[:subcollection_count]).to eq(2)
       end
 
-      context "and searching", :with_nested_reindexing do
+      context "and searching" do
         it "returns some works and subcollections" do
           # "/collections/4m90dv529?utf8=%E2%9C%93&cq=King+Louie&sort="
           get :show, params: { id: collection, cq: "Second" }

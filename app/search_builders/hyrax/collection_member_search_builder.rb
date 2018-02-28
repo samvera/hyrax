@@ -5,7 +5,7 @@ module Hyrax
     attr_reader :collection, :search_includes_models
 
     class_attribute :collection_membership_field
-    self.collection_membership_field = 'nesting_collection__parent_ids_ssim'
+    self.collection_membership_field = 'member_of_collection_ids_ssim'
 
     # Defines which search_params_logic should be used when searching for Collection members
     self.default_processor_chain += [:member_of_collection]

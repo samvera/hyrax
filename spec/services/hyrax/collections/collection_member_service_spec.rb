@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true, with_nested_reindexing: true do
+RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
   let(:blacklight_config) { CatalogController.blacklight_config }
   let(:repository) { Blacklight::Solr::Repository.new(blacklight_config) }
   let(:current_ability) { instance_double(Ability, admin?: true) }
