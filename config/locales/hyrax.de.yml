@@ -7,7 +7,12 @@ de:
   activemodel:
     errors:
       messages:
+        cannot_have_child_nested: kann kein Kind darin verschachtelt haben
+        cannot_nest_in_parent: kann nicht in Eltern verschachteln
+        cannot_remove_relationship: Erlaubnis ist ungeeignet zum Entfernen der Verschachtelungsbeziehung
         conflict: Ihre Änderungen konnten nicht gespeichert werden, da ein anderer Benutzer (oder Hintergrundjob) dieses %{model} aktualisiert hat, nachdem Sie mit der Bearbeitung begonnen haben. Bitte stellen Sie sicher, dass alle Dateianlagen erfolgreich abgeschlossen sind und versuchen Sie es erneut. Dieses Formular hat sich mit der letzten gespeicherten Kopie der/des %{model} aktualisiert.
+        exceeds_maximum_nesting_depth: Verschachtelung überschreitet die zulässige maximale Verschachtelungstiefe.
+        is_not_nestable: ist nicht verschachtelbar
   blacklight:
     search:
       fields:
@@ -32,15 +37,19 @@ de:
       extension_whitelist_error: 'Sie dürfen keine %{extension}-Dateien hochladen, erlaubt: %{allowed_types}'
   helpers:
     action:
+      add: Hinzufügen
       admin_set:
         new: Erstellen Sie ein neues Admin-Set
       batch:
         new: Deponieren von Arbeiten mittels Batch-Upload
       cancel: Abbrechen
+      close: Schließen
       collection:
         new: Neue Sammlung
       delete: Löschen
       edit: Bearbeiten
+      refresh: Aktualisierung
+      remove: Löschen
       work:
         new: Neue Arbeit hinzufügen
     submit:
@@ -168,6 +177,73 @@ de:
         update:
           flash:
             success: Das Design wurde erfolgreich aktualisiert
+      collection_types:
+        create:
+          notification: Der Sammlertyp %{name} wurde erstellt.
+        delete:
+          notification: Der Sammlertyp %{name} wurde gelöscht.
+        edit:
+          header: Sammlungsart bearbeiten
+          submit: Änderungen speichern
+        errors:
+          no_settings_change_for_admin_sets: Die Einstellungen für den Erfassungstyp können für den Typ des Verwaltungssatzes nicht geändert werden
+          no_settings_change_for_user_collections: Die Einstellungen für den Sammlungstyp können für den Typ der Benutzersammlung nicht geändert werden
+          no_settings_change_if_not_empty: Die Einstellungen für den Sammlungstyp können für einen Typ mit Sammlungen nicht geändert werden
+          not_empty: Der Sammlungstyp kann nicht geändert werden, da er Sammlungen enthält
+        form:
+          tab:
+            metadata: Beschreibung
+            participants: Teilnehmer
+            settings: die Einstellungen
+        form_participant_table:
+          creators:
+            action: Aktion
+            agent_name: Sammlung Schöpfer
+            empty: Zu dieser Sammlungsart wurden keine Ersteller hinzugefügt.
+            help: Ersteller von Sammlungen dieses Typs können eigene Sammlungen erstellen und verwalten.
+            title: Schöpfer
+            type: Art
+          managers:
+            action: Aktion
+            agent_name: Sammlungsmanager
+            empty: Dieser Sammlungsart wurden keine Manager hinzugefügt.
+            help: Manager von Sammlungen dieses Typs können Sammlungen bearbeiten, die andere Benutzer erstellt haben, einschließlich Hinzufügen und Entfernen von Werken aus einer Sammlung, Ändern von Sammlungsmetadaten und Löschen von Sammlungen.
+            title: Manager
+            type: Art
+        form_participants:
+          add_participants: Teilnehmer hinzufügen
+          current_participants: Aktuelle Teilnehmer
+          header: Sammlungs-Teilnehmer
+          instructions: Sie können sowohl Gruppen als auch Benutzer als Ersteller und Manager von Sammlungen dieses Typs festlegen
+          remove_success: Teilnehmer wurde entfernt
+          submit: Hinzufügen
+          update_notice: Teilnehmer aktualisiert
+        form_settings:
+          instructions: Diese Einstellungen legen fest, wie Sammlungen dieses Typs verwaltet und ermittelt werden können.
+          warning: 'Warnung: Diese Einstellungen können nicht geändert werden, nachdem eine Sammlung dieses Typs erstellt wurde.'
+        index:
+          breadcrumb: Sammlungsarten
+          create_new_button: Erstellen Sie einen neuen Sammlertyp
+          description: Mit Erfassungstypen können Sie Einstellungen definieren, die Sammlungen steuern, die unterschiedliche Zwecke in Ihrem Repository erfüllen. Sie können so viele Sammlungsarten definieren, wie Sie benötigen.
+          header: Sammlungsarten
+          modal:
+            can_delete_body_html: "<p> Durch das Löschen dieses Erfassungstyps werden der Typ und seine Einstellungen dauerhaft aus dem Repository entfernt. Möchten Sie diesen Sammlertyp wirklich löschen? </p>"
+            cannot_delete_body_html: "<p> Sie können diesen Sammlungsart nicht löschen, da mindestens eine Sammlung dieses Typs bereits erstellt wurde. </p><p> Um diesen Erfassungstyp zu löschen, stellen Sie zunächst sicher, dass alle Sammlungen dieses Typs gelöscht wurden. </p>"
+            header_can_delete: Sammlungsart löschen?
+            header_cannot_delete: Sammlertyp kann nicht gelöscht werden
+            view_collections: Sammlungen dieses Typs anzeigen
+          more_toggle_content_html: "<p> Typische Szenarien für Sammlungsarten umfassen: </p><ul><li> <strong>Benutzersammlungen</strong> , die ein registrierter Benutzer erstellen kann, um die eingezahlten Elemente zu organisieren. </li><li> <strong>Exponate</strong> , die das Personal für die öffentliche Ausstellung kreiert und kuratiert, wobei Gegenstände in einer beliebigen Anzahl von Exponaten enthalten sein können. </li><li> <strong>Kontrollierte Sammlungen</strong> , die von Mitarbeitern erstellt und verwaltet werden und nicht zur öffentlichen Anzeige bestimmt sind, z. B. Sammlungen, die Organisationseinheiten oder Abteilungen zugeordnet sind. </li><li> <strong>Community-Sammlungen</strong> , die zur öffentlichen Anzeige vorgesehen sind, ähnlich wie DSpace-Communitys und Sammlungen manchmal verwendet werden. </li></ul>"
+          more_toggle_header_html: "<span>Mehr</span> über Sammlungstypen"
+          table:
+            actions: Aktionen
+            name: Name
+        multiple_membership_checker:
+          error_preamble: 'Fehler: Sie haben mehrere derselben Sammlungsarten mit einer einzelnen Mitgliedschaft angegeben'
+        new:
+          header: Erstellen Sie einen neuen Sammlungstyp
+          submit: sparen
+        update:
+          notification: Der Sammlertyp %{name} wurde aktualisiert.
       features:
         index:
           action: Aktion
@@ -176,8 +252,8 @@ de:
           header: Features
       sidebar:
         activity: Aktivität
-        admin_sets: Admin-Sets
         appearance: Design
+        collection_types: Sammlungsarten
         collections: Sammlungen
         configuration: Konfiguration
         content_blocks: Inhaltsblöcke
@@ -310,10 +386,19 @@ de:
         required_descriptions: Beschreiben Sie Ihre Arbeit
         required_files: Dateien hinzufügen
         requirements: Bedarf
+      form_rendering:
+        help_html: Wählen Sie die Datei (en) aus, die als Download für jedes Bild im Universal Viewer angeboten werden soll, z. B. eine PDF-Datei des gesamten Werks.
+        legend_html: Rendern
+      form_representative:
+        help_html: Wählen Sie die Datei mit den Medien aus, die diese Arbeit darstellen.
+        legend_html: Repräsentative Medien
       form_share:
         add_sharing: Hinzufügen von Teilen
         currently_sharing: Derzeit freigegeben mit
         directions: Unabhängig von den Sichtbarkeitseinstellungen für diese Arbeit können Sie sie auch für andere Benutzer und Gruppen freigeben.
+      form_thumbnail:
+        help_html: Wählen Sie die Datei aus, die als Miniaturansicht für diese Arbeit verwendet werden soll.
+        legend_html: Miniaturansicht
       items:
         actions: Aktionen
         date_uploaded: Datum Upload
@@ -355,9 +440,15 @@ de:
       search_results: Zurück zu den Suchergebnissen
     collection:
       actions:
-        add_works:
-          desc: Fügen Sie Arbeiten zu dieser Sammlung hinzu
-          label: Hinzufügen von Arbeiten
+        add_existing_works:
+          desc: Fügen Sie dieser Sammlung vorhandene Werke hinzu
+          label: Fügen Sie dieser Sammlung vorhandene Werke hinzu
+        add_new_nested_collection:
+          desc: Fügen Sie dieser Sammlung eine neue Sammlung hinzu
+          label: Erstellen Sie eine neue Sammlung als Untersammlung
+        add_new_work:
+          desc: Hinterlegen Sie neue Arbeit durch diese Sammlung
+          label: Hinterlegen Sie neue Arbeit durch diese Sammlung
         delete:
           confirmation: Diese Sammlung löschen?
           desc: Löschen Sie diese Sammlung
@@ -366,6 +457,17 @@ de:
           desc: Bearbeiten Sie diese Sammlung
           label: Bearbeiten
         header: Aktionen
+        nest_collections:
+          button_label: Fügen Sie eine Untersammlung hinzu
+          desc: Verschachteln Sie andere Sammlungen innerhalb dieser Sammlung
+          label: Fügen Sie dieser Sammlung vorhandene Sammlungen hinzu
+          modal_title: Fügen Sie der Sammlung eine Untersammlung hinzu
+          select_label: Wählen Sie die Untersammlung aus
+        nested_subcollection:
+          button_label: Zur Sammlung hinzufügen
+          desc: Fügen Sie dieser Sammlung vorhandene Sammlungen hinzu
+          modal_title: Fügen Sie diese Sammlung in einer anderen Sammlung hinzu
+          select_label: Wählen Sie die Sammlung aus
       browse_view: Durchsuchen Ansicht
       document_list:
         edit: Bearbeiten
@@ -384,12 +486,28 @@ de:
         select_heading: 'Wählen Sie die Sammlung aus, um Ihre Dateien hinzuzufügen:'
         title: Zur Sammlung hinzufügen
         update: Update-Sammlung
+    collection_type:
+      admin_set_title: Adminsatz
+      default_title: Benutzersammlung
+    collection_types:
+      create_service:
+        admin_set_description: Eine Sammlung von Werken, die bei der administrativen Kontrolle helfen sollen. Admin-Sets bieten eine Möglichkeit, Verhaltensweisen und Richtlinien für eine Reihe von Arbeiten zu definieren.
+        default_description: Eine Benutzersammlung kann von jedem Benutzer erstellt werden, um ihre Arbeiten zu organisieren.
     collections:
       search_form:
         button_label: Suche
         label: Suche Sammlung %{title}
         placeholder: Suche Sammlung
       show:
+        buttons:
+          remove_from_collection: Löschen
+          remove_this_sub_collection: Löschen
+        no_visible_parent_collections: Es gibt keine sichtbaren übergeordneten Sammlungen.
+        no_visible_subcollections: Es gibt keine sichtbaren Untersammlungen.
+        parent_collection_header: Übergeordnete Sammlungen
+        show_less_parent_collections: "...zeige weniger"
+        show_more_parent_collections: Zeig mehr...
+        subcollection_count: Untersammlungen
         works_in_collection: Arbeiten in dieser Sammlung
     contact_form:
       button_label: Senden
@@ -433,18 +551,100 @@ de:
       authorize_proxies: Proxies autorisieren
       breadcrumbs:
         admin: Verwaltung
+      collection_type_actions:
+        close: Schließen
+        create_collection: Sammlung erstellen
+        select_type_of_collection: Wählen Sie den Typ der Sammlung aus
       collections:
         edit:
           header: 'Bearbeiten Sammlung: %{title}'
         form:
+          permission_update_errors:
+            error: Ungültige Update-Option für die Berechtigungsvorlage
+          permission_update_notices:
+            participants: Die Freigabeoptionen der Sammlung wurden aktualisiert.
+            sharing: Die Freigabeoptionen der Sammlung wurden aktualisiert.
           tabs:
+            branding: Branding
             description: Beschreibung
+            discovery: Entdeckung
+            relationships: Beziehungen
             sharing: Teilen
-            visibility: Sichtbarkeit
+        form_branding:
+          banner:
+            description: Ein Bild, das am oberen Rand der Sammlungsseite angezeigt werden soll. Für beste Ergebnisse laden Sie ein Bild (JPG, GIF oder PNG) hoch, das mindestens 120 Pixel groß und 1200 Pixel breit ist.
+            label: Banner
+          branding:
+            description: Optional können Sie ein Bannerbild und / oder Logo-Bilder hochladen, die mit dieser Sammlung verknüpft werden sollen. Wenn diese hochgeladen werden, werden diese Bilder oben auf der Sammlungsseite angezeigt, um ein eindeutiges Branding für die Sammlung bereitzustellen.
+            label: Branding
+          logo:
+            description: Ein oder mehrere Bilder, die oben auf der Sammlungsseite angezeigt werden. Für beste Ergebnisse laden Sie ein Bild (JPG, GIF oder PNG) hoch, das 40 Pixel hoch ist. Größere Bilder werden auf 40 Pixel in der Höhe angepasst.
+            label: Logo
+        form_discovery:
+          para1: Diese Einstellungen legen fest, wer die Zielseite dieser Sammlung ermitteln und anzeigen kann. Sie haben keinen Einfluss auf die Sichtbarkeit von Elementen in der Sammlung.
+          para2: Wenn Sie diese Sammlung nicht öffnen möchten, können Sie die Sammlung weiterhin für bestimmte Benutzer und Gruppen freigeben, indem Sie die Registerkarte Freigabe verwenden.
+        form_relationships:
+          add_other_collections_as_sub_collections_description: Sie können die Untersammlungen dieser Sammlung verwalten.
+          buttons:
+            remove_from_collection: Löschen
+            remove_this_sub_collection: Löschen
+          collection_is_subcollection_description: Diese Sammlung ist derzeit eine Untersammlung dieser Sammlungen
+          headlines:
+            other_collections_in_this_collection: Andere Sammlungen in dieser Sammlung
+            this_collection_in_other_collections: Diese Sammlung in anderen Sammlungen
+          modals:
+            remove_from_collection_description: Durch das Entfernen dieser Sammlung wird sie nicht nur aus dem Repository entfernt, sondern nur als übergeordnetes Objekt dieser Sammlung. Möchten Sie diese Sammlung wirklich entfernen?
+            remove_this_sub_collection_description: Durch das Entfernen dieser Untersammlung wird sie nicht nur aus dieser übergeordneten Sammlung aus dem Repository entfernt. Möchten Sie diese Untersammlung wirklich entfernen?
+          sub_collections_of_collection_description: Diese Sammlungen sind derzeit Untersammlungen dieser Sammlung
+          table:
+            action: Aktion
+            collection_title: Sammlungstitel
+          this_collection_in_other_collections_description: Sie können diese Sammlung anderen Sammlungen als Untersammlung hinzufügen.
+        form_share:
+          add_group: Gruppe hinzufügen
+          add_sharing: Hinzufügen von Teilen
+          add_user: Benutzer hinzufügen
+          current_shared: Derzeit freigegeben mit
+          note: Unabhängig von den Sichtbarkeitseinstellungen dieser Sammlung können Sie diese Sammlung für bestimmte Gruppen und Benutzer freigeben.
+        form_share_table:
+          allow_all_registered: Erlaube alle registrierten
+          depositors:
+            action: Aktion
+            agent_name: Benutzergruppe
+            empty: Diese Sammlung wurde um keine Einleger erweitert.
+            help: Einzahler dieser Sammlung können die Sammlung einsehen und ihr Werke hinzufügen, auch wenn die Sichtbarkeitsberechtigungen des Collectons es ihnen sonst nicht erlauben würden, sie einzusehen.
+            remove: Löschen
+            title: Einleger
+            type: Art
+          managers:
+            action: Aktion
+            agent_name: Benutzergruppe
+            empty: Dieser Sammlung wurden keine Manager hinzugefügt.
+            help: Manager dieser Sammlung können Werke aus der Sammlung hinzufügen und entfernen, Sammlungsmetadaten ändern und die Sammlung löschen.
+            help_with_works: Bei Sammlungen vom Typ %{type_title} erhalten die Manager bei der direkten Erstellung von Werken in dieser Sammlung Bearbeitungszugriff auf die neue Arbeit.
+            remove: Löschen
+            title: Manager
+            type: Art
+          viewers:
+            action: Aktion
+            agent_name: Benutzergruppe
+            empty: Dieser Sammlung wurden keine Viewer hinzugefügt.
+            help: Betrachter dieser Sammlung können sie anzeigen, selbst wenn die Sichtbarkeitsberechtigungen der Sammlung es ihnen sonst nicht erlauben würden, sie anzuzeigen.
+            help_with_works: Bei Sammlungen vom Typ %{type_title} erhalten die Betrachter Lesezugriff auf die neue Arbeit, wenn sie direkt in dieser Sammlung erstellt werden.
+            remove: Löschen
+            title: Zuschauer
+            type: Art
         new:
           header: Neue Sammlung erstellen
         show:
-          works_in_collection: Arbeiten in dieser Sammlung
+          header: Sammlung
+          item_count: Funktioniert
+          parent_collection_header: Übergeordnete Sammlungen
+          public_view_label: Öffentliche Sicht der Sammlung
+          search_results: Suchergebnisse innerhalb dieser Sammlung
+          show_less_parent_collections: "...zeige weniger"
+          show_more_parent_collections: Zeig mehr...
+          subcollection_count: Untersammlungen
       create_work: Arbeien erstellen
       current_proxies: Aktuelle Proxies
       delete_notification: Benachrichtigung löschen
@@ -453,19 +653,44 @@ de:
         create_work: Arbeit erstellen
         select_type_of_work: Wählen Sie die Art der Arbeit aus
       manage_proxies: Proxies verwalten
+      managed:
+        collections: Gemanagte Sammlungen
+        works: Verwaltete Werke
       my:
         action:
-          collection_confirmation: Das Löschen einer Sammlung von %{application_name} ist unumkehrbar. Klicken Sie auf OK, um diese Sammlung aus %{application_name} dauerhaft zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
+          add_to_collection: Zur Sammlung hinzufügen
+          add_to_collection_only: Erlaubte Aktionen sind auf das Hinzufügen von Mitgliedern beschränkt
+          admin_set_confirmation: Löschen eines Admin-Set von %{application_name} ist dauerhaft. Klicken Sie auf OK, um diesen Adminsatz aus %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
+          collection_create_success: Die Sammlung wurde erfolgreich erstellt.
+          collection_delete_fail: Sammlung %{id} konnte nicht gelöscht werden
+          collection_delete_success: Sammlung %{id} wurde erfolgreich gelöscht
+          collection_deny_add_members: Sie verfügen nicht über ausreichende Berechtigungen zum Hinzufügen von Mitgliedern zur Sammlung
+          collection_update_success: Die Sammlung wurde erfolgreich aktualisiert.
+          collections_confirmation_html: "<span class='pluralized'>Diese Sammlung</span> löschen , wird permanent <span class='pluralized'>diese Sammlung</span> aus dem Repository entfernen. Elemente in <span class='pluralized'>dieser Sammlung</span> verbleiben im Repository. Möchten Sie <span class='pluralized'>diese Sammlung</span> wirklich löschen?"
+          collections_confirmation_no_items_html: Möchten Sie diese Sammlung wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.
+          delete_admin_set: Sammlung löschen
+          delete_admin_set_deny: Diese Sammlung ist als Admin-Set definiert und nicht leer. Um dieses Admin-Set zu löschen, müssen Sie zunächst alle Elemente aus dem Admin-Set entfernen (löschen oder in eine andere Admin-Set-Sammlung verschieben).
           delete_collection: Sammlung löschen
+          delete_collection_deny: Sie verfügen nicht über ausreichende Berechtigungen zum Löschen dieses Dokuments.
+          delete_collections: Sammlungen löschen
+          delete_collections_deny: Sie müssen eine oder mehrere Sammlungen zum Löschen auswählen.
           delete_work: Arbeit löschen
+          edit_admin_set: Sammlung bearbeiten
           edit_collection: Sammlung bearbeiten
+          edit_collection_deny: Sie verfügen nicht über ausreichende Berechtigungen zum Bearbeiten dieser Sammlung.
+          edit_selected: Ausgewählte bearbeiten
           edit_work: Arbeit bearbeiten
           highlight: Heben Sie die Arbeit in ihrem Profil hervor
+          members_no_access: Sie verfügen nicht über ausreichende Berechtigungen für eines der ausgewählten Mitglieder
+          nesting_not_allowed: Sammlungen dieses Typs unterstützen keine Verschachtelung.
+          nesting_permission_denied: Sie verfügen nicht über ausreichende Berechtigungen, um diese Sammlung einer anderen Sammlung hinzuzufügen.
           select: Auswählen
           select_all: Wählen Sie die aktuelle Seite aus
           select_none: Nichts ausgewählt
           transfer: Besitz der Arbeit übertragen
           unhighlight: Hervorhebung der Arbeit entfernen
+          view_admin_set: Sammlung anzeigen
+          view_collection: Sammlung anzeigen
           work_confirmation: Das Löschen einer Arbeit aus %{application_name} ist dauerhaft. Klicken Sie auf OK, um diese Arbeit aus %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
         collection_list:
           description: 'Beschreibung:'
@@ -480,9 +705,14 @@ de:
           works: 'Filter Arbeiten:'
         heading:
           action: Aktionen
+          collection_type: Sammlungsart
+          date_modified: Zuletzt bearbeitet
           date_uploaded: Upload-Datum
           highlighted: Hervorgehoben
+          items: Artikel
+          last_modified: Zuletzt bearbeitet
           title: Titel
+          type: Art
           visibility: Sichtbarkeit
         highlighted: Meine Hervorhebungen
         shared: Arbeiten, welche mit mir geteilt wurden
@@ -495,6 +725,10 @@ de:
           results_per_page: Anzahl der Ergebnisse pro Seite
           show_label: Zeige alle Details von
         works: Ihre Arbeiten
+      nest_collections_form:
+        create_under: "'%{child_title}' wurde zu '%{parent_title}' hinzugefügt"
+        create_within: "'%{child_title}' wurde zu '%{parent_title}' hinzugefügt"
+        removed_relationship: "'%{child_title}' wurde aus '%{parent_title}' entfernt"
       no_activity: Benutzer hat keine aktuellen Aufgaben
       no_notifications: Benutzer hat keine Benachrichtigungen
       no_transfer_requests: Sie haben keine Arbeitsübertragungsanforderungen erhalten
@@ -603,6 +837,7 @@ de:
         tab_label: Ausgewählte Werke
         title: Ausgewählte Werke
       recently_uploaded:
+        depositor: Einzahler
         details: Details
         document:
           depositor_label: Einzahler
@@ -653,6 +888,9 @@ de:
       message: Nachricht
       notifications_deleted: Benachrichtigungen wurden gelöscht
       subject: Fach
+    manifest:
+      download_text: Laden Sie die gesamte Ressource herunter
+      unknown_mime_text: unbekannter Mimetyp
     messages:
       failure:
         multiple:
@@ -850,6 +1088,17 @@ de:
         resource_type: Vordefinierte Kategorien, um die Art des hochgeladenen Inhalts zu beschreiben, wie beispielsweise &ldquor;Artikel&ldquo; oder &ldquor;Datensatz&ldquo; . Es können mehr als ein Typ ausgewählt werden.
         subject: Überschriften oder Indexbegriffe, die beschreiben, was die Sammlung betrifft; Diese müssen sich an ein bestehendes Vokabular anpassen.
         title: Ein Name, der bei der Identifizierung einer Sammlung hilft.
+      collection_type:
+        allow_multiple_membership: Lassen Sie Werke zu mehreren Sammlungen dieses Typs gehören
+        assigns_visibility: Sammlungen dieses Typs erlauben, einer neuen Arbeit erste Sichtbarkeitseinstellungen zuzuweisen
+        assigns_workflow: Sammlungen dieses Typs erlauben, Arbeitsabläufe einer neuen Arbeit zuzuweisen
+        description: Eine kurze Erklärung des allgemeinen Zwecks dieser Sammlungsart. Benutzer sehen dies, wenn beim Erstellen einer neuen Sammlung mehrere Sammlungsarten zur Auswahl stehen.
+        discoverable: Sammlungen dieses Typs können erkannt werden
+        nestable: Sammlungen dieses Typs können geschachtelt werden (eine Sammlung kann andere Sammlungen enthalten)
+        require_membership: Ein Werk muss zu mindestens einer Sammlung dieses Typs gehören
+        sharable: Benutzern erlauben, Sammlungsmanager, Einleger und Betrachter für von ihnen verwaltete Sammlungen zuzuweisen
+        share_applies_to_new_works: Wenn neue Werke direkt in der Sammlung erstellt werden, gewähren Sie Benutzern und Gruppen Berechtigungen für die neue Arbeit entsprechend ihrer Sammlungsrollen.
+        title: ''
       defaults:
         based_near: Ein Ortsname in Bezug auf die Arbeit, wie ihre Website der Veröffentlichung, oder die Stadt, Staat oder Land die Inhalt der Arbeit sind. Ruft die Seite <a href='http://www.geonames.org'> GeoNames Web Service </a> auf.
         contributor: Eine Person oder Gruppe, die Sie für eine Rolle bei der Schaffung der Arbeit kenntlich machen wollen, aber nicht die primäre Rolle besitzen.
@@ -869,6 +1118,17 @@ de:
       collection:
         size: Größe
         total_items: Arbeiten gesamt
+      collection_type:
+        allow_multiple_membership: MEHRERE MITGLIEDSCHAFT
+        assigns_visibility: SICHTWEITE
+        assigns_workflow: ARBEITSABLAUF
+        description: Typbeschreibung
+        discoverable: ENTDECKUNG
+        nestable: NESTABLE
+        require_membership: MITGLIEDSCHAFT ERFORDERLICH
+        sharable: Teilen
+        share_applies_to_new_works: Gilt für neue Arbeiten
+        title: Modellname
       defaults:
         admin_set_id: Admin-Set
         based_near: Ort
@@ -882,6 +1142,7 @@ de:
         license: Lizenz
         member_of_collection_ids: Zur Sammlung hinzufügen
         related_url: Zugehörige URL
+        rights_statement: Rechtserklärung
         title: Titel
         visibility_after_embargo: Dann öffnen sie es bis zu
         visibility_after_lease: Zugriffsbeschränkung nach diesem Zeitraum

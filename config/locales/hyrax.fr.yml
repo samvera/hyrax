@@ -7,7 +7,12 @@ fr:
   activemodel:
     errors:
       messages:
+        cannot_have_child_nested: ne peut pas avoir d'enfant imbriqué dedans
+        cannot_nest_in_parent: ne peut pas nicher dans le parent
+        cannot_remove_relationship: la permission est inadéquate pour la suppression de la relation de nidification
         conflict: Vos modifications n'ont pas pu être enregistrées car un autre utilisateur (ou travail en arrière-plan) a mis à jour ce %{model} après avoir commencé à l'éditer. Assurez-vous que toutes les pièces jointes du fichier sont terminées et réessayez. Ce formulaire a été actualisé avec la plus récente copie enregistrée du %{model}.
+        exceeds_maximum_nesting_depth: l'emboîtement dépasse la profondeur d'imbrication maximale autorisée.
+        is_not_nestable: n'est pas imbriqué
   blacklight:
     search:
       fields:
@@ -32,15 +37,19 @@ fr:
       extension_whitelist_error: 'Vous n''êtes pas autorisé à télécharger des fichiers %{extension}, types autorisés: %{allowed_types}'
   helpers:
     action:
+      add: Ajouter
       admin_set:
         new: Créer un nouvel ensemble administratif
       batch:
         new: Créer un lot d'œuvres
       cancel: Annuler
+      close: Fermer
       collection:
         new: Nouvelle collection
       delete: Effacer
       edit: modifier
+      refresh: Rafraîchir
+      remove: Retirer
       work:
         new: Ajouter un nouveau travail
     submit:
@@ -168,6 +177,73 @@ fr:
         update:
           flash:
             success: L'apparence a été mise à jour avec succès
+      collection_types:
+        create:
+          notification: Le type de collection %{name} a été créé.
+        delete:
+          notification: Le type de collection %{name} a été supprimé.
+        edit:
+          header: Modifier le type de collection
+          submit: Sauvegarder les modifications
+        errors:
+          no_settings_change_for_admin_sets: Les paramètres de type de collection ne peuvent pas être modifiés pour le type d'ensemble administratif
+          no_settings_change_for_user_collections: Les paramètres de type de collection ne peuvent pas être modifiés pour le type de collection utilisateur
+          no_settings_change_if_not_empty: Les paramètres de type de collection ne peuvent pas être modifiés pour un type qui a des collections
+          not_empty: Le type de collection ne peut pas être modifié car il a des collections
+        form:
+          tab:
+            metadata: La description
+            participants: Participants
+            settings: Paramètres
+        form_participant_table:
+          creators:
+            action: action
+            agent_name: Créateurs de collection
+            empty: Aucun créateur n'a été ajouté à ce type de collection.
+            help: Les créateurs de collections de ce type peuvent créer et gérer leurs propres collections.
+            title: Créateurs
+            type: Type
+          managers:
+            action: action
+            agent_name: Gestionnaires de collection
+            empty: Aucun responsable n'a été ajouté à ce type de collection.
+            help: Les gestionnaires de collections de ce type peuvent modifier les collections créées par d'autres utilisateurs, notamment en ajoutant et en supprimant des œuvres d'une collection, en modifiant les métadonnées de collection et en supprimant des collections.
+            title: Les gestionnaires
+            type: Type
+        form_participants:
+          add_participants: Ajouter des participants
+          current_participants: Participants actuels
+          header: Participants à la collecte
+          instructions: Vous pouvez désigner des groupes et des utilisateurs en tant que créateurs et gestionnaires de collections de ce type
+          remove_success: Participant supprimé
+          submit: Ajouter
+          update_notice: Participants mis à jour
+        form_settings:
+          instructions: Ces paramètres déterminent comment les collections de ce type peuvent être gérées et découvertes.
+          warning: 'Avertissement: ces paramètres ne peuvent pas être modifiés après la création d''une collection de ce type.'
+        index:
+          breadcrumb: Types de collection
+          create_new_button: Créer un nouveau type de collection
+          description: Les types de collection vous permettent de définir les paramètres qui régissent les collections qui servent différents objectifs dans votre référentiel. Vous pouvez définir autant de types de collections que vous le souhaitez.
+          header: Types de collection
+          modal:
+            can_delete_body_html: "<p> La suppression de ce type de collection supprimera définitivement le type et ses paramètres du référentiel. Êtes-vous sûr de vouloir supprimer ce type de collection? </p>"
+            cannot_delete_body_html: "<p> Vous ne pouvez pas supprimer ce type de collection car une ou plusieurs collections de ce type ont déjà été créées. </p><p> Pour supprimer ce type de collection, assurez-vous d'abord que toutes les collections de ce type ont été supprimées. </p>"
+            header_can_delete: Supprimer le type de collection?
+            header_cannot_delete: Impossible de supprimer le type de collection
+            view_collections: Voir les collections de ce type
+          more_toggle_content_html: "<p> Les scénarios typiques pour les types de collection incluent: </p><ul><li> <strong>Collections d'utilisateurs</strong> que tout utilisateur enregistré peut créer pour organiser les éléments qu'il dépose. </li><li> <strong>Les expositions</strong> que le personnel crée et organise pour l'exposition publique, où les articles peuvent être inclus dans un certain nombre d'expositions. </li><li> <strong>Collections contrôlées</strong> créées et gérées par le personnel et non destinées à l'affichage public, telles que les collections associées aux unités organisationnelles ou aux départements. </li><li> <strong>Collections de communautés</strong> qui sont destinées à l'affichage public, de la même manière que les communautés et les collections DSpace sont parfois utilisées. </li></ul>"
+          more_toggle_header_html: "<span>Plus d'informations</span> sur les types de collection"
+          table:
+            actions: actes
+            name: prénom
+        multiple_membership_checker:
+          error_preamble: 'Erreur: vous avez spécifié plusieurs des mêmes types de collection de membres uniques'
+        new:
+          header: Créer un nouveau type de collection
+          submit: sauvegarder
+        update:
+          notification: Le type de collection %{name} a été mis à jour.
       features:
         index:
           action: Action
@@ -176,8 +252,8 @@ fr:
           header: Caractéristiques
       sidebar:
         activity: Activité
-        admin_sets: Ensembles administratifs
         appearance: Apparence
+        collection_types: Types de collection
         collections: Collections
         configuration: Configuration
         content_blocks: Blocs de contenu
@@ -309,10 +385,19 @@ fr:
         required_descriptions: Décrivez votre travail
         required_files: Ajouter des fichiers
         requirements: Exigences
+      form_rendering:
+        help_html: Sélectionnez le (s) fichier (s) à télécharger en téléchargement pour chaque image dans Universal Viewer, par exemple un PDF de l'ensemble de l'œuvre.
+        legend_html: Le rendu
+      form_representative:
+        help_html: Sélectionnez le fichier avec le média qui représente ce travail.
+        legend_html: Médias représentatifs
       form_share:
         add_sharing: Ajouter un partage
         currently_sharing: Actuellement partagé avec
         directions: Indépendamment des paramètres de visibilité pour ce travail, vous pouvez également le partager avec d'autres utilisateurs et groupes.
+      form_thumbnail:
+        help_html: Sélectionnez le fichier à utiliser comme vignette pour ce travail.
+        legend_html: La vignette
       items:
         actions: actes
         date_uploaded: Date de téléchargement
@@ -354,9 +439,15 @@ fr:
       search_results: Retour aux résultats de recherche
     collection:
       actions:
-        add_works:
-          desc: Ajouter des œuvres à cette collection
-          label: Ajouter des travaux
+        add_existing_works:
+          desc: Ajouter des œuvres existantes à cette collection
+          label: Ajouter des œuvres existantes à cette collection
+        add_new_nested_collection:
+          desc: Ajouter une nouvelle collection à cette collection
+          label: Créer une nouvelle collection en tant que sous-collection
+        add_new_work:
+          desc: Déposez du nouveau travail grâce à cette collection
+          label: Déposez du nouveau travail grâce à cette collection
         delete:
           confirmation: Supprimez cette collection?
           desc: Supprimer cette collection
@@ -365,6 +456,17 @@ fr:
           desc: Modifier cette collection
           label: modifier
         header: actes
+        nest_collections:
+          button_label: Ajouter une sous-collection
+          desc: Nicher les autres collections de cette collection
+          label: Ajouter des collections existantes à cette collection
+          modal_title: Ajouter une sous-collection à la collection
+          select_label: Sélectionnez la sous-collection
+        nested_subcollection:
+          button_label: Ajouter à la collection
+          desc: Ajouter des collections existantes à cette collection
+          modal_title: Ajouter cette collection dans une autre collection
+          select_label: Sélectionner une collection
       browse_view: Parcourir la vue
       document_list:
         edit: modifier
@@ -383,12 +485,28 @@ fr:
         select_heading: 'Sélectionnez la collection pour ajouter vos fichiers à:'
         title: Ajouter à la collection
         update: Mise à jour de la collection
+    collection_type:
+      admin_set_title: Admin Set
+      default_title: Collection d'utilisateurs
+    collection_types:
+      create_service:
+        admin_set_description: Une agrégation de travaux destinée à faciliter le contrôle administratif. Les ensembles d'administration permettent de définir des comportements et des stratégies autour d'un ensemble de travaux.
+        default_description: Une collection d'utilisateurs peut être créée par n'importe quel utilisateur pour organiser leurs travaux.
     collections:
       search_form:
         button_label: Aller
         label: Rechercher Collection %{title}
         placeholder: Rechercher Collection
       show:
+        buttons:
+          remove_from_collection: Retirer
+          remove_this_sub_collection: Retirer
+        no_visible_parent_collections: Il n'y a pas de collections parent visibles.
+        no_visible_subcollections: Il n'y a pas de sous-collections visibles.
+        parent_collection_header: Collections de parents
+        show_less_parent_collections: "...montre moins"
+        show_more_parent_collections: montre plus...
+        subcollection_count: Sous-collections
         works_in_collection: Fonctionne dans cette collection
     contact_form:
       button_label: Envoyer
@@ -432,18 +550,100 @@ fr:
       authorize_proxies: Autoriser les procurations
       breadcrumbs:
         admin: Administration
+      collection_type_actions:
+        close: Fermer
+        create_collection: Créer une collection
+        select_type_of_collection: Sélectionnez le type de collection
       collections:
         edit:
           header: 'Modifier la collection: %{title}'
         form:
+          permission_update_errors:
+            error: Option de mise à jour non valide pour le modèle d'autorisation.
+          permission_update_notices:
+            participants: Les options de partage de la collection ont été mises à jour.
+            sharing: Les options de partage de la collection ont été mises à jour.
           tabs:
+            branding: l'image de marque
             description: La description
+            discovery: Découverte
+            relationships: Des relations
             sharing: Partage
-            visibility: Visibilité
+        form_branding:
+          banner:
+            description: Une image à afficher en haut de la page de collection. Pour de meilleurs résultats, téléchargez une image (JPG, GIF ou PNG) d'une hauteur d'au moins 120 pixels et d'une largeur de 1200 pixels.
+            label: Bannière
+          branding:
+            description: En option, vous pouvez télécharger une image de bannière et / ou des images de logo à associer à cette collection. Si elles sont téléchargées, ces images seront affichées en haut de la page de collection afin de fournir une image de marque unique pour la collection.
+            label: l'image de marque
+          logo:
+            description: Une ou plusieurs images à afficher en haut de la page de collection. Pour de meilleurs résultats, téléchargez une image (JPG, GIF ou PNG) de 40 pixels de hauteur. Les images plus grandes seront redimensionnées à 40 pixels de hauteur.
+            label: Logo
+        form_discovery:
+          para1: Ces paramètres déterminent qui peut découvrir et afficher la page de destination de cette collection. ils n'affectent pas la visibilité des éléments de la collection.
+          para2: Si vous choisissez de ne pas autoriser l'accès en accès libre à cette collection, vous pouvez toujours partager la collection avec des utilisateurs et des groupes spécifiques à l'aide de l'onglet Partage.
+        form_relationships:
+          add_other_collections_as_sub_collections_description: Vous pouvez gérer les sous-collections de cette collection.
+          buttons:
+            remove_from_collection: Retirer
+            remove_this_sub_collection: Retirer
+          collection_is_subcollection_description: Cette collection est actuellement une sous-collection de ces collections
+          headlines:
+            other_collections_in_this_collection: Autres collections de cette collection
+            this_collection_in_other_collections: Cette collection dans d'autres collections
+          modals:
+            remove_from_collection_description: La suppression de cette collection ne la supprimera pas du référentiel, uniquement en tant que parent de cette collection. Êtes-vous sûr de vouloir supprimer cette collection?
+            remove_this_sub_collection_description: La suppression de cette sous-collection ne la supprimera pas du référentiel, uniquement à partir de cette collection parent. Êtes-vous sûr de vouloir supprimer cette sous-collection?
+          sub_collections_of_collection_description: Ces collections sont actuellement des sous-collections de cette collection
+          table:
+            action: action
+            collection_title: Titre de la collection
+          this_collection_in_other_collections_description: Vous pouvez ajouter cette collection à d'autres collections en tant que sous-collection.
+        form_share:
+          add_group: Ajouter un groupe
+          add_sharing: Ajouter un partage
+          add_user: Ajouter un utilisateur
+          current_shared: Actuellement partagé avec
+          note: Indépendamment des paramètres de visibilité de cette collection, vous pouvez partager cette collection avec des groupes et des utilisateurs spécifiques.
+        form_share_table:
+          allow_all_registered: Autoriser tous les inscrits
+          depositors:
+            action: action
+            agent_name: Utilisateur / Groupe
+            empty: Aucun déposant n'a été ajouté à cette collection.
+            help: Les déposants de cette collection peuvent voir la collection et y ajouter des œuvres, même si les autorisations de visibilité du collecton ne leur permettraient pas de l'afficher.
+            remove: Retirer
+            title: Déposants
+            type: Type
+          managers:
+            action: action
+            agent_name: Utilisateur / Groupe
+            empty: Aucun responsable n'a été ajouté à cette collection.
+            help: Les gestionnaires de cette collection peuvent ajouter et supprimer des œuvres de la collection, modifier les métadonnées de collection et supprimer la collection.
+            help_with_works: Pour les collections de type %{type_title}, lorsque les œuvres sont créées directement dans cette collection, les gestionnaires disposent d'un accès en modification au nouveau travail.
+            remove: Retirer
+            title: Les gestionnaires
+            type: Type
+          viewers:
+            action: action
+            agent_name: Utilisateur / Groupe
+            empty: Aucun spectateur n'a été ajouté à cette collection.
+            help: Les utilisateurs de cette collection peuvent l'afficher même si les autorisations de visibilité de la collection ne leur permettent pas de l'afficher.
+            help_with_works: Pour les collections de type %{type_title}, lorsque les œuvres sont créées directement dans cette collection, les utilisateurs disposent d'un accès en lecture au nouveau travail.
+            remove: Retirer
+            title: Les spectateurs
+            type: Type
         new:
           header: Créer une nouvelle collection
         show:
-          works_in_collection: Fonctionne dans cette collection
+          header: Collection
+          item_count: Travaux
+          parent_collection_header: Collections de parents
+          public_view_label: Vue publique de la collection
+          search_results: Résultats de la recherche dans cette collection
+          show_less_parent_collections: "...montre moins"
+          show_more_parent_collections: montre plus...
+          subcollection_count: Sous-collections
       create_work: Créer un travail
       current_proxies: Proxies actuelles
       delete_notification: Supprimer la notification
@@ -452,19 +652,44 @@ fr:
         create_work: Créer un travail
         select_type_of_work: Sélectionnez le type de travail
       manage_proxies: Gérer les procurations
+      managed:
+        collections: Collections gérées
+        works: Travaux gérés
       my:
         action:
-          collection_confirmation: Supprimer une collection de %{application_name} est permanent. Cliquez sur OK pour supprimer cette collection de %{application_name} ou sur Annuler pour annuler cette opération
+          add_to_collection: Ajouter à la collection
+          add_to_collection_only: Les actions autorisées sont limitées à l'ajout de membres
+          admin_set_confirmation: La suppression d'un ensemble d'administrateurs à partir de %{application_name} est permanente. Cliquez sur OK pour supprimer cet ensemble d'administrateurs de %{application_name}, ou sur Annuler pour annuler cette opération
+          collection_create_success: La collection a été créée avec succès.
+          collection_delete_fail: La collection %{id} n'a pas pu être supprimée
+          collection_delete_success: La collection %{id} a été supprimée avec succès
+          collection_deny_add_members: Vous n'avez pas les privilèges suffisants pour ajouter des membres à la collection
+          collection_update_success: La collection a été mise à jour avec succès.
+          collections_confirmation_html: La suppression de <span class='pluralized'>cette collection</span> supprimera définitivement <span class='pluralized'>cette collection</span> du référentiel. Les éléments de <span class='pluralized'>cette collection</span> resteront dans le référentiel. Êtes-vous sûr de vouloir supprimer <span class='pluralized'>cette collection</span> ?
+          collections_confirmation_no_items_html: Êtes-vous sûr de vouloir supprimer cette collection? Cette action ne peut pas être annulée.
+          delete_admin_set: Supprimer la collection
+          delete_admin_set_deny: Cette collection est définie en tant que jeu d'administration et n'est pas vide. Pour supprimer cet ensemble d'administration, vous devez d'abord supprimer (supprimer ou déplacer vers une autre collection d'ensembles d'administration) tous les éléments du jeu d'administration.
           delete_collection: Supprimer la collection
+          delete_collection_deny: Vous n'avez pas les privilèges suffisants pour supprimer ce document.
+          delete_collections: Supprimer les collections
+          delete_collections_deny: Vous devez sélectionner une ou plusieurs collections à supprimer.
           delete_work: Supprimer le travail
+          edit_admin_set: Modifier la collection
           edit_collection: Modifier la collection
+          edit_collection_deny: Vous n'avez pas les privilèges suffisants pour modifier cette collection.
+          edit_selected: Modifier la sélection
           edit_work: Modifier le travail
           highlight: Surligner le travail sur le profil
+          members_no_access: Vous n'avez pas de privilèges suffisants pour les membres sélectionnés
+          nesting_not_allowed: Les collections de ce type ne prennent pas en charge l'imbrication.
+          nesting_permission_denied: Vous n'avez pas les privilèges suffisants pour ajouter cette collection à une autre collection.
           select: Sélectionner
           select_all: Sélectionnez la page actuelle
           select_none: Ne rien sélectionner
           transfer: Transfert de propriété du travail
           unhighlight: Supprimer la mise en évidence du travail
+          view_admin_set: Afficher la collection
+          view_collection: Afficher la collection
           work_confirmation: Supprimer un travail de %{application_name} est permanent. Cliquez sur OK pour supprimer ce travail de %{application_name} ou sur Annuler pour annuler cette opération
         collection_list:
           description: 'La description:'
@@ -479,9 +704,14 @@ fr:
           works: 'Le filtre fonctionne:'
         heading:
           action: Actes
+          collection_type: Type de collection
+          date_modified: Dernière modification
           date_uploaded: Date Ajoutée
           highlighted: Souligné
+          items: Articles
+          last_modified: Dernière modification
           title: Titre
+          type: Type
           visibility: Visibilité
         highlighted: Mes faits saillants
         shared: Travaux partagés avec moi
@@ -494,6 +724,10 @@ fr:
           results_per_page: Nombre de résultats à afficher par page
           show_label: Afficher tous les détails de
         works: Vos travaux
+      nest_collections_form:
+        create_under: "'%{child_title}' a été ajouté à '%{parent_title}'"
+        create_within: "'%{child_title}' a été ajouté à '%{parent_title}'"
+        removed_relationship: "'%{child_title}' a été retiré de '%{parent_title}'"
       no_activity: L'utilisateur n'a aucune activité récente
       no_notifications: L'utilisateur n'a pas de notification
       no_transfer_requests: Vous n'avez reçu aucune demande de transfert de travail
@@ -602,6 +836,7 @@ fr:
         tab_label: Travaux en vedette
         title: Travaux en vedette
       recently_uploaded:
+        depositor: Déposant
         details: Détails
         document:
           depositor_label: Déposant
@@ -652,6 +887,9 @@ fr:
       message: Message
       notifications_deleted: Les notifications ont été supprimées
       subject: Assujettir
+    manifest:
+      download_text: Télécharger toute la ressource
+      unknown_mime_text: type mime inconnu
     messages:
       failure:
         multiple:
@@ -849,6 +1087,17 @@ fr:
         resource_type: Des catégories prédéfinies pour décrire le type de contenu en cours de chargement, tel que "quotite" Ou "ensemble de données". & Quot; Plus d'un type peut être sélectionné.
         subject: Les rubriques ou les termes d'index décrivant la collecte de la collection; Ceux-ci doivent être conformes à un vocabulaire existant.
         title: Un nom pour aider à identifier une collection.
+      collection_type:
+        allow_multiple_membership: Autoriser les œuvres à appartenir à plusieurs collections de ce type
+        assigns_visibility: Autoriser les collections de ce type à attribuer des paramètres de visibilité initiaux à un nouveau travail
+        assigns_workflow: Autoriser les collections de ce type à affecter un workflow à un nouveau travail
+        description: Une brève déclaration de l'objectif général de ce type de collection. Les utilisateurs verront cela s'ils ont plus d'un type de collection à choisir lors de la création d'une nouvelle collection.
+        discoverable: Autoriser les collections de ce type à être détectables
+        nestable: Autoriser l'imbrication de collections de ce type (une collection peut contenir d'autres collections)
+        require_membership: Une oeuvre doit appartenir à au moins une collection de ce type
+        sharable: Autoriser les utilisateurs à affecter des gestionnaires de collection, des déposants et des lecteurs aux collections qu'ils gèrent
+        share_applies_to_new_works: Lorsque de nouveaux travaux sont créés directement dans la collection, accordez aux utilisateurs et aux groupes des autorisations de partage pour le nouveau travail en fonction de leurs rôles de collection.
+        title: ''
       defaults:
         based_near: Un nom de lieu lié au travail, tel que son site de publication, ou la ville, l'état ou le pays sur lequel se trouvent les contenus du travail. Appelle le <a href='http://www.geonames.org'> service web GeoNames </a>.
         contributor: Une personne ou un groupe que vous souhaitez reconnaître pour avoir joué un rôle dans la création du travail, mais pas le rôle principal.
@@ -868,6 +1117,17 @@ fr:
       collection:
         size: Taille
         total_items: Total travaux
+      collection_type:
+        allow_multiple_membership: MEMBRES MULTIPLES
+        assigns_visibility: VISIBILITÉ
+        assigns_workflow: FLUX DE TRAVAIL
+        description: Description du type
+        discoverable: DÉCOUVERTE
+        nestable: NESTABLE
+        require_membership: OBLIGATION D'ADHÉSION
+        sharable: PARTAGE
+        share_applies_to_new_works: APPLIQUEZ AUX NOUVEAUX TRAVAUX
+        title: Nom du type
       defaults:
         admin_set_id: L'ensemble Administratif
         based_near: Emplacement
@@ -881,6 +1141,7 @@ fr:
         license: Licence
         member_of_collection_ids: Ajouter à la collection
         related_url: URL associée
+        rights_statement: Déclaration de droits
         title: Titre
         visibility_after_embargo: Puis ouvrez-le jusqu'à
         visibility_after_lease: Puis la restreindre à

@@ -7,7 +7,12 @@ pt-BR:
   activemodel:
     errors:
       messages:
+        cannot_have_child_nested: não pode ter um filho aninhado nele
+        cannot_nest_in_parent: não pode aninhar no pai
+        cannot_remove_relationship: a permissão é inadequada para a remoção do relacionamento de nidificação
         conflict: Suas alterações não podem ser salvas porque outro usuário (ou trabalho em segundo plano) atualizou este %{model} depois de começar a editar. Certifique-se de que todos os anexos de arquivos tenham sido concluídos com sucesso e tente novamente. Este formulário foi atualizado com a cópia salva mais recente do %{model}.
+        exceeds_maximum_nesting_depth: o nidificação excede a profundidade máxima de nidificação permitida.
+        is_not_nestable: não é nestable
   blacklight:
     search:
       fields:
@@ -32,15 +37,19 @@ pt-BR:
       extension_whitelist_error: 'Você não tem permissão para carregar arquivos %{extension}, tipos permitidos: %{allowed_types}'
   helpers:
     action:
+      add: Adicionar
       admin_set:
         new: Criar novo conjunto administrativo
       batch:
         new: Criar lote de obras
       cancel: Cancelar
+      close: Fechar
       collection:
         new: Nova coleção
       delete: Excluir
       edit: Editar
+      refresh: Atualizar
+      remove: Remover
       work:
         new: Adicionar novo trabalho
     submit:
@@ -168,6 +177,73 @@ pt-BR:
         update:
           flash:
             success: A aparência foi atualizada com sucesso
+      collection_types:
+        create:
+          notification: O tipo de coleção %{name} foi criado.
+        delete:
+          notification: O tipo de coleção %{name} foi excluído.
+        edit:
+          header: Editar tipo de coleção
+          submit: Salvar alterações
+        errors:
+          no_settings_change_for_admin_sets: As configurações do tipo de coleção não podem ser alteradas para o tipo de conjunto administrativo
+          no_settings_change_for_user_collections: As configurações do tipo de coleção não podem ser alteradas para o tipo de Coleção do Usuário
+          no_settings_change_if_not_empty: As configurações do tipo de coleção não podem ser alteradas para um tipo que tenha coleções
+          not_empty: O tipo de coleção não pode ser alterado, pois tem coleções
+        form:
+          tab:
+            metadata: Descrição
+            participants: Participantes
+            settings: Configurações
+        form_participant_table:
+          creators:
+            action: Açao
+            agent_name: Criadores de coleção
+            empty: Nenhum criador foi adicionado a este tipo de coleção.
+            help: Criadores de coleções desse tipo podem criar e gerenciar suas próprias coleções.
+            title: Criadores
+            type: Tipo
+          managers:
+            action: Açao
+            agent_name: Gerentes de cobrança
+            empty: Nenhum gerenciador foi adicionado a este tipo de coleção.
+            help: Gerentes de coleções desse tipo podem editar coleções criadas por outros usuários, incluindo adicionar e remover trabalhos de uma coleção, modificar metadados de coleção e excluir coleções.
+            title: Gerentes
+            type: Tipo
+        form_participants:
+          add_participants: Adicione participantes
+          current_participants: Participantes atuais
+          header: Participantes da coleção
+          instructions: Você pode designar grupos e usuários como criadores e gerentes de coleções desse tipo
+          remove_success: Participante removido
+          submit: Adicionar
+          update_notice: Participantes Atualizados
+        form_settings:
+          instructions: Essas configurações determinam como as coleções desse tipo podem ser gerenciadas e descobertas.
+          warning: 'Aviso: estas configurações não podem ser alteradas após a criação desse tipo.'
+        index:
+          breadcrumb: Tipos de coleção
+          create_new_button: Criar novo tipo de coleção
+          description: Os tipos de coleção permitem que você defina as configurações que regem coleções que atendem a diferentes fins em seu repositório. Você pode definir quantos tipos de coleção você precisa.
+          header: Tipos de coleção
+          modal:
+            can_delete_body_html: "<p> A exclusão deste tipo de coleção removerá permanentemente o tipo e suas configurações do repositório. Tem certeza de que deseja excluir esse tipo de coleção? </p>"
+            cannot_delete_body_html: "<p> Você não pode excluir esse tipo de coleção porque uma ou mais coleções desse tipo já foram criadas. </p><p> Para excluir esse tipo de coleção, primeiro certifique-se de que todas as coleções deste tipo foram excluídas. </p>"
+            header_can_delete: Eliminar tipo de coleção?
+            header_cannot_delete: Não é possível excluir o tipo de coleção
+            view_collections: Visualizar coleções desse tipo
+          more_toggle_content_html: "<p> Os cenários típicos para os tipos de coleta incluem: </p><ul><li> <strong>Coleções de usuários</strong> que qualquer usuário registrado pode criar para organizar itens que depositam. </li><li> <strong>Exibe</strong> que os funcionários criam e curam para exibição pública, onde itens podem ser incluídos em qualquer número de exposições. </li><li> <strong>Coleções controladas</strong> criadas e gerenciadas por funcionários e não destinadas a exibição pública, como coleções associadas a unidades organizacionais ou departamentos. </li><li> <strong>Coleções de comunidade</strong> que se destinam a exibição pública, semelhante a como as comunidades e coleções do DSpace às vezes são usadas. </li></ul>"
+          more_toggle_header_html: "<span>Mais</span> sobre tipos de coleção"
+          table:
+            actions: Ações
+            name: Nome
+        multiple_membership_checker:
+          error_preamble: 'Erro: você especificou mais do que um dos mesmos tipos de coleção de associação única'
+        new:
+          header: Criar novo tipo de coleção
+          submit: Salve 
+        update:
+          notification: O tipo de coleção %{name} foi atualizado.
       features:
         index:
           action: Açao
@@ -176,8 +252,8 @@ pt-BR:
           header: Características
       sidebar:
         activity: Atividade
-        admin_sets: Conjuntos Administrativos
         appearance: Aparência
+        collection_types: Tipos de coleção
         collections: Coleções
         configuration: Configuração
         content_blocks: Blocos de conteúdo
@@ -303,10 +379,19 @@ pt-BR:
         required_descriptions: Descreva seu trabalho
         required_files: Adicionar arquivos
         requirements: Requisitos
+      form_rendering:
+        help_html: Selecione o (s) arquivo (s) a ser oferecido como download para cada imagem no Universal Viewer, por exemplo, um PDF de todo o trabalho.
+        legend_html: Renderização
+      form_representative:
+        help_html: Selecione o arquivo com a mídia que representa esse trabalho.
+        legend_html: Mídia representativa
       form_share:
         add_sharing: Adicionar compartilhamento
         currently_sharing: Atualmente compartilhado com
         directions: Independentemente das configurações de visibilidade para este trabalho, você também pode compartilhá-lo com outros usuários e grupos.
+      form_thumbnail:
+        help_html: Selecione o arquivo a ser usado como miniatura para este trabalho.
+        legend_html: Miniatura
       items:
         actions: Ações
         date_uploaded: Data carregada
@@ -348,9 +433,15 @@ pt-BR:
       search_results: Voltar aos resultados da pesquisa
     collection:
       actions:
-        add_works:
-          desc: Adicione trabalhos a esta coleção
-          label: Adicionar trabalhos
+        add_existing_works:
+          desc: Adicione trabalhos existentes a esta coleção
+          label: Adicione os trabalhos existentes a esta coleção
+        add_new_nested_collection:
+          desc: Adicionar nova coleção a esta coleção
+          label: Crie uma nova coleção como subcollection
+        add_new_work:
+          desc: Deposite novos trabalhos através desta coleção
+          label: Deposite novos trabalhos através desta coleção
         delete:
           confirmation: Eliminar esta coleção?
           desc: Exclua esta coleção
@@ -359,6 +450,17 @@ pt-BR:
           desc: Edite esta coleção
           label: Editar
         header: Ações
+        nest_collections:
+          button_label: Adicionar uma subcultação
+          desc: Anote outras coleções dentro desta coleção
+          label: Adicione coleções existentes a esta coleção
+          modal_title: Adicionar uma subcultação à coleção
+          select_label: Selecionar subcollection
+        nested_subcollection:
+          button_label: Adicionar a coleção
+          desc: Adicione coleções existentes a esta coleção
+          modal_title: Adicione esta coleção dentro de outra coleção
+          select_label: Selecione a coleção
       browse_view: Procurar Visualizar
       document_list:
         edit: Editar
@@ -377,12 +479,28 @@ pt-BR:
         select_heading: 'Selecione a coleção para adicionar seus arquivos para:'
         title: Adicionar a coleção
         update: Coleção de Atualizações
+    collection_type:
+      admin_set_title: Conjunto de administradores
+      default_title: Coleção de usuários
+    collection_types:
+      create_service:
+        admin_set_description: Uma agregação de obras que se destina a ajudar com o controle administrativo. Os conjuntos de administradores fornecem uma maneira de definir comportamentos e políticas em torno de um conjunto de trabalhos.
+        default_description: Uma Coleção de Usuários pode ser criada por qualquer usuário para organizar seus trabalhos.
     collections:
       search_form:
         button_label: Ir
         label: Pesquisar Collection %{title}
         placeholder: Pesquisar Coleção
       show:
+        buttons:
+          remove_from_collection: Remover
+          remove_this_sub_collection: Remover
+        no_visible_parent_collections: Não há coleções pai visíveis.
+        no_visible_subcollections: Não há subcollections visíveis.
+        parent_collection_header: Coleções de pais
+        show_less_parent_collections: "...mostre menos"
+        show_more_parent_collections: mostre mais...
+        subcollection_count: Subcollections
         works_in_collection: Funciona nesta coleção
     contact_form:
       button_label: Enviar
@@ -426,18 +544,100 @@ pt-BR:
       authorize_proxies: Autorizar Proxies
       breadcrumbs:
         admin: Administração
+      collection_type_actions:
+        close: Fechar
+        create_collection: Criar coleção
+        select_type_of_collection: Selecione o tipo de coleção
       collections:
         edit:
           header: 'Editar coleção: %{title}'
         form:
+          permission_update_errors:
+            error: Opção de atualização inválida para o modelo de permissão.
+          permission_update_notices:
+            participants: As opções de compartilhamento da coleção foram atualizadas.
+            sharing: As opções de compartilhamento da coleção foram atualizadas.
           tabs:
+            branding: Branding
             description: Descrição
+            discovery: Descoberta
+            relationships: Relacionamentos
             sharing: Compartilhando
-            visibility: Visibilidade
+        form_branding:
+          banner:
+            description: Uma imagem a ser exibida na parte superior da página de coleta. Para obter melhores resultados, carregue uma imagem (JPG, GIF ou PNG) com pelo menos 120 pixels de altura e 1200 pixels de largura.
+            label: Bandeira
+          branding:
+            description: Opcionalmente, você pode fazer o upload de uma imagem de banner e / ou imagens de logotipo para associar a essa coleção. Se carregado, essas imagens serão exibidas no topo da página de coleta para fornecer marca única para a coleção.
+            label: Branding
+          logo:
+            description: Uma ou mais imagens a serem exibidas no topo da página de coleta. Para obter melhores resultados, carregue uma imagem (JPG, GIF ou PNG) com 40 pixels de altura. As imagens maiores serão redimensionadas para 40 pixels de altura.
+            label: Logotipo
+        form_discovery:
+          para1: Essas configurações determinam quem é capaz de descobrir e visualizar a página de destino dessa coleção; eles não afetam a visibilidade de itens na coleção.
+          para2: Se você optar por não abrir esta coleção, você ainda pode compartilhar a coleção com usuários e grupos específicos usando a guia Compartilhamento.
+        form_relationships:
+          add_other_collections_as_sub_collections_description: Você pode gerenciar as sub-coleções desta coleção.
+          buttons:
+            remove_from_collection: Remover
+            remove_this_sub_collection: Remover
+          collection_is_subcollection_description: Esta coleção é atualmente uma sub-coleção dessas coleções
+          headlines:
+            other_collections_in_this_collection: Outras coleções nesta coleção
+            this_collection_in_other_collections: Esta coleção em outras coleções
+          modals:
+            remove_from_collection_description: A remoção desta coleção não o removerá do repositório, apenas como pai dessa coleção. Tem certeza de que deseja remover essa coleção?
+            remove_this_sub_collection_description: A remoção desta subculpa não a removerá do repositório, apenas a partir dessa coleção original. Tem certeza de que deseja remover essa subculpa?
+          sub_collections_of_collection_description: Essas coleções são atualmente sub-coleções desta coleção
+          table:
+            action: Açao
+            collection_title: Título da coleção
+          this_collection_in_other_collections_description: Você pode adicionar esta coleção a outras coleções como uma sub-coleção.
+        form_share:
+          add_group: Adicionar grupo
+          add_sharing: Adicionar compartilhamento
+          add_user: Adicionar usuário
+          current_shared: Atualmente compartilhado com
+          note: Independentemente das configurações de visibilidade desta coleção, você pode compartilhar essa coleção com grupos e usuários específicos.
+        form_share_table:
+          allow_all_registered: Permitir todos os inscritos
+          depositors:
+            action: Açao
+            agent_name: Grupo de usuários
+            empty: Nenhum depositante foi adicionado a esta coleção.
+            help: Os depositantes desta coleção podem ver a coleção e adicionar trabalhos a ela, mesmo que as permissões de visibilidade do coletor de outra forma não permitisse que as visualizem.
+            remove: Remover
+            title: Depositantes
+            type: Tipo
+          managers:
+            action: Açao
+            agent_name: Grupo de usuários
+            empty: Nenhum gerenciador foi adicionado a esta coleção.
+            help: Os gerentes desta coleção podem adicionar e remover trabalhos da coleção, modificar metadados de coleção e excluir a coleção.
+            help_with_works: Para coleções de tipo %{type_title}, quando os trabalhos são criados diretamente nesta coleção, os administradores recebem acesso de edição ao novo trabalho.
+            remove: Remover
+            title: Gerentes
+            type: Tipo
+          viewers:
+            action: Açao
+            agent_name: Grupo de usuários
+            empty: Nenhum visualizador foi adicionado a esta coleção.
+            help: Os espectadores desta coleção podem visualizá-lo, mesmo que as permissões de visibilidade da coleção de outra forma não permitissem visualizá-lo.
+            help_with_works: Para as coleções do tipo %{type_title}, quando as obras são criadas diretamente nesta coleção, os espectadores recebem acesso de leitura ao novo trabalho.
+            remove: Remover
+            title: Visualizadores
+            type: Tipo
         new:
           header: Criar nova coleção
         show:
-          works_in_collection: Funciona nesta coleção
+          header: Coleção
+          item_count: Trabalho
+          parent_collection_header: Coleções de pais
+          public_view_label: Vista pública da coleção
+          search_results: Resultados da pesquisa dentro desta coleção
+          show_less_parent_collections: "...mostre menos"
+          show_more_parent_collections: mostre mais...
+          subcollection_count: Subcollections
       create_work: Criar trabalho
       current_proxies: Proxies atuais
       delete_notification: Eliminar Notificação
@@ -446,19 +646,44 @@ pt-BR:
         create_work: Criar trabalho
         select_type_of_work: Selecione o tipo de trabalho
       manage_proxies: Gerenciar Proxies
+      managed:
+        collections: Coleções Gerenciadas
+        works: Trabalhos gerenciados
       my:
         action:
-          collection_confirmation: Excluir uma coleção do %{application_name} é permanente. Clique em OK para excluir esta coleção de %{application_name} ou Cancelar para cancelar esta operação
+          add_to_collection: Adicionar a coleção
+          add_to_collection_only: As ações permitidas estão limitadas à adição de membros
+          admin_set_confirmation: Excluir um conjunto de administradores de %{application_name} é permanente. Clique em OK para excluir este conjunto de administrador de %{application_name} ou Cancelar para cancelar esta operação
+          collection_create_success: A coleção foi criada com sucesso.
+          collection_delete_fail: Coleção %{id} não pôde ser excluída
+          collection_delete_success: Coleção %{id} foi excluída com sucesso
+          collection_deny_add_members: Você não tem privilégios suficientes para adicionar membros à coleção
+          collection_update_success: A coleção foi atualizada com sucesso.
+          collections_confirmation_html: A exclusão <span class='pluralized'>dessa coleção</span> removerá permanentemente <span class='pluralized'>essa coleção</span> do repositório. Os itens <span class='pluralized'>desta coleção</span> permanecerão no repositório. Tem certeza de que deseja excluir <span class='pluralized'>esta coleção</span> ?
+          collections_confirmation_no_items_html: Tem certeza de que deseja excluir esta coleção? Essa ação não pode ser desfeita.
+          delete_admin_set: Eliminar coleção
+          delete_admin_set_deny: Esta coleção é definida como Admin Set e não está vazia. Para excluir este conjunto de administradores, primeiro você deve remover (excluir ou mover para outra coleção de conjuntos de administração) todos os itens do Conjunto de administradores.
           delete_collection: Eliminar coleção
+          delete_collection_deny: Você não possui privilégios suficientes para excluir este documento.
+          delete_collections: Eliminar coleções
+          delete_collections_deny: Você deve selecionar uma ou mais coleções para excluir.
           delete_work: Excluir o trabalho
+          edit_admin_set: Editar coleção
           edit_collection: Editar coleção
+          edit_collection_deny: Você não possui privilégios suficientes para editar esta coleção.
+          edit_selected: Editar Selecionado
           edit_work: Editar trabalho
           highlight: Destaque trabalho em perfil
+          members_no_access: Você não tem privilégios suficientes para nenhum dos membros selecionados
+          nesting_not_allowed: Coleções deste tipo não suportam o nidificação.
+          nesting_permission_denied: Você não possui privilégios suficientes para adicionar esta coleção a outra coleção.
           select: Selecione
           select_all: Selecione a página atual
           select_none: Selecione nenhum
           transfer: Transferência de propriedade do trabalho
           unhighlight: Remova o destaque do trabalho
+          view_admin_set: Ver coleção
+          view_collection: Ver coleção
           work_confirmation: Excluir um trabalho do %{application_name} é permanente. Clique em OK para excluir este trabalho de %{application_name} ou Cancelar para cancelar esta operação
         collection_list:
           description: 'Descrição:'
@@ -473,9 +698,14 @@ pt-BR:
           works: 'Filtro funciona:'
         heading:
           action: Ações
+          collection_type: Tipo de Coleção
+          date_modified: Última modificação
           date_uploaded: data adicionada
           highlighted: Meus destaques
+          items: Unid
+          last_modified: Última modificação
           title: Título
+          type: Tipo
           visibility: Visibilidade
         highlighted: Meus destaques
         shared: Obras compartilhadas comigo
@@ -488,6 +718,10 @@ pt-BR:
           results_per_page: Número de resultados a serem exibidos por página
           show_label: Exibir todos os detalhes de
         works: Seus trabalhos
+      nest_collections_form:
+        create_under: "'%{child_title}' foi adicionado a '%{parent_title}'"
+        create_within: "'%{child_title}' foi adicionado a '%{parent_title}'"
+        removed_relationship: "'%{child_title}' foi removido de '%{parent_title}'"
       no_activity: O usuário não tem atividade recente
       no_notifications: O usuário não possui notificações
       no_transfer_requests: Você não recebeu nenhum pedido de transferência de trabalho
@@ -596,6 +830,7 @@ pt-BR:
         tab_label: Trabalhos em destaque
         title: Trabalhos em destaque
       recently_uploaded:
+        depositor: Depositante
         details: Detalhes
         document:
           depositor_label: Depositante
@@ -646,6 +881,9 @@ pt-BR:
       message: mensagem
       notifications_deleted: As notificações foram excluídas
       subject: Sujeito
+    manifest:
+      download_text: Baixe todo o recurso
+      unknown_mime_text: tipo mime desconhecido
     messages:
       failure:
         multiple:
@@ -843,6 +1081,17 @@ pt-BR:
         resource_type: Categorias pré-definidas para descrever o tipo de conteúdo que está sendo carregado, como "artigo" Ou "conjunto de dados". & Quot; Mais de um tipo pode ser selecionado.
         subject: Título ou termos de índice descrevendo o que é a coleção; Estes precisam se adequar a um vocabulário existente.
         title: Um nome para auxiliar na identificação de uma coleção.
+      collection_type:
+        allow_multiple_membership: Permitir que as obras pertençam a múltiplas coleções desse tipo
+        assigns_visibility: Permitir coleções deste tipo para atribuir configurações de visibilidade inicial a um novo trabalho
+        assigns_workflow: Permitir coleções desse tipo para atribuir fluxo de trabalho a um novo trabalho
+        description: Uma breve descrição do propósito geral deste tipo de coleção. Os usuários verão isso se tiverem mais de um tipo de coleção para escolher ao criar uma nova coleção.
+        discoverable: Permitir que as coleções desse tipo sejam detectáveis
+        nestable: Permitir que coleções deste tipo sejam aninhadas (uma coleção pode conter outras coleções)
+        require_membership: Um trabalho deve pertencer a pelo menos uma coleção deste tipo
+        sharable: Permitir que os usuários atribuam gerentes de cobrança, depositantes e visualizadores para coleções que eles gerenciam
+        share_applies_to_new_works: Quando novos trabalhos são criados diretamente na coleção, conceda compartilhamento de usuários e grupos de permissões para o novo trabalho de acordo com suas funções de coleção.
+        title: ''
       defaults:
         based_near: Um nome de local relacionado ao trabalho, como seu site de publicação, ou a cidade, estado ou país sobre o conteúdo do trabalho. Solicita o <a href='http://www.geonames.org'> serviço na Web GeoNames </a>.
         contributor: Uma pessoa ou grupo que você deseja reconhecer por desempenhar um papel na criação do trabalho, mas não o papel principal.
@@ -862,6 +1111,17 @@ pt-BR:
       collection:
         size: Tamanho
         total_items: Total de trabalhos
+      collection_type:
+        allow_multiple_membership: MEMBROS MÚLTIPLOS
+        assigns_visibility: VISIBILIDADE
+        assigns_workflow: FLUXO DE TRABALHO
+        description: Descrição do tipo
+        discoverable: DESCOBERTA
+        nestable: NESTABLE
+        require_membership: EXIGE MEMBROS
+        sharable: COMPARTILHAR
+        share_applies_to_new_works: APLICAR A NOVOS OBRAS
+        title: Digite o nome
       defaults:
         admin_set_id: Conjunto Administrativo
         based_near: Localização
@@ -875,6 +1135,7 @@ pt-BR:
         license: Licença
         member_of_collection_ids: Adicionar a coleção
         related_url: URL associada
+        rights_statement: Declaração de direitos
         title: Título
         visibility_after_embargo: Então abra-o até
         visibility_after_lease: Então restrinja-o a

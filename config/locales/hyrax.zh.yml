@@ -7,7 +7,12 @@ zh:
   activemodel:
     errors:
       messages:
+        cannot_have_child_nested: 不能让孩子嵌套在其中
+        cannot_nest_in_parent: 不能嵌套在父代中
+        cannot_remove_relationship: 许可不适合取消嵌套关系
         conflict: 您的更改无法保存，因为另一用户(或后台作业）在您开始编辑后更新了%{model}。 请确保所有文件附件已成功完成之后再试一次。这已经是最新刷新后保存的副本%{model}
+        exceeds_maximum_nesting_depth: 嵌套超过了允许的最大嵌套深度。
+        is_not_nestable: 不可嵌套
   blacklight:
     search:
       fields:
@@ -32,15 +37,19 @@ zh:
       extension_whitelist_error: "%{extension} 的文件不能上传, 可上传的扩展类型: %{allowed_types}"
   helpers:
     action:
+      add: 加
       admin_set:
         new: 创建新管理集
       batch:
         new: 创建批量作品
       cancel: 取消
+      close: 关
       collection:
         new: 新收藏集
       delete: 删除
       edit: 编辑
+      refresh: 刷新
+      remove: 去掉
       work:
         new: 添加新作品
     submit:
@@ -168,6 +177,73 @@ zh:
         update:
           flash:
             success: 表面已更新
+      collection_types:
+        create:
+          notification: 收集类型%{name}已创建。
+        delete:
+          notification: 集合类型%{name}已被删除。
+        edit:
+          header: 编辑集合类型
+          submit: 保存更改
+        errors:
+          no_settings_change_for_admin_sets: 对于“管理集”类型，集合类型设置无法更改
+          no_settings_change_for_user_collections: 用户集合类型无法更改集合类型设置
+          no_settings_change_if_not_empty: 集合类型设置不能为具有集合的类型更改
+          not_empty: 集合类型不能更改，因为它具有集合
+        form:
+          tab:
+            metadata: 描述
+            participants: 参与者
+            settings: 设置
+        form_participant_table:
+          creators:
+            action: 行动
+            agent_name: 收集创作者
+            empty: 没有创作者被添加到这个集合类型。
+            help: 这种类型的集合的创建者可以创建和管理他们自己的集合。
+            title: 创作者
+            type: 类型
+          managers:
+            action: 行动
+            agent_name: 收藏经理
+            empty: 此集合类型中未添加管理员。
+            help: 此类集合的管理员可以编辑其他用户创建的集合，包括向集合中添加和删除作品，修改集合元数据以及删除集合。
+            title: 经理
+            type: 类型
+        form_participants:
+          add_participants: 添加参与者
+          current_participants: 当前参与者
+          header: 收藏参与者
+          instructions: 您可以将这两个组和用户指定为此类集合的创建者和管理者
+          remove_success: 参与者已移除
+          submit: 加
+          update_notice: 参与者已更新
+        form_settings:
+          instructions: 这些设置决定了如何管理和发现此类型的集合。
+          warning: 警告：创建此类型的集合后，这些设置无法更改。
+        index:
+          breadcrumb: 集合类型
+          create_new_button: 创建新的集合类型
+          description: 集合类型使您能够定义管理存储库中用于不同目的的集合的设置。您可以根据需要定义任意数量的集合类型。
+          header: 集合类型
+          modal:
+            can_delete_body_html: "<p>删除此集合类型将永久地从存储库中删除类型及其设置。您确定要删除此集合类型吗？ </p>"
+            cannot_delete_body_html: "<p>您无法删除此集合类型，因为此类型的一个或多个集合已经创建。 </p><p>要删除此集合类型，请首先确保已删除此类型的所有集合。 </p>"
+            header_can_delete: 删除集合类型？
+            header_cannot_delete: 无法删除集合类型
+            view_collections: 查看这种类型的集合
+          more_toggle_content_html: "<p>收集类型的典型场景包括： </p><ul><li> <strong>用户集合</strong> ，任何注册用户可以创建它们来组织他们存放的物品。 </li><li>工作人员为展示公开<strong>展出的展品</strong> ，其中的物品可以包含在任何展品中。 </li><li>由员工创建和管理的<strong>受控集合</strong> ，并非用于公开展示，例如与组织单位或部门相关的集合。 </li><li>用于公开展示的<strong>社区集合</strong> ，类似于有时使用DSpace社区和集合的方式。 </li></ul>"
+          more_toggle_header_html: "<span>更多</span>关于收集类型"
+          table:
+            actions: 操作
+            name: 名称
+        multiple_membership_checker:
+          error_preamble: 错误：您指定了多个相同的单一成员资格集合类型
+        new:
+          header: 创建新的集合类型
+          submit: 保存
+        update:
+          notification: 集合类型%{name}已更新。
       features:
         index:
           action: 行动
@@ -176,8 +252,8 @@ zh:
           header: 特征
       sidebar:
         activity: 活动
-        admin_sets: 管理集
         appearance: 表面
+        collection_types: 集合类型
         collections: 收藏
         configuration: 配置
         content_blocks: 内容块
@@ -306,10 +382,19 @@ zh:
         required_descriptions: 描述您的作品
         required_files: 添加文件
         requirements: 必要条件
+      form_rendering:
+        help_html: 在Universal Viewer中选择要作为每个图像下载的文件，例如整个作品的PDF。
+        legend_html: 渲染
+      form_representative:
+        help_html: 选择代表这项工作的媒体文件。
+        legend_html: 代表媒体
       form_share:
         add_sharing: 添加共享
         currently_sharing: 目前与...共享
         directions: 无论此工作的可见性设置如何，您也可以与其他用户和组共享。
+      form_thumbnail:
+        help_html: 选择要用作此作品缩略图的文件。
+        legend_html: 缩略图
       items:
         actions: 行动
         date_uploaded: 上传日期
@@ -351,9 +436,15 @@ zh:
       search_results: 回到检索结果
     collection:
       actions:
-        add_works:
-          desc: 向收藏集添加作品
-          label: 添加作品
+        add_existing_works:
+          desc: 将现有作品添加到此收藏集
+          label: 将现有作品添加到此集合中
+        add_new_nested_collection:
+          desc: 将新集合添加到此集合
+          label: 创建新的集合作为子集合
+        add_new_work:
+          desc: 通过这个集合存放新作品
+          label: 通过这个集合存放新作品
         delete:
           confirmation: 删除此收藏集？
           desc: 删除此收藏集？
@@ -362,6 +453,17 @@ zh:
           desc: 编辑收藏集
           label: 编辑
         header: 行动
+        nest_collections:
+          button_label: 添加一个子集合
+          desc: 在此集合中嵌套其他集合
+          label: 将现有集合添加到此集合
+          modal_title: 向集合添加一个子集合
+          select_label: 选择子集合
+        nested_subcollection:
+          button_label: 添加到收藏
+          desc: 将现有集合添加到此集合
+          modal_title: 将此集合添加到另一个集合中
+          select_label: 选择收藏
       browse_view: 浏览页面
       document_list:
         edit: 编辑
@@ -380,12 +482,28 @@ zh:
         select_heading: 选择要添加文件的收藏集：
         title: 添加到新收藏集
         update: 更新收藏集
+    collection_type:
+      admin_set_title: 管理员设置
+      default_title: 用户集合
+    collection_types:
+      create_service:
+        admin_set_description: 旨在帮助行政控制的作品集合。管理员集合提供了定义一组作品周围的行为和策略的方法。
+        default_description: 用户集合可由任何用户创建以组织他们的作品。
     collections:
       search_form:
         button_label: 去
         label: 搜索收藏集 %{title}
         placeholder: 搜索收藏集
       show:
+        buttons:
+          remove_from_collection: 去掉
+          remove_this_sub_collection: 去掉
+        no_visible_parent_collections: 没有可见的父集合。
+        no_visible_subcollections: 没有可见的子集合。
+        parent_collection_header: 家长集合
+        show_less_parent_collections: "...显示较少"
+        show_more_parent_collections: 展示更多...
+        subcollection_count: 子集合
         works_in_collection: 作品在此收藏集
     contact_form:
       button_label: 发送
@@ -429,18 +547,100 @@ zh:
       authorize_proxies: 授权代理
       breadcrumbs:
         admin: 管理
+      collection_type_actions:
+        close: 关
+        create_collection: 创建集合
+        select_type_of_collection: 选择收集类型
       collections:
         edit:
           header: 编辑收藏集：%{title}
         form:
+          permission_update_errors:
+            error: 无效的权限模板更新选项。
+          permission_update_notices:
+            participants: 收藏的分享选项已更新。
+            sharing: 收藏的分享选项已更新。
           tabs:
+            branding: 品牌
             description: 描述
+            discovery: 发现
+            relationships: 关系
             sharing: 分享
-            visibility: 能见度
+        form_branding:
+          banner:
+            description: 要显示在收集页面顶部的图像。为获得最佳效果，请上传至少120像素高，1200像素宽的图像（JPG，GIF或PNG）。
+            label: 旗帜
+          branding:
+            description: 或者，您可以上传横幅图像和/或徽标图像以与此集合关联。如果上传，这些图像将显示在收集页面的顶部，为收藏提供独特的品牌。
+            label: 品牌
+          logo:
+            description: 一个或多个图像显示在收集页面的顶部。为获得最佳效果，请上传高度为40像素的图像（JPG，GIF或PNG）。较大的图像将被调整到40像素的高度。
+            label: 商标
+        form_discovery:
+          para1: 这些设置决定了哪些人能够发现并查看此收藏集的着陆页;它们不会影响集合中项目的可见性。
+          para2: 如果您选择不让该集合成为开放访问权限，您仍然可以使用共享选项卡将该集合与特定用户和组共享。
+        form_relationships:
+          add_other_collections_as_sub_collections_description: 您可以管理此集合的子集合。
+          buttons:
+            remove_from_collection: 去掉
+            remove_this_sub_collection: 去掉
+          collection_is_subcollection_description: 此集合目前是这些集合的子集合
+          headlines:
+            other_collections_in_this_collection: 其他收藏集
+            this_collection_in_other_collections: 此集合在其他集合中
+          modals:
+            remove_from_collection_description: 删除此集合不会将其从存储库中删除，只能作为此集合的父项。你确定要删除这个集合吗？
+            remove_this_sub_collection_description: 删除此子集合不会将其从存储库中删除，只能从此父集合中删除。你确定要删除这个子集合吗？
+          sub_collections_of_collection_description: 这些集合目前是该集合的子集合
+          table:
+            action: 行动
+            collection_title: 收藏标题
+          this_collection_in_other_collections_description: 您可以将此集合作为子集合添加到其他集合。
+        form_share:
+          add_group: 添加组
+          add_sharing: 添加共享
+          add_user: 添加用户
+          current_shared: 目前与...共享
+          note: 无论此集合的可见性设置如何，您都可以将此集合与特定的组和用户共享。
+        form_share_table:
+          allow_all_registered: 允许所有注册
+          depositors:
+            action: 行动
+            agent_name: 用户/组
+            empty: 此集合中没有添加存储器。
+            help: 此集合的存储者可以查看集合并向其添加作品，即使collecton的可见性权限不允许他们查看它也是如此。
+            remove: 去掉
+            title: 储户
+            type: 类型
+          managers:
+            action: 行动
+            agent_name: 用户/组
+            empty: 没有管理员被添加到这个集合。
+            help: 此集合的管理员可以添加和删除集合中的作品，修改集合元数据并删除集合。
+            help_with_works: 对于%{type_title}类型的集合，当直接在此集合中创建作品时，管理员可以对新作品进行编辑访问。
+            remove: 去掉
+            title: 经理
+            type: 类型
+          viewers:
+            action: 行动
+            agent_name: 用户/组
+            empty: 此收藏中没有添加观看者。
+            help: 即使集合的可见性权限不允许他们查看，该集合的查看者也可以查看它。
+            help_with_works: 对于%{type_title}类型的集合，当直接在此集合中创建作品时，查看者被授予对新作品的读取权限。
+            remove: 去掉
+            title: 观众
+            type: 类型
         new:
           header: 创建新收藏集
         show:
-          works_in_collection: 在这个收藏集的作品
+          header: 采集
+          item_count: 作品
+          parent_collection_header: 家长集合
+          public_view_label: 公众对收藏的看法
+          search_results: 搜索此集合中的结果
+          show_less_parent_collections: "...显示较少"
+          show_more_parent_collections: 展示更多...
+          subcollection_count: 子集合
       create_work: 创建作品
       current_proxies: 目前代理
       delete_notification: 删除通知
@@ -449,19 +649,44 @@ zh:
         create_work: 创建作品
         select_type_of_work: 选择作品类型
       manage_proxies: 管理代理
+      managed:
+        collections: 管理集合
+        works: 托管作品
       my:
         action:
-          collection_confirmation: 删除收藏集, 从%{application_name}删除收藏集是永久性的。从%{application_name}点击'OK'删除此收藏集，或点击'取消'取消操作。
+          add_to_collection: 添加到收藏
+          add_to_collection_only: 允许的操作仅限于添加成员
+          admin_set_confirmation: 从%{application_name}删除管理员集合是永久性的。单击确定从%{application_name}删除此管理集，或单击取消取消此操作
+          collection_create_success: 收集已成功创建。
+          collection_delete_fail: 收藏%{id}无法删除
+          collection_delete_success: 收藏夹%{id}已成功删除
+          collection_deny_add_members: 您没有足够的权限将成员添加到集合中
+          collection_update_success: 收集已成功更新。
+          collections_confirmation_html: 删除<span class='pluralized'>这个集合</span>将永久地从存储库中删除<span class='pluralized'>这个集合</span> 。 <span class='pluralized'>此集合中的</span>项目将保留在存储库中。你确定要删除<span class='pluralized'>这个集合</span>吗？
+          collections_confirmation_no_items_html: 你确定要删除这个集合吗？此操作无法撤消。
+          delete_admin_set: 删除集合
+          delete_admin_set_deny: 这个集合被定义为Admin Set并且不是空的。要删除此管理员设置，您必须先删除（删除或移动到另一个管理员设置集合）管理员设置中的所有项目。
           delete_collection: 删除收藏集
+          delete_collection_deny: 您没有足够的权限来删除此文档。
+          delete_collections: 删除集合
+          delete_collections_deny: 您必须选择一个或多个要删除的集合。
           delete_work: 删除作品
+          edit_admin_set: 编辑集合
           edit_collection: 编辑收藏集
+          edit_collection_deny: 您没有足够的权限来编辑此集合。
+          edit_selected: 编辑选定
           edit_work: 编辑作品
           highlight: 在个人资料栏加重点作品
+          members_no_access: 您没有足够的权限给任何选定的成员
+          nesting_not_allowed: 这种类型的集合不支持嵌套。
+          nesting_permission_denied: 您没有足够的权限将此集合添加到其他集合。
           select: 选择
           select_all: 选择当前页面
           select_none: 选择没有
           transfer: 转让作品所有权
           unhighlight: 删除重点作品
+          view_admin_set: 查看集合
+          view_collection: 查看集合
           work_confirmation: 删除作品，从%{application_name}删除作品是永久性的。从%{application_name}点击'OK'删除此收藏集，或点击'取消'取消操作。
         collection_list:
           description: 描述：
@@ -476,9 +701,14 @@ zh:
           works: '筛选作品:'
         heading:
           action: 行动
+          collection_type: 集合类型
+          date_modified: 上一次更改
           date_uploaded: 上传日期
           highlighted: 重点
+          items: 项目
+          last_modified: 上一次更改
           title: 标题
+          type: 类型
           visibility: 公开度
         highlighted: 我的重点
         shared: 与我分享的作品
@@ -491,6 +721,10 @@ zh:
           results_per_page: 每页显示的结果数量
           show_label: 展示所有细节
         works: 您的作品
+      nest_collections_form:
+        create_under: "'%{child_title}'已被添加到'%{parent_title}'"
+        create_within: "'%{child_title}'已被添加到'%{parent_title}'"
+        removed_relationship: "'%{child_title}'已从'%{parent_title}'中删除"
       no_activity: 用户最近没有活动
       no_notifications: 用户没有收到通知
       no_transfer_requests: 您没有收到任何在作品转让请求
@@ -599,6 +833,7 @@ zh:
         tab_label: 特色作品
         title: 特色作品
       recently_uploaded:
+        depositor: 储户
         details: 细节
         document:
           depositor_label: 储户
@@ -649,6 +884,9 @@ zh:
       message: 讯息
       notifications_deleted: 通知已被删除
       subject: 主题
+    manifest:
+      download_text: 下载整个资源
+      unknown_mime_text: 未知的mime类型
     messages:
       failure:
         multiple:
@@ -846,6 +1084,17 @@ zh:
         resource_type: 预定类型用于描述上传内容类型，例如&quot;文章&quot; or &quot;数据集。&quot; 可以选择多项类型。
         subject: 用于描述收藏集的主题词或索引词,需要选自现存的词汇表。
         title: 用于帮助识别收藏集的名称。
+      collection_type:
+        allow_multiple_membership: 允许作品属于此类型的多个集合
+        assigns_visibility: 允许此类型的集合将初始可见性设置分配给新作品
+        assigns_workflow: 允许此类型的集合将工作流分配到新作品
+        description: 关于这种集合类型的一般用途的简要说明。如果用户创建新集合时有多个集合类型可供选择，用户将会看到这一点。
+        discoverable: 允许这种类型的集合被发现
+        nestable: 允许嵌套此类型的集合（集合可以包含其他集合）
+        require_membership: 作品必须至少属于这种类型的一个集合
+        sharable: 允许用户为他们管理的收藏分配收藏管理员，存储者和查看者
+        share_applies_to_new_works: 当直接在集合中创建新作品时，根据其集合角色为新作品授予共享用户和组的权限。
+        title: ''
       defaults:
         based_near: 与作品相关的地名，例如出版品的地点，或者是作品中涉及的城市，州、或国家。 参见<a href='http://www.geonames.org'>GeoNames web service</a>。
         contributor: 个人与团体，虽未担任主要职责，却对作品创建做出贡献。
@@ -865,6 +1114,17 @@ zh:
       collection:
         size: 大小
         total_items: 总件数
+      collection_type:
+        allow_multiple_membership: 多会员
+        assigns_visibility: 能见度
+        assigns_workflow: 工作流程
+        description: 类型描述
+        discoverable: 发现
+        nestable: 嵌套
+        require_membership: 需要会员资格
+        sharable: 共享
+        share_applies_to_new_works: 适用于新作品
+        title: 类型名称
       defaults:
         admin_set_id: 在行政
         based_near: 地点
@@ -878,6 +1138,7 @@ zh:
         license: 许可
         member_of_collection_ids: 添加到收藏
         related_url: 相关链接
+        rights_statement: 权利声明
         title: 标题
         visibility_after_embargo: 开放
         visibility_after_lease: 仅限
