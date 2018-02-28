@@ -38,16 +38,27 @@ RSpec.describe 'hyrax/dashboard/profiles/edit.html.erb', type: :view do
   end
 
   context "with trophy" do
-    let(:solr_document) { SolrDocument.new(id: 'abc123', has_model_ssim: 'GenericWork', title_tesim: ['Title']) }
     let(:page) { Capybara::Node::Simple.new(rendered) }
 
-    before do
-      assign(:trophies, [Hyrax::TrophyPresenter.new(solr_document)])
-      render
+    context "and there are no highlighted works" do
+      it "has no trophy" do
+        expect(page).not_to have_css('a#remove_trophy_help')
+        expect(page).not_to have_content('Remove Highlight Designation')
+      end
     end
 
-    it "has trophy" do
-      expect(page).to have_selector("#remove_trophy_abc123")
+    context "and there are highlighted works" do
+      let(:solr_document) { SolrDocument.new(id: 'abc123', has_model_ssim: 'GenericWork', title_tesim: ['Title']) }
+
+      before do
+        assign(:trophies, [Hyrax::TrophyPresenter.new(solr_document)])
+        render
+      end
+
+      it "has trophy" do
+        expect(page).to have_css('a#remove_trophy_help')
+        expect(page).to have_selector("#remove_trophy_abc123")
+      end
     end
   end
 
