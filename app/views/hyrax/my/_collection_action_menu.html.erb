@@ -18,7 +18,8 @@
       <li role="menuitem" tabindex="-1">
         <%= link_to hyrax.edit_dashboard_collection_path(id),
                     class: 'itemicon itemedit',
-                    title: t("hyrax.dashboard.my.action.edit_collection") do %>
+                    title: t("hyrax.dashboard.my.action.edit_collection"),
+                    data: { turbolinks: false }  do %>
           <%= t("hyrax.dashboard.my.action.edit_collection") %>
         <% end %>
       </li>
