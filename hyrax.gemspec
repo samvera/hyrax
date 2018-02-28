@@ -83,7 +83,7 @@ SUMMARY
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
   spec.add_development_dependency 'engine_cart', '~> 1.2'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
-  spec.add_development_dependency "factory_bot_rails", '~> 4.4'
+  spec.add_development_dependency "factory_bot", '~> 4.4'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.5', '>= 0.5.1'
   spec.add_development_dependency "jasmine", '~> 2.3', '< 2.99'
   spec.add_development_dependency "jasmine-core", '~> 2.3', '< 2.99'
