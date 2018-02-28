@@ -34,6 +34,7 @@ RSpec.describe 'Transferring work ownership:', type: :feature do
 
       context 'If the new owner accepts it' do
         before do
+          expect(page).to have_content('Transfer request created')
           new_owner.proxy_deposit_requests.last.transfer!
           # refresh the page
           visit '/dashboard'
