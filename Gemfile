@@ -10,6 +10,7 @@ group :development, :test do
   gem "simplecov", require: false
 end
 
+# rubocop:disable Bundler/DuplicatedGem
 # BEGIN ENGINE_CART BLOCK
 # engine_cart: 1.1.0
 # engine_cart stanza: 0.10.0
@@ -44,7 +45,6 @@ else
   end
 end
 # END ENGINE_CART BLOCK
+# rubocop:enable Bundler/DuplicatedGem
 
-unless File.exist?(file)
-  eval_gemfile File.expand_path('spec/test_app_templates/Gemfile.extra', File.dirname(__FILE__))
-end
+eval_gemfile File.expand_path('spec/test_app_templates/Gemfile.extra', File.dirname(__FILE__)) unless File.exist?(file)

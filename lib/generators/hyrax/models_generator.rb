@@ -17,7 +17,6 @@ class Hyrax::ModelsGenerator < Rails::Generators::Base
   end
 
   # Add behaviors to the user model
-  # rubocop:disable Metrics/MethodLength
   def inject_user_behavior
     file_path = "app/models/#{model_name.underscore}.rb"
     if File.exist?(file_path)

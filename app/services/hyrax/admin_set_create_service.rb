@@ -72,9 +72,7 @@ module Hyrax
           { agent_type: 'group', agent_id: admin_group_name, access: Hyrax::PermissionTemplateAccess::MANAGE }
         ].tap do |attribute_list|
           # Grant manage access to the creating_user if it exists. Should exist for all but default Admin Set
-          if creating_user
-            attribute_list << { agent_type: 'user', agent_id: creating_user.user_key, access: Hyrax::PermissionTemplateAccess::MANAGE }
-          end
+          attribute_list << { agent_type: 'user', agent_id: creating_user.user_key, access: Hyrax::PermissionTemplateAccess::MANAGE } if creating_user
         end
       end
 

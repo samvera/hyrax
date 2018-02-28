@@ -112,9 +112,7 @@ module Hyrax
           end
         end
 
-        if Flipflop.proxy_deposit? && registered_user?
-          can :create, ProxyDepositRequest
-        end
+        can :create, ProxyDepositRequest if Flipflop.proxy_deposit? && registered_user?
 
         can :accept, ProxyDepositRequest, receiving_user_id: current_user.id, status: 'pending'
         can :reject, ProxyDepositRequest, receiving_user_id: current_user.id, status: 'pending'

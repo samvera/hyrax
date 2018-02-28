@@ -194,9 +194,7 @@ module Hyrax
       end
 
       def featured?
-        if @featured.nil?
-          @featured = FeaturedWork.where(work_id: solr_document.id).exists?
-        end
+        @featured = FeaturedWork.where(work_id: solr_document.id).exists? if @featured.nil?
         @featured
       end
 

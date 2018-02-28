@@ -45,9 +45,7 @@ if Gem.loaded_specs.key? 'engine_cart'
     task :after_generate do
       puts 'Creating default collection type...'
       EngineCart.within_test_app do
-        unless system "bundle exec rake hyrax:default_collection_types:create"
-          raise "EngineCart failed on with: #{$?}"
-        end
+        raise "EngineCart failed on with: #{$?}" unless system "bundle exec rake hyrax:default_collection_types:create"
       end
     end
   end

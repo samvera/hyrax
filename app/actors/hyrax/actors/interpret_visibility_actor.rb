@@ -114,9 +114,7 @@ module Hyrax
 
         def apply_visibility(env, intention)
           result = apply_lease(env, intention) && apply_embargo(env, intention)
-          if env.attributes[:visibility]
-            env.curation_concern.visibility = env.attributes[:visibility]
-          end
+          env.curation_concern.visibility = env.attributes[:visibility] if env.attributes[:visibility]
           result
         end
 
