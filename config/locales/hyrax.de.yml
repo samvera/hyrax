@@ -818,8 +818,8 @@ de:
     homepage:
       admin_sets:
         link: Alle Sammlungen anzeigen
-        tab_label: Entdecken Sie Sammlungen
-        title: Entdecken Sie Sammlungen
+        tab_label: Erforschen Sie Sammlungen
+        title: Erforschen Sie Sammlungen
       featured_researcher:
         missing: Es wurden keine Forscher vorgestellt.
         tab_label: Ausgewählter Forscher
@@ -827,7 +827,7 @@ de:
       featured_works:
         document:
           depositor_label: Deponent
-          depositor_missing: kein Deponenten-Wert
+          depositor_missing: kein Eintrag unter Deponenten
           keyword_label: Schlüsselwörter
           keyword_missing: keine Schlüsselwörter angegeben
           title_label: Titel
@@ -840,7 +840,7 @@ de:
         details: Details
         document:
           depositor_label: Deponent
-          depositor_missing: kein Deponent-Wert
+          depositor_missing: kein Eintrag unter Deponenten
           keyword_label: Schlüsselwörter
           keyword_missing: keine Schlüsselwörter angegeben
           title_label: Titel
@@ -848,7 +848,7 @@ de:
         tab_label: Zuletzt hochgeladen
         title: Zuletzt hochgeladen
     icons:
-      collection: Fa-cubes
+      collection: Fa-würfel
       default: Fa fa-würfel
     leases:
       edit:
@@ -856,23 +856,23 @@ de:
           current: Aktuelle Leasingverhältnisse
           past: Vergangene Leasingverhältnisse
         history_empty: Auf diese %{cc} wurden keine vorherigen Leasingverhältnisse angewendet.
-        lease_apply: Leasingverhältniss aktivieren
+        lease_apply: Leasingverhältnis aktivieren
         lease_cancel: Abbrechen und Verwalten aller Leasingverhältnisse
-        lease_deactivate: Leasingverhältniss deaktivieren
+        lease_deactivate: Leasingverhältnis deaktivieren
         lease_false_html: "<strong>Diese %{cc} ist derzeit nicht geleast.</strong> Wenn Sie einen Leasingvertrag anwenden möchten, geben Sie hier die Informationen an."
         lease_return: Zurück zur Bearbeitung dieses %{cc}
         lease_true_html: "<strong>Dieser %{cc} ist zur Zeit geleast.</strong>"
-        lease_update: Update Leasing
+        lease_update: Leasing aktualisieren 
         manage_leases_html: Leasing für %{cc} <span class='human_readable_type'>(%{cc_type})</span>
       index:
-        active: Alle aktiven Leasingverhältnisse
+        active: Aktive Leasingverhältnisse
         deactivated: Deaktivierte Leasingverhältnisse
         expired: Abgelaufene aktive Leasingverhältnisse
         manage_leases: Leasing verwalten
       list_expired_active_leases:
         change_all: Ändern Sie alle Dateien in %{cc} zu
         deactivate: Leasing deaktivieren
-        deactivate_selected: Deaktivieren Sie das Leaseing für die Auswahl
+        deactivate_selected: Deaktivieren Sie das Leasing für die Auswahl
         missing: Es sind zu diesem Zeitpunkt keine abgelaufenen Leasingverhältnisse vorhanden.
       table_headers:
         release_date: Leasing Freigabedatum
@@ -896,27 +896,27 @@ de:
           keyword: Konnte nicht aktualisiert werden. Sie haben keine ausreichenden Berechtigungen, um sie zu bearbeiten.
           link: Diese Dateien
         single: Konnte nicht aktualisiert werden. Sie haben keine ausreichenden Berechtigungen, um sie zu bearbeiten.
-        subject: Stapel-Hochlade-Berechtigung verweigert
+        subject: Berechtigung für stapelweises Hochladen verweigert
         title: Dateien fehlgeschlagen
       success:
         multiple:
           keyword: Wurden gerettet
           link: Diese Dateien
         single: wurde gespeichert.
-        subject: Stapel-Hochladen komplett
+        subject: Stapelweises Hochladen abgeschlossen
         title: Dateien erfolgreich hochgeladen
     pages:
-      cancel: Stornieren
+      cancel: Abbrechen
       tabs:
-        about_page: Über Seite
-        agreement_page: Deponierungssvereinbarung
-        help_page: Hilfe Seite
+        about_page: Impressum
+        agreement_page: Deponierungsvereinbarung
+        help_page: Hilfe 
         terms_page: Nutzungsbedingungen
       updated: Seiten aktualisiert.
     passive_consent_to_agreement: Durch das Speichern dieser Arbeit stimme ich der ... zu.
     search:
       button:
-        html: <span class="glyphicon glyphicon-search"></span> Gehen
+        html: <span class="glyphicon glyphicon-search"></span> Suchen
         text: Suche
       form:
         option:
@@ -927,8 +927,8 @@ de:
             label_long: Meine Sammlungen
             label_short: Meine Sammlungen
           my_shares:
-            label_long: Meine Anteile
-            label_short: Meine Anteile
+            label_long: Meine Freigaben 
+            label_short: Meine Freigaben
           my_works:
             label_long: Meine Arbeiten
             label_short: Meine Arbeiten
@@ -938,9 +938,9 @@ de:
     select_type:
       description: Allzweckarbeit-Typ
       name: Arbeit
-    share_button: Teilen Sie Ihre Arbeit
+    share_button: Arbeit hinzufügen
     single_use_links:
-      button: Single-Use Link zu Datei
+      button: Einweg-Link zur Datei
       copy:
         button: Kopieren
         tooltip: Kopiert!
@@ -972,14 +972,14 @@ de:
       profile:
         login: Anmeldung
         logout: Ausloggen
-        sr_action: Aussicht
+        sr_action: Ansicht
         sr_target: Profil
     transfers:
       new:
-        confirm: Sind Sie sicher, dass Sie das Eigentum an dieser Arbeit an einen anderen Benutzer übertragen möchten? Klicken Sie auf OK, um zu übertragen oder auf Abbrechen, um zum Übertragungsbildschirm zurückzukehren
+        confirm: Sind Sie sicher, dass Sie das Eigentum an dieser Arbeit an einen anderen Benutzer übertragen möchten? Klicken Sie auf OK, um zu übertragen oder auf Abbrechen, um zur Transfer-Seite zurückzukehren
         header: Eigentum übertragen
         placeholder: Suche nach einem Benutzer
-        sr_only_description: Wählen Sie einen Benutzer aus, um &ldquor;%{work_title}&ldquo; zu senden, fügen Sie optionale Kommentare hinzu und drücken Sie dann die Übertragung.
+        sr_only_description: Wählen Sie einen Benutzer aus, um &ldquor;%{work_title}&ldquo; zu senden, fügen Sie optionale Kommentare hinzu und drücken Sie dann Übertragung.
         title: Übertragung des Eigentums von &ldquor;%{work_title}&ldquo;
     upload:
       alert:
@@ -993,15 +993,15 @@ de:
         files_selected: Dateien ausgewählt
         sr_tab_label: Zugriff auf Dateien von
         tab_label: Cloud-Provider
-      change_access_flash_message: Aktualisierungsdatei-Zugriffsebenen. Das kann ein paar minuten dauern. Sie können Ihren Browser aktualisieren oder später zu diesem Datensatz zurückkehren, um die aktualisierten Dateizugriffsebenen zu sehen.
-      change_access_message_html: "<p> Sie haben die <i>Zugriffsebene</i> auf die Arbeit <i>%{curation_concern} geändert</i> , so dass sie anderen Benutzern oder Gruppen zum Ansehen oder Bearbeiten zugänglich ist. </p><p> Möchten Sie alle Dateien in der Arbeit ändern, um die gleichen Zugangsbenutzer, Gruppen und Sichtbarkeit zu haben? </p>"
+      change_access_flash_message: Aktualisierung der Dateiberechtigungen. Dies kann ein paar Minuten dauern. Sie können Ihren Browser aktualisieren oder später zu diesem Datensatz zurückkehren, um die aktualisierten Dateizugriffsberechtigungen zu sehen.
+      change_access_message_html: "<p> Sie haben die <i>Zugriffsberechtigung</i> auf die Arbeit <i>%{curation_concern} geändert</i> , so dass sie anderen Benutzern oder Gruppen zum Ansehen oder Bearbeiten zugänglich ist. </p><p> Möchten Sie alle Dateien in der Arbeit ändern, damit diese die selben Berechtigungen für Benutzer, Gruppen und Sichtbarkeit zu haben? </p>"
       change_access_no_message: Nein. Ich werde es manuell aktualisieren.
       change_access_yes_message: Ja bitte.
       change_permissions_message_html: "<p> Sie haben die Berechtigungen für diese %{curation_concern_human_readable_type}, <i>%{curation_concern} geändert</i> , so dass es sichtbar für <b>%{visibility_badge}</b> . </p><p> Möchten Sie alle Dateien im %{curation_concern_human_readable_type} auch auf <b>%{visibility_badge} ändern</b> ? </p>"
       local_ingest:
         tab_label: Netzwerk / Server Standort
       my_computer:
-        sr_instructions: Stimme der Deponierungsvereinbarung zu und wähle dann Dateien aus. Drücken Sie die Hochladen-Taste, sobald alle Dateien ausgewählt wurden.
+        sr_instructions: Stimme der Deponierungsvereinbarung zu und wähle dann Dateien aus. Drücken Sie die Hochladen-Schaltfläche, sobald alle Dateien ausgewählt wurden.
         sr_tab_label: Zugriff auf Dateien von
         tab_label: Mein Computer
       permissions_message: Aktualisieren von Dateiberechtigungen. Dieser Vorgang kann ein paar Minuten dauern. Sie können Ihren Browser aktualisieren oder später zu diesem Datensatz zurückkehren, um die aktualisierten Dateiberechtigungen zu sehen.
@@ -1031,7 +1031,7 @@ de:
       open:
         note_html: Jeder. Schauen Sie sich <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> für die Urheberrechtsrichtlinien des Publishers an, wenn Sie planen, Ihr %{type} in einer Zeitschrift zu patentieren und / oder zu veröffentlichen.
         text: Öffentlichkeit
-        warning_html: '<p> <strong>Bitte beachten Sie</strong> , dass etwas, das für die Welt sichtbar ist (dh das Markieren dieses als %{label}), als Publikation angesehen werden kann, die Ihre Fähigkeit beeinflussen könnte: </p><ul><li> Patent Ihre Arbeit </li><li> Veröffentlichen Sie Ihre Arbeit in einer Zeitschrift </li></ul><p> Überprüfen Sie <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> für weitere Informationen über Urheberrechtsrichtlinien des Publishers. </p>'
+        warning_html: '<p> <strong>Bitte beachten Sie</strong> , dass etwas, das für die gesamte Öffentlichkeit sichtbar ist (d.h. das Markieren dieses als %{label}), als Publikation angesehen werden kann, die Ihre Fähigkeit beeinflussen könnte: </p><ul><li> Das Patentieren Ihrer Arbeit </li><li> Das Veröffentlichen Sie Ihre Arbeit in einer Zeitschrift </li></ul><p> Überprüfen Sie <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> für weitere Informationen über Urheberrechtsrichtlinien des Herausgebers. </p>'
       open_title_attr: Ändern Sie die Sichtbarkeit dieser Ressource
       restricted:
         note_html: Nur Benutzer und / oder Gruppen, denen im Abschnitt &ldquor;Freigeben&ldquo; einen bestimmten Zugriff gewährt wurde.
@@ -1070,7 +1070,7 @@ de:
   simple_form:
     hints:
       admin_set:
-        description: Eine kurze übergreifende Beschreibung, die für alle in diesem Admin-Set gesammelten Abeiten gilt. Zum Beispiel,  &ldquor;Thesen und ergänzende Dateien, welche von den Absolventen der Geowissenschaften erstellt wurden. &ldquo;
+        description: Eine kurze übergreifende Beschreibung, die für alle in diesem Admin-Set gesammelten Arbeiten gilt. Zum Beispiel,  &ldquor;Thesen und ergänzende Dateien, welche von den Absolventen der Geowissenschaften erstellt wurden. &ldquo;
         title: Ein Name zur erleichterten Identifizierung des Admin-Sets und zur Unterscheidung von anderen Admin-Sets im Repositorium.
       collection:
         based_near: Ein Ortsname im Zusammenhang mit der Sammlung, wie die Website der Veröffentlichung, oder die Stadt, Staat oder Land, welches Inhalt der Sammlung sind. Ruft die Seite <a href='http://www.geonames.org'> GeoNames Web Service </a> auf.
@@ -1081,7 +1081,7 @@ de:
         identifier: Eine eindeutige Kennung, der die Sammlung identifiziert. Ein Beispiel wäre ein DOI für einen Zeitschriftenartikel oder eine ISBN- oder OCLC-Nummer für ein Buch.
         keyword: Wörter oder Phrasen, die Sie wählen, um zu beschreiben, was die Sammlung ist. Diese werden verwendet, um nach Inhalt zu suchen.
         language: Die Sprache der Sammlung.
-        license: Lizenz- und Verbreitungsinformationen für den Zugang zur Sammlung. Wählen Sie aus der mitgelieferten Dropdown-Liste aus.
+        license: Lizenz- und Verbreitungsinformationen für den Zugang zur Sammlung. Wählen Sie aus der mitgelieferten Auswahlliste aus.
         publisher: Die Person oder Gruppe, die die Sammlung zur Verfügung stellt. Im Allgemeinen ist das die Institution.
         related_url: Ein Link zu einer Website oder anderen spezifischen Inhalten (Audio, Video, PDF Dokument) im Zusammenhang mit der Sammlung. Ein Beispiel ist die URL eines Forschungsprojektes, aus dem die Sammlung abgeleitet wurde.
         resource_type: Vordefinierte Kategorien, um die Art des hochgeladenen Inhalts zu beschreiben, wie beispielsweise &ldquor;Artikel&ldquo; oder &ldquor;Datensatz&ldquo; . Es können mehr als ein Typ ausgewählt werden.
@@ -1141,7 +1141,7 @@ de:
         license: Lizenz
         member_of_collection_ids: Zur Sammlung hinzufügen
         related_url: Zugehörige URL
-        rights_statement: Copyright-Erklärung
+        rights_statement: Urheberrechts-Erklärung
         title: Titel
         visibility_after_embargo: Dann öffnen sie es bis zu
         visibility_after_lease: Zugriffsbeschränkung nach diesem Zeitraum
