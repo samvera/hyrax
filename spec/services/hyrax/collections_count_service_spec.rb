@@ -37,7 +37,7 @@ RSpec.describe Hyrax::CollectionsCountService do
           {
               'member_of_collection_ids_ssim' => ['xyz123'],
               'member_of_collections_ssim' => ['xyz123'],
-              'file_set_ids_ssim' => ['aaa'],
+              'file_set_ids_ssim' => ['aaa', 'bbb', 'ccc'],
               'system_modified_dtsi' => '2015-01-01T20:50:35Z',
               'title_tesim' => ['xyz123']
           },
