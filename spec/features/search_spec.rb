@@ -35,21 +35,18 @@ RSpec.describe 'searching' do
       # it "does not display search options for dashboard files" do
       # This section was tested on its own, and required a full setup.
       within(".input-group-btn") do
+        expect(page).not_to have_content("All")
         expect(page).not_to have_content("My Works")
         expect(page).not_to have_content("My Collections")
         expect(page).not_to have_content("My Shares")
       end
-      # end
 
-      expect(page).to have_content("All")
-      expect(page).to have_css("a[data-search-label*=All]", visible: false)
+      expect(page).not_to have_css("a[data-search-label*=All]", visible: false)
       expect(page).not_to have_css("a[data-search-label*='My Works']", visible: false)
       expect(page).not_to have_css("a[data-search-label*='My Collections']", visible: false)
       expect(page).not_to have_css("a[data-search-label*='My Highlights']", visible: false)
       expect(page).not_to have_css("a[data-search-label*='My Shares']", visible: false)
 
-      click_button("All")
-      expect(page).to have_content("All of Hyrax")
       fill_in "search-field-header", with: subject_value
       click_button("Go")
 
