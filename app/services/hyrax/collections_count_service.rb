@@ -21,7 +21,7 @@ module Hyrax
       file_counts = count_files(results)
 
       collections.map do |collection|
-        last_update = last_updated(results, collection)
+        last_update = last_updated(results, collection.id)
         SearchResultForWorkCount.new(collection, last_update, counts[collection.id].to_i, file_counts[collection.id].to_i)
       end
     end
@@ -43,13 +43,15 @@ module Hyrax
     end
 
     # Get last updated record from a collection
-    def last_updated(results, collection)
+    def last_updated(results, collection_id)
       dates = []
 
       results['response']['docs'].each do |coll|
-        if coll['member_of_collections_ssim'].include? collection.to_s
+        if coll['member_of_collection_ids_ssim'].include? collection_id
+          unless coll['system_modified_dtsi'].nil?
           # dates << DateTime.parse(coll['date_modified_dtsi']).strftime("%Y-%m-%d")
-          dates << DateTime.parse(coll['system_modified_dtsi']).strftime("%Y-%m-%d")
+            dates << DateTime.parse(coll['system_modified_dtsi']).strftime("%Y-%m-%d")
+          end
         end
       end
 
