@@ -1,0 +1,35 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= t('.title') %></h3>
+        <div class="admin-repo-charts">
+          <ul id="analytics-collections" class="list-unstyled list-inline analytics-options">
+            <li><%= link_to t('.recently_updated') , update_collections_dashboard_index_path(sort_type: "updated"), id: "recently-updated", remote: true %></li>
+            <li class="analytics-borderless"><%= link_to t('.pinned') , update_collections_dashboard_index_path(sort_type: "pinned"), id: "pinned", class: "stats-selected", remote: true %></li>
+            <li class="pull-right"><%= pluralize(number_with_delimiter(@collection_rows.total_count), t('.collection'))%>  <%= t('.collection_count') %></li>
+          </ul>
+        </div>
+      </div>
+      <div class="panel-body">
+        <table id="analytics-collections-table" class="table table-striped">
+          <thead>
+          <tr>
+            <th><%= t('.collection') %></th>
+            <th><%= t('.last_updated') %></th>
+            <th><%= t('.works') %></th>
+            <th><%= t('.files') %></th>
+          </tr>
+          </thead>
+          <tbody>
+          <%= render 'analytics_collections_ajax' %>
+          </tbody>
+        </table>
+        <div class="pagination, pull-right">
+          <%= page_entries_info @collection_rows %>
+          <%= paginate @collection_rows, remote: true %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
