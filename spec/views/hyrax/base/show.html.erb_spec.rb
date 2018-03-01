@@ -47,6 +47,7 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
     allow(presenter).to receive(:representative_presenter).and_return(representative_presenter)
     allow(presenter).to receive(:representative_id).and_return('123')
     allow(presenter).to receive(:tweeter).and_return("@#{depositor.twitter_handle}")
+    allow(presenter).to receive(:human_readable_type).and_return("Work")
     allow(controller).to receive(:current_user).and_return(depositor)
     allow(User).to receive(:find_by_user_key).and_return(depositor.user_key)
     allow(view).to receive(:blacklight_config).and_return(Blacklight::Configuration.new)
@@ -99,6 +100,13 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
       it 'omits the UniversalViewer' do
         expect(page).not_to have_selector 'div.viewer'
       end
+    end
+  end
+
+  describe 'head tag page title' do
+    it 'appears in head tags' do
+      head_tag = Nokogiri::HTML(rendered).xpath("//head/title")
+      expect(head_tag.text).to eq("Work | My Title | ID: 999 | Hyrax")
     end
   end
 

@@ -36,6 +36,7 @@ RSpec.describe "display a work as its owner" do
 
   context "as a user who is not logged in" do
     let(:work) { create(:public_generic_work, title: ["Magnificent splendor"], source: ["The Internet"], based_near: ["USA"]) }
+    let(:page_title) { { text: "Generic Work | Magnificent splendor | ID: #{work.id} | Hyrax" }.to_param }
 
     before do
       visit work_path
@@ -51,7 +52,7 @@ RSpec.describe "display a work as its owner" do
       expect(page).not_to have_selector "form#fileupload"
 
       # has some social media buttons
-      expect(page).to have_link '', href: "https://twitter.com/intent/tweet/?text=Magnificent+splendor&url=http%3A%2F%2Fwww.example.com%2Fconcern%2Fgeneric_works%2F#{work.id}"
+      expect(page).to have_link '', href: "https://twitter.com/intent/tweet/?#{page_title}&url=http%3A%2F%2Fwww.example.com%2Fconcern%2Fgeneric_works%2F#{work.id}"
 
       # exports EndNote
       expect(page).to have_link 'EndNote'
