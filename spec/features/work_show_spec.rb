@@ -7,14 +7,18 @@ RSpec.describe "display a work as its owner" do
 
   context "as the work owner" do
     let(:work) do
-      create(:work_with_one_file,
+      create(:work,
              with_admin_set: true,
              title: ["Magnificent splendor"],
              source: ["The Internet"],
              based_near: ["USA"],
-             user: user)
+             user: user,
+             ordered_members: [file_set],
+             representative_id: file_set.id)
     end
     let(:user) { create(:user) }
+    let(:file_set) { create(:file_set, user: user, title: ['A Contained FileSet'], content: file) }
+    let(:file) { File.open(fixture_path + '/world.png') }
 
     before do
       sign_in user
@@ -31,6 +35,9 @@ RSpec.describe "display a work as its owner" do
       within '.related-files' do
         expect(page).to have_selector '.attribute-filename', text: 'A Contained FileSet'
       end
+
+      # IIIF manifest does not include locale query param
+      expect(find('div.viewer:first')['data-uri']).to eq "/concern/generic_works/#{work.id}/manifest"
     end
   end
 

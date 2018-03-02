@@ -80,17 +80,6 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
       it 'renders the UniversalViewer' do
         expect(page).to have_selector 'div.viewer'
       end
-
-      context 'with default_url_options' do
-        before do
-          allow(controller).to receive(:default_url_options).and_return(locale: I18n.locale)
-        end
-
-        it 'strips the locale from the manifest url' do
-          expect(controller.default_url_options.keys).to include :locale
-          expect(page.find_css('div.viewer')[0]['data-uri']).to eq '/concern/generic_works/999/manifest'
-        end
-      end
     end
 
     context 'when presenter says it is disabled' do
