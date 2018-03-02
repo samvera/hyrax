@@ -40,6 +40,7 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
   context 'with a user who can read the admin dash' do
     let(:read_admin_dashboard) { true }
 
+    before { render }
     subject { rendered }
 
     it { is_expected.to have_link t('hyrax.admin.sidebar.statistics') }
