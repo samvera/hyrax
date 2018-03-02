@@ -1,0 +1,18 @@
+class CreateResourceStats < ActiveRecord::Migration<%= migration_version %>
+  def change
+    create_table :resource_stats do |t|
+      t.datetime :date, null: false
+      t.integer :user_id
+      t.integer :downloads
+      t.integer :pageviews
+      t.integer :unique_visitors
+      t.integer :returning_visitors
+      t.string :resource_id
+      t.string :resource_type
+
+      t.timestamps
+    end
+    add_index :resource_stats, :date
+    add_index :resource_stats, [:date, :resource_id, :resource_type]
+  end
+end
