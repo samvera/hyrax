@@ -7,6 +7,7 @@ FactoryBot.define do
     nestable true
     discoverable true
     sharable true
+    brandable true
     share_applies_to_new_works true
     allow_multiple_membership true
     require_membership false
@@ -68,6 +69,14 @@ FactoryBot.define do
 
     trait :not_discoverable do
       discoverable false
+    end
+
+    trait :brandable do
+      brandable true
+    end
+
+    trait :not_brandable do
+      brandable false
     end
 
     trait :sharable do

@@ -5,6 +5,7 @@
 <div class="collection-types-settings">
   <div class="form-inline">
     <p><%= f.input :nestable, as: :boolean, disabled: f.object.all_settings_disabled? %></p>
+    <p><%= f.input :brandable, as: :boolean, disabled: f.object.all_settings_disabled? %></p>
     <p><%= f.input :discoverable, as: :boolean, disabled: f.object.all_settings_disabled? %></p>
     <p><%= f.input :sharable, as: :boolean, disabled: f.object.all_settings_disabled? %></p>
     <% # Using html instead of simple_form to allow adding of disabled class to elements through javascript settings.es6 %>

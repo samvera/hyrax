@@ -825,9 +825,19 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         sign_in user
       end
 
-      it 'always includes branding' do
-        visit "/dashboard/collections/#{collection.id}/edit"
-        expect(page).to have_link('Branding', href: '#branding')
+      context 'with brandable set' do
+        let(:brandable_collection_id) { create(:collection, user: user, collection_type_settings: [:brandable], create_access: true).id }
+        let(:not_brandable_collection_id) { create(:collection, user: user, collection_type_settings: [:not_brandable], create_access: true).id }
+
+        it 'to true, it shows Branding tab' do
+          visit "/dashboard/collections/#{brandable_collection_id}/edit"
+          expect(page).to have_link('Branding', href: '#branding')
+        end
+
+        it 'to false, it hides Branding tab' do
+          visit "/dashboard/collections/#{not_brandable_collection_id}/edit"
+          expect(page).not_to have_link('Branding', href: '#branding')
+        end
       end
 
       context 'with discoverable set' do
