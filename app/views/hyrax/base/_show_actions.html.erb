@@ -7,9 +7,22 @@
       <%= link_to "Delete", [main_app, presenter], class: 'btn btn-danger', data: { confirm: "Delete this #{presenter.human_readable_type}?" }, method: :delete %>
       <% if presenter.member_presenters.size > 1 %>
           <%= link_to t("hyrax.file_manager.link_text"), polymorphic_path([main_app, :file_manager, presenter]), class: 'btn btn-default' %>
+      <% end %> 
+      <% if presenter.valid_child_concerns.length > 0 %>
+        <div class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Attach Child <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <% presenter.valid_child_concerns.each do |concern| %>
+              <li>
+                <%= link_to "Attach #{concern.human_readable_type}", polymorphic_path([main_app, :new, :hyrax, :parent, concern.model_name.singular], parent_id: presenter.id) %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
       <% end %>
   <% end %>
-
   <% if presenter.work_featurable? %>
       <%= link_to "Feature", hyrax.featured_work_path(presenter, format: :json),
           data: { behavior: 'feature' },
