@@ -29,8 +29,12 @@
 
   <% if can?(:download, file_set.id) %>
     <li role="menuitem" tabindex="-1">
-      <%= link_to 'Download', hyrax.download_path(file_set),
-        title: "Download #{file_set.to_s.inspect}", target: "_blank" %>
+      <%= link_to 'Download',
+                  hyrax.download_path(file_set),
+                  title: "Download #{file_set.to_s.inspect}",
+                  target: "_blank",
+                  id: "file_download",
+                  data: { label: file_set.id } %>
     </li>
   <% end %>
 
