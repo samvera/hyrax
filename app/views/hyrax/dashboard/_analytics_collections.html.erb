@@ -22,13 +22,16 @@
           </tr>
           </thead>
           <tbody>
-          <%= render 'analytics_collections_ajax' %>
+          <% @collection_rows.each do |row| %>
+            <tr>
+              <td><%= row.collection_name %></td>
+              <td><%= row.updated %></td>
+              <td><%= row.work_count %></td>
+              <td><%= row.file_count %></td>
+            </tr>
+          <% end %>
           </tbody>
         </table>
-        <div class="pagination, pull-right">
-          <%= page_entries_info @collection_rows %>
-          <%= paginate @collection_rows, remote: true %>
-        </div>
       </div>
     </div>
   </div>
