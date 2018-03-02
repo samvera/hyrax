@@ -1,4 +1,4 @@
-RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_repo: true, js: true, with_nested_reindexing: true do
+RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_repo: true, js: true do
   let(:admin_user) { create(:admin, email: 'admin@example.com') }
   let(:single_membership_type_1) { create(:collection_type, :not_allow_multiple_membership, title: 'Single-membership 1') }
   let(:single_membership_type_2) { create(:collection_type, :not_allow_multiple_membership, title: 'Single-membership 2') }
