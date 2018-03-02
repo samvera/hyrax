@@ -7,7 +7,7 @@ RSpec.describe 'Creating a new Work as admin', :js, :workflow do
                        edit_users: [user.user_key])
   end
   let(:admin_set_2) do
-    create(:admin_set, title: ["Second Admin Set"],
+    create(:admin_set, title: ["Another Admin Set"],
                        description: ["A description"],
                        edit_users: [user.user_key])
   end
@@ -35,7 +35,7 @@ RSpec.describe 'Creating a new Work as admin', :js, :workflow do
       click_button 'Create work'
       click_link "Relationship" # switch tab
       expect(page).to have_content('Administrative Set')
-      expect(page).to have_content('Second Admin Set')
+      expect(page).to have_content('Another Admin Set')
       expect(page).to have_content('Default Admin Set')
       expect(page).to have_selector('select#generic_work_admin_set_id')
       expect(page).to have_select('generic_work_admin_set_id', selected: 'Default Admin Set')
