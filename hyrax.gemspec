@@ -105,8 +105,9 @@ SUMMARY
   ########################################################
   # Temporarily pinned dependencies. INCLUDE EXPLANATIONS.
   #
-  # simple_form 3.5.1 broke local and Travis builds in bad ways for unknown reasons
-  spec.add_dependency 'simple_form', '=3.5.0'
+  # simple_form 3.5.1 broke hydra-editor for certain model types;
+  #   see: https://github.com/plataformatec/simple_form/issues/1549
+  spec.add_dependency 'simple_form', '~> 3.2', '<= 3.5.0'
   # parser 2.5.0.0 broke local and Travis rubocop checks due to a change in parsing
   spec.add_development_dependency 'parser', '< 2.5'
 end
