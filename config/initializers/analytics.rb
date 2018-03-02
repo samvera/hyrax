@@ -2,10 +2,11 @@
 # Needs to run after other initializers
 Rails.application.config.after_initialize do
   filename = Rails.root.join('config', 'analytics.yml')
+  next unless File.exist?(filename)
   yaml = YAML.safe_load(File.read(filename))
   unless yaml
     Rails.logger.error("Unable to fetch any keys from #{filename}.")
-    return
+    next
   end
   config = yaml.fetch('analytics')
 
