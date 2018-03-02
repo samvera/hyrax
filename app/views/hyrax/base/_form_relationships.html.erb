@@ -3,8 +3,7 @@
   <%= f.input :admin_set_id, as: :select,
       include_blank: false,
       collection: Hyrax::AdminSetOptionsPresenter.new(Hyrax::AdminSetService.new(controller)).select_options,
-      input_html: { class: 'form-control' },
-      selected: AdminSet::DEFAULT_ID %>
+      input_html: { class: 'form-control' } %>
 <% end %>
 
 <%= render 'form_in_works', f: f %>
