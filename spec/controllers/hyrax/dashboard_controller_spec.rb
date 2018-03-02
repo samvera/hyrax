@@ -40,24 +40,5 @@ RSpec.describe Hyrax::DashboardController, type: :controller do
       expect(assigns[:admin_set_rows]).to eq results
       expect(response).to render_template('show_admin')
     end
-
-    context 'with updated table' do
-      let(:response) do
-        allow(DashboardController).to receive(:get_data).and_return(response)
-      end
-
-      def response
-        {
-            'rows' => '<tr><td>dd</td></tr>'
-        }.to_json
-      end
-
-      it "returns json" do
-        get :update_collections
-        parsed_response = JSON.parse(response)
-        puts parsed_response['rows']
-        expect(parsed_response['rows']).to eq('<tr><td>dd</td></tr>')
-      end
-    end
   end
 end
