@@ -1,0 +1,11 @@
+<% if Flipflop.analytics_redesign? %>
+  <div class="admin-repo-charts">
+    <ul id="objects-graph" class="list-unstyled list-inline analytics-options">
+      <li><%= link_to t('.repository_objects.subtitle_visible'), "#", id: "total-visibility", remote: true %></li>
+      <li><%= link_to t('.repository_objects.subtitle_work'), "#", id: "total-works", class: "stats-selected", remote: true %></li>
+      <li><%= link_to t('.repository_objects.subtitle_resource'), "#", id: "total-resources", remote: true %></li>
+    </ul>
+  </div>
+<% else %>
+  <div><%= t('.repository_objects.subtitle') %></div>
+<% end %>
