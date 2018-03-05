@@ -611,7 +611,7 @@ en:
             action: Action
             agent_name: User/Group
             empty: No depositors have been added to this collection.
-            help: Depositors of this collection can view the collection and add works to it, even if the visibility permissions of the collecton otherwise would not permit them to view it.
+            help: Depositors of this collection can view the collection and add works to it, even if the visibility permissions of the collection otherwise would not permit them to view it.
             remove: Remove
             title: Depositors
             type: Type
