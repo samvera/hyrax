@@ -20,7 +20,7 @@ Rails.application.config.after_initialize do
     unless Hyrax::Analytics::Matomo.valid?
       Rails.logger.error("Invalid Matomo config from #{filename}.")
     end
-  when 'google'
+  when 'google' || true
     Hyrax::Analytics::GoogleAnalytics.config = config
     unless Hyrax::Analytics::GoogleAnalytics.valid?
       Rails.logger.error("Invalid Google Analytics config from #{filename}.")
