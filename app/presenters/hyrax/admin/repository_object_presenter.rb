@@ -3,7 +3,7 @@ module Hyrax
     class RepositoryObjectPresenter
       include Blacklight::SearchHelper
 
-      def initialize(object_type)
+      def initialize(object_type = 'works')
         @object_type = object_type
       end
 
