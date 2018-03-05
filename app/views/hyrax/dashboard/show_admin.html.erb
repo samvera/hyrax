@@ -51,7 +51,7 @@
         <div><%= t('.user_activity.subtitle') %></div>
       </div>
       <div class="panel-body text-center">
-        <div id="user-activity" style="height: 200px"><%= javascript_tag "Hyrax.statistics.userActivity = #{@presenter.user_activity.to_json}" %></div>
+        <%= bar_chart @presenter.user_activity, id: "user-activity", height: "200px", colors: ['#a6cee3','#d8b365','#5ab4ac', '#f5f5f5',] %>
       </div>
     </div>
   </div>
@@ -63,7 +63,7 @@
         <%= render 'analytics_growth' %>
       </div>
       <div class="panel-body text-center">
-        <div id="dashboard-growth" style="height: 200px"><%= javascript_tag "Hyrax.statistics.repositoryGrowth = #{@presenter.repository_growth.to_json}" %></div>
+        <%= line_chart @presenter.repository_growth, id: "dashboard-growth", height: "200px", colors: ['#a6cee3','#d8b365','#5ab4ac', '#f5f5f5'] %>
       </div>
     </div>
   </div>
@@ -75,7 +75,7 @@
         <%= render 'analytics_object_counts' %>
       </div>
       <div class="panel-body text-center">
-        <div id="dashboard-repository-objects" style="height: 200px"><%= javascript_tag "Hyrax.statistics.repositoryObjects = #{@presenter.repository_objects.to_json}" %></div>
+        <%= pie_chart @presenter.repository_objects, id: "dashboard-repository-objects", height: "200px", donut: true, colors: ['#a6cee3','#d8b365','#5ab4ac', '#f5f5f5',] %>
       </div>
     </div>
   </div>

@@ -7,9 +7,15 @@ module Hyrax
       end
 
       def as_json(*)
+        new_users_list = { name: I18n.translate('hyrax.dashboard.show_admin.new_visitors'), data: [] }
+        returning_users_list = { name: I18n.translate('hyrax.dashboard.show_admin.returning_visitors'), data: [] }
+
         new_users.to_a.zip(returning_users.to_a).map do |e|
-          { y: e.first.first, a: e.first.last, b: e.last.try(:last) }
+          new_users_list[:data] << [e.first.first, e.first.last]
+          returning_users_list[:data] << [e.first.first, e.last.try(:last)]
         end
+
+        [new_users_list, returning_users_list]
       end
 
       private
