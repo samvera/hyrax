@@ -72,7 +72,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <div class="h3 panel-title"><%= t('.repository_objects.title') %></div>
-        <%= render 'analtyics_object_counts' %>
+        <%= render 'analytics_object_counts' %>
       </div>
       <div class="panel-body text-center">
         <div id="dashboard-repository-objects" style="height: 200px"><%= javascript_tag "Hyrax.statistics.repositoryObjects = #{@presenter.repository_objects.to_json}" %></div>
