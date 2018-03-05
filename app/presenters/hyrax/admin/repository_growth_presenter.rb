@@ -1,8 +1,8 @@
 module Hyrax
   module Admin
     class RepositoryGrowthPresenter
-      def initialize
-        @x_min = 90.days.ago.beginning_of_day
+      def initialize(time_period = 90)
+        @x_min = Integer(time_period).days.ago.beginning_of_day
         @date_format = ->(x) { x.strftime('%F') }
       end
 
