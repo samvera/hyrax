@@ -73,6 +73,25 @@ RSpec.describe Hyrax::Renderers::AttributeRenderer do
     end
   end
 
+  describe "#render_dl_row" do
+    subject { Nokogiri::HTML(renderer.render_dl_row) }
+
+    let(:expected) { Nokogiri::HTML(dl_content) }
+    let(:dl_content) do
+      "<dt>Name</dt>\n" \
+       "<dd><ul class='tabular'><li class=\"attribute attribute-name\">Bob</li>\n" \
+       "<li class=\"attribute attribute-name\">Jessica</li>\n" \
+       "</ul></dd>"
+    end
+
+    before do
+      allow(Hyrax.config).to receive(:display_microdata?).and_return(false)
+    end
+
+    it { expect(renderer).not_to be_microdata(field) }
+    it { expect(subject).to be_equivalent_to(expected) }
+  end
+
   describe "#label" do
     subject { renderer }
 
