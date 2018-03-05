@@ -67,6 +67,14 @@ RSpec.describe 'Routes', type: :routing do
       expect(get: '/dashboard/activity').to route_to(controller: 'hyrax/dashboard', action: 'activity')
     end
 
+    it "routes to dashboard repository growth chart update" do
+      expect(get: '/dashboard/repository_growth').to route_to(controller: 'hyrax/dashboard', action: 'repository_growth')
+    end
+
+    it "routes to dashboard repository obects chart update" do
+      expect(get: '/dashboard/repository_object_counts').to route_to(controller: 'hyrax/dashboard', action: 'repository_object_counts')
+    end
+
     it "routes to all works" do
       expect(get: '/dashboard/works').to route_to(controller: 'hyrax/dashboard/works', action: 'index')
     end
