@@ -55,7 +55,7 @@
         <div><%= t('.user_activity.subtitle') %></div>
       </div>
       <div class="panel-body text-center">
-        <%= bar_chart @presenter.user_activity, id: "user-activity", height: "200px", colors: ['#a6cee3','#d8b365','#5ab4ac', '#f5f5f5',] %>
+        <%= bar_chart @presenter.user_activity, id: "user-activity" %>
       </div>
     </div>
   </div>
@@ -67,7 +67,7 @@
         <%= render 'analytics_growth' %>
       </div>
       <div class="panel-body text-center">
-        <%= line_chart @presenter.repository_growth, id: "dashboard-growth", height: "200px", colors: ['#a6cee3','#d8b365','#5ab4ac', '#f5f5f5'] %>
+        <%= line_chart @presenter.repository_growth, id: "dashboard-growth" %>
       </div>
     </div>
   </div>
@@ -79,7 +79,7 @@
         <%= render 'analytics_object_counts' %>
       </div>
       <div class="panel-body text-center">
-        <%= pie_chart @presenter.repository_objects, id: "dashboard-repository-objects", height: "200px", donut: true, colors: ['#a6cee3','#d8b365','#5ab4ac', '#f5f5f5',] %>
+        <%= pie_chart @presenter.repository_objects, id: "dashboard-repository-objects", donut: true %>
       </div>
     </div>
   </div>
