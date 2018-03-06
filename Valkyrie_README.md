@@ -27,19 +27,20 @@
 
 ## TODO:
 
-* Phase 2 (Dec 2017-Jan 2018)
-  * finish up getting test suite green
-  * Versioning
-  * Noid integration
-  * Embargo and Lease - Where should these be persisted
-  * paranoid_edit_permissions moves to ChangeSet
-  * remove_representative_relationship should go into a change set (when you delete a FileSet that is a representative)
-  * Get UI to a functional state
 * Phase 3 (spring 2018)
-  * Persist as PCDM (as migration path from Hyrax 2 to Hyrax 3)
-    * Read from PCDM (migration path)
-    * Write to PCDM (no migration at all)
-  * WebAC
-  * Presenters: Use Draper decorators?
-* Phase ?
+  * Rebase atop latest work (latest 2.1 release with Collection Extensions) and Valkyrize 2.1/CE work
+  * Get the test suite green (the prior bullet will make it red in parts)
+  * Determine how far along versioning is and provide feature parity with Hyrax 2 
+  * Work on noid integration
+  * Decide where Embargo and Lease information should be persisted and implement this
+  * Move paranoid_edit_permissions functionality to a change set
+  * Move remove_representative_relationship into a change set (when you delete a FileSet that is a representative)
+  * Engage Hyrax testing subgroup to do UI testing
+  * Provide smooth migration/upgrade path from Hyrax 2.x to 3
+    * Persist as PCDM (as migration path from Hyrax 2 to Hyrax 3)
+      * Read from PCDM (migration path)
+      * Write to PCDM (no migration at all)
+    * Use WebAC for access controls (
+  * Presenters: Consider using Draper decorators?
+* Wishlist
   * Finish removing direct dependency on Solr
