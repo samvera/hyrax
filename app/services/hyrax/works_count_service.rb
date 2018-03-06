@@ -3,7 +3,7 @@ module Hyrax
   class WorksCountService < CountService
     MAX_ROWS = 1000
     SearchResultForWorkCount = Struct.new(:work_name, :updated, :work_views, :work_type, :visibility)
-
+    
     # Returns list of works
     # @param [Symbol] access :read or :edit
     # @return [Array<Hyrax::WorksCountService::SearchResultForWorkCount>] a list with documents
