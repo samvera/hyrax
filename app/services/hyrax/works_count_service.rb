@@ -3,24 +3,22 @@ module Hyrax
   class WorksCountService < CountService
     SearchResultForWorkCount = Struct.new(:work_name, :updated, :work_views, :work_type, :visibility)
 
-    # This performs a two pass query, first getting the AdminSets
-    # and then getting the work and file counts
+    # Returns list of works
     # @param [Symbol] access :read or :edit
-    # @param join_field [String] how are we joining the admin_set ids (by default "isPartOf_ssim")
-    # @return [Array<Hyrax::AdminSetService::SearchResultForWorkCount>] a list with document, then work and file count
-    def search_results_with_work_count(access, join_field: "isPartOf_ssim")
+    # @return [Array<Hyrax::WorksCountService::SearchResultForWorkCount>] a list with documents
+    def search_results_with_work_count(access)
       works = search_results(access)
-      ids = works.map(&:id).join(',')
-      query = "{!terms f=#{join_field}}#{ids}"
-      results = ActiveFedora::SolrService.instance.conn.get(
-          ActiveFedora::SolrService.select_path,
-          params: { fq: query,
-                    'facet.field' => join_field }
-      )
-      counts = results['facet_counts']['facet_fields'][join_field].each_slice(2).to_h
+
       works.map do |work|
-        SearchResultForWorkCount.new(work.title[0], work.date_modified, counts[work.id].to_i, work.type, work.visibility)
+        created_date = DateTime.parse(work['system_create_dtsi']).strftime("%Y-%m-%d")
+        SearchResultForWorkCount.new(work, created_date, 0, work['human_readable_type_tesim'][0], work['visibility_ssi'])
       end
+    end
+
+    private
+    
+    def builder(_)
+      search_builder.new(context).rows(1000)
     end
   end
 end
