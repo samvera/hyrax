@@ -13,9 +13,9 @@ module Hyrax
       ids = collections.map(&:id).join(',')
       query = "{!terms f=#{join_field}}#{ids}"
       results = ActiveFedora::SolrService.instance.conn.get(
-          ActiveFedora::SolrService.select_path,
-          params: { fq: query,
-                    'facet.field' => join_field }
+        ActiveFedora::SolrService.select_path,
+        params: { fq: query,
+                  'facet.field' => join_field }
       )
       counts = results['facet_counts']['facet_fields'][join_field].each_slice(2).to_h
       file_counts = count_files(results)
@@ -27,36 +27,34 @@ module Hyrax
     end
 
     private
-    # Count number of files from works
-    # @param [Array] results Solr search result
-    # @return [Hash] collection id keys and file count values
-    def count_files(results)
-      file_counts = Hash.new(0)
-      results['response']['docs'].each do |doc|
-        unless doc['member_of_collection_ids_ssim'].nil?
+
+      # Count number of files from works
+      # @param [Array] results Solr search result
+      # @return [Hash] collection id keys and file count values
+      def count_files(results)
+        file_counts = Hash.new(0)
+        results['response']['docs'].each do |doc|
+          next if doc['member_of_collection_ids_ssim'].nil?
           doc['member_of_collection_ids_ssim'].each do |id|
             file_counts[id] += doc.fetch('file_set_ids_ssim', []).length
           end
         end
+        file_counts
       end
-      file_counts
-    end
 
-    # Get last updated record from a collection
-    def last_updated(results, collection_id)
-      dates = []
+      # Get last updated record from a collection
+      def last_updated(results, collection_id)
+        dates = []
 
-      results['response']['docs'].each do |coll|
-        if coll['member_of_collection_ids_ssim'].include? collection_id
-          unless coll['system_modified_dtsi'].nil?
+        results['response']['docs'].each do |coll|
+          next if !coll['member_of_collection_ids_ssim'].include?(collection_id) ||
+                  coll['system_modified_dtsi'].nil?
           # dates << DateTime.parse(coll['date_modified_dtsi']).strftime("%Y-%m-%d")
-            dates << DateTime.parse(coll['system_modified_dtsi']).strftime("%Y-%m-%d")
-          end
+          dates << DateTime.parse(coll['system_modified_dtsi']).in_time_zone.strftime("%Y-%m-%d")
         end
-      end
 
-      dates.sort!
-      dates.last
-    end
+        dates.sort!
+        dates.last
+      end
   end
 end
