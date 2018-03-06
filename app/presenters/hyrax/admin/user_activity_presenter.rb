@@ -12,7 +12,14 @@ module Hyrax
 
         new_users.to_a.zip(returning_users.to_a).map do |e|
           new_users_list[:data] << [e.first.first, e.first.last]
-          returning_users_list[:data] << [e.first.first, e.last.try(:last)]
+
+          visitor_count = if e.last.nil?
+                            0
+                          else
+                            e.last
+                          end
+
+          returning_users_list[:data] << [e.first.first, visitor_count]
         end
 
         [new_users_list, returning_users_list]
