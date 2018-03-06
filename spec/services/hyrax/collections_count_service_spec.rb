@@ -26,41 +26,41 @@ RSpec.describe Hyrax::CollectionsCountService do
   describe '#search_results_with_work_count' do
     subject { service.search_results_with_work_count(access) }
 
-    let(:access) { :edit}
+    let(:access) { :edit }
     let(:documents) { [doc1, doc2] }
     let(:doc1) { SolrDocument.new(id: 'xyz123') }
     let(:doc2) { SolrDocument.new(id: 'yyx123') }
     let(:connection) { instance_double(RSolr::Client) }
-    let(:facets) {{ 'member_of_collection_ids_ssim' => [doc1.id, 8, doc2.id, 2] }}
+    let(:facets) { { 'member_of_collection_ids_ssim' => [doc1.id, 8, doc2.id, 2] } }
     let(:document_list) do
       [
-          {
-              'member_of_collection_ids_ssim' => ['xyz123'],
-              'member_of_collections_ssim' => ['xyz123'],
-              'file_set_ids_ssim' => ['aaa', 'bbb', 'ccc'],
-              'system_modified_dtsi' => '2015-01-01T20:50:35Z',
-              'title_tesim' => ['xyz123']
-          },
-          {
-              'member_of_collection_ids_ssim' => ['yyx123'],
-              'member_of_collections_ssim' => ['yyx123'],
-              'file_set_ids_ssim' => ['bbb', 'ccc'],
-              'system_modified_dtsi' => '2015-02-01T20:50:35Z',
-              'title_tesim' => ['yyx123']
-          }
+        {
+          'member_of_collection_ids_ssim' => ['xyz123'],
+          'member_of_collections_ssim' => ['xyz123'],
+          'file_set_ids_ssim' => ['aaa', 'bbb', 'ccc'],
+          'system_modified_dtsi' => '2015-01-01T20:50:35Z',
+          'title_tesim' => ['xyz123']
+        },
+        {
+          'member_of_collection_ids_ssim' => ['yyx123'],
+          'member_of_collections_ssim' => ['yyx123'],
+          'file_set_ids_ssim' => ['bbb', 'ccc'],
+          'system_modified_dtsi' => '2015-02-01T20:50:35Z',
+          'title_tesim' => ['yyx123']
+        }
       ]
     end
 
     let(:results) do
       {
-          'response' =>
-              {
-                  'docs' => document_list
-              },
-          'facet_counts' =>
-              {
-                  'facet_fields' => facets
-              }
+        'response' =>
+        {
+          'docs' => document_list
+        },
+        'facet_counts' =>
+        {
+          'facet_fields' => facets
+        }
       }
     end
 
@@ -82,16 +82,16 @@ RSpec.describe Hyrax::CollectionsCountService do
     context "when there are no files in the collection" do
       let(:document_list) do
         [
-            {
-                'member_of_collection_ids_ssim' => ['xyz123'],
-                'member_of_collections_ssim' => ['xyz123'],
-                'title_tesim' => ['xyz123']
-            },
-            {
-                'member_of_collection_ids_ssim' => ['xyz123', 'yyx123'],
-                'member_of_collections_ssim' => ['xyz123', 'yyx123'],
-                'title_tesim' => ['yyx123']
-            }
+          {
+            'member_of_collection_ids_ssim' => ['xyz123'],
+            'member_of_collections_ssim' => ['xyz123'],
+            'title_tesim' => ['xyz123']
+          },
+          {
+            'member_of_collection_ids_ssim' => ['xyz123', 'yyx123'],
+            'member_of_collections_ssim' => ['xyz123', 'yyx123'],
+            'title_tesim' => ['yyx123']
+          }
         ]
       end
 
