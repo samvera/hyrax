@@ -250,6 +250,8 @@ body.dashboard {
   }
 
   .analytics-options {
+    margin-bottom: 0;
+
     li:not(:last-child) {
       border-right: 1px solid $panel-default-border;
     }
