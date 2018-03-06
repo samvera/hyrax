@@ -53,6 +53,5 @@ Blacklight.onLoad(function() {
   function updateChart(id, data) {
     var chart = Chartkick.charts[id];
     chart.updateData(data);
-   // chart.redraw();
   }
 });
