@@ -14,7 +14,7 @@ RSpec.describe Hyrax::Admin::UserActivityPresenter do
     end
 
     it "returns points" do
-      expect(subject).to eq '[{"name":"New Visitors","data":[["2017-02-16","12"]]},{"name":"Returning Visitors","data":[["2017-02-16",null]]}]'
+      expect(subject).to eq '[{"name":"New Visitors","data":[["2017-02-16","12"]]},{"name":"Returning Visitors","data":[["2017-02-16",0]]}]'
     end
   end
 end
