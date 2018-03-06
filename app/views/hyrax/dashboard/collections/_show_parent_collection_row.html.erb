@@ -1,6 +1,10 @@
-<li style="margin: 5px 0">
-	<%# TODO: move styling into CSS %>
-	<strong><%= link_to document, [hyrax, :dashboard, document], id: "src_copy_link_#{document.id}" %></strong>
-	<button class="btn btn-xs btn-danger remove-from-collection-button pull-right" <%= "disabled" unless can? :edit, document.id %>><%= t('hyrax.collections.show.buttons.remove_from_collection') %></button>
+<li>
+	<div class="flex-wrapper">
+		<div class="collections-list-title">
+			<%= link_to document, [hyrax, :dashboard, document], id: "src_copy_link_#{document.id}" %>
+		</div>
+		<button class="btn btn-xs btn-danger remove-from-collection-button" <%= "disabled" unless can? :edit, document.id %>><%= t('hyrax.collections.show.buttons.remove_from_collection') %></button>
+	</div>
+
 	<%= render 'modal_remove_from_collection', child_id: id, parent_id: document.id %>
 </li>
