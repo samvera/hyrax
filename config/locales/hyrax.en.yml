@@ -560,6 +560,13 @@ en:
         works: Works
         collection: collection
         collection_count: in repository
+      analytics_works:
+        header:   Works
+        title:      Work title
+        deposited:  Deposited
+        views:      Views
+        work_type:  Work Type
+        visibility: Visibility
       managed:
         collections: Managed Collections
         works: Managed Works
