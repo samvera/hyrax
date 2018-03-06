@@ -7,7 +7,9 @@ RuboCop::RakeTask.new(:rubocop) do |task|
   task.fail_on_error = true
 end
 
-RSpec::Core::RakeTask.new(:spec)
+RSpec::Core::RakeTask.new(:spec) do |task|
+  task.rspec_opts = "--tag ~type:feature" if ENV['SKIP_FEATURE_TESTS']
+end
 
 desc 'Spin up test servers and run specs'
 task :spec_with_app_load do
