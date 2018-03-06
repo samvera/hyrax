@@ -17,13 +17,9 @@ Rails.application.config.after_initialize do
     Piwik::PIWIK_TOKEN = config['matomo_token']
 
     Hyrax::Analytics::Matomo.config = config
-    unless Hyrax::Analytics::Matomo.valid?
-      Rails.logger.error("Invalid Matomo config from #{filename}.")
-    end
+    Rails.logger.error("Invalid Matomo config from #{filename}.") unless Hyrax::Analytics::Matomo.valid?
   when 'google' || true
     Hyrax::Analytics::GoogleAnalytics.config = config
-    unless Hyrax::Analytics::GoogleAnalytics.valid?
-      Rails.logger.error("Invalid Google Analytics config from #{filename}.")
-    end
+    Rails.logger.error("Invalid Google Analytics config from #{filename}.") unless Hyrax::Analytics::GoogleAnalytics.valid?
   end
 end
