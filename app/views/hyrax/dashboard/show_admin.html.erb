@@ -51,7 +51,7 @@
         <div><%= t('.user_activity.subtitle') %></div>
       </div>
       <div class="panel-body text-center">
-        <%= column_chart @presenter.user_activity, id: "user-activity" %>
+        <%= column_chart @presenter.user_activity, id: "user-activity", statcked: true  %>
       </div>
     </div>
   </div>
