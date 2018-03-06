@@ -97,7 +97,8 @@ module Hyrax
       # Return an authorized Google Analytics Reporting Service
       def self.setup_and_authorize
         unless File.exist?(config['privkey_path'])
-          raise "Private key file for Google Analytics was expected at '#{config['privkey_path']}', but no file was found."
+          raise "Private key file for Google Analytics was expected at '#{config['privkey_path']}',\
+                but no file was found."
         end
         analytics = Google::Apis::AnalyticsreportingV4::AnalyticsReportingService.new
         credentials = Google::Auth::ServiceAccountCredentials.make_creds(json_key_io: File.open(config['privkey_path']))

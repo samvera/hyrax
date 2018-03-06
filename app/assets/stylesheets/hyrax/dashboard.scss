@@ -256,14 +256,14 @@ body.dashboard {
       border-right: 1px solid $panel-default-border;
     }
 
-    li.analytics-borderless {
-      border: none;
+    .analytics-borderless {
+      border: 0;
     }
   }
 
   .stats-selected {
     color: $gray-base;
-    text-decoration: none;
     cursor: default;
+    text-decoration: none;
   }
 }
