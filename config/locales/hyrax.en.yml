@@ -27,7 +27,7 @@ en:
           keyword: Keyword
       filters:
         title: 'Filtering by:'
-      start_over: Clear filters
+      start_over: 'Start Over'
   errors:
     messages:
       carrierwave_download_error: Couldn't download image.
