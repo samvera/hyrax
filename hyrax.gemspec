@@ -107,4 +107,13 @@ EOF
   spec.add_development_dependency 'webmock'
   spec.add_development_dependency 'i18n-debug' if ENV['I18N_DEBUG']
   spec.add_development_dependency 'i18n_yaml_sorter' unless ENV['TRAVIS']
+
+  ########################################################
+  # Temporarily pinned dependencies. INCLUDE EXPLANATIONS.
+  #
+  # simple_form 3.5.1 broke hydra-editor for certain model types;
+  #   see: https://github.com/plataformatec/simple_form/issues/1549
+  spec.add_dependency 'simple_form', '~> 3.2', '<= 3.5.0'
+  # parser 2.5.0.0 broke local and Travis rubocop checks due to a change in parsing
+  spec.add_development_dependency 'parser', '< 2.5'
 end

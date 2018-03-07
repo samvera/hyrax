@@ -10,6 +10,7 @@ class Hyrax::CatalogSearchBuilder < Hyrax::SearchBuilder
     return if blacklight_params[:q].blank? || blacklight_params[:search_field] != 'all_fields'
     solr_parameters[:user_query] = blacklight_params[:q]
     solr_parameters[:q] = new_query
+    solr_parameters[:defType] = 'lucene'
   end
 
   # show works that are in the active state.
