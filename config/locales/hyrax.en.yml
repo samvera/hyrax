@@ -560,6 +560,19 @@ en:
         works: Works
         collection: collection
         collection_count: in repository
+      analytics_growth:
+        repository_growth:
+          subtitle:         Past
+          subtitle_full:    Past 90 days
+          subtitle_30_days: 30 days
+          subtitle_90_days: 90 days
+          subtitle_1_year:  1 year
+      analytics_object_counts:
+        repository_objects:
+          subtitle:          Current Status
+          subtitle_visible:  Visibility
+          subtitle_work:     Works
+          subtitle_resource: Resources
       managed:
         collections: Managed Collections
         works: Managed Works

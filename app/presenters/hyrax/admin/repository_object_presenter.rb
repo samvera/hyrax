@@ -3,10 +3,13 @@ module Hyrax
     class RepositoryObjectPresenter
       include Blacklight::SearchHelper
 
+      def initialize(object_type = 'works')
+        @object_type = object_type
+      end
+
       def as_json(*)
         counts.map do |k, v|
-          { label: I18n.translate(k, scope: 'hyrax.admin.stats.repository_objects.series'),
-            value: v }
+          [I18n.translate(k, scope: 'hyrax.admin.stats.repository_objects.series'), v]
         end
       end
 
