@@ -66,4 +66,28 @@ RSpec.describe ResourceStat, type: :model do
       expect(ResourceStat.site_range_stats(start_date, end_date).map(&:unique_visitors)).to eq([123])
     end
   end
+
+  describe ".site_unique_visitors" do
+    let(:user_id) { 123 }
+    let(:resource_id) { "199" }
+
+    it 'finds site-wide statistics in a given time range' do
+      ResourceStat.create(date: DateTime.new(2018, 2, 4).in_time_zone, unique_visitors: 123)
+      ResourceStat.create(date: DateTime.new(2018, 2, 17).in_time_zone, unique_visitors: 234, resource_id: resource_id, user_id: 123)
+
+      expect(ResourceStat.site_unique_visitors.map(&:unique_visitors)).to eq([123])
+    end
+  end
+
+  describe ".site_returning_visitors" do
+    let(:user_id) { 123 }
+    let(:resource_id) { "199" }
+
+    it 'finds site-wide statistics in a given time range' do
+      ResourceStat.create(date: DateTime.new(2018, 2, 4).in_time_zone, returning_visitors: 123)
+      ResourceStat.create(date: DateTime.new(2018, 2, 17).in_time_zone, returning_visitors: 234, resource_id: resource_id, user_id: 123)
+
+      expect(ResourceStat.site_returning_visitors.map(&:returning_visitors)).to eq([123])
+    end
+  end
 end
