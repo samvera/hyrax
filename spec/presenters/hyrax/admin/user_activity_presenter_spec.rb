@@ -4,17 +4,23 @@ RSpec.describe Hyrax::Admin::UserActivityPresenter do
   describe "#to_json" do
     subject { instance.to_json }
 
-    let(:users) do
-      instance_double(Hyrax::Statistics::Users::OverTime,
-                      points: [['2017-02-16', '12']])
+    let(:unique_visitors) do
+      instance_double(Hyrax::Statistics::Site::UniqueVisitors,
+                      points: [["Feb 21", 0], ["Feb 28", 20], ["Mar 7", 10]])
+    end
+
+    let(:returning_visitors) do
+      instance_double(Hyrax::Statistics::Site::ReturningVisitors,
+                      points: [["Feb 21", 5], ["Feb 28", 10], ["Mar 7", 0]])
     end
 
     before do
-      allow(Hyrax::Statistics::Users::OverTime).to receive(:new).and_return(users)
+      allow(Hyrax::Statistics::Site::UniqueVisitors).to receive(:new).and_return(unique_visitors)
+      allow(Hyrax::Statistics::Site::ReturningVisitors).to receive(:new).and_return(returning_visitors)
     end
 
     it "returns points" do
-      expect(subject).to eq '[{"name":"New Visitors","data":[["2017-02-16","12"]]},{"name":"Returning Visitors","data":[["2017-02-16",0]]}]'
+      expect(subject).to eq '[{"name":"New Visitors","data":[["Feb 21",0],["Feb 28",20],["Mar 7",10]]},{"name":"Returning Visitors","data":[["Feb 21",5],["Feb 28",10],["Mar 7",0]]}]'
     end
   end
 end
