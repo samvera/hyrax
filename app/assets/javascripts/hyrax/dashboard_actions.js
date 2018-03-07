@@ -54,4 +54,6 @@ Blacklight.onLoad(function() {
     var chart = Chartkick.charts[id];
     chart.updateData(data);
   }
+
+  $('#analytics-works-table').DataTable();
 });
