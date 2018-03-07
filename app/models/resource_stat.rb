@@ -15,4 +15,10 @@ class ResourceStat < ApplicationRecord
   scope :resource_range_stats, ->(start_date, end_date, resource_id, user_id) { where('date BETWEEN ? AND ? AND resource_id = ? AND user_id = ?', start_date, end_date, resource_id, user_id) }
   # Statistics for the site, in a time range
   scope :site_range_stats, ->(start_date, end_date) { where('date BETWEEN ? AND ? AND resource_id IS NULL AND user_id IS NULL', start_date, end_date) }
+
+  # Queries for Hyrax::Statistics queries
+
+  # Unique visitors for the site
+  scope :site_unique_visitors, -> { select('unique_visitors').where('resource_id IS NULL AND user_id IS NULL') }
+  scope :site_returning_visitors, -> { select('returning_visitors').where('resource_id IS NULL AND user_id IS NULL') }
 end
