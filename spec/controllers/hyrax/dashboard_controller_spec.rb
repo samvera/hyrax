@@ -23,21 +23,25 @@ RSpec.describe Hyrax::DashboardController, type: :controller do
   end
 
   context 'with an admin user' do
-    let(:service) { instance_double(Hyrax::AdminSetService, search_results_with_work_count: results) }
-    let(:results) { instance_double(Array) }
+    let(:service_collections) { instance_double(Hyrax::CollectionsCountService, search_results_with_work_count: results_collections) }
+    let(:service_works) { instance_double(Hyrax::WorksCountService, search_results_with_work_count: results_works) }
+    let(:results_collections) { instance_double(Array) }
+    let(:results_works) { instance_double(Array) }
     let(:user) { create(:admin) }
     let(:access) { :edit }
     let(:read_admin_dashboard) { true }
 
     before do
       sign_in user
-      allow(Hyrax::AdminSetService).to receive(:new).and_return(service)
+      allow(Hyrax::CollectionsCountService).to receive(:new).and_return(service_collections)
+      allow(Hyrax::WorksCountService).to receive(:new).and_return(service_works)
     end
 
     it "is successful" do
       get :show
       expect(response).to be_success
-      expect(assigns[:admin_set_rows]).to eq results
+      expect(assigns[:collection_rows]).to eq results_collections
+      expect(assigns[:work_rows]).to eq results_works
       expect(response).to render_template('show_admin')
     end
   end
