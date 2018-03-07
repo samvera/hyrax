@@ -12,7 +12,7 @@
       <tbody>
         <% messages.each do |msg| %>
           <tr>
-            <td>
+            <td data-sort="<%= msg.last_message.created_at.getutc.iso8601(5) %>">
               <relative-time datetime="<%= msg.last_message.created_at.getutc.iso8601 %>" title="<%= msg.last_message.created_at.to_formatted_s(:standard) %>">
                 <%= msg.last_message.created_at.to_formatted_s(:long_ordinal) %>
               </relative-time>
