@@ -525,6 +525,7 @@ pt-BR:
         featured_researcher: Pesquisador em destaque
         marketing_text: Texto de marketing
       updated: Blocos de conteúdo atualizados.
+      change_tab_message: Sei sicuro di voler lasciare questa scheda? Tutti i dati non salvati andranno persi.      
     controls:
       about: Sobre
       contact: Contato

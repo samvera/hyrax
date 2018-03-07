@@ -531,6 +531,7 @@ fr:
         featured_researcher: Chercheur en vedette
         marketing_text: Texte de marketing
       updated: Les blocs de contenu sont mis à jour.
+      change_tab_message: Êtes-vous sûr de vouloir quitter cet onglet? Toutes les données non enregistrées seront perdues.      
     controls:
       about: Sur
       contact: Contact

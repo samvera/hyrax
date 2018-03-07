@@ -1,13 +1,14 @@
+<%= render "modal_content_block"%>
 <div class="panel panel-default tabs">
   <ul class="nav nav-tabs" role="tablist">
     <li class="active">
-      <a href="#announcement_text" role="tab" data-toggle="tab"><%= t(:'hyrax.content_blocks.tabs.announcement_text') %></a>
+      <a href="#announcement_text" role="tab" data-toggle="tab" class="show-confirm"><%= t(:'hyrax.content_blocks.tabs.announcement_text') %></a>
     </li>
     <li>
-      <a href="#marketing" role="tab" data-toggle="tab"><%= t(:'hyrax.content_blocks.tabs.marketing_text') %></a>
+      <a href="#marketing" role="tab" data-toggle="tab" class="show-confirm"><%= t(:'hyrax.content_blocks.tabs.marketing_text') %></a>
     </li>
     <li>
-      <a href="#researcher" role="tab" data-toggle="tab"><%= t(:'hyrax.content_blocks.tabs.featured_researcher') %></a>
+      <a href="#researcher" role="tab" data-toggle="tab" class="show-confirm"><%= t(:'hyrax.content_blocks.tabs.featured_researcher') %></a>
     </li>
   </ul>
   <div class="tab-content">

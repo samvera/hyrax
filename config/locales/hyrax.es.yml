@@ -530,6 +530,7 @@ es:
         featured_researcher: Investigador Destacado
         marketing_text: Texto de Marketing
       updated: Bloques de contenido actualizados.
+      change_tab_message: ¿Seguro que quieres salir de esta pestaña? Cualquier información no guardada se perderá.      
     controls:
       about: Acerca de
       contact: Contacto
