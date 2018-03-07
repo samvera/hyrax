@@ -34,4 +34,5 @@ Blacklight.onLoad(function() {
 
   // Create sortable, searchable table
   $('#analytics-collections-table').DataTable();
+  $('#analytics-works-table').DataTable();
 });
