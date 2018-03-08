@@ -169,13 +169,14 @@ module Hyrax
     def chartkick
       # Chartkick needs to be loaded in the final Gemfile. Won't load correctly via hyrax.gemspec
       generate 'hyrax:chartkick'
+      copy_file 'config/initializers/chartkick.rb', 'config/initializers/chartkick.rb'
 
       # Chartkick js libs need to be loaded before hyrax.js or charts won't work
       javascript_manifest = 'app/assets/javascripts/application.js'
 
       insert_into_file javascript_manifest, after: /jquery.?\n/ do
-        "//= require Chart.bundle\n"
-        "//= require chartkick\n"
+        "//= require Chart.bundle\n \
+         //= require chartkick\n"
       end
     end
 
