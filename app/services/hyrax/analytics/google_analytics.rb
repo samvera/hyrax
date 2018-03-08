@@ -1,5 +1,6 @@
 require 'google/apis/analyticsreporting_v4'
 include Google::Apis::AnalyticsreportingV4
+include Rails.application.routes.url_helpers
 
 module Hyrax
   module Analytics
@@ -13,7 +14,7 @@ module Hyrax
       def self.pageviews(start_date, object)
         params = { dimensions: ['date'],
                    metrics: ['pageviews', 'users'], # users is unique visitors
-                   filters: 'ga:pagePath=~' + Rails.application.routes.url_helpers.polymorphic_path(object) }
+                   filters: 'ga:pagePath=~' + polymorphic_path(object) }
         run_report(start_date, params)
       end
 

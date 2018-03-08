@@ -24,21 +24,19 @@ module Hyrax
       @collections.sort_by { |coll| coll[params[:sort_type]].to_s }.reverse!
       @collection_rows = Kaminari.paginate_array(@collections).page(params[:page]).per(10)
 
-      render json: { rows: render_to_string('hyrax/dashboard/_analytics_collections_ajax', layout: false, locals: { collection_rows: @collection_rows}) }
+      render json: { rows: render_to_string('hyrax/dashboard/_analytics_collections_ajax', layout: false, locals: { collection_rows: @collection_rows }) }
     end
 
     def repository_growth
-      if can? :read, :admin_dashboard
-        @presenter = Hyrax::Admin::RepositoryGrowthPresenter.new(params[:time_period])
-        render json: @presenter
-      end
+      return unless can? :read, :admin_dashboard
+      @presenter = Hyrax::Admin::RepositoryGrowthPresenter.new(params[:time_period])
+      render json: @presenter
     end
 
     def repository_object_counts
-      if can? :read, :admin_dashboard
-        @presenter = Hyrax::Admin::RepositoryObjectPresenter.new(params[:type_value])
-        render json: @presenter
-      end
+      return unless can? :read, :admin_dashboard
+      @presenter = Hyrax::Admin::RepositoryObjectPresenter.new(params[:type_value])
+      render json: @presenter
     end
   end
 end
