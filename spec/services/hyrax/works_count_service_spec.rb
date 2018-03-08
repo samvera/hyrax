@@ -28,16 +28,18 @@ RSpec.describe Hyrax::WorksCountService do
 
     let(:access) { :edit }
     let(:documents) { [doc1, doc2] }
-    let(:doc1) {
-      SolrDocument.new(id: 'xyz123',  human_readable_type_tesim: ['Work type'],
-                                  visibility_ssi: 'restricted',
-                                  system_create_dtsi: '2015-01-01T20:50:35Z')
-    }
-    let(:doc2) {
-      SolrDocument.new(id: 'yyx123',  human_readable_type_tesim: ['Work type'],
-                                  visibility_ssi: 'institution',
-                                  system_create_dtsi: '2015-02-01T20:50:35Z')
-    }
+    let(:doc1) do
+      SolrDocument.new(id: 'xyz123',
+                       human_readable_type_tesim: ['Work type'],
+                       visibility_ssi: 'restricted',
+                       system_create_dtsi: '2015-01-01T20:50:35Z')
+    end
+    let(:doc2) do
+      SolrDocument.new(id: 'yyx123',
+                       human_readable_type_tesim: ['Work type'],
+                       visibility_ssi: 'institution',
+                       system_create_dtsi: '2015-02-01T20:50:35Z')
+    end
 
     let(:struct) { described_class::SearchResultForWorkCount }
 
