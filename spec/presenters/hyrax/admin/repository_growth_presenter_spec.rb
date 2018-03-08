@@ -1,7 +1,7 @@
 RSpec.describe Hyrax::Admin::RepositoryGrowthPresenter do
   let(:instance) { described_class.new }
 
-  describe "#to_json" do
+  describe "#to_json action" do
     subject { instance.to_json }
 
     let(:works) do
@@ -19,7 +19,7 @@ RSpec.describe Hyrax::Admin::RepositoryGrowthPresenter do
     end
 
     it "returns points" do
-      expect(subject).to eq "[{\"y\":\"2017-02-16\",\"a\":\"12\",\"b\":\"3\"}]"
+      expect(subject).to eq '[{"name":"Works","data":[["2017-02-16","12"]]},{"name":"Collections","data":[["2017-02-16","3"]]}]'
     end
   end
 end

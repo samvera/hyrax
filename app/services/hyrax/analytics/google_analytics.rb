@@ -1,5 +1,6 @@
 require 'google/apis/analyticsreporting_v4'
 include Google::Apis::AnalyticsreportingV4
+include Rails.application.routes.url_helpers
 
 module Hyrax
   module Analytics
@@ -13,7 +14,7 @@ module Hyrax
       def self.pageviews(start_date, object)
         params = { dimensions: ['date'],
                    metrics: ['pageviews', 'users'], # users is unique visitors
-                   filters: 'ga:pagePath=~' + Rails.application.routes.url_helpers.polymorphic_path(object) }
+                   filters: 'ga:pagePath=~' + polymorphic_path(object) }
         run_report(start_date, params)
       end
 
@@ -97,7 +98,8 @@ module Hyrax
       # Return an authorized Google Analytics Reporting Service
       def self.setup_and_authorize
         unless File.exist?(config['privkey_path'])
-          raise "Private key file for Google Analytics was expected at '#{config['privkey_path']}', but no file was found."
+          raise "Private key file for Google Analytics was expected at '#{config['privkey_path']}',\
+                but no file was found."
         end
         analytics = Google::Apis::AnalyticsreportingV4::AnalyticsReportingService.new
         credentials = Google::Auth::ServiceAccountCredentials.make_creds(json_key_io: File.open(config['privkey_path']))

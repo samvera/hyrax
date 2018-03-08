@@ -28,8 +28,9 @@ module Hyrax
   14. Updates simple_form to use browser validations
   15. Installs Blacklight gallery (and removes it's scss)
   16. Install jquery-datatables
-  17. Initializes the noid-rails database-backed minter
-  18. Generates RIIIF image server implementation
+  17. Install chartkick
+  18. Initializes the noid-rails database-backed minter
+  19. Generates RIIIF image server implementation
          """
 
     def run_required_generators
@@ -162,6 +163,20 @@ module Hyrax
 
       insert_into_file 'app/assets/stylesheets/application.css', before: ' *= require_self' do
         " *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap\n"
+      end
+    end
+
+    def chartkick
+      # Chartkick needs to be loaded in the final Gemfile. Won't load correctly via hyrax.gemspec
+      generate 'hyrax:chartkick'
+      copy_file 'config/initializers/chartkick.rb', 'config/initializers/chartkick.rb'
+
+      # Chartkick js libs need to be loaded before hyrax.js or charts won't work
+      javascript_manifest = 'app/assets/javascripts/application.js'
+
+      insert_into_file javascript_manifest, after: /jquery.?\n/ do
+        "//= require Chart.bundle\n \
+         //= require chartkick\n"
       end
     end
 

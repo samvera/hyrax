@@ -1,0 +1,11 @@
+<% if Flipflop.analytics_redesign? %>
+  <div class="admin-repo-charts">
+    <ul id="growth-graph" class="list-unstyled list-inline analytics-options">
+      <li><%= t('.repository_growth.subtitle') %> <%= link_to t('.repository_growth.subtitle_30_days') , repository_growth_dashboard_index_path(time_period: 30), id: "days-30", remote: true %></li>
+      <li><%= link_to t('.repository_growth.subtitle_90_days') , repository_growth_dashboard_index_path(time_period: 90), id: "days-90", class: "stats-selected", remote: true %></li>
+      <li><%= link_to t('.repository_growth.subtitle_1_year') , repository_growth_dashboard_index_path(time_period: 365), id: "days-365", remote: true %></a></li>
+    </ul>
+  </div>
+<% else %>
+  <div><%= t('.repository_growth.subtitle_full') %></div>
+<% end %>
