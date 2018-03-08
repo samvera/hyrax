@@ -215,6 +215,7 @@ RSpec.configure do |config|
   end
 
   config.include EngineRoutes, type: :controller
+  config.include Rails.application.routes.url_helpers, type: :service
   config.include Warden::Test::Helpers, type: :request
   config.include Warden::Test::Helpers, type: :feature
   config.after(:each, type: :feature) do
