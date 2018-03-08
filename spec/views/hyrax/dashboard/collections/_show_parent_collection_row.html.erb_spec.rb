@@ -11,7 +11,6 @@ RSpec.describe 'hyrax/dashboard/collections/_show_parent_collection_row.html.erb
 
   context 'when user can edit the parent collection' do
     before do
-      stub_template "_modal_remove_from_collection.html.erb" => 'modal'
       allow(view).to receive(:can?).with(:edit, document.id).and_return(true)
     end
 
@@ -19,13 +18,17 @@ RSpec.describe 'hyrax/dashboard/collections/_show_parent_collection_row.html.erb
       subject
       expect(rendered).to have_link(document.title.first)
       expect(rendered).to have_button("Remove")
-      expect(subject).to render_template("_modal_remove_from_collection")
+    end
+
+    it "renders the proper data attributes on list element" do
+      expect(subject).to have_selector(:css, 'li[data-post-url="/dashboard/collections/123/remove_parent/999"]')
+      expect(subject).to have_selector(:css, 'li[data-id="123"]')
+      expect(subject).to have_selector(:css, 'li[data-parent-id="999"]')
     end
   end
 
   context 'disable button if no edit permission' do
     before do
-      stub_template "_modal_remove_from_collection.html.erb" => 'modal'
       allow(view).to receive(:can?).with(:edit, document.id).and_return(false)
     end
 
@@ -33,7 +36,6 @@ RSpec.describe 'hyrax/dashboard/collections/_show_parent_collection_row.html.erb
       subject
       expect(rendered).to have_link(document.title.first)
       expect(rendered).to have_button("Remove", disabled: true)
-      expect(subject).to render_template("_modal_remove_from_collection")
     end
   end
 end
