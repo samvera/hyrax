@@ -3,7 +3,7 @@
 <% else %>
   <% if presenter.use_parent_more_less? %>
   	<div class="less-parent-collections-block" id="less-parent-collections">
-			<ul>
+			<ul class="collections-list">
 	  		<% presenter.visible_parent_collections.each do |document| %>
 	      	<%= render 'hyrax/dashboard/collections/show_parent_collection_row', id: presenter.id, document: document %>
 	  		<% end %>
@@ -14,7 +14,7 @@
   	</div>
   	<% if presenter.more_parent_collections? %>
   		<div class="more-parent-collections-block" id="more-parent-collections">
-				<ul>
+				<ul class="collections-list">
 	  			<% presenter.more_parent_collections.each do |document| %>
 	      		<%= render 'hyrax/dashboard/collections/show_parent_collection_row', id: presenter.id, document: document %>
 	  			<% end %>
@@ -23,7 +23,7 @@
   		</div>
   	<% end %>
   <% else %>
-		<ul>
+		<ul class="collections-list">
 			<% presenter.parent_collections.documents.each do |document| %>
 	    	<%= render 'hyrax/dashboard/collections/show_parent_collection_row', id: presenter.id, document: document %>
 			<% end %>
