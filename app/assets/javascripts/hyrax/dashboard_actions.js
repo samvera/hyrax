@@ -35,6 +35,13 @@ Blacklight.onLoad(function() {
   // Create sortable, searchable table
   $('#analytics-collections-table').DataTable();
 
+  // Generally there will be way too many works to show them in one go
+  $('#analytics-works-table').DataTable({
+    processing: true,
+    serverSide: true,
+    ajax: '/dashboard/update_works_list'
+  });
+
   // Transition between time periods or object type
   $('.admin-repo-charts').on('click', function(e) {
     var type_id = e.target.id;
@@ -54,6 +61,4 @@ Blacklight.onLoad(function() {
     var chart = Chartkick.charts[id];
     chart.updateData(data);
   }
-
-  $('#analytics-works-table').DataTable();
 });
