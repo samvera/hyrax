@@ -34,7 +34,6 @@ Blacklight.onLoad(function() {
 
   // Create sortable, searchable tables
   $('#analytics-collections-table').DataTable();
-  $('#analytics-works-table').DataTable();
 
   // Generally there will be way too many works to show them in one go
   $('#analytics-works-table').DataTable({
