@@ -8,6 +8,7 @@ RSpec.describe Hyrax::CollectionTypes::CreateService do
       expect(ct.description).to eq('')
       expect(ct).to be_nestable
       expect(ct).to be_discoverable
+      expect(ct).to be_brandable
       expect(ct).to be_sharable
       expect(ct).to be_share_applies_to_new_works
       expect(ct).to be_allow_multiple_membership
@@ -42,6 +43,7 @@ RSpec.describe Hyrax::CollectionTypes::CreateService do
       expect(ct.title).to eq(Hyrax::CollectionType::ADMIN_SET_DEFAULT_TITLE)
       expect(ct.description).to eq('An aggregation of works that is intended to help with administrative control. Admin Sets provide a way of defining behaviors and policies around a set of works.')
       expect(ct).not_to be_nestable
+      expect(ct).not_to be_brandable
       expect(ct).not_to be_discoverable
       expect(ct).to be_sharable
       expect(ct).to be_share_applies_to_new_works
@@ -60,6 +62,7 @@ RSpec.describe Hyrax::CollectionTypes::CreateService do
       expect(ct.title).to eq(Hyrax::CollectionType::USER_COLLECTION_DEFAULT_TITLE)
       expect(ct.description).to eq('A User Collection can be created by any user to organize their works.')
       expect(ct).to be_nestable
+      expect(ct).to be_brandable
       expect(ct).to be_discoverable
       expect(ct).to be_sharable
       expect(ct).not_to be_share_applies_to_new_works

@@ -1095,6 +1095,7 @@ en:
         assigns_workflow: Allow collections of this type to assign workflow to a new work
         description: A brief statement of the general purpose of this collection type.  Users will see this if they have more than one collection type to choose from when creating a new collection.
         discoverable: Allow collections of this type to be discoverable
+        brandable: Allow collections of this type to be branded
         nestable: Allow collections of this type to be nested (a collection can contain other collections)
         require_membership: A work must belong to at least one collection of this type
         sharable: Allow users to assign collection managers, depositors, and viewers for collections they manage
@@ -1123,9 +1124,10 @@ en:
         allow_multiple_membership: MULTIPLE MEMBERSHIP
         assigns_visibility: VISIBILITY
         assigns_workflow: WORKFLOW
+        brandable: BRANDING
         description: Type description
         discoverable: DISCOVERY
-        nestable: NESTABLE
+        nestable: NESTING
         require_membership: REQUIRE MEMBERSHIP
         sharable: SHARING
         share_applies_to_new_works: APPLY TO NEW WORKS

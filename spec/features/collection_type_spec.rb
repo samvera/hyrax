@@ -112,6 +112,7 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
 
         # confirm all non-admin_set checkboxes are on
         expect(page).to have_checked_field('collection_type_nestable')
+        expect(page).to have_checked_field('collection_type_brandable')
         expect(page).to have_checked_field('collection_type_discoverable')
         expect(page).to have_checked_field('collection_type_sharable')
         expect(page).to have_checked_field('collection_type_share_applies_to_new_works')
@@ -123,13 +124,14 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
         expect(page).to have_unchecked_field('collection_type_assigns_visibility', disabled: true)
 
         # change settings
-        page.uncheck('NESTABLE')
+        page.uncheck('NESTING')
         page.uncheck('DISCOVERY')
         page.check('APPLY TO NEW WORKS')
         page.uncheck('MULTIPLE MEMBERSHIP')
 
         # confirm all non-admin_set checkboxes are now off
         expect(page).to have_unchecked_field('collection_type_nestable')
+        expect(page).to have_checked_field('collection_type_brandable')
         expect(page).to have_unchecked_field('collection_type_discoverable')
         expect(page).to have_checked_field('collection_type_sharable')
         expect(page).to have_checked_field('collection_type_share_applies_to_new_works')
@@ -187,6 +189,7 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
 
           # confirm default user collection checkboxes are set to appropriate values
           expect(page).to have_checked_field('collection_type_nestable', disabled: true)
+          expect(page).to have_checked_field('collection_type_brandable', disabled: true)
           expect(page).to have_checked_field('collection_type_discoverable', disabled: true)
           expect(page).to have_checked_field('collection_type_sharable', disabled: true)
           expect(page).to have_unchecked_field('collection_type_share_applies_to_new_works', disabled: true)
@@ -260,6 +263,7 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
 
         # confirm all checkboxes are disabled
         expect(page).to have_field('collection_type_nestable', disabled: true)
+        expect(page).to have_field('collection_type_brandable', disabled: true)
         expect(page).to have_field('collection_type_discoverable', disabled: true)
         expect(page).to have_field('collection_type_sharable', disabled: true)
         expect(page).to have_field('collection_type_share_applies_to_new_works', disabled: true)

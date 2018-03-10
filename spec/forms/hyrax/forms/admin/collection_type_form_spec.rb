@@ -7,6 +7,7 @@ RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm do
   it { is_expected.to delegate_method(:title).to(:collection_type) }
   it { is_expected.to delegate_method(:description).to(:collection_type) }
   it { is_expected.to delegate_method(:nestable).to(:collection_type) }
+  it { is_expected.to delegate_method(:brandable).to(:collection_type) }
   it { is_expected.to delegate_method(:sharable).to(:collection_type) }
   it { is_expected.to delegate_method(:share_applies_to_new_works).to(:collection_type) }
   it { is_expected.to delegate_method(:require_membership).to(:collection_type) }

@@ -52,6 +52,7 @@ FactoryBot.define do
   #   let(:settings) { [
   #                      :nestable,                  # OR :not_nestable,
   #                      :discoverable,              # OR :not_discoverable
+  #                      :brandable,                 # OR :not_brandable
   #                      :sharable,                  # OR :not_sharable OR :sharable_no_work_permissions
   #                      :allow_multiple_membership, # OR :not_allow_multiple_membership
   #                    ] }
@@ -63,6 +64,7 @@ FactoryBot.define do
   #   let(:settings) { [
   #                      :nestable,                  # OR :not_nestable,
   #                      :discoverable,              # OR :not_discoverable
+  #                      :brandable,                 # OR :not_brandable
   #                      :sharable,                  # OR :not_sharable OR :sharable_no_work_permissions
   #                      :allow_multiple_membership, # OR :not_allow_multiple_membership
   #                    ] }

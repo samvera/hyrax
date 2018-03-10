@@ -21,7 +21,7 @@ module Hyrax
     end
 
     class_attribute :collection_type_settings_methods, instance_writer: false
-    self.collection_type_settings_methods = [:nestable?, :discoverable?, :sharable?, :share_applies_to_new_works?,
+    self.collection_type_settings_methods = [:nestable?, :discoverable?, :brandable?, :sharable?, :share_applies_to_new_works?,
                                              :allow_multiple_membership?, :require_membership?, :assigns_workflow?,
                                              :assigns_visibility?]
 
@@ -31,6 +31,7 @@ module Hyrax
     alias_attribute :multiple_membership, :allow_multiple_membership
     alias_attribute :workflow, :assigns_workflow
     alias_attribute :visibility, :assigns_visibility
+    alias_attribute :branding, :brandable
 
     # Find the collection type associated with the Global Identifier (gid)
     # @param [String] gid - Global Identifier for this collection_type (e.g. gid://internal/hyrax-collectiontype/3)
@@ -144,7 +145,7 @@ module Hyrax
       end
 
       def collection_type_settings_changed?
-        (changes.keys & ['nestable', 'discoverable', 'sharable', 'share_applies_to_new_works', 'allow_multiple_membership',
+        (changes.keys & ['nestable', 'brandable', 'discoverable', 'sharable', 'share_applies_to_new_works', 'allow_multiple_membership',
                          'require_membership', 'assigns_workflow', 'assigns_visibility']).any?
       end
 
