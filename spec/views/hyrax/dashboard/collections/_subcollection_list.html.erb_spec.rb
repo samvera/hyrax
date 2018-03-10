@@ -1,6 +1,14 @@
 RSpec.describe 'hyrax/dashboard/collections/_subcollection_list.html.erb', type: :view do
+  let(:user) { create :user }
+  let(:ability) { instance_double("Ability") }
   let(:collection) { build(:named_collection, id: '123') }
   let(:subject) { render('subcollection_list.html.erb', id: collection.id, collection: subcollection) }
+
+  before do
+    allow(view).to receive(:id).and_return(collection.id)
+    allow(view).to receive(:current_ability).and_return(ability)
+    allow(controller).to receive(:can?).with(:edit, collection.id).and_return true
+  end
 
   context 'when subcollection list is empty' do
     let(:subcollection) { nil }
@@ -19,7 +27,6 @@ RSpec.describe 'hyrax/dashboard/collections/_subcollection_list.html.erb', type:
     let(:subcollection) { [collection] }
 
     before do
-      stub_template '_modal_remove_sub_collection.html.erb' => 'Remove button'
       assign(:subcollection_docs, subcollection)
       assign(:document, collection)
       allow(collection).to receive(:title_or_label).and_return(collection.title)
@@ -37,6 +44,11 @@ RSpec.describe 'hyrax/dashboard/collections/_subcollection_list.html.erb', type:
         subject
         expect(rendered).to have_link(collection.title.to_s)
         expect(subject).to render_template('_modal_remove_sub_collection')
+      end
+
+      it "renders the proper data attributes on list element" do
+        expect(subject).to have_selector(:css, 'li[data-post-url="/dashboard/collections/123/remove_child/123"]')
+        expect(subject).to have_selector(:css, 'li[data-id="123"]')
       end
 
       it 'renders pagination' do

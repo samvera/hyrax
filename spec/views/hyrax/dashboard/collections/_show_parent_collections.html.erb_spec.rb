@@ -61,6 +61,10 @@ RSpec.describe 'hyrax/dashboard/collections/_show_parent_collections.html.erb', 
   context 'when parent collection list is not empty, but small' do
     let(:parent_docs) { [collection1, collection2, collection3] }
 
+    before do
+      stub_template "_modal_remove_from_collection.html.erb" => 'modal'
+    end
+
     it "posts the collection's title with a link to the collection" do
       assign(:events, parent_docs)
       subject
@@ -72,6 +76,10 @@ RSpec.describe 'hyrax/dashboard/collections/_show_parent_collections.html.erb', 
 
     it 'does not render pagination' do
       expect(subject).not_to render_template("hyrax/collections/_paginate")
+    end
+
+    it 'renders the remove from list modal' do
+      expect(subject).to render_template("_modal_remove_from_collection")
     end
   end
 

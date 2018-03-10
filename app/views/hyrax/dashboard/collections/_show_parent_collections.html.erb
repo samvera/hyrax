@@ -32,4 +32,8 @@
       <%= render 'hyrax/collections/paginate', solr_response: presenter.parent_collections, page_param_name: :parent_collection_page  %>
     </div>
   <% end %>
+
+	<!-- Remove parent collection Modal window -->
+	<%= render 'modal_remove_from_collection' %>
+
 <% end %>
