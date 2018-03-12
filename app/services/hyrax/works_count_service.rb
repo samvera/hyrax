@@ -16,6 +16,7 @@ module Hyrax
     def search_results_with_work_count(access)
       works = search_results(access)
       sort_column = Integer(@params[:order]['0'][:column])
+      sort_ordering = @params[:order]['0'][:dir]
       results = []
       
       works.each do |work|
@@ -24,16 +25,10 @@ module Hyrax
         results << [work.title, created_date, 0, work['human_readable_type_tesim'][0], work['visibility_ssi']]
       end
 
-      if @params[:order]['0'][:dir] == 'asc'
-        results.sort! { |a, b| a[sort_column] <=> b[sort_column] }
-      else
-        results.sort! { |a, b| b[sort_column] <=> a[sort_column] }
-      end
-
       { draw: @params[:draw],
         recordsTotal: works['response']['numFound'],
         recordsFiltered: works.documents.length,
-        data: results }
+        data: works_sort(results, sort_column, sort_ordering) }
     end
 
     def search_results(access)
@@ -46,6 +41,20 @@ module Hyrax
         search_builder.new(context, @params)
                       .start(@params[:start])
                       .rows(@params[:length])
+      end
+
+      # Returns sorted array either string sorted or numeric sorted depending on the column
+      # Currently array[2] is the works count and the only numeric column
+      def works_sort(results, sort_column, sort_ordering)
+        if sort_ordering == 'asc' && sort_column == 2
+          results.sort! { |a, b| a[sort_column].to_i <=> b[sort_column].to_i }
+        elsif sort_ordering == 'desc' && sort_column == 2
+          results.sort! { |a, b| b[sort_column].to_i <=> a[sort_column].to_i }
+        elsif sort_ordering == 'asc'
+          results.sort! { |a, b| a[sort_column] <=> b[sort_column] }
+        else
+          results.sort! { |a, b| b[sort_column] <=> a[sort_column] }
+        end
       end
   end
 end
