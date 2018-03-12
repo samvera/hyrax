@@ -15,12 +15,19 @@ module Hyrax
     # @return [Array<Hyrax::WorksCountService::SearchResultForWorkCount>] a list with documents
     def search_results_with_work_count(access)
       works = search_results(access)
+      sort_column = Integer(@params[:order]['0'][:column])
       results = []
       
       works.each do |work|
         next if work['system_create_dtsi'].nil?
         created_date = DateTime.parse(work['system_create_dtsi']).in_time_zone.strftime("%Y-%m-%d")
         results << [work.title, created_date, 0, work['human_readable_type_tesim'][0], work['visibility_ssi']]
+      end
+
+      if @params[:order]['0'][:dir] == 'asc'
+        results.sort! { |a, b| a[sort_column] <=> b[sort_column] }
+      else
+        results.sort! { |a, b| b[sort_column] <=> a[sort_column] }
       end
 
       { draw: @params[:draw],

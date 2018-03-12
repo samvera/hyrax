@@ -22,12 +22,6 @@ module Hyrax
       end
     end
 
-    def sort_ordering(solr_parameters)
-      unless @params[:sort_column].nil? || @params[:order]['0'][:dir].nil?
-        solr_parameters[:sort] ||= "#{@params[:sort_column]} #{@params[:order]['0'][:dir]}"
-      end
-    end
-
     def only_works?
       true
     end
