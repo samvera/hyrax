@@ -3,7 +3,7 @@ module Hyrax
   class WorksCountService < CountService
     SearchResultForWorkCount = Struct.new(:work_name, :updated, :work_views, :work_type, :visibility)
 
-    def initialize(context, params)
+    def initialize(context, search_builder, params)
       super(context)
 
       @search_builder = search_builder
