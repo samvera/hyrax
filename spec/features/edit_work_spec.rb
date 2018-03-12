@@ -21,7 +21,9 @@ RSpec.describe 'Editing a work', type: :feature do
   end
 
   context 'when the user changes permissions' do
-    it 'confirms copying permissions to files using Hyrax layout' do
+    let(:work) { create(:private_work, user: user, admin_set: default_admin_set) }
+
+    it 'confirms copying permissions to files using Hyrax layout and shows updated value', with_nested_reindexing: true do
       # e.g. /concern/generic_works/jq085k20z/edit
       visit edit_hyrax_generic_work_path(work)
       choose('generic_work_visibility_open')
@@ -29,6 +31,10 @@ RSpec.describe 'Editing a work', type: :feature do
       click_on('Save')
       expect(page).to have_content 'Apply changes to contents?'
       expect(page).not_to have_content "Powered by Hyrax"
+      click_on("No. I'll update it manually.")
+      within(".panel-heading") do
+        expect(page).to have_content('Public')
+      end
     end
   end
 
