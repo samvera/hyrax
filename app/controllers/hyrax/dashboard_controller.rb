@@ -32,8 +32,6 @@ module Hyrax
 
     def update_works_list
       if can? :read, :admin_dashboard
-        columns = %w[title_tesim date_created views work_type visibility]
-        params[:sort_column] = columns[Integer(params[:order]['0'][:column])]
         @work_rows = Hyrax::WorksCountService.new(self, Hyrax::AnalyticsWorksSearchBuilder, params).search_results_with_work_count(:read)
         render json: @work_rows
       end
