@@ -35,7 +35,7 @@ Blacklight.onLoad(function() {
   // Create sortable, searchable tables
   $('#analytics-collections-table').DataTable();
 
-  // Generally there will be way too many works to show them in one go
+  // Uses server side sorting, etc. Generally there will be way too many works to show them in one go
   $('#analytics-works-table').DataTable({
     ajax: {
       url: '/dashboard/update_works_list',
@@ -44,7 +44,7 @@ Blacklight.onLoad(function() {
       }
     },
     language: {
-      processing: '<img src="/assets/loading.gif">'
+      processing: '<img src="/assets/sm-loader.gif">'
     },
     processing: true,
     serverSide: true
@@ -65,6 +65,7 @@ Blacklight.onLoad(function() {
     });
   });
 
+  // Update chartkick graphs with new data
   function updateChart(id, data) {
     var chart = Chartkick.charts[id];
     chart.updateData(data);
