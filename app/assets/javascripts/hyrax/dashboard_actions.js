@@ -37,9 +37,17 @@ Blacklight.onLoad(function() {
 
   // Generally there will be way too many works to show them in one go
   $('#analytics-works-table').DataTable({
+    ajax: {
+      url: '/dashboard/update_works_list',
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert(errorThrown);
+      }
+    },
+    language: {
+      processing: '<img src="/assets/loading.gif">'
+    },
     processing: true,
-    serverSide: true,
-    ajax: '/dashboard/update_works_list'
+    serverSide: true
   });
 
   // Transition between time periods or object type
