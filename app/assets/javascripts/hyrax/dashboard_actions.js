@@ -34,6 +34,7 @@ Blacklight.onLoad(function() {
 
   // Create sortable, searchable table
   $('#analytics-collections-table').DataTable();
+  $('#analytics-works-table').DataTable();
 
   // Transition between time periods or object type
   $('.admin-repo-charts').on('click', function(e) {

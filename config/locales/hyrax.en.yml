@@ -573,6 +573,13 @@ en:
           subtitle_visible:  Visibility
           subtitle_work:     Works
           subtitle_resource: Resources
+      analytics_works:
+        header:   Works
+        title:      Work title
+        deposited:  Deposited
+        views:      Views
+        work_type:  Work Type
+        visibility: Visibility
       managed:
         collections: Managed Collections
         works: Managed Works
