@@ -1,28 +1,19 @@
 RSpec.describe Hyrax::CollectionMemberService, :clean_repo do
-  let(:work_attrs) { { id: '123', title_tesim: ['A generic work'] } }
-
-  let(:coll1_attrs) { { id: 'col1', title_tesim: ['A Collection 1'], child_object_ids_ssim: [work.id] } }
-  let(:coll2_attrs) { { id: 'col2', title_tesim: ['A Collection 2'], child_object_ids_ssim: [work.id, 'abc123'] } }
-  let(:coll3_attrs) { { id: 'col3', title_tesim: ['A Collection 3'], child_object_ids_ssim: ['abc123'] } }
-
+  let(:user) { create(:user, groups: 'potato') }
+  let!(:ability) { ::Ability.new(user) }
+  let!(:col1) { build(:collection_lw, id: 'col1', user: user, with_solr_document: true) }
+  let!(:col2) { build(:collection_lw, id: 'col2', with_solr_document: true) }
+  let(:colls) { [col1.id, col2.id] }
+  let(:work_attrs) { { id: '123', title_tesim: ['A generic work'], member_of_collection_ids_ssim: colls } }
   let(:work) { SolrDocument.new(work_attrs) }
 
-  before do
-    ActiveFedora::SolrService.add(coll1_attrs)
-    ActiveFedora::SolrService.add(coll2_attrs)
-    ActiveFedora::SolrService.add(coll3_attrs)
-    ActiveFedora::SolrService.commit
-  end
-
   describe "#run" do
-    subject { described_class.run(work) }
+    subject { described_class.run(work, ability) }
 
-    specify "should return correct collections" do
-      expect(subject.length).to eq(2)
+    it "returns only authorized parent collections" do
+      expect(subject.count).to eq(1)
       ids = subject.map { |col| col[:id] }
-      expect(ids).to include(coll1_attrs[:id])
-      expect(ids).to include(coll2_attrs[:id])
-      expect(ids).not_to include(coll3_attrs[:id])
+      expect(ids).to contain_exactly(col1.id)
     end
   end
 end

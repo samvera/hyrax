@@ -10,4 +10,6 @@
   <% end %>
 <% end %>
 
-<%= presenter.attribute_to_html(:admin_set, render_as: :faceted) %>
+<% if current_user %>
+  <%= presenter.attribute_to_html(:admin_set, render_as: :faceted) %>
+<% end %>

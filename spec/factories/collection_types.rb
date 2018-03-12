@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :collection_type, class: Hyrax::CollectionType do
-    sequence(:title) { |n| "Title #{n}" }
+    sequence(:title) { |n| "Collection Type #{n}" }
     sequence(:machine_id) { |n| "title_#{n}" }
 
     description 'Collection type with all options'

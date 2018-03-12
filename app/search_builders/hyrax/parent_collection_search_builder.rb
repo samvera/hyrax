@@ -3,10 +3,10 @@ module Hyrax
   class ParentCollectionSearchBuilder < Hyrax::CollectionSearchBuilder
     delegate :item, to: :scope
 
-    # include filters into the query to only include the collection memebers
+    # include filters into the query to only include the collections containing this item
     def include_item_ids(solr_parameters)
       solr_parameters[:fq] ||= []
-      solr_parameters[:fq] << "child_object_ids_ssim:#{item.id}"
+      solr_parameters[:fq] << ActiveFedora::SolrQueryBuilder.construct_query_for_ids(item.member_of_collection_ids)
     end
   end
 end

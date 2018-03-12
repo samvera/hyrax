@@ -9,7 +9,7 @@ module Hyrax
     end
 
     def render_collection_links(solr_doc)
-      collection_list = Hyrax::CollectionMemberService.run(solr_doc)
+      collection_list = Hyrax::CollectionMemberService.run(solr_doc, controller.current_ability)
       return if collection_list.empty?
       links = collection_list.map do |collection|
         link_to collection.title_or_label, collection_path(collection.id)
