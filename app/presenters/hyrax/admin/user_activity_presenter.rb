@@ -7,34 +7,22 @@ module Hyrax
       end
 
       def as_json(*)
-        new_users_list = { name: I18n.translate('hyrax.dashboard.show_admin.new_visitors'), data: [] }
-        returning_users_list = { name: I18n.translate('hyrax.dashboard.show_admin.returning_visitors'), data: [] }
+        unique_visitors_list = { name: I18n.translate('hyrax.dashboard.show_admin.new_visitors'), data: unique_visitors.to_a }
+        returning_visitors_list = { name: I18n.translate('hyrax.dashboard.show_admin.returning_visitors'), data: returning_visitors.to_a }
 
-        new_users.to_a.zip(returning_users.to_a).map do |e|
-          new_users_list[:data] << [e.first.first, e.first.last]
-
-          visitor_count = if e.last.nil?
-                            0
-                          else
-                            e.last
-                          end
-
-          returning_users_list[:data] << [e.first.first, visitor_count]
-        end
-
-        [new_users_list, returning_users_list]
+        [unique_visitors_list, returning_visitors_list]
       end
 
       private
 
-        def new_users
-          Hyrax::Statistics::Users::OverTime.new(x_min: @x_min,
-                                                 x_output: @date_format).points
+        def unique_visitors
+          Hyrax::Statistics::Site::UniqueVisitors.new(x_min: @x_min,
+                                                      x_output: @date_format).points
         end
 
-        # TODO: using google analytics
-        def returning_users
-          []
+        def returning_visitors
+          Hyrax::Statistics::Site::ReturningVisitors.new(x_min: @x_min,
+                                                         x_output: @date_format).points
         end
     end
   end
