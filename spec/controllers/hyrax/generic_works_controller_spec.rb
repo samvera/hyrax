@@ -26,6 +26,24 @@ RSpec.describe Hyrax::GenericWorksController do
     end
   end
 
+  describe 'integration test for depositor of a suppressed documents without a workflow role' do
+    let(:work) do
+      create(:work, :public, state: Vocab::FedoraResourceStatus.inactive, user: user)
+    end
+
+    before do
+      create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
+    end
+
+    it 'renders without the unauthorized message' do
+      get :show, params: { id: work.id }
+      expect(response.code).to eq '200'
+      expect(response).to render_template(:show)
+      expect(assigns[:presenter]).to be_instance_of Hyrax::GenericWorkPresenter
+      expect(flash[:notice]).to be_nil
+    end
+  end
+
   describe '#show' do
     before do
       create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)

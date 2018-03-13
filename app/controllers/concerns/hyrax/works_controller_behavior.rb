@@ -46,12 +46,7 @@ module Hyrax
     def new
       # TODO: move these lines to the work form builder in Hyrax
       curation_concern.depositor = current_user.user_key
-
-      # admin_set_id is required on the client, otherwise simple_form renders a blank option.
-      # however it isn't a required field for someone to submit via json.
-      # Set the first admin_set they have access to.
-      admin_set = Hyrax::AdminSetService.new(self).search_results(:deposit).first
-      curation_concern.admin_set_id = admin_set && admin_set.id
+      curation_concern.admin_set_id = admin_set_id_for_new
       build_form
     end
 
@@ -137,6 +132,16 @@ module Hyrax
 
     private
 
+      def admin_set_id_for_new
+        # admin_set_id is required on the client, otherwise simple_form renders a blank option.
+        # however it isn't a required field for someone to submit via json.
+        # Set the default admin set if it exists; otherwise, set to first admin_set they have access to.
+        admin_sets = Hyrax::AdminSetService.new(self).search_results(:deposit)
+        return nil if admin_sets.blank? # shouldn't happen
+        return AdminSet::DEFAULT_ID if admin_sets.map(&:id).include?(AdminSet::DEFAULT_ID)
+        admin_sets.first.id
+      end
+
       def build_form
         @form = work_form_service.build(curation_concern, current_ability, self)
       end
@@ -154,12 +159,10 @@ module Hyrax
       end
 
       def parent_presenter
+        return @parent_presenter unless params[:parent_id]
+
         @parent_presenter ||=
-          begin
-            if params[:parent_id]
-              @parent_presenter ||= show_presenter.new(search_result_document(id: params[:parent_id]), current_ability, request)
-            end
-          end
+          show_presenter.new(search_result_document(id: params[:parent_id]), current_ability, request)
       end
 
       # Include 'hyrax/base' in the search path for views, while prefering

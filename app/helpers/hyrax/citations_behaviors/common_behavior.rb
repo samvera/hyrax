@@ -6,9 +6,7 @@ module Hyrax
       end
 
       def clean_end_punctuation(text)
-        if text && ([".", ",", ":", ";", "/"].include? text[-1, 1])
-          return text[0, text.length - 1]
-        end
+        return text[0, text.length - 1] if text && ([".", ",", ":", ";", "/"].include? text[-1, 1])
         text
       end
     end

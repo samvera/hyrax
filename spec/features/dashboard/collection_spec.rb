@@ -128,7 +128,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       visit '/dashboard/my/collections'
     end
 
-    it 'lists all collections for all users', with_nested_reindexing: true do
+    it 'lists all collections for all users' do
       expect(page).to have_link 'All Collection'
       click_link 'All Collections'
       expect(page).to have_link(collection1.title.first)
@@ -293,6 +293,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     end
   end
 
+  # TODO: this section is still deactivated
   describe "adding works to a collection", skip: "we need to define a dashboard/works path" do
     let!(:collection) { create!(:collection, title: ["Barrel of monkeys"], user: user, with_permission_template: true) }
     let!(:work1) { create(:work, title: ["King Louie"], user: user) }
@@ -531,7 +532,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     end
   end
 
-  describe 'collection show page', with_nested_reindexing: true do
+  describe 'collection show page' do
     let(:collection) do
       create(:public_collection, user: user, description: ['collection description'], create_access: true)
     end
@@ -662,7 +663,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   end
 
   # TODO: this is just like the block above. Merge them.
-  describe 'show pages of a collection', with_nested_reindexing: true do
+  describe 'show pages of a collection' do
     before do
       docs = (0..12).map do |n|
         { "has_model_ssim" => ["GenericWork"], :id => "zs25x871q#{n}",
@@ -690,7 +691,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   end
 
   describe 'remove works from collection' do
-    context 'user that can edit', :with_nested_reindexing do
+    context 'user that can edit' do
       let!(:work2) { create(:work, title: ["King Louie"], member_of_collections: [collection1], user: user) }
       let!(:work1) { create(:work, title: ["King Kong"], member_of_collections: [collection1], user: user) }
 
@@ -779,14 +780,6 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           expect(page).to have_field('collection_title', with: collection.title.first)
           expect(page).to have_field('collection_description', with: collection.description.first)
 
-          # TODO: These two expectations require the spec to include with_nested_reindexing: true.
-          # However, adding nested indexing causes this spec to fail to go through the update method
-          # in the controller unless js: true is also included. Including javascript greatly increases
-          # the time required for the spec to complete, so for now, I am simply commenting out these
-          # two expectations, as these are not integral to the function being tested.
-          # expect(page).to have_content(work1.title.first)
-          # expect(page).to have_content(work2.title.first)
-
           new_title = "Altered Title"
           new_description = "Completely new Description text."
           creators = ["Dorje Trollo", "Vajrayogini"]
@@ -832,9 +825,19 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         sign_in user
       end
 
-      it 'always includes branding' do
-        visit "/dashboard/collections/#{collection.id}/edit"
-        expect(page).to have_link('Branding', href: '#branding')
+      context 'with brandable set' do
+        let(:brandable_collection_id) { create(:collection, user: user, collection_type_settings: [:brandable], create_access: true).id }
+        let(:not_brandable_collection_id) { create(:collection, user: user, collection_type_settings: [:not_brandable], create_access: true).id }
+
+        it 'to true, it shows Branding tab' do
+          visit "/dashboard/collections/#{brandable_collection_id}/edit"
+          expect(page).to have_link('Branding', href: '#branding')
+        end
+
+        it 'to false, it hides Branding tab' do
+          visit "/dashboard/collections/#{not_brandable_collection_id}/edit"
+          expect(page).not_to have_link('Branding', href: '#branding')
+        end
       end
 
       context 'with discoverable set' do

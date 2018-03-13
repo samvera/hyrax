@@ -1,12 +1,11 @@
-require: rubocop-rspec
+inherit_gem:
+  bixby: bixby_default.yml
+
 inherit_from: .rubocop_fixme.yml
 
 AllCops:
   TargetRubyVersion: 2.1
   DisplayCopNames: true
-  Include:
-    - '**/Rakefile'
-    - '**/config.ru'
   Exclude:
     - 'db/**/*'
     - 'script/**/*'
@@ -14,24 +13,9 @@ AllCops:
     - 'vendor/**/*'
     - 'lib/hyrax/specs/**/*'
 
-Bundler/DuplicatedGem:  # This doesn't work with engine_cart
-  Enabled: false
-
-Layout/IndentationConsistency:
-  EnforcedStyle: rails
-
 Lint/ImplicitStringConcatenation:
   Exclude:
     - 'lib/generators/hyrax/**/*'
-
-Lint/AmbiguousBlockAssociation:
-  Enabled: false
-
-Metrics/LineLength:
-  Max: 200
-
-Metrics/AbcSize:
-  Max: 26
 
 Metrics/BlockLength:
   ExcludedMethods: ['included']
@@ -47,12 +31,9 @@ Metrics/BlockLength:
     - 'lib/tasks/*.rake'
     - 'spec/**/*.rb'
 
-Metrics/MethodLength:
-  Max: 13
-
-Naming/FileName: # https://github.com/bbatsov/rubocop/issues/2973
-  Exclude:
-    - 'Gemfile'
+# Naming/FileName: # https://github.com/bbatsov/rubocop/issues/2973
+#   Exclude:
+#     - 'Gemfile'
 
 Style/AsciiComments:
   Enabled: false
@@ -76,19 +57,7 @@ Style/NumericPredicate:
 Style/SymbolArray:
   Enabled: false
 
-Style/WordArray:
-  Enabled: false
-
-Style/RegexpLiteral:
-  Enabled: false
-
-Style/StringLiterals:
-  Enabled: false
-
 Style/ClassAndModuleChildren:
-  Enabled: false
-
-Style/Documentation:
   Enabled: false
 
 Style/SingleLineBlockParams:
@@ -97,9 +66,6 @@ Style/SingleLineBlockParams:
 Style/ZeroLengthPredicate:
   Exclude:
     - 'app/controllers/hyrax/file_sets_controller.rb'
-
-Rails:
-  Enabled: true
 
 Rails/ApplicationJob:
   Enabled: false
@@ -141,12 +107,9 @@ RSpec/DescribeClass:
     - 'spec/tasks/rake_spec.rb'
     - 'spec/views/**/*'
 
-RSpec/ContextWording:
-  Enabled: false
-
-# By default RSpec/MessageSpies has the following:
-#   Prefer have_received for setting message expectations. Setup form as a spy using allow or instance_spy.
-# The default assumes EnforcedStyle is 'have_received'. Most of our specs are 'receive'
+# # By default RSpec/MessageSpies has the following:
+# #   Prefer have_received for setting message expectations. Setup form as a spy using allow or instance_spy.
+# # The default assumes EnforcedStyle is 'have_received'. Most of our specs are 'receive'
 RSpec/MessageSpies:
   Enabled: false
 
@@ -161,9 +124,6 @@ RSpec/LetSetup:
   Enabled: false
 
 RSpec/MessageExpectation:
-  Enabled: false
-
-RSpec/MultipleExpectations:
   Enabled: false
 
 RSpec/NestedGroups:

@@ -1,4 +1,7 @@
 RSpec.describe Hyrax::CollectionsHelper do
+  let(:user) { create(:user, groups: ['admin']) }
+  let(:ability) { Ability.new(user) }
+
   before do
     # Stub route because helper specs don't handle engine routes
     # https://github.com/rspec/rspec-rails/issues/1250
@@ -9,9 +12,13 @@ RSpec.describe Hyrax::CollectionsHelper do
   end
 
   describe '#render_collection_links' do
-    let!(:work_doc) { SolrDocument.new(id: '123', title_tesim: ['My GenericWork']) }
+    before do
+      allow(controller).to receive(:current_ability).and_return(ability)
+    end
 
     context 'when a GenericWork does not belongs to any collections', :clean_repo do
+      let!(:work_doc) { SolrDocument.new(id: '123', title_tesim: ['My GenericWork']) }
+
       it 'renders nothing' do
         expect(helper.render_collection_links(work_doc)).to be_nil
       end
@@ -20,8 +27,9 @@ RSpec.describe Hyrax::CollectionsHelper do
     context 'when a GenericWork belongs to collections' do
       let(:coll_ids) { ['111', '222'] }
       let(:coll_titles) { ['Collection 111', 'Collection 222'] }
-      let(:coll1_attrs) { { id: coll_ids[0], title_tesim: [coll_titles[0]], child_object_ids_ssim: [work_doc.id] } }
-      let(:coll2_attrs) { { id: coll_ids[1], title_tesim: [coll_titles[1]], child_object_ids_ssim: [work_doc.id, 'abc123'] } }
+      let(:coll1_attrs) { { id: coll_ids[0], title_tesim: [coll_titles[0]] } }
+      let(:coll2_attrs) { { id: coll_ids[1], title_tesim: [coll_titles[1]] } }
+      let!(:work_doc) { SolrDocument.new(id: '123', title_tesim: ['My GenericWork'], member_of_collection_ids_ssim: coll_ids) }
 
       before do
         ActiveFedora::SolrService.add(coll1_attrs)
@@ -80,7 +88,7 @@ RSpec.describe Hyrax::CollectionsHelper do
       let(:test_collection_type) { FactoryBot.create(:collection_type) }
 
       it "returns the CollectionType title" do
-        expect(collection_type_label(test_collection_type.gid)).to match %r{^Title \d+$}
+        expect(collection_type_label(test_collection_type.gid)).to eq test_collection_type.title
       end
     end
 

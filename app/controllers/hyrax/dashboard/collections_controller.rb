@@ -63,8 +63,10 @@ module Hyrax
       end
 
       def show
-        banner_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "banner")
-        @banner_file = "/" + banner_info.first.local_path.split("/")[-4..-1].join("/") unless banner_info.empty?
+        if @collection.collection_type.brandable?
+          banner_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "banner")
+          @banner_file = "/" + banner_info.first.local_path.split("/")[-4..-1].join("/") unless banner_info.empty?
+        end
 
         presenter
         query_collection_members
@@ -441,7 +443,7 @@ module Hyrax
           results = collection_member_service.available_member_subcollections
           @subcollection_solr_response = results
           @subcollection_docs = results.documents
-          @subcollection_count = results.total
+          @subcollection_count = @presenter.nil? ? 0 : @subcollection_count = @presenter.subcollection_count = results.total
         end
 
         def parent_collections

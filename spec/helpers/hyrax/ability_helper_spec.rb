@@ -6,7 +6,7 @@ RSpec.describe Hyrax::AbilityHelper do
       Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC =>
         "<span class=\"label label-success\">Public</span>",
       Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED =>
-        "<span class=\"label label-info\">%s</span>",
+        "<span class=\"label label-info\">%<name>s</span>",
       Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE =>
         "<span class=\"label label-danger\">Private</span>",
       Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO =>
@@ -17,7 +17,7 @@ RSpec.describe Hyrax::AbilityHelper do
       context value do
         let(:visibility) { value }
 
-        it { expect(subject).to eql(output % t('hyrax.institution_name')) }
+        it { expect(subject).to eql(format(output, name: t('hyrax.institution_name'))) }
       end
     end
   end

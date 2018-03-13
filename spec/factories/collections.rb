@@ -52,6 +52,7 @@ FactoryBot.define do
   #   let(:settings) { [
   #                      :nestable,                  # OR :not_nestable,
   #                      :discoverable,              # OR :not_discoverable
+  #                      :brandable,                 # OR :not_brandable
   #                      :sharable,                  # OR :not_sharable OR :sharable_no_work_permissions
   #                      :allow_multiple_membership, # OR :not_allow_multiple_membership
   #                    ] }
@@ -63,6 +64,7 @@ FactoryBot.define do
   #   let(:settings) { [
   #                      :nestable,                  # OR :not_nestable,
   #                      :discoverable,              # OR :not_discoverable
+  #                      :brandable,                 # OR :not_brandable
   #                      :sharable,                  # OR :not_sharable OR :sharable_no_work_permissions
   #                      :allow_multiple_membership, # OR :not_allow_multiple_membership
   #                    ] }
@@ -105,7 +107,7 @@ FactoryBot.define do
       with_nesting_attributes nil
       with_solr_document false
     end
-    sequence(:title) { |n| ["Title #{n}"] }
+    sequence(:title) { |n| ["Collection Title #{n}"] }
 
     after(:build) do |collection, evaluator|
       collection.apply_depositor_metadata(evaluator.user.user_key)
@@ -162,7 +164,7 @@ FactoryBot.define do
       user { create(:user) }
     end
 
-    sequence(:title) { |n| ["Title #{n}"] }
+    sequence(:title) { |n| ["User Collection Title #{n}"] }
 
     after(:build) do |collection, evaluator|
       collection.apply_depositor_metadata(evaluator.user.user_key)
@@ -181,7 +183,7 @@ FactoryBot.define do
       do_save false
     end
 
-    sequence(:title) { |n| ["Title #{n}"] }
+    sequence(:title) { |n| ["Typeless Collection Title #{n}"] }
 
     after(:build) do |collection, evaluator|
       collection.apply_depositor_metadata(evaluator.user.user_key)

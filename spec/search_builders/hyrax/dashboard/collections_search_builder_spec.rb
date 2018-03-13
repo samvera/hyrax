@@ -7,7 +7,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsSearchBuilder do
   let(:ability) do
     ::Ability.new(user)
   end
-  let(:user) { create(:user, groups: 'registered') }
+  let(:user) { build(:user, groups: 'registered') }
   let(:builder) { described_class.new(context) }
 
   describe '#models' do
@@ -49,37 +49,40 @@ RSpec.describe Hyrax::Dashboard::CollectionsSearchBuilder do
   end
 
   describe "#gated_discovery_filters" do
+    let(:user2) { build(:user) }
+    let!(:collection) { build(:collection_lw, user: user2, with_permission_template: permissions, with_solr_document: true) }
+
     subject { builder.gated_discovery_filters }
 
-    let(:collection) { create(:collection) }
-    let(:permission_template) { create(:permission_template, source_id: collection.id) }
-
-    context "user has deposit access" do
-      before do
-        create(:permission_template_access,
-               permission_template: permission_template,
-               agent_type: 'user',
-               agent_id: user.user_key,
-               access: 'deposit')
-      end
+    context "user has manage access" do
+      let(:permissions) { { manage_users: [user] } }
 
       it { is_expected.to include ["{!terms f=id}#{collection.id}"] }
     end
 
-    context "group has deposit access" do
-      before do
-        create(:permission_template_access,
-               permission_template: permission_template,
-               agent_type: 'group',
-               agent_id: 'registered',
-               access: 'deposit')
-      end
+    context "user has deposit access" do
+      let(:permissions) { { deposit_users: [user] } }
 
       it { is_expected.to include ["{!terms f=id}#{collection.id}"] }
+    end
+
+    context "user has view access" do
+      let(:permissions) { { view_users: [user] } }
+
+      it { is_expected.not_to include ["{!terms f=id}#{collection.id}"] }
+    end
+
+    context "does not include registered group for read access" do
+      let(:permissions) { { view_groups: ['registered'] } }
+
+      it { is_expected.not_to include ["{!terms f=id}#{collection.id}"] }
     end
 
     context "does not include public group for read access" do
+      let(:permissions) { { view_groups: ['public'] } }
+
       let(:expected_discovery_filters) do
+        # all filters except no additional ids added for deposit collections
         [
           ["({!terms f=edit_access_group_ssim}public,registered)"],
           ["edit_access_person_ssim:#{user.user_key}", "read_access_person_ssim:#{user.user_key}"]
@@ -87,6 +90,14 @@ RSpec.describe Hyrax::Dashboard::CollectionsSearchBuilder do
       end
 
       it { is_expected.to eq expected_discovery_filters }
+    end
+
+    context "user has deposit access and registered has deposit access" do
+      # make sure that having registered deposit access, which isn't included, doesn't
+      # remove the user specific deposit access
+      let(:permissions) { { deposit_users: [user], view_groups: ['registered'] } }
+
+      it { is_expected.to include ["{!terms f=id}#{collection.id}"] }
     end
   end
 end

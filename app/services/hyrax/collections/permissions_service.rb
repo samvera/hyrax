@@ -8,9 +8,10 @@ module Hyrax
       # @param access [Array<String>] one or more types of access (e.g. Hyrax::PermissionTemplateAccess::MANAGE, Hyrax::PermissionTemplateAccess::DEPOSIT, Hyrax::PermissionTemplateAccess::VIEW)
       # @param ability [Ability] the ability coming from cancan ability check
       # @param source_type [String] 'collection', 'admin_set', or nil to get all types
+      # @param exclude_groups [Array<String>] name of groups to exclude from the results
       # @return [Array<String>] IDs of collections and admin sets for which the user has specified roles
-      def self.source_ids_for_user(access:, ability:, source_type: nil)
-        scope = PermissionTemplateAccess.for_user(ability: ability, access: access)
+      def self.source_ids_for_user(access:, ability:, source_type: nil, exclude_groups: [])
+        scope = PermissionTemplateAccess.for_user(ability: ability, access: access, exclude_groups: exclude_groups)
                                         .joins(:permission_template)
         ids = scope.pluck('DISTINCT source_id')
         return ids unless source_type
@@ -64,11 +65,12 @@ module Hyrax
       #
       # @param ability [Ability] the ability coming from cancan ability check
       # @param source_type [String] 'collection', 'admin_set', or nil to get all types
+      # @param exclude_groups [Array<String>] name of groups to exclude from the results
       # @return [Array<String>] IDs of collections and/or admin_sets into which the user can deposit
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
-      def self.source_ids_for_deposit(ability:, source_type: nil)
+      def self.source_ids_for_deposit(ability:, source_type: nil, exclude_groups: [])
         access = [Hyrax::PermissionTemplateAccess::MANAGE, Hyrax::PermissionTemplateAccess::DEPOSIT]
-        source_ids_for_user(access: access, ability: ability, source_type: source_type)
+        source_ids_for_user(access: access, ability: ability, source_type: source_type, exclude_groups: exclude_groups)
       end
 
       # @api public

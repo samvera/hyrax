@@ -49,7 +49,7 @@ SUMMARY
   spec.add_dependency 'hydra-editor', '~> 3.3'
   spec.add_dependency 'hydra-head', '>= 10.5.0'
   spec.add_dependency 'hydra-works', '~> 0.16'
-  spec.add_dependency 'iiif_manifest', '~> 0.3.0'
+  spec.add_dependency 'iiif_manifest', '>= 0.3', '< 0.5'
   spec.add_dependency 'jquery-datatables-rails', '~> 3.4'
   spec.add_dependency 'jquery-ui-rails', '~> 6.0'
   spec.add_dependency 'json-schema' # for Arkivo
@@ -83,7 +83,7 @@ SUMMARY
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
   spec.add_development_dependency 'engine_cart', '~> 1.2'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
-  spec.add_development_dependency "factory_bot_rails", '~> 4.4'
+  spec.add_development_dependency "factory_bot", '~> 4.4'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.5', '>= 0.5.1'
   spec.add_development_dependency "jasmine", '~> 2.3', '< 2.99'
   spec.add_development_dependency "jasmine-core", '~> 2.3', '< 2.99'
@@ -93,21 +93,11 @@ SUMMARY
   spec.add_development_dependency 'rspec-rails', '~> 3.1'
   spec.add_development_dependency "selenium-webdriver"
   spec.add_development_dependency 'solr_wrapper', '~> 1.1'
-  # Pin rubocop and rubocop-rspec tightly. Minor-level version bumps
-  # in these gems cause Rubocop violations, and those violations cause
-  # continuous integration builds to fail, and those failures prevent
-  # us from merging pull requests. As a community, we have decided
-  # that it is not reasonable to manage style violations to be dealt
-  # with in a pull request *unless* said pull request's intent is to
-  # bring the codebase in further alignment with community style
-  # conventions. This allows us to take a managed approach to code
-  # style -- we choose to update style when we wish, not when a
-  # minor-level version bump in a dependency comes out.
   spec.add_development_dependency 'i18n-debug' if ENV['I18N_DEBUG']
   spec.add_development_dependency 'i18n_yaml_sorter' unless ENV['TRAVIS']
   spec.add_development_dependency 'rails-controller-testing', '~> 1'
-  spec.add_development_dependency 'rubocop', '~> 0.51.0'
-  spec.add_development_dependency 'rubocop-rspec', '~> 1.20.1'
+  # the hyrax style guide is based on `bixby`. see `.rubocop.yml`
+  spec.add_development_dependency 'bixby', '~> 1.0.0'
   spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'webmock'
@@ -115,8 +105,9 @@ SUMMARY
   ########################################################
   # Temporarily pinned dependencies. INCLUDE EXPLANATIONS.
   #
-  # simple_form 3.5.1 broke local and Travis builds in bad ways for unknown reasons
-  spec.add_dependency 'simple_form', '=3.5.0'
+  # simple_form 3.5.1 broke hydra-editor for certain model types;
+  #   see: https://github.com/plataformatec/simple_form/issues/1549
+  spec.add_dependency 'simple_form', '~> 3.2', '<= 3.5.0'
   # parser 2.5.0.0 broke local and Travis rubocop checks due to a change in parsing
   spec.add_development_dependency 'parser', '< 2.5'
 end

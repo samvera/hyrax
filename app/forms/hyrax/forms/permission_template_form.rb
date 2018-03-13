@@ -45,7 +45,6 @@ module Hyrax
       # @return [Hash{Symbol => String, Boolean}] { :content_tab (for confirmation message),
       #                                             :updated (true/false),
       #                                               :error_code (for flash error lookup) }
-      # rubocop:disable Metrics/MethodLength
       def update(attributes)
         @attributes = attributes
         return_info = { content_tab: tab_to_update }
@@ -219,9 +218,7 @@ module Hyrax
         def grants_as_collection
           return [] unless attributes[:access_grants_attributes]
           attributes_collection = attributes[:access_grants_attributes]
-          if attributes_collection.respond_to?(:permitted?)
-            attributes_collection = attributes_collection.to_h
-          end
+          attributes_collection = attributes_collection.to_h if attributes_collection.respond_to?(:permitted?)
           if attributes_collection.is_a? Hash
             attributes_collection = attributes_collection
                                     .sort_by { |i, _| i.to_i }

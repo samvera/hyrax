@@ -3,9 +3,7 @@ class FeaturedWorkList
 
   # @param [ActionController::Parameters] a collection of nested perameters
   def featured_works_attributes=(attributes_collection)
-    if attributes_collection.respond_to?(:permitted?)
-      attributes_collection = attributes_collection.to_h
-    end
+    attributes_collection = attributes_collection.to_h if attributes_collection.respond_to?(:permitted?)
     attributes_collection = attributes_collection.sort_by { |i, _| i.to_i }.map { |_, attributes| attributes } if attributes_collection.is_a? Hash
     attributes_collection.each do |attributes|
       raise "Missing id" if attributes['id'].blank?

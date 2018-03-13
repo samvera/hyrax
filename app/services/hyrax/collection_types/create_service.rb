@@ -14,6 +14,7 @@ module Hyrax
       DEFAULT_OPTIONS = {
         description: '',
         nestable: true,
+        brandable: true,
         discoverable: true,
         sharable: true,
         share_applies_to_new_works: true,
@@ -30,6 +31,7 @@ module Hyrax
       USER_COLLECTION_OPTIONS = {
         description: I18n.t('hyrax.collection_types.create_service.default_description'),
         nestable: true,
+        brandable: true,
         discoverable: true,
         sharable: true,
         share_applies_to_new_works: false,
@@ -46,6 +48,7 @@ module Hyrax
       ADMIN_SET_OPTIONS = {
         description: I18n.t('hyrax.collection_types.create_service.admin_set_description'),
         nestable: false,
+        brandable: false,
         discoverable: false,
         sharable: true,
         share_applies_to_new_works: true,
@@ -66,6 +69,7 @@ module Hyrax
       # @param options [Hash] options to override DEFAULT_OPTIONS
       # @option options [String] :description a description to show the user when selecting the collection type
       # @option options [Boolean] :nestable if true, collections of this type can be nested
+      # @option options [Boolean] :brandable if true, collections of this type can be branded
       # @option options [Boolean] :discoverable if true, collections of this type can be marked Public and found in search results
       # @option options [Boolean] :sharable if true, collections of this type can have participants added for :manage, :deposit, or :view access
       # @option options [Boolean] :share_applies_to_new_works if true, share participant permissions are applied to new works created in the collection
@@ -133,7 +137,7 @@ module Hyrax
             agent_id = p.fetch(:agent_id)
             access = p.fetch(:access)
             Hyrax::CollectionTypeParticipant.create!(hyrax_collection_type_id: collection_type_id, agent_type: agent_type, agent_id: agent_id, access: access)
-          rescue => e # rubocop:disable Lint/RescueWithoutErrorClass
+          rescue => e
             Rails.logger.error "Participant not created for collection type #{collection_type_id}: #{agent_type}, #{agent_id}, #{access} -- reason: #{e.class.name} - #{e.message}\n"
           end
         end

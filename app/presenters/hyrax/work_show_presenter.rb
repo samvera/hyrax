@@ -28,7 +28,7 @@ module Hyrax
     end
 
     def page_title
-      title.first
+      "#{human_readable_type} | #{title.first} | ID: #{id} | #{I18n.t('hyrax.product_name')}"
     end
 
     # CurationConcern methods
@@ -81,7 +81,7 @@ module Hyrax
     # Get presenters for the collections this work is a member of via the member_of_collections association.
     # @return [Array<CollectionPresenter>] presenters
     def member_of_collection_presenters
-      PresenterFactory.build_for(ids: member_of_collection_ids,
+      PresenterFactory.build_for(ids: member_of_authorized_parent_collections,
                                  presenter_class: collection_presenter_class,
                                  presenter_args: presenter_factory_arguments)
     end
@@ -194,9 +194,7 @@ module Hyrax
       end
 
       def featured?
-        if @featured.nil?
-          @featured = FeaturedWork.where(work_id: solr_document.id).exists?
-        end
+        @featured = FeaturedWork.where(work_id: solr_document.id).exists? if @featured.nil?
         @featured
       end
 
@@ -214,6 +212,11 @@ module Hyrax
 
       def graph
         GraphExporter.new(solr_document, request).fetch
+      end
+
+      def member_of_authorized_parent_collections
+        # member_of_collection_ids with current_ability access
+        @member_of ||= Hyrax::CollectionMemberService.run(solr_document, current_ability).map(&:id)
       end
   end
 end

@@ -1,15 +1,12 @@
-<div class="panel panel-default tabs" id="collection-controls">
+<div class="panel panel-default tabs">
   <ul class="nav nav-tabs" role="tablist">
     <li class="active">
       <a href="#description" role="tab" data-toggle="tab"><%= t('.tabs.description') %></a>
     </li>
     <% if @form.persisted? %>
+      <% if @collection.brandable? %>  
       <li>
         <a href="#branding" role="tab" data-toggle="tab"><%= t('.tabs.branding') %></a>
-      </li>
-      <% if @collection.nestable? %>
-      <li>
-        <a href="#relationships" role="tab" data-toggle="tab"><%= t('.tabs.relationships') %></a>
       </li>
       <% end %>
       <% if @collection.discoverable? %>
@@ -77,14 +74,6 @@
           <div class="panel panel-default labels">
             <div class="panel-body">
               <%= render 'form_branding', f: f %>
-            </div>
-          </div>
-        </div>
-
-        <div id="relationships" class="tab-pane">
-          <div class="panel panel-default labels">
-            <div class="panel-body">
-              <%= render 'form_relationships', f: f %>
             </div>
           </div>
         </div>

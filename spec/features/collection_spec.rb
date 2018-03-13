@@ -1,4 +1,4 @@
-RSpec.describe 'collection', type: :feature, with_nested_reindexing: true do
+RSpec.describe 'collection', type: :feature, clean_repo: true do
   let(:user) { create(:user) }
 
   let(:collection1) { create(:public_collection, user: user) }
@@ -52,6 +52,18 @@ RSpec.describe 'collection', type: :feature, with_nested_reindexing: true do
       expect(page).to have_content("Search Results")
       expect(page).to have_content(work1.title.first)
       expect(page).not_to have_content(work2.title.first)
+    end
+
+    context "with a non-nestable collection type" do
+      let(:collection) do
+        build(:public_collection_lw, user: user, description: ['collection description'], collection_type_settings: :not_nestable, with_solr_document: true, with_permission_template: true)
+      end
+
+      it "displays basic information on its show page" do
+        expect(page).to have_content(collection.title.first)
+        expect(page).to have_content(collection.description.first)
+        expect(page).to have_content("Collection Details")
+      end
     end
   end
 

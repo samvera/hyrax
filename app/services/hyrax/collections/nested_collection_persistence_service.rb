@@ -15,6 +15,12 @@ module Hyrax
         child.member_of_collections << parent
         child.save
       end
+
+      def self.remove_nested_relationship_for(parent:, child:)
+        child.member_of_collections.delete(parent)
+        child.save
+        true
+      end
     end
   end
 end

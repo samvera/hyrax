@@ -32,6 +32,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     subject { presenter }
 
     it { is_expected.to delegate_method(:collection_type_is_nestable?).to(:collection_type).as(:nestable?) }
+    it { is_expected.to delegate_method(:collection_type_is_brandable?).to(:collection_type).as(:brandable?) }
     it { is_expected.to delegate_method(:collection_type_is_discoverable?).to(:collection_type).as(:discoverable?) }
     it { is_expected.to delegate_method(:collection_type_is_sharable?).to(:collection_type).as(:sharable?) }
     it { is_expected.to delegate_method(:collection_type_is_share_applies_to_new_works?).to(:collection_type).as(:share_applies_to_new_works?) }
@@ -39,6 +40,21 @@ RSpec.describe Hyrax::CollectionPresenter do
     it { is_expected.to delegate_method(:collection_type_is_require_membership?).to(:collection_type).as(:require_membership?) }
     it { is_expected.to delegate_method(:collection_type_is_assigns_workflow?).to(:collection_type).as(:assigns_workflow?) }
     it { is_expected.to delegate_method(:collection_type_is_assigns_visibility?).to(:collection_type).as(:assigns_visibility?) }
+
+    it "sets a default value on subcollection_counts" do
+      expect(subject.subcollection_count).to eq(0)
+    end
+
+    it { is_expected.to respond_to(:subcollection_count=).with(1).argument }
+
+    it "provides the amount of subcollections when there are none" do
+      subject.subcollection_count = nil
+      expect(subject.subcollection_count).to eq(0)
+    end
+
+    it "provides the amount of subcollections when they exist" do
+      expect(subject.subcollection_count = 5).to eq(5)
+    end
   end
 
   describe '#collection_type' do

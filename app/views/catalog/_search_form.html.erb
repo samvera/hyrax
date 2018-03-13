@@ -10,18 +10,17 @@
       <button type="submit" class="btn btn-primary" id="search-submit-header">
         <%= t('hyrax.search.button.html') %>
       </button>
-      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-        <span data-search-element="label"><%= t("hyrax.search.form.option.all.label_long", application_name: application_name) %></span>
-        <span class="caret"></span>
-      </button>
+      <% if current_user %>
+        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+          <span data-search-element="label"><%= t("hyrax.search.form.option.all.label_long", application_name: application_name) %></span>
+          <span class="caret"></span>
+        </button>
 
-      <ul class="dropdown-menu pull-right">
-        <li>
-          <%= link_to t("hyrax.search.form.option.all.label_long", application_name: application_name), "#",
-              data: { "search-option" => main_app.search_catalog_path, "search-label" => t("hyrax.search.form.option.all.label_short") } %>
-        </li>
-
-        <% if current_user %>
+        <ul class="dropdown-menu pull-right">
+          <li>
+            <%= link_to t("hyrax.search.form.option.all.label_long", application_name: application_name), "#",
+                data: { "search-option" => main_app.search_catalog_path, "search-label" => t("hyrax.search.form.option.all.label_short") } %>
+          </li>
           <li>
             <%= link_to t("hyrax.search.form.option.my_works.label_long"), "#",
                 data: { "search-option" => hyrax.my_works_path, "search-label" => t("hyrax.search.form.option.my_works.label_short") } %>

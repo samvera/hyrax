@@ -4,17 +4,13 @@ module Hyrax
       class ChicagoFormatter < BaseFormatter
         include Hyrax::CitationsBehaviors::PublicationBehavior
         include Hyrax::CitationsBehaviors::TitleBehavior
-
-        # rubocop:disable Metrics/MethodLength
         def format(work)
           text = ""
 
           # setup formatted author list
           authors_list = all_authors(work)
           text << format_authors(authors_list)
-          if text.present?
-            text = "<span class=\"citation-author\">#{text}</span>"
-          end
+          text = "<span class=\"citation-author\">#{text}</span>" if text.present?
           # Get Pub Date
           pub_date = setup_pub_date(work)
           text << " #{pub_date}." unless pub_date.nil?

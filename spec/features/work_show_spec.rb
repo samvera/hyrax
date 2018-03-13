@@ -7,14 +7,18 @@ RSpec.describe "display a work as its owner" do
 
   context "as the work owner" do
     let(:work) do
-      create(:work_with_one_file,
+      create(:work,
              with_admin_set: true,
              title: ["Magnificent splendor"],
              source: ["The Internet"],
              based_near: ["USA"],
-             user: user)
+             user: user,
+             ordered_members: [file_set],
+             representative_id: file_set.id)
     end
     let(:user) { create(:user) }
+    let(:file_set) { create(:file_set, user: user, title: ['A Contained FileSet'], content: file) }
+    let(:file) { File.open(fixture_path + '/world.png') }
 
     before do
       sign_in user
@@ -31,11 +35,15 @@ RSpec.describe "display a work as its owner" do
       within '.related-files' do
         expect(page).to have_selector '.attribute-filename', text: 'A Contained FileSet'
       end
+
+      # IIIF manifest does not include locale query param
+      expect(find('div.viewer:first')['data-uri']).to eq "/concern/generic_works/#{work.id}/manifest"
     end
   end
 
   context "as a user who is not logged in" do
     let(:work) { create(:public_generic_work, title: ["Magnificent splendor"], source: ["The Internet"], based_near: ["USA"]) }
+    let(:page_title) { { text: "Generic Work | Magnificent splendor | ID: #{work.id} | Hyrax" }.to_param }
 
     before do
       visit work_path
@@ -51,7 +59,7 @@ RSpec.describe "display a work as its owner" do
       expect(page).not_to have_selector "form#fileupload"
 
       # has some social media buttons
-      expect(page).to have_link '', href: "https://twitter.com/intent/tweet/?text=Magnificent+splendor&url=http%3A%2F%2Fwww.example.com%2Fconcern%2Fgeneric_works%2F#{work.id}"
+      expect(page).to have_link '', href: "https://twitter.com/intent/tweet/?#{page_title}&url=http%3A%2F%2Fwww.example.com%2Fconcern%2Fgeneric_works%2F#{work.id}"
 
       # exports EndNote
       expect(page).to have_link 'EndNote'

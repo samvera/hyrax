@@ -13,7 +13,7 @@
       <% unless req.receiving_user.blank? %>
         <tr>
           <td> <%= show_transfer_request_title(req) %> </td>
-          <td>
+          <td data-sort="<%= req.created_at.getutc.iso8601(5) %>">
             <relative-time datetime="<%= req.created_at.getutc.iso8601 %>" title="<%= req.created_at.to_formatted_s(:standard) %>">
               <%= req.created_at.to_formatted_s(:long_ordinal) %>
             </relative-time>

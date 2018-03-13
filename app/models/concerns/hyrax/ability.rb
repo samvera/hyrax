@@ -9,9 +9,10 @@ module Hyrax
       include Hyrax::Ability::PermissionTemplateAbility
       include Hyrax::Ability::SolrDocumentAbility
 
-      class_attribute :admin_group_name, :registered_group_name
+      class_attribute :admin_group_name, :registered_group_name, :public_group_name
       self.admin_group_name = 'admin'
       self.registered_group_name = 'registered'
+      self.public_group_name = 'public' # TODO: find hard coded values and replace with this
       self.ability_logic += [:admin_permissions,
                              :curation_concerns_permissions,
                              :operation_abilities,
@@ -112,9 +113,7 @@ module Hyrax
           end
         end
 
-        if Flipflop.proxy_deposit? && registered_user?
-          can :create, ProxyDepositRequest
-        end
+        can :create, ProxyDepositRequest if Flipflop.proxy_deposit? && registered_user?
 
         can :accept, ProxyDepositRequest, receiving_user_id: current_user.id, status: 'pending'
         can :reject, ProxyDepositRequest, receiving_user_id: current_user.id, status: 'pending'

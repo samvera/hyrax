@@ -42,6 +42,35 @@ header {
   text-align: center;
 }
 
+// Wrapper class for <ul> display list of parent collections, sub collections
+.collections-list {
+  li {
+    margin: 5px 0;
+  }
+
+  .flex-wrapper {
+    align-items: flex-start;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .collections-list-title {
+    font-weight: bold;
+    padding-right: 10px;
+  }
+
+  @media (max-width: 768px) {
+    .flex-wrapper,
+    .collections-list-title {
+      display: block;
+    }
+
+    .collections-list-title {
+      padding-bottom: 10px;
+    }
+  }
+}
+
 .actions-controls-collections {
   display: block;
   margin: 1em 0 0 1em;
@@ -262,7 +291,7 @@ button.branding-banner-remove:hover {
     display: flex;
     justify-content: space-between;
 
-    @media (max-width: 768px) {
+    @media (max-width: 992px) {
       display: block;
     }
 
@@ -270,25 +299,34 @@ button.branding-banner-remove:hover {
       align-items: center;
       display: flex;
 
-      @media (max-width: 768px) {
+      @media (max-width: 992px) {
         display: block;
         margin-bottom: 10px;
+      }
 
+      .label {
+        margin-left: 5px;
+      }
+
+      @media (max-width: 768px) {
         .btn {
           display: block;
           margin: 0 0 5px;
           width: 100%;
         }
       }
-
-      .label {
-        margin-left: 5px;
-      }
     }
 
     .collection-title {
       display: inline-block;
       margin: 0;
+      padding-right: 5px;
+
+      // Wraps each collection title text, and helpful when there are multiple titles
+      span {
+        display: block;
+        padding-bottom: 5px;
+      }
     }
   }
 

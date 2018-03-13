@@ -25,8 +25,16 @@ module Hyrax
         after_update_error(err_msg) if err_msg.present?
         return if err_msg.present?
 
-        collection.add_member_objects batch_ids
-        after_update
+        members = collection.add_member_objects batch_ids
+        messages = members.collect { |member| member.errors.full_messages }.flatten
+        if messages.size == members.size
+          after_update_error(messages.uniq.join(', '))
+        elsif messages.present?
+          flash[:error] = messages.uniq.join(', ')
+          after_update
+        else
+          after_update
+        end
       end
 
       private
@@ -50,7 +58,7 @@ module Hyrax
         end
 
         def collection
-          Collection.find(collection_id)
+          @collection ||= Collection.find(collection_id)
         end
 
         def batch_ids

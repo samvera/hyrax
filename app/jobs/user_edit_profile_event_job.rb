@@ -6,6 +6,6 @@ class UserEditProfileEventJob < EventJob
   end
 
   def action
-    "User #{link_to_profile @editor} has edited his or her profile"
+    "User #{link_to_profile @editor} has edited their profile"
   end
 end

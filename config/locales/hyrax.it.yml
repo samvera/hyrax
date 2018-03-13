@@ -7,7 +7,12 @@ it:
   activemodel:
     errors:
       messages:
+        cannot_have_child_nested: non posso avere un figlio annidato al suo interno
+        cannot_nest_in_parent: non può nidificare all'interno del genitore
+        cannot_remove_relationship: il permesso è inadeguato per la rimozione della relazione di nidificazione
         conflict: Le modifiche non sono state salvate perché un altro utente (o il lavoro di sfondo) ha aggiornato questo %{model} dopo aver iniziato la modifica. Assicurati che tutti gli allegati di file siano stati completati correttamente e riprovare. Questo modulo è stato aggiornato con la più recente copia salvata dello %{model}.
+        exceeds_maximum_nesting_depth: l'annidamento supera la profondità massima di annidamento consentita.
+        is_not_nestable: non è annidabile
   blacklight:
     search:
       fields:
@@ -32,15 +37,19 @@ it:
       extension_whitelist_error: 'Non è consentito caricare i file %{extension}, i tipi consentiti: %{allowed_types}'
   helpers:
     action:
+      add: Inserisci
       admin_set:
         new: Crea nuovo set amministrativo
       batch:
         new: Crea un gruppo di opere
       cancel: Annulla
+      close: Vicino
       collection:
         new: Nuova collezione
       delete: Elimina
       edit: Modifica
+      refresh: ricaricare
+      remove: Rimuovere
       work:
         new: Aggiungi nuovo lavoro
     submit:
@@ -168,6 +177,73 @@ it:
         update:
           flash:
             success: L'aspetto è stato aggiornato con successo
+      collection_types:
+        create:
+          notification: Il tipo di raccolta %{name} è stato creato.
+        delete:
+          notification: Il tipo di raccolta %{name} è stato cancellato.
+        edit:
+          header: Modifica il tipo di raccolta
+          submit: Salva I Cambiamenti
+        errors:
+          no_settings_change_for_admin_sets: Le impostazioni del tipo di raccolta non possono essere modificate per il tipo di set amministrativo
+          no_settings_change_for_user_collections: Le impostazioni del tipo di raccolta non possono essere modificate per il tipo di raccolta utente
+          no_settings_change_if_not_empty: Le impostazioni del tipo di raccolta non possono essere modificate per un tipo che dispone di raccolte
+          not_empty: Il tipo di raccolta non può essere modificato in quanto ha collezioni
+        form:
+          tab:
+            metadata: Descrizione
+            participants: I partecipanti
+            settings: impostazioni
+        form_participant_table:
+          creators:
+            action: Azione
+            agent_name: Creatori di collezioni
+            empty: Nessun creatore è stato aggiunto a questo tipo di raccolta.
+            help: I creatori di raccolte di questo tipo possono creare e gestire le proprie raccolte.
+            title: creatori
+            type: genere
+          managers:
+            action: Azione
+            agent_name: Responsabili della raccolta
+            empty: Nessun gestore è stato aggiunto a questo tipo di raccolta.
+            help: I gestori di raccolte di questo tipo possono modificare le raccolte create da altri utenti, incluso l'aggiunta e la rimozione di opere da una raccolta, la modifica dei metadati della raccolta e l'eliminazione delle raccolte.
+            title: I gestori
+            type: genere
+        form_participants:
+          add_participants: Aggiungi partecipanti
+          current_participants: Partecipanti attuali
+          header: Partecipanti alla raccolta
+          instructions: Puoi designare sia gruppi che utenti come creatori e gestori di raccolte di questo tipo
+          remove_success: Rimosso il partecipante
+          submit: Inserisci
+          update_notice: Aggiornamento dei partecipanti
+        form_settings:
+          instructions: Queste impostazioni determinano in che modo è possibile gestire e scoprire raccolte di questo tipo.
+          warning: 'Avvertenza: queste impostazioni non possono essere modificate dopo aver creato una collezione di questo tipo.'
+        index:
+          breadcrumb: Tipi di raccolta
+          create_new_button: Crea un nuovo tipo di raccolta
+          description: I tipi di raccolta ti consentono di definire le impostazioni che governano le raccolte che hanno scopi diversi nel tuo repository. È possibile definire tutti i tipi di raccolta necessari.
+          header: Tipi di raccolta
+          modal:
+            can_delete_body_html: "<p> L'eliminazione di questo tipo di raccolta rimuove permanentemente il tipo e le relative impostazioni dal repository. Sei sicuro di voler eliminare questo tipo di raccolta? </p>"
+            cannot_delete_body_html: "<p> Non è possibile eliminare questo tipo di raccolta perché una o più raccolte di questo tipo sono già state create. </p><p> Per eliminare questo tipo di raccolta, assicurati innanzitutto che tutte le raccolte di questo tipo siano state eliminate. </p>"
+            header_can_delete: Elimina il tipo di raccolta?
+            header_cannot_delete: Impossibile eliminare il tipo di raccolta
+            view_collections: Visualizza raccolte di questo tipo
+          more_toggle_content_html: "<p> Gli scenari tipici per i tipi di raccolta includono: </p><ul><li> <strong>Raccolte di utenti</strong> che qualsiasi utente registrato può creare per organizzare gli oggetti depositati. </li><li> <strong>Esibisce</strong> che il personale crea e cura per la visualizzazione pubblica, dove gli articoli possono essere inclusi in un numero qualsiasi di esposizioni. </li><li> <strong>Collezioni controllate</strong> create e gestite dallo staff e non destinate alla visualizzazione pubblica, come raccolte associate a unità organizzative o reparti. </li><li> <strong>Raccolte di comunità</strong> destinate alla visualizzazione pubblica, analogamente a come vengono talvolta utilizzate le community e le raccolte di DSpace. </li></ul>"
+          more_toggle_header_html: "<span>Ulteriori</span> informazioni sui tipi di raccolta"
+          table:
+            actions: Azioni
+            name: Nome
+        multiple_membership_checker:
+          error_preamble: 'Errore: hai specificato più di uno degli stessi tipi di raccolta a membro singolo'
+        new:
+          header: Crea un nuovo tipo di raccolta
+          submit: Salvare
+        update:
+          notification: Il tipo di raccolta %{name} è stato aggiornato.
       features:
         index:
           action: Azione
@@ -176,8 +252,8 @@ it:
           header: Caratteristiche
       sidebar:
         activity: Attività
-        admin_sets: Set amministrativi
         appearance: Aspetto
+        collection_types: Tipi di raccolta
         collections: collezioni
         configuration: Configurazione
         content_blocks: Blocchi di contenuti
@@ -308,10 +384,19 @@ it:
         required_descriptions: Descrivi il tuo lavoro
         required_files: Aggiungere i file
         requirements: Requisiti
+      form_rendering:
+        help_html: Selezionare i file da offrire come download per ogni immagine in Universal Viewer, ad esempio un PDF dell'intero lavoro.
+        legend_html: Rendering
+      form_representative:
+        help_html: Seleziona il file con il supporto che rappresenta questo lavoro.
+        legend_html: Media rappresentativo
       form_share:
         add_sharing: Aggiungi condivisione
         currently_sharing: Attualmente condiviso con
         directions: Indipendentemente dalle impostazioni di visibilità per questo lavoro, puoi anche condividerlo con altri utenti e gruppi.
+      form_thumbnail:
+        help_html: Seleziona il file da utilizzare come anteprima per questo lavoro.
+        legend_html: Thumbnail
       items:
         actions: Azioni
         date_uploaded: Data caricata
@@ -353,9 +438,15 @@ it:
       search_results: Torna ai risultati della ricerca
     collection:
       actions:
-        add_works:
-          desc: Aggiungi opere a questa raccolta
-          label: Aggiungi opere
+        add_existing_works:
+          desc: Aggiungi opere esistenti a questa raccolta
+          label: Aggiungi opere esistenti a questa raccolta
+        add_new_nested_collection:
+          desc: Aggiungi nuova collezione a questa raccolta
+          label: Crea nuova raccolta come sottoraccolta
+        add_new_work:
+          desc: Deposita un nuovo lavoro attraverso questa raccolta
+          label: Deposita un nuovo lavoro attraverso questa raccolta
         delete:
           confirmation: Cancellare questa collezione?
           desc: Elimina questa raccolta
@@ -364,6 +455,17 @@ it:
           desc: Modifica questa raccolta
           label: Modifica
         header: Azioni
+        nest_collections:
+          button_label: Aggiungi una sottoraccolta
+          desc: Annidare altre raccolte all'interno di questa raccolta
+          label: Aggiungi raccolte esistenti a questa raccolta
+          modal_title: Aggiungi una sottoraccolta alla raccolta
+          select_label: Seleziona sottoraccolta
+        nested_subcollection:
+          button_label: Aggiungere alla collezione
+          desc: Aggiungi raccolte esistenti a questa raccolta
+          modal_title: Aggiungi questa collezione in un'altra raccolta
+          select_label: Seleziona raccolta
       browse_view: Sfoglia la vista
       document_list:
         edit: Modifica
@@ -382,12 +484,28 @@ it:
         select_heading: 'Seleziona la raccolta per aggiungere i tuoi file a:'
         title: Aggiungere alla collezione
         update: Aggiorna Collezione
+    collection_type:
+      admin_set_title: Set di amministrazione
+      default_title: Collezione utente
+    collection_types:
+      create_service:
+        admin_set_description: Un'aggregazione di opere che ha lo scopo di aiutare con il controllo amministrativo. I set di amministratori forniscono un modo per definire comportamenti e politiche attorno a un insieme di opere.
+        default_description: Una User Collection può essere creata da qualsiasi utente per organizzare i propri lavori.
     collections:
       search_form:
         button_label: Partire
         label: Cerca la raccolta %{title}
         placeholder: Cerca raccolta
       show:
+        buttons:
+          remove_from_collection: Rimuovere
+          remove_this_sub_collection: Rimuovere
+        no_visible_parent_collections: Non ci sono raccolte genitori visibili.
+        no_visible_subcollections: Non ci sono sottoraccolte visibili.
+        parent_collection_header: Collezioni principali
+        show_less_parent_collections: "...mostra meno"
+        show_more_parent_collections: mostra di più...
+        subcollection_count: sottoraccolte
         works_in_collection: Funziona in questa collezione
     contact_form:
       button_label: Inviare
@@ -431,18 +549,100 @@ it:
       authorize_proxies: Autorizzare i Proxy
       breadcrumbs:
         admin: Amministrazione
+      collection_type_actions:
+        close: Vicino
+        create_collection: Crea raccolta
+        select_type_of_collection: Seleziona il tipo di collezione
       collections:
         edit:
           header: 'Modifica collezione: %{title}'
         form:
+          permission_update_errors:
+            error: Opzione di aggiornamento non valida per modello di autorizzazione.
+          permission_update_notices:
+            participants: Le opzioni di condivisione della raccolta sono state aggiornate.
+            sharing: Le opzioni di condivisione della raccolta sono state aggiornate.
           tabs:
+            branding: Branding
             description: Descrizione
+            discovery: Scoperta
+            relationships: Le relazioni
             sharing: compartecipazione
-            visibility: Visibilità
+        form_branding:
+          banner:
+            description: Un'immagine da visualizzare nella parte superiore della pagina di raccolta. Per risultati ottimali, carica un'immagine (JPG, GIF o PNG) di almeno 120 pixel di altezza e 1200 pixel di larghezza.
+            label: bandiera
+          branding:
+            description: Facoltativamente, puoi caricare un'immagine banner e / o immagini logo da associare a questa raccolta. Se caricate, queste immagini verranno visualizzate nella parte superiore della pagina di raccolta per fornire un marchio univoco per la raccolta.
+            label: Branding
+          logo:
+            description: Una o più immagini da visualizzare nella parte superiore della pagina di raccolta. Per risultati ottimali, carica un'immagine (JPG, GIF o PNG) di altezza pari a 40 pixel. Le immagini più grandi verranno ridimensionate a 40 pixel in altezza.
+            label: Logo
+        form_discovery:
+          para1: Queste impostazioni determinano chi è in grado di scoprire e visualizzare la pagina di destinazione di questa raccolta; non influenzano la visibilità degli oggetti nella collezione.
+          para2: Se hai scelto di non rendere questa raccolta accessibile, puoi comunque condividere la raccolta con utenti e gruppi specifici utilizzando la scheda Condivisione.
+        form_relationships:
+          add_other_collections_as_sub_collections_description: Puoi gestire le sotto-raccolte di questa raccolta.
+          buttons:
+            remove_from_collection: Rimuovere
+            remove_this_sub_collection: Rimuovere
+          collection_is_subcollection_description: Questa raccolta è attualmente una sotto-raccolta di queste raccolte
+          headlines:
+            other_collections_in_this_collection: Altre collezioni in questa raccolta
+            this_collection_in_other_collections: Questa collezione in altre collezioni
+          modals:
+            remove_from_collection_description: La rimozione di questa raccolta non la rimuoverà dal repository, ma solo come genitore di questa raccolta. Sei sicuro di voler rimuovere questa raccolta?
+            remove_this_sub_collection_description: La rimozione di questa sotto-raccolta non la rimuoverà dal repository, solo da questa raccolta genitore. Sei sicuro di voler rimuovere questa sottoraccolta?
+          sub_collections_of_collection_description: Queste raccolte sono attualmente sotto-raccolte di questa collezione
+          table:
+            action: Azione
+            collection_title: Titolo della collezione
+          this_collection_in_other_collections_description: È possibile aggiungere questa raccolta ad altre raccolte come sotto-raccolta.
+        form_share:
+          add_group: Aggiungere gruppo
+          add_sharing: Aggiungi condivisione
+          add_user: Aggiungi utente
+          current_shared: Attualmente condiviso con
+          note: Indipendentemente dalle impostazioni di visibilità di questa raccolta, puoi condividere questa raccolta con gruppi e utenti specifici.
+        form_share_table:
+          allow_all_registered: Consenti tutti registrati
+          depositors:
+            action: Azione
+            agent_name: Gruppo di utenti
+            empty: Nessun depositante è stato aggiunto a questa raccolta.
+            help: I depositanti di questa collezione possono visualizzare la raccolta e aggiungervi lavori, anche se i permessi di visibilità del collettivo non consentirebbero loro di vederlo.
+            remove: Rimuovere
+            title: depositanti
+            type: genere
+          managers:
+            action: Azione
+            agent_name: Gruppo di utenti
+            empty: Nessun gestore è stato aggiunto a questa raccolta.
+            help: I gestori di questa raccolta possono aggiungere e rimuovere lavori dalla raccolta, modificare i metadati della raccolta ed eliminare la raccolta.
+            help_with_works: Per gli insiemi di tipo %{type_title}, quando i lavori vengono creati direttamente in questa raccolta, ai gestori viene concesso l'accesso di modifica alla nuova opera.
+            remove: Rimuovere
+            title: I gestori
+            type: genere
+          viewers:
+            action: Azione
+            agent_name: Gruppo di utenti
+            empty: Nessun spettatore è stato aggiunto a questa raccolta.
+            help: Gli spettatori di questa raccolta possono visualizzarlo anche se i permessi di visibilità della raccolta non consentirebbero loro di vederlo.
+            help_with_works: Per gli insiemi di tipo %{type_title}, quando i lavori vengono creati direttamente in questa raccolta, gli spettatori hanno accesso in lettura alla nuova opera.
+            remove: Rimuovere
+            title: Gli spettatori
+            type: genere
         new:
           header: Crea nuova collezione
         show:
-          works_in_collection: Funziona in questa collezione
+          header: Collezione
+          item_count: Lavori
+          parent_collection_header: Collezioni principali
+          public_view_label: Visione pubblica della collezione
+          search_results: Risultati della ricerca all'interno di questa raccolta
+          show_less_parent_collections: "...mostra meno"
+          show_more_parent_collections: mostra di più...
+          subcollection_count: sottoraccolte
       create_work: Crea lavoro
       current_proxies: Proxy attuali
       delete_notification: Elimina notifica
@@ -451,19 +651,44 @@ it:
         create_work: Crea lavoro
         select_type_of_work: Seleziona il tipo di lavoro
       manage_proxies: Gestire le Proxy
+      managed:
+        collections: Collezioni gestite
+        works: Lavori gestiti
       my:
         action:
-          collection_confirmation: La cancellazione di una raccolta da %{application_name} è permanente. Fare clic su OK per eliminare questa raccolta da %{application_name} oppure Annulla per annullare questa operazione
+          add_to_collection: Aggiungere alla collezione
+          add_to_collection_only: Le azioni consentite sono limitate all'aggiunta di membri
+          admin_set_confirmation: L'eliminazione di un set di amministratori da %{application_name} è permanente. Fare clic su OK per eliminare questo set di amministratori da %{application_name}, o Annulla per annullare questa operazione
+          collection_create_success: La raccolta è stata creata con successo.
+          collection_delete_fail: Collezione %{id} non può essere cancellata
+          collection_delete_success: La raccolta %{id} è stata cancellata con successo
+          collection_deny_add_members: Non disponi di privilegi sufficienti per aggiungere membri alla raccolta
+          collection_update_success: La raccolta è stata aggiornata con successo.
+          collections_confirmation_html: L'eliminazione di <span class='pluralized'>questa raccolta</span> rimuove definitivamente <span class='pluralized'>questa raccolta</span> dal repository. Gli articoli di <span class='pluralized'>questa raccolta</span> rimarranno nel repository. Sei sicuro di voler eliminare <span class='pluralized'>questa raccolta</span> ?
+          collections_confirmation_no_items_html: Sei sicuro di voler eliminare questa raccolta? Questa azione non può essere annullata.
+          delete_admin_set: Elimina raccolta
+          delete_admin_set_deny: Questa raccolta è definita come Imposta amministratore e non è vuota. Per eliminare questo set di amministrazione, devi prima rimuovere (eliminare o spostare in un'altra raccolta di un gruppo di amministratori) tutti gli elementi dal set di amministrazione.
           delete_collection: Elimina raccolta
+          delete_collection_deny: Non disponi di privilegi sufficienti per eliminare questo documento.
+          delete_collections: Elimina raccolte
+          delete_collections_deny: È necessario selezionare una o più raccolte da eliminare.
           delete_work: Elimina lavoro
+          edit_admin_set: Modifica raccolta
           edit_collection: Modifica raccolta
+          edit_collection_deny: Non disponi di privilegi sufficienti per modificare questa raccolta.
+          edit_selected: Modifica selezionato
           edit_work: Modifica lavoro
           highlight: Evidenziare il Savoro sul Profilo
+          members_no_access: Non hai privilegi sufficienti per nessuno dei membri selezionati
+          nesting_not_allowed: Le raccolte di questo tipo non supportano il nesting.
+          nesting_permission_denied: Non disponi di privilegi sufficienti per aggiungere questa raccolta a un'altra raccolta.
           select: Selezionare
           select_all: Seleziona pagina corrente
           select_none: Non selezionare niente
           transfer: Trasferimento di proprietà del lavoro
           unhighlight: Rimuovi l'evidenziazione dal lavoro
+          view_admin_set: Guarda la collezione
+          view_collection: Guarda la collezione
           work_confirmation: La cancellazione di un lavoro da %{application_name} è permanente. Fare clic su OK per eliminare questo lavoro da %{application_name} oppure Annulla per annullare questa operazione
         collection_list:
           description: 'Descrizione:'
@@ -478,9 +703,14 @@ it:
           works: 'Funzioni di filtro:'
         heading:
           action: Azioni
+          collection_type: Tipo di raccolta
+          date_modified: Ultima modifica
           date_uploaded: Data aggiunta
           highlighted: Evidenziato
+          items: Elementi
+          last_modified: Ultima modifica
           title: Titolo
+          type: genere
           visibility: Visibilità
         highlighted: I miei punti salienti
         shared: Opere condivise con me
@@ -493,6 +723,10 @@ it:
           results_per_page: Numero di risultati da visualizzare per pagina
           show_label: Visualizza tutti i dettagli di
         works: Le tue opere
+      nest_collections_form:
+        create_under: "'%{child_title}' è stato aggiunto a '%{parent_title}'"
+        create_within: "'%{child_title}' è stato aggiunto a '%{parent_title}'"
+        removed_relationship: "'%{child_title}' è stato rimosso da '%{parent_title}'"
       no_activity: L'utente non ha attività recenti
       no_notifications: L'utente non ha notifiche
       no_transfer_requests: Non hai ricevuto richieste di trasferimento di lavoro
@@ -601,6 +835,7 @@ it:
         tab_label: Opere in primo piano
         title: Opere in primo piano
       recently_uploaded:
+        depositor: Depositante
         details: Dettagli
         document:
           depositor_label: Depositante
@@ -651,6 +886,9 @@ it:
       message: Messaggio
       notifications_deleted: Le notifiche sono state eliminate
       subject: Soggetto
+    manifest:
+      download_text: Scarica l'intera risorsa
+      unknown_mime_text: tipo mime sconosciuto
     messages:
       failure:
         multiple:
@@ -848,6 +1086,17 @@ it:
         resource_type: Categorie predefinite per descrivere il tipo di contenuto che viene caricato, ad esempio "articolo" O "set di dati". Possono essere selezionati più di un tipo.
         subject: Intestazioni o indici che descrivono ciò che riguarda la raccolta; Questi devono essere conformi a un vocabolario esistente.
         title: Un nome per aiutare a identificare una collezione.
+      collection_type:
+        allow_multiple_membership: Consenti alle opere di appartenere a più raccolte di questo tipo
+        assigns_visibility: Consenti a raccolte di questo tipo di assegnare le impostazioni di visibilità iniziale a una nuova opera
+        assigns_workflow: Consenti a raccolte di questo tipo di assegnare un flusso di lavoro a una nuova opera
+        description: Una breve dichiarazione dello scopo generale di questo tipo di raccolta. Gli utenti vedranno questo se hanno più di un tipo di raccolta tra cui scegliere durante la creazione di una nuova raccolta.
+        discoverable: Consenti a raccolte di questo tipo di essere rilevabili
+        nestable: Consenti l'inserimento di raccolte di questo tipo (una raccolta può contenere altre raccolte)
+        require_membership: Un'opera deve appartenere ad almeno una raccolta di questo tipo
+        sharable: Consenti agli utenti di assegnare gestori di collezioni, depositanti e spettatori per le raccolte che gestiscono
+        share_applies_to_new_works: Quando vengono creati nuovi lavori direttamente nella raccolta, concedere la condivisione di autorizzazioni di utenti e gruppi per il nuovo lavoro in base ai rispettivi ruoli di raccolta.
+        title: ''
       defaults:
         based_near: Un nome di posto relativo al lavoro, come il suo sito di pubblicazione, o la città, lo stato o il paese sono i contenuti del lavoro. Chiama il <a href='http://www.geonames.org'> servizio Web di GeoNames </a>.
         contributor: Una persona o un gruppo che si desidera riconoscere per svolgere un ruolo nella creazione del lavoro, ma non il ruolo primario.
@@ -867,6 +1116,17 @@ it:
       collection:
         size: Dimensione
         total_items: Totale opere
+      collection_type:
+        allow_multiple_membership: MULTIPLE MEMBERSHIP
+        assigns_visibility: VISIBILITÀ
+        assigns_workflow: FLUSSO DI LAVORO
+        description: Tipo descrizione
+        discoverable: SCOPERTA
+        nestable: inseribile
+        require_membership: RICHIEDI ASSOCIAZIONE
+        sharable: CONDIVISIONE
+        share_applies_to_new_works: SI APPLICA A NUOVE OPERE
+        title: Digita il nome
       defaults:
         admin_set_id: Set Amministrativo
         based_near: luogo
@@ -880,6 +1140,7 @@ it:
         license: Licenza
         member_of_collection_ids: Aggiungere alla collezione
         related_url: URL correlato
+        rights_statement: Dichiarazione dei diritti
         title: Titolo
         visibility_after_embargo: Poi aprila fino a
         visibility_after_lease: Quindi limitarla

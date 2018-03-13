@@ -57,16 +57,16 @@ module Hyrax
 
     # Add member objects by adding this collection to the objects' member_of_collection association.
     def add_member_objects(new_member_ids)
-      Array(new_member_ids).each do |member_id|
+      Array(new_member_ids).collect do |member_id|
         member = ActiveFedora::Base.find(member_id)
-        # @note Ideally, this would be surfaced as a warning in a flash
-        #       message. Because the member is found and saved in this model
-        #       method, I am not sure it's worth the effort to rejigger things
-        #       such that this information bubbles up to the controller and
-        #       view.
-        next if Hyrax::MultipleMembershipChecker.new(item: member).check(collection_ids: id, include_current_members: true)
-        member.member_of_collections << self
-        member.save!
+        message = Hyrax::MultipleMembershipChecker.new(item: member).check(collection_ids: id, include_current_members: true)
+        if message
+          member.errors.add(:collections, message)
+        else
+          member.member_of_collections << self
+          member.save!
+        end
+        member
       end
     end
 

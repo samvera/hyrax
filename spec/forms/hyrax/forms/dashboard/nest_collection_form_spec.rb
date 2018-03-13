@@ -129,4 +129,31 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
       end
     end
   end
+
+  describe '#remove' do
+    subject { form.remove }
+
+    describe 'when not authorized' do
+      before do
+        expect(context).to receive(:can?).with(:edit, parent).and_return(false)
+      end
+
+      it 'does not even attempt to persist the relationship' do
+        expect(persistence_service).not_to receive(:remove_nested_relationship_for)
+        subject
+        expect(form.errors[:parent]).to eq(["permission is inadequate for removal of nesting relationship"])
+      end
+    end
+
+    describe 'when authorized' do
+      before do
+        expect(context).to receive(:can?).with(:edit, parent).and_return(true)
+      end
+
+      it "returns the result of the given persistence_service's call to remove_nested_relationship_for" do
+        expect(persistence_service).to receive(:remove_nested_relationship_for).with(parent: parent, child: child).and_return(:persisted)
+        subject
+      end
+    end
+  end
 end

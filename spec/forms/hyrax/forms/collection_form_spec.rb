@@ -159,7 +159,7 @@ RSpec.describe Hyrax::Forms::CollectionForm do
       it { is_expected.to be_empty }
     end
 
-    context 'with a work/file attached', :with_nested_reindexing do
+    context 'with a work/file attached' do
       let!(:work) { create(:work_with_one_file, :public, member_of_collections: [collection]) }
       let(:title) { work.file_sets.first.title.first }
       let(:file_id) { work.file_sets.first.id }

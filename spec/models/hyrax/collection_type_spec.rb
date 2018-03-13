@@ -23,6 +23,7 @@ RSpec.describe Hyrax::CollectionType, type: :model do
 
   it "has configuration properties with defaults" do
     expect(collection_type).to be_nestable
+    expect(collection_type).to be_brandable
     expect(collection_type).to be_discoverable
     expect(collection_type).to be_sharable
     expect(collection_type).to be_share_applies_to_new_works
