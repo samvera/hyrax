@@ -1,13 +1,13 @@
 RSpec.describe Hyrax::Analytics::GoogleAnalytics do
   let(:query_date) { '2018-03-01' }
-  let(:pageview_query_params) do
-    { dimensions: ['date'],
-      metrics: ['pageviews', 'users'], # users is unique visitors
-      filters: 'ga:pagePath=~' + Rails.application.routes.url_helpers.polymorphic_path(object) }
-  end
 
   describe 'Work API calls' do
     let(:object) { create(:work) }
+    let(:pageview_query_params) do
+      { dimensions: ['date'],
+        metrics: ['pageviews', 'users'], # users is unique visitors
+        filters: 'ga:pagePath=~' + Rails.application.routes.url_helpers.hyrax_generic_work_path(object) }
+    end
 
     describe 'work pageviews' do
       it 'sends the correct query paramaters' do
@@ -19,6 +19,11 @@ RSpec.describe Hyrax::Analytics::GoogleAnalytics do
 
   describe 'FileSet API calls' do
     let(:object) { create(:file_set) }
+    let(:pageview_query_params) do
+      { dimensions: ['date'],
+        metrics: ['pageviews', 'users'], # users is unique visitors
+        filters: 'ga:pagePath=~' + Rails.application.routes.url_helpers.hyrax_file_set_path(object) }
+    end
 
     describe 'FileSet pageviews' do
       it 'sends the correct query paramaters' do

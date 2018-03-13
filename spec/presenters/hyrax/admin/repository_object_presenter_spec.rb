@@ -16,9 +16,9 @@ RSpec.describe Hyrax::Admin::RepositoryObjectPresenter do
       allow(instance).to receive(:repository).and_return(stub_repo)
     end
     it do
-      is_expected.to eq [{ label: "Published", value: 1 },
-                         { label: "Unpublished", value: 2 },
-                         { label: "Unknown", value: 3 }]
+      is_expected.to eq [["Published", 1],
+                         ["Unpublished", 2],
+                         ["Unknown", 3]]
     end
   end
 end
