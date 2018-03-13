@@ -29,13 +29,14 @@ module Hyrax
     #
     # @param access [Array<String>] one or more types of access (e.g. Hyrax::PermissionTemplateAccess::MANAGE, Hyrax::PermissionTemplateAccess::DEPOSIT, Hyrax::PermissionTemplateAccess::VIEW)
     # @param ability [Ability] the ability coming from cancan ability check
+    # @param exclude_groups [Array<String>] name of groups to exclude from the results
     # @return [ActiveRecord::Relation] relation of templates for which the user has specified roles
-    def self.for_user(ability:, access:)
+    def self.for_user(ability:, access:, exclude_groups: [])
       PermissionTemplateAccess.where(
         user_where(access: access, ability: ability)
       ).or(
         PermissionTemplateAccess
-          .where(group_where(access: access, ability: ability))
+          .where(group_where(access: access, ability: ability, exclude_groups: exclude_groups))
       )
     end
 
@@ -79,13 +80,14 @@ module Hyrax
     #
     # @param access [Array<String>] one or more types of access (e.g. Hyrax::PermissionTemplateAccess::MANAGE, Hyrax::PermissionTemplateAccess::DEPOSIT, Hyrax::PermissionTemplateAccess::VIEW)
     # @param ability [Ability] the cancan ability
+    # @param exclude_groups [Array<String>] name of groups to exclude from the results
     # @return [Hash] the where clause hash to pass to joins for groups
     # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
     #   If calling from Abilities, pass the ability.  If you try to get the ability from the user, you end up in an infinit loop.
-    def self.group_where(access:, ability:)
+    def self.group_where(access:, ability:, exclude_groups: [])
       where_clause = {}
       where_clause[:agent_type] = 'group'
-      where_clause[:agent_id] = ability.user_groups
+      where_clause[:agent_id] = ability.user_groups - exclude_groups
       where_clause[:access] = access
       where_clause
     end
