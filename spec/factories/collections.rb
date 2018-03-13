@@ -107,7 +107,7 @@ FactoryBot.define do
       with_nesting_attributes nil
       with_solr_document false
     end
-    sequence(:title) { |n| ["Title #{n}"] }
+    sequence(:title) { |n| ["Collection Title #{n}"] }
 
     after(:build) do |collection, evaluator|
       collection.apply_depositor_metadata(evaluator.user.user_key)
@@ -164,7 +164,7 @@ FactoryBot.define do
       user { create(:user) }
     end
 
-    sequence(:title) { |n| ["Title #{n}"] }
+    sequence(:title) { |n| ["User Collection Title #{n}"] }
 
     after(:build) do |collection, evaluator|
       collection.apply_depositor_metadata(evaluator.user.user_key)
@@ -183,7 +183,7 @@ FactoryBot.define do
       do_save false
     end
 
-    sequence(:title) { |n| ["Title #{n}"] }
+    sequence(:title) { |n| ["Typeless Collection Title #{n}"] }
 
     after(:build) do |collection, evaluator|
       collection.apply_depositor_metadata(evaluator.user.user_key)
