@@ -1,6 +1,5 @@
 require 'google/apis/analyticsreporting_v4'
 include Google::Apis::AnalyticsreportingV4
-include Rails.application.routes.url_helpers
 
 module Hyrax
   module Analytics
@@ -8,6 +7,8 @@ module Hyrax
       REQUIRED_KEYS = %w[privkey_path view_id].freeze
 
       class << self
+        include ActionDispatch::Routing::PolymorphicRoutes
+        include Rails.application.routes.url_helpers
         attr_accessor :config
       end
 
