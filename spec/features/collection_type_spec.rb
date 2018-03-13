@@ -69,6 +69,50 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
       expect(page).to have_link('Settings', href: '#settings')
       expect(page).to have_link('Participants', href: '#participants')
     end
+
+    it 'tries to make a collection type with existing title, and receives error message', :js do
+      click_link 'Create new collection type'
+
+      expect(page).to have_content 'Create New Collection Type'
+
+      # confirm only Description tab is visible
+      expect(page).to have_link('Description', href: '#metadata')
+      expect(page).not_to have_link('Settings', href: '#settings')
+      expect(page).not_to have_link('Participants', href: '#participants')
+
+      # confirm metadata fields exist
+      expect(page).to have_selector 'input#collection_type_title'
+      expect(page).to have_selector 'textarea#collection_type_description'
+
+      # set values and save
+      fill_in('Type name', with: title)
+      fill_in('Type description', with: description)
+
+      click_button('Save')
+
+      visit '/admin/collection_types'
+      click_link 'Create new collection type'
+
+      expect(page).to have_content 'Create New Collection Type'
+
+      # confirm only Description tab is visible
+      expect(page).to have_link('Description', href: '#metadata')
+      expect(page).not_to have_link('Settings', href: '#settings')
+      expect(page).not_to have_link('Participants', href: '#participants')
+
+      # confirm metadata fields exist
+      expect(page).to have_selector 'input#collection_type_title'
+      expect(page).to have_selector 'textarea#collection_type_description'
+
+      # set values and save
+      fill_in('Type name', with: title)
+      fill_in('Type description', with: description)
+
+      click_button('Save')
+
+      # Confirm error message is displayed.
+      expect(page).to have_content 'Save was not successful because title has already been taken, and machine_id has already been taken.'
+    end
   end
 
   describe 'edit collection type' do
