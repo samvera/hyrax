@@ -14,3 +14,24 @@
 .select2-default {
   color: #4c4c4c !important;
 }
+
+// Adds a skip to content link for keyboard users, but only makes it visible when element receives focus
+.skip-to-content a {
+  height: 1px;
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  overflow: hidden;
+}
+
+.skip-to-content a:focus {
+  background-color: $admin-content-background-color;
+  height: auto;
+  left: 1rem;
+  padding: 1.5rem;
+  position: absolute;
+  top: 0.5rem;
+  width: auto;
+  z-index: 1005;
+}
