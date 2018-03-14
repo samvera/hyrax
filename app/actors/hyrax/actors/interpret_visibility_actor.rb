@@ -96,7 +96,7 @@ module Hyrax
         attributes = intention.sanitize_params
         new_env = Environment.new(env.curation_concern, env.current_ability, attributes)
         validate(env, intention, attributes) && apply_visibility(new_env, intention) &&
-          next_actor.update(new_env)
+          next_actor.update(new_env) && reindex_visibility_change(new_env)
       end
 
       private
@@ -226,6 +226,13 @@ module Hyrax
           env.curation_concern.apply_embargo(*intention.embargo_params)
           return unless env.curation_concern.embargo
           env.curation_concern.embargo.save # see https://github.com/samvera/hydra-head/issues/226
+        end
+
+        def reindex_visibility_change(env)
+          return true unless env.curation_concern.visibility_changed?
+          env.curation_concern.update_index
+          # Don't try to handle the indexing response and always return true
+          true
         end
     end
   end

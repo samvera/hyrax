@@ -279,7 +279,6 @@ module Hyrax
       end
 
       def after_update_response
-        reindex_visibility_change
         if curation_concern.file_sets.present?
           return redirect_to hyrax.confirm_access_permission_path(curation_concern) if permissions_changed?
           return redirect_to main_app.confirm_hyrax_permission_path(curation_concern) if curation_concern.visibility_changed?
@@ -311,10 +310,6 @@ module Hyrax
 
       def permissions_changed?
         @saved_permissions != curation_concern.permissions.map(&:to_hash)
-      end
-
-      def reindex_visibility_change
-        curation_concern.update_index if curation_concern.visibility_changed?
       end
   end
 end
