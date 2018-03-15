@@ -10,6 +10,10 @@ module Hyrax
       @params = params
     end
 
+    def self.works_query_filters
+      start(@params[:start]).rows(@params[:length])
+    end
+
     # Returns list of works
     # @param [Symbol] access :read or :edit
     # @return [Array<Hyrax::WorksCountService::SearchResultForWorkCount>] a list with documents
@@ -22,25 +26,24 @@ module Hyrax
       works.each do |work|
         next if work['system_create_dtsi'].nil?
         created_date = DateTime.parse(work['system_create_dtsi']).in_time_zone.strftime("%Y-%m-%d")
-        results << [work.title, created_date, 0, work['human_readable_type_tesim'][0], work['visibility_ssi']]
+        results << [work['title_tesim'][0], created_date, 0, work['human_readable_type_tesim'][0], work['visibility_ssi']]
       end
 
       { draw: @params[:draw],
-        recordsTotal: works['response']['numFound'],
-        recordsFiltered: works.documents.length,
+        recordsTotal: works.length,
+        recordsFiltered: works.length,
         data: works_sort(results, sort_column, sort_ordering) }
     end
 
     def search_results(access)
-      context.repository.search(builder(access))
+      response = context.repository.search(builder(access))
+      response.documents
     end
 
     private
 
       def builder(_)
-        search_builder.new(context, @params)
-                      .start(@params[:start])
-                      .rows(@params[:length])
+        search_builder.new(context, @params).rows(@params[:length])
       end
 
       # Returns sorted array either string sorted or numeric sorted depending on the column
