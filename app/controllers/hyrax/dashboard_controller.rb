@@ -31,10 +31,9 @@ module Hyrax
     end
 
     def update_works_list
-      if can? :read, :admin_dashboard
-        @work_rows = Hyrax::WorksCountService.new(self, Hyrax::AnalyticsWorksSearchBuilder, params).search_results_with_work_count(:read)
-        render json: @work_rows
-      end
+      return unless can? :read, :admin_dashboard
+      @work_rows = Hyrax::WorksCountService.new(self, Hyrax::AnalyticsWorksSearchBuilder, params).search_results_with_work_count(:read)
+      render json: @work_rows
     end
   end
 end

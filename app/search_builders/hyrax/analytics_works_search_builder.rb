@@ -12,14 +12,12 @@ module Hyrax
     end
 
     def filter_search(solr_parameters)
-      unless @params[:search][:value].nil? || @params[:search][:value] == ''
-        filter_params = "/.*#{@params[:search][:value]}.*/"
-        solr_parameters[:fq] ||= []
-        solr_parameters[:fq] << "(title_tesim:#{filter_params}
-          OR date_created_tesim:#{filter_params}
-          OR visibility_ssi:#{filter_params}
-          OR human_readable_type_tesim:#{filter_params})"
-      end
+      solr_parameters[:start] = @params[:start]
+
+      return if @params[:search][:value].nil? || @params[:search][:value] == ''
+      filter_params = "/.*#{@params[:search][:value]}.*/"
+      solr_parameters[:fq] ||= []
+      solr_parameters[:fq] << "(title_tesim:#{filter_params} OR date_created_tesim:#{filter_params} OR visibility_ssi:#{filter_params} OR human_readable_type_tesim:#{filter_params})"
     end
 
     def only_works?
