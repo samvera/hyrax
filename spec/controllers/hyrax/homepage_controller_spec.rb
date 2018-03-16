@@ -70,7 +70,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
         get :index
         expect(response).to be_success
         expect(assigns(:recent_documents).length).to be <= 4
-        create_times = assigns(:recent_documents).map { |d| d['system_create_dtsi'] }
+        create_times = assigns(:recent_documents).map { |d| d['date_uploaded_dtsi'] }
         expect(create_times).to eq create_times.sort.reverse
       end
     end
