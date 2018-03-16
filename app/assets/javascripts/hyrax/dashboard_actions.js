@@ -9,15 +9,6 @@ Blacklight.onLoad(function() {
     }
   });
 
-  function show_details(item) {
-    var array = item.id.split("expand_");
-    if (array.length > 1) {
-      var docId = array[1];
-      $("#detail_" + docId + " .expanded-details").slideToggle();
-      $(item).toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
-    }
-  }
-
   // show/hide more information on the dashboard when clicking
   // plus/minus
   $('.glyphicon-chevron-right').on('click', function() {
@@ -32,11 +23,12 @@ Blacklight.onLoad(function() {
     return false;
   });
 
-  // Create sortable, searchable tables
+  // Create sortable, searchable collections table
   $('#analytics-collections-table').DataTable();
 
+  // Create sortable, searchable works table
   // Uses server side sorting, etc. Generally there will be way too many works to show them in one go
-  $('#analytics-works-table').DataTable({
+  var analytics_works = $('#analytics-works-table').DataTable({
     ajax: {
       url: '/dashboard/update_works_list',
       error: function (jqXHR, textStatus, errorThrown) {
@@ -46,11 +38,24 @@ Blacklight.onLoad(function() {
     language: {
       processing: '<img src="/assets/sm-loader.gif">'
     },
+    search: {
+      search: function(val) {
+        if (val >= 3) {
+          return  val;
+        }
+
+        return '';
+      }
+    },
+    searchDelay: 350,
     processing: true,
     serverSide: true
   });
 
-  // Transition between time periods or object type
+  minTableSearchLength('analytics-collections-table');
+
+
+  // Transition between time periods or object type for chartkick charts
   $('.admin-repo-charts').on('click', function(e) {
     var type_id = e.target.id;
     var field = $('#' + type_id);
@@ -65,9 +70,49 @@ Blacklight.onLoad(function() {
     });
   });
 
-  // Update chartkick graphs with new data
+  /**** Private functions ****/
+
+  /**
+   *  Shows details of expanded item
+   * @param item
+   */
+  function show_details(item) {
+    var array = item.id.split("expand_");
+    if (array.length > 1) {
+      var docId = array[1];
+      $("#detail_" + docId + " .expanded-details").slideToggle();
+      $(item).toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
+    }
+  }
+
+  /**
+   * Update chartkick graphs with new data
+   * @param id
+   * @param data
+   */
   function updateChart(id, data) {
     var chart = Chartkick.charts[id];
     chart.updateData(data);
+  }
+
+  /**
+   * Add minimum typeahead length for dataTable filter searching
+   * See https://stackoverflow.com/questions/5548893/jquery-datatables-delay-search-until-3-characters-been-typed-or-a-button-clicke/23897722#23897722
+   * @param selector
+   */
+  function minTableSearchLength(selector) {
+    $('#' + selector + '_filter input')
+      .unbind()
+      .bind('input', function(e){
+        var search_value = this.value;
+
+        if (search_value.length >= 3) {
+          analytics_works.search(search_value).draw();
+        }
+
+        if(search_value === '') {
+          analytics_works.search('').draw();
+        }
+      });
   }
 });
