@@ -1,0 +1,124 @@
+{
+  "reports": [
+    {
+      "columnHeader": {
+        "dimensions": [
+          "ga:date"
+        ],
+        "metricHeader": {
+          "metricHeaderEntries": [
+            {
+              "name": "ga:sessions",
+              "type": "INTEGER"
+            },
+            {
+              "name": "ga:users",
+              "type": "INTEGER"
+            }
+          ]
+        }
+      },
+      "data": {
+        "rows": [
+          {
+            "dimensions": [
+              "20150101"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "1508",
+                  "1318"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "20150102"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "2256",
+                  "1864"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "20150103"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "2054",
+                  "1816"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "20150104"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "2980",
+                  "2315"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "20150105"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "9117",
+                  "6933"
+                ]
+              }
+            ]
+          }
+        ],
+        "totals": [
+          {
+            "values": [
+              "5920281",
+              "4413140"
+            ]
+          }
+        ],
+        "rowCount": 1097,
+        "minimums": [
+          {
+            "values": [
+              "843",
+              "736"
+            ]
+          }
+        ],
+        "maximums": [
+          {
+            "values": [
+              "12679",
+              "11159"
+            ]
+          }
+        ],
+        "samplesReadCounts": [
+          "498707"
+        ],
+        "samplingSpaceSizes": [
+          "5920292"
+        ],
+        "isDataGolden": true
+      }
+    }
+  ]
+}

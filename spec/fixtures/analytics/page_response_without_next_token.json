@@ -1,0 +1,287 @@
+{
+  "reports": [
+    {
+      "columnHeader": {
+        "dimensions": [
+          "ga:pagePath",
+          "ga:date"
+        ],
+        "metricHeader": {
+          "metricHeaderEntries": [
+            {
+              "name": "ga:sessions",
+              "type": "INTEGER"
+            },
+            {
+              "name": "ga:users",
+              "type": "INTEGER"
+            },
+            {
+              "name": "ga:pageviews",
+              "type": "INTEGER"
+            }
+          ]
+        }
+      },
+      "data": {
+        "rows": [
+          {
+            "dimensions": [
+              "/concern/file_sets/000000018",
+              "20180201"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "1",
+                  "1",
+                  "2"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "/concern/file_sets/0g354f20t",
+              "20180201"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "0",
+                  "2",
+                  "3"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "/concern/file_sets/2n49t1702",
+              "20180201"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "1",
+                  "1",
+                  "1"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "/concern/file_sets/4q77fr32b",
+              "20180201"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "0",
+                  "1",
+                  "4"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "/concern/file_sets/5425k9713",
+              "20180201"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "0",
+                  "1",
+                  "1"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "/concern/file_sets/5q47rn74h",
+              "20180201"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "0",
+                  "1",
+                  "1"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "/concern/file_sets/8g84mm26k",
+              "20180201"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "0",
+                  "2",
+                  "3"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "/concern/file_sets/9p290934t?locale=en",
+              "20180201"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "1",
+                  "1",
+                  "1"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "/concern/file_sets/b5644r54d",
+              "20180201"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "1",
+                  "1",
+                  "1"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "/concern/file_sets/cr56n0995",
+              "20180201"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "0",
+                  "1",
+                  "2"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "/concern/file_sets/f4752g75f",
+              "20180201"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "0",
+                  "1",
+                  "2"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "/concern/file_sets/g445cd17d",
+              "20180201"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "0",
+                  "1",
+                  "1"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "/concern/file_sets/gt54kn01b",
+              "20180201"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "0",
+                  "3",
+                  "12"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "/concern/file_sets/jq085j98n",
+              "20180201"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "0",
+                  "1",
+                  "1"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "/concern/file_sets/m039k4903",
+              "20180201"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "0",
+                  "1",
+                  "1"
+                ]
+              }
+            ]
+          }
+        ],
+        "totals": [
+          {
+            "values": [
+              "101",
+              "701",
+              "1008"
+            ]
+          }
+        ],
+        "rowCount": 656,
+        "minimums": [
+          {
+            "values": [
+              "0",
+              "1",
+              "1"
+            ]
+          }
+        ],
+        "maximums": [
+          {
+            "values": [
+              "3",
+              "5",
+              "21"
+            ]
+          }
+        ],
+        "isDataGolden": true
+      }
+    }
+  ]
+}
+

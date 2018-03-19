@@ -5,6 +5,8 @@ module Hyrax
   module Analytics
     class GoogleAnalytics < Hyrax::Analytics::Base
       REQUIRED_KEYS = %w[privkey_path view_id].freeze
+      # we ask for the maximum number of results in a single query
+      PAGE_SIZE = 10_000
 
       class << self
         include ActionDispatch::Routing::PolymorphicRoutes
@@ -12,17 +14,20 @@ module Hyrax
         attr_accessor :config
       end
 
-      def self.pageviews(start_date, object)
-        params = { dimensions: ['date'],
-                   metrics: ['pageviews', 'users'], # users is unique visitors
-                   filters: 'ga:pagePath=~' + polymorphic_path(object) }
+      def self.page_report(start_date, page_token)
+        params = { dimensions: ['date', 'pagePath'],
+                   metrics: ['pageviews', 'users', 'sessions'], # users is unique visitors
+                   filters: filters,
+                   page_size: PAGE_SIZE,
+                   page_token: page_token }
         run_report(start_date, params)
       end
 
-      def self.downloads(start_date, object)
-        params = { dimensions: ['eventCategory', 'eventAction', 'eventLabel', 'date'],
-                   metrics: ['totalEvents', 'uniqueEvents'],
-                   filters: 'ga:eventLabel==' + object.id.to_s }
+      def self.site_report(start_date, page_token)
+        params = { dimensions: ['date'],
+                   metrics: ['users', 'sessions'], # users is unique visitors
+                   page_size: PAGE_SIZE,
+                   page_token: page_token }
         run_report(start_date, params)
       end
 
@@ -39,28 +44,51 @@ module Hyrax
       def self.run_report(start_date, query_params)
         unless connection
           Rails.logger.error("Google Analytics Reporting Service has not been established. Unable to fetch report.")
-          return []
+          return {}
         end
 
         date_ranges = [DateRange.new(start_date: format_date(start_date), end_date: 'today')]
         dimensions = query_params[:dimensions].map { |d| Dimension.new(name: 'ga:' + d) }
         metrics = query_params[:metrics].map { |m| Metric.new(expression: 'ga:' + m) }
 
-        request = report_request(date_ranges, dimensions, metrics, query_params[:filters])
+        request = report_request(date_ranges, dimensions, metrics, query_params[:page_token], query_params[:filters])
         response = connection.batch_get_reports(request)
-        return [] if response.try(:reports).try(:first).try(:data).try(:rows).blank?
-        stats_rows(response, query_params)
+        return {} if response.try(:reports).try(:first).try(:data).try(:rows).blank?
+
+        next_page_token = response.reports.first.try(:next_page_token) || ''
+        { rows: stats_rows(response, query_params), next_page_token: next_page_token }
       end
       private_class_method :run_report
 
-      def self.report_request(date_ranges, dimensions, metrics, filters)
+      # Google Analytics filters to apply to page_report queries
+      # Google specifies that OR conditions are comma-separate and AND conditions are colon
+      # This filter query is saying "Include everything in known model paths AND exclude /edit subpaths"
+      def self.filters
+        paths = super
+        include_filters(paths) + ';' + exclude_filters(paths)
+      end
+      private_class_method :filters
+
+      def self.include_filters(paths)
+        paths.map { |p| "ga:pagePath=~#{p}" }.join(',')
+      end
+      private_class_method :include_filters
+
+      def self.exclude_filters(paths)
+        paths.map { |p| "ga:pagePath!~#{p}*/edit" }.join(',')
+      end
+      private_class_method :include_filters
+
+      def self.report_request(date_ranges, dimensions, metrics, page_token, filters = '')
         GetReportsRequest.new(
           report_requests: [ReportRequest.new(view_id: 'ga:' + config['view_id'].to_s,
                                               dimensions: dimensions,
                                               metrics: metrics,
                                               date_ranges: date_ranges,
                                               sort: 'ga:date',
-                                              filters_expression: filters)]
+                                              filters_expression: filters,
+                                              page_size: PAGE_SIZE,
+                                              page_token: page_token)]
         )
       end
       private_class_method :report_request

@@ -1,31 +1,31 @@
 RSpec.describe Hyrax::Analytics::Base do
-  describe '.connection' do
+  describe '.page_report' do
     it 'is unimplemented' do
-      expect { described_class.connection }.to raise_error NotImplementedError
+      expect { described_class.page_report("2018-02-16", '0') }.to raise_error NotImplementedError
     end
   end
 
-  describe '.pageviews' do
+  describe '.site_report' do
     it 'is unimplemented' do
-      expect { described_class.pageviews("2018-02-16", nil) }.to raise_error NotImplementedError
+      expect { described_class.site_report("2018-02-16", '0') }.to raise_error NotImplementedError
     end
   end
 
-  describe '.downloads' do
-    it 'is unimplemented' do
-      expect { described_class.downloads("2018-02-16", nil) }.to raise_error NotImplementedError
-    end
-  end
+  describe '.filters' do
+    context 'with existing content' do
+      before do
+        create(:work_with_one_file, :public)
+      end
 
-  describe '.unique_visitors' do
-    it 'is unimplemented' do
-      expect { described_class.unique_visitors("2018-02-16") }.to raise_error NotImplementedError
+      it 'provides a listing of model paths in the current application' do
+        expect(described_class.filters).to eq(["/concern/generic_works/", "/concern/file_sets/"])
+      end
     end
-  end
 
-  describe '.returning_visitors' do
-    it 'is unimplemented' do
-      expect { described_class.returning_visitors("2018-02-16") }.to raise_error NotImplementedError
+    context 'without existing content' do
+      it 'return an empty array when there are no instances of any models', :clean_repo do
+        expect(described_class.filters).to eq([])
+      end
     end
   end
 end
