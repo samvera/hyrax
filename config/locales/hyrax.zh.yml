@@ -528,6 +528,7 @@ zh:
         featured_researcher: 特色研究员
         marketing_text: 营销文字
       updated: 内容块已更新。
+      change_tab_message: 你确定要离开这个标签吗？任何未保存的数据都将丢失。
     controls:
       about: 关于
       contact: 联系

@@ -530,6 +530,7 @@ it:
         featured_researcher: Ricercatore in primo piano
         marketing_text: Testo di marketing
       updated: Blocchi di contenuto aggiornati.
+      change_tab_message: Sei sicuro di voler lasciare questa scheda? Tutti i dati non salvati andranno persi.      
     controls:
       about: Di
       contact: contatto

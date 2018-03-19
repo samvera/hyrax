@@ -531,6 +531,7 @@ en:
         featured_researcher: Featured Researcher
         marketing_text: Marketing Text
       updated: Content blocks updated.
+      change_tab_message: Are you sure you want to leave this tab?  Any unsaved data will be lost.
     controls:
       about: About
       contact: Contact

@@ -531,6 +531,7 @@ de:
         featured_researcher: Ausgewählter Forscher
         marketing_text: Marketing Text
       updated: Inhaltsblöcke aktualisiert.
+      change_tab_message: Möchten Sie diesen Tab wirklich verlassen? Nicht gespeicherte Daten gehen verloren.      
     controls:
       about: Impressum
       contact: Kontakt
