@@ -91,6 +91,6 @@ RSpec.describe Hyrax::DownloadsController do
     end
     subject { controller.send(:derivative_download_options) }
 
-    it { is_expected.to eq(disposition: 'inline', type: 'image/png') }
+    it { is_expected.to eq(disposition: 'inline', filename: 'world.png', type: 'image/png') }
   end
 end

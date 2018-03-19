@@ -15,26 +15,98 @@ module Hyrax
         super
       when String
         # For derivatives stored on the local file system
-        response.headers['Accept-Ranges'] = 'bytes'
-        response.headers['Content-Length'] = File.size(file).to_s
-        send_file file, derivative_download_options
+        send_content
       else
         raise ActiveFedora::ObjectNotFoundError
       end
     end
+
+    protected
+
+      # Override
+      # render an HTTP Range response
+      # rubocop:disable  Metrics/AbcSize
+      def send_range
+        _, range = request.headers['Range'].split('bytes=')
+        from, to = range.split('-').map(&:to_i)
+        to = file_size - 1 unless to
+        length = to - from + 1
+        response.headers['Content-Range'] = "bytes #{from}-#{to}/#{file_size}"
+        response.headers['Content-Length'] = length.to_s
+        self.status = 206
+        prepare_file_headers
+        if file.is_a? String
+          # For derivatives stored on the local file system
+          send_data IO.binread(file, length, from), derivative_download_options.merge(status: status)
+        else
+          stream_body file.stream(request.headers['Range'])
+        end
+      end
+      # rubocop:enable  Metrics/AbcSize
+
+      # Override
+      def send_file_contents
+        self.status = 200
+        prepare_file_headers
+        if file.is_a? String
+          # For derivatives stored on the local file system
+          send_file file, derivative_download_options
+        else
+          stream_body file.stream
+        end
+      end
+
+      def file_size
+        @file_size ||= File.size(file) if file.is_a? String
+        @file_size ||= file.size
+      end
+
+      def file_mime_type
+        @file_mime_type ||= mime_type_for(file) if file.is_a? String
+        @file_mime_type ||= file.mime_type
+      end
+
+      # Override
+      # @return [String] the filename
+      def file_name
+        @file_name ||= params[:filename] || File.basename(file) || (asset.respond_to?(:label) && asset.label) if file.is_a? String
+        @file_name ||= super
+      end
+
+      def file_last_modified
+        @file_last_modified ||= File.mtime(file) if file.is_a? String
+        @file_last_modified ||= asset.modified_date
+      end
+
+      # Override
+      # render an HTTP HEAD response
+      def content_head
+        response.headers['Content-Length'] = file_size.to_s
+        head :ok, content_type: file_mime_type
+      end
+
+      # Override
+      def prepare_file_headers
+        send_file_headers! content_options
+        response.headers['Content-Type'] = file_mime_type
+        response.headers['Content-Length'] ||= file_size.to_s
+        # Prevent Rack::ETag from calculating a digest over body
+        response.headers['Last-Modified'] = file_last_modified.utc.strftime("%a, %d %b %Y %T GMT")
+        self.content_type = file_mime_type
+      end
 
     private
 
       # Override the Hydra::Controller::DownloadBehavior#content_options so that
       # we have an attachement rather than 'inline'
       def content_options
-        super.merge(disposition: 'attachment')
+        { type: file_mime_type, filename: file_name, disposition: 'attachment' }
       end
 
       # Override this method if you want to change the options sent when downloading
       # a derivative file
       def derivative_download_options
-        { type: mime_type_for(file), disposition: 'inline' }
+        { type: file_mime_type, filename: file_name, disposition: 'inline' }
       end
 
       # Customize the :read ability in your Ability class, or override this method.
@@ -55,7 +127,7 @@ module Hyrax
       # Loads the file specified by the HTTP parameter `:file`.
       # If this object does not have a file by that name, return the default file
       # as returned by {#default_file}
-      # @return [ActiveFedora::File, String, NilClass] Returns the file from the repository or a path to a file on the local file system, if it exists.
+      # @return [ActiveFedora::File, File, NilClass] Returns the file from the repository or a path to a file on the local file system, if it exists.
       def load_file
         file_reference = params[:file]
         return default_file unless file_reference
