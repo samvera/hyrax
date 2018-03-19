@@ -864,6 +864,15 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           expect(page).to have_link('Sharing', href: '#sharing')
         end
 
+        context "to true, limits available users", js: true do
+          it "to system users filted by select2" do
+            visit "/dashboard/collections/#{sharable_collection_id}/edit"
+            expect(page).to have_link('Sharing', href: '#sharing')
+            click_link('Sharing')
+            expect(page).to have_selector(".form-inline.add-users .select2-container")
+          end
+        end
+
         it 'to false, it hides Sharable tab' do
           visit "/dashboard/collections/#{not_sharable_collection_id}/edit"
           expect(page).not_to have_link('Sharing', href: '#sharing')
