@@ -281,7 +281,30 @@ en:
           start_label: Start
         repository_objects:
           series:
+            article: Article
+            authenticated: Authenticated
+            audio: Audio
+            book: Book
+            capstone_project: Capstone Project
+            conference_proceeding: Conference Proceeding
+            dataset: Dataset
+            dissertation: Dissertation
+            image: Image
+            journal: Journal
+            map: Map or Cartographic Material
+            masters_thesis: Masters Thesis
+            open: Open
+            part_of_book: Part of Book
+            poster: Poster
+            presentation: Presentation
+            project: Project
+            report: Report
+            research_paper: Research Paper
+            software: Software or Program Code
+            video: Video
+            none: None
             published: Published
+            restricted: Restricted
             unknown: Unknown
             unpublished: Unpublished
         user_deposits:
