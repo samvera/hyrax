@@ -13,8 +13,20 @@ module Hyrax
       define_model_callbacks :update_index, only: :after
       after_update_index :update_nested_collection_relationship_indices
       after_destroy :update_child_nested_collection_relationship_indices
+      before_save :before_update_nested_collection_relationship_indices
+      after_save :after_update_nested_collection_relationship_indices
+
+      def before_update_nested_collection_relationship_indices
+        @during_save = true
+      end
+
+      def after_update_nested_collection_relationship_indices
+        @during_save = false
+        Hyrax.config.nested_relationship_reindexer.call(id: id)
+      end
 
       def update_nested_collection_relationship_indices
+        return if @during_save
         Hyrax.config.nested_relationship_reindexer.call(id: id)
       end
 
