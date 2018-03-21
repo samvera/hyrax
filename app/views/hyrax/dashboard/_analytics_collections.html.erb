@@ -12,15 +12,24 @@
             <th><%= t('.last_updated') %></th>
             <th><%= t('.works') %></th>
             <th><%= t('.files') %></th>
+            <th><%= t('.pinned') %></th>
           </tr>
           </thead>
           <tbody>
-          <% @collection_rows.each do |row| %>
+          <% @collection_rows.each_with_index do |row, index| %>
             <tr>
               <td><%= row.collection_name %></td>
               <td><%= row.updated %></td>
               <td><%= row.work_count %></td>
               <td><%= row.file_count %></td>
+              <td data-order="<%= index %>">
+                <svg class="pinned-star" viewBox="0 0 25 50" preserveAspectRatio="xMinYmin meet" width="30" height="20">
+                  <title><%= t('.pin_unpin_button') %></title>
+                  <desc><%= t('.pin_unpin') %></desc>
+                  <path id="pinned-<%= index %>" data-collection="<%= row.collection_name %>" class="pinned"
+                        d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"></path>
+                </svg>
+              </td>
             </tr>
           <% end %>
           </tbody>
