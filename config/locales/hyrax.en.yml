@@ -554,6 +554,8 @@ en:
         title: Collections
         recently_updated: Most recently updated
         pinned: Pinned
+        pin_unpin_button: Pin/unpin button
+        pin_unpin: Button to pin/unpin collections in admin dashboard
         last_updated: Last Updated
         collection: Collection Title
         files: Files

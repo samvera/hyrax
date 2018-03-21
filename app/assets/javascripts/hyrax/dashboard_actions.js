@@ -22,7 +22,7 @@ Blacklight.onLoad(function() {
     show_details($(this).find(".glyphicon-chevron-right")[0]);
     return false;
   });
-
+  
   /**** Private functions ****/
 
   /**

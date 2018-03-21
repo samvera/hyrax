@@ -267,4 +267,22 @@ body.dashboard {
     cursor: default;
     text-decoration: none;
   }
+
+  .pinned-star {
+    pointer-events: all;
+    stroke: $gray-base;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  
+  .not-pinned {
+    fill: none;
+
+  }
+
+  .pinned {
+    fill: yellow;
+  }
 }
