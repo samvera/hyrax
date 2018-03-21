@@ -17,7 +17,8 @@ en:
     search:
       fields:
         facet:
-          admin_set_sim: Collection
+          admin_set_sim: Admin Set
+          member_of_collections_ssim: Collection
           resource_type_sim: Resource type
           suppressed_bsi: Status
         show:

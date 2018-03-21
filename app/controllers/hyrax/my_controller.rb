@@ -13,7 +13,6 @@ module Hyrax
                                helper_method: :visibility_badge,
                                limit: 5, label: I18n.t('hyrax.dashboard.my.heading.visibility')
         config.add_facet_field IndexesWorkflow.suppressed_field, helper_method: :suppressed_to_status
-        config.add_facet_field solr_name("admin_set", :facetable), limit: 5
         config.add_facet_field solr_name("resource_type", :facetable), limit: 5
       end
     end

@@ -1,6 +1,15 @@
 module Hyrax
   module My
     class WorksController < MyController
+      # Define collection specific filter facets.
+      def self.configure_facets
+        configure_blacklight do |config|
+          config.add_facet_field solr_name("admin_set", :facetable), limit: 5
+          config.add_facet_field solr_name('member_of_collections', :symbol), limit: 5
+        end
+      end
+      configure_facets
+
       class_attribute :create_work_presenter_class
       self.create_work_presenter_class = Hyrax::SelectTypeListPresenter
 
