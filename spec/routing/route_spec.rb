@@ -76,7 +76,7 @@ RSpec.describe 'Routes', type: :routing do
     it "routes to dashboard activity" do
       expect(get: '/dashboard/activity').to route_to(controller: 'hyrax/dashboard', action: 'activity')
     end
-
+    
     it "routes to all works" do
       expect(get: '/dashboard/works').to route_to(controller: 'hyrax/dashboard/works', action: 'index')
     end
