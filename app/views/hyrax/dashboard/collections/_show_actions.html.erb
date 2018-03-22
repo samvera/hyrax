@@ -1,4 +1,12 @@
 <h2 class="sr-only"><%= t('hyrax.collection.actions.header') %></h2>
+<% if Flipflop.analytics_redesign? and can? :read, :admin_dashboard %>
+  <%= link_to t('hyrax.collection.actions.pin_collection'),
+              hyrax.dashboard_pin_collection_path,
+              method: :post,
+              class: 'btn btn-default',
+              remote: true %>
+<% end %>
+
 <% if can? :edit, presenter.solr_document %>
     <%= link_to t('hyrax.collection.actions.edit.label'),
                 hyrax.edit_dashboard_collection_path(presenter),
