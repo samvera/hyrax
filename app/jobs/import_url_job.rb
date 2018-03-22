@@ -20,7 +20,7 @@ class ImportUrlJob < Hyrax::ApplicationJob
 
   # @param [FileSet] file_set
   # @param [Hyrax::BatchCreateOperation] operation
-  def perform(file_set:, operation:, headers: {})
+  def perform(file_set, operation, headers = {})
     operation.performing!
     user = User.find_by_user_key(file_set.depositor)
     uri = URI(file_set.import_url)

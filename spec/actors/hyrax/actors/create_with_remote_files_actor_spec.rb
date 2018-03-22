@@ -39,7 +39,7 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
     end
 
     it "attaches files" do
-      expect(ImportUrlJob).to receive(:perform_later).with(file_set: FileSet, operation: Hyrax::Operation, headers: {}).twice
+      expect(ImportUrlJob).to receive(:perform_later).with(FileSet, Hyrax::Operation, {}).twice
       expect(actor.create(environment)).to be true
     end
   end
@@ -57,7 +57,7 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
     end
 
     it "attaches files" do
-      expect(ImportUrlJob).to receive(:perform_later).with(file_set: FileSet, operation: Hyrax::Operation, headers: { 'Authorization' => 'Bearer access-token' }).twice
+      expect(ImportUrlJob).to receive(:perform_later).with(FileSet, Hyrax::Operation, 'Authorization' => 'Bearer access-token').twice
       expect(actor.create(environment)).to be true
     end
   end
