@@ -10,11 +10,12 @@ RSpec.describe Hyrax::WorksCountService do
   let(:search_builder) { double(new: search_builder_instance) }
   let(:service) { described_class.new(context, search_builder, params) }
   let(:user) { create(:user) }
+  let(:access) { :edit }
+  let(:connection) { instance_double(RSolr::Client) }
 
   context 'with injection' do
     subject { service.search_results(access) }
 
-    let(:access) { :edit }
     let(:search_builder) { double(new: search_builder_instance) }
     let(:search_builder_instance) { double }
 
@@ -28,9 +29,7 @@ RSpec.describe Hyrax::WorksCountService do
   describe '#search_results_with_work_count' do
     subject { service.search_results_with_work_count(access) }
 
-    let(:access) { :edit }
     let(:documents) { [doc1, doc2] }
-    let(:connection) { instance_double(RSolr::Client) }
     let(:doc1) do
       SolrDocument.new(id: 'xyz123',
                        title_tesim: ['test1'],
@@ -70,6 +69,39 @@ RSpec.describe Hyrax::WorksCountService do
           recordsTotal: 2,
           recordsFiltered: 2,
           data: [['test1', '2015-01-01', 0, 'Work type', 'restricted'], ['test2', '2015-02-01', 0, 'Work type', 'institution']]
+        )
+      end
+    end
+  end
+
+  describe '#no_search_results_with_work_count' do
+    subject { service.search_results_with_work_count(access) }
+
+    let(:documents) { [] }
+    let(:results) do
+      {
+        'response' =>
+            {
+              'docs' => documents,
+              'numFound' => 0
+            }
+      }
+    end
+
+    before do
+      allow(service).to receive(:search_results).and_return(documents)
+      allow(ActiveFedora::SolrService.instance).to receive(:conn).and_return(connection)
+      allow(connection).to receive(:get).with('select', params: { fq: '{!terms f=has_model_ssim}GenericWork',
+                                                                  rows: 10 }).and_return(results)
+    end
+
+    context 'when there are no works in the collection' do
+      it 'returns nothing' do
+        expect(subject).to include(
+          draw: 1,
+          recordsTotal: 0,
+          recordsFiltered: 0,
+          data: []
         )
       end
     end
