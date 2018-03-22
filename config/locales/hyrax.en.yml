@@ -470,6 +470,7 @@ en:
           desc: Add existing collections to this collection
           modal_title: Add this Collection Within Another Collection
           select_label: Select collection
+        pin_collection: Pin Collection
       browse_view: Browse View
       document_list:
         edit: Edit
