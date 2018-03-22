@@ -12,7 +12,8 @@ RSpec.describe 'hyrax/dashboard/collections/_form_share.html.erb', type: :view d
     assign(:collection, collection)
     @form = instance_double(Hyrax::Forms::CollectionForm,
                             to_model: collection,
-                            permission_template: pt_form)
+                            permission_template: pt_form,
+                            id: '1234xyz')
     render
   end
   it "has the required selectors" do
