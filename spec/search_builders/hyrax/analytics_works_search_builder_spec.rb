@@ -36,7 +36,7 @@ RSpec.describe Hyrax::AnalyticsWorksSearchBuilder do
 
   describe 'filter_search with search text' do
     let(:wildcard_param) { '/.*test.*/' }
-    let(:query) { ['test', "(title_tesim:#{wildcard_param} OR date_created_tesim:#{wildcard_param} OR visibility_ssi:#{wildcard_param} OR human_readable_type_tesim:#{wildcard_param})"] }
+    let(:query) { ['test', "(title_tesim:#{wildcard_param} OR visibility_ssi:#{wildcard_param} OR human_readable_type_tesim:#{wildcard_param})"] }
     let(:search_builder) { described_class.new(context, search: { value: 'test' }) }
     let(:solr_params) { { fq: ['test'] } }
     before { search_builder.filter_search(solr_params) }
