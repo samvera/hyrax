@@ -54,7 +54,7 @@ Blacklight.onLoad(function() {
     $.ajax({
       method: 'POST',
       url: '/dashboard/pin_collection',
-      data: { status: pinned, collection: target.attr('data-collection') }
+      data: { status: pinned, user_id: target.attr('data-user_id'), collection: target.attr('data-collection') }
     }).done(function(data) {
 
     });
