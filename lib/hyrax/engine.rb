@@ -32,10 +32,28 @@ module Hyrax
     end
 
     config.after_initialize do
-      begin
+      # Attempt to establish a connection before trying to do anything with it. This has to rescue
+      # StandardError instead of, e.g., ActiveRecord::ConnectionNotEstablished or ActiveRecord::NoDatabaseError
+      # because we can't be absolutely sure what the specific database adapter will raise. pg, for example,
+      # raises PG::ConnectionBad. There's no good common ancestor to assume. That's why this test
+      # is in its own tiny chunk of code – so we know that whatever the StandardError is, it's coming
+      # from the attempt to connect.
+      can_connect = begin
+        ActiveRecord::Base.connection
+        true
+      rescue StandardError
+        false
+      end
+
+      can_persist = can_connect && begin
         Hyrax.config.persist_registered_roles!
         Rails.logger.info("Hyrax::Engine.after_initialize - persisting registered roles!")
+        true
       rescue ActiveRecord::StatementInvalid
+        false
+      end
+
+      unless can_persist
         message = "Hyrax::Engine.after_initialize - unable to persist registered roles.\n"
         message += "It is expected during the application installation - during integration tests, rails install.\n"
         message += "It is UNEXPECTED if you are booting up a Hyrax powered application via `rails server'"
