@@ -1,7 +1,7 @@
 module Hyrax
   # Returns Collections that the current user has permission to use.
   class CollectionsCountService < CountService
-    SearchResultForWorkCount = Struct.new(:collection_name, :updated, :work_count, :file_count)
+    SearchResultForWorkCount = Struct.new(:collection_name, :updated, :work_count, :file_count, :collection_id)
 
     # This performs a two pass query, first getting the Collections
     # and then getting the work and file counts
@@ -22,7 +22,7 @@ module Hyrax
 
       collections.map do |collection|
         last_update = last_updated(results, collection.id)
-        SearchResultForWorkCount.new(collection, last_update, counts[collection.id].to_i, file_counts[collection.id].to_i)
+        SearchResultForWorkCount.new(collection, last_update, counts[collection.id].to_i, file_counts[collection.id].to_i, collection.id)
       end
     end
 
