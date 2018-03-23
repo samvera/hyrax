@@ -1,6 +1,7 @@
 module Hyrax
   # Returns Works that the current user has permission to use.
   class WorksCountService < CountService
+    MAX_ROWS = 1000
     SearchResultForWorkCount = Struct.new(:work_name, :updated, :work_views, :work_type, :visibility)
 
     # Returns list of works
@@ -18,7 +19,7 @@ module Hyrax
     private
 
       def builder(_)
-        search_builder.new(context).rows(1000)
+        search_builder.new(context).rows(MAX_ROWS)
       end
   end
 end

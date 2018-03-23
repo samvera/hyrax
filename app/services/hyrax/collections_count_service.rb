@@ -49,7 +49,6 @@ module Hyrax
         results['response']['docs'].each do |coll|
           next if !coll['member_of_collection_ids_ssim'].include?(collection_id) ||
                   coll['system_modified_dtsi'].nil?
-          # dates << DateTime.parse(coll['date_modified_dtsi']).strftime("%Y-%m-%d")
           dates << DateTime.parse(coll['system_modified_dtsi']).in_time_zone.strftime("%Y-%m-%d")
         end
 
