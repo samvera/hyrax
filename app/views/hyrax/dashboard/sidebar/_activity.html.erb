@@ -1,13 +1,11 @@
   <li class="h5"><%= t('hyrax.admin.sidebar.activity') %></li>
 
-  <% if Flipflop.analytics_redesign? %>
-    <% if can? :read, :admin_dashboard %>
-      <li>
-        <%= menu.nav_link(hyrax.dashboard_path) do %>
-          <span class="fa fa-area-chart"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.repository_activity') %></span>
-        <% end %>
-      </li>
-    <% end %>
+  <% if Flipflop.analytics_redesign? and can? :read, :admin_dashboard %>
+    <li>
+      <%= menu.nav_link(hyrax.dashboard_path) do %>
+        <span class="fa fa-area-chart"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.repository_activity') %></span>
+      <% end %>
+    </li>
   <% end %>
 
   <li>
