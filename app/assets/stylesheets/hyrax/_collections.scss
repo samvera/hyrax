@@ -403,7 +403,8 @@ button.branding-banner-remove:hover {
       }
 
       input,
-      select {
+      select,
+      .select2-container {
         width: 200px;
       }
 
@@ -422,8 +423,10 @@ button.branding-banner-remove:hover {
     .share-status {
       th,
       td {
+        width: 40%;
         &:last-of-type {
           text-align: center;
+          width: 20%;
         }
       }
     }
