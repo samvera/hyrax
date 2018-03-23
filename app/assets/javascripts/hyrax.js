@@ -65,6 +65,7 @@
 //= require hyrax/batch
 //= require hyrax/flot_stats
 //= require hyrax/admin/admin_set_controls
+//= require hyrax/admin/analytics_stats
 //= require hyrax/admin/admin_set/group_participants
 //= require hyrax/admin/admin_set/registered_users
 //= require hyrax/admin/admin_set/participants
