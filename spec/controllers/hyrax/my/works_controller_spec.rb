@@ -17,7 +17,7 @@ RSpec.describe Hyrax::My::WorksController, type: :controller do
     it "shows search results and breadcrumbs" do
       expect(controller).to receive(:search_results).with(ActionController::Parameters).and_return([response, doc_list])
       expect(controller).to receive(:add_breadcrumb).with('Home', root_path(locale: 'en'))
-      expect(controller).to receive(:add_breadcrumb).with('Administration', dashboard_path(locale: 'en'))
+      expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path(locale: 'en'))
       expect(controller).to receive(:add_breadcrumb).with('Works', my_works_path(locale: 'en'))
       expect(collection_service).to receive(:search_results).with(:deposit).and_return([my_collection])
       get :index, params: { per_page: 2 }

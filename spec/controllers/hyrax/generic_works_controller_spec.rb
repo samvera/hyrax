@@ -352,7 +352,7 @@ RSpec.describe Hyrax::GenericWorksController do
 
       it 'shows me the page and sets breadcrumbs' do
         expect(controller).to receive(:add_breadcrumb).with("Home", root_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with("Administration", hyrax.dashboard_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with("Dashboard", hyrax.dashboard_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with("Your Works", hyrax.my_works_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(work.title.first, main_app.hyrax_generic_work_path(work.id, locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with('Edit', main_app.edit_hyrax_generic_work_path(work.id))

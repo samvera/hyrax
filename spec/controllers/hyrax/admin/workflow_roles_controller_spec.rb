@@ -7,7 +7,7 @@ RSpec.describe Hyrax::Admin::WorkflowRolesController do
 
       it "is successful" do
         expect(controller).to receive(:add_breadcrumb).with('Home', root_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Administration', dashboard_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with('Workflow Roles', admin_workflow_roles_path(locale: 'en'))
         get :index
         expect(response).to be_success
