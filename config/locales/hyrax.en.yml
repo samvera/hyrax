@@ -795,7 +795,7 @@ en:
       table_headers:
         release_date: Embargo Release Date
         title: Title
-        type: Type of Work
+        type: Type of Item
         viz_after: Visibility will Change to
         viz_current: Current Visibility
     featured_researchers: Featured Researchers
@@ -883,7 +883,7 @@ en:
       table_headers:
         release_date: Lease Release Date
         title: Title
-        type: Type of Work
+        type: Type of Item
         viz_after: Visibility will Change to
         viz_current: Current Visibility
     mailbox:

@@ -6,6 +6,8 @@ RSpec.describe Hyrax::CollectionNesting do
         include ActiveModel::Validations::Callbacks
         # Because we need these declared before we include the Hyrax::CollectionNesting
         define_model_callbacks :destroy, only: :after
+        define_model_callbacks :save, only: :after
+        define_model_callbacks :save, only: :before
 
         def destroy
           true
@@ -15,6 +17,13 @@ RSpec.describe Hyrax::CollectionNesting do
           true
         end
 
+        def before_save
+          false
+        end
+
+        def after_save
+          true
+        end
         include Hyrax::CollectionNesting
 
         attr_accessor :id
@@ -33,6 +42,8 @@ RSpec.describe Hyrax::CollectionNesting do
 
     it { is_expected.to callback(:update_nested_collection_relationship_indices).after(:update_index) }
     it { is_expected.to callback(:update_child_nested_collection_relationship_indices).after(:destroy) }
+    it { is_expected.to callback(:before_update_nested_collection_relationship_indices).before(:save) }
+    it { is_expected.to callback(:after_update_nested_collection_relationship_indices).after(:save) }
     it { is_expected.to respond_to(:update_nested_collection_relationship_indices) }
     it { is_expected.to respond_to(:update_child_nested_collection_relationship_indices) }
     it { is_expected.to respond_to(:use_nested_reindexing?) }
@@ -42,6 +53,11 @@ RSpec.describe Hyrax::CollectionNesting do
         it 'will call Hyrax.config.nested_relationship_reindexer' do
           expect(Hyrax.config.nested_relationship_reindexer).to receive(:call).with(id: subject.id).and_call_original
           subject.update_nested_collection_relationship_indices
+        end
+
+        it 'will not call during save' do
+          allow(klass).to receive(:before_save).and_return(true)
+          expect(Hyrax.config.nested_relationship_reindexer).not_to receive(:call)
         end
       end
     end
