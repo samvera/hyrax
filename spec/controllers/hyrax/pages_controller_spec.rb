@@ -68,7 +68,7 @@ RSpec.describe Hyrax::PagesController, type: :controller do
       describe "GET #edit" do
         it "renders breadcrumbs and dashboard layout" do
           expect(controller).to receive(:add_breadcrumb).with('Home', root_path)
-          expect(controller).to receive(:add_breadcrumb).with('Administration', dashboard_path)
+          expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path)
           expect(controller).to receive(:add_breadcrumb).with('Configuration', '#')
           expect(controller).to receive(:add_breadcrumb).with('Pages', edit_pages_path)
           get :edit

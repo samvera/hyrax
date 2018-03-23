@@ -550,7 +550,7 @@ en:
         works: All Works
       authorize_proxies: Authorize Proxies
       breadcrumbs:
-        admin: Administration
+        admin: Dashboard
       collection_type_actions:
         close: Close
         create_collection: Create collection
