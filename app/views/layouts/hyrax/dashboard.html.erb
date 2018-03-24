@@ -6,11 +6,12 @@
   </head>
 
   <body class="dashboard">
-    <a href="#skip_to_content" class="sr-only">Skip to Content</a>
+    <div class="skip-to-content">
+      <%= link_to "Skip to Content", "#skip-to-content", data: { turbolinks: false } %>
+    </div>
     <%= render '/masthead' %>
     <%= content_for(:navbar) %>
     <div id="content-wrapper" role="main">
-      <a name="skip_to_content"></a>
       <div class="sidebar maximized">
         <%= render 'hyrax/dashboard/sidebar' %>
       </div>
@@ -25,7 +26,9 @@
           </div>
         <% end %>
 
-        <%= content_for?(:content) ? yield(:content) : yield %>
+          <a name="skip-to-content" id="skip-to-content"></a>
+          <%= content_for?(:content) ? yield(:content) : yield %>
+
       </div>
 
     </div><!-- /#content-wrapper -->
