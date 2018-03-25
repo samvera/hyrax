@@ -118,7 +118,7 @@ module Hyrax
 
     attr_writer :noid_minter_class
     def noid_minter_class
-      @noid_minter_class ||= Noid::Rails::Minter::Db
+      @noid_minter_class ||= ::Noid::Rails::Minter::Db
     end
 
     attr_writer :minter_statefile
