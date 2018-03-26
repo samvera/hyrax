@@ -90,9 +90,9 @@ module Hyrax
         ActiveFedora::Base.translate_uri_to_id = c.translate_uri_to_id
         ActiveFedora::Base.translate_id_to_uri = c.translate_id_to_uri
 
-        Noid::Rails.config.template = c.noid_template
-        Noid::Rails.config.minter_class = c.noid_minter_class
-        Noid::Rails.config.statefile = c.minter_statefile
+        ::Noid::Rails.config.template = c.noid_template
+        ::Noid::Rails.config.minter_class = c.noid_minter_class
+        ::Noid::Rails.config.statefile = c.minter_statefile
       end
     end
 
