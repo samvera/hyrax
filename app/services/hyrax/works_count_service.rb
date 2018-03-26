@@ -11,6 +11,7 @@ module Hyrax
       works = search_results(access)
 
       works.map do |work|
+        next if work['system_create_dtsi'].nil?
         created_date = DateTime.parse(work['system_create_dtsi']).in_time_zone.strftime("%Y-%m-%d")
         SearchResultForWorkCount.new(work, created_date, 0, work['human_readable_type_tesim'][0], work['visibility_ssi'])
       end
