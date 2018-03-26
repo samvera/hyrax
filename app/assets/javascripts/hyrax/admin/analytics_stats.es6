@@ -48,8 +48,8 @@ export default class {
   minTableSearchLength(selector, table_obj) {
     $('#' + selector + '_filter input')
       .unbind()
-      .bind('input', function(e){
-        var search_value = this.value;
+      .bind('input', function(e) {
+        let search_value = this.value;
 
         if (search_value.length >= 3) {
           table_obj.search(search_value).draw();
