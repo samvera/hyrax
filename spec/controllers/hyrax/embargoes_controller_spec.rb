@@ -17,6 +17,7 @@ RSpec.describe Hyrax::EmbargoesController do
       it 'shows me the page' do
         get :index
         expect(response).to be_success
+        expect(response).to render_template('dashboard')
       end
     end
   end
@@ -33,6 +34,7 @@ RSpec.describe Hyrax::EmbargoesController do
       it 'shows me the page' do
         get :edit, params: { id: a_work }
         expect(response).to be_success
+        expect(response).to render_template('dashboard')
       end
     end
   end
