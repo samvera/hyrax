@@ -14,5 +14,11 @@ module Hyrax
       @repo_objects = Hyrax::Admin::RepositoryObjectPresenter.new(params[:type_value])
       render json: @repo_objects
     end
+
+    def update_works_list
+      return unless can? :read, :admin_dashboard
+      @work_rows = Hyrax::WorksCountService.new(self, Hyrax::AnalyticsWorksSearchBuilder, params).search_results_with_work_count(:read)
+      render json: @work_rows
+    end
   end
 end
