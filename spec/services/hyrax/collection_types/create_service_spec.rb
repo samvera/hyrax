@@ -87,5 +87,21 @@ RSpec.describe Hyrax::CollectionTypes::CreateService do
       expect(Hyrax::CollectionTypeParticipant).to receive(:create!)
       described_class.add_participants(coltype.id, participants)
     end
+
+    context 'when raising an error' do
+      let(:error) { 'my error' }
+
+      before { allow(Hyrax::CollectionTypeParticipant).to receive(:create!).and_raise(error) }
+
+      it 'logs errors' do
+        expect(Rails.logger).to receive(:error).with start_with('Participant not created')
+        described_class.add_participants(coltype.id, participants)
+      end
+
+      it 'reraises with a wrapped error' do
+        expect { described_class.add_participants(coltype.id, participants) }
+          .to raise_error error
+      end
+    end
   end
 end
