@@ -22,6 +22,7 @@ Hyrax = {
         this.sortAndPerPage();
         this.sidebar();
         this.batchSelect();
+        this.analyticsStats();
     },
 
     // Add WYSIWYG editor functionality to editable content blocks
@@ -187,5 +188,10 @@ Hyrax = {
     batchSelect: function () {
         var BatchSelect = require('hyrax/batch_select');
         BatchSelect.initialize_batch_selected();
+    },
+
+    analyticsStats: function () {
+        var AnalyticsStats = require('hyrax/admin/analytics_stats')
+        new AnalyticsStats();
     }
 };
