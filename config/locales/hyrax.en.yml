@@ -698,7 +698,8 @@ en:
           edit_access: 'Edit Access:'
           groups: 'Groups:'
           users: 'Users:'
-        collections: Your Collections
+        collections: Collections
+        your_collections: Your Collections
         facet_label:
           collections: 'Filter collections:'
           highlighted: 'Filter highlights:'
@@ -725,7 +726,8 @@ en:
           press_to: Press to
           results_per_page: Number of results to display per page
           show_label: Display all details of
-        works: Your Works
+        works: Works
+        your_works: Your Works
       nest_collections_form:
         create_under: "'%{child_title}' has been added to '%{parent_title}'"
         create_within: "'%{child_title}' has been added to '%{parent_title}'"
