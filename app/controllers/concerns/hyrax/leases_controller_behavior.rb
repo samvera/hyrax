@@ -5,6 +5,9 @@ module Hyrax
     include Hyrax::Collections::AcceptsBatches
 
     def index
+      add_breadcrumb t(:'hyrax.controls.home'), root_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.leases.index.manage_leases', hyrax.leases_path)
       authorize! :index, Hydra::AccessControls::Lease
     end
 
