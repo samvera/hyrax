@@ -66,6 +66,7 @@ RSpec.describe Hyrax::FileSetsController do
         expect(assigns[:version_list]).to be_kind_of Hyrax::VersionListPresenter
         expect(assigns[:parent]).to eq parent
         expect(response).to render_template(:edit)
+        expect(response).to render_template('dashboard')
       end
     end
 
@@ -150,6 +151,7 @@ RSpec.describe Hyrax::FileSetsController do
               post :update, params: { id: file_set, revision: version1 }
               expect(response.code).to eq '401'
               expect(response).to render_template 'unauthorized'
+              expect(response).to render_template('dashboard')
             end
           end
         end
@@ -196,6 +198,7 @@ RSpec.describe Hyrax::FileSetsController do
           post :update, params: { id: file_set, file_set: { keyword: [''] } }
           expect(response.code).to eq '422'
           expect(response).to render_template('edit')
+          expect(response).to render_template('dashboard')
           expect(assigns[:file_set]).to eq file_set
         end
       end
@@ -220,6 +223,7 @@ RSpec.describe Hyrax::FileSetsController do
           get :edit, params: { id: file_set }
           expect(response.code).to eq '401'
           expect(response).to render_template('unauthorized')
+          expect(response).to render_template('dashboard')
         end
       end
     end
@@ -278,6 +282,7 @@ RSpec.describe Hyrax::FileSetsController do
           get :edit, params: { id: public_file_set }
           expect(response.code).to eq '401'
           expect(response).to render_template(:unauthorized)
+          expect(response).to render_template('dashboard')
         end
       end
 

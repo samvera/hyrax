@@ -11,6 +11,8 @@ module Hyrax
     # provides the help_text view method
     helper PermissionsHelper
 
+    with_themed_layout 'dashboard'
+
     def edit
       work = form_class.model_class.new
       work.depositor = current_user.user_key

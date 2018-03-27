@@ -28,6 +28,8 @@ module Hyrax
     private :curation_concern=
     helper_method :file_set
 
+    layout :decide_layout
+
     # GET /concern/file_sets/:id
     def edit
       initialize_edit_form
@@ -167,6 +169,16 @@ module Hyrax
       # while prefering our local paths. Thus we are unable to just override `self.local_prefixes`
       def _prefixes
         @_prefixes ||= super + ['hyrax/base']
+      end
+
+      def decide_layout
+        layout = case action_name
+                   when 'show'
+                     '1_column'
+                   else
+                     'dashboard'
+                 end
+        File.join(theme, layout)
       end
   end
 end
