@@ -1,0 +1,12 @@
+class CreatePinnedCollections < ActiveRecord::Migration<%= migration_version %>
+  def change
+    create_table :pinned_collections do |t|
+      t.string :collection
+      t.references :user, foreign_key: true
+      t.integer :pinned, limit: 1
+      t.timestamps
+    end
+
+    add_index :pinned_collections, :collection
+  end
+end
