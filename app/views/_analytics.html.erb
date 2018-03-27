@@ -1,6 +1,6 @@
 <% case Hyrax.config.analytics %>
 <%when 'matomo' %>
-  <%= render partial: '/matomo', formats: [:html] %>
-<%when 'google' || true%>
-  <%= render partial: '/ga', formats: [:html] %>
+  <%= render '/matomo' %>
+<%when 'google', true %>
+  <%= render '/ga' %>
 <%end%>
