@@ -5,7 +5,7 @@ module Hyrax
     attr_reader :context, :search_builder, :model
     class_attribute :default_search_builder
     self.default_search_builder = Hyrax::AdminSetSearchBuilder
-    MAX_ROWS = 100
+    MAX_ROWS = 1000
 
     # @param [#repository,#blacklight_config,#current_ability] context
     def initialize(context, search_builder = default_search_builder, model = ::AdminSet)
@@ -29,7 +29,7 @@ module Hyrax
 
       # @param [Symbol] access :read or :edit
       def builder(access)
-        search_builder.new(context, access, @model).rows(MAX_ROWS)
+        search_builder.new(@context, access, @model).rows(MAX_ROWS)
       end
   end
 end

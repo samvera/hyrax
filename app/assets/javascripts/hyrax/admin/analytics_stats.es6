@@ -14,7 +14,7 @@ export default class {
     // Uses server side sorting, etc. Generally there will be way too many works to show them in one go
     let analytics_works = this.works_table.DataTable({
       ajax: {
-        url: '/dashboard/update_works_list',
+        url: '/analytics/update_works_list',
         error: function (jqXHR, textStatus, errorThrown) {
           alert(errorThrown);
         }
@@ -33,7 +33,7 @@ export default class {
       },
       searchDelay: 350,
       processing: true,
-
+      serverSide: true
     });
 
     this.minTableSearchLength('analytics-works-table', analytics_works);

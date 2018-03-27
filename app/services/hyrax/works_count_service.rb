@@ -1,17 +1,11 @@
 module Hyrax
   # Returns Works that the current user has permission to use.
   class WorksCountService < CountService
-    SearchResultForWorkCount = Struct.new(:work_name, :updated, :work_views, :work_type, :visibility)
-
     def initialize(context, search_builder, params)
       super(context)
 
       @search_builder = search_builder
       @params = params
-    end
-
-    def self.works_query_filters
-      start(@params[:start]).rows(@params[:length])
     end
 
     # Returns list of works
@@ -22,9 +16,8 @@ module Hyrax
       sort_column = Integer(@params[:order]['0'][:column])
       sort_ordering = @params[:order]['0'][:dir]
       results = []
-      
+
       works.each do |work|
-        next if work['system_create_dtsi'].nil?
         created_date = DateTime.parse(work['system_create_dtsi']).in_time_zone.strftime("%Y-%m-%d")
         results << [work['title_tesim'][0], created_date, 0, work['human_readable_type_tesim'][0], work['visibility_ssi']]
       end
