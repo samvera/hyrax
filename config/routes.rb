@@ -104,14 +104,17 @@ Hyrax::Engine.routes.draw do
     resources :operations, only: [:index, :show], controller: 'operations'
   end
 
+  # Analytics charts and tables
+  resource :analytics, only: [] do
+    get 'repository_growth', action: :repository_growth
+    get 'repository_object_counts', action: :repository_object_counts
+  end
+
   # Dashboard page
   resource :dashboard, controller: 'dashboard', only: [:show]
   resources :dashboard, only: [] do
     collection do
       get 'activity', action: :activity, as: :dashboard_activity
-      get 'update_collections', action: :update_collections, as: :update_collections
-      get 'repository_growth', action: :repository_growth
-      get 'repository_object_counts', action: :repository_object_counts
 
       resources :transfers, only: [:index, :destroy] do
         member do
