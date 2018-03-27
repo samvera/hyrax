@@ -110,6 +110,7 @@ Hyrax::Engine.routes.draw do
     get 'repository_growth', action: :repository_growth
     get 'repository_object_counts', action: :repository_object_counts
     get 'update_works_list', action: :update_works_list
+    post 'pin_collection', action: :pin_collection
   end
 
   # Dashboard page
@@ -141,7 +142,6 @@ Hyrax::Engine.routes.draw do
         put :remove_member
       end
     end
-    post 'pin_collection', action: :pin_collection
 
     post 'collections/:id', controller: 'collection_members', action: :update_members
     post 'collections/:child_id/within', controller: 'nest_collections', action: 'create_relationship_within', as: 'create_nest_collection_within'
