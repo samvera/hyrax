@@ -173,10 +173,10 @@ module Hyrax
 
       def decide_layout
         layout = case action_name
-                   when 'show'
-                     '1_column'
-                   else
-                     'dashboard'
+                 when 'show'
+                   '1_column'
+                 else
+                   'dashboard'
                  end
         File.join(theme, layout)
       end
