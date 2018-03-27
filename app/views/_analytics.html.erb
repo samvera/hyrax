@@ -1,6 +1,6 @@
 <% case Hyrax.config.analytics %>
-<%when 'matomo' %>
+<% when 'matomo' %>
   <%= render '/matomo' %>
-<%when 'google', true %>
+<% when 'google', true %>
   <%= render '/ga' %>
-<%end%>
+<% end %>
