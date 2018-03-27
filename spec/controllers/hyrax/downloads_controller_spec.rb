@@ -66,6 +66,48 @@ RSpec.describe Hyrax::DownloadsController do
             expect(ActiveFedora::Base).not_to receive(:find).with(file_set.id)
             get :show, params: { id: file_set, file: 'thumbnail' }
           end
+
+          context "stream" do
+            it "head request" do
+              request.env["HTTP_RANGE"] = 'bytes=0-15'
+              head :show, params: { id: file_set, file: 'thumbnail' }
+              expect(response.headers['Content-Length']).to eq '4218'
+              expect(response.headers['Accept-Ranges']).to eq 'bytes'
+              expect(response.headers['Content-Type']).to start_with 'image/png'
+            end
+
+            it "sends the whole thing" do
+              request.env["HTTP_RANGE"] = 'bytes=0-4217'
+              get :show, params: { id: file_set, file: 'thumbnail' }
+              expect(response.headers["Content-Range"]).to eq 'bytes 0-4217/4218'
+              expect(response.headers["Content-Length"]).to eq '4218'
+              expect(response.headers['Accept-Ranges']).to eq 'bytes'
+              expect(response.headers['Content-Type']).to start_with "image/png"
+              expect(response.headers["Content-Disposition"]).to eq "inline; filename=\"world.png\""
+              expect(response.body).to eq content
+              expect(response.status).to eq 206
+            end
+
+            it "sends the whole thing when the range is open ended" do
+              request.env["HTTP_RANGE"] = 'bytes=0-'
+              get :show, params: { id: file_set, file: 'thumbnail' }
+              expect(response.body).to eq content
+            end
+
+            it "gets a range not starting at the beginning" do
+              request.env["HTTP_RANGE"] = 'bytes=4200-4217'
+              get :show, params: { id: file_set, file: 'thumbnail' }
+              expect(response.headers["Content-Range"]).to eq 'bytes 4200-4217/4218'
+              expect(response.headers["Content-Length"]).to eq '18'
+            end
+
+            it "gets a range not ending at the end" do
+              request.env["HTTP_RANGE"] = 'bytes=4-11'
+              get :show, params: { id: file_set, file: 'thumbnail' }
+              expect(response.headers["Content-Range"]).to eq 'bytes 4-11/4218'
+              expect(response.headers["Content-Length"]).to eq '8'
+            end
+          end
         end
 
         context "that isn't persisted" do
@@ -91,6 +133,6 @@ RSpec.describe Hyrax::DownloadsController do
     end
     subject { controller.send(:derivative_download_options) }
 
-    it { is_expected.to eq(disposition: 'inline', filename: 'world.png', type: 'image/png') }
+    it { is_expected.to eq(disposition: 'inline', type: 'image/png') }
   end
 end
