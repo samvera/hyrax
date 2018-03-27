@@ -6,6 +6,7 @@ module Hyrax
 
     # @param [#repository,#blacklight_config,#current_ability] context
     # @param [Symbol] access one of :edit, :read, or :deposit
+    # @param model
     def initialize(context, access, model = ::AdminSet)
       @access = access
       @model = model

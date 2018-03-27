@@ -9,15 +9,6 @@ Blacklight.onLoad(function() {
     }
   });
 
-  function show_details(item) {
-    var array = item.id.split("expand_");
-    if (array.length > 1) {
-      var docId = array[1];
-      $("#detail_" + docId + " .expanded-details").slideToggle();
-      $(item).toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
-    }
-  }
-
   // show/hide more information on the dashboard when clicking
   // plus/minus
   $('.glyphicon-chevron-right').on('click', function() {
@@ -32,27 +23,18 @@ Blacklight.onLoad(function() {
     return false;
   });
 
-  // Create sortable, searchable table
-  $('#analytics-collections-table').DataTable();
-  $('#analytics-works-table').DataTable();
+  /**** Private functions ****/
 
-  // Transition between time periods or object type
-  $('.admin-repo-charts').on('click', function(e) {
-    var type_id = e.target.id;
-    var field = $('#' + type_id);
-
-    $(field).on('ajax:success', function(e, data) {
-      var update_chart_id = (/days/.test(type_id)) ? 'dashboard-growth' : 'dashboard-repository-objects';
-      updateChart(update_chart_id, data);
-
-      var clicked_chart = field.parents().filter('ul').attr('id');
-      $('#' + clicked_chart + ' a').removeClass('stats-selected');
-      field.addClass('stats-selected');
-    });
-  });
-
-  function updateChart(id, data) {
-    var chart = Chartkick.charts[id];
-    chart.updateData(data);
+  /**
+   *  Shows details of expanded item
+   * @param item
+   */
+  function show_details(item) {
+    var array = item.id.split("expand_");
+    if (array.length > 1) {
+      var docId = array[1];
+      $("#detail_" + docId + " .expanded-details").slideToggle();
+      $(item).toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
+    }
   }
 });

@@ -5,7 +5,7 @@
         <h3 class="panel-title"><%= t('.header') %></h3>
       </div>
       <div class="panel-body">
-        <table id="analytics-works-table" class="table data-table table-striped">
+        <table id="analytics-works-table" class="table table-striped">
           <thead>
           <tr>
             <th><%= t('.title') %></th>
@@ -15,17 +15,6 @@
             <th><%= t('.visibility') %></th>
           </tr>
           </thead>
-          <tbody>
-          <% @work_rows.each do |row| %>
-            <tr>
-              <td><%= row.work_name %></td>
-              <td><%= row.updated %></td>
-              <td><%= row.work_views %></td>
-              <td><%= row.work_type %></td>
-              <td><%= row.visibility %></td>
-            </tr>
-          <% end %>
-          </tbody>
         </table>
       </div>
     </div>
