@@ -5,11 +5,12 @@ export default class {
     this.admin_repo_charts = $('.admin-repo-charts');
 
     this.createDataTables();
+    this.pinCollection();
     this.transitionChart();
   }
 
   createDataTables() {
-    this.collections_table.DataTable();
+    let analtyics_collections = this.collections_table.DataTable({ responsive: true });
 
     // Uses server side sorting, etc. Generally there will be way too many works to show them in one go
     let analytics_works = this.works_table.DataTable({
@@ -33,10 +34,32 @@ export default class {
       },
       searchDelay: 350,
       processing: true,
-      serverSide: true
+      serverSide: true,
+      responsive: true
     });
 
     this.minTableSearchLength('analytics-works-table', analytics_works);
+    this.preventDuplicateTables(analtyics_collections, analytics_works);
+  }
+
+  pinCollection() {
+    this.collections_table.on('click', (e) => {
+      let target = $('#' + e.target.id);
+      let pinned = !target.hasClass('pinned');
+      let is_pinned = (pinned) ? 1 : 0;
+
+      target.toggleClass('pinned', pinned);
+      target.toggleClass('not-pinned', !target.hasClass('not-pinned'));
+
+      // Update pinned status in the db
+      $.ajax({
+        method: 'POST',
+        url: '/analytics/pin_collection',
+        data: { status: is_pinned, user_id: target.attr('data-user_id'), collection: target.attr('data-collection') }
+      }).done(function(data) {
+
+      });
+    });
   }
 
   /**
@@ -59,6 +82,19 @@ export default class {
           table_obj.search('').draw();
         }
       });
+  }
+
+  /**
+   * Destroy existing dataTables or Turbolinks keeps adding them to the page
+   * when user hits back/forward buttons
+   * @param collections
+   * @param works
+   */
+  preventDuplicateTables(collections, works) {
+    $(document).on('turbolinks:before-cache', function() {
+      collections.destroy();
+      works.destroy();
+    });
   }
 
   /**

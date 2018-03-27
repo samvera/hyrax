@@ -32,5 +32,11 @@ RSpec.describe Hyrax::AnalyticsController, type: :controller do
       expect(response).to be_success
       expect(assigns[:work_rows]).to eq results_works
     end
+
+    it "pins collection" do
+      post :pin_collection
+      expect(response).to be_success
+      expect(assigns[:work_rows]).to eq results_works
+    end
   end
 end
