@@ -123,23 +123,46 @@ module Hyrax
         add_participants(collection_type_id, default_participants)
       end
 
+      ##
       # @api public
       #
       # Add a participants to a collection_type.
       #
       # @param collection_type_id [Integer] the id of the collection type
-      # @param participants [Array<Hash>] each element holds agent_type, agent_id, and access for a participant to be added
+      # @param participants [Array<Hash>] each element holds agent_type, agent_id,
+      #   and access for a participant to be added
+      #
+      # @raise [InvalidParticipantError] if a participant is missing an
+      #   `agent_type`, `agent_id`, or `access`.
       def self.add_participants(collection_type_id, participants)
-        return unless collection_type_id && participants.count > 0
+        raise(InvalidParticipantError, participants) unless
+          participants.all? { |p| p.key?(:agent_type) && p.key?(:agent_id) && p.key?(:access) }
+
         participants.each do |p|
-          begin
-            agent_type = p.fetch(:agent_type)
-            agent_id = p.fetch(:agent_id)
-            access = p.fetch(:access)
-            Hyrax::CollectionTypeParticipant.create!(hyrax_collection_type_id: collection_type_id, agent_type: agent_type, agent_id: agent_id, access: access)
-          rescue => e
-            Rails.logger.error "Participant not created for collection type #{collection_type_id}: #{agent_type}, #{agent_id}, #{access} -- reason: #{e.class.name} - #{e.message}\n"
-          end
+          Hyrax::CollectionTypeParticipant.create!(hyrax_collection_type_id: collection_type_id, agent_type: p.fetch(:agent_type), agent_id: p.fetch(:agent_id), access: p.fetch(:access))
+        end
+      rescue InvalidParticipantError => error
+        Rails.logger.error "Participants not created for collection type " \
+                           " #{collection_type_id}: #{error.message}"
+        raise error
+      end
+
+      ##
+      # An error class for the case that invalid/incomplete participants are
+      # added to a collection type.
+      class InvalidParticipantError < RuntimeError
+        attr_reader :participants
+
+        def initialize(participants)
+          @participants = participants
+        end
+
+        ##
+        # @return [String]
+        def message
+          @participants.map do |participant|
+            "#{participant[:agent_type]}, #{participant[:agent_id]}, #{participant[:access]}"
+          end.join("--\n")
         end
       end
     end
