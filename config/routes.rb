@@ -83,6 +83,7 @@ Hyrax::Engine.routes.draw do
   # Depositors routes for proxy deposit
   post 'users/:user_id/depositors' => 'depositors#create', as: 'user_depositors'
   delete 'users/:user_id/depositors/:id' => 'depositors#destroy', as: 'user_depositor'
+  get 'proxies' => 'depositors#index', as: 'depositors'
 
   resources :featured_work_lists, path: 'featured_works', only: :create
 

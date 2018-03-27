@@ -42,8 +42,8 @@
     function rowTemplate (data) {
       return '<tr>'+
                 '<td class="depositor-name">'+data.name+'</td>'+
-                '<td><a class="remove-proxy-button" data-method="delete" href="'+data.delete_path+'" rel="nofollow">'+
-                  '<i class="glyphicon glyphicon-remove"></i></a>'+
+                '<td><a class="remove-proxy-button btn btn-danger" data-method="delete" href="'+data.delete_path+'" rel="nofollow">'+
+                $('#delete_button_label').data('label')+'</a>'+
                 '</td>'+
               '</tr>'
     }

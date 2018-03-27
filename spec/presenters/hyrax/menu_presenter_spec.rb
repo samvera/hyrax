@@ -79,6 +79,12 @@ RSpec.describe Hyrax::MenuPresenter do
 
       it { is_expected.to be false }
     end
+
+    context "for the Hyrax::DepositorsController" do
+      let(:controller) { Hyrax::DepositorsController.new }
+
+      it { is_expected.to be true }
+    end
   end
 
   describe "#show_configuration?" do

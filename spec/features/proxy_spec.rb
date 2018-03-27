@@ -6,8 +6,7 @@ RSpec.describe 'proxy', type: :feature do
     it "creates a proxy" do
       sign_in user
       click_link "Your activity"
-      click_link "Profile"
-      click_link "Edit Profile"
+      click_link "Manage Proxies"
       expect(first("td.depositor-name")).to be_nil
 
       # BEGIN create_proxy_using_partial
@@ -18,6 +17,7 @@ RSpec.describe 'proxy', type: :feature do
       # END create_proxy_using_partial
 
       expect(page).to have_css('td.depositor-name', text: second_user.user_key)
+      expect(page).to have_link('Delete Proxy')
     end
   end
 end
