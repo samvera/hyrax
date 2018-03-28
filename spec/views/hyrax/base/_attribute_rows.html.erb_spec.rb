@@ -7,7 +7,11 @@ RSpec.describe 'hyrax/base/_attribute_rows.html.erb', type: :view do
                related_url: [url],
                rights_statement: [rights_statement_uri])
   end
-  let(:solr_document) { SolrDocument.new(work.to_solr) }
+  let(:solr_document) do
+    SolrDocument.new(has_model_ssim: 'GenericWork',
+                     rights_statement_tesim: [rights_statement_uri],
+                     related_url_tesim: [url])
+  end
   let(:presenter) { Hyrax::WorkShowPresenter.new(solr_document, ability) }
 
   let(:page) do

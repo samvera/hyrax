@@ -21,6 +21,7 @@ RSpec.describe 'hyrax/base/_attributes.html.erb' do
   let(:doc) { Nokogiri::HTML(rendered) }
 
   before do
+    allow(presenter).to receive(:member_of_collection_presenters).and_return([])
     allow(view).to receive(:dom_class) { '' }
 
     render 'hyrax/base/attributes', presenter: presenter

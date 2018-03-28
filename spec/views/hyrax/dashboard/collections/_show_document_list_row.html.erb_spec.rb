@@ -2,7 +2,12 @@ RSpec.describe 'hyrax/dashboard/collections/_show_document_list_row.html.erb', t
   let(:user) { create(:user) }
 
   let(:work) do
-    create(:work, user: user, creator: ["ggm"], title: ['One Hundred Years of Solitude'])
+    mock_model(GenericWork, label: 'One Hundred Years of Solitude', date_uploaded: '1999',
+                            collection?: true, visibility: 'open',
+                            title: ['One Hundred Years of Solitude'],
+                            depositor: user,
+                            edit_groups: [],
+                            creator: ["ggm"])
   end
 
   let(:collection) { mock_model(Collection, title: 'My awesome collection', members: [work]) }

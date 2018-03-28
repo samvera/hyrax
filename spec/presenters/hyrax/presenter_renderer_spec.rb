@@ -1,7 +1,9 @@
 RSpec.describe Hyrax::PresenterRenderer, type: :view do
-  let(:work) { GenericWork.new }
   let(:ability) { double }
-  let(:document) { SolrDocument.new(work.to_solr) }
+  let(:document) { SolrDocument.new(data) }
+  let(:data) do
+    { id: '123', date_created_tesim: 'foo', date_uploaded_tesim: 'bar', has_model_ssim: 'GenericWork' }
+  end
   let(:presenter) { Hyrax::WorkShowPresenter.new(document, ability) }
   let(:renderer) { described_class.new(presenter, view) }
 

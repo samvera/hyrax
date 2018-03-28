@@ -1,6 +1,6 @@
 RSpec.describe 'hyrax/base/_form_rendering.html.erb', type: :view do
   let(:ability) { double }
-  let(:work) { create(:work_with_one_file) }
+  let(:work) { stub_model(GenericWork, new_record?: false) }
   let(:form) do
     Hyrax::GenericWorkForm.new(work, ability, controller)
   end
@@ -10,6 +10,10 @@ RSpec.describe 'hyrax/base/_form_rendering.html.erb', type: :view do
       render 'hyrax/base/form_rendering', f: f
     end
     Capybara::Node::Simple.new(rendered)
+  end
+
+  before do
+    allow(form).to receive(:select_files).and_return([{ '123' => 'File one' }])
   end
 
   it 'has a rendering_ids field' do

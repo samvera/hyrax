@@ -4,27 +4,24 @@ RSpec.describe "hyrax/base/file_manager.html.erb" do
   let(:member) { Hyrax::WorkShowPresenter.new(solr_doc_work, nil) }
   let(:solr_doc) do
     SolrDocument.new(
-      resource.to_solr.merge(
-        id: "test",
-        title_tesim: ["Test"],
-        thumbnail_path_ss: "/test/image/path.jpg",
-        label_tesim: ["file_name.tif"]
-      )
+      id: "test",
+      title_tesim: ["Test"],
+      thumbnail_path_ss: "/test/image/path.jpg",
+      label_tesim: ["file_name.tif"],
+      has_model_ssim: 'FileSet'
     )
   end
   let(:solr_doc_work) do
     SolrDocument.new(
-      resource.to_solr.merge(
-        id: "work",
-        title_tesim: ["Work"],
-        thumbnail_path_ss: "/test/image/path.jpg",
-        label_tesim: ["work"]
-      )
+      id: "work",
+      has_model_ssim: 'GenericWork',
+      title_tesim: ["Work"],
+      thumbnail_path_ss: "/test/image/path.jpg",
+      label_tesim: ["work"]
     )
   end
-  let(:resource) { build(:file_set) }
 
-  let(:parent) { build(:generic_work) }
+  let(:parent) { stub_model(GenericWork, title: ["Test title"]) }
 
   let(:form) do
     Hyrax::Forms::FileManagerForm.new(parent, nil)

@@ -13,8 +13,12 @@ RSpec.describe "hyrax/admin/admin_sets/index.html.erb", type: :view do
   end
 
   context "when an admin set exists" do
-    let(:admin_set) { build(:admin_set, id: '123', title: ['Example Admin Set'], creator: ['jdoe@example.com']) }
-    let(:solr_doc) { SolrDocument.new(admin_set.to_solr) }
+    let(:solr_doc) do
+      SolrDocument.new(has_model_ssim: 'AdminSet',
+                       id: 123,
+                       title_tesim: ['Example Admin Set'],
+                       creator_ssim: ['jdoe@example.com'])
+    end
     let(:admin_sets) { [solr_doc] }
     let(:presenter_class) { Hyrax::AdminSetPresenter }
     let(:presenter) { instance_double(presenter_class, total_items: 99) }
