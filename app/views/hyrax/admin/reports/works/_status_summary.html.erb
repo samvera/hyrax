@@ -1,0 +1,24 @@
+<p>
+<% if @presenter.work_count == 0 %>
+  <%= t('hrax.admin.reports.works.status.work_types.default', count: 'no') %>
+<% elsif @presenter.work_count == 1 %>
+  <%= t('hyrax.admin.reports.works.status.work_counts.one') %>
+<% else %>
+  <%= t('hyrax.admin.reports.works.status.work_counts.default', count: @presenter.work_count) %>
+<% end %>
+
+<% if @presenter.current_work_types.count == 0 %>
+  <%= t('hyrax.admin.reports.works.status.work_types.default', count: 'no') %>
+<% elsif @presenter.current_work_types.count == 1 %>
+  <%= t('hyrax.admin.reports.works.status.work_types.one') %>
+<% else %>
+  <%= t('hyrax.admin.reports.works.status.work_types.default', count: @presenter.current_work_types.count) %>
+<% end %>
+
+<% if @presenter.user_count == 1 %>
+  <%= t('hyrax.admin.reports.works.status.created_by.one') %>
+<% else %>
+  <%= t('hyrax.admin.reports.works.status.created_by.default', count: @presenter.user_count) %>
+<% end %>
+
+</p>

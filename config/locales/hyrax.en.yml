@@ -250,6 +250,19 @@ en:
           description: Description
           feature: Feature
           header: Features
+      reports:
+        works:
+          status:
+            title: Work Reports
+            work_counts:
+              one: The repository contains 1 work
+              default: The repository contains %{count} works
+            work_types:
+              one: which collectively contain 1 work type
+              default: which collectively contain %{count} work types
+            created_by:
+              one: created by 1 user
+              default: created by #{count} users
       sidebar:
         activity: Activity
         appearance: Appearance
