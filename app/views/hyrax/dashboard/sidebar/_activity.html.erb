@@ -28,10 +28,8 @@
     <% end %>
   </li>
 
-  <% unless Flipflop.analytics_redesign? %>
-    <% if can? :read, :admin_dashboard %>
-      <%= menu.nav_link(hyrax.admin_stats_path) do %>
-        <span class="fa fa-bar-chart"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.statistics') %></span>
-      <% end %>
+  <% unless Flipflop.analytics_redesign? && can?(:read, :admin_dashboard) %>
+    <%= menu.nav_link(hyrax.admin_stats_path) do %>
+      <span class="fa fa-bar-chart"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.statistics') %></span>
     <% end %>
   <% end %>
