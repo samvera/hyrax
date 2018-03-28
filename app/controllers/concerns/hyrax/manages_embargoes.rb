@@ -13,9 +13,6 @@ module Hyrax
       redirect_to root_path, alert: exception.message
     end
 
-    def edit
-      add_breadcrumb t(:'hyrax.controls.home'), root_path
-      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
-    end
+    def edit; end
   end
 end
