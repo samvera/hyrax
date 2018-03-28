@@ -33,7 +33,7 @@
                       </li>
                       <li class="radio form-inline">
                         <label>
-                          <%= f.radio_button :release_varies, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO  %>
+                          <%= f.radio_button :release_varies, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO %>
                           <%= t('.release.varies.period') %>
                           <%= f.collection_select :release_embargo, f.object.embargo_options, :first, :last, prompt: t('.release.varies.embargo.select') %>
                         </label>
@@ -56,8 +56,8 @@
                   <% end %>
                 </div>
                 <div class="panel-footer">
-                  <%= link_to t('.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-default pull-right'%>
-                  <%= f.button :submit, class: 'btn btn-primary pull-right'%>
+                  <%= link_to t('.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-default pull-right' %>
+                  <%= f.button :submit, class: 'btn btn-primary pull-right' %>
                 </div>
               <% end %>
             </div>

@@ -2,7 +2,7 @@
 <tr id="document_<%= id %>">
   <td>&nbsp;
     <% if current_user and document.depositor != current_user.user_key %>
-      <i class="glyphicon glyphicon-share-alt"/>
+      <i class="glyphicon glyphicon-share-alt" />
     <% end %>
   </td>
   <td>
@@ -41,7 +41,7 @@
       <dd class="col-xs-9 col-lg-10">
         <% if document.edit_groups.present? %>
           Groups: <%= document.edit_groups.join(', ') %>
-          <br/>
+          <br />
         <% end %>
         Users: <%= document.edit_people.join(', ') %>
       </dd>

@@ -4,9 +4,13 @@
   <%= atom_feed_link_tag route_set: hyrax %>
 <% end %>
 
-<%= javascript_tag do %>
+<script>
+//<![CDATA[
+
   <%= render partial: 'scripts', formats: [:js] %>
-<% end %>
+
+//]]>
+</script>
 
 <% provide :page_header do %>
   <h1><span class="fa fa-folder-open"></span> <%= t("hyrax.admin.sidebar.collections") %></h1>
@@ -25,7 +29,7 @@
           data-toggle="modal"
           data-target="#collectiontypes-to-create"
           data-behavior="select-collection">
-          <%= t(:'helpers.action.collection.new')%>
+          <%= t(:'helpers.action.collection.new') %>
         </button>
       <% else @collection_type_list_presenter.any? %>
         <% # link directly to create collection form with type %>
