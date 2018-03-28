@@ -11,6 +11,10 @@ module Hyrax
         pinned.update_attributes({ :pinned => @params[:status] })
       end
 
+      def single_pinned_collections
+        PinnedCollection.where(:user_id => @params[:user_id], :collection => @params[:collection])
+      end
+
       def all_pinned_collections
         PinnedCollection.where(:user_id => @params[:user_id], :pinned => 1)
       end

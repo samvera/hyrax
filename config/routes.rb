@@ -109,6 +109,7 @@ Hyrax::Engine.routes.draw do
     get 'repository_growth', action: :repository_growth
     get 'repository_object_counts', action: :repository_object_counts
     get 'update_works_list', action: :update_works_list
+    get 'all_pinned_collections', action: :all_pinned_collections
     post 'pin_collection', action: :pin_collection
   end
 

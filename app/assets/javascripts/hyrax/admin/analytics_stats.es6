@@ -49,14 +49,13 @@ export default class {
       url: '/analytics/all_pinned_collections',
       data: { user_id: $('#pinned-0').attr('data-user_id') }
     }).done((data) => {
-      console.log(data)
       data.forEach((d) => {
-        $( "path[data-collection='" + d.collection + "']" )
+        $("path[data-collection='" + d.collection + "']")
           .removeClass('not-pinned')
           .addClass('pinned');
-      })
+      });
     }).fail((jqXHR, textStatus) => {
-      console.log(`Request failed: ${textStatus}. Unable to retrieve pinned collection`);
+      console.log(`Request failed: ${textStatus}. Unable to retrieve pinned collections`);
     });
   }
 
@@ -75,7 +74,7 @@ export default class {
         url: '/analytics/pin_collection',
         data: { status: is_pinned, user_id: target.attr('data-user_id'), collection: target.attr('data-collection') }
       }).done((data) => {
-
+        target.text('Unpin Collection')
       }).fail((jqXHR, textStatus) => {
         console.log(`Request failed: ${textStatus}. Unable to update collection`);
       });
