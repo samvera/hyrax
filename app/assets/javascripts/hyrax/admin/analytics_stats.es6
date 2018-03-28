@@ -5,12 +5,13 @@ export default class {
     this.admin_repo_charts = $('.admin-repo-charts');
 
     this.createDataTables();
+    this.getPinnedCollections();
     this.pinCollection();
     this.transitionChart();
   }
 
   createDataTables() {
-    let analtyics_collections = this.collections_table.DataTable({ responsive: true });
+    let analytics_collections = this.collections_table.DataTable({ responsive: true });
 
     // Uses server side sorting, etc. Generally there will be way too many works to show them in one go
     let analytics_works = this.works_table.DataTable({
@@ -39,7 +40,24 @@ export default class {
     });
 
     this.minTableSearchLength('analytics-works-table', analytics_works);
-    this.preventDuplicateTables(analtyics_collections, analytics_works);
+    this.preventDuplicateTables(analytics_collections, analytics_works);
+  }
+
+  getPinnedCollections() {
+    $.ajax({
+      method: 'GET',
+      url: '/analytics/all_pinned_collections',
+      data: { user_id: $('#pinned-0').attr('data-user_id') }
+    }).done((data) => {
+      console.log(data)
+      data.forEach((d) => {
+        $( "path[data-collection='" + d.collection + "']" )
+          .removeClass('not-pinned')
+          .addClass('pinned');
+      })
+    }).fail((jqXHR, textStatus) => {
+      console.log(`Request failed: ${textStatus}. Unable to retrieve pinned collection`);
+    });
   }
 
   pinCollection() {
@@ -56,8 +74,10 @@ export default class {
         method: 'POST',
         url: '/analytics/pin_collection',
         data: { status: is_pinned, user_id: target.attr('data-user_id'), collection: target.attr('data-collection') }
-      }).done(function(data) {
+      }).done((data) => {
 
+      }).fail((jqXHR, textStatus) => {
+        console.log(`Request failed: ${textStatus}. Unable to update collection`);
       });
     });
   }
