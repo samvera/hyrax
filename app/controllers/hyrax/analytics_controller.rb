@@ -24,8 +24,13 @@ module Hyrax
     def pin_collection
       return unless can? :read, :admin_dashboard
       @pinned = Hyrax::Admin::PinCollectionPresenter.new(params)
-      @pinned.pinned_collections
-      render json: @pinned
+      render json: @pinned.pin_collection
+    end
+
+    def all_pinned_collections
+      return unless can? :read, :admin_dashboard
+      @all = Hyrax::Admin::PinCollectionPresenter.new(params)
+      render json: @all.all_pinned_collections
     end
   end
 end

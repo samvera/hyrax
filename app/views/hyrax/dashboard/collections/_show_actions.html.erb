@@ -1,6 +1,6 @@
 <h2 class="sr-only"><%= t('hyrax.collection.actions.header') %></h2>
 <% if Flipflop.analytics_redesign? and can? :read, :admin_dashboard %>
-  <%= link_to t('hyrax.collection.actions.pin_collection'),
+  <%= link_to if pinned t('hyrax.collection.actions.pin_collection'),
               hyrax.dashboard_pin_collection_path({status: 'pinned', user_id: current_user.id, collection: presenter.id }),
               method: :post,
               class: 'btn btn-default',
