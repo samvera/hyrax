@@ -5,8 +5,8 @@ class CreateResourceStats < ActiveRecord::Migration<%= migration_version %>
       t.integer :user_id
       t.integer :downloads
       t.integer :pageviews
-      t.integer :unique_visitors
-      t.integer :returning_visitors
+      t.integer :visitors
+      t.integer :sessions
       t.string :resource_id
       t.string :resource_type
 
