@@ -24,6 +24,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
       get :edit
       expect(response).to be_successful
+      expect(response).to render_template('dashboard')
       expect(assigns[:form].model.creator).to match_array ["Fred", "Wilma"]
     end
   end

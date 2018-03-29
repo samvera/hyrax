@@ -5,6 +5,9 @@ module Hyrax
     include Hyrax::Collections::AcceptsBatches
 
     def index
+      add_breadcrumb t(:'hyrax.controls.home'), root_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.embargoes.index.manage_embargoes'), hyrax.embargoes_path
       authorize! :index, Hydra::AccessControls::Embargo
     end
 
@@ -39,6 +42,13 @@ module Hyrax
     # This allows us to use the unauthorized template in curation_concerns/base
     def self.local_prefixes
       ['hyrax/base']
+    end
+
+    def edit
+      add_breadcrumb t(:'hyrax.controls.home'), root_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.embargoes.index.manage_embargoes'), hyrax.embargoes_path
+      add_breadcrumb t(:'hyrax.embargoes.edit.embargo_update'), '#'
     end
   end
 end
