@@ -43,9 +43,16 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       create(:work, creator: ["Fred"], title: ["abc"], language: ['en'])
     end
 
+    let!(:file_set) do
+      create(:file_set, creator: ["Fred"])
+    end
+
     let(:mycontroller) { "hyrax/my/works" }
 
     before do
+      one.members << file_set
+      one.save!
+
       # TODO: why aren't we just submitting batch_document_ids[] as a parameter?
       controller.batch = [one.id, two.id, three.id]
       expect(controller).to receive(:can?).with(:edit, one.id).and_return(true)
@@ -77,7 +84,11 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
     it "updates permissions" do
       put :update, params: { update_type: "update", visibility: "authenticated" }
       expect(response).to be_redirect
-      expect(GenericWork.find(one.id).visibility).to eq "authenticated"
+
+      work1 = GenericWork.find(one.id)
+      expect(work1.visibility).to eq "authenticated"
+      expect(work1.file_sets.map(&:visibility)).to eq ["authenticated"]
+
       expect(GenericWork.find(two.id).visibility).to eq "authenticated"
       expect(GenericWork.find(three.id).visibility).to eq "restricted"
     end
