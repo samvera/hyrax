@@ -23,7 +23,7 @@ module Hyrax
 
       self.terms = [:title, :creator, :contributor, :description,
                     :keyword, :license, :rights_statement, :publisher, :date_created,
-                    :subject, :language, :identifier, :based_near, :related_url,
+                    :subject, :language, :identifier, :based_near, :related_url, :bibliographic_citation,
                     :representative_id, :thumbnail_id, :rendering_ids, :files,
                     :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo,
                     :visibility_during_lease, :lease_expiration_date, :visibility_after_lease,
