@@ -49,6 +49,10 @@ module Hyrax
       obj.attributes = work_params
       obj.date_modified = Time.current.ctime
       obj.visibility = params[:visibility]
+
+      InheritPermissionsJob.perform_now(obj)
+      VisibilityCopyJob.perform_now(obj)
+
       obj.save
     end
 
