@@ -16,6 +16,7 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
         "has_model_ssim" => ["Collection"],
         "title_tesim" => ["Collection Title"],
         "description_tesim" => ["Collection Description"],
+        "thumbnail_path_ss" => Hyrax::CollectionIndexer.thumbnail_path_service.default_image,
         "collection_type_gid_ssim" => [collection_type.gid],
         "system_modified_dtsi" => modified_date
       }
@@ -49,7 +50,8 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
       expect(rendered).to have_link 'Add to collection'
       expect(rendered).to have_css '.collection_type', text: 'User Collection'
       expect(rendered).to have_selector '.expanded-details', text: 'Collection Description'
-      expect(rendered).not_to include '<span class="fa fa-cubes collection-icon-small"></span></a>'
+      expect(rendered).not_to have_selector 'span.fa-cubes'
+      expect(rendered).to have_selector '.thumbnail-wrapper > img[alt="Collection"]'
       expect(rendered).to include Date.parse(modified_date).to_formatted_s(:standard)
     end
   end
@@ -61,6 +63,7 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
         "has_model_ssim" => ["AdminSet"],
         "title_tesim" => ["AdminSet Title"],
         "description_tesim" => ["Admin Description"],
+        "thumbnail_path_ss" => Hyrax::AdminSetIndexer.thumbnail_path_service.default_image,
         "collection_type_gid_ssim" => [collection_type.gid],
         "system_modified_dtsi" => modified_date
       }
@@ -93,7 +96,8 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
       expect(rendered).to have_link 'Add to collection' if Hyrax::CollectionType.any_nestable?
       expect(rendered).to have_css '.collection_type', text: 'Admin Set'
       expect(rendered).to have_selector '.expanded-details', text: 'Admin Description'
-      expect(rendered).not_to include '<span class="fa fa-cubes collection-icon-small"></span></a>'
+      expect(rendered).not_to have_selector 'span.fa-cubes'
+      expect(rendered).to have_selector '.thumbnail-wrapper > img[alt="Collection"]'
       expect(rendered).to include Date.parse(modified_date).to_formatted_s(:standard)
     end
   end
