@@ -4,7 +4,7 @@ module Hyrax
   class AnalyticsImporter
     attr_reader :start_date
 
-    def initialize(start_date:, options = {})
+    def initialize(start_date, options = {})
       if options[:verbose]
         stdout_logger = Logger.new(STDOUT)
         stdout_logger.level = Logger::INFO
@@ -18,27 +18,24 @@ module Hyrax
       @start_date = start_date
     end
 
-    def import_page_stats(page_token='0')
+    def import_page_stats(page_token = '0')
       results = analytics_service.page_report(start_date, page_token)
       results[:rows].each do |result|
         create_or_update_page_stat(result)
       end
 
-      unless results[:next_page_token].blank?
-        import_page_stats(start_date, results[:next_page_token])
-      end
-
+      return if results[:next_page_token].blank?
+      import_page_stats(results[:next_page_token])
     end
 
-    def import_site_stats(page_token='0')
+    def import_site_stats(page_token = '0')
       results = analytics_service.site_report(start_date, page_token)
       results[:rows].each do |result|
         create_or_update_site_stat(result)
       end
 
-      unless results[:next_page_token].blank? #TODO: can Matomo pass this along too? Or do we need to coerce?
-        import_site_stats(start_date, results[:next_page_token])
-      end
+      return if results[:next_page_token].blank?
+      import_site_stats(results[:next_page_token])
     end
 
     # Create or update entries in ResourceStat table for page-level results
@@ -54,10 +51,9 @@ module Hyrax
                                                                 date: date)
 
       stat.resource_type = resource.class
-      stat.pageviews = result.fetch(:pageviews, 0)
-      stat.downloads = result.fetch(:downloads, 0)
-      stat.unique_visitors = result.fetch(:unique_visitors, 0)
-      stat.returning_visitors = result.fetch(:returning_visitors, 0)
+      stat.pageviews = result.pageviews.to_i || 0
+      stat.sessions = result.sessions.to_i || 0
+      stat.visitors = result.visitors.to_i || 0
       stat.save!
     end
 
@@ -71,8 +67,8 @@ module Hyrax
                                 resource_id: nil,
                                 date: date).first_or_initialize(date: date)
 
-      stat.unique_visitors = result.fetch(:unique_visitors, 0)
-      stat.returning_visitors = result.fetch(:returning_visitors, 0)
+      stat.sessions = result.sessions || 0
+      stat.visitors = result.visitors || 0
       stat.save!
     end
 
@@ -84,7 +80,7 @@ module Hyrax
 
       def user_id(resource)
         email = resource.depositor
-        user = User.find_by(email: email)
+        user = ::User.find_by(email: email)
         user.id
       end
 
