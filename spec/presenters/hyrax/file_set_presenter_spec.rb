@@ -20,7 +20,7 @@ RSpec.describe Hyrax::FileSetPresenter do
       # https://github.com/samvera/active_fedora/issues/1251
       allow(file).to receive(:persisted?).and_return(true)
     end
-    it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_file_path(id: file) }
+    it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_file_path(id: file, locale: 'en') }
   end
 
   subject { presenter }

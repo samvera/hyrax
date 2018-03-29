@@ -106,7 +106,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
       allow(work).to receive(:persisted?).and_return(true)
     end
 
-    it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_work_path(id: work) }
+    it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_work_path(id: work, locale: 'en') }
   end
 
   describe '#itemtype' do
