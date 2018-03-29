@@ -11,6 +11,7 @@ RSpec.describe Hyrax::CitationsController do
       end
 
       it "is successful" do
+        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         get :work, params: { id: work }
         expect(response).to be_successful
@@ -39,6 +40,7 @@ RSpec.describe Hyrax::CitationsController do
       end
 
       it "is successful" do
+        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         get :file, params: { id: file_set }
         expect(response).to be_successful
