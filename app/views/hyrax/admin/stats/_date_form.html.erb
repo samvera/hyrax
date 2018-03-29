@@ -1,4 +1,5 @@
 <%= form_for "stats_filters", url: hyrax.admin_stats_path, method: "GET" do |f| %>
+  <input type='hidden' name='locale' value="<%= params[:locale] %>" />
   <%= f.label "Start *" %>
   <input type="date" name="stats_filters[start_date]" value="<%= @presenter.stats_filters[:start_date] %>" placeholder="yyyy-mm-dd" ></input>
   <%= f.label "end [defaults to now]" %>
