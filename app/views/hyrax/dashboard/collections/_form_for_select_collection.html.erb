@@ -1,4 +1,4 @@
-<div role="dialog" class="modal collection-list-modal fade" id="collection-list-container" tabindex="-1" aria-labelledby="col_add_title" >
+<div role="dialog" class="modal collection-list-modal fade" id="collection-list-container" tabindex="-1" aria-labelledby="col_add_title">
   <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -7,13 +7,13 @@
         </div>
         <div class="modal-body">
           <% if user_collections.blank? %>
-            <em> <%= t("hyrax.collection.select_form.no_collections") %></em><br><br><br><br>
+            <em> <%= t("hyrax.collection.select_form.no_collections") %></em><br /><br /><br /><br />
           <% else %>
             <div class="collection-list">
               <fieldset>
                 <legend><%= t("hyrax.collection.select_form.select_heading") %></legend>
               <ul>
-                <% user_collections.sort { |c1,c2| c2[CatalogController.uploaded_field] <=> c1[CatalogController.uploaded_field] }.each_with_index do |collection,index|  %>
+                <% user_collections.sort { |c1,c2| c2[CatalogController.uploaded_field] <=> c1[CatalogController.uploaded_field] }.each_with_index do |collection,index| %>
                   <li>
                     <% selected = (collection.id == @add_works_to_collection) || (@add_works_to_collection.blank? && index == 0) %>
                     <%= radio_button_tag(:id, collection.id, selected, class: "collection-selector") %>
@@ -26,7 +26,7 @@
           <% end %> <!-- else -->
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("hyrax.collection.select_form.close")%></button>
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("hyrax.collection.select_form.close") %></button>
           <% if user_collections.blank? %>
             <%= render 'hyrax/dashboard/collections/button_create_collection', label: t("hyrax.collection.select_form.create") %>
 

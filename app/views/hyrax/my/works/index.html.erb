@@ -5,9 +5,13 @@
   <%= atom_feed_link_tag route_set: hyrax %>
 <% end %>
 
-<%= javascript_tag do %>
+<script>
+//<![CDATA[
+
   <%= render partial: 'scripts', formats: [:js] %>
-<% end %>
+
+//]]>
+</script>
 
 <% provide :page_header do %>
   <h1><span class="fa fa-file"></span> <%= t("hyrax.admin.sidebar.works") %></h1>
