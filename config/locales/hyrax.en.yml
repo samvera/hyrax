@@ -672,9 +672,9 @@ en:
           delete_admin_set: Delete collection
           delete_admin_set_deny: This collection is defined as Admin Set and is not empty. To delete this Admin Set, you must first remove (delete or move to another Admin Set collection) all items from the Admin Set.
           delete_collection: Delete collection
-          delete_collection_deny: You do not have sufficient privileges to delete this document.
+          delete_collection_deny: You do not have sufficient privileges to delete this collection.
           delete_collections: Delete collections
-          delete_collections_deny: You must select one or more collections to delete.
+          delete_collections_deny: You do not have sufficient privileges to delete one or more collections.
           delete_work: Delete Work
           edit_admin_set: Edit collection
           edit_collection: Edit collection

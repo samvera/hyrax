@@ -5,7 +5,13 @@
   data-post-url="<%= hyrax.dashboard_create_nest_collection_within_path(id) %>"
   data-post-delete-url="<%= is_admin_set ? hyrax.admin_admin_set_path(id) : hyrax.dashboard_collection_path(id) %>">
 
-  <td><% unless collection_presenter.solr_document.admin_set? %><input type="checkbox" name="batch_document_ids[]" id="batch_document_<%= id %>" value="<%= id %>" class="batch_document_selector" /><% end %></td>
+  <td>
+    <% unless collection_presenter.solr_document.admin_set? %>
+    <input type="checkbox" name="batch_document_ids[]" id="batch_document_<%= id %>" value="<%= id %>" class="batch_document_selector"
+      data-hasaccess="<%= (can?(:edit, collection_presenter.solr_document)) %>"
+    />
+    <% end %>
+  </td>
   <td>
     <div class="thumbnail-title-wrapper">
       <div class="thumbnail-wrapper">
