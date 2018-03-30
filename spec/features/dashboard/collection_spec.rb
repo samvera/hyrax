@@ -420,7 +420,6 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
     end
 
-
     context 'when user does not have permission to delete a collection' do
       let(:user2) { create(:user) }
 
@@ -435,7 +434,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       context 'and selects Delete from drop down within table' do
-        fit 'does not allow delete collection', js: true do
+        it 'does not allow delete collection', js: true do
           expect(page).to have_content(collection.title.first)
           check_tr_data_attributes(collection.id, 'collection')
           within("#document_#{collection.id}") do
@@ -453,7 +452,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       context 'and selects the collection and clicks "Delete collections" button at top of page' do
-        fit 'does not allow delete collection', js: true do
+        it 'does not allow delete collection', js: true do
           expect(page).to have_content(collection.title.first)
           check_tr_data_attributes(collection.id, 'collection')
 
