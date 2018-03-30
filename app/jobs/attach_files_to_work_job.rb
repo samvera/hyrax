@@ -6,7 +6,11 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
   # @param [Array<Hyrax::UploadedFile>] uploaded_files - an array of files to attach
   def perform(work, uploaded_files, **work_attributes)
     validate_files!(uploaded_files)
-    user = User.find_by_user_key(work.depositor) # BUG? file depositor ignored
+    # When running as a background job (as opposed to running inline), a work with files attached
+    # by a proxy user will set the depositor as the intended user that the proxy user was depositing on
+    # behalf of. See ticket #2764.
+    depositor = work.on_behalf_of || work.depositor
+    user = User.find_by_user_key(depositor)
     work_permissions = work.permissions.map(&:to_hash)
     metadata = visibility_attributes(work_attributes)
     uploaded_files.each do |uploaded_file|

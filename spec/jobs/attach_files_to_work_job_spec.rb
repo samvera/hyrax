@@ -5,6 +5,7 @@ RSpec.describe AttachFilesToWorkJob do
     let(:uploaded_file1) { build(:uploaded_file, file: file1) }
     let(:uploaded_file2) { build(:uploaded_file, file: file2) }
     let(:generic_work) { create(:public_generic_work) }
+    let(:user) { create(:user) }
 
     shared_examples 'a file attacher' do
       it 'attaches files, copies visibility and permissions and updates the uploaded files' do
@@ -42,6 +43,18 @@ RSpec.describe AttachFilesToWorkJob do
       end
 
       it_behaves_like 'a file attacher'
+    end
+
+    context "deposited on behalf of another user" do
+      before do
+        generic_work.on_behalf_of = user.user_key
+        generic_work.save
+      end
+      it_behaves_like 'a file attacher' do
+        it 'records the depositor(s) in edit_users' do
+          expect(generic_work.file_sets.map(&:edit_users)).to all(match_array([user.user_key]))
+        end
+      end
     end
   end
 end
