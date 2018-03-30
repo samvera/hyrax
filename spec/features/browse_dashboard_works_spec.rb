@@ -7,6 +7,10 @@ RSpec.describe "Browse Dashboard", type: :feature do
     create(:public_work, user: user, title: ["Test Document MP3"], subject: %w[consectetur adipisicing elit])
   end
 
+  let!(:collection) { create(:public_collection, title: ['Collection with Work'], user: user, create_access: true) }
+  let!(:admin_user) { create(:admin) }
+  let!(:adminset) { create(:admin_set, title: ['Admin Set with Work'], creator: [admin_user.user_key], with_permission_template: true) }
+
   before do
     # Grant the user access to deposit into an admin set.
     create(:permission_template_access,
@@ -16,7 +20,13 @@ RSpec.describe "Browse Dashboard", type: :feature do
            agent_id: user.user_key)
 
     sign_in user
-    create(:public_work, user: user, title: ["Fake Wav Files"], subject: %w[sed do eiusmod tempor incididunt ut labore])
+
+    create(:public_work,
+           user: user,
+           title: ["Fake Wav Files"],
+           subject: %w[sed do eiusmod tempor incididunt ut labore],
+           admin_set: adminset,
+           member_of_collections: [collection])
     visit "/dashboard/my/works"
   end
 
@@ -52,5 +62,11 @@ RSpec.describe "Browse Dashboard", type: :feature do
       accept_confirm { click_button('Delete Selected') }
       expect(page).to have_content('Batch delete complete')
     end.to change { GenericWork.count }.by(-3)
+  end
+
+  it "has a Collection facet that includes collections and admin sets", js: true do
+    click_button "Collection"
+    expect(page).to have_link('Admin Set with Work')
+    expect(page).to have_link('Collection with Work')
   end
 end

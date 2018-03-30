@@ -46,6 +46,14 @@ module Hyrax
       CollectionType.find_or_create_default_collection_type.title
     end
 
+    # @param collection_id [String] The id of the Collection to be looked up
+    # @return [String] The Collection's title if found, else the id
+    def collection_label(collection_id)
+      Collection.find(collection_id).title.first
+    rescue ActiveRecord::RecordNotFound, URI::BadURIError
+      collection_id
+    end
+
     private
 
       # add hidden fields to a form for performing an action on a single document on a collection
