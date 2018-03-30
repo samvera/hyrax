@@ -125,20 +125,32 @@ module Hyrax
     # Calculate and update who should have read/edit access to the collections based on who
     # has access in PermissionTemplateAccess
     def reset_access_controls!
-      edit_users = permission_template.agent_ids_for(access: 'manage', agent_type: 'user')
-      edit_groups = permission_template.agent_ids_for(access: 'manage', agent_type: 'group')
-      read_users = permission_template.agent_ids_for(access: 'view', agent_type: 'user') +
-                   permission_template.agent_ids_for(access: 'deposit', agent_type: 'user')
-      read_groups = (permission_template.agent_ids_for(access: 'view', agent_type: 'group') +
-                     permission_template.agent_ids_for(access: 'deposit', agent_type: 'group') +
-                     visibility_group).uniq
-      update!(edit_users: edit_users,
-              edit_groups: edit_groups,
-              read_users: read_users,
-              read_groups: read_groups)
+      update!(edit_users: permission_template_edit_users,
+              edit_groups: permission_template_edit_groups,
+              read_users: permission_template_read_users,
+              read_groups: (permission_template_read_groups + visibility_group).uniq)
     end
 
     private
+
+      def permission_template_edit_users
+        permission_template.agent_ids_for(access: 'manage', agent_type: 'user')
+      end
+
+      def permission_template_edit_groups
+        permission_template.agent_ids_for(access: 'manage', agent_type: 'group')
+      end
+
+      def permission_template_read_users
+        (permission_template.agent_ids_for(access: 'view', agent_type: 'user') +
+          permission_template.agent_ids_for(access: 'deposit', agent_type: 'user')).uniq
+      end
+
+      def permission_template_read_groups
+        (permission_template.agent_ids_for(access: 'view', agent_type: 'group') +
+          permission_template.agent_ids_for(access: 'deposit', agent_type: 'group')).uniq -
+          [::Ability.registered_group_name, ::Ability.public_group_name]
+      end
 
       def visibility_group
         return [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC] if visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC

@@ -198,15 +198,17 @@ RSpec.describe AdminSet, type: :model do
 
     before do
       allow(admin_set).to receive(:permission_template).and_return(permission_template)
-      allow(permission_template).to receive(:agent_ids_for).with(access: 'manage', agent_type: 'user').and_return(['mgr1.ex.com', 'mgr2.ex.com', user.user_key])
+      allow(permission_template).to receive(:agent_ids_for).with(access: 'manage', agent_type: 'user').and_return(['mgr1@ex.com', 'mgr2@ex.com', user.user_key])
       allow(permission_template).to receive(:agent_ids_for).with(access: 'manage', agent_type: 'group').and_return(['managers', ::Ability.admin_group_name])
-      allow(permission_template).to receive(:agent_ids_for).with(access: 'view', agent_type: 'user').and_return(['vw1.ex.com', 'vw2.ex.com'])
-      allow(permission_template).to receive(:agent_ids_for).with(access: 'view', agent_type: 'group').and_return(['viewers'])
+      allow(permission_template).to receive(:agent_ids_for).with(access: 'deposit', agent_type: 'user').and_return(['dep1@ex.com', 'dep2@ex.com'])
+      allow(permission_template).to receive(:agent_ids_for).with(access: 'deposit', agent_type: 'group').and_return(['depositors', 'registered'])
+      allow(permission_template).to receive(:agent_ids_for).with(access: 'view', agent_type: 'user').and_return(['vw1@ex.com', 'vw2@ex.com'])
+      allow(permission_template).to receive(:agent_ids_for).with(access: 'view', agent_type: 'group').and_return(['viewers', 'public'])
     end
 
     it 'resets user edit access' do
       admin_set.reset_access_controls!
-      expect(admin_set.edit_users).to match_array([user.user_key, 'mgr1.ex.com', 'mgr2.ex.com'])
+      expect(admin_set.edit_users).to match_array([user.user_key, 'mgr1@ex.com', 'mgr2@ex.com'])
     end
 
     it 'resets group edit access' do
@@ -214,14 +216,14 @@ RSpec.describe AdminSet, type: :model do
       expect(admin_set.edit_groups).to match_array(['managers', ::Ability.admin_group_name])
     end
 
-    it "doesn't reset user read access" do
+    it 'resets user read access' do
       admin_set.reset_access_controls!
-      expect(admin_set.read_users).to match_array([]) # different behavior from Collections which grants participant Viewers to have read_access in the solr doc
+      expect(admin_set.read_users).to match_array(['dep1@ex.com', 'dep2@ex.com', 'vw1@ex.com', 'vw2@ex.com'])
     end
 
-    it "doesn't reset group read access" do
+    it 'resets group read access' do
       admin_set.reset_access_controls!
-      expect(admin_set.read_groups).to match_array(['public']) # different behavior from Collections which grants participant Viewers to have read_access in the solr doc
+      expect(admin_set.read_groups).to match_array(['depositors', 'viewers'])
     end
   end
 end
