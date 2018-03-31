@@ -1,4 +1,6 @@
 RSpec.describe 'collection', type: :feature, clean_repo: true do
+  include Selectors::Dashboard
+
   let(:user) { create(:user) }
   let(:admin_user) { create(:admin) }
   let(:collection_type) { create(:collection_type, creator_user: user) }
@@ -865,11 +867,16 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         end
 
         context "to true, limits available users", js: true do
+          let(:user2) { create(:user) }
           it "to system users filted by select2" do
             visit "/dashboard/collections/#{sharable_collection_id}/edit"
             expect(page).to have_link('Sharing', href: '#sharing')
             click_link('Sharing')
             expect(page).to have_selector(".form-inline.add-users .select2-container")
+            select_user(user2, 'Depositor')
+            click_button('Save')
+            click_link('Sharing')
+            expect(page).to have_selector('td', text: user2.user_key)
           end
         end
 
