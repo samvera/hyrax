@@ -57,10 +57,8 @@ module Hyrax
 
     # @return [Boolean] render the UniversalViewer
     def universal_viewer?
-      representative_id.present? &&
-        representative_presenter.present? &&
-        representative_presenter.image? &&
-        Hyrax.config.iiif_image_server?
+      Hyrax.config.iiif_image_server? &&
+        members_include_viewable_image?
     end
 
     # @return FileSetPresenter presenter for the representative FileSets
@@ -217,6 +215,10 @@ module Hyrax
       def member_of_authorized_parent_collections
         # member_of_collection_ids with current_ability access
         @member_of ||= Hyrax::CollectionMemberService.run(solr_document, current_ability).map(&:id)
+      end
+
+      def members_include_viewable_image?
+        file_set_presenters.any? { |presenter| presenter.image? && current_ability.can?(:read, presenter.id) }
       end
   end
 end
