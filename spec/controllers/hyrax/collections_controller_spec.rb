@@ -31,6 +31,7 @@ RSpec.describe Hyrax::CollectionsController do
       end
 
       it "returns the collection and its members" do # rubocop:disable RSpec/ExampleLength
+        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         get :show, params: { id: collection }
         expect(response).to be_successful
@@ -66,6 +67,7 @@ RSpec.describe Hyrax::CollectionsController do
 
       context "without a referer" do
         it "sets breadcrumbs" do
+          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
           get :show, params: { id: collection }
           expect(response).to be_successful
@@ -78,6 +80,7 @@ RSpec.describe Hyrax::CollectionsController do
         end
 
         it "sets breadcrumbs" do
+          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('Your Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('My collection', collection_path(collection.id, locale: 'en'))
