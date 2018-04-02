@@ -1,6 +1,7 @@
 export default class {
   constructor() {
     this.collections_table = $('#analytics-collections-table');
+    this.collections_table_body = $('#analytics-collections-table tbody');
     this.works_table = $('#analytics-works-table');
     this.admin_repo_charts = $('.admin-repo-charts');
 
@@ -50,9 +51,14 @@ export default class {
       data: { user_id: $('#pinned-0').attr('data-user_id') }
     }).done((data) => {
       data.forEach((d) => {
-        $("path[data-collection='" + d.collection + "']")
-          .removeClass('not-pinned')
+        let selector = $("path[data-collection='" + d.collection + "']");
+
+        selector.removeClass('not-pinned')
           .addClass('pinned');
+
+        // Set correct sort ordering for pinned collections
+        selector.closest('td')
+          .attr('data-order', `1-${d.collection}`);
       });
     }).fail((jqXHR, textStatus) => {
       console.log(`Request failed: ${textStatus}. Unable to retrieve pinned collections`);
@@ -60,7 +66,7 @@ export default class {
   }
 
   pinCollection() {
-    this.collections_table.on('click', (e) => {
+    this.collections_table_body.on('click', (e) => {
       let target = $('#' + e.target.id);
       let pinned = !target.hasClass('pinned');
       let is_pinned = (pinned) ? 1 : 0;
