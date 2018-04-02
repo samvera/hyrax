@@ -7,22 +7,22 @@ module Hyrax
       end
 
       def as_json(*)
-        unique_visitors_list = { name: I18n.translate('hyrax.dashboard.show_admin.new_visitors'), data: unique_visitors.to_a }
-        returning_visitors_list = { name: I18n.translate('hyrax.dashboard.show_admin.returning_visitors'), data: returning_visitors.to_a }
+        visitors_list = { name: I18n.translate('hyrax.dashboard.show_admin.visitors'), data: visitors.to_a }
+        sessions_list = { name: I18n.translate('hyrax.dashboard.show_admin.sessions'), data: sessions.to_a }
 
-        [unique_visitors_list, returning_visitors_list]
+        [visitors_list, sessions_list]
       end
 
       private
 
-        def unique_visitors
-          Hyrax::Statistics::Site::UniqueVisitors.new(x_min: @x_min,
-                                                      x_output: @date_format).points
+        def visitors
+          Hyrax::Statistics::Site::Visitors.new(x_min: @x_min,
+                                                x_output: @date_format).points
         end
 
-        def returning_visitors
-          Hyrax::Statistics::Site::ReturningVisitors.new(x_min: @x_min,
-                                                         x_output: @date_format).points
+        def sessions
+          Hyrax::Statistics::Site::Sessions.new(x_min: @x_min,
+                                                x_output: @date_format).points
         end
     end
   end

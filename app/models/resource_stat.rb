@@ -17,8 +17,6 @@ class ResourceStat < ApplicationRecord
   scope :site_range_stats, ->(start_date, end_date) { where('date BETWEEN ? AND ? AND resource_id IS NULL AND user_id IS NULL', start_date, end_date) }
 
   # Queries for Hyrax::Statistics queries
-
-  # Unique visitors for the site
   scope :site_sessions, -> { select('sessions').where('resource_id IS NULL AND user_id IS NULL') }
   scope :site_visitors, -> { select('visitors').where('resource_id IS NULL AND user_id IS NULL') }
 end
