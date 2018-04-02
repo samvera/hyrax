@@ -34,4 +34,8 @@ Flipflop.configure do
   feature :analytics_redesign,
           default: false,
           description: "Display new reporting features. *Very Experimental*"
+
+  feature :hide_private_files,
+          default: false,
+          description: "Do not show the private files."
 end
