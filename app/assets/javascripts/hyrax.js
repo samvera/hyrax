@@ -99,6 +99,7 @@
 //= require hyrax/thumbnail_select
 //= require hyrax/batch_select
 //= require hyrax/tabbed_form
+//= require hyrax/turbolinks_events
 
 // this needs to be after batch_select so that the form ids get setup correctly
 //= require hyrax/batch_edit
