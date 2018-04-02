@@ -1,5 +1,6 @@
 <h2><%= t('.header') %></h2>
-<% if presenter.member_presenters.present? %>
+<%  members = presenter.member_presenters.delete_if { |m| Flipflop.hide_private_files? && m.is_a?(Hyrax::FileSetPresenter) && !current_ability.can?(:read, m.id) } %>
+<% if members.present? %>
   <table class="table table-striped related-files">
     <thead>
       <tr>
@@ -11,7 +12,7 @@
       </tr>
     </thead>
     <tbody>
-      <%= render partial: 'member', collection: presenter.member_presenters %>
+      <%= render partial: 'member', collection: members %>
     </tbody>
   </table>
 <% elsif can? :edit, presenter.id %>
