@@ -92,7 +92,7 @@ RSpec.describe Hyrax::AnalyticsImporter do
 
   describe '#import_site_stats' do
     before do
-        allow(analytics_service).to receive(:site_report).and_return(site_level_results)
+      allow(analytics_service).to receive(:site_report).and_return(site_level_results)
     end
     it 'creates site level cached statistics', :clean_repo do
       expect(ResourceStat.count).to eq(0)

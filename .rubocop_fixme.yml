@@ -13,6 +13,7 @@ Metrics/ClassLength:
     - 'app/presenters/hyrax/work_show_presenter.rb'
     - 'app/presenters/hyrax/collection_presenter.rb'
     - 'app/services/hyrax/user_stat_importer.rb'
+    - 'app/services/hyrax/analytics/google_analytics.rb'
     - 'lib/generators/hyrax/templates/catalog_controller.rb'
     - 'lib/generators/hyrax/install_generator.rb'
     - 'lib/hyrax/configuration.rb'

@@ -14,9 +14,9 @@ module Hyrax
         # Manipulate `result` to an agreed upon data structure
       end
 
-      def self.page_report start_date, page_token = nil
+      def self.page_report(start_date, _page_token)
         output = []
-        end_date = Date.today
+        end_date = Time.zone.today
         site = Piwik::Site.load(matomo_site_id)
 
         # WIP
@@ -34,15 +34,14 @@ module Hyrax
                                    sessions: day['nb_visits'])
         end
         output
-
       end
 
       #
       # Matomo can only get unique visitors by the month
       #
-      def self.site_report start_date, page_token=nil
+      def self.site_report(start_date, _page_token)
         output = []
-        end_date = Date.today
+        end_date = Time.zone.today
         site = Piwik::Site.load(matomo_site_id)
         report = site.visits.summary(
           date: "#{start_date.to_formatted_s(:db)},#{end_date.to_formatted_s(:db)}"
@@ -54,8 +53,6 @@ module Hyrax
         end
         output
       end
-
-
 
       def self.include_filters(paths)
         paths.map { |p| "pageUrl==#{p}" }.join(',')
@@ -72,8 +69,6 @@ module Hyrax
         CGI.escape include_filters(paths) + ';' + exclude_filters(paths)
       end
       private_class_method :filters
-
-
 
       # @return [Boolean] are all the required values present?
       def self.valid?
