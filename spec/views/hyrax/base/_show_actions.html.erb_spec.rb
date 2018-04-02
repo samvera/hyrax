@@ -16,9 +16,10 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
       allow(presenter).to receive(:editor?).and_return(false)
       render 'hyrax/base/show_actions.html.erb', presenter: presenter
     end
-    it "doesn't show edit / delete links" do
+    it "doesn't show edit / delete / Add to collection links" do
       expect(rendered).not_to have_link 'Edit'
       expect(rendered).not_to have_link 'Delete'
+      expect(rendered).not_to have_link 'Add to collection'
     end
   end
 
@@ -34,9 +35,10 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
       it "does not show file manager link" do
         expect(rendered).not_to have_link 'File Manager'
       end
-      it "shows edit / delete links" do
+      it "shows edit / delete / Add to collection links" do
         expect(rendered).to have_link 'Edit'
         expect(rendered).to have_link 'Delete'
+        expect(rendered).to have_button 'Add to collection'
       end
     end
     context "when the work contains 1 child" do
