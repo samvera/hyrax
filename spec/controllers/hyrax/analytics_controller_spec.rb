@@ -15,19 +15,19 @@ RSpec.describe Hyrax::AnalyticsController, type: :controller do
       allow(Hyrax::WorksCountService).to receive(:new).and_return(service_works)
     end
 
-    it "sends repository_growth counts" do
+    it 'sends repository_growth counts' do
       get :repository_growth
       expect(response).to be_success
       expect(assigns[:repo_growth]).to eq repo_growth
     end
 
-    it "sends repository object counts" do
+    it 'sends repository object counts' do
       get :repository_object_counts
       expect(response).to be_success
       expect(assigns[:repo_objects]).to eq repo_objects
     end
 
-    it "renders works" do
+    it 'renders works' do
       get :update_works_list
       expect(response).to be_success
       expect(assigns[:work_rows]).to eq results_works

@@ -7,7 +7,7 @@ module Hyrax
       # zero to just get the facet information
       # @param solr_parameters the current solr parameters
       def include_resource_type_facet(solr_parameters)
-        solr_parameters[:"facet.field"].concat(["visibility_ssi"])
+        solr_parameters[:"facet.field"].concat(['visibility_ssi'])
         solr_parameters[:'facet.missing'] = true
 
         # we only want the facet counts not the actual data
@@ -16,9 +16,9 @@ module Hyrax
 
       private
 
-      def only_works?
-        true
-      end
+        def only_works?
+          true
+        end
     end
   end
 end

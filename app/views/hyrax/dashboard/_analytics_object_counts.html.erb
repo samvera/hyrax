@@ -3,7 +3,6 @@
     <ul id="objects-graph" class="list-unstyled list-inline analytics-options">
       <li><%= link_to t('.repository_objects.subtitle_visible'), repository_object_counts_analytics_path(object_type: 'visibility'), id: "total-visibility", remote: true %></li>
       <li><%= link_to t('.repository_objects.subtitle_work'), repository_object_counts_analytics_path(object_type: 'works'), id: "total-works", class: "stats-selected", remote: true %></li>
-      <li><%= link_to t('.repository_objects.subtitle_resource'), repository_object_counts_analytics_path(object_type: 'resources'), id: "total-resources", remote: true %></li>
     </ul>
   </div>
 <% else %>
