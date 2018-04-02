@@ -1,7 +1,7 @@
 module Hyrax
   module Statistics
     module Site
-      class UniqueVisitors < Statistics::OverTime
+      class Sessions < Statistics::OverTime
         # Overridden to do a noncumulative query
         def points
           Enumerator.new(size) do |y|
@@ -17,11 +17,11 @@ module Hyrax
         private
 
           def relation
-            ResourceStat.site_unique_visitors
+            ResourceStat.site_sessions
           end
 
           def point(min, max)
-            relation.where(query(min, max)).sum('unique_visitors')
+            relation.where(query(min, max)).sum('sessions')
           end
 
           # Override to make an activerecord date range query

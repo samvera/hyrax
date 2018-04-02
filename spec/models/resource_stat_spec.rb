@@ -30,10 +30,10 @@ RSpec.describe ResourceStat, type: :model do
     let(:resource_id) { "199" }
 
     it 'finds site-wide statistics and ignores resource statistics' do
-      ResourceStat.create(date: date, unique_visitors: 123)
-      ResourceStat.create(date: date, unique_visitors: 456, resource_id: resource_id, user_id: 123)
+      ResourceStat.create(date: date, visitors: 123)
+      ResourceStat.create(date: date, sessions: 456, resource_id: resource_id, user_id: 123)
 
-      expect(ResourceStat.site_daily_stats(date).map(&:unique_visitors)).to eq([123])
+      expect(ResourceStat.site_daily_stats(date).map(&:visitors)).to eq([123])
     end
   end
 
@@ -44,11 +44,11 @@ RSpec.describe ResourceStat, type: :model do
     let(:resource_id) { "199" }
 
     it 'finds statistics for a resource in a given time range' do
-      ResourceStat.create(date: DateTime.new(2018, 2, 4).in_time_zone, unique_visitors: 123, resource_id: resource_id, user_id: 123)
-      ResourceStat.create(date: DateTime.new(2018, 2, 17).in_time_zone, unique_visitors: 234, resource_id: resource_id, user_id: 123)
-      ResourceStat.create(date: DateTime.new(2018, 3, 9).in_time_zone, unique_visitors: 567, resource_id: resource_id, user_id: 123)
+      ResourceStat.create(date: DateTime.new(2018, 2, 4).in_time_zone, sessions: 123, resource_id: resource_id, user_id: 123)
+      ResourceStat.create(date: DateTime.new(2018, 2, 17).in_time_zone, sessions: 234, resource_id: resource_id, user_id: 123)
+      ResourceStat.create(date: DateTime.new(2018, 3, 9).in_time_zone, sessions: 567, resource_id: resource_id, user_id: 123)
 
-      expect(ResourceStat.resource_range_stats(start_date, end_date, resource_id, user_id).map(&:unique_visitors)).to eq([123, 234])
+      expect(ResourceStat.resource_range_stats(start_date, end_date, resource_id, user_id).map(&:sessions)).to eq([123, 234])
     end
   end
 
@@ -59,35 +59,35 @@ RSpec.describe ResourceStat, type: :model do
     let(:resource_id) { "199" }
 
     it 'finds site-wide statistics in a given time range' do
-      ResourceStat.create(date: DateTime.new(2018, 2, 4).in_time_zone, unique_visitors: 123)
-      ResourceStat.create(date: DateTime.new(2018, 2, 17).in_time_zone, unique_visitors: 234, resource_id: resource_id, user_id: 123)
-      ResourceStat.create(date: DateTime.new(2018, 3, 9).in_time_zone, unique_visitors: 567)
+      ResourceStat.create(date: DateTime.new(2018, 2, 4).in_time_zone, sessions: 123)
+      ResourceStat.create(date: DateTime.new(2018, 2, 17).in_time_zone, sessions: 234, resource_id: resource_id, user_id: 123)
+      ResourceStat.create(date: DateTime.new(2018, 3, 9).in_time_zone, sessions: 567)
 
-      expect(ResourceStat.site_range_stats(start_date, end_date).map(&:unique_visitors)).to eq([123])
+      expect(ResourceStat.site_range_stats(start_date, end_date).map(&:sessions)).to eq([123])
     end
   end
 
-  describe ".site_unique_visitors" do
+  describe ".site_sessions" do
     let(:user_id) { 123 }
     let(:resource_id) { "199" }
 
     it 'finds site-wide statistics in a given time range' do
-      ResourceStat.create(date: DateTime.new(2018, 2, 4).in_time_zone, unique_visitors: 123)
-      ResourceStat.create(date: DateTime.new(2018, 2, 17).in_time_zone, unique_visitors: 234, resource_id: resource_id, user_id: 123)
+      ResourceStat.create(date: DateTime.new(2018, 2, 4).in_time_zone, sessions: 123)
+      ResourceStat.create(date: DateTime.new(2018, 2, 17).in_time_zone, sessions: 234, resource_id: resource_id, user_id: 123)
 
-      expect(ResourceStat.site_unique_visitors.map(&:unique_visitors)).to eq([123])
+      expect(ResourceStat.site_sessions.map(&:sessions)).to eq([123])
     end
   end
 
-  describe ".site_returning_visitors" do
+  describe ".site_visitors" do
     let(:user_id) { 123 }
     let(:resource_id) { "199" }
 
     it 'finds site-wide statistics in a given time range' do
-      ResourceStat.create(date: DateTime.new(2018, 2, 4).in_time_zone, returning_visitors: 123)
-      ResourceStat.create(date: DateTime.new(2018, 2, 17).in_time_zone, returning_visitors: 234, resource_id: resource_id, user_id: 123)
+      ResourceStat.create(date: DateTime.new(2018, 2, 4).in_time_zone, visitors: 123)
+      ResourceStat.create(date: DateTime.new(2018, 2, 17).in_time_zone, visitors: 234, resource_id: resource_id, user_id: 123)
 
-      expect(ResourceStat.site_returning_visitors.map(&:returning_visitors)).to eq([123])
+      expect(ResourceStat.site_visitors.map(&:visitors)).to eq([123])
     end
   end
 end

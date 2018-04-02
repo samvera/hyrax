@@ -19,6 +19,6 @@ class ResourceStat < ApplicationRecord
   # Queries for Hyrax::Statistics queries
 
   # Unique visitors for the site
-  scope :site_unique_visitors, -> { select('unique_visitors').where('resource_id IS NULL AND user_id IS NULL') }
-  scope :site_returning_visitors, -> { select('returning_visitors').where('resource_id IS NULL AND user_id IS NULL') }
+  scope :site_sessions, -> { select('sessions').where('resource_id IS NULL AND user_id IS NULL') }
+  scope :site_visitors, -> { select('visitors').where('resource_id IS NULL AND user_id IS NULL') }
 end
