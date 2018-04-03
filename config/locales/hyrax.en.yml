@@ -28,7 +28,7 @@ en:
           keyword: Keyword
       filters:
         title: 'Filtering by:'
-      start_over: 'Start Over'
+      start_over: Start Over
   errors:
     messages:
       carrierwave_download_error: Couldn't download image.
@@ -527,12 +527,12 @@ en:
       type_label: Issue Type
     content_blocks:
       cancel: Cancel
+      change_tab_message: Are you sure you want to leave this tab?  Any unsaved data will be lost.
       tabs:
         announcement_text: Announcement Text
         featured_researcher: Featured Researcher
         marketing_text: Marketing Text
       updated: Content blocks updated.
-      change_tab_message: Are you sure you want to leave this tab?  Any unsaved data will be lost.
     controls:
       about: About
       contact: Contact
@@ -736,6 +736,7 @@ en:
       no_transfers: You haven't transferred any work
       proxy_activity: Proxy Activity
       proxy_delete: Delete Proxy
+      proxy_help: Select a user who can deposit works on your behalf. You will be the owner of works that this user deposits for you. You can revoke a proxy by clicking the Delete Proxy button.
       proxy_user: Proxy User
       show_admin:
         new_visitors: New Visitors
@@ -806,12 +807,12 @@ en:
       show:
         download: Download the file
         downloadable_content:
+          audio_link: Download audio
           default_link: Download file
           heading: Downloadable Content
           image_link: Download image
           office_link: Download file
           pdf_link: Download PDF
-          audio_link: Download audio
           video_link: Download video
     file_sets:
       groups_description:
@@ -1097,9 +1098,9 @@ en:
         allow_multiple_membership: Allow works to belong to multiple collections of this type
         assigns_visibility: Allow collections of this type to assign initial visibility settings to a new work
         assigns_workflow: Allow collections of this type to assign workflow to a new work
+        brandable: Allow collections of this type to be branded
         description: A brief statement of the general purpose of this collection type.  Users will see this if they have more than one collection type to choose from when creating a new collection.
         discoverable: Allow collections of this type to be discoverable
-        brandable: Allow collections of this type to be branded
         nestable: Allow collections of this type to be nested (a collection can contain other collections)
         require_membership: A work must belong to at least one collection of this type
         sharable: Allow users to assign collection managers, depositors, and viewers for collections they manage

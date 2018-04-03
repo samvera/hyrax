@@ -1,0 +1,13 @@
+<% provide :page_header do %>
+  <h1><span class="fa fa-users"></span>  <%= t("hyrax.dashboard.manage_proxies") %></h1>
+<% end %>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <%= render 'hyrax/dashboard/_index_partials/proxy_rights', user: @user %>
+      </div>
+    </div>
+  </div>
+</div>
