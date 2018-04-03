@@ -11,7 +11,7 @@ RSpec.describe Hyrax::Analytics::Base do
     end
   end
 
-  describe '.filters' do
+  describe '.filters', :clean_repo do
     context 'with existing content' do
       before do
         create(:work_with_one_file, :public)
@@ -23,7 +23,7 @@ RSpec.describe Hyrax::Analytics::Base do
     end
 
     context 'without existing content' do
-      it 'return an empty array when there are no instances of any models', :clean_repo do
+      it 'return an empty array when there are no instances of any models' do
         expect(described_class.filters).to eq([])
       end
     end

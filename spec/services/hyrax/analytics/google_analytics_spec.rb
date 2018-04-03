@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::Analytics::GoogleAnalytics do
+RSpec.describe Hyrax::Analytics::GoogleAnalytics, :clean_repo do
   let(:query_date) { '2018-03-01' }
   let(:ga_connection) { instance_double(Google::Apis::AnalyticsreportingV4::AnalyticsReportingService) }
   let(:config) { { 'view_id' => 123 } }

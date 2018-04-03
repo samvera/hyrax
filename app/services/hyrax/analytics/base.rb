@@ -4,8 +4,8 @@ module Hyrax
     # Implementing subclasses must define `#connection` `#remote_statistics` and `#to_graph`
     class Base
       class << self
-        include ActionDispatch::Routing::PolymorphicRoutes
         include Rails.application.routes.url_helpers
+        include ActionDispatch::Routing::PolymorphicRoutes
       end
       # Establish connection with the analytics service
       def self.connection
@@ -22,8 +22,8 @@ module Hyrax
       # 2. visitors
       # 3. sessions
       #
-      # @return [Hash]<OpenStruct,String> - Should contain attributes for date, pagePath, pageviews, unique_visitors and
-      # returning_visitors. It should also contain a next_page_token String.
+      # @return [Hash]<OpenStruct,String> - Should contain attributes for date, pagePath, pageviews, visitors and
+      # sessions. It should also contain a next_page_token String.
       # Example: { rows: [<OpenStruct date="2018-03-15", pagePath: '/concern/generic_works/224', pageviews: '4',
       # visitors: '5', sesssions: '3'>], next_page_token: '10000' }
       def self.page_report(_start_date, _page_token)
@@ -39,8 +39,8 @@ module Hyrax
       # 1. visitors
       # 2. sessions
       #
-      # @return [Hash]<OpenStruct,String> - Should contain attributes for date, pagePath, pageviews, unique_visitors and
-      # returning_visitors. It should also contain a next_page_token String.
+      # @return [Hash]<OpenStruct,String> - Should contain attributes for date, pagePath, pageviews, visitors and
+      # sessions. It should also contain a next_page_token String.
       # Example: { rows: [<OpenStruct date="2018-03-15", visitors: '5', sessions: '3'>], next_page_token: '10000' }
       def self.site_report(_start_date, _page_token)
         raise NotImplementedError, "#{self.class}#site_report is unimplemented."
@@ -58,7 +58,9 @@ module Hyrax
       def self.filters
         Hyrax::ExposedModelsRelation.new.allowable_types.map do |klass|
           next unless klass.first
-          path = polymorphic_path(klass.first)
+          obj = klass.first
+          path = polymorphic_path(obj)
+          # path = polymorphic_path(klass.first)
           path.slice(0..path.rindex('/'))
         end.compact
       end
