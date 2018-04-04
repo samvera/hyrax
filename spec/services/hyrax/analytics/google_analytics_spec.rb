@@ -53,7 +53,8 @@ RSpec.describe Hyrax::Analytics::GoogleAnalytics, :clean_repo do
     let(:page_report_params) do
       { dimensions: ['date', 'pagePath'],
         metrics: ['pageviews', 'users', 'sessions'], # users is unique visitors
-        filters: 'ga:pagePath=~/concern/generic_works/,ga:pagePath=~/collections/,ga:pagePath=~/concern/file_sets/;ga:pagePath!~/concern/generic_works/*/edit,ga:pagePath!~/collections/*/edit,ga:pagePath!~/concern/file_sets/*/edit',
+        filters: 'ga:pagePath=~/concern/generic_works/,ga:pagePath=~/collections/,ga:pagePath=~/concern/file_sets/;'\
+                 'ga:pagePath!~/concern/generic_works/*/edit,ga:pagePath!~/collections/*/edit,ga:pagePath!~/concern/file_sets/*/edit',
         page_size: 10_000,
         page_token: '0' }
     end

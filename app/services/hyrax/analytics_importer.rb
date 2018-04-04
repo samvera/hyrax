@@ -84,8 +84,10 @@ module Hyrax
         user.id
       end
 
+      # Takes a pagePath from an analytics service and returns ID
+      # /concern/file_sets/9p290934t?locale=en => 9p290934t
       def path_to_id(page_path)
-        page_path.split('/').last
+        page_path.split('/').last.split('?').first
       end
 
       def analytics_service
