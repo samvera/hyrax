@@ -55,8 +55,8 @@ RSpec.describe Hyrax::GenericWorksController do
       before { sign_out user }
 
       context "without a referer" do
-        it "sets no breadcrumbs" do
-          expect(controller).not_to receive(:add_breadcrumb)
+        it "sets the default breadcrumbs" do
+          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
           get :show, params: { id: work }
           expect(response).to be_successful
         end
