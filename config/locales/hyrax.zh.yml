@@ -18,6 +18,7 @@ zh:
       fields:
         facet:
           admin_set_sim: 集
+          member_of_collections_ssim: 采集
           resource_type_sim: 资源类型
           suppressed_bsi: 状况
         show:
@@ -523,12 +524,12 @@ zh:
       type_label: 问题类型
     content_blocks:
       cancel: 取消
+      change_tab_message: 你确定要离开这个标签吗？任何未保存的数据都将丢失。
       tabs:
         announcement_text: 公告文字
         featured_researcher: 特色研究员
         marketing_text: 营销文字
       updated: 内容块已更新。
-      change_tab_message: 你确定要离开这个标签吗？任何未保存的数据都将丢失。
     controls:
       about: 关于
       contact: 联系
@@ -722,6 +723,8 @@ zh:
           results_per_page: 每页显示的结果数量
           show_label: 展示所有细节
         works: 您的作品
+        your_collections: 你的收藏
+        your_works: 你的作品
       nest_collections_form:
         create_under: "'%{child_title}'已被添加到'%{parent_title}'"
         create_within: "'%{child_title}'已被添加到'%{parent_title}'"
@@ -732,6 +735,7 @@ zh:
       no_transfers: 您没有转让任何作品
       proxy_activity: 代理活动
       proxy_delete: 删除代理
+      proxy_help: 选择一个可以代表您存放作品的用户。您将成为该用户为您存储的作品的所有者。您可以通过单击删除代理按钮来撤销代理。
       proxy_user: 代理用户
       show_admin:
         new_visitors: 新访问者
@@ -802,11 +806,13 @@ zh:
       show:
         download: 下载文件
         downloadable_content:
+          audio_link: 下载音频
           default_link: 下载文件
           heading: 可下载的内容
           image_link: 下载图片
           office_link: 下载文件
           pdf_link: 下载PDF文件
+          video_link: 下载视频
     file_sets:
       groups_description:
         description_html: 标有"选择一个群"的下拉框内是您所属的一组用户管理群的清单。您可以选择一个特定的群，指定对%{application_name}中文件的访问级别，类似于添加用户访问级别。
@@ -1089,6 +1095,7 @@ zh:
         allow_multiple_membership: 允许作品属于此类型的多个集合
         assigns_visibility: 允许此类型的集合将初始可见性设置分配给新作品
         assigns_workflow: 允许此类型的集合将工作流分配到新作品
+        brandable: 允许将此类型的集合打上烙印
         description: 关于这种集合类型的一般用途的简要说明。如果用户创建新集合时有多个集合类型可供选择，用户将会看到这一点。
         discoverable: 允许这种类型的集合被发现
         nestable: 允许嵌套此类型的集合（集合可以包含其他集合）
@@ -1119,6 +1126,7 @@ zh:
         allow_multiple_membership: 多会员
         assigns_visibility: 能见度
         assigns_workflow: 工作流程
+        brandable: 品牌
         description: 类型描述
         discoverable: 发现
         nestable: 嵌套

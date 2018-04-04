@@ -18,6 +18,7 @@ it:
       fields:
         facet:
           admin_set_sim: Collezione
+          member_of_collections_ssim: Collezione
           resource_type_sim: Tipo di risorsa
           suppressed_bsi: Stato
         show:
@@ -525,12 +526,12 @@ it:
       type_label: tipo di problema
     content_blocks:
       cancel: Annulla
+      change_tab_message: Sei sicuro di voler lasciare questa scheda? Tutti i dati non salvati andranno persi.
       tabs:
         announcement_text: Testo annuncio
         featured_researcher: Ricercatore in primo piano
         marketing_text: Testo di marketing
       updated: Blocchi di contenuto aggiornati.
-      change_tab_message: Sei sicuro di voler lasciare questa scheda? Tutti i dati non salvati andranno persi.      
     controls:
       about: Di
       contact: contatto
@@ -724,6 +725,8 @@ it:
           results_per_page: Numero di risultati da visualizzare per pagina
           show_label: Visualizza tutti i dettagli di
         works: Le tue opere
+        your_collections: Le tue collezioni
+        your_works: I tuoi lavori
       nest_collections_form:
         create_under: "'%{child_title}' è stato aggiunto a '%{parent_title}'"
         create_within: "'%{child_title}' è stato aggiunto a '%{parent_title}'"
@@ -734,6 +737,7 @@ it:
       no_transfers: Non hai trasferito alcun lavoro
       proxy_activity: Attività proxy
       proxy_delete: Elimina proxy
+      proxy_help: Seleziona un utente che può depositare opere per tuo conto. Sarai il proprietario delle opere che questo utente deposita per te. È possibile revocare un proxy facendo clic sul pulsante Elimina proxy.
       proxy_user: Utente Proxy
       show_admin:
         new_visitors: Nuovi visitatori
@@ -804,11 +808,13 @@ it:
       show:
         download: Scarica il file
         downloadable_content:
+          audio_link: Scarica audio
           default_link: Download file
           heading: Contenuto scaricabile
           image_link: Scarica l'immagine
           office_link: Download file
           pdf_link: Scarica il pdf
+          video_link: Scarica video
     file_sets:
       groups_description:
         description_html: L'elenco dei gruppi nel menu a discesa contrassegnato con "Seleziona un gruppo" è un elenco di Gruppi gestiti utente di cui sei membro. È possibile selezionare un gruppo specifico e assegnare un livello di accesso per un file all'interno di %{application_name}, analogamente ad aggiungere livelli di accesso utente.
@@ -1091,6 +1097,7 @@ it:
         allow_multiple_membership: Consenti alle opere di appartenere a più raccolte di questo tipo
         assigns_visibility: Consenti a raccolte di questo tipo di assegnare le impostazioni di visibilità iniziale a una nuova opera
         assigns_workflow: Consenti a raccolte di questo tipo di assegnare un flusso di lavoro a una nuova opera
+        brandable: Consenti alle raccolte di questo tipo di essere marchiate
         description: Una breve dichiarazione dello scopo generale di questo tipo di raccolta. Gli utenti vedranno questo se hanno più di un tipo di raccolta tra cui scegliere durante la creazione di una nuova raccolta.
         discoverable: Consenti a raccolte di questo tipo di essere rilevabili
         nestable: Consenti l'inserimento di raccolte di questo tipo (una raccolta può contenere altre raccolte)
@@ -1121,6 +1128,7 @@ it:
         allow_multiple_membership: MULTIPLE MEMBERSHIP
         assigns_visibility: VISIBILITÀ
         assigns_workflow: FLUSSO DI LAVORO
+        brandable: IL BRANDING
         description: Tipo descrizione
         discoverable: SCOPERTA
         nestable: inseribile
