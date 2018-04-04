@@ -48,11 +48,12 @@ RSpec.describe Hyrax::Analytics::GoogleAnalytics, :clean_repo do
   describe '.page_report' do
     before do
       create(:work_with_one_file, :public)
+      create(:collection)
     end
     let(:page_report_params) do
       { dimensions: ['date', 'pagePath'],
         metrics: ['pageviews', 'users', 'sessions'], # users is unique visitors
-        filters: 'ga:pagePath=~/concern/generic_works/,ga:pagePath=~/concern/file_sets/;ga:pagePath!~/concern/generic_works/*/edit,ga:pagePath!~/concern/file_sets/*/edit',
+        filters: 'ga:pagePath=~/concern/generic_works/,ga:pagePath=~/collections/,ga:pagePath=~/concern/file_sets/;ga:pagePath!~/concern/generic_works/*/edit,ga:pagePath!~/collections/*/edit,ga:pagePath!~/concern/file_sets/*/edit',
         page_size: 10_000,
         page_token: '0' }
     end

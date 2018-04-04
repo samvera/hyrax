@@ -5,6 +5,7 @@ module Hyrax
     class Base
       class << self
         include Rails.application.routes.url_helpers
+        include Hyrax::Engine.routes.url_helpers
         include ActionDispatch::Routing::PolymorphicRoutes
       end
       # Establish connection with the analytics service
@@ -58,9 +59,7 @@ module Hyrax
       def self.filters
         Hyrax::ExposedModelsRelation.new.allowable_types.map do |klass|
           next unless klass.first
-          obj = klass.first
-          path = polymorphic_path(obj)
-          # path = polymorphic_path(klass.first)
+          path = polymorphic_path(klass.first)
           path.slice(0..path.rindex('/'))
         end.compact
       end
