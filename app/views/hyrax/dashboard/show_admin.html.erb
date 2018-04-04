@@ -76,7 +76,7 @@
         <%= render 'analytics_object_counts' %>
       </div>
       <div class="panel-body text-center">
-        <%= bar_chart @presenter.repository_objects, id: "dashboard-repository-objects" %>
+        <%= pie_chart @presenter.repository_objects, id: "dashboard-repository-objects", donut: true %>
       </div>
     </div>
   </div>
