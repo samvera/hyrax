@@ -97,5 +97,30 @@ RSpec.describe Hyrax::CollectionsController do
         expect(assigns[:subcollection_docs].count).to eq 0
       end
     end
+
+    context "without a referer" do
+      it "sets breadcrumbs" do
+        expect(controller).not_to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+        expect(controller).not_to receive(:add_breadcrumb).with('Your Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
+        expect(controller).not_to receive(:add_breadcrumb).with('My collection', collection_path(collection.id, locale: 'en'))
+
+        get :show, params: { id: collection }
+        expect(response).to be_successful
+      end
+    end
+
+    context "with a referer" do
+      before do
+        request.env['HTTP_REFERER'] = 'http://test.host/foo'
+      end
+
+      it "sets breadcrumbs" do
+        expect(controller).not_to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+        expect(controller).not_to receive(:add_breadcrumb).with('Your Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('My collection', collection_path(collection.id, locale: 'en'))
+        get :show, params: { id: collection }
+        expect(response).to be_successful
+      end
+    end
   end
 end

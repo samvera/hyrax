@@ -48,6 +48,36 @@ RSpec.describe Hyrax::GenericWorksController do
     before do
       create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
     end
+
+    context 'while logged out' do
+      let(:work) { create(:public_generic_work, user: user, title: ['public thing']) }
+
+      before { sign_out user }
+
+      context "without a referer" do
+        it "sets no breadcrumbs" do
+          expect(controller).not_to receive(:add_breadcrumb)
+          get :show, params: { id: work }
+          expect(response).to be_successful
+        end
+      end
+
+      context "with a referer" do
+        before do
+          request.env['HTTP_REFERER'] = 'http://test.host/foo'
+        end
+
+        it "sets breadcrumbs to authorized pages" do
+          expect(controller).not_to receive(:add_breadcrumb).with('Dashboard', hyrax.dashboard_path(locale: 'en'))
+          expect(controller).not_to receive(:add_breadcrumb).with('Your Works', hyrax.my_works_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('public thing', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
+          get :show, params: { id: work }
+          expect(response).to be_successful
+          expect(response).to render_template("layouts/hyrax/1_column")
+        end
+      end
+    end
+
     context 'my own private work' do
       let(:work) { create(:private_generic_work, user: user, title: ['test title']) }
 
@@ -122,7 +152,7 @@ RSpec.describe Hyrax::GenericWorksController do
       end
     end
 
-    context 'someone elses public work' do
+    context 'someone else\'s public work' do
       let(:work) { create(:public_generic_work) }
 
       context "html" do
