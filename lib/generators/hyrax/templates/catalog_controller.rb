@@ -280,6 +280,10 @@ class CatalogController < ApplicationController
     # If there are more than this many search results, no spelling ("did you
     # mean") suggestion is offered.
     config.spell_max = 5
+
+    # Disable discarding of flash messages in blacklight since we are using turbolinks
+    # to handle things like following redirects after xhr posts
+    config.discard_flash_if_xhr = false
   end
 
   # disable the bookmark control from displaying in gallery view

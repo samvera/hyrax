@@ -3,6 +3,11 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
   let(:child_id) { 'child1' }
   let(:child) { instance_double(Collection, title: ["Awesome Child"]) }
   let(:parent) { create(:collection, id: 'parent1', collection_type_settings: :nestable, title: ["Uncool Parent"]) }
+  let(:user) { create(:user) }
+
+  before do
+    sign_in user
+  end
 
   describe '#blacklight_config' do
     subject { controller.blacklight_config }
