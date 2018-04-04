@@ -699,7 +699,6 @@ en:
           groups: 'Groups:'
           users: 'Users:'
         collections: Collections
-        your_collections: Your Collections
         facet_label:
           collections: 'Filter collections:'
           highlighted: 'Filter highlights:'
@@ -727,6 +726,7 @@ en:
           results_per_page: Number of results to display per page
           show_label: Display all details of
         works: Works
+        your_collections: Your Collections
         your_works: Your Works
       nest_collections_form:
         create_under: "'%{child_title}' has been added to '%{parent_title}'"
@@ -818,9 +818,7 @@ en:
           video_link: Download video
     file_sets:
       groups_description:
-        description_html: 'The list of groups in the drop-down marked "Select a group" is a list of User Managed Groups that you are a member of.  You may select a specific group and assign an access level for a file within %{application_name}, similarly to adding user access levels.
-
-'
+        description_html: 'The list of groups in the drop-down marked "Select a group" is a list of User Managed Groups that you are a member of.  You may select a specific group and assign an access level for a file within %{application_name}, similarly to adding user access levels.'
     help:
       header: User Support
       override_text: Use app/views/static/help.html.erb to override this file.

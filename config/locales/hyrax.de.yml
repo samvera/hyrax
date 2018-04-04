@@ -18,6 +18,7 @@ de:
       fields:
         facet:
           admin_set_sim: Sammlung
+          member_of_collections_ssim: Sammlung
           resource_type_sim: Ressourcentyp
           suppressed_bsi: Status
         show:
@@ -361,6 +362,7 @@ de:
           möglicherweise nicht in der Lage, Ihrer Anfrage nachzukommen. Wenn Sie
           irgendwelche Fehler beim Hochladen aus der Cloud erhalten, lassen Sie uns
           dies über %{contact_href} wissen.</p>
+        local_upload_html: "<p> Sie können eine oder mehrere Dateien hinzufügen, die dieser Arbeit zugeordnet werden sollen. </p>"
       form_member_of_collections:
         actions:
           remove: Aus der Sammlung entfernen
@@ -526,12 +528,12 @@ de:
       type_label: Anfragentyp
     content_blocks:
       cancel: Abbrechen
+      change_tab_message: Möchten Sie diesen Tab wirklich verlassen? Nicht gespeicherte Daten gehen verloren.
       tabs:
         announcement_text: Ankündigungstext
         featured_researcher: Ausgewählter Forscher
         marketing_text: Marketing Text
       updated: Inhaltsblöcke aktualisiert.
-      change_tab_message: Möchten Sie diesen Tab wirklich verlassen? Nicht gespeicherte Daten gehen verloren.      
     controls:
       about: Impressum
       contact: Kontakt
@@ -725,6 +727,8 @@ de:
           results_per_page: Anzahl der Ergebnisse pro Seite
           show_label: Zeige alle Details von
         works: Ihre Arbeiten
+        your_collections: Ihre Sammlungen
+        your_works: Deine Werke
       nest_collections_form:
         create_under: "'%{child_title}' wurde zu '%{parent_title}' hinzugefügt"
         create_within: "'%{child_title}' wurde zu '%{parent_title}' hinzugefügt"
@@ -735,6 +739,7 @@ de:
       no_transfers: Sie haben keine Arbeit übertragen
       proxy_activity: Vertreter-Aktivität
       proxy_delete: Vertreter löschen
+      proxy_help: Wählen Sie einen Benutzer aus, der Arbeiten in Ihrem Namen hinterlegen kann. Sie sind der Eigentümer von Werken, die dieser Benutzer für Sie hinterlegt. Sie können einen Proxy widerrufen, indem Sie auf die Schaltfläche Proxy löschen klicken.
       proxy_user: Vertreter-Benutzer
       show_admin:
         new_visitors: Neue Besucher
@@ -805,11 +810,13 @@ de:
       show:
         download: Laden Sie die Datei herunter
         downloadable_content:
+          audio_link: Audio herunterladen
           default_link: Datei herunterladen
           heading: Herunterladbarer Inhalt
           image_link: Bild herunterladen
           office_link: Download-Datei
           pdf_link: PDF Herunterladen
+          video_link: Video herunterladen
     file_sets:
       groups_description:
         description_html: Die Liste der Gruppen in der Auswahlliste mit der Bezeichnung &ldquor; Wählen Sie eine Gruppe aus &ldquor; zeigt ihnen jene Benutzer administrierten Gruppen an, bei denen Sie Mitglied sind. Sie können eine bestimmte Gruppe auswählen und eine Zugriffsebene für eine Datei innerhalb von %{application_name} zuweisen, ähnlich wie das Hinzufügen von Benutzerzugriffsebenen.
@@ -863,7 +870,7 @@ de:
         lease_false_html: "<strong>Diese %{cc} ist derzeit nicht geleast.</strong> Wenn Sie einen Leasingvertrag anwenden möchten, geben Sie hier die Informationen an."
         lease_return: Zurück zur Bearbeitung dieses %{cc}
         lease_true_html: "<strong>Dieser %{cc} ist zur Zeit geleast.</strong>"
-        lease_update: Leasing aktualisieren 
+        lease_update: Leasing aktualisieren
         manage_leases_html: Leasing für %{cc} <span class='human_readable_type'>(%{cc_type})</span>
       index:
         active: Aktive Leasingverhältnisse
@@ -911,7 +918,7 @@ de:
       tabs:
         about_page: Impressum
         agreement_page: Deponierungsvereinbarung
-        help_page: Hilfe 
+        help_page: Hilfe
         terms_page: Nutzungsbedingungen
       updated: Seiten aktualisiert.
     passive_consent_to_agreement: Durch das Speichern dieser Arbeit stimme ich der ... zu.
@@ -928,7 +935,7 @@ de:
             label_long: Meine Sammlungen
             label_short: Meine Sammlungen
           my_shares:
-            label_long: Meine Freigaben 
+            label_long: Meine Freigaben
             label_short: Meine Freigaben
           my_works:
             label_long: Meine Arbeiten
@@ -1092,6 +1099,7 @@ de:
         allow_multiple_membership: Lassen Sie Abeiten zu mehreren Sammlungen dieses Typs gehören
         assigns_visibility: Sammlungen dieses Typs erlauben, einer neuen Arbeit initiale Sichtbarkeitseinstellungen zuzuweisen
         assigns_workflow: Sammlungen dieses Typs erlauben, Arbeitsabläufe einer neuen Arbeit zuzuweisen
+        brandable: Sammlungen dieses Typs dürfen als Marken gekennzeichnet werden
         description: Eine kurze Erklärung des allgemeinen Zwecks dieser Sammlungsart. Benutzer sehen dies, wenn beim Erstellen einer neuen Sammlung mehrere Sammlungsarten zur Auswahl stehen.
         discoverable: Sammlungen dieses Typs können sichtbar gemacht werden
         nestable: Sammlungen dieses Typs können geschachtelt werden (eine Sammlung kann andere Sammlungen enthalten)
@@ -1122,6 +1130,7 @@ de:
         allow_multiple_membership: MEHRFACHE MITGLIEDSCHAFT
         assigns_visibility: SICHTBARKEIT
         assigns_workflow: ARBEITSABLAUF
+        brandable: BRANDING
         description: Typbeschreibung
         discoverable: ENTDECKUNG
         nestable: SCHACHTELBAR
