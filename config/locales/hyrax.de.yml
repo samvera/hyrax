@@ -223,17 +223,17 @@ de:
           instructions: Diese Einstellungen legen fest, wie Sammlungen dieses Typs verwaltet und ermittelt werden können.
           warning: 'Warnung: Diese Einstellungen können nicht geändert werden, nachdem eine Sammlung dieses Typs erstellt wurde.'
         index:
-          breadcrumb: Sammlungsarten
+          breadcrumb: Sammlungstypen
           create_new_button: Erstellen Sie eine neue Sammlungsart
-          description: Mit Sammlungsarten können Sie Einstellungen definieren, die Sammlungen steuern, die unterschiedliche Zwecke in Ihrem Repositorium erfüllen. Sie können so viele Sammlungsarten definieren, wie Sie benötigen.
-          header: Sammlungsrten
+          description: Mit Sammlungstypen können Sie Einstellungen definieren, die Sammlungen steuern. Somit können Sammlungen unterschiedliche Zwecke in Ihrem Repositorium erfüllen. Sie können so viele Sammlungstypen definieren, wie Sie benötigen.
+          header: Sammlungstypen
           modal:
             can_delete_body_html: "<p> Durch das Löschen dieses Sammlumgs-Types werden der Typ und seine Einstellungen dauerhaft aus dem Repository entfernt. Möchten Sie diesen Sammlungstyp wirklich löschen? </p>"
             cannot_delete_body_html: "<p> Sie können diesen Sammlungsart nicht löschen, da mindestens eine Sammlung dieses Typs bereits erstellt wurde. </p><p> Um diesen Erfassungstyp zu löschen, stellen Sie zunächst sicher, dass alle Sammlungen dieses Typs gelöscht wurden.</p>"
             header_can_delete: Sammlungstyp löschen?
             header_cannot_delete: Sammlungstyp kann nicht gelöscht werden
             view_collections: Sammlungen dieses Typs anzeigen
-          more_toggle_content_html: "<p> Typische Szenarien für Sammlungstypen umfassen: </p><ul><li> <strong>Benutzer-Sammlungen</strong> , die ein registrierter Benutzer erstellen kann, um die deponierten Arbeiten zu organisieren. </li><li> <strong>Exponate</strong> , die das Personal für die öffentliche Ausstellung kreiert und kuratiert, wobei Gegenstände in einer beliebigen Anzahl von Exponaten enthalten sein können. </li><li> <strong>Kontrollierte Sammlungen</strong> , die von Mitarbeitern erstellt und verwaltet werden und nicht zur öffentlichen Anzeige bestimmt sind, z. B. Sammlungen, die Organisationseinheiten oder Abteilungen zugeordnet sind. </li><li> <strong>Community-Sammlungen</strong> , die zur öffentlichen Anzeige vorgesehen sind, ähnlich wie DSpace-Communitys und Sammlungen manchmal verwendet werden. </li></ul>"
+          more_toggle_content_html: "<p> Typische Szenarien für Sammlungstypen umfassen: </p><ul><li> <strong>Benutzer-Sammlungen</strong>, die ein registrierter Benutzer erstellen kann, um die deponierten Arbeiten zu organisieren. </li><li> <strong>Exponate</strong>, die Mitarbeiter für die öffentliche Ausstellung erstellt und kuratiert, wobei Gegenstände in einer beliebigen Anzahl von Exponaten enthalten sein können. </li><li> <strong>Kontrollierte Sammlungen</strong>, die von Mitarbeitern erstellt und verwaltet werden und nicht zur öffentlichen Anzeige bestimmt sind, z. B. Sammlungen, die Organisationseinheiten oder Abteilungen zugeordnet sind. </li><li> <strong>Community-Sammlungen</strong>, die zur öffentlichen Anzeige vorgesehen sind, ähnlich wie DSpace-Communitys und Sammlungen manchmal verwendet werden. </li></ul>"
           more_toggle_header_html: "<span>Mehr</span> über Sammlungstypen"
           table:
             actions: Aktionen
@@ -383,7 +383,7 @@ de:
         legend_html: Sichtbarkeit <small>Wer soll in der Lage sein, diesen Inhalt anzusehen oder herunterzuladen?</small>
         management_page: Leasing-Management-Seite
       form_progress:
-        required_agreement: Kaution vereinbaren
+        required_agreement: Deponierungsvereinbarung zustimmen
         required_descriptions: Beschreiben Sie Ihre Arbeit
         required_files: Dateien hinzufügen
         requirements: Bedarf
@@ -1100,7 +1100,7 @@ de:
         assigns_visibility: Sammlungen dieses Typs erlauben, einer neuen Arbeit initiale Sichtbarkeitseinstellungen zuzuweisen
         assigns_workflow: Sammlungen dieses Typs erlauben, Arbeitsabläufe einer neuen Arbeit zuzuweisen
         brandable: Sammlungen dieses Typs dürfen als Marken gekennzeichnet werden
-        description: Eine kurze Erklärung des allgemeinen Zwecks dieser Sammlungsart. Benutzer sehen dies, wenn beim Erstellen einer neuen Sammlung mehrere Sammlungsarten zur Auswahl stehen.
+        description: Eine kurze Erklärung des allgemeinen Zwecks dieser Sammlungsart. Benutzer sehen dies, wenn beim Erstellen einer neuen Sammlung mehrere Sammlungstypen zur Auswahl stehen.
         discoverable: Sammlungen dieses Typs können sichtbar gemacht werden
         nestable: Sammlungen dieses Typs können geschachtelt werden (eine Sammlung kann andere Sammlungen enthalten)
         require_membership: Eine Arbeit muss zu mindestens einer Sammlung dieses Typs gehören
@@ -1129,10 +1129,10 @@ de:
       collection_type:
         allow_multiple_membership: MEHRFACHE MITGLIEDSCHAFT
         assigns_visibility: SICHTBARKEIT
-        assigns_workflow: ARBEITSABLAUF
-        brandable: BRANDING
+        assigns_workflow: WORKFLOW
+        brandable: HERVORHEBBAR (MARKE)
         description: Typbeschreibung
-        discoverable: ENTDECKUNG
+        discoverable: EINSEHBAR
         nestable: SCHACHTELBAR
         require_membership: MITGLIEDSCHAFT ERFORDERLICH
         sharable: TEILBAR
