@@ -6,7 +6,9 @@ RSpec.describe 'proxy', type: :feature do
     it "creates a proxy" do
       sign_in user
       click_link "Your activity"
-      click_link "Manage Proxies"
+      within 'div#proxy_management' do
+        click_link "Manage Proxies"
+      end
       expect(first("td.depositor-name")).to be_nil
 
       # BEGIN create_proxy_using_partial

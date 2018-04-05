@@ -10,6 +10,7 @@ RSpec.describe "hyrax/dashboard/show_user.html.erb", type: :view do
                     render_recent_activity: 'recent activity',
                     render_recent_notifications: 'recent notifications',
                     link_to_additional_notifications: 'additional notifications',
+                    link_to_manage_proxies: 'Manage Proxies',
                     transfers: transfer_presenter)
   end
   let(:transfer_presenter) do
@@ -40,7 +41,8 @@ RSpec.describe "hyrax/dashboard/show_user.html.erb", type: :view do
 
       it 'renders proxy partial' do
         render
-        expect(rendered).to match(/Authorize Proxies/)
+        expect(rendered).to match(/Current Proxies/)
+        expect(rendered).to match(/Manage Proxies/)
       end
     end
 
@@ -51,7 +53,8 @@ RSpec.describe "hyrax/dashboard/show_user.html.erb", type: :view do
 
       it 'does not render proxy partial' do
         render
-        expect(rendered).not_to match(/Authorize Proxies/)
+        expect(rendered).not_to match(/Current Proxies/)
+        expect(rendered).not_to match(/Manage Proxies/)
       end
     end
   end

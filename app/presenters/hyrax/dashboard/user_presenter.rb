@@ -41,6 +41,10 @@ module Hyrax
         link_to t('hyrax.dashboard.additional_notifications'), hyrax.notifications_path
       end
 
+      def link_to_manage_proxies
+        link_to t('hyrax.dashboard.manage_proxies'), hyrax.depositors_path
+      end
+
       private
 
         attr_reader :current_user, :view_context, :since
