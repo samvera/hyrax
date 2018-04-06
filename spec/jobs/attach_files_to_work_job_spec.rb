@@ -56,5 +56,17 @@ RSpec.describe AttachFilesToWorkJob do
         end
       end
     end
+
+    context "deposited as 'Yourself' selected in on behalf of list" do
+      before do
+        generic_work.on_behalf_of = ''
+        generic_work.save
+      end
+      it_behaves_like 'a file attacher' do
+        it 'records the depositor(s) in edit_users' do
+          expect(generic_work.file_sets.map(&:edit_users)).to all(match_array([generic_work.depositor]))
+        end
+      end
+    end
   end
 end
