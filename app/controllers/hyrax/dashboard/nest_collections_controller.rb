@@ -1,6 +1,6 @@
 module Hyrax
   module Dashboard
-    class NestCollectionsController < ApplicationController
+    class NestCollectionsController < Hyrax::My::CollectionsController
       include Blacklight::Base
       class_attribute :form_class, :new_collection_form_class
       self.form_class = Hyrax::Forms::Dashboard::NestCollectionForm
