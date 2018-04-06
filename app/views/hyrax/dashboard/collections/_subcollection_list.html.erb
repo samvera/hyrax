@@ -7,8 +7,7 @@
     data-id="<%= document.id %>"
     data-parent-id="<%= id %>"
     data-post-url="<%= hyrax.dashboard_remove_child_relationship_under_path(id, document.id) %>"
-    data-subcollection-label="<%= document.title_or_label %>"
-    >
+    data-subcollection-label="<%= document.title_or_label %>">
     <div class="flex-wrapper">
       <div class="collections-list-title">
         <%= link_to document.title_or_label, [hyrax, :dashboard, document], id: "src_copy_link_#{document.id}" %>
@@ -20,7 +19,7 @@
   </li>
   <% end %>
 </ul>
-<%= render 'hyrax/collections/paginate', solr_response: @subcollection_solr_response, page_param_name: :sub_collection_page  %>
+<%= render 'hyrax/collections/paginate', solr_response: @subcollection_solr_response, page_param_name: :sub_collection_page %>
 <% end %>
 
 <% if can? :edit, id %>

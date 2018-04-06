@@ -87,8 +87,38 @@ RSpec.describe Hyrax::CollectionTypes::CreateService do
     let(:coltype) { create(:collection_type) }
 
     it 'adds the participants to a collection type' do
-      expect(Hyrax::CollectionTypeParticipant).to receive(:create!)
-      described_class.add_participants(coltype.id, participants)
+      expect { described_class.add_participants(coltype.id, participants) }
+        .to change { Hyrax::CollectionType.find(coltype.id).collection_type_participants.to_a }
+        .to contain_exactly an_object_having_attributes(**participants.first)
+    end
+
+    context 'when participants are incomplete' do
+      let(:participants) do
+        [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE,
+           agent_id:   'test_group',
+           access:     Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
+         { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE,
+           agent_id:   'test_group' }]
+      end
+
+      it 'logs and raises an error' do
+        expect(Rails.logger)
+          .to receive(:error)
+          .with a_string_starting_with('Participants not created')
+
+        expect { described_class.add_participants(coltype.id, participants) }
+          .to raise_error(described_class::InvalidParticipantError)
+      end
+
+      it 'does not add participants' do
+        expect do
+          begin
+            described_class.add_participants(coltype.id, participants)
+          rescue described_class::InvalidParticipantError
+            nil
+          end
+        end.not_to change { Hyrax::CollectionType.find(coltype.id).collection_type_participants.to_a }
+      end
     end
   end
 end

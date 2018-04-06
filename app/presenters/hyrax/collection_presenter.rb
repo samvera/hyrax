@@ -8,8 +8,6 @@ module Hyrax
     attr_accessor :parent_collections # This is expected to be a Blacklight::Solr::Response with all of the parent collections
     attr_writer :collection_type
 
-    NUM_PARENTS_TO_SHOW = 3
-
     class_attribute :create_work_presenter_class
     self.create_work_presenter_class = Hyrax::SelectTypeListPresenter
 
@@ -94,28 +92,6 @@ module Hyrax
     # due to pagination.
     def parent_collection_count
       parent_collections.nil? ? 0 : parent_collections.documents.size
-    end
-
-    # Of the number of parent collections shown on the current page, are there more to show?
-    def more_parent_collections?
-      parent_collection_count > NUM_PARENTS_TO_SHOW
-    end
-
-    # Are there few enough parent collections to use the more/less behavior?
-    def use_parent_more_less?
-      parent_collections.total_pages <= 1
-    end
-
-    # Returns a subset of parent collections that should be shown by default
-    def visible_parent_collections
-      return parent_collections.documents[0..NUM_PARENTS_TO_SHOW - 1] if more_parent_collections?
-      parent_collections && parent_collections.documents || []
-    end
-
-    # Returns the remaining subset of parent collections that should not be shown by default
-    def more_parent_collections
-      return parent_collections.documents[NUM_PARENTS_TO_SHOW..parent_collection_count - 1] if more_parent_collections?
-      []
     end
 
     def user_can_nest_collection?

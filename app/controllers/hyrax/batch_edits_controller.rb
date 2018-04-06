@@ -11,6 +11,8 @@ module Hyrax
     # provides the help_text view method
     helper PermissionsHelper
 
+    with_themed_layout 'dashboard'
+
     def edit
       work = form_class.model_class.new
       work.depositor = current_user.user_key
@@ -47,6 +49,10 @@ module Hyrax
       obj.attributes = work_params
       obj.date_modified = Time.current.ctime
       obj.visibility = params[:visibility]
+
+      InheritPermissionsJob.perform_now(obj)
+      VisibilityCopyJob.perform_now(obj)
+
       obj.save
     end
 

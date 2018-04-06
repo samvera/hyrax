@@ -136,10 +136,6 @@ module Hyrax
               edit_groups: edit_groups,
               read_users: read_users,
               read_groups: read_groups)
-      # added because the collection indexing happens before Hydra::AccessControls::Permission is
-      # saved, and the after_update_index callback in the nested_relationship_reindexer removes the
-      # permissions from the Solr document.
-      update_index
     end
 
     private

@@ -15,8 +15,12 @@ RSpec.describe Hyrax::EmbargoesController do
       let(:user) { create(:user, groups: ['admin']) }
 
       it 'shows me the page' do
+        expect(controller).to receive(:add_breadcrumb).with('Home', root_path)
+        expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path)
+        expect(controller).to receive(:add_breadcrumb).with('Manage Embargoes', embargoes_path)
         get :index
         expect(response).to be_success
+        expect(response).to render_template('dashboard')
       end
     end
   end
@@ -31,8 +35,13 @@ RSpec.describe Hyrax::EmbargoesController do
     end
     context 'when I have permission to edit the object' do
       it 'shows me the page' do
+        expect(controller).to receive(:add_breadcrumb).with('Home', root_path)
+        expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path)
+        expect(controller).to receive(:add_breadcrumb).with('Manage Embargoes', embargoes_path)
+        expect(controller).to receive(:add_breadcrumb).with('Update Embargo', '#')
         get :edit, params: { id: a_work }
         expect(response).to be_success
+        expect(response).to render_template('dashboard')
       end
     end
   end

@@ -35,4 +35,20 @@ RSpec.describe Hyrax::Actors::LeaseActor do
       end
     end
   end
+
+  context 'deactivating an expired lease', clean_repo: true do
+    let(:lease_attributes) do
+      { lease_date: Date.tomorrow.to_s,
+        current_state: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
+        future_state: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
+    end
+    let(:leased_work) { create(:leased_work, with_lease_attributes: lease_attributes) }
+    let(:subject) { described_class.new(leased_work) }
+
+    it 'destroys and reindexes the new permission appropriately in solr', with_nested_reindexing: true do
+      allow(leased_work.lease).to receive(:active?).and_return false
+      subject.destroy
+      expect(::SolrDocument.find(leased_work.id)[:visibility_ssi]).to eq(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
+    end
+  end
 end

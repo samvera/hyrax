@@ -9,7 +9,7 @@ RSpec.describe "display a work as its owner" do
     let(:work) do
       create(:work,
              with_admin_set: true,
-             title: ["Magnificent splendor"],
+             title: ["Magnificent splendor", "Happy little trees"],
              source: ["The Internet"],
              based_near: ["USA"],
              user: user,
@@ -27,10 +27,12 @@ RSpec.describe "display a work as its owner" do
 
     it "shows a work" do
       expect(page).to have_selector 'h2', text: 'Magnificent splendor'
+      expect(page).to have_selector 'h2', text: 'Happy little trees'
       expect(page).to have_selector 'li', text: 'The Internet'
       expect(page).to have_selector 'dt', text: 'Location'
       expect(page).not_to have_selector 'dt', text: 'Based near'
-
+      expect(page).to have_selector 'button', text: 'Attach Child', count: 1
+ 
       # Displays FileSets already attached to this work
       within '.related-files' do
         expect(page).to have_selector '.attribute-filename', text: 'A Contained FileSet'

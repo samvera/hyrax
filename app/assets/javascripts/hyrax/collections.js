@@ -311,8 +311,46 @@ Blacklight.onLoad(function () {
     submitModalAjax(url, 'POST', data, $(this));
   });
 
+
   // Handle add a subcollection button click on the collections show page
   $('.sub-collections-wrapper button.add-subcollection').on('click', function (e) {
     $('#add-subcollection-modal-' + $(this).data('presenterId')).modal('show');
+  });
+
+
+  // Edit Collection: Sharing tab: Add Sharing section click handlers
+  /*
+  Notes:
+  This is a workaround for a scoping issue with 'simple_form' and nested forms in the
+  'Edit Collections' partials.  All tabs were wrapped in a 'simple_form'. Nested forms, for example inside a tab partial,
+  have behaved erratically, so the pattern has been to remove nested form instances for relatively non-complex forms
+  and replace with AJAX requests.  For this instance of Add Sharing > Add user and Add group, seem more complex in how
+  the form is built from '@form.permission_template', so since it's not working, but the form is already built, this
+  code listens for a click event on the nested form submit button, prevents Default submit behavior, and manually makes
+  the form post.
+   */
+  $('#participants').find('.edit-collection-add-sharing-button').on('click', function(e) {
+    e.preventDefault();
+    var $wrapEl = $(e.target).parents('.form-add-sharing-wrapper');
+    if ($wrapEl.length === 0) {
+      return;
+    }
+    var serialized = $wrapEl.find(':input').serialize(),
+      url = '/dashboard/collections/' + $wrapEl.data('id') + '/permission_template?locale=en';
+
+    if (serialized.length === 0) {
+      return;
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: url,
+      data: serialized
+    }).done(function(response) {
+      // Success handler here, possibly show alert success if page didn't reload?
+    }).fail(function(err) {
+      console.error(err);
+    });
+
   });
 });

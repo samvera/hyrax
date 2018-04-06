@@ -1,5 +1,5 @@
 <%# button for removing a batch from a collection %>
-<%# collection -- collection to be updated  %>
+<%# collection -- collection to be updated %>
 <%# label -- button label %>
 <%= form_for collection, url: hyrax.dashboard_collection_path(collection.id), method: :put do |f| %>
     <%= f.hidden_field :members, :value => "remove" %>

@@ -1,4 +1,4 @@
-RSpec.describe 'hyrax/file_sets/mdeia_display/_default.html.erb', type: :view do
+RSpec.describe 'hyrax/file_sets/media_display/_default.html.erb', type: :view do
   let(:file_set) { stub_model(FileSet) }
   let(:config) { double }
   let(:link) { true }

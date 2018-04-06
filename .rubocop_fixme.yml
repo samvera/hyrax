@@ -6,6 +6,7 @@ Metrics/ClassLength:
   Exclude:
     - 'app/controllers/hyrax/dashboard/collections_controller.rb'
     - 'app/controllers/hyrax/admin/admin_sets_controller.rb'
+    - 'app/controllers/hyrax/downloads_controller.rb'
     - 'app/controllers/hyrax/file_sets_controller.rb'
     - 'app/forms/hyrax/forms/permission_template_form.rb'
     - 'app/presenters/hyrax/work_show_presenter.rb'

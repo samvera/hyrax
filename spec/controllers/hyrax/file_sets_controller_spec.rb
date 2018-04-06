@@ -56,6 +56,7 @@ RSpec.describe Hyrax::FileSetsController do
       end
 
       it "sets the breadcrumbs and versions presenter" do
+        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.file_set.browse_view'), Rails.application.routes.url_helpers.hyrax_file_set_path(file_set, locale: 'en'))
@@ -66,6 +67,7 @@ RSpec.describe Hyrax::FileSetsController do
         expect(assigns[:version_list]).to be_kind_of Hyrax::VersionListPresenter
         expect(assigns[:parent]).to eq parent
         expect(response).to render_template(:edit)
+        expect(response).to render_template('dashboard')
       end
     end
 
@@ -150,6 +152,7 @@ RSpec.describe Hyrax::FileSetsController do
               post :update, params: { id: file_set, revision: version1 }
               expect(response.code).to eq '401'
               expect(response).to render_template 'unauthorized'
+              expect(response).to render_template('dashboard')
             end
           end
         end
@@ -196,6 +199,7 @@ RSpec.describe Hyrax::FileSetsController do
           post :update, params: { id: file_set, file_set: { keyword: [''] } }
           expect(response.code).to eq '422'
           expect(response).to render_template('edit')
+          expect(response).to render_template('dashboard')
           expect(assigns[:file_set]).to eq file_set
         end
       end
@@ -220,6 +224,7 @@ RSpec.describe Hyrax::FileSetsController do
           get :edit, params: { id: file_set }
           expect(response.code).to eq '401'
           expect(response).to render_template('unauthorized')
+          expect(response).to render_template('dashboard')
         end
       end
     end
@@ -231,6 +236,7 @@ RSpec.describe Hyrax::FileSetsController do
 
       context "without a referer" do
         it "shows me the file and set breadcrumbs" do
+          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
           get :show, params: { id: file_set }
           expect(response).to be_successful
@@ -257,8 +263,9 @@ RSpec.describe Hyrax::FileSetsController do
         end
 
         it "shows me the breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('Your Works', Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Works', Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('test file', main_app.hyrax_file_set_path(file_set, locale: 'en'))
           get :show, params: { id: file_set }
@@ -278,6 +285,7 @@ RSpec.describe Hyrax::FileSetsController do
           get :edit, params: { id: public_file_set }
           expect(response.code).to eq '401'
           expect(response).to render_template(:unauthorized)
+          expect(response).to render_template('dashboard')
         end
       end
 

@@ -10,6 +10,8 @@ module Hyrax
         add_breadcrumb t(:'hyrax.controls.home'), root_path
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
         add_breadcrumb t(:'hyrax.admin.sidebar.profile'), hyrax.dashboard_profile_path
+
+        @presenter = Hyrax::UserProfilePresenter.new(@user, current_ability)
       end
 
       # Display form for users to edit their profile information

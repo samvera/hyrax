@@ -1,4 +1,6 @@
 RSpec.describe 'collection', type: :feature, clean_repo: true do
+  include Selectors::Dashboard
+
   let(:user) { create(:user) }
   let(:admin_user) { create(:admin) }
   let(:collection_type) { create(:collection_type, creator_user: user) }
@@ -37,7 +39,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       it "has page title, does not have tabs, and lists only user's collections" do
         expect(page).to have_content 'Collections'
         expect(page).not_to have_link 'All Collections'
-        expect(page).not_to have_link 'Your Collections'
+        within('section.tabs-row') do
+          expect(page).not_to have_link 'Your Collections'
+        end
         expect(page).to have_link(collection1.title.first)
         expect(page).to have_link(collection2.title.first)
         expect(page).to have_link(admin_set_b.title.first)
@@ -85,7 +89,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         visit '/dashboard/my/collections'
       end
 
-      it "has page title, has tabs for All and Your Collections, and lists collections with edit access" do
+      it "has page title, has tabs for All Collections and Your Collections, and lists collections with edit access" do
         expect(page).to have_content 'Collections'
         expect(page).to have_link 'All Collections'
         expect(page).to have_link 'Your Collections'
@@ -862,6 +866,20 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         it 'to true, it shows Sharable tab' do
           visit "/dashboard/collections/#{sharable_collection_id}/edit"
           expect(page).to have_link('Sharing', href: '#sharing')
+        end
+
+        context "to true, limits available users", js: true do
+          let(:user2) { create(:user) }
+          it "to system users filted by select2" do
+            visit "/dashboard/collections/#{sharable_collection_id}/edit"
+            expect(page).to have_link('Sharing', href: '#sharing')
+            click_link('Sharing')
+            expect(page).to have_selector(".form-inline.add-users .select2-container")
+            select_user(user2, 'Depositor')
+            click_button('Save')
+            click_link('Sharing')
+            expect(page).to have_selector('td', text: user2.user_key)
+          end
         end
 
         it 'to false, it hides Sharable tab' do

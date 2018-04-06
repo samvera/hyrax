@@ -11,7 +11,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
       "date_created_tesim" => ['an unformatted date'],
       "depositor_tesim" => user_key }
   end
-  let(:ability) { nil }
+  let(:ability) { double Ability }
   let(:presenter) { described_class.new(solr_document, ability, request) }
 
   subject { described_class.new(double, double) }
@@ -48,10 +48,16 @@ RSpec.describe Hyrax::WorkShowPresenter do
     let(:representative_presenter) { double('representative', present?: false) }
     let(:image_boolean) { false }
     let(:iiif_enabled) { false }
+    let(:file_set_presenter) { Hyrax::FileSetPresenter.new(solr_document, ability) }
+    let(:file_set_presenters) { [file_set_presenter] }
+    let(:read_permission) { true }
 
     before do
       allow(presenter).to receive(:representative_id).and_return(id_present)
       allow(presenter).to receive(:representative_presenter).and_return(representative_presenter)
+      allow(presenter).to receive(:file_set_presenters).and_return(file_set_presenters)
+      allow(file_set_presenter).to receive(:image?).and_return(true)
+      allow(ability).to receive(:can?).with(:read, solr_document.id).and_return(read_permission)
       allow(representative_presenter).to receive(:image?).and_return(image_boolean)
       allow(Hyrax.config).to receive(:iiif_image_server?).and_return(iiif_enabled)
     end
@@ -92,6 +98,12 @@ RSpec.describe Hyrax::WorkShowPresenter do
       let(:iiif_enabled) { true }
 
       it { is_expected.to be true }
+
+      context "when the user doesn't have permission to view the image" do
+        let(:read_permission) { false }
+
+        it { is_expected.to be false }
+      end
     end
   end
 
@@ -106,7 +118,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
       allow(work).to receive(:persisted?).and_return(true)
     end
 
-    it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_work_path(id: work) }
+    it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_work_path(id: work, locale: 'en') }
   end
 
   describe '#itemtype' do

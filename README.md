@@ -63,7 +63,7 @@ The Samvera community is here to help. Please see our [support guide](./.github/
 # Getting started
 
 This document contains instructions specific to setting up an app with __Hyrax
-v2.1.0.beta1__. If you are looking for instructions on installing a different
+v2.1.0.beta2__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -122,6 +122,8 @@ On OSX, you can use Homebrew to install ffmpeg:
 
 Otherwise, to compile ffmpeg yourself, see the [ffmpeg compilation guide](https://trac.ffmpeg.org/wiki/CompilationGuide).
 
+Once ffmpeg has been installed, enable transcoding by setting `config.enable_ffmpeg = true` in `config/initializers/hyrax.rb`.  You may also configure the location of ffmpeg using `config.ffmpeg_path`.
+
 ## Environments
 
 Note here that the following commands assume you're setting up Hyrax in a development environment (using the Rails built-in development environment). If you're setting up a production or production-like environment, you may wish to tell Rails that by prepending `RAILS_ENV=production` to the commands that follow, e.g., `rails`, `rake`, `bundle`, and so on.
@@ -160,7 +162,7 @@ NOTE: The steps need to be done in order to create a new Hyrax based app.
 Generate a new Rails application using the template.
 
 ```
-rails _5.0.6_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v2.1.0.beta1/template.rb
+rails _5.0.6_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v2.1.0.beta2/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:

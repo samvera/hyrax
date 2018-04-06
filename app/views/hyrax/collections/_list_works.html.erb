@@ -1,7 +1,7 @@
 <tr id="document_<%= document.id %>">
 
   <td>
-    <label for="batch_document_<%= document.id %>" class="sr-only"><%=t("hyrax.dashboard.my.sr.batch_checkbox")%></label>
+    <label for="batch_document_<%= document.id %>" class="sr-only"><%= t("hyrax.dashboard.my.sr.batch_checkbox") %></label>
     <%= render 'hyrax/batch_select/add_button', document: document %>&nbsp;
   </td>
 

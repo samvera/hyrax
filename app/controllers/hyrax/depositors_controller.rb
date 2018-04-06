@@ -5,6 +5,15 @@ module Hyrax
     before_action :authenticate_user!
     before_action :validate_users, only: :create
 
+    layout :decide_layout
+
+    def index
+      add_breadcrumb t(:'hyrax.controls.home'), root_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.dashboard.manage_proxies'), hyrax.depositors_path
+      @user = current_user
+    end
+
     def create
       grantor = authorize_and_return_grantor
       grantee = ::User.from_url_component(params[:grantee_id])
@@ -40,6 +49,16 @@ module Hyrax
         message_to_grantor = "You have assigned #{grantee.name} as a proxy depositor"
         Hyrax::MessengerService.deliver(::User.batch_user, grantor, message_to_grantor, "Proxy Depositor Added")
         Hyrax::MessengerService.deliver(::User.batch_user, grantee, message_to_grantee, "Proxy Depositor Added")
+      end
+
+      def decide_layout
+        layout = case action_name
+                 when 'index'
+                   'dashboard'
+                 else
+                   '1_column'
+                 end
+        File.join(theme, layout)
       end
   end
 end
