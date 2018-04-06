@@ -1,6 +1,5 @@
-<tr>
-  <th><%= t(".label", type: type.humanize) %></th>
-  <td>
+<dt> <%= t(".label", type: type.humanize) %> </dt>
+<dd>
     <% if items.blank? %>
       <p><%= t('.empty', type: type.humanize) %></p>
     <% else %>
@@ -12,5 +11,5 @@
         <% end %>
       </ul>
     <% end %>
-  </td>
-</tr>
+  </dd>
+

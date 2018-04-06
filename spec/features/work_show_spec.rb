@@ -29,8 +29,8 @@ RSpec.describe "display a work as its owner" do
       expect(page).to have_selector 'h2', text: 'Magnificent splendor'
       expect(page).to have_selector 'h2', text: 'Happy little trees'
       expect(page).to have_selector 'li', text: 'The Internet'
-      expect(page).to have_selector 'th', text: 'Location'
-      expect(page).not_to have_selector 'th', text: 'Based near'
+      expect(page).to have_selector 'dt', text: 'Location'
+      expect(page).not_to have_selector 'dt', text: 'Based near'
       expect(page).to have_selector 'button', text: 'Attach Child', count: 1
 
       # Displays FileSets already attached to this work
@@ -54,8 +54,8 @@ RSpec.describe "display a work as its owner" do
     it "shows a work" do
       expect(page).to have_selector 'h2', text: 'Magnificent splendor'
       expect(page).to have_selector 'li', text: 'The Internet'
-      expect(page).to have_selector 'th', text: 'Location'
-      expect(page).not_to have_selector 'th', text: 'Based near'
+      expect(page).to have_selector 'dt', text: 'Location'
+      expect(page).not_to have_selector 'dt', text: 'Based near'
 
       # Doesn't have the upload form for uploading more files
       expect(page).not_to have_selector "form#fileupload"
