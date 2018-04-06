@@ -32,7 +32,7 @@ RSpec.describe "display a work as its owner" do
       expect(page).to have_selector 'dt', text: 'Location'
       expect(page).not_to have_selector 'dt', text: 'Based near'
       expect(page).to have_selector 'button', text: 'Attach Child', count: 1
- 
+
       # Displays FileSets already attached to this work
       within '.related-files' do
         expect(page).to have_selector '.attribute-filename', text: 'A Contained FileSet'
