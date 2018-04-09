@@ -4,8 +4,8 @@ module Hyrax
     # Implementing subclasses must define `#connection` `#remote_statistics` and `#to_graph`
     class Base
       class << self
-        include Rails.application.routes.url_helpers
         include Hyrax::Engine.routes.url_helpers
+        include Rails.application.routes.url_helpers
         include ActionDispatch::Routing::PolymorphicRoutes
       end
       # Establish connection with the analytics service
