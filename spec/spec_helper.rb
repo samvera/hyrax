@@ -179,7 +179,7 @@ RSpec.configure do |config|
                                                    Hyrax.config.default_nested_relationship_reindexer
                                                  else
                                                    # Don't use the nested relationship reindexer. This slows everything down quite a bit.
-                                                   ->(id:) {}
+                                                   ->(id:, extent:) {}
                                                  end
   end
 

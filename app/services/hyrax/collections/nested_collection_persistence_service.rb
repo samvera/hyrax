@@ -14,6 +14,7 @@ module Hyrax
       # @note Adding the member_of_collections method doesn't trigger reindexing of the child so we have to do it manually.
       #       However it save and reindexes the parent unnecessarily!!
       def self.persist_nested_collection_for(parent:, child:)
+        parent.reindex_extent = Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX
         child.member_of_collections.push(parent)
         child.update_nested_collection_relationship_indices
       end
