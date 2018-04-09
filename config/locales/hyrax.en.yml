@@ -199,6 +199,7 @@ en:
             metadata: Description
             participants: Participants
             settings: Settings
+            appearance: Badge Color
         form_participant_table:
           creators:
             action: Action
@@ -1142,6 +1143,7 @@ en:
         allow_multiple_membership: MULTIPLE MEMBERSHIP
         assigns_visibility: VISIBILITY
         assigns_workflow: WORKFLOW
+        badge_color: Badge Color
         brandable: BRANDING
         description: Type description
         discoverable: DISCOVERY

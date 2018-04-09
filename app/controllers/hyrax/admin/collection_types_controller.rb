@@ -101,7 +101,7 @@ module Hyrax
 
       def collection_type_params
         params.require(:collection_type).permit(:title, :description, :nestable, :brandable, :discoverable, :sharable, :share_applies_to_new_works,
-                                                :allow_multiple_membership, :require_membership, :assigns_workflow, :assigns_visibility)
+                                                :allow_multiple_membership, :require_membership, :assigns_workflow, :assigns_visibility, :badge_color)
       end
   end
 end

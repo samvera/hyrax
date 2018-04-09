@@ -28,6 +28,7 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
 
     allow(collection_type).to receive(:nestable?).and_return(true)
     allow(collection_type).to receive(:title).and_return("User Collection")
+    allow(collection_type).to receive(:badge_color).and_return("#ffa510")
 
     assign(:presenter, presenter)
     # Stub route because view specs don't handle engine routes
