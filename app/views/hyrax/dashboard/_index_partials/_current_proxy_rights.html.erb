@@ -1,0 +1,17 @@
+<div class="clearfix proxy-rights">
+  <div class="row">
+    <div class="col-xs-6">
+      <table class="table table-condensed table-striped" id="authorizedProxies">
+        <tbody>
+        <% if user.can_receive_deposits_from.count == 0 %>
+          <%= t('hyrax.dashboard.no_proxies') %>
+        <% else %>
+          <% user.can_receive_deposits_from.each do |depositor| %>
+            <tr><td class="depositor-name"><%= depositor.name %></td></tr>
+          <% end %>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

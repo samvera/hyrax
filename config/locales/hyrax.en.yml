@@ -736,6 +736,7 @@ en:
       no_notifications: User has no notifications
       no_transfer_requests: You haven't received any work transfer requests
       no_transfers: You haven't transferred any work
+      no_proxies: There are no proxies assigned
       proxy_activity: Proxy Activity
       proxy_delete: Delete Proxy
       proxy_help: Select a user who can deposit works on your behalf. You will be the owner of works that this user deposits for you. You can revoke a proxy by clicking the Delete Proxy button.
