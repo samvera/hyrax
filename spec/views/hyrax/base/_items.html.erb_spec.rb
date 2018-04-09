@@ -39,43 +39,42 @@ RSpec.describe 'hyrax/base/_items.html.erb', type: :view do
     let(:file1) { create(:file_set, :public) }
     let(:file2) { create(:file_set) }
 
-    let(:fs_presenter_1) { Hyrax::FileSetPresenter.new(SolrDocument.new(file1.to_solr), ability) }
-    let(:fs_presenter_2) { Hyrax::FileSetPresenter.new(SolrDocument.new(file2.to_solr), ability) }
+    let(:solr_document) { SolrDocument.new(attributes) }
+    let(:presenter) { Hyrax::WorkShowPresenter.new(solr_document, ability, request) }
 
     before do
       stub_template 'hyrax/base/_member.html.erb' => '<%= member %>'
     end
 
     context "and a public file set" do
-      let(:member_presenters) { [fs_presenter_1] }
+      let(:attributes) { create(:public_work, ordered_members: [file1]).to_solr }
 
       it "show the link for the file set" do
         expect(Flipflop).to receive(:hide_private_files?).and_return(true)
-        render 'hyrax/base/items', presenter: presenter, current_ability: ability
-        expect(rendered).to have_content fs_presenter_1.link_name
-        expect(rendered).not_to have_content fs_presenter_2.link_name
+        render 'hyrax/base/items', presenter: presenter
+        expect(rendered).to have_content presenter.member_presenters.first.link_name
       end
     end
 
     context "and a private file set" do
-      let(:member_presenters) { [fs_presenter_2] }
+      let(:attributes) { create(:public_work, ordered_members: [file2]).to_solr }
 
       it "won't show the link to the file set" do
         expect(Flipflop).to receive(:hide_private_files?).and_return(true)
         expect(view).to receive(:can?).with(:edit, presenter.id).and_return(false)
-        render 'hyrax/base/items', presenter: presenter, current_ability: ability
-        expect(rendered).not_to have_content fs_presenter_2.link_name
+        render 'hyrax/base/items', presenter: presenter
+        expect(rendered).not_to have_content presenter.member_presenters.first.link_name
       end
     end
 
     context "with public and private file sets" do
-      let(:member_presenters) { [fs_presenter_1, fs_presenter_2] }
+      let(:attributes) { create(:public_work, ordered_members: [file1, file2]).to_solr }
 
       it "only show the link to the file set that users have permission to see" do
-        expect(Flipflop).to receive(:hide_private_files?).exactly(2).times.and_return(true)
-        render 'hyrax/base/items', presenter: presenter, current_ability: ability
-        expect(rendered).to have_content fs_presenter_1.link_name
-        expect(rendered).not_to have_content fs_presenter_2.link_name
+        expect(Flipflop).to receive(:hide_private_files?).and_return(true)
+        render 'hyrax/base/items', presenter: presenter
+        expect(rendered).to have_content presenter.member_presenters.first.link_name
+        expect(rendered).not_to have_content presenter.member_presenters[1].link_name
       end
     end
   end

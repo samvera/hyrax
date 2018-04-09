@@ -1,5 +1,5 @@
 <h2><%= t('.header') %></h2>
-<%  members = presenter.member_presenters.delete_if { |m| Flipflop.hide_private_files? && m.is_a?(Hyrax::FileSetPresenter) && !current_ability.can?(:read, m.id) } %>
+<%  members = Flipflop.hide_private_files? ? presenter.exclude_unauthorized_file_sets : presenter.member_presenters %>
 <% if members.present? %>
   <table class="table table-striped related-files">
     <thead>
