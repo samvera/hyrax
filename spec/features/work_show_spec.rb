@@ -19,6 +19,8 @@ RSpec.describe "display a work as its owner" do
     let(:user) { create(:user) }
     let(:file_set) { create(:file_set, user: user, title: ['A Contained FileSet'], content: file) }
     let(:file) { File.open(fixture_path + '/world.png') }
+    let(:multi_membership_type_1) { create(:collection_type, :allow_multiple_membership, title: 'Multi-membership 1') }
+    let!(:collection) { create(:collection_lw, user: user, collection_type_gid: multi_membership_type_1.gid) }
 
     before do
       sign_in user
@@ -40,6 +42,20 @@ RSpec.describe "display a work as its owner" do
 
       # IIIF manifest does not include locale query param
       expect(find('div.viewer:first')['data-uri']).to eq "/concern/generic_works/#{work.id}/manifest"
+    end
+
+    it "add work to a collection", js: true do
+      click_button "Add to collection" # opens the modal
+      # since there is only one collection, it's not necessary to choose a radio button
+      within('div#collection-list-container') do
+        choose collection.title.first # selects the collection
+        click_button 'Save changes'
+      end
+
+      # forwards to collection show page
+      expect(page).to have_content collection.title.first
+      expect(page).to have_content work.title.first
+      expect(page).to have_selector '.alert-success', text: 'Collection was successfully updated.'
     end
   end
 

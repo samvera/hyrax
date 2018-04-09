@@ -68,6 +68,8 @@ module Hyrax
     # Finds a solr document matching the id and sets @presenter
     # @raise CanCan::AccessDenied if the document is not found or the user doesn't have access to it.
     def show
+      @user_collections = user_collections
+
       respond_to do |wants|
         wants.html { presenter && parent_presenter }
         wants.json do
@@ -131,6 +133,14 @@ module Hyrax
     end
 
     private
+
+      def user_collections
+        collections_service.search_results(:deposit) if presenter.editor?
+      end
+
+      def collections_service
+        Hyrax::CollectionsService.new(self)
+      end
 
       def admin_set_id_for_new
         # admin_set_id is required on the client, otherwise simple_form renders a blank option.

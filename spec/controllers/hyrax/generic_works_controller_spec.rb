@@ -169,10 +169,12 @@ RSpec.describe Hyrax::GenericWorksController do
         before do
           allow(controller).to receive(:presenter).and_return(presenter)
           allow(presenter).to receive(:export_as_ttl).and_return("ttl graph")
+          allow(presenter).to receive(:editor?).and_return(true)
         end
 
         it 'renders a turtle file' do
           get :show, params: { id: '99999999', format: :ttl }
+
           expect(response).to be_successful
           expect(response.body).to eq "ttl graph"
           expect(response.content_type).to eq 'text/turtle'

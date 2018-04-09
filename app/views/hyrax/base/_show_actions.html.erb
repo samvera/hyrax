@@ -13,6 +13,12 @@
           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Attach Child <span class="caret"></span>
           </button>
+
+          <input type="checkbox"  style="display:none" name="batch_document_ids[]" id="batch_document_<%= presenter.id %>" value="<%= presenter.id %>" class="batch_document_selector" checked="checked" />
+          <%= button_tag t('hyrax.dashboard.my.action.add_to_collection'),
+              class: 'btn btn-default submits-batches submits-batches-add',
+              data: { toggle: "modal", target: "#collection-list-container" } %>
+
           <ul class="dropdown-menu">
             <% presenter.valid_child_concerns.each do |concern| %>
               <li>
@@ -32,7 +38,11 @@
           data: { behavior: 'unfeature' },
           class: presenter.display_feature_link? ? 'btn btn-default collapse' : 'btn btn-default' %>
   <% end %>
+</div>
 
 <!-- COinS hook for Zotero -->
   <span class="Z3988" title="<%= export_as_openurl_ctx_kev(presenter) %>"></span>
-</div>
+<!-- Render Modals -->
+  <%= render 'hyrax/dashboard/collections/form_for_select_collection', user_collections: @user_collections %>
+
+
