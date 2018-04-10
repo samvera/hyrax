@@ -2,8 +2,9 @@ module Hyrax
   module Admin
     class RepositoryObjectPresenter
       include Blacklight::SearchHelper
+      WORKS = 'works'.freeze
 
-      def initialize(object_type = 'works')
+      def initialize(object_type = WORKS)
         @object_type = object_type
       end
 
@@ -24,7 +25,7 @@ module Hyrax
         end
 
         def search_builder
-          if @object_type == 'works'
+          if @object_type == WORKS
             Stats::WorkStatusSearchBuilder.new(self)
           else
             Stats::VisibilitySearchBuilder.new(self)
@@ -42,7 +43,7 @@ module Hyrax
         end
 
         def find_object_type
-          if @object_type == 'works'
+          if @object_type == WORKS
             IndexesWorkflow.suppressed_field
           else
             'visibility_ssi'
@@ -50,7 +51,7 @@ module Hyrax
         end
 
         def translation_keys
-          if @object_type == 'works'
+          if @object_type == WORKS
             { 'false' => :published, 'true' => :unpublished, nil => :unknown }
           else
             { 'authenticated' => :authenticated, 'open' => :open, 'restricted' => :restricted, nil => :unknown }
