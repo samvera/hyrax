@@ -9,7 +9,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
     end
   end
 
-  describe "with a signed in user" do
+  describe "with a signed in user", :perform_enqueued do
     let(:another_user) { create(:user) }
     let(:user) { create(:user) }
 

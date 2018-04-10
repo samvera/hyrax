@@ -100,7 +100,7 @@ RSpec.describe Hyrax::FileSetsController do
           allow(Hyrax::Actors::FileActor).to receive(:new).and_return(actor)
         end
 
-        it "spawns a ContentNewVersionEventJob" do
+        it "spawns a ContentNewVersionEventJob", :perform_enqueued do
           expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
           expect(actor).to receive(:ingest_file).with(JobIoWrapper).and_return(true)
           file = fixture_file_upload('/world.png', 'image/png')
@@ -109,7 +109,7 @@ RSpec.describe Hyrax::FileSetsController do
         end
       end
 
-      context "with two existing versions from different users" do
+      context "with two existing versions from different users", :perform_enqueued do
         let(:file1)       { "world.png" }
         let(:file2)       { "image.jpg" }
         let(:second_user) { create(:user) }

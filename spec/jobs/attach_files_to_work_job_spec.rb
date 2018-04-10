@@ -1,4 +1,4 @@
-RSpec.describe AttachFilesToWorkJob do
+RSpec.describe AttachFilesToWorkJob, :perform_enqueued do
   context "happy path" do
     let(:file1) { File.open(fixture_path + '/world.png') }
     let(:file2) { File.open(fixture_path + '/image.jp2') }

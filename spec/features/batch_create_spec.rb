@@ -27,7 +27,7 @@ RSpec.describe 'Batch creation of works', type: :feature do
     expect(page).to have_content("Each file will be uploaded to a separate new work resulting in one work per uploaded file.")
   end
 
-  context 'when the user is a proxy', :js, :workflow do
+  context 'when the user is a proxy', :js, :workflow, :perform_enqueued do
     let(:second_user) { create(:user) }
 
     before do

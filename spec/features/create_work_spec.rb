@@ -56,7 +56,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow do
     end
   end
 
-  context 'when the user is a proxy' do
+  context 'when the user is a proxy', :perform_enqueued do
     let(:second_user) { create(:user) }
 
     before do

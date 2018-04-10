@@ -1,6 +1,6 @@
 require 'redlock'
 
-RSpec.describe Hyrax::Actors::GenericWorkActor do
+RSpec.describe Hyrax::Actors::GenericWorkActor, :perform_enqueued do
   include ActionDispatch::TestProcess
   let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
   let(:user) { create(:user) }
