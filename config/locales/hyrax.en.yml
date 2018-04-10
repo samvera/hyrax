@@ -799,7 +799,7 @@ en:
       proxy_user: Proxy User
       show_admin:
         visitors: Visitors
-        registered_users: Registered users
+        registered_users: Registered Users
         repository_growth:
           subtitle: Past 90 days
           title: Repository Growth
