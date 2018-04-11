@@ -81,7 +81,7 @@ SUMMARY
   spec.add_development_dependency 'capybara-maleficent', '~> 0.2'
   spec.add_development_dependency "chromedriver-helper"
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
-  spec.add_development_dependency 'engine_cart', '~> 1.2'
+  spec.add_development_dependency 'engine_cart', '~> 2.0'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "factory_bot", '~> 4.4'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.5', '>= 0.5.1'
