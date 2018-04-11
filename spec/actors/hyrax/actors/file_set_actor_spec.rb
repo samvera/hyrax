@@ -218,8 +218,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       expect(IngestJob).to receive(:perform_later).with(any_args).and_return(IngestJob.new)
       expect(actor.update_content(local_file)).to be_a(IngestJob)
     end
-    it 'runs callbacks', :perform_enqueued do
-      ActiveJob::Base.queue_adapter.filter = [IngestJob]
+    it 'runs callbacks', perform_enqueued: [IngestJob] do
       # Do not bother ingesting the file -- test only the result of callback
       allow(file_actor).to receive(:ingest_file).with(any_args).and_return(double)
       expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
@@ -328,15 +327,13 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     end
   end
 
-  describe '#revert_content', :perform_enqueued do
+  describe '#revert_content', perform_enqueued: [IngestJob] do
     let(:file_set) { create(:file_set, user: user) }
     let(:file1)    { "small_file.txt" }
     let(:version1) { "version1" }
     let(:restored_content) { file_set.reload.original_file }
 
     before do
-      ActiveJob::Base.queue_adapter.filter = [IngestJob]
-
       actor.create_content(fixture_file_upload(file1))
       actor.create_content(fixture_file_upload('hyrax_generic_stub.txt'))
       actor.file_set.reload

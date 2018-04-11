@@ -1,4 +1,4 @@
-RSpec.describe AttachFilesToWorkJob, :perform_enqueued do
+RSpec.describe AttachFilesToWorkJob, perform_enqueued: [AttachFilesToWorkJob] do
   context "happy path" do
     let(:file1) { File.open(fixture_path + '/world.png') }
     let(:file2) { File.open(fixture_path + '/image.jp2') }
@@ -7,11 +7,7 @@ RSpec.describe AttachFilesToWorkJob, :perform_enqueued do
     let(:generic_work) { create(:public_generic_work) }
     let(:user) { create(:user) }
 
-    before { ActiveJob::Base.queue_adapter.filter = [described_class] }
-
-    shared_examples 'a file attacher' do
-      before { ActiveJob::Base.queue_adapter.filter = [described_class, IngestJob] }
-
+    shared_examples 'a file attacher', perform_enqueued: [AttachFilesToWorkJob, IngestJob] do
       it 'attaches files, copies visibility and permissions and updates the uploaded files' do
         expect(CharacterizeJob).to receive(:perform_later).twice
         described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2])

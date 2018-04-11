@@ -63,13 +63,10 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       end
     end
 
-    context 'valid attributes', :perform_enqueued do
+    context 'valid attributes', perform_enqueued: [AttachFilesToWorkJob, IngestJob] do
       let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
 
-      before do
-        redlock_client_stub
-        ActiveJob::Base.queue_adapter.filter = [AttachFilesToWorkJob, IngestJob]
-      end
+      before { redlock_client_stub }
 
       context 'with embargo' do
         context "with attached files" do

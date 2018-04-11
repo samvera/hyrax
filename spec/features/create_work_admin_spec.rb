@@ -1,4 +1,4 @@
-RSpec.describe 'Creating a new Work as admin', :js, :workflow, :perform_enqueued do
+RSpec.describe 'Creating a new Work as admin', :js, :workflow, perform_enqueued: [AttachFilesToWorkJob, IngestJob] do
   let(:user) { create(:admin) }
   let(:admin_set_1) do
     create(:admin_set, id: AdminSet::DEFAULT_ID,
@@ -11,8 +11,6 @@ RSpec.describe 'Creating a new Work as admin', :js, :workflow, :perform_enqueued
                        description: ["A description"],
                        edit_users: [user.user_key])
   end
-
-  before { ActiveJob::Base.queue_adapter.filter = [AttachFilesToWorkJob, IngestJob] }
 
   context 'when there are multiple admin sets' do
     before do

@@ -78,9 +78,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
       end
     end
 
-    describe "#accept", :perform_enqueued do
-      before { ActiveJob::Base.queue_adapter.filter = [ContentDepositorChangeEventJob] }
-
+    describe "#accept", perform_enqueued: [ContentDepositorChangeEventJob] do
       context "when I am the receiver" do
         let!(:incoming_work) do
           GenericWork.new(title: ['incoming']) do |w|

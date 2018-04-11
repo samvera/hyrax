@@ -96,8 +96,7 @@ RSpec.describe Hyrax::FileSetsController do
           allow(Hyrax::Actors::FileActor).to receive(:new).and_return(actor)
         end
 
-        it "spawns a ContentNewVersionEventJob", :perform_enqueued do
-          ActiveJob::Base.queue_adapter.filter = [IngestJob]
+        it "spawns a ContentNewVersionEventJob", perform_enqueued: [IngestJob] do
           expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
           expect(actor).to receive(:ingest_file).with(JobIoWrapper).and_return(true)
           file = fixture_file_upload('/world.png', 'image/png')

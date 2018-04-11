@@ -5,7 +5,7 @@ RSpec.describe CreateWorkJob do
                              operation_type: "Create Work")
   end
 
-  describe "#perform", :perform_enqueued do
+  describe "#perform", perform_enqueued: [described_class] do
     let(:file1) { File.open(fixture_path + '/world.png') }
     let(:upload1) { Hyrax::UploadedFile.create(user: user, file: file1) }
     let(:metadata) do
@@ -28,7 +28,6 @@ RSpec.describe CreateWorkJob do
     end
 
     before do
-      ActiveJob::Base.queue_adapter.filter = [described_class]
       allow(Hyrax::CurationConcern).to receive(:actor).and_return(actor)
       allow(GenericWork).to receive(:new).and_return(work)
     end
