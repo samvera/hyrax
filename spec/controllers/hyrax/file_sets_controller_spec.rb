@@ -6,10 +6,6 @@ RSpec.describe Hyrax::FileSetsController do
   context "when signed in" do
     before do
       sign_in user
-      # allow_any_instance_of(User).to receive(:groups).and_return([])
-      # prevents characterization and derivative creation
-      allow(CharacterizeJob).to receive(:perform_later)
-      allow(CreateDerivativesJob).to receive(:perform_later)
     end
 
     describe "#destroy" do
@@ -101,6 +97,7 @@ RSpec.describe Hyrax::FileSetsController do
         end
 
         it "spawns a ContentNewVersionEventJob", :perform_enqueued do
+          ActiveJob::Base.queue_adapter.filter = [IngestJob]
           expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
           expect(actor).to receive(:ingest_file).with(JobIoWrapper).and_return(true)
           file = fixture_file_upload('/world.png', 'image/png')
@@ -118,6 +115,7 @@ RSpec.describe Hyrax::FileSetsController do
         let(:actor2)      { Hyrax::Actors::FileSetActor.new(file_set, second_user) }
 
         before do
+          ActiveJob::Base.queue_adapter.filter = [IngestJob]
           actor1.create_content(fixture_file_upload(file1))
           actor2.create_content(fixture_file_upload(file2))
         end

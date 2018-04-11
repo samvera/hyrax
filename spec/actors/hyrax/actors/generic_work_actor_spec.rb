@@ -1,6 +1,6 @@
 require 'redlock'
 
-RSpec.describe Hyrax::Actors::GenericWorkActor, :perform_enqueued do
+RSpec.describe Hyrax::Actors::GenericWorkActor do
   include ActionDispatch::TestProcess
   let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
   let(:user) { create(:user) }
@@ -57,18 +57,18 @@ RSpec.describe Hyrax::Actors::GenericWorkActor, :perform_enqueued do
       let(:attributes) { { title: ['Foo Bar'], admin_set_id: admin_set.id } }
 
       it "invokes the after_create_concern callback" do
-        allow(CharacterizeJob).to receive(:perform_later).and_return(true)
         expect(Hyrax.config.callback).to receive(:run)
           .with(:after_create_concern, curation_concern, user)
         middleware.create(env)
       end
     end
 
-    context 'valid attributes' do
+    context 'valid attributes', :perform_enqueued do
       let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
 
       before do
         redlock_client_stub
+        ActiveJob::Base.queue_adapter.filter = [AttachFilesToWorkJob, IngestJob]
       end
 
       context 'with embargo' do
@@ -86,7 +86,6 @@ RSpec.describe Hyrax::Actors::GenericWorkActor, :perform_enqueued do
           end
 
           it "applies embargo to attached files" do
-            allow(CharacterizeJob).to receive(:perform_later).and_return(true)
             middleware.create(env)
             curation_concern.reload
             file_set = curation_concern.file_sets.first

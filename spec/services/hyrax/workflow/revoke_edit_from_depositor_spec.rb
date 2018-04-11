@@ -38,6 +38,8 @@ RSpec.describe Hyrax::Workflow::RevokeEditFromDepositor do
       let(:work) { create(:work_with_one_file, user: depositor) }
       let(:file_set) { work.members.first }
 
+      before { ActiveJob::Base.queue_adapter.filter = [Hyrax::RevokeEditFromMembersJob] }
+
       it "removes edit access" do
         # We need to reload, because this work happens in a background job
         expect { subject }.to change { file_set.reload.edit_users }.from([depositor.user_key]).to([])

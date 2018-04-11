@@ -12,6 +12,8 @@ RSpec.describe 'Creating a new Work as admin', :js, :workflow, :perform_enqueued
                        edit_users: [user.user_key])
   end
 
+  before { ActiveJob::Base.queue_adapter.filter = [AttachFilesToWorkJob, IngestJob] }
+
   context 'when there are multiple admin sets' do
     before do
       create(:permission_template_access,

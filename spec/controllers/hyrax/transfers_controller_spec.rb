@@ -9,7 +9,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
     end
   end
 
-  describe "with a signed in user", :perform_enqueued do
+  describe "with a signed in user" do
     let(:another_user) { create(:user) }
     let(:user) { create(:user) }
 
@@ -78,7 +78,9 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
       end
     end
 
-    describe "#accept" do
+    describe "#accept", :perform_enqueued do
+      before { ActiveJob::Base.queue_adapter.filter = [ContentDepositorChangeEventJob] }
+
       context "when I am the receiver" do
         let!(:incoming_work) do
           GenericWork.new(title: ['incoming']) do |w|

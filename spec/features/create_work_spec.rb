@@ -60,6 +60,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow do
     let(:second_user) { create(:user) }
 
     before do
+      ActiveJob::Base.queue_adapter.filter = [ContentDepositorChangeEventJob, AttachFilesToWorkJob, IngestJob]
       ProxyDepositRights.create!(grantor: second_user, grantee: user)
       sign_in user
       click_link 'Works'
