@@ -43,6 +43,7 @@ SUMMARY
   spec.add_dependency 'clipboard-rails', '~> 1.5'
   spec.add_dependency 'dry-equalizer', '~> 0.2'
   spec.add_dependency 'dry-struct', '~> 0.1'
+  spec.add_dependency 'dry-transaction', '~> 0.11'
   spec.add_dependency 'dry-validation', '~> 0.9'
   spec.add_dependency 'flipflop', '~> 2.3'
   # Pin more tightly because 0.x gems are potentially unstable

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :work, aliases: [:generic_work, :private_generic_work], class: GenericWork do
     transient do
@@ -32,6 +34,10 @@ FactoryBot.define do
 
     trait :public do
       visibility { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
+    end
+
+    factory :invalid_generic_work do
+      title nil
     end
 
     factory :private_work do
