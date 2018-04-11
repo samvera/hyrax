@@ -22,18 +22,18 @@ module Hyrax
 
       def after_update_nested_collection_relationship_indices
         @during_save = false
-        Hyrax.config.nested_relationship_reindexer.call(id: id)
+        reindex_nested_relationships_for(id: id)
       end
 
       def update_nested_collection_relationship_indices
         return if @during_save
-        Hyrax.config.nested_relationship_reindexer.call(id: id)
+        reindex_nested_relationships_for(id: id)
       end
 
       def update_child_nested_collection_relationship_indices
         children = find_children_of(destroyed_id: id)
         children.each do |child|
-          Hyrax.config.nested_relationship_reindexer.call(id: child.id)
+          reindex_nested_relationships_for(id: child.id)
         end
       end
     end
@@ -49,5 +49,11 @@ module Hyrax
     def use_nested_reindexing?
       true
     end
+
+    private
+
+      def reindex_nested_relationships_for(id:)
+        Hyrax.config.nested_relationship_reindexer.call(id: id)
+      end
   end
 end

@@ -62,7 +62,7 @@ RSpec.describe Hyrax::CollectionNesting do
       end
     end
 
-    context 'after_destroy callback' do
+    context 'after_destroy callback', with_nested_reindexing: true do
       describe '#update_child_nested_collection_relationship_indices' do
         it 'will call Hyrax.config.nested_relationship_reindexer' do
           expect(Hyrax.config.nested_relationship_reindexer).to receive(:call).with(id: child_collection.id).and_call_original

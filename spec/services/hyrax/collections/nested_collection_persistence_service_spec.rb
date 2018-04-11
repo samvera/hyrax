@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::Collections::NestedCollectionPersistenceService do
+RSpec.describe Hyrax::Collections::NestedCollectionPersistenceService, with_nested_reindexing: true do
   let(:parent) { create(:collection) }
   let(:child) { create(:collection) }
 
