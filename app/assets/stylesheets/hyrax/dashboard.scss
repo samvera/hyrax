@@ -159,6 +159,8 @@ body.dashboard {
       line-height: 1.42857143;
       color: #333;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .facet-count {
