@@ -1,4 +1,4 @@
-RSpec.describe 'Creating a new Work as admin', :js, :workflow do
+RSpec.describe 'Creating a new Work as admin', :js, :workflow, perform_enqueued: [AttachFilesToWorkJob, IngestJob] do
   let(:user) { create(:admin) }
   let(:admin_set_1) do
     create(:admin_set, id: AdminSet::DEFAULT_ID,

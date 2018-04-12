@@ -78,7 +78,7 @@ end
 Capybara.default_driver = :rack_test # This is a faster driver
 Capybara.javascript_driver = :selenium_chrome_headless_sandboxless # This is slower
 
-ApplicationJob.queue_adapter = :inline
+ActiveJob::Base.queue_adapter = :test
 
 # require 'http_logger'
 # HttpLogger.logger = Logger.new(STDOUT)
@@ -246,4 +246,37 @@ RSpec.configure do |config|
   config.example_status_persistence_file_path = 'spec/examples.txt'
 
   config.profile_examples = 10
+
+  # Use this example metadata when you want to perform jobs inline during testing.
+  #
+  #   describe '#my_method`, :perform_enqueued do
+  #     ...
+  #   end
+  #
+  # If you pass an `Array` of job classes, they will be treated as the filter list.
+  #
+  #   describe '#my_method`, perform_enqueued: [MyJobClass] do
+  #     ...
+  #   end
+  #
+  # Limit to specific job classes with:
+  #
+  #   ActiveJob::Base.queue_adapter.filter = [JobClass]
+  #
+  config.before(:example, :perform_enqueued) do |example|
+    ActiveJob::Base.queue_adapter.filter =
+      example.metadata[:perform_enqueued].try(:to_a)
+
+    ActiveJob::Base.queue_adapter.perform_enqueued_jobs    = true
+    ActiveJob::Base.queue_adapter.perform_enqueued_at_jobs = true
+  end
+
+  config.after(:example, :perform_enqueued) do
+    ActiveJob::Base.queue_adapter.filter         = nil
+    ActiveJob::Base.queue_adapter.enqueued_jobs  = []
+    ActiveJob::Base.queue_adapter.performed_jobs = []
+
+    ActiveJob::Base.queue_adapter.perform_enqueued_jobs    = false
+    ActiveJob::Base.queue_adapter.perform_enqueued_at_jobs = false
+  end
 end

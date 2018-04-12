@@ -10,13 +10,7 @@ RSpec.describe 'Batch creation of works', type: :feature do
           with_permission_template: { deposit_groups: [::Ability.registered_group_name] })
   end
 
-  before do
-    # stub out characterization and derivatives. Travis doesn't have fits installed, and it's not relevant to the test.
-    allow(CharacterizeJob).to receive(:perform_later)
-    allow(CreateDerivativesJob).to receive(:perform_later)
-
-    sign_in user
-  end
+  before { sign_in user }
 
   it "renders the batch create form" do
     visit hyrax.new_batch_upload_path
@@ -27,10 +21,13 @@ RSpec.describe 'Batch creation of works', type: :feature do
     expect(page).to have_content("Each file will be uploaded to a separate new work resulting in one work per uploaded file.")
   end
 
-  context 'when the user is a proxy', :js, :workflow do
+  context 'when the user is a proxy', :js, :workflow, :perform_enqueued do
     let(:second_user) { create(:user) }
 
     before do
+      allow(CharacterizeJob).to receive(:perform_later).and_return(true)
+      allow(CreateDerivativesJob).to receive(:perform_later).and_return(true)
+
       ProxyDepositRights.create!(grantor: second_user, grantee: user)
       sign_in user
       click_link 'Works'

@@ -5,7 +5,7 @@ RSpec.describe CreateWorkJob do
                              operation_type: "Create Work")
   end
 
-  describe "#perform" do
+  describe "#perform", perform_enqueued: [described_class] do
     let(:file1) { File.open(fixture_path + '/world.png') }
     let(:upload1) { Hyrax::UploadedFile.create(user: user, file: file1) }
     let(:metadata) do
