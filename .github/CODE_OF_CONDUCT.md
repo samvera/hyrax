@@ -22,15 +22,15 @@ mutual respect and reasoned argument.
 Community members work together to promote a respectful and safe
 community. In the event that someone’s conduct is causing offence or
 distress, Samvera has a detailed
-[Anti-Harassment Policy and Protocol](https://wiki.duraspace.org/display/hydra/Anti-Harassment+Policy)
+[Anti-Harassment Policy and Protocol](https://wiki.duraspace.org/display/samvera/Anti-Harassment+Policy)
 which can be applied to address the problem. The first step in dealing
 with any serious misconduct is to contact a local meeting organizer,
 the
-[Samvera community helpers](https://wiki.duraspace.org/display/hydra/Hydra+Community+Helpers)
-([email](mailto:helpers@projecthydra.org)), a community member you
+[Samvera community helpers](https://wiki.duraspace.org/display/samvera/Samvera+Community+Helpers)
+([email](mailto:helpers@samvera.org)), a community member you
 trust, or the
-[Samvera Steering Group](https://wiki.duraspace.org/display/hydra/Samvera+Steering+Group+membership)
+[Samvera Steering Group](https://wiki.duraspace.org/display/samvera/Samvera+Steering+Group+membership)
 immediately; at Samvera events, these people can be identified by
 distinctive name badges. The
-[Policy and Protocol](https://wiki.duraspace.org/display/hydra/Anti-Harassment+Policy)
+[Policy and Protocol](https://wiki.duraspace.org/display/samvera/Anti-Harassment+Policy)
 should be consulted for fuller details.
