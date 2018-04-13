@@ -172,6 +172,7 @@ Generating a new Rails application using Hyrax's template above takes cares of a
 * Running Hyrax's install generator, to add a number of files that Hyrax requires within your Rails app, including e.g. database migrations
 * Loading all of Hyrax's database migrations into your application's database
 * Loading Hyrax's default workflows into your application's database
+* Create default collection types (e.g. Admin Set, User Collection)
 
 ## Start servers
 
