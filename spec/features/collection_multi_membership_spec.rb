@@ -1,4 +1,5 @@
 RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_repo: true, js: true do
+  include Selectors::Dashboard
   let(:admin_user) { create(:admin, email: 'admin@example.com') }
   let(:single_membership_type_1) { create(:collection_type, :not_allow_multiple_membership, title: 'Single-membership 1') }
   let(:single_membership_type_2) { create(:collection_type, :not_allow_multiple_membership, title: 'Single-membership 2') }
@@ -58,7 +59,14 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
 
   describe 'when both collections require single membership' do
     let(:old_collection) { create(:collection_lw, user: admin_user, collection_type_gid: single_membership_type_1.gid) }
-    let!(:work) { create(:generic_work, user: admin_user, member_of_collections: [old_collection], title: ['The highly valued work that everyone wants in their collection']) }
+    let!(:work) do
+      create(:generic_work,
+             user: admin_user,
+             member_of_collections: [old_collection],
+             title: ['The highly valued work that everyone wants in their collection'],
+             creator: ["Fred"],
+             keyword: ['test'], rights_statement: ['http://rightsstatements.org/vocab/InC/1.0/'])
+    end
 
     context 'and are of different types' do
       let!(:new_collection) { create(:collection_lw, user: admin_user, collection_type_gid: single_membership_type_2.gid) }
@@ -104,20 +112,26 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
           expect(page).to have_selector '.alert', text: err_message
         end
 
-        it "from the work's edit form Relationships tab" do
-          skip 'Needs additional work to find and select the second collection'
+        it "from the work's edit form Relationships tab", js: true do
           # Attempt to add to second single-membership collection of the same type
           visit edit_hyrax_generic_work_path(work)
           click_link "Relationships"
-          # TODO: not sure how to find and select the correct collection
 
-          # forwards to work index page and shows flash message
-          expect(page).to have_link 'All Works'
-          expect(page).to have_link 'Your Works'
+          select_collection(new_collection)
+          check('agreement')
+          sleep 3
+          choose('generic_work_visibility_open')
+          sleep 3
 
-          err_message = "Error: You have specified more than one of the same single-membership collection types: " \
-                        "Single-membership 1 (Collection 1 for SM1)"
-          expect(page).to have_selector '.alert', text: err_message
+          within('div#savewidget') do
+            element = nil
+            all('input').each { |i| element = i if i.value == 'Save changes' }
+            element.click
+          end
+
+          err_message = "Single collection Error: You have specified more than one of the same single-membership collection types: " \
+                        "Single-membership 1 (#{old_collection.title.first} and #{new_collection.title.first})"
+          expect(page).to have_selector '.help-block', text: err_message
         end
 
         it "from the collection's show page Add to collection" do
@@ -135,6 +149,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
             expect(page).to have_link 'All Collections'
             expect(page).to have_link 'Your Collections'
           end
+
           err_message = "Error: You have specified more than one of the same single-membership collection types: " \
                         "Single-membership 1 (#{new_collection.title.first} and #{old_collection.title.first})"
           expect(page).to have_selector '.alert', text: err_message
