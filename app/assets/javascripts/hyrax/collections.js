@@ -240,27 +240,29 @@ Blacklight.onLoad(function () {
     };
     var $deleteWordingTarget = $('#selected-collections-delete-modal .pluralized');
 
-    tableRows.each(function(i, row) {
-      checkbox = $(row).find('td:first input[type=checkbox]');
-      if (typeof checkbox[0] !== "undefined") {
-        if (checkbox[0].checked) {
-          numRowsSelected++;
-        }
-      }
-    });
+    var canDeleteAll = true;
+    var selectedInputs = $('#documents table.collections-list-table tbody tr')
+      // Get all inputs in the table
+      .find('td:first input[type=checkbox]')
+      // Filter to those that are checked
+      .filter((i, checkbox) => checkbox.checked)
 
-    if (numRowsSelected > 0) {
+    var cannotDeleteInputs = selectedInputs.filter((i, checkbox) => (checkbox.dataset.hasaccess === "false"))
+    if(cannotDeleteInputs.length > 0) {
+      // TODO: Can we pass data to this modal to be more specific about which ones they cannot delete?
+      $('#collections-to-delete-deny-modal').modal('show');
+      return;
+    }
+
+    if (selectedInputs.length > 0) {
       // Collections are selected
       // Update singular / plural text in delete modal
-      if (numRowsSelected > 1) {
+      if (selectedInputs.length > 1) {
         $deleteWordingTarget.text(deleteWording.plural);
       } else {
         $deleteWordingTarget.text(deleteWording.singular);
       }
       $('#selected-collections-delete-modal').modal('show');
-    } else {
-      // No collections are selected
-      $('#collections-to-delete-deny-modal').modal('show');
     }
   });
 
