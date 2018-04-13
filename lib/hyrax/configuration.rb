@@ -428,6 +428,12 @@ module Hyrax
       @subject_prefix ||= "Contact form:"
     end
 
+    attr_writer :extract_full_text
+    def extract_full_text?
+      return @extract_full_text unless @extract_full_text.nil?
+      @extract_full_text = true
+    end
+
     attr_writer :model_to_create
     # Returns a lambda that takes a hash of attributes and returns a string of the model
     # name. This is called by the batch upload process
