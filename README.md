@@ -59,7 +59,7 @@ If you have questions or need help, please email [the Samvera community tech lis
 # Getting started
 
 This document contains instructions specific to setting up an app with __Hyrax
-v1.0.5__. If you are looking for instructions on installing a different
+v1.1.0__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -121,7 +121,7 @@ Hyrax requires Rails 5. We recommend the latest Rails 5.0 release.
 
 ```
 # If you don't already have Rails at your disposal...
-gem install rails -v 5.0.3
+gem install rails -v 5.0.4
 ```
 
 ### JavaScript runtime
@@ -133,7 +133,7 @@ Rails requires that you have a JavaScript runtime -- for example, nodejs -- inst
 Generate a new Rails application using the template.
 
 ```
-rails new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v1.0.5/template.rb
+rails new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v1.1.0/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:
