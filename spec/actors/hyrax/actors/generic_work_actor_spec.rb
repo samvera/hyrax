@@ -5,7 +5,7 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
   let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
-  let(:admin_set) { build(:admin_set, with_permission_template: { with_active_workflow: true }) }
+  let(:admin_set) { create(:admin_set, id: 'admin_set_1', with_permission_template: { with_active_workflow: true }) }
   # stub out redis connection
   let(:redlock_client_stub) do
     client = double('redlock client')
