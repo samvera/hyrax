@@ -111,6 +111,30 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
         expect(collection.reload.member_objects).to eq [curation_concern]
       end
 
+      context 'when it is empty' do
+        let(:attributes) { { member_of_collection_ids: [], title: ['test'] } }
+
+        it 'does not add it to a collection' do
+          skip 'this behavior past its deprecation sunset time and can be removed' if
+            Hyrax::VERSION.split('.').first.to_i >= 3
+
+          expect(subject.create(env)).to be true
+          expect(collection.reload.member_objects).to eq []
+        end
+      end
+
+      context 'when it is an empty string' do
+        let(:attributes) { { member_of_collection_ids: '', title: ['test'] } }
+
+        it 'does not add it to a collection' do
+          skip 'this behavior past its deprecation sunset time and can be removed' if
+            Hyrax::VERSION.split('.').first.to_i >= 3
+
+          expect(subject.create(env)).to be true
+          expect(collection.reload.member_objects).to eq []
+        end
+      end
+
       context "when work is in user's own collection" do
         let(:attributes) { { member_of_collection_ids: [] } }
 

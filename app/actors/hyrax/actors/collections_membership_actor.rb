@@ -79,6 +79,7 @@ module Hyrax
             Deprecation.warn(self, ':member_of_collection_ids has been deprecated for removal in Hyrax 3.0. ' \
                                    'use :member_of_collections_attributes instead.')
 
+            collection_ids = [] if collection_ids.empty?
             other_collections = collections_without_edit_access(env)
 
             collections = ::Collection.find(collection_ids)
