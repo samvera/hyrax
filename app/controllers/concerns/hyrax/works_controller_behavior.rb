@@ -56,7 +56,6 @@ module Hyrax
       else
         respond_to do |wants|
           wants.html do
-            flash[:error] = curation_concern.errors.messages[:collections].to_sentence
             build_form
             render 'new', status: :unprocessable_entity
           end
@@ -101,7 +100,6 @@ module Hyrax
       else
         respond_to do |wants|
           wants.html do
-            curation_concern.errors[:single_collection] << curation_concern.errors.messages[:collections].to_sentence
             build_form
             render 'edit', status: :unprocessable_entity
           end
