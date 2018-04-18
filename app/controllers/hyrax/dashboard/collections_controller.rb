@@ -337,9 +337,10 @@ module Hyrax
 
         def extract_old_style_permission_attributes(attributes)
           # TODO: REMOVE in 3.0 - part of deprecation of permission attributes
-          Deprecation.warn(self, "passing in permissions with a new collection is deprecated and will be removed from Hyrax 3.0 ()") # TODO: elr - add alternative in ()
           permissions = attributes.delete("permissions_attributes")
           return [] unless permissions
+          Deprecation.warn(self, "Passing in permissions_attributes parameter with a new collection is deprecated and support will be removed from Hyrax 3.0. " \
+                                 "Use Hyrax::PermissionTemplate instead to grant Manage, Deposit, or View access.")
           participants = []
           permissions.each do |p|
             access = access(p)

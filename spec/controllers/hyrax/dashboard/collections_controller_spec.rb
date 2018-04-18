@@ -39,6 +39,9 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         post :create, params: {
           collection: collection_attrs.merge(
             visibility: 'open',
+            # TODO: Tests with old approach to sharing a collection which is deprecated and
+            # will be removed in 3.0.  New approach creates a PermissionTemplate with
+            # source_id = the collection's id.
             permissions_attributes: [{ type: 'person',
                                        name: 'archivist1',
                                        access: 'edit' }]
