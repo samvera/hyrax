@@ -25,6 +25,10 @@ class Hyrax::AssetsGenerator < Rails::Generators::Base
     end
   end
 
+  def copy_image_file
+    copy_file 'app/assets/images/unauthorized.png'
+  end
+
   private
 
     def hyrax_javascript_installed?

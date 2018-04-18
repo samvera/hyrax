@@ -42,7 +42,13 @@ module Hyrax
       def authorize_download!
         authorize! :download, params[asset_param_key]
       rescue CanCan::AccessDenied
-        redirect_to default_image
+        unauthorized_image = Rails.root.join("app", "assets", "images", "unauthorized.png")
+        if File.exist? unauthorized_image
+          send_file unauthorized_image, status: :unauthorized
+        else
+          Deprecation.warn(self, "redirect_to default_image is deprecated and will be removed from Hyrax 3.0 (copy unauthorized.png image to directory assets/images instead)")
+          redirect_to default_image
+        end
       end
 
       def default_image
