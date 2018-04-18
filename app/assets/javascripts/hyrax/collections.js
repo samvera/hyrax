@@ -245,9 +245,9 @@ Blacklight.onLoad(function () {
       // Get all inputs in the table
       .find('td:first input[type=checkbox]')
       // Filter to those that are checked
-      .filter((i, checkbox) => checkbox.checked)
+      .filter(function(i, checkbox) { return checkbox.checked; });
 
-    var cannotDeleteInputs = selectedInputs.filter((i, checkbox) => (checkbox.dataset.hasaccess === "false"))
+    var cannotDeleteInputs = selectedInputs.filter(function(i, checkbox) { return checkbox.dataset.hasaccess === "false"; });
     if(cannotDeleteInputs.length > 0) {
       // TODO: Can we pass data to this modal to be more specific about which ones they cannot delete?
       $('#collections-to-delete-deny-modal').modal('show');
