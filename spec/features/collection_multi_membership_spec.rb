@@ -107,8 +107,8 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
             expect(page).to have_link 'Your Collections'
           end
 
-          err_message = "Error: You have specified more than one of the same single-membership collection types: " \
-                        "Single-membership 1 (#{new_collection.title.first} and #{old_collection.title.first})"
+          err_message = "Error: You have specified more than one of the same single-membership collection type " \
+                        "(type: Single-membership 1, collections: #{new_collection.title.first} and #{old_collection.title.first})"
           expect(page).to have_selector '.alert', text: err_message
         end
 
@@ -129,8 +129,8 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
             element.click
           end
 
-          err_message = "Single collection Error: You have specified more than one of the same single-membership collection types: " \
-                        "Single-membership 1 (#{old_collection.title.first} and #{new_collection.title.first})"
+          err_message = "Error: You have specified more than one of the same single-membership collection type " \
+                        "(type: Single-membership 1, collections: #{old_collection.title.first} and #{new_collection.title.first})"
           expect(page).to have_selector '.help-block', text: err_message
         end
 
@@ -150,8 +150,8 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
             expect(page).to have_link 'Your Collections'
           end
 
-          err_message = "Error: You have specified more than one of the same single-membership collection types: " \
-                        "Single-membership 1 (#{new_collection.title.first} and #{old_collection.title.first})"
+          err_message = "Error: You have specified more than one of the same single-membership collection type " \
+                        "(type: Single-membership 1, collections: #{new_collection.title.first} and #{old_collection.title.first})"
           expect(page).to have_selector '.alert', text: err_message
         end
       end

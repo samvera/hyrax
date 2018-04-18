@@ -239,7 +239,8 @@ en:
             actions: Actions
             name: Name
         multiple_membership_checker:
-          error_preamble: 'Error: You have specified more than one of the same single-membership collection types'
+          error_preamble: 'Error: You have specified more than one of the same single-membership collection type '
+          error_type_and_collections: '(type: %{type}, collections: %{collections})'
         new:
           header: Create New Collection Type
           submit: Save

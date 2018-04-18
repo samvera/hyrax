@@ -262,20 +262,9 @@ RSpec.describe Hyrax::GenericWorksController do
     context 'when create fails' do
       let(:work) { create(:work) }
       let(:create_status) { false }
-      let(:errors) { double }
-      let(:messages) { double }
-      let(:error_messages) { ['Error: foo bar'] }
-
-      before do
-        allow(controller).to receive(:curation_concern).and_return(work)
-        allow(work).to receive(:errors).and_return(errors)
-        allow(errors).to receive(:messages).and_return(messages)
-        allow(messages).to receive(:[]).with(:collections).and_return(error_messages)
-      end
 
       it 'draws the form again' do
         post :create, params: { generic_work: { title: ['a title'] } }
-        expect(flash[:error]).to eq error_messages.to_sentence
         expect(response.status).to eq 422
         expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkForm
         expect(response).to render_template 'new'
@@ -495,22 +484,9 @@ RSpec.describe Hyrax::GenericWorksController do
 
       describe 'update failed' do
         let(:actor) { double(update: false) }
-        let(:work) { create(:work) }
-        let(:errors) { double }
-        let(:messages) { double }
-        let(:error_messages) { ['Error: foo bar'] }
-
-        before do
-          allow(controller).to receive(:curation_concern).and_return(work)
-          allow(work).to receive(:errors).and_return(errors)
-          allow(errors).to receive(:messages).and_return(messages)
-          allow(messages).to receive(:[]).with(:collections).and_return(error_messages)
-          allow(errors).to receive(:[]).with(:single_collection).and_return(error_messages)
-        end
 
         it 'renders the form' do
           patch :update, params: { id: work, generic_work: {} }
-          expect(work.errors[:single_collection].to_sentence).to eq error_messages.to_sentence
           expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkForm
           expect(response).to render_template('edit')
         end
