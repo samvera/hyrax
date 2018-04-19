@@ -355,4 +355,48 @@ Blacklight.onLoad(function () {
     });
 
   });
+
+  /**
+   * Mapping object to organize Collections Sharing tab specific functions & data
+   */
+  var sharingTabHelper = {
+    handleFormSharingWrapperOnChange: function(e) {
+      var inputs = $(this).find('.form-control');
+      var $addButton = $(this).find('.edit-collection-add-sharing-button');
+      var inputsPass = sharingTabHelper.checkInputsPass(inputs);
+      var select2Pass = sharingTabHelper.checkSelect2Pass($(this));
+      $addButton.prop('disabled', !(inputsPass && select2Pass));
+    },
+    checkInputsPass: function(inputs) {
+      var inputsPass = true;
+
+      inputs.each(function(i) {
+        if ($(this).val() === '') {
+          inputsPass = false;
+          return false;
+        }
+      });
+      return inputsPass;
+    },
+    // This checks that the select2 input is not the default value
+    checkSelect2Pass: function(context) {
+      var $select2 = context.find('.select2-container');
+      // No select2 element present, so it passes by default
+      if ($select2.length === 0) {
+        return true;
+      }
+      var $placeholder = $select2.siblings('[placeholder]');
+      var placeholderValue = $placeholder.attr('placeholder');
+      var chosenValue = $select2.find('.select2-chosen').text();
+
+      return placeholderValue !== chosenValue;
+    }
+  };
+
+  // Add a change event listener for
+  // Edit Collections: Sharing Tab: 'Add Sharing' section pseudo-forms
+  $('#participants')
+  .find('.form-add-sharing-wrapper')
+  .on('change', sharingTabHelper.handleFormSharingWrapperOnChange);
+
 });
