@@ -213,6 +213,8 @@ en:
             type: Type
         form_participants:
           add_participants: Add Participants
+          add_group: 'Add group'
+          add_user: 'Add user'
           current_participants: Current Participants
           header: Collection Participants
           instructions: You can designate both groups and users as creators and managers of collections of this type
