@@ -20,7 +20,7 @@ module Hyrax
           @parents = collection_doc[Samvera::NestingIndexer.configuration.solr_field_name_for_storing_parent_ids]
           @pathnames = collection_doc[Samvera::NestingIndexer.configuration.solr_field_name_for_storing_pathnames]
           @ancestors = collection_doc[Samvera::NestingIndexer.configuration.solr_field_name_for_storing_ancestors]
-          @depth = collection_doc[Hyrax::Adapters::NestingIndexAdapter.solr_field_name_for_deepest_nested_depth]
+          @depth = collection_doc[Samvera::NestingIndexer.configuration.solr_field_name_for_deepest_nested_depth]
         end
       end
 
@@ -154,13 +154,13 @@ module Hyrax
         # note: We need to include works in this search. They are included in the depth validations in
         # the indexer, so we do NOT use collection search builder here.
         builder = Hyrax::SearchBuilder.new(scope).where("#{Samvera::NestingIndexer.configuration.solr_field_name_for_storing_pathnames}:/.*#{child.id}.*/")
-        builder.query[:sort] = "#{Hyrax::Adapters::NestingIndexAdapter.solr_field_name_for_deepest_nested_depth} desc"
+        builder.query[:sort] = "#{Samvera::NestingIndexer.configuration.solr_field_name_for_deepest_nested_depth} desc"
         builder.query[:rows] = 1
         query = clean_lucene_error(builder: builder)
         response = scope.repository.search(query).documents.first
 
         # Now we have the largest nesting depth for all paths containing this collection
-        descendant_depth = response[Hyrax::Adapters::NestingIndexAdapter.solr_field_name_for_deepest_nested_depth]
+        descendant_depth = response[Samvera::NestingIndexer.configuration.solr_field_name_for_deepest_nested_depth]
 
         # => 2) Then we get the stored depth of the child collection itself to eliminate the collections above this one from our count, and add 1 to add back in this collection itself
         child_depth = NestingAttributes.new(id: child.id, scope: scope).depth

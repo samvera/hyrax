@@ -57,7 +57,7 @@ RSpec.describe Hyrax::WorkBehavior do
 
   describe '#update_nested_collection_relationship_indices', :with_nested_reindexing do
     it 'will be called after save' do
-      expect(Samvera::NestingIndexer).to receive(:reindex_relationships).with(id: kind_of(String))
+      expect(Samvera::NestingIndexer).to receive(:reindex_relationships).with(id: kind_of(String), extent: kind_of(String))
       subject.save!
     end
   end

@@ -503,7 +503,7 @@ module Hyrax
     attr_accessor :nested_relationship_reindexer
 
     def default_nested_relationship_reindexer
-      ->(id:) { Samvera::NestingIndexer.reindex_relationships(id: id) }
+      ->(id:, extent:) { Samvera::NestingIndexer.reindex_relationships(id: id, extent: extent) }
     end
 
     private
