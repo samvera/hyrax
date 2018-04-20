@@ -86,7 +86,9 @@
 //= require hyrax/relationships
 //= require hyrax/select_work_type
 //= require hyrax/collections
+//= require hyrax/collections_v2
 //= require hyrax/collection_types
+//= require hyrax/collections_utils
 //= require hyrax/select_collection_type
 //= require hydra-editor/hydra-editor
 //= require nestable
