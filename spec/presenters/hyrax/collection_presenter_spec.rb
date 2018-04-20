@@ -392,4 +392,58 @@ RSpec.describe Hyrax::CollectionPresenter do
   it { is_expected.to delegate_method(:related_url).to(:solr_document) }
   it { is_expected.to delegate_method(:identifier).to(:solr_document) }
   it { is_expected.to delegate_method(:date_created).to(:solr_document) }
+
+  describe '#managed_access' do
+    context 'when manager' do
+      before do
+        allow(ability).to receive(:can?).with(:edit, solr_doc).and_return(true)
+      end
+      it 'returns Manage label' do
+        expect(presenter.managed_access).to eq 'Manage'
+      end
+    end
+
+    context 'when depositor' do
+      before do
+        allow(ability).to receive(:can?).with(:edit, solr_doc).and_return(false)
+        allow(ability).to receive(:can?).with(:deposit, solr_doc).and_return(true)
+      end
+      it 'returns Deposit label' do
+        expect(presenter.managed_access).to eq 'Deposit'
+      end
+    end
+
+    context 'when manager' do
+      before do
+        allow(ability).to receive(:can?).with(:edit, solr_doc).and_return(false)
+        allow(ability).to receive(:can?).with(:deposit, solr_doc).and_return(false)
+        allow(ability).to receive(:can?).with(:read, solr_doc).and_return(true)
+      end
+      it 'returns View label' do
+        expect(presenter.managed_access).to eq 'View'
+      end
+    end
+  end
+
+  describe '#allow_batch?' do
+    context 'when user cannot edit' do
+      before do
+        allow(ability).to receive(:can?).with(:edit, solr_doc).and_return(false)
+      end
+
+      it 'returns false' do
+        expect(presenter.allow_batch?).to be false
+      end
+    end
+
+    context 'when user can edit' do
+      before do
+        allow(ability).to receive(:can?).with(:edit, solr_doc).and_return(true)
+      end
+
+      it 'returns false' do
+        expect(presenter.allow_batch?).to be true
+      end
+    end
+  end
 end
