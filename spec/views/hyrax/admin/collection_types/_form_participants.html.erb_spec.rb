@@ -9,8 +9,16 @@ RSpec.describe 'hyrax/admin/collection_types/_form_participants.html.erb', type:
     assign(:form, form)
     render
   end
-  it 'has the required selectors' do
-    expect(rendered).to have_selector('#user-participants-form')
-    expect(rendered).to have_selector('#group-participants-form')
+
+  context 'Collection Types edit participants tab' do
+    it 'has the required form selectors' do
+      expect(rendered).to have_selector('#user-participants-form')
+      expect(rendered).to have_selector('#group-participants-form')
+    end
+
+    it 'has the required javascript selectors to process AJAX add user and add group requests' do
+      expect(rendered).to have_selector('.form-add-participants-wrapper')
+      expect(rendered).to have_selector('.add-participants-form')
+    end
   end
 end
