@@ -31,6 +31,9 @@ module Hyrax
       []
     end
 
+    # For the Managed Collections tab, determine the label to use for the level of access the user has for this admin set.
+    # Checks from most permissive to most restrictive.
+    # @return String the access label (e.g. Manage, Deposit, View)
     def managed_access
       return I18n.t('hyrax.dashboard.my.collection_list.managed_access.manage') if current_ability.can?(:edit, solr_document)
       return I18n.t('hyrax.dashboard.my.collection_list.managed_access.deposit') if current_ability.can?(:deposit, solr_document)
@@ -38,6 +41,12 @@ module Hyrax
       ''
     end
 
+    # Determine if the user can perform batch operations on this admin set.  Currently, the only
+    # batch operation allowed is deleting, so this is equivalent to checking if the user can delete
+    # the admin set determined by criteria...
+    # * user must be able to edit the admin set to be able to delete it
+    # * the admin set itself must be able to be deleted (i.e., there cannot be any works in the admin set)
+    # @return Boolean true if the user can perform batch actions; otherwise, false
     def allow_batch?
       return false unless current_ability.can?(:edit, solr_document)
       !disable_delete?

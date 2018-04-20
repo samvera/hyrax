@@ -93,7 +93,7 @@ RSpec.describe Hyrax::AdminSetPresenter do
       end
     end
 
-    context 'when manager' do
+    context 'when viewer' do
       before do
         allow(ability).to receive(:can?).with(:edit, solr_document).and_return(false)
         allow(ability).to receive(:can?).with(:deposit, solr_document).and_return(false)

@@ -454,24 +454,6 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           expect(page).to have_content(collection.title.first)
         end
       end
-
-      context 'and selects the collection and clicks "Delete collections" button at top of page' do
-        it 'does not allow delete collection', js: true do
-          expect(page).to have_content(collection.title.first)
-          check_tr_data_attributes(collection.id, 'collection')
-
-          # Check the checkbox for the collection the user is not allowed to delete.
-          find("#batch_document_#{collection.id}").set(true)
-          # Click the "Delete collections" button at the top of the page.
-          find('#delete-collections-button').click
-          # Expect to see the modal that explains why the user couldn't delete the collection
-          expect(page).to have_selector('div#collections-to-delete-deny-modal', visible: true)
-          within('div#collections-to-delete-deny-modal') do
-            click_button('Close')
-          end
-          expect(page).to have_content(collection.title.first)
-        end
-      end
     end
 
     context 'when user created the admin set' do
