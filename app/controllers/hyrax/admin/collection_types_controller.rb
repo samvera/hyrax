@@ -38,6 +38,7 @@ module Hyrax
     end
 
     def edit
+      @groups = groups
       setup_form
       setup_participants_form
       add_common_breadcrumbs
@@ -102,6 +103,12 @@ module Hyrax
       def collection_type_params
         params.require(:collection_type).permit(:title, :description, :nestable, :brandable, :discoverable, :sharable, :share_applies_to_new_works,
                                                 :allow_multiple_membership, :require_membership, :assigns_workflow, :assigns_visibility)
+      end
+
+      def groups
+        groups = current_user.groups || []
+        groups << ::Ability.registered_group_name if current_ability.admin?
+        groups.uniq
       end
   end
 end

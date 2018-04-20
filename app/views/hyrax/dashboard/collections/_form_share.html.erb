@@ -22,9 +22,10 @@
                   <label class="col-md-2 col-xs-4 control-label"><%= t('.add_group') %>:</label>
                   <div class="col-md-10 col-xs-8 form-group">
                     <%= builder.hidden_field :agent_type %>
-                    <%= builder.text_field :agent_id,
-                                           placeholder: "Search for a group...",
-                                           class: 'form-control search-input' %>
+                    <%= builder.select :agent_id,
+                                       @groups,
+                                       { prompt: "Select a group..." },
+                                       class: 'form-control' %>
                     as
                     <%= builder.select :access,
                                        access_options,

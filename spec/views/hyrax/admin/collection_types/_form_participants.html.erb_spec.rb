@@ -7,6 +7,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form_participants.html.erb', type:
   before do
     assign(:collection_type_participant, participant_form)
     assign(:form, form)
+    assign(:groups, ['group1', 'admin', 'registered'])
     render
   end
 

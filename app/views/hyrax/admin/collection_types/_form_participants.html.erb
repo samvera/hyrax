@@ -16,9 +16,10 @@
             <div class="col-md-10 col-xs-8 form-group">
               <%= f.hidden_field :hyrax_collection_type_id, value: @collection_type_participant.hyrax_collection_type_id %>
               <%= f.hidden_field :agent_type, value: Hyrax::CollectionTypeParticipant::GROUP_TYPE %>
-              <%= f.text_field :agent_id,
-                               placeholder: "Search for a group...",
-                               class: 'form-control' %>
+              <%= f.select :agent_id,
+                           @groups,
+                           { prompt: "Select a group..." },
+                           class: 'form-control' %>
               as
               <%= f.select :access,
                            access_options,

@@ -8,9 +8,10 @@ RSpec.describe 'hyrax/admin/admin_sets/_form_participants.html.erb', type: :view
   end
 
   before do
-    @form = instance_double(Hyrax::Forms::AdminSetForm,
-                            to_model: stub_model(AdminSet),
-                            permission_template: pt_form)
+    assign(:groups, ['group1', 'admin', 'registered'])
+    assign(:form, instance_double(Hyrax::Forms::AdminSetForm,
+                                  to_model: stub_model(AdminSet),
+                                  permission_template: pt_form))
     render
   end
   it "has the required selectors" do

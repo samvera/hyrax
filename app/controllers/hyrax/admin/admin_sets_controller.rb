@@ -38,6 +38,7 @@ module Hyrax
     end
 
     def edit
+      @groups = groups
       setup_form
     end
 
@@ -146,6 +147,12 @@ module Hyrax
         else
           redirect_to hyrax.my_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
         end
+      end
+
+      def groups
+        groups = current_user.groups || []
+        groups << ::Ability.registered_group_name if current_ability.admin?
+        groups.uniq
       end
   end
 end
