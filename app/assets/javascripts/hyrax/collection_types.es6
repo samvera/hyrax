@@ -4,7 +4,36 @@ export default class CollectionTypes {
     if (element.length > 0) {
       this.handleCollapseToggle()
       this.handleDelete()
+
+      // Edit Collection Type
+      this.handleAddParticipants()
     }
+  }
+
+  handleAddParticipants() {
+    $('#participants').find('.add-participants-form input[type="submit"]').on('click', function(e) {
+      e.preventDefault();
+      const $wrapEl = $(e.target).parents('.form-add-participants-wrapper');
+      if ($wrapEl.length === 0) {
+        return;
+      }
+      const serialized = $wrapEl.find(':input').serialize();
+      const url = '/admin/collection_type_participants?locale=en';
+      if (serialized.length === 0) {
+        return;
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: url,
+        data: serialized
+      }).done(function(response) {
+        // Success handler here, possibly show alert success if page didn't reload?
+      }).fail(function(err) {
+        console.error(err);
+      });
+
+    });
   }
 
   handleCollapseToggle() {
