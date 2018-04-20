@@ -526,7 +526,6 @@ it:
       type_label: tipo di problema
     content_blocks:
       cancel: Annulla
-      change_tab_message: Sei sicuro di voler lasciare questa scheda? Tutti i dati non salvati andranno persi.
       tabs:
         announcement_text: Testo annuncio
         featured_researcher: Ricercatore in primo piano
@@ -911,6 +910,8 @@ it:
         single: È stato salvato.
         subject: Caricamento batch completato
         title: I file sono stati caricati correttamente
+    nav_safety:
+      change_tab_message: Sei sicuro di voler lasciare questa scheda? Tutti i dati non salvati andranno persi.
     pages:
       cancel: Annulla
       tabs:

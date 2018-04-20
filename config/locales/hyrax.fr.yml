@@ -527,7 +527,6 @@ fr:
       type_label: type de probleme
     content_blocks:
       cancel: Annuler
-      change_tab_message: Êtes-vous sûr de vouloir quitter cet onglet? Toutes les données non enregistrées seront perdues.
       tabs:
         announcement_text: Texte d'annonce
         featured_researcher: Chercheur en vedette
@@ -912,6 +911,8 @@ fr:
         single: a été enregistré.
         subject: Téléchargement par lots complet
         title: Fichiers téléchargés avec succès
+    nav_safety:
+      change_tab_message: Êtes-vous sûr de vouloir quitter cet onglet? Toutes les données non enregistrées seront perdues.
     pages:
       cancel: Annuler
       tabs:

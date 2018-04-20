@@ -526,7 +526,6 @@ es:
       type_label: Tipo de Problema
     content_blocks:
       cancel: Cancelar
-      change_tab_message: "¿Seguro que quieres salir de esta pestaña? Cualquier información no guardada se perderá."
       tabs:
         announcement_text: Texto del Anuncio
         featured_researcher: Investigador Destacado
@@ -913,6 +912,8 @@ es:
         single: ha sido guardado.
         subject: Subida en lote completa
         title: Archivos cargados satisfactoriamente
+    nav_safety:
+      change_tab_message: "¿Seguro que quieres salir de esta pestaña? Cualquier información no guardada se perderá."
     pages:
       cancel: Cancelar
       tabs:

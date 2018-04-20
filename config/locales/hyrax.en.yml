@@ -533,7 +533,6 @@ en:
       type_label: Issue Type
     content_blocks:
       cancel: Cancel
-      change_tab_message: Are you sure you want to leave this tab?  Any unsaved data will be lost.
       tabs:
         announcement_text: Announcement Text
         featured_researcher: Featured Researcher
@@ -919,6 +918,8 @@ en:
         single: has been saved.
         subject: Batch upload complete
         title: Files uploaded successfully
+    nav_safety:
+      change_tab_message: Are you sure you want to leave this tab?  Any unsaved data will be lost.
     pages:
       cancel: Cancel
       tabs:
