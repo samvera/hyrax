@@ -17,8 +17,6 @@ en:
     search:
       fields:
         facet:
-          admin_set_sim: Admin Set
-          member_of_collections_ssim: Collection
           resource_type_sim: Resource type
           suppressed_bsi: Status
         show:
@@ -709,6 +707,7 @@ en:
           works: 'Filter works:'
         heading:
           action: Actions
+          collection: Collection
           collection_type: Collection Type
           date_modified: Last Modified
           date_uploaded: Date Added

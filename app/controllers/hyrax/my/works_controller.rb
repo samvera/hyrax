@@ -4,8 +4,15 @@ module Hyrax
       # Define collection specific filter facets.
       def self.configure_facets
         configure_blacklight do |config|
-          config.add_facet_field solr_name("admin_set", :facetable), limit: 5
-          config.add_facet_field solr_name('member_of_collections', :symbol), limit: 5
+          config.add_facet_field solr_name('member_of_collection_ids', :symbol),
+                                 helper_method: :collection_label,
+                                 limit: 5,
+                                 pivot: [solr_name('admin_set', :facetable), solr_name('member_of_collection_ids', :symbol)],
+                                 label: I18n.t('hyrax.dashboard.my.heading.collection')
+          config.add_facet_field solr_name('admin_set', :facetable),
+                                 limit: 5,
+                                 label: I18n.t('hyrax.dashboard.my.heading.collection'),
+                                 show: false
         end
       end
       configure_facets
