@@ -141,15 +141,15 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       it "fails to delete collections when user does not have edit access" do
         controller.batch = [collection1.id, collection3.id]
         delete :destroy_collection, params: { update_type: "delete_all" }
-        expect { Collection.find(collection1.id) }.not_to raise_error(Ldp::Gone)
-        expect { Collection.find(collection2.id) }.not_to raise_error(Ldp::Gone)
+        expect(Collection.exists?(collection1.id)).to eq true
+        expect(Collection.exists?(collection2.id)).to eq true
       end
 
       it "deletes collections where user has edit access, failing to delete those where user does not have edit access" do
         controller.batch = [collection1.id, collection3.id]
         delete :destroy_collection, params: { update_type: "delete_all" }
-        expect { Collection.find(collection1.id) }.not_to raise_error(Ldp::Gone)
-        expect { Collection.find(collection2.id) }.not_to raise_error(Ldp::Gone)
+        expect(Collection.exists?(collection1.id)).to eq true
+        expect(Collection.exists?(collection2.id)).to eq true
         expect { Collection.find(collection3.id) }.to raise_error(Ldp::Gone)
       end
     end
