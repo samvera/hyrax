@@ -80,7 +80,7 @@ RSpec.describe 'batch', type: :feature, clean_repo: true, js: true do
         # This was `expect(page).to have_content 'Changes Saved'`, however in debugging,
         # the `have_content` check was ignoring the `within` scoping and finding
         # "Changes Saved" for other field areas
-        find('.status', text: 'Changes Saved')
+        find('.status', text: 'Changes Saved', wait: 5)
       end
 
       within "#form_permissions" do
@@ -94,7 +94,7 @@ RSpec.describe 'batch', type: :feature, clean_repo: true, js: true do
         # This was `expect(page).to have_content 'Changes Saved'`, however in debugging,
         # the `have_content` check was ignoring the `within` scoping and finding
         # "Changes Saved" for other field areas
-        find('.status', text: 'Changes Saved')
+        find('.status', text: 'Changes Saved', wait: 5)
       end
 
       # Visit work permissions and verify
