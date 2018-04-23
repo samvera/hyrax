@@ -704,6 +704,10 @@ en:
           edit_access: 'Edit Access:'
           groups: 'Groups:'
           users: 'Users:'
+          managed_access:
+            manage:  'Manage'
+            deposit: 'Deposit'
+            view:    'View'
         collections: Collections
         facet_label:
           collections: 'Filter collections:'
@@ -712,6 +716,7 @@ en:
           works: 'Filter works:'
         heading:
           action: Actions
+          access: Access
           collection_type: Collection Type
           date_modified: Last Modified
           date_uploaded: Date Added

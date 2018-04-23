@@ -1,0 +1,30 @@
+<table id="collections-list-table" class="table table-striped collections-list-table">
+  <caption class="sr-only"><%= t("hyrax.dashboard.my.sr.listing") %> <%= application_name %></caption>
+  <thead>
+  <tr>
+    <th class="check-all">
+      <label for="check_all" class="sr-only"><%= t("hyrax.dashboard.my.sr.check_all_label") %></label>
+      <input type="checkbox" name="check_all" id="check_all" value="yes" />
+    </th>
+    <th><%= t("hyrax.dashboard.my.heading.title") %></th>
+    <% if !current_ability.admin? %>
+      <th><%= t("hyrax.dashboard.my.heading.access") %></th>
+    <% end %>
+    <th><%= t("hyrax.dashboard.my.heading.type") %></th>
+    <th><%= t("hyrax.dashboard.my.heading.visibility") %></th>
+    <th><%= t("hyrax.dashboard.my.heading.items") %></th>
+    <th><%= t("hyrax.dashboard.my.heading.last_modified") %></th>
+    <th><%= t("hyrax.dashboard.my.heading.action") %></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% docs.each_with_index do |document, counter| %>
+    <% collection_presenter = if document.admin_set?
+                                Hyrax::AdminSetPresenter.new(document, current_ability, nil)
+                              else
+                                Hyrax::CollectionPresenter.new(document, current_ability, nil)
+                              end %>
+    <%= render 'list_collections', collection_presenter: collection_presenter, counter: counter, is_admin_set: document.admin_set? %>
+  <% end %>
+  </tbody>
+</table>
