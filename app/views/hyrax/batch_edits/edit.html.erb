@@ -50,25 +50,65 @@
         </div><!-- #descriptions_display -->
 
         <div id="permissions_display" class="tab-pane">
-          <%= simple_form_for @form.model,
-                              url: hyrax.batch_edits_path,
-                              method: :put,
-                              remote: true,
-                              html: { id: "form_permissions", class: "ajax-form"},
-                              data: { 'param-key' => @form.model_name.param_key } do |f| %>
-            <%= hidden_field_tag('update_type', 'update') %>
-            <%= hidden_field_tag('key', 'permissions') %>
-            <%= render "hyrax/base/form_permission", f: f %>
-            <%= render "hyrax/base/form_share", f: f %>
+          <div class="row">
+            <%= simple_form_for @form,
+                                url: hyrax.batch_edits_path,
+                                method: :put,
+                                remote: true,
+                                builder: Hyrax::FormBuilder,
+                                html: { id: "form_permissions_visibility", class: "ajax-form"},
+                                data: { 'param-key' => @form.model_name.param_key } do |f| %>
+              <div class="col-xs-12 col-sm-4">
+                <a class="accordion-toggle grey glyphicon-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_permissions_visibility" id="expand_link_permissions_visibility">
+                  <%= f.input_label "Visibility" %> <span class="chevron"></span>
+                </a>
+              </div>
+              <div id="collapse_permissions_visibility" class="collapse scrolly col-xs-12 col-sm-7">
+                <%= hidden_field_tag('update_type', 'update') %>
+                <%= hidden_field_tag('key', 'permissions') %>
+                <%= render "hyrax/base/form_permission", f: f %>
 
-            <% @form.batch_document_ids.each do |batch_id| %>
-              <%= hidden_field_tag "batch_document_ids[]", batch_id %>
+                <% @form.batch_document_ids.each do |batch_id| %>
+                  <%= hidden_field_tag "batch_document_ids[]", batch_id %>
+                <% end %>
+                <div>
+                  <%= f.submit "Save changes", class: 'btn btn-primary field-save', id: "permissions_visibility_save" %>
+                  <a class="btn btn-default" data-toggle="collapse" data-parent="#row_permissions_visibility" href="#collapse_permissions_visibility">Cancel </a>
+                  <div class="status fleft"></div>
+                </div>
+              </div>
             <% end %>
-            <div class="row">
-              <%= f.submit "Save changes", class: 'btn btn-primary', id: 'permissions_save' %>
-              <div id="status_permissions" class="status fleft"></div>
-            </div>
-          <% end %>
+          </div>
+
+          <div class="row">
+            <%= simple_form_for @form,
+                                url: hyrax.batch_edits_path,
+                                method: :put,
+                                remote: true,
+                                builder: Hyrax::FormBuilder,
+                                html: { id: "form_permissions", class: "ajax-form"},
+                                data: { 'param-key' => @form.model_name.param_key } do |f| %>
+              <div class="col-xs-12 col-sm-4">
+                <a class="accordion-toggle grey glyphicon-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_permissions_sharing" id="expand_link_permissions_sharing">
+                  <%= f.input_label "Sharing" %> <span class="chevron"></span>
+                </a>
+              </div>
+              <div id="collapse_permissions_sharing" class="collapse scrolly col-xs-12 col-sm-7">
+                <%= hidden_field_tag('update_type', 'update') %>
+                <%= hidden_field_tag('key', 'permissions') %>
+                <%= render "hyrax/base/form_share", f: f %>
+
+                <% @form.batch_document_ids.each do |batch_id| %>
+                  <%= hidden_field_tag "batch_document_ids[]", batch_id %>
+                <% end %>
+                <div>
+                  <%= f.submit "Save changes", class: 'btn btn-primary field-save', id: "permissions_sharing_save" %>
+                  <a class="btn btn-default" data-toggle="collapse" data-parent="#row_permissions_sharing" href="#collapse_permissions_sharing">Cancel </a>
+                  <div class="status fleft"></div>
+                </div>
+              </div>
+            <% end %>
+          </div>
         </div>
       </div> <!-- .tab-content -->
     </div>

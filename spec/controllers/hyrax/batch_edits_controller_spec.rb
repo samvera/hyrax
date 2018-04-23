@@ -32,21 +32,26 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
   describe "update" do
     let(:user) { build(:user) }
+    let(:admin_set) { create(:admin_set) }
+    let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
+    let!(:workflow) { create(:workflow, allows_access_grant: true, active: true, permission_template_id: permission_template.id) }
     let!(:one) do
-      create(:work, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
+      create(:work, admin_set_id: admin_set.id, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
     end
 
     let!(:two) do
-      create(:work, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
+      create(:work, admin_set_id: admin_set.id, creator: ["Fred"], title: ["abc"], language: ['en'], user: user)
     end
 
     let!(:three) do
-      create(:work, creator: ["Fred"], title: ["abc"], language: ['en'])
+      create(:work, admin_set_id: admin_set.id, creator: ["Fred"], title: ["abc"], language: ['en'])
     end
 
     let!(:file_set) do
       create(:file_set, creator: ["Fred"])
     end
+
+    let(:release_date) { Time.zone.today + 2 }
 
     let(:mycontroller) { "hyrax/my/works" }
 
@@ -83,7 +88,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
     end
 
     it "updates permissions" do
-      put :update, params: { update_type: "update", visibility: "authenticated" }
+      put :update, params: { update_type: "update", generic_work: { visibility: "authenticated" } }
       expect(response).to be_redirect
 
       work1 = GenericWork.find(one.id)
@@ -92,6 +97,76 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
 
       expect(GenericWork.find(two.id).visibility).to eq "authenticated"
       expect(GenericWork.find(three.id).visibility).to eq "restricted"
+    end
+
+    it 'creates leases' do
+      put :update, params: { update_type: "update",
+                             generic_work: { visibility: "lease", lease_expiration_date: release_date, visibility_during_lease: 'open', visibility_after_lease: 'restricted' } }
+      expect(response).to be_redirect
+
+      work1 = GenericWork.find(one.id)
+      expect(work1.visibility).to eq "open"
+      expect(work1.visibility_during_lease).to eq 'open'
+      expect(work1.visibility_after_lease).to eq 'restricted'
+      expect(work1.lease_expiration_date).to eq release_date
+      expect(work1.file_sets.map(&:visibility)).to eq ['open']
+      expect(work1.file_sets.map(&:visibility_during_lease)).to eq ['open']
+      expect(work1.file_sets.map(&:visibility_after_lease)).to eq ['restricted']
+      expect(work1.file_sets.map(&:lease_expiration_date)).to eq [release_date]
+
+      work2 = GenericWork.find(two.id)
+      expect(work2.visibility).to eq 'open'
+      expect(work2.visibility_during_lease).to eq 'open'
+      expect(work2.visibility_after_lease).to eq 'restricted'
+      expect(work2.lease_expiration_date).to eq release_date
+
+      work3 = GenericWork.find(three.id)
+      expect(work3.visibility).to eq 'restricted'
+      expect(work3.visibility_during_lease).to be_nil
+      expect(work3.visibility_after_lease).to be_nil
+      expect(work3.lease_expiration_date).to be_nil
+    end
+
+    it 'creates embargoes' do
+      put :update, params: { update_type: "update",
+                             generic_work: { visibility: "embargo", embargo_release_date: release_date, visibility_during_embargo: 'authenticated', visibility_after_embargo: 'open' } }
+      expect(response).to be_redirect
+
+      work1 = GenericWork.find(one.id)
+      expect(work1.visibility).to eq "authenticated"
+      expect(work1.visibility_during_embargo).to eq 'authenticated'
+      expect(work1.visibility_after_embargo).to eq 'open'
+      expect(work1.embargo_release_date).to eq release_date
+      expect(work1.file_sets.map(&:visibility)).to eq ['authenticated']
+      expect(work1.file_sets.map(&:visibility_during_embargo)).to eq ['authenticated']
+      expect(work1.file_sets.map(&:visibility_after_embargo)).to eq ['open']
+      expect(work1.file_sets.map(&:embargo_release_date)).to eq [release_date]
+
+      work2 = GenericWork.find(two.id)
+      expect(work2.visibility).to eq 'authenticated'
+      expect(work2.visibility_during_embargo).to eq 'authenticated'
+      expect(work2.visibility_after_embargo).to eq 'open'
+      expect(work2.embargo_release_date).to eq release_date
+
+      work3 = GenericWork.find(three.id)
+      expect(work3.visibility).to eq 'restricted'
+      expect(work3.visibility_during_embargo).to be_nil
+      expect(work3.visibility_after_embargo).to be_nil
+      expect(work3.embargo_release_date).to be_nil
+    end
+
+    context 'with roles' do
+      it 'updates roles' do
+        put :update, params: { update_type: "update", generic_work: { permissions_attributes: [{ type: 'person', access: 'read', name: 'foo@bar.com' }] } }
+        expect(response).to be_redirect
+
+        work1 = GenericWork.find(one.id)
+        expect(work1.read_users).to include "foo@bar.com"
+        expect(work1.file_sets.map(&:read_users)).to eq [["foo@bar.com"]]
+
+        expect(GenericWork.find(two.id).read_users).to eq ["foo@bar.com"]
+        expect(GenericWork.find(three.id).read_users).to eq []
+      end
     end
   end
 

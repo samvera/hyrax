@@ -6,6 +6,7 @@ Metrics/ClassLength:
   Exclude:
     - 'app/controllers/hyrax/dashboard/collections_controller.rb'
     - 'app/controllers/hyrax/admin/admin_sets_controller.rb'
+    - 'app/controllers/hyrax/batch_edits_controller.rb'
     - 'app/controllers/hyrax/downloads_controller.rb'
     - 'app/controllers/hyrax/file_sets_controller.rb'
     - 'app/forms/hyrax/forms/permission_template_form.rb'
@@ -83,6 +84,7 @@ RSpec/ExampleLength:
     - 'spec/actors/hyrax/actors/file_set_actor_spec.rb'
     - 'spec/actors/hyrax/actors/generic_work_actor_spec.rb'
     - 'spec/controllers/hyrax/api/items_controller_spec.rb'
+    - 'spec/controllers/hyrax/batch_edits_controller_spec.rb'
     - 'spec/controllers/hyrax/batch_uploads_controller_spec.rb'
     - 'spec/controllers/hyrax/file_sets_controller_spec.rb'
     - 'spec/controllers/hyrax/generic_works_controller_spec.rb'
