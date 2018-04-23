@@ -20,8 +20,9 @@ module Hyrax
     self.admin_set_create_service = AdminSetCreateService
 
     def show
+      add_breadcrumb I18n.t('hyrax.controls.home'), hyrax.root_path
       add_breadcrumb t(:'hyrax.dashboard.title'), hyrax.dashboard_path
-      add_breadcrumb t(:'hyrax.dashboard.my.collections'), hyrax.admin_admin_sets_path
+      add_breadcrumb t(:'hyrax.dashboard.my.collections'), hyrax.my_collections_path
       add_breadcrumb @admin_set.title.first
       super
     end
@@ -111,14 +112,6 @@ module Hyrax
       # initialize the form object
       def form
         @form ||= form_class.new(@admin_set, current_ability, repository)
-      end
-
-      # Overrides the parent implementation so that the returned search builder
-      #  searches for edit access
-      # Instantiates the search builder that builds a query for a single item
-      # this is useful in the show view.
-      def single_item_search_builder
-        single_item_search_builder_class.new(self, :edit).with(params.except(:q, :page))
       end
 
       def action_breadcrumb

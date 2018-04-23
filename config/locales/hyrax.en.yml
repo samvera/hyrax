@@ -169,9 +169,10 @@ en:
           header: Create New Administrative Set
         show:
           breadcrumb: View Set
-          confirm_delete: Are you sure you wish to delete this Administrative Set? This action cannot be undone.
           header: Administrative Set
           item_list_header: Works in This Set
+        show_actions:
+          confirm_delete: Are you sure you wish to delete this Administrative Set? This action cannot be undone.
       appearances:
         show:
           header: Appearance

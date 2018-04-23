@@ -15,6 +15,9 @@ module Hyrax
     DEPOSIT = 'deposit'.freeze
     MANAGE = 'manage'.freeze
 
+    GROUP = 'group'.freeze
+    USER = 'user'.freeze
+
     enum(
       access: {
         VIEW => VIEW,
@@ -41,7 +44,7 @@ module Hyrax
     end
 
     def label
-      return agent_id unless agent_type == 'group'
+      return agent_id unless agent_type == GROUP
       case agent_id
       when 'registered'
         I18n.t('hyrax.admin.admin_sets.form_participant_table.registered_users')
@@ -53,7 +56,7 @@ module Hyrax
     end
 
     def admin_group?
-      agent_type == 'group' && agent_id == ::Ability.admin_group_name
+      agent_type == GROUP && agent_id == ::Ability.admin_group_name
     end
 
     # @api private
@@ -67,7 +70,7 @@ module Hyrax
     #   If calling from Abilities, pass the ability.  If you try to get the ability from the user, you end up in an infinit loop.
     def self.user_where(access:, ability:)
       where_clause = {}
-      where_clause[:agent_type] = 'user'
+      where_clause[:agent_type] = USER
       where_clause[:agent_id] = ability.current_user.user_key
       where_clause[:access] = access
       where_clause
@@ -86,7 +89,7 @@ module Hyrax
     #   If calling from Abilities, pass the ability.  If you try to get the ability from the user, you end up in an infinit loop.
     def self.group_where(access:, ability:, exclude_groups: [])
       where_clause = {}
-      where_clause[:agent_type] = 'group'
+      where_clause[:agent_type] = GROUP
       where_clause[:agent_id] = ability.user_groups - exclude_groups
       where_clause[:access] = access
       where_clause

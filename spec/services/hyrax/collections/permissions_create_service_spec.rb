@@ -24,7 +24,7 @@ RSpec.describe Hyrax::Collections::PermissionsCreateService do
     end
     let!(:collection_type_participant) { create(:collection_type_participant, user_manage_attributes) }
     let!(:collection_type_participant2) { create(:collection_type_participant, group_manage_attributes) }
-    let(:collection) { create(:collection, collection_type_gid: collection_type.gid) }
+    let(:collection) { build(:collection_lw, id: 'collection1', collection_type_gid: collection_type.gid) }
 
     before do
       subject

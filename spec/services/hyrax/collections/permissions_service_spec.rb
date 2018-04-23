@@ -187,6 +187,10 @@ RSpec.describe Hyrax::Collections::PermissionsService do
       it 'returns admin set ids where user has deposit access' do
         expect(described_class.source_ids_for_deposit(ability: ability, source_type: 'admin_set')).to match_array [as_du.id, as_dg.id, as_mu.id, as_mg.id]
       end
+      it 'returns admin set ids where user has deposit access except excluded groups' do
+        expect(described_class.source_ids_for_deposit(ability: ability, source_type: 'admin_set', exclude_groups: ['deposit_group']))
+          .to match_array [as_du.id, as_mu.id, as_mg.id]
+      end
 
       context 'when user has no access' do
         let(:ability) { Ability.new(user2) }
