@@ -528,7 +528,6 @@ de:
       type_label: Anfragentyp
     content_blocks:
       cancel: Abbrechen
-      change_tab_message: Möchten Sie diesen Tab wirklich verlassen? Nicht gespeicherte Daten gehen verloren.
       tabs:
         announcement_text: Ankündigungstext
         featured_researcher: Ausgewählter Forscher
@@ -913,6 +912,8 @@ de:
         single: wurde gespeichert.
         subject: Stapelweises Hochladen abgeschlossen
         title: Dateien erfolgreich hochgeladen
+    nav_safety:
+      change_tab_message: Möchten Sie diesen Tab wirklich verlassen? Nicht gespeicherte Daten gehen verloren.
     pages:
       cancel: Abbrechen
       tabs:

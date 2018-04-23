@@ -521,7 +521,6 @@ pt-BR:
       type_label: Tipo de problema
     content_blocks:
       cancel: Cancelar
-      change_tab_message: Sei sicuro di voler lasciare questa scheda? Tutti i dati non salvati andranno persi.
       tabs:
         announcement_text: Texto de Anúncio
         featured_researcher: Pesquisador em destaque
@@ -906,6 +905,8 @@ pt-BR:
         single: Foi salvo.
         subject: Carregamento em lote completo
         title: Arquivos carregados com sucesso
+    nav_safety:
+      change_tab_message: Sei sicuro di voler lasciare questa scheda? Tutti i dati non salvati andranno persi.
     pages:
       cancel: Cancelar
       tabs:

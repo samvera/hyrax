@@ -1,20 +1,20 @@
-<%= render "modal_content_block" %>
+<%= render "shared/nav_safety_modal" %>
 <div class="panel panel-default tabs">
   <ul class="nav nav-tabs" role="tablist">
     <li class="active">
-      <a href="#announcement_text" role="tab" data-toggle="tab" class="show-confirm"><%= t(:'hyrax.content_blocks.tabs.announcement_text') %></a>
+      <a href="#announcement_text" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t(:'hyrax.content_blocks.tabs.announcement_text') %></a>
     </li>
     <li>
-      <a href="#marketing" role="tab" data-toggle="tab" class="show-confirm"><%= t(:'hyrax.content_blocks.tabs.marketing_text') %></a>
+      <a href="#marketing" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t(:'hyrax.content_blocks.tabs.marketing_text') %></a>
     </li>
     <li>
-      <a href="#researcher" role="tab" data-toggle="tab" class="show-confirm"><%= t(:'hyrax.content_blocks.tabs.featured_researcher') %></a>
+      <a href="#researcher" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t(:'hyrax.content_blocks.tabs.featured_researcher') %></a>
     </li>
   </ul>
   <div class="tab-content">
     <div id="announcement_text" class="tab-pane active">
       <div class="panel panel-default labels">
-        <%= simple_form_for ContentBlock.for(:announcement), url: hyrax.content_block_path(ContentBlock.for(:announcement)) do |f| %>
+        <%= simple_form_for ContentBlock.for(:announcement), url: hyrax.content_block_path(ContentBlock.for(:announcement)), html: {class: 'nav-safety'} do |f| %>
           <div class="panel-body">
             <div class="field form-group">
                 <%= f.label :announcement %><br />
@@ -30,7 +30,7 @@
     </div>
     <div id="marketing" class="tab-pane">
       <div class="panel panel-default labels">
-        <%= simple_form_for ContentBlock.for(:marketing), url: hyrax.content_block_path(ContentBlock.for(:marketing)) do |f| %>
+        <%= simple_form_for ContentBlock.for(:marketing), url: hyrax.content_block_path(ContentBlock.for(:marketing)), html: {class: 'nav-safety'} do |f| %>
           <div class="panel-body">
             <div class="field form-group">
                 <%= f.label :marketing %><br />
@@ -46,7 +46,7 @@
     </div>
     <div id="researcher" class="tab-pane">
       <div class="panel panel-default labels">
-        <%= simple_form_for ContentBlock.for(:researcher), url: hyrax.content_block_path(ContentBlock.for(:researcher)) do |f| %>
+        <%= simple_form_for ContentBlock.for(:researcher), url: hyrax.content_block_path(ContentBlock.for(:researcher)), html: {class: 'nav-safety'} do |f| %>
           <div class="panel-body">
             <div class="field form-group">
                 <%= f.label :researcher %><br />
@@ -62,3 +62,4 @@
     </div>
   </div>
 </div>
+<%= tinymce :content_block %>
