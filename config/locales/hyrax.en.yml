@@ -49,6 +49,8 @@ en:
         new: New Collection
       delete: Delete
       edit: Edit
+      less: Less
+      more: More
       refresh: Refresh
       remove: Remove
       work:

@@ -25,7 +25,7 @@
                            { prompt: "Select a role..." },
                            class: 'form-control' %>
 
-                         <%= f.submit t('.submit'), class: 'btn btn-info' %>
+                         <%= f.submit t('.submit'), class: 'btn btn-info', :disabled => true %>
             </div>
           </div>
       <% end %>
@@ -44,15 +44,14 @@
                 <%= f.hidden_field :hyrax_collection_type_id, value: @collection_type_participant.hyrax_collection_type_id %>
                 <%= f.hidden_field :agent_type, value: Hyrax::CollectionTypeParticipant::USER_TYPE %>
                 <%= f.text_field :agent_id,
-                                 placeholder: "Search for a user...",
-                                 class: 'form-control' %>
+                                 placeholder: "Search for a user..." %>
                 as
                 <%= f.select :access,
                              access_options,
                              { prompt: "Select a role..." },
                              class: 'form-control' %>
 
-                           <%= f.submit t('.submit'), class: 'btn btn-info' %>
+                           <%= f.submit t('.submit'), class: 'btn btn-info', :disabled => true %>
               </div>
             </div>
       <% end %>
