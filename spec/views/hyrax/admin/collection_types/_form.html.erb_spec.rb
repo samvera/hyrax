@@ -1,6 +1,5 @@
 RSpec.describe 'hyrax/admin/collection_types/_form.html.erb', type: :view do
   let(:collection_type) { build(:collection_type) }
-  # let(:collection_type) { build(:collection_type, machine_id: "type_does_not_matter") }
   let(:form) { Hyrax::Forms::Admin::CollectionTypeForm.new(collection_type: collection_type) }
 
   before do
@@ -13,6 +12,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form.html.erb', type: :view do
     expect(rendered).to have_selector('#metadata')
     expect(rendered).to have_selector('#settings')
     expect(rendered).to have_selector('#participants')
+    expect(rendered).to have_selector('#appearance')
   end
 
   context "when creating a new collection type" do
@@ -25,6 +25,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form.html.erb', type: :view do
       expect(rendered).to have_link(I18n.t('hyrax.admin.collection_types.form.tab.metadata'))
       expect(rendered).not_to have_link(I18n.t('hyrax.admin.collection_types.form.tab.settings'))
       expect(rendered).not_to have_link(I18n.t('hyrax.admin.collection_types.form.tab.participants'))
+      expect(rendered).not_to have_link(I18n.t('hyrax.admin.collection_types.form.tab.appearance'))
     end
   end
 
@@ -38,6 +39,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form.html.erb', type: :view do
       expect(rendered).to have_link(I18n.t('hyrax.admin.collection_types.form.tab.metadata'))
       expect(rendered).to have_link(I18n.t('hyrax.admin.collection_types.form.tab.settings'))
       expect(rendered).to have_link(I18n.t('hyrax.admin.collection_types.form.tab.participants'))
+      expect(rendered).to have_link(I18n.t('hyrax.admin.collection_types.form.tab.appearance'))
     end
   end
 end

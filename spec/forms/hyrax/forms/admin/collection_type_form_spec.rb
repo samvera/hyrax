@@ -19,6 +19,7 @@ RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm do
   it { is_expected.to delegate_method(:collections?).to(:collection_type) }
   it { is_expected.to delegate_method(:admin_set?).to(:collection_type) }
   it { is_expected.to delegate_method(:user_collection?).to(:collection_type) }
+  it { is_expected.to delegate_method(:badge_color).to(:collection_type) }
 
   describe '#all_settings_disabled?' do
     before do

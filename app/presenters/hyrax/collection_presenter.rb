@@ -3,6 +3,7 @@ module Hyrax
     include ModelProxy
     include PresentsAttributes
     include ActionView::Helpers::NumberHelper
+    include ActionView::Helpers::TagHelper
     attr_accessor :solr_document, :current_ability, :request
     attr_reader :subcollection_count
     attr_accessor :parent_collections # This is expected to be a Blacklight::Solr::Response with all of the parent collections
@@ -80,7 +81,7 @@ module Hyrax
     end
 
     def collection_type_badge
-      collection_type.title
+      content_tag(:span, collection_type.title, class: "label", style: "background-color: " + collection_type.badge_color + ";")
     end
 
     # The total number of parents that this collection belongs to, visible or not.

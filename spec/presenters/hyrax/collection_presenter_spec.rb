@@ -322,6 +322,18 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
   end
 
+  describe "#collection_type_badge" do
+    let(:collection_type) { create(:collection_type) }
+    before do
+      allow(collection_type).to receive(:badge_color).and_return("#ffa510")
+      allow(presenter).to receive(:collection_type).and_return(collection_type)
+    end
+
+    subject { presenter.collection_type_badge }
+
+    it { is_expected.to eq "<span class=\"label\" style=\"background-color: #ffa510;\">" + collection_type.title + "</span>" }
+  end
+
   describe "#user_can_nest_collection?" do
     before do
       allow(ability).to receive(:can?).with(:deposit, solr_doc).and_return(true)
