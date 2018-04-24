@@ -76,6 +76,7 @@ module Hyrax
         member_works
         # this is used to populate the "add to a collection" action for the members
         @user_collections = find_collections_for_form
+        @groups = groups
         form
       end
 
@@ -460,6 +461,12 @@ module Hyrax
         # @return <Hash> the inputs required for the collection member search builder
         def params_for_query
           params.merge(q: params[:cq])
+        end
+
+        def groups
+          groups = current_user.groups || []
+          groups << ::Ability.registered_group_name if current_ability.admin?
+          groups.uniq
         end
     end
   end

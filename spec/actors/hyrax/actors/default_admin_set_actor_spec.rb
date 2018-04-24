@@ -54,7 +54,7 @@ RSpec.describe Hyrax::Actors::DefaultAdminSetActor do
       let(:attributes) { { title: 'new title' } }
       let(:default_id) { AdminSet::DEFAULT_ID }
 
-      it "gets the admin set id fro the work" do
+      it "gets the admin set id from the work" do
         expect(terminator).to receive(:update).with(Hyrax::Actors::Environment) do |k|
           expect(k.attributes).to eq('title' => 'new title', 'admin_set_id' => admin_set.id)
           true
