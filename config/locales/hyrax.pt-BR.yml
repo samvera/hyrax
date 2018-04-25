@@ -171,7 +171,6 @@ pt-BR:
           header: Criar novo conjunto administrativo
         show:
           breadcrumb: Conjunto de imagens
-          confirm_delete: Tem certeza de que deseja excluir este conjunto administrativo? Essa ação não pode ser desfeita.
           header: Conjunto Administrativo
           item_list_header: Funciona neste conjunto
         show_actions:

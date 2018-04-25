@@ -171,7 +171,6 @@ zh:
           header: 创建新的管理集
         show:
           breadcrumb: 观看集
-          confirm_delete: 确定要删除吗？删除后不可复原。
           header: 管理集
           item_list_header: 集内作品
         show_actions:

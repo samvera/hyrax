@@ -171,7 +171,6 @@ de:
           header: Neues Admin-Set erstellen
         show:
           breadcrumb: Ansicht Admin-Set
-          confirm_delete: Sind Sie sicher, dass Sie dieses Admin-Set löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.
           header: Admin-Set
           item_list_header: Arbeiten in diesem Admin-Set
         show_actions:
