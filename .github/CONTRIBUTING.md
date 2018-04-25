@@ -164,6 +164,6 @@ If you are uncertain, bring other contributors into the conversation by assignin
 # Additional Resources
 
 * [General GitHub documentation](http://help.github.com/)
-* [GitHub pull request documentation](http://help.github.com/send-pull-requests/)
+* [GitHub pull request documentation](https://help.github.com/articles/about-pull-requests/)
 * [Pro Git](http://git-scm.com/book) is both a free and excellent book about Git.
 * [A Git Config for Contributing](http://ndlib.github.io/practices/my-typical-per-project-git-config/)
