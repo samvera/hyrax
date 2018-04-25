@@ -49,6 +49,8 @@ pt-BR:
         new: Nova coleção
       delete: Excluir
       edit: Editar
+      less: Menos
+      more: Mais
       refresh: Atualizar
       remove: Remover
       work:
@@ -172,6 +174,8 @@ pt-BR:
           confirm_delete: Tem certeza de que deseja excluir este conjunto administrativo? Essa ação não pode ser desfeita.
           header: Conjunto Administrativo
           item_list_header: Funciona neste conjunto
+        show_actions:
+          confirm_delete: Tem certeza de que deseja excluir este conjunto administrativo? Essa ação não pode ser desfeita.
       appearances:
         show:
           header: Aparência
@@ -193,6 +197,7 @@ pt-BR:
           not_empty: O tipo de coleção não pode ser alterado, pois tem coleções
         form:
           tab:
+            appearance: Cor do Emblema
             metadata: Descrição
             participants: Participantes
             settings: Configurações
@@ -212,7 +217,9 @@ pt-BR:
             title: Gerentes
             type: Tipo
         form_participants:
+          add_group: Adicionar grupo
           add_participants: Adicione participantes
+          add_user: Adicionar usuário
           current_participants: Participantes atuais
           header: Participantes da coleção
           instructions: Você pode designar grupos e usuários como criadores e gerentes de coleções desse tipo
@@ -240,6 +247,7 @@ pt-BR:
             name: Nome
         multiple_membership_checker:
           error_preamble: 'Erro: você especificou mais do que um dos mesmos tipos de coleção de associação única'
+          error_type_and_collections: "(tipo: %{type}, coleções: %{collections})"
         new:
           header: Criar novo tipo de coleção
           submit: Salve 
@@ -690,6 +698,10 @@ pt-BR:
           description: 'Descrição:'
           edit_access: 'Editar acesso:'
           groups: 'Grupos:'
+          managed_access:
+            deposit: Depósito
+            manage: Gerir
+            view: Visão
           users: 'Comercial:'
         collections: Suas coleções
         facet_label:
@@ -698,6 +710,7 @@ pt-BR:
           shared: 'Compartilhamento de filtro:'
           works: 'Filtro funciona:'
         heading:
+          access: Acesso
           action: Ações
           collection_type: Tipo de Coleção
           date_modified: Última modificação
@@ -727,6 +740,7 @@ pt-BR:
         removed_relationship: "'%{child_title}' foi removido de '%{parent_title}'"
       no_activity: O usuário não tem atividade recente
       no_notifications: O usuário não possui notificações
+      no_proxies: Não há proxies designados
       no_transfer_requests: Você não recebeu nenhum pedido de transferência de trabalho
       no_transfers: Você não transferiu nenhum trabalho
       proxy_activity: Atividade de proxy
@@ -1124,6 +1138,7 @@ pt-BR:
         allow_multiple_membership: MEMBROS MÚLTIPLOS
         assigns_visibility: VISIBILIDADE
         assigns_workflow: FLUXO DE TRABALHO
+        badge_color: Cor do Emblema
         brandable: MARCA
         description: Descrição do tipo
         discoverable: DESCOBERTA

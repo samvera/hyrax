@@ -49,6 +49,8 @@ fr:
         new: Nouvelle collection
       delete: Effacer
       edit: modifier
+      less: Moins
+      more: Plus
       refresh: Rafraîchir
       remove: Retirer
       work:
@@ -172,6 +174,8 @@ fr:
           confirm_delete: Êtes-vous sûr de vouloir supprimer ce Set administratif? Cette action ne peut pas être annulée.
           header: Ensemble administratif
           item_list_header: Fonctionne dans cet ensemble
+        show_actions:
+          confirm_delete: Êtes-vous sûr de vouloir supprimer cet ensemble administratif? Cette action ne peut pas être annulée.
       appearances:
         show:
           header: Apparence
@@ -193,6 +197,7 @@ fr:
           not_empty: Le type de collection ne peut pas être modifié car il a des collections
         form:
           tab:
+            appearance: Couleur du badge
             metadata: La description
             participants: Participants
             settings: Paramètres
@@ -212,7 +217,9 @@ fr:
             title: Les gestionnaires
             type: Type
         form_participants:
+          add_group: Ajouter un groupe
           add_participants: Ajouter des participants
+          add_user: Ajouter un utilisateur
           current_participants: Participants actuels
           header: Participants à la collecte
           instructions: Vous pouvez désigner des groupes et des utilisateurs en tant que créateurs et gestionnaires de collections de ce type
@@ -240,6 +247,7 @@ fr:
             name: prénom
         multiple_membership_checker:
           error_preamble: 'Erreur: vous avez spécifié plusieurs des mêmes types de collection de membres uniques'
+          error_type_and_collections: "(type: %{type}, collections: %{collections})"
         new:
           header: Créer un nouveau type de collection
           submit: sauvegarder
@@ -696,6 +704,10 @@ fr:
           description: 'La description:'
           edit_access: 'Modifier l''accès:'
           groups: 'Groupes:'
+          managed_access:
+            deposit: Dépôt
+            manage: Gérer
+            view: Vue
           users: 'Utilisateurs:'
         collections: Vos collections
         facet_label:
@@ -704,6 +716,7 @@ fr:
           shared: 'Filtrer les actions:'
           works: 'Le filtre fonctionne:'
         heading:
+          access: Accès
           action: Actes
           collection_type: Type de collection
           date_modified: Dernière modification
@@ -733,6 +746,7 @@ fr:
         removed_relationship: "'%{child_title}' a été retiré de '%{parent_title}'"
       no_activity: L'utilisateur n'a aucune activité récente
       no_notifications: L'utilisateur n'a pas de notification
+      no_proxies: Il n'y a pas de proxy attribués
       no_transfer_requests: Vous n'avez reçu aucune demande de transfert de travail
       no_transfers: Vous n'avez transféré aucun travail
       proxy_activity: Activité de procuration
@@ -1130,6 +1144,7 @@ fr:
         allow_multiple_membership: MEMBRES MULTIPLES
         assigns_visibility: VISIBILITÉ
         assigns_workflow: FLUX DE TRAVAIL
+        badge_color: Couleur du badge
         brandable: L'IMAGE DE MARQUE
         description: Description du type
         discoverable: DÉCOUVERTE
