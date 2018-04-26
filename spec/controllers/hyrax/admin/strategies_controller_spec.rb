@@ -2,11 +2,16 @@ RSpec.describe Hyrax::Admin::StrategiesController do
   describe "#update" do
     before do
       # Added when Flipflop bumped to 2.3.2. See also https://github.com/voormedia/flipflop/issues/26
-      features_hash = Flipflop::FeatureSet.current.instance_variable_get(:@features)
-      Flipflop::FeatureSet.current.instance_variable_set(:@features, features_hash.merge(feature_id => feature))
+      Flipflop::FeatureSet.current.instance_variable_set(:@features, original_feature_hash.merge(feature_id => feature))
 
       sign_in user
     end
+
+    after do
+      Flipflop::FeatureSet.current.instance_variable_set(:@features, original_feature_hash)
+    end
+
+    let(:original_feature_hash) { Flipflop::FeatureSet.current.instance_variable_get(:@features) }
     let(:user) { create(:user) }
     let(:strategy) { Flipflop::Strategies::ActiveRecordStrategy.new(class: Hyrax::Feature).key }
     let(:feature) { double('feature', id: feature_id, key: 'foo') }
