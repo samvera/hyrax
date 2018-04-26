@@ -49,6 +49,8 @@ it:
         new: Nuova collezione
       delete: Elimina
       edit: Modifica
+      less: Di meno
+      more: Di Più
       refresh: ricaricare
       remove: Rimuovere
       work:
@@ -169,9 +171,10 @@ it:
           header: Crea nuovo set amministrativo
         show:
           breadcrumb: Visualizza set
-          confirm_delete: Sei sicuro di voler eliminare questo set amministrativo? Questa azione non può essere annullata.
           header: Impostazione amministrativa
           item_list_header: Funziona in questo set
+        show_actions:
+          confirm_delete: Sei sicuro di voler eliminare questo set amministrativo? Questa azione non può essere annullata.
       appearances:
         show:
           header: Aspetto
@@ -193,6 +196,7 @@ it:
           not_empty: Il tipo di raccolta non può essere modificato in quanto ha collezioni
         form:
           tab:
+            appearance: Colore distintivo
             metadata: Descrizione
             participants: I partecipanti
             settings: impostazioni
@@ -212,7 +216,9 @@ it:
             title: I gestori
             type: genere
         form_participants:
+          add_group: Aggiungere gruppo
           add_participants: Aggiungi partecipanti
+          add_user: Aggiungi utente
           current_participants: Partecipanti attuali
           header: Partecipanti alla raccolta
           instructions: Puoi designare sia gruppi che utenti come creatori e gestori di raccolte di questo tipo
@@ -240,6 +246,7 @@ it:
             name: Nome
         multiple_membership_checker:
           error_preamble: 'Errore: hai specificato più di uno degli stessi tipi di raccolta a membro singolo'
+          error_type_and_collections: "(tipo: %{type}, collezioni: %{collections})"
         new:
           header: Crea un nuovo tipo di raccolta
           submit: Salvare
@@ -695,6 +702,10 @@ it:
           description: 'Descrizione:'
           edit_access: 'Modifica accesso:'
           groups: 'gruppi:'
+          managed_access:
+            deposit: Depositare
+            manage: Gestire
+            view: vista
           users: 'utenti:'
         collections: Le tue collezioni
         facet_label:
@@ -703,6 +714,7 @@ it:
           shared: 'Condivisione di filtri:'
           works: 'Funzioni di filtro:'
         heading:
+          access: Accesso
           action: Azioni
           collection_type: Tipo di raccolta
           date_modified: Ultima modifica
@@ -732,6 +744,7 @@ it:
         removed_relationship: "'%{child_title}' è stato rimosso da '%{parent_title}'"
       no_activity: L'utente non ha attività recenti
       no_notifications: L'utente non ha notifiche
+      no_proxies: Non ci sono proxy assegnati
       no_transfer_requests: Non hai ricevuto richieste di trasferimento di lavoro
       no_transfers: Non hai trasferito alcun lavoro
       proxy_activity: Attività proxy
@@ -1129,6 +1142,7 @@ it:
         allow_multiple_membership: MULTIPLE MEMBERSHIP
         assigns_visibility: VISIBILITÀ
         assigns_workflow: FLUSSO DI LAVORO
+        badge_color: Colore distintivo
         brandable: IL BRANDING
         description: Tipo descrizione
         discoverable: SCOPERTA

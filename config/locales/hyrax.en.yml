@@ -196,10 +196,10 @@ en:
           not_empty: Collection type cannot be altered as it has collections
         form:
           tab:
+            appearance: Badge Color
             metadata: Description
             participants: Participants
             settings: Settings
-            appearance: Badge Color
         form_participant_table:
           creators:
             action: Action
@@ -216,9 +216,9 @@ en:
             title: Managers
             type: Type
         form_participants:
+          add_group: Add group
           add_participants: Add Participants
-          add_group: 'Add group'
-          add_user: 'Add user'
+          add_user: Add user
           current_participants: Current Participants
           header: Collection Participants
           instructions: You can designate both groups and users as creators and managers of collections of this type
@@ -246,7 +246,7 @@ en:
             name: Name
         multiple_membership_checker:
           error_preamble: 'Error: You have specified more than one of the same single-membership collection type '
-          error_type_and_collections: '(type: %{type}, collections: %{collections})'
+          error_type_and_collections: "(type: %{type}, collections: %{collections})"
         new:
           header: Create New Collection Type
           submit: Save
@@ -703,11 +703,11 @@ en:
           description: 'Description:'
           edit_access: 'Edit Access:'
           groups: 'Groups:'
-          users: 'Users:'
           managed_access:
-            manage:  'Manage'
-            deposit: 'Deposit'
-            view:    'View'
+            deposit: Deposit
+            manage: Manage
+            view: View
+          users: 'Users:'
         collections: Collections
         facet_label:
           collections: 'Filter collections:'
@@ -715,8 +715,8 @@ en:
           shared: 'Filter shares:'
           works: 'Filter works:'
         heading:
-          action: Actions
           access: Access
+          action: Actions
           collection_type: Collection Type
           date_modified: Last Modified
           date_uploaded: Date Added
@@ -745,9 +745,9 @@ en:
         removed_relationship: "'%{child_title}' has been removed from '%{parent_title}'"
       no_activity: User has no recent activity
       no_notifications: User has no notifications
+      no_proxies: There are no proxies assigned
       no_transfer_requests: You haven't received any work transfer requests
       no_transfers: You haven't transferred any work
-      no_proxies: There are no proxies assigned
       proxy_activity: Proxy Activity
       proxy_delete: Delete Proxy
       proxy_help: Select a user who can deposit works on your behalf. You will be the owner of works that this user deposits for you. You can revoke a proxy by clicking the Delete Proxy button.
@@ -830,7 +830,7 @@ en:
           video_link: Download video
     file_sets:
       groups_description:
-        description_html: 'The list of groups in the drop-down marked "Select a group" is a list of User Managed Groups that you are a member of.  You may select a specific group and assign an access level for a file within %{application_name}, similarly to adding user access levels.'
+        description_html: The list of groups in the drop-down marked "Select a group" is a list of User Managed Groups that you are a member of.  You may select a specific group and assign an access level for a file within %{application_name}, similarly to adding user access levels.
     help:
       header: User Support
       override_text: Use app/views/static/help.html.erb to override this file.

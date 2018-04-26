@@ -49,6 +49,8 @@ de:
         new: Neue Sammlung
       delete: Löschen
       edit: Bearbeiten
+      less: Weniger
+      more: Mehr
       refresh: Aktualisierung
       remove: Entfernen
       work:
@@ -169,9 +171,10 @@ de:
           header: Neues Admin-Set erstellen
         show:
           breadcrumb: Ansicht Admin-Set
-          confirm_delete: Sind Sie sicher, dass Sie dieses Admin-Set löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.
           header: Admin-Set
           item_list_header: Arbeiten in diesem Admin-Set
+        show_actions:
+          confirm_delete: Möchten Sie dieses Verwaltungsset wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.
       appearances:
         show:
           header: Design
@@ -193,6 +196,7 @@ de:
           not_empty: Der Sammlungstyp kann nicht geändert werden, da er Sammlungen enthält
         form:
           tab:
+            appearance: Abzeichen Farbe
             metadata: Beschreibung
             participants: Teilnehmer
             settings: Einstellungen
@@ -212,7 +216,9 @@ de:
             title: Manager
             type: Typ
         form_participants:
+          add_group: Gruppe hinzufügen
           add_participants: Teilnehmer hinzufügen
+          add_user: Benutzer hinzufügen
           current_participants: Aktuelle Teilnehmer
           header: Sammlungs-Teilnehmer
           instructions: Sie können sowohl Gruppen als auch Benutzer als Ersteller und Manager von Sammlungen dieses Typs festlegen
@@ -240,6 +246,7 @@ de:
             name: Name
         multiple_membership_checker:
           error_preamble: 'Fehler: Sie haben mehrere derselben Sammlungstypen mit einer einzelnen Mitgliedschaft angegeben'
+          error_type_and_collections: "(Geben Sie ein: %{type}, Sammlungen: %{collections})"
         new:
           header: Erstellen Sie einen neuen Sammlungstyp
           submit: Speichen
@@ -697,6 +704,10 @@ de:
           description: 'Beschreibung:'
           edit_access: 'Bearbeiten der Zugriffsrechte:'
           groups: 'Gruppen:'
+          managed_access:
+            deposit: Anzahlung
+            manage: Verwalten
+            view: Aussicht
           users: 'Benutzer:'
         collections: Ihre Sammlungen
         facet_label:
@@ -705,6 +716,7 @@ de:
           shared: 'Filter Freigaben:'
           works: 'Filter Arbeiten:'
         heading:
+          access: Zugriff
           action: Aktionen
           collection_type: Sammlungsart
           date_modified: Zuletzt bearbeitet
@@ -734,6 +746,7 @@ de:
         removed_relationship: "'%{child_title}' wurde aus '%{parent_title}' entfernt"
       no_activity: Benutzer hat keine aktuellen Aufgaben
       no_notifications: Benutzer hat keine Benachrichtigungen
+      no_proxies: Es sind keine Proxys zugewiesen
       no_transfer_requests: Sie haben keine Übertragungsanfragen für Arbeiten erhalten
       no_transfers: Sie haben keine Arbeit übertragen
       proxy_activity: Vertreter-Aktivität
@@ -1131,6 +1144,7 @@ de:
         allow_multiple_membership: MEHRFACHE MITGLIEDSCHAFT
         assigns_visibility: SICHTBARKEIT
         assigns_workflow: WORKFLOW
+        badge_color: Abzeichen Farbe
         brandable: HERVORHEBBAR (MARKE)
         description: Typbeschreibung
         discoverable: EINSEHBAR
