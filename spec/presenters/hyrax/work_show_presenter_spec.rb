@@ -47,7 +47,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
     let(:id_present) { false }
     let(:representative_presenter) { double('representative', present?: false) }
     let(:image_boolean) { false }
-    let(:iiif_enabled) { false }
+    let(:iiif_enabled) { true }
     let(:file_set_presenter) { Hyrax::FileSetPresenter.new(solr_document, ability) }
     let(:file_set_presenters) { [file_set_presenter] }
     let(:read_permission) { true }
@@ -77,7 +77,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
     context 'with non-image representative_presenter' do
       let(:id_present) { true }
       let(:representative_presenter) { double('representative', present?: true) }
-      let(:image_boolean) { true }
+      let(:image_boolean) { false }
 
       it { is_expected.to be false }
     end
