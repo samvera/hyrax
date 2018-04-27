@@ -174,7 +174,7 @@ de:
           header: Admin-Set
           item_list_header: Arbeiten in diesem Admin-Set
         show_actions:
-          confirm_delete: Möchten Sie dieses Verwaltungsset wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.
+          confirm_delete: Möchten Sie dieses Admin-Set wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.
       appearances:
         show:
           header: Design
@@ -196,7 +196,7 @@ de:
           not_empty: Der Sammlungstyp kann nicht geändert werden, da er Sammlungen enthält
         form:
           tab:
-            appearance: Abzeichen Farbe
+            appearance: Emblemfarbe
             metadata: Beschreibung
             participants: Teilnehmer
             settings: Einstellungen
@@ -705,9 +705,9 @@ de:
           edit_access: 'Bearbeiten der Zugriffsrechte:'
           groups: 'Gruppen:'
           managed_access:
-            deposit: Anzahlung
+            deposit: Deponieren
             manage: Verwalten
-            view: Aussicht
+            view: Ansicht
           users: 'Benutzer:'
         collections: Ihre Sammlungen
         facet_label:
@@ -746,7 +746,7 @@ de:
         removed_relationship: "'%{child_title}' wurde aus '%{parent_title}' entfernt"
       no_activity: Benutzer hat keine aktuellen Aufgaben
       no_notifications: Benutzer hat keine Benachrichtigungen
-      no_proxies: Es sind keine Proxys zugewiesen
+      no_proxies: Es sind keine Vertreter zugewiesen
       no_transfer_requests: Sie haben keine Übertragungsanfragen für Arbeiten erhalten
       no_transfers: Sie haben keine Arbeit übertragen
       proxy_activity: Vertreter-Aktivität
@@ -1144,7 +1144,7 @@ de:
         allow_multiple_membership: MEHRFACHE MITGLIEDSCHAFT
         assigns_visibility: SICHTBARKEIT
         assigns_workflow: WORKFLOW
-        badge_color: Abzeichen Farbe
+        badge_color: Emblemfarbe
         brandable: HERVORHEBBAR (MARKE)
         description: Typbeschreibung
         discoverable: EINSEHBAR
