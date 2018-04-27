@@ -16,7 +16,7 @@
                 <% if row_presenter.admin_set? %>
                   data-path="<%= new_admin_admin_set_path %>"
                 <% else %>
-                  data-path="<%= "#{new_dashboard_collection_path}&collection_type_id=#{row_presenter.id}" %>"
+                  data-path="<%= append_collection_type_url(new_dashboard_collection_path, row_presenter.id) %>"
                 <% end %> />
                 <h4><%= row_presenter.title %></h4>
                 <p><%= row_presenter.description %></p>
