@@ -52,6 +52,12 @@ ul.tabular {
 .work-type {
   margin-bottom: 18px;
   margin-top: -8px;
+  .panel-body {
+    .work_description,
+    li.attribute {
+      word-break: break-word;
+    }
+  }
 }
 
 .panel-workflow {
