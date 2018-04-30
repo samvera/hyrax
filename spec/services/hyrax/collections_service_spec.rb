@@ -1,10 +1,11 @@
 RSpec.describe Hyrax::CollectionsService do
   let(:controller) { ::CatalogController.new }
-
+  let(:search_params) { {} }
   let(:context) do
     double(current_ability: Ability.new(user1),
            repository: controller.repository,
-           blacklight_config: controller.blacklight_config)
+           blacklight_config: controller.blacklight_config,
+           params: search_params)
   end
 
   let(:service) { described_class.new(context) }
@@ -38,8 +39,16 @@ RSpec.describe Hyrax::CollectionsService do
     context "with read access" do
       let(:access) { :read }
 
-      it "returns three collections" do
+      it "returns four collections" do
         expect(subject.map(&:id)).to match_array [collection1.id, collection2.id, collection3.id, collection4.id]
+      end
+
+      describe "it to one when using params[:add_works_to_collection]" do
+        let(:search_params) { { add_works_to_collection: collection1.id } }
+
+        it "returns only selected collection" do
+          expect(subject.map(&:id)).to match_array [collection1.id]
+        end
       end
     end
 
@@ -54,7 +63,7 @@ RSpec.describe Hyrax::CollectionsService do
     context "with deposit access" do
       let(:access) { :deposit }
 
-      it "returns one collections" do
+      it "returns three collections" do
         expect(subject.map(&:id)).to match_array [collection1.id, collection2.id, collection3.id]
       end
     end

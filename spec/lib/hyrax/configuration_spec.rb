@@ -81,4 +81,5 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:default_nested_relationship_reindexer) }
   it { is_expected.to respond_to(:whitelisted_ingest_dirs) }
   it { is_expected.to respond_to(:whitelisted_ingest_dirs=) }
+  it { is_expected.to respond_to(:collection_query_limit) }
 end

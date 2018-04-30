@@ -506,6 +506,13 @@ module Hyrax
       ->(id:, extent:) { Samvera::NestingIndexer.reindex_relationships(id: id, extent: extent) }
     end
 
+    # @return [integer] max # of collections to return in query
+    # Max number of collections, to be used when we need to return all in a solr query
+    attr_writer :collection_query_limit
+    def collection_query_limit
+      @collection_query_limit ||= Collection.count + 1_000
+    end
+
     private
 
       # @param [Symbol, #to_s] model_name - symbol representing the model
