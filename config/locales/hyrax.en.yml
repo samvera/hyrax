@@ -925,6 +925,12 @@ en:
         single: has been saved.
         subject: Batch upload complete
         title: Files uploaded successfully
+    my:
+      count:
+        collections:
+          in_repo: <strong>%{total_count} collections</strong> in the repository
+          you_manage: <strong>%{total_count} collections</strong> you can manage in the repository
+          you_own: <strong>%{total_count} collections</strong> you own in the repository
     nav_safety:
       change_tab_message: Are you sure you want to leave this tab?  Any unsaved data will be lost.
     pages:
