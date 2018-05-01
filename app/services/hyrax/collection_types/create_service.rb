@@ -40,7 +40,7 @@ module Hyrax
         require_membership: false,
         assigns_workflow: false,
         assigns_visibility: false,
-        badge_color: "#663333",
+        badge_color: "#705070",
         participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
                        { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.registered_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
       }.freeze
@@ -58,7 +58,7 @@ module Hyrax
         require_membership: true,
         assigns_workflow: true,
         assigns_visibility: true,
-        badge_color: "#663333",
+        badge_color: "#405060",
         participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
                        { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
       }.freeze
