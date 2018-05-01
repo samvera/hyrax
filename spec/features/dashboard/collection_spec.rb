@@ -36,7 +36,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         visit '/dashboard/my/collections'
       end
 
-      it "has page title, does not have tabs, and lists only user's collections" do
+      it "has page title, does not have tabs, lists only user's collections, and displays number of collections in the respository" do
         expect(page).to have_content 'Collections'
         expect(page).not_to have_link 'All Collections'
         within('section.tabs-row') do
@@ -47,6 +47,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         expect(page).to have_link(admin_set_b.title.first)
         expect(page).not_to have_link(collection3.title.first)
         expect(page).not_to have_link(admin_set_a.title.first)
+        expect(page).to have_content("3 collections in the repository")
       end
 
       it "has collection type and visibility filters" do
