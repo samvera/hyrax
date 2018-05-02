@@ -73,9 +73,6 @@ module Hyrax
       end
 
       def edit
-        member_works
-        # this is used to populate the "add to a collection" action for the members
-        @user_collections = find_collections_for_form
         form
       end
 
@@ -129,7 +126,6 @@ module Hyrax
 
       def after_update_error
         form
-        query_collection_members
         respond_to do |format|
           format.html { render action: 'edit' }
           format.json { render json: @collection.errors, status: :unprocessable_entity }

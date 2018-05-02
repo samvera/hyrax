@@ -266,18 +266,6 @@ Blacklight.onLoad(function () {
     }
   });
 
-  $('#show-more-parent-collections').on('click', function () {
-    $(this).hide();
-    $("#more-parent-collections").show();
-    $("#show-less-parent-collections").show();
-  });
-
-  $('#show-less-parent-collections').on('click', function () {
-    $(this).hide();
-    $("#more-parent-collections").hide();
-    $("#show-more-parent-collections").show();
-  });
-
   // Add to collection modal form post
   $('#add-to-collection-modal').find('.modal-add-button').on('click', function (e) {
     var $self = $(this),
