@@ -78,7 +78,7 @@ module Hyrax
       def fixity_check_file(file)
         versions = file.has_versions? ? file.versions.all : [file]
 
-        versions = [versions.max_by(&:created)] if latest_version_only
+        versions = [versions.max_by(&:created)] if file.has_versions? && latest_version_only
 
         versions.collect { |v| fixity_check_file_version(file.id, v.uri.to_s) }.flatten
       end
