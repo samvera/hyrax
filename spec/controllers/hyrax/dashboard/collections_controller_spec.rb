@@ -251,7 +251,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         }
         expect(response).to be_successful
         expect(response).to render_template(:edit)
-        expect(assigns[:member_docs]).to be_kind_of Array
       end
     end
 
