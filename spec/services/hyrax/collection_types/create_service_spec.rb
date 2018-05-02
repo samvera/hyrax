@@ -43,7 +43,7 @@ RSpec.describe Hyrax::CollectionTypes::CreateService do
       expect(ct.machine_id).to eq(Hyrax::CollectionType::ADMIN_SET_MACHINE_ID)
       expect(ct.title).to eq(Hyrax::CollectionType::ADMIN_SET_DEFAULT_TITLE)
       expect(ct.description).to eq('An aggregation of works that is intended to help with administrative control. Admin Sets provide a way of defining behaviors and policies around a set of works.')
-      expect(ct.badge_color).to eq('#663333')
+      expect(ct.badge_color).to eq('#405060')
       expect(ct).not_to be_nestable
       expect(ct).not_to be_brandable
       expect(ct).not_to be_discoverable
@@ -63,7 +63,7 @@ RSpec.describe Hyrax::CollectionTypes::CreateService do
       expect(ct.machine_id).to eq(Hyrax::CollectionType::USER_COLLECTION_MACHINE_ID)
       expect(ct.title).to eq(Hyrax::CollectionType::USER_COLLECTION_DEFAULT_TITLE)
       expect(ct.description).to eq('A User Collection can be created by any user to organize their works.')
-      expect(ct.badge_color).to eq('#663333')
+      expect(ct.badge_color).to eq('#705070')
       expect(ct).to be_nestable
       expect(ct).to be_brandable
       expect(ct).to be_discoverable
