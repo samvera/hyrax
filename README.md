@@ -200,12 +200,22 @@ Many of the services performed by Hyrax are resource intensive, and therefore ar
 
 Hyrax implements these jobs using the Rails [ActiveJob](http://edgeguides.rubyonrails.org/active_job_basics.html) framework, allowing you to choose the message queue system of your choice.
 
-For initial testing and development, it is recommended that you change the default ActiveJob adapter from `:async` to `:inline`. This adapter will execute jobs immediately (in the foreground) as they are received. This can be accomplished by adding the following to your `config/application.rb`
+For initial development, it is recommended that you change the default ActiveJob adapter from `:async` to `:inline`. This adapter will execute jobs immediately (in the foreground) as they are received. This can be accomplished by adding the following to your `config/environments/development.rb`
 
 ```
 class Application < Rails::Application
   # ...
   config.active_job.queue_adapter = :inline
+  # ...
+end
+```
+
+For testing, it is recommended that you use the [built-in `:test` adapter](http://api.rubyonrails.org/classes/ActiveJob/QueueAdapters/TestAdapter.html) which stores enqueued and performed jobs, running only those configured to run during test setup. To do this, add the following to `config/environments/test.rb`:
+
+```ruby
+Rails.application.configure do
+  # ...
+  config.active_job.queue_adapter = :test
   # ...
 end
 ```
