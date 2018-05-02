@@ -53,7 +53,7 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
         let(:service_by_object) { described_class.new(f, async_jobs: false, latest_version_only: true) }
 
         before do
-          allow(f.original_file).to receive(:has_versions?) { false }
+          allow(f.original_file).to receive(:has_versions?).and_return(false)
         end
 
         subject { service_by_object.send(:fixity_check_file, f.original_file) }
