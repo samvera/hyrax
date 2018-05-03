@@ -402,7 +402,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         delete :destroy, params: { id: collection }
         expect(response).to have_http_status(:found)
         expect(response).to redirect_to(Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
-        expect(flash[:notice]).to eq "Collection #{collection.id} was successfully deleted"
+        expect(flash[:notice]).to eq "Collection was successfully deleted"
       end
 
       it "returns json" do
@@ -420,7 +420,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         delete :destroy, params: { id: collection }
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response).to render_template(:edit)
-        expect(flash[:notice]).to eq "Collection #{collection.id} could not be deleted"
+        expect(flash[:notice]).to eq "Collection could not be deleted"
       end
 
       it "returns json" do
