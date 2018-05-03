@@ -49,6 +49,19 @@ RSpec.describe Hyrax::FileSetFixityCheckService do
       specify 'returns a single result' do
         expect(subject.length).to eq(1)
       end
+      describe 'non-versioned file with latest version only' do
+        let(:service_by_object) { described_class.new(f, async_jobs: false, latest_version_only: true) }
+
+        before do
+          allow(f.original_file).to receive(:has_versions?).and_return(false)
+        end
+
+        subject { service_by_object.send(:fixity_check_file, f.original_file) }
+
+        specify 'returns a single result' do
+          expect(subject.length).to eq(1)
+        end
+      end
     end
 
     describe '#fixity_check_file_version' do
