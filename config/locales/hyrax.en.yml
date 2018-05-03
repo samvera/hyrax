@@ -669,8 +669,8 @@ en:
           add_to_collection_only: Allowed actions are limited to adding members
           admin_set_confirmation: Deleting an admin set from %{application_name} is permanent. Click OK to delete this admin set from %{application_name}, or Cancel to cancel this operation
           collection_create_success: Collection was successfully created.
-          collection_delete_fail: Collection %{id} could not be deleted
-          collection_delete_success: Collection %{id} was successfully deleted
+          collection_delete_fail: Collection could not be deleted
+          collection_delete_success: Collection was successfully deleted
           collection_deny_add_members: You do not have sufficient privileges to add members to the collection
           collection_update_success: Collection was successfully updated.
           collections_confirmation_html: Deleting <span class='pluralized'>this collection</span> will permanently remove <span class='pluralized'>this collection</span> from the repository.  Items in <span class='pluralized'>this collection</span> will remain in the repository.  Are you sure you want to delete <span class='pluralized'>this collection</span>?

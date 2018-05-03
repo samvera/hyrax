@@ -670,8 +670,8 @@ de:
           add_to_collection_only: Erlaubte Aktionen sind auf das Hinzufügen von Mitgliedern beschränkt
           admin_set_confirmation: Löschen eines Admin-Set von %{application_name} ist dauerhaft. Klicken Sie auf OK, um dieses Admin-Set aus %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
           collection_create_success: Die Sammlung wurde erfolgreich erstellt.
-          collection_delete_fail: Sammlung %{id} konnte nicht gelöscht werden
-          collection_delete_success: Sammlung %{id} wurde erfolgreich gelöscht
+          collection_delete_fail: Sammlung konnte nicht gelöscht werden
+          collection_delete_success: Sammlung wurde erfolgreich gelöscht
           collection_deny_add_members: Sie verfügen nicht über ausreichende Berechtigungen zum Hinzufügen von Mitgliedern zur Sammlung
           collection_update_success: Die Sammlung wurde erfolgreich aktualisiert.
           collections_confirmation_html: "<span class='pluralized'>Diese Sammlung</span> löschen , wird permanent <span class='pluralized'>diese Sammlung</span> aus dem Repository entfernen. Elemente in <span class='pluralized'>dieser Sammlung</span> verbleiben im Repository. Möchten Sie <span class='pluralized'>diese Sammlung</span> wirklich löschen?"

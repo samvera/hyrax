@@ -668,8 +668,8 @@ it:
           add_to_collection_only: Le azioni consentite sono limitate all'aggiunta di membri
           admin_set_confirmation: L'eliminazione di un set di amministratori da %{application_name} è permanente. Fare clic su OK per eliminare questo set di amministratori da %{application_name}, o Annulla per annullare questa operazione
           collection_create_success: La raccolta è stata creata con successo.
-          collection_delete_fail: Collezione %{id} non può essere cancellata
-          collection_delete_success: La raccolta %{id} è stata cancellata con successo
+          collection_delete_fail: Collezione non può essere cancellata
+          collection_delete_success: La raccolta è stata cancellata con successo
           collection_deny_add_members: Non disponi di privilegi sufficienti per aggiungere membri alla raccolta
           collection_update_success: La raccolta è stata aggiornata con successo.
           collections_confirmation_html: L'eliminazione di <span class='pluralized'>questa raccolta</span> rimuove definitivamente <span class='pluralized'>questa raccolta</span> dal repository. Gli articoli di <span class='pluralized'>questa raccolta</span> rimarranno nel repository. Sei sicuro di voler eliminare <span class='pluralized'>questa raccolta</span> ?
