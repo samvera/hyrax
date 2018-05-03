@@ -20,6 +20,15 @@ module Hyrax
       content_tag :span, safe_join([t('hyrax.collection.is_part_of'), ': '] + collection_links)
     end
 
+    ##
+    # Append a collection_type_id to the existing querystring (whether or not it has pre-existing params)
+    # @return [String] the original url with and added collection_type_id param
+    def append_collection_type_url(url, collection_type_id)
+      uri = URI.parse(url)
+      uri.query = [uri.query, "collection_type_id=#{collection_type_id}"].compact.join('&')
+      uri.to_s
+    end
+
     # @return [Boolean]
     def has_collection_search_parameters?
       params[:cq].present?
