@@ -19,8 +19,9 @@ module Hyrax
       attr_reader :discovery_permissions
       self.default_processor_chain += [:with_pagination, :show_only_other_collections_of_the_same_collection_type]
 
+      # make sure we find them all
       def with_pagination(solr_parameters)
-        solr_parameters[:rows] = 1000
+        solr_parameters[:rows] = Hyrax.config.collection_query_limit
       end
 
       def show_only_other_collections_of_the_same_collection_type(solr_parameters)
