@@ -46,7 +46,7 @@ SUMMARY
   spec.add_dependency 'flot-rails', '~> 0.0.6'
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
   spec.add_dependency 'hydra-derivatives', '~> 3.3'
-  spec.add_dependency 'hydra-editor', '~> 3.3'
+  spec.add_dependency 'hydra-editor', '>= 3.3', '< 5.0'
   spec.add_dependency 'hydra-head', '>= 10.5.0'
   spec.add_dependency 'hydra-works', '~> 0.16'
   spec.add_dependency 'iiif_manifest', '>= 0.3', '< 0.5'
