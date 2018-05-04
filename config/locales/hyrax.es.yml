@@ -600,6 +600,7 @@ es:
             this_collection_in_other_collections: Esta colección en otras colecciones
           modals:
             remove_from_collection_description: La eliminación de esta colección no la eliminará del repositorio, solo como padre de esta colección. ¿Seguro que quieres eliminar esta colección?
+            remove_parent_collection_deny: No tiene suficientes privilegios para que la colección principal pueda eliminarla.
             remove_this_sub_collection_description: La eliminación de esta subcolección no la eliminará del repositorio, solo de esta colección principal. ¿Seguro que quieres eliminar esta subcolección?
           sub_collections_of_collection_description: Estas colecciones son actualmente subcolecciones de esta colección
           table:

@@ -595,6 +595,7 @@ pt-BR:
             this_collection_in_other_collections: Esta coleção em outras coleções
           modals:
             remove_from_collection_description: A remoção desta coleção não o removerá do repositório, apenas como pai dessa coleção. Tem certeza de que deseja remover essa coleção?
+            remove_parent_collection_deny: Você não tem privilégios suficientes para que a coleção pai possa removê-la.
             remove_this_sub_collection_description: A remoção desta subculpa não a removerá do repositório, apenas a partir dessa coleção original. Tem certeza de que deseja remover essa subculpa?
           sub_collections_of_collection_description: Essas coleções são atualmente sub-coleções desta coleção
           table:
