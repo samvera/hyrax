@@ -1,3 +1,5 @@
+var autocompleteModule = require('hyrax/autocomplete');
+
 Blacklight.onLoad(function () {
 
   /**
@@ -182,10 +184,17 @@ Blacklight.onLoad(function () {
   $('[data-behavior="updates-collection"]').on('click', function() {
       var string_to_replace = "collection_replace_id",
         form = $(this).closest("form"),
-        collection_id = $(".collection-selector:checked")[0].value;
+        collection_id = $('#member_of_collection_ids')[0].value;
 
       form[0].action = form[0].action.replace(string_to_replace, collection_id);
       form.append('<input type="hidden" value="add" name="collection[members]"></input>');
+  });
+
+  // Initializes the autocomplete element for the add to collection modal
+  $('#collection-list-container').on('show.bs.modal', function() {
+    var inputField = $('#member_of_collection_ids');
+    var autocomplete = new autocompleteModule();
+    autocomplete.setup(inputField, inputField.data('autocomplete'), inputField.data('autocompleteUrl'));
   });
 
   // Display access deny for edit request.
