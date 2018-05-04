@@ -80,8 +80,8 @@ Prerequisites are required for both creating a Hyrax\-based app and contributing
 
 Hyrax requires the following software to work:
 
-1. [Solr](http://lucene.apache.org/solr/) version >= 5.x (tested up to 6.4.1)
-1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.5.1 (tested up to 4.7.1)
+1. [Solr](http://lucene.apache.org/solr/) version >= 5.x (tested up to 7.0.0)
+1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.5.1 (tested up to 4.7.5)
 1. A SQL RDBMS (MySQL, PostgreSQL), though **note** that SQLite will be used by default if you're looking to get up and running quickly
 1. [Redis](http://redis.io/), a key-value store
 1. [ImageMagick](http://www.imagemagick.org/) with JPEG-2000 support
@@ -132,7 +132,7 @@ Note here that the following commands assume you're setting up Hyrax in a develo
 
 First, you'll need a working Ruby installation. You can install this via your operating system's package manager -- you are likely to get farther with OSX, Linux, or UNIX than Windows but your mileage may vary -- but we recommend using a Ruby version manager such as [RVM](https://rvm.io/) or [rbenv](https://github.com/sstephenson/rbenv).
 
-We recommend either Ruby 2.4 or the latest 2.3 version.
+We recommend either Ruby 2.5 or the latest 2.4 version.
 
 ## Redis
 
@@ -142,11 +142,11 @@ Starting up Redis will depend on your operating system, and may in fact already 
 
 ## Rails
 
-Hyrax requires Rails 5. We recommend the latest Rails 5.0 release.
+Hyrax requires Rails 5. We recommend the latest Rails 5.1 release.
 
 ```
 # If you don't already have Rails at your disposal...
-gem install rails -v 5.0.6
+gem install rails -v 5.1.6
 ```
 
 ### JavaScript runtime
@@ -162,7 +162,7 @@ NOTE: The steps need to be done in order to create a new Hyrax based app.
 Generate a new Rails application using the template.
 
 ```
-rails _5.0.6_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v2.1.0.rc1/template.rb
+rails _5.1.6_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v2.1.0.rc1/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:
