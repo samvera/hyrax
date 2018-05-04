@@ -194,6 +194,12 @@ Blacklight.onLoad(function () {
     $('#collections-to-edit-deny-modal').modal('show');
   });
 
+  // Display access deny for remove parent collection button.
+  $('#parent-collections-wrapper').find('.remove-parent-from-collection-deny-button').on('click', function (e) {
+    e.preventDefault();
+    $('#parent-collection-to-remove-deny-modal').modal('show');
+  });
+
   // Remove this parent collection list button clicked
   $('#parent-collections-wrapper')
     .find('.remove-from-collection-button')
