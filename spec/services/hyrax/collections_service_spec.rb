@@ -38,7 +38,7 @@ RSpec.describe Hyrax::CollectionsService do
     context "with read access" do
       let(:access) { :read }
 
-      it "returns three collections" do
+      it "returns four collections" do
         expect(subject.map(&:id)).to match_array [collection1.id, collection2.id, collection3.id, collection4.id]
       end
     end
