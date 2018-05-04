@@ -663,8 +663,8 @@ pt-BR:
           add_to_collection_only: As ações permitidas estão limitadas à adição de membros
           admin_set_confirmation: Excluir um conjunto de administradores de %{application_name} é permanente. Clique em OK para excluir este conjunto de administrador de %{application_name} ou Cancelar para cancelar esta operação
           collection_create_success: A coleção foi criada com sucesso.
-          collection_delete_fail: Coleção %{id} não pôde ser excluída
-          collection_delete_success: Coleção %{id} foi excluída com sucesso
+          collection_delete_fail: Coleção não pôde ser excluída
+          collection_delete_success: Coleção foi excluída com sucesso
           collection_deny_add_members: Você não tem privilégios suficientes para adicionar membros à coleção
           collection_update_success: A coleção foi atualizada com sucesso.
           collections_confirmation_html: A exclusão <span class='pluralized'>dessa coleção</span> removerá permanentemente <span class='pluralized'>essa coleção</span> do repositório. Os itens <span class='pluralized'>desta coleção</span> permanecerão no repositório. Tem certeza de que deseja excluir <span class='pluralized'>esta coleção</span> ?

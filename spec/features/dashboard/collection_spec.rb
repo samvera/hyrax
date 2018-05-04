@@ -363,7 +363,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
       context 'and collection is empty' do
         it 'and user confirms delete, deletes the collection', :js do
-          expect(page).to have_content(empty_collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).to have_content(empty_collection.title.first)
+          end
           check_tr_data_attributes(empty_collection.id, 'collection')
           # check that modal data attributes haven't been added yet
           expect(page).not_to have_selector("div[data-id='#{empty_collection.id}']")
@@ -376,11 +378,15 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           within("div#collection-empty-to-delete-modal") do
             click_button('Delete')
           end
-          expect(page).not_to have_content(empty_collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).not_to have_content(empty_collection.title.first)
+          end
         end
 
         it 'and user cancels, does NOT delete the collection', :js do
-          expect(page).to have_content(empty_collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).to have_content(collection.title.first)
+          end
           check_tr_data_attributes(empty_collection.id, 'collection')
           # check that modal data attributes haven't been added yet
           expect(page).not_to have_selector("div[data-id='#{empty_collection.id}']")
@@ -394,13 +400,17 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           within("div#collection-empty-to-delete-modal") do
             click_button('Cancel')
           end
-          expect(page).to have_content(empty_collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).to have_content(collection.title.first)
+          end
         end
       end
 
       context 'and collection is not empty' do
         it 'and user confirms delete, deletes the collection', :js do
-          expect(page).to have_content(collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).to have_content(collection.title.first)
+          end
           check_tr_data_attributes(collection.id, 'collection')
           within("#document_#{collection.id}") do
             first('button.dropdown-toggle').click
@@ -411,11 +421,15 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           within("div#collection-to-delete-modal") do
             find('button.modal-delete-button').click
           end
-          expect(page).not_to have_content(collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).not_to have_content(collection.title.first)
+          end
         end
 
         it 'and user cancels, does NOT delete the collection', :js do
-          expect(page).to have_content(collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).to have_content(collection.title.first)
+          end
           within("#document_#{collection.id}") do
             first('button.dropdown-toggle').click
             first('.itemtrash').click
@@ -425,7 +439,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           within("div#collection-to-delete-modal") do
             click_button('Cancel')
           end
-          expect(page).to have_content(collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).to have_content(collection.title.first)
+          end
         end
       end
     end

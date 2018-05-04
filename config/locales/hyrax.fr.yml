@@ -669,8 +669,8 @@ fr:
           add_to_collection_only: Les actions autorisées sont limitées à l'ajout de membres
           admin_set_confirmation: La suppression d'un ensemble d'administrateurs à partir de %{application_name} est permanente. Cliquez sur OK pour supprimer cet ensemble d'administrateurs de %{application_name}, ou sur Annuler pour annuler cette opération
           collection_create_success: La collection a été créée avec succès.
-          collection_delete_fail: La collection %{id} n'a pas pu être supprimée
-          collection_delete_success: La collection %{id} a été supprimée avec succès
+          collection_delete_fail: La collection n'a pas pu être supprimée
+          collection_delete_success: La collection a été supprimée avec succès
           collection_deny_add_members: Vous n'avez pas les privilèges suffisants pour ajouter des membres à la collection
           collection_update_success: La collection a été mise à jour avec succès.
           collections_confirmation_html: La suppression de <span class='pluralized'>cette collection</span> supprimera définitivement <span class='pluralized'>cette collection</span> du référentiel. Les éléments de <span class='pluralized'>cette collection</span> resteront dans le référentiel. Êtes-vous sûr de vouloir supprimer <span class='pluralized'>cette collection</span> ?
