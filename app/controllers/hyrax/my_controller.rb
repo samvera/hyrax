@@ -56,6 +56,7 @@ module Hyrax
         @empty_batch = batch.empty?
         @all_checked = (count_on_page == @document_list.count)
         @add_works_to_collection = params.fetch(:add_works_to_collection, '')
+        @add_works_to_collection_label = params.fetch(:add_works_to_collection_label, '')
       end
 
       def query_solr
