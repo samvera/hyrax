@@ -602,6 +602,7 @@ en:
           modals:
             remove_from_collection_description: Removing this collection will not remove it from the repository, only as a parent of this collection.  Are you sure you want to remove this collection?
             remove_this_sub_collection_description: Removing this sub-collection will not remove it from the repository, only from this parent collection.  Are you sure you want to remove this sub-collection?
+            remove_parent_collection_deny: You do not have sufficient privileges for the parent collection to be able to remove it.
           sub_collections_of_collection_description: These collections are currently sub-collections of this collection
           table:
             action: Action
