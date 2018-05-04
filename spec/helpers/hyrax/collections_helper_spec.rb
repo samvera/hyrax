@@ -98,4 +98,20 @@ RSpec.describe Hyrax::CollectionsHelper do
       end
     end
   end
+
+  describe '#append_collection_type_url' do
+    let(:url) { "http://example.com" }
+    context "when a provided url has no querystring" do
+      it 'returns the url with added collection_type_id' do
+        expect(append_collection_type_url(url, '1')).to eq "#{url}?collection_type_id=1"
+      end
+    end
+
+    context "when a provided url has an existing querystring" do
+      let(:url) { "http://example.com?bob=ross" }
+      it 'return the url with added collection_type_id' do
+        expect(append_collection_type_url(url, '1')).to eq "#{url}&collection_type_id=1"
+      end
+    end
+  end
 end

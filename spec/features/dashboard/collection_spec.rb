@@ -257,6 +257,11 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         expect(page).to have_content title
         expect(page).to have_content description
       end
+
+      it "has properly formed collection type buttons" do
+        expect(page).not_to have_selector("input[data-path$='collections/new&collection_type_id=1']")
+        expect(page).to have_selector("input[data-path$='collections/new?locale=en&collection_type_id=1']")
+      end
     end
 
     context 'when user can create collections of one type' do
