@@ -666,8 +666,8 @@ zh:
           add_to_collection_only: 允许的操作仅限于添加成员
           admin_set_confirmation: 从%{application_name}删除管理员集合是永久性的。单击确定从%{application_name}删除此管理集，或单击取消取消此操作
           collection_create_success: 收集已成功创建。
-          collection_delete_fail: 收藏%{id}无法删除
-          collection_delete_success: 收藏夹%{id}已成功删除
+          collection_delete_fail: 收藏无法删除
+          collection_delete_success: 收藏夹已成功删除
           collection_deny_add_members: 您没有足够的权限将成员添加到集合中
           collection_update_success: 收集已成功更新。
           collections_confirmation_html: 删除<span class='pluralized'>这个集合</span>将永久地从存储库中删除<span class='pluralized'>这个集合</span> 。 <span class='pluralized'>此集合中的</span>项目将保留在存储库中。你确定要删除<span class='pluralized'>这个集合</span>吗？
