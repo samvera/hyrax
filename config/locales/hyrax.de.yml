@@ -602,6 +602,7 @@ de:
             this_collection_in_other_collections: Diese Sammlung in anderen Sammlungen
           modals:
             remove_from_collection_description: Durch das Entfernen dieser Sammlung wird sie nicht aus dem Repository entfernt, sondern nur als übergeordnetes Objekt dieser Sammlung. Möchten Sie diese Sammlung wirklich entfernen?
+            remove_parent_collection_deny: Sie verfügen nicht über ausreichende Berechtigungen, damit die übergeordnete Sammlung entfernt werden kann.
             remove_this_sub_collection_description: Durch das Entfernen dieser Untersammlung wird sie nicht aus dieser übergeordneten Sammlung aus dem Repository entfernt. Möchten Sie diese Untersammlung wirklich entfernen?
           sub_collections_of_collection_description: Diese Sammlungen sind derzeit Untersammlungen dieser Sammlung
           table:

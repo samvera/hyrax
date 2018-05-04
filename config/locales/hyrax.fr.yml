@@ -601,6 +601,7 @@ fr:
             this_collection_in_other_collections: Cette collection dans d'autres collections
           modals:
             remove_from_collection_description: La suppression de cette collection ne la supprimera pas du référentiel, uniquement en tant que parent de cette collection. Êtes-vous sûr de vouloir supprimer cette collection?
+            remove_parent_collection_deny: Vous n'avez pas les privilèges suffisants pour la collection parent pour pouvoir le supprimer.
             remove_this_sub_collection_description: La suppression de cette sous-collection ne la supprimera pas du référentiel, uniquement à partir de cette collection parent. Êtes-vous sûr de vouloir supprimer cette sous-collection?
           sub_collections_of_collection_description: Ces collections sont actuellement des sous-collections de cette collection
           table:

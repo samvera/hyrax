@@ -600,6 +600,7 @@ it:
             this_collection_in_other_collections: Questa collezione in altre collezioni
           modals:
             remove_from_collection_description: La rimozione di questa raccolta non la rimuoverà dal repository, ma solo come genitore di questa raccolta. Sei sicuro di voler rimuovere questa raccolta?
+            remove_parent_collection_deny: Non disponi di privilegi sufficienti per la raccolta principale per poterlo rimuovere.
             remove_this_sub_collection_description: La rimozione di questa sotto-raccolta non la rimuoverà dal repository, solo da questa raccolta genitore. Sei sicuro di voler rimuovere questa sottoraccolta?
           sub_collections_of_collection_description: Queste raccolte sono attualmente sotto-raccolte di questa collezione
           table:

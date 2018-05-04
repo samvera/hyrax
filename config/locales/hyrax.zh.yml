@@ -598,6 +598,7 @@ zh:
             this_collection_in_other_collections: 此集合在其他集合中
           modals:
             remove_from_collection_description: 删除此集合不会将其从存储库中删除，只能作为此集合的父项。你确定要删除这个集合吗？
+            remove_parent_collection_deny: 您没有足够的权限让父级集合能够将其删除。
             remove_this_sub_collection_description: 删除此子集合不会将其从存储库中删除，只能从此父集合中删除。你确定要删除这个子集合吗？
           sub_collections_of_collection_description: 这些集合目前是该集合的子集合
           table:
