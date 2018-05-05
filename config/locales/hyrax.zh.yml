@@ -598,6 +598,7 @@ zh:
             this_collection_in_other_collections: 此集合在其他集合中
           modals:
             remove_from_collection_description: 删除此集合不会将其从存储库中删除，只能作为此集合的父项。你确定要删除这个集合吗？
+            remove_parent_collection_deny: 您没有足够的权限让父级集合能够将其删除。
             remove_this_sub_collection_description: 删除此子集合不会将其从存储库中删除，只能从此父集合中删除。你确定要删除这个子集合吗？
           sub_collections_of_collection_description: 这些集合目前是该集合的子集合
           table:
@@ -921,6 +922,16 @@ zh:
         single: 已保存。
         subject: 批量上传完成
         title: 文件上传成功
+    my:
+      count:
+        collections:
+          in_repo: 存储库中的<strong> %{total_count}集合</ strong>
+          you_manage: 您可以在存储库中管理<strong> %{total_count}集合</ strong>
+          you_own: 您在存储库中拥有<strong> %{total_count}集合</ strong>
+        works:
+          in_repo: 存储库中的<strong> %{total_count}有效</ strong>
+          you_manage: 您可以在存储库中管理<strong> %{total_count}作品</ strong>
+          you_own: 您在存储库中拥有<strong> %{total_count}作品</ strong>
     nav_safety:
       change_tab_message: 你确定要离开这个标签吗？任何未保存的数据都将丢失。
     pages:

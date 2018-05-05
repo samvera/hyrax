@@ -600,6 +600,7 @@ es:
             this_collection_in_other_collections: Esta colección en otras colecciones
           modals:
             remove_from_collection_description: La eliminación de esta colección no la eliminará del repositorio, solo como padre de esta colección. ¿Seguro que quieres eliminar esta colección?
+            remove_parent_collection_deny: No tiene suficientes privilegios para que la colección principal pueda eliminarla.
             remove_this_sub_collection_description: La eliminación de esta subcolección no la eliminará del repositorio, solo de esta colección principal. ¿Seguro que quieres eliminar esta subcolección?
           sub_collections_of_collection_description: Estas colecciones son actualmente subcolecciones de esta colección
           table:
@@ -925,6 +926,16 @@ es:
         single: ha sido guardado.
         subject: Subida en lote completa
         title: Archivos cargados satisfactoriamente
+    my:
+      count:
+        collections:
+          in_repo: "<strong> colecciones %{total_count} </ strong> en el repositorio"
+          you_manage: "<strong> colecciones %{total_count} </ strong> puede administrar en el repositorio"
+          you_own: "<strong> colecciones %{total_count} </ strong> que posee en el repositorio"
+        works:
+          in_repo: "<strong> %{total_count} funciona </ strong> en el repositorio"
+          you_manage: "<strong> %{total_count} funciona </ strong> puedes administrar en el repositorio"
+          you_own: "<strong> %{total_count} funciona </ strong> en el repositorio"
     nav_safety:
       change_tab_message: "¿Seguro que quieres salir de esta pestaña? Cualquier información no guardada se perderá."
     pages:
