@@ -31,7 +31,7 @@
 
 //= require clipboard
 
-// TODO: Consider removing? jcoyne thinks this is primarily needed for testing with PhantomJS:
+// This is required for Jasmine tests, specifically to polyfill the Symbol() function
 //= require babel/polyfill
 // CustomElements polyfill is a dependency of time-elements
 //= require webcomponentsjs/0.5.4/CustomElements.min
