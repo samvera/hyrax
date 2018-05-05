@@ -54,6 +54,15 @@
   <div class="col-md-12">
     <div class="panel panel-default <%= 'tabs' if current_page?(hyrax.dashboard_works_path(locale: nil)) || @managed_works_count > 0 %>">
       <%= render 'tabs' if current_page?(hyrax.dashboard_works_path(locale: nil)) || @managed_works_count > 0 %>
+      <div class="panel-heading">
+        <% if current_page?(hyrax.my_works_path(locale: nil)) %>
+          <span class="count-display"><%= I18n.t('hyrax.my.count.works.you_own', total_count: @response.total_count).html_safe %></span>
+        <% elsif current_page?(hyrax.dashboard_works_path(locale: nil)) && !current_ability.admin? %>
+          <span class="count-display"><%= I18n.t('hyrax.my.count.works.you_manage', total_count: @response.total_count).html_safe %></span>
+        <% else %>
+          <span class="count-display"><%= I18n.t('hyrax.my.count.works.in_repo', total_count: @response.total_count).html_safe %></span>     
+        <% end %>
+      </div> 
       <div class="panel-body">
         <%= render 'search_header' %>
         <h2 class="sr-only">Works listing</h2>
@@ -64,5 +73,7 @@
     </div>
   </div>
 </div>
+
+
 
 <%= render '/shared/select_work_type_modal', create_work_presenter: @create_work_presenter if @create_work_presenter.many? %>
