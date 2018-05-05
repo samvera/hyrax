@@ -601,8 +601,8 @@ en:
             this_collection_in_other_collections: This Collection in Other Collections
           modals:
             remove_from_collection_description: Removing this collection will not remove it from the repository, only as a parent of this collection.  Are you sure you want to remove this collection?
-            remove_this_sub_collection_description: Removing this sub-collection will not remove it from the repository, only from this parent collection.  Are you sure you want to remove this sub-collection?
             remove_parent_collection_deny: You do not have sufficient privileges for the parent collection to be able to remove it.
+            remove_this_sub_collection_description: Removing this sub-collection will not remove it from the repository, only from this parent collection.  Are you sure you want to remove this sub-collection?
           sub_collections_of_collection_description: These collections are currently sub-collections of this collection
           table:
             action: Action
@@ -928,13 +928,13 @@ en:
     my:
       count:
         collections:
-          in_repo: <strong>%{total_count} collections</strong> in the repository
-          you_manage: <strong>%{total_count} collections</strong> you can manage in the repository
-          you_own: <strong>%{total_count} collections</strong> you own in the repository
+          in_repo: "<strong>%{total_count} collections</strong> in the repository"
+          you_manage: "<strong>%{total_count} collections</strong> you can manage in the repository"
+          you_own: "<strong>%{total_count} collections</strong> you own in the repository"
         works:
-          in_repo: <strong>%{total_count} works</strong> in the repository
-          you_manage: <strong>%{total_count} works</strong> you can manage in the repository
-          you_own: <strong>%{total_count} works</strong> you own in the repository
+          in_repo: "<strong>%{total_count} works</strong> in the repository"
+          you_manage: "<strong>%{total_count} works</strong> you can manage in the repository"
+          you_own: "<strong>%{total_count} works</strong> you own in the repository"
     nav_safety:
       change_tab_message: Are you sure you want to leave this tab?  Any unsaved data will be lost.
     pages:
