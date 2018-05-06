@@ -11,22 +11,22 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
   end
 
   describe 'when both collections support multiple membership' do
-    let(:old_collection) { create(:collection_lw, user: admin_user, collection_type_gid: multi_membership_type_1.gid) }
+    let(:old_collection) { create(:collection_lw, user: admin_user, collection_type_gid: multi_membership_type_1.gid, title: ['OldCollectionTitle']) }
     let!(:work) { create(:generic_work, user: admin_user, member_of_collections: [old_collection], title: ['The highly valued work that everyone wants in their collection']) }
 
     context 'and are of different types' do
-      let!(:new_collection) { create(:collection_lw, user: admin_user, collection_type_gid: multi_membership_type_2.gid) }
+      let!(:new_collection) { create(:collection_lw, user: admin_user, collection_type_gid: multi_membership_type_2.gid, title: ['NewCollectionTitle']) }
 
       it 'then the work is added to both collections' do
         # Add to second multi-membership collection of a different type
         visit '/dashboard/my/works'
         check 'check_all'
         click_button 'Add to collection' # opens the modal
-        within('div#collection-list-container') do
-          puts page.body
-          autocomplete_collection new_collection.title.first # selects the collection
-          click_button 'Save changes'
-        end
+        collection_dropdown.click
+        collection_search_field.set new_collection.title.first
+        sleep 3
+        collection_search_result.click
+        click_button 'Save changes'
 
         # forwards to collection show page
         expect(page).to have_content new_collection.title.first
@@ -37,17 +37,18 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
     end
 
     context 'and are of the same type' do
-      let!(:new_collection) { create(:collection_lw, user: admin_user, collection_type_gid: multi_membership_type_1.gid) }
+      let!(:new_collection) { create(:collection_lw, user: admin_user, collection_type_gid: multi_membership_type_1.gid, title: ['NewCollectionTitle']) }
 
       it 'then the work is added to both collections' do
         # Add to second multi-membership collection of a different type
         visit '/dashboard/my/works'
         check 'check_all'
         click_button 'Add to collection' # opens the modal
-        within('div#collection-list-container') do
-          autocomplete_collection new_collection.title.first # selects the collection
-          click_button 'Save changes'
-        end
+        collection_dropdown.click
+        collection_search_field.set new_collection.title.first
+        sleep 3
+        collection_search_result.click
+        click_button 'Save changes'
 
         # forwards to collection show page
         expect(page).to have_content new_collection.title.first
@@ -59,7 +60,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
   end
 
   describe 'when both collections require single membership' do
-    let(:old_collection) { create(:collection_lw, user: admin_user, collection_type_gid: single_membership_type_1.gid) }
+    let(:old_collection) { create(:collection_lw, user: admin_user, collection_type_gid: single_membership_type_1.gid, title: ['OldCollectionTitle']) }
     let!(:work) do
       create(:generic_work,
              user: admin_user,
@@ -70,17 +71,19 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
     end
 
     context 'and are of different types' do
-      let!(:new_collection) { create(:collection_lw, user: admin_user, collection_type_gid: single_membership_type_2.gid) }
+      let!(:new_collection) { create(:collection_lw, user: admin_user, collection_type_gid: single_membership_type_2.gid, title: ['NewCollectionTitle']) }
 
       it 'then the work is added to both collections' do
         # Add to second single-membership collection of a different type
         visit '/dashboard/my/works'
         check 'check_all'
         click_button 'Add to collection' # opens the modal
-        within('div#collection-list-container') do
-          autocomplete_collection new_collection.title.first # selects the collection
-          click_button 'Save changes'
-        end
+        collection_dropdown.click
+        collection_search_field.set new_collection.title.first
+        sleep 3
+        collection_search_result.click
+        click_button 'Save changes'
+
         # forwards to collection show page
         expect(page).to have_content new_collection.title.first
         expect(page).to have_content 'Works (1)'
@@ -90,7 +93,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
     end
 
     context 'and are of the same type' do
-      let!(:new_collection) { create(:collection_lw, user: admin_user, collection_type_gid: single_membership_type_1.gid) }
+      let!(:new_collection) { create(:collection_lw, user: admin_user, collection_type_gid: single_membership_type_1.gid, title: ['NewCollectionTitle']) }
 
       context 'then the work fails to add to the second collection' do
         it 'from the dashboard->works batch add to collection' do
@@ -98,10 +101,12 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
           visit '/dashboard/my/works'
           check 'check_all'
           click_button 'Add to collection' # opens the modal
-          within('div#collection-list-container') do
-            autocomplete_collection new_collection.title.first # selects the collection
-            click_button 'Save changes'
-          end
+          collection_dropdown.click
+          collection_search_field.set new_collection.title.first
+          sleep 3
+          collection_search_result.click
+          click_button 'Save changes'
+
           # forwards to collections index page and shows flash message
           within('section.tabs-row') do
             expect(page).to have_link 'All Collections'
@@ -164,7 +169,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
     let!(:work) { create(:generic_work, user: admin_user, member_of_collections: [old_collection], title: ['The highly valued work that everyone wants in their collection']) }
 
     context 'allowing multi-membership' do
-      let(:old_collection) { create(:collection_lw, user: admin_user, collection_type_gid: multi_membership_type_1.gid) }
+      let(:old_collection) { create(:collection_lw, user: admin_user, collection_type_gid: multi_membership_type_1.gid, title: ['CollectionTitle']) }
       let!(:new_collection) { old_collection }
 
       it 'then the add is treated as a success' do
@@ -172,10 +177,12 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
         visit '/dashboard/my/works'
         check 'check_all'
         click_button 'Add to collection' # opens the modal
-        within('div#collection-list-container') do
-          autocomplete_collection new_collection.title.first # selects the collection
-          click_button 'Save changes'
-        end
+        collection_dropdown.click
+        collection_search_field.set new_collection.title.first
+        sleep 3
+        collection_search_result.click
+        click_button 'Save changes'
+
         # forwards to collection show page
         expect(page).to have_content new_collection.title.first
         expect(page).to have_content 'Works (1)'
@@ -185,7 +192,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
     end
 
     context 'requiring single-membership' do
-      let(:old_collection) { create(:collection_lw, user: admin_user, collection_type_gid: single_membership_type_1.gid) }
+      let(:old_collection) { create(:collection_lw, user: admin_user, collection_type_gid: single_membership_type_1.gid, title: ['CollectionTitle']) }
       let!(:new_collection) { old_collection }
 
       it 'then the add is treated as a success' do
@@ -193,10 +200,12 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
         visit '/dashboard/my/works'
         check 'check_all'
         click_button 'Add to collection' # opens the modal
-        within('div#collection-list-container') do
-          autocomplete_collection new_collection.title.first # selects the collection
-          click_button 'Save changes'
-        end
+        collection_dropdown.click
+        collection_search_field.set new_collection.title.first
+        sleep 3
+        collection_search_result.click
+        click_button 'Save changes'
+
         # forwards to collection show page
         expect(page).to have_content new_collection.title.first
         expect(page).to have_content 'Works (1)'

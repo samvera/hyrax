@@ -36,11 +36,20 @@ module Selectors
       end
     end
 
-    def autocomplete_collection(collection)
-      first('a.select2-choice').click
-      find('.select2-input').set(collection.title.first)
-      expect(page).to have_css('div.select2-result-label')
-      first('div.select2-result-label').click
+    def collection_dropdown
+      find '#s2id_member_of_collection_ids'
+    end
+
+    def collection_search_field
+      within '#select2-drop' do
+        find '.select2-input'
+      end
+    end
+
+    def collection_search_result
+      within '#select2-drop' do
+        find '.select2-result-selectable'
+      end
     end
   end
 

@@ -46,13 +46,12 @@ RSpec.describe "display a work as its owner" do
       expect(find('div.viewer:first')['data-uri']).to eq "/concern/generic_works/#{work.id}/manifest"
     end
 
-    it "add work to a collection", js: true do
+    it "add work to a collection", clean_repo: true, js: true do
       click_button "Add to collection" # opens the modal
-      # since there is only one collection, it's not necessary to choose a radio button
-      within('div#collection-list-container') do
-        autocomplete_collection collection.title.first # selects the collection
-        click_button 'Save changes'
-      end
+      collection_dropdown.click
+      collection_search_field.set collection.title.first
+      collection_search_result.click
+      click_button 'Save changes'
 
       # forwards to collection show page
       expect(page).to have_content collection.title.first
