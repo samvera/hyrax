@@ -50,6 +50,7 @@ RSpec.describe "display a work as its owner" do
       click_button "Add to collection" # opens the modal
       collection_dropdown.click
       collection_search_field.set collection.title.first
+      sleep 3
       collection_search_result.click
       click_button 'Save changes'
 
