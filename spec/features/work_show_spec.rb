@@ -1,4 +1,6 @@
 RSpec.describe "display a work as its owner" do
+  include Selectors::Dashboard
+
   let(:work_path) { "/concern/generic_works/#{work.id}" }
 
   before do
@@ -48,7 +50,7 @@ RSpec.describe "display a work as its owner" do
       click_button "Add to collection" # opens the modal
       # since there is only one collection, it's not necessary to choose a radio button
       within('div#collection-list-container') do
-        choose collection.title.first # selects the collection
+        autocomplete_collection collection.title.first # selects the collection
         click_button 'Save changes'
       end
 

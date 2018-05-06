@@ -23,7 +23,8 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
         check 'check_all'
         click_button 'Add to collection' # opens the modal
         within('div#collection-list-container') do
-          choose new_collection.title.first # selects the collection
+          puts page.body
+          autocomplete_collection new_collection.title.first # selects the collection
           click_button 'Save changes'
         end
 
@@ -44,7 +45,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
         check 'check_all'
         click_button 'Add to collection' # opens the modal
         within('div#collection-list-container') do
-          choose new_collection.title.first # selects the collection
+          autocomplete_collection new_collection.title.first # selects the collection
           click_button 'Save changes'
         end
 
@@ -77,7 +78,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
         check 'check_all'
         click_button 'Add to collection' # opens the modal
         within('div#collection-list-container') do
-          choose new_collection.title.first # selects the collection
+          autocomplete_collection new_collection.title.first # selects the collection
           click_button 'Save changes'
         end
         # forwards to collection show page
@@ -98,7 +99,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
           check 'check_all'
           click_button 'Add to collection' # opens the modal
           within('div#collection-list-container') do
-            choose new_collection.title.first # selects the collection
+            autocomplete_collection new_collection.title.first # selects the collection
             click_button 'Save changes'
           end
           # forwards to collections index page and shows flash message
@@ -141,7 +142,8 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
           check 'check_all'
           click_button 'Add to collection' # opens the modal
           within('div#collection-list-container') do
-            choose new_collection.title.first # selects the collection
+            expect(page).to have_selector "#member_of_collection_ids[value=\"#{new_collection.id}\"]", visible: false
+            expect(page).to have_selector "#member_of_collection_label[value=\"#{new_collection.title.first}\"]"
             click_button 'Save changes'
           end
           # forwards to collections index page and shows flash message
@@ -171,7 +173,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
         check 'check_all'
         click_button 'Add to collection' # opens the modal
         within('div#collection-list-container') do
-          choose new_collection.title.first # selects the collection
+          autocomplete_collection new_collection.title.first # selects the collection
           click_button 'Save changes'
         end
         # forwards to collection show page
@@ -192,7 +194,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
         check 'check_all'
         click_button 'Add to collection' # opens the modal
         within('div#collection-list-container') do
-          choose new_collection.title.first # selects the collection
+          autocomplete_collection new_collection.title.first # selects the collection
           click_button 'Save changes'
         end
         # forwards to collection show page

@@ -35,6 +35,13 @@ module Selectors
         end
       end
     end
+
+    def autocomplete_collection(collection)
+      first('a.select2-choice').click
+      find('.select2-input').set(collection.title.first)
+      expect(page).to have_css('div.select2-result-label')
+      first('div.select2-result-label').click
+    end
   end
 
   module NewTransfers
