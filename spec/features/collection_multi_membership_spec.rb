@@ -22,10 +22,11 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
         visit '/dashboard/my/works'
         check 'check_all'
         click_button 'Add to collection' # opens the modal
-        collection_dropdown.click
-        collection_search_field.set new_collection.title.first
-        sleep 3
-        collection_search_result.click
+select_member_of_collection(new_collection)
+        # collection_dropdown.click
+        # collection_search_field.set new_collection.title.first
+        # sleep 3
+        # collection_search_result.click
         click_button 'Save changes'
 
         # forwards to collection show page
@@ -44,10 +45,11 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
         visit '/dashboard/my/works'
         check 'check_all'
         click_button 'Add to collection' # opens the modal
-        collection_dropdown.click
-        collection_search_field.set new_collection.title.first
-        sleep 3
-        collection_search_result.click
+select_member_of_collection(new_collection)
+        # collection_dropdown.click
+        # collection_search_field.set new_collection.title.first
+        # sleep 3
+        # collection_search_result.click
         click_button 'Save changes'
 
         # forwards to collection show page
@@ -78,10 +80,11 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
         visit '/dashboard/my/works'
         check 'check_all'
         click_button 'Add to collection' # opens the modal
-        collection_dropdown.click
-        collection_search_field.set new_collection.title.first
-        sleep 3
-        collection_search_result.click
+select_member_of_collection(new_collection)
+        # collection_dropdown.click
+        # collection_search_field.set new_collection.title.first
+        # sleep 3
+        # collection_search_result.click
         click_button 'Save changes'
 
         # forwards to collection show page
@@ -101,10 +104,11 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
           visit '/dashboard/my/works'
           check 'check_all'
           click_button 'Add to collection' # opens the modal
-          collection_dropdown.click
-          collection_search_field.set new_collection.title.first
-          sleep 3
-          collection_search_result.click
+select_member_of_collection(new_collection)
+          # collection_dropdown.click
+          # collection_search_field.set new_collection.title.first
+          # sleep 3
+          # collection_search_result.click
           click_button 'Save changes'
 
           # forwards to collections index page and shows flash message
@@ -177,10 +181,11 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
         visit '/dashboard/my/works'
         check 'check_all'
         click_button 'Add to collection' # opens the modal
-        collection_dropdown.click
-        collection_search_field.set new_collection.title.first
-        sleep 3
-        collection_search_result.click
+select_member_of_collection(new_collection)
+        # collection_dropdown.click
+        # collection_search_field.set new_collection.title.first
+        # sleep 3
+        # collection_search_result.click
         click_button 'Save changes'
 
         # forwards to collection show page
@@ -200,10 +205,11 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
         visit '/dashboard/my/works'
         check 'check_all'
         click_button 'Add to collection' # opens the modal
-        collection_dropdown.click
-        collection_search_field.set new_collection.title.first
-        sleep 3
-        collection_search_result.click
+select_member_of_collection(new_collection)
+        # collection_dropdown.click
+        # collection_search_field.set new_collection.title.first
+        # sleep 3
+        # collection_search_result.click
         click_button 'Save changes'
 
         # forwards to collection show page

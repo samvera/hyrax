@@ -36,21 +36,31 @@ module Selectors
       end
     end
 
-    def collection_dropdown
-      find '#s2id_member_of_collection_ids'
+    # For use with javascript collection selector that allows for searching for an existing collection.
+    # @param [Collection] collection to select
+    def select_member_of_collection(collection)
+      find('#s2id_member_of_collection_ids').click
+      find('.select2-input').set(collection.title.first)
+      expect(page).to have_css('div.select2-result-label')
+      first('div.select2-result-label').click
+      # click Save and check added in test using this
     end
 
-    def collection_search_field
-      within '#select2-drop' do
-        find '.select2-input'
-      end
-    end
-
-    def collection_search_result
-      within '#select2-drop' do
-        find '.select2-result-selectable'
-      end
-    end
+    # def collection_dropdown
+    #   find '#s2id_member_of_collection_ids'
+    # end
+    #
+    # def collection_search_field
+    #   within '#select2-drop' do
+    #     find '.select2-input'
+    #   end
+    # end
+    #
+    # def collection_search_result
+    #   within '#select2-drop' do
+    #     find '.select2-result-selectable'
+    #   end
+    # end
   end
 
   module NewTransfers
