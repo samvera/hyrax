@@ -22,7 +22,9 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
         visit '/dashboard/my/works'
         check 'check_all'
         click_button 'Add to collection' # opens the modal
-select_member_of_collection(new_collection)
+
+        select_member_of_collection(new_collection)
+
         # collection_dropdown.click
         # collection_search_field.set new_collection.title.first
         # sleep 3
@@ -45,7 +47,9 @@ select_member_of_collection(new_collection)
         visit '/dashboard/my/works'
         check 'check_all'
         click_button 'Add to collection' # opens the modal
-select_member_of_collection(new_collection)
+
+        select_member_of_collection(new_collection)
+
         # collection_dropdown.click
         # collection_search_field.set new_collection.title.first
         # sleep 3
@@ -80,7 +84,9 @@ select_member_of_collection(new_collection)
         visit '/dashboard/my/works'
         check 'check_all'
         click_button 'Add to collection' # opens the modal
-select_member_of_collection(new_collection)
+
+        select_member_of_collection(new_collection)
+
         # collection_dropdown.click
         # collection_search_field.set new_collection.title.first
         # sleep 3
@@ -104,7 +110,9 @@ select_member_of_collection(new_collection)
           visit '/dashboard/my/works'
           check 'check_all'
           click_button 'Add to collection' # opens the modal
-select_member_of_collection(new_collection)
+
+          select_member_of_collection(new_collection)
+
           # collection_dropdown.click
           # collection_search_field.set new_collection.title.first
           # sleep 3
@@ -181,7 +189,9 @@ select_member_of_collection(new_collection)
         visit '/dashboard/my/works'
         check 'check_all'
         click_button 'Add to collection' # opens the modal
-select_member_of_collection(new_collection)
+
+        select_member_of_collection(new_collection)
+
         # collection_dropdown.click
         # collection_search_field.set new_collection.title.first
         # sleep 3
@@ -205,7 +215,9 @@ select_member_of_collection(new_collection)
         visit '/dashboard/my/works'
         check 'check_all'
         click_button 'Add to collection' # opens the modal
-select_member_of_collection(new_collection)
+
+        select_member_of_collection(new_collection)
+
         # collection_dropdown.click
         # collection_search_field.set new_collection.title.first
         # sleep 3

@@ -48,7 +48,9 @@ RSpec.describe "display a work as its owner" do
 
     it "add work to a collection", clean_repo: true, js: true do
       click_button "Add to collection" # opens the modal
-select_member_of_collection(collection)
+
+      select_member_of_collection(collection)
+
       # collection_dropdown.click
       # collection_search_field.set collection.title.first
       # sleep 3
