@@ -38,12 +38,16 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
   describe '.find_index_document_by' do
     subject { described_class.find_index_document_by(id: id) }
 
-    context 'with a not found id ' do
+    context 'with id not in solr, it builds from Fedora' do
       let(:id) { 'so-very-missing-no-document-here' }
+      let(:document) { double("Document", id: id, fetch: nil) }
+      let(:object) { double("Object_to_reindex", id: id, to_solr: document) }
 
-      it 'raises RuntimeError' do
-        expect { subject }.to raise_error(RuntimeError)
+      before do
+        allow(ActiveFedora::Base).to receive(:find).with(id).and_return(object)
       end
+
+      it { is_expected.to be_a(Samvera::NestingIndexer::Documents::IndexDocument) }
     end
 
     context 'with a found id' do
