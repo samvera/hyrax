@@ -13,12 +13,17 @@
               <fieldset>
                 <legend><%= t("hyrax.collection.select_form.select_heading") %></legend>
               <ul>
-                <% user_collections.sort { |c1,c2| c2[CatalogController.uploaded_field] <=> c1[CatalogController.uploaded_field] }.each_with_index do |collection,index| %>
-                  <li>
-                    <% selected = (collection.id == @add_works_to_collection) || (@add_works_to_collection.blank? && index == 0) %>
-                    <%= radio_button_tag(:id, collection.id, selected, class: "collection-selector") %>
-                    <%= label_tag(:collection, collection.title_or_label, for: "id_#{collection.id}") %>
-                  </li>
+                <% if @add_works_to_collection.present? %>
+                  <%= text_field_tag 'member_of_collection_label', @add_works_to_collection_label, disabled: true %>
+                  <%= hidden_field_tag 'member_of_collection_ids', @add_works_to_collection %>
+                <% else %>
+                  <%= text_field_tag 'member_of_collection_ids', nil,
+                              prompt: :translate,
+                              data: {
+                                placeholder: t('simple_form.placeholders.defaults.member_of_collection_ids'),
+                                autocomplete: 'collection',
+                                'autocomplete-url' => Rails.application.routes.url_helpers.qa_path + '/search/collections?access=deposit'
+                              } %>
                 <% end %>
               </ul>
               </fieldset>
