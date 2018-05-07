@@ -226,6 +226,7 @@ RSpec.configure do |config|
   config.include Capybara::RSpecMatchers, type: :input
   config.include InputSupport, type: :input
   config.include FactoryBot::Syntax::Methods
+  config.include OptionalExample
 
   config.infer_spec_type_from_file_location!
 
