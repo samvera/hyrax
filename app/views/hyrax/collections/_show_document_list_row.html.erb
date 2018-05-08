@@ -13,7 +13,6 @@
       <div class="media-body">
         <p class="media-heading">
           <strong><%= link_to document.title_or_label, [main_app, document], id: "src_copy_link#{id}", class: "#{'document-title' if document.title_or_label == document.label}" %></strong>
-          <a href="#" class="small" title="Click for more details"><i id="expand_<%= id %>" class="glyphicon glyphicon-chevron-right"></i></a>
         </p>
         <%= render_collection_links(document) %>
       </div>
@@ -22,23 +21,5 @@
   <td class="text-center"><%= document.date_uploaded %> </td>
   <td class="text-center">
     <%= render_visibility_link(document) %>
-  </td>
-</tr>
-<tr id="detail_<%= id %>"> <!--  document detail"> -->
-  <td colspan="6">
-    <dl class="expanded-details row">
-      <dt class="col-xs-3 col-lg-2">Creator:</dt>
-      <dd class="col-xs-9 col-lg-4"><%= document.creator.to_a.to_sentence %></dd>
-      <dt class="col-xs-3 col-lg-2">Depositor:</dt>
-      <dd class="col-xs-9 col-lg-4"><%= link_to_profile document.depositor %></dd>
-      <dt class="col-xs-3 col-lg-2">Edit Access:</dt>
-      <dd class="col-xs-9 col-lg-10">
-        <% if document.edit_groups.present? %>
-          Groups: <%= document.edit_groups.join(', ') %>
-          <br />
-        <% end %>
-        Users: <%= document.edit_people.join(', ') %>
-      </dd>
-    </dl>
   </td>
 </tr>
