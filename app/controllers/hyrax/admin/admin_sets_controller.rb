@@ -2,7 +2,8 @@ module Hyrax
   class Admin::AdminSetsController < ApplicationController
     include Hyrax::CollectionsControllerBehavior
 
-    before_action :ensure_manager!
+    before_action :ensure_manager!, except: [:show]
+    before_action :ensure_viewer!, only: [:show]
     load_and_authorize_resource
 
     with_themed_layout 'dashboard'
@@ -95,6 +96,12 @@ module Hyrax
         # Even though the user can view this admin set, they may not be able to view
         # it on the admin page.
         authorize! :manage_any, AdminSet
+      end
+
+      def ensure_viewer!
+        # Even though the user can view this admin set, they may not be able to view
+        # it on the admin page if access is granted as a public or registered user only.
+        authorize! :view_admin_show, @admin_set
       end
 
       def create_admin_set
