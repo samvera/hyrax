@@ -698,7 +698,7 @@ de:
           select_none: Nichts ausgewählt
           transfer: Besitz der Arbeit übertragen
           unhighlight: Hervorhebung der Arbeit entfernen
-          view_admin_set: Admin-Set anzeigen
+          view_admin_set: Sammlung anzeigen
           view_collection: Sammlung anzeigen
           work_confirmation: Das Löschen einer Arbeit aus %{application_name} ist dauerhaft. Klicken Sie auf OK, um diese Arbeit aus %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
         collection_list:
