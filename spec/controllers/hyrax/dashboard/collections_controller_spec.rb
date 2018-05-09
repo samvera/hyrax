@@ -1,7 +1,8 @@
-RSpec.describe Hyrax::Dashboard::CollectionsController do
+RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
   routes { Hyrax::Engine.routes }
   let(:user)  { create(:user) }
   let(:other) { build(:user) }
+  let(:collection_type_gid) { create(:user_collection_type).gid }
 
   let(:collection) do
     create(:public_collection, title: ["My collection"],
@@ -12,10 +13,12 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
   let(:asset1)         { create(:work, title: ["First of the Assets"], user: user) }
   let(:asset2)         { create(:work, title: ["Second of the Assets"], user: user) }
   let(:asset3)         { create(:work, title: ["Third of the Assets"], user: user) }
+  let(:asset4)         { create(:collection, title: ["First subcollection"], user: user) }
+  let(:asset5)         { create(:collection, title: ["Second subcollection"], user: user) }
   let(:unowned_asset)  { create(:work, user: other) }
 
   let(:collection_attrs) do
-    { title: ['My First Collection'], description: ["The Description\r\n\r\nand more"] }
+    { title: ['My First Collection'], description: ["The Description\r\n\r\nand more"], collection_type_gid: [collection_type_gid] }
   end
 
   describe '#new' do
@@ -36,6 +39,9 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
         post :create, params: {
           collection: collection_attrs.merge(
             visibility: 'open',
+            # TODO: Tests with old approach to sharing a collection which is deprecated and
+            # will be removed in 3.0.  New approach creates a PermissionTemplate with
+            # source_id = the collection's id.
             permissions_attributes: [{ type: 'person',
                                        name: 'archivist1',
                                        access: 'edit' }]
@@ -44,6 +50,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
       end.to change { Collection.count }.by(1)
       expect(assigns[:collection].visibility).to eq 'open'
       expect(assigns[:collection].edit_users).to contain_exactly "archivist1", user.email
+      expect(flash[:notice]).to eq "Collection was successfully created."
     end
 
     it "removes blank strings from params before creating Collection" do
@@ -70,7 +77,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
 
       it "adds docs to the collection and adds the collection id to the documents in the collection" do
         post :create, params: {
-          batch_document_ids: [asset1.id],
+          batch_document_ids: [asset1.id, unowned_asset.id],
           collection: collection_attrs
         }
 
@@ -79,6 +86,42 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
         expect(asset_results["response"]["numFound"]).to eq 1
         doc = asset_results["response"]["docs"].first
         expect(doc["id"]).to eq asset1.id
+      end
+    end
+
+    context 'when setting collection type' do
+      let(:collection_type) { create(:collection_type) }
+
+      it "creates a Collection of default type when type is nil" do
+        expect do
+          post :create, params: {
+            collection: collection_attrs
+          }
+        end.to change { Collection.count }.by(1)
+        expect(assigns[:collection].collection_type.machine_id).to eq Hyrax::CollectionType::USER_COLLECTION_MACHINE_ID
+      end
+
+      it "creates a Collection of specified type" do
+        expect do
+          post :create, params: {
+            collection: collection_attrs, collection_type_gid: collection_type.gid
+          }
+        end.to change { Collection.count }.by(1)
+        expect(assigns[:collection].collection_type_gid).to eq collection_type.gid
+      end
+    end
+
+    context "when params includes parent_id" do
+      let(:parent_collection) { create(:collection, title: ['Parent']) }
+
+      it "creates a collection as a subcollection of parent" do
+        parent_collection
+        expect do
+          post :create, params: {
+            collection: collection_attrs, parent_id: parent_collection.id
+          }
+        end.to change { Collection.count }.by(1)
+        expect(assigns[:collection].member_of_collections).to eq [parent_collection]
       end
     end
 
@@ -110,7 +153,18 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
         end
       end
 
-      it "adds members to the collection" do
+      it "adds members to the collection from edit form" do
+        expect do
+          put :update, params: { id: collection,
+                                 collection: { members: 'add' },
+                                 batch_document_ids: [asset3.id],
+                                 stay_on_edit: true }
+        end.to change { collection.reload.member_objects.size }.by(1)
+        expect(response).to redirect_to routes.url_helpers.edit_dashboard_collection_path(collection, locale: 'en')
+        expect(assigns[:collection].member_objects).to match_array [asset1, asset2, asset3]
+      end
+
+      it "adds members to the collection from other than the edit form" do
         expect do
           put :update, params: { id: collection,
                                  collection: { members: 'add' },
@@ -135,11 +189,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
       let(:asset1) { create(:generic_work, user: user) }
       let(:asset2) { create(:generic_work, user: user) }
       let(:asset3) { create(:generic_work, user: user) }
-      let(:collection2) do
-        Collection.create(title: ['Some Collection']) do |col|
-          col.apply_depositor_metadata(user.user_key)
-        end
-      end
+      let(:collection2) { create(:collection, title: ['Some Collection'], user: user) }
 
       before do
         [asset1, asset2, asset3].each do |asset|
@@ -166,6 +216,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
         put :update, params: { id: collection, collection: { creator: ['Emily'] } }
         collection.reload
         expect(collection.creator).to eq ['Emily']
+        expect(flash[:notice]).to eq "Collection was successfully updated."
       end
 
       it "removes blank strings from params before updating Collection metadata" do
@@ -182,9 +233,9 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
     end
 
     context "when update fails" do
-      let(:collection) { Collection.new(id: '12345') }
+      let(:collection) { create(:collection, id: '12345') }
       let(:repository) { instance_double(Blacklight::Solr::Repository, search: result) }
-      let(:result) { double(documents: []) }
+      let(:result) { double(documents: [], total: 0) }
 
       before do
         allow(controller).to receive(:authorize!)
@@ -200,7 +251,48 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
         }
         expect(response).to be_successful
         expect(response).to render_template(:edit)
-        expect(assigns[:member_docs]).to be_kind_of Array
+      end
+    end
+
+    context "updating a collections branding metadata" do
+      it "saves banner metadata" do
+        val = double("/public/banner.gif")
+        allow(val).to receive(:file_url).and_return("/public/banner.gif")
+        allow(Hyrax::UploadedFile).to receive(:find).with(["1"]).and_return([val])
+
+        allow(File).to receive(:split).with(any_args).and_return(["banner.gif"])
+        allow(FileUtils).to receive(:cp).with(any_args).and_return(nil)
+
+        put :update, params: { id: collection, banner_files: [1], collection: { creator: ['Emily'] }, update_collection: true }
+        collection.reload
+        expect(CollectionBrandingInfo.where(collection_id: collection.id, role: "banner").where("local_path LIKE '%banner.gif'")).to exist
+      end
+
+      it "don't save banner metadata" do
+        val = double("/public/banner.gif")
+        allow(val).to receive(:file_url).and_return("/public/banner.gif")
+        allow(Hyrax::UploadedFile).to receive(:find).with(["1"]).and_return([val])
+
+        allow(File).to receive(:split).with(any_args).and_return(["banner.gif"])
+        allow(FileUtils).to receive(:cp).with(any_args).and_return(nil)
+
+        put :update, params: { id: collection, banner_files: [1], collection: { creator: ['Emily'] } }
+        collection.reload
+        expect(CollectionBrandingInfo.where(collection_id: collection.id, role: "banner").where("local_path LIKE '%banner.gif'")).not_to exist
+      end
+
+      it "saves logo metadata" do
+        val = double(["/public/logo.gif"])
+        allow(val).to receive(:file_url).and_return("/public/logo.gif")
+        allow(Hyrax::UploadedFile).to receive(:find).with("1").and_return(val)
+
+        allow(File).to receive(:split).with(any_args).and_return(["logo.gif"])
+        allow(FileUtils).to receive(:cp).with(any_args).and_return(nil)
+
+        put :update, params: { id: collection, logo_files: [1], alttext: ["Logo alt Text"], linkurl: ["http://abc.com"], collection: { creator: ['Emily'] }, update_collection: true }
+        collection.reload
+
+        expect(CollectionBrandingInfo.where(collection_id: collection.id, role: "logo", alt_text: "Logo alt Text", target_url: "http://abc.com").where("local_path LIKE '%logo.gif'")).to exist
       end
     end
   end
@@ -209,27 +301,34 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
     context "when signed in" do
       before do
         sign_in user
-        [asset1, asset2, asset3].each do |asset|
+        [asset1, asset2, asset3, asset4, asset5].each do |asset|
           asset.member_of_collections = [collection]
           asset.save
         end
       end
 
       it "returns the collection and its members" do
+        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         get :show, params: { id: collection }
         expect(response).to be_successful
         expect(assigns[:presenter]).to be_kind_of Hyrax::CollectionPresenter
         expect(assigns[:presenter].title).to match_array collection.title
         expect(assigns[:member_docs].map(&:id)).to match_array [asset1, asset2, asset3].map(&:id)
+        expect(assigns[:subcollection_docs].map(&:id)).to match_array [asset4, asset5].map(&:id)
+        expect(assigns[:members_count]).to eq(3)
+        expect(assigns[:subcollection_count]).to eq(2)
       end
 
       context "and searching" do
-        it "returns some works" do
+        it "returns some works and collections" do
           # "/dashboard/collections/4m90dv529?utf8=%E2%9C%93&cq=King+Louie&sort="
-          get :show, params: { id: collection, cq: "Third" }
+          get :show, params: { id: collection, cq: "Second" }
           expect(assigns[:presenter]).to be_kind_of Hyrax::CollectionPresenter
-          expect(assigns[:member_docs].map(&:id)).to match_array [asset3].map(&:id)
+          expect(assigns[:member_docs].map(&:id)).to match_array [asset2].map(&:id)
+          expect(assigns[:subcollection_docs].map(&:id)).to match_array [asset5].map(&:id)
+          expect(assigns[:members_count]).to eq(1)
+          expect(assigns[:subcollection_count]).to eq(1)
         end
       end
 
@@ -244,6 +343,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
 
       context "without a referer" do
         it "sets breadcrumbs" do
+          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
           get :show, params: { id: collection }
           expect(response).to be_successful
@@ -256,8 +356,9 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
         end
 
         it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('Your Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('My collection', collection_path(collection.id, locale: 'en'))
           get :show, params: { id: collection }
           expect(response).to be_successful
@@ -288,7 +389,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
     context "when not signed in" do
       it "redirects to sign in page" do
         get :show, params: { id: collection }
-        expect(response).to have_http_status(302)
+        expect(response).to redirect_to('/users/sign_in')
       end
     end
   end
@@ -300,7 +401,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
         delete :destroy, params: { id: collection }
         expect(response).to have_http_status(:found)
         expect(response).to redirect_to(Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
-        expect(flash[:notice]).to eq "Collection #{collection.id} was successfully deleted"
+        expect(flash[:notice]).to eq "Collection was successfully deleted"
       end
 
       it "returns json" do
@@ -318,7 +419,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
         delete :destroy, params: { id: collection }
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response).to render_template(:edit)
-        expect(flash[:notice]).to eq "Collection #{collection.id} could not be deleted"
+        expect(flash[:notice]).to eq "Collection could not be deleted"
       end
 
       it "returns json" do
@@ -340,6 +441,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
 
     context "without a referer" do
       it "sets breadcrumbs" do
+        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         get :edit, params: { id: collection }
         expect(response).to be_successful
@@ -352,8 +454,9 @@ RSpec.describe Hyrax::Dashboard::CollectionsController do
       end
 
       it "sets breadcrumbs" do
-        expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Your Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(I18n.t("hyrax.collection.browse_view"), collection_path(collection.id, locale: 'en'))
         get :edit, params: { id: collection }
         expect(response).to be_successful

@@ -1,0 +1,88 @@
+<div class="collection-types-wrapper">
+  <% # for modal dialogue setup and interaction see app/assets/javascripts/collection_types.es6 %>
+  <% provide :page_header do %>
+    <h1><span class="fa fa-folder-open"></span> <%= t('.header') %></h1>
+  <% end %>
+
+  <div class="panel panel-default">
+    <div class="panel-heading adam">
+      <span class="panel-heading-message">
+        <strong><%= pluralize(@collection_types.size, 'collection type') %> </strong> in this repository
+      </span>
+      <%= link_to hyrax.new_admin_collection_type_path, class: 'btn btn-primary' do %>
+        <%= t('.create_new_button') %>
+      <% end %>
+    </div>
+    <div class="panel-body">
+      <p><%= t('.description') %></p>
+
+      <p><a class="collapse-header" data-toggle="collapse" href="#collapseAbout" aria-expanded="false" aria-controls="collapseAbout" data-expand-text="<%= t('helpers.action.more')%>" data-collapse-text="<%= t('helpers.action.less')%>"><%= t('.more_toggle_header_html') %></a></p>
+      <div id="collapseAbout" class="collapse">
+        <%= t('.more_toggle_content_html') %>
+      </div>
+
+      <h3>Current Collection Types</h3>
+      <table class="table collection-types-table">
+         <thead>
+           <tr>
+             <th><%= t('.table.name') %></th>
+             <th><%= t('.table.actions') %></th>
+           </tr>
+         </thead>
+         <tbody>
+           <% @collection_types.each do |collection_type| %>
+             <tr>
+               <td><%= collection_type.title %></td>
+               <td>
+                 <%= link_to hyrax.edit_admin_collection_type_path(collection_type), class: 'btn btn-primary btn-sm', data: { turbolinks: false } do %>
+                  <%= t('helpers.action.edit') %>
+                 <% end %>
+                 <% unless collection_type.admin_set? || collection_type.user_collection? %>
+                  <button class="btn btn-danger btn-sm delete-collection-type"
+                          data-collection-type="<%= collection_type.to_json %>"
+                          data-collection-type-index="<%= hyrax.dashboard_collections_path({ 'f[collection_type_gid_ssim][]' => collection_type.gid, 'f[has_model_ssim][]' => 'Collection' }) %>"
+                          data-has-collections="<%= collection_type.collections? %>">
+                    <%= t('helpers.action.delete') %>
+                  </button>
+                  <% end %>
+               </td>
+             </tr>
+           <% end %>
+         </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal window: Delete collection type confirmation -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h4 class="screen-hidden" id="deleteModalLabel"><%= t('.modal.header_can_delete') %></h4>
+          <%= t('.modal.can_delete_body_html') %>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('helpers.action.cancel') %></button>
+          <button type="button" class="btn btn-danger confirm-delete-collection-type"><%= t('helpers.action.delete') %></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal window: Can't delete the collection type -->
+  <div class="modal fade" id="deleteDenyModal" tabindex="-1" role="dialog" aria-labelledby="deleteDenyModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h4 class="screen-hidden" id="deleteDenyModalLabel"><%= t('.modal.header_cannot_delete') %></h4>
+          <%= t('.modal.cannot_delete_body_html') %>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('helpers.action.cancel') %></button>
+    <%= link_to  t('.modal.view_collections'), hyrax.my_collections_path, class: 'btn btn-primary view-collections-of-this-type', data_dismiss: 'modal' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

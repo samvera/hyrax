@@ -35,16 +35,13 @@ ul.tabular {
   // text-align: center;
 }
 
-.table.table-borderless {
-  th,
-  td {
-    border: 0;
-    padding: 8px;
-    vertical-align: top;
+.work-show {
+  dt,
+  dd {
+    padding: 2px;
   }
-
-  th {
-    text-align: right;
+  dd {
+    margin-left: 6px;
   }
 }
 

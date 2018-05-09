@@ -10,3 +10,13 @@
       <span class="fa fa-user"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.users') %></span>
     <% end %>
   <% end %>
+
+  <% if can? :read, :admin_dashboard %>
+    <%= menu.nav_link(hyrax.embargoes_path) do %>
+      <span class="fa fa-flag"></span> <span class="sidebar-action-text"><%= t('hyrax.embargoes.index.manage_embargoes') %></span>
+    <% end %>
+
+    <%= menu.nav_link(hyrax.leases_path) do %>
+      <span class="fa fa-flag"></span> <span class="sidebar-action-text"><%= t('hyrax.leases.index.manage_leases') %></span>
+    <% end %>
+  <% end %>

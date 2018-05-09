@@ -20,7 +20,7 @@ RSpec.describe Hyrax::FileSetPresenter do
       # https://github.com/samvera/active_fedora/issues/1251
       allow(file).to receive(:persisted?).and_return(true)
     end
-    it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_file_path(id: file) }
+    it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_file_path(id: file, locale: 'en') }
   end
 
   subject { presenter }
@@ -284,8 +284,13 @@ RSpec.describe Hyrax::FileSetPresenter do
     let(:file_set) { create(:file_set) }
     let(:solr_document) { SolrDocument.new(file_set.to_solr) }
     let(:request) { double(base_url: 'http://test.host') }
-    let(:presenter) { described_class.new(solr_document, nil, request) }
+    let(:presenter) { described_class.new(solr_document, ability, request) }
     let(:id) { CGI.escape(file_set.original_file.id) }
+    let(:read_permission) { true }
+
+    before do
+      allow(ability).to receive(:can?).with(:read, solr_document.id).and_return(read_permission)
+    end
 
     describe "#display_image" do
       subject { presenter.display_image }
@@ -310,6 +315,10 @@ RSpec.describe Hyrax::FileSetPresenter do
 
         context "when the file is an image" do
           let(:file_path) { File.open(fixture_path + '/world.png') }
+
+          before do
+            allow(solr_document).to receive(:image?).and_return(true)
+          end
 
           it { is_expected.to be_instance_of IIIFManifest::DisplayImage }
           its(:url) { is_expected.to eq "http://test.host/images/#{id}/full/600,/0/default.jpg" }
@@ -343,6 +352,12 @@ RSpec.describe Hyrax::FileSetPresenter do
 
             it { is_expected.to be_instance_of IIIFManifest::DisplayImage }
             its(:url) { is_expected.to eq "http://test.host/downloads/#{id.split('/').first}" }
+          end
+
+          context "when the user doesn't have permission to view the image" do
+            let(:read_permission) { false }
+
+            it { is_expected.to be_nil }
           end
         end
       end

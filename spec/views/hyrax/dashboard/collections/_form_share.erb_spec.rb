@@ -1,42 +1,22 @@
 RSpec.describe 'hyrax/dashboard/collections/_form_share.html.erb', type: :view do
-  let(:collection) do
-    stub_model(Collection, id: '123', depositor: 'bob')
+  let(:template) { stub_model(Hyrax::PermissionTemplate) }
+  let(:pt_form) do
+    instance_double(Hyrax::Forms::PermissionTemplateForm,
+                    model_name: template.model_name,
+                    to_key: template.to_key,
+                    access_grants: template.access_grants)
   end
-
-  let(:form) do
-    view.simple_form_for(collection, url: '/update') do |fs_form|
-      return fs_form
-    end
-  end
+  let(:collection) { create(:collection, collection_type_settings: :sharable_no_work_permissions) }
 
   before do
-    allow(controller).to receive(:current_user).and_return(stub_model(User))
-    allow(collection).to receive(:permissions).and_return(permissions)
-    allow(view).to receive(:f).and_return(form)
-    view.lookup_context.prefixes.push 'hyrax/base'
-    view.extend Hyrax::PermissionsHelper
+    assign(:collection, collection)
+    @form = instance_double(Hyrax::Forms::CollectionForm,
+                            to_model: collection,
+                            permission_template: pt_form,
+                            id: '1234xyz')
     render
   end
-
-  context "without additional users" do
-    let(:permissions) { [] }
-
-    it "draws the permissions form without error" do
-      expect(rendered).to have_css("input#new_user_name_skel")
-      expect(rendered).not_to have_css("button.remove_perm")
-    end
-  end
-
-  context "with additional users" do
-    let(:depositor_permission) { Hydra::AccessControls::Permission.new(id: '123', name: 'bob', type: 'person', access: 'edit') }
-    let(:public_permission) { Hydra::AccessControls::Permission.new(id: '124', name: 'public', type: 'group', access: 'read') }
-    let(:other_permission) { Hydra::AccessControls::Permission.new(id: '125', name: 'joe@example.com', type: 'person', access: 'edit') }
-    let(:permissions) { [depositor_permission, public_permission, other_permission] }
-
-    it "draws the permissions form without error" do
-      expect(rendered).to have_css("input#new_user_name_skel")
-      expect(rendered).to have_css("button.remove_perm", count: 1) # depositor and public should be filtered out
-      expect(rendered).to have_css("button.remove_perm[data-index='2']")
-    end
+  it "has the required selectors" do
+    expect(rendered).to have_selector('#participants #user-participants-form input[type=text]')
   end
 end

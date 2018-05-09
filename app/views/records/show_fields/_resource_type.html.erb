@@ -1,4 +1,3 @@
 <% record.resource_type.each do |rtype| %>
   <%= link_to_facet(rtype, ActiveFedora.index_field_mapper.solr_name("resource_type", :facetable)) %><br />
 <% end %>
-

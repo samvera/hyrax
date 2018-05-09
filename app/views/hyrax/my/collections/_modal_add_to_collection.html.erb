@@ -1,0 +1,33 @@
+<div class="modal fade disable-unless-selected" id="add-to-collection-modal" tabindex="-1" role="dialog" aria-labelledby="add-to-collection-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('hyrax.dashboard.heading_actions.close') %>"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="add-to-collection-label"><%= t('hyrax.collection.actions.nested_subcollection.modal_title') %></h4>
+      </div>
+
+      <div class="modal-body">
+        <!-- Any alert messaging mounts to this element -->
+        <div class="modal-ajax-alert"></div>
+
+        <label><%= t('hyrax.collection.actions.nested_subcollection.select_label') %></label>
+        <input type="hidden" name="source" value="<%= source %>" />
+        <select name="parent_id">
+          <option value="none"><%= t("hyrax.dashboard.my.action.select") %></option>
+        </select>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('helpers.action.cancel') %></button>
+        <button
+          disabled
+          type="button"
+          class="btn btn-primary modal-add-button modal-submit-button"
+          data-source="<%= source %>">
+          <%= t('hyrax.collection.actions.nested_subcollection.button_label') %>
+        </button>
+        </div>
+    </div>
+  </div>
+</div>

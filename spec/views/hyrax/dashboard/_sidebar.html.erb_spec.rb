@@ -7,6 +7,7 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
   let(:update_appearance) { false }
   let(:manage_feature) { false }
   let(:manage_workflow) { false }
+  let(:manage_collection_types) { false }
 
   before do
     allow(view).to receive(:signed_in?).and_return(true)
@@ -19,6 +20,7 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
     allow(view).to receive(:can?).with(:update, :appearance).and_return(update_appearance)
     allow(view).to receive(:can?).with(:manage, Hyrax::Feature).and_return(manage_feature)
     allow(view).to receive(:can?).with(:manage, Sipity::WorkflowResponsibility).and_return(manage_workflow)
+    allow(view).to receive(:can?).with(:manage, :collection_types).and_return(manage_collection_types)
   end
 
   context 'with any user' do
@@ -42,15 +44,8 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
     subject { rendered }
 
     it { is_expected.to have_link t('hyrax.admin.sidebar.statistics') }
-  end
-
-  context 'with a user who can manage any admin set' do
-    let(:manage_any_admin_set) { true }
-
-    before { render }
-    subject { rendered }
-
-    it { is_expected.to have_link t('hyrax.admin.sidebar.admin_sets') }
+    it { is_expected.to have_link t('hyrax.embargoes.index.manage_embargoes') }
+    it { is_expected.to have_link t('hyrax.leases.index.manage_leases') }
   end
 
   context 'with a user who can review submissions' do
@@ -101,5 +96,37 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
 
     it { is_expected.to have_content t('hyrax.admin.sidebar.configuration') }
     it { is_expected.to have_link t('hyrax.admin.sidebar.workflow_roles') }
+  end
+
+  context 'with a user who can manage collection types' do
+    let(:manage_collection_types) { true }
+
+    before { render }
+    subject { rendered }
+
+    it { is_expected.to have_content t('hyrax.admin.sidebar.configuration') }
+    it { is_expected.to have_link t('hyrax.admin.sidebar.collection_types') }
+  end
+
+  context 'when proxy deposits are enabled' do
+    before do
+      allow(Flipflop).to receive(:proxy_deposit?).and_return(true)
+      render
+    end
+
+    subject { rendered }
+
+    it { is_expected.to have_link t('hyrax.dashboard.manage_proxies') }
+  end
+
+  context 'when proxy deposits are disabled' do
+    before do
+      allow(Flipflop).to receive(:proxy_deposit?).and_return(false)
+      render
+    end
+
+    subject { rendered }
+
+    it { is_expected.not_to have_link t('hyrax.dashboard.manage_proxies') }
   end
 end

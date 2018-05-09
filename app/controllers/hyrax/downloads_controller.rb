@@ -1,6 +1,7 @@
 module Hyrax
   class DownloadsController < ApplicationController
     include Hydra::Controller::DownloadBehavior
+    include Hyrax::LocalFileDownloadsControllerBehavior
 
     def self.default_content_path
       :original_file
@@ -15,9 +16,7 @@ module Hyrax
         super
       when String
         # For derivatives stored on the local file system
-        response.headers['Accept-Ranges'] = 'bytes'
-        response.headers['Content-Length'] = File.size(file).to_s
-        send_file file, derivative_download_options
+        send_local_content
       else
         raise ActiveFedora::ObjectNotFoundError
       end
@@ -43,7 +42,13 @@ module Hyrax
       def authorize_download!
         authorize! :download, params[asset_param_key]
       rescue CanCan::AccessDenied
-        redirect_to default_image
+        unauthorized_image = Rails.root.join("app", "assets", "images", "unauthorized.png")
+        if File.exist? unauthorized_image
+          send_file unauthorized_image, status: :unauthorized
+        else
+          Deprecation.warn(self, "redirect_to default_image is deprecated and will be removed from Hyrax 3.0 (copy unauthorized.png image to directory assets/images instead)")
+          redirect_to default_image
+        end
       end
 
       def default_image
@@ -55,7 +60,7 @@ module Hyrax
       # Loads the file specified by the HTTP parameter `:file`.
       # If this object does not have a file by that name, return the default file
       # as returned by {#default_file}
-      # @return [ActiveFedora::File, String, NilClass] Returns the file from the repository or a path to a file on the local file system, if it exists.
+      # @return [ActiveFedora::File, File, NilClass] Returns the file from the repository or a path to a file on the local file system, if it exists.
       def load_file
         file_reference = params[:file]
         return default_file unless file_reference

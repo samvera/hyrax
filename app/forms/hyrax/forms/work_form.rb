@@ -24,7 +24,7 @@ module Hyrax
       self.terms = [:title, :creator, :contributor, :description,
                     :keyword, :license, :rights_statement, :publisher, :date_created,
                     :subject, :language, :identifier, :based_near, :related_url,
-                    :representative_id, :thumbnail_id, :files,
+                    :representative_id, :thumbnail_id, :rendering_ids, :files,
                     :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo,
                     :visibility_during_lease, :lease_expiration_date, :visibility_after_lease,
                     :visibility, :ordered_member_ids, :source, :in_works_ids,
@@ -106,18 +106,33 @@ module Hyrax
         Hash[file_presenters.map { |file| [file.to_s, file.id] }]
       end
 
+      ##
       # Fields that are automatically drawn on the page above the fold
+      #
+      # @return [Enumerable<Symbol>] symbols representing each primary term
       def primary_terms
-        required_fields
+        primary = (required_fields & terms)
+
+        (required_fields - primary).each do |missing|
+          Rails.logger.warn("The form field #{missing} is configured as a " \
+                            'required field, but not as a term. This can lead ' \
+                            'to unexpected behavior. Did you forget to add it ' \
+                            "to `#{self.class}#terms`?")
+        end
+
+        primary
       end
 
+      ##
       # Fields that are automatically drawn on the page below the fold
+      #
+      # @return [Enumerable<Symbol>]
       def secondary_terms
         terms - primary_terms -
           [:files, :visibility_during_embargo, :embargo_release_date,
            :visibility_after_embargo, :visibility_during_lease,
            :lease_expiration_date, :visibility_after_lease, :visibility,
-           :thumbnail_id, :representative_id, :ordered_member_ids,
+           :thumbnail_id, :representative_id, :rendering_ids, :ordered_member_ids,
            :member_of_collection_ids, :in_works_ids, :admin_set_id]
       end
 
@@ -145,9 +160,7 @@ module Hyrax
       # are going into a mediated deposit workflow.
       def self.sanitize_params(form_params)
         admin_set_id = form_params[:admin_set_id]
-        if admin_set_id && workflow_for(admin_set_id: admin_set_id).allows_access_grant?
-          return super
-        end
+        return super if admin_set_id && workflow_for(admin_set_id: admin_set_id).allows_access_grant?
         params_without_permissions = permitted_params.reject { |arg| arg.respond_to?(:key?) && arg.key?(:permissions_attributes) }
         form_params.permit(*params_without_permissions)
       end
@@ -172,7 +185,7 @@ module Hyrax
       # @return Sipity::Workflow the current active workflow for the given AdminSet
       def self.workflow_for(admin_set_id:)
         begin
-          workflow = Hyrax::PermissionTemplate.find_by!(admin_set_id: admin_set_id).active_workflow
+          workflow = Hyrax::PermissionTemplate.find_by!(source_id: admin_set_id).active_workflow
         rescue ActiveRecord::RecordNotFound
           raise "Missing permission template for AdminSet(id:#{admin_set_id})"
         end

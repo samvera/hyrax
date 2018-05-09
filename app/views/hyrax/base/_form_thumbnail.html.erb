@@ -2,11 +2,10 @@
     <div class="col-md-12">
       <fieldset id="representative-image">
         <legend>
-           Thumbnail
+          <%= t("hyrax.base.form_thumbnail.legend_html") %>
         </legend>
-        <p>Select the file to be used as the thumbnail for this <%= f.object.human_readable_type %>.</p>
+        <p><%= t("hyrax.base.form_thumbnail.help_html") %></p>
         <%= f.select :thumbnail_id, @form.select_files, {}, { class: 'form-control' } %>
       </fieldset>
     </div>
   </div>
-

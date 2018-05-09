@@ -1,20 +1,21 @@
-RSpec.describe AttachFilesToWorkJob do
+RSpec.describe AttachFilesToWorkJob, perform_enqueued: [AttachFilesToWorkJob] do
   context "happy path" do
     let(:file1) { File.open(fixture_path + '/world.png') }
     let(:file2) { File.open(fixture_path + '/image.jp2') }
     let(:uploaded_file1) { build(:uploaded_file, file: file1) }
     let(:uploaded_file2) { build(:uploaded_file, file: file2) }
     let(:generic_work) { create(:public_generic_work) }
+    let(:user) { create(:user) }
 
-    shared_examples 'a file attacher' do
+    shared_examples 'a file attacher', perform_enqueued: [AttachFilesToWorkJob, IngestJob] do
       it 'attaches files, copies visibility and permissions and updates the uploaded files' do
-        expect(ImportUrlJob).not_to receive(:perform_later)
         expect(CharacterizeJob).to receive(:perform_later).twice
         described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2])
         generic_work.reload
         expect(generic_work.file_sets.count).to eq 2
         expect(generic_work.file_sets.map(&:visibility)).to all(eq 'open')
         expect(uploaded_file1.reload.file_set_uri).not_to be_nil
+        expect(ImportUrlJob).not_to have_been_enqueued
       end
     end
 
@@ -42,6 +43,30 @@ RSpec.describe AttachFilesToWorkJob do
       end
 
       it_behaves_like 'a file attacher'
+    end
+
+    context "deposited on behalf of another user" do
+      before do
+        generic_work.on_behalf_of = user.user_key
+        generic_work.save
+      end
+      it_behaves_like 'a file attacher' do
+        it 'records the depositor(s) in edit_users' do
+          expect(generic_work.file_sets.map(&:edit_users)).to all(match_array([user.user_key]))
+        end
+      end
+    end
+
+    context "deposited as 'Yourself' selected in on behalf of list" do
+      before do
+        generic_work.on_behalf_of = ''
+        generic_work.save
+      end
+      it_behaves_like 'a file attacher' do
+        it 'records the depositor(s) in edit_users' do
+          expect(generic_work.file_sets.map(&:edit_users)).to all(match_array([generic_work.depositor]))
+        end
+      end
     end
   end
 end

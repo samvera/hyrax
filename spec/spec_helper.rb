@@ -62,10 +62,23 @@ WebMock.disable_net_connect!(allow_localhost: true)
 require 'i18n/debug' if ENV['I18N_DEBUG']
 require 'byebug' unless ENV['TRAVIS']
 
-Capybara.default_driver = :rack_test # This is a faster driver
-Capybara.javascript_driver = :selenium_chrome_headless # This is slower
+# @note In January 2018, TravisCI disabled Chrome sandboxing in its Linux
+#       container build environments to mitigate Meltdown/Spectre
+#       vulnerabilities, at which point Hyrax could no longer use the
+#       Capybara-provided :selenium_chrome_headless driver (which does not
+#       include the `--no-sandbox` argument).
+Capybara.register_driver :selenium_chrome_headless_sandboxless do |app|
+  browser_options = ::Selenium::WebDriver::Chrome::Options.new
+  browser_options.args << '--headless'
+  browser_options.args << '--disable-gpu'
+  browser_options.args << '--no-sandbox'
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
+end
 
-ApplicationJob.queue_adapter = :inline
+Capybara.default_driver = :rack_test # This is a faster driver
+Capybara.javascript_driver = :selenium_chrome_headless_sandboxless # This is slower
+
+ActiveJob::Base.queue_adapter = :test
 
 # require 'http_logger'
 # HttpLogger.logger = Logger.new(STDOUT)
@@ -114,9 +127,11 @@ module EngineRoutes
 end
 
 require 'shoulda/matchers'
+require 'shoulda/callback/matchers'
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
     with.test_framework :rspec
+    with.library :rails
   end
 end
 
@@ -124,6 +139,8 @@ require 'active_fedora/cleaner'
 RSpec.configure do |config|
   config.disable_monkey_patching!
   config.include Shoulda::Matchers::ActiveRecord, type: :model
+  config.include Shoulda::Matchers::ActiveModel, type: :form
+  config.include Shoulda::Callback::Matchers::ActiveModel
   config.full_backtrace = true if ENV['TRAVIS']
   config.expect_with :rspec do |c|
     c.syntax = :expect
@@ -151,7 +168,19 @@ RSpec.configure do |config|
     # using :workflow is preferable to :clean_repo, use the former if possible
     # It's important that this comes after DatabaseCleaner.start
     ensure_deposit_available_for(user) if example.metadata[:workflow]
-    ActiveFedora::Cleaner.clean! if example.metadata[:clean_repo]
+    if example.metadata[:clean_repo]
+      ActiveFedora::Cleaner.clean!
+      # The JS is executed in a different thread, so that other thread
+      # may think the root path has already been created:
+      ActiveFedora.fedora.connection.send(:init_base_path) if example.metadata[:js]
+    end
+    Hyrax.config.nested_relationship_reindexer = if example.metadata[:with_nested_reindexing]
+                                                   # Use the default relationship reindexer (and the cascading reindexing of child documents)
+                                                   Hyrax.config.default_nested_relationship_reindexer
+                                                 else
+                                                   # Don't use the nested relationship reindexer. This slows everything down quite a bit.
+                                                   ->(id:, extent:) {}
+                                                 end
   end
 
   config.include(ControllerLevelHelpers, type: :view)
@@ -197,6 +226,7 @@ RSpec.configure do |config|
   config.include Capybara::RSpecMatchers, type: :input
   config.include InputSupport, type: :input
   config.include FactoryBot::Syntax::Methods
+  config.include OptionalExample
 
   config.infer_spec_type_from_file_location!
 
@@ -217,4 +247,37 @@ RSpec.configure do |config|
   config.example_status_persistence_file_path = 'spec/examples.txt'
 
   config.profile_examples = 10
+
+  # Use this example metadata when you want to perform jobs inline during testing.
+  #
+  #   describe '#my_method`, :perform_enqueued do
+  #     ...
+  #   end
+  #
+  # If you pass an `Array` of job classes, they will be treated as the filter list.
+  #
+  #   describe '#my_method`, perform_enqueued: [MyJobClass] do
+  #     ...
+  #   end
+  #
+  # Limit to specific job classes with:
+  #
+  #   ActiveJob::Base.queue_adapter.filter = [JobClass]
+  #
+  config.before(:example, :perform_enqueued) do |example|
+    ActiveJob::Base.queue_adapter.filter =
+      example.metadata[:perform_enqueued].try(:to_a)
+
+    ActiveJob::Base.queue_adapter.perform_enqueued_jobs    = true
+    ActiveJob::Base.queue_adapter.perform_enqueued_at_jobs = true
+  end
+
+  config.after(:example, :perform_enqueued) do
+    ActiveJob::Base.queue_adapter.filter         = nil
+    ActiveJob::Base.queue_adapter.enqueued_jobs  = []
+    ActiveJob::Base.queue_adapter.performed_jobs = []
+
+    ActiveJob::Base.queue_adapter.perform_enqueued_jobs    = false
+    ActiveJob::Base.queue_adapter.perform_enqueued_at_jobs = false
+  end
 end

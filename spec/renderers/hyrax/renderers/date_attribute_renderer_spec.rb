@@ -11,7 +11,7 @@ RSpec.describe Hyrax::Renderers::DateAttributeRenderer do
         %(
       <tr><th>Embargo release date</th>
       <td><ul class="tabular">
-      <li class="attribute embargo_release_date">03/14/2013</li>
+      <li class="attribute attribute-embargo_release_date">03/14/2013</li>
       </ul></td></tr>
       )
       end
@@ -27,7 +27,7 @@ RSpec.describe Hyrax::Renderers::DateAttributeRenderer do
         %(
       <tr><th>Lease expiration date</th>
       <td><ul class="tabular">
-      <li class="attribute lease_expiration_date">03/14/2013</li>
+      <li class="attribute attribute-lease_expiration_date">03/14/2013</li>
       </ul></td></tr>
       )
       end

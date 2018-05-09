@@ -13,7 +13,7 @@ RSpec.describe Hyrax::My::CollectionsController, type: :controller do
         expect(controller).to receive(:search_results).with(ActionController::Parameters).and_return([response, doc_list])
 
         expect(controller).to receive(:add_breadcrumb).with('Home', root_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Administration', dashboard_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with('Collections', my_collections_path(locale: 'en'))
 
         get :index, params: { per_page: 2 }

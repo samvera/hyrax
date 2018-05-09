@@ -19,7 +19,7 @@ module Hyrax
       # later utilized by Javascript to limit new Work options based on AdminSet selected
       def data_attributes(admin_set)
         # Get permission template associated with this AdminSet (if any)
-        permission_template = PermissionTemplate.find_by(admin_set_id: admin_set.id)
+        permission_template = PermissionTemplate.find_by(source_id: admin_set.id)
 
         # Only add data attributes if permission template exists
         return {} unless permission_template

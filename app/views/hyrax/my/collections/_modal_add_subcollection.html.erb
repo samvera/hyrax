@@ -1,0 +1,39 @@
+<div class="modal fade disable-unless-selected" id="add-subcollection-modal-<%= id %>" tabindex="-1" role="dialog" aria-labelledby="add-subcollection-label">
+<% collection = Collection.find id %>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('hyrax.dashboard.heading_actions.close') %>"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="add-subcollection-label"><%= t('hyrax.collection.actions.nest_collections.modal_title') %></h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-ajax-alert"></div>
+        <label><%= t('hyrax.collection.actions.nest_collections.select_label') %></label>
+        <input type="hidden" name="source" value="<%= source %>" />
+        <select name="child_id">
+          <option value="none"><%= t("hyrax.dashboard.my.action.select") %></option>
+          <% colls = Hyrax::Collections::NestedCollectionQueryService.available_child_collections(parent: collection, scope: controller, limit_to_id: nil) %>
+          <% colls.each {|coll| %>
+            <option value="<%= coll.id %>"><%= coll.title.first %></option>
+          <% } %>
+        </select>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('helpers.action.cancel') %></button>
+        <% # '.modal-add-button' and '.modal-submit-button' classes applied below are used for JavaScript targeting %>
+        <button
+          disabled
+          type="button"
+          class="btn btn-primary modal-add-button modal-submit-button"
+          data-post-url="<%= dashboard_create_nest_collection_under_path(collection.id) %>"
+          data-source="<%= source %>">
+          <%= t('hyrax.collection.actions.nest_collections.button_label') %>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

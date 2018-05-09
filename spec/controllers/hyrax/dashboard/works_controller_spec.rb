@@ -2,7 +2,7 @@ RSpec.describe Hyrax::Dashboard::WorksController, type: :controller do
   describe "#search_builder_class" do
     subject { controller.search_builder_class }
 
-    it { is_expected.to eq Hyrax::WorksSearchBuilder }
+    it { is_expected.to eq Hyrax::Dashboard::WorksSearchBuilder }
   end
 
   describe "#search_facet_path" do

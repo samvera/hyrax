@@ -1,0 +1,21 @@
+<li
+  data-id="<%= id %>"
+  data-parent-id="<%= document.id %>"
+  data-post-url="<%= hyrax.dashboard_remove_parent_relationship_above_path(id, document.id) %>">
+  <div class="flex-wrapper">
+    <div class="collections-list-title">
+      <%= link_to document, [hyrax, :dashboard, document], id: "src_copy_link_#{document.id}" %>
+    </div>
+    <% if can? :edit, id %>
+      <% if can? :edit, document.id %>
+        <button class="btn btn-xs btn-danger remove-from-collection-button"><%= t('hyrax.collections.show.buttons.remove_from_collection') %></button>
+      <% else %>
+        <%= link_to "#",
+                    class: 'btn btn-xs btn-danger remove-parent-from-collection-deny-button',
+                    title: t('hyrax.collections.show.buttons.remove_from_collection') do %>
+            <%= t('hyrax.collections.show.buttons.remove_from_collection') %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</li>

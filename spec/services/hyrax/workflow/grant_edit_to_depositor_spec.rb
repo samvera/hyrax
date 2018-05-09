@@ -34,7 +34,7 @@ RSpec.describe Hyrax::Workflow::GrantEditToDepositor do
       end
     end
 
-    context "with attached FileSets" do
+    context "with attached FileSets", :perform_enqueued do
       let(:work) { create(:work_with_one_file, user: depositor) }
       let(:file_set) do
         work.members.first.tap do |file_set|

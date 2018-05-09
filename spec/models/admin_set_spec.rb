@@ -16,10 +16,10 @@ RSpec.describe AdminSet, type: :model do
   end
 
   describe '#permission_template' do
-    it 'queries for a Hyrax::PermissionTemplate with a matching admin_set_id' do
+    it 'queries for a Hyrax::PermissionTemplate with a matching source_id' do
       admin_set = build(:admin_set, id: '123')
       permission_template = build(:permission_template)
-      expect(Hyrax::PermissionTemplate).to receive(:find_by!).with(admin_set_id: '123').and_return(permission_template)
+      expect(Hyrax::PermissionTemplate).to receive(:find_by!).with(source_id: '123').and_return(permission_template)
       expect(admin_set.permission_template).to eq(permission_template)
     end
   end
@@ -188,6 +188,42 @@ RSpec.describe AdminSet, type: :model do
         expect(subject.errors.full_messages).to eq ["Administrative set cannot be deleted as it is the default set"]
         expect(AdminSet.exists?(described_class::DEFAULT_ID)).to be true
       end
+    end
+  end
+
+  describe '#reset_access_controls!' do
+    let!(:user) { build(:user) }
+    let!(:admin_set) { create(:admin_set, creator: [user.user_key], edit_users: [user.user_key], edit_groups: [::Ability.admin_group_name], read_users: [], read_groups: ['public']) }
+    let!(:permission_template) { build(:permission_template) }
+
+    before do
+      allow(admin_set).to receive(:permission_template).and_return(permission_template)
+      allow(permission_template).to receive(:agent_ids_for).with(access: 'manage', agent_type: 'user').and_return(['mgr1@ex.com', 'mgr2@ex.com', user.user_key])
+      allow(permission_template).to receive(:agent_ids_for).with(access: 'manage', agent_type: 'group').and_return(['managers', ::Ability.admin_group_name])
+      allow(permission_template).to receive(:agent_ids_for).with(access: 'deposit', agent_type: 'user').and_return(['dep1@ex.com', 'dep2@ex.com'])
+      allow(permission_template).to receive(:agent_ids_for).with(access: 'deposit', agent_type: 'group').and_return(['depositors', 'registered'])
+      allow(permission_template).to receive(:agent_ids_for).with(access: 'view', agent_type: 'user').and_return(['vw1@ex.com', 'vw2@ex.com'])
+      allow(permission_template).to receive(:agent_ids_for).with(access: 'view', agent_type: 'group').and_return(['viewers', 'public'])
+    end
+
+    it 'resets user edit access' do
+      admin_set.reset_access_controls!
+      expect(admin_set.edit_users).to match_array([user.user_key, 'mgr1@ex.com', 'mgr2@ex.com'])
+    end
+
+    it 'resets group edit access' do
+      admin_set.reset_access_controls!
+      expect(admin_set.edit_groups).to match_array(['managers', ::Ability.admin_group_name])
+    end
+
+    it 'resets user read access' do
+      admin_set.reset_access_controls!
+      expect(admin_set.read_users).to match_array(['dep1@ex.com', 'dep2@ex.com', 'vw1@ex.com', 'vw2@ex.com'])
+    end
+
+    it 'resets group read access' do
+      admin_set.reset_access_controls!
+      expect(admin_set.read_groups).to match_array(['depositors', 'viewers'])
     end
   end
 end

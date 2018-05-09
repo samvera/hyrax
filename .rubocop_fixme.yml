@@ -5,9 +5,13 @@ Security/MarshalLoad:
 Metrics/ClassLength:
   Exclude:
     - 'app/controllers/hyrax/dashboard/collections_controller.rb'
+    - 'app/controllers/hyrax/admin/admin_sets_controller.rb'
+    - 'app/controllers/hyrax/batch_edits_controller.rb'
+    - 'app/controllers/hyrax/downloads_controller.rb'
     - 'app/controllers/hyrax/file_sets_controller.rb'
     - 'app/forms/hyrax/forms/permission_template_form.rb'
     - 'app/presenters/hyrax/work_show_presenter.rb'
+    - 'app/presenters/hyrax/collection_presenter.rb'
     - 'app/services/hyrax/user_stat_importer.rb'
     - 'lib/generators/hyrax/templates/catalog_controller.rb'
     - 'lib/generators/hyrax/install_generator.rb'
@@ -29,6 +33,8 @@ Metrics/ModuleLength:
     - 'app/models/concerns/hyrax/ability.rb'
     - 'app/services/hyrax/workflow/permission_query.rb'
     - 'spec/services/hyrax/workflow/permission_query_spec.rb'
+    # TODO:  extract CollectionAccessControls or something, so we don't have to skip this check?
+    - 'app/models/concerns/hyrax/collection_behavior.rb'
 
 Metrics/MethodLength:
   Exclude:
@@ -61,6 +67,10 @@ Style/CommentedKeyword:
   Exclude:
     - 'app/models/vocab/fedora_resource_status.rb'
 
+Style/SpecialGlobalVars:
+  Exclude:
+    - 'tasks/hyrax_dev.rake'
+
 Rails/Output:
   Exclude:
     - 'lib/generators/**/*'
@@ -74,6 +84,7 @@ RSpec/ExampleLength:
     - 'spec/actors/hyrax/actors/file_set_actor_spec.rb'
     - 'spec/actors/hyrax/actors/generic_work_actor_spec.rb'
     - 'spec/controllers/hyrax/api/items_controller_spec.rb'
+    - 'spec/controllers/hyrax/batch_edits_controller_spec.rb'
     - 'spec/controllers/hyrax/batch_uploads_controller_spec.rb'
     - 'spec/controllers/hyrax/file_sets_controller_spec.rb'
     - 'spec/controllers/hyrax/generic_works_controller_spec.rb'

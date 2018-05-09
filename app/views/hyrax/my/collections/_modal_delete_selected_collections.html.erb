@@ -1,0 +1,17 @@
+<div class="modal fade" id="selected-collections-delete-modal" tabindex="-1" role="dialog" aria-labelledby="delete-collection-label">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-body">
+          <p><%= t('hyrax.dashboard.my.action.collections_confirmation_html') %></p>
+        </div>
+        <div class="modal-footer">
+          <div style="text-align: right; display: inline-block">
+            <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('helpers.action.cancel') %></button>
+            <div style="float: right; margin-left: 10px;">
+              <%= render 'hyrax/dashboard/collections/button_for_batch_delete_collection', label: t('helpers.action.delete') %>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

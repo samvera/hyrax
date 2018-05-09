@@ -1,5 +1,6 @@
 require 'hyrax/callbacks'
 require 'hyrax/role_registry'
+require 'samvera/nesting_indexer'
 
 module Hyrax
   class Configuration
@@ -9,6 +10,7 @@ module Hyrax
       @registered_concerns = []
       @role_registry = Hyrax::RoleRegistry.new
       @default_active_workflow_name = DEFAULT_ACTIVE_WORKFLOW_NAME
+      @nested_relationship_reindexer = default_nested_relationship_reindexer
     end
 
     DEFAULT_ACTIVE_WORKFLOW_NAME = 'default'.freeze
@@ -56,6 +58,12 @@ module Hyrax
     attr_writer :working_path
     def working_path
       @working_path ||= Rails.root.join('tmp', 'uploads')
+    end
+
+    # Path on the local file system where where log and banners will be stored.
+    attr_writer :branding_path
+    def branding_path
+      @branding_path ||= Rails.root.join('public', 'branding')
     end
 
     attr_writer :enable_ffmpeg
@@ -110,7 +118,7 @@ module Hyrax
 
     attr_writer :noid_minter_class
     def noid_minter_class
-      @noid_minter_class ||= Noid::Rails::Minter::Db
+      @noid_minter_class ||= ::Noid::Rails::Minter::Db
     end
 
     attr_writer :minter_statefile
@@ -198,9 +206,7 @@ module Hyrax
     # @param [Array<Symbol>,Symbol] curation_concern_types
     def register_curation_concern(*curation_concern_types)
       Array.wrap(curation_concern_types).flatten.compact.each do |cc_type|
-        unless @registered_concerns.include?(cc_type)
-          @registered_concerns << cc_type
-        end
+        @registered_concerns << cc_type unless @registered_concerns.include?(cc_type)
       end
     end
 
@@ -321,6 +327,13 @@ module Hyrax
       @admin_set_predicate ||= ::RDF::Vocab::DC.isPartOf
     end
 
+    # Set predicate for rendering to dc:hasFormat as defined in
+    #   IIIF Presentation API context:  http://iiif.io/api/presentation/2/context.json
+    attr_writer :rendering_predicate
+    def rendering_predicate
+      @rendering_predicate ||= ::RDF::Vocab::DC.hasFormat
+    end
+
     attr_writer :work_requires_files
     def work_requires_files?
       return true if @work_requires_files.nil?
@@ -402,6 +415,14 @@ module Hyrax
     end
     attr_writer :iiif_image_size_default
 
+    # IIIF metadata - fields to display in the metadata section
+    #
+    # @return [#Array] fields
+    def iiif_metadata_fields
+      @iiif_metadata_fields ||= Hyrax::Forms::WorkForm.required_fields
+    end
+    attr_writer :iiif_metadata_fields
+
     # Should a button with "Share my work" show on the front page to users who are not logged in?
     attr_writer :display_share_button_when_not_logged_in
     def display_share_button_when_not_logged_in?
@@ -477,6 +498,12 @@ module Hyrax
                     else
                       default_uploader_config
                     end
+    end
+
+    attr_accessor :nested_relationship_reindexer
+
+    def default_nested_relationship_reindexer
+      ->(id:, extent:) { Samvera::NestingIndexer.reindex_relationships(id: id, extent: extent) }
     end
 
     private

@@ -28,15 +28,15 @@ module Hyrax
         # Set the order of the children (works or file_sets)
         middleware.use Hyrax::Actors::ApplyOrderActor
 
+        # Sets the default admin set if they didn't supply one
+        middleware.use Hyrax::Actors::DefaultAdminSetActor
+
         # Decode the private/public/institution on the form into permisisons on
         # the model
         middleware.use Hyrax::Actors::InterpretVisibilityActor
 
         # Handles transfering ownership of works from one user to another
         middleware.use Hyrax::Actors::TransferRequestActor
-
-        # Sets the default admin set if they didn't supply one
-        middleware.use Hyrax::Actors::DefaultAdminSetActor
 
         # Copies default permissions from the PermissionTemplate to the work
         middleware.use Hyrax::Actors::ApplyPermissionTemplateActor

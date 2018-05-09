@@ -32,21 +32,22 @@
       <% if ::Flipflop.active_deposit_agreement_acceptance? %>
         <label>
           <%= check_box_tag 'agreement', 1, f.object.agreement_accepted, required: true %>
-          <%= t('hyrax.active_consent_to_agreement') %><br>
+          <%= t('hyrax.active_consent_to_agreement') %><br />
           <%= link_to t('hyrax.pages.tabs.agreement_page'),
                       hyrax.agreement_path,
                       target: '_blank' %>
         </label>
       <% else %>
-        <%= t('hyrax.passive_consent_to_agreement') %><br>
+        <%= t('hyrax.passive_consent_to_agreement') %><br />
         <%= link_to t('hyrax.pages.tabs.agreement_page'),
                     hyrax.agreement_path,
                     target: '_blank' %>
       <% end %>
     <% end %>
-    <br>
+    <br />
+    <% cancel_path = f.object.persisted? ? polymorphic_path([main_app, f.object]) : hyrax.my_works_path %>
     <%= link_to t(:'helpers.action.cancel'),
-                hyrax.dashboard_path,
+                cancel_path,
                 class: 'btn btn-default' %>
     <%# TODO: If we start using ActionCable, we could listen for object updates and
               alert the user that the object has changed by someone else %>

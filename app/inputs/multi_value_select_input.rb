@@ -39,9 +39,7 @@ class MultiValueSelectInput < MultiValueInput
     def build_field(value, index)
       render_options = select_options
       html_options = build_field_options(value)
-      if options[:item_helper]
-        (render_options, html_options) = options[:item_helper].call(value, index, render_options, html_options)
-      end
+      (render_options, html_options) = options[:item_helper].call(value, index, render_options, html_options) if options[:item_helper]
       template.select_tag(attribute_name, template.options_for_select(render_options, value), html_options)
     end
 end

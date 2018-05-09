@@ -14,7 +14,7 @@ RSpec.describe 'hyrax/base/_attributes.html.erb' do
       description_tesim: description
     }
   end
-  let(:ability) { nil }
+  let(:ability) { double(admin?: true) }
   let(:presenter) do
     Hyrax::WorkShowPresenter.new(solr_document, ability)
   end

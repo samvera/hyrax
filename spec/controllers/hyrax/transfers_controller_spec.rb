@@ -64,7 +64,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
         # AND A NOTIFICATION SHOULD HAVE BEEN CREATED
         notification = another_user.reload.mailbox.inbox[0].messages[0]
         expect(notification.subject).to eq("Ownership Change Request")
-        expect(notification.body).to eq("<a href=\"/users/#{user.user_key}\">#{user.name}</a> " \
+        expect(notification.body).to eq("<a href=\"#{routes.url_helpers.user_path(user)}\">#{user.name}</a> " \
                                         "wants to transfer a work to you. Review all " \
                                         "<a href=\"#{routes.url_helpers.transfers_path}\">transfer requests</a>")
       end
@@ -78,7 +78,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
       end
     end
 
-    describe "#accept" do
+    describe "#accept", perform_enqueued: [ContentDepositorChangeEventJob] do
       context "when I am the receiver" do
         let!(:incoming_work) do
           GenericWork.new(title: ['incoming']) do |w|

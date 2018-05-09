@@ -1,0 +1,26 @@
+<h3><%= t(".#{access}.title") %></h3>
+<p><%= t(".#{access}.help") %></p>
+<% if @form.collection_type_participants.select(&filter).any? %>
+  <table class="table table-striped share-status">
+    <thead>
+      <tr>
+        <th><%= t(".#{access}.agent_name") %></th>
+        <th><%= t(".#{access}.type") %></th>
+        <th><%= t(".#{access}.action") %></th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @form.collection_type_participants.select(&filter).each do |g| %>
+      <tr>
+        <td data-agent="<%= g.agent_id %>"><%= g.label %></td>
+        <td><%= g.agent_type.titleize %></td>
+        <td>
+          <%= link_to t("helpers.action.remove"), hyrax.admin_collection_type_participant_path(g), method: :delete, class: 'btn btn-sm btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p><em><%= t(".#{access}.empty") %></em></p>
+<% end %>

@@ -2,6 +2,7 @@ module Hyrax
   class WorkShowPresenter
     include ModelProxy
     include PresentsAttributes
+
     attr_accessor :solr_document, :current_ability, :request
 
     class_attribute :collection_presenter_class
@@ -27,7 +28,7 @@ module Hyrax
     end
 
     def page_title
-      title.first
+      "#{human_readable_type} | #{title.first} | ID: #{id} | #{I18n.t('hyrax.product_name')}"
     end
 
     # CurationConcern methods
@@ -38,7 +39,7 @@ module Hyrax
     delegate :title, :date_created, :description,
              :creator, :contributor, :subject, :publisher, :language, :embargo_release_date,
              :lease_expiration_date, :license, :source, :rights_statement, :thumbnail_id, :representative_id,
-             :member_of_collection_ids, to: :solr_document
+             :rendering_ids, :member_of_collection_ids, to: :solr_document
 
     def workflow
       @workflow ||= WorkflowPresenter.new(solr_document, current_ability)
@@ -54,16 +55,13 @@ module Hyrax
       Hyrax::Engine.routes.url_helpers.download_url(representative_presenter, host: request.host)
     end
 
-    def manifest_url
-      manifest_helper.polymorphic_url([:manifest, self])
-    end
-
     # @return [Boolean] render the UniversalViewer
     def universal_viewer?
       representative_id.present? &&
         representative_presenter.present? &&
         representative_presenter.image? &&
-        Hyrax.config.iiif_image_server?
+        Hyrax.config.iiif_image_server? &&
+        members_include_viewable_image?
     end
 
     # @return FileSetPresenter presenter for the representative FileSets
@@ -72,6 +70,7 @@ module Hyrax
       @representative_presenter ||=
         begin
           result = member_presenters([representative_id]).first
+          return nil if result.try(:id) == id
           if result.respond_to?(:representative_presenter)
             result.representative_presenter
           else
@@ -83,7 +82,7 @@ module Hyrax
     # Get presenters for the collections this work is a member of via the member_of_collections association.
     # @return [Array<CollectionPresenter>] presenters
     def member_of_collection_presenters
-      PresenterFactory.build_for(ids: member_of_collection_ids,
+      PresenterFactory.build_for(ids: member_of_authorized_parent_collections,
                                  presenter_class: collection_presenter_class,
                                  presenter_args: presenter_factory_arguments)
     end
@@ -147,7 +146,7 @@ module Hyrax
     end
 
     def stats_path
-      Hyrax::Engine.routes.url_helpers.stats_work_path(self)
+      Hyrax::Engine.routes.url_helpers.stats_work_path(self, locale: I18n.locale)
     end
 
     def model
@@ -156,17 +155,52 @@ module Hyrax
 
     delegate :member_presenters, :file_set_presenters, :work_presenters, to: :member_presenter_factory
 
-    private
+    def exclude_unauthorized_file_sets
+      member_presenters.delete_if { |m| m.is_a?(Hyrax::FileSetPresenter) && !current_ability.can?(:read, m.id) }
+    end
 
-      def featured?
-        if @featured.nil?
-          @featured = FeaturedWork.where(work_id: solr_document.id).exists?
+    def manifest_url
+      manifest_helper.polymorphic_url([:manifest, self])
+    end
+
+    # IIIF rendering linking property for inclusion in the manifest
+    #  Called by the `iiif_manifest` gem to add a 'rendering' (eg. a link a download for the resource)
+    #
+    # @return [Array] array of rendering hashes
+    def sequence_rendering
+      renderings = []
+      if solr_document.rendering_ids.present?
+        solr_document.rendering_ids.each do |file_set_id|
+          renderings << manifest_helper.build_rendering(file_set_id)
         end
-        @featured
       end
+      renderings.flatten
+    end
+
+    # IIIF metadata for inclusion in the manifest
+    #  Called by the `iiif_manifest` gem to add metadata
+    #
+    # @return [Array] array of metadata hashes
+    def manifest_metadata
+      metadata = []
+      Hyrax.config.iiif_metadata_fields.each do |field|
+        metadata << {
+          'label' => I18n.t("simple_form.labels.defaults.#{field}"),
+          'value' => Array.wrap(send(field))
+        }
+      end
+      metadata
+    end
+
+    private
 
       def manifest_helper
         @manifest_helper ||= ManifestHelper.new(request.base_url)
+      end
+
+      def featured?
+        @featured = FeaturedWork.where(work_id: solr_document.id).exists? if @featured.nil?
+        @featured
       end
 
       def user_can_feature_works?
@@ -183,6 +217,15 @@ module Hyrax
 
       def graph
         GraphExporter.new(solr_document, request).fetch
+      end
+
+      def member_of_authorized_parent_collections
+        # member_of_collection_ids with current_ability access
+        @member_of ||= Hyrax::CollectionMemberService.run(solr_document, current_ability).map(&:id)
+      end
+
+      def members_include_viewable_image?
+        file_set_presenters.any? { |presenter| presenter.image? && current_ability.can?(:read, presenter.id) }
       end
   end
 end

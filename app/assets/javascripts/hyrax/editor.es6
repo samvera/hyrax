@@ -24,6 +24,7 @@ export default class {
     this.relationshipsControl()
     this.saveWorkControl()
     this.saveWorkFixed()
+    this.authoritySelect()
   }
 
   // Used when you have a linked data field that can have terms from multiple
@@ -33,7 +34,7 @@ export default class {
           let authoritySelect = $(this).data().authoritySelect
           let options =  {selectBox: 'select.' + authoritySelect,
                           inputField: 'input.' + authoritySelect}
-          new AuthoritySelect(this, options);
+          new AuthoritySelect(options);
       })
   }
 

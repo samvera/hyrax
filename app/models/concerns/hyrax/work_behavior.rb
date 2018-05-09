@@ -8,6 +8,7 @@ module Hyrax
     include Serializers
     include Hydra::WithDepositor
     include HasRepresentative
+    include HasRendering
     include WithFileSets
     include Naming
     include CoreMetadata
@@ -19,6 +20,7 @@ module Hyrax
     include ProxyDeposit
     include Works::Metadata
     include WithEvents
+    include Hyrax::CollectionNesting
 
     included do
       property :owner, predicate: RDF::URI.new('http://opaquenamespace.org/ns/hydra/owner'), multiple: false

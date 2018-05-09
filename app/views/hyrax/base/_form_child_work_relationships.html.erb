@@ -8,8 +8,7 @@ CSS:
 HTML Properties:
   table:
     [data-behavior="child-relationships"] : allows the javascript to be initialized
-    data-param-key : the parameter key value for this model type
-%>
+    data-param-key : the parameter key value for this model type %>
 <div class="form-group" data-behavior="child-relationships" data-param-key="<%= f.object.model_name.param_key %>" data-members="<%= f.object.work_members_json %>">
   <div class="form-inline">
       <%= f.label :find_child_work %>

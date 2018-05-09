@@ -7,7 +7,7 @@ module Hyrax
       include BreadcrumbsForCollections
       with_themed_layout 'dashboard'
 
-      before_action :filter_docs_with_read_access!, except: :show
+      before_action :filter_docs_with_read_access!, except: [:show, :edit]
       before_action :remove_select_something_first_flash, except: :show
 
       include Hyrax::Collections::AcceptsBatches
@@ -16,9 +16,6 @@ module Hyrax
       helper Hyrax::BatchEditsHelper
       # include the display_trophy_link view helper method
       helper Hyrax::TrophyHelper
-
-      # This is needed as of BL 3.7
-      copy_blacklight_config_from(::CatalogController)
 
       # Catch permission errors
       rescue_from Hydra::AccessDenied, CanCan::AccessDenied, with: :deny_collection_access
@@ -29,7 +26,7 @@ module Hyrax
       class_attribute :presenter_class,
                       :form_class,
                       :single_item_search_builder_class,
-                      :member_search_builder_class
+                      :membership_service_class
 
       self.presenter_class = Hyrax::CollectionPresenter
 
@@ -38,11 +35,9 @@ module Hyrax
       # The search builder to find the collection
       self.single_item_search_builder_class = SingleCollectionSearchBuilder
       # The search builder to find the collections' members
-      self.member_search_builder_class = Hyrax::CollectionMemberSearchBuilder
+      self.membership_service_class = Collections::CollectionMemberService
 
       load_and_authorize_resource except: [:index, :create], instance_name: :collection
-
-      before_action :ensure_admin!, only: :index # index for All Collections; see also Hyrax::My::CollectionsController #index for My Collections
 
       def deny_collection_access(exception)
         if exception.action == :edit
@@ -56,30 +51,40 @@ module Hyrax
       end
 
       def new
+        # Coming from the UI, a collection type id should always be present.  Coming from the API, if a collection type id is not specified,
+        # use the default collection type (provides backward compatibility with versions < Hyrax 2.1.0)
+        collection_type_id = params[:collection_type_id].presence || default_collection_type.id
+        @collection.collection_type_gid = CollectionType.find(collection_type_id).gid
         add_breadcrumb t(:'hyrax.controls.home'), root_path
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
-        add_breadcrumb t(:'hyrax.collections.new.header'), hyrax.new_dashboard_collection_path
+        add_breadcrumb t('.header', type_title: @collection.collection_type.title), request.path
         @collection.apply_depositor_metadata(current_user.user_key)
         form
       end
 
       def show
+        if @collection.collection_type.brandable?
+          banner_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "banner")
+          @banner_file = "/" + banner_info.first.local_path.split("/")[-4..-1].join("/") unless banner_info.empty?
+        end
+
         presenter
         query_collection_members
       end
 
       def edit
-        query_collection_members
-        # this is used to populate the "add to a collection" action for the members
-        @user_collections = find_collections_for_form
         form
       end
 
       def after_create
         form
+        set_default_permissions
+        # if we are creating the new collection as a subcollection (via the nested collections controller),
+        # we pass the parent_id through a hidden field in the form and link the two after the create.
+        link_parent_collection(params[:parent_id]) unless params[:parent_id].nil?
         respond_to do |format|
           ActiveFedora::SolrService.instance.conn.commit
-          format.html { redirect_to dashboard_collection_path(@collection), notice: 'Collection was successfully created.' }
+          format.html { redirect_to edit_dashboard_collection_path(@collection), notice: t('hyrax.dashboard.my.action.collection_create_success') }
           format.json { render json: @collection, status: :created, location: dashboard_collection_path(@collection) }
         end
       end
@@ -98,10 +103,13 @@ module Hyrax
         # collection is saved without a value for `has_model.`
         @collection = ::Collection.new
         authorize! :create, @collection
-
-        @collection.attributes = collection_params.except(:members)
+        # Coming from the UI, a collection type gid should always be present.  Coming from the API, if a collection type gid is not specified,
+        # use the default collection type (provides backward compatibility with versions < Hyrax 2.1.0)
+        @collection.collection_type_gid = params[:collection_type_gid].presence || default_collection_type.gid
+        @collection.attributes = collection_params.except(:members, :parent_id, :collection_type_gid)
         @collection.apply_depositor_metadata(current_user.user_key)
         add_members_to_collection unless batch.empty?
+        @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
         if @collection.save
           after_create
         else
@@ -110,18 +118,14 @@ module Hyrax
       end
 
       def after_update
-        if flash[:notice].nil?
-          flash[:notice] = 'Collection was successfully updated.'
-        end
         respond_to do |format|
-          format.html { redirect_to dashboard_collection_path(@collection) }
+          format.html { redirect_to update_referer, notice: t('hyrax.dashboard.my.action.collection_update_success') }
           format.json { render json: @collection, status: :updated, location: dashboard_collection_path(@collection) }
         end
       end
 
       def after_update_error
         form
-        query_collection_members
         respond_to do |format|
           format.html { render action: 'edit' }
           format.json { render json: @collection.errors, status: :unprocessable_entity }
@@ -129,7 +133,15 @@ module Hyrax
       end
 
       def update
+        unless params[:update_collection].nil?
+          process_banner_input
+          process_logo_input
+        end
+
         process_member_changes
+        @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
+        # we don't have to reindex the full graph when updating collection
+        @collection.reindex_extent = Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX
         if @collection.update(collection_params.except(:members))
           after_update
         else
@@ -137,11 +149,12 @@ module Hyrax
         end
       end
 
-      def after_destroy(id)
+      def after_destroy(_id)
+        # leaving id to avoid changing the method's parameters prior to release
         respond_to do |format|
           format.html do
             redirect_to my_collections_path,
-                        notice: "Collection #{id} was successfully deleted"
+                        notice: t('hyrax.dashboard.my.action.collection_delete_success')
           end
           format.json { head :no_content, location: my_collections_path }
         end
@@ -150,7 +163,7 @@ module Hyrax
       def after_destroy_error(id)
         respond_to do |format|
           format.html do
-            flash[:notice] = "Collection #{id} could not be deleted"
+            flash[:notice] = t('hyrax.dashboard.my.action.collection_delete_fail')
             render :edit, status: :unprocessable_entity
           end
           format.json { render json: { id: id }, status: :unprocessable_entity, location: dashboard_collection_path(@collection) }
@@ -179,10 +192,115 @@ module Hyrax
       end
 
       def search_builder_class
-        Hyrax::CollectionSearchBuilder
+        Hyrax::Dashboard::CollectionsSearchBuilder
       end
 
       private
+
+        def default_collection_type
+          Hyrax::CollectionType.find_or_create_default_collection_type
+        end
+
+        def link_parent_collection(parent_id)
+          parent = ActiveFedora::Base.find(parent_id)
+          Hyrax::Collections::NestedCollectionPersistenceService.persist_nested_collection_for(parent: parent, child: @collection)
+        end
+
+        def uploaded_files(uploaded_file_ids)
+          return [] if uploaded_file_ids.empty?
+          UploadedFile.find(uploaded_file_ids)
+        end
+
+        def update_referer
+          return edit_dashboard_collection_path(@collection) + (params[:referer_anchor] || '') if params[:stay_on_edit]
+          dashboard_collection_path(@collection)
+        end
+
+        def process_banner_input
+          return update_existing_banner if params["banner_unchanged"] == "true"
+          remove_banner
+          uploaded_file_ids = params["banner_files"]
+          add_new_banner(uploaded_file_ids) if uploaded_file_ids
+        end
+
+        def update_existing_banner
+          banner_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "banner")
+          banner_info.first.save(banner_info.first.local_path, false)
+        end
+
+        def add_new_banner(uploaded_file_ids)
+          f = uploaded_files(uploaded_file_ids).first
+          banner_info = CollectionBrandingInfo.new(
+            collection_id: @collection.id,
+            filename: File.split(f.file_url).last,
+            role: "banner",
+            alt_txt: "",
+            target_url: ""
+          )
+          banner_info.save f.file_url
+        end
+
+        def remove_banner
+          banner_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "banner")
+          banner_info.delete_all unless banner_info.nil?
+        end
+
+        def update_logo_info(uploaded_file_id, alttext, linkurl)
+          logo_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "logo").where(local_path: uploaded_file_id.to_s)
+          logo_info.first.alt_text = alttext
+          logo_info.first.target_url = linkurl
+          logo_info.first.local_path = uploaded_file_id
+          logo_info.first.save(uploaded_file_id, false)
+        end
+
+        def create_logo_info(uploaded_file_id, alttext, linkurl)
+          file = uploaded_files(uploaded_file_id)
+          logo_info = CollectionBrandingInfo.new(
+            collection_id: @collection.id,
+            filename: File.split(file.file_url).last,
+            role: "logo",
+            alt_txt: alttext,
+            target_url: linkurl
+          )
+          logo_info.save file.file_url
+          logo_info
+        end
+
+        def remove_redundant_files(public_files)
+          # remove any public ones that were not included in the selection.
+          logos_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "logo")
+          logos_info.each do |logo_info|
+            logo_info.delete(logo_info.local_path) unless public_files.include? logo_info.local_path
+            logo_info.destroy unless public_files.include? logo_info.local_path
+          end
+        end
+
+        def process_logo_records(uploaded_file_ids)
+          public_files = []
+          uploaded_file_ids.each_with_index do |ufi, i|
+            if ufi.include?('public')
+              update_logo_info(ufi, params["alttext"][i], params["linkurl"][i])
+              public_files << ufi
+            else # brand new one, insert in the database
+              logo_info = create_logo_info(ufi, params["alttext"][i], params["linkurl"][i])
+              public_files << logo_info.local_path
+            end
+          end
+          public_files
+        end
+
+        def process_logo_input
+          uploaded_file_ids = params["logo_files"]
+          public_files = []
+
+          if uploaded_file_ids.nil?
+            remove_redundant_files public_files
+            return
+          end
+
+          public_files = process_logo_records uploaded_file_ids
+          remove_redundant_files public_files
+        end
 
         # run a solr query to get the collections the user has access to edit
         # @return [Array] a list of the user's collections
@@ -211,35 +329,35 @@ module Hyrax
           single_item_search_builder_class.new(self).with(params.except(:q, :page))
         end
 
-        # Instantiates the search builder that builds a query for items that are
-        # members of the current collection. This is used in the show view.
-        def member_search_builder
-          @member_search_builder ||= member_search_builder_class.new(self)
-        end
-
         def collection_params
+          @participants = extract_old_style_permission_attributes(params[:collection])
           form_class.model_attributes(params[:collection])
         end
 
-        # Queries Solr for members of the collection.
-        # Populates @response and @member_docs similar to Blacklight Catalog#index populating @response and @documents
-        def query_collection_members
-          params[:q] = params[:cq]
-          @response = repository.search(query_for_collection_members)
-          @member_docs = @response.documents
+        def extract_old_style_permission_attributes(attributes)
+          # TODO: REMOVE in 3.0 - part of deprecation of permission attributes
+          permissions = attributes.delete("permissions_attributes")
+          return [] unless permissions
+          Deprecation.warn(self, "Passing in permissions_attributes parameter with a new collection is deprecated and support will be removed from Hyrax 3.0. " \
+                                 "Use Hyrax::PermissionTemplate instead to grant Manage, Deposit, or View access.")
+          participants = []
+          permissions.each do |p|
+            access = access(p)
+            participants << { agent_type: agent_type(p), agent_id: p["name"], access: access } if access
+          end
+          participants
         end
 
-        # @return <Hash> a representation of the solr query that find the collection members
-        def query_for_collection_members
-          member_search_builder.with(params_for_members_query).query
+        def agent_type(permission)
+          # TODO: REMOVE in 3.0 - part of deprecation of permission attributes
+          return 'group' if permission["type"] == 'group'
+          'user'
         end
 
-        # You can override this method if you need to provide additional inputs to the search
-        # builder. For example:
-        #   search_field: 'all_fields'
-        # @return <Hash> the inputs required for the collection member search builder
-        def params_for_members_query
-          params.merge(q: params[:cq])
+        def access(permission)
+          # TODO: REMOVE in 3.0 - part of deprecation of permission attributes
+          return Hyrax::PermissionTemplateAccess::MANAGE if permission["access"] == 'edit'
+          return Hyrax::PermissionTemplateAccess::VIEW if permission["access"] == 'read'
         end
 
         def process_member_changes
@@ -292,6 +410,53 @@ module Hyrax
 
         def form
           @form ||= form_class.new(@collection, current_ability, repository)
+        end
+
+        def set_default_permissions
+          additional_grants = @participants # Grants converted from older versions (< Hyrax 2.1.0) where share was edit or read access instead of managers, depositors, and viewers
+          Collections::PermissionsCreateService.create_default(collection: @collection, creating_user: current_user, grants: additional_grants)
+        end
+
+        def query_collection_members
+          member_works
+          member_subcollections if collection.collection_type.nestable?
+          parent_collections if collection.collection_type.nestable? && action_name == 'show'
+        end
+
+        # Instantiate the membership query service
+        def collection_member_service
+          @collection_member_service ||= membership_service_class.new(scope: self, collection: collection, params: params_for_query)
+        end
+
+        def member_works
+          @response = collection_member_service.available_member_works
+          @member_docs = @response.documents
+          @members_count = @response.total
+        end
+
+        def member_subcollections
+          results = collection_member_service.available_member_subcollections
+          @subcollection_solr_response = results
+          @subcollection_docs = results.documents
+          @subcollection_count = @presenter.nil? ? 0 : @subcollection_count = @presenter.subcollection_count = results.total
+        end
+
+        def parent_collections
+          page = params[:parent_collection_page].to_i
+          query = Hyrax::Collections::NestedCollectionQueryService
+          collection.parent_collections = query.parent_collections(child: collection_object, scope: self, page: page)
+        end
+
+        def collection_object
+          action_name == 'show' ? Collection.find(collection.id) : collection
+        end
+
+        # You can override this method if you need to provide additional
+        # inputs to the search builder. For example:
+        #   search_field: 'all_fields'
+        # @return <Hash> the inputs required for the collection member search builder
+        def params_for_query
+          params.merge(q: params[:cq])
         end
     end
   end

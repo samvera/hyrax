@@ -22,6 +22,15 @@ module Sipity
       let!(:other_permission_template) { create(:permission_template) }
       let!(:active_workflow) { create(:workflow, active: true, permission_template_id: permission_template.id) }
 
+      context 'selecting already active workflow' do
+        it 'makes no change' do
+          inactive_workflow = create(:workflow, permission_template_id: permission_template.id)
+          described_class.activate!(permission_template: permission_template, workflow_id: active_workflow.id)
+          expect(active_workflow.reload).to be_active
+          expect(inactive_workflow.reload).not_to be_active
+        end
+      end
+
       it 'raises an exception if you do not pass a workflow_id nor workflow_name' do
         expect do
           described_class.activate!(permission_template: other_permission_template)
@@ -57,18 +66,18 @@ module Sipity
     end
 
     context '.find_active_workflow_for' do
-      let(:admin_set_id) { 1234 }
-      let(:permission_template) { create(:permission_template, admin_set_id: admin_set_id) }
+      let(:source_id) { 1234 }
+      let(:permission_template) { create(:permission_template, source_id: source_id) }
 
       it 'returns the active workflow for the permission template' do
         active_workflow = create(:workflow, active: true, permission_template: permission_template)
         _inactive_workflow = create(:workflow, active: false, permission_template: permission_template)
-        expect(described_class.find_active_workflow_for(admin_set_id: admin_set_id)).to eq(active_workflow)
+        expect(described_class.find_active_workflow_for(admin_set_id: source_id)).to eq(active_workflow)
       end
 
       it 'raises an exception when none exists' do
         create(:workflow, active: false, permission_template: permission_template)
-        expect { described_class.find_active_workflow_for(admin_set_id: admin_set_id) }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { described_class.find_active_workflow_for(admin_set_id: source_id) }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end

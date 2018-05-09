@@ -1,0 +1,97 @@
+@mixin toggle-arrow($content) {
+  content: $content;
+  display: inline-block;
+  font-family: 'FontAwesome';
+  margin-left: 5px;
+  text-decoration: none;
+}
+
+.collection-types-wrapper {
+  @media (min-width: 900px) {
+    .collection-types-table {
+      td:last-child,
+      th:last-child {
+        width: 20%;
+      }
+    }
+  }
+
+  .screen-hidden {
+    height: 1px;
+    left: -10000px;
+    overflow: hidden;
+    position: absolute;
+    top: auto;
+    width: 1px;
+  }
+
+  .panel-heading {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .collapse-header {
+    &:focus {
+      text-decoration: none;
+    }
+
+    &::after {
+      @include toggle-arrow('\f0da');
+    }
+
+    &.open {
+      &::after {
+        @include toggle-arrow('\f0d7');
+      }
+    }
+  }
+}
+
+// Edit Collection Types - Participants Tab
+.collection-types-edit-participants-tab {
+  .section-participants {
+    padding-bottom: 40px;
+
+    .form-inline {
+      label {
+        padding-right: 5px;
+        text-align: right;
+        width: 100px;
+      }
+
+      .select2-container,
+      input,
+      select {
+        width: 200px;
+      }
+
+      .btn {
+        width: 75px;
+      }
+    }
+  }
+
+  .section-current-participants {
+    legend {
+      margin-bottom: 0;
+    }
+
+    .share-status {
+      td,
+      th {
+        width: 40%;
+      }
+
+      th:last-of-type,
+      td:last-of-type {
+        text-align: center;
+        width: 20%;
+      }
+    }
+  }
+}
+
+.collection-type-share-applies-to {
+  margin-left: 3em;
+}

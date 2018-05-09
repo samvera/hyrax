@@ -46,16 +46,18 @@ RSpec.describe Hyrax::GenericWorkForm do
   end
 
   describe '.model_attributes' do
-    let(:permission_template) { create(:permission_template, admin_set_id: admin_set_id) }
+    let(:permission_template) { create(:permission_template, source_id: source_id) }
     let!(:workflow) { create(:workflow, active: true, permission_template_id: permission_template.id) }
-    let(:admin_set_id) { '123' }
+    let(:source_id) { '123' }
+    let(:file_set) { create(:file_set) }
     let(:params) do
       ActionController::Parameters.new(
         title: ['foo'],
         description: [''],
         visibility: 'open',
-        admin_set_id: admin_set_id,
+        source_id: source_id,
         representative_id: '456',
+        rendering_ids: [file_set.id],
         thumbnail_id: '789',
         keyword: ['derp'],
         license: ['http://creativecommons.org/licenses/by/3.0/us/'],
@@ -72,6 +74,7 @@ RSpec.describe Hyrax::GenericWorkForm do
       expect(subject['license']).to eq ['http://creativecommons.org/licenses/by/3.0/us/']
       expect(subject['keyword']).to eq ['derp']
       expect(subject['member_of_collection_ids']).to eq ['123456', 'abcdef']
+      expect(subject['rendering_ids']).to eq [file_set.id]
     end
 
     context '.model_attributes' do

@@ -1,9 +1,12 @@
 RSpec.describe 'hyrax/my/works/index.html.erb', type: :view do
+  let(:resp) { double(docs: "", total_count: 11) }
+
   before do
     allow(view).to receive(:current_ability).and_return(ability)
     allow(view).to receive(:provide).and_yield
     allow(view).to receive(:provide).with(:page_title, String)
     assign(:create_work_presenter, presenter)
+    assign(:response, resp)
     allow(view).to receive(:can?).and_return(true)
     allow(Flipflop).to receive(:batch_upload?).and_return(batch_enabled)
     stub_template 'shared/_select_work_type_modal.html.erb' => 'modal'
@@ -12,6 +15,7 @@ RSpec.describe 'hyrax/my/works/index.html.erb', type: :view do
     stub_template 'hyrax/my/works/_document_list.html.erb' => 'list'
     stub_template 'hyrax/my/works/_results_pagination.html.erb' => 'pagination'
     stub_template 'hyrax/my/works/_scripts.js.erb' => 'batch edit stuff'
+    assign(:managed_works_count, 1)
     render
   end
 

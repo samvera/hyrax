@@ -1,16 +1,15 @@
-<tr>
-  <th><%= t(".label", type: type.humanize) %></th>
-  <td>
+<dt> <%= t(".label", type: type.humanize) %> </dt>
+<dd>
     <% if items.blank? %>
       <p><%= t('.empty', type: type.humanize) %></p>
     <% else %>
       <ul class="tabular">
         <% items.each do |item| %>
-          <li class='attribute title'>
+          <li class='attribute attribute-title'>
             <%= link_to item.title.first, url_for_document(item) %>
           </li>
         <% end %>
       </ul>
     <% end %>
-  </td>
-</tr>
+  </dd>
+

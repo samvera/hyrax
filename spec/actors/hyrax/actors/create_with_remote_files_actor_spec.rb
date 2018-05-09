@@ -39,7 +39,25 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
     end
 
     it "attaches files" do
-      expect(ImportUrlJob).to receive(:perform_later).with(FileSet, Hyrax::Operation).twice
+      expect(ImportUrlJob).to receive(:perform_later).with(FileSet, Hyrax::Operation, {}).twice
+      expect(actor.create(environment)).to be true
+    end
+  end
+
+  context "with source uris that are remote bearing auth headers" do
+    let(:remote_files) do
+      [{ url: url1,
+         expires: "2014-03-31T20:37:36.214Z",
+         file_name: "filepicker-demo.txt.txt",
+         auth_header: { 'Authorization' => 'Bearer access-token' } },
+       { url: url2,
+         expires: "2014-03-31T20:37:36.731Z",
+         file_name: "Getting+Started.pdf",
+         auth_header: { 'Authorization' => 'Bearer access-token' } }]
+    end
+
+    it "attaches files" do
+      expect(ImportUrlJob).to receive(:perform_later).with(FileSet, Hyrax::Operation, 'Authorization' => 'Bearer access-token').twice
       expect(actor.create(environment)).to be true
     end
   end

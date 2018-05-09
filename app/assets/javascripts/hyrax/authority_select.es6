@@ -1,3 +1,5 @@
+import Autocomplete from 'hyrax/autocomplete'
+
 /** Class for authority selection on an input field */
 export default class AuthoritySelect {
     /**
@@ -6,8 +8,7 @@ export default class AuthoritySelect {
      * @param {string} selectBox - The selector for the select box
      * @param {string} inputField - The selector for the input field
      */
-    constructor(editor, options) {
-      this.editor = editor
+    constructor(options) {
     	this.selectBox = options.selectBox
     	this.inputField = options.inputField
     	this.selectBoxChange();
@@ -24,8 +25,10 @@ export default class AuthoritySelect {
         var _this2 = this
       	$(selectBox).on('change', function(data) {
       	    var selectBoxValue = $(this).val();
-      	    $(inputField).each(function (data) { $(this).data('autocomplete-url', selectBoxValue) });
-      	    _this2.setupAutocomplete();
+      	    $(inputField).each(function (data) {
+              $(this).data('autocomplete-url', selectBoxValue);
+      	       _this2.setupAutocomplete()
+            });
       	});
     }
 
@@ -35,11 +38,14 @@ export default class AuthoritySelect {
     observeAddedElement() {
       	var selectBox = this.selectBox;
       	var inputField = this.inputField;
+        var _this2 = this
 
       	var observer = new MutationObserver((mutations) => {
       	    mutations.forEach((mutation) => {
-      		      $(inputField).each(function (data) { $(this).data('autocomplete-url', $(selectBox).val()) });
-      		      this.setupAutocomplete();
+      		      $(inputField).each(function (data) {
+                  $(this).data('autocomplete-url', $(selectBox).val())
+      		        _this2.setupAutocomplete();
+                });
       	    });
       	});
 
@@ -51,6 +57,8 @@ export default class AuthoritySelect {
      * intialize the Hyrax autocomplete with the fields that you are using
      */
     setupAutocomplete() {
-      this.editor.autocomplete()
+      var inputField = $(this.inputField);
+      var autocomplete = new Autocomplete()
+      autocomplete.setup(inputField, inputField.data('autocomplete'), inputField.data('autocompleteUrl'))
     }
 }

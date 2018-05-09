@@ -105,10 +105,10 @@ RSpec.describe Hyrax::BatchUploadsController do
         }
       end
 
-      it 'redirects to my shares page' do
+      it 'redirects to managed works page' do
         allow(BatchCreateJob).to receive(:perform_later)
         post :create, params: post_params
-        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_shares_path(locale: 'en')
+        expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.dashboard_works_path(locale: 'en')
       end
     end
   end

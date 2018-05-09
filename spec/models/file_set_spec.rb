@@ -658,7 +658,7 @@ RSpec.describe FileSet do
     end
   end
 
-  describe "#to_global_id" do
+  describe "#to_global_id", clean_repo: true do
     let(:file_set) { described_class.new(id: '123') }
 
     subject { file_set.to_global_id }

@@ -13,7 +13,7 @@ module Hyrax
     # workflow actions on the work corresponding to the SolrDocument
     # with id = `blacklight_params[:id]`
     def only_active_works(solr_parameters)
-      return if user_has_active_workflow_role?
+      return if user_has_active_workflow_role? || depositor?
       super
     end
 
@@ -28,6 +28,14 @@ module Hyrax
       rescue PowerConverter::ConversionError
         # The current_work doesn't have a sipity workflow entity
         false
+      end
+
+      def depositor?
+        depositors = current_work[DepositSearchBuilder.depositor_field]
+
+        return false if depositors.nil?
+
+        depositors.first == current_ability.current_user.user_key
       end
   end
 end

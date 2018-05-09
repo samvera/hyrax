@@ -34,7 +34,7 @@ RSpec.describe Hyrax::Workflow::GrantReadToDepositor do
       end
     end
 
-    context "with attached FileSets" do
+    context "with attached FileSets", perform_enqueued: [Hyrax::GrantReadToMembersJob] do
       let(:work) { create(:work_with_one_file, user: depositor) }
       let(:file_set) { work.members.first }
 

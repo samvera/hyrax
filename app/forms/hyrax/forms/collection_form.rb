@@ -1,37 +1,51 @@
 module Hyrax
   module Forms
+    # rubocop:disable Metrics/ClassLength
     class CollectionForm
       include HydraEditor::Form
       include HydraEditor::Form::Permissions
       # Used by the search builder
-      attr_accessor :current_ability, :repository
+      attr_reader :scope
 
-      delegate :id, :depositor, :permissions, to: :model
+      delegate :id, :depositor, :permissions, :human_readable_type, :member_ids, :nestable?, to: :model
+
+      class_attribute :membership_service_class
 
       # Required for search builder (FIXME)
       alias collection model
 
       self.model_class = ::Collection
-      class_attribute :member_search_builder_class
-      self.member_search_builder_class = Hyrax::CollectionMemberSearchBuilder
 
-      delegate :human_readable_type, :member_ids, to: :model
+      self.membership_service_class = Collections::CollectionMemberService
+
       delegate :blacklight_config, to: Hyrax::CollectionsController
 
       self.terms = [:resource_type, :title, :creator, :contributor, :description,
                     :keyword, :license, :publisher, :date_created, :subject, :language,
                     :representative_id, :thumbnail_id, :identifier, :based_near,
-                    :related_url, :visibility]
+                    :related_url, :visibility, :collection_type_gid]
 
       self.required_fields = [:title]
+
+      ProxyScope = Struct.new(:current_ability, :repository, :blacklight_config) do
+        def can?(*args)
+          current_ability.can?(*args)
+        end
+      end
 
       # @param model [Collection] the collection model that backs this form
       # @param current_ability [Ability] the capabilities of the current user
       # @param repository [Blacklight::Solr::Repository] the solr repository
       def initialize(model, current_ability, repository)
         super(model)
-        @current_ability = current_ability
-        @repository = repository
+        @scope = ProxyScope.new(current_ability, repository, blacklight_config)
+      end
+
+      def permission_template
+        @permission_template ||= begin
+                                   template_model = PermissionTemplate.find_or_create_by(source_id: model.id)
+                                   PermissionTemplateForm.new(template_model)
+                                 end
       end
 
       # @return [Hash] All FileSets in the collection, file.to_s is the key, file.id is the value
@@ -41,14 +55,13 @@ module Hyrax
 
       # Terms that appear above the accordion
       def primary_terms
-        [:title]
+        [:title, :description]
       end
 
       # Terms that appear within the accordion
       def secondary_terms
         [:creator,
          :contributor,
-         :description,
          :keyword,
          :license,
          :publisher,
@@ -59,6 +72,31 @@ module Hyrax
          :based_near,
          :related_url,
          :resource_type]
+      end
+
+      def banner_info
+        @banner_info ||= begin
+          # Find Banner filename
+          banner_info = CollectionBrandingInfo.where(collection_id: id).where(role: "banner")
+          banner_file = File.split(banner_info.first.local_path).last unless banner_info.empty?
+          file_location = banner_info.first.local_path unless banner_info.empty?
+          relative_path = "/" + banner_info.first.local_path.split("/")[-4..-1].join("/") unless banner_info.empty?
+          { file: banner_file, full_path: file_location, relative_path: relative_path }
+        end
+      end
+
+      def logo_info
+        @logo_info ||= begin
+          # Find Logo filename, alttext, linktext
+          logos_info = CollectionBrandingInfo.where(collection_id: id).where(role: "logo")
+          logos_info.map do |logo_info|
+            logo_file = File.split(logo_info.local_path).last
+            relative_path = "/" + logo_info.local_path.split("/")[-4..-1].join("/")
+            alttext = logo_info.alt_text
+            linkurl = logo_info.target_url
+            { file: logo_file, full_path: logo_info.local_path, relative_path: relative_path, alttext: alttext, linkurl: linkurl }
+          end
+        end
       end
 
       # Do not display additional fields if there are no secondary terms
@@ -72,6 +110,25 @@ module Hyrax
         model.thumbnail.title.first
       end
 
+      def list_parent_collections
+        collection.member_of_collections
+      end
+
+      def list_child_collections
+        collection_member_service.available_member_subcollections.documents
+      end
+
+      def available_parent_collections(scope:)
+        return @available_parents if @available_parents.present?
+
+        collection = Collection.find(id)
+        colls = Hyrax::Collections::NestedCollectionQueryService.available_parent_collections(child: collection, scope: scope, limit_to_id: nil)
+        @available_parents = colls.map do |col|
+          { "id" => col.id, "title_first" => col.title.first }
+        end
+        @available_parents.to_json
+      end
+
       private
 
         def all_files_with_access
@@ -80,12 +137,12 @@ module Hyrax
 
         # Override this method if you have a different way of getting the member's ids
         def member_work_ids
-          response = repository.search(member_search_builder.merge(fl: 'id').query).response
+          response = collection_member_service.available_member_work_ids.response
           response.fetch('docs').map { |doc| doc['id'] }
         end
 
-        def member_search_builder
-          @member_search_builder ||= member_search_builder_class.new(self)
+        def collection_member_service
+          @collection_member_service ||= membership_service_class.new(scope: scope, collection: collection, params: blacklight_config.default_solr_params)
         end
 
         def member_presenters(member_ids)
@@ -94,5 +151,6 @@ module Hyrax
                                      presenter_args: [nil])
         end
     end
+    # rubocop:enable ClassLength
   end
 end

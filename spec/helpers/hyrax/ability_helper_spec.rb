@@ -6,7 +6,7 @@ RSpec.describe Hyrax::AbilityHelper do
       Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC =>
         "<span class=\"label label-success\">Public</span>",
       Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED =>
-        "<span class=\"label label-info\">%s</span>",
+        "<span class=\"label label-info\">%<name>s</span>",
       Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE =>
         "<span class=\"label label-danger\">Private</span>",
       Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO =>
@@ -17,10 +17,11 @@ RSpec.describe Hyrax::AbilityHelper do
       context value do
         let(:visibility) { value }
 
-        it { expect(subject).to eql(output % t('hyrax.institution_name')) }
+        it { expect(subject).to eql(format(output, name: t('hyrax.institution_name'))) }
       end
     end
   end
+
   describe "#visibility_options" do
     let(:public_opt) { ['Public', Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC] }
     let(:authenticated_opt) { [t('hyrax.institution_name'), Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED] }
@@ -45,6 +46,16 @@ RSpec.describe Hyrax::AbilityHelper do
       let(:option) { :loosen }
 
       it { is_expected.to eql(options) }
+    end
+  end
+
+  describe "#render_visibility_link" do
+    subject { helper.render_visibility_link(document) }
+
+    context 'admin set' do
+      let(:document) { double(admin_set?: true) }
+
+      it { is_expected.to be_nil }
     end
   end
 end

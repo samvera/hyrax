@@ -10,19 +10,23 @@ class ImportUrlJob < Hyrax::ApplicationJob
   queue_as Hyrax.config.ingest_queue_name
 
   before_enqueue do |job|
-    operation = job.arguments.last
     operation.pending_job(job)
+  end
+
+  # Retrieves the operation for the job
+  def operation
+    arguments.reduce(:merge).fetch(:operation)
   end
 
   # @param [FileSet] file_set
   # @param [Hyrax::BatchCreateOperation] operation
-  def perform(file_set, operation)
+  def perform(file_set, operation, headers = {})
     operation.performing!
     user = User.find_by_user_key(file_set.depositor)
     uri = URI(file_set.import_url)
     # @todo Use Hydra::Works::AddExternalFileToFileSet instead of manually
     #       copying the file here. This will be gnarly.
-    copy_remote_file(uri) do |f|
+    copy_remote_file(uri, headers) do |f|
       # reload the FileSet once the data is copied since this is a long running task
       file_set.reload
 
@@ -47,17 +51,20 @@ class ImportUrlJob < Hyrax::ApplicationJob
     # metadata.
     # @param uri [URI] the uri of the file to download
     # @yield [IO] the stream to write to
-    def copy_remote_file(uri)
+    def copy_remote_file(uri, headers = {})
       filename = File.basename(uri.path)
-      Dir.mktmpdir do |dir|
-        File.open(File.join(dir, filename), 'wb') do |f|
-          retriever = BrowseEverything::Retriever.new
-          retriever.retrieve('url' => uri) do |chunk|
-            f.write(chunk)
-          end
-          f.rewind
-          yield f
+      dir = Dir.mktmpdir
+      Rails.logger.debug("ImportUrlJob: Copying <#{uri}> to #{dir}")
+
+      File.open(File.join(dir, filename), 'wb') do |f|
+        retriever = BrowseEverything::Retriever.new
+        uri_spec = { 'url' => uri }.merge(headers)
+        retriever.retrieve(uri_spec) do |chunk|
+          f.write(chunk)
         end
+        f.rewind
+        yield f
       end
+      Rails.logger.debug("ImportUrlJob: Closing #{File.join(dir, filename)}")
     end
 end

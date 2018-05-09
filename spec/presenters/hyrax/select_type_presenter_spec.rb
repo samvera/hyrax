@@ -34,6 +34,12 @@ RSpec.describe Hyrax::SelectTypePresenter do
       it { is_expected.to eq "/concern/#{model.to_s.tableize}/new?add_works_to_collection=#{collection_id}" }
     end
 
+    context 'with id and controller params' do
+      let(:params) { { id: collection_id, controller: 'hyrax/dashboard/collections' } }
+
+      it { is_expected.to eq "/concern/#{model.to_s.tableize}/new?add_works_to_collection=#{collection_id}" }
+    end
+
     context 'with no params' do
       let(:params) { {} }
 
@@ -49,6 +55,12 @@ RSpec.describe Hyrax::SelectTypePresenter do
 
     context 'with add_works_to_collection param' do
       let(:params) { { add_works_to_collection: collection_id } }
+
+      it { is_expected.to eq "/batch_uploads/new?add_works_to_collection=#{collection_id}&payload_concern=#{model}" }
+    end
+
+    context 'with id and controller params' do
+      let(:params) { { id: collection_id, controller: 'hyrax/dashboard/collections' } }
 
       it { is_expected.to eq "/batch_uploads/new?add_works_to_collection=#{collection_id}&payload_concern=#{model}" }
     end

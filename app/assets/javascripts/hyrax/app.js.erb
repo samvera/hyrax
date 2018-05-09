@@ -9,9 +9,14 @@ Hyrax = {
         this.workEditor();
         this.fileManager();
         this.selectWorkType();
+        this.selectCollectionType();
         this.datatable();
         this.adminSetEditor();
         this.collectionEditor();
+        this.collectionsV2();
+        this.collectionTypes();
+        this.collectionTypeEditor();
+        this.collectionUtilities();
         this.adminStatisticsGraphs();
         this.tinyMCE();
         this.sortAndPerPage();
@@ -34,10 +39,34 @@ Hyrax = {
       var controls = new AdminSetControls($('#admin-set-controls'));
     },
 
+    // The collectionType edit page
+    collectionTypeEditor: function() {
+      var CollectionTypeControls = require('hyrax/admin/collection_type_controls');
+      var controls = new CollectionTypeControls($('#collection-types-controls'));
+    },
+
     // The Collection edit page
     collectionEditor: function() {
       var CollectionControls = require('hyrax/collections/editor');
-      var controls = new CollectionControls($('#collection-controls'));
+      var controls = new CollectionControls($('#collection-edit-controls'));
+    },
+
+    // Collections v2 - collections related js should (over time) be moved here
+    // from 'collections.js' to take advantage of shared modules
+    collectionsV2: function() {
+      var CollectionsV2 = require('hyrax/collections_v2');
+      new CollectionsV2();
+    },
+
+    // Collection types
+    collectionTypes: function() {
+      var CollectionTypes = require('hyrax/collection_types');
+      var collection_types = new CollectionTypes($('.collection-types-wrapper'))
+    },
+
+    collectionUtilities: function() {
+      var CollectionUtilities = require('hyrax/collections_utils');
+      new CollectionUtilities();
     },
 
     // Pretty graphs on the dashboard page
@@ -119,6 +148,14 @@ Hyrax = {
         });
     },
 
+    // Popover menu to select the type when creating a new collection
+    selectCollectionType: function () {
+        var SelectCollectionType = require('hyrax/select_collection_type');
+        $("[data-behavior=select-collection]").each(function () {
+            new SelectCollectionType($(this)); // eslint-disable-line no-new
+        });
+    },
+
     // Minimize/maximize the dashboard sidebar
     sidebar: function () {
         $('.sidebar-toggle').on('click', function() {
@@ -151,5 +188,4 @@ Hyrax = {
         var BatchSelect = require('hyrax/batch_select');
         BatchSelect.initialize_batch_selected();
     }
-
 };

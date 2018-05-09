@@ -29,15 +29,29 @@ RSpec.describe ImportUrlJob do
   end
 
   context 'after running the job' do
+    let!(:tmpdir) { Rails.root.join("tmp/spec/#{Process.pid}") }
+
     before do
       file_set.id = 'abc123'
       allow(file_set).to receive(:reload)
+
+      FileUtils.mkdir_p(tmpdir)
+      allow(Dir).to receive(:mktmpdir).and_return(tmpdir)
+    end
+
+    after do
+      FileUtils.remove_entry(tmpdir)
     end
 
     it 'creates the content and updates the associated operation' do
       expect(actor).to receive(:create_content).with(File, from_url: true).and_return(true)
       described_class.perform_now(file_set, operation)
       expect(operation).to be_success
+    end
+
+    it 'leaves the temp directory in place' do
+      described_class.perform_now(file_set, operation)
+      expect(File.exist?(File.join(tmpdir, file_hash))).to be true
     end
   end
 

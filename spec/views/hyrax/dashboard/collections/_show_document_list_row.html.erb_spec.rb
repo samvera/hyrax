@@ -24,6 +24,7 @@ RSpec.describe 'hyrax/dashboard/collections/_show_document_list_row.html.erb', t
     it "renders works" do
       render('show_document_list_row', document: work)
       expect(rendered).to have_content 'One Hundred Years of Solitude'
+      expect(rendered).to have_content('Edit Access:')
     end
   end
 end

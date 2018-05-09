@@ -26,10 +26,59 @@ RSpec.describe Hyrax::GenericWorksController do
     end
   end
 
+  describe 'integration test for depositor of a suppressed documents without a workflow role' do
+    let(:work) do
+      create(:work, :public, state: Vocab::FedoraResourceStatus.inactive, user: user)
+    end
+
+    before do
+      create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
+    end
+
+    it 'renders without the unauthorized message' do
+      get :show, params: { id: work.id }
+      expect(response.code).to eq '200'
+      expect(response).to render_template(:show)
+      expect(assigns[:presenter]).to be_instance_of Hyrax::GenericWorkPresenter
+      expect(flash[:notice]).to be_nil
+    end
+  end
+
   describe '#show' do
     before do
       create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
     end
+
+    context 'while logged out' do
+      let(:work) { create(:public_generic_work, user: user, title: ['public thing']) }
+
+      before { sign_out user }
+
+      context "without a referer" do
+        it "sets the default breadcrumbs" do
+          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+          get :show, params: { id: work }
+          expect(response).to be_successful
+        end
+      end
+
+      context "with a referer" do
+        before do
+          request.env['HTTP_REFERER'] = 'http://test.host/foo'
+        end
+
+        it "sets breadcrumbs to authorized pages" do
+          expect(controller).to receive(:add_breadcrumb).with('Home', main_app.root_path(locale: 'en'))
+          expect(controller).not_to receive(:add_breadcrumb).with('Dashboard', hyrax.dashboard_path(locale: 'en'))
+          expect(controller).not_to receive(:add_breadcrumb).with('Your Works', hyrax.my_works_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('public thing', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
+          get :show, params: { id: work }
+          expect(response).to be_successful
+          expect(response).to render_template("layouts/hyrax/1_column")
+        end
+      end
+    end
+
     context 'my own private work' do
       let(:work) { create(:private_generic_work, user: user, title: ['test title']) }
 
@@ -41,7 +90,8 @@ RSpec.describe Hyrax::GenericWorksController do
 
       context "without a referer" do
         it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with("My Dashboard", hyrax.dashboard_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with("Dashboard", hyrax.dashboard_path(locale: 'en'))
           get :show, params: { id: work }
           expect(response).to be_successful
         end
@@ -53,8 +103,9 @@ RSpec.describe Hyrax::GenericWorksController do
         end
 
         it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', hyrax.dashboard_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('Your Works', hyrax.my_works_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Dashboard', hyrax.dashboard_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Works', hyrax.my_works_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
           get :show, params: { id: work }
           expect(response).to be_successful
@@ -102,7 +153,7 @@ RSpec.describe Hyrax::GenericWorksController do
       end
     end
 
-    context 'someone elses public work' do
+    context 'someone else\'s public work' do
       let(:work) { create(:public_generic_work) }
 
       context "html" do
@@ -119,10 +170,12 @@ RSpec.describe Hyrax::GenericWorksController do
         before do
           allow(controller).to receive(:presenter).and_return(presenter)
           allow(presenter).to receive(:export_as_ttl).and_return("ttl graph")
+          allow(presenter).to receive(:editor?).and_return(true)
         end
 
         it 'renders a turtle file' do
           get :show, params: { id: '99999999', format: :ttl }
+
           expect(response).to be_successful
           expect(response.body).to eq "ttl graph"
           expect(response.content_type).to eq 'text/turtle'
@@ -208,6 +261,7 @@ RSpec.describe Hyrax::GenericWorksController do
     end
 
     context 'when create fails' do
+      let(:work) { create(:work) }
       let(:create_status) { false }
 
       it 'draws the form again' do
@@ -322,8 +376,8 @@ RSpec.describe Hyrax::GenericWorksController do
 
       it 'shows me the page and sets breadcrumbs' do
         expect(controller).to receive(:add_breadcrumb).with("Home", root_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with("Administration", hyrax.dashboard_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with("Your Works", hyrax.my_works_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with("Dashboard", hyrax.dashboard_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with("Works", hyrax.my_works_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(work.title.first, main_app.hyrax_generic_work_path(work.id, locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with('Edit', main_app.edit_hyrax_generic_work_path(work.id))
 

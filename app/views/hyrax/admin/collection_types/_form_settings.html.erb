@@ -1,0 +1,40 @@
+<p><%= t('.instructions') %></p>
+
+<p><strong><%= t('.warning') %></strong></p>
+
+<div class="collection-types-settings">
+  <div class="form-inline">
+    <p><%= f.input :nestable, as: :boolean, disabled: f.object.all_settings_disabled? %></p>
+    <p><%= f.input :brandable, as: :boolean, disabled: f.object.all_settings_disabled? %></p>
+    <p><%= f.input :discoverable, as: :boolean, disabled: f.object.all_settings_disabled? %></p>
+    <p><%= f.input :sharable, as: :boolean, disabled: f.object.all_settings_disabled? %></p>
+    <% # Using html instead of simple_form to allow adding of disabled class to elements through javascript settings.es6 %>
+    <div class="collection-type-share-applies-to">
+      <div id="sharable-applies-to-new-works-setting-checkbox-container"
+           class="form-group boolean optional collection_type_share_applies_to_new_works <%= 'disabled' if f.object.share_options_disabled? %>">
+        <div class="checkbox">
+          <input value="0"
+                 name="collection_type[share_applies_to_new_works]"
+                 type="hidden"
+                 <%= "disabled=\"disabled\"".html_safe if f.object.share_options_disabled? %> />
+          <label id="sharable-applies-to-new-works-setting-label"
+                 class="boolean optional <%= 'disabled' if f.object.share_options_disabled? %>"
+                 for="collection_type_share_applies_to_new_works">
+            <input id="collection_type_share_applies_to_new_works" <%= "disabled=\"disabled\"".html_safe if f.object.share_options_disabled? %>
+                   class="boolean optional <%= 'disabled' if f.object.share_options_disabled? %>"
+                   value="1"
+                   <%= "checked=\"checked\"".html_safe if f.object.share_applies_to_new_works %>"
+                   name="collection_type[share_applies_to_new_works]"
+                   type="checkbox" />
+            APPLY TO NEW WORKS
+          </label>
+        </div>
+        <p class="help-block">When new works are created directly in the collection, grant sharing users and groups permissions for the new work according to their collection roles.</p>
+      </div>
+    </div>
+    <p><%= f.input :allow_multiple_membership, as: :boolean, disabled: f.object.all_settings_disabled? %></p>
+    <p><%= f.input :require_membership, as: :boolean, disabled: true %></p>
+    <p><%= f.input :assigns_workflow, as: :boolean, disabled: true %></p>
+    <p><%= f.input :assigns_visibility, as: :boolean, disabled: true %></p>
+  </div>
+</div>

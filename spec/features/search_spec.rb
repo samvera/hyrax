@@ -29,17 +29,24 @@ RSpec.describe 'searching' do
       end
     end
 
-    it "only searches all" do
+    it "only searches all and does not display search options for dashboard files" do
       visit '/'
-      expect(page).to have_content("All")
-      expect(page).to have_css("a[data-search-label*=All]", visible: false)
+
+      # it "does not display search options for dashboard files" do
+      # This section was tested on its own, and required a full setup.
+      within(".input-group-btn") do
+        expect(page).not_to have_content("All")
+        expect(page).not_to have_content("My Works")
+        expect(page).not_to have_content("My Collections")
+        expect(page).not_to have_content("My Shares")
+      end
+
+      expect(page).not_to have_css("a[data-search-label*=All]", visible: false)
       expect(page).not_to have_css("a[data-search-label*='My Works']", visible: false)
       expect(page).not_to have_css("a[data-search-label*='My Collections']", visible: false)
       expect(page).not_to have_css("a[data-search-label*='My Highlights']", visible: false)
       expect(page).not_to have_css("a[data-search-label*='My Shares']", visible: false)
 
-      click_button("All")
-      expect(page).to have_content("All of Hyrax")
       fill_in "search-field-header", with: subject_value
       click_button("Go")
 
@@ -50,15 +57,6 @@ RSpec.describe 'searching' do
 
       expect(page.body).to include "<span itemprop=\"keywords\"><a href=\"/catalog?f%5Bkeyword_sim%5D%5B%5D=taco&amp;locale=en\">taco</a></span>"
       expect(page.body).to include "<span itemprop=\"keywords\"><a href=\"/catalog?f%5Bkeyword_sim%5D%5B%5D=mustache&amp;locale=en\">mustache</a></span>"
-    end
-
-    it "does not display search options for dashboard files" do
-      visit "/"
-      within(".input-group-btn") do
-        expect(page).not_to have_content("My Works")
-        expect(page).not_to have_content("My Collections")
-        expect(page).not_to have_content("My Shares")
-      end
     end
   end
 end

@@ -1,0 +1,31 @@
+                  <h3><%= t(".#{access}.title") %></h3>
+                  <p><%= t(".#{access}.help") %></p>
+                  <p><%= t(".#{access}.help_with_works", type_title: @collection.collection_type.title) if @collection.share_applies_to_new_works? && access != 'depositors' %></p>
+                  <% if @form.permission_template.access_grants.select(&filter).any? %>
+                    <table class="table table-striped share-status">
+                      <thead>
+                        <tr>
+                          <th><%= t(".#{access}.agent_name") %></th>
+                          <th><%= t(".#{access}.type") %></th>
+                          <th><%= t(".#{access}.action") %></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <% @form.permission_template.access_grants.select(&filter).each do |g| %>
+                        <tr>
+                          <td data-agent="<%= g.agent_id %>"><%= g.label %></td>
+                          <td><%= g.agent_type.titleize %></td>
+                          <td>
+                            <% if g.admin_group? %>
+                              <%= link_to t(".#{access}.remove"), hyrax.admin_permission_template_access_path(g), method: :delete, class: 'btn btn-sm btn-danger disabled', disabled: true, title: t('hyrax.admin.admin_sets.form.permission_destroy_errors.admin_group') %>
+                            <% else %>
+                              <%= link_to t(".#{access}.remove"), hyrax.admin_permission_template_access_path(g), method: :delete, class: 'btn btn-sm btn-danger' %>
+                            <% end %>
+                          </td>
+                        </tr>
+                      <% end %>
+                      </tbody>
+                    </table>
+                  <% else %>
+                    <p><em><%= t(".#{access}.empty") %></em></p>
+                  <% end %>

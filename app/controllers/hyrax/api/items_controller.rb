@@ -34,13 +34,9 @@ module Hyrax
         def my_load_and_authorize_resource
           @work = Hyrax::WorkRelation.new.find(params[:id])
 
-          unless user.can? :edit, @work
-            return render plain: "#{user} lacks access to #{@work}", status: :unauthorized
-          end
+          return render plain: "#{user} lacks access to #{@work}", status: :unauthorized unless user.can? :edit, @work
 
-          if @work.arkivo_checksum.nil?
-            return render plain: "Forbidden: #{@work} not deposited via Arkivo", status: :forbidden
-          end
+          return render plain: "Forbidden: #{@work} not deposited via Arkivo", status: :forbidden if @work.arkivo_checksum.nil?
         rescue ActiveFedora::ObjectNotFoundError
           return render plain: "id '#{params[:id]}' not found", status: :not_found
         end

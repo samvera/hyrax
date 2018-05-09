@@ -46,9 +46,7 @@ module Hyrax
     # any existing edit permissions on the work.
     def accept
       @proxy_deposit_request.transfer!(params[:reset])
-      if params[:sticky]
-        current_user.can_receive_deposits_from << @proxy_deposit_request.sending_user
-      end
+      current_user.can_receive_deposits_from << @proxy_deposit_request.sending_user if params[:sticky]
       redirect_to hyrax.transfers_path, notice: "Transfer complete"
     end
 

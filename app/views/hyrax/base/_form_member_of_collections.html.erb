@@ -8,8 +8,7 @@ CSS:
 HTML Properties:
   table:
     [data-behavior="child-relationships"] : allows the javascript to be initialized
-    data-param-key : the parameter key value for this model type
-%>
+    data-param-key : the parameter key value for this model type %>
 <h2><%= t("hyrax.works.form.in_collections") %></h2>
 
 <div class="form-group" data-behavior="collection-relationships" data-param-key="<%= f.object.model_name.param_key %>" data-members="<%= f.object.member_of_collections_json %>">
@@ -20,7 +19,7 @@ HTML Properties:
                   prompt: :translate,
                   data: {
                     autocomplete: 'collection',
-                    'autocomplete-url' => Rails.application.routes.url_helpers.qa_path + '/search/collections?access=edit'
+                    'autocomplete-url' => Rails.application.routes.url_helpers.qa_path + '/search/collections?access=deposit'
                   } %>
       <a class="btn btn-primary" data-behavior="add-relationship">Add</a>
   </div>

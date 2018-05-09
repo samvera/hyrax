@@ -1,0 +1,22 @@
+<div class="modal fade" id="collection-remove-subcollection-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="delete-collection-form">
+        <div class="modal-body">
+          <!-- Any alert messaging mounts to this element -->
+          <div class="modal-ajax-alert"></div>
+
+          <p><%= t('hyrax.dashboard.collections.form_relationships.modals.remove_this_sub_collection_description') %></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('helpers.action.cancel') %></button>
+          <button
+            type="button"
+            class="btn btn-danger modal-button-remove-collection">
+            <%= t('helpers.action.remove') %>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

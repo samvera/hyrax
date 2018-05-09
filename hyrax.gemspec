@@ -46,10 +46,10 @@ SUMMARY
   spec.add_dependency 'flot-rails', '~> 0.0.6'
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
   spec.add_dependency 'hydra-derivatives', '~> 3.3'
-  spec.add_dependency 'hydra-editor', '~> 3.3'
+  spec.add_dependency 'hydra-editor', '>= 3.3', '< 5.0'
   spec.add_dependency 'hydra-head', '~> 11.0.0.rc1'
   spec.add_dependency 'hydra-works', '~> 0.16'
-  spec.add_dependency 'iiif_manifest', '~> 0.3.0'
+  spec.add_dependency 'iiif_manifest', '>= 0.3', '< 0.5'
   spec.add_dependency 'jquery-datatables-rails', '~> 3.4'
   spec.add_dependency 'jquery-ui-rails', '~> 6.0'
   spec.add_dependency 'json-schema' # for Arkivo
@@ -71,40 +71,41 @@ SUMMARY
   spec.add_dependency 'redis-namespace', '~> 1.5'
   spec.add_dependency 'redlock', '>= 0.1.2'
   spec.add_dependency 'retriable', '>= 2.9', '< 4.0'
+  spec.add_dependency 'samvera-nesting_indexer', '~> 2.0'
   spec.add_dependency 'select2-rails', '~> 3.5'
   spec.add_dependency 'signet'
   spec.add_dependency 'tinymce-rails', '~> 4.1'
 
-  spec.add_development_dependency "capybara", '~> 2.4'
+  # temporary pin to 2.17 due to failures caused in 2.18.0
+  spec.add_development_dependency "capybara", '~> 2.4', '< 2.18.0'
   spec.add_development_dependency 'capybara-maleficent', '~> 0.2'
   spec.add_development_dependency "chromedriver-helper"
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
-  spec.add_development_dependency 'engine_cart', '~> 1.2'
+  spec.add_development_dependency 'engine_cart', '~> 2.0'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
-  spec.add_development_dependency "factory_bot_rails", '~> 4.4'
+  spec.add_development_dependency "factory_bot", '~> 4.4'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.5', '>= 0.5.1'
-  spec.add_development_dependency "jasmine", '~> 2.3'
+  spec.add_development_dependency "jasmine", '~> 2.3', '< 2.99'
+  spec.add_development_dependency "jasmine-core", '~> 2.3', '< 2.99'
   spec.add_development_dependency 'mida', '~> 0.3'
   spec.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0'
   spec.add_development_dependency 'rspec-its', '~> 1.1'
   spec.add_development_dependency 'rspec-rails', '~> 3.1'
   spec.add_development_dependency "selenium-webdriver"
   spec.add_development_dependency 'solr_wrapper', '~> 1.1'
-  # Pin rubocop and rubocop-rspec tightly. Minor-level version bumps
-  # in these gems cause Rubocop violations, and those violations cause
-  # continuous integration builds to fail, and those failures prevent
-  # us from merging pull requests. As a community, we have decided
-  # that it is not reasonable to manage style violations to be dealt
-  # with in a pull request *unless* said pull request's intent is to
-  # bring the codebase in further alignment with community style
-  # conventions. This allows us to take a managed approach to code
-  # style -- we choose to update style when we wish, not when a
-  # minor-level version bump in a dependency comes out.
   spec.add_development_dependency 'i18n-debug' if ENV['I18N_DEBUG']
   spec.add_development_dependency 'i18n_yaml_sorter' unless ENV['TRAVIS']
   spec.add_development_dependency 'rails-controller-testing', '~> 1'
-  spec.add_development_dependency 'rubocop', '~> 0.51.0'
-  spec.add_development_dependency 'rubocop-rspec', '~> 1.20.1'
+  # the hyrax style guide is based on `bixby`. see `.rubocop.yml`
+  spec.add_development_dependency 'bixby', '~> 1.0.0'
+  spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'webmock'
+
+  ########################################################
+  # Temporarily pinned dependencies. INCLUDE EXPLANATIONS.
+  #
+  # simple_form 3.5.1 broke hydra-editor for certain model types;
+  #   see: https://github.com/plataformatec/simple_form/issues/1549
+  spec.add_dependency 'simple_form', '~> 3.2', '<= 3.5.0'
 end

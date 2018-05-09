@@ -10,10 +10,43 @@ module Hyrax
     include Hyrax::HumanReadableType
     include Hyrax::HasRepresentative
     include Hyrax::Permissions
+    include Hyrax::CollectionNesting
 
     included do
       validates_with HasOneTitleValidator
+      after_destroy :destroy_permission_template
+
       self.indexer = Hyrax::CollectionIndexer
+
+      class_attribute :index_collection_type_gid_as, writer: false
+      self.index_collection_type_gid_as = [:symbol]
+
+      property :collection_type_gid, predicate: ::RDF::Vocab::SCHEMA.additionalType, multiple: false do |index|
+        index.as(*index_collection_type_gid_as)
+      end
+
+      # validates that collection_type_gid is present
+      validates :collection_type_gid, presence: true
+
+      # Need to define here in order to override setter defined by ActiveTriples
+      def collection_type_gid=(new_collection_type_gid)
+        raise "Can't modify collection type of this collection" if persisted? && !collection_type_gid_was.nil? && collection_type_gid_was != new_collection_type_gid
+        new_collection_type = Hyrax::CollectionType.find_by_gid!(new_collection_type_gid)
+        super
+        @collection_type = new_collection_type
+        collection_type_gid
+      end
+    end
+
+    delegate(*Hyrax::CollectionType.collection_type_settings_methods, to: :collection_type)
+
+    # Get the collection_type when accessed
+    def collection_type
+      @collection_type ||= Hyrax::CollectionType.find_by_gid!(collection_type_gid)
+    end
+
+    def collection_type=(new_collection_type)
+      self.collection_type_gid = new_collection_type.gid
     end
 
     # Add members using the members association.
@@ -24,10 +57,16 @@ module Hyrax
 
     # Add member objects by adding this collection to the objects' member_of_collection association.
     def add_member_objects(new_member_ids)
-      Array(new_member_ids).each do |member_id|
+      Array(new_member_ids).collect do |member_id|
         member = ActiveFedora::Base.find(member_id)
-        member.member_of_collections << self
-        member.save!
+        message = Hyrax::MultipleMembershipChecker.new(item: member).check(collection_ids: id, include_current_members: true)
+        if message
+          member.errors.add(:collections, message)
+        else
+          member.member_of_collections << self
+          member.save!
+        end
+        member
       end
     end
 
@@ -47,6 +86,10 @@ module Hyrax
           collection = ActiveSupport::Inflector.tableize(name)
           "hyrax/#{collection}/#{element}".freeze
         end
+      end
+
+      def collection_type_gid_document_field_name
+        Solrizer.solr_name('collection_type_gid', *index_collection_type_gid_as)
       end
     end
 
@@ -71,7 +114,49 @@ module Hyrax
       ActiveFedora::Base.search_with_conditions("member_of_collection_ids_ssim:#{id}").map(&:id)
     end
 
+    # @api public
+    # Retrieve the permission template for this collection.
+    # @return [Hyrax::PermissionTemplate]
+    # @raise [ActiveRecord::RecordNotFound]
+    def permission_template
+      Hyrax::PermissionTemplate.find_by!(source_id: id)
+    end
+
+    # Calculate and update who should have read/edit access to the collections based on who
+    # has access in PermissionTemplateAccess
+    def reset_access_controls!
+      update!(edit_users: permission_template_edit_users,
+              edit_groups: permission_template_edit_groups,
+              read_users: permission_template_read_users,
+              read_groups: (permission_template_read_groups + visibility_group).uniq)
+    end
+
     private
+
+      def permission_template_edit_users
+        permission_template.agent_ids_for(access: 'manage', agent_type: 'user')
+      end
+
+      def permission_template_edit_groups
+        permission_template.agent_ids_for(access: 'manage', agent_type: 'group')
+      end
+
+      def permission_template_read_users
+        (permission_template.agent_ids_for(access: 'view', agent_type: 'user') +
+          permission_template.agent_ids_for(access: 'deposit', agent_type: 'user')).uniq
+      end
+
+      def permission_template_read_groups
+        (permission_template.agent_ids_for(access: 'view', agent_type: 'group') +
+          permission_template.agent_ids_for(access: 'deposit', agent_type: 'group')).uniq -
+          [::Ability.registered_group_name, ::Ability.public_group_name]
+      end
+
+      def visibility_group
+        return [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC] if visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+        return [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED] if visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+        []
+      end
 
       # Calculate the size of all the files in the work
       # @param work_id [String] identifer for a work
@@ -92,6 +177,12 @@ module Hyrax
       # Solr field name works use to index member ids
       def member_ids_field
         ActiveFedora.index_field_mapper.solr_name('member_ids', :symbol)
+      end
+
+      def destroy_permission_template
+        permission_template.destroy
+      rescue ActiveRecord::RecordNotFound
+        true
       end
   end
 end

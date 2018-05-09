@@ -1,0 +1,153 @@
+<div class="set-access-controls">
+  <h3><%= t('.branding.label') %></h3>
+  <p><%= t('.branding.description') %></p>
+  <label><strong><%= t('.banner.label') %></strong></label>
+  <p><%= t('.banner.description') %>.</p>
+
+  <div id="fileupload">
+    <!-- Redirect browsers with JavaScript disabled to the origin page -->
+    <noscript><input type="hidden" name="redirect" value="<%= main_app.root_path %>" /></noscript>
+    <!-- The table listing the files available for upload/download -->
+
+    <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+    <div class="row fileupload-buttonbar">
+      <div class="col-xs-4">
+        <!-- The fileinput-button span is used to style the file input field as button -->
+        <span class="btn btn-success fileinput-button">
+          <span class="glyphicon glyphicon-plus"></span>
+          <span>Choose File</span>
+          <input type="file" name="files[]" single />
+        </span>
+      </div> <!-- end col-xs-4 -->
+
+      <!-- The global progress state -->
+      <div class="col-xs-8 fileupload-progress branding-banner-progress fade">
+        <!-- The global progress bar -->
+        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+        </div>
+        <!-- The extended global progress state -->
+        <div class="progress-extended">&nbsp;</div>
+      </div> <!-- end col-xs-5 fileupload-progress fade -->
+    </div> <!-- end row fileupload-buttonbar -->
+
+    <div class="row branding-banner-list">
+      <div class="col-xs-12">
+        <div class="container">
+        <% if f.object.banner_info[:file] %>
+          <div id="banner">
+            <div class="row branding-banner-row">
+              <div class="col-sm-3">
+                <span class="name">
+                  <span><%= f.object.banner_info[:file] %></span>
+                  <input type="hidden" name="banner_unchanged" value="true" />
+                </span>
+              </div>
+
+              <div class="col-sm-2">
+                <button class="btn btn-danger delete branding-banner-remove" data-type="DELETE" data-url="/" onclick=$("#banner").remove();>
+                  <span class="glyphicon glyphicon-remove"></span>
+                  <span class="controls-remove-text">Remove</span>
+                  <span class="sr-only">
+                    previous
+                    <span class="controls-field-name-text">Remove Current Banner</span>
+                  </span>
+                </button>
+              </div> <!-- end col-sm-2 -->
+            </div> <!-- row branding-banner-row -->
+
+            <% if f.object.banner_info[:relative_path] %>
+            <div class="banner-image">
+              <i><%= image_tag(f.object.banner_info[:relative_path],
+                               size: "800x100",
+                               alt: "Unable to display banner: #{f.object.banner_info[:file]}") %></i>
+            </div>
+            <% end %>
+          </div> <!-- end banner -->
+          <div role="presentation" class="table table-striped"><span class="files"></span></div>
+        <% else %>
+          <div role="presentation" class="table table-striped"><span class="files"></span></div>
+        <% end %>
+
+          <!-- The global file processing state -->
+          <span class="fileupload-process"></span>
+        </div> <!-- end container -->
+      </div> <!-- end row branding-banner-list -->
+    </div> <!-- end row branding-banner-list -->
+  </div> <!-- fileupload -->
+
+  <%= render 'hyrax/uploads/js_templates_branding' %>
+
+  <label><strong><%= t('.logo.label') %></strong></label>
+  <p><%= t('.logo.description') %></p>
+
+  <div id="fileuploadlogo">
+    <!-- Redirect browsers with JavaScript disabled to the origin page -->
+    <noscript><input type="hidden" name="redirect" value="<%= main_app.root_path %>" /></noscript>
+    <!-- The table listing the files available for upload/download -->
+
+    <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+    <div class="row fileupload-buttonbar">
+      <div class="col-xs-4">
+        <!-- The fileinput-button span is used to style the file input field as button -->
+        <span class="btn btn-success fileinput-button">
+          <span class="glyphicon glyphicon-plus"></span>
+          <span>Choose File</span>
+          <input type="file" name="files[]" single />
+        </span>
+      </div> <!-- end col-xs-4 -->
+
+      <!-- The global progress state -->
+      <div class="col-xs-8 fileupload-progress branding-logo-progress fade">
+        <!-- The global progress bar -->
+        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+        </div>
+        <!-- The extended global progress state -->
+        <div class="progress-extended">&nbsp;</div>
+      </div> <!-- end col-xs-8 fileupload-progress branding-logo-progress fade -->
+    </div> <!-- end row fileupload-buttonbar -->
+
+    <div class="row branding-logo-list">
+      <div class="col-xs-12">
+        <div class="container">
+          <% i = 0 %>
+          <% f.object.logo_info.each_with_index do |linfo, i| %>
+            <div class="row branding-logo-row" id="logorow_<%= i %>">
+              <div class="col-sm-3">
+                <span class="name">
+                  <span><%= linfo[:file] %></span>
+                <input type="hidden" name="logo_files[]" value="<%= linfo[:full_path] %>" />
+                </span>
+              </div>
+
+              <div class="col-sm-4 branding-logo-input">
+                <label for="linkurl_<%= i %>">Link URL:
+                  <input id="linkurl_<%= i %>" class="branding-logo-input" type="text" name="linkurl[]" value="<%= linfo[:linkurl] %>" />
+                </label>
+                <label for="alttext_<%= i %>">Alt Text:
+                  <input id="alttext_<%= i %>" class="branding-logo-input" type="text" name="alttext[]" value="<%= linfo[:alttext] %>" />
+                </label>
+              </div>
+
+              <div class="col-sm-2">
+                <button class="btn btn-danger delete branding-logo-remove" data-type="DELETE" data-url="/" onclick=$("#logorow_<%= i %>").remove();>
+                  <span class="glyphicon glyphicon-remove"></span>
+                  <span class="controls-remove-text">Remove</span>
+                   <span class="sr-only">
+                    previous
+                    <span class="controls-field-name-text">Remove Logo <%= i + 1 %></span>
+                  </span>
+                </button>
+              </div> <!-- end col-sm-2 -->
+            </div> <!-- row logorow -->
+          <% end %>
+          <span class="files"></span>
+        </div> <!-- end container -->
+
+        <!-- The global file processing state -->
+        <span class="fileupload-process"></span>
+      </div> <!-- end col-xs-12 -->
+    </div> <!-- end row branding-logo-list -->
+  </div> <!-- end fileuploadlogo -->
+</div> <!-- end set-access-controls -->

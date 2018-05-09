@@ -7,12 +7,18 @@ en:
   activemodel:
     errors:
       messages:
+        cannot_have_child_nested: cannot have child nested within it
+        cannot_nest_in_parent: cannot nest within parent
+        cannot_remove_relationship: permission is inadequate for removal of nesting relationship
         conflict: Your changes could not be saved because another user (or background job) updated this %{model} after you began editing. Please make sure all file attachments have completed successfully and try again. This form has refreshed with the most recent saved copy of the %{model}.
+        exceeds_maximum_nesting_depth: nesting exceeds the allowed maximum nesting depth.
+        is_not_nestable: is not nestable
   blacklight:
     search:
       fields:
         facet:
-          admin_set_sim: Collection
+          admin_set_sim: Admin Set
+          member_of_collections_ssim: Collection
           resource_type_sim: Resource type
           suppressed_bsi: Status
         show:
@@ -22,7 +28,7 @@ en:
           keyword: Keyword
       filters:
         title: 'Filtering by:'
-      start_over: Clear filters
+      start_over: Start Over
   errors:
     messages:
       carrierwave_download_error: Couldn't download image.
@@ -32,21 +38,27 @@ en:
       extension_whitelist_error: 'You are not allowed to upload %{extension} files, allowed types: %{allowed_types}'
   helpers:
     action:
+      add: Add
       admin_set:
         new: Create new administrative set
       batch:
         new: Create batch of works
       cancel: Cancel
+      close: Close
       collection:
         new: New Collection
       delete: Delete
       edit: Edit
+      less: Less
+      more: More
+      refresh: Refresh
+      remove: Remove
       work:
         new: Add new work
     submit:
       admin_set:
         create: Save
-        update: Save
+        update: Save changes
       create: Save
       hyrax_permission_template:
         create: Save
@@ -55,7 +67,7 @@ en:
         create: Add
       proxy_deposit_request:
         create: Transfer
-      update: Save
+      update: Save changes
   hyrax:
     account_label: User
     active_consent_to_agreement: I have read and agree to the
@@ -70,7 +82,7 @@ en:
           no_works: The administrative set does not contain any works.
           title: List of items in this administrative set
         edit:
-          header: Edit Administrative Set
+          header: 'Edit Administrative Set: %{title}'
         form:
           cancel: Cancel
           note: Users granted a new role will only gain the role on works that are deposited after that role has been granted.
@@ -159,15 +171,87 @@ en:
           header: Create New Administrative Set
         show:
           breadcrumb: View Set
-          confirm_delete: Are you sure you wish to delete this Administrative Set? This action cannot be undone.
           header: Administrative Set
           item_list_header: Works in This Set
+        show_actions:
+          confirm_delete: Are you sure you wish to delete this Administrative Set? This action cannot be undone.
       appearances:
         show:
           header: Appearance
         update:
           flash:
             success: The appearance was successfully updated
+      collection_types:
+        create:
+          notification: The collection type %{name} has been created.
+        delete:
+          notification: The collection type %{name} has been deleted.
+        edit:
+          header: Edit Collection Type
+          submit: Save changes
+        errors:
+          no_settings_change_for_admin_sets: Collection type settings cannot be altered for the Administrative Set type
+          no_settings_change_for_user_collections: Collection type settings cannot be altered for the User Collection type
+          no_settings_change_if_not_empty: Collection type settings cannot be altered for a type that has collections
+          not_empty: Collection type cannot be altered as it has collections
+        form:
+          tab:
+            appearance: Badge Color
+            metadata: Description
+            participants: Participants
+            settings: Settings
+        form_participant_table:
+          creators:
+            action: Action
+            agent_name: Collection Creators
+            empty: No creators have been added to this collection type.
+            help: Creators of collections of this type can create and manage their own collections.
+            title: Creators
+            type: Type
+          managers:
+            action: Action
+            agent_name: Collection Managers
+            empty: No managers have been added to this collection type.
+            help: Managers of collections of this type can edit collections other users have created, including adding to and removing works from a collection, modifying collection metadata, and deleting collections.
+            title: Managers
+            type: Type
+        form_participants:
+          add_group: Add group
+          add_participants: Add Participants
+          add_user: Add user
+          current_participants: Current Participants
+          header: Collection Participants
+          instructions: You can designate both groups and users as creators and managers of collections of this type
+          remove_success: Participant Removed
+          submit: Add
+          update_notice: Participants Updated
+        form_settings:
+          instructions: These settings determine how collections of this type can be managed and discovered.
+          warning: 'Warning: These settings cannot be changed after a collection of this type has been created.'
+        index:
+          breadcrumb: Collection Types
+          create_new_button: Create new collection type
+          description: Collection types enable you to define settings that govern collections that serve different purposes in your repository.  You can define as many collection types as you need.
+          header: Collection Types
+          modal:
+            can_delete_body_html: "<p>Deleting this collection type will permanently remove the type and its settings from the repository.  Are you sure you want to delete this collection type?</p>"
+            cannot_delete_body_html: "<p>You cannot delete this collection type because one or more collections of this type have already been created.</p> <p>To delete this collection type, first ensure that all collections of this type have been deleted.</p>"
+            header_can_delete: Delete Collection Type?
+            header_cannot_delete: Cannot Delete Collection Type
+            view_collections: View collections of this type
+          more_toggle_content_html: "<p>Typical scenarios for collection types include:</p> <ul> <li><strong>User Collections</strong> that any registered user can create to organize items they deposit.</li> <li><strong>Exhibits</strong> that staff create and curate for public display, where items can be included in any number of exhibits.</li> <li><strong>Controlled Collections</strong> created and managed by staff and not intended for public display, such as collections associated with organizational units or departments.</li> <li><strong>Community Collections</strong> that are intended for public display, similar to how DSpace communities and collections are sometimes used.</li> </ul>"
+          more_toggle_header_html: "<span>More</span> about collection types"
+          table:
+            actions: Actions
+            name: Name
+        multiple_membership_checker:
+          error_preamble: 'Error: You have specified more than one of the same single-membership collection type '
+          error_type_and_collections: "(type: %{type}, collections: %{collections})"
+        new:
+          header: Create New Collection Type
+          submit: Save
+        update:
+          notification: The collection type %{name} has been updated.
       features:
         index:
           action: Action
@@ -176,8 +260,8 @@ en:
           header: Features
       sidebar:
         activity: Activity
-        admin_sets: Administrative Sets
         appearance: Appearance
+        collection_types: Collection Types
         collections: Collections
         configuration: Configuration
         content_blocks: Content Blocks
@@ -309,10 +393,19 @@ en:
         required_descriptions: Describe your work
         required_files: Add files
         requirements: Requirements
+      form_rendering:
+        help_html: Select file(s) to be offered as a download for every image in Universal Viewer, for example a PDF of the whole work.
+        legend_html: Rendering
+      form_representative:
+        help_html: Select the file with media that represents this work.
+        legend_html: Representative Media
       form_share:
         add_sharing: Add Sharing
         currently_sharing: Currently Shared With
         directions: Regardless of the visibility settings for this work, you can also share it with other users and groups.
+      form_thumbnail:
+        help_html: Select the file to be used as the thumbnail for this work.
+        legend_html: Thumbnail
       items:
         actions: Actions
         date_uploaded: Date Uploaded
@@ -354,17 +447,34 @@ en:
       search_results: Back to search results
     collection:
       actions:
-        add_works:
-          desc: Add works to this Collection
-          label: Add works
+        add_existing_works:
+          desc: Add existing works to this Collection
+          label: Add existing works to this collection
+        add_new_nested_collection:
+          desc: Add new collection to this Collection
+          label: Create new collection as subcollection
+        add_new_work:
+          desc: Deposit new work through this collection
+          label: Deposit new work through this collection
         delete:
           confirmation: Delete this collection?
           desc: Delete this collection
-          label: Delete
+          label: Delete collection
         edit:
           desc: Edit this collection
-          label: Edit
+          label: Edit collection
         header: Actions
+        nest_collections:
+          button_label: Add a subcollection
+          desc: Nest other collections within this Collection
+          label: Add existing collections to this collection
+          modal_title: Add a Subcollection to Collection
+          select_label: Select subcollection
+        nested_subcollection:
+          button_label: Add to collection
+          desc: Add existing collections to this collection
+          modal_title: Add this Collection Within Another Collection
+          select_label: Select collection
       browse_view: Browse View
       document_list:
         edit: Edit
@@ -377,19 +487,35 @@ en:
       is_part_of: Is part of
       select_form:
         close: Close
-        create: Create Collection
+        create: Save
         create_new: Add to new Collection
         no_collections: You do not have access to any existing collections. You may create a new collection.
         select_heading: 'Select the collection to add your files to:'
         title: Add to collection
-        update: Update Collection
+        update: Save changes
+    collection_type:
+      admin_set_title: Admin Set
+      default_title: User Collection
+    collection_types:
+      create_service:
+        admin_set_description: An aggregation of works that is intended to help with administrative control. Admin Sets provide a way of defining behaviors and policies around a set of works.
+        default_description: A User Collection can be created by any user to organize their works.
     collections:
       search_form:
         button_label: Go
         label: Search Collection %{title}
-        placeholder: Search Collection
+        placeholder: Search subcollections and works in this collection
       show:
-        works_in_collection: Works in this Collection
+        buttons:
+          remove_from_collection: Remove
+          remove_this_sub_collection: Remove
+        no_visible_parent_collections: There are no visible parent collections.
+        no_visible_subcollections: There are no visible subcollections.
+        parent_collection_header: Parent Collections
+        show_less_parent_collections: "...show less"
+        show_more_parent_collections: show more...
+        subcollection_count: Subcollections
+        works_in_collection: Works
     contact_form:
       button_label: Send
       email_label: Your Email
@@ -431,19 +557,102 @@ en:
         works: All Works
       authorize_proxies: Authorize Proxies
       breadcrumbs:
-        admin: Administration
+        admin: Dashboard
+      collection_type_actions:
+        close: Close
+        create_collection: Create collection
+        select_type_of_collection: Select type of collection
       collections:
         edit:
-          header: 'Edit Collection: %{title}'
+          header: 'Edit %{type_title}: %{title}'
         form:
+          permission_update_errors:
+            error: Invalid update option for permission template.
+          permission_update_notices:
+            participants: The collection's sharing options have been updated.
+            sharing: The collection's sharing options have been updated.
           tabs:
+            branding: Branding
             description: Description
+            discovery: Discovery
+            relationships: Relationships
             sharing: Sharing
-            visibility: Visibility
+        form_branding:
+          banner:
+            description: An image to be displayed at the top of the collection page.  For best results, upload an image (JPG, GIF or PNG) that is at least 120 pixels tall and 1200 pixels wide.
+            label: Banner
+          branding:
+            description: Optionally, you can upload a banner image and/or logo images to associate with this collection.  If uploaded, these images will be displayed at the top of the collection page to provide unique branding for the collection.
+            label: Branding
+          logo:
+            description: One or more images to be displayed at the top of the collection page.  For best results, upload an image (JPG, GIF or PNG) that is 40 pixels in height.  Larger images will be resized to 40 pixels in height.
+            label: Logo
+        form_discovery:
+          para1: These settings determine who is able to discover and view this collection's landing page; they do not affect the visibility of items in the collection.
+          para2: If you chose not to make this collection open access, you can still share the collection with specific users and groups using the Sharing tab.
+        form_relationships:
+          add_other_collections_as_sub_collections_description: You can manage the sub-collections of this collection.
+          buttons:
+            remove_from_collection: Remove
+            remove_this_sub_collection: Remove
+          collection_is_subcollection_description: This collection is currently a sub-collection of these collections
+          headlines:
+            other_collections_in_this_collection: Other Collections in This Collection
+            this_collection_in_other_collections: This Collection in Other Collections
+          modals:
+            remove_from_collection_description: Removing this collection will not remove it from the repository, only as a parent of this collection.  Are you sure you want to remove this collection?
+            remove_parent_collection_deny: You do not have sufficient privileges for the parent collection to be able to remove it.
+            remove_this_sub_collection_description: Removing this sub-collection will not remove it from the repository, only from this parent collection.  Are you sure you want to remove this sub-collection?
+          sub_collections_of_collection_description: These collections are currently sub-collections of this collection
+          table:
+            action: Action
+            collection_title: Collection Title
+          this_collection_in_other_collections_description: You can add this collection to other collections as a sub-collection.
+        form_share:
+          add_group: Add group
+          add_sharing: Add Sharing
+          add_user: Add user
+          current_shared: Currently Shared With
+          note: Regardless of the visibility settings of this collection, you can share this collection with specific groups and users.
+        form_share_table:
+          allow_all_registered: Allow all registered
+          depositors:
+            action: Action
+            agent_name: User/Group
+            empty: No depositors have been added to this collection.
+            help: Depositors of this collection can view the collection and add works to it, even if the visibility permissions of the collection otherwise would not permit them to view it.
+            remove: Remove
+            title: Depositors
+            type: Type
+          managers:
+            action: Action
+            agent_name: User/Group
+            empty: No managers have been added to this collection.
+            help: Managers of this collection can add to and remove works from the collection, modify collection metadata, and delete the collection.
+            help_with_works: For collections of type %{type_title}, when works are created directly in this collection, the managers are given edit access to the new work.
+            remove: Remove
+            title: Managers
+            type: Type
+          viewers:
+            action: Action
+            agent_name: User/Group
+            empty: No viewers have been added to this collection.
+            help: Viewers of this collection can view it even if the visibility permissions of the collection otherwise would not permit them to view it.
+            help_with_works: For collections of type %{type_title}, when works are created directly in this collection, the viewers are given read access to the new work.
+            remove: Remove
+            title: Viewers
+            type: Type
         new:
-          header: Create New Collection
+          header: New %{type_title}
         show:
-          works_in_collection: Works in this Collection
+          header: Collection
+          item_count: Works
+          parent_collection_header: Parent Collections
+          public_view_label: Public view of Collection
+          search_results: Search Results within this Collection
+          show_less_parent_collections: "...show less"
+          show_more_parent_collections: show more...
+          subcollection_count: Subcollections
       create_work: Create Work
       current_proxies: Current Proxies
       delete_notification: Delete Notification
@@ -452,36 +661,71 @@ en:
         create_work: Create work
         select_type_of_work: Select type of work
       manage_proxies: Manage Proxies
+      managed:
+        collections: Managed Collections
+        works: Managed Works
       my:
         action:
-          collection_confirmation: Deleting a collection from %{application_name} is permanent. Click OK to delete this collection from %{application_name}, or Cancel to cancel this operation
-          delete_collection: Delete Collection
+          add_to_collection: Add to collection
+          add_to_collection_only: Allowed actions are limited to adding members
+          admin_set_confirmation: Deleting an admin set from %{application_name} is permanent. Click OK to delete this admin set from %{application_name}, or Cancel to cancel this operation
+          collection_create_success: Collection was successfully created.
+          collection_delete_fail: Collection could not be deleted
+          collection_delete_success: Collection was successfully deleted
+          collection_deny_add_members: You do not have sufficient privileges to add members to the collection
+          collection_update_success: Collection was successfully updated.
+          collections_confirmation_html: Deleting <span class='pluralized'>this collection</span> will permanently remove <span class='pluralized'>this collection</span> from the repository.  Items in <span class='pluralized'>this collection</span> will remain in the repository.  Are you sure you want to delete <span class='pluralized'>this collection</span>?
+          collections_confirmation_no_items_html: Are you sure you want to delete this collection? This action cannot be undone.
+          delete_admin_set: Delete collection
+          delete_admin_set_deny: This collection is defined as Admin Set and is not empty. To delete this Admin Set, you must first remove (delete or move to another Admin Set collection) all items from the Admin Set.
+          delete_collection: Delete collection
+          delete_collection_deny: You do not have sufficient privileges to delete this collection.
+          delete_collections: Delete collections
+          delete_collections_deny: You do not have sufficient privileges to delete one or more collections.
           delete_work: Delete Work
-          edit_collection: Edit Collection
+          edit_admin_set: Edit collection
+          edit_collection: Edit collection
+          edit_collection_deny: You do not have sufficient privileges to edit this collection.
+          edit_selected: Edit Selected
           edit_work: Edit Work
           highlight: Highlight Work on Profile
+          members_no_access: You do not have sufficient privileges to any of the selected members
+          nesting_not_allowed: Collections of this type do not support nesting.
+          nesting_permission_denied: You do not have sufficient privileges to add this collection to another collection.
           select: Select
           select_all: Select Current Page
           select_none: Select None
           transfer: Transfer Ownership of Work
           unhighlight: Unhighlight Work
+          view_admin_set: View collection
+          view_collection: View collection
           work_confirmation: Deleting a work from %{application_name} is permanent. Click OK to delete this work from %{application_name}, or Cancel to cancel this operation
         collection_list:
           description: 'Description:'
           edit_access: 'Edit Access:'
           groups: 'Groups:'
+          managed_access:
+            deposit: Deposit
+            manage: Manage
+            view: View
           users: 'Users:'
-        collections: Your Collections
+        collections: Collections
         facet_label:
           collections: 'Filter collections:'
           highlighted: 'Filter highlights:'
           shared: 'Filter shares:'
           works: 'Filter works:'
         heading:
+          access: Access
           action: Actions
+          collection_type: Collection Type
+          date_modified: Last Modified
           date_uploaded: Date Added
           highlighted: Highlighted
+          items: Items
+          last_modified: Last modified
           title: Title
+          type: Type
           visibility: Visibility
         highlighted: My Highlights
         shared: Works Shared with Me
@@ -493,17 +737,25 @@ en:
           press_to: Press to
           results_per_page: Number of results to display per page
           show_label: Display all details of
-        works: Your Works
+        works: Works
+        your_collections: Your Collections
+        your_works: Your Works
+      nest_collections_form:
+        create_under: "'%{child_title}' has been added to '%{parent_title}'"
+        create_within: "'%{child_title}' has been added to '%{parent_title}'"
+        removed_relationship: "'%{child_title}' has been removed from '%{parent_title}'"
       no_activity: User has no recent activity
       no_notifications: User has no notifications
+      no_proxies: There are no proxies assigned
       no_transfer_requests: You haven't received any work transfer requests
       no_transfers: You haven't transferred any work
       proxy_activity: Proxy Activity
       proxy_delete: Delete Proxy
+      proxy_help: Select a user who can deposit works on your behalf. Both you and your proxy will be able to make changes to these works. You can revoke a proxy by clicking the Delete Proxy button. To revoke their ability to edit a work they previously submitted, remove them from the Sharing tab on each work.
       proxy_user: Proxy User
       show_admin:
         new_visitors: New Visitors
-        registered_users: Registered users
+        registered_users: Registered Users
         repository_growth:
           subtitle: Past 90 days
           title: Repository Growth
@@ -522,7 +774,7 @@ en:
         files: Files deposited
         heading: Your Statistics
         works: Works created
-      title: My Dashboard
+      title: Dashboard
       transfer_of_ownership: Transfers of Ownership
       transfer_works_link: Select works to transfer
       transfers_received: Transfers Received
@@ -559,7 +811,7 @@ en:
       table_headers:
         release_date: Embargo Release Date
         title: Title
-        type: Type of Work
+        type: Type of Item
         viz_after: Visibility will Change to
         viz_current: Current Visibility
     featured_researchers: Featured Researchers
@@ -570,16 +822,16 @@ en:
       show:
         download: Download the file
         downloadable_content:
+          audio_link: Download audio
           default_link: Download file
           heading: Downloadable Content
           image_link: Download image
           office_link: Download file
           pdf_link: Download PDF
+          video_link: Download video
     file_sets:
       groups_description:
-        description_html: 'The list of groups in the drop-down marked "Select a group" is a list of User Managed Groups that you are a member of.  You may select a specific group and assign an access level for a file within %{application_name}, similarly to adding user access levels.
-
-'
+        description_html: The list of groups in the drop-down marked "Select a group" is a list of User Managed Groups that you are a member of.  You may select a specific group and assign an access level for a file within %{application_name}, similarly to adding user access levels.
     help:
       header: User Support
       override_text: Use app/views/static/help.html.erb to override this file.
@@ -604,6 +856,7 @@ en:
         tab_label: Featured Works
         title: Featured Works
       recently_uploaded:
+        depositor: Depositor
         details: Details
         document:
           depositor_label: Depositor
@@ -644,7 +897,7 @@ en:
       table_headers:
         release_date: Lease Release Date
         title: Title
-        type: Type of Work
+        type: Type of Item
         viz_after: Visibility will Change to
         viz_current: Current Visibility
     mailbox:
@@ -654,6 +907,9 @@ en:
       message: Message
       notifications_deleted: Notifications have been deleted
       subject: Subject
+    manifest:
+      download_text: Download whole resource
+      unknown_mime_text: unknown mime type
     messages:
       failure:
         multiple:
@@ -669,6 +925,18 @@ en:
         single: has been saved.
         subject: Batch upload complete
         title: Files uploaded successfully
+    my:
+      count:
+        collections:
+          in_repo: "<strong>%{total_count} collections</strong> in the repository"
+          you_manage: "<strong>%{total_count} collections</strong> you can manage in the repository"
+          you_own: "<strong>%{total_count} collections</strong> you own in the repository"
+        works:
+          in_repo: "<strong>%{total_count} works</strong> in the repository"
+          you_manage: "<strong>%{total_count} works</strong> you can manage in the repository"
+          you_own: "<strong>%{total_count} works</strong> you own in the repository"
+    nav_safety:
+      change_tab_message: Are you sure you want to leave this tab?  Any unsaved data will be lost.
     pages:
       cancel: Cancel
       tabs:
@@ -851,6 +1119,18 @@ en:
         resource_type: Pre-defined categories to describe the type of content being uploaded, such as &quot;article&quot; or &quot;dataset.&quot;  More than one type may be selected.
         subject: Headings or index terms describing what the collection is about; these do need to conform to an existing vocabulary.
         title: A name to aid in identifying a collection.
+      collection_type:
+        allow_multiple_membership: Allow works to belong to multiple collections of this type
+        assigns_visibility: Allow collections of this type to assign initial visibility settings to a new work
+        assigns_workflow: Allow collections of this type to assign workflow to a new work
+        brandable: Allow collections of this type to be branded
+        description: A brief statement of the general purpose of this collection type.  Users will see this if they have more than one collection type to choose from when creating a new collection.
+        discoverable: Allow collections of this type to be discoverable
+        nestable: Allow collections of this type to be nested (a collection can contain other collections)
+        require_membership: A work must belong to at least one collection of this type
+        sharable: Allow users to assign collection managers, depositors, and viewers for collections they manage
+        share_applies_to_new_works: When new works are created directly in the collection, grant sharing users and groups permissions for the new work according to their collection roles.
+        title: ''
       defaults:
         based_near: A place name related to the work, such as its site of publication, or the city, state, or country the work contents are about. Calls upon the <a href='http://www.geonames.org'>GeoNames web service</a>.
         contributor: A person or group you want to recognize for playing a role in the creation of the work, but not the primary role.
@@ -869,7 +1149,20 @@ en:
     labels:
       collection:
         size: Size
-        total_items: Total works
+        total_items: Total items
+      collection_type:
+        allow_multiple_membership: MULTIPLE MEMBERSHIP
+        assigns_visibility: VISIBILITY
+        assigns_workflow: WORKFLOW
+        badge_color: Badge Color
+        brandable: BRANDING
+        description: Type description
+        discoverable: DISCOVERY
+        nestable: NESTING
+        require_membership: REQUIRE MEMBERSHIP
+        sharable: SHARING
+        share_applies_to_new_works: APPLY TO NEW WORKS
+        title: Type name
       defaults:
         admin_set_id: Administrative Set
         based_near: Location
@@ -883,6 +1176,7 @@ en:
         license: License
         member_of_collection_ids: Add to collection
         related_url: Related URL
+        rights_statement: Rights statement
         title: Title
         visibility_after_embargo: then open it up to
         visibility_after_lease: then restrict it to

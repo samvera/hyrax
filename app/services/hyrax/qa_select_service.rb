@@ -22,8 +22,17 @@ module Hyrax
       authority.find(id).fetch('active')
     end
 
-    def label(id)
-      authority.find(id).fetch('term')
+    ##
+    # @param id [String]
+    #
+    # @return [String] the label for the authority
+    #
+    # @yield when no 'term' value is present for the id
+    # @yieldreturn [String] an alternate label to return
+    #
+    # @raise [KeyError] when no 'term' value is present for the id
+    def label(id, &block)
+      authority.find(id).fetch('term', &block)
     end
 
     def active_elements

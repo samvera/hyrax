@@ -1,0 +1,25 @@
+<h2 class="sr-only"><%= t('hyrax.collection.actions.header') %></h2>
+<div class="text-right">
+  <% if can? :deposit, presenter.solr_document %>
+    <div>
+      <% if @presenter.create_many_work_types? %>
+        <%= link_to t('hyrax.collection.actions.add_new_work.label'),
+                    '#',
+                    title: t('hyrax.collection.actions.add_new_work.desc'),
+                    data: { behavior: "select-work", target: "#worktypes-to-create", 'create-type' => 'single', add_works_to_collection: presenter.id },
+                    class: 'btn btn-primary deposit-new-work-through-collection' %>
+      <% else # simple link to the first work type %>
+        <%= link_to t('hyrax.collection.actions.add_new_work.label'),
+                    new_polymorphic_path([main_app, @presenter.first_work_type], add_works_to_collection: presenter.id),
+                    class: 'btn btn-primary' %>
+      <% end %>
+    </div>
+    <div>
+      <%= link_to t('hyrax.collection.actions.add_existing_works.label'),
+                  hyrax.my_works_path(add_works_to_collection: presenter.id, add_works_to_collection_label: presenter.title),
+                  title: t('hyrax.collection.actions.add_existing_works.desc'),
+                  class: 'btn btn-link side-arrows',
+                  data: { turbolinks: false } %>
+    </div>
+  <% end %>
+</div>

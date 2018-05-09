@@ -17,7 +17,7 @@ RSpec.describe 'hyrax/dashboard/collections/_form_for_select_collection.html.erb
     end
   end
 
-  let(:doc) { Nokogiri::HTML(rendered) }
+  let(:page) { Capybara::Node::Simple.new(rendered) }
 
   before do
     # Stub route because view specs don't handle engine routes
@@ -27,29 +27,21 @@ RSpec.describe 'hyrax/dashboard/collections/_form_for_select_collection.html.erb
     allow(view).to receive(:user_collections).and_return(solr_collections)
   end
 
-  it "sorts the collections" do
+  it "uses autocomplete" do
     render
-    collection_ids = doc.xpath("//input[@class='collection-selector']/@id").map(&:to_s)
-    expect(collection_ids).to eql(["id_1237", "id_1234", "id_1235", "id_1236"])
-    expect(rendered).to have_selector("label", text: 'Title 1')
-    expect(rendered).not_to have_selector("label", text: "[\"Title 1\"]")
+    expect(page).to have_selector('input[data-autocomplete-url="/authorities/search/collections?access=deposit"]')
   end
 
-  it "selects the right collection when instructed to do so" do
-    assign(:add_works_to_collection, collections[2][:id])
-    render
-    expect(rendered).not_to have_selector "#id_#{collections[0][:id]}[checked='checked']"
-    expect(rendered).not_to have_selector "#id_#{collections[1][:id]}[checked='checked']"
-    expect(rendered).not_to have_selector "#id_#{collections[3][:id]}[checked='checked']"
-    expect(rendered).to have_selector "#id_#{collections[2][:id]}[checked='checked']"
-  end
+  context 'when a collection is specified' do
+    let(:collection_id) { collections[2][:id] }
+    let(:collection_label) { collections[2]["title_tesim"] }
 
-  it "selects the first collection when nothing else specified" do
-    # first when sorted by create date, so not index 0
-    render
-    expect(rendered).not_to have_selector "#id_#{collections[0][:id]}[checked='checked']"
-    expect(rendered).not_to have_selector "#id_#{collections[1][:id]}[checked='checked']"
-    expect(rendered).not_to have_selector "#id_#{collections[2][:id]}[checked='checked']"
-    expect(rendered).to have_selector "#id_#{collections[3][:id]}[checked='checked']"
+    it "selects the right collection when instructed to do so" do
+      assign(:add_works_to_collection, collection_id)
+      assign(:add_works_to_collection_label, collection_label)
+      render
+      expect(page).to have_selector "#member_of_collection_ids[value=\"#{collection_id}\"]", visible: false
+      expect(page).to have_selector "#member_of_collection_label", text: collection_label
+    end
   end
 end

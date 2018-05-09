@@ -1,0 +1,72 @@
+<%= render "shared/nav_safety_modal" %>
+<div class="panel panel-default tabs" id="collection-types-controls">
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="active">
+      <a href="#metadata" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('hyrax.admin.collection_types.form.tab.metadata') %></a>
+    </li>
+    <% if @form.persisted? %>
+      <li>
+        <a href="#settings" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('hyrax.admin.collection_types.form.tab.settings') %></a>
+      </li>
+      <li>
+        <a href="#participants" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('hyrax.admin.collection_types.form.tab.participants') %></a>
+      </li>
+      <li>
+        <a href="#appearance" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('hyrax.admin.collection_types.form.tab.appearance') %></a>
+      </li>
+    <% end %>
+  </ul>
+  <% form_url = @form.id.nil? ? hyrax.admin_collection_types_path : hyrax.admin_collection_type_path(@form.id) %>
+  <%= simple_form_for @form, url: form_url, as: :collection_type, html: {class: 'nav-safety'} do |f| %>
+    <div class="tab-content">
+      <% if @collection_type.admin_set? %>
+        <div id="metadata" class="tab-pane active">
+          <div class="panel panel-default labels">
+            <div class="panel-body">
+              <%= render 'form_metadata_admin_set', f: f %>
+            </div>
+          </div>
+        </div>
+      <% else %>
+        <div id="metadata" class="tab-pane active">
+          <div class="panel panel-default labels">
+            <div class="panel-body">
+              <%= render 'form_metadata', f: f %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <div id="settings" class="tab-pane">
+        <div class="panel panel-default labels">
+          <div class="panel-body">
+            <%= render 'form_settings', f: f %>
+          </div>
+        </div>
+      </div>
+      <% # end of form %>
+      <% # TODO: The participants partial can't sit inside the other form, moved down here temporarily %>
+      <div id="participants" class="tab-pane">
+        <div class="panel panel-default labels collection-types-edit-participants-tab">
+          <div class="panel-body">
+            <%= render 'form_participants' %>
+          </div>
+        </div>
+      </div>
+      <div id="appearance" class="tab-pane">
+        <div class="panel panel-default labels">
+          <div class="panel-body">
+            <%= render 'form_appearance', f: f %>
+          </div>
+        </div>
+      </div>
+      <div class="panel-footer">
+        <% if params[:action] == "new" %>
+          <%= f.submit t(:'hyrax.admin.collection_types.new.submit'), class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "create_submit", name: "create_collection_type" %>
+        <% else %>
+          <%= f.submit t(:'hyrax.admin.collection_types.edit.submit'), class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "update_submit", name: "update_collection_type" %>
+        <% end %>
+        <%= link_to t(:'helpers.action.cancel'), hyrax.admin_collection_types_path, class: 'btn btn-link' %>
+      </div>
+    </div>
+  <% end %>
+</div>

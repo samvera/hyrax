@@ -15,7 +15,7 @@ describe('authority select', () => {
     })
 
     it('should change the data-autocomplete-url when you select an authority', () => {
-	      new AuthoritySelect(editor, { selectBox : "select.generic_work_creator", inputField : "input.generic_work_creator" }).initialize()
+	      new AuthoritySelect({ selectBox : "select.generic_work_creator", inputField : "input.generic_work_creator" })
 	      $('select.generic_work_creator').val('/authorities/search/assign_fast/all').change()
 	      expect($('input.generic_work_creator').data('autocomplete-url')).toEqual('/authorities/search/assign_fast/all')
     })

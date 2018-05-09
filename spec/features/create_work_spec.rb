@@ -1,5 +1,6 @@
 RSpec.describe 'Creating a new Work', :js, :workflow do
   let(:user) { create(:user) }
+  let!(:ability) { ::Ability.new(user) }
   let(:file1) { File.open(fixture_path + '/world.png') }
   let(:file2) { File.open(fixture_path + '/image.jp2') }
   let!(:uploaded_file1) { Hyrax::UploadedFile.create(file: file1, user: user) }
@@ -55,7 +56,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow do
     end
   end
 
-  context 'when the user is a proxy' do
+  context 'when the user is a proxy', perform_enqueued: [ContentDepositorChangeEventJob, AttachFilesToWorkJob, IngestJob] do
     let(:second_user) { create(:user) }
 
     before do

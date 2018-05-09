@@ -1,5 +1,6 @@
 <h2><%= t('.header') %></h2>
-<% if presenter.member_presenters.present? %>
+<%  members = Flipflop.hide_private_files? ? presenter.exclude_unauthorized_file_sets : presenter.member_presenters %>
+<% if members.present? %>
   <table class="table table-striped related-files">
     <thead>
       <tr>
@@ -11,7 +12,7 @@
       </tr>
     </thead>
     <tbody>
-      <%= render partial: 'member', collection: presenter.member_presenters %>
+      <%= render partial: 'member', collection: members %>
     </tbody>
   </table>
 <% elsif can? :edit, presenter.id %>

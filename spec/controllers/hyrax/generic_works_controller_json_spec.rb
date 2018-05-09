@@ -8,7 +8,9 @@ RSpec.describe Hyrax::GenericWorksController do
   before { sign_in user }
 
   context "JSON" do
-    let(:resource) { create(:private_generic_work, user: user) }
+    let(:admin_set) { create(:admin_set, id: 'admin_set_1', with_permission_template: { with_active_workflow: true }) }
+
+    let(:resource) { create(:private_generic_work, user: user, admin_set_id: admin_set.id) }
     let(:resource_request) { get :show, params: { id: resource, format: :json } }
 
     subject { response }
@@ -81,9 +83,7 @@ RSpec.describe Hyrax::GenericWorksController do
     end
 
     describe 'failed update' do
-      before do
-        post :update, params: { id: resource, generic_work: { title: [''] }, format: :json }
-      end
+      before { post :update, params: { id: resource, generic_work: { title: [''] }, format: :json } }
       it "returns 422 and the errors" do
         expect(response).to respond_unprocessable_entity(errors: { title: ["Your work must have a title."] })
       end

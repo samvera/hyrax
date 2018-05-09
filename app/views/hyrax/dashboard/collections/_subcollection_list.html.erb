@@ -1,0 +1,27 @@
+<% if @subcollection_docs.nil? || @subcollection_docs.empty? %>
+<div class="alert alert-warning" role="alert"><%= t('hyrax.collections.show.no_visible_subcollections') %></div>
+<% else %>
+<ul class="collections-list">
+  <% @subcollection_docs.each do |document| %>
+  <li
+    data-id="<%= document.id %>"
+    data-parent-id="<%= id %>"
+    data-post-url="<%= hyrax.dashboard_remove_child_relationship_under_path(id, document.id) %>"
+    data-subcollection-label="<%= document.title_or_label %>">
+    <div class="flex-wrapper">
+      <div class="collections-list-title">
+        <%= link_to document.title_or_label, [hyrax, :dashboard, document], id: "src_copy_link_#{document.id}" %>
+      </div>
+      <% if can? :edit, id %>
+      <button class="btn btn-xs btn-danger remove-subcollection-button"><%= t('hyrax.collections.show.buttons.remove_this_sub_collection') %></button>
+      <% end %>
+    </div>
+  </li>
+  <% end %>
+</ul>
+<%= render 'hyrax/collections/paginate', solr_response: @subcollection_solr_response, page_param_name: :sub_collection_page %>
+<% end %>
+
+<% if can? :edit, id %>
+<%= render 'modal_remove_sub_collection' %>
+<% end %>

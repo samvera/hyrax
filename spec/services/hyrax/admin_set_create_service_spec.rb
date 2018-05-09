@@ -62,7 +62,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
       subject { service.create }
 
       context "when the admin_set is valid" do
-        let(:permission_template) { Hyrax::PermissionTemplate.find_by(admin_set_id: admin_set.id) }
+        let(:permission_template) { Hyrax::PermissionTemplate.find_by(source_id: admin_set.id) }
         let(:grants) { permission_template.access_grants }
         let(:available_workflows) { [create(:workflow), create(:workflow)] }
 
@@ -85,9 +85,12 @@ RSpec.describe Hyrax::AdminSetCreateService do
           #  * 2 available workflows, multiplied by
           #  * 3 roles (from Hyrax::RoleRegistry), equals
           #  * 12
+          expect(admin_set.edit_users).to match_array([user.user_key])
+          expect(admin_set.edit_groups).to match_array(['admin'])
+          expect(admin_set.read_users).to match_array([])
           expect(admin_set.read_groups).not_to include('public')
-          expect(admin_set.edit_groups).to eq ['admin']
           expect(admin_set.creator).to eq [user.user_key]
+
           expect(workflow_importer).to have_received(:call).with(permission_template: permission_template)
           expect(permission_template).to be_persisted
           expect(grants.count).to eq 2

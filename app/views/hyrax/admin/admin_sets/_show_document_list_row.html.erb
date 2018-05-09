@@ -3,7 +3,7 @@
 <tr id="document_<%= id %>">
   <td>&nbsp;
     <% if current_user and document.depositor != current_user.user_key %>
-      <i class="glyphicon glyphicon-share-alt"/>
+      <i class="glyphicon glyphicon-share-alt" />
     <% end %>
   </td>
   <td>
@@ -12,10 +12,10 @@
         <%= render_thumbnail_tag document, { class: "hidden-xs file_listing_thumbnail" }, { suppress_link: true } %>
       <% end %>
       <div class="media-body">
-        <h4 class="media-heading">
-          <%= link_to document.title_or_label, [main_app, document], id: "src_copy_link#{id}", class: "#{'document-title' if document.title_or_label == document.label}" %>
+        <p class="media-heading">
+          <strong><%= link_to document.title_or_label, [main_app, document], id: "src_copy_link#{id}", class: "#{'document-title' if document.title_or_label == document.label}" %></strong>
           <a href="#" class="small" title="Click for more details"><i id="expand_<%= id %>" class="glyphicon glyphicon-chevron-right"></i></a>
-        </h4>
+        </p>
         <%= render_collection_links(document) %>
       </div>
     </div>
@@ -42,7 +42,7 @@
       <dd class="col-xs-9 col-lg-10">
         <% if document.edit_groups.present? %>
           Groups: <%= document.edit_groups.join(', ') %>
-          <br/>
+          <br />
         <% end %>
         Users: <%= document.edit_people.join(', ') %>
       </dd>

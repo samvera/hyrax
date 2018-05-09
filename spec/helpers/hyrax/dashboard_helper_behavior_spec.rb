@@ -17,17 +17,6 @@ RSpec.describe Hyrax::DashboardHelperBehavior, type: :helper do
     end
   end
 
-  describe "#on_my_works" do
-    it "returns false when the controller isn't my works" do
-      allow(helper).to receive(:params).and_return(controller: "hyrax/my/collections")
-      expect(helper).not_to be_on_my_works
-    end
-    it "returns true when the controller is my works" do
-      allow(helper).to receive(:params).and_return(controller: "hyrax/my/works")
-      expect(helper).to be_on_my_works
-    end
-  end
-
   describe "#number_of_works" do
     let(:conn) { ActiveFedora::SolrService.instance.conn }
     let(:user1) { User.new(email: "abc@test") }

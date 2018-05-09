@@ -11,7 +11,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
       "date_created_tesim" => ['an unformatted date'],
       "depositor_tesim" => user_key }
   end
-  let(:ability) { nil }
+  let(:ability) { double Ability }
   let(:presenter) { described_class.new(solr_document, ability, request) }
 
   subject { described_class.new(double, double) }
@@ -47,11 +47,17 @@ RSpec.describe Hyrax::WorkShowPresenter do
     let(:id_present) { false }
     let(:representative_presenter) { double('representative', present?: false) }
     let(:image_boolean) { false }
-    let(:iiif_enabled) { false }
+    let(:iiif_enabled) { true }
+    let(:file_set_presenter) { Hyrax::FileSetPresenter.new(solr_document, ability) }
+    let(:file_set_presenters) { [file_set_presenter] }
+    let(:read_permission) { true }
 
     before do
       allow(presenter).to receive(:representative_id).and_return(id_present)
       allow(presenter).to receive(:representative_presenter).and_return(representative_presenter)
+      allow(presenter).to receive(:file_set_presenters).and_return(file_set_presenters)
+      allow(file_set_presenter).to receive(:image?).and_return(true)
+      allow(ability).to receive(:can?).with(:read, solr_document.id).and_return(read_permission)
       allow(representative_presenter).to receive(:image?).and_return(image_boolean)
       allow(Hyrax.config).to receive(:iiif_image_server?).and_return(iiif_enabled)
     end
@@ -71,7 +77,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
     context 'with non-image representative_presenter' do
       let(:id_present) { true }
       let(:representative_presenter) { double('representative', present?: true) }
-      let(:image_boolean) { true }
+      let(:image_boolean) { false }
 
       it { is_expected.to be false }
     end
@@ -92,6 +98,12 @@ RSpec.describe Hyrax::WorkShowPresenter do
       let(:iiif_enabled) { true }
 
       it { is_expected.to be true }
+
+      context "when the user doesn't have permission to view the image" do
+        let(:read_permission) { false }
+
+        it { is_expected.to be false }
+      end
     end
   end
 
@@ -106,7 +118,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
       allow(work).to receive(:persisted?).and_return(true)
     end
 
-    it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_work_path(id: work) }
+    it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_work_path(id: work, locale: 'en') }
   end
 
   describe '#itemtype' do
@@ -256,6 +268,27 @@ RSpec.describe Hyrax::WorkShowPresenter do
         .and_return ["abc"]
       expect(presenter.representative_presenter).to eq("abc")
     end
+
+    context 'without a representative' do
+      let(:obj) { create(:work) }
+
+      it 'has a nil presenter' do
+        expect(presenter.representative_presenter).to be_nil
+      end
+    end
+
+    context 'when it is its own representative' do
+      let(:obj) { create(:work) }
+
+      before do
+        obj.representative_id = obj.id
+        obj.save
+      end
+
+      it 'has a nil presenter; avoids infinite loop' do
+        expect(presenter.representative_presenter).to be_nil
+      end
+    end
   end
 
   describe "#download_url" do
@@ -279,7 +312,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   describe '#page_title' do
     subject { presenter.page_title }
 
-    it { is_expected.to eq 'foo' }
+    it { is_expected.to eq 'Generic Work | foo | ID: 888888 | Hyrax' }
   end
 
   describe "#valid_child_concerns" do
@@ -376,6 +409,42 @@ RSpec.describe Hyrax::WorkShowPresenter do
   "@id": "http://example.com/1",
   "dc:title": "Test title"
 }'
+      end
+    end
+  end
+
+  describe "#manifest" do
+    let(:work) { create(:work_with_one_file) }
+    let(:solr_document) { SolrDocument.new(work.to_solr) }
+
+    describe "#sequence_rendering" do
+      subject do
+        presenter.sequence_rendering
+      end
+
+      before do
+        Hydra::Works::AddFileToFileSet.call(work.file_sets.first,
+                                            File.open(fixture_path + '/world.png'), :original_file)
+      end
+
+      it "returns a hash containing the rendering information" do
+        work.rendering_ids = [work.file_sets.first.id]
+        expect(subject).to be_an Array
+      end
+    end
+
+    describe "#manifest_metadata" do
+      subject do
+        presenter.manifest_metadata
+      end
+
+      before do
+        work.title = ['Test title', 'Another test title']
+      end
+
+      it "returns an array of metadata values" do
+        expect(subject[0]['label']).to eq('Title')
+        expect(subject[0]['value']).to include('Test title', 'Another test title')
       end
     end
   end

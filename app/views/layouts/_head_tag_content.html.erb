@@ -7,8 +7,8 @@ signed in %>
     <%= tag :meta, name: 'current-user', data: { user_key: current_user.user_key } %>
 <% end %>
 <!-- added for use on small devices like phones -->
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<link rel="resourcesync" href="<%= hyrax.capability_list_url %>"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<link rel="resourcesync" href="<%= hyrax.capability_list_url %>" />
 
 <!-- Twitter card metadata -->
 <%= yield :twitter_meta %>
