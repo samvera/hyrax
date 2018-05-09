@@ -170,9 +170,11 @@ module Hyrax
       # @return [Boolean] true if the user has permission to view the admin show page for the collection
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
       def self.can_view_admin_show_for_collection?(collection_id:, ability:)
-        deposit_access_to_collection?(collection_id: collection_id, ability: ability) ||
-          manage_access_to_collection?(collection_id: collection_id, ability: ability) ||
-          view_access_to_collection?(collection_id: collection_id, ability: ability)
+        exclude_groups = [::Ability.registered_group_name,
+                          ::Ability.public_group_name]
+        manage_access_to_collection?(collection_id: collection_id, ability: ability) ||
+          deposit_access_to_collection?(collection_id: collection_id, ability: ability, exclude_groups: exclude_groups) ||
+          view_access_to_collection?(collection_id: collection_id, ability: ability, exclude_groups: exclude_groups)
       end
 
       # @api private
@@ -181,10 +183,11 @@ module Hyrax
       #
       # @param collection_id [String] id of the collection we are checking permissions on
       # @param ability [Ability] the ability coming from cancan ability check
+      # @param exclude_groups [Array<String>] name of groups to exclude from the results
       # @return [Boolean] true if the user has :deposit access to the collection
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
-      def self.deposit_access_to_collection?(collection_id:, ability: nil)
-        access_to_collection?(collection_id: collection_id, access: 'deposit', ability: ability)
+      def self.deposit_access_to_collection?(collection_id:, ability: nil, exclude_groups: [])
+        access_to_collection?(collection_id: collection_id, access: 'deposit', ability: ability, exclude_groups: exclude_groups)
       end
       private_class_method :deposit_access_to_collection?
 
@@ -194,10 +197,11 @@ module Hyrax
       #
       # @param collection_id [String] id of the collection we are checking permissions on
       # @param ability [Ability] the ability coming from cancan ability check
+      # @param exclude_groups [Array<String>] name of groups to exclude from the results
       # @return [Boolean] true if the user has :manage access to the collection
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
-      def self.manage_access_to_collection?(collection_id:, ability:)
-        access_to_collection?(collection_id: collection_id, access: 'manage', ability: ability)
+      def self.manage_access_to_collection?(collection_id:, ability:, exclude_groups: [])
+        access_to_collection?(collection_id: collection_id, access: 'manage', ability: ability, exclude_groups: exclude_groups)
       end
       private_class_method :manage_access_to_collection?
 
@@ -207,10 +211,11 @@ module Hyrax
       #
       # @param collection_id [String] id of the collection we are checking permissions on
       # @param ability [Ability] the ability coming from cancan ability check
+      # @param exclude_groups [Array<String>] name of groups to exclude from the results
       # @return [Boolean] true if the user has permission to view the collection
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
-      def self.view_access_to_collection?(collection_id:, ability:)
-        access_to_collection?(collection_id: collection_id, access: 'view', ability: ability)
+      def self.view_access_to_collection?(collection_id:, ability:, exclude_groups: [])
+        access_to_collection?(collection_id: collection_id, access: 'view', ability: ability, exclude_groups: exclude_groups)
       end
       private_class_method :view_access_to_collection?
 
@@ -221,13 +226,14 @@ module Hyrax
       # @param collection_id [String] id of the collection we are checking permissions on
       # @param access [Symbol] the access level to check
       # @param ability [Ability] the ability coming from cancan ability check
+      # @param exclude_groups [Array<String>] name of groups to exclude from the results
       # @return [Boolean] true if the user has permission to view the collection
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
-      def self.access_to_collection?(collection_id:, access:, ability:)
+      def self.access_to_collection?(collection_id:, access:, ability:, exclude_groups: [])
         return false unless collection_id
         template = Hyrax::PermissionTemplate.find_by!(source_id: collection_id)
         return true if ([ability.current_user.user_key] & template.agent_ids_for(agent_type: 'user', access: access)).present?
-        return true if (ability.user_groups & template.agent_ids_for(agent_type: 'group', access: access)).present?
+        return true if (ability.user_groups & (template.agent_ids_for(agent_type: 'group', access: access) - exclude_groups)).present?
         false
       end
       private_class_method :access_to_collection?
