@@ -9,7 +9,7 @@ module Hyrax
           can :view_admin_show_any, AdminSet
         else
           can :manage_any, AdminSet if Hyrax::Collections::PermissionsService.can_manage_any_admin_set?(ability: self)
-          can :create_any, AdminSet if Hyrax::CollectionTypes::PermissionsService.can_create_admin_set_collection_type?(ability: self)
+          can [:create_any, :create], AdminSet if Hyrax::CollectionTypes::PermissionsService.can_create_admin_set_collection_type?(ability: self)
           can :view_admin_show_any, AdminSet if Hyrax::Collections::PermissionsService.can_view_admin_show_for_any_admin_set?(ability: self)
 
           can [:edit, :update, :destroy], AdminSet do |admin_set| # for test by solr_doc, see solr_document_ability.rb

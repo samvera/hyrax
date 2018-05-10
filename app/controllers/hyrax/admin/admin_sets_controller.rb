@@ -2,9 +2,13 @@ module Hyrax
   class Admin::AdminSetsController < ApplicationController
     include Hyrax::CollectionsControllerBehavior
 
+    before_action :authenticate_user!
     before_action :ensure_manager!, except: [:show]
-    before_action :ensure_viewer!, only: [:show]
     load_and_authorize_resource
+    before_action :ensure_viewer!, only: [:show]
+
+    # Catch permission errors
+    rescue_from Hydra::AccessDenied, CanCan::AccessDenied, with: :deny_adminset_access
 
     with_themed_layout 'dashboard'
     self.presenter_class = Hyrax::AdminSetPresenter
@@ -19,6 +23,15 @@ module Hyrax
     # Used to create the admin set
     class_attribute :admin_set_create_service
     self.admin_set_create_service = AdminSetCreateService
+
+    def deny_adminset_access(exception)
+      if current_user && current_user.persisted?
+        redirect_to root_url, alert: exception.message
+      else
+        session['user_return_to'] = request.url
+        redirect_to main_app.new_user_session_url, alert: exception.message
+      end
+    end
 
     def show
       add_breadcrumb I18n.t('hyrax.controls.home'), hyrax.root_path
@@ -93,6 +106,7 @@ module Hyrax
       end
 
       def ensure_manager!
+        # TODO: Review for possible removal.  Doesn't appear to apply anymore.
         # Even though the user can view this admin set, they may not be able to view
         # it on the admin page.
         authorize! :manage_any, AdminSet
