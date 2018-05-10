@@ -55,6 +55,30 @@ RSpec.describe Hyrax::FileSetPresenter do
     it { is_expected.to be false }
   end
 
+  describe "#user_can_perform_any_action?" do
+    subject { presenter.user_can_perform_any_action? }
+    let(:current_ability) { ability }
+
+    context 'when user can perform at least 1 action' do
+      before do
+        expect(current_ability).to receive(:can?).with(:edit, presenter.id).and_return false
+        expect(current_ability).to receive(:can?).with(:destroy, presenter.id).and_return false
+        expect(current_ability).to receive(:can?).with(:download, presenter.id).and_return true
+      end
+
+      it { is_expected.to be true }
+    end
+    context 'when user cannot perform any action' do
+      before do
+        expect(current_ability).to receive(:can?).with(:edit, presenter.id).and_return false
+        expect(current_ability).to receive(:can?).with(:destroy, presenter.id).and_return false
+        expect(current_ability).to receive(:can?).with(:download, presenter.id).and_return false
+      end
+
+      it { is_expected.to be false }
+    end
+  end
+
   describe "properties delegated to solr_document" do
     let(:solr_properties) do
       ["date_uploaded", "title_or_label",

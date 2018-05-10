@@ -1,5 +1,5 @@
 <h2><%= t('.header') %></h2>
-<%  members = Flipflop.hide_private_files? ? presenter.exclude_unauthorized_file_sets : presenter.member_presenters %>
+<%  members = Flipflop.hide_private_items? ? presenter.exclude_unauthorized_members : presenter.member_presenters %>
 <% if members.present? %>
   <table class="table table-striped related-files">
     <thead>
@@ -17,4 +17,6 @@
   </table>
 <% elsif can? :edit, presenter.id %>
     <div class="alert alert-warning" role="alert"><%= t('.empty', type: presenter.human_readable_type) %></div>
+<% else %>
+  <div class="alert alert-warning" role="alert"><%= t('.unauthorized', type: presenter.human_readable_type) %></div>
 <% end %>

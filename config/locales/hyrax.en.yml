@@ -413,6 +413,7 @@ en:
         header: Items
         thumbnail: Thumbnail
         title: Title
+        unauthorized: There are no publicly available items in this %{type}.
         visibility: Visibility
       relationships:
         empty: This %{type} is not currently in any collections.
@@ -830,6 +831,17 @@ en:
           pdf_link: Download PDF
           video_link: Download video
     file_sets:
+      actions:
+        delete: Delete
+        delete_confirm: Deleting %{file_set} from %{application_name} is permanent. Click OK to delete this from %{application_name}, or Cancel to cancel this operation
+        delete_title: Delete %{file_set}
+        download: Download
+        download_title: Download %{file_set}
+        edit: Edit
+        edit_title: Edit %{file_set}
+        header: Select an action
+        versions: Versions
+        versions_title: Display previous versions
       groups_description:
         description_html: The list of groups in the drop-down marked "Select a group" is a list of User Managed Groups that you are a member of.  You may select a specific group and assign an access level for a file within %{application_name}, similarly to adding user access levels.
     help:
