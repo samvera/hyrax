@@ -155,8 +155,8 @@ module Hyrax
 
     delegate :member_presenters, :file_set_presenters, :work_presenters, to: :member_presenter_factory
 
-    def exclude_unauthorized_file_sets
-      member_presenters.delete_if { |m| m.is_a?(Hyrax::FileSetPresenter) && !current_ability.can?(:read, m.id) }
+    def exclude_unauthorized_members
+      member_presenters.delete_if { |m| !current_ability.can?(:read, m.id) }
     end
 
     def manifest_url

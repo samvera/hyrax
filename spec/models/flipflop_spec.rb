@@ -31,8 +31,8 @@ RSpec.describe Flipflop do
     end
   end
 
-  describe "hide_private_files?" do
-    subject { described_class.hide_private_files? }
+  describe "hide_private_items?" do
+    subject { described_class.hide_private_items? }
 
     it "defaults to false" do
       is_expected.to be false
