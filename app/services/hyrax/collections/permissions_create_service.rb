@@ -17,6 +17,29 @@ module Hyrax
         collection.reset_access_controls!
       end
 
+      # @api public
+      #
+      # Add access grants to a collection
+      #
+      # @param collection_id [String] id of a collection
+      # @param grants [Array<Hash>] array of grants to add to the collection
+      # @example grants
+      #   [ { agent_type: Hyrax::PermissionTemplateAccess::GROUP,
+      #       agent_id: 'my_group_name',
+      #       access: Hyrax::PermissionTemplateAccess::DEPOSIT } ]
+      # @see Hyrax::PermissionTemplateAccess for valid values for agent_type and access
+      def self.add_access(collection_id:, grants:)
+        collection = Collection.find(collection_id)
+        template = Hyrax::PermissionTemplate.find_by!(source_id: collection_id)
+        grants.each do |grant|
+          Hyrax::PermissionTemplateAccess.find_or_create_by(permission_template_id: template.id,
+                                                            agent_type: grant[:agent_type],
+                                                            agent_id: grant[:agent_id],
+                                                            access: grant[:access])
+        end
+        collection.reset_access_controls!
+      end
+
       # @api private
       #
       # Gather the default permissions needed for a new collection
