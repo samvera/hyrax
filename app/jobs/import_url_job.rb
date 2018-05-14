@@ -10,12 +10,8 @@ class ImportUrlJob < Hyrax::ApplicationJob
   queue_as Hyrax.config.ingest_queue_name
 
   before_enqueue do |job|
+    operation = job.arguments[1]
     operation.pending_job(job)
-  end
-
-  # Retrieves the operation for the job
-  def operation
-    arguments.reduce(:merge).fetch(:operation)
   end
 
   # @param [FileSet] file_set

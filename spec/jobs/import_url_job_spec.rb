@@ -28,6 +28,19 @@ RSpec.describe ImportUrlJob do
     )
   end
 
+  context 'before enqueueing the job' do
+    before do
+      file_set.id = 'fsid123'
+    end
+
+    describe '.operation' do
+      it 'fetches the operation' do
+        described_class.perform_later(file_set, operation)
+        expect { subject.operation.to eq Hyrax::Operation }
+      end
+    end
+  end
+
   context 'after running the job' do
     let!(:tmpdir) { Rails.root.join("tmp/spec/#{Process.pid}") }
 
