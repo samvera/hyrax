@@ -1,42 +1,44 @@
-<div class="btn-group">
+<% if file_set.user_can_perform_any_action? %>
+  <div class="btn-group">
 
-  <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button" id="dropdownMenu_<%= file_set.id %>" aria-haspopup="true">
-    <span class="sr-only">Press to </span>
-    Select an action
-    <span class="caret" aria-hidden="true"></span>
-  </button>
+    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button" id="dropdownMenu_<%= file_set.id %>" aria-haspopup="true">
+      <span class="sr-only">Press to </span>
+      <%= t('.header') %>
+      <span class="caret" aria-hidden="true"></span>
+    </button>
 
-  <ul role="menu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu_<%= file_set.id %>">
-  <% if can?(:edit, file_set.id) %>
-    <li role="menuitem" tabindex="-1">
-      <%= link_to 'Edit', edit_polymorphic_path([main_app, file_set]),
-        { title: "Edit #{file_set}" } %>
-    </li>
+    <ul role="menu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu_<%= file_set.id %>">
+    <% if can?(:edit, file_set.id) %>
+      <li role="menuitem" tabindex="-1">
+        <%= link_to t('.edit'), edit_polymorphic_path([main_app, file_set]),
+          { title: t('.edit_title', file_set: file_set) } %>
+      </li>
 
-    <li role="menuitem" tabindex="-1">
-      <%= link_to 'Versions',  edit_polymorphic_path([main_app, file_set], anchor: 'versioning_display'),
-        { title: "Display previous versions" } %>
-    </li>
-  <% end %>
+      <li role="menuitem" tabindex="-1">
+        <%= link_to t('.versions'),  edit_polymorphic_path([main_app, file_set], anchor: 'versioning_display'),
+          { title: t('.versions_title') } %>
+      </li>
+    <% end %>
 
-  <% if can?(:destroy, file_set.id) %>
-    <li role="menuitem" tabindex="-1">
-      <%= link_to 'Delete', polymorphic_path([main_app, file_set]),
-        method: :delete, title: "Delete #{file_set}",
-        data: {confirm: "Deleting #{file_set} from #{application_name} is permanent. Click OK to delete this from #{application_name}, or Cancel to cancel this operation"} %>
-    </li>
-  <% end %>
+    <% if can?(:destroy, file_set.id) %>
+      <li role="menuitem" tabindex="-1">
+        <%= link_to t('.delete'), polymorphic_path([main_app, file_set]),
+          method: :delete, title: t('.delete_title', file_set: file_set),
+          data: { confirm: t('.delete_confirm', file_set: file_set, application_name: application_name) } %>
+      </li>
+    <% end %>
 
-  <% if can?(:download, file_set.id) %>
-    <li role="menuitem" tabindex="-1">
-      <%= link_to 'Download',
-                  hyrax.download_path(file_set),
-                  title: "Download #{file_set.to_s.inspect}",
-                  target: "_blank",
-                  id: "file_download",
-                  data: { label: file_set.id } %>
-    </li>
-  <% end %>
+    <% if can?(:download, file_set.id) %>
+      <li role="menuitem" tabindex="-1">
+        <%= link_to t('.download'),
+                    hyrax.download_path(file_set),
+                    title: t('.download_title', file_set: file_set),
+                    target: "_blank",
+                    id: "file_download",
+                    data: { label: file_set.id } %>
+      </li>
+    <% end %>
 
-  </ul>
-</div>
+    </ul>
+  </div>
+<% end %>
