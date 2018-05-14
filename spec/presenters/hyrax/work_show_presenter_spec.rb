@@ -224,6 +224,16 @@ RSpec.describe Hyrax::WorkShowPresenter do
     end
   end
 
+  describe "exclude_unauthorized_members" do
+    let(:obj) { create(:work_with_file_and_work) }
+    let(:attributes) { obj.to_solr }
+    let(:ability) { double Ability, can?: false }
+
+    it 'filters out unauthorized members' do
+      expect(presenter.exclude_unauthorized_members.count).to eq 0
+    end
+  end
+
   describe "#file_set_presenters" do
     let(:obj) { create(:work_with_ordered_files) }
     let(:attributes) { obj.to_solr }
