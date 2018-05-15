@@ -407,6 +407,7 @@ pt-BR:
         header: Unid
         thumbnail: Miniatura
         title: Título
+        unauthorized: Não há itens publicamente disponíveis neste %{type}.
         visibility: Visibilidade
       relationships:
         empty: Este %{type} atualmente não está em nenhuma coleção.
@@ -824,6 +825,17 @@ pt-BR:
           pdf_link: baixar PDF
           video_link: Baixar video
     file_sets:
+      actions:
+        delete: Excluir
+        delete_confirm: A exclusão de %{file_set} de %{application_name} é permanente. Clique em OK para excluir isso do %{application_name} ou Cancelar para cancelar esta operação
+        delete_title: Excluir %{file_set}
+        download: Baixar
+        download_title: Baixar %{file_set}
+        edit: Editar
+        edit_title: Editar %{file_set}
+        header: Selecione uma ação
+        versions: Versões
+        versions_title: Exibir versões anteriores
       groups_description:
         description_html: A lista de grupos no menu suspenso marcado como "Selecionar um grupo" é uma lista de Grupos Gerenciados pelo Usuário de que você é membro. Você pode selecionar um grupo específico e atribuir um nível de acesso para um arquivo dentro do %{application_name}, de forma semelhante à adição de níveis de acesso ao usuário.
     help:

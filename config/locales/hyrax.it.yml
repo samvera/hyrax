@@ -412,6 +412,7 @@ it:
         header: Elementi
         thumbnail: Thumbnail
         title: Titolo
+        unauthorized: Non ci sono articoli disponibili pubblicamente in questo %{type}.
         visibility: Visibilità
       relationships:
         empty: Questo %{type} non è in una raccolta.
@@ -829,6 +830,17 @@ it:
           pdf_link: Scarica il pdf
           video_link: Scarica video
     file_sets:
+      actions:
+        delete: Elimina
+        delete_confirm: L'eliminazione di %{file_set} da %{application_name} è permanente. Fare clic su OK per eliminare questo da %{application_name}, o Annulla per annullare questa operazione
+        delete_title: Elimina %{file_set}
+        download: Scaricare
+        download_title: Scarica %{file_set}
+        edit: modificare
+        edit_title: Modifica %{file_set}
+        header: Seleziona un'azione
+        versions: versioni
+        versions_title: Mostra le versioni precedenti
       groups_description:
         description_html: L'elenco dei gruppi nel menu a discesa contrassegnato con "Seleziona un gruppo" è un elenco di Gruppi gestiti utente di cui sei membro. È possibile selezionare un gruppo specifico e assegnare un livello di accesso per un file all'interno di %{application_name}, analogamente ad aggiungere livelli di accesso utente.
     help:
