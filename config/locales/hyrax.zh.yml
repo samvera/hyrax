@@ -410,6 +410,7 @@ zh:
         header: 单件
         thumbnail: 缩略图
         title: 标题
+        unauthorized: 这个%{type}中没有公开可用的项目。
         visibility: 公开度
       relationships:
         empty: 该 %{type} 目前未纳入任何收藏集内。
@@ -827,6 +828,17 @@ zh:
           pdf_link: 下载PDF文件
           video_link: 下载视频
     file_sets:
+      actions:
+        delete: 删除
+        delete_confirm: 从%{application_name}删除%{file_set}是永久性的。单击确定从%{application_name}中删除此项，或单击取消取消此操作
+        delete_title: 删除%{file_set}
+        download: 下载
+        download_title: 下载%{file_set}
+        edit: 编辑
+        edit_title: 编辑%{file_set}
+        header: 选择一个动作
+        versions: 版本
+        versions_title: 显示以前的版本
       groups_description:
         description_html: 标有"选择一个群"的下拉框内是您所属的一组用户管理群的清单。您可以选择一个特定的群，指定对%{application_name}中文件的访问级别，类似于添加用户访问级别。
     help:
