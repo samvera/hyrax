@@ -413,6 +413,7 @@ fr:
         header: Articles
         thumbnail: La vignette
         title: Titre
+        unauthorized: Il n'y a pas d'objets disponibles publiquement dans ce %{type}.
         visibility: Visibilité
       relationships:
         empty: Ce %{type} ne se trouve actuellement dans aucune collection.
@@ -830,6 +831,17 @@ fr:
           pdf_link: Télécharger le fichier PDF
           video_link: Télécharger la video
     file_sets:
+      actions:
+        delete: Effacer
+        delete_confirm: La suppression de %{file_set} à partir de %{application_name} est permanente. Cliquez sur OK pour le supprimer de %{application_name}, ou sur Annuler pour annuler cette opération
+        delete_title: Supprimer %{file_set}
+        download: Télécharger
+        download_title: Télécharger %{file_set}
+        edit: modifier
+        edit_title: Modifier %{file_set}
+        header: Sélectionnez une action
+        versions: Versions
+        versions_title: Afficher les versions précédentes
       groups_description:
         description_html: La liste des groupes dans le menu déroulant intitulé «Sélectionner un groupe» est une liste des groupes gérés par l'utilisateur dont vous êtes membre. Vous pouvez sélectionner un groupe spécifique et attribuer un niveau d'accès pour un fichier dans %{application_name}, de même que l'ajout de niveaux d'accès utilisateur.
     help:
