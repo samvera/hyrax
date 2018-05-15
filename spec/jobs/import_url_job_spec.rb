@@ -14,6 +14,9 @@ RSpec.describe ImportUrlJob do
   let(:operation) { create(:operation) }
   let(:actor) { instance_double(Hyrax::Actors::FileSetActor, create_content: true) }
 
+  let(:mock_retriever) { double }
+  let(:inbox) { user.mailbox.inbox }
+
   before do
     allow(Hyrax::Actors::FileSetActor).to receive(:new).with(file_set, user).and_return(actor)
 
@@ -26,6 +29,22 @@ RSpec.describe ImportUrlJob do
     stub_request(:get, "http://example.org#{file_hash}").to_return(
       body: File.open(File.expand_path(file_path, __FILE__)).read, status: 200, headers: response_headers
     )
+
+    allow(BrowseEverything::Retriever).to receive(:new).and_return(mock_retriever)
+    allow(mock_retriever).to receive(:retrieve)
+  end
+
+  context 'before enqueueing the job' do
+    before do
+      file_set.id = 'fsid123'
+    end
+
+    describe '.operation' do
+      it 'fetches the operation' do
+        described_class.perform_later(file_set, operation)
+        expect { subject.operation.to eq Hyrax::Operation }
+      end
+    end
   end
 
   context 'after running the job' do
@@ -73,6 +92,40 @@ RSpec.describe ImportUrlJob do
       # import job should not override the title set another process
       file = FileSet.find(file_set_id)
       expect(file.title).to eq(['File One'])
+    end
+  end
+
+  context 'when the remote file is unavailable' do
+    before do
+      response_headers = { 'Content-Type' => 'image/png', 'Content-Length' => File.size(File.expand_path(file_path, __FILE__)) }
+
+      stub_request(:head, "http://example.org#{file_hash}").to_return(
+        body: "", status: 404, headers: response_headers
+      )
+    end
+
+    it 'sends error message' do
+      expect(operation).to receive(:fail!)
+      expect(file_set.original_file).to be_nil
+      described_class.perform_now(file_set, operation)
+      expect(inbox.count).to eq(1)
+      last_message = inbox[0].last_message
+      expect(last_message.subject).to eq('File Import Error')
+      expect(last_message.body).to eq("Error: Expired URL")
+    end
+  end
+
+  context 'when retrieval fails' do
+    before { allow(mock_retriever).to receive(:retrieve).and_raise(StandardError, 'Timeout') }
+
+    it 'sends error message' do
+      expect(operation).to receive(:fail!)
+      expect(file_set.original_file).to be_nil
+      described_class.perform_now(file_set, operation)
+      expect(inbox.count).to eq(1)
+      last_message = inbox[0].last_message
+      expect(last_message.subject).to eq('File Import Error')
+      expect(last_message.body).to eq("Error: Timeout")
     end
   end
 end

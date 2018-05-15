@@ -4,7 +4,8 @@
   }
 }
 
-.no-preview, .social-media {
+.no-preview,
+.social-media {
   padding: $panel-body-padding;
 }
 
@@ -17,7 +18,8 @@ header > h1 .label {
   padding: $panel-body-padding;
 }
 
-.relationships, .attributes {
+.relationships,
+.attributes {
   tbody th {
     width: 20%;
   }
@@ -52,6 +54,13 @@ ul.tabular {
 .work-type {
   margin-bottom: 18px;
   margin-top: -8px;
+
+  .panel-body {
+    .work_description,
+    li.attribute {
+      word-break: break-word;
+    }
+  }
 }
 
 .panel-workflow {
