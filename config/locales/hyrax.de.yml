@@ -414,6 +414,7 @@ de:
         header: Artikel
         thumbnail: Miniaturansicht
         title: Titel
+        unauthorized: Es gibt keine öffentlich verfügbaren Elemente in diesem %{type}.
         visibility: Sichtbarkeit
       relationships:
         empty: Diese %{type} ist derzeit noch keiner Sammlung zugeordnet.
@@ -831,6 +832,17 @@ de:
           pdf_link: PDF Herunterladen
           video_link: Video herunterladen
     file_sets:
+      actions:
+        delete: Löschen
+        delete_confirm: Das Löschen von %{file_set} aus %{application_name} ist permanent. Klicken Sie auf OK, um dies aus %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
+        delete_title: Löschen Sie %{file_set}
+        download: Herunterladen
+        download_title: Laden Sie %{file_set} herunter
+        edit: Bearbeiten
+        edit_title: Bearbeite %{file_set}
+        header: Wählen Sie eine Aktion
+        versions: Versionen
+        versions_title: Vorherige Versionen anzeigen
       groups_description:
         description_html: Die Liste der Gruppen in der Auswahlliste mit der Bezeichnung &ldquor; Wählen Sie eine Gruppe aus &ldquor; zeigt ihnen jene Benutzer administrierten Gruppen an, bei denen Sie Mitglied sind. Sie können eine bestimmte Gruppe auswählen und eine Zugriffsebene für eine Datei innerhalb von %{application_name} zuweisen, ähnlich wie das Hinzufügen von Benutzerzugriffsebenen.
     help:
