@@ -357,7 +357,7 @@ RSpec.describe Hyrax::CollectionPresenter do
   describe '#show_path' do
     subject { presenter.show_path }
 
-    it { is_expected.to eq "/dashboard/collections/#{solr_doc.id}" }
+    it { is_expected.to eq "/dashboard/collections/#{solr_doc.id}?locale=en" }
   end
 
   describe "banner_file" do

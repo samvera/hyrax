@@ -10,8 +10,8 @@ RSpec.describe Hyrax::Renderers::LinkedAttributeRenderer do
     let(:tr_content) do
       "<tr><th>Name</th>\n" \
        "<td><ul class='tabular'>" \
-       "<li class=\"attribute attribute-name\"><a href=\"/catalog?q=Bob&amp;search_field=name\">Bob</a></li>\n" \
-       "<li class=\"attribute attribute-name\"><a href=\"/catalog?q=Jessica&amp;search_field=name\">Jessica</a></li>\n" \
+       "<li class=\"attribute attribute-name\"><a href=\"/catalog?locale=en&q=Bob&amp;search_field=name\">Bob</a></li>\n" \
+       "<li class=\"attribute attribute-name\"><a href=\"/catalog?locale=en&q=Jessica&amp;search_field=name\">Jessica</a></li>\n" \
        "</ul></td></tr>"
     end
 

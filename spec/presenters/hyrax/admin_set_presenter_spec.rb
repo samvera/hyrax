@@ -68,7 +68,7 @@ RSpec.describe Hyrax::AdminSetPresenter do
 
     subject { presenter.show_path }
 
-    it { is_expected.to eq "/admin/admin_sets/#{admin_set.id}" }
+    it { is_expected.to eq "/admin/admin_sets/#{admin_set.id}?locale=en" }
   end
 
   describe '#managed_access' do
