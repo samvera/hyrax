@@ -11,8 +11,8 @@ RSpec.describe Hyrax::Renderers::FacetedAttributeRenderer do
       %(
       <tr><th>Name</th>
       <td><ul class='tabular'>
-      <li class="attribute attribute-name"><a href="/catalog?f%5Bname_sim%5D%5B%5D=Bob">Bob</a></li>
-      <li class="attribute attribute-name"><a href="/catalog?f%5Bname_sim%5D%5B%5D=Jessica">Jessica</a></li>
+      <li class="attribute attribute-name"><a href="/catalog?f%5Bname_sim%5D%5B%5D=Bob&locale=en">Bob</a></li>
+      <li class="attribute attribute-name"><a href="/catalog?f%5Bname_sim%5D%5B%5D=Jessica&locale=en">Jessica</a></li>
       </ul></td></tr>
     )
     end
@@ -28,7 +28,7 @@ RSpec.describe Hyrax::Renderers::FacetedAttributeRenderer do
       let(:rendered_link_query) { URI.parse(rendered_link['href']).query }
 
       it "escapes content properly" do
-        expect(rendered_link_query).to eq "#{CGI.escape('f[name_sim][]')}=#{CGI.escape('John & Bob')}"
+        expect(rendered_link_query).to eq "#{CGI.escape('f[name_sim][]')}=#{CGI.escape('John & Bob')}&locale=en"
       end
     end
   end
