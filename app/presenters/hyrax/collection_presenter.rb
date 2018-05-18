@@ -104,7 +104,7 @@ module Hyrax
     end
 
     def show_path
-      Hyrax::Engine.routes.url_helpers.dashboard_collection_path(id)
+      Hyrax::Engine.routes.url_helpers.dashboard_collection_path(id, locale: I18n.locale)
     end
 
     def banner_file
