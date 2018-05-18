@@ -4,6 +4,7 @@ export class UploadedFiles {
     this.form = form
     this.element = $('#fileupload')
     this.element.bind('fileuploadcompleted', callback)
+    this.element.bind('fileuploaddestroyed', callback)
   }
 
   get hasFileRequirement() {
