@@ -192,7 +192,9 @@ module Hyrax
       end
 
       def curation_concern_from_search_results
-        search_result_document(params)
+        search_params = params
+        search_params.delete :page
+        search_result_document(search_params)
       end
 
       # Only returns unsuppressed documents the user has read access to

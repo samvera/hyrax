@@ -30,6 +30,8 @@ RSpec.describe Hyrax::WorkShowPresenter do
   it { is_expected.to delegate_method(:resource_type).to(:solr_document) }
   it { is_expected.to delegate_method(:keyword).to(:solr_document) }
   it { is_expected.to delegate_method(:itemtype).to(:solr_document) }
+  it { is_expected.to delegate_method(:member_presenters).to(:member_presenter_factory) }
+  it { is_expected.to delegate_method(:ordered_ids).to(:member_presenter_factory) }
 
   describe "#model_name" do
     subject { presenter.model_name }
@@ -224,13 +226,86 @@ RSpec.describe Hyrax::WorkShowPresenter do
     end
   end
 
-  describe "exclude_unauthorized_members" do
+  describe "#member_presenters_for" do
     let(:obj) { create(:work_with_file_and_work) }
     let(:attributes) { obj.to_solr }
-    let(:ability) { double Ability, can?: false }
+    let(:items) { presenter.ordered_ids }
+    let(:subject) { presenter.member_presenters_for(items) }
 
-    it 'filters out unauthorized members' do
-      expect(presenter.exclude_unauthorized_members.count).to eq 0
+    it "returns appropriate classes for each item" do
+      expect(subject.size).to eq 2
+      expect(subject.first).to be_instance_of(Hyrax::FileSetPresenter)
+      expect(subject.last).to be_instance_of(described_class)
+    end
+  end
+
+  describe "#list_of_item_ids_to_display" do
+    let(:subject) { presenter.list_of_item_ids_to_display }
+    let(:items_list) { ['item0', 'item1', 'item2', 'item3', 'item4', 'item5', 'item6', 'item7', 'item8', 'item9'] }
+    let(:rows) { 10 }
+    let(:page) { 1 }
+    let(:ability) { double "Ability" }
+    let(:current_ability) { ability }
+
+    before do
+      allow(presenter).to receive(:ordered_ids).and_return(items_list)
+      allow(current_ability).to receive(:can?).with(:read, 'item0').and_return true
+      allow(current_ability).to receive(:can?).with(:read, 'item1').and_return false
+      allow(current_ability).to receive(:can?).with(:read, 'item2').and_return true
+      allow(current_ability).to receive(:can?).with(:read, 'item3').and_return false
+      allow(current_ability).to receive(:can?).with(:read, 'item4').and_return true
+      allow(current_ability).to receive(:can?).with(:read, 'item5').and_return true
+      allow(current_ability).to receive(:can?).with(:read, 'item6').and_return false
+      allow(current_ability).to receive(:can?).with(:read, 'item7').and_return true
+      allow(current_ability).to receive(:can?).with(:read, 'item8').and_return false
+      allow(current_ability).to receive(:can?).with(:read, 'item9').and_return true
+      allow(presenter).to receive(:rows_from_params).and_return(rows)
+      allow(presenter).to receive(:current_page).and_return(page)
+      allow(Flipflop).to receive(:hide_private_items?).and_return(answer)
+    end
+
+    context 'when hiding private items' do
+      let(:answer) { true }
+
+      it "returns viewable items" do
+        expect(subject.size).to eq 6
+        expect(subject).to be_instance_of(Kaminari::PaginatableArray)
+        expect(subject).to include("item0", "item2", "item4", "item5", "item7", "item9")
+      end
+    end
+    context 'when including private items' do
+      let(:answer) { false }
+
+      it "returns appropriate items" do
+        expect(subject.size).to eq 10
+        expect(subject).to be_instance_of(Kaminari::PaginatableArray)
+        expect(subject).to eq(items_list)
+      end
+    end
+    context 'with pagination' do
+      let(:rows) { 3 }
+      let(:page) { 2 }
+
+      let(:answer) { true }
+      it 'partitions the item list and excluding hidden items' do
+        expect(subject).to eq(['item5', 'item7', 'item9'])
+      end
+    end
+  end
+
+  describe "#total_pages" do
+    let(:subject) { presenter.total_pages }
+    let(:items) { 17 }
+    let(:rows) { 4 }
+
+    before do
+      allow(Flipflop).to receive(:hide_private_items?).and_return(false)
+      allow(presenter).to receive(:total_items).and_return(items)
+      allow(presenter).to receive(:rows_from_params).and_return(rows)
+    end
+
+    it 'calculates number of pages from items and rows' do
+      expect(subject).to eq(5)
     end
   end
 
