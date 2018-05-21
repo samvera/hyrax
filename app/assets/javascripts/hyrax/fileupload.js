@@ -5,4 +5,7 @@ Blacklight.onLoad(function() {
   var options = {};
   $('#fileupload').hyraxUploader(options);
   $('#fileuploadlogo').hyraxUploader({downloadTemplateId: 'logo-template-download'});
+  $("#new_generic_work, #new_batch_upload_item, .edit_generic_work").on('submit', function(event) {
+    $(".panel-footer").toggleClass("hidden");
+  });
 });

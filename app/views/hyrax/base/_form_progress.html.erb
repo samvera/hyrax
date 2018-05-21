@@ -45,13 +45,18 @@
       <% end %>
     <% end %>
     <br />
-    <% cancel_path = f.object.persisted? ? polymorphic_path([main_app, f.object]) : hyrax.my_works_path %>
-    <%= link_to t(:'helpers.action.cancel'),
-                cancel_path,
-                class: 'btn btn-default' %>
     <%# TODO: If we start using ActionCable, we could listen for object updates and
               alert the user that the object has changed by someone else %>
     <%= f.input Hyrax::Actors::OptimisticLockValidator.version_field, as: :hidden if f.object.persisted? %>
     <%= f.submit class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "with_files_submit", name: "save_with_files" %>
+  </div>
+
+  <%# Provide immediate feedback after the form is submitted while the subsequent page is loading %>
+  <div class="panel-footer hidden">
+    <div class="progress">
+      <div class="progress-bar progress-bar-striped progress-bar-complete active">
+        <span id="form-feedback" aria-live="assertive">Saving your work. This may take a few moments</span>
+      </div>
+    </div>
   </div>
 </aside>
