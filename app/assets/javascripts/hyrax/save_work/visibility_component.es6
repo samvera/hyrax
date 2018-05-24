@@ -8,7 +8,7 @@ export default class VisibilityComponent {
     this.element = element
     this.adminSetWidget = adminSetWidget
     this.form = element.closest('form')
-    $('.collapse').collapse({ toggle: false })
+      this.element.find('.collapse').collapse({ toggle: false })
     element.find("[type='radio']").on('change', () => { this.showForm() })
     // Ensure any disabled options are re-enabled when form submits
     this.form.on('submit', () => { this.enableAllOptions() })
@@ -22,7 +22,7 @@ export default class VisibilityComponent {
 
   // Collapse all Visibility sub-options
   collapseAll() {
-    $('.collapse').collapse('hide');
+      this.element.find('.collapse').collapse('hide');
   }
 
   // Open the selected Visibility's sub-options, collapsing all others
@@ -33,8 +33,8 @@ export default class VisibilityComponent {
 
     if(target) {
       // Show the target suboption and hide all others
-      $('.collapse' + target).collapse('show');
-      $('.collapse:not(' + target + ')').collapse('hide');
+        this.element.find('.collapse' + target).collapse('show');
+        this.element.find('.collapse:not(' + target + ')').collapse('hide');
     }
     else {
       this.collapseAll()
