@@ -36,17 +36,17 @@ module Hyrax
       @work_presenters ||= member_presenters(ordered_ids - file_set_ids, work_presenter_class)
     end
 
-    private
+    # TODO: Extract this to ActiveFedora::Aggregations::ListSource
+    def ordered_ids
+      @ordered_ids ||= begin
+                         ActiveFedora::SolrService.query("proxy_in_ssi:#{id}",
+                                                         rows: 10_000,
+                                                         fl: "ordered_targets_ssim")
+                                                  .flat_map { |x| x.fetch("ordered_targets_ssim", []) }
+                       end
+    end
 
-      # TODO: Extract this to ActiveFedora::Aggregations::ListSource
-      def ordered_ids
-        @ordered_ids ||= begin
-                           ActiveFedora::SolrService.query("proxy_in_ssi:#{id}",
-                                                           rows: 10_000,
-                                                           fl: "ordered_targets_ssim")
-                                                    .flat_map { |x| x.fetch("ordered_targets_ssim", []) }
-                         end
-      end
+    private
 
       # These are the file sets that belong to this work, but not necessarily
       # in order.
