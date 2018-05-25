@@ -116,6 +116,10 @@ Hyrax.config do |config|
   # The default is true.
   # config.work_requires_files = true
 
+  # How many rows of items should appear on the work show view?
+  # The default is 10
+  # config.show_work_item_rows = 10
+
   # Enable IIIF image service. This is required to use the
   # UniversalViewer-ified show page
   #

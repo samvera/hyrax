@@ -340,6 +340,11 @@ module Hyrax
       @work_requires_files
     end
 
+    attr_writer :show_work_item_rows
+    def show_work_item_rows
+      @show_work_item_rows ||= 10 # rows on show view
+    end
+
     attr_writer :batch_user_key
     def batch_user_key
       @batch_user_key ||= 'batchuser@example.com'

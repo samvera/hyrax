@@ -72,6 +72,7 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:rights_statement_service_class=) }
   it { is_expected.to respond_to(:redis_namespace) }
   it { is_expected.to respond_to(:subject_prefix) }
+  it { is_expected.to respond_to(:show_work_item_rows) }
   it { is_expected.to respond_to(:translate_id_to_uri) }
   it { is_expected.to respond_to(:translate_uri_to_id) }
   it { is_expected.to respond_to(:upload_path) }
