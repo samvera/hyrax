@@ -4,7 +4,6 @@ Code: [![Version](https://badge.fury.io/rb/hyrax.png)](http://badge.fury.io/rb/h
 [![Build Status](https://travis-ci.org/samvera/hyrax.png?branch=master)](https://travis-ci.org/samvera/hyrax)
 [![Coverage Status](https://coveralls.io/repos/github/samvera/hyrax/badge.svg?branch=master)](https://coveralls.io/github/samvera/hyrax?branch=master)
 [![Code Climate](https://codeclimate.com/github/samvera/hyrax/badges/gpa.svg)](https://codeclimate.com/github/samvera/hyrax)
-[![Dependency Update Status](https://gemnasium.com/samvera/hyrax.png)](https://gemnasium.com/samvera/hyrax)
 [![Dependency Maintenance Status](https://dependencyci.com/github/samvera/hyrax/badge)](https://dependencyci.com/github/samvera/hyrax)
 
 Docs: [![Documentation Status](https://inch-ci.org/github/samvera/hyrax.svg?branch=master)](https://inch-ci.org/github/samvera/hyrax)
