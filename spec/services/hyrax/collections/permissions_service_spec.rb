@@ -299,6 +299,20 @@ RSpec.describe Hyrax::Collections::PermissionsService do
       end
     end
 
+    describe '.collection_ids_for_view' do
+      it 'returns collection ids where user has view access' do
+        expect(described_class.collection_ids_for_view(ability: ability)).to match_array [col_du.id, col_dg.id, col_mu.id, col_mg.id, col_vu.id, col_vg.id]
+      end
+
+      context 'when user has no access' do
+        let(:ability) { Ability.new(user2) }
+
+        it 'returns empty array' do
+          expect(described_class.collection_ids_for_view(ability: ability)).to match_array []
+        end
+      end
+    end
+
     describe '.can_manage_any_collection?' do
       it 'returns true when user has manage access to at least one collection' do
         expect(described_class.can_manage_any_collection?(ability: ability)).to be true
