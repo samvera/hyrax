@@ -225,7 +225,7 @@ module Hyrax
       end
 
       def rows_from_params
-        request.params[:rows].nil? ? 10 : request.params[:rows].to_i
+        request.params[:rows].nil? ? Hyrax.config.show_work_item_rows : request.params[:rows].to_i
       end
 
       def current_page

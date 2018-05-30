@@ -99,6 +99,19 @@ module Hyrax
 
       # @api public
       #
+      # IDs of collections which the user can view.
+      #
+      # @param ability [Ability] the ability coming from cancan ability check
+      # @return [Array<String>] IDs of collections into which the user can view
+      # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
+      def self.collection_ids_for_view(ability:)
+        collection_ids_for_user(ability: ability, access: [Hyrax::PermissionTemplateAccess::MANAGE,
+                                                           Hyrax::PermissionTemplateAccess::DEPOSIT,
+                                                           Hyrax::PermissionTemplateAccess::VIEW])
+      end
+
+      # @api public
+      #
       # Determine if the given user has permissions to view the admin show page for at least one collection
       #
       # @param ability [Ability] the ability coming from cancan ability check

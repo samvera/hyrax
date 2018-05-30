@@ -48,4 +48,39 @@ RSpec.describe Hyrax::CatalogSearchBuilder do
       expect(solr_params[:fq]).to eq ["-suppressed_bsi:true"]
     end
   end
+
+  describe "#filter_collection_facet_for_access" do
+    let(:user) { build(:user) }
+    let(:ability) { Ability.new(user) }
+    let(:context) { double(current_ability: ability) }
+
+    subject { builder.filter_collection_facet_for_access(solr_params) }
+
+    context 'with an admin' do
+      let(:user) { build(:admin) }
+
+      it "does nothing if user is an admin" do
+        subject
+        expect(solr_params['f.member_of_collection_ids_ssim.facet.matches']).to be_blank
+      end
+    end
+
+    context 'when the user has view access to collections' do
+      let(:collection_ids) { ['abcd12345', 'efgh67890'] }
+
+      before do
+        allow(Hyrax::Collections::PermissionsService).to receive(:collection_ids_for_view).with(ability: ability).and_return(collection_ids)
+      end
+
+      it "includes a regex of the ids of collections" do
+        subject
+        expect(solr_params['f.member_of_collection_ids_ssim.facet.matches']).to eq '^abcd12345$|^efgh67890$'
+      end
+    end
+
+    it "includes an empty regex when user doesn't have access to view any collections" do
+      subject
+      expect(solr_params['f.member_of_collection_ids_ssim.facet.matches']).to eq '^$'
+    end
+  end
 end

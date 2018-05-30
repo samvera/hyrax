@@ -366,4 +366,34 @@ RSpec.describe HyraxHelper, type: :helper do
       expect(helper.banner_image).to eq(Hyrax.config.banner_image)
     end
   end
+
+  describe "#collection_title_by_id" do
+    let(:solr_doc) { double(id: "abcd12345") }
+    let(:bad_solr_doc) { double(id: "efgh67890") }
+    let(:solr_response) { double(docs: [solr_doc]) }
+    let(:bad_solr_response) { double(docs: [bad_solr_doc]) }
+    let(:empty_solr_response) { double(docs: []) }
+    let(:repository) { double }
+
+    before do
+      allow(controller).to receive(:repository).and_return(repository)
+      allow(solr_doc).to receive(:[]).with("title_tesim").and_return(["Collection of Awesomeness"])
+      allow(bad_solr_doc).to receive(:[]).with("title_tesim").and_return(nil)
+      allow(repository).to receive(:find).with("abcd12345").and_return(solr_response)
+      allow(repository).to receive(:find).with("efgh67890").and_return(bad_solr_response)
+      allow(repository).to receive(:find).with("bad-id").and_return(empty_solr_response)
+    end
+
+    it "returns the first title of the collection" do
+      expect(helper.collection_title_by_id("abcd12345")).to eq "Collection of Awesomeness"
+    end
+
+    it "returns nil if collection doesn't have title_tesim field" do
+      expect(helper.collection_title_by_id("efgh67890")).to eq nil
+    end
+
+    it "returns nil if collection not found" do
+      expect(helper.collection_title_by_id("bad-id")).to eq nil
+    end
+  end
 end
