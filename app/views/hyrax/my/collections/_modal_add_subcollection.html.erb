@@ -11,7 +11,7 @@
       <div class="modal-body">
         <div class="modal-ajax-alert"></div>
         <label><%= t('hyrax.collection.actions.nest_collections.select_label') %></label>
-        <input type="hidden" name="source" value="<%= source %>" /><input />
+        <input type="hidden" name="source" value="<%= source %>" />
         <select name="child_id">
           <option value="none"><%= t("hyrax.dashboard.my.action.select") %></option>
           <% colls = Hyrax::Collections::NestedCollectionQueryService.available_child_collections(parent: collection, scope: controller, limit_to_id: nil) %>

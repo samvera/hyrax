@@ -12,8 +12,6 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   let(:relation)      { :original_file }
   let(:file_actor)    { Hyrax::Actors::FileActor.new(file_set, relation, user) }
 
-  before { allow(CharacterizeJob).to receive(:perform_later) } # not testing that
-
   describe 'private' do
     let(:file_set) { build(:file_set) } # avoid 130+ LDP requests
 
@@ -123,7 +121,6 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       let(:actor) { described_class.new(file_set, user) }
 
       before do
-        allow(IngestJob).to receive(:perform_later).with(JobIoWrapper)
         actor.create_content(file)
       end
 
@@ -136,14 +133,12 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   describe '#create_content when from_url is true' do
     before do
       expect(JobIoWrapper).to receive(:create_with_varied_file_handling!).with(any_args).once.and_call_original
-      allow(VisibilityCopyJob).to receive(:perform_later).with(file_set.parent).and_return(true)
-      allow(InheritPermissionsJob).to receive(:perform_later).with(file_set.parent).and_return(true)
     end
 
     it 'calls ingest_file and kicks off jobs' do
       actor.create_content(file, from_url: true)
-      expect(VisibilityCopyJob).to have_received(:perform_later)
-      expect(InheritPermissionsJob).to have_received(:perform_later)
+      expect(VisibilityCopyJob).to have_been_enqueued
+      expect(InheritPermissionsJob).to have_been_enqueued
     end
 
     context 'when an alternative relationship is specified' do
@@ -223,7 +218,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       expect(IngestJob).to receive(:perform_later).with(any_args).and_return(IngestJob.new)
       expect(actor.update_content(local_file)).to be_a(IngestJob)
     end
-    it 'runs callbacks' do
+    it 'runs callbacks', perform_enqueued: [IngestJob] do
       # Do not bother ingesting the file -- test only the result of callback
       allow(file_actor).to receive(:ingest_file).with(any_args).and_return(double)
       expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
@@ -332,18 +327,15 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     end
   end
 
-  describe '#revert_content' do
+  describe '#revert_content', perform_enqueued: [IngestJob] do
     let(:file_set) { create(:file_set, user: user) }
     let(:file1)    { "small_file.txt" }
     let(:version1) { "version1" }
     let(:restored_content) { file_set.reload.original_file }
 
     before do
-      original_adapter = ApplicationJob.queue_adapter
-      ApplicationJob.queue_adapter = :inline
       actor.create_content(fixture_file_upload(file1))
       actor.create_content(fixture_file_upload('hyrax_generic_stub.txt'))
-      ApplicationJob.queue_adapter = original_adapter
       actor.file_set.reload
     end
 

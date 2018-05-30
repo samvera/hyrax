@@ -36,7 +36,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         visit '/dashboard/my/collections'
       end
 
-      it "has page title, does not have tabs, and lists only user's collections" do
+      it "has page title, does not have tabs, lists only user's collections, and displays number of collections in the respository" do
         expect(page).to have_content 'Collections'
         expect(page).not_to have_link 'All Collections'
         within('section.tabs-row') do
@@ -47,6 +47,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         expect(page).to have_link(admin_set_b.title.first)
         expect(page).not_to have_link(collection3.title.first)
         expect(page).not_to have_link(admin_set_a.title.first)
+        expect(page).to have_content("3 collections you own in the repository")
       end
 
       it "has collection type and visibility filters" do
@@ -256,6 +257,11 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         expect(page).to have_content title
         expect(page).to have_content description
       end
+
+      it "has properly formed collection type buttons" do
+        expect(page).not_to have_selector("input[data-path$='collections/new&collection_type_id=1']")
+        expect(page).to have_selector("input[data-path$='collections/new?locale=en&collection_type_id=1']")
+      end
     end
 
     context 'when user can create collections of one type' do
@@ -357,7 +363,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
       context 'and collection is empty' do
         it 'and user confirms delete, deletes the collection', :js do
-          expect(page).to have_content(empty_collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).to have_content(empty_collection.title.first)
+          end
           check_tr_data_attributes(empty_collection.id, 'collection')
           # check that modal data attributes haven't been added yet
           expect(page).not_to have_selector("div[data-id='#{empty_collection.id}']")
@@ -370,11 +378,15 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           within("div#collection-empty-to-delete-modal") do
             click_button('Delete')
           end
-          expect(page).not_to have_content(empty_collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).not_to have_content(empty_collection.title.first)
+          end
         end
 
         it 'and user cancels, does NOT delete the collection', :js do
-          expect(page).to have_content(empty_collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).to have_content(collection.title.first)
+          end
           check_tr_data_attributes(empty_collection.id, 'collection')
           # check that modal data attributes haven't been added yet
           expect(page).not_to have_selector("div[data-id='#{empty_collection.id}']")
@@ -388,13 +400,17 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           within("div#collection-empty-to-delete-modal") do
             click_button('Cancel')
           end
-          expect(page).to have_content(empty_collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).to have_content(collection.title.first)
+          end
         end
       end
 
       context 'and collection is not empty' do
         it 'and user confirms delete, deletes the collection', :js do
-          expect(page).to have_content(collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).to have_content(collection.title.first)
+          end
           check_tr_data_attributes(collection.id, 'collection')
           within("#document_#{collection.id}") do
             first('button.dropdown-toggle').click
@@ -405,11 +421,15 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           within("div#collection-to-delete-modal") do
             find('button.modal-delete-button').click
           end
-          expect(page).not_to have_content(collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).not_to have_content(collection.title.first)
+          end
         end
 
         it 'and user cancels, does NOT delete the collection', :js do
-          expect(page).to have_content(collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).to have_content(collection.title.first)
+          end
           within("#document_#{collection.id}") do
             first('button.dropdown-toggle').click
             first('.itemtrash').click
@@ -419,12 +439,14 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           within("div#collection-to-delete-modal") do
             click_button('Cancel')
           end
-          expect(page).to have_content(collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).to have_content(collection.title.first)
+          end
         end
       end
     end
 
-    context 'when user without permissions selects delete' do
+    context 'when user does not have permission to delete a collection' do
       let(:user2) { create(:user) }
 
       before do
@@ -437,18 +459,22 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         visit '/dashboard/collections' # Managed Collections tab
       end
 
-      it 'does not allow delete collection' do
-        expect(page).to have_content(collection.title.first)
-        check_tr_data_attributes(collection.id, 'collection')
-        within("#document_#{collection.id}") do
-          first('button.dropdown-toggle').click
-          first('.itemtrash').click
+      context 'and selects Delete from drop down within table' do
+        it 'does not allow delete collection', js: true do
+          expect(page).to have_content(collection.title.first)
+          check_tr_data_attributes(collection.id, 'collection')
+          within("#document_#{collection.id}") do
+            first('button.dropdown-toggle').click
+            first('.itemtrash').click
+          end
+
+          # Exepct the modal to be shown that explains why the user can't delete the collection.
+          expect(page).to have_selector('div#collection-to-delete-deny-modal', visible: true)
+          within('div#collection-to-delete-deny-modal') do
+            click_button('Close')
+          end
+          expect(page).to have_content(collection.title.first)
         end
-        expect(page).to have_selector('div#collection-to-delete-deny-modal', visible: true)
-        within('div#collection-to-delete-deny-modal') do
-          click_button('Close')
-        end
-        expect(page).to have_content(collection.title.first)
       end
     end
 
@@ -607,15 +633,15 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         click_link 'Add existing works'
         first('input#check_all').click
         click_button "Add to collection"
-        expect(page).to have_css("input#id_#{collection1.id}[checked='checked']")
-        expect(page).not_to have_css("input#id_#{collection2.id}[checked='checked']")
+        expect(page).to have_selector "#member_of_collection_ids[value=\"#{collection1.id}\"]", visible: false
+        expect(page).to have_selector "#member_of_collection_label[value=\"#{collection1.title.first}\"]"
 
         visit "/dashboard/collections/#{collection2.id}"
         click_link 'Add existing works'
         first('input#check_all').click
         click_button "Add to collection"
-        expect(page).not_to have_css("input#id_#{collection1.id}[checked='checked']")
-        expect(page).to have_css("input#id_#{collection2.id}[checked='checked']")
+        expect(page).to have_selector "#member_of_collection_ids[value=\"#{collection2.id}\"]", visible: false
+        expect(page).to have_selector "#member_of_collection_label[value=\"#{collection2.title.first}\"]"
 
         click_button "Save changes"
         expect(page).to have_content(work1.title.first)

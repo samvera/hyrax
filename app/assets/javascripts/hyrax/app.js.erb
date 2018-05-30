@@ -13,8 +13,10 @@ Hyrax = {
         this.datatable();
         this.adminSetEditor();
         this.collectionEditor();
+        this.collectionsV2();
         this.collectionTypes();
         this.collectionTypeEditor();
+        this.collectionUtilities();
         this.adminStatisticsGraphs();
         this.tinyMCE();
         this.sortAndPerPage();
@@ -47,13 +49,25 @@ Hyrax = {
     // The Collection edit page
     collectionEditor: function() {
       var CollectionControls = require('hyrax/collections/editor');
-      var controls = new CollectionControls($('#collection_permissions'));
+      var controls = new CollectionControls($('#collection-edit-controls'));
+    },
+
+    // Collections v2 - collections related js should (over time) be moved here
+    // from 'collections.js' to take advantage of shared modules
+    collectionsV2: function() {
+      var CollectionsV2 = require('hyrax/collections_v2');
+      new CollectionsV2();
     },
 
     // Collection types
     collectionTypes: function() {
       var CollectionTypes = require('hyrax/collection_types');
       var collection_types = new CollectionTypes($('.collection-types-wrapper'))
+    },
+
+    collectionUtilities: function() {
+      var CollectionUtilities = require('hyrax/collections_utils');
+      new CollectionUtilities();
     },
 
     // Pretty graphs on the dashboard page

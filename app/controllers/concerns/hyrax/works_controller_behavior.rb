@@ -56,7 +56,6 @@ module Hyrax
       else
         respond_to do |wants|
           wants.html do
-            flash[:error] = curation_concern.errors.messages[:collections].to_sentence
             build_form
             render 'new', status: :unprocessable_entity
           end
@@ -101,7 +100,6 @@ module Hyrax
       else
         respond_to do |wants|
           wants.html do
-            flash[:error] = curation_concern.errors.messages[:collections].to_sentence
             build_form
             render 'edit', status: :unprocessable_entity
           end
@@ -194,7 +192,9 @@ module Hyrax
       end
 
       def curation_concern_from_search_results
-        search_result_document(params)
+        search_params = params
+        search_params.delete :page
+        search_result_document(search_params)
       end
 
       # Only returns unsuppressed documents the user has read access to

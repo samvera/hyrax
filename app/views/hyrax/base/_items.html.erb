@@ -1,5 +1,7 @@
 <h2><%= t('.header') %></h2>
-<% if presenter.member_presenters.present? %>
+<%  array_of_ids = presenter.list_of_item_ids_to_display %>
+<%  members = presenter.member_presenters_for(array_of_ids) %>
+<% if members.present? %>
   <table class="table table-striped related-files">
     <thead>
       <tr>
@@ -11,9 +13,18 @@
       </tr>
     </thead>
     <tbody>
-      <%= render partial: 'member', collection: presenter.member_presenters %>
+      <%= render partial: 'member', collection: members %>
     </tbody>
   </table>
+  <div class="row">
+    <% if presenter.total_pages > 1 %>
+        <div class="row record-padding col-md-9">
+          <%= paginate array_of_ids, outer_window: 2, theme: 'blacklight', param_name: :page, route_set: main_app %>
+        </div><!-- /pager -->
+    <% end %>
+  </div>
 <% elsif can? :edit, presenter.id %>
     <div class="alert alert-warning" role="alert"><%= t('.empty', type: presenter.human_readable_type) %></div>
+<% else %>
+  <div class="alert alert-warning" role="alert"><%= t('.unauthorized', type: presenter.human_readable_type) %></div>
 <% end %>

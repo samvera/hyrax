@@ -9,16 +9,4 @@ Blacklight.onLoad(function() {
     $this.parent().hide();
     $($this.data('target')).show();
   });
-
-  $('.show-confirm').on('click', function(evt) {
-    evt.preventDefault();
-    evt.stopPropagation();
-    $('#change-tab-content-block').modal('show');
-  });
-
-  $('#change-tab-btn').on('click', function(evt) {
-    evt.preventDefault();
-    $('#change-tab-content-block').modal('hide');
-    $('.nav-tabs a[href="' + location.hash + '"]').tab('show');
-  });    
 });

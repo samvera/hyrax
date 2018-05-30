@@ -10,16 +10,16 @@ FactoryBot.define do
   #
   # @example Simple build of a collection with no additional parts created.  Lightest weight.
   #          NOTE: A user is automatically created as the owner of the collection.
-  #   let(:collection) { build(:collection_lw)
+  #   let(:collection) { build(:collection_lw) }
   #
   # @example Simple build of a collection with no additional parts created.  User is the owner of the collection.  Lightest weight.
-  #   let(:collection) { build(:collection_lw, user:)
+  #   let(:collection) { build(:collection_lw, user:) }
   #
   # @example Simple build of a collection with only solr-document.  Owner is given edit-access in solr-document. Light weight.
-  #   let(:collection) { build(:collection_lw, with_solr_document: true)
+  #   let(:collection) { build(:collection_lw, with_solr_document: true) }
   #
   # @example Simple build of a collection with only a permission template created.  Owner is set as a manager.  Light weight.
-  #   let(:collection) { build(:collection_lw, with_permission_template: true)
+  #   let(:collection) { build(:collection_lw, with_permission_template: true) }
   #
   # @example Build a collection with only a permission template created.  Permissions are set based on
   #          attributes set for `with_permission_template`.  Middle weight.
@@ -30,7 +30,7 @@ FactoryBot.define do
   #                         manage_groups: [group_name],    # multiple groups can be listed
   #                         deposit_groups: [group_name],
   #                         view_groups: [group_name],  } }
-  #   let(:collection) { build(:collection_lw, user: , with_permission_template: permissions)
+  #   let(:collection) { build(:collection_lw, user: , with_permission_template: permissions) }
   #
   # @example Build a collection with permission template and solr-document created.  Permissions are set based on
   #          attributes set for `with_permission_template`.  Solr-document includes read/edit access defined based
@@ -42,7 +42,7 @@ FactoryBot.define do
   #                         manage_groups: [group_name],    # multiple groups can be listed
   #                         deposit_groups: [group_name],
   #                         view_groups: [group_name],  } }
-  #   let(:collection) { build(:collection_lw, user: , with_permission_template: permissions, with_solr_document: true)
+  #   let(:collection) { build(:collection_lw, user: , with_permission_template: permissions, with_solr_document: true) }
   #
   # @example Build a collection generating its collection type with specific settings. Light Weight.
   #          NOTE: Do not use this approach if you need access to the collection type in the test.
@@ -68,8 +68,8 @@ FactoryBot.define do
   #                      :sharable,                  # OR :not_sharable OR :sharable_no_work_permissions
   #                      :allow_multiple_membership, # OR :not_allow_multiple_membership
   #                    ] }
-  #   let(:collection_type) { create(:collection_lw_type, settings)}
-  #   let(:collection) { build(:collection_lw, collection_type_gid: collection_type.gid)}
+  #   let(:collection_type) { create(:collection_lw_type, settings) }
+  #   let(:collection) { build(:collection_lw, collection_type_gid: collection_type.gid) }
   #
   # @example Build a collection with nesting fields set in the solr document.  Light weight.
   #          NOTE: The property `with_nesting_attributes` is only supported for building collections.  The attributes will
@@ -77,7 +77,7 @@ FactoryBot.define do
   #   let(:collection) { build(:collection_lw, with_nesting_attributes: { ancestors: ['Parent_1'],
   #                                                                       parent_ids: ['Parent_1'],
   #                                                                       pathnames: ['Parent_1/Collection123'],
-  #                                                                       depth: 2 })
+  #                                                                       depth: 2 }) }
   #
   # @example Create a collection with everything.  Extreme heavy weight.  This is very slow and should be avoided.
   #          NOTE: Everything gets created.
@@ -87,7 +87,7 @@ FactoryBot.define do
   #                 * `with_solr_document` is ignored.  A solr document is always created.
   #                 * `with_nested_attributes` is ignored.
   #          NOTE: Additional process is required for testing nested collections with Fedora objects.  See next example.
-  #   let(:collection) { create(:collection_lw)
+  #   let(:collection) { create(:collection_lw) }
   #
   # @example Create collections for use with nested collection index testing.
   #          NOTE: For light weight nested collection testing using solr documents only, see `with_nested_attributes` above

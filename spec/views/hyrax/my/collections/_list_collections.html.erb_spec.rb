@@ -36,6 +36,7 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
       allow(collection).to receive(:id).and_return(id)
       allow(collection).to receive(:member_of_collection_ids).and_return(["abc", "123"])
       allow(collection_presenter).to receive(:collection_type_badge).and_return("User Collection")
+      allow(collection_presenter).to receive(:allow_batch?).and_return(true)
       view.lookup_context.prefixes.push 'hyrax/my'
       render 'hyrax/my/collections/list_collections', collection_presenter: collection_presenter, is_admin_set: doc.admin_set?
     end
@@ -44,7 +45,7 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
       expect(rendered).to have_selector("tr#document_#{id}")
       check_tr_data_attributes
       expect(rendered).to have_selector("tr[data-post-delete-url='/dashboard/collections/#{id}']")
-      expect(rendered).to have_link 'Collection Title', href: hyrax.dashboard_collection_path(id)
+      expect(rendered).to have_link 'Collection Title', href: hyrax.dashboard_collection_path(id, locale: I18n.locale)
       expect(rendered).to have_link 'Edit collection', href: hyrax.edit_dashboard_collection_path(id)
       expect(rendered).to have_link 'Delete collection'
       expect(rendered).to have_link 'Add to collection'
@@ -79,6 +80,7 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
       allow(view).to receive(:can?).with(:edit, doc).and_return(true)
       allow(doc).to receive(:to_model).and_return(stub_model(AdminSet, id: id))
       allow(collection_presenter).to receive(:collection_type_badge).and_return("Admin Set")
+      allow(collection_presenter).to receive(:allow_batch?).and_return(true)
       view.lookup_context.prefixes.push 'hyrax/my'
 
       render 'hyrax/my/collections/list_collections', collection_presenter: collection_presenter, is_admin_set: doc.admin_set?

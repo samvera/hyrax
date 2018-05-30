@@ -20,6 +20,35 @@ module Selectors
         find('input.edit-collection-add-sharing-button').click
       end
     end
+
+    # For use with javascript collection selector that allows for searching for an existing collection from works relationship tab.
+    # Adds the collection and validates that the collection is listed in the Collection Relationship table once added.
+    # @param [Collection] collection to select
+    def select_collection(collection)
+      first('a.select2-choice').click
+      find('.select2-input').set(collection.title.first)
+      expect(page).to have_css('div.select2-result-label')
+      first('div.select2-result-label').click
+      first('[data-behavior~=add-relationship]').click
+      within('[data-behavior~=collection-relationships]') do
+        within('table.table.table-striped') do
+          expect(page).to have_content(collection.title.first)
+        end
+      end
+    end
+
+    # For use with javascript collection selector that allows for searching for an existing collection from add to collection modal.
+    # Does not save the selection.  The calling test is expected to click Save and validate the collection membership was added to the work.
+    # @param [Collection] collection to select
+    def select_member_of_collection(collection)
+      find('#s2id_member_of_collection_ids').click
+      find('.select2-input').set(collection.title.first)
+      sleep 10
+      expect(page).to have_css('.select2-result')
+      within ".select2-result" do
+        find("span", text: collection.title.first).click
+      end
+    end
   end
 
   module NewTransfers

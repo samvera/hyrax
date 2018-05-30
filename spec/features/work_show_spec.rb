@@ -1,4 +1,6 @@
 RSpec.describe "display a work as its owner" do
+  include Selectors::Dashboard
+
   let(:work_path) { "/concern/generic_works/#{work.id}" }
 
   before do
@@ -44,13 +46,11 @@ RSpec.describe "display a work as its owner" do
       expect(find('div.viewer:first')['data-uri']).to eq "/concern/generic_works/#{work.id}/manifest"
     end
 
-    it "add work to a collection", js: true do
+    it "add work to a collection", clean_repo: true, js: true do
+      optional 'ability to get capybara to find css select2-result (see Issue #3038)' if ENV['TRAVIS']
       click_button "Add to collection" # opens the modal
-      # since there is only one collection, it's not necessary to choose a radio button
-      within('div#collection-list-container') do
-        choose collection.title.first # selects the collection
-        click_button 'Save changes'
-      end
+      select_member_of_collection(collection)
+      click_button 'Save changes'
 
       # forwards to collection show page
       expect(page).to have_content collection.title.first

@@ -24,7 +24,7 @@ RSpec.describe Hyrax::Collections::PermissionsCreateService do
     end
     let!(:collection_type_participant) { create(:collection_type_participant, user_manage_attributes) }
     let!(:collection_type_participant2) { create(:collection_type_participant, group_manage_attributes) }
-    let(:collection) { create(:collection, collection_type_gid: collection_type.gid) }
+    let(:collection) { build(:collection_lw, id: 'collection1', collection_type_gid: collection_type.gid) }
 
     before do
       subject
@@ -36,6 +36,29 @@ RSpec.describe Hyrax::Collections::PermissionsCreateService do
 
     it "creates the default permission template access entries for the collection" do
       expect(Hyrax::PermissionTemplate.find_by_source_id(collection.id).access_grants.count).to eq 4
+    end
+  end
+
+  describe ".add_access" do
+    subject { described_class.add_access(collection_id: collection.id, grants: grants) }
+    let(:collection) { build(:collection_lw, id: 'test_collection', with_permission_template: true) }
+    let(:grants) do
+      [{ agent_type: Hyrax::PermissionTemplateAccess::GROUP,
+         agent_id: 'archivist',
+         access: Hyrax::PermissionTemplateAccess::DEPOSIT }]
+    end
+    let(:depositor_grants) { collection.permission_template.access_grants.deposit }
+    let(:array) { [] }
+
+    before do
+      allow(ActiveFedora::Base).to receive(:find).with(collection.id).and_return(collection)
+      allow(collection).to receive(:reset_access_controls!).and_return true
+      subject
+      depositor_grants.each { |agent| array << agent.agent_id }
+    end
+
+    it 'gives deposit access to archivist group' do
+      expect(array.include?("archivist")).to eq true
     end
   end
 end

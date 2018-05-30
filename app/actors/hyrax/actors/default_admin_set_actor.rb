@@ -10,24 +10,27 @@ module Hyrax
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if create was successful
       def create(env)
-        ensure_admin_set_attribute!(env.attributes)
+        ensure_admin_set_attribute!(env)
         next_actor.create(env)
       end
 
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if update was successful
       def update(env)
-        ensure_admin_set_attribute!(env.attributes)
+        ensure_admin_set_attribute!(env)
         next_actor.update(env)
       end
 
       private
 
-        def ensure_admin_set_attribute!(attributes)
-          if attributes[:admin_set_id].present?
-            ensure_permission_template!(admin_set_id: attributes[:admin_set_id])
+        def ensure_admin_set_attribute!(env)
+          if env.attributes[:admin_set_id].present?
+            ensure_permission_template!(admin_set_id: env.attributes[:admin_set_id])
+          elsif env.curation_concern.admin_set_id.present?
+            env.attributes[:admin_set_id] = env.curation_concern.admin_set_id
+            ensure_permission_template!(admin_set_id: env.attributes[:admin_set_id])
           else
-            attributes[:admin_set_id] = default_admin_set_id
+            env.attributes[:admin_set_id] = default_admin_set_id
           end
         end
 

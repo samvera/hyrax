@@ -19,7 +19,7 @@
     </div>
   </td>
   <td class="collection_type">
-    <span class="label label-success"><%= collection_presenter.collection_type_badge %></span>
+    <%= collection_presenter.collection_type_badge %>
   </td>
   <td class="text-center date"><%= collection_presenter.modified_date.try(:to_formatted_s, :standard) %> </td>
   <td class="text-center">

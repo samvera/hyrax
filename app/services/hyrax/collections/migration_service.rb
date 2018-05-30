@@ -13,6 +13,11 @@ module Hyrax
           migrate_collection(col)
           Rails.logger.info "  migrating collection - id: #{col.id}, title: #{col.title}"
         end
+
+        AdminSet.all.each do |adminset|
+          migrate_adminset(adminset)
+          Rails.logger.info "  migrating adminset - id: #{adminset.id}, title: #{adminset.title}"
+        end
         Rails.logger.info "--- Migration Complete"
       end
 
@@ -30,6 +35,20 @@ module Hyrax
       end
       private_class_method :migrate_collection
 
+      # @api private
+      #
+      # Migrate a single adminset to grant depositors and viewers read access to the admin set unless the grant is for
+      # registered (authenticated users) or public (anyone) groups.  The adjustment is being made to adminsets created
+      # before Hyrax 2.1.0.  Migrating twice will not adversely impact the adminset.
+      #
+      # @param adminset [AdminSet] adminset object to be migrated
+      def self.migrate_adminset(adminset)
+        Hyrax::PermissionTemplateAccess.find_or_create_by(permission_template_id: adminset.permission_template.id,
+                                                          agent_type: "group", agent_id: "admin", access: "manage")
+        adminset.reset_access_controls!
+      end
+      private_class_method :migrate_adminset
+
       # @api public
       #
       # Validate that migrated collections have both the collection type gid assigned and the permission template with
@@ -39,9 +58,13 @@ module Hyrax
         Rails.logger.info "*** Repairing migrated collections"
         Collection.all.each do |col|
           repair_migrated_collection(col)
-          Rails.logger.info "  migrating collection - id: #{col.id}, title: #{col.title}"
+          Rails.logger.info "  repairing collection - id: #{col.id}, title: #{col.title}"
         end
-        Rails.logger.info "--- Migration Complete"
+        AdminSet.all.each do |adminset|
+          migrate_adminset(adminset)
+          Rails.logger.info "  repairing adminset - id: #{adminset.id}, title: #{adminset.title}"
+        end
+        Rails.logger.info "--- Repairing Complete"
       end
 
       # @api private

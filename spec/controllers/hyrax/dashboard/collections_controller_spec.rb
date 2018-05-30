@@ -39,6 +39,9 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         post :create, params: {
           collection: collection_attrs.merge(
             visibility: 'open',
+            # TODO: Tests with old approach to sharing a collection which is deprecated and
+            # will be removed in 3.0.  New approach creates a PermissionTemplate with
+            # source_id = the collection's id.
             permissions_attributes: [{ type: 'person',
                                        name: 'archivist1',
                                        access: 'edit' }]
@@ -248,7 +251,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         }
         expect(response).to be_successful
         expect(response).to render_template(:edit)
-        expect(assigns[:member_docs]).to be_kind_of Array
       end
     end
 
@@ -399,7 +401,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         delete :destroy, params: { id: collection }
         expect(response).to have_http_status(:found)
         expect(response).to redirect_to(Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
-        expect(flash[:notice]).to eq "Collection #{collection.id} was successfully deleted"
+        expect(flash[:notice]).to eq "Collection was successfully deleted"
       end
 
       it "returns json" do
@@ -417,7 +419,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         delete :destroy, params: { id: collection }
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response).to render_template(:edit)
-        expect(flash[:notice]).to eq "Collection #{collection.id} could not be deleted"
+        expect(flash[:notice]).to eq "Collection could not be deleted"
       end
 
       it "returns json" do

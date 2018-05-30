@@ -14,12 +14,12 @@ RSpec.describe BatchCreateJob do
     let(:uploaded_files) { [upload1.id.to_s, upload2.id.to_s] }
 
     subject do
-      described_class.perform_later(user,
-                                    title,
-                                    resource_types,
-                                    uploaded_files,
-                                    metadata,
-                                    operation)
+      described_class.perform_now(user,
+                                  title,
+                                  resource_types,
+                                  uploaded_files,
+                                  metadata,
+                                  operation)
     end
 
     before do

@@ -1,5 +1,5 @@
 RSpec.describe 'hyrax/dashboard/collections/_show_add_items_actions.html.erb', type: :view do
-  let(:presenter) { double('Hyrax::CollectionPresenter', solr_document: solr_document, id: '123') }
+  let(:presenter) { double('Hyrax::CollectionPresenter', solr_document: solr_document, id: '123', title: 'Collection 1') }
   let(:solr_document) { double('Solr Document') }
   let(:can_deposit) { true }
 
@@ -14,7 +14,8 @@ RSpec.describe 'hyrax/dashboard/collections/_show_add_items_actions.html.erb', t
 
     it 'renders add_existing_works_to_collection link' do
       render
-      expect(rendered).to have_css(".btn[href='#{hyrax.my_works_path(add_works_to_collection: presenter.id)}']")
+      expect(rendered).to have_css(".btn[href='#{hyrax.my_works_path(add_works_to_collection: presenter.id,
+                                                                     add_works_to_collection_label: presenter.title)}']")
     end
     it 'renders add_new_work_to_collection link' do
       render
@@ -26,7 +27,8 @@ RSpec.describe 'hyrax/dashboard/collections/_show_add_items_actions.html.erb', t
 
     it 'does not render add_works_to_collection link' do
       render
-      expect(rendered).not_to have_css(".actions-controls-collections .btn[href='#{hyrax.my_works_path(add_works_to_collection: presenter.id)}']")
+      expect(rendered).not_to have_css(".actions-controls-collections .btn[href='#{hyrax.my_works_path(add_works_to_collection: presenter.id,
+                                                                                                       add_works_to_collection_label: presenter.title)}']")
     end
   end
 

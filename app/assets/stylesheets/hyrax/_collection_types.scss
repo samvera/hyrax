@@ -9,8 +9,8 @@
 .collection-types-wrapper {
   @media (min-width: 900px) {
     .collection-types-table {
-      th:last-child,
-      td:last-child {
+      td:last-child,
+      th:last-child {
         width: 20%;
       }
     }
@@ -43,6 +43,50 @@
     &.open {
       &::after {
         @include toggle-arrow('\f0d7');
+      }
+    }
+  }
+}
+
+// Edit Collection Types - Participants Tab
+.collection-types-edit-participants-tab {
+  .section-participants {
+    padding-bottom: 40px;
+
+    .form-inline {
+      label {
+        padding-right: 5px;
+        text-align: right;
+        width: 100px;
+      }
+
+      .select2-container,
+      input,
+      select {
+        width: 200px;
+      }
+
+      .btn {
+        width: 75px;
+      }
+    }
+  }
+
+  .section-current-participants {
+    legend {
+      margin-bottom: 0;
+    }
+
+    .share-status {
+      td,
+      th {
+        width: 40%;
+      }
+
+      th:last-of-type,
+      td:last-of-type {
+        text-align: center;
+        width: 20%;
       }
     }
   }

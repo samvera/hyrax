@@ -73,9 +73,6 @@ module Hyrax
       end
 
       def edit
-        member_works
-        # this is used to populate the "add to a collection" action for the members
-        @user_collections = find_collections_for_form
         form
       end
 
@@ -129,7 +126,6 @@ module Hyrax
 
       def after_update_error
         form
-        query_collection_members
         respond_to do |format|
           format.html { render action: 'edit' }
           format.json { render json: @collection.errors, status: :unprocessable_entity }
@@ -144,6 +140,8 @@ module Hyrax
 
         process_member_changes
         @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
+        # we don't have to reindex the full graph when updating collection
+        @collection.reindex_extent = Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX
         if @collection.update(collection_params.except(:members))
           after_update
         else
@@ -151,11 +149,12 @@ module Hyrax
         end
       end
 
-      def after_destroy(id)
+      def after_destroy(_id)
+        # leaving id to avoid changing the method's parameters prior to release
         respond_to do |format|
           format.html do
             redirect_to my_collections_path,
-                        notice: t('hyrax.dashboard.my.action.collection_delete_success', id: id)
+                        notice: t('hyrax.dashboard.my.action.collection_delete_success')
           end
           format.json { head :no_content, location: my_collections_path }
         end
@@ -164,7 +163,7 @@ module Hyrax
       def after_destroy_error(id)
         respond_to do |format|
           format.html do
-            flash[:notice] = t('hyrax.dashboard.my.action.collection_delete_fail', id: id)
+            flash[:notice] = t('hyrax.dashboard.my.action.collection_delete_fail')
             render :edit, status: :unprocessable_entity
           end
           format.json { render json: { id: id }, status: :unprocessable_entity, location: dashboard_collection_path(@collection) }
@@ -337,9 +336,10 @@ module Hyrax
 
         def extract_old_style_permission_attributes(attributes)
           # TODO: REMOVE in 3.0 - part of deprecation of permission attributes
-          Deprecation.warn(self, "passing in permissions with a new collection is deprecated and will be removed from Hyrax 3.0 ()") # TODO: elr - add alternative in ()
           permissions = attributes.delete("permissions_attributes")
           return [] unless permissions
+          Deprecation.warn(self, "Passing in permissions_attributes parameter with a new collection is deprecated and support will be removed from Hyrax 3.0. " \
+                                 "Use Hyrax::PermissionTemplate instead to grant Manage, Deposit, or View access.")
           participants = []
           permissions.each do |p|
             access = access(p)

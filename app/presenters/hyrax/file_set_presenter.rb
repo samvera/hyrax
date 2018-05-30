@@ -82,18 +82,26 @@ module Hyrax
     end
 
     def parent
-      ids = ActiveFedora::SolrService.query("{!field f=member_ids_ssim}#{id}",
-                                            fl: ActiveFedora.id_field)
-                                     .map { |x| x.fetch(ActiveFedora.id_field) }
-      @parent_presenter ||= Hyrax::PresenterFactory.build_for(ids: ids,
-                                                              presenter_class: WorkShowPresenter,
-                                                              presenter_args: current_ability).first
+      @parent_presenter ||= fetch_parent_presenter
+    end
+
+    def user_can_perform_any_action?
+      current_ability.can?(:edit, id) || current_ability.can?(:destroy, id) || current_ability.can?(:download, id)
     end
 
     private
 
       def link_presenter_class
         SingleUseLinkPresenter
+      end
+
+      def fetch_parent_presenter
+        ids = ActiveFedora::SolrService.query("{!field f=member_ids_ssim}#{id}",
+                                              fl: ActiveFedora.id_field)
+                                       .map { |x| x.fetch(ActiveFedora.id_field) }
+        Hyrax::PresenterFactory.build_for(ids: ids,
+                                          presenter_class: WorkShowPresenter,
+                                          presenter_args: current_ability).first
       end
   end
 end

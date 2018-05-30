@@ -22,6 +22,7 @@ module Hyrax
         require_membership: false,
         assigns_workflow: false,
         assigns_visibility: false,
+        badge_color: "#663333",
         participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
                        { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.registered_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
       }.freeze
@@ -39,6 +40,7 @@ module Hyrax
         require_membership: false,
         assigns_workflow: false,
         assigns_visibility: false,
+        badge_color: "#705070",
         participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
                        { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.registered_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
       }.freeze
@@ -56,6 +58,7 @@ module Hyrax
         require_membership: true,
         assigns_workflow: true,
         assigns_visibility: true,
+        badge_color: "#405060",
         participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
                        { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
       }.freeze
@@ -78,6 +81,7 @@ module Hyrax
       #   with allow_multiple_membership=false, works can belong to one and only one collection of this type.
       # @option options [Boolean] :assigns_workflow if true, collections of this type can be used to assign a workflow to a work
       # @option options [Boolean] :assigns_visibility if true, collections of this type can be used to assign initial visibility to a work
+      # @option options [String] :badge_color a color for the badge to show the user when selecting the collection type
       # @return [Hyrax::CollectionType] the newly created collection type instance
       def self.create_collection_type(machine_id:, title:, options: {})
         opts = DEFAULT_OPTIONS.merge(options).except(:participants)

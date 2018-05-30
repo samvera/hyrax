@@ -1,3 +1,5 @@
+var autocompleteModule = require('hyrax/autocomplete');
+
 Blacklight.onLoad(function () {
 
   /**
@@ -182,16 +184,29 @@ Blacklight.onLoad(function () {
   $('[data-behavior="updates-collection"]').on('click', function() {
       var string_to_replace = "collection_replace_id",
         form = $(this).closest("form"),
-        collection_id = $(".collection-selector:checked")[0].value;
+        collection_id = $('#member_of_collection_ids')[0].value;
 
       form[0].action = form[0].action.replace(string_to_replace, collection_id);
       form.append('<input type="hidden" value="add" name="collection[members]"></input>');
+  });
+
+  // Initializes the autocomplete element for the add to collection modal
+  $('#collection-list-container').on('show.bs.modal', function() {
+    var inputField = $('#member_of_collection_ids');
+    var autocomplete = new autocompleteModule();
+    autocomplete.setup(inputField, inputField.data('autocomplete'), inputField.data('autocompleteUrl'));
   });
 
   // Display access deny for edit request.
   $('#documents').find('.edit-collection-deny-button').on('click', function (e) {
     e.preventDefault();
     $('#collections-to-edit-deny-modal').modal('show');
+  });
+
+  // Display access deny for remove parent collection button.
+  $('#parent-collections-wrapper').find('.remove-parent-from-collection-deny-button').on('click', function (e) {
+    e.preventDefault();
+    $('#parent-collection-to-remove-deny-modal').modal('show');
   });
 
   // Remove this parent collection list button clicked
@@ -240,40 +255,30 @@ Blacklight.onLoad(function () {
     };
     var $deleteWordingTarget = $('#selected-collections-delete-modal .pluralized');
 
-    tableRows.each(function(i, row) {
-      checkbox = $(row).find('td:first input[type=checkbox]');
-      if (typeof checkbox[0] !== "undefined") {
-        if (checkbox[0].checked) {
-          numRowsSelected++;
-        }
-      }
-    });
+    var canDeleteAll = true;
+    var selectedInputs = $('#documents table.collections-list-table tbody tr')
+      // Get all inputs in the table
+      .find('td:first input[type=checkbox]')
+      // Filter to those that are checked
+      .filter(function(i, checkbox) { return checkbox.checked; });
 
-    if (numRowsSelected > 0) {
+    var cannotDeleteInputs = selectedInputs.filter(function(i, checkbox) { return checkbox.dataset.hasaccess === "false"; });
+    if(cannotDeleteInputs.length > 0) {
+      // TODO: Can we pass data to this modal to be more specific about which ones they cannot delete?
+      $('#collections-to-delete-deny-modal').modal('show');
+      return;
+    }
+
+    if (selectedInputs.length > 0) {
       // Collections are selected
       // Update singular / plural text in delete modal
-      if (numRowsSelected > 1) {
+      if (selectedInputs.length > 1) {
         $deleteWordingTarget.text(deleteWording.plural);
       } else {
         $deleteWordingTarget.text(deleteWording.singular);
       }
       $('#selected-collections-delete-modal').modal('show');
-    } else {
-      // No collections are selected
-      $('#collections-to-delete-deny-modal').modal('show');
     }
-  });
-
-  $('#show-more-parent-collections').on('click', function () {
-    $(this).hide();
-    $("#more-parent-collections").show();
-    $("#show-less-parent-collections").show();
-  });
-
-  $('#show-less-parent-collections').on('click', function () {
-    $(this).hide();
-    $("#more-parent-collections").hide();
-    $("#show-more-parent-collections").show();
   });
 
   // Add to collection modal form post
@@ -317,40 +322,4 @@ Blacklight.onLoad(function () {
     $('#add-subcollection-modal-' + $(this).data('presenterId')).modal('show');
   });
 
-
-  // Edit Collection: Sharing tab: Add Sharing section click handlers
-  /*
-  Notes:
-  This is a workaround for a scoping issue with 'simple_form' and nested forms in the
-  'Edit Collections' partials.  All tabs were wrapped in a 'simple_form'. Nested forms, for example inside a tab partial,
-  have behaved erratically, so the pattern has been to remove nested form instances for relatively non-complex forms
-  and replace with AJAX requests.  For this instance of Add Sharing > Add user and Add group, seem more complex in how
-  the form is built from '@form.permission_template', so since it's not working, but the form is already built, this
-  code listens for a click event on the nested form submit button, prevents Default submit behavior, and manually makes
-  the form post.
-   */
-  $('#participants').find('.edit-collection-add-sharing-button').on('click', function(e) {
-    e.preventDefault();
-    var $wrapEl = $(e.target).parents('.form-add-sharing-wrapper');
-    if ($wrapEl.length === 0) {
-      return;
-    }
-    var serialized = $wrapEl.find(':input').serialize(),
-      url = '/dashboard/collections/' + $wrapEl.data('id') + '/permission_template?locale=en';
-
-    if (serialized.length === 0) {
-      return;
-    }
-
-    $.ajax({
-      type: 'POST',
-      url: url,
-      data: serialized
-    }).done(function(response) {
-      // Success handler here, possibly show alert success if page didn't reload?
-    }).fail(function(err) {
-      console.error(err);
-    });
-
-  });
 });

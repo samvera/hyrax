@@ -33,7 +33,7 @@
         </button>
       <% else @collection_type_list_presenter.any? %>
         <% # link directly to create collection form with type %>
-        <%= link_to(t('helpers.action.collection.new'), "#{new_dashboard_collection_path}&collection_type_id=#{@collection_type_list_presenter.first_collection_type.id}", class: 'btn btn-primary') %>
+        <%= link_to(t('helpers.action.collection.new'), append_collection_type_url(new_dashboard_collection_path, @collection_type_list_presenter.first_collection_type.id), class: 'btn btn-primary') %>
       <% end %>
     <% end %>
   </section>
@@ -41,7 +41,13 @@
   <%# Collections list %>
   <div class="panel panel-default collections-panel-wrapper">
     <div class="panel-heading">
-      <h3 class="panel-title"><strong><%= @response.docs.count %> collections</strong> in the repository</h3>
+      <% if  current_page?(hyrax.my_collections_path(locale: nil)) %>
+        <span class="count-display"><%= I18n.t('hyrax.my.count.collections.you_own', total_count: @response.total_count).html_safe %></span>
+      <% elsif current_page?(hyrax.dashboard_collections_path(locale: nil)) && !current_ability.admin? %>
+        <span class="count-display"><%= I18n.t('hyrax.my.count.collections.you_manage', total_count: @response.total_count).html_safe %></span>
+      <% else %>
+        <span class="count-display"><%= I18n.t('hyrax.my.count.collections.in_repo', total_count: @response.total_count).html_safe %></span>     
+      <% end %>
     </div>
     <div class="panel-body">
       <h2 class="sr-only">Collections listing</h2>
@@ -59,6 +65,7 @@
   <%= render 'modal_delete_admin_set_deny' %>
   <%= render 'modal_delete_collection' %>
   <%= render 'modal_delete_collection_deny' %>
+  <%= render 'modal_delete_collections_deny' %>
   <%= render 'modal_delete_deny' %>
   <%= render 'modal_delete_empty_collection' %>
   <%= render 'modal_delete_selected_collections' %>

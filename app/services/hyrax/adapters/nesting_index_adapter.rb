@@ -1,8 +1,10 @@
 module Hyrax
   module Adapters
     module NestingIndexAdapter
-      # @!group Providing interface for a Samvera::NestingIndexer::Adapter
+      FULL_REINDEX = "full".freeze
+      LIMITED_REINDEX = "limited".freeze
 
+      # @!group Providing interface for a Samvera::NestingIndexer::Adapter
       # @api public
       # @param id [String]
       # @return Samvera::NestingIndexer::Document::PreservationDocument
@@ -39,18 +41,9 @@ module Hyrax
       end
 
       # @api public
-      # @deprecated
-      # @yield Samvera::NestingIndexer::Document::PreservationDocument
-      # rubocop:disable Lint/UnusedMethodArgument
-      def self.each_preservation_document(&block)
-        raise NotImplementedError
-      end
-      # rubocop:enable Lint/UnusedMethodArgument
-
-      # @api public
       # @yieldparam id [String]
       # @yieldparam parent_id [Array<String>]
-      # Samvera::NestingIndexer.reindex_all!
+      # Samvera::NestingIndexer.reindex_all!(extent: FULL_REINDEX)
       # rubocop:disable Lint/UnusedMethodArgument
       def self.each_perservation_document_id_and_parent_ids(&block)
         ActiveFedora::Base.descendant_uris(ActiveFedora.fedora.base_uri, exclude_uri: true).each do |uri|
@@ -67,22 +60,6 @@ module Hyrax
             ActiveFedora::SolrService.add(object.to_solr, commit: true)
           end
         end
-      end
-      # rubocop:enable Lint/UnusedMethodArgument
-
-      # @api public
-      # @deprecated
-      #
-      # From the given parameters, we will need to add them to the underlying SOLR document for the object
-      #
-      # @param id [String]
-      # @param parent_ids [Array<String>]
-      # @param ancestors [Array<String>]
-      # @param pathnames [Array<String>]
-      # @return Hash - the attributes written to the indexing layer
-      # rubocop:disable Lint/UnusedMethodArgument
-      def self.write_document_attributes_to_index_layer(id:, parent_ids:, ancestors:, pathnames:, deepest_nested_depth:)
-        raise NotImplementedError, "This method is deprecated as of v1.0.0 of samvera-nesting_indexer, prefer instead .write_nesting_document_to_index_layer"
       end
       # rubocop:enable Lint/UnusedMethodArgument
 
@@ -126,12 +103,14 @@ module Hyrax
 
       # @api public
       # @param document [Samvera::NestingIndexer::Documents::IndexDocument]
+      # @param extent [String] if not "full" or nil, doesn't yield children for reindexing
       # @param solr_field_name_for_ancestors [String] The SOLR field name we use to find children
       # @yield Samvera::NestingIndexer::Documents::IndexDocument
-      def self.each_child_document_of(document:, &block)
+      def self.each_child_document_of(document:, extent:, &block)
         raw_child_solr_documents_of(parent_document: document).each do |solr_document|
           child_document = coerce_solr_document_to_index_document(original_solr_document: solr_document, id: solr_document.fetch('id'))
-          block.call(child_document)
+          # during light reindexing, we want to reindex the child only if fields aren't already there
+          block.call(child_document) if full_reindex?(extent: extent) || child_document.pathnames.empty?
         end
       end
       # @!endgroup
@@ -154,6 +133,7 @@ module Hyrax
       def self.find_solr_document_by(id:)
         query = ActiveFedora::SolrQueryBuilder.construct_query_for_ids([id])
         document = ActiveFedora::SolrService.query(query, rows: 1).first
+        document = ActiveFedora::Base.find(id).to_solr if document.nil?
         raise "Unable to find SolrDocument with ID=#{id}" if document.nil?
         document
       end
@@ -165,14 +145,10 @@ module Hyrax
       end
 
       class << self
-        delegate :solr_field_name_for_storing_pathnames, :solr_field_name_for_storing_ancestors, :solr_field_name_for_storing_parent_ids, to: :nesting_configuration
-      end
-
-      # <dynamicField name="*_isi" type="int" stored="true" indexed="true" multiValued="false"/>
-      SOLR_FIELD_NAME_FOR_DEEPEST_NESTED_DEPTH = 'nesting_collection__deepest_nested_depth_isi'.freeze
-
-      def self.solr_field_name_for_deepest_nested_depth
-        SOLR_FIELD_NAME_FOR_DEEPEST_NESTED_DEPTH
+        delegate :solr_field_name_for_storing_pathnames,
+                 :solr_field_name_for_storing_ancestors,
+                 :solr_field_name_for_storing_parent_ids,
+                 :solr_field_name_for_deepest_nested_depth, to: :nesting_configuration
       end
 
       # @api private
@@ -180,12 +156,17 @@ module Hyrax
       # @return [Hash] A raw response document from SOLR
       # @todo What is the appropriate suffix to apply to the solr_field_name?
       def self.raw_child_solr_documents_of(parent_document:)
-        # query Solr for all of the documents included as a member_of_collection parent.
+        # query Solr for all of the documents included as a member_of_collection parent. Or up to 10000 of them.
         child_query = ActiveFedora::SolrQueryBuilder.construct_query(member_of_collection_ids_ssim: parent_document.id)
-        ActiveFedora::SolrService.query(child_query)
+        ActiveFedora::SolrService.query(child_query, rows: 10_000.to_i)
       end
       private_class_method :raw_child_solr_documents_of
 
+      def self.full_reindex?(extent:)
+        return true if extent == FULL_REINDEX
+        false
+      end
+      private_class_method :full_reindex?
       # @!endgroup
     end
   end

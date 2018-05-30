@@ -33,6 +33,7 @@ RSpec.describe Hyrax::CollectionNesting do
     let(:user) { create(:user) }
     let!(:collection) { create(:collection, collection_type_settings: [:nestable]) }
     let!(:child_collection) { create(:collection, collection_type_settings: [:nestable]) }
+    let(:extent) { Hyrax::Adapters::NestingIndexAdapter::FULL_REINDEX }
 
     before do
       Hyrax::Collections::NestedCollectionPersistenceService.persist_nested_collection_for(parent: collection, child: child_collection)
@@ -47,11 +48,13 @@ RSpec.describe Hyrax::CollectionNesting do
     it { is_expected.to respond_to(:update_nested_collection_relationship_indices) }
     it { is_expected.to respond_to(:update_child_nested_collection_relationship_indices) }
     it { is_expected.to respond_to(:use_nested_reindexing?) }
+    it { is_expected.to respond_to(:reindex_extent) }
+    it { is_expected.to respond_to(:reindex_extent=) }
 
     context 'after_update_index callback' do
       describe '#update_nested_collection_relationship_indices' do
         it 'will call Hyrax.config.nested_relationship_reindexer' do
-          expect(Hyrax.config.nested_relationship_reindexer).to receive(:call).with(id: subject.id).and_call_original
+          expect(Hyrax.config.nested_relationship_reindexer).to receive(:call).with(id: subject.id, extent: extent).and_call_original
           subject.update_nested_collection_relationship_indices
         end
 
@@ -62,10 +65,10 @@ RSpec.describe Hyrax::CollectionNesting do
       end
     end
 
-    context 'after_destroy callback' do
+    context 'after_destroy callback', with_nested_reindexing: true do
       describe '#update_child_nested_collection_relationship_indices' do
         it 'will call Hyrax.config.nested_relationship_reindexer' do
-          expect(Hyrax.config.nested_relationship_reindexer).to receive(:call).with(id: child_collection.id).and_call_original
+          expect(Hyrax.config.nested_relationship_reindexer).to receive(:call).with(id: child_collection.id, extent: extent).and_call_original
           subject.update_child_nested_collection_relationship_indices
         end
       end

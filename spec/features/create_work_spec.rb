@@ -56,7 +56,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow do
     end
   end
 
-  context 'when the user is a proxy' do
+  context 'when the user is a proxy', perform_enqueued: [ContentDepositorChangeEventJob, AttachFilesToWorkJob, IngestJob] do
     let(:second_user) { create(:user) }
 
     before do
@@ -99,6 +99,27 @@ RSpec.describe 'Creating a new Work', :js, :workflow do
       sign_in second_user
       click_link 'Works'
       expect(page).to have_content "My Test Work"
+    end
+  end
+
+  context "when a file uploaded and then deleted" do
+    before do
+      sign_in user
+      click_link 'Works'
+      click_link "Add new work"
+      choose "payload_concern", option: "GenericWork"
+      click_button 'Create work'
+    end
+
+    it 'updates the required file check status' do
+      click_link "Files" # switch to the Files tab
+      within('span#addfiles') do
+        attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/image.jp2", visible: false)
+      end
+      expect(page).to have_css('ul li#required-files.complete', text: 'Add files')
+
+      click_button 'Delete' # delete the file
+      expect(page).to have_css('ul li#required-files.incomplete', text: 'Add files')
     end
   end
 end

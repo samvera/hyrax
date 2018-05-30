@@ -49,6 +49,8 @@ zh:
         new: 新收藏集
       delete: 删除
       edit: 编辑
+      less: 减
+      more: 更多
       refresh: 刷新
       remove: 去掉
       work:
@@ -169,9 +171,10 @@ zh:
           header: 创建新的管理集
         show:
           breadcrumb: 观看集
-          confirm_delete: 确定要删除吗？删除后不可复原。
           header: 管理集
           item_list_header: 集内作品
+        show_actions:
+          confirm_delete: 您确定要删除此管理集？此操作无法撤消。
       appearances:
         show:
           header: 表面
@@ -193,6 +196,7 @@ zh:
           not_empty: 集合类型不能更改，因为它具有集合
         form:
           tab:
+            appearance: 徽章颜色
             metadata: 描述
             participants: 参与者
             settings: 设置
@@ -212,7 +216,9 @@ zh:
             title: 经理
             type: 类型
         form_participants:
+          add_group: 添加组
           add_participants: 添加参与者
+          add_user: 添加用户
           current_participants: 当前参与者
           header: 收藏参与者
           instructions: 您可以将这两个组和用户指定为此类集合的创建者和管理者
@@ -240,6 +246,7 @@ zh:
             name: 名称
         multiple_membership_checker:
           error_preamble: 错误：您指定了多个相同的单一成员资格集合类型
+          error_type_and_collections: "（类型：%{type}，集合：%{collections}）"
         new:
           header: 创建新的集合类型
           submit: 保存
@@ -403,6 +410,7 @@ zh:
         header: 单件
         thumbnail: 缩略图
         title: 标题
+        unauthorized: 这个%{type}中没有公开可用的项目。
         visibility: 公开度
       relationships:
         empty: 该 %{type} 目前未纳入任何收藏集内。
@@ -524,7 +532,6 @@ zh:
       type_label: 问题类型
     content_blocks:
       cancel: 取消
-      change_tab_message: 你确定要离开这个标签吗？任何未保存的数据都将丢失。
       tabs:
         announcement_text: 公告文字
         featured_researcher: 特色研究员
@@ -592,6 +599,7 @@ zh:
             this_collection_in_other_collections: 此集合在其他集合中
           modals:
             remove_from_collection_description: 删除此集合不会将其从存储库中删除，只能作为此集合的父项。你确定要删除这个集合吗？
+            remove_parent_collection_deny: 您没有足够的权限让父级集合能够将其删除。
             remove_this_sub_collection_description: 删除此子集合不会将其从存储库中删除，只能从此父集合中删除。你确定要删除这个子集合吗？
           sub_collections_of_collection_description: 这些集合目前是该集合的子集合
           table:
@@ -660,8 +668,8 @@ zh:
           add_to_collection_only: 允许的操作仅限于添加成员
           admin_set_confirmation: 从%{application_name}删除管理员集合是永久性的。单击确定从%{application_name}删除此管理集，或单击取消取消此操作
           collection_create_success: 收集已成功创建。
-          collection_delete_fail: 收藏%{id}无法删除
-          collection_delete_success: 收藏夹%{id}已成功删除
+          collection_delete_fail: 收藏无法删除
+          collection_delete_success: 收藏夹已成功删除
           collection_deny_add_members: 您没有足够的权限将成员添加到集合中
           collection_update_success: 收集已成功更新。
           collections_confirmation_html: 删除<span class='pluralized'>这个集合</span>将永久地从存储库中删除<span class='pluralized'>这个集合</span> 。 <span class='pluralized'>此集合中的</span>项目将保留在存储库中。你确定要删除<span class='pluralized'>这个集合</span>吗？
@@ -694,6 +702,10 @@ zh:
           description: 描述：
           edit_access: 编辑访问：
           groups: '群:'
+          managed_access:
+            deposit: 存款
+            manage: 管理
+            view: 视图
           users: '用户:'
         collections: 你的收藏集
         facet_label:
@@ -702,6 +714,7 @@ zh:
           shared: '筛选您的分享:'
           works: '筛选作品:'
         heading:
+          access: 访问
           action: 行动
           collection_type: 集合类型
           date_modified: 上一次更改
@@ -731,6 +744,7 @@ zh:
         removed_relationship: "'%{child_title}'已从'%{parent_title}'中删除"
       no_activity: 用户最近没有活动
       no_notifications: 用户没有收到通知
+      no_proxies: 没有代理分配
       no_transfer_requests: 您没有收到任何在作品转让请求
       no_transfers: 您没有转让任何作品
       proxy_activity: 代理活动
@@ -814,6 +828,17 @@ zh:
           pdf_link: 下载PDF文件
           video_link: 下载视频
     file_sets:
+      actions:
+        delete: 删除
+        delete_confirm: 从%{application_name}删除%{file_set}是永久性的。单击确定从%{application_name}中删除此项，或单击取消取消此操作
+        delete_title: 删除%{file_set}
+        download: 下载
+        download_title: 下载%{file_set}
+        edit: 编辑
+        edit_title: 编辑%{file_set}
+        header: 选择一个动作
+        versions: 版本
+        versions_title: 显示以前的版本
       groups_description:
         description_html: 标有"选择一个群"的下拉框内是您所属的一组用户管理群的清单。您可以选择一个特定的群，指定对%{application_name}中文件的访问级别，类似于添加用户访问级别。
     help:
@@ -909,6 +934,18 @@ zh:
         single: 已保存。
         subject: 批量上传完成
         title: 文件上传成功
+    my:
+      count:
+        collections:
+          in_repo: 存储库中的<strong> %{total_count}集合</ strong>
+          you_manage: 您可以在存储库中管理<strong> %{total_count}集合</ strong>
+          you_own: 您在存储库中拥有<strong> %{total_count}集合</ strong>
+        works:
+          in_repo: 存储库中的<strong> %{total_count}有效</ strong>
+          you_manage: 您可以在存储库中管理<strong> %{total_count}作品</ strong>
+          you_own: 您在存储库中拥有<strong> %{total_count}作品</ strong>
+    nav_safety:
+      change_tab_message: 你确定要离开这个标签吗？任何未保存的数据都将丢失。
     pages:
       cancel: 取消
       tabs:
@@ -1126,6 +1163,7 @@ zh:
         allow_multiple_membership: 多会员
         assigns_visibility: 能见度
         assigns_workflow: 工作流程
+        badge_color: 徽章颜色
         brandable: 品牌
         description: 类型描述
         discoverable: 发现

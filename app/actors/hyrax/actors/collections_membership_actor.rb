@@ -79,6 +79,7 @@ module Hyrax
             Deprecation.warn(self, ':member_of_collection_ids has been deprecated for removal in Hyrax 3.0. ' \
                                    'use :member_of_collections_attributes instead.')
 
+            collection_ids = [] if collection_ids.empty?
             other_collections = collections_without_edit_access(env)
 
             collections = ::Collection.find(collection_ids)
@@ -102,6 +103,8 @@ module Hyrax
         # along side the FileSets on the show page
         def add(env, id)
           collection = Collection.find(id)
+          collection.reindex_extent = Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX
+
           return unless env.current_ability.can?(:deposit, collection)
           env.curation_concern.member_of_collections << collection
         end

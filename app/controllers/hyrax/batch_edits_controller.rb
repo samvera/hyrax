@@ -46,9 +46,16 @@ module Hyrax
     end
 
     def update_document(obj)
-      obj.attributes = work_params
+      interpret_visiblity_params(obj)
+      obj.attributes = work_params(admin_set_id: obj.admin_set_id).except(*visibility_params)
       obj.date_modified = Time.current.ctime
-      obj.visibility = params[:visibility]
+
+      if params[:visibility]
+        Deprecation.warn(self, "visibility is not submitted by the Hyrax UI and is deprecated " \
+                               "for removal in Hyrax 3.0. Please use " \
+                               "#{form_class.model_name.param_key}[visibility] instead.")
+        obj.visibility = params[:visibility]
+      end
 
       InheritPermissionsJob.perform_now(obj)
       VisibilityCopyJob.perform_now(obj)
@@ -94,9 +101,28 @@ module Hyrax
         form_class.terms
       end
 
-      def work_params
+      def work_params(extra_params = {})
         work_params = params[form_class.model_name.param_key] || ActionController::Parameters.new
-        form_class.model_attributes(work_params)
+        form_class.model_attributes(work_params.merge(extra_params))
+      end
+
+      def interpret_visiblity_params(obj)
+        stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
+          middleware.use Hyrax::Actors::InterpretVisibilityActor
+        end
+        env = Hyrax::Actors::Environment.new(obj, current_ability, work_params(admin_set_id: obj.admin_set_id))
+        last_actor = Hyrax::Actors::Terminator.new
+        stack.build(last_actor).update(env)
+      end
+
+      def visibility_params
+        ['visibility',
+         'lease_expiration_date',
+         'visibility_during_lease',
+         'visibility_after_lease',
+         'embargo_release_date',
+         'visibility_during_embargo',
+         'visibility_after_embargo']
       end
 
       def redirect_to_return_controller

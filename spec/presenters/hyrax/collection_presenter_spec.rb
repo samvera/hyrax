@@ -322,6 +322,18 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
   end
 
+  describe "#collection_type_badge" do
+    let(:collection_type) { create(:collection_type) }
+    before do
+      allow(collection_type).to receive(:badge_color).and_return("#ffa510")
+      allow(presenter).to receive(:collection_type).and_return(collection_type)
+    end
+
+    subject { presenter.collection_type_badge }
+
+    it { is_expected.to eq "<span class=\"label\" style=\"background-color: #ffa510;\">" + collection_type.title + "</span>" }
+  end
+
   describe "#user_can_nest_collection?" do
     before do
       allow(ability).to receive(:can?).with(:deposit, solr_doc).and_return(true)
@@ -345,7 +357,7 @@ RSpec.describe Hyrax::CollectionPresenter do
   describe '#show_path' do
     subject { presenter.show_path }
 
-    it { is_expected.to eq "/dashboard/collections/#{solr_doc.id}" }
+    it { is_expected.to eq "/dashboard/collections/#{solr_doc.id}?locale=en" }
   end
 
   describe "banner_file" do
@@ -392,4 +404,58 @@ RSpec.describe Hyrax::CollectionPresenter do
   it { is_expected.to delegate_method(:related_url).to(:solr_document) }
   it { is_expected.to delegate_method(:identifier).to(:solr_document) }
   it { is_expected.to delegate_method(:date_created).to(:solr_document) }
+
+  describe '#managed_access' do
+    context 'when manager' do
+      before do
+        allow(ability).to receive(:can?).with(:edit, solr_doc).and_return(true)
+      end
+      it 'returns Manage label' do
+        expect(presenter.managed_access).to eq 'Manage'
+      end
+    end
+
+    context 'when depositor' do
+      before do
+        allow(ability).to receive(:can?).with(:edit, solr_doc).and_return(false)
+        allow(ability).to receive(:can?).with(:deposit, solr_doc).and_return(true)
+      end
+      it 'returns Deposit label' do
+        expect(presenter.managed_access).to eq 'Deposit'
+      end
+    end
+
+    context 'when manager' do
+      before do
+        allow(ability).to receive(:can?).with(:edit, solr_doc).and_return(false)
+        allow(ability).to receive(:can?).with(:deposit, solr_doc).and_return(false)
+        allow(ability).to receive(:can?).with(:read, solr_doc).and_return(true)
+      end
+      it 'returns View label' do
+        expect(presenter.managed_access).to eq 'View'
+      end
+    end
+  end
+
+  describe '#allow_batch?' do
+    context 'when user cannot edit' do
+      before do
+        allow(ability).to receive(:can?).with(:edit, solr_doc).and_return(false)
+      end
+
+      it 'returns false' do
+        expect(presenter.allow_batch?).to be false
+      end
+    end
+
+    context 'when user can edit' do
+      before do
+        allow(ability).to receive(:can?).with(:edit, solr_doc).and_return(true)
+      end
+
+      it 'returns false' do
+        expect(presenter.allow_batch?).to be true
+      end
+    end
+  end
 end

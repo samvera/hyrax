@@ -1,3 +1,4 @@
+<% # used by All and Managed Collections tabs %>
 <% id = collection_presenter.id %>
 <tr id="document_<%= id %>"
   data-id="<%= id %>"
@@ -5,7 +6,14 @@
   data-post-url="<%= hyrax.dashboard_create_nest_collection_within_path(id) %>"
   data-post-delete-url="<%= is_admin_set ? hyrax.admin_admin_set_path(id) : hyrax.dashboard_collection_path(id) %>">
 
-  <td><% unless collection_presenter.solr_document.admin_set? %><input type="checkbox" name="batch_document_ids[]" id="batch_document_<%= id %>" value="<%= id %>" class="batch_document_selector" /><% end %></td>
+  <td>
+    <% if collection_presenter.allow_batch? %>
+    <input type="checkbox" name="batch_document_ids[]" id="batch_document_<%= id %>" value="<%= id %>" class="batch_document_selector"
+      data-hasaccess="<%= (can?(:edit, collection_presenter.solr_document)) %>" />
+    <% else %>
+    <input type="checkbox" class="disabled" disabled=true />
+    <% end %>
+  </td>
   <td>
     <div class="thumbnail-title-wrapper">
       <div class="thumbnail-wrapper">
@@ -46,8 +54,11 @@
       </div>
     </div>
   </td>
+  <% if !current_ability.admin? %>
+    <td><%= collection_presenter.managed_access %></td>
+  <% end %>
   <td class="collection_type">
-    <span class="label label-success"><%= collection_presenter.collection_type_badge %></span>
+    <%= collection_presenter.collection_type_badge %>
   </td>
   <td><%= collection_presenter.permission_badge %>  </td>
   <td><%= collection_presenter.total_viewable_items %></td>

@@ -49,6 +49,8 @@ es:
         new: Nueva Colección
       delete: Borrar
       edit: Editar
+      less: Menos
+      more: Más
       refresh: Refrescar
       remove: retirar
       work:
@@ -169,9 +171,10 @@ es:
           header: Crear Nuevo Conjunto Administrativo
         show:
           breadcrumb: Ver Conjunto
-          confirm_delete: "¿Está seguro de que desea eliminar este conjunto administrativo? Esta acción no se puede deshacer."
           header: Conjunto Administrativo
           item_list_header: Trabajos en este conjunto
+        show_actions:
+          confirm_delete: "¿Estás seguro de que deseas eliminar este conjunto administrativo? Esta acción no se puede deshacer."
       appearances:
         show:
           header: Apariencia
@@ -193,6 +196,7 @@ es:
           not_empty: El tipo de colección no se puede modificar ya que tiene colecciones
         form:
           tab:
+            appearance: Insignia de color
             metadata: Descripción
             participants: Participantes
             settings: Configuraciones
@@ -212,7 +216,9 @@ es:
             title: Gerentes
             type: Tipo
         form_participants:
+          add_group: Añadir grupo
           add_participants: Agregar participantes
+          add_user: Agregar usuario
           current_participants: Participantes actuales
           header: Participantes de la colección
           instructions: Puede designar grupos y usuarios como creadores y administradores de colecciones de este tipo
@@ -240,6 +246,7 @@ es:
             name: Nombre
         multiple_membership_checker:
           error_preamble: 'Error: ha especificado más de uno de los mismos tipos de colección de membresía única'
+          error_type_and_collections: "(tipo: %{type}, colecciones: %{collections})"
         new:
           header: Crear nuevo tipo de colección
           submit: Salvar
@@ -405,6 +412,7 @@ es:
         header: Elementos
         thumbnail: Miniatura
         title: Título
+        unauthorized: No hay elementos disponibles públicamente en este %{type}.
         visibility: Visibilidad
       relationships:
         empty: Este %{type} no está actualmente disponible en ninguna colección.
@@ -526,7 +534,6 @@ es:
       type_label: Tipo de Problema
     content_blocks:
       cancel: Cancelar
-      change_tab_message: "¿Seguro que quieres salir de esta pestaña? Cualquier información no guardada se perderá."
       tabs:
         announcement_text: Texto del Anuncio
         featured_researcher: Investigador Destacado
@@ -594,6 +601,7 @@ es:
             this_collection_in_other_collections: Esta colección en otras colecciones
           modals:
             remove_from_collection_description: La eliminación de esta colección no la eliminará del repositorio, solo como padre de esta colección. ¿Seguro que quieres eliminar esta colección?
+            remove_parent_collection_deny: No tiene suficientes privilegios para que la colección principal pueda eliminarla.
             remove_this_sub_collection_description: La eliminación de esta subcolección no la eliminará del repositorio, solo de esta colección principal. ¿Seguro que quieres eliminar esta subcolección?
           sub_collections_of_collection_description: Estas colecciones son actualmente subcolecciones de esta colección
           table:
@@ -662,8 +670,8 @@ es:
           add_to_collection_only: Las acciones permitidas están limitadas a agregar miembros
           admin_set_confirmation: La eliminación de un conjunto de administración de %{application_name} es permanente. Haga clic en Aceptar para eliminar este conjunto de administrador de %{application_name}, o en Cancelar para cancelar esta operación
           collection_create_success: La colección fue creada con éxito.
-          collection_delete_fail: Colección %{id} no se pudo eliminar
-          collection_delete_success: Colección %{id} fue eliminada exitosamente
+          collection_delete_fail: Colección no se pudo eliminar
+          collection_delete_success: Colección fue eliminada exitosamente
           collection_deny_add_members: No tiene suficientes privilegios para agregar miembros a la colección
           collection_update_success: La colección fue actualizada con éxito.
           collections_confirmation_html: Eliminar <span class='pluralized'>esta colección</span> eliminará permanentemente <span class='pluralized'>esta colección</span> del repositorio. Los elementos de <span class='pluralized'>esta colección</span> permanecerán en el repositorio. ¿Seguro que quieres eliminar <span class='pluralized'>esta colección</span> ?
@@ -696,6 +704,10 @@ es:
           description: 'Descripción:'
           edit_access: 'Editar Acceso:'
           groups: 'Grupos:'
+          managed_access:
+            deposit: Depositar
+            manage: Gestionar
+            view: Ver
           users: 'Usuarios:'
         collections: Mis Colecciones
         facet_label:
@@ -704,6 +716,7 @@ es:
           shared: 'Filtrar archivos compartidos:'
           works: 'Filtrar trabajos:'
         heading:
+          access: Acceso
           action: Acciones
           collection_type: Tipo de colección
           date_modified: Última modificación
@@ -733,6 +746,7 @@ es:
         removed_relationship: "'%{child_title}' ha sido eliminado de '%{parent_title}'"
       no_activity: El usuario no tiene actividad reciente
       no_notifications: El usuario no tiene notificaciones
+      no_proxies: No hay proxies asignados
       no_transfer_requests: No ha recibido ninguna petición de transferencia
       no_transfers: No ha transferido ningún trabajo
       proxy_activity: Actividad de Proxy
@@ -816,6 +830,17 @@ es:
           pdf_link: Descargar PDF
           video_link: Descargar video
     file_sets:
+      actions:
+        delete: Borrar
+        delete_confirm: Eliminar %{file_set} de %{application_name} es permanente. Haga clic en Aceptar para eliminar esto de %{application_name}, o en Cancelar para cancelar esta operación
+        delete_title: Eliminar %{file_set}
+        download: Descargar
+        download_title: Descargar %{file_set}
+        edit: Editar
+        edit_title: Editar %{file_set}
+        header: Selecciona una acción
+        versions: Versiones
+        versions_title: Mostrar versiones anteriores
       groups_description:
         description_html: 'La lista de grupos del listado "Seleccionar un grupo" es una lista de Grupos Administrados por el Usuario de la que que es miembro. Puede seleccionar un grupo específico y asignar un nivel de acceso por archivo dentro de %{application_name}, y del mismo modo puede agregar niveles de acceso de usuarios.
 
@@ -913,6 +938,18 @@ es:
         single: ha sido guardado.
         subject: Subida en lote completa
         title: Archivos cargados satisfactoriamente
+    my:
+      count:
+        collections:
+          in_repo: "<strong> colecciones %{total_count} </ strong> en el repositorio"
+          you_manage: "<strong> colecciones %{total_count} </ strong> puede administrar en el repositorio"
+          you_own: "<strong> colecciones %{total_count} </ strong> que posee en el repositorio"
+        works:
+          in_repo: "<strong> %{total_count} funciona </ strong> en el repositorio"
+          you_manage: "<strong> %{total_count} funciona </ strong> puedes administrar en el repositorio"
+          you_own: "<strong> %{total_count} funciona </ strong> en el repositorio"
+    nav_safety:
+      change_tab_message: "¿Seguro que quieres salir de esta pestaña? Cualquier información no guardada se perderá."
     pages:
       cancel: Cancelar
       tabs:
@@ -1130,6 +1167,7 @@ es:
         allow_multiple_membership: MIEMBROS MÚLTIPLES
         assigns_visibility: VISIBILIDAD
         assigns_workflow: FLUJO DE TRABAJO
+        badge_color: Insignia de color
         brandable: MARCA
         description: Descripción del tipo
         discoverable: DESCUBRIMIENTO

@@ -49,6 +49,8 @@ fr:
         new: Nouvelle collection
       delete: Effacer
       edit: modifier
+      less: Moins
+      more: Plus
       refresh: Rafraîchir
       remove: Retirer
       work:
@@ -169,9 +171,10 @@ fr:
           header: Créer un nouvel ensemble administratif
         show:
           breadcrumb: Ensemble de vues
-          confirm_delete: Êtes-vous sûr de vouloir supprimer ce Set administratif? Cette action ne peut pas être annulée.
           header: Ensemble administratif
           item_list_header: Fonctionne dans cet ensemble
+        show_actions:
+          confirm_delete: Êtes-vous sûr de vouloir supprimer cet ensemble administratif? Cette action ne peut pas être annulée.
       appearances:
         show:
           header: Apparence
@@ -193,6 +196,7 @@ fr:
           not_empty: Le type de collection ne peut pas être modifié car il a des collections
         form:
           tab:
+            appearance: Couleur du badge
             metadata: La description
             participants: Participants
             settings: Paramètres
@@ -212,7 +216,9 @@ fr:
             title: Les gestionnaires
             type: Type
         form_participants:
+          add_group: Ajouter un groupe
           add_participants: Ajouter des participants
+          add_user: Ajouter un utilisateur
           current_participants: Participants actuels
           header: Participants à la collecte
           instructions: Vous pouvez désigner des groupes et des utilisateurs en tant que créateurs et gestionnaires de collections de ce type
@@ -240,6 +246,7 @@ fr:
             name: prénom
         multiple_membership_checker:
           error_preamble: 'Erreur: vous avez spécifié plusieurs des mêmes types de collection de membres uniques'
+          error_type_and_collections: "(type: %{type}, collections: %{collections})"
         new:
           header: Créer un nouveau type de collection
           submit: sauvegarder
@@ -406,6 +413,7 @@ fr:
         header: Articles
         thumbnail: La vignette
         title: Titre
+        unauthorized: Il n'y a pas d'objets disponibles publiquement dans ce %{type}.
         visibility: Visibilité
       relationships:
         empty: Ce %{type} ne se trouve actuellement dans aucune collection.
@@ -527,7 +535,6 @@ fr:
       type_label: type de probleme
     content_blocks:
       cancel: Annuler
-      change_tab_message: Êtes-vous sûr de vouloir quitter cet onglet? Toutes les données non enregistrées seront perdues.
       tabs:
         announcement_text: Texte d'annonce
         featured_researcher: Chercheur en vedette
@@ -595,6 +602,7 @@ fr:
             this_collection_in_other_collections: Cette collection dans d'autres collections
           modals:
             remove_from_collection_description: La suppression de cette collection ne la supprimera pas du référentiel, uniquement en tant que parent de cette collection. Êtes-vous sûr de vouloir supprimer cette collection?
+            remove_parent_collection_deny: Vous n'avez pas les privilèges suffisants pour la collection parent pour pouvoir le supprimer.
             remove_this_sub_collection_description: La suppression de cette sous-collection ne la supprimera pas du référentiel, uniquement à partir de cette collection parent. Êtes-vous sûr de vouloir supprimer cette sous-collection?
           sub_collections_of_collection_description: Ces collections sont actuellement des sous-collections de cette collection
           table:
@@ -663,8 +671,8 @@ fr:
           add_to_collection_only: Les actions autorisées sont limitées à l'ajout de membres
           admin_set_confirmation: La suppression d'un ensemble d'administrateurs à partir de %{application_name} est permanente. Cliquez sur OK pour supprimer cet ensemble d'administrateurs de %{application_name}, ou sur Annuler pour annuler cette opération
           collection_create_success: La collection a été créée avec succès.
-          collection_delete_fail: La collection %{id} n'a pas pu être supprimée
-          collection_delete_success: La collection %{id} a été supprimée avec succès
+          collection_delete_fail: La collection n'a pas pu être supprimée
+          collection_delete_success: La collection a été supprimée avec succès
           collection_deny_add_members: Vous n'avez pas les privilèges suffisants pour ajouter des membres à la collection
           collection_update_success: La collection a été mise à jour avec succès.
           collections_confirmation_html: La suppression de <span class='pluralized'>cette collection</span> supprimera définitivement <span class='pluralized'>cette collection</span> du référentiel. Les éléments de <span class='pluralized'>cette collection</span> resteront dans le référentiel. Êtes-vous sûr de vouloir supprimer <span class='pluralized'>cette collection</span> ?
@@ -697,6 +705,10 @@ fr:
           description: 'La description:'
           edit_access: 'Modifier l''accès:'
           groups: 'Groupes:'
+          managed_access:
+            deposit: Dépôt
+            manage: Gérer
+            view: Vue
           users: 'Utilisateurs:'
         collections: Vos collections
         facet_label:
@@ -705,6 +717,7 @@ fr:
           shared: 'Filtrer les actions:'
           works: 'Le filtre fonctionne:'
         heading:
+          access: Accès
           action: Actes
           collection_type: Type de collection
           date_modified: Dernière modification
@@ -734,6 +747,7 @@ fr:
         removed_relationship: "'%{child_title}' a été retiré de '%{parent_title}'"
       no_activity: L'utilisateur n'a aucune activité récente
       no_notifications: L'utilisateur n'a pas de notification
+      no_proxies: Il n'y a pas de proxy attribués
       no_transfer_requests: Vous n'avez reçu aucune demande de transfert de travail
       no_transfers: Vous n'avez transféré aucun travail
       proxy_activity: Activité de procuration
@@ -817,6 +831,17 @@ fr:
           pdf_link: Télécharger le fichier PDF
           video_link: Télécharger la video
     file_sets:
+      actions:
+        delete: Effacer
+        delete_confirm: La suppression de %{file_set} à partir de %{application_name} est permanente. Cliquez sur OK pour le supprimer de %{application_name}, ou sur Annuler pour annuler cette opération
+        delete_title: Supprimer %{file_set}
+        download: Télécharger
+        download_title: Télécharger %{file_set}
+        edit: modifier
+        edit_title: Modifier %{file_set}
+        header: Sélectionnez une action
+        versions: Versions
+        versions_title: Afficher les versions précédentes
       groups_description:
         description_html: La liste des groupes dans le menu déroulant intitulé «Sélectionner un groupe» est une liste des groupes gérés par l'utilisateur dont vous êtes membre. Vous pouvez sélectionner un groupe spécifique et attribuer un niveau d'accès pour un fichier dans %{application_name}, de même que l'ajout de niveaux d'accès utilisateur.
     help:
@@ -912,6 +937,18 @@ fr:
         single: a été enregistré.
         subject: Téléchargement par lots complet
         title: Fichiers téléchargés avec succès
+    my:
+      count:
+        collections:
+          in_repo: "<strong> Collections %{total_count} </ strong> dans le référentiel"
+          you_manage: "<strong> collections %{total_count} </ strong> que vous pouvez gérer dans le référentiel"
+          you_own: "<strong> collections %{total_count} </ strong> que vous possédez dans le référentiel"
+        works:
+          in_repo: "<strong> %{total_count} fonctionne </ strong> dans le référentiel"
+          you_manage: "<strong> %{total_count} fonctionne </ strong> vous pouvez gérer dans le référentiel"
+          you_own: "<strong> %{total_count} fonctionne </ strong> que vous possédez dans le référentiel"
+    nav_safety:
+      change_tab_message: Êtes-vous sûr de vouloir quitter cet onglet? Toutes les données non enregistrées seront perdues.
     pages:
       cancel: Annuler
       tabs:
@@ -1129,6 +1166,7 @@ fr:
         allow_multiple_membership: MEMBRES MULTIPLES
         assigns_visibility: VISIBILITÉ
         assigns_workflow: FLUX DE TRAVAIL
+        badge_color: Couleur du badge
         brandable: L'IMAGE DE MARQUE
         description: Description du type
         discoverable: DÉCOUVERTE

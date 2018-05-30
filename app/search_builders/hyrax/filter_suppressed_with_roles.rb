@@ -31,7 +31,11 @@ module Hyrax
       end
 
       def depositor?
-        current_work[DepositSearchBuilder.depositor_field].first == current_ability.current_user.user_key
+        depositors = current_work[DepositSearchBuilder.depositor_field]
+
+        return false if depositors.nil?
+
+        depositors.first == current_ability.current_user.user_key
       end
   end
 end

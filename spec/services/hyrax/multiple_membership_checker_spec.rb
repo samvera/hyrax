@@ -73,7 +73,7 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
         expect(item).not_to receive(:member_of_collection_ids)
         expect(checker).to receive(:single_membership_collections).with(collection_ids).once.and_call_original
         expect(Collection).to receive(:where).with(id: collection_ids, collection_type_gid_ssim: [collection_type.gid]).once.and_return(collections)
-        expect(subject).to eq 'Error: You have specified more than one of the same single-membership collection types: Greedy (Foo and Bar)'
+        expect(subject).to eq 'Error: You have specified more than one of the same single-membership collection type (type: Greedy, collections: Foo and Bar)'
       end
 
       context 'with multiple single membership collection types' do
@@ -84,7 +84,7 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
           expect(item).not_to receive(:member_of_collection_ids)
           expect(checker).to receive(:single_membership_collections).with(collection_ids).once.and_call_original
           expect(Collection).to receive(:where).with(id: collection_ids, collection_type_gid_ssim: collection_types).once.and_return(collections)
-          expect(subject).to eq 'Error: You have specified more than one of the same single-membership collection types: Greedy (Foo and Bar)'
+          expect(subject).to eq 'Error: You have specified more than one of the same single-membership collection type (type: Greedy, collections: Foo and Bar)'
         end
       end
     end
@@ -104,7 +104,7 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
         expect(item).to receive(:member_of_collection_ids)
         expect(Collection).to receive(:where).with(id: collection_ids, collection_type_gid_ssim: [collection_type.gid]).once.and_return(collections)
         expect(Collection).to receive(:where).with(id: [collection2.id], collection_type_gid_ssim: [collection_type.gid]).once.and_return([collection2])
-        expect(subject).to eq 'Error: You have specified more than one of the same single-membership collection types: Greedy (Foo and Bar)'
+        expect(subject).to eq 'Error: You have specified more than one of the same single-membership collection type (type: Greedy, collections: Foo and Bar)'
       end
 
       context 'with multiple single membership collection types' do
@@ -115,7 +115,7 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
           expect(item).to receive(:member_of_collection_ids)
           expect(Collection).to receive(:where).with(id: collection_ids, collection_type_gid_ssim: collection_types).once.and_return(collections)
           expect(Collection).to receive(:where).with(id: [collection2.id], collection_type_gid_ssim: collection_types).once.and_return([collection2])
-          expect(subject).to eq 'Error: You have specified more than one of the same single-membership collection types: Greedy (Foo and Bar)'
+          expect(subject).to eq 'Error: You have specified more than one of the same single-membership collection type (type: Greedy, collections: Foo and Bar)'
         end
       end
     end

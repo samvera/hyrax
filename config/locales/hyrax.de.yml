@@ -49,6 +49,8 @@ de:
         new: Neue Sammlung
       delete: Löschen
       edit: Bearbeiten
+      less: Weniger
+      more: Mehr
       refresh: Aktualisierung
       remove: Entfernen
       work:
@@ -169,9 +171,10 @@ de:
           header: Neues Admin-Set erstellen
         show:
           breadcrumb: Ansicht Admin-Set
-          confirm_delete: Sind Sie sicher, dass Sie dieses Admin-Set löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.
           header: Admin-Set
           item_list_header: Arbeiten in diesem Admin-Set
+        show_actions:
+          confirm_delete: Möchten Sie dieses Admin-Set wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.
       appearances:
         show:
           header: Design
@@ -193,6 +196,7 @@ de:
           not_empty: Der Sammlungstyp kann nicht geändert werden, da er Sammlungen enthält
         form:
           tab:
+            appearance: Emblemfarbe
             metadata: Beschreibung
             participants: Teilnehmer
             settings: Einstellungen
@@ -212,7 +216,9 @@ de:
             title: Manager
             type: Typ
         form_participants:
+          add_group: Gruppe hinzufügen
           add_participants: Teilnehmer hinzufügen
+          add_user: Benutzer hinzufügen
           current_participants: Aktuelle Teilnehmer
           header: Sammlungs-Teilnehmer
           instructions: Sie können sowohl Gruppen als auch Benutzer als Ersteller und Manager von Sammlungen dieses Typs festlegen
@@ -240,6 +246,7 @@ de:
             name: Name
         multiple_membership_checker:
           error_preamble: 'Fehler: Sie haben mehrere derselben Sammlungstypen mit einer einzelnen Mitgliedschaft angegeben'
+          error_type_and_collections: "(Geben Sie ein: %{type}, Sammlungen: %{collections})"
         new:
           header: Erstellen Sie einen neuen Sammlungstyp
           submit: Speichen
@@ -407,6 +414,7 @@ de:
         header: Artikel
         thumbnail: Miniaturansicht
         title: Titel
+        unauthorized: Es gibt keine öffentlich verfügbaren Elemente in diesem %{type}.
         visibility: Sichtbarkeit
       relationships:
         empty: Diese %{type} ist derzeit noch keiner Sammlung zugeordnet.
@@ -528,7 +536,6 @@ de:
       type_label: Anfragentyp
     content_blocks:
       cancel: Abbrechen
-      change_tab_message: Möchten Sie diesen Tab wirklich verlassen? Nicht gespeicherte Daten gehen verloren.
       tabs:
         announcement_text: Ankündigungstext
         featured_researcher: Ausgewählter Forscher
@@ -596,6 +603,7 @@ de:
             this_collection_in_other_collections: Diese Sammlung in anderen Sammlungen
           modals:
             remove_from_collection_description: Durch das Entfernen dieser Sammlung wird sie nicht aus dem Repository entfernt, sondern nur als übergeordnetes Objekt dieser Sammlung. Möchten Sie diese Sammlung wirklich entfernen?
+            remove_parent_collection_deny: Sie verfügen nicht über ausreichende Berechtigungen, damit die übergeordnete Sammlung entfernt werden kann.
             remove_this_sub_collection_description: Durch das Entfernen dieser Untersammlung wird sie nicht aus dieser übergeordneten Sammlung aus dem Repository entfernt. Möchten Sie diese Untersammlung wirklich entfernen?
           sub_collections_of_collection_description: Diese Sammlungen sind derzeit Untersammlungen dieser Sammlung
           table:
@@ -664,8 +672,8 @@ de:
           add_to_collection_only: Erlaubte Aktionen sind auf das Hinzufügen von Mitgliedern beschränkt
           admin_set_confirmation: Löschen eines Admin-Set von %{application_name} ist dauerhaft. Klicken Sie auf OK, um dieses Admin-Set aus %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
           collection_create_success: Die Sammlung wurde erfolgreich erstellt.
-          collection_delete_fail: Sammlung %{id} konnte nicht gelöscht werden
-          collection_delete_success: Sammlung %{id} wurde erfolgreich gelöscht
+          collection_delete_fail: Sammlung konnte nicht gelöscht werden
+          collection_delete_success: Sammlung wurde erfolgreich gelöscht
           collection_deny_add_members: Sie verfügen nicht über ausreichende Berechtigungen zum Hinzufügen von Mitgliedern zur Sammlung
           collection_update_success: Die Sammlung wurde erfolgreich aktualisiert.
           collections_confirmation_html: "<span class='pluralized'>Diese Sammlung</span> löschen , wird permanent <span class='pluralized'>diese Sammlung</span> aus dem Repository entfernen. Elemente in <span class='pluralized'>dieser Sammlung</span> verbleiben im Repository. Möchten Sie <span class='pluralized'>diese Sammlung</span> wirklich löschen?"
@@ -691,13 +699,17 @@ de:
           select_none: Nichts ausgewählt
           transfer: Besitz der Arbeit übertragen
           unhighlight: Hervorhebung der Arbeit entfernen
-          view_admin_set: Admin-Set anzeigen
+          view_admin_set: Sammlung anzeigen
           view_collection: Sammlung anzeigen
           work_confirmation: Das Löschen einer Arbeit aus %{application_name} ist dauerhaft. Klicken Sie auf OK, um diese Arbeit aus %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
         collection_list:
           description: 'Beschreibung:'
           edit_access: 'Bearbeiten der Zugriffsrechte:'
           groups: 'Gruppen:'
+          managed_access:
+            deposit: Deponieren
+            manage: Verwalten
+            view: Ansicht
           users: 'Benutzer:'
         collections: Ihre Sammlungen
         facet_label:
@@ -706,6 +718,7 @@ de:
           shared: 'Filter Freigaben:'
           works: 'Filter Arbeiten:'
         heading:
+          access: Zugriff
           action: Aktionen
           collection_type: Sammlungsart
           date_modified: Zuletzt bearbeitet
@@ -735,6 +748,7 @@ de:
         removed_relationship: "'%{child_title}' wurde aus '%{parent_title}' entfernt"
       no_activity: Benutzer hat keine aktuellen Aufgaben
       no_notifications: Benutzer hat keine Benachrichtigungen
+      no_proxies: Es sind keine Vertreter zugewiesen
       no_transfer_requests: Sie haben keine Übertragungsanfragen für Arbeiten erhalten
       no_transfers: Sie haben keine Arbeit übertragen
       proxy_activity: Vertreter-Aktivität
@@ -818,6 +832,17 @@ de:
           pdf_link: PDF Herunterladen
           video_link: Video herunterladen
     file_sets:
+      actions:
+        delete: Löschen
+        delete_confirm: Das Löschen von %{file_set} aus %{application_name} ist permanent. Klicken Sie auf OK, um dies aus %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
+        delete_title: Löschen Sie %{file_set}
+        download: Herunterladen
+        download_title: Laden Sie %{file_set} herunter
+        edit: Bearbeiten
+        edit_title: Bearbeite %{file_set}
+        header: Wählen Sie eine Aktion
+        versions: Versionen
+        versions_title: Vorherige Versionen anzeigen
       groups_description:
         description_html: Die Liste der Gruppen in der Auswahlliste mit der Bezeichnung &ldquor; Wählen Sie eine Gruppe aus &ldquor; zeigt ihnen jene Benutzer administrierten Gruppen an, bei denen Sie Mitglied sind. Sie können eine bestimmte Gruppe auswählen und eine Zugriffsebene für eine Datei innerhalb von %{application_name} zuweisen, ähnlich wie das Hinzufügen von Benutzerzugriffsebenen.
     help:
@@ -913,6 +938,18 @@ de:
         single: wurde gespeichert.
         subject: Stapelweises Hochladen abgeschlossen
         title: Dateien erfolgreich hochgeladen
+    my:
+      count:
+        collections:
+          in_repo: "<strong> %{total_count} Sammlungen </ strong> im Repository"
+          you_manage: "<strong> %{total_count} Sammlungen </ strong>, die Sie im Repository verwalten können"
+          you_own: "<strong> %{total_count} Sammlungen </ strong>, die Sie im Repository besitzen"
+        works:
+          in_repo: "<strong> %{total_count} funktioniert </ strong> im Repository"
+          you_manage: "<strong> %{total_count} funktioniert </ strong>, das Sie im Repository verwalten können"
+          you_own: "<strong> %{total_count} funktioniert </ strong>, das Sie im Repository besitzen"
+    nav_safety:
+      change_tab_message: Möchten Sie diesen Tab wirklich verlassen? Nicht gespeicherte Daten gehen verloren.
     pages:
       cancel: Abbrechen
       tabs:
@@ -1130,6 +1167,7 @@ de:
         allow_multiple_membership: MEHRFACHE MITGLIEDSCHAFT
         assigns_visibility: SICHTBARKEIT
         assigns_workflow: WORKFLOW
+        badge_color: Emblemfarbe
         brandable: HERVORHEBBAR (MARKE)
         description: Typbeschreibung
         discoverable: EINSEHBAR

@@ -96,6 +96,7 @@
 <% if @presenter.collection_type_is_nestable? && !has_collection_search_parameters? %>
   <%= render 'hyrax/my/collections/modal_add_to_collection', source: 'show' %>
   <%= render 'hyrax/my/collections/modal_add_subcollection', id: @presenter.id, source: 'show' %>
+  <%= render 'hyrax/dashboard/collections/modal_parent_collection_remove_deny', source: 'show' %>
 <% end %>
 
 <% unless has_collection_search_parameters? %>

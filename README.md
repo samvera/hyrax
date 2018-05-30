@@ -4,7 +4,6 @@ Code: [![Version](https://badge.fury.io/rb/hyrax.png)](http://badge.fury.io/rb/h
 [![Build Status](https://travis-ci.org/samvera/hyrax.png?branch=master)](https://travis-ci.org/samvera/hyrax)
 [![Coverage Status](https://coveralls.io/repos/github/samvera/hyrax/badge.svg?branch=master)](https://coveralls.io/github/samvera/hyrax?branch=master)
 [![Code Climate](https://codeclimate.com/github/samvera/hyrax/badges/gpa.svg)](https://codeclimate.com/github/samvera/hyrax)
-[![Dependency Update Status](https://gemnasium.com/samvera/hyrax.png)](https://gemnasium.com/samvera/hyrax)
 [![Dependency Maintenance Status](https://dependencyci.com/github/samvera/hyrax/badge)](https://dependencyci.com/github/samvera/hyrax)
 
 Docs: [![Documentation Status](https://inch-ci.org/github/samvera/hyrax.svg?branch=master)](https://inch-ci.org/github/samvera/hyrax)
@@ -63,7 +62,7 @@ The Samvera community is here to help. Please see our [support guide](./.github/
 # Getting started
 
 This document contains instructions specific to setting up an app with __Hyrax
-v2.1.0.beta2__. If you are looking for instructions on installing a different
+v2.1.0.rc1__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -80,8 +79,8 @@ Prerequisites are required for both creating a Hyrax\-based app and contributing
 
 Hyrax requires the following software to work:
 
-1. [Solr](http://lucene.apache.org/solr/) version >= 5.x (tested up to 6.4.1)
-1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.5.1 (tested up to 4.7.1)
+1. [Solr](http://lucene.apache.org/solr/) version >= 5.x (tested up to 7.0.0)
+1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.5.1 (tested up to 4.7.5)
 1. A SQL RDBMS (MySQL, PostgreSQL), though **note** that SQLite will be used by default if you're looking to get up and running quickly
 1. [Redis](http://redis.io/), a key-value store
 1. [ImageMagick](http://www.imagemagick.org/) with JPEG-2000 support
@@ -132,7 +131,7 @@ Note here that the following commands assume you're setting up Hyrax in a develo
 
 First, you'll need a working Ruby installation. You can install this via your operating system's package manager -- you are likely to get farther with OSX, Linux, or UNIX than Windows but your mileage may vary -- but we recommend using a Ruby version manager such as [RVM](https://rvm.io/) or [rbenv](https://github.com/sstephenson/rbenv).
 
-We recommend either Ruby 2.4 or the latest 2.3 version.
+We recommend either Ruby 2.5 or the latest 2.4 version.
 
 ## Redis
 
@@ -142,11 +141,11 @@ Starting up Redis will depend on your operating system, and may in fact already 
 
 ## Rails
 
-Hyrax requires Rails 5. We recommend the latest Rails 5.0 release.
+Hyrax requires Rails 5. We recommend the latest Rails 5.1 release.
 
 ```
 # If you don't already have Rails at your disposal...
-gem install rails -v 5.0.6
+gem install rails -v 5.1.6
 ```
 
 ### JavaScript runtime
@@ -162,7 +161,7 @@ NOTE: The steps need to be done in order to create a new Hyrax based app.
 Generate a new Rails application using the template.
 
 ```
-rails _5.0.6_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v2.1.0.beta2/template.rb
+rails _5.1.6_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v2.1.0.rc1/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:
@@ -172,6 +171,7 @@ Generating a new Rails application using Hyrax's template above takes cares of a
 * Running Hyrax's install generator, to add a number of files that Hyrax requires within your Rails app, including e.g. database migrations
 * Loading all of Hyrax's database migrations into your application's database
 * Loading Hyrax's default workflows into your application's database
+* Create default collection types (e.g. Admin Set, User Collection)
 
 ## Start servers
 
@@ -199,12 +199,22 @@ Many of the services performed by Hyrax are resource intensive, and therefore ar
 
 Hyrax implements these jobs using the Rails [ActiveJob](http://edgeguides.rubyonrails.org/active_job_basics.html) framework, allowing you to choose the message queue system of your choice.
 
-For initial testing and development, it is recommended that you change the default ActiveJob adapter from `:async` to `:inline`. This adapter will execute jobs immediately (in the foreground) as they are received. This can be accomplished by adding the following to your `config/application.rb`
+For initial development, it is recommended that you change the default ActiveJob adapter from `:async` to `:inline`. This adapter will execute jobs immediately (in the foreground) as they are received. This can be accomplished by adding the following to your `config/environments/development.rb`
 
 ```
 class Application < Rails::Application
   # ...
   config.active_job.queue_adapter = :inline
+  # ...
+end
+```
+
+For testing, it is recommended that you use the [built-in `:test` adapter](http://api.rubyonrails.org/classes/ActiveJob/QueueAdapters/TestAdapter.html) which stores enqueued and performed jobs, running only those configured to run during test setup. To do this, add the following to `config/environments/test.rb`:
+
+```ruby
+Rails.application.configure do
+  # ...
+  config.active_job.queue_adapter = :test
   # ...
 end
 ```

@@ -16,7 +16,7 @@
     </div>
     <div>
       <%= link_to t('hyrax.collection.actions.add_existing_works.label'),
-                  hyrax.my_works_path(add_works_to_collection: presenter.id),
+                  hyrax.my_works_path(add_works_to_collection: presenter.id, add_works_to_collection_label: presenter.title),
                   title: t('hyrax.collection.actions.add_existing_works.desc'),
                   class: 'btn btn-link side-arrows',
                   data: { turbolinks: false } %>

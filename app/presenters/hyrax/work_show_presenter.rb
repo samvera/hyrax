@@ -57,7 +57,10 @@ module Hyrax
 
     # @return [Boolean] render the UniversalViewer
     def universal_viewer?
-      Hyrax.config.iiif_image_server? &&
+      representative_id.present? &&
+        representative_presenter.present? &&
+        representative_presenter.image? &&
+        Hyrax.config.iiif_image_server? &&
         members_include_viewable_image?
     end
 
@@ -66,7 +69,7 @@ module Hyrax
       return nil if representative_id.blank?
       @representative_presenter ||=
         begin
-          result = member_presenters([representative_id]).first
+          result = member_presenters_for([representative_id]).first
           return nil if result.try(:id) == id
           if result.respond_to?(:representative_presenter)
             result.representative_presenter
@@ -150,7 +153,23 @@ module Hyrax
       solr_document.to_model
     end
 
-    delegate :member_presenters, :file_set_presenters, :work_presenters, to: :member_presenter_factory
+    delegate :member_presenters, :ordered_ids, :file_set_presenters, :work_presenters, to: :member_presenter_factory
+
+    # @return [Array] list to display with Kaminari pagination
+    def list_of_item_ids_to_display
+      paginated_item_list(page_array: authorized_item_ids)
+    end
+
+    # @param [Array<String>] ids a list of ids to build presenters for
+    # @return [Array<presenter_class>] presenters for the array of ids (not filtered by class)
+    def member_presenters_for(an_array_of_ids)
+      member_presenters(an_array_of_ids)
+    end
+
+    # @return [Integer] total number of pages of viewable items
+    def total_pages
+      (total_items.to_f / rows_from_params.to_f).ceil
+    end
 
     def manifest_url
       manifest_helper.polymorphic_url([:manifest, self])
@@ -186,6 +205,33 @@ module Hyrax
     end
 
     private
+
+      # list of item ids to display is based on ordered_ids
+      def authorized_item_ids
+        @member_item_list_ids ||= begin
+          items = ordered_ids
+          items.delete_if { |m| !current_ability.can?(:read, m) } if Flipflop.hide_private_items?
+          items
+        end
+      end
+
+      # Uses kaminari to paginate an array to avoid need for solr documents for items here
+      def paginated_item_list(page_array:)
+        Kaminari.paginate_array(page_array, total_count: page_array.size).page(current_page).per(rows_from_params)
+      end
+
+      def total_items
+        authorized_item_ids.size
+      end
+
+      def rows_from_params
+        request.params[:rows].nil? ? 10 : request.params[:rows].to_i
+      end
+
+      def current_page
+        page = request.params[:page].nil? ? 1 : request.params[:page].to_i
+        page > total_pages ? total_pages : page
+      end
 
       def manifest_helper
         @manifest_helper ||= ManifestHelper.new(request.base_url)
