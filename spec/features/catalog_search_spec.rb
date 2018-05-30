@@ -28,4 +28,45 @@ RSpec.describe 'catalog searching', type: :feature do
       expect(page).to have_content(collection.title.first)
     end
   end
+
+  context 'with public works and private collections', clean_repo: true do
+    let!(:collection) { create(:private_collection) }
+
+    let!(:jills_work) do
+      create(:public_work, title: ["Jill's Research"], keyword: ['jills_keyword'], member_of_collections: [collection])
+    end
+
+    it "hides collection facet values the user doesn't have access to view when performing a search" do
+      within('#search-form-header') do
+        fill_in('search-field-header', with: 'jills_keyword')
+        click_button('Go')
+      end
+
+      expect(page).to have_content('Search Results')
+      expect(page).to have_content(jills_work.title.first)
+      expect(page).not_to have_content(collection.title.first)
+      expect(page).not_to have_css('.blacklight-member_of_collection_ids_ssim')
+    end
+
+    context 'as an admin' do
+      let(:admin_user) { create :admin }
+
+      before do
+        sign_in admin_user
+        visit '/'
+      end
+
+      it "shows collection facet values the user has access to view when performing a search" do
+        within('#search-form-header') do
+          fill_in('search-field-header', with: 'jills_keyword')
+          click_button('Go')
+        end
+
+        expect(page).to have_content('Search Results')
+        expect(page).to have_content(jills_work.title.first)
+        find('.blacklight-member_of_collection_ids_ssim').click
+        expect(page).to have_content(collection.title.first)
+      end
+    end
+  end
 end

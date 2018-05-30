@@ -257,6 +257,14 @@ module Hyrax
       content_tag(:span, "", class: [Hyrax::ModelIcon.css_class_for(Collection), "collection-icon-search"])
     end
 
+    def collection_title_by_id(id)
+      solr_docs = controller.repository.find(id).docs
+      return nil if solr_docs.empty?
+      solr_field = solr_docs.first[Solrizer.solr_name("title", :stored_searchable)]
+      return nil if solr_field.nil?
+      solr_field.first
+    end
+
     private
 
       def user_agent
