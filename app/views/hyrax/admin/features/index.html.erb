@@ -44,14 +44,12 @@
                           <%= submit_tag "on",
                             type: "submit",
                             class: Flipflop.enabled?(feature.name.to_sym) ? 'active' : nil,
-                            disabled: !strategy.switchable?
-                          -%>
+                            disabled: !strategy.switchable? -%>
 
                           <%= submit_tag "off",
                             type: "submit",
                             class: Flipflop.enabled?(feature.name.to_sym) ? nil : 'active',
-                            disabled: !strategy.switchable?
-                          -%>
+                            disabled: !strategy.switchable? -%>
                         </div>
                       <% end -%>
                     </div>

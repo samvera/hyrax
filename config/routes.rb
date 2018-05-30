@@ -83,6 +83,7 @@ Hyrax::Engine.routes.draw do
   # Depositors routes for proxy deposit
   post 'users/:user_id/depositors' => 'depositors#create', as: 'user_depositors'
   delete 'users/:user_id/depositors/:id' => 'depositors#destroy', as: 'user_depositor'
+  get 'proxies' => 'depositors#index', as: 'depositors'
 
   resources :featured_work_lists, path: 'featured_works', only: :create
 
@@ -109,6 +110,8 @@ Hyrax::Engine.routes.draw do
     get 'repository_growth', action: :repository_growth
     get 'repository_object_counts', action: :repository_object_counts
     get 'update_works_list', action: :update_works_list
+    get 'all_pinned_collections', action: :all_pinned_collections
+    post 'pin_collection', action: :pin_collection
   end
 
   # Dashboard page
@@ -140,6 +143,7 @@ Hyrax::Engine.routes.draw do
         put :remove_member
       end
     end
+
     post 'collections/:id', controller: 'collection_members', action: :update_members
     post 'collections/:child_id/within', controller: 'nest_collections', action: 'create_relationship_within', as: 'create_nest_collection_within'
     get 'collections/:parent_id/under', controller: 'nest_collections', action: 'create_collection_under', as: 'create_subcollection_under'

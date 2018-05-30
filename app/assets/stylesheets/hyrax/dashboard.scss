@@ -46,6 +46,10 @@ body.dashboard {
     margin-top: 0.5em;
   }
 
+  .count-display {
+    font-size: 1.1em;
+  }
+
   .tabs {
     margin-top: $tab-margin;
     position: relative;
@@ -66,7 +70,6 @@ body.dashboard {
   .nav-tabs > li.active > a:hover {
     border-top: 2px solid $tab-active-accent-color;
   }
-
 
   /* The #masthead selector below could (and ideally, should) be removed if we can
    * replace the "navbar-static-top" class with "navbar-fixed-top" for the Admin UI only
@@ -160,6 +163,8 @@ body.dashboard {
       line-height: 1.42857143;
       color: #333;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .facet-count {
@@ -266,5 +271,22 @@ body.dashboard {
     color: $gray-base;
     cursor: default;
     text-decoration: none;
+  }
+
+  .pinned-star {
+    pointer-events: all;
+    stroke: $gray-base;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  
+  .not-pinned {
+    fill: none;
+  }
+
+  .pinned {
+    fill: #ffd700;
   }
 }

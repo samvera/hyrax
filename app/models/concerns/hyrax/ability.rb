@@ -9,9 +9,10 @@ module Hyrax
       include Hyrax::Ability::PermissionTemplateAbility
       include Hyrax::Ability::SolrDocumentAbility
 
-      class_attribute :admin_group_name, :registered_group_name
+      class_attribute :admin_group_name, :registered_group_name, :public_group_name
       self.admin_group_name = 'admin'
       self.registered_group_name = 'registered'
+      self.public_group_name = 'public' # TODO: find hard coded values and replace with this
       self.ability_logic += [:admin_permissions,
                              :curation_concerns_permissions,
                              :operation_abilities,

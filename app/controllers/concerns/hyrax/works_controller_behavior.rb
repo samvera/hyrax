@@ -46,12 +46,7 @@ module Hyrax
     def new
       # TODO: move these lines to the work form builder in Hyrax
       curation_concern.depositor = current_user.user_key
-
-      # admin_set_id is required on the client, otherwise simple_form renders a blank option.
-      # however it isn't a required field for someone to submit via json.
-      # Set the first admin_set they have access to.
-      admin_set = Hyrax::AdminSetService.new(self).search_results(:deposit).first
-      curation_concern.admin_set_id = admin_set && admin_set.id
+      curation_concern.admin_set_id = admin_set_id_for_new
       build_form
     end
 
@@ -61,7 +56,6 @@ module Hyrax
       else
         respond_to do |wants|
           wants.html do
-            flash[:error] = curation_concern.errors.messages[:collections].to_sentence
             build_form
             render 'new', status: :unprocessable_entity
           end
@@ -73,6 +67,8 @@ module Hyrax
     # Finds a solr document matching the id and sets @presenter
     # @raise CanCan::AccessDenied if the document is not found or the user doesn't have access to it.
     def show
+      @user_collections = user_collections
+
       respond_to do |wants|
         wants.html { presenter && parent_presenter }
         wants.json do
@@ -104,7 +100,6 @@ module Hyrax
       else
         respond_to do |wants|
           wants.html do
-            flash[:error] = curation_concern.errors.messages[:collections].to_sentence
             build_form
             render 'edit', status: :unprocessable_entity
           end
@@ -136,6 +131,24 @@ module Hyrax
     end
 
     private
+
+      def user_collections
+        collections_service.search_results(:deposit) if presenter.editor?
+      end
+
+      def collections_service
+        Hyrax::CollectionsService.new(self)
+      end
+
+      def admin_set_id_for_new
+        # admin_set_id is required on the client, otherwise simple_form renders a blank option.
+        # however it isn't a required field for someone to submit via json.
+        # Set the default admin set if it exists; otherwise, set to first admin_set they have access to.
+        admin_sets = Hyrax::AdminSetService.new(self).search_results(:deposit)
+        return nil if admin_sets.blank? # shouldn't happen
+        return AdminSet::DEFAULT_ID if admin_sets.map(&:id).include?(AdminSet::DEFAULT_ID)
+        admin_sets.first.id
+      end
 
       def build_form
         @form = work_form_service.build(curation_concern, current_ability, self)
@@ -179,7 +192,9 @@ module Hyrax
       end
 
       def curation_concern_from_search_results
-        search_result_document(params)
+        search_params = params
+        search_params.delete :page
+        search_result_document(search_params)
       end
 
       # Only returns unsuppressed documents the user has read access to

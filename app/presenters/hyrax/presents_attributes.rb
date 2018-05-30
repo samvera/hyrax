@@ -1,7 +1,7 @@
 module Hyrax
   module PresentsAttributes
     ##
-    # Present the attribute as an HTML table row.
+    # Present the attribute as an HTML table row or dl row.
     #
     # @param [Hash] options
     # @option options [Symbol] :render_as use an alternate renderer
@@ -18,7 +18,11 @@ module Hyrax
         return
       end
 
-      renderer_for(field, options).new(field, send(field), options).render
+      if options[:html_dl]
+        renderer_for(field, options).new(field, send(field), options).render_dl_row
+      else
+        renderer_for(field, options).new(field, send(field), options).render
+      end
     end
 
     def permission_badge

@@ -12,7 +12,7 @@
             <label>
               <input type="radio" name="payload_concern" value="<%= row_presenter.concern %>"
                                                            data-single="<%= row_presenter.switch_to_new_work_path(route_set: main_app, params: params) %>"
-                                                           data-batch="<%= row_presenter.switch_to_batch_upload_path(route_set: hyrax, params: params) %>">
+                                                           data-batch="<%= row_presenter.switch_to_batch_upload_path(route_set: hyrax, params: params) %>" />
               <div class="select-work-icon">
                 <span class="<%= row_presenter.icon_class %>"></span>
               </div>
@@ -26,7 +26,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('hyrax.dashboard.heading_actions.close') %></button>
-        <input type="submit" class="btn btn-primary" value="<%= t('hyrax.dashboard.heading_actions.create_work') %>">
+        <input type="submit" class="btn btn-primary" value="<%= t('hyrax.dashboard.heading_actions.create_work') %>" />
       </div>
     </form>
   </div>

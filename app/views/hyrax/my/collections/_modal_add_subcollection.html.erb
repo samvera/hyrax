@@ -11,18 +11,19 @@
       <div class="modal-body">
         <div class="modal-ajax-alert"></div>
         <label><%= t('hyrax.collection.actions.nest_collections.select_label') %></label>
-        <input type="hidden" name="source" value="<%= source %>"></input>
+        <input type="hidden" name="source" value="<%= source %>" />
         <select name="child_id">
           <option value="none"><%= t("hyrax.dashboard.my.action.select") %></option>
           <% colls = Hyrax::Collections::NestedCollectionQueryService.available_child_collections(parent: collection, scope: controller, limit_to_id: nil) %>
           <% colls.each {|coll| %>
-            <option  value="<%= coll.id %>"><%= coll.title.first %></option>
+            <option value="<%= coll.id %>"><%= coll.title.first %></option>
           <% } %>
         </select>
       </div>
 
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('helpers.action.cancel') %></button>
+        <% # '.modal-add-button' and '.modal-submit-button' classes applied below are used for JavaScript targeting %>
         <button
           disabled
           type="button"

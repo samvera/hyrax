@@ -75,7 +75,7 @@ RSpec.describe Hyrax::CollectionsCountService do
 
     context "when there are works in the collection" do
       it "returns rows with document in the first column, last modified in the second column and integer count values in the third and fourth column" do
-        expect(subject).to eq [struct.new(doc1, '2015-01-01', 8, 3), struct.new(doc2, '2015-02-01', 2, 2)]
+        expect(subject).to eq [struct.new(doc1, '2015-01-01', 8, 3, doc1.id), struct.new(doc2, '2015-02-01', 2, 2, doc2.id)]
       end
     end
 
@@ -96,7 +96,7 @@ RSpec.describe Hyrax::CollectionsCountService do
       end
 
       it "returns rows with document in the first column no date in the second column and integer count values in the third and fourth column" do
-        expect(subject).to eq [struct.new(doc1, nil, 8, 0), struct.new(doc2, nil, 2, 0)]
+        expect(subject).to eq [struct.new(doc1, nil, 8, 0, doc1.id), struct.new(doc2, nil, 2, 0, doc2.id)]
       end
     end
   end

@@ -39,6 +39,9 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         post :create, params: {
           collection: collection_attrs.merge(
             visibility: 'open',
+            # TODO: Tests with old approach to sharing a collection which is deprecated and
+            # will be removed in 3.0.  New approach creates a PermissionTemplate with
+            # source_id = the collection's id.
             permissions_attributes: [{ type: 'person',
                                        name: 'archivist1',
                                        access: 'edit' }]
@@ -248,7 +251,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         }
         expect(response).to be_successful
         expect(response).to render_template(:edit)
-        expect(assigns[:member_docs]).to be_kind_of Array
       end
     end
 
@@ -305,7 +307,8 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         end
       end
 
-      it "returns the collection and its members", :with_nested_reindexing do
+      it "returns the collection and its members" do
+        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         get :show, params: { id: collection }
         expect(response).to be_successful
@@ -317,7 +320,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         expect(assigns[:subcollection_count]).to eq(2)
       end
 
-      context "and searching", :with_nested_reindexing do
+      context "and searching" do
         it "returns some works and collections" do
           # "/dashboard/collections/4m90dv529?utf8=%E2%9C%93&cq=King+Louie&sort="
           get :show, params: { id: collection, cq: "Second" }
@@ -340,6 +343,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
       context "without a referer" do
         it "sets breadcrumbs" do
+          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
           get :show, params: { id: collection }
           expect(response).to be_successful
@@ -352,8 +356,9 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         end
 
         it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('Your Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('My collection', collection_path(collection.id, locale: 'en'))
           get :show, params: { id: collection }
           expect(response).to be_successful
@@ -396,7 +401,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         delete :destroy, params: { id: collection }
         expect(response).to have_http_status(:found)
         expect(response).to redirect_to(Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
-        expect(flash[:notice]).to eq "Collection #{collection.id} was successfully deleted"
+        expect(flash[:notice]).to eq "Collection was successfully deleted"
       end
 
       it "returns json" do
@@ -414,7 +419,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         delete :destroy, params: { id: collection }
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response).to render_template(:edit)
-        expect(flash[:notice]).to eq "Collection #{collection.id} could not be deleted"
+        expect(flash[:notice]).to eq "Collection could not be deleted"
       end
 
       it "returns json" do
@@ -436,6 +441,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
     context "without a referer" do
       it "sets breadcrumbs" do
+        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         get :edit, params: { id: collection }
         expect(response).to be_successful
@@ -448,8 +454,9 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       end
 
       it "sets breadcrumbs" do
-        expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Your Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(I18n.t("hyrax.collection.browse_view"), collection_path(collection.id, locale: 'en'))
         get :edit, params: { id: collection }
         expect(response).to be_successful

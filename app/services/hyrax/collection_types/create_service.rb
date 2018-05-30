@@ -14,6 +14,7 @@ module Hyrax
       DEFAULT_OPTIONS = {
         description: '',
         nestable: true,
+        brandable: true,
         discoverable: true,
         sharable: true,
         share_applies_to_new_works: true,
@@ -21,6 +22,7 @@ module Hyrax
         require_membership: false,
         assigns_workflow: false,
         assigns_visibility: false,
+        badge_color: "#663333",
         participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
                        { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.registered_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
       }.freeze
@@ -30,6 +32,7 @@ module Hyrax
       USER_COLLECTION_OPTIONS = {
         description: I18n.t('hyrax.collection_types.create_service.default_description'),
         nestable: true,
+        brandable: true,
         discoverable: true,
         sharable: true,
         share_applies_to_new_works: false,
@@ -37,6 +40,7 @@ module Hyrax
         require_membership: false,
         assigns_workflow: false,
         assigns_visibility: false,
+        badge_color: "#705070",
         participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
                        { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.registered_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
       }.freeze
@@ -46,6 +50,7 @@ module Hyrax
       ADMIN_SET_OPTIONS = {
         description: I18n.t('hyrax.collection_types.create_service.admin_set_description'),
         nestable: false,
+        brandable: false,
         discoverable: false,
         sharable: true,
         share_applies_to_new_works: true,
@@ -53,6 +58,7 @@ module Hyrax
         require_membership: true,
         assigns_workflow: true,
         assigns_visibility: true,
+        badge_color: "#405060",
         participants: [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
                        { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE, agent_id: ::Ability.admin_group_name, access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS }]
       }.freeze
@@ -66,6 +72,7 @@ module Hyrax
       # @param options [Hash] options to override DEFAULT_OPTIONS
       # @option options [String] :description a description to show the user when selecting the collection type
       # @option options [Boolean] :nestable if true, collections of this type can be nested
+      # @option options [Boolean] :brandable if true, collections of this type can be branded
       # @option options [Boolean] :discoverable if true, collections of this type can be marked Public and found in search results
       # @option options [Boolean] :sharable if true, collections of this type can have participants added for :manage, :deposit, or :view access
       # @option options [Boolean] :share_applies_to_new_works if true, share participant permissions are applied to new works created in the collection
@@ -74,6 +81,7 @@ module Hyrax
       #   with allow_multiple_membership=false, works can belong to one and only one collection of this type.
       # @option options [Boolean] :assigns_workflow if true, collections of this type can be used to assign a workflow to a work
       # @option options [Boolean] :assigns_visibility if true, collections of this type can be used to assign initial visibility to a work
+      # @option options [String] :badge_color a color for the badge to show the user when selecting the collection type
       # @return [Hyrax::CollectionType] the newly created collection type instance
       def self.create_collection_type(machine_id:, title:, options: {})
         opts = DEFAULT_OPTIONS.merge(options).except(:participants)
@@ -119,23 +127,46 @@ module Hyrax
         add_participants(collection_type_id, default_participants)
       end
 
+      ##
       # @api public
       #
       # Add a participants to a collection_type.
       #
       # @param collection_type_id [Integer] the id of the collection type
-      # @param participants [Array<Hash>] each element holds agent_type, agent_id, and access for a participant to be added
+      # @param participants [Array<Hash>] each element holds agent_type, agent_id,
+      #   and access for a participant to be added
+      #
+      # @raise [InvalidParticipantError] if a participant is missing an
+      #   `agent_type`, `agent_id`, or `access`.
       def self.add_participants(collection_type_id, participants)
-        return unless collection_type_id && participants.count > 0
+        raise(InvalidParticipantError, participants) unless
+          participants.all? { |p| p.key?(:agent_type) && p.key?(:agent_id) && p.key?(:access) }
+
         participants.each do |p|
-          begin
-            agent_type = p.fetch(:agent_type)
-            agent_id = p.fetch(:agent_id)
-            access = p.fetch(:access)
-            Hyrax::CollectionTypeParticipant.create!(hyrax_collection_type_id: collection_type_id, agent_type: agent_type, agent_id: agent_id, access: access)
-          rescue => e
-            Rails.logger.error "Participant not created for collection type #{collection_type_id}: #{agent_type}, #{agent_id}, #{access} -- reason: #{e.class.name} - #{e.message}\n"
-          end
+          Hyrax::CollectionTypeParticipant.create!(hyrax_collection_type_id: collection_type_id, agent_type: p.fetch(:agent_type), agent_id: p.fetch(:agent_id), access: p.fetch(:access))
+        end
+      rescue InvalidParticipantError => error
+        Rails.logger.error "Participants not created for collection type " \
+                           " #{collection_type_id}: #{error.message}"
+        raise error
+      end
+
+      ##
+      # An error class for the case that invalid/incomplete participants are
+      # added to a collection type.
+      class InvalidParticipantError < RuntimeError
+        attr_reader :participants
+
+        def initialize(participants)
+          @participants = participants
+        end
+
+        ##
+        # @return [String]
+        def message
+          @participants.map do |participant|
+            "#{participant[:agent_type]}, #{participant[:agent_id]}, #{participant[:access]}"
+          end.join("--\n")
         end
       end
     end

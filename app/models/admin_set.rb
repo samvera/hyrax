@@ -83,12 +83,34 @@ class AdminSet < ActiveFedora::Base
   # Calculate and update who should have edit access based on who
   # has "manage" access in the PermissionTemplateAccess
   def reset_access_controls!
-    # NOTE: This is different from Collections in that it doesn't update read access.  See the notes in services/hyrax/collections/permissions_service.rb
-    update!(edit_users: permission_template.agent_ids_for(access: 'manage', agent_type: 'user'),
-            edit_groups: permission_template.agent_ids_for(access: 'manage', agent_type: 'group'))
+    # NOTE: This is different from Collections in that it doesn't update read access based on visibility.
+    #       See also app/models/concerns/hyrax/collection_behavior.rb#reset_access_controls!
+    update!(edit_users: permission_template_edit_users,
+            edit_groups: permission_template_edit_groups,
+            read_users: permission_template_read_users,
+            read_groups: permission_template_read_groups)
   end
 
   private
+
+    def permission_template_edit_users
+      permission_template.agent_ids_for(access: 'manage', agent_type: 'user')
+    end
+
+    def permission_template_edit_groups
+      permission_template.agent_ids_for(access: 'manage', agent_type: 'group')
+    end
+
+    def permission_template_read_users
+      (permission_template.agent_ids_for(access: 'view', agent_type: 'user') +
+          permission_template.agent_ids_for(access: 'deposit', agent_type: 'user')).uniq
+    end
+
+    def permission_template_read_groups
+      (permission_template.agent_ids_for(access: 'view', agent_type: 'group') +
+        permission_template.agent_ids_for(access: 'deposit', agent_type: 'group')).uniq -
+        [::Ability.registered_group_name, ::Ability.public_group_name]
+    end
 
     def destroy_permission_template
       permission_template.destroy

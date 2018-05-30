@@ -1,15 +1,17 @@
 export default class {
   constructor() {
-    this.collections_table = $('#analytics-collections-table');
+    this.collections_table_body = $('#analytics-collections-table tbody');
     this.works_table = $('#analytics-works-table');
     this.admin_repo_charts = $('.admin-repo-charts');
 
     this.createDataTables();
+    this.getPinnedCollections();
+    this.pinCollection();
     this.transitionChart();
   }
 
   createDataTables() {
-    this.collections_table.DataTable();
+    let analytics_collections = this.collections_table.DataTable({ responsive: true });
 
     // Uses server side sorting, etc. Generally there will be way too many works to show them in one go
     let analytics_works = this.works_table.DataTable({
@@ -33,10 +35,55 @@ export default class {
       },
       searchDelay: 350,
       processing: true,
-      serverSide: true
+      serverSide: true,
+      responsive: true
     });
 
     this.minTableSearchLength('analytics-works-table', analytics_works);
+    this.preventDuplicateTables(analytics_collections, analytics_works);
+  }
+
+  getPinnedCollections() {
+    $.ajax({
+      method: 'GET',
+      url: '/analytics/all_pinned_collections',
+      data: { user_id: $('#pinned-0').attr('data-user_id') }
+    }).done((data) => {
+      data.forEach((d) => {
+        let selector = $("path[data-collection='" + d.collection + "']");
+
+        selector.removeClass('not-pinned')
+          .addClass('pinned');
+
+        // Set correct sort ordering for pinned collections
+        selector.closest('td')
+          .attr('data-order', `1-${d.collection}`);
+      });
+    }).fail((jqXHR, textStatus) => {
+      console.log(`Request failed: ${textStatus}. Unable to retrieve pinned collections`);
+    });
+  }
+
+  pinCollection() {
+    this.collections_table_body.on('click', (e) => {
+      let target = $('#' + e.target.id);
+      let pinned = !target.hasClass('pinned');
+      let is_pinned = (pinned) ? 1 : 0;
+
+      target.toggleClass('pinned', pinned);
+      target.toggleClass('not-pinned', !target.hasClass('not-pinned'));
+
+      // Update pinned status in the db
+      $.ajax({
+        method: 'POST',
+        url: '/analytics/pin_collection',
+        data: { status: is_pinned, user_id: target.attr('data-user_id'), collection: target.attr('data-collection') }
+      }).done((data) => {
+        target.text('Unpin Collection')
+      }).fail((jqXHR, textStatus) => {
+        console.log(`Request failed: ${textStatus}. Unable to update collection`);
+      });
+    });
   }
 
   /**
@@ -59,6 +106,19 @@ export default class {
           table_obj.search('').draw();
         }
       });
+  }
+
+  /**
+   * Destroy existing dataTables or Turbolinks keeps adding them to the page
+   * when user hits back/forward buttons
+   * @param collections
+   * @param works
+   */
+  preventDuplicateTables(collections, works) {
+    $(document).on('turbolinks:before-cache', function() {
+      collections.destroy();
+      works.destroy();
+    });
   }
 
   /**

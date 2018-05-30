@@ -23,6 +23,7 @@ RSpec.describe 'AdminSetAbility' do
       is_expected.to be_able_to(:manage, AdminSet)
       is_expected.to be_able_to(:manage_any, AdminSet)
       is_expected.to be_able_to(:create_any, AdminSet)
+      is_expected.to be_able_to(:create, AdminSet)
       is_expected.to be_able_to(:view_admin_show_any, AdminSet)
       is_expected.to be_able_to(:edit, admin_set)
       is_expected.to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb
@@ -72,6 +73,7 @@ RSpec.describe 'AdminSetAbility' do
     it 'denies manage ability' do
       is_expected.not_to be_able_to(:manage, AdminSet)
       is_expected.not_to be_able_to(:create_any, AdminSet) # granted by collection type, not collection
+      is_expected.not_to be_able_to(:create, AdminSet)
     end
   end
 
@@ -100,6 +102,7 @@ RSpec.describe 'AdminSetAbility' do
       is_expected.not_to be_able_to(:manage, AdminSet)
       is_expected.not_to be_able_to(:manage_any, AdminSet)
       is_expected.not_to be_able_to(:create_any, AdminSet) # granted by collection type, not collection
+      is_expected.not_to be_able_to(:create, AdminSet)
       is_expected.not_to be_able_to(:edit, admin_set)
       is_expected.not_to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb
       is_expected.not_to be_able_to(:update, admin_set)
@@ -133,6 +136,7 @@ RSpec.describe 'AdminSetAbility' do
       is_expected.not_to be_able_to(:manage, AdminSet)
       is_expected.not_to be_able_to(:manage_any, AdminSet)
       is_expected.not_to be_able_to(:create_any, AdminSet) # granted by collection type, not collection
+      is_expected.not_to be_able_to(:create, AdminSet)
       is_expected.not_to be_able_to(:edit, admin_set)
       is_expected.not_to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb
       is_expected.not_to be_able_to(:update, admin_set)
@@ -154,6 +158,7 @@ RSpec.describe 'AdminSetAbility' do
       is_expected.not_to be_able_to(:manage, AdminSet)
       is_expected.not_to be_able_to(:manage_any, AdminSet)
       is_expected.not_to be_able_to(:create_any, AdminSet) # granted by collection type, not collection
+      is_expected.not_to be_able_to(:create, AdminSet)
       is_expected.not_to be_able_to(:view_admin_show_any, AdminSet)
       is_expected.not_to be_able_to(:edit, admin_set)
       is_expected.not_to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb

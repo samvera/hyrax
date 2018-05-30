@@ -31,7 +31,7 @@
 
 //= require clipboard
 
-// TODO: Consider removing? jcoyne thinks this is primarily needed for testing with PhantomJS:
+// This is required for Jasmine tests, specifically to polyfill the Symbol() function
 //= require babel/polyfill
 // CustomElements polyfill is a dependency of time-elements
 //= require webcomponentsjs/0.5.4/CustomElements.min
@@ -54,6 +54,7 @@
 //= require hyrax/browse_everything
 //= require hyrax/search
 //= require hyrax/content_blocks
+//= require hyrax/nav_safety
 //= require hyrax/ga_events
 //= require hyrax/select_submit
 //= require hyrax/tabs
@@ -87,8 +88,9 @@
 //= require hyrax/relationships
 //= require hyrax/select_work_type
 //= require hyrax/collections
-//= require hyrax/collections_forms
+//= require hyrax/collections_v2
 //= require hyrax/collection_types
+//= require hyrax/collections_utils
 //= require hyrax/select_collection_type
 //= require hydra-editor/hydra-editor
 //= require nestable
@@ -101,6 +103,7 @@
 //= require hyrax/thumbnail_select
 //= require hyrax/batch_select
 //= require hyrax/tabbed_form
+//= require hyrax/turbolinks_events
 
 // this needs to be after batch_select so that the form ids get setup correctly
 //= require hyrax/batch_edit

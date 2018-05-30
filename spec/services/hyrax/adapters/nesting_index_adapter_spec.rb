@@ -38,12 +38,16 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
   describe '.find_index_document_by' do
     subject { described_class.find_index_document_by(id: id) }
 
-    context 'with a not found id ' do
+    context 'with id not in solr, it builds from Fedora' do
       let(:id) { 'so-very-missing-no-document-here' }
+      let(:document) { double("Document", id: id, fetch: nil) }
+      let(:object) { double("Object_to_reindex", id: id, to_solr: document) }
 
-      it 'raises RuntimeError' do
-        expect { subject }.to raise_error(RuntimeError)
+      before do
+        allow(ActiveFedora::Base).to receive(:find).with(id).and_return(object)
       end
+
+      it { is_expected.to be_a(Samvera::NestingIndexer::Documents::IndexDocument) }
     end
 
     context 'with a found id' do
@@ -80,13 +84,15 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
 
   describe '.each_child_document_of', clean_repo: true do
     let(:ancestors_key) { described_class.solr_field_name_for_storing_ancestors }
+    let(:pathnames_key) { described_class.solr_field_name_for_storing_pathnames }
     let(:index_document_class) { Samvera::NestingIndexer::Documents::IndexDocument }
     let(:parent) { { id: document.id } }
     let(:document) { index_document_class.new(id: 'parent-1', pathnames: ['parent-1'], parent_ids: [], ancestors: []) }
     let(:children) do
       [{ id: 'child-1',
          member_of_collection_ids_ssim: [document.id],
-         ancestors_key => [document.id] },
+         ancestors_key => [document.id],
+         pathnames_key => ['child-1'] },
        { id: 'child-2',
          member_of_collection_ids_ssim: [document.id],
          ancestors_key => [document.id] }]
@@ -94,10 +100,12 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
     let(:not_my_children) do
       [{ id: 'youre-not-my-dad-1',
          member_of_collection_ids_ssim: ['parent-2'],
-         ancestors_key => ['parent-2'] },
+         ancestors_key => ['parent-2'],
+         pathnames_key => ['youre-not-my-dad-1'] },
        { id: 'i-am-your-grandchild',
          member_of_collection_ids_ssim: ['parent-3'],
-         ancestors_key => ['parent-1/parent-3'] }]
+         ancestors_key => ['parent-1/parent-3'],
+         pathnames_key => ['i-am-your-grandchild'] }]
     end
 
     before do
@@ -106,15 +114,31 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
       end
     end
 
-    it 'yields all of the child solr-documents of the given document' do
-      child_index_documents = []
-      described_class.each_child_document_of(document: document) do |doc|
-        child_index_documents << doc
+    context 'with full reindexing extent' do
+      it 'yields all of the child solr-documents of the given document' do
+        child_index_documents = []
+        described_class.each_child_document_of(document: document, extent: Hyrax::Adapters::NestingIndexAdapter::FULL_REINDEX) do |doc|
+          child_index_documents << doc
+        end
+        expect(child_index_documents.count).to eq(2)
+        child_index_documents.each do |child|
+          expect(child).to be_a(index_document_class)
+          expect(child.ancestors).to eq([document.id])
+        end
       end
-      expect(child_index_documents.count).to eq(2)
-      child_index_documents.each do |child|
-        expect(child).to be_a(index_document_class)
-        expect(child.ancestors).to eq([document.id])
+    end
+
+    context 'with limited reindexing extent' do
+      it 'yields only child documents without pathnames' do
+        child_index_documents = []
+        described_class.each_child_document_of(document: document, extent: Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX) do |doc|
+          child_index_documents << doc
+        end
+        expect(child_index_documents.count).to eq(1)
+        child_index_documents.each do |child|
+          expect(child).to be_a(index_document_class)
+          expect(child.ancestors).to eq([document.id])
+        end
       end
     end
   end
@@ -157,16 +181,6 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
       expect(newly_queried_solr_document.fetch(described_class.solr_field_name_for_deepest_nested_depth)).to eq(nesting_document.deepest_nested_depth)
     end
     # rubocop:enable RSpec/ExampleLength
-  end
-
-  describe '.write_document_attributes_to_index_layer' do
-    it 'is not implemented and deprecated' do
-      expect do
-        described_class.write_document_attributes_to_index_layer(
-          id: 1, parent_ids: 2, ancestors: 3, pathnames: 4, deepest_nested_depth: 5
-        )
-      end.to raise_error(NotImplementedError)
-    end
   end
 
   describe '.solr_field_name_for_storing_ancestors' do

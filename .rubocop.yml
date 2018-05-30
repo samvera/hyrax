@@ -24,6 +24,7 @@ Metrics/BlockLength:
     - 'app/models/concerns/hyrax/content_block_behavior.rb'
     - 'app/services/hyrax/workflow/workflow_schema.rb'
     - 'config/initializers/simple_form.rb'
+    - 'config/features.rb'
     - 'config/routes.rb'
     - 'lib/generators/hyrax/templates/catalog_controller.rb'
     - 'lib/generators/hyrax/templates/config/initializers/simple_form_bootstrap.rb'

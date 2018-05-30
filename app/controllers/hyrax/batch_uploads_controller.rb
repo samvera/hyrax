@@ -60,7 +60,7 @@ module Hyrax
         # Calling `#t` in a controller context does not mark _html keys as html_safe
         flash[:notice] = view_context.t('hyrax.works.create.after_create_html', application_name: view_context.application_name)
         if uploading_on_behalf_of?
-          redirect_to hyrax.dashboard_shares_path
+          redirect_to hyrax.dashboard_works_path
         else
           redirect_to hyrax.my_works_path
         end

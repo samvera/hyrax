@@ -32,6 +32,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     subject { presenter }
 
     it { is_expected.to delegate_method(:collection_type_is_nestable?).to(:collection_type).as(:nestable?) }
+    it { is_expected.to delegate_method(:collection_type_is_brandable?).to(:collection_type).as(:brandable?) }
     it { is_expected.to delegate_method(:collection_type_is_discoverable?).to(:collection_type).as(:discoverable?) }
     it { is_expected.to delegate_method(:collection_type_is_sharable?).to(:collection_type).as(:sharable?) }
     it { is_expected.to delegate_method(:collection_type_is_share_applies_to_new_works?).to(:collection_type).as(:share_applies_to_new_works?) }
@@ -321,104 +322,16 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
   end
 
-  describe "#more_parent_collections?" do
-    subject { presenter.more_parent_collections? }
-
-    context('when parent_collections is has no collections') do
-      before do
-        allow(presenter).to receive(:parent_collection_count).and_return(0)
-      end
-
-      it { is_expected.to eq false }
-    end
-
-    context('when parent_collections has less than or equal to show limit') do
-      before do
-        allow(presenter).to receive(:parent_collection_count).and_return(3)
-      end
-
-      it { is_expected.to eq false }
-    end
-
-    context('when parent_collections has more than show limit') do
-      before do
-        allow(presenter).to receive(:parent_collection_count).and_return(4)
-      end
-
-      it { is_expected.to eq true }
-    end
-  end
-
-  describe "#visible_parent_collections" do
-    subject { presenter.visible_parent_collections }
-
-    let(:collection1) { build(:collection, title: ['col1']) }
-    let(:collection2) { build(:collection, title: ['col2']) }
-    let(:collection3) { build(:collection, title: ['col3']) }
-    let(:collection4) { build(:collection, title: ['col4']) }
-    let(:collection5) { build(:collection, title: ['col5']) }
-    let(:parent_collections) { double(Object, documents: parent_docs, response: { "numFound" => parent_docs.size }, total_pages: 1) }
-
+  describe "#collection_type_badge" do
+    let(:collection_type) { create(:collection_type) }
     before do
-      presenter.parent_collections = parent_collections
+      allow(collection_type).to receive(:badge_color).and_return("#ffa510")
+      allow(presenter).to receive(:collection_type).and_return(collection_type)
     end
 
-    context('when parent_collections is nil') do
-      let(:parent_collections) { nil }
+    subject { presenter.collection_type_badge }
 
-      it { is_expected.to eq [] }
-    end
-
-    context('when parent_collections has less than or equal to show limit') do
-      let(:parent_docs) { [collection1, collection2, collection3] }
-
-      it { is_expected.to include(collection1, collection2, collection3) }
-    end
-
-    context('when parent_collections has more than show limit') do
-      let(:parent_docs) { [collection1, collection2, collection3, collection4, collection5] }
-
-      it { is_expected.to include(collection1, collection2, collection3) }
-    end
-  end
-
-  describe "#more_parent_collections" do
-    subject { presenter.more_parent_collections }
-
-    let(:collection1) { build(:collection, title: ['col1']) }
-    let(:collection2) { build(:collection, title: ['col2']) }
-    let(:collection3) { build(:collection, title: ['col3']) }
-    let(:collection4) { build(:collection, title: ['col4']) }
-    let(:collection5) { build(:collection, title: ['col5']) }
-    let(:parent_collections) { double(Object, documents: parent_docs, response: { "numFound" => parent_docs.size }, total_pages: 1) }
-
-    before do
-      presenter.parent_collections = parent_collections
-    end
-
-    context('when parent_collections is nil') do
-      let(:parent_collections) { nil }
-
-      it { is_expected.to eq [] }
-    end
-
-    context('when parent_collections is empty') do
-      let(:parent_docs) { [] }
-
-      it { is_expected.to eq [] }
-    end
-
-    context('when parent_collections has less than or equal to show limit') do
-      let(:parent_docs) { [collection1, collection2, collection3] }
-
-      it { is_expected.to eq [] }
-    end
-
-    context('when parent_collections has more than show limit') do
-      let(:parent_docs) { [collection1, collection2, collection3, collection4, collection5] }
-
-      it { is_expected.to include(collection4, collection5) }
-    end
+    it { is_expected.to eq "<span class=\"label\" style=\"background-color: #ffa510;\">" + collection_type.title + "</span>" }
   end
 
   describe "#user_can_nest_collection?" do
@@ -444,7 +357,7 @@ RSpec.describe Hyrax::CollectionPresenter do
   describe '#show_path' do
     subject { presenter.show_path }
 
-    it { is_expected.to eq "/dashboard/collections/#{solr_doc.id}" }
+    it { is_expected.to eq "/dashboard/collections/#{solr_doc.id}?locale=en" }
   end
 
   describe "banner_file" do
@@ -491,4 +404,58 @@ RSpec.describe Hyrax::CollectionPresenter do
   it { is_expected.to delegate_method(:related_url).to(:solr_document) }
   it { is_expected.to delegate_method(:identifier).to(:solr_document) }
   it { is_expected.to delegate_method(:date_created).to(:solr_document) }
+
+  describe '#managed_access' do
+    context 'when manager' do
+      before do
+        allow(ability).to receive(:can?).with(:edit, solr_doc).and_return(true)
+      end
+      it 'returns Manage label' do
+        expect(presenter.managed_access).to eq 'Manage'
+      end
+    end
+
+    context 'when depositor' do
+      before do
+        allow(ability).to receive(:can?).with(:edit, solr_doc).and_return(false)
+        allow(ability).to receive(:can?).with(:deposit, solr_doc).and_return(true)
+      end
+      it 'returns Deposit label' do
+        expect(presenter.managed_access).to eq 'Deposit'
+      end
+    end
+
+    context 'when manager' do
+      before do
+        allow(ability).to receive(:can?).with(:edit, solr_doc).and_return(false)
+        allow(ability).to receive(:can?).with(:deposit, solr_doc).and_return(false)
+        allow(ability).to receive(:can?).with(:read, solr_doc).and_return(true)
+      end
+      it 'returns View label' do
+        expect(presenter.managed_access).to eq 'View'
+      end
+    end
+  end
+
+  describe '#allow_batch?' do
+    context 'when user cannot edit' do
+      before do
+        allow(ability).to receive(:can?).with(:edit, solr_doc).and_return(false)
+      end
+
+      it 'returns false' do
+        expect(presenter.allow_batch?).to be false
+      end
+    end
+
+    context 'when user can edit' do
+      before do
+        allow(ability).to receive(:can?).with(:edit, solr_doc).and_return(true)
+      end
+
+      it 'returns false' do
+        expect(presenter.allow_batch?).to be true
+      end
+    end
+  end
 end

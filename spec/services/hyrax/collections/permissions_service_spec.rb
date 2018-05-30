@@ -26,10 +26,10 @@ RSpec.describe Hyrax::Collections::PermissionsService do
 
       subject { described_class }
 
-      it ".can_deposit_in_collection? returns true" do
+      it '.can_deposit_in_collection? returns true' do
         expect(subject.can_deposit_in_collection?(collection_id: collection.id, ability: ability)).to be true
       end
-      it ".can_view_admin_show_for_collection? returns true" do
+      it '.can_view_admin_show_for_collection? returns true' do
         expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, ability: ability)).to be true
       end
     end
@@ -46,10 +46,10 @@ RSpec.describe Hyrax::Collections::PermissionsService do
 
       subject { described_class }
 
-      it ".can_deposit_in_collection? returns true" do
+      it '.can_deposit_in_collection? returns true' do
         expect(subject.can_deposit_in_collection?(collection_id: collection.id, ability: ability)).to be true
       end
-      it ".can_view_admin_show_for_collection? returns true" do
+      it '.can_view_admin_show_for_collection? returns true' do
         expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, ability: ability)).to be true
       end
     end
@@ -66,21 +66,105 @@ RSpec.describe Hyrax::Collections::PermissionsService do
 
       subject { described_class }
 
-      it ".can_deposit_in_collection? returns true" do
+      it '.can_deposit_in_collection? returns false' do
         expect(subject.can_deposit_in_collection?(collection_id: collection.id, ability: ability)).to be false
       end
-      it ".can_view_admin_show_for_collection? returns true" do
+      it '.can_view_admin_show_for_collection? returns true' do
         expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, ability: ability)).to be true
+      end
+    end
+
+    context 'when deposit user' do
+      context 'thru membership in public group' do
+        before do
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'user', access: 'manage').and_return([])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'user', access: 'deposit').and_return([])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'user', access: 'view').and_return([])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'group', access: 'manage').and_return([])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'group', access: 'deposit').and_return(['public'])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'group', access: 'view').and_return([])
+        end
+
+        subject { described_class }
+
+        it '.can_deposit_in_collection? returns true' do
+          expect(subject.can_deposit_in_collection?(collection_id: collection.id, ability: ability)).to be true
+        end
+        it '.can_view_admin_show_for_collection? returns false' do
+          expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, ability: ability)).to be false
+        end
+      end
+
+      context 'thru membership in registered group' do
+        before do
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'user', access: 'manage').and_return([])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'user', access: 'deposit').and_return([])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'user', access: 'view').and_return([])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'group', access: 'manage').and_return([])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'group', access: 'deposit').and_return(['registered'])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'group', access: 'view').and_return([])
+        end
+
+        subject { described_class }
+
+        it '.can_deposit_in_collection? returns true' do
+          expect(subject.can_deposit_in_collection?(collection_id: collection.id, ability: ability)).to be true
+        end
+        it '.can_view_admin_show_for_collection? returns false' do
+          expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, ability: ability)).to be false
+        end
+      end
+    end
+
+    context 'when view user' do
+      context 'thru membership in public group' do
+        before do
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'user', access: 'manage').and_return([])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'user', access: 'deposit').and_return([])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'user', access: 'view').and_return([])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'group', access: 'manage').and_return([])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'group', access: 'deposit').and_return([])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'group', access: 'view').and_return(['public'])
+        end
+
+        subject { described_class }
+
+        it '.can_deposit_in_collection? returns false' do
+          expect(subject.can_deposit_in_collection?(collection_id: collection.id, ability: ability)).to be false
+        end
+        it '.can_view_admin_show_for_collection? returns false' do
+          expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, ability: ability)).to be false
+        end
+      end
+
+      context 'thru membership in registered group' do
+        before do
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'user', access: 'manage').and_return([])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'user', access: 'deposit').and_return([])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'user', access: 'view').and_return([])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'group', access: 'manage').and_return([])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'group', access: 'deposit').and_return([])
+          allow(col_permission_template).to receive(:agent_ids_for).with(agent_type: 'group', access: 'view').and_return(['registered'])
+        end
+
+        subject { described_class }
+
+        it '.can_deposit_in_collection? returns false' do
+          expect(subject.can_deposit_in_collection?(collection_id: collection.id, ability: ability)).to be false
+        end
+        it '.can_view_admin_show_for_collection? returns false' do
+          expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, ability: ability)).to be false
+        end
       end
     end
 
     context 'when user without access' do
       subject { described_class }
 
-      it ".can_deposit_in_collection? returns true" do
+      it '.can_deposit_in_collection? returns false' do
         expect(subject.can_deposit_in_collection?(collection_id: collection.id, ability: ability)).to be false
       end
-      it ".can_view_admin_show_for_collection? returns true" do
+      it '.can_view_admin_show_for_collection? returns false' do
         expect(subject.can_view_admin_show_for_collection?(collection_id: collection.id, ability: ability)).to be false
       end
     end
@@ -186,6 +270,10 @@ RSpec.describe Hyrax::Collections::PermissionsService do
       end
       it 'returns admin set ids where user has deposit access' do
         expect(described_class.source_ids_for_deposit(ability: ability, source_type: 'admin_set')).to match_array [as_du.id, as_dg.id, as_mu.id, as_mg.id]
+      end
+      it 'returns admin set ids where user has deposit access except excluded groups' do
+        expect(described_class.source_ids_for_deposit(ability: ability, source_type: 'admin_set', exclude_groups: ['deposit_group']))
+          .to match_array [as_du.id, as_mu.id, as_mg.id]
       end
 
       context 'when user has no access' do

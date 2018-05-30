@@ -29,6 +29,7 @@ module Hyrax
         Hyrax::CollectionTypes::CreateService.add_default_participants(@collection_type.id)
         redirect_to hyrax.edit_admin_collection_type_path(@collection_type), notice: t(:'hyrax.admin.collection_types.create.notification', name: @collection_type.title)
       else
+        report_error_msg
         setup_form
         add_common_breadcrumbs
         add_breadcrumb t(:'hyrax.admin.collection_types.new.header'), hyrax.new_admin_collection_type_path
@@ -64,6 +65,15 @@ module Hyrax
 
     private
 
+      def report_error_msg
+        error_msg = @collection_type.errors.messages
+        msg = 'Save was not successful because '
+        error_msg.each { |k, v| msg << k.to_s + ' ' + v.join(', ') + ', and ' }
+        msg.chomp!(', and ')
+        msg << '.'
+        flash[:error] = msg
+      end
+
       def update_referer
         hyrax.edit_admin_collection_type_path(@collection_type) + (params[:referer_anchor] || '')
       end
@@ -90,8 +100,8 @@ module Hyrax
       end
 
       def collection_type_params
-        params.require(:collection_type).permit(:title, :description, :nestable, :discoverable, :sharable, :share_applies_to_new_works,
-                                                :allow_multiple_membership, :require_membership, :assigns_workflow, :assigns_visibility)
+        params.require(:collection_type).permit(:title, :description, :nestable, :brandable, :discoverable, :sharable, :share_applies_to_new_works,
+                                                :allow_multiple_membership, :require_membership, :assigns_workflow, :assigns_visibility, :badge_color)
       end
   end
 end

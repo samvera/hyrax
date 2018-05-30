@@ -118,7 +118,7 @@ module Hyrax
 
     attr_writer :noid_minter_class
     def noid_minter_class
-      @noid_minter_class ||= Noid::Rails::Minter::Db
+      @noid_minter_class ||= ::Noid::Rails::Minter::Db
     end
 
     attr_writer :minter_statefile
@@ -503,7 +503,7 @@ module Hyrax
     attr_accessor :nested_relationship_reindexer
 
     def default_nested_relationship_reindexer
-      ->(id:) { Samvera::NestingIndexer.reindex_relationships(id: id) }
+      ->(id:, extent:) { Samvera::NestingIndexer.reindex_relationships(id: id, extent: extent) }
     end
 
     private

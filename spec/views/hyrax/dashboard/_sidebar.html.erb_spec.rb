@@ -129,4 +129,26 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
     it { is_expected.to have_content t('hyrax.admin.sidebar.configuration') }
     it { is_expected.to have_link t('hyrax.admin.sidebar.collection_types') }
   end
+
+  context 'when proxy deposits are enabled' do
+    before do
+      allow(Flipflop).to receive(:proxy_deposit?).and_return(true)
+      render
+    end
+
+    subject { rendered }
+
+    it { is_expected.to have_link t('hyrax.dashboard.manage_proxies') }
+  end
+
+  context 'when proxy deposits are disabled' do
+    before do
+      allow(Flipflop).to receive(:proxy_deposit?).and_return(false)
+      render
+    end
+
+    subject { rendered }
+
+    it { is_expected.not_to have_link t('hyrax.dashboard.manage_proxies') }
+  end
 end

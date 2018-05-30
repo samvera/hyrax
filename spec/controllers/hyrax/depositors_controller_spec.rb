@@ -68,6 +68,17 @@ RSpec.describe Hyrax::DepositorsController do
         expect { delete :destroy, params: revoke_proxy_params }.to change { ProxyDepositRights.count }.by(-1)
       end
     end
+
+    describe "index" do
+      it "renders the page with user proxy info" do
+        expect(controller).to receive(:add_breadcrumb).with('Home', root_path)
+        expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path)
+        expect(controller).to receive(:add_breadcrumb).with('Manage Proxies', depositors_path)
+        get :index
+        expect(response).to be_successful
+        expect(response).to render_template('dashboard')
+      end
+    end
   end
 
   context "as a user without access" do

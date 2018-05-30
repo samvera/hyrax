@@ -34,6 +34,14 @@ RSpec.describe 'Routes', type: :routing do
     it "routes to analytics repository objects chart update" do
       expect(get: '/analytics/repository_object_counts').to route_to(controller: 'hyrax/analytics', action: 'repository_object_counts')
     end
+
+    it "get users pinned collections" do
+      expect(get: '/analytics/all_pinned_collections').to route_to(controller: 'hyrax/analytics', action: 'all_pinned_collections')
+    end
+
+    it "pins/unpins collections" do
+      expect(post: '/analytics/pin_collection').to route_to(controller: 'hyrax/analytics', action: 'pin_collection')
+    end
   end
 
   describe 'FileSet' do

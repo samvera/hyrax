@@ -10,6 +10,7 @@
       <%= f.object.errors.full_messages_for(:base).send(SimpleForm.error_method) %>
       <%= render 'form_in_works_error', f: f %>
       <%= render 'form_ordered_members_error', f: f %>
+      <%= render 'form_collections_error', f: f %>
       <%= render 'form_visibility_error', f: f %>
     </div>
   <% end %>

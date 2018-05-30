@@ -5,6 +5,7 @@
 <div class="collection-types-settings">
   <div class="form-inline">
     <p><%= f.input :nestable, as: :boolean, disabled: f.object.all_settings_disabled? %></p>
+    <p><%= f.input :brandable, as: :boolean, disabled: f.object.all_settings_disabled? %></p>
     <p><%= f.input :discoverable, as: :boolean, disabled: f.object.all_settings_disabled? %></p>
     <p><%= f.input :sharable, as: :boolean, disabled: f.object.all_settings_disabled? %></p>
     <% # Using html instead of simple_form to allow adding of disabled class to elements through javascript settings.es6 %>
@@ -15,7 +16,7 @@
           <input value="0"
                  name="collection_type[share_applies_to_new_works]"
                  type="hidden"
-                 <%= "disabled=\"disabled\"".html_safe if f.object.share_options_disabled? %> >
+                 <%= "disabled=\"disabled\"".html_safe if f.object.share_options_disabled? %> />
           <label id="sharable-applies-to-new-works-setting-label"
                  class="boolean optional <%= 'disabled' if f.object.share_options_disabled? %>"
                  for="collection_type_share_applies_to_new_works">
@@ -24,7 +25,7 @@
                    value="1"
                    <%= "checked=\"checked\"".html_safe if f.object.share_applies_to_new_works %>"
                    name="collection_type[share_applies_to_new_works]"
-                   type="checkbox">
+                   type="checkbox" />
             APPLY TO NEW WORKS
           </label>
         </div>

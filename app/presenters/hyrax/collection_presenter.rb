@@ -3,12 +3,11 @@ module Hyrax
     include ModelProxy
     include PresentsAttributes
     include ActionView::Helpers::NumberHelper
+    include ActionView::Helpers::TagHelper
     attr_accessor :solr_document, :current_ability, :request
     attr_reader :subcollection_count
     attr_accessor :parent_collections # This is expected to be a Blacklight::Solr::Response with all of the parent collections
     attr_writer :collection_type
-
-    NUM_PARENTS_TO_SHOW = 3
 
     class_attribute :create_work_presenter_class
     self.create_work_presenter_class = Hyrax::SelectTypeListPresenter
@@ -82,7 +81,7 @@ module Hyrax
     end
 
     def collection_type_badge
-      collection_type.title
+      content_tag(:span, collection_type.title, class: "label", style: "background-color: " + collection_type.badge_color + ";")
     end
 
     # The total number of parents that this collection belongs to, visible or not.
@@ -96,28 +95,6 @@ module Hyrax
       parent_collections.nil? ? 0 : parent_collections.documents.size
     end
 
-    # Of the number of parent collections shown on the current page, are there more to show?
-    def more_parent_collections?
-      parent_collection_count > NUM_PARENTS_TO_SHOW
-    end
-
-    # Are there few enough parent collections to use the more/less behavior?
-    def use_parent_more_less?
-      parent_collections.total_pages <= 1
-    end
-
-    # Returns a subset of parent collections that should be shown by default
-    def visible_parent_collections
-      return parent_collections.documents[0..NUM_PARENTS_TO_SHOW - 1] if more_parent_collections?
-      parent_collections && parent_collections.documents || []
-    end
-
-    # Returns the remaining subset of parent collections that should not be shown by default
-    def more_parent_collections
-      return parent_collections.documents[NUM_PARENTS_TO_SHOW..parent_collection_count - 1] if more_parent_collections?
-      []
-    end
-
     def user_can_nest_collection?
       current_ability.can?(:deposit, solr_document)
     end
@@ -127,7 +104,7 @@ module Hyrax
     end
 
     def show_path
-      Hyrax::Engine.routes.url_helpers.dashboard_collection_path(id)
+      Hyrax::Engine.routes.url_helpers.dashboard_collection_path(id, locale: I18n.locale)
     end
 
     def banner_file
@@ -181,6 +158,27 @@ module Hyrax
 
     def subcollection_count=(total)
       @subcollection_count = total unless total.nil?
+    end
+
+    # For the Managed Collections tab, determine the label to use for the level of access the user has for this admin set.
+    # Checks from most permissive to most restrictive.
+    # @return String the access label (e.g. Manage, Deposit, View)
+    def managed_access
+      return I18n.t('hyrax.dashboard.my.collection_list.managed_access.manage') if current_ability.can?(:edit, solr_document)
+      return I18n.t('hyrax.dashboard.my.collection_list.managed_access.deposit') if current_ability.can?(:deposit, solr_document)
+      return I18n.t('hyrax.dashboard.my.collection_list.managed_access.view') if current_ability.can?(:read, solr_document)
+      ''
+    end
+
+    # Determine if the user can perform batch operations on this collection.  Currently, the only
+    # batch operation allowed is deleting, so this is equivalent to checking if the user can delete
+    # the collection determined by criteria...
+    # * user must be able to edit the collection to be able to delete it
+    # * the collection does not have to be empty
+    # @return Boolean true if the user can perform batch actions; otherwise, false
+    def allow_batch?
+      return true if current_ability.can?(:edit, solr_document)
+      false
     end
   end
 end

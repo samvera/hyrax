@@ -1,4 +1,4 @@
-RSpec.describe 'Creating a new Work as admin', :js, :workflow do
+RSpec.describe 'Creating a new Work as admin', :js, :workflow, perform_enqueued: [AttachFilesToWorkJob, IngestJob] do
   let(:user) { create(:admin) }
   let(:admin_set_1) do
     create(:admin_set, id: AdminSet::DEFAULT_ID,
@@ -7,7 +7,7 @@ RSpec.describe 'Creating a new Work as admin', :js, :workflow do
                        edit_users: [user.user_key])
   end
   let(:admin_set_2) do
-    create(:admin_set, title: ["Second Admin Set"],
+    create(:admin_set, title: ["Another Admin Set"],
                        description: ["A description"],
                        edit_users: [user.user_key])
   end

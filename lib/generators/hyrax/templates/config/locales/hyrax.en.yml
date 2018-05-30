@@ -1,3 +1,4 @@
+---
 en:
   blacklight:
     search:
@@ -45,13 +46,13 @@ en:
           subject_tesim: Subject
           title_tesim: Title
   hyrax:
-    account_name:           "My Institution Account Id"
+    account_name: My Institution Account Id
     directory:
-      suffix:               "@example.org"
+      suffix: "@example.org"
     footer:
       copyright_html: "<strong>Copyright &copy; 2017 Samvera</strong> Licensed under the Apache License, Version 2.0"
       service_html: A service of <a href="http://samvera.org/" class="navbar-link" target="_blank">Samvera</a>.
-    institution_name:       "Institution"
-    institution_name_full:  "The Institution Name"
-    product_name:           "Hyrax"
+    institution_name: Institution
+    institution_name_full: The Institution Name
+    product_name: Hyrax
     product_twitter_handle: "@SamveraRepo"

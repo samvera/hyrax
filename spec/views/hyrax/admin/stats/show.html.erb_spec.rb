@@ -10,6 +10,15 @@ RSpec.describe "hyrax/admin/stats/show.html.erb", type: :view do
     allow(presenter).to receive(:depositors).and_return([])
   end
 
+  context 'locales' do
+    before do
+      render
+    end
+    it 'includes a default locale hidden input' do
+      expect(rendered).to have_selector 'input', exact: 'en'
+    end
+  end
+
   context "default depositors" do
     let(:top_5_active_users) do
       (1..5).map { |i| double(label: i.to_s, value: i) }

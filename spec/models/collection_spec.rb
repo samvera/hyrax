@@ -174,6 +174,7 @@ RSpec.describe Collection, type: :model do
 
     it { is_expected.to delegate_method(:nestable?).to(:collection_type) }
     it { is_expected.to delegate_method(:discoverable?).to(:collection_type) }
+    it { is_expected.to delegate_method(:brandable?).to(:collection_type) }
     it { is_expected.to delegate_method(:sharable?).to(:collection_type) }
     it { is_expected.to delegate_method(:share_applies_to_new_works?).to(:collection_type) }
     it { is_expected.to delegate_method(:allow_multiple_membership?).to(:collection_type) }
@@ -318,7 +319,7 @@ RSpec.describe Collection, type: :model do
 
   describe '#update_nested_collection_relationship_indices', :with_nested_reindexing do
     it 'will be called after save' do
-      expect(Samvera::NestingIndexer).to receive(:reindex_relationships).with(id: kind_of(String))
+      expect(Samvera::NestingIndexer).to receive(:reindex_relationships).with(id: kind_of(String), extent: kind_of(String))
       collection.save!
     end
   end

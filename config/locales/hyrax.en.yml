@@ -17,7 +17,8 @@ en:
     search:
       fields:
         facet:
-          admin_set_sim: Collection
+          admin_set_sim: Admin Set
+          member_of_collections_ssim: Collection
           resource_type_sim: Resource type
           suppressed_bsi: Status
         show:
@@ -27,7 +28,7 @@ en:
           keyword: Keyword
       filters:
         title: 'Filtering by:'
-      start_over: Clear filters
+      start_over: Start Over
   errors:
     messages:
       carrierwave_download_error: Couldn't download image.
@@ -48,6 +49,8 @@ en:
         new: New Collection
       delete: Delete
       edit: Edit
+      less: Less
+      more: More
       refresh: Refresh
       remove: Remove
       work:
@@ -168,9 +171,10 @@ en:
           header: Create New Administrative Set
         show:
           breadcrumb: View Set
-          confirm_delete: Are you sure you wish to delete this Administrative Set? This action cannot be undone.
           header: Administrative Set
           item_list_header: Works in This Set
+        show_actions:
+          confirm_delete: Are you sure you wish to delete this Administrative Set? This action cannot be undone.
       appearances:
         show:
           header: Appearance
@@ -192,6 +196,7 @@ en:
           not_empty: Collection type cannot be altered as it has collections
         form:
           tab:
+            appearance: Badge Color
             metadata: Description
             participants: Participants
             settings: Settings
@@ -211,7 +216,9 @@ en:
             title: Managers
             type: Type
         form_participants:
+          add_group: Add group
           add_participants: Add Participants
+          add_user: Add user
           current_participants: Current Participants
           header: Collection Participants
           instructions: You can designate both groups and users as creators and managers of collections of this type
@@ -238,7 +245,8 @@ en:
             actions: Actions
             name: Name
         multiple_membership_checker:
-          error_preamble: 'Error: You have specified more than one of the same single-membership collection types'
+          error_preamble: 'Error: You have specified more than one of the same single-membership collection type '
+          error_type_and_collections: "(type: %{type}, collections: %{collections})"
         new:
           header: Create New Collection Type
           submit: Save
@@ -412,6 +420,7 @@ en:
         header: Items
         thumbnail: Thumbnail
         title: Title
+        unauthorized: There are no publicly available items in this %{type}.
         visibility: Visibility
       relationships:
         empty: This %{type} is not currently in any collections.
@@ -474,6 +483,7 @@ en:
           desc: Add existing collections to this collection
           modal_title: Add this Collection Within Another Collection
           select_label: Select collection
+        pin_collection: Pin Collection
       browse_view: Browse View
       document_list:
         edit: Edit
@@ -558,6 +568,8 @@ en:
         title: Collections
         recently_updated: Most recently updated
         pinned: Pinned
+        pin_unpin_button: Pin/unpin button
+        pin_unpin: Button to pin/unpin collections in admin dashboard
         last_updated: Last Updated
         collection: Collection Title
         files: Files
@@ -589,7 +601,7 @@ en:
         works: Managed Works
       authorize_proxies: Authorize Proxies
       breadcrumbs:
-        admin: Administration
+        admin: Dashboard
       collection_type_actions:
         close: Close
         create_collection: Create collection
@@ -633,6 +645,7 @@ en:
             this_collection_in_other_collections: This Collection in Other Collections
           modals:
             remove_from_collection_description: Removing this collection will not remove it from the repository, only as a parent of this collection.  Are you sure you want to remove this collection?
+            remove_parent_collection_deny: You do not have sufficient privileges for the parent collection to be able to remove it.
             remove_this_sub_collection_description: Removing this sub-collection will not remove it from the repository, only from this parent collection.  Are you sure you want to remove this sub-collection?
           sub_collections_of_collection_description: These collections are currently sub-collections of this collection
           table:
@@ -651,7 +664,7 @@ en:
             action: Action
             agent_name: User/Group
             empty: No depositors have been added to this collection.
-            help: Depositors of this collection can view the collection and add works to it, even if the visibility permissions of the collecton otherwise would not permit them to view it.
+            help: Depositors of this collection can view the collection and add works to it, even if the visibility permissions of the collection otherwise would not permit them to view it.
             remove: Remove
             title: Depositors
             type: Type
@@ -701,8 +714,8 @@ en:
           add_to_collection_only: Allowed actions are limited to adding members
           admin_set_confirmation: Deleting an admin set from %{application_name} is permanent. Click OK to delete this admin set from %{application_name}, or Cancel to cancel this operation
           collection_create_success: Collection was successfully created.
-          collection_delete_fail: Collection %{id} could not be deleted
-          collection_delete_success: Collection %{id} was successfully deleted
+          collection_delete_fail: Collection could not be deleted
+          collection_delete_success: Collection was successfully deleted
           collection_deny_add_members: You do not have sufficient privileges to add members to the collection
           collection_update_success: Collection was successfully updated.
           collections_confirmation_html: Deleting <span class='pluralized'>this collection</span> will permanently remove <span class='pluralized'>this collection</span> from the repository.  Items in <span class='pluralized'>this collection</span> will remain in the repository.  Are you sure you want to delete <span class='pluralized'>this collection</span>?
@@ -710,9 +723,9 @@ en:
           delete_admin_set: Delete collection
           delete_admin_set_deny: This collection is defined as Admin Set and is not empty. To delete this Admin Set, you must first remove (delete or move to another Admin Set collection) all items from the Admin Set.
           delete_collection: Delete collection
-          delete_collection_deny: You do not have sufficient privileges to delete this document.
+          delete_collection_deny: You do not have sufficient privileges to delete this collection.
           delete_collections: Delete collections
-          delete_collections_deny: You must select one or more collections to delete.
+          delete_collections_deny: You do not have sufficient privileges to delete one or more collections.
           delete_work: Delete Work
           edit_admin_set: Edit collection
           edit_collection: Edit collection
@@ -735,14 +748,19 @@ en:
           description: 'Description:'
           edit_access: 'Edit Access:'
           groups: 'Groups:'
+          managed_access:
+            deposit: Deposit
+            manage: Manage
+            view: View
           users: 'Users:'
-        collections: Your Collections
+        collections: Collections
         facet_label:
           collections: 'Filter collections:'
           highlighted: 'Filter highlights:'
           shared: 'Filter shares:'
           works: 'Filter works:'
         heading:
+          access: Access
           action: Actions
           collection_type: Collection Type
           date_modified: Last Modified
@@ -763,21 +781,25 @@ en:
           press_to: Press to
           results_per_page: Number of results to display per page
           show_label: Display all details of
-        works: Your Works
+        works: Works
+        your_collections: Your Collections
+        your_works: Your Works
       nest_collections_form:
         create_under: "'%{child_title}' has been added to '%{parent_title}'"
         create_within: "'%{child_title}' has been added to '%{parent_title}'"
         removed_relationship: "'%{child_title}' has been removed from '%{parent_title}'"
       no_activity: User has no recent activity
       no_notifications: User has no notifications
+      no_proxies: There are no proxies assigned
       no_transfer_requests: You haven't received any work transfer requests
       no_transfers: You haven't transferred any work
       proxy_activity: Proxy Activity
       proxy_delete: Delete Proxy
+      proxy_help: Select a user who can deposit works on your behalf. Both you and your proxy will be able to make changes to these works. You can revoke a proxy by clicking the Delete Proxy button. To revoke their ability to edit a work they previously submitted, remove them from the Sharing tab on each work.
       proxy_user: Proxy User
       show_admin:
         new_visitors: New Visitors
-        registered_users: Registered users
+        registered_users: Registered Users
         repository_growth:
           subtitle: Past 90 days
           title: Repository Growth
@@ -796,7 +818,7 @@ en:
         files: Files deposited
         heading: Your Statistics
         works: Works created
-      title: My Dashboard
+      title: Dashboard
       transfer_of_ownership: Transfers of Ownership
       transfer_works_link: Select works to transfer
       transfers_received: Transfers Received
@@ -833,7 +855,7 @@ en:
       table_headers:
         release_date: Embargo Release Date
         title: Title
-        type: Type of Work
+        type: Type of Item
         viz_after: Visibility will Change to
         viz_current: Current Visibility
     featured_researchers: Featured Researchers
@@ -844,16 +866,27 @@ en:
       show:
         download: Download the file
         downloadable_content:
+          audio_link: Download audio
           default_link: Download file
           heading: Downloadable Content
           image_link: Download image
           office_link: Download file
           pdf_link: Download PDF
+          video_link: Download video
     file_sets:
+      actions:
+        delete: Delete
+        delete_confirm: Deleting %{file_set} from %{application_name} is permanent. Click OK to delete this from %{application_name}, or Cancel to cancel this operation
+        delete_title: Delete %{file_set}
+        download: Download
+        download_title: Download %{file_set}
+        edit: Edit
+        edit_title: Edit %{file_set}
+        header: Select an action
+        versions: Versions
+        versions_title: Display previous versions
       groups_description:
-        description_html: 'The list of groups in the drop-down marked "Select a group" is a list of User Managed Groups that you are a member of.  You may select a specific group and assign an access level for a file within %{application_name}, similarly to adding user access levels.
-
-'
+        description_html: The list of groups in the drop-down marked "Select a group" is a list of User Managed Groups that you are a member of.  You may select a specific group and assign an access level for a file within %{application_name}, similarly to adding user access levels.
     help:
       header: User Support
       override_text: Use app/views/static/help.html.erb to override this file.
@@ -919,7 +952,7 @@ en:
       table_headers:
         release_date: Lease Release Date
         title: Title
-        type: Type of Work
+        type: Type of Item
         viz_after: Visibility will Change to
         viz_current: Current Visibility
     mailbox:
@@ -947,6 +980,18 @@ en:
         single: has been saved.
         subject: Batch upload complete
         title: Files uploaded successfully
+    my:
+      count:
+        collections:
+          in_repo: "<strong>%{total_count} collections</strong> in the repository"
+          you_manage: "<strong>%{total_count} collections</strong> you can manage in the repository"
+          you_own: "<strong>%{total_count} collections</strong> you own in the repository"
+        works:
+          in_repo: "<strong>%{total_count} works</strong> in the repository"
+          you_manage: "<strong>%{total_count} works</strong> you can manage in the repository"
+          you_own: "<strong>%{total_count} works</strong> you own in the repository"
+    nav_safety:
+      change_tab_message: Are you sure you want to leave this tab?  Any unsaved data will be lost.
     pages:
       cancel: Cancel
       tabs:
@@ -1133,6 +1178,7 @@ en:
         allow_multiple_membership: Allow works to belong to multiple collections of this type
         assigns_visibility: Allow collections of this type to assign initial visibility settings to a new work
         assigns_workflow: Allow collections of this type to assign workflow to a new work
+        brandable: Allow collections of this type to be branded
         description: A brief statement of the general purpose of this collection type.  Users will see this if they have more than one collection type to choose from when creating a new collection.
         discoverable: Allow collections of this type to be discoverable
         nestable: Allow collections of this type to be nested (a collection can contain other collections)
@@ -1163,9 +1209,11 @@ en:
         allow_multiple_membership: MULTIPLE MEMBERSHIP
         assigns_visibility: VISIBILITY
         assigns_workflow: WORKFLOW
+        badge_color: Badge Color
+        brandable: BRANDING
         description: Type description
         discoverable: DISCOVERY
-        nestable: NESTABLE
+        nestable: NESTING
         require_membership: REQUIRE MEMBERSHIP
         sharable: SHARING
         share_applies_to_new_works: APPLY TO NEW WORKS

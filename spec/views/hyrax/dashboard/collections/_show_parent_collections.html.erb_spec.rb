@@ -58,61 +58,25 @@ RSpec.describe 'hyrax/dashboard/collections/_show_parent_collections.html.erb', 
     end
   end
 
-  context 'when parent collection list is not empty, but small' do
-    let(:parent_docs) { [collection1, collection2, collection3] }
-
-    it "posts the collection's title with a link to the collection" do
-      assign(:events, parent_docs)
-      subject
-
-      expect(subject).to render_template("_show_parent_collection_row")
-      expect(view).to render_template(partial: "_show_parent_collection_row", count: 3)
-      expect(rendered).not_to have_button('show more...')
-    end
-
-    it 'does not render pagination' do
-      expect(subject).not_to render_template("hyrax/collections/_paginate")
-    end
-  end
-
-  context 'when parent collection list exceeds parents_to_show' do
+  context 'when parent collection list is not empty' do
     let(:parent_docs) { [collection1, collection2, collection3, collection4, collection5] }
-
-    it "posts the collection's title with a link to the collection" do
-      assign(:events, parent_docs)
-      subject
-      expect(view).to render_template(partial: "_show_parent_collection_row", count: 5)
-      expect(rendered).to have_button('show more...', visible: true)
-      expect(rendered).to have_button('...show less', visible: false)
-    end
-
-    it 'renders pagination' do
-      expect(subject).not_to render_template("hyrax/collections/_paginate")
-    end
-  end
-
-  context 'when parent collection list has multiple pages' do
-    let(:parent_docs) { [collection1, collection2, collection3, collection4, collection5] }
-    let(:parent_collections) { double(Object, documents: parent_docs, response: { "numFound" => parent_docs.size }, total_pages: 2) }
 
     before do
-      stub_template "hyrax/collections/_paginate.html.erb" => "paginate"
-      assign(:events, parent_docs)
+      stub_template "_modal_remove_from_collection.html.erb" => 'modal'
     end
 
-    it "renders a row for each collection" do
+    it "posts the collection's title with a link to the collection" do
+      assign(:events, parent_docs)
       subject
       expect(view).to render_template(partial: "_show_parent_collection_row", count: 5)
-    end
-
-    it "does not render the more/less buttons" do
-      subject
-      expect(rendered).not_to have_button('show more...', visible: true)
-      expect(rendered).not_to have_button('...show less', visible: false)
     end
 
     it 'renders pagination' do
       expect(subject).to render_template("hyrax/collections/_paginate")
+    end
+
+    it 'renders the remove from list modal' do
+      expect(subject).to render_template("_modal_remove_from_collection")
     end
   end
 end

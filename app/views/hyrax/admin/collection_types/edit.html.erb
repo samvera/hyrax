@@ -1,10 +1,12 @@
-<% provide :page_title, construct_page_title( t('.header') ) %>
-<% provide :page_header do %>
-  <h1><span class="fa fa-folder-open"></span> <%= t('.header') %>: <%= @form.title %></h1>
-<% end %>
+<div class="collection-types-wrapper">
+  <% provide :page_title, construct_page_title( t('.header') ) %>
+  <% provide :page_header do %>
+    <h1><span class="fa fa-folder-open"></span> <%= t('.header') %>: <%= @form.title %></h1>
+  <% end %>
 
-<div class="row">
-  <div class="col-md-12">
-    <%= render 'form' %>
+  <div class="row">
+    <div class="col-md-12">
+      <%= render 'form' %>
+    </div>
   </div>
 </div>

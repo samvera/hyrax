@@ -5,31 +5,32 @@
    <%= @form.names.join(", ").html_safe %>
 </div> <!-- /original values -->
 
-<div >
+<div>
   <h3> Descriptions:</h3>
-
+  <div class="panel panel-default tabs">
     <ul class="nav nav-tabs">
       <li id="edit_descriptions_link" class="active"><a href="#descriptions_display" data-toggle="tab"><i class="glyphicon glyphicon-tags"></i> Descriptions</a></li>
       <li id="edit_permissions_link"><a href="#permissions_display" data-toggle="tab"><i class="glyphicon glyphicon-lock"></i> Permissions</a></li>
     </ul>
-    <div class="tab-content">
-      <div class="tab-pane active" id="descriptions_display">
-        <% @form.terms.each do |term| %>
-          <div class="row">
-            <%= simple_form_for @form,
-                                url: hyrax.batch_edits_path,
-                                method: :put,
-                                remote: true,
-                                builder: Hyrax::FormBuilder,
-                                html: { id: "form_#{term.to_s}",
-                                        class: "ajax-form" },
-                                data: { model: @form.model_name.param_key } do |f| %>
-              <div class="col-xs-12 col-sm-4">
-                <a class="accordion-toggle grey glyphicon-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_<%= term %>" id="expand_link_<%=term.to_s%>">
-                  <%= f.input_label term %> <span class="chevron"></span>
-                </a>
-              </div>
-              <div id="collapse_<%= term %>" class="collapse scrolly col-xs-12 col-sm-7">
+    <div class="panel-body">
+      <div class="tab-content">
+        <div class="tab-pane active" id="descriptions_display">
+          <% @form.terms.each do |term| %>
+            <div class="row">
+              <%= simple_form_for @form,
+                                  url: hyrax.batch_edits_path,
+                                  method: :put,
+                                  remote: true,
+                                  builder: Hyrax::FormBuilder,
+                                  html: { id: "form_#{term.to_s}",
+                                          class: "ajax-form" },
+                                  data: { model: @form.model_name.param_key } do |f| %>
+                <div class="col-xs-12 col-sm-4">
+                  <a class="accordion-toggle grey glyphicon-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_<%= term %>" id="expand_link_<%=term.to_s%>">
+                    <%= f.input_label term %> <span class="chevron"></span>
+                  </a>
+                </div>
+                <div id="collapse_<%= term %>" class="collapse scrolly col-xs-12 col-sm-7">
                   <%= hidden_field_tag('update_type', 'update') %>
                   <%= hidden_field_tag('key', term.to_s) %>
                   <%# TODO we don't need to show required %>
@@ -42,34 +43,76 @@
                     <a class="btn btn-default" data-toggle="collapse" data-parent="#row_<%= term.to_s %>" href="#collapse_<%= term.to_s %>">Cancel </a>
                     <div class="status fleft"></div>
                   </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div><!-- #descriptions_display -->
+
+        <div id="permissions_display" class="tab-pane">
+          <div class="row">
+            <%= simple_form_for @form,
+                                url: hyrax.batch_edits_path,
+                                method: :put,
+                                remote: true,
+                                builder: Hyrax::FormBuilder,
+                                html: { id: "form_permissions_visibility", class: "ajax-form"},
+                                data: { 'param-key' => @form.model_name.param_key } do |f| %>
+              <div class="col-xs-12 col-sm-4">
+                <a class="accordion-toggle grey glyphicon-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_permissions_visibility" id="expand_link_permissions_visibility">
+                  <%= f.input_label "Visibility" %> <span class="chevron"></span>
+                </a>
+              </div>
+              <div id="collapse_permissions_visibility" class="collapse scrolly col-xs-12 col-sm-7">
+                <%= hidden_field_tag('update_type', 'update') %>
+                <%= hidden_field_tag('key', 'permissions') %>
+                <%= render "hyrax/base/form_permission", f: f %>
+
+                <% @form.batch_document_ids.each do |batch_id| %>
+                  <%= hidden_field_tag "batch_document_ids[]", batch_id %>
+                <% end %>
+                <div>
+                  <%= f.submit "Save changes", class: 'btn btn-primary field-save', id: "permissions_visibility_save" %>
+                  <a class="btn btn-default" data-toggle="collapse" data-parent="#row_permissions_visibility" href="#collapse_permissions_visibility">Cancel </a>
+                  <div class="status fleft"></div>
+                </div>
               </div>
             <% end %>
           </div>
-        <% end %>
-      </div><!-- #descriptions_display -->
 
-    <div id="permissions_display" class="tab-pane">
-      <%= simple_form_for @form.model,
-                          url: hyrax.batch_edits_path,
-                          method: :put,
-                          remote: true,
-                          html: { id: "form_permissions", class: "ajax-form"},
-                          data: { 'param-key' => @form.model_name.param_key } do |f| %>
-        <%= hidden_field_tag('update_type', 'update') %>
-        <%= hidden_field_tag('key', 'permissions') %>
-        <%= render "hyrax/base/form_permission", f: f %>
-        <%= render "hyrax/base/form_share", f: f %>
+          <div class="row">
+            <%= simple_form_for @form,
+                                url: hyrax.batch_edits_path,
+                                method: :put,
+                                remote: true,
+                                builder: Hyrax::FormBuilder,
+                                html: { id: "form_permissions", class: "ajax-form"},
+                                data: { 'param-key' => @form.model_name.param_key } do |f| %>
+              <div class="col-xs-12 col-sm-4">
+                <a class="accordion-toggle grey glyphicon-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_permissions_sharing" id="expand_link_permissions_sharing">
+                  <%= f.input_label "Sharing" %> <span class="chevron"></span>
+                </a>
+              </div>
+              <div id="collapse_permissions_sharing" class="collapse scrolly col-xs-12 col-sm-7">
+                <%= hidden_field_tag('update_type', 'update') %>
+                <%= hidden_field_tag('key', 'permissions') %>
+                <%= render "hyrax/base/form_share", f: f %>
 
-        <% @form.batch_document_ids.each do |batch_id| %>
-          <%= hidden_field_tag "batch_document_ids[]", batch_id %>
-        <% end %>
-        <div class="row">
-            <%= f.submit "Save changes", class: 'btn btn-primary', id: 'permissions_save' %>
-            <div id="status_permissions" class="status fleft"></div>
+                <% @form.batch_document_ids.each do |batch_id| %>
+                  <%= hidden_field_tag "batch_document_ids[]", batch_id %>
+                <% end %>
+                <div>
+                  <%= f.submit "Save changes", class: 'btn btn-primary field-save', id: "permissions_sharing_save" %>
+                  <a class="btn btn-default" data-toggle="collapse" data-parent="#row_permissions_sharing" href="#collapse_permissions_sharing">Cancel </a>
+                  <div class="status fleft"></div>
+                </div>
+              </div>
+            <% end %>
+          </div>
         </div>
-      <% end %>
+      </div> <!-- .tab-content -->
     </div>
-  </div> <!-- .tab-content -->
+  </div>
 
 <!-- Ajax call to clear the batch before page uload. -->
 <%= button_to "Clear Batch", hyrax.clear_batch_edits_path, form_class: 'hidden', remote: true, id: 'clear_batch' %>

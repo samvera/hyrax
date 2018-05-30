@@ -1,12 +1,13 @@
 FactoryBot.define do
   factory :collection_type, class: Hyrax::CollectionType do
-    sequence(:title) { |n| "Title #{n}" }
+    sequence(:title) { |n| "Collection Type #{n}" }
     sequence(:machine_id) { |n| "title_#{n}" }
 
     description 'Collection type with all options'
     nestable true
     discoverable true
     sharable true
+    brandable true
     share_applies_to_new_works true
     allow_multiple_membership true
     require_membership false
@@ -68,6 +69,14 @@ FactoryBot.define do
 
     trait :not_discoverable do
       discoverable false
+    end
+
+    trait :brandable do
+      brandable true
+    end
+
+    trait :not_brandable do
+      brandable false
     end
 
     trait :sharable do

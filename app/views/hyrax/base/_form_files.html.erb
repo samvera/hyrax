@@ -1,6 +1,6 @@
      <div id="fileupload">
         <!-- Redirect browsers with JavaScript disabled to the origin page -->
-        <noscript><input type="hidden" name="redirect" value="<%= main_app.root_path %>"></noscript>
+        <noscript><input type="hidden" name="redirect" value="<%= main_app.root_path %>" /></noscript>
         <!-- The table listing the files available for upload/download -->
         <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
         <% if Hyrax.config.browse_everything? %>
@@ -16,13 +16,13 @@
                 <span id="addfiles" class="btn btn-success fileinput-button">
                     <span class="glyphicon glyphicon-plus"></span>
                     <span>Add files...</span>
-                    <input type="file" name="files[]" multiple>
+                    <input type="file" name="files[]" multiple />
                 </span>
                 <!-- The fileinput-button span is used to style the file input field as button -->
                 <span id="addfolder" class="btn btn-success fileinput-button">
                     <span class="glyphicon glyphicon-plus"></span>
                     <span>Add folder...</span>
-                    <input type="file" name="files[]" multiple directory webkitdirectory>
+                    <input type="file" name="files[]" multiple directory webkitdirectory />
                 </span>
                 <% if Hyrax.config.browse_everything? %>
                   <%= button_tag(type: 'button', class: 'btn btn-success', id: "browse-btn",

@@ -60,9 +60,11 @@ module Hyrax
 
       def build_error_message(problematic_collections)
         error_message_clauses = problematic_collections.map do |gid, list|
-          "#{collection_type_title_from_gid(gid)} (#{collection_titles_from_list(list)})"
+          I18n.t('hyrax.admin.collection_types.multiple_membership_checker.error_type_and_collections',
+                 type: collection_type_title_from_gid(gid),
+                 collections: collection_titles_from_list(list))
         end
-        "#{I18n.t('hyrax.admin.collection_types.multiple_membership_checker.error_preamble')}: #{error_message_clauses.join('; ')}"
+        "#{I18n.t('hyrax.admin.collection_types.multiple_membership_checker.error_preamble')}#{error_message_clauses.join('; ')}"
       end
 
       def collection_type_title_from_gid(gid)

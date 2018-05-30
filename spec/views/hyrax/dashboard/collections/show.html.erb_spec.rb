@@ -28,6 +28,7 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
 
     allow(collection_type).to receive(:nestable?).and_return(true)
     allow(collection_type).to receive(:title).and_return("User Collection")
+    allow(collection_type).to receive(:badge_color).and_return("#ffa510")
 
     assign(:presenter, presenter)
     # Stub route because view specs don't handle engine routes
@@ -43,6 +44,7 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
     stub_template '_show_subcollection_actions.html.erb' => '<div class="stubbed-actions">THE SUBCOLLECTION ACTIONS</div>'
     stub_template '_show_add_items_actions.html.erb' => '<div class="stubbed-actions">THE ADD ITEMS ACTIONS</div>'
     stub_template '_show_parent_collections.html.erb' => '<div class="stubbed-actions">THE PARENT COLLECTIONS LIST</div>'
+    stub_template '_subcollection_list.html.erb' => '<div class="stubbed-actions">THE SUB-COLLECTIONS LIST</div>'
     stub_template 'hyrax/collections/_paginate.html.erb' => 'paginate'
     stub_template 'hyrax/collections/_media_display.html.erb' => '<span class="fa fa-cubes collection-icon-search"></span>'
     stub_template 'hyrax/my/collections/_modal_add_to_collection.html.erb' => 'modal add as subcollection'

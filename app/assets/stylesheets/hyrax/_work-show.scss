@@ -4,7 +4,8 @@
   }
 }
 
-.no-preview, .social-media {
+.no-preview,
+.social-media {
   padding: $panel-body-padding;
 }
 
@@ -17,7 +18,8 @@ header > h1 .label {
   padding: $panel-body-padding;
 }
 
-.relationships, .attributes {
+.relationships,
+.attributes {
   tbody th {
     width: 20%;
   }
@@ -35,16 +37,13 @@ ul.tabular {
   // text-align: center;
 }
 
-.table.table-borderless {
-  th,
-  td {
-    border: 0;
-    padding: 8px;
-    vertical-align: top;
+.work-show {
+  dt,
+  dd {
+    padding: 2px;
   }
-
-  th {
-    text-align: right;
+  dd {
+    margin-left: 6px;
   }
 }
 
@@ -55,6 +54,13 @@ ul.tabular {
 .work-type {
   margin-bottom: 18px;
   margin-top: -8px;
+
+  .panel-body {
+    .work_description,
+    li.attribute {
+      word-break: break-word;
+    }
+  }
 }
 
 .panel-workflow {

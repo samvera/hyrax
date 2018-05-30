@@ -11,7 +11,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
       "date_created_tesim" => ['an unformatted date'],
       "depositor_tesim" => user_key }
   end
-  let(:ability) { nil }
+  let(:ability) { double Ability }
   let(:presenter) { described_class.new(solr_document, ability, request) }
 
   subject { described_class.new(double, double) }
@@ -30,6 +30,8 @@ RSpec.describe Hyrax::WorkShowPresenter do
   it { is_expected.to delegate_method(:resource_type).to(:solr_document) }
   it { is_expected.to delegate_method(:keyword).to(:solr_document) }
   it { is_expected.to delegate_method(:itemtype).to(:solr_document) }
+  it { is_expected.to delegate_method(:member_presenters).to(:member_presenter_factory) }
+  it { is_expected.to delegate_method(:ordered_ids).to(:member_presenter_factory) }
 
   describe "#model_name" do
     subject { presenter.model_name }
@@ -47,11 +49,17 @@ RSpec.describe Hyrax::WorkShowPresenter do
     let(:id_present) { false }
     let(:representative_presenter) { double('representative', present?: false) }
     let(:image_boolean) { false }
-    let(:iiif_enabled) { false }
+    let(:iiif_enabled) { true }
+    let(:file_set_presenter) { Hyrax::FileSetPresenter.new(solr_document, ability) }
+    let(:file_set_presenters) { [file_set_presenter] }
+    let(:read_permission) { true }
 
     before do
       allow(presenter).to receive(:representative_id).and_return(id_present)
       allow(presenter).to receive(:representative_presenter).and_return(representative_presenter)
+      allow(presenter).to receive(:file_set_presenters).and_return(file_set_presenters)
+      allow(file_set_presenter).to receive(:image?).and_return(true)
+      allow(ability).to receive(:can?).with(:read, solr_document.id).and_return(read_permission)
       allow(representative_presenter).to receive(:image?).and_return(image_boolean)
       allow(Hyrax.config).to receive(:iiif_image_server?).and_return(iiif_enabled)
     end
@@ -71,7 +79,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
     context 'with non-image representative_presenter' do
       let(:id_present) { true }
       let(:representative_presenter) { double('representative', present?: true) }
-      let(:image_boolean) { true }
+      let(:image_boolean) { false }
 
       it { is_expected.to be false }
     end
@@ -92,6 +100,12 @@ RSpec.describe Hyrax::WorkShowPresenter do
       let(:iiif_enabled) { true }
 
       it { is_expected.to be true }
+
+      context "when the user doesn't have permission to view the image" do
+        let(:read_permission) { false }
+
+        it { is_expected.to be false }
+      end
     end
   end
 
@@ -106,7 +120,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
       allow(work).to receive(:persisted?).and_return(true)
     end
 
-    it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_work_path(id: work) }
+    it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_work_path(id: work, locale: 'en') }
   end
 
   describe '#itemtype' do
@@ -209,6 +223,89 @@ RSpec.describe Hyrax::WorkShowPresenter do
       expect(presenter.member_presenters.size).to eq 2
       expect(presenter.member_presenters.first).to be_instance_of(Hyrax::FileSetPresenter)
       expect(presenter.member_presenters.last).to be_instance_of(described_class)
+    end
+  end
+
+  describe "#member_presenters_for" do
+    let(:obj) { create(:work_with_file_and_work) }
+    let(:attributes) { obj.to_solr }
+    let(:items) { presenter.ordered_ids }
+    let(:subject) { presenter.member_presenters_for(items) }
+
+    it "returns appropriate classes for each item" do
+      expect(subject.size).to eq 2
+      expect(subject.first).to be_instance_of(Hyrax::FileSetPresenter)
+      expect(subject.last).to be_instance_of(described_class)
+    end
+  end
+
+  describe "#list_of_item_ids_to_display" do
+    let(:subject) { presenter.list_of_item_ids_to_display }
+    let(:items_list) { ['item0', 'item1', 'item2', 'item3', 'item4', 'item5', 'item6', 'item7', 'item8', 'item9'] }
+    let(:rows) { 10 }
+    let(:page) { 1 }
+    let(:ability) { double "Ability" }
+    let(:current_ability) { ability }
+
+    before do
+      allow(presenter).to receive(:ordered_ids).and_return(items_list)
+      allow(current_ability).to receive(:can?).with(:read, 'item0').and_return true
+      allow(current_ability).to receive(:can?).with(:read, 'item1').and_return false
+      allow(current_ability).to receive(:can?).with(:read, 'item2').and_return true
+      allow(current_ability).to receive(:can?).with(:read, 'item3').and_return false
+      allow(current_ability).to receive(:can?).with(:read, 'item4').and_return true
+      allow(current_ability).to receive(:can?).with(:read, 'item5').and_return true
+      allow(current_ability).to receive(:can?).with(:read, 'item6').and_return false
+      allow(current_ability).to receive(:can?).with(:read, 'item7').and_return true
+      allow(current_ability).to receive(:can?).with(:read, 'item8').and_return false
+      allow(current_ability).to receive(:can?).with(:read, 'item9').and_return true
+      allow(presenter).to receive(:rows_from_params).and_return(rows)
+      allow(presenter).to receive(:current_page).and_return(page)
+      allow(Flipflop).to receive(:hide_private_items?).and_return(answer)
+    end
+
+    context 'when hiding private items' do
+      let(:answer) { true }
+
+      it "returns viewable items" do
+        expect(subject.size).to eq 6
+        expect(subject).to be_instance_of(Kaminari::PaginatableArray)
+        expect(subject).to include("item0", "item2", "item4", "item5", "item7", "item9")
+      end
+    end
+    context 'when including private items' do
+      let(:answer) { false }
+
+      it "returns appropriate items" do
+        expect(subject.size).to eq 10
+        expect(subject).to be_instance_of(Kaminari::PaginatableArray)
+        expect(subject).to eq(items_list)
+      end
+    end
+    context 'with pagination' do
+      let(:rows) { 3 }
+      let(:page) { 2 }
+
+      let(:answer) { true }
+      it 'partitions the item list and excluding hidden items' do
+        expect(subject).to eq(['item5', 'item7', 'item9'])
+      end
+    end
+  end
+
+  describe "#total_pages" do
+    let(:subject) { presenter.total_pages }
+    let(:items) { 17 }
+    let(:rows) { 4 }
+
+    before do
+      allow(Flipflop).to receive(:hide_private_items?).and_return(false)
+      allow(presenter).to receive(:total_items).and_return(items)
+      allow(presenter).to receive(:rows_from_params).and_return(rows)
+    end
+
+    it 'calculates number of pages from items and rows' do
+      expect(subject).to eq(5)
     end
   end
 

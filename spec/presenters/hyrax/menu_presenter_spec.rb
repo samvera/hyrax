@@ -79,6 +79,59 @@ RSpec.describe Hyrax::MenuPresenter do
 
       it { is_expected.to be false }
     end
+
+    context "for the Hyrax::DepositorsController" do
+      let(:controller) { Hyrax::DepositorsController.new }
+
+      it { is_expected.to be true }
+    end
+  end
+
+  describe "#admin_reports_section?" do
+    before do
+      allow(context).to receive(:controller_name).and_return(controller_name)
+      allow(context).to receive(:action_name).and_return(action_name)
+    end
+    subject { instance.admin_reports_section? }
+
+    context "for the Admin::Reports::WorksController" do
+      let(:controller_name) { Hyrax::Admin::Reports::WorksController.controller_name }
+
+      context "status action" do
+        let(:action_name) { 'status' }
+
+        it { is_expected.to be true }
+      end
+
+      context "attributes action" do
+        let(:action_name) { 'attributes' }
+
+        it { is_expected.to be true }
+      end
+
+      context "activity action" do
+        let(:action_name) { 'activity' }
+
+        it { is_expected.to be true }
+      end
+
+      context "show action" do
+        let(:action_name) { 'show' }
+
+        it { is_expected.to be false }
+      end
+    end
+  end
+
+  describe "#admin_reports_works_section?" do
+    before { allow(context).to receive(:controller).and_return(controller) }
+    subject { instance.admin_reports_works_section? }
+
+    context "for the Admin::Reports::Works::WorkController" do
+      let(:controller) { Hyrax::Admin::Reports::WorksController.new }
+
+      it { is_expected.to be true }
+    end
   end
 
   describe "#admin_reports_section?" do

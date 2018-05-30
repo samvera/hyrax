@@ -6,6 +6,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form_settings.html.erb', type: :vi
 
   INPUT_IDS = %w[
     collection_type_nestable
+    collection_type_brandable
     collection_type_discoverable
     collection_type_sharable
     collection_type_share_applies_to_new_works

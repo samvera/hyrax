@@ -5,6 +5,9 @@ module Hyrax
     include Hyrax::Collections::AcceptsBatches
 
     def index
+      add_breadcrumb t(:'hyrax.controls.home'), root_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.embargoes.index.manage_embargoes'), hyrax.embargoes_path
       authorize! :index, Hydra::AccessControls::Embargo
     end
 
@@ -25,7 +28,13 @@ module Hyrax
       copy_visibility = params[:embargoes].values.map { |h| h[:copy_visibility] }
       ActiveFedora::Base.find(batch).each do |curation_concern|
         Hyrax::Actors::EmbargoActor.new(curation_concern).destroy
-        curation_concern.copy_visibility_to_files if copy_visibility.include?(curation_concern.id)
+        # if the concern is a FileSet, set its visibility and skip the copy_visibility_to_files, which is built for Works
+        if curation_concern.file_set?
+          curation_concern.visibility = curation_concern.to_solr["visibility_after_embargo_ssim"]
+          curation_concern.save!
+        elsif copy_visibility.include?(curation_concern.id)
+          curation_concern.copy_visibility_to_files
+        end
       end
       redirect_to embargoes_path
     end
@@ -33,6 +42,13 @@ module Hyrax
     # This allows us to use the unauthorized template in curation_concerns/base
     def self.local_prefixes
       ['hyrax/base']
+    end
+
+    def edit
+      add_breadcrumb t(:'hyrax.controls.home'), root_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.embargoes.index.manage_embargoes'), hyrax.embargoes_path
+      add_breadcrumb t(:'hyrax.embargoes.edit.embargo_update'), '#'
     end
   end
 end

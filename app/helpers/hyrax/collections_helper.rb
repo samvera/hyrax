@@ -9,12 +9,24 @@ module Hyrax
     end
 
     def render_collection_links(solr_doc)
-      collection_list = Hyrax::CollectionMemberService.run(solr_doc)
+      collection_list = Hyrax::CollectionMemberService.run(solr_doc, controller.current_ability)
       return if collection_list.empty?
-      links = collection_list.map do |collection|
-        link_to collection.title_or_label, collection_path(collection.id)
+      links = collection_list.map { |collection| link_to collection.title_or_label, collection_path(collection.id) }
+      collection_links = []
+      links.each_with_index do |link, n|
+        collection_links << link
+        collection_links << ', ' unless links[n + 1].nil?
       end
-      content_tag :span, safe_join([t('hyrax.collection.is_part_of'), ': '] + links)
+      content_tag :span, safe_join([t('hyrax.collection.is_part_of'), ': '] + collection_links)
+    end
+
+    ##
+    # Append a collection_type_id to the existing querystring (whether or not it has pre-existing params)
+    # @return [String] the original url with and added collection_type_id param
+    def append_collection_type_url(url, collection_type_id)
+      uri = URI.parse(url)
+      uri.query = [uri.query, "collection_type_id=#{collection_type_id}"].compact.join('&')
+      uri.to_s
     end
 
     # @return [Boolean]

@@ -13,7 +13,6 @@ module Hyrax
                                helper_method: :visibility_badge,
                                limit: 5, label: I18n.t('hyrax.dashboard.my.heading.visibility')
         config.add_facet_field IndexesWorkflow.suppressed_field, helper_method: :suppressed_to_status
-        config.add_facet_field solr_name("admin_set", :facetable), limit: 5
         config.add_facet_field solr_name("resource_type", :facetable), limit: 5
       end
     end
@@ -57,6 +56,7 @@ module Hyrax
         @empty_batch = batch.empty?
         @all_checked = (count_on_page == @document_list.count)
         @add_works_to_collection = params.fetch(:add_works_to_collection, '')
+        @add_works_to_collection_label = params.fetch(:add_works_to_collection_label, '')
       end
 
       def query_solr

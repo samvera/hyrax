@@ -6,15 +6,16 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
   # @param [Array<Hyrax::UploadedFile>] uploaded_files - an array of files to attach
   def perform(work, uploaded_files, **work_attributes)
     validate_files!(uploaded_files)
-    user = User.find_by_user_key(work.depositor) # BUG? file depositor ignored
+    depositor = proxy_or_depositor(work)
+    user = User.find_by_user_key(depositor)
     work_permissions = work.permissions.map(&:to_hash)
     metadata = visibility_attributes(work_attributes)
     uploaded_files.each do |uploaded_file|
       actor = Hyrax::Actors::FileSetActor.new(FileSet.create, user)
+      actor.file_set.permissions_attributes = work_permissions
       actor.create_metadata(metadata)
       actor.create_content(uploaded_file)
       actor.attach_to_work(work)
-      actor.file_set.permissions_attributes = work_permissions
       uploaded_file.update(file_set_uri: actor.file_set.uri)
     end
   end
@@ -34,5 +35,12 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
         next if uploaded_file.is_a? Hyrax::UploadedFile
         raise ArgumentError, "Hyrax::UploadedFile required, but #{uploaded_file.class} received: #{uploaded_file.inspect}"
       end
+    end
+
+    ##
+    # A work with files attached by a proxy user will set the depositor as the intended user
+    # that the proxy was depositing on behalf of. See tickets #2764, #2902.
+    def proxy_or_depositor(work)
+      work.on_behalf_of.blank? ? work.depositor : work.on_behalf_of
     end
 end

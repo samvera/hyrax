@@ -7,6 +7,7 @@ RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm do
   it { is_expected.to delegate_method(:title).to(:collection_type) }
   it { is_expected.to delegate_method(:description).to(:collection_type) }
   it { is_expected.to delegate_method(:nestable).to(:collection_type) }
+  it { is_expected.to delegate_method(:brandable).to(:collection_type) }
   it { is_expected.to delegate_method(:sharable).to(:collection_type) }
   it { is_expected.to delegate_method(:share_applies_to_new_works).to(:collection_type) }
   it { is_expected.to delegate_method(:require_membership).to(:collection_type) }
@@ -18,6 +19,7 @@ RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm do
   it { is_expected.to delegate_method(:collections?).to(:collection_type) }
   it { is_expected.to delegate_method(:admin_set?).to(:collection_type) }
   it { is_expected.to delegate_method(:user_collection?).to(:collection_type) }
+  it { is_expected.to delegate_method(:badge_color).to(:collection_type) }
 
   describe '#all_settings_disabled?' do
     before do

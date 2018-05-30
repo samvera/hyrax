@@ -4,17 +4,18 @@ module Hyrax
     include Blacklight::Configurable
     include Blacklight::SearchHelper
 
-    attr_reader :item
+    attr_reader :item, :current_ability
 
     copy_blacklight_config_from(CatalogController)
 
     # @param [SolrDocument] item represents a work
-    def self.run(item)
-      new(item).list_collections
+    def self.run(item, ability)
+      new(item, ability).list_collections
     end
 
-    def initialize(item)
+    def initialize(item, ability)
       @item = item
+      @current_ability = ability
     end
 
     def list_collections
@@ -24,7 +25,7 @@ module Hyrax
     end
 
     def collection_search_builder
-      @collection_search_builder ||= ParentCollectionSearchBuilder.new([:include_item_ids, :add_paging_to_solr], self)
+      @collection_search_builder ||= ParentCollectionSearchBuilder.new([:include_item_ids, :add_paging_to_solr, :add_access_controls_to_solr_params], self)
     end
   end
 end

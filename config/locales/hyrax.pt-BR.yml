@@ -18,6 +18,7 @@ pt-BR:
       fields:
         facet:
           admin_set_sim: Coleção
+          member_of_collections_ssim: Coleção
           resource_type_sim: Tipo de recurso
           suppressed_bsi: Status
         show:
@@ -48,6 +49,8 @@ pt-BR:
         new: Nova coleção
       delete: Excluir
       edit: Editar
+      less: Menos
+      more: Mais
       refresh: Atualizar
       remove: Remover
       work:
@@ -168,9 +171,10 @@ pt-BR:
           header: Criar novo conjunto administrativo
         show:
           breadcrumb: Conjunto de imagens
-          confirm_delete: Tem certeza de que deseja excluir este conjunto administrativo? Essa ação não pode ser desfeita.
           header: Conjunto Administrativo
           item_list_header: Funciona neste conjunto
+        show_actions:
+          confirm_delete: Tem certeza de que deseja excluir este conjunto administrativo? Essa ação não pode ser desfeita.
       appearances:
         show:
           header: Aparência
@@ -192,6 +196,7 @@ pt-BR:
           not_empty: O tipo de coleção não pode ser alterado, pois tem coleções
         form:
           tab:
+            appearance: Cor do Emblema
             metadata: Descrição
             participants: Participantes
             settings: Configurações
@@ -211,7 +216,9 @@ pt-BR:
             title: Gerentes
             type: Tipo
         form_participants:
+          add_group: Adicionar grupo
           add_participants: Adicione participantes
+          add_user: Adicionar usuário
           current_participants: Participantes atuais
           header: Participantes da coleção
           instructions: Você pode designar grupos e usuários como criadores e gerentes de coleções desse tipo
@@ -239,6 +246,7 @@ pt-BR:
             name: Nome
         multiple_membership_checker:
           error_preamble: 'Erro: você especificou mais do que um dos mesmos tipos de coleção de associação única'
+          error_type_and_collections: "(tipo: %{type}, coleções: %{collections})"
         new:
           header: Criar novo tipo de coleção
           submit: Salve 
@@ -399,6 +407,7 @@ pt-BR:
         header: Unid
         thumbnail: Miniatura
         title: Título
+        unauthorized: Não há itens publicamente disponíveis neste %{type}.
         visibility: Visibilidade
       relationships:
         empty: Este %{type} atualmente não está em nenhuma coleção.
@@ -587,6 +596,7 @@ pt-BR:
             this_collection_in_other_collections: Esta coleção em outras coleções
           modals:
             remove_from_collection_description: A remoção desta coleção não o removerá do repositório, apenas como pai dessa coleção. Tem certeza de que deseja remover essa coleção?
+            remove_parent_collection_deny: Você não tem privilégios suficientes para que a coleção pai possa removê-la.
             remove_this_sub_collection_description: A remoção desta subculpa não a removerá do repositório, apenas a partir dessa coleção original. Tem certeza de que deseja remover essa subculpa?
           sub_collections_of_collection_description: Essas coleções são atualmente sub-coleções desta coleção
           table:
@@ -655,8 +665,8 @@ pt-BR:
           add_to_collection_only: As ações permitidas estão limitadas à adição de membros
           admin_set_confirmation: Excluir um conjunto de administradores de %{application_name} é permanente. Clique em OK para excluir este conjunto de administrador de %{application_name} ou Cancelar para cancelar esta operação
           collection_create_success: A coleção foi criada com sucesso.
-          collection_delete_fail: Coleção %{id} não pôde ser excluída
-          collection_delete_success: Coleção %{id} foi excluída com sucesso
+          collection_delete_fail: Coleção não pôde ser excluída
+          collection_delete_success: Coleção foi excluída com sucesso
           collection_deny_add_members: Você não tem privilégios suficientes para adicionar membros à coleção
           collection_update_success: A coleção foi atualizada com sucesso.
           collections_confirmation_html: A exclusão <span class='pluralized'>dessa coleção</span> removerá permanentemente <span class='pluralized'>essa coleção</span> do repositório. Os itens <span class='pluralized'>desta coleção</span> permanecerão no repositório. Tem certeza de que deseja excluir <span class='pluralized'>esta coleção</span> ?
@@ -689,6 +699,10 @@ pt-BR:
           description: 'Descrição:'
           edit_access: 'Editar acesso:'
           groups: 'Grupos:'
+          managed_access:
+            deposit: Depósito
+            manage: Gerir
+            view: Visão
           users: 'Comercial:'
         collections: Suas coleções
         facet_label:
@@ -697,6 +711,7 @@ pt-BR:
           shared: 'Compartilhamento de filtro:'
           works: 'Filtro funciona:'
         heading:
+          access: Acesso
           action: Ações
           collection_type: Tipo de Coleção
           date_modified: Última modificação
@@ -718,16 +733,20 @@ pt-BR:
           results_per_page: Número de resultados a serem exibidos por página
           show_label: Exibir todos os detalhes de
         works: Seus trabalhos
+        your_collections: Suas coleções
+        your_works: Seus trabalhos
       nest_collections_form:
         create_under: "'%{child_title}' foi adicionado a '%{parent_title}'"
         create_within: "'%{child_title}' foi adicionado a '%{parent_title}'"
         removed_relationship: "'%{child_title}' foi removido de '%{parent_title}'"
       no_activity: O usuário não tem atividade recente
       no_notifications: O usuário não possui notificações
+      no_proxies: Não há proxies designados
       no_transfer_requests: Você não recebeu nenhum pedido de transferência de trabalho
       no_transfers: Você não transferiu nenhum trabalho
       proxy_activity: Atividade de proxy
       proxy_delete: Eliminar Proxy
+      proxy_help: Selecione um usuário que possa depositar obras em seu nome. Você será o proprietário das obras que esse usuário deposita para você. Você pode revogar um proxy clicando no botão Excluir Proxy.
       proxy_user: Usuário Proxy
       show_admin:
         new_visitors: Novos visitantes
@@ -798,12 +817,25 @@ pt-BR:
       show:
         download: Baixe o arquivo
         downloadable_content:
+          audio_link: Download de áudio
           default_link: "⇬ Fazer download do arquivo"
           heading: Conteúdo disponível para download
           image_link: Baixe a imagem
           office_link: "⇬ Fazer download do arquivo"
           pdf_link: baixar PDF
+          video_link: Baixar video
     file_sets:
+      actions:
+        delete: Excluir
+        delete_confirm: A exclusão de %{file_set} de %{application_name} é permanente. Clique em OK para excluir isso do %{application_name} ou Cancelar para cancelar esta operação
+        delete_title: Excluir %{file_set}
+        download: Baixar
+        download_title: Baixar %{file_set}
+        edit: Editar
+        edit_title: Editar %{file_set}
+        header: Selecione uma ação
+        versions: Versões
+        versions_title: Exibir versões anteriores
       groups_description:
         description_html: A lista de grupos no menu suspenso marcado como "Selecionar um grupo" é uma lista de Grupos Gerenciados pelo Usuário de que você é membro. Você pode selecionar um grupo específico e atribuir um nível de acesso para um arquivo dentro do %{application_name}, de forma semelhante à adição de níveis de acesso ao usuário.
     help:
@@ -899,6 +931,18 @@ pt-BR:
         single: Foi salvo.
         subject: Carregamento em lote completo
         title: Arquivos carregados com sucesso
+    my:
+      count:
+        collections:
+          in_repo: "<strong> coleções %{total_count} </ strong> no repositório"
+          you_manage: "<strong> coleções %{total_count} </ strong> você pode gerenciar no repositório"
+          you_own: "<strong> coleções %{total_count} </ strong> você possui no repositório"
+        works:
+          in_repo: "<strong> %{total_count} funciona </ strong> no repositório"
+          you_manage: "<strong> %{total_count} funciona </ strong> você pode gerenciar no repositório"
+          you_own: "<strong> %{total_count} funciona </ strong> você possui no repositório"
+    nav_safety:
+      change_tab_message: Sei sicuro di voler lasciare questa scheda? Tutti i dati non salvati andranno persi.
     pages:
       cancel: Cancelar
       tabs:
@@ -1085,6 +1129,7 @@ pt-BR:
         allow_multiple_membership: Permitir que as obras pertençam a múltiplas coleções desse tipo
         assigns_visibility: Permitir coleções deste tipo para atribuir configurações de visibilidade inicial a um novo trabalho
         assigns_workflow: Permitir coleções desse tipo para atribuir fluxo de trabalho a um novo trabalho
+        brandable: Permitir que coleções deste tipo sejam marcadas
         description: Uma breve descrição do propósito geral deste tipo de coleção. Os usuários verão isso se tiverem mais de um tipo de coleção para escolher ao criar uma nova coleção.
         discoverable: Permitir que as coleções desse tipo sejam detectáveis
         nestable: Permitir que coleções deste tipo sejam aninhadas (uma coleção pode conter outras coleções)
@@ -1115,6 +1160,8 @@ pt-BR:
         allow_multiple_membership: MEMBROS MÚLTIPLOS
         assigns_visibility: VISIBILIDADE
         assigns_workflow: FLUXO DE TRABALHO
+        badge_color: Cor do Emblema
+        brandable: MARCA
         description: Descrição do tipo
         discoverable: DESCOBERTA
         nestable: NESTABLE

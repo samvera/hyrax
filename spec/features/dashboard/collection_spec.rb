@@ -1,4 +1,6 @@
 RSpec.describe 'collection', type: :feature, clean_repo: true do
+  include Selectors::Dashboard
+
   let(:user) { create(:user) }
   let(:admin_user) { create(:admin) }
   let(:collection_type) { create(:collection_type, creator_user: user) }
@@ -34,15 +36,18 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         visit '/dashboard/my/collections'
       end
 
-      it "has page title, does not have tabs, and lists only user's collections" do
+      it "has page title, does not have tabs, lists only user's collections, and displays number of collections in the respository" do
         expect(page).to have_content 'Collections'
         expect(page).not_to have_link 'All Collections'
-        expect(page).not_to have_link 'Your Collections'
+        within('section.tabs-row') do
+          expect(page).not_to have_link 'Your Collections'
+        end
         expect(page).to have_link(collection1.title.first)
         expect(page).to have_link(collection2.title.first)
         expect(page).to have_link(admin_set_b.title.first)
         expect(page).not_to have_link(collection3.title.first)
         expect(page).not_to have_link(admin_set_a.title.first)
+        expect(page).to have_content("3 collections you own in the repository")
       end
 
       it "has collection type and visibility filters" do
@@ -85,7 +90,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         visit '/dashboard/my/collections'
       end
 
-      it "has page title, has tabs for All and Your Collections, and lists collections with edit access" do
+      it "has page title, has tabs for All Collections and Your Collections, and lists collections with edit access" do
         expect(page).to have_content 'Collections'
         expect(page).to have_link 'All Collections'
         expect(page).to have_link 'Your Collections'
@@ -128,7 +133,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       visit '/dashboard/my/collections'
     end
 
-    it 'lists all collections for all users', with_nested_reindexing: true do
+    it 'lists all collections for all users' do
       expect(page).to have_link 'All Collection'
       click_link 'All Collections'
       expect(page).to have_link(collection1.title.first)
@@ -252,6 +257,11 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         expect(page).to have_content title
         expect(page).to have_content description
       end
+
+      it "has properly formed collection type buttons" do
+        expect(page).not_to have_selector("input[data-path$='collections/new&collection_type_id=1']")
+        expect(page).to have_selector("input[data-path$='collections/new?locale=en&collection_type_id=1']")
+      end
     end
 
     context 'when user can create collections of one type' do
@@ -293,6 +303,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     end
   end
 
+  # TODO: this section is still deactivated
   describe "adding works to a collection", skip: "we need to define a dashboard/works path" do
     let!(:collection) { create!(:collection, title: ["Barrel of monkeys"], user: user, with_permission_template: true) }
     let!(:work1) { create(:work, title: ["King Louie"], user: user) }
@@ -352,7 +363,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
       context 'and collection is empty' do
         it 'and user confirms delete, deletes the collection', :js do
-          expect(page).to have_content(empty_collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).to have_content(empty_collection.title.first)
+          end
           check_tr_data_attributes(empty_collection.id, 'collection')
           # check that modal data attributes haven't been added yet
           expect(page).not_to have_selector("div[data-id='#{empty_collection.id}']")
@@ -365,11 +378,15 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           within("div#collection-empty-to-delete-modal") do
             click_button('Delete')
           end
-          expect(page).not_to have_content(empty_collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).not_to have_content(empty_collection.title.first)
+          end
         end
 
         it 'and user cancels, does NOT delete the collection', :js do
-          expect(page).to have_content(empty_collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).to have_content(collection.title.first)
+          end
           check_tr_data_attributes(empty_collection.id, 'collection')
           # check that modal data attributes haven't been added yet
           expect(page).not_to have_selector("div[data-id='#{empty_collection.id}']")
@@ -383,13 +400,17 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           within("div#collection-empty-to-delete-modal") do
             click_button('Cancel')
           end
-          expect(page).to have_content(empty_collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).to have_content(collection.title.first)
+          end
         end
       end
 
       context 'and collection is not empty' do
         it 'and user confirms delete, deletes the collection', :js do
-          expect(page).to have_content(collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).to have_content(collection.title.first)
+          end
           check_tr_data_attributes(collection.id, 'collection')
           within("#document_#{collection.id}") do
             first('button.dropdown-toggle').click
@@ -400,11 +421,15 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           within("div#collection-to-delete-modal") do
             find('button.modal-delete-button').click
           end
-          expect(page).not_to have_content(collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).not_to have_content(collection.title.first)
+          end
         end
 
         it 'and user cancels, does NOT delete the collection', :js do
-          expect(page).to have_content(collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).to have_content(collection.title.first)
+          end
           within("#document_#{collection.id}") do
             first('button.dropdown-toggle').click
             first('.itemtrash').click
@@ -414,12 +439,14 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           within("div#collection-to-delete-modal") do
             click_button('Cancel')
           end
-          expect(page).to have_content(collection.title.first)
+          within("table#collections-list-table") do
+            expect(page).to have_content(collection.title.first)
+          end
         end
       end
     end
 
-    context 'when user without permissions selects delete' do
+    context 'when user does not have permission to delete a collection' do
       let(:user2) { create(:user) }
 
       before do
@@ -432,18 +459,22 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         visit '/dashboard/collections' # Managed Collections tab
       end
 
-      it 'does not allow delete collection' do
-        expect(page).to have_content(collection.title.first)
-        check_tr_data_attributes(collection.id, 'collection')
-        within("#document_#{collection.id}") do
-          first('button.dropdown-toggle').click
-          first('.itemtrash').click
+      context 'and selects Delete from drop down within table' do
+        it 'does not allow delete collection', js: true do
+          expect(page).to have_content(collection.title.first)
+          check_tr_data_attributes(collection.id, 'collection')
+          within("#document_#{collection.id}") do
+            first('button.dropdown-toggle').click
+            first('.itemtrash').click
+          end
+
+          # Exepct the modal to be shown that explains why the user can't delete the collection.
+          expect(page).to have_selector('div#collection-to-delete-deny-modal', visible: true)
+          within('div#collection-to-delete-deny-modal') do
+            click_button('Close')
+          end
+          expect(page).to have_content(collection.title.first)
         end
-        expect(page).to have_selector('div#collection-to-delete-deny-modal', visible: true)
-        within('div#collection-to-delete-deny-modal') do
-          click_button('Close')
-        end
-        expect(page).to have_content(collection.title.first)
       end
     end
 
@@ -531,7 +562,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     end
   end
 
-  describe 'collection show page', with_nested_reindexing: true do
+  describe 'collection show page' do
     let(:collection) do
       create(:public_collection, user: user, description: ['collection description'], create_access: true)
     end
@@ -602,15 +633,15 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         click_link 'Add existing works'
         first('input#check_all').click
         click_button "Add to collection"
-        expect(page).to have_css("input#id_#{collection1.id}[checked='checked']")
-        expect(page).not_to have_css("input#id_#{collection2.id}[checked='checked']")
+        expect(page).to have_selector "#member_of_collection_ids[value=\"#{collection1.id}\"]", visible: false
+        expect(page).to have_selector "#member_of_collection_label[value=\"#{collection1.title.first}\"]"
 
         visit "/dashboard/collections/#{collection2.id}"
         click_link 'Add existing works'
         first('input#check_all').click
         click_button "Add to collection"
-        expect(page).not_to have_css("input#id_#{collection1.id}[checked='checked']")
-        expect(page).to have_css("input#id_#{collection2.id}[checked='checked']")
+        expect(page).to have_selector "#member_of_collection_ids[value=\"#{collection2.id}\"]", visible: false
+        expect(page).to have_selector "#member_of_collection_label[value=\"#{collection2.title.first}\"]"
 
         click_button "Save changes"
         expect(page).to have_content(work1.title.first)
@@ -662,7 +693,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   end
 
   # TODO: this is just like the block above. Merge them.
-  describe 'show pages of a collection', with_nested_reindexing: true do
+  describe 'show pages of a collection' do
     before do
       docs = (0..12).map do |n|
         { "has_model_ssim" => ["GenericWork"], :id => "zs25x871q#{n}",
@@ -690,7 +721,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   end
 
   describe 'remove works from collection' do
-    context 'user that can edit', :with_nested_reindexing do
+    context 'user that can edit' do
       let!(:work2) { create(:work, title: ["King Louie"], member_of_collections: [collection1], user: user) }
       let!(:work1) { create(:work, title: ["King Kong"], member_of_collections: [collection1], user: user) }
 
@@ -779,14 +810,6 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           expect(page).to have_field('collection_title', with: collection.title.first)
           expect(page).to have_field('collection_description', with: collection.description.first)
 
-          # TODO: These two expectations require the spec to include with_nested_reindexing: true.
-          # However, adding nested indexing causes this spec to fail to go through the update method
-          # in the controller unless js: true is also included. Including javascript greatly increases
-          # the time required for the spec to complete, so for now, I am simply commenting out these
-          # two expectations, as these are not integral to the function being tested.
-          # expect(page).to have_content(work1.title.first)
-          # expect(page).to have_content(work2.title.first)
-
           new_title = "Altered Title"
           new_description = "Completely new Description text."
           creators = ["Dorje Trollo", "Vajrayogini"]
@@ -832,9 +855,19 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         sign_in user
       end
 
-      it 'always includes branding' do
-        visit "/dashboard/collections/#{collection.id}/edit"
-        expect(page).to have_link('Branding', href: '#branding')
+      context 'with brandable set' do
+        let(:brandable_collection_id) { create(:collection, user: user, collection_type_settings: [:brandable], create_access: true).id }
+        let(:not_brandable_collection_id) { create(:collection, user: user, collection_type_settings: [:not_brandable], create_access: true).id }
+
+        it 'to true, it shows Branding tab' do
+          visit "/dashboard/collections/#{brandable_collection_id}/edit"
+          expect(page).to have_link('Branding', href: '#branding')
+        end
+
+        it 'to false, it hides Branding tab' do
+          visit "/dashboard/collections/#{not_brandable_collection_id}/edit"
+          expect(page).not_to have_link('Branding', href: '#branding')
+        end
       end
 
       context 'with discoverable set' do
@@ -859,6 +892,20 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         it 'to true, it shows Sharable tab' do
           visit "/dashboard/collections/#{sharable_collection_id}/edit"
           expect(page).to have_link('Sharing', href: '#sharing')
+        end
+
+        context "to true, limits available users", js: true do
+          let(:user2) { create(:user) }
+          it "to system users filted by select2" do
+            visit "/dashboard/collections/#{sharable_collection_id}/edit"
+            expect(page).to have_link('Sharing', href: '#sharing')
+            click_link('Sharing')
+            expect(page).to have_selector(".form-inline.add-users .select2-container")
+            select_user(user2, 'Depositor')
+            click_button('Save')
+            click_link('Sharing')
+            expect(page).to have_selector('td', text: user2.user_key)
+          end
         end
 
         it 'to false, it hides Sharable tab' do

@@ -17,6 +17,12 @@
         <div class="list-group-item">
           <%= render 'hyrax/users/user_info', user: @user %>
         </div>
+
+        <% if @presenter.trophies.any? %>
+          <div class="list-group-item">
+            <%= render 'hyrax/users/contributions', presenter: @presenter %>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>

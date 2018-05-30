@@ -69,6 +69,50 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
       expect(page).to have_link('Settings', href: '#settings')
       expect(page).to have_link('Participants', href: '#participants')
     end
+
+    it 'tries to make a collection type with existing title, and receives error message', :js do
+      click_link 'Create new collection type'
+
+      expect(page).to have_content 'Create New Collection Type'
+
+      # confirm only Description tab is visible
+      expect(page).to have_link('Description', href: '#metadata')
+      expect(page).not_to have_link('Settings', href: '#settings')
+      expect(page).not_to have_link('Participants', href: '#participants')
+
+      # confirm metadata fields exist
+      expect(page).to have_selector 'input#collection_type_title'
+      expect(page).to have_selector 'textarea#collection_type_description'
+
+      # set values and save
+      fill_in('Type name', with: title)
+      fill_in('Type description', with: description)
+
+      click_button('Save')
+
+      visit '/admin/collection_types'
+      click_link 'Create new collection type'
+
+      expect(page).to have_content 'Create New Collection Type'
+
+      # confirm only Description tab is visible
+      expect(page).to have_link('Description', href: '#metadata')
+      expect(page).not_to have_link('Settings', href: '#settings')
+      expect(page).not_to have_link('Participants', href: '#participants')
+
+      # confirm metadata fields exist
+      expect(page).to have_selector 'input#collection_type_title'
+      expect(page).to have_selector 'textarea#collection_type_description'
+
+      # set values and save
+      fill_in('Type name', with: title)
+      fill_in('Type description', with: description)
+
+      click_button('Save')
+
+      # Confirm error message is displayed.
+      expect(page).to have_content 'Save was not successful because title has already been taken, and machine_id has already been taken.'
+    end
   end
 
   describe 'edit collection type' do
@@ -112,6 +156,7 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
 
         # confirm all non-admin_set checkboxes are on
         expect(page).to have_checked_field('collection_type_nestable')
+        expect(page).to have_checked_field('collection_type_brandable')
         expect(page).to have_checked_field('collection_type_discoverable')
         expect(page).to have_checked_field('collection_type_sharable')
         expect(page).to have_checked_field('collection_type_share_applies_to_new_works')
@@ -123,13 +168,14 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
         expect(page).to have_unchecked_field('collection_type_assigns_visibility', disabled: true)
 
         # change settings
-        page.uncheck('NESTABLE')
+        page.uncheck('NESTING')
         page.uncheck('DISCOVERY')
         page.check('APPLY TO NEW WORKS')
         page.uncheck('MULTIPLE MEMBERSHIP')
 
         # confirm all non-admin_set checkboxes are now off
         expect(page).to have_unchecked_field('collection_type_nestable')
+        expect(page).to have_checked_field('collection_type_brandable')
         expect(page).to have_unchecked_field('collection_type_discoverable')
         expect(page).to have_checked_field('collection_type_sharable')
         expect(page).to have_checked_field('collection_type_share_applies_to_new_works')
@@ -187,6 +233,7 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
 
           # confirm default user collection checkboxes are set to appropriate values
           expect(page).to have_checked_field('collection_type_nestable', disabled: true)
+          expect(page).to have_checked_field('collection_type_brandable', disabled: true)
           expect(page).to have_checked_field('collection_type_discoverable', disabled: true)
           expect(page).to have_checked_field('collection_type_sharable', disabled: true)
           expect(page).to have_unchecked_field('collection_type_share_applies_to_new_works', disabled: true)
@@ -260,6 +307,7 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
 
         # confirm all checkboxes are disabled
         expect(page).to have_field('collection_type_nestable', disabled: true)
+        expect(page).to have_field('collection_type_brandable', disabled: true)
         expect(page).to have_field('collection_type_discoverable', disabled: true)
         expect(page).to have_field('collection_type_sharable', disabled: true)
         expect(page).to have_field('collection_type_share_applies_to_new_works', disabled: true)
@@ -275,13 +323,14 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
     context 'when there are no collections of this type' do
       let!(:empty_collection_type) { create(:collection_type, title: 'Empty Type', creator_user: admin_user) }
       let!(:delete_modal_text) { 'Deleting this collection type will permanently remove the type and its settings from the repository.  Are you sure you want to delete this collection type?' }
+      let!(:deleted_flash_text) { "The collection type #{empty_collection_type.title} has been deleted." }
 
       before do
         sign_in admin_user
         visit '/admin/collection_types'
       end
 
-      it 'shows warning and deletes collection type', :js do
+      it 'shows warning, deletes collection type, and shows flash message on success', :js do
         expect(page).to have_content(empty_collection_type.title)
 
         find(:xpath, "//tr[td[contains(.,'#{empty_collection_type.title}')]]/td/button", text: 'Delete').click
@@ -291,7 +340,13 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
           click_button('Delete')
         end
 
-        expect(page).not_to have_content(empty_collection_type.title)
+        within('.alert-success') do
+          expect(page).to have_content(deleted_flash_text)
+        end
+
+        within('.collection-types-table') do
+          expect(page).not_to have_content(empty_collection_type.title)
+        end
       end
     end
 

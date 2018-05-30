@@ -1,19 +1,23 @@
+<%= render "shared/nav_safety_modal" %>
 <div class="panel panel-default tabs" id="collection-types-controls">
   <ul class="nav nav-tabs" role="tablist">
     <li class="active">
-      <a href="#metadata" role="tab" data-toggle="tab"><%= t('hyrax.admin.collection_types.form.tab.metadata') %></a>
+      <a href="#metadata" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('hyrax.admin.collection_types.form.tab.metadata') %></a>
     </li>
     <% if @form.persisted? %>
       <li>
-        <a href="#settings" role="tab" data-toggle="tab"><%= t('hyrax.admin.collection_types.form.tab.settings') %></a>
+        <a href="#settings" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('hyrax.admin.collection_types.form.tab.settings') %></a>
       </li>
       <li>
-        <a href="#participants" role="tab" data-toggle="tab"><%= t('hyrax.admin.collection_types.form.tab.participants') %></a>
-        </li>
+        <a href="#participants" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('hyrax.admin.collection_types.form.tab.participants') %></a>
+      </li>
+      <li>
+        <a href="#appearance" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('hyrax.admin.collection_types.form.tab.appearance') %></a>
+      </li>
     <% end %>
   </ul>
   <% form_url = @form.id.nil? ? hyrax.admin_collection_types_path : hyrax.admin_collection_type_path(@form.id) %>
-  <%= simple_form_for @form, url: form_url, as: :collection_type do |f| %>
+  <%= simple_form_for @form, url: form_url, as: :collection_type, html: {class: 'nav-safety'} do |f| %>
     <div class="tab-content">
       <% if @collection_type.admin_set? %>
         <div id="metadata" class="tab-pane active">
@@ -42,9 +46,16 @@
       <% # end of form %>
       <% # TODO: The participants partial can't sit inside the other form, moved down here temporarily %>
       <div id="participants" class="tab-pane">
-        <div class="panel panel-default labels">
+        <div class="panel panel-default labels collection-types-edit-participants-tab">
           <div class="panel-body">
             <%= render 'form_participants' %>
+          </div>
+        </div>
+      </div>
+      <div id="appearance" class="tab-pane">
+        <div class="panel panel-default labels">
+          <div class="panel-body">
+            <%= render 'form_appearance', f: f %>
           </div>
         </div>
       </div>

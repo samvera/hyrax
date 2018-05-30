@@ -18,14 +18,83 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
     end
 
     describe "#show" do
-      context "a public admin set" do
-        # Even though the user can view this admin set, the should not be able to view
+      before do
+        sign_in user
+        controller.instance_variable_set(:@admin_set, admin_set)
+      end
+
+      context "when user has access through public group" do
+        # Even though the user can view this admin set, they should not be able to view
         # it on the admin page.
-        let(:admin_set) { create(:admin_set, read_groups: ['public']) }
+        let(:admin_set) { create(:adminset_lw, with_solr_document: true, with_permission_template: { view_groups: ['public'] }) }
 
         it 'is unauthorized' do
           get :show, params: { id: admin_set }
           expect(response).to be_redirect
+        end
+      end
+
+      context "when user has access through registered group" do
+        # Even though the user can view this admin set, the should not be able to view
+        # it on the admin page.
+        let(:admin_set) { create(:adminset_lw, with_solr_document: true, with_permission_template: { view_groups: ['registered'] }) }
+
+        it 'is unauthorized' do
+          get :show, params: { id: admin_set }
+          expect(response).to be_redirect
+        end
+      end
+
+      context "when user is directly granted view access" do
+        # Even though the user can view this admin set, the should not be able to view
+        # it on the admin page.
+        let(:admin_set) { create(:adminset_lw, with_solr_document: true, with_permission_template: { view_users: [user.user_key] }) }
+
+        before do
+          create(:work, :public, admin_set: admin_set)
+        end
+
+        it 'defines a presenter' do
+          get :show, params: { id: admin_set }
+          expect(response).to be_success
+          expect(assigns[:presenter]).to be_kind_of Hyrax::AdminSetPresenter
+          expect(assigns[:presenter].id).to eq admin_set.id
+        end
+      end
+    end
+
+    describe "#edit" do
+      before do
+        sign_in user
+      end
+
+      context "when user is directly granted manage access" do
+        # Even though the user can view this admin set, the should not be able to view
+        # it on the admin page.
+        let(:admin_set) { create(:adminset_lw, with_solr_document: true, with_permission_template: { manage_users: [user.user_key] }) }
+        let(:admin_set2) { create(:adminset_lw, with_solr_document: true, with_permission_template: true) }
+
+        context 'and user is accessing the managed set' do
+          before do
+            controller.instance_variable_set(:@admin_set, admin_set)
+          end
+
+          it 'defines a form' do
+            get :edit, params: { id: admin_set }
+            expect(response).to be_success
+            expect(assigns[:form]).to be_kind_of Hyrax::Forms::AdminSetForm
+          end
+        end
+
+        context 'and user attempts to access another admin set' do
+          before do
+            controller.instance_variable_set(:@admin_set, admin_set2)
+          end
+
+          it 'is unauthorized' do
+            get :edit, params: { id: admin_set2 }
+            expect(response).to be_redirect
+          end
         end
       end
     end

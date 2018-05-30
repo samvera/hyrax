@@ -8,6 +8,10 @@ module Hyrax
         @object_type = object_type
       end
 
+      def initialize(object_type = 'works')
+        @object_type = object_type
+      end
+
       def as_json(*)
         counts.map do |k, v|
           [I18n.translate(k, scope: 'hyrax.admin.stats.repository_objects.series'), v]

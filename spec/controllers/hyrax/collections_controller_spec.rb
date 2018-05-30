@@ -30,7 +30,8 @@ RSpec.describe Hyrax::CollectionsController do
         end
       end
 
-      it "returns the collection and its members", :with_nested_reindexing do # rubocop:disable RSpec/ExampleLength
+      it "returns the collection and its members" do # rubocop:disable RSpec/ExampleLength
+        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         get :show, params: { id: collection }
         expect(response).to be_successful
@@ -43,7 +44,7 @@ RSpec.describe Hyrax::CollectionsController do
         expect(assigns[:subcollection_count]).to eq(2)
       end
 
-      context "and searching", :with_nested_reindexing do
+      context "and searching" do
         it "returns some works and subcollections" do
           # "/collections/4m90dv529?utf8=%E2%9C%93&cq=King+Louie&sort="
           get :show, params: { id: collection, cq: "Second" }
@@ -66,6 +67,7 @@ RSpec.describe Hyrax::CollectionsController do
 
       context "without a referer" do
         it "sets breadcrumbs" do
+          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
           get :show, params: { id: collection }
           expect(response).to be_successful
@@ -78,8 +80,9 @@ RSpec.describe Hyrax::CollectionsController do
         end
 
         it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('My Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('Your Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('My collection', collection_path(collection.id, locale: 'en'))
           get :show, params: { id: collection }
           expect(response).to be_successful
@@ -92,6 +95,31 @@ RSpec.describe Hyrax::CollectionsController do
         get :show, params: { id: collection }
         expect(assigns[:member_docs].count).to eq 0
         expect(assigns[:subcollection_docs].count).to eq 0
+      end
+    end
+
+    context "without a referer" do
+      it "sets breadcrumbs" do
+        expect(controller).not_to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+        expect(controller).not_to receive(:add_breadcrumb).with('Your Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
+        expect(controller).not_to receive(:add_breadcrumb).with('My collection', collection_path(collection.id, locale: 'en'))
+
+        get :show, params: { id: collection }
+        expect(response).to be_successful
+      end
+    end
+
+    context "with a referer" do
+      before do
+        request.env['HTTP_REFERER'] = 'http://test.host/foo'
+      end
+
+      it "sets breadcrumbs" do
+        expect(controller).not_to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+        expect(controller).not_to receive(:add_breadcrumb).with('Your Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('My collection', collection_path(collection.id, locale: 'en'))
+        get :show, params: { id: collection }
+        expect(response).to be_successful
       end
     end
   end

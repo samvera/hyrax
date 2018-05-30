@@ -29,9 +29,10 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
       end
 
       it 'will create a collection type with specified settings when collection_type_settings is set to attributes identifying settings' do
-        col = build(:collection_lw, collection_type_settings: [:not_discoverable, :not_sharable, :nestable])
+        col = build(:collection_lw, collection_type_settings: [:not_discoverable, :not_sharable, :not_brandable, :nestable])
         expect(col.collection_type.discoverable?).to be false
         expect(col.collection_type.sharable?).to be false
+        expect(col.collection_type.brandable?).to be false
         expect(col.collection_type.nestable?).to be true
       end
     end
@@ -58,7 +59,7 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
     end
 
     context 'with_solr_document' do
-      it 'will not created a solr document by default' do
+      it 'will not create a solr document by default' do
         col = build(:collection_lw)
         expect(col.id).to eq nil # no real way to confirm a solr document wasn't created if the collection doesn't have an id
       end
@@ -68,7 +69,7 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
 
         subject { ActiveFedora::SolrService.get("id:#{col.id}")["response"]["docs"].first }
 
-        it 'will created a solr document' do
+        it 'will create a solr document' do
           expect(subject["id"]).to eq col.id
           expect(subject["has_model_ssim"].first).to eq "Collection"
           expect(subject["edit_access_person_ssim"]).not_to be_blank
@@ -86,7 +87,7 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
 
         subject { ActiveFedora::SolrService.get("id:#{col.id}")["response"]["docs"].first }
 
-        it 'will created a solr document' do
+        it 'will create a solr document' do
           expect(subject["id"]).to eq col.id
           expect(subject["has_model_ssim"].first).to eq "Collection"
           expect(subject["edit_access_person_ssim"]).to include(user.user_key, user_mgr.user_key)

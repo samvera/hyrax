@@ -159,7 +159,8 @@ function batch_edit_init () {
         setTimeout(ajaxManager.runNow(), 100);
     }
 
-    $("#permissions_save").click(runSave);
+    $("#permissions_visibility_save").click(runSave);
+    $("#permissions_roles_save").click(runSave);
     $(".field-save").click(runSave);
 }
 
