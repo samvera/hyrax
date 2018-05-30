@@ -63,7 +63,7 @@ The Samvera community is here to help. Please see our [support guide](./.github/
 # Getting started
 
 This document contains instructions specific to setting up an app with __Hyrax
-v2.1.0.rc3__. If you are looking for instructions on installing a different
+v2.1.0.rc4__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -162,7 +162,7 @@ NOTE: The steps need to be done in order to create a new Hyrax based app.
 Generate a new Rails application using the template.
 
 ```
-rails _5.1.6_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v2.1.0.rc3/template.rb
+rails _5.1.6_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v2.1.0.rc4/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:
@@ -187,6 +187,13 @@ And now you should be able to browse to [localhost:3000](http://localhost:3000/)
 Notes:
 * This web server is purely for development purposes. You will want to use a more fully featured [web server](#web-server) for production-like environments.
 * You have the option to start each of these services individually.  More information on [solr_wrapper](https://github.com/cbeer/solr_wrapper) and [fcrepo_wrapper](https://github.com/cbeer/fcrepo_wrapper) will help you set this up.  Start rails with `rails s`.
+
+### Avoid Performance Issues with solr-suggest
+
+*Recommended for all Hyrax apps.*
+
+It is strongly suggested that you turn off solr-suggest.  Details on why and how to do this are in 
+[Fix performance issue caused by solr-suggest](https://github.com/samvera/hyrax/wiki/Troubleshooting-Migration-from-2.0.x-to-2.1.0#fix-performance-issue-caused-by-solr-suggest-after-200-objects-are-in-the-repository).
 
 ## Start background workers
 
