@@ -1,4 +1,4 @@
-gem 'hyrax', '2.1.0.rc4'
+gem 'hyrax', '2.1.0'
 run 'bundle install'
 generate 'hyrax:install', '-f'
 rails_command 'db:migrate'
