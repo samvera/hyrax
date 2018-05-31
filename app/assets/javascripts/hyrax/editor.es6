@@ -25,8 +25,16 @@ export default class {
     this.saveWorkControl()
     this.saveWorkFixed()
     this.authoritySelect()
+    this.formInProgress()
   }
 
+  // Immediate feedback after work creation, editing.
+  formInProgress() {
+    $('[data-behavior~=work-form]').on('submit', function(event){
+      $('.panel-footer').toggleClass('hidden');
+    });
+  }
+  
   // Used when you have a linked data field that can have terms from multiple
   // authorities.
   authoritySelect() {
