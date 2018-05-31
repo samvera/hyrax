@@ -20,5 +20,17 @@ module Hyrax
       @work_rows = Hyrax::WorksCountService.new(self, Hyrax::AnalyticsWorksSearchBuilder, params).search_results_with_work_count(:read)
       render json: @work_rows
     end
+
+    def pin_collection
+      return unless can? :read, :admin_dashboard
+      @pinned = Hyrax::Admin::PinCollectionPresenter.new(params)
+      render json: @pinned.pin_collection
+    end
+
+    def all_pinned_collections
+      return unless can? :read, :admin_dashboard
+      @all = Hyrax::Admin::PinCollectionPresenter.new(params)
+      render json: @all.all_pinned_collections
+    end
   end
 end
