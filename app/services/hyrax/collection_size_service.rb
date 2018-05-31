@@ -1,5 +1,10 @@
 # returns a list of solr documents for collections the item is a part of
 module Hyrax
+  ##
+  # @deprecated This class is broken for base Hyrax applications. Current users
+  #   should call with extreme caution and consider a local implementation as
+  #   an alternative.
+  # @see https://github.com/samvera/hyrax/issues/2801
   class CollectionSizeService
     include Blacklight::Configurable
     include Blacklight::SearchHelper
@@ -13,6 +18,13 @@ module Hyrax
     end
 
     def initialize(collection)
+      Deprecation
+        .warn(self, 'CollectionSizeService has been deprecated for removal in ' \
+                    'Hyrax 3.0. This class is broken for base Hyrax ' \
+                    'applications. Current users should call with extreme ' \
+                    'caution and consider a local implementation as an ' \
+                    'alternative.')
+
       @collection = collection
     end
 
