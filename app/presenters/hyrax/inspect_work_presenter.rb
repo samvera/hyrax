@@ -43,7 +43,7 @@ module Hyrax
       end
 
       def workflow_comments
-        return [] unless sipity_entity && sipity_entity.comments.count > 0
+        return [] unless sipity_entity&.comments&.any?
         sipity_entity.comments.map do |comment|
           { comment: comment.comment, created_at: comment.created_at }
         end

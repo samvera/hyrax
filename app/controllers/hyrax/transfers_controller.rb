@@ -10,7 +10,7 @@ module Hyrax
     # Catch permission errors
     # TODO: Isn't this already handled?
     rescue_from CanCan::AccessDenied do |exception|
-      if current_user && current_user.persisted?
+      if current_user&.persisted?
         redirect_to root_url, alert: exception.message
       else
         session["user_return_to"] = request.url

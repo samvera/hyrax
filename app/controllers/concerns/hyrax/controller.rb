@@ -52,7 +52,7 @@ module Hyrax::Controller
       # For the JSON message, we don't want to display the default CanCan messages,
       # just custom Hydra messages such as "This item is under embargo.", etc.
       json_message = exception.message if exception.is_a? Hydra::AccessDenied
-      if current_user && current_user.persisted?
+      if current_user&.persisted?
         deny_access_for_current_user(exception, json_message)
       else
         deny_access_for_anonymous_user(exception, json_message)

@@ -14,11 +14,11 @@ module Hyrax
 
       # @param [Hyrax::WorkShowPresenter] work_presenter
       def setup_pub_place(work_presenter)
-        work_presenter.based_near_label.first if work_presenter.based_near_label
+        work_presenter.based_near_label&.first
       end
 
       def setup_pub_publisher(work)
-        work.publisher.first if work.publisher
+        work.publisher&.first
       end
 
       def setup_pub_info(work, include_date = false)

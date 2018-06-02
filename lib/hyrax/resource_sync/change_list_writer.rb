@@ -8,8 +8,8 @@ module Hyrax
     # lists and add a Change List Index to point to all of them.
     class ChangeListWriter
       attr_reader :resource_host, :capability_list_url
-      MODIFIED_DATE_FIELD = 'system_modified_dtsi'.freeze
-      BEGINNING_OF_TIME = '1970-01-01T00:00:00Z'.freeze
+      MODIFIED_DATE_FIELD = 'system_modified_dtsi'
+      BEGINNING_OF_TIME = '1970-01-01T00:00:00Z'
 
       def initialize(resource_host:, capability_list_url:)
         @resource_host = resource_host

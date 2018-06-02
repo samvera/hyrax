@@ -28,7 +28,7 @@ module Hyrax::Strategies
     private
 
       def key_exists?(feature)
-        yaml_file[feature.to_s] && yaml_file[feature.to_s].key?("enabled")
+        yaml_file[feature.to_s]&.key?("enabled")
       end
 
       def yaml_file

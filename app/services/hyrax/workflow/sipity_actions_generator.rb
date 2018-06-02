@@ -66,7 +66,7 @@ module Hyrax
           workflow.workflow_states.each do |state|
             next if new_state_names.include?(state.name)
             states_to_remove << state
-            states_that_cannot_be_destroyed << state if state.entities.count > 0 # Choosing count so we pre-warm the query
+            states_that_cannot_be_destroyed << state if state.entities.count.positive? # Choosing count so we pre-warm the query
           end
           if states_that_cannot_be_destroyed.any?
             exception_message = "Cannot delete one or more states because they have one or more entities associated with them."

@@ -100,11 +100,9 @@ module Hyrax
           array_to_exclude += @nesting_attributes.ancestors unless @nesting_attributes.ancestors.nil?
           # build a unique string containing all of Collection F's pathnames and ancestors
           exclude_list = ""
-          unless array_to_exclude.nil?
-            array_to_exclude.uniq.each do |element|
-              exclude_list += ' ' unless exclude_list.empty?
-              exclude_list += element.to_s
-            end
+          array_to_exclude&.uniq&.each do |element|
+            exclude_list += ' ' unless exclude_list.empty?
+            exclude_list += element.to_s
           end
           # Using a !lucene query allows us to get items which match any individual element
           # from the list. Building the query via the AF builder created a !field query which

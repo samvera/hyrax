@@ -11,12 +11,12 @@ module Hyrax
       scope: [:agent_id, :agent_type, :permission_template_id]
     }
 
-    VIEW = 'view'.freeze
-    DEPOSIT = 'deposit'.freeze
-    MANAGE = 'manage'.freeze
+    VIEW = 'view'
+    DEPOSIT = 'deposit'
+    MANAGE = 'manage'
 
-    GROUP = 'group'.freeze
-    USER = 'user'.freeze
+    GROUP = 'group'
+    USER = 'user'
 
     enum(
       access: {

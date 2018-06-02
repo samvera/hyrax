@@ -149,7 +149,7 @@ module Hyrax
       def authorized_for_processing?(user:, entity:, action:)
         action_name = PowerConverter.convert_to_sipity_action_name(action)
         scope_permitted_workflow_actions_available_for_current_state(user: user, entity: entity)
-          .where(Sipity::WorkflowAction.arel_table[:name].eq(action_name)).count > 0
+          .find_by(Sipity::WorkflowAction.arel_table[:name].eq(action_name)).present?
       end
 
       # @api public

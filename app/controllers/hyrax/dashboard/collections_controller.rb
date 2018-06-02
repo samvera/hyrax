@@ -42,7 +42,7 @@ module Hyrax
       def deny_collection_access(exception)
         if exception.action == :edit
           redirect_to(url_for(action: 'show'), alert: 'You do not have sufficient privileges to edit this document')
-        elsif current_user && current_user.persisted?
+        elsif current_user&.persisted?
           redirect_to root_url, alert: exception.message
         else
           session['user_return_to'] = request.url
@@ -242,7 +242,7 @@ module Hyrax
 
         def remove_banner
           banner_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "banner")
-          banner_info.delete_all unless banner_info.nil?
+          banner_info&.delete_all
         end
 
         def update_logo_info(uploaded_file_id, alttext, linkurl)
