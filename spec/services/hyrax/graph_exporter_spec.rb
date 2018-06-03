@@ -36,5 +36,23 @@ RSpec.describe Hyrax::GraphExporter do
         expect { subject }.to raise_error ActiveFedora::ObjectNotFoundError
       end
     end
+
+    context 'with a nested work' do
+      let(:work) do
+        NamespacedWorks::NestedWork
+          .create(title: ['Comet in Moominland'],
+                  created_attributes: [{ start: DateTime.now.utc - 1, finish: DateTime.now.utc },
+                                       { start: DateTime.now.utc - 2, finish: DateTime.now.utc }])
+      end
+
+      it 'includes each nested resources once' do
+        resource_fragments = work.created.map { |ts| ts.rdf_subject.fragment }
+        mapped_fragments   = subject.query(predicate: RDF.type, object: RDF::Vocab::EDM.TimeSpan)
+                                    .subjects
+                                    .map(&:fragment)
+
+        expect(mapped_fragments).to contain_exactly(*resource_fragments)
+      end
+    end
   end
 end
