@@ -51,6 +51,8 @@ module Hyrax
       end
 
       def subresource_replacer(resource_id, parent_klass)
+        return subject_replacer(parent_klass, resource_id) unless resource_id.include?('/')
+
         parent_id, local = resource_id.split('/', 2)
 
         if @visited_subresources.add?(resource_id)
@@ -73,7 +75,10 @@ module Hyrax
                     end
         routes = Rails.application.routes.url_helpers
         builder = ActionDispatch::Routing::PolymorphicRoutes::HelperMethodBuilder
-        builder.polymorphic_method routes, route_key, nil, :url, id: resource_id, host: hostname, anchor: anchor
+        resource_id = RDF::URI(resource_id)
+        new_uri = RDF::URI(builder.polymorphic_method(routes, route_key, nil, :url, id: resource_id.path, host: hostname, anchor: anchor))
+        new_uri.fragment = resource_id.fragment
+        new_uri
       end
 
       def object_replacer(id, _graph)
