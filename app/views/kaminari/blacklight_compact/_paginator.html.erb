@@ -5,7 +5,7 @@ Blacklight, this file can be removed -%>
   <%# #render checks if total_pages > 1, so we can't put our fallback
   in here .. -%>
   <%= paginator.render do -%>
-    <div aria-hidden="true" class="page_links">
+    <div class="page_links">
       <%= prev_page_tag %> |
       <span class="page_entries">
         <%= page_entries_info %>
@@ -14,7 +14,7 @@ Blacklight, this file can be removed -%>
     </div>
   <% end -%>
 <% else -%>
-    <div aria-hidden="true" class="page_links">
+    <div class="page_links">
       <span class="page_entries">
         <%= page_entries_info %>
       </span>
