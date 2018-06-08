@@ -47,7 +47,7 @@ class LoggingFormatter < RSpec::Core::Formatters::ProgressFormatter
       output.puts "Examples with the most LDP requests"
       top = @profile.sort_by { |hash| hash[:count] }.last(10)
       top.each do |hash|
-        result = hash[:count_by_name].select { |_, v| v > 0 }
+        result = hash[:count_by_name].select { |_, v| v.positive? }
         next if result.empty?
         output.puts "  #{hash[:description]}"
         output.puts "    #{hash[:location]}"

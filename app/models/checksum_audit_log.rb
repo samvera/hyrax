@@ -51,7 +51,7 @@ class ChecksumAuditLog < ActiveRecord::Base
 
     0.upto(all_logs.length - 2).each do |i|
       next if all_logs[i].failed?
-      next if i > 0 && all_logs[i - 1].failed?
+      next if i.positive? && all_logs[i - 1].failed?
       next if all_logs[i + 1].failed?
 
       all_logs[i].destroy!

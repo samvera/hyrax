@@ -66,7 +66,7 @@ module Hyrax
 
     # @return [Boolean] True if there is at least one collection of this type
     def collections?
-      collections.count > 0
+      collections.count.positive?
     end
 
     # @return [Boolean] True if this is the Admin Set type

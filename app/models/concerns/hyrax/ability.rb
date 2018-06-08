@@ -75,7 +75,7 @@ module Hyrax
                                       .joins(:permission_template)
                                       .pluck('DISTINCT source_id')
         query = "_query_:\"{!raw f=has_model_ssim}AdminSet\" AND {!terms f=id}#{ids.join(',')}"
-        ActiveFedora::SolrService.count(query) > 0
+        ActiveFedora::SolrService.count(query).positive?
       end
 
       # This overrides hydra-head, (and restores the method from blacklight-access-controls)

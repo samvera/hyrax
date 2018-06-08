@@ -25,7 +25,7 @@ module Hyrax
     self.admin_set_create_service = AdminSetCreateService
 
     def deny_adminset_access(exception)
-      if current_user && current_user.persisted?
+      if current_user&.persisted?
         redirect_to root_url, alert: exception.message
       else
         session['user_return_to'] = request.url
