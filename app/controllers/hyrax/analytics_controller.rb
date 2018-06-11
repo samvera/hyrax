@@ -11,7 +11,7 @@ module Hyrax
 
     def repository_object_counts
       return unless can? :read, :admin_dashboard
-      @repo_objects = Hyrax::Admin::RepositoryObjectPresenter.new(params[:type_value])
+      @repo_objects = Hyrax::Admin::RepositoryObjectPresenter.new(params[:object_type])
       render json: @repo_objects
     end
 

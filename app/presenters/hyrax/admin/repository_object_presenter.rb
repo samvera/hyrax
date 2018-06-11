@@ -2,8 +2,9 @@ module Hyrax
   module Admin
     class RepositoryObjectPresenter
       include Blacklight::SearchHelper
+      WORKS = 'works'.freeze
 
-      def initialize(object_type = 'works')
+      def initialize(object_type = WORKS)
         @object_type = object_type
       end
 
@@ -18,13 +19,17 @@ module Hyrax
         delegate :blacklight_config, to: CatalogController
 
         def counts
-          translation = { 'false' => :published, 'true' => :unpublished, nil => :unknown }
+          translation = translation_keys
           raw_count = Hash[*results.to_a.flatten]
           @counts ||= raw_count.each_with_object({}) { |(k, v), o| o[translation[k]] = v }
         end
 
         def search_builder
-          Stats::WorkStatusSearchBuilder.new(self)
+          if @object_type == WORKS
+            Stats::WorkStatusSearchBuilder.new(self)
+          else
+            Stats::VisibilitySearchBuilder.new(self)
+          end
         end
 
         # results come from Solr in an array where the first item is the status and
@@ -34,7 +39,23 @@ module Hyrax
         # @return [#each] an enumerable object of tuples (status and count)
         def results
           facet_results = repository.search(search_builder)
-          facet_results.facet_fields[IndexesWorkflow.suppressed_field].each_slice(2)
+          facet_results.facet_fields[find_object_type].each_slice(2)
+        end
+
+        def find_object_type
+          if @object_type == WORKS
+            IndexesWorkflow.suppressed_field
+          else
+            'visibility_ssi'
+          end
+        end
+
+        def translation_keys
+          if @object_type == WORKS
+            { 'false' => :published, 'true' => :unpublished, nil => :unknown }
+          else
+            { 'authenticated' => :authenticated, 'open' => :open, 'restricted' => :restricted, nil => :unknown }
+          end
         end
     end
   end

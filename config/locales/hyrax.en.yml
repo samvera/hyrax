@@ -289,7 +289,11 @@ en:
           start_label: Start
         repository_objects:
           series:
+            authenticated: Authenticated
+            open: Open
+            none: None
             published: Published
+            restricted: Restricted
             unknown: Unknown
             unpublished: Unpublished
         user_deposits:

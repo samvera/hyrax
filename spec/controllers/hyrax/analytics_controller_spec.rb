@@ -1,5 +1,9 @@
 RSpec.describe Hyrax::AnalyticsController, type: :controller do
   context 'with an admin user' do
+    let(:results_works) { instance_double(Array) }
+    let(:repo_growth) { Hyrax::Admin::RepositoryGrowthPresenter.new(90) }
+    let(:repo_objects) { Hyrax::Admin::RepositoryObjectPresenter.new('visible') }
+    let(:service_works) { instance_double(Hyrax::WorksCountService, search_results_with_work_count: results_works) }
     let(:user) { create(:admin) }
     let(:access) { :edit }
     let(:read_admin_dashboard) { true }

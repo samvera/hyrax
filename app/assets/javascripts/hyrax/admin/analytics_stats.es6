@@ -1,7 +1,6 @@
 export default class {
   constructor() {
     this.collections_table = $('#analytics-collections-table');
-    this.collections_table_body = $('#analytics-collections-table tbody');
     this.works_table = $('#analytics-works-table');
     this.admin_repo_charts = $('.admin-repo-charts');
 
@@ -66,7 +65,7 @@ export default class {
   }
 
   pinCollection() {
-    this.collections_table_body.on('click', (e) => {
+    this.collections_table.on('click', (e) => {
       let target = $('#' + e.target.id);
       let pinned = !target.hasClass('pinned');
       let is_pinned = (pinned) ? 1 : 0;
