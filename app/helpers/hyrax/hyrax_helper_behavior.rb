@@ -201,7 +201,7 @@ module Hyrax
     # @param [Hash] options from blacklight helper_method invocation. Maps license URIs to links with labels.
     # @return [ActiveSupport::SafeBuffer] license links, html_safe
     def license_links(options)
-      service = Hyrax::LicenseService.new
+      service = Hyrax.config.license_service_class.new
       to_sentence(options[:value].map { |right| link_to service.label(right), right })
     end
 
@@ -209,7 +209,7 @@ module Hyrax
     # @param [Hash] options from blacklight helper_method invocation. Maps rights statement URIs to links with labels.
     # @return [ActiveSupport::SafeBuffer] rights statement links, html_safe
     def rights_statement_links(options)
-      service = Hyrax::RightsStatementService.new
+      service = Hyrax.config.rights_statement_service_class.new
       to_sentence(options[:value].map { |right| link_to service.label(right), right })
     end
 
