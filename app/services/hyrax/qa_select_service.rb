@@ -8,16 +8,23 @@ module Hyrax
       @authority = Qa::Authorities::Local.subauthority_for(authority_name)
     end
 
+    ##
+    # @return [Array<String, #to_s>]
     def select_all_options
       authority.all.map do |element|
         [element[:label], element[:id]]
       end
     end
 
+    # @return [Array<String, #to_s>]
     def select_active_options
       active_elements.map { |e| [e[:label], e[:id]] }
     end
 
+    ##
+    # @return [Boolean] whether the key is active
+    #
+    # @raise [KeyError] when the key has no `active:` status
     def active?(id)
       authority.find(id).fetch('active')
     end
@@ -35,6 +42,10 @@ module Hyrax
       authority.find(id).fetch('term', &block)
     end
 
+    ##
+    # @return [Enumerable<Hash>]
+    #
+    # @raise [KeyError] when no 'term' value is present for the id
     def active_elements
       authority.all.select { |e| e.fetch('active') }
     end

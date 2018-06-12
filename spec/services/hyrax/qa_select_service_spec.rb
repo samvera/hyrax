@@ -44,6 +44,16 @@ RSpec.describe Hyrax::QaSelectService do
     it 'will be Array of Arrays<label, id>' do
       expect(subject).to eq([['Active Label', 'active-id'], ['Active No Term', 'active-no-term-id']])
     end
+
+    context 'when a key has no active property' do
+      let(:no_state) { HashWithIndifferentAccess.new(term: 'term', label: 'label', id: 'no-state') }
+
+      before { authority_map << no_state }
+
+      it 'raises KeyError' do
+        expect { subject }.to raise_error(KeyError)
+      end
+    end
   end
 
   describe '#label' do
