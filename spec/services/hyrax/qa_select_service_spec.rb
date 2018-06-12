@@ -78,4 +78,32 @@ RSpec.describe Hyrax::QaSelectService do
       end
     end
   end
+
+  describe '#include_current_value' do
+    let(:render_opts) { [] }
+    let(:html_opts)   { { class: 'moomin' } }
+
+    let(:authority_map) do
+      [
+        HashWithIndifferentAccess.new(term: 'Active Label', label: 'Active Label', id: 'active-id', active: true),
+        HashWithIndifferentAccess.new(term: 'Inactive Label', label: 'Inactive Label', id: 'inactive-id', active: false),
+        HashWithIndifferentAccess.new(label: 'Inactive No Term', id: 'inactive-no-term-id', active: false)
+      ]
+    end
+
+    it 'adds an inactive current value' do
+      expect(qa_select_service.include_current_value('inactive-id', :idx, render_opts, html_opts))
+        .to eq [[['Inactive Label', 'inactive-id']], { class: 'moomin force-select' }]
+    end
+
+    it 'adds an inactive current value with fallback label' do
+      expect(qa_select_service.include_current_value('inactive-no-term-id', :idx, render_opts, html_opts))
+        .to eq [[['inactive-no-term-id', 'inactive-no-term-id']], { class: 'moomin force-select' }]
+    end
+
+    it 'does not add an active current value' do
+      expect(qa_select_service.include_current_value('active-id', :idx, render_opts.dup, html_opts.dup))
+        .to eq [render_opts, html_opts]
+    end
+  end
 end

@@ -49,5 +49,22 @@ module Hyrax
     def active_elements
       authority.all.select { |e| e.fetch('active') }
     end
+
+    ##
+    # A helper for adding the current value to a form dropdown when
+    # @note this was extracted from LicenseService for more general use.
+    #
+    # @todo find a better home for this! This was initially inlined to the
+    #   service from a helper module in
+    #   https://github.com/samvera/curation_concerns/pull/986. It seems odd
+    #   that this service knows about HTML rendering details. Maybe a factory
+    #   is an appropriate next step?
+    def include_current_value(value, _index, render_options, html_options)
+      unless value.blank? || active?(value)
+        html_options[:class] << ' force-select'
+        render_options += [[label(value) { value }, value]]
+      end
+      [render_options, html_options]
+    end
   end
 end
