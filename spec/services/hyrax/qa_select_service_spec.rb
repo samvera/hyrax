@@ -1,21 +1,4 @@
 RSpec.describe Hyrax::QaSelectService do
-  let(:authority) do
-    # Implementing an ActiveRecord interface as required for this spec
-    Class.new do
-      def initialize(map)
-        @map = map
-      end
-
-      def all
-        @map
-      end
-
-      def find(id)
-        @map.detect { |item| item[:id] == id }
-      end
-    end
-    # rubocop:enable RSpec/InstanceVariable
-  end
   let(:authority_map) do
     [
       HashWithIndifferentAccess.new(term: 'Active Label', label: 'Active Label', id: 'active-id', active: true),
@@ -23,6 +6,8 @@ RSpec.describe Hyrax::QaSelectService do
       HashWithIndifferentAccess.new(label: 'Active No Term', id: 'active-no-term-id', active: true)
     ]
   end
+
+  let(:authority) { FakeAuthority }
   let(:authority_name) { 'respect_my' }
   let(:qa_select_service) { described_class.new(authority_name) }
 
