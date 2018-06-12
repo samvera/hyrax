@@ -2,10 +2,13 @@ class SingleUseLink < ActiveRecord::Base
   validate :expiration_date_cannot_be_in_the_past
   validate :cannot_be_destroyed
 
+  alias_attribute :downloadKey, :download_key
+  alias_attribute :itemId, :item_id
+
   after_initialize :set_defaults
 
   def create_for_path(path)
-    self.class.create(itemId: itemId, path: path)
+    self.class.create(item_id: item_id, path: path)
   end
 
   def expired?
@@ -13,7 +16,7 @@ class SingleUseLink < ActiveRecord::Base
   end
 
   def to_param
-    downloadKey
+    download_key
   end
 
   private
@@ -29,6 +32,6 @@ class SingleUseLink < ActiveRecord::Base
     def set_defaults
       return unless new_record?
       self.expires ||= DateTime.current.advance(hours: 24)
-      self.downloadKey ||= (Digest::SHA2.new << rand(1_000_000_000).to_s).to_s
+      self.download_key ||= (Digest::SHA2.new << rand(1_000_000_000).to_s).to_s
     end
 end
