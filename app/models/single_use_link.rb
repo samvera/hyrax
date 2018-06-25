@@ -7,6 +7,28 @@ class SingleUseLink < ActiveRecord::Base
 
   after_initialize :set_defaults
 
+  # rubocop:disable Naming/MethodName
+  def downloadKey
+    Deprecation.warn(self, 'The #downloadKey attribute is deprecated. Use #download_key instead.')
+    download_key
+  end
+
+  def downloadKey=(val)
+    Deprecation.warn(self, 'The #downloadKey attribute is deprecated. Use #download_key instead.')
+    self.download_key = val
+  end
+
+  def itemId
+    Deprecation.warn(self, 'The #itemId attribute is deprecated. Use #item_id instead.')
+    item_id
+  end
+
+  def itemId=(val)
+    Deprecation.warn(self, 'The #itemId attribute is deprecated. Use #item_id instead.')
+    self.item_id = val
+  end
+  # rubocop:enable Naming/MethodName
+
   def create_for_path(path)
     self.class.create(item_id: item_id, path: path)
   end
