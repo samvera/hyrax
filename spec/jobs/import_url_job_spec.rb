@@ -102,7 +102,7 @@ RSpec.describe ImportUrlJob do
   context 'when the remote file is unavailable' do
     before do
       stub_request(:get, "http://example.org#{file_hash}").with(headers: { 'Range' => 'bytes=0-0' }).to_return(
-        body: '', status: 406, headers: { }
+        body: '', status: 406, headers: {}
       )
     end
 
