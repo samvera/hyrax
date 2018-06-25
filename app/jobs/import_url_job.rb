@@ -24,7 +24,7 @@ class ImportUrlJob < Hyrax::ApplicationJob
     @file_set = file_set
     @operation = operation
 
-    unless HTTParty.head(file_set.import_url).success?
+    unless HTTParty.get(file_set.import_url, headers: { Range: 'bytes=0-0' }).success?
       send_error('Expired URL')
       return false
     end
