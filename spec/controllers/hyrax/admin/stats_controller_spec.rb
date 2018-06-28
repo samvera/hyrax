@@ -21,10 +21,40 @@ RSpec.describe Hyrax::Admin::StatsController, type: :controller do
       end
 
       it 'allows an authorized user to view the page' do
-        expect(Hyrax::AdminStatsPresenter).to receive(:new).with(expected_params, 5).and_call_original
         get :show
+
         expect(response).to be_success
         expect(assigns[:presenter]).to be_kind_of Hyrax::AdminStatsPresenter
+        expect(assigns[:presenter])
+          .to have_attributes(limit: 5, stats_filters: {})
+      end
+
+      context 'with a custom presenter' do
+        let(:presenter_class) { Class.new(Hyrax::AdminStatsPresenter) }
+
+        before { described_class.admin_stats_presenter = presenter_class }
+
+        it 'allows an authorized user to view the page' do
+          get :show
+
+          expect(assigns[:presenter]).to be_kind_of presenter_class
+          expect(assigns[:presenter])
+            .to have_attributes(limit: 5, stats_filters: {})
+        end
+      end
+
+      context 'with custom stats services' do
+        let(:by_depositor_class) { Class.new(Hyrax::Statistics::Works::ByDepositor) }
+        let(:service_config)     { { by_depositor: by_depositor_class } }
+
+        before { described_class.admin_stats_services = service_config }
+
+        it 'allows an authorized user to view the page' do
+          get :show
+
+          expect(assigns[:presenter])
+            .to have_attributes(by_depositor: by_depositor_class)
+        end
       end
     end
   end
