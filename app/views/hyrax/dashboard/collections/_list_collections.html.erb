@@ -40,7 +40,7 @@
       <div class="expanded-details">
         <p>
           <strong><%= t("hyrax.dashboard.my.collection_list.description") %></strong>
-          <br /><%= collection_presenter.description.first %>
+          <br /><%= collection_presenter.description&.first %>
         </p>
         <p>
           <strong><%= t("hyrax.dashboard.my.collection_list.edit_access") %></strong>
