@@ -314,6 +314,7 @@ zh:
           delete:
             confirm: 您肯定要删除?
           header:
+            name: 名称
             roles: 角色
             user: 用户
           new_role: '授予角色:'

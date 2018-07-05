@@ -314,6 +314,7 @@ en:
           delete:
             confirm: Are you sure?
           header:
+            name: Name
             roles: Roles
             user: User
           new_role: Assign Role
