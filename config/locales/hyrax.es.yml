@@ -314,6 +314,7 @@ es:
           delete:
             confirm: "¿Estás seguro?"
           header:
+            name: Nombre
             roles: Roles
             user: Usuario
           new_role: Asignar Rol

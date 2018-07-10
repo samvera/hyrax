@@ -314,6 +314,7 @@ pt-BR:
           delete:
             confirm: Você tem certeza?
           header:
+            name: Nome
             roles: Roles
             user: Do utilizador
           new_role: Atribuir papel
