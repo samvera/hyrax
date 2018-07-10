@@ -206,7 +206,7 @@ module Hyrax
 
       def document_not_found!
         doc = ::SolrDocument.find(params[:id])
-        raise WorkflowAuthorizationException if doc.suppressed?
+        raise WorkflowAuthorizationException if doc.suppressed? && current_ability.can?(:read, doc)
         raise CanCan::AccessDenied.new(nil, :show)
       end
 
