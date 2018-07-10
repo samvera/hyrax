@@ -6,7 +6,6 @@
   <% end %>
 
   <%= menu.nav_link(hyrax.my_works_path,
-                    also_active_for: hyrax.dashboard_works_path,
-                    data: { turbolinks: false }) do %>
+                    also_active_for: hyrax.dashboard_works_path) do %>
     <span class="fa fa-file"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.works') %></span>
   <% end %>

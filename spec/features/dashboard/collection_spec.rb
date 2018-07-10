@@ -631,14 +631,14 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       it "preselects the collection we are adding works to and adds the selected works" do
         visit "/dashboard/collections/#{collection1.id}"
         click_link 'Add existing works'
-        first('input#check_all').click
+        find('input#check_all').click
         click_button "Add to collection"
         expect(page).to have_selector "#member_of_collection_ids[value=\"#{collection1.id}\"]", visible: false
         expect(page).to have_selector "#member_of_collection_label[value=\"#{collection1.title.first}\"]"
 
         visit "/dashboard/collections/#{collection2.id}"
         click_link 'Add existing works'
-        first('input#check_all').click
+        find('input#check_all').click
         click_button "Add to collection"
         expect(page).to have_selector "#member_of_collection_ids[value=\"#{collection2.id}\"]", visible: false
         expect(page).to have_selector "#member_of_collection_label[value=\"#{collection2.title.first}\"]"
