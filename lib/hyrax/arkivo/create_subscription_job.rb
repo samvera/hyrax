@@ -22,7 +22,7 @@ module Hyrax
       private
 
         def logger
-          ActiveFedora::Base.logger
+          Hyrax.logger
         end
 
         def validate_user!

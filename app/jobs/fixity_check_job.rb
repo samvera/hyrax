@@ -58,6 +58,6 @@ class FixityCheckJob < Hyrax::ApplicationJob
     end
 
     def logger
-      ActiveFedora::Base.logger
+      Hyrax.logger
     end
 end
