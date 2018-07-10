@@ -53,6 +53,6 @@ module Hyrax
   end
 
   def self.primary_work_type
-    Hyrax::WorkRelation::DummyModel.primary_concern
+    config.curation_concerns.first
   end
 end
