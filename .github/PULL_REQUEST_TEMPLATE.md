@@ -19,4 +19,9 @@ Changes proposed in this pull request:
 *
 *
 
+Guidance for testing, such as acceptance criteria or new user interface behaviors:
+*
+*
+*
+
 @samvera/hyrax-code-reviewers
