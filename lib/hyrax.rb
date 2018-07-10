@@ -46,6 +46,12 @@ module Hyrax
     @config
   end
 
+  ##
+  # @return [Logger]
+  def self.logger
+    @logger ||= ActiveFedora::Base.logger
+  end
+
   def self.primary_work_type
     Hyrax::WorkRelation::DummyModel.primary_concern
   end

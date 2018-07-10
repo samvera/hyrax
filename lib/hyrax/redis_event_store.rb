@@ -15,7 +15,7 @@ module Hyrax
         nil
       end
 
-      delegate :logger, to: ActiveFedora::Base
+      delegate :logger, to: Hyrax
 
       def instance
         if Redis.current.is_a? Redis::Namespace
