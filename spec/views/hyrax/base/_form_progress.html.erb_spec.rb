@@ -99,6 +99,17 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
         expect(page).not_to have_link 'Deposit Agreement', href: '/agreement'
       end
     end
+
+    context "with active deposit acceptance but no show deposit agreement" do
+      before do
+        allow(Flipflop).to receive(:show_deposit_agreement?).and_return(false)
+        allow(Flipflop).to receive(:active_deposit_agreement_acceptance?)
+          .and_return(true)
+      end
+      it "does not display the deposit agreement in the requirements" do
+        expect(page).not_to have_selector("#required-agreement")
+      end
+    end
   end
 
   context "when the work has been saved before" do
