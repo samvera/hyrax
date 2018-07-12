@@ -57,7 +57,6 @@ RSpec.describe 'hyrax/file_sets/_show_actions.html.erb', type: :view do
     it 'renders actions for the user' do
       expect(page).to have_link("Edit This File")
       expect(page).to have_link("Delete This File")
-      expect(page).to have_link("Single-Use Link to File")
     end
   end
 end

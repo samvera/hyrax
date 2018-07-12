@@ -1021,7 +1021,7 @@ en:
       name: Work
     share_button: Share Your Work
     single_use_links:
-      button: Single-Use Link to File
+      button: Create Single-Use Link
       copy:
         button: Copy
         tooltip: Copied!
