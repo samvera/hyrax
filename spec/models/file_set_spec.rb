@@ -487,8 +487,8 @@ RSpec.describe FileSet do
     end
 
     let(:depositor) { 'jcoyne' }
-    let(:depositor_key) { Solrizer.solr_name('depositor') }
-    let(:title_key) { Solrizer.solr_name('title', :stored_searchable, type: :string) }
+    let(:depositor_key) { ActiveFedora.index_field_mapper.solr_name('depositor') }
+    let(:title_key) { ActiveFedora.index_field_mapper.solr_name('title', :stored_searchable, type: :string) }
     let(:title) { ['abc123'] }
     let(:no_terms) { described_class.find(subject.id).to_solr }
     let(:terms) do

@@ -5,7 +5,7 @@ module Hyrax
         private
 
           def index_key
-            Solrizer.solr_name("resource_type", :facetable)
+            ActiveFedora.index_field_mapper.solr_name("resource_type", :facetable)
           end
       end
     end

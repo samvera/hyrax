@@ -17,7 +17,6 @@ RSpec.describe Hyrax::WorkBehavior do
                                                Hyrax::Serializers,
                                                Hydra::WithDepositor,
                                                Hydra::AccessControls::Embargoable,
-                                               Solrizer::Common,
                                                Hyrax::Suppressible,
                                                Hyrax::CollectionNesting)
   end

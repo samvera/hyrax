@@ -1,3 +1,3 @@
 <% record.language.each do |lang| %>
-  <span itemprop="inLanguage"><%= link_to_facet(lang, Solrizer.solr_name("language", :facetable)) %></span><br />
+  <span itemprop="inLanguage"><%= link_to_facet(lang, ActiveFedora.index_field_mapper.solr_name("language", :facetable)) %></span><br />
 <% end %>

@@ -6,7 +6,7 @@ module Hyrax
 
           # Returns 'file_format_sim'
           def index_key
-            Solrizer.solr_name('file_format', :facetable)
+            ActiveFedora.index_field_mapper.solr_name('file_format', :facetable)
           end
       end
     end
