@@ -199,9 +199,10 @@ RSpec.describe Hyrax::GenericWorksController do
       end
       let(:work) { instance_double(GenericWork, id: '99999', to_global_id: '99999') }
 
-      context 'with a user lacking workflow permission' do
+      context 'with a user lacking both workflow permission and read access' do
         before do
           allow(SolrDocument).to receive(:find).and_return(document)
+          allow(controller.current_ability).to receive(:can?).with(:read, document).and_return(false)
         end
         let(:document_list) { [] }
         let(:document) { instance_double(SolrDocument, suppressed?: true) }
@@ -209,8 +210,23 @@ RSpec.describe Hyrax::GenericWorksController do
         it 'shows the unauthorized message' do
           get :show, params: { id: work.id }
           expect(response.code).to eq '401'
-          expect(response).to render_template(:unavailable)
-          expect(flash[:notice]).to eq 'The work is not currently available because it has not yet completed the approval process'
+          expect(response).to render_template(:unauthorized)
+        end
+
+        context 'with a user who lacks workflow permission but has read access' do
+          before do
+            allow(SolrDocument).to receive(:find).and_return(document)
+            allow(controller.current_ability).to receive(:can?).with(:read, document).and_return(true)
+          end
+          let(:document_list) { [] }
+          let(:document) { instance_double(SolrDocument, suppressed?: true) }
+
+          it 'shows the unavailable message' do
+            get :show, params: { id: work.id }
+            expect(response.code).to eq '401'
+            expect(response).to render_template(:unavailable)
+            expect(flash[:notice]).to eq 'The work is not currently available because it has not yet completed the approval process'
+          end
         end
       end
 
