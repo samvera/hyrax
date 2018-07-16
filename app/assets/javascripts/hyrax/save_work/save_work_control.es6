@@ -108,13 +108,18 @@ export default class SaveWorkControl {
 
   // Called when a file has been uploaded, the deposit agreement is clicked or a form field has had text entered.
   formStateChanged() {
-    this.saveButton.prop("disabled", !this.isValid());
+    this.saveButton.prop("disabled", !this.isSaveButtonEnabled);
   }
 
   // called when a new field has been added to the form.
   formChanged() {
     this.requiredFields.reload();
     this.formStateChanged();
+  }
+
+  // Indicates whether the "Save" button should be enabled: a valid form and no uploads in progress
+  get isSaveButtonEnabled() {
+    return this.isValid() && !this.uploads.inProgress;
   }
 
   isValid() {
