@@ -14,8 +14,4 @@ RSpec.describe 'hyrax/single_use_links_viewer/show.html.erb' do
   it "contains a download link" do
     expect(rendered).to have_selector "a[href^='/single_use_link/download/']"
   end
-
-  it "has turbolinks disabled in the download link" do
-    expect(rendered).to have_selector "a[data-turbolinks^='false'][href^='/single_use_link/download/']"
-  end
 end

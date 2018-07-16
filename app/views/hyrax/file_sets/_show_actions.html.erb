@@ -1,6 +1,6 @@
 <div class="form-actions">
   <% if Hyrax.config.analytics? %>
-    <%= link_to "Analytics", @presenter.stats_path, id: 'stats', class: 'btn btn-default', data: { turbolinks: false } %>
+    <%= link_to "Analytics", @presenter.stats_path, id: 'stats', class: 'btn btn-default' %>
   <% end %>
 
   <% if @presenter.editor? %>
