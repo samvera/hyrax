@@ -173,6 +173,56 @@ describe("SaveWorkControl", function() {
 
   });
 
+  describe('isSaveButtonEnabled helper method', function() {
+    const form_id = 'new_generic_work';
+    let buildTarget = function(form_id) {
+      let buildFixture = function(id) {
+        return setFixtures(
+          `<form id="${id}">
+            <aside id="form-progress">
+              <ul>
+                <li id="required-metadata"></li>
+                <li id="required-files"></li>
+                <li id="required-agreement"></li>
+              </ul>
+              <input type="checkbox" name="agreement" id="agreement" value="1" required="required" checked="checked" />
+              <input type="submit">
+            </aside>
+          </form>`
+        );
+      };
+      target = new SaveWorkControl(buildFixture(form_id).find('#form-progress'));
+      return target;
+    };
+
+    describe('returns a boolean value of', function() {
+      beforeEach(function() {
+        target = buildTarget(form_id);
+        target.uploads = {
+          hasFiles: true,
+          hasFileRequirement: true,
+          // mock current uploads getter value
+          inProgress: false
+        };
+      });
+
+      it('true when the form is valid and there are no in progress uploads', () => {
+        expect(target.isSaveButtonEnabled).toBeTruthy();
+      });
+      
+      it('false when required files have not been added to the form', () => {
+        target.uploads.hasFiles = false;
+        expect(target.isSaveButtonEnabled).toBeFalsy();
+      });
+
+      it('false when file uploads are still in progress', () => {
+        target.uploads.inProgress = true;
+        expect(target.isSaveButtonEnabled).toBeFalsy();
+      });
+    });
+  });
+
+
   describe("on submit", function() {
     var target;
     beforeEach(function() {
