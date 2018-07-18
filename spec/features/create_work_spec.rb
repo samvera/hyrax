@@ -117,7 +117,6 @@ RSpec.describe 'Creating a new Work', :js, :workflow do
         attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/image.jp2", visible: false)
       end
       expect(page).to have_css('ul li#required-files.complete', text: 'Add files')
-
       click_button 'Delete' # delete the file
       expect(page).to have_css('ul li#required-files.incomplete', text: 'Add files')
     end

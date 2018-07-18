@@ -14,7 +14,7 @@
             <p class="size">Processing...</p>
             <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
         </td>
-        <td>
+        <td class="text-right">
             {% if (!i && !o.options.autoUpload) { %}
                 <button class="btn btn-primary start" disabled>
                     <i class="glyphicon glyphicon-upload"></i>
@@ -22,7 +22,7 @@
                 </button>
             {% } %}
             {% if (!i) { %}
-                <button class="btn btn-warning cancel">
+                <button class="btn btn-sm btn-warning cancel">
                     <i class="glyphicon glyphicon-ban-circle"></i>
                     <span>Cancel</span>
                 </button>
@@ -54,9 +54,9 @@
 <!-- The template to display files available for download -->
 <script id="batch-template-download" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
-    <tr class="template-download <%= fade_class_if_not_test %>">
+    <tr class="template-download add-batch-work-file-wrapper <%= fade_class_if_not_test %>">
         <td>
-          <div class="row">
+          <div class="row padding-bottom">
             <div class="col-sm-6 name">
                 <span>{%=file.name%}</span>
                 <input type="hidden" name="uploaded_files[]" value="{%=file.id%}">
@@ -66,7 +66,7 @@
                   <div><span class="label label-danger">Error</span> {%=file.error%}</div>
               {% } %}
               <span class="size">{%=o.formatFileSize(file.size)%}</span>
-              <button class="btn btn-danger delete pull-right" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+              <button class="btn btn-sm btn-danger delete pull-right" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
                   <i class="glyphicon glyphicon-trash"></i>
                   <span>Delete</span>
               </button>
@@ -76,15 +76,15 @@
             <div class="col-sm-12 form-horizontal">
               <div class="form-group">
                 <label for="title_{%=file.id%}" class="col-sm-5 control-label">Display label</label>
-                <div class="col-sm-7">
+                <div class="col-sm-7 padding-bottom">
                   <input type="text" class="form-control" name="title[{%=file.id%}]" id="title_{%=file.id%}" value="{%=file.name%}">
                 </div>
                 <label for="resource_type_{%=file.id%}" class="col-sm-5 control-label">Resource Type</label>
-                <div class="col-sm-7">
+                <div class="col-sm-7 padding-bottom">
                   <select class="form-control resource_type_dropdown" multiple="multiple" size="6" name="resource_type[{%=file.id%}][]" id="resource_type_{%=file.id%}" value="{%=file.name%}">
                     <%= options_for_select(Hyrax::ResourceTypesService.select_options) %>
                   </select>
-                  <button class="btn pull-right resource_type_button" onClick="setAllResourceTypes({%= file.id %}); return false;">Set all to this Resource Type</button>
+                  <button class="btn btn-default pull-right resource_type_button" onClick="setAllResourceTypes({%= file.id %}); return false;">Set all to this Resource Type</button>
                 </div>
               </div>
             </div>
@@ -122,10 +122,10 @@
         <td>
             <span class="size">{%=o.formatFileSize(file.size)%}</span>
         </td>
-        <td>
-            <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+        <td class="text-right">
+            <button class="btn btn-sm btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
                 <i class="glyphicon glyphicon-trash"></i>
-                <span>Delete</span>
+                Delete
             </button>
         </td>
     </tr>
