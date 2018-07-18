@@ -24,7 +24,6 @@ RSpec.describe Hyrax::My::WorksSearchBuilder do
 
     it "filters works that we are the depositor of" do
       expect(subject).to eq ["{!terms f=has_model_ssim}GenericWork",
-                             "-suppressed_bsi:true",
                              "depositor"]
     end
   end
@@ -44,7 +43,6 @@ RSpec.describe Hyrax::My::WorksSearchBuilder do
         :add_group_config_to_solr,
         :add_facet_paging_to_solr,
         :filter_models,
-        :only_active_works,
         :show_only_resources_deposited_by_current_user
       ]
     end
