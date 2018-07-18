@@ -27,5 +27,9 @@ RSpec.describe 'hyrax/file_sets/_single_use_links.html.erb', type: :view do
     it "renders a table with links" do
       expect(rendered).to include("Link sha2ha expires in 23 hours")
     end
+
+    it "renders the single use link button" do
+      expect(rendered).to have_link("Create Single-Use Link")
+    end
   end
 end
