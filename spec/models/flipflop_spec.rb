@@ -38,4 +38,12 @@ RSpec.describe Flipflop do
       is_expected.to be false
     end
   end
+
+  describe "hide_users_list?" do
+    subject { described_class.hide_users_list? }
+
+    it "defaults to true" do
+      is_expected.to be true
+    end
+  end
 end

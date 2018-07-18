@@ -6,6 +6,7 @@ module Hyrax
     helper Hyrax::TrophyHelper
 
     def index
+      authenticate_user! if Flipflop.hide_users_list?
       @users = search(params[:uq])
     end
 

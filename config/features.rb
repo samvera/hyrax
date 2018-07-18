@@ -38,4 +38,8 @@ Flipflop.configure do
   feature :hide_private_items,
           default: false,
           description: "Do not show the private items."
+
+  feature :hide_users_list,
+          default: true,
+          description: "Do not show users list unless user has authenticated."
 end
