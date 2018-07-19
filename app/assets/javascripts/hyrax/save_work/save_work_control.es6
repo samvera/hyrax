@@ -92,6 +92,20 @@ export default class SaveWorkControl {
     this.preventSubmit()
     this.watchMultivaluedFields()
     this.formChanged()
+    this.addFileUploadEventListeners();
+  }
+
+  addFileUploadEventListeners() {
+    let $uploadsEl = this.uploads.element;
+    const $cancelBtn = this.uploads.form.find('#file-upload-cancel-btn');
+
+    $uploadsEl.bind('fileuploadstart', () => {
+      $cancelBtn.removeClass('hidden');
+    });
+
+    $uploadsEl.bind('fileuploadstop', () => {
+      $cancelBtn.addClass('hidden');
+    });
   }
 
   preventSubmit() {
