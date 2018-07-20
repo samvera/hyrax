@@ -109,6 +109,11 @@ input#check_all {
 
 .check-all {
   white-space: nowrap;
+
+  label {
+    margin: 0;
+  }
+
   .caret {
     margin-left: 0;
   }
