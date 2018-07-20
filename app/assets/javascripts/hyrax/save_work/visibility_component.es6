@@ -14,6 +14,7 @@ export default class VisibilityComponent {
     this.form.on('submit', () => { this.enableAllOptions() })
     this.showForm()
     this.limitByAdminSet()
+    element.data('visibility_component', this)
   }
 
   showForm() {
