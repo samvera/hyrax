@@ -305,11 +305,15 @@ RSpec.describe Hyrax::FileSetPresenter do
   end
 
   describe 'IIIF integration' do
+    def uri_segment_escape(uri)
+      ActionDispatch::Journey::Router::Utils.escape_segment(uri)
+    end
+
     let(:file_set) { create(:file_set) }
     let(:solr_document) { SolrDocument.new(file_set.to_solr) }
     let(:request) { double(base_url: 'http://test.host') }
     let(:presenter) { described_class.new(solr_document, ability, request) }
-    let(:id) { CGI.escape(file_set.original_file.id) }
+    let(:id) { ActiveFedora::File.uri_to_id(file_set.original_file.versions.last.uri) }
     let(:read_permission) { true }
 
     before do
@@ -345,7 +349,7 @@ RSpec.describe Hyrax::FileSetPresenter do
           end
 
           it { is_expected.to be_instance_of IIIFManifest::DisplayImage }
-          its(:url) { is_expected.to eq "http://test.host/images/#{id}/full/600,/0/default.jpg" }
+          its(:url) { is_expected.to eq "http://test.host/images/#{uri_segment_escape(id)}/full/600,/0/default.jpg" }
 
           context 'with custom image size default' do
             let(:custom_image_size) { '666,' }
@@ -358,7 +362,7 @@ RSpec.describe Hyrax::FileSetPresenter do
             end
 
             it { is_expected.to be_instance_of IIIFManifest::DisplayImage }
-            its(:url) { is_expected.to eq "http://test.host/images/#{id}/full/#{custom_image_size}/0/default.jpg" }
+            its(:url) { is_expected.to eq "http://test.host/images/#{uri_segment_escape(id)}/full/#{custom_image_size}/0/default.jpg" }
           end
 
           context 'with custom image url builder' do
@@ -388,7 +392,7 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
 
     describe "#iiif_endpoint" do
-      subject { presenter.send(:iiif_endpoint, file_set.original_file.id) }
+      subject { presenter.send(:iiif_endpoint, id) }
 
       before do
         allow(Hyrax.config).to receive(:iiif_image_server?).and_return(riiif_enabled)
@@ -399,7 +403,7 @@ RSpec.describe Hyrax::FileSetPresenter do
       context 'with iiif_image_server enabled' do
         let(:riiif_enabled) { true }
 
-        its(:url) { is_expected.to eq "http://test.host/images/#{id}" }
+        its(:url) { is_expected.to eq "http://test.host/images/#{uri_segment_escape(id)}" }
         its(:profile) { is_expected.to eq 'http://iiif.io/api/image/2/level2.json' }
 
         context 'with a custom iiif image profile' do

@@ -13,9 +13,10 @@ module Hyrax
       return nil unless ::FileSet.exists?(id) && solr_document.image? && current_ability.can?(:read, id)
       # @todo this is slow, find a better way (perhaps index iiif url):
       original_file = ::FileSet.find(id).original_file
+      latest_file_id = original_file.has_versions? ? ActiveFedora::File.uri_to_id(original_file.versions.last.uri) : original_file.id
 
       url = Hyrax.config.iiif_image_url_builder.call(
-        original_file.id,
+        latest_file_id,
         request.base_url,
         Hyrax.config.iiif_image_size_default
       )
@@ -23,7 +24,7 @@ module Hyrax
       IIIFManifest::DisplayImage.new(url,
                                      width: 640,
                                      height: 480,
-                                     iiif_endpoint: iiif_endpoint(original_file.id))
+                                     iiif_endpoint: iiif_endpoint(latest_file_id))
     end
 
     private
