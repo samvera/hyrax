@@ -4,6 +4,7 @@ module Hyrax
 
     included do
       self.default_processor_chain += [:find_one]
+      self.default_processor_chain.delete :filter_models
     end
 
     def find_one(solr_parameters)
