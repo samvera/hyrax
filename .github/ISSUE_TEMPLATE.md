@@ -13,7 +13,7 @@ Provide the rationale or user story that describes "why" this issue should be ad
 ### Steps to reproduce the behavior
 
 1. Do this
-1. Then do this...
+2. Then do this...
 
 ### Related work
 
