@@ -54,7 +54,7 @@ module Hyrax
       # @param [Hash] file_set_params specifying the visibility, lease and/or embargo of the file set.
       #   Without visibility, embargo_release_date or lease_expiration_date, visibility will be copied from the parent.
       def create_metadata(file_set_params = {})
-        file_set.apply_depositor_metadata(user)
+        file_set.depositor = depositor_id(user)
         now = TimeService.time_in_utc
         file_set.date_uploaded = now
         file_set.date_modified = now
@@ -142,6 +142,11 @@ module Hyrax
 
         def assign_visibility?(file_set_params = {})
           !((file_set_params || {}).keys.map(&:to_s) & %w[visibility embargo_release_date lease_expiration_date]).empty?
+        end
+
+        # replaces file_set.apply_depositor_metadata(user)from hydra-access-controls so depositor doesn't automatically get edit access
+        def depositor_id(depositor)
+          depositor.respond_to?(:user_key) ? depositor.user_key : depositor
         end
 
         # Must clear the fileset from the thumbnail_id, representative_id and rendering_ids fields on the work
