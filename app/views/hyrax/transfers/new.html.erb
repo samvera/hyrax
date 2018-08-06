@@ -1,5 +1,5 @@
 <% provide :page_header do %>
-  <h1><span class="fa fa-arrows-h"></span><%= t(:'.title', work_title: @proxy_deposit_request.to_s) %></h1>
+  <h1><span class="fa fa-arrows-h" aria-hidden="true"></span><%= t(:'.title', work_title: @proxy_deposit_request.to_s) %></h1>
 <% end %>
 
 <span class="sr-only"><%= t(:'.sr_only_description', work_title: @proxy_deposit_request.to_s) %></span>

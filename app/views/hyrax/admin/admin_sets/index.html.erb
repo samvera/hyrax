@@ -1,9 +1,9 @@
 <% provide :page_header do %>
-  <h1><span class="fa fa-sitemap"></span> Administrative Sets</h1>
+  <h1><span class="fa fa-sitemap" aria-hidden="true"></span> Administrative Sets</h1>
   <% if can? :create, AdminSet %>
     <div class="pull-right">
       <%= link_to hyrax.new_admin_admin_set_path, class: 'btn btn-primary' do %>
-        <span class="fa fa-edit"></span> <%= t(:'helpers.action.admin_set.new') %>
+        <span class="fa fa-edit" aria-hidden="true"></span> <%= t(:'helpers.action.admin_set.new') %>
       <% end %>
     </div>
   <% end %>

@@ -1,5 +1,5 @@
 <% provide :page_header do %>
-  <h1><span class="fa fa-sitemap"></span> <%= t('.header') %></h1>
+  <h1><span class="fa fa-sitemap" aria-hidden="true"></span> <%= t('.header') %></h1>
 <% end %>
 
 <div class="row">
@@ -14,7 +14,7 @@
               <%= render_thumbnail_tag @presenter.solr_document, {}, suppress_link: true %>
             </div>
           <% else %>
-            <span class="fa fa-sitemap collection-icon-search"></span>
+            <span class="fa fa-sitemap collection-icon-search" aria-hidden="true"></span>
           <% end %>
         </div>
         <div class="col-md-10">

@@ -14,7 +14,7 @@
 </script>
 
 <% provide :page_header do %>
-  <h1><span class="fa fa-file"></span> <%= t("hyrax.admin.sidebar.works") %></h1>
+  <h1><span class="fa fa-file" aria-hidden="true"></span> <%= t("hyrax.admin.sidebar.works") %></h1>
   <% if current_ability.can_create_any_work? %>
     <div class="pull-right">
       <% if @create_work_presenter.many? %>

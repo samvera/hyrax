@@ -11,35 +11,35 @@
 <% end %>
 
 <% if user.facebook_handle.present? %>
-  <dt><i class="fa fa-facebook"></i> Facebook Handle</dt>
+  <dt><i class="fa fa-facebook" aria-hidden="true"></i> Facebook Handle</dt>
   <dd><%= link_to user.facebook_handle, "http://facebook.com/#{user.facebook_handle}", {target:'_blank'} %></dd>
 <% end %>
 
 <% if user.twitter_handle.present? %>
-  <dt><i class="fa fa-twitter"></i> Twitter Handle</dt>
+  <dt><i class="fa fa-twitter" aria-hidden="true"></i> Twitter Handle</dt>
   <dd><%= link_to user.twitter_handle, "http://twitter.com/#{user.twitter_handle}", {target:'_blank'} %></dd>
 <% end %>
 
 <% if user.googleplus_handle.present? %>
-  <dt><i class="fa fa-google-plus"></i> Google+ Handle</dt>
+  <dt><i class="fa fa-google-plus" aria-hidden="true"></i> Google+ Handle</dt>
   <dd><%= link_to user.googleplus_handle, "http://google.com/+#{user.googleplus_handle}", {target:'_blank'} %></dd>
 <% end %>
 
 <% if user.linkedin_handle.present? %>
-  <dt><i class="fa fa-linkedin"></i> LinkedIn</dt>
+  <dt><i class="fa fa-linkedin" aria-hidden="true"></i> LinkedIn</dt>
   <dd><%= link_to "#{@linkedInUrl}", "#{@linkedInUrl}", { target: '_blank' } %></dd>
 <% end %>
 
-  <dt><i class="fa fa-envelope"></i> Email</dt>
+  <dt><i class="fa fa-envelope" aria-hidden="true"></i> Email</dt>
   <dd><%= mail_to user.email %></dd>
 
   <% if user.chat_id %>
-    <dt><i class="glyphicon glyphicon-bullhorn"></i> Chat ID</dt>
+    <dt><i class="glyphicon glyphicon-bullhorn" aria-hidden="true"></i> Chat ID</dt>
     <dd><%= user.chat_id %></dd>
   <% end %>
 
   <% if user.website %>
-    <dt><i class="glyphicon glyphicon-globe"></i> Website(s)</dt>
+    <dt><i class="glyphicon glyphicon-globe" aria-hidden="true"></i> Website(s)</dt>
     <dd><%= iconify_auto_link(user.website) %></dd>
   <% end %>
 
@@ -64,7 +64,7 @@
   <% end %>
 
   <% if user.address %>
-    <dt><i class="glyphicon glyphicon-map-marker"></i> Address</dt>
+    <dt><i class="glyphicon glyphicon-map-marker" aria-hidden="true"></i> Address</dt>
     <dd><%= user.address %></dd>
   <% end %>
 
@@ -74,7 +74,7 @@
   <% end %>
 
   <% if user.telephone %>
-    <dt><i class="glyphicon glyphicon-earphone"></i> Telephone</dt>
+    <dt><i class="glyphicon glyphicon-earphone" aria-hidden="true"></i> Telephone</dt>
     <dd><%= link_to_telephone(user) %></dd>
   <% end %>
 

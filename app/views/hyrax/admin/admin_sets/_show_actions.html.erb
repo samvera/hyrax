@@ -7,17 +7,17 @@
           <div class="col-sm-4">
             <div class="pull-right">
               <%= link_to edit_admin_admin_set_path(presenter), class: 'btn btn-primary' do %>
-                <span class="fa fa-edit"></span> <%= t(:'helpers.action.edit') %>
+                <span class="fa fa-edit" aria-hidden="true"></span> <%= t(:'helpers.action.edit') %>
               <% end %>
               <% if presenter.disable_delete? %>
                 <span title="<%= presenter.disabled_message %>">
                   <%= link_to admin_admin_set_path(presenter), class: 'btn btn-danger disabled' do %>
-                    <span class="fa fa-remove"></span> <%= t(:'helpers.action.delete') %>
+                    <span class="fa fa-remove" aria-hidden="true"></span> <%= t(:'helpers.action.delete') %>
                   <% end %>
                 </span>
               <% else %>
                 <%= link_to admin_admin_set_path(presenter), class: 'btn btn-danger', data: { confirm: t('.confirm_delete'), method: :delete } do %>
-                  <span class="fa fa-remove"></span> <%= t(:'helpers.action.delete') %>
+                  <span class="fa fa-remove" aria-hidden="true"></span> <%= t(:'helpers.action.delete') %>
                 <% end %>
               <% end %>
             </div>

@@ -26,7 +26,7 @@ module Hyrax
                     href: "##{id}",
                     'aria-expanded' => open,
                     'aria-controls' => id) do
-                      safe_join([content_tag(:span, '', class: icon_class),
+                      safe_join([content_tag(:span, '', class: icon_class, 'aria-hidden' => true),
                                  content_tag(:span, text)], ' ')
                     end
       end

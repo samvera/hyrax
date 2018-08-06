@@ -28,12 +28,12 @@
 
     <li role="menuitem" tabindex="-1">
       <%= display_trophy_link @user, document.id do |text| %>
-        <i class='glyphicon glyphicon-star'></i> <%= text %>
+        <i class="glyphicon glyphicon-star" aria-hidden="true"></i> <%= text %>
       <% end %>
     </li>
     <li role="menuitem" tabindex="-1">
       <%= link_to(hyrax.new_work_transfer_path(document.id), class: 'itemicon itemtransfer', title: 'Transfer Ownership of Work') do %>
-        <i aria-hidden="true" class='glyphicon glyphicon-transfer'></i>
+        <i aria-hidden="true" class="glyphicon glyphicon-transfer"></i>
         <span> Transfer Ownership of Work </span>
       <% end %>
     </li>
