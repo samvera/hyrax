@@ -13,17 +13,17 @@
           <div class="row">
             <div class="col-xs-12">
                 <!-- The fileinput-button span is used to style the file input field as button -->
-                <span id="addfiles" class="btn btn-success fileinput-button">
+                <button id="addfiles" class="btn btn-success fileinput-button">
                     <span class="glyphicon glyphicon-plus"></span>
                     <span>Add files...</span>
-                    <input type="file" name="files[]" multiple />
-                </span>
+                    <input type="file" name="files[]" tabindex="-1" aria-hidden="true" multiple />
+                </button>
                 <!-- The fileinput-button span is used to style the file input field as button -->
-                <span id="addfolder" class="btn btn-success fileinput-button">
+                <button id="addfolder" class="btn btn-success fileinput-button">
                     <span class="glyphicon glyphicon-plus"></span>
                     <span>Add folder...</span>
-                    <input type="file" name="files[]" multiple directory webkitdirectory />
-                </span>
+                    <input type="file" name="files[]" tabindex="-1" aria-hidden="true" multiple directory webkitdirectory />
+                </button>
                 <% if Hyrax.config.browse_everything? %>
                   <%= button_tag(type: 'button', class: 'btn btn-success', id: "browse-btn",
                     'data-toggle' => 'browse-everything', 'data-route' => browse_everything_engine.root_path,
