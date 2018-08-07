@@ -275,7 +275,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
         actor.attach_to_work(work)
         expect(work.representative).to eq(file_set)
         expect(work.thumbnail).to eq(file_set)
-        expect { work.reload }.not_to change { [work.representative, work.thumbnail] }
+        expect { work.reload }.not_to change { [work.representative.id, work.thumbnail.id] }
       end
     end
 
