@@ -24,7 +24,7 @@ class ImportUrlJob < Hyrax::ApplicationJob
     @file_set = file_set
     @operation = operation
 
-    unless BrowseEverything::Retriever.can_retrieve?(uri)
+    unless can_retrieve?(uri)
       send_error('Expired URL')
       return false
     end
@@ -43,6 +43,17 @@ class ImportUrlJob < Hyrax::ApplicationJob
   end
 
   private
+
+    # The previous strategy of using only a HEAD request to check the validity of a
+    # remote URL fails for Amazon S3 pre-signed URLs. S3 URLs are generated for a single
+    # verb only (in this case, GET), and will return a 403 Forbidden response if any
+    # other verb is used. The workaround is to issue a GET request instead, with a
+    # Range: header requesting only the first byte. The successful response status
+    # code is 206 instead of 200, but that is enough to satisfy the #success? method.
+    # @param uri [URI] the uri of the file to be downloaded
+    def can_retrieve?(uri)
+      HTTParty.get(uri, headers: { Range: 'bytes=0-0' }).success?
+    end
 
     # Download file from uri, yields a block with a file in a temporary directory.
     # It is important that the file on disk has the same file name as the URL,
