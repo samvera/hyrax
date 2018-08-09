@@ -50,6 +50,9 @@ tmp
 *.log
 *~
 
+## Xray Rails
+.xrayconfig.yml
+
 #redis snapshot db
 dump.rdb
 
