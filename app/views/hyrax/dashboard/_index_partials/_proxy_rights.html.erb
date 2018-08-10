@@ -7,9 +7,11 @@
   <div class="row">
     <div class="col-xs-6 proxy-search">
       <h4><%= t("hyrax.dashboard.authorize_proxies") %></h4>
-      <label class="sr-only" for="user"><%= t("hyrax.dashboard.proxy_user") %></label>
-      <%= hidden_field_tag :user, nil, data: { grantor: current_user.to_param } %>
-      <%= hidden_field_tag :delete_button_label, nil, data: { label: I18n.t('hyrax.dashboard.proxy_delete') } %>
+      <div class="form-group">
+        <label for="user"><%= t("hyrax.dashboard.proxy_user") %></label>
+        <%= hidden_field_tag :user, nil, data: { grantor: current_user.to_param } %>
+        <%= hidden_field_tag :delete_button_label, nil, data: { label: I18n.t('hyrax.dashboard.proxy_delete') } %>
+      </div>
     </div>
 
     <div class="col-xs-6">
