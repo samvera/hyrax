@@ -12,7 +12,9 @@
       </button>
       <% if current_user %>
         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-          <span data-search-element="label"><%= t("hyrax.search.form.option.all.label_long", application_name: application_name) %></span>
+
+          <span class="sr-only" data-search-element="label"><%= t("hyrax.search.form.option.all.label_long", application_name: application_name) %></span>
+          <span aria-hidden="true"><%= t("hyrax.search.form.option.all.label_short") %></span>
           <span class="caret"></span>
         </button>
 
