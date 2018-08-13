@@ -22,6 +22,7 @@ Hyrax = {
         this.sortAndPerPage();
         this.sidebar();
         this.batchSelect();
+        this.internationalizationHelper();
     },
 
     // Add WYSIWYG editor functionality to editable content blocks
@@ -82,6 +83,11 @@ Hyrax = {
         if ($('.dataTables_wrapper').length === 0) {
             $('.datatable').DataTable();
         }
+    },
+
+    internationalizationHelper: function () {
+        var InternationalizationHelper = require('hyrax/i18n_helper');
+        new InternationalizationHelper();
     },
 
     // The work edit page

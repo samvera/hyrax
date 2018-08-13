@@ -103,6 +103,7 @@
 //= require hyrax/batch_select
 //= require hyrax/tabbed_form
 //= require hyrax/turbolinks_events
+//= require hyrax/i18n_helper
 
 // this needs to be after batch_select so that the form ids get setup correctly
 //= require hyrax/batch_edit

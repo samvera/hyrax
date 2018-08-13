@@ -9,7 +9,7 @@
         <li role="presentation" class="divider"></li>
         <% available_translations.each do |language, label| %>
             <li role="presentation" lang="<%= language %>">
-                <%= link_to label, "?locale=#{language}", class: 'dropdown-item', role: 'menuitem', tabindex: '-1' %>
+                <%= link_to label, "?locale=#{language}", class: 'dropdown-item', role: 'menuitem', tabindex: '-1', data: { locale: language } %>
             </li>
         <% end %>
     </ul>
