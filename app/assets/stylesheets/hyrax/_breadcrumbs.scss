@@ -1,0 +1,25 @@
+.breadcrumb {
+  border: 1px solid $admin-panel-border-color;
+  border-radius: 3px;
+  margin-top: 0.5em;
+  padding: 0.8em 1em;
+
+  ol {
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+  }
+
+  li {
+    display: inline;
+
+    +::before {
+      border-right: 0.1em solid #ccc;
+      content: '';
+      display: inline-block;
+      height: 0.8em;
+      margin: 0 0.5em;
+      transform: rotate(15deg);
+    }
+  }
+}
