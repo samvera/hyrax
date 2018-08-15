@@ -56,3 +56,9 @@ label.disabled {
   text-decoration:underline;
   background-color:#0088CC;
 }
+
+// Vertically center child elements
+.centerizer {
+  align-items: center;
+  display: flex;
+}

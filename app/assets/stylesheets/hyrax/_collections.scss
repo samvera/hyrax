@@ -154,10 +154,16 @@ button.branding-banner-remove:hover {
     td {
       text-align: center;
       vertical-align: top;
+      padding: 8px 2px;
 
+      &:nth-child(1),
       &:nth-child(2) {
         text-align: left;
       }
+    }
+
+    .check-all-checkbox {
+      margin-right: 5px !important;
     }
 
     .modal {
