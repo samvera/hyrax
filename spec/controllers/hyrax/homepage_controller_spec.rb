@@ -52,7 +52,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
       end
     end
 
-    context "with a document not created this second" do
+    context "with a document not created this second", clean_repo: true do
       before do
         gw3 = GenericWork.new(title: ['Test 3 Document'], read_groups: ['public'])
         gw3.apply_depositor_metadata('mjg36')
@@ -60,7 +60,8 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
         old_to_solr = gw3.method(:to_solr)
         allow(gw3).to receive(:to_solr) do
           old_to_solr.call.merge(
-            Solrizer.solr_name('system_create', :stored_sortable, type: :date) => 1.day.ago.iso8601
+            Solrizer.solr_name('system_create', :stored_sortable, type: :date) => 1.day.ago.iso8601,
+            Solrizer.solr_name('date_uploaded', :stored_sortable, type: :date) => 1.day.ago.iso8601
           )
         end
         gw3.save
