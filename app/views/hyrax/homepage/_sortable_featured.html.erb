@@ -5,12 +5,7 @@
     <%= f.hidden_field :id %>
     <%= f.hidden_field :order, data: { property: "order" } %>
     <div class="main row">
-      <div class="col-sm-3">
-        <%= link_to [main_app, presenter] do %>
-          <%= render_thumbnail_tag presenter, width: 90 %>
-        <% end %>
-      </div>
-      <div class="col-sm-9">
+      <div class="col-sm-12">
         <% if can? :destroy, FeaturedWork %>
           <h3 class="pull-right">
             <%= link_to hyrax.featured_work_path(presenter, format: :json),

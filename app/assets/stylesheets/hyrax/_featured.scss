@@ -18,6 +18,8 @@ ol#featured_works {
 
   img {
     width: 90px;
+    float: left;
+    padding-right: 1em;
   }
 
   .main {
@@ -27,6 +29,10 @@ ol#featured_works {
   .featured-label {
     color: $gray;
     font-weight: bold;
+  }
+
+  .featured-field {
+    padding-left: 90px;
   }
 }
 
