@@ -1,6 +1,6 @@
 <% provide :page_title, construct_page_title( t('.header', type_title: @collection.collection_type.title) ) %>
 <% provide :page_header do %>
-  <h1><span class="fa fa-edit"></span> <%= t('.header', type_title: @collection.collection_type.title) %> </h1>
+  <h1><span class="fa fa-edit" aria-hidden="true"></span> <%= t('.header', type_title: @collection.collection_type.title) %> </h1>
 <% end %>
 
 <div class="row">

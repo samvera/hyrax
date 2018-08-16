@@ -31,6 +31,6 @@
 
   <td class="date"><%= document.date_uploaded %></td>
   <td class='text-center'>
-    <span class="fa <%= current_user.trophies.where(work_id: document.id).exists? ? 'fa-star highlighted-work' : 'fa-star-o trophy-off' %>"></span></td>
+    <span class="fa <%= current_user.trophies.where(work_id: document.id).exists? ? 'fa-star highlighted-work' : 'fa-star-o trophy-off' %>" aria-hidden="true"></span></td>
   <td><%= render_visibility_link document %></td>
 </tr>

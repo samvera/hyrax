@@ -1,22 +1,22 @@
   <% if can? :review, :submissions %>
     <li class="h5"><%= t('hyrax.admin.sidebar.tasks') %></li>
     <%= menu.nav_link(hyrax.admin_workflows_path) do %>
-      <span class="fa fa-flag"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.workflow_review') %></span>
+      <span class="fa fa-flag" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.workflow_review') %></span>
     <% end %>
   <% end %>
 
   <% if can? :manage, User %>
     <%= menu.nav_link(hyrax.admin_users_path) do %>
-      <span class="fa fa-user"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.users') %></span>
+      <span class="fa fa-user" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.users') %></span>
     <% end %>
   <% end %>
 
   <% if can? :read, :admin_dashboard %>
     <%= menu.nav_link(hyrax.embargoes_path) do %>
-      <span class="fa fa-flag"></span> <span class="sidebar-action-text"><%= t('hyrax.embargoes.index.manage_embargoes') %></span>
+      <span class="fa fa-flag" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.embargoes.index.manage_embargoes') %></span>
     <% end %>
 
     <%= menu.nav_link(hyrax.leases_path) do %>
-      <span class="fa fa-flag"></span> <span class="sidebar-action-text"><%= t('hyrax.leases.index.manage_leases') %></span>
+      <span class="fa fa-flag" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.leases.index.manage_leases') %></span>
     <% end %>
   <% end %>

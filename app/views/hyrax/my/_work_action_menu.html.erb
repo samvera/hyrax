@@ -29,14 +29,14 @@
 
     <li role="menuitem" tabindex="-1">
       <%= display_trophy_link(current_user, document.id) do |text| %>
-        <i class='glyphicon glyphicon-star'></i> <%= text %>
+        <i class="glyphicon glyphicon-star" aria-hidden="true"></i> <%= text %>
       <% end %>
     </li>
 
     <% if can? :transfer, document.id %>
       <li role="menuitem" tabindex="-1">
         <%= link_to(hyrax.new_work_transfer_path(document.id), class: 'itemicon itemtransfer', title: t("hyrax.dashboard.my.action.transfer")) do %>
-          <i aria-hidden="true" class='glyphicon glyphicon-transfer'></i>
+          <i class="glyphicon glyphicon-transfer" aria-hidden="true"></i>
           <span> <%= t("hyrax.dashboard.my.action.transfer") %> </span>
         <% end %>
       </li>

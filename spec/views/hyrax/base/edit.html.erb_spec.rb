@@ -21,6 +21,6 @@ RSpec.describe 'hyrax/base/edit.html.erb', type: :view do
     expect(view).to receive(:provide).with(:page_title, 'A nice work // Generic Work [456] // Hyrax')
     expect(view).to receive(:provide).with(:page_header).and_yield
     render
-    expect(rendered).to eq "  <h1><span class=\"fa fa-edit\"></span>Edit Work</h1>\n\na form\n"
+    expect(rendered).to eq "  <h1><span class=\"fa fa-edit\" aria-hidden=\"true\"></span>Edit Work</h1>\n\na form\n"
   end
 end

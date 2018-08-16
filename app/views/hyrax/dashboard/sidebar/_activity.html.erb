@@ -7,20 +7,20 @@
                                  open: menu.user_activity_section? do %>
       <%= menu.nav_link(hyrax.dashboard_profile_path(current_user),
                         also_active_for: hyrax.edit_dashboard_profile_path(current_user)) do %>
-        <span class="fa fa-id-card"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.profile') %></span>
+        <span class="fa fa-id-card" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.profile') %></span>
       <% end %>
 
       <%= menu.nav_link(hyrax.notifications_path) do %>
-        <span class="fa fa-bell"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.notifications') %></span>
+        <span class="fa fa-bell" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.notifications') %></span>
       <% end %>
 
       <%= menu.nav_link(hyrax.transfers_path) do %>
-        <span class="fa fa-arrows-h"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.transfers') %></span>
+        <span class="fa fa-arrows-h" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.transfers') %></span>
       <% end %>
 
       <% if Flipflop.proxy_deposit? %>
         <%= menu.nav_link(hyrax.depositors_path) do %>
-          <span class="fa fa-users"></span> <span class="sidebar-action-text"><%= t('hyrax.dashboard.manage_proxies') %></span>
+          <span class="fa fa-users" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.dashboard.manage_proxies') %></span>
         <% end %>
       <% end %>
     <% end %>
@@ -28,6 +28,6 @@
 
   <% if can? :read, :admin_dashboard %>
     <%= menu.nav_link(hyrax.admin_stats_path) do %>
-      <span class="fa fa-bar-chart"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.statistics') %></span>
+      <span class="fa fa-bar-chart" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.statistics') %></span>
     <% end %>
   <% end %>
