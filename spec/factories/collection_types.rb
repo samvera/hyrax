@@ -3,22 +3,22 @@ FactoryBot.define do
     sequence(:title) { |n| "Collection Type #{n}" }
     sequence(:machine_id) { |n| "title_#{n}" }
 
-    description 'Collection type with all options'
-    nestable true
-    discoverable true
-    sharable true
-    brandable true
-    share_applies_to_new_works true
-    allow_multiple_membership true
-    require_membership false
-    assigns_workflow false
-    assigns_visibility false
+    description { 'Collection type with all options' }
+    nestable { true }
+    discoverable { true }
+    sharable { true }
+    brandable { true }
+    share_applies_to_new_works { true }
+    allow_multiple_membership { true }
+    require_membership { false }
+    assigns_workflow { false }
+    assigns_visibility { false }
 
     transient do
-      creator_user nil
-      creator_group nil
-      manager_user nil
-      manager_group nil
+      creator_user { nil }
+      creator_group { nil }
+      manager_user { nil }
+      manager_group { nil }
     end
 
     after(:create) do |collection_type, evaluator|
@@ -56,50 +56,50 @@ FactoryBot.define do
     end
 
     trait :nestable do
-      nestable true
+      nestable { true }
     end
 
     trait :not_nestable do
-      nestable false
+      nestable { false }
     end
 
     trait :discoverable do
-      discoverable true
+      discoverable { true }
     end
 
     trait :not_discoverable do
-      discoverable false
+      discoverable { false }
     end
 
     trait :brandable do
-      brandable true
+      brandable { true }
     end
 
     trait :not_brandable do
-      brandable false
+      brandable { false }
     end
 
     trait :sharable do
-      sharable true
-      share_applies_to_new_works true
+      sharable { true }
+      share_applies_to_new_works { true }
     end
 
     trait :sharable_no_work_permissions do
-      sharable true
-      share_applies_to_new_works false
+      sharable { true }
+      share_applies_to_new_works { false }
     end
 
     trait :not_sharable do
-      sharable false
-      share_applies_to_new_works false
+      sharable { false }
+      share_applies_to_new_works { false }
     end
 
     trait :allow_multiple_membership do
-      allow_multiple_membership true
+      allow_multiple_membership { true }
     end
 
     trait :not_allow_multiple_membership do
-      allow_multiple_membership false
+      allow_multiple_membership { false }
     end
   end
 

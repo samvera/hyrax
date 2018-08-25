@@ -58,8 +58,8 @@ FactoryBot.define do
     transient do
       user { create(:user) }
 
-      with_permission_template false
-      with_solr_document false
+      with_permission_template { false }
+      with_solr_document { false }
     end
     sequence(:title) { |n| ["Collection Title #{n}"] }
 
@@ -87,10 +87,10 @@ FactoryBot.define do
             manage_groups: [::Ability.admin_group_name]
           }
         end
-        with_solr_document true
+        with_solr_document { true }
       end
-      id AdminSet::DEFAULT_ID
-      title AdminSet::DEFAULT_TITLE
+      id { AdminSet::DEFAULT_ID }
+      title { AdminSet::DEFAULT_TITLE }
     end
   end
 
@@ -99,8 +99,8 @@ FactoryBot.define do
     # Do not use with create because the save will cause the solr grants to be created.
     transient do
       user { create(:user) }
-      with_permission_template true
-      with_solr_document true
+      with_permission_template { true }
+      with_solr_document { true }
     end
 
     sequence(:title) { |n| ["No Solr Grant Admin Set Title #{n}"] }
