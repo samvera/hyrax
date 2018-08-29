@@ -1,10 +1,10 @@
 <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" aria-controls="language-dropdown-menu">
         <span class="sr-only"><%= t('hyrax.toolbar.language_switch') %></span>
         <span title="<%= t('hyrax.toolbar.language_switch') %>"><%= available_translations[I18n.locale.to_s] %></span>
         <b class="caret"></b>
     </a>
-    <ul class="dropdown-menu" role="menu">
+    <ul id="language-dropdown-menu" class="dropdown-menu" role="menu">
         <li role="presentation" class="dropdown-header"><%= t('hyrax.toolbar.language_switch') %></li>
         <li role="presentation" class="divider"></li>
         <% available_translations.each do |language, label| %>

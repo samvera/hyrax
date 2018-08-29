@@ -1,12 +1,13 @@
 <% id = collection_presenter.id %>
-<div class="btn-group">
+<% ul_id = 'collection-action-dropdown-ul-' + id %>
 
-  <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" type="button" id="dropdownMenu_<%= id %>" aria-haspopup="true">
+<div class="btn-group">
+  <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" type="button" id="dropdownMenu_<%= id %>" aria-haspopup="true" aria-expanded="false" aria-controls="<%= ul_id %>">
     <span class="sr-only"><%= t("hyrax.dashboard.my.sr.press_to") %> </span>
     <%= t("hyrax.dashboard.my.action.select") %> <span class="caret" aria-hidden="true"></span>
   </button>
 
-  <ul role="menu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu_<%= id %>">
+  <ul role="menu" id="<%= ul_id %>" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu_<%= id %>">
     <li role="menuitem" tabindex="-1">
       <%= link_to hyrax.dashboard_collection_path(id),
                   class: 'itemicon itemedit',

@@ -1,5 +1,5 @@
 <% if !subfacet ||= false %>
-  <ul class="dropdown-menu pivot-facet list-unstyled">
+  <ul class="dropdown-menu pivot-facet list-unstyled" id="<%= facet_field.field.parameterize + '-dropdown-options' %>">
 <% end %>
 
   <% display_facet.items.each do |item| -%>
