@@ -50,6 +50,7 @@ module Hyrax
           return "" if title_info.blank?
           title_text = chicago_citation_title(title_info)
           title_text << '.' unless title_text =~ /\.$/
+          title_text = Loofah.fragment(title_text).scrub!(:whitewash).to_s
           " <i class=\"citation-title\">#{title_text}</i>"
         end
       end
