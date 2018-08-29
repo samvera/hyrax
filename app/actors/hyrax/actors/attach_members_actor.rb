@@ -4,8 +4,8 @@ module Hyrax
     # that follow the rails nested parameters conventions:
     # e.g.
     #   'work_members_attributes' => {
-    #     '0' => { 'id' = '12312412'},
-    #     '1' => { 'id' = '99981228', '_destroy' => 'true' }
+    #     '0' => { 'id' => '12312412'},
+    #     '1' => { 'id' => '99981228', '_destroy' => 'true' }
     #   }
     #
     # The goal of this actor is to mutate the ordered_members with as few writes
