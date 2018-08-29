@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :post_item, class: Hash do
     skip_create
 
-    token 'mock_token'
+    token { 'mock_token' }
 
     metadata do
       {

@@ -2,15 +2,15 @@ FactoryBot.define do
   factory :permission_template_access, class: Hyrax::PermissionTemplateAccess do
     permission_template
     trait :manage do
-      access 'manage'
+      access { 'manage' }
     end
 
     trait :deposit do
-      access 'deposit'
+      access { 'deposit' }
     end
 
     trait :view do
-      access 'view'
+      access { 'view' }
     end
   end
 end

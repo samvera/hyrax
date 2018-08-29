@@ -52,16 +52,16 @@ FactoryBot.define do
     end
 
     transient do
-      with_admin_set false
-      with_collection false
-      with_workflows false
-      with_active_workflow false
-      manage_users nil
-      manage_groups nil
-      deposit_users nil
-      deposit_groups nil
-      view_users nil
-      view_groups nil
+      with_admin_set { false }
+      with_collection { false }
+      with_workflows { false }
+      with_active_workflow { false }
+      manage_users { nil }
+      manage_groups { nil }
+      deposit_users { nil }
+      deposit_groups { nil }
+      view_users { nil }
+      view_groups { nil }
     end
   end
 

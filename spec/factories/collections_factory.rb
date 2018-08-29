@@ -20,10 +20,10 @@ FactoryBot.define do
     transient do
       user { create(:user) }
       # allow defaulting to default user collection
-      collection_type_settings nil
-      with_permission_template false
-      create_access false
-      with_nesting_attributes nil
+      collection_type_settings { nil }
+      with_permission_template { false }
+      create_access { false }
+      with_nesting_attributes { nil }
     end
     sequence(:title) { |n| ["Collection Title #{n}"] }
 
@@ -66,20 +66,20 @@ FactoryBot.define do
     factory :public_collection, traits: [:public]
 
     trait :public do
-      visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+      visibility { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
     end
 
     factory :private_collection do
-      visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+      visibility { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
     end
 
     factory :institution_collection do
-      visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+      visibility { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
     end
 
     factory :named_collection do
-      title ['collection title']
-      description ['collection description']
+      title { ['collection title'] }
+      description { ['collection description'] }
     end
   end
 
@@ -103,9 +103,9 @@ FactoryBot.define do
     #   col.save(validate: false)
     transient do
       user { create(:user) }
-      with_permission_template false
-      create_access false
-      do_save false
+      with_permission_template { false }
+      create_access { false }
+      do_save { false }
     end
 
     sequence(:title) { |n| ["Typeless Collection Title #{n}"] }

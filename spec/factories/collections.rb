@@ -102,10 +102,10 @@ FactoryBot.define do
     transient do
       user { create(:user) }
 
-      collection_type_settings nil
-      with_permission_template false
-      with_nesting_attributes nil
-      with_solr_document false
+      collection_type_settings { nil }
+      with_permission_template { false }
+      with_nesting_attributes { nil }
+      with_solr_document { false }
     end
     sequence(:title) { |n| ["Collection Title #{n}"] }
 
@@ -130,32 +130,32 @@ FactoryBot.define do
     factory :public_collection_lw, traits: [:public_lw]
 
     factory :private_collection_lw do
-      visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+      visibility { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
     end
 
     factory :institution_collection_lw do
-      visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+      visibility { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
     end
 
     factory :named_collection_lw do
-      title ['collection title']
-      description ['collection description']
+      title { ['collection title'] }
+      description { ['collection description'] }
     end
 
     trait :public_lw do
-      visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+      visibility { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
     end
 
     trait :private_lw do
-      visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+      visibility { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
     end
 
     trait :institution_lw do
-      visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+      visibility { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
     end
 
     trait :public_lw do
-      visibility Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+      visibility { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
     end
   end
 
@@ -179,8 +179,8 @@ FactoryBot.define do
     #   col.save(validate: false)
     transient do
       user { create(:user) }
-      with_permission_template false
-      do_save false
+      with_permission_template { false }
+      do_save { false }
     end
 
     sequence(:title) { |n| ["Typeless Collection Title #{n}"] }
