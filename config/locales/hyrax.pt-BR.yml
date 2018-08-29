@@ -1224,7 +1224,7 @@ pt-BR:
         keyword: Palavra-chave
         lease_expiration_date: até
         license: Licença
-      member_of_collection_ids: Acrescentar à coleção
+        member_of_collection_ids: Acrescentar à coleção
         related_url: URL relacionado
         rights_statement: Declaração de direitos
         title: Título
