@@ -671,7 +671,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
         # add required file
         click_link "Files" # switch tab
-        within('button#addfiles') do
+        within('span#addfiles') do
           attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/image.jp2", visible: false)
         end
         # set required metadata
