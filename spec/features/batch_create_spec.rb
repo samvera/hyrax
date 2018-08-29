@@ -39,7 +39,7 @@ RSpec.describe 'Batch creation of works', type: :feature do
     it "allows on-behalf-of batch deposit", :js do
       click_link "Files" # switch tab
       expect(page).to have_content "Add files"
-      within('button#addfiles') do
+      within('span#addfiles') do
         # two arbitrary files that aren't actually related, but should be
         # small enough to require minimal processessing.
         attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/small_file.txt", visible: false)
