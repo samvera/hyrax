@@ -107,6 +107,12 @@ module Hyrax
       end
     end
 
+    def inject_devise_trackable
+      inject_into_file 'app/models/user.rb', after: /\s*devise :database_authenticatable, :registerable,\s*\n/ do
+        "         :trackable,\n"
+      end
+    end
+
     # Add behaviors to the application controller
     def inject_hyrax_application_controller_behavior
       file_path = "app/controllers/application_controller.rb"
