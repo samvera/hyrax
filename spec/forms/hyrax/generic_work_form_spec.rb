@@ -59,7 +59,7 @@ RSpec.describe Hyrax::GenericWorkForm do
         representative_id: '456',
         rendering_ids: [file_set.id],
         thumbnail_id: '789',
-        keyword: ['derp'],
+        keyword: ['penguin'],
         license: ['http://creativecommons.org/licenses/by/3.0/us/'],
         member_of_collection_ids: ['123456', 'abcdef']
       )
@@ -72,7 +72,7 @@ RSpec.describe Hyrax::GenericWorkForm do
       expect(subject['description']).to be_empty
       expect(subject['visibility']).to eq 'open'
       expect(subject['license']).to eq ['http://creativecommons.org/licenses/by/3.0/us/']
-      expect(subject['keyword']).to eq ['derp']
+      expect(subject['keyword']).to eq ['penguin']
       expect(subject['member_of_collection_ids']).to eq ['123456', 'abcdef']
       expect(subject['rendering_ids']).to eq [file_set.id]
     end
