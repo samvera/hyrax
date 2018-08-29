@@ -35,9 +35,8 @@ RSpec.describe Hyrax::WorkSearchBuilder do
       context "and the current user has a role" do
         let(:roles) { [double] }
 
-        it "filters for id, access, suppressed and type" do
+        it "filters for id and access" do
           expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
-                                      "{!terms f=has_model_ssim}GenericWork,Collection",
                                       "{!raw f=id}123abc"]
         end
       end
@@ -49,9 +48,8 @@ RSpec.describe Hyrax::WorkSearchBuilder do
             allow(builder).to receive(:depositor?).and_return(false)
           end
 
-          it "filters for id, access, suppressed and type" do
+          it "filters for id, access, and suppressed" do
             expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
-                                        "{!terms f=has_model_ssim}GenericWork,Collection",
                                         "-suppressed_bsi:true",
                                         "{!raw f=id}123abc"]
           end
@@ -62,9 +60,8 @@ RSpec.describe Hyrax::WorkSearchBuilder do
             allow(builder).to receive(:depositor?).and_return(true)
           end
 
-          it "filters for id, access, suppressed and type" do
+          it "filters for id and access" do
             expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
-                                        "{!terms f=has_model_ssim}GenericWork,Collection",
                                         "{!raw f=id}123abc"]
           end
         end
@@ -82,9 +79,8 @@ RSpec.describe Hyrax::WorkSearchBuilder do
           allow(builder).to receive(:depositor?).and_return(false)
         end
 
-        it "filters for id, access, suppressed and type" do
+        it "filters for id, access, and suppressed" do
           expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
-                                      "{!terms f=has_model_ssim}GenericWork,Collection",
                                       "-suppressed_bsi:true",
                                       "{!raw f=id}123abc"]
         end
@@ -95,9 +91,8 @@ RSpec.describe Hyrax::WorkSearchBuilder do
           allow(builder).to receive(:depositor?).and_return(true)
         end
 
-        it "filters for id, access, suppressed and type" do
+        it "filters for id and access" do
           expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
-                                      "{!terms f=has_model_ssim}GenericWork,Collection",
                                       "{!raw f=id}123abc"]
         end
       end
