@@ -29,4 +29,20 @@ RSpec.describe Hyrax::Admin::UsersPresenter do
       end
     end
   end
+
+  describe 'show_last_access?' do
+    before do
+      allow(User).to receive(:devise_modules).and_return(modules)
+    end
+    subject { instance.show_last_access? }
+    context 'when devise trackable is installed' do
+      let(:modules) { [:trackable] }
+      it { is_expected.to be true }
+    end
+
+    context 'when devise trackable is not installed' do
+      let(:modules) { [:rememberable] }
+      it { is_expected.to be false }
+    end
+  end
 end

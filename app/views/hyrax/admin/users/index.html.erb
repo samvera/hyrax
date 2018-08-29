@@ -15,7 +15,9 @@
             <th></th>
             <th><%= t('.id_label') %></th>
             <th><%= t('.role_label') %></th>
-            <th><%= t('.access_label') %></th>
+            <% if @presenter.show_last_access? %>
+              <th><%= t('.access_label') %></th>
+            <% end %>
           </tr>
         </thead>
         <tbody>
@@ -32,12 +34,14 @@
                     <% end %>
                   </ul>
               </td>
-              <td>
-                <%# in the case that a user is created who never signs in, this is necessary %>
-                <relative-time datetime="<%= @presenter.last_accessed(user).getutc.iso8601 %>" title="<%= @presenter.last_accessed(user).to_formatted_s(:standard) %>">
-                  <%= @presenter.last_accessed(user).to_formatted_s(:long_ordinal) %>
-                </relative-time>
-              </td>
+              <% if @presenter.show_last_access? %>
+                <td>
+                  <%# in the case that a user is created who never signs in, this is necessary %>
+                  <relative-time datetime="<%= @presenter.last_accessed(user).getutc.iso8601 %>" title="<%= @presenter.last_accessed(user).to_formatted_s(:standard) %>">
+                    <%= @presenter.last_accessed(user).to_formatted_s(:long_ordinal) %>
+                  </relative-time>
+                </td>
+              <% end %>
             </tr>
           <% end %>
         </tbody>
