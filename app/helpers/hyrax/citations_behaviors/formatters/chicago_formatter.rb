@@ -25,8 +25,9 @@ module Hyrax
         end
 
         def format_authors(authors_list = [])
+          text = ''
+
           unless authors_list.blank?
-            text = ''
             text << surname_first(authors_list.first) if authors_list.first
             authors_list[1..6].each_with_index do |author, index|
               text << if index + 2 == authors_list.length # we've skipped the first author
@@ -37,6 +38,7 @@ module Hyrax
             end
             text << " et al." if authors_list.length > 7
           end
+
           # if for some reason the first author ended with a comma
           text.gsub!(',,', ',')
           text << "." unless text =~ /\.$/
@@ -49,6 +51,7 @@ module Hyrax
           return "" if title_info.blank?
           title_text = chicago_citation_title(title_info)
           title_text << '.' unless title_text =~ /\.$/
+          title_text = Loofah.fragment(title_text).scrub!(:whitewash).to_s
           " <i class=\"citation-title\">#{title_text}</i>"
         end
       end
