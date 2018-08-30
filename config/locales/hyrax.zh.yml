@@ -1232,7 +1232,6 @@ zh:
         transfer_to: 用户
     placeholders:
       defaults:
-        file: XXX
         find_child_work: 搜索工作...
         member_of_collection_ids: 选择一个集合...
     required:

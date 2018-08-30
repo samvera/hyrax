@@ -1236,7 +1236,6 @@ de:
         transfer_to: Benutzer
     placeholders:
       defaults:
-        file: xxx
         find_child_work: Suche nach einer Arbeit ...
         member_of_collection_ids: Wählen Sie eine Sammlung ...
     required:

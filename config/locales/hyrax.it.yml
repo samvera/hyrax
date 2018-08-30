@@ -1234,7 +1234,6 @@ it:
         transfer_to: Utente
     placeholders:
       defaults:
-        file: xxx
         find_child_work: Cerca un lavoro ...
         member_of_collection_ids: Seleziona una collezione ...
     required:

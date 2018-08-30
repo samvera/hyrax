@@ -1229,7 +1229,6 @@ pt-BR:
         transfer_to: Usuário
     placeholders:
       defaults:
-        file: xxx
         find_child_work: Procure uma obra ...
         member_of_collection_ids: Selecione uma coleção ...
     required:
