@@ -421,6 +421,10 @@ fr:
         header: Des relations
       relationships_parent_row:
         label: 'Dans %{type}:'
+      share_with:
+        definition_heading: Définitions d'autorisation
+        definitions_html: "<strong>Afficher / Télécharger:</strong> ce fichier (contenu et métadonnées) est accessible depuis %{application_name}. <br /> <strong>Edit:</strong> ce fichier (contenu et métadonnées) peut être modifié. Vous ne pouvez accorder cette autorisation qu'aux utilisateurs et / ou groupes de %{institution_name}."
+        share_with_html: Vous pouvez accorder l'accès aux fichiers "View / Download" ou "Edit" à des utilisateurs et / ou des groupes spécifiques. Entrez un %{account_name} valide, un par un, sélectionnez le niveau d'accès pour cet utilisateur, puis cliquez sur + Ajouter.
       show:
         last_modified: Dernière modification
       social_media:
@@ -843,8 +847,39 @@ fr:
         header: Sélectionnez une action
         versions: Versions
         versions_title: Afficher les versions précédentes
+      edit:
+        descriptions: Les descriptions
+        header: Modifier %{file_set}
+        permissions: Autorisations
+        versions: Des versions
+      form:
+        attach_to: Joindre à %{parent}
+        cancel: Annuler
+        save: sauvegarder
+        title: Titre
       groups_description:
         description_html: La liste des groupes dans le menu déroulant intitulé «Sélectionner un groupe» est une liste des groupes gérés par l'utilisateur dont vous êtes membre. Vous pouvez sélectionner un groupe spécifique et attribuer un niveau d'accès pour un fichier dans %{application_name}, de même que l'ajout de niveaux d'accès utilisateur.
+      permission:
+        save: sauvegarder
+      permission_form:
+        applied_to: "(appliqué à tous les fichiers que vous venez de télécharger)"
+        depositor: Déposant
+        enter: Entrez %{account_label} (un à la fois)
+        header: Autorisations
+        optional: "(optionnel)"
+        save_note_html: Les autorisations <strong>ne</strong> sont <strong>pas</strong> enregistrées tant que le bouton "Enregistrer" n'est pas enfoncé en bas de la page.
+        select_group: Sélectionnez un groupe
+        share_with: Partager avec
+        table_title_access: Niveau d'accès
+        table_title_user: Personne / groupe
+        user_search: Rechercher un utilisateur
+      versioning:
+        current: Version actuelle
+        header: Des versions
+        restore: Restaurer la version précédente
+        restore_from: Restauration à partir de
+        save: Enregistrer la révision
+        upload: Télécharger une nouvelle version
     help:
       header: Support utilisateur
       override_text: Utilisez application / views / static / help.html.erb pour remplacer ce fichier.
@@ -1200,6 +1235,7 @@ fr:
         transfer_to: Utilisateur
     placeholders:
       defaults:
+        file: xxx
         find_child_work: Rechercher un travail ...
         member_of_collection_ids: Sélectionnez une collection ...
     required:

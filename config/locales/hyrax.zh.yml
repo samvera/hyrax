@@ -418,6 +418,10 @@ zh:
         header: 关联
       relationships_parent_row:
         label: '属于 %{type}:'
+      share_with:
+        definition_heading: 许可定义
+        definitions_html: "<strong>查看/下载：</strong>可以从%{application_name}中访问此文件（内容和元数据）。 <br /> <strong>编辑：</strong>可以<strong>编辑</strong>此文件（包括内容和元数据）。您只能将此权限授予%{institution_name}用户和/或组。"
+        share_with_html: 您可以为特定用户和/或组授予对文件的“查看/下载”或“编辑”访问权限。输入有效的%{account_name}，一次选择一个，选择该用户的访问级别，然后单击+添加。
       show:
         last_modified: 最新修改
       social_media:
@@ -840,8 +844,39 @@ zh:
         header: 选择一个动作
         versions: 版本
         versions_title: 显示以前的版本
+      edit:
+        descriptions: 说明
+        header: 编辑%{file_set}
+        permissions: 权限
+        versions: 版本
+      form:
+        attach_to: 附加到%{parent}
+        cancel: 取消
+        save: 保存
+        title: 标题
       groups_description:
         description_html: 标有"选择一个群"的下拉框内是您所属的一组用户管理群的清单。您可以选择一个特定的群，指定对%{application_name}中文件的访问级别，类似于添加用户访问级别。
+      permission:
+        save: 保存
+      permission_form:
+        applied_to: "（适用于刚刚上传的所有文件）"
+        depositor: 储户
+        enter: 输入%{account_label}（一次一个）
+        header: 权限
+        optional: "（可选的）"
+        save_note_html: 在页面底部按“保存”按钮之前， <strong>不会</strong>保存权限。
+        select_group: 选择一个组
+        share_with: 与某人分享
+        table_title_access: 访问权限
+        table_title_user: 人/组
+        user_search: 搜索用户
+      versioning:
+        current: 当前版本
+        header: 版本
+        restore: 恢复以前的版本
+        restore_from: 还原自
+        save: 保存修订
+        upload: 上传新版本
     help:
       header: 用户支持
       override_text: 用 app/views/static/help.html.erb 取代此文件。
@@ -1197,6 +1232,7 @@ zh:
         transfer_to: 用户
     placeholders:
       defaults:
+        file: XXX
         find_child_work: 搜索工作...
         member_of_collection_ids: 选择一个集合...
     required:

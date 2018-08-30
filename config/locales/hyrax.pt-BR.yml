@@ -147,7 +147,7 @@ pt-BR:
             title: Divulgação
             varies:
               any: O depositante escolhe a duração de embargo; empréstimos são permitidos
-              between: O depositante pode embargar até a data de 
+              between: O depositante pode embargar até a data de
               description: 'Permitir ao depositante escolher as configurações :'
               embargo:
                 1yr: 1 ano após o depósito
@@ -351,7 +351,7 @@ pt-BR:
       form_child_work_relationships:
         actions:
           remove: Remover desta obra
-        attach_new_work: Depositar uma nova obra embutida nesta 
+        attach_new_work: Depositar uma nova obra embutida nesta
         caption: esta obra atualmente contém estas obras embutidas
         confirm:
           cancel: Cancelar
@@ -363,12 +363,6 @@ pt-BR:
       form_files:
         dropzone: Largue os arquivos aqui.
         local_upload_browse_everything_html: "<p>Você pode associar um ou mais arquivos a esta obra. Associe arquivos de seu sistema local ou um provedor de nuvem.</p> <p>Note que se você carregar uma grande quantidade de arquivos dentro de um curto período de tempo, o fornecedor de nuvem pode não ser capaz de acomodar a sua solicitação. Se você tiver algum erro ao carregar da nuvem, avise-nos através do %{contact_href}.<p>"
-
-
-
-
-
-
         local_upload_html: "<p>Você pode acrescentar um ou mais arquivos para associar a esta obra.</p>"
       form_member_of_collections:
         actions:
@@ -422,11 +416,9 @@ pt-BR:
       relationships_parent_row:
         label: 'Em %{type}:'
       share_with:
-        definitions_html: "<strong>Acesso/Download:</strong> este arquivo (tanto conteúdo quanto metadados) é acessível a partir de %{application_name}.<br />
-          <strong>Edição:</strong> este arquivo (tanto conteúdo quanto metadados) pode ser editado. Você só pode conceder esta permissão a usuários e grupos do(a) %{institution_name}."
-
-        definition_heading: "Definições de Permissão"
-        share_with_html: "Você pode conceder a permissão de &quot;Acesso/Download&quot; ou &quot;Edição&quot; dos arquivos para usuários e grupos específicos. Entre uma %{account_name} válida, uma de cada vez, selecione o nível de acesso para o usuário, e clique +Acrescentar."
+        definition_heading: Definições de Permissão
+        definitions_html: "<strong>Acesso/Download:</strong> este arquivo (tanto conteúdo quanto metadados) é acessível a partir de %{application_name}.<br /> <strong>Edição:</strong> este arquivo (tanto conteúdo quanto metadados) pode ser editado. Você só pode conceder esta permissão a usuários e grupos do(a) %{institution_name}."
+        share_with_html: Você pode conceder a permissão de &quot;Acesso/Download&quot; ou &quot;Edição&quot; dos arquivos para usuários e grupos específicos. Entre uma %{account_name} válida, uma de cada vez, selecione o nível de acesso para o usuário, e clique +Acrescentar.
       show:
         last_modified: Última modificação
       social_media:
@@ -480,7 +472,7 @@ pt-BR:
           select_label: Selecionar sb-coleção
         nested_subcollection:
           button_label: Acrescentar uma coleção
-          desc: Embutir nesta coleção coleções que já existem 
+          desc: Embutir nesta coleção coleções que já existem
           modal_title: Embutir esta coleção em outra coleção
           select_label: Selecionar coleção
       browse_view: Explorar
@@ -563,7 +555,7 @@ pt-BR:
       all:
         collections: Todas as Coleções
         works: Todas as Obras
-      authorize_suplentes: Autorizar Suplentes
+      authorize_proxies: Autorizar proxies
       breadcrumbs:
         admin: Painel de Ferramentas
       collection_type_actions:
@@ -662,13 +654,13 @@ pt-BR:
           show_more_parent_collections: mostre mais...
           subcollection_count: Sub-coleções
       create_work: Criar obra
-      current_suplentes: Suplentes correntes
+      current_proxies: Proxies atuais
       delete_notification: Eliminar Notificação
       heading_actions:
         close: Fechar
         create_work: Criar obra
         select_type_of_work: Selecionar o tipo de obra
-      manage_suplentes: Gerenciar Suplentes
+      manage_proxies: Gerenciar Proxies
       managed:
         collections: Coleções Curateladas
         works: Obras Curateladas
@@ -754,7 +746,7 @@ pt-BR:
         removed_relationship: "'%{child_title}' foi removido de '%{parent_title}'"
       no_activity: O usuário não tem atividade recente
       no_notifications: O usuário não possui notificações
-      no_suplentes: Não há suplentes designados
+      no_proxies: Não há proxies designados
       no_transfer_requests: Você não recebeu nenhum pedido de transferência de obra
       no_transfers: Você não transferiu nenhuma obra
       proxy_activity: Atividade de suplente
@@ -850,38 +842,38 @@ pt-BR:
         versions: Versões
         versions_title: Exibir versões anteriores
       edit:
-        header: "Editar %{file_set}"
-        descriptions: "Descrições"
-        versions: "Versões"
-        permissions: "Permissões"
+        descriptions: Descrições
+        header: Editar %{file_set}
+        permissions: Permissões
+        versions: Versões
       form:
-        attach_to: "Anexar a %{parent}"
-        cancel: "Cancelar"
-        save: "Salvar"
-        title: "Título"
+        attach_to: Anexar a %{parent}
+        cancel: Cancelar
+        save: Salvar
+        title: Título
       groups_description:
         description_html: A lista de grupos no menu suspenso marcado como "Selecionar um grupo" é uma lista de Grupos Gerenciados pelo Usuário de que você é membro. Você pode selecionar um grupo específico e acrescentar um nível de acesso para um arquivo dentro do %{application_name}, de forma semelhante ao acréscimo de níveis de acesso ao usuário.
+      permission:
+        save: Salvar
       permission_form:
         applied_to: "(válido para todos os arquivos que acabaram de ser ingeridos)"
-        depositor: "Depositante"
-        enter: "Entrar %{account_label} (um de cada vez)"
-        header: "Permissões"
+        depositor: Depositante
+        enter: Entrar %{account_label} (um de cada vez)
+        header: Permissões
         optional: "(opcional)"
-        save_note_html: "As permissões <strong>não</strong> são salvas até que o botão de  &quot;Salvar&quot; abaixo seja pressionado."
-        select_group: "Selecionar um grupo"
-        share_with: "Compartilhar com"
-        table_title_access: "Nível de acesso"
-        table_title_user: "Pessoa/Grupo"
-        user_search: "Procurar um usuário"
-      permission:
-        save: "Salvar"
+        save_note_html: As permissões <strong>não</strong> são salvas até que o botão de  &quot;Salvar&quot; abaixo seja pressionado.
+        select_group: Selecionar um grupo
+        share_with: Compartilhar com
+        table_title_access: Nível de acesso
+        table_title_user: Pessoa/Grupo
+        user_search: Procurar um usuário
       versioning:
-        current: "Versão corrente"
-        header: "Versões"
-        upload: "Carregar nova versão"
-        restore: "Restaurar a Versão Anterior"
-        restore_from: "Restaurar a partir de"
-        save: "Salvar Revisão"
+        current: Versão corrente
+        header: Versões
+        restore: Restaurar a Versão Anterior
+        restore_from: Restaurar a partir de
+        save: Salvar Revisão
+        upload: Carregar nova versão
     help:
       header: Suporte ao usuário
       override_text: Usar app/views/static/help.html.erb para substituir este arquivo.
@@ -1237,7 +1229,7 @@ pt-BR:
         transfer_to: Usuário
     placeholders:
       defaults:
-        file: 'xxx'
+        file: xxx
         find_child_work: Procure uma obra ...
         member_of_collection_ids: Selecione uma coleção ...
     required:
