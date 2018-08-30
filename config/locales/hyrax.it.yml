@@ -420,6 +420,10 @@ it:
         header: Le relazioni
       relationships_parent_row:
         label: 'In %{type}:'
+      share_with:
+        definition_heading: Definizioni di autorizzazione
+        definitions_html: "<strong>Visualizza / Scarica:</strong> questo file (sia i contenuti che i metadati) è accessibile dall'interno di %{application_name}. <br /> <strong>Modifica:</strong> questo file (sia i contenuti che i metadati) può essere modificato. È possibile concedere questa autorizzazione solo agli utenti e / o ai gruppi %{institution_name}."
+        share_with_html: È possibile concedere l'accesso "Visualizza / Scarica" ​​o "Modifica" per utenti specifici e / o gruppi ai file. Immettere uno %{account_name} valido, uno alla volta, selezionare il livello di accesso per quell'utente e fare clic su + Aggiungi.
       show:
         last_modified: Ultima modifica
       social_media:
@@ -842,8 +846,39 @@ it:
         header: Seleziona un'azione
         versions: versioni
         versions_title: Mostra le versioni precedenti
+      edit:
+        descriptions: descrizioni
+        header: Modifica %{file_set}
+        permissions: permessi
+        versions: versioni
+      form:
+        attach_to: Allegare a %{parent}
+        cancel: Annulla
+        save: Salvare
+        title: Titolo
       groups_description:
         description_html: L'elenco dei gruppi nel menu a discesa contrassegnato con "Seleziona un gruppo" è un elenco di Gruppi gestiti utente di cui sei membro. È possibile selezionare un gruppo specifico e assegnare un livello di accesso per un file all'interno di %{application_name}, analogamente ad aggiungere livelli di accesso utente.
+      permission:
+        save: Salvare
+      permission_form:
+        applied_to: "(applicato a tutti i file appena caricati)"
+        depositor: Depositante
+        enter: Inserisci %{account_label} (uno alla volta)
+        header: permessi
+        optional: "(opzionale)"
+        save_note_html: Le autorizzazioni <strong>non</strong> vengono salvate finché <strong>non</strong> viene premuto il pulsante "Salva" nella parte inferiore della pagina.
+        select_group: Seleziona un gruppo
+        share_with: Condividi con
+        table_title_access: Livello di accesso
+        table_title_user: Persona / Gruppo
+        user_search: Cerca un utente
+      versioning:
+        current: Versione attuale
+        header: versioni
+        restore: Ripristina la versione precedente
+        restore_from: Ripristina da
+        save: Salva revisione
+        upload: Carica nuova versione
     help:
       header: Supporto utente
       override_text: Utilizza app / views / static / help.html.erb per ignorare questo file.

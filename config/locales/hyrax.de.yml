@@ -422,6 +422,10 @@ de:
         header: Beziehungen
       relationships_parent_row:
         label: 'In %{type}:'
+      share_with:
+        definition_heading: Berechtigungsdefinitionen
+        definitions_html: "<strong>Ansicht / Download: Auf</strong> diese Datei (sowohl Inhalte als auch Metadaten) kann innerhalb von %{application_name} zugegriffen werden. <br /> <strong>Bearbeiten:</strong> Diese Datei (sowohl Inhalte als auch Metadaten) kann bearbeitet werden. Sie dürfen diese Berechtigung nur Benutzern und / oder Gruppen von %{institution_name} erteilen."
+        share_with_html: Sie können den Zugriff "Ansicht / Download" oder "Bearbeiten" für bestimmte Benutzer und / oder Gruppen auf Dateien gewähren. Geben Sie nacheinander einen gültigen %{account_name} ein, wählen Sie die Zugriffsebene für diesen Benutzer und klicken Sie auf + Hinzufügen.
       show:
         last_modified: Zuletzt geändert
       social_media:
@@ -844,8 +848,39 @@ de:
         header: Wählen Sie eine Aktion
         versions: Versionen
         versions_title: Vorherige Versionen anzeigen
+      edit:
+        descriptions: Beschreibungen
+        header: Bearbeite %{file_set}
+        permissions: Berechtigungen
+        versions: Versionen
+      form:
+        attach_to: An %{parent} anhängen
+        cancel: Stornieren
+        save: sparen
+        title: Titel
       groups_description:
         description_html: Die Liste der Gruppen in der Auswahlliste mit der Bezeichnung &ldquor; Wählen Sie eine Gruppe aus &ldquor; zeigt ihnen jene Benutzer administrierten Gruppen an, bei denen Sie Mitglied sind. Sie können eine bestimmte Gruppe auswählen und eine Zugriffsebene für eine Datei innerhalb von %{application_name} zuweisen, ähnlich wie das Hinzufügen von Benutzerzugriffsebenen.
+      permission:
+        save: sparen
+      permission_form:
+        applied_to: "(gilt für alle gerade hochgeladenen Dateien)"
+        depositor: Einzahler
+        enter: Geben Sie %{account_label} ein (einzeln)
+        header: Berechtigungen
+        optional: "(wahlweise)"
+        save_note_html: Berechtigungen werden <strong>nicht</strong> gespeichert, bis die Schaltfläche "Speichern" am unteren Rand der Seite gedrückt wird.
+        select_group: Wählen Sie eine Gruppe aus
+        share_with: Teilen mit
+        table_title_access: Zugriffsebene
+        table_title_user: Person / Gruppe
+        user_search: Nach einem Benutzer suchen
+      versioning:
+        current: Aktuelle Version
+        header: Versionen
+        restore: Vorherige Version wiederherstellen
+        restore_from: Wiederherstellen von
+        save: Revision speichern
+        upload: Neue Version hochladen
     help:
       header: Benutzer-Support
       override_text: Verwenden Sie app/views/static/help.html.erb, um diese Datei zu überschreiben.

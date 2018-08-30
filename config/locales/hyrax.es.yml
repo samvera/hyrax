@@ -420,6 +420,10 @@ es:
         header: Relaciones
       relationships_parent_row:
         label: 'En %{type}:'
+      share_with:
+        definition_heading: Definiciones de permisos
+        definitions_html: "<strong>Ver / Descargar:</strong> este archivo (tanto contenido como metadatos) es accesible desde %{application_name}. <br /> <strong>Editar:</strong> este archivo (tanto contenido como metadatos) se puede editar. Solo puede otorgar este permiso a usuarios y / o grupos %{institution_name}."
+        share_with_html: Puede otorgar acceso de "Ver / Descargar" o "Editar" para usuarios o grupos específicos a los archivos. Ingrese un %{account_name} válido, uno a la vez, seleccione el nivel de acceso para ese usuario y haga clic en + Agregar.
       show:
         last_modified: Última modificación
       social_media:
@@ -842,10 +846,41 @@ es:
         header: Selecciona una acción
         versions: Versiones
         versions_title: Mostrar versiones anteriores
+      edit:
+        descriptions: Descripciones
+        header: Editar %{file_set}
+        permissions: Permisos
+        versions: Versiones
+      form:
+        attach_to: Adjuntar a %{parent}
+        cancel: Cancelar
+        save: Salvar
+        title: Título
       groups_description:
         description_html: 'La lista de grupos del listado "Seleccionar un grupo" es una lista de Grupos Administrados por el Usuario de la que que es miembro. Puede seleccionar un grupo específico y asignar un nivel de acceso por archivo dentro de %{application_name}, y del mismo modo puede agregar niveles de acceso de usuarios.
 
 '
+      permission:
+        save: Salvar
+      permission_form:
+        applied_to: "(aplicado a todos los archivos recién cargados)"
+        depositor: Depositor
+        enter: Ingrese %{account_label} (uno a la vez)
+        header: Permisos
+        optional: "(Opcional)"
+        save_note_html: Los permisos <strong>no se</strong> guardan hasta que se presiona el botón "Guardar" en la parte inferior de la página.
+        select_group: Seleccione un grupo
+        share_with: Compartir con
+        table_title_access: Nivel de acceso
+        table_title_user: Persona / Grupo
+        user_search: Buscar un usuario
+      versioning:
+        current: Versión actual
+        header: Versiones
+        restore: Restaurar la versión anterior
+        restore_from: Restaurar desde
+        save: Guardar revisión
+        upload: Subir nueva versión
     help:
       header: Soporte al Usuario
       override_text: Utilice app/views/static/help.html.erb para anular este archivo
