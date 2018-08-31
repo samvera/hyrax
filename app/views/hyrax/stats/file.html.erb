@@ -2,7 +2,7 @@
 <script>
 //<![CDATA[
 
-  var hyrax_item_stats = <%= @stats.to_flot.to_json.html_safe %>;
+  var hyrax_item_stats = <%= raw json_escape @stats.to_flot.to_json %>;
 
 //]]>
 </script>
