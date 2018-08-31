@@ -9,7 +9,7 @@
   <% events.each do |event| %>
     <% next if event[:action].blank? or event[:timestamp].blank? %>
     <tr>
-      <td><%= event[:action].html_safe %></td>
+      <td><%= event[:action] %></td>
       <% time = Time.zone.at(event[:timestamp].to_i) %>
       <td data-sort="<%= time.getutc.iso8601(5) %>">
         <relative-time datetime="<%= time.getutc.iso8601 %>" title="<%= time.to_formatted_s(:standard) %>">

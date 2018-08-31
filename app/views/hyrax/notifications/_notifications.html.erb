@@ -17,8 +17,8 @@
                 <%= msg.last_message.created_at.to_formatted_s(:long_ordinal) %>
               </relative-time>
             </td>
-            <td><%= msg.last_message.subject.html_safe %></td>
-            <td><%= msg.last_message.body.html_safe %></td>
+            <td><%= sanitize msg.last_message.subject %></td>
+            <td><%= sanitize msg.last_message.body %></td>
             <td>
               <%= link_to hyrax.notification_path(msg.id),
                       class: "itemicon itemtrash",
