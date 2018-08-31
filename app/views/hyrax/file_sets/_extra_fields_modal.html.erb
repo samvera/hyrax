@@ -11,7 +11,7 @@
         <h2 id="extraFieldsModal_<%=name %>_Label">Additional <%= label %>(s)</h2>
       </div>
       <div class="modal-body">
-        <%= values.join("<br />").html_safe %>
+        <%= sanitize values.join("<br />") %>
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary" data-dismiss="modal">Close</button>
