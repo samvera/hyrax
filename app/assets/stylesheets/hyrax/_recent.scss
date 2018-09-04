@@ -17,10 +17,16 @@
 
   img {
     width: 90px;
+    float: left;
+    padding-right: 1em;
   }
 
   .recent-label {
     color: $gray;
     font-weight: bold;
+  }
+
+  .recent-field {
+    padding-left: 90px;
   }
 }

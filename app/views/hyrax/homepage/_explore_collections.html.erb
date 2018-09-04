@@ -4,13 +4,11 @@
       <tr>
         <td>
           <div class="media">
-            <%= link_to [hyrax, collection], class: 'media-left', 'aria-hidden' => true do %>
-              <%= render_thumbnail_tag collection, { class: 'hidden-xs file_listing_thumbnail' }, { suppress_link: true } %>
-            <% end %>
             <div class="media-body">
               <div class="media-heading">
                 <%= link_to [hyrax, collection] do %>
-                  <%= collection.title_or_label %>
+                  <%= render_thumbnail_tag(collection, { class: 'hidden-xs file_listing_thumbnail' },
+                                           { suppress_link: true }) + collection.title_or_label %>
                 <% end %>
               </div>
             </div>
