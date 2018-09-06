@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<%= t("hyrax.document_language", default: '') %>" prefix="og:http://ogp.me/ns#">
+<html lang="<%= I18n.locale.to_s %>" prefix="og:http://ogp.me/ns#">
   <head>
     <%= render partial: 'layouts/head_tag_content' %>
     <%= content_for(:head) %>
