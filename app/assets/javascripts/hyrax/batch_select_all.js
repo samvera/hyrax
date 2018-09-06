@@ -75,6 +75,11 @@ Blacklight.onLoad(function() {
 
   // check all check boxes
   $("#check_all").bind('click', check_all_page);
+  
+  // select/deselect all check boxes 
+  $("#checkAllBox").change(function () {
+    $("input:checkbox").prop('checked', $(this).prop("checked"));
+  });
 
   // toggle button on or off based on boxes being clicked
   $(".batch_document_selector").bind('click', function(e) {

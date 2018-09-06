@@ -22,7 +22,7 @@
     <table class="embargoes table">
       <thead>
         <tr>
-          <th></th>
+          <th><input type="checkbox" id="checkAllBox" class="batch_document_selector"/> Select All</th>
           <%= render partial: 'table_headers' %>
         </tr>
       </thead>
@@ -40,7 +40,7 @@
         <tr data-behavior="extra" data-id="<%= curation_concern.id %>" class="extra-embargo-info">
           <td></td>
           <td colspan=5>
-            <%= check_box_tag "embargoes[#{i}][copy_visibility]", curation_concern.id, true %>
+            <%= check_box_tag "embargoes[#{i}][copy_visibility]", curation_concern.id, false %>
             <%= t('.change_all', cc: curation_concern) %>
             <%= visibility_badge(curation_concern.visibility_after_embargo) %>?
           </td>
