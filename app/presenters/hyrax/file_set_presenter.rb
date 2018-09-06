@@ -38,7 +38,7 @@ module Hyrax
 
     # The title of the webpage that shows this FileSet.
     def page_title
-      first_title
+      "#{human_readable_type} | #{title.first} | ID: #{id} | #{I18n.t('hyrax.product_name')}"
     end
 
     # The first title assertion
