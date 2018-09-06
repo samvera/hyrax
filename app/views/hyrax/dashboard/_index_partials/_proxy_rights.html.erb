@@ -6,7 +6,7 @@
   </div>
   <div class="row">
     <div class="col-xs-6 proxy-search">
-      <h4><%= t("hyrax.dashboard.authorize_proxies") %></h4>
+      <h2><%= t("hyrax.dashboard.authorize_proxies") %></h2>
       <div class="form-group">
         <label for="user"><%= t("hyrax.dashboard.proxy_user") %></label>
         <%= hidden_field_tag :user, nil, data: { grantor: current_user.to_param } %>
@@ -15,7 +15,7 @@
     </div>
 
     <div class="col-xs-6">
-      <h4><%= t("hyrax.dashboard.current_proxies") %></h4>
+      <h2><%= t("hyrax.dashboard.current_proxies") %></h2>
       <table class="table table-condensed table-striped" id="authorizedProxies">
         <tbody>
         <% user.can_receive_deposits_from.each do |depositor| %>
