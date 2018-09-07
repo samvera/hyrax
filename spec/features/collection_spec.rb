@@ -54,6 +54,14 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       expect(page).not_to have_content(work2.title.first)
     end
 
+    it "returns json results" do
+      visit "/collections/#{collection.id}.json"
+      expect(page).to have_http_status(:success)
+      json = JSON.parse(page.body)
+      expect(json['id']).to eq collection.id
+      expect(json['title']).to match_array collection.title
+    end
+
     context "with a non-nestable collection type" do
       let(:collection) do
         build(:public_collection_lw, user: user, description: ['collection description'], collection_type_settings: :not_nestable, with_solr_document: true, with_permission_template: true)

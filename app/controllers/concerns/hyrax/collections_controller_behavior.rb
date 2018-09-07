@@ -25,6 +25,7 @@ module Hyrax
     end
 
     def show
+      @curation_concern ||= ActiveFedora::Base.find(params[:id])
       presenter
       query_collection_members
     end
