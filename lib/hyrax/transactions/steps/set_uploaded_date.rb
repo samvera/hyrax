@@ -2,6 +2,11 @@
 module Hyrax
   module Transactions
     module Steps
+      ##
+      # A `dry-transaction` step that sets the uploaded date to now for an
+      # input work.
+      #
+      # @since 2.4.0
       class SetUploadedDate
         include Dry::Transaction::Operation
 
