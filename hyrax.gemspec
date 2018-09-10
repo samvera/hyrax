@@ -80,7 +80,7 @@ EOF
   spec.add_development_dependency 'engine_cart', '~> 1.2'
   spec.add_development_dependency 'mida', '~> 0.3'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
-  spec.add_development_dependency 'solr_wrapper', '~> 1.1'
+  spec.add_development_dependency 'solr_wrapper', '>= 1.1', '< 3.0'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.5', '>= 0.5.1'
   spec.add_development_dependency 'rspec-rails', '~> 3.1'
   spec.add_development_dependency 'rspec-its', '~> 1.1'
