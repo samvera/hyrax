@@ -23,7 +23,6 @@ FactoryBot.define do
     end
 
     title { ["Test title"] }
-    visibility { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
 
     after(:build) do |work, evaluator|
       work.apply_depositor_metadata(evaluator.user.user_key)
@@ -36,7 +35,8 @@ FactoryBot.define do
     end
 
     factory :private_work do
-      visibility { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
+      # private is default
+      # visibility { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
     end
 
     factory :registered_generic_work do
