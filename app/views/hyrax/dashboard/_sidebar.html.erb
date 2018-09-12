@@ -1,19 +1,21 @@
 <% menu = Hyrax::MenuPresenter.new(self) %>
 <div class="sidebar-toggle"><span class="fa fa-chevron-circle-right"></span></div>
-<ul class="nav nav-pills nav-stacked">
-  <li>
-    <div class="profile">
-      <div class="profile-image">
-        <%= image_tag current_user.avatar.url(:thumb), width: 100 if current_user.avatar.present? %>
+<nav>
+  <ul class="nav nav-pills nav-stacked">
+    <li>
+      <div class="profile">
+        <div class="profile-image">
+          <%= image_tag current_user.avatar.url(:thumb), width: 100 if current_user.avatar.present? %>
+        </div>
+        <div class="profile-data">
+          <div class="profile-data-name"><%= current_user.name %></div>
+        </div>
       </div>
-      <div class="profile-data">
-        <div class="profile-data-name"><%= current_user.name %></div>
-      </div>
-    </div>
-  </li>
+    </li>
 
-  <%= render 'hyrax/dashboard/sidebar/activity', menu: menu %>
-  <%= render 'hyrax/dashboard/sidebar/repository_content', menu: menu %>
-  <%= render 'hyrax/dashboard/sidebar/tasks', menu: menu %>
-  <%= render 'hyrax/dashboard/sidebar/configuration', menu: menu %>
-</ul>
+    <%= render 'hyrax/dashboard/sidebar/activity', menu: menu %>
+    <%= render 'hyrax/dashboard/sidebar/repository_content', menu: menu %>
+    <%= render 'hyrax/dashboard/sidebar/tasks', menu: menu %>
+    <%= render 'hyrax/dashboard/sidebar/configuration', menu: menu %>
+  </ul>
+</nav>
