@@ -33,10 +33,11 @@ module Hyrax
       results = ActiveFedora::SolrService.instance.conn.get(
         ActiveFedora::SolrService.select_path,
         params: { fq: query,
+                  rows: 0,
                   'facet.field' => join_field }
       )
       counts = results['facet_counts']['facet_fields'][join_field].each_slice(2).to_h
-      file_counts = count_files(results)
+      file_counts = count_files(admin_sets)
       admin_sets.map do |admin_set|
         SearchResultForWorkCount.new(admin_set, counts[admin_set.id].to_i, file_counts[admin_set.id].to_i)
       end
@@ -50,14 +51,18 @@ module Hyrax
       end
 
       # Count number of files from admin set works
-      # @param [Array] results Solr search result
+      # @param [Array] AdminSets to count files in
       # @return [Hash] admin set id keys and file count values
-      def count_files(results)
+      def count_files(admin_sets)
         file_counts = Hash.new(0)
-        results['response']['docs'].each do |doc|
-          doc['isPartOf_ssim'].each do |id|
-            file_counts[id] += doc.fetch('file_set_ids_ssim', []).length
-          end
+        admin_sets.each do |admin_set|
+          query = "{!join from=file_set_ids_ssim to=id}isPartOf_ssim:#{admin_set.id}"
+          file_results = ActiveFedora::SolrService.instance.conn.get(
+            ActiveFedora::SolrService.select_path,
+            params: { fq: [query, "has_model_ssim:FileSet"],
+                      rows: 0 }
+          )
+          file_counts[admin_set.id] = file_results['response']['numFound']
         end
         file_counts
       end

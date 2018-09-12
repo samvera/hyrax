@@ -54,68 +54,117 @@ RSpec.describe Hyrax::AdminSetService do
   describe '#search_results_with_work_count' do
     subject { service.search_results_with_work_count(access) }
 
-    let(:access) { :read }
-    let(:documents) { [doc1, doc2, doc3] }
-    let(:doc1) { SolrDocument.new(id: 'xyz123') }
-    let(:doc2) { SolrDocument.new(id: 'yyx123') }
-    let(:doc3) { SolrDocument.new(id: 'zxy123') }
-    let(:connection) { instance_double(RSolr::Client) }
-    let(:facets) { { 'isPartOf_ssim' => [doc1.id, 8, doc2.id, 2] } }
-    let(:document_list) do
+    let(:admin_set_attrs) do
       [
-        {
-          'isPartOf_ssim' => ['xyz123'],
-          'file_set_ids_ssim' => ['aaa']
-        },
-        {
-          'isPartOf_ssim' => ['xyz123', 'yyx123'],
-          'file_set_ids_ssim' => ['bbb', 'ccc']
-        }
+        { id: 'admin_set_1' },
+        { id: 'admin_set_2' },
+        { id: 'admin_set_3' }
       ]
     end
 
-    let(:results) do
-      {
-        'response' =>
-          {
-            'docs' => document_list
-          },
-        'facet_counts' =>
-          {
-            'facet_fields' => facets
-          }
-      }
+    let(:file_set_attrs) do
+      [
+        { id: 'file_1', has_model_ssim: 'FileSet' },
+        { id: 'file_2', has_model_ssim: 'FileSet' },
+        { id: 'file_3', has_model_ssim: 'FileSet' },
+        { id: 'file_4', has_model_ssim: 'FileSet' },
+        { id: 'file_5', has_model_ssim: 'FileSet' },
+        { id: 'file_6', has_model_ssim: 'FileSet' },
+        { id: 'file_7', has_model_ssim: 'FileSet' },
+        { id: 'file_8', has_model_ssim: 'FileSet' },
+        { id: 'file_9', has_model_ssim: 'FileSet' },
+        { id: 'file_10', has_model_ssim: 'FileSet' },
+        { id: 'file_11', has_model_ssim: 'FileSet' }
+      ]
     end
 
+    let(:work1_attrs) { { id: 'work_1' } }
+    let(:work2_attrs) { { id: 'work_2' } }
+    let(:work3_attrs) { { id: 'work_3' } }
+    let(:work4_attrs) { { id: 'work_4' } }
+    let(:work5_attrs) { { id: 'work_5' } }
+    let(:work6_attrs) { { id: 'work_6' } }
+    let(:work7_attrs) { { id: 'work_7' } }
+    let(:work8_attrs) { { id: 'work_8' } }
+    let(:work9_attrs) { { id: 'work_9' } }
+    let(:work10_attrs) { { id: 'work_10' } }
+    let(:work11_attrs) { { id: 'work_11' } }
+
+    let(:work_attrs) { [work1_attrs, work2_attrs, work3_attrs, work4_attrs, work5_attrs, work6_attrs, work7_attrs, work8_attrs, work9_attrs, work10_attrs, work11_attrs] }
+
+    let(:works) do
+      [].tap do |result|
+        work_attrs.each do |work|
+          result << SolrDocument.new(work)
+        end
+      end
+    end
+
+    let(:admin_sets) do
+      [].tap do |result|
+        admin_set_attrs.each do |admin_set|
+          result << SolrDocument.new(admin_set)
+        end
+      end
+    end
+
+    let(:file_sets) do
+      [].tap do |result|
+        file_set_attrs.each do |file_set|
+          result << SolrDocument.new(file_set)
+        end
+      end
+    end
+
+    let(:access) { :read }
     let(:struct) { described_class::SearchResultForWorkCount }
 
     before do
-      allow(service).to receive(:search_results).and_return(documents)
-      allow(ActiveFedora::SolrService.instance).to receive(:conn).and_return(connection)
-      allow(connection).to receive(:get).with("select", params: { fq: "{!terms f=isPartOf_ssim}xyz123,yyx123,zxy123",
-                                                                  "facet.field" => "isPartOf_ssim" }).and_return(results)
+      allow(service).to receive(:search_results).and_return(admin_sets)
+      all_objects = []
+      all_objects << works << admin_sets << file_sets
+      all_objects.each do |obj|
+        ActiveFedora::SolrService.add(obj)
+      end
+      ActiveFedora::SolrService.commit
     end
 
-    context "when there are works in the admin set" do
-      it "returns rows with document in the first column and integer count value in the second and third column" do
-        expect(subject).to eq [struct.new(doc1, 8, 3), struct.new(doc2, 2, 2), struct.new(doc3, 0, 0)]
+    context "when there are works and files in the admin set" do
+      let(:work1_attrs) { { id: 'work_1', isPartOf_ssim: 'admin_set_1', file_set_ids_ssim: ['file_1', 'file_3', 'file_4'] } }
+      let(:work2_attrs) { { id: 'work_2', isPartOf_ssim: 'admin_set_2', file_set_ids_ssim: ['file_2'] } }
+      let(:work3_attrs) { { id: 'work_3', isPartOf_ssim: 'admin_set_2', file_set_ids_ssim: ['file_6', 'file_7'] } }
+      let(:work4_attrs) { { id: 'work_4', isPartOf_ssim: 'admin_set_3', file_set_ids_ssim: ['file_8'] } }
+
+      it "returns rows with document in the first column, count of works in second column and count of files in the third column" do
+        expect(subject).to eq [struct.new(admin_sets[0], 1, 3), struct.new(admin_sets[1], 2, 3), struct.new(admin_sets[2], 1, 1)]
       end
     end
 
     context "when there are no files in the admin set" do
-      let(:document_list) do
-        [
-          {
-            'isPartOf_ssim' => ['xyz123']
-          },
-          {
-            'isPartOf_ssim' => ['xyz123', 'yyx123']
-          }
-        ]
-      end
+      let(:work1_attrs) { { id: 'work_1', isPartOf_ssim: 'admin_set_1', file_set_ids_ssim: [] } }
+      let(:work2_attrs) { { id: 'work_2', isPartOf_ssim: 'admin_set_2', file_set_ids_ssim: [] } }
+      let(:work3_attrs) { { id: 'work_3', isPartOf_ssim: 'admin_set_2', file_set_ids_ssim: [] } }
 
-      it "returns rows with document in the first column and integer count value in the second and third column" do
-        expect(subject).to eq [struct.new(doc1, 8, 0), struct.new(doc2, 2, 0), struct.new(doc3, 0, 0)]
+      it "returns rows with document in the first column, count of works in second column and count of no files in the third column" do
+        expect(subject).to eq [struct.new(admin_sets[0], 1, 0), struct.new(admin_sets[1], 2, 0), struct.new(admin_sets[2], 0, 0)]
+      end
+    end
+
+    context "when there are more than 10 works in the admin set" do
+      let(:work1_attrs) { { id: 'work_1', isPartOf_ssim: 'admin_set_1', file_set_ids_ssim: ['file_1'] } }
+      let(:work2_attrs) { { id: 'work_2', isPartOf_ssim: 'admin_set_1', file_set_ids_ssim: ['file_2'] } }
+      let(:work3_attrs) { { id: 'work_3', isPartOf_ssim: 'admin_set_1', file_set_ids_ssim: ['file_3'] } }
+      let(:work4_attrs) { { id: 'work_4', isPartOf_ssim: 'admin_set_1', file_set_ids_ssim: ['file_4'] } }
+      let(:work5_attrs) { { id: 'work_5', isPartOf_ssim: 'admin_set_1', file_set_ids_ssim: ['file_5'] } }
+      let(:work6_attrs) { { id: 'work_6', isPartOf_ssim: 'admin_set_1', file_set_ids_ssim: ['file_6'] } }
+      let(:work7_attrs) { { id: 'work_7', isPartOf_ssim: 'admin_set_1', file_set_ids_ssim: ['file_7'] } }
+      let(:work8_attrs) { { id: 'work_8', isPartOf_ssim: 'admin_set_1', file_set_ids_ssim: ['file_8'] } }
+      let(:work9_attrs) { { id: 'work_9', isPartOf_ssim: 'admin_set_1', file_set_ids_ssim: ['file_9'] } }
+      let(:work10_attrs) { { id: 'work_10', isPartOf_ssim: 'admin_set_1', file_set_ids_ssim: ['file_10'] } }
+      let(:work11_attrs) { { id: 'work_11', isPartOf_ssim: 'admin_set_1', file_set_ids_ssim: ['file_11'] } }
+
+      it "returns rows with document in the first column, count of works in second column and count of files in the third column" do
+        expect(subject).to eq [struct.new(admin_sets[0], 11, 11), struct.new(admin_sets[1], 0, 0), struct.new(admin_sets[2], 0, 0)]
       end
     end
   end
