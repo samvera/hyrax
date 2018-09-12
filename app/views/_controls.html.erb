@@ -1,7 +1,7 @@
 <nav class="navbar navbar-default navbar-static-top" role="navigation">
   <div class="container-fluid">
     <div class="row">
-      <ul class="nav navbar-nav col-sm-5 col-md-6">
+      <ul class="nav navbar-nav col-sm-5">
         <li <%= 'class=active' if current_page?(hyrax.root_path) %>>
           <%= link_to t(:'hyrax.controls.home'), hyrax.root_path, aria: current_page?(hyrax.root_path) ? {current: 'page'} : nil %></li>
         <li <%= 'class=active' if current_page?(hyrax.about_path) %>>
@@ -11,7 +11,7 @@
         <li <%= 'class=active' if current_page?(hyrax.contact_path) %>>
           <%= link_to t(:'hyrax.controls.contact'), hyrax.contact_path, aria: current_page?(hyrax.contact_path) ? {current: 'page'} : nil %></li>
       </ul><!-- /.nav -->
-      <div class="searchbar-right navbar-right col-sm-7 col-md-6">
+      <div class="searchbar-right navbar-right col-sm-7">
         <%= render partial: 'catalog/search_form' %>
       </div>
     </div>
