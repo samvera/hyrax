@@ -55,6 +55,8 @@ EOF
   spec.add_dependency 'rdf-rdfxml' # controlled vocabulary importer
   spec.add_dependency 'railties', '~> 5.0'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
+  # Devise 4.5 removes the 'trackable' module, which we depend on
+  spec.add_dependency 'devise', '<= 4.4.99'
   spec.add_dependency 'rails_autolink', '~> 1.1'
   spec.add_dependency 'active_fedora-noid', '~> 2.0', '>= 2.0.2'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
@@ -73,7 +75,7 @@ EOF
   spec.add_development_dependency 'engine_cart', '~> 1.0'
   spec.add_development_dependency 'mida', '~> 0.3'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
-  spec.add_development_dependency 'solr_wrapper', '~> 0.5'
+  spec.add_development_dependency 'solr_wrapper', '~> 0.5', '< 3.0'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.5', '>= 0.5.1'
   spec.add_development_dependency 'rspec-rails', '~> 3.1'
   spec.add_development_dependency 'rspec-its', '~> 1.1'
