@@ -11,6 +11,8 @@ jobs:
       environment:
         RAILS_ENV: test
         RACK_ENV: test
+        BUNDLE_JOBS: 4
+        BUNDLE_RETRY: 3
         NOKOGIRI_USE_SYSTEM_LIBRARIES: true
         ENGINE_CART_RAILS_OPTIONS: --skip-git --skip-bundle --skip-listen --skip-spring --skip-yarn --skip-keeps --skip-action-cable --skip-coffee --skip-puma --skip-test
         SPEC_OPTS: --format progress --format RspecJunitFormatter --out /tmp/test-results/rspec.xml --format progress
@@ -26,24 +28,31 @@ jobs:
     working_directory: ~/repo
 
     steps:
+    - run:
+        name: Setup Interpolated ENV Variables
+        command: |
+          echo 'export BUNDLE_PATH="$CIRCLE_WORKING_DIR/vendor/bundle"' >> $BASH_ENV
+
     - checkout
 
     # Download and cache dependencies
     - restore_cache:
         keys:
-        - v1-dependencies-{{ checksum "Gemfile.lock" }}
-        # fallback to using the latest cache if no exact match is found
         - v1-dependencies-
 
     - run:
         name: install dependencies
         command: |
-          bundle check || bundle install --jobs=4 --retry=3 --path vendor/bundle
+          gem update bundler
+          bundle update
+          bundle exec rake engine_cart:generate
 
     - save_cache:
         paths:
+        - ./Gemfile.lock
         - ./vendor/bundle
-        key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+        - ./.internal_test_app
+        key: v1-dependencies-{{ checksum "./.internal_test_app/.generated_engine_cart" }}
 
     # run tests!
     - run:
