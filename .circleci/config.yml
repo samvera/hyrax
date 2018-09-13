@@ -6,8 +6,8 @@ version: 2
 jobs:
   build:
     docker:
-    # specify the version you desire here
-    - image: circleci/ruby:2.5.1-node-browsers
+    # legacy needed for phantomjs
+    - image: circleci/ruby:2.5.1-node-browsers-legacy
       environment:
         RAILS_ENV: test
         RACK_ENV: test
@@ -31,7 +31,7 @@ jobs:
     - run:
         name: Setup Interpolated ENV Variables
         command: |
-          echo 'export BUNDLE_PATH="$CIRCLE_WORKING_DIR/vendor/bundle"' >> $BASH_ENV
+          echo 'export BUNDLE_PATH="$CIRCLE_WORKING_DIRECTORY/vendor/bundle"' >> $BASH_ENV
 
     - checkout
 
@@ -54,9 +54,13 @@ jobs:
         - ./.internal_test_app
         key: v1-dependencies-{{ checksum "./.internal_test_app/.generated_engine_cart" }}
 
-    # run tests!
     - run:
-        name: run tests
+        name: Start headless Chrome
+        command: google-chrome-stable --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 http://localhost
+        background: true
+
+    - run:
+        name: Run tests
         command: |
           mkdir /tmp/test-results
           TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
