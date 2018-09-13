@@ -348,6 +348,9 @@ en:
     base:
       citations:
         header: 'Citations:'
+      currently_shared:
+        table_title_access: Access Level
+        table_title_user: Person/Group
       form_child_work_relationships:
         actions:
           remove: Remove from this work
@@ -875,8 +878,6 @@ en:
         save_note_html: Permissions are <strong>not</strong> saved until the &quot;Save&quot; button is pressed at the bottom of the page.
         select_group: Select a group
         share_with: Share With
-        table_title_access: Access Level
-        table_title_user: Person/Group
         user_search: Search for a user
       versioning:
         current: Current Version

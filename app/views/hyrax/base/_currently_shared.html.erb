@@ -1,0 +1,97 @@
+<%# ================================================================= %>
+<%# Lock unauthorized permissions from update:
+    - user is permitted to update any work permissions coming from collections they manage
+    - user is permitted to update non-manager permissions from any Collections
+    - user is permitted to update non-collection permissions
+    Process used:
+    - find all of the work's collections a user can manage
+    - find all of the work's collections a user cannot manage
+    - find all of the other managers of collections a user can manage
+    - find all of the other managers of collections a user cannot manage who are not also managers in collections that the user CAN manage.
+    This gives us the permissions the user is not authorized to update.
+%>
+
+<%# get all of work's or file_set's collection ids %>
+<% object_acting_upon =  f.object.respond_to?(:work?) ? f.object.in_works.first : f.object %>
+<% work_member_of = object_acting_upon.member_of_collection_ids + Array.wrap(object_acting_upon.admin_set_id) %>
+
+<%# get work's collection ids which the user manages %>
+<% managed_collection_ids = Hyrax::Collections::PermissionsService.source_ids_for_manage(ability: current_ability) %>
+<% work_managed_collection_ids = work_member_of & managed_collection_ids %>
+<% work_unauthorized_collection_ids = work_member_of - work_managed_collection_ids %>
+
+<%# authorized collection managers %>
+<% authorized_mgrs = [] %>
+<% authorized_collection_mgrs = [] %>
+<% work_managed_collection_ids.each do |id| %>
+  <% Hyrax::PermissionTemplate.find_by(source_id: id).access_grants.each do |grant| %>
+    <% if grant.access == "manage" %>
+      <% authorized_mgrs << grant.agent_id %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%# unauthorized collection managers %>
+<% unauthorized_mgrs = [] %>
+<% unauthorized_collection_mgrs = [] %>
+<% work_unauthorized_collection_ids.each do |id| %>
+  <% Hyrax::PermissionTemplate.find_by(source_id: id).access_grants.each do |grant| %>
+    <% if grant.access == "manage" && (!authorized_mgrs.include? grant.agent_id) %>
+      <% unauthorized_mgrs << grant.agent_id %>
+      <% unauthorized_collection_mgrs += Array.wrap({name: grant.agent_id}.merge({id: id})) %>
+    <% end %>
+  <% end %>
+<% end %>
+<%# ================================================================= %>
+
+<% depositor = f.object.depositor %>
+<%# omit the public, registered, admin, and depositor permissions from the display %>
+<% exclude_from_display = [::Ability.public_group_name, ::Ability.registered_group_name, ::Ability.admin_group_name, depositor] %>
+
+<h2><%= t('hyrax.base.form_share.currently_sharing') %></h2>
+
+<table class="table table-bordered">
+  <tr>
+    <th><%= t('.table_title_user') %></th>
+    <th><div class="col-sm-10"><%= t('.table_title_access') %></div></th>
+  </tr>
+  <tr id="file_permissions">
+    <td>
+      <%= label_tag :owner_access, class: "control-label" do %>
+        Depositor (<span id="file_owner" data-depositor="<%= depositor %>"><%= link_to_profile depositor %></span>)
+      <% end %>
+    </td>
+    <td>
+    <div class="col-sm-10">
+      <%= Hyrax.config.owner_permission_levels.keys[0] %>
+    </div>
+    </td>
+  </tr>
+  <%= f.fields_for :permissions do |permission_fields| %>
+    <% perm_hash = permission_fields.object.to_hash %>
+    <% next if exclude_from_display.include? perm_hash[:name].downcase %>
+    <% cannot_edit_perms = (unauthorized_mgrs.include? perm_hash[:name]) && perm_hash[:access] == "edit" %>
+    <tr>
+      <td>
+        <%= permission_fields.label :agent_name, class: "control-label" do %>
+          <%= user_display_name_and_key(perm_hash[:name]) %>
+          <% unauthorized_collection_mgrs.select {|mgrs| mgrs[:name] == perm_hash[:name] }.each do |coll| %>
+            <br />Access granted via collection <%= coll[:id] %>
+          <% end %>
+        <% end %>
+      </td>
+      <td>
+        <div class="col-sm-10">
+        <% if cannot_edit_perms %>
+          <%= Hyrax.config.permission_levels.key(perm_hash[:access]) %>
+        <% else %>
+          <%= permission_fields.select :access, Hyrax.config.permission_levels, {}, class: 'form-control select_perm' %>
+        <% end %>
+        </div>
+        <% if !cannot_edit_perms %>
+          <button class="btn close remove_perm" data-index="<%= permission_fields.index %>">&times;</button>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>
