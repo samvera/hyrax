@@ -42,7 +42,7 @@ module Hyrax
       end
 
       def link_to_manage_proxies
-        link_to t('hyrax.dashboard.manage_proxies'), hyrax.depositors_path
+        link_to t('hyrax.dashboard.manage_proxies'), hyrax.depositors_path, aria: { label: t('hyrax.dashboard.manage_proxies') }
       end
 
       private
