@@ -1,0 +1,28 @@
+<div class="panel-heading">
+  <h3 class="panel-title"><%= t('.title') %></h3>
+  <div><%= t('.subtitle') %></div>
+</div>
+<div class="panel-body text-center">
+  <% user_activity = @presenter.user_activity.to_json %>
+  <div id="user-activity" aria-hidden="true" style="height: 200px"><script>
+//<![CDATA[
+Hyrax.statistics.userActivity = <%== user_activity %>
+//]]>
+</script></div>
+  <table aria-label="<%= t('.title') %>, <%= t('.subtitle') %>" class="table table-striped sr-only text-left">
+    <thead>
+      <tr>
+        <th><%= t('.date') %></th>
+        <th><%= t('.new_users') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% JSON.parse(user_activity).each do |row| %>
+        <tr>
+          <td><%= row["y"] %></td>
+          <td><%= row["a"] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

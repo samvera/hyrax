@@ -54,49 +54,19 @@
 <div class="row">
   <div class="col-md-4">
     <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><%= t('.user_activity.title') %></h3>
-        <div><%= t('.user_activity.subtitle') %></div>
-      </div>
-      <div class="panel-body text-center">
-        <div id="user-activity" style="height: 200px"><script>
-//<![CDATA[
-Hyrax.statistics.userActivity = <%== @presenter.user_activity.to_json %>
-//]]>
-</script></div>
-      </div>
+      <%= render 'user_activity' %>
     </div>
   </div>
 
   <div class="col-md-4">
     <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><%= t('.repository_growth.title') %></h3>
-        <div><%= t('.repository_growth.subtitle') %></div>
-      </div>
-      <div class="panel-body text-center">
-        <div id="dashboard-growth" style="height: 200px"><script>
-//<![CDATA[
-Hyrax.statistics.repositoryGrowth = <%== @presenter.repository_growth.to_json %>
-//]]>
-</script></div>
-      </div>
+      <%= render 'repository_growth' %>
     </div>
   </div>
 
   <div class="col-md-4">
     <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><%= t('.repository_objects.title') %></h3>
-        <div><%= t('.repository_objects.subtitle') %></div>
-      </div>
-      <div class="panel-body text-center">
-        <div id="dashboard-repository-objects" style="height: 200px"><script>
-//<![CDATA[
-Hyrax.statistics.repositoryObjects = <%== @presenter.repository_objects.to_json %>
-//]]>
-</script></div>
-      </div>
+      <%= render 'repository_objects' %>
     </div>
   </div>
 </div>

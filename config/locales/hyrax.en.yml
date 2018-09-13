@@ -759,20 +759,21 @@ en:
       proxy_delete: Delete Proxy
       proxy_help: Select a user who can deposit works on your behalf. Both you and your proxy will be able to make changes to these works. You can revoke a proxy by clicking the Delete Proxy button. To revoke their ability to edit a work they previously submitted, remove them from the Sharing tab on each work.
       proxy_user: Proxy User
+      repository_growth:
+        subtitle: Past 90 days
+        title: Repository Growth
+        date: Date
+        objects: Objects
+        collections: Collections
+      repository_objects:
+        subtitle: Current Status
+        title: Repository Objects
+        status: Current Status
       show_admin:
         new_visitors: New Visitors
         registered_users: Registered Users
-        repository_growth:
-          subtitle: Past 90 days
-          title: Repository Growth
-        repository_objects:
-          subtitle: Current Status
-          title: Repository Objects
         returning_visitors: Returning Visitors
         total_visitors: Total Visitors
-        user_activity:
-          subtitle: New user signups
-          title: User Activity
       stats:
         collections: Collections created
         file_downloads: Download
@@ -785,7 +786,11 @@ en:
       transfer_works_link: Select works to transfer
       transfers_received: Transfers Received
       transfers_sent: Transfers Sent
-      user_activity: User Activity
+      user_activity:
+        subtitle: New user signups
+        title: User Activity
+        date: Date
+        new_users: New Users
       user_notifications: User Notifications
       view_files: View Files
     document_language: en
