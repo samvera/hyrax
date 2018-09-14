@@ -753,20 +753,21 @@ pt-BR:
       proxy_delete: Eliminar Suplente
       proxy_help: Selecione um usuário que possa depositar obras em seu nome. Tanto você quanto o seu suplente poderão modificar estas obras. Você pode revogar a função de suplente clicando no botão Eliminar Suplente. Para revogar a abilidade de editar uma obra que o suplente submeteu, remova seu acesso na guia de Compartilhamento relativa à obra.
       proxy_user: Usuário Suplente
+      repository_growth:
+        collections: Coleções
+        date: Encontro
+        objects: Objetos
+        subtitle: Últimos 90 dias
+        title: Crescimento do Repositório
+      repository_objects:
+        status: Status atual
+        subtitle: Status atual
+        title: Objetos de Repositório
       show_admin:
         new_visitors: Novos visitantes
         registered_users: Usuários cadastrados
-        repository_growth:
-          subtitle: Últimos 90 dias
-          title: Crescimento do depósito
-        repository_objects:
-          subtitle: Status atual
-          title: Objetos de repositório
         returning_visitors: Visitantes recorrentes
         total_visitors: Total de visitantes
-        user_activity:
-          subtitle: Novas inscrições de usuários
-          title: Atividade do usuário
       stats:
         collections: Coleções criadas
         file_downloads: Download
@@ -779,7 +780,11 @@ pt-BR:
       transfer_works_link: Selecione as obras a transferir
       transfers_received: Transferências Recebidas
       transfers_sent: Transferências enviadas
-      user_activity: Atividade do usuário
+      user_activity:
+        date: Encontro
+        new_users: Novos usuários
+        subtitle: Novas inscrições de usuários
+        title: Atividade do usuário
       user_notifications: Notificações do usuário
       view_files: Ver arquivos
     document_language: pt-BR

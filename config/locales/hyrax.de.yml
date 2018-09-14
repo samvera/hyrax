@@ -760,20 +760,21 @@ de:
       proxy_delete: Vertreter löschen
       proxy_help: Wählen Sie einen Benutzer aus, der Arbeiten in Ihrem Namen hinterlegen kann. Sie sind der Eigentümer von Werken, die dieser Benutzer für Sie hinterlegt. Sie können einen Proxy widerrufen, indem Sie auf die Schaltfläche Proxy löschen klicken.
       proxy_user: Vertreter-Benutzer
+      repository_growth:
+        collections: Sammlungen
+        date: Datum
+        objects: Objekte
+        subtitle: Die letzten 90 Tage
+        title: Repository-Wachstum
+      repository_objects:
+        status: Aktueller Status
+        subtitle: Aktueller Status
+        title: Repository-Objekte
       show_admin:
         new_visitors: Neue Besucher
         registered_users: Registrierte Benutzer
-        repository_growth:
-          subtitle: Letzte 90 Tage
-          title: Repositoriums- Wachstum
-        repository_objects:
-          subtitle: Aktueller Status
-          title: Repositoriums- Objekte
         returning_visitors: Besucher wiederkehrend
         total_visitors: Besucher insgesamt
-        user_activity:
-          subtitle: Benutzer- Neuanmeldungen
-          title: Benutzeraktivität
       stats:
         collections: Sammlungen erstellt
         file_downloads: Herunterladen
@@ -786,7 +787,11 @@ de:
       transfer_works_link: Wählen Sie die zu übertragenden Arbeiten aus
       transfers_received: Transfers erhalten
       transfers_sent: Transfers gesendet
-      user_activity: Benutzeraktivität
+      user_activity:
+        date: Datum
+        new_users: Neue Nutzer
+        subtitle: Neue Benutzeranmeldungen
+        title: Benutzeraktivität
       user_notifications: Benutzerbenachrichtigungen
       view_files: Dateien ansehen
     document_language: de
