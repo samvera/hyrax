@@ -2,7 +2,7 @@
 
 <div class="scrollx scrolly fileHeight"> <!-- original values -->
   <h3> <b>Changes will be applied to: (<%= @form.names.size %> works) </b></h3>
-   <%= @form.names.join(", ").html_safe %>
+   <%= sanitize @form.names.join(", ") %>
 </div> <!-- /original values -->
 
 <div >
