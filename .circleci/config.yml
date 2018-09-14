@@ -8,17 +8,12 @@ jobs:
     docker:
     # legacy needed for phantomjs
     - image: circleci/ruby:2.5.1-node-browsers-legacy
-      environment:
-        RAILS_ENV: test
-        RACK_ENV: test
-        BUNDLE_JOBS: 4
-        BUNDLE_RETRY: 3
-        NOKOGIRI_USE_SYSTEM_LIBRARIES: true
-        ENGINE_CART_RAILS_OPTIONS: --skip-git --skip-bundle --skip-listen --skip-spring --skip-yarn --skip-keeps --skip-action-cable --skip-coffee --skip-puma --skip-test
-        SPEC_OPTS: --format progress --format RspecJunitFormatter --out /tmp/test-results/rspec.xml --format progress
     - image: circleci/redis:4
-    # - image: yinlinchen/fcrepo4-docker:4.7.5
-    # - image: solr:7
+    - image: ualbertalib/docker-fcrepo4:4.7
+      environment:
+        CATALINA_OPTS: "-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:+DisableExplicitGC"
+    - image: solr:7
+      command: bin/solr -cloud -noprompt -f -p 8985
 
     # Specify service dependencies here if necessary
     # CircleCI maintains a library of pre-built images
@@ -26,33 +21,73 @@ jobs:
     # - image: circleci/postgres:9.4
 
     working_directory: ~/repo
+    parallelism: 2
+
+    environment:
+      RAILS_ENV: test
+      RACK_ENV: test
+      FCREPO_TEST_PORT: 8080/fcrepo
+      BUNDLE_JOBS: 4
+      BUNDLE_RETRY: 3
+      NOKOGIRI_USE_SYSTEM_LIBRARIES: true
+      ENGINE_CART_RAILS_OPTIONS: --skip-git --skip-bundle --skip-listen --skip-spring --skip-yarn --skip-keeps --skip-action-cable --skip-coffee --skip-puma --skip-test
+      SPEC_OPTS: --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec.xml --format progress
+      COVERALLS_PARALLEL: true
 
     steps:
-    - run:
-        name: Setup Interpolated ENV Variables
-        command: |
-          echo 'export BUNDLE_PATH="$CIRCLE_WORKING_DIRECTORY/vendor/bundle"' >> $BASH_ENV
+    - restore_cache:
+        keys:
+        - source-v1-{{ .Branch }}-{{ .Revision }}
+        - source-v1-{{ .Branch }}-
+        - source-v1-
 
     - checkout
+
+    - save_cache:
+        key: source-v1-{{ .Branch }}-{{ .Revision }}
+        paths:
+        - ".git"
+
+    # BUNDLE_PATH is unset to allow for `bundle config path` to take precedence.
+    - run:
+        name: Extra environment setup
+        command: |
+          echo 'unset BUNDLE_PATH' >> $BASH_ENV
+
+    - restore_cache:
+        keys:
+        - v1-internal-test-app-{{ .Branch }}
+        - v1-internal-test-app-
 
     # Download and cache dependencies
     - restore_cache:
         keys:
+        - v1-dependencies-{{ .Branch }}-{{ checksum "./.internal_test_app/.generated_engine_cart" }}
+        - v1-dependencies-{{ .Branch }}
         - v1-dependencies-
 
     - run:
-        name: install dependencies
+        name: Install dependencies
         command: |
           gem update --system
+          gem update bundler
+          bundle config path $CIRCLE_WORKING_DIRECTORY/vendor/bundle
           bundle install
+
+    - run:
+        name: Call Rubocop
+        command: bundle exec rubocop
+
+    - run:
+        name: Generate test app, ensure top-level Gemfile.lock is valid
+        command: |
           bundle exec rake engine_cart:generate
+          bundle install
 
     - save_cache:
         paths:
-        - ./Gemfile.lock
-        - ./vendor/bundle
         - ./.internal_test_app
-        key: v1-dependencies-{{ checksum "./.internal_test_app/.generated_engine_cart" }}
+        key: v1-internal-test-app-{{ .Branch }}-{{ checksum "./.internal_test_app/.generated_engine_cart" }}
 
     - run:
         name: Start headless Chrome
@@ -60,12 +95,27 @@ jobs:
         background: true
 
     - run:
-        name: Run tests
+        name: Load config into SolrCloud
+        command: |
+          cd .internal_test_app/solr/config
+          zip -1 -r solr_hyrax_config.zip ./*
+          curl -H "Content-type:application/octet-stream" --data-binary @solr_hyrax_config.zip "http://localhost:8985/solr/admin/configs?action=UPLOAD&name=hyrax"
+          curl -H 'Content-type: application/json' http://localhost:8985/api/collections/ -d '{create: {name: hydra-test, config: hyrax, numShards: 1}}'
+
+    - run:
+        name: Run rspec in parallel
         command: |
           mkdir /tmp/test-results
-          TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+          bundle exec rspec $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
 
-          bundle exec rake ci
+    - run:
+        name: Clean dependencies
+        command: bundle clean
+
+    - save_cache:
+        paths:
+        - ./vendor/bundle
+        key: v1-dependencies-{{ .Branch }}-{{ checksum "./.internal_test_app/.generated_engine_cart" }}
 
     # collect reports
     - store_test_results:
