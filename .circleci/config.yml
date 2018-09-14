@@ -43,8 +43,8 @@ jobs:
     - run:
         name: install dependencies
         command: |
-          gem update bundler
-          bundle update
+          gem update --system
+          bundle install
           bundle exec rake engine_cart:generate
 
     - save_cache:
