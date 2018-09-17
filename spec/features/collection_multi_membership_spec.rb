@@ -18,7 +18,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
       let!(:new_collection) { create(:collection_lw, user: admin_user, collection_type_gid: multi_membership_type_2.gid, title: ['NewCollectionTitle']) }
 
       it 'then the work is added to both collections' do
-        optional 'ability to get capybara to find css select2-result (see Issue #3038)' if ENV['TRAVIS']
+        optional 'ability to get capybara to find css select2-result (see Issue #3038)' if ci_build?
         # Add to second multi-membership collection of a different type
         visit '/dashboard/my/works'
         check 'check_all'
@@ -38,7 +38,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
       let!(:new_collection) { create(:collection_lw, user: admin_user, collection_type_gid: multi_membership_type_1.gid, title: ['NewCollectionTitle']) }
 
       it 'then the work is added to both collections' do
-        optional 'ability to get capybara to find css select2-result (see Issue #3038)' if ENV['TRAVIS']
+        optional 'ability to get capybara to find css select2-result (see Issue #3038)' if ci_build?
         # Add to second multi-membership collection of a different type
         visit '/dashboard/my/works'
         check 'check_all'
@@ -70,7 +70,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
       let!(:new_collection) { create(:collection_lw, user: admin_user, collection_type_gid: single_membership_type_2.gid, title: ['NewCollectionTitle']) }
 
       it 'then the work is added to both collections' do
-        optional 'ability to get capybara to find css select2-result (see Issue #3038)' if ENV['TRAVIS']
+        optional 'ability to get capybara to find css select2-result (see Issue #3038)' if ci_build?
         # Add to second single-membership collection of a different type
         visit '/dashboard/my/works'
         check 'check_all'
@@ -91,7 +91,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
 
       context 'then the work fails to add to the second collection' do
         it 'from the dashboard->works batch add to collection' do
-          optional 'ability to get capybara to find css select2-result (see Issue #3038)' if ENV['TRAVIS']
+          optional 'ability to get capybara to find css select2-result (see Issue #3038)' if ci_build?
           # Attempt to add to second single-membership collection of the same type
           visit '/dashboard/my/works'
           check 'check_all'
@@ -165,7 +165,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
       let!(:new_collection) { old_collection }
 
       it 'then the add is treated as a success' do
-        optional 'ability to get capybara to find css select2-result (see Issue #3038)' if ENV['TRAVIS']
+        optional 'ability to get capybara to find css select2-result (see Issue #3038)' if ci_build?
         # Re-add to same multi-membership collection
         visit '/dashboard/my/works'
         check 'check_all'
@@ -186,7 +186,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
       let!(:new_collection) { old_collection }
 
       it 'then the add is treated as a success' do
-        optional 'ability to get capybara to find css select2-result (see Issue #3038)' if ENV['TRAVIS']
+        optional 'ability to get capybara to find css select2-result (see Issue #3038)' if ci_build?
         # Re-add to same single-membership collection
         visit '/dashboard/my/works'
         check 'check_all'
