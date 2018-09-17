@@ -41,6 +41,7 @@ Jump in: [![Slack Status](http://slack.samvera.org/badge.svg)](http://slack.samv
   * [License](#license)
   * [Contributing](#contributing)
   * [Development](#development)
+    * [Security](#reporting-security-issues)
     * [Workflow Relationship Diagram](#workflow-relationship-diagram)
   * [Release process](#release-process)
   * [Acknowledgments](#acknowledgments)
@@ -325,6 +326,10 @@ If you'd like to help the development effort and you're not sure where to get st
 # Development
 
 The [Hyrax Development Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide) is for people who want to modify Hyrax itself, not an application that uses Hyrax.
+
+## Reporting Security Issues
+
+To report a security vulnerability, email [samvera-steering@googlegroups.com](mailto:samvera-steering@googlegroups.com) and the Steering Group will coordinate the community response. In your message, please document to the best of your ability cases (relevant software versions, conditions, etc.) where the vulnerability is applicable, the potential negative effects, and any known workarounds or fixes to mitigate the risk. Steering will communicate this to the Partners and the rest of the community in a timely fashion.
 
 ## Workflow Relationship Diagram
 
