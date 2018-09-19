@@ -114,5 +114,5 @@ SUMMARY
   # chromedriver-helper 2.0 broke the chromedriver used by capybara
   #   see: https://github.com/flavorjones/chromedriver-helper/issues/62
   #        and https://github.com/flavorjones/chromedriver-helper/issues/57
-  spec.add_development_dependency 'chromedriver-helper', '< 2.0'
+  spec.add_development_dependency 'chromedriver-helper', '< 3.0'
 end
