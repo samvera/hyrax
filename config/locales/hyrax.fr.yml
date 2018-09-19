@@ -759,20 +759,21 @@ fr:
       proxy_delete: Supprimer le proxy
       proxy_help: Sélectionnez un utilisateur qui peut déposer des œuvres en votre nom. Vous serez le propriétaire des œuvres que cet utilisateur dépose pour vous. Vous pouvez révoquer un proxy en cliquant sur le bouton Supprimer le proxy.
       proxy_user: Utilisateur proxy
+      repository_growth:
+        collections: Collections
+        date: Rendez-vous amoureux
+        objects: Objets
+        subtitle: 90 derniers jours
+        title: Croissance du dépôt
+      repository_objects:
+        status: Statut actuel
+        subtitle: Statut actuel
+        title: Objets de référentiel
       show_admin:
         new_visitors: Nouveaux visiteurs
         registered_users: Utilisateurs enregistrés
-        repository_growth:
-          subtitle: 90 jours précédents
-          title: Croissance du dépôt
-        repository_objects:
-          subtitle: Statut actuel
-          title: Objets de dépôt
         returning_visitors: Retrouver les visiteurs
         total_visitors: Total des visiteurs
-        user_activity:
-          subtitle: Nouvelles inscriptions d'utilisateurs
-          title: Activité de l'utilisateur
       stats:
         collections: Collections créées
         file_downloads: Télécharger
@@ -785,7 +786,11 @@ fr:
       transfer_works_link: Sélectionnez les travaux à transférer
       transfers_received: Transferts reçus
       transfers_sent: Transferts envoyés
-      user_activity: Activité de l'utilisateur
+      user_activity:
+        date: Rendez-vous amoureux
+        new_users: Nouveaux utilisateurs
+        subtitle: Nouvelles inscriptions d'utilisateurs
+        title: Activité de l'utilisateur
       user_notifications: Notifications de l'utilisateur
       view_files: Afficher les fichiers
     document_language: fr

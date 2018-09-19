@@ -756,20 +756,21 @@ zh:
       proxy_delete: 删除代理
       proxy_help: 选择一个可以代表您存放作品的用户。您将成为该用户为您存储的作品的所有者。您可以通过单击删除代理按钮来撤销代理。
       proxy_user: 代理用户
+      repository_growth:
+        collections: 集合
+        date: 日期
+        objects: 对象
+        subtitle: 过去90天
+        title: 存储库增长
+      repository_objects:
+        status: 当前状态
+        subtitle: 当前状态
+        title: 存储库对象
       show_admin:
         new_visitors: 新访问者
         registered_users: 注册用户
-        repository_growth:
-          subtitle: 过去90天
-          title: 储存库增长
-        repository_objects:
-          subtitle: 现状
-          title: 储存库物件
         returning_visitors: 老访问者
         total_visitors: 所有访问者
-        user_activity:
-          subtitle: 新用户注册
-          title: 用户活动
       stats:
         collections: 已建立的收藏集
         file_downloads: 下载
@@ -782,7 +783,11 @@ zh:
       transfer_works_link: 选择作品转让
       transfers_received: 收到转让
       transfers_sent: 转让已发出
-      user_activity: 用户活动
+      user_activity:
+        date: 日期
+        new_users: 新用户
+        subtitle: 新用户注册
+        title: 用户活动
       user_notifications: 用户通知
       view_files: 阅览文件
     document_language: zh

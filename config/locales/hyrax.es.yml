@@ -758,20 +758,21 @@ es:
       proxy_delete: Eliminar proxy
       proxy_help: Seleccione un usuario que pueda depositar trabajos en su nombre. Usted será el propietario de los trabajos que este usuario deposite para usted. Puede revocar un proxy haciendo clic en el botón Eliminar proxy.
       proxy_user: Usuario de Proxy
+      repository_growth:
+        collections: Colecciones
+        date: Fecha
+        objects: Objetos
+        subtitle: Últimos 90 días
+        title: Crecimiento del repositorio
+      repository_objects:
+        status: Estado actual
+        subtitle: Estado actual
+        title: Objetos de repositorio
       show_admin:
         new_visitors: Visitantes Nuevos
         registered_users: Usuarios registrados
-        repository_growth:
-          subtitle: Pasados 90 días
-          title: Crecimiento del Repositorio
-        repository_objects:
-          subtitle: Estado Actual
-          title: Objetos del Repositorio
         returning_visitors: Visitantes Recurrentes
         total_visitors: Visitantes Totales
-        user_activity:
-          subtitle: Nuevas inscripciones de usuarios
-          title: Actividad de Usuario
       stats:
         collections: Colecciones creadas
         file_downloads: Descargar
@@ -784,7 +785,11 @@ es:
       transfer_works_link: Seleccionar los trabajos a transferir
       transfers_received: Transferencias Recibidas
       transfers_sent: Transferencias Enviadas
-      user_activity: Actividad de usuario
+      user_activity:
+        date: Fecha
+        new_users: Usuarios nuevos
+        subtitle: Nuevos registros de usuarios
+        title: Actividad del usuario
       user_notifications: Notificaciones de Usuario
       view_files: Ver Archivos
     document_language: es

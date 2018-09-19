@@ -758,20 +758,21 @@ it:
       proxy_delete: Elimina proxy
       proxy_help: Seleziona un utente che può depositare opere per tuo conto. Sarai il proprietario delle opere che questo utente deposita per te. È possibile revocare un proxy facendo clic sul pulsante Elimina proxy.
       proxy_user: Utente Proxy
+      repository_growth:
+        collections: collezioni
+        date: Data
+        objects: Oggetti
+        subtitle: Ultimi 90 giorni
+        title: Crescita del repository
+      repository_objects:
+        status: Stato attuale
+        subtitle: Stato attuale
+        title: Oggetti del repository
       show_admin:
         new_visitors: Nuovi visitatori
         registered_users: Utente registrato
-        repository_growth:
-          subtitle: Ultimi 90 giorni
-          title: Crescita dei repository
-        repository_objects:
-          subtitle: Stato attuale
-          title: Oggetti di repository
         returning_visitors: Visitatori di ritorno
         total_visitors: Totale visitatori
-        user_activity:
-          subtitle: Nuove iscrizioni degli utenti
-          title: Attività utente
       stats:
         collections: Collezioni create
         file_downloads: Scaricare
@@ -784,7 +785,11 @@ it:
       transfer_works_link: Seleziona le opere da trasferire
       transfers_received: Trasferimenti ricevuti
       transfers_sent: Trasferimenti inviati
-      user_activity: Attività utente
+      user_activity:
+        date: Data
+        new_users: Nuovi utenti
+        subtitle: Nuove iscrizioni utente
+        title: Attività dell'utente
       user_notifications: Notifiche utente
       view_files: Vedi files
     document_language: it
