@@ -87,7 +87,6 @@ EOF
   spec.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0'
   spec.add_development_dependency "capybara", '~> 2.4'
   spec.add_development_dependency 'capybara-maleficent', '~> 0.2'
-  spec.add_development_dependency "chromedriver-helper"
   spec.add_development_dependency "selenium-webdriver"
   spec.add_development_dependency "factory_bot_rails", '~> 4.4'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
@@ -118,4 +117,8 @@ EOF
   spec.add_dependency 'simple_form', '~> 3.2', '<= 3.5.0'
   # parser 2.5.0.0 broke local and Travis rubocop checks due to a change in parsing
   spec.add_development_dependency 'parser', '< 2.5'
+  # chromedriver-helper 2.0 broke the chromedriver used by capybara
+  #   see: https://github.com/flavorjones/chromedriver-helper/issues/62
+  #        and https://github.com/flavorjones/chromedriver-helper/issues/57
+  spec.add_development_dependency 'chromedriver-helper', '< 2.0'
 end
