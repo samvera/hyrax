@@ -1,6 +1,5 @@
 require 'active_fedora/base'
 require 'active_fedora/version'
-raise "Verify this override is still needed for non 11.5.2 versions" unless ActiveFedora::VERSION == '11.5.2'
 
 module Hyrax
   module RepositoryReindexer
