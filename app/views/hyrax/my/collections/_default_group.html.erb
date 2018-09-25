@@ -2,7 +2,15 @@
   <caption class="sr-only"><%= t("hyrax.dashboard.my.sr.listing") %> <%= application_name %></caption>
   <thead>
   <tr>
-    <th class="check-all"><label for="check_all" class="sr-only"><%= t("hyrax.dashboard.my.sr.check_all_label") %></label><%= render_check_all %></th>
+    <th class="check-all text-left">
+      <label for="check_all" class="sr-only">
+        <%= t("hyrax.dashboard.my.sr.check_all_label") %>
+      </label>
+      <label class="centerizer">
+        <input type="checkbox" class="check-all-checkbox" name="check_all" id="check_all" value="yes" />
+        <%= t("hyrax.dashboard.my.action.select") %>
+      </label>
+    </th>
     <th><%= t("hyrax.dashboard.my.heading.title") %></th>
     <th><%= t("hyrax.dashboard.my.heading.type") %></th>
     <th><%= t("hyrax.dashboard.my.heading.visibility") %></th>

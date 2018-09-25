@@ -9,6 +9,7 @@ module Hyrax
     # Displays a "check all" button with a dropdown that has "Select None"
     # and "Select current page" actions
     def render_check_all
+      return if params[:controller] == "hyrax/my/collections"
       render 'hyrax/batch_edits/check_all'
     end
   end
