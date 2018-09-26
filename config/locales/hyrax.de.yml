@@ -860,16 +860,16 @@ de:
         versions: Versionen
       form:
         attach_to: An %{parent} anhängen
-        cancel: Stornieren
-        save: sparen
+        cancel: Abbrechen
+        save: Speichern
         title: Titel
       groups_description:
         description_html: Die Liste der Gruppen in der Auswahlliste mit der Bezeichnung &ldquor; Wählen Sie eine Gruppe aus &ldquor; zeigt ihnen jene Benutzer administrierten Gruppen an, bei denen Sie Mitglied sind. Sie können eine bestimmte Gruppe auswählen und eine Zugriffsebene für eine Datei innerhalb von %{application_name} zuweisen, ähnlich wie das Hinzufügen von Benutzerzugriffsebenen.
       permission:
-        save: sparen
+        save: Speichern
       permission_form:
         applied_to: "(gilt für alle gerade hochgeladenen Dateien)"
-        depositor: Einzahler
+        depositor: Deponent
         enter: Geben Sie %{account_label} ein (einzeln)
         header: Berechtigungen
         optional: "(wahlweise)"
@@ -884,7 +884,7 @@ de:
         header: Versionen
         restore: Vorherige Version wiederherstellen
         restore_from: Wiederherstellen von
-        save: Revision speichern
+        save: Überarbeitete Version speichern
         upload: Neue Version hochladen
     help:
       header: Benutzer-Support
