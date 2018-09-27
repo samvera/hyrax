@@ -40,8 +40,10 @@ RSpec.describe Hyrax::BatchEditsHelper, type: :helper do
     context "with my collections" do
       let(:controller_path) { "hyrax/my/collections" }
 
-      it "does not show the check all dropdown" do
-        expect(subject).to be_nil
+      it "show the check all dropdown" do
+        expect(subject).to have_css("span.caret")
+        expect(subject).to have_content t("hyrax.dashboard.my.action.select_all")
+        expect(subject).to have_content t("hyrax.dashboard.my.action.select_none")
       end
     end
 
