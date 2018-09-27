@@ -18,7 +18,7 @@ RSpec.describe 'hyrax/dashboard/collections/_show_document_list_row.html.erb', t
 
     it "renders collections links" do
       render('show_document_list_row', document: work)
-      expect(rendered).to have_content 'My awesome collection'
+      expect(rendered).not_to have_content 'My awesome collection'
     end
 
     it "renders works" do
