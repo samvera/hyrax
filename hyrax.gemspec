@@ -102,6 +102,7 @@ SUMMARY
   spec.add_development_dependency 'rails-controller-testing', '~> 1'
   # the hyrax style guide is based on `bixby`. see `.rubocop.yml`
   spec.add_development_dependency 'bixby', '~> 1.0.0'
+  spec.add_development_dependency 'chromedriver-helper', '~> 2.1'
   spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'webmock'
@@ -112,8 +113,4 @@ SUMMARY
   # simple_form 3.5.1 broke hydra-editor for certain model types;
   #   see: https://github.com/plataformatec/simple_form/issues/1549
   spec.add_dependency 'simple_form', '~> 3.2', '<= 3.5.0'
-  # chromedriver-helper 2.0 broke the chromedriver used by capybara
-  #   see: https://github.com/flavorjones/chromedriver-helper/issues/62
-  #        and https://github.com/flavorjones/chromedriver-helper/issues/57
-  spec.add_development_dependency 'chromedriver-helper', '< 2.0'
 end
