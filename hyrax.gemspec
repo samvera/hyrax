@@ -82,8 +82,7 @@ SUMMARY
 
   # the hyrax style guide is based on `bixby`. see `.rubocop.yml`
   spec.add_development_dependency 'bixby', '~> 1.0.0'
-  # temporary pin to 2.17 due to failures caused in 2.18.0
-  spec.add_development_dependency "capybara", '~> 2.4', '< 2.18.0'
+  spec.add_development_dependency "capybara", '~> 3.8'
   spec.add_development_dependency 'capybara-maleficent', '~> 0.3.0'
   spec.add_development_dependency 'chromedriver-helper', '~> 2.1'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
