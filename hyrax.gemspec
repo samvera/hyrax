@@ -80,9 +80,12 @@ SUMMARY
   spec.add_dependency 'signet'
   spec.add_dependency 'tinymce-rails', '~> 4.1'
 
+  # the hyrax style guide is based on `bixby`. see `.rubocop.yml`
+  spec.add_development_dependency 'bixby', '~> 1.0.0'
   # temporary pin to 2.17 due to failures caused in 2.18.0
   spec.add_development_dependency "capybara", '~> 2.4', '< 2.18.0'
   spec.add_development_dependency 'capybara-maleficent', '~> 0.3.0'
+  spec.add_development_dependency 'chromedriver-helper', '~> 2.1'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
   spec.add_development_dependency 'engine_cart', '~> 2.0'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
@@ -95,14 +98,11 @@ SUMMARY
   spec.add_development_dependency 'rspec-its', '~> 1.1'
   spec.add_development_dependency 'rspec-rails', '~> 3.1'
   spec.add_development_dependency 'rspec_junit_formatter'
-  spec.add_development_dependency "selenium-webdriver"
+  spec.add_development_dependency "selenium-webdriver", '~> 3.14'
   spec.add_development_dependency 'solr_wrapper', '>= 1.1', '< 3.0'
   spec.add_development_dependency 'i18n-debug' if ENV['I18N_DEBUG']
   spec.add_development_dependency 'i18n_yaml_sorter' unless ENV['TRAVIS']
   spec.add_development_dependency 'rails-controller-testing', '~> 1'
-  # the hyrax style guide is based on `bixby`. see `.rubocop.yml`
-  spec.add_development_dependency 'bixby', '~> 1.0.0'
-  spec.add_development_dependency 'chromedriver-helper', '~> 2.1'
   spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'webmock'
