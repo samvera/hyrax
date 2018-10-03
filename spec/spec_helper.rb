@@ -5,6 +5,10 @@ def coverage_needed?
   ENV['COVERAGE'] || ENV['TRAVIS']
 end
 
+def ci_build?
+  ENV['TRAVIS'] || ENV['CIRCLE']
+end
+
 if coverage_needed?
   require 'simplecov'
   require 'coveralls'
@@ -60,7 +64,7 @@ require 'webmock/rspec'
 WebMock.disable_net_connect!(allow_localhost: true)
 
 require 'i18n/debug' if ENV['I18N_DEBUG']
-require 'byebug' unless ENV['TRAVIS']
+require 'byebug' unless ci_build?
 
 # @note In January 2018, TravisCI disabled Chrome sandboxing in its Linux
 #       container build environments to mitigate Meltdown/Spectre
@@ -141,7 +145,7 @@ RSpec.configure do |config|
   config.include Shoulda::Matchers::ActiveRecord, type: :model
   config.include Shoulda::Matchers::ActiveModel, type: :form
   config.include Shoulda::Callback::Matchers::ActiveModel
-  config.full_backtrace = true if ENV['TRAVIS']
+  config.full_backtrace = true if ci_build?
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
