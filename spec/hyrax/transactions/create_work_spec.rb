@@ -23,6 +23,10 @@ RSpec.describe Hyrax::Transactions::CreateWork do
       it 'does not save the work' do
         expect { transaction.call(work) }.not_to change { work.new_record? }.from true
       end
+
+      it 'gives useful errors' do
+        expect(transaction.call(work).failure).to eq work.errors
+      end
     end
 
     it 'is a success' do

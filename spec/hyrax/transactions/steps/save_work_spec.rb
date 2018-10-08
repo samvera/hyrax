@@ -23,6 +23,10 @@ RSpec.describe Hyrax::Transactions::Steps::SaveWork do
       it 'returns failure' do
         expect(step.call(work)).to be_failure
       end
+
+      it 'gives errors about the work' do
+        expect(step.call(work).failure).to eq work.errors
+      end
     end
   end
 end
