@@ -64,6 +64,18 @@ RSpec.describe Hyrax::Transactions::CreateWork do
     end
   end
 
+  context 'when visibility is set' do
+    let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
+
+    before { work.visibility = visibility }
+
+    it 'keeps the visibility' do
+      expect { transaction.call(work) }
+        .not_to change { work.visibility }
+        .from visibility
+    end
+  end
+
   context 'with an admin set' do
     let(:admin_set) { create(:admin_set, with_permission_template: true) }
     let(:work)      { build(:generic_work, admin_set: admin_set) }
