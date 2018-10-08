@@ -18,7 +18,12 @@ header > h1 .label {
   padding: $panel-body-padding;
 }
 
-.relationships,
+.attribute-filename,
+header h1,
+#activity td:first-child {
+  word-break: break-all;
+}
+
 .attributes {
   tbody th {
     width: 20%;
