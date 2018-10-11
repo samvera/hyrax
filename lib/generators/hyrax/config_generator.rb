@@ -49,6 +49,10 @@ class Hyrax::ConfigGenerator < Rails::Generators::Base
     copy_file 'config/tinymce.yml'
   end
 
+  def configure_browse_everything
+    copy_file 'config/browse_everything_providers.yml'
+  end
+
   def inject_i18n
     copy_file 'config/locales/hyrax.en.yml'
     copy_file 'config/locales/hyrax.es.yml'
