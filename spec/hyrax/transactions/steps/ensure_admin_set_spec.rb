@@ -9,7 +9,7 @@ RSpec.describe Hyrax::Transactions::Steps::EnsureAdminSet do
   describe '#call' do
     context 'without an admin set' do
       it 'is a failure' do
-        expect(step.call(work)).to be_failure
+        expect(step.call(work).failure).to eq :no_admin_set_id
       end
     end
 

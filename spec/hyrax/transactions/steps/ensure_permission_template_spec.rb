@@ -9,7 +9,7 @@ RSpec.describe Hyrax::Transactions::Steps::EnsurePermissionTemplate do
   describe '#call' do
     context 'without an admin_set' do
       it 'is a failure' do
-        expect(step.call(work)).to be_failure
+        expect(step.call(work).failure).to eq :no_permission_template
       end
     end
 
@@ -25,7 +25,7 @@ RSpec.describe Hyrax::Transactions::Steps::EnsurePermissionTemplate do
         let(:admin_set) { create(:admin_set, with_permission_template: false) }
 
         it 'fails with missing template' do
-          expect(step.call(work)).to be_failure
+          expect(step.call(work).failure).to eq :no_permission_template
         end
       end
     end
