@@ -1,3 +1,4 @@
+# coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'hyrax/version'
@@ -38,7 +39,6 @@ SUMMARY
   spec.add_dependency 'blacklight-gallery', '~> 0.7'
   spec.add_dependency 'breadcrumbs_on_rails', '~> 3.0'
   # Pin browse-everything to stable version
-  spec.add_dependency 'browse-everything', '< 0.16'
   spec.add_dependency 'carrierwave', '~> 1.0'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
   spec.add_dependency 'dry-equalizer', '~> 0.2'

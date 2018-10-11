@@ -24,7 +24,7 @@ class ImportUrlJob < Hyrax::ApplicationJob
     @file_set = file_set
     @operation = operation
 
-    unless can_retrieve?(uri)
+    unless can_retrieve?(uri, headers)
       send_error('Expired URL')
       return false
     end
@@ -51,8 +51,12 @@ class ImportUrlJob < Hyrax::ApplicationJob
     # Range: header requesting only the first byte. The successful response status
     # code is 206 instead of 200, but that is enough to satisfy the #success? method.
     # @param uri [URI] the uri of the file to be downloaded
-    def can_retrieve?(uri)
-      HTTParty.get(uri, headers: { Range: 'bytes=0-0' }).success?
+    def can_retrieve?(uri, headers = {})
+      can_retrieve_headers = { 'Range' => 'bytes=0-0' }
+      can_retrieve_headers.merge!(headers)
+
+      response = Typhoeus.get(uri, headers: can_retrieve_headers)
+      response.success?
     end
 
     # Download file from uri, yields a block with a file in a temporary directory.
@@ -92,7 +96,8 @@ class ImportUrlJob < Hyrax::ApplicationJob
     # @param f [IO] the stream to write to
     def write_file(uri, f, headers)
       retriever = BrowseEverything::Retriever.new
-      uri_spec = { 'url' => uri }.merge(headers)
+      uri_spec = ActiveSupport::HashWithIndifferentAccess.new(url: uri, headers: headers)
+
       retriever.retrieve(uri_spec) do |chunk|
         f.write(chunk)
       end
