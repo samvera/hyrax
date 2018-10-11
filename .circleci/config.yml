@@ -12,7 +12,7 @@ jobs:
     - image: ualbertalib/docker-fcrepo4:4.7
       environment:
         CATALINA_OPTS: "-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:+DisableExplicitGC"
-    - image: solr:7
+    - image: solr:7-alpine
       command: bin/solr -cloud -noprompt -f -p 8985
 
     # Specify service dependencies here if necessary
