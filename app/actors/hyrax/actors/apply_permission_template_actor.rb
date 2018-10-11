@@ -31,10 +31,8 @@ module Hyrax
         end
 
         def set_curation_concern_access(env, template)
-          env.curation_concern.edit_users += template.agent_ids_for(agent_type: 'user', access: 'manage')
-          env.curation_concern.edit_groups += template.agent_ids_for(agent_type: 'group', access: 'manage')
-          env.curation_concern.read_users += template.agent_ids_for(agent_type: 'user', access: 'view')
-          env.curation_concern.read_groups += template.agent_ids_for(agent_type: 'group', access: 'view')
+          PermissionTemplateApplicator
+            .apply(template).to(model: env.curation_concern)
         end
     end
   end

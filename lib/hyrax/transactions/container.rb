@@ -19,6 +19,7 @@ module Hyrax
     # @see https://dry-rb.org/gems/dry-container/
     class Container
       require 'hyrax/transactions/create_work'
+      require 'hyrax/transactions/steps/apply_permission_template'
       require 'hyrax/transactions/steps/ensure_admin_set'
       require 'hyrax/transactions/steps/ensure_permission_template'
       require 'hyrax/transactions/steps/save_work'
@@ -29,6 +30,10 @@ module Hyrax
       extend Dry::Container::Mixin
 
       namespace 'work' do |ops|
+        ops.register 'apply_permission_template' do
+          Steps::ApplyPermissionTemplate.new
+        end
+
         ops.register 'ensure_admin_set' do
           Steps::EnsureAdminSet.new
         end
