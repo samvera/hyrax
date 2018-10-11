@@ -70,6 +70,7 @@ module Hyrax
       require 'dry/struct'
       require 'dry/equalizer'
       require 'dry/validation'
+      require 'solrizer'
     end
 
     initializer 'routing' do
