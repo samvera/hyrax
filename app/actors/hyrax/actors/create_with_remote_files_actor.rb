@@ -64,7 +64,8 @@ module Hyrax
         # Generic utility for creating FileSet from a URL
         # Used in to import files using URLs from a file picker like browse_everything
         def create_file_from_url(env, uri, file_name, auth_header = {})
-          ::FileSet.new(import_url: uri.to_s, label: file_name) do |fs|
+          import_url = URI.decode_www_form_component(uri.to_s)
+          ::FileSet.new(import_url: import_url, label: file_name) do |fs|
             actor = Hyrax::Actors::FileSetActor.new(fs, env.user)
             actor.create_metadata(visibility: env.curation_concern.visibility)
             actor.attach_to_work(env.curation_concern)
