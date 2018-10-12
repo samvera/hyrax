@@ -35,3 +35,20 @@
   width: auto;
   z-index: 1005;
 }
+
+// Makes file upload buttons tab focusable
+.hidden-file-input {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+/* Colors taken from Bootstrap's focus */
+input.hidden-file-input:focus + label {
+  outline: #66afe9 auto 5px;
+  outline: -webkit-focus-ring-color auto 5px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
