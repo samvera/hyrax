@@ -1,4 +1,5 @@
 class IngestJob < Hyrax::ApplicationJob
+  include Sidekiq::Worker
   queue_as Hyrax.config.ingest_queue_name
 
   after_perform do |job|
@@ -13,6 +14,7 @@ class IngestJob < Hyrax::ApplicationJob
   # @see 'config/initializers/hyrax_callbacks.rb'
   # rubocop:disable Lint/UnusedMethodArgument
   def perform(wrapper, notification: false)
+    logger.debug "Help #{hash.inspect}"
     wrapper.ingest_file
   end
 end
