@@ -822,6 +822,8 @@ zh:
         type: 什么样的工作
         viz_after: 公开度将更改为
         viz_current: 当前公开度
+      update:
+        embargo_deactivated: 停用限制成功!
     featured_researchers: 特色研究者
     file_manager:
       link_text: 文件管理员

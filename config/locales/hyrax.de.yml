@@ -826,6 +826,8 @@ de:
         type: Art von Arbeit
         viz_after: Sichtbarkeit wird geändert
         viz_current: Aktuelle Sichtbarkeit
+      update:
+        embargo_deactivated: Deaktivierung erfolgreich!
     featured_researchers: Ausgewählte Forscher
     file_manager:
       link_text: Dateimanager

@@ -819,6 +819,8 @@ pt-BR:
         type: Tipo de obra
         viz_after: O acesso mudará para
         viz_current: Acesso atual
+      update:
+        embargo_deactivated: Desativação bem sucedida!
     featured_researchers: Pesquisadores em destaque
     file_manager:
       link_text: Gerenciador de arquivos

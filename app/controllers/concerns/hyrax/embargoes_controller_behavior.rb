@@ -36,7 +36,7 @@ module Hyrax
           curation_concern.copy_visibility_to_files
         end
       end
-      redirect_to embargoes_path
+      redirect_to embargoes_path, notice: t('.embargo_deactivated')
     end
 
     # This allows us to use the unauthorized template in curation_concerns/base
