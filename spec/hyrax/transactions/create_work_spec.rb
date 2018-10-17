@@ -4,6 +4,7 @@ require 'hyrax/transactions'
 
 RSpec.describe Hyrax::Transactions::CreateWork do
   subject(:transaction) { described_class.new }
+  let(:template)        { Hyrax::PermissionTemplate.find_by!(source_id: work.admin_set_id) }
   let(:work)            { build(:generic_work) }
   let(:xmas)            { DateTime.parse('2018-12-25 11:30').iso8601 }
 
@@ -62,6 +63,12 @@ RSpec.describe Hyrax::Transactions::CreateWork do
 
       expect { transaction.call(work) }.to change { work.date_uploaded }.to xmas
     end
+
+    it 'grants edit permission to depositor' do
+      transaction.call(work)
+
+      expect(work.edit_users).to include work.depositor
+    end
   end
 
   context 'when visibility is set' do
@@ -77,7 +84,8 @@ RSpec.describe Hyrax::Transactions::CreateWork do
   end
 
   context 'with an admin set' do
-    let(:admin_set) { create(:admin_set, with_permission_template: true) }
+    let(:admin_set) { AdminSet.find(template.source_id) }
+    let(:template)  { create(:permission_template, with_admin_set: true) }
     let(:work)      { build(:generic_work, admin_set: admin_set) }
 
     context 'without a permission template' do
@@ -102,6 +110,46 @@ RSpec.describe Hyrax::Transactions::CreateWork do
       expect { transaction.call(work) }
         .not_to change { work.admin_set&.id }
         .from admin_set.id
+    end
+
+    context 'with users and groups' do
+      let(:manage_groups) { ['manage_group_1', 'manage_group_2'] }
+      let(:manage_users)  { create_list(:user, 2) }
+      let(:view_groups)   { ['view_group_1', 'view_group_2'] }
+      let(:view_users)    { create_list(:user, 2) }
+
+      let(:template) do
+        create(:permission_template,
+               with_admin_set: true,
+               manage_groups: manage_groups,
+               manage_users:  manage_users,
+               view_groups:   view_groups,
+               view_users:    view_users)
+      end
+
+      it 'assigns edit groups from template' do
+        expect { transaction.call(work) }
+          .to change { work.edit_groups }
+          .to include(*manage_groups)
+      end
+
+      it 'assigns edit users from template' do
+        expect { transaction.call(work) }
+          .to change { work.edit_users }
+          .to include(*manage_users.map(&:user_key))
+      end
+
+      it 'assigns read groups from template' do
+        expect { transaction.call(work) }
+          .to change { work.read_groups }
+          .to include(*view_groups)
+      end
+
+      it 'assigns read users from template' do
+        expect { transaction.call(work) }
+          .to change { work.read_users }
+          .to include(*view_users.map(&:user_key))
+      end
     end
   end
 end
