@@ -1,5 +1,5 @@
 RSpec.describe 'hyrax/admin/collection_types/_form_metadata_admin_set.html.erb', type: :view do
-  let(:collection_type) { create(:admin_set_collection_type) }
+  let(:collection_type) { stub_model(Hyrax::CollectionType) }
   let(:collection_type_form) { Hyrax::Forms::Admin::CollectionTypeForm.new }
 
   let(:form) do

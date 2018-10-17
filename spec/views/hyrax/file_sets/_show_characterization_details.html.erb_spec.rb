@@ -1,6 +1,5 @@
 RSpec.describe 'hyrax/file_sets/_show_characterization_details.html.erb', type: :view do
-  let(:file) { build(:file_set).tap { |f| f.apply_depositor_metadata("user") } }
-  let(:solr_document) { SolrDocument.new(file.to_solr) }
+  let(:solr_document) { SolrDocument.new({}) }
   let(:ability) { double "Ability" }
   let(:presenter) { Hyrax::FileSetPresenter.new(solr_document, ability) }
   let(:mock_metadata) do

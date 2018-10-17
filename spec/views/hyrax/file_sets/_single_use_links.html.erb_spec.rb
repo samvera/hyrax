@@ -1,7 +1,6 @@
 RSpec.describe 'hyrax/file_sets/_single_use_links.html.erb', type: :view do
   let(:user)          { create(:user) }
-  let(:file_set)      { build(:file_set, user: user, id: "1234") }
-  let(:solr_document) { SolrDocument.new(file_set.to_solr) }
+  let(:solr_document) { SolrDocument.new(id: '1234', 'has_model_ssim' => 'FileSet') }
   let(:ability)       { Ability.new(user) }
   let(:presenter)     { Hyrax::FileSetPresenter.new(solr_document, ability) }
 

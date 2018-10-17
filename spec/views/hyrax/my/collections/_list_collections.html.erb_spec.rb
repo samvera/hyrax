@@ -23,20 +23,21 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
     end
 
     let(:doc) { SolrDocument.new(attributes) }
-    let(:collection) { mock_model(Collection) }
-    let(:collection_type) { create(:collection_type) }
+    let(:collection_type) { build(:collection_type) }
     let(:collection_presenter) { Hyrax::CollectionPresenter.new(doc, Ability.new(build(:user)), nil) }
 
     before do
-      allow(view).to receive(:current_user).and_return(stub_model(User))
       allow(view).to receive(:can?).with(:edit, doc).and_return(true)
       allow(view).to receive(:can?).with(:read, doc).and_return(true)
-      allow(doc).to receive(:to_model).and_return(stub_model(Collection, id: id))
-      allow(Collection).to receive(:find).with(id).and_return(collection)
-      allow(collection).to receive(:id).and_return(id)
-      allow(collection).to receive(:member_of_collection_ids).and_return(["abc", "123"])
+      allow(Hyrax::CollectionType).to receive(:any_nestable?).and_return(true)
       allow(collection_presenter).to receive(:collection_type_badge).and_return("User Collection")
       allow(collection_presenter).to receive(:allow_batch?).and_return(true)
+      allow(collection_presenter).to receive(:total_viewable_items).and_return(0)
+      allow(collection_presenter).to receive(:total_items).and_return(0)
+      allow(collection_presenter).to receive(:collection_type_is_require_membership?).and_return(true)
+      allow(collection_presenter).to receive(:collection_type_is_nestable?).and_return(true)
+      allow(collection_presenter).to receive(:available_parent_collections).and_return([mock_model(Collection)])
+
       view.lookup_context.prefixes.push 'hyrax/my'
       render 'hyrax/my/collections/list_collections', collection_presenter: collection_presenter, is_admin_set: doc.admin_set?
     end
@@ -72,7 +73,7 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
 
     let(:doc) { SolrDocument.new(attributes) }
     let(:admin_set) { mock_model(AdminSet) }
-    let(:collection_type) { create(:admin_set_collection_type) }
+    let(:collection_type) { build(:admin_set_collection_type) }
     let(:collection_presenter) { Hyrax::AdminSetPresenter.new(doc, Ability.new(build(:user)), nil) }
 
     before do
@@ -81,6 +82,8 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
       allow(doc).to receive(:to_model).and_return(stub_model(AdminSet, id: id))
       allow(collection_presenter).to receive(:collection_type_badge).and_return("Admin Set")
       allow(collection_presenter).to receive(:allow_batch?).and_return(true)
+      allow(collection_presenter).to receive(:total_viewable_items).and_return(0)
+      allow(collection_presenter).to receive(:total_items).and_return(0)
       view.lookup_context.prefixes.push 'hyrax/my'
 
       render 'hyrax/my/collections/list_collections', collection_presenter: collection_presenter, is_admin_set: doc.admin_set?

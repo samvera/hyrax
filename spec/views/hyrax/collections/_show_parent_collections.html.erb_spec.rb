@@ -11,11 +11,11 @@ RSpec.describe 'hyrax/collections/_show_parent_collections.html.erb', type: :vie
   let(:ability) { double }
   let(:solr_document) { SolrDocument.new(collection_doc) }
   let(:presenter) { Hyrax::CollectionPresenter.new(solr_document, ability) }
-  let(:collection1) { build(:collection, id: 'col1', title: ['col1']) }
-  let(:collection2) { build(:collection, id: 'col2', title: ['col2']) }
-  let(:collection3) { build(:collection, id: 'col3', title: ['col3']) }
-  let(:collection4) { build(:collection, id: 'col4', title: ['col4']) }
-  let(:collection5) { build(:collection, id: 'col5', title: ['col5']) }
+  let(:collection1) { stub_model(Collection, id: 'col1', title: ['col1']) }
+  let(:collection2) { stub_model(Collection, id: 'col2', title: ['col2']) }
+  let(:collection3) { stub_model(Collection, id: 'col3', title: ['col3']) }
+  let(:collection4) { stub_model(Collection, id: 'col4', title: ['col4']) }
+  let(:collection5) { stub_model(Collection, id: 'col5', title: ['col5']) }
   let(:parent_collections) { double(Object, documents: parent_docs, response: { "numFound" => parent_docs.size }, total_pages: 1) }
 
   before do

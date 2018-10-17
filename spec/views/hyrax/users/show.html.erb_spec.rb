@@ -9,6 +9,9 @@ RSpec.describe 'hyrax/users/show.html.erb', type: :view do
     allow(view).to receive(:signed_in?).and_return(true)
     allow(view).to receive(:current_user).and_return(current_user)
     allow(view).to receive(:can?).and_return(true)
+    allow(view).to receive(:number_of_collections).and_return(0)
+    allow(view).to receive(:number_of_works).and_return(0)
+    allow(presenter).to receive(:trophies).and_return([])
     assign(:user, user)
     assign(:presenter, presenter)
   end

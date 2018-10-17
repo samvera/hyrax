@@ -20,6 +20,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_show_actions.html.erb', type: :view do
     context "when presenter has delete disabled" do
       before do
         allow(presenter).to receive(:disable_delete?).and_return(true)
+        allow(presenter).to receive(:disabled_message).and_return('')
         render
       end
       it "displays a disabled delete button" do
@@ -43,6 +44,7 @@ RSpec.describe 'hyrax/admin/admin_sets/_show_actions.html.erb', type: :view do
     context "with default admin set" do
       before do
         allow(presenter).to receive(:disable_delete?).and_return(true)
+        allow(presenter).to receive(:disabled_message).and_return('')
         render
       end
       it "displays a disabled delete button" do

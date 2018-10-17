@@ -2,7 +2,7 @@ RSpec.describe 'hyrax/dashboard/collections/_form_share_table.html.erb', type: :
   let(:template) { stub_model(Hyrax::PermissionTemplate) }
   let(:user) { create(:user) }
   let(:access_grant) { stub_model(Hyrax::PermissionTemplateAccess) }
-  let(:collection) { create(:collection, collection_type_settings: :sharable_no_work_permissions) }
+  let(:collection) { stub_model(Collection, share_applies_to_new_works?: false) }
   let(:pt_form) do
     instance_double(Hyrax::Forms::PermissionTemplateForm,
                     model_name: template.model_name,

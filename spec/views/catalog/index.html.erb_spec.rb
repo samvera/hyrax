@@ -1,6 +1,9 @@
 RSpec.describe 'catalog/index.html.erb', type: :view do
-  let(:collection) { build(:collection, id: "abc123") }
-  let(:doc) { SolrDocument.new(collection.to_solr) }
+  let(:doc) do
+    SolrDocument.new(id: "abc123",
+                     has_model_ssim: ['Collection'],
+                     title_tesim: ['Collection Title 999'])
+  end
 
   before do
     view.extend Hyrax::CollectionsHelper
@@ -30,7 +33,7 @@ RSpec.describe 'catalog/index.html.erb', type: :view do
     before { allow(view).to receive(:can?).and_return(false) }
     it 'appears on page without error' do
       render
-      expect(rendered).to include(collection.title.first)
+      expect(rendered).to include('Collection Title 999')
       page = Capybara::Node::Simple.new(rendered)
       expect(page).to have_selector("span.fa.fa-cubes.collection-icon-search")
     end
@@ -39,7 +42,7 @@ RSpec.describe 'catalog/index.html.erb', type: :view do
     before { allow(view).to receive(:can?).and_return(true) }
     it 'appears on page without error' do
       render
-      expect(rendered).to include(collection.title.first)
+      expect(rendered).to include('Collection Title 999')
       page = Capybara::Node::Simple.new(rendered)
       expect(page).to have_selector("span.fa.fa-cubes.collection-icon-search")
     end

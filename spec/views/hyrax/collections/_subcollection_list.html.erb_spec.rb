@@ -1,6 +1,6 @@
 RSpec.describe 'hyrax/collections/_subcollection_list.html.erb', type: :view do
   let(:subject) { render('subcollection_list.html.erb', collection: subcollection) }
-  let(:collection) { build(:named_collection, id: '123') }
+  let(:collection) { stub_model(Collection, id: '123') }
 
   context 'when subcollection list is empty' do
     let(:subcollection) { nil }

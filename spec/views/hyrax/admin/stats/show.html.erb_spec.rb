@@ -12,6 +12,7 @@ RSpec.describe "hyrax/admin/stats/show.html.erb", type: :view do
 
   context 'locales' do
     before do
+      allow(presenter).to receive(:active_users).and_return([])
       render
     end
     it 'includes a default locale hidden input' do

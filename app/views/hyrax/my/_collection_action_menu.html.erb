@@ -42,6 +42,7 @@
         <%= t("hyrax.dashboard.my.action.delete_collection") %>
       <% end %>
     </li>
+
     <% if Hyrax::CollectionType.any_nestable? %>
       <% # The user should have deposit access to the parent we are adding, and read access to the child (the collection we are linking here). %>
       <li role="menuitem" tabindex="-1">

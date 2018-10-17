@@ -6,7 +6,7 @@ RSpec.describe 'hyrax/dashboard/collections/_form_share.html.erb', type: :view d
                     to_key: template.to_key,
                     access_grants: template.access_grants)
   end
-  let(:collection) { create(:collection, collection_type_settings: :sharable_no_work_permissions) }
+  let(:collection) { stub_model(Collection, share_applies_to_new_works?: false) }
 
   before do
     assign(:collection, collection)

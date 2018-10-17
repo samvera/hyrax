@@ -8,6 +8,8 @@ RSpec.describe 'hyrax/dashboard/profiles/show.html.erb', type: :view do
     allow(view).to receive(:signed_in?).and_return(true)
     allow(view).to receive(:current_user).and_return(user)
     allow(view).to receive(:can?).and_return(true)
+    allow(view).to receive(:number_of_collections).and_return(3)
+    allow(view).to receive(:number_of_works).and_return(5)
     assign(:user, user)
     assign(:presenter, presenter)
   end
@@ -21,9 +23,6 @@ RSpec.describe 'hyrax/dashboard/profiles/show.html.erb', type: :view do
     end
 
     before do
-      allow(view).to receive(:search_session).and_return({})
-      allow(view).to receive(:blacklight_config).and_return(CatalogController.blacklight_config)
-      allow(view).to receive(:current_search_session).and_return(nil)
       allow(presenter).to receive(:trophies).and_return([trophy_presenter])
     end
 

@@ -169,6 +169,13 @@ RSpec.configure do |config|
       DatabaseCleaner.start
     end
 
+    if example.metadata[:type] == :view
+      # View tests should not hit any services. This ensures the tests are unit
+      # testing only the views and run fast.
+      WebMock.disable_net_connect!(allow_localhost: false)
+    else
+      WebMock.disable_net_connect!(allow_localhost: true)
+    end
     # using :workflow is preferable to :clean_repo, use the former if possible
     # It's important that this comes after DatabaseCleaner.start
     ensure_deposit_available_for(user) if example.metadata[:workflow]

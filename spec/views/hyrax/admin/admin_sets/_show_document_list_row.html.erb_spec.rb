@@ -3,13 +3,16 @@ RSpec.describe 'hyrax/admin/admin_sets/_show_document_list_row.html.erb', type: 
   let(:ability) { Ability.new(user) }
 
   let(:work) do
-    create(:work, user: user, creator: ["ggm"], title: ['One Hundred Years of Solitude'])
+    stub_model(GenericWork, title: ['One Hundred Years of Solitude'])
   end
 
   before do
     view.blacklight_config = Blacklight::Configuration.new
     allow(controller).to receive(:current_ability).and_return(ability)
     allow(view).to receive(:current_user).and_return(user)
+    allow(view).to receive(:render_collection_links).and_return('')
+    allow(view).to receive(:render_visibility_link).and_return('')
+
     allow(work).to receive(:title_or_label).and_return("One Hundred Years of Solitude")
     allow(work).to receive(:edit_groups).and_return([user])
     allow(work).to receive(:edit_people).and_return([user])

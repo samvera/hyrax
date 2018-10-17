@@ -40,6 +40,8 @@ RSpec.describe 'hyrax/base/_items.html.erb', type: :view do
       expect(Flipflop).to receive(:hide_private_items?).and_return(:flipflop)
       allow(presenter).to receive(:list_of_item_ids_to_display).and_return(member_list)
       allow(presenter).to receive(:member_presenters_for).with(member_list).and_return(member_list)
+      allow(presenter).to receive(:ordered_ids).and_return([])
+
       allow(ability).to receive(:can?).with(:read, child1.id).and_return true
       allow(ability).to receive(:can?).with(:read, child2.id).and_return false
       allow(ability).to receive(:can?).with(:read, child3.id).and_return true

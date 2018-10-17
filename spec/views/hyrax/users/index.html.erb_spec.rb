@@ -9,6 +9,7 @@ RSpec.describe 'hyrax/users/index.html.erb', type: :view do
     allow(relation).to receive(:limit_value).and_return(10)
     allow(relation).to receive(:current_page).and_return(1)
     allow(relation).to receive(:total_pages).and_return(3)
+    allow(view).to receive(:number_of_works).and_return(0)
     assign(:users, relation)
   end
 
