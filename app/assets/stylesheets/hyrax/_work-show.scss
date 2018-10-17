@@ -18,12 +18,11 @@ header > h1 .label {
   padding: $panel-body-padding;
 }
 
-.attribute-filename,
-header h1,
-td:first-child {
+.ensure-wrapped {
   word-break: break-all;
 }
 
+.relationships,
 .attributes {
   tbody th {
     width: 20%;
