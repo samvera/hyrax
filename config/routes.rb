@@ -5,6 +5,11 @@ Hyrax::Engine.routes.draw do
   # Route the home page as the root
   root to: 'homepage#index'
 
+  # Models API
+  resources :concern, only: :index, controller: 'models'
+  resources :concern, only: :show, controller: 'models'
+  # @todo route for namespaced works
+
   # Handle routes that existed in Hyrax < 7
   #   e.g. https://scholarsphere.psu.edu/files/gm80hv36p
   get '/files/:id', to: redirect('/concern/generic_works/%{id}')
