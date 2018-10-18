@@ -348,6 +348,9 @@ fr:
     base:
       citations:
         header: 'Citations:'
+      form:
+        batch_upload: l'import par lot
+        create_separate_work_for_each_file: Pour créer un travail distinct par fichier, utilisez
       form_child_work_relationships:
         actions:
           remove: Supprimer de ce travail

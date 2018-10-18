@@ -348,6 +348,9 @@ it:
     base:
       citations:
         header: 'citazioni:'
+      form:
+        batch_upload: caricamento in gruppo
+        create_separate_work_for_each_file: Per creare un'opera separata per ciascuno dei file, vai a
       form_child_work_relationships:
         actions:
           remove: Rimuovi da questo lavoro

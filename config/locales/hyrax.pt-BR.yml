@@ -348,6 +348,9 @@ pt-BR:
     base:
       citations:
         header: 'Citações:'
+      form:
+        batch_upload: upload em lote
+        create_separate_work_for_each_file: Para criar um trabalho separado para cada um dos arquivos, vá para
       form_child_work_relationships:
         actions:
           remove: Remover desta obra

@@ -348,6 +348,9 @@ zh:
     base:
       citations:
         header: '引文:'
+      form:
+        batch_upload: 批量上传
+        create_separate_work_for_each_file: 要为每个文件创建单独的工作，请转到
       form_child_work_relationships:
         actions:
           remove: 从这个工作中删除
