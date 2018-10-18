@@ -1,0 +1,58 @@
+---
+nl:
+  blacklight:
+    search:
+      fields:
+        facet:
+          based_near_label_sim: Plaats
+          creator_sim: Schepper
+          file_format_sim: Formaat
+          generic_type_sim: Type
+          keyword_sim: keyword
+          language_sim: Taal
+          publisher_sim: Uitgeverij
+          subject_sim: Onderwerpen
+        index:
+          based_near_tesim: Plaats
+          contributor_tesim: Bijdrager
+          creator_tesim: Schepper
+          date_created_tesim: Datum gecreeërd
+          date_modified_dtsi: Datum gewijzigd
+          date_uploaded_dtsi: Datum geüpload
+          description_tesim: Omschrijving
+          file_format_tesim: Bestandsformaat
+          identifier_tesim: Identifier
+          keyword_tesim: keyword
+          language_tesim: Taal
+          license_tesim: Licentie
+          publisher_tesim: Uitgeverij
+          rights_statement_tesim: Rechtenverklaring
+          subject_tesim: Onderwerpen
+        show:
+          based_near_tesim: Plaats
+          contributor_tesim: Bijdrager
+          creator_tesim: Schepper
+          date_created_tesim: Datum gecreeërd
+          date_modified_dtsi: Datum gewijzigd
+          date_uploaded_dtsi: Datum geüpload
+          description_tesim: Omschrijving
+          file_format_tesim: Bestandsformaat
+          identifier_tesim: Identifier
+          keyword_tesim: keyword
+          language_tesim: Taal
+          license_tesim: Licentie
+          publisher_tesim: Uitgeverij
+          rights_statement_tesim: Rechtenverklaring
+          subject_tesim: Onderwerpen
+          title_tesim: Titel
+  hyrax:
+    account_name: Mijn instellingsaccount-ID
+    directory:
+      suffix: "@ example.org"
+    footer:
+      copyright_html: "<strong>Copyright © 2017 Samvera</strong> Gelicentieerd onder de Apache-licentie, versie 2.0"
+      service_html: Een dienst van <a href="http://samvera.org/" class="navbar-link" target="_blank">Samvera</a> .
+    institution_name: Instelling
+    institution_name_full: De naam van de instelling
+    product_name: Hyrax
+    product_twitter_handle: "@SamveraRepo"

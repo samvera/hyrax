@@ -1,0 +1,1240 @@
+---
+nl:
+  activefedora:
+    models:
+      batch_upload_item: Werkt door Batch
+      file_set: het dossier
+  activemodel:
+    errors:
+      messages:
+        cannot_have_child_nested: kan er geen kind in laten nestelen
+        cannot_nest_in_parent: kan niet nestelen binnen de ouder
+        cannot_remove_relationship: toestemming is niet voldoende voor het verwijderen van de nestrelatie
+        conflict: Je wijzigingen kunnen niet worden opgeslagen omdat een andere gebruiker (of achtergrondtaak) deze %{model} heeft bijgewerkt nadat je met bewerken begon. Zorg ervoor dat alle bestandsbijlagen succesvol zijn voltooid en probeer het opnieuw. Dit formulier is vernieuwd met de meest recente opgeslagen kopie van de %{model}.
+        exceeds_maximum_nesting_depth: nesten overschrijdt de toegestane maximale nestdiepte.
+        is_not_nestable: is niet nestbaar
+  blacklight:
+    search:
+      fields:
+        facet:
+          admin_set_sim: Admin ingesteld
+          member_of_collections_ssim: Verzameling
+          resource_type_sim: Resource type
+          suppressed_bsi: staat
+        show:
+          admin_set: 'In beheersset:'
+          based_near_label: Plaats
+          contributor: medewerkers
+          keyword: keyword
+      filters:
+        title: 'Filteren op:'
+      start_over: Begin opnieuw
+  errors:
+    messages:
+      carrierwave_download_error: Kan afbeelding niet downloaden.
+      carrierwave_integrity_error: Geen afbeelding.
+      carrierwave_processing_error: Afbeelding van afbeelding kan niet worden gewijzigd.
+      extension_blacklist_error: 'Het is niet toegestaan ​​om %{extension}-bestanden te uploaden, verboden typen: %{prohibited_types}'
+      extension_whitelist_error: 'U mag geen %{extension}-bestanden uploaden, toegestane typen: %{allowed_types}'
+  helpers:
+    action:
+      add: Toevoegen
+      admin_set:
+        new: Maak een nieuwe beheersset
+      batch:
+        new: Maak een reeks werken
+      cancel: annuleren
+      close: Dichtbij
+      collection:
+        new: Nieuwe collectie
+      delete: Verwijder
+      edit: Bewerk
+      less: Minder
+      more: Meer
+      refresh: verversen
+      remove: Verwijderen
+      work:
+        new: Voeg nieuw werk toe
+    submit:
+      admin_set:
+        create: Opslaan
+        update: Wijzigingen opslaan
+      create: Opslaan
+      hyrax_permission_template:
+        create: Opslaan
+        update: Opslaan
+      hyrax_permission_template_access:
+        create: Toevoegen
+      proxy_deposit_request:
+        create: Overdracht
+      update: Wijzigingen opslaan
+  hyrax:
+    account_label: Gebruiker
+    active_consent_to_agreement: Ik heb de. Gelezen en ga ermee akkoord
+    admin:
+      admin_sets:
+        delete:
+          error_default_set: Administratieve set kan niet worden verwijderd omdat dit de standaardset is
+          error_not_empty: Administratieve set kan niet worden verwijderd omdat deze niet leeg is
+          notification: Administratieve set verwijderd
+        document_list:
+          edit: Bewerk
+          no_works: De administratieve set bevat geen werken.
+          title: Lijst met items in deze beheersset
+        edit:
+          header: 'Beheerset bewerken: %{title}'
+        form:
+          cancel: annuleren
+          note: Gebruikers die een nieuwe rol krijgen, krijgen alleen de rol op werken die worden gestort nadat die rol is toegekend.
+          permission_destroy_errors:
+            admin_group: De repository administrators group kan niet worden verwijderd
+          permission_update_errors:
+            error: Ongeldige update-optie voor machtigingssjabloon.
+            no_date: Een datum is vereist voor de geselecteerde release-optie.
+            no_embargo: Voor de geselecteerde optie is een embargo-periode vereist.
+            nothing: Selecteer vrijgaveopties voordat u op Opslaan drukt.
+          permission_update_notices:
+            new_admin_set: De administratieve set '%{name}' is gemaakt. Gebruik de extra tabbladen om andere aspecten van de administratieve set te definiëren.
+            participants: De deelnemersrechten van de beheerset zijn bijgewerkt
+            updated_admin_set: De administratieve set '%{name}' is bijgewerkt.
+            visibility: De release- en zichtbaarheidsinstellingen van de beheerdersset zijn bijgewerkt.
+            workflow: De workflow van de administratieve set is bijgewerkt.
+          tabs:
+            description: Omschrijving
+            participants: Deelnemers
+            visibility: Release en zichtbaarheid
+            workflow: workflow
+        form_participant_table:
+          admin_users: Repository-beheerders
+          allow_all_registered: Sta alle geregistreerde gebruikers toe om te storten
+          depositors:
+            action: Actie
+            agent_name: Deposanten van deze set
+            empty: Er zijn geen depositohouders aan deze administratieve set toegevoegd.
+            help: Inleggers kunnen nieuw werk toevoegen aan deze administratieve set.
+            remove: Verwijderen
+            title: Depositors
+            type: Type
+          managers:
+            action: Actie
+            agent_name: Managers van deze set
+            empty: Er zijn geen beheerders aan deze administratieve set toegevoegd.
+            help: Beheerders van deze beheersset kunnen de instellingen voor metagegevens, deelnemers en vrijgave- en zichtbaarheidsinstellingen bewerken. Managers kunnen ook metadata voor het werk bewerken, bestanden toevoegen aan of verwijderen uit een werk en nieuwe werken aan de set toevoegen.
+            remove: Verwijderen
+            title: managers
+            type: Type
+          registered_users: Geregistreerde gebruikers
+          viewers:
+            action: Actie
+            agent_name: Kijkers van deze set
+            empty: Er zijn geen kijkers aan deze beheerdersset toegevoegd.
+            help: Kijkers van deze beheersset kunnen werken in de set bekijken, ongeacht de zichtbaarheidsinstellingen die op het werk zijn toegepast. Kijkers kunnen bijvoorbeeld werken in deze set bekijken, zelfs als de werken momenteel zijn onder embargo of beperkt.
+            remove: Verwijderen
+            title: kijkers
+            type: Type
+        form_participants:
+          add_group: 'Groep toevoegen:'
+          add_participants: Voeg deelnemers toe
+          add_user: 'Voeg gebruiker toe:'
+          current_participants: Huidige deelnemers
+        form_visibility:
+          cancel: annuleren
+          page_description: Release- en zichtbaarheidsinstellingen bepalen de beschikbare opties voor deposanten bij het indienen van een werk bij deze beheersset. Wijzigingen in deze instellingen hebben geen invloed op eerder gedeponeerde werken.
+          release:
+            description: Stel embargo's en leasebeleid in voor deze administratieve set.
+            fixed: Depositor moet embargo kiezen - vertraagde vrijgave van alle werken tot
+            no_delay: Sta geen embargo's of leases toe
+            title: Vrijlating
+            varies:
+              any: Depositor kan elke embargolengte kiezen; huurcontracten zijn toegestaan
+              between: 'De bewaargever kan het embargo up-to-date kiezen:'
+              description: 'Sta de deposant toe om instellingen te kiezen:'
+              embargo:
+                1yr: 1 jaar na storting
+                2yrs: 2 jaar na storting
+                3yrs: 3 jaar na storting
+                6mos: 6 maanden na storting
+                select: Selecteer embargoperiode ..
+              period: 'Depositor kan embargoperiode kiezen tot:'
+          visibility:
+            description: Stel zichtbaarheidsbeleid voor de administratieve set in. Instellen eersbevel embargobeleid hierboven.
+            everyone: Publieke depositeur kan alleen de publieke zichtbaarheidsinstelling kiezen
+            institution: Instelling - deposant kan alleen instelling instelling zichtbaarheid selecteren
+            restricted: Private - depositeur kan alleen privé selecteren voor zichtbaarheid. Toegang is beperkt tot beheerders van repositories, managers en kijkers van de set. Moet worden gebruikt met de bovenstaande instelling 'Geen embargo'.
+            title: Zichtbaarheid
+            varies: Alle instellingen toegestaan ​​- bewaargever kan kiezen. Moet deze optie gebruiken om leases toe te staan.
+        form_workflow:
+          cancel: annuleren
+          no_workflows: Er zijn geen workflows om te selecteren.
+          page_description: Aan elke administratieve set is een werkstroom gekoppeld. Deze werkstroom wordt toegepast op alle werken die aan de beheerset zijn toegevoegd. Selecteer de workflow die moet worden gebruikt voor deze beheersset hieronder.
+        new:
+          header: Maak een nieuwe administratieve set
+        show:
+          breadcrumb: Set bekijken
+          header: Administratieve set
+          item_list_header: Werkt in deze set
+        show_actions:
+          confirm_delete: Weet je zeker dat je deze administratieve set wilt verwijderen? Deze actie kan niet ongedaan gemaakt worden.
+      appearances:
+        show:
+          header: Verschijning
+        update:
+          flash:
+            success: Het uiterlijk is succesvol bijgewerkt
+      collection_types:
+        create:
+          notification: Het collectietype %{name} is gemaakt.
+        delete:
+          notification: Het collectietype %{name} is verwijderd.
+        edit:
+          header: Collectietype bewerken
+          submit: Wijzigingen opslaan
+        errors:
+          no_settings_change_for_admin_sets: Instellingen voor collectietypen kunnen niet worden gewijzigd voor het type Administrative Set
+          no_settings_change_for_user_collections: Instellingen voor collectietypen kunnen niet worden gewijzigd voor het type Gebruikersverzameling
+          no_settings_change_if_not_empty: Instellingen voor collectietypen kunnen niet worden gewijzigd voor een type met verzamelingen
+          not_empty: Het collectietype kan niet worden gewijzigd omdat het collecties bevat
+        form:
+          tab:
+            appearance: Badge kleur
+            metadata: Omschrijving
+            participants: Deelnemers
+            settings: instellingen
+        form_participant_table:
+          creators:
+            action: Actie
+            agent_name: Collectie makers
+            empty: Er zijn geen makers toegevoegd aan dit verzamelingstype.
+            help: Makers van collecties van dit type kunnen hun eigen collecties maken en beheren.
+            title: makers
+            type: Type
+          managers:
+            action: Actie
+            agent_name: Collectiemanagers
+            empty: Er zijn geen beheerders aan dit verzamelingstype toegevoegd.
+            help: Beheerders van collecties van dit type kunnen verzamelingen die andere gebruikers hebben gemaakt bewerken, waaronder het toevoegen en verwijderen van werken uit een verzameling, het wijzigen van verzamelmetagegevens en het verwijderen van verzamelingen.
+            title: managers
+            type: Type
+        form_participants:
+          add_group: Groep toevoegen
+          add_participants: Voeg deelnemers toe
+          add_user: Voeg gebruiker toe
+          current_participants: Huidige deelnemers
+          header: Collectie deelnemers
+          instructions: U kunt zowel groepen als gebruikers aanduiden als makers en beheerders van collecties van dit type
+          remove_success: Deelnemer verwijderd
+          submit: Toevoegen
+          update_notice: Deelnemers bijgewerkt
+        form_settings:
+          instructions: Deze instellingen bepalen hoe collecties van dit type kunnen worden beheerd en ontdekt.
+          warning: 'Waarschuwing: deze instellingen kunnen niet worden gewijzigd nadat een verzameling van dit type is gemaakt.'
+        index:
+          breadcrumb: Collectie Types
+          create_new_button: Maak een nieuw collectietype
+          description: Met collectietypen kunt u instellingen definiëren die gelden voor collecties die verschillende doeleinden in uw repository dienen. U kunt zoveel soorten verzamelingen definiëren als u nodig heeft.
+          header: Collectie Types
+          modal:
+            can_delete_body_html: "<p> Als u dit collectietype verwijdert, worden het type en de instellingen permanent uit de repository verwijderd. Weet je zeker dat je dit collectietype wilt verwijderen? </p>"
+            cannot_delete_body_html: "<p> U kunt dit verzamelingstype niet verwijderen omdat er al een of meer verzamelingen van dit type zijn gemaakt. </p><p> Als u dit verzameltype wilt verwijderen, moet u eerst controleren of alle verzamelingen van dit type zijn verwijderd. </p>"
+            header_can_delete: Collectietype verwijderen?
+            header_cannot_delete: Kan collectietype niet verwijderen
+            view_collections: Bekijk collecties van dit type
+          more_toggle_content_html: "<p> Typische scenario's voor collectietypen zijn onder meer: </p><ul><li> <strong>Gebruikerscollecties</strong> die elke geregistreerde gebruiker kan maken om items te organiseren die ze plaatsen. </li><li> <strong>Exposities</strong> die medewerkers maken en beheren voor openbare weergave, waarbij items kunnen worden opgenomen in een willekeurig aantal exposities. </li><li> <strong>Gecontroleerde verzamelingen</strong> gemaakt en beheerd door personeel en niet bedoeld voor openbare weergave, zoals verzamelingen gekoppeld aan organisatie-eenheden of afdelingen. </li><li> <strong>Communityverzamelingen</strong> die zijn bedoeld voor openbare weergave, vergelijkbaar met de manier waarop DSpace-community's en -collecties soms worden gebruikt. </li></ul>"
+          more_toggle_header_html: "<span>Meer</span> over collectietypen"
+          table:
+            actions: acties
+            name: Naam
+        multiple_membership_checker:
+          error_preamble: 'Fout: u hebt meer dan één van hetzelfde verzameltype voor één lidmaatschap opgegeven'
+          error_type_and_collections: "(type: %{type}, collecties: %{collections})"
+        new:
+          header: Maak een nieuw collectietype
+          submit: Opslaan
+        update:
+          notification: Het collectietype %{name} is bijgewerkt.
+      features:
+        index:
+          action: Actie
+          description: Omschrijving
+          feature: Voorzien zijn van
+          header: Kenmerken
+      sidebar:
+        activity: Activiteit
+        appearance: Verschijning
+        collection_types: Collectie Types
+        collections: collecties
+        configuration: Configuratie
+        content_blocks: Inhoudsblokken
+        notifications: meldingen
+        pages: Pages
+        profile: Profiel
+        repository_objects: Repository Inhoud
+        settings: instellingen
+        statistics: rapporten
+        tasks: taken
+        technical: Kenmerken
+        transfers: transfers
+        user_activity: Jouw activiteit
+        users: Gebruikers beheren
+        workflow_review: Inzendingen bekijken
+        workflow_roles: Workflow Rollen
+        works: Werken
+      stats:
+        deposited_form:
+          end_label: einde [standaard nu]
+          heading: 'Weergegeven bestanden weergeven:'
+          start_label: Begin
+        repository_objects:
+          series:
+            published: Gepubliceerd
+            unknown: Onbekend
+            unpublished: onuitgegeven
+        user_deposits:
+          end_label: Eindigend [standaard naar nu]
+          heading: Geef bestanden weer die door gebruikers zijn gedeponeerd
+          start_label: Beginnend
+        works:
+          headers:
+            main: Werk statistieken
+            total: 'Total Works:'
+            visibility: Totalen door zichtbaarheid
+      users:
+        index:
+          access_label: Laatste toegang
+          describe_users_html:
+            one: Er is <b>%{count} gebruiker</b> in deze repository.
+            other: Er zijn <b>%{count}-gebruikers</b> in deze repository.
+          id_label: Gebruikersnaam
+          role_label: Rollen
+          title: Gebruikers beheren
+      workflow_roles:
+        header: Workflow Rollen
+        index:
+          current_roles: Huidige rollen
+          delete:
+            confirm: Weet je het zeker?
+          header:
+            name: Naam
+            roles: Rollen
+            user: Gebruiker
+          new_role: Wijs de rol toe
+          no_roles: Geen rollen
+      workflows:
+        index:
+          header: Inzendingen bekijken
+          tabs:
+            published: Gepubliceerd
+            under_review: Wordt beoordeeld
+    api:
+      accepted:
+        default: Uw aanvraag is geaccepteerd voor verwerking, maar de verwerking is niet voltooid. Zie baan voor meer info.
+      bad_request:
+        default: Kan uw verzoek niet verwerken. Zie fouten voor meer info.
+      deleted:
+        default: De bron verwijderd
+      forbidden:
+        default: U bent niet gemachtigd om toegang te krijgen tot deze inhoud.
+      internal_error:
+        default: Er is een fout opgetreden in de server.
+      not_found:
+        default: Kon geen resource vinden die overeenkomt met uw verzoek.
+      success:
+        default: Uw aanvraag is met succes verwerkt.
+      unauthorized:
+        default: Daarvoor moet je ingelogd zijn!
+      unprocessable_entity:
+        default: De bron die u probeerde te wijzigen, kan niet worden aangepast aan uw verzoek.
+    background_attribution_html: ''
+    base:
+      citations:
+        header: 'citaten:'
+      form_child_work_relationships:
+        actions:
+          remove: Verwijder van dit werk
+        attach_new_work: Stort nieuw werk als kind van dit werk
+        caption: Dit werk bevat momenteel deze kinderwerken
+        confirm:
+          cancel: annuleren
+          remove: Verwijderen
+          text: Als u dit onderliggende werk verwijdert, wordt het niet uit de repository verwijderd, alleen vanuit dit bovenliggende werk. Weet u zeker dat u dit werk uit dit bovenliggende werk wilt verwijderen?
+        header:
+          actions: Actie
+          title: Werktitel
+      form_files:
+        dropzone: Zet hier bestanden neer.
+        local_upload_browse_everything_html: "<p> U kunt een of meer bestanden toevoegen om aan dit werk te koppelen. Voeg bestanden toe vanaf uw lokale systeem of een cloudprovider. </p><p> Houd er rekening mee dat als u een cloudprovider gebruikt om een ​​groot aantal bestanden binnen een korte tijd te uploaden, de provider mogelijk niet in staat is om aan uw verzoek te voldoen. Als u fouten ondervindt bij het uploaden vanuit de cloud, kunt u ons dit laten weten via %{contact_href}. </p>"
+        local_upload_html: "<p> U kunt een of meer bestanden toevoegen om aan dit werk te koppelen. </p>"
+      form_member_of_collections:
+        actions:
+          remove: Verwijderen uit de verzameling
+        caption: Dit werk bevindt zich momenteel in deze collecties
+        confirm:
+          cancel: annuleren
+          remove: Verwijderen
+          text: Als u dit werk verwijdert, wordt het niet uit de repository verwijderd, alleen uit deze verzameling. Weet je zeker dat je dit werk uit de verzameling wilt verwijderen?
+        header:
+          actions: Actie
+          title: Collectietitel
+      form_permission_under_embargo:
+        help_html: "<strong>Dit werk is onder embargo.</strong> U kunt de instellingen van het embargo hier wijzigen of u kunt de %{edit_link} bezoeken om deze te deactiveren."
+        legend_html: Zichtbaarheid <small>Wie moet deze inhoud kunnen bekijken of downloaden?</small>
+        management_page: Embargo Management Page
+      form_permission_under_lease:
+        help_html: "<strong>Dit werk is in lease.</strong> U kunt hier de instellingen van de lease wijzigen of u kunt de %{edit_link} bezoeken om deze te deactiveren."
+        legend_html: Zichtbaarheid <small>Wie moet deze inhoud kunnen bekijken of downloaden?</small>
+        management_page: Pagina Leasebeheer
+      form_progress:
+        required_agreement: Betaalinstructie controleren
+        required_descriptions: Beschrijf je werk
+        required_files: Bestanden toevoegen
+        requirements: Vereisten
+      form_rendering:
+        help_html: Selecteer bestand (en) als download voor elke afbeelding in Universal Viewer, bijvoorbeeld een PDF van het hele werk.
+        legend_html: rendering
+      form_representative:
+        help_html: Selecteer het bestand met media die dit werk vertegenwoordigen.
+        legend_html: Representatieve media
+      form_share:
+        add_sharing: Voeg delen toe
+        currently_sharing: Momenteel gedeeld met
+        directions: Ongeacht de zichtbaarheidsinstellingen voor dit werk, kunt u het ook delen met andere gebruikers en groepen.
+      form_thumbnail:
+        help_html: Selecteer het bestand dat als miniatuur voor dit werk moet worden gebruikt.
+        legend_html: thumbnail
+      items:
+        actions: acties
+        date_uploaded: Datum geüpload
+        empty: Deze %{type} heeft geen bijbehorende bestanden. Klik op "Bewerken" om meer bestanden toe te voegen.
+        header: items
+        thumbnail: thumbnail
+        title: Titel
+        unauthorized: Er zijn geen publiek beschikbare items in deze %{type}.
+        visibility: Zichtbaarheid
+      relationships:
+        empty: Deze %{type} bevindt zich momenteel niet in een verzameling.
+        header: Relaties
+      relationships_parent_row:
+        label: 'In %{type}:'
+      share_with:
+        definition_heading: Permission Definitions
+        definitions_html: "<strong>Bekijken / downloaden:</strong> dit bestand (zowel inhoud als metagegevens) is toegankelijk vanuit %{application_name}. <br /> <strong>Bewerken:</strong> dit bestand (zowel inhoud als metagegevens) kan worden bewerkt. U kunt deze toestemming alleen verlenen aan %{institution_name}-gebruikers en / of -groepen."
+        share_with_html: U kunt "Bekijken / downloaden" of "Bewerken" toegang verlenen voor specifieke gebruikers en / of groepen naar bestanden. Voer één voor één een geldige %{account_name} in, selecteer het toegangsniveau voor die gebruiker en klik op + Toevoegen.
+      show:
+        last_modified: Laatst gewijzigd
+      social_media:
+        facebook: Facebook
+        google: Google+
+        tumblr: tumblr
+        twitter: tjilpen
+    batch:
+      help:
+        resource_type: U kunt meerdere typen selecteren om op alle bestanden toe te passen
+        title: Bestandsnaam is de standaardtitel. Geef een betekenisvollere titel op en bestandsnamen worden nog steeds door het systeem bewaard.
+    batch_uploads:
+      disabled: Functie uitgeschakeld door beheerder
+      files:
+        button_label: Voeg nieuw werk toe
+        instructions: Elk bestand wordt geüpload naar een nieuw afzonderlijk werk, wat resulteert in één werk per geüploade bestand.
+        upload_type_instructions: Ga naar als u één werk voor alle bestanden wilt maken
+      new:
+        header: Batch Maak nieuwe werken
+        in_collections: Deze werken in collecties
+        in_other_works: Dit werk in andere werken
+        in_this_work: Andere werken in dit werk
+      progress:
+        header: Sla Works op
+    bread_crumb:
+      search_results: terug naar zoekresultaten
+    collection:
+      actions:
+        add_existing_works:
+          desc: Voeg bestaande werken toe aan deze collectie
+          label: Bestaande werken aan deze verzameling toevoegen
+        add_new_nested_collection:
+          desc: Voeg een nieuwe collectie toe aan deze collectie
+          label: Maak een nieuwe verzameling als subcollectie
+        add_new_work:
+          desc: Stort nieuw werk via deze verzameling
+          label: Stort nieuw werk via deze verzameling
+        delete:
+          confirmation: Deze verzameling verwijderen?
+          desc: Verwijder deze verzameling
+          label: Verzameling verwijderen
+        edit:
+          desc: Bewerk deze verzameling
+          label: Bewerk verzameling
+        header: acties
+        nest_collections:
+          button_label: Voeg een deelcollectie toe
+          desc: Nest andere collecties in deze verzameling
+          label: Voeg bestaande collecties toe aan deze verzameling
+          modal_title: Voeg een deelcollectie toe aan de verzameling
+          select_label: Selecteer subcollectie
+        nested_subcollection:
+          button_label: Voeg toe aan collectie
+          desc: Voeg bestaande collecties toe aan deze verzameling
+          modal_title: Voeg deze collectie toe binnen een andere collectie
+          select_label: Selecteer verzameling
+      browse_view: Blader door de weergave
+      document_list:
+        edit: Bewerk
+        no_visible_works: De verzameling is leeg of bevat geen items waartoe u toegang hebt.
+      edit:
+        manage_items: Beheer items in deze collectie
+      form:
+        additional_fields: Extra velden
+        description: beschrijvingen
+      is_part_of: Is onderdeel van
+      select_form:
+        close: Dichtbij
+        create: Opslaan
+        create_new: Toevoegen aan nieuwe collectie
+        no_collections: U hebt geen toegang tot bestaande collecties. U kunt een nieuwe verzameling maken.
+        select_heading: 'Selecteer de verzameling om uw bestanden toe te voegen:'
+        title: Voeg toe aan collectie
+        update: Wijzigingen opslaan
+    collection_type:
+      admin_set_title: Admin ingesteld
+      default_title: Gebruikerscollectie
+    collection_types:
+      create_service:
+        admin_set_description: Een samenvoeging van werken die is bedoeld om te helpen bij administratieve controle. Admin-sets bieden een manier om gedrag en beleid rond een reeks werken te definiëren.
+        default_description: Een gebruikersverzameling kan door elke gebruiker worden gemaakt om hun werken te ordenen.
+    collections:
+      search_form:
+        button_label: Gaan
+        label: Zoek verzameling %{title}
+        placeholder: Zoek deelcollecties en werk in deze verzameling
+      show:
+        buttons:
+          remove_from_collection: Verwijderen
+          remove_this_sub_collection: Verwijderen
+        no_visible_parent_collections: Er zijn geen zichtbare bovenliggende collecties.
+        no_visible_subcollections: Er zijn geen zichtbare subcollecties.
+        parent_collection_header: Bovenliggende collecties
+        show_less_parent_collections: "...laat minder zien"
+        show_more_parent_collections: laat meer zien...
+        subcollection_count: deelcollecties
+        works_in_collection: Werken
+    contact_form:
+      button_label: Sturen
+      email_label: Jouw email
+      header: Contact Formulier
+      issue_types:
+        browsing: Bladeren en zoeken
+        changing: Wijzigingen in mijn inhoud aanbrengen
+        depositing: Inhoud storten
+        general: Algemene vraag of verzoek
+        reporting: Een probleem melden
+      message_label: Bericht
+      name_label: Uw naam
+      notice: Gebruik het contactformulier om vragen over dit systeem in te dienen; om een ​​probleem dat u ervaart te melden bij het systeem; om hulp te vragen met behulp van het systeem; of om algemene feedback te geven. Zie de Help-pagina voor aanvullende informatie over dit systeem.
+      select_type: Selecteer een type probleem
+      subject_label: Onderwerpen
+      type_label: Uitgiftetype
+    content_blocks:
+      cancel: annuleren
+      tabs:
+        announcement_text: Aankondigingstekst
+        featured_researcher: Aanbevolen onderzoeker
+        marketing_text: Marketingtekst
+      updated: Inhoudsblokken bijgewerkt.
+    controls:
+      about: Wat betreft
+      contact: Contact
+      help: Helpen
+      home: Huis
+    dashboard:
+      additional_notifications: Bekijk alle meldingen
+      admin_sets:
+        admin_set: Administratieve set
+        files: bestanden
+        subtitle: Recente activiteit
+        title: Administratieve sets
+        works: Werken
+      all:
+        collections: Alle collecties
+        works: Alle werken
+      authorize_proxies: Autorisatie van proxy's
+      breadcrumbs:
+        admin: Dashboard
+      collection_type_actions:
+        close: Dichtbij
+        create_collection: Maak een verzameling
+        select_type_of_collection: Selecteer het type verzameling
+      collections:
+        edit:
+          header: 'Bewerk %{type_title}: %{title}'
+        form:
+          permission_update_errors:
+            error: Ongeldige update-optie voor machtigingssjabloon.
+          permission_update_notices:
+            participants: De deelopties van de verzameling zijn bijgewerkt.
+            sharing: De deelopties van de verzameling zijn bijgewerkt.
+          tabs:
+            branding: branding
+            description: Omschrijving
+            discovery: Ontdekking
+            relationships: Relaties
+            sharing: Het delen van
+        form_branding:
+          banner:
+            description: Een afbeelding die bovenaan de collectiepagina wordt weergegeven. Upload voor de beste resultaten een afbeelding (JPG, GIF of PNG) van ten minste 120 pixels hoog en 1200 pixels breed.
+            label: banier
+          branding:
+            description: Optioneel kunt u een bannerafbeelding en / of logo-afbeeldingen uploaden om aan deze verzameling te koppelen. Als ze worden geüpload, worden deze afbeeldingen boven aan de collectiepagina weergegeven om unieke branding voor de verzameling te bieden.
+            label: branding
+          logo:
+            description: Een of meer afbeeldingen worden bovenaan de collectiepagina weergegeven. Upload voor de beste resultaten een afbeelding (JPG, GIF of PNG) van 40 pixels hoog. Grotere afbeeldingen worden verkleind tot 40 pixels hoog.
+            label: Logo
+        form_discovery:
+          para1: Deze instellingen bepalen wie de bestemmingspagina van deze verzameling kan ontdekken en bekijken. ze hebben geen invloed op de zichtbaarheid van items in de verzameling.
+          para2: Als u ervoor kiest om deze verzameling geen open toegang te geven, kunt u de verzameling met specifieke gebruikers en groepen nog steeds delen via het tabblad Delen.
+        form_relationships:
+          add_other_collections_as_sub_collections_description: U kunt de subcollecties van deze verzameling beheren.
+          buttons:
+            remove_from_collection: Verwijderen
+            remove_this_sub_collection: Verwijderen
+          collection_is_subcollection_description: Deze verzameling is momenteel een subcollectie van deze collecties
+          headlines:
+            other_collections_in_this_collection: Andere collecties in deze collectie
+            this_collection_in_other_collections: Deze collectie in andere collecties
+          modals:
+            remove_from_collection_description: Als u deze verzameling verwijdert, wordt deze niet uit de gegevensopslagruimte verwijderd, maar alleen als bovenliggend item van deze verzameling. Weet je zeker dat je deze verzameling wilt verwijderen?
+            remove_parent_collection_deny: U hebt onvoldoende rechten voor de bovenliggende verzameling om deze te kunnen verwijderen.
+            remove_this_sub_collection_description: Als u deze subverzameling verwijdert, wordt deze niet uit de repository verwijderd, alleen uit deze bovenliggende verzameling. Weet je zeker dat je deze subcollectie wilt verwijderen?
+          sub_collections_of_collection_description: Deze collecties zijn momenteel subcollecties van deze verzameling
+          table:
+            action: Actie
+            collection_title: Collectietitel
+          this_collection_in_other_collections_description: U kunt deze verzameling toevoegen aan andere collecties als een subcollectie.
+        form_share:
+          add_group: Groep toevoegen
+          add_sharing: Voeg delen toe
+          add_user: Voeg gebruiker toe
+          current_shared: Momenteel gedeeld met
+          note: Ongeacht de zichtbaarheidsinstellingen van deze verzameling, kunt u deze verzameling delen met specifieke groepen en gebruikers.
+        form_share_table:
+          allow_all_registered: Sta alle geregistreerde toe
+          depositors:
+            action: Actie
+            agent_name: Gebruikersgroep
+            empty: Er zijn geen depositohouders aan deze verzameling toegevoegd.
+            help: Deposanten van deze verzameling kunnen de collectie bekijken en werken eraan toevoegen, zelfs als de zichtbaarheidsrechten van de verzameling anders niet zouden toelaten om deze te bekijken.
+            remove: Verwijderen
+            title: Depositors
+            type: Type
+          managers:
+            action: Actie
+            agent_name: Gebruikersgroep
+            empty: Er zijn geen beheerders aan deze verzameling toegevoegd.
+            help: Beheerders van deze verzameling kunnen werken uit de verzameling toevoegen en verwijderen, metagegevens van collecties wijzigen en de verzameling verwijderen.
+            help_with_works: Voor collecties van het type %{type_title} krijgen werken direct in deze collectie de bewerkingsrechten voor het nieuwe werk.
+            remove: Verwijderen
+            title: managers
+            type: Type
+          viewers:
+            action: Actie
+            agent_name: Gebruikersgroep
+            empty: Er zijn geen kijkers aan deze verzameling toegevoegd.
+            help: Kijkers van deze collectie kunnen deze bekijken, zelfs als de zichtbaarheidsrechten van de verzameling anders niet zouden toelaten dat ze deze bekijken.
+            help_with_works: Voor collecties van het type %{type_title} krijgen de kijkers, wanneer werken rechtstreeks in deze verzameling worden gemaakt, leestoegang tot het nieuwe werk.
+            remove: Verwijderen
+            title: kijkers
+            type: Type
+        new:
+          header: Nieuwe %{type_title}
+        show:
+          header: Verzameling
+          item_count: Werken
+          parent_collection_header: Bovenliggende collecties
+          public_view_label: Openbare weergave van collectie
+          search_results: Zoekresultaten in deze collectie
+          show_less_parent_collections: "...laat minder zien"
+          show_more_parent_collections: laat meer zien...
+          subcollection_count: deelcollecties
+      create_work: Werk maken
+      current_proxies: Huidige volmachten
+      delete_notification: Notificatie verwijderen
+      heading_actions:
+        close: Dichtbij
+        create_work: Maak werk
+        select_type_of_work: Selecteer type werk
+      manage_proxies: Beheer proxy's
+      managed:
+        collections: Managed Collections
+        works: Managed Works
+      my:
+        action:
+          add_to_collection: Voeg toe aan collectie
+          add_to_collection_only: Toegestane acties zijn beperkt tot leden toevoegen
+          admin_set_confirmation: Het verwijderen van een admin-set uit %{application_name} is permanent. Klik op OK om deze beheerdersset te verwijderen uit %{application_name} of Annuleren om deze bewerking te annuleren
+          collection_create_success: Verzameling is succesvol gemaakt.
+          collection_delete_fail: Verzameling kon niet worden verwijderd
+          collection_delete_success: Verzameling is succesvol verwijderd
+          collection_deny_add_members: Je hebt onvoldoende rechten om leden aan de verzameling toe te voegen
+          collection_update_success: Verzameling is succesvol bijgewerkt.
+          collections_confirmation_html: "<span class='pluralized'>Deze collectie</span> verwijdert, wordt het permanent verwijderd <span class='pluralized'>deze collectie</span> uit de repository. Items in <span class='pluralized'>deze verzameling</span> blijven in de repository. Weet je zeker dat je <span class='pluralized'>deze verzameling</span> wilt verwijderen?"
+          collections_confirmation_no_items_html: Weet je zeker dat je deze verzameling wilt verwijderen? Deze actie kan niet ongedaan gemaakt worden.
+          delete_admin_set: Verzameling verwijderen
+          delete_admin_set_deny: Deze verzameling wordt gedefinieerd als Admin-set en is niet leeg. Om deze Admin Set te verwijderen, moet u alle items uit de Admin Set verwijderen (verwijderen of verplaatsen naar een andere Admin Set-verzameling).
+          delete_collection: Verzameling verwijderen
+          delete_collection_deny: U hebt onvoldoende rechten om deze verzameling te verwijderen.
+          delete_collections: Collecties verwijderen
+          delete_collections_deny: U hebt onvoldoende rechten om een ​​of meer verzamelingen te verwijderen.
+          delete_work: Werk verwijderen
+          edit_admin_set: Bewerk verzameling
+          edit_collection: Bewerk verzameling
+          edit_collection_deny: Je hebt niet voldoende rechten om deze verzameling te bewerken.
+          edit_selected: Geselecteerde bewerken
+          edit_work: Bewerk werk
+          highlight: Markeer werk op profiel
+          members_no_access: U hebt onvoldoende rechten voor een van de geselecteerde leden
+          nesting_not_allowed: Verzamelingen van dit type bieden geen ondersteuning voor nesten.
+          nesting_permission_denied: Je hebt onvoldoende rechten om deze verzameling toe te voegen aan een andere verzameling.
+          select: kiezen
+          select_all: Selecteer huidige pagina
+          select_none: Selecteer Geen
+          transfer: Eigendom van werk overdragen
+          unhighlight: Werk onhighlight
+          view_admin_set: Bekijk collectie
+          view_collection: Bekijk collectie
+          work_confirmation: Het verwijderen van een werk van %{application_name} is permanent. Klik op OK om dit werk te verwijderen uit %{application_name} of Annuleren om deze bewerking te annuleren
+        collection_list:
+          description: 'Omschrijving:'
+          edit_access: 'Bewerk toegang:'
+          groups: 'groepen:'
+          managed_access:
+            deposit: Storting
+            manage: Beheren
+            view: Uitzicht
+          users: 'gebruikers:'
+        collections: collecties
+        facet_label:
+          collections: 'Collecties filteren:'
+          highlighted: 'Hoogtepunten filteren:'
+          shared: 'Filter shares:'
+          works: 'Filter werkt:'
+        heading:
+          access: Toegang
+          action: acties
+          collection_type: Collectietype
+          date_modified: Laatst gewijzigd
+          date_uploaded: Datum toegevoegd
+          highlighted: Opvallende
+          items: items
+          last_modified: Laatst gewijzigd
+          title: Titel
+          type: Type
+          visibility: Zichtbaarheid
+        highlighted: Mijn hoogtepunten
+        shared: Works Shared with Me
+        sr:
+          batch_checkbox: Vink aan om toe te voegen aan een verzameling of bewerklijst
+          check_all_label: Selecteer alle bestanden die aan een verzameling moeten worden toegevoegd of die moeten worden bewerkt
+          detail_label: Toon samenvatting details van
+          listing: Lijst van items die u hebt gestort
+          press_to: druk om
+          results_per_page: Aantal weer te geven resultaten per pagina
+          show_label: Toon alle details van
+        works: Werken
+        your_collections: Jouw collecties
+        your_works: Jouw werken
+      nest_collections_form:
+        create_under: "'%{child_title}' is toegevoegd aan '%{parent_title}'"
+        create_within: "'%{child_title}' is toegevoegd aan '%{parent_title}'"
+        removed_relationship: "'%{child_title}' is verwijderd uit '%{parent_title}'"
+      no_activity: Gebruiker heeft geen recente activiteit
+      no_notifications: Gebruiker heeft geen meldingen
+      no_proxies: Er zijn geen proxy's toegewezen
+      no_transfer_requests: U hebt geen aanvragen voor werkoverdracht ontvangen
+      no_transfers: U hebt geen werk overgedragen
+      proxy_activity: Proxy-activiteit
+      proxy_delete: Proxy verwijderen
+      proxy_help: Selecteer een gebruiker die namens jou geld kan storten. Zowel jij als je proxy zullen wijzigingen in deze werken kunnen aanbrengen. U kunt een proxy intrekken door op de knop Proxy verwijderen te klikken. Als u de mogelijkheid wilt intrekken om een ​​werk dat ze eerder hebben ingediend, te bewerken, verwijdert u ze op het tabblad Delen van elk werk.
+      proxy_user: Proxy-gebruiker
+      repository_growth:
+        collections: collecties
+        date: Datum
+        objects: Voorwerpen
+        subtitle: Afgelopen 90 dagen
+        title: Groei van de repository
+      repository_objects:
+        status: Huidige status
+        subtitle: Huidige status
+        title: Repository-objecten
+      show_admin:
+        new_visitors: Nieuwe bezoekers
+        registered_users: Geregistreerde gebruikers
+        returning_visitors: Terugkerende bezoekers
+        total_visitors: Totaal aantal bezoekers
+      stats:
+        collections: Collecties gemaakt
+        file_downloads: Download
+        file_views: Uitzicht
+        files: Bestanden neergelegd
+        heading: Uw statistieken
+        works: Works created
+      title: Dashboard
+      transfer_of_ownership: Eigendomsoverdrachten
+      transfer_works_link: Selecteer werkt om over te zetten
+      transfers_received: Overdrachten ontvangen
+      transfers_sent: Transfers verzonden
+      user_activity:
+        date: Datum
+        new_users: Nieuwe gebruikers
+        subtitle: Nieuwe gebruikersregistraties
+        title: Gebruikersactiviteit
+      user_notifications: Gebruikersmeldingen
+      view_files: Bekijk bestanden
+    document_language: nl
+    edit_profile: Bewerk profiel
+    embargoes:
+      edit:
+        embargo_apply: Embargo toepassen
+        embargo_cancel: Annuleer en beheer alle embargo's
+        embargo_deactivate: Deactiveer embargo
+        embargo_false_html: "<strong>Deze %{cc} is momenteel niet onder embargo.</strong> Als u een embargo wilt toepassen, geeft u hier de informatie op."
+        embargo_return: Keer terug naar het bewerken van deze %{cc}
+        embargo_true_html: "<strong>Deze %{cc} staat onder embargo.</strong>"
+        embargo_update: Update Embargo
+        header:
+          current: Huidige embargo
+          past: Embargo's uit het verleden
+        history_empty: Deze %{cc} heeft geen eerdere embargo's toegepast.
+        manage_embargoes_html: Embargo's beheren voor %{cc} <span class='human_readable_type'>(%{cc_type})</span>
+      index:
+        active: Alle actieve embargo's
+        deactivated: Gedeactiveerde embargo's
+        expired: Verlopen actieve embargo's
+        manage_embargoes: Embargo's beheren
+      list_expired_active_embargoes:
+        change_all: Verander alle bestanden binnen %{cc} naar
+        deactivate: Deactiveer embargo
+        deactivate_selected: Deactiveer embargo's voor geselecteerd
+        missing: Er zijn op dit moment geen verlopen embargo's van kracht.
+      table_headers:
+        release_date: Embargo Releasedatum
+        title: Titel
+        type: Soort artikel
+        viz_after: Zichtbaarheid verandert in
+        viz_current: Huidige zichtbaarheid
+    featured_researchers: Aanbevolen onderzoekers
+    file_manager:
+      link_text: Bestandsbeheer
+    file_set:
+      browse_view: Blader door de weergave
+      show:
+        download: Download het bestand
+        downloadable_content:
+          audio_link: Audio downloaden
+          default_link: Download bestand
+          heading: Downloadbare inhoud
+          image_link: Afbeelding downloaden
+          office_link: Download bestand
+          pdf_link: Download PDF
+          video_link: Download video
+    file_sets:
+      actions:
+        delete: Verwijder
+        delete_confirm: Het verwijderen van %{file_set} uit %{application_name} is permanent. Klik op OK om dit te verwijderen uit %{application_name} of op Annuleren om deze bewerking te annuleren
+        delete_title: Verwijder %{file_set}
+        download: Download
+        download_title: "%{file_set} downloaden"
+        edit: Bewerk
+        edit_title: Bewerk %{file_set}
+        header: Selecteer een actie
+        versions: versies
+        versions_title: Toon vorige versies
+      edit:
+        descriptions: beschrijvingen
+        header: Bewerk %{file_set}
+        permissions: machtigingen
+        versions: versies
+      form:
+        attach_to: Bevestig aan %{parent}
+        cancel: annuleren
+        save: Opslaan
+        title: Titel
+      groups_description:
+        description_html: De lijst met groepen in de vervolgkeuzelijst "Selecteer een groep" is een lijst met door de gebruiker beheerde groepen waarvan u lid bent. U kunt een specifieke groep selecteren en een toegangsniveau toewijzen voor een bestand binnen %{application_name}, vergelijkbaar met het toevoegen van gebruikerstoegangsniveaus.
+      permission:
+        save: Opslaan
+      permission_form:
+        applied_to: "(toegepast op alle zojuist geüploade bestanden)"
+        depositor: inlegger
+        enter: Voer %{account_label} in (één per keer)
+        header: machtigingen
+        optional: "(Optioneel)"
+        save_note_html: Machtigingen worden <strong>niet</strong> opgeslagen totdat de knop "Opslaan" onderaan de pagina wordt ingedrukt.
+        select_group: Selecteer een groep
+        share_with: Delen met
+        table_title_access: Toegangsniveau
+        table_title_user: Persoon / Groep
+        user_search: Zoeken naar een gebruiker
+      versioning:
+        current: Huidige versie
+        header: versies
+        restore: Herstel vorige versie
+        restore_from: Herstellen van
+        save: Revisie opslaan
+        upload: Upload nieuwe versie
+    help:
+      header: Gebruikersondersteuning
+      override_text: Gebruik app / views / static / help.html.erb om dit bestand te negeren.
+    homepage:
+      admin_sets:
+        link: Bekijk alle collecties
+        tab_label: Collecties verkennen
+        title: Collecties verkennen
+      featured_researcher:
+        missing: Er zijn geen onderzoekers vermeld.
+        tab_label: Aanbevolen onderzoeker
+        title: Aanbevolen onderzoeker
+      featured_works:
+        document:
+          depositor_label: inlegger
+          depositor_missing: geen waarde van de deposant
+          keyword_label: trefwoorden
+          keyword_missing: geen zoekwoorden opgegeven
+          title_label: Titel
+        drag: Slepen
+        no_works: Er zijn geen werken weergegeven
+        tab_label: Aanbevolen werken
+        title: Aanbevolen werken
+      recently_uploaded:
+        depositor: inlegger
+        details: Details
+        document:
+          depositor_label: inlegger
+          depositor_missing: geen waarde van de deposant
+          keyword_label: trefwoorden
+          keyword_missing: geen zoekwoorden opgegeven
+          title_label: Titel
+        no_public: Er is geen openbaar werk ingebracht.
+        tab_label: Onlangs geüpload
+        title: Onlangs geüpload
+    icons:
+      collection: fa fa-cubes
+      default: fa fa-cube
+    leases:
+      edit:
+        header:
+          current: Huidige Lease
+          past: Vorige leases
+        history_empty: Deze %{cc} heeft geen vorige lease-overeenkomsten toegepast.
+        lease_apply: Lease toepassen
+        lease_cancel: Annuleer en beheer alle huurovereenkomsten
+        lease_deactivate: Lease deactiveren
+        lease_false_html: "<strong>Deze %{cc} is momenteel niet geleased.</strong> Als u een lease-overeenkomst wilt toepassen, geeft u deze hier op."
+        lease_return: Keer terug naar het bewerken van deze %{cc}
+        lease_true_html: "<strong>Deze %{cc} is onderverhuurd.</strong>"
+        lease_update: Update Lease
+        manage_leases_html: Leaseovereenkomsten beheren voor %{cc} <span class='human_readable_type'>(%{cc_type})</span>
+      index:
+        active: Alle actieve lease-overeenkomsten
+        deactivated: Gedeactiveerde huurcontracten
+        expired: Verlopen actieve lease
+        manage_leases: Leaseovereenkomsten beheren
+      list_expired_active_leases:
+        change_all: Verander alle bestanden binnen %{cc} naar
+        deactivate: Lease deactiveren
+        deactivate_selected: Deactiveer huurcontracten voor geselecteerd
+        missing: Er zijn op dit moment geen verlopen huurovereenkomsten van kracht.
+      table_headers:
+        release_date: Lease Releasedatum
+        title: Titel
+        type: Soort artikel
+        viz_after: Zichtbaarheid verandert in
+        viz_current: Huidige zichtbaarheid
+    mailbox:
+      date: Datum
+      delete: Verwijder bericht
+      empty: Geen meldingen gevonden
+      message: Bericht
+      notifications_deleted: Meldingen zijn verwijderd
+      subject: Onderwerpen
+    manifest:
+      download_text: Download hele bron
+      unknown_mime_text: onbekend type mime
+    messages:
+      failure:
+        multiple:
+          keyword: kan niet worden bijgewerkt. Je hebt onvoldoende rechten om ze te bewerken.
+          link: Deze bestanden
+        single: kan niet worden bijgewerkt. Je hebt onvoldoende rechten om het te bewerken.
+        subject: Batch upload toestemming geweigerd
+        title: Bestanden zijn mislukt
+      success:
+        multiple:
+          keyword: zijn opgeslagen.
+          link: Deze bestanden
+        single: is opgeslagen.
+        subject: Batchupload voltooid
+        title: Bestanden geüpload met succes
+    my:
+      count:
+        collections:
+          in_repo: "<strong> %{total_count}-verzamelingen </ strong> in de repository"
+          you_manage: "<strong> %{total_count}-verzamelingen </ strong> die u in de repository kunt beheren"
+          you_own: "<strong> %{total_count}-verzamelingen </ strong> waarvan u de eigenaar bent in de repository"
+        works:
+          in_repo: "<strong> %{total_count} werkt </ strong> in de repository"
+          you_manage: "<strong> %{total_count} werkt </ strong> kunt u beheren in de repository"
+          you_own: "<strong> %{total_count} werkt </ strong> bezit u in de repository"
+    nav_safety:
+      change_tab_message: Weet je zeker dat je dit tabblad wilt verlaten? Niet-opgeslagen gegevens gaan verloren.
+    pages:
+      cancel: annuleren
+      tabs:
+        about_page: Over de pagina
+        agreement_page: Aanbetaling
+        help_page: Help-pagina
+        terms_page: Gebruiksvoorwaarden
+      updated: Pagina's bijgewerkt.
+    passive_consent_to_agreement: Door dit werk op te slaan, ga ik akkoord met de
+    search:
+      button:
+        html: <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Gaan
+        text: Zoeken
+      form:
+        option:
+          all:
+            label_long: Alles van %{application_name}
+            label_short: Allemaal
+          my_collections:
+            label_long: Mijn collecties
+            label_short: Mijn collecties
+          my_shares:
+            label_long: Mijn aandelen
+            label_short: Mijn aandelen
+          my_works:
+            label_long: Mijn werk
+            label_short: Mijn werk
+        q:
+          label: Zoeken %{application_name}
+          placeholder: Voer zoektermen in
+    select_type:
+      description: Werktype voor algemeen gebruik
+      name: Werk
+    share_button: Deel uw werk
+    single_use_links:
+      button: Maak eenmalige link
+      copy:
+        button: Kopiëren
+        tooltip: Gekopieerde!
+      delete: Verwijder
+      download:
+        type: Download
+      expiration:
+        lesser_time: in minder dan een uur
+        time: in %{value} uur
+      expiration_message: Link %{link} verloopt over %{time}
+      show:
+        type: Laten zien
+      table:
+        actions: acties
+        expires: verloopt
+        key: Sleutel
+        link: Link
+        no_links: Er zijn geen links gegenereerd
+      title: Links voor éénmalig gebruik
+    sort_label: Sorteer de lijst met items
+    toolbar:
+      dashboard:
+        menu: Dashboard
+      language_switch: Wissel van taal
+      notifications:
+        many: U hebt %{count} ongelezen meldingen
+        one: U hebt één ongelezen melding
+        zero: U hebt geen ongelezen meldingen
+      profile:
+        login: Log in
+        logout: Uitloggen
+        sr_action: Uitzicht
+        sr_target: profiel
+    transfers:
+      new:
+        confirm: Weet u zeker dat u het eigendom van dit werk wilt overdragen aan een andere gebruiker? Klik op OK om over te zetten of Annuleren om terug te gaan naar het overdrachtscherm
+        header: Eigendom overdragen
+        placeholder: Zoeken naar een gebruiker
+        sr_only_description: Selecteer een gebruiker om "%{work_title}" over te zetten, voeg optionele opmerkingen toe en druk vervolgens op overdracht.
+        title: Eigendom van "%{work_title}" overdragen
+    upload:
+      alert:
+        contact_href_text: Contact Formulier
+        fail_html: Er is een probleem opgetreden tijdens het uploaden, geen van uw bestanden correct geüpload. Alsjeblieft %{reload_href}. Gebruik de functie %{contact_href} om de fout te melden als deze aanhoudt.
+        fail_restart_href_text: begin opnieuw
+        partial_fail_html: Een of meer bestanden zijn niet succesvol geüpload. Om door te gaan met het gebruik van de bestanden die %{metadata_href} hebben geüpload. <br /> Gebruik de functie %{contact_href} om de fout te melden als deze aanhoudt.
+        partial_fail_metadata_href_text: hun metadata bewerken
+      browse_everything:
+        browse_files_button: Voeg cloudbestanden toe ...
+        files_selected: bestanden geselecteerd
+        sr_tab_label: Toegang tot bestanden van
+        tab_label: Cloud Providers
+      change_access_flash_message: Bestandstoegangsniveaus bijwerken. Dit kan een paar minuten duren. Mogelijk wilt u uw browser vernieuwen of later terugkeren naar deze record om de bijgewerkte toegangsniveaus voor bestanden te bekijken.
+      change_access_message_html: "<p> U hebt het toegangsniveau op het werk <i>%{curation_concern} gewijzigd</i> , waardoor het toegankelijk is voor andere gebruikers of groepen om te bekijken of te bewerken. </p><p> Wilt u alle bestanden in het werk wijzigen om dezelfde toegangsgebruikers, -groepen en -zichtbaarheid te hebben? </p>"
+      change_access_no_message: Nee. Ik zal het handmatig bijwerken.
+      change_access_yes_message: Ja graag.
+      change_permissions_message_html: "<p> U hebt de machtigingen voor deze %{curation_concern_human_readable_type}, <i>%{curation_concern}</i> , gewijzigd in zichtbaar voor <b>%{visibility_badge}</b> . </p><p> Wilt u ook alle bestanden binnen de %{curation_concern_human_readable_type} naar <b>%{visibility_badge} wijzigen</b> ? </p>"
+      local_ingest:
+        tab_label: Netwerk / serverlocatie
+      my_computer:
+        sr_instructions: Ga akkoord met de aanbetalingsovereenkomst en selecteer vervolgens bestanden. Druk op de knop Start Upload nadat alle bestanden zijn geselecteerd.
+        sr_tab_label: Toegang tot bestanden van
+        tab_label: Mijn computer
+      permissions_message: Bestandsrechten bijwerken. Dit kan een paar minuten duren. Mogelijk wilt u uw browser vernieuwen of later terugkeren naar deze record om de bijgewerkte bestandsrechten te bekijken.
+      processing: Bestand wordt verwerkt; u kunt bewerken wanneer de verwerking is voltooid
+    user_profile:
+      orcid:
+        alt: ORCID-pictogram
+        label: ORCID profiel
+      tab_activity: Activiteit
+      tab_highlighted: Opvallende
+      tab_profile: Profiel
+      zotero:
+        alt: Zotero-pictogram
+        connected: Verbonden!
+        label: Zotero-profiel
+        unlinked: Link met Zotero
+    visibility:
+      authenticated:
+        note_html: Beperk de toegang tot %{institution}.
+        text: "%{institution}"
+      embargo:
+        note_html: Stel datum in voor toekomstige release.
+        text: Embargo
+      lease:
+        note_html: Stel de datum in voor toekomstige beperkte toegang.
+        text: Huren
+      open:
+        note_html: Beschikbaar maken voor iedereen.
+        text: Openbaar
+        warning_html: '<p> <strong>Let op</strong> , iets zichtbaar maken voor de wereld (dat wil zeggen dit markeren als %{label}) kan gezien worden als publiceren, wat van invloed kan zijn op je vermogen om: </p><ul><li> Patenteer uw werk </li><li> Publiceer uw werk in een dagboek </li></ul><p> Bekijk <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> voor meer informatie over auteursrechtenbeleid van uitgevers. </p>'
+      open_title_attr: Verander de zichtbaarheid van deze bron
+      restricted:
+        note_html: Voor mezelf houden met de optie om te delen.
+        text: Privaat
+      restricted_title_attr: Verander de zichtbaarheid van deze bron
+    workflow:
+      default:
+        deposit: Storting
+      load:
+        state_error: 'De workflow: %{workflow_name} is niet bijgewerkt. U verwijdert een staat: %{state_name} met entiteiten %{entity_count}. Een status mag niet worden verwijderd terwijl deze actieve entiteiten heeft!'
+      unauthorized: Het werk is momenteel niet beschikbaar omdat het goedkeuringsproces nog niet is voltooid
+    works:
+      create:
+        after_create_html: Uw bestanden worden door %{application_name} op de achtergrond verwerkt. De metadata en toegangscontrole die u hebt opgegeven, worden toegepast. Mogelijk moet u deze pagina vernieuwen om deze updates te bekijken.
+        breadcrumb: Voeg nieuw werk toe
+        header: Voeg nieuwe %{type} toe
+      edit:
+        breadcrumb: Bewerk
+      form:
+        additional_fields: Extra velden
+        in_collections: collecties
+        in_other_works: Dit werk in andere werken
+        in_this_work: Andere werken in dit werk
+        tab:
+          files: bestanden
+          metadata: beschrijvingen
+          relationships: Relaties
+          share: Het delen van
+        visibility_until: tot
+      progress:
+        header: Werk opslaan
+      show:
+        no_preview: Geen voorbeeld beschikbaar
+      update:
+        header: Bewerk werk
+  simple_form:
+    hints:
+      admin_set:
+        description: 'Een korte overkoepelende beschrijving die van toepassing is op alle werken die in deze set worden verzameld. Bijvoorbeeld: "Scripties en aanvullende bestanden gemaakt door de School of Earth Sciences afgestudeerde studenten."'
+        title: Een naam om te helpen bij het identificeren van de beheersset en om deze te onderscheiden van andere beheersets in de gegevensopslagruimte.
+      collection:
+        based_near: Een plaatsnaam die is gerelateerd aan de verzameling, zoals de publicatielocatie of de stad, staat of het land waar de inhoud van de verzameling over gaat. Roept de <a href='http://www.geonames.org'> GeoNames webservice </a> op.
+        contributor: Een persoon of groep die u wilt herkennen omdat deze een rol speelt bij het maken van de verzameling, maar niet de primaire rol.
+        creator: De persoon of groep die verantwoordelijk is voor de verzameling. Meestal is dit de auteur van de inhoud. Persoonlijke namen moeten eerst met de achternaam worden ingevoerd, bijvoorbeeld & quot; Smith, John. & quot ;.
+        date_created: De datum waarop de verzameling is gemaakt.
+        description: Gratis tekstnotities over de verzameling. Voorbeelden zijn samenvattingen van een paper of citatie-informatie voor een tijdschriftartikel.
+        identifier: Een uniek handvat dat de verzameling identificeert. Een voorbeeld is een DOI voor een tijdschriftartikel of een ISBN- of OCLC-nummer voor een boek.
+        keyword: Woorden of woordgroepen die u selecteert om te beschrijven waar de collectie over gaat. Deze worden gebruikt om naar inhoud te zoeken.
+        language: De taal van de inhoud van de verzameling.
+        license: Licentie- en distributiegegevens die de toegang tot de verzameling regelen. Selecteer in de meegeleverde vervolgkeuzelijst.
+        publisher: De persoon of groep die de verzameling beschikbaar stelt. Over het algemeen is dit de instelling.
+        related_url: Een link naar een website of andere specifieke inhoud (audio, video, PDF-document) met betrekking tot de verzameling. Een voorbeeld is de URL van een onderzoeksproject waaruit de verzameling is afgeleid.
+        resource_type: Vooraf gedefinieerde categorieën om het type inhoud te beschrijven dat wordt geüpload, zoals & quot; artikel & quot; of & quot; dataset. & quot; Er kunnen meerdere typen worden geselecteerd.
+        subject: Koppen of indextermen die beschrijven waar de collectie over gaat; deze moeten zich conformeren aan een bestaande vocabulaire.
+        title: Een naam om te helpen bij het identificeren van een verzameling.
+      collection_type:
+        allow_multiple_membership: Sta toe dat werken tot meerdere collecties van dit type behoren
+        assigns_visibility: Sta collecties van dit type toe om initiële zichtbaarheidsinstellingen toe te wijzen aan een nieuw werk
+        assigns_workflow: Sta collecties van dit type toe om workflow aan een nieuw werk toe te wijzen
+        brandable: Sta toe dat collecties van dit type worden gebrandmerkt
+        description: Een korte verklaring van het algemene doel van dit collectietype. Gebruikers zien dit als ze meer dan één verzamelingstype hebben om uit te kiezen bij het maken van een nieuwe verzameling.
+        discoverable: Sta toe dat collecties van dit type kunnen worden gevonden
+        nestable: Sta verzamelingen van dit type toe genest te worden (een verzameling kan andere collecties bevatten)
+        require_membership: Een werk moet tot ten minste één verzameling van dit type behoren
+        sharable: Sta gebruikers toe om collectiebeheerders, spaarders en kijkers toe te wijzen aan collecties die ze beheren
+        share_applies_to_new_works: Wanneer nieuwe werken rechtstreeks in de verzameling worden gemaakt, verleent u gebruikers en groepen toestemmingen voor het nieuwe werk, afhankelijk van hun verzamelrollen.
+        title: ''
+      defaults:
+        based_near: Een plaatsnaam gerelateerd aan het werk, zoals de publicatieplaats of de stad, staat of land waar de inhoud van het werk over gaat. Roept de <a href='http://www.geonames.org'> GeoNames webservice </a> op.
+        contributor: Een persoon of groep die u wilt herkennen omdat deze een rol speelt bij het maken van het werk, maar niet de primaire rol.
+        creator: De persoon of groep die verantwoordelijk is voor het werk. Meestal is dit de auteur van de inhoud. Persoonlijke namen moeten eerst met de achternaam worden ingevoerd, bijvoorbeeld & quot; Smith, John. & quot ;.
+        date_created: De datum waarop het werk is gemaakt.
+        description: Gratis tekstnotities over het werk. Voorbeelden zijn samenvattingen van een paper of citatie-informatie voor een tijdschriftartikel.
+        identifier: Een uniek handvat dat het werk identificeert. Een voorbeeld is een DOI voor een tijdschriftartikel of een ISBN- of OCLC-nummer voor een boek.
+        keyword: Woorden of woordgroepen die u selecteert om te beschrijven waar het werk over gaat. Deze worden gebruikt om naar inhoud te zoeken.
+        language: De taal van de inhoud van het werk.
+        license: Licentie- en distributie-informatie die de toegang tot het werk regelt. Selecteer in de meegeleverde vervolgkeuzelijst.
+        publisher: De persoon of groep die het werk beschikbaar stelt. Over het algemeen is dit de instelling.
+        related_url: Een link naar een website of andere specifieke inhoud (audio, video, PDF-document) met betrekking tot het werk. Een voorbeeld is de URL van een onderzoeksproject waaruit het werk is afgeleid.
+        resource_type: Vooraf gedefinieerde categorieën om het type inhoud te beschrijven dat wordt geüpload, zoals & quot; artikel & quot; of & quot; dataset. & quot; Er kunnen meerdere typen worden geselecteerd.
+        subject: Koppen of indextermen die beschrijven waar het werk over gaat; deze moeten zich conformeren aan een bestaande vocabulaire.
+        title: Een naam om te helpen bij het identificeren van een werk.
+    labels:
+      collection:
+        size: Grootte
+        total_items: Totaal artikelen
+      collection_type:
+        allow_multiple_membership: MEERVOUDIG LIDMAATSCHAP
+        assigns_visibility: ZICHTBAARHEID
+        assigns_workflow: WORKFLOW
+        badge_color: Badge kleur
+        brandable: BRANDING
+        description: Type beschrijving
+        discoverable: ONTDEKKING
+        nestable: NESTING
+        require_membership: VERPLICHT LIDMAATSCHAP
+        sharable: DELEN
+        share_applies_to_new_works: TOEPASSEN OP NIEUWE WERKEN
+        title: Type naam
+      defaults:
+        admin_set_id: Administratieve set
+        based_near: Plaats
+        creator: Schepper
+        date_created: Datum gecreeërd
+        description: Samenvatting of samenvatting
+        embargo_release_date: tot
+        files: Een bestand uploaden
+        keyword: keyword
+        lease_expiration_date: tot
+        license: Licentie
+        member_of_collection_ids: Voeg toe aan collectie
+        related_url: Gerelateerde URL
+        rights_statement: Rechten verklaring
+        title: Titel
+        visibility_after_embargo: open het dan voor
+        visibility_after_lease: beperk het dan tot
+        visibility_during_embargo: Beperkt tot
+        visibility_during_lease: Is beschikbaar voor
+      proxy_deposit_request:
+        sender_comment: Comments
+        transfer_to: Gebruiker
+    placeholders:
+      defaults:
+        find_child_work: Zoek naar een werk ...
+        member_of_collection_ids: Selecteer een verzameling ...
+    required:
+      html: <span class="label label-info required-tag">verplicht</span>

@@ -1,0 +1,10 @@
+---
+nl:
+  simple_form:
+    error_notification:
+      default_message: 'Bekijk de onderstaande problemen:'
+    'no': Nee
+    required:
+      mark: "*"
+      text: verplicht
+    'yes': Ja
