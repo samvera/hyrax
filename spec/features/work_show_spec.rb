@@ -1,4 +1,4 @@
-RSpec.describe "display a work as its owner" do
+RSpec.describe "work show view" do
   include Selectors::Dashboard
 
   let(:work_path) { "/concern/generic_works/#{work.id}" }
@@ -29,13 +29,17 @@ RSpec.describe "display a work as its owner" do
       visit work_path
     end
 
-    it "shows a work" do
+    it "shows work content and all editor buttons and links" do
       expect(page).to have_selector 'h2', text: 'Magnificent splendor'
       expect(page).to have_selector 'h2', text: 'Happy little trees'
       expect(page).to have_selector 'li', text: 'The Internet'
       expect(page).to have_selector 'dt', text: 'Location'
       expect(page).not_to have_selector 'dt', text: 'Based near'
       expect(page).to have_selector 'button', text: 'Attach Child', count: 1
+      expect(page).to have_link 'Analytics'
+      expect(page).to have_link 'Edit'
+      expect(page).to have_link 'Delete'
+      expect(page).to have_selector 'button', text: 'Add to collection', count: 1
 
       # Displays FileSets already attached to this work
       within '.related-files' do
@@ -46,7 +50,56 @@ RSpec.describe "display a work as its owner" do
       expect(find('div.viewer:first')['data-uri']).to eq "/concern/generic_works/#{work.id}/manifest"
     end
 
-    it "add work to a collection", clean_repo: true, js: true do
+    it "allows adding work to a collection", clean_repo: true, js: true do
+      optional 'ability to get capybara to find css select2-result (see Issue #3038)' if ci_build?
+      click_button "Add to collection" # opens the modal
+      select_member_of_collection(collection)
+      click_button 'Save changes'
+
+      # forwards to collection show page
+      expect(page).to have_content collection.title.first
+      expect(page).to have_content work.title.first
+      expect(page).to have_selector '.alert-success', text: 'Collection was successfully updated.'
+    end
+  end
+
+  context "as the work viewer" do
+    let(:work) do
+      create(:public_work,
+             with_admin_set: true,
+             title: ["Magnificent splendor", "Happy little trees"],
+             source: ["The Internet"],
+             based_near: ["USA"],
+             user: user,
+             ordered_members: [file_set],
+             representative_id: file_set.id)
+    end
+    let(:user) { create(:user) }
+    let(:viewer) { create(:user) }
+    let(:file_set) { create(:file_set, user: user, title: ['A Contained FileSet'], content: file) }
+    let(:file) { File.open(fixture_path + '/world.png') }
+    let(:multi_membership_type_1) { create(:collection_type, :allow_multiple_membership, title: 'Multi-membership 1') }
+    let!(:collection) { create(:collection_lw, user: viewer, collection_type_gid: multi_membership_type_1.gid) }
+
+    before do
+      sign_in viewer
+      visit work_path
+    end
+
+    it "shows work content and only Analytics and Add to collection buttons" do
+      expect(page).to have_selector 'h2', text: 'Magnificent splendor'
+      expect(page).to have_selector 'h2', text: 'Happy little trees'
+      expect(page).to have_selector 'li', text: 'The Internet'
+      expect(page).to have_selector 'dt', text: 'Location'
+      expect(page).not_to have_selector 'dt', text: 'Based near'
+      expect(page).not_to have_selector 'button', text: 'Attach Child', count: 1
+      expect(page).to have_link 'Analytics'
+      expect(page).not_to have_link 'Edit'
+      expect(page).not_to have_link 'Delete'
+      expect(page).to have_selector 'button', text: 'Add to collection', count: 1
+    end
+
+    it "allows adding work to a collection", clean_repo: true, js: true do
       optional 'ability to get capybara to find css select2-result (see Issue #3038)' if ci_build?
       click_button "Add to collection" # opens the modal
       select_member_of_collection(collection)

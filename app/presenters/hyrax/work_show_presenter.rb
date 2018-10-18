@@ -204,6 +204,13 @@ module Hyrax
       metadata
     end
 
+    # determine if the user can add this work to a collection
+    # @param collections <Collections> list of collections to which this user can deposit
+    # @return true if the user can deposit to at least one collection OR if the user can create a collection; otherwise, false
+    def show_deposit_for?(collections:)
+      collections.present? || current_ability.can?(:create_any, Collection)
+    end
+
     private
 
       # list of item ids to display is based on ordered_ids

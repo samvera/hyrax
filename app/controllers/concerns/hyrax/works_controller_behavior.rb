@@ -133,7 +133,7 @@ module Hyrax
     private
 
       def user_collections
-        collections_service.search_results(:deposit) if presenter.editor?
+        collections_service.search_results(:deposit)
       end
 
       def collections_service
