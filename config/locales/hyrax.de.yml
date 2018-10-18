@@ -350,7 +350,7 @@ de:
         header: 'Zitate:'
       form:
         batch_upload: batch upload
-        create_separate_work_for_each_file: Um eine separate Arbeit für jede Datei zu erstellen, gehen Sie zu
+        create_separate_work_for_each_file: Um eine separate Arbeit für jede einzelne Datei zu erstellen, gehen Sie zu
       form_child_work_relationships:
         actions:
           remove: Diese Arbeit entfernen
