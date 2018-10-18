@@ -349,7 +349,7 @@ en:
       citations:
         header: 'Citations:'
       form:
-        batch_upload: batch upload
+        batch_upload: Batch upload
         create_separate_work_for_each_file: To create a separate work for each of the files, go to
       form_child_work_relationships:
         actions:
