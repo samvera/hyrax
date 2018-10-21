@@ -43,7 +43,7 @@ RSpec.describe "display a work as its owner" do
       end
 
       # IIIF manifest does not include locale query param
-      expect(find('div.viewer:first')['data-uri']).to eq "/concern/generic_works/#{work.id}/manifest"
+      expect(find('div.viewer:first')['data-uri']).to eq "http://www.example.com/concern/generic_works/#{work.id}/manifest"
     end
 
     it "add work to a collection", clean_repo: true, js: true do
