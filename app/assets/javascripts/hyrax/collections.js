@@ -289,6 +289,7 @@ Blacklight.onLoad(function () {
       parentId = $modal.find('[name="parent_id"]').val(),
       data = {
         parent_id: parentId,
+        // source parameter is used by NestCollectionsController#redirect_path
         source: $self.data('source')
       };
     if (url.length === 0) {
@@ -308,6 +309,7 @@ Blacklight.onLoad(function () {
       childId = $(this).closest('.modal').find('[name="child_id"]').val(),
       data = {
       child_id: childId,
+      // source parameter is used by NestCollectionsController#redirect_path
       source: $(this).data('source')
     };
     if (url.length === 0) {
