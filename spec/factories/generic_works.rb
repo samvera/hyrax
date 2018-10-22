@@ -37,7 +37,7 @@ FactoryBot.define do
     end
 
     factory :invalid_generic_work do
-      title nil
+      title { nil }
     end
 
     factory :private_work do
