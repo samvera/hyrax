@@ -18,6 +18,10 @@ header > h1 .label {
   padding: $panel-body-padding;
 }
 
+.ensure-wrapped {
+  word-break: break-all;
+}
+
 .relationships,
 .attributes {
   tbody th {
