@@ -533,4 +533,40 @@ RSpec.describe Hyrax::WorkShowPresenter do
       end
     end
   end
+
+  describe "#show_deposit_for?" do
+    subject { presenter }
+
+    context "when user has depositable collections" do
+      let(:user_collections) { double }
+
+      it "returns true" do
+        expect(subject.show_deposit_for?(collections: user_collections)).to be true
+      end
+    end
+
+    context "when user does not have depositable collections" do
+      let(:user_collections) { nil }
+
+      context "and user can create a collection" do
+        before do
+          allow(ability).to receive(:can?).with(:create_any, Collection).and_return(true)
+        end
+
+        it "returns true" do
+          expect(subject.show_deposit_for?(collections: user_collections)).to be true
+        end
+      end
+
+      context "and user can NOT create a collection" do
+        before do
+          allow(ability).to receive(:can?).with(:create_any, Collection).and_return(false)
+        end
+
+        it "returns false" do
+          expect(subject.show_deposit_for?(collections: user_collections)).to be false
+        end
+      end
+    end
+  end
 end

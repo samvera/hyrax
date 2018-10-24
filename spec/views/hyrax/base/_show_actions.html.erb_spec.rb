@@ -13,6 +13,7 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
 
   context "as an unregistered user" do
     before do
+      allow(presenter).to receive(:show_deposit_for?).with(anything).and_return(false)
       allow(presenter).to receive(:editor?).and_return(false)
       render 'hyrax/base/show_actions.html.erb', presenter: presenter
     end
@@ -25,6 +26,7 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
 
   context "as an editor" do
     before do
+      allow(presenter).to receive(:show_deposit_for?).with(anything).and_return(true)
       allow(presenter).to receive(:editor?).and_return(true)
     end
     context "when the work does not contain children" do
@@ -72,6 +74,75 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
       end
       it "creates a link to add child work" do
         expect(rendered).to have_link 'Attach Generic Work', href: "/concern/parent/#{presenter.id}/generic_works/new"
+      end
+    end
+  end
+
+  context "when user CAN deposit to at least one collection" do
+    before do
+      allow(presenter).to receive(:show_deposit_for?).with(anything).and_return(true)
+      allow(presenter).to receive(:member_presenters).and_return([])
+    end
+
+    context "and user is editor" do
+      before do
+        allow(presenter).to receive(:editor?).and_return(true)
+        render 'hyrax/base/show_actions.html.erb', presenter: presenter
+      end
+
+      it "shows editor related buttons" do
+        expect(rendered).not_to have_link 'File Manager'
+        expect(rendered).to have_link 'Edit'
+        expect(rendered).to have_link 'Delete'
+        expect(rendered).to have_button 'Add to collection'
+      end
+    end
+
+    context "and user is viewer" do
+      before do
+        allow(presenter).to receive(:editor?).and_return(false)
+        render 'hyrax/base/show_actions.html.erb', presenter: presenter
+      end
+      it "shows only Add to collection link" do
+        expect(rendered).not_to have_link 'File Manager'
+        expect(rendered).not_to have_link 'Edit'
+        expect(rendered).not_to have_link 'Delete'
+        expect(rendered).to have_button 'Add to collection'
+      end
+    end
+  end
+
+  context "when user can NOT deposit to any collections" do
+    before do
+      allow(presenter).to receive(:show_deposit_for?).with(anything).and_return(false)
+      allow(presenter).to receive(:member_presenters).and_return([])
+    end
+
+    context "and user is editor" do
+      before do
+        allow(presenter).to receive(:editor?).and_return(true)
+        render 'hyrax/base/show_actions.html.erb', presenter: presenter
+      end
+
+      it "shows editor related buttons" do
+        expect(rendered).not_to have_link 'File Manager'
+        expect(rendered).to have_link 'Edit'
+        expect(rendered).to have_link 'Delete'
+        expect(rendered).not_to have_button 'Add to collection'
+      end
+    end
+
+    context "and user is viewer" do
+      before do
+        allow(presenter).to receive(:editor?).and_return(false)
+        render 'hyrax/base/show_actions.html.erb', presenter: presenter
+      end
+
+      it "shows only Add to collection link" do
+        expect(rendered).not_to have_link 'File Manager'
+        expect(rendered).not_to have_link 'Edit'
+        expect(rendered).not_to have_link 'Delete'
+        expect(rendered).not_to have_button 'Add to collection'
       end
     end
   end
