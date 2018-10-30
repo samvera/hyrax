@@ -55,14 +55,17 @@ module Hyrax
       Hyrax::Engine.routes.url_helpers.download_url(representative_presenter, host: request.host)
     end
 
-    # @return [Boolean] render the UniversalViewer
-    def universal_viewer?
+    # @return [Boolean] render a IIIF viewer
+    def iiif_viewer?
       representative_id.present? &&
         representative_presenter.present? &&
         representative_presenter.image? &&
         Hyrax.config.iiif_image_server? &&
         members_include_viewable_image?
     end
+
+    alias universal_viewer? iiif_viewer?
+    deprecation_deprecate universal_viewer?: "use iiif_viewer? instead"
 
     # Override this method to declare a different iiif viewer for your work type
     # @return [Symbol] the name of the IIIF viewer partial to render

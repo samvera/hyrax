@@ -45,7 +45,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
     it { is_expected.to eq 'http://example.org/concern/generic_works/888888/manifest' }
   end
 
-  describe '#universal_viewer?' do
+  describe '#iiif_viewer?' do
     let(:id_present) { false }
     let(:representative_presenter) { double('representative', present?: false) }
     let(:image_boolean) { false }
@@ -64,7 +64,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
       allow(Hyrax.config).to receive(:iiif_image_server?).and_return(iiif_enabled)
     end
 
-    subject { presenter.universal_viewer? }
+    subject { presenter.iiif_viewer? }
 
     context 'with no representative_id' do
       it { is_expected.to be false }
