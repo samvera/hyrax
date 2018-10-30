@@ -15,13 +15,13 @@
       <div class="panel-body">
         <div class="row">
           <%= render 'workflow_actions_widget', presenter: @presenter %>
-          <% if @presenter.universal_viewer? %>
+          <% if @presenter.iiif_viewer? %>
             <div class="col-sm-12">
               <%= render 'representative_media', presenter: @presenter, viewer: true %>
             </div>
           <% end %>
           <div class="col-sm-3 text-center">
-            <%= render 'representative_media', presenter: @presenter, viewer: false unless @presenter.universal_viewer? %>
+            <%= render 'representative_media', presenter: @presenter, viewer: false unless @presenter.iiif_viewer? %>
             <%= render 'citations', presenter: @presenter %>
             <%= render 'social_media' %>
           </div>

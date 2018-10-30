@@ -121,7 +121,7 @@ Hyrax.config do |config|
   # config.show_work_item_rows = 10
 
   # Enable IIIF image service. This is required to use the
-  # UniversalViewer-ified show page
+  # IIIF viewer enabled show page
   #
   # If you have run the riiif generator, an embedded riiif service
   # will be used to deliver images via IIIF. If you have not, you will
