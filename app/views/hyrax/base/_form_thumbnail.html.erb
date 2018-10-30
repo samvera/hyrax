@@ -4,8 +4,10 @@
         <legend>
           <%= t("hyrax.base.form_thumbnail.legend_html") %>
         </legend>
-        <p><%= t("hyrax.base.form_thumbnail.help_html") %></p>
-        <%= f.select :thumbnail_id, @form.select_files, {}, { class: 'form-control' } %>
+        <div class="form-group">
+          <span class="help-block"><%= t("hyrax.base.form_thumbnail.help_html") %></span>
+          <%= f.select :thumbnail_id, @form.select_files, {}, { class: 'form-control' } %>
+        </div>
       </fieldset>
     </div>
   </div>
