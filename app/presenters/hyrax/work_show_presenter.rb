@@ -67,8 +67,19 @@ module Hyrax
     alias universal_viewer? iiif_viewer?
     deprecation_deprecate universal_viewer?: "use iiif_viewer? instead"
 
-    # Override this method to declare a different iiif viewer for your work type
     # @return [Symbol] the name of the IIIF viewer partial to render
+    # @example A work presenter with a custom iiif viewer
+    #   module Hyrax
+    #     class GenericWorkPresenter < Hyrax::WorkShowPresenter
+    #       def iiif_viewer
+    #         :my_iiif_viewer
+    #       end
+    #     end
+    #   end
+    #
+    #   Custom iiif viewer partial at app/views/hyrax/base/iiif_viewers/_my_iiif_viewer.html.erb
+    #   <h3>My IIIF Viewer!</h3>
+    #   <a href=<%= main_app.polymorphic_url([main_app, :manifest, presenter], { locale: nil }) %>>Manifest</a>
     def iiif_viewer
       :universal_viewer
     end
