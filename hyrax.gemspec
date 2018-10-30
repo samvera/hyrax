@@ -34,7 +34,7 @@ SUMMARY
   spec.add_dependency 'active-fedora', '~> 11.5', '>= 11.5.2'
   spec.add_dependency 'almond-rails', '~> 0.1'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
-  spec.add_dependency 'blacklight', '~> 6.14'
+  spec.add_dependency 'blacklight', '7.0.0.rc1'
   spec.add_dependency 'blacklight-gallery', '~> 0.7'
   spec.add_dependency 'breadcrumbs_on_rails', '~> 3.0'
   # Pin browse-everything to stable version
