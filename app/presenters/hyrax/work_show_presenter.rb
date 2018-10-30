@@ -64,6 +64,12 @@ module Hyrax
         members_include_viewable_image?
     end
 
+    # Override this method to declare a different iiif viewer for your work type
+    # @return [Symbol] the name of the IIIF viewer partial to render
+    def iiif_viewer
+      :universal_viewer
+    end
+
     # @return FileSetPresenter presenter for the representative FileSets
     def representative_presenter
       return nil if representative_id.blank?
