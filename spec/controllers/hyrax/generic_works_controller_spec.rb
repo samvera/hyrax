@@ -609,8 +609,13 @@ RSpec.describe Hyrax::GenericWorksController do
         .and_return(manifest_factory)
     end
 
-    it "produces a manifest" do
+    it "produces a manifest for a json request" do
       get :manifest, params: { id: work, format: :json }
+      expect(response.body).to eq "{\"test\":\"manifest\"}"
+    end
+
+    it "produces a manifest for a html request" do
+      get :manifest, params: { id: work, format: :html }
       expect(response.body).to eq "{\"test\":\"manifest\"}"
     end
   end
