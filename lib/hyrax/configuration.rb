@@ -367,7 +367,7 @@ module Hyrax
     end
 
     # Enable IIIF image service. This is required to use the
-    # UniversalViewer-enabled show page
+    # IIIF viewer enabled show page
     #
     # If you have run the hyrax:riiif generator, an embedded riiif service
     # will be used to deliver images via IIIF. If you have not, you will

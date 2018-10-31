@@ -69,9 +69,9 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
     expect(page).to have_content 'Foobar'
   end
 
-  describe 'UniversalViewer integration' do
+  describe 'IIIF viewer integration' do
     before do
-      allow(presenter).to receive(:universal_viewer?).and_return(viewer_enabled)
+      allow(presenter).to receive(:iiif_viewer?).and_return(viewer_enabled)
       render template: 'hyrax/base/show.html.erb'
     end
 
