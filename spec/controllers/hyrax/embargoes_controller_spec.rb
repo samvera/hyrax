@@ -107,6 +107,7 @@ RSpec.describe Hyrax::EmbargoesController do
           expect(a_work.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
           expect(file_set.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
           expect(response).to redirect_to embargoes_path
+          expect(flash[:notice]).to be_present
         end
       end
 
@@ -138,6 +139,7 @@ RSpec.describe Hyrax::EmbargoesController do
           expect(file_set2.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
           expect(file_set3.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
           expect(response).to redirect_to embargoes_path
+          expect(flash[:notice]).to be_present
         end
       end
     end
