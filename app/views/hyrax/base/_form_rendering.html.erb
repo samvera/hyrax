@@ -4,11 +4,13 @@
       <legend>
         <%= t("hyrax.base.form_rendering.legend_html") %>
       </legend>
-      <p><%= t("hyrax.base.form_rendering.help_html") %></p>
-      <%= f.select :rendering_ids,
-                   f.object.select_files,
-                   { include_blank: true },
-                   { class: 'form-control', multiple: true } %>
+      <div class="form-group">
+        <span class="help-block"><%= t("hyrax.base.form_rendering.help_html") %></span>
+        <%= f.select :rendering_ids,
+                    f.object.select_files,
+                    { include_blank: true },
+                    { class: 'form-control', multiple: true } %>
+      </div>
     </fieldset>
   </div>
 </div>
