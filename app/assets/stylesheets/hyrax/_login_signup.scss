@@ -1,0 +1,20 @@
+// Login / Sign up styles needed because Devise gem controls the markup
+form.new_user {
+  margin-bottom: 1rem;
+
+  .field {
+    @extend .form-group;
+
+    input[type='email'],
+    input[type='input'],
+    input[type='password'] {
+      @extend .form-control;
+      width: 300px;
+    }
+  }
+
+  input[type='submit'] {
+    @extend .btn;
+    @extend .btn-primary;
+  }
+}
