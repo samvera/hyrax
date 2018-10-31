@@ -91,15 +91,8 @@ module Hyrax
 
         # determine appropriate redirect location depending on specified source
         def redirect_path(item:)
-          from = params[:source] || 'none'
-          case from
-          when "my"
-            my_collections_path
-          when "show"
-            dashboard_collection_path(item)
-          else
-            dashboard_collection_path(item)
-          end
+          return my_collections_path if params[:source] == 'my'
+          dashboard_collection_path(item)
         end
     end
   end
