@@ -37,8 +37,17 @@ ul.tabular {
 }
 
 .show-actions {
-  padding: $panel-body-padding;
-  // text-align: center;
+  padding-right: $panel-body-padding;
+
+  .row {
+    &:first-child {
+      margin-bottom: 8px;
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    padding-top: $panel-body-padding;
+  }
 }
 
 .work-show {
@@ -63,6 +72,23 @@ ul.tabular {
     .work_description,
     li.attribute {
       word-break: break-word;
+    }
+  }
+}
+
+.work-title-wrapper {
+  align-items: center;
+  display: flex;
+
+  h2 {
+    margin: 0;
+  }
+
+  .label {
+    margin-left: 5px;
+
+    &:first-of-type {
+      margin-left: 10px;
     }
   }
 }
