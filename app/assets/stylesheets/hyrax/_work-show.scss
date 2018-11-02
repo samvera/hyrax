@@ -36,20 +36,6 @@ ul.tabular {
   list-style: none;
 }
 
-.show-actions {
-  padding-right: $panel-body-padding;
-
-  .row {
-    &:first-child {
-      margin-bottom: 8px;
-    }
-  }
-
-  @media screen and (max-width: 640px) {
-    padding-top: $panel-body-padding;
-  }
-}
-
 .work-show {
   dt,
   dd {
@@ -62,6 +48,10 @@ ul.tabular {
 
 .work-type-tag {
   color: #808080;
+  margin-bottom: $padding-large-vertical;
+  margin-top: $padding-large-vertical * 2;
+  font-size: 24px;
+  font-weight: 500;
 }
 
 .work-type {
@@ -74,21 +64,41 @@ ul.tabular {
       word-break: break-word;
     }
   }
+
+  // Button row which sits below the title, and above panel content for a page
+  .button-row-top-two-column {
+    margin-top: $padding-large-vertical;
+    margin-bottom: $padding-large-vertical;
+
+    @media screen and (max-width: 767px) {
+      > div {
+        text-align: center;
+
+        &:first-child {
+          padding-bottom: $padding-small-vertical;
+        }
+      }
+    }
+  }
 }
 
 .work-title-wrapper {
-  align-items: center;
-  display: flex;
+  margin-bottom: $padding-large-vertical * 2;
 
-  h2 {
-    margin: 0;
-  }
+  .title-with-badges {
+    align-items: center;
+    display: flex;
 
-  .label {
-    margin-left: 5px;
+    h1, h2 {
+      margin: 0;
+    }
 
-    &:first-of-type {
-      margin-left: 10px;
+    .label {
+      margin-left: 5px;
+
+      &:first-of-type {
+        margin-left: 10px;
+      }
     }
   }
 }
