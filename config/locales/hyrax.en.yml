@@ -1162,7 +1162,7 @@ en:
       collection:
         based_near: A place name related to the collection, such as its site of publication, or the city, state, or country the collection contents are about. Calls upon the <a href='http://www.geonames.org'>GeoNames web service</a>.
         contributor: A person or group you want to recognize for playing a role in the creation of the collection, but not the primary role.
-        creator: The person or group responsible for the collection. Usually this is the author of the content. Personal names should be entered with the last name first, e.g. &quot;Smith, John.&quot;.
+        creator: The person or group responsible for the collection. Usually this is the author of the content. Personal names should be entered with the last name first: Smith, John
         date_created: The date on which the collection was created.
         description: Free-text notes about the collection. Examples include abstracts of a paper or citation information for a journal article.
         identifier: A unique handle identifying the collection. An example would be a DOI for a journal article, or an ISBN or OCLC number for a book.
