@@ -11,6 +11,10 @@ ol#featured_works {
   min-height: 100px;
   padding: 8px;
 
+  &:first-of-type {
+    border-top: 0;
+  }
+
   h3 {
     font-size: 1.1em;
     margin-top: 0;
