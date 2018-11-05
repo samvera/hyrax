@@ -47,6 +47,48 @@ RSpec.describe Hyrax::CollectionsHelper do
     end
   end
 
+  describe '#render_other_collection_links' do
+    before do
+      allow(controller).to receive(:current_ability).and_return(ability)
+    end
+
+    context 'when a GenericWork belongs to one collection' do
+      let(:coll_ids) { ['111'] }
+      let(:coll_titles) { ['Collection 111'] }
+      let(:coll1_attrs) { { id: coll_ids[0], title_tesim: [coll_titles[0]] } }
+      let!(:work_doc) { SolrDocument.new(id: '123', title_tesim: ['My GenericWork'], member_of_collection_ids_ssim: coll_ids) }
+
+      before do
+        ActiveFedora::SolrService.add(coll1_attrs)
+        ActiveFedora::SolrService.commit
+      end
+
+      it 'renders nothing' do
+        expect(helper.render_other_collection_links(work_doc, coll_ids[0])).to be_nil
+      end
+    end
+
+    context 'when a GenericWork belongs to more than one collection' do
+      let(:coll_ids) { ['111', '222'] }
+      let(:coll_titles) { ['Collection 111', 'Collection 222'] }
+      let(:coll1_attrs) { { id: coll_ids[0], title_tesim: [coll_titles[0]] } }
+      let(:coll2_attrs) { { id: coll_ids[1], title_tesim: [coll_titles[1]] } }
+      let!(:work_doc) { SolrDocument.new(id: '123', title_tesim: ['My GenericWork'], member_of_collection_ids_ssim: coll_ids) }
+
+      before do
+        ActiveFedora::SolrService.add(coll1_attrs)
+        ActiveFedora::SolrService.add(coll2_attrs)
+        ActiveFedora::SolrService.commit
+      end
+
+      it 'renders a list of links to the collections' do
+        expect(helper.render_other_collection_links(work_doc, coll_ids[0])).to match(/This work also belongs to/i)
+        expect(helper.render_other_collection_links(work_doc, coll_ids[0])).to match("href=\"/collections/#{coll_ids[1]}\"")
+        expect(helper.render_other_collection_links(work_doc, coll_ids[0])).to match(coll_titles[1])
+      end
+    end
+  end
+
   describe "has_collection_search_parameters?" do
     subject { helper }
 

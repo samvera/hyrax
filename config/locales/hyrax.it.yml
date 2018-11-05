@@ -490,6 +490,7 @@ it:
         additional_fields: Campi aggiuntivi
         description: descrizioni
       is_part_of: È parte di
+      also_belongs_to: Anche questo lavoro appartiene a
       select_form:
         close: Vicino
         create: Crea collezione

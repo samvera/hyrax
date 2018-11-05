@@ -491,6 +491,7 @@ fr:
         additional_fields: Champs supplémentaires
         description: Descriptions
       is_part_of: Fait partie de
+      also_belongs_to: Ce travail appartient aussi à
       select_form:
         close: Fermer
         create: Créer une collection

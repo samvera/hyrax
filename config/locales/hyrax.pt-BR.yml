@@ -485,6 +485,7 @@ pt-BR:
         additional_fields: Campos adicionais
         description: Descrições
       is_part_of: É parte de
+      also_belongs_to: Este trabalho também pertence a
       select_form:
         close: Fechar
         create: Salvar
