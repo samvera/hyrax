@@ -15,15 +15,16 @@ RSpec.describe 'hyrax/collections/_show_document_list_row.html.erb', type: :view
   context 'when not logged in' do
     before do
       view.blacklight_config = Blacklight::Configuration.new
+      assign(:presenter, collection)
       allow(view).to receive(:current_user).and_return(nil)
       allow(work).to receive(:title_or_label).and_return("One Hundred Years of Solitude")
       allow(work).to receive(:edit_people).and_return([])
-      allow(view).to receive(:render_collection_links).and_return("collections: #{collection.title}")
+      allow(view).to receive(:render_other_collection_links).and_return([])
     end
 
     it "renders collections links" do
       render('hyrax/collections/show_document_list_row.html.erb', document: work)
-      expect(rendered).to have_content 'My awesome collection'
+      expect(rendered).not_to have_content 'My awesome collection'
     end
 
     it "renders works" do

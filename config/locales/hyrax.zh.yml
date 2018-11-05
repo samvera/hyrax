@@ -488,6 +488,7 @@ zh:
         additional_fields: 额外字段
         description: 描述
       is_part_of: 是一部分
+      also_belongs_to: 这项工作也属于
       select_form:
         close: 关闭
         create: 创建收藏集

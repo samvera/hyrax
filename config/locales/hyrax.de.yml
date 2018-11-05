@@ -492,6 +492,7 @@ de:
         additional_fields: Zusätzliche Felder
         description: Beschreibungen
       is_part_of: Ist ein Teil von
+      also_belongs_to: Diese Arbeit gehört auch zu
       select_form:
         close: Schließen
         create: Sammlung erstellen
