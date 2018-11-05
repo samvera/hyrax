@@ -30,8 +30,8 @@ RSpec.describe "work show view" do
     end
 
     it "shows work content and all editor buttons and links" do
-      expect(page).to have_selector 'h2', text: 'Magnificent splendor'
-      expect(page).to have_selector 'h2', text: 'Happy little trees'
+      expect(page).to have_selector 'h1', text: 'Magnificent splendor'
+      expect(page).to have_selector 'h1', text: 'Happy little trees'
       expect(page).to have_selector 'li', text: 'The Internet'
       expect(page).to have_selector 'dt', text: 'Location'
       expect(page).not_to have_selector 'dt', text: 'Based near'
@@ -87,8 +87,8 @@ RSpec.describe "work show view" do
     end
 
     it "shows work content and only Analytics and Add to collection buttons" do
-      expect(page).to have_selector 'h2', text: 'Magnificent splendor'
-      expect(page).to have_selector 'h2', text: 'Happy little trees'
+      expect(page).to have_selector 'h1', text: 'Magnificent splendor'
+      expect(page).to have_selector 'h1', text: 'Happy little trees'
       expect(page).to have_selector 'li', text: 'The Internet'
       expect(page).to have_selector 'dt', text: 'Location'
       expect(page).not_to have_selector 'dt', text: 'Based near'
@@ -121,7 +121,7 @@ RSpec.describe "work show view" do
     end
 
     it "shows a work" do
-      expect(page).to have_selector 'h2', text: 'Magnificent splendor'
+      expect(page).to have_selector 'h1', text: 'Magnificent splendor'
       expect(page).to have_selector 'li', text: 'The Internet'
       expect(page).to have_selector 'dt', text: 'Location'
       expect(page).not_to have_selector 'dt', text: 'Based near'

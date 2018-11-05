@@ -32,7 +32,7 @@ RSpec.describe 'Editing a work', type: :feature do
       expect(page).to have_content 'Apply changes to contents?'
       expect(page).not_to have_content "Powered by Hyrax"
       click_on("No. I'll update it manually.")
-      within(".panel-heading") do
+      within(".work-title-wrapper") do
         expect(page).to have_content('Public')
       end
     end
