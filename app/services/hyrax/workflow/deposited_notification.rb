@@ -4,11 +4,16 @@ module Hyrax
       private
 
         def subject
-          'Deposit has been approved'
+          I18n.with_locale(:en) {
+            I18n.t('hyrax.notifications.workflow.deposited.subject')
+          }
         end
 
         def message
-          "#{title} (#{link_to work_id, document_path}) was approved by #{user.user_key}. #{comment}"
+          I18n.with_locale(:en) {
+            I18n.t('hyrax.notifications.workflow.deposited.message', title: title, link: (link_to work_id, document_path),
+                   user: user.user_key, comment: comment)
+          }
         end
 
         def users_to_notify

@@ -7,11 +7,15 @@ module Hyrax
     end
 
     def message
-      "The batch create for #{user} failed: #{messages}"
+      I18n.with_locale(:en) {
+        I18n.t('hyrax.notifications.batch_create_failure.message', user: user, messages: messages)
+      }
     end
 
     def subject
-      'Failing batch create'
+      I18n.with_locale(:en) {
+        I18n.t('hyrax.notifications.batch_create_failure.subject')
+      }
     end
   end
 end

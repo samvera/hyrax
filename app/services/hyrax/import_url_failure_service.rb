@@ -5,7 +5,9 @@ module Hyrax
     end
 
     def subject
-      'File Import Error'
+      I18n.with_locale(:en) {
+        I18n.t('hyrax.notifications.import_url_failure.subject')
+      }
     end
   end
 end

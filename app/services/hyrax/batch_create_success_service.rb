@@ -7,11 +7,15 @@ module Hyrax
     end
 
     def message
-      "The batch create for #{user} passed."
+      I18n.with_locale(:en) {
+        I18n.t('hyrax.notifications.batch_create_success.message', user: user)
+      }
     end
 
     def subject
-      'Passing batch create'
+      I18n.with_locale(:en) {
+        I18n.t('hyrax.notifications.batch_create_success.subject')
+      }
     end
   end
 end
