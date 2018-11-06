@@ -45,14 +45,14 @@ module Hyrax
       end
 
       def send_proxy_depositor_added_messages(grantor, grantee)
-        I18n.with_locale(:en) {
+        I18n.with_locale(:en) do
           message_to_grantee = I18n.t('hyrax.notifications.proxy_depositor_added.grantee_message', grantor: grantor.name)
           message_to_grantor = I18n.t('hyrax.notifications.proxy_depositor_added.grantor_message', grantee: grantee.name)
           Hyrax::MessengerService.deliver(::User.batch_user, grantor, message_to_grantor,
                                           I18n.t('hyrax.notifications.proxy_depositor_added.subject'))
           Hyrax::MessengerService.deliver(::User.batch_user, grantee, message_to_grantee,
                                           I18n.t('hyrax.notifications.proxy_depositor_added.subject'))
-        }
+        end
       end
 
       def decide_layout

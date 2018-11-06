@@ -5,9 +5,9 @@ module Hyrax
     end
 
     def subject
-      I18n.with_locale(:en) {
+      I18n.with_locale(:en) do
         I18n.t('hyrax.notifications.import_url_failure.subject')
-      }
+      end
     end
   end
 end

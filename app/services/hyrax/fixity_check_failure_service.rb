@@ -15,15 +15,15 @@ module Hyrax
     def message
       uri = file_set.original_file.uri.to_s
       file_title = file_set.title.first
-      I18n.with_locale(:en) {
+      I18n.with_locale(:en) do
         I18n.t('hyrax.notifications.fixity_check_failure.message', log_date: log_date, file_title: file_title, uri: uri)
-      }
+      end
     end
 
     def subject
-      I18n.with_locale(:en) {
+      I18n.with_locale(:en) do
         I18n.t('hyrax.notifications.fixity_check_failure.subject')
-      }
+      end
     end
   end
 end
