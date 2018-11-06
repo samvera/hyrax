@@ -127,14 +127,6 @@ button.branding-banner-remove:hover {
   text-decoration: underline;
 }
 
-.dashboard .collections-wrapper {
-  .panel {
-    .panel-title {
-      font-weight: 300;
-    }
-  }
-}
-
 // Styles wrapped in a selector class initially intended
 // for the Collections index list page
 .collections-wrapper {
@@ -262,13 +254,6 @@ button.branding-banner-remove:hover {
       }
     }
   }
-
-  .side-arrows::after {
-    content: "»";
-    font-size: 18px;
-    line-height: 1;
-    padding-left: 3px;
-  }
 }
 
 // Admin show page
@@ -291,51 +276,6 @@ button.branding-banner-remove:hover {
     }
   }
 
-  // This class wraps the collection title row, which includes labels plus show action buttons
-  .collection-title-row-wrapper {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-
-    @media (max-width: 992px) {
-      display: block;
-    }
-
-    .collection-title-row-content {
-      align-items: center;
-      display: flex;
-
-      @media (max-width: 992px) {
-        display: block;
-        margin-bottom: 10px;
-      }
-
-      .label {
-        margin-left: 5px;
-      }
-
-      @media (max-width: 768px) {
-        .btn {
-          display: block;
-          margin: 0 0 5px;
-          width: 100%;
-        }
-      }
-    }
-
-    .collection-title {
-      display: inline-block;
-      margin: 0;
-      padding-right: 5px;
-
-      // Wraps each collection title text, and helpful when there are multiple titles
-      span {
-        display: block;
-        padding-bottom: 5px;
-      }
-    }
-  }
-
   .collection-description-wrapper {
     section {
       margin-bottom: 30px;
@@ -348,7 +288,8 @@ button.branding-banner-remove:hover {
 
   // Search collections section
   .collections-search-wrapper {
-    border: 0;
+    margin-bottom: $padding-large-vertical;
+    margin-top: $padding-large-vertical * 4;
   }
 
   // Works section

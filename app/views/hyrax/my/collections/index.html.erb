@@ -39,7 +39,7 @@
   </section>
 
   <%# Collections list %>
-  <div class="panel panel-default collections-panel-wrapper">
+  <div class="panel panel-default">
     <div class="panel-heading">
       <% if  current_page?(hyrax.my_collections_path(locale: nil)) %>
         <span class="count-display"><%= I18n.t('hyrax.my.count.collections.you_own', total_count: @response.total_count).html_safe %></span>

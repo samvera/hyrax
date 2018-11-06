@@ -1,23 +1,16 @@
-<% id = presenter.id %>
+<section class="item-title">
 
-<section class="collection-title-row-wrapper"
-  data-source="my"
-  data-id="<%= id %>"
-  data-colls-hash="<%= presenter.available_parent_collections(scope: controller) %>"
-  data-post-url="<%= hyrax.dashboard_create_nest_collection_within_path(id) %>"
-  data-post-delete-url="<%= hyrax.dashboard_collection_path(id) %>">
+  <% presenter.title.each_with_index do |title, index| %>
+    <% if index == 0 %>
+      <div class="title-with-badges">
+        <h2><%= title %></h2>
+        <%= presenter.permission_badge %>
+        <%= presenter.collection_type_badge %>
+      </div>
+    <% else %>
+      <h2><%= title %></h2>
+    <% end %>
+  <% end %>
 
-    <div class="collection-title-row-content">
-      <h3 class="collection-title">
-        <% # List multiple titles %>
-        <% presenter.title.each_with_index do |title, index| %>
-          <span><%= title %></span>
-        <% end %>
-      </h3>
-      <%= presenter.permission_badge %>
-      <%= presenter.collection_type_badge %>
-    </div>
-    <div class="collection-title-row-content">
-      <%= render 'show_actions', presenter: presenter %>
-    </div>
 </section>
+

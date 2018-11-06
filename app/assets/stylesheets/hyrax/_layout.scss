@@ -1,0 +1,45 @@
+// Button row which sits below the title, and above panel content for a page
+.button-row-top-two-column {
+  margin-bottom: $padding-large-vertical;
+  margin-top: $padding-large-vertical;
+
+  @media screen and (max-width: 767px) {
+    > div {
+      text-align: center;
+
+      &:first-child {
+        padding-bottom: $padding-small-vertical;
+      }
+    }
+  }
+}
+
+.item-title {
+  margin-bottom: $padding-large-vertical * 2;
+}
+
+.item-type-tag {
+  color: #808080;
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: $padding-large-vertical;
+  margin-top: $padding-large-vertical * 2;
+}
+
+.title-with-badges {
+  align-items: center;
+  display: flex;
+
+  h1,
+  h2 {
+    margin: 0;
+  }
+
+  .label {
+    margin-left: 5px;
+
+    &:first-of-type {
+      margin-left: 10px;
+    }
+  }
+}

@@ -4,92 +4,117 @@
   <h1><span class="fa fa-file" aria-hidden="true"></span> <%= t('.header') %></h1>
 <% end %>
 
+<% id = @presenter.id %>
 <div class="collections-wrapper">
-  <section class="panel panel-default collections-panel-wrapper admin-show-page">
-    <div class="panel-heading">
-      <%= render 'collection_title', presenter: @presenter %>
-    </div>
+  <section class="admin-show-page"
+    data-source="my"
+    data-id="<%= id %>"
+    data-colls-hash="<%= @presenter.available_parent_collections(scope: controller) %>"
+    data-post-url="<%= hyrax.dashboard_create_nest_collection_within_path(id) %>"
+    data-post-delete-url="<%= hyrax.dashboard_collection_path(id) %>"
+  >
 
-    <div class="panel-body">
-      <section>
+    <%= render 'collection_title', presenter: @presenter %>
+    <%= render 'show_actions', presenter: @presenter %>
+
+    <div class="panel panel-default">
+      <div class="panel-body">
         <div itemscope itemtype="http://schema.org/CollectionPage" class="row collection">
           <div class="col-sm-3 text-center">
               <%= render 'hyrax/collections/media_display', presenter: @presenter %>
               <%= link_to t('.public_view_label'), collection_path(id: @presenter.id) %>
           </div>
-          <div class="col-sm-9 collection-description-wrapper">
-            <!-- Parent Collection(s) -->
-            <% if @presenter.collection_type_is_nestable? && @presenter.total_parent_collections > 0 %>
-                <h4><%= t('.parent_collection_header') %> (<%= @presenter.total_parent_collections %>)</h4>
-                <section id="parent-collections-wrapper" class="parent-collections-wrapper">
-                  <%= render 'hyrax/dashboard/collections/show_parent_collections', presenter: @presenter %>
-                </section>
-            <% end %>
+          <div class="col-sm-8 col-sm-offset-1 collection-description-wrapper">
 
             <!-- Collection Description(s) -->
-            <section>
+            <div>
               <%= render 'hyrax/collections/collection_description', presenter: @presenter %>
-            </section>
+            </div>
 
             <% unless has_collection_search_parameters? %>
               <%= render 'show_descriptions' %>
             <% end %>
+
           </div>
         </div>
-      </section>
-
-      <!-- Search results label -->
-
-      <% if @members_count > 0 || @presenter.subcollection_count > 0 %>
-          <div class="hyc-blacklight hyc-bl-title">
-            <h2>
-              <% if has_collection_search_parameters? %>
-                  <%= t('hyrax.dashboard.collections.show.search_results') %>
+      </div>
+      <div class="panel-footer text-right">
+        <%# Add this collection within another collection button %>
+        <% if @presenter.collection_type_is_nestable? && @presenter.user_can_nest_collection? %>
+        <!-- The user should have deposit access to the parent and read access to the child (the collection we are already showing, so no test is necessary). -->
+            <%= button_tag '',
+              class: 'btn btn-default add-to-collection',
+              title: t("hyrax.collection.actions.nested_subcollection.desc"),
+              type: 'button',
+              data: { nestable: @presenter.collection_type_is_nestable?,
+                      hasaccess: true } do %>
+              <%= t('hyrax.collection.actions.nested_subcollection.modal_title') %>
               <% end %>
-            </h2>
-          </div>
-      <% end %>
-
-      <!-- Search bar -->
-      <section class="collections-search-wrapper">
-        <div class="row">
-          <div class="col-sm-8">
-            <%# TODO: leaving this as it was causes rerouting to the public show page. needs work %>
-            <%= render 'hyrax/collections/search_form', presenter: @presenter, url: hyrax.dashboard_collection_path(@presenter.id) %>
-          </div>
-        </div>
-      </section>
-
-      <!-- Subcollections -->
-      <% if @presenter.collection_type_is_nestable? %>
-        <section id="sub-collections-wrapper" class="sub-collections-wrapper">
-          <h4><%= t('.subcollection_count') %> (<%= @subcollection_count %>)</h4>
-          <div class="row">
-            <div class="col-md-7">
-              <%= render 'subcollection_list', id: @presenter.id, collection: @subcollection_docs %>
-            </div>
-            <% unless has_collection_search_parameters? %>
-              <div class="col-md-5">
-                <%= render 'show_subcollection_actions', presenter: @presenter %>
-              </div>
-            <% end %>
-          </div>
-        </section>
-      <% end %>
-
-      <!-- Works -->
-      <section class="works-wrapper">
-        <h4><%= t('.item_count') %> (<%= @members_count %>)</h4>
-        <% unless has_collection_search_parameters? %>
-          <%= render 'show_add_items_actions', presenter: @presenter %>
         <% end %>
+      </div>
+    </div>
 
+    <!-- Parent Collection(s) -->
+    <% if @presenter.collection_type_is_nestable? && @presenter.total_parent_collections > 0 %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><%= t('.parent_collection_header') %> (<%= @presenter.total_parent_collections %>)</h3>
+        </div>
+        <div id="parent-collections-wrapper" class="panel-body parent-collections-wrapper">
+          <%= render 'hyrax/dashboard/collections/show_parent_collections', presenter: @presenter %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Search bar -->
+    <div class="collections-search-wrapper">
+      <div class="row">
+        <div class="col-lg-6 col-lg-offset-3">
+          <%# TODO: leaving this as it was causes rerouting to the public show page. needs work %>
+          <%= render 'hyrax/collections/search_form', presenter: @presenter, url: hyrax.dashboard_collection_path(@presenter.id) %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search results label -->
+    <% if @members_count > 0 || @presenter.subcollection_count > 0 %>
+      <% if has_collection_search_parameters? %>
+        <h3>
+          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+          <%= t('hyrax.dashboard.collections.show.search_results') %>
+        </h3>
+    <% end %>
+    <% end %>
+
+    <!-- Subcollections -->
+    <% if @presenter.collection_type_is_nestable? %>
+      <div id="sub-collections-wrapper" class="panel panel-default sub-collections-wrapper">
+        <div class="panel-heading">
+          <h3 class="panel-title"><%= t('.subcollection_count') %> (<%= @subcollection_count %>)</h3>
+        </div>
+        <div class="panel-body">
+          <%= render 'subcollection_list', id: @presenter.id, collection: @subcollection_docs %>
+        </div>
+        <% unless has_collection_search_parameters? %>
+          <div class="panel-footer">
+            <%= render 'show_subcollection_actions', presenter: @presenter %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <!-- Works -->
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= t('.item_count') %> (<%= @members_count %>)</h3>
+      </div>
+      <div class="panel-body">
         <%= render 'sort_and_per_page', collection: @presenter %>
         <%= render_document_index @member_docs %>
         <%= render 'hyrax/collections/paginate' %>
-      </section>
+      </div>
+    </div>
 
-    </div><!-- /panel-body -->
   </section><!-- /collections-panel-wrapper -->
 </div><!-- /collections-wrapper -->
 

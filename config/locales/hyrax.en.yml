@@ -474,7 +474,7 @@ en:
           label: Edit collection
         header: Actions
         nest_collections:
-          button_label: Add a subcollection
+          button_label: Add existing collection as subcollection
           desc: Nest other collections within this Collection
           label: Add existing collections to this collection
           modal_title: Add a Subcollection to Collection
@@ -482,7 +482,7 @@ en:
         nested_subcollection:
           button_label: Add to collection
           desc: Add existing collections to this collection
-          modal_title: Add this Collection Within Another Collection
+          modal_title: Add this collection within another collection
           select_label: Select collection
       browse_view: Browse View
       document_list:
@@ -511,7 +511,7 @@ en:
         default_description: A User Collection can be created by any user to organize their works.
     collections:
       search_form:
-        button_label: Go
+        button_label: Search
         label: Search Collection %{title}
         placeholder: Search subcollections and works in this collection
       show:

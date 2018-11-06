@@ -1,28 +1,28 @@
 <h2 class="sr-only"><%= t('hyrax.collection.actions.header') %></h2>
-<% if can? :edit, presenter.solr_document %>
-    <%= link_to t('hyrax.collection.actions.edit.label'),
-                hyrax.edit_dashboard_collection_path(presenter),
-                title: t('hyrax.collection.actions.edit.desc'),
-                class: 'btn btn-primary' %>
-<% end %>
 
-<% if presenter.collection_type_is_nestable? && presenter.user_can_nest_collection? %>
-<!-- The user should have deposit access to the parent and read access to the child (the collection we are already showing, so no test is necessary). -->
-    <%= button_tag '',
-                  class: 'btn btn-primary add-to-collection',
-                  title: t("hyrax.collection.actions.nested_subcollection.desc"),
-                  type: 'button',
-                  data: { nestable: presenter.collection_type_is_nestable?,
-                          hasaccess: true } do %>
-                  <%= t('hyrax.collection.actions.nested_subcollection.button_label') %>
-                <% end %>
-<% end %>
+<div class="row button-row-top-two-column">
+    <div class="col-sm-8">
+        <% unless has_collection_search_parameters? %>
+            <%= render 'show_add_items_actions', presenter: presenter %>
+        <% end %>
+    </div>
+    <div class="col-sm-4 text-right">
+        <% if can? :edit, presenter.solr_document %>
+            <%= link_to hyrax.edit_dashboard_collection_path(presenter),
+                        title: t('hyrax.collection.actions.edit.desc'),
+                        class: 'btn btn-default' do %>
+                <%= t('hyrax.collection.actions.edit.label') %>
+            <% end %>
+        <% end %>
+        <% if can? :destroy, presenter.solr_document %>
+            <%= link_to hyrax.dashboard_collection_path(presenter),
+                        title: t('hyrax.collection.actions.delete.desc'),
+                        class: 'btn btn-danger',
+                        data: { confirm: t('hyrax.collection.actions.delete.confirmation'),
+                                method: :delete } do %>
+                <%= t('hyrax.collection.actions.delete.label') %>
+            <% end %>
+        <% end %>
+    </div>
+</div>
 
-<% if can? :destroy, presenter.solr_document %>
-    <%= link_to t('hyrax.collection.actions.delete.label'),
-                hyrax.dashboard_collection_path(presenter),
-                title: t('hyrax.collection.actions.delete.desc'),
-                class: 'btn btn-danger',
-                data: { confirm: t('hyrax.collection.actions.delete.confirmation'),
-                        method: :delete } %>
-<% end %>
