@@ -70,7 +70,7 @@
     </div>
     <div class="col-md-4 hyc-metadata">
       <% unless has_collection_search_parameters? %>
-          <h2>Collection Details</h2>
+          <h2><%= t('hyrax.dashboard.collections.show.metadata_header') %></h2>
           <%= render 'show_descriptions' %>
       <% end %>
     </div>

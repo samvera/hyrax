@@ -653,6 +653,7 @@ en:
         show:
           header: Collection
           item_count: Works
+          metadata_header: Collection Details
           parent_collection_header: Parent Collections
           public_view_label: Public view of Collection
           search_results: Search Results within this Collection
