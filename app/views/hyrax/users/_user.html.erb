@@ -2,10 +2,7 @@
   <div class="panel-heading">
     <%= image_tag user.avatar.url(:thumb), width: 100 if user.avatar.present? %>
     <h3>
-      <% if user.name != user.user_key %>
-        <%= user.name %><br />
-      <% end %>
-      <%= user.user_key %>
+      <%= user.name %>
     </h3>
   </div>
 
