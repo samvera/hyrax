@@ -82,7 +82,7 @@ SUMMARY
 
   # temporary pin to 2.17 due to failures caused in 2.18.0
   spec.add_development_dependency "capybara", '~> 2.4', '< 2.18.0'
-  spec.add_development_dependency 'capybara-maleficent', '~> 0.2'
+  spec.add_development_dependency 'capybara-maleficent', '~> 0.3.0'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
   spec.add_development_dependency 'engine_cart', '~> 2.0'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
