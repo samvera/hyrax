@@ -218,7 +218,7 @@ module Hyrax
       Hyrax.config.iiif_metadata_fields.each do |field|
         metadata << {
           'label' => I18n.t("simple_form.labels.defaults.#{field}"),
-          'value' => Array.wrap(send(field))
+          'value' => Array.wrap(send(field).map { |f| Loofah.fragment(f.to_s).scrub!(:whitewash).to_s })
         }
       end
       metadata
