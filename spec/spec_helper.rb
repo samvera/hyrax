@@ -49,7 +49,7 @@ unless ENV['SKIP_MALEFICENT']
   # Wrap Capybara matchers with sleep intervals to reduce fragility of specs.
   require 'capybara/maleficent/spindle'
 
-  Capybara::Maleficent.config do |c|
+  Capybara::Maleficent.configure do |c|
     # Quieting down maleficent's logging
     logger = Logger.new(STDOUT)
     logger.level = Logger::INFO
