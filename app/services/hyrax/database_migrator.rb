@@ -57,8 +57,6 @@ module Hyrax
       end
 
       def migration_version
-        # Don't use AR migration versioning in Rails 4
-        return if Rails.version < '5.0.0'
         # Specify the current major.minor version of Rails for AR migrations
         "[#{Rails::VERSION::MAJOR}.#{Rails::VERSION::MINOR}]"
       end
