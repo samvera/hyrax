@@ -16,7 +16,7 @@ class Hyrax::RiiifGenerator < Rails::Generators::Base
   end
 
   def add_to_gemfile
-    gem 'riiif', '~> 1.1'
+    gem 'riiif', '~> 2.0'
 
     Bundler.with_clean_env do
       run "bundle install"
