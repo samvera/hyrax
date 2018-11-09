@@ -9,6 +9,16 @@ class TestAppGenerator < Rails::Generators::Base
     generate 'hyrax:install', '-f'
   end
 
+  def patch_gemfile
+    return if Rails.version > '5.1.6'
+    # Apply this patch https://github.com/rails/rails/commit/b1b0a334b8fe3a3fb363d6a4b8a35272231fc4f3
+    # which allows us to use newer capybara
+    gsub_file 'Gemfile',  /gem 'capybara',.*$/, "gem 'capybara', '>= 2.15'"
+    Bundler.with_clean_env do
+      run "bundle update capybara"
+    end
+  end
+
   def browse_everything_install
     generate "browse_everything:install --skip-assets"
   end
