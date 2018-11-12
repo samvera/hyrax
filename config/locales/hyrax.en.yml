@@ -348,6 +348,9 @@ en:
     base:
       citations:
         header: 'Citations:'
+      form:
+        batch_link: Batch upload
+        batch_upload_hint: To create a separate work for each of the files, go to
       form_child_work_relationships:
         actions:
           remove: Remove from this work
