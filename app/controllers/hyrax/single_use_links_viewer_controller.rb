@@ -18,7 +18,7 @@ module Hyrax
     end
 
     def show
-      _, document_list = search_results(id: single_use_link.itemId)
+      _, document_list = search_results(id: single_use_link.item_id)
       curation_concern = document_list.first
 
       # Authorize using SingleUseLinksViewerController::Ability
@@ -30,7 +30,7 @@ module Hyrax
 
       # create a dowload link that is single use for the user since we do not just want to show metadata we want to access it too
       @su = single_use_link.create_for_path hyrax.download_path(curation_concern.id)
-      @download_link = hyrax.download_single_use_link_path(@su.downloadKey)
+      @download_link = hyrax.download_single_use_link_path(@su.download_key)
     end
 
     private
@@ -51,7 +51,7 @@ module Hyrax
       end
 
       def single_use_link
-        @single_use_link ||= SingleUseLink.find_by_downloadKey!(params[:id])
+        @single_use_link ||= SingleUseLink.find_by_download_key!(params[:id])
       end
 
       def not_found_exception
@@ -59,7 +59,7 @@ module Hyrax
       end
 
       def asset
-        @asset ||= ActiveFedora::Base.find(single_use_link.itemId)
+        @asset ||= ActiveFedora::Base.find(single_use_link.item_id)
       end
 
       def current_ability
@@ -88,7 +88,7 @@ module Hyrax
 
           @single_use_link = single_use_link
           can :read, [ActiveFedora::Base, ::SolrDocument] do |obj|
-            single_use_link.valid? && single_use_link.itemId == obj.id && single_use_link.destroy!
+            single_use_link.valid? && single_use_link.item_id == obj.id && single_use_link.destroy!
           end
         end
       end

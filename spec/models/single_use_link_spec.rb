@@ -5,6 +5,20 @@ RSpec.describe SingleUseLink do
     let(:hash) { "sha2hash#{DateTime.current.to_f}" }
     let(:path) { '/foo/file/99999' }
 
+    subject { described_class.new item_id: '99999', path: path }
+
+    it "creates link" do
+      expect(Digest::SHA2).to receive(:new).and_return(hash)
+      expect(subject.download_key).to eq hash
+      expect(subject.item_id).to eq '99999'
+      expect(subject.path).to eq path
+    end
+  end
+
+  describe "attribute aliases" do
+    let(:hash) { "sha2hash#{DateTime.current.to_f}" }
+    let(:path) { '/foo/file/99999' }
+
     subject { described_class.new itemId: '99999', path: path }
 
     it "creates link" do

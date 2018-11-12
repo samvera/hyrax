@@ -4,7 +4,7 @@ module Hyrax
 
     attr_reader :link
 
-    delegate :downloadKey, :expired?, :to_param, to: :link
+    delegate :download_key, :expired?, :to_param, to: :link
 
     # @param link [SingleUseLink]
     def initialize(link)
@@ -20,7 +20,7 @@ module Hyrax
     end
 
     def short_key
-      link.downloadKey.first(6)
+      link.download_key.first(6)
     end
 
     def link_type

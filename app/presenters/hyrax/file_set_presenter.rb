@@ -33,7 +33,7 @@ module Hyrax
              to: :solr_document
 
     def single_use_links
-      @single_use_links ||= SingleUseLink.where(itemId: id).map { |link| link_presenter_class.new(link) }
+      @single_use_links ||= SingleUseLink.where(item_id: id).map { |link| link_presenter_class.new(link) }
     end
 
     # The title of the webpage that shows this FileSet.

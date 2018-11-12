@@ -15,11 +15,11 @@ RSpec.describe Hyrax::SingleUseLinkPresenter do
     end
 
     describe "#short_key" do
-      its(:short_key) { is_expected.to eq(link.downloadKey.first(6)) }
+      its(:short_key) { is_expected.to eq(link.download_key.first(6)) }
     end
 
     describe "delegated methods" do
-      its(:downloadKey) { is_expected.to eq(link.downloadKey) }
+      its(:download_key) { is_expected.to eq(link.download_key) }
       its(:expired?)    { is_expected.to eq(link.expired?) }
       its(:to_param)    { is_expected.to eq(link.to_param) }
     end
