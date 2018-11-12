@@ -7,15 +7,11 @@ module Hyrax
     end
 
     def message
-      I18n.with_locale(:en) do
-        I18n.t('hyrax.notifications.batch_create_success.message', user: user)
-      end
+      I18n.t('hyrax.notifications.batch_create_success.message', user: user)
     end
 
     def subject
-      I18n.with_locale(:en) do
-        I18n.t('hyrax.notifications.batch_create_success.subject')
-      end
+      I18n.t('hyrax.notifications.batch_create_success.subject')
     end
   end
 end
