@@ -401,22 +401,8 @@ button.branding-banner-remove:hover {
   .section-add-sharing {
     padding-bottom: 40px;
 
-    .form-inline {
-      label {
-        padding-right: 5px;
-        text-align: right;
-        width: 100px;
-      }
-
-      input,
-      select,
-      .select2-container {
-        width: 200px;
-      }
-
-      .btn {
-        width: 75px;
-      }
+    .sharing-row-form {
+      margin-bottom: $padding-large-vertical;
     }
   }
 
