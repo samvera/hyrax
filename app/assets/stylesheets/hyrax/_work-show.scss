@@ -36,11 +36,6 @@ ul.tabular {
   list-style: none;
 }
 
-.show-actions {
-  padding: $panel-body-padding;
-  // text-align: center;
-}
-
 .work-show {
   dt,
   dd {
@@ -53,6 +48,10 @@ ul.tabular {
 
 .work-type-tag {
   color: #808080;
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: $padding-large-vertical;
+  margin-top: $padding-large-vertical * 2;
 }
 
 .work-type {
@@ -63,6 +62,44 @@ ul.tabular {
     .work_description,
     li.attribute {
       word-break: break-word;
+    }
+  }
+
+  // Button row which sits below the title, and above panel content for a page
+  .button-row-top-two-column {
+    margin-bottom: $padding-large-vertical;
+    margin-top: $padding-large-vertical;
+
+    @media screen and (max-width: 767px) {
+      > div {
+        text-align: center;
+
+        &:first-child {
+          padding-bottom: $padding-small-vertical;
+        }
+      }
+    }
+  }
+}
+
+.work-title-wrapper {
+  margin-bottom: $padding-large-vertical * 2;
+
+  .title-with-badges {
+    align-items: center;
+    display: flex;
+
+    h1,
+    h2 {
+      margin: 0;
+    }
+
+    .label {
+      margin-left: 5px;
+
+      &:first-of-type {
+        margin-left: 10px;
+      }
     }
   }
 }
