@@ -186,7 +186,7 @@ bin/rails hydra:server
 And now you should be able to browse to [localhost:3000](http://localhost:3000/) and see the application.
 
 Notes:
-* This web server is purely for development purposes. You will want to use a more fully featured [web server](#web-server) for production-like environments.
+* This web server is purely for development purposes. You will want to use a more fully featured [web server](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide#web-serverhttps://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide#web-server) for production-like environments.
 * You have the option to start each of these services individually.  More information on [solr_wrapper](https://github.com/cbeer/solr_wrapper) and [fcrepo_wrapper](https://github.com/cbeer/fcrepo_wrapper) will help you set this up.  Start rails with `rails s`.
 
 ## Start background workers
