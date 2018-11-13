@@ -1,7 +1,14 @@
 source 'https://rubygems.org'
 
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  "https://github.com/#{repo_name}.git"
+end
+
 # Please see hyrax.gemspec for dependency information.
 gemspec
+
+gem 'hydra-head', github: 'samvera/hydra-head', branch: 'no-extra-acls'
 
 group :development, :test do
   gem 'coveralls', require: false
