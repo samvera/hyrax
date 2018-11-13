@@ -16,7 +16,7 @@
   <% end %>
   <% if Flipflop.batch_upload? && f.object.new_record? %>
     <% provide :metadata_tab do %>
-      <p class="switch-upload-type">To create a separate work for each of the files, go to <%= link_to "Batch upload", hyrax.new_batch_upload_path %></p>
+      <p class="switch-upload-type"><%= t('.batch_upload_hint') %> <%= link_to t('.batch_link'), hyrax.new_batch_upload_path %></p>
     <% end %>
   <% end %>
   <%= render 'hyrax/base/guts4form', f: f %>

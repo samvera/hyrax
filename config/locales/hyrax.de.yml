@@ -348,6 +348,9 @@ de:
     base:
       citations:
         header: 'Zitate:'
+      form:
+        batch_upload: batch upload
+        batch_upload_hint: Um eine separate Arbeit für jede Datei zu erstellen, gehen Sie zu
       form_child_work_relationships:
         actions:
           remove: Diese Arbeit entfernen
