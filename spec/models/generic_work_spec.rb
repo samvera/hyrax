@@ -5,9 +5,8 @@ RSpec.describe GenericWork do
   end
 
   describe '.create_and_insert_terms' do
-    it 'is deprecated' do
-      expect(Deprecation).to receive(:warn)
-      described_class.create_and_insert_terms(:base, :value, [], {})
+    it 'wait, did this never exist?' do
+      expect { described_class.create_and_insert_terms(:base, :value, [], {}) }.not_to raise_error
     end
   end
 
