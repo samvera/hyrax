@@ -62,13 +62,6 @@ module Hyrax
       results.flatten.group_by(&:file_id)
     end
 
-    # Return current fixity status for this FileSet based on
-    # ChecksumAuditLog records on file.
-    def logged_fixity_status
-      Deprecation.warn(self, "logged_fixity_status is deprecated, use FixityStatusPresenter instead")
-      FixityStatusPresenter.new(file_set.id).render_file_set_status
-    end
-
     private
 
       # Retrieve or generate the fixity check for a file

@@ -50,13 +50,6 @@ module Hyrax
       obj.attributes = work_params(admin_set_id: obj.admin_set_id).except(*visibility_params)
       obj.date_modified = Time.current.ctime
 
-      if params[:visibility]
-        Deprecation.warn(self, "visibility is not submitted by the Hyrax UI and is deprecated " \
-                               "for removal in Hyrax 3.0. Please use " \
-                               "#{form_class.model_name.param_key}[visibility] instead.")
-        obj.visibility = params[:visibility]
-      end
-
       InheritPermissionsJob.perform_now(obj)
       VisibilityCopyJob.perform_now(obj)
 
