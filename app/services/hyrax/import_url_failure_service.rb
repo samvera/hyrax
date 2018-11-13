@@ -5,7 +5,7 @@ module Hyrax
     end
 
     def subject
-      'File Import Error'
+      I18n.t('hyrax.notifications.import_url_failure.subject')
     end
   end
 end

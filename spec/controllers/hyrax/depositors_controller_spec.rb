@@ -34,10 +34,14 @@ RSpec.describe Hyrax::DepositorsController do
 
         it 'sends a message to the grantor' do
           expect { request_to_grant_proxy }.to change { user.mailbox.inbox.count }.by(1)
+          expect(user.mailbox.inbox.last.last_message.subject).to eq 'Proxy Depositor Added'
+          expect(user.mailbox.inbox.last.last_message.body).to eq 'You have assigned ' + grantee.user_key + ' as a proxy depositor'
         end
 
         it 'sends a message to the grantee' do
           expect { request_to_grant_proxy }.to change { grantee.mailbox.inbox.count }.by(1)
+          expect(grantee.mailbox.inbox.last.last_message.subject).to eq 'Proxy Depositor Added'
+          expect(grantee.mailbox.inbox.last.last_message.body).to eq user.user_key + ' has assigned you as a proxy depositor'
         end
       end
 

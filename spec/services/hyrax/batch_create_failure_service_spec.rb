@@ -11,7 +11,7 @@ RSpec.describe Hyrax::BatchCreateFailureService do
       expect(inbox.count).to eq(1)
       inbox.each do |msg|
         expect(msg.last_message.subject).to eq('Failing batch create')
-        expect(msg.last_message.body).to include(messages.first)
+        expect(msg.last_message.body).to eq('The batch create for ' + depositor.user_key + ' failed: ' + messages.first)
       end
     end
   end

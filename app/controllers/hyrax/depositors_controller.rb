@@ -45,10 +45,12 @@ module Hyrax
       end
 
       def send_proxy_depositor_added_messages(grantor, grantee)
-        message_to_grantee = "#{grantor.name} has assigned you as a proxy depositor"
-        message_to_grantor = "You have assigned #{grantee.name} as a proxy depositor"
-        Hyrax::MessengerService.deliver(::User.batch_user, grantor, message_to_grantor, "Proxy Depositor Added")
-        Hyrax::MessengerService.deliver(::User.batch_user, grantee, message_to_grantee, "Proxy Depositor Added")
+        message_to_grantee = I18n.t('hyrax.notifications.proxy_depositor_added.grantee_message', grantor: grantor.name)
+        message_to_grantor = I18n.t('hyrax.notifications.proxy_depositor_added.grantor_message', grantee: grantee.name)
+        Hyrax::MessengerService.deliver(::User.batch_user, grantor, message_to_grantor,
+                                        I18n.t('hyrax.notifications.proxy_depositor_added.subject'))
+        Hyrax::MessengerService.deliver(::User.batch_user, grantee, message_to_grantee,
+                                        I18n.t('hyrax.notifications.proxy_depositor_added.subject'))
       end
 
       def decide_layout

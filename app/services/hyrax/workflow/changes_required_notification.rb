@@ -4,11 +4,13 @@ module Hyrax
       private
 
         def subject
-          'Your deposit requires changes'
+          I18n.t('hyrax.notifications.workflow.changes_required.subject')
         end
 
         def message
-          "#{title} (#{link_to work_id, document_path}) requires additional changes before approval.\n\n '#{comment}'"
+          I18n.t('hyrax.notifications.workflow.changes_required.message', title: title,
+                                                                          link: (link_to work_id, document_path),
+                                                                          comment: comment)
         end
 
         def users_to_notify

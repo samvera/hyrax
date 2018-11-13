@@ -15,11 +15,11 @@ module Hyrax
     def message
       uri = file_set.original_file.uri.to_s
       file_title = file_set.title.first
-      "The fixity check run at #{log_date} for #{file_title} (#{uri}) failed."
+      I18n.t('hyrax.notifications.fixity_check_failure.message', log_date: log_date, file_title: file_title, uri: uri)
     end
 
     def subject
-      'Failing Fixity Check'
+      I18n.t('hyrax.notifications.fixity_check_failure.subject')
     end
   end
 end

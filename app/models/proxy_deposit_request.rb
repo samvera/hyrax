@@ -89,14 +89,21 @@ class ProxyDepositRequest < ActiveRecord::Base
     def send_request_transfer_message_as_part_of_create
       user_link = link_to(sending_user.name, Hyrax::Engine.routes.url_helpers.user_path(sending_user))
       transfer_link = link_to('transfer requests', Hyrax::Engine.routes.url_helpers.transfers_path)
-      message = "#{user_link} wants to transfer a work to you. Review all #{transfer_link}"
-      Hyrax::MessengerService.deliver(::User.batch_user, receiving_user, message, "Ownership Change Request")
+      message = I18n.t('hyrax.notifications.proxy_deposit_request.transfer_on_create.message', user_link: user_link,
+                                                                                               transfer_link: transfer_link)
+      Hyrax::MessengerService.deliver(::User.batch_user, receiving_user, message,
+                                      I18n.t('hyrax.notifications.proxy_deposit_request.transfer_on_create.subject'))
     end
 
     def send_request_transfer_message_as_part_of_update
-      message = "Your transfer request was #{status}."
-      message += " Comments: #{receiver_comment}" if receiver_comment.present?
-      Hyrax::MessengerService.deliver(::User.batch_user, sending_user, message, "Ownership Change #{status}")
+      message = I18n.t('hyrax.notifications.proxy_deposit_request.transfer_on_update.message', status: status)
+      if receiver_comment.present?
+        message += " " + I18n.t('hyrax.notifications.proxy_deposit_request.transfer_on_update.comments',
+                                receiver_comment: receiver_comment)
+      end
+      Hyrax::MessengerService.deliver(::User.batch_user, sending_user, message,
+                                      I18n.t('hyrax.notifications.proxy_deposit_request.transfer_on_update.subject',
+                                             status: status))
     end
 
   public

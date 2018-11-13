@@ -24,6 +24,7 @@ RSpec.describe Hyrax::FixityCheckFailureService do
       subject.call
       expect(inbox.count).to eq(1)
       inbox.each { |msg| expect(msg.last_message.subject).to eq('Failing Fixity Check') }
+      inbox.each { |msg| expect(msg.last_message.body).to eq('The fixity check run at ' + checksum_audit_log.created_at.to_s + ' for ' + file_set.to_s + ' (' + file.uri + ') failed.') }
     end
   end
 end

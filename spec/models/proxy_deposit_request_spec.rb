@@ -1,4 +1,6 @@
 RSpec.describe ProxyDepositRequest, type: :model do
+  include ActionView::Helpers::UrlHelper
+
   let(:sender) { create(:user) }
   let(:receiver) { create(:user) }
   let(:receiver2) { create(:user) }
@@ -112,11 +114,23 @@ RSpec.describe ProxyDepositRequest, type: :model do
     context 'when the transfer_to user is found' do
       it 'creates a transfer_request' do
         subject.transfer_to = receiver.user_key
-        expect { subject.save! }.to change { receiver.mailbox.inbox(unread: true).count }
-          .from(0).to(1)
+        expect { subject.save! }.to change { receiver.mailbox.inbox(unread: true).count }.from(0).to(1)
+        expect(receiver.mailbox.inbox.last.last_message.subject).to eq 'Ownership Change Request'
+        user_link = link_to(sender.name, Hyrax::Engine.routes.url_helpers.user_path(sender))
+        transfer_link = link_to('transfer requests', Hyrax::Engine.routes.url_helpers.transfers_path)
+        expect(receiver.mailbox.inbox.last.last_message.body).to eq user_link + ' wants to transfer a work to you. Review all ' + transfer_link
         proxy_request = receiver.proxy_deposit_requests.first
         expect(proxy_request.work_id).to eq(work_id)
         expect(proxy_request.sending_user).to eq(sender)
+      end
+
+      it 'updates a transfer_request' do
+        subject.transfer_to = receiver.user_key
+        expect { subject.save! }.to change { receiver.mailbox.inbox(unread: true).count }.from(0).to(1)
+        subject.status = described_class::ACCEPTED
+        subject.save!
+        expect(sender.mailbox.inbox.last.last_message.subject).to eq 'Ownership Change ' + described_class::ACCEPTED
+        expect(sender.mailbox.inbox.last.last_message.body).to eq 'Your transfer request was ' + described_class::ACCEPTED + '.'
       end
     end
 
@@ -143,8 +157,12 @@ RSpec.describe ProxyDepositRequest, type: :model do
         end
 
         it 'does not raise an error' do
-          subject.save!
+          expect { subject.save! }.to change { receiver.mailbox.inbox(unread: true).count }.from(0).to(1)
           expect(subject2).to be_valid
+          expect(receiver.mailbox.inbox.last.last_message.subject).to eq 'Ownership Change Request'
+          user_link = link_to(sender.name, Hyrax::Engine.routes.url_helpers.user_path(sender))
+          transfer_link = link_to('transfer requests', Hyrax::Engine.routes.url_helpers.transfers_path)
+          expect(receiver.mailbox.inbox.last.last_message.body).to eq user_link + ' wants to transfer a work to you. Review all ' + transfer_link
         end
       end
     end

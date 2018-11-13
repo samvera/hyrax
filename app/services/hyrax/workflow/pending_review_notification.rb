@@ -4,11 +4,13 @@ module Hyrax
       private
 
         def subject
-          'Deposit needs review'
+          I18n.t('hyrax.notifications.workflow.pending_review.subject')
         end
 
         def message
-          "#{title} (#{link_to work_id, document_path}) was deposited by #{user.user_key} and is awaiting approval #{comment}"
+          I18n.t('hyrax.notifications.workflow.pending_review.message', title: title,
+                                                                        link: (link_to work_id, document_path),
+                                                                        user: user.user_key, comment: comment)
         end
 
         def users_to_notify
