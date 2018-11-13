@@ -1,30 +1,28 @@
 <% provide :page_title, application_name %>
 
 <% if @presenter.display_share_button? %>
-  <div class="home_share_work row">
-    <div class="col-sm-12 text-center">
-      <% if signed_in? %>
-        <% if @presenter.create_many_work_types? %>
-          <%= link_to '#',
-            class: "btn btn-primary btn-lg",
-            data: { behavior: 'select-work', target: '#worktypes-to-create', 'create-type' => 'single' } do %>
-            <i class="glyphicon glyphicon-upload" aria-hidden="true"></i> <%= t('hyrax.share_button') %>
-          <% end %>
-        <% else # simple link to the first work type %>
-          <%= link_to new_polymorphic_path([main_app, @presenter.first_work_type]),
-                class: 'btn btn-primary' do %>
-            <i class="glyphicon glyphicon-upload" aria-hidden="true"></i> <%= t('hyrax.share_button') %>
-          <% end %>
-        <% end %>
-      <% else %>
-        <%= link_to hyrax.my_works_path,
-          class: "btn btn-primary btn-lg" do %>
-          <i class="glyphicon glyphicon-upload" aria-hidden="true"></i> <%= t('hyrax.share_button') %>
-        <% end %>
+<div class="home-share-work text-center">
+  <% if signed_in? %>
+    <% if @presenter.create_many_work_types? %>
+      <%= link_to '#',
+        class: "btn btn-primary btn-lg",
+        data: { behavior: 'select-work', target: '#worktypes-to-create', 'create-type' => 'single' } do %>
+        <i class="glyphicon glyphicon-upload" aria-hidden="true"></i> <%= t('hyrax.share_button') %>
       <% end %>
-      <p><%= link_to t(:'hyrax.pages.tabs.terms_page'), hyrax.terms_path %></p>
-    </div>
-  </div>
+    <% else # simple link to the first work type %>
+      <%= link_to new_polymorphic_path([main_app, @presenter.first_work_type]),
+            class: 'btn btn-primary btn-lg' do %>
+        <i class="glyphicon glyphicon-upload" aria-hidden="true"></i> <%= t('hyrax.share_button') %>
+      <% end %>
+    <% end %>
+  <% else %>
+    <%= link_to hyrax.my_works_path,
+      class: "btn btn-primary btn-lg" do %>
+      <i class="glyphicon glyphicon-upload" aria-hidden="true"></i> <%= t('hyrax.share_button') %>
+    <% end %>
+  <% end %>
+  <p class="terms-of-use"><%= link_to t(:'hyrax.pages.tabs.terms_page'), hyrax.terms_path %></p>
+</div>
 <% end %>
 
 <div class="row home-content">
