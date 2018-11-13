@@ -45,6 +45,15 @@ module Hyrax
           "hyrax/#{collection}/#{element}".freeze
         end
       end
+
+      ##
+      # @deprecated Solrizer::Common will be removed in 3.0.0
+      def create_and_insert_terms(*)
+        Deprecation.warn(self, 'Solrizer::Common methods will be removed ' \
+                               'from WorkBehavior in Hyrax 3.0.0')
+
+        super
+      end
     end
   end
 end

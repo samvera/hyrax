@@ -4,6 +4,13 @@ RSpec.describe GenericWork do
     expect(subject.title).to eq ['foo']
   end
 
+  describe '.create_and_insert_terms' do
+    it 'is deprecated' do
+      expect(Deprecation).to receive(:warn)
+      described_class.create_and_insert_terms(:base, :value, [], {})
+    end
+  end
+
   describe '#active_workflow' do
     it 'leverages "Sipity::Workflow.find_active_workflow_for"' do
       expect(Sipity::Workflow).to receive(:find_active_workflow_for)
