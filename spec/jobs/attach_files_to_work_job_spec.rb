@@ -27,6 +27,16 @@ RSpec.describe AttachFilesToWorkJob, perform_enqueued: [AttachFilesToWorkJob] do
       it 'records the depositor(s) in edit_users' do
         expect(generic_work.file_sets.map(&:edit_users)).to all(match_array([generic_work.depositor, 'userz@bbb.ddd']))
       end
+
+      describe 'with existing files' do
+        let(:file_set)       { create(:file_set) }
+        let(:uploaded_file1) { build(:uploaded_file, file: file1, file_set_uri: 'http://example.com/file_set') }
+
+        it 'skips files that already have a FileSet' do
+          expect { described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2]) }
+            .to change { generic_work.file_sets.count }.to eq 1
+        end
+      end
     end
   end
 
