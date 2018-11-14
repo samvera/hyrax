@@ -6,7 +6,6 @@ RSpec.describe Hyrax::DownloadsController do
     let(:file_set) do
       create(:file_with_work, user: user, content: File.open(fixture_path + '/image.png'))
     end
-    let(:default_image) { ActionController::Base.helpers.image_path 'default.png' }
 
     it 'raises an error if the object does not exist' do
       expect do
@@ -22,7 +21,6 @@ RSpec.describe Hyrax::DownloadsController do
       it 'returns :unauthorized status with image content' do
         get :show, params: { id: file_set.to_param }
         expect(response).to have_http_status(:unauthorized)
-        expect(response).not_to redirect_to default_image
         expect(response.content_type).to eq 'image/png'
       end
     end
@@ -36,19 +34,7 @@ RSpec.describe Hyrax::DownloadsController do
         it 'returns :unauthorized status with image content' do
           get :show, params: { id: file_set.to_param }
           expect(response).to have_http_status(:unauthorized)
-          expect(response).not_to redirect_to default_image
           expect(response.content_type).to eq 'image/png'
-        end
-      end
-
-      context "and the unauthorized image doesn't exist" do
-        before do
-          allow(File).to receive(:exist?).and_return(false)
-        end
-
-        it 'redirects to the default image' do
-          get :show, params: { id: file_set.to_param }
-          expect(response).to redirect_to default_image
         end
       end
 

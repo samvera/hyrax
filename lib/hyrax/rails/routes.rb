@@ -46,11 +46,6 @@ module ActionDispatch::Routing
       end
     end
 
-    def curation_concerns_embargo_management
-      # routes moved to config/routes.rb
-      Deprecation.warn(self, '#curation_concerns_embargo_management is deprecated and has no effect. It will be removed in Hyrax 3.0')
-    end
-
     private
 
       # routing namepace arguments, for using a path other than the default
