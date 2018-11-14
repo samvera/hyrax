@@ -103,7 +103,7 @@ pt-BR:
             description: Descrição
             participants: Participantes
             visibility: Divulgação e Acesso
-            workflow: fluxo de trabalho
+            workflow: Fluxo de trabalho
         form_participant_table:
           admin_users: Administradores do Repositório
           allow_all_registered: Permitir que todos os usuários cadastrados depositem
@@ -1202,7 +1202,7 @@ pt-BR:
       collection_type:
         allow_multiple_membership: MEMBROS MÚLTIPLOS
         assigns_visibility: ACESSO
-        assigns_workflow: fluxo de trabalho
+        assigns_workflow: Fluxo de trabalho
         badge_color: Cor do Emblema
         brandable: Branding
         description: Descrição do tipo
