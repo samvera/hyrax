@@ -348,6 +348,9 @@ zh:
     base:
       citations:
         header: '引文:'
+      form:
+        batch_link: 批量上传
+        batch_upload_hint: 要为每个文件创建单独的工作，请转到
       form_child_work_relationships:
         actions:
           remove: 从这个工作中删除
@@ -650,6 +653,7 @@ zh:
         show:
           header: 采集
           item_count: 作品
+          metadata_header: 收集细节
           parent_collection_header: 家长集合
           public_view_label: 公众对收藏的看法
           search_results: 搜索此集合中的结果
@@ -989,6 +993,43 @@ zh:
           you_own: 您在存储库中拥有<strong> %{total_count}作品</ strong>
     nav_safety:
       change_tab_message: 你确定要离开这个标签吗？任何未保存的数据都将丢失。
+    notifications:
+      batch_create_failure:
+        message: 为%{user}创建的批处理失败：%{messages}
+        subject: 失败的批次创建
+      batch_create_success:
+        message: 传递的%{user}批量创建。
+        subject: 传递批量创建
+      fixity_check_failure:
+        message: "%{log_date}（%{uri}）的%{log_date}运行的固定性检查失败。"
+        subject: 失败的固定检查
+      import_url_failure:
+        subject: 文件导入错误
+      proxy_deposit_request:
+        transfer_on_create:
+          message: "%{user_link}想要将作品转移给你。查看所有%{transfer_link}"
+          subject: 所有权变更请求
+        transfer_on_update:
+          comments: 评论：%{receiver_comment}
+          message: 您的转移请求是%{status}。
+          subject: 所有权变更%{status}
+      proxy_depositor_added:
+        grantee_message: "%{grantor}已指定您为代理存款人"
+        grantor_message: 您已将%{grantee}指定为代理存款人
+        subject: 代理存款人已添加
+      workflow:
+        changes_required:
+          message: |-
+            %{title}（%{link}）在批准之前需要进行其他更改。
+
+             '%{comment}'
+          subject: 您的存款需要更改
+        deposited:
+          message: zxzxzxx（%{link}）被%{user}批准。 %{comment}
+          subject: 存款已获批准
+        pending_review:
+          message: "%{title}（%{link}）由%{user}存放，正在等待批准%{comment}"
+          subject: 存款需要审核
     pages:
       cancel: 取消
       tabs:

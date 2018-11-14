@@ -349,7 +349,7 @@ de:
       citations:
         header: 'Zitate:'
       form:
-        batch_upload: batch upload
+        batch_link: batch upload
         batch_upload_hint: Um eine separate Arbeit für jede Datei zu erstellen, gehen Sie zu
       form_child_work_relationships:
         actions:
@@ -657,6 +657,7 @@ de:
         show:
           header: Sammlung
           item_count: Arbeiten
+          metadata_header: Details zur Sammlung
           parent_collection_header: Übergeordnete Sammlungen
           public_view_label: Öffentliche Sicht der Sammlung
           search_results: Suchergebnisse innerhalb dieser Sammlung
@@ -996,6 +997,43 @@ de:
           you_own: "<strong> %{total_count} funktioniert </ strong>, das Sie im Repository besitzen"
     nav_safety:
       change_tab_message: Möchten Sie diesen Tab wirklich verlassen? Nicht gespeicherte Daten gehen verloren.
+    notifications:
+      batch_create_failure:
+        message: 'Die Batcherstellung für %{user} ist fehlgeschlagen: %{messages}'
+        subject: Fehler beim Batch-Erstellen
+      batch_create_success:
+        message: Die Batcherstellung für %{user} wurde übergeben.
+        subject: Batch erstellen übergeben
+      fixity_check_failure:
+        message: Die Überprüfung der Fixität bei %{log_date} für %{file_title} (%{uri}) ist fehlgeschlagen.
+        subject: Fehler bei der Fixitätsprüfung
+      import_url_failure:
+        subject: Fehler beim Dateiimport
+      proxy_deposit_request:
+        transfer_on_create:
+          message: "%{user_link} möchte eine Arbeit an Sie übertragen. Überprüfen Sie alle %{transfer_link}"
+          subject: Antrag auf Änderung des Eigentums
+        transfer_on_update:
+          comments: 'Kommentare: %{receiver_comment}'
+          message: Ihre Übertragungsanforderung lautete %{status}.
+          subject: Eigentümerwechsel %{status}
+      proxy_depositor_added:
+        grantee_message: "%{grantor} hat Sie als Proxy-Einzahler beauftragt"
+        grantor_message: Sie haben %{grantee} als Proxy-Einzahler zugewiesen
+        subject: Proxy Depositor hinzugefügt
+      workflow:
+        changes_required:
+          message: |-
+            Für %{title} (%{link}) sind vor der Genehmigung zusätzliche Änderungen erforderlich.
+
+             '%{comment}'
+          subject: Ihre Einzahlung erfordert Änderungen
+        deposited:
+          message: "%{title} (%{link}) wurde von %{user} genehmigt. %{comment}"
+          subject: Einzahlung wurde genehmigt
+        pending_review:
+          message: "%{title} (%{link}) wurde von %{user} hinterlegt und wartet auf die Genehmigung von %{comment}"
+          subject: Einzahlung muss überprüft werden
     pages:
       cancel: Abbrechen
       tabs:

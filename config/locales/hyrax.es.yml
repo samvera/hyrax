@@ -348,6 +348,9 @@ es:
     base:
       citations:
         header: 'Citaciones:'
+      form:
+        batch_link: Carga por lotes
+        batch_upload_hint: Para crear un trabajo separado para cada uno de los archivos, vaya a
       form_child_work_relationships:
         actions:
           remove: Eliminar de este trabajo
@@ -652,6 +655,7 @@ es:
         show:
           header: Colección
           item_count: Trabajos
+          metadata_header: Detalles de la colección
           parent_collection_header: Colecciones de padres
           public_view_label: Vista pública de la colección
           search_results: Resultados de búsqueda dentro de esta colección
@@ -993,6 +997,43 @@ es:
           you_own: "<strong> %{total_count} funciona </ strong> en el repositorio"
     nav_safety:
       change_tab_message: "¿Seguro que quieres salir de esta pestaña? Cualquier información no guardada se perderá."
+    notifications:
+      batch_create_failure:
+        message: 'La creación del lote para %{user} falló: %{messages}'
+        subject: Creación de lote fallido
+      batch_create_success:
+        message: El lote creado para %{user} pasado.
+        subject: Pasar por lotes crear
+      fixity_check_failure:
+        message: La comprobación de corrección ejecutada en %{log_date} para %{file_title} (%{uri}) falló.
+        subject: Comprobación de falla de la falla
+      import_url_failure:
+        subject: Error de importación de archivo
+      proxy_deposit_request:
+        transfer_on_create:
+          message: "%{user_link} quiere transferirte un trabajo. Revisar todos los %{transfer_link}"
+          subject: Solicitud de cambio de propiedad
+        transfer_on_update:
+          comments: 'Comentarios: %{receiver_comment}'
+          message: Su solicitud de transferencia fue %{status}.
+          subject: Cambio de propiedad %{status}
+      proxy_depositor_added:
+        grantee_message: "%{grantor} te ha asignado como depositante proxy"
+        grantor_message: Usted ha asignado %{grantee} como depositante proxy
+        subject: Proxy depositante agregado
+      workflow:
+        changes_required:
+          message: |-
+            %{title} (%{link}) requiere cambios adicionales antes de la aprobación.
+
+             '%{comment}'
+          subject: Su depósito requiere cambios
+        deposited:
+          message: "%{title} (%{link}) fue aprobado por %{user}. %{comment}"
+          subject: El deposito ha sido aprobado
+        pending_review:
+          message: "%{title} (%{link}) fue depositado por %{user} y está pendiente de aprobación %{comment}"
+          subject: Depósito necesita revisión
     pages:
       cancel: Cancelar
       tabs:

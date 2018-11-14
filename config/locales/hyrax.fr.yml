@@ -348,6 +348,9 @@ fr:
     base:
       citations:
         header: 'Citations:'
+      form:
+        batch_link: Envoi par lot
+        batch_upload_hint: Pour créer un travail séparé pour chacun des fichiers, allez à
       form_child_work_relationships:
         actions:
           remove: Supprimer de ce travail
@@ -653,6 +656,7 @@ fr:
         show:
           header: Collection
           item_count: Travaux
+          metadata_header: Détails de la collection
           parent_collection_header: Collections de parents
           public_view_label: Vue publique de la collection
           search_results: Résultats de la recherche dans cette collection
@@ -992,6 +996,43 @@ fr:
           you_own: "<strong> %{total_count} fonctionne </ strong> que vous possédez dans le référentiel"
     nav_safety:
       change_tab_message: Êtes-vous sûr de vouloir quitter cet onglet? Toutes les données non enregistrées seront perdues.
+    notifications:
+      batch_create_failure:
+        message: 'La création par lots pour %{user} a échoué: %{messages}'
+        subject: Lot échouant créer
+      batch_create_success:
+        message: Le lot créé pour %{user} a été transmis.
+        subject: Passing batch create
+      fixity_check_failure:
+        message: La vérification de la fixité exécutée sur %{log_date} pour %{file_title} (%{uri}) a échoué.
+        subject: Échec de la fixité
+      import_url_failure:
+        subject: Erreur d'importation de fichier
+      proxy_deposit_request:
+        transfer_on_create:
+          message: "%{user_link} souhaite vous transférer une œuvre. Voir tous les %{transfer_link}"
+          subject: Demande de changement de propriété
+        transfer_on_update:
+          comments: 'Commentaires: %{receiver_comment}'
+          message: Votre demande de transfert était %{status}.
+          subject: Changement de propriété %{status}
+      proxy_depositor_added:
+        grantee_message: "%{grantor} vous a assigné comme déposant par procuration"
+        grantor_message: Vous avez affecté %{grantee} en tant que déposant par procuration.
+        subject: Dépositaire de procuration ajouté
+      workflow:
+        changes_required:
+          message: |-
+            %{title} (%{link}) nécessite des modifications supplémentaires avant d'être approuvé.
+
+             '%{comment}'
+          subject: Votre dépôt nécessite des modifications
+        deposited:
+          message: "%{title} (%{link}) a été approuvé par %{user}. %{comment}"
+          subject: Le dépôt a été approuvé
+        pending_review:
+          message: "%{title} (%{link}) a été déposé par %{user} et est en attente d'approbation. %{comment}"
+          subject: Examen des besoins de dépôt
     pages:
       cancel: Annuler
       tabs:
