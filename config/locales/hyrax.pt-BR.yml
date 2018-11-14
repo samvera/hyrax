@@ -469,7 +469,7 @@ pt-BR:
           desc: Acrescentar outras coleções nesta coleção
           label: Acrescentar nesta coleção coleções que já existem
           modal_title: Acrescentar uma sub-coleção nesta coleção
-          select_label: Selecionar sb-coleção
+          select_label: Selecionar sub-coleção
         nested_subcollection:
           button_label: Acrescentar uma coleção
           desc: Embutir nesta coleção coleções que já existem
@@ -555,7 +555,7 @@ pt-BR:
       all:
         collections: Todas as Coleções
         works: Todas as Obras
-      authorize_proxies: Autorizar proxies
+      authorize_proxies: Autorizar suplentes
       breadcrumbs:
         admin: Painel de Ferramentas
       collection_type_actions:
@@ -654,13 +654,13 @@ pt-BR:
           show_more_parent_collections: mostre mais...
           subcollection_count: Sub-coleções
       create_work: Criar obra
-      current_proxies: Proxies atuais
+      current_proxies: Suplentes correntes
       delete_notification: Eliminar Notificação
       heading_actions:
         close: Fechar
         create_work: Criar obra
         select_type_of_work: Selecionar o tipo de obra
-      manage_proxies: Gerenciar Proxies
+      manage_proxies: Gerenciar Suplentes
       managed:
         collections: Coleções Curateladas
         works: Obras Curateladas
@@ -675,7 +675,7 @@ pt-BR:
           collection_deny_add_members: Você não tem privilégios suficientes para acrescentar membros à coleção
           collection_update_success: A coleção foi atualizada com sucesso.
           collections_confirmation_html: A eliminação <span class='pluralized'>desta coleção</span> a removerá permanentemente do repositório. Os itens <span class='pluralized'>desta coleção</span> permanecerão no repositório. Tem certeza de que deseja eliminar <span class='pluralized'>esta coleção</span> ?
-          collections_confirmation_no_items_html: Tem certeza de que deseja aliminar esta coleção? Essa ação não pode ser revertida.
+          collections_confirmation_no_items_html: Tem certeza de que deseja eliminar esta coleção? Essa ação não pode ser revertida.
           delete_admin_set: Eliminar coleção
           delete_admin_set_deny: Esta coleção é definida como Conjunto Administrativo e não está vazia. Para eliminar este conjunto administrativo, primeiro você deve remover (eliminar ou mover para outro conjunto administrativo) todos os itens nele contidos.
           delete_collection: Eliminar coleção
@@ -746,7 +746,7 @@ pt-BR:
         removed_relationship: "'%{child_title}' foi removido de '%{parent_title}'"
       no_activity: O usuário não tem atividade recente
       no_notifications: O usuário não possui notificações
-      no_proxies: Não há proxies designados
+      no_proxies: Não há suplentes designados
       no_transfer_requests: Você não recebeu nenhum pedido de transferência de obra
       no_transfers: Você não transferiu nenhuma obra
       proxy_activity: Atividade de suplente
@@ -966,7 +966,7 @@ pt-BR:
           link: Estes arquivos
         single: Não pôde ser atualizado. Você não tem privilégios suficientes para editá-lo.
         subject: Permissão de carga em lote negada
-        title: Arquivos falhou
+        title: Arquivos falharam
       success:
         multiple:
           keyword: Foram salvos.
@@ -1011,8 +1011,8 @@ pt-BR:
             label_long: Meus compartilhamentos
             label_short: Meus compartilhamentos
           my_works:
-            label_long: Meus obras
-            label_short: Meus obras
+            label_long: Minhas obras
+            label_short: Minhas obras
         q:
           label: Pesquisar %{application_name}
           placeholder: Entre os termos da pesquisa
@@ -1239,4 +1239,4 @@ pt-BR:
         find_child_work: Procure uma obra ...
         member_of_collection_ids: Selecione uma coleção ...
     required:
-      html: <span class="label label-info required-tag">obrigatórios</span>
+html: <span class="label label-info required-tag">obrigatórios</span>
