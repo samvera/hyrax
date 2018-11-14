@@ -7,7 +7,6 @@ module Hyrax
     include Permissions
     include Serializers
     include Hydra::WithDepositor
-    include Solrizer::Common
     include HasRepresentative
     include HasRendering
     include WithFileSets

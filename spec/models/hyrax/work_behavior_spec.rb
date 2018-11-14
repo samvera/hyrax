@@ -10,14 +10,13 @@ RSpec.describe Hyrax::WorkBehavior do
 
   subject { EssentialWork.new }
 
-  it 'mixes together all the goodness' do
+  it 'mixes together some junk' do
     expect(subject.class.ancestors).to include(::Hyrax::WithFileSets,
                                                ::Hyrax::HumanReadableType,
                                                Hyrax::Noid,
                                                Hyrax::Serializers,
                                                Hydra::WithDepositor,
                                                Hydra::AccessControls::Embargoable,
-                                               Solrizer::Common,
                                                Hyrax::Suppressible,
                                                Hyrax::CollectionNesting)
   end
