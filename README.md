@@ -13,7 +13,7 @@ Docs: [![Documentation Status](https://inch-ci.org/github/samvera/hyrax.svg?bran
 [![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
 
 Jump in: [![Slack Status](http://slack.samvera.org/badge.svg)](http://slack.samvera.org/)
-[![Ready Tickets](https://badge.waffle.io/samvera/hyrax.png?label=ready&milestone=2.x%20series&title=Ready)](https://waffle.io/samvera/hyrax?milestone=2.x%20series)
+[![Ready Tickets](https://badge.waffle.io/samvera/hyrax.png?label=ready&milestone=2.x%20series&title=Ready)](https://waffle.io/samvera/hyrax?milestone=3.x%20series)
 
 # Table of Contents
 
@@ -64,7 +64,7 @@ The Samvera community is here to help. Please see our [support guide](./.github/
 # Getting started
 
 This document contains instructions specific to setting up an app with __Hyrax
-v2.4.0__. If you are looking for instructions on installing a different
+v3.0.0-beta1__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
