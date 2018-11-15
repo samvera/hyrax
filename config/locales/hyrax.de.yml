@@ -1020,7 +1020,7 @@ de:
       proxy_depositor_added:
         grantee_message: "%{grantor} hat Sie als Proxy-Deponent beauftragt"
         grantor_message: Sie haben %{grantee} als Proxy-Deponent zugewiesen
-        subject: Proxy Deponent hinzugefügt
+        subject: Proxy-Deponent hinzugefügt
       workflow:
         changes_required:
           message: |-
