@@ -349,7 +349,7 @@ de:
       citations:
         header: 'Zitate:'
       form:
-        batch_link: batch upload
+        batch_link: Batch-Upload
         batch_upload_hint: Um eine separate Arbeit für jede Datei zu erstellen, gehen Sie zu
       form_child_work_relationships:
         actions:
@@ -1003,10 +1003,10 @@ de:
         subject: Fehler beim Batch-Erstellen
       batch_create_success:
         message: Die Batcherstellung für %{user} wurde übergeben.
-        subject: Batch erstellen übergeben
+        subject: Batcherstellung übergeben
       fixity_check_failure:
-        message: Die Überprüfung der Fixität bei %{log_date} für %{file_title} (%{uri}) ist fehlgeschlagen.
-        subject: Fehler bei der Fixitätsprüfung
+        message: Die Überprüfung der Integrität bei %{log_date} für %{file_title} (%{uri}) ist fehlgeschlagen.
+        subject: Fehler bei der Integritätsprüfung
       import_url_failure:
         subject: Fehler beim Dateiimport
       proxy_deposit_request:
@@ -1018,22 +1018,22 @@ de:
           message: Ihre Übertragungsanforderung lautete %{status}.
           subject: Eigentümerwechsel %{status}
       proxy_depositor_added:
-        grantee_message: "%{grantor} hat Sie als Proxy-Einzahler beauftragt"
-        grantor_message: Sie haben %{grantee} als Proxy-Einzahler zugewiesen
-        subject: Proxy Depositor hinzugefügt
+        grantee_message: "%{grantor} hat Sie als Proxy-Deponent beauftragt"
+        grantor_message: Sie haben %{grantee} als Proxy-Deponent zugewiesen
+        subject: Proxy-Deponent hinzugefügt
       workflow:
         changes_required:
           message: |-
             Für %{title} (%{link}) sind vor der Genehmigung zusätzliche Änderungen erforderlich.
 
              '%{comment}'
-          subject: Ihre Einzahlung erfordert Änderungen
+          subject: Ihre Einreichung erfordert Änderungen
         deposited:
           message: "%{title} (%{link}) wurde von %{user} genehmigt. %{comment}"
-          subject: Einzahlung wurde genehmigt
+          subject: Einreichung wurde genehmigt
         pending_review:
           message: "%{title} (%{link}) wurde von %{user} hinterlegt und wartet auf die Genehmigung von %{comment}"
-          subject: Einzahlung muss überprüft werden
+          subject: Einreichung muss überprüft werden
     pages:
       cancel: Abbrechen
       tabs:
