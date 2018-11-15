@@ -1006,7 +1006,7 @@ de:
         subject: Batcherstellung übergeben
       fixity_check_failure:
         message: Die Überprüfung der Integrität bei %{log_date} für %{file_title} (%{uri}) ist fehlgeschlagen.
-        subject: Fehler bei der Fixitätsprüfung
+        subject: Fehler bei der Integritätsprüfung
       import_url_failure:
         subject: Fehler beim Dateiimport
       proxy_deposit_request:
