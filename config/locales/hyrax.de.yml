@@ -2,7 +2,7 @@
 de:
   activefedora:
     models:
-      batch_upload_item: Arbeiten stapelweise hochladen
+      batch_upload_item: Arbeiten im Batch-Upload
       file_set: Datei
   activemodel:
     errors:
@@ -366,13 +366,13 @@ de:
       form_files:
         dropzone: Dateien hier hinziehen.
         local_upload_browse_everything_html: |
-          <p>Sie können eine oder mehr Dateien hinzufügen, mit dieser Arbeit zu
-          verknüpfen.</p>
-          <p>Bitte beachten Sie, dass, wenn Sie eine große Anzahl von Dateien
-          innerhalb einer kurzen Zeitspanne hochladen, der Cloud-Anbieter
-          möglicherweise nicht in der Lage, Ihrer Anfrage nachzukommen. Wenn Sie
-          irgendwelche Fehler beim Hochladen aus der Cloud erhalten, lassen Sie uns
-          dies über %{contact_href} wissen.</p>
+          <p>Sie können eine oder mehre Dateien von Ihrem lokalen System oder einem Cloudanbieter hinzufügen, welche mit dieser Arbeit
+          verknüpft werden sollen.</p>
+          <p>Bitte beachten Sie, dass der Cloud-Anbieter möglicherweise nicht in der Lage ist Ihrer Anfrage nachzukommen, wenn Sie eine große Anzahl von Dateien
+          innerhalb einer kurzen Zeitspanne hochladen. 
+          Wenn Sie
+          irgendwelche Fehler beim Hochladen aus der Cloud erhalten, teilen Sie uns dies 
+          bitte über %{contact_href} mit.</p>
         local_upload_html: "<p> Sie können eine oder mehrere Dateien hinzufügen, die dieser Arbeit zugeordnet werden sollen. </p>"
       form_member_of_collections:
         actions:
@@ -444,8 +444,8 @@ de:
       disabled: Diese Funktion vom Administrator des Repositoriums deaktiviert
       files:
         button_label: Neue Arbeit hinzufügen
-        instructions: Jede Datei wird auf eine separate neue Arbeit hochgeladen, die zu einer Arbeit pro hochgeladener Datei führt.
-        upload_type_instructions: Um eine einzelne Arbeit für alle Dateien zu erstellen, geh zu
+        instructions: Jede Datei wird in eine separate, neue Arbeit hochgeladen, d.h. somit wird eine Arbeit pro hochgeladener Datei erstellt.
+        upload_type_instructions: Um eine einzelne Arbeit für alle Dateien zu erstellen, gehen Sie zu
       new:
         header: Stapelweises Hochladen neuer Arbeiten
         in_collections: Diese Arbeiten in Sammlungen
@@ -659,12 +659,12 @@ de:
           item_count: Arbeiten
           metadata_header: Details zur Sammlung
           parent_collection_header: Übergeordnete Sammlungen
-          public_view_label: Öffentliche Sicht der Sammlung
+          public_view_label: Öffentliche Ansicht der Sammlung
           search_results: Suchergebnisse innerhalb dieser Sammlung
           show_less_parent_collections: "...zeige weniger"
           show_more_parent_collections: Zeig mehr...
           subcollection_count: Untersammlungen
-      create_work: Arbeien erstellen
+      create_work: Arbeiten erstellen
       current_proxies: Aktuelle Vertreter
       delete_notification: Benachrichtigung löschen
       heading_actions:
@@ -750,7 +750,7 @@ de:
           show_label: Zeige alle Details von
         works: Ihre Arbeiten
         your_collections: Ihre Sammlungen
-        your_works: Deine Werke
+        your_works: Ihre Werke
       nest_collections_form:
         create_under: "'%{child_title}' wurde zu '%{parent_title}' hinzugefügt"
         create_within: "'%{child_title}' wurde zu '%{parent_title}' hinzugefügt"
@@ -762,7 +762,7 @@ de:
       no_transfers: Sie haben keine Arbeit übertragen
       proxy_activity: Vertreter-Aktivität
       proxy_delete: Vertreter löschen
-      proxy_help: Wählen Sie einen Benutzer aus, der Arbeiten in Ihrem Namen hinterlegen kann. Sie sind der Eigentümer von Werken, die dieser Benutzer für Sie hinterlegt. Sie können einen Proxy widerrufen, indem Sie auf die Schaltfläche Proxy löschen klicken.
+      proxy_help: Wählen Sie einen Benutzer aus, der Arbeiten in Ihrem Namen hinterlegen kann. Sie sind der Eigentümer von Werken, die dieser Benutzer für Sie hinterlegt. Sie können einen Vertreter abberufen, indem Sie auf die Schaltfläche Vertreter löschen klicken.
       proxy_user: Vertreter-Benutzer
       repository_growth:
         collections: Sammlungen
@@ -1149,18 +1149,18 @@ de:
         unlinked: Mit Zotero verlinken
     visibility:
       authenticated:
-        note_html: Beschränkung des Zugriffs auf Benutzer und / oder Gruppen der %{institution}
+        note_html: Beschränkung des Zugriffs auf %{institution}
         text: "%{institution}"
       embargo:
-        note_html: Stellen Sie das Datum für die zukünftige Freigabe ein.
+        note_html: Zukünftigen Freigabezeitpunkt festlegen.
         text: Embargo
       lease:
-        note_html: Zeitraum für den zukünftig eingeschränkten Zugriff festlegen
+        note_html: Zeitraum für eingeschränkten Zugriff festlegen
         text: Leasen
       open:
-        note_html: Jeder. Schauen Sie sich <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> für die Urheberrechtsrichtlinien des Publishers an, wenn Sie planen, Ihr %{type} in einer Zeitschrift zu patentieren und / oder zu veröffentlichen.
-        text: Öffentlichkeit
-        warning_html: '<p> <strong>Bitte beachten Sie</strong> , dass etwas, das für die gesamte Öffentlichkeit sichtbar ist (d.h. das Markieren dieses als %{label}), als Publikation angesehen werden kann, die Ihre Fähigkeit beeinflussen könnte: </p><ul><li> Das Patentieren Ihrer Arbeit </li><li> Das Veröffentlichen Sie Ihre Arbeit in einer Zeitschrift </li></ul><p> Überprüfen Sie <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> für weitere Informationen über Urheberrechtsrichtlinien des Herausgebers. </p>'
+        note_html: Für alle verfügbar machen.
+        text: Öffentlich
+        warning_html: '<p> <strong>Bitte beachten Sie</strong>, dass Inhalt, der für die gesamte Öffentlichkeit sichtbar ist (d.h. das Markieren dieses als %{label}), als Publikation angesehen werden kann und somit folgende Schritte negativ beeinflussen könnte: </p><ul><li> Patentieren Ihrer Arbeit </li><li> Veröffentlichen Ihrer Arbeit in einer Zeitschrift. </li></ul><p> Überprüfen Sie <a href="http://www.sherpa.ac.uk/romeo/">SHERPA / RoMEO</a> für weitere Informationen über Urheberrechtsrichtlinien des Herausgebers. </p>'
       open_title_attr: Ändern Sie die Sichtbarkeit dieser Ressource
       restricted:
         note_html: Nur Benutzer und / oder Gruppen, denen im Abschnitt &ldquor;Freigeben&ldquo; einen bestimmten Zugriff gewährt wurde.
