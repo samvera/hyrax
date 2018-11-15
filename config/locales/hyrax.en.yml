@@ -998,38 +998,41 @@ en:
       change_tab_message: Are you sure you want to leave this tab?  Any unsaved data will be lost.
     notifications:
       batch_create_failure:
+        message: 'The batch create for %{user} failed: %{messages}'
         subject: Failing batch create
-        message: "The batch create for %{user} failed: %{messages}"
       batch_create_success:
-        subject: Passing batch create
         message: The batch create for %{user} passed.
+        subject: Passing batch create
       fixity_check_failure:
-        subject: Failing Fixity Check
         message: The fixity check run at %{log_date} for %{file_title} (%{uri}) failed.
+        subject: Failing Fixity Check
       import_url_failure:
         subject: File Import Error
-      proxy_depositor_added:
-        subject: Proxy Depositor Added
-        grantee_message: "%{grantor} has assigned you as a proxy depositor"
-        grantor_message: You have assigned %{grantee} as a proxy depositor
       proxy_deposit_request:
         transfer_on_create:
-          subject: Ownership Change Request
           message: "%{user_link} wants to transfer a work to you. Review all %{transfer_link}"
+          subject: Ownership Change Request
         transfer_on_update:
-          subject: Ownership Change %{status}
+          comments: 'Comments: %{receiver_comment}'
           message: Your transfer request was %{status}.
-          comments: "Comments: %{receiver_comment}"
+          subject: Ownership Change %{status}
+      proxy_depositor_added:
+        grantee_message: "%{grantor} has assigned you as a proxy depositor"
+        grantor_message: You have assigned %{grantee} as a proxy depositor
+        subject: Proxy Depositor Added
       workflow:
         changes_required:
+          message: |-
+            %{title} (%{link}) requires additional changes before approval.
+
+             '%{comment}'
           subject: Your deposit requires changes
-          message: "%{title} (%{link}) requires additional changes before approval.\n\n '%{comment}'"
         deposited:
-          subject: Deposit has been approved
           message: "%{title} (%{link}) was approved by %{user}. %{comment}"
+          subject: Deposit has been approved
         pending_review:
-          subject: Deposit needs review
           message: "%{title} (%{link}) was deposited by %{user} and is awaiting approval %{comment}"
+          subject: Deposit needs review
     pages:
       cancel: Cancel
       tabs:
@@ -1200,7 +1203,7 @@ en:
       collection:
         based_near: A place name related to the collection, such as its site of publication, or the city, state, or country the collection contents are about. Calls upon the <a href='http://www.geonames.org'>GeoNames web service</a>.
         contributor: A person or group you want to recognize for playing a role in the creation of the collection, but not the primary role.
-        creator: "The person or group responsible for the collection. Usually this is the author of the content. Personal names should be entered with the last name first: Smith, John"
+        creator: 'The person or group responsible for the collection. Usually this is the author of the content. Personal names should be entered with the last name first: Smith, John'
         date_created: The date on which the collection was created.
         description: Free-text notes about the collection. Examples include abstracts of a paper or citation information for a journal article.
         identifier: A unique handle identifying the collection. An example would be a DOI for a journal article, or an ISBN or OCLC number for a book.
