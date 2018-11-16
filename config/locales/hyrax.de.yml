@@ -654,6 +654,7 @@ de:
         show:
           header: Sammlung
           item_count: Arbeiten
+          metadata_header: Details zur Sammlung
           parent_collection_header: Übergeordnete Sammlungen
           public_view_label: Öffentliche Sicht der Sammlung
           search_results: Suchergebnisse innerhalb dieser Sammlung

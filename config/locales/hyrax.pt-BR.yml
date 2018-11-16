@@ -647,6 +647,7 @@ pt-BR:
         show:
           header: Coleção
           item_count: Obras
+          metadata_header: Detalhes da coleção
           parent_collection_header: Coleções mães
           public_view_label: Vista pública da Coleção
           search_results: Resultados da pesquisa dentro desta coleção

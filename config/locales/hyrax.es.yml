@@ -652,6 +652,7 @@ es:
         show:
           header: Colección
           item_count: Trabajos
+          metadata_header: Detalles de la colección
           parent_collection_header: Colecciones de padres
           public_view_label: Vista pública de la colección
           search_results: Resultados de búsqueda dentro de esta colección
