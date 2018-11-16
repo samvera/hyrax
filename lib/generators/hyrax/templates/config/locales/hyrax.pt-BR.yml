@@ -5,7 +5,7 @@ pt-BR:
       fields:
         facet:
           based_near_label_sim: Localização
-          creator_sim: O Criador
+          creator_sim: Criador
           file_format_sim: Formato
           generic_type_sim: Tipo
           keyword_sim: Palavra-chave
@@ -16,9 +16,9 @@ pt-BR:
           based_near_tesim: Localização
           contributor_tesim: Contribuinte
           creator_tesim: O Criador
-          date_created_tesim: Data Criada
-          date_modified_dtsi: Data modificada
-          date_uploaded_dtsi: Data carregada
+          date_created_tesim: Data de Criação
+          date_modified_dtsi: Data de Modificação
+          date_uploaded_dtsi: Data de Carga
           description_tesim: Descrição
           file_format_tesim: Formato de arquivo
           identifier_tesim: Identificador
@@ -30,11 +30,11 @@ pt-BR:
           subject_tesim: Sujeito
         show:
           based_near_tesim: Localização
-          contributor_tesim: Contribuinte
-          creator_tesim: O Criador
-          date_created_tesim: Data Criada
-          date_modified_dtsi: Data modificada
-          date_uploaded_dtsi: Data carregada
+          contributor_tesim: Colaborador
+          creator_tesim: Criador
+          date_created_tesim: Data de Criação
+          date_modified_dtsi: Data de Modificação
+          date_uploaded_dtsi: Data de Carga
           description_tesim: Descrição
           file_format_tesim: Formato de arquivo
           identifier_tesim: Identificador
@@ -50,7 +50,7 @@ pt-BR:
     directory:
       suffix: "@ Example.org"
     footer:
-      copyright_html: "<strong>Copyright © 2017 Samvera Licenciado</strong> sob a Licença Apache, Versão 2.0"
+      copyright_html: "<strong>Copyright © 2018 Samvera </strong> Licenciado sob a Licença Apache, Versão 2.0"
       service_html: Um serviço de <a href="http://samvera.org/" class="navbar-link" target="_blank">Samvera</a> .
     institution_name: Instituição
     institution_name_full: O Nome da Instituição
