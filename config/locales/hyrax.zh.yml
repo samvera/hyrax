@@ -650,6 +650,7 @@ zh:
         show:
           header: 采集
           item_count: 作品
+          metadata_header: 收集细节
           parent_collection_header: 家长集合
           public_view_label: 公众对收藏的看法
           search_results: 搜索此集合中的结果

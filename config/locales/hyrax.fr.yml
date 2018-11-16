@@ -653,6 +653,7 @@ fr:
         show:
           header: Collection
           item_count: Travaux
+          metadata_header: Détails de la collection
           parent_collection_header: Collections de parents
           public_view_label: Vue publique de la collection
           search_results: Résultats de la recherche dans cette collection
