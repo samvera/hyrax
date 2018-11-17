@@ -5,7 +5,7 @@ module Hyrax
 
       module ClassMethods
         def where_digest_is(digest_string)
-          where Solrizer.solr_name('digest', :symbol) => urnify(digest_string)
+          where ActiveFedora.index_field_mapper.solr_name('digest', :symbol) => urnify(digest_string)
         end
 
         def urnify(digest_string)

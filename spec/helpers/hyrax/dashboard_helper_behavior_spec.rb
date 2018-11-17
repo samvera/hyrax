@@ -62,13 +62,13 @@ RSpec.describe Hyrax::DashboardHelperBehavior, type: :helper do
   def create_models(model, user1, user2)
     # deposited by the first user
     3.times do |t|
-      conn.add id: "199#{t}", Solrizer.solr_name('depositor', :stored_searchable) => user1.user_key, "has_model_ssim" => [model],
-               Solrizer.solr_name('depositor', :symbol) => user1.user_key
+      conn.add id: "199#{t}", ActiveFedora.index_field_mapper.solr_name('depositor', :stored_searchable) => user1.user_key, "has_model_ssim" => [model],
+               ActiveFedora.index_field_mapper.solr_name('depositor', :symbol) => user1.user_key
     end
 
     # deposited by the second user, but editable by the first
-    conn.add id: "1994", Solrizer.solr_name('depositor', :stored_searchable) => user2.user_key, "has_model_ssim" => [model],
-             Solrizer.solr_name('depositor', :symbol) => user2.user_key, "edit_access_person_ssim" => user1.user_key
+    conn.add id: "1994", ActiveFedora.index_field_mapper.solr_name('depositor', :stored_searchable) => user2.user_key, "has_model_ssim" => [model],
+             ActiveFedora.index_field_mapper.solr_name('depositor', :symbol) => user2.user_key, "edit_access_person_ssim" => user1.user_key
     conn.commit
   end
 end

@@ -67,13 +67,13 @@ module Hyrax
       # @param [Array] val an array of two elements, first is a string (the uri) and the second is a hash with one key: `:label`
       def append_label_and_uri(solr_doc, solr_field_key, field_info, val)
         val = val.solrize
-        self.class.create_and_insert_terms(solr_field_key,
-                                           val.first,
-                                           field_info.behaviors, solr_doc)
+        ActiveFedora::Indexing::Inserter.create_and_insert_terms(solr_field_key,
+                                                                 val.first,
+                                                                 field_info.behaviors, solr_doc)
         return unless val.last.is_a? Hash
-        self.class.create_and_insert_terms("#{solr_field_key}_label",
-                                           label(val),
-                                           field_info.behaviors, solr_doc)
+        ActiveFedora::Indexing::Inserter.create_and_insert_terms("#{solr_field_key}_label",
+                                                                 label(val),
+                                                                 field_info.behaviors, solr_doc)
       end
 
       # Use this method to append a string value from a controlled vocabulary field
@@ -83,12 +83,12 @@ module Hyrax
       # @param [Hash] field_info
       # @param [String] val
       def append_label(solr_doc, solr_field_key, field_info, val)
-        self.class.create_and_insert_terms(solr_field_key,
-                                           val,
-                                           field_info.behaviors, solr_doc)
-        self.class.create_and_insert_terms("#{solr_field_key}_label",
-                                           val,
-                                           field_info.behaviors, solr_doc)
+        ActiveFedora::Indexing::Inserter.create_and_insert_terms(solr_field_key,
+                                                                 val,
+                                                                 field_info.behaviors, solr_doc)
+        ActiveFedora::Indexing::Inserter.create_and_insert_terms("#{solr_field_key}_label",
+                                                                 val,
+                                                                 field_info.behaviors, solr_doc)
       end
 
       # Return a label for the solrized term:

@@ -22,8 +22,8 @@ module Hyrax
 
     def to_solr(solr_doc = {})
       super(solr_doc).tap do |doc|
-        doc[Solrizer.solr_name('human_readable_type', :facetable)] = human_readable_type
-        doc[Solrizer.solr_name('human_readable_type', :stored_searchable)] = human_readable_type
+        doc[ActiveFedora.index_field_mapper.solr_name('human_readable_type', :facetable)] = human_readable_type
+        doc[ActiveFedora.index_field_mapper.solr_name('human_readable_type', :stored_searchable)] = human_readable_type
       end
     end
   end

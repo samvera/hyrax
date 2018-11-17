@@ -1,3 +1,3 @@
 <% record.keyword.each do |t| %>
-  <span itemprop="keywords"><%= link_to_facet(t, Solrizer.solr_name("keyword", :facetable)) %></span><br />
+  <span itemprop="keywords"><%= link_to_facet(t, ActiveFedora.index_field_mapper.solr_name("keyword", :facetable)) %></span><br />
 <% end %>

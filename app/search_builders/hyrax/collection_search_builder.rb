@@ -19,7 +19,7 @@ module Hyrax
 
     # @return [String] Solr field name indicating default sort order
     def sort_field
-      Solrizer.solr_name('title', :sortable)
+      ActiveFedora.index_field_mapper.solr_name('title', :sortable)
     end
 
     # This overrides the models in FilterByType
