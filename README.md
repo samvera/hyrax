@@ -37,6 +37,7 @@ Jump in: [![Slack Status](http://slack.samvera.org/badge.svg)](http://slack.samv
     * [Create default administrative set](#create-default-administrative-set)
     * [Generate a work type](#generate-a-work-type)
     * [Enable notifications](#enable-notifications)
+    * [Set id validation](#set-id-validation)
   * [Managing a Hyrax\-based app](#managing-a-hyrax-based-app)
     * [Toggling features](#toggling-features)
   * [License](#license)
@@ -278,6 +279,20 @@ gem 'redis', '~> 3.0'
 And then run `bundle update redis`.
 
 Note that the Hyrax Management Guide contains additional information on [how to configure ActionCable in production environments](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide#notifications).
+
+## Set id validation
+
+Hyrax uses [noid-rails](https://github.com/samvera/noid-rails) for id generation.  By default, the minter will not validate whether a newly minted id is already in use.
+
+To set up id validation, add `config/initializers/noid_rails.rb`
+
+```
+::Noid::Rails.config.identifier_in_use = lambda { |id| ActiveFedora::Base.exists?(id) || ActiveFedora::Base.gone?(id) }
+```
+
+Requirement: noid-rails >= 3.0.1 (older versions prevented the override of identifier_in_use)
+
+NOTE: Checking ActiveFedora with every id generation can be slow.
 
 # Managing a Hyrax-based app
 
