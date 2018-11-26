@@ -2,7 +2,7 @@ module Hyrax
   class FileSetIndexer < ActiveFedora::IndexingService
     include Hyrax::IndexesThumbnails
     include Hyrax::IndexesBasicMetadata
-    STORED_LONG = Solrizer::Descriptor.new(:long, :stored)
+    STORED_LONG = ActiveFedora::Indexing::Descriptor.new(:long, :stored)
 
     def generate_solr_document
       super.tap do |solr_doc|

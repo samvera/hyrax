@@ -71,11 +71,11 @@ module Hyrax
 
     # Method to return the ActiveFedora model
     def hydra_model
-      first(Solrizer.solr_name('has_model', :symbol)).constantize
+      first(ActiveFedora.index_field_mapper.solr_name('has_model', :symbol)).constantize
     end
 
     def depositor(default = '')
-      val = first(Solrizer.solr_name('depositor'))
+      val = first(ActiveFedora.index_field_mapper.solr_name('depositor'))
       val.present? ? val : default
     end
 
@@ -85,7 +85,7 @@ module Hyrax
                    else
                      :stored_searchable
                    end
-      fetch(Solrizer.solr_name('creator', descriptor), [])
+      fetch(ActiveFedora.index_field_mapper.solr_name('creator', descriptor), [])
     end
 
     def visibility

@@ -1,6 +1,6 @@
 <% record.creator.each do |creator| %>
 <span itemprop="creator" itemscope itemtype="http://schema.org/Person">
-  <span itemprop="name"><%= link_to_facet(creator, Solrizer.solr_name("creator", :facetable)) %></span>
+  <span itemprop="name"><%= link_to_facet(creator, ActiveFedora.index_field_mapper.solr_name("creator", :facetable)) %></span>
 </span>
 <br />
 <% end %>

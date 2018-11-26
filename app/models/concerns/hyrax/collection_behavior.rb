@@ -89,7 +89,7 @@ module Hyrax
       end
 
       def collection_type_gid_document_field_name
-        Solrizer.solr_name('collection_type_gid', *index_collection_type_gid_as)
+        ActiveFedora.index_field_mapper.solr_name('collection_type_gid', *index_collection_type_gid_as)
       end
     end
 
@@ -171,12 +171,12 @@ module Hyrax
       # Field name to look up when locating the size of each file in Solr.
       # Override for your own installation if using something different
       def file_size_field
-        Solrizer.solr_name(:file_size, Hyrax::FileSetIndexer::STORED_LONG)
+        ActiveFedora.index_field_mapper.solr_name(:file_size, Hyrax::FileSetIndexer::STORED_LONG)
       end
 
       # Solr field name works use to index member ids
       def member_ids_field
-        Solrizer.solr_name('member_ids', :symbol)
+        ActiveFedora.index_field_mapper.solr_name('member_ids', :symbol)
       end
 
       def destroy_permission_template

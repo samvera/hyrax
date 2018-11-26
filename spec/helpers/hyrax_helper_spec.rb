@@ -117,7 +117,7 @@ RSpec.describe HyraxHelper, type: :helper do
     subject { helper.link_to_each_facet_field(options) }
 
     context "with helper_facet and default separator" do
-      let(:options) { { config: { helper_facet: Solrizer.solr_name("document_types", :facetable).to_sym }, value: ["Imaging > Object Photography"] } }
+      let(:options) { { config: { helper_facet: ActiveFedora.index_field_mapper.solr_name("document_types", :facetable).to_sym }, value: ["Imaging > Object Photography"] } }
 
       it do
         is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">" \
@@ -127,7 +127,7 @@ RSpec.describe HyraxHelper, type: :helper do
     end
 
     context "with helper_facet and optional separator" do
-      let(:options) { { config: { helper_facet: Solrizer.solr_name("document_types", :facetable).to_sym, separator: " : " }, value: ["Imaging : Object Photography"] } }
+      let(:options) { { config: { helper_facet: ActiveFedora.index_field_mapper.solr_name("document_types", :facetable).to_sym, separator: " : " }, value: ["Imaging : Object Photography"] } }
 
       it do
         is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">" \
@@ -137,7 +137,9 @@ RSpec.describe HyraxHelper, type: :helper do
     end
 
     context "with :output_separator" do
-      let(:options) { { config: { helper_facet: Solrizer.solr_name("document_types", :facetable).to_sym, output_separator: ' ~ ', separator: ":" }, value: ["Imaging : Object Photography"] } }
+      let(:options) do
+        { config: { helper_facet: ActiveFedora.index_field_mapper.solr_name("document_types", :facetable).to_sym, output_separator: ' ~ ', separator: ":" }, value: ["Imaging : Object Photography"] }
+      end
 
       it do
         is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">" \
@@ -147,7 +149,9 @@ RSpec.describe HyraxHelper, type: :helper do
     end
 
     context "with :no_spaces_around_separator" do
-      let(:options) { { config: { helper_facet: Solrizer.solr_name("document_types", :facetable).to_sym, output_separator: '~', separator: ":" }, value: ["Imaging : Object Photography"] } }
+      let(:options) do
+        { config: { helper_facet: ActiveFedora.index_field_mapper.solr_name("document_types", :facetable).to_sym, output_separator: '~', separator: ":" }, value: ["Imaging : Object Photography"] }
+      end
 
       it do
         is_expected.to eq("<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Imaging\">" \
