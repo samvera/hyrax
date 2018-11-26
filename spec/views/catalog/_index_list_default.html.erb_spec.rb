@@ -8,14 +8,15 @@ RSpec.describe 'catalog/_index_list_default', type: :view do
       'date_modified_dtsi'   => 'a date',
       'rights_statement_tesim' => [''],
       'embargo_release_date_dtsi' => 'a date',
-      'lease_expiration_date_dtsi' => 'a date' }
+      'lease_expiration_date_dtsi' => 'a date',
+      'has_model_ssim' => 'GenericWork' }
   end
   let(:document) { SolrDocument.new(attributes) }
   let(:presenter) { double }
 
   before do
     allow(view).to receive(:index_presenter).and_return(presenter)
-    allow(presenter).to receive(:field_value) { |field| "Test #{field}" }
+    allow(presenter).to receive(:field_value) { |field| "Test #{field.field}" }
     render 'catalog/index_list_default', document: document
   end
 

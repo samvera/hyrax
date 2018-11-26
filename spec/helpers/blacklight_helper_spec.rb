@@ -33,7 +33,9 @@ RSpec.describe BlacklightHelper, type: :helper do
       search_catalog_path(stuff)
     end
 
-    subject { index_presenter(document).field_value field_name }
+    let(:presenter) { index_presenter(document) }
+    let(:field) { blacklight_config.index_fields.fetch(field_name) }
+    subject { presenter.field_value field }
 
     context "description_tesim" do
       let(:field_name) { 'description_tesim' }
