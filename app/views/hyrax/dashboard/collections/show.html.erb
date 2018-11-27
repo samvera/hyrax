@@ -66,25 +66,25 @@
       </div>
     <% end %>
 
-    <!-- Search bar -->
     <div class="collections-search-wrapper">
+      <!-- Search results headline -->
+      <% if @members_count > 0 || @presenter.subcollection_count > 0 %>
+        <% if has_collection_search_parameters? %>
+          <h3 class="collections-search-results-headline">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            <%= t('hyrax.dashboard.collections.show.search_results') %>
+          </h3>
+        <% end %>
+      <% end %>
+
+      <!-- Search bar -->
       <div class="row">
-        <div class="col-lg-6 col-lg-offset-3">
+        <div class="col-lg-9">
           <%# TODO: leaving this as it was causes rerouting to the public show page. needs work %>
           <%= render 'hyrax/collections/search_form', presenter: @presenter, url: hyrax.dashboard_collection_path(@presenter.id) %>
         </div>
       </div>
     </div>
-
-    <!-- Search results label -->
-    <% if @members_count > 0 || @presenter.subcollection_count > 0 %>
-      <% if has_collection_search_parameters? %>
-        <h3>
-          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-          <%= t('hyrax.dashboard.collections.show.search_results') %>
-        </h3>
-    <% end %>
-    <% end %>
 
     <!-- Subcollections -->
     <% if @presenter.collection_type_is_nestable? %>
