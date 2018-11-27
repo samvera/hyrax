@@ -32,13 +32,9 @@ module Hyrax
         # @return [Boolean]
         #
         # rubocop:disable Metrics/MethodLength
-        # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         def assign_nested_attributes_for_collection(env)
           attributes_collection = env.attributes.delete(:member_of_collections_attributes)
-
-          return assign_for_collection_ids(env) unless attributes_collection
-
-          emit_deprecation if env.attributes.delete(:member_of_collection_ids)
+          return true unless attributes_collection
 
           return false unless
             valid_membership?(env, collection_ids: attributes_collection.map { |_, attributes| attributes['id'] })
@@ -58,46 +54,6 @@ module Hyrax
           true
         end
         # rubocop:enable Metrics/MethodLength
-        # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-
-        ##
-        # @deprecated supports old :member_of_collection_ids arguments
-        def emit_deprecation
-          Deprecation.warn(self, ':member_of_collections_attributes and :member_of_collection_ids were both ' \
-                                 ' passed. :member_of_collection_ids is ignored when both are passed and is ' \
-                                 'deprecated for removal in Hyrax 3.0.')
-        end
-
-        ##
-        # @deprecated supports old :member_of_collection_ids arguments
-        def assign_for_collection_ids(env)
-          collection_ids = env.attributes.delete(:member_of_collection_ids)
-
-          return false unless valid_membership?(env, collection_ids: collection_ids)
-
-          if collection_ids
-            Deprecation.warn(self, ':member_of_collection_ids has been deprecated for removal in Hyrax 3.0. ' \
-                                   'use :member_of_collections_attributes instead.')
-
-            collection_ids = [] if collection_ids.empty?
-            other_collections = collections_without_edit_access(env)
-
-            collections = ::Collection.find(collection_ids)
-            raise "Tried to assign collections with ids: #{collection_ids}, but none were found" unless
-              collections
-
-            env.curation_concern.member_of_collections = collections
-            env.curation_concern.member_of_collections.concat(other_collections)
-          end
-
-          true
-        end
-
-        ##
-        # @deprecated supports old :member_of_collection_ids arguments
-        def collections_without_edit_access(env)
-          env.curation_concern.member_of_collections.select { |coll| env.current_ability.cannot?(:edit, coll) }
-        end
 
         # Adds the item to the ordered members so that it displays in the items
         # along side the FileSets on the show page
@@ -140,17 +96,11 @@ module Hyrax
           attributes_collection =
             env.attributes.fetch(:member_of_collections_attributes) { nil }
 
-          if attributes_collection
-            # Determine if the work is being created in one and only one collection.
-            return unless attributes_collection && attributes_collection.size == 1
+          # Determine if the work is being created in one and only one collection.
+          return unless attributes_collection && attributes_collection.size == 1
 
-            # Extract the collection id from attributes_collection,
-            collection_id = attributes_collection.first.second['id']
-          else
-            collection_ids = env.attributes.fetch(:member_of_collection_ids) { [] }
-            return unless collection_ids.size == 1
-            collection_id = collection_ids.first
-          end
+          # Extract the collection id from attributes_collection,
+          collection_id = attributes_collection.first.second['id']
 
           # Do not apply permissions to work if collection type is configured not to
           collection = ::Collection.find(collection_id)

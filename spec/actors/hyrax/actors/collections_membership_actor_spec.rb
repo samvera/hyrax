@@ -100,76 +100,6 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
       end
     end
 
-    context 'when passing `member_of_collection_ids`' do
-      let(:attributes) { { member_of_collection_ids: [collection.id], title: ['test'] } }
-
-      it 'adds it to the collection' do
-        skip 'this behavior past its deprecation sunset time and can be removed' if
-          Hyrax::VERSION.split('.').first.to_i >= 3
-
-        expect(subject.create(env)).to be true
-        expect(collection.reload.member_objects).to eq [curation_concern]
-      end
-
-      context 'when it is empty' do
-        let(:attributes) { { member_of_collection_ids: [], title: ['test'] } }
-
-        it 'does not add it to a collection' do
-          skip 'this behavior past its deprecation sunset time and can be removed' if
-            Hyrax::VERSION.split('.').first.to_i >= 3
-
-          expect(subject.create(env)).to be true
-          expect(collection.reload.member_objects).to eq []
-        end
-      end
-
-      context 'when it is an empty string' do
-        let(:attributes) { { member_of_collection_ids: '', title: ['test'] } }
-
-        it 'does not add it to a collection' do
-          skip 'this behavior past its deprecation sunset time and can be removed' if
-            Hyrax::VERSION.split('.').first.to_i >= 3
-
-          expect(subject.create(env)).to be true
-          expect(collection.reload.member_objects).to eq []
-        end
-      end
-
-      context "when work is in user's own collection" do
-        let(:attributes) { { member_of_collection_ids: [] } }
-
-        it "removes the work from that collection" do
-          skip 'this behavior past its deprecation sunset time and can be removed' if
-            Hyrax::VERSION.split('.').first.to_i >= 3
-
-          expect(subject.create(env)).to be true
-          expect(collection.reload.member_objects).to be_empty
-        end
-      end
-
-      describe "when work is in another user's collection" do
-        let(:other_user)    { create(:user) }
-        let(:collection)    { create(:collection, user: other_user, title: ['A good title']) }
-        let(:my_collection) { create(:collection, title: ['My good title']) }
-
-        let(:attributes) { { member_of_collection_ids: [my_collection.id] } }
-
-        before do
-          curation_concern.member_of_collections = [collection]
-          curation_concern.save!
-        end
-
-        it "doesn't remove the work from the other user's collection" do
-          skip 'this behavior past its deprecation sunset time and can be removed' if
-            Hyrax::VERSION.split('.').first.to_i >= 3
-
-          expect(subject.create(env)).to be true
-          expect(curation_concern.member_of_collections)
-            .to contain_exactly(collection, my_collection)
-        end
-      end
-    end
-
     context "updates env" do
       let!(:collection_type) { create(:collection_type) }
       let!(:collection) { create(:collection, collection_type_gid: collection_type.gid, create_access: true) }
@@ -241,110 +171,11 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
             }
           end
 
-          it "removes member_of_collection_ids and does NOT add collection_id" do
+          it "removes member_of_collections_attributes and does NOT add collection_id" do
             expect(env.attributes).to have_key(:member_of_collections_attributes)
             expect(env.attributes[:member_of_collections_attributes].size).to eq 1
             expect(subject.create(env)).to be true
             expect(env.attributes).not_to have_key(:member_of_collections_attributes)
-            expect(env.attributes).not_to have_key(:collection_id)
-          end
-        end
-      end
-    end
-  end
-
-  context 'when old style env parameter' do
-    describe 'create' do
-      let(:collection) { create(:collection) }
-      let(:attributes) do
-        { member_of_collection_ids: [collection.id], title: ['test'] }
-      end
-
-      it 'adds it to the collection' do
-        expect(subject.create(env)).to be true
-        expect(collection.reload.member_objects).to eq [curation_concern]
-      end
-
-      context 'when multiple membership checker returns a non-nil value' do
-        before do
-          allow(Hyrax::MultipleMembershipChecker).to receive(:new).and_return(checker)
-          allow(checker).to receive(:check).and_return(error_message)
-        end
-
-        let(:checker) { double('checker') }
-        let(:error_message) { 'Error: foo bar' }
-
-        it 'adds an error and returns false' do
-          expect(env.curation_concern.errors).to receive(:add).with(:collections, error_message)
-          expect(subject.create(env)).to be false
-          expect(curation_concern.member_of_collections).to be_empty
-        end
-      end
-
-      context "when work is in user's own collection" do
-        let(:collection) { create(:collection, user: user, title: ['A good title']) }
-        let(:attributes) { { member_of_collection_ids: [] } }
-
-        before do
-          subject.create(Hyrax::Actors::Environment.new(curation_concern, ability,
-                                                        member_of_collection_ids: [collection.id], title: ['test']))
-        end
-
-        it "removes the work from that collection" do
-          expect(subject.create(env)).to be true
-          expect(curation_concern.member_of_collections).to eq []
-        end
-      end
-
-      context "when work is in another user's collection" do
-        let(:other_user) { create(:user) }
-        let(:collection) { create(:collection, user: other_user, title: ['A good title']) }
-
-        it "doesn't remove the work from that collection" do
-          subject.create(env)
-          expect(subject.create(env)).to be true
-          expect(curation_concern.member_of_collections).to eq [collection]
-        end
-      end
-
-      context "updates env" do
-        let(:collection) do
-          create(:collection, collection_type_settings: [:discoverable, :sharable])
-        end
-
-        subject(:middleware) do
-          stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
-            middleware.use described_class
-          end
-          stack.build(terminator)
-        end
-
-        context "when only one collection" do
-          let(:attributes) do
-            { member_of_collection_ids: [collection.id], title: ['test'] }
-          end
-
-          it "removes member_of_collection_ids and adds collection_id to env" do
-            expect(env.attributes).to have_key(:member_of_collection_ids)
-            expect(env.attributes[:member_of_collection_ids].size).to eq 1
-            expect(subject.create(env)).to be true
-            expect(env.attributes).not_to have_key(:member_of_collection_ids)
-            expect(env.attributes).to have_key(:collection_id)
-            expect(env.attributes[:collection_id]).to eq collection.id
-          end
-        end
-
-        context "when more than one collection" do
-          let(:collection2) { create(:collection) }
-          let(:attributes) do
-            { member_of_collection_ids: [collection.id, collection2.id], title: ['test'] }
-          end
-
-          it "removes member_of_collection_ids and does NOT add collection_id" do
-            expect(env.attributes).to have_key(:member_of_collection_ids)
-            expect(env.attributes[:member_of_collection_ids].size).to eq 2
-            expect(subject.create(env)).to be true
-            expect(env.attributes).not_to have_key(:member_of_collection_ids)
             expect(env.attributes).not_to have_key(:collection_id)
           end
         end
