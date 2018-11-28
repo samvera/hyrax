@@ -12,6 +12,8 @@ RSpec.describe 'hyrax/dashboard/collections/_show_actions.html.erb', type: :view
 
     allow(view).to receive(:can?).with(:edit, solr_document).and_return(can_edit)
     allow(view).to receive(:can?).with(:destroy, solr_document).and_return(can_destroy)
+
+    stub_template '_show_add_items_actions.html.erb' => '<div class="stubbed-actions">THE ADD ITEMS ACTIONS</div>'
   end
 
   describe 'when user can edit the document' do

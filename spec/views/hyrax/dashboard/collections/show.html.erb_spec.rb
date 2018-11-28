@@ -17,6 +17,7 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
     allow(view).to receive(:can?).with(:destroy, document).and_return(true)
     allow(view).to receive(:current_ability).and_return(ability)
     allow(ability).to receive(:current_user).and_return(user)
+    allow(ability).to receive(:can?).with(:deposit, document).and_return(true)
 
     allow(Collection).to receive(:find).with(document.id).and_return(collection)
 
@@ -42,7 +43,6 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
     # This is tested ./spec/views/hyrax/dashboard/collections/_show_actions.html.erb_spec.rb
     stub_template '_show_actions.html.erb' => '<div class="stubbed-actions">THE COLLECTION ACTIONS</div>'
     stub_template '_show_subcollection_actions.html.erb' => '<div class="stubbed-actions">THE SUBCOLLECTION ACTIONS</div>'
-    stub_template '_show_add_items_actions.html.erb' => '<div class="stubbed-actions">THE ADD ITEMS ACTIONS</div>'
     stub_template '_show_parent_collections.html.erb' => '<div class="stubbed-actions">THE PARENT COLLECTIONS LIST</div>'
     stub_template '_subcollection_list.html.erb' => '<div class="stubbed-actions">THE SUB-COLLECTIONS LIST</div>'
     stub_template 'hyrax/collections/_paginate.html.erb' => 'paginate'
@@ -56,7 +56,6 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
     # Making sure that we are verifying that the _show_actions.html.erb is rendering
     expect(rendered).to have_css('.stubbed-actions', text: 'THE COLLECTION ACTIONS')
     expect(rendered).to have_css('.stubbed-actions', text: 'THE SUBCOLLECTION ACTIONS')
-    expect(rendered).to have_css('.stubbed-actions', text: 'THE ADD ITEMS ACTIONS')
     expect(rendered).to match '<span class="fa fa-cubes collection-icon-search"></span>'
     expect(rendered).not_to have_text('Search Results within this Collection')
   end
@@ -71,7 +70,6 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
       # Making sure that we are verifying that the _show_actions.html.erb is rendering
       expect(rendered).to have_css('.stubbed-actions', text: 'THE COLLECTION ACTIONS')
       expect(rendered).to have_css('.stubbed-actions', text: 'THE SUBCOLLECTION ACTIONS')
-      expect(rendered).to have_css('.stubbed-actions', text: 'THE ADD ITEMS ACTIONS')
       expect(rendered).to match '<span class="fa fa-cubes collection-icon-search"></span>'
       expect(rendered).not_to have_text('Search Results within this Collection')
     end
@@ -94,7 +92,6 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
         expect(rendered).to have_text('Search Results within this Collection')
         expect(rendered).to have_css('.stubbed-actions', text: 'THE COLLECTION ACTIONS')
         expect(rendered).not_to have_css('.stubbed-actions', text: 'THE SUBCOLLECTION ACTIONS')
-        expect(rendered).not_to have_css('.stubbed-actions', text: 'THE ADD ITEMS ACTIONS')
       end
     end
 
@@ -109,7 +106,6 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
         expect(rendered).to have_text('Search Results within this Collection')
         expect(rendered).to have_css('.stubbed-actions', text: 'THE COLLECTION ACTIONS')
         expect(rendered).not_to have_css('.stubbed-actions', text: 'THE SUBCOLLECTION ACTIONS')
-        expect(rendered).not_to have_css('.stubbed-actions', text: 'THE ADD ITEMS ACTIONS')
       end
     end
   end
