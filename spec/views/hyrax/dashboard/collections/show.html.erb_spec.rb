@@ -60,6 +60,35 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
     expect(rendered).not_to have_text('Search Results within this Collection')
   end
 
+  describe 'nesting the collection within another collection' do
+    context 'with nestable collection' do
+      it 'renders add parent collection link' do
+        allow(presenter).to receive(:collection_type_is_nestable?).and_return true
+        allow(presenter).to receive(:user_can_nest_collection?).and_return true
+
+        render
+        expect(rendered).to have_button('Add existing collections to this collection')
+      end
+    end
+
+    context 'with nestable collection but without permissions' do
+      it 'does not render add parent collection link' do
+        allow(presenter).to receive(:collection_type_is_nestable?).and_return true
+        allow(presenter).to receive(:user_can_nest_collection?).and_return false
+
+        render
+        expect(rendered).not_to have_button('Add existing collections to this collection')
+      end
+    end
+
+    context 'with non-nestable collection' do
+      it 'does not render add parent collection link' do
+        render
+        expect(rendered).not_to have_button('Nest this collection')
+      end
+    end
+  end
+
   context 'with a not-nested collection_type' do
     before do
       allow(presenter).to receive(:subcollection_count).and_return(0)
