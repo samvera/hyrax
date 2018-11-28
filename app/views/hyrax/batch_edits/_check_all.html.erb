@@ -1,7 +1,7 @@
 <div class="dropdown batch_document_selector_all">
   <label class="centerizer">
     <%= check_box_tag 'check_all', 'yes', @all_checked, disabled: @disable_select_all %>
-    <span class="works-list-batch-checkbox-label-text">
+    <span class="batch-checkbox-label-text">
       <%= t("hyrax.dashboard.my.action.select") %>
     </span>
     <% if !@disable_select_all %>

@@ -209,11 +209,13 @@ button.branding-banner-remove:hover {
     display: flex;
 
     .thumbnail-wrapper {
-      width: 50px;
+      flex: 0 0 64px;
+      margin-right: 10px;
+      overflow-x: hidden;
 
       > img {
-        height: 30px;
-        width: auto;
+        height: auto;
+        max-width: 64px;
       }
     }
 
