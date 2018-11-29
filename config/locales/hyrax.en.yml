@@ -1265,7 +1265,7 @@ en:
         based_near: Location
         creator: Creator
         date_created: Date Created
-        description: Abstract or Summary
+        description: Description
         embargo_release_date: until
         files: Upload a file
         keyword: Keyword

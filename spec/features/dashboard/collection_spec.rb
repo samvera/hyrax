@@ -250,7 +250,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         expect(page).to have_selector "input.collection_creator.multi_value"
 
         fill_in('Title', with: title)
-        fill_in('Abstract or Summary', with: description)
+        fill_in('Description', with: description)
         fill_in('Related URL', with: 'http://example.com/')
 
         click_button("Save")
@@ -281,7 +281,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         expect(page).to have_selector "input.collection_creator.multi_value"
 
         fill_in('Title', with: title)
-        fill_in('Abstract or Summary', with: description)
+        fill_in('Description', with: description)
         fill_in('Related URL', with: 'http://example.com/')
 
         click_button("Save")
@@ -815,7 +815,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           creators = ["Dorje Trollo", "Vajrayogini"]
 
           fill_in('Title', with: new_title)
-          fill_in('Abstract or Summary', with: new_description)
+          fill_in('Description', with: new_description)
           fill_in('Creator', with: creators.first)
           within('.panel-footer') do
             click_button('Save changes')
