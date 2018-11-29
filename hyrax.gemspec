@@ -81,7 +81,7 @@ SUMMARY
   spec.add_dependency 'tinymce-rails', '~> 4.1'
 
   # temporary pin to 2.17 due to failures caused in 2.18.0
-  spec.add_development_dependency "capybara", '~> 2.4', '< 2.18.0'
+  spec.add_development_dependency "capybara", '~> 3.12', '< 3.13.0'
   spec.add_development_dependency 'capybara-maleficent', '~> 0.3.0'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
   spec.add_development_dependency 'engine_cart', '~> 2.0'
