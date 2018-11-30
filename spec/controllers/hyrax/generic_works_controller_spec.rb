@@ -618,5 +618,14 @@ RSpec.describe Hyrax::GenericWorksController do
       get :manifest, params: { id: work, format: :html }
       expect(response.body).to eq "{\"test\":\"manifest\"}"
     end
+
+    describe "when there are html tags in the labels or description" do
+      let(:manifest_factory) { double(to_h: { label: "The title<img src=xx:x onerror=eval('\x61ler\x74(1)') />", description: ["Some description <script>something</script> here..."] }) }
+
+      it "sanitizes the labels and description" do
+        get :manifest, params: { id: work, format: :json }
+        expect(response.body).to include "{\"label\":\"The title\\u003cimg\\u003e\",\"description\":[\"Some description  here...\"]}"
+      end
+    end
   end
 end

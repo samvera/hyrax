@@ -531,6 +531,16 @@ RSpec.describe Hyrax::WorkShowPresenter do
         expect(subject[0]['label']).to eq('Title')
         expect(subject[0]['value']).to include('Test title', 'Another test title')
       end
+
+      context "when there are html tags in the metadata" do
+        before do
+          work.title = ["The title<img src=xx:x onerror=eval('\x61ler\x74(1)') />", 'Another test title']
+        end
+
+        it "sanitizes the metadata values" do
+          expect(subject[0]['value']).to include('The title<img>', 'Another test title')
+        end
+      end
     end
   end
 

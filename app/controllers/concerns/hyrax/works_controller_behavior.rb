@@ -127,9 +127,12 @@ module Hyrax
 
     def manifest
       headers['Access-Control-Allow-Origin'] = '*'
+
+      json = sanitize_manifest(JSON.parse(manifest_builder.to_h.to_json))
+
       respond_to do |wants|
-        wants.json { render json: manifest_builder.to_h }
-        wants.html { render json: manifest_builder.to_h }
+        wants.json { render json: json }
+        wants.html { render json: json }
       end
     end
 
@@ -323,6 +326,22 @@ module Hyrax
 
       def permissions_changed?
         @saved_permissions != curation_concern.permissions.map(&:to_hash)
+      end
+
+      def sanitize_manifest(hash)
+        hash['label'] = sanitize_value(hash['label']) if hash.key?('label')
+        hash['description'] = hash['description']&.collect { |elem| sanitize_value(elem) } if hash.key?('description')
+
+        hash['sequences']&.each do |sequence|
+          sequence['canvases']&.each do |canvas|
+            canvas['label'] = sanitize_value(canvas['label'])
+          end
+        end
+        hash
+      end
+
+      def sanitize_value(text)
+        Loofah.fragment(text.to_s).scrub!(:prune).to_s
       end
   end
 end
