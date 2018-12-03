@@ -161,7 +161,7 @@ class CatalogController < ApplicationController
     end
 
     config.add_search_field('description') do |field|
-      field.label = "Abstract or Summary"
+      field.label = "Description"
       solr_name = solr_name("description", :stored_searchable)
       field.solr_local_parameters = {
         qf: solr_name,
