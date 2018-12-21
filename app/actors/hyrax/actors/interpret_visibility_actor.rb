@@ -1,9 +1,11 @@
 module Hyrax
   module Actors
     class InterpretVisibilityActor < AbstractActor
-      class Intention
+      class Intention < VisibilityIntention
         def initialize(attributes)
           @attributes = attributes
+
+          instance_vars_from_attributes
         end
 
         # returns a copy of attributes with the necessary params removed
@@ -21,35 +23,26 @@ module Hyrax
           end
         end
 
-        def wants_lease?
-          visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE
-        end
-
-        def wants_embargo?
-          visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO
-        end
-
-        def valid_lease?
-          wants_lease? && @attributes[:lease_expiration_date].present?
-        end
-
-        def valid_embargo?
-          wants_embargo? && @attributes[:embargo_release_date].present?
-        end
-
-        def lease_params
-          [:lease_expiration_date,
-           :visibility_during_lease,
-           :visibility_after_lease].map { |key| @attributes[key] }
-        end
-
-        def embargo_params
-          [:embargo_release_date,
-           :visibility_during_embargo,
-           :visibility_after_embargo].map { |key| @attributes[key] }
-        end
-
         private
+
+          ##
+          # This method provides compatibility between form attributes passed in
+          # by the Actor, and the interface of `VisibilityIntention`. This
+          # behavior might benefit from being extracted elsewhere (the Actor?
+          # the form object?). Or it might be better to just expect clients to
+          # only pass in one set of end_date/during/after values.
+          #
+          # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+          def instance_vars_from_attributes
+            self.visibility   = @attributes[:visibility]
+            self.release_date = (wants_embargo? && @attributes[:embargo_release_date].presence) ||
+                                (wants_lease?   && @attributes[:lease_expiration_date].presence)
+            self.after        = (wants_embargo? && @attributes[:visibility_after_embargo].presence) ||
+                                (wants_lease?   && @attributes[:visibility_after_lease].presence)
+            self.during       = (wants_embargo? && @attributes[:visibility_during_embargo].presence) ||
+                                (wants_lease?   && @attributes[:visibility_during_lease].presence)
+          end
+          # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
           def sanitize_unrestricted_params
             @attributes.except(:lease_expiration_date,
@@ -72,10 +65,6 @@ module Hyrax
                                :embargo_release_date,
                                :visibility_during_embargo,
                                :visibility_after_embargo)
-          end
-
-          def visibility
-            @attributes[:visibility]
           end
       end
 
