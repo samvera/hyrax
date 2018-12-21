@@ -21,6 +21,7 @@ module Hyrax
       require 'hyrax/transactions/create_work'
       require 'hyrax/transactions/destroy_work'
       require 'hyrax/transactions/steps/apply_permission_template'
+      require 'hyrax/transactions/steps/apply_visibility'
       require 'hyrax/transactions/steps/destroy_work'
       require 'hyrax/transactions/steps/ensure_admin_set'
       require 'hyrax/transactions/steps/ensure_permission_template'
@@ -36,8 +37,13 @@ module Hyrax
           Steps::ApplyPermissionTemplate.new
         end
 
+<<<<<<< HEAD
         ops.register 'destroy_work' do
           Steps::DestroyWork.new
+=======
+        ops.register 'apply_visibility' do
+          Steps::ApplyVisibility.new
+>>>>>>> Apply visibility, embargo, and lease when creating transactionally
         end
 
         ops.register 'ensure_admin_set' do

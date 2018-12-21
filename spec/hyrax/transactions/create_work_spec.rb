@@ -83,6 +83,34 @@ RSpec.describe Hyrax::Transactions::CreateWork do
     end
   end
 
+  context 'when requesting a lease' do
+    let(:after)     { 'restricted' }
+    let(:during)    { 'open' }
+    let(:end_date)  { (Time.zone.today + 2).to_s }
+    let(:request)   { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE }
+    let(:step_args) { { apply_visibility: [visibility: request, release_date: end_date, during: during, after: after] } }
+
+    it 'sets the lease' do
+      expect { transaction.with_step_args(step_args).call(work) }
+        .to change { work.lease }
+        .to be_a_lease_matching(release_date: end_date, during: during, after: after)
+    end
+  end
+
+  context 'when requesting an embargo' do
+    let(:after)     { 'open' }
+    let(:during)    { 'restricted' }
+    let(:end_date)  { (Time.zone.today + 2).to_s }
+    let(:request)   { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO }
+    let(:step_args) { { apply_visibility: [visibility: request, release_date: end_date, during: during, after: after] } }
+
+    it 'sets the embargo' do
+      expect { transaction.with_step_args(step_args).call(work) }
+        .to change { work.embargo }
+        .to be_an_embargo_matching(release_date: end_date, during: during, after: after)
+    end
+  end
+
   context 'with an admin set' do
     let(:admin_set) { AdminSet.find(template.source_id) }
     let(:template)  { create(:permission_template, with_admin_set: true) }
