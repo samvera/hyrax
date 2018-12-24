@@ -34,17 +34,21 @@ module Hyrax
     #
     # @see https://dry-rb.org/gems/dry-transaction/
     #
-    # @todo add collection membership handling
-    # @todo add handling for collection permissions (see: `ApplyPermissionTemplateActor`)
+    # @todo add collection membership handling (@see CollectionsMembershipActor)
+    # @todo set depositor (@see BaseActor)
+    # @todo initialize workflow after save (@see BaseActor)
     # @todo add to parent works post-save (see: 'AddToWorkActor`)
     # @todo attach files (see: 'CreateWithFilesActor`, `CreateWithRemoteFilesActor`
     # @todo validate PermissionTemplate against visibility, lease, and embargo (see: `InterpretVisibilityActor`)
+    # @todo add locking/transactionality. Just do better than the Actor Stack
+    # @todo add support for proxy deposit (see: TransferRequestActor)
     class CreateWork
       include Dry::Transaction(container: Hyrax::Transactions::Container)
 
       step :set_default_admin_set,     with: 'work.set_default_admin_set'
       step :ensure_admin_set,          with: 'work.ensure_admin_set'
       step :apply_permission_template, with: 'work.apply_permission_template'
+      step :apply_collection_template, with: 'work.apply_collection_permission_template'
       step :apply_visibility,          with: 'work.apply_visibility'
       step :set_modified_date,         with: 'work.set_modified_date'
       step :set_uploaded_date,         with: 'work.set_uploaded_date'

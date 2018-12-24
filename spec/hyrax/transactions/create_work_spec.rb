@@ -180,4 +180,44 @@ RSpec.describe Hyrax::Transactions::CreateWork do
       end
     end
   end
+
+  context 'when inheriting permissions from a collection' do
+    let(:manage_groups) { ['edit_group_1', 'edit_group_2'] }
+    let(:manage_users)  { create_list(:user, 2) }
+    let(:view_groups)   { ['read_group_1', 'read_group_2'] }
+    let(:view_users)    { create_list(:user, 2) }
+    let(:collection)    { create(:collection_lw, with_permission_template: permissions) }
+    let(:step_args)     { { apply_collection_template: [collections: [collection]] } }
+
+    let(:permissions) do
+      { manage_groups: manage_groups,
+        manage_users:  manage_users,
+        view_groups:   view_groups,
+        view_users:    view_users }
+    end
+
+    it 'assigns edit groups from template' do
+      expect { transaction.with_step_args(step_args).call(work) }
+        .to change { work.edit_groups }
+        .to include(*manage_groups)
+    end
+
+    it 'assigns edit users from template' do
+      expect { transaction.with_step_args(step_args).call(work) }
+        .to change { work.edit_users }
+        .to include(*manage_users.map(&:user_key))
+    end
+
+    it 'assigns read groups from template' do
+      expect { transaction.with_step_args(step_args).call(work) }
+        .to change { work.read_groups }
+        .to include(*view_groups)
+    end
+
+    it 'assigns read users from template' do
+      expect { transaction.with_step_args(step_args).call(work) }
+        .to change { work.read_users }
+        .to include(*view_users.map(&:user_key))
+    end
+  end
 end
