@@ -114,6 +114,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
           expect(curation_concern.visibility_during_embargo).to eq 'authenticated'
           expect(curation_concern.visibility_after_embargo).to eq 'open'
           expect(curation_concern.visibility).to eq 'authenticated'
+          expect(curation_concern.reload).to be_under_embargo
         end
       end
 
@@ -429,6 +430,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
           expect(curation_concern.visibility_during_lease).to eq 'open'
           expect(curation_concern.visibility_after_lease).to eq 'restricted'
           expect(curation_concern.visibility).to eq 'open'
+          expect(curation_concern.reload.lease).not_to be_new_record
         end
       end
 
