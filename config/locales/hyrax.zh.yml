@@ -364,6 +364,8 @@ zh:
           actions: 行动
           title: 职称
       form_files:
+        add_files: 添加文件
+        add_folder: 添加文件夹
         dropzone: 请将文件拖放此处。
         local_upload_browse_everything_html: |
           <p>您可以添加一个或多个文件与该工作相关联。</p>

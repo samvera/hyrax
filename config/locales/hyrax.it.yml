@@ -364,6 +364,8 @@ it:
           actions: Azione
           title: Titolo del lavoro
       form_files:
+        add_files: Aggiungi file
+        add_folder: Aggiungi una cartella
         dropzone: Drop file qui.
         local_upload_browse_everything_html: |
           <p>È possibile aggiungere uno o più file da associare a questo lavoro.</p>

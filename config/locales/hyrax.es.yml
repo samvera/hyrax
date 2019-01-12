@@ -364,6 +364,8 @@ es:
           actions: Acción
           title: Título de trabajo
       form_files:
+        add_files: Agregar archivos
+        add_folder: Agregar una carpeta
         dropzone: Soltar archivos aquí.
         local_upload_browse_everything_html: |
           <p>Puede agregar uno o más archivos para asociar con esta obra.</p>
