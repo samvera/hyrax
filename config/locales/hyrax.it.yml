@@ -409,6 +409,8 @@ it:
       form_thumbnail:
         help_html: Seleziona il file da utilizzare come anteprima per questo lavoro.
         legend_html: Thumbnail
+      form_visibility_component:
+        visibility: Visibilità
       items:
         actions: Azioni
         date_uploaded: Data caricata
