@@ -410,6 +410,8 @@ fr:
       form_thumbnail:
         help_html: Sélectionnez le fichier à utiliser comme vignette pour ce travail.
         legend_html: La vignette
+      form_visibility_component:
+        visibility: Visibilité
       items:
         actions: actes
         date_uploaded: Date de téléchargement

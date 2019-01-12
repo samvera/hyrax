@@ -409,6 +409,8 @@ es:
       form_thumbnail:
         help_html: Seleccione el archivo que se utilizará como miniatura para este trabajo.
         legend_html: Miniatura
+      form_visibility_component:
+        visibility: Visibilidad
       items:
         actions: Acciones
         date_uploaded: Fecha de subida

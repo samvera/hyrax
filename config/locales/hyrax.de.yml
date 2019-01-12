@@ -411,6 +411,8 @@ de:
       form_thumbnail:
         help_html: Wählen Sie die Datei aus, die als Miniaturansicht für diese Arbeit verwendet werden soll.
         legend_html: Miniaturansicht
+      form_visibility_component:
+        visibility: Sichtbarkeit
       items:
         actions: Aktionen
         date_uploaded: Datum Hochgeladen

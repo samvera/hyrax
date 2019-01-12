@@ -404,6 +404,8 @@ pt-BR:
       form_thumbnail:
         help_html: Selecione o arquivo a ser usado como miniatura para esta obra.
         legend_html: Miniatura
+      form_visibility_component:
+        visibility: Visibilidade
       items:
         actions: Ações
         date_uploaded: Data de carga

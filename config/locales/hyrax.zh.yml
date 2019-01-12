@@ -407,6 +407,8 @@ zh:
       form_thumbnail:
         help_html: 选择要用作此作品缩略图的文件。
         legend_html: 缩略图
+      form_visibility_component:
+        visibility: 能见度
       items:
         actions: 行动
         date_uploaded: 上传日期

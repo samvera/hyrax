@@ -410,6 +410,8 @@ en:
       form_thumbnail:
         help_html: Select the file to be used as the thumbnail for this work.
         legend_html: Thumbnail
+      form_visibility_component:
+        visibility: Visibilité
       items:
         actions: Actions
         date_uploaded: Date Uploaded
