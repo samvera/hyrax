@@ -364,6 +364,8 @@ pt-BR:
           actions: Ação
           title: Título da Obra
       form_files:
+        add_files: Adicionar arquivos
+        add_folder: Adicione uma pasta
         dropzone: Largue os arquivos aqui.
         local_upload_browse_everything_html: "<p>Você pode associar um ou mais arquivos a esta obra. Associe arquivos de seu sistema local ou um provedor de nuvem.</p> <p>Note que se você carregar uma grande quantidade de arquivos dentro de um curto período de tempo, o fornecedor de nuvem pode não ser capaz de acomodar a sua solicitação. Se você tiver algum erro ao carregar da nuvem, avise-nos através do %{contact_href}.<p>"
         local_upload_html: "<p>Você pode acrescentar um ou mais arquivos para associar a esta obra.</p>"

@@ -364,6 +364,8 @@ de:
           actions: Aktion
           title: Arbeitstitel
       form_files:
+        add_files: Dateien hinzufügen
+        add_folder: Einen Ordner hinzufügen
         dropzone: Dateien hier hinziehen.
         local_upload_browse_everything_html: |
           <p>Sie können eine oder mehre Dateien von Ihrem lokalen System oder einem Cloudanbieter hinzufügen, welche mit dieser Arbeit
