@@ -432,6 +432,7 @@ es:
         definitions_html: "<strong>Ver / Descargar:</strong> este archivo (tanto contenido como metadatos) es accesible desde %{application_name}. <br /> <strong>Editar:</strong> este archivo (tanto contenido como metadatos) se puede editar. Solo puede otorgar este permiso a usuarios y / o grupos %{institution_name}."
         share_with_html: Puede otorgar acceso de "Ver / Descargar" o "Editar" para usuarios o grupos específicos a los archivos. Ingrese un %{account_name} válido, uno a la vez, seleccione el nivel de acceso para ese usuario y haga clic en + Agregar.
       show:
+        items: Elementos
         last_modified: Última modificación
         relationships: Las relaciones
       show_actions:

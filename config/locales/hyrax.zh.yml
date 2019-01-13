@@ -430,6 +430,7 @@ zh:
         definitions_html: "<strong>查看/下载：</strong>可以从%{application_name}中访问此文件（内容和元数据）。 <br /> <strong>编辑：</strong>可以<strong>编辑</strong>此文件（包括内容和元数据）。您只能将此权限授予%{institution_name}用户和/或组。"
         share_with_html: 您可以为特定用户和/或组授予对文件的“查看/下载”或“编辑”访问权限。输入有效的%{account_name}，一次选择一个，选择该用户的访问级别，然后单击+添加。
       show:
+        items: 项目
         last_modified: 最新修改
         relationships: 关系
       show_actions:

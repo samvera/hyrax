@@ -433,6 +433,7 @@ fr:
         definitions_html: "<strong>Afficher / Télécharger:</strong> ce fichier (contenu et métadonnées) est accessible depuis %{application_name}. <br /> <strong>Edit:</strong> ce fichier (contenu et métadonnées) peut être modifié. Vous ne pouvez accorder cette autorisation qu'aux utilisateurs et / ou groupes de %{institution_name}."
         share_with_html: Vous pouvez accorder l'accès aux fichiers "View / Download" ou "Edit" à des utilisateurs et / ou des groupes spécifiques. Entrez un %{account_name} valide, un par un, sélectionnez le niveau d'accès pour cet utilisateur, puis cliquez sur + Ajouter.
       show:
+        items: Contenu
         last_modified: Dernière modification
         relationships: Relations
       show_actions:

@@ -427,6 +427,7 @@ pt-BR:
         definitions_html: "<strong>Acesso/Download:</strong> este arquivo (tanto conteúdo quanto metadados) é acessível a partir de %{application_name}.<br /> <strong>Edição:</strong> este arquivo (tanto conteúdo quanto metadados) pode ser editado. Você só pode conceder esta permissão a usuários e grupos do(a) %{institution_name}."
         share_with_html: Você pode conceder a permissão de &quot;Acesso/Download&quot; ou &quot;Edição&quot; dos arquivos para usuários e grupos específicos. Entre uma %{account_name} válida, uma de cada vez, selecione o nível de acesso para o usuário, e clique +Acrescentar.
       show:
+        items: Itens
         last_modified: Última modificação
         relationships: Relações
       show_actions:
