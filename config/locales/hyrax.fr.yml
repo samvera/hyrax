@@ -786,6 +786,7 @@ fr:
         subtitle: Statut actuel
         title: Objets de référentiel
       show_admin:
+        current_registered_users: Actuellement
         new_visitors: Nouveaux visiteurs
         registered_users: Utilisateurs enregistrés
         returning_visitors: Retrouver les visiteurs

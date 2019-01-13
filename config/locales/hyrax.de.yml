@@ -780,6 +780,7 @@ de:
         subtitle: Aktueller Status
         title: Repository-Objekte
       show_admin:
+        current_registered_users: Aktuelle
         new_visitors: Neue Besucher
         registered_users: Registrierte Benutzer
         returning_visitors: Besucher wiederkehrend
