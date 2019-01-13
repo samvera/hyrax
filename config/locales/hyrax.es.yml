@@ -436,8 +436,8 @@ es:
       show_actions:
         analytics: Estadística
         attach_child: Insertar un sub-trabajo
-        edit: Modifier
         delete: Eliminar
+        edit: Modifier
       social_media:
         facebook: Facebook
         google: Google+
@@ -492,6 +492,7 @@ es:
           desc: Agregar colecciones existentes a esta colección
           modal_title: Añadir esta colección dentro de otra colección
           select_label: Seleccionar colección
+      also_belongs_to: Este trabajo también pertenece a
       browse_view: Vista Navegación
       document_list:
         edit: Editar
@@ -502,7 +503,6 @@ es:
         additional_fields: Campos adicionales
         description: Descripciones
       is_part_of: Es parte de
-      also_belongs_to: Este trabajo también pertenece a
       select_form:
         close: Cerrar
         create: Crear Colección
@@ -867,11 +867,17 @@ es:
         header: Selecciona una acción
         versions: Versiones
         versions_title: Mostrar versiones anteriores
+      batch_create_success:
+        message: El lote creado para %{user} pasado.
+        subject: Pasar por lotes crear
       edit:
         descriptions: Descripciones
         header: Editar %{file_set}
         permissions: Permisos
         versions: Versiones
+      fixity_check_failure:
+        message: La comprobación de corrección ejecutada en %{log_date} para %{file_title} (%{uri}) falló.
+        subject: Comprobación de falla de la falla
       form:
         attach_to: Adjuntar a %{parent}
         cancel: Cancelar
@@ -1011,12 +1017,6 @@ es:
       batch_create_failure:
         message: 'La creación del lote para %{user} falló: %{messages}'
         subject: Creación de lote fallido
-      batch_create_success:
-        message: El lote creado para %{user} pasado.
-        subject: Pasar por lotes crear
-      fixity_check_failure:
-        message: La comprobación de corrección ejecutada en %{log_date} para %{file_title} (%{uri}) falló.
-        subject: Comprobación de falla de la falla
       import_url_failure:
         subject: Error de importación de archivo
       proxy_deposit_request:
@@ -1035,7 +1035,6 @@ es:
         changes_required:
           message: |-
             %{title} (%{link}) requiere cambios adicionales antes de la aprobación.
-
              '%{comment}'
           subject: Su depósito requiere cambios
         deposited:

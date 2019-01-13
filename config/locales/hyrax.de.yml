@@ -438,8 +438,8 @@ de:
       show_actions:
         analytics: Statistiken
         attach_child: Fügen Sie einen Unterjob ein
-        edit: Veränderung
         delete: Entfernen
+        edit: Veränderung
       social_media:
         facebook: Facebook
         google: Google+
@@ -494,6 +494,7 @@ de:
           desc: Fügen Sie dieser Sammlung vorhandene Sammlungen hinzu
           modal_title: Fügen Sie diese Sammlung zu einer anderen Sammlung hinzu
           select_label: Wählen Sie die Sammlung aus
+      also_belongs_to: Diese Arbeit gehört auch zu
       browse_view: Durchsuche Ansicht
       document_list:
         edit: Bearbeiten
@@ -504,7 +505,6 @@ de:
         additional_fields: Zusätzliche Felder
         description: Beschreibungen
       is_part_of: Ist ein Teil von
-      also_belongs_to: Diese Arbeit gehört auch zu
       select_form:
         close: Schließen
         create: Sammlung erstellen
@@ -1035,7 +1035,6 @@ de:
         changes_required:
           message: |-
             Für %{title} (%{link}) sind vor der Genehmigung zusätzliche Änderungen erforderlich.
-
              '%{comment}'
           subject: Ihre Einreichung erfordert Änderungen
         deposited:

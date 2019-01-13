@@ -437,8 +437,8 @@ en:
       show_actions:
         analytics: Analytics
         attach_child: Attach child
-        edit: Edit
         delete: Delete
+        edit: Edit
       social_media:
         facebook: Facebook
         google: Google+
@@ -493,6 +493,7 @@ en:
           desc: Add existing collections to this collection
           modal_title: Add this Collection Within Another Collection
           select_label: Select collection
+      also_belongs_to: This work also belongs to 
       browse_view: Browse View
       document_list:
         edit: Edit
@@ -503,7 +504,6 @@ en:
         additional_fields: Additional fields
         description: Descriptions
       is_part_of: Is part of
-      also_belongs_to: This work also belongs to 
       select_form:
         close: Close
         create: Save
@@ -1034,7 +1034,6 @@ en:
         changes_required:
           message: |-
             %{title} (%{link}) requires additional changes before approval.
-
              '%{comment}'
           subject: Your deposit requires changes
         deposited:

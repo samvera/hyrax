@@ -437,8 +437,8 @@ fr:
       show_actions:
         analytics: Statistiques
         attach_child: Attacher un travail enfant
-        edit: Modifier
         delete: Supprimer
+        edit: Modifier
       social_media:
         facebook: Facebook
         google: Google+
@@ -493,6 +493,7 @@ fr:
           desc: Ajouter des collections existantes à cette collection
           modal_title: Ajouter cette collection dans une autre collection
           select_label: Sélectionner une collection
+      also_belongs_to: Ce travail appartient aussi à
       browse_view: Parcourir la vue
       document_list:
         edit: modifier
@@ -503,7 +504,6 @@ fr:
         additional_fields: Champs supplémentaires
         description: Descriptions
       is_part_of: Fait partie de
-      also_belongs_to: Ce travail appartient aussi à
       select_form:
         close: Fermer
         create: Créer une collection
@@ -1034,7 +1034,6 @@ fr:
         changes_required:
           message: |-
             %{title} (%{link}) nécessite des modifications supplémentaires avant d'être approuvé.
-
              '%{comment}'
           subject: Votre dépôt nécessite des modifications
         deposited:

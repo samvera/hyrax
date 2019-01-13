@@ -436,8 +436,8 @@ it:
       show_actions:
         analytics: Statistica
         attach_child: Inserisci un lavoro secondario
-        edit: Cambiamento
         delete: Rimuovere
+        edit: Cambiamento
       social_media:
         facebook: Facebook
         google: Google+
@@ -492,6 +492,7 @@ it:
           desc: Aggiungi raccolte esistenti a questa raccolta
           modal_title: Aggiungi questa collezione in un'altra raccolta
           select_label: Seleziona raccolta
+      also_belongs_to: Anche questo lavoro appartiene a
       browse_view: Sfoglia la vista
       document_list:
         edit: Modifica
@@ -502,7 +503,6 @@ it:
         additional_fields: Campi aggiuntivi
         description: descrizioni
       is_part_of: È parte di
-      also_belongs_to: Anche questo lavoro appartiene a
       select_form:
         close: Vicino
         create: Crea collezione
@@ -1033,7 +1033,6 @@ it:
         changes_required:
           message: |-
             %{title} (%{link}) richiede ulteriori modifiche prima dell'approvazione.
-
              '%{comment}'
           subject: Il tuo deposito richiede modifiche
         deposited:
