@@ -7,7 +7,7 @@ task :add_entry, [:locale, :path, :value] do |t, args|
   source_path = File.expand_path("../../config/locales/hyrax.#{args.locale}.yml", __FILE__)
   source_hash = Psych.load_file(source_path)
   source_hash.dig_or_create(path, args.value)
-  File.open(source_path, 'w') {|f| f << source_hash.to_yaml}
+  File.open(source_path, 'w') {|f| f << source_hash.to_yaml(line_width: -1)}
   Rake::Task["i18n_sorter"].invoke
 end
 
@@ -34,7 +34,7 @@ task :quick_translate, [:locale, :path] do |t, args|
       next
     end
     target_locale_hash.dig_or_create(target_path, translated_value)
-    File.open(target_locale_path, 'w') {|f| f << target_locale_hash.to_yaml}
+    File.open(target_locale_path, 'w') {|f| f << target_locale_hash.to_yaml(line_width: -1)}
   end
   Rake::Task["i18n_sorter"].invoke
 end
