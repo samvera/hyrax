@@ -42,8 +42,16 @@ end
 def yandex_translate(value, from:, to:, key:)
   require 'faraday'
   require 'nokogiri'
+  value = value.dup
+  variables = value.scan(/%\{[a-z0-9_]+\}/)
+  value.gsub!(/%\{[a-z0-9_]+\}/,'[]')
   response = Faraday.new("https://translate.yandex.net/api/v1.5/tr/translate?key=#{key}&text=#{value}&lang=#{from}-#{to}").get
-  Nokogiri::XML(response.body).xpath('//Translation/text').first.text
+  translated = Nokogiri::XML(response.body).xpath('//Translation/text').first.text
+  counter=0
+  while translated.match(/\[\]/) && variables[counter] do
+    translated.sub!(/\[\]/,variables[counter]);counter+=1
+  end
+  translated
 end
 
 class Hash
