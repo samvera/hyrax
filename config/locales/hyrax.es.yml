@@ -785,6 +785,7 @@ es:
         subtitle: Estado actual
         title: Objetos de repositorio
       show_admin:
+        current_registered_users: Actual
         new_visitors: Visitantes Nuevos
         registered_users: Usuarios registrados
         returning_visitors: Visitantes Recurrentes

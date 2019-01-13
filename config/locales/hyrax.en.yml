@@ -786,6 +786,7 @@ en:
         subtitle: Current Status
         title: Repository Objects
       show_admin:
+        current_registered_users: Current
         new_visitors: New Visitors
         registered_users: Registered Users
         returning_visitors: Returning Visitors

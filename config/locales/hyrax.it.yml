@@ -785,6 +785,7 @@ it:
         subtitle: Stato attuale
         title: Oggetti del repository
       show_admin:
+        current_registered_users: Corrente
         new_visitors: Nuovi visitatori
         registered_users: Utente registrato
         returning_visitors: Visitatori di ritorno

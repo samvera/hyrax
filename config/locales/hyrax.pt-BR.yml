@@ -780,6 +780,7 @@ pt-BR:
         subtitle: Status atual
         title: Objetos de Repositório
       show_admin:
+        current_registered_users: Corrente
         new_visitors: Novos visitantes
         registered_users: Usuários cadastrados
         returning_visitors: Visitantes recorrentes

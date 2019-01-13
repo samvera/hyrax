@@ -783,6 +783,7 @@ zh:
         subtitle: 当前状态
         title: 存储库对象
       show_admin:
+        current_registered_users: 电流
         new_visitors: 新访问者
         registered_users: 注册用户
         returning_visitors: 老访问者
