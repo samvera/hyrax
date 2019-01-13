@@ -435,6 +435,11 @@ de:
         share_with_html: Sie können den Zugriff "Ansicht / Download" oder "Bearbeiten" für bestimmte Benutzer und / oder Gruppen auf Dateien gewähren. Geben Sie nacheinander einen gültigen %{account_name} ein, wählen Sie die Zugriffsebene für diesen Benutzer und klicken Sie auf + Hinzufügen.
       show:
         last_modified: Zuletzt geändert
+      show_actions:
+        analytics: Statistiken
+        attach_child: Fügen Sie einen Unterjob ein
+        edit: Veränderung
+        delete: Entfernen
       social_media:
         facebook: Facebook
         google: Google+

@@ -434,6 +434,11 @@ fr:
         share_with_html: Vous pouvez accorder l'accès aux fichiers "View / Download" ou "Edit" à des utilisateurs et / ou des groupes spécifiques. Entrez un %{account_name} valide, un par un, sélectionnez le niveau d'accès pour cet utilisateur, puis cliquez sur + Ajouter.
       show:
         last_modified: Dernière modification
+      show_actions:
+        analytics: Statistiques
+        attach_child: Attacher un travail enfant
+        edit: Modifier
+        delete: Supprimer
       social_media:
         facebook: Facebook
         google: Google+

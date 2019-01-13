@@ -433,6 +433,11 @@ es:
         share_with_html: Puede otorgar acceso de "Ver / Descargar" o "Editar" para usuarios o grupos específicos a los archivos. Ingrese un %{account_name} válido, uno a la vez, seleccione el nivel de acceso para ese usuario y haga clic en + Agregar.
       show:
         last_modified: Última modificación
+      show_actions:
+        analytics: Estadística
+        attach_child: Insertar un sub-trabajo
+        edit: Modifier
+        delete: Eliminar
       social_media:
         facebook: Facebook
         google: Google+
