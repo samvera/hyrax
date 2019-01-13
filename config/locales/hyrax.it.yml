@@ -449,6 +449,9 @@ it:
       help:
         resource_type: È possibile selezionare più tipi da applicare a tutti i file
         title: Il nome del file sarà il titolo predefinito. Fornire un titolo più significativo e i nomi dei file saranno ancora conservati dal sistema.
+    batch_edits:
+      delete_selected:
+        button_label: Elimina Selezionato
     batch_uploads:
       disabled: Caratteristica disabilitata dall'amministratore
       files:

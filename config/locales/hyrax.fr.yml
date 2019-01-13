@@ -450,6 +450,9 @@ fr:
       help:
         resource_type: Vous pouvez sélectionner plusieurs types à appliquer à tous les fichiers
         title: Nom de fichier sera le titre par défaut. Veuillez fournir un titre plus significatif et les noms de fichiers seront conservés par le système.
+    batch_edits:
+      delete_selected:
+        button_label: Supprimer la sélection
     batch_uploads:
       disabled: Fonction désactivée par l'administrateur
       files:

@@ -450,6 +450,9 @@ en:
       help:
         resource_type: You may select multiple types to apply to all files
         title: Filename will be the default title. Please provide a more meaningful title, and filenames will still be preserved by the system.
+    batch_edits:
+      delete_selected:
+        button_label: Delete Selected
     batch_uploads:
       disabled: Feature disabled by administrator
       files:
