@@ -433,6 +433,7 @@ it:
         share_with_html: È possibile concedere l'accesso "Visualizza / Scarica" ​​o "Modifica" per utenti specifici e / o gruppi ai file. Immettere uno %{account_name} valido, uno alla volta, selezionare il livello di accesso per quell'utente e fare clic su + Aggiungi.
       show:
         last_modified: Ultima modifica
+        relationships: Relazioni
       show_actions:
         analytics: Statistica
         attach_child: Inserisci un lavoro secondario

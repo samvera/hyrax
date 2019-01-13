@@ -431,6 +431,7 @@ zh:
         share_with_html: 您可以为特定用户和/或组授予对文件的“查看/下载”或“编辑”访问权限。输入有效的%{account_name}，一次选择一个，选择该用户的访问级别，然后单击+添加。
       show:
         last_modified: 最新修改
+        relationships: 关系
       show_actions:
         analytics: 统计
         attach_child: 插入子作業
