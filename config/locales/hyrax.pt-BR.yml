@@ -444,6 +444,9 @@ pt-BR:
       help:
         resource_type: Você pode selecionar vários tipos para serem atribuídos a todos os arquivos.
         title: O nome do arquivo será o título padrão. Forneça um título mais significativo; mesmo assim os nomes de arquivos serão preservados pelo sistema.
+    batch_edits:
+      delete_selected:
+        button_label: Excluir Selecionado
     batch_uploads:
       disabled: Recurso desativado pelo administrador
       files:

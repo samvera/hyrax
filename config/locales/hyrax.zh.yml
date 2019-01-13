@@ -447,6 +447,9 @@ zh:
       help:
         resource_type: 您可以选择适用于所有文件的多种类型
         title: 文件名将作为默认标题。请提供更有意义的标题，文件名将会在系统内保留。
+    batch_edits:
+      delete_selected:
+        button_label: 删除选择
     batch_uploads:
       disabled: 功能被管理员禁用
       files:

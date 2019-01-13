@@ -444,6 +444,9 @@ de:
       help:
         resource_type: Sie können mehrere Typen auswählen, die für alle Dateien gelten sollen
         title: Dateiname ist der Standardtitel. Bitte geben Sie einen aussagekräftigeren Titel, und Dateinamen werden noch vom System bewahrt.
+    batch_edits:
+      delete_selected:
+        button_label: Ausgewählte Löschen
     batch_uploads:
       disabled: Diese Funktion vom Administrator des Repositoriums deaktiviert
       files:
