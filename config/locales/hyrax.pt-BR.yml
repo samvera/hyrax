@@ -431,8 +431,8 @@ pt-BR:
       show_actions:
         analytics: Estatística
         attach_child: Inserir um subemprego
-        edit: Mudança
         delete: Remover
+        edit: Mudança
       social_media:
         facebook: Facebook
         google: Google+
@@ -487,6 +487,7 @@ pt-BR:
           desc: Embutir nesta coleção coleções que já existem
           modal_title: Embutir esta coleção em outra coleção
           select_label: Selecionar coleção
+      also_belongs_to: Este trabalho também pertence a
       browse_view: Explorar
       document_list:
         edit: Editar
@@ -497,7 +498,6 @@ pt-BR:
         additional_fields: Campos adicionais
         description: Descrições
       is_part_of: É parte de
-      also_belongs_to: Este trabalho também pertence a
       select_form:
         close: Fechar
         create: Salvar
@@ -1028,7 +1028,6 @@ pt-BR:
         changes_required:
           message: |-
             %{title} (%{link}) requer alterações adicionais antes da aprovação.
-
              '%{comment}'
           subject: Seu depósito requer alterações
         deposited:

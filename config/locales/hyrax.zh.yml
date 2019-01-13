@@ -434,8 +434,8 @@ zh:
       show_actions:
         analytics: 统计
         attach_child: 插入子作業
-        edit: 變化
         delete: 清除
+        edit: 變化
       social_media:
         facebook: Facebook
         google: Google+
@@ -490,6 +490,7 @@ zh:
           desc: 将现有集合添加到此集合
           modal_title: 将此集合添加到另一个集合中
           select_label: 选择收藏
+      also_belongs_to: 这项工作也属于
       browse_view: 浏览页面
       document_list:
         edit: 编辑
@@ -500,7 +501,6 @@ zh:
         additional_fields: 额外字段
         description: 描述
       is_part_of: 是一部分
-      also_belongs_to: 这项工作也属于
       select_form:
         close: 关闭
         create: 创建收藏集
@@ -1031,7 +1031,6 @@ zh:
         changes_required:
           message: |-
             %{title}（%{link}）在批准之前需要进行其他更改。
-
              '%{comment}'
           subject: 您的存款需要更改
         deposited:
