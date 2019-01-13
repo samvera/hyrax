@@ -447,6 +447,7 @@ de:
     batch_edits:
       delete_selected:
         button_label: Ausgewählte Löschen
+        warning: Löschen einer Datei von %{application_name} ist permanent. Klicken Sie auf OK, um diese Datei zu löschen, die von %{application_name}
     batch_uploads:
       disabled: Diese Funktion vom Administrator des Repositoriums deaktiviert
       files:

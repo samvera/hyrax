@@ -453,6 +453,7 @@ en:
     batch_edits:
       delete_selected:
         button_label: Delete Selected
+        warning: Deleting a file from %{application_name} is permanent. Click OK to delete this file from %{application_name}
     batch_uploads:
       disabled: Feature disabled by administrator
       files:

@@ -447,6 +447,7 @@ pt-BR:
     batch_edits:
       delete_selected:
         button_label: Excluir Selecionado
+        warning: A exclusão de um arquivo a partir de %{application_name} é permanente. Clique em OK para excluir este arquivo a partir de %{application_name}
     batch_uploads:
       disabled: Recurso desativado pelo administrador
       files:

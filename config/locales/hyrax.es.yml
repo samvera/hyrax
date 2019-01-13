@@ -452,6 +452,7 @@ es:
     batch_edits:
       delete_selected:
         button_label: Eliminar Seleccionados
+        warning: Cómo eliminar un archivo de %{application_name} es permanente. Haga clic en ACEPTAR para borrar el archivo de %{application_name}
     batch_uploads:
       disabled: Función desactivada por el administrador
       files:

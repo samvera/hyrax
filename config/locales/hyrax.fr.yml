@@ -453,6 +453,7 @@ fr:
     batch_edits:
       delete_selected:
         button_label: Supprimer la sélection
+        warning: La suppression d'un fichier à partir de %{application_name} est permanente. Cliquez sur OK pour supprimer ce fichier à partir de %{application_name}
     batch_uploads:
       disabled: Fonction désactivée par l'administrateur
       files:

@@ -450,6 +450,7 @@ zh:
     batch_edits:
       delete_selected:
         button_label: 删除选择
+        warning: 删除文件从%{application_name}是永久性的。 点击确定要删除这个文件从%{application_name}
     batch_uploads:
       disabled: 功能被管理员禁用
       files:

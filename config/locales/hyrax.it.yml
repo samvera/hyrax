@@ -452,6 +452,7 @@ it:
     batch_edits:
       delete_selected:
         button_label: Elimina Selezionato
+        warning: Eliminazione di un file da %{application_name} permanente. Fare clic su OK per eliminare questo file %{application_name}
     batch_uploads:
       disabled: Caratteristica disabilitata dall'amministratore
       files:
