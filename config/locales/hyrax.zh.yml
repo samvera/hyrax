@@ -785,6 +785,7 @@ zh:
       show_admin:
         current_registered_users: 电流
         new_visitors: 新访问者
+        past_30_days: 过去30天
         registered_users: 注册用户
         returning_visitors: 老访问者
         total_visitors: 所有访问者

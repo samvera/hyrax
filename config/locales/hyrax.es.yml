@@ -787,6 +787,7 @@ es:
       show_admin:
         current_registered_users: Actual
         new_visitors: Visitantes Nuevos
+        past_30_days: En los últimos 30 días
         registered_users: Usuarios registrados
         returning_visitors: Visitantes Recurrentes
         total_visitors: Visitantes Totales
