@@ -428,6 +428,7 @@ pt-BR:
         share_with_html: Você pode conceder a permissão de &quot;Acesso/Download&quot; ou &quot;Edição&quot; dos arquivos para usuários e grupos específicos. Entre uma %{account_name} válida, uma de cada vez, selecione o nível de acesso para o usuário, e clique +Acrescentar.
       show:
         last_modified: Última modificação
+        relationships: Relações
       show_actions:
         analytics: Estatística
         attach_child: Inserir um subemprego

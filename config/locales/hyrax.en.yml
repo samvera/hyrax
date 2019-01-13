@@ -434,6 +434,7 @@ en:
         share_with_html: You may grant &quot;View/Download&quot; or &quot;Edit&quot; access for specific users and/or groups to files. Enter a valid %{account_name}, one at a time, select the access level for that user, and click +Add.
       show:
         last_modified: Last modified
+        relationships: Relations
       show_actions:
         analytics: Analytics
         attach_child: Attach child
@@ -493,7 +494,7 @@ en:
           desc: Add existing collections to this collection
           modal_title: Add this Collection Within Another Collection
           select_label: Select collection
-      also_belongs_to: This work also belongs to 
+      also_belongs_to: This work also belongs to
       browse_view: Browse View
       document_list:
         edit: Edit
