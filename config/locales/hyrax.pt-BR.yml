@@ -782,6 +782,7 @@ pt-BR:
       show_admin:
         current_registered_users: Corrente
         new_visitors: Novos visitantes
+        past_30_days: Últimos 30 dias
         registered_users: Usuários cadastrados
         returning_visitors: Visitantes recorrentes
         total_visitors: Total de visitantes
