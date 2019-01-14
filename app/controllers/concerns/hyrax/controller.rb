@@ -1,3 +1,5 @@
+require 'hyrax/search_state'
+
 module Hyrax::Controller
   extend ActiveSupport::Concern
 
