@@ -64,14 +64,7 @@ class Hash
       self[current_key] = parts[1].nil? ? value_to_insert : {}
     end
     match = self[current_key]
-    if parts[1]
-      return match.dig_or_create(parts[1], value_to_insert)
-    else
-      return match
-    end
+    return match.dig_or_create(parts[1], value_to_insert) if parts[1]
+    match
   end
 end
-
-
-
-
