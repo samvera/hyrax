@@ -16,20 +16,20 @@
           class: presenter.display_feature_link? ? 'btn btn-default collapse' : 'btn btn-default' %>
     <% end %>
     <% if Hyrax.config.analytics? %>
-      <%= link_to t('.analytics'), presenter.stats_path, id: 'stats', class: 'btn btn-default' %>
+      <%= link_to t('hyrax.base.show_actions.analytics'), presenter.stats_path, id: 'stats', class: 'btn btn-default' %>
     <% end %>
   </div>
 
   <div class="col-sm-6 text-right">
     <% if presenter.editor? %>
-      <%= link_to t('.edit'), edit_polymorphic_path([main_app, presenter]), class: 'btn btn-default' %>
+      <%= link_to t('hyrax.base.show_actions.edit'), edit_polymorphic_path([main_app, presenter]), class: 'btn btn-default' %>
       <% if presenter.member_presenters.size > 1 %>
           <%= link_to t("hyrax.file_manager.link_text"), polymorphic_path([main_app, :file_manager, presenter]), class: 'btn btn-default' %>
       <% end %>
       <% if presenter.valid_child_concerns.length > 0 %>
         <div class="btn-group">
           <button type="button" class="btn btn-default dropdown-toggle" type="button" id="dropdown-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <%= t('.attach_child') %> <span class="caret"></span></button>
+            <%= t('hyrax.base.show_actions.attach_child') %> <span class="caret"></span></button>
             <ul class="dropdown-menu">
               <% presenter.valid_child_concerns.each do |concern| %>
                 <li>
@@ -39,7 +39,7 @@
             </ul>
         </div>
       <% end %>
-      <%= link_to t('.delete'), [main_app, presenter], class: 'btn btn-danger', data: { confirm: "Delete this #{presenter.human_readable_type}?" }, method: :delete %>
+      <%= link_to t('hyrax.base.show_actions.delete'), [main_app, presenter], class: 'btn btn-danger', data: { confirm: "Delete this #{presenter.human_readable_type}?" }, method: :delete %>
     <% end %>
   </div>
 </div>
