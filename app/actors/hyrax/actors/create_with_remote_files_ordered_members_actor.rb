@@ -42,13 +42,11 @@ module Hyrax
     # Browse everything may also return a local file. And although it's in the
     # url property, it may have spaces, and not be a valid URI.
     class CreateWithRemoteFilesOrderedMembersActor < CreateWithRemoteFilesActor
-      attr_reader :ordered_members
-
       # @param [HashWithIndifferentAccess] remote_files
       # @return [TrueClass]
       def attach_files(env, remote_files)
         return true unless remote_files
-        @ordered_members = env.curation_concern.ordered_members.to_a
+        env.store(self, :ordered_members, env.curation_concern.ordered_members.to_a)
         remote_files.each do |file_info|
           next if file_info.blank? || file_info[:url].blank?
           # Escape any space characters, so that this is a legal URI
@@ -60,7 +58,7 @@ module Hyrax
           auth_header = file_info.fetch(:auth_header, {})
           create_file_from_url(env, uri, file_info[:file_name], auth_header)
         end
-        add_ordered_members(env.user, env.curation_concern)
+        add_ordered_members(env)
         true
       end
 
@@ -72,7 +70,7 @@ module Hyrax
           actor.create_metadata(visibility: env.curation_concern.visibility)
           actor.attach_to_work(env.curation_concern)
           fs.save!
-          ordered_members << fs
+          env.retrieve(self, :ordered_members) << fs
           if uri.scheme == 'file'
             # Turn any %20 into spaces.
             file_path = CGI.unescape(uri.path)
@@ -84,9 +82,9 @@ module Hyrax
       end
 
       # Add all file_sets as ordered_members in a single action
-      def add_ordered_members(user, work)
-        actor = Hyrax::Actors::OrderedMembersActor.new(ordered_members, user)
-        actor.attach_ordered_members_to_work(work)
+      def add_ordered_members(env)
+        actor = Hyrax::Actors::OrderedMembersActor.new(env.retrieve(self, :ordered_members), env.user)
+        actor.attach_ordered_members_to_work(env.curation_concern)
       end
 
       class_attribute :file_set_actor_class
