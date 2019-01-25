@@ -3,10 +3,6 @@ module Hyrax
     # rubocop:disable Metrics/MethodLength
     def self.build_stack
       ActionDispatch::MiddlewareStack.new.tap do |middleware|
-        # Wrap everything in a database transaction, if the save of the resource
-        # fails then roll back any database AdminSetChangeSet
-        middleware.use Hyrax::Actors::TransactionalRequest
-
         # Ensure you are mutating the most recent version
         middleware.use Hyrax::Actors::OptimisticLockValidator
 
