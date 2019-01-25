@@ -30,7 +30,7 @@ module Hyrax::User
 
     scope :guests, ->() { where(guest: true) }
     scope :registered, ->() { where(guest: false) }
-    scope :without_system_accounts, -> { where("#{Hydra.config.user_key_field} not in (?)", [::User.batch_user_key, ::User.audit_user_key]) }
+    scope :without_system_accounts, -> { where("#{::User.user_key_field} not in (?)", [::User.batch_user_key, ::User.audit_user_key]) }
 
     # Validate and normalize ORCIDs
     validates_with OrcidValidator
@@ -46,6 +46,10 @@ module Hyrax::User
     has_many :trophies,
              dependent: :destroy
     has_one :sipity_agent, as: :proxy_for, dependent: :destroy, class_name: 'Sipity::Agent'
+  end
+
+  def user_key
+    public_send(self.class.user_key_field)
   end
 
   # Look for, in order:
@@ -149,6 +153,10 @@ module Hyrax::User
       Hyrax.config.audit_user_key
     end
 
+    def user_key_field
+      Hydra.config.user_key_field
+    end
+
     # Override this method if you aren't using email/password
     def batch_user
       find_or_create_system_user(batch_user_key)
@@ -159,7 +167,7 @@ module Hyrax::User
     end
 
     def find_or_create_system_user(user_key)
-      User.find_by_user_key(user_key) || User.create!(Hydra.config.user_key_field => user_key, password: Devise.friendly_token[0, 20])
+      User.find_by_user_key(user_key) || User.create!(user_key_field => user_key, password: Devise.friendly_token[0, 20])
     end
 
     def from_url_component(component)
