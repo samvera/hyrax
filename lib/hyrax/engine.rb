@@ -2,9 +2,11 @@ module Hyrax
   class Engine < ::Rails::Engine
     isolate_namespace Hyrax
 
-    # These gems must be required outside of an initializer or they don't get loaded.
     require 'awesome_nested_set'
     require 'breadcrumbs_on_rails'
+    require 'dry/struct'
+    require 'dry/equalizer'
+    require 'dry/validation'
     require 'jquery-ui-rails'
     require 'flot-rails'
     require 'almond-rails'
@@ -14,6 +16,11 @@ module Hyrax
     require 'clipboard/rails'
     require 'legato'
     require 'pul_uv_rails'
+
+    require 'hydra/derivatives'
+    require 'hyrax/controller_resource'
+    require 'hyrax/search_state'
+    require 'hyrax/errors'
 
     # Force these models to be added to Legato's registry in development mode
     config.eager_load_paths += %W[
@@ -62,14 +69,7 @@ module Hyrax
     end
 
     initializer 'requires' do
-      require 'hydra/derivatives'
-      require 'hyrax/controller_resource'
-      require 'hyrax/search_state'
-      require 'hyrax/errors'
       require 'power_converters'
-      require 'dry/struct'
-      require 'dry/equalizer'
-      require 'dry/validation'
       require 'wings'
       begin
         require 'valkyrie'
