@@ -10,6 +10,10 @@ module Hyrax
         ActiveRecord::Base.transaction do
           next_actor.create(env)
         end
+      rescue StandardError => err
+        # note that this does not catch explicit `ActiveRecord::Rollback` calls.
+        env.curation_concern.ensure_valid_minter_state
+        raise err
       end
 
       # @param [Hyrax::Actors::Environment] env

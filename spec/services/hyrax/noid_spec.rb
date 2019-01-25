@@ -34,4 +34,41 @@ RSpec.describe Hyrax::Noid do
       expect { object.assign_id }.not_to change { object.id }
     end
   end
+
+  describe '#ensure_valid_state' do
+    let(:work) { FactoryBot.build(:work) }
+
+    context 'in an already valid minter state' do
+      it 'returns true' do
+        expect(object.ensure_valid_minter_state).to eq true
+      end
+    end
+
+    context 'with an ldp conflict state' do
+      before(:context) do
+        Hyrax.config.enable_noids = true
+        # we need to mint once to set the `rand` database column and
+        # make minter behavior predictable
+        ::Noid::Rails.config.minter_class.new.mint
+      end
+      after(:context) { Hyrax.config.enable_noids = false }
+
+      before do
+        ActiveRecord::Base.transaction do
+          FactoryBot.create_list(:work, 3)
+
+          raise ActiveRecord::Rollback
+        end
+      end
+
+      it 'reinstates a valid minter state' do
+
+        aggregate_failures 'minter state transitions' do
+          expect { FactoryBot.create(:work) }.to raise_error Ldp::Conflict
+          object.ensure_valid_minter_state
+          expect(FactoryBot.create(:work)).to have_attributes(id: an_instance_of(String))
+        end
+      end
+    end
+  end
 end
