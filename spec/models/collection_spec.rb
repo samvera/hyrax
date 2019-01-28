@@ -1,5 +1,5 @@
 RSpec.describe Collection, type: :model do
-  let(:collection) { build(:public_collection) }
+  let(:collection) { build(:public_collection_lw) }
 
   it "has open visibility" do
     expect(collection.read_groups).to eq ['public']
@@ -15,7 +15,7 @@ RSpec.describe Collection, type: :model do
 
   describe "#to_solr" do
     let(:user) { build(:user) }
-    let(:collection) { build(:collection, user: user, title: ['A good title']) }
+    let(:collection) { build(:collection_lw, user: user, title: ['A good title']) }
 
     let(:solr_document) { collection.to_solr }
 
@@ -80,7 +80,7 @@ RSpec.describe Collection, type: :model do
   end
 
   describe "#destroy", clean_repo: true do
-    let(:collection) { build(:collection) }
+    let(:collection) { build(:collection_lw) }
     let(:work1) { create(:work) }
 
     before do
@@ -130,7 +130,7 @@ RSpec.describe Collection, type: :model do
   end
 
   describe '#collection_type_gid=' do
-    let(:collection) { build(:collection) }
+    let(:collection) { build(:collection_lw) }
     let(:collection_type) { create(:collection_type) }
 
     it 'sets gid' do
@@ -170,7 +170,7 @@ RSpec.describe Collection, type: :model do
   end
 
   describe 'collection type delegated methods' do
-    subject { build(:collection) }
+    subject { build(:collection_lw) }
 
     it { is_expected.to delegate_method(:nestable?).to(:collection_type) }
     it { is_expected.to delegate_method(:discoverable?).to(:collection_type) }
@@ -293,7 +293,7 @@ RSpec.describe Collection, type: :model do
 
       context 'when building a collection' do
         let(:coll123) do
-          build(:collection,
+          build(:collection_lw,
                 id: 'Collection123',
                 collection_type_gid: collection_type.gid,
                 with_nesting_attributes:
