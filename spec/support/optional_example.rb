@@ -6,6 +6,7 @@ module OptionalExample
         example.display_exception = nil
         example.execution_result.pending_exception = ex
       end
+      true
     end
   end
 

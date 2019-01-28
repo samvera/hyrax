@@ -210,6 +210,7 @@ RSpec.configure do |config|
 
   config.after do
     DatabaseCleaner.clean
+    true
   end
 
   # If true, the base class of anonymous controllers will be inferred
@@ -232,6 +233,7 @@ RSpec.configure do |config|
     Warden.test_reset!
     Capybara.reset_sessions!
     page.driver.reset!
+    true
   end
 
   config.include Capybara::RSpecMatchers, type: :input
@@ -290,5 +292,6 @@ RSpec.configure do |config|
 
     ActiveJob::Base.queue_adapter.perform_enqueued_jobs    = false
     ActiveJob::Base.queue_adapter.perform_enqueued_at_jobs = false
+    true
   end
 end
