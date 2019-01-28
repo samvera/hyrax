@@ -2,7 +2,7 @@ RSpec.describe Hyrax::CollectionMemberSearchBuilder do
   let(:context) { double("context", blacklight_config: CatalogController.blacklight_config) }
   let(:solr_params) { { fq: [] } }
   let(:include_models) { :both }
-  let(:collection) { build(:collection, id: '12345') }
+  let(:collection) { build(:collection_lw, id: '12345') }
   let(:builder) { described_class.new(scope: context, collection: collection, search_includes_models: include_models) }
 
   describe ".default_processor_chain" do
