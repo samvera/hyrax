@@ -7,7 +7,6 @@ RSpec.describe Hyrax::DefaultMiddlewareStack do
 
     it "has the correct stack frames" do
       expect(subject.middlewares).to eq [
-        Hyrax::Actors::TransactionalRequest,
         Hyrax::Actors::OptimisticLockValidator,
         Hyrax::Actors::CreateWithRemoteFilesActor,
         Hyrax::Actors::CreateWithFilesActor,
@@ -30,7 +29,7 @@ RSpec.describe Hyrax::DefaultMiddlewareStack do
 
   describe 'Hyrax::CurationConcern.actor' do
     it "calls the Hyrax::ActorFactory" do
-      expect(Hyrax::CurationConcern.actor).to be_instance_of Hyrax::Actors::TransactionalRequest
+      expect(Hyrax::CurationConcern.actor).to be_instance_of Hyrax::Actors::OptimisticLockValidator
     end
   end
 end
