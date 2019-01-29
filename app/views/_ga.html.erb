@@ -1,20 +1,46 @@
 <%
-if Hyrax.config.google_analytics_id?
+if Hyrax.config.respond_to? :google_analytics_id
 tracking_id = Hyrax.config.google_analytics_id
 %>
 <script type="text/javascript">
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', '<%= tracking_id %>']);
+
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
   <% if Rails.env.development? %>
     // This allows us to look at GA data live from locahost
-    _gaq.push(['_setDomainName', 'none']);
+    ga('create', '<%= tracking_id %>', 'auto', {'legacyCookieDomain': 'none'});
+  <% else %>
+    ga('create', '<%= tracking_id %>', 'auto')
   <% end %>
-  _gaq.push(['_trackPageview']);
+    ga('send', 'pageview');
 
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+  $(document).on('turbolinks:load',function(){
+
+    $("a[href*='downloads']").click(function(event){
+      var href = this.href;
+
+      // Don't follow the link
+      event.preventDefault();
+
+      var label = href.split("/").pop().split("?")
+
+      ga('send', 'event', {
+        eventCategory: 'downloads',
+        eventAction: 'click',
+        eventLabel: label[0]
+      });
+
+
+      window.open(href, '_new');
+
+
+    });
+
+  });
+
 </script>
 <% end %>
