@@ -11,7 +11,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
   end
 
   describe 'when both collections support multiple membership' do
-    let(:old_collection) { create(:collection_lw, user: admin_user, collection_type_gid: multi_membership_type_1.gid, title: ['OldCollectionTitle']) }
+    let(:old_collection) { build(:collection_lw, user: admin_user, collection_type_gid: multi_membership_type_1.gid, title: ['OldCollectionTitle']) }
     let!(:work) { create(:generic_work, user: admin_user, member_of_collections: [old_collection], title: ['The highly valued work that everyone wants in their collection']) }
 
     context 'and are of different types' do
@@ -56,7 +56,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
   end
 
   describe 'when both collections require single membership' do
-    let(:old_collection) { create(:collection_lw, user: admin_user, collection_type_gid: single_membership_type_1.gid, title: ['OldCollectionTitle']) }
+    let(:old_collection) { build(:collection_lw, user: admin_user, collection_type_gid: single_membership_type_1.gid, title: ['OldCollectionTitle']) }
     let!(:work) do
       create(:generic_work,
              user: admin_user,

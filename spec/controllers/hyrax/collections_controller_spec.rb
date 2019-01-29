@@ -12,8 +12,8 @@ RSpec.describe Hyrax::CollectionsController do
   let(:asset1)         { create(:work, title: ["First of the Assets"], user: user) }
   let(:asset2)         { create(:work, title: ["Second of the Assets"], user: user) }
   let(:asset3)         { create(:work, title: ["Third of the Assets"], user: user) }
-  let(:asset4)         { create(:collection, title: ["First subcollection"], user: user) }
-  let(:asset5)         { create(:collection, title: ["Second subcollection"], user: user) }
+  let(:asset4)         { build(:collection_lw, title: ["First subcollection"], user: user) }
+  let(:asset5)         { build(:collection_lw, title: ["Second subcollection"], user: user) }
   let(:unowned_asset)  { create(:work, user: other) }
 
   let(:collection_attrs) do

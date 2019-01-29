@@ -10,7 +10,7 @@ RSpec.describe 'CollectionAbility' do
 
   context 'when admin user' do
     let(:user) { FactoryBot.create(:admin) }
-    let!(:collection) { create(:collection, id: 'col_au', with_permission_template: true, collection_type_gid: collection_type_gid) }
+    let!(:collection) { build(:collection_lw, id: 'col_au', with_permission_template: true, collection_type_gid: collection_type_gid) }
     let!(:solr_document) { SolrDocument.new(collection.to_solr) }
 
     it 'allows all abilities' do # rubocop:disable RSpec/ExampleLength
@@ -34,7 +34,7 @@ RSpec.describe 'CollectionAbility' do
   end
 
   context 'when collection manager' do
-    let!(:collection) { create(:collection, id: 'col_mu', with_permission_template: true, collection_type_gid: collection_type_gid) }
+    let!(:collection) { build(:collection_lw, id: 'col_mu', with_permission_template: true, collection_type_gid: collection_type_gid) }
     let!(:solr_document) { SolrDocument.new(collection.to_solr) }
 
     before do
@@ -69,7 +69,7 @@ RSpec.describe 'CollectionAbility' do
   end
 
   context 'when collection depositor' do
-    let!(:collection) { create(:collection, id: 'col_du', with_permission_template: true, collection_type_gid: collection_type_gid) }
+    let!(:collection) { build(:collection_lw, id: 'col_du', with_permission_template: true, collection_type_gid: collection_type_gid) }
     let!(:solr_document) { SolrDocument.new(collection.to_solr) }
 
     before do
@@ -104,7 +104,7 @@ RSpec.describe 'CollectionAbility' do
   end
 
   context 'when collection viewer' do
-    let!(:collection) { create(:collection, id: 'col_vu', with_permission_template: true, collection_type_gid: collection_type_gid) }
+    let!(:collection) { build(:collection_lw, id: 'col_vu', with_permission_template: true, collection_type_gid: collection_type_gid) }
     let!(:solr_document) { SolrDocument.new(collection.to_solr) }
 
     before do
