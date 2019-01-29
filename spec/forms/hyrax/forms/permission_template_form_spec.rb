@@ -3,7 +3,7 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
   let(:form) { described_class.new(permission_template) }
   let(:today) { Time.zone.today }
   let(:admin_set) { create(:admin_set) }
-  let(:collection) { create(:collection) }
+  let(:collection) { build(:collection_lw) }
 
   subject { form }
 
