@@ -4,15 +4,37 @@ require 'hyrax/valkyrie/resource_factory'
 
 RSpec.describe Hyrax::Valkyrie::ResourceFactory do
   subject(:factory) { described_class.new(pcdm_object: work) }
+  let(:adapter)     { Valkyrie::MetadataAdapter.find(:memory) }
   let(:id)          { 'moomin123' }
+  let(:persister)   { adapter.persister }
   let(:work)        { GenericWork.new(id: id, **attributes) }
+
+  let(:uris) do
+    [RDF::URI('http://example.com/fake1'),
+     RDF::URI('http://example.com/fake2')]
+  end
 
   let(:attributes) do
     {
       title: ['fake title'],
+      date_created: [Time.now.utc],
       depositor: 'user1',
-      description: ['a description']
+      description: ['a description'],
+      import_url: uris.first,
+      related_url: uris
     }
+  end
+
+  before(:context) do
+    Valkyrie::MetadataAdapter.register(
+      Valkyrie::Persistence::Memory::MetadataAdapter.new,
+      :memory
+    )
+
+    Valkyrie::StorageAdapter.register(
+      Valkyrie::Storage::Memory.new,
+      :memory
+    )
   end
 
   # TODO: extract to Valkyrie?
@@ -41,8 +63,21 @@ RSpec.describe Hyrax::Valkyrie::ResourceFactory do
     it 'has attributes matching the pcdm_object' do
       expect(factory.build)
         .to have_attributes title: work.title,
+                            date_created: work.date_created,
                             depositor: work.depositor,
                             description: work.description
+    end
+
+    it 'round trips attributes' do
+      persister.save(resource: factory.build)
+
+      expect(adapter.query_service.find_by(id: work.id))
+        .to have_attributes title: work.title,
+                            date_created: work.date_created,
+                            depositor: work.depositor,
+                            description: work.description,
+                            import_url: work.import_url,
+                            related_url: work.related_url
     end
   end
 end

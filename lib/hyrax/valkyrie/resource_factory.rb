@@ -43,8 +43,27 @@ module Hyrax
           end
         end
 
-        klass.new(id: pcdm_object.id, **pcdm_object.attributes.symbolize_keys)
+        klass.new(id: pcdm_object.id, **attributes)
       end
+
+      private
+
+        def attributes
+          pcdm_object.attributes.each_with_object({}) do |(name, values), mem|
+            mem[name.to_sym] = normalize_values(values)
+          end
+        end
+
+        def normalize_values(values)
+          case values
+          when ActiveTriples::Resource
+            values.to_term
+          when ActiveTriples::Relation
+            values.map { |val| normalize_values(val) }
+          else
+            values
+          end
+        end
     end
     # rubocop:enable Style/ClassVars
   end
