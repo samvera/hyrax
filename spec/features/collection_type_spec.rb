@@ -292,7 +292,7 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
     end
 
     context 'when collections exist of this type' do
-      let!(:collection1) { create(:public_collection, user: build(:user), collection_type_gid: exhibit_collection_type.gid) }
+      let!(:collection1) { create(:public_collection_lw, user: build(:user), collection_type_gid: exhibit_collection_type.gid) }
 
       before do
         exhibit_collection_type
@@ -352,7 +352,7 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
 
     context 'when collections exist of this type' do
       let!(:not_empty_collection_type) { create(:collection_type, title: 'Not Empty Type', creator_user: admin_user) }
-      let!(:collection1) { create(:public_collection, user: admin_user, collection_type_gid: not_empty_collection_type.gid) }
+      let!(:collection1) { create(:public_collection_lw, user: admin_user, collection_type_gid: not_empty_collection_type.gid) }
       let(:deny_delete_modal_text) do
         'You cannot delete this collection type because one or more collections of this type have already been created. ' \
         'To delete this collection type, first ensure that all collections of this type have been deleted.'

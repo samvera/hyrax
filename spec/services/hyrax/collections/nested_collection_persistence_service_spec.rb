@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::Collections::NestedCollectionPersistenceService, with_nested_reindexing: true do
-  let(:parent) { create(:collection) }
+  let(:parent) { build(:collection_lw) }
   let(:child) { create(:collection) }
 
   describe '.persist_nested_collection_for' do

@@ -9,7 +9,7 @@ RSpec.describe 'searching' do
   end
 
   let!(:collection) do
-    create(:public_collection, title: ['collection title abc'], description: [subject_value], user: user, members: [work])
+    create(:public_collection_lw, title: ['collection title abc'], description: [subject_value], user: user, members: [work])
   end
 
   context "as a public user", :clean_repo do
