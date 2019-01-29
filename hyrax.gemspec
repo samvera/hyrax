@@ -42,6 +42,7 @@ SUMMARY
   spec.add_dependency 'carrierwave', '~> 1.0'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
   spec.add_dependency 'dry-equalizer', '~> 0.2'
+  spec.add_dependency 'dry-logic', '~> 0.4.2'
   spec.add_dependency 'dry-struct', '~> 0.1'
   spec.add_dependency 'dry-transaction', '~> 0.11'
   spec.add_dependency 'dry-validation', '~> 0.9'
@@ -79,6 +80,7 @@ SUMMARY
   spec.add_dependency 'select2-rails', '~> 3.5'
   spec.add_dependency 'signet'
   spec.add_dependency 'tinymce-rails', '~> 4.1'
+  spec.add_dependency 'valkyrie', '>= 1.4'
 
   # temporary pin to 2.17 due to failures caused in 2.18.0
   spec.add_development_dependency "capybara", '~> 2.4', '< 2.18.0'
