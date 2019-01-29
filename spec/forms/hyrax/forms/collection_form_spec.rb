@@ -24,7 +24,7 @@ RSpec.describe Hyrax::Forms::CollectionForm do
     end
   end
 
-  let(:collection) { build(:collection) }
+  let(:collection) { build(:collection_lw) }
   let(:ability) { Ability.new(create(:user)) }
   let(:repository) { double }
   let(:form) { described_class.new(collection, ability, repository) }
@@ -74,8 +74,8 @@ RSpec.describe Hyrax::Forms::CollectionForm do
   end
 
   context "nested relationships" do
-    let(:child_collection) { build(:collection) }
-    let(:parent_collection) { build(:collection) }
+    let(:child_collection) { build(:collection_lw) }
+    let(:parent_collection) { build(:collection_lw) }
     let(:service_object) { double(available_member_subcollections: double(documents: [child_collection])) }
 
     before do
