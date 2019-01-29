@@ -11,7 +11,7 @@ RSpec.describe Hyrax::CollectionPresenter do
   end
 
   let(:collection) do
-    build(:collection,
+    build(:collection_lw,
           id: 'adc12v',
           description: ['a nice collection'],
           based_near: ['Over there'],
@@ -61,7 +61,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     let(:collection_type) { create(:collection_type) }
 
     describe 'when solr_document#collection_type_gid exists' do
-      let(:collection) { build(:collection, collection_type_gid: collection_type.gid) }
+      let(:collection) { build(:collection_lw, collection_type_gid: collection_type.gid) }
       let(:solr_doc) { SolrDocument.new(collection.to_solr) }
 
       it 'finds the collection type based on the solr_document#collection_type_gid if one exists' do
@@ -173,7 +173,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
 
     context "collection with private collection" do
-      let!(:work) { create(:private_collection, member_of_collections: [collection]) }
+      let!(:work) { create(:private_collection_lw, member_of_collections: [collection]) }
 
       it { is_expected.to eq 0 }
     end
@@ -185,14 +185,14 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
 
     context "collection with public collection" do
-      let!(:subcollection) { create(:public_collection, member_of_collections: [collection]) }
+      let!(:subcollection) { create(:public_collection_lw, member_of_collections: [collection]) }
 
       it { is_expected.to eq 1 }
     end
 
     context "collection with public work and sub-collection" do
       let!(:work) { create(:public_work, member_of_collections: [collection]) }
-      let!(:subcollection) { create(:public_collection, member_of_collections: [collection]) }
+      let!(:subcollection) { create(:public_collection_lw, member_of_collections: [collection]) }
 
       it { is_expected.to eq 2 }
     end
@@ -232,7 +232,7 @@ RSpec.describe Hyrax::CollectionPresenter do
 
     context "collection with public work and sub-collection" do
       let!(:work) { create(:public_work, member_of_collections: [collection]) }
-      let!(:subcollection) { create(:public_collection, member_of_collections: [collection]) }
+      let!(:subcollection) { create(:public_collection_lw, member_of_collections: [collection]) }
 
       it { is_expected.to eq 1 }
     end
@@ -259,20 +259,20 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
 
     context "collection with private collection" do
-      let!(:subcollection) { create(:private_collection, member_of_collections: [collection]) }
+      let!(:subcollection) { create(:private_collection_lw, member_of_collections: [collection]) }
 
       it { is_expected.to eq 0 }
     end
 
     context "collection with public collection" do
-      let!(:subcollection) { create(:public_collection, member_of_collections: [collection]) }
+      let!(:subcollection) { create(:public_collection_lw, member_of_collections: [collection]) }
 
       it { is_expected.to eq 1 }
     end
 
     context "collection with public work and sub-collection" do
       let!(:work) { create(:public_work, member_of_collections: [collection]) }
-      let!(:subcollection) { create(:public_collection, member_of_collections: [collection]) }
+      let!(:subcollection) { create(:public_collection_lw, member_of_collections: [collection]) }
 
       it { is_expected.to eq 1 }
     end
@@ -310,8 +310,8 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
 
     context('when parent_collections is has collections') do
-      let(:collection1) { build(:collection, title: ['col1']) }
-      let(:collection2) { build(:collection, title: ['col2']) }
+      let(:collection1) { build(:collection_lw, title: ['col1']) }
+      let(:collection2) { build(:collection_lw, title: ['col2']) }
       let!(:parent_docs) { [collection1, collection2] }
 
       before do
