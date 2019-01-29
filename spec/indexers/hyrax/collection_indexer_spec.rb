@@ -1,6 +1,6 @@
 RSpec.describe Hyrax::CollectionIndexer do
   let(:indexer) { described_class.new(collection) }
-  let(:collection) { build(:collection) }
+  let(:collection) { build(:collection_lw) }
   let(:col1id) { 'col1' }
   let(:col2id) { 'col2' }
   let(:col1title) { 'col1 title' }
