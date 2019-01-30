@@ -10,6 +10,27 @@ RSpec.describe Hyrax::ResourceSync::ChangeListWriter, :clean_repo do
     described_class.new(resource_host: 'example.com',
                         capability_list_url: capability_list)
   end
+  let(:namespaces) do
+    {
+      'rs' => "http://www.openarchives.org/rs/terms/",
+      'x' => sitemap
+    }
+  end
+  let(:capability_element) { xml.xpath('//rs:ln/@href', 'rs' => "http://www.openarchives.org/rs/terms/") }
+  # The creation and modified dates are used in order to determine whether or
+  # not the status is "created" or "updated"
+  # This avoids any potential delays/conflicts when testing against Solr and
+  # Fedora within the testing environment
+  # @see Hyrax::ResourceSync::ChangeListWriter#build_resource
+  let(:file_set_status) do
+    file_set.create_date.to_i == file_set.modified_date.to_i ? 'created' : 'updated'
+  end
+  let(:public_work_status) do
+    public_work.create_date.to_i == public_work.modified_date.to_i ? 'created' : 'updated'
+  end
+  let(:public_collection_status) do
+    public_collection.create_date.to_i == public_collection.modified_date.to_i ? 'created' : 'updated'
+  end
 
   subject { instance.write }
 
@@ -25,40 +46,33 @@ RSpec.describe Hyrax::ResourceSync::ChangeListWriter, :clean_repo do
       create(:private_collection)
       create(:work)
 
-      # Sleep in between to ensure modified dates are different
       public_collection
-      sleep(1)
       public_work
-      sleep(1)
       file_set
     end
 
     it "has a list of resources" do
-      capability = xml.xpath('//rs:ln/@href', 'rs' => "http://www.openarchives.org/rs/terms/").text
-      expect(capability).to eq capability_list
-
-      expect(location(1)).to eq "http://example.com/concern/file_sets/#{file_set.id}"
-      expect(change(1)).to eq "created"
-
-      expect(location(2)).to eq "http://example.com/concern/generic_works/#{public_work.id}"
-      expect(change(2)).to eq "created"
-
-      expect(location(3)).to eq "http://example.com/collections/#{public_collection.id}"
-      expect(change(3)).to eq "created"
+      expect(capability_element.text).to eq capability_list
+      locations = location_elements(namespaces).map(&:text)
+      expect(locations).to include "http://example.com/concern/file_sets/#{file_set.id}"
+      expect(locations).to include "http://example.com/concern/generic_works/#{public_work.id}"
+      expect(locations).to include "http://example.com/collections/#{public_collection.id}"
+      changed = changed_elements(namespaces).map(&:value)
+      expect(changed).to match_array([public_collection_status, public_work_status, file_set_status])
 
       expect(url_list.count).to eq 3
     end
   end
 
-  def change(n)
-    query(n, 'rs:md/@change', 'rs' => "http://www.openarchives.org/rs/terms/")
+  def changed_elements(namespaces = {})
+    query("rs:md/@change", namespaces)
   end
 
-  def location(n)
-    query(n, 'x:loc')
+  def location_elements(namespaces = {})
+    query("x:loc", namespaces)
   end
 
-  def query(n, part, ns = {})
-    xml.xpath("//x:url[#{n}]/#{part}", ns.merge('x' => sitemap)).text
+  def query(part, ns = {})
+    xml.xpath("//x:url/#{part}", ns)
   end
 end
