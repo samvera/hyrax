@@ -21,7 +21,9 @@ RSpec.describe Wings::ResourceFactory do
       depositor: 'user1',
       description: ['a description'],
       import_url: uris.first,
-      related_url: uris
+      publisher: [false],
+      related_url: uris,
+      source: [1.125, :moomin]
     }
   end
 
@@ -105,7 +107,9 @@ RSpec.describe Wings::ResourceFactory do
                             depositor: work.depositor,
                             description: work.description,
                             import_url: work.import_url,
-                            related_url: work.related_url
+                            publisher: work.publisher,
+                            related_url: work.related_url,
+                            source: work.source
     end
   end
 end
