@@ -2,9 +2,9 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
   let(:blacklight_config) { CatalogController.blacklight_config }
   let(:repository) { Blacklight::Solr::Repository.new(blacklight_config) }
   let(:current_ability) { instance_double(Ability, admin?: true) }
-  let!(:nestable_collection) { create(:public_collection, collection_type_settings: [:nestable]) }
+  let!(:nestable_collection) { create(:public_collection_lw, collection_type_settings: [:nestable]) }
   let(:scope) { double('Scope', current_ability: current_ability, repository: repository, blacklight_config: blacklight_config, collection: nestable_collection) }
-  let!(:subcollection) { create(:public_collection, member_of_collections: [nestable_collection], collection_type_settings: [:nestable]) }
+  let!(:subcollection) { create(:public_collection_lw, member_of_collections: [nestable_collection], collection_type_settings: [:nestable]) }
   let(:builder) { described_class.new(scope: scope, collection: nestable_collection, params: { "id" => nestable_collection.id.to_s }) }
 
   let!(:work1) { create(:generic_work, member_of_collections: [nestable_collection]) }

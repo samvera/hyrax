@@ -4,9 +4,9 @@ RSpec.describe Hyrax::CollectionsController do
   let(:other) { build(:user) }
 
   let(:collection) do
-    create(:public_collection, title: ["My collection"],
-                               description: ["My incredibly detailed description of the collection"],
-                               user: user)
+    create(:public_collection_lw, title: ["My collection"],
+                                  description: ["My incredibly detailed description of the collection"],
+                                  user: user)
   end
 
   let(:asset1)         { create(:work, title: ["First of the Assets"], user: user) }

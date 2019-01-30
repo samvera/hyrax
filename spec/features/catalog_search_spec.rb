@@ -14,7 +14,7 @@ RSpec.describe 'catalog searching', type: :feature do
       create(:public_work, title: ["Jack's Research"], keyword: ['jacks_keyword', 'shared_keyword'])
     end
 
-    let!(:collection) { create(:public_collection, keyword: ['collection_keyword', 'shared_keyword']) }
+    let!(:collection) { create(:public_collection_lw, keyword: ['collection_keyword', 'shared_keyword']) }
 
     it 'performing a search' do
       within('#search-form-header') do
