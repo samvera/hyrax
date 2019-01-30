@@ -8,7 +8,7 @@ end
 # Please see hyrax.gemspec for dependency information.
 gemspec
 
-gem 'hydra-head', github: 'samvera/hydra-head', branch: 'no-extra-acls'
+gem 'hydra-head', github: 'samvera/hydra-head', branch: 'master'
 
 group :development, :test do
   gem 'coveralls', require: false

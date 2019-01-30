@@ -318,8 +318,8 @@ RSpec.describe Collection, type: :model do
   end
 
   describe '#update_nested_collection_relationship_indices', :with_nested_reindexing do
-    it 'will be called after save' do
-      expect(Samvera::NestingIndexer).to receive(:reindex_relationships).with(id: kind_of(String), extent: kind_of(String))
+    it 'will be called once for the Collection resource and once for the nested ACL permission resource' do
+      expect(Samvera::NestingIndexer).to receive(:reindex_relationships).exactly(2).times.with(id: kind_of(String), extent: kind_of(String))
       collection.save!
     end
   end

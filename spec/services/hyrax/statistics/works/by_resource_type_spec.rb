@@ -1,12 +1,19 @@
 RSpec.describe Hyrax::Statistics::Works::ByResourceType do
   let(:service) { described_class.new }
+  let(:user) { create(:user) }
 
   describe "#query", :clean_repo do
     before do
-      create(:generic_work, resource_type: ['Conference Proceeding'])
-      create(:generic_work, resource_type: ['Conference Proceeding'])
-      create(:generic_work, resource_type: ['Image'])
-      create(:generic_work, resource_type: ['Journal'])
+      # Creating factories here led to failures found within
+      # https://travis-ci.org/samvera/hyrax/jobs/454752377
+      # One should be able to invoke create(:generic_work)...
+      # ...however, there are difficulties here which relate to the "terms"
+      # requestHandler
+      # @see https://github.com/samvera/hyrax/issues/3491
+      GenericWork.create(title: ['test'], resource_type: ['Conference Proceeding']).save!
+      GenericWork.create(title: ['test'], resource_type: ['Conference Proceeding']).save!
+      GenericWork.create(title: ['test'], resource_type: ['Image']).save!
+      GenericWork.create(title: ['test'], resource_type: ['Journal']).save!
     end
 
     subject { service.query }
