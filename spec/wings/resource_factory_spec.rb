@@ -40,10 +40,9 @@ RSpec.describe Wings::ResourceFactory do
   end
 
   # TODO: extract to Valkyrie?
-  define :have_a_valkyrie_id_of do |expected_id_str|
+  define :have_a_valkyrie_alternate_id_of do |expected_id_str|
     match do |valkyrie_resource|
-      expect(valkyrie_resource.id).to be_a Valkyrie::ID
-      valkyrie_resource.id.id == expected_id_str
+      valkyrie_resource.alternate_ids.map(&:id).include?(expected_id_str)
     end
   end
 
@@ -87,7 +86,7 @@ RSpec.describe Wings::ResourceFactory do
     end
 
     it 'has the id of the pcdm_object' do
-      expect(factory.build).to have_a_valkyrie_id_of work.id
+      expect(factory.build).to have_a_valkyrie_alternate_id_of work.id
     end
 
     it 'has attributes matching the pcdm_object' do
@@ -101,7 +100,7 @@ RSpec.describe Wings::ResourceFactory do
     it 'round trips attributes' do
       persister.save(resource: factory.build)
 
-      expect(adapter.query_service.find_by(id: work.id))
+      expect(adapter.query_service.find_by_alternate_identifier(alternate_identifier: work.id))
         .to have_attributes title: work.title,
                             date_created: work.date_created,
                             depositor: work.depositor,

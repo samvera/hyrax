@@ -30,7 +30,7 @@ module Wings
     end
 
     def self.to_valkyrie_resource_class(klass:)
-      Class.new(::Valkyrie::Resource) do
+      Class.new(ActiveFedoraResource) do
         # Based on Valkyrie implementation, we call Class.to_s to define
         # the internal resource.
         @to_s = klass.to_s
@@ -56,7 +56,11 @@ module Wings
         self.class.to_valkyrie_resource_class(klass: pcdm_object.class)
       end
 
-      klass.new(id: pcdm_object.id, **attributes)
+      klass.new(alternate_ids: [Valkyrie::ID.new(pcdm_object.id)], **attributes)
+    end
+
+    class ActiveFedoraResource < Valkyrie::Resource
+      attribute :alternate_ids, Valkyrie::Types::Array
     end
 
     private
