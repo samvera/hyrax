@@ -70,6 +70,14 @@ module Hyrax
       require 'dry/struct'
       require 'dry/equalizer'
       require 'dry/validation'
+      begin
+        require 'valkyrie'
+      rescue LoadError
+        message  = "Hyrax::Engine.initializer did not load Valkyrie. We are in the process\n"
+        message += "\tof adding Valkyrie to Hyrax; For now you need do nothing. However,\n"
+        message += "\tstay tuned for release notes on what are the steps for incorporating Valkyrie."
+        Rails.logger.info(message)
+      end
     end
 
     initializer 'routing' do

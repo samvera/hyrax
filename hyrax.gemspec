@@ -42,7 +42,7 @@ SUMMARY
   spec.add_dependency 'carrierwave', '~> 1.0'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
   spec.add_dependency 'dry-equalizer', '~> 0.2'
-  spec.add_dependency 'dry-struct', '~> 0.1'
+  spec.add_dependency 'dry-struct', '~> 0.4'
   spec.add_dependency 'dry-transaction', '~> 0.11'
   spec.add_dependency 'dry-validation', '~> 0.9'
   spec.add_dependency 'flipflop', '~> 2.3'
@@ -105,6 +105,7 @@ SUMMARY
   spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'webmock'
+  spec.add_development_dependency 'valkyrie', '~> 1.4'
 
   ########################################################
   # Temporarily pinned dependencies. INCLUDE EXPLANATIONS.
