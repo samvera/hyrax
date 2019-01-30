@@ -322,8 +322,8 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
 
     context 'when newer collections are found (e.g. collections created at or after Hyrax 2.1.0)' do
       let!(:collection) do
-        create(:collection, id: 'col_newer', user: user, with_permission_template: true, collection_type_settings: [:discoverable],
-                            edit_users: [user.user_key], create_access: true)
+        build(:collection_lw, id: 'col_newer', user: user, with_permission_template: true, collection_type_settings: [:discoverable],
+                              edit_users: [user.user_key])
       end
       let!(:permission_template) { collection.permission_template }
       let!(:collection_type_gid) { collection.collection_type_gid }
