@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 require 'spec_helper'
-require 'hyrax/valkyrie/resource_factory'
+require 'wings/resource_factory'
 
-RSpec.describe Hyrax::Valkyrie::ResourceFactory do
+RSpec.describe Wings::ResourceFactory do
   subject(:factory) { described_class.new(pcdm_object: work) }
   let(:adapter)     { Valkyrie::MetadataAdapter.find(:memory) }
   let(:id)          { 'moomin123' }
