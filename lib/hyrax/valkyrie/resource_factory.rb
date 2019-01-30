@@ -23,6 +23,27 @@ module Hyrax
 
       attr_accessor :pcdm_object
 
+      # The method signature is to conform to Valkyrie's method signature for
+      # ::Valkyrie.config.resource_class_resolver
+      def self.convert_class_name_to_valkyrie_resource_class(class_name)
+        klass = class_name.constantize
+        to_valkyrie_resource_class(klass: klass)
+      end
+
+      def self.to_valkyrie_resource_class(klass:)
+        Class.new(::Valkyrie::Resource) do
+          # Based on Valkyrie implementation, we call Class.to_s to define
+          # the internal resource.
+          @to_s = klass.to_s
+          def self.to_s
+            @to_s
+          end
+          klass.properties.each_key do |property_name|
+            attribute property_name.to_sym, ::Valkyrie::Types::String
+          end
+        end
+      end
+
       def initialize(pcdm_object:)
         self.pcdm_object = pcdm_object
       end
@@ -33,14 +54,7 @@ module Hyrax
 
       def build
         klass = @@resource_class_cache.fetch(pcdm_object) do
-          # we need a local binding to the object for use in the class scope below
-          pcdm_local = pcdm_object
-
-          Class.new(::Valkyrie::Resource) do
-            pcdm_local.send(:properties).each_key do |property_name|
-              attribute property_name.to_sym, ::Valkyrie::Types::String
-            end
-          end
+          self.class.to_valkyrie_resource_class(klass: pcdm_object.class)
         end
 
         klass.new(id: pcdm_object.id, **attributes)
