@@ -89,11 +89,6 @@ jobs:
         key: v1-internal-test-app-{{ .Branch }}-{{ checksum "./.internal_test_app/.generated_engine_cart" }}
 
     - run:
-        name: Start headless Chrome
-        command: google-chrome-stable --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 http://localhost
-        background: true
-
-    - run:
         name: Load config into SolrCloud
         command: |
           cd .internal_test_app/solr/config

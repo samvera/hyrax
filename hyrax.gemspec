@@ -83,6 +83,7 @@ SUMMARY
   # temporary pin to 2.17 due to failures caused in 2.18.0
   spec.add_development_dependency "capybara", '~> 2.4', '< 2.18.0'
   spec.add_development_dependency 'capybara-maleficent', '~> 0.3.0'
+  spec.add_development_dependency 'chromedriver-helper', '~> 2.1'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
   spec.add_development_dependency 'engine_cart', '~> 2.0'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
@@ -113,8 +114,4 @@ SUMMARY
   # simple_form 3.5.1 broke hydra-editor for certain model types;
   #   see: https://github.com/plataformatec/simple_form/issues/1549
   spec.add_dependency 'simple_form', '~> 3.2', '<= 3.5.0'
-  # chromedriver-helper 2.0 broke the chromedriver used by capybara
-  #   see: https://github.com/flavorjones/chromedriver-helper/issues/62
-  #        and https://github.com/flavorjones/chromedriver-helper/issues/57
-  spec.add_development_dependency 'chromedriver-helper', '< 2.0'
 end
