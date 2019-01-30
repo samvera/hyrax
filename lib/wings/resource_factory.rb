@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'wings/value_mapper'
+
 module Wings
   # we really want a class var here. maybe we could use a singleton instead?
   # rubocop:disable Style/ClassVars
@@ -67,18 +69,7 @@ module Wings
 
       def attributes
         pcdm_object.attributes.each_with_object({}) do |(name, values), mem|
-          mem[name.to_sym] = normalize_values(values)
-        end
-      end
-
-      def normalize_values(values)
-        case values
-        when ActiveTriples::Resource
-          values.to_term
-        when ActiveTriples::Relation
-          values.map { |val| normalize_values(val) }
-        else
-          values
+          mem[name.to_sym] = ValueMapper.for(values).result
         end
       end
   end
