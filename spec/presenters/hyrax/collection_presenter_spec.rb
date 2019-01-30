@@ -173,7 +173,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
 
     context "collection with private collection" do
-      let!(:work) { create(:private_collection_lw, member_of_collections: [collection]) }
+      let!(:work) { build(:private_collection_lw, member_of_collections: [collection]) }
 
       it { is_expected.to eq 0 }
     end
@@ -259,7 +259,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
 
     context "collection with private collection" do
-      let!(:subcollection) { create(:private_collection_lw, member_of_collections: [collection]) }
+      let!(:subcollection) { build(:private_collection_lw, member_of_collections: [collection]) }
 
       it { is_expected.to eq 0 }
     end

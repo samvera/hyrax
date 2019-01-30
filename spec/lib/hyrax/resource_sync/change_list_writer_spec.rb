@@ -22,7 +22,7 @@ RSpec.describe Hyrax::ResourceSync::ChangeListWriter, :clean_repo do
   context "when resources exist" do
     before do
       # These private items should not show up.
-      create(:private_collection)
+      build(:private_collection_lw)
       create(:work)
 
       # Sleep in between to ensure modified dates are different
