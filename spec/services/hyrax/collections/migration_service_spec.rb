@@ -185,11 +185,11 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
       end
 
       context "and collection type gid is set but permission template doesn't exist" do
-        let!(:col_none) { create(:user_collection, id: 'col_none', user: user, edit_users: [user.user_key], collection_type_gid: default_gid) }
-        let!(:col_vu) { create(:user_collection, id: 'col_vu', user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key], collection_type_gid: default_gid) }
-        let!(:col_vg) { create(:user_collection, id: 'col_vg', user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'], collection_type_gid: default_gid) }
-        let!(:col_mu) { create(:user_collection, id: 'col_mu', user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key], collection_type_gid: default_gid) }
-        let!(:col_mg) { create(:user_collection, id: 'col_mg', user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], collection_type_gid: default_gid) }
+        let!(:col_none) { build(:user_collection_lw, id: 'col_none', user: user, edit_users: [user.user_key], collection_type_gid: default_gid) }
+        let!(:col_vu) { build(:user_collection_lw, id: 'col_vu', user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key], collection_type_gid: default_gid) }
+        let!(:col_vg) { build(:user_collection_lw, id: 'col_vg', user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'], collection_type_gid: default_gid) }
+        let!(:col_mu) { build(:user_collection_lw, id: 'col_mu', user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key], collection_type_gid: default_gid) }
+        let!(:col_mg) { build(:user_collection_lw, id: 'col_mg', user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], collection_type_gid: default_gid) }
 
         it 'sets gid and adds permissions' do # rubocop:disable RSpec/ExampleLength
           Collection.all.each do |col|

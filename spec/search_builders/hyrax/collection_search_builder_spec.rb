@@ -50,7 +50,7 @@ RSpec.describe Hyrax::CollectionSearchBuilder do
 
     context 'when access is :deposit' do
       let(:access) { "deposit" }
-      let!(:collection) { create(:collection, with_permission_template: attributes) }
+      let!(:collection) { create(:collection_lw, with_permission_template: attributes) }
 
       context 'and user has access' do
         let(:attributes) { { deposit_users: [user.user_key] } }

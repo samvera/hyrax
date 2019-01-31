@@ -306,7 +306,7 @@ RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller, clean
       end
 
       context "when collections exist of this type" do
-        let!(:collection) { create(:collection, collection_type_gid: collection_type_to_destroy.gid) }
+        let!(:collection) { create(:collection_lw, collection_type_gid: collection_type_to_destroy.gid) }
 
         it "doesn't delete the collection type or collection" do
           delete :destroy, params: { id: collection_type_to_destroy }

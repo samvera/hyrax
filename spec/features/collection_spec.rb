@@ -90,7 +90,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
       sign_in user
     end
-    let(:collection) { create(:named_collection, user: user) }
+    let(:collection) { create(:named_collection_lw, user: user) }
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       visit "/collections/#{collection.id}"
@@ -112,7 +112,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
       sign_in user
     end
-    let(:collection) { create(:named_collection, user: user) }
+    let(:collection) { create(:named_collection_lw, user: user) }
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       visit "/collections/#{collection.id}"
