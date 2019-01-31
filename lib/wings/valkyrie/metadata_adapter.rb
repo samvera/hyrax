@@ -16,7 +16,7 @@ module Wings
       def id
         @id ||= begin
           to_hash = "active_fedora"
-          Valkyrie::ID.new(Digest::MD5.hexdigest(to_hash))
+          ::Valkyrie::ID.new(Digest::MD5.hexdigest(to_hash))
         end
       end
 
