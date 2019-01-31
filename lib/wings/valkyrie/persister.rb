@@ -8,7 +8,7 @@ module Wings
 
       # @param adapter [Wings::Valkyrie::MetadataAdapter] The adapter which holds the resource_factory for this persister.
       # @note Many persister methods are part of Valkyrie's public API, but instantiation itself is not
-      def initialize(adapter)
+      def initialize(adapter:)
         @adapter = adapter
       end
 
