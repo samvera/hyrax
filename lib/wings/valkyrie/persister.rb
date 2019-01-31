@@ -35,7 +35,7 @@ module Wings
       # @return [Valkyrie::Resource] the deleted resource
       def delete(resource:)
         af_object = resource_factory.from_resource(resource: resource)
-        af_object.destroy #TODO: eradicate as well?
+        af_object.destroy # TODO: eradicate as well?
       end
     end
   end

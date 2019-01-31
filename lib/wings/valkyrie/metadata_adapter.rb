@@ -6,6 +6,7 @@ module Wings
       def persister
         @persister ||= Wings::Valkyrie::Persister.new(adapter: self)
       end
+
       # @return [Class] {Valkyrie::Persistence::Postgres::QueryService}
       def query_service
         @query_service ||= Wings::Valkyrie::QueryService.new(adapter: self)
@@ -15,7 +16,7 @@ module Wings
       def id
         @id ||= begin
           to_hash = "active_fedora"
-          ::Valkyrie::ID.new(Digest::MD5.hexdigest(to_hash))
+          Valkyrie::ID.new(Digest::MD5.hexdigest(to_hash))
         end
       end
 
