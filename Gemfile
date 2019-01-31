@@ -1,15 +1,5 @@
 source 'https://rubygems.org'
 
-git_source(:github) do |repo_name|
-  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
-  "https://github.com/#{repo_name}.git"
-end
-
-# Please see hyrax.gemspec for dependency information.
-gemspec
-
-gem 'hydra-head', github: 'samvera/hydra-head', branch: 'master'
-
 group :development, :test do
   gem 'coveralls', require: false
   gem 'i18n-tasks'
