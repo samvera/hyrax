@@ -31,14 +31,21 @@ module Wings
       to_valkyrie_resource_class(klass: klass)
     end
 
+    # rubocop:disable Metrics/MethodLength
     def self.to_valkyrie_resource_class(klass:)
       Class.new(ActiveFedoraResource) do
         # Based on Valkyrie implementation, we call Class.to_s to define
         # the internal resource.
-        @to_s = klass.to_s
-        def self.to_s
-          @to_s
+        @internal_resource = klass
+
+        class << self
+          attr_reader :internal_resource
         end
+
+        def self.to_s
+          internal_resource.to_s
+        end
+
         klass.properties.each_key do |property_name|
           attribute property_name.to_sym, ::Valkyrie::Types::String
         end
@@ -46,8 +53,17 @@ module Wings
         relationship_keys.each do |linked_property_name|
           attribute linked_property_name.to_sym, ::Valkyrie::Types::Set.of(::Valkyrie::Types::ID)
         end
+
+        # Defined after properties in case we have an `internal_resource` property.
+        # This may not be ideal, but based on my understanding of the `internal_resource`
+        # usage in Valkyrie, I'd rather keep synchronized the instance_method and class_method value for
+        # `internal_resource`
+        def internal_resource
+          self.class.internal_resource
+        end
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
     def initialize(pcdm_object:)
       self.pcdm_object = pcdm_object
