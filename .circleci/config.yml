@@ -59,19 +59,11 @@ jobs:
         - v1-internal-test-app-{{ .Branch }}
         - v1-internal-test-app-
 
-    # Download and cache dependencies
-    - restore_cache:
-        keys:
-        - v1-dependencies-{{ .Branch }}-{{ checksum "./.internal_test_app/.generated_engine_cart" }}
-        - v1-dependencies-{{ .Branch }}
-        - v1-dependencies-
-
     - run:
         name: Install dependencies
         command: |
           gem update --system
           gem update bundler
-          bundle config path $CIRCLE_WORKING_DIRECTORY/vendor/bundle
           bundle install
 
     - run:
@@ -107,10 +99,6 @@ jobs:
         name: Clean dependencies
         command: bundle clean
 
-    - save_cache:
-        paths:
-        - ./vendor/bundle
-        key: v1-dependencies-{{ .Branch }}-{{ checksum "./.internal_test_app/.generated_engine_cart" }}
 
     # collect reports
     - store_test_results:
