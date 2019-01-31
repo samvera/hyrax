@@ -65,7 +65,7 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
 
   describe '.each_perservation_document_id_and_parent_ids', clean_repo: true do
     let!(:nested_parent) { build(:collection_lw, member_of_collections: []) }
-    let!(:nested_with_parent) { create(:collection, member_of_collections: [nested_parent]) }
+    let!(:nested_with_parent) { create(:collection_lw, member_of_collections: [nested_parent]) }
     let!(:work) { create(:generic_work) }
     let(:count_of_items) { ActiveFedora::Base.descendant_uris(ActiveFedora.fedora.base_uri, exclude_uri: true).count }
 

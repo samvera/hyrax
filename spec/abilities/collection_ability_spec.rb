@@ -139,7 +139,7 @@ RSpec.describe 'CollectionAbility' do
   end
 
   context 'when user has no special access' do
-    let!(:collection) { create(:collection, id: 'as', with_permission_template: true, collection_type_gid: collection_type_gid) }
+    let!(:collection) { build(:collection_lw, id: 'as', with_permission_template: true, collection_type_gid: collection_type_gid) }
     let!(:solr_document) { SolrDocument.new(collection.to_solr) }
 
     it 'denies all abilities' do # rubocop:disable RSpec/ExampleLength
