@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 require 'wings/metadata_adapter'
+require 'wings/query_service'
 
 RSpec.describe Wings::QueryService do
   let(:subject) { described_class.new(adapter: adapter, resource_factory: factory) }
@@ -35,6 +36,6 @@ RSpec.describe Wings::QueryService do
       persister.save
     end
 
-    expect(subject.find_by(id: work.id).to_return(work)
+    expect(subject.find_by(id: work.id).to_return(work.to_valkyrie_resource)
   end
 end

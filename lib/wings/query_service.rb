@@ -3,6 +3,8 @@
 module Wings
   class QueryService
     attr_reader :resource_factory, :adapter
+    extend Forwardable
+    def_delegator :resource_factory, :form_class
     # delegate :form_class, to: :resource_factory
 
     # @param [ResourceFactory] resource_factory

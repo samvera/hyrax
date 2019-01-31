@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 require 'wings/persister'
+require 'wings/metadata_adapter'
 
 RSpec.describe Wings::Persister do
   let(:adapter) { Wings::MetadataAdapter.new }
@@ -9,7 +10,7 @@ RSpec.describe Wings::Persister do
   it 'responds to expected methods' do
     expect(subject).to respond_to(:save)
     expect(subject).to respond_to(:delete)
-    expect(subject).to delegate_method(:resource_factory).to(:adapter)
+    expect(subject).to respond_to(:adapter)
   end
 
   describe '.save' do

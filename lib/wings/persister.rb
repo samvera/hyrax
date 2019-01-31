@@ -3,7 +3,9 @@
 module Wings
   class Persister
     attr_reader :adapter
-    delegate :resource_factory, to: :adapter
+    extend Forwardable
+    def_delegator :adapter, :resource_factory
+    # delegate :resource_factory, to: :adapter
 
     # @param [MetadataAdapter] adapter
     def initialize(adapter:)
