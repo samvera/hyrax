@@ -222,6 +222,11 @@ module Hyrax
       registered_curation_concern_types.map(&:constantize)
     end
 
+    def valkyrie_metadata_adapter
+      @valkyrie_metadata_adapter ||= :wings_adapter
+    end
+    attr_writer :valkyrie_metadata_adapter
+
     # A configuration point for changing the behavior of the license service.
     #
     # @!attribute [w] license_service_class
