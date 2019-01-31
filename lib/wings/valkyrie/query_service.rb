@@ -3,6 +3,7 @@
 module Wings
   module Valkyrie
     class QueryService
+      attr_reader :adapter
       extend Forwardable
       def_delegator :adapter, :resource_factory
 
