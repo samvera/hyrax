@@ -94,11 +94,6 @@ jobs:
           mkdir /tmp/test-results
           bundle exec rspec $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
 
-    - run:
-        name: Clean dependencies
-        command: bundle clean
-
-
     # collect reports
     - store_test_results:
         path: /tmp/test-results
