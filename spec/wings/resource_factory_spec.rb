@@ -67,6 +67,9 @@ RSpec.describe Wings::ResourceFactory do
         it 'has a to_s instance that delegates to the given klass' do
           expect(subject.to_s).to eq(GenericWork.to_s)
         end
+        it 'has a internal_resource instance that is the given klass' do
+          expect(subject.internal_resource).to eq(GenericWork)
+        end
       end
     end
     context 'when given a non-ActiveFedora class' do
