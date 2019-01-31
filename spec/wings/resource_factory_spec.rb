@@ -3,7 +3,8 @@ require 'spec_helper'
 require 'wings/resource_factory'
 
 RSpec.describe Wings::ResourceFactory do
-  subject(:factory) { described_class.new(pcdm_object: work) }
+  subject(:factory) { described_class.new(pcdm_object: pcdm_object) }
+  let(:pcdm_object) { work }
   let(:adapter)     { Valkyrie::MetadataAdapter.find(:memory) }
   let(:id)          { 'moomin123' }
   let(:persister)   { adapter.persister }
@@ -21,7 +22,9 @@ RSpec.describe Wings::ResourceFactory do
       depositor: 'user1',
       description: ['a description'],
       import_url: uris.first,
-      related_url: uris
+      publisher: [false],
+      related_url: uris,
+      source: [1.125, :moomin]
     }
   end
 
@@ -38,10 +41,9 @@ RSpec.describe Wings::ResourceFactory do
   end
 
   # TODO: extract to Valkyrie?
-  define :have_a_valkyrie_id_of do |expected_id_str|
+  define :have_a_valkyrie_alternate_id_of do |expected_id_str|
     match do |valkyrie_resource|
-      expect(valkyrie_resource.id).to be_a Valkyrie::ID
-      valkyrie_resource.id.id == expected_id_str
+      valkyrie_resource.alternate_ids.map(&:id).include?(expected_id_str)
     end
   end
 
@@ -85,7 +87,7 @@ RSpec.describe Wings::ResourceFactory do
     end
 
     it 'has the id of the pcdm_object' do
-      expect(factory.build).to have_a_valkyrie_id_of work.id
+      expect(factory.build).to have_a_valkyrie_alternate_id_of work.id
     end
 
     it 'has attributes matching the pcdm_object' do
@@ -96,16 +98,83 @@ RSpec.describe Wings::ResourceFactory do
                             description: work.description
     end
 
-    it 'round trips attributes' do
+    it 'round trips attributes' do # rubocop:disable RSpec/ExampleLength
       persister.save(resource: factory.build)
 
-      expect(adapter.query_service.find_by(id: work.id))
+      expect(adapter.query_service.find_by_alternate_identifier(alternate_identifier: work.id))
         .to have_attributes title: work.title,
                             date_created: work.date_created,
                             depositor: work.depositor,
                             description: work.description,
                             import_url: work.import_url,
-                            related_url: work.related_url
+                            publisher: work.publisher,
+                            related_url: work.related_url,
+                            source: work.source
+    end
+  end
+
+  context 'with relationship properties' do
+    let(:pcdm_object) { book }
+    let(:id)          { 'moomin123' }
+    let(:book)        { book_class.new(id: id, **attributes) }
+    let(:page1)       { page_class.new(id: 'pg1') }
+    let(:page2)       { page_class.new(id: 'pg2') }
+
+    let(:book_class) do
+      Book = Class.new(ActiveFedora::Base) do
+        has_many :pages
+        property :title, predicate: ::RDF::Vocab::DC.title
+        property :contributor, predicate: ::RDF::Vocab::DC.contributor
+        property :description, predicate: ::RDF::Vocab::DC.description
+      end
+    end
+
+    let(:page_class) do
+      Page = Class.new(ActiveFedora::Base) do
+        belongs_to :book_with_pages, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf
+      end
+    end
+
+    after do
+      Object.send(:remove_const, :Page)
+      Object.send(:remove_const, :Book)
+    end
+
+    let(:attributes) do
+      {
+        title: ['fake title', 'fake title 2'],
+        contributor: ['user1'],
+        description: ['a description'],
+        pages: [page1, page2]
+      }
+    end
+
+    describe '.for' do
+      it 'returns a Valkyrie::Resource' do
+        expect(described_class.for(book)).to be_a Valkyrie::Resource
+      end
+    end
+
+    describe '#build' do
+      it 'returns a Valkyrie::Resource' do
+        expect(subject.build).to be_a Valkyrie::Resource
+      end
+
+      it 'has the id of the active_fedora_object' do
+        expect(subject.build).to have_a_valkyrie_alternate_id_of book.id
+      end
+
+      it 'has attributes matching the active_fedora_object' do
+        expect(subject.build)
+          .to have_attributes title: book.title,
+                              contributor: book.contributor,
+                              description: book.description
+        expect_ids_to_match(subject.build.page_ids, ['pg1', 'pg2'])
+      end
+    end
+
+    def expect_ids_to_match(valkyrie_ids, expected_ids)
+      expect(valkyrie_ids.map(&:id)).to match_array expected_ids
     end
   end
 end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'wings/value_mapper'
+
 module Wings
   # we really want a class var here. maybe we could use a singleton instead?
   # rubocop:disable Style/ClassVars
@@ -30,7 +32,7 @@ module Wings
     end
 
     def self.to_valkyrie_resource_class(klass:)
-      Class.new(::Valkyrie::Resource) do
+      Class.new(ActiveFedoraResource) do
         # Based on Valkyrie implementation, we call Class.to_s to define
         # the internal resource.
         @to_s = klass.to_s
@@ -39,6 +41,10 @@ module Wings
         end
         klass.properties.each_key do |property_name|
           attribute property_name.to_sym, ::Valkyrie::Types::String
+        end
+        relationship_keys = klass.reflections.keys.reject { |k| k.to_s.include?('id') }.map { |k| k.to_s.singularize + '_ids' }
+        relationship_keys.each do |linked_property_name|
+          attribute linked_property_name.to_sym, ::Valkyrie::Types::Set.of(::Valkyrie::Types::ID)
         end
       end
     end
@@ -55,26 +61,23 @@ module Wings
       klass = @@resource_class_cache.fetch(pcdm_object) do
         self.class.to_valkyrie_resource_class(klass: pcdm_object.class)
       end
+      klass.new(alternate_ids: [Valkyrie::ID.new(pcdm_object.id)], **attributes)
+    end
 
-      klass.new(id: pcdm_object.id, **attributes)
+    class ActiveFedoraResource < Valkyrie::Resource
+      attribute :alternate_ids, Valkyrie::Types::Array
     end
 
     private
 
       def attributes
-        pcdm_object.attributes.each_with_object({}) do |(name, values), mem|
-          mem[name.to_sym] = normalize_values(values)
-        end
-      end
+        relationship_keys = pcdm_object.reflections.keys.reject { |k| k.to_s.include?('id') }.map { |k| k.to_s.singularize + '_ids' }
 
-      def normalize_values(values)
-        case values
-        when ActiveTriples::Resource
-          values.to_term
-        when ActiveTriples::Relation
-          values.map { |val| normalize_values(val) }
-        else
-          values
+        attrs_with_relationships = pcdm_object.attributes.keys + relationship_keys
+
+        attrs_with_relationships.each_with_object({}) do |attr_name, mem|
+          next unless pcdm_object.respond_to? attr_name
+          mem[attr_name.to_sym] = ValueMapper.for(pcdm_object.public_send(attr_name)).result
         end
       end
   end
