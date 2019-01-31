@@ -9,7 +9,7 @@ module Valkyrie
   module MonkeyPatch
     module ResourceClassResolver
       def resource_klass
-        Wings::ResourceFactory.convert_class_name_to_valkyrie_resource_class(internal_resource)
+        Wings::ModelTransformer.convert_class_name_to_valkyrie_resource_class(internal_resource)
       end
     end
   end
