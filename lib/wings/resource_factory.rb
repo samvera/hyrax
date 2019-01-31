@@ -77,7 +77,7 @@ module Wings
       klass = @@resource_class_cache.fetch(pcdm_object) do
         self.class.to_valkyrie_resource_class(klass: pcdm_object.class)
       end
-      klass.new(alternate_ids: [Valkyrie::ID.new(pcdm_object.id)], **attributes)
+      klass.new(alternate_ids: [::Valkyrie::ID.new(pcdm_object.id)], **attributes)
     end
 
     class ActiveFedoraResource < Valkyrie::Resource
