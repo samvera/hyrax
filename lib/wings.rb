@@ -11,9 +11,9 @@ require 'wings/model_transformer'
 require 'wings/resource_factory'
 require 'wings/valkyrizable'
 require 'wings/valkyrie_monkey_patch'
+require 'wings/valkyrie/metadata_adapter'
 require 'wings/valkyrie/resource_factory'
-require 'wings/metadata_adapter'
-require 'wings/persister'
-require 'wings/query_service'
+require 'wings/valkyrie/persister'
+require 'wings/valkyrie/query_service'
 
 ActiveFedora::Base.include Wings::Valkyrizable
