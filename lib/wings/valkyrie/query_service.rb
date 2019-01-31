@@ -6,7 +6,7 @@ module Wings
       extend Forwardable
       def_delegator :adapter, :resource_factory
 
-      # @param [ResourceFactory] resource_factory
+      # @param adapter [Wings::Valkyrie::MetadataAdapter] The adapter which holds the resource_factory for this query_service.
       def initialize(adapter:)
         @adapter = adapter
       end
