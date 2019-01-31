@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 require 'wings/resource_factory'
+require 'wings/valkyrie_monkey_patch'
 
 RSpec.describe Wings::ResourceFactory do
   subject(:factory) { described_class.new(pcdm_object: pcdm_object) }
@@ -68,7 +69,7 @@ RSpec.describe Wings::ResourceFactory do
         end
       end
     end
-    context 'when given a ActiveFedora class' do
+    context 'when given a non-ActiveFedora class' do
       it 'raises an exception' do
         expect { described_class.to_valkyrie_resource_class(klass: String) }.to raise_error
       end
