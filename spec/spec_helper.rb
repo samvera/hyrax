@@ -210,6 +210,11 @@ RSpec.configure do |config|
 
   config.after do
     DatabaseCleaner.clean
+    # This is disabled in order to avoid occasional failures where DELETE
+    # requests to the Selenium server are treated as network requests which
+    # should be forbidden by WebMock
+    # @see https://github.com/samvera/hyrax/issues/3514
+    WebMock.disable!
   end
 
   # If true, the base class of anonymous controllers will be inferred
