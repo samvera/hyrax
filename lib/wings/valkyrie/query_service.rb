@@ -17,10 +17,21 @@ module Wings
       # @return [Valkyrie::Resource]
       # @raise [Valkyrie::Persistence::ObjectNotFoundError]
       def find_by(id:)
+        id = ::Valkyrie::ID.new(id.to_s) if id.is_a?(String)
+        validate_id(id)
         resource_factory.to_resource(object: ::ActiveFedora::Base.find(id.to_s))
       rescue ::ActiveFedora::ObjectNotFoundError
         raise ::Valkyrie::Persistence::ObjectNotFoundError
       end
+
+      private
+
+        # Determines whether or not an Object is a Valkyrie ID
+        # @param [Object] id
+        # @raise [ArgumentError]
+        def validate_id(id)
+          raise ArgumentError, 'id must be a Valkyrie::ID' unless id.is_a? ::Valkyrie::ID
+        end
     end
   end
 end
