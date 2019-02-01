@@ -27,14 +27,13 @@ module Wings
       attrs.delete(:id)
       attrs.delete(:alternate_ids)
 
-      attrs[:id] = id unless id.empty?
       attrs.compact
     end
 
     ##
     # @return [ActiveFedora::Base]
     def convert
-      resource.internal_resource.new(attributes)
+      resource.internal_resource.new(attributes).tap { |obj| obj.id = id unless id.empty? }
     end
 
     ##
