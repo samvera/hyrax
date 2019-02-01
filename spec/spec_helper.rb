@@ -206,15 +206,21 @@ RSpec.configure do |config|
     # Precompile the assets to prevent these issues.
     visit "/assets/application.css"
     visit "/assets/application.js"
+    # This is enabled in order to avoid occasional failures where DELETE
+    # requests to the Selenium server are treated as network requests which
+    # should be forbidden by WebMock
+    # @see https://github.com/samvera/hyrax/issues/3514
+    WebMock.enable!
+  end
+
+  config.after(:all, type: :feature) do
+    # This is disabled in order to avoid the aforementioned Capybara/Selenium
+    # failures
+    WebMock.disable!
   end
 
   config.after do
     DatabaseCleaner.clean
-    # This is disabled in order to avoid occasional failures where DELETE
-    # requests to the Selenium server are treated as network requests which
-    # should be forbidden by WebMock
-    # @see https://github.com/samvera/hyrax/issues/3514
-    WebMock.disable!
   end
 
   # If true, the base class of anonymous controllers will be inferred
