@@ -24,6 +24,12 @@ module Wings
         raise ::Valkyrie::Persistence::ObjectNotFoundError
       end
 
+      # Constructs a Valkyrie::Persistence::CustomQueryContainer using this query service
+      # @return [Valkyrie::Persistence::CustomQueryContainer]
+      def custom_queries
+        @custom_queries ||= ::Valkyrie::Persistence::CustomQueryContainer.new(query_service: self)
+      end
+
       private
 
         # Determines whether or not an Object is a Valkyrie ID
