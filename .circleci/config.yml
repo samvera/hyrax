@@ -21,7 +21,7 @@ jobs:
     # - image: circleci/postgres:9.4
 
     working_directory: ~/repo
-    parallelism: 2
+    parallelism: 4
 
     environment:
       RAILS_ENV: test
