@@ -3,7 +3,9 @@ sudo: required
 dist: trusty
 
 addons:
-  chrome: stable
+  apt:
+    packages:
+      - chromium-chromedriver
 cache:
   bundler: true
 
@@ -31,3 +33,4 @@ services:
   - redis-server
 before_script:
   - jdk_switcher use oraclejdk8
+  - ln -s /usr/lib/chromium-browser/chromedriver ~/bin/chromedriver
