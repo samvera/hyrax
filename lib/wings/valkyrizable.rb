@@ -5,7 +5,7 @@ module Wings
     ##
     # @return [Valkyrie::Resource] a valkyrie resource matching this model
     def valkyrie_resource
-      ResourceFactory.for(self)
+      ModelTransformer.for(self)
     end
   end
 end
