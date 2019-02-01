@@ -11,5 +11,6 @@ require 'wings/model_transformer'
 require 'wings/resource_factory'
 require 'wings/valkyrizable'
 require 'wings/valkyrie_monkey_patch'
+require 'wings/valkyrie/resource_factory'
 
 ActiveFedora::Base.include Wings::Valkyrizable
