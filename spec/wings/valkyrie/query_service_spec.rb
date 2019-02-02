@@ -51,7 +51,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
   end
 
   describe ".register_query_handler" do
-    it "can register a query handler" do
+    before do
       class QueryHandler
         def self.queries
           [:find_by_user_id]
@@ -66,6 +66,13 @@ RSpec.describe Wings::Valkyrie::QueryService do
           1
         end
       end
+    end
+
+    after do
+      Object.send(:remove_const, :QueryHandler)
+    end
+
+    it "can register a query handler" do
       query_service.custom_queries.register_query_handler(QueryHandler)
       expect(query_service.custom_queries).to respond_to :find_by_user_id
       expect(query_service.custom_queries.find_by_user_id).to eq 1
