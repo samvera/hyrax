@@ -176,9 +176,114 @@ RSpec.describe Wings::ModelTransformer do
         expect_ids_to_match(subject.build.page_ids, ['pg1', 'pg2'])
       end
     end
+  end
 
-    def expect_ids_to_match(valkyrie_ids, expected_ids)
-      expect(valkyrie_ids.map(&:id)).to match_array expected_ids
+  context 'for PCDM & Hydra-Works models', :clean_repo do
+    let(:collection1) { build(:public_collection_lw, id: 'col1', title: ['Collection 1']) }
+    let(:collection2) { build(:public_collection_lw, id: 'col2', title: ['Collection 2']) }
+    let(:collection3) { build(:public_collection_lw, id: 'col3', title: ['Collection 3']) }
+    let(:work1)       { build(:work, id: 'wk1', title: ['Work 1']) }
+    let(:work2)       { build(:work, id: 'wk2', title: ['Work 2']) }
+    let(:work3)       { build(:work, id: 'wk3', title: ['Work 3']) }
+    let(:fileset1)    { build(:file_set, id: 'fs1', title: ['Fileset 1']) }
+    let(:fileset2)    { build(:file_set, id: 'fs2', title: ['Fileset 2']) }
+
+    describe '#build' do
+      context 'for parent collection' do
+        before do
+          collection1.members = [work1, work2, collection2, collection3]
+          collection1.save!
+        end
+
+        let(:pcdm_object) { collection1 }
+
+        it 'returns a Valkyrie::Resource' do
+          expect(subject.build).to be_a Valkyrie::Resource
+        end
+
+        it 'has the id of the active_fedora_object' do
+          expect(subject.build).to have_a_valkyrie_alternate_id_of collection1.id
+        end
+
+        it 'has attributes for the PCDM model' do
+          expect(subject.build)
+            .to have_attributes title: collection1.title
+          expect_ids_to_match(subject.build.member_ids, [work1.id, work2.id, collection2.id, collection3.id])
+        end
+      end
+
+      context 'for child collection' do
+        let(:pcdm_object) { collection3 }
+
+        before do
+          collection3.member_of_collections = [collection1, collection2]
+          collection3.save!
+        end
+
+        it 'returns a Valkyrie::Resource' do
+          expect(subject.build).to be_a Valkyrie::Resource
+        end
+
+        it 'has the id of the active_fedora_object' do ###
+          expect(subject.build).to have_a_valkyrie_alternate_id_of collection3.id
+        end
+
+        it 'has attributes matching the active_fedora_object' do
+          expect(subject.build)
+            .to have_attributes title: collection3.title
+          expect_ids_to_match(subject.build.member_of_collection_ids, ['col1', 'col2'])
+        end
+      end
+
+      context 'for work in collection' do
+        let(:pcdm_object) { work1 }
+
+        before do
+          work1.member_of_collections = [collection1, collection2]
+          work1.save!
+        end
+
+        it 'returns a Valkyrie::Resource' do
+          expect(subject.build).to be_a Valkyrie::Resource
+        end
+
+        it 'has the id of the active_fedora_object' do ###
+          expect(subject.build).to have_a_valkyrie_alternate_id_of work1.id
+        end
+
+        it 'has attributes matching the active_fedora_object' do
+          expect(subject.build)
+            .to have_attributes title: work1.title
+          expect_ids_to_match(subject.build.member_of_collection_ids, ['col1', 'col2'])
+        end
+      end
+
+      context 'work with works and filesets' do
+        let(:pcdm_object) { work1 }
+
+        before do
+          work1.members = [work2, work3, fileset1, fileset2]
+          work1.save!
+        end
+
+        it 'returns a Valkyrie::Resource' do
+          expect(subject.build).to be_a Valkyrie::Resource
+        end
+
+        it 'has the id of the active_fedora_object' do ###
+          expect(subject.build).to have_a_valkyrie_alternate_id_of work1.id
+        end
+
+        it 'has attributes matching the active_fedora_object' do
+          expect(subject.build)
+            .to have_attributes title: work1.title
+          expect_ids_to_match(subject.build.member_ids, [work2.id, work3.id, fileset1.id, fileset2.id])
+        end
+      end
     end
+  end
+
+  def expect_ids_to_match(valkyrie_ids, expected_ids)
+    expect(valkyrie_ids.map(&:id)).to match_array expected_ids
   end
 end
