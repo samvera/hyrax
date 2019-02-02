@@ -3,20 +3,43 @@
 require 'wings/value_mapper'
 
 module Wings
+  #
   # This class is responsible for coordinating the transformation of a PCDM
   # Model (be it the class or an instance of the class) to a [Valkyrie::Resource](https://github.com/samvera-labs/valkyrie/blob/master/lib/valkyrie/resource.rb).
   # for the given PCDM model.
   #
-  # we really want a class var here. maybe we could use a singleton instead?
-  # rubocop:disable Style/ClassVars
+  # @example getting a valkyrie resource
+  #   work     = GenericWork.new(id: 'an_identifier')
+  #   resource = Wings::ModelTransformer.for(pcdm_object: work)
+  #
+  #   resource.alternate_ids # => [#<Valkyrie::ID:0x... id: 'an_identifier'>]
+  #
   class ModelTransformer
+    ##
+    # Caches dynamically generated `Valkyrie::Resource` subclasses mapped from
+    # legacy `ActiveFedora` model classes.
+    #
+    # @example
+    #   cache = ResourceClassCache.new
+    #
+    #   klass = cache.fetch(GenericWork) do
+    #     # logic mapping GenericWork to a Valkyrie::Resource subclass
+    #   end
+    #
     class ResourceClassCache
+      ##
+      # @!attribute [r] cache
+      #   @return [Hash<Class, Class>]
       attr_reader :cache
 
       def initialize
         @cache = {}
       end
 
+      ##
+      # @param key [Class] the ActiveFedora class to map
+      #
+      # @return [Class]
       def fetch(key)
         @cache.fetch(key) do
           @cache[key] = yield
@@ -24,19 +47,38 @@ module Wings
       end
     end
 
+    # we really want a class var here. maybe we could use a singleton instead?
+    # rubocop:disable Style/ClassVars
     @@resource_class_cache = ResourceClassCache.new
 
+    ##
+    # @!attribute [rw] pcdm_object
+    #   @return [ActiveFedora::Base]
     attr_accessor :pcdm_object
 
-    # The method signature is to conform to Valkyrie's method signature for
-    # ::Valkyrie.config.resource_class_resolver
+    ##
+    # @note The method signature is to conform to Valkyrie's method signature
+    #   for ::Valkyrie.config.resource_class_resolver
+    #
+    # @param class_name [String] a string representation of an `ActiveFedora`
+    #   model
+    #
+    # @return [Class] a dynamically generated `Valkyrie::Resource` subclass
+    #   mirroring the provided class name
+    #
     def self.convert_class_name_to_valkyrie_resource_class(class_name)
       klass = class_name.constantize
       to_valkyrie_resource_class(klass: klass)
     end
 
-    # rubocop:disable Metrics/MethodLength
-    # Because meta programming a class results in long methods
+    ##
+    # @param klass [String] an `ActiveFedora` model
+    #
+    # @return [Class] a dyamically generated `Valkyrie::Resource` subclass
+    #   mirroring the provided `ActiveFedora` model
+    #
+    # rubocop:disable Metrics/MethodLength because metaprogramming a class
+    #   results in long methods
     def self.to_valkyrie_resource_class(klass:)
       Class.new(ActiveFedoraResource) do
         # Based on Valkyrie implementation, we call Class.to_s to define
@@ -70,14 +112,24 @@ module Wings
     end
     # rubocop:enable Metrics/MethodLength
 
+    ##
+    # @param pcdm_object [ActiveFedora::Base]
     def initialize(pcdm_object:)
       self.pcdm_object = pcdm_object
     end
 
+    ##
+    # @param pcdm_object [ActiveFedora::Base]
+    #
+    # @return [::Valkyrie::Resource] a resource mirroiring `pcdm_object`
     def self.for(pcdm_object)
       new(pcdm_object: pcdm_object).build
     end
 
+    ##
+    # Builds a `Valkyrie::Resource` equivalent to the `pcdm_object`
+    #
+    # @return [::Valkyrie::Resource] a resource mirroiring `pcdm_object`
     def build
       klass = @@resource_class_cache.fetch(pcdm_object) do
         self.class.to_valkyrie_resource_class(klass: pcdm_object.class)

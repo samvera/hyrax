@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 module Wings
+  ##
+  # Converts `ValkyrieResource` objects to legacy `ActiveFedora::Base` objects.
+  #
+  # @example
+  #   work     = GenericWork.new(title: ['Comet in Moominland'])
+  #   resource = GenericWork.valkyrie_resource
+  #
+  #   ActiveFedoraConverter.new(resource: resource).convert == work # => true
+  #
+  # @note the `Valkyrie::Resource` object passed to this class **must** have an
+  #   `#internal_resource` mapping it to an `ActiveFedora::Base` class.
   class ActiveFedoraConverter
     ##
     # @!attribute [rw] resource

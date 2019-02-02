@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # ********************************************************************************
 # BEGIN samvera-labs/valkyrie#654
 # TODO: See https://github.com/samvera-labs/valkyrie/pull/654
