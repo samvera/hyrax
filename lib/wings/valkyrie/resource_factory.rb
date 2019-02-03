@@ -4,6 +4,12 @@ require 'wings/active_fedora_converter'
 
 module Wings
   module Valkyrie
+    ##
+    # This class provides two-way mapping between `ActiveFedora::Base` and
+    # `Valkyrie::Resource` models.
+    #
+    # @see Wings::ActiveFedoraConverter
+    # @see Wings::Valkyrizable
     class ResourceFactory
       ##
       # @!attribute [r] adapter
