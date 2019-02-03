@@ -22,7 +22,6 @@ module Wings; end
 require 'valkyrie'
 require 'wings/model_transformer'
 require 'wings/resource_factory'
-require 'wings/metadata_adapter'
 require 'wings/valkyrizable'
 require 'wings/valkyrie_monkey_patch'
 require 'wings/valkyrie/metadata_adapter'
@@ -33,7 +32,7 @@ require 'wings/valkyrie/query_service'
 ActiveFedora::Base.include Wings::Valkyrizable
 
 Valkyrie::MetadataAdapter.register(
-  Valkyrie::Persistence::ActiveFedora::MetadataAdapter.new,
+  Wings::Valkyrie::MetadataAdapter.new,
   :wings_adapter
 
 )
