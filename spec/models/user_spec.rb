@@ -35,8 +35,33 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '#user_key' do
+    it 'is email by default' do
+      expect(user.user_key).to eq user.email
+    end
+
+    context 'with a custom user_key_field' do
+      let(:user)  { build(:user, display_name: value) }
+      let(:value) { 'moomin' }
+
+      before do
+        allow(Hydra.config).to receive(:user_key_field).and_return(:display_name)
+      end
+
+      it 'is email by default' do
+        expect(user.user_key).to eq value
+      end
+
+      it 'is findable by user_key' do
+        user.save
+
+        expect(User.find_by_user_key(value)).to eq user
+      end
+    end
+  end
+
   it "has an email" do
-    expect(user.user_key).to be_kind_of String
+    expect(user.email).to be_kind_of String
   end
   it "has activity stream-related methods defined" do
     expect(user).to respond_to(:stream)
