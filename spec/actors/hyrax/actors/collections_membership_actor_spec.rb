@@ -102,7 +102,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
 
     context "updates env" do
       let!(:collection_type) { create(:collection_type) }
-      let!(:collection) { build(:collection_lw, collection_type_gid: collection_type.gid, with_permission_template: true) }
+      let!(:collection) { create(:collection_lw, collection_type_gid: collection_type.gid, with_permission_template: true) }
 
       subject(:middleware) do
         stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
@@ -135,7 +135,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
         end
 
         context "when more than one collection" do
-          let(:collection2) { build(:collection_lw, with_permission_template: true) }
+          let(:collection2) { create(:collection_lw, with_permission_template: true) }
           let(:attributes) do
             {
               member_of_collections_attributes: {
