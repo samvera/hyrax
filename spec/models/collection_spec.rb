@@ -245,7 +245,7 @@ RSpec.describe Collection, type: :model do
       end
 
       it 'will be created when create_access is true' do
-        expect { build(:collection_lw, create_access: true) }.to change { Hyrax::PermissionTemplate.count }.by(1)
+        expect { create(:collection_lw, with_permission_template: true) }.to change { Hyrax::PermissionTemplate.count }.by(1)
       end
 
       it 'will not be created by default' do
