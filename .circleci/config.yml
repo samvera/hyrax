@@ -6,7 +6,7 @@ version: 2.1
 executors:
   ruby:
     docker:
-      - image: circleci/ruby:2.5.3
+      - image: ruby:2.5
     working_directory: ~/hyrax
     environment:
       BUNDLE_PATH: ~/bundle
@@ -55,7 +55,7 @@ jobs:
 
   build:
     docker:
-    - image: circleci/ruby:2.5.3-node-browsers-legacy
+    - image: circleci/ruby:2.5-node-browsers
     - image: circleci/redis:4
     - image: ualbertalib/docker-fcrepo4:4.7
       environment:
@@ -73,7 +73,6 @@ jobs:
       RACK_ENV: test
       FCREPO_TEST_PORT: 8080/fcrepo
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
-      ENGINE_CART_RAILS_OPTIONS: --skip-git --skip-bundle --skip-listen --skip-spring --skip-yarn --skip-keeps --skip-action-cable --skip-coffee --skip-puma --skip-test
       SPEC_OPTS: --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec.xml --format progress
       COVERALLS_PARALLEL: true
 
@@ -82,22 +81,40 @@ jobs:
         at: ~/
 
     - run:
-        name: Generate test app, ensure top-level Gemfile.lock is valid
+        name: Generate test app
         command: |
-          bundle exec rake engine_cart:generate
-          bundle check || bundle install
+          bundle exec rails new ~/test_app
+          cd ~/test_app
 
-    - persist_to_workspace:
-        root: ~/
-        paths:
-        - hyrax/*
-        - hyrax/**/*
-        - bundle/*
-        - bundle/**/*
+    - run:
+        name: Setup Gemfile dependencies
+        command: |
+          sed -i -- "s/gem 'sqlite3'/gem 'sqlite3', '< 1.4.0'/g" ~/test_app/Gemfile
+          echo "gem 'hyrax', path: '../hyrax'" >> ~/test_app/Gemfile
+
+    - run:
+        name: Install app dependencies
+        command: |
+          cd ~/test_app
+          bundle install --path ./vendor/bundle --binstubs ./vendor/bin
+          bundle show --paths
+          ruby -v
+
+    - run:
+        name: Install Hyrax
+        command: |
+          cd ~/test_app
+          ruby -v
+          bundle exec ruby -v
+          bundle exec rake -T
+          bundle exec ./vendor/bin/rails --version
+          bundle exec ./vendor/bin/rails g hyrax:install -f
+          bundle exec rake db:migrate
+          bundle exec rake hyrax:default_collection_types:create
 
   test:
     docker:
-    - image: circleci/ruby:2.5.3-node-browsers-legacy
+    - image: circleci/ruby:2.5.3
     - image: circleci/redis:4
     - image: ualbertalib/docker-fcrepo4:4.7
       environment:
@@ -127,7 +144,7 @@ jobs:
     - run:
         name: Load config into SolrCloud
         command: |
-          cd .internal_test_app/solr/config
+          cd ~/test_app/solr/config
           zip -1 -r solr_hyrax_config.zip ./*
           curl -H "Content-type:application/octet-stream" --data-binary @solr_hyrax_config.zip "http://localhost:8985/solr/admin/configs?action=UPLOAD&name=hyrax"
           curl -H 'Content-type: application/json' http://localhost:8985/api/collections/ -d '{create: {name: hydra-test, config: hyrax, numShards: 1}}'
