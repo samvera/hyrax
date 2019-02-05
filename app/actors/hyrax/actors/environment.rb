@@ -8,6 +8,7 @@ module Hyrax
         @curation_concern = curation_concern
         @current_ability = current_ability
         @attributes = attributes.to_h.with_indifferent_access
+        @actor_storage = {}
       end
 
       attr_reader :curation_concern, :current_ability, :attributes
@@ -16,6 +17,20 @@ module Hyrax
       def user
         current_ability.current_user
       end
+
+      def store(actor, key, value)
+        store_for(actor)[key] = value
+      end
+
+      def retrieve(actor, key)
+        store_for(actor)[key]
+      end
+
+      private
+
+        def store_for(actor)
+          @actor_storage[actor] ||= {}
+        end
     end
   end
 end
