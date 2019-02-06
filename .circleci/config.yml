@@ -97,18 +97,12 @@ jobs:
         command: |
           cd ~/test_app
           bundle install --path ./vendor/bundle --binstubs ./vendor/bin
-          bundle show --paths
-          ruby -v
 
     - run:
         name: Install Hyrax
         command: |
           cd ~/test_app
-          ruby -v
-          bundle exec ruby -v
-          bundle exec rake -T
-          bundle exec ./vendor/bin/rails --version
-          bundle exec ./vendor/bin/rails g hyrax:install -f
+          bundle exec ./bin/rails g hyrax:install -f
           bundle exec rake db:migrate
           bundle exec rake hyrax:default_collection_types:create
 
