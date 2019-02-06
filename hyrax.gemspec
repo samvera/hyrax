@@ -106,7 +106,7 @@ SUMMARY
   spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'webmock'
-  spec.add_development_dependency 'valkyrie', '~> 1.4'
+  spec.add_development_dependency 'valkyrie', '~> 1.5'
 
   ########################################################
   # Temporarily pinned dependencies. INCLUDE EXPLANATIONS.
