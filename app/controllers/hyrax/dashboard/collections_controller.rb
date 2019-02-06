@@ -230,6 +230,9 @@ module Hyrax
 
         def add_new_banner(uploaded_file_ids)
           f = uploaded_files(uploaded_file_ids).first
+          if f.file_url.match(/^http/)
+            f.file.download!(f.file_url)
+          end
           banner_info = CollectionBrandingInfo.new(
             collection_id: @collection.id,
             filename: File.split(f.file_url).last,
@@ -255,6 +258,9 @@ module Hyrax
 
         def create_logo_info(uploaded_file_id, alttext, linkurl)
           file = uploaded_files(uploaded_file_id)
+          if file.file_url.match(/^http/)
+            file.file.download!(file.file_url)
+          end
           logo_info = CollectionBrandingInfo.new(
             collection_id: @collection.id,
             filename: File.split(file.file_url).last,
