@@ -169,13 +169,6 @@ RSpec.configure do |config|
       DatabaseCleaner.start
     end
 
-    if example.metadata[:type] == :view
-      # View tests should not hit any services. This ensures the tests are unit
-      # testing only the views and run fast.
-      WebMock.disable_net_connect!(allow_localhost: false)
-    else
-      WebMock.disable_net_connect!(allow_localhost: true)
-    end
     # using :workflow is preferable to :clean_repo, use the former if possible
     # It's important that this comes after DatabaseCleaner.start
     ensure_deposit_available_for(user) if example.metadata[:workflow]
@@ -195,7 +188,15 @@ RSpec.configure do |config|
   end
 
   config.include(ControllerLevelHelpers, type: :view)
-  config.before(:each, type: :view) { initialize_controller_helpers(view) }
+
+  config.before(:each, type: :view) do
+    initialize_controller_helpers(view)
+    WebMock.disable_net_connect!(allow_localhost: false)
+  end
+
+  config.after(:each, type: :view) do
+    WebMock.disable_net_connect!(allow_localhost: true)
+  end
 
   config.before(:all, type: :feature) do
     # Assets take a long time to compile. This causes two problems:
