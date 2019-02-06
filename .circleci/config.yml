@@ -83,14 +83,14 @@ jobs:
     - run:
         name: Generate test app
         command: |
-          bundle exec rails new ~/test_app
+          bundle exec rails new ~/test_app -m template.rb
           cd ~/test_app
 
     - run:
         name: Setup Gemfile dependencies
         command: |
           sed -i -- "s/gem 'sqlite3'/gem 'sqlite3', '< 1.4.0'/g" ~/test_app/Gemfile
-          echo "gem 'hyrax', path: '../hyrax'" >> ~/test_app/Gemfile
+          sed -i -- "s/gem 'hyrax', .*/gem 'hyrax', path: '..\/hyrax/g" ~/test_app/Gemfile
 
     - run:
         name: Install app dependencies
@@ -102,7 +102,6 @@ jobs:
         name: Install Hyrax
         command: |
           cd ~/test_app
-          ./bin/rails g hyrax:install -f
           bundle exec rake db:migrate
           bundle exec rake hyrax:default_collection_types:create
 
