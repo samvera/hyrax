@@ -102,7 +102,7 @@ jobs:
         name: Install Hyrax
         command: |
           cd ~/test_app
-          bundle exec ./bin/rails g hyrax:install -f
+          ./bin/rails g hyrax:install -f
           bundle exec rake db:migrate
           bundle exec rake hyrax:default_collection_types:create
 
