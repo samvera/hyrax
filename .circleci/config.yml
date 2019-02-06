@@ -90,7 +90,7 @@ jobs:
         name: Setup Gemfile dependencies
         command: |
           sed -i -- "s/gem 'sqlite3'/gem 'sqlite3', '< 1.4.0'/g" ~/test_app/Gemfile
-          sed -i -- "s/gem 'hyrax', .*/gem 'hyrax', path: '..\/hyrax/g" ~/test_app/Gemfile
+          sed -i -- "s/gem 'hyrax', .*/gem 'hyrax', path: '..\/hyrax'/g" ~/test_app/Gemfile
 
     - run:
         name: Install app dependencies
