@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 require 'spec_helper'
 require 'wings/model_transformer'
-require 'wings/valkyrie_monkey_patch'
 
 RSpec.describe Wings::ModelTransformer do
   subject(:factory) { described_class.new(pcdm_object: pcdm_object) }
