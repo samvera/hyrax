@@ -1,33 +1,6 @@
 # frozen_string_literal: true
 
 # ********************************************************************************
-# BEGIN samvera-labs/valkyrie#654
-# TODO: See https://github.com/samvera-labs/valkyrie/pull/654
-# ********************************************************************************
-warning_message = "Monkey Patch Invalidated?\n\tIt appears that https://github.com/samvera-labs/valkyrie/pull/654 has been merged, look to the details of that PR to look to remove this monkey patch"
-raise(warning_message) if Valkyrie.config.respond_to?(:resource_class_resolver)
-
-module Valkyrie
-  module MonkeyPatch
-    module ResourceClassResolver
-      def resource_klass
-        Wings::ModelTransformer.convert_class_name_to_valkyrie_resource_class(internal_resource)
-      end
-    end
-  end
-end
-
-class Valkyrie::Persistence::Postgres::ORMConverter
-  include Valkyrie::MonkeyPatch::ResourceClassResolver
-end
-class Valkyrie::Persistence::Solr::ORMConverter
-  include Valkyrie::MonkeyPatch::ResourceClassResolver
-end
-# ********************************************************************************
-# END samvera-labs/valkyrie#654
-# ********************************************************************************
-
-# ********************************************************************************
 # BEGIN samvera-labs/valkyrie#659
 # Ported fix from https://github.com/samvera-labs/valkyrie/pull/659/files
 # ********************************************************************************
