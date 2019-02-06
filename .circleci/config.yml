@@ -98,6 +98,16 @@ jobs:
           cd ~/test_app
           bundle install --path ./vendor/bundle --binstubs ./vendor/bin
 
+    - persist_to_workspace:
+        root: ~/
+        paths:
+        - hyrax/*
+        - hyrax/**/*
+        - bundle/*
+        - bundle/**/*
+        - test_app/*
+        - test_app/**/*
+
   test:
     docker:
     - image: circleci/ruby:2.5-node-browsers
