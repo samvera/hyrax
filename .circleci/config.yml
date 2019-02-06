@@ -98,16 +98,9 @@ jobs:
           cd ~/test_app
           bundle install --path ./vendor/bundle --binstubs ./vendor/bin
 
-    - run:
-        name: Install Hyrax
-        command: |
-          cd ~/test_app
-          bundle exec rake db:migrate
-          bundle exec rake hyrax:default_collection_types:create
-
   test:
     docker:
-    - image: circleci/ruby:2.5.3
+    - image: circleci/ruby:2.5-node-browsers
     - image: circleci/redis:4
     - image: ualbertalib/docker-fcrepo4:4.7
       environment:
