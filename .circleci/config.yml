@@ -84,7 +84,7 @@ jobs:
 
     - restore_cache:
         keys:
-        - v1-test-app-{{ checksum "template.rb" }}
+        - v1-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
 
     - run:
         name: Check dependencies
@@ -101,7 +101,7 @@ jobs:
           bundle check || bundle install
 
     - save_cache:
-        key: v1-test-app-{{ .Branch }}-{{ .Revision }}
+        key: v1-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
         paths:
         - ".internal_test_app"
 
