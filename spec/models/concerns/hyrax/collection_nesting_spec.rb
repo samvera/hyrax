@@ -31,8 +31,8 @@ RSpec.describe Hyrax::CollectionNesting do
     end
 
     let(:user) { create(:user) }
-    let!(:collection) { create(:collection, collection_type_settings: [:nestable]) }
-    let!(:child_collection) { create(:collection, collection_type_settings: [:nestable]) }
+    let!(:collection) { build(:collection_lw, collection_type_settings: [:nestable]) }
+    let!(:child_collection) { create(:collection_lw, collection_type_settings: [:nestable]) }
     let(:extent) { Hyrax::Adapters::NestingIndexAdapter::FULL_REINDEX }
 
     before do

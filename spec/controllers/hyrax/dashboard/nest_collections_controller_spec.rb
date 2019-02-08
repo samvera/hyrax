@@ -2,7 +2,7 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
   routes { Hyrax::Engine.routes }
   let(:child_id) { 'child1' }
   let(:child) { instance_double(Collection, title: ["Awesome Child"]) }
-  let(:parent) { create(:collection, id: 'parent1', collection_type_settings: :nestable, title: ["Uncool Parent"]) }
+  let(:parent) { create(:collection_lw, id: 'parent1', collection_type_settings: :nestable, title: ["Uncool Parent"]) }
 
   describe '#blacklight_config' do
     subject { controller.blacklight_config }

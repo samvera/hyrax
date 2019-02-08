@@ -153,57 +153,57 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
 
         # using create option here because permission template is required for testing :deposit access
         let(:coll_a) do
-          create(:public_collection,
-                 id: 'Collection_A',
-                 collection_type_gid: collection_type.gid,
-                 user: user,
-                 create_access: true)
+          build(:public_collection_lw,
+                id: 'Collection_A',
+                collection_type_gid: collection_type.gid,
+                user: user,
+                with_permission_template: true)
         end
         let(:coll_b) do
-          create(:public_collection,
-                 id: 'Collection_B',
-                 collection_type_gid: collection_type.gid,
-                 user: user,
-                 create_access: true,
-                 member_of_collections: [coll_a])
+          build(:public_collection_lw,
+                id: 'Collection_B',
+                collection_type_gid: collection_type.gid,
+                user: user,
+                with_permission_template: true,
+                member_of_collections: [coll_a])
         end
         let(:coll_c) do
-          create(:public_collection,
-                 id: 'Collection_C',
-                 collection_type_gid: collection_type.gid,
-                 user: user,
-                 create_access: true,
-                 member_of_collections: [coll_b])
+          build(:public_collection_lw,
+                id: 'Collection_C',
+                collection_type_gid: collection_type.gid,
+                user: user,
+                with_permission_template: true,
+                member_of_collections: [coll_b])
         end
         let(:coll_d) do
-          create(:public_collection,
-                 id: 'Collection_D',
-                 collection_type_gid: collection_type.gid,
-                 user: user,
-                 create_access: true,
-                 member_of_collections: [coll_c])
+          build(:public_collection_lw,
+                id: 'Collection_D',
+                collection_type_gid: collection_type.gid,
+                user: user,
+                with_permission_template: true,
+                member_of_collections: [coll_c])
         end
         let(:coll_e) do
-          create(:public_collection,
+          create(:public_collection_lw,
                  id: 'Collection_E',
                  collection_type_gid: collection_type.gid,
                  user: user,
-                 create_access: true,
+                 with_permission_template: true,
                  member_of_collections: [coll_d])
         end
         let(:another) do
-          create(:public_collection,
+          create(:public_collection_lw,
                  id: 'Another_One',
                  collection_type_gid: collection_type.gid,
                  user: user,
-                 create_access: true)
+                 with_permission_template: true)
         end
         let(:wrong) do
-          create(:public_collection,
-                 id: 'Wrong_Type',
-                 collection_type_gid: another_collection_type.gid,
-                 user: user,
-                 create_access: true)
+          build(:public_collection_lw,
+                id: 'Wrong_Type',
+                collection_type_gid: another_collection_type.gid,
+                user: user,
+                with_permission_template: true)
         end
 
         before do
@@ -245,18 +245,18 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
       describe 'and are of the same collection type', with_nested_reindexing: true do
         # using create option here because permission template is required for testing :deposit access
         let!(:parent) do
-          create(:public_collection,
+          create(:public_collection_lw,
                  id: 'Parent_Collecton',
                  collection_type_gid: collection_type.gid,
                  user: user,
-                 create_access: true)
+                 with_permission_template: true)
         end
         let!(:child) do
-          create(:public_collection,
+          create(:public_collection_lw,
                  id: 'Child_Collection',
                  collection_type_gid: collection_type.gid,
                  user: user,
-                 create_access: true)
+                 with_permission_template: true)
         end
 
         it { is_expected.to eq(true) }
@@ -326,7 +326,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
   describe 'nesting attributes object', with_nested_reindexing: true do
     let(:user) { create(:user) }
     let!(:parent) { build(:collection_lw, id: 'Parent_Coll', collection_type_gid: collection_type.gid, user: user) }
-    let!(:child) { create(:user_collection, id: 'Child_Coll', collection_type_gid: collection_type.gid, user: user) }
+    let!(:child) { create(:user_collection_lw, id: 'Child_Coll', collection_type_gid: collection_type.gid, user: user) }
     let(:nesting_attributes) { Hyrax::Collections::NestedCollectionQueryService::NestingAttributes.new(id: child.id, scope: scope) }
 
     before do

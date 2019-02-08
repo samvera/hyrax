@@ -112,7 +112,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
     end
 
     context "when params includes parent_id" do
-      let(:parent_collection) { create(:collection, title: ['Parent']) }
+      let(:parent_collection) { create(:collection_lw, title: ['Parent']) }
 
       it "creates a collection as a subcollection of parent" do
         parent_collection
@@ -189,7 +189,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       let(:asset1) { create(:generic_work, user: user) }
       let(:asset2) { create(:generic_work, user: user) }
       let(:asset3) { create(:generic_work, user: user) }
-      let(:collection2) { create(:collection, title: ['Some Collection'], user: user) }
+      let(:collection2) { create(:collection_lw, title: ['Some Collection'], user: user) }
 
       before do
         [asset1, asset2, asset3].each do |asset|

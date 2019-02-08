@@ -134,7 +134,7 @@ RSpec.describe Hyrax::CollectionType, type: :model do
   end
 
   describe "collections" do
-    let!(:collection) { create(:collection, collection_type_gid: collection_type.gid.to_s) }
+    let!(:collection) { create(:collection_lw, collection_type_gid: collection_type.gid.to_s) }
     let(:collection_type) { create(:collection_type) }
 
     it 'returns collections of this collection type' do
@@ -151,7 +151,7 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     let(:collection_type) { create(:collection_type) }
 
     it 'returns true if there are any collections of this collection type' do
-      create(:collection, collection_type_gid: collection_type.gid.to_s)
+      create(:collection_lw, collection_type_gid: collection_type.gid.to_s)
       expect(collection_type).to have_collections
     end
     it 'returns false if there are not any collections of this collection type' do
