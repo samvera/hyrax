@@ -15,13 +15,13 @@
                 <!-- The fileinput-button span is used to style the file input field as button -->
                 <span id="addfiles" class="btn btn-success fileinput-button">
                     <span class="glyphicon glyphicon-plus"></span>
-                    <span>Add files...</span>
+                    <span><%=  t(".add_files") %></span>
                     <input type="file" name="files[]" multiple />
                 </span>
                 <!-- The fileinput-button span is used to style the file input field as button -->
                 <span id="addfolder" class="btn btn-success fileinput-button">
                     <span class="glyphicon glyphicon-plus"></span>
-                    <span>Add folder...</span>
+                    <span><%=  t(".add_folder") %></span>
                     <input type="file" name="files[]" multiple directory webkitdirectory />
                 </span>
                 <% if Hyrax.config.browse_everything? %>

@@ -364,15 +364,10 @@ de:
           actions: Aktion
           title: Arbeitstitel
       form_files:
+        add_files: Dateien hinzufügen
+        add_folder: Ordner hinzufügen
         dropzone: Dateien hier hinziehen.
-        local_upload_browse_everything_html: |
-          <p>Sie können eine oder mehre Dateien von Ihrem lokalen System oder einem Cloudanbieter hinzufügen, welche mit dieser Arbeit
-          verknüpft werden sollen.</p>
-          <p>Bitte beachten Sie, dass der Cloud-Anbieter möglicherweise nicht in der Lage ist Ihrer Anfrage nachzukommen, wenn Sie eine große Anzahl von Dateien
-          innerhalb einer kurzen Zeitspanne hochladen. 
-          Wenn Sie
-          irgendwelche Fehler beim Hochladen aus der Cloud erhalten, teilen Sie uns dies 
-          bitte über %{contact_href} mit.</p>
+        local_upload_browse_everything_html: "<p>Sie können eine oder mehre Dateien von Ihrem lokalen System oder einem Cloudanbieter hinzufügen, welche mit dieser Arbeit\nverknüpft werden sollen.</p>\n<p>Bitte beachten Sie, dass der Cloud-Anbieter möglicherweise nicht in der Lage ist Ihrer Anfrage nachzukommen, wenn Sie eine große Anzahl von Dateien\ninnerhalb einer kurzen Zeitspanne hochladen. \nWenn Sie\nirgendwelche Fehler beim Hochladen aus der Cloud erhalten, teilen Sie uns dies \nbitte über %{contact_href} mit.</p>\n"
         local_upload_html: "<p> Sie können eine oder mehrere Dateien hinzufügen, die dieser Arbeit zugeordnet werden sollen. </p>"
       form_member_of_collections:
         actions:
@@ -411,6 +406,8 @@ de:
       form_thumbnail:
         help_html: Wählen Sie die Datei aus, die als Miniaturansicht für diese Arbeit verwendet werden soll.
         legend_html: Miniaturansicht
+      form_visibility_component:
+        visibility: Sichtbarkeit
       items:
         actions: Aktionen
         date_uploaded: Datum Hochgeladen
@@ -430,7 +427,16 @@ de:
         definitions_html: "<strong>Ansicht / Download: Auf</strong> diese Datei (sowohl Inhalte als auch Metadaten) kann innerhalb von %{application_name} zugegriffen werden. <br /> <strong>Bearbeiten:</strong> Diese Datei (sowohl Inhalte als auch Metadaten) kann bearbeitet werden. Sie dürfen diese Berechtigung nur Benutzern und / oder Gruppen von %{institution_name} erteilen."
         share_with_html: Sie können den Zugriff "Ansicht / Download" oder "Bearbeiten" für bestimmte Benutzer und / oder Gruppen auf Dateien gewähren. Geben Sie nacheinander einen gültigen %{account_name} ein, wählen Sie die Zugriffsebene für diesen Benutzer und klicken Sie auf + Hinzufügen.
       show:
+        items: Objekte
         last_modified: Zuletzt geändert
+        relationships: Beziehungen
+      show_actions:
+        analytics: Analytics
+        attach_child: Untergeordnete Arbeit hinzufügen
+        delete: Löschen
+        edit: Bearbeiten
+        feature: Hervorheben
+        unfeature: Hervorhebung entfernen
       social_media:
         facebook: Facebook
         google: Google+
@@ -440,6 +446,9 @@ de:
       help:
         resource_type: Sie können mehrere Typen auswählen, die für alle Dateien gelten sollen
         title: Dateiname ist der Standardtitel. Bitte geben Sie einen aussagekräftigeren Titel, und Dateinamen werden noch vom System bewahrt.
+    batch_edits:
+      delete_selected:
+        button_label: Ausgewählte Löschen
     batch_uploads:
       disabled: Diese Funktion vom Administrator des Repositoriums deaktiviert
       files:
@@ -485,6 +494,7 @@ de:
           desc: Fügen Sie dieser Sammlung vorhandene Sammlungen hinzu
           modal_title: Fügen Sie diese Sammlung zu einer anderen Sammlung hinzu
           select_label: Wählen Sie die Sammlung aus
+      also_belongs_to: Diese Arbeit gehört auch zu
       browse_view: Durchsuche Ansicht
       document_list:
         edit: Bearbeiten
@@ -495,7 +505,6 @@ de:
         additional_fields: Zusätzliche Felder
         description: Beschreibungen
       is_part_of: Ist ein Teil von
-      also_belongs_to: Diese Arbeit gehört auch zu
       select_form:
         close: Schließen
         create: Sammlung erstellen
@@ -776,7 +785,9 @@ de:
         subtitle: Aktueller Status
         title: Repository-Objekte
       show_admin:
+        current_registered_users: Aktuelle
         new_visitors: Neue Besucher
+        past_30_days: Letzten 30 Tage
         registered_users: Registrierte Benutzer
         returning_visitors: Besucher wiederkehrend
         total_visitors: Besucher insgesamt
@@ -1026,7 +1037,6 @@ de:
         changes_required:
           message: |-
             Für %{title} (%{link}) sind vor der Genehmigung zusätzliche Änderungen erforderlich.
-
              '%{comment}'
           subject: Ihre Einreichung erfordert Änderungen
         deposited:

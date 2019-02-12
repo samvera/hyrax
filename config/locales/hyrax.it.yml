@@ -364,6 +364,8 @@ it:
           actions: Azione
           title: Titolo del lavoro
       form_files:
+        add_files: Aggiungi file
+        add_folder: Aggiungi cartella
         dropzone: Drop file qui.
         local_upload_browse_everything_html: |
           <p>È possibile aggiungere uno o più file da associare a questo lavoro.</p>
@@ -409,6 +411,8 @@ it:
       form_thumbnail:
         help_html: Seleziona il file da utilizzare come anteprima per questo lavoro.
         legend_html: Thumbnail
+      form_visibility_component:
+        visibility: Visibilità
       items:
         actions: Azioni
         date_uploaded: Data caricata
@@ -428,7 +432,16 @@ it:
         definitions_html: "<strong>Visualizza / Scarica:</strong> questo file (sia i contenuti che i metadati) è accessibile dall'interno di %{application_name}. <br /> <strong>Modifica:</strong> questo file (sia i contenuti che i metadati) può essere modificato. È possibile concedere questa autorizzazione solo agli utenti e / o ai gruppi %{institution_name}."
         share_with_html: È possibile concedere l'accesso "Visualizza / Scarica" ​​o "Modifica" per utenti specifici e / o gruppi ai file. Immettere uno %{account_name} valido, uno alla volta, selezionare il livello di accesso per quell'utente e fare clic su + Aggiungi.
       show:
+        items: Articoli
         last_modified: Ultima modifica
+        relationships: Relazioni
+      show_actions:
+        analytics: Analytics
+        attach_child: Allegare Bambino
+        delete: Eliminare
+        edit: Modifica
+        feature: Funzione
+        unfeature: Unfeature
       social_media:
         facebook: Facebook
         google: Google+
@@ -438,6 +451,9 @@ it:
       help:
         resource_type: È possibile selezionare più tipi da applicare a tutti i file
         title: Il nome del file sarà il titolo predefinito. Fornire un titolo più significativo e i nomi dei file saranno ancora conservati dal sistema.
+    batch_edits:
+      delete_selected:
+        button_label: Elimina Selezionato
     batch_uploads:
       disabled: Caratteristica disabilitata dall'amministratore
       files:
@@ -483,6 +499,7 @@ it:
           desc: Aggiungi raccolte esistenti a questa raccolta
           modal_title: Aggiungi questa collezione in un'altra raccolta
           select_label: Seleziona raccolta
+      also_belongs_to: Anche questo lavoro appartiene a
       browse_view: Sfoglia la vista
       document_list:
         edit: Modifica
@@ -493,7 +510,6 @@ it:
         additional_fields: Campi aggiuntivi
         description: descrizioni
       is_part_of: È parte di
-      also_belongs_to: Anche questo lavoro appartiene a
       select_form:
         close: Vicino
         create: Crea collezione
@@ -774,7 +790,9 @@ it:
         subtitle: Stato attuale
         title: Oggetti del repository
       show_admin:
+        current_registered_users: Corrente
         new_visitors: Nuovi visitatori
+        past_30_days: Ultimi 30 giorni
         registered_users: Utente registrato
         returning_visitors: Visitatori di ritorno
         total_visitors: Totale visitatori
@@ -1024,7 +1042,6 @@ it:
         changes_required:
           message: |-
             %{title} (%{link}) richiede ulteriori modifiche prima dell'approvazione.
-
              '%{comment}'
           subject: Il tuo deposito richiede modifiche
         deposited:
