@@ -39,15 +39,19 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesOrderedMembersActor do
     let(:work2) { create(:generic_work, user: user) }
     let(:environments) { [environment, Hyrax::Actors::Environment.new(work2, ability, attributes)] }
 
+    # rubocop:disable RSpec/ExampleLength
     it "attaches the correct FileSets to the correct works in the correct order" do
       expect(ImportUrlJob).to receive(:perform_later).with(FileSet, null_operation, {}).exactly(4).times
       threads = environments.collect do |env|
         Thread.new do
-          expect(actor.create(env)).to be true
-          expect(env.curation_concern.ordered_members.to_a.collect(&:label)).to eq(filenames)
+          Rails.application.reloader.wrap do
+            expect(actor.create(env)).to be true
+            expect(env.curation_concern.ordered_members.to_a.collect(&:label)).to eq(filenames)
+          end
         end
       end
       threads.each(&:join)
     end
+    # rubocop:enable RSpec/ExampleLength
   end
 end
