@@ -5,7 +5,7 @@ RSpec.describe Hyrax::CurationConcern do
   describe ".actor" do
     subject { described_class.actor }
 
-    it { is_expected.to be_kind_of Hyrax::Actors::AbstractActor }
+    it { is_expected.to be_kind_of Hyrax::Actors::TransactionalRequest }
   end
 
   describe ".actor_factory" do
