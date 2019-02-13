@@ -35,10 +35,12 @@ RSpec.describe Hyrax::Actors::TransactionalRequest do
 
     subject { middleware.create(env) }
 
-    it "rolls back any database changes" do
+    # Note that this test changed behavior with the
+    # backport of https://github.com/samvera/hyrax/pull/3482
+    it "does NOT roll back any database changes" do
       expect do
         expect { subject }.to raise_error 'boom'
-      end.not_to change { User.count } # Note the above good actor creates a user
+      end.to change { User.count } # Note the above good actor creates a user
     end
   end
 end

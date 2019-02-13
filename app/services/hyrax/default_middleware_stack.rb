@@ -3,7 +3,12 @@ module Hyrax
     # rubocop:disable Metrics/MethodLength
     def self.build_stack
       ActionDispatch::MiddlewareStack.new.tap do |middleware|
+        # Used to wrap everything in a database transaction, if the save of the resource
+        # failed then rolled back any database AdminSetChangeSet
+        # This was problematic, is removed in v3.0, and is currently a no-op
+        # Backport of https://github.com/samvera/hyrax/pull/3482
         middleware.use Hyrax::Actors::TransactionalRequest
+        # Ensure you are mutating the most recent version
         middleware.use Hyrax::Actors::OptimisticLockValidator
         middleware.use Hyrax::Actors::CreateWithRemoteFilesActor
         middleware.use Hyrax::Actors::CreateWithFilesActor
