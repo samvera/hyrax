@@ -44,8 +44,10 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesOrderedMembersActor do
       expect(ImportUrlJob).to receive(:perform_later).with(FileSet, null_operation, {}).exactly(4).times
       threads = environments.collect do |env|
         Thread.new do
-          expect(actor.create(env)).to be true
-          expect(env.curation_concern.ordered_members.to_a.collect(&:label)).to eq(filenames)
+          Rails.application.reloader.wrap do
+            expect(actor.create(env)).to be true
+            expect(env.curation_concern.ordered_members.to_a.collect(&:label)).to eq(filenames)
+          end
         end
       end
       threads.each(&:join)
