@@ -15,7 +15,7 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
     before do
       allow(presenter).to receive(:show_deposit_for?).with(anything).and_return(false)
       allow(presenter).to receive(:editor?).and_return(false)
-      render 'hyrax/base/show_actions.html.erb', presenter: presenter
+      render 'hyrax/base/show_actions', presenter: presenter
     end
     it "doesn't show edit / delete / Add to collection links" do
       expect(rendered).not_to have_link 'Edit'
@@ -32,7 +32,7 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
     context "when the work does not contain children" do
       before do
         allow(presenter).to receive(:member_presenters).and_return([])
-        render 'hyrax/base/show_actions.html.erb', presenter: presenter
+        render 'hyrax/base/show_actions', presenter: presenter
       end
       it "does not show file manager link" do
         expect(rendered).not_to have_link 'File Manager'
@@ -46,7 +46,7 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
     context "when the work contains 1 child" do
       before do
         allow(presenter).to receive(:member_presenters).and_return([member])
-        render 'hyrax/base/show_actions.html.erb', presenter: presenter
+        render 'hyrax/base/show_actions', presenter: presenter
       end
       it "does not show file manager link" do
         expect(rendered).not_to have_link 'File Manager'
@@ -60,7 +60,7 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
 
       before do
         allow(presenter).to receive(:member_presenters).and_return([member, file_member])
-        render 'hyrax/base/show_actions.html.erb', presenter: presenter
+        render 'hyrax/base/show_actions', presenter: presenter
       end
       it "shows file manager link" do
         expect(rendered).to have_link 'File Manager'
@@ -70,7 +70,7 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
     context "when there are valid_child_concerns" do
       before do
         allow(presenter).to receive(:member_presenters).and_return([])
-        render 'hyrax/base/show_actions.html.erb', presenter: presenter
+        render 'hyrax/base/show_actions', presenter: presenter
       end
       it "creates a link to add child work" do
         expect(rendered).to have_link 'Attach Generic Work', href: "/concern/parent/#{presenter.id}/generic_works/new"
@@ -87,7 +87,7 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
     context "and user is editor" do
       before do
         allow(presenter).to receive(:editor?).and_return(true)
-        render 'hyrax/base/show_actions.html.erb', presenter: presenter
+        render 'hyrax/base/show_actions', presenter: presenter
       end
 
       it "shows editor related buttons" do
@@ -101,7 +101,7 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
     context "and user is viewer" do
       before do
         allow(presenter).to receive(:editor?).and_return(false)
-        render 'hyrax/base/show_actions.html.erb', presenter: presenter
+        render 'hyrax/base/show_actions', presenter: presenter
       end
       it "shows only Add to collection link" do
         expect(rendered).not_to have_link 'File Manager'
@@ -121,7 +121,7 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
     context "and user is editor" do
       before do
         allow(presenter).to receive(:editor?).and_return(true)
-        render 'hyrax/base/show_actions.html.erb', presenter: presenter
+        render 'hyrax/base/show_actions', presenter: presenter
       end
 
       it "shows editor related buttons" do
@@ -135,7 +135,7 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
     context "and user is viewer" do
       before do
         allow(presenter).to receive(:editor?).and_return(false)
-        render 'hyrax/base/show_actions.html.erb', presenter: presenter
+        render 'hyrax/base/show_actions', presenter: presenter
       end
 
       it "shows only Add to collection link" do

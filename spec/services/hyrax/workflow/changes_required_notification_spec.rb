@@ -13,7 +13,7 @@ RSpec.describe Hyrax::Workflow::ChangesRequiredNotification do
       expect(approver).to receive(:send_message)
         .with(anything,
               "Test title (<a href=\"/concern/generic_works/#{work.id}\">#{work.id}</a>) " \
-              "requires additional changes before approval.\n\n 'A pleasant read'",
+              "requires additional changes before approval.\n 'A pleasant read'",
               anything).exactly(3).times.and_call_original
 
       expect { described_class.send_notification(entity: entity, user: approver, comment: comment, recipients: recipients) }

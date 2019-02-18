@@ -364,6 +364,8 @@ pt-BR:
           actions: Ação
           title: Título da Obra
       form_files:
+        add_files: Adicionar arquivos
+        add_folder: Adicionar pasta
         dropzone: Largue os arquivos aqui.
         local_upload_browse_everything_html: "<p>Você pode associar um ou mais arquivos a esta obra. Associe arquivos de seu sistema local ou um provedor de nuvem.</p> <p>Note que se você carregar uma grande quantidade de arquivos dentro de um curto período de tempo, o fornecedor de nuvem pode não ser capaz de acomodar a sua solicitação. Se você tiver algum erro ao carregar da nuvem, avise-nos através do %{contact_href}.<p>"
         local_upload_html: "<p>Você pode acrescentar um ou mais arquivos para associar a esta obra.</p>"
@@ -404,6 +406,8 @@ pt-BR:
       form_thumbnail:
         help_html: Selecione o arquivo a ser usado como miniatura para esta obra.
         legend_html: Miniatura
+      form_visibility_component:
+        visibility: Visibilidade
       items:
         actions: Ações
         date_uploaded: Data de carga
@@ -423,7 +427,16 @@ pt-BR:
         definitions_html: "<strong>Acesso/Download:</strong> este arquivo (tanto conteúdo quanto metadados) é acessível a partir de %{application_name}.<br /> <strong>Edição:</strong> este arquivo (tanto conteúdo quanto metadados) pode ser editado. Você só pode conceder esta permissão a usuários e grupos do(a) %{institution_name}."
         share_with_html: Você pode conceder a permissão de &quot;Acesso/Download&quot; ou &quot;Edição&quot; dos arquivos para usuários e grupos específicos. Entre uma %{account_name} válida, uma de cada vez, selecione o nível de acesso para o usuário, e clique +Acrescentar.
       show:
+        items: Itens
         last_modified: Última modificação
+        relationships: Relações
+      show_actions:
+        analytics: O Analytics
+        attach_child: Anexar Criança
+        delete: Apagar
+        edit: Editar
+        feature: Recurso
+        unfeature: Unfeature
       social_media:
         facebook: Facebook
         google: Google+
@@ -433,6 +446,9 @@ pt-BR:
       help:
         resource_type: Você pode selecionar vários tipos para serem atribuídos a todos os arquivos.
         title: O nome do arquivo será o título padrão. Forneça um título mais significativo; mesmo assim os nomes de arquivos serão preservados pelo sistema.
+    batch_edits:
+      delete_selected:
+        button_label: Excluir Selecionado
     batch_uploads:
       disabled: Recurso desativado pelo administrador
       files:
@@ -478,6 +494,7 @@ pt-BR:
           desc: Embutir nesta coleção coleções que já existem
           modal_title: Embutir esta coleção em outra coleção
           select_label: Selecionar coleção
+      also_belongs_to: Este trabalho também pertence a
       browse_view: Explorar
       document_list:
         edit: Editar
@@ -488,7 +505,6 @@ pt-BR:
         additional_fields: Campos adicionais
         description: Descrições
       is_part_of: É parte de
-      also_belongs_to: Este trabalho também pertence a
       select_form:
         close: Fechar
         create: Salvar
@@ -769,7 +785,9 @@ pt-BR:
         subtitle: Status atual
         title: Objetos de Repositório
       show_admin:
+        current_registered_users: Corrente
         new_visitors: Novos visitantes
+        past_30_days: Últimos 30 dias
         registered_users: Usuários cadastrados
         returning_visitors: Visitantes recorrentes
         total_visitors: Total de visitantes
@@ -1019,7 +1037,6 @@ pt-BR:
         changes_required:
           message: |-
             %{title} (%{link}) requer alterações adicionais antes da aprovação.
-
              '%{comment}'
           subject: Seu depósito requer alterações
         deposited:

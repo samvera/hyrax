@@ -62,7 +62,7 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
     stub_template 'hyrax/base/_workflow_actions_widget.html.erb' => ''
     stub_template '_masthead.html.erb' => ''
     assign(:presenter, presenter)
-    render template: 'hyrax/base/show.html.erb', layout: 'layouts/hyrax/1_column'
+    render template: 'hyrax/base/show', layout: 'layouts/hyrax/1_column'
   end
 
   it 'shows workflow badge' do
@@ -72,7 +72,7 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
   describe 'IIIF viewer integration' do
     before do
       allow(presenter).to receive(:iiif_viewer?).and_return(viewer_enabled)
-      render template: 'hyrax/base/show.html.erb'
+      render template: 'hyrax/base/show'
     end
 
     context 'when presenter says it is enabled' do

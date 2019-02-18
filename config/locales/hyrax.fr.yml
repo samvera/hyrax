@@ -364,6 +364,8 @@ fr:
           actions: action
           title: Titre du travail
       form_files:
+        add_files: Ajouter des fichiers
+        add_folder: Ajouter un dossier
         dropzone: Déposez les fichiers ici.
         local_upload_browse_everything_html: |
           <p>Vous pouvez ajouter un ou plusieurs fichiers à associer à ce travail.</p>
@@ -410,6 +412,8 @@ fr:
       form_thumbnail:
         help_html: Sélectionnez le fichier à utiliser comme vignette pour ce travail.
         legend_html: La vignette
+      form_visibility_component:
+        visibility: Visibilité
       items:
         actions: actes
         date_uploaded: Date de téléchargement
@@ -429,7 +433,16 @@ fr:
         definitions_html: "<strong>Afficher / Télécharger:</strong> ce fichier (contenu et métadonnées) est accessible depuis %{application_name}. <br /> <strong>Edit:</strong> ce fichier (contenu et métadonnées) peut être modifié. Vous ne pouvez accorder cette autorisation qu'aux utilisateurs et / ou groupes de %{institution_name}."
         share_with_html: Vous pouvez accorder l'accès aux fichiers "View / Download" ou "Edit" à des utilisateurs et / ou des groupes spécifiques. Entrez un %{account_name} valide, un par un, sélectionnez le niveau d'accès pour cet utilisateur, puis cliquez sur + Ajouter.
       show:
+        items: Contenu
         last_modified: Dernière modification
+        relationships: Relations
+      show_actions:
+        analytics: Statistiques
+        attach_child: Insérer un travail enfant
+        delete: Supprimer
+        edit: Modifier
+        feature: Mettre à la une
+        unfeature: Ne plus mettre à la une
       social_media:
         facebook: Facebook
         google: Google+
@@ -439,6 +452,9 @@ fr:
       help:
         resource_type: Vous pouvez sélectionner plusieurs types à appliquer à tous les fichiers
         title: Nom de fichier sera le titre par défaut. Veuillez fournir un titre plus significatif et les noms de fichiers seront conservés par le système.
+    batch_edits:
+      delete_selected:
+        button_label: Supprimer la sélection
     batch_uploads:
       disabled: Fonction désactivée par l'administrateur
       files:
@@ -484,6 +500,7 @@ fr:
           desc: Ajouter des collections existantes à cette collection
           modal_title: Ajouter cette collection dans une autre collection
           select_label: Sélectionner une collection
+      also_belongs_to: Ce travail appartient aussi à
       browse_view: Parcourir la vue
       document_list:
         edit: modifier
@@ -494,7 +511,6 @@ fr:
         additional_fields: Champs supplémentaires
         description: Descriptions
       is_part_of: Fait partie de
-      also_belongs_to: Ce travail appartient aussi à
       select_form:
         close: Fermer
         create: Créer une collection
@@ -775,7 +791,9 @@ fr:
         subtitle: Statut actuel
         title: Objets de référentiel
       show_admin:
+        current_registered_users: Actuellement
         new_visitors: Nouveaux visiteurs
+        past_30_days: Ces 30 derniers jours
         registered_users: Utilisateurs enregistrés
         returning_visitors: Retrouver les visiteurs
         total_visitors: Total des visiteurs
@@ -1025,7 +1043,6 @@ fr:
         changes_required:
           message: |-
             %{title} (%{link}) nécessite des modifications supplémentaires avant d'être approuvé.
-
              '%{comment}'
           subject: Votre dépôt nécessite des modifications
         deposited:
