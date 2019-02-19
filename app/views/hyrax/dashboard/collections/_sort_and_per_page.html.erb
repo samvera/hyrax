@@ -14,11 +14,10 @@
          <div class="form-group form-group-lg">
            <fieldset class="col-sm-9">
              <legend class="sr-only"><%= t('hyrax.sort_label') %></legend>
-             <%= label_tag(:sort, 'Sort By:') %>
+             <%= label_tag(:sort, t(".sort_by")) %>
              <%= select_tag(:sort, options_from_collection_for_select(active_sort_fields, 'first', lambda {|field| field.last.label}, h(params[:sort]))) %>
              <%= label_tag(:per_page) do %>
-                 Show <%= select_tag(:per_page, options_for_select(['10', '20', '50', '100'], params[:per_page]), title: t('hyrax.dashboard.my.sr.results_per_page')) %>
-                 per page
+               <%= t(".show_par_page_html", select: select_tag(:per_page, options_for_select(['10', '20', '50', '100'], params[:per_page]), title: t('hyrax.dashboard.my.sr.results_per_page'))) %>
              <% end %>
              <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:per_page, :sort)) %>
              <button class="btn btn-info"><span class="glyphicon glyphicon-refresh"></span> <%= t('helpers.action.refresh') %></button>

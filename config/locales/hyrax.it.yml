@@ -541,6 +541,10 @@ it:
         show_more_parent_collections: mostra di più...
         subcollection_count: sottoraccolte
         works_in_collection: Funziona in questa collezione
+      sort_and_per_page:
+        number_of_results_to_display_per_page: Numero di risultati da visualizzare per pagina
+        results_per_page: 'Risultati per la pagina:'
+        sort_by_html: "<span>Ordina per:</span>"
     contact_form:
       button_label: Inviare
       email_label: La tua email
@@ -603,15 +607,22 @@ it:
             relationships: Le relazioni
             sharing: compartecipazione
         form_branding:
+          alt_text: 'Il Testo Alt:'
           banner:
             description: Un'immagine da visualizzare nella parte superiore della pagina di raccolta. Per risultati ottimali, carica un'immagine (JPG, GIF o PNG) di almeno 120 pixel di altezza e 1200 pixel di larghezza.
             label: bandiera
           branding:
             description: Facoltativamente, puoi caricare un'immagine banner e / o immagini logo da associare a questa raccolta. Se caricate, queste immagini verranno visualizzate nella parte superiore della pagina di raccolta per fornire un marchio univoco per la raccolta.
             label: Branding
+          choose_file: Scegliere File
+          link_url: 'URL del Link:'
           logo:
             description: Una o più immagini da visualizzare nella parte superiore della pagina di raccolta. Per risultati ottimali, carica un'immagine (JPG, GIF o PNG) di altezza pari a 40 pixel. Le immagini più grandi verranno ridimensionate a 40 pixel in altezza.
             label: Logo
+          previous: Precedente
+          remove: Rimuovere
+          remove_current_banner: Rimuovere Corrente Banner
+          remove_logo: Rimuovere Il Logo
         form_discovery:
           para1: Queste impostazioni determinano chi è in grado di scoprire e visualizzare la pagina di destinazione di questa raccolta; non influenzano la visibilità degli oggetti nella collezione.
           para2: Se hai scelto di non rendere questa raccolta accessibile, puoi comunque condividere la raccolta con utenti e gruppi specifici utilizzando la scheda Condivisione.
@@ -638,7 +649,13 @@ it:
           add_sharing: Aggiungi condivisione
           add_user: Aggiungi utente
           current_shared: Attualmente condiviso con
+          depositor: Depositante
+          manager: Manager
           note: Indipendentemente dalle impostazioni di visibilità di questa raccolta, puoi condividere questa raccolta con gruppi e utenti specifici.
+          search_for_a_group: La ricerca di un gruppo...
+          search_for_a_user: Cercare un utente...
+          select_a_role: Selezionare un ruolo...
+          viewer: Visualizzatore
         form_share_table:
           allow_all_registered: Consenti tutti registrati
           depositors:
@@ -679,6 +696,9 @@ it:
           show_less_parent_collections: "...mostra meno"
           show_more_parent_collections: mostra di più...
           subcollection_count: sottoraccolte
+        sort_and_per_page:
+          show_par_page_html: Mostra %{select} per pagina
+          sort_by: 'Ordina Per:'
       create_work: Crea lavoro
       current_proxies: Proxy attuali
       delete_notification: Elimina notifica
@@ -802,6 +822,7 @@ it:
         file_views: vista
         files: File depositati
         heading: Le tue statistiche
+        joined_on: Unito
         works: Opere create
       title: la mia scrivania
       transfer_of_ownership: Trasferimenti di proprietà
@@ -902,6 +923,19 @@ it:
         table_title_access: Livello di accesso
         table_title_user: Persona / Gruppo
         user_search: Cerca un utente
+      show_actions:
+        analytics: Analytics
+        confirm_delete_this: Delete %{type}?
+        delete_this: Delete %{type}
+        edit_this: Modificare questo %{type}
+      show_details:
+        characterization: Caratterizzazione
+        date_modified: La Data Di Modifica
+        date_uploaded: Data Caricato
+        depositor: Depositante
+        file_details: Dettagli File
+        fixity_check: Fissità Di Controllo
+        not_yet_characterized: Non Ancora Caratterizzati
       versioning:
         current: Versione attuale
         header: versioni
