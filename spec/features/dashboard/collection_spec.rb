@@ -897,10 +897,18 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
             visit "/dashboard/collections/#{sharable_collection_id}/edit"
             expect(page).to have_link('Sharing', href: '#sharing')
             click_link('Sharing')
+
+            expect(page.driver.browser.switch_to.alert.text).to have_content 'It is best to "Save changes" before moving to another tab, or your changes may be lost.  Do you want to change tab?'
+            page.driver.browser.switch_to.alert.accept
+
             expect(page).to have_selector(".form-inline.add-users .select2-container")
             select_user(user2, 'Depositor')
             click_button('Save')
             click_link('Sharing')
+
+            expect(page.driver.browser.switch_to.alert.text).to have_content 'It is best to "Save changes" before moving to another tab, or your changes may be lost.  Do you want to change tab?'
+            page.driver.browser.switch_to.alert.accept
+
             expect(page).to have_selector('td', text: user2.user_key)
           end
         end

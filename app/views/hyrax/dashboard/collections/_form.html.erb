@@ -1,21 +1,21 @@
 <div class="panel panel-default tabs" id="collection-edit-controls">
   <ul class="nav nav-tabs" role="tablist">
-    <li class="active">
+    <li class="coll-panel active">
       <a href="#description" role="tab" data-toggle="tab"><%= t('.tabs.description') %></a>
     </li>
     <% if @form.persisted? %>
       <% if @collection.brandable? %>
-      <li>
+      <li class="coll-panel">
         <a href="#branding" role="tab" data-toggle="tab"><%= t('.tabs.branding') %></a>
       </li>
       <% end %>
       <% if @collection.discoverable? %>
-      <li>
+      <li class="coll-panel">
         <a href="#discovery" role="tab" data-toggle="tab"><%= t('.tabs.discovery') %></a>
       </li>
       <% end %>
       <% if @collection.sharable? %>
-      <li>
+      <li class="coll-panel">
         <a href="#sharing" role="tab" data-toggle="tab"><%= t('.tabs.sharing') %></a>
       </li>
       <% end %>
