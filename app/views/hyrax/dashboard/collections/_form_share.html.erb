@@ -1,4 +1,4 @@
-<% access_options = options_for_select([['Manager', 'manage'], ['Depositor', 'deposit'], ['Viewer', 'view']]) %>
+<% access_options = options_for_select([[t('.manager'), 'manage'], [t('.depositor'), 'deposit'], [t('.viewer'), 'view']]) %>
 
 <div id="participants" class="tab-pane">
   <div class="edit-sharing-tab">
@@ -21,14 +21,14 @@
                 <label><%= t('.add_group') %>:</label>
                 <%= builder.hidden_field :agent_type %>
                 <%= builder.text_field :agent_id,
-                                        placeholder: "Search for a group...",
+                                        placeholder: t('.search_for_a_group'),
                                         class: 'form-control search-input' %>
               </div>
               <div class="form-group">
                 <label>as</label>
                 <%= builder.select :access,
                                       access_options,
-                                      { prompt: "Select a role..." },
+                                      { prompt: t('.select_a_role') },
                                       class: 'form-control' %>
               </div>
             <% end %>
@@ -53,13 +53,13 @@
                 <label><%= t('.add_user') %>:</label>
                 <%= builder.hidden_field :agent_type %>
                 <%= builder.text_field :agent_id,
-                                        placeholder: "Search for a user..." %>
+                                        placeholder: t('.search_for_a_user') %>
               </div>
               <div class="form-group">
                 <label>as</label>
                 <%= builder.select :access,
                                     access_options,
-                                    { prompt: "Select a role..." },
+                                    { prompt: t('.select_a_role') },
                                     class: 'form-control' %>
               </div>
             <% end %>

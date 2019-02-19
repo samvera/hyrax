@@ -29,6 +29,10 @@ fr:
       filters:
         title: 'Filtrage par:'
       start_over: Effacer les filtres
+      view:
+        gallery: Galerie
+        masonry: Mur
+        slideshow: Diaporama
   errors:
     messages:
       carrierwave_download_error: Impossible de télécharger l'image.
@@ -551,6 +555,10 @@ fr:
         show_more_parent_collections: montre plus...
         subcollection_count: Sous-collections
         works_in_collection: Fonctionne dans cette collection
+      sort_and_per_page:
+        number_of_results_to_display_per_page: Nombre de résultats à afficher par page
+        results_per_page: 'Résultats par page:'
+        sort_by_html: "<span>Trier par:</span>"
     contact_form:
       button_label: Envoyer
       email_label: Votre Email
@@ -613,15 +621,22 @@ fr:
             relationships: Des relations
             sharing: Partage
         form_branding:
+          alt_text: 'Texte alternatif:'
           banner:
             description: Une image à afficher en haut de la page de collection. Pour de meilleurs résultats, téléchargez une image (JPG, GIF ou PNG) d'une hauteur d'au moins 120 pixels et d'une largeur de 1200 pixels.
             label: Bannière
           branding:
             description: En option, vous pouvez télécharger une image de bannière et / ou des images de logo à associer à cette collection. Si elles sont téléchargées, ces images seront affichées en haut de la page de collection afin de fournir une image de marque unique pour la collection.
             label: l'image de marque
+          choose_file: Choisissez un fichier
+          link_url: URL du lien
           logo:
             description: Une ou plusieurs images à afficher en haut de la page de collection. Pour de meilleurs résultats, téléchargez une image (JPG, GIF ou PNG) de 40 pixels de hauteur. Les images plus grandes seront redimensionnées à 40 pixels de hauteur.
             label: Logo
+          previous: Précédente
+          remove: Supprimer
+          remove_current_banner: Supprimer la bannière actuelle
+          remove_logo: Supprimer le logo
         form_discovery:
           para1: Ces paramètres déterminent qui peut découvrir et afficher la page de destination de cette collection. ils n'affectent pas la visibilité des éléments de la collection.
           para2: Si vous choisissez de ne pas autoriser l'accès en accès libre à cette collection, vous pouvez toujours partager la collection avec des utilisateurs et des groupes spécifiques à l'aide de l'onglet Partage.
@@ -648,7 +663,13 @@ fr:
           add_sharing: Ajouter un partage
           add_user: Ajouter un utilisateur
           current_shared: Actuellement partagé avec
+          depositor: Déposer
+          manager: Gérer
           note: Indépendamment des paramètres de visibilité de cette collection, vous pouvez partager cette collection avec des groupes et des utilisateurs spécifiques.
+          search_for_a_group: Rechercher un groupe...
+          search_for_a_user: Recherchez un utilisateur...
+          select_a_role: Choisissez un rôle...
+          viewer: Consulter
         form_share_table:
           allow_all_registered: Autoriser tous les inscrits
           depositors:
@@ -689,6 +710,9 @@ fr:
           show_less_parent_collections: "...montre moins"
           show_more_parent_collections: montre plus...
           subcollection_count: Sous-collections
+        sort_and_per_page:
+          show_par_page_html: Afficher %{select} collections par page
+          sort_by: 'Trier par:'
       create_work: Créer un travail
       current_proxies: Proxies actuelles
       delete_notification: Supprimer la notification
@@ -812,6 +836,7 @@ fr:
         file_views: Vue
         files: Fichiers déposés
         heading: Vos statistiques
+        joined_on: Créé le
         works: Travaux créés
       title: Mon tableau de bord
       transfer_of_ownership: Transfert de propriété
@@ -912,6 +937,19 @@ fr:
         table_title_access: Niveau d'accès
         table_title_user: Personne / groupe
         user_search: Rechercher un utilisateur
+      show_actions:
+        analytics: Statistiques
+        confirm_delete_this: Supprimer ce %{type}?
+        delete_this: Supprimer ce %{type}
+        edit_this: Modifier ce %{type}
+      show_details:
+        characterization: Caractérisation
+        date_modified: Modifié le
+        date_uploaded: Déposé le
+        depositor: Déposé par
+        file_details: Description du fichier
+        fixity_check: Vérification de la fixité
+        not_yet_characterized: Pas encore caractérisé
       versioning:
         current: Version actuelle
         header: Des versions

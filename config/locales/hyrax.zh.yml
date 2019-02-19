@@ -548,6 +548,10 @@ zh:
         show_more_parent_collections: 展示更多...
         subcollection_count: 子集合
         works_in_collection: 作品在此收藏集
+      sort_and_per_page:
+        number_of_results_to_display_per_page: 数量的结果显示，每页
+        results_per_page: 每页结果
+        sort_by_html: "<跨>排序：</跨>"
     contact_form:
       button_label: 发送
       email_label: 您的邮件
@@ -610,15 +614,22 @@ zh:
             relationships: 关系
             sharing: 分享
         form_branding:
+          alt_text: Alt案文：
           banner:
             description: 要显示在收集页面顶部的图像。为获得最佳效果，请上传至少120像素高，1200像素宽的图像（JPG，GIF或PNG）。
             label: 旗帜
           branding:
             description: 或者，您可以上传横幅图像和/或徽标图像以与此集合关联。如果上传，这些图像将显示在收集页面的顶部，为收藏提供独特的品牌。
             label: 品牌
+          choose_file: 选择文件
+          link_url: 链接网址：
           logo:
             description: 一个或多个图像显示在收集页面的顶部。为获得最佳效果，请上传高度为40像素的图像（JPG，GIF或PNG）。较大的图像将被调整到40像素的高度。
             label: 商标
+          previous: 以前的
+          remove: 删除
+          remove_current_banner: 删除目前的旗帜
+          remove_logo: 删除标志
         form_discovery:
           para1: 这些设置决定了哪些人能够发现并查看此收藏集的着陆页;它们不会影响集合中项目的可见性。
           para2: 如果您选择不让该集合成为开放访问权限，您仍然可以使用共享选项卡将该集合与特定用户和组共享。
@@ -645,7 +656,13 @@ zh:
           add_sharing: 添加共享
           add_user: 添加用户
           current_shared: 目前与...共享
+          depositor: 存款
+          manager: 经理
           note: 无论此集合的可见性设置如何，您都可以将此集合与特定的组和用户共享。
+          search_for_a_group: 搜索一组...
+          search_for_a_user: 搜索一个用户...
+          select_a_role: 选择一个角色...
+          viewer: 观众
         form_share_table:
           allow_all_registered: 允许所有注册
           depositors:
@@ -686,6 +703,9 @@ zh:
           show_less_parent_collections: "...显示较少"
           show_more_parent_collections: 展示更多...
           subcollection_count: 子集合
+        sort_and_per_page:
+          show_par_page_html: 显示%{select}每页
+          sort_by: 排序：
       create_work: 创建作品
       current_proxies: 目前代理
       delete_notification: 删除通知
@@ -809,6 +829,7 @@ zh:
         file_views: 阅览
         files: 文件已存储
         heading: 您的【下载？】统计
+        joined_on: 加入上
         works: 已建立的作品
       title: 我的控件板
       transfer_of_ownership: 转让所有权
@@ -909,6 +930,19 @@ zh:
         table_title_access: 访问权限
         table_title_user: 人/组
         user_search: 搜索用户
+      show_actions:
+        analytics: 分析
+        confirm_delete_this: 删除这一%{type}吗？
+        delete_this: 删除这一%{type}
+        edit_this: 编辑本%{type}
+      show_details:
+        characterization: 表征
+        date_modified: 修改日期
+        date_uploaded: 日上传
+        depositor: 存款
+        file_details: 文件的详细信息
+        fixity_check: 固定性检查
+        not_yet_characterized: 没有特征
       versioning:
         current: 当前版本
         header: 版本

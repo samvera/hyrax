@@ -1,5 +1,5 @@
 RSpec.describe 'hyrax/dashboard/collections/_sort_and_per_page.html.erb', type: :view do
-  let(:subject) { 'hyrax/dashboard/collections/sort_and_per_page.html.erb' }
+  let(:subject) { 'hyrax/dashboard/collections/sort_and_per_page' }
   let(:collection) { instance_double(Collection) }
 
   before do
