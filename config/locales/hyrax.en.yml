@@ -542,6 +542,10 @@ en:
         show_more_parent_collections: show more...
         subcollection_count: Subcollections
         works_in_collection: Works
+      sort_and_per_page:
+        number_of_results_to_display_per_page: Number of results to display per page
+        results_per_page: 'Results per page:'
+        sort_by_html: "<span>Sort by:</span>"
     contact_form:
       button_label: Send
       email_label: Your Email
@@ -604,15 +608,22 @@ en:
             relationships: Relationships
             sharing: Sharing
         form_branding:
+          alt_text: 'Alt Text:'
           banner:
             description: An image to be displayed at the top of the collection page.  For best results, upload an image (JPG, GIF or PNG) that is at least 120 pixels tall and 1200 pixels wide.
             label: Banner
           branding:
             description: Optionally, you can upload a banner image and/or logo images to associate with this collection.  If uploaded, these images will be displayed at the top of the collection page to provide unique branding for the collection.
             label: Branding
+          choose_file: Choose File
+          link_url: 'Link URL:'
           logo:
             description: One or more images to be displayed at the top of the collection page.  For best results, upload an image (JPG, GIF or PNG) that is 40 pixels in height.  Larger images will be resized to 40 pixels in height.
             label: Logo
+          previous: Previous
+          remove: Remove
+          remove_current_banner: Remove Current Banner
+          remove_logo: Remove Logo
         form_discovery:
           para1: These settings determine who is able to discover and view this collection's landing page; they do not affect the visibility of items in the collection.
           para2: If you chose not to make this collection open access, you can still share the collection with specific users and groups using the Sharing tab.
@@ -639,7 +650,13 @@ en:
           add_sharing: Add Sharing
           add_user: Add user
           current_shared: Currently Shared With
+          depositor: Depositor
+          manager: Manager
           note: Regardless of the visibility settings of this collection, you can share this collection with specific groups and users.
+          search_for_a_group: Search for a group...
+          search_for_a_user: Search for a user...
+          select_a_role: Select a role...
+          viewer: Viewer
         form_share_table:
           allow_all_registered: Allow all registered
           depositors:
@@ -680,6 +697,9 @@ en:
           show_less_parent_collections: "...show less"
           show_more_parent_collections: show more...
           subcollection_count: Subcollections
+        sort_and_per_page:
+          show_par_page_html: Show %{select} per page
+          sort_by: 'Sort By:'
       create_work: Create Work
       current_proxies: Current Proxies
       delete_notification: Delete Notification
@@ -803,6 +823,7 @@ en:
         file_views: View
         files: Files deposited
         heading: Your Statistics
+        joined_on: Joined on
         works: Works created
       title: Dashboard
       transfer_of_ownership: Transfers of Ownership
@@ -903,6 +924,19 @@ en:
         table_title_access: Access Level
         table_title_user: Person/Group
         user_search: Search for a user
+      show_actions:
+        analytics: Analytics
+        confirm_delete_this: Delete this %{type}?
+        delete_this: Delete this %{type}
+        edit_this: Edit this %{type}
+      show_details:
+        characterization: Characterization
+        date_modified: Date Modified
+        date_uploaded: Date Uploaded
+        depositor: Depositor
+        file_details: File Details
+        fixity_check: Fixity Check
+        not_yet_characterized: Not Yet Characterized
       versioning:
         current: Current Version
         header: Versions

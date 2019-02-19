@@ -536,6 +536,10 @@ pt-BR:
         show_more_parent_collections: mostre mais...
         subcollection_count: Sub-coleções
         works_in_collection: Obras
+      sort_and_per_page:
+        number_of_results_to_display_per_page: Número de resultados exibidos por página
+        results_per_page: 'Resultados por página:'
+        sort_by_html: "<span>Ordenar por:</span>"
     contact_form:
       button_label: Enviar
       email_label: Seu email
@@ -598,15 +602,22 @@ pt-BR:
             relationships: Relações
             sharing: Compartilhamento
         form_branding:
+          alt_text: 'Alt Texto:'
           banner:
             description: Uma imagem a ser exibida na parte superior das páginas de coleção. Para obter melhores resultados, carregue uma imagem (JPG, GIF ou PNG) com pelo menos 120 pixels de altura e 1200 pixels de largura.
             label: Faixa
           branding:
             description: Opcionalmente, você pode carregar uma imagem de faixa e/ou imagens de logotipo para associar a esta coleção. Se carregadas, essas imagens serão exibidas no topo da página da coleção para fornecer branding único para a coleção.
             label: Branding
+          choose_file: Escolha O Arquivo
+          link_url: 'URL do Link:'
           logo:
             description: Uma ou mais imagens a serem exibidas no topo da página da coleção. Para obter melhores resultados, carregue uma imagem (JPG, GIF ou PNG) com 40 pixels de altura. As imagens maiores serão redimensionadas para 40 pixels de altura.
             label: Logotipo
+          previous: Anterior
+          remove: Remover
+          remove_current_banner: Remover A Actual Bandeira
+          remove_logo: Com O Remove Logo
         form_discovery:
           para1: Essas configurações determinam quem pode descobrir e acessar a página principal dessa coleção; elas não afetam o acesso de itens na coleção.
           para2: Se você optar por não fornecer acesso aberto a esta coleção, você ainda pode compartilhar a coleção com usuários e grupos específicos usando a guia Compartilhamento.
@@ -633,7 +644,13 @@ pt-BR:
           add_sharing: Acrescentar Compartilhamento
           add_user: Acrescentar Usuário
           current_shared: Atualmente compartilhado com
+          depositor: Depositante
+          manager: Gestor de
           note: Independentemente das configurações de acesso desta coleção, você pode compartilhá-la com grupos e usuários específicos.
+          search_for_a_group: Procure um grupo de...
+          search_for_a_user: Procurar um usuário...
+          select_a_role: Seleccione um papel...
+          viewer: Visualizador de
         form_share_table:
           allow_all_registered: Permitir todos os inscritos
           depositors:
@@ -674,6 +691,9 @@ pt-BR:
           show_less_parent_collections: "...mostre menos"
           show_more_parent_collections: mostre mais...
           subcollection_count: Sub-coleções
+        sort_and_per_page:
+          show_par_page_html: Mostrar %{select} por página
+          sort_by: 'Ordenar Por:'
       create_work: Criar obra
       current_proxies: Suplentes correntes
       delete_notification: Eliminar Notificação
@@ -797,6 +817,7 @@ pt-BR:
         file_views: Acesso
         files: Arquivos depositados
         heading: Suas estatísticas
+        joined_on: Ingressou no
         works: Obras criadas
       title: Painel de Controle
       transfer_of_ownership: Transferências de propriedade
@@ -897,6 +918,19 @@ pt-BR:
         table_title_access: Nível de acesso
         table_title_user: Pessoa/Grupo
         user_search: Procurar um usuário
+      show_actions:
+        analytics: O google Analytics
+        confirm_delete_this: Eliminar esta %{type}?
+        delete_this: Eliminar esta %{type}
+        edit_this: Edite esta %{type}
+      show_details:
+        characterization: Caracterização
+        date_modified: Data Modificada
+        date_uploaded: Data Carregado
+        depositor: Depositante
+        file_details: Detalhes Do Ficheiro
+        fixity_check: Fixidez De Seleção
+        not_yet_characterized: Ainda Não Caracterizados
       versioning:
         current: Versão corrente
         header: Versões
