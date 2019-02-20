@@ -1,0 +1,187 @@
+# Ruby CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-ruby/ for more details
+#
+version: 2.1
+executors:
+  ruby:
+    docker:
+      - image: circleci/ruby:2.5.3
+    working_directory: ~/hyrax
+    environment:
+      BUNDLE_PATH: vendor/bundle
+      BUNDLE_JOBS: 4
+      BUNDLE_RETRY: 3
+
+jobs:
+  bundle:
+    executor: ruby
+    steps:
+    - restore_cache:
+        keys:
+        - v1-source-{{ .Branch }}-{{ .Revision }}
+        - v1-source-{{ .Branch }}-
+        - v1-source-
+
+    - checkout
+
+    - save_cache:
+        key: v1-source-{{ .Branch }}-{{ .Revision }}
+        paths:
+        - ".git"
+
+    - restore_cache:
+        keys:
+        - v1-bundle-{{ checksum "Gemfile" }}--{{ checksum "hyrax.gemspec" }}
+        - v1-bundle
+
+    - run:
+        name: Install dependencies
+        command: bundle check || bundle install
+
+    - save_cache:
+        key: v1-bundle-{{ checksum "Gemfile.lock" }}--{{ checksum "hyrax.gemspec" }}
+        paths:
+        - ~/hyrax/vendor/bundle
+
+    - persist_to_workspace:
+        root: ~/
+        paths:
+        - hyrax/*
+        - hyrax/**/*
+
+  lint:
+    executor: ruby
+    steps:
+    - attach_workspace:
+        at: ~/
+
+    - run:
+        name: Call Rubocop
+        command: bundle exec rubocop
+
+  build:
+    docker:
+    - image: circleci/ruby:2.5.3-node
+
+    working_directory: ~/hyrax
+
+    environment:
+      BUNDLE_PATH: vendor/bundle
+      BUNDLE_JOBS: 4
+      BUNDLE_RETRY: 3
+      RAILS_ENV: test
+      RACK_ENV: test
+      FCREPO_TEST_PORT: 8080/fcrepo
+      NOKOGIRI_USE_SYSTEM_LIBRARIES: true
+      ENGINE_CART_RAILS_OPTIONS: --skip-git --skip-bundle --skip-listen --skip-spring --skip-yarn --skip-keeps --skip-action-cable --skip-coffee --skip-puma --skip-test
+      SPEC_OPTS: --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec.xml --format progress
+      COVERALLS_PARALLEL: true
+
+    steps:
+    - attach_workspace:
+        at: ~/
+
+    # Update to the latest release of Chrome
+    - run: wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+    - run: sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+    - run: sudo apt-get update && sudo apt-get -y install google-chrome-stable
+
+    - restore_cache:
+        keys:
+        - v1-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
+
+    - run:
+        name: Check dependencies
+        command: bundle check || bundle install
+
+    - run:
+        name: Generate test app
+        command: (git diff --name-only master | grep -qG 'generators\/hyrax') || bundle exec rake engine_cart:generate
+
+    - run:
+        name: Ensure test app dependencies are installed
+        command: |
+          cd .internal_test_app
+          bundle check || bundle install
+
+    - save_cache:
+        key: v1-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
+        paths:
+        - ".internal_test_app"
+
+    - persist_to_workspace:
+        root: ~/
+        paths:
+        - hyrax/*
+        - hyrax/**/*
+
+  test:
+    docker:
+    - image: circleci/ruby:2.5.3-node-browsers-legacy
+    - image: circleci/redis:4
+    - image: ualbertalib/docker-fcrepo4:4.7
+      environment:
+        CATALINA_OPTS: "-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:+DisableExplicitGC"
+    - image: solr:7-alpine
+      command: bin/solr -cloud -noprompt -f -p 8985
+
+    working_directory: ~/hyrax
+    parallelism: 4
+
+    environment:
+      BUNDLE_PATH: vendor/bundle
+      BUNDLE_JOBS: 4
+      BUNDLE_RETRY: 3
+      RAILS_ENV: test
+      RACK_ENV: test
+      FCREPO_TEST_PORT: 8080/fcrepo
+      NOKOGIRI_USE_SYSTEM_LIBRARIES: true
+      ENGINE_CART_RAILS_OPTIONS: --skip-git --skip-bundle --skip-listen --skip-spring --skip-yarn --skip-keeps --skip-action-cable --skip-coffee --skip-puma --skip-test
+      SPEC_OPTS: --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec.xml --format progress
+      COVERALLS_PARALLEL: true
+
+    steps:
+    - attach_workspace:
+        at: ~/
+
+    - run:
+        name: Ensure top-level Gemfile.lock is valid
+        command: bundle check || bundle install
+
+    - run:
+        name: Load config into solr
+        command: |
+          cd .internal_test_app/solr/config
+          zip -1 -r solr_hyrax_config.zip ./*
+          curl -H "Content-type:application/octet-stream" --data-binary @solr_hyrax_config.zip "http://localhost:8985/solr/admin/configs?action=UPLOAD&name=hyrax"
+          curl -H 'Content-type: application/json' http://localhost:8985/api/collections/ -d '{create: {name: hydra-test, config: hyrax, numShards: 1}}'
+
+    - run:
+        name: Run rspec in parallel
+        command: |
+          mkdir /tmp/test-results
+          bundle exec rspec $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+
+    # collect reports
+    - store_test_results:
+        path: /tmp/test-results
+    - store_artifacts:
+        path: /tmp/test-results
+        destination: test-results
+
+workflows:
+  version: 2
+  ci:
+    jobs:
+      - bundle
+      - lint:
+          requires:
+            - bundle
+      - build:
+          requires:
+            - bundle
+      - test:
+          requires:
+            - build
+            - lint
