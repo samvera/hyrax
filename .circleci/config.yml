@@ -113,7 +113,7 @@ jobs:
 
   test:
     docker:
-    - image: circleci/ruby:2.5.3-node-browsers-legacy
+    - image: circleci/ruby:2.5.3-node-browsers
     - image: circleci/redis:4
     - image: ualbertalib/docker-fcrepo4:4.7
       environment:
