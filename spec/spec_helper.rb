@@ -40,6 +40,7 @@ require 'rspec/active_model/mocks'
 require 'capybara/rspec'
 require 'capybara/rails'
 require 'selenium-webdriver'
+require 'chromedriver-helper'
 require 'equivalent-xml'
 require 'equivalent-xml/rspec_matchers'
 require 'database_cleaner'
@@ -66,17 +67,20 @@ WebMock.disable_net_connect!(allow_localhost: true)
 require 'i18n/debug' if ENV['I18N_DEBUG']
 require 'byebug' unless ci_build?
 
-# @note In January 2018, TravisCI disabled Chrome sandboxing in its Linux
-#       container build environments to mitigate Meltdown/Spectre
-#       vulnerabilities, at which point Hyrax could no longer use the
-#       Capybara-provided :selenium_chrome_headless driver (which does not
-#       include the `--no-sandbox` argument).
-Capybara.register_driver :selenium_chrome_headless_sandboxless do |app|
-  browser_options = ::Selenium::WebDriver::Chrome::Options.new
-  browser_options.args << '--headless'
-  browser_options.args << '--disable-gpu'
-  browser_options.args << '--no-sandbox'
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
+if ci_build?
+  Capybara.register_driver :selenium_chrome_headless_sandboxless do |app|
+    args = ['--disable-gpu', '--nosandbox', '--headless']
+    caps = Selenium::WebDriver::Remote::Capabilities.chrome("chromeOptions" => { "args" => args })
+    Capybara::Selenium::Driver.new(app, browser: :remote, url: "http://#{ENV['SELENIUM_HOST']}:4444/wd/hub", desired_capabilities: caps)
+  end
+else
+  Capybara.register_driver :selenium_chrome_headless_sandboxless do |app|
+    browser_options = ::Selenium::WebDriver::Chrome::Options.new
+    browser_options.args << '--headless'
+    browser_options.args << '--disable-gpu'
+    browser_options.args << '--no-sandbox'
+    Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
+  end
 end
 
 Capybara.default_driver = :rack_test # This is a faster driver
@@ -207,6 +211,7 @@ RSpec.configure do |config|
     # Precompile the assets to prevent these issues.
     visit "/assets/application.css"
     visit "/assets/application.js"
+    WebMock.allow_net_connect!
   end
 
   config.after do

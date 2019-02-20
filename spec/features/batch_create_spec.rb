@@ -42,8 +42,8 @@ RSpec.describe 'Batch creation of works', type: :feature do
       within('span#addfiles') do
         # two arbitrary files that aren't actually related, but should be
         # small enough to require minimal processessing.
-        attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/small_file.txt", visible: false)
-        attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/png_fits.xml", visible: false)
+        attach_file("files[]", "fixtures/small_file.txt", visible: false)
+        attach_file("files[]", "fixtures/png_fits.xml", visible: false)
       end
       click_link "Descriptions" # switch tab
       fill_in('Creator', with: 'Doe, Jane')
