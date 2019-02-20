@@ -10,20 +10,23 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
   let(:work_5_read) { create(:work, id: 'work-5-read', title: ["Other's work with read access"], user: other, read_users: [user]) }
   let(:work_6_noaccess) { create(:work, id: 'work-6-no_access', title: ["Other's work with no access"], user: other) }
 
-  let(:coll_1_own) { create(:private_collection, id: 'col-1-own', title: ['User created'], user: user, create_access: true) }
+  let(:coll_1_own) { create(:private_collection_lw, id: 'col-1-own', title: ['User created'], user: user, with_permission_template: true) }
   let(:coll_2_mgr) do
-    create(:private_collection, id: 'col-2-mgr', title: ['User has manage access'], user: other,
-                                with_permission_template: { manage_users: [user] }, create_access: true)
+    create(:private_collection_lw, id: 'col-2-mgr', title: ['User has manage access'], user: other,
+                                   with_permission_template: { manage_users: [user] })
   end
   let(:coll_3_dep) do
-    create(:private_collection, id: 'col-3-dep', title: ['User has deposit access'], user: other,
-                                with_permission_template: { deposit_users: [user] }, create_access: true)
+    create(:private_collection_lw, id: 'col-3-dep', title: ['User has deposit access'], user: other,
+                                   with_permission_template: { deposit_users: [user] })
   end
   let(:coll_4_view) do
-    create(:private_collection, id: 'col-4-dep', title: ['User has view access'], user: other,
-                                with_permission_template: { view_users: [user] }, create_access: true)
+    create(:private_collection_lw, id: 'col-4-dep', title: ['User has view access'], user: other,
+                                   with_permission_template: { view_users: [user] })
   end
-  let(:coll_5_noaccess) { create(:private_collection, id: 'col-5-no_access', title: ['Other user created'], user: other, create_access: true) }
+  let(:coll_5_noaccess) do
+    create(:private_collection_lw, id: 'col-5-no_access', title: ['Other user created'],
+                                   user: other, with_permission_template: true)
+  end
 
   describe '#update_members' do
     context 'when user created the collection' do
@@ -95,7 +98,7 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
       end
 
       context 'and user adds a subcollection' do
-        let(:parent_collection) { create(:private_collection, id: 'pcol', title: ['User created another'], user: user, create_access: true) }
+        let(:parent_collection) { create(:private_collection_lw, id: 'pcol', title: ['User created another'], user: user, with_permission_template: true) }
 
         it 'adds collection user created' do
           expect do
@@ -209,8 +212,8 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
       context 'and user adds a subcollection' do
         let(:parent_collection) do
-          create(:private_collection, id: 'pcol-mgr', title: ['User has manage access to another'], user: other,
-                                      with_permission_template: { manage_users: [user] }, create_access: true)
+          create(:private_collection_lw, id: 'pcol-mgr', title: ['User has manage access to another'], user: other,
+                                         with_permission_template: { manage_users: [user] })
         end
 
         it 'adds collection user created' do
@@ -325,8 +328,8 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
       context 'and user adds a subcollection' do
         let(:parent_collection) do
-          create(:private_collection, id: 'pcol-dep', title: ['User has deposit access to another'], user: other,
-                                      with_permission_template: { deposit_users: [user] }, create_access: true)
+          create(:private_collection_lw, id: 'pcol-dep', title: ['User has deposit access to another'], user: other,
+                                         with_permission_template: { deposit_users: [user] })
         end
 
         it 'adds collection user created' do

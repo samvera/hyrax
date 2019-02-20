@@ -51,7 +51,7 @@ SUMMARY
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
   spec.add_dependency 'hydra-derivatives', '~> 3.3'
   spec.add_dependency 'hydra-editor', '>= 3.3', '< 5.0'
-  spec.add_dependency 'hydra-head', '>= 10.5.0'
+  spec.add_dependency 'hydra-head', '>= 10.6.1'
   spec.add_dependency 'hydra-works', '>= 0.16', '< 2.0'
   spec.add_dependency 'iiif_manifest', '>= 0.3', '< 0.6'
   spec.add_dependency 'jquery-datatables-rails', '~> 3.4'
@@ -83,8 +83,9 @@ SUMMARY
   # temporary pin to 2.17 due to failures caused in 2.18.0
   spec.add_development_dependency "capybara", '~> 2.4', '< 2.18.0'
   spec.add_development_dependency 'capybara-maleficent', '~> 0.3.0'
+  spec.add_development_dependency 'chromedriver-helper', '~> 2.1'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
-  spec.add_development_dependency 'engine_cart', '~> 2.0'
+  spec.add_development_dependency 'engine_cart', '~> 2.2'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "factory_bot", '~> 4.4'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.5', '>= 0.5.1'
@@ -112,8 +113,4 @@ SUMMARY
   # simple_form 3.5.1 broke hydra-editor for certain model types;
   #   see: https://github.com/plataformatec/simple_form/issues/1549
   spec.add_dependency 'simple_form', '~> 3.2', '<= 3.5.0'
-  # chromedriver-helper 2.0 broke the chromedriver used by capybara
-  #   see: https://github.com/flavorjones/chromedriver-helper/issues/62
-  #        and https://github.com/flavorjones/chromedriver-helper/issues/57
-  spec.add_development_dependency 'chromedriver-helper', '< 2.0'
 end

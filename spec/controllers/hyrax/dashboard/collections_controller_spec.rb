@@ -5,16 +5,16 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
   let(:collection_type_gid) { create(:user_collection_type).gid }
 
   let(:collection) do
-    create(:public_collection, title: ["My collection"],
-                               description: ["My incredibly detailed description of the collection"],
-                               user: user)
+    create(:public_collection_lw, title: ["My collection"],
+                                  description: ["My incredibly detailed description of the collection"],
+                                  user: user)
   end
 
   let(:asset1)         { create(:work, title: ["First of the Assets"], user: user) }
   let(:asset2)         { create(:work, title: ["Second of the Assets"], user: user) }
   let(:asset3)         { create(:work, title: ["Third of the Assets"], user: user) }
-  let(:asset4)         { create(:collection, title: ["First subcollection"], user: user) }
-  let(:asset5)         { create(:collection, title: ["Second subcollection"], user: user) }
+  let(:asset4)         { build(:collection_lw, title: ["First subcollection"], user: user) }
+  let(:asset5)         { build(:collection_lw, title: ["Second subcollection"], user: user) }
   let(:unowned_asset)  { create(:work, user: other) }
 
   let(:collection_attrs) do
@@ -112,7 +112,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
     end
 
     context "when params includes parent_id" do
-      let(:parent_collection) { create(:collection, title: ['Parent']) }
+      let(:parent_collection) { create(:collection_lw, title: ['Parent']) }
 
       it "creates a collection as a subcollection of parent" do
         parent_collection
@@ -189,7 +189,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       let(:asset1) { create(:generic_work, user: user) }
       let(:asset2) { create(:generic_work, user: user) }
       let(:asset3) { create(:generic_work, user: user) }
-      let(:collection2) { create(:collection, title: ['Some Collection'], user: user) }
+      let(:collection2) { create(:collection_lw, title: ['Some Collection'], user: user) }
 
       before do
         [asset1, asset2, asset3].each do |asset|
@@ -233,7 +233,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
     end
 
     context "when update fails" do
-      let(:collection) { create(:collection, id: '12345') }
+      let(:collection) { build(:collection_lw, id: '12345') }
       let(:repository) { instance_double(Blacklight::Solr::Repository, search: result) }
       let(:result) { double(documents: [], total: 0) }
 

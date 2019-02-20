@@ -52,7 +52,7 @@ RSpec.describe CharacterizeJob do
 
   context "when the file set's work is in a collection" do
     let(:work)       { build(:generic_work) }
-    let(:collection) { build(:collection) }
+    let(:collection) { build(:collection_lw) }
 
     before do
       allow(file_set).to receive(:parent).and_return(work)

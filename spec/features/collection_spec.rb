@@ -1,17 +1,17 @@
 RSpec.describe 'collection', type: :feature, clean_repo: true do
   let(:user) { create(:user) }
 
-  let(:collection1) { create(:public_collection, user: user) }
-  let(:collection2) { create(:public_collection, user: user) }
+  let(:collection1) { create(:public_collection_lw, user: user) }
+  let(:collection2) { create(:public_collection_lw, user: user) }
 
   describe 'collection show page' do
     let(:collection) do
-      create(:public_collection, user: user, description: ['collection description'], collection_type_settings: :nestable)
+      create(:public_collection_lw, user: user, description: ['collection description'], collection_type_settings: :nestable)
     end
     let!(:work1) { create(:work, title: ["King Louie"], member_of_collections: [collection], user: user) }
     let!(:work2) { create(:work, title: ["King Kong"], member_of_collections: [collection], user: user) }
-    let!(:col1) { create(:public_collection, title: ["Sub-collection 1"], member_of_collections: [collection], user: user) }
-    let!(:col2) { create(:public_collection, title: ["Sub-collection 2"], member_of_collections: [collection], user: user) }
+    let!(:col1) { create(:public_collection_lw, title: ["Sub-collection 1"], member_of_collections: [collection], user: user) }
+    let!(:col2) { create(:public_collection_lw, title: ["Sub-collection 2"], member_of_collections: [collection], user: user) }
 
     before do
       sign_in user
@@ -90,7 +90,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
       sign_in user
     end
-    let(:collection) { create(:named_collection, user: user) }
+    let(:collection) { create(:named_collection_lw, user: user) }
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       visit "/collections/#{collection.id}"
@@ -112,7 +112,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
       sign_in user
     end
-    let(:collection) { create(:named_collection, user: user) }
+    let(:collection) { create(:named_collection_lw, user: user) }
 
     it "shows a collection with a listing of Descriptive Metadata and catalog-style search results" do
       visit "/collections/#{collection.id}"

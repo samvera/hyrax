@@ -174,15 +174,15 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
     let(:user) { create(:user) }
 
     let(:collection1) do
-      create(:public_collection, title: ["My First Collection"],
-                                 description: ["My incredibly detailed description of the collection"],
-                                 user: user)
+      create(:public_collection_lw, title: ["My First Collection"],
+                                    description: ["My incredibly detailed description of the collection"],
+                                    user: user)
     end
 
     let(:collection2) do
-      create(:public_collection, title: ["My Other Collection"],
-                                 description: ["My incredibly detailed description of the other collection"],
-                                 user: user)
+      create(:public_collection_lw, title: ["My Other Collection"],
+                                    description: ["My incredibly detailed description of the other collection"],
+                                    user: user)
     end
 
     let!(:work1) { create(:work, title: ["First of the Assets"], member_of_collections: [collection1], user: user) }
@@ -204,9 +204,9 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       let(:user2) { create(:user) }
 
       let(:collection3) do
-        create(:public_collection, title: ["User2's Collection"],
-                                   description: ["Collection created by user2"],
-                                   user: user2)
+        create(:public_collection_lw, title: ["User2's Collection"],
+                                      description: ["Collection created by user2"],
+                                      user: user2)
       end
 
       before do

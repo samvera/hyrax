@@ -24,7 +24,7 @@ RSpec.describe Hyrax::Forms::CollectionForm do
     end
   end
 
-  let(:collection) { build(:collection) }
+  let(:collection) { build(:collection_lw) }
   let(:ability) { Ability.new(create(:user)) }
   let(:repository) { double }
   let(:form) { described_class.new(collection, ability, repository) }
@@ -74,8 +74,8 @@ RSpec.describe Hyrax::Forms::CollectionForm do
   end
 
   context "nested relationships" do
-    let(:child_collection) { build(:collection) }
-    let(:parent_collection) { build(:collection) }
+    let(:child_collection) { build(:collection_lw) }
+    let(:parent_collection) { build(:collection_lw) }
     let(:service_object) { double(available_member_subcollections: double(documents: [child_collection])) }
 
     before do
@@ -174,7 +174,7 @@ RSpec.describe Hyrax::Forms::CollectionForm do
     subject { form.permission_template }
 
     context "when the PermissionTemplate doesn't exist" do
-      let(:model) { create(:collection) }
+      let(:model) { build(:collection_lw) }
 
       it "gets created" do
         expect(subject).to be_instance_of Hyrax::Forms::PermissionTemplateForm
@@ -185,7 +185,7 @@ RSpec.describe Hyrax::Forms::CollectionForm do
     context "when the PermissionTemplate exists" do
       let(:form) { described_class.new(model, ability, repository) }
       let(:permission_template) { Hyrax::PermissionTemplate.find_by(source_id: model.id) }
-      let(:model) { create(:collection, with_permission_template: true) }
+      let(:model) { build(:collection_lw, with_permission_template: true) }
 
       it "uses the existing template" do
         expect(subject).to be_instance_of Hyrax::Forms::PermissionTemplateForm

@@ -14,11 +14,11 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
 
   describe ".migrate_all_collections" do
     context 'when legacy collections are found (e.g. collections created before Hyrax 2.1.0)' do
-      let!(:col_none) { build(:typeless_collection, id: 'col_none', user: user, edit_users: [user.user_key], do_save: true) }
-      let!(:col_vu) { build(:typeless_collection, id: 'col_vu', user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key], do_save: true) }
-      let!(:col_vg) { build(:typeless_collection, id: 'col_vg', user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'], do_save: true) }
-      let!(:col_mu) { build(:typeless_collection, id: 'col_mu', user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key], do_save: true) }
-      let!(:col_mg) { build(:typeless_collection, id: 'col_mg', user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], do_save: true) }
+      let!(:col_none) { build(:typeless_collection, user: user, edit_users: [user.user_key], do_save: true) }
+      let!(:col_vu) { build(:typeless_collection, user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key], do_save: true) }
+      let!(:col_vg) { build(:typeless_collection, user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'], do_save: true) }
+      let!(:col_mu) { build(:typeless_collection, user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key], do_save: true) }
+      let!(:col_mg) { build(:typeless_collection, user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], do_save: true) }
 
       it 'sets gid and adds permissions' do # rubocop:disable RSpec/ExampleLength
         Collection.all.each do |col|
@@ -158,11 +158,11 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
       let!(:col_mg) { build(:typeless_collection, id: 'col_mg', user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], do_save: true) }
 
       context "and collection wasn't migrated at all" do
-        let!(:col_none) { build(:typeless_collection, id: 'col_none', user: user, edit_users: [user.user_key], do_save: true) }
-        let!(:col_vu) { build(:typeless_collection, id: 'col_vu', user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key], do_save: true) }
-        let!(:col_vg) { build(:typeless_collection, id: 'col_vg', user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'], do_save: true) }
-        let!(:col_mu) { build(:typeless_collection, id: 'col_mu', user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key], do_save: true) }
-        let!(:col_mg) { build(:typeless_collection, id: 'col_mg', user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], do_save: true) }
+        let!(:col_none) { build(:typeless_collection_lw, user: user, edit_users: [user.user_key], read_users: [], do_save: true) }
+        let!(:col_vu) { build(:typeless_collection_lw, user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key], do_save: true) }
+        let!(:col_vg) { build(:typeless_collection_lw, user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'], do_save: true) }
+        let!(:col_mu) { build(:typeless_collection_lw, user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key], do_save: true) }
+        let!(:col_mg) { build(:typeless_collection_lw, user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], do_save: true) }
 
         it 'sets gid and adds permissions' do # rubocop:disable RSpec/ExampleLength
           Collection.all.each do |col|
@@ -185,11 +185,11 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
       end
 
       context "and collection type gid is set but permission template doesn't exist" do
-        let!(:col_none) { create(:user_collection, id: 'col_none', user: user, edit_users: [user.user_key], collection_type_gid: default_gid) }
-        let!(:col_vu) { create(:user_collection, id: 'col_vu', user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key], collection_type_gid: default_gid) }
-        let!(:col_vg) { create(:user_collection, id: 'col_vg', user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'], collection_type_gid: default_gid) }
-        let!(:col_mu) { create(:user_collection, id: 'col_mu', user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key], collection_type_gid: default_gid) }
-        let!(:col_mg) { create(:user_collection, id: 'col_mg', user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], collection_type_gid: default_gid) }
+        let!(:col_none) { build(:user_collection_lw, id: 'col_none', user: user, edit_users: [user.user_key], collection_type_gid: default_gid) }
+        let!(:col_vu) { build(:user_collection_lw, id: 'col_vu', user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key], collection_type_gid: default_gid) }
+        let!(:col_vg) { build(:user_collection_lw, id: 'col_vg', user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'], collection_type_gid: default_gid) }
+        let!(:col_mu) { build(:user_collection_lw, id: 'col_mu', user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key], collection_type_gid: default_gid) }
+        let!(:col_mg) { build(:user_collection_lw, id: 'col_mg', user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], collection_type_gid: default_gid) }
 
         it 'sets gid and adds permissions' do # rubocop:disable RSpec/ExampleLength
           Collection.all.each do |col|
@@ -212,21 +212,21 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
       end
 
       context "and collection type gid isn't set but permission template exists with access set" do
-        let!(:col_none) { build(:typeless_collection, id: 'col_none', user: user, edit_users: [user.user_key], do_save: true, with_permission_template: true) }
+        let!(:col_none) { build(:typeless_collection, user: user, edit_users: [user.user_key], do_save: true, with_permission_template: true) }
         let!(:col_vu) do
-          build(:typeless_collection, id: 'col_vu', user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key],
+          build(:typeless_collection, user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key],
                                       do_save: true, with_permission_template: true)
         end
         let!(:col_vg) do
-          build(:typeless_collection, id: 'col_vg', user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'],
+          build(:typeless_collection, user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'],
                                       do_save: true, with_permission_template: true)
         end
         let!(:col_mu) do
-          build(:typeless_collection, id: 'col_mu', user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key],
+          build(:typeless_collection, user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key],
                                       do_save: true, with_permission_template: true)
         end
         let!(:col_mg) do
-          build(:typeless_collection, id: 'col_mg', user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'],
+          build(:typeless_collection, user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'],
                                       do_save: true, with_permission_template: true)
         end
 
@@ -276,21 +276,21 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
       end
 
       context "and collection type gid isn't set and permission template exists with access not set" do
-        let!(:col_none) { build(:typeless_collection, id: 'col_none', user: user, edit_users: [user.user_key], do_save: true, with_permission_template: true) }
+        let!(:col_none) { build(:typeless_collection, user: user, edit_users: [user.user_key], do_save: true, with_permission_template: true) }
         let!(:col_vu) do
-          build(:typeless_collection, id: 'col_vu', user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key],
+          build(:typeless_collection, user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key],
                                       do_save: true, with_permission_template: true)
         end
         let!(:col_vg) do
-          build(:typeless_collection, id: 'col_vg', user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'],
+          build(:typeless_collection, user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'],
                                       do_save: true, with_permission_template: true)
         end
         let!(:col_mu) do
-          build(:typeless_collection, id: 'col_mu', user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key],
+          build(:typeless_collection, user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key],
                                       do_save: true, with_permission_template: true)
         end
         let!(:col_mg) do
-          build(:typeless_collection, id: 'col_mg', user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'],
+          build(:typeless_collection, user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'],
                                       do_save: true, with_permission_template: true)
         end
 
@@ -322,8 +322,8 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
 
     context 'when newer collections are found (e.g. collections created at or after Hyrax 2.1.0)' do
       let!(:collection) do
-        create(:collection, id: 'col_newer', user: user, with_permission_template: true, collection_type_settings: [:discoverable],
-                            edit_users: [user.user_key], create_access: true)
+        build(:collection_lw, id: 'col_newer', user: user, with_permission_template: true, collection_type_settings: [:discoverable],
+                              edit_users: [user.user_key])
       end
       let!(:permission_template) { collection.permission_template }
       let!(:collection_type_gid) { collection.collection_type_gid }
