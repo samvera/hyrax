@@ -149,6 +149,14 @@ jobs:
         command: bundle check || bundle install
 
     - run:
+        name: Uninstall chromedriver Gems
+        command: gem uninstall -ax chromedriver-helper
+
+    - run:
+        name: Install chromedriver Gems
+        command: gem install chromedriver-helper
+
+    - run:
         name: Load config into solr
         command: |
           cd .internal_test_app/solr/config
