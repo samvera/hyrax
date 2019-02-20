@@ -1258,6 +1258,7 @@ en:
         publisher: The person or group making the work available. Generally this is the institution.
         related_url: A link to a website or other specific content (audio, video, PDF document) related to the work. An example is the URL of a research project from which the work was derived.
         resource_type: Pre-defined categories to describe the type of content being uploaded, such as &quot;article&quot; or &quot;dataset.&quot;  More than one type may be selected.
+        rights_notes: Contains information about rights held in and over the resource.
         subject: Headings or index terms describing what the work is about; these do need to conform to an existing vocabulary.
         title: A name to aid in identifying a work.
     labels:
@@ -1290,6 +1291,7 @@ en:
         license: License
         member_of_collection_ids: Add to collection
         related_url: Related URL
+        rights_notes: Rights notes
         rights_statement: Rights statement
         title: Title
         visibility_after_embargo: then open it up to

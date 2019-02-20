@@ -109,6 +109,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
         keyword: ['penguin'],
         source: ['related'],
         rights_statement: 'http://rightsstatements.org/vocab/InC-EDU/1.0/',
+        rights_notes: ['Notes on the rights'],
         license: ['http://creativecommons.org/licenses/by/3.0/us/']
       }
     end
@@ -121,6 +122,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
       expect(subject['visibility']).to eq 'open'
       expect(subject['license']).to eq ['http://creativecommons.org/licenses/by/3.0/us/']
       expect(subject['rights_statement']).to eq 'http://rightsstatements.org/vocab/InC-EDU/1.0/'
+      expect(subject['rights_notes']).to eq ['Notes on the rights']
       expect(subject['keyword']).to eq ['penguin']
       expect(subject['source']).to eq ['related']
     end

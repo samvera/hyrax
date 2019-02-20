@@ -22,6 +22,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   it { is_expected.to delegate_method(:date_modified).to(:solr_document) }
   it { is_expected.to delegate_method(:date_uploaded).to(:solr_document) }
   it { is_expected.to delegate_method(:rights_statement).to(:solr_document) }
+  it { is_expected.to delegate_method(:rights_notes).to(:solr_document) }
 
   it { is_expected.to delegate_method(:based_near_label).to(:solr_document) }
   it { is_expected.to delegate_method(:related_url).to(:solr_document) }
