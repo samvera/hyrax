@@ -129,6 +129,8 @@ jobs:
       command: |
         sh -c 'wget "https://github.com/samvera/hyrax/archive/master.zip" && \
         unzip -d / master.zip && \
+        mkdir -p /home/circleci && \
+        ln -s /hyrax-master /home/circleci/hyrax && \
         /opt/bin/entry_point.sh'
 
     working_directory: ~/hyrax
