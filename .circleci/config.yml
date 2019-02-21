@@ -127,10 +127,10 @@ jobs:
     - image: selenium/standalone-chrome:latest
       user: root
       command: |
-        sh -c 'wget "https://github.com/samvera/hyrax/archive/master.zip" && \
-        unzip -d / master.zip && \
+        sh -c 'wget "https://github.com/samvera/hyrax/archive/$CIRCLE_BRANCH.zip" && \
+        unzip -d / $CIRCLE_BRANCH.zip && \
         mkdir -p /home/circleci && \
-        ln -s /hyrax-master /home/circleci/hyrax && \
+        ln -s /hyrax-$CIRCLE_BRANCH /home/circleci/hyrax && \
         /opt/bin/entry_point.sh'
 
     working_directory: ~/hyrax
