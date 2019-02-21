@@ -609,7 +609,7 @@ de:
           branding:
             description: Optional können Sie ein Bannerbild und / oder Logo-Bilder hochladen, die mit dieser Sammlung verknüpft werden sollen. Wenn diese hochgeladen werden, werden diese Bilder oben auf der Sammlungsseite angezeigt, um ein eindeutiges Markenbildung für die Sammlung bereitzustellen.
             label: Markenbildung
-          choose_file: "Datei" wählen
+          choose_file: "Datei wählen"
           link_url: 'URL-Link:'
           logo:
             description: Ein oder mehrere Bilder, die oben auf der Sammlungsseite angezeigt werden. Für beste Ergebnisse laden Sie ein Bild (JPG, GIF oder PNG) hoch, das 40 Pixel hoch ist. Größere Bilder werden auf 40 Pixel in der Höhe angepasst.
@@ -920,9 +920,9 @@ de:
         user_search: Nach einem Benutzer suchen
       show_actions:
         analytics: Statistik
-        confirm_delete_this: %{type} löschen?
+        confirm_delete_this: "%{type} löschen?"
         delete_this: Löschen %{type}
-        edit_this: %{type} bearbeiten
+        edit_this: "%{type} bearbeiten"
       show_details:
         characterization: Charakterisierung
         date_modified: Letztes Änderungsdatum
