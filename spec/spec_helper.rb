@@ -211,7 +211,6 @@ RSpec.configure do |config|
     # Precompile the assets to prevent these issues.
     visit "/assets/application.css"
     visit "/assets/application.js"
-    WebMock.allow_net_connect!
   end
 
   config.after do

@@ -149,20 +149,11 @@ jobs:
       COVERALLS_PARALLEL: true
 
     steps:
-      #- setup_remote_docker
-
     - attach_workspace:
         at: ~/
 
-    #- run:
-    #    name: "Start the selenium service"
-    #    command: |
-    #      docker run -d --name selenium -p 4444:4444 selenium/standalone-chrome:latest
-    #      docker cp ~/hyrax/spec/fixtures selenium:fixtures
-
     - run:
         name: "Retrieve the IP address for the container"
-        # command: echo "export SELENIUM_HOST=$(docker inspect --format='{{range $p, $conf := .NetworkSettings.Ports}}{{(index $conf 0).HostIp}}{{end}}' selenium)" >> $BASH_ENV
         command: echo "export SELENIUM_HOST=localhost" >> $BASH_ENV
 
     - run:
