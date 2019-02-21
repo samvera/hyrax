@@ -125,9 +125,10 @@ jobs:
     - image: solr:7-alpine
       command: bin/solr -cloud -noprompt -f -p 8985
     - image: selenium/standalone-chrome:latest
+      user: root
       command: |
-        wget "https://github.com/samvera/hyrax/archive/master.zip"
-        unzip master.zip
+        wget "https://github.com/samvera/hyrax/archive/master.zip" && \
+        unzip master.zip && \
         /opt/bin/entry_point.sh
 
     working_directory: ~/hyrax
