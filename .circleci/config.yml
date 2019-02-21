@@ -128,7 +128,7 @@ jobs:
       user: root
       command: |
         sh -c 'wget "https://github.com/samvera/hyrax/archive/master.zip" && \
-        unzip master.zip && \
+        unzip -d / master.zip && \
         /opt/bin/entry_point.sh'
 
     working_directory: ~/hyrax
