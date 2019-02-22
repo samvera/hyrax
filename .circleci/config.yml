@@ -128,12 +128,13 @@ jobs:
       user: root
       command: |
         sh -c 'wget "https://github.com/samvera/hyrax/archive/$CIRCLE_BRANCH.zip" && \
-        unzip -d / ${CIRCLE_BRANCH}.zip && \
+        unzip -d / $CIRCLE_BRANCH.zip && \
         mkdir -p /home/circleci && \
-        ln -s /hyrax-${CIRCLE_BRANCH} /home/circleci/hyrax && \
+        ln -s /hyrax-$CIRCLE_BRANCH /home/circleci/hyrax && \
+        printenv && \
         /opt/bin/entry_point.sh'
       environment:
-        CIRCLE_BRANCH: ${CIRCLE_BRANCH}
+        CIRCLE_BRANCH: master
 
     working_directory: ~/hyrax
     parallelism: 4
