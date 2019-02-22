@@ -104,10 +104,6 @@ jobs:
           cd .internal_test_app
           bundle check || bundle install
 
-    - run:
-        name: Persisting the branch in the env. var
-        command: echo 'export GIT_BRANCH="$CIRCLE_BRANCH"' >> $BASH_ENV
-
     - save_cache:
         key: v1-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
         paths:
@@ -131,11 +127,13 @@ jobs:
     - image: selenium/standalone-chrome:latest
       user: root
       command: |
-        sh -c 'wget "https://github.com/samvera/hyrax/archive/${GIT_BRANCH}.zip" && \
-        unzip -d / ${GIT_BRANCH}.zip && \
+        sh -c 'wget "https://github.com/samvera/hyrax/archive/$CIRCLE_BRANCH.zip" && \
+        unzip -d / ${CIRCLE_BRANCH}.zip && \
         mkdir -p /home/circleci && \
-        ln -s /hyrax-${GIT_BRANCH} /home/circleci/hyrax && \
+        ln -s /hyrax-${CIRCLE_BRANCH} /home/circleci/hyrax && \
         /opt/bin/entry_point.sh'
+      environment:
+        CIRCLE_BRANCH: ${CIRCLE_BRANCH}
 
     working_directory: ~/hyrax
     parallelism: 4
