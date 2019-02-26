@@ -13,6 +13,12 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
     allow(controller).to receive(:action_name).and_return(controller_action)
     allow(controller).to receive(:repository).and_return(controller_class.new.repository)
     allow(controller).to receive(:blacklight_config).and_return(controller_class.new.blacklight_config)
+    allow(controller).to receive(:controller_name).and_return('batch_uploads')
+
+    allow(form).to receive(:permissions).and_return([])
+    allow(form).to receive(:visibility).and_return('public')
+    stub_template 'hyrax/base/_form_files.html.erb' => 'files'
+    stub_template 'hyrax/base/_currently_shared.html.erb' => 'shared'
   end
 
   context 'with a change_set style form' do

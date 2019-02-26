@@ -55,7 +55,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, js: true
   end
 
   describe 'when both collections require single membership' do
-    let(:old_collection) { FactoryBot.build(:collection_lw, user: admin_user, collection_type: single_membership_type_1, title: ['OldCollectionTitle']) }
+    let(:old_collection) { FactoryBot.build(:collection_lw, user: admin_user, collection_type: single_membership_type_1, title: ['OldCollectionTitle'], with_permission_template: true) }
     let!(:work) do
       create(:generic_work,
              user: admin_user,

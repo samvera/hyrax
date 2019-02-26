@@ -6,7 +6,7 @@ RSpec.describe 'batch', type: :feature, clean_repo: true, js: true do
   let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
   let!(:workflow) { create(:workflow, allows_access_grant: true, active: true, permission_template_id: permission_template.id) }
 
-  let!(:work1)       { create(:public_work, admin_set_id: admin_set.id, user: current_user, members: [file_set]) }
+  let!(:work1)       { create(:public_work, admin_set_id: admin_set.id, user: current_user, ordered_members: [file_set]) }
   let!(:work2)       { create(:public_work, admin_set_id: admin_set.id, user: current_user) }
   let!(:file_set)    { create(:file_set) }
 

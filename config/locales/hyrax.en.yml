@@ -362,6 +362,10 @@ en:
         header: 'Citations:'
         mendeley: Mendeley
         zotero: Zotero
+      currently_shared:
+        currently_sharing: Currently Shared With
+        table_title_access: Access Level
+        table_title_user: Person/Group
       file_manager:
         back_to: Back to
         toolbar: Toolbar
@@ -534,6 +538,10 @@ en:
     batch_edits:
       check_all:
         select_to_access_selection_options: Select to access selection option
+      currently_shared:
+        share_batch_with: Share Batch With
+        table_title_access: Access Level
+        table_title_user: Person/Group
       delete_selected:
         button_label: Delete Selected
         deleting_file_from: Deleting a file from %{application_name} is permanent. Click OK to delete this file from %{application_name}, or Cancel to cancel this operation
@@ -1089,8 +1097,6 @@ en:
         save_note_html: Permissions are <strong>not</strong> saved until the &quot;Save&quot; button is pressed at the bottom of the page.
         select_group: Select a group
         share_with: Share With
-        table_title_access: Access Level
-        table_title_user: Person/Group
         user_search: Search for a user
       proxy:
         message: "%{sending_user} has deposited the file %{title} on your behalf."
