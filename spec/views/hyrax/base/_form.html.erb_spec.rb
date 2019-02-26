@@ -26,6 +26,7 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
     allow(form).to receive(:permissions).and_return([])
     allow(form).to receive(:visibility).and_return('public')
     stub_template 'hyrax/base/_form_files.html.erb' => 'files'
+    stub_template 'hyrax/base/_currently_shared.html.erb' => 'shared'
   end
 
   context "for a new object" do

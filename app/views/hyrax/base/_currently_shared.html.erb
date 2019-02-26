@@ -1,0 +1,66 @@
+<%#
+# form object.class = SimpleForm::FormBuilder
+#   For works (i.e. GenericWork):
+#   - form object.object = Hyrax::GenericWorkForm
+#   - form object.object.model = GenericWork
+#   - use the work itself
+#   For file_sets:
+#   - form object.object.class = FileSet
+#   - use work the file_set is in
+#   No other object types are supported by this view. %>
+<% if f.object.respond_to?(:model) && f.object.model.work?
+  object_acting_upon = f.object
+elsif f.object.file_set?
+  object_acting_upon = f.object.in_works.first
+end %>
+
+<% permission_service = Hyrax::EditPermissionsService.new(object: object_acting_upon, ability: current_ability) %>
+<% depositor = permission_service.depositor %>
+
+<h2><%= t('.currently_sharing') %></h2>
+
+<table class="table table-bordered">
+  <tr>
+    <th><%= t('.table_title_user') %></th>
+    <th><div class="col-sm-10"><%= t('.table_title_access') %></div></th>
+  </tr>
+  <tr id="file_permissions">
+    <td>
+      <%= label_tag :owner_access, class: "control-label" do %>
+        Depositor (<span id="file_owner" data-depositor="<%= depositor %>"><%= link_to_profile depositor %></span>)
+      <% end %>
+    </td>
+    <td>
+    <div class="col-sm-10">
+      <%= Hyrax.config.owner_permission_levels.keys[0] %>
+    </div>
+    </td>
+  </tr>
+  <%= f.fields_for :permissions do |permission_fields| %>
+    <% perm_hash = permission_fields.object.to_hash %>
+    <% next if permission_service.excluded_permission?(perm_hash) %>
+    <% cannot_edit_perms = permission_service.cannot_edit_permissions?(perm_hash) %>
+    <tr>
+      <td>
+        <%= permission_fields.label :agent_name, class: "control-label" do %>
+          <%= user_display_name_and_key(perm_hash[:name]) %>
+          <% permission_service.unauthorized_collection_managers.select {|mgrs| mgrs[:name] == perm_hash[:name] }.each do |coll| %>
+            <br />Access granted via collection <%= coll[:id] %>
+          <% end %>
+        <% end %>
+      </td>
+      <td>
+        <div class="col-sm-10">
+        <% if cannot_edit_perms %>
+          <%= Hyrax.config.permission_levels.key(perm_hash[:access]) %>
+        <% else %>
+          <%= permission_fields.select :access, Hyrax.config.permission_levels, {}, class: 'form-control select_perm' %>
+        <% end %>
+        </div>
+        <% if !cannot_edit_perms %>
+          <button class="btn close remove_perm" data-index="<%= permission_fields.index %>">&times;</button>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>
