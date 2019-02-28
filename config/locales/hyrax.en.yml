@@ -927,8 +927,8 @@ en:
       show_actions:
         analytics: Analytics
         confirm_delete_this: Delete this %{type}?
-        delete_this: Delete this %{type}
-        edit_this: Edit this %{type}
+        delete_this: Delete This %{type}
+        edit_this: Edit This %{type}
       show_details:
         characterization: Characterization
         date_modified: Date Modified
