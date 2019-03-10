@@ -117,7 +117,7 @@ jobs:
 
   test:
     docker:
-    - image: circleci/ruby:2.5.3-node-browsers-legacy
+    - image: circleci/ruby:2.6.0-node-browsers-legacy
     - image: circleci/redis:4
     - image: ualbertalib/docker-fcrepo4:4.7
       environment:
@@ -126,9 +126,9 @@ jobs:
       command: bin/solr -cloud -noprompt -f -p 8985
 
     working_directory: ~/hyrax
-    parallelism: 4
+    parallelism: 2
 
-    environment:
+    environment: &spec_env
       BUNDLE_PATH: vendor/bundle
       BUNDLE_JOBS: 4
       BUNDLE_RETRY: 3
@@ -140,7 +140,7 @@ jobs:
       SPEC_OPTS: --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec.xml --format progress
       COVERALLS_PARALLEL: true
 
-    steps:
+    steps: &run_specs
     - attach_workspace:
         at: ~/
 
@@ -177,6 +177,21 @@ jobs:
         path: /tmp/test-results
         destination: test-results
 
+  test-ruby-2-5:
+    docker:
+    - image: circleci/ruby:2.5.3-node-browsers-legacy
+    - image: circleci/redis:4
+    - image: ualbertalib/docker-fcrepo4:4.7
+      environment:
+        CATALINA_OPTS: "-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:+DisableExplicitGC"
+    - image: solr:7-alpine
+      command: bin/solr -cloud -noprompt -f -p 8985
+
+    working_directory: ~/hyrax
+    parallelism: 2
+    environment: *spec_env
+    steps:       *run_specs
+
 workflows:
   version: 2
   ci:
@@ -189,6 +204,10 @@ workflows:
           requires:
             - bundle
       - test:
+          requires:
+            - build
+            - lint
+      - test-ruby-2-5:
           requires:
             - build
             - lint
