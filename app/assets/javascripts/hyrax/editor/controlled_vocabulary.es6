@@ -27,7 +27,7 @@ export default class ControlledVocabulary extends FieldManager {
 
         labelControls:      true,
       }
-      super(element, options)
+      super(element, $.extend({}, options, $(element).data()))
       this.paramKey = paramKey
       this.fieldName = this.element.data('fieldName')
       this.searchUrl = this.element.data('autocompleteUrl')
