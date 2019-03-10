@@ -222,6 +222,24 @@ module Hyrax
       registered_curation_concern_types.map(&:constantize)
     end
 
+    # The MetadataAdapter to use when persisting resources with Valkyrie
+    #
+    # @see lib/wings
+    # @see https://github.com/samvera-labs/valkyrie
+    def valkyrie_metadata_adapter
+      @valkyrie_metadata_adapter ||= :wings_adapter
+    end
+    attr_writer :valkyrie_metadata_adapter
+
+    # The StorageAdapter to use when persisting resources with Valkyrie
+    #
+    # @see lib/wings
+    # @see https://github.com/samvera-labs/valkyrie
+    def valkyrie_storage_adapter
+      @valkyrie_storage_adapter ||= :fedora
+    end
+    attr_writer :valkyrie_storage_adapter
+
     # A configuration point for changing the behavior of the license service.
     #
     # @!attribute [w] license_service_class
