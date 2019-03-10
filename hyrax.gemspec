@@ -86,7 +86,7 @@ EOF
   spec.add_development_dependency 'rspec-its', '~> 1.1'
   spec.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0'
   spec.add_development_dependency "capybara", '~> 2.4'
-  spec.add_development_dependency 'capybara-maleficent', '~> 0.2'
+  spec.add_development_dependency 'capybara-maleficent', '0.2'
   spec.add_development_dependency "selenium-webdriver"
   spec.add_development_dependency "factory_bot_rails", '~> 4.4'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
@@ -109,6 +109,7 @@ EOF
   spec.add_development_dependency 'i18n-debug' if ENV['I18N_DEBUG']
   spec.add_development_dependency 'i18n_yaml_sorter' unless ENV['TRAVIS']
   spec.add_development_dependency 'chromedriver-helper', '~> 2.1'
+  spec.add_development_dependency 'rspec_junit_formatter'
 
   ########################################################
   # Temporarily pinned dependencies. INCLUDE EXPLANATIONS.
