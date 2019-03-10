@@ -108,6 +108,7 @@ EOF
   spec.add_development_dependency 'webmock'
   spec.add_development_dependency 'i18n-debug' if ENV['I18N_DEBUG']
   spec.add_development_dependency 'i18n_yaml_sorter' unless ENV['TRAVIS']
+  spec.add_development_dependency 'chromedriver-helper', '~> 2.1'
 
   ########################################################
   # Temporarily pinned dependencies. INCLUDE EXPLANATIONS.
@@ -117,8 +118,4 @@ EOF
   spec.add_dependency 'simple_form', '~> 3.2', '<= 3.5.0'
   # parser 2.5.0.0 broke local and Travis rubocop checks due to a change in parsing
   spec.add_development_dependency 'parser', '< 2.5'
-  # chromedriver-helper 2.0 broke the chromedriver used by capybara
-  #   see: https://github.com/flavorjones/chromedriver-helper/issues/62
-  #        and https://github.com/flavorjones/chromedriver-helper/issues/57
-  spec.add_development_dependency 'chromedriver-helper', '< 2.0'
 end
