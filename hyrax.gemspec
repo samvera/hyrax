@@ -79,6 +79,7 @@ SUMMARY
   spec.add_dependency 'select2-rails', '~> 3.5'
   spec.add_dependency 'signet'
   spec.add_dependency 'tinymce-rails', '~> 4.1'
+  spec.add_dependency 'valkyrie', '~> 2.0.0-rc3'
 
   # temporary pin to 2.17 due to failures caused in 2.18.0
   spec.add_development_dependency "capybara", '~> 2.4', '< 2.18.0'
@@ -106,7 +107,6 @@ SUMMARY
   spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'webmock'
-  spec.add_development_dependency 'valkyrie', '~> 1.5'
 
   ########################################################
   # Temporarily pinned dependencies. INCLUDE EXPLANATIONS.
