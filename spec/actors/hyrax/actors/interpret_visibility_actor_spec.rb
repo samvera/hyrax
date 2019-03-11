@@ -2,7 +2,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
   let(:curation_concern) { GenericWork.new }
-  let(:attributes) { { admin_set_id: admin_set.id } }
+  let(:attributes) { { title: title, admin_set_id: admin_set.id } }
   let(:admin_set) { create(:admin_set) }
   let(:permission_template) { create(:permission_template, source_id: admin_set.id) }
   let(:terminator) { Hyrax::Actors::Terminator.new }
@@ -10,6 +10,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
   let(:two_years_from_today) { Time.zone.today + 2.years }
   let(:date) { Time.zone.today + 2 }
   let(:env) { Hyrax::Actors::Environment.new(curation_concern, ability, attributes) }
+  let(:title) { ['Totally moomin'] }
 
   subject(:middleware) do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
@@ -28,7 +29,8 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
     context 'when visibility is set to open' do
       let(:attributes) do
-        { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
+        { title: title,
+          visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
           visibility_during_embargo: 'restricted',
           visibility_after_embargo: 'open',
           embargo_release_date: date.to_s }
@@ -36,7 +38,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
       it 'does not receive the embargo attributes' do
         expect(terminator).to receive(:create).with(Hyrax::Actors::Environment) do |k|
-          expect(k.attributes).to eq("visibility" => 'open')
+          expect(k.attributes).to eq(title: title, visibility: 'open')
           false
         end
         subject.create(env)
@@ -45,7 +47,8 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
     context 'when visibility is set to embargo' do
       let(:attributes) do
-        { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
+        { title: title,
+          visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
           visibility_during_embargo: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE,
           visibility_after_embargo: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
           embargo_release_date: date.to_s }
@@ -60,18 +63,19 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       end
 
       context 'when embargo_release_date is not set' do
-        let(:attributes) { { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO } }
+        let(:attributes) { { title: title, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO } }
 
         it 'does not clear the visibility attributes' do
           expect(subject.create(env)).to be false
-          expect(attributes).to eq(visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO)
+          expect(attributes).to eq(title: title, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO)
         end
       end
     end
 
     context 'when visibility is set to lease' do
       let(:attributes) do
-        { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE,
+        { title: title,
+          visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE,
           visibility_during_lease: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE,
           visibility_after_lease: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
           lease_expiration_date: date.to_s }
@@ -86,11 +90,11 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
       end
 
       context 'when lease_expiration_date is not set' do
-        let(:attributes) { { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE } }
+        let(:attributes) { { title: title, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE } }
 
         it 'sets error on curation_concern and return false' do
           expect(subject.create(env)).to be false
-          expect(attributes).to eq(visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE)
+          expect(attributes).to eq(title: title, visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE)
         end
       end
     end
