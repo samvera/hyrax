@@ -9,6 +9,7 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
                      description_tesim: ['Lorem ipsum lorem ipsum.'],
                      keyword_tesim: ['bacon', 'sausage', 'eggs'],
                      rights_statement_tesim: ['http://example.org/rs/1'],
+                     rights_notes_tesim: ['Notes on the rights'],
                      date_created_tesim: ['1984-01-02'])
   end
 

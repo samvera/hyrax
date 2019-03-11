@@ -15,7 +15,7 @@ module Hyrax
 
     # delegate fields from Hyrax::Works::Metadata to solr_document
     delegate :based_near_label, :related_url, :depositor, :identifier, :resource_type,
-             :keyword, :itemtype, :admin_set, to: :solr_document
+             :keyword, :itemtype, :admin_set, :rights_notes, to: :solr_document
 
     # @param [SolrDocument] solr_document
     # @param [Ability] current_ability

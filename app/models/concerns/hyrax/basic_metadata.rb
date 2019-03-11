@@ -19,6 +19,8 @@ module Hyrax
       # Used for a license
       property :license, predicate: ::RDF::Vocab::DC.rights
 
+      property :rights_notes, predicate: ::RDF::URI.new('http://purl.org/dc/elements/1.1/rights'), multiple: true
+
       # This is for the rights statement
       property :rights_statement, predicate: ::RDF::Vocab::EDM.rights
       property :publisher, predicate: ::RDF::Vocab::DC11.publisher
