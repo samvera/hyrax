@@ -26,6 +26,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
   it 'responds to expected methods' do
     expect(subject).to respond_to(:find_by).with_keywords(:id)
     expect(subject).to respond_to(:resource_factory)
+    expect(subject).to respond_to(:find_all).with(0).arguments
   end
 
   describe ".find_by" do
@@ -47,6 +48,20 @@ RSpec.describe Wings::Valkyrie::QueryService do
 
     it 'raises an error if the id is not a Valkyrie::ID or a string' do
       expect { query_service.find_by(id: 123) }.to raise_error ArgumentError
+    end
+  end
+
+  describe ".find_all", clean_repo: true do
+    before do
+      allow(Hyrax.config).to receive(:curation_concerns).and_return(Hyrax.config.curation_concerns.append(::Collection).append(af_resource_class))
+    end
+
+    it "returns all created resources and no access control objects" do
+      work = create(:generic_work)
+      resource1 = persister.save(resource: resource_class.new)
+      resource2 = persister.save(resource: resource_class.new)
+
+      expect(query_service.find_all.map(&:id)).to contain_exactly resource1.id, resource2.id, Valkyrie::ID.new(work.id)
     end
   end
 

@@ -24,6 +24,18 @@ module Wings
         raise ::Valkyrie::Persistence::ObjectNotFoundError
       end
 
+      # Find all work/collection records, and map to Valkyrie Resources
+      # @return [Array<Valkyrie::Resource>]
+      def find_all
+        klasses = Hyrax.config.curation_concerns.append(::Collection)
+        objects = ::ActiveFedora::Base.all.select do |object|
+          klasses.include? object.class
+        end
+        objects.map do |id|
+          resource_factory.to_resource(object: id)
+        end
+      end
+
       # Constructs a Valkyrie::Persistence::CustomQueryContainer using this query service
       # @return [Valkyrie::Persistence::CustomQueryContainer]
       def custom_queries
