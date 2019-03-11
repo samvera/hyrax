@@ -1255,6 +1255,7 @@ zh:
         publisher: 出版作品的个人或团体，一般来说是机构单位。
         related_url: 相关链接，用于链接与作品相关的网页或其它具体内容(音频、视频、PDF文件)。例如一个研究项目的网址，作品是此研究项目的成果。
         resource_type: 预定类型用于描述上传内容类型，例如&quot;文章&quot; or &quot;数据集。&quot; 可以选择多项类型。
+        rights_notes: 包含有关资源内和资源上的权限的信息。
         subject: 用于描述作品的主题词或索引词,需要选自现存的词汇表。
         title: 用于帮助识别作品的名称。
     labels:
@@ -1287,6 +1288,7 @@ zh:
         license: 许可
         member_of_collection_ids: 添加到收藏
         related_url: 相关链接
+        rights_notes: 权利说明
         rights_statement: 权利声明
         title: 标题
         visibility_after_embargo: 开放

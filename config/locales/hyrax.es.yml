@@ -876,17 +876,11 @@ es:
         header: Selecciona una acción
         versions: Versiones
         versions_title: Mostrar versiones anteriores
-      batch_create_success:
-        message: El lote creado para %{user} pasado.
-        subject: Pasar por lotes crear
       edit:
         descriptions: Descripciones
         header: Editar %{file_set}
         permissions: Permisos
         versions: Versiones
-      fixity_check_failure:
-        message: La comprobación de corrección ejecutada en %{log_date} para %{file_title} (%{uri}) falló.
-        subject: Comprobación de falla de la falla
       form:
         attach_to: Adjuntar a %{parent}
         cancel: Cancelar
@@ -1026,6 +1020,12 @@ es:
       batch_create_failure:
         message: 'La creación del lote para %{user} falló: %{messages}'
         subject: Creación de lote fallido
+      batch_create_success:
+        message: El lote creado para %{user} pasado.
+        subject: Pasar por lotes crear
+      fixity_check_failure:
+        message: La comprobación de corrección ejecutada en %{log_date} para %{file_title} (%{uri}) falló.
+        subject: Comprobación de falla de la falla
       import_url_failure:
         subject: Error de importación de archivo
       proxy_deposit_request:
@@ -1259,6 +1259,7 @@ es:
         publisher: La persona o grupo que facilitó el trabajo. Generalmente se trata de una institución.
         related_url: Un enlace a una página web u otro contenido específico (audio, vídeo, un documento PDF) relacionado con el trabajo. Un ejemplo es la URL de un proyecto de investigación de la cual proviene el trabajo
         resource_type: Categorías predefinidas que describen el tipo de contenido que se ha subido, tal como &quot;artículo&quot; o &quot;conjunto de datos&quot;. Se puede seleccionar más de un tipo.
+        rights_notes: Contiene información sobre los derechos mantenidos en y sobre el recurso.
         subject: Cabeceras o términos de indexación que describen de qué trata el trabajo; no tienen por qué pertenecer a un vocabulario existente.
         title: Un nombre para ayudar a la identificación de un trabajo.
     labels:
@@ -1291,6 +1292,7 @@ es:
         license: Licencia
         member_of_collection_ids: Añadir a la colección
         related_url: URL relacionada
+        rights_notes: Notas de derechos
         rights_statement: Declaración de derechos
         title: Título
         visibility_after_embargo: luego abrirlo a

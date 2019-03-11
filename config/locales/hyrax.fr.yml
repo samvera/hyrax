@@ -1258,6 +1258,7 @@ fr:
         publisher: La personne ou le groupe qui met l'ouvrage disponible. Généralement, c'est l'institution.
         related_url: Un lien vers un site Web ou un autre contenu spécifique (audio, vidéo, document PDF) lié au travail. Un exemple est l'URL d'un projet de recherche à partir duquel le travail a été dérivé.
         resource_type: Des catégories prédéfinies pour décrire le type de contenu en cours de chargement, tel que "quotite" Ou "ensemble de données". & Quot; Plus d'un type peut être sélectionné.
+        rights_notes: Contient des informations sur les droits détenus dans et sur la ressource.
         subject: Rubriques ou termes d'index décrivant le travail de ce travail; Ceux-ci doivent être conformes à un vocabulaire existant.
         title: Un nom pour aider à identifier un travail.
     labels:
@@ -1290,6 +1291,7 @@ fr:
         license: Licence
         member_of_collection_ids: Ajouter à la collection
         related_url: URL associée
+        rights_notes: Notes de droits
         rights_statement: Déclaration de droits
         title: Titre
         visibility_after_embargo: Puis ouvrez-le jusqu'à

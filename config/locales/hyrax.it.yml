@@ -1257,6 +1257,7 @@ it:
         publisher: La persona o il gruppo che rende disponibile il lavoro. Generalmente questa è l'istituzione.
         related_url: Un collegamento a un sito web o ad altri contenuti specifici (audio, video, documento PDF) correlati al lavoro. Un esempio è l'URL di un progetto di ricerca da cui è stato derivato il lavoro.
         resource_type: Categorie predefinite per descrivere il tipo di contenuto che viene caricato, ad esempio "articolo" O "set di dati". Possono essere selezionati più di un tipo.
+        rights_notes: Contiene informazioni sui diritti detenuti all'interno e sulla risorsa.
         subject: Intestazioni o termini dell'indice che descrivono ciò che il lavoro riguarda; Questi devono essere conformi a un vocabolario esistente.
         title: Un nome per aiutare a identificare un lavoro.
     labels:
@@ -1289,6 +1290,7 @@ it:
         license: Licenza
         member_of_collection_ids: Aggiungere alla collezione
         related_url: URL correlato
+        rights_notes: Note sui diritti
         rights_statement: Dichiarazione dei diritti
         title: Titolo
         visibility_after_embargo: Poi aprila fino a
