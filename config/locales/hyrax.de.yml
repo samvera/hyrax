@@ -1252,6 +1252,7 @@ de:
         publisher: Die Person oder Gruppe, die die Arbeit zur Verfügung stellt. Im Allgemeinen ist das die Institution.
         related_url: Ein Link zu einer Website oder anderen spezifischen Inhalten (Audio, Video, PDF-Dokument) im Zusammenhang mit der Arbeit. Ein Beispiel ist die URL eines Forschungsprojekts, aus dem die Arbeit abgeleitet wurde.
         resource_type: Vordefinierte Kategorien, um die Art des hochgeladenen Inhalts zu beschreiben, wie beispielsweise &ldquor;Artikel&ldquo; oder &ldquor;Datensatz&ldquo;. Es können mehr als ein Typ ausgewählt werden.
+        rights_notes: Enthält Informationen zu den in und über der Ressource gehaltenen Rechten.
         subject: Überschriften oder Indexbegriffe, die beschreiben, worum es bei der Arbeit geht; Diese müssen sich an ein bestehendes Vokabular anpassen.
         title: Ein Titel, um bei der Identifizierung einer Arbeit zu helfen.
     labels:
@@ -1284,6 +1285,7 @@ de:
         license: Lizenz
         member_of_collection_ids: Zur Sammlung hinzufügen
         related_url: Zugehörige URL
+        rights_notes: Rechte Hinweise
         rights_statement: Urheberrechts-Erklärung
         title: Titel
         visibility_after_embargo: Dann öffnen sie es bis zu

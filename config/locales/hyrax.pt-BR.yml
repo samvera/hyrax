@@ -1252,6 +1252,7 @@ pt-BR:
         publisher: A pessoa ou grupo que disponibiliza a obra. Geralmente é a instituição.
         related_url: Um link para um site ou outro conteúdo específico (áudio, vídeo, documento PDF) relacionado à obra. Um exemplo é o URL de um projeto de pesquisa a partir do qual a obra foi derivada.
         resource_type: Categorias pré-definidas para descrever o tipo de conteúdo sendo carregado, como &quot;artigo&quot; ou &quot;conjunto de dados&quot;. Mais de um tipo pode ser selecionado.
+        rights_notes: Contém informações sobre os direitos mantidos e sobre o recurso.
         subject: Título ou termos de índice que descrevem a obra; estes precisam se adequar a um vocabulário existente.
         title: Um nome para ajudar na identificação de uma obra.
     labels:
@@ -1284,6 +1285,7 @@ pt-BR:
         license: Licença
         member_of_collection_ids: Acrescentar à coleção
         related_url: URL relacionado
+        rights_notes: Notas de direitos
         rights_statement: Declaração de direitos
         title: Título
         visibility_after_embargo: Então a abra até
