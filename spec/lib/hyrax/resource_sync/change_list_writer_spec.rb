@@ -37,14 +37,16 @@ RSpec.describe Hyrax::ResourceSync::ChangeListWriter, :clean_repo do
       capability = xml.xpath('//rs:ln/@href', 'rs' => "http://www.openarchives.org/rs/terms/").text
       expect(capability).to eq capability_list
 
+      # The setup for this test may introduce "updated" messages depending upon
+      # the order in which the test suites are executed
       expect(location(1)).to eq "http://example.com/concern/file_sets/#{file_set.id}"
-      expect(change(1)).to eq "created"
+      expect(['created', 'updated']).to include(change(1))
 
       expect(location(2)).to eq "http://example.com/concern/generic_works/#{public_work.id}"
-      expect(change(2)).to eq "created"
+      expect(['created', 'updated']).to include(change(2))
 
       expect(location(3)).to eq "http://example.com/collections/#{public_collection.id}"
-      expect(change(3)).to eq "created"
+      expect(['created', 'updated']).to include(change(3))
 
       expect(url_list.count).to eq 3
     end
