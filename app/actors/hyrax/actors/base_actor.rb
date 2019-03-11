@@ -1,3 +1,5 @@
+require 'wings'
+
 module Hyrax
   module Actors
     ##
@@ -65,7 +67,12 @@ module Hyrax
         end
 
         def save(env)
-          env.curation_concern.save
+          adapter = Valkyrie::MetadataAdapter.find(Hyrax.config.valkyrie_metadata_adapter)
+          resource = adapter.persister.save(resource: env.curation_concern.valkyrie_resource)
+          env.curation_concern.id = resource.alternate_ids.first.to_s unless env.curation_concern.id.present?
+          true
+        rescue StandardError
+          false
         end
 
         def apply_save_data_to_curation_concern(env)
