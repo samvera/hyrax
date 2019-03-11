@@ -12,10 +12,14 @@ RSpec.describe Hyrax::Statistics::Works::ByResourceType do
     subject { service.query }
 
     it "is a list of categories" do
-      expect(subject).to eq [{ label: 'Conference Proceeding', data: 2 },
-                             { label: 'Image', data: 1 },
-                             { label: 'Journal', data: 1 }]
-      expect(subject.to_json).to eq "[{\"label\":\"Conference Proceeding\",\"data\":2},{\"label\":\"Image\",\"data\":1},{\"label\":\"Journal\",\"data\":1}]"
+      expect(subject).to be_an Array
+      expect(subject.length).to eq 3
+      expect(subject.first).to be_a Hyrax::Statistics::TermQuery::Result
+      data = subject.map { |result| JSON.parse(result.to_json) }
+      expect(data).to include('label' => 'Conference Proceeding', 'data' => 2)
+      expect(data).to include('label' => 'Image', 'data' => 1)
+      expect(data).to include('label' => 'Journal', 'data' => 2)
+      expect(JSON.parse(subject.to_json)).to eq(data)
     end
   end
 end
