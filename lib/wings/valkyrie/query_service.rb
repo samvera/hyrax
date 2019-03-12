@@ -53,14 +53,14 @@ module Wings
       # @param [Array<Valkyrie::ID, String>] ids
       # @return [Array<Valkyrie::Resource>]
       def find_many_by_ids(ids:)
-        ids = ids.uniq
-        ids.map do |id|
-          begin
-            find_by(id: id)
-          rescue ::Valkyrie::Persistence::ObjectNotFoundError
-            nil
-          end
-        end.compact
+        ids.each do |id|
+          id = ::Valkyrie::ID.new(id.to_s) if id.is_a?(String)
+          validate_id(id)
+        end
+        ids = ids.uniq.map(&:to_s)
+        ActiveFedora::Base.where("id: (#{ids.join(' OR ')})").map do |obj|
+          resource_factory.to_resource(object: obj)
+        end
       end
 
       # Constructs a Valkyrie::Persistence::CustomQueryContainer using this query service
