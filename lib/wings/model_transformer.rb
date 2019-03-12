@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'wings/value_mapper'
+require 'wings/hydra/pcdm/models/concerns/pcdm_valkyrie_behavior'
 
 module Wings
   #
@@ -81,6 +82,8 @@ module Wings
     #   results in long methods
     def self.to_valkyrie_resource_class(klass:)
       Class.new(ActiveFedoraResource) do
+        include Wings::PcdmValkyrieBehavior
+
         # Based on Valkyrie implementation, we call Class.to_s to define
         # the internal resource.
         @internal_resource = klass
