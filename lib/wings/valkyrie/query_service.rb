@@ -49,6 +49,9 @@ module Wings
         end
       end
 
+      # Find an array of record using Valkyrie IDs, and map them to Valkyrie Resources
+      # @param [Array<Valkyrie::ID, String>] ids
+      # @return [Array<Valkyrie::Resource>]
       def find_many_by_ids(ids:)
         ids = ids.uniq
         ids.map do |id|
