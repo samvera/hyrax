@@ -77,7 +77,7 @@ EOF
   spec.add_dependency 'active-fedora', '~> 11.5', '>= 11.5.2'
   spec.add_dependency 'linkeddata' # Required for getting values from geonames
 
-  spec.add_development_dependency 'engine_cart', '~> 1.2'
+  spec.add_development_dependency 'engine_cart', '~> 2.2'
   spec.add_development_dependency 'mida', '~> 0.3'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
   spec.add_development_dependency 'solr_wrapper', '>= 1.1', '< 3.0'
@@ -86,7 +86,7 @@ EOF
   spec.add_development_dependency 'rspec-its', '~> 1.1'
   spec.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0'
   spec.add_development_dependency "capybara", '~> 2.4'
-  spec.add_development_dependency 'capybara-maleficent', '~> 0.2'
+  spec.add_development_dependency 'capybara-maleficent', '0.2'
   spec.add_development_dependency "selenium-webdriver"
   spec.add_development_dependency "factory_bot_rails", '~> 4.4'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
@@ -108,6 +108,8 @@ EOF
   spec.add_development_dependency 'webmock'
   spec.add_development_dependency 'i18n-debug' if ENV['I18N_DEBUG']
   spec.add_development_dependency 'i18n_yaml_sorter' unless ENV['TRAVIS']
+  spec.add_development_dependency 'chromedriver-helper', '~> 2.1'
+  spec.add_development_dependency 'rspec_junit_formatter'
 
   ########################################################
   # Temporarily pinned dependencies. INCLUDE EXPLANATIONS.
@@ -117,8 +119,4 @@ EOF
   spec.add_dependency 'simple_form', '~> 3.2', '<= 3.5.0'
   # parser 2.5.0.0 broke local and Travis rubocop checks due to a change in parsing
   spec.add_development_dependency 'parser', '< 2.5'
-  # chromedriver-helper 2.0 broke the chromedriver used by capybara
-  #   see: https://github.com/flavorjones/chromedriver-helper/issues/62
-  #        and https://github.com/flavorjones/chromedriver-helper/issues/57
-  spec.add_development_dependency 'chromedriver-helper', '< 2.0'
 end
