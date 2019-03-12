@@ -15,6 +15,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
 
   after do
     Object.send(:remove_const, :Book)
+    Object.send(:remove_const, :Image)
   end
 
   subject(:query_service) { described_class.new(adapter: adapter) }
@@ -23,6 +24,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
   let(:af_resource_class) { Book }
   let(:af_image_resource_class) { Image }
   let(:resource_class) { Wings::ModelTransformer.to_valkyrie_resource_class(klass: af_resource_class) }
+  let(:image_resource_class) { Wings::ModelTransformer.to_valkyrie_resource_class(klass: af_image_resource_class) }
   let(:resource) { resource_class.new(title: ['Foo']) }
 
   # it_behaves_like "a Valkyrie query provider"
@@ -32,6 +34,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
     expect(subject).to respond_to(:resource_factory)
     expect(subject).to respond_to(:find_all).with(0).arguments
     expect(subject).to respond_to(:find_all_of_model).with_keywords(:model)
+    expect(subject).to respond_to(:find_by_alternate_identifier).with_keywords(:alternate_identifier)
   end
 
   describe ".find_by" do
@@ -75,20 +78,64 @@ RSpec.describe Wings::Valkyrie::QueryService do
   end
 
   describe ".find_all_of_model", clean_repo: true do
-    let(:resource_class_image) { Wings::ModelTransformer.to_valkyrie_resource_class(klass: af_image_resource_class) }
-
     it "returns all of that model" do
       persister.save(resource: resource_class.new)
-      resource2 = persister.save(resource: resource_class_image.new)
+      resource2 = persister.save(resource: image_resource_class.new)
 
-      expect(query_service.find_all_of_model(model: resource_class_image).map(&:id)).to contain_exactly resource2.id
+      expect(query_service.find_all_of_model(model: image_resource_class).map(&:id)).to contain_exactly resource2.id
     end
 
     it "returns an empty array if there are none" do
       persister.save(resource: resource_class.new)
       persister.save(resource: resource_class.new)
 
-      expect(query_service.find_all_of_model(model: resource_class_image).to_a).to eq []
+      expect(query_service.find_all_of_model(model: image_resource_class).to_a).to eq []
+    end
+  end
+
+  describe ".find_by_alternate_identifier" do
+    it "returns a resource by alternate identifier or string representation of an alternate identifier" do
+      resource = resource_class.new
+      resource.alternate_ids = [Valkyrie::ID.new('p9s0xfj')]
+      resource = persister.save(resource: resource)
+
+      found = query_service.find_by_alternate_identifier(alternate_identifier: resource.alternate_ids.first)
+      expect(found.id).to eq resource.id
+      # expect(found).to be_persisted
+
+      found = query_service.find_by_alternate_identifier(alternate_identifier: resource.alternate_ids.first.to_s)
+      expect(found.id).to eq resource.id
+      # expect(found).to be_persisted
+    end
+
+    # Not a use case that Hyrax has; everything has to have an alternate_id
+    #   We can't make this test pass because we can't persist an object without
+    #   an alternate_id
+    xit 'raises a Valkyrie::Persistence::ObjectNotFoundError when persisted objects do not have alternate_ids' do
+      persister.save(resource: SecondResource.new)
+      expect { query_service.find_by_alternate_identifier(alternate_identifier: Valkyrie::ID.new("123123123")) }.to raise_error ::Valkyrie::Persistence::ObjectNotFoundError
+    end
+
+    it "raises a Valkyrie::Persistence::ObjectNotFoundError for a non-found alternate identifier" do
+      expect { query_service.find_by_alternate_identifier(alternate_identifier: Valkyrie::ID.new("123123123")) }.to raise_error ::Valkyrie::Persistence::ObjectNotFoundError
+    end
+
+    it 'raises an error if the alternate identifier is not a Valkyrie::ID or a string' do
+      expect { query_service.find_by_alternate_identifier(alternate_identifier: 123) }.to raise_error ArgumentError
+    end
+
+    it 'can have multiple alternate identifiers' do
+      resource = resource_class.new
+      resource.alternate_ids = [Valkyrie::ID.new('p9s0xfj'), Valkyrie::ID.new('jks0xfj')]
+      resource = persister.save(resource: resource)
+
+      found = query_service.find_by_alternate_identifier(alternate_identifier: resource.alternate_ids.first)
+      expect(found.id).to eq resource.id
+      # expect(found).to be_persisted
+
+      found = query_service.find_by_alternate_identifier(alternate_identifier: resource.alternate_ids.last)
+      expect(found.id).to eq resource.id
+      # expect(found).to be_persisted
     end
   end
 
