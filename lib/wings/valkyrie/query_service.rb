@@ -36,6 +36,19 @@ module Wings
         end
       end
 
+      # Find all work/collection records of a given model, and map to Valkyrie Resources
+      # @param [Valkyrie::ResourceClass]
+      # @return [Array<Valkyrie::Resource>]
+      def find_all_of_model(model:)
+        find_model = model.internal_resource
+        objects = ::ActiveFedora::Base.all.select do |object|
+          object.class == find_model
+        end
+        objects.map do |id|
+          resource_factory.to_resource(object: id)
+        end
+      end
+
       # Constructs a Valkyrie::Persistence::CustomQueryContainer using this query service
       # @return [Valkyrie::Persistence::CustomQueryContainer]
       def custom_queries

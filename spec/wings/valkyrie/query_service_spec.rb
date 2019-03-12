@@ -8,6 +8,9 @@ RSpec.describe Wings::Valkyrie::QueryService do
     class Book < ActiveFedora::Base
       property :title, predicate: ::RDF::Vocab::DC.title, multiple: true
     end
+    class Image < ActiveFedora::Base
+      property :title, predicate: ::RDF::Vocab::DC.title, multiple: true
+    end
   end
 
   after do
@@ -18,6 +21,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
   let(:adapter) { Wings::Valkyrie::MetadataAdapter.new }
   let(:persister) { Wings::Valkyrie::Persister.new(adapter: adapter) }
   let(:af_resource_class) { Book }
+  let(:af_image_resource_class) { Image }
   let(:resource_class) { Wings::ModelTransformer.to_valkyrie_resource_class(klass: af_resource_class) }
   let(:resource) { resource_class.new(title: ['Foo']) }
 
@@ -27,6 +31,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
     expect(subject).to respond_to(:find_by).with_keywords(:id)
     expect(subject).to respond_to(:resource_factory)
     expect(subject).to respond_to(:find_all).with(0).arguments
+    expect(subject).to respond_to(:find_all_of_model).with_keywords(:model)
   end
 
   describe ".find_by" do
@@ -62,6 +67,28 @@ RSpec.describe Wings::Valkyrie::QueryService do
       resource2 = persister.save(resource: resource_class.new)
 
       expect(query_service.find_all.map(&:id)).to contain_exactly resource1.id, resource2.id, Valkyrie::ID.new(work.id)
+    end
+
+    it "returns an empty array if there are none" do
+      expect(query_service.find_all.to_a).to eq []
+    end
+  end
+
+  describe ".find_all_of_model", clean_repo: true do
+    let(:resource_class_image) { Wings::ModelTransformer.to_valkyrie_resource_class(klass: af_image_resource_class) }
+
+    it "returns all of that model" do
+      persister.save(resource: resource_class.new)
+      resource2 = persister.save(resource: resource_class_image.new)
+
+      expect(query_service.find_all_of_model(model: resource_class_image).map(&:id)).to contain_exactly resource2.id
+    end
+
+    it "returns an empty array if there are none" do
+      persister.save(resource: resource_class.new)
+      persister.save(resource: resource_class.new)
+
+      expect(query_service.find_all_of_model(model: resource_class_image).to_a).to eq []
     end
   end
 
