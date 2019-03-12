@@ -49,6 +49,17 @@ module Wings
         end
       end
 
+      def find_many_by_ids(ids:)
+        ids = ids.uniq
+        ids.map do |id|
+          begin
+            find_by(id: id)
+          rescue ::Valkyrie::Persistence::ObjectNotFoundError
+            nil
+          end
+        end.compact
+      end
+
       # Constructs a Valkyrie::Persistence::CustomQueryContainer using this query service
       # @return [Valkyrie::Persistence::CustomQueryContainer]
       def custom_queries

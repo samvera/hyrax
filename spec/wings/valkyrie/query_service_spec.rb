@@ -32,6 +32,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
     expect(subject).to respond_to(:resource_factory)
     expect(subject).to respond_to(:find_all).with(0).arguments
     expect(subject).to respond_to(:find_all_of_model).with_keywords(:model)
+    expect(subject).to respond_to(:find_many_by_ids).with_keywords(:ids)
   end
 
   describe ".find_by" do
@@ -89,6 +90,39 @@ RSpec.describe Wings::Valkyrie::QueryService do
       persister.save(resource: resource_class.new)
 
       expect(query_service.find_all_of_model(model: resource_class_image).to_a).to eq []
+    end
+  end
+
+  describe ".find_many_by_ids" do
+    let!(:resource) { persister.save(resource: resource_class.new) }
+    let!(:resource2) { persister.save(resource: resource_class.new) }
+    let!(:resource3) { persister.save(resource: resource_class.new) }
+
+    it "returns an array of resources by ids or string representation ids" do
+      found = query_service.find_many_by_ids(ids: [resource.id, resource2.id])
+      expect(found.map(&:id)).to contain_exactly resource.id, resource2.id
+
+      found = query_service.find_many_by_ids(ids: [resource.id.to_s, resource2.id.to_s])
+      expect(found.map(&:id)).to contain_exactly resource.id, resource2.id
+    end
+
+    it "returns a partial list for a non-found ID" do
+      found = query_service.find_many_by_ids(ids: [resource.id, Valkyrie::ID.new("123123123")])
+      expect(found.map(&:id)).to contain_exactly resource.id
+    end
+
+    it "returns an empty list if no ids were found" do
+      found = query_service.find_many_by_ids(ids: [Valkyrie::ID.new("you-cannot-find-me"), Valkyrie::ID.new("123123123")])
+      expect(found.map(&:id)).to eq []
+    end
+
+    it 'raises an error if any id is not a Valkyrie::ID or a string' do
+      expect { query_service.find_many_by_ids(ids: [resource.id, 123]) }.to raise_error ArgumentError
+    end
+
+    it "removes duplicates" do
+      found = query_service.find_many_by_ids(ids: [resource.id, resource2.id, resource.id])
+      expect(found.map(&:id)).to contain_exactly resource.id, resource2.id
     end
   end
 
