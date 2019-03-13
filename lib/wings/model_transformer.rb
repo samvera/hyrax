@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'wings/value_mapper'
+require 'wings/hydra/pcdm/models/concerns/pcdm_valkyrie_behavior'
 
 module Wings
   #
@@ -81,6 +82,8 @@ module Wings
     #   results in long methods
     def self.to_valkyrie_resource_class(klass:)
       Class.new(ActiveFedoraResource) do
+        include Wings::PcdmValkyrieBehavior
+
         # Based on Valkyrie implementation, we call Class.to_s to define
         # the internal resource.
         @internal_resource = klass
@@ -134,6 +137,7 @@ module Wings
       klass = @@resource_class_cache.fetch(pcdm_object) do
         self.class.to_valkyrie_resource_class(klass: pcdm_object.class)
       end
+      pcdm_object.id = minted_id if pcdm_object.id.nil?
       klass.new(alternate_ids: [::Valkyrie::ID.new(pcdm_object.id)], **attributes)
     end
 
@@ -142,6 +146,10 @@ module Wings
     end
 
     private
+
+      def minted_id
+        ::Noid::Rails.config.minter_class.new.mint
+      end
 
       def attributes
         relationship_keys = pcdm_object.reflections.keys.reject { |k| k.to_s.include?('id') }.map { |k| k.to_s.singularize + '_ids' }

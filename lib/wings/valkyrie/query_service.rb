@@ -12,16 +12,22 @@ module Wings
         @adapter = adapter
       end
 
+      # WARNING: In general, prefer find_by_alternate_identifier over this
+      # method.
+      #
+      # Hyrax uses a shortened noid in place of an id, and this is what is
+      # stored in ActiveFedora, which is still the storage backend for Hyrax.
+      #
+      # If you do not heed this warning, then switch to Valyrie's Postgres
+      # MetadataAdapter, but continue passing noids to find_by, you will
+      # start getting ObjectNotFoundErrors instead of the objects you wanted
+      #
       # Find a record using a Valkyrie ID, and map it to a Valkyrie Resource
       # @param [Valkyrie::ID, String] id
       # @return [Valkyrie::Resource]
       # @raise [Valkyrie::Persistence::ObjectNotFoundError]
       def find_by(id:)
-        id = ::Valkyrie::ID.new(id.to_s) if id.is_a?(String)
-        validate_id(id)
-        resource_factory.to_resource(object: ::ActiveFedora::Base.find(id.to_s))
-      rescue ::ActiveFedora::ObjectNotFoundError
-        raise ::Valkyrie::Persistence::ObjectNotFoundError
+        find_by_alternate_identifier(alternate_identifier: id)
       end
 
       # Find all work/collection records, and map to Valkyrie Resources
@@ -61,6 +67,14 @@ module Wings
         ActiveFedora::Base.where("id: (#{ids.join(' OR ')})").map do |obj|
           resource_factory.to_resource(object: obj)
         end
+      end
+
+      def find_by_alternate_identifier(alternate_identifier:)
+        alternate_identifier = ::Valkyrie::ID.new(alternate_identifier.to_s) if alternate_identifier.is_a?(String)
+        validate_id(alternate_identifier)
+        resource_factory.to_resource(object: ::ActiveFedora::Base.find(alternate_identifier.to_s))
+      rescue ::ActiveFedora::ObjectNotFoundError
+        raise ::Valkyrie::Persistence::ObjectNotFoundError
       end
 
       # Constructs a Valkyrie::Persistence::CustomQueryContainer using this query service

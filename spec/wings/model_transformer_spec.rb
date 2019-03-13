@@ -1,9 +1,9 @@
 # frozen_string_literal: true
-require 'spec_helper'
+require 'wings_helper'
 require 'wings/model_transformer'
 
 RSpec.describe Wings::ModelTransformer do
-  subject(:factory) { described_class.new(pcdm_object: pcdm_object) }
+  let(:factory)     { described_class.new(pcdm_object: pcdm_object) }
   let(:pcdm_object) { work }
   let(:adapter)     { Valkyrie::MetadataAdapter.find(:memory) }
   let(:id)          { 'moomin123' }
@@ -27,6 +27,8 @@ RSpec.describe Wings::ModelTransformer do
       source: [1.125, :moomin]
     }
   end
+
+  subject { factory }
 
   before(:context) do
     Valkyrie::MetadataAdapter.register(
@@ -114,6 +116,17 @@ RSpec.describe Wings::ModelTransformer do
                             related_url: work.related_url,
                             source: work.source
     end
+
+    context 'without an existing id' do
+      let(:id)        { nil }
+      let(:minted_id) { 'bobross' }
+
+      before do
+        allow(factory).to receive(:minted_id).and_return(minted_id)
+      end
+
+      it { expect(factory.build).to have_a_valkyrie_alternate_id_of minted_id }
+    end
   end
 
   context 'with relationship properties' do
@@ -172,7 +185,7 @@ RSpec.describe Wings::ModelTransformer do
           .to have_attributes title: book.title,
                               contributor: book.contributor,
                               description: book.description
-        expect_ids_to_match(subject.build.page_ids, ['pg1', 'pg2'])
+        expect(subject.build.page_ids).to match_valkyrie_ids_with_active_fedora_ids(['pg1', 'pg2'])
       end
     end
   end
@@ -191,6 +204,7 @@ RSpec.describe Wings::ModelTransformer do
       context 'for parent collection' do
         before do
           collection1.members = [work1, work2, collection2, collection3]
+          # collection1.vmembers = [work1.id, work2.id, collection2.id, collection3.id]
           collection1.save!
         end
 
@@ -207,7 +221,7 @@ RSpec.describe Wings::ModelTransformer do
         it 'has attributes for the PCDM model' do
           expect(subject.build)
             .to have_attributes title: collection1.title
-          expect_ids_to_match(subject.build.member_ids, [work1.id, work2.id, collection2.id, collection3.id])
+          expect(subject.build.member_ids).to match_valkyrie_ids_with_active_fedora_ids([work1.id, work2.id, collection2.id, collection3.id])
         end
       end
 
@@ -230,7 +244,7 @@ RSpec.describe Wings::ModelTransformer do
         it 'has attributes matching the active_fedora_object' do
           expect(subject.build)
             .to have_attributes title: collection3.title
-          expect_ids_to_match(subject.build.member_of_collection_ids, ['col1', 'col2'])
+          expect(subject.build.member_of_collection_ids).to match_valkyrie_ids_with_active_fedora_ids(['col1', 'col2'])
         end
       end
 
@@ -253,7 +267,7 @@ RSpec.describe Wings::ModelTransformer do
         it 'has attributes matching the active_fedora_object' do
           expect(subject.build)
             .to have_attributes title: work1.title
-          expect_ids_to_match(subject.build.member_of_collection_ids, ['col1', 'col2'])
+          expect(subject.build.member_of_collection_ids).to match_valkyrie_ids_with_active_fedora_ids(['col1', 'col2'])
         end
       end
 
@@ -276,13 +290,9 @@ RSpec.describe Wings::ModelTransformer do
         it 'has attributes matching the active_fedora_object' do
           expect(subject.build)
             .to have_attributes title: work1.title
-          expect_ids_to_match(subject.build.member_ids, [work2.id, work3.id, fileset1.id, fileset2.id])
+          expect(subject.build.member_ids).to match_valkyrie_ids_with_active_fedora_ids([work2.id, work3.id, fileset1.id, fileset2.id])
         end
       end
     end
-  end
-
-  def expect_ids_to_match(valkyrie_ids, expected_ids)
-    expect(valkyrie_ids.map(&:id)).to match_array expected_ids
   end
 end
