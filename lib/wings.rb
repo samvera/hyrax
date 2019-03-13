@@ -21,7 +21,6 @@ module Wings; end
 
 require 'valkyrie'
 require 'wings/model_transformer'
-require 'wings/resource_factory'
 require 'wings/valkyrizable'
 require 'wings/valkyrie/metadata_adapter'
 require 'wings/valkyrie/resource_factory'
