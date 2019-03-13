@@ -44,7 +44,10 @@ module Wings
     ##
     # @return [ActiveFedora::Base]
     def convert
-      resource.internal_resource.new(attributes).tap { |obj| obj.id = id unless id.empty? }
+      resource.internal_resource.new(attributes).tap do |obj|
+        obj.id = id unless id.empty?
+        resource.member_ids.each { |valkyrie_id| obj.members << ActiveFedora::Base.find(valkyrie_id.id) } if resource.respond_to? :member_ids
+      end
     end
 
     ##
