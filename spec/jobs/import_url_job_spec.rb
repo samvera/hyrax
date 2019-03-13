@@ -75,6 +75,7 @@ RSpec.describe ImportUrlJob do
 
     it 'leaves the temp directory in place' do
       described_class.perform_now(file_set, operation)
+      file_name = File.basename(file_set.label)
       expect(File.exist?(File.join(tmpdir, file_name))).to be true
     end
   end
