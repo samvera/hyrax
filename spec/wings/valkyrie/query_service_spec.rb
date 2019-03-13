@@ -44,11 +44,11 @@ RSpec.describe Wings::Valkyrie::QueryService do
 
       found = query_service.find_by(id: book.id)
       expect(found.id).to eq book.id
-      # expect(found).to be_persisted
+      expect(found).to be_persisted
 
       found = query_service.find_by(id: book.id.to_s)
       expect(found.id).to eq book.id
-      # expect(found).to be_persisted
+      expect(found).to be_persisted
     end
 
     it "returns a Valkyrie::Persistence::ObjectNotFoundError for a non-found ID" do
@@ -102,11 +102,11 @@ RSpec.describe Wings::Valkyrie::QueryService do
 
       found = query_service.find_by_alternate_identifier(alternate_identifier: resource.alternate_ids.first)
       expect(found.id).to eq resource.id
-      # expect(found).to be_persisted
+      expect(found).to be_persisted
 
       found = query_service.find_by_alternate_identifier(alternate_identifier: resource.alternate_ids.first.to_s)
       expect(found.id).to eq resource.id
-      # expect(found).to be_persisted
+      expect(found).to be_persisted
     end
 
     # Not a use case that Hyrax has; everything has to have an alternate_id
@@ -132,11 +132,11 @@ RSpec.describe Wings::Valkyrie::QueryService do
 
       found = query_service.find_by_alternate_identifier(alternate_identifier: resource.alternate_ids.first)
       expect(found.id).to eq resource.id
-      # expect(found).to be_persisted
+      expect(found).to be_persisted
 
       found = query_service.find_by_alternate_identifier(alternate_identifier: resource.alternate_ids.last)
       expect(found.id).to eq resource.id
-      # expect(found).to be_persisted
+      expect(found).to be_persisted
     end
   end
 
