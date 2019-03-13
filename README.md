@@ -1,7 +1,6 @@
 ![Logo](https://raw.githubusercontent.com/samvera/hyrax/gh-pages/assets/images/hyrax_logo_horizontal_white_background.png)
 
 Code: [![Version](https://badge.fury.io/rb/hyrax.png)](http://badge.fury.io/rb/hyrax)
-[![Build Status](https://travis-ci.org/samvera/hyrax.png?branch=master)](https://travis-ci.org/samvera/hyrax)
 [![CircleCI](https://circleci.com/gh/samvera/hyrax.svg?style=svg)](https://circleci.com/gh/samvera/hyrax)
 [![Coverage Status](https://coveralls.io/repos/github/samvera/hyrax/badge.svg?branch=master)](https://coveralls.io/github/samvera/hyrax?branch=master)
 [![Code Climate](https://codeclimate.com/github/samvera/hyrax/badges/gpa.svg)](https://codeclimate.com/github/samvera/hyrax)
@@ -326,7 +325,7 @@ If you'd like to help the development effort and you're not sure where to get st
 
 # Development
 
-The [Hyrax Development Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide) is for people who want to modify Hyrax itself, not an application that uses Hyrax.
+The [Hyrax Development Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide) is for people who want to modify Hyrax itself, not an application that uses Hyrax. See especially the [Quick Start](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide#quick-start-for-hyrax-development) guide and instructions for running the [Hyrax test suite](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide#run-the-test-suite).
 
 ## Reporting Security Issues
 
