@@ -3,11 +3,11 @@ RSpec.describe ImportUrlJob do
 
   let(:file_path) { fixture_path + '/world.png' }
   let(:file_hash) { '/673467823498723948237462429793840923582' }
-  let(:file_name) { 'world.png' }
+  let(:label) { file_path }
 
   let(:file_set) do
     FileSet.new(import_url: "http://example.org#{file_hash}",
-                label: file_name) do |f|
+                label: label) do |f|
       f.apply_depositor_metadata(user.user_key)
     end
   end
@@ -78,6 +78,19 @@ RSpec.describe ImportUrlJob do
       file_name = File.basename(file_set.label)
       expect(File.exist?(File.join(tmpdir, file_name))).to be true
     end
+
+    context 'when the FileSet has an existing label' do
+      let(:label) { "example.tif" }
+      before do
+        allow(Rails.logger).to receive(:debug)
+      end
+      it 'uses the FileSet label' do
+        described_class.perform_now(file_set, operation)
+        tmp_file_path = Rails.root.join(tmpdir, label)
+        expect(Rails.logger).to have_received(:debug).with("ImportUrlJob: Closing #{tmp_file_path}")
+        expect(File.exist?(tmp_file_path.to_s)).to be true
+      end
+    end
   end
 
   context "when a batch update job is running too" do
@@ -130,6 +143,38 @@ RSpec.describe ImportUrlJob do
       last_message = inbox[0].last_message
       expect(last_message.subject).to eq('File Import Error')
       expect(last_message.body).to eq("Error: Timeout")
+    end
+  end
+
+  context 'when the URL to the remote file has headers' do
+    let(:import_url) { "http://example.org#{file_hash}" }
+    let(:headers) do
+      {
+        "Authorization" => "OAuth <ACCESS_TOKEN>"
+      }
+    end
+    let(:file_set) do
+      FileSet.new(import_url: import_url, label: file_path) do |f|
+        f.apply_depositor_metadata(user.user_key)
+      end
+    end
+    let(:operation) { create(:operation) }
+    let(:import_uri) { URI(import_url) }
+
+    before do
+      allow(BrowseEverything::Retriever).to receive(:can_retrieve?).and_return(true)
+      described_class.perform_now(file_set, operation, headers)
+    end
+
+    it 'submits a request to the cloud server with auth headers' do
+      expect(BrowseEverything::Retriever).to have_received(:can_retrieve?).with(import_uri, headers)
+    end
+
+    it 'retrieves the cloud server resources with the auth headers' do
+      expect(mock_retriever).to have_received(:retrieve).with(
+        "url" => import_uri,
+        "headers" => headers
+      )
     end
   end
 end

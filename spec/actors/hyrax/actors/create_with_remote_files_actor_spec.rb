@@ -44,6 +44,20 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
     end
   end
 
+  context "with source URIs that are remote and contain encoded parameters" do
+    let(:url1) { "https://dl.dropbox.com/fake/file?param1=%28example%29&param2=%5Bexample2%5D" }
+
+    before do
+      allow(::FileSet).to receive(:new).and_call_original
+    end
+
+    it "preserves the encoded parameters in the URIs" do
+      expect(ImportUrlJob).to receive(:perform_later).with(FileSet, Hyrax::Operation, {}).twice
+      expect(actor.create(environment)).to be true
+      expect(::FileSet).to have_received(:new).with(import_url: "https://dl.dropbox.com/fake/file?param1=%28example%29&param2=%5Bexample2%5D", label: "filepicker-demo.txt.txt")
+    end
+  end
+
   context "with source uris that are remote bearing auth headers" do
     let(:remote_files) do
       [{ url: url1,
