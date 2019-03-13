@@ -134,6 +134,7 @@ module Wings
       klass = @@resource_class_cache.fetch(pcdm_object) do
         self.class.to_valkyrie_resource_class(klass: pcdm_object.class)
       end
+      pcdm_object.id = minted_id if pcdm_object.id.nil?
       klass.new(alternate_ids: [::Valkyrie::ID.new(pcdm_object.id)], **attributes)
     end
 
@@ -142,6 +143,10 @@ module Wings
     end
 
     private
+
+      def minted_id
+        ::Noid::Rails.config.minter_class.new.mint
+      end
 
       def attributes
         relationship_keys = pcdm_object.reflections.keys.reject { |k| k.to_s.include?('id') }.map { |k| k.to_s.singularize + '_ids' }

@@ -3,7 +3,7 @@ require 'spec_helper'
 require 'wings/model_transformer'
 
 RSpec.describe Wings::ModelTransformer do
-  subject(:factory) { described_class.new(pcdm_object: pcdm_object) }
+  let(:factory)     { described_class.new(pcdm_object: pcdm_object) }
   let(:pcdm_object) { work }
   let(:adapter)     { Valkyrie::MetadataAdapter.find(:memory) }
   let(:id)          { 'moomin123' }
@@ -27,6 +27,8 @@ RSpec.describe Wings::ModelTransformer do
       source: [1.125, :moomin]
     }
   end
+
+  subject { factory }
 
   before(:context) do
     Valkyrie::MetadataAdapter.register(
@@ -113,6 +115,17 @@ RSpec.describe Wings::ModelTransformer do
                             publisher: work.publisher,
                             related_url: work.related_url,
                             source: work.source
+    end
+
+    context 'without an existing id' do
+      let(:id)        { nil }
+      let(:minted_id) { 'bobross' }
+
+      before do
+        allow(factory).to receive(:minted_id).and_return(minted_id)
+      end
+
+      it { expect(factory.build).to have_a_valkyrie_alternate_id_of minted_id }
     end
   end
 
