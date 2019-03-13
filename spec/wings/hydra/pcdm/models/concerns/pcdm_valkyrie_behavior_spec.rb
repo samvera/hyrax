@@ -2,7 +2,7 @@
 require 'wings_helper'
 require 'wings/model_transformer'
 
-RSpec.describe Wings::PcdmValkyrieBehavior do
+RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior do
   subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
 
   let(:collection1) { build(:public_collection_lw, id: 'col1', title: ['Collection 1']) }
@@ -26,6 +26,7 @@ RSpec.describe Wings::PcdmValkyrieBehavior do
       it 'returns works only as valkyrie resources through pcdm_valkyrie_behavior' do
         resources = subject.build.objects(valkyrie: true)
         expect(resources.size).to eq 2
+        expect(resources.first.pcdm_object?).to be true
         expect(resources.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([work1.id, work2.id])
       end
     end
@@ -56,21 +57,21 @@ RSpec.describe Wings::PcdmValkyrieBehavior do
     end
 
     context 'when valkyrie resources requested' do
-      it 'returns works only as valkyrie resources through pcdm_valkyrie_behavior' do
+      it 'returns ids of works only as valkyrie resources through pcdm_valkyrie_behavior' do
         resource_ids = subject.build.object_ids(valkyrie: true)
         expect(resource_ids.size).to eq 2
         expect(resource_ids).to match_valkyrie_ids_with_active_fedora_ids([work1.id, work2.id])
       end
     end
     context 'when active fedora objects requested' do
-      it 'returns works only as fedora objects through pcdm_valkyrie_behavior' do
+      it 'returns ids of works only as fedora objects through pcdm_valkyrie_behavior' do
         af_object_ids = subject.build.object_ids(valkyrie: false)
         expect(af_object_ids.size).to eq 2
         expect(af_object_ids.to_a).to match_array [work1.id, work2.id]
       end
     end
     context 'when return type is not specified' do
-      it 'returns works only as fedora objects through pcdm_valkyrie_behavior' do
+      it 'returns ids of works only as fedora objects through pcdm_valkyrie_behavior' do
         af_object_ids = subject.build.object_ids
         expect(af_object_ids.size).to eq 2
         expect(af_object_ids.to_a).to match_array [work1.id, work2.id]

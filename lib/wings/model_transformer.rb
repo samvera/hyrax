@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 require 'wings/value_mapper'
-require 'wings/hydra/pcdm/models/concerns/pcdm_valkyrie_behavior'
+require 'wings/hydra/works/models/concerns/collection_valkyrie_behavior'
+require 'wings/hydra/works/models/concerns/work_valkyrie_behavior'
+require 'wings/hydra/works/models/concerns/file_set_valkyrie_behavior'
 
 module Wings
   #
@@ -78,11 +80,13 @@ module Wings
     # @return [Class] a dyamically generated `Valkyrie::Resource` subclass
     #   mirroring the provided `ActiveFedora` model
     #
-    # rubocop:disable Metrics/MethodLength because metaprogramming a class
+    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize because metaprogramming a class
     #   results in long methods
     def self.to_valkyrie_resource_class(klass:)
       Class.new(ActiveFedoraResource) do
-        include Wings::PcdmValkyrieBehavior
+        include Wings::Works::CollectionValkyrieBehavior if klass.included_modules.include?(Hyrax::CollectionBehavior)
+        include Wings::Works::WorkValkyrieBehavior if klass.included_modules.include?(Hyrax::WorkBehavior)
+        include Wings::Works::FileSetValkyrieBehavior if klass.included_modules.include?(Hyrax::FileSetBehavior)
 
         # Based on Valkyrie implementation, we call Class.to_s to define
         # the internal resource.
@@ -113,7 +117,7 @@ module Wings
         end
       end
     end
-    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
     ##
     # @param pcdm_object [ActiveFedora::Base]
