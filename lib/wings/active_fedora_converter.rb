@@ -46,6 +46,8 @@ module Wings
       attrs.delete(:new_record)
       attrs.delete(:id)
       attrs.delete(:alternate_ids)
+      attrs.delete(:created_at)
+      attrs.delete(:updated_at)
 
       attrs.compact
     end

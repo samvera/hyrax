@@ -34,7 +34,7 @@ RSpec.describe Wings::Valkyrie::Persister do
     expect(saved.id).not_to be_blank
   end
 
-  xit "stores created_at/updated_at" do
+  it "stores created_at/updated_at" do
     book = persister.save(resource: resource)
     book.title = ["test"]
     book = persister.save(resource: book)
@@ -48,13 +48,12 @@ RSpec.describe Wings::Valkyrie::Persister do
   xit "can override default id generation with a provided id" do
     id = SecureRandom.uuid
     book = persister.save(resource: resource_class.new(id: id, title: ['Foo']))
-    reloaded = query_service.find_by(id: book.id)
-    expect(reloaded.id).to eq Valkyrie::ID.new(id)
-    expect(reloaded).to be_persisted
-    expect(reloaded.created_at).not_to be_blank
-    expect(reloaded.updated_at).not_to be_blank
-    expect(reloaded.created_at).not_to be_kind_of Array
-    expect(reloaded.updated_at).not_to be_kind_of Array
+    expect(book.id).to eq Valkyrie::ID.new(id)
+    expect(book).to be_persisted
+    expect(book.created_at).not_to be_blank
+    expect(book.updated_at).not_to be_blank
+    expect(book.created_at).not_to be_kind_of Array
+    expect(book.updated_at).not_to be_kind_of Array
   end
 
   it "doesn't override a resource that already has an ID" do

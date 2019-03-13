@@ -172,6 +172,8 @@ module Wings
           next unless pcdm_object.respond_to? attr_name
           mem[attr_name.to_sym] = ValueMapper.for(pcdm_object.public_send(attr_name)).result
         end
+                                .merge(created_at: pcdm_object.try(:create_date),
+                                       updated_at: pcdm_object.try(:modified_date))
       end
   end
   # rubocop:enable Style/ClassVars
