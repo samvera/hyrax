@@ -13,7 +13,7 @@ module Wings
   #
   # @example getting a valkyrie resource
   #   work     = GenericWork.new(id: 'an_identifier')
-  #   resource = Wings::ModelTransformer.for(pcdm_object: work)
+  #   resource = Wings::ModelTransformer.for(work)
   #
   #   resource.alternate_ids # => [#<Valkyrie::ID:0x... id: 'an_identifier'>]
   #
