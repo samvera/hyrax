@@ -27,10 +27,16 @@ module Wings
     ##
     # @return [ActiveFedora::Base]
     def convert
-      resource.internal_resource.constantize.new(attributes).tap do |obj|
+      active_fedora_class.new(attributes).tap do |obj|
         obj.id = id unless id.empty?
-        resource.member_ids.each { |valkyrie_id| obj.members << ActiveFedora::Base.find(valkyrie_id.id) } if resource.respond_to? :member_ids
+        resource.member_ids.each { |valkyrie_id| obj.members << ActiveFedora::Base.find(valkyrie_id.id) } if resource.respond_to?(:member_ids) && resource.member_ids
       end
+    end
+
+    def active_fedora_class
+      klass = resource.internal_resource.constantize
+      return klass if klass <= ActiveFedora::Base
+      DefaultWork
     end
 
     ##
@@ -55,7 +61,36 @@ module Wings
     ##
     # @return [String]
     def id
+      return "" unless resource.respond_to?(:alternate_ids)
       resource.alternate_ids.first.to_s
+    end
+
+    # A dummy work class for valkyrie resources that don't have corresponding
+    # hyrax ActiveFedora::Base models.
+    #
+    # A possible improvement would be to dynamically generate properties based
+    # on what's found in the resource.
+    class DefaultWork < ActiveFedora::Base
+      include Hyrax::WorkBehavior
+      property :ordered_authors, predicate: ::RDF::Vocab::DC.creator
+      property :ordered_nested, predicate: ::RDF::URI("http://example.com/ordered_nested")
+      property :nested_resource, predicate: ::RDF::URI("http://example.com/nested_resource"), class_name: "Wings::ActiveFedoraConverter::NestedResource"
+      accepts_nested_attributes_for :nested_resource
+
+      # self.indexer = <%= class_name %>Indexer
+      include ::Hyrax::BasicMetadata
+    end
+
+    class NestedResource < ActiveTriples::Resource
+      def initialize(uri = RDF::Node.new, _parent = ActiveTriples::Resource.new)
+        uri = if uri.try(:node?)
+                RDF::URI("#nested_resource_#{uri.to_s.gsub('_:', '')}")
+              elsif uri.to_s.include?('#')
+                RDF::URI(uri)
+              end
+        super
+      end
+      include ::Hyrax::BasicMetadata
     end
   end
 end

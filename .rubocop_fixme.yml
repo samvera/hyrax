@@ -129,7 +129,7 @@ RSpec/ExampleLength:
     - 'spec/services/hyrax/workflow/state_machine_generator_spec.rb'
     - 'spec/services/hyrax/workflow/workflow_importer_spec.rb'
     - 'spec/views/**/*'
-
+    - 'spec/wings/valkyrie/persister_spec.rb'
 RSpec/VerifiedDoubles:
   Enabled: false
 
