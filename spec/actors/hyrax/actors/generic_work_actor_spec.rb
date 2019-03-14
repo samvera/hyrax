@@ -304,7 +304,6 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
 
         it "works" do
           expect(curation_concern.ordered_members.to_a).to eq [file_set1, file_set2]
-
           expect(subject.update(env)).to be true
 
           curation_concern.reload

@@ -69,6 +69,7 @@ module Hyrax
         def save(env)
           adapter = Valkyrie::MetadataAdapter.find(Hyrax.config.valkyrie_metadata_adapter)
           resource = adapter.persister.save(resource: env.curation_concern.valkyrie_resource)
+          env.curation_concern = adapter.resource_factory.from_resource(resource: resource)
           env.curation_concern.id = resource.alternate_ids.first.to_s unless env.curation_concern.id.present?
           true
         rescue StandardError

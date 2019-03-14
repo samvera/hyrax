@@ -12,6 +12,7 @@ module Hyrax
       end
 
       attr_reader :curation_concern, :current_ability, :attributes
+      attr_writer :curation_concern
 
       # @return [User] the user from the current_ability
       def user
