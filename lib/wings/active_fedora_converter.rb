@@ -2,7 +2,7 @@
 
 module Wings
   ##
-  # Converts `ValkyrieResource` objects to legacy `ActiveFedora::Base` objects.
+  # Converts `Valkyrie::Resource` objects to legacy `ActiveFedora::Base` objects.
   #
   # @example
   #   work     = GenericWork.new(title: ['Comet in Moominland'])
@@ -25,6 +25,15 @@ module Wings
     end
 
     ##
+    # @return [ActiveFedora::Base]
+    def convert
+      resource.internal_resource.new(attributes).tap do |obj|
+        obj.id = id unless id.empty?
+        resource.member_ids.each { |valkyrie_id| obj.members << ActiveFedora::Base.find(valkyrie_id.id) } if resource.respond_to? :member_ids
+      end
+    end
+
+    ##
     # @return [Hash<Symbol, Object>]
     def attributes
       attrs = resource.attributes
@@ -39,15 +48,6 @@ module Wings
       attrs.delete(:alternate_ids)
 
       attrs.compact
-    end
-
-    ##
-    # @return [ActiveFedora::Base]
-    def convert
-      resource.internal_resource.new(attributes).tap do |obj|
-        obj.id = id unless id.empty?
-        resource.member_ids.each { |valkyrie_id| obj.members << ActiveFedora::Base.find(valkyrie_id.id) } if resource.respond_to? :member_ids
-      end
     end
 
     ##
