@@ -73,7 +73,7 @@ module Wings
         alternate_identifier = ::Valkyrie::ID.new(alternate_identifier.to_s) if alternate_identifier.is_a?(String)
         validate_id(alternate_identifier)
         resource_factory.to_resource(object: ::ActiveFedora::Base.find(alternate_identifier.to_s))
-      rescue ::ActiveFedora::ObjectNotFoundError
+      rescue ::ActiveFedora::ObjectNotFoundError, Ldp::Gone
         raise ::Valkyrie::Persistence::ObjectNotFoundError
       end
 
