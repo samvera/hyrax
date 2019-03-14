@@ -24,8 +24,9 @@ RSpec.describe Wings::Valkyrie::Persister do
   # it_behaves_like "a Valkyrie::Persister"
 
   it { is_expected.to respond_to(:save).with_keywords(:resource) }
-  xit { is_expected.to respond_to(:save_all).with_keywords(:resources) }
-  xit { is_expected.to respond_to(:delete).with_keywords(:resource) }
+  it { is_expected.to respond_to(:save_all).with_keywords(:resources) }
+  it { is_expected.to respond_to(:delete).with_keywords(:resource) }
+  it { is_expected.to respond_to(:wipe!) }
 
   it "can save a resource" do
     expect(resource).not_to be_persisted
@@ -66,5 +67,26 @@ RSpec.describe Wings::Valkyrie::Persister do
   it "can find that resource again" do
     id = persister.save(resource: resource).id
     expect(query_service.find_by(id: id).internal_resource).to eq resource.internal_resource
+  end
+
+  it "can save multiple resources at once" do
+    resource2 = resource_class.new
+    results = persister.save_all(resources: [resource, resource2])
+
+    expect(results.map(&:id).uniq.length).to eq 2
+    expect(persister.save_all(resources: [])).to eq []
+  end
+
+  it "can delete objects" do
+    persisted = persister.save(resource: resource)
+    persister.delete(resource: persisted)
+    expect { query_service.find_by(id: persisted.id) }.to raise_error ::Valkyrie::Persistence::ObjectNotFoundError
+  end
+
+  it "can delete all objects" do
+    resource2 = resource_class.new
+    persister.save_all(resources: [resource, resource2])
+    persister.wipe!
+    expect(query_service.find_all.to_a.length).to eq 0
   end
 end
