@@ -53,7 +53,8 @@ module Wings
         self.class.to_valkyrie_resource_class(klass: pcdm_object.class)
       end
       pcdm_object.id = minted_id if pcdm_object.id.nil?
-      klass.new(alternate_ids: [::Valkyrie::ID.new(pcdm_object.id)], **attributes)
+      attrs = attributes.tap { |hash| hash[:new_record] = pcdm_object.new_record? }
+      klass.new(alternate_ids: [::Valkyrie::ID.new(pcdm_object.id)], **attrs)
     end
 
     ##

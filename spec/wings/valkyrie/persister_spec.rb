@@ -30,7 +30,7 @@ RSpec.describe Wings::Valkyrie::Persister do
   it "can save a resource" do
     expect(resource).not_to be_persisted
     saved = persister.save(resource: resource)
-    # expect(saved).to be_persisted
+    expect(saved).to be_persisted
     expect(saved.id).not_to be_blank
   end
 
