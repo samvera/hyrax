@@ -55,6 +55,20 @@ module Wings
         end
       end
 
+      # Find an array of record using Valkyrie IDs, and map them to Valkyrie Resources
+      # @param [Array<Valkyrie::ID, String>] ids
+      # @return [Array<Valkyrie::Resource>]
+      def find_many_by_ids(ids:)
+        ids.each do |id|
+          id = ::Valkyrie::ID.new(id.to_s) if id.is_a?(String)
+          validate_id(id)
+        end
+        ids = ids.uniq.map(&:to_s)
+        ActiveFedora::Base.where("id: (#{ids.join(' OR ')})").map do |obj|
+          resource_factory.to_resource(object: obj)
+        end
+      end
+
       def find_by_alternate_identifier(alternate_identifier:)
         alternate_identifier = ::Valkyrie::ID.new(alternate_identifier.to_s) if alternate_identifier.is_a?(String)
         validate_id(alternate_identifier)
