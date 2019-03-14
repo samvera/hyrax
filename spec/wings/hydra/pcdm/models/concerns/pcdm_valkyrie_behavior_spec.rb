@@ -16,62 +16,195 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior do
   let(:fileset1)    { build(:file_set, id: 'fs1', title: ['Fileset 1']) }
   let(:fileset2)    { build(:file_set, id: 'fs2', title: ['Fileset 2']) }
 
+  describe '#add_collections_and_works' do
+    let(:pcdm_object) { collection1 }
+    let(:parent_collection_resource) { resource }
+
+    context 'when new_member_ids are valkyrie ids' do
+      let(:collection_resource2) { Wings::ModelTransformer.new(pcdm_object: collection2).build }
+      let(:collection_resource3) { Wings::ModelTransformer.new(pcdm_object: collection3).build }
+      let(:work_resource1) { Wings::ModelTransformer.new(pcdm_object: work1).build }
+      let(:work_resource2) { Wings::ModelTransformer.new(pcdm_object: work2).build }
+
+      it 'adds the collections and works to the parent collection' do
+        valkyrie_ids = [collection_resource2.id, collection_resource3.id, work_resource1.id, work_resource2.id]
+        parent_collection_resource.add_collections_and_works(valkyrie_ids, valkyrie: true)
+
+        resources = parent_collection_resource.child_collections_and_works(valkyrie: true)
+        expect(resources.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([collection2.id, collection3.id, work1.id, work2.id])
+      end
+    end
+
+    context 'when new_member_ids are active fedora ids' do
+      it 'adds the collections and works to the parent collection' do
+        af_ids = [collection2.id, collection3.id, work1.id, work2.id]
+        parent_collection_resource.add_collections_and_works(af_ids, valkyrie: false)
+
+        resources = parent_collection_resource.child_collections_and_works(valkyrie: true)
+        expect(resources.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([collection2.id, collection3.id, work1.id, work2.id])
+      end
+    end
+  end
+
+  describe '#parent_collections' do
+    let(:pcdm_object) { collection1 }
+    let(:child_collection_resource) { resource }
+
+    before do
+      collection1.member_of_collections = [collection2, collection3]
+      collection1.save!
+    end
+
+    context 'when valkyrie resources requested' do
+      it 'returns parent collections as valkyrie resources through pcdm_valkyrie_behavior' do
+        resources = child_collection_resource.parent_collections(valkyrie: true)
+        expect(resources.first.pcdm_collection?).to be true
+        expect(resources.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([collection2.id, collection3.id])
+      end
+    end
+    context 'when active fedora objects requested' do
+      it 'returns parent collections as fedora objects through pcdm_valkyrie_behavior' do
+        af_objects = child_collection_resource.parent_collections(valkyrie: false)
+        expect(af_objects.first.pcdm_collection?).to be true
+        expect(af_objects.map(&:id)).to match_array [collection2.id, collection3.id]
+      end
+    end
+    context 'when return type is not specified' do
+      it 'returns parent collections as fedora objects through pcdm_valkyrie_behavior' do
+        af_objects = child_collection_resource.parent_collections
+        expect(af_objects.first.pcdm_collection?).to be true
+        expect(af_objects.map(&:id)).to match_array [collection2.id, collection3.id]
+      end
+    end
+  end
+
+  describe '#parent_collection_ids' do
+    let(:pcdm_object) { collection1 }
+    let(:child_collection_resource) { resource }
+
+    before do
+      collection1.member_of_collections = [collection2, collection3]
+      collection1.save!
+    end
+
+    context 'when valkyrie resources requested' do
+      it 'returns ids of parent collections as valkyrie resources through pcdm_valkyrie_behavior' do
+        resource_ids = child_collection_resource.parent_collection_ids(valkyrie: true)
+        expect(resource_ids).to match_valkyrie_ids_with_active_fedora_ids([collection2.id, collection3.id])
+      end
+    end
+    context 'when active fedora objects requested' do
+      it 'returns ids of parent collections as fedora objects through pcdm_valkyrie_behavior' do
+        af_object_ids = child_collection_resource.parent_collection_ids(valkyrie: false)
+        expect(af_object_ids.to_a).to match_array [collection2.id, collection3.id]
+      end
+    end
+    context 'when return type is not specified' do
+      it 'returns ids of parent collections as fedora objects through pcdm_valkyrie_behavior' do
+        af_object_ids = child_collection_resource.parent_collection_ids
+        expect(af_object_ids.to_a).to match_array [collection2.id, collection3.id]
+      end
+    end
+  end
+
+  describe '#child_collections_and_works' do
+    let(:pcdm_object) { collection1 }
+    let(:parent_collection_resource) { resource }
+
+    before do
+      collection2.member_of_collections = [collection1]
+      collection3.member_of_collections = [collection1]
+      work1.member_of_collections = [collection1]
+      work2.member_of_collections = [collection1]
+      work1.save!
+      work2.save!
+      collection1.save!
+    end
+
+    context 'when valkyrie resources requested' do
+      it 'returns parent collections as valkyrie resources through pcdm_valkyrie_behavior' do
+        resources = parent_collection_resource.child_collections_and_works(valkyrie: true)
+        expect(resources.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([collection2.id, collection3.id, work1.id, work2.id])
+      end
+    end
+    context 'when active fedora objects requested' do
+      it 'returns parent collections as fedora objects through pcdm_valkyrie_behavior' do
+        af_objects = parent_collection_resource.child_collections_and_works(valkyrie: false)
+        expect(af_objects.map(&:id)).to match_array [collection2.id, collection3.id, work1.id, work2.id]
+      end
+    end
+    context 'when return type is not specified' do
+      it 'returns parent collections as fedora objects through pcdm_valkyrie_behavior' do
+        af_objects = parent_collection_resource.child_collections_and_works
+        expect(af_objects.map(&:id)).to match_array [collection2.id, collection3.id, work1.id, work2.id]
+      end
+    end
+  end
+
+  describe '#members' do
+    let(:pcdm_object) { work1 }
+    let(:parent_work_resource) { resource }
+
+    before do
+      work1.members = [work2, work3, fileset1, fileset2]
+      work1.save!
+    end
+
+    context 'when valkyrie resources requested' do
+      it 'returns parent collections as valkyrie resources through pcdm_valkyrie_behavior' do
+        resources = parent_work_resource.members(valkyrie: true)
+        expect(resources.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([work2.id, work3.id, fileset1.id, fileset2.id])
+      end
+    end
+    context 'when active fedora objects requested' do
+      it 'returns parent collections as fedora objects through pcdm_valkyrie_behavior' do
+        af_objects = parent_work_resource.members(valkyrie: false)
+        expect(af_objects.map(&:id)).to match_array [work2.id, work3.id, fileset1.id, fileset2.id]
+      end
+    end
+    context 'when return type is not specified' do
+      it 'returns parent collections as fedora objects through pcdm_valkyrie_behavior' do
+        af_objects = parent_work_resource.members
+        expect(af_objects.map(&:id)).to match_array [work2.id, work3.id, fileset1.id, fileset2.id]
+      end
+    end
+  end
+
   describe '#member_ids' do
-    context 'for parent collection' do
-      before do
-        collection1.members = [work1, work2, collection2, collection3]
-        collection1.save!
-      end
+    let(:pcdm_object) { work1 }
+    let(:parent_work_resource) { resource }
 
-      let(:pcdm_object) { collection1 }
-
-      it 'has attributes for the PCDM model' do
-        expect(resource).to be_a Valkyrie::Resource
-        expect(resource.member_ids).to match_valkyrie_ids_with_active_fedora_ids([work1.id, work2.id, collection2.id, collection3.id])
-      end
+    before do
+      work1.members = [work2, work3, fileset1, fileset2]
+      work1.save!
     end
 
-    context 'for child collection' do
-      let(:pcdm_object) { collection3 }
-
-      before do
-        collection3.member_of_collections = [collection1, collection2]
-        collection3.save!
-      end
-
-      it 'has attributes matching the active_fedora_object' do
-        expect(resource).to be_a Valkyrie::Resource
-        expect(resource.member_of_collection_ids).to match_valkyrie_ids_with_active_fedora_ids(['col1', 'col2'])
+    # TODO: For now, the tests confirm that the correct members are returned and that they all have valkyrie ids.
+    #       This is because #member_ids comes from the attribute definition and can't receive a `valkyrie:` parameter.
+    context 'when valkyrie resources requested' do
+      it 'returns ids of parent collections as valkyrie resources through pcdm_valkyrie_behavior' do
+        resource_ids = parent_work_resource.member_ids
+        expect(resource_ids).to match_valkyrie_ids_with_active_fedora_ids([work2.id, work3.id, fileset1.id, fileset2.id])
       end
     end
-
-    context 'for work in collection' do
-      let(:pcdm_object) { work1 }
-
-      before do
-        work1.member_of_collections = [collection1, collection2]
-        work1.save!
-      end
-
-      it 'has attributes matching the active_fedora_object' do
-        expect(resource).to be_a Valkyrie::Resource
-        expect(resource.member_of_collection_ids).to match_valkyrie_ids_with_active_fedora_ids(['col1', 'col2'])
-      end
-    end
-
-    context 'work with works and filesets' do
-      let(:pcdm_object) { work1 }
-
-      before do
-        work1.members = [work2, work3, fileset1, fileset2]
-        work1.save!
-      end
-
-      it 'has attributes matching the active_fedora_object' do
-        expect(resource).to be_a Valkyrie::Resource
-        expect(resource.member_ids).to match_valkyrie_ids_with_active_fedora_ids([work2.id, work3.id, fileset1.id, fileset2.id])
-      end
-    end
+    # context 'when valkyrie resources requested' do
+    #   it 'returns ids of parent collections as valkyrie resources through pcdm_valkyrie_behavior' do
+    #     resource_ids = parent_work_resource.member_ids(valkyrie: true)
+    #     expect(resource_ids).to match_valkyrie_ids_with_active_fedora_ids([work2.id, work3.id, fileset1.id, fileset2.id])
+    #   end
+    # end
+    # context 'when active fedora objects requested' do
+    #   it 'returns ids of parent collections as fedora objects through pcdm_valkyrie_behavior' do
+    #     af_object_ids = parent_work_resource.member_ids(valkyrie: false)
+    #     expect(af_object_ids.to_a).to match_array [work2.id, work3.id, fileset1.id, fileset2.id]
+    #   end
+    # end
+    # context 'when return type is not specified' do
+    #   it 'returns ids of parent collections as fedora objects through pcdm_valkyrie_behavior' do
+    #     af_object_ids = parent_work_resource.member_ids
+    #     expect(af_object_ids.to_a).to match_array [work2.id, work3.id, fileset1.id, fileset2.id]
+    #   end
+    # end
   end
 
   describe '#objects' do
@@ -108,7 +241,7 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior do
     end
   end
 
-  describe '#object_ids on valkyrie resource' do
+  describe '#object_ids' do
     let(:pcdm_object) { collection1 }
 
     before do

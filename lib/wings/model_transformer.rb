@@ -139,6 +139,7 @@ module Wings
         end
         relationship_keys = klass.reflections.keys.reject { |k| k.to_s.include?('id') }.map { |k| k.to_s.singularize + '_ids' }
         relationship_keys.delete('member_ids')
+        relationship_keys.delete('member_of_collection_ids')
         relationship_keys.each do |linked_property_name|
           attribute linked_property_name.to_sym, ::Valkyrie::Types::Set.of(::Valkyrie::Types::ID)
         end
