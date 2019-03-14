@@ -4,7 +4,7 @@ require 'wings/active_fedora_converter'
 module Wings
   module Pcdm
     module PcdmValkyrieBehavior
-    extend ActiveSupport::Concern
+      extend ActiveSupport::Concern
 
       included do
         attribute :member_ids, ::Valkyrie::Types::Array.of(::Valkyrie::Types::ID).meta(ordered: true)
