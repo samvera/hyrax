@@ -46,7 +46,7 @@ module Wings
       # @param [Valkyrie::ResourceClass]
       # @return [Array<Valkyrie::Resource>]
       def find_all_of_model(model:)
-        find_model = model.internal_resource
+        find_model = model.internal_resource.constantize
         objects = ::ActiveFedora::Base.all.select do |object|
           object.class == find_model
         end
