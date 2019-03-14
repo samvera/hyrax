@@ -124,14 +124,14 @@ module Wings
 
         # Based on Valkyrie implementation, we call Class.to_s to define
         # the internal resource.
-        @internal_resource = klass
+        @internal_resource = klass.to_s
 
         class << self
           attr_reader :internal_resource
         end
 
         def self.to_s
-          internal_resource.to_s
+          internal_resource
         end
 
         klass.properties.each_key do |property_name|

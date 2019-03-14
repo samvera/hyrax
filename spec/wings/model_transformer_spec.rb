@@ -69,7 +69,7 @@ RSpec.describe Wings::ModelTransformer do
           expect(subject.to_s).to eq(GenericWork.to_s)
         end
         it 'has a internal_resource instance that is the given klass' do
-          expect(subject.internal_resource).to eq(GenericWork)
+          expect(subject.internal_resource).to eq(GenericWork.to_s)
         end
       end
     end
