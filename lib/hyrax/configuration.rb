@@ -227,7 +227,7 @@ module Hyrax
     # @see lib/wings
     # @see https://github.com/samvera-labs/valkyrie
     def valkyrie_metadata_adapter
-      @valkyrie_metadata_adapter ||= :wings_adapter
+      Valkyrie::MetadataAdapter.find(@valkyrie_metadata_adapter || :wings_adapter)
     end
     attr_writer :valkyrie_metadata_adapter
 
@@ -236,7 +236,7 @@ module Hyrax
     # @see lib/wings
     # @see https://github.com/samvera-labs/valkyrie
     def valkyrie_storage_adapter
-      @valkyrie_storage_adapter ||= :fedora
+      Valkyrie::StorageAdapter.find(@valkyrie_storage_adapter || :fedora)
     end
     attr_writer :valkyrie_storage_adapter
 
