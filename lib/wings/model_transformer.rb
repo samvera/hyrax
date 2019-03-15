@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'wings/value_mapper'
-require 'wings/hydra/works/models/concerns/collection_valkyrie_behavior'
+require 'wings/models/concerns/collection_behavior'
 require 'wings/hydra/works/models/concerns/work_valkyrie_behavior'
 require 'wings/hydra/works/models/concerns/file_set_valkyrie_behavior'
 
@@ -118,7 +118,7 @@ module Wings
     #   results in long methods
     def self.to_valkyrie_resource_class(klass:)
       Class.new(ActiveFedoraResource) do
-        include Wings::Works::CollectionValkyrieBehavior if klass.included_modules.include?(Hyrax::CollectionBehavior)
+        include Wings::CollectionBehavior if klass.included_modules.include?(Hyrax::CollectionBehavior)
         include Wings::Works::WorkValkyrieBehavior if klass.included_modules.include?(Hyrax::WorkBehavior)
         include Wings::Works::FileSetValkyrieBehavior if klass.included_modules.include?(Hyrax::FileSetBehavior)
 
