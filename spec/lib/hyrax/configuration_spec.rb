@@ -86,4 +86,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:whitelisted_ingest_dirs) }
   it { is_expected.to respond_to(:whitelisted_ingest_dirs=) }
   it { is_expected.to respond_to(:work_requires_files?) }
+
+  # Can be removed when Hyrax has support and established pattern for using non-Wings adapter
+  it { expect { subject.valkyrie_metadata_adapter = :bobross }.to raise_error(StandardError) }
+  it { expect { subject.valkyrie_metadata_adapter = :wings_adapter }.not_to raise_error(StandardError) }
 end
