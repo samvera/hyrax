@@ -1,4 +1,3 @@
-require 'wings/value_mapper'
 require 'wings/active_fedora_converter'
 
 module Wings
@@ -15,16 +14,6 @@ module Wings
         #   * set - In AF, members and ordered_members are enumerable and can be set using operators << and +=.
         #           Since member_ids is all that keeps these in wings, how can we do that here?
       end
-
-      # Add member objects by adding this collection to the objects' member_of_collection association.
-      # @param [Enumerable<String> | Enumerable<Valkyrie::ID] the ids of the new child collections and works collection ids
-      def add_collections_and_works(new_member_ids, valkyrie: false)
-        ### TODO: Change to do this through Valkyrie.  Right now using existing AF method to get multi-membership check.
-        af_self = Wings::ActiveFedoraConverter.new(resource: self).convert
-        af_ids = valkyrie ? convert_to_active_fedora_ids(new_member_ids) : new_member_ids
-        af_self.add_member_objects(af_ids)
-      end
-      alias add_member_objects add_collections_and_works
 
       ##
       # @return [Enumerable<ActiveFedora::Base> | Enumerable<Valkyrie::Resource>] an enumerable over the parent collections
@@ -43,15 +32,6 @@ module Wings
       end
 
       ##
-      # @return [Enumerable<ActiveFedora::Base> | Enumerable<Valkyrie::Resource>] an enumerable over the children of this collection
-      def child_collections_and_works(valkyrie: false)
-        af_collections_and_works = ActiveFedora::Base.where("member_of_collection_ids_ssim:#{id.id}")
-        return af_collections_and_works unless valkyrie
-        af_collections_and_works.map(&:valkyrie_resource)
-      end
-      alias member_objects child_collections_and_works
-
-      ##
       # Gives the subset of #members that are PCDM objects
       # @return [Enumerable<ActiveFedora::Base> | Enumerable<Valkyrie::Resource>] an enumerable over the members
       #   that are PCDM objects
@@ -68,12 +48,6 @@ module Wings
       # @return [Enumerable<String> | Enumerable<Valkyrie::ID] the object ids
       def object_ids(valkyrie: false)
         objects(valkyrie: valkyrie).map(&:id)
-      end
-
-      def convert_to_active_fedora_ids(valkyrie_ids)
-        metadata_adapter = Hyrax.config.valkyrie_metadata_adapter
-        resources = valkyrie_ids.map { |id| metadata_adapter.query_service.find_by(id: id) }
-        resources.map { |resource| resource.id.id } # TODO: What if id.id is empty?
       end
     end
   end
