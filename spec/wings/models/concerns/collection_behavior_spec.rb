@@ -81,4 +81,40 @@ RSpec.describe Wings::CollectionBehavior do
       end
     end
   end
+
+  describe '#child_collections_and_works_ids' do
+    let(:pcdm_object) { collection1 }
+    let(:parent_collection_resource) { resource }
+
+    before do
+      collection2.member_of_collections = [collection1]
+      collection3.member_of_collections = [collection1]
+      work1.member_of_collections = [collection1]
+      work2.member_of_collections = [collection1]
+      collection2.save!
+      collection3.save!
+      work1.save!
+      work2.save!
+      collection1.save!
+    end
+
+    context 'when valkyrie resources requested' do
+      it 'returns ids of works only as valkyrie resources through pcdm_valkyrie_behavior' do
+        resource_ids = parent_collection_resource.child_collections_and_works_ids(valkyrie: true)
+        expect(resource_ids).to match_valkyrie_ids_with_active_fedora_ids([work1.id, work2.id, collection2.id, collection3.id])
+      end
+    end
+    context 'when active fedora objects requested' do
+      it 'returns ids of works only as fedora objects through pcdm_valkyrie_behavior' do
+        af_object_ids = parent_collection_resource.child_collections_and_works_ids(valkyrie: false)
+        expect(af_object_ids.to_a).to match_array [work1.id, work2.id, collection2.id, collection3.id]
+      end
+    end
+    context 'when return type is not specified' do
+      it 'returns ids of works only as fedora objects through pcdm_valkyrie_behavior' do
+        af_object_ids = parent_collection_resource.child_collections_and_works_ids
+        expect(af_object_ids.to_a).to match_array [work1.id, work2.id, collection2.id, collection3.id]
+      end
+    end
+  end
 end

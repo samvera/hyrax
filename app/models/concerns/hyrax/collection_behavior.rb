@@ -50,6 +50,8 @@ module Hyrax
     end
 
     # Add members using the members association.
+    # TODO: Confirm if this is ever used.  I believe all relationships are done through
+    #       add_member_objects using the member_of_collections relationship.  Deprecate?
     def add_members(new_member_ids)
       return if new_member_ids.blank?
       members << ActiveFedora::Base.find(new_member_ids)
@@ -78,6 +80,15 @@ module Hyrax
     #                   lib/wings/models/concerns/collection_behavior.rb
     def member_objects
       ActiveFedora::Base.where("member_of_collection_ids_ssim:#{id}")
+    end
+
+    # Use this query to get the ids of the member objects (since the containment
+    # association has been flipped)
+    # Valkyrie Version: Wings::CollectionBehavior#child_collections_and_works_ids aliased to #member_object_ids
+    #                   lib/wings/models/concerns/collection_behavior.rb
+    def member_object_ids
+      return [] unless id
+      member_objects.map(&:id)
     end
 
     def to_s
@@ -111,13 +122,6 @@ module Hyrax
 
       # One query per member_id because Solr is not a relational database
       member_object_ids.collect { |work_id| size_for_work(work_id) }.sum
-    end
-
-    # Use this query to get the ids of the member objects (since the containment
-    # association has been flipped)
-    def member_object_ids
-      return [] unless id
-      ActiveFedora::Base.search_with_conditions("member_of_collection_ids_ssim:#{id}").map(&:id)
     end
 
     # @api public
