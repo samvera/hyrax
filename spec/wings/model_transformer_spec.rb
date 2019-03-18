@@ -135,6 +135,14 @@ RSpec.describe Wings::ModelTransformer do
         expect(subject.build.embargo_id.to_s).to eq work.embargo.id
       end
     end
+
+    context 'with a lease' do
+      let(:work) { FactoryBot.create(:leased_work) }
+
+      it 'has the correct lease id' do
+        expect(subject.build.lease_id.to_s).to eq work.lease.id
+      end
+    end
   end
 
   context 'with relationship properties' do

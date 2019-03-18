@@ -35,5 +35,13 @@ RSpec.describe Wings::ActiveFedoraConverter do
         expect(converter.convert).to have_attributes(embargo_id: work.embargo_id)
       end
     end
+
+    context 'with a lease' do
+      let(:work) { FactoryBot.create(:leased_work) }
+
+      it 'repopulates the lease' do
+        expect(converter.convert).to have_attributes(lease_id: work.lease_id)
+      end
+    end
   end
 end

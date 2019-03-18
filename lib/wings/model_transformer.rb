@@ -171,6 +171,8 @@ module Wings
     class ActiveFedoraResource < ::Valkyrie::Resource
       attribute :alternate_ids, ::Valkyrie::Types::Array
       attribute :embargo_id,    ::Valkyrie::Types::ID
+      attribute :lease_id,      ::Valkyrie::Types::ID
+      attribute :visibility,    ::Valkyrie::Types::Symbol
     end
 
     private
@@ -179,6 +181,8 @@ module Wings
         ::Noid::Rails.config.minter_class.new.mint
       end
 
+      # rubocop:disable Metrics/AbcSize this should probably be refactored later,
+      #   but it seems best to let it develop for now
       def attributes
         attrs_with_relationships =
           pcdm_object.attributes.keys +
@@ -190,8 +194,11 @@ module Wings
         end
                                 .merge(created_at: pcdm_object.try(:create_date),
                                        updated_at: pcdm_object.try(:modified_date),
-                                       embargo_id: pcdm_object.try(:embargo)&.id)
+                                       embargo_id: pcdm_object.try(:embargo)&.id,
+                                       lease_id:   pcdm_object.try(:lease)&.id,
+                                       visibility: pcdm_object.try(:visibility))
       end
   end
+  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Style/ClassVars
 end
