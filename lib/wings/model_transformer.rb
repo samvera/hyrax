@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'wings/value_mapper'
+require 'wings/transformer_value_mapper'
 require 'wings/models/concerns/collection_behavior'
 require 'wings/hydra/works/models/concerns/work_valkyrie_behavior'
 require 'wings/hydra/works/models/concerns/file_set_valkyrie_behavior'
@@ -190,7 +190,7 @@ module Wings
 
         attrs_with_relationships.each_with_object({}) do |attr_name, mem|
           next unless pcdm_object.respond_to? attr_name
-          mem[attr_name.to_sym] = ValueMapper.for(pcdm_object.public_send(attr_name)).result
+          mem[attr_name.to_sym] = TransformerValueMapper.for(pcdm_object.public_send(attr_name)).result
         end
                                 .merge(created_at: pcdm_object.try(:create_date),
                                        updated_at: pcdm_object.try(:modified_date),
