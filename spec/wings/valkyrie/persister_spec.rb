@@ -136,7 +136,7 @@ RSpec.describe Wings::Valkyrie::Persister do
       expect(persister.save_all(resources: [])).to eq []
     end
 
-    xit "can save nested resources" do
+    it "can save nested resources" do
       book2 = resource_class.new(title: "Nested")
       book3 = persister.save(resource: resource_class.new(nested_resource: book2))
 

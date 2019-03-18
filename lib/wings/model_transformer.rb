@@ -125,10 +125,11 @@ module Wings
     # @return [Class] a dyamically generated `Valkyrie::Resource` subclass
     #   mirroring the provided `ActiveFedora` model
     #
+    # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/MethodLength because metaprogramming a class
     #   results in long methods
     def self.to_valkyrie_resource_class(klass:)
-      relationship_keys = relationship_keys_for(reflections: klass.reflections)
+      relationship_keys = klass.respond_to?(:reflections) ? relationship_keys_for(reflections: klass.reflections) : []
       relationship_keys.delete('member_ids')
       relationship_keys.delete('member_of_collection_ids')
 
@@ -167,6 +168,7 @@ module Wings
       end
     end
     # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     class ActiveFedoraResource < ::Valkyrie::Resource
       attribute :alternate_ids, ::Valkyrie::Types::Array
@@ -184,18 +186,18 @@ module Wings
       # rubocop:disable Metrics/AbcSize this should probably be refactored later,
       #   but it seems best to let it develop for now
       def attributes
-         all_keys =
+        all_keys =
           pcdm_object.attributes.keys +
           self.class.relationship_keys_for(reflections: pcdm_object.reflections)
         all_keys.each_with_object({}) do |attr_name, mem|
           next unless pcdm_object.respond_to? attr_name
           mem[attr_name.to_sym] = TransformerValueMapper.for(pcdm_object.public_send(attr_name)).result
         end
-                                .merge(created_at: pcdm_object.try(:create_date),
-                                       updated_at: pcdm_object.try(:modified_date),
-                                       embargo_id: pcdm_object.try(:embargo)&.id,
-                                       lease_id:   pcdm_object.try(:lease)&.id,
-                                       visibility: pcdm_object.try(:visibility))
+                .merge(created_at: pcdm_object.try(:create_date),
+                       updated_at: pcdm_object.try(:modified_date),
+                       embargo_id: pcdm_object.try(:embargo)&.id,
+                       lease_id:   pcdm_object.try(:lease)&.id,
+                       visibility: pcdm_object.try(:visibility))
       end
   end
   # rubocop:enable Metrics/AbcSize

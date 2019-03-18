@@ -9,6 +9,28 @@ module Wings
   # indivdual value types from the source data.
   class TransformerValueMapper < ::Valkyrie::ValueMapper; end
 
+  class NestedResourceMapper < ::Valkyrie::ValueMapper
+    TransformerValueMapper.register(self)
+
+    def self.handles?(value)
+      value.is_a? Wings::ActiveFedoraConverter::NestedResource
+    end
+
+    def result
+      id = ActiveFedora::Base.uri_to_id(value.id)
+      obj = ActiveFedora::Base.find id
+      attributes = obj.attributes.keys.each_with_object({}) do |attr_name, mem|
+        mem[attr_name.to_sym] = TransformerValueMapper.for(obj.public_send(attr_name)).result
+      end
+      object = Wings::ActiveFedoraConverter::NestedResource.new(attributes)
+      klass = Wings::ModelTransformer::ResourceClassCache.new.fetch(Wings::ActiveFedoraConverter::NestedResource) do
+        ModelTransformer.to_valkyrie_resource_class(klass: object.class)
+      end
+      resource = klass.new(attributes)
+      resource
+    end
+  end
+
   ##
   # Maps `RDF::Term` values to their underlying types.
   #

@@ -102,6 +102,9 @@ module Wings
     end
 
     class NestedResource < ActiveTriples::Resource
+      property :title, predicate: ::RDF::Vocab::DC.title
+      property :ordered_authors, predicate: ::RDF::Vocab::DC.creator
+      property :ordered_nested, predicate: ::RDF::URI("http://example.com/ordered_nested")
       def initialize(uri = RDF::Node.new, _parent = ActiveTriples::Resource.new)
         uri = if uri.try(:node?)
                 RDF::URI("#nested_resource_#{uri.to_s.gsub('_:', '')}")
@@ -114,6 +117,41 @@ module Wings
     end
 
     class ConverterValueMapper < ::Valkyrie::ValueMapper; end
+
+    class NestedResourceArrayValue < ::Valkyrie::ValueMapper
+      ConverterValueMapper.register(self)
+      def self.handles?(value)
+        value.last.is_a?(Array) && value.last.map { |x| x.try(:class) }.include?(Hash)
+      end
+
+      def result
+        ["#{value.first}_attributes".to_sym, values]
+      end
+
+      def values
+        value.last.map do |val|
+          calling_mapper.for([value.first, val]).result
+        end.flat_map(&:last)
+      end
+    end
+
+    class NestedResourceValue < ::Valkyrie::ValueMapper
+      ConverterValueMapper.register(self)
+      def self.handles?(value)
+        value.last.is_a?(Hash)
+      end
+
+      def result
+        # [value.first, ActiveFedoraConverter.new(resource: value.last).convert]
+        attrs = ActiveFedoraAttributes.new(value.last).result
+        attrs.delete(:read_groups)
+        attrs.delete(:read_users)
+        attrs.delete(:edit_groups)
+        attrs.delete(:edit_users)
+
+        [value.first, attrs]
+      end
+    end
 
     private
 
