@@ -143,7 +143,7 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior do
     # end
   end
 
-  describe '#objects' do
+  describe '#child_objects' do
     let(:pcdm_object) { collection1 }
 
     before do
@@ -153,7 +153,7 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior do
 
     context 'when valkyrie resources requested' do
       it 'returns works only as valkyrie resources through pcdm_valkyrie_behavior' do
-        resources = resource.objects(valkyrie: true)
+        resources = resource.child_objects(valkyrie: true)
         expect(resources.size).to eq 2
         expect(resources.first.pcdm_object?).to be true
         expect(resources.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([work1.id, work2.id])
@@ -161,7 +161,7 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior do
     end
     context 'when active fedora objects requested' do
       it 'returns works only as fedora objects through pcdm_valkyrie_behavior' do
-        af_objects = resource.objects(valkyrie: false)
+        af_objects = resource.child_objects(valkyrie: false)
         expect(af_objects.size).to eq 2
         expect(af_objects.first.pcdm_object?).to be true
         expect(af_objects.map(&:id)).to match_array [work1.id, work2.id]
@@ -169,7 +169,7 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior do
     end
     context 'when return type is not specified' do
       it 'returns works only as fedora objects through pcdm_valkyrie_behavior' do
-        af_objects = resource.objects
+        af_objects = resource.child_objects
         expect(af_objects.size).to eq 2
         expect(af_objects.first.pcdm_object?).to be true
         expect(af_objects.map(&:id)).to match_array [work1.id, work2.id]
@@ -187,21 +187,21 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior do
 
     context 'when valkyrie resources requested' do
       it 'returns ids of works only as valkyrie resources through pcdm_valkyrie_behavior' do
-        resource_ids = resource.object_ids(valkyrie: true)
+        resource_ids = resource.child_object_ids(valkyrie: true)
         expect(resource_ids.size).to eq 2
         expect(resource_ids).to match_valkyrie_ids_with_active_fedora_ids([work1.id, work2.id])
       end
     end
     context 'when active fedora objects requested' do
       it 'returns ids of works only as fedora objects through pcdm_valkyrie_behavior' do
-        af_object_ids = resource.object_ids(valkyrie: false)
+        af_object_ids = resource.child_object_ids(valkyrie: false)
         expect(af_object_ids.size).to eq 2
         expect(af_object_ids.to_a).to match_array [work1.id, work2.id]
       end
     end
     context 'when return type is not specified' do
       it 'returns ids of works only as fedora objects through pcdm_valkyrie_behavior' do
-        af_object_ids = resource.object_ids
+        af_object_ids = resource.child_object_ids
         expect(af_object_ids.size).to eq 2
         expect(af_object_ids.to_a).to match_array [work1.id, work2.id]
       end

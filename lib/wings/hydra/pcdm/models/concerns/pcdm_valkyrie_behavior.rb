@@ -35,20 +35,22 @@ module Wings
       # Gives the subset of #members that are PCDM objects
       # @return [Enumerable<ActiveFedora::Base> | Enumerable<Valkyrie::Resource>] an enumerable over the members
       #   that are PCDM objects
-      def objects(valkyrie: false)
+      def child_objects(valkyrie: false)
         af_objects = Wings::ActiveFedoraConverter.new(resource: self).convert.objects
         return af_objects unless valkyrie
         af_objects.map(&:valkyrie_resource)
       end
-      alias members objects
-      alias ordered_members objects
+      alias objects child_objects
+      alias members child_objects
+      alias ordered_members child_objects
 
       ##
       # Gives a subset of #member_ids, where all elements are PCDM objects.
       # @return [Enumerable<String> | Enumerable<Valkyrie::ID] the object ids
-      def object_ids(valkyrie: false)
-        objects(valkyrie: valkyrie).map(&:id)
+      def child_object_ids(valkyrie: false)
+        child_objects(valkyrie: valkyrie).map(&:id)
       end
+      alias object_ids child_object_ids
     end
   end
 end
