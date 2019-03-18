@@ -45,6 +45,17 @@ module Wings
     end
 
     ##
+    # @param reflections [Hash<Symbol, Object>]
+    #
+    # @return [Array<Symbol>]
+    def self.relationship_keys_for(reflections:)
+      reflections
+        .keys
+        .reject { |k| k.to_s.include?('id') }
+        .map { |k| k.to_s.singularize + '_ids' }
+    end
+
+    ##
     # Builds a `Valkyrie::Resource` equivalent to the `pcdm_object`
     #
     # @return [::Valkyrie::Resource] a resource mirroiring `pcdm_object`
@@ -114,9 +125,13 @@ module Wings
     # @return [Class] a dyamically generated `Valkyrie::Resource` subclass
     #   mirroring the provided `ActiveFedora` model
     #
-    # rubocop:disable Metrics/MethodLength, Metrics/AbcSize because metaprogramming a class
+    # rubocop:disable Metrics/MethodLength because metaprogramming a class
     #   results in long methods
     def self.to_valkyrie_resource_class(klass:)
+      relationship_keys = relationship_keys_for(reflections: klass.reflections)
+      relationship_keys.delete('member_ids')
+      relationship_keys.delete('member_of_collection_ids')
+
       Class.new(ActiveFedoraResource) do
         include Wings::CollectionBehavior if klass.included_modules.include?(Hyrax::CollectionBehavior)
         include Wings::Works::WorkValkyrieBehavior if klass.included_modules.include?(Hyrax::WorkBehavior)
@@ -137,9 +152,7 @@ module Wings
         klass.properties.each_key do |property_name|
           attribute property_name.to_sym, ::Valkyrie::Types::String
         end
-        relationship_keys = klass.reflections.keys.reject { |k| k.to_s.include?('id') }.map { |k| k.to_s.singularize + '_ids' }
-        relationship_keys.delete('member_ids')
-        relationship_keys.delete('member_of_collection_ids')
+
         relationship_keys.each do |linked_property_name|
           attribute linked_property_name.to_sym, ::Valkyrie::Types::Set.of(::Valkyrie::Types::ID)
         end
@@ -153,7 +166,7 @@ module Wings
         end
       end
     end
-    # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
 
     class ActiveFedoraResource < ::Valkyrie::Resource
       attribute :alternate_ids, ::Valkyrie::Types::Array
@@ -166,9 +179,9 @@ module Wings
       end
 
       def attributes
-        relationship_keys = pcdm_object.reflections.keys.reject { |k| k.to_s.include?('id') }.map { |k| k.to_s.singularize + '_ids' }
-
-        attrs_with_relationships = pcdm_object.attributes.keys + relationship_keys
+        attrs_with_relationships =
+          pcdm_object.attributes.keys +
+          self.class.relationship_keys_for(reflections: pcdm_object.reflections)
 
         attrs_with_relationships.each_with_object({}) do |attr_name, mem|
           next unless pcdm_object.respond_to? attr_name
