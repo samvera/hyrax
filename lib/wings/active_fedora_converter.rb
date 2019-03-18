@@ -27,6 +27,7 @@ module Wings
     ##
     # @return [ActiveFedora::Base]
     def convert
+      attributes = ActiveFedoraAttributes.new(resource.attributes).result
       active_fedora_class.new(attributes).tap do |af_object|
         af_object.id = id unless id.empty?
         convert_members(af_object)
@@ -40,28 +41,41 @@ module Wings
       DefaultWork
     end
 
-    ##
-    # @return [Hash<Symbol, Object>]
-    def attributes
-      attrs = resource.attributes
+    class ActiveFedoraAttributes
+      attr_reader :attributes
+      def initialize(attributes)
+        @attributes = attributes
+      end
 
-      # avoid reflections for now; `*_ids` can't be passed as attributes.
-      # handling for reflections needs to happen in future work
-      attrs = attrs.reject { |k, _| k.to_s.end_with? '_ids' }
+      def result
+        Hash[
+          filter_attributes.map do |value|
+            ConverterValueMapper.for(value).result
+          end.select(&:present?)
+        ]
+      end
 
-      attrs.delete(:internal_resource)
-      attrs.delete(:new_record)
-      attrs.delete(:id)
-      attrs.delete(:alternate_ids)
-      attrs.delete(:created_at)
-      attrs.delete(:updated_at)
+      ##
+      # @return [Hash<Symbol, Object>]
+      def filter_attributes
+        # avoid reflections for now; `*_ids` can't be passed as attributes.
+        # handling for reflections needs to happen in future work
+        attrs = attributes.reject { |k, _| k.to_s.end_with? '_ids' }
 
-      embargo_id         = attrs.delete(:embargo_id)
-      attrs[:embargo_id] = embargo_id.to_s unless embargo_id.nil? || embargo_id.empty?
-      lease_id          = attrs.delete(:lease_id)
-      attrs[:lease_id]  = lease_id.to_s unless lease_id.nil? || lease_id.empty?
+        attrs.delete(:internal_resource)
+        attrs.delete(:new_record)
+        attrs.delete(:id)
+        attrs.delete(:alternate_ids)
+        attrs.delete(:created_at)
+        attrs.delete(:updated_at)
+        attrs.delete(:member_ids)
 
-      attrs.compact
+        embargo_id         = attrs.delete(:embargo_id)
+        attrs[:embargo_id] = embargo_id.to_s unless embargo_id.nil? || embargo_id.empty?
+        lease_id          = attrs.delete(:lease_id)
+        attrs[:lease_id]  = lease_id.to_s unless lease_id.nil? || lease_id.empty?
+        attrs.compact
+      end
     end
 
     ##
@@ -98,6 +112,8 @@ module Wings
       end
       include ::Hyrax::BasicMetadata
     end
+
+    class ConverterValueMapper < ::Valkyrie::ValueMapper; end
 
     private
 
