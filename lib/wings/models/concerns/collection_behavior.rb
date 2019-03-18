@@ -27,5 +27,12 @@ module Wings
       af_collections_and_works.map(&:valkyrie_resource)
     end
     alias member_objects child_collections_and_works
+
+    ##
+    # @return [Enumerable<ActiveFedora::Base> | Enumerable<Valkyrie::Resource>] an enumerable over the children of this collection
+    def child_collections_and_works_ids(valkyrie: false)
+      child_collections_and_works(valkyrie: valkyrie).map(&:id)
+    end
+    alias member_object_ids child_collections_and_works_ids
   end
 end
