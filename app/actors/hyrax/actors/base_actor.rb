@@ -18,7 +18,10 @@ module Hyrax
       def create(env)
         apply_creation_data_to_curation_concern(env)
         apply_save_data_to_curation_concern(env)
-        save(env) && next_actor.create(env) && run_callbacks(:after_create_concern, env)
+
+        save(env, use_valkyrie: false) &&
+          next_actor.create(env) &&
+          run_callbacks(:after_create_concern, env)
       end
 
       # @param [Hyrax::Actors::Environment] env
@@ -64,8 +67,13 @@ module Hyrax
           env.curation_concern.date_uploaded = TimeService.time_in_utc
         end
 
-        def save(env)
-          env.curation_concern.save
+        def save(env, use_valkyrie: false)
+          return env.curation_concern.save unless use_valkyrie
+
+          adapter  = Hyrax.config.valkyrie_metadata_adapter
+          resource = adapter.persister.save(resource: env.curation_concern.valkyrie_resource)
+
+          env.curation_concern = adapter.resource_factory.from_resource(resource: resource)
         end
 
         def apply_save_data_to_curation_concern(env)
