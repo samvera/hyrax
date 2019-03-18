@@ -170,6 +170,7 @@ module Wings
 
     class ActiveFedoraResource < ::Valkyrie::Resource
       attribute :alternate_ids, ::Valkyrie::Types::Array
+      attribute :embargo_id,    ::Valkyrie::Types::ID
     end
 
     private
@@ -188,7 +189,8 @@ module Wings
           mem[attr_name.to_sym] = ValueMapper.for(pcdm_object.public_send(attr_name)).result
         end
                                 .merge(created_at: pcdm_object.try(:create_date),
-                                       updated_at: pcdm_object.try(:modified_date))
+                                       updated_at: pcdm_object.try(:modified_date),
+                                       embargo_id: pcdm_object.try(:embargo)&.id)
       end
   end
   # rubocop:enable Style/ClassVars

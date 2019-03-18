@@ -127,6 +127,14 @@ RSpec.describe Wings::ModelTransformer do
 
       it { expect(factory.build).to have_a_valkyrie_alternate_id_of minted_id }
     end
+
+    context 'with an embargo' do
+      let(:work) { FactoryBot.create(:embargoed_work) }
+
+      it 'has the correct embargo id' do
+        expect(subject.build.embargo_id.to_s).to eq work.embargo.id
+      end
+    end
   end
 
   context 'with relationship properties' do
