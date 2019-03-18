@@ -1289,6 +1289,7 @@ en:
         share_applies_to_new_works: When new works are created directly in the collection, grant sharing users and groups permissions for the new work according to their collection roles.
         title: ''
       defaults:
+        abstract: A brief summary of a research article, thesis, review, conference proceeding, or any in-depth analysis of a particular subject.
         based_near: A place name related to the work, such as its site of publication, or the city, state, or country the work contents are about. Calls upon the <a href='http://www.geonames.org'>GeoNames web service</a>.
         contributor: A person or group you want to recognize for playing a role in the creation of the work, but not the primary role.
         creator: The person or group responsible for the work. Usually this is the author of the content. Personal names should be entered with the last name first, e.g. &quot;Smith, John.&quot;.
@@ -1322,6 +1323,7 @@ en:
         share_applies_to_new_works: APPLY TO NEW WORKS
         title: Type name
       defaults:
+        abstract: Abstract
         admin_set_id: Administrative Set
         based_near: Location
         creator: Creator

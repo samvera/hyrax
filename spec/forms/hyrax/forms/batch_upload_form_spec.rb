@@ -44,6 +44,7 @@ RSpec.describe Hyrax::Forms::BatchUploadForm do
       is_expected.to eq [:creator,
                          :contributor,
                          :description,
+                         :abstract,
                          :keyword,
                          :license,
                          :rights_statement,

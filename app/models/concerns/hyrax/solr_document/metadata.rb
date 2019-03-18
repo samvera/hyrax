@@ -56,6 +56,7 @@ module Hyrax
         attribute :admin_set, Solr::Array, solr_name('admin_set')
         attribute :member_of_collection_ids, Solr::Array, solr_name('member_of_collection_ids', :symbol)
         attribute :description, Solr::Array, solr_name('description')
+        attribute :abstract, Solr::Array, solr_name('abstract')
         attribute :title, Solr::Array, solr_name('title')
         attribute :contributor, Solr::Array, solr_name('contributor')
         attribute :subject, Solr::Array, solr_name('subject')

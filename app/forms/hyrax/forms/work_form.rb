@@ -21,7 +21,7 @@ module Hyrax
 
       attr_reader :agreement_accepted
 
-      self.terms = [:title, :creator, :contributor, :description,
+      self.terms = [:title, :creator, :contributor, :description, :abstract,
                     :keyword, :license, :rights_statement, :rights_notes, :publisher, :date_created,
                     :subject, :language, :identifier, :based_near, :related_url,
                     :representative_id, :thumbnail_id, :rendering_ids, :files,
