@@ -227,7 +227,7 @@ module Hyrax
     # @see lib/wings
     # @see https://github.com/samvera-labs/valkyrie
     def valkyrie_metadata_adapter
-      Valkyrie::MetadataAdapter.find(@valkyrie_metadata_adapter)
+      Valkyrie::MetadataAdapter.find(@valkyrie_metadata_adapter || :wings_adapter)
     end
 
     def valkyrie_metadata_adapter=(adapter)
