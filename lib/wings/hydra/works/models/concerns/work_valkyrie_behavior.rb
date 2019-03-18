@@ -24,6 +24,15 @@ module Wings
         false
       end
 
+      # @param valkyrie [Boolean] Should the returned ids be for Valkyrie or AF objects?
+      # @return [Enumerable<PCDM::Object>] The works this work is contains
+      def child_works(valkyrie: false)
+        af_works = child_objects(valkyrie: false).select(&:work?)
+        return af_works unless valkyrie
+        af_works.map(&:valkyrie_resource)
+      end
+      alias works child_works
+
       # TODO: Add translated methods
     end
   end
