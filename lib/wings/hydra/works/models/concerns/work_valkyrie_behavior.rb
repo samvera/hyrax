@@ -33,6 +33,13 @@ module Wings
       end
       alias works child_works
 
+      # @param valkyrie [Boolean] Should the returned ids be for Valkyrie or AF objects?
+      # @return [Enumerable<String> | Enumerable<Valkerie::ID] The ids of the works this work contains
+      def child_work_ids(valkyrie: false)
+        child_works(valkyrie: valkyrie).map(&:id)
+      end
+      alias work_ids child_work_ids
+
       # TODO: Add translated methods
     end
   end
