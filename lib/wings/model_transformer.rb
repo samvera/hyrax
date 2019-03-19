@@ -184,11 +184,10 @@ module Wings
       # rubocop:disable Metrics/AbcSize this should probably be refactored later,
       #   but it seems best to let it develop for now
       def attributes
-        attrs_with_relationships =
+         all_keys =
           pcdm_object.attributes.keys +
           self.class.relationship_keys_for(reflections: pcdm_object.reflections)
-
-        attrs_with_relationships.each_with_object({}) do |attr_name, mem|
+        all_keys.each_with_object({}) do |attr_name, mem|
           next unless pcdm_object.respond_to? attr_name
           mem[attr_name.to_sym] = TransformerValueMapper.for(pcdm_object.public_send(attr_name)).result
         end
