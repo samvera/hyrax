@@ -77,6 +77,24 @@ module Wings
         raise ::Valkyrie::Persistence::ObjectNotFoundError
       end
 
+      # Find all members of a given resource, and map to Valkyrie Resources
+      # @param [Valkyrie::Resource]
+      # @param [Valkyrie::ResourceClass]
+      # @return [Array<Valkyrie::Resource>]
+      def find_members(resource:, model: nil)
+        find_model = model.internal_resource.constantize if model
+        member_list = resource_factory.from_resource(resource: resource).try(:members)
+        return [] unless member_list
+        if model
+          member_list = member_list.select do |obj|
+            obj.class == find_model
+          end
+        end
+        member_list.map do |obj|
+          resource_factory.to_resource(object: obj)
+        end
+      end
+
       # Constructs a Valkyrie::Persistence::CustomQueryContainer using this query service
       # @return [Valkyrie::Persistence::CustomQueryContainer]
       def custom_queries
