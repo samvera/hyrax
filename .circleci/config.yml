@@ -96,7 +96,7 @@ jobs:
 
     - run:
         name: Generate test app
-        command: (git diff --name-only master | grep -qG 'generators\/hyrax') || bundle exec rake engine_cart:generate
+        command: (git diff --name-only master | grep -qiG 'generators\/hyrax') || bundle exec rake engine_cart:generate
 
     - run:
         name: Ensure test app dependencies are installed
