@@ -323,4 +323,11 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior do
       end
     end
   end
+
+  describe '#missing_method' do
+    let!(:pcdm_object) { collection1 }
+    it 'raises NoMethodError when neither the resource nor the active fedora object respond to the method' do
+      expect { resource.a_missing_method }.to raise_error NoMethodError
+    end
+  end
 end
