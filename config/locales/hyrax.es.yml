@@ -348,6 +348,15 @@ es:
     base:
       citations:
         header: 'Citaciones:'
+      file_manager:
+        back_to: De vuelta a
+        toolbar: Barra de herramientas
+      file_manager_actions:
+        save: Guardar
+        sort_alphabetically: Ordenar alfabéticamente
+      file_manager_member_resource_options:
+        representative_media: Representante De Los Medios De Comunicación
+        thumbnail: Miniatura
       form:
         batch_link: Carga por lotes
         batch_upload_hint: Para crear un trabajo separado para cada uno de los archivos, vaya a
@@ -876,11 +885,17 @@ es:
         header: Selecciona una acción
         versions: Versiones
         versions_title: Mostrar versiones anteriores
+      batch_create_success:
+        message: El lote creado para %{user} pasado.
+        subject: Pasar por lotes crear
       edit:
         descriptions: Descripciones
         header: Editar %{file_set}
         permissions: Permisos
         versions: Versiones
+      fixity_check_failure:
+        message: La comprobación de corrección ejecutada en %{log_date} para %{file_title} (%{uri}) falló.
+        subject: Comprobación de falla de la falla
       form:
         attach_to: Adjuntar a %{parent}
         cancel: Cancelar
@@ -1020,12 +1035,6 @@ es:
       batch_create_failure:
         message: 'La creación del lote para %{user} falló: %{messages}'
         subject: Creación de lote fallido
-      batch_create_success:
-        message: El lote creado para %{user} pasado.
-        subject: Pasar por lotes crear
-      fixity_check_failure:
-        message: La comprobación de corrección ejecutada en %{log_date} para %{file_title} (%{uri}) falló.
-        subject: Comprobación de falla de la falla
       import_url_failure:
         subject: Error de importación de archivo
       proxy_deposit_request:

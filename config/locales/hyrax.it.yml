@@ -348,6 +348,15 @@ it:
     base:
       citations:
         header: 'citazioni:'
+      file_manager:
+        back_to: Torna alla
+        toolbar: Barra degli strumenti
+      file_manager_actions:
+        save: Salva
+        sort_alphabetically: Ordinare in ordine alfabetico
+      file_manager_member_resource_options:
+        representative_media: Rappresentante Dei Media
+        thumbnail: Miniatura
       form:
         batch_link: Caricamento in batch
         batch_upload_hint: Per creare un'opera separata per ciascuno dei file, vai a
