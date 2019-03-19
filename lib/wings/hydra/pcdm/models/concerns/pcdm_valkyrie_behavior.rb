@@ -119,8 +119,8 @@ module Wings
         end
         Rails.logger.info "Calling through Method Missing with name: #{name}    args: #{args}   block_given? #{block_given?}"
         args.delete_if { |arg| arg.is_a?(Hash) && arg.key?(:valkyrie) }
-        return af_object.send(name, args, block) if block_given?
-        return af_object.send(name, args) if args.present?
+        return af_object.send(name, *args, block) if block_given?
+        return af_object.send(name, *args) if args.present?
         af_object.send(name)
       end
 

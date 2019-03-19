@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'wings/services/file_converter_service'
 
 module Wings
   ##
@@ -32,6 +33,7 @@ module Wings
         af_object.id = id unless id.empty?
         convert_members(af_object)
         convert_member_of_collections(af_object)
+        convert_files(af_object)
       end
     end
 
@@ -69,6 +71,7 @@ module Wings
         attrs.delete(:created_at)
         attrs.delete(:updated_at)
         attrs.delete(:member_ids)
+        attrs.delete(:file_metadata)
 
         embargo_id         = attrs.delete(:embargo_id)
         attrs[:embargo_id] = embargo_id.to_s unless embargo_id.nil? || embargo_id.empty?
@@ -161,15 +164,24 @@ module Wings
     private
 
       def convert_members(af_object)
-        return unless resource.respond_to?(:member_ids) && resource.member_ids
+        return unless resource.attributes.keys.include?(:member_ids) && resource.member_ids
         # TODO: It would be better to find a way to add the members without resuming all the member AF objects
         resource.member_ids.each { |valkyrie_id| af_object.ordered_members << ActiveFedora::Base.find(valkyrie_id.id) }
       end
 
       def convert_member_of_collections(af_object)
-        return unless resource.respond_to?(:member_of_collection_ids) && resource.member_of_collection_ids
+        return unless resource.attributes.keys.include?(:member_of_collection_ids) && resource.member_of_collection_ids
         # TODO: It would be better to find a way to set the parent collections without resuming all the collection AF objects
         resource.member_of_collection_ids.each { |valkyrie_id| af_object.member_of_collections << ActiveFedora::Base.find(valkyrie_id.id) }
+      end
+
+      def convert_files(af_object)
+        return unless resource.attributes.keys.include?(:file_metadata) && resource.file_metadata
+        # TODO: It would be better to find a way to set the parent collections without resuming all the collection AF objects
+        resource.file_metadata.each do |file_metadata|
+          next unless file_metadata.file_identifiers.present?
+          Wings::FileConverterService.convert_and_add_file_to_af_object(file_metadata, af_object)
+        end
       end
   end
 end

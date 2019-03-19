@@ -4,6 +4,7 @@ require 'wings/transformer_value_mapper'
 require 'wings/models/concerns/collection_behavior'
 require 'wings/hydra/works/models/concerns/work_valkyrie_behavior'
 require 'wings/hydra/works/models/concerns/file_set_valkyrie_behavior'
+require 'wings/services/file_converter_service'
 
 module Wings
   ##
@@ -39,7 +40,7 @@ module Wings
     #
     # @param pcdm_object [ActiveFedora::Base]
     #
-    # @return [::Valkyrie::Resource] a resource mirroiring `pcdm_object`
+    # @return [::Valkyrie::Resource] a resource mirroring `pcdm_object`
     def self.for(pcdm_object)
       new(pcdm_object: pcdm_object).build
     end
@@ -60,14 +61,16 @@ module Wings
     ##
     # Builds a `Valkyrie::Resource` equivalent to the `pcdm_object`
     #
-    # @return [::Valkyrie::Resource] a resource mirroiring `pcdm_object`
+    # @return [::Valkyrie::Resource] a resource mirroring `pcdm_object`
     def build
       klass = ResourceClassCache.instance.fetch(pcdm_object) do
         self.class.to_valkyrie_resource_class(klass: pcdm_object.class)
       end
       pcdm_object.id = minted_id if pcdm_object.id.nil?
       attrs = attributes.tap { |hash| hash[:new_record] = pcdm_object.new_record? }
-      klass.new(alternate_ids: [::Valkyrie::ID.new(pcdm_object.id)], **attrs)
+      resource = klass.new(alternate_ids: [::Valkyrie::ID.new(pcdm_object.id)], **attrs)
+      build_files(resource)
+      resource
     end
 
     ##
@@ -203,6 +206,18 @@ module Wings
                                    lease_id:   pcdm_object.try(:lease)&.id,
                                    visibility: pcdm_object.try(:visibility),
                                    member_ids: pcdm_object.try(:ordered_member_ids)) # We want members in order, so extract from ordered_members.
+      end
+
+      ##
+      # Builds a `Valkyrie::Resource` equivalent for any files attached to the `pcdm_object`
+      #
+      # @return [Array<::Valkyrie::Resource>] resources mirroring files attached to `pcdm_object`
+      def build_files(resource)
+        return unless pcdm_object.respond_to?(:files) && pcdm_object.files.present?
+        return unless resource.respond_to? :file_metadata
+        pcdm_object.files.each do |fil|
+          Wings::FileConverterService.convert_and_add_file_to_resource(fil, resource)
+        end
       end
   end
   # rubocop:enable Style/ClassVars
