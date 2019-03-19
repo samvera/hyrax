@@ -439,7 +439,7 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
 
         it 'sets error on curation_concern and return false' do
           expect(subject.create(env)).to be false
-          expect(curation_concern.errors[:lease_expiration_date].first).to eq 'Must be a future date'
+          expect(env.curation_concern.errors[:lease_expiration_date].first).to eq 'Must be a future date'
         end
       end
     end
