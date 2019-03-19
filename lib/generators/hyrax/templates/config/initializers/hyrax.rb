@@ -1,5 +1,4 @@
 Hyrax.config do |config|
-
   # The MetadataAdapter to use when persisting resources with Valkyrie.
   # NOTE: Until Hyrax has been reworked to be Valkyrie-native, the default
   #       metadata adapter supported is :wings_adapter.
