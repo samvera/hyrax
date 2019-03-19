@@ -126,7 +126,7 @@ jobs:
       command: bin/solr -cloud -noprompt -f -p 8985
 
     working_directory: ~/hyrax
-    parallelism: 2
+    parallelism: 4
 
     environment: &spec_env
       BUNDLE_PATH: vendor/bundle
@@ -188,7 +188,7 @@ jobs:
       command: bin/solr -cloud -noprompt -f -p 8985
 
     working_directory: ~/hyrax
-    parallelism: 2
+    parallelism: 4
     environment: *spec_env
     steps:       *run_specs
 
