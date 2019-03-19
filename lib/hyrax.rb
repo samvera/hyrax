@@ -17,7 +17,6 @@ require 'hyrax/engine'
 require 'hyrax/version'
 require 'hyrax/inflections'
 require 'kaminari_route_prefix'
-require 'wings'
 
 module Hyrax
   extend ActiveSupport::Autoload
