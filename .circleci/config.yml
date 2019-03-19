@@ -100,12 +100,6 @@ jobs:
         name: Generate test app
         command: (git diff --name-only master | grep -qG 'generators\/hyrax') || bundle exec rake engine_cart:generate
 
-    - run:
-        name: Ensure test app dependencies are installed
-        command: |
-          cd .internal_test_app
-          bundle check || bundle install
-
     - save_cache:
         key: v1-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
         paths:
