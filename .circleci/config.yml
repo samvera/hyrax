@@ -7,6 +7,7 @@ executors:
   ruby:
     docker:
       - image: circleci/ruby:2.5.3
+    resource_class: small
     working_directory: ~/hyrax
     environment:
       BUNDLE_PATH: vendor/bundle
