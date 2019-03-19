@@ -70,7 +70,7 @@ jobs:
 
     environment:
       BUNDLE_PATH: vendor/bundle
-      BUNDLE_JOBS: 4
+      BUNDLE_JOBS: 16
       BUNDLE_RETRY: 3
       RAILS_ENV: test
       RACK_ENV: test
@@ -127,7 +127,7 @@ jobs:
 
     environment: &spec_env
       BUNDLE_PATH: vendor/bundle
-      BUNDLE_JOBS: 4
+      BUNDLE_JOBS: 16
       BUNDLE_RETRY: 3
       RAILS_ENV: test
       RACK_ENV: test
