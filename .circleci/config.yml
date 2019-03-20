@@ -123,7 +123,7 @@ jobs:
 
     working_directory: ~/hyrax
     resource_class: medium+
-    parallelism: 10
+    parallelism: 6
 
     environment: &spec_env
       BUNDLE_PATH: vendor/bundle
@@ -186,7 +186,7 @@ jobs:
 
     resource_class: medium+
     working_directory: ~/hyrax
-    parallelism: 10
+    parallelism: 6
     environment: *spec_env
     steps:       *run_specs
 
