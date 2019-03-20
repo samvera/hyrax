@@ -348,6 +348,15 @@ zh:
     base:
       citations:
         header: '引文:'
+      file_manager:
+        back_to: 回到
+        toolbar: 工具条
+      file_manager_actions:
+        save: 保存
+        sort_alphabetically: 按字母顺序排序
+      file_manager_member_resource_options:
+        representative_media: 媒体代表
+        thumbnail: 缩略
       form:
         batch_link: 批量上传
         batch_upload_hint: 要为每个文件创建单独的工作，请转到

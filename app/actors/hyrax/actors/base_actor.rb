@@ -18,7 +18,10 @@ module Hyrax
       def create(env)
         apply_creation_data_to_curation_concern(env)
         apply_save_data_to_curation_concern(env)
-        save(env) && next_actor.create(env) && run_callbacks(:after_create_concern, env)
+
+        save(env, use_valkyrie: false) &&
+          next_actor.create(env) &&
+          run_callbacks(:after_create_concern, env)
       end
 
       # @param [Hyrax::Actors::Environment] env
@@ -64,7 +67,20 @@ module Hyrax
           env.curation_concern.date_uploaded = TimeService.time_in_utc
         end
 
-        def save(env)
+        def save(env, use_valkyrie: false)
+          return env.curation_concern.save unless use_valkyrie
+
+          env.curation_concern.embargo&.save
+          env.curation_concern.lease&.save
+
+          adapter  = Hyrax.config.valkyrie_metadata_adapter
+          resource = adapter.persister.save(resource: env.curation_concern.valkyrie_resource)
+
+          env.curation_concern = adapter.resource_factory.from_resource(resource: resource)
+        rescue Wings::Valkyrie::Persister::FailedSaveError => _err
+          # for now, just hit the validation error again
+          # later we should capture the _err.obj and pass it back
+          # through the environment
           env.curation_concern.save
         end
 

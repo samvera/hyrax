@@ -11,7 +11,8 @@ module Hyrax
         @actor_storage = {}
       end
 
-      attr_reader :curation_concern, :current_ability, :attributes
+      attr_reader   :current_ability, :attributes
+      attr_accessor :curation_concern
 
       # @return [User] the user from the current_ability
       def user

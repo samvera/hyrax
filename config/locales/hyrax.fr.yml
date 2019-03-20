@@ -348,6 +348,15 @@ fr:
     base:
       citations:
         header: 'Citations:'
+      file_manager:
+        back_to: Revenir à
+        toolbar: Outils
+      file_manager_actions:
+        save: Enregistrer
+        sort_alphabetically: Trier par ordre alphabétique
+      file_manager_member_resource_options:
+        representative_media: Média représentatif
+        thumbnail: Miniature
       form:
         batch_link: Envoi par lot
         batch_upload_hint: Pour créer un travail séparé pour chacun des fichiers, allez à

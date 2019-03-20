@@ -6,8 +6,10 @@ require 'wings'
 RSpec.describe Wings::Valkyrie::QueryService do
   before do
     class Book < ActiveFedora::Base
-      property :title, predicate: ::RDF::Vocab::DC.title, multiple: true
       include Hyrax::WorkBehavior
+      property :title, predicate: ::RDF::Vocab::DC.title, multiple: true
+      property :a_member_of, predicate: ::RDF::URI.new('http://www.example.com/a_member_of'), multiple: true
+      property :an_ordered_member_of, predicate: ::RDF::URI.new('http://www.example.com/an_ordered_member_of'), multiple: true
     end
     class Image < ActiveFedora::Base
       property :title, predicate: ::RDF::Vocab::DC.title, multiple: true
@@ -38,6 +40,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
     expect(subject).to respond_to(:find_many_by_ids).with_keywords(:ids)
     expect(subject).to respond_to(:find_by_alternate_identifier).with_keywords(:alternate_identifier)
     expect(subject).to respond_to(:find_members).with_keywords(:resource)
+    expect(subject).to respond_to(:find_references_by).with_keywords(:resource, :property)
   end
 
   describe ".find_by" do
@@ -246,6 +249,54 @@ RSpec.describe Wings::Valkyrie::QueryService do
         it "returns an empty array" do
           expect(subject.to_a).to eq []
         end
+
+  describe ".find_references_by" do
+    context "when the property is unordered" do
+      it "returns all references given in a property" do
+        parent = persister.save(resource: resource_class.new(title: ['Parent']))
+        parent2 = persister.save(resource: resource_class.new(title: ['Parent 2']))
+        child = persister.save(resource: resource_class.new(title: ['Child'], a_member_of: [parent.id, parent2.id]))
+        persister.save(resource: resource_class.new(title: ['Another Resource']))
+
+        expect(query_service.find_references_by(resource: child, property: :a_member_of).map(&:id).to_a).to contain_exactly parent.id, parent2.id
+      end
+
+      it "returns an empty array if there are none" do
+        child = persister.save(resource: resource_class.new(title: ['Child']))
+        expect(query_service.find_references_by(resource: child, property: :a_member_of).to_a).to eq []
+      end
+
+      it "removes duplicates" do
+        parent = persister.save(resource: resource_class.new)
+        child = persister.save(resource: resource_class.new(a_member_of: [parent.id, parent.id]))
+        persister.save(resource: resource_class.new)
+
+        expect(query_service.find_references_by(resource: child, property: :a_member_of).map(&:id).to_a).to contain_exactly parent.id
+      end
+
+      it "returns nothing if reference not found" do
+        child = persister.save(resource: resource_class.new(a_member_of: ["123123123"]))
+        persister.save(resource: resource_class.new)
+
+        expect(query_service.find_references_by(resource: child, property: :a_member_of).map(&:id).to_a).to eq []
+      end
+    end
+
+    context "when the property is ordered" do
+      xit "returns all references in order including duplicates" do
+        parent = persister.save(resource: resource_class.new)
+        parent2 = persister.save(resource: resource_class.new)
+        child = persister.save(resource: resource_class.new(an_ordered_member_of: [parent.id, parent2.id, parent.id]))
+        persister.save(resource: resource_class.new)
+
+        expect(query_service.find_references_by(resource: child, property: :an_ordered_member_of).map(&:id).to_a).to eq [parent.id, parent2.id, parent.id]
+      end
+
+      it "returns nothing if reference not found" do
+        child = persister.save(resource: resource_class.new(an_ordered_member_of: ["123123123"]))
+        persister.save(resource: resource_class.new)
+
+        expect(query_service.find_references_by(resource: child, property: :an_ordered_member_of).map(&:id).to_a).to eq []
       end
     end
   end

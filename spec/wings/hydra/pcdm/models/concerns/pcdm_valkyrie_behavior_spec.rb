@@ -28,21 +28,21 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior do
     context 'when valkyrie resources requested' do
       it 'returns parent collections as valkyrie resources through pcdm_valkyrie_behavior' do
         resources = child_collection_resource.parent_collections(valkyrie: true)
-        expect(resources.first.pcdm_collection?).to be true
+        expect(resources.map(&:pcdm_collection?)).to all(be true)
         expect(resources.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([collection2.id, collection3.id])
       end
     end
     context 'when active fedora objects requested' do
-      it 'returns parent collections as fedora objects through pcdm_valkyrie_behavior' do
+      it 'returns parent collections as active fedora objects through pcdm_valkyrie_behavior' do
         af_objects = child_collection_resource.parent_collections(valkyrie: false)
-        expect(af_objects.first.pcdm_collection?).to be true
+        expect(af_objects.map(&:pcdm_collection?)).to all(be true)
         expect(af_objects.map(&:id)).to match_array [collection2.id, collection3.id]
       end
     end
     context 'when return type is not specified' do
-      it 'returns parent collections as fedora objects through pcdm_valkyrie_behavior' do
+      it 'returns parent collections as active fedora objects through pcdm_valkyrie_behavior' do
         af_objects = child_collection_resource.parent_collections
-        expect(af_objects.first.pcdm_collection?).to be true
+        expect(af_objects.map(&:pcdm_collection?)).to all(be true)
         expect(af_objects.map(&:id)).to match_array [collection2.id, collection3.id]
       end
     end
@@ -64,13 +64,13 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior do
       end
     end
     context 'when active fedora objects requested' do
-      it 'returns ids of parent collections as fedora objects through pcdm_valkyrie_behavior' do
+      it 'returns ids of parent collections as active fedora objects through pcdm_valkyrie_behavior' do
         af_object_ids = child_collection_resource.parent_collection_ids(valkyrie: false)
         expect(af_object_ids.to_a).to match_array [collection2.id, collection3.id]
       end
     end
     context 'when return type is not specified' do
-      it 'returns ids of parent collections as fedora objects through pcdm_valkyrie_behavior' do
+      it 'returns ids of parent collections as active fedora objects through pcdm_valkyrie_behavior' do
         af_object_ids = child_collection_resource.parent_collection_ids
         expect(af_object_ids.to_a).to match_array [collection2.id, collection3.id]
       end
@@ -93,13 +93,13 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior do
       end
     end
     context 'when active fedora objects requested' do
-      it 'returns parent collections as fedora objects through pcdm_valkyrie_behavior' do
+      it 'returns parent collections as active fedora objects through pcdm_valkyrie_behavior' do
         af_objects = parent_work_resource.members(valkyrie: false)
         expect(af_objects.map(&:id)).to match_array [work2.id, work3.id, fileset1.id, fileset2.id]
       end
     end
     context 'when return type is not specified' do
-      it 'returns parent collections as fedora objects through pcdm_valkyrie_behavior' do
+      it 'returns parent collections as active fedora objects through pcdm_valkyrie_behavior' do
         af_objects = parent_work_resource.members
         expect(af_objects.map(&:id)).to match_array [work2.id, work3.id, fileset1.id, fileset2.id]
       end
@@ -130,13 +130,13 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior do
     #   end
     # end
     # context 'when active fedora objects requested' do
-    #   it 'returns ids of parent collections as fedora objects through pcdm_valkyrie_behavior' do
+    #   it 'returns ids of parent collections as active fedora objects through pcdm_valkyrie_behavior' do
     #     af_object_ids = parent_work_resource.member_ids(valkyrie: false)
     #     expect(af_object_ids.to_a).to match_array [work2.id, work3.id, fileset1.id, fileset2.id]
     #   end
     # end
     # context 'when return type is not specified' do
-    #   it 'returns ids of parent collections as fedora objects through pcdm_valkyrie_behavior' do
+    #   it 'returns ids of parent collections as active fedora objects through pcdm_valkyrie_behavior' do
     #     af_object_ids = parent_work_resource.member_ids
     #     expect(af_object_ids.to_a).to match_array [work2.id, work3.id, fileset1.id, fileset2.id]
     #   end
@@ -155,23 +155,23 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior do
       it 'returns works only as valkyrie resources through pcdm_valkyrie_behavior' do
         resources = resource.child_objects(valkyrie: true)
         expect(resources.size).to eq 2
-        expect(resources.first.pcdm_object?).to be true
+        expect(resources.map(&:pcdm_object?)).to all(be true)
         expect(resources.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([work1.id, work2.id])
       end
     end
     context 'when active fedora objects requested' do
-      it 'returns works only as fedora objects through pcdm_valkyrie_behavior' do
+      it 'returns works only as active fedora objects through pcdm_valkyrie_behavior' do
         af_objects = resource.child_objects(valkyrie: false)
         expect(af_objects.size).to eq 2
-        expect(af_objects.first.pcdm_object?).to be true
+        expect(af_objects.map(&:pcdm_object?)).to all(be true)
         expect(af_objects.map(&:id)).to match_array [work1.id, work2.id]
       end
     end
     context 'when return type is not specified' do
-      it 'returns works only as fedora objects through pcdm_valkyrie_behavior' do
+      it 'returns works only as active fedora objects through pcdm_valkyrie_behavior' do
         af_objects = resource.child_objects
         expect(af_objects.size).to eq 2
-        expect(af_objects.first.pcdm_object?).to be true
+        expect(af_objects.map(&:pcdm_object?)).to all(be true)
         expect(af_objects.map(&:id)).to match_array [work1.id, work2.id]
       end
     end
@@ -193,18 +193,141 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior do
       end
     end
     context 'when active fedora objects requested' do
-      it 'returns ids of works only as fedora objects through pcdm_valkyrie_behavior' do
+      it 'returns ids of works only as active fedora objects through pcdm_valkyrie_behavior' do
         af_object_ids = resource.child_object_ids(valkyrie: false)
         expect(af_object_ids.size).to eq 2
         expect(af_object_ids.to_a).to match_array [work1.id, work2.id]
       end
     end
     context 'when return type is not specified' do
-      it 'returns ids of works only as fedora objects through pcdm_valkyrie_behavior' do
+      it 'returns ids of works only as active fedora objects through pcdm_valkyrie_behavior' do
         af_object_ids = resource.child_object_ids
         expect(af_object_ids.size).to eq 2
         expect(af_object_ids.to_a).to match_array [work1.id, work2.id]
       end
+    end
+  end
+
+  describe '#member_of' do
+    let(:pcdm_object) { work3 }
+    let(:child_resource) { resource }
+
+    before do
+      work1.members = [work3, fileset1]
+      work2.members = [work3, fileset2]
+      work1.save!
+      work2.save!
+    end
+
+    context 'when valkyrie resources requested' do
+      it 'returns works only as valkyrie resources through pcdm_valkyrie_behavior' do
+        resources = child_resource.member_of(valkyrie: true)
+        expect(resources.size).to eq 2
+        expect(resources.map(&:pcdm_object?)).to all(be true)
+        expect(resources.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([work1.id, work2.id])
+      end
+    end
+    context 'when active fedora objects requested' do
+      it 'returns works only as active fedora objects through pcdm_valkyrie_behavior' do
+        af_objects = child_resource.member_of(valkyrie: false)
+        expect(af_objects.size).to eq 2
+        expect(af_objects.map(&:pcdm_object?)).to all(be true)
+        expect(af_objects.map(&:id)).to match_array [work1.id, work2.id]
+      end
+    end
+    context 'when return type is not specified' do
+      it 'returns works only as active fedora objects through pcdm_valkyrie_behavior' do
+        af_objects = child_resource.member_of
+        expect(af_objects.size).to eq 2
+        expect(af_objects.map(&:pcdm_object?)).to all(be true)
+        expect(af_objects.map(&:id)).to match_array [work1.id, work2.id]
+      end
+    end
+  end
+
+  describe '#in_collections' do
+    # TODO: This test is misleading.  Hyrax does not use the members relationship for tracking members of a collection.
+    #       It uses the member_of_collections relationship.  Use of members here is only to test the in_collections
+    #       method from PCDM which is used in 2 places in Hyrax.  It is likely that the 2 places this is used never gets
+    #       any collections and use of this method is a no-op.  But that needs to be confirmed before this can be deprecated.
+    let(:pcdm_object) { work1 }
+    let(:child_resource) { resource }
+
+    before do
+      collection1.members = [work1, collection3]
+      collection2.members = [work1, work2]
+      work3.members = [work1]
+      collection1.save!
+      collection2.save!
+    end
+
+    context 'when valkyrie resources requested' do
+      it 'returns collections only as valkyrie resources through pcdm_valkyrie_behavior' do
+        resources = child_resource.in_collections(valkyrie: true)
+        expect(resources.size).to eq 2
+        expect(resources.map(&:pcdm_collection?)).to all(be true)
+        expect(resources.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([collection1.id, collection2.id])
+      end
+    end
+    context 'when active fedora objects requested' do
+      it 'returns collections only as active fedora objects through pcdm_valkyrie_behavior' do
+        af_objects = child_resource.in_collections(valkyrie: false)
+        expect(af_objects.size).to eq 2
+        expect(af_objects.map(&:pcdm_collection?)).to all(be true)
+        expect(af_objects.map(&:id)).to match_array [collection1.id, collection2.id]
+      end
+    end
+    context 'when return type is not specified' do
+      it 'returns collections only as active fedora objects through pcdm_valkyrie_behavior' do
+        af_objects = child_resource.in_collections
+        expect(af_objects.size).to eq 2
+        expect(af_objects.map(&:pcdm_collection?)).to all(be true)
+        expect(af_objects.map(&:id)).to match_array [collection1.id, collection2.id]
+      end
+    end
+  end
+
+  describe '#in_collection_ids' do
+    # TODO: This test is misleading.  Hyrax does not use the members relationship for tracking members of a collection.
+    #       It uses the member_of_collections relationship.  Use of members here is only to test the in_collection_ids
+    #       method from PCDM which is used in 1 place in Hyrax.  It is likely that the place this is used never gets
+    #       any collections and use of this method is a no-op.  But that needs to be confirmed before this can be deprecated.
+    let(:pcdm_object) { work1 }
+    let(:child_resource) { resource }
+
+    before do
+      collection1.members = [work1, collection3]
+      collection2.members = [work1, work2]
+      work3.members = [work1]
+      collection1.save!
+      collection2.save!
+      work3.save!
+    end
+
+    context 'when valkyrie resources requested' do
+      it 'returns collection ids only as valkyrie resource ids through pcdm_valkyrie_behavior' do
+        resource_ids = child_resource.in_collection_ids(valkyrie: true)
+        expect(resource_ids).to match_valkyrie_ids_with_active_fedora_ids([collection1.id, collection2.id])
+      end
+    end
+    context 'when active fedora objects requested' do
+      it 'returns collection ids only as active fedora object ids through pcdm_valkyrie_behavior' do
+        af_object_ids = child_resource.in_collection_ids(valkyrie: false)
+        expect(af_object_ids).to match_array [collection1.id, collection2.id]
+      end
+    end
+    context 'when return type is not specified' do
+      it 'returns collection ids only as active fedora object ids through pcdm_valkyrie_behavior' do
+        af_object_ids = child_resource.in_collection_ids
+        expect(af_object_ids).to match_array [collection1.id, collection2.id]
+      end
+    end
+  end
+
+  describe '#missing_method' do
+    let!(:pcdm_object) { collection1 }
+    it 'raises NoMethodError when neither the resource nor the active fedora object respond to the method' do
+      expect { resource.a_missing_method }.to raise_error NoMethodError
     end
   end
 end

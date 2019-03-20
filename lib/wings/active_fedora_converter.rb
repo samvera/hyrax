@@ -27,9 +27,10 @@ module Wings
     ##
     # @return [ActiveFedora::Base]
     def convert
-      active_fedora_class.new(attributes).tap do |obj|
-        obj.id = id unless id.empty?
-        resource.member_ids.each { |valkyrie_id| obj.members << ActiveFedora::Base.find(valkyrie_id.id) } if resource.respond_to?(:member_ids) && resource.member_ids
+      active_fedora_class.new(attributes).tap do |af_object|
+        af_object.id = id unless id.empty?
+        convert_members(af_object)
+        convert_member_of_collections(af_object)
       end
     end
 
@@ -54,6 +55,11 @@ module Wings
       attrs.delete(:alternate_ids)
       attrs.delete(:created_at)
       attrs.delete(:updated_at)
+
+      embargo_id         = attrs.delete(:embargo_id)
+      attrs[:embargo_id] = embargo_id.to_s unless embargo_id.nil? || embargo_id.empty?
+      lease_id          = attrs.delete(:lease_id)
+      attrs[:lease_id]  = lease_id.to_s unless lease_id.nil? || lease_id.empty?
 
       attrs.compact
     end
@@ -92,5 +98,19 @@ module Wings
       end
       include ::Hyrax::BasicMetadata
     end
+
+    private
+
+      def convert_members(af_object)
+        return unless resource.respond_to?(:member_ids) && resource.member_ids
+        # TODO: It would be better to find a way to add the members without resuming all the member AF objects
+        resource.member_ids.each { |valkyrie_id| af_object.members << ActiveFedora::Base.find(valkyrie_id.id) }
+      end
+
+      def convert_member_of_collections(af_object)
+        return unless resource.respond_to?(:member_of_collection_ids) && resource.member_of_collection_ids
+        # TODO: It would be better to find a way to set the parent collections without resuming all the collection AF objects
+        resource.member_of_collection_ids.each { |valkyrie_id| af_object.member_of_collections << ActiveFedora::Base.find(valkyrie_id.id) }
+      end
   end
 end

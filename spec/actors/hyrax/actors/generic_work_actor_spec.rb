@@ -39,13 +39,9 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
     end
 
     context 'failure' do
-      before do
-        allow(middleware).to receive(:attach_files).and_return(true)
-      end
+      before { allow_any_instance_of(described_class).to receive(:save).and_return(false) }
 
-      # The clean is here because this test depends on the repo not having an AdminSet/PermissionTemplate created yet
-      it 'returns false', :clean_repo do
-        expect(curation_concern).to receive(:save).and_return(false)
+      it 'returns false' do
         expect(middleware.create(env)).to be false
       end
     end

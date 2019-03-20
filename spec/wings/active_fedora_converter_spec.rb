@@ -27,5 +27,61 @@ RSpec.describe Wings::ActiveFedoraConverter do
 
       it 'populates reflections'
     end
+
+    context 'with an embargo' do
+      let(:work) { FactoryBot.create(:embargoed_work) }
+
+      it 'repopulates the embargo' do
+        expect(converter.convert).to have_attributes(embargo_id: work.embargo_id)
+      end
+    end
+
+    context 'with a lease' do
+      let(:work) { FactoryBot.create(:leased_work) }
+
+      it 'repopulates the lease' do
+        expect(converter.convert).to have_attributes(lease_id: work.lease_id)
+      end
+    end
+
+    context 'with relationships' do
+      subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
+
+      let(:resource) { subject.build }
+
+      context 'for member_of_collections' do
+        let(:pcdm_object) { collection1 }
+
+        let(:collection1) { build(:public_collection_lw, id: 'col1', title: ['Collection 1']) }
+        let(:collection2) { build(:public_collection_lw, id: 'col2', title: ['Collection 2']) }
+        let(:collection3) { build(:public_collection_lw, id: 'col3', title: ['Collection 3']) }
+
+        before do
+          collection1.member_of_collections = [collection2, collection3]
+          collection1.save!
+        end
+
+        it 'converts member_of_collection_ids back to af_object' do
+          expect(converter.convert.member_of_collections.map(&:id)).to match_array [collection2.id, collection3.id]
+        end
+      end
+
+      context 'for members' do
+        let(:pcdm_object) { work1 }
+
+        let(:work1)       { build(:work, id: 'wk1', title: ['Work 1']) }
+        let(:work2)       { build(:work, id: 'wk2', title: ['Work 2']) }
+        let(:work3)       { build(:work, id: 'wk3', title: ['Work 3']) }
+
+        before do
+          work1.members = [work2, work3]
+          work1.save!
+        end
+
+        it 'converts member_of_collection_ids back to af_object' do
+          expect(converter.convert.members.map(&:id)).to match_array [work2.id, work3.id]
+        end
+      end
+    end
   end
 end

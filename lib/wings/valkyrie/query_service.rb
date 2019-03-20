@@ -93,6 +93,19 @@ module Wings
         member_list.map do |obj|
           resource_factory.to_resource(object: obj)
         end
+
+      # Find the Valkyrie Resources referenced by another Valkyrie Resource
+      # @param [<Valkyrie::Resource>]
+      # @param [Symbol] the property holding the references to another resource
+      # @return [Array<Valkyrie::Resource>]
+      def find_references_by(resource:, property:)
+        object = resource_factory.from_resource(resource: resource)
+        object.send(property).map do |reference|
+          af_id = find_id_for(reference)
+          resource_factory.to_resource(object: ::ActiveFedora::Base.find(af_id))
+        end
+      rescue ActiveFedora::ObjectNotFoundError
+        return []
       end
 
       # Constructs a Valkyrie::Persistence::CustomQueryContainer using this query service
@@ -108,6 +121,13 @@ module Wings
         # @raise [ArgumentError]
         def validate_id(id)
           raise ArgumentError, 'id must be a Valkyrie::ID' unless id.is_a? ::Valkyrie::ID
+        end
+
+        def find_id_for(reference)
+          return ::ActiveFedora::Base.uri_to_id(reference.id) if reference.class == ActiveTriples::Resource
+          return reference if reference.class == String
+          # not a supported type
+          ''
         end
     end
   end

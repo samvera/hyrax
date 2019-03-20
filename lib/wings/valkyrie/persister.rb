@@ -20,6 +20,8 @@ module Wings
         af_object = resource_factory.from_resource(resource: resource)
         af_object.save!
         resource_factory.to_resource(object: af_object)
+      rescue ActiveFedora::RecordInvalid => err
+        raise FailedSaveError.new(err.message, obj: af_object)
       end
 
       # Persists a resource using ActiveFedora
@@ -44,6 +46,15 @@ module Wings
         ActiveFedora::SolrService.instance.conn.delete_by_query("*:*")
         ActiveFedora::SolrService.instance.conn.commit
         ActiveFedora::Cleaner.clean!
+      end
+
+      class FailedSaveError < RuntimeError
+        attr_accessor :obj
+
+        def initialize(msg = nil, obj:)
+          self.obj = obj
+          super(msg)
+        end
       end
     end
   end

@@ -59,4 +59,35 @@ RSpec.describe Wings::Works::WorkValkyrieBehavior do
       end
     end
   end
+
+  describe '#child_work_ids' do
+    let(:pcdm_object) { work1 }
+    let(:work) { resource }
+
+    before do
+      work1.members = [work2, work3, fileset1, fileset2]
+      work1.save!
+    end
+
+    context 'when return type is not specified' do
+      it 'returns AF ids for child works only' do
+        af_object_ids = work.child_work_ids
+        expect(af_object_ids).to match_array [work2.id, work3.id]
+      end
+    end
+
+    context 'when active fedora objects are requested' do
+      it 'returns AF ids for child works only' do
+        af_object_ids = work.child_work_ids(valkyrie: false)
+        expect(af_object_ids).to match_array [work2.id, work3.id]
+      end
+    end
+
+    context 'when valkyrie objects are requested' do
+      it 'returns Valkyrie ids for child works only' do
+        resource_ids = work.child_work_ids(valkyrie: true)
+        expect(resource_ids).to match_valkyrie_ids_with_active_fedora_ids([work2.id, work3.id])
+      end
+    end
+  end
 end
