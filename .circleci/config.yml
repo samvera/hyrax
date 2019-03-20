@@ -7,6 +7,7 @@ executors:
   ruby:
     docker:
       - image: circleci/ruby:2.5.3
+    resource_class: small
     working_directory: ~/hyrax
     environment:
       BUNDLE_PATH: vendor/bundle
@@ -64,11 +65,12 @@ jobs:
     docker:
     - image: circleci/ruby:2.5.3-node
 
+    resource_class: large
     working_directory: ~/hyrax
 
     environment:
       BUNDLE_PATH: vendor/bundle
-      BUNDLE_JOBS: 4
+      BUNDLE_JOBS: 16
       BUNDLE_RETRY: 3
       RAILS_ENV: test
       RACK_ENV: test
@@ -98,12 +100,6 @@ jobs:
         name: Generate test app
         command: (git diff --name-only master | grep -qG 'generators\/hyrax') || bundle exec rake engine_cart:generate
 
-    - run:
-        name: Ensure test app dependencies are installed
-        command: |
-          cd .internal_test_app
-          bundle check || bundle install
-
     - save_cache:
         key: v1-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
         paths:
@@ -126,11 +122,12 @@ jobs:
       command: bin/solr -cloud -noprompt -f -p 8985
 
     working_directory: ~/hyrax
-    parallelism: 4
+    resource_class: medium+
+    parallelism: 10
 
     environment: &spec_env
       BUNDLE_PATH: vendor/bundle
-      BUNDLE_JOBS: 4
+      BUNDLE_JOBS: 16
       BUNDLE_RETRY: 3
       RAILS_ENV: test
       RACK_ENV: test
@@ -187,8 +184,9 @@ jobs:
     - image: solr:7-alpine
       command: bin/solr -cloud -noprompt -f -p 8985
 
+    resource_class: medium+
     working_directory: ~/hyrax
-    parallelism: 4
+    parallelism: 10
     environment: *spec_env
     steps:       *run_specs
 
