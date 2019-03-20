@@ -90,4 +90,69 @@ RSpec.describe Wings::Works::WorkValkyrieBehavior do
       end
     end
   end
+
+  describe '#child_file_sets' do
+    let(:pcdm_object) { work1 }
+    let(:work) { resource }
+
+    before do
+      work1.members = [work2, work3, fileset1, fileset2]
+      work1.save!
+    end
+
+    context 'when return type is not specified' do
+      it 'returns only child file sets, in AF format' do
+        af_objects = work.child_file_sets
+        expect(af_objects.map(&:file_set?)).to all(be true)
+        expect(af_objects.map(&:id)).to match_array [fileset1.id, fileset2.id]
+      end
+    end
+
+    context 'when active fedora objects are requested' do
+      it 'returns only child file sets, in AF format' do
+        af_objects = work.child_file_sets(valkyrie: false)
+        expect(af_objects.map(&:file_set?)).to all(be true)
+        expect(af_objects.map(&:id)).to match_array [fileset1.id, fileset2.id]
+      end
+    end
+
+    context 'when valkyrie objects are requested' do
+      it 'returns only child file sets, in Valkyrie format' do
+        resources = work.child_file_sets(valkyrie: true)
+        expect(resources.map(&:file_set?)).to all(be true)
+        expect(resources.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([fileset1.id, fileset2.id])
+      end
+    end
+  end
+
+  describe '#child_file_set_ids' do
+    let(:pcdm_object) { work1 }
+    let(:work) { resource }
+
+    before do
+      work1.members = [work2, work3, fileset1, fileset2]
+      work1.save!
+    end
+
+    context 'when return type is not specified' do
+      it 'returns only child file sets, in AF format' do
+        af_object_ids = work.child_file_set_ids
+        expect(af_object_ids).to match_array [fileset1.id, fileset2.id]
+      end
+    end
+
+    context 'when active fedora objects are requested' do
+      it 'returns only child file sets, in AF format' do
+        af_object_ids = work.child_file_set_ids(valkyrie: false)
+        expect(af_object_ids).to match_array [fileset1.id, fileset2.id]
+      end
+    end
+
+    context 'when valkyrie objects are requested' do
+      it 'returns only child file sets, in Valkyrie format' do
+        resource_ids = work.child_file_set_ids(valkyrie: true)
+        expect(resource_ids).to match_valkyrie_ids_with_active_fedora_ids([fileset1.id, fileset2.id])
+      end
+    end
+  end
 end
