@@ -166,13 +166,14 @@ module Wings
       end
     end
     # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/AbcSize
 
-    class ActiveFedoraResource < ::Valkyrie::Resource
-      attribute :alternate_ids, ::Valkyrie::Types::Array
-      attribute :embargo_id,    ::Valkyrie::Types::ID
-      attribute :lease_id,      ::Valkyrie::Types::ID
-      attribute :visibility,    ::Valkyrie::Types::Symbol
+    class ActiveFedoraResource <    ::Valkyrie::Resource
+      attribute :alternate_ids,     ::Valkyrie::Types::Array
+      attribute :embargo_id,        ::Valkyrie::Types::ID
+      attribute :lease_id,          ::Valkyrie::Types::ID
+      attribute :representative_id, ::Valkyrie::Types::ID
+      attribute :thumbnail_id,      ::Valkyrie::Types::ID
+      attribute :visibility,        ::Valkyrie::Types::Symbol
     end
 
     class AttributeTransformer
@@ -195,12 +196,15 @@ module Wings
           pcdm_object.attributes.keys +
           self.class.relationship_keys_for(reflections: pcdm_object.reflections)
         AttributeTransformer.run(pcdm_object, all_keys)
-                            .merge(created_at: pcdm_object.try(:create_date),
-                                   updated_at: pcdm_object.try(:modified_date),
-                                   embargo_id: pcdm_object.try(:embargo)&.id,
-                                   lease_id:   pcdm_object.try(:lease)&.id,
-                                   visibility: pcdm_object.try(:visibility))
+                            .merge(created_at:        pcdm_object.try(:create_date),
+                                   updated_at:        pcdm_object.try(:modified_date),
+                                   embargo_id:        pcdm_object.try(:embargo)&.id,
+                                   lease_id:          pcdm_object.try(:lease)&.id,
+                                   representative_id: pcdm_object.try(:representative)&.id,
+                                   thumbnail_id:      pcdm_object.try(:thumbnail)&.id,
+                                   visibility:        pcdm_object.try(:visibility))
       end
   end
   # rubocop:enable Style/ClassVars
+  # rubocop:enable Metrics/AbcSize
 end

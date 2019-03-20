@@ -69,11 +69,11 @@ module Wings
         attrs.delete(:created_at)
         attrs.delete(:updated_at)
         attrs.delete(:member_ids)
-
-        embargo_id         = attrs.delete(:embargo_id)
-        attrs[:embargo_id] = embargo_id.to_s unless embargo_id.nil? || embargo_id.empty?
-        lease_id          = attrs.delete(:lease_id)
-        attrs[:lease_id]  = lease_id.to_s unless lease_id.nil? || lease_id.empty?
+        # remove reflection id attributes and reinsert as strings
+        attrs.select { |k| k.to_s.end_with? '_id' }.each_key do |k|
+          val = attrs.delete(k)
+          attrs[k] = val.to_s unless val.blank?
+        end
         attrs.compact
       end
     end
