@@ -6,6 +6,7 @@ require 'wings'
 RSpec.describe Wings::Valkyrie::QueryService do
   before do
     class Book < ActiveFedora::Base
+      include Hyrax::WorkBehavior
       property :title, predicate: ::RDF::Vocab::DC.title, multiple: true
       property :a_member_of, predicate: ::RDF::URI.new('http://www.example.com/a_member_of'), multiple: true
       property :an_ordered_member_of, predicate: ::RDF::URI.new('http://www.example.com/an_ordered_member_of'), multiple: true
@@ -38,7 +39,8 @@ RSpec.describe Wings::Valkyrie::QueryService do
     expect(subject).to respond_to(:find_all_of_model).with_keywords(:model)
     expect(subject).to respond_to(:find_many_by_ids).with_keywords(:ids)
     expect(subject).to respond_to(:find_by_alternate_identifier).with_keywords(:alternate_identifier)
-    respond_to(:find_references_by).with_keywords(:resource, :property)
+    expect(subject).to respond_to(:find_members).with_keywords(:resource)
+    expect(subject).to respond_to(:find_references_by).with_keywords(:resource, :property)
   end
 
   describe ".find_by" do
@@ -173,6 +175,81 @@ RSpec.describe Wings::Valkyrie::QueryService do
     it "removes duplicates" do
       found = query_service.find_many_by_ids(ids: [resource.id, resource2.id, resource.id])
       expect(found.map(&:id)).to contain_exactly resource.id, resource2.id
+    end
+  end
+
+  describe ".find_members" do
+    context "without filtering by model" do
+      let(:af_resource_class) { GenericWork }
+      subject { query_service.find_members(resource: parent) }
+
+      context "when the object has members" do
+        let!(:child1) { persister.save(resource: resource_class.new(title: ['Child 1'])) }
+        let!(:child2) { persister.save(resource: resource_class.new(title: ['Child 2'])) }
+        let(:parent) { persister.save(resource: resource_class.new(title: ['Parent'], member_ids: [child2.id, child1.id])) }
+
+        it "returns all a resource's members in order" do
+          expect(subject.map(&:id).to_a).to eq [child2.id, child1.id]
+        end
+
+        context "when something is member more than once" do
+          let(:parent) { persister.save(resource: resource_class.new(title: ['Parent'], member_ids: [child1.id, child2.id, child1.id])) }
+          xit "includes duplicates" do
+            expect(subject.map(&:id).to_a).to eq [child1.id, child2.id, child1.id]
+          end
+        end
+      end
+
+      context "when there's no resource ID" do
+        let(:parent) { resource_class.new(title: ['Parent']) }
+
+        it "doesn't error" do
+          expect(subject).not_to eq nil
+          expect(subject.to_a).to eq []
+        end
+      end
+
+      context "when there are no members" do
+        let(:parent) { persister.save(resource: resource_class.new(title: ['Parent'])) }
+
+        it "returns an empty array" do
+          expect(subject.to_a).to eq []
+        end
+      end
+
+      context "when the model doesn't have member_ids" do
+        let(:parent) { persister.save(resource: image_resource_class.new) }
+
+        it "returns an empty array" do
+          expect(subject.to_a).to eq []
+        end
+      end
+    end
+
+    context "filtering by model" do
+      subject { query_service.find_members(resource: parent, model: resource_class) }
+      let(:gw_resource_class) { GenericWork }
+      let(:parent_resource_class) { Wings::ModelTransformer.to_valkyrie_resource_class(klass: gw_resource_class) }
+
+      context "when the object has members" do
+        let(:child1) { persister.save(resource: resource_class.new(title: ['Child 1'])) }
+        let(:child2) { persister.save(resource: parent_resource_class.new(title: ['Child 2'])) }
+        let(:child3) { persister.save(resource: resource_class.new(title: ['Child 3'])) }
+        let(:parent) { persister.save(resource: parent_resource_class.new(title: ['Parent'], member_ids: [child3.id, child2.id, child1.id])) }
+
+        it "returns all a resource's members in order" do
+          expect(subject.map(&:id).to_a).to eq [child3.id, child1.id]
+        end
+      end
+
+      context "when there are no members that match the filter" do
+        let(:child2) { persister.save(resource: parent_resource_class.new(title: ['Child 2'])) }
+        let(:parent) { persister.save(resource: parent_resource_class.new(title: ['Parent'], member_ids: [child2.id])) }
+
+        it "returns an empty array" do
+          expect(subject.to_a).to eq []
+        end
+      end
     end
   end
 
