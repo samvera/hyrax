@@ -93,6 +93,7 @@ module Wings
         member_list.map do |obj|
           resource_factory.to_resource(object: obj)
         end
+      end
 
       # Find the Valkyrie Resources referenced by another Valkyrie Resource
       # @param [<Valkyrie::Resource>]
