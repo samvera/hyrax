@@ -249,6 +249,9 @@ RSpec.describe Wings::Valkyrie::QueryService do
         it "returns an empty array" do
           expect(subject.to_a).to eq []
         end
+      end
+    end
+  end
 
   describe ".find_references_by" do
     context "when the property is unordered" do
