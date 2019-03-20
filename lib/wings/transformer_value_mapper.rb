@@ -10,6 +10,8 @@ module Wings
   class TransformerValueMapper < ::Valkyrie::ValueMapper; end
 
   class NestedResourceMapper < ::Valkyrie::ValueMapper
+    # needs to register before the ResourceMapper or it will use that one
+    # instead
     TransformerValueMapper.register(self)
 
     def self.handles?(value)
@@ -18,16 +20,13 @@ module Wings
 
     def result
       id = ActiveFedora::Base.uri_to_id(value.id)
-      obj = ActiveFedora::Base.find id
-      attributes = obj.attributes.keys.each_with_object({}) do |attr_name, mem|
-        mem[attr_name.to_sym] = TransformerValueMapper.for(obj.public_send(attr_name)).result
+      default_obj = ActiveFedora::Base.find id
+      attributes = Wings::ModelTransformer::AttributeTransformer.run(default_obj, default_obj.attributes.keys)
+      nested_object = Wings::ActiveFedoraConverter::NestedResource.new(attributes)
+      klass = Wings::ModelTransformer::ResourceClassCache.instance.fetch(Wings::ActiveFedoraConverter::NestedResource) do
+        ModelTransformer.to_valkyrie_resource_class(klass: nested_object.class)
       end
-      object = Wings::ActiveFedoraConverter::NestedResource.new(attributes)
-      klass = Wings::ModelTransformer::ResourceClassCache.new.fetch(Wings::ActiveFedoraConverter::NestedResource) do
-        ModelTransformer.to_valkyrie_resource_class(klass: object.class)
-      end
-      resource = klass.new(attributes)
-      resource
+      klass.new(attributes)
     end
   end
 
