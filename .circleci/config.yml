@@ -122,7 +122,7 @@ jobs:
       command: bin/solr -cloud -noprompt -f -p 8985
 
     working_directory: ~/hyrax
-    resource_class: medium+
+    resource_class: large
     parallelism: 6
 
     environment: &spec_env
@@ -184,7 +184,7 @@ jobs:
     - image: solr:7-alpine
       command: bin/solr -cloud -noprompt -f -p 8985
 
-    resource_class: medium+
+    resource_class: large
     working_directory: ~/hyrax
     parallelism: 6
     environment: *spec_env
