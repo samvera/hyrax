@@ -19,9 +19,7 @@ module Wings
     end
 
     def result
-      id = ActiveFedora::Base.uri_to_id(value.id)
-      default_obj = ActiveFedora::Base.find id
-      attributes = Wings::ModelTransformer::AttributeTransformer.run(default_obj, default_obj.attributes.keys)
+      attributes = value.attributes
       nested_object = Wings::ActiveFedoraConverter::NestedResource.new(attributes)
       klass = Wings::ModelTransformer::ResourceClassCache.instance.fetch(Wings::ActiveFedoraConverter::NestedResource) do
         ModelTransformer.to_valkyrie_resource_class(klass: nested_object.class)
