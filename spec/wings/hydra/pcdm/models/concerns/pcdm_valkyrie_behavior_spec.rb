@@ -2,7 +2,7 @@
 require 'wings_helper'
 require 'wings/model_transformer'
 
-RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior do
+RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
   subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
 
   let(:resource) { subject.build }
