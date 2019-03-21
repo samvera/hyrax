@@ -37,7 +37,8 @@ module Wings
       # @param [Valkyrie::Resource] resource
       # @return [Valkyrie::Resource] the deleted resource
       def delete(resource:)
-        af_object = resource_factory.from_resource(resource: resource)
+        af_object = ActiveFedora::Base.new
+        af_object.id = resource.alternate_ids.first.to_s
         af_object.delete
       end
 

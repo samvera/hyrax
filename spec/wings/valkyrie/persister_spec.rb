@@ -325,7 +325,7 @@ RSpec.describe Wings::Valkyrie::Persister do
       expect(query_service.find_by(id: id)).to be_kind_of resource_class
     end
 
-    xit "can delete objects" do
+    it "can delete objects" do
       persisted = persister.save(resource: resource)
       persister.delete(resource: persisted)
       expect { query_service.find_by(id: persisted.id) }.to raise_error ::Valkyrie::Persistence::ObjectNotFoundError
