@@ -3,7 +3,7 @@ require 'spec_helper'
 require 'wings'
 require 'wings/active_fedora_converter'
 
-RSpec.describe Wings::ActiveFedoraConverter do
+RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
   subject(:converter) { described_class.new(resource: resource) }
   let(:adapter)       { Valkyrie::Persistence::Memory::MetadataAdapter.new }
   let(:attributes)    { { id: id } }
