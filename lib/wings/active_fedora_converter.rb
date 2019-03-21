@@ -79,8 +79,13 @@ module Wings
     end
 
     ##
+    # In the context of a Valkyrie resource, prefer to use the id if it
+    # is provided and fallback to the first of the alternate_ids. If all else fails
+    # then the id hasn't been minted and shouldn't yet be set.
     # @return [String]
     def id
+      id_attr = resource[:id]
+      return id_attr.to_s if id_attr.present? && id_attr.is_a?(::Valkyrie::ID) && !id_attr.blank?
       return "" unless resource.respond_to?(:alternate_ids)
       resource.alternate_ids.first.to_s
     end

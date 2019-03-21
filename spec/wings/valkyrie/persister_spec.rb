@@ -47,7 +47,7 @@ RSpec.describe Wings::Valkyrie::Persister do
       expect(book.updated_at > book.created_at).to eq true
     end
 
-    xit "can override default id generation with a provided id" do
+    it "can override default id generation with a provided id" do
       id = SecureRandom.uuid
       book = persister.save(resource: resource_class.new(id: id, title: ['Foo']))
       reloaded = query_service.find_by(id: book.id)
