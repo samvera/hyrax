@@ -15,7 +15,6 @@ module Hyrax
     require 'qa'
     require 'clipboard/rails'
     require 'legato'
-    require 'pul_uv_rails'
 
     require 'hydra/derivatives'
     require 'hyrax/controller_resource'

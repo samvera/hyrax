@@ -128,4 +128,9 @@ class TestAppGenerator < Rails::Generators::Base
               "development:\n  adapter: async",
               "development:\n  adapter: redis\n  url: redis://localhost:6379"
   end
+  
+  def install_universal_viewer
+    exec('yarn run install-uv')
+  end
+  
 end
