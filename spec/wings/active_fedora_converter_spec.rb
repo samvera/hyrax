@@ -81,6 +81,10 @@ RSpec.describe Wings::ActiveFedoraConverter do
         it 'converts member_of_collection_ids back to af_object' do
           expect(converter.convert.members.map(&:id)).to match_array [work2.id, work3.id]
         end
+
+        it 'preserves order across conversion' do
+          expect(converter.convert.ordered_member_ids).to match_array [work2.id, work3.id]
+        end
       end
     end
   end
