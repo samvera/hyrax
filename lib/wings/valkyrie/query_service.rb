@@ -109,6 +109,28 @@ module Wings
         return []
       end
 
+      # Get all resources which link to a resource or id with a given property.
+      # @param resource [Valkyrie::Resource] The resource which is being referenced by
+      #   other resources.
+      # @param resource [Valkyrie::ID] The id of the resource which is being referenced by
+      #   other resources.
+      # @param property [Symbol] The property which, on other resources, is
+      #   referencing the given `resource`. Note: the property needs to be
+      #   indexed as a `*_ssim` field
+      # @raise [ArgumentError] Raised when the ID is not in the persistence backend.
+      # @return [Array<Valkyrie::Resource>] All resources in the persistence backend
+      #   which have the ID of the given `resource` in their `property` property. Not
+      #   in order.
+      def find_inverse_references_by(resource: nil, id: nil, property:)
+        raise ArgumentError, "Provide resource or id" unless resource || id
+        id ||= resource.alternate_ids.first
+        raise ArgumentError, "Resource has no id; is it persisted?" unless id
+        uri = ActiveFedora::Base.id_to_uri(id.to_s)
+        ActiveFedora::Base.where("#{property}_ssim: \"#{uri}\"").map do |obj|
+          resource_factory.to_resource(object: obj)
+        end
+      end
+
       # Constructs a Valkyrie::Persistence::CustomQueryContainer using this query service
       # @return [Valkyrie::Persistence::CustomQueryContainer]
       def custom_queries
