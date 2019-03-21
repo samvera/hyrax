@@ -2,7 +2,7 @@
 require 'wings_helper'
 require 'wings/model_transformer'
 
-RSpec.describe Wings::Pcdm::CollectionValkyrieBehavior do
+RSpec.describe Wings::Pcdm::CollectionValkyrieBehavior, :clean_repo do
   subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
 
   let(:collection1) { build(:public_collection_lw, id: 'col1', title: ['Collection 1']) }
