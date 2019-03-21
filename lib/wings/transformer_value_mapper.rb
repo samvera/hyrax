@@ -7,7 +7,26 @@ module Wings
   #
   # This top level matcher has registered several internal mappers which handle
   # indivdual value types from the source data.
-  class ValueMapper < ::Valkyrie::ValueMapper; end
+  class TransformerValueMapper < ::Valkyrie::ValueMapper; end
+
+  class NestedResourceMapper < ::Valkyrie::ValueMapper
+    # needs to register before the ResourceMapper or it will use that one
+    # instead
+    TransformerValueMapper.register(self)
+
+    def self.handles?(value)
+      value.is_a? Wings::ActiveFedoraConverter::NestedResource
+    end
+
+    def result
+      attributes = value.attributes
+      nested_object = Wings::ActiveFedoraConverter::NestedResource.new(attributes)
+      klass = Wings::ModelTransformer::ResourceClassCache.instance.fetch(Wings::ActiveFedoraConverter::NestedResource) do
+        ModelTransformer.to_valkyrie_resource_class(klass: nested_object.class)
+      end
+      klass.new(attributes)
+    end
+  end
 
   ##
   # Maps `RDF::Term` values to their underlying types.
@@ -18,8 +37,8 @@ module Wings
   # handled by `Valkyrie`.
   #
   # @see RDF::Term
-  class ResourceMapper < ValueMapper
-    ValueMapper.register(self)
+  class ResourceMapper < ::Valkyrie::ValueMapper
+    TransformerValueMapper.register(self)
 
     ##
     # @param value [Object]
@@ -41,8 +60,8 @@ module Wings
   # parent `ValueMapper` on each member.
   #
   # @note a common value type this mapper handles is `ActiveTriples::Relation`
-  class EnumerableMapper < ValueMapper
-    ValueMapper.register(self)
+  class EnumerableMapper < ::Valkyrie::ValueMapper
+    TransformerValueMapper.register(self)
 
     ##
     # @param value [Object]

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'wings/value_mapper'
+require 'wings/transformer_value_mapper'
 require 'wings/models/concerns/collection_behavior'
 require 'wings/hydra/works/models/concerns/work_valkyrie_behavior'
 require 'wings/hydra/works/models/concerns/file_set_valkyrie_behavior'
@@ -60,7 +60,7 @@ module Wings
     #
     # @return [::Valkyrie::Resource] a resource mirroiring `pcdm_object`
     def build
-      klass = @@resource_class_cache.fetch(pcdm_object) do
+      klass = ResourceClassCache.instance.fetch(pcdm_object) do
         self.class.to_valkyrie_resource_class(klass: pcdm_object.class)
       end
       pcdm_object.id = minted_id if pcdm_object.id.nil?
@@ -80,6 +80,8 @@ module Wings
     #   end
     #
     class ResourceClassCache
+      include Singleton
+
       ##
       # @!attribute [r] cache
       #   @return [Hash<Class, Class>]
@@ -99,10 +101,6 @@ module Wings
         end
       end
     end
-
-    # we really want a class var here. maybe we could use a singleton instead?
-    # rubocop:disable Style/ClassVars
-    @@resource_class_cache = ResourceClassCache.new
 
     ##
     # @note The method signature is to conform to Valkyrie's method signature
@@ -125,10 +123,11 @@ module Wings
     # @return [Class] a dyamically generated `Valkyrie::Resource` subclass
     #   mirroring the provided `ActiveFedora` model
     #
+    # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/MethodLength because metaprogramming a class
     #   results in long methods
     def self.to_valkyrie_resource_class(klass:)
-      relationship_keys = relationship_keys_for(reflections: klass.reflections)
+      relationship_keys = klass.respond_to?(:reflections) ? relationship_keys_for(reflections: klass.reflections) : []
       relationship_keys.delete('member_ids')
       relationship_keys.delete('member_of_collection_ids')
 
@@ -167,6 +166,7 @@ module Wings
       end
     end
     # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     class ActiveFedoraResource < ::Valkyrie::Resource
       attribute :alternate_ids, ::Valkyrie::Types::Array
@@ -175,30 +175,32 @@ module Wings
       attribute :visibility,    ::Valkyrie::Types::Symbol
     end
 
+    class AttributeTransformer
+      def self.run(obj, keys)
+        keys.each_with_object({}) do |attr_name, mem|
+          next unless obj.respond_to? attr_name
+          mem[attr_name.to_sym] = TransformerValueMapper.for(obj.public_send(attr_name)).result
+        end
+      end
+    end
+
     private
 
       def minted_id
         ::Noid::Rails.config.minter_class.new.mint
       end
 
-      # rubocop:disable Metrics/AbcSize this should probably be refactored later,
-      #   but it seems best to let it develop for now
       def attributes
-        attrs_with_relationships =
+        all_keys =
           pcdm_object.attributes.keys +
           self.class.relationship_keys_for(reflections: pcdm_object.reflections)
-
-        attrs_with_relationships.each_with_object({}) do |attr_name, mem|
-          next unless pcdm_object.respond_to? attr_name
-          mem[attr_name.to_sym] = ValueMapper.for(pcdm_object.public_send(attr_name)).result
-        end
-                                .merge(created_at: pcdm_object.try(:create_date),
-                                       updated_at: pcdm_object.try(:modified_date),
-                                       embargo_id: pcdm_object.try(:embargo)&.id,
-                                       lease_id:   pcdm_object.try(:lease)&.id,
-                                       visibility: pcdm_object.try(:visibility))
+        AttributeTransformer.run(pcdm_object, all_keys)
+                            .merge(created_at: pcdm_object.try(:create_date),
+                                   updated_at: pcdm_object.try(:modified_date),
+                                   embargo_id: pcdm_object.try(:embargo)&.id,
+                                   lease_id:   pcdm_object.try(:lease)&.id,
+                                   visibility: pcdm_object.try(:visibility))
       end
   end
-  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Style/ClassVars
 end
