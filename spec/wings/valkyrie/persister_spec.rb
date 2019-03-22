@@ -49,9 +49,11 @@ RSpec.describe Wings::Valkyrie::Persister do
 
     it "can override default id generation with a provided id" do
       id = SecureRandom.uuid
+      valkyrie_id = Valkyrie::ID.new(id)
       book = persister.save(resource: resource_class.new(id: id, title: ['Foo']))
       reloaded = query_service.find_by(id: book.id)
-      expect(reloaded.id).to eq Valkyrie::ID.new(id)
+      expect(reloaded.id).to eq valkyrie_id
+      expect(reloaded.alternate_ids.first).to eq valkyrie_id
       expect(reloaded).to be_persisted
       expect(reloaded.created_at).not_to be_blank
       expect(reloaded.updated_at).not_to be_blank
@@ -126,6 +128,7 @@ RSpec.describe Wings::Valkyrie::Persister do
       saved = persister.save(resource: resource)
       expect(saved).to be_persisted
       expect(saved.id).not_to be_blank
+      expect(saved.alternate_ids.first).to eq saved.id
     end
 
     it "can save multiple resources at once" do
