@@ -13,17 +13,23 @@
           <div class="row">
             <div class="col-xs-12">
                 <!-- The fileinput-button span is used to style the file input field as button -->
-                <span id="addfiles" class="btn btn-success fileinput-button">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    <span><%=  t(".add_files") %></span>
-                    <input type="file" name="files[]" multiple />
-                </span>
+                <!-- The a tag and the tabIndex="-1" is used to allow tabbing on page to work -->
+                <a href="#" onclick="return false;">
+                    <span id="addfiles" class="btn btn-success fileinput-button">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        <span><%=  t(".add_files") %></span>
+                        <input tabIndex="-1" type="file" name="files[]" multiple />
+                    </span>
+                </a>
                 <!-- The fileinput-button span is used to style the file input field as button -->
-                <span id="addfolder" class="btn btn-success fileinput-button">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    <span><%=  t(".add_folder") %></span>
-                    <input type="file" name="files[]" multiple directory webkitdirectory />
-                </span>
+                <!-- The a tag and the tabIndex="-1" is used to allow tabbing on page to work -->
+                <a href="#" onclick="return false;">
+                    <span id="addfolder" class="btn btn-success fileinput-button">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        <span><%=  t(".add_folder") %></span>
+                        <input tabIndex="-1" type="file" name="files[]" multiple directory webkitdirectory />
+                    </span>
+                </a>
                 <% if Hyrax.config.browse_everything? %>
                   <%= button_tag(type: 'button', class: 'btn btn-success', id: "browse-btn",
                     'data-toggle' => 'browse-everything', 'data-route' => browse_everything_engine.root_path,
