@@ -229,7 +229,11 @@ module Hyrax
     def valkyrie_metadata_adapter
       Valkyrie::MetadataAdapter.find(@valkyrie_metadata_adapter || :wings_adapter)
     end
-    attr_writer :valkyrie_metadata_adapter
+
+    def valkyrie_metadata_adapter=(adapter)
+      raise StandardError, "Hyrax currently only supports :wings_adapter as the configured valkyrie_metadata_adapter." unless adapter == :wings_adapter
+      @valkyrie_metadata_adapter = adapter
+    end
 
     # The StorageAdapter to use when persisting resources with Valkyrie
     #
