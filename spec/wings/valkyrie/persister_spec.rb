@@ -283,7 +283,7 @@ RSpec.describe Wings::Valkyrie::Persister do
       expect([shared_title.id, Valkyrie::ID.new("adapter://1"), "test"]).to contain_exactly(*reloaded.title)
     end
 
-    xit "can override default id generation with a provided id" do
+    it "can override default id generation with a provided id" do
       id = SecureRandom.uuid
       book = persister.save(resource: resource_class.new(id: id))
       reloaded = query_service.find_by(id: book.id)
