@@ -166,6 +166,7 @@ module Wings
       end
     end
     # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     class ActiveFedoraResource <    ::Valkyrie::Resource
       attribute :alternate_ids,     ::Valkyrie::Types::Array
@@ -196,15 +197,17 @@ module Wings
           pcdm_object.attributes.keys +
           self.class.relationship_keys_for(reflections: pcdm_object.reflections)
         AttributeTransformer.run(pcdm_object, all_keys)
-                            .merge(created_at:        pcdm_object.try(:create_date),
-                                   updated_at:        pcdm_object.try(:modified_date),
-                                   embargo_id:        pcdm_object.try(:embargo)&.id,
-                                   lease_id:          pcdm_object.try(:lease)&.id,
-                                   representative_id: pcdm_object.try(:representative)&.id,
-                                   thumbnail_id:      pcdm_object.try(:thumbnail)&.id,
-                                   visibility:        pcdm_object.try(:visibility))
+                            .merge active_fedora_resource_reflection_ids
+          .merge(created_at: pcdm_object.try(:create_date),
+                 updated_at: pcdm_object.try(:modified_date),
+                 visibility: pcdm_object.try(:visibility))
+      end
+
+      def active_fedora_resource_reflection_ids
+        ActiveFedoraResource.fields.select { |k| k.to_s.end_with? '_id' }.each_with_object({}) do |k, mem|
+          mem[k] = pcdm_object.try(k)
+        end
       end
   end
   # rubocop:enable Style/ClassVars
-  # rubocop:enable Metrics/AbcSize
 end
