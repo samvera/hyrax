@@ -98,7 +98,14 @@ jobs:
 
     - run:
         name: Generate test app
-        command: (git diff --name-only master | grep -qG 'generators\/hyrax') || bundle exec rake engine_cart:generate
+        command: |
+          has_generator_changes=`(git diff --name-only master | grep -G 'generators\/hyrax')`
+          if [ $? == 0 ] || [ ! -f .internal_test_app/Gemfile ]; then
+            bundle exec rake engine_cart:generate
+            exit $?
+          else
+            exit 0
+          fi
 
     - save_cache:
         key: v1-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
