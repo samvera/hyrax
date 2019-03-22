@@ -197,13 +197,13 @@ module Wings
           pcdm_object.attributes.keys +
           self.class.relationship_keys_for(reflections: pcdm_object.reflections)
         AttributeTransformer.run(pcdm_object, all_keys)
-                            .merge active_fedora_resource_reflection_ids
+                            .merge active_fedora_resource_attribute_ids
           .merge(created_at: pcdm_object.try(:create_date),
                  updated_at: pcdm_object.try(:modified_date),
                  visibility: pcdm_object.try(:visibility))
       end
 
-      def active_fedora_resource_reflection_ids
+      def active_fedora_resource_attribute_ids
         ActiveFedoraResource.fields.select { |k| k.to_s.end_with? '_id' }.each_with_object({}) do |k, mem|
           mem[k] = pcdm_object.try(k)
         end
