@@ -74,7 +74,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
         let(:work3)       { build(:work, id: 'wk3', title: ['Work 3']) }
 
         before do
-          work1.members = [work2, work3]
+          work1.ordered_members = [work2, work3]
           work1.save!
         end
 

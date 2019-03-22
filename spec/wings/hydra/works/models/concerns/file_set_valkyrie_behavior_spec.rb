@@ -28,8 +28,8 @@ RSpec.describe Wings::Works::FileSetValkyrieBehavior, :clean_repo do
     let(:child_file_set_resource) { resource }
 
     before do
-      work1.members = [fileset1]
-      work2.members = [fileset1]
+      work1.ordered_members = [fileset1]
+      work2.ordered_members = [fileset1]
       work1.save!
       work2.save!
     end
@@ -63,8 +63,8 @@ RSpec.describe Wings::Works::FileSetValkyrieBehavior, :clean_repo do
     let(:child_file_set_resource) { resource }
 
     before do
-      work1.members = [fileset1]
-      work2.members = [fileset1]
+      work1.ordered_members = [fileset1]
+      work2.ordered_members = [fileset1]
       work1.save!
       work2.save!
     end

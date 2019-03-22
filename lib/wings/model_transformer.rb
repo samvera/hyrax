@@ -49,10 +49,12 @@ module Wings
     #
     # @return [Array<Symbol>]
     def self.relationship_keys_for(reflections:)
-      reflections
-        .keys
-        .reject { |k| k.to_s.include?('id') }
-        .map { |k| k.to_s.singularize + '_ids' }
+      relationships = reflections
+                      .keys
+                      .reject { |k| k.to_s.include?('id') }
+                      .map { |k| k.to_s.singularize + '_ids' }
+      relationships.delete(:member_ids) # Remove here.  Members will be extracted as ordered_members in attributes method.
+      relationships
     end
 
     ##
@@ -199,7 +201,8 @@ module Wings
                                    updated_at: pcdm_object.try(:modified_date),
                                    embargo_id: pcdm_object.try(:embargo)&.id,
                                    lease_id:   pcdm_object.try(:lease)&.id,
-                                   visibility: pcdm_object.try(:visibility))
+                                   visibility: pcdm_object.try(:visibility),
+                                   member_ids: pcdm_object.try(:ordered_member_ids)) # We want members in order, so extract from ordered_members.
       end
   end
   # rubocop:enable Style/ClassVars

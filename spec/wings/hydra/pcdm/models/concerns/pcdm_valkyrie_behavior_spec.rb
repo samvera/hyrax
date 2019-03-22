@@ -82,7 +82,7 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
     let(:parent_work_resource) { resource }
 
     before do
-      work1.members = [work2, work3, fileset1, fileset2]
+      work1.ordered_members = [work2, work3, fileset1, fileset2]
       work1.save!
     end
 
@@ -111,7 +111,7 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
     let(:parent_work_resource) { resource }
 
     before do
-      work1.members = [work2, work3, fileset1, fileset2]
+      work1.ordered_members = [work2, work3, fileset1, fileset2]
       work1.save!
     end
 
@@ -147,7 +147,7 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
     let(:pcdm_object) { collection1 }
 
     before do
-      collection1.members = [work1, work2, collection2, collection3]
+      collection1.ordered_members = [work1, work2, collection2, collection3]
       collection1.save!
     end
 
@@ -181,7 +181,7 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
     let(:pcdm_object) { collection1 }
 
     before do
-      collection1.members = [work1, work2, collection2, collection3]
+      collection1.ordered_members = [work1, work2, collection2, collection3]
       collection1.save!
     end
 
@@ -213,8 +213,8 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
     let(:child_resource) { resource }
 
     before do
-      work1.members = [work3, fileset1]
-      work2.members = [work3, fileset2]
+      work1.ordered_members = [work3, fileset1]
+      work2.ordered_members = [work3, fileset2]
       work1.save!
       work2.save!
     end
@@ -254,9 +254,9 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
     let(:child_resource) { resource }
 
     before do
-      collection1.members = [work1, collection3]
-      collection2.members = [work1, work2]
-      work3.members = [work1]
+      collection1.ordered_members = [work1, collection3]
+      collection2.ordered_members = [work1, work2]
+      work3.ordered_members = [work1]
       collection1.save!
       collection2.save!
     end
@@ -296,9 +296,9 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
     let(:child_resource) { resource }
 
     before do
-      collection1.members = [work1, collection3]
-      collection2.members = [work1, work2]
-      work3.members = [work1]
+      collection1.ordered_members = [work1, collection3]
+      collection2.ordered_members = [work1, work2]
+      work3.ordered_members = [work1]
       collection1.save!
       collection2.save!
       work3.save!
