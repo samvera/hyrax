@@ -99,9 +99,9 @@ jobs:
     - run:
         name: Generate test app
         command: |
-          has_generator_changes=git diff --name-only master | grep -G 'generators\/hyrax'
-          echo "$has_generator_changes"
+          has_generator_changes=`git diff --name-only master | grep -G 'generators\/hyrax'`
           echo $?
+          echo "$has_generator_changes"
           if [ $? == 0 ] || [ ! -f .internal_test_app/Gemfile ]; then
             bundle exec rake engine_cart:generate
           fi
