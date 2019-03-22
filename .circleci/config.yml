@@ -102,9 +102,6 @@ jobs:
           has_generator_changes=`(git diff --name-only master | grep -G 'generators\/hyrax')`
           if [ $? == 0 ] || [ ! -f .internal_test_app/Gemfile ]; then
             bundle exec rake engine_cart:generate
-            exit $?
-          else
-            exit 0
           fi
 
     - save_cache:
