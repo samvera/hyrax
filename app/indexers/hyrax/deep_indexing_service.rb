@@ -25,6 +25,21 @@ module Hyrax
     end
 
     private
+      # Grab full label geolocation label to index for display. e.g. Chapel Hill, North Carolina, United States
+      def parse_geo_location(location)
+        begin
+          geo_id = location.match(/\d+/)[0]
+          request = HTTParty.get("http://api.geonames.org/getJSON?geonameId=#{geo_id}&username=#{Hyrax.config.geonames_username}")
+          response = JSON.parse(request.body)
+          "#{response["asciiName"]}, #{response["adminName1"]}, #{response["countryName"]}"
+        rescue => e
+          Rails.logger.warn "Unable to index location for #{location} from geonames service"
+          mail(to: Hyrax.config.contact_email, subject: 'Unable to index geonames uri to human readable text') do |format|
+            format.text { render plain: e.message }
+          end
+          return ''
+        end
+      end
 
       # Grab the labels for controlled properties from the remote sources
       def fetch_external
@@ -66,7 +81,8 @@ module Hyrax
       # @param [Hash] field_info
       # @param [Array] val an array of two elements, first is a string (the uri) and the second is a hash with one key: `:label`
       def append_label_and_uri(solr_doc, solr_field_key, field_info, val)
-        val = val.solrize
+        full_label = parse_geo_location(val.to_uri.to_s)
+        val = val.solrize(full_label)
         ActiveFedora::Indexing::Inserter.create_and_insert_terms(solr_field_key,
                                                                  val.first,
                                                                  field_info.behaviors, solr_doc)
@@ -83,11 +99,12 @@ module Hyrax
       # @param [Hash] field_info
       # @param [String] val
       def append_label(solr_doc, solr_field_key, field_info, val)
+        full_label = parse_geo_location(val.to_uri.to_s)
         ActiveFedora::Indexing::Inserter.create_and_insert_terms(solr_field_key,
-                                                                 val,
+                                                                 full_label,
                                                                  field_info.behaviors, solr_doc)
         ActiveFedora::Indexing::Inserter.create_and_insert_terms("#{solr_field_key}_label",
-                                                                 val,
+                                                                 full_label,
                                                                  field_info.behaviors, solr_doc)
       end
 
