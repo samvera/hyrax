@@ -550,6 +550,10 @@ es:
         show_more_parent_collections: mostrar más...
         subcollection_count: Subcolecciones
         works_in_collection: Trabajos en esta colección
+      sort_and_per_page:
+        number_of_results_to_display_per_page: Número de resultados a mostrar por página
+        results_per_page: 'Resultados por página:'
+        sort_by_html: "<span>Tipo:</span>"
     contact_form:
       button_label: Enviar
       email_label: Tu Correo Electrónico
@@ -612,15 +616,22 @@ es:
             relationships: Relaciones
             sharing: Compartiendo
         form_branding:
+          alt_text: 'Texto Alternativo:'
           banner:
             description: Una imagen para mostrar en la parte superior de la página de colección. Para obtener los mejores resultados, cargue una imagen (JPG, GIF o PNG) que tenga al menos 120 píxeles de alto y 1.200 píxeles de ancho.
             label: Bandera
           branding:
             description: Opcionalmente, puede cargar una imagen de banner y / o imágenes de logotipo para asociar con esta colección. Si se cargan, estas imágenes se mostrarán en la parte superior de la página de la colección para proporcionar una marca única para la colección.
             label: Marca
+          choose_file: Elija Archivo
+          link_url: 'Link URL:'
           logo:
             description: Una o más imágenes para mostrar en la parte superior de la página de la colección. Para obtener los mejores resultados, cargue una imagen (JPG, GIF o PNG) de 40 píxeles de altura. Las imágenes más grandes se redimensionarán a 40 píxeles de altura.
             label: Logo
+          previous: Anterior
+          remove: Quitar
+          remove_current_banner: Quitar El Banner Actual
+          remove_logo: Quitar Logo
         form_discovery:
           para1: Esta configuración determina quién puede descubrir y ver la página de destino de esta colección; no afectan la visibilidad de los elementos en la colección.
           para2: Si elige no hacer que esta colección tenga acceso abierto, aún puede compartir la colección con usuarios y grupos específicos mediante la pestaña Compartir.
@@ -647,7 +658,13 @@ es:
           add_sharing: Agregar Compartir
           add_user: Agregar usuario
           current_shared: Actualmente compartido con
+          depositor: Depositante
+          manager: El administrador de
           note: Independientemente de la configuración de visibilidad de esta colección, puede compartir esta colección con grupos y usuarios específicos.
+          search_for_a_group: La búsqueda de un grupo de...
+          search_for_a_user: Búsqueda de un usuario...
+          select_a_role: Seleccione un papel...
+          viewer: Visor
         form_share_table:
           allow_all_registered: Permitir todo registrado
           depositors:
@@ -688,6 +705,9 @@ es:
           show_less_parent_collections: "...Muestra menos"
           show_more_parent_collections: mostrar más...
           subcollection_count: Subcolecciones
+        sort_and_per_page:
+          show_par_page_html: "%{select} Por página"
+          sort_by: 'Ordenar Por:'
       create_work: Crear Trabajo
       current_proxies: Proxies actuales
       delete_notification: Eliminar notificación
@@ -811,6 +831,7 @@ es:
         file_views: Ver
         files: Archivos depositados
         heading: Mis Estadísticas
+        joined_on: Se unió en
         works: Trabajos creados
       title: Mi Panel de Control
       transfer_of_ownership: Transferencias de propiedad
@@ -926,6 +947,19 @@ es:
         restore_from: Restaurar desde
         save: Guardar revisión
         upload: Subir nueva versión
+      show_details:
+        file_details: Los Detalles Del Archivo
+        depositor: Depositante
+        date_uploaded: Fecha Cargado
+        date_modified: Fecha De Modificación
+        fixity_check: La Fijeza De Verificación
+        characterization: Caracterización
+        not_yet_characterized: Aún No Se Caracteriza
+      show_actions:
+        analytics: Analíticas
+        delete_this: Eliminar este %{type}
+        edit_this: Editar este %{type}
+        confirm_delete_this: Eliminar este %{type}?
     help:
       header: Soporte al Usuario
       override_text: Utilice app/views/static/help.html.erb para anular este archivo

@@ -545,6 +545,10 @@ de:
         show_more_parent_collections: Zeig mehr...
         subcollection_count: Untergeordnete Sammlungen
         works_in_collection: Arbeiten in dieser Sammlung
+      sort_and_per_page:
+        number_of_results_to_display_per_page: Anzahl der Ergebnisse die pro Seite angezeigt werden
+        results_per_page: 'Ergebnisse pro Seite:'
+        sort_by_html: "<span>Sortieren nach:</span>"
     contact_form:
       button_label: Senden
       email_label: Ihre E-Mail
@@ -607,15 +611,22 @@ de:
             relationships: Beziehungen
             sharing: Freigaben
         form_branding:
+          alt_text: 'Alternativer Linktext:'
           banner:
             description: Ein Bild, das am oberen Rand der Sammlungsseite angezeigt werden soll. Für beste Ergebnisse laden Sie ein Bild (JPG, GIF oder PNG) hoch, das mindestens 120 Pixel groß und 1200 Pixel breit ist.
             label: Banner
           branding:
             description: Optional können Sie ein Bannerbild und / oder Logo-Bilder hochladen, die mit dieser Sammlung verknüpft werden sollen. Wenn diese hochgeladen werden, werden diese Bilder oben auf der Sammlungsseite angezeigt, um ein eindeutiges Markenbildung für die Sammlung bereitzustellen.
             label: Markenbildung
+          choose_file: "Datei wählen"
+          link_url: 'URL-Link:'
           logo:
             description: Ein oder mehrere Bilder, die oben auf der Sammlungsseite angezeigt werden. Für beste Ergebnisse laden Sie ein Bild (JPG, GIF oder PNG) hoch, das 40 Pixel hoch ist. Größere Bilder werden auf 40 Pixel in der Höhe angepasst.
             label: Logo
+          previous: Vorherig
+          remove: Entfernen
+          remove_current_banner: Aktuelles Banner entfernen
+          remove_logo: Logo entfernen
         form_discovery:
           para1: Diese Einstellungen legen fest, wer die Einstiegsseite dieser Sammlung ermitteln und ansehen kann. Sie haben keinen Einfluss auf die Sichtbarkeit von Elementen in der Sammlung.
           para2: Wenn Sie diese Sammlung nicht öffnen möchten, können Sie die Sammlung weiterhin für bestimmte Benutzer und Gruppen freigeben, indem Sie die Registerkarte Freigaben verwenden.
@@ -642,7 +653,13 @@ de:
           add_sharing: Freigaben hinzufügen
           add_user: Benutzer hinzufügen
           current_shared: Derzeit freigegeben für
+          depositor: Deponent
+          manager: Manager
           note: Unabhängig von den Sichtbarkeitseinstellungen dieser Sammlung können Sie diese Sammlung für bestimmte Gruppen und Benutzer freigeben.
+          search_for_a_group: Eine Gruppe suchen...
+          search_for_a_user: Einen Benutzer suchen...
+          select_a_role: Wählen Sie eine Rolle...
+          viewer: Betrachter
         form_share_table:
           allow_all_registered: Erlaube alle registrierten
           depositors:
@@ -683,6 +700,9 @@ de:
           show_less_parent_collections: "...zeige weniger"
           show_more_parent_collections: Zeig mehr...
           subcollection_count: Untersammlungen
+        sort_and_per_page:
+          show_par_page_html: Zeige %{select} pro Seite
+          sort_by: 'Sortieren nach:'
       create_work: Arbeiten erstellen
       current_proxies: Aktuelle Vertreter
       delete_notification: Benachrichtigung löschen
@@ -806,6 +826,7 @@ de:
         file_views: Aussicht
         files: Dateien deponiert
         heading: Ihre Statistik
+        joined_on: Beigetreten am
         works: Arbeiten erstellt
       title: Mein Dashboard
       transfer_of_ownership: Eigentumsübertragungen
@@ -906,6 +927,19 @@ de:
         table_title_access: Zugriffsebene
         table_title_user: Person / Gruppe
         user_search: Nach einem Benutzer suchen
+      show_actions:
+        analytics: Statistik
+        confirm_delete_this: "%{type} löschen?"
+        delete_this: Löschen %{type}
+        edit_this: "%{type} bearbeiten"
+      show_details:
+        characterization: Charakterisierung
+        date_modified: Letztes Änderungsdatum
+        date_uploaded: Hochlade-Datum
+        depositor: Deponent
+        file_details: Dateidetails
+        fixity_check: Beständigkeit überprüfen
+        not_yet_characterized: Noch nicht charakterisiert
       versioning:
         current: Aktuelle Version
         header: Versionen

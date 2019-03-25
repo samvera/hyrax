@@ -1,19 +1,19 @@
-<h2>File Details</h2>
+<h2><%= t(".file_details") %></h2>
 <dl class="dl-horizontal file-show-term file-show-details">
-  <dt>Depositor</dt>
+  <dt><%= t(".depositor") %></dt>
   <dd itemprop="accountablePerson" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><%= link_to_profile @presenter.depositor %></span></dd>
-  <dt>Date Uploaded</dt>
+  <dt><%= t(".date_uploaded") %></dt>
   <dd itemprop="datePublished"><%= @presenter.date_uploaded %></dd>
-  <dt>Date Modified</dt>
+  <dt><%= t(".date_modified") %></dt>
   <dd itemprop="dateModified"><%= @presenter.date_modified %></dd>
-  <dt>Fixity Check</dt>
+  <dt><%= t(".fixity_check") %></dt>
   <dd><%= @presenter.fixity_check_status %></dd>
-  <dt>Characterization</dt>
+  <dt><%= t(".characterization") %></dt>
   <dd>
     <% if @presenter.characterized? %>
       <%= render 'show_characterization_details' %>
     <% else %>
-      not yet characterized
+      <%= t(".not_yet_characterized") %>
     <% end %>
   </dd>
 </dl>

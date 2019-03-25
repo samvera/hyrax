@@ -1,5 +1,5 @@
 <div class="list-group-item">
-  <span class="glyphicon glyphicon-time" aria-hidden="true"></span> Joined on <%= user.created_at.to_date.strftime("%b %d, %Y") %>
+  <span class="glyphicon glyphicon-time" aria-hidden="true"></span> <%= t("hyrax.dashboard.stats.joined_on") %> <%= user.created_at.to_date.strftime("%b %d, %Y") %>
 </div>
 
 <div class="list-group-item">
