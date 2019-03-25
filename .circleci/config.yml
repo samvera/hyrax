@@ -90,7 +90,7 @@ jobs:
     - run: sudo apt-get -y install google-chrome-stable
     - restore_cache:
         keys:
-        - v1-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
+        - v2-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
 
     - run:
         name: Check dependencies
@@ -98,10 +98,10 @@ jobs:
 
     - run:
         name: Generate test app
-        command: (git diff --name-only master | grep -qG 'generators\/hyrax') || bundle exec rake engine_cart:generate
+        command: bundle exec rake engine_cart:generate
 
     - save_cache:
-        key: v1-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
+        key: v2-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
         paths:
         - ".internal_test_app"
 
