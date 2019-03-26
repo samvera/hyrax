@@ -102,6 +102,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
       {
         title: ['foo'],
         description: [''],
+        abstract: [''],
         visibility: 'open',
         parent_id: '123',
         representative_id: '456',
@@ -119,6 +120,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
     it 'permits parameters' do
       expect(subject['title']).to eq ['foo']
       expect(subject['description']).to be_empty
+      expect(subject['abstract']).to be_empty
       expect(subject['visibility']).to eq 'open'
       expect(subject['license']).to eq ['http://creativecommons.org/licenses/by/3.0/us/']
       expect(subject['rights_statement']).to eq 'http://rightsstatements.org/vocab/InC-EDU/1.0/'
@@ -170,6 +172,12 @@ RSpec.describe Hyrax::Forms::WorkForm do
   describe "initialized fields" do
     context "for :description" do
       subject { form[:description] }
+
+      it { is_expected.to eq [''] }
+    end
+
+    context "for :abstract" do
+      subject { form[:abstract] }
 
       it { is_expected.to eq [''] }
     end
