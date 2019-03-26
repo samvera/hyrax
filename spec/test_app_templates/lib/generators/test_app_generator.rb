@@ -5,12 +5,6 @@ class TestAppGenerator < Rails::Generators::Base
   # so the following path gets us to /path/to/hyrax/spec/test_app_templates/
   source_root File.expand_path('../../../../spec/test_app_templates/', __FILE__)
 
-  def require_bootsnap
-    inject_into_file 'config/boot.rb', after: "require 'bundler/setup' # Set up gems listed in the Gemfile.\n" do
-      "require 'bootsnap/setup'\n"
-    end
-  end
-
   def install_engine
     generate 'hyrax:install', '-f'
   end
@@ -128,9 +122,9 @@ class TestAppGenerator < Rails::Generators::Base
               "development:\n  adapter: async",
               "development:\n  adapter: redis\n  url: redis://localhost:6379"
   end
-  
+
   def install_universal_viewer
     system './bin/yarn install'
   end
-  
+
 end
