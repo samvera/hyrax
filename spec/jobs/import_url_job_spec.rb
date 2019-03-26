@@ -3,10 +3,11 @@ RSpec.describe ImportUrlJob do
 
   let(:file_path) { fixture_path + '/world.png' }
   let(:file_hash) { '/673467823498723948237462429793840923582' }
+  let(:file_name) { 'world.png' }
 
   let(:file_set) do
     FileSet.new(import_url: "http://example.org#{file_hash}",
-                label: file_path) do |f|
+                label: file_name) do |f|
       f.apply_depositor_metadata(user.user_key)
     end
   end
@@ -74,7 +75,7 @@ RSpec.describe ImportUrlJob do
 
     it 'leaves the temp directory in place' do
       described_class.perform_now(file_set, operation)
-      expect(File.exist?(File.join(tmpdir, file_hash))).to be true
+      expect(File.exist?(File.join(tmpdir, file_name))).to be true
     end
   end
 

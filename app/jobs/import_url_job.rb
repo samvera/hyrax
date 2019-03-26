@@ -62,7 +62,7 @@ class ImportUrlJob < Hyrax::ApplicationJob
     # @param uri [URI] the uri of the file to download
     # @yield [IO] the stream to write to
     def copy_remote_file(uri, headers = {})
-      filename = File.basename(uri.path)
+      filename = file_set.label
       dir = Dir.mktmpdir
       Rails.logger.debug("ImportUrlJob: Copying <#{uri}> to #{dir}")
 
