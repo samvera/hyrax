@@ -85,6 +85,7 @@ module Wings
         return af_parents unless valkyrie
         af_parents.map(&:valkyrie_resource)
       end
+      alias parent_objects member_of
 
       # @return [Enumerable<ActiveFedora::Base> | Enumerable<Valkyrie::Resource>] the collections the
       #   object is a member of.
