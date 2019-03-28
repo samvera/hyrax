@@ -33,7 +33,7 @@ jobs:
 
     - restore_cache:
         keys:
-        - v1-bundle-{{ checksum "Gemfile.lock" }}--{{ checksum "hyrax.gemspec" }}
+        - v1-bundle-{{ checksum "Gemfile" }}--{{ checksum "hyrax.gemspec" }}
         - v1-bundle
 
     - run:
@@ -41,7 +41,7 @@ jobs:
         command: bundle check || bundle install
 
     - save_cache:
-        key: v1-bundle-{{ checksum "Gemfile.lock" }}--{{ checksum "hyrax.gemspec" }}
+        key: v1-bundle-{{ checksum "Gemfile" }}--{{ checksum "hyrax.gemspec" }}
         paths:
         - ~/hyrax/vendor/bundle
 
@@ -91,7 +91,7 @@ jobs:
     - restore_cache:
         keys:
         - v3-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
-        - v1-bundle-{{ checksum "Gemfile.lock" }}--{{ checksum "hyrax.gemspec" }}
+        - v1-bundle-{{ checksum "Gemfile" }}--{{ checksum "hyrax.gemspec" }}
 
     - run:
         name: Generate test app
@@ -141,7 +141,7 @@ jobs:
     - restore_cache:
         keys:
         - v3-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
-        - v1-bundle-{{ checksum "Gemfile.lock" }}--{{ checksum "hyrax.gemspec" }}
+        - v1-bundle-{{ checksum "Gemfile" }}--{{ checksum "hyrax.gemspec" }}
         
     - run:
         name: Uninstall chromedriver Gems
