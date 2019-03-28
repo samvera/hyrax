@@ -19,7 +19,7 @@ RSpec.describe Hyrax::VisibilityIntentionApplicator do
 
   describe '#apply_to' do
     it 'applies simple visibility' do
-      expect { applicator.apply_to(work) }
+      expect { applicator.apply_to(model: work) }
         .to change { work.visibility }
         .to Hyrax::VisibilityIntention::PUBLIC
     end
@@ -39,7 +39,7 @@ RSpec.describe Hyrax::VisibilityIntentionApplicator do
       end
 
       it 'applies an embargo' do
-        expect { applicator.apply_to(work) }
+        expect { applicator.apply_to(model: work) }
           .to change { work.embargo }
           .to be_an_embargo_matching(release_date: end_date, during: during, after: after)
       end
@@ -60,7 +60,7 @@ RSpec.describe Hyrax::VisibilityIntentionApplicator do
       end
 
       it 'applies an lease' do
-        expect { applicator.apply_to(work) }
+        expect { applicator.apply_to(model: work) }
           .to change { work.lease }
           .to be_a_lease_matching(release_date: end_date, during: during, after: after)
       end

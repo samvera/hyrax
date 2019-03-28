@@ -23,17 +23,17 @@ module Hyrax
     end
 
     ##
-    # @param [Object] obj an object; this probably needs to be leasable,
+    # @param [Object] model an object; this probably needs to be leasable,
     #   embargoable, has visibility, and an AdminSet/PermissionTemplate.
-    def apply_to(obj)
+    def apply_to(model:)
       if intention.wants_embargo?
         raise InvalidIntentionError unless intention.valid_embargo?
-        obj.apply_embargo(*intention.embargo_params)
+        model.apply_embargo(*intention.embargo_params)
       elsif intention.wants_lease?
         raise InvalidIntentionError unless intention.valid_lease?
-        obj.apply_lease(*intention.lease_params)
+        model.apply_lease(*intention.lease_params)
       else
-        obj.visibility = intention.visibility
+        model.visibility = intention.visibility
       end
     end
     alias to apply_to

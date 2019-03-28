@@ -27,7 +27,7 @@ module Hyrax
                                                      during:       during,
                                                      after:        after)
 
-          Hyrax::VisibilityIntentionApplicator.apply(intention).to(work)
+          Hyrax::VisibilityIntentionApplicator.apply(intention).to(model: work)
 
           Success(work)
         rescue Hyrax::VisibilityIntentionApplicator::InvalidIntentionError => err
