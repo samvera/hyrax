@@ -91,6 +91,9 @@ jobs:
     - restore_cache:
         keys:
         - v1-bundle-{{ checksum "Gemfile" }}--{{ checksum "hyrax.gemspec" }}
+        
+    - restore_cache:
+        keys:
         - v3-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
 
     - run:
@@ -141,6 +144,9 @@ jobs:
     - restore_cache:
         keys:
         - v1-bundle-{{ checksum "Gemfile" }}--{{ checksum "hyrax.gemspec" }}
+        
+    - restore_cache:
+        keys:
         - v3-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
         
     - run:
