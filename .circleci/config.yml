@@ -33,7 +33,7 @@ jobs:
 
     - restore_cache:
         keys:
-        - v1-bundle-{{ checksum "Gemfile" }}--{{ checksum "hyrax.gemspec" }}
+        - v1-bundle-{{ checksum "Gemfile.lock" }}--{{ checksum "hyrax.gemspec" }}
         - v1-bundle
 
     - run:
@@ -90,18 +90,15 @@ jobs:
     - run: sudo apt-get -y install google-chrome-stable
     - restore_cache:
         keys:
-        - v2-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
-
-    - run:
-        name: Check dependencies
-        command: bundle check || bundle install
+        - v3-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
+        - v1-bundle-{{ checksum "Gemfile.lock" }}--{{ checksum "hyrax.gemspec" }}
 
     - run:
         name: Generate test app
         command: bundle exec rake engine_cart:generate
 
     - save_cache:
-        key: v2-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
+        key: v3-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
         paths:
         - ".internal_test_app"
 
@@ -140,11 +137,12 @@ jobs:
     steps: &run_specs
     - attach_workspace:
         at: ~/
-
-    - run:
-        name: Ensure top-level Gemfile.lock is valid
-        command: bundle check || bundle install
-
+        
+    - restore_cache:
+        keys:
+        - v3-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
+        - v1-bundle-{{ checksum "Gemfile.lock" }}--{{ checksum "hyrax.gemspec" }}
+        
     - run:
         name: Uninstall chromedriver Gems
         command: gem uninstall -ax chromedriver-helper
