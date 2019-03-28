@@ -36,7 +36,6 @@ RSpec.describe Wings::Works::FileSetValkyrieBehavior, :clean_repo do
 
     context 'when valkyrie resources requested' do
       it 'returns parent works as valkyrie resources through file_set_valkyrie_behavior' do
-        pending "TODO: Implementation of this method for valkyrie"
         resources = child_file_set_resource.parent_works(valkyrie: true)
         expect(resources.map(&:work?)).to all(be true)
         expect(resources.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([work1.id, work2.id])
@@ -71,7 +70,6 @@ RSpec.describe Wings::Works::FileSetValkyrieBehavior, :clean_repo do
 
     context 'when valkyrie resources requested' do
       it 'returns parent works as valkyrie resources through file_set_valkyrie_behavior' do
-        pending "TODO: Implementation of this method for valkyrie"
         resource_ids = child_file_set_resource.parent_work_ids(valkyrie: true)
         expect(resource_ids).to match_valkyrie_ids_with_active_fedora_ids([work1.id, work2.id])
       end

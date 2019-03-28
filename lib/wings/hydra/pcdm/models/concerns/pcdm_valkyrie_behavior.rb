@@ -127,6 +127,22 @@ module Wings
       def respond_to_missing?(_name, _include_private = false)
         true
       end
+
+      # @param valkyrie [Boolean] Should the returned ids be for Valkyrie or AF objects?
+      # @return [Enumerable<Hydra::Works::Work>] The works this work contains
+      # NOTE: This method avoids using the Hydra::Works version of parent_works because of Issue #361
+      def parent_works(valkyrie: false)
+        af_child = Wings::ActiveFedoraConverter.new(resource: self).convert
+        af_parents = af_child.member_of_works
+        return af_parents unless valkyrie
+        af_parents.map(&:valkyrie_resource)
+      end
+
+      # @param valkyrie [Boolean] Should the returned ids be for Valkyrie or AF objects?
+      # @return [Enumerable<String> | Enumerable<Valkerie::ID] The ids of the file sets this work contains
+      def parent_work_ids(valkyrie: false)
+        parent_works(valkyrie: valkyrie).map(&:id)
+      end
     end
   end
 end
