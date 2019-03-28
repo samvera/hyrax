@@ -90,8 +90,8 @@ jobs:
     - run: sudo apt-get -y install google-chrome-stable
     - restore_cache:
         keys:
-        - v3-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
         - v1-bundle-{{ checksum "Gemfile" }}--{{ checksum "hyrax.gemspec" }}
+        - v3-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
 
     - run:
         name: Generate test app
@@ -140,8 +140,8 @@ jobs:
         
     - restore_cache:
         keys:
-        - v3-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
         - v1-bundle-{{ checksum "Gemfile" }}--{{ checksum "hyrax.gemspec" }}
+        - v3-test-app-{{ checksum "template.rb" }}--{{ checksum "Gemfile.lock" }}
         
     - run:
         name: Uninstall chromedriver Gems
