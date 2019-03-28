@@ -44,13 +44,12 @@ module Hyrax
           Steps::ApplyPermissionTemplate.new
         end
 
-<<<<<<< HEAD
-        ops.register 'destroy_work' do
-          Steps::DestroyWork.new
-=======
         ops.register 'apply_visibility' do
           Steps::ApplyVisibility.new
->>>>>>> Apply visibility, embargo, and lease when creating transactionally
+        end
+
+        ops.register 'destroy_work' do
+          Steps::DestroyWork.new
         end
 
         ops.register 'ensure_admin_set' do
