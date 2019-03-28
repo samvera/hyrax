@@ -18,6 +18,9 @@ module Wings
         af_file = Hydra::PCDM::File.find(file_metadata.file_identifiers.first)
         attrs = file_metadata_attributes(file_metadata)
         attrs.each { |key, value| af_file.metadata_node.set_value(key, value) }
+        af_file.mime_type = file_metadata.mime_type
+byebug
+        af_file.content = file_metadata.content.first if file_metadata.content.present?
         af_object.files << af_file
       end
 
@@ -29,7 +32,8 @@ module Wings
             attr_hash[attr_name] = ValueMapper.for(af_file.metadata_node.public_send(attr_name)).result
           end
               .merge(file_identifiers: [af_file.id],
-                     mime_type: ValueMapper.for(af_file.metadata_node.public_send(:mime_type)).result,
+                     mime_type: ValueMapper.for(af_file.public_send(:mime_type)).result,
+                     content: ValueMapper.for(af_file.public_send(:content)).result,
                      type: ValueMapper.for(af_file.metadata_node.public_send(:type)).result)
         end
 
@@ -43,6 +47,8 @@ module Wings
           attrs.delete(:alternate_ids)
           attrs.delete(:created_at)
           attrs.delete(:updated_at)
+          attrs.delete(:content)
+          attrs.delete(:mimetype)
           attrs.compact
         end
     end

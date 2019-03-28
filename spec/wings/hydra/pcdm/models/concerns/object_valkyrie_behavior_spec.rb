@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'wings_helper'
 require 'wings/model_transformer'
+# require 'wings/support/helpers/fileset_metadata_helper'
 
 RSpec.describe Wings::Pcdm::ObjectValkyrieBehavior, :clean_repo do
   subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }

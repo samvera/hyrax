@@ -2,8 +2,17 @@
 class FileMetadata < Valkyrie::Resource
   # include Valkyrie::Resource::AccessControls
 
+  # TODO: Everything is a set.  Should it be?
+  # TODO: Content in AF can hold a string as content or point to a binary.  Not sure this is adequate.
+  # TODO: Should attributes be defined from anywhere other than metadata_node.attributes and the AF file
+  # TODO: Although the metadata_node has a mime_type attribute, it is always empty.  The mime_type comes from the AF file.
+
   attribute :file_identifiers, Valkyrie::Types::Set
   attribute :type, Valkyrie::Types::Set
+
+# TODO: Not sure content should be a set. Sometimes content is a String, sometimes binary file.  Not clear if
+#       both use this content field.
+  attribute :content, Valkyrie::Types::Set
 
   # For ActiveFedora, these attributes can be accessed from the FileSet using...
   #   `fileset1.files.first.metadata_node.attributes`

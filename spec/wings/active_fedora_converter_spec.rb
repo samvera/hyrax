@@ -86,6 +86,54 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
           expect(converter.convert.ordered_member_ids).to eq [work2.id, work3.id]
         end
       end
+
+      context 'for files' do
+        let(:pcdm_object) { fileset1 }
+
+        let(:fileset1) { build(:file_set, id: 'fs1', title: ['Fileset 1']) }
+        let(:file) { set_attrs_on_af_file(fileset1.files.build) }
+
+        let(:file_identifier) { 'af_fileid' }
+        let(:file_name) { 'picture.jpg' }
+        let(:content) { 'hello world' }
+        let(:date_created) { Date.parse 'Fri, 08 May 2015 08:00:00 -0400 (EDT)' }
+        let(:date_modified) { Date.parse 'Sat, 09 May 2015 09:00:00 -0400 (EDT)' }
+        let(:byte_order) { 'little-endian' }
+        let(:mime_type) { 'application/jpg' }
+
+        before do
+          file
+        end
+
+        it 'converts member_of_collection_ids back to af_object' do
+          expect(converter.convert.files.map(&:id)).to match_array [file.id, work3.id]
+        end
+      end
     end
   end
+
+  private
+
+  def set_attrs_on_af_file(af_file)
+    af_file.file_name = [file_name]
+    af_file.content = [content]
+    af_file.date_created = [date_created]
+    af_file.date_modified = [date_modified]
+    af_file.byte_order = [byte_order]
+    af_file.mime_type = [mime_type]
+    af_file
+  end
+
+  def attrs_for_file_metadata
+    attrs = {}
+    attrs[:file_identifiers] = Wings::ValueMapper.for([file_identifier]).result
+    attrs[:file_name] = Wings::ValueMapper.for([file_name]).result
+    attrs[:content] = Wings::ValueMapper.for([content]).result
+    attrs[:date_created] = Wings::ValueMapper.for([date_created]).result
+    attrs[:date_modified] = Wings::ValueMapper.for([date_modified]).result
+    attrs[:byte_order] = Wings::ValueMapper.for([byte_order]).result
+    attrs[:mime_type] = Wings::ValueMapper.for([mime_type]).result
+    attrs
+  end
+
 end
