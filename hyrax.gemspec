@@ -45,6 +45,7 @@ SUMMARY
   spec.add_dependency 'dry-struct', '~> 0.4'
   spec.add_dependency 'dry-transaction', '~> 0.11'
   spec.add_dependency 'dry-validation', '~> 0.9'
+  spec.add_dependency 'nokogiri', '~> 1.10', '< 1.10.2'
   spec.add_dependency 'flipflop', '~> 2.3'
   # Pin more tightly because 0.x gems are potentially unstable
   spec.add_dependency 'flot-rails', '~> 0.0.6'
