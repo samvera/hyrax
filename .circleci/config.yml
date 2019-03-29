@@ -156,7 +156,7 @@ jobs:
     - run:
         name: Load config into solr
         command: |
-          cd .internal_test_app/solr/config
+          cd .internal_test_app/solr/conf
           zip -1 -r solr_hyrax_config.zip ./*
           curl -H "Content-type:application/octet-stream" --data-binary @solr_hyrax_config.zip "http://localhost:8985/solr/admin/configs?action=UPLOAD&name=hyrax"
           curl -H 'Content-type: application/json' http://localhost:8985/api/collections/ -d '{create: {name: hydra-test, config: hyrax, numShards: 1}}'
