@@ -54,7 +54,7 @@ Hyrax is a front-end based on the robust [Samvera](http://samvera.org) framework
 
 Hyrax has many features. [Read more about what they are and how to turn them on](https://github.com/samvera/hyrax/wiki/Feature-matrix). See the [Hyrax Management Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide) to learn more.
 
-For non-technical documentation about Hyrax, see the Hyrax [documentation site](http://hyr.ax/).
+For non-technical documentation about Hyrax, see the Hyrax [documentation site](http://hyrax.samvera.org/).
 
 # Help
 
@@ -345,4 +345,3 @@ This software has been developed by and is brought to you by the Samvera communi
 [Samvera website](http://samvera.org/).
 
 ![Samvera Logo](https://wiki.duraspace.org/download/thumbnails/87459292/samvera-fall-font2-200w.png?version=1&modificationDate=1498550535816&api=v2)
- 
