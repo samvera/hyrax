@@ -54,7 +54,7 @@ Hyrax is a front-end based on the robust [Samvera](http://samvera.org) framework
 
 Hyrax has many features. [Read more about what they are and how to turn them on](https://github.com/samvera/hyrax/wiki/Feature-matrix). See the [Hyrax Management Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide) to learn more.
 
-For non-technical documentation about Hyrax, see the Hyrax [documentation site](http://hyrax.samvera.org/).
+For non-technical documentation about Hyrax, see the Hyrax [documentation site](https://hyrax.samvera.org/).
 
 # Help
 
