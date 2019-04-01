@@ -15,4 +15,4 @@ If you have questions or need help, please email [the Samvera community tech lis
 This website has been developed by and is brought to you by the Samvera community.  Learn more at the
 [Samvera Community website](http://samvera.org)
 
-![Samvera Logo](http://hyrax.samvera.org/assets/images/samvera_logo.png)
+![Samvera Logo](https://hyrax.samvera.org/assets/images/samvera_logo.png)
