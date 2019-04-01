@@ -1,10 +1,10 @@
 # Contributing Guide
 
-We want your help to make [Hyrax's documentation](http://hyr.ax/) great. There are a few guidelines that we need contributors to follow to make it easier to work together.
+We want your help to make [Hyrax's documentation](http://hyrax.samvera.org/) great. There are a few guidelines that we need contributors to follow to make it easier to work together.
 
 ## Samvera Project Intellectual Property Licensing and Ownership
 
-While code contributions require contributor license agreements to be on file with the Samvera Project Steering Group, contributing to Hyrax's documentation requires only that you agree to the [Creative Commons Attribution-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-sa/3.0/) that covers all content available at hyr.ax.
+While code contributions require contributor license agreements to be on file with the Samvera Project Steering Group, contributing to Hyrax's documentation requires only that you agree to the [Creative Commons Attribution-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-sa/3.0/) that covers all content available at hyrax.samvera.org.
 
 ## How to Contribute
 
