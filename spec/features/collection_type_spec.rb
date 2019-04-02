@@ -372,6 +372,7 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
           expect(page).to have_content(deny_delete_modal_text)
           click_link('View collections of this type')
         end
+        sleep 3
 
         # forwards to Dashboard -> Collections -> All Collections
         within('li.active') do
