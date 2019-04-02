@@ -14,6 +14,13 @@ module Wings
   #   `#internal_resource` mapping it to an `ActiveFedora::Base` class.
   class ActiveFedoraConverter
     ##
+    # Accesses the Class implemented for handling resource attributes
+    # @return [Class]
+    def self.attributes_class
+      ActiveFedoraAttributes
+    end
+
+    ##
     # @!attribute [rw] resource
     #   @return [Valkyrie::Resource]
     attr_accessor :resource
@@ -25,10 +32,17 @@ module Wings
     end
 
     ##
+    # Accesses and parses the attributes from the resource
+    # @return [Hash]
+    def attributes
+      wrapper = self.class.attributes_class.new(resource.attributes)
+      wrapper.result
+    end
+
+    ##
     # @return [ActiveFedora::Base]
     def convert
-      attributes = ActiveFedoraAttributes.new(resource.attributes).result
-      active_fedora_class.new(attributes).tap do |af_object|
+      active_fedora_class.new(normal_attributes).tap do |af_object|
         af_object.id = id unless id.empty?
         af_object.visibility = attributes[:visibility] unless attributes[:visibility].blank?
         convert_members(af_object)
@@ -180,6 +194,23 @@ module Wings
           member_of_collections << ActiveFedora::Base.find(valkyrie_id.id)
         end
         af_object.member_of_collections = member_of_collections
+      end
+
+      # Normalizes the attributes parsed from the resource
+      #   (This ensures that scalar values are passed to the constructor for the
+      #   ActiveFedora::Base Class)
+      # @return [Hash]
+      def normal_attributes
+        normalized = {}
+        attributes.each_pair do |attr, value|
+          property = active_fedora_class.properties[attr.to_s]
+          # This handles some cases where the attributes do not directly map to an
+          #   RDF property value
+          normalized[attr] = value
+          next if property.nil?
+          normalized[attr] = Array.wrap(value) if property.multiple?
+        end
+        normalized
       end
   end
 end
