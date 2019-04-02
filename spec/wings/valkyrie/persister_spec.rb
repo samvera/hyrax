@@ -201,39 +201,56 @@ RSpec.describe Wings::Valkyrie::Persister do
       expect(reloaded.title).to contain_exactly custom_rdf
     end
 
-    xit "can handle Date RDF properties" do
+    it "can handle Date RDF properties" do
       date_rdf = RDF::Literal.new(Date.current)
       book = persister.save(resource: resource_class.new(title: [date_rdf]))
       reloaded = query_service.find_by(id: book.id)
-      expect(reloaded.title).to contain_exactly date_rdf
+      persisted_date_rdf = RDF::Literal(reloaded.title.first)
+      expect(persisted_date_rdf).to eq date_rdf
     end
 
-    xit "can handle DateTime RDF properties" do
+    it "can handle DateTime RDF properties" do
       datetime_rdf = RDF::Literal.new(DateTime.current)
       book = persister.save(resource: resource_class.new(title: [datetime_rdf]))
       reloaded = query_service.find_by(id: book.id)
-      expect(reloaded.title).to contain_exactly datetime_rdf
+      # Because ActiveFedora uses ActiveTriples::Relation to manage underlying
+      # attributes, the attribute values are consistently persisted as
+      # RDF::Literal types within the RDF graph store
+      #
+      # Unless classes interfacing with the ActiveFedora expect to deal
+      # exclusively with RDF::Literal objects, adopters must explicitly recast
+      # the attribute values into RDF::Literals after the Valkyrie::Resource is
+      # constructed from the persisted ActiveFedora Model
+      persisted_datetime_rdf = RDF::Literal(reloaded.title.first)
+      expect(persisted_datetime_rdf).to eq datetime_rdf
     end
 
-    xit "can handle Decimal RDF properties" do
+    # This is failing given that indexing floats in Solr are not supported by
+    # ActiveFedora
+    it "can handle Decimal RDF properties" do
       decimal_rdf = RDF::Literal.new(BigDecimal(5.5, 10))
       book = persister.save(resource: resource_class.new(title: [decimal_rdf]))
       reloaded = query_service.find_by(id: book.id)
-      expect(reloaded.title).to contain_exactly decimal_rdf
+      persisted_rdf = RDF::Literal(reloaded.title.first)
+      expect(persisted_rdf).to eq decimal_rdf
     end
 
-    xit "can handle Double RDF properties" do
+    # This is failing given that indexing floats in Solr are not supported by
+    # ActiveFedora
+    it "can handle Double RDF properties" do
       double_rdf = RDF::Literal.new(5.5)
       book = persister.save(resource: resource_class.new(title: [double_rdf]))
       reloaded = query_service.find_by(id: book.id)
-      expect(reloaded.title).to contain_exactly double_rdf
+      persisted_rdf = RDF::Literal(reloaded.title.first)
+      expect(persisted_rdf).to eq double_rdf
     end
 
-    xit "can handle Integer RDF properties" do
+    it "can handle Integer RDF properties" do
       int_rdf = RDF::Literal.new(17)
       book = persister.save(resource: resource_class.new(title: [int_rdf]))
       reloaded = query_service.find_by(id: book.id)
-      expect(reloaded.title).to contain_exactly int_rdf
+      persisted_rdf = RDF::Literal(reloaded.title.first)
+      expect(persisted_rdf).to eq int_rdf
     end
 
     it "can handle language-typed RDF properties" do
@@ -243,11 +260,12 @@ RSpec.describe Wings::Valkyrie::Persister do
       expect(reloaded.title).to contain_exactly "Test1", language_rdf
     end
 
-    xit "can handle Time RDF properties" do
+    it "can handle Time RDF properties" do
       time_rdf = RDF::Literal.new(Time.current)
       book = persister.save(resource: resource_class.new(title: [time_rdf]))
       reloaded = query_service.find_by(id: book.id)
-      expect(reloaded.title).to contain_exactly time_rdf
+      persisted_time_rdf = RDF::Literal.new(reloaded.title.first)
+      expect(DateTime.parse(persisted_time_rdf.value).utc).to eq DateTime.parse(time_rdf.value).utc
     end
 
     #  https://github.com/samvera-labs/valkyrie/wiki/Supported-Data-Types
