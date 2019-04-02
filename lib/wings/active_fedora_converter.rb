@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'wings/resource_transformer'
 
 require 'wings/converter_value_mapper'
 
@@ -15,6 +16,8 @@ module Wings
   # @note the `Valkyrie::Resource` object passed to this class **must** have an
   #   `#internal_resource` mapping it to an `ActiveFedora::Base` class.
   class ActiveFedoraConverter
+    class NestedResource < ::Wings::NestedResource; end
+
     ##
     # Accesses the Class implemented for handling resource attributes
     # @return [Class]
@@ -46,19 +49,13 @@ module Wings
     ##
     # @return [ActiveFedora::Base]
     def convert
-      active_fedora_class.new(normal_attributes).tap do |af_object|
+      ResourceTransformer.for(resource).tap do |af_object|
         af_object.id = id unless id.empty?
         apply_depositor_to(af_object)
         add_access_control_attributes(af_object)
         convert_members(af_object)
         convert_member_of_collections(af_object)
       end
-    end
-
-    def active_fedora_class
-      klass = resource.internal_resource.constantize
-      return klass if klass <= ActiveFedora::Base
-      DefaultWork
     end
 
     ##
@@ -71,37 +68,6 @@ module Wings
       return id_attr.to_s if id_attr.present? && id_attr.is_a?(::Valkyrie::ID) && !id_attr.blank?
       return "" unless resource.respond_to?(:alternate_ids)
       resource.alternate_ids.first.to_s
-    end
-
-    # A dummy work class for valkyrie resources that don't have corresponding
-    # hyrax ActiveFedora::Base models.
-    #
-    # A possible improvement would be to dynamically generate properties based
-    # on what's found in the resource.
-    class DefaultWork < ActiveFedora::Base
-      include Hyrax::WorkBehavior
-      property :ordered_authors, predicate: ::RDF::Vocab::DC.creator
-      property :ordered_nested, predicate: ::RDF::URI("http://example.com/ordered_nested")
-      property :nested_resource, predicate: ::RDF::URI("http://example.com/nested_resource"), class_name: "Wings::ActiveFedoraConverter::NestedResource"
-      include ::Hyrax::BasicMetadata
-      accepts_nested_attributes_for :nested_resource
-
-      # self.indexer = <%= class_name %>Indexer
-    end
-
-    class NestedResource < ActiveTriples::Resource
-      property :title, predicate: ::RDF::Vocab::DC.title
-      property :ordered_authors, predicate: ::RDF::Vocab::DC.creator
-      property :ordered_nested, predicate: ::RDF::URI("http://example.com/ordered_nested")
-      def initialize(uri = RDF::Node.new, _parent = ActiveTriples::Resource.new)
-        uri = if uri.try(:node?)
-                RDF::URI("#nested_resource_#{uri.to_s.gsub('_:', '')}")
-              elsif uri.to_s.include?('#')
-                RDF::URI(uri)
-              end
-        super
-      end
-      include ::Hyrax::BasicMetadata
     end
 
     private
