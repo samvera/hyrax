@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  samvera: samvera/circleci-orb@dev:hyrax
+  samvera: samvera/circleci-orb@0
 jobs:
   bundle_and_test:
     parameters:
