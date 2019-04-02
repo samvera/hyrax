@@ -8,7 +8,9 @@ RSpec.describe Wings::Valkyrie::QueryService do
     class Book < ActiveFedora::Base
       include Hyrax::WorkBehavior
       property :title, predicate: ::RDF::Vocab::DC.title, multiple: true
-      property :a_member_of, predicate: ::RDF::URI.new('http://www.example.com/a_member_of'), multiple: true
+      property :a_member_of, predicate: ::RDF::URI.new('http://www.example.com/a_member_of'), multiple: true do |index|
+        index.as :symbol
+      end
       property :an_ordered_member_of, predicate: ::RDF::URI.new('http://www.example.com/an_ordered_member_of'), multiple: true
     end
     class Image < ActiveFedora::Base
@@ -32,6 +34,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
 
   # it_behaves_like "a Valkyrie query provider"
 
+  # rubocop:disable RSpec/ExampleLength
   it 'responds to expected methods' do
     expect(subject).to respond_to(:find_by).with_keywords(:id)
     expect(subject).to respond_to(:resource_factory)
@@ -41,7 +44,10 @@ RSpec.describe Wings::Valkyrie::QueryService do
     expect(subject).to respond_to(:find_by_alternate_identifier).with_keywords(:alternate_identifier)
     expect(subject).to respond_to(:find_members).with_keywords(:resource)
     expect(subject).to respond_to(:find_references_by).with_keywords(:resource, :property)
+    expect(subject).to respond_to(:find_inverse_references_by).with_keywords(:resource, :property)
+    expect(subject).to respond_to(:find_inverse_references_by).with_keywords(:id, :property)
   end
+  # rubocop:enable RSpec/ExampleLength
 
   describe ".find_by" do
     it "returns a resource by id or string representation of an id" do
@@ -300,6 +306,69 @@ RSpec.describe Wings::Valkyrie::QueryService do
         persister.save(resource: resource_class.new)
 
         expect(query_service.find_references_by(resource: child, property: :an_ordered_member_of).map(&:id).to_a).to eq []
+      end
+    end
+  end
+
+  describe ".find_inverse_references_by" do
+    context "when the resource is saved" do
+      context "when the property is unordered" do
+        it "returns everything which references the given resource by the given property" do
+          parent = persister.save(resource: resource_class.new(title: ['parent']))
+          parent2 = persister.save(resource: resource_class.new(title: ['parent2']))
+          child = persister.save(resource: resource_class.new(title: ['child'], a_member_of: [parent.id]))
+          child2 = persister.save(resource: resource_class.new(title: ['child2'], a_member_of: [parent.id, parent2.id, parent.id]))
+          persister.save(resource: resource_class.new(title: ['resource']))
+          persister.save(resource: image_resource_class.new(title: ['resource 2']))
+
+          expect(query_service.find_inverse_references_by(resource: parent, property: :a_member_of).map(&:id).to_a).to contain_exactly child.id, child2.id
+        end
+
+        it "returns an empty array if there are none" do
+          parent = persister.save(resource: resource_class.new(title: ['parent']))
+
+          expect(query_service.find_inverse_references_by(resource: parent, property: :a_member_of).to_a).to eq []
+        end
+      end
+
+      # not yet supported by the wings persister
+      context "when the property is ordered" do
+        xit "returns everything which references the given resource by the given property" do
+          parent = persister.save(resource: resource_class.new)
+          child = persister.save(resource: resource_class.new(an_ordered_member_of: [parent.id]))
+          child2 = persister.save(resource: resource_class.new(an_ordered_member_of: [parent.id, parent.id]))
+          persister.save(resource: resource_class.new)
+          persister.save(resource: Valkyrie::Specs::SecondResource.new)
+
+          expect(query_service.find_inverse_references_by(resource: parent, property: :an_ordered_member_of).map(&:id).to_a).to contain_exactly child.id, child2.id
+        end
+      end
+    end
+
+    context "when id is passed instead of resource" do
+      it "returns everything which references the given resource by the given property" do
+        parent = persister.save(resource: resource_class.new(title: ['parent']))
+        parent2 = persister.save(resource: resource_class.new(title: ['parent2']))
+        child = persister.save(resource: resource_class.new(title: ['child'], a_member_of: [parent.id]))
+        child2 = persister.save(resource: resource_class.new(title: ['child2'], a_member_of: [parent.id, parent2.id, parent.id]))
+        persister.save(resource: resource_class.new(title: ['resource']))
+        persister.save(resource: image_resource_class.new(title: ['resource 2']))
+
+        expect(query_service.find_inverse_references_by(id: parent.alternate_ids.first, property: :a_member_of).map(&:id).to_a).to contain_exactly child.id, child2.id
+      end
+    end
+
+    context "when neither id nor resource is passed" do
+      it "raises an error" do
+        expect { query_service.find_inverse_references_by(property: :a_member_of) }.to raise_error ArgumentError
+      end
+    end
+
+    context "when the resource is not saved" do
+      it "raises an error" do
+        parent = resource_class.new(title: ['parent'])
+
+        expect { query_service.find_inverse_references_by(resource: parent, property: :a_member_of).to_a }.to raise_error(ArgumentError, "Resource has no id; is it persisted?")
       end
     end
   end
