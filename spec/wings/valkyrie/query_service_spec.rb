@@ -4,8 +4,17 @@ require 'valkyrie/specs/shared_specs'
 require 'wings'
 
 RSpec.describe Wings::Valkyrie::QueryService do
+  subject(:query_service) { described_class.new(adapter: adapter) }
+  let(:adapter) { Wings::Valkyrie::MetadataAdapter.new }
+  let(:persister) { Wings::Valkyrie::Persister.new(adapter: adapter) }
+  let(:af_resource_class) { Manuscript }
+  let(:af_image_resource_class) { Image }
+  let(:resource_class) { Wings::ModelTransformer.to_valkyrie_resource_class(klass: af_resource_class) }
+  let(:image_resource_class) { Wings::ModelTransformer.to_valkyrie_resource_class(klass: af_image_resource_class) }
+  let(:resource) { resource_class.new(title: ['Foo']) }
+
   before do
-    class Book < ActiveFedora::Base
+    class Manuscript < ActiveFedora::Base
       include Hyrax::WorkBehavior
       include Hydra::AccessControls::Permissions
       property :title, predicate: ::RDF::Vocab::DC.title, multiple: true
@@ -14,6 +23,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
       end
       property :an_ordered_member_of, predicate: ::RDF::URI.new('http://www.example.com/an_ordered_member_of'), multiple: true
     end
+
     class Image < ActiveFedora::Base
       include Hydra::AccessControls::Permissions
       property :title, predicate: ::RDF::Vocab::DC.title, multiple: true
@@ -21,18 +31,9 @@ RSpec.describe Wings::Valkyrie::QueryService do
   end
 
   after do
-    Object.send(:remove_const, :Book)
+    Object.send(:remove_const, :Manuscript)
     Object.send(:remove_const, :Image)
   end
-
-  subject(:query_service) { described_class.new(adapter: adapter) }
-  let(:adapter) { Wings::Valkyrie::MetadataAdapter.new }
-  let(:persister) { Wings::Valkyrie::Persister.new(adapter: adapter) }
-  let(:af_resource_class) { Book }
-  let(:af_image_resource_class) { Image }
-  let(:resource_class) { Wings::ModelTransformer.to_valkyrie_resource_class(klass: af_resource_class) }
-  let(:image_resource_class) { Wings::ModelTransformer.to_valkyrie_resource_class(klass: af_image_resource_class) }
-  let(:resource) { resource_class.new(title: ['Foo']) }
 
   # it_behaves_like "a Valkyrie query provider"
 
@@ -241,10 +242,10 @@ RSpec.describe Wings::Valkyrie::QueryService do
       let(:parent_resource_class) { Wings::ModelTransformer.to_valkyrie_resource_class(klass: gw_resource_class) }
 
       context "when the object has members" do
-        let(:child1) { persister.save(resource: resource_class.new(title: ['Child 1'])) }
-        let(:child2) { persister.save(resource: parent_resource_class.new(title: ['Child 2'])) }
-        let(:child3) { persister.save(resource: resource_class.new(title: ['Child 3'])) }
-        let(:parent) { persister.save(resource: parent_resource_class.new(title: ['Parent'], member_ids: [child3.id, child2.id, child1.id])) }
+        let(:child1) { persister.save(resource: resource_class.new(title: ['Child 1 Book'])) }
+        let(:child2) { persister.save(resource: parent_resource_class.new(title: ['Child 2 GenericWork'])) }
+        let(:child3) { persister.save(resource: resource_class.new(title: ['Child 3 Book'])) }
+        let(:parent) { persister.save(resource: parent_resource_class.new(title: ['Parent GenericWork'], member_ids: [child3.id, child2.id, child1.id])) }
 
         it "returns all a resource's members in order" do
           expect(subject.map(&:id).to_a).to eq [child3.id, child1.id]
@@ -268,14 +269,15 @@ RSpec.describe Wings::Valkyrie::QueryService do
         parent = persister.save(resource: resource_class.new(title: ['Parent']))
         parent2 = persister.save(resource: resource_class.new(title: ['Parent 2']))
         child = persister.save(resource: resource_class.new(title: ['Child'], a_member_of: [parent.id, parent2.id]))
-        persister.save(resource: resource_class.new(title: ['Another Resource']))
 
-        expect(query_service.find_references_by(resource: child, property: :a_member_of).map(&:id).to_a).to contain_exactly parent.id, parent2.id
+        persisted = query_service.find_references_by(resource: child, property: :a_member_of)
+        expect(persisted.map(&:id).to_a).to contain_exactly parent.id, parent2.id
       end
 
       it "returns an empty array if there are none" do
         child = persister.save(resource: resource_class.new(title: ['Child']))
-        expect(query_service.find_references_by(resource: child, property: :a_member_of).to_a).to eq []
+        persisted = query_service.find_references_by(resource: child, property: :a_member_of)
+        expect(persisted.to_a).to eq []
       end
 
       it "removes duplicates" do
@@ -283,14 +285,16 @@ RSpec.describe Wings::Valkyrie::QueryService do
         child = persister.save(resource: resource_class.new(a_member_of: [parent.id, parent.id]))
         persister.save(resource: resource_class.new)
 
-        expect(query_service.find_references_by(resource: child, property: :a_member_of).map(&:id).to_a).to contain_exactly parent.id
+        persisted = query_service.find_references_by(resource: child, property: :a_member_of)
+        expect(persisted.map(&:id).to_a).to contain_exactly parent.id
       end
 
       it "returns nothing if reference not found" do
         child = persister.save(resource: resource_class.new(a_member_of: ["123123123"]))
         persister.save(resource: resource_class.new)
 
-        expect(query_service.find_references_by(resource: child, property: :a_member_of).map(&:id).to_a).to eq []
+        persisted = query_service.find_references_by(resource: child, property: :a_member_of)
+        expect(persisted.map(&:id).to_a).to eq []
       end
     end
 

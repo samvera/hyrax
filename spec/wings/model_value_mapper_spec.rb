@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 require 'spec_helper'
-require 'wings/transformer_value_mapper'
+require 'wings/model_value_mapper'
 
-RSpec.describe Wings::TransformerValueMapper do
+RSpec.describe Wings::ModelValueMapper do
   subject(:mapper) { described_class.for(value) }
   let(:value)      { 'a value' }
   let(:uri)        { RDF::URI('http://example.com/moomin') }

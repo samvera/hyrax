@@ -67,7 +67,7 @@ module Wings
     def id
       id_attr = resource[:id]
       return id_attr.to_s if id_attr.present? && id_attr.is_a?(::Valkyrie::ID) && !id_attr.blank?
-      return "" unless resource.respond_to?(:alternate_ids)
+      return "" unless resource.respond_to?(:alternate_ids) && !resource.alternate_ids.nil?
       resource.alternate_ids.first.to_s
     end
 
@@ -78,7 +78,7 @@ module Wings
         # TODO: It would be better to find a way to add the members without resuming all the member AF objects
         ordered_members = []
         resource.member_ids.each do |valkyrie_id|
-          ordered_members << ActiveFedora::Base.find(valkyrie_id.id)
+          ordered_members << ActiveFedora::Base.find(valkyrie_id.to_s)
         end
         af_object.ordered_members = ordered_members
       end

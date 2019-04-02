@@ -43,6 +43,8 @@ module Wings
       # @param [Valkyrie::Resource] resource
       # @return [Valkyrie::Resource] the deleted resource
       def delete(resource:)
+        return unless resource.respond_to?(:alternate_ids) && !resource.alternate_ids.empty?
+
         af_object = ActiveFedora::Base.new
         af_object.id = resource.alternate_ids.first.to_s
         af_object.delete

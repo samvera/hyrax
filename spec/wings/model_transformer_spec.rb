@@ -3,18 +3,18 @@ require 'wings_helper'
 require 'wings/model_transformer'
 
 RSpec.describe Wings::ModelTransformer do
+  subject { factory }
+
   let(:factory)     { described_class.new(pcdm_object: pcdm_object) }
   let(:pcdm_object) { work }
   let(:adapter)     { Valkyrie::MetadataAdapter.find(:memory) }
   let(:id)          { 'moomin123' }
   let(:persister)   { adapter.persister }
-  let(:work)        { GenericWork.new(id: id, **attributes) }
-
+  let(:work)        { ExampleWork.new(id: id, **attributes) }
   let(:uris) do
     [RDF::URI('http://example.com/fake1'),
      RDF::URI('http://example.com/fake2')]
   end
-
   let(:attributes) do
     {
       title: ['fake title'],
@@ -28,9 +28,7 @@ RSpec.describe Wings::ModelTransformer do
     }
   end
 
-  subject { factory }
-
-  before(:context) do
+  before do
     Valkyrie::MetadataAdapter.register(
       Valkyrie::Persistence::Memory::MetadataAdapter.new,
       :memory
@@ -40,6 +38,31 @@ RSpec.describe Wings::ModelTransformer do
       Valkyrie::Storage::Memory.new,
       :memory
     )
+
+    class ExampleWork < ActiveFedora::Base
+      include ::Hyrax::WorkBehavior
+      include Hyrax::BasicMetadata
+    end
+
+    class Book < ActiveFedora::Base
+      has_many :pages
+      property :title, predicate: ::RDF::Vocab::DC.title
+      property :contributor, predicate: ::RDF::Vocab::DC.contributor
+      property :description, predicate: ::RDF::Vocab::DC.description
+    end
+
+    class Page < ActiveFedora::Base
+      belongs_to :book_with_pages, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf
+    end
+  end
+
+  after do
+    Object.send(:remove_const, :Page)
+    Object.send(:remove_const, :Book)
+    Object.send(:remove_const, :ExampleWork)
+    described_class.send(:remove_const, :Book) if described_class.constants.include?(:Book)
+    described_class.send(:remove_const, :Page) if described_class.constants.include?(:Page)
+    described_class.send(:remove_const, :ExampleWork) if described_class.constants.include?(:ExampleWork)
   end
 
   # TODO: extract to Valkyrie?
@@ -51,9 +74,9 @@ RSpec.describe Wings::ModelTransformer do
 
   describe '.convert_class_name_to_valkyrie_resource_class' do
     context 'when given a ActiveFedora class name (eg. a constant that responds to #properties)' do
+      let(:converted_class) { described_class.convert_class_name_to_valkyrie_resource_class('Book') }
       it 'creates a Valkyrie::Resource class' do
-        subject = described_class.convert_class_name_to_valkyrie_resource_class('GenericWork')
-        expect(subject.new).to be_a Valkyrie::Resource
+        expect(converted_class.new).to be_a Valkyrie::Resource
       end
     end
   end
@@ -61,15 +84,15 @@ RSpec.describe Wings::ModelTransformer do
   describe '.to_valkyrie_resource_class' do
     context 'when given a ActiveFedora class (eg. a constant that responds to #properties)' do
       context 'for the returned object (e.g. a class)' do
-        subject { described_class.to_valkyrie_resource_class(klass: GenericWork) }
+        subject { described_class.to_valkyrie_resource_class(klass: Book) }
         it 'will be Valkyrie::Resource build' do
           expect(subject.new).to be_a Valkyrie::Resource
         end
         it 'has a to_s instance that delegates to the given klass' do
-          expect(subject.to_s).to eq(GenericWork.to_s)
+          expect(subject.to_s).to eq(Book.to_s)
         end
         it 'has a internal_resource instance that is the given klass' do
-          expect(subject.internal_resource).to eq(GenericWork.to_s)
+          expect(subject.internal_resource).to eq(Book.to_s)
         end
       end
     end
@@ -176,27 +199,12 @@ RSpec.describe Wings::ModelTransformer do
     let(:book)        { book_class.new(id: id, **attributes) }
     let(:page1)       { page_class.new(id: 'pg1') }
     let(:page2)       { page_class.new(id: 'pg2') }
-
     let(:book_class) do
-      Book = Class.new(ActiveFedora::Base) do
-        has_many :pages
-        property :title, predicate: ::RDF::Vocab::DC.title
-        property :contributor, predicate: ::RDF::Vocab::DC.contributor
-        property :description, predicate: ::RDF::Vocab::DC.description
-      end
+      Book
     end
-
     let(:page_class) do
-      Page = Class.new(ActiveFedora::Base) do
-        belongs_to :book_with_pages, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf
-      end
+      Page
     end
-
-    after do
-      Object.send(:remove_const, :Page)
-      Object.send(:remove_const, :Book)
-    end
-
     let(:attributes) do
       {
         title: ['fake title', 'fake title 2'],
@@ -213,20 +221,27 @@ RSpec.describe Wings::ModelTransformer do
     end
 
     describe '#build' do
+      let(:work) { book }
+      let(:built) { factory.build }
+
       it 'returns a Valkyrie::Resource' do
-        expect(subject.build).to be_a Valkyrie::Resource
+        expect(built).to be_a Valkyrie::Resource
       end
 
       it 'has the id of the active_fedora_object' do
-        expect(subject.build).to have_a_valkyrie_alternate_id_of book.id
+        expect(built).to have_a_valkyrie_alternate_id_of book.id
       end
 
       it 'has attributes matching the active_fedora_object' do
-        expect(subject.build)
-          .to have_attributes title: book.title,
-                              contributor: book.contributor,
-                              description: book.description
-        expect(subject.build.page_ids).to match_valkyrie_ids_with_active_fedora_ids(['pg1', 'pg2'])
+        expect(built.attributes).to include(:title)
+        # These values on `book` are ActiveTriples::Relation and must be cast to
+        # Arrays for comparison
+        expect(built.title).to eq book.title.to_a
+        expect(built.attributes).to include(:contributor)
+        expect(built.contributor).to eq book.contributor.to_a
+        expect(built.attributes).to include(:description)
+        expect(built.description).to eq book.description.to_a
+        expect(built.page_ids).to match_valkyrie_ids_with_active_fedora_ids(['pg1', 'pg2'])
       end
     end
   end

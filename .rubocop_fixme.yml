@@ -16,6 +16,7 @@ Metrics/ClassLength:
     - 'lib/generators/hyrax/templates/catalog_controller.rb'
     - 'lib/generators/hyrax/install_generator.rb'
     - 'lib/hyrax/configuration.rb'
+    - 'lib/wings/model_transformer.rb'
 
 Metrics/ParameterLists:
   Exclude:

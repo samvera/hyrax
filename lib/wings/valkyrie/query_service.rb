@@ -46,9 +46,10 @@ module Wings
       # @param [Valkyrie::ResourceClass]
       # @return [Array<Valkyrie::Resource>]
       def find_all_of_model(model:)
-        find_model = model.internal_resource.constantize
+        find_model = model.internal_resource
+        model_class_name = find_model.split("::").last
         objects = ::ActiveFedora::Base.all.select do |object|
-          object.class == find_model
+          object.class.name == model_class_name
         end
         objects.map do |id|
           resource_factory.to_resource(object: id)
@@ -67,7 +68,7 @@ module Wings
         resources = []
         ids.uniq.map(&:to_s).each do |id|
           begin
-            af_object = ActiveFedora::Base.find(id)
+            af_object = find_pcdm_object(id: id)
             resources << resource_factory.to_resource(object: af_object)
           rescue ::ActiveFedora::ObjectNotFoundError, Ldp::Gone
             next
@@ -79,21 +80,21 @@ module Wings
       def find_by_alternate_identifier(alternate_identifier:)
         alternate_identifier = ::Valkyrie::ID.new(alternate_identifier.to_s) if alternate_identifier.is_a?(String)
         validate_id(alternate_identifier)
-        resource_factory.to_resource(object: ::ActiveFedora::Base.find(alternate_identifier.to_s))
+        pcdm_object = find_pcdm_object(id: alternate_identifier)
+        resource_factory.to_resource(object: pcdm_object)
       rescue ::ActiveFedora::ObjectNotFoundError, Ldp::Gone
         raise ::Valkyrie::Persistence::ObjectNotFoundError
       end
 
       # Find all members of a given resource, and map to Valkyrie Resources
-      # @param [Valkyrie::Resource]
-      # @param [Valkyrie::ResourceClass]
+      # @param resource [Valkyrie::Resource]
+      # @param model [Class]
       # @return [Array<Valkyrie::Resource>]
       def find_members(resource:, model: nil)
         return [] unless resource.respond_to?(:member_ids) && resource.member_ids.present?
         all_members = find_many_by_ids(ids: resource.member_ids)
         return all_members unless model
-        find_model = model.internal_resource.constantize if model
-        all_members.select { |member_resource| member_resource.internal_resource.constantize == find_model }
+        all_members.select { |member_resource| member_resource.is_a?(model) }
       end
 
       # Find the Valkyrie Resources referenced by another Valkyrie Resource
@@ -104,7 +105,8 @@ module Wings
         object = resource_factory.from_resource(resource: resource)
         object.send(property).map do |reference|
           af_id = find_id_for(reference)
-          resource_factory.to_resource(object: ::ActiveFedora::Base.find(af_id))
+          pcdm_object = find_pcdm_object(id: af_id)
+          resource_factory.to_resource(object: pcdm_object)
         end
       rescue ActiveFedora::ObjectNotFoundError
         return []
@@ -165,6 +167,13 @@ module Wings
           return reference if reference.class == String
           # not a supported type
           ''
+        end
+
+        # Retrieve an ActiveFedora Model using an ID
+        # @param id [String]
+        # @return [ActiveFedora::Base]
+        def find_pcdm_object(id:)
+          ::ActiveFedora::Base.find(id.to_s)
         end
     end
   end

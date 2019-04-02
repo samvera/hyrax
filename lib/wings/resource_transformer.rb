@@ -79,11 +79,17 @@ module Wings
     def self.to_active_fedora_class(resource:)
       return resource.internal_resource.constantize if const_defined?(resource.internal_resource) && class_in_namespace?(resource.internal_resource) || active_fedora_model?(resource.internal_resource)
 
+      # This handles cases where there might be an ActiveFedora Model defined in
+      # the global namespace
+      class_name = resource.internal_resource.split("::").last
+      return class_name.constantize if const_defined?(class_name) && active_fedora_model?(class_name)
+
+      namespaced_class_name = "#{class_namespace}::#{class_name}"
       class_namespace.class_eval <<-CODE
-        class #{resource.internal_resource} < Wings::DefaultWork; end
+        class #{namespaced_class_name} < Wings::DefaultWork; end
       CODE
 
-      "#{class_namespace}::#{resource.internal_resource}".constantize
+      namespaced_class_name.to_s.constantize
     end
 
     # Retrieve the Class for the Valkyrie Resource being transformed

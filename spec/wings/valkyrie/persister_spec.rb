@@ -120,6 +120,7 @@ RSpec.describe Wings::Valkyrie::Persister do
         attribute :title
         attribute :author
         attribute :member_ids
+        attribute :alternate_ids
         attribute :nested_resource
         attribute :depositor, Valkyrie::Types::String.optional
         attribute :ordered_authors, Valkyrie::Types::Array.of(Valkyrie::Types::Anything).meta(ordered: true)
@@ -359,9 +360,9 @@ RSpec.describe Wings::Valkyrie::Persister do
     # not sure how to fix this one. When a resource wasn't ever in AF, it is persisted as
     # internal_resource="Wings::ActiveFedoraConverter::DefaultWork"
     # so the CustomResource defined above will not be persisted as such.
-    xit "can find that resource again" do
-      id = persister.save(resource: resource).id
-      item = query_service.find_by(id: id)
+    it "can find that resource again" do
+      persisted = persister.save(resource: resource)
+      item = query_service.find_by(id: persisted.id)
       expect(item).to be_kind_of resource_class
     end
 
