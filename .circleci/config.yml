@@ -1,25 +1,6 @@
 version: 2.1
-executors:
-  ruby:
-    docker:
-      - image: circleci/ruby:2.5.3
-    resource_class: small
-    working_directory: ~/hyrax
-    environment: &spec_env
-      BUNDLE_PATH: vendor/bundle
-      BUNDLE_JOBS: 16
-      BUNDLE_RETRY: 3
-      RAILS_ENV: test
-      RAILS_VERSION: << parameters.rails_version >>
-      RACK_ENV: test
-      FCREPO_TEST_PORT: 8080/fcrepo
-      NOKOGIRI_USE_SYSTEM_LIBRARIES: true
-      ENGINE_CART_RAILS_OPTIONS: --skip-git --skip-bundle --skip-listen --skip-spring --skip-yarn --skip-keeps --skip-action-cable --skip-coffee --skip-puma --skip-test
-      SPEC_OPTS: --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec.xml --format progress
-      COVERALLS_PARALLEL: true
-
 orbs:
-  samvera: samvera/circleci-orb@0
+  samvera: samvera/circleci-orb@dev:hyrax
 jobs:
   bundle_and_test:
     parameters:
@@ -33,21 +14,18 @@ jobs:
         type: string
         default: '5.2.2'
     executor:
-      name: 'samvera/ruby'
+      name: 'samvera/ruby_fcrepo_solr_redis'
       ruby_version: << parameters.ruby_version >>
-    docker:
-    - image: circleci/ruby:2.5.3-node-browsers-legacy
-    - image: circleci/redis:4
-    - image: ualbertalib/docker-fcrepo4:4.7
-      environment:
-        CATALINA_OPTS: "-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:+DisableExplicitGC"
-    - image: solr:7-alpine
-      command: bin/solr -cloud -noprompt -f -p 8985
 
     resource_class: medium+
     working_directory: ~/hyrax
     parallelism: 10
-    environment: *spec_env
+    environment:
+      RAILS_VERSION: << parameters.rails_version >>
+      NOKOGIRI_USE_SYSTEM_LIBRARIES: true
+      ENGINE_CART_RAILS_OPTIONS: --skip-git --skip-bundle --skip-listen --skip-spring --skip-yarn --skip-keeps --skip-action-cable --skip-coffee --skip-puma --skip-test
+      COVERALLS_PARALLEL: true
+
     steps:
       - samvera/cached_checkout
 
@@ -58,6 +36,9 @@ jobs:
 
       - samvera/engine_cart_generate:
           cache_key: v1-internal-test-app-{{ checksum "hyrax.gemspec" }}-{{ checksum "spec/test_app_templates/lib/generators/test_app_generator.rb" }}-{{ checksum "lib/generators/hyrax/install_generator.rb" }}-<< parameters.rails_version >>-<< parameters.ruby_version >>
+
+      - samvera/install_solr_core:
+          solr_config_path: .internal_test_app/solr/config
 
       - samvera/bundle_for_gem:
           ruby_version: << parameters.ruby_version >>
