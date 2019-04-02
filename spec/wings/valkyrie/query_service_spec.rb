@@ -46,6 +46,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
     expect(subject).to respond_to(:find_references_by).with_keywords(:resource, :property)
     expect(subject).to respond_to(:find_inverse_references_by).with_keywords(:resource, :property)
     expect(subject).to respond_to(:find_inverse_references_by).with_keywords(:id, :property)
+    expect(subject).to respond_to(:find_parents).with_keywords(:resource)
   end
   # rubocop:enable RSpec/ExampleLength
 
@@ -369,6 +370,39 @@ RSpec.describe Wings::Valkyrie::QueryService do
         parent = resource_class.new(title: ['parent'])
 
         expect { query_service.find_inverse_references_by(resource: parent, property: :a_member_of).to_a }.to raise_error(ArgumentError, "Resource has no id; is it persisted?")
+      end
+    end
+  end
+
+  describe ".find_parents" do
+    it "returns all parent resources" do
+      child1 = persister.save(resource: resource_class.new(title: ['child 1']))
+      child2 = persister.save(resource: resource_class.new(title: ['child 2']))
+      parent = persister.save(resource: resource_class.new(title: ['parent'], member_ids: [child1.id, child2.id]))
+      parent2 = persister.save(resource: resource_class.new(title: ['parent 2'], member_ids: [child1.id]))
+
+      expect(query_service.find_parents(resource: child1).map(&:id).to_a).to contain_exactly parent.id, parent2.id
+    end
+
+    it "returns an empty array if there are none" do
+      child1 = persister.save(resource: resource_class.new(title: ['child 1']))
+
+      expect(query_service.find_parents(resource: child1).to_a).to eq []
+    end
+
+    it "doesn't return same parent twice" do
+      child1 = persister.save(resource: resource_class.new(title: ['child 1']))
+      parent = persister.save(resource: resource_class.new(title: ['parent'], member_ids: [child1.id, child1.id]))
+      parent2 = persister.save(resource: resource_class.new(title: ['parent 2'], member_ids: [child1.id]))
+
+      expect(query_service.find_parents(resource: child1).map(&:id).to_a).to contain_exactly parent.id, parent2.id
+    end
+
+    context "when the model doesn't have member_ids" do
+      let(:child1) { persister.save(resource: image_resource_class.new) }
+
+      it "returns an empty array if there are none" do
+        expect(query_service.find_parents(resource: child1).to_a).to eq []
       end
     end
   end

@@ -131,6 +131,19 @@ module Wings
         end
       end
 
+      # Find all parents of a given resource.
+      # @param resource [Valkyrie::Resource] The resource whose parents are being searched
+      #   for.
+      # @return [Array<Valkyrie::Resource>] All resources which are parents of the given
+      #   `resource`. This means the resource's `id` appears in their `member_ids`
+      #   array.
+      def find_parents(resource:)
+        id = resource.alternate_ids.first
+        ActiveFedora::Base.where("member_ids_ssim: \"#{id}\"").map do |obj|
+          resource_factory.to_resource(object: obj)
+        end
+      end
+
       # Constructs a Valkyrie::Persistence::CustomQueryContainer using this query service
       # @return [Valkyrie::Persistence::CustomQueryContainer]
       def custom_queries
