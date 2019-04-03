@@ -30,7 +30,7 @@ module Wings
       attributes = ActiveFedoraAttributes.new(resource.attributes).result
       active_fedora_class.new(attributes).tap do |af_object|
         af_object.id = id unless id.empty?
-        af_object.visibility = attributes[:visibility]
+        af_object.visibility = attributes[:visibility] unless attributes[:visibility].blank?
         convert_members(af_object)
         convert_member_of_collections(af_object)
       end
