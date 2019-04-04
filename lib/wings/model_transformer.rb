@@ -132,6 +132,7 @@ module Wings
       relationship_keys = klass.respond_to?(:reflections) ? relationship_keys_for(reflections: klass.reflections) : []
       relationship_keys.delete('member_ids')
       relationship_keys.delete('member_of_collection_ids')
+      reflection_id_keys = klass.respond_to?(:reflections) ? klass.reflections.keys.select { |k| k.to_s.end_with? '_id' } : []
 
       Class.new(ActiveFedoraResource) do
         include Wings::CollectionBehavior if klass.included_modules.include?(Hyrax::CollectionBehavior)
@@ -158,6 +159,10 @@ module Wings
           attribute linked_property_name.to_sym, ::Valkyrie::Types::Set.of(::Valkyrie::Types::ID)
         end
 
+        reflection_id_keys.each do |property_name|
+          attribute property_name, ::Valkyrie::Types::ID
+        end
+
         # Defined after properties in case we have an `internal_resource` property.
         # This may not be ideal, but based on my understanding of the `internal_resource`
         # usage in Valkyrie, I'd rather keep synchronized the instance_method and class_method value for
@@ -172,8 +177,6 @@ module Wings
 
     class ActiveFedoraResource < ::Valkyrie::Resource
       attribute :alternate_ids, ::Valkyrie::Types::Array
-      attribute :embargo_id,    ::Valkyrie::Types::ID
-      attribute :lease_id,      ::Valkyrie::Types::ID
       attribute :visibility,    ::Valkyrie::Types::Symbol
     end
 
@@ -197,12 +200,17 @@ module Wings
           pcdm_object.attributes.keys +
           self.class.relationship_keys_for(reflections: pcdm_object.reflections)
         AttributeTransformer.run(pcdm_object, all_keys)
-                            .merge(created_at: pcdm_object.try(:create_date),
-                                   updated_at: pcdm_object.try(:modified_date),
-                                   embargo_id: pcdm_object.try(:embargo)&.id,
-                                   lease_id:   pcdm_object.try(:lease)&.id,
-                                   visibility: pcdm_object.try(:visibility),
-                                   member_ids: pcdm_object.try(:ordered_member_ids)) # We want members in order, so extract from ordered_members.
+                            .merge reflection_ids
+          .merge(created_at: pcdm_object.try(:create_date),
+                 updated_at: pcdm_object.try(:modified_date),
+                 visibility: pcdm_object.try(:visibility),
+                 member_ids: pcdm_object.try(:ordered_member_ids)) # We want members in order, so extract from ordered_members.
+      end
+
+      def reflection_ids
+        pcdm_object.reflections.keys.select { |k| k.to_s.end_with? '_id' }.each_with_object({}) do |k, mem|
+          mem[k] = pcdm_object.try(k)
+        end
       end
   end
   # rubocop:enable Style/ClassVars
