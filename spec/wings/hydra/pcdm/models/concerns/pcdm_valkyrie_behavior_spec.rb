@@ -230,7 +230,7 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
     context 'when active fedora objects requested' do
       it 'returns works only as active fedora objects through pcdm_valkyrie_behavior' do
         af_objects = child_resource.member_of(valkyrie: false)
-byebug
+# byebug
         expect(af_objects.size).to eq 2
         expect(af_objects.map(&:pcdm_object?)).to all(be true)
         expect(af_objects.map(&:id)).to match_array [work1.id, work2.id]

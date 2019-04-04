@@ -102,11 +102,12 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
         let(:mime_type) { 'application/jpg' }
 
         before do
-          file
+          fileset1.save
+          file.save
         end
 
         it 'converts member_of_collection_ids back to af_object' do
-          expect(converter.convert.files.map(&:id)).to match_array [file.id, work3.id]
+          expect(converter.convert.files.map(&:id)).to match_array [file.id]
         end
       end
     end
@@ -116,7 +117,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
 
   def set_attrs_on_af_file(af_file)
     af_file.file_name = [file_name]
-    af_file.content = [content]
+    af_file.content = content
     af_file.date_created = [date_created]
     af_file.date_modified = [date_modified]
     af_file.byte_order = [byte_order]
@@ -128,7 +129,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
     attrs = {}
     attrs[:file_identifiers] = Wings::ValueMapper.for([file_identifier]).result
     attrs[:file_name] = Wings::ValueMapper.for([file_name]).result
-    attrs[:content] = Wings::ValueMapper.for([content]).result
+    attrs[:content] = Wings::ValueMapper.for(content).result
     attrs[:date_created] = Wings::ValueMapper.for([date_created]).result
     attrs[:date_modified] = Wings::ValueMapper.for([date_modified]).result
     attrs[:byte_order] = Wings::ValueMapper.for([byte_order]).result

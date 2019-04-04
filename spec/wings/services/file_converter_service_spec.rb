@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 require 'wings_helper'
 require 'wings/model_transformer'
-require 'wings/value_mapper'
 
 RSpec.describe Wings::FileConverterService do
   let(:af_fileset) { build(:file_set, id: 'fsn1', title: ['AF Fileset']) }

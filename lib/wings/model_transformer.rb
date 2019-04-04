@@ -68,6 +68,8 @@ module Wings
       end
       pcdm_object.id = minted_id if pcdm_object.id.nil?
       attrs = attributes.tap { |hash| hash[:new_record] = pcdm_object.new_record? }
+# pp attrs
+# byebug # transforming af_object to valkyrie object
       resource = klass.new(alternate_ids: [::Valkyrie::ID.new(pcdm_object.id)], **attrs)
       build_files(resource)
       resource
