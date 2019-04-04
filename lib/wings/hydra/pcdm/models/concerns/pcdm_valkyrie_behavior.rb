@@ -129,7 +129,7 @@ module Wings
       end
 
       # @param valkyrie [Boolean] Should the returned ids be for Valkyrie or AF objects?
-      # @return [Enumerable<Hydra::Works::Work>] The works this work contains
+      # @return [Enumerable<Hydra::Works::Work>] The works this work is contained in
       # NOTE: This method avoids using the Hydra::Works version of parent_works because of Issue #361
       def parent_works(valkyrie: false)
         af_child = Wings::ActiveFedoraConverter.new(resource: self).convert
@@ -139,7 +139,7 @@ module Wings
       end
 
       # @param valkyrie [Boolean] Should the returned ids be for Valkyrie or AF objects?
-      # @return [Enumerable<String> | Enumerable<Valkyrie::ID>] The ids of the file sets this work contains
+      # @return [Enumerable<String> | Enumerable<Valkerie::ID>] The ids of the works this work is contained in
       def parent_work_ids(valkyrie: false)
         parent_works(valkyrie: valkyrie).map(&:id)
       end
