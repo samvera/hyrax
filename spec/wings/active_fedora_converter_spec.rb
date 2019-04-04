@@ -28,6 +28,15 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       it 'populates reflections'
     end
 
+    context 'with an admin_set' do
+      let(:admin_set) { FactoryBot.create(:admin_set) }
+      let(:work)      { FactoryBot.create(:work, admin_set: admin_set) }
+
+      it 'repopulates the admin_set' do
+        expect(converter.convert).to have_attributes(admin_set_id: work.admin_set_id)
+      end
+    end
+
     context 'with an embargo' do
       let(:work) { FactoryBot.create(:embargoed_work) }
 

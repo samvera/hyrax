@@ -117,6 +117,13 @@ RSpec.describe Wings::ModelTransformer do
                             source: work.source
     end
 
+    it 'has an admin set id matching the pcdm object' do
+      work.admin_set = admin_set = create(:admin_set)
+
+      expect(factory.build)
+        .to have_attributes admin_set_id: Valkyrie::ID.new(admin_set.id)
+    end
+
     context 'without an existing id' do
       let(:id)        { nil }
       let(:minted_id) { 'bobross' }

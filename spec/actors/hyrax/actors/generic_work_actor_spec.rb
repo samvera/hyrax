@@ -90,6 +90,15 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
         end
       end
 
+      context 'with an admin_set' do
+        let(:curation_concern) { build(:generic_work, admin_set: admin_set, user: user) }
+
+        it 'assigns the admin_set' do
+          expect(middleware.create(env)).to be true
+          expect(curation_concern.reload.admin_set).to eq admin_set
+        end
+      end
+
       context 'with in_work_ids' do
         let(:parent) { create(:generic_work, user: user) }
         let(:attributes) do

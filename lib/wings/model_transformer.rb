@@ -53,7 +53,10 @@ module Wings
                       .keys
                       .reject { |k| k.to_s.include?('id') }
                       .map { |k| k.to_s.singularize + '_ids' }
-      relationships.delete(:member_ids) # Remove here.  Members will be extracted as ordered_members in attributes method.
+      # Remove here.  Members will be extracted as ordered_members in attributes method.
+      relationships.delete(:member_ids)
+
+      relationships.delete('admin_set_ids')
       relationships
     end
 
@@ -171,6 +174,7 @@ module Wings
     # rubocop:enable Metrics/AbcSize
 
     class ActiveFedoraResource < ::Valkyrie::Resource
+      attribute :admin_set_id,  ::Valkyrie::Types::ID
       attribute :alternate_ids, ::Valkyrie::Types::Array
       attribute :embargo_id,    ::Valkyrie::Types::ID
       attribute :lease_id,      ::Valkyrie::Types::ID
@@ -197,12 +201,13 @@ module Wings
           pcdm_object.attributes.keys +
           self.class.relationship_keys_for(reflections: pcdm_object.reflections)
         AttributeTransformer.run(pcdm_object, all_keys)
-                            .merge(created_at: pcdm_object.try(:create_date),
-                                   updated_at: pcdm_object.try(:modified_date),
-                                   embargo_id: pcdm_object.try(:embargo)&.id,
-                                   lease_id:   pcdm_object.try(:lease)&.id,
-                                   visibility: pcdm_object.try(:visibility),
-                                   member_ids: pcdm_object.try(:ordered_member_ids)) # We want members in order, so extract from ordered_members.
+                            .merge(created_at:   pcdm_object.try(:create_date),
+                                   updated_at:   pcdm_object.try(:modified_date),
+                                   admin_set_id: pcdm_object.try(:admin_set_id),
+                                   embargo_id:   pcdm_object.try(:embargo)&.id,
+                                   lease_id:     pcdm_object.try(:lease)&.id,
+                                   visibility:   pcdm_object.try(:visibility),
+                                   member_ids:   pcdm_object.try(:ordered_member_ids)) # We want members in order, so extract from ordered_members.
       end
   end
   # rubocop:enable Style/ClassVars

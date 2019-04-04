@@ -62,20 +62,22 @@ module Wings
         # handling for reflections needs to happen in future work
         attrs = attributes.reject { |k, _| k.to_s.end_with? '_ids' }
 
-        attrs.delete(:internal_resource)
-        attrs.delete(:new_record)
-        attrs.delete(:id)
-        attrs.delete(:alternate_ids)
-        attrs.delete(:created_at)
-        attrs.delete(:updated_at)
-        attrs.delete(:member_ids)
+        [:internal_resource, :new_record, :id, :alternate_ids, :created_at,
+         :updated_at, :member_ids]
+          .map { |key| attrs.delete(key) }
 
-        embargo_id         = attrs.delete(:embargo_id)
-        attrs[:embargo_id] = embargo_id.to_s unless embargo_id.nil? || embargo_id.empty?
-        lease_id          = attrs.delete(:lease_id)
-        attrs[:lease_id]  = lease_id.to_s unless lease_id.nil? || lease_id.empty?
+        [:admin_set_id, :embargo_id, :lease_id]
+          .map { |name| stringify_id_field(attrs, name: name) }
+
         attrs.compact
       end
+
+      private
+
+        def stringify_id_field(attrs, name:)
+          value       = attrs.delete(name)
+          attrs[name] = value.to_s unless value.nil? || value.empty?
+        end
     end
 
     ##
