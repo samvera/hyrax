@@ -27,7 +27,6 @@ RSpec.describe CreateDerivativesJob do
     context "with a file name" do
       it 'calls create_derivatives and save on a file set' do
         expect(Hydra::Derivatives::AudioDerivatives).to receive(:create)
-        expect(file_set).to receive(:reload)
         expect(file_set).to receive(:update_index)
         described_class.perform_now(file_set, file.id)
       end
@@ -44,7 +43,6 @@ RSpec.describe CreateDerivativesJob do
         let(:parent) { GenericWork.new(thumbnail_id: id) }
 
         it 'updates the index of the parent object' do
-          expect(file_set).to receive(:reload)
           expect(parent).to receive(:update_index)
           described_class.perform_now(file_set, file.id)
         end
@@ -54,7 +52,6 @@ RSpec.describe CreateDerivativesJob do
         let(:parent) { GenericWork.new }
 
         it "doesn't update the parent's index" do
-          expect(file_set).to receive(:reload)
           expect(parent).not_to receive(:update_index)
           described_class.perform_now(file_set, file.id)
         end

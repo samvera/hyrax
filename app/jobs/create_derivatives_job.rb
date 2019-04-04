@@ -1,3 +1,4 @@
+require 'wings'
 class CreateDerivativesJob < Hyrax::ApplicationJob
   queue_as Hyrax.config.ingest_queue_name
 
@@ -11,7 +12,7 @@ class CreateDerivativesJob < Hyrax::ApplicationJob
     file_set.create_derivatives(filename)
 
     # Reload from Fedora and reindex for thumbnail and extracted text
-    file_set.reload
+    file_set = reload(file_set)
     file_set.update_index
     file_set.parent.update_index if parent_needs_reindex?(file_set)
   end
@@ -21,5 +22,15 @@ class CreateDerivativesJob < Hyrax::ApplicationJob
   def parent_needs_reindex?(file_set)
     return false unless file_set.parent
     file_set.parent.thumbnail_id == file_set.id
+  end
+
+  def reload(af_object)
+    adapter = Hyrax.config.valkyrie_metadata_adapter
+    return af_object unless af_object.persisted?
+
+    resource = adapter.query_service.find_by(id: af_object.id)
+    af_object.clear_association_cache
+    af_object.association_cache.merge! adapter.resource_factory.from_resource(resource: resource).association_cache
+    af_object
   end
 end
