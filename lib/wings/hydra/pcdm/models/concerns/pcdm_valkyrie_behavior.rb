@@ -139,7 +139,7 @@ module Wings
       end
 
       # @param valkyrie [Boolean] Should the returned ids be for Valkyrie or AF objects?
-      # @return [Enumerable<String> | Enumerable<Valkerie::ID>] The ids of the works this work is contained in
+      # @return [Enumerable<String> | Enumerable<Valkyrie::ID>] The ids of the works this work is contained in
       def parent_work_ids(valkyrie: false)
         parent_works(valkyrie: valkyrie).map(&:id)
       end
