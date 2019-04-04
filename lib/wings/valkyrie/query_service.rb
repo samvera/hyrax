@@ -89,17 +89,11 @@ module Wings
       # @param [Valkyrie::ResourceClass]
       # @return [Array<Valkyrie::Resource>]
       def find_members(resource:, model: nil)
+        return [] unless resource.respond_to?(:member_ids) && resource.member_ids.present?
+        all_members = find_many_by_ids(ids: resource.member_ids)
+        return all_members unless model
         find_model = model.internal_resource.constantize if model
-        member_list = resource_factory.from_resource(resource: resource).try(:members)
-        return [] unless member_list
-        if model
-          member_list = member_list.select do |obj|
-            obj.class == find_model
-          end
-        end
-        member_list.map do |obj|
-          resource_factory.to_resource(object: obj)
-        end
+        all_members.select { |member_resource| member_resource.internal_resource.constantize == find_model }
       end
 
       # Find the Valkyrie Resources referenced by another Valkyrie Resource
