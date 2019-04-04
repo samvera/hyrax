@@ -25,18 +25,6 @@ module Wings
       end
 
       # @param valkyrie [Boolean] Should the returned resources be Valkyrie or AF objects?
-      # @return [Enumerable<Hydra::Works::Work>] The works this work is in
-      def parent_works(valkyrie: false)
-        parent_objects(valkyrie: valkyrie).select(&:work?)
-      end
-
-      # @param valkyrie [Boolean] Should the returned ids be for Valkyrie or AF objects?
-      # @return [Enumerable<String> | Enumerable<Valkerie::ID] The ids of the works this work is in
-      def parent_work_ids(valkyrie: false)
-        parent_works(valkyrie: valkyrie).map(&:id)
-      end
-
-      # @param valkyrie [Boolean] Should the returned resources be Valkyrie or AF objects?
       # @return [Enumerable<Hydra::Works::Work>] The works this work contains
       def child_works(valkyrie: false)
         child_objects(valkyrie: valkyrie).select(&:work?)

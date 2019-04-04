@@ -82,7 +82,7 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
     let(:parent_work_resource) { resource }
 
     before do
-      work1.members = [work2, work3, fileset1, fileset2]
+      work1.ordered_members = [work2, work3, fileset1, fileset2]
       work1.save!
     end
 
@@ -111,7 +111,7 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
     let(:parent_work_resource) { resource }
 
     before do
-      work1.members = [work2, work3, fileset1, fileset2]
+      work1.ordered_members = [work2, work3, fileset1, fileset2]
       work1.save!
     end
 
@@ -147,7 +147,7 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
     let(:pcdm_object) { collection1 }
 
     before do
-      collection1.members = [work1, work2, collection2, collection3]
+      collection1.ordered_members = [work1, work2, collection2, collection3]
       collection1.save!
     end
 
@@ -181,7 +181,7 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
     let(:pcdm_object) { collection1 }
 
     before do
-      collection1.members = [work1, work2, collection2, collection3]
+      collection1.ordered_members = [work1, work2, collection2, collection3]
       collection1.save!
     end
 
@@ -213,8 +213,8 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
     let(:child_resource) { resource }
 
     before do
-      work1.members = [work3, fileset1]
-      work2.members = [work3, fileset2]
+      work1.ordered_members = [work3, fileset1]
+      work2.ordered_members = [work3, fileset2]
       work1.save!
       work2.save!
     end
@@ -254,9 +254,9 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
     let(:child_resource) { resource }
 
     before do
-      collection1.members = [work1, collection3]
-      collection2.members = [work1, work2]
-      work3.members = [work1]
+      collection1.ordered_members = [work1, collection3]
+      collection2.ordered_members = [work1, work2]
+      work3.ordered_members = [work1]
       collection1.save!
       collection2.save!
     end
@@ -296,9 +296,9 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
     let(:child_resource) { resource }
 
     before do
-      collection1.members = [work1, collection3]
-      collection2.members = [work1, work2]
-      work3.members = [work1]
+      collection1.ordered_members = [work1, collection3]
+      collection2.ordered_members = [work1, work2]
+      work3.ordered_members = [work1]
       collection1.save!
       collection2.save!
       work3.save!
@@ -328,6 +328,71 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
     let!(:pcdm_object) { collection1 }
     it 'raises NoMethodError when neither the resource nor the active fedora object respond to the method' do
       expect { resource.a_missing_method }.to raise_error NoMethodError
+    end
+  end
+
+  describe '#parent_works' do
+    let(:pcdm_object) { work3 }
+    let(:child_work_resource) { resource }
+
+    before do
+      work1.ordered_members = [work3]
+      work2.ordered_members = [work3]
+      work1.save!
+      work2.save!
+    end
+
+    context 'when valkyrie resources requested' do
+      it 'returns parent works as valkyrie resources through pcdm_valkyrie_behavior' do
+        resources = child_work_resource.parent_works(valkyrie: true)
+        expect(resources.map(&:work?)).to all(be true)
+        expect(resources.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([work1.id, work2.id])
+      end
+    end
+    context 'when active fedora objects requested' do
+      it 'returns parent works as fedora objects through pcdm_valkyrie_behavior' do
+        af_objects = child_work_resource.parent_works(valkyrie: false)
+        expect(af_objects.map(&:work?)).to all(be true)
+        expect(af_objects.map(&:id)).to match_array [work1.id, work2.id]
+      end
+    end
+    context 'when return type is not specified' do
+      it 'returns parent works as fedora objects through pcdm_valkyrie_behavior' do
+        af_objects = child_work_resource.parent_works
+        expect(af_objects.map(&:work?)).to all(be true)
+        expect(af_objects.map(&:id)).to match_array [work1.id, work2.id]
+      end
+    end
+  end
+
+  describe '#parent_work_ids' do
+    let(:pcdm_object) { work3 }
+    let(:child_work_resource) { resource }
+
+    before do
+      work1.ordered_members = [work3]
+      work2.ordered_members = [work3]
+      work1.save!
+      work2.save!
+    end
+
+    context 'when valkyrie resources requested' do
+      it 'returns parent works as valkyrie resources through pcdm_valkyrie_behavior' do
+        resource_ids = child_work_resource.parent_work_ids(valkyrie: true)
+        expect(resource_ids).to match_valkyrie_ids_with_active_fedora_ids([work1.id, work2.id])
+      end
+    end
+    context 'when active fedora objects requested' do
+      it 'returns parent works as fedora objects through pcdm_valkyrie_behavior' do
+        af_object_ids = child_work_resource.parent_work_ids(valkyrie: false)
+        expect(af_object_ids).to match_array [work1.id, work2.id]
+      end
+    end
+    context 'when return type is not specified' do
+      it 'returns parent works as fedora objects through pcdm_valkyrie_behavior' do
+        af_object_ids = child_work_resource.parent_work_ids
+        expect(af_object_ids).to match_array [work1.id, work2.id]
+      end
     end
   end
 end

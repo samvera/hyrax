@@ -3,7 +3,7 @@ require 'spec_helper'
 require 'wings'
 require 'wings/active_fedora_converter'
 
-RSpec.describe Wings::ActiveFedoraConverter do
+RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
   subject(:converter) { described_class.new(resource: resource) }
   let(:adapter)       { Valkyrie::Persistence::Memory::MetadataAdapter.new }
   let(:attributes)    { { id: id } }
@@ -74,12 +74,16 @@ RSpec.describe Wings::ActiveFedoraConverter do
         let(:work3)       { build(:work, id: 'wk3', title: ['Work 3']) }
 
         before do
-          work1.members = [work2, work3]
+          work1.ordered_members = [work2, work3]
           work1.save!
         end
 
         it 'converts member_of_collection_ids back to af_object' do
-          expect(converter.convert.members.map(&:id)).to match_array [work2.id, work3.id]
+          expect(converter.convert.members.map(&:id)).to match_array [work3.id, work2.id]
+        end
+
+        it 'preserves order across conversion' do
+          expect(converter.convert.ordered_member_ids).to eq [work2.id, work3.id]
         end
       end
     end

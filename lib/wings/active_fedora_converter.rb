@@ -163,7 +163,7 @@ module Wings
       def convert_members(af_object)
         return unless resource.respond_to?(:member_ids) && resource.member_ids
         # TODO: It would be better to find a way to add the members without resuming all the member AF objects
-        resource.member_ids.each { |valkyrie_id| af_object.members << ActiveFedora::Base.find(valkyrie_id.id) }
+        resource.member_ids.each { |valkyrie_id| af_object.ordered_members << ActiveFedora::Base.find(valkyrie_id.id) }
       end
 
       def convert_member_of_collections(af_object)

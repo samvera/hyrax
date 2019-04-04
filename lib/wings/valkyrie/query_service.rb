@@ -55,18 +55,25 @@ module Wings
         end
       end
 
-      # Find an array of record using Valkyrie IDs, and map them to Valkyrie Resources
+      # Find an array of record using Valkyrie IDs, and map them to Valkyrie Resources maintaining order based on given ids
       # @param [Array<Valkyrie::ID, String>] ids
       # @return [Array<Valkyrie::Resource>]
+      # NOTE: Ignores non-existent ids.
       def find_many_by_ids(ids:)
         ids.each do |id|
           id = ::Valkyrie::ID.new(id.to_s) if id.is_a?(String)
           validate_id(id)
         end
-        ids = ids.uniq.map(&:to_s)
-        ActiveFedora::Base.where("id: (#{ids.join(' OR ')})").map do |obj|
-          resource_factory.to_resource(object: obj)
+        resources = []
+        ids.uniq.map(&:to_s).each do |id|
+          begin
+            af_object = ActiveFedora::Base.find(id)
+            resources << resource_factory.to_resource(object: af_object)
+          rescue ::ActiveFedora::ObjectNotFoundError, Ldp::Gone
+            next
+          end
         end
+        resources
       end
 
       def find_by_alternate_identifier(alternate_identifier:)

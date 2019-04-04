@@ -26,7 +26,7 @@ RSpec.describe Wings::Works::WorkValkyrieBehavior, :clean_repo do
     work4.save!
     work5.ordered_members << work1
     work5.save!
-    work1.members = [work2, work3, fileset1, fileset2]
+    work1.ordered_members = [work2, work3, fileset1, fileset2]
     work1.save!
   end
 
