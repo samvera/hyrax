@@ -160,6 +160,16 @@ RSpec.describe Wings::ModelTransformer do
     end
   end
 
+  context 'with a generic work that has open visibility' do
+    before do
+      work.visibility = "open"
+    end
+
+    it 'sets the visibility' do
+      expect(subject.build.visibility).to eq(work.visibility)
+    end
+  end
+
   context 'with relationship properties' do
     let(:pcdm_object) { book }
     let(:id)          { 'moomin123' }

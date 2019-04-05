@@ -60,6 +60,19 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       end
     end
 
+    context 'with a generic work that has open visibility' do
+      let(:attributes) do
+        FactoryBot.attributes_for(:generic_work)
+      end
+      before do
+        work.visibility = "open"
+      end
+
+      it 'sets the visibility' do
+        expect(converter.convert).to have_attributes(visibility: work.visibility)
+      end
+    end
+
     context 'with relationships' do
       subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
 
