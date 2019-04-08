@@ -296,36 +296,40 @@ RSpec.describe Wings::Valkyrie::Persister do
     end
 
     context "parent tests" do
-      let(:book) { persister.save(resource: resource_class.new) }
-      let(:book2) { persister.save(resource: resource_class.new) }
+      let(:book) { persister.save(resource: resource_class.new(title: ['Book'])) }
+      let(:book2) { persister.save(resource: resource_class.new(title: ['Book 2'])) }
 
-      xit "can order members" do
-        book3 = persister.save(resource: resource_class.new)
-        parent = persister.save(resource: resource_class.new(member_ids: [book2.id, book.id]))
+      it "can order members" do
+        book3 = persister.save(resource: resource_class.new(title: ['Book 3']))
+        parent = persister.save(resource: resource_class.new(title: ['Parent'], member_ids: [book2.id, book.id]))
         parent.member_ids = parent.member_ids + [book3.id]
         parent = persister.save(resource: parent)
         reloaded = query_service.find_by(id: parent.id)
         expect(reloaded.member_ids).to eq [book2.id, book.id, book3.id]
       end
 
-      xit "can remove members" do
-        parent = persister.save(resource: resource_class.new(member_ids: [book2.id, book.id]))
+      it "can remove members" do
+        parent = persister.save(resource: resource_class.new(title: ['Parent'], member_ids: [book2.id, book.id]))
         parent.member_ids = parent.member_ids - [book2.id]
         parent = persister.save(resource: parent)
         expect(parent.member_ids).to eq [book.id]
       end
     end
 
-    xit "doesn't override a resource that already has an ID" do
+    it "doesn't override a resource that already has an ID" do
       book = persister.save(resource: resource_class.new)
       id = book.id
       output = persister.save(resource: book)
       expect(output.id).to eq id
     end
 
+    # not sure how to fix this one. When a resource wasn't ever in AF, it is persisted as
+    # internal_resource="Wings::ActiveFedoraConverter::DefaultWork"
+    # so the CustomResource defined above will not be persisted as such.
     xit "can find that resource again" do
       id = persister.save(resource: resource).id
-      expect(query_service.find_by(id: id)).to be_kind_of resource_class
+      item = query_service.find_by(id: id)
+      expect(item).to be_kind_of resource_class
     end
 
     it "can delete objects" do

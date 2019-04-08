@@ -100,10 +100,10 @@ module Wings
       property :ordered_authors, predicate: ::RDF::Vocab::DC.creator
       property :ordered_nested, predicate: ::RDF::URI("http://example.com/ordered_nested")
       property :nested_resource, predicate: ::RDF::URI("http://example.com/nested_resource"), class_name: "Wings::ActiveFedoraConverter::NestedResource"
+      include ::Hyrax::BasicMetadata
       accepts_nested_attributes_for :nested_resource
 
       # self.indexer = <%= class_name %>Indexer
-      include ::Hyrax::BasicMetadata
     end
 
     class NestedResource < ActiveTriples::Resource
@@ -163,13 +163,21 @@ module Wings
       def convert_members(af_object)
         return unless resource.respond_to?(:member_ids) && resource.member_ids
         # TODO: It would be better to find a way to add the members without resuming all the member AF objects
-        resource.member_ids.each { |valkyrie_id| af_object.ordered_members << ActiveFedora::Base.find(valkyrie_id.id) }
+        ordered_members = []
+        resource.member_ids.each do |valkyrie_id|
+          ordered_members << ActiveFedora::Base.find(valkyrie_id.id)
+        end
+        af_object.ordered_members = ordered_members
       end
 
       def convert_member_of_collections(af_object)
         return unless resource.respond_to?(:member_of_collection_ids) && resource.member_of_collection_ids
         # TODO: It would be better to find a way to set the parent collections without resuming all the collection AF objects
-        resource.member_of_collection_ids.each { |valkyrie_id| af_object.member_of_collections << ActiveFedora::Base.find(valkyrie_id.id) }
+        member_of_collections = []
+        resource.member_of_collection_ids.each do |valkyrie_id|
+          member_of_collections << ActiveFedora::Base.find(valkyrie_id.id)
+        end
+        af_object.member_of_collections = member_of_collections
       end
   end
 end
