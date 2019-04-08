@@ -106,7 +106,7 @@ RSpec.describe Wings::Valkyrie::Persister do
         attribute :author
         attribute :member_ids
         attribute :nested_resource
-        attribute :single_value, Valkyrie::Types::String.optional
+        attribute :depositor, Valkyrie::Types::String.optional
         attribute :ordered_authors, Valkyrie::Types::Array.of(Valkyrie::Types::Anything).meta(ordered: true)
         attribute :ordered_nested, Valkyrie::Types::Array.of(CustomResource).meta(ordered: true)
       end
@@ -147,18 +147,18 @@ RSpec.describe Wings::Valkyrie::Persister do
       expect(reloaded.nested_resource.first.title).to eq ["Nested"]
     end
 
-    xit "can persist single values" do
-      resource.single_value = "A single value"
+    it "can persist single values" do
+      resource.depositor = "user@institution.edu"
 
       output = persister.save(resource: resource)
 
-      expect(output.single_value).to eq "A single value"
+      expect(output.depositor).to eq "user@institution.edu"
     end
 
-    xit "returns nil for an unset single value" do
+    it "returns nil for an unset single value" do
       output = persister.save(resource: resource_class.new)
 
-      expect(output.single_value).to be_nil
+      expect(output.depositor).to be_nil
     end
 
     xit "stores created_at/updated_at" do
