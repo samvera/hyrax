@@ -145,6 +145,31 @@ RSpec.describe Wings::ModelTransformer do
     end
   end
 
+  context 'with _id attributes' do
+    let(:work) { FactoryBot.create(:work_with_representative_file, with_admin_set: true) }
+    before do
+      work.thumbnail_id = work.representative_id
+    end
+
+    it 'repopulates the _id attributes' do
+      resource = subject.build
+      expect(resource[:representative_id].to_s).to eq(work.representative_id)
+      expect(resource[:thumbnail_id].to_s).to eq(work.thumbnail_id)
+      expect(resource[:access_control_id].to_s).to eq(work.access_control_id)
+      expect(resource[:admin_set_id].to_s).to eq(work.admin_set_id)
+    end
+  end
+
+  context 'with a generic work that has open visibility' do
+    before do
+      work.visibility = "open"
+    end
+
+    it 'sets the visibility' do
+      expect(subject.build.visibility).to eq(work.visibility)
+    end
+  end
+
   context 'with relationship properties' do
     let(:pcdm_object) { book }
     let(:id)          { 'moomin123' }

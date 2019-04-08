@@ -44,6 +44,35 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       end
     end
 
+    context 'with a generic work with _id attributes' do
+      let(:work) { FactoryBot.create(:work_with_representative_file, with_admin_set: true) }
+      before do
+        work.thumbnail_id = work.representative_id
+      end
+
+      it 'repopulates the _id attributes' do
+        expect(converter.convert).to have_attributes(
+          representative_id: work.representative_id,
+          thumbnail_id: work.thumbnail_id,
+          access_control_id: work.access_control_id,
+          admin_set_id: work.admin_set_id
+        )
+      end
+    end
+
+    context 'with a generic work that has open visibility' do
+      let(:attributes) do
+        FactoryBot.attributes_for(:generic_work)
+      end
+      before do
+        work.visibility = "open"
+      end
+
+      it 'sets the visibility' do
+        expect(converter.convert).to have_attributes(visibility: work.visibility)
+      end
+    end
+
     context 'with relationships' do
       subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
 

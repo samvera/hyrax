@@ -30,6 +30,7 @@ module Wings
       attributes = ActiveFedoraAttributes.new(resource.attributes).result
       active_fedora_class.new(attributes).tap do |af_object|
         af_object.id = id unless id.empty?
+        af_object.visibility = attributes[:visibility] unless attributes[:visibility].blank?
         convert_members(af_object)
         convert_member_of_collections(af_object)
       end
@@ -70,10 +71,11 @@ module Wings
         attrs.delete(:updated_at)
         attrs.delete(:member_ids)
 
-        embargo_id         = attrs.delete(:embargo_id)
-        attrs[:embargo_id] = embargo_id.to_s unless embargo_id.nil? || embargo_id.empty?
-        lease_id          = attrs.delete(:lease_id)
-        attrs[:lease_id]  = lease_id.to_s unless lease_id.nil? || lease_id.empty?
+        # remove reflection id attributes and reinsert as strings
+        attrs.select { |k| k.to_s.end_with? '_id' }.each_key do |k|
+          val = attrs.delete(k)
+          attrs[k] = val.to_s unless val.blank?
+        end
         attrs.compact
       end
     end
