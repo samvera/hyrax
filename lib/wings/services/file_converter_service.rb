@@ -18,15 +18,15 @@ module Wings
         af_file = Hydra::PCDM::File.find(file_metadata.file_identifiers.first)
         attrs = attributes_from_file_metadata_resource(file_metadata)
         attrs.each do |key, value|
-puts "UNABLE TO SET ON AF METADATA_NODE: key=#{key}   value=#{value}" unless af_file.respond_to? key
+          puts "UNABLE TO SET ON AF METADATA_NODE: key=#{key}   value=#{value}" unless af_file.respond_to? key # TODO: files -- resolve each of these
           af_file.metadata_node.set_value(key, value) if af_file.respond_to? key
         end
         af_file.mime_type = file_metadata.mime_type
+        types(file_metadata) { |type| Hydra::PCDM::AddTypeToFile.call(af_file, type) }
 
-
-### WORKING ON HOW TO SET THE FILE ON THE FILESET
+        ### TODO: files -- WORKING ON HOW TO SET THE FILE ON THE FILESET
         # af_file.content = file_metadata.content if file_metadata.content.present?
-        # af_object.files << af_file
+        af_object.files << af_file
         # Hydra::Works::AddFileToFileSet.call(af_object,
         #                                     io,
         #                                     relation,
@@ -44,7 +44,7 @@ puts "UNABLE TO SET ON AF METADATA_NODE: key=#{key}   value=#{value}" unless af_
               .merge(file_identifiers: [af_file.id],
                      mime_type: TransformerValueMapper.for(af_file.public_send(:mime_type)).result,
                      # content: TransformerValueMapper.for(content).result,
-                     type: TransformerValueMapper.for(af_file.metadata_node.public_send(:type)).result)
+                     use: TransformerValueMapper.for(uses(af_file)).result)
         end
 
         def attributes_from_file_metadata_resource(file_metadata)
@@ -58,6 +58,7 @@ puts "UNABLE TO SET ON AF METADATA_NODE: key=#{key}   value=#{value}" unless af_
           attrs.delete(:updated_at)
           attrs.delete(:content)
           attrs.delete(:mimetype)
+          attrs.delete(:use)
           attrs.compact
           attrs
         end
@@ -65,6 +66,25 @@ puts "UNABLE TO SET ON AF METADATA_NODE: key=#{key}   value=#{value}" unless af_
         def content(af_file)
           content = af_file.content
           content.is_a?(String) ? content : nil
+        end
+
+        # NOTE: Hyrax uses RDF::URI and Valkyrie uses RDF::Vocabulary::Term
+        def uses(af_file)
+          af_file.metadata_node.type.map do |type|
+            next ::Valkyrie::Vocab::PCDMUse.OriginalFile if type == ::RDF::URI('http://pcdm.org/use#OriginalFile')
+            next ::Valkyrie::Vocab::PCDMUse.ThumbnailFile if type == ::RDF::URI('http://pcdm.org/use#ThumbnailFile')
+            next ::Valkyrie::Vocab::PCDMUse.ExtractedFile if type == ::RDF::URI('http://pcdm.org/use#ExtractedFile')
+            type
+          end
+        end
+
+        # NOTE: Hyrax uses RDF::URI and Valkyrie uses RDF::Vocabulary::Term
+        def types(file_metadata)
+          file_metadata.use.map do |use|
+            next ::RDF::URI('http://pcdm.org/use#OriginalFile') if use == ::Valkyrie::Vocab::PCDMUse.OriginalFile
+            next ::RDF::URI('http://pcdm.org/use#ThumbnailFile') if use == ::Valkyrie::Vocab::PCDMUse.ThumbnailFile
+            next ::RDF::URI('http://pcdm.org/use#ExtractedFile') if use == ::Valkyrie::Vocab::PCDMUse.ExtractedFile
+          end
         end
     end
   end

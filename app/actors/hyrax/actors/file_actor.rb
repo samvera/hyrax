@@ -10,7 +10,7 @@ module Hyrax
       # @param [User] user the user to record as the Agent acting upon the file
       def initialize(file_set, relation, user)
         @file_set = file_set
-byebug
+# byebug
         @relation = relation.to_sym
         @user = user
       end
@@ -23,12 +23,12 @@ byebug
       # @todo create a job to monitor the temp directory (or in a multi-worker system, directories!) to prune old files that have made it into the repo
       def ingest_file(io)
         # Skip versioning because versions will be minted by VersionCommitter as necessary during save_characterize_and_record_committer.
-byebug
+# byebug
         Hydra::Works::AddFileToFileSet.call(file_set,
                                             io,
                                             relation,
                                             versioning: false)
-byebug
+# byebug
         return false unless file_set.save
         repository_file = related_file
         Hyrax::VersioningService.create(repository_file, user)

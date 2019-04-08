@@ -10,7 +10,7 @@ class FileMetadata < Valkyrie::Resource
 
   attribute :file_identifiers, Valkyrie::Types::Set
   attribute :original_filename, Valkyrie::Types::Set
-  attribute :use, Valkyrie::Types::Set
+  attribute :use, Valkyrie::Types::Set # stored in rdf:type in the af_object
 
   # TODO: Not sure content should be a set. Sometimes content is a String, sometimes binary file.  Not clear if
   #       both use this content field.
@@ -88,15 +88,19 @@ class FileMetadata < Valkyrie::Resource
   # def derivative_partial?
   #   use.include?(Valkyrie::Vocab::PCDMUse.ServiceFilePartial)
   # end
-  #
-  # def original_file?
-  #   use.include?(Valkyrie::Vocab::PCDMUse.OriginalFile)
-  # end
-  #
-  # def thumbnail_file?
-  #   use.include?(Valkyrie::Vocab::PCDMUse.ThumbnailImage)
-  # end
-  #
+
+  def original_file?
+    use.include?(Valkyrie::Vocab::PCDMUse.OriginalFile)
+  end
+
+  def thumbnail_file?
+    use.include?(Valkyrie::Vocab::PCDMUse.ThumbnailImage)
+  end
+
+  def extracted_file?
+    use.include?(Valkyrie::Vocab::PCDMUse.ExtractedImage)
+  end
+
   # def preservation_file?
   #   use.include?(Valkyrie::Vocab::PCDMUse.PreservationMasterFile)
   # end
