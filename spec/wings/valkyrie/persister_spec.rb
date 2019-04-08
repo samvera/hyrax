@@ -161,7 +161,7 @@ RSpec.describe Wings::Valkyrie::Persister do
       expect(output.depositor).to be_nil
     end
 
-    xit "stores created_at/updated_at" do
+    it "stores created_at/updated_at" do
       book = persister.save(resource: resource_class.new)
       book.title = "test"
       book = persister.save(resource: book)
