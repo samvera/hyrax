@@ -116,7 +116,7 @@ module Hyrax
     end
 
     def link_name
-      current_ability.can?(:read, id) ? to_s : 'File'
+      current_ability.can?(:read, id) ? to_s : 'Private'
     end
 
     def export_as_nt
