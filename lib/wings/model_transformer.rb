@@ -178,7 +178,8 @@ module Wings
       attribute :alternate_ids, ::Valkyrie::Types::Array
       attribute :embargo_id,    ::Valkyrie::Types::ID
       attribute :lease_id,      ::Valkyrie::Types::ID
-      attribute :visibility,    ::Valkyrie::Types::Symbol
+      attribute :access_control_id, ::Valkyrie::Types::ID
+      attribute :visibility, ::Valkyrie::Types::Symbol
     end
 
     class AttributeTransformer
@@ -205,6 +206,7 @@ module Wings
                                    updated_at:   pcdm_object.try(:modified_date),
                                    admin_set_id: pcdm_object.try(:admin_set_id),
                                    embargo_id:   pcdm_object.try(:embargo)&.id,
+                                   access_control_id:   pcdm_object.try(:access_control_id),
                                    lease_id:     pcdm_object.try(:lease)&.id,
                                    visibility:   pcdm_object.try(:visibility),
                                    member_ids:   pcdm_object.try(:ordered_member_ids)) # We want members in order, so extract from ordered_members.

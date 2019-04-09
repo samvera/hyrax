@@ -30,6 +30,8 @@ module Wings
         child_objects(valkyrie: valkyrie).select(&:work?)
       end
       alias works child_works
+      alias member_works child_works
+      alias member_objects child_works
 
       # @param valkyrie [Boolean] Should the returned ids be for Valkyrie or AF objects?
       # @return [Enumerable<String> | Enumerable<Valkerie::ID] The ids of the works this work contains
@@ -37,6 +39,8 @@ module Wings
         child_works(valkyrie: valkyrie).map(&:id)
       end
       alias work_ids child_work_ids
+      alias member_work_ids child_work_ids
+      alias member_object_ids child_work_ids
 
       # @param valkyrie [Boolean] Should the returned resources be Valkyrie or AF objects?
       # @return [Enumerable<Hydra::Works::FileSet>] The file sets this work contains

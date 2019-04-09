@@ -66,7 +66,7 @@ module Wings
          :updated_at, :member_ids]
           .map { |key| attrs.delete(key) }
 
-        [:admin_set_id, :embargo_id, :lease_id]
+        [:admin_set_id, :embargo_id, :lease_id, :access_control_id]
           .map { |name| stringify_id_field(attrs, name: name) }
 
         attrs.compact
