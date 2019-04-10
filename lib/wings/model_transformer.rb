@@ -197,20 +197,22 @@ module Wings
         ::Noid::Rails.config.minter_class.new.mint
       end
 
+      # rubocop:disable Metrics/AbcSize
       def attributes
         all_keys =
           pcdm_object.attributes.keys +
           self.class.relationship_keys_for(reflections: pcdm_object.reflections)
         AttributeTransformer.run(pcdm_object, all_keys)
-                            .merge(created_at:   pcdm_object.try(:create_date),
-                                   updated_at:   pcdm_object.try(:modified_date),
-                                   admin_set_id: pcdm_object.try(:admin_set_id),
-                                   embargo_id:   pcdm_object.try(:embargo)&.id,
+                            .merge(created_at:          pcdm_object.try(:create_date),
+                                   updated_at:          pcdm_object.try(:modified_date),
+                                   admin_set_id:        pcdm_object.try(:admin_set_id),
+                                   embargo_id:          pcdm_object.try(:embargo)&.id,
                                    access_control_id:   pcdm_object.try(:access_control_id),
-                                   lease_id:     pcdm_object.try(:lease)&.id,
-                                   visibility:   pcdm_object.try(:visibility),
-                                   member_ids:   pcdm_object.try(:ordered_member_ids)) # We want members in order, so extract from ordered_members.
+                                   lease_id:            pcdm_object.try(:lease)&.id,
+                                   visibility:          pcdm_object.try(:visibility),
+                                   member_ids:          pcdm_object.try(:ordered_member_ids)) # We want members in order, so extract from ordered_members.
       end
+    # rubocop:enable Metrics/AbcSize
   end
   # rubocop:enable Style/ClassVars
 end
