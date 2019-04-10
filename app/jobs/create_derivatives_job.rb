@@ -25,9 +25,9 @@ class CreateDerivativesJob < Hyrax::ApplicationJob
   end
 
   def reload(af_object)
-    adapter = Hyrax.config.valkyrie_metadata_adapter
     return af_object unless af_object.persisted?
 
+    adapter = Hyrax.config.valkyrie_metadata_adapter
     resource = adapter.query_service.find_by(id: af_object.id)
     af_object.clear_association_cache
     af_object.association_cache.merge! adapter.resource_factory.from_resource(resource: resource).association_cache
