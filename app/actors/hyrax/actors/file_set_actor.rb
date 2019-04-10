@@ -1,5 +1,7 @@
+require 'wings'
 module Hyrax
   module Actors
+    # rubocop:disable Metrics/ClassLength
     # Actions are decoupled from controller logic so that they may be called from a controller or a background job.
     class FileSetActor
       include Lockable
@@ -21,7 +23,7 @@ module Hyrax
         # If the file set doesn't have a title or label assigned, set a default.
         file_set.label ||= label_for(file)
         file_set.title = [file_set.label] if file_set.title.blank?
-        return false unless file_set.save # Need to save to get an id
+        return false unless save(file_set) # Need to save to get an id
         if from_url
           # If ingesting from URL, don't spawn an IngestJob; instead
           # reach into the FileActor and run the ingest with the file instance in
@@ -71,14 +73,15 @@ module Hyrax
       def attach_to_work(work, file_set_params = {})
         acquire_lock_for(work.id) do
           # Ensure we have an up-to-date copy of the members association, so that we append to the end of the list.
-          work.reload unless work.new_record?
+          work = reload(work) unless work.new_record?
           file_set.visibility = work.visibility unless assign_visibility?(file_set_params)
+          save(file_set)
           work.ordered_members << file_set
           work.representative = file_set if work.representative_id.blank?
           work.thumbnail = file_set if work.thumbnail_id.blank?
           # Save the work so the association between the work and the file_set is persisted (head_id)
           # NOTE: the work may not be valid, in which case this save doesn't do anything.
-          work.save
+          save(work)
           Hyrax.config.callback.run(:after_create_fileset, file_set, user)
         end
       end
@@ -101,7 +104,7 @@ module Hyrax
 
       def destroy
         unlink_from_work
-        file_set.destroy
+        file_set_destroy
         Hyrax.config.callback.run(:after_destroy, file_set.id, user)
       end
 
@@ -159,8 +162,37 @@ module Hyrax
           work.thumbnail = nil if work.thumbnail_id == file_set.id
           work.representative = nil if work.representative_id == file_set.id
           work.rendering_ids -= [file_set.id]
-          work.save!
+          save(work)
         end
+
+        def save(af_object, use_valkyrie: false)
+          af_object.save unless use_valkyrie
+
+          adapter = Hyrax.config.valkyrie_metadata_adapter
+          resource = adapter.persister.save(resource: af_object.valkyrie_resource)
+          Wings::ActiveFedoraConverter.new(resource: resource).convert
+          true
+        rescue StandardError
+          false
+        end
+
+        # Per the comment in attach_to_work, reload is needed to ensure that associations
+        # are up-to-date.
+        def reload(af_object)
+          return af_object unless af_object.persisted?
+
+          adapter = Hyrax.config.valkyrie_metadata_adapter
+          resource = adapter.query_service.find_by(id: af_object.id)
+          af_object.clear_association_cache
+          af_object.association_cache.merge! adapter.resource_factory.from_resource(resource: resource).association_cache
+          af_object
+        end
+
+        def file_set_destroy
+          adapter = Hyrax.config.valkyrie_metadata_adapter
+          adapter.persister.delete(resource: file_set.valkyrie_resource)
+        end
+      # rubocop:enable Metrics/ClassLength
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/CyclomaticComplexity
     end

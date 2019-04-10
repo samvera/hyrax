@@ -229,7 +229,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   describe "#destroy" do
     it "destroys the object" do
       actor.destroy
-      expect { file_set.reload }.to raise_error ActiveFedora::ObjectNotFoundError
+      expect { file_set.reload }.to raise_error Ldp::Gone
     end
 
     context "representative, renderings and thumbnail of a work" do
@@ -291,16 +291,21 @@ RSpec.describe Hyrax::Actors::FileSetActor do
 
     context 'with multiple versions' do
       let(:work_v1) { create(:generic_work) } # this version of the work has no members
+      let(:coll) { create(:collection, title: ['Cats on Roombas']) }
 
       before do # another version of the same work is saved with a member
         work_v2 = ActiveFedora::Base.find(work_v1.id)
         work_v2.ordered_members << create(:file_set)
+        work_v2.description = ["3 kittens"]
+        work_v2.member_of_collections = [coll]
         work_v2.save!
       end
 
       it "writes to the most up to date version" do
         actor.attach_to_work(work_v1)
-        expect(work_v1.members.size).to eq 2
+        expect(work_v1.ordered_members.ids.size).to eq 2
+        expect(work_v1.member_of_collections).to eq([coll])
+        expect(work_v1.description).to eq(["3 kittens"])
       end
     end
   end
