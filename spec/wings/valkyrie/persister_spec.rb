@@ -7,6 +7,7 @@ RSpec.describe Wings::Valkyrie::Persister do
   context "When passing a Valkyrie::Resource converted from an ActiveFedora::Base" do
     before do
       class Book < ActiveFedora::Base
+        include Hydra::AccessControls::Permissions
         property :title, predicate: ::RDF::Vocab::DC.title, multiple: true
       end
     end
@@ -23,6 +24,15 @@ RSpec.describe Wings::Valkyrie::Persister do
     let(:resource) { resource_class.new(title: ['Foo']) }
 
     # it_behaves_like "a Valkyrie::Persister", :no_deep_nesting, :no_mixed_nesting
+
+    describe 'persists permissions' do
+      let(:v_work) { resource_class.new(title: ['test_work'], read_groups: ['registered']) }
+
+      it 'has permissions once saved' do
+        saved = persister.save(resource: v_work)
+        expect(saved.read_groups).to eq(['registered'])
+      end
+    end
 
     it { is_expected.to respond_to(:save).with_keywords(:resource) }
     it { is_expected.to respond_to(:save_all).with_keywords(:resources) }

@@ -34,11 +34,13 @@ module Wings
     end
 
     ##
-    # Accesses and parses the attributes from the resource
+    # Accesses and parses the attributes from the resource through ConverterValueMapper
     # @return [Hash]
     def attributes
-      wrapper = self.class.attributes_class.new(resource.attributes)
-      wrapper.result
+      @attribs ||= begin
+        wrapper = self.class.attributes_class.new(resource.attributes)
+        wrapper.result
+      end
     end
 
     ##
@@ -46,7 +48,7 @@ module Wings
     def convert
       active_fedora_class.new(normal_attributes).tap do |af_object|
         af_object.id = id unless id.empty?
-        af_object.visibility = attributes[:visibility] unless attributes[:visibility].blank?
+        add_access_control_attributes(af_object)
         convert_members(af_object)
         convert_member_of_collections(af_object)
       end
@@ -138,6 +140,15 @@ module Wings
           normalized[attr] = Array.wrap(value) if property.multiple?
         end
         normalized
+      end
+
+      # Add attributes from resource which aren't AF properties into af_object
+      def add_access_control_attributes(af_object)
+        af_object.visibility = attributes[:visibility] unless attributes[:visibility].blank?
+        af_object.read_users = attributes[:read_users] unless attributes[:read_users].blank?
+        af_object.edit_users = attributes[:edit_users] unless attributes[:edit_users].blank?
+        af_object.read_groups = attributes[:read_groups] unless attributes[:read_groups].blank?
+        af_object.edit_groups = attributes[:edit_groups] unless attributes[:edit_groups].blank?
       end
   end
 end
