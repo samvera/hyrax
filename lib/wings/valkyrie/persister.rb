@@ -20,6 +20,7 @@ module Wings
       def save(resource:)
         return save_file(file_node: resource) if resource.is_a? Wings::FileNode
         af_object = resource_factory.from_resource(resource: resource)
+        af_object.ordered_member_proxies.association.owner.save if af_object.respond_to? :ordered_member_proxies
         af_object.save!
         resource_factory.to_resource(object: af_object)
       rescue ActiveFedora::RecordInvalid => err
