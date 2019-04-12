@@ -48,6 +48,7 @@ module Wings
     def convert
       active_fedora_class.new(normal_attributes).tap do |af_object|
         af_object.id = id unless id.empty?
+        apply_depositor_to(af_object)
         add_access_control_attributes(af_object)
         convert_members(af_object)
         convert_member_of_collections(af_object)
@@ -140,6 +141,10 @@ module Wings
           normalized[attr] = Array.wrap(value) if property.multiple?
         end
         normalized
+      end
+
+      def apply_depositor_to(af_object)
+        af_object.apply_depositor_metadata(attributes[:depositor]) unless attributes[:depositor].blank?
       end
 
       # Add attributes from resource which aren't AF properties into af_object
