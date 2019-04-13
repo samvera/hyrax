@@ -7,6 +7,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
   before do
     class Book < ActiveFedora::Base
       include Hyrax::WorkBehavior
+      include Hydra::AccessControls::Permissions
       property :title, predicate: ::RDF::Vocab::DC.title, multiple: true
       property :a_member_of, predicate: ::RDF::URI.new('http://www.example.com/a_member_of'), multiple: true do |index|
         index.as :symbol
@@ -14,6 +15,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
       property :an_ordered_member_of, predicate: ::RDF::URI.new('http://www.example.com/an_ordered_member_of'), multiple: true
     end
     class Image < ActiveFedora::Base
+      include Hydra::AccessControls::Permissions
       property :title, predicate: ::RDF::Vocab::DC.title, multiple: true
     end
   end

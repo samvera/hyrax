@@ -138,6 +138,7 @@ module Wings
         include Wings::CollectionBehavior if klass.included_modules.include?(Hyrax::CollectionBehavior)
         include Wings::Works::WorkValkyrieBehavior if klass.included_modules.include?(Hyrax::WorkBehavior)
         include Wings::Works::FileSetValkyrieBehavior if klass.included_modules.include?(Hyrax::FileSetBehavior)
+        include ::Valkyrie::Resource::AccessControls
 
         # Based on Valkyrie implementation, we call Class.to_s to define
         # the internal resource.
@@ -201,16 +202,24 @@ module Wings
           self.class.relationship_keys_for(reflections: pcdm_object.reflections)
         AttributeTransformer.run(pcdm_object, all_keys)
                             .merge reflection_ids
-          .merge(created_at: pcdm_object.try(:create_date),
-                 updated_at: pcdm_object.try(:modified_date),
-                 visibility: pcdm_object.try(:visibility),
-                 member_ids: pcdm_object.try(:ordered_member_ids)) # We want members in order, so extract from ordered_members.
+          .merge(additional_attributes)
       end
 
       def reflection_ids
         pcdm_object.reflections.keys.select { |k| k.to_s.end_with? '_id' }.each_with_object({}) do |k, mem|
           mem[k] = pcdm_object.try(k)
         end
+      end
+
+      def additional_attributes
+        { created_at: pcdm_object.try(:create_date),
+          updated_at: pcdm_object.try(:modified_date),
+          visibility: pcdm_object.try(:visibility),
+          read_groups: pcdm_object.try(:read_groups),
+          read_users: pcdm_object.try(:read_users),
+          edit_groups: pcdm_object.try(:edit_groups),
+          edit_users: pcdm_object.try(:edit_users),
+          member_ids: pcdm_object.try(:ordered_member_ids) } # We want members in order, so extract from ordered_members.
       end
   end
   # rubocop:enable Style/ClassVars
