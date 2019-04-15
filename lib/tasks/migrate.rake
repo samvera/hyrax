@@ -34,5 +34,10 @@ namespace :hyrax do
       # added in Hyrax 2.1.0
       Hyrax::Collections::MigrationService.migrate_all_collections
     end
+
+    # Migrate any orphan fedora data from the first to the second predicate
+    task migrate_keyword_predicate: :environment do
+      Hyrax::Works::MigrationService.migrate_predicate(::RDF::Vocab::DC11.relation, ::RDF::Vocab::SCHEMA.keywords)
+    end
   end
 end

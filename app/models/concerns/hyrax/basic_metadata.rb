@@ -16,7 +16,7 @@ module Hyrax
       property :contributor, predicate: ::RDF::Vocab::DC11.contributor
       property :description, predicate: ::RDF::Vocab::DC11.description
       property :abstract, predicate: ::RDF::Vocab::DC.abstract
-      property :keyword, predicate: ::RDF::Vocab::DC11.relation
+      property :keyword, predicate: ::RDF::Vocab::SCHEMA.keywords
       # Used for a license
       property :license, predicate: ::RDF::Vocab::DC.rights
 
