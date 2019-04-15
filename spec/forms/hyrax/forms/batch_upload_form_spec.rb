@@ -48,6 +48,7 @@ RSpec.describe Hyrax::Forms::BatchUploadForm do
                          :keyword,
                          :license,
                          :rights_statement,
+                         :access_right,
                          :rights_notes,
                          :publisher,
                          :date_created,

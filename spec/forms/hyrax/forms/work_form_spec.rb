@@ -111,22 +111,27 @@ RSpec.describe Hyrax::Forms::WorkForm do
         source: ['related'],
         rights_statement: 'http://rightsstatements.org/vocab/InC-EDU/1.0/',
         rights_notes: ['Notes on the rights'],
-        license: ['http://creativecommons.org/licenses/by/3.0/us/']
+        license: ['http://creativecommons.org/licenses/by/3.0/us/'],
+        access_right: ['Only accessible via login.']
       }
     end
 
     subject { described_class.model_attributes(params) }
 
-    it 'permits parameters' do
+    it 'permits metadata parameters' do
       expect(subject['title']).to eq ['foo']
       expect(subject['description']).to be_empty
       expect(subject['abstract']).to be_empty
       expect(subject['visibility']).to eq 'open'
+      expect(subject['keyword']).to eq ['penguin']
+      expect(subject['source']).to eq ['related']
+    end
+
+    it 'permits rights parameters' do
       expect(subject['license']).to eq ['http://creativecommons.org/licenses/by/3.0/us/']
       expect(subject['rights_statement']).to eq 'http://rightsstatements.org/vocab/InC-EDU/1.0/'
       expect(subject['rights_notes']).to eq ['Notes on the rights']
-      expect(subject['keyword']).to eq ['penguin']
-      expect(subject['source']).to eq ['related']
+      expect(subject['access_right']).to eq ['Only accessible via login.']
     end
 
     it 'excludes non-permitted params' do
