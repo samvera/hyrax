@@ -1,3 +1,6 @@
+require 'wings/models/file_node'
+require 'wings/valkyrie/query_service'
+
 # Primarily for jobs like IngestJob to revivify an equivalent FileActor to one that existed on
 # the caller's side of an asynchronous Job invocation.  This involves providing slots
 # for the metadata that might travel w/ the actor's various supported types of @file.
@@ -56,16 +59,34 @@ class JobIoWrapper < ApplicationRecord
     super || extracted_mime_type
   end
 
-  def file_set
-    FileSet.find(file_set_id)
+  def file_set(use_valkyrie: false)
+    return FileSet.find(file_set_id) unless use_valkyrie
+    adapter = Valkyrie.config.metadata_adapter
+    query_service = Wings::Valkyrie::QueryService.new(adapter: adapter)
+    query_service.find_by(id: Valkyrie::ID.new(file_set_id))
+    # TODO: At least temporarily, should this return the valkyrie resource version of the fileset or the active fedora fileset?
   end
 
   def file_actor
     Hyrax::Actors::FileActor.new(file_set, relation.to_sym, user)
   end
 
+  # @return [FileNode, FalseClass] the created file node on success, false on failure
   def ingest_file
     file_actor.ingest_file(self)
+  end
+
+  def to_file_node
+    Wings::FileNode.new(label: original_name,
+                        original_filename: original_name,
+                        mime_type: mime_type,
+                        use: [Valkyrie::Vocab::PCDMUse.OriginalFile])
+  end
+
+  # The magic that switches *once* between local filepath and CarrierWave file
+  # @return [File, StringIO, #read] File-like object ready to #read
+  def file
+    @file ||= (file_from_path || file_from_uploaded_file!)
   end
 
   private
@@ -78,12 +99,6 @@ class JobIoWrapper < ApplicationRecord
 
     def extracted_mime_type
       uploaded_file ? uploaded_file.uploader.content_type : Hydra::PCDM::GetMimeTypeForFile.call(original_name)
-    end
-
-    # The magic that switches *once* between local filepath and CarrierWave file
-    # @return [File, StringIO, #read] File-like object ready to #read
-    def file
-      @file ||= (file_from_path || file_from_uploaded_file!)
     end
 
     # @return [File, StringIO] depending on CarrierWave configuration

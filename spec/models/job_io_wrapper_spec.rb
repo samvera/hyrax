@@ -169,4 +169,21 @@ RSpec.describe JobIoWrapper, type: :model do
       end
     end
   end
+
+  describe '#file_set' do
+    context 'when finding through active fedora' do
+      xit 'finds the file set using active fedora and returns an instance of an active fedora file set'
+    end
+    context 'when finding through valkyrie' do
+      xit 'finds the file set through valkyrie and returns an instance of an active fedora file set'
+    end
+  end
+
+  describe '#to_file_node' do
+    xit 'creates and returns file_node'
+  end
+
+  describe '#file' do
+    xit 'switches between local filepath and CarrierWave file'
+  end
 end
