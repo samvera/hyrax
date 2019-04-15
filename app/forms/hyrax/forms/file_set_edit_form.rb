@@ -5,7 +5,7 @@ module Hyrax::Forms
 
     delegate :depositor, :permissions, to: :model
 
-    self.required_fields = [:title, :creator, :keyword, :license]
+    self.required_fields = [:title, :creator, :license]
 
     self.model_class = ::FileSet
 

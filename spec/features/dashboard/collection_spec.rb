@@ -678,7 +678,6 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         click_link "Descriptions" # switch tab
         fill_in('Title', with: 'New Work for Collection')
         fill_in('Creator', with: 'Doe, Jane')
-        fill_in('Keyword', with: 'testing')
         select('In Copyright', from: 'Rights statement')
         # check required acceptance
         check('agreement')

@@ -37,7 +37,6 @@ RSpec.describe 'Creating a new Work', :js, :workflow do
       click_link "Descriptions" # switch tab
       fill_in('Title', with: 'My Test Work')
       fill_in('Creator', with: 'Doe, Jane')
-      fill_in('Keyword', with: 'testing')
       select('In Copyright', from: 'Rights statement')
       # With selenium and the chrome driver, focus remains on the
       # select box. Click outside the box so the next line can't find
@@ -78,7 +77,6 @@ RSpec.describe 'Creating a new Work', :js, :workflow do
       click_link "Descriptions" # switch tab
       fill_in('Title', with: 'My Test Work')
       fill_in('Creator', with: 'Doe, Jane')
-      fill_in('Keyword', with: 'testing')
       select('In Copyright', from: 'Rights statement')
       # With selenium and the chrome driver, focus remains on the
       # select box. Click outside the box so the next line can't find
