@@ -8,10 +8,11 @@ While code contributions require contributor license agreements to be on file wi
 
 ## How to Contribute
 
-There are two ways to contribute changes to the documentation.
+There are several ways to contribute changes to the documentation.
 
 1. *Easy*: send email to the [samvera-tech mailing list](https://groups.google.com/forum/#!forum/samvera-tech) and ask the community to make the change on your behalf.
 2. *Advanced*: create a GitHub pull request.
+3. *New*: add issues or documentation to [our new documentation site](https://samvera.github.io/) on github [samvera.github.io](https://github.com/samvera/samvera.github.io).
 
 If you choose option 2, here's a guide to help you.
 
