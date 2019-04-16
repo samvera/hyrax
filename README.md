@@ -50,11 +50,12 @@ Jump in: [![Slack Status](http://slack.samvera.org/badge.svg)](http://slack.samv
 
 Hyrax is a front-end based on the robust [Samvera](http://samvera.org) framework, providing a user interface for common repository features. Hyrax offers the ability to create repository object types on demand, to deposit content via multiple configurable workflows, and to describe content with flexible metadata. Numerous optional features may be turned on in the administrative dashboard or added through plugins. It is implemented as a Rails engine, so it may be the base of, or added to, a Rails application. Hyrax is the consolidation of Sufia and the CurationConcerns gems and behaves in much the same way.
 
-## Feature list
+# Feature Documentation
 
-Hyrax has many features. [Read more about what they are and how to turn them on](https://github.com/samvera/hyrax/wiki/Feature-matrix). See the [Hyrax Management Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide) to learn more.
-
-For non-technical documentation about Hyrax, see the Hyrax [documentation site](http://hyr.ax/).
+* List of features: [Feature Matrix](https://github.com/samvera/hyrax/wiki/Feature-matrix)
+* Configuration and enabling features: [Hyrax Management Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide)
+* Walk-through on using features: [Hyrax Feature Guides](https://samvera.github.io/intro-to.html)
+* For general information about Hyrax: [Hyrax Site](https://hyrax.samvera.org/)
 
 # Help
 
@@ -345,4 +346,3 @@ This software has been developed by and is brought to you by the Samvera communi
 [Samvera website](http://samvera.org/).
 
 ![Samvera Logo](https://wiki.duraspace.org/download/thumbnails/87459292/samvera-fall-font2-200w.png?version=1&modificationDate=1498550535816&api=v2)
- 
