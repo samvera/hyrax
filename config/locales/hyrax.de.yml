@@ -402,6 +402,7 @@ de:
         required_descriptions: Beschreiben Sie Ihre Arbeit
         required_files: Dateien hinzufügen
         requirements: Bedarf
+        yourself: Selbst
       form_rendering:
         help_html: Wählen Sie die Datei(en) aus, die als Download für jedes Bild im Universal Viewer angeboten werden soll, z. B. eine PDF-Datei der gesamten Arbeit.
         legend_html: Rendern
@@ -618,7 +619,7 @@ de:
           branding:
             description: Optional können Sie ein Bannerbild und / oder Logo-Bilder hochladen, die mit dieser Sammlung verknüpft werden sollen. Wenn diese hochgeladen werden, werden diese Bilder oben auf der Sammlungsseite angezeigt, um ein eindeutiges Markenbildung für die Sammlung bereitzustellen.
             label: Markenbildung
-          choose_file: "Datei wählen"
+          choose_file: Datei wählen
           link_url: 'URL-Link:'
           logo:
             description: Ein oder mehrere Bilder, die oben auf der Sammlungsseite angezeigt werden. Für beste Ergebnisse laden Sie ein Bild (JPG, GIF oder PNG) hoch, das 40 Pixel hoch ist. Größere Bilder werden auf 40 Pixel in der Höhe angepasst.

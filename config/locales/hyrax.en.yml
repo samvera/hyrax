@@ -408,6 +408,7 @@ en:
         required_descriptions: Describe your work
         required_files: Add files
         requirements: Requirements
+        yourself: Yourself
       form_rendering:
         help_html: Select file(s) to be offered as a download for every image in Universal Viewer, for example a PDF of the whole work.
         legend_html: Rendering

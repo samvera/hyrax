@@ -407,6 +407,7 @@ it:
         required_descriptions: Descrivi il tuo lavoro
         required_files: Aggiungere i file
         requirements: Requisiti
+        yourself: Te
       form_rendering:
         help_html: Selezionare i file da offrire come download per ogni immagine in Universal Viewer, ad esempio un PDF dell'intero lavoro.
         legend_html: Rendering
