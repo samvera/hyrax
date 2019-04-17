@@ -68,6 +68,7 @@ module Hyrax
         attribute :date_created, Solr::Array, solr_name('date_created')
         attribute :rights_statement, Solr::Array, solr_name('rights_statement')
         attribute :rights_notes, Solr::Array, solr_name('rights_notes')
+        attribute :access_right, Solr::Array, solr_name('access_right')
 
         attribute :mime_type, Solr::String, solr_name('mime_type', :stored_sortable)
         attribute :workflow_state, Solr::String, solr_name('workflow_state_name', :symbol)
