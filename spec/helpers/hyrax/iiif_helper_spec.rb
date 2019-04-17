@@ -41,4 +41,20 @@ RSpec.describe Hyrax::IiifHelper, type: :helper do
       it { is_expected.to eq 'hyrax/base/iiif_viewers/mirador' }
     end
   end
+
+  describe '#universal_viewer_base_url' do
+    subject { helper.universal_viewer_base_url }
+
+    it 'defaults to universal viewer base path' do
+      expect(subject).to eq "http://test.host/uv.html"
+    end
+  end
+
+  describe '#universal_viewer_config_url' do
+    subject { helper.universal_viewer_config_url }
+
+    it 'defaults to universal viewer base path' do
+      expect(subject).to eq "http://test.host/uv_config.json"
+    end
+  end
 end

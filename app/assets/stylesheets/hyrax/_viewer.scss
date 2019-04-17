@@ -1,8 +1,19 @@
+// Default for smaller screens, uses mobile panel
 .viewer-wrapper {
-  height: 500px;
+  height: 390px;
 }
 
-.viewer {
+.viewer-wrapper iframe {
   height: 100%;
-  padding: 10px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+// Show various footer, header, left and right panels on larger screens only
+@media only screen and (min-width: 640px) {
+  .viewer-wrapper {
+    height: 640px;
+  }
 }
