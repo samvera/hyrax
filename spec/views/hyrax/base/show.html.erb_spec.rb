@@ -80,7 +80,7 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
       let(:viewer_enabled) { true }
 
       it 'renders the UniversalViewer' do
-        expect(page).to have_selector 'div.viewer'
+        expect(page).to have_selector 'div.viewer-wrapper'
       end
     end
 
@@ -88,7 +88,7 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
       let(:viewer_enabled) { false }
 
       it 'omits the UniversalViewer' do
-        expect(page).not_to have_selector 'div.viewer'
+        expect(page).not_to have_selector 'div.viewer-wrapper'
       end
     end
   end
