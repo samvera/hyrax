@@ -30,7 +30,7 @@ module Hyrax
                     :visibility, :ordered_member_ids, :source, :in_works_ids,
                     :member_of_collection_ids, :admin_set_id]
 
-      self.required_fields = [:title, :creator, :keyword, :rights_statement]
+      self.required_fields = [:title, :creator, :rights_statement]
 
       # The service that determines the cardinality of each field
       self.field_metadata_service = Hyrax::FormMetadataService
