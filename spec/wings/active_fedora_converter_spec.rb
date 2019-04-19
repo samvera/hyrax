@@ -124,7 +124,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
           work1.save!
         end
 
-        xit 'converts member_of_collection_ids back to af_object' do
+        it 'converts member_of_collection_ids back to af_object' do
           expect(converter.convert.members.map(&:id)).to match_array [work3.id, work2.id]
         end
 
