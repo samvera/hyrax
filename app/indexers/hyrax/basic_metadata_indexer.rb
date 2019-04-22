@@ -3,7 +3,7 @@ module Hyrax
   class BasicMetadataIndexer < ActiveFedora::RDF::IndexingService
     class_attribute :stored_and_facetable_fields, :stored_fields, :symbol_fields
     self.stored_and_facetable_fields = %i[resource_type creator contributor keyword publisher subject language based_near]
-    self.stored_fields = %i[description abstract license rights_statement rights_notes access_right date_created identifier related_url bibliographic_citation source]
+    self.stored_fields = %i[alt_title description abstract license rights_statement rights_notes access_right date_created identifier related_url bibliographic_citation source]
     self.symbol_fields = %i[import_url]
 
     private

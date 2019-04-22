@@ -31,6 +31,11 @@ class AdminSet < ActiveFedora::Base
   property :title, predicate: ::RDF::Vocab::DC.title do |index|
     index.as :stored_searchable, :facetable
   end
+
+  property :alt_title, predicate: ::RDF::Vocab::DC.alternative do |index|
+    index.as :stored_searchable
+  end
+
   property :description, predicate: ::RDF::Vocab::DC.description do |index|
     index.as :stored_searchable
   end

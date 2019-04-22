@@ -44,6 +44,7 @@ module Hyrax
       end
 
       included do
+        attribute :alt_title, Solr::Array, solr_name('alt_title')
         attribute :identifier, Solr::Array, solr_name('identifier')
         attribute :based_near, Solr::Array, solr_name('based_near')
         attribute :based_near_label, Solr::Array, solr_name('based_near_label')

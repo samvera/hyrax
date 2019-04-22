@@ -244,7 +244,6 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         click_on('Create collection')
 
         expect(page).to have_selector('h1', text: 'New User Collection')
-        expect(page).to have_selector "input.collection_title.multi_value"
 
         click_link('Additional fields')
         expect(page).to have_selector "input.collection_creator.multi_value"
@@ -275,7 +274,6 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       it 'makes a new collection' do
         click_link "New Collection"
         expect(page).to have_selector('h1', text: 'New User Collection')
-        expect(page).to have_selector "input.collection_title.multi_value"
 
         click_link('Additional fields')
         expect(page).to have_selector "input.collection_creator.multi_value"
@@ -335,7 +333,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     let!(:adminset) { create(:admin_set, title: ['Admin Set with Work'], creator: [admin_user.user_key], with_permission_template: true) }
     let!(:work) { create(:work, title: ["King Louie"], admin_set: adminset, member_of_collections: [collection], user: user) }
 
-    # check table row has appropriate data attributes added
+    # Check table row has appropriate data attributes added
     def check_tr_data_attributes(id, type)
       url_fragment = get_url_fragment(type)
       expect(page).to have_selector("tr[data-id='#{id}'][data-colls-hash]")
@@ -343,7 +341,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       expect(page).to have_selector("tr[data-post-delete-url='/#{url_fragment}/#{id}?locale=en']")
     end
 
-    # check data attributes have been transferred from table row to the modal
+    # Check data attributes have been transferred from table row to the modal
     def check_modal_data_attributes(id, type)
       url_fragment = get_url_fragment(type)
       expect(page).to have_selector("div[data-id='#{id}']")

@@ -6,6 +6,8 @@ module Hyrax
     extend ActiveSupport::Concern
 
     included do
+      property :alt_title, predicate: ::RDF::Vocab::DC.alternative
+
       property :label, predicate: ActiveFedora::RDF::Fcrepo::Model.downloadFilename, multiple: false
 
       property :relative_path, predicate: ::RDF::URI.new('http://scholarsphere.psu.edu/ns#relativePath'), multiple: false

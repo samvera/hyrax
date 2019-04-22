@@ -3,7 +3,8 @@ RSpec.describe Hyrax::Forms::CollectionForm do
     subject { described_class.terms }
 
     it do
-      is_expected.to eq [:resource_type,
+      is_expected.to eq [:alt_title,
+                         :resource_type,
                          :title,
                          :creator,
                          :contributor,
@@ -40,6 +41,7 @@ RSpec.describe Hyrax::Forms::CollectionForm do
 
     it do
       is_expected.to eq [
+        :alt_title,
         :creator,
         :contributor,
         :keyword,
@@ -127,7 +129,8 @@ RSpec.describe Hyrax::Forms::CollectionForm do
     subject { described_class.build_permitted_params }
 
     it do
-      is_expected.to eq [{ resource_type: [] },
+      is_expected.to eq [{ alt_title: [] },
+                         { resource_type: [] },
                          { title: [] },
                          { creator: [] },
                          { contributor: [] },

@@ -39,7 +39,7 @@ module Hyrax
     delegate :title, :date_created, :description,
              :creator, :contributor, :subject, :publisher, :language, :embargo_release_date,
              :lease_expiration_date, :license, :source, :rights_statement, :thumbnail_id, :representative_id,
-             :rendering_ids, :member_of_collection_ids, to: :solr_document
+             :rendering_ids, :member_of_collection_ids, :alt_title, to: :solr_document
 
     def workflow
       @workflow ||= WorkflowPresenter.new(solr_document, current_ability)

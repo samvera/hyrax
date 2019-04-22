@@ -1,0 +1,3 @@
+<% f.object.alt_title.each do |value| %>
+  <%= f.hidden_field :alt_title, multiple: true, value: value.to_s  %>
+<% end %>
