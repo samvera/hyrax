@@ -97,6 +97,17 @@ RSpec.describe 'Creating a new Work', :js, :workflow do
       sign_in second_user
       click_link 'Works'
       expect(page).to have_content "My Test Work"
+
+      # check that user can get to the files
+      click_link "My Test Work"
+      click_link "image.jp2"
+      expect(page).to have_content "image.jp2"
+
+      visit '/dashboard'
+      click_link 'Works'
+      click_link "My Test Work"
+      click_link "jp2_fits.xml"
+      expect(page).to have_content "jp2_fits.xml"
     end
   end
 
