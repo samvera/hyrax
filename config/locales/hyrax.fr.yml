@@ -412,6 +412,7 @@ fr:
         required_descriptions: Décrivez votre travail
         required_files: Ajouter des fichiers
         requirements: Exigences
+        yourself: Vous-même
       form_rendering:
         help_html: Sélectionnez le (s) fichier (s) à télécharger en téléchargement pour chaque image dans Universal Viewer, par exemple un PDF de l'ensemble de l'œuvre.
         legend_html: Le rendu

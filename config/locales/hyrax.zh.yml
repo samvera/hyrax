@@ -405,6 +405,7 @@ zh:
         required_descriptions: 描述您的作品
         required_files: 添加文件
         requirements: 必要条件
+        yourself: 自己
       form_rendering:
         help_html: 在Universal Viewer中选择要作为每个图像下载的文件，例如整个作品的PDF。
         legend_html: 渲染

@@ -402,6 +402,7 @@ pt-BR:
         required_descriptions: Descreva sua obra
         required_files: Acrescente arquivos
         requirements: Requisitos
+        yourself: A si mesmo
       form_rendering:
         help_html: Selecione os arquivos a serem oferecidos por download para cada imagem no Universal Viewer; por exemplo, um PDF da obra toda.
         legend_html: Apresentação
