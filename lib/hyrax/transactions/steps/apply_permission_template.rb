@@ -3,7 +3,8 @@ module Hyrax
   module Transactions
     module Steps
       ##
-      # A `dry-transcation` step that applies a permission template.
+      # A `dry-transcation` step that applies a permission template for a given
+      # work's AdminSet.
       #
       # @since 2.4.0
       class ApplyPermissionTemplate

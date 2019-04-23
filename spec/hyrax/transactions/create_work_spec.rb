@@ -83,6 +83,34 @@ RSpec.describe Hyrax::Transactions::CreateWork do
     end
   end
 
+  context 'when requesting a lease' do
+    let(:after)     { 'restricted' }
+    let(:during)    { 'open' }
+    let(:end_date)  { (Time.zone.today + 2).to_s }
+    let(:request)   { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE }
+    let(:step_args) { { apply_visibility: [visibility: request, release_date: end_date, during: during, after: after] } }
+
+    it 'sets the lease' do
+      expect { transaction.with_step_args(step_args).call(work) }
+        .to change { work.lease }
+        .to be_a_lease_matching(release_date: end_date, during: during, after: after)
+    end
+  end
+
+  context 'when requesting an embargo' do
+    let(:after)     { 'open' }
+    let(:during)    { 'restricted' }
+    let(:end_date)  { (Time.zone.today + 2).to_s }
+    let(:request)   { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO }
+    let(:step_args) { { apply_visibility: [visibility: request, release_date: end_date, during: during, after: after] } }
+
+    it 'sets the embargo' do
+      expect { transaction.with_step_args(step_args).call(work) }
+        .to change { work.embargo }
+        .to be_an_embargo_matching(release_date: end_date, during: during, after: after)
+    end
+  end
+
   context 'with an admin set' do
     let(:admin_set) { AdminSet.find(template.source_id) }
     let(:template)  { create(:permission_template, with_admin_set: true) }
@@ -150,6 +178,46 @@ RSpec.describe Hyrax::Transactions::CreateWork do
           .to change { work.read_users }
           .to include(*view_users.map(&:user_key))
       end
+    end
+  end
+
+  context 'when inheriting permissions from a collection' do
+    let(:manage_groups) { ['edit_group_1', 'edit_group_2'] }
+    let(:manage_users)  { create_list(:user, 2) }
+    let(:view_groups)   { ['read_group_1', 'read_group_2'] }
+    let(:view_users)    { create_list(:user, 2) }
+    let(:collection)    { create(:collection_lw, with_permission_template: permissions) }
+    let(:step_args)     { { apply_collection_template: [collections: [collection]] } }
+
+    let(:permissions) do
+      { manage_groups: manage_groups,
+        manage_users:  manage_users,
+        view_groups:   view_groups,
+        view_users:    view_users }
+    end
+
+    it 'assigns edit groups from template' do
+      expect { transaction.with_step_args(step_args).call(work) }
+        .to change { work.edit_groups }
+        .to include(*manage_groups)
+    end
+
+    it 'assigns edit users from template' do
+      expect { transaction.with_step_args(step_args).call(work) }
+        .to change { work.edit_users }
+        .to include(*manage_users.map(&:user_key))
+    end
+
+    it 'assigns read groups from template' do
+      expect { transaction.with_step_args(step_args).call(work) }
+        .to change { work.read_groups }
+        .to include(*view_groups)
+    end
+
+    it 'assigns read users from template' do
+      expect { transaction.with_step_args(step_args).call(work) }
+        .to change { work.read_users }
+        .to include(*view_users.map(&:user_key))
     end
   end
 end

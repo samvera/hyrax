@@ -20,7 +20,9 @@ module Hyrax
     class Container
       require 'hyrax/transactions/create_work'
       require 'hyrax/transactions/destroy_work'
+      require 'hyrax/transactions/steps/apply_collection_permission_template'
       require 'hyrax/transactions/steps/apply_permission_template'
+      require 'hyrax/transactions/steps/apply_visibility'
       require 'hyrax/transactions/steps/destroy_work'
       require 'hyrax/transactions/steps/ensure_admin_set'
       require 'hyrax/transactions/steps/ensure_permission_template'
@@ -31,9 +33,19 @@ module Hyrax
 
       extend Dry::Container::Mixin
 
+      # Disable BlockLength rule for DSL code
+      # rubocop:disable Metrics/BlockLength
       namespace 'work' do |ops|
+        ops.register 'apply_collection_permission_template' do
+          Steps::ApplyCollectionPermissionTemplate.new
+        end
+
         ops.register 'apply_permission_template' do
           Steps::ApplyPermissionTemplate.new
+        end
+
+        ops.register 'apply_visibility' do
+          Steps::ApplyVisibility.new
         end
 
         ops.register 'destroy_work' do
@@ -64,6 +76,7 @@ module Hyrax
           Steps::SetUploadedDate.new
         end
       end
+      # rubocop:enable Metrics/BlockLength
     end
   end
 end
