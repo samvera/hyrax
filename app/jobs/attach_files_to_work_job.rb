@@ -8,7 +8,8 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
     validate_files!(uploaded_files)
     depositor = proxy_or_depositor(work)
     user = User.find_by_user_key(depositor)
-    work_permissions = work.permissions.map(&:to_hash)
+
+    work, work_permissions = create_permissions work, depositor
     metadata = visibility_attributes(work_attributes)
     uploaded_files.each do |uploaded_file|
       next if uploaded_file.file_set_uri.present?
@@ -23,6 +24,13 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
   end
 
   private
+
+    def create_permissions(work, depositor)
+      work.edit_users += [depositor]
+      work.edit_users = work.edit_users.dup
+      work_permissions = work.permissions.map(&:to_hash)
+      [work, work_permissions]
+    end
 
     # The attributes used for visibility - sent as initial params to created FileSets.
     def visibility_attributes(attributes)
