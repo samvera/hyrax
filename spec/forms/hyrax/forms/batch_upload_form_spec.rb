@@ -41,7 +41,8 @@ RSpec.describe Hyrax::Forms::BatchUploadForm do
     subject { form.terms }
 
     it do
-      is_expected.to eq [:creator,
+      is_expected.to eq [:alt_title,
+                         :creator,
                          :contributor,
                          :description,
                          :abstract,
