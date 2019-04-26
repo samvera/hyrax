@@ -111,7 +111,7 @@ module Wings
         # TODO: It would be better to find a way to add the members without resuming all the member AF objects
         temp_object = assemble_members(af_object)
         af_object.ordered_member_proxies.association.replace temp_object.ordered_member_proxies.association.to_a
-        af_object.members.proxy_association.target.concat temp_object.members.proxy_association.target
+        af_object.members.proxy_association.target.replace temp_object.members.proxy_association.target
         af_object
       end
 
