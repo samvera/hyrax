@@ -414,7 +414,7 @@ module Hyrax
     #
     # @return [#call] lambda/proc that generates a URL to an image
     def iiif_image_url_builder
-      @iiif_image_url_builder ||= ->(file_id, base_url, _size) { "#{base_url}/downloads/#{file_id.split('/').first}" }
+      @iiif_image_url_builder ||= ->(file_id, base_url, _size, _format) { "#{base_url}/downloads/#{file_id.split('/').first}" }
     end
     attr_writer :iiif_image_url_builder
 

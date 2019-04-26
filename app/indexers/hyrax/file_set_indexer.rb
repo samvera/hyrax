@@ -27,6 +27,7 @@ module Hyrax
         solr_doc['duration_tesim']          = object.duration
         solr_doc['sample_rate_tesim']       = object.sample_rate
         solr_doc['original_checksum_tesim'] = object.original_checksum
+        solr_doc['alpha_channels_ssi'] = object.alpha_channels
       end
     end
 

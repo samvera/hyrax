@@ -149,7 +149,7 @@ Hyrax.config do |config|
   # config.iiif_image_server = false
 
   # Returns a URL that resolves to an image provided by a IIIF image server
-  # config.iiif_image_url_builder = lambda do |file_id, base_url, size|
+  # config.iiif_image_url_builder = lambda do |file_id, base_url, size, format|
   #   "#{base_url}/downloads/#{file_id.split('/').first}"
   # end
 

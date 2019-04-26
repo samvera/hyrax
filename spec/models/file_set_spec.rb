@@ -108,6 +108,7 @@ RSpec.describe FileSet do
       expect(subject).to respond_to(:sample_rate)
       # :creator is characterization metadata?
       expect(subject).to respond_to(:creator)
+      expect(subject).to respond_to(:alpha_channels)
     end
 
     it 'redefines to_param to make redis keys more recognizable' do

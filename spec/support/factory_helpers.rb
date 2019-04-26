@@ -16,6 +16,7 @@ module Hyrax
                  file_title:        opts.fetch(:file_title, []),
                  last_modified:     opts.fetch(:last_modified, []),
                  original_checksum: opts.fetch(:original_checksum, []),
+                 alpha_channels:    opts.fetch(:alpha_channels, []),
                  digest:            opts.fetch(:digest, []),
                  duration:          opts.fetch(:duration, []),
                  sample_rate:       opts.fetch(:sample_rate, []))
