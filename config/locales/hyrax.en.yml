@@ -807,6 +807,7 @@ en:
       no_transfer_requests: You haven't received any work transfer requests
       no_transfers: You haven't transferred any work
       proxy_activity: Proxy Activity
+      proxy_add_deny: You cannot make yourself a proxy
       proxy_delete: Delete Proxy
       proxy_help: Select a user who can deposit works on your behalf. Both you and your proxy will be able to make changes to these works. You can revoke a proxy by clicking the Delete Proxy button. To revoke their ability to edit a work they previously submitted, remove them from the Sharing tab on each work.
       proxy_user: Proxy User

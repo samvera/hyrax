@@ -3,7 +3,6 @@ module Hyrax
     include DenyAccessOverrideBehavior
 
     before_action :authenticate_user!
-    before_action :validate_users, only: :create
 
     layout :decide_layout
 
@@ -15,14 +14,18 @@ module Hyrax
     end
 
     def create
-      grantor = authorize_and_return_grantor
-      grantee = ::User.from_url_component(params[:grantee_id])
-      if grantor.can_receive_deposits_from.include?(grantee)
-        head :ok
+      if (params[:user_id].sub '.', '-dot-') == (params[:grantee_id].sub '.', '-dot-')
+        render json: { name: "FAILURE" }
       else
-        grantor.can_receive_deposits_from << grantee
-        send_proxy_depositor_added_messages(grantor, grantee)
-        render json: { name: grantee.name, delete_path: hyrax.user_depositor_path(grantor.user_key, grantee.user_key) }
+        grantor = authorize_and_return_grantor
+        grantee = ::User.from_url_component(params[:grantee_id])
+        if grantor.can_receive_deposits_from.include?(grantee)
+          head :ok
+        else
+          grantor.can_receive_deposits_from << grantee
+          send_proxy_depositor_added_messages(grantor, grantee)
+          render json: { name: grantee.name, delete_path: hyrax.user_depositor_path(grantor.user_key, grantee.user_key) }
+        end
       end
     end
 
@@ -30,10 +33,6 @@ module Hyrax
       grantor = authorize_and_return_grantor
       grantor.can_receive_deposits_from.delete(::User.from_url_component(params[:id]))
       head :ok
-    end
-
-    def validate_users
-      head :ok if params[:user_id] == params[:grantee_id]
     end
 
     private

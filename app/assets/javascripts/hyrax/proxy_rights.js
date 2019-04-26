@@ -16,7 +16,11 @@
         dataType: 'json',
         data: {grantee_id: user_key},
         success: function (data) {
-          if (data.name !== undefined) {
+          if (data.name === "FAILURE") {
+            $('#proxy-deny-modal').modal('show');
+            return;
+          }
+          else if (data.name !== undefined) {
             row = rowTemplate(data);
             $('#authorizedProxies tbody', $container).append(row);
             if (settings.afterAdd)
