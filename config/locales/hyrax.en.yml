@@ -18,9 +18,11 @@ en:
       fields:
         facet:
           admin_set_sim: Admin Set
+          collection_type_gid_ssim: Collection Type
           member_of_collections_ssim: Collection
           resource_type_sim: Resource type
           suppressed_bsi: Status
+          visibility_ssi: Visibility
         show:
           admin_set: 'In Administrative Set:'
           based_near_label: Location
