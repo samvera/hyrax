@@ -130,7 +130,7 @@ class TestAppGenerator < Rails::Generators::Base
   end
   
   def install_universal_viewer
-    system './bin/yarn run install-uv'
+    system './bin/yarn install'
   end
   
 end
