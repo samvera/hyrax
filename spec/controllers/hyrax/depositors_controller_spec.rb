@@ -51,10 +51,10 @@ RSpec.describe Hyrax::DepositorsController do
           post :create, params: grant_proxy_params.merge(grantee_id: user.user_key)
         end
 
-        it 'does not add the user, and returns a 200, with empty response body' do
+        it 'does not add the user, and returns an unsuccessful response, with an error message' do
           expect { redundant_request_to_grant_proxy }.to change { ProxyDepositRights.count }.by(0)
-          expect(response).to be_success
-          expect(response.body).to be_blank
+          expect(response).not_to be_success
+          expect(response.body).to have_content "You cannot make yourself a proxy"
         end
 
         it 'does not send a message to the user' do

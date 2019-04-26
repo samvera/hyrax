@@ -22,6 +22,14 @@
             if (settings.afterAdd)
               settings.afterAdd(this, cloneElem);
           }
+        },
+        error: function (data) {
+          if (data.responseJSON !== undefined) {
+            errorMsg = data.responseJSON.description;
+            $('#errorMsg').text(errorMsg);
+            $('#proxy-deny-modal').modal('show');
+            return;
+          }
         }
       })
       return false;
