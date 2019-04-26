@@ -2,10 +2,16 @@
   "name": "hyrax",
   "private": true,
   "repository": "git@github.com:samvera/hyrax.git",
-  "scripts": {
-    "install-uv": "yarn install --modules-folder ./public/uv"
-  },
   "dependencies": {
-    "universalviewer": "^3.0.16"
+  "universalviewer": "^3.0.16"
+},
+"scripts": {
+  "preinstall": "rm -rf ./public/uv",
+  "postinstall": "yarn run uv-install && yarn run uv-config",
+  "uv-install": "shx cp -r ./node_modules/universalviewer/uv ./public/",
+  "uv-config": "shx cp ./config/uv/uv.html ./public/uv/uv.html & shx cp ./config/uv/uv-config.json ./public/uv/"
+  },
+  "devDependencies": {
+  "shx": "^0.3.2"
   }
 }

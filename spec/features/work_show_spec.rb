@@ -48,9 +48,9 @@ RSpec.describe "work show view" do
 
       # IIIF manifest does not include locale query param
       expect(find('div.viewer-wrapper iframe')['src']).to eq(
-        "http://www.example.com/uv.html#?manifest=" \
+        "http://www.example.com/uv/uv.html#?manifest=" \
         "http://www.example.com/concern/generic_works/#{work.id}/manifest&" \
-        "config=http://www.example.com/uv_config.json"
+        "config=http://www.example.com/uv/uv-config.json"
       )
     end
 

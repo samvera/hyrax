@@ -10,11 +10,11 @@ module Hyrax
     end
 
     def universal_viewer_base_url
-      "#{request&.base_url}/uv.html"
+      "#{request&.base_url}/uv/uv.html"
     end
 
     def universal_viewer_config_url
-      "#{request&.base_url}/uv_config.json"
+      "#{request&.base_url}/uv/uv-config.json"
     end
   end
 end

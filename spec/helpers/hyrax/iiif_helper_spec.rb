@@ -46,7 +46,7 @@ RSpec.describe Hyrax::IiifHelper, type: :helper do
     subject { helper.universal_viewer_base_url }
 
     it 'defaults to universal viewer base path' do
-      expect(subject).to eq "http://test.host/uv.html"
+      expect(subject).to eq "http://test.host/uv/uv.html"
     end
   end
 
@@ -54,7 +54,7 @@ RSpec.describe Hyrax::IiifHelper, type: :helper do
     subject { helper.universal_viewer_config_url }
 
     it 'defaults to universal viewer base path' do
-      expect(subject).to eq "http://test.host/uv_config.json"
+      expect(subject).to eq "http://test.host/uv/uv-config.json"
     end
   end
 end
