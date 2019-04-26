@@ -19,7 +19,9 @@ module Hyrax
                  alpha_channels:    opts.fetch(:alpha_channels, []),
                  digest:            opts.fetch(:digest, []),
                  duration:          opts.fetch(:duration, []),
-                 sample_rate:       opts.fetch(:sample_rate, []))
+                 sample_rate:       opts.fetch(:sample_rate, []),
+                 versions:          opts.fetch(:versions, []),
+                 uri:               opts.fetch(:versions, []))
     end
   end
 end

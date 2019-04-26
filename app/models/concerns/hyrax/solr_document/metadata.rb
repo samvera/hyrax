@@ -77,6 +77,7 @@ module Hyrax
         attribute :label, Solr::String, "label_tesim"
         attribute :file_format, Solr::String, "file_format_tesim"
         attribute :suppressed?, Solr::String, "suppressed_bsi"
+        attribute :current_file_version, Solr::String, "current_file_version_ssi"
         attribute :date_modified, Solr::Date, "date_modified_dtsi"
         attribute :date_uploaded, Solr::Date, "date_uploaded_dtsi"
         attribute :create_date, Solr::Date, "system_create_dtsi"
