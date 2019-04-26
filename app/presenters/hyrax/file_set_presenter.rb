@@ -30,6 +30,7 @@ module Hyrax
              :embargo_release_date, :lease_expiration_date,
              :depositor, :keyword, :title_or_label, :keyword,
              :date_created, :date_modified, :itemtype,
+             :current_file_version,
              to: :solr_document
 
     def single_use_links

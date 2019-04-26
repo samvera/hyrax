@@ -29,6 +29,7 @@ module Hyrax
       end
 
       def send_local_file_contents
+        return unless stale?(last_modified: local_file_last_modified, template: false)
         self.status = 200
         prepare_local_file_headers
         # For derivatives stored on the local file system
@@ -65,7 +66,7 @@ module Hyrax
         response.headers['Content-Type'] = local_file_mime_type
         response.headers['Content-Length'] ||= local_file_size.to_s
         # Prevent Rack::ETag from calculating a digest over body
-        response.headers['Last-Modified'] = local_file_last_modified.utc.strftime("%a, %d %b %Y %T GMT")
+        response.headers['Last-Modified'] ||= local_file_last_modified.httpdate
         self.content_type = local_file_mime_type
       end
 

@@ -17,10 +17,14 @@ module Hyrax
       return nil unless latest_file_id
 
       url = Hyrax.config.iiif_image_url_builder.call(
-        original_file.id,
+        latest_file_id,
         request.base_url,
         Hyrax.config.iiif_image_size_default
       )
+
+      # @todo this is slow, find a better way (perhaps index iiif url):
+      original_file = ::FileSet.find(id).original_file
+
       # @see https://github.com/samvera-labs/iiif_manifest
       IIIFManifest::DisplayImage.new(url,
                                      width: solr_document[:width_is],
