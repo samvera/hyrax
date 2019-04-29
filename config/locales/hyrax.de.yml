@@ -425,7 +425,7 @@ de:
       share_with:
         definition_heading: Berechtigungsdefinitionen
         definitions_html: "<strong>Ansicht / Download: Auf</strong> diese Datei (sowohl Inhalte als auch Metadaten) kann innerhalb von %{application_name} zugegriffen werden. <br /> <strong>Bearbeiten:</strong> Diese Datei (sowohl Inhalte als auch Metadaten) kann bearbeitet werden. Sie dürfen diese Berechtigung nur Benutzern und / oder Gruppen von %{institution_name} erteilen."
-        share_with_html: Sie können den Zugriff &ldquor;Ansicht / Download&ldquo; oder "&ldquor;Bearbeiten&ldquo; für bestimmte Benutzer und / oder Gruppen auf Dateien gewähren. Geben Sie nacheinander einen gültigen %{account_name} ein, wählen Sie die Zugriffsebene für diesen Benutzer und klicken Sie auf + Hinzufügen.
+        share_with_html: Sie können den Zugriff &ldquor;Ansicht / Download&ldquo; oder &ldquor;Bearbeiten&ldquo; für bestimmte Benutzer und / oder Gruppen auf Dateien gewähren. Geben Sie nacheinander einen gültigen %{account_name} ein, wählen Sie die Zugriffsebene für diesen Benutzer und klicken Sie auf + Hinzufügen.
       show:
         items: Objekte
         last_modified: Zuletzt geändert
