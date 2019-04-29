@@ -147,7 +147,7 @@ de:
             title: Freigabe
             varies:
               any: Dem Deponenten erlauben, sich zu entscheiden
-              between: Zwischen &ldquor; jetzt &ldquo; und
+              between: Zwischen &ldquor;jetzt&ldquo; und
               description: 'Variabel - Deponenten können den Freigabedatum für eine einzelne Arbeit festlegen:'
               embargo:
                 1yr: 1 Jahr nach Deponierung
@@ -411,7 +411,7 @@ de:
       items:
         actions: Aktionen
         date_uploaded: Datum Hochgeladen
-        empty: Diese %{type} hat keine Dateien zugeordnet. Klicken Sie auf &ldquor; Bearbeiten &ldquo; , um weitere Dateien hinzuzufügen.
+        empty: Diese %{type} hat keine Dateien zugeordnet. Klicken Sie auf &ldquor;Bearbeiten&ldquo;, um weitere Dateien hinzuzufügen.
         header: Artikel
         thumbnail: Miniaturansicht
         title: Titel
@@ -425,7 +425,7 @@ de:
       share_with:
         definition_heading: Berechtigungsdefinitionen
         definitions_html: "<strong>Ansicht / Download: Auf</strong> diese Datei (sowohl Inhalte als auch Metadaten) kann innerhalb von %{application_name} zugegriffen werden. <br /> <strong>Bearbeiten:</strong> Diese Datei (sowohl Inhalte als auch Metadaten) kann bearbeitet werden. Sie dürfen diese Berechtigung nur Benutzern und / oder Gruppen von %{institution_name} erteilen."
-        share_with_html: Sie können den Zugriff "Ansicht / Download" oder "Bearbeiten" für bestimmte Benutzer und / oder Gruppen auf Dateien gewähren. Geben Sie nacheinander einen gültigen %{account_name} ein, wählen Sie die Zugriffsebene für diesen Benutzer und klicken Sie auf + Hinzufügen.
+        share_with_html: Sie können den Zugriff &ldquor;Ansicht / Download&ldquo; oder "&ldquor;Bearbeiten&ldquo; für bestimmte Benutzer und / oder Gruppen auf Dateien gewähren. Geben Sie nacheinander einen gültigen %{account_name} ein, wählen Sie die Zugriffsebene für diesen Benutzer und klicken Sie auf + Hinzufügen.
       show:
         items: Objekte
         last_modified: Zuletzt geändert
@@ -882,7 +882,7 @@ de:
         save: Speichern
         title: Titel
       groups_description:
-        description_html: Die Liste der Gruppen in der Auswahlliste mit der Bezeichnung &ldquor; Wählen Sie eine Gruppe aus &ldquor; zeigt ihnen jene Benutzer administrierten Gruppen an, bei denen Sie Mitglied sind. Sie können eine bestimmte Gruppe auswählen und eine Zugriffsebene für eine Datei innerhalb von %{application_name} zuweisen, ähnlich wie das Hinzufügen von Benutzerzugriffsebenen.
+        description_html: Die Liste der Gruppen in der Auswahlliste mit der Bezeichnung &ldquor;Wählen Sie eine Gruppe aus&ldquo; zeigt ihnen jene Benutzer administrierten Gruppen an, bei denen Sie Mitglied sind. Sie können eine bestimmte Gruppe auswählen und eine Zugriffsebene für eine Datei innerhalb von %{application_name} zuweisen, ähnlich wie das Hinzufügen von Benutzerzugriffsebenen.
       permission:
         save: Speichern
       permission_form:
@@ -891,7 +891,7 @@ de:
         enter: Geben Sie %{account_label} ein (einzeln)
         header: Berechtigungen
         optional: "(wahlweise)"
-        save_note_html: Berechtigungen werden <strong>nicht</strong> gespeichert, bis die Schaltfläche "Speichern" am unteren Rand der Seite gedrückt wird.
+        save_note_html: Berechtigungen werden <strong>nicht</strong> gespeichert, bis die Schaltfläche &ldquor;Speichern&ldquo; am unteren Rand der Seite gedrückt wird.
         select_group: Wählen Sie eine Gruppe aus
         share_with: Teilen mit
         table_title_access: Zugriffsebene
@@ -1210,12 +1210,12 @@ de:
   simple_form:
     hints:
       admin_set:
-        description: Eine kurze übergreifende Beschreibung, die für alle in diesem Admin-Set gesammelten Arbeiten gilt. Zum Beispiel,  &ldquor;Thesen und ergänzende Dateien, welche von den Absolventen der Geowissenschaften erstellt wurden. &ldquo;
+        description: Eine kurze übergreifende Beschreibung, die für alle in diesem Admin-Set gesammelten Arbeiten gilt. Zum Beispiel,  &ldquor;Thesen und ergänzende Dateien, welche von den Absolventen der Geowissenschaften erstellt wurden.&ldquo;
         title: Ein Name zur erleichterten Identifizierung des Admin-Sets und zur Unterscheidung von anderen Admin-Sets im Repositorium.
       collection:
         based_near: Ein Ortsname im Zusammenhang mit der Sammlung, wie die Website der Veröffentlichung, oder die Stadt, Staat oder Land, welches Inhalt der Sammlung sind. Ruft die Seite <a href='http://www.geonames.org'> GeoNames Web Service </a> auf.
         contributor: Eine Person oder Gruppe, die Sie für eine Rolle bei der Erstellung der Sammlung kenntlich machen wollen, die aber nicht die primäre Rolle besitzen.
-        creator: Die Person oder Gruppe, welche verantwortlich für die Sammlung ist. In der Regel ist dies der Autor des Inhalts. Persönliche Namen sollten zuerst mit dem Nachnamen eingegeben werden, z.B. &ldquor; Smith, John &ldquo; .
+        creator: Die Person oder Gruppe, welche verantwortlich für die Sammlung ist. In der Regel ist dies der Autor des Inhalts. Persönliche Namen sollten zuerst mit dem Nachnamen eingegeben werden, z.B. &ldquor;Smith, John&ldquo;.
         date_created: Das Datum, an dem die Sammlung erstellt wurde.
         description: Freitextnoten über die Sammlung. Beispiel hierfür sind Kurzfassungen (Abstracts) eines wissenschaftlichen Aufsatzes in Zeitschriftenartikeln.
         identifier: Eine eindeutige Kennung, der die Sammlung identifiziert. Ein Beispiel wäre ein DOI für einen Zeitschriftenartikel oder eine ISBN- oder OCLC-Nummer für ein Buch.
@@ -1224,7 +1224,7 @@ de:
         license: Lizenz- und Verbreitungsinformationen für den Zugang zur Sammlung. Wählen Sie aus der mitgelieferten Auswahlliste aus.
         publisher: Die Person oder Gruppe, die die Sammlung zur Verfügung stellt. Im Allgemeinen ist das die Institution.
         related_url: Ein Link zu einer Website oder anderen spezifischen Inhalten (Audio, Video, PDF Dokument) im Zusammenhang mit der Sammlung. Ein Beispiel ist die URL eines Forschungsprojektes, aus dem die Sammlung abgeleitet wurde.
-        resource_type: Vordefinierte Kategorien, um die Art des hochgeladenen Inhalts zu beschreiben, wie beispielsweise &ldquor;Artikel&ldquo; oder &ldquor;Datensatz&ldquo; . Es können mehr als ein Typ ausgewählt werden.
+        resource_type: Vordefinierte Kategorien, um die Art des hochgeladenen Inhalts zu beschreiben, wie beispielsweise &ldquor;Artikel&ldquo; oder &ldquor;Datensatz&ldquo;. Es können mehr als ein Typ ausgewählt werden.
         subject: Überschriften oder Indexbegriffe, die beschreiben, was die Sammlung betrifft; Diese müssen sich an ein bestehendes Vokabular anpassen.
         title: Ein Name, der bei der Identifizierung einer Sammlung hilft.
       collection_type:
@@ -1242,7 +1242,7 @@ de:
       defaults:
         based_near: Ein Ortsname in Bezug auf die Arbeit, wie ihre Website der Veröffentlichung, oder die Stadt, Staat oder Land die Inhalt der Arbeit sind. Ruft die Seite <a href='http://www.geonames.org'> GeoNames Web Service </a> auf.
         contributor: Eine Person oder Gruppe, die Sie für eine Rolle bei der Schaffung der Arbeit kenntlich machen wollen, aber nicht die primäre Rolle besitzen.
-        creator: Die Person oder Gruppe, welche verantwortlich für die Arbeit ist. In der Regel ist dies der Autor des Inhalts. Persönliche Namen sollten zuerst mit dem Nachnamen eingegeben werden, z.B. &ldquor; Smith, John &ldquo; .
+        creator: Die Person oder Gruppe, welche verantwortlich für die Arbeit ist. In der Regel ist dies der Autor des Inhalts. Persönliche Namen sollten zuerst mit dem Nachnamen eingegeben werden, z.B. &ldquor;Smith, John&ldquo;.
         date_created: Das Datum, an dem die Arbeit erstellt wurde.
         description: Freitextnoten über die Arbeit. Beispiel hierfür sind Kurzfassungen (Abstracts) eines wissenschaftlichen Aufsatzes in Zeitschriftenartikeln.
         identifier: Eine eindeutige Kennung, der die Arbeit identifiziert. Ein Beispiel wäre ein DOI für einen Zeitschriftenartikel oder eine ISBN- oder OCLC-Nummer für ein Buch.
