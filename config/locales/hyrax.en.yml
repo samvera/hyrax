@@ -451,7 +451,7 @@ en:
       show_actions:
         analytics: Analytics
         attach_child: Attach Child
-        confirm_delete: Delete this %{work_type}
+        confirm_delete: Delete this %{work_type}?
         delete: Delete
         edit: Edit
         feature: Feature
