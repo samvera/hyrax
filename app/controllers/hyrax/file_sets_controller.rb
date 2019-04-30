@@ -48,7 +48,7 @@ module Hyrax
     def destroy
       parent = curation_concern.parent
       actor.destroy
-      redirect_to [main_app, parent], notice: 'The file has been deleted.'
+      redirect_to [main_app, parent], notice: view_context.t('hyrax.file_sets.asset_deleted_flash.message')
     end
 
     # PATCH /concern/file_sets/:id
@@ -95,7 +95,7 @@ module Hyrax
       def after_update_response
         respond_to do |wants|
           wants.html do
-            redirect_to [main_app, curation_concern], notice: "The file #{view_context.link_to(curation_concern, [main_app, curation_concern])} has been updated."
+            redirect_to [main_app, curation_concern], notice: view_context.t('hyrax.file_sets.asset_updated_flash.message', link_to_file: view_context.link_to(curation_concern, [main_app, curation_concern]))
           end
           wants.json do
             @presenter = show_presenter.new(curation_concern, current_ability)
