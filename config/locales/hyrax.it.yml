@@ -1087,6 +1087,7 @@ it:
         transfer_on_create:
           message: "%{user_link} vuole trasferirti un lavoro. Revisione di tutto %{transfer_link}"
           subject: Richiesta di modifica della proprietà
+          transfer_link_label: le richieste di trasferimento
         transfer_on_update:
           comments: 'Commenti: %{receiver_comment}'
           message: La tua richiesta di trasferimento era %{status}.

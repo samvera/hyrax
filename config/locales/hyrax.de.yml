@@ -1082,6 +1082,7 @@ de:
         transfer_on_create:
           message: "%{user_link} möchte eine Arbeit an Sie übertragen. Überprüfen Sie alle %{transfer_link}"
           subject: Antrag auf Änderung des Eigentums
+          transfer_link_label: transfer-Anfragen
         transfer_on_update:
           comments: 'Kommentare: %{receiver_comment}'
           message: Ihre Übertragungsanforderung lautete %{status}.

@@ -1088,6 +1088,7 @@ en:
         transfer_on_create:
           message: "%{user_link} wants to transfer a work to you. Review all %{transfer_link}"
           subject: Ownership Change Request
+          transfer_link_label: transfer requests
         transfer_on_update:
           comments: 'Comments: %{receiver_comment}'
           message: Your transfer request was %{status}.

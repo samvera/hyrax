@@ -1090,8 +1090,9 @@ fr:
         subject: Erreur d'importation de fichier
       proxy_deposit_request:
         transfer_on_create:
-          message: "%{user_link} souhaite vous transférer une œuvre. Voir tous les %{transfer_link}"
+          message: "%{user_link} souhaite vous transférer une œuvre. Voir toutes les %{transfer_link}"
           subject: Demande de changement de propriété
+          transfer_link_label: les demandes de transfert
         transfer_on_update:
           comments: 'Commentaires: %{receiver_comment}'
           message: Votre demande de transfert était %{status}.

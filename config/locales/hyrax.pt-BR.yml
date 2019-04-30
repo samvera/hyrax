@@ -1082,6 +1082,7 @@ pt-BR:
         transfer_on_create:
           message: "%{user_link} quer transferir um trabalho para você. Revisão de todos %{transfer_link}"
           subject: Pedido de Alteração de Propriedade
+          transfer_link_label: pedidos de transferência de
         transfer_on_update:
           comments: 'Comentários: %{receiver_comment}'
           message: Seu pedido de transferência foi %{status}.

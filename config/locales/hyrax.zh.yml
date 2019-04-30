@@ -1085,6 +1085,7 @@ zh:
         transfer_on_create:
           message: "%{user_link}想要将作品转移给你。查看所有%{transfer_link}"
           subject: 所有权变更请求
+          transfer_link_label: 转移请求
         transfer_on_update:
           comments: 评论：%{receiver_comment}
           message: 您的转移请求是%{status}。
