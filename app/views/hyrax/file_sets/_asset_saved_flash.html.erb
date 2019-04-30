@@ -1,9 +1,8 @@
-The file(s)
 <%=
   total_shown = 20
-  file_sets.first(total_shown)
-           .map { |fs| link_to(fs, file_set_url(fs)) }
-           .tap { |fs| fs << '...' if file_sets.length > total_shown }
-           .join(', ')
+  saved_files = file_sets.first(total_shown)
+  .map { |fs| link_to(fs, file_set_url(fs)) }
+  .tap { |fs| fs << '...' if file_sets.length > total_shown }
+  .join(', ')
 %>
- have been saved.
+<%=t('.message', files: saved_files, count:file_sets.count) %>

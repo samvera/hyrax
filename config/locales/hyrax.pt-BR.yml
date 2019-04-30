@@ -905,6 +905,14 @@ pt-BR:
         header: Selecione uma ação
         versions: Versões
         versions_title: Exibir versões anteriores
+      asset_deleted_flash:
+        message: O arquivo foi excluído.
+      asset_saved_flash:
+        message:
+          one: O arquivo %{saved_files} tiver sido salvo.
+          other: Os arquivos %{saved_files} ter sido salvo.
+      asset_updated_flash:
+        message: O arquivo %{link_to_file} foi atualizado.
       edit:
         descriptions: Descrições
         header: Editar %{file_set}

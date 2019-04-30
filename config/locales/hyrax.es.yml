@@ -964,6 +964,14 @@ es:
         delete_this: Eliminar este %{type}
         edit_this: Editar este %{type}
         confirm_delete_this: Eliminar este %{type}?
+      asset_deleted_flash:
+        message: El archivo ha sido eliminado.
+      asset_saved_flash:
+        message:
+          one: El archivo %{saved_files} ha sido guardado.
+          other: Los archivos %{saved_files} se han salvado.
+      asset_updated_flash:
+        message: El archivo %{link_to_file} ha sido actualizado.
     help:
       header: Soporte al Usuario
       override_text: Utilice app/views/static/help.html.erb para anular este archivo

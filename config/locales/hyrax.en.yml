@@ -911,6 +911,14 @@ en:
         header: Select an action
         versions: Versions
         versions_title: Display previous versions
+      asset_deleted_flash:
+        message: The file has been deleted.
+      asset_saved_flash:
+        message:
+          one: The file %{saved_files} has been saved.
+          other: The files %{saved_files} have been saved.
+      asset_updated_flash:
+        message: The file %{link_to_file} has been updated.
       edit:
         descriptions: Descriptions
         header: Edit %{file_set}

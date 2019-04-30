@@ -910,6 +910,14 @@ it:
         header: Seleziona un'azione
         versions: versioni
         versions_title: Mostra le versioni precedenti
+      asset_deleted_flash:
+        message: Il file è stato eliminato.
+      asset_saved_flash:
+        message:
+          one: Il file %{saved_files} è stato salvato.
+          other: Il file %{saved_files} sono stati salvati.
+      asset_updated_flash:
+        message: Il file %{link_to_file} è stata aggiornata.
       edit:
         descriptions: descrizioni
         header: Modifica %{file_set}
