@@ -445,6 +445,7 @@ pt-BR:
       show_actions:
         analytics: O Analytics
         attach_child: Anexar Criança
+        confirm_delete: Eliminar esta %{work_type} ?
         delete: Apagar
         edit: Editar
         feature: Recurso
@@ -1182,6 +1183,7 @@ pt-BR:
       change_access_flash_message: Atualizando os níveis de acesso do arquivo. Isto pode levar alguns minutos. Você pode recarregar seu navegador ou retornar a este registro mais tarde para ver os níveis de acesso do arquivo atualizados.
       change_access_message_html: "<p>Você alterou o nível de acesso na obra <i> %{curation_concern}</i> , possibilitando seu acesso e edição por outros usuários ou grupos. </p><p> Você quer que todos os arquivos da obra tenham os mesmos usuários, grupos e permissões de acesso? </p>"
       change_access_no_message: Não. Vou fazer atualizações manualmente.
+      change_access_title_html: Aplicar alterações a conteúdo?
       change_access_yes_message: Sim, por favor.
       change_permissions_message_html: "<p> Você alterou as permissões neste %{curation_concern_human_readable_type}, <i>%{curation_concern}</i> , tornando-o accessível para <b>%{visibility_badge}</b> . </p><p> Você gostaria de mudar todos os arquivos do %{curation_concern_human_readable_type} para <b> %{visibility_badge}</b> também? </p>"
       local_ingest:

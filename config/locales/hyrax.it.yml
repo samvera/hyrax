@@ -450,6 +450,7 @@ it:
       show_actions:
         analytics: Analytics
         attach_child: Allegare Bambino
+        confirm_delete: Eliminare questo %{work_type} ?
         delete: Eliminare
         edit: Modifica
         feature: Funzione
@@ -1187,6 +1188,7 @@ it:
       change_access_flash_message: Aggiornamento dei livelli di accesso ai file. Questo potrebbe richiedere alcuni minuti. Potresti voler aggiornare il tuo browser o tornare a questo disco in un secondo momento per vedere i livelli di accesso ai file aggiornati.
       change_access_message_html: "<p> Hai <i>modificato</i> il livello di accesso sul lavoro <i>%{curation_concern}</i> , rendendolo accessibile ad altri utenti o gruppi per visualizzare o modificare. </p><p> Vuoi cambiare tutti i file all'interno del lavoro per avere gli stessi utenti di accesso, i gruppi e la visibilità? </p>"
       change_access_no_message: No. Lo aggiornerò manualmente.
+      change_access_title_html: Applicare le modifiche al contenuto?
       change_access_yes_message: Sì grazie.
       change_permissions_message_html: "<p> Hai modificato le autorizzazioni di questo %{curation_concern_human_readable_type}, <i>%{curation_concern}</i> , <i>rendendolo</i> visibile a <b>%{visibility_badge}</b> . </p><p> Vuoi cambiare tutti i file all'interno di <b>%{curation_concern_human_readable_type}</b> anche <b>%{visibility_badge}</b> ? </p>"
       local_ingest:

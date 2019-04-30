@@ -450,6 +450,7 @@ es:
       show_actions:
         analytics: Analíticas
         attach_child: Adjuntar Niño
+        confirm_delete: Eliminar este %{work_type} ?
         delete: Eliminar
         edit: Editar
         feature: Función
@@ -1189,6 +1190,7 @@ es:
       change_access_flash_message: Actualizando los niveles de acceso. Esto puede tomar unos minutos. Quizás quiera actualizar su navegador o regresar a este registro posteriormente para ver los niveles de acceso.
       change_access_message_html: "<p>Ha cambiado los permisos de acceso en el trabajo <i>%{curation_concern}</i>, haciéndolo accesible a otros usuarios o grupos para ver o editar.</p><p>¿Le gustaría también cambiar todos los archivos dentro del mismo trabajo para que tengan los mismos usuarios de acceso, grupos y visibilidad?</p>"
       change_access_no_message: No. Los actualizaré automáticamente.
+      change_access_title_html: Aplicar los cambios a los contenidos?
       change_access_yes_message: Sí, por favor.
       change_permissions_message_html: "<p>Ha cambiado los permisos en %{curation_concern_human_readable_type}, <i>%{curation_concern}</i>, haciéndolo visible para <b>%{visibility_badge}</b>.</p><p>¿Le gustaría también cambiar todos los archivos dentro de %{curation_concern_human_readable_type} a <b>%{visibility_badge}</b> también?</p>"
       local_ingest:

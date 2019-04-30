@@ -448,6 +448,7 @@ zh:
       show_actions:
         analytics: 分析
         attach_child: 附上的孩子
+        confirm_delete: 删除这一%{work_type}
         delete: 删除
         edit: 编辑
         feature: 功能
@@ -1185,6 +1186,7 @@ zh:
       change_access_flash_message: 更新文件访问级别。 稍等片刻。 您可能需要刷新浏览器或稍后回访查询该文件访问级别是否更新。
       change_access_message_html: "<p>您改变了其他用户或群组对作品阅览或编辑的访问级别 <i>%{curation_concern}</i> </p><p>您需要对作品内所有文件的用户或群组的访问级别和公开度做同样的改变吗</p>"
       change_access_no_message: 不用。 我会手动更新。
+      change_access_title_html: 申请更改的内容吗？
       change_access_yes_message: 是的, 请做同样的更新。
       change_permissions_message_html: "<p>您改变了对%{curation_concern_human_readable_type}, <i>%{curation_concern}</i>的权限，使它对<b>%{visibility_badge}</b>公开。</p><p> 您需要对%{curation_concern_human_readable_type}中所有文件对<b>%{visibility_badge}</b>的权限做同样的改变吗？</p>"
       local_ingest:

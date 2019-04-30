@@ -455,6 +455,7 @@ fr:
       show_actions:
         analytics: Statistiques
         attach_child: Insérer un travail enfant
+        confirm_delete: Supprimer ce %{work_type} ?
         delete: Supprimer
         edit: Modifier
         feature: Mettre à la une
@@ -1192,6 +1193,7 @@ fr:
       change_access_flash_message: Mise à jour des niveaux d'accès aux fichiers. Cela peut prendre quelques minutes. Vous voudrez peut-être rafraîchir votre navigateur ou revenir à cet enregistrement plus tard pour voir les niveaux d'accès aux fichiers mis à jour.
       change_access_message_html: "<p> Vous avez modifié le niveau d'accès au travail <i>%{curation_concern}</i> , ce qui le rend accessible à d'autres utilisateurs ou groupes pour afficher ou modifier. </p><p> Voulez-vous changer tous les fichiers dans le travail pour avoir le même accès utilisateurs, groupes et visibilité? </p>"
       change_access_no_message: Non. Je vais le mettre à jour manuellement.
+      change_access_title_html: Appliquer les modifications au contenu ?
       change_access_yes_message: Oui s'il vous plaît.
       change_permissions_message_html: "<p> Vous avez modifié les autorisations sur ce %{curation_concern_human_readable_type}, <i>%{curation_concern}</i> , ce qui le rend visible pour <b>%{visibility_badge}</b> . </p><p> Voulez-vous changer tous les fichiers dans %{curation_concern_human_readable_type} à <b>%{visibility_badge}</b> aussi? </p>"
       local_ingest:
