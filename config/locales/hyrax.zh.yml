@@ -733,6 +733,8 @@ zh:
           collection_update_success: 收集已成功更新。
           collections_confirmation_html: 删除<span class='pluralized'>这个集合</span>将永久地从存储库中删除<span class='pluralized'>这个集合</span> 。 <span class='pluralized'>此集合中的</span>项目将保留在存储库中。你确定要删除<span class='pluralized'>这个集合</span>吗？
           collections_confirmation_no_items_html: 你确定要删除这个集合吗？此操作无法撤消。
+          collections_confirmation_plural: 这些集合
+          collections_confirmation_singular: 此集合
           delete_admin_set: 删除集合
           delete_admin_set_deny: 这个集合被定义为Admin Set并且不是空的。要删除此管理员设置，您必须先删除（删除或移动到另一个管理员设置集合）管理员设置中的所有项目。
           delete_collection: 删除收藏集

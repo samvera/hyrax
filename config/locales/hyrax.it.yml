@@ -735,6 +735,8 @@ it:
           collection_update_success: La raccolta è stata aggiornata con successo.
           collections_confirmation_html: L'eliminazione di <span class='pluralized'>questa raccolta</span> rimuove definitivamente <span class='pluralized'>questa raccolta</span> dal repository. Gli articoli di <span class='pluralized'>questa raccolta</span> rimarranno nel repository. Sei sicuro di voler eliminare <span class='pluralized'>questa raccolta</span> ?
           collections_confirmation_no_items_html: Sei sicuro di voler eliminare questa raccolta? Questa azione non può essere annullata.
+          collections_confirmation_plural: queste collezioni
+          collections_confirmation_singular: questa collezione
           delete_admin_set: Elimina raccolta
           delete_admin_set_deny: Questa raccolta è definita come Imposta amministratore e non è vuota. Per eliminare questo set di amministrazione, devi prima rimuovere (eliminare o spostare in un'altra raccolta di un gruppo di amministratori) tutti gli elementi dal set di amministrazione.
           delete_collection: Elimina raccolta

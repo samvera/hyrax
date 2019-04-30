@@ -740,6 +740,8 @@ fr:
           collection_update_success: La collection a été mise à jour avec succès.
           collections_confirmation_html: La suppression de <span class='pluralized'>cette collection</span> supprimera définitivement <span class='pluralized'>cette collection</span> du référentiel. Les éléments de <span class='pluralized'>cette collection</span> resteront dans le référentiel. Êtes-vous sûr de vouloir supprimer <span class='pluralized'>cette collection</span> ?
           collections_confirmation_no_items_html: Êtes-vous sûr de vouloir supprimer cette collection? Cette action ne peut pas être annulée.
+          collections_confirmation_plural: ces collections
+          collections_confirmation_singular: cette collection
           delete_admin_set: Supprimer la collection
           delete_admin_set_deny: Cette collection est définie en tant que jeu d'administration et n'est pas vide. Pour supprimer cet ensemble d'administration, vous devez d'abord supprimer (supprimer ou déplacer vers une autre collection d'ensembles d'administration) tous les éléments du jeu d'administration.
           delete_collection: Supprimer la collection

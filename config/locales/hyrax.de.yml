@@ -730,6 +730,8 @@ de:
           collection_update_success: Die Sammlung wurde erfolgreich aktualisiert.
           collections_confirmation_html: "<span class='pluralized'>Diese Sammlung</span> löschen , wird permanent <span class='pluralized'>diese Sammlung</span> aus dem Repository entfernen. Elemente in <span class='pluralized'>dieser Sammlung</span> verbleiben im Repository. Möchten Sie <span class='pluralized'>diese Sammlung</span> wirklich löschen?"
           collections_confirmation_no_items_html: Möchten Sie diese Sammlung wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.
+          collections_confirmation_plural: diese Sammlungen
+          collections_confirmation_singular: diese Sammlung
           delete_admin_set: Sammlung löschen
           delete_admin_set_deny: Dieses Sammlung ist als Admin-Set definiert und nicht leer. Um dieses Admin-Set zu löschen, müssen Sie zunächst alle Elemente aus dem Admin-Set entfernen (löschen oder in eine andere Admin-Set-Sammlung verschieben).
           delete_collection: Sammlung löschen

@@ -730,6 +730,8 @@ pt-BR:
           collection_update_success: A coleção foi atualizada com sucesso.
           collections_confirmation_html: A eliminação <span class='pluralized'>desta coleção</span> a removerá permanentemente do repositório. Os itens <span class='pluralized'>desta coleção</span> permanecerão no repositório. Tem certeza de que deseja eliminar <span class='pluralized'>esta coleção</span> ?
           collections_confirmation_no_items_html: Tem certeza de que deseja eliminar esta coleção? Essa ação não pode ser revertida.
+          collections_confirmation_plural: essas coleções
+          collections_confirmation_singular: esta coleção
           delete_admin_set: Eliminar coleção
           delete_admin_set_deny: Esta coleção é definida como Conjunto Administrativo e não está vazia. Para eliminar este conjunto administrativo, primeiro você deve remover (eliminar ou mover para outro conjunto administrativo) todos os itens nele contidos.
           delete_collection: Eliminar coleção
