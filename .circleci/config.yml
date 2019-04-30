@@ -117,14 +117,14 @@ workflows:
     jobs:
       - bundle:
           ruby_version: "2.5.5"
-          rails_version: "5.1.7"
+          rails_version: "5.2.3"
       - lint:
           ruby_version: "2.5.5"
           requires:
             - bundle
       - build:
           ruby_version: "2.5.5"
-          rails_version: "5.1.7"
+          rails_version: "5.2.3"
           requires:
             - bundle
       - test:
