@@ -255,7 +255,6 @@ Blacklight.onLoad(function () {
       plural: $modal.data("pluralForm"),
       singular: $modal.data("singularForm")
     };
-    console.log(deleteWording);
 
     var canDeleteAll = true;
     var selectedInputs = $('#documents table.collections-list-table tbody tr')
