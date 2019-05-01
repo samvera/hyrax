@@ -18,9 +18,11 @@ zh:
       fields:
         facet:
           admin_set_sim: 集
+          collection_type_gid_ssim: 集合类型
           member_of_collections_ssim: 采集
           resource_type_sim: 资源类型
           suppressed_bsi: 状况
+          visibility_ssi: 公开度
         show:
           admin_set: '管理集内:'
           based_near_label: 地点

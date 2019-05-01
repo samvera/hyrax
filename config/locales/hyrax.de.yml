@@ -18,9 +18,11 @@ de:
       fields:
         facet:
           admin_set_sim: Sammlung
+          collection_type_gid_ssim: Sammlungsart
           member_of_collections_ssim: Sammlung
           resource_type_sim: Ressourcentyp
           suppressed_bsi: Status
+          visibility_ssi: Sichtbarkeit
         show:
           admin_set: 'Im Admin-Set:'
           based_near_label: Ort
