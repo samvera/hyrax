@@ -95,7 +95,8 @@ module Hyrax
       def after_update_response
         respond_to do |wants|
           wants.html do
-            redirect_to [main_app, curation_concern], notice: view_context.t('hyrax.file_sets.asset_updated_flash.message', link_to_file: view_context.link_to(curation_concern, [main_app, curation_concern]))
+            link_to_file = view_context.link_to(curation_concern, [main_app, curation_concern])
+            redirect_to [main_app, curation_concern], notice: view_context.t('hyrax.file_sets.asset_updated_flash.message', link_to_file: link_to_file)
           end
           wants.json do
             @presenter = show_presenter.new(curation_concern, current_ability)
