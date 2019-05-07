@@ -40,7 +40,7 @@ require 'rspec/active_model/mocks'
 require 'capybara/rspec'
 require 'capybara/rails'
 require 'selenium-webdriver'
-require 'chromedriver-helper'
+require 'webdrivers'
 require 'equivalent-xml'
 require 'equivalent-xml/rspec_matchers'
 require 'database_cleaner'
@@ -62,7 +62,7 @@ end
 Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each { |f| require f }
 
 require 'webmock/rspec'
-WebMock.disable_net_connect!(allow_localhost: true)
+WebMock.disable_net_connect!(allow_localhost: true, allow: 'chromedriver.storage.googleapis.com')
 
 require 'i18n/debug' if ENV['I18N_DEBUG']
 require 'byebug' unless ci_build?
@@ -82,6 +82,9 @@ end
 
 Capybara.default_driver = :rack_test # This is a faster driver
 Capybara.javascript_driver = :selenium_chrome_headless_sandboxless # This is slower
+
+# FIXME: Pin to older version of chromedriver to avoid issue with clicking non-visible elements
+Webdrivers::Chromedriver.version = '72.0.3626.69'
 
 ActiveJob::Base.queue_adapter = :test
 
@@ -192,11 +195,11 @@ RSpec.configure do |config|
 
   config.before(:each, type: :view) do
     initialize_controller_helpers(view)
-    WebMock.disable_net_connect!(allow_localhost: false)
+    WebMock.disable_net_connect!(allow_localhost: false, allow: 'chromedriver.storage.googleapis.com')
   end
 
   config.after(:each, type: :view) do
-    WebMock.disable_net_connect!(allow_localhost: true)
+    WebMock.disable_net_connect!(allow_localhost: true, allow: 'chromedriver.storage.googleapis.com')
   end
 
   config.before(:all, type: :feature) do
