@@ -21,8 +21,8 @@ module Hyrax
       )
       # @see https://github.com/samvera-labs/iiif_manifest
       IIIFManifest::DisplayImage.new(url,
-                                     width: 640,
-                                     height: 480,
+                                     width: original_file.width,
+                                     height: original_file.height,
                                      iiif_endpoint: iiif_endpoint(original_file.id))
     end
 
