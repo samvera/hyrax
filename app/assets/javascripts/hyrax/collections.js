@@ -249,11 +249,12 @@ Blacklight.onLoad(function () {
     var tableRows = $('#documents table.collections-list-table tbody tr');
     var checkbox = null;
     var numRowsSelected = false;
+    var $modal = $('#selected-collections-delete-modal');
+    var $deleteWordingTarget = $modal.find('.pluralized');
     var deleteWording = {
-      plural: 'these collections',
-      singular: 'this collection'
+      plural: $modal.data("pluralForm"),
+      singular: $modal.data("singularForm")
     };
-    var $deleteWordingTarget = $('#selected-collections-delete-modal .pluralized');
 
     var canDeleteAll = true;
     var selectedInputs = $('#documents table.collections-list-table tbody tr')
@@ -277,7 +278,7 @@ Blacklight.onLoad(function () {
       } else {
         $deleteWordingTarget.text(deleteWording.singular);
       }
-      $('#selected-collections-delete-modal').modal('show');
+      $modal.modal('show');
     }
   });
 

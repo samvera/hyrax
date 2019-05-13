@@ -450,6 +450,7 @@ it:
       show_actions:
         analytics: Analytics
         attach_child: Allegare Bambino
+        confirm_delete: Eliminare questo %{work_type} ?
         delete: Eliminare
         edit: Modifica
         feature: Funzione
@@ -734,6 +735,8 @@ it:
           collection_update_success: La raccolta è stata aggiornata con successo.
           collections_confirmation_html: L'eliminazione di <span class='pluralized'>questa raccolta</span> rimuove definitivamente <span class='pluralized'>questa raccolta</span> dal repository. Gli articoli di <span class='pluralized'>questa raccolta</span> rimarranno nel repository. Sei sicuro di voler eliminare <span class='pluralized'>questa raccolta</span> ?
           collections_confirmation_no_items_html: Sei sicuro di voler eliminare questa raccolta? Questa azione non può essere annullata.
+          collections_confirmation_plural: queste collezioni
+          collections_confirmation_singular: questa collezione
           delete_admin_set: Elimina raccolta
           delete_admin_set_deny: Questa raccolta è definita come Imposta amministratore e non è vuota. Per eliminare questo set di amministrazione, devi prima rimuovere (eliminare o spostare in un'altra raccolta di un gruppo di amministratori) tutti gli elementi dal set di amministrazione.
           delete_collection: Elimina raccolta
@@ -909,6 +912,14 @@ it:
         header: Seleziona un'azione
         versions: versioni
         versions_title: Mostra le versioni precedenti
+      asset_deleted_flash:
+        message: Il file è stato eliminato.
+      asset_saved_flash:
+        message:
+          one: Il file %{saved_files} è stato salvato.
+          other: Il file %{saved_files} sono stati salvati.
+      asset_updated_flash:
+        message: Il file %{link_to_file} è stata aggiornata.
       edit:
         descriptions: descrizioni
         header: Modifica %{file_set}
@@ -1076,6 +1087,7 @@ it:
         transfer_on_create:
           message: "%{user_link} vuole trasferirti un lavoro. Revisione di tutto %{transfer_link}"
           subject: Richiesta di modifica della proprietà
+          transfer_link_label: le richieste di trasferimento
         transfer_on_update:
           comments: 'Commenti: %{receiver_comment}'
           message: La tua richiesta di trasferimento era %{status}.
@@ -1187,6 +1199,7 @@ it:
       change_access_flash_message: Aggiornamento dei livelli di accesso ai file. Questo potrebbe richiedere alcuni minuti. Potresti voler aggiornare il tuo browser o tornare a questo disco in un secondo momento per vedere i livelli di accesso ai file aggiornati.
       change_access_message_html: "<p> Hai <i>modificato</i> il livello di accesso sul lavoro <i>%{curation_concern}</i> , rendendolo accessibile ad altri utenti o gruppi per visualizzare o modificare. </p><p> Vuoi cambiare tutti i file all'interno del lavoro per avere gli stessi utenti di accesso, i gruppi e la visibilità? </p>"
       change_access_no_message: No. Lo aggiornerò manualmente.
+      change_access_title_html: Applicare le modifiche al contenuto?
       change_access_yes_message: Sì grazie.
       change_permissions_message_html: "<p> Hai modificato le autorizzazioni di questo %{curation_concern_human_readable_type}, <i>%{curation_concern}</i> , <i>rendendolo</i> visibile a <b>%{visibility_badge}</b> . </p><p> Vuoi cambiare tutti i file all'interno di <b>%{curation_concern_human_readable_type}</b> anche <b>%{visibility_badge}</b> ? </p>"
       local_ingest:

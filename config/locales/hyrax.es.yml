@@ -450,6 +450,7 @@ es:
       show_actions:
         analytics: Analíticas
         attach_child: Adjuntar Niño
+        confirm_delete: Eliminar este %{work_type} ?
         delete: Eliminar
         edit: Editar
         feature: Función
@@ -734,6 +735,8 @@ es:
           collection_update_success: La colección fue actualizada con éxito.
           collections_confirmation_html: Eliminar <span class='pluralized'>esta colección</span> eliminará permanentemente <span class='pluralized'>esta colección</span> del repositorio. Los elementos de <span class='pluralized'>esta colección</span> permanecerán en el repositorio. ¿Seguro que quieres eliminar <span class='pluralized'>esta colección</span> ?
           collections_confirmation_no_items_html: "¿Seguro que quieres eliminar esta colección? Esta acción no se puede deshacer."
+          collections_confirmation_plural: estas colecciones
+          collections_confirmation_singular: esta colección
           delete_admin_set: Eliminar colección
           delete_admin_set_deny: Esta colección se define como Admin Set y no está vacía. Para eliminar este conjunto de administración, primero debe eliminar (eliminar o mover a otra colección del conjunto de administración) todos los elementos del conjunto de administración.
           delete_collection: Borrar Colección
@@ -963,6 +966,14 @@ es:
         delete_this: Eliminar este %{type}
         edit_this: Editar este %{type}
         confirm_delete_this: Eliminar este %{type}?
+      asset_deleted_flash:
+        message: El archivo ha sido eliminado.
+      asset_saved_flash:
+        message:
+          one: El archivo %{saved_files} ha sido guardado.
+          other: Los archivos %{saved_files} se han salvado.
+      asset_updated_flash:
+        message: El archivo %{link_to_file} ha sido actualizado.
     help:
       header: Soporte al Usuario
       override_text: Utilice app/views/static/help.html.erb para anular este archivo
@@ -1078,6 +1089,7 @@ es:
         transfer_on_create:
           message: "%{user_link} quiere transferirte un trabajo. Revisar todos los %{transfer_link}"
           subject: Solicitud de cambio de propiedad
+          transfer_link_label: las solicitudes de transferencia
         transfer_on_update:
           comments: 'Comentarios: %{receiver_comment}'
           message: Su solicitud de transferencia fue %{status}.
@@ -1189,6 +1201,7 @@ es:
       change_access_flash_message: Actualizando los niveles de acceso. Esto puede tomar unos minutos. Quizás quiera actualizar su navegador o regresar a este registro posteriormente para ver los niveles de acceso.
       change_access_message_html: "<p>Ha cambiado los permisos de acceso en el trabajo <i>%{curation_concern}</i>, haciéndolo accesible a otros usuarios o grupos para ver o editar.</p><p>¿Le gustaría también cambiar todos los archivos dentro del mismo trabajo para que tengan los mismos usuarios de acceso, grupos y visibilidad?</p>"
       change_access_no_message: No. Los actualizaré automáticamente.
+      change_access_title_html: Aplicar los cambios a los contenidos?
       change_access_yes_message: Sí, por favor.
       change_permissions_message_html: "<p>Ha cambiado los permisos en %{curation_concern_human_readable_type}, <i>%{curation_concern}</i>, haciéndolo visible para <b>%{visibility_badge}</b>.</p><p>¿Le gustaría también cambiar todos los archivos dentro de %{curation_concern_human_readable_type} a <b>%{visibility_badge}</b> también?</p>"
       local_ingest:

@@ -448,6 +448,7 @@ zh:
       show_actions:
         analytics: 分析
         attach_child: 附上的孩子
+        confirm_delete: 删除这一%{work_type}
         delete: 删除
         edit: 编辑
         feature: 功能
@@ -732,6 +733,8 @@ zh:
           collection_update_success: 收集已成功更新。
           collections_confirmation_html: 删除<span class='pluralized'>这个集合</span>将永久地从存储库中删除<span class='pluralized'>这个集合</span> 。 <span class='pluralized'>此集合中的</span>项目将保留在存储库中。你确定要删除<span class='pluralized'>这个集合</span>吗？
           collections_confirmation_no_items_html: 你确定要删除这个集合吗？此操作无法撤消。
+          collections_confirmation_plural: 这些集合
+          collections_confirmation_singular: 此集合
           delete_admin_set: 删除集合
           delete_admin_set_deny: 这个集合被定义为Admin Set并且不是空的。要删除此管理员设置，您必须先删除（删除或移动到另一个管理员设置集合）管理员设置中的所有项目。
           delete_collection: 删除收藏集
@@ -907,6 +910,14 @@ zh:
         header: 选择一个动作
         versions: 版本
         versions_title: 显示以前的版本
+      asset_deleted_flash:
+        message: 该文件已经被删除。
+      asset_saved_flash:
+        message:
+          one: 该文件%{saved_files}已经保存。
+          other: 该文件%{saved_files}已经保存。
+      asset_updated_flash:
+        message: 该文件%{link_to_file}已经更新。
       edit:
         descriptions: 说明
         header: 编辑%{file_set}
@@ -1074,6 +1085,7 @@ zh:
         transfer_on_create:
           message: "%{user_link}想要将作品转移给你。查看所有%{transfer_link}"
           subject: 所有权变更请求
+          transfer_link_label: 转移请求
         transfer_on_update:
           comments: 评论：%{receiver_comment}
           message: 您的转移请求是%{status}。
@@ -1185,6 +1197,7 @@ zh:
       change_access_flash_message: 更新文件访问级别。 稍等片刻。 您可能需要刷新浏览器或稍后回访查询该文件访问级别是否更新。
       change_access_message_html: "<p>您改变了其他用户或群组对作品阅览或编辑的访问级别 <i>%{curation_concern}</i> </p><p>您需要对作品内所有文件的用户或群组的访问级别和公开度做同样的改变吗</p>"
       change_access_no_message: 不用。 我会手动更新。
+      change_access_title_html: 申请更改的内容吗？
       change_access_yes_message: 是的, 请做同样的更新。
       change_permissions_message_html: "<p>您改变了对%{curation_concern_human_readable_type}, <i>%{curation_concern}</i>的权限，使它对<b>%{visibility_badge}</b>公开。</p><p> 您需要对%{curation_concern_human_readable_type}中所有文件对<b>%{visibility_badge}</b>的权限做同样的改变吗？</p>"
       local_ingest:

@@ -445,6 +445,7 @@ pt-BR:
       show_actions:
         analytics: O Analytics
         attach_child: Anexar Criança
+        confirm_delete: Eliminar esta %{work_type} ?
         delete: Apagar
         edit: Editar
         feature: Recurso
@@ -729,6 +730,8 @@ pt-BR:
           collection_update_success: A coleção foi atualizada com sucesso.
           collections_confirmation_html: A eliminação <span class='pluralized'>desta coleção</span> a removerá permanentemente do repositório. Os itens <span class='pluralized'>desta coleção</span> permanecerão no repositório. Tem certeza de que deseja eliminar <span class='pluralized'>esta coleção</span> ?
           collections_confirmation_no_items_html: Tem certeza de que deseja eliminar esta coleção? Essa ação não pode ser revertida.
+          collections_confirmation_plural: essas coleções
+          collections_confirmation_singular: esta coleção
           delete_admin_set: Eliminar coleção
           delete_admin_set_deny: Esta coleção é definida como Conjunto Administrativo e não está vazia. Para eliminar este conjunto administrativo, primeiro você deve remover (eliminar ou mover para outro conjunto administrativo) todos os itens nele contidos.
           delete_collection: Eliminar coleção
@@ -904,6 +907,14 @@ pt-BR:
         header: Selecione uma ação
         versions: Versões
         versions_title: Exibir versões anteriores
+      asset_deleted_flash:
+        message: O arquivo foi excluído.
+      asset_saved_flash:
+        message:
+          one: O arquivo %{saved_files} tiver sido salvo.
+          other: Os arquivos %{saved_files} ter sido salvo.
+      asset_updated_flash:
+        message: O arquivo %{link_to_file} foi atualizado.
       edit:
         descriptions: Descrições
         header: Editar %{file_set}
@@ -1071,6 +1082,7 @@ pt-BR:
         transfer_on_create:
           message: "%{user_link} quer transferir um trabalho para você. Revisão de todos %{transfer_link}"
           subject: Pedido de Alteração de Propriedade
+          transfer_link_label: pedidos de transferência de
         transfer_on_update:
           comments: 'Comentários: %{receiver_comment}'
           message: Seu pedido de transferência foi %{status}.
@@ -1182,6 +1194,7 @@ pt-BR:
       change_access_flash_message: Atualizando os níveis de acesso do arquivo. Isto pode levar alguns minutos. Você pode recarregar seu navegador ou retornar a este registro mais tarde para ver os níveis de acesso do arquivo atualizados.
       change_access_message_html: "<p>Você alterou o nível de acesso na obra <i> %{curation_concern}</i> , possibilitando seu acesso e edição por outros usuários ou grupos. </p><p> Você quer que todos os arquivos da obra tenham os mesmos usuários, grupos e permissões de acesso? </p>"
       change_access_no_message: Não. Vou fazer atualizações manualmente.
+      change_access_title_html: Aplicar alterações a conteúdo?
       change_access_yes_message: Sim, por favor.
       change_permissions_message_html: "<p> Você alterou as permissões neste %{curation_concern_human_readable_type}, <i>%{curation_concern}</i> , tornando-o accessível para <b>%{visibility_badge}</b> . </p><p> Você gostaria de mudar todos os arquivos do %{curation_concern_human_readable_type} para <b> %{visibility_badge}</b> também? </p>"
       local_ingest:

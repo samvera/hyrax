@@ -455,6 +455,7 @@ fr:
       show_actions:
         analytics: Statistiques
         attach_child: Insérer un travail enfant
+        confirm_delete: Supprimer ce %{work_type} ?
         delete: Supprimer
         edit: Modifier
         feature: Mettre à la une
@@ -739,6 +740,8 @@ fr:
           collection_update_success: La collection a été mise à jour avec succès.
           collections_confirmation_html: La suppression de <span class='pluralized'>cette collection</span> supprimera définitivement <span class='pluralized'>cette collection</span> du référentiel. Les éléments de <span class='pluralized'>cette collection</span> resteront dans le référentiel. Êtes-vous sûr de vouloir supprimer <span class='pluralized'>cette collection</span> ?
           collections_confirmation_no_items_html: Êtes-vous sûr de vouloir supprimer cette collection? Cette action ne peut pas être annulée.
+          collections_confirmation_plural: ces collections
+          collections_confirmation_singular: cette collection
           delete_admin_set: Supprimer la collection
           delete_admin_set_deny: Cette collection est définie en tant que jeu d'administration et n'est pas vide. Pour supprimer cet ensemble d'administration, vous devez d'abord supprimer (supprimer ou déplacer vers une autre collection d'ensembles d'administration) tous les éléments du jeu d'administration.
           delete_collection: Supprimer la collection
@@ -914,6 +917,14 @@ fr:
         header: Sélectionnez une action
         versions: Versions
         versions_title: Afficher les versions précédentes
+      asset_deleted_flash:
+        message: Le fichier a été supprimé.
+      asset_saved_flash:
+        message:
+          one: Le fichier %{saved_files} a été enregistré.
+          other: Les fichiers %{saved_files} ont été enregistrés.
+      asset_updated_flash:
+        message: Le fichier %{link_to_file} a été mis à jour.
       edit:
         descriptions: Les descriptions
         header: Modifier %{file_set}
@@ -1079,8 +1090,9 @@ fr:
         subject: Erreur d'importation de fichier
       proxy_deposit_request:
         transfer_on_create:
-          message: "%{user_link} souhaite vous transférer une œuvre. Voir tous les %{transfer_link}"
+          message: "%{user_link} souhaite vous transférer une œuvre. Voir toutes les %{transfer_link}"
           subject: Demande de changement de propriété
+          transfer_link_label: les demandes de transfert
         transfer_on_update:
           comments: 'Commentaires: %{receiver_comment}'
           message: Votre demande de transfert était %{status}.
@@ -1192,6 +1204,7 @@ fr:
       change_access_flash_message: Mise à jour des niveaux d'accès aux fichiers. Cela peut prendre quelques minutes. Vous voudrez peut-être rafraîchir votre navigateur ou revenir à cet enregistrement plus tard pour voir les niveaux d'accès aux fichiers mis à jour.
       change_access_message_html: "<p> Vous avez modifié le niveau d'accès au travail <i>%{curation_concern}</i> , ce qui le rend accessible à d'autres utilisateurs ou groupes pour afficher ou modifier. </p><p> Voulez-vous changer tous les fichiers dans le travail pour avoir le même accès utilisateurs, groupes et visibilité? </p>"
       change_access_no_message: Non. Je vais le mettre à jour manuellement.
+      change_access_title_html: Appliquer les modifications au contenu ?
       change_access_yes_message: Oui s'il vous plaît.
       change_permissions_message_html: "<p> Vous avez modifié les autorisations sur ce %{curation_concern_human_readable_type}, <i>%{curation_concern}</i> , ce qui le rend visible pour <b>%{visibility_badge}</b> . </p><p> Voulez-vous changer tous les fichiers dans %{curation_concern_human_readable_type} à <b>%{visibility_badge}</b> aussi? </p>"
       local_ingest:

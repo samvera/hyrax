@@ -445,6 +445,7 @@ de:
       show_actions:
         analytics: Analytics
         attach_child: Untergeordnete Arbeit hinzufügen
+        confirm_delete: Löschen %{work_type} ?
         delete: Löschen
         edit: Bearbeiten
         feature: Hervorheben
@@ -729,6 +730,8 @@ de:
           collection_update_success: Die Sammlung wurde erfolgreich aktualisiert.
           collections_confirmation_html: "<span class='pluralized'>Diese Sammlung</span> löschen , wird permanent <span class='pluralized'>diese Sammlung</span> aus dem Repository entfernen. Elemente in <span class='pluralized'>dieser Sammlung</span> verbleiben im Repository. Möchten Sie <span class='pluralized'>diese Sammlung</span> wirklich löschen?"
           collections_confirmation_no_items_html: Möchten Sie diese Sammlung wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.
+          collections_confirmation_plural: diese Sammlungen
+          collections_confirmation_singular: diese Sammlung
           delete_admin_set: Sammlung löschen
           delete_admin_set_deny: Dieses Sammlung ist als Admin-Set definiert und nicht leer. Um dieses Admin-Set zu löschen, müssen Sie zunächst alle Elemente aus dem Admin-Set entfernen (löschen oder in eine andere Admin-Set-Sammlung verschieben).
           delete_collection: Sammlung löschen
@@ -904,6 +907,14 @@ de:
         header: Wählen Sie eine Aktion
         versions: Versionen
         versions_title: Vorherige Versionen anzeigen
+      asset_deleted_flash:
+        message: Die Datei wurde gelöscht.
+      asset_saved_flash:
+        message:
+          one: Die Datei %{saved_files} gespeichert wurden.
+          other: Die Dateien %{saved_files} gespeichert wurden.
+      asset_updated_flash:
+        message: Die Datei %{link_to_file} wurde aktualisiert.
       edit:
         descriptions: Beschreibungen
         header: Bearbeite %{file_set}
@@ -1071,6 +1082,7 @@ de:
         transfer_on_create:
           message: "%{user_link} möchte eine Arbeit an Sie übertragen. Überprüfen Sie alle %{transfer_link}"
           subject: Antrag auf Änderung des Eigentums
+          transfer_link_label: transfer-Anfragen
         transfer_on_update:
           comments: 'Kommentare: %{receiver_comment}'
           message: Ihre Übertragungsanforderung lautete %{status}.
@@ -1182,6 +1194,7 @@ de:
       change_access_flash_message: Aktualisierung der Dateiberechtigungen. Dies kann ein paar Minuten dauern. Sie können Ihren Browser aktualisieren oder später zu diesem Datensatz zurückkehren, um die aktualisierten Dateizugriffsberechtigungen zu sehen.
       change_access_message_html: "<p> Sie haben die <i>Zugriffsberechtigung</i> auf die Arbeit <i>%{curation_concern} geändert</i> , so dass sie anderen Benutzern oder Gruppen zum Ansehen oder Bearbeiten zugänglich ist. </p><p> Möchten Sie alle Dateien in der Arbeit ändern, damit diese die selben Berechtigungen für Benutzer, Gruppen und Sichtbarkeit zu haben? </p>"
       change_access_no_message: Nein. Ich werde es manuell aktualisieren.
+      change_access_title_html: Änderungen an Inhalt?
       change_access_yes_message: Ja bitte.
       change_permissions_message_html: "<p> Sie haben die Berechtigungen für diese %{curation_concern_human_readable_type}, <i>%{curation_concern} geändert</i> , so dass es sichtbar für <b>%{visibility_badge}</b> . </p><p> Möchten Sie alle Dateien im %{curation_concern_human_readable_type} auch auf <b>%{visibility_badge} ändern</b> ? </p>"
       local_ingest:

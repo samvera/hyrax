@@ -451,6 +451,7 @@ en:
       show_actions:
         analytics: Analytics
         attach_child: Attach Child
+        confirm_delete: Delete this %{work_type}?
         delete: Delete
         edit: Edit
         feature: Feature
@@ -735,6 +736,8 @@ en:
           collection_update_success: Collection was successfully updated.
           collections_confirmation_html: Deleting <span class='pluralized'>this collection</span> will permanently remove <span class='pluralized'>this collection</span> from the repository.  Items in <span class='pluralized'>this collection</span> will remain in the repository.  Are you sure you want to delete <span class='pluralized'>this collection</span>?
           collections_confirmation_no_items_html: Are you sure you want to delete this collection? This action cannot be undone.
+          collections_confirmation_plural: these collections
+          collections_confirmation_singular: this collection
           delete_admin_set: Delete collection
           delete_admin_set_deny: This collection is defined as Admin Set and is not empty. To delete this Admin Set, you must first remove (delete or move to another Admin Set collection) all items from the Admin Set.
           delete_collection: Delete collection
@@ -910,6 +913,14 @@ en:
         header: Select an action
         versions: Versions
         versions_title: Display previous versions
+      asset_deleted_flash:
+        message: The file has been deleted.
+      asset_saved_flash:
+        message:
+          one: The file %{saved_files} has been saved.
+          other: The files %{saved_files} have been saved.
+      asset_updated_flash:
+        message: The file %{link_to_file} has been updated.
       edit:
         descriptions: Descriptions
         header: Edit %{file_set}
@@ -1077,6 +1088,7 @@ en:
         transfer_on_create:
           message: "%{user_link} wants to transfer a work to you. Review all %{transfer_link}"
           subject: Ownership Change Request
+          transfer_link_label: transfer requests
         transfer_on_update:
           comments: 'Comments: %{receiver_comment}'
           message: Your transfer request was %{status}.
@@ -1188,6 +1200,7 @@ en:
       change_access_flash_message: Updating file access levels. This may take a few minutes. You may want to refresh your browser or return to this record later to see the updated file access levels.
       change_access_message_html: "<p>You have changed the access level on work <i>%{curation_concern}</i>, making it accessible to other users or groups to view or edit.</p><p>Would you like change all of the files within the work to have the same access users, groups and visibility as well?</p>"
       change_access_no_message: No. I'll update it manually.
+      change_access_title_html: Apply changes to contents?
       change_access_yes_message: Yes please.
       change_permissions_message_html: "<p>You have changed the permissions on this %{curation_concern_human_readable_type}, <i>%{curation_concern}</i>, making it visible to <b>%{visibility_badge}</b>.</p><p>Would you like change all of the files within the %{curation_concern_human_readable_type} to <b>%{visibility_badge}</b> as well?</p>"
       local_ingest:
@@ -1327,8 +1340,8 @@ en:
         share_applies_to_new_works: APPLY TO NEW WORKS
         title: Type name
       defaults:
-        access_right: Access Rights
         abstract: Abstract
+        access_right: Access Rights
         admin_set_id: Administrative Set
         based_near: Location
         creator: Creator

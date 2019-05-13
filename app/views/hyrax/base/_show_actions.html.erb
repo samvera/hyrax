@@ -39,7 +39,7 @@
             </ul>
         </div>
       <% end %>
-      <%= link_to t('.delete'), [main_app, presenter], class: 'btn btn-danger', data: { confirm: "Delete this #{presenter.human_readable_type}?" }, method: :delete %>
+      <%= link_to t('.delete'), [main_app, presenter], class: 'btn btn-danger', data: { confirm: t('.confirm_delete', work_type: presenter.human_readable_type) }, method: :delete %>
     <% end %>
   </div>
 </div>
