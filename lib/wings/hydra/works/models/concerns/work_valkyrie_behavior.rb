@@ -30,6 +30,7 @@ module Wings
         child_objects(valkyrie: valkyrie).select(&:work?)
       end
       alias works child_works
+      alias member_works child_works
 
       # @param valkyrie [Boolean] Should the returned ids be for Valkyrie or AF objects?
       # @return [Enumerable<String> | Enumerable<Valkerie::ID] The ids of the works this work contains
