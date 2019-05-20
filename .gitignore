@@ -25,6 +25,9 @@ tmtags
 ## VIM
 *.sw[pon]
 
+## VSCode
+.vscode
+
 ## OSX
 .DS_Store
 nohup.out
