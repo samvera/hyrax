@@ -5,7 +5,6 @@ module Wings
     # TODO: Branch valkyrie6 included the valkyrie resource access controls.  Including this now causes an exception.
     #       Need to explore whether this line should be uncommented.
     # include ::Valkyrie::Resource::AccessControls
-    attribute :id, ::Valkyrie::Types::ID.optional
     attribute :label, ::Valkyrie::Types::Set
     attribute :mime_type, ::Valkyrie::Types::Set
     attribute :format_label, ::Valkyrie::Types::Set # e.g. "JPEG Image"
