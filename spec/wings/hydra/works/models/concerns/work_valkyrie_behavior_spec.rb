@@ -108,6 +108,14 @@ RSpec.describe Wings::Works::WorkValkyrieBehavior, :clean_repo do
         expect(af_objects.map(&:work?)).to all(be true)
         expect(af_objects.map(&:id)).to match_array [work2.id, work3.id]
       end
+
+      context 'when operating on an unsaved work' do
+        let(:pcdm_object) { build(:work, title: ['Unsaved work without children']) }
+        it 'returns an empty array' do
+          af_objects = work.child_works
+          expect(af_objects).to match_array []
+        end
+      end
     end
 
     context 'when active fedora objects are requested' do
