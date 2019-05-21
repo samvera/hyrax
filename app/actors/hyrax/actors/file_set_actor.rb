@@ -23,7 +23,7 @@ module Hyrax
         # If the file set doesn't have a title or label assigned, set a default.
         file_set.label ||= label_for(file)
         file_set.title = [file_set.label] if file_set.title.blank?
-        return false unless save(file_set) # Need to save to get an id
+        return false unless save(file_set, use_valkyrie: false) # Need to save to get an id
         if from_url
           # If ingesting from URL, don't spawn an IngestJob; instead
           # reach into the FileActor and run the ingest with the file instance in
@@ -75,13 +75,13 @@ module Hyrax
           # Ensure we have an up-to-date copy of the members association, so that we append to the end of the list.
           work = reload(work) unless work.new_record?
           file_set.visibility = work.visibility unless assign_visibility?(file_set_params)
-          save(file_set)
+          save(file_set, use_valkyrie: false)
           work.ordered_members << file_set
           work.representative = file_set if work.representative_id.blank?
           work.thumbnail = file_set if work.thumbnail_id.blank?
           # Save the work so the association between the work and the file_set is persisted (head_id)
           # NOTE: the work may not be valid, in which case this save doesn't do anything.
-          save(work)
+          save(work, use_valkyrie: false)
           Hyrax.config.callback.run(:after_create_fileset, file_set, user)
         end
       end
@@ -162,7 +162,7 @@ module Hyrax
           work.thumbnail = nil if work.thumbnail_id == file_set.id
           work.representative = nil if work.representative_id == file_set.id
           work.rendering_ids -= [file_set.id]
-          save(work)
+          save(work, use_valkyrie: false)
         end
 
         def save(af_object, use_valkyrie: false)
