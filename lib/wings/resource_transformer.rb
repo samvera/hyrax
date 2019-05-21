@@ -118,7 +118,14 @@ module Wings
     # class derived from ActiveFedora::Base
     # @return [ActiveFedora::Base]
     def build
-      klass.new(**attributes)
+      built = klass.new(**attributes)
+
+      # Permissions are handled separately by hydra-access-controls
+      built.read_users = valkyrie_resource.attributes.fetch(:read_users, [])
+      built.read_groups = valkyrie_resource.attributes.fetch(:read_groups, [])
+      built.edit_users = valkyrie_resource.attributes.fetch(:edit_users, [])
+      built.edit_groups = valkyrie_resource.attributes.fetch(:edit_groups, [])
+      built
     end
 
     private

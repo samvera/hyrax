@@ -163,9 +163,11 @@ module Wings
         klass.properties.each_key do |property_name|
           attribute property_name.to_sym, ::Valkyrie::Types::String
         end
+
         relationship_keys.each do |linked_property_name|
           attribute linked_property_name.to_sym, ::Valkyrie::Types::Set.of(::Valkyrie::Types::ID)
         end
+
         reflection_id_keys.each do |property_name|
           attribute property_name, ::Valkyrie::Types::ID
         end
@@ -193,6 +195,10 @@ module Wings
     class ActiveFedoraResource < ::Valkyrie::Resource
       attribute :alternate_ids, ::Valkyrie::Types::Array
       attribute :visibility,    ::Valkyrie::Types::Symbol
+      attribute :read_users, ::Valkyrie::Types::Array
+      attribute :read_groups, ::Valkyrie::Types::Array
+      attribute :edit_users, ::Valkyrie::Types::Array
+      attribute :edit_groups, ::Valkyrie::Types::Array
     end
 
     class AttributeTransformer
@@ -215,12 +221,14 @@ module Wings
           pcdm_object.attributes.keys +
           self.class.relationship_keys_for(reflections: pcdm_object.reflections)
 
+        # We want members in order, so extract from ordered_members.
         ordered_member_ids = pcdm_object.try(:ordered_member_ids)
         ordered_member_ids = ordered_member_ids.map { |ordered_member_id| ::Valkyrie::ID.new(ordered_member_id) } unless ordered_member_ids.nil?
+
         AttributeTransformer.run(pcdm_object, all_keys)
                             .merge reflection_ids
           .merge(additional_attributes)
-          .merge(member_ids: ordered_member_ids) # We want members in order, so extract from ordered_members.
+          .merge(member_ids: ordered_member_ids)
       end
 
       def reflection_ids
@@ -230,13 +238,15 @@ module Wings
       end
 
       def additional_attributes
-        { created_at: pcdm_object.try(:create_date),
+        {
+          created_at: pcdm_object.try(:create_date),
           updated_at: pcdm_object.try(:modified_date),
           visibility: pcdm_object.try(:visibility),
           read_groups: pcdm_object.try(:read_groups),
           read_users: pcdm_object.try(:read_users),
           edit_groups: pcdm_object.try(:edit_groups),
-          edit_users: pcdm_object.try(:edit_users) } # We want members in order, so extract from ordered_members.
+          edit_users: pcdm_object.try(:edit_users)
+        }
       end
 
       def klass

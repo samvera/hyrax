@@ -11,6 +11,10 @@ RSpec.describe Wings::Valkyrie::Persister do
         include Hyrax::CoreMetadata
         include Hydra::WithDepositor
         property :title, predicate: ::RDF::Vocab::DC.title, multiple: true
+        # property :read_users, predicate:
+        # property :read_groups
+        # property :edit_users
+        # property :edit_groups
       end
     end
 
