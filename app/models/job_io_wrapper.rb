@@ -1,4 +1,5 @@
 require 'wings/models/file_node'
+# require 'wings/services/file_node_builder'
 require 'wings/valkyrie/query_service'
 
 # Primarily for jobs like IngestJob to revivify an equivalent FileActor to one that existed on
@@ -32,7 +33,7 @@ class JobIoWrapper < ApplicationRecord
   #
   # @param [User] user - The user requesting to create this instance
   # @param [#path, Hyrax::UploadedFile] file - The file that is to be uploaded
-  # @param [String] relation
+  # @param [RDF::URI] relation
   # @param [FileSet] file_set - The associated file set
   # @return [JobIoWrapper]
   # @raise ActiveRecord::RecordInvalid - if the instance is not valid
@@ -68,7 +69,8 @@ class JobIoWrapper < ApplicationRecord
   end
 
   def file_actor
-    Hyrax::Actors::FileActor.new(file_set, relation.to_sym, user)
+    # Hyrax::Actors::FileActor.new(file_set, relation.to_sym, user)
+    Hyrax::Actors::FileActor.new(file_set, RDF::URI.new(relation), user)
   end
 
   # @return [FileNode, FalseClass] the created file node on success, false on failure
@@ -115,6 +117,6 @@ class JobIoWrapper < ApplicationRecord
     end
 
     def static_defaults
-      self.relation ||= 'original_file'
+      self.relation ||= Valkyrie::Vocab::PCDMUse.OriginalFile.to_s
     end
 end

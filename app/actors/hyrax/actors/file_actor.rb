@@ -10,7 +10,7 @@ module Hyrax
       # @param [FileSet] file_set the parent FileSet
       # @param [Symbol, #to_sym] relation the type/use for the file
       # @param [User] user the user to record as the Agent acting upon the file
-      def initialize(file_set, relation, user, use_valkyrie: false)
+      def initialize(file_set, relation, user, use_valkyrie: true)
         @file_set = file_set
         @relation = normalize_relation(relation, use_valkyrie: use_valkyrie)
         @user = user
@@ -83,7 +83,8 @@ module Hyrax
           unsaved_node = io.to_file_node
           unsaved_node.use = relation
           begin
-            saved_node = node_builder.create(file: io.file, node: unsaved_node, file_set: file_set)
+            # saved_node = node_builder.create(file: io.file, node: unsaved_node, file_set: file_set)
+            saved_node = node_builder.create(io: io, node: unsaved_node, file_set: file_set)
           rescue StandardError => e # Handle error persisting file node
             Rails.logger.error("Failed to save file_node through valkyrie: #{e.message}")
             return false
