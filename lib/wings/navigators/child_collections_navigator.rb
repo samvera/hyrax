@@ -18,7 +18,7 @@ module Wings
     # TODO: By storing all children in a single relationship, it requires that the full resource be constructed for all children
     #       and then selecting only the children of a particular type to return.
     def find_child_collections(resource:)
-      query_service.find_members(resource: resource).select(&:collection?)
+      query_service.find_inverse_references_by(resource: resource, property: :member_of_collection_ids).select(&:collection?)
     end
 
     # Find the ids of child collections of a given resource, and map to Valkyrie Resources
