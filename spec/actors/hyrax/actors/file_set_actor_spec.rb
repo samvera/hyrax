@@ -28,7 +28,6 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     end
   end
 
-
   describe "creating metadata, content and attaching to a work" do
     let(:work) { create(:generic_work) }
     let(:date_today) { DateTime.current }
@@ -243,7 +242,6 @@ RSpec.describe Hyrax::Actors::FileSetActor do
     end
   end
 
-
   describe "#destroy" do
     [true, false].each do |use_valkyrie|
       context "when use_valkyrie = #{use_valkyrie}" do
@@ -309,7 +307,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
         context 'with representative and thumbnail' do
           it 'does not (re)assign them' do
             allow(work).to receive(:thumbnail_id).and_return('ab123c78h')
-             allow(work).to receive(:representative_id).and_return('zz365c78h')
+            allow(work).to receive(:representative_id).and_return('zz365c78h')
             expect(work).not_to receive(:representative=)
             expect(work).not_to receive(:thumbnail=)
             actor.attach_to_work(work)
