@@ -374,7 +374,7 @@ RSpec.describe Wings::Valkyrie::Persister do
 
       describe "#save" do
         context "when creating a resource" do
-          xit "returns the value of the system-generated optimistic locking attribute on the resource" do
+          it "returns the value of the system-generated optimistic locking attribute on the resource" do
             resource = MyLockingResource.new(title: ["My Locked Resource"])
             saved_resource = persister.save(resource: resource)
             expect(saved_resource[Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK]).not_to be_empty
@@ -382,7 +382,7 @@ RSpec.describe Wings::Valkyrie::Persister do
         end
 
         context "when updating a resource with a correct lock token" do
-          xit "successfully saves the resource and returns the updated value of the optimistic locking attribute" do
+          it "successfully saves the resource and returns the updated value of the optimistic locking attribute" do
             resource = MyLockingResource.new(title: ["My Locked Resource"])
             initial_resource = persister.save(resource: resource)
             updated_resource = persister.save(resource: initial_resource)
@@ -392,31 +392,38 @@ RSpec.describe Wings::Valkyrie::Persister do
         end
 
         context "when updating a resource with an incorrect lock token" do
-          xit "raises a Valkyrie::Persistence::StaleObjectError" do
+          it "raises a Valkyrie::Persistence::StaleObjectError" do
             resource = MyLockingResource.new(title: ["My Locked Resource"])
             resource = persister.save(resource: resource)
-            # update the resource in the datastore to make its token stale
-            persister.save(resource: resource)
+            # @see valkyrie/spec/valkyrie/persistence/fedora/persister_spec.rb
+            other_resource = resource.dup
+            other_resource.title = ["Updated Locking Resource"]
+            resource_lock = Valkyrie::Persistence::OptimisticLockToken.deserialize(resource[Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK])
+            new_token = Valkyrie::Persistence::OptimisticLockToken.new(
+              adapter_id: resource_lock.adapter_id,
+              token: "token"
+            )
+            other_resource.send("#{Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK}=", [new_token])
 
-            expect { persister.save(resource: resource) }.to raise_error(Valkyrie::Persistence::StaleObjectError, "The object #{resource.id} has been updated by another process.")
+            expect { persister.save(resource: other_resource) }.to raise_error(Valkyrie::Persistence::StaleObjectError, "The object #{resource.id} has been updated by another process.")
           end
         end
 
         context "when lock token is nil" do
-          xit "successfully saves the resource and returns the updated value of the optimistic locking attribute" do
+          it "successfully saves the resource and returns the updated value of the optimistic locking attribute" do
             resource = MyLockingResource.new(title: ["My Locked Resource"])
             initial_resource = persister.save(resource: resource)
             initial_token = initial_resource[Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK].first
             initial_resource.send("#{Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK}=", [])
             updated_resource = persister.save(resource: initial_resource)
-            expect(initial_token.serialize)
-              .not_to eq(updated_resource[Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK].first.serialize)
+            expect(initial_token)
+              .not_to eq(updated_resource[Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK].first)
             expect(updated_resource[Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK]).not_to be_empty
           end
         end
 
         context "when there is a token, but it's for a different adapter (migration use case)" do
-          xit "successfully saves the resource and returns a token for the adapter that was saved to" do
+          it "successfully saves the resource and returns a token for the adapter that was saved to" do
             resource = MyLockingResource.new(title: ["My Locked Resource"])
             initial_resource = persister.save(resource: resource)
             new_token = Valkyrie::Persistence::OptimisticLockToken.new(
@@ -425,8 +432,8 @@ RSpec.describe Wings::Valkyrie::Persister do
             )
             initial_resource.send("#{Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK}=", [new_token])
             updated_resource = persister.save(resource: initial_resource)
-            expect(new_token.serialize)
-              .not_to eq(updated_resource[Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK].first.serialize)
+            expect(new_token)
+              .not_to eq(updated_resource[Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK].first)
             expect(updated_resource[Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK]).not_to be_empty
           end
         end
@@ -434,7 +441,7 @@ RSpec.describe Wings::Valkyrie::Persister do
 
       describe "#save_all" do
         context "when creating multiple resources" do
-          xit "returns an array of resources with their system-generated optimistic locking attributes" do
+          it "returns an array of resources with their system-generated optimistic locking attributes" do
             resource1 = MyLockingResource.new(title: ["My Locked Resource 1"])
             resource2 = MyLockingResource.new(title: ["My Locked Resource 2"])
             resource3 = MyLockingResource.new(title: ["My Locked Resource 3"])
@@ -446,7 +453,7 @@ RSpec.describe Wings::Valkyrie::Persister do
         end
 
         context "when updating multiple resources that all have a correct lock token" do
-          xit "saves the resources and returns them with updated values of the optimistic locking attribute" do
+          it "saves the resources and returns them with updated values of the optimistic locking attribute" do
             resource1 = MyLockingResource.new(title: ["My Locked Resource 1"])
             resource2 = MyLockingResource.new(title: ["My Locked Resource 2"])
             resource3 = MyLockingResource.new(title: ["My Locked Resource 3"])
@@ -463,16 +470,21 @@ RSpec.describe Wings::Valkyrie::Persister do
         end
 
         context "when one of the resources has an incorrect lock token" do
-          xit "raises a Valkyrie::Persistence::StaleObjectError" do
+          it "raises a Valkyrie::Persistence::StaleObjectError" do
             resource1 = MyLockingResource.new(title: ["My Locked Resource 1"])
             resource2 = MyLockingResource.new(title: ["My Locked Resource 2"])
             resource3 = MyLockingResource.new(title: ["My Locked Resource 3"])
             resource1, resource2, resource3 = persister.save_all(resources: [resource1, resource2, resource3])
-            # update a resource in the datastore to make its token stale
-            persister.save(resource: resource2)
 
+            # Manually insert a new token to render the lock stale
+            resource_lock = Valkyrie::Persistence::OptimisticLockToken.deserialize(resource2[Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK])
+            new_token = Valkyrie::Persistence::OptimisticLockToken.new(
+              adapter_id: resource_lock.adapter_id,
+              token: "token"
+            )
+            resource2.send("#{Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK}=", [new_token])
             expect { persister.save_all(resources: [resource1, resource2, resource3]) }
-              .to raise_error(Valkyrie::Persistence::StaleObjectError, "One or more resources have been updated by another process.")
+              .to raise_error(Valkyrie::Persistence::StaleObjectError)
           end
         end
       end

@@ -83,6 +83,9 @@ module Wings
       property :ordered_authors, predicate: ::RDF::Vocab::DC.creator
       property :ordered_nested, predicate: ::RDF::URI("http://example.com/ordered_nested")
       property :nested_resource, predicate: ::RDF::URI("http://example.com/nested_resource"), class_name: "Wings::ActiveFedoraConverter::NestedResource"
+      # The Fedora adapter for Valkyrie uses predicates with namespaces such as
+      # the following: http://example.com/predicate/updated_at
+      property :optimistic_lock_token, predicate: ::RDF::URI("http://example.com/valkyrie/hasOptimisticLockToken")
       include ::Hyrax::BasicMetadata
       accepts_nested_attributes_for :nested_resource
 
@@ -134,6 +137,11 @@ module Wings
         normalized = {}
         attributes.each_pair do |attr, value|
           property = active_fedora_class.properties[attr.to_s]
+          # Handles cases for OptimisticLockToken objects
+          if attr == ::Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK
+            lock_values = Array.wrap(value)
+            value = lock_values.map { |val| val.serialize if val.is_a?(::Valkyrie::Persistence::OptimisticLockToken) }
+          end
           # This handles some cases where the attributes do not directly map to an
           #   RDF property value
           normalized[attr] = value

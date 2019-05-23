@@ -19,6 +19,17 @@ module Wings
       # @return [Valkyrie::Resource] the persisted/updated resource
       def save(resource:)
         return save_file(file_node: resource) if resource.is_a? Wings::FileNode
+
+        # Update the lock for atomic updates
+        # Should the lock in the object state be one in the same for this timestamp,
+        # then a race condition has occurred
+        # The downside is that we don't permit a series of updates which happen
+        # within the range of the Time.new.to_r accuracy
+        if resource.attributes.key?(::Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK)
+          raise ::Valkyrie::Persistence::StaleObjectError, "The object #{resource.id} has been updated by another process." unless valid_lock?(resource)
+          resource.optimistic_lock_token = generate_lock_token
+        end
+
         af_object = resource_factory.from_resource(resource: resource)
         af_object.save!
         resource_factory.to_resource(object: af_object)
@@ -63,6 +74,54 @@ module Wings
           super(msg)
         end
       end
+
+      private
+
+        # Access the Valkyrie query service from the metadata persister
+        # @return [Wings::Valkyrie::QueryService]
+        def query_service
+          adapter.query_service
+        end
+
+        # Determines whether or not the resource being saved has a valid lock
+        # for persisted
+        # @param resource [Valkyrie::Resource]
+        # @return [Boolean]
+        def valid_lock?(resource)
+          return true unless resource.optimistic_locking_enabled?
+          return true if resource.id.nil?
+
+          current_lock_tokens = resource[::Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK]
+          current_lock_tokens = Array.wrap(current_lock_tokens)
+          current_lock_token = current_lock_tokens.first
+          return true if current_lock_token.nil?
+
+          # Retrieve any existing lock tokens from the query service
+          persisted = query_service.find_by(id: resource.id)
+          retrieved_lock_tokens = persisted[::Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK]
+
+          return true if retrieved_lock_tokens.empty?
+          retrieved_lock_token = retrieved_lock_tokens.first
+
+          retrieved_lock = ::Valkyrie::Persistence::OptimisticLockToken.deserialize(retrieved_lock_token)
+          current_lock = ::Valkyrie::Persistence::OptimisticLockToken.deserialize(current_lock_token)
+          # For cases such as migrations, optimistic locking is not supported when
+          # two separate persistence adapters modify the same resource
+          return true if current_lock.adapter_id != retrieved_lock.adapter_id
+
+          # This logic is usually row-specific for ActiveRecord
+          # @see https://github.com/rails/rails/blob/master/activerecord/lib/active_record/locking/optimistic.rb#L95
+          # For Valkyrie resources, the last atomic update to the underlying data
+          # store should leave the token in the same
+          current_lock == retrieved_lock
+        end
+
+        # Generates a new optimistic lock token
+        # @see Valkyrie::Persistence::Fedora::Persister#generate_lock_token(resource)
+        # @return [OptimisticLockToken]
+        def generate_lock_token
+          ::Valkyrie::Persistence::OptimisticLockToken.new(adapter_id: adapter.id, token: Time.current.to_r)
+        end
     end
   end
 end
