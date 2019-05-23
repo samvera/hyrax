@@ -74,7 +74,7 @@ module Hyrax
       def attach_to_work(work, file_set_params = {})
         acquire_lock_for(work.id) do
           # Ensure we have an up-to-date copy of the members association, so that we append to the end of the list.
-          work = reload(work) unless work.new_record?
+          work.reload unless work.new_record?
           file_set.visibility = work.visibility unless assign_visibility?(file_set_params)
           save(file_set, use_valkyrie: @use_valkyrie)
           work.ordered_members << file_set
@@ -175,18 +175,6 @@ module Hyrax
           true
         rescue StandardError
           false
-        end
-
-        # Per the comment in attach_to_work, reload is needed to ensure that associations
-        # are up-to-date.
-        def reload(af_object)
-          return af_object unless af_object.persisted?
-
-          adapter = Hyrax.config.valkyrie_metadata_adapter
-          resource = adapter.query_service.find_by(id: af_object.id)
-          af_object.clear_association_cache
-          af_object.association_cache.merge! adapter.resource_factory.from_resource(resource: resource).association_cache
-          af_object
         end
 
         def file_set_destroy
