@@ -167,7 +167,7 @@ module Hyrax
         end
 
         def save(af_object, use_valkyrie: @use_valkyrie)
-          af_object.save unless use_valkyrie
+          return af_object.save unless use_valkyrie
 
           adapter = Hyrax.config.valkyrie_metadata_adapter
           resource = adapter.persister.save(resource: af_object.valkyrie_resource)
