@@ -83,10 +83,10 @@ module Hyrax
           unsaved_node = io.to_file_node
           unsaved_node.use = relation
           begin
-            # saved_node = node_builder.create(file: io.file, node: unsaved_node, file_set: file_set)
-            saved_node = node_builder.create(io: io, node: unsaved_node, file_set: file_set)
+            saved_node = node_builder.create(io_wrapper: io, node: unsaved_node, file_set: file_set)
           rescue StandardError => e # Handle error persisting file node
-            Rails.logger.error("Failed to save file_node through valkyrie: #{e.message}")
+            # Rails.logger.error("Failed to save file_node through valkyrie: #{e.message}")
+            Rails.logger.error("\n\n****************\n\nFailed to save file_node through valkyrie: #{e.message}\n\n****************\n\n")
             return false
           end
           Hyrax::VersioningService.create(saved_node, user)

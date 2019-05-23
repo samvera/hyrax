@@ -3,21 +3,26 @@
 module Wings
   # Stores a file and an associated FileNode
   class FileNodeBuilder
+    include Hyrax::Noid
+
     attr_reader :storage_adapter, :persister
     def initialize(storage_adapter:, persister:)
       @storage_adapter = storage_adapter
       @persister = persister
     end
 
-    # @param io [JobIOWrapper]
+    # @param io_wrapper [JobIOWrapper] with details about the uploaded file
     # @param node [FileNode] the metadata to represent the file
     # @param file_set [FileNode] the associated FileSet
     # @return [FileNode] the persisted metadata node that represents the file
-    def create(io:, node:, file_set:)
-      file = build_file(io, node.use)
+    def create(io_wrapper:, node:, file_set:)
+      file = build_file(io_wrapper, node.use)
+node.id = ::Valkyrie::ID.new(assign_id)
       stored_file = storage_adapter.upload(file: file,
-                                           original_filename: io.original_name,
-                                           resource: node)
+                                           original_filename: file.original_filename,
+                                           # content_type: file.content_type,
+                                           resource: node,
+                                           id_transformer: Hyrax.config.translate_id_to_uri)
       node.file_identifiers = [stored_file.id]
       attach_file_node(node: node, file_set: file_set)
     end
@@ -37,15 +42,16 @@ module Wings
 
       # Class for wrapping the file being ingested
       class IoDecorator < SimpleDelegator
-        attr_reader :original_filename, :content_type, :use, :tempfile
+        attr_reader :original_filename, :content_type, :content_length, :use, :tempfile
 
         # @param [IO] io stream for the file content
         # @param [String] original_filename
         # @param [String] content_type
         # @param [RDF::URI] use the URI for the PCDM predicate indicating the use for this resource
-        def initialize(io, original_filename, content_type, use)
+        def initialize(io, original_filename, content_type, content_length, use)
           @original_filename = original_filename
           @content_type = content_type
+          @content_length = content_length
           @use = use
           @tempfile = io
           super(io)
@@ -53,10 +59,10 @@ module Wings
       end
 
       # Constructs the IoDecorator for ingesting the intermediate file
-      # @return [IoDecorator]
-      def build_file(io, use)
-        # IoDecorator.new(file_stream, original_filename, file_content_type.to_s, use)
-        IoDecorator.new(io.file, io.original_name, io.mime_type, use)
+      # @param [JobIOWrapper] io wrapper with details about the uploaded file
+      # @param [RDF::URI] use the URI for the PCDM predicate indicating the use for this resource
+      def build_file(io_wrapper, use)
+        IoDecorator.new(io_wrapper.file, io_wrapper.original_name, io_wrapper.mime_type, io_wrapper.size, use)
       end
   end
 end

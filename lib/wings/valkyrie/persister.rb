@@ -28,6 +28,10 @@ module Wings
 
       def save_file(file_node:)
         # TODO: SKIP for now
+        # check for existing af File and create if non-existent
+        # convert file_node resource into af File metadata
+        # save af File
+
       end
 
       # Persists a resource using ActiveFedora

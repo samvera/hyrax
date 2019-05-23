@@ -1,5 +1,4 @@
 require 'wings/models/file_node'
-# require 'wings/services/file_node_builder'
 require 'wings/valkyrie/query_service'
 
 # Primarily for jobs like IngestJob to revivify an equivalent FileActor to one that existed on
@@ -26,7 +25,7 @@ class JobIoWrapper < ApplicationRecord
   validates :file_set_id, presence: true
 
   after_initialize :static_defaults
-  delegate :read, :size, to: :file
+  delegate :read, to: :file
 
   # Responsible for creating a JobIoWrapper from the given parameters, with a
   # focus on sniffing out attributes from the given :file.
@@ -58,6 +57,12 @@ class JobIoWrapper < ApplicationRecord
 
   def mime_type
     super || extracted_mime_type
+  end
+
+  def size
+    return file.size.to_s if file.respond_to? :size
+    return file.stat.size.to_s if file.respond_to? :stat
+    nil # unable to determine
   end
 
   def file_set(use_valkyrie: false)
