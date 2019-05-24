@@ -1,4 +1,5 @@
 require 'wings/active_fedora_converter'
+require 'wings/navigators/child_collections_navigator'
 
 module Wings
   module Pcdm
@@ -39,6 +40,23 @@ module Wings
         member_of_collection_ids.map(&:id)
       end
       # alias member_of_collection_ids child_object_ids # TODO: Cannot alias in this way because member_of_collection_ids method is already defined thru the attribute definition.
+
+      ##
+      # @return [Enumerable<ActiveFedora::Base> | Enumerable<Valkyrie::Resource>] an enumerable over the child collections
+      def child_collections(valkyrie: false)
+        @child_collections_navigator ||= ChildCollectionsNavigator.new(query_service: ::Valkyrie.config.metadata_adapter.query_service)
+        resources = @child_collections_navigator.find_child_collections(resource: self)
+        return resources if valkyrie
+        resources.map { |r| Wings::ActiveFedoraConverter.new(resource: r).convert }
+      end
+      alias collections child_collections
+
+      ##
+      # @return [Enumerable<String> | Enumerable<Valkyrie::ID] the child collection ids
+      def child_collection_ids(valkyrie: false)
+        child_collections(valkyrie: valkyrie).map(&:id)
+      end
+      alias collection_ids child_collection_ids
 
       ##
       # Gives the subset of #members that are PCDM objects

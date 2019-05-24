@@ -117,7 +117,7 @@ module Wings
       #   other resources.
       # @param property [Symbol] The property which, on other resources, is
       #   referencing the given `resource`. Note: the property needs to be
-      #   indexed as a `*_ssim` field
+      #   indexed as a `*_ssim` field and indexing either ActiveFedora IDs or full URIs
       # @raise [ArgumentError] Raised when the ID is not in the persistence backend.
       # @return [Array<Valkyrie::Resource>] All resources in the persistence backend
       #   which have the ID of the given `resource` in their `property` property. Not
@@ -127,7 +127,7 @@ module Wings
         id ||= resource.alternate_ids.first
         raise ArgumentError, "Resource has no id; is it persisted?" unless id
         uri = ActiveFedora::Base.id_to_uri(id.to_s)
-        ActiveFedora::Base.where("#{property}_ssim: \"#{uri}\"").map do |obj|
+        ActiveFedora::Base.where("+(#{property}_ssim: \"#{uri}\" OR #{property}_ssim: \"#{id}\")").map do |obj|
           resource_factory.to_resource(object: obj)
         end
       end
