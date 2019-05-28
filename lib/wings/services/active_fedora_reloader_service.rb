@@ -2,9 +2,7 @@
 
 module Wings
   class ActiveFedoraReloaderService
-  ##
-  # For replacing calls to reload on ActiveFedora objects
-  #
+    # For replacing calls to reload on ActiveFedora objects
 
     def self.reload(af_object)
       return af_object unless af_object.persisted?
