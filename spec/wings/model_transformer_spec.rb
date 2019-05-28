@@ -3,7 +3,7 @@ require 'wings_helper'
 require 'wings/model_transformer'
 
 RSpec.describe Wings::ModelTransformer do
-  let(:factory)     { described_class.new(pcdm_object: pcdm_object) }
+  subject(:factory) { described_class.new(pcdm_object: pcdm_object) }
   let(:pcdm_object) { work }
   let(:adapter)     { Valkyrie::MetadataAdapter.find(:memory) }
   let(:id)          { 'moomin123' }
@@ -27,8 +27,6 @@ RSpec.describe Wings::ModelTransformer do
       source: [1.125, :moomin]
     }
   end
-
-  subject { factory }
 
   before(:context) do
     Valkyrie::MetadataAdapter.register(
@@ -117,16 +115,20 @@ RSpec.describe Wings::ModelTransformer do
                             source: work.source
     end
 
+    # rubocop:disable RSpec/AnyInstance
     context 'without an existing id' do
       let(:id)        { nil }
       let(:minted_id) { 'bobross' }
 
       before do
-        allow(factory).to receive(:minted_id).and_return(minted_id)
+        allow_any_instance_of(::Noid::Rails.config.minter_class)
+          .to receive(:mint)
+          .and_return(minted_id)
       end
 
       it { expect(factory.build).to have_a_valkyrie_alternate_id_of minted_id }
     end
+    # rubocop:enable RSpec/AnyInstance
 
     context 'with an embargo' do
       let(:work) { FactoryBot.create(:embargoed_work) }
@@ -177,6 +179,19 @@ RSpec.describe Wings::ModelTransformer do
       expect(resource[:thumbnail_id].to_s).to eq(work.thumbnail_id)
       expect(resource[:access_control_id].to_s).to eq(work.access_control_id)
       expect(resource[:admin_set_id].to_s).to eq(work.admin_set_id)
+    end
+  end
+
+  context 'with a generic work that has open visibility' do
+    before { work.visibility = "open" }
+
+    it 'sets the visibility' do
+      resource = factory.build
+
+      expect(resource.read_groups).to contain_exactly(*work.read_groups)
+      expect(resource.read_users).to contain_exactly(*work.read_users)
+      expect(resource.edit_groups).to contain_exactly(*work.edit_groups)
+      expect(resource.edit_users).to contain_exactly(*work.edit_users)
     end
   end
 

@@ -34,7 +34,7 @@ module Wings
     end
 
     ##
-    # Accesses and parses the attributes from the resource through ConvetrerValueMapper
+    # Accesses and parses the attributes from the resource through ConverterValueMapper
     # @return [Hash]
     def attributes
       @attribs ||= begin
