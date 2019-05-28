@@ -295,11 +295,13 @@ RSpec.describe Hyrax::Actors::FileSetActor do
       before do # another version of the same work is saved with a member
         work_v2 = ActiveFedora::Base.find(work_v1.id)
         work_v2.ordered_members << create(:file_set)
+        work_v2.description = ["3 kittens"]
         work_v2.save!
       end
 
       it "writes to the most up to date version" do
         actor.attach_to_work(work_v1)
+        expect(work_v1.description).to eq ["3 kittens"]
         expect(work_v1.members.size).to eq 2
       end
     end

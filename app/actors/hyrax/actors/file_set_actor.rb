@@ -1,3 +1,4 @@
+require 'wings/services/active_fedora_reloader_service'
 module Hyrax
   module Actors
     # Actions are decoupled from controller logic so that they may be called from a controller or a background job.
@@ -71,7 +72,7 @@ module Hyrax
       def attach_to_work(work, file_set_params = {})
         acquire_lock_for(work.id) do
           # Ensure we have an up-to-date copy of the members association, so that we append to the end of the list.
-          work.reload unless work.new_record?
+          Wings::ActiveFedoraReloaderService.reload(work) unless work.new_record?
           file_set.visibility = work.visibility unless assign_visibility?(file_set_params)
           work.ordered_members << file_set
           work.representative = file_set if work.representative_id.blank?
