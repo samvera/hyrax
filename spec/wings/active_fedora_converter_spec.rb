@@ -60,16 +60,33 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       end
     end
 
-    context 'with a generic work that has open visibility' do
+    context 'when specifying visibility' do
       let(:attributes) do
         FactoryBot.attributes_for(:generic_work)
       end
-      before do
-        work.visibility = "open"
-      end
+
+      let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
+
+      before { work.visibility = visibility }
 
       it 'sets the visibility' do
-        expect(converter.convert).to have_attributes(visibility: work.visibility)
+        expect(converter.convert).to have_attributes(visibility: visibility)
+      end
+
+      context 'when restricted' do
+        let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
+
+        it 'sets the visibility' do
+          expect(converter.convert).to have_attributes(visibility: visibility)
+        end
+      end
+
+      context 'when private' do
+        let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
+
+        it 'sets the visibility' do
+          expect(converter.convert).to have_attributes(visibility: visibility)
+        end
       end
     end
 

@@ -34,7 +34,7 @@ module Wings
     end
 
     ##
-    # Accesses and parses the attributes from the resource through ConverterValueMapper
+    # Accesses and parses the attributes from the resource through ConvetrerValueMapper
     # @return [Hash]
     def attributes
       @attribs ||= begin
@@ -149,7 +149,6 @@ module Wings
 
       # Add attributes from resource which aren't AF properties into af_object
       def add_access_control_attributes(af_object)
-        af_object.visibility = attributes[:visibility] unless attributes[:visibility].blank?
         af_object.read_users = attributes[:read_users] unless attributes[:read_users].blank?
         af_object.edit_users = attributes[:edit_users] unless attributes[:edit_users].blank?
         af_object.read_groups = attributes[:read_groups] unless attributes[:read_groups].blank?
