@@ -17,7 +17,7 @@ module Hyrax
     end
 
     def self.depositor_field
-      @depositor_field ||= ActiveFedora.index_field_mapper.solr_name('depositor', :symbol).freeze
+      @depositor_field ||= Hyrax.config.index_field_mapper.solr_name('depositor', :symbol).freeze
     end
 
     private

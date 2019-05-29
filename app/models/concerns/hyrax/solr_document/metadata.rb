@@ -10,7 +10,7 @@ module Hyrax
         end
 
         def solr_name(*args)
-          ActiveFedora.index_field_mapper.solr_name(*args)
+          Hyrax.config.index_field_mapper.solr_name(*args)
         end
       end
 
