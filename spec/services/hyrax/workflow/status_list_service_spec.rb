@@ -41,18 +41,6 @@ RSpec.describe Hyrax::Workflow::StatusListService do
         expect(results.first.to_s).to eq 'Hey dood!'
         expect(results.first.workflow_state).to eq 'initial'
       end
-
-      describe '#search_solr' do
-        let(:mock_response) { { 'response' => { 'docs' => [{}, {}, {}] } } }
-
-        it 'queries Solr via HTTP POST method' do
-          allow(Hyrax::SolrService).to receive(:post).and_return(mock_response)
-          allow(Hyrax::SolrService).to receive(:get)
-          service.send(:search_solr)
-          expect(Hyrax::SolrService).to have_received(:post)
-          expect(Hyrax::SolrService).not_to have_received(:get)
-        end
-      end
     end
 
     context "when user doesn't have roles" do
