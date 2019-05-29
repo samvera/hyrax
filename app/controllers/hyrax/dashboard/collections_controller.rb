@@ -279,10 +279,10 @@ module Hyrax
           public_files = []
           uploaded_file_ids.each_with_index do |ufi, i|
             if ufi.include?('public')
-              update_logo_info(ufi, params["alttext"][i], params["linkurl"][i])
+              update_logo_info(ufi, params["alttext"][i], verify_linkurl(params["linkurl"][i]))
               public_files << ufi
             else # brand new one, insert in the database
-              logo_info = create_logo_info(ufi, params["alttext"][i], params["linkurl"][i])
+              logo_info = create_logo_info(ufi, params["alttext"][i], verify_linkurl(params["linkurl"][i]))
               public_files << logo_info.local_path
             end
           end
@@ -457,6 +457,17 @@ module Hyrax
         # @return <Hash> the inputs required for the collection member search builder
         def params_for_query
           params.merge(q: params[:cq])
+        end
+
+        # Only accept HTTP|HTTPS urls;
+        # @return <String> the url
+        def verify_linkurl(linkurl)
+          url = Loofah.scrub_fragment(linkurl, :prune).to_s
+          url if valid_url?(url)
+        end
+
+        def valid_url?(url)
+          (url =~ URI.regexp(['http', 'https']))
         end
     end
   end
