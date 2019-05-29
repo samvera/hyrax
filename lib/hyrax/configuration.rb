@@ -388,6 +388,11 @@ module Hyrax
       @cache_path ||= ->() { Rails.root + 'tmp' + 'uploads' + 'cache' }
     end
 
+    attr_writer :id_field
+    def id_field
+      @id_field || ActiveFedora.id_field
+    end
+
     # Enable IIIF image service. This is required to use the
     # IIIF viewer enabled show page
     #
