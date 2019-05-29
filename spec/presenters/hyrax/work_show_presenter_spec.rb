@@ -320,7 +320,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
     context "solr query" do
       before do
-        expect(ActiveFedora::SolrService).to receive(:query).twice.with(anything, hash_including(rows: 10_000)).and_return([])
+        expect(Hyrax::SolrService).to receive(:query).twice.with(anything, hash_including(rows: 10_000)).and_return([])
       end
 
       it "requests >10 rows" do

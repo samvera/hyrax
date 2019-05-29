@@ -18,8 +18,8 @@ RSpec.describe CatalogController, type: :controller do
     end
 
     before do
-      objects.each { |obj| ActiveFedora::SolrService.add(obj.to_solr) }
-      ActiveFedora::SolrService.commit
+      objects.each { |obj| Hyrax::SolrService.add(obj.to_solr) }
+      Hyrax::SolrService.commit
     end
 
     context 'with a non-work file' do

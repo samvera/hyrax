@@ -55,8 +55,8 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
       let(:document) { { id: id } }
 
       before do
-        ActiveFedora::SolrService.delete(id)
-        ActiveFedora::SolrService.add(document, commit: true)
+        Hyrax::SolrService.delete(id)
+        Hyrax::SolrService.add(document, commit: true)
       end
 
       it { is_expected.to be_a(Samvera::NestingIndexer::Documents::IndexDocument) }
@@ -72,7 +72,7 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
     it 'uses direct add to Solr on non-nested objects but yields the document and parent_ids to allow nesting logic to fire' do
       # The two collections and the work are handled via the nesting indexer.
       # we expect remaining repository objects to reindex via to_solr.
-      expect(ActiveFedora::SolrService).to receive(:add).exactly(count_of_items - 3).times
+      expect(Hyrax::SolrService).to receive(:add).exactly(count_of_items - 3).times
       yielded = []
       described_class.each_perservation_document_id_and_parent_ids do |document_id, parent_ids|
         yielded << [document_id, parent_ids]
@@ -110,7 +110,7 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
 
     before do
       ([parent] + children + not_my_children).each do |doc|
-        ActiveFedora::SolrService.add(doc, commit: true)
+        Hyrax::SolrService.add(doc, commit: true)
       end
     end
 
@@ -145,7 +145,7 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
 
   describe '.write_nesting_document_to_index_layer' do
     let(:work) { create(:work) }
-    let(:query_for_works_solr_document) { ->(id:) { ActiveFedora::SolrService.query(ActiveFedora::SolrQueryBuilder.construct_query_for_ids([id])).first } }
+    let(:query_for_works_solr_document) { ->(id:) { Hyrax::SolrService.query(ActiveFedora::SolrQueryBuilder.construct_query_for_ids([id])).first } }
 
     # rubocop:disable RSpec/ExampleLength
     it 'will append parent_ids, ancestors, pathnames, and deepest_nested_depth to the SOLR document' do

@@ -21,7 +21,7 @@ RSpec.describe Hyrax::Workflow::StatusListService do
     let(:results) { service.each.to_a }
 
     before do
-      ActiveFedora::SolrService.add([document, ability], commit: true)
+      Hyrax::SolrService.add([document, ability], commit: true)
     end
 
     context "when user has roles" do
@@ -46,11 +46,11 @@ RSpec.describe Hyrax::Workflow::StatusListService do
         let(:mock_response) { { 'response' => { 'docs' => [{}, {}, {}] } } }
 
         it 'queries Solr via HTTP POST method' do
-          allow(ActiveFedora::SolrService).to receive(:post).and_return(mock_response)
-          allow(ActiveFedora::SolrService).to receive(:get)
+          allow(Hyrax::SolrService).to receive(:post).and_return(mock_response)
+          allow(Hyrax::SolrService).to receive(:get)
           service.send(:search_solr)
-          expect(ActiveFedora::SolrService).to have_received(:post)
-          expect(ActiveFedora::SolrService).not_to have_received(:get)
+          expect(Hyrax::SolrService).to have_received(:post)
+          expect(Hyrax::SolrService).not_to have_received(:get)
         end
       end
     end

@@ -187,7 +187,7 @@ FactoryBot.define do
     # @param [Class] evaluator holding the transient properties for the current build/creation process
     def self.process_with_solr_document(adminset, evaluator, creator_only = false)
       return unless creator_only || evaluator.with_solr_document
-      ActiveFedora::SolrService.add(solr_document_with_permissions(adminset, evaluator, creator_only), commit: true)
+      Hyrax::SolrService.add(solr_document_with_permissions(adminset, evaluator, creator_only), commit: true)
     end
 
     # Return the admin set's solr document with permissions added, such that...
