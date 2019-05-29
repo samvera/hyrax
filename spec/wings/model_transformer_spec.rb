@@ -143,6 +143,26 @@ RSpec.describe Wings::ModelTransformer do
         expect(subject.build.lease_id.to_s).to eq work.lease.id
       end
     end
+
+    context 'with newly saved embargo' do
+      let(:work) { FactoryBot.build(:embargoed_work) }
+
+      it 'has the correct embargo id' do
+        work.embargo.save
+
+        expect(subject.build.embargo_id.to_s).to eq work.embargo.id
+      end
+    end
+
+    context 'with newly saved lease' do
+      let(:work) { FactoryBot.build(:leased_work) }
+
+      it 'has the correct lease id' do
+        work.lease.save
+
+        expect(subject.build.lease_id.to_s).to eq work.lease.id
+      end
+    end
   end
 
   context 'with _id attributes' do
@@ -157,16 +177,6 @@ RSpec.describe Wings::ModelTransformer do
       expect(resource[:thumbnail_id].to_s).to eq(work.thumbnail_id)
       expect(resource[:access_control_id].to_s).to eq(work.access_control_id)
       expect(resource[:admin_set_id].to_s).to eq(work.admin_set_id)
-    end
-  end
-
-  context 'with a generic work that has open visibility' do
-    before do
-      work.visibility = "open"
-    end
-
-    it 'sets the visibility' do
-      expect(subject.build.visibility).to eq(work.visibility)
     end
   end
 
