@@ -450,6 +450,11 @@ module Hyrax
     end
     attr_writer :iiif_metadata_fields
 
+    attr_writer :index_field_mapper
+    def index_field_mapper
+      @index_field_mapper ||= ActiveFedora.index_field_mapper
+    end
+
     # Should a button with "Share my work" show on the front page to users who are not logged in?
     attr_writer :display_share_button_when_not_logged_in
     def display_share_button_when_not_logged_in?

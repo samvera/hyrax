@@ -44,6 +44,6 @@ class Hyrax::HomepageController < ApplicationController
     end
 
     def sort_field
-      "#{ActiveFedora.index_field_mapper.solr_name('date_uploaded', :stored_sortable, type: :date)} desc"
+      "#{Hyrax.config.index_field_mapper.solr_name('date_uploaded', :stored_sortable, type: :date)} desc"
     end
 end
