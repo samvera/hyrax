@@ -178,7 +178,6 @@ module Wings
 
     class ActiveFedoraResource < ::Valkyrie::Resource
       attribute :alternate_ids, ::Valkyrie::Types::Array
-      attribute :visibility,    ::Valkyrie::Types::Symbol
     end
 
     class AttributeTransformer
