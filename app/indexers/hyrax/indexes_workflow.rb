@@ -1,6 +1,6 @@
 module Hyrax
   module IndexesWorkflow
-    STORED_BOOL = ActiveFedora::Indexing::Descriptor.new(:boolean, :stored, :indexed)
+    STORED_BOOL = Hyrax::Indexing::Descriptor.new(:boolean, :stored, :indexed)
 
     mattr_accessor :suppressed_field, instance_writer: false do
       Hyrax.config.index_field_mapper.solr_name('suppressed', STORED_BOOL)

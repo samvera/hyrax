@@ -457,7 +457,7 @@ module Hyrax
 
     attr_writer :index_field_mapper
     def index_field_mapper
-      @index_field_mapper ||= ActiveFedora.index_field_mapper
+      @index_field_mapper ||= Hyrax::Indexing::Solr.index_field_mapper
     end
 
     # Should a button with "Share my work" show on the front page to users who are not logged in?

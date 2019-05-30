@@ -1,8 +1,12 @@
 ENV["RAILS_ENV"] ||= 'test'
 require "bundler/setup"
 
+def coverage_needed?
+  ENV['COVERAGE'] || ENV['TRAVIS']
+end
+
 def ci_build?
-  ENV['CI']
+  ENV['TRAVIS'] || ENV['CIRCLE']
 end
 
 require 'simplecov'

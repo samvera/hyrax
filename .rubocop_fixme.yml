@@ -25,6 +25,20 @@ Metrics/AbcSize:
   Exclude:
     - 'app/indexers/hyrax/file_set_indexer.rb'
     - 'app/services/hyrax/workflow/permission_query.rb'
+    - 'app/services/hyrax/indexing/solr_mapper.rb'
+    - 'app/services/hyrax/indexing/field_mapper.rb'
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'app/services/hyrax/indexing/solr_mapper.rb'
+    - 'app/services/hyrax/indexing/field_mapper.rb'
+    - 'app/services/hyrax/indexing/suffix.rb'
+
+Metrics/LineLength:
+  Exclude:
+    - 'app/services/hyrax/indexing/solr_mapper.rb'
+    - 'app/services/hyrax/indexing/descriptor.rb'
+    - 'app/services/hyrax/indexing/suffix.rb'
 
 Metrics/ModuleLength:
   Exclude:
@@ -46,13 +60,19 @@ Metrics/MethodLength:
     - 'app/services/hyrax/workflow/permission_query.rb'
     - 'lib/generators/hyrax/install_generator.rb'
     - 'lib/hyrax/rails/routes.rb'
+    - 'app/services/hyrax/indexing/solr_mapper.rb'
+    - 'app/services/hyrax/indexing/field_mapper.rb'
+    - 'app/services/hyrax/indexing/suffix.rb'
     - 'spec/support/**/*'
 
+Metrics/PerceivedComplexity:
+  Exclude:
+    - 'app/services/hyrax/indexing/solr_mapper.rb'
+    - 'app/services/hyrax/indexing/field_mapper.rb'
 
 Naming/PredicateName:
   Exclude:
     - 'app/helpers/hyrax/collections_helper.rb'
-
 
 # TODO: remove when https://github.com/bbatsov/rubocop/issues/4539 is fixed
 Style/FormatStringToken:
