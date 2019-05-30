@@ -395,4 +395,48 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
       end
     end
   end
+
+  describe '#member_collections' do
+    let(:pcdm_object) { collection1 }
+
+    before do
+      collection1.ordered_members = [work1, work2, collection2, collection3]
+      collection1.save!
+    end
+
+    it { expect(resource.member_collections).to eq([collection2, collection3]) }
+  end
+
+  describe '#member_collection_ids' do
+    let(:pcdm_object) { collection1 }
+
+    before do
+      collection1.ordered_members = [work1, work2, collection2, collection3]
+      collection1.save!
+    end
+
+    it { expect(resource.member_collection_ids).to eq([collection2.id, collection3.id]) }
+  end
+
+  describe '#member_works' do
+    let(:pcdm_object) { collection1 }
+
+    before do
+      collection1.ordered_members = [work1, work2, collection2, collection3]
+      collection1.save!
+    end
+
+    it { expect(resource.member_works).to eq([work1, work2]) }
+  end
+
+  describe '#member_work_ids' do
+    let(:pcdm_object) { collection1 }
+
+    before do
+      collection1.ordered_members = [work1, work2, collection2, collection3]
+      collection1.save!
+    end
+
+    it { expect(resource.member_work_ids).to eq([work1.id, work2.id]) }
+  end
 end
