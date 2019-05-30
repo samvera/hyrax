@@ -214,7 +214,8 @@ module Wings
       def additional_attributes
         { created_at: pcdm_object.try(:create_date),
           updated_at: pcdm_object.try(:modified_date),
-          visibility: pcdm_object.try(:visibility),
+          embargo_id: pcdm_object.try(:embargo)&.id || pcdm_object.try(:embargo_id),
+          lease_id:   pcdm_object.try(:lease)&.id   || pcdm_object.try(:lease_id),
           read_groups: pcdm_object.try(:read_groups),
           read_users: pcdm_object.try(:read_users),
           edit_groups: pcdm_object.try(:edit_groups),
