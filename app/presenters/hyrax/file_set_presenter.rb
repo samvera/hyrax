@@ -97,8 +97,8 @@ module Hyrax
 
       def fetch_parent_presenter
         ids = ActiveFedora::SolrService.query("{!field f=member_ids_ssim}#{id}",
-                                              fl: ActiveFedora.id_field)
-                                       .map { |x| x.fetch(ActiveFedora.id_field) }
+                                              fl: Hyrax.config.id_field)
+                                       .map { |x| x.fetch(Hyrax.config.id_field) }
         Hyrax::PresenterFactory.build_for(ids: ids,
                                           presenter_class: WorkShowPresenter,
                                           presenter_args: current_ability).first
