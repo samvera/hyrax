@@ -50,6 +50,7 @@ module Wings
         resources.map { |r| Wings::ActiveFedoraConverter.new(resource: r).convert }
       end
       alias collections child_collections
+      alias member_collections child_collections
 
       ##
       # @return [Enumerable<String> | Enumerable<Valkyrie::ID] the child collection ids
@@ -57,6 +58,7 @@ module Wings
         child_collections(valkyrie: valkyrie).map(&:id)
       end
       alias collection_ids child_collection_ids
+      alias member_collection_ids child_collection_ids
 
       ##
       # Gives the subset of #members that are PCDM objects
@@ -74,6 +76,7 @@ module Wings
       alias ordered_objects child_objects
       alias members child_objects
       alias ordered_members child_objects
+      alias member_works child_objects
 
       ##
       # Gives a subset of #member_ids, where all elements are PCDM objects.
@@ -88,6 +91,7 @@ module Wings
       alias ordered_object_ids child_object_ids
       # alias member_ids child_object_ids # TODO: Cannot alias in this way because member_ids method is already defined thru the attribute definition.
       alias ordered_members_ids child_object_ids
+      alias member_work_ids child_object_ids
 
       ##
       # @return [Enumerable<ActiveFedora::Base> | Enumerable<Valkyrie::Resource>] the collections the
