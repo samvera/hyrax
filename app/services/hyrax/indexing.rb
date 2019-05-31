@@ -11,7 +11,7 @@ module Hyrax
     extend ActiveSupport::Concern
     extend ActiveSupport::Autoload
 
-    class InvalidIndexDescriptor < StandardError; end
+    class InvalidIndexDescriptor < RuntimeError; end
     class UnknownIndexMacro < StandardError; end
 
     eager_autoload do

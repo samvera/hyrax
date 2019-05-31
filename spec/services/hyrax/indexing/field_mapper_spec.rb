@@ -21,6 +21,7 @@ RSpec.describe Hyrax::Indexing::FieldMapper do
       end
     end
 
+    # rubocop:disable RSpec/ExampleLength
     it 'generates pairs of Solr field names and values' do
       expect(field_mapper.solr_names_and_values('subject', '社会生物学', [:stored_searchable])).to eq('subject_tesim' => ['社会生物学'])
       expect(field_mapper.solr_names_and_values('subject', '社会生物学', [:stored_searchable, :sortable])).to eq("subject_si" => "社会生物学", "subject_tesim" => ["社会生物学"])
@@ -30,6 +31,11 @@ RSpec.describe Hyrax::Indexing::FieldMapper do
       current_date_time = DateTime.current
       expect(field_mapper.solr_names_and_values('creation_date', current_date_time, [:stored_searchable])).to eq("creation_date_dtsim" => [current_date_time.strftime('%Y-%m-%dT%H:%M:%S%:z')])
       expect(field_mapper.solr_names_and_values('publicly_accessible', true, [:stored_searchable])).to eq("publicly_accessible_bsi" => true)
+      expect(field_mapper.solr_names_and_values('my_number', (6.022140857 * 10**23).to_f, [:displayable, :searchable])).to eq(
+        "my_number_ssm" => ["6.0221408569999995e+23"],
+        "my_number_fim" => ["6.0221408569999995e+23"]
+      )
     end
+    # rubocop:enable RSpec/ExampleLength
   end
 end
