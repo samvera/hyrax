@@ -30,4 +30,12 @@ RSpec.describe Wings::Pcdm::CollectionValkyrieBehavior, :clean_repo do
   describe '#collections' do
     it { expect(resource.collections).to eq([collection2, collection3]) }
   end
+
+  describe '#ordered_collection_ids' do
+    it { expect(resource.ordered_collection_ids).to eq([collection2.id, collection3.id]) }
+  end
+
+  describe '#ordered_collections' do
+    it { expect(resource.ordered_collections).to eq([collection2, collection3]) }
+  end
 end
