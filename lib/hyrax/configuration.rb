@@ -390,7 +390,7 @@ module Hyrax
 
     attr_writer :id_field
     def id_field
-      @id_field || ActiveFedora.id_field
+      @id_field || index_field_mapper.id_field
     end
 
     # Enable IIIF image service. This is required to use the
