@@ -148,6 +148,38 @@ RSpec.describe JobIoWrapper, type: :model do
     end
   end
 
+  describe '#size' do
+    context 'when file responds to :size' do
+      before do
+        allow(subject.file).to receive(:respond_to?).with(:size).and_return(true)
+        allow(subject.file).to receive(:respond_to?).with(:stat).and_return(false)
+        allow(subject.file).to receive(:size).and_return(123)
+      end
+      it 'returns the size of the file' do
+        expect(subject.size).to eq '123'
+      end
+    end
+    context 'when file responds to :stat' do
+      before do
+        allow(subject.file).to receive(:respond_to?).with(:size).and_return(false)
+        allow(subject.file).to receive(:respond_to?).with(:stat).and_return(true)
+        allow(subject.file).to receive_message_chain(:stat, :size).and_return(456) # rubocop:disable RSpec/MessageChain
+      end
+      it 'returns the size of the file' do
+        expect(subject.size).to eq '456'
+      end
+    end
+    context 'when file responds to neither :size nor :stat' do
+      before do
+        allow(subject.file).to receive(:respond_to?).with(:size).and_return(false)
+        allow(subject.file).to receive(:respond_to?).with(:stat).and_return(false)
+      end
+      it 'returns nil' do
+        expect(subject.size).to eq nil
+      end
+    end
+  end
+
   describe '#file_actor' do
     let(:file_actor) { Hyrax::Actors::FileActor.new(file_set, subject.relation, user) }
 

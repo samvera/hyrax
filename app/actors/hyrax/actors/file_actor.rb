@@ -83,7 +83,7 @@ module Hyrax
           unsaved_node = io.to_file_node
           unsaved_node.use = relation
           begin
-            saved_node = node_builder.create(file: io.file, node: unsaved_node, file_set: file_set)
+            saved_node = node_builder.create(io_wrapper: io, node: unsaved_node, file_set: file_set)
           rescue StandardError => e # Handle error persisting file node
             Rails.logger.error("Failed to save file_node through valkyrie: #{e.message}")
             return false
@@ -104,17 +104,17 @@ module Hyrax
           return :original_file if relation.to_s.casecmp(Valkyrie::Vocab::PCDMUse.original_file.to_s)
           return :extracted_file if relation.to_s.casecmp(Valkyrie::Vocab::PCDMUse.extracted_file.to_s)
           return :thumbnail_file if relation.to_s.casecmp(Valkyrie::Vocab::PCDMUse.thumbnail_file.to_s)
-          :original_file # TODO: This should never happen.  What should be done if none of the other conditions are met?
+          :original_file
         end
 
         def normalize_relation_for_valkyrie(relation)
-          return relation if relation.is_a? RDF::URI
-
-          relation = relation.to_sym
+          # TODO: When this is fully switched to valkyrie, this should probably be removed and relation should always be passed
+          #       in as a valid URI already set to the file's use
+          relation = relation.to_s.to_sym
           return Valkyrie::Vocab::PCDMUse.original_file if relation == :original_file
           return Valkyrie::Vocab::PCDMUse.extracted_file if relation == :extracted_file
           return Valkyrie::Vocab::PCDMUse.thumbnail_file if relation == :thumbnail_file
-          Valkyrie::Vocab::PCDMUse.original_file # TODO: This should never happen.  What should be done if none of the other conditions are met?
+          Valkyrie::Vocab::PCDMUse.original_file
         end
     end
   end

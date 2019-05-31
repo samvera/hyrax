@@ -243,6 +243,11 @@ Hyrax.config do |config|
   # config.translate_uri_to_id = lambda do |id|
   #                                "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/#{Noid::Rails.treeify(id)}"
   #                              end
+  # config.resource_id_to_uri_transformer = lambda do |resource, base_url|
+  #                                           file_id = CGI.escape(resource.file_identifiers.first.to_s)
+  #                                           fs_id = CGI.escape(resource.file_set_id.to_s)
+  #                                           "#{base_url}#{::Noid::Rails.treeify(fs_id)}/files/#{file_id}"
+  #                                         end
 
   ## Fedora import/export tool
   #
