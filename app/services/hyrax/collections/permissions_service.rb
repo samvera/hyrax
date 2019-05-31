@@ -29,7 +29,7 @@ module Hyrax
                   "_query_:\"{!raw f=has_model_ssim}Collection\""
                 end
         query += " AND #{id_clause}"
-        ActiveFedora::SolrService.query(query, fl: 'id', rows: ids.count).map { |hit| hit['id'] }
+        Hyrax::SolrService.query(query, fl: 'id', rows: ids.count).map { |hit| hit['id'] }
       end
       private_class_method :filter_source
 

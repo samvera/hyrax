@@ -4,7 +4,7 @@ module Hyrax
   # @see ProxyDepositRequest
   # @see Hyrax::WorkRelation
   # @see SolrDocument
-  # @see ActiveFedora::SolrService
+  # @see Hyrax::SolrService
   # @see ActiveFedora::SolrQueryBuilder
   # @note This was extracted from the ProxyDepositRequest, which was coordinating lots of effort. It was also an ActiveRecord object that required lots of Fedora/Solr interactions.
   class WorkQueryService
@@ -48,7 +48,7 @@ module Hyrax
       end
 
       def solr_response
-        @solr_response ||= ActiveFedora::SolrService.get(query)
+        @solr_response ||= Hyrax::SolrService.get(query)
       end
 
       def query

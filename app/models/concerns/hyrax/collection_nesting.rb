@@ -43,7 +43,7 @@ module Hyrax
     end
 
     def find_children_of(destroyed_id:)
-      ActiveFedora::SolrService.query(ActiveFedora::SolrQueryBuilder.construct_query(member_of_collection_ids_ssim: destroyed_id))
+      Hyrax::SolrService.query(ActiveFedora::SolrQueryBuilder.construct_query(member_of_collection_ids_ssim: destroyed_id))
     end
 
     # Only models which include Hyrax::CollectionNesting will respond to this method.

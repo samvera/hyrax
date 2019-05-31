@@ -543,6 +543,11 @@ module Hyrax
       ->(id:, extent:) { Samvera::NestingIndexer.reindex_relationships(id: id, extent: extent) }
     end
 
+    attr_writer :solr_select_path
+    def solr_select_path
+      @solr_select_path ||= ActiveFedora.solr_config.fetch(:select_path, 'select')
+    end
+
     private
 
       # @param [Symbol, #to_s] model_name - symbol representing the model

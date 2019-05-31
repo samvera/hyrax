@@ -18,7 +18,7 @@ RSpec.describe Hyrax::DashboardHelperBehavior, type: :helper do
   end
 
   describe "#number_of_works" do
-    let(:conn) { ActiveFedora::SolrService.instance.conn }
+    let(:conn) { Hyrax::SolrService.instance.conn }
     let(:user1) { User.new(email: "abc@test") }
     let(:user2) { User.new(email: "abc@test.123") }
 
@@ -32,7 +32,7 @@ RSpec.describe Hyrax::DashboardHelperBehavior, type: :helper do
   end
 
   describe "#number_of_files" do
-    let(:conn) { ActiveFedora::SolrService.instance.conn }
+    let(:conn) { Hyrax::SolrService.instance.conn }
     let(:user1) { User.new(email: "abc@test") }
     let(:user2) { User.new(email: "abc@test.123") }
 
@@ -46,7 +46,7 @@ RSpec.describe Hyrax::DashboardHelperBehavior, type: :helper do
   end
 
   describe "#number_of_collections" do
-    let(:conn) { ActiveFedora::SolrService.instance.conn }
+    let(:conn) { Hyrax::SolrService.instance.conn }
     let(:user1) { User.new(email: "abc@test") }
     let(:user2) { User.new(email: "abc@test.123") }
 

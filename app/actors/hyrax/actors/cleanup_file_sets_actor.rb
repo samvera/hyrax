@@ -22,7 +22,7 @@ module Hyrax
           curation_concern.list_source.destroy
           # Remove Work from Solr after it was removed from Fedora so that the
           # in_objects lookup does not break when FileSets are destroyed.
-          ActiveFedora::SolrService.delete(curation_concern.id)
+          Hyrax::SolrService.delete(curation_concern.id)
           fs.each(&:destroy)
         end
     end

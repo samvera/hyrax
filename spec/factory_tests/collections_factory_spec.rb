@@ -67,7 +67,7 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
       context 'true' do
         let(:col) { build(:collection_lw, with_solr_document: true) }
 
-        subject { ActiveFedora::SolrService.get("id:#{col.id}")["response"]["docs"].first }
+        subject { Hyrax::SolrService.get("id:#{col.id}")["response"]["docs"].first }
 
         it 'will create a solr document' do
           expect(subject["id"]).to eq col.id
@@ -85,7 +85,7 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
                                                             view_users: [user_vw] })
         end
 
-        subject { ActiveFedora::SolrService.get("id:#{col.id}")["response"]["docs"].first }
+        subject { Hyrax::SolrService.get("id:#{col.id}")["response"]["docs"].first }
 
         it 'will create a solr document' do
           expect(subject["id"]).to eq col.id
@@ -102,7 +102,7 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
       let(:repository) { Blacklight::Solr::Repository.new(blacklight_config) }
       let(:current_ability) { instance_double(Ability, admin?: true) }
       let(:scope) { double('Scope', can?: true, current_ability: current_ability, repository: repository, blacklight_config: blacklight_config) }
-      let(:solr_doc) { ActiveFedora::SolrService.get("id:#{col.id}")["response"]["docs"].first }
+      let(:solr_doc) { Hyrax::SolrService.get("id:#{col.id}")["response"]["docs"].first }
       let(:nesting_attributes) do
         Hyrax::Collections::NestedCollectionQueryService::NestingAttributes.new(id: col.id, scope: scope)
       end

@@ -57,7 +57,7 @@ module Hyrax
             yield(id, parent_ids) if parent_ids.empty?
           else
             Rails.logger.info "Re-indexing via to_solr ... #{id}"
-            ActiveFedora::SolrService.add(object.to_solr, commit: true)
+            Hyrax::SolrService.add(object.to_solr, commit: true)
           end
         end
       end
@@ -97,7 +97,7 @@ module Hyrax
         solr_doc[solr_field_name_for_storing_parent_ids] = parent_ids
         solr_doc[solr_field_name_for_storing_pathnames] = pathnames
         solr_doc[solr_field_name_for_deepest_nested_depth] = depth
-        ActiveFedora::SolrService.add(solr_doc, commit: true)
+        Hyrax::SolrService.add(solr_doc, commit: true)
         solr_doc
       end
 
@@ -132,7 +132,7 @@ module Hyrax
       # @api private
       def self.find_solr_document_by(id:)
         query = ActiveFedora::SolrQueryBuilder.construct_query_for_ids([id])
-        document = ActiveFedora::SolrService.query(query, rows: 1).first
+        document = Hyrax::SolrService.query(query, rows: 1).first
         document = ActiveFedora::Base.find(id).to_solr if document.nil?
         raise "Unable to find SolrDocument with ID=#{id}" if document.nil?
         document
@@ -158,7 +158,7 @@ module Hyrax
       def self.raw_child_solr_documents_of(parent_document:)
         # query Solr for all of the documents included as a member_of_collection parent. Or up to 10000 of them.
         child_query = ActiveFedora::SolrQueryBuilder.construct_query(member_of_collection_ids_ssim: parent_document.id)
-        ActiveFedora::SolrService.query(child_query, rows: 10_000.to_i)
+        Hyrax::SolrService.query(child_query, rows: 10_000.to_i)
       end
       private_class_method :raw_child_solr_documents_of
 

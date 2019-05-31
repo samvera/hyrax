@@ -35,7 +35,7 @@ RSpec.describe 'AdminSets Factory' do # rubocop:disable RSpec/DescribeClass
       context 'true' do
         let(:adminset) { build(:adminset_lw, with_solr_document: true) }
 
-        subject { ActiveFedora::SolrService.get("id:#{adminset.id}")["response"]["docs"].first }
+        subject { Hyrax::SolrService.get("id:#{adminset.id}")["response"]["docs"].first }
 
         it 'will create a solr document' do
           expect(subject["id"]).to eq adminset.id
@@ -53,7 +53,7 @@ RSpec.describe 'AdminSets Factory' do # rubocop:disable RSpec/DescribeClass
                                                           view_users: [user_vw] })
         end
 
-        subject { ActiveFedora::SolrService.get("id:#{adminset.id}")["response"]["docs"].first }
+        subject { Hyrax::SolrService.get("id:#{adminset.id}")["response"]["docs"].first }
 
         it 'will created a solr document' do
           expect(subject["id"]).to eq adminset.id
@@ -79,7 +79,7 @@ RSpec.describe 'AdminSets Factory' do # rubocop:disable RSpec/DescribeClass
 
   describe 'default_adminset' do
     let(:default_adminset) { build(:default_adminset) }
-    let(:solrdoc) { ActiveFedora::SolrService.get("id:#{default_adminset.id}")["response"]["docs"].first }
+    let(:solrdoc) { Hyrax::SolrService.get("id:#{default_adminset.id}")["response"]["docs"].first }
     let(:permission_template) { default_adminset.permission_template }
 
     it 'will create the default adminset with expected metadata' do
@@ -111,7 +111,7 @@ RSpec.describe 'AdminSets Factory' do # rubocop:disable RSpec/DescribeClass
         view_users: [user_vw] }
     end
     let(:legacy_adminset) { build(:no_solr_grants_adminset, user: user, with_permission_template: permissions) }
-    let(:solrdoc) { ActiveFedora::SolrService.get("id:#{legacy_adminset.id}")["response"]["docs"].first }
+    let(:solrdoc) { Hyrax::SolrService.get("id:#{legacy_adminset.id}")["response"]["docs"].first }
 
     it 'will create a permission template with all access' do
       expect { build(:no_solr_grants_adminset, user: user, with_permission_template: permissions) }

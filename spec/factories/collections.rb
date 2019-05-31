@@ -302,7 +302,7 @@ FactoryBot.define do
     def self.process_with_solr_document(collection, evaluator)
       return unless evaluator.with_solr_document
       return if evaluator.with_nesting_attributes.present? && collection.nestable? # will create the solr document there instead
-      ActiveFedora::SolrService.add(solr_document_with_permissions(collection, evaluator), commit: true)
+      Hyrax::SolrService.add(solr_document_with_permissions(collection, evaluator), commit: true)
     end
 
     # Return the collection's solr document with permissions added, such that...
