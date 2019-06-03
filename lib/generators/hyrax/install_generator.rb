@@ -174,9 +174,7 @@ module Hyrax
     end
 
     def universalviewer_files
-      copy_file 'package.json', 'package.json'
-      copy_file 'uv.html', 'config/uv/uv.html'
-      copy_file 'uv-config.json', 'config/uv/uv-config.json'
+      rake('hyrax:universal_viewer:install')
     end
 
     # Blacklight::Controller will by default add an after_action filter to discard all flash messages on xhr requests.
