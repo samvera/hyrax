@@ -26,6 +26,29 @@ RSpec.describe Hyrax::DefaultMiddlewareStack, :clean_repo do
         .to true
     end
 
+    context 'when noids are disabled' do
+      let(:uuid_regex) { /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/ }
+
+      it 'uses the fedora assigned uuids' do
+        expect { actor.create(env) }
+          .to change { env.curation_concern.id }
+          .to uuid_regex
+      end
+    end
+
+    context 'when noids are enabled' do
+      before(:context) { Hyrax.config.enable_noids = true }
+      after(:context)  { Hyrax.config.enable_noids = false }
+
+      let(:noid_regex) { /^[0-9a-z]+$/ }
+
+      it 'assigns noids' do
+        expect { actor.create(env) }
+          .to change { env.curation_concern.id }
+          .to noid_regex
+      end
+    end
+
     context 'when failing on the way back up the actor stack' do
       before { stack.insert_before(Hyrax::Actors::ModelActor, delayed_failure_actor) }
 
