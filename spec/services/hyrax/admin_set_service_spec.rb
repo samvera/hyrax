@@ -124,9 +124,9 @@ RSpec.describe Hyrax::AdminSetService do
       all_objects = []
       all_objects << works << admin_sets << file_sets
       all_objects.each do |obj|
-        ActiveFedora::SolrService.add(obj)
+        Hyrax::SolrService.add(obj)
       end
-      ActiveFedora::SolrService.commit
+      Hyrax::SolrService.commit
     end
 
     context "when there are works and files in the admin set" do

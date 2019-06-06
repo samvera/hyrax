@@ -3,7 +3,7 @@ module Hyrax
     STORED_BOOL = ActiveFedora::Indexing::Descriptor.new(:boolean, :stored, :indexed)
 
     mattr_accessor :suppressed_field, instance_writer: false do
-      ActiveFedora.index_field_mapper.solr_name('suppressed', STORED_BOOL)
+      Hyrax.config.index_field_mapper.solr_name('suppressed', STORED_BOOL)
     end
 
     # Adds thumbnail indexing to the solr document
@@ -31,11 +31,11 @@ module Hyrax
     end
 
     def workflow_state_name_field
-      @workflow_state_name_field ||= ActiveFedora.index_field_mapper.solr_name('workflow_state_name', :symbol)
+      @workflow_state_name_field ||= Hyrax.config.index_field_mapper.solr_name('workflow_state_name', :symbol)
     end
 
     def workflow_role_field
-      @workflow_role_field ||= ActiveFedora.index_field_mapper.solr_name('actionable_workflow_roles', :symbol)
+      @workflow_role_field ||= Hyrax.config.index_field_mapper.solr_name('actionable_workflow_roles', :symbol)
     end
 
     def workflow_roles(entity)

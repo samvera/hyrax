@@ -25,7 +25,7 @@ class Hyrax::My::FindWorksSearchBuilder < Hyrax::My::SearchBuilder
   end
 
   def show_only_works_not_child(solr_parameters)
-    ids = ActiveFedora::SolrService.query("{!field f=id}#{@id}", fl: "member_ids_ssim", rows: 10_000).flat_map { |x| x.fetch("member_ids_ssim", []) }
+    ids = Hyrax::SolrService.query("{!field f=id}#{@id}", fl: "member_ids_ssim", rows: 10_000).flat_map { |x| x.fetch("member_ids_ssim", []) }
     solr_parameters[:fq] ||= []
     solr_parameters[:fq]  += [
       "-" + ActiveFedora::SolrQueryBuilder.construct_query_for_ids(ids)

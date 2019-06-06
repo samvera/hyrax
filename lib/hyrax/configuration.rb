@@ -388,6 +388,11 @@ module Hyrax
       @cache_path ||= ->() { Rails.root + 'tmp' + 'uploads' + 'cache' }
     end
 
+    attr_writer :id_field
+    def id_field
+      @id_field || index_field_mapper.id_field
+    end
+
     # Enable IIIF image service. This is required to use the
     # IIIF viewer enabled show page
     #
@@ -449,6 +454,11 @@ module Hyrax
       @iiif_metadata_fields ||= Hyrax::Forms::WorkForm.required_fields
     end
     attr_writer :iiif_metadata_fields
+
+    attr_writer :index_field_mapper
+    def index_field_mapper
+      @index_field_mapper ||= ActiveFedora.index_field_mapper
+    end
 
     # Should a button with "Share my work" show on the front page to users who are not logged in?
     attr_writer :display_share_button_when_not_logged_in
@@ -531,6 +541,11 @@ module Hyrax
 
     def default_nested_relationship_reindexer
       ->(id:, extent:) { Samvera::NestingIndexer.reindex_relationships(id: id, extent: extent) }
+    end
+
+    attr_writer :solr_select_path
+    def solr_select_path
+      @solr_select_path ||= ActiveFedora.solr_config.fetch(:select_path, 'select')
     end
 
     private

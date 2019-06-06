@@ -30,8 +30,8 @@ module Hyrax
       admin_sets = search_results(access)
       ids = admin_sets.map(&:id).join(',')
       query = "{!terms f=#{join_field}}#{ids}"
-      results = ActiveFedora::SolrService.instance.conn.get(
-        ActiveFedora::SolrService.select_path,
+      results = Hyrax::SolrService.instance.conn.get(
+        Hyrax.config.solr_select_path,
         params: { fq: query,
                   rows: 0,
                   'facet.field' => join_field }
@@ -57,8 +57,8 @@ module Hyrax
         file_counts = Hash.new(0)
         admin_sets.each do |admin_set|
           query = "{!join from=file_set_ids_ssim to=id}isPartOf_ssim:#{admin_set.id}"
-          file_results = ActiveFedora::SolrService.instance.conn.get(
-            ActiveFedora::SolrService.select_path,
+          file_results = Hyrax::SolrService.instance.conn.get(
+            Hyrax.config.solr_select_path,
             params: { fq: [query, "has_model_ssim:FileSet"],
                       rows: 0 }
           )

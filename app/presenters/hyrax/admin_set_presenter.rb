@@ -7,7 +7,7 @@ module Hyrax
     end
 
     def total_items
-      ActiveFedora::SolrService.count("{!field f=isPartOf_ssim}#{id}")
+      Hyrax::SolrService.count("{!field f=isPartOf_ssim}#{id}")
     end
 
     def total_viewable_items

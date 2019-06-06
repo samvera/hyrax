@@ -3,7 +3,7 @@ require 'wings_helper'
 require 'wings/model_transformer'
 
 RSpec.describe Wings::ModelTransformer do
-  let(:factory)     { described_class.new(pcdm_object: pcdm_object) }
+  subject(:factory) { described_class.new(pcdm_object: pcdm_object) }
   let(:pcdm_object) { work }
   let(:adapter)     { Valkyrie::MetadataAdapter.find(:memory) }
   let(:id)          { 'moomin123' }
@@ -27,8 +27,6 @@ RSpec.describe Wings::ModelTransformer do
       source: [1.125, :moomin]
     }
   end
-
-  subject { factory }
 
   before(:context) do
     Valkyrie::MetadataAdapter.register(
@@ -117,16 +115,20 @@ RSpec.describe Wings::ModelTransformer do
                             source: work.source
     end
 
+    # rubocop:disable RSpec/AnyInstance
     context 'without an existing id' do
       let(:id)        { nil }
       let(:minted_id) { 'bobross' }
 
       before do
-        allow(factory).to receive(:minted_id).and_return(minted_id)
+        allow_any_instance_of(::Noid::Rails.config.minter_class)
+          .to receive(:mint)
+          .and_return(minted_id)
       end
 
       it { expect(factory.build).to have_a_valkyrie_alternate_id_of minted_id }
     end
+    # rubocop:enable RSpec/AnyInstance
 
     context 'with an embargo' do
       let(:work) { FactoryBot.create(:embargoed_work) }
@@ -140,6 +142,26 @@ RSpec.describe Wings::ModelTransformer do
       let(:work) { FactoryBot.create(:leased_work) }
 
       it 'has the correct lease id' do
+        expect(subject.build.lease_id.to_s).to eq work.lease.id
+      end
+    end
+
+    context 'with newly saved embargo' do
+      let(:work) { FactoryBot.build(:embargoed_work) }
+
+      it 'has the correct embargo id' do
+        work.embargo.save
+
+        expect(subject.build.embargo_id.to_s).to eq work.embargo.id
+      end
+    end
+
+    context 'with newly saved lease' do
+      let(:work) { FactoryBot.build(:leased_work) }
+
+      it 'has the correct lease id' do
+        work.lease.save
+
         expect(subject.build.lease_id.to_s).to eq work.lease.id
       end
     end
@@ -161,12 +183,15 @@ RSpec.describe Wings::ModelTransformer do
   end
 
   context 'with a generic work that has open visibility' do
-    before do
-      work.visibility = "open"
-    end
+    before { work.visibility = "open" }
 
     it 'sets the visibility' do
-      expect(subject.build.visibility).to eq(work.visibility)
+      resource = factory.build
+
+      expect(resource.read_groups).to contain_exactly(*work.read_groups)
+      expect(resource.read_users).to contain_exactly(*work.read_users)
+      expect(resource.edit_groups).to contain_exactly(*work.edit_groups)
+      expect(resource.edit_users).to contain_exactly(*work.edit_users)
     end
   end
 

@@ -43,8 +43,8 @@ RSpec.describe Hyrax::EmbargoService do
     end
 
     before do
-      ActiveFedora::SolrService.add(attributes)
-      ActiveFedora::SolrService.commit
+      Hyrax::SolrService.add(attributes)
+      Hyrax::SolrService.commit
     end
 
     it 'returns all assets with embargo history set' do

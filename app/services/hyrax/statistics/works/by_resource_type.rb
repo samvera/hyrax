@@ -5,7 +5,7 @@ module Hyrax
         private
 
           def index_key
-            ActiveFedora.index_field_mapper.solr_name("resource_type", :facetable)
+            Hyrax.config.index_field_mapper.solr_name("resource_type", :facetable)
           end
       end
     end

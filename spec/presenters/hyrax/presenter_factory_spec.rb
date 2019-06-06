@@ -3,7 +3,7 @@ RSpec.describe Hyrax::PresenterFactory do
     let(:presenter_class) { Hyrax::FileSetPresenter }
 
     before do
-      allow(ActiveFedora::SolrService.instance.conn).to receive(:post)
+      allow(Hyrax::SolrService.instance.conn).to receive(:post)
         .with('select', data: { q: "{!terms f=id}12,13", rows: 1000, qt: 'standard' })
         .and_return('response' => { 'docs' => results })
     end
