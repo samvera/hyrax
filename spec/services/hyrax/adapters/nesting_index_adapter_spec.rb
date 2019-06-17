@@ -145,8 +145,7 @@ RSpec.describe Hyrax::Adapters::NestingIndexAdapter do
 
   describe '.write_nesting_document_to_index_layer' do
     let(:work) { create(:work) }
-    let(:query_for_works_solr_document) { ->(id:) { Hyrax::SolrService.query(ActiveFedora::SolrQueryBuilder.construct_query_for_ids([id])).first } }
-
+    let(:query_for_works_solr_document) { ->(id:) { Hyrax::SolrService.query(Hyrax::SolrQueryBuilderService.construct_query_for_ids([id])).first } }
     # rubocop:disable RSpec/ExampleLength
     it 'will append parent_ids, ancestors, pathnames, and deepest_nested_depth to the SOLR document' do
       previous_solr_keys = work.to_solr.keys
