@@ -19,17 +19,13 @@ class Hyrax::My::FindWorksSearchBuilder < Hyrax::My::SearchBuilder
 
   def show_only_other_works(solr_parameters)
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] += [
-      "-" + ActiveFedora::SolrQueryBuilder.construct_query_for_ids([@id])
-    ]
+    solr_parameters[:fq] += ["-#{Hyrax::SolrQueryBuilderService.construct_query_for_ids([@id])}"]
   end
 
   def show_only_works_not_child(solr_parameters)
     ids = Hyrax::SolrService.query("{!field f=id}#{@id}", fl: "member_ids_ssim", rows: 10_000).flat_map { |x| x.fetch("member_ids_ssim", []) }
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq]  += [
-      "-" + ActiveFedora::SolrQueryBuilder.construct_query_for_ids(ids)
-    ]
+    solr_parameters[:fq] += ["-#{Hyrax::SolrQueryBuilderService.construct_query_for_ids([ids])}"]
   end
 
   def show_only_works_not_parent(solr_parameters)
