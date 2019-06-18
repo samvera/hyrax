@@ -10,4 +10,3 @@ RSpec.describe Hyrax::SolrQueryBuilderService do
     end
   end
 end
-
