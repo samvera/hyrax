@@ -107,7 +107,7 @@ module Wings
     private
 
       def convert_members(af_object)
-        return unless resource.respond_to?(:member_ids) && !resource.member_ids.blank?
+        return unless resource.respond_to?(:member_ids) && resource.member_ids.present?
         # TODO: It would be better to find a way to add the members without resuming all the member AF objects
         temp_object = assemble_members(af_object)
         af_object.ordered_member_proxies.association.replace temp_object.ordered_member_proxies.association.to_a
