@@ -105,7 +105,7 @@ module Hyrax
 
       def destroy
         unlink_from_work
-        file_set_destroy
+        file_set_destroy(use_valkyrie: @use_valkyrie)
         Hyrax.config.callback.run(:after_destroy, file_set.id, user)
       end
 
@@ -177,7 +177,9 @@ module Hyrax
           false
         end
 
-        def file_set_destroy
+        def file_set_destroy(use_valkyrie: @use_valkyrie)
+          return file_set.destroy unless use_valkyrie
+
           adapter = Hyrax.config.valkyrie_metadata_adapter
           adapter.persister.delete(resource: file_set.valkyrie_resource)
         end

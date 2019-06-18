@@ -243,14 +243,25 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   end
 
   describe "#destroy" do
+    context "when use_valkyrie = false" do
+      before { actor.instance_variable_set("@use_valkyrie", false) }
+      it "destroys the object" do
+        actor.destroy
+        expect { file_set.reload }.to raise_error ActiveFedora::ObjectNotFoundError
+      end
+    end
+    context "when use_valkyrie = true" do
+      before { actor.instance_variable_set("@use_valkyrie", true) }
+
+      it "destroys the object" do
+        actor.destroy
+        expect { file_set.reload }.to raise_error Ldp::Gone
+      end
+    end
+
     [true, false].each do |use_valkyrie|
       context "when use_valkyrie = #{use_valkyrie}" do
         before { actor.instance_variable_set("@use_valkyrie", use_valkyrie) }
-
-        it "destroys the object" do
-          actor.destroy
-          expect { file_set.reload }.to raise_error Ldp::Gone
-        end
 
         context "representative, renderings and thumbnail of a work" do
           let!(:work) do
