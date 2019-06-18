@@ -16,7 +16,7 @@ module Hyrax
     private
 
       def curation_concern
-        @curation_concern ||= ActiveFedora::Base.find(params[:id])
+        @curation_concern ||= Hyrax::ActiveFedoraFinder.find(params[:id])
       end
 
       def workflow_action_form

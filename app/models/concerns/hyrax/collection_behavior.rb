@@ -54,7 +54,7 @@ module Hyrax
     #       add_member_objects using the member_of_collections relationship.  Deprecate?
     def add_members(new_member_ids)
       return if new_member_ids.blank?
-      members << ActiveFedora::Base.find(new_member_ids)
+      members << Hyrax::ActiveFedoraFinder.find(new_member_ids)
     end
 
     # Add member objects by adding this collection to the objects' member_of_collection association.
@@ -63,7 +63,7 @@ module Hyrax
     #                   lib/wings/models/concerns/collection_behavior.rb
     def add_member_objects(new_member_ids)
       Array(new_member_ids).collect do |member_id|
-        member = ActiveFedora::Base.find(member_id)
+        member = Hyrax::ActiveFedoraFinder.find(member_id)
         message = Hyrax::MultipleMembershipChecker.new(item: member).check(collection_ids: id, include_current_members: true)
         if message
           member.errors.add(:collections, message)
@@ -79,7 +79,7 @@ module Hyrax
     # Valkyrie Version: Wings::CollectionBehavior#child_collections_and_works aliased to #member_objects
     #                   lib/wings/models/concerns/collection_behavior.rb
     def member_objects
-      ActiveFedora::Base.where("member_of_collection_ids_ssim:#{id}")
+      Hyrax::ActiveFedoraFinder.where("member_of_collection_ids_ssim:#{id}")
     end
 
     # Use this query to get the ids of the member objects (since the containment

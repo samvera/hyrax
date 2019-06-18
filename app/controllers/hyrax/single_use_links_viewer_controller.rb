@@ -59,7 +59,7 @@ module Hyrax
       end
 
       def asset
-        @asset ||= ActiveFedora::Base.find(single_use_link.item_id)
+        @asset ||= Hyrax::ActiveFedoraFinder.find(single_use_link.item_id)
       end
 
       def current_ability

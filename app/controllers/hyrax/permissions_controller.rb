@@ -28,7 +28,7 @@ module Hyrax
     end
 
     def curation_concern
-      @curation_concern ||= ActiveFedora::Base.find(params[:id])
+      @curation_concern ||= Hyrax::ActiveFedoraFinder.find(params[:id])
     end
   end
 end

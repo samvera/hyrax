@@ -202,7 +202,7 @@ module Hyrax
         end
 
         def link_parent_collection(parent_id)
-          parent = ActiveFedora::Base.find(parent_id)
+          parent = Hyrax::ActiveFedoraFinder.find(parent_id)
           Hyrax::Collections::NestedCollectionPersistenceService.persist_nested_collection_for(parent: parent, child: @collection)
         end
 
@@ -375,7 +375,7 @@ module Hyrax
 
         def remove_members_from_collection
           batch.each do |pid|
-            work = ActiveFedora::Base.find(pid)
+            work = Hyrax::ActiveFedoraFinder.find(pid)
             work.member_of_collections.delete @collection
             work.save!
           end

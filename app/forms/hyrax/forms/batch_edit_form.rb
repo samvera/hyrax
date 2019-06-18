@@ -64,7 +64,7 @@ module Hyrax
         def initialize_combined_fields
           # For each of the files in the batch, set the attributes to be the concatenation of all the attributes
           batch_document_ids.each_with_object({}) do |doc_id, combined_attributes|
-            work = ActiveFedora::Base.find(doc_id)
+            work = Hyrax::ActiveFedoraFinder.find(doc_id)
             terms.each do |field|
               combined_attributes[field] ||= []
               combined_attributes[field] = (combined_attributes[field] + work[field].to_a).uniq

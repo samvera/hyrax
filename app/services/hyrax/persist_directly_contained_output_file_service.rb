@@ -24,7 +24,7 @@ module Hyrax
     def self.retrieve_file_set(directives)
       uri = URI(directives.fetch(:url))
       raise ArgumentError, "#{uri} is not an http(s) uri" unless uri.is_a?(URI::HTTP)
-      ActiveFedora::Base.find(ActiveFedora::Base.uri_to_id(uri.to_s))
+      Hyrax::ActiveFedoraFinder.find(ActiveFedora::Base.uri_to_id(uri.to_s))
     end
     private_class_method :retrieve_file_set
 
