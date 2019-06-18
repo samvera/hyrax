@@ -1,5 +1,6 @@
 module Hyrax
   class SolrQueryBuilderService
+    # Extracted from ActiveFedora::SolrQueryBuilder
     # Construct a solr query for a list of ids
     # This is used to get a solr response based on the list of ids in an object's RELS-EXT relationhsips
     # If the id_array is empty, defaults to a query of "id:NEVER_USE_THIS_ID", which will return an empty solr response
