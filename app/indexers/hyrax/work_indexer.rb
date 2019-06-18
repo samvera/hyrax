@@ -1,5 +1,5 @@
 module Hyrax
-  class WorkIndexer < ActiveFedora::IndexingService
+  class WorkIndexer < Hyrax::IndexingService
     include Hyrax::IndexesThumbnails
     include Hyrax::IndexesWorkflow
 

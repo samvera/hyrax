@@ -15,6 +15,7 @@ require 'browse-everything'
 require 'hydra/works'
 require 'hyrax/engine'
 require 'hyrax/version'
+require 'hyrax/indexing_service'
 require 'hyrax/inflections'
 require 'kaminari_route_prefix'
 
