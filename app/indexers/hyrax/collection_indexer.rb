@@ -11,9 +11,9 @@ module Hyrax
     def generate_solr_document
       super.tap do |solr_doc|
         # Makes Collections show under the "Collections" tab
-        Hyrax.config.index_field_mapper.set_field(solr_doc, 'generic_type', 'Collection', :facetable)
+        solr_doc['generic_type_sim'] = ["Collection"]
         # Index the size of the collection in bytes
-        solr_doc[Hyrax.config.index_field_mapper.solr_name(:bytes, STORED_LONG)] = object.bytes
+        solr_doc['bytes_lts'] = object.bytes
         solr_doc['visibility_ssi'] = object.visibility
 
         object.in_collections.each do |col|
