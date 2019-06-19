@@ -1,5 +1,5 @@
 module Hyrax
-  # Methods in this class are from ActiveFedora::SolrQueryBuilder
+  # Methods in this class are from/based on ActiveFedora::SolrQueryBuilder
   class SolrQueryBuilderService
     class << self
       # Construct a solr query for a list of ids
@@ -9,7 +9,7 @@ module Hyrax
       def construct_query_for_ids(id_array)
         ids = id_array.reject(&:blank?)
         return "id:NEVER_USE_THIS_ID" if ids.empty?
-        "{!terms f=id}#{ids.join(',')}"
+        "{!terms f=#{Hyrax.config.id_field}}#{ids.join(',')}"
       end
 
       # Construct a solr query from a list of pairs (e.g. [field name, values])

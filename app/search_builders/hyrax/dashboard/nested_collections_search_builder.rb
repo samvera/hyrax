@@ -26,7 +26,7 @@ module Hyrax
       def show_only_other_collections_of_the_same_collection_type(solr_parameters)
         solr_parameters[:fq] ||= []
         solr_parameters[:fq] += [
-          "-" +  Hyrax::SolrQueryBuilderService.construct_query_for_ids([limit_ids]),
+          "-" + Hyrax::SolrQueryBuilderService.construct_query_for_ids([limit_ids]),
           Hyrax::SolrQueryBuilderService.construct_query(Collection.collection_type_gid_document_field_name => @collection.collection_type_gid)
         ]
         solr_parameters[:fq] += limit_clause if limit_clause # add limits to prevent illegal nesting arrangements
