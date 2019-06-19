@@ -29,7 +29,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
 
     it "is successful" do
       subject
-      expect(solr_params[:fq]).to eq ["-" + ActiveFedora::SolrQueryBuilder.construct_query_for_ids([work.id])]
+      expect(solr_params[:fq]).to eq ["-" + Hyrax::SolrQueryBuilderService.construct_query_for_ids([work.id])]
     end
   end
 
@@ -39,7 +39,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
     it "is successful" do
       subject
       ids = Hyrax::SolrService.query("{!field f=id}#{work.id}", fl: "member_ids_ssim").flat_map { |x| x.fetch("member_ids_ssim", []) }
-      expect(solr_params[:fq]).to eq ["-" + ActiveFedora::SolrQueryBuilder.construct_query_for_ids([ids])]
+      expect(solr_params[:fq]).to eq ["-" + Hyrax::SolrQueryBuilderService.construct_query_for_ids([ids])]
     end
   end
 
