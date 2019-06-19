@@ -23,6 +23,14 @@ module Wings
     end
 
     ##
+    # @params [Valkyrie::Resource] resource
+    #
+    # @return [ActiveFedora::Base]
+    def self.convert(resource:)
+      new(resource: resource).convert
+    end
+
+    ##
     # @!attribute [rw] resource
     #   @return [Valkyrie::Resource]
     attr_accessor :resource
