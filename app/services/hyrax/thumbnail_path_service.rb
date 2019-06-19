@@ -22,7 +22,7 @@ module Hyrax
 
         def fetch_thumbnail(object)
           return object if object.thumbnail_id == object.id
-          ::ActiveFedora::Base.find(object.thumbnail_id)
+          Valkyrie.config.metadata_adapter.query_service.find_by_alternate_identifier(alternate_identifier: object.thumbnail_id, use_valkyrie: false)
         rescue ActiveFedora::ObjectNotFoundError
           Rails.logger.error("Couldn't find thumbnail #{object.thumbnail_id} for #{object.id}")
           nil

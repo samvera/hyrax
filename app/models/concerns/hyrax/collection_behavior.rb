@@ -63,7 +63,7 @@ module Hyrax
     #                   lib/wings/models/concerns/collection_behavior.rb
     def add_member_objects(new_member_ids)
       Array(new_member_ids).collect do |member_id|
-        member = ActiveFedora::Base.find(member_id)
+        member = Valkyrie.config.metadata_adapter.query_service.find_by_alternate_identifier(alternate_identifier: member_id, use_valkyrie: false)
         message = Hyrax::MultipleMembershipChecker.new(item: member).check(collection_ids: id, include_current_members: true)
         if message
           member.errors.add(:collections, message)
