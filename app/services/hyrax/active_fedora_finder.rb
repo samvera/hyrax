@@ -26,12 +26,13 @@ module Hyrax
     #
     # @return [ActiveFedora::Base]
     def find(id)
-      # resource = resource_finder.find(id.to_s)
+      resource = @resource_finder.find(id.to_s)
 
-      # Wings::ActiveFedoraConverter
-      #   .new(resource: resource)
-      #   .convert
-      ActiveFedora::Base.find(id)
+      Wings::ActiveFedoraConverter
+        .new(resource: resource)
+        .convert
+    rescue Valkyrie::Persistence::ObjectNotFoundError => err
+      raise ActiveFedora::ObjectNotFoundError, err.message
     end
   end
 end
