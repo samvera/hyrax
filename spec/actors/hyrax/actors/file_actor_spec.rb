@@ -173,7 +173,7 @@ RSpec.describe Hyrax::Actors::FileActor do
       end
     end
 
-    it 'uses the provided mime_type' do
+    xit 'uses the provided mime_type' do
       pending 'implementation of Wings::Valkyrie::Persister #save_file_node'
       allow(fixture).to receive(:content_type).and_return('image/gif')
       expect(Hyrax::VersioningService).to receive(:create).with(Wings::FileNode, user)
@@ -196,6 +196,7 @@ RSpec.describe Hyrax::Actors::FileActor do
       end
 
       before do
+        # TODO: WINGS - When #ingest_file works, these should be uncommented.
         # expect(Hyrax::VersioningService).to receive(:create).with(Wings::FileNode, user)
         # expect(Hyrax::VersioningService).to receive(:create).with(Wings::FileNode, user2)
         # expect(CharacterizeJob).to receive(:perform_later)
