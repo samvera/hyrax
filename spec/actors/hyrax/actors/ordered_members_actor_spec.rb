@@ -38,7 +38,7 @@ RSpec.describe Hyrax::Actors::OrderedMembersActor do
       let(:work_v1) { create(:generic_work) } # this version of the work has no members
 
       before do # another version of the same work is saved with a member
-        work_v2 = ActiveFedora::Base.find(work_v1.id)
+        work_v2 = Valkyrie.config.metadata_adapter.query_service.find_by_alternate_identifier(alternate_identifier: work_v1.id, use_valkyrie: false)
         work_v2.ordered_members << create(:file_set)
         work_v2.save!
       end

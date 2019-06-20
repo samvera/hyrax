@@ -76,12 +76,19 @@ module Wings
         resources
       end
 
-      def find_by_alternate_identifier(alternate_identifier:)
+      # Find a record using an alternate ID, and map it to a Valkyrie Resource
+      # @param [Valkyrie::ID, String] id
+      # @param [boolean] optionally return ActiveFedora object/errors
+      # @return [Valkyrie::Resource]
+      # @raise [Valkyrie::Persistence::ObjectNotFoundError]
+      def find_by_alternate_identifier(alternate_identifier:, use_valkyrie: true)
         alternate_identifier = ::Valkyrie::ID.new(alternate_identifier.to_s) if alternate_identifier.is_a?(String)
         validate_id(alternate_identifier)
-        resource_factory.to_resource(object: ::ActiveFedora::Base.find(alternate_identifier.to_s))
-      rescue ::ActiveFedora::ObjectNotFoundError, Ldp::Gone
-        raise ::Valkyrie::Persistence::ObjectNotFoundError
+        object = ::ActiveFedora::Base.find(alternate_identifier.to_s)
+        return object if use_valkyrie == false
+        resource_factory.to_resource(object: object)
+      rescue ::ActiveFedora::ObjectNotFoundError, Ldp::Gone => e
+        raise use_valkyrie == true ? ::Valkyrie::Persistence::ObjectNotFoundError : e
       end
 
       # Find all members of a given resource, and map to Valkyrie Resources

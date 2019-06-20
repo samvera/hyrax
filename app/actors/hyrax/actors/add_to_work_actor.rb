@@ -30,7 +30,7 @@ module Hyrax
 
         def cleanup_ids_to_remove_from_curation_concern(env, new_work_ids)
           (env.curation_concern.in_works_ids - new_work_ids).each do |old_id|
-            work = ::ActiveFedora::Base.find(old_id)
+            work = Valkyrie.config.metadata_adapter.query_service.find_by_alternate_identifier(alternate_identifier: old_id, use_valkyrie: false)
             work.ordered_members.delete(env.curation_concern)
             work.members.delete(env.curation_concern)
             work.save!
@@ -40,7 +40,7 @@ module Hyrax
         def add_new_work_ids_not_already_in_curation_concern(env, new_work_ids)
           # add to new so long as the depositor for the parent and child matches, otherwise inject an error
           (new_work_ids - env.curation_concern.in_works_ids).each do |work_id|
-            work = ::ActiveFedora::Base.find(work_id)
+            work = Valkyrie.config.metadata_adapter.query_service.find_by_alternate_identifier(alternate_identifier: work_id, use_valkyrie: false)
             if can_edit_both_works?(env, work)
               work.ordered_members << env.curation_concern
               work.save!

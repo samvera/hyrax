@@ -16,7 +16,7 @@ module Hyrax
     private
 
       def curation_concern
-        @curation_concern ||= ActiveFedora::Base.find(params[:id])
+        @curation_concern ||= Valkyrie.config.metadata_adapter.query_service.find_by_alternate_identifier(alternate_identifier: params[:id], use_valkyrie: false)
       end
 
       def workflow_action_form
