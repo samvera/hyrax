@@ -15,7 +15,7 @@ RSpec.describe Hyrax::My::WorksSearchBuilder do
       # This prevents any generated classes from interfering with this test:
       allow(builder).to receive(:work_classes).and_return([GenericWork])
 
-      allow(ActiveFedora::SolrQueryBuilder).to receive(:construct_query_for_rel)
+      allow(Hyrax::SolrQueryBuilderService).to receive(:construct_query_for_rel)
         .with(depositor: me.user_key)
         .and_return("depositor")
     end

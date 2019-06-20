@@ -20,7 +20,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
 
     it "is successful" do
       subject
-      expect(solr_params[:fq]).to eq [ActiveFedora::SolrQueryBuilder.construct_query(title_tesim: q)]
+      expect(solr_params[:fq]).to eq [Hyrax::SolrQueryBuilderService.construct_query(title_tesim: q)]
     end
   end
 
@@ -48,7 +48,7 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
 
     it "is successful" do
       subject
-      expect(solr_params[:fq]).to eq ["-" + ActiveFedora::SolrQueryBuilder.construct_query(member_ids_ssim: work.id)]
+      expect(solr_params[:fq]).to eq ["-" + Hyrax::SolrQueryBuilderService.construct_query(member_ids_ssim: work.id)]
     end
   end
 

@@ -114,7 +114,7 @@ module Hyrax
 
         def exclude_if_already_parent
           # 2) Exclude any of Collection F's direct children
-          "-" + ActiveFedora::SolrQueryBuilder.construct_query(Samvera::NestingIndexer.configuration.solr_field_name_for_storing_parent_ids => @collection.id)
+          "-" + Hyrax::SolrQueryBuilderService.construct_query(Samvera::NestingIndexer.configuration.solr_field_name_for_storing_parent_ids => @collection.id)
         end
     end
   end
