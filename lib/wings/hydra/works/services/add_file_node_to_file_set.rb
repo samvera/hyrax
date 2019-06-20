@@ -31,7 +31,7 @@ module Wings::Works
         @af_file_set = af_file_set
         @file_node = file_node
         @file = file
-        @current_file = find_or_create_file(file_node.use, update_existing)
+        @current_file = find_or_create_file(association_type(file_node.use), update_existing)
       end
 
       # @param [#read] file object that will be interrogated using the methods: :path, :original_name, :original_filename, :mime_type, :content_type
@@ -45,14 +45,15 @@ module Wings::Works
 
         # @param [RDF::URI] the identified use of the file (e.g. Valkyrie::Vocab::PCDMUse.OriginalFile, Valkyrie::Vocab::PCDMUse.ThumbnailImage, etc.)
         # @param [true, false] update_existing when true, try to retrieve existing element before building one
-        def find_or_create_file(use, update_existing)
-          current_file = af_file_set.filter_files_by_type(use).first if update_existing
-          unless current_file
-            af_file_set.files.build
-            current_file = af_file_set.files.last
-            Hydra::PCDM::AddTypeToFile.call(current_file, use)
-          end
-          current_file
+        def find_or_create_file(type, update_existing)
+          association = af_file_set.association(type)
+          raise ArgumentError, "you're attempting to add a file to a file_set using '#{type}' association but the file_set does not have an association called '#{type}''" unless association
+          current_file = association.reader if update_existing
+          current_file || association.build
+        end
+
+        def association_type(use)
+          use.first.to_s.split('#').second.underscore.to_sym
         end
 
         # Persist a new file with its containing file set; otherwise, just save the file itself
