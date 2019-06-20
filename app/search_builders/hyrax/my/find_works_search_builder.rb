@@ -14,7 +14,7 @@ class Hyrax::My::FindWorksSearchBuilder < Hyrax::My::SearchBuilder
 
   def filter_on_title(solr_parameters)
     solr_parameters[:fq] ||= []
-    solr_parameters[:fq] += [ActiveFedora::SolrQueryBuilder.construct_query(title_tesim: @q)]
+    solr_parameters[:fq] += [Hyrax::SolrQueryBuilderService.construct_query(title_tesim: @q)]
   end
 
   def show_only_other_works(solr_parameters)
@@ -31,7 +31,7 @@ class Hyrax::My::FindWorksSearchBuilder < Hyrax::My::SearchBuilder
   def show_only_works_not_parent(solr_parameters)
     solr_parameters[:fq] ||= []
     solr_parameters[:fq]  += [
-      "-" + ActiveFedora::SolrQueryBuilder.construct_query(member_ids_ssim: @id)
+      "-" + Hyrax::SolrQueryBuilderService.construct_query(member_ids_ssim: @id)
     ]
   end
 
