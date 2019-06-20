@@ -13,10 +13,6 @@ module Valkyrie
           @connection = connection
           @resource_indexer = resource_indexer
         end
-
-        def conn
-          connection
-        end
       end
     end
   end
