@@ -7,11 +7,14 @@ module Hyrax
   class SolrService
     extend Forwardable
 
-    def_delegators :@old_service, :add, :commit, :count, :delete, :instance
-    def_delegators :instance, :conn
+    def_delegators :@old_service, :add, :commit, :count, :delete
 
     def initialize
       @old_service = ActiveFedora::SolrService
+    end
+
+    def instance
+      Valkyrie::IndexingAdapter.find(:solr_index)
     end
 
     class << self

@@ -8,6 +8,10 @@ RSpec.describe Hyrax::SolrService do
   end
 
   describe "#get" do
+    it "integrates with a Valkyrie::IndexingService" do
+      expect(described_class.get('id:1234')["response"]["docs"]).to eq []
+    end
+
     it "calls solr" do
       stub_result = double("Result")
       expect(mock_conn).to receive(:get).with('select', params: { q: 'querytext', qt: 'standard' }).and_return(stub_result)
