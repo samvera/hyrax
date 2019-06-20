@@ -8,4 +8,6 @@ module Hyrax
   class WorkflowAuthorizationException < HyraxError; end
 
   class SingleUseError < HyraxError; end
+
+  class ObjectNotFoundError < HyraxError; end
 end

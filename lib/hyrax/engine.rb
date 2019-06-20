@@ -29,7 +29,8 @@ module Hyrax
 
     config.action_dispatch.rescue_responses.merge!(
       "ActiveFedora::ObjectNotFoundError" =>     :not_found, # We can remove this when we use ActiveFedora 11.2
-      "Blacklight::Exceptions::RecordNotFound" => :not_found
+      "Blacklight::Exceptions::RecordNotFound" => :not_found,
+      "Hyrax::ObjectNotFoundError" => :not_found
     )
 
     config.before_initialize do
