@@ -202,7 +202,7 @@ module Hyrax
         end
 
         def link_parent_collection(parent_id)
-          parent = Valkyrie.config.metadata_adapter.query_service.find_by_alternate_identifier(alternate_identifier: parent_id, use_valkyrie: false)
+          parent = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: parent_id, use_valkyrie: false)
           Hyrax::Collections::NestedCollectionPersistenceService.persist_nested_collection_for(parent: parent, child: @collection)
         end
 
@@ -375,7 +375,7 @@ module Hyrax
 
         def remove_members_from_collection
           batch.each do |pid|
-            work = Valkyrie.config.metadata_adapter.query_service.find_by_alternate_identifier(alternate_identifier: pid, use_valkyrie: false)
+            work = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: pid, use_valkyrie: false)
             work.member_of_collections.delete @collection
             work.save!
           end

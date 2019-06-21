@@ -24,7 +24,7 @@ module Hyrax
     def self.retrieve_file_set(directives)
       uri = URI(directives.fetch(:url))
       raise ArgumentError, "#{uri} is not an http(s) uri" unless uri.is_a?(URI::HTTP)
-      Valkyrie.config.metadata_adapter.query_service.find_by_alternate_identifier(alternate_identifier: ActiveFedora::Base.uri_to_id(uri.to_s), use_valkyrie: false)
+      Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: ActiveFedora::Base.uri_to_id(uri.to_s), use_valkyrie: false)
     end
     private_class_method :retrieve_file_set
 

@@ -91,10 +91,8 @@ module Hyrax
         end
 
         def node_builder
-          storage_adapter = Valkyrie.config.storage_adapter
-          persister = Valkyrie.config.metadata_adapter.persister # TODO: Explore why valkyrie6 branch used indexing_persister adapter for this
-          Wings::FileNodeBuilder.new(storage_adapter: storage_adapter,
-                                     persister: persister)
+          Wings::FileNodeBuilder.new(storage_adapter: Hyrax.storage_adapter,
+                                     persister:       Hyrax.persister)
         end
 
         def normalize_relation(relation, use_valkyrie: false)

@@ -45,7 +45,7 @@ module Wings
       # @return [Enumerable<ActiveFedora::Base> | Enumerable<Valkyrie::Resource>] an enumerable over the child collections
       # @todo There is no guarantee to collection ordering until Hyrax is fully valkyrie-native, see issue 3784
       def child_collections(valkyrie: false)
-        @child_collections_navigator ||= ChildCollectionsNavigator.new(query_service: ::Valkyrie.config.metadata_adapter.query_service)
+        @child_collections_navigator ||= ChildCollectionsNavigator.new(query_service: Hyrax.query_service)
         resources = @child_collections_navigator.find_child_collections(resource: self)
         return resources if valkyrie
         resources.map { |r| Wings::ActiveFedoraConverter.new(resource: r).convert }

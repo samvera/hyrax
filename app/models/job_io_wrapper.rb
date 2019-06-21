@@ -67,9 +67,8 @@ class JobIoWrapper < ApplicationRecord
 
   def file_set(use_valkyrie: false)
     return FileSet.find(file_set_id) unless use_valkyrie
-    adapter = Valkyrie.config.metadata_adapter
-    query_service = Wings::Valkyrie::QueryService.new(adapter: adapter)
-    query_service.find_by(id: Valkyrie::ID.new(file_set_id))
+
+    Hyrax.query_service.find_by(id: Valkyrie::ID.new(file_set_id))
     # TODO: At least temporarily, should this return the valkyrie resource version of the fileset or the active fedora fileset?
   end
 
