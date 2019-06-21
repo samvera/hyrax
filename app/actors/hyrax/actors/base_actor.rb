@@ -73,7 +73,7 @@ module Hyrax
           env.curation_concern.embargo&.save
           env.curation_concern.lease&.save
 
-          adapter  = Hyrax.config.valkyrie_metadata_adapter
+          adapter  = Valkyrie.config.metadata_adapter
           resource = adapter.persister.save(resource: env.curation_concern.valkyrie_resource)
 
           env.curation_concern = adapter.resource_factory.from_resource(resource: resource)
