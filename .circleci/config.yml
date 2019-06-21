@@ -129,9 +129,3 @@ workflows:
           requires:
             - build
             - lint
-      - test:
-          name: "ruby2-6-2"
-          ruby_version: "2.6.2"
-          requires:
-            - build
-            - lint
