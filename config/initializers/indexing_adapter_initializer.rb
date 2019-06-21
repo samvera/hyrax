@@ -5,7 +5,6 @@ require 'valkyrie/indexing/solr/indexing_adapter'
 Rails.application.config.to_prepare do
   Valkyrie::IndexingAdapter.register(
     Valkyrie::Indexing::Solr::IndexingAdapter.new(
-      connection: Blacklight.default_index.connection,
       resource_indexer: Valkyrie::Persistence::Solr::MetadataAdapter::NullIndexer
       #      resource_indexer: Valkyrie::Persistence::Solr::CompositeIndexer.new(
       #        Hyrax::Indexers::BaseIndexer,
