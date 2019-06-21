@@ -16,7 +16,7 @@ module Wings
 
     # @param io_wrapper [JobIOWrapper] with details about the uploaded file
     # @param node [FileNode] the metadata to represent the file
-    # @param file_set [Valkyrie::Resouce, Hydra::Works::FileSet] the associated FileSet # TODO: Remove Hydra::Works::FileSet as a potential type when valkyrization is complete.
+    # @param file_set [Valkyrie::Resouce, Hydra::Works::FileSet] the associated FileSet # TODO: WINGS - Remove Hydra::Works::FileSet as a potential type when valkyrization is complete.
     # @return [FileNode] the persisted metadata node that represents the file
     def create(io_wrapper:, node:, file_set:)
       io_wrapper = build_file(io_wrapper, node.use)
@@ -33,16 +33,13 @@ module Wings
     end
 
     def attach_file_node(node:, file_set:)
-      saved_node = file_set.is_a?(::Valkyrie::Resource) ? attach_file_node_to_valkyrie_file_set(node, file_set) : node
-
-      # note the returned saved_node does not yet contain the characterization done in the async job
-      CharacterizeJob.perform_later(saved_node.file_identifiers.first.to_s) # TODO: What id is the correct one for the file? Check where this is called outside of wings.
-      saved_node
+      file_set.is_a?(::Valkyrie::Resource) ? attach_file_node_to_valkyrie_file_set(node, file_set) : node
     end
 
     def attach_file_node_to_valkyrie_file_set(node, file_set)
       # This is for storage adapters other than wings.  The wings storage adapter already attached the file to the file_set.
-      # This process is a no-op for wings.  TODO: May need to verify this is a no-op once file_set is passed in as a resource.
+      # This process is a no-op for wings.  # TODO: WINGS - May need to verify this is a no-op for wings once file_set is passed in as a resource.
+      # TODO: WINGS - Need to test this against other adapters once they are available for use.
       existing_node = file_set.original_file || node
       node = existing_node.new(node.to_h.except(:id, :member_ids))
       saved_node = persister.save(resource: node)

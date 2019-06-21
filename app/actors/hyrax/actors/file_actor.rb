@@ -76,10 +76,6 @@ module Hyrax
 
         def perform_ingest_file_through_valkyrie(io)
           # Skip versioning because versions will be minted by VersionCommitter as necessary during save_characterize_and_record_committer.
-          storage_adapter = Valkyrie.config.storage_adapter
-          persister = Valkyrie.config.metadata_adapter.persister # TODO: Explore why valkyrie6 branch used indexing_persister adapter for this
-          node_builder = Wings::FileNodeBuilder.new(storage_adapter: storage_adapter,
-                                                    persister: persister)
           unsaved_node = io.to_file_node
           unsaved_node.use = relation
           begin
@@ -89,7 +85,16 @@ module Hyrax
             return false
           end
           Hyrax::VersioningService.create(saved_node, user)
-          saved_node
+          pathhint = io.uploaded_file.uploader.path if io.uploaded_file # in case next worker is on same filesystem
+          id = Hyrax.config.translate_uri_to_id.call saved_node.file_identifiers.first
+          CharacterizeJob.perform_later(file_set, id, pathhint || io.path)
+        end
+
+        def node_builder
+          storage_adapter = Valkyrie.config.storage_adapter
+          persister = Valkyrie.config.metadata_adapter.persister # TODO: Explore why valkyrie6 branch used indexing_persister adapter for this
+          Wings::FileNodeBuilder.new(storage_adapter: storage_adapter,
+                                     persister: persister)
         end
 
         def normalize_relation(relation, use_valkyrie: false)
