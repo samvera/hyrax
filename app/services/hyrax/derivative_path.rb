@@ -20,7 +20,7 @@ module Hyrax
     # @param [ActiveFedora::Base, String] object either the AF object or its id
     # @param [String] destination_name
     def initialize(object, destination_name = nil)
-      @id = object.is_a?(String) ? object : object.id
+      @id = object.is_a?(String) ? object : object.id.to_s
       @destination_name = destination_name.gsub(/^original_file_/, '') if destination_name
     end
 
