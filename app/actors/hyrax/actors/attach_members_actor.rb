@@ -33,7 +33,8 @@ module Hyrax
           attributes_collection.each do |attributes|
             next if attributes['id'].blank?
             if existing_works.include?(attributes['id'])
-              remove(env.curation_concern, attributes['id']) if has_destroy_flag?(attributes)
+              remove(env.curation_concern, attributes['id']) if
+                ActiveModel::Type::Boolean.new.cast(attributes['_destroy'])
             else
               add(env, attributes['id'])
             end
@@ -59,13 +60,6 @@ module Hyrax
           curation_concern.ordered_members.delete(member)
           curation_concern.members.delete(member)
         end
-
-        # Determines if a hash contains a truthy _destroy key.
-        # rubocop:disable Naming/PredicateName
-        def has_destroy_flag?(hash)
-          ActiveFedora::Type::Boolean.new.cast(hash['_destroy'])
-        end
-      # rubocop:enable Naming/PredicateName
     end
   end
 end
