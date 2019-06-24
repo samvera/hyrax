@@ -46,6 +46,12 @@ RSpec.describe Hyrax::ThumbnailPathService do
       it { is_expected.to eq '/downloads/999?file=thumbnail' }
     end
 
+    context 'when it has a missing thumbnail' do
+      let(:object) { GenericWork.new(thumbnail_id: 'very_fake') }
+
+      it { is_expected.to be_nil }
+    end
+
     context "that doesn't have a representative" do
       let(:object) { FileSet.new }
 
