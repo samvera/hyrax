@@ -26,39 +26,37 @@ module Hyrax
         # @param [Hash<Hash>] a collection of members
         def assign_nested_attributes_for_collection(env, attributes_collection)
           return true unless attributes_collection
-          attributes_collection = attributes_collection.sort_by { |i, _| i.to_i }.map { |_, attributes| attributes }
-          # checking for existing works to avoid rewriting/loading works that are
-          # already attached
-          existing_works = env.curation_concern.member_ids
-          attributes_collection.each do |attributes|
-            next if attributes['id'].blank?
-            if existing_works.include?(attributes['id'])
-              remove(env.curation_concern, attributes['id']) if
-                ActiveModel::Type::Boolean.new.cast(attributes['_destroy'])
-            else
-              add(env, attributes['id'])
-            end
-          end
-        end
 
-        # Adds the item to the ordered members so that it displays in the items
-        # along side the FileSets on the show page
-        def add(env, id)
-          return unless env.current_ability.can?(:edit, id)
+          attributes_collection = attributes_collection
+                                  .sort_by { |i, _| i.to_i }
+                                  .map { |_, attributes| attributes }
 
-          resource = env.curation_concern.valkyrie_resource
-          resource.member_ids << Valkyrie::ID.new(id)
+          resource           = env.curation_concern.valkyrie_resource
+          current_member_ids = resource.member_ids.map(&:id)
+          inserts, destroys  = split_inserts_and_destroys(attributes_collection, current_member_ids)
+
+          return true if destroys.empty? && inserts.empty?
+          # we fail silently if we can't insert the object; this is for legacy
+          # compatibility
+          return true unless inserts.all? { |id| env.current_ability.can?(:edit, id) }
+
+          resource.member_ids += inserts.map  { |id| Valkyrie::ID.new(id) }
+          resource.member_ids -= destroys.map { |id| Valkyrie::ID.new(id) }
 
           env.curation_concern = Hyrax.metadata_adapter
                                       .resource_factory
                                       .from_resource(resource: resource)
         end
 
-        # Remove the object from the members set and the ordered members list
-        def remove(curation_concern, id)
-          member = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: id, use_valkyrie: false)
-          curation_concern.ordered_members.delete(member)
-          curation_concern.members.delete(member)
+        def split_inserts_and_destroys(attributes_collection, current_member_ids)
+          destroys = attributes_collection.select do |col_hash|
+            ActiveModel::Type::Boolean.new.cast(col_hash['_destroy'])
+          end
+
+          inserts  = (attributes_collection - destroys).map { |h| h['id'] }.compact - current_member_ids
+          destroys = destroys.map { |h| h['id'] }.compact & current_member_ids
+
+          [inserts, destroys]
         end
     end
   end
