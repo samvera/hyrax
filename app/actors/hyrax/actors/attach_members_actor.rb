@@ -43,9 +43,14 @@ module Hyrax
         # Adds the item to the ordered members so that it displays in the items
         # along side the FileSets on the show page
         def add(env, id)
-          member = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: id, use_valkyrie: false)
-          return unless env.current_ability.can?(:edit, member)
-          env.curation_concern.ordered_members << member
+          return unless env.current_ability.can?(:edit, id)
+
+          resource = env.curation_concern.valkyrie_resource
+          resource.member_ids << Valkyrie::ID.new(id)
+
+          env.curation_concern = Hyrax.metadata_adapter
+                                      .resource_factory
+                                      .from_resource(resource: resource)
         end
 
         # Remove the object from the members set and the ordered members list
