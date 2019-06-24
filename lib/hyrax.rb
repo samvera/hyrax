@@ -55,4 +55,20 @@ module Hyrax
   def self.primary_work_type
     config.curation_concerns.first
   end
+
+  def self.persister
+    metadata_adapter.persister
+  end
+
+  def self.metadata_adapter
+    Valkyrie.config.metadata_adapter
+  end
+
+  def self.storage_adapter
+    Valkyrie.config.storage_adapter
+  end
+
+  def self.query_service
+    metadata_adapter.query_service
+  end
 end

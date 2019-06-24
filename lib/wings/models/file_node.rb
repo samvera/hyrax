@@ -132,7 +132,7 @@ module Wings
     end
 
     def versions
-      query_service = Wings::Valkyrie::QueryService.new(adapter: ::Valkyrie.config.metadata_adapter)
+      query_service = Wings::Valkyrie::QueryService.new(adapter: Hyrax.metadata_adapter)
       query_service.find_members(resource: self, model: Wings::FileNode).to_a
     end
   end

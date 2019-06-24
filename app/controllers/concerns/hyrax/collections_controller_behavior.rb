@@ -25,7 +25,7 @@ module Hyrax
     end
 
     def show
-      @curation_concern ||= Valkyrie.config.metadata_adapter.query_service.find_by_alternate_identifier(alternate_identifier: params[:id], use_valkyrie: false)
+      @curation_concern ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id], use_valkyrie: false)
       presenter
       query_collection_members
     end

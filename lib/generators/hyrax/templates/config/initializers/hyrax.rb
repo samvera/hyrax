@@ -1,16 +1,4 @@
 Hyrax.config do |config|
-  # The MetadataAdapter to use when persisting resources with Valkyrie.
-  # NOTE: Until Hyrax has been reworked to be Valkyrie-native, the default
-  #       metadata adapter supported is :wings_adapter.
-  # @see lib/wings
-  # @see https://github.com/samvera-labs/valkyrie
-  # config.valkyrie_metadata_adapter = :wings_adapter
-
-  # The StorageAdapter to use when persisting resources with Valkyrie
-  # @see lib/wings
-  # @see https://github.com/samvera-labs/valkyrie
-  # config.valkyrie_storage_adapter = :fedora
-
   # Register roles that are expected by your implementation.
   # @see Hyrax::RoleRegistry for additional details.
   # @note there are magical roles as defined in Hyrax::RoleRegistry::MAGIC_ROLES

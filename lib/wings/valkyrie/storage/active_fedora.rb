@@ -21,8 +21,7 @@ module Wings::Storage
 
       def file_set(file_node)
         file_set_id = file_node.file_set_id
-        query_service = Valkyrie.config.metadata_adapter.query_service
-        query_service.find_by(id: file_set_id)
+        Hyrax.query_service.find_by(id: file_set_id)
       end
   end
 end

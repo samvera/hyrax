@@ -38,7 +38,7 @@ module Hyrax
 
     def destroy_collection
       batch.each do |doc_id|
-        obj = Valkyrie.config.metadata_adapter.query_service.find_by_alternate_identifier(alternate_identifier: doc_id, use_valkyrie: false)
+        obj = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: doc_id, use_valkyrie: false)
         obj.destroy
       end
       flash[:notice] = "Batch delete complete"
@@ -60,7 +60,7 @@ module Hyrax
       case params["update_type"]
       when "update"
         batch.each do |doc_id|
-          update_document(Valkyrie.config.metadata_adapter.query_service.find_by_alternate_identifier(alternate_identifier: doc_id, use_valkyrie: false))
+          update_document(Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: doc_id, use_valkyrie: false))
         end
         flash[:notice] = "Batch update complete"
         after_update
@@ -82,7 +82,7 @@ module Hyrax
       end
 
       def destroy_batch
-        batch.each { |id| Valkyrie.config.metadata_adapter.query_service.find_by_alternate_identifier(alternate_identifier: id, use_valkyrie: false).destroy }
+        batch.each { |id| Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: id, use_valkyrie: false).destroy }
         after_update
       end
 
