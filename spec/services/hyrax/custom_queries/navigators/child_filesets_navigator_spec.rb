@@ -1,16 +1,7 @@
-# frozen_string_literal: true
-require 'wings_helper'
-require 'wings/model_transformer'
-require 'wings/navigators/child_filesets_navigator'
-
-RSpec.describe Wings::ChildFilesetsNavigator, :clean_repo do
+RSpec.describe Hyrax::CustomQueries::Navigators::ChildFilesetsNavigator, :clean_repo do
   subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
-
   let(:resource) { subject.build }
-
-  let(:adapter) { Wings::Valkyrie::MetadataAdapter.new }
-  let(:query_service) { Wings::Valkyrie::QueryService.new(adapter: adapter) }
-  let(:navigator) { described_class.new(query_service: query_service) }
+  let(:custom_query_service) { Hyrax.query_service.custom_queries }
 
   let(:work1)    { build(:work, id: 'wk1', title: ['Work 1']) }
   let(:work2)    { build(:work, id: 'wk2', title: ['Child Work 1']) }
@@ -28,7 +19,7 @@ RSpec.describe Wings::ChildFilesetsNavigator, :clean_repo do
     end
 
     it 'returns only child filesets as Valkyrie resources' do
-      child_filesets = navigator.find_child_filesets(resource: work1_resource)
+      child_filesets = custom_query_service.find_child_filesets(resource: work1_resource)
       expect(child_filesets.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([fileset1.id, fileset2.id])
     end
   end
@@ -43,7 +34,7 @@ RSpec.describe Wings::ChildFilesetsNavigator, :clean_repo do
     end
 
     it 'returns Valkyrie ids for child filesets only' do
-      child_fileset_ids = navigator.find_child_fileset_ids(resource: work1_resource)
+      child_fileset_ids = custom_query_service.find_child_fileset_ids(resource: work1_resource)
       expect(child_fileset_ids).to match_valkyrie_ids_with_active_fedora_ids([fileset1.id, fileset2.id])
     end
   end

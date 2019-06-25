@@ -1,16 +1,7 @@
-# frozen_string_literal: true
-require 'wings_helper'
-require 'wings/model_transformer'
-require 'wings/navigators/child_collections_navigator'
-
-RSpec.describe Wings::ChildCollectionsNavigator, :clean_repo do
+RSpec.describe Hyrax::CustomQueries::Navigators::ChildCollectionsNavigator, :clean_repo do
   subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
-
   let(:resource) { subject.build }
-
-  let(:adapter) { Wings::Valkyrie::MetadataAdapter.new }
-  let(:query_service) { Wings::Valkyrie::QueryService.new(adapter: adapter) }
-  let(:navigator) { described_class.new(query_service: query_service) }
+  let(:custom_query_service) { Hyrax.query_service.custom_queries }
 
   let(:collection1)    { build(:collection, id: 'col1', title: ['Collection 1']) }
   let(:collection2)    { build(:collection, id: 'col2', title: ['Child Collection 1']) }
@@ -28,7 +19,7 @@ RSpec.describe Wings::ChildCollectionsNavigator, :clean_repo do
     end
 
     it 'returns only child collections as Valkyrie resources' do
-      child_collections = navigator.find_child_collections(resource: collection1_resource)
+      child_collections = custom_query_service.find_child_collections(resource: collection1_resource)
       expect(child_collections.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([collection2.id, collection3.id])
     end
   end
@@ -43,7 +34,7 @@ RSpec.describe Wings::ChildCollectionsNavigator, :clean_repo do
     end
 
     it 'returns Valkyrie ids for child collections only' do
-      child_collections = navigator.find_child_collections(resource: collection1_resource)
+      child_collections = custom_query_service.find_child_collections(resource: collection1_resource)
       expect(child_collections.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([collection2.id, collection3.id])
     end
   end
