@@ -46,6 +46,9 @@ Valkyrie::StorageAdapter.register(
 )
 Valkyrie.config.storage_adapter = :active_fedora
 
-[Hyrax::CustomQueries::Wings].each do |query_handler|
+[Hyrax::CustomQueries::Wings,
+ Hyrax::CustomQueries::Navigators::ChildCollectionsNavigator,
+ Hyrax::CustomQueries::Navigators::ChildFilesetsNavigator,
+ Hyrax::CustomQueries::Navigators::ChildWorksNavigator].each do |query_handler|
   Valkyrie.config.metadata_adapter.query_service.custom_queries.register_query_handler(query_handler)
 end
