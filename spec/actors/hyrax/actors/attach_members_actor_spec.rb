@@ -30,16 +30,16 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
 
     context "when the id already exists in the members" do
       it "does nothing" do
-        expect { subject }.not_to change { work.ordered_members.to_a }
+        expect { subject }.not_to change { env.curation_concern.ordered_members.to_a }
       end
 
       context "and the _destroy flag is set" do
         let(:attributes) { HashWithIndifferentAccess.new(work_members_attributes: { '0' => { id: id, _destroy: 'true' } }) }
 
         it "removes from the member and the ordered members" do
-          expect { subject }.to change { work.ordered_members.to_a }
-          expect(work.ordered_member_ids).not_to include(existing_child_work.id)
-          expect(work.member_ids).not_to include(existing_child_work.id)
+          expect { subject }.to change { env.curation_concern.ordered_members.to_a }
+          expect(env.curation_concern.ordered_member_ids).not_to include(existing_child_work.id)
+          expect(env.curation_concern.member_ids).not_to include(existing_child_work.id)
         end
       end
     end
@@ -49,18 +49,63 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
       let(:id) { another_work.id }
 
       context "and I can edit that object" do
-        before do
-          allow(ability).to receive(:can?).with(:edit, GenericWork).and_return(true)
-        end
+        let(:another_work) { create(:work, user: depositor) }
+
         it "is added to the ordered members" do
-          expect { subject }.to change { work.ordered_members.to_a }
-          expect(work.ordered_member_ids).to include(existing_child_work.id, another_work.id)
+          expect { subject }.to change { env.curation_concern.ordered_members.to_a }
+          expect(env.curation_concern.ordered_member_ids).to include(existing_child_work.id, another_work.id)
         end
       end
 
       context "and I can not edit that object" do
         it "does nothing" do
-          expect { subject }.not_to change { work.ordered_members.to_a }
+          expect { subject }.not_to change { env.curation_concern.ordered_members.to_a }
+        end
+      end
+    end
+
+    context 'when using a valkyrie resource' do
+      let(:work) { create(:work).valkyrie_resource }
+
+      before { work.member_ids << Valkyrie::ID.new(existing_child_work.id) }
+
+      context "when the _destroy flag is set" do
+        let(:attributes) { HashWithIndifferentAccess.new(work_members_attributes: { '0' => { id: id, _destroy: 'true' } }) }
+
+        it "removes from the members" do
+          expect { middleware.update(env) }
+            .to change { env.curation_concern.member_ids }
+            .from([Valkyrie::ID.new(existing_child_work.id)])
+            .to be_empty
+        end
+      end
+
+      context 'when adding a duplicate member' do
+        it "does nothing" do
+          expect { middleware.update(env) }
+            .not_to change { env.curation_concern.member_ids }
+        end
+      end
+
+      context 'when adding a new member' do
+        let(:another_work) { create(:work, user: depositor) }
+        let(:id) { another_work.id }
+
+        it 'adds successfully' do
+          expect { middleware.update(env) }
+            .to change { env.curation_concern.member_ids }
+            .from([Valkyrie::ID.new(existing_child_work.id)])
+            .to [Valkyrie::ID.new(existing_child_work.id),
+                 Valkyrie::ID.new(another_work.id)]
+        end
+
+        context 'and the ability cannot edit' do
+          let(:another_work) { create(:work) }
+
+          it "does nothing" do
+            expect { middleware.update(env) }
+              .not_to change { env.curation_concern.member_ids }
+          end
         end
       end
     end
