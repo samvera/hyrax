@@ -26,6 +26,35 @@ RSpec.describe Hyrax::DefaultMiddlewareStack, :clean_repo do
         .to true
     end
 
+    context 'when adding to a work' do
+      let(:other_work) { FactoryBot.create(:work, user: user) }
+      let(:attributes) { { 'in_works_ids' => [other_work.id] } }
+
+      context 'when the user cannot edit the parent work' do
+        let(:other_work) { FactoryBot.create(:work, user: other_user) }
+        let(:other_user) { FactoryBot.create(:user) }
+
+        it 'fails' do
+          expect { actor.create(env) }
+            .not_to change { other_work.reload.members.to_a }
+            .from be_empty
+        end
+
+        it 'does not create the work' do
+          expect { actor.create(env) }
+            .not_to change { work.persisted? }
+            .from false
+        end
+      end
+
+      it 'adds the work to the parent' do
+        expect { actor.create(env) }
+          .to change { other_work.reload.members.to_a }
+          .from(be_empty)
+          .to contain_exactly(work)
+      end
+    end
+
     context 'when failing on the way back up the actor stack' do
       before { stack.insert_before(Hyrax::Actors::ModelActor, delayed_failure_actor) }
 
