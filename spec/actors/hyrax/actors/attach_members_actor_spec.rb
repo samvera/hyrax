@@ -63,5 +63,51 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
         end
       end
     end
+
+    context 'when using a valkyrie resource' do
+      let(:work) { create(:work).valkyrie_resource }
+
+      before { work.member_ids << Valkyrie::ID.new(existing_child_work.id) }
+
+      context "when the _destroy flag is set" do
+        let(:attributes) { HashWithIndifferentAccess.new(work_members_attributes: { '0' => { id: id, _destroy: 'true' } }) }
+
+        it "removes from the members" do
+          expect { middleware.update(env) }
+            .to change { env.curation_concern.member_ids }
+            .from([Valkyrie::ID.new(existing_child_work.id)])
+            .to be_empty
+        end
+      end
+
+      context 'when adding a duplicate member' do
+        it "does nothing" do
+          expect { middleware.update(env) }
+            .not_to change { env.curation_concern.member_ids }
+        end
+      end
+
+      context 'when adding a new member' do
+        let(:another_work) { create(:work, user: depositor) }
+        let(:id) { another_work.id }
+
+        it 'adds successfully' do
+          expect { middleware.update(env) }
+            .to change { env.curation_concern.member_ids }
+            .from([Valkyrie::ID.new(existing_child_work.id)])
+            .to [Valkyrie::ID.new(existing_child_work.id),
+                 Valkyrie::ID.new(another_work.id)]
+        end
+
+        context 'and the ability cannot edit' do
+          let(:another_work) { create(:work) }
+
+          it "does nothing" do
+            expect { middleware.update(env) }
+              .not_to change { env.curation_concern.member_ids }
+          end
+        end
+      end
+    end
   end
 end
