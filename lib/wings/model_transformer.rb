@@ -134,11 +134,10 @@ module Wings
       relationship_keys.delete('member_of_collection_ids')
       reflection_id_keys = klass.respond_to?(:reflections) ? klass.reflections.keys.select { |k| k.to_s.end_with? '_id' } : []
 
-      Class.new(ActiveFedoraResource) do
+      Class.new(Hyrax::Resource) do
         include Wings::CollectionBehavior if klass.included_modules.include?(Hyrax::CollectionBehavior)
         include Wings::Works::WorkValkyrieBehavior if klass.included_modules.include?(Hyrax::WorkBehavior)
         include Wings::Works::FileSetValkyrieBehavior if klass.included_modules.include?(Hyrax::FileSetBehavior)
-        include ::Valkyrie::Resource::AccessControls
 
         # Based on Valkyrie implementation, we call Class.to_s to define
         # the internal resource.
@@ -175,10 +174,6 @@ module Wings
     end
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
-
-    class ActiveFedoraResource < ::Valkyrie::Resource
-      attribute :alternate_ids, ::Valkyrie::Types::Array
-    end
 
     class AttributeTransformer
       def self.run(obj, keys)
