@@ -5,7 +5,8 @@ module Hyrax
       # @return [Boolean] true if create was successful
       def create(env)
         work_ids = env.attributes.delete(:in_works_ids)
-        next_actor.create(env) && add_to_works(env, work_ids)
+
+        can_edit_works?(env, work_ids) && next_actor.create(env) && add_to_works(env, work_ids)
       end
 
       # @param [Hyrax::Actors::Environment] env
@@ -19,6 +20,15 @@ module Hyrax
 
         def can_edit_both_works?(env, work)
           env.current_ability.can?(:edit, work) && env.current_ability.can?(:edit, env.curation_concern)
+        end
+
+        def can_edit_works?(env, work_ids)
+          unless Array(work_ids).all? { |work_id| env.current_ability.can?(:edit, work_id) }
+            add_permissions_error(env.curation_concern)
+            return false
+          end
+
+          true
         end
 
         def add_to_works(env, new_work_ids)
@@ -39,15 +49,24 @@ module Hyrax
 
         def add_new_work_ids_not_already_in_curation_concern(env, new_work_ids)
           # add to new so long as the depositor for the parent and child matches, otherwise inject an error
-          (new_work_ids - env.curation_concern.in_works_ids).each do |work_id|
-            work = ::ActiveFedora::Base.find(work_id)
+          new_works_for(env, new_work_ids).each do |work|
             if can_edit_both_works?(env, work)
               work.ordered_members << env.curation_concern
               work.save!
             else
-              env.curation_concern.errors[:in_works_ids] << "Works can only be related to each other if user has ability to edit both."
+              add_permissions_error(env.curation_concern)
             end
           end
+        end
+
+        def new_works_for(env, new_work_ids)
+          (new_work_ids - env.curation_concern.in_works_ids).map do |work_id|
+            ::ActiveFedora::Base.find(work_id)
+          end
+        end
+
+        def add_permissions_error(work)
+          work.errors[:in_works_ids] << "Works can only be related to each other if user has ability to edit both."
         end
     end
   end
