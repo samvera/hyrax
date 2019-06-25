@@ -170,8 +170,7 @@ module Hyrax
           return af_object.save unless use_valkyrie
 
           adapter = Hyrax.config.valkyrie_metadata_adapter
-          resource = adapter.persister.save(resource: af_object.valkyrie_resource)
-          Wings::ActiveFedoraConverter.new(resource: resource).convert
+          adapter.persister.save(resource: af_object.valkyrie_resource)
           true
         rescue StandardError
           false
