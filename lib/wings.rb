@@ -45,3 +45,17 @@ Valkyrie::StorageAdapter.register(
   :active_fedora
 )
 Valkyrie.config.storage_adapter = :active_fedora
+
+# if we've messed up handling the @destroyed flag, still raise the correct error
+class ActiveFedora::Base
+  def reload
+    super
+  rescue Ldp::Gone => err
+    Rails.logger.info("Tried to reload an object that has been destroyed; " \
+                      "this is probably due to mismanagement of the object's " \
+                      "@destroyed variable, which should prevent us from " \
+                      "sending Fedora requests for objects that have been " \
+                      "destroyed in-memory: #{err.message}")
+    raise ActiveFedora::ObjectNotFoundError
+  end
+end

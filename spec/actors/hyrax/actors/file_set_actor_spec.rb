@@ -250,12 +250,13 @@ RSpec.describe Hyrax::Actors::FileSetActor do
         expect { file_set.reload }.to raise_error ActiveFedora::ObjectNotFoundError
       end
     end
+
     context "when use_valkyrie = true" do
       before { actor.instance_variable_set("@use_valkyrie", true) }
 
       it "destroys the object" do
         actor.destroy
-        expect { file_set.reload }.to raise_error Ldp::Gone
+        expect { file_set.reload }.to raise_error ActiveFedora::ObjectNotFoundError
       end
     end
 

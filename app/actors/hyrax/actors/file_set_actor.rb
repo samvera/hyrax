@@ -182,6 +182,7 @@ module Hyrax
 
           adapter = Hyrax.config.valkyrie_metadata_adapter
           adapter.persister.delete(resource: file_set.valkyrie_resource)
+          file_set.instance_variable_set(:@destroyed, true)
         end
       # rubocop:enable Metrics/ClassLength
       # rubocop:enable Metrics/AbcSize
