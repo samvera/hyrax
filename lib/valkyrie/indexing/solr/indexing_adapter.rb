@@ -5,6 +5,7 @@ module Valkyrie
   module Indexing
     module Solr
       class IndexingAdapter
+        COMMIT_PARAMS = { softCommit: true }.freeze
         ##
         # @!attribute [r] connection
         #   @return [RSolr::Client]
@@ -21,7 +22,34 @@ module Valkyrie
           @resource_indexer = resource_indexer
         end
 
+        def save(resource:)
+          persist([resource])
+        end
+
         private
+
+          def persist(resources)
+            documents = resources.map do |resource|
+              solr_document(resource)
+            end
+            add_documents(documents)
+          end
+
+          def solr_document(resource)
+            base_hash(resource).merge(resource_indexer.new(resource: resource).to_solr)
+          end
+
+          def add_documents(documents)
+            connection.add documents, params: COMMIT_PARAMS
+          end
+
+          def base_hash(resource)
+            {
+              "id": resource.id.to_s,
+              "created_at_dtsi": resource.created_at,
+              "updated_at_dtsi": resource.updated_at
+            }
+          end
 
           ##
           # Index configuration based on the blacklight connection.
@@ -42,7 +70,7 @@ module Valkyrie
 
           def connection_url
             config = begin
-                       Rails.application.config_for(:valkyrie_index)
+                       Rails.application.config_for(:valkyrie_index).compact
                      rescue RuntimeError
                        {}
                      end

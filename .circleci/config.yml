@@ -95,11 +95,15 @@ jobs:
     parallelism: 10
     environment:
       COVERALLS_PARALLEL: true
+      VALKYRIE_SOLR_PORT: 8985
     steps:
       - attach_workspace:
           at: ~/
       - samvera/install_solr_core:
           solr_config_path: .internal_test_app/solr/config
+      - samvera/install_solr_core:
+          solr_config_path: .internal_test_app/solr/config
+          core_name: hyrax-valkyrie-test
       # Rerun bundler in case this is a different ruby version than bundle and build steps
       - samvera/bundle_for_gem:
           ruby_version: << parameters.ruby_version >>

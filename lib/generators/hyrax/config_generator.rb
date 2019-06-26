@@ -37,8 +37,9 @@ class Hyrax::ConfigGenerator < Rails::Generators::Base
     copy_file 'config/initializers/redis_config.rb'
   end
 
-  def configure_valyrie_index
+  def configure_valkyrie_index
     copy_file 'config/valkyrie_index.yml'
+    copy_file 'config/solr_wrapper_valkyrie_test.yml'
   end
 
   def create_initializer_config_file
