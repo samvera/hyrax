@@ -71,21 +71,17 @@ module Hyrax
 
     # Method to return the ActiveFedora model
     def hydra_model
-      first(Hyrax.config.index_field_mapper.solr_name('has_model', :symbol)).constantize
+      first("has_model_ssim").constantize
     end
 
     def depositor(default = '')
-      val = first(Hyrax.config.index_field_mapper.solr_name('depositor'))
+      val = first("depositor_tesim")
       val.present? ? val : default
     end
 
     def creator
-      descriptor = if hydra_model == AdminSet
-                     hydra_model.index_config[:creator].behaviors.first
-                   else
-                     :stored_searchable
-                   end
-      fetch(Hyrax.config.index_field_mapper.solr_name('creator', descriptor), [])
+      solr_term = hydra_model == AdminSet ? "creator_ssim" : "creator_tesim"
+      fetch(solr_term, [])
     end
 
     def visibility

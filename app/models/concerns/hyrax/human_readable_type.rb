@@ -22,8 +22,8 @@ module Hyrax
 
     def to_solr(solr_doc = {})
       super(solr_doc).tap do |doc|
-        doc[Hyrax.config.index_field_mapper.solr_name('human_readable_type', :facetable)] = human_readable_type
-        doc[Hyrax.config.index_field_mapper.solr_name('human_readable_type', :stored_searchable)] = human_readable_type
+        doc["human_readable_type_sim"] = human_readable_type
+        doc["human_readable_type_tesim"] = human_readable_type
       end
     end
   end

@@ -3,27 +3,27 @@ module Hyrax
     # TODO: aside from height and width, I don't think any of these other terms are indexed by default. - Justin 3/2016
     module Characterization
       def byte_order
-        self[Hyrax.config.index_field_mapper.solr_name("byte_order")]
+        self["byte_order_tesim"]
       end
 
       def capture_device
-        self[Hyrax.config.index_field_mapper.solr_name("capture_device")]
+        self["capture_device_tesim"]
       end
 
       def color_map
-        self[Hyrax.config.index_field_mapper.solr_name("color_map")]
+        self["color_map_tesim"]
       end
 
       def color_space
-        self[Hyrax.config.index_field_mapper.solr_name("color_space")]
+        self["color_space_tesim"]
       end
 
       def compression
-        self[Hyrax.config.index_field_mapper.solr_name("compression")]
+        self["compression_tesim"]
       end
 
       def gps_timestamp
-        self[Hyrax.config.index_field_mapper.solr_name("gps_timestamp")]
+        self["gps_timestamp_tesim"]
       end
 
       def height
@@ -31,31 +31,31 @@ module Hyrax
       end
 
       def image_producer
-        self[Hyrax.config.index_field_mapper.solr_name("image_producer")]
+        self["image_producer_tesim"]
       end
 
       def latitude
-        self[Hyrax.config.index_field_mapper.solr_name("latitude")]
+        self["latitude_tesim"]
       end
 
       def longitude
-        self[Hyrax.config.index_field_mapper.solr_name("longitude")]
+        self["longitude_tesim"]
       end
 
       def orientation
-        self[Hyrax.config.index_field_mapper.solr_name("orientation")]
+        self["orientation_tesim"]
       end
 
       def profile_name
-        self[Hyrax.config.index_field_mapper.solr_name("profile_name")]
+        self["profile_name_tesim"]
       end
 
       def profile_version
-        self[Hyrax.config.index_field_mapper.solr_name("profile_version")]
+        self["profile_version_tesim"]
       end
 
       def scanning_software
-        self[Hyrax.config.index_field_mapper.solr_name("scanning_software")]
+        self["scanning_software_tesim"]
       end
 
       def width
@@ -63,43 +63,43 @@ module Hyrax
       end
 
       def format_label
-        self[Hyrax.config.index_field_mapper.solr_name("format_label")]
+        self["format_label_tesim"]
       end
 
       def file_size
-        self[Hyrax.config.index_field_mapper.solr_name("file_size")]
+        self["file_size_tesim"]
       end
 
       def filename
-        self[Hyrax.config.index_field_mapper.solr_name("filename")]
+        self["filename_tesim"]
       end
 
       def well_formed
-        self[Hyrax.config.index_field_mapper.solr_name("well_formed")]
+        self["well_formed_tesim"]
       end
 
       def page_count
-        self[Hyrax.config.index_field_mapper.solr_name("page_count")]
+        self["page_count_tesim"]
       end
 
       def file_title
-        self[Hyrax.config.index_field_mapper.solr_name("file_title")]
+        self["file_title_tesim"]
       end
 
       def duration
-        self[Hyrax.config.index_field_mapper.solr_name("duration")]
+        self["duration_tesim"]
       end
 
       def sample_rate
-        self[Hyrax.config.index_field_mapper.solr_name("sample_rate")]
+        self["sample_rate_tesim"]
       end
 
       def last_modified
-        self[Hyrax.config.index_field_mapper.solr_name("last_modified")]
+        self["last_modified_tesim"]
       end
 
       def original_checksum
-        self[Hyrax.config.index_field_mapper.solr_name("original_checksum")]
+        self["original_checksum_tesim"]
       end
     end
   end

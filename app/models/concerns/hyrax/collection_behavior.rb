@@ -106,7 +106,7 @@ module Hyrax
       end
 
       def collection_type_gid_document_field_name
-        Hyrax.config.index_field_mapper.solr_name('collection_type_gid', *index_collection_type_gid_as)
+        "collection_type_gid_ssim"
       end
     end
 
@@ -181,12 +181,12 @@ module Hyrax
       # Field name to look up when locating the size of each file in Solr.
       # Override for your own installation if using something different
       def file_size_field
-        Hyrax.config.index_field_mapper.solr_name(:file_size, Hyrax::FileSetIndexer::STORED_LONG)
+        "file_size_lts"
       end
 
       # Solr field name works use to index member ids
       def member_ids_field
-        Hyrax.config.index_field_mapper.solr_name('member_ids', :symbol)
+        "member_ids_ssim"
       end
 
       def destroy_permission_template

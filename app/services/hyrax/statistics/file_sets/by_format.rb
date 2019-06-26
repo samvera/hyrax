@@ -6,7 +6,7 @@ module Hyrax
 
           # Returns 'file_format_sim'
           def index_key
-            Hyrax.config.index_field_mapper.solr_name('file_format', :facetable)
+            "file_format_sim"
           end
       end
     end
