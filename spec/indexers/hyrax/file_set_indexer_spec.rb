@@ -25,6 +25,7 @@ RSpec.describe Hyrax::FileSetIndexer do
 
   let(:mock_file) do
     mock_file_factory(
+      id: '1-abc-2',
       content: "asdf",
       digest: ["urn:sha1:f794b23c0c6fe1083d0ca8b58261a078cd968967"],
       mime_type: 'image/jpeg',
@@ -92,6 +93,7 @@ RSpec.describe Hyrax::FileSetIndexer do
       expect(subject['file_title_tesim']).to eq ['title']
       expect(subject['duration_tesim']).to eq ['0:1']
       expect(subject['sample_rate_tesim']).to eq ['sample rate']
+      except(subject['original_file_id_ssi']).to eq '1-abc-2'
     end
   end
 
