@@ -28,7 +28,7 @@ module Hyrax
 
     # Wraps rsolr get
     # @return [Hash] the hash straight form rsolr
-    def get(query, use_valkyrie: false, **args)
+    def get(query, use_valkyrie: Hyrax.config.query_index_from_valkyrie, **args)
       if use_valkyrie
         args = args.merge(q: query)
         valkyrie_index.connection.get(Hyrax.config.solr_select_path, params: args)
@@ -40,7 +40,7 @@ module Hyrax
 
     # Wraps rsolr post
     # @return [Hash] the hash straight form rsolr
-    def post(query, use_valkyrie: false, **args)
+    def post(query, use_valkyrie: Hyrax.config.query_index_from_valkyrie, **args)
       if use_valkyrie
         args = args.merge(q: query)
         valkyrie_index.connection.post(Hyrax.config.solr_select_path, data: args)
@@ -52,7 +52,7 @@ module Hyrax
 
     # Wraps get by default
     # @return [Array<SolrHit>] the response docs wrapped in SolrHit objects
-    def query(query, use_valkyrie: false, **args)
+    def query(query, use_valkyrie: Hyrax.config.query_index_from_valkyrie, **args)
       Rails.logger.warn rows_warning unless args.key?(:rows)
       method = args.delete(:method) || :get
 
