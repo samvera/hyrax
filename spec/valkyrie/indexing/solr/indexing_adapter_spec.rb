@@ -3,7 +3,7 @@ require 'spec_helper'
 require 'valkyrie/indexing/solr/indexing_adapter'
 
 RSpec.describe Valkyrie::Indexing::Solr::IndexingAdapter, :clean_index do
-  subject(:adapter) { described_class.new }
+  subject(:adapter) { Valkyrie::IndexingAdapter.find(:solr_index) }
   let(:persister) { Wings::Valkyrie::Persister.new(adapter: metadata_adapter) }
   let(:metadata_adapter) { Wings::Valkyrie::MetadataAdapter.new }
   let(:resource) { FactoryBot.create_for_repository(:hyrax_resource) }
