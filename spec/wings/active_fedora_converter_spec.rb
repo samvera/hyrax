@@ -73,7 +73,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
 
       let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
 
-      before { work.visibility = visibility }
+      before { resource.visibility = visibility }
 
       it 'sets the visibility' do
         expect(converter.convert).to have_attributes(visibility: visibility)

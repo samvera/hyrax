@@ -7,5 +7,6 @@ module Hyrax
     include Valkyrie::Resource::AccessControls
 
     attribute :alternate_ids, ::Valkyrie::Types::Array
+    attribute :visibility,    ::Valkyrie::Types::String
   end
 end
