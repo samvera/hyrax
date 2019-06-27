@@ -82,7 +82,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         }
 
         expect(assigns[:collection].member_objects).to eq [asset1]
-        asset_results = Hyrax::SolrService.instance.conn.get "select", params: { fq: ["id:\"#{asset1.id}\""], fl: ['id', Hyrax.config.index_field_mapper.solr_name(:collection)] }
+        asset_results = Hyrax::SolrService.instance.conn.get "select", params: { fq: ["id:\"#{asset1.id}\""], fl: ['id', "collection_tesim"] }
         expect(asset_results["response"]["numFound"]).to eq 1
         doc = asset_results["response"]["docs"].first
         expect(doc["id"]).to eq asset1.id

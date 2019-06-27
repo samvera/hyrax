@@ -12,7 +12,7 @@ module Hyrax
         end
 
         def search_field
-          ERB::Util.h(Hyrax.config.index_field_mapper.solr_name(options.fetch(:search_field, field), :facetable, type: :string))
+          ERB::Util.h(options.fetch(:search_field, field).to_s + "_sim")
         end
     end
   end
