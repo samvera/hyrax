@@ -92,6 +92,7 @@ RSpec.describe Hyrax::FileSetIndexer do
       expect(subject['file_title_tesim']).to eq ['title']
       expect(subject['duration_tesim']).to eq ['0:1']
       expect(subject['sample_rate_tesim']).to eq ['sample rate']
+      expect(subject['original_file_id_ssi']).to eq file_set.original_file.id
     end
   end
 
