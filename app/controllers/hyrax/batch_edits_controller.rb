@@ -37,10 +37,8 @@ module Hyrax
     end
 
     def destroy_collection
-      batch.each do |doc_id|
-        obj = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: doc_id, use_valkyrie: false)
-        obj.destroy
-      end
+      objs = Hyrax.query_service.custom_queries.find_many_by_alternate_ids(alternate_ids: batch)
+      objs.map(&:destroy)
       flash[:notice] = "Batch delete complete"
       after_destroy_collection
     end
