@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'valkyrie/indexing/solr/indexing_adapter'
 
-RSpec.describe Valkyrie::Indexing::Solr::IndexingAdapter do
+RSpec.describe Valkyrie::Indexing::Solr::IndexingAdapter, :clean_index do
   subject(:adapter) { described_class.new }
   let(:persister) { Wings::Valkyrie::Persister.new(adapter: metadata_adapter) }
   let(:metadata_adapter) { Wings::Valkyrie::MetadataAdapter.new }
