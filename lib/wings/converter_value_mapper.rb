@@ -23,6 +23,20 @@ module Wings
     end
   end
 
+  class NestedLeaseValue < ::Valkyrie::ValueMapper
+    ConverterValueMapper.register(self)
+
+    def self.handles?(value)
+      value.first == :lease
+    end
+
+    def result
+      lease = ActiveFedoraConverter.new(resource: Hyrax::Lease.new(**value.last)).convert
+
+      [:lease, lease]
+    end
+  end
+
   class NestedResourceArrayValue < ::Valkyrie::ValueMapper
     ConverterValueMapper.register(self)
     def self.handles?(value)

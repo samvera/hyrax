@@ -67,6 +67,7 @@ module Wings
       klass = resource.internal_resource.constantize
       return klass if klass <= ActiveFedora::Base
       return Hydra::AccessControls::Embargo if klass <= Hyrax::Embargo
+      return Hydra::AccessControls::Lease   if klass <= Hyrax::Lease
       DefaultWork
     end
 

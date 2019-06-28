@@ -142,7 +142,7 @@ RSpec.describe Wings::ModelTransformer do
       let(:work) { FactoryBot.create(:leased_work) }
 
       it 'has the correct lease id' do
-        expect(subject.build.lease.id).to eq work.lease.id
+        expect(subject.build.lease.id.id).to eq work.lease.id
       end
     end
 
@@ -162,7 +162,7 @@ RSpec.describe Wings::ModelTransformer do
       it 'has the correct lease id' do
         work.lease.save
 
-        expect(subject.build.lease.id).to eq work.lease.id
+        expect(subject.build.lease.id.id).to eq work.lease.id
       end
     end
   end

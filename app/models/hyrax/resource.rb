@@ -8,6 +8,7 @@ module Hyrax
 
     attribute :alternate_ids, ::Valkyrie::Types::Array
     attribute :embargo,       Hyrax::Embargo
+    attribute :lease,         Hyrax::Lease
 
     def visibility=(value)
       visibility_writer.assign_access_for(visibility: value)

@@ -30,6 +30,16 @@ RSpec.describe Hyrax::Resource do
     end
   end
 
+  describe '#lease' do
+    subject(:resource) { described_class.new(lease: lease) }
+    let(:lease)        { FactoryBot.build(:hyrax_lease) }
+
+    it 'saves the lease' do
+      expect(Hyrax.persister.save(resource: resource).lease)
+        .to have_attributes(lease_expiration_date: lease.lease_expiration_date)
+    end
+  end
+
   describe '#visibility' do
     let(:open) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
 

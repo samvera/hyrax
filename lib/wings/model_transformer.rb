@@ -22,6 +22,7 @@ module Wings
   #
   #   resource.alternate_ids # => [#<Valkyrie::ID:0x... id: 'an_identifier'>]
   #
+  # rubocop:disable Metrics/ClassLength
   class ModelTransformer
     ##
     # @!attribute [rw] pcdm_object
@@ -111,6 +112,8 @@ module Wings
     def self.base_for(klass:)
       if klass == Hydra::AccessControls::Embargo
         Hyrax::Embargo
+      elsif klass == Hydra::AccessControls::Lease
+        Hyrax::Lease
       else
         Hyrax::Resource
       end
@@ -210,6 +213,7 @@ module Wings
         result = AttributeTransformer.run(pcdm_object, all_keys).merge(reflection_ids).merge(additional_attributes)
 
         append_embargo(result)
+        append_lease(result)
 
         result
       end
@@ -223,7 +227,6 @@ module Wings
       def additional_attributes
         { created_at: pcdm_object.try(:create_date),
           updated_at: pcdm_object.try(:modified_date),
-          lease_id:   pcdm_object.try(:lease)&.id || pcdm_object.try(:lease_id),
           read_groups: pcdm_object.try(:read_groups),
           read_users: pcdm_object.try(:read_users),
           edit_groups: pcdm_object.try(:edit_groups),
@@ -236,6 +239,12 @@ module Wings
         attrs[:embargo] = Hyrax.query_service.find_by(id: ::Valkyrie::ID.new(embargo_id)) if
           embargo_id
       end
+
+      def append_lease(attrs)
+        lease_id      = pcdm_object.try(:lease_id) || pcdm_object.try(:lease)&.id
+        attrs[:lease] = Hyrax.query_service.find_by(id: ::Valkyrie::ID.new(lease_id)) if
+          lease_id
+      end
   end
-  # rubocop:enable Style/ClassVars
+  # rubocop:enable Style/ClassVars Metrics/ClassLength
 end
