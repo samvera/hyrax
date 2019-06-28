@@ -96,6 +96,25 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       end
     end
 
+    context 'when setting ACLs' do
+      it 'converts ACLs' do
+        expect { resource.read_users = ['moomin'] }
+          .to change { described_class.new(resource: resource).convert }
+          .to have_attributes(read_users: contain_exactly('moomin'))
+      end
+
+      context 'when ACLs exist' do
+        let(:work) { FactoryBot.create(:public_work) }
+
+        it 'can delete ACLs' do
+          expect { resource.read_groups = [] }
+            .to change { described_class.new(resource: resource).convert }
+            .from(have_attributes(read_groups: contain_exactly('public')))
+            .to have_attributes(read_groups: be_empty)
+        end
+      end
+    end
+
     context 'with relationships' do
       subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
 

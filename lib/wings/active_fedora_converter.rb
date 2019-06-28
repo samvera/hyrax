@@ -56,8 +56,8 @@ module Wings
     def convert
       active_fedora_class.new(normal_attributes).tap do |af_object|
         af_object.id = id unless id.empty?
-        apply_depositor_to(af_object)
         add_access_control_attributes(af_object)
+        apply_depositor_to(af_object)
         convert_members(af_object)
         convert_member_of_collections(af_object)
       end
@@ -157,10 +157,12 @@ module Wings
 
       # Add attributes from resource which aren't AF properties into af_object
       def add_access_control_attributes(af_object)
-        af_object.read_users = attributes[:read_users] unless attributes[:read_users].blank?
-        af_object.edit_users = attributes[:edit_users] unless attributes[:edit_users].blank?
-        af_object.read_groups = attributes[:read_groups] unless attributes[:read_groups].blank?
-        af_object.edit_groups = attributes[:edit_groups] unless attributes[:edit_groups].blank?
+        return unless af_object.is_a? Hydra::AccessControls::Permissions
+
+        af_object.read_users = attributes[:read_users]
+        af_object.edit_users = attributes[:edit_users]
+        af_object.read_groups = attributes[:read_groups]
+        af_object.edit_groups = attributes[:edit_groups]
       end
   end
 end
