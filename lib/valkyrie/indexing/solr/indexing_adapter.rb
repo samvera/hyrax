@@ -26,6 +26,22 @@ module Valkyrie
           persist([resource])
         end
 
+        def save_all(resources:)
+          persist(resources)
+        end
+
+        # Deletes a Solr Document using the ID
+        # @return [Array<Valkyrie::Resource>] resources which have been deleted from Solr
+        def delete(resource:)
+          connection.delete_by_id resource.id.to_s, params: COMMIT_PARAMS
+        end
+
+        # Delete the Solr index of all Documents
+        def wipe!
+          connection.delete_by_query("*:*")
+          connection.commit
+        end
+
         private
 
           def persist(resources)
