@@ -105,6 +105,18 @@ module Wings
     end
 
     ##
+    # Selects an existing base class for the generated valkyrie class
+    #
+    # @return [Class]
+    def self.base_for(klass:)
+      if klass == Hydra::AccessControls::Embargo
+        Hyrax::Embargo
+      else
+        Hyrax::Resource
+      end
+    end
+
+    ##
     # @note The method signature is to conform to Valkyrie's method signature
     #   for ::Valkyrie.config.resource_class_resolver
     #
@@ -134,7 +146,7 @@ module Wings
       relationship_keys.delete('member_of_collection_ids')
       reflection_id_keys = klass.respond_to?(:reflections) ? klass.reflections.keys.select { |k| k.to_s.end_with? '_id' } : []
 
-      Class.new(Hyrax::Resource) do
+      Class.new(base_for(klass: klass)) do
         include Wings::CollectionBehavior if klass.included_modules.include?(Hyrax::CollectionBehavior)
         include Wings::Works::WorkValkyrieBehavior if klass.included_modules.include?(Hyrax::WorkBehavior)
         include Wings::Works::FileSetValkyrieBehavior if klass.included_modules.include?(Hyrax::FileSetBehavior)

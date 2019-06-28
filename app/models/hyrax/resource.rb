@@ -8,5 +8,6 @@ module Hyrax
 
     attribute :alternate_ids, ::Valkyrie::Types::Array
     attribute :visibility,    ::Valkyrie::Types::String
+    attribute :embargo_id,    Valkyrie::Types::ID
   end
 end
