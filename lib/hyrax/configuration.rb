@@ -535,6 +535,11 @@ module Hyrax
       @solr_select_path ||= ActiveFedora.solr_config.fetch(:select_path, 'select')
     end
 
+    attr_writer :query_index_from_valkyrie
+    def query_index_from_valkyrie
+      @query_index_from_valkyrie ||= false
+    end
+
     private
 
       # @param [Symbol, #to_s] model_name - symbol representing the model

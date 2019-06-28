@@ -237,6 +237,11 @@ Hyrax.config do |config|
   #                                           "#{base_url}#{::Noid::Rails.treeify(fs_id)}/files/#{file_id}"
   #                                         end
 
+  # When your application is ready to use the valkyrie index instead of the one
+  # maintained by active fedora, you will need to set this to true. You will
+  # also need to update your Blacklight configuration.
+  # config.query_index_from_valkyrie = false
+
   ## Fedora import/export tool
   #
   # Path to the Fedora import export tool jar file
