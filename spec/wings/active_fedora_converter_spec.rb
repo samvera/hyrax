@@ -40,6 +40,10 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       it 'repopulates the embargo' do
         expect(converter.convert).to have_attributes(embargo_id: work.embargo_id)
       end
+
+      it 'repopulates the embargo as a model' do
+        expect(converter.convert).to have_attributes(embargo: work.embargo)
+      end
     end
 
     context 'with a lease' do

@@ -7,7 +7,7 @@ module Hyrax
     include Valkyrie::Resource::AccessControls
 
     attribute :alternate_ids, ::Valkyrie::Types::Array
-    attribute :embargo_id,    Valkyrie::Types::ID
+    attribute :embargo,       Hyrax::Embargo
 
     def visibility=(value)
       visibility_writer.assign_access_for(visibility: value)

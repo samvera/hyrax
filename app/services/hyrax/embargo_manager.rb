@@ -36,7 +36,7 @@ module Hyrax
     ##
     # @return [Hyrax::Embargo]
     def clone_embargo
-      return Embargo::NullEmbargo.new unless under_embargo?
+      return Embargo.new unless under_embargo?
 
       Embargo.new(clone_attributes)
     end
@@ -52,9 +52,7 @@ module Hyrax
     ##
     # @return [Valkyrie::Resource]
     def embargo
-      return Embargo::NullEmbargo.new unless resource.embargo_id.present?
-
-      query_service.find_by(id: resource.embargo_id)
+      resource.embargo || Embargo.new
     end
 
     ##
