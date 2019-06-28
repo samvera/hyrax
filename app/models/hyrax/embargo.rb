@@ -2,7 +2,12 @@
 
 module Hyrax
   ##
-  # The Valkyrie model for embargos.
+  # The Valkyrie model for embargoes.
+  #
+  # @note Embargo and Lease can, in principle, be collapsed into a single model
+  #   with a `#visibility_during`, `#visibility_after`, `#end_date`, and
+  #   `#history`. We haven't made this transition in order to simplify legacy
+  #   support for `Hydra::AccessControls`.
   class Embargo < Valkyrie::Resource
     attribute :visibility_after_embargo,  Valkyrie::Types::String
     attribute :visibility_during_embargo, Valkyrie::Types::String
