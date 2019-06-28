@@ -52,19 +52,11 @@ module Valkyrie
           end
 
           def solr_document(resource)
-            base_hash(resource).merge(resource_indexer.new(resource: resource).to_solr)
+            resource_indexer.new(resource: resource).to_solr
           end
 
           def add_documents(documents)
             connection.add documents, params: COMMIT_PARAMS
-          end
-
-          def base_hash(resource)
-            {
-              "id": resource.id.to_s,
-              "created_at_dtsi": resource.created_at,
-              "updated_at_dtsi": resource.updated_at
-            }
           end
 
           ##
