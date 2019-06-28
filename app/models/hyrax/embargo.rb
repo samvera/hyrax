@@ -12,31 +12,5 @@ module Hyrax
     def active?
       (embargo_release_date.present? && Time.zone.today < embargo_release_date)
     end
-
-    class NullEmbargo
-      def id
-        nil
-      end
-
-      def visibility_after_embargo
-        nil
-      end
-
-      def visibility_during_embargo
-        nil
-      end
-
-      def embargo_release_date
-        nil
-      end
-
-      def embargo_history
-        []
-      end
-
-      def active?
-        false
-      end
-    end
   end
 end
