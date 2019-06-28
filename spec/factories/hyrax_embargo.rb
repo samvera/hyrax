@@ -8,5 +8,9 @@ FactoryBot.define do
     to_create do |instance|
       Valkyrie.config.metadata_adapter.persister.save(resource: instance)
     end
+
+    trait :expired do
+      embargo_release_date { Time.zone.today - 1 }
+    end
   end
 end

@@ -2,7 +2,28 @@
 
 module Hyrax
   ##
-  # Manages an embargo for a `Hyrax::Resource`
+  # Provides utilities for managing the lifecycle of an `Hyrax::Embargo` on a
+  # `Hyrax::Resource`.
+  #
+  # This can do things like
+  #
+  # @example check whether a resource is under an active embargo
+  #   manager = EmbargoManager.new(resource: my_resource)
+  #   manager.under_embargo? # => false
+  #
+  # @example applying an embargo
+  #   embargo = Hyrax::Embargo.new(visibility_during_embargo: 'restricted',
+  #                                visibility_after_embargo:  'open',
+  #                                embargo_release_date:      Time.zone.today + 1000)
+  #
+  #   resource            = Hyrax::Resource.new(embargo: embargo)
+  #   resource.visibility = 'open'
+  #
+  #   manager = EmbargoManager.new(resource: resource)
+  #
+  #   manager.apply
+  #   resource.visibility # => 'restricted'
+  #
   class EmbargoManager
     ##
     # @!attribute [rw] resource
@@ -34,11 +55,16 @@ module Hyrax
     end
 
     ##
-    # @return [Hyrax::Embargo]
-    def clone_embargo
-      return Embargo.new unless under_embargo?
+    # Copies and applies the embargo to a new (target) resource.
+    #
+    # @param target [Hyrax::Resource]
+    #
+    # @return [Boolean]
+    def copy_embargo_to(target:)
+      return false unless under_embargo?
 
-      Embargo.new(clone_attributes)
+      target.embargo = Embargo.new(clone_attributes)
+      self.class.apply_embargo_for(resource: target)
     end
 
     ##
