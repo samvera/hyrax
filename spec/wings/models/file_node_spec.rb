@@ -137,7 +137,10 @@ RSpec.describe Wings::FileNode do
       end
     end
     context 'when versions saved' do
-      it 'returns a set of file_nodes for previous versions'
+      it 'returns a set of file_nodes for previous versions' do
+        pending 'TODO: write test when Wings file versioning is implemented'
+        expect(false).to be true
+      end
     end
   end
 end
