@@ -8,6 +8,25 @@ RSpec.describe Hyrax::EmbargoManager do
     let(:resource) { FactoryBot.create(:embargoed_work).valkyrie_resource }
   end
 
+  describe '#apply' do
+    it 'is a no-op for inactive embargo' do
+      expect { manager.apply }
+        .not_to change { resource.visibility }
+    end
+
+    context 'when under embargo' do
+      include_context 'when under embargo'
+
+      before { resource.visibility = 'open' }
+
+      it 'applies the active embargo visibility' do
+        expect { manager.apply }
+          .to change { resource.visibility }
+          .to 'restricted'
+      end
+    end
+  end
+
   describe '#embargo' do
     it 'gives an inactive embargo' do
       expect(manager.embargo).not_to be_active
