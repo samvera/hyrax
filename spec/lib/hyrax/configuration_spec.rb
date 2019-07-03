@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::Configuration do
-  subject { described_class.new }
+  subject(:configuration) { described_class.new }
 
   describe '#register_roles' do
     it 'yields a RoleRegistry' do
@@ -82,4 +82,10 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:whitelisted_ingest_dirs) }
   it { is_expected.to respond_to(:whitelisted_ingest_dirs=) }
   it { is_expected.to respond_to(:work_requires_files?) }
+
+  describe "#whitelisted_ingest_dirs" do
+    it "provides the Rails tmp directory for temporary downloads for cloud files" do
+      expect(configuration.whitelisted_ingest_dirs).to include(Rails.root.join('tmp').to_s)
+    end
+  end
 end
