@@ -189,7 +189,10 @@ module Hyrax
     def whitelisted_ingest_dirs
       @whitelisted_ingest_dirs ||= \
         if defined? BrowseEverything
-          Array.wrap(BrowseEverything.config['file_system'].try(:[], :home)).compact
+          file_system_dirs = Array.wrap(BrowseEverything.config['file_system'].try(:[], :home)).compact
+          # Include the Rails tmp directory for cases where the BrowseEverything provider is required to download the file to a temporary directory first
+          tmp_dir = [Rails.root.join('tmp').to_s]
+          file_system_dirs + tmp_dir
         else
           []
         end
