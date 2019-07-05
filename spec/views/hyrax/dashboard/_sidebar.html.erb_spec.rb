@@ -129,4 +129,43 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
 
     it { is_expected.not_to have_link t('hyrax.dashboard.manage_proxies') }
   end
+
+  context 'when sidebar partials are configured' do
+    around do |example|
+      original_partials = Hyrax::DashboardController.sidebar_partials.deep_dup
+      example.call
+      Hyrax::DashboardController.sidebar_partials = original_partials
+    end
+
+    # Show configuration menu
+    let(:manage_feature) { true }
+
+    it 'renders custom activity partials' do
+      stub_template "hyrax/dashboard/sidebar/_custom_activity.html.erb" => "Custom Activity Item"
+      Hyrax::DashboardController.sidebar_partials[:activity] << "hyrax/dashboard/sidebar/custom_activity"
+      render
+      expect(rendered).to have_content "Custom Activity Item"
+    end
+
+    it 'renders custom configuration partials' do
+      stub_template "hyrax/dashboard/sidebar/_custom_configuration.html.erb" => "Custom Configuration Item"
+      Hyrax::DashboardController.sidebar_partials[:configuration] << "hyrax/dashboard/sidebar/custom_configuration"
+      render
+      expect(rendered).to have_content "Custom Configuration Item"
+    end
+
+    it 'renders custom repository content partials' do
+      stub_template "hyrax/dashboard/sidebar/_custom_repository_content.html.erb" => "Custom Repository Content Item"
+      Hyrax::DashboardController.sidebar_partials[:repository_content] << "hyrax/dashboard/sidebar/custom_repository_content"
+      render
+      expect(rendered).to have_content "Custom Repository Content Item"
+    end
+
+    it 'renders custom tasks partials' do
+      stub_template "hyrax/dashboard/sidebar/_custom_task.html.erb" => "Custom Task Item"
+      Hyrax::DashboardController.sidebar_partials[:tasks] << "hyrax/dashboard/sidebar/custom_task"
+      render
+      expect(rendered).to have_content "Custom Task Item"
+    end
+  end
 end

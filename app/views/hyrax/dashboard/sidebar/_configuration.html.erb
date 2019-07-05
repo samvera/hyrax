@@ -28,9 +28,14 @@
         <% end %>
       <% end %>
     </li>
+
     <% if can?(:manage, Sipity::WorkflowResponsibility) %>
       <%= menu.nav_link(hyrax.admin_workflow_roles_path) do %>
         <span class="fa fa-users" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.workflow_roles') %></span>
       <% end %>
-    <% end # end of configuration block %>
+    <% end %>
+
+    <% Hyrax::DashboardController.sidebar_partials[:configuration].each do |partial| %>
+      <%= render partial, menu: menu %>
+    <% end %>
   <% end %>

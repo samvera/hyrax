@@ -6,6 +6,9 @@ module Hyrax
     before_action :authenticate_user!
     before_action :build_breadcrumbs, only: [:show]
 
+    class_attribute :sidebar_partials
+    self.sidebar_partials = { activity: [], configuration: [], repository_content: [], tasks: [] }
+
     def show
       if can? :read, :admin_dashboard
         @presenter = Hyrax::Admin::DashboardPresenter.new

@@ -31,3 +31,7 @@
       <span class="fa fa-bar-chart" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.statistics') %></span>
     <% end %>
   <% end %>
+
+  <% Hyrax::DashboardController.sidebar_partials[:activity].each do |partial| %>
+    <%= render partial, menu: menu %>
+  <% end %>

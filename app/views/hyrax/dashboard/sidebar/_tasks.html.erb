@@ -20,3 +20,7 @@
       <span class="fa fa-flag" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.leases.index.manage_leases') %></span>
     <% end %>
   <% end %>
+
+  <% Hyrax::DashboardController.sidebar_partials[:tasks].each do |partial| %>
+    <%= render partial, menu: menu %>
+  <% end %>
