@@ -1185,6 +1185,12 @@ en:
         placeholder: Search for a user
         sr_only_description: Select a user to transfer "%{work_title}" to, add optional comments and then press transfer.
         title: Transfer Ownership of "%{work_title}"
+      received:
+        comments: Comments
+        date: Date
+        from: From
+        status: Status
+        title: Title
     upload:
       alert:
         contact_href_text: contact form
