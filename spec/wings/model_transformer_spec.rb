@@ -134,7 +134,7 @@ RSpec.describe Wings::ModelTransformer do
       let(:work) { FactoryBot.create(:embargoed_work) }
 
       it 'has the correct embargo id' do
-        expect(subject.build.embargo_id.to_s).to eq work.embargo.id
+        expect(subject.build.embargo.id.id).to eq work.embargo.id
       end
     end
 
@@ -142,7 +142,7 @@ RSpec.describe Wings::ModelTransformer do
       let(:work) { FactoryBot.create(:leased_work) }
 
       it 'has the correct lease id' do
-        expect(subject.build.lease_id.to_s).to eq work.lease.id
+        expect(subject.build.lease.id.id).to eq work.lease.id
       end
     end
 
@@ -152,7 +152,7 @@ RSpec.describe Wings::ModelTransformer do
       it 'has the correct embargo id' do
         work.embargo.save
 
-        expect(subject.build.embargo_id.to_s).to eq work.embargo.id
+        expect(subject.build.embargo.id.id).to eq work.embargo.id
       end
     end
 
@@ -162,7 +162,7 @@ RSpec.describe Wings::ModelTransformer do
       it 'has the correct lease id' do
         work.lease.save
 
-        expect(subject.build.lease_id.to_s).to eq work.lease.id
+        expect(subject.build.lease.id.id).to eq work.lease.id
       end
     end
   end

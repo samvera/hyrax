@@ -1,4 +1,50 @@
+# frozen_string_literal: true
+
 RSpec.describe VisibilityCopyJob do
+  context 'context with a valkyrie resource' do
+    let(:proxy)    { Hyrax::ActiveJobProxy.new(resource: resource) }
+    let(:resource) { FactoryBot.create(:work_with_files).valkyrie_resource }
+    let(:queries)  { Hyrax.query_service.custom_queries }
+
+    it 'serializes proxies' do
+      expect { described_class.perform_later(proxy) }.not_to raise_error
+    end
+
+    it 'copies visibility to file sets' do
+      resource.visibility = 'open'
+
+      expect { described_class.perform_now(resource) }
+        .to change { queries.find_child_filesets(resource: resource).map(&:visibility) }
+        .to ['open', 'open']
+    end
+
+    context 'with an embargo' do
+      let(:resource) { FactoryBot.create(:embargoed_work_with_files).valkyrie_resource }
+
+      it 'applies a copy of the embargo' do
+        release_date = resource.embargo.embargo_release_date
+
+        expect { described_class.perform_now(resource) }
+          .to change { queries.find_child_filesets(resource: resource).map(&:embargo) }
+          .to contain_exactly(have_attributes(embargo_release_date: release_date),
+                              have_attributes(embargo_release_date: release_date))
+      end
+    end
+
+    context 'when work is under lease' do
+      let(:resource) { FactoryBot.create(:leased_work_with_files).valkyrie_resource }
+
+      it 'applies a copy of the embargo' do
+        release_date = resource.lease.lease_expiration_date
+
+        expect { described_class.perform_now(resource) }
+          .to change { queries.find_child_filesets(resource: resource).map(&:lease) }
+          .to contain_exactly(have_attributes(lease_expiration_date: release_date),
+                              have_attributes(lease_expiration_date: release_date))
+      end
+    end
+  end
+
   describe 'an open access work' do
     let(:work) { create(:work_with_files) }
 

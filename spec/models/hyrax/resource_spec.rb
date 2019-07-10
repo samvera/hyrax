@@ -20,6 +20,26 @@ RSpec.describe Hyrax::Resource do
     end
   end
 
+  describe '#embargo' do
+    subject(:resource) { described_class.new(embargo: embargo) }
+    let(:embargo)      { FactoryBot.build(:hyrax_embargo) }
+
+    it 'saves the embargo' do
+      expect(Hyrax.persister.save(resource: resource).embargo)
+        .to have_attributes(embargo_release_date: embargo.embargo_release_date)
+    end
+  end
+
+  describe '#lease' do
+    subject(:resource) { described_class.new(lease: lease) }
+    let(:lease)        { FactoryBot.build(:hyrax_lease) }
+
+    it 'saves the lease' do
+      expect(Hyrax.persister.save(resource: resource).lease)
+        .to have_attributes(lease_expiration_date: lease.lease_expiration_date)
+    end
+  end
+
   describe '#visibility' do
     let(:open) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
 

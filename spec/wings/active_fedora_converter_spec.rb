@@ -40,6 +40,10 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       it 'repopulates the embargo' do
         expect(converter.convert).to have_attributes(embargo_id: work.embargo_id)
       end
+
+      it 'repopulates the embargo as a model' do
+        expect(converter.convert).to have_attributes(embargo: work.embargo)
+      end
     end
 
     context 'with a lease' do
@@ -92,6 +96,25 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
 
         it 'sets the visibility' do
           expect(converter.convert).to have_attributes(visibility: visibility)
+        end
+      end
+    end
+
+    context 'when setting ACLs' do
+      it 'converts ACLs' do
+        expect { resource.read_users = ['moomin'] }
+          .to change { described_class.new(resource: resource).convert }
+          .to have_attributes(read_users: contain_exactly('moomin'))
+      end
+
+      context 'when ACLs exist' do
+        let(:work) { FactoryBot.create(:public_work) }
+
+        it 'can delete ACLs' do
+          expect { resource.read_groups = [] }
+            .to change { described_class.new(resource: resource).convert }
+            .from(have_attributes(read_groups: contain_exactly('public')))
+            .to have_attributes(read_groups: be_empty)
         end
       end
     end

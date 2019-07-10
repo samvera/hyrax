@@ -22,6 +22,7 @@ module Wings
   #
   #   resource.alternate_ids # => [#<Valkyrie::ID:0x... id: 'an_identifier'>]
   #
+  # rubocop:disable Metrics/ClassLength
   class ModelTransformer
     ##
     # @!attribute [rw] pcdm_object
@@ -111,6 +112,8 @@ module Wings
     def self.base_for(klass:)
       if klass == Hydra::AccessControls::Embargo
         Hyrax::Embargo
+      elsif klass == Hydra::AccessControls::Lease
+        Hyrax::Lease
       else
         Hyrax::Resource
       end
@@ -206,9 +209,13 @@ module Wings
         all_keys =
           pcdm_object.attributes.keys +
           self.class.relationship_keys_for(reflections: pcdm_object.reflections)
-        AttributeTransformer.run(pcdm_object, all_keys)
-                            .merge reflection_ids
-          .merge(additional_attributes)
+
+        result = AttributeTransformer.run(pcdm_object, all_keys).merge(reflection_ids).merge(additional_attributes)
+
+        append_embargo(result)
+        append_lease(result)
+
+        result
       end
 
       def reflection_ids
@@ -220,14 +227,24 @@ module Wings
       def additional_attributes
         { created_at: pcdm_object.try(:create_date),
           updated_at: pcdm_object.try(:modified_date),
-          embargo_id: pcdm_object.try(:embargo)&.id || pcdm_object.try(:embargo_id),
-          lease_id:   pcdm_object.try(:lease)&.id   || pcdm_object.try(:lease_id),
           read_groups: pcdm_object.try(:read_groups),
           read_users: pcdm_object.try(:read_users),
           edit_groups: pcdm_object.try(:edit_groups),
           edit_users: pcdm_object.try(:edit_users),
           member_ids: pcdm_object.try(:ordered_member_ids) } # We want members in order, so extract from ordered_members.
       end
+
+      def append_embargo(attrs)
+        embargo_id      = pcdm_object.try(:embargo_id) || pcdm_object.try(:embargo)&.id
+        attrs[:embargo] = Hyrax.query_service.find_by(id: ::Valkyrie::ID.new(embargo_id)) if
+          embargo_id
+      end
+
+      def append_lease(attrs)
+        lease_id      = pcdm_object.try(:lease_id) || pcdm_object.try(:lease)&.id
+        attrs[:lease] = Hyrax.query_service.find_by(id: ::Valkyrie::ID.new(lease_id)) if
+          lease_id
+      end
   end
-  # rubocop:enable Style/ClassVars
+  # rubocop:enable Style/ClassVars Metrics/ClassLength
 end
