@@ -26,6 +26,7 @@ require 'wings/valkyrie/metadata_adapter'
 require 'wings/valkyrie/resource_factory'
 require 'wings/valkyrie/persister'
 require 'wings/valkyrie/query_service'
+require 'wings/valkyrie/storage/active_fedora'
 
 ActiveFedora::Base.include Wings::Valkyrizable
 
@@ -39,8 +40,15 @@ Valkyrie::MetadataAdapter.register(
 Valkyrie.config.metadata_adapter = :wings_adapter
 
 Valkyrie::StorageAdapter.register(
-  Valkyrie::Storage::Fedora
-    .new(connection: Ldp::Client.new(ActiveFedora.fedora.host)),
-  :fedora
+  Wings::Storage::ActiveFedora
+    .new(connection: Ldp::Client.new(ActiveFedora.fedora.host), base_path: ActiveFedora.fedora.base_path),
+  :active_fedora
 )
-Valkyrie.config.storage_adapter = :fedora
+Valkyrie.config.storage_adapter = :active_fedora
+
+[Hyrax::CustomQueries::Wings,
+ Hyrax::CustomQueries::Navigators::ChildCollectionsNavigator,
+ Hyrax::CustomQueries::Navigators::ChildFilesetsNavigator,
+ Hyrax::CustomQueries::Navigators::ChildWorksNavigator].each do |query_handler|
+  Valkyrie.config.metadata_adapter.query_service.custom_queries.register_query_handler(query_handler)
+end

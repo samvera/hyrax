@@ -11,6 +11,12 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
   let(:resource)      { work.valkyrie_resource }
   let(:work)          { GenericWork.new(attributes) }
 
+  describe '.convert' do
+    it 'returns the ActiveFedora model' do
+      expect(described_class.convert(resource: resource)).to eq work
+    end
+  end
+
   describe '#convert' do
     it 'returns the ActiveFedora model' do
       expect(converter.convert).to eq work
@@ -67,7 +73,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
 
       let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
 
-      before { work.visibility = visibility }
+      before { resource.visibility = visibility }
 
       it 'sets the visibility' do
         expect(converter.convert).to have_attributes(visibility: visibility)

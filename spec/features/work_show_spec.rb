@@ -55,7 +55,6 @@ RSpec.describe "work show view" do
     end
 
     it "allows adding work to a collection", clean_repo: true, js: true do
-      optional 'ability to get capybara to find css select2-result (see Issue #3038)' if ci_build?
       click_button "Add to collection" # opens the modal
       # Really ensure that this Collection model is persisted
       Collection.all.map(&:destroy!)
@@ -64,6 +63,7 @@ RSpec.describe "work show view" do
       click_button 'Save changes'
 
       # forwards to collection show page
+      sleep 5
       expect(page).to have_content persisted_collection.title.first
       expect(page).to have_content work.title.first
       expect(page).to have_selector '.alert-success', text: 'Collection was successfully updated.'
@@ -107,12 +107,12 @@ RSpec.describe "work show view" do
     end
 
     it "allows adding work to a collection", clean_repo: true, js: true do
-      optional 'ability to get capybara to find css select2-result (see Issue #3038)' if ci_build?
       click_button "Add to collection" # opens the modal
       select_member_of_collection(collection)
       click_button 'Save changes'
 
       # forwards to collection show page
+      sleep 5
       expect(page).to have_content collection.title.first
       expect(page).to have_content work.title.first
       expect(page).to have_selector '.alert-success', text: 'Collection was successfully updated.'

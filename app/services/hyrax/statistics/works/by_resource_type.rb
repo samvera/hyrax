@@ -5,7 +5,7 @@ module Hyrax
         private
 
           def index_key
-            Hyrax.config.index_field_mapper.solr_name("resource_type", :facetable)
+            "resource_type_sim"
           end
       end
     end

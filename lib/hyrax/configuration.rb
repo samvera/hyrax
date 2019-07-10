@@ -189,7 +189,10 @@ module Hyrax
     def whitelisted_ingest_dirs
       @whitelisted_ingest_dirs ||= \
         if defined? BrowseEverything
-          Array.wrap(BrowseEverything.config['file_system'].try(:[], :home)).compact
+          file_system_dirs = Array.wrap(BrowseEverything.config['file_system'].try(:[], :home)).compact
+          # Include the Rails tmp directory for cases where the BrowseEverything provider is required to download the file to a temporary directory first
+          tmp_dir = [Rails.root.join('tmp').to_s]
+          file_system_dirs + tmp_dir
         else
           []
         end
@@ -221,28 +224,6 @@ module Hyrax
     def curation_concerns
       registered_curation_concern_types.map(&:constantize)
     end
-
-    # The MetadataAdapter to use when persisting resources with Valkyrie
-    #
-    # @see lib/wings
-    # @see https://github.com/samvera-labs/valkyrie
-    def valkyrie_metadata_adapter
-      Valkyrie::MetadataAdapter.find(@valkyrie_metadata_adapter || :wings_adapter)
-    end
-
-    def valkyrie_metadata_adapter=(adapter)
-      raise StandardError, "Hyrax currently only supports :wings_adapter as the configured valkyrie_metadata_adapter." unless adapter == :wings_adapter
-      @valkyrie_metadata_adapter = adapter
-    end
-
-    # The StorageAdapter to use when persisting resources with Valkyrie
-    #
-    # @see lib/wings
-    # @see https://github.com/samvera-labs/valkyrie
-    def valkyrie_storage_adapter
-      Valkyrie::StorageAdapter.find(@valkyrie_storage_adapter || :fedora)
-    end
-    attr_writer :valkyrie_storage_adapter
 
     # A configuration point for changing the behavior of the license service.
     #
@@ -511,6 +492,15 @@ module Hyrax
       end
     end
 
+    attr_writer :resource_id_to_uri_transformer
+    def resource_id_to_uri_transformer
+      @resource_id_to_uri_transformer ||= lambda do |resource, base_url|
+        file_id = CGI.escape(resource.file_identifiers.first.to_s)
+        fs_id = CGI.escape(resource.file_set_id.to_s)
+        "#{base_url}#{::Noid::Rails.treeify(fs_id)}/files/#{file_id}"
+      end
+    end
+
     attr_writer :contact_email
     def contact_email
       @contact_email ||= "repo-admin@example.org"
@@ -546,6 +536,11 @@ module Hyrax
     attr_writer :solr_select_path
     def solr_select_path
       @solr_select_path ||= ActiveFedora.solr_config.fetch(:select_path, 'select')
+    end
+
+    attr_writer :query_index_from_valkyrie
+    def query_index_from_valkyrie
+      @query_index_from_valkyrie ||= false
     end
 
     private

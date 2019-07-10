@@ -131,7 +131,7 @@ module Hyrax
 
       # @api private
       def self.find_solr_document_by(id:)
-        query = ActiveFedora::SolrQueryBuilder.construct_query_for_ids([id])
+        query = Hyrax::SolrQueryBuilderService.construct_query_for_ids([id])
         document = Hyrax::SolrService.query(query, rows: 1).first
         document = ActiveFedora::Base.find(id).to_solr if document.nil?
         raise "Unable to find SolrDocument with ID=#{id}" if document.nil?
@@ -157,7 +157,7 @@ module Hyrax
       # @todo What is the appropriate suffix to apply to the solr_field_name?
       def self.raw_child_solr_documents_of(parent_document:)
         # query Solr for all of the documents included as a member_of_collection parent. Or up to 10000 of them.
-        child_query = ActiveFedora::SolrQueryBuilder.construct_query(member_of_collection_ids_ssim: parent_document.id)
+        child_query = Hyrax::SolrQueryBuilderService.construct_query(member_of_collection_ids_ssim: parent_document.id)
         Hyrax::SolrService.query(child_query, rows: 10_000.to_i)
       end
       private_class_method :raw_child_solr_documents_of

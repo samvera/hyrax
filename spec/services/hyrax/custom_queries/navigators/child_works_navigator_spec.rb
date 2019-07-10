@@ -1,16 +1,8 @@
-# frozen_string_literal: true
-require 'wings_helper'
-require 'wings/model_transformer'
-require 'wings/navigators/child_works_navigator'
-
-RSpec.describe Wings::ChildWorksNavigator, :clean_repo do
+RSpec.describe Hyrax::CustomQueries::Navigators::ChildWorksNavigator, :clean_repo do
   subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
 
   let(:resource) { subject.build }
-
-  let(:adapter) { Wings::Valkyrie::MetadataAdapter.new }
-  let(:query_service) { Wings::Valkyrie::QueryService.new(adapter: adapter) }
-  let(:navigator) { described_class.new(query_service: query_service) }
+  let(:custom_query_service) { Hyrax.query_service.custom_queries }
 
   let(:collection1)    { build(:collection, id: 'col1', title: ['Collection 1']) }
   let(:collection2)    { build(:collection, id: 'col2', title: ['Child Collection 1']) }
@@ -32,7 +24,7 @@ RSpec.describe Wings::ChildWorksNavigator, :clean_repo do
       end
 
       it 'returns only child works as Valkyrie resources' do
-        child_works = navigator.find_child_works(resource: collection1_resource)
+        child_works = custom_query_service.find_child_works(resource: collection1_resource)
         expect(child_works.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([work2.id, work1.id])
       end
     end
@@ -47,7 +39,7 @@ RSpec.describe Wings::ChildWorksNavigator, :clean_repo do
       end
 
       it 'returns only child works as Valkyrie resources' do
-        child_works = navigator.find_child_works(resource: work1_resource)
+        child_works = custom_query_service.find_child_works(resource: work1_resource)
         expect(child_works.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([work2.id, work3.id])
       end
     end
@@ -64,7 +56,7 @@ RSpec.describe Wings::ChildWorksNavigator, :clean_repo do
       end
 
       it 'returns Valkyrie ids for child works only' do
-        child_work_ids = navigator.find_child_work_ids(resource: collection1_resource)
+        child_work_ids = custom_query_service.find_child_work_ids(resource: collection1_resource)
         expect(child_work_ids).to match_valkyrie_ids_with_active_fedora_ids([work2.id, work1.id])
       end
     end
@@ -79,7 +71,7 @@ RSpec.describe Wings::ChildWorksNavigator, :clean_repo do
       end
 
       it 'returns Valkyrie ids for child works only' do
-        child_work_ids = navigator.find_child_work_ids(resource: work1_resource)
+        child_work_ids = custom_query_service.find_child_work_ids(resource: work1_resource)
         expect(child_work_ids).to match_valkyrie_ids_with_active_fedora_ids([work2.id, work3.id])
       end
     end

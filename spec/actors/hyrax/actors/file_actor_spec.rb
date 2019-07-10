@@ -137,8 +137,8 @@ RSpec.describe Hyrax::Actors::FileActor do
     let(:fixture)  { fixture_file_upload('/world.png', 'image/png') }
     let(:huf) { Hyrax::UploadedFile.new(user: user, file: fixture) }
     let(:io) { JobIoWrapper.new(file_set_id: file_set.id, user: user, uploaded_file: huf, path: huf.uploader.path) }
-    let(:storage_adapter) { Valkyrie.config.storage_adapter }
-    let(:metadata_adapter) { Valkyrie.config.metadata_adapter }
+    let(:storage_adapter) { Hyrax.storage_adapter }
+    let(:metadata_adapter) { Hyrax.metadata_adapter }
     let(:persister) { metadata_adapter.persister }
     let(:query_service) { Wings::Valkyrie::QueryService.new(adapter: metadata_adapter) }
     let(:file_node) do
@@ -173,7 +173,7 @@ RSpec.describe Hyrax::Actors::FileActor do
       end
     end
 
-    it 'uses the provided mime_type' do
+    xit 'uses the provided mime_type' do
       pending 'implementation of Wings::Valkyrie::Persister #save_file_node'
       allow(fixture).to receive(:content_type).and_return('image/gif')
       expect(Hyrax::VersioningService).to receive(:create).with(Wings::FileNode, user)
@@ -188,7 +188,7 @@ RSpec.describe Hyrax::Actors::FileActor do
       let(:io2) { JobIoWrapper.new(file_set_id: file_set.id, user: user2, uploaded_file: huf2, path: huf2.uploader.path) }
       let(:user2) { create(:user) }
       let(:actor2) { described_class.new(file_set, relation, user2) }
-      let(:adapter) { Valkyrie.config.metadata_adapter }
+      let(:adapter) { Hyrax.metadata_adapter }
       let(:query_service) { Wings::Valkyrie::QueryService.new(adapter: adapter) }
       let(:versions) do
         reloaded = query_service.find_by(id: file_set.id)
@@ -196,6 +196,7 @@ RSpec.describe Hyrax::Actors::FileActor do
       end
 
       before do
+        # TODO: WINGS - When #ingest_file works, these should be uncommented.
         # expect(Hyrax::VersioningService).to receive(:create).with(Wings::FileNode, user)
         # expect(Hyrax::VersioningService).to receive(:create).with(Wings::FileNode, user2)
         # expect(CharacterizeJob).to receive(:perform_later)

@@ -3,8 +3,7 @@
 module Wings
   class IdConverterService
     def self.convert_to_active_fedora_ids(valkyrie_ids)
-      metadata_adapter = Hyrax.config.valkyrie_metadata_adapter
-      resources = valkyrie_ids.map { |id| metadata_adapter.query_service.find_by(id: id) }
+      resources = valkyrie_ids.map { |id| Hyrax.query_service.find_by(id: id) }
       resources.map { |resource| resource.id.id } # TODO: What if id.id is empty?
     end
 

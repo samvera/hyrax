@@ -1,16 +1,4 @@
 Hyrax.config do |config|
-  # The MetadataAdapter to use when persisting resources with Valkyrie.
-  # NOTE: Until Hyrax has been reworked to be Valkyrie-native, the default
-  #       metadata adapter supported is :wings_adapter.
-  # @see lib/wings
-  # @see https://github.com/samvera-labs/valkyrie
-  # config.valkyrie_metadata_adapter = :wings_adapter
-
-  # The StorageAdapter to use when persisting resources with Valkyrie
-  # @see lib/wings
-  # @see https://github.com/samvera-labs/valkyrie
-  # config.valkyrie_storage_adapter = :fedora
-
   # Register roles that are expected by your implementation.
   # @see Hyrax::RoleRegistry for additional details.
   # @note there are magical roles as defined in Hyrax::RoleRegistry::MAGIC_ROLES
@@ -243,6 +231,16 @@ Hyrax.config do |config|
   # config.translate_uri_to_id = lambda do |id|
   #                                "#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}/#{Noid::Rails.treeify(id)}"
   #                              end
+  # config.resource_id_to_uri_transformer = lambda do |resource, base_url|
+  #                                           file_id = CGI.escape(resource.file_identifiers.first.to_s)
+  #                                           fs_id = CGI.escape(resource.file_set_id.to_s)
+  #                                           "#{base_url}#{::Noid::Rails.treeify(fs_id)}/files/#{file_id}"
+  #                                         end
+
+  # When your application is ready to use the valkyrie index instead of the one
+  # maintained by active fedora, you will need to set this to true. You will
+  # also need to update your Blacklight configuration.
+  # config.query_index_from_valkyrie = false
 
   ## Fedora import/export tool
   #

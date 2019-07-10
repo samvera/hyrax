@@ -25,7 +25,7 @@ module Hyrax
     end
 
     def show
-      @curation_concern ||= ActiveFedora::Base.find(params[:id])
+      @curation_concern ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id], use_valkyrie: false)
       presenter
       query_collection_members
     end

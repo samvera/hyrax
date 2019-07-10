@@ -148,6 +148,38 @@ RSpec.describe JobIoWrapper, type: :model do
     end
   end
 
+  describe '#size' do
+    context 'when file responds to :size' do
+      before do
+        allow(subject.file).to receive(:respond_to?).with(:size).and_return(true)
+        allow(subject.file).to receive(:respond_to?).with(:stat).and_return(false)
+        allow(subject.file).to receive(:size).and_return(123)
+      end
+      it 'returns the size of the file' do
+        expect(subject.size).to eq '123'
+      end
+    end
+    context 'when file responds to :stat' do
+      before do
+        allow(subject.file).to receive(:respond_to?).with(:size).and_return(false)
+        allow(subject.file).to receive(:respond_to?).with(:stat).and_return(true)
+        allow(subject.file).to receive_message_chain(:stat, :size).and_return(456) # rubocop:disable RSpec/MessageChain
+      end
+      it 'returns the size of the file' do
+        expect(subject.size).to eq '456'
+      end
+    end
+    context 'when file responds to neither :size nor :stat' do
+      before do
+        allow(subject.file).to receive(:respond_to?).with(:size).and_return(false)
+        allow(subject.file).to receive(:respond_to?).with(:stat).and_return(false)
+      end
+      it 'returns nil' do
+        expect(subject.size).to eq nil
+      end
+    end
+  end
+
   describe '#file_actor' do
     let(:file_actor) { Hyrax::Actors::FileActor.new(file_set, subject.relation, user) }
 
@@ -171,16 +203,30 @@ RSpec.describe JobIoWrapper, type: :model do
   end
 
   describe '#file_set' do
+    let(:fileset_id) { 'fileset_id' }
+    let!(:fileset) { create(:file_set, id: fileset_id) }
+    before { allow(subject).to receive(:file_set_id).and_return(fileset_id) }
+
     context 'when finding through active fedora' do
-      xit 'finds the file set using active fedora and returns an instance of an active fedora file set'
+      it 'finds the file set using active fedora and returns an instance of an active fedora file set' do
+        results = subject.file_set
+        expect(results).to be_a_kind_of(FileSet)
+        expect(results.id).to eq fileset_id
+      end
     end
     context 'when finding through valkyrie' do
-      xit 'finds the file set through valkyrie and returns an instance of an active fedora file set'
+      it 'finds the file set through valkyrie and returns an instance of a valkyrie file set resource' do
+        results = subject.file_set(use_valkyrie: true)
+        expect(results).to be_a_kind_of(Valkyrie::Resource)
+        expect(results.id.to_s).to eq fileset_id
+      end
     end
   end
 
   describe '#to_file_node' do
-    xit 'creates and returns file_node'
+    it 'creates and returns file_node' do
+      expect(subject.to_file_node).to be_a_kind_of(Wings::FileNode)
+    end
   end
 
   describe '#file' do

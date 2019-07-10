@@ -38,6 +38,7 @@ module Hyrax
       say_status('info', '[Hyrax] GENERATING HYDRA-HEAD', :blue)
       generate 'hydra:head -f'
       generate "hyrax:models#{options[:force] ? ' -f' : ''}"
+      generate 'browse_everything:config'
     end
 
     def replace_blacklight_layout

@@ -52,7 +52,7 @@ module Hyrax
       end
 
       def query
-        ActiveFedora::SolrQueryBuilder.construct_query_for_ids([id])
+        Hyrax::SolrQueryBuilderService.construct_query_for_ids([id])
       end
   end
 end

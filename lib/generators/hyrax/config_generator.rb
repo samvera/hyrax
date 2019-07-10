@@ -11,6 +11,7 @@ class Hyrax::ConfigGenerator < Rails::Generators::Base
     * Mini-magick
     * TinyMCE
     * i18n
+    * Valkyrie index
        """
 
   source_root File.expand_path('../templates', __FILE__)
@@ -34,6 +35,11 @@ class Hyrax::ConfigGenerator < Rails::Generators::Base
   def configure_redis
     copy_file 'config/redis.yml'
     copy_file 'config/initializers/redis_config.rb'
+  end
+
+  def configure_valkyrie_index
+    copy_file 'config/valkyrie_index.yml'
+    copy_file 'config/solr_wrapper_valkyrie_test.yml'
   end
 
   def create_initializer_config_file

@@ -25,7 +25,7 @@ class JobIoWrapper < ApplicationRecord
   validates :file_set_id, presence: true
 
   after_initialize :static_defaults
-  delegate :read, :size, to: :file
+  delegate :read, to: :file
 
   # Responsible for creating a JobIoWrapper from the given parameters, with a
   # focus on sniffing out attributes from the given :file.
@@ -59,12 +59,15 @@ class JobIoWrapper < ApplicationRecord
     super || extracted_mime_type
   end
 
+  def size
+    return file.size.to_s if file.respond_to? :size
+    return file.stat.size.to_s if file.respond_to? :stat
+    nil # unable to determine
+  end
+
   def file_set(use_valkyrie: false)
     return FileSet.find(file_set_id) unless use_valkyrie
-    adapter = Valkyrie.config.metadata_adapter
-    query_service = Wings::Valkyrie::QueryService.new(adapter: adapter)
-    query_service.find_by(id: Valkyrie::ID.new(file_set_id))
-    # TODO: At least temporarily, should this return the valkyrie resource version of the fileset or the active fedora fileset?
+    Hyrax.query_service.find_by(id: Valkyrie::ID.new(file_set_id))
   end
 
   def file_actor

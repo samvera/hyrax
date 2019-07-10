@@ -54,7 +54,7 @@ module Hyrax
     #       add_member_objects using the member_of_collections relationship.  Deprecate?
     def add_members(new_member_ids)
       return if new_member_ids.blank?
-      members << ActiveFedora::Base.find(new_member_ids)
+      members << Hyrax.query_service.custom_queries.find_many_by_alternate_ids(alternate_ids: new_member_ids, use_valkyrie: false)
     end
 
     # Add member objects by adding this collection to the objects' member_of_collection association.
@@ -63,7 +63,7 @@ module Hyrax
     #                   lib/wings/models/concerns/collection_behavior.rb
     def add_member_objects(new_member_ids)
       Array(new_member_ids).collect do |member_id|
-        member = ActiveFedora::Base.find(member_id)
+        member = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: member_id, use_valkyrie: false)
         message = Hyrax::MultipleMembershipChecker.new(item: member).check(collection_ids: id, include_current_members: true)
         if message
           member.errors.add(:collections, message)
@@ -106,7 +106,7 @@ module Hyrax
       end
 
       def collection_type_gid_document_field_name
-        Hyrax.config.index_field_mapper.solr_name('collection_type_gid', *index_collection_type_gid_as)
+        "collection_type_gid_ssim"
       end
     end
 
@@ -181,12 +181,12 @@ module Hyrax
       # Field name to look up when locating the size of each file in Solr.
       # Override for your own installation if using something different
       def file_size_field
-        Hyrax.config.index_field_mapper.solr_name(:file_size, Hyrax::FileSetIndexer::STORED_LONG)
+        "file_size_lts"
       end
 
       # Solr field name works use to index member ids
       def member_ids_field
-        Hyrax.config.index_field_mapper.solr_name('member_ids', :symbol)
+        "member_ids_ssim"
       end
 
       def destroy_permission_template

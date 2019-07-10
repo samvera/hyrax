@@ -59,7 +59,7 @@ module Hyrax
       end
 
       def asset
-        @asset ||= ActiveFedora::Base.find(single_use_link.item_id)
+        @asset ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: single_use_link.item_id, use_valkyrie: false)
       end
 
       def current_ability

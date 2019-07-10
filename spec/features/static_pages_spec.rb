@@ -1,4 +1,4 @@
-RSpec.describe "The static pages" do
+RSpec.describe "The static pages", :clean_repo do
   it do
     visit root_path
     click_link "About"

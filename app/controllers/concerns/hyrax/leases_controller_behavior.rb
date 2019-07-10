@@ -25,7 +25,8 @@ module Hyrax
     def update
       filter_docs_with_edit_access!
       copy_visibility = params[:leases].values.map { |h| h[:copy_visibility] }
-      ActiveFedora::Base.find(batch).each do |curation_concern|
+      af_objects = Hyrax.query_service.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie: false)
+      af_objects.each do |curation_concern|
         Hyrax::Actors::LeaseActor.new(curation_concern).destroy
         curation_concern.copy_visibility_to_files if copy_visibility.include?(curation_concern.id)
       end

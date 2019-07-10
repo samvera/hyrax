@@ -69,7 +69,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - samvera/engine_cart_generate:
-          cache_key: v2-internal-test-app-{{ checksum "hyrax.gemspec" }}-{{ checksum "spec/test_app_templates/lib/generators/test_app_generator.rb" }}-{{ checksum "lib/generators/hyrax/install_generator.rb" }}-<< parameters.rails_version >>-<< parameters.ruby_version >>
+          cache_key: v1-internal-test-app-{{ checksum "hyrax.gemspec" }}-{{ checksum ".regen" }}-<< parameters.rails_version >>-<< parameters.ruby_version >>
       - samvera/bundle_for_gem:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
@@ -95,11 +95,15 @@ jobs:
     parallelism: 10
     environment:
       COVERALLS_PARALLEL: true
+      VALKYRIE_SOLR_PORT: 8985
     steps:
       - attach_workspace:
           at: ~/
       - samvera/install_solr_core:
           solr_config_path: .internal_test_app/solr/config
+      - samvera/install_solr_core:
+          solr_config_path: .internal_test_app/solr/config
+          core_name: hyrax-valkyrie-test
       # Rerun bundler in case this is a different ruby version than bundle and build steps
       - samvera/bundle_for_gem:
           ruby_version: << parameters.ruby_version >>

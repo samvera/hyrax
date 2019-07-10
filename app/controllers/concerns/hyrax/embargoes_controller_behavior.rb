@@ -26,7 +26,8 @@ module Hyrax
     def update
       filter_docs_with_edit_access!
       copy_visibility = params[:embargoes].values.map { |h| h[:copy_visibility] }
-      ActiveFedora::Base.find(batch).each do |curation_concern|
+      af_objects = Hyrax.query_service.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie: false)
+      af_objects.each do |curation_concern|
         Hyrax::Actors::EmbargoActor.new(curation_concern).destroy
         # if the concern is a FileSet, set its visibility and skip the copy_visibility_to_files, which is built for Works
         if curation_concern.file_set?

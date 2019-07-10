@@ -7,8 +7,9 @@ module Hyrax
         return default_image unless object.thumbnail_id
 
         thumb = fetch_thumbnail(object)
+
         return unless thumb
-        return call(thumb) unless thumb.is_a?(::FileSet)
+        return call(thumb) unless thumb.file_set?
         if thumb.audio?
           audio_image
         elsif thumbnail?(thumb)
@@ -22,8 +23,8 @@ module Hyrax
 
         def fetch_thumbnail(object)
           return object if object.thumbnail_id == object.id
-          ::ActiveFedora::Base.find(object.thumbnail_id)
-        rescue ActiveFedora::ObjectNotFoundError
+          Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: object.thumbnail_id)
+        rescue Valkyrie::Persistence::ObjectNotFoundError
           Rails.logger.error("Couldn't find thumbnail #{object.thumbnail_id} for #{object.id}")
           nil
         end

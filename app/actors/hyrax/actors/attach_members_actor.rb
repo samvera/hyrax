@@ -11,6 +11,9 @@ module Hyrax
     # The goal of this actor is to mutate the ordered_members with as few writes
     # as possible, because changing ordered_members is slow. This class only
     # writes changes, not the full ordered list.
+    #
+    # The `env` for this actor may contain a `Valkyrie::Resource` or an
+    # `ActiveFedora::Base` model, as required by the
     class AttachMembersActor < Hyrax::Actors::AbstractActor
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if update was successful
@@ -24,43 +27,62 @@ module Hyrax
 
         # Attaches any unattached members.  Deletes those that are marked _delete
         # @param [Hash<Hash>] a collection of members
+        #
+        # rubocop:disable Metrics/CyclomaticComplexity
+        # Complexity in this method is incleased by dual AF/Valkyrie support
+        # when removing AF, we should be able to reduce it substantially.
         def assign_nested_attributes_for_collection(env, attributes_collection)
           return true unless attributes_collection
-          attributes_collection = attributes_collection.sort_by { |i, _| i.to_i }.map { |_, attributes| attributes }
-          # checking for existing works to avoid rewriting/loading works that are
-          # already attached
-          existing_works = env.curation_concern.member_ids
-          attributes_collection.each do |attributes|
-            next if attributes['id'].blank?
-            if existing_works.include?(attributes['id'])
-              remove(env.curation_concern, attributes['id']) if has_destroy_flag?(attributes)
-            else
-              add(env, attributes['id'])
-            end
+
+          attributes         = extract_attributes(attributes_collection)
+          cast_concern       = !env.curation_concern.is_a?(Valkyrie::Resource)
+          resource           = cast_concern ? env.curation_concern.valkyrie_resource : env.curation_concern
+          inserts, destroys  = split_inserts_and_destroys(attributes, resource)
+
+          # short circuit to avoid casting unnecessarily
+          return true if destroys.empty? && inserts.empty?
+          # we fail silently if we can't insert the object; this is for legacy
+          # compatibility
+          return true unless check_permissions(ability: env.current_ability,
+                                               inserts: inserts,
+                                               destroys: destroys)
+
+          update_members(resource: resource, inserts: inserts, destroys: destroys)
+
+          return true unless cast_concern
+          env.curation_concern = Hyrax.metadata_adapter
+                                      .resource_factory
+                                      .from_resource(resource: resource)
+        end
+        # rubocop:enable Metrics/CyclomaticComplexity
+
+        def extract_attributes(collection)
+          collection
+            .sort_by { |i, _| i.to_i }
+            .map { |_, attributes| attributes }
+        end
+
+        def split_inserts_and_destroys(attributes, resource)
+          current_member_ids = resource.member_ids.map(&:id)
+
+          destroys = attributes.select do |col_hash|
+            ActiveModel::Type::Boolean.new.cast(col_hash['_destroy'])
           end
+
+          inserts  = (attributes - destroys).map { |h| h['id'] }.compact - current_member_ids
+          destroys = destroys.map { |h| h['id'] }.compact & current_member_ids
+
+          [inserts, destroys]
         end
 
-        # Adds the item to the ordered members so that it displays in the items
-        # along side the FileSets on the show page
-        def add(env, id)
-          member = ActiveFedora::Base.find(id)
-          return unless env.current_ability.can?(:edit, member)
-          env.curation_concern.ordered_members << member
+        def update_members(resource:, inserts: [], destroys: [])
+          resource.member_ids += inserts.map  { |id| Valkyrie::ID.new(id) }
+          resource.member_ids -= destroys.map { |id| Valkyrie::ID.new(id) }
         end
 
-        # Remove the object from the members set and the ordered members list
-        def remove(curation_concern, id)
-          member = ActiveFedora::Base.find(id)
-          curation_concern.ordered_members.delete(member)
-          curation_concern.members.delete(member)
+        def check_permissions(ability:, inserts: [], **_opts)
+          inserts.all? { |id| ability.can?(:edit, id) }
         end
-
-        # Determines if a hash contains a truthy _destroy key.
-        # rubocop:disable Naming/PredicateName
-        def has_destroy_flag?(hash)
-          ActiveFedora::Type::Boolean.new.cast(hash['_destroy'])
-        end
-      # rubocop:enable Naming/PredicateName
     end
   end
 end

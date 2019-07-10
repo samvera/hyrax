@@ -152,6 +152,24 @@ RSpec.describe Wings::Valkyrie::QueryService do
       expect(found.id).to eq resource.id
       expect(found).to be_persisted
     end
+
+    context 'when use_valkyrie: false' do
+      it 'returns an ActiveFedora object' do
+        resource = resource_class.new
+        resource.alternate_ids = [Valkyrie::ID.new('p9s0xfj')]
+        resource = persister.save(resource: resource)
+        id = resource.alternate_ids.first
+
+        found = query_service.find_by_alternate_identifier(alternate_identifier: id, use_valkyrie: false)
+        expect(found.id).to eq resource.id.id
+        expect(found).to be_persisted
+        expect(found).to be_a(ActiveFedora::Base)
+      end
+
+      it 'returns an ActiveFedora error' do
+        expect { query_service.find_by_alternate_identifier(alternate_identifier: Valkyrie::ID.new("123123123"), use_valkyrie: false) }.to raise_error ::ActiveFedora::ObjectNotFoundError
+      end
+    end
   end
 
   describe ".find_many_by_ids" do

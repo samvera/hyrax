@@ -6,7 +6,7 @@ module Hyrax
     # include filters into the query to only include the collections containing this item
     def include_item_ids(solr_parameters)
       solr_parameters[:fq] ||= []
-      solr_parameters[:fq] << ActiveFedora::SolrQueryBuilder.construct_query_for_ids(item.member_of_collection_ids)
+      solr_parameters[:fq] += [Hyrax::SolrQueryBuilderService.construct_query_for_ids([item.member_of_collection_ids])]
     end
   end
 end

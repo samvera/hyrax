@@ -27,7 +27,13 @@ module Wings
       end
 
       def save_file(file_node:)
-        # TODO: SKIP for now
+        # This is a no-op when the file is being created or updated through the FileActor.
+        # There may be other scenarios where something needs to happen here.
+
+        # TODO: SKIP for now, but potentially need to...
+        #   find existing af File
+        #   convert file_node resource into af File metadata
+        #   save af File
       end
 
       # Persists a resource using ActiveFedora

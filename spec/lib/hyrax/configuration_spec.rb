@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::Configuration do
-  subject { described_class.new }
+  subject(:configuration) { described_class.new }
 
   describe '#register_roles' do
     it 'yields a RoleRegistry' do
@@ -79,15 +79,13 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:translate_id_to_uri) }
   it { is_expected.to respond_to(:translate_uri_to_id) }
   it { is_expected.to respond_to(:upload_path) }
-  it { is_expected.to respond_to(:valkyrie_metadata_adapter) }
-  it { is_expected.to respond_to(:valkyrie_metadata_adapter=) }
-  it { is_expected.to respond_to(:valkyrie_storage_adapter) }
-  it { is_expected.to respond_to(:valkyrie_storage_adapter=) }
   it { is_expected.to respond_to(:whitelisted_ingest_dirs) }
   it { is_expected.to respond_to(:whitelisted_ingest_dirs=) }
   it { is_expected.to respond_to(:work_requires_files?) }
 
-  # Can be removed when Hyrax has support and established pattern for using non-Wings adapter
-  it { expect { subject.valkyrie_metadata_adapter = :bobross }.to raise_error(StandardError) }
-  it { expect { subject.valkyrie_metadata_adapter = :wings_adapter }.not_to raise_error(StandardError) }
+  describe "#whitelisted_ingest_dirs" do
+    it "provides the Rails tmp directory for temporary downloads for cloud files" do
+      expect(configuration.whitelisted_ingest_dirs).to include(Rails.root.join('tmp').to_s)
+    end
+  end
 end

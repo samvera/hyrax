@@ -21,17 +21,19 @@ class ImportUrlJob < Hyrax::ApplicationJob
     operation.performing!
     user = User.find_by_user_key(file_set.depositor)
     uri = URI(file_set.import_url)
+    name = file_set.label
+
     @file_set = file_set
     @operation = operation
 
-    unless can_retrieve?(uri)
+    unless BrowseEverything::Retriever.can_retrieve?(uri, headers)
       send_error('Expired URL')
       return false
     end
 
     # @todo Use Hydra::Works::AddExternalFileToFileSet instead of manually
     #       copying the file here. This will be gnarly.
-    copy_remote_file(uri, headers) do |f|
+    copy_remote_file(uri, name, headers) do |f|
       # reload the FileSet once the data is copied since this is a long running task
       file_set.reload
 
@@ -44,25 +46,16 @@ class ImportUrlJob < Hyrax::ApplicationJob
 
   private
 
-    # The previous strategy of using only a HEAD request to check the validity of a
-    # remote URL fails for Amazon S3 pre-signed URLs. S3 URLs are generated for a single
-    # verb only (in this case, GET), and will return a 403 Forbidden response if any
-    # other verb is used. The workaround is to issue a GET request instead, with a
-    # Range: header requesting only the first byte. The successful response status
-    # code is 206 instead of 200, but that is enough to satisfy the #success? method.
-    # @param uri [URI] the uri of the file to be downloaded
-    def can_retrieve?(uri)
-      HTTParty.get(uri, headers: { Range: 'bytes=0-0' }).success?
-    end
-
     # Download file from uri, yields a block with a file in a temporary directory.
     # It is important that the file on disk has the same file name as the URL,
     # because when the file in added into Fedora the file name will get persisted in the
     # metadata.
     # @param uri [URI] the uri of the file to download
+    # @param name [String] the human-readable name of the file
+    # @param headers [Hash] the HTTP headers for the GET request (these may contain an authentication token)
     # @yield [IO] the stream to write to
-    def copy_remote_file(uri, headers = {})
-      filename = file_set.label
+    def copy_remote_file(uri, name, headers = {})
+      filename = File.basename(name)
       dir = Dir.mktmpdir
       Rails.logger.debug("ImportUrlJob: Copying <#{uri}> to #{dir}")
 
@@ -92,7 +85,7 @@ class ImportUrlJob < Hyrax::ApplicationJob
     # @param f [IO] the stream to write to
     def write_file(uri, f, headers)
       retriever = BrowseEverything::Retriever.new
-      uri_spec = { 'url' => uri }.merge(headers)
+      uri_spec = ActiveSupport::HashWithIndifferentAccess.new(url: uri, headers: headers)
       retriever.retrieve(uri_spec) do |chunk|
         f.write(chunk)
       end

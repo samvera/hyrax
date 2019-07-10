@@ -9,11 +9,11 @@
     <% if presenter.work_featurable? %>
       <%= link_to t('.feature'), hyrax.featured_work_path(presenter, format: :json),
           data: { behavior: 'feature' },
-          class: presenter.display_unfeature_link? ? 'btn btn-default collapse' : 'btn btn-default' %>
+          class: presenter.display_feature_link? ? 'btn btn-default' : 'btn btn-default collapse' %>
 
       <%= link_to t('.unfeature'), hyrax.featured_work_path(presenter, format: :json),
           data: { behavior: 'unfeature' },
-          class: presenter.display_feature_link? ? 'btn btn-default collapse' : 'btn btn-default' %>
+          class: presenter.display_unfeature_link? ? 'btn btn-default' : 'btn btn-default collapse' %>
     <% end %>
     <% if Hyrax.config.analytics? %>
       <%= link_to t('.analytics'), presenter.stats_path, id: 'stats', class: 'btn btn-default' %>
