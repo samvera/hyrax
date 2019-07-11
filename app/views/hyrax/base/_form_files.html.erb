@@ -12,18 +12,20 @@
         <div class="fileupload-buttonbar">
           <div class="row">
             <div class="col-xs-12">
-                <!-- The fileinput-button span is used to style the file input field as button -->
-                <span id="addfiles" class="btn btn-success fileinput-button">
+                <div class="fileinput-button" id="add-files">
+                  <input id="addfiles" type="file" style="display:none;"  name="files[]" multiple />
+                  <button type="button" class="btn btn-success" onclick="document.getElementById('addfiles').click();">
                     <span class="glyphicon glyphicon-plus"></span>
                     <span><%=  t(".add_files") %></span>
-                    <input type="file" name="files[]" multiple />
-                </span>
-                <!-- The fileinput-button span is used to style the file input field as button -->
-                <span id="addfolder" class="btn btn-success fileinput-button">
+                  </button>
+                </div>
+                <div class="fileinput-button">
+                  <input id="addfolder" type="file" style="display:none;"  name="files[]" multiple directory webkitdirectory />
+                  <button type="button" class="btn btn-success" onclick="document.getElementById('addfolder').click();">
                     <span class="glyphicon glyphicon-plus"></span>
                     <span><%=  t(".add_folder") %></span>
-                    <input type="file" name="files[]" multiple directory webkitdirectory />
-                </span>
+                  </button>
+                </div>
                 <% if Hyrax.config.browse_everything? %>
                   <%= button_tag(type: 'button', class: 'btn btn-success', id: "browse-btn",
                     'data-toggle' => 'browse-everything', 'data-route' => browse_everything_engine.root_path,
