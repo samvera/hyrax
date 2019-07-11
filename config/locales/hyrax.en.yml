@@ -354,7 +354,11 @@ en:
         table_values: Value
         visibility: Visibility
       citations:
+        citations: Citations
+        endnote: EndNote
         header: 'Citations:'
+        mendeley: Mendeley
+        zotero: Zotero
       file_manager:
         back_to: Back to
         toolbar: Toolbar
