@@ -989,6 +989,8 @@ en:
         restore_from: Restore From
         save: Save Revision
         upload: Upload New Version
+    form_member_of_collections:
+      add: Add
     help:
       header: User Support
       override_text: Use app/views/static/help.html.erb to override this file.
