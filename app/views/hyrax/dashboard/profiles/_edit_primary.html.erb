@@ -7,7 +7,7 @@
       <%= image_tag @user.avatar.url(:thumb) if @user.avatar? %>
       <%= f.file_field :avatar %>
       <%= f.hidden_field :avatar_cache %>
-      <span class="help-block">t(".help_change_picture_type")</span>
+      <span class="help-block"><%= t(".help_change_picture_type") %></span>
 
       <div class="checkbox">
         <%= f.label :remove_avatar do %>
