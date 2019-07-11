@@ -374,6 +374,7 @@ en:
       form_child_work_relationships:
         actions:
           remove: Remove from this work
+        add: Add
         attach_new_work: Deposit new work as child of this work
         caption: This work currently contains these child works
         confirm:
