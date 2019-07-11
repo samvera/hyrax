@@ -1191,6 +1191,12 @@ en:
         from: From
         status: Status
         title: Title
+      sent:
+        comments: Comments
+        date: Date
+        from: From
+        status: Status
+        title: Title
     upload:
       alert:
         contact_href_text: contact form
