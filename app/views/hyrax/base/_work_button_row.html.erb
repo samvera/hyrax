@@ -8,7 +8,7 @@
       <% if presenter.valid_child_concerns.length > 0 %>
         <div class="btn-group">
           <button type="button" class="btn btn-default dropdown-toggle" type="button" id="dropdown-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Attach Child <span class="caret"></span></button>
+            <%= t('.attach_child') %> <span class="caret"></span></button>
             <ul class="dropdown-menu">
               <% presenter.valid_child_concerns.each do |concern| %>
                 <li>
@@ -18,7 +18,7 @@
             </ul>
         </div>
       <% end %>
-      <%= link_to "Delete", [main_app, presenter], class: 'btn btn-danger', data: { confirm: "Delete this #{presenter.human_readable_type}?" }, method: :delete %>
+      <%= link_to t(".delete"), [main_app, presenter], class: 'btn btn-danger', data: { confirm: "Delete this #{presenter.human_readable_type}?" }, method: :delete %>
     <% end %>
   </div>
   <div class="col-sm-6 text-right">
