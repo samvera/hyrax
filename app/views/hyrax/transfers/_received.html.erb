@@ -40,7 +40,7 @@
           <%# = button_to "Accept and allow depositor to retain edit access", hyrax.accept_transfer_path(req), method: :put, class: 'btn btn-primary' %>
           <%# = button_to "Accept and reset access", hyrax.accept_transfer_path(req, reset: true), method: :put, class: 'btn btn-primary' %>
           <%# = button_to "Accept & Authorize Proxy", hyrax.accept_transfer_path(req, sticky: true), method: :put, class: 'btn btn-primary' %>
-          <%= button_to t(".reject"), hyrax.reject_transfer_path(req), method: :put, class: 'btn btn-sm btn-danger', data: {confirm: t(".are_you_sure_you_want_to_reject_this_request?")} %>
+          <%= button_to t(".reject"), hyrax.reject_transfer_path(req), method: :put, class: 'btn btn-sm btn-danger', data: {confirm: t(".are_you_sure_you_want_to_reject_this_request")} %>
         <% else %>
           <%= req.status.capitalize %>
         <% end %>
