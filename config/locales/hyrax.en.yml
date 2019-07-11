@@ -387,6 +387,7 @@ en:
       form_files:
         add_files: Add files...
         add_folder: Add folder...
+        cancel_upload: Cancel upload
         dropzone: Drop files here.
         local_upload_browse_everything_html: |
           <p>You can add one or more files to associate with this work. Add files
