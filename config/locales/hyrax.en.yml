@@ -477,6 +477,8 @@ en:
         resource_type: You may select multiple types to apply to all files
         title: Filename will be the default title. Please provide a more meaningful title, and filenames will still be preserved by the system.
     batch_edits:
+      check_all:
+        select_to_access_selection_options: Select to access selection option
       delete_selected:
         button_label: Delete Selected
     batch_uploads:
