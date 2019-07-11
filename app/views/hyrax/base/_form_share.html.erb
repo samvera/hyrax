@@ -3,16 +3,13 @@
 
 <% depositor = f.object.depositor %>
 
-<div class="alert alert-info hidden" id="save_perm_note">Permissions are
-  <strong>not</strong> saved until the &quot;Save&quot; button is pressed at the bottom of the page.</div>
+<div class="alert alert-info hidden" id="save_perm_note"><%= t('.permissions_save_note' %></div>
 
 <div class="alert alert-warning hidden" role="alert" id="permissions_error">
   <span id="permissions_error_text"></span>
 </div>
 
-<p class="sr-only">Use the add button to give access to one <%= t('hyrax.account_label') %> at a time (it will be added to the list below).
-  Select the user, by name or <%= t('hyrax.account_label') %>. Then select the access level you wish to grant and click on Add this
-  <%= t('hyrax.account_label') %> to complete adding the permission.
+<p class="sr-only"><%= t('.use_add_button', account_label:  t('hyrax.account('hyrax.account_label')) %>
 </p>
 
 <fieldset class="form-group row permission-add-group">
@@ -20,13 +17,13 @@
     <%= t('hyrax.admin.admin_sets.form_participants.add_group') %>
   </legend>
   <div class="col-sm-9 form-inline">
-    <label for="new_group_name_skel" class="sr-only">Group</label>
+    <label for="new_group_name_skel" class="sr-only"><%= t(".group") %></label>
     <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + current_user.groups), class: 'form-control' %>
-    <label for="new_group_permission_skel" class="sr-only">Access type to grant</label>
+    <label for="new_group_permission_skel" class="sr-only"><%= t(".access_type_to_grant") %></label>
     <%= select_tag 'new_group_permission_skel', options_for_select(Hyrax.config.permission_options), class: 'form-control' %>
 
     <button class="btn btn-default" id="add_new_group_skel">
-      <span>Add<span class="sr-only"> this group</span></span>
+      <span><%= t(".add_this_group") %></span>
     </button>
     <br /><span id="directory_group_result"></span>
   </div>
@@ -37,9 +34,9 @@
     <%= t('hyrax.admin.admin_sets.form_participants.add_user') %>
   </legend>
   <div class="col-sm-9 form-inline">
-    <label for="new_user_name_skel" class="sr-only"><%= t('hyrax.account_label') %> (without the <%= t('hyrax.directory.suffix') %> part)</label>
+    <label for="new_user_name_skel" class="sr-only"><%= t('.account_label_without_suffix', account_label: t('hyrax.account_label'), suffix: t('hyrax.directory.suffix')) %> </label>
     <%= text_field_tag 'new_user_name_skel', nil %>
-    <label for="new_user_permission_skel" class="sr-only">Access type to grant</label>
+    <label for="new_user_permission_skel" class="sr-only"><%= t('.access_type_to_grant') %></label>
     <%= select_tag 'new_user_permission_skel', options_for_select(Hyrax.config.permission_options), class: 'form-control' %>
     <button class="btn btn-default" id="add_new_user_skel">
       <span>Add<span class="sr-only"> this <%= t('hyrax.account_label') %></span></span>
@@ -57,7 +54,7 @@
     </td>
     <td width="60%">
       <%= label_tag :owner_access, class: "control-label" do %>
-        Depositor (<span id="file_owner" data-depositor="<%= depositor %>"><%= link_to_profile depositor %></span>)
+        t('.depositor') (<span id="file_owner" data-depositor="<%= depositor %>"><%= link_to_profile depositor %></span>)
       <% end %>
     </td>
   </tr>

@@ -995,6 +995,14 @@ en:
       visibility: Visibility
     form_progress:
       saving_your_work: Saving your work. This may take a few moments
+    form_share:
+      access_type_to_grant: Access type to grant
+      account_label_without_suffix: "%{account_label} (without the %{suffix} part)"
+      add_this_group: Add<span class="sr-only"> this group</span>
+      depositor: Depositor
+      group: Group
+      permissions_save_note: Permissions are <strong>not</strong> saved until the &quot;Save&quot; button is pressed at the bottom of the page.
+      use_add_button: Use the add button to give access to one %{account_label}  at a time (it will be added to the list below). Select the user, by name or %{account_label} \. Then select the access level you wish to grant and click on Add this  %{account_label} to complete adding the permission.
     help:
       header: User Support
       override_text: Use app/views/static/help.html.erb to override this file.
