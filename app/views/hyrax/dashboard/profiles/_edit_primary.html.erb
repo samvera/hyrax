@@ -12,8 +12,8 @@
       <div class="checkbox">
         <%= f.label :remove_avatar do %>
           <%= f.check_box :remove_avatar %>
-          Delete picture
-          <a href="#" id="delete_picture_help" data-toggle="popover" data-content="If you would like to remove your picture entirely, check the box and save your profile." data-original-title="Delete Picture"><i class="glyphicon glyphicon-question-sign"></i></a>
+          t(".delete_picture")
+          <a href="#" id="delete_picture_help" data-toggle="popover" data-content="<%= t('.delete_picture_data_content')%>" data-original-title="<%= t('.delete_picture_data_original_title')%>"><i class="glyphicon glyphicon-question-sign"></i></a>
         <% end %>
       </div>
     </div>

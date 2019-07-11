@@ -814,6 +814,9 @@ en:
       profiles:
         edit_primary:
           change_picture: Change picture
+          delete_picture: Delete picture
+          delete_picture_data_content: If you would like to remove your picture entirely, check the box and save your profile.
+          delete_picture_data_original_title: Delete Picture
           help_change_picture_type: JPG, GIF, or PNG (less than 2MB)
       proxy_activity: Proxy Activity
       proxy_delete: Delete Proxy
