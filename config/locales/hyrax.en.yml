@@ -991,6 +991,8 @@ en:
         upload: Upload New Version
     form_member_of_collections:
       add: Add
+    form_permission:
+      visibility: Visibility
     help:
       header: User Support
       override_text: Use app/views/static/help.html.erb to override this file.
