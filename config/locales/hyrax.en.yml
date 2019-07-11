@@ -811,6 +811,10 @@ en:
       no_proxies: There are no proxies assigned
       no_transfer_requests: You haven't received any work transfer requests
       no_transfers: You haven't transferred any work
+      profiles:
+        edit_primary:
+          change_picture: Change picture
+          help_change_picture_type: JPG, GIF, or PNG (less than 2MB)
       proxy_activity: Proxy Activity
       proxy_delete: Delete Proxy
       proxy_help: Select a user who can deposit works on your behalf. Both you and your proxy will be able to make changes to these works. You can revoke a proxy by clicking the Delete Proxy button. To revoke their ability to edit a work they previously submitted, remove them from the Sharing tab on each work.

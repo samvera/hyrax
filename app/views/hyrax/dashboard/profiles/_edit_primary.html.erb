@@ -2,12 +2,12 @@
              url: hyrax.dashboard_profile_path(@user.to_param),
              html: { multipart: true, class: 'form-horizontal' } do |f| %>
   <div class="form-group">
-    <%= f.label :avatar, '<i class="glyphicon glyphicon-camera"></i> Change picture'.html_safe, class: "col-xs-4 control-label" %>
+    <%= f.label :avatar, '<i class="glyphicon glyphicon-camera"></i> t(".change_picture").html_safe, class: "col-xs-4 control-label" %>
     <div class="col-xs-8">
       <%= image_tag @user.avatar.url(:thumb) if @user.avatar? %>
       <%= f.file_field :avatar %>
       <%= f.hidden_field :avatar_cache %>
-      <span class="help-block">JPG, GIF, or PNG (less than 2MB)</span>
+      <span class="help-block">t(".help_change_picture_type")</span>
 
       <div class="checkbox">
         <%= f.label :remove_avatar do %>
