@@ -7,24 +7,22 @@ RSpec.describe Hyrax::Works::MigrationService, clean_repo: true do
 
   describe "#migrate_predicate" do
     it "uses DC description and terms-license license by default" do
-      @work = GenericWork.create( title: ["War and Peace"],
-                                  description: ["war", "peace"],
-                                  license: ["the_license_string"] )
+      @work = GenericWork.create(title: ["War and Peace"], description: ["war", "peace"],
+                                 license: ["the_license_string"])
       expect(@work.ldp_source.content).to include("http://purl.org/dc/elements/1.1/description")
-      expect(@work.ldp_source.content).to include( predicate_to2.to_s )
+      expect(@work.ldp_source.content).to include(predicate_to2.to_s)
     end
 
     it "updates to use SCHEMA description" do
-      @work = GenericWork.create( title: ["War and Peace"],
-                                  description: ["war", "peace"],
-                                  license: ["the_license_string"] )
+      @work = GenericWork.create(title: ["War and Peace"], description: ["war", "peace"],
+                                 license: ["the_license_string"])
       described_class.migrate_predicate(predicate_from, predicate_to)
       described_class.migrate_predicate(predicate_from2, predicate_to2)
       @work.reload
       expect(@work.ldp_source.content).to include("http://schema.org/description")
       expect(@work.ldp_source.content).not_to include("http://purl.org/dc/elements/1.1/description")
-      expect(@work.ldp_source.content).to include( predicate_to2.to_s )
-      expect(@work.ldp_source.content).not_to include( predicate_from2.to_s )
+      expect(@work.ldp_source.content).to include(predicate_to2.to_s)
+      expect(@work.ldp_source.content).not_to include(predicate_from2.to_s)
     end
   end
 end
