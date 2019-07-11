@@ -23,7 +23,7 @@
 
           <td>
             <% if req.pending? %>
-              <%= button_to "Cancel", hyrax.transfer_path(req), method: :delete, class:'btn btn-sm btn-danger', data: {confirm: "Are you sure you want to cancel this request?"} %>
+              <%= button_to t(".cancel"), hyrax.transfer_path(req), method: :delete, class:'btn btn-sm btn-danger', data: {confirm: t(".are_you_sure_you_want_to_cancel_this_request")} %>
             <% else %>
               <%= req.status.capitalize %>
             <% end %>

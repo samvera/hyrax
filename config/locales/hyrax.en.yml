@@ -1201,6 +1201,8 @@ en:
         status: Status
         title: Title
       sent:
+        are_you_sure_you_want_to_cancel_this_request: Are you sure you want to cancel this request?
+        cancel: Cancel
         comments: Comments
         date: Date
         from: From
