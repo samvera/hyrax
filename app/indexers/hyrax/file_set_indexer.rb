@@ -35,15 +35,6 @@ module Hyrax
 
     private
 
-      def latest_version_id
-        return unless object.original_file.present?
-        if object.original_file.versions.present?
-          ActiveFedora::File.uri_to_id(object.current_content_version_uri)
-        else
-          ActiveFedora::File.uri_to_id(object.original_file.uri)
-        end
-      end
-
       def digest_from_content
         return unless object.original_file
         object.original_file.digest.first.to_s
@@ -51,7 +42,11 @@ module Hyrax
 
       def original_file_id
         return unless object.original_file
-        object.original_file.id
+        if object.original_file.versions.present?
+          ActiveFedora::File.uri_to_id(object.current_content_version_uri)
+        else
+          object.original_file.id
+        end
       end
 
       def file_format

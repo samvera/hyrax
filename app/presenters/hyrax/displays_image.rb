@@ -12,7 +12,7 @@ module Hyrax
     def display_image
       return nil unless ::FileSet.exists?(id) && solr_document.image? && current_ability.can?(:read, id)
 
-      latest_file_id = current_file_version || unindexed_current_file_version
+      latest_file_id = original_file_id || unindexed_current_file_version
 
       return nil unless latest_file_id
 
