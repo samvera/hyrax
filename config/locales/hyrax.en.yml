@@ -348,6 +348,11 @@ en:
         default: The resource you attempted to modify cannot be modified according to your request.
     background_attribution_html: ''
     base:
+      attributes:
+        table_attribute_name: Attribute Name
+        table_heading_attributes: Attributes
+        table_values: Value
+        visibility: Visibility
       citations:
         header: 'Citations:'
       file_manager:
