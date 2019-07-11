@@ -1191,10 +1191,12 @@ en:
         accept_the_file_and_allow_the_original_depositor_to_retain_access_to_edit_the_file_and_metadata: Accept the file and allow the original depositor to retain access to edit the file and metadata.
         accept_the_file_remove_access_from_the_original_depositor: Accept the file remove access from the original depositor.
         allow_depositor_to_retain_edit_access: Allow depositor to retain edit access
+        are_you_sure_you_want_to_reject_this_request: Are you sure you want to reject this request?
         authorize_depositor_as_proxy: Authorize depositor as proxy
         comments: Comments
         date: Date
         from: From
+        reject: Reject
         remove_depositor_access: Remove depositor access
         status: Status
         title: Title

@@ -32,7 +32,7 @@
                   <%= link_to t(".remove_depositor_access"), hyrax.accept_transfer_path(req, reset: true), method: :put, class: 'accept-reset', title: t(".accept_the_file_remove_access_from_the_original_depositor") %>
                 </li>
                 <li>
-                  <%= link_to t("authorize_depositor_as_proxy"), hyrax.accept_transfer_path(req, sticky: true), method: :put, class: 'accept-stick', title: 'Accept the file and allow the original depositor to retain access and authorize the original depositor as a proxy to deposit file on your behalf.' %>
+                  <%= link_to t(".authorize_depositor_as_proxy"), hyrax.accept_transfer_path(req, sticky: true), method: :put, class: 'accept-stick', title: t(".accept_the_file_and_allow_the_original_depositor_to_retain_access_and_authorize") %>
                 </li>
               </ul>
             </div>
@@ -40,7 +40,7 @@
           <%# = button_to "Accept and allow depositor to retain edit access", hyrax.accept_transfer_path(req), method: :put, class: 'btn btn-primary' %>
           <%# = button_to "Accept and reset access", hyrax.accept_transfer_path(req, reset: true), method: :put, class: 'btn btn-primary' %>
           <%# = button_to "Accept & Authorize Proxy", hyrax.accept_transfer_path(req, sticky: true), method: :put, class: 'btn btn-primary' %>
-          <%= button_to "Reject", hyrax.reject_transfer_path(req), method: :put, class: 'btn btn-sm btn-danger', data: {confirm: "Are you sure you want to reject this request?"} %>
+          <%= button_to t(".reject"), hyrax.reject_transfer_path(req), method: :put, class: 'btn btn-sm btn-danger', data: {confirm: t(".are_you_sure_you_want_to_reject_this_request?")} %>
         <% else %>
           <%= req.status.capitalize %>
         <% end %>
