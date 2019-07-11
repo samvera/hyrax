@@ -820,6 +820,7 @@ en:
           facebook_handle: Facebook Handle
           google_handle: Google+ Handle
           help_change_picture_type: JPG, GIF, or PNG (less than 2MB)
+          save_profile: Save Profile
           twitter_handle: Twitter Handle
       proxy_activity: Proxy Activity
       proxy_delete: Delete Proxy
