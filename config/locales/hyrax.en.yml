@@ -398,9 +398,9 @@ en:
           cloud, let us know via the %{contact_href}.</p>
         local_upload_html: "<p>You can add one or more files to associate with this work.</p>"
       form_member_of_collections:
-        add: Add
         actions:
           remove: Remove from collection
+        add: Add
         caption: This work is currently in these collections
         confirm:
           cancel: Cancel
@@ -732,6 +732,8 @@ en:
           show_less_parent_collections: "...show less"
           show_more_parent_collections: show more...
           subcollection_count: Subcollections
+        show_descriptions:
+          descriptions: Descriptions
         sort_and_per_page:
           show_par_page_html: Show %{select} per page
           sort_by: 'Sort By:'
@@ -841,7 +843,7 @@ en:
           delete_picture_data_original_title: Delete Picture
           facebook_handle: <i class="fa fa-facebook" aria-hidden="true"></i> Facebook Handle
           google_handle: <i class="fa fa-google-plus"></i> Google+ Handle
-          help_change_picture_type: "JPG, GIF, or PNG (less than 2MB)"
+          help_change_picture_type: JPG, GIF, or PNG (less than 2MB)
           save_profile: <i class="glyphicon glyphicon-save"></i> Save Profile
           twitter_handle: <i class="fa fa-twitter" aria-hidden="true"></i> Twitter Handle
       proxy_activity: Proxy Activity
