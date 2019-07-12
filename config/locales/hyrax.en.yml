@@ -398,6 +398,7 @@ en:
           cloud, let us know via the %{contact_href}.</p>
         local_upload_html: "<p>You can add one or more files to associate with this work.</p>"
       form_member_of_collections:
+        add: Add
         actions:
           remove: Remove from collection
         caption: This work is currently in these collections
@@ -991,8 +992,6 @@ en:
         restore_from: Restore From
         save: Save Revision
         upload: Upload New Version
-    form_member_of_collections:
-      add: Add
     form_permission:
       visibility: Visibility
     form_progress:
