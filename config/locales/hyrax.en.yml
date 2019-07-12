@@ -422,6 +422,7 @@ en:
         required_descriptions: Describe your work
         required_files: Add files
         requirements: Requirements
+        saving_your_work: Saving your work. This may take a few moments
         yourself: Yourself
       form_rendering:
         help_html: Select file(s) to be offered as a download for every image in Universal Viewer, for example a PDF of the whole work.
@@ -1001,8 +1002,6 @@ en:
         upload: Upload New Version
     form_permission:
       visibility: Visibility
-    form_progress:
-      saving_your_work: Saving your work. This may take a few moments
     help:
       header: User Support
       override_text: Use app/views/static/help.html.erb to override this file.
