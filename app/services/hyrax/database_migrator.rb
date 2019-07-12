@@ -1,3 +1,4 @@
+require 'rails/generators/actions'
 require 'rails/generators/active_record'
 
 module Hyrax
