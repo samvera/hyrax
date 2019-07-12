@@ -2,18 +2,18 @@
              url: hyrax.dashboard_profile_path(@user.to_param),
              html: { multipart: true, class: 'form-horizontal' } do |f| %>
   <div class="form-group">
-    <%= f.label :avatar, '<i class="glyphicon glyphicon-camera"></i> t(".change_picture")'.html_safe, class: "col-xs-4 control-label" %>
+    <%= f.label :avatar, '<i class="glyphicon glyphicon-camera"></i> t("hyrax.dashboard.my.profiles.edit_primary.change_picture")'.html_safe, class: "col-xs-4 control-label" %>
     <div class="col-xs-8">
       <%= image_tag @user.avatar.url(:thumb) if @user.avatar? %>
       <%= f.file_field :avatar %>
       <%= f.hidden_field :avatar_cache %>
-      <span class="help-block"><%= t(".help_change_picture_type") %></span>
+      <span class="help-block"><%= t("hyrax.dashboard.my.profiles.edit_primary.help_change_picture_type") %></span>
 
       <div class="checkbox">
         <%= f.label :remove_avatar do %>
           <%= f.check_box :remove_avatar %>
-          t(".delete_picture")
-          <a href="#" id="delete_picture_help" data-toggle="popover" data-content="<%= t('.delete_picture_data_content') %>" data-original-title="<%= t('.delete_picture_data_original_title') %>"><i class="glyphicon glyphicon-question-sign"></i></a>
+          t("hyrax.dashboard.my.profiles.edit_primary.delete_picture")
+          <a href="#" id="delete_picture_help" data-toggle="popover" data-content="<%= t('hyrax.dashboard.my.profiles.edit_primary.delete_picture_data_content') %>" data-original-title="<%= t('hyrax.dashboard.my.profiles.edit_primary.delete_picture_data_original_title') %>"><i class="glyphicon glyphicon-question-sign"></i></a>
         <% end %>
       </div>
     </div>
@@ -33,21 +33,21 @@
   </div><!-- .form-group -->
 
   <div class="form-group">
-    <%= f.label :twitter_handle, '<i class="fa fa-twitter" aria-hidden="true"></i> t(".twitter_handle")'.html_safe, class: 'col-xs-4 control-label' %>
+    <%= f.label :twitter_handle, '<i class="fa fa-twitter" aria-hidden="true"></i> t("hyrax.dashboard.my.profiles.edit_primary.twitter_handle")'.html_safe, class: 'col-xs-4 control-label' %>
     <div class="col-xs-8">
        <%= f.text_field :twitter_handle, class: "form-control" %>
     </div>
   </div><!-- .form-group -->
 
   <div class="form-group">
-    <%= f.label :facebook_handle, '<i class="fa fa-facebook" aria-hidden="true"></i> t(".facebook_handle")'.html_safe, class: 'col-xs-4 control-label' %>
+    <%= f.label :facebook_handle, '<i class="fa fa-facebook" aria-hidden="true"></i> t("hyrax.dashboard.my.profiles.edit_primary.facebook_handle")'.html_safe, class: 'col-xs-4 control-label' %>
     <div class="col-xs-8">
        <%= f.text_field :facebook_handle, class: "form-control" %>
     </div>
   </div><!-- .form-group -->
 
   <div class="form-group">
-    <%= f.label :googleplus_handle, '<i class="fa fa-google-plus"></i> t(".google_handle")'.html_safe, class: 'col-xs-4 control-label' %>
+    <%= f.label :googleplus_handle, '<i class="fa fa-google-plus"></i> t("hyrax.dashboard.my.profiles.edit_primary.google_handle")'.html_safe, class: 'col-xs-4 control-label' %>
     <div class="col-xs-8">
        <%= f.text_field :googleplus_handle, class: "form-control" %>
     </div>
@@ -55,5 +55,5 @@
 
   <%= render 'trophy_edit', trophies: @trophies %>
 
-  <%= f.button '<i class="glyphicon glyphicon-save"></i> t(".save_profile")'.html_safe, type: 'submit', class: "btn btn-primary" %>
+  <%= f.button '<i class="glyphicon glyphicon-save"></i> t("hyrax.dashboard.my.profiles.edit_primary.save_profile")'.html_safe, type: 'submit', class: "btn btn-primary" %>
 <% end %>
