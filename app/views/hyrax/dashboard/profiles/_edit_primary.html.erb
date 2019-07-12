@@ -2,7 +2,7 @@
              url: hyrax.dashboard_profile_path(@user.to_param),
              html: { multipart: true, class: 'form-horizontal' } do |f| %>
   <div class="form-group">
-    <%= f.label :avatar, '<i class="glyphicon glyphicon-camera"></i> t(".change_picture").html_safe, class: "col-xs-4 control-label" %>
+    <%= f.label :avatar, '<i class="glyphicon glyphicon-camera"></i> t(".change_picture")'.html_safe, class: "col-xs-4 control-label" %>
     <div class="col-xs-8">
       <%= image_tag @user.avatar.url(:thumb) if @user.avatar? %>
       <%= f.file_field :avatar %>
@@ -13,7 +13,7 @@
         <%= f.label :remove_avatar do %>
           <%= f.check_box :remove_avatar %>
           t(".delete_picture")
-          <a href="#" id="delete_picture_help" data-toggle="popover" data-content="<%= t('.delete_picture_data_content')%>" data-original-title="<%= t('.delete_picture_data_original_title')%>"><i class="glyphicon glyphicon-question-sign"></i></a>
+          <a href="#" id="delete_picture_help" data-toggle="popover" data-content="<%= t('.delete_picture_data_content') %>" data-original-title="<%= t('.delete_picture_data_original_title') %>"><i class="glyphicon glyphicon-question-sign"></i></a>
         <% end %>
       </div>
     </div>
@@ -40,7 +40,7 @@
   </div><!-- .form-group -->
 
   <div class="form-group">
-    <%= f.label :facebook_handle, '<i class="fa fa-facebook" aria-hidden="true"></i> t(".facebook_andle")'.html_safe, class: 'col-xs-4 control-label' %>
+    <%= f.label :facebook_handle, '<i class="fa fa-facebook" aria-hidden="true"></i> t(".facebook_handle")'.html_safe, class: 'col-xs-4 control-label' %>
     <div class="col-xs-8">
        <%= f.text_field :facebook_handle, class: "form-control" %>
     </div>
