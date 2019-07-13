@@ -1284,6 +1284,8 @@ en:
         label: Zotero Profile
         unlinked: Link with Zotero
     users:
+      proxies:
+        proxies: Proxies
       search_form:
         go: Go
         search_users: Search Users
