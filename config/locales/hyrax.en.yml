@@ -1284,6 +1284,13 @@ en:
         label: Zotero Profile
         unlinked: Link with Zotero
     users:
+      index:
+        avatar: Avatar
+        department: Department
+        user_id: User Id
+        user_name: User Name
+        users: Users
+        works_created: Works Created
       left_sidebar:
         view_users: View Users
       proxies:
