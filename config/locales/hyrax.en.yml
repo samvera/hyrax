@@ -843,7 +843,7 @@ en:
           delete_picture_data_original_title: Delete Picture
           facebook_handle: <i class="fa fa-facebook" aria-hidden="true"></i> Facebook Handle
           google_handle: <i class="fa fa-google-plus"></i> Google+ Handle
-          help_change_picture_type: JPG, GIF, or PNG (less than 2MB)
+          help_change_picture_type: "JPG, GIF, or PNG (less than 2MB)"
           save_profile: <i class="glyphicon glyphicon-save"></i> Save Profile
           twitter_handle: <i class="fa fa-twitter" aria-hidden="true"></i> Twitter Handle
       proxy_activity: Proxy Activity
