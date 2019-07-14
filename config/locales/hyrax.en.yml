@@ -482,6 +482,14 @@ en:
         google: Google+
         tumblr: Tumblr
         twitter: Twitter
+      work_button_row:
+        analytics: Analytics
+        attach: Attach %{type}
+        delete: Delete
+        delete_type: Delete this %{type}?
+        edit: Edit
+        feature: Feature
+        unfeature: Unfeature
     batch:
       help:
         resource_type: You may select multiple types to apply to all files
