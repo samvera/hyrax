@@ -491,6 +491,7 @@ en:
         select_to_access_selection_options: Select to access selection option
       delete_selected:
         button_label: Delete Selected
+        deleting_file_from: Deleting a file from %{application_name} is permanent. Click OK to delete this file from %{application_name}, or Cancel to cancel this operation
     batch_uploads:
       disabled: Feature disabled by administrator
       files:
@@ -805,6 +806,7 @@ en:
         heading:
           access: Access
           action: Actions
+          caption: List of items in this collection
           collection_type: Collection Type
           date_modified: Last Modified
           date_uploaded: Date Added
@@ -821,6 +823,7 @@ en:
           check_all_label: Select all files to be added to a collection or edited
           detail_label: Display summary details of
           listing: Listing of items you have deposited in
+          number_of_results_to_display_per_page: Number of results to display per page
           press_to: Press to
           results_per_page: Number of results to display per page
           show_label: Display all details of
@@ -1101,11 +1104,13 @@ en:
     my:
       count:
         collections:
+          collections_listing: Collections listing
           in_repo: "<strong>%{total_count} collections</strong> in the repository"
           you_manage: "<strong>%{total_count} collections</strong> you can manage in the repository"
           you_own: "<strong>%{total_count} collections</strong> you own in the repository"
         works:
           in_repo: "<strong>%{total_count} works</strong> in the repository"
+          works_listing: Works listing
           you_manage: "<strong>%{total_count} works</strong> you can manage in the repository"
           you_own: "<strong>%{total_count} works</strong> you own in the repository"
     nav_safety:
