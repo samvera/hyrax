@@ -1121,6 +1121,8 @@ en:
           works_listing: Works listing
           you_manage: "<strong>%{total_count} works</strong> you can manage in the repository"
           you_own: "<strong>%{total_count} works</strong> you own in the repository"
+      sort_and_per_page:
+        number_of_results_to_display_per_page: Number of results to display per page
     nav_safety:
       change_tab_message: Are you sure you want to leave this tab?  Any unsaved data will be lost.
     notifications:
