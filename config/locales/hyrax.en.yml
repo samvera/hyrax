@@ -990,10 +990,19 @@ en:
       permission:
         save: Save
       permission_form:
+        add_new_group_skel: Add this group
+        add_new_user_skel: Add this %{account_label}
         applied_to: "(applied to all files just uploaded)"
+        bulk: Bulk
         depositor: Depositor
         enter: Enter %{account_label} (one at a time)
         header: Permissions
+        new_group_help_text: Use the add button to give access to one group at a time (it will be added to the list below).
+        new_group_name_skel: Group
+        new_group_permission_skel: Access type to grant
+        new_user_help_text: Use the add button to give access to one %{account_label} at a time (it will be added to the list below).  Select the user, by name or %{account_label} . Then select the access level youwish to grant and click on Add this %{account_label} to complete adding the permission.
+        new_user_name_skel: "%{account_label} (without the %{suffix} part)"
+        new_user_permission_skel: Access type to grant
         optional: "(optional)"
         save_note_html: Permissions are <strong>not</strong> saved until the &quot;Save&quot; button is pressed at the bottom of the page.
         select_group: Select a group
