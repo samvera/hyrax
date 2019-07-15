@@ -926,6 +926,7 @@ en:
         deactivate: Deactivate Embargo
         deactivate_selected: Deactivate Embargoes for Selected
         missing: There are no expired embargoes in effect at this time.
+        select_all: Select All
       table_headers:
         release_date: Embargo Release Date
         title: Title
