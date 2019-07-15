@@ -969,6 +969,9 @@ en:
           other: The files %{saved_files} have been saved.
       asset_updated_flash:
         message: The file %{link_to_file} has been updated.
+      descriptions:
+        save: Save Descriptions
+        title: Descriptions
       edit:
         descriptions: Descriptions
         header: Edit %{file_set}
