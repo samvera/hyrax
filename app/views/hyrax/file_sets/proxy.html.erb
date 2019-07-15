@@ -1,5 +1,5 @@
-<%= @proxy_deposit_request.sending_user %> has deposited the file <%= @file_set.title %> on your behalf.
+<%= t('.message', sending_user: @proxy_deposit_request, title: @file_set.title) %>
 
 <%= form_for @proxy_deposit_request do |f| %>
-  <% f.submit "Accept" %>
+  <% f.submit t.("hyrax.helpers.action.accept") %>
 <% end %>

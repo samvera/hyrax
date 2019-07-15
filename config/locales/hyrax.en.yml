@@ -40,6 +40,7 @@ en:
       extension_whitelist_error: 'You are not allowed to upload %{extension} files, allowed types: %{allowed_types}'
   helpers:
     action:
+      accept: Accept
       add: Add
       admin_set:
         new: Create new administrative set
@@ -1010,6 +1011,8 @@ en:
         table_title_access: Access Level
         table_title_user: Person/Group
         user_search: Search for a user
+      proxy:
+        message: "%{sending_user} has deposited the file %{title} on your behalf."
       show_actions:
         analytics: Analytics
         confirm_delete_this: Delete this %{type}?
