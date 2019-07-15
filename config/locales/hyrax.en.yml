@@ -1184,6 +1184,12 @@ en:
         pending_review:
           message: "%{title} (%{link}) was deposited by %{user} and is awaiting approval %{comment}"
           subject: Deposit needs review
+    operations:
+      index:
+        operations_type: Operations Type
+        status: Status
+        title: Operations
+        updated: Updated
     pages:
       cancel: Cancel
       tabs:
