@@ -977,6 +977,9 @@ en:
         header: Edit %{file_set}
         permissions: Permissions
         versions: Versions
+      extra_fields_modal:
+        additional: Additional
+        label: Additional
       form:
         attach_to: Attach to %{parent}
         cancel: Cancel
