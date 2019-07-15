@@ -958,6 +958,7 @@ en:
         edit: Edit
         edit_title: Edit %{file_set}
         header: Select an action
+        press_to: Press to
         versions: Versions
         versions_title: Display previous versions
       asset_deleted_flash:
