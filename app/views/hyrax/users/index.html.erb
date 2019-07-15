@@ -5,7 +5,7 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th><%= t(".avatar') %></th>
+            <th><%= t('.avatar') %></th>
             <th class="sorts"><i id="name" class="<%= params[:sort].blank? ? 'caret up' : params[:sort] == "name desc" ? 'caret' : params[:sort] == "name" ? 'caret up' : '' %>"></i> <%= t('.user_name') %></th>
             <th class="sorts"><i id="login" class="<%= params[:sort] == "login desc" ? 'caret' : params[:sort] == "login" ? 'caret up' : '' %>"></i> <%= t('.user_id') %></th>
             <th class="sorts"><i id="department" class="<%= params[:sort] == "department desc" ? 'caret' : params[:sort] == "department" ? 'caret up' : '' %>"></i> <%= t('.department') %></th>
