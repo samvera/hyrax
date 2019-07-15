@@ -21,7 +21,7 @@
         </label>
       </div>
     <% end %>
-    <div id="save_version_note" class="alert hide">You must click &quot;Save Revision&quot; to revert a previous version of this file</div>
+    <div id="save_version_note" class="alert hide"><%= t(.save_your_note') %></div>
     <%= f.button :button, name: "revert_submit", id: "revert_submit", onclick: "confirmation_needed = false;", class: "btn btn-primary", type: 'submit' do %>
       <%= t('.save') %>
     <% end %>
