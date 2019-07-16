@@ -982,7 +982,7 @@ en:
         versions: Versions
       extra_fields_modal:
         additional: Additional
-        label: Additional
+        label: Additional %{label}(s)
       form:
         attach_to: Attach to %{parent}
         cancel: Cancel
