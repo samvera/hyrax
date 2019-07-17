@@ -30,7 +30,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
       click_link "Files" # switch tab
       expect(page).to have_content "Add files"
       expect(page).to have_content "Add folder"
-      within('span#addfiles') do
+      within('div#add-files') do
         attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/image.jp2", visible: false)
         attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/jp2_fits.xml", visible: false)
       end
@@ -70,7 +70,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
     it "allows on-behalf-of deposit" do
       click_link "Files" # switch tab
       expect(page).to have_content "Add files"
-      within('span#addfiles') do
+      within('div#add-files') do
         attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/image.jp2", visible: false)
         attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/jp2_fits.xml", visible: false)
       end
@@ -122,7 +122,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
 
     it 'updates the required file check status' do
       click_link "Files" # switch to the Files tab
-      within('span#addfiles') do
+      within('div#add-files') do
         attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/image.jp2", visible: false)
       end
       expect(page).to have_css('ul li#required-files.complete', text: 'Add files')
