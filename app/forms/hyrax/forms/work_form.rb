@@ -19,8 +19,6 @@ module Hyrax
                :visibility, :in_works_ids, :depositor, :on_behalf_of, :permissions,
                :member_ids, :alt_title, to: :model
 
-      attr_reader :agreement_accepted
-
       self.terms = [:title, :alt_title, :creator, :contributor, :description, :abstract,
                     :keyword, :license, :rights_statement, :access_right, :rights_notes, :publisher, :date_created,
                     :subject, :language, :identifier, :based_near, :related_url,
@@ -37,7 +35,6 @@ module Hyrax
 
       def initialize(model, current_ability, controller)
         @current_ability = current_ability
-        @agreement_accepted = !model.new_record?
         @controller = controller
         super(model)
       end
@@ -55,6 +52,14 @@ module Hyrax
         end
         attrs
       end
+
+      ##
+      # @return [Boolean] whether the deposit agreement has already been
+      #   accepted
+      def agreement_accepted?
+        !model.new_record?
+      end
+      alias agreement_accepted agreement_accepted?
 
       # when the add_works_to_collection parameter is set, they mean to create
       # a new work and add it to that collection.
