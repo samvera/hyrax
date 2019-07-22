@@ -6,16 +6,26 @@ module Hyrax
       # @return [Boolean] true if create was successful
       def create(env)
         uploaded_file_ids = filter_file_ids(env.attributes.delete(:uploaded_files))
-        files = uploaded_files(uploaded_file_ids)
-        validate_files(files, env) && next_actor.create(env) && attach_files(files, env)
+        files             = uploaded_files(uploaded_file_ids)
+        # get a current copy of attributes, to protect against future mutations
+        attributes        = env.attributes.clone
+
+        validate_files(files, env) &&
+          next_actor.create(env) &&
+          attach_files(files, env.curation_concern, attributes)
       end
 
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if update was successful
       def update(env)
         uploaded_file_ids = filter_file_ids(env.attributes.delete(:uploaded_files))
-        files = uploaded_files(uploaded_file_ids)
-        validate_files(files, env) && next_actor.update(env) && attach_files(files, env)
+        files             = uploaded_files(uploaded_file_ids)
+        # get a current copy of attributes, to protect against future mutations
+        attributes        = env.attributes.clone
+
+        validate_files(files, env) &&
+          next_actor.update(env) &&
+          attach_files(files, env.curation_concern, attributes)
       end
 
       private
@@ -37,9 +47,9 @@ module Hyrax
         end
 
         # @return [TrueClass]
-        def attach_files(files, env)
+        def attach_files(files, curation_concern, attributes)
           return true if files.blank?
-          AttachFilesToWorkJob.perform_later(env.curation_concern, files, env.attributes.to_h.symbolize_keys)
+          AttachFilesToWorkJob.perform_later(curation_concern, files, attributes.to_h.symbolize_keys)
           true
         end
 
