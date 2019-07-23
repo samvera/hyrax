@@ -66,9 +66,13 @@ module Wings
       klass = ResourceClassCache.instance.fetch(pcdm_object) do
         self.class.to_valkyrie_resource_class(klass: pcdm_object.class)
       end
-      pcdm_object.id = minted_id if pcdm_object.id.nil?
+
+      mint_id unless pcdm_object.id
+
       attrs = attributes.tap { |hash| hash[:new_record] = pcdm_object.new_record? }
-      klass.new(alternate_ids: [::Valkyrie::ID.new(pcdm_object.id)], **attrs)
+      attrs[:alternate_ids] = [::Valkyrie::ID.new(pcdm_object.id)] if pcdm_object.id
+
+      klass.new(**attrs)
     end
 
     ##
@@ -201,8 +205,10 @@ module Wings
 
     private
 
-      def minted_id
-        ::Noid::Rails.config.minter_class.new.mint
+      def mint_id
+        id = pcdm_object.assign_id
+
+        pcdm_object.id = id unless id.blank?
       end
 
       def attributes

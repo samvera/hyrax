@@ -121,10 +121,13 @@ RSpec.describe Wings::ModelTransformer do
       let(:minted_id) { 'bobross' }
 
       before do
+        Hyrax.config.enable_noids = true
         allow_any_instance_of(::Noid::Rails.config.minter_class)
           .to receive(:mint)
           .and_return(minted_id)
       end
+
+      after { Hyrax.config.enable_noids = false }
 
       it { expect(factory.build).to have_a_valkyrie_alternate_id_of minted_id }
     end
