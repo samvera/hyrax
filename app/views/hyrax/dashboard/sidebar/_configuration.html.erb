@@ -35,7 +35,5 @@
       <% end %>
     <% end %>
 
-    <% Hyrax::DashboardController.sidebar_partials[:configuration].each do |partial| %>
-      <%= render partial, menu: menu %>
-    <% end %>
+    <%= render 'hyrax/dashboard/sidebar/menu_partials', menu: menu, section: :configuration %>
   <% end %>
