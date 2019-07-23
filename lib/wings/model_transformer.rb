@@ -241,15 +241,21 @@ module Wings
       end
 
       def append_embargo(attrs)
-        embargo_id      = pcdm_object.try(:embargo_id) || pcdm_object.try(:embargo)&.id
-        attrs[:embargo] = Hyrax.query_service.find_by(id: ::Valkyrie::ID.new(embargo_id)) if
-          embargo_id
+        return unless pcdm_object.try(:embargo)
+        embargo_attrs = pcdm_object.embargo.attributes.symbolize_keys
+        embargo_attrs[:embargo_history] = embargo_attrs[:embargo_history].to_a
+        embargo_attrs[:id] = ::Valkyrie::ID.new(embargo_attrs[:id]) if embargo_attrs[:id]
+
+        attrs[:embargo] = Hyrax::Embargo.new(**embargo_attrs)
       end
 
       def append_lease(attrs)
-        lease_id      = pcdm_object.try(:lease_id) || pcdm_object.try(:lease)&.id
-        attrs[:lease] = Hyrax.query_service.find_by(id: ::Valkyrie::ID.new(lease_id)) if
-          lease_id
+        return unless pcdm_object.try(:lease)
+        lease_attrs = pcdm_object.lease.attributes.symbolize_keys
+        lease_attrs[:lease_history] = lease_attrs[:embargo_history].to_a
+        lease_attrs[:id] = ::Valkyrie::ID.new(lease_attrs[:id]) if lease_attrs[:id]
+
+        attrs[:lease] = Hyrax::Lease.new(**lease_attrs)
       end
   end
   # rubocop:enable Style/ClassVars Metrics/ClassLength

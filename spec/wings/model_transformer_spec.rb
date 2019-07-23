@@ -149,6 +149,14 @@ RSpec.describe Wings::ModelTransformer do
       end
     end
 
+    context 'with an unsaved embargo' do
+      let(:work) { FactoryBot.build(:embargoed_work) }
+
+      it 'has the correct embargo details' do
+        expect(factory.build.embargo).to have_attributes work.embargo.attributes.symbolize_keys
+      end
+    end
+
     context 'with newly saved embargo' do
       let(:work) { FactoryBot.build(:embargoed_work) }
 
@@ -156,6 +164,14 @@ RSpec.describe Wings::ModelTransformer do
         work.embargo.save
 
         expect(subject.build.embargo.id.id).to eq work.embargo.id
+      end
+    end
+
+    context 'with an unsaved lease' do
+      let(:work) { FactoryBot.build(:leased_work) }
+
+      it 'has the correct lease details' do
+        expect(factory.build.lease).to have_attributes work.lease.attributes.symbolize_keys
       end
     end
 
