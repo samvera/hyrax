@@ -1398,6 +1398,9 @@ en:
         label: Zotero Profile
         unlinked: Link with Zotero
     users:
+      activity_log:
+        date: Date
+        user_activity: User Activity
       index:
         avatar: Avatar
         department: Department
