@@ -484,6 +484,11 @@ en:
         google: Google+
         tumblr: Tumblr
         twitter: Twitter
+      unauthorized:
+        id: 'ID: %{id}'
+        is_private: The %{type} you have tried to access is private
+        page_is_private: The page you have tried to access is private
+        unauthorized: Unauthorized
       work_button_row:
         analytics: Analytics
         attach: Attach %{type}
@@ -492,6 +497,9 @@ en:
         edit: Edit
         feature: Feature
         unfeature: Unfeature
+    base/unauthorized:
+      is_private: The %{type} you have tried to access is private
+      unauthorized: Unauthorized
     batch:
       help:
         resource_type: You may select multiple types to apply to all files
