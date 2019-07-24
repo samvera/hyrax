@@ -1316,7 +1316,9 @@ en:
     sort_label: Sort the listing of items
     static:
       mendeley:
+        contact_form: Contact Form
         export_to_mendeley: Export to Mendeley
+        export_to_mendeley_details: 'Exporting to Mendeley is supported via embedded metadata.  If Mendeley does not automatically pick up metadata for deposited files, please report the issue via the '
     toolbar:
       dashboard:
         menu: Dashboard
