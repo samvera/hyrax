@@ -549,6 +549,9 @@ en:
         header: Save Works
     bread_crumb:
       search_results: Back to search results
+    citations:
+      work:
+        citation_formats: Citation Formats
     collection:
       actions:
         add_existing_works:
