@@ -512,6 +512,11 @@ en:
         edit: Edit
         feature: Feature
         unfeature: Unfeature
+    base/_workflow_actions:
+      actions: Actions
+      previous_comments: Previous Comments
+      review_comment: Review Comment
+      title: Review and Approval
     base/unauthorized:
       is_private: The %{type} you have tried to access is private
       unauthorized: Unauthorized
