@@ -771,6 +771,14 @@ en:
         sort_and_per_page:
           show_par_page_html: Show %{select} per page
           sort_by: 'Sort By:'
+        work_action_menu:
+          delete_work: Delete Work
+          deletin_from_work: Deleting a work from %{application_name} is permanent. Click OK to delete this work from %{application_name}, or Cancel to cancel this operation
+          edit_work: Edit Work
+          press_to: Press to
+          remove_from_collection: Remove from collection
+          select_an_action: Select an action
+          transfer_ownership_of_work: Transfer Ownership of Work
       create_work: Create Work
       current_proxies: Current Proxies
       delete_notification: Delete Notification
