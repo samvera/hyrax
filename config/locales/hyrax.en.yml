@@ -796,7 +796,7 @@ en:
           sort_by: 'Sort By:'
         work_action_menu:
           delete_work: Delete Work
-          deletin_from_work: Deleting a work from %{application_name} is permanent. Click OK to delete this work from %{application_name}, or Cancel to cancel this operation
+          deleting_from_work: Deleting a work from %{application_name} is permanent. Click OK to delete this work from %{application_name}, or Cancel to cancel this operation
           edit_work: Edit Work
           press_to: Press to
           remove_from_collection: Remove from collection
