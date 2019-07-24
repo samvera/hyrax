@@ -755,6 +755,13 @@ en:
           subcollection_count: Subcollections
         show_descriptions:
           descriptions: Descriptions
+        show_document_list:
+          action: Action
+          date_added: Date added
+          list_items_in_collection: List of items in this collection
+          owner: Owner
+          title: Title
+          visibility: Visibility
         sort_and_per_page:
           show_par_page_html: Show %{select} per page
           sort_by: 'Sort By:'
