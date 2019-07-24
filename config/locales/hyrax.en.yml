@@ -1319,6 +1319,10 @@ en:
         contact_form: Contact Form
         export_to_mendeley: Export to Mendeley
         export_to_mendeley_details: 'Exporting to Mendeley is supported via embedded metadata.  If Mendeley does not automatically pick up metadata for deposited files, please report the issue via the '
+      zotero:
+        contact_form: Contact Form
+        export_to_zotero: Export to Zotero
+        export_to_zotero_details: 'Exporting to Zotero is supported via embedded metadata.  If Zotero does not automatically pick up metadata for deposited files, please report the issue via the '
     toolbar:
       dashboard:
         menu: Dashboard
