@@ -449,6 +449,21 @@ en:
         legend_html: Thumbnail
       form_visibility_component:
         visibility: Visibility
+      inspect_work:
+        back_to: Back to
+        entity_id: Entity ID
+        id: ID
+        name: Name
+        object_name: Object Name
+        persistence: Persistence
+        processing_entity_id: Processing Entity ID
+        proxy_for: Proxy for
+        roles: Roles
+        state: State
+        state_name: State Name
+        users: Users
+        workflow: Workflow
+        workflow_comments: Workflow Comments
       items:
         actions: Actions
         date_uploaded: Date Uploaded
