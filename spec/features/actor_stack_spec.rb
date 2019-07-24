@@ -55,6 +55,18 @@ RSpec.describe Hyrax::DefaultMiddlewareStack, :clean_repo do
       end
     end
 
+    context 'when adding permissions' do
+      before do
+        work.permissions.build(name: 'discover_user', type: 'person', access: 'discover')
+      end
+
+      it 'persists arbitrary ACL permissions' do
+        expect { actor.create(env) }
+          .to change { env.curation_concern.permissions }
+          .to include(grant_permission(:discover).to_user('discover_user'))
+      end
+    end
+
     context 'when noids are disabled' do
       let(:uuid_regex) { /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/ }
 

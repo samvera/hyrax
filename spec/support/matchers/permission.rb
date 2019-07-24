@@ -1,0 +1,22 @@
+# frozen_string_literal: true
+
+RSpec::Matchers.define :grant_permission do |acl_type|
+  match do |permission|
+    access_match = permission.access == acl_type.to_s
+    agent_match =
+      if user_id
+        permission.type == 'person' &&
+          permission.agent.first.id.include?(user_id)
+      elsif group_id
+        permission.type == 'group' &&
+          permission.agent.first.id.include?(group_id)
+      else
+        true
+      end
+
+    return access_match && agent_match
+  end
+
+  chain :to_user,  :user_id
+  chain :to_group, :group_id
+end
