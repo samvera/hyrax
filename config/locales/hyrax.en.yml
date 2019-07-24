@@ -512,11 +512,11 @@ en:
         edit: Edit
         feature: Feature
         unfeature: Unfeature
-    base/_workflow_actions:
-      actions: Actions
-      previous_comments: Previous Comments
-      review_comment: Review Comment
-      title: Review and Approval
+      workflow_actions:
+        actions: Actions
+        previous_comments: Previous Comments
+        review_comment: Review Comment
+        title: Review and Approval
     base/unauthorized:
       is_private: The %{type} you have tried to access is private
       unauthorized: Unauthorized
@@ -1314,6 +1314,9 @@ en:
         link_expired_not_found: Single Use Link Expired or Not Found
         link_not_found: Single use link Not Found
     sort_label: Sort the listing of items
+    static:
+      mendeley:
+        export_to_mendeley: Export to Mendeley
     toolbar:
       dashboard:
         menu: Dashboard
