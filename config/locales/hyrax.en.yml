@@ -1001,12 +1001,14 @@ en:
         download: Download the file
         downloadable_content:
           audio_link: Download audio
+          audio_tag_not_supported: Your browser does not support the audio tag.
           default_link: Download file
           heading: Downloadable Content
           image_link: Download image
           office_link: Download file
           pdf_link: Download PDF
           video_link: Download video
+          video_tag_not_supported: Your browser does not support the video tag.
     file_sets:
       actions:
         delete: Delete
