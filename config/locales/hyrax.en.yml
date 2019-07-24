@@ -762,6 +762,8 @@ en:
           owner: Owner
           title: Title
           visibility: Visibility
+        show_document_list_menu:
+          select: Select
         sort_and_per_page:
           show_par_page_html: Show %{select} per page
           sort_by: 'Sort By:'
