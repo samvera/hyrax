@@ -140,6 +140,10 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
+Valkyrie::MetadataAdapter.register(
+  Valkyrie::Persistence::Memory::MetadataAdapter.new, :test_adapter
+)
+
 require 'active_fedora/cleaner'
 RSpec.configure do |config|
   config.disable_monkey_patching!
