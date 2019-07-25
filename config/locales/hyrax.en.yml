@@ -1100,7 +1100,7 @@ en:
         save_your_note: You must click &quot;Save Revision&quot; to revert a previous version of this file
         upload: Upload New Version
     form_permission:
-      visibility: Visibility
+      visibility: Visibility <small>Who should be able to view or download this content?</small>
     help:
       header: User Support
       override_text: Use app/views/static/help.html.erb to override this file.
