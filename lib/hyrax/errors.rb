@@ -9,5 +9,5 @@ module Hyrax
 
   class SingleUseError < HyraxError; end
 
-  class ObjectNotFoundError < HyraxError; end
+  class ObjectNotFoundError < ActiveFedora::ObjectNotFoundError; end
 end
