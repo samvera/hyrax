@@ -17,6 +17,34 @@ RSpec.describe Hyrax::AccessControlList do
     Hyrax.persister.save(resource: r)
   end
 
+  describe 'grant DSL' do
+    let(:mode) { :read }
+    let(:user) { ::User.find(permission.agent) }
+
+    describe '#grant' do
+      it 'grants a permission' do
+        expect { acl.grant(mode).to(user) }
+          .to change { acl.permissions }
+          .to contain_exactly(have_attributes(mode:      mode,
+                                              agent:     user.id,
+                                              access_to: resource.id))
+      end
+    end
+
+    describe '#revoke' do
+      before do
+        acl << permission
+        acl.save
+      end
+
+      it 'revokes a permission' do
+        expect { acl.revoke(mode).from(user) }
+          .to change { acl.permissions }
+          .to be_empty
+      end
+    end
+  end
+
   describe '#permissions' do
     it 'is empty by default' do
       expect(acl.permissions).to be_empty
