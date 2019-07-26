@@ -1,4 +1,6 @@
 module Hyrax
+  require 'active_fedora/errors'
+
   # Generic Hyrax exception class.
   class HyraxError < StandardError; end
 
