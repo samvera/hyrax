@@ -373,8 +373,8 @@ RSpec.describe FileSet do
     context 'when file contains a virus' do
       before do
         allow(subject).to receive(:warn) # suppress virus warnings
-        allow(Hydra::Works::VirusCheckerService).to receive(:file_has_virus?) { true }
-        # TODO: Test that this works with Hydra::Works::UploadFileToFileSet. see https://github.com/samvera/hydra-works/pull/139
+        allow(Hyrax::Works::VirusCheckerService).to receive(:file_has_virus?) { true }
+        # TODO: Test that this works with Hyrax::Works::UploadFileToFileSet. see https://github.com/samvera/hydra-works/pull/139
         # Hydra::Works::UploadFileToFileSet.call(subject, file_path, original_name: 'small_file.txt')
         of = subject.build_original_file
         of.content = File.open(file_path)
