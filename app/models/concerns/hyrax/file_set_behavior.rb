@@ -3,7 +3,7 @@ module Hyrax
     extend ActiveSupport::Concern
     include Hyrax::WithEvents
     include Hydra::Works::FileSetBehavior
-    include Hydra::Works::VirusCheck
+    include Hyrax::Works::VirusCheck
     include Hyrax::FileSet::Characterization
     include Hydra::WithDepositor
     include Serializers
