@@ -65,8 +65,8 @@ RSpec.describe Wings::Valkyrie::QueryService do
       expect(found).to be_persisted
     end
 
-    it "returns a Valkyrie::Persistence::ObjectNotFoundError for a non-found ID" do
-      expect { query_service.find_by(id: ::Valkyrie::ID.new("123123123")) }.to raise_error ::Valkyrie::Persistence::ObjectNotFoundError
+    it "returns a Hyrax::ObjectNotFoundError for a non-found ID" do
+      expect { query_service.find_by(id: ::Valkyrie::ID.new("123123123")) }.to raise_error Hyrax::ObjectNotFoundError
     end
 
     it 'raises an error if the id is not a Valkyrie::ID or a string' do
@@ -126,13 +126,13 @@ RSpec.describe Wings::Valkyrie::QueryService do
     # Not a use case that Hyrax has; everything has to have an alternate_id
     #   We can't make this test pass because we can't persist an object without
     #   an alternate_id
-    xit 'raises a Valkyrie::Persistence::ObjectNotFoundError when persisted objects do not have alternate_ids' do
+    xit 'raises a Hyrax::ObjectNotFoundError when persisted objects do not have alternate_ids' do
       persister.save(resource: SecondResource.new)
-      expect { query_service.find_by_alternate_identifier(alternate_identifier: Valkyrie::ID.new("123123123")) }.to raise_error ::Valkyrie::Persistence::ObjectNotFoundError
+      expect { query_service.find_by_alternate_identifier(alternate_identifier: Valkyrie::ID.new("123123123")) }.to raise_error Hyrax::ObjectNotFoundError
     end
 
-    it "raises a Valkyrie::Persistence::ObjectNotFoundError for a non-found alternate identifier" do
-      expect { query_service.find_by_alternate_identifier(alternate_identifier: Valkyrie::ID.new("123123123")) }.to raise_error ::Valkyrie::Persistence::ObjectNotFoundError
+    it "raises a Hyrax::ObjectNotFoundError for a non-found alternate identifier" do
+      expect { query_service.find_by_alternate_identifier(alternate_identifier: Valkyrie::ID.new("123123123")) }.to raise_error Hyrax::ObjectNotFoundError
     end
 
     it 'raises an error if the alternate identifier is not a Valkyrie::ID or a string' do
@@ -167,7 +167,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
       end
 
       it 'returns an ActiveFedora error' do
-        expect { query_service.find_by_alternate_identifier(alternate_identifier: Valkyrie::ID.new("123123123"), use_valkyrie: false) }.to raise_error ::ActiveFedora::ObjectNotFoundError
+        expect { query_service.find_by_alternate_identifier(alternate_identifier: Valkyrie::ID.new("123123123"), use_valkyrie: false) }.to raise_error ActiveFedora::ObjectNotFoundError
       end
     end
   end
