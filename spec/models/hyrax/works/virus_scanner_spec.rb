@@ -4,7 +4,7 @@ RSpec.describe Hyrax::Works::VirusScanner do
   let(:file)   { '/tmp/path' }
   let(:logger) { Logger.new(nil) }
 
-  before { allow(ActiveFedora::Base).to receive(:logger).and_return(logger) }
+  before { allow(Hyrax).to receive(:logger).and_return(logger) }
 
   subject { described_class.new(file) }
 
@@ -26,14 +26,14 @@ RSpec.describe Hyrax::Works::VirusScanner do
     context 'with a clean file' do
       before { allow(ClamAV.instance).to receive(:scanfile).with('/tmp/path').and_return(0) }
       it 'returns false with no warning' do
-        expect(ActiveFedora::Base.logger).not_to receive(:warn)
+        expect(Hyrax.logger).not_to receive(:warn)
         is_expected.not_to be_infected
       end
     end
     context 'with an infected file' do
       before { allow(ClamAV.instance).to receive(:scanfile).with('/tmp/path').and_return(1) }
       it 'returns true with a warning' do
-        expect(ActiveFedora::Base.logger).to receive(:warn).with(kind_of(String))
+        expect(Hyrax.logger).to receive(:warn).with(kind_of(String))
         is_expected.to be_infected
       end
     end
@@ -41,7 +41,7 @@ RSpec.describe Hyrax::Works::VirusScanner do
 
   context 'when ClamAV is not defined' do
     it 'returns false with a warning' do
-      expect(ActiveFedora::Base.logger).to receive(:warn).with(kind_of(String))
+      expect(Hyrax.logger).to receive(:warn).with(kind_of(String))
       is_expected.not_to be_infected
     end
   end
