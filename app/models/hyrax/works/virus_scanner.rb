@@ -35,7 +35,7 @@ module Hyrax::Works
 
     def clam_av_scanner
       scan_result = ClamAV.instance.method(:scanfile).call(file)
-      return false if scan_result == 0
+      return false if scan_result.zero?
       warning "A virus was found in #{file}: #{scan_result}"
       true
     end
