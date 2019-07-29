@@ -24,9 +24,11 @@ module Hyrax
 
     included do
       property :owner, predicate: RDF::URI.new('http://opaquenamespace.org/ns/hydra/owner'), multiple: false
-      class_attribute :human_readable_short_description
+      class_attribute :human_readable_short_description, :default_system_virus_scanner
       # TODO: do we need this line?
       self.indexer = WorkIndexer
+      # Default VirusScanner, configurable for Hyrax work types
+      self.default_system_virus_scanner = Hyrax::Works::VirusScanner
     end
 
     # TODO: This can be removed when we upgrade to ActiveFedora 12.0
