@@ -6,7 +6,7 @@ module Hyrax::Works
       validate :must_not_detect_viruses
 
       def viruses?
-        return false unless original_file && original_file.new_record? # We have a new file to check
+        return false unless original_file&.new_record? # We have a new file to check
         VirusCheckerService.file_has_virus?(original_file)
       end
 
