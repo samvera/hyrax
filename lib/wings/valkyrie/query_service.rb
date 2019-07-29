@@ -87,7 +87,7 @@ module Wings
         object = ::ActiveFedora::Base.find(alternate_identifier.to_s)
         return object if use_valkyrie == false
         resource_factory.to_resource(object: object)
-      rescue ActiveFedora::ObjectNotFoundError, Ldp::Gone => e
+      rescue ActiveFedora::ObjectNotFoundError, Ldp::Gone
         raise Hyrax::ObjectNotFoundError
       end
 
