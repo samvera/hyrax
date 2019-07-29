@@ -18,7 +18,7 @@ RSpec.describe Hyrax::PermissionTemplate, :clean_repo do
       end
       it 'will not persist an AdminSet when false (or not given)' do
         permission_template = create(:permission_template, with_admin_set: false)
-        expect { permission_template.admin_set }.to raise_error(ActiveFedora::ObjectNotFoundError)
+        expect { permission_template.admin_set }.to raise_error(Hyrax::ObjectNotFoundError)
       end
     end
 
@@ -29,7 +29,7 @@ RSpec.describe Hyrax::PermissionTemplate, :clean_repo do
       end
       it 'will not persist an Collection when false (or not given)' do
         permission_template = create(:permission_template, with_collection: false)
-        expect { permission_template.collection }.to raise_error(ActiveFedora::ObjectNotFoundError)
+        expect { permission_template.collection }.to raise_error(Hyrax::ObjectNotFoundError)
       end
     end
 

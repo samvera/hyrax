@@ -18,7 +18,7 @@ module Hyrax
         # For derivatives stored on the local file system
         send_local_content
       else
-        raise ActiveFedora::ObjectNotFoundError
+        raise Hyrax::ObjectNotFoundError
       end
     end
 

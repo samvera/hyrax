@@ -71,7 +71,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
 
       before do
         allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)
-        allow(relation).to receive(:find).with(default_work.id).and_raise(ActiveFedora::ObjectNotFoundError)
+        allow(relation).to receive(:find).with(default_work.id).and_raise(Hyrax::ObjectNotFoundError)
         get :show, params: { format: :json, id: default_work.id, token: token }
       end
 
@@ -231,7 +231,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       before do
         allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)
         allow(relation).to receive(:find).with(gw.id) do
-          raise(ActiveFedora::ObjectNotFoundError)
+          raise(Hyrax::ObjectNotFoundError)
         end
         put :update, params: { id: gw.id, format: :json }, body: put_item
       end
@@ -368,7 +368,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       before do
         # Mock ActiveFedora
         allow(Hyrax::WorkRelation).to receive(:new).and_return(relation)
-        allow(relation).to receive(:find).with(not_found_id).and_raise(ActiveFedora::ObjectNotFoundError)
+        allow(relation).to receive(:find).with(not_found_id).and_raise(Hyrax::ObjectNotFoundError)
         delete :destroy, params: { format: :json, id: not_found_id, token: token }
       end
 

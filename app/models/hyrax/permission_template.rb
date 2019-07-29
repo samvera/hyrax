@@ -30,31 +30,31 @@ module Hyrax
 
     # A bit of an analogue for a `belongs_to :source_model` as it crosses from Fedora to the DB
     # @return [AdminSet | Collection]
-    # @raise [ActiveFedora::ObjectNotFoundError] when neither an AdminSet or Collection is found
+    # @raise [Hyrax::ObjectNotFoundError] when neither an AdminSet or Collection is found
     def source_model
       admin_set
-    rescue ActiveFedora::ObjectNotFoundError
+    rescue Hyrax::ObjectNotFoundError
       collection
     end
 
     # A bit of an analogue for a `belongs_to :admin_set` as it crosses from Fedora to the DB
     # @return [AdminSet]
-    # @raise [ActiveFedora::ObjectNotFoundError] when the we cannot find the AdminSet
+    # @raise [Hyrax::ObjectNotFoundError] when the we cannot find the AdminSet
     def admin_set
       return AdminSet.find(source_id) if AdminSet.exists?(source_id)
-      raise ActiveFedora::ObjectNotFoundError
+      raise Hyrax::ObjectNotFoundError
     rescue ActiveFedora::ActiveFedoraError # TODO: remove the rescue when active_fedora issue #1276 is fixed
-      raise ActiveFedora::ObjectNotFoundError
+      raise Hyrax::ObjectNotFoundError
     end
 
     # A bit of an analogue for a `belongs_to :collection` as it crosses from Fedora to the DB
     # @return [Collection]
-    # @raise [ActiveFedora::ObjectNotFoundError] when the we cannot find the Collection
+    # @raise [Hyrax::ObjectNotFoundError] when the we cannot find the Collection
     def collection
       return Collection.find(source_id) if Collection.exists?(source_id)
-      raise ActiveFedora::ObjectNotFoundError
+      raise Hyrax::ObjectNotFoundError
     rescue ActiveFedora::ActiveFedoraError # TODO: remove the rescue when active_fedora issue #1276 is fixed
-      raise ActiveFedora::ObjectNotFoundError
+      raise Hyrax::ObjectNotFoundError
     end
 
     # Valid Release Period values
