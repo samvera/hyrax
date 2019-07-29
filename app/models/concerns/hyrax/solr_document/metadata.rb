@@ -33,7 +33,7 @@ module Hyrax
             begin
               ::Date.parse(field)
             rescue ArgumentError
-              Rails.logger.info "Unable to parse date: #{field.first.inspect}"
+              Hyrax.logger.info "Unable to parse date: #{field.first.inspect}"
             end
           end
         end
