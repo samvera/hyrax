@@ -50,7 +50,7 @@ module Hyrax::Works
     private
 
       def warning(msg)
-        ActiveFedora::Base.logger&.warn(msg)
+        Hyrax.logger&.warn(msg)
       end
   end
 end
