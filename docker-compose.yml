@@ -1,0 +1,200 @@
+version: '3'
+
+networks:
+  external:
+  internal:
+
+volumes:
+  db-dev:
+  fcrepo-dev:
+  solr-dev:
+  redis-dev:
+  bundled:
+
+services:
+  ##
+  # Basic Rails application build image
+  app: &app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    user: $UID
+    volumes:
+      - .:/data # mount current directory into the image
+      - bundled:/usr/local/bundle
+    networks:
+      external:
+      internal:
+    # use tmpfs for tmp and log for performance and to allow
+    # multiple builds in parallel. Both directories are mounted
+    # into the image AFTER the working directory is mounted.
+    tmpfs:
+      - /data/log
+
+  ##
+  # Development environment for application
+  dev: &dev
+    <<: *app
+    environment:
+      - CACHE_PATH=/data/tmp/uploads/cache
+      - DB_NAME=development
+      - DB_HOST=db-dev
+      - DB_PASSWORD=postgres
+      - DB_PORT='5432'
+      - DB_USERNAME=postgres
+      - DERIVATIVES_PATH=/data/tmp/derivatives
+      - FEDORA_URL=http://fcrepo-dev:8080/fcrepo/rest
+      - FITS_PATH=/opt/fits-1.0.5/fits.sh
+      - RAILS_ENV=development
+      - RAILS_LOG_TO_STDOUT=true
+      - REDIS_HOST=redis-dev
+      - REDIS_PORT='6379'
+      - SECRET_KEY_BASE=bobross
+      - SOLR_URL=http://solr-dev:8983/solr/development
+      - UPLOADS_PATH=/data/tmp/uploads
+    depends_on:
+      - db-dev
+      - solr-dev
+      - fcrepo-dev
+      - redis-dev
+      - memcache
+      - workers
+    expose:
+      - 3000
+  server:
+    <<: *dev
+    command: >
+      bash -c "./build/entrypoint.sh &&
+      bundle exec puma --dir /data/.internal_test_app --pidfile /data/tmp/puma.pid -b tcp://0.0.0.0:3000"
+  workers:
+    <<: *dev
+    working_dir: /data/.internal_test_app
+    command: bash -c "bundle exec sidekiq"
+    depends_on:
+      - db-dev
+      - solr-dev
+      - fcrepo-dev
+      - redis-dev
+      - memcache
+
+  ##
+  # Test environment for application
+  test: &test
+    <<: *app
+    environment:
+      - CACHE_PATH=/data/tmp/uploads/cache
+      - DB_NAME=test
+      - DB_HOST=db-dev
+      - DB_PASSWORD=postgres
+      - DB_PORT='5432'
+      - DB_USERNAME=postgres
+      - DERIVATIVES_PATH=/data/tmp/derivatives
+      - FEDORA_URL=http://fcrepo-test:8080/fcrepo/rest
+      - FITS_PATH=/opt/fits-1.0.5/fits.sh
+      - RAILS_ENV=test
+      - REDIS_HOST=redis-test
+      - REDIS_PORT='6379'
+      - SECRET_KEY_BASE=bobross
+      - SOLR_URL=http://solr-test:8983/solr/test
+      - UPLOADS_PATH=/data/tmp/uploads
+    depends_on:
+      - db-test
+      - solr-test
+      - fcrepo-test
+      - redis-test
+      - memcache
+    volumes:
+      - .:/data # mount current directory into the image
+      - ./tmp:/tmp
+      - bundled:/usr/local/bundle
+    command: >
+      bash -c "./build/entrypoint.sh &&
+      puma -b tcp://0.0.0.0:3001 -e test"
+    expose:
+      - 3001
+
+  ##
+  # SOLR Index server
+  solr: &solr
+    image: solr:6-alpine
+    expose:
+      - 8983
+    networks:
+      internal:
+  solr-dev:
+    <<: *solr
+    volumes:
+      - ./solr/config:/opt/solr/nurax_conf
+      - solr-dev:/opt/solr/server/solr/mycores
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - development
+      - /opt/solr/nurax_conf
+  solr-test:
+    <<: *solr
+    volumes:
+      - ./solr/config:/opt/solr/nurax_conf
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - test
+      - /opt/solr/nurax_conf
+
+  ##
+  # Fedora repository server
+  fcrepo: &fcrepo
+    image: ualbertalib/docker-fcrepo4:4.7
+    environment:
+      - JAVA_OPTS=${JAVA_OPTS} -Dfcrepo.modeshape.configuration="classpath:/config/file-simple/repository.json" -Dfcrepo.object.directory="/data/objects" -Dfcrepo.binary.directory="/data/binaries"
+    expose:
+      - 8080
+    networks:
+      internal:
+  fcrepo-dev:
+    <<: *fcrepo
+    volumes:
+      - fcrepo-dev:/data
+  fcrepo-test:
+    <<: *fcrepo
+    tmpfs: /data
+
+  ##
+  # Postgres database server
+  db: &db
+    image: postgres:10-alpine
+    networks:
+      internal:
+  db-dev:
+    <<: *db
+    environment:
+      - POSTGRES_DB=development
+    volumes:
+      - db-dev:/var/lib/postgresql/data
+  db-test:
+    <<: *db
+    environment:
+      - POSTGRES_DB=test
+    tmpfs: /var/lib/postgresql/data
+
+  ##
+  # Redis queue server
+  redis: &redis
+    image: redis:4-alpine
+    command: redis-server
+    networks:
+      internal:
+  redis-dev:
+    <<: *redis
+    volumes:
+      - redis-dev:/data
+  redis-test:
+    <<: *redis
+    tmpfs: /data
+
+  ##
+  # Memcache cache server
+  memcache:
+    image: memcached
+    networks:
+      internal:
