@@ -28,7 +28,7 @@ module Hyrax
 
     # Wraps rsolr get
     # @return [Hash] the hash straight form rsolr
-    def get(query=nil, use_valkyrie: Hyrax.config.query_index_from_valkyrie, **args)
+    def get(query = nil, use_valkyrie: Hyrax.config.query_index_from_valkyrie, **args)
       # Make Hyrax.config.solr_select_path the default SOLR path
       solr_path = args.delete(:path) || Hyrax.config.solr_select_path
       args = args.merge(q: query) unless query.blank?
@@ -43,7 +43,7 @@ module Hyrax
 
     # Wraps rsolr post
     # @return [Hash] the hash straight form rsolr
-    def post(query=nil, use_valkyrie: Hyrax.config.query_index_from_valkyrie, **args)
+    def post(query = nil, use_valkyrie: Hyrax.config.query_index_from_valkyrie, **args)
       # Make Hyrax.config.solr_select_path the default SOLR path
       solr_path = args.delete(:path) || Hyrax.config.solr_select_path
       args = args.merge(q: query) unless query.blank?

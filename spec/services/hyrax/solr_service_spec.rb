@@ -127,7 +127,7 @@ RSpec.describe Hyrax::SolrService do
 
   describe ".delete_by_query" do
     it "calls solr" do
-      expect(mock_conn).to receive(:delete_by_query).with("*:*", params:{})
+      expect(mock_conn).to receive(:delete_by_query).with("*:*", params: {})
       allow(described_class).to receive(:instance).and_return(double("instance", conn: mock_conn))
       described_class.delete_by_query("*:*")
     end
@@ -136,7 +136,7 @@ RSpec.describe Hyrax::SolrService do
       let(:service) { described_class.new }
 
       it "accepts and passes through use_valkyrie:true" do
-        expect(mock_conn).to receive(:delete_by_query).with("*:*", params:{})
+        expect(mock_conn).to receive(:delete_by_query).with("*:*", params: {})
         allow(service).to receive(:valkyrie_index).and_return(double("valkyrie_index", connection: mock_conn))
         service.delete_by_query("*:*", use_valkyrie: true)
       end
