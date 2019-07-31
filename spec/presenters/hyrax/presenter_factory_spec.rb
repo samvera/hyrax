@@ -4,7 +4,7 @@ RSpec.describe Hyrax::PresenterFactory do
 
     before do
       allow(Hyrax::SolrService).to receive(:query)
-        .with("{!terms f=id}12,13", :method=>:post, :rows=>1000 )
+        .with("{!terms f=id}12,13", method: :post, rows: 1000)
         .and_return(results)
     end
 
