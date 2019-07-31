@@ -54,8 +54,8 @@ module Wings
 
       # Deletes all resources from Fedora and Solr
       def wipe!
-        Hyrax::SolrService.instance.conn.delete_by_query("*:*")
-        Hyrax::SolrService.instance.conn.commit
+        Hyrax::SolrService.delete_by_query("*:*")
+        Hyrax::SolrService.commit
         ActiveFedora::Cleaner.clean!
       end
 

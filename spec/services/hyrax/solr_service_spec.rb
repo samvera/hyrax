@@ -106,4 +106,40 @@ RSpec.describe Hyrax::SolrService do
       end
     end
   end
+
+  describe ".commit" do
+    it "calls solr" do
+      expect(mock_conn).to receive(:commit)
+      allow(described_class).to receive(:instance).and_return(double("instance", conn: mock_conn))
+      described_class.commit
+    end
+
+    context "when use_valkyrie: true" do
+      let(:service) { described_class.new }
+
+      it "accepts and passes through use_valkyrie:true" do
+        expect(mock_conn).to receive(:commit)
+        allow(service).to receive(:valkyrie_index).and_return(double("valkyrie_index", connection: mock_conn))
+        service.commit use_valkyrie: true
+      end
+    end
+  end
+
+  describe ".delete_by_query" do
+    it "calls solr" do
+      expect(mock_conn).to receive(:delete_by_query).with("*:*", params:{})
+      allow(described_class).to receive(:instance).and_return(double("instance", conn: mock_conn))
+      described_class.delete_by_query("*:*")
+    end
+
+    context "when use_valkyrie: true" do
+      let(:service) { described_class.new }
+
+      it "accepts and passes through use_valkyrie:true" do
+        expect(mock_conn).to receive(:delete_by_query).with("*:*", params:{})
+        allow(service).to receive(:valkyrie_index).and_return(double("valkyrie_index", connection: mock_conn))
+        service.delete_by_query("*:*", use_valkyrie: true)
+      end
+    end
+  end
 end
