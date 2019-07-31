@@ -19,12 +19,13 @@ module Hyrax
       def query
         term = index_key
         # Grab JSON response (looks like {"terms": {"depositor_tesim": {"mjg36": 3}}} for depositor)
-        json = solr_connection.get 'terms', params: { 'terms.fl' => term,
-                                                      'terms.sort' => 'count',
-                                                      'terms.limit' => @limit,
-                                                      wt: 'json',
-                                                      'json.nl' => 'map',
-                                                      omitHeader: 'true' }
+        json = Hyrax::SolrService.get(path: 'terms',
+                                      'terms.fl': term,
+                                      'terms.sort': 'count',
+                                      'terms.limit': @limit,
+                                      wt: 'json',
+                                      'json.nl': 'map',
+                                      omitHeader: 'true')
         unless json
           Rails.logger.error "Unable to reach TermsComponent via Solr connection. Is it enabled in your solr config?"
           return []
@@ -61,12 +62,6 @@ module Hyrax
           @data.as_json(opts)
         end
       end
-
-      private
-
-        def solr_connection
-          Hyrax::SolrService.instance.conn
-        end
     end
   end
 end

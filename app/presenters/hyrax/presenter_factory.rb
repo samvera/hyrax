@@ -56,11 +56,8 @@ module Hyrax
 
       # Query solr using POST so that the query doesn't get too large for a URI
       def query(query, args = {})
-        args[:q] = query
-        args[:qt] = 'standard'
-        conn = Hyrax::SolrService.instance.conn
-        result = conn.post('select', data: args)
-        result.fetch('response').fetch('docs')
+        args[:method] = :post
+        Hyrax::SolrService.query(query, args)
       end
   end
 end

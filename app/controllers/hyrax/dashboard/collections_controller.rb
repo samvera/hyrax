@@ -83,7 +83,7 @@ module Hyrax
         # we pass the parent_id through a hidden field in the form and link the two after the create.
         link_parent_collection(params[:parent_id]) unless params[:parent_id].nil?
         respond_to do |format|
-          Hyrax::SolrService.instance.conn.commit
+          Hyrax::SolrService.commit
           format.html { redirect_to edit_dashboard_collection_path(@collection), notice: t('hyrax.dashboard.my.action.collection_create_success') }
           format.json { render json: @collection, status: :created, location: dashboard_collection_path(@collection) }
         end

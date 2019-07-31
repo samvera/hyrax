@@ -23,30 +23,36 @@ module Hyrax
                                    'Use `Hyrax.config.solr_select_path` instead'
       end
 
-      delegate :add, :commit, :count, :delete, :get, :instance, :post, :query, to: :new
+      delegate :add, :commit, :count, :delete, :get, :instance, :post, :query, :delete_by_query, to: :new
     end
 
     # Wraps rsolr get
     # @return [Hash] the hash straight form rsolr
-    def get(query, use_valkyrie: Hyrax.config.query_index_from_valkyrie, **args)
+    def get(query=nil, use_valkyrie: Hyrax.config.query_index_from_valkyrie, **args)
+      # Make Hyrax.config.solr_select_path the default SOLR path
+      solr_path = args.delete(:path) || Hyrax.config.solr_select_path
+      args = args.merge(q: query) unless query.blank?
+
       if use_valkyrie
-        args = args.merge(q: query)
-        valkyrie_index.connection.get(Hyrax.config.solr_select_path, params: args)
+        valkyrie_index.connection.get(solr_path, params: args)
       else
-        args = args.merge(q: query, qt: 'standard')
-        SolrService.instance.conn.get(Hyrax.config.solr_select_path, params: args)
+        args = args.merge(qt: 'standard') unless query.blank?
+        SolrService.instance.conn.get(solr_path, params: args)
       end
     end
 
     # Wraps rsolr post
     # @return [Hash] the hash straight form rsolr
-    def post(query, use_valkyrie: Hyrax.config.query_index_from_valkyrie, **args)
+    def post(query=nil, use_valkyrie: Hyrax.config.query_index_from_valkyrie, **args)
+      # Make Hyrax.config.solr_select_path the default SOLR path
+      solr_path = args.delete(:path) || Hyrax.config.solr_select_path
+      args = args.merge(q: query) unless query.blank?
+
       if use_valkyrie
-        args = args.merge(q: query)
-        valkyrie_index.connection.post(Hyrax.config.solr_select_path, data: args)
+        valkyrie_index.connection.post(solr_path, data: args)
       else
-        args = args.merge(q: query, qt: 'standard')
-        SolrService.instance.conn.post(Hyrax.config.solr_select_path, data: args)
+        args = args.merge(qt: 'standard') unless query.blank?
+        SolrService.instance.conn.post(solr_path, data: args)
       end
     end
 
@@ -66,6 +72,24 @@ module Hyrax
                end
       result['response']['docs'].map do |doc|
         ::SolrHit.new(doc)
+      end
+    end
+
+    # Wraps rsolr :commit
+    def commit(use_valkyrie: Hyrax.config.query_index_from_valkyrie)
+      if use_valkyrie
+        valkyrie_index.connection.commit
+      else
+        SolrService.instance.conn.commit
+      end
+    end
+
+    # Wraps rsolr :delete_by_query
+    def delete_by_query(query, use_valkyrie: Hyrax.config.query_index_from_valkyrie, **args)
+      if use_valkyrie
+        valkyrie_index.connection.delete_by_query(query, params: args)
+      else
+        SolrService.instance.conn.delete_by_query(query, params: args)
       end
     end
 
