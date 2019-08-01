@@ -198,8 +198,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
 
       it 'calls the arkivo actor to update the work' do
         expect(arkivo_actor).to receive(:update_work_from_item)
-        request.env['RAW_POST_DATA'] = put_item
-        put :update, params: { id: gw.id, format: :json }
+        put :update, params: { id: gw.id, format: :json }, body: put_item
       end
     end
 
@@ -216,8 +215,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
         allow(relation).to receive(:find).with(non_arkivo_gw.id).and_return(non_arkivo_gw)
 
         # Post an update to a work with a nil arkivo_checksum
-        request.env['RAW_POST_DATA'] = put_item
-        put :update, params: { id: non_arkivo_gw.id, format: :json }
+        put :update, params: { id: non_arkivo_gw.id, format: :json }, body: put_item
       end
 
       it "is forbidden" do
@@ -235,8 +233,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
         allow(relation).to receive(:find).with(gw.id) do
           raise(ActiveFedora::ObjectNotFoundError)
         end
-        request.env['RAW_POST_DATA'] = put_item
-        put :update, params: { id: gw.id, format: :json }
+        put :update, params: { id: gw.id, format: :json }, body: put_item
       end
 
       it "is not found" do
@@ -251,8 +248,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
         allow(controller).to receive(:user).and_return(user)
         allow(user).to receive(:can?).and_return(false)
         # Post an update with an resource unauthorized for the user
-        request.env['RAW_POST_DATA'] = put_item
-        put :update, params: { id: gw.id, format: :json }
+        put :update, params: { id: gw.id, format: :json }, body: put_item
       end
 
       it "is unauthorized" do
@@ -268,8 +264,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       let(:bad_token_item) { FactoryBot.json(:put_item, token: bad_token) }
 
       before do
-        request.env['RAW_POST_DATA'] = bad_token_item
-        put :update, params: { id: gw.id, format: :json }
+        put :update, params: { id: gw.id, format: :json }, body: bad_token_item
       end
 
       it "is unauthorized" do
@@ -283,8 +278,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       let(:invalid_item) { { foo: 'bar' }.to_json }
 
       before do
-        request.env['RAW_POST_DATA'] = invalid_item
-        put :update, params: { id: gw.id, format: :json }
+        put :update, params: { id: gw.id, format: :json }, body: invalid_item
       end
 
       it "is a bad request" do
