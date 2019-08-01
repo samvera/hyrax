@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Hyrax::Works::VirusScanner do
+RSpec.describe Hyrax::VirusScanner do
   let(:file)   { '/tmp/path' }
   let(:logger) { Logger.new(nil) }
 
