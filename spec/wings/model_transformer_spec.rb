@@ -274,4 +274,37 @@ RSpec.describe Wings::ModelTransformer do
       end
     end
   end
+
+  context 'with members' do
+    let(:pcdm_object) { parent_work }
+    let(:parent_work) { FactoryBot.create(:work, id: 'pw', title: ['Parent Work']) }
+    let(:child_work1) { FactoryBot.create(:work, id: 'cw1', title: ['Child Work 1']) }
+    let(:child_work2) { FactoryBot.create(:work, id: 'cw2', title: ['Child Work 2']) }
+
+    context 'and members are ordered' do
+      before do
+        parent_work.ordered_members << child_work1
+        parent_work.ordered_members << child_work2
+      end
+
+      describe '#build' do
+        it 'sets member_ids to the ids of the ordered members' do
+          expect(subject.build.member_ids).to match_valkyrie_ids_with_active_fedora_ids(['cw1', 'cw2'])
+        end
+      end
+    end
+
+    context 'and members are unordered' do
+      before do
+        parent_work.members << child_work1
+        parent_work.members << child_work2
+      end
+
+      describe '#build' do
+        it 'sets member_ids to the ids of the unordered members' do
+          expect(subject.build.member_ids).to match_valkyrie_ids_with_active_fedora_ids(['cw1', 'cw2'])
+        end
+      end
+    end
+  end
 end

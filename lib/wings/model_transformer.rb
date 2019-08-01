@@ -237,7 +237,14 @@ module Wings
           read_users: pcdm_object.try(:read_users),
           edit_groups: pcdm_object.try(:edit_groups),
           edit_users: pcdm_object.try(:edit_users),
-          member_ids: pcdm_object.try(:ordered_member_ids) } # We want members in order, so extract from ordered_members.
+          member_ids: member_ids }
+      end
+
+      # Prefer ordered members, but if ordered members don't exist, use non-ordered members.
+      def member_ids
+        ordered_member_ids = pcdm_object.try(:ordered_member_ids)
+        return ordered_member_ids if ordered_member_ids.present?
+        pcdm_object.try(:member_ids)
       end
 
       def append_embargo(attrs)
