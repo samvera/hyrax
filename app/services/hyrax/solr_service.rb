@@ -43,7 +43,7 @@ module Hyrax
         valkyrie_index.connection.get(solr_path, params: args)
       else
         args = args.merge(qt: 'standard') unless query.blank?
-        SolrService.instance.conn.get(solr_path, params: args)
+        self.class.instance.conn.get(solr_path, params: args)
       end
     end
 
@@ -58,7 +58,7 @@ module Hyrax
         valkyrie_index.connection.post(solr_path, data: args)
       else
         args = args.merge(qt: 'standard') unless query.blank?
-        SolrService.instance.conn.post(solr_path, data: args)
+        self.class.instance.conn.post(solr_path, data: args)
       end
     end
 
@@ -86,7 +86,7 @@ module Hyrax
       if use_valkyrie
         valkyrie_index.connection.commit
       else
-        SolrService.instance.conn.commit
+        self.class.instance.conn.commit
       end
     end
 
@@ -95,7 +95,7 @@ module Hyrax
       if use_valkyrie
         valkyrie_index.connection.delete_by_query(query, params: args)
       else
-        SolrService.instance.conn.delete_by_query(query, params: args)
+        self.class.instance.conn.delete_by_query(query, params: args)
       end
     end
 
