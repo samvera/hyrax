@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-RSpec.describe RSpec::Matchers::BuiltIn::MatchValkyrieIdsWithActiveFedoraIds do
+RSpec.describe Hyrax::Matchers::MatchValkyrieIdsWithActiveFedoraIds do
   context 'when valkyrie ids and active fedora ids match' do
     let(:valkyrie_ids) { [Valkyrie::ID.new('id1'), Valkyrie::ID.new('id2')] }
     let(:af_ids) { ['id1', 'id2'] }
