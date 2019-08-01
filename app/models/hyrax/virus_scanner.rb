@@ -13,7 +13,7 @@
 #
 # Then set Hyrax::Works to use your scanner either in a config file or initializer:
 #   Hyrax::Works.default_system_virus_scanner = MyScanner
-module Hyrax::Works
+module Hyrax
   class VirusScanner
     attr_reader :file
 

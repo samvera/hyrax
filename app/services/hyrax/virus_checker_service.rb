@@ -1,4 +1,4 @@
-module Hyrax::Works
+module Hyrax
   # Responsible for checking if the given file is a virus. Coordinates
   # with the underlying system virus scanner.
   class VirusCheckerService

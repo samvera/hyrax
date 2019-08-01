@@ -28,7 +28,7 @@ module Hyrax
       # TODO: do we need this line?
       self.indexer = WorkIndexer
       # Default VirusScanner, configurable for Hyrax work types
-      self.default_system_virus_scanner = Hyrax::Works::VirusScanner
+      self.default_system_virus_scanner = Hyrax::VirusScanner
     end
 
     # TODO: This can be removed when we upgrade to ActiveFedora 12.0

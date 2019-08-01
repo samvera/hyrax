@@ -1,4 +1,4 @@
-module Hyrax::Works
+module Hyrax
   module VirusCheck
     extend ActiveSupport::Concern
 
