@@ -19,7 +19,7 @@ RSpec.describe Hyrax::RedisEventStore do
       end
       context "with a logger" do
         it "logs the error" do
-          expect(Valkyrie.logger).to receive(:error).exactly(:once).with("unable to create event: Redis::CommandError")
+          expect(Hyrax.logger).to receive(:error).exactly(:once).with("unable to create event: Redis::CommandError")
           expect(subject).to be_nil
         end
       end
