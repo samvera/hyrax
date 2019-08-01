@@ -53,7 +53,7 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
       expect(rendered).to have_css '.collection_type', text: 'User Collection'
       expect(rendered).to have_selector '.expanded-details', text: 'Collection Description'
       expect(rendered).not_to have_selector 'span.fa-cubes'
-      expect(rendered).to have_selector '.thumbnail-wrapper > img[alt="Collection"]'
+      expect(rendered).to have_selector '.thumbnail-wrapper > img'
       expect(rendered).to include Date.parse(modified_date).to_formatted_s(:standard)
     end
   end
@@ -102,7 +102,7 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
       expect(rendered).to have_css '.collection_type', text: 'Admin Set'
       expect(rendered).to have_selector '.expanded-details', text: 'Admin Description'
       expect(rendered).not_to have_selector 'span.fa-cubes'
-      expect(rendered).to have_selector '.thumbnail-wrapper > img[alt="Collection"]'
+      expect(rendered).to have_selector '.thumbnail-wrapper > img'
       expect(rendered).to include Date.parse(modified_date).to_formatted_s(:standard)
     end
   end
