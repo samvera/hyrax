@@ -7,11 +7,17 @@ module Hyrax
   class SolrService
     extend Forwardable
 
-    def_delegators :@old_service, :add, :commit, :count, :delete, :instance
-    def_delegators :instance, :conn
+    def_delegators :@old_service, :add, :count, :delete
 
     def initialize
       @old_service = ActiveFedora::SolrService
+    end
+
+    def instance
+      # Deprecation warning for calling from outside of the Hyrax::SolrService class
+      Deprecation.warn(self, rsolr_call_warning) unless caller[1].include?("#{self.class.name.underscore}.rb")
+
+      @old_service.instance
     end
 
     class << self
@@ -101,6 +107,10 @@ module Hyrax
 
       def rows_warning
         "Calling Hyrax::SolrService.get without passing an explicit value for ':rows' is not recommended. You will end up with Solr's default (usually set to 10)\nCalled by #{caller[0]}"
+      end
+
+      def rsolr_call_warning
+        "Calling Hyrax::SolrService.instance are deprecated and support will be removed from Hyrax 3.0. Use methods in Hyrax::SolrService instead."
       end
   end
 end
