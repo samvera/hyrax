@@ -184,6 +184,72 @@ RSpec.describe Wings::ModelTransformer do
         expect(subject.build.lease.id.id).to eq work.lease.id
       end
     end
+
+    context 'with files and derivatives in fileset' do
+      let(:file_set)            { Hydra::Works::FileSet.new }
+      let(:original_file)       { File.open(File.join(fixture_path, 'world.png')) }
+      let(:thumbnail_file)      { File.open(File.join(fixture_path, 'image.jpg')) }
+      let(:extracted_text_file) { File.open(File.join(fixture_path, 'updated-file.txt')) }
+      let(:original_type)       { :original_file }
+      let(:thumbnail_type)      { :thumbnail }
+      let(:extracted_text_type) { :extracted_text }
+
+      before do
+        Hydra::Works::AddFileToFileSet.call(file_set, original_file, original_type)
+        Hydra::Works::AddFileToFileSet.call(file_set, thumbnail_file, thumbnail_type)
+        Hydra::Works::AddFileToFileSet.call(file_set, extracted_text_file, extracted_text_type)
+      end
+
+      it 'has the correct reflection ids' do
+        resource = described_class.new(pcdm_object: file_set).build
+        expect(resource.file_ids).to match_valkyrie_ids_with_active_fedora_ids(file_set.files.map(&:id))
+        expect(resource.original_file_ids).to match_valkyrie_ids_with_active_fedora_ids([file_set.original_file.id])
+        expect(resource.thumbnail_ids).to match_valkyrie_ids_with_active_fedora_ids([file_set.thumbnail.id])
+        expect(resource.extracted_text_ids).to match_valkyrie_ids_with_active_fedora_ids([file_set.extracted_text.id])
+      end
+    end
+
+    context 'with members' do
+      let(:work)        { FactoryBot.create(:work, id: 'pw', title: ['Parent Work']) }
+      let(:child_work1) { FactoryBot.create(:work, id: 'cw1', title: ['Child Work 1']) }
+      let(:child_work2) { FactoryBot.create(:work, id: 'cw2', title: ['Child Work 2']) }
+
+      context 'and members are ordered' do
+        before do
+          work.ordered_members << child_work1
+          work.ordered_members << child_work2
+        end
+
+        it 'sets member_ids to the ids of the ordered members' do
+          expect(subject.build.member_ids).to match_valkyrie_ids_with_active_fedora_ids(['cw1', 'cw2'])
+        end
+      end
+
+      context 'and members are unordered' do
+        before do
+          work.members << child_work1
+          work.members << child_work2
+        end
+
+        it 'sets member_ids to the ids of the unordered members' do
+          expect(subject.build.member_ids).to match_valkyrie_ids_with_active_fedora_ids(['cw1', 'cw2'])
+        end
+      end
+    end
+
+    context 'with parent collections' do
+      let(:work) { FactoryBot.create(:work_with_representative_file, with_admin_set: true) }
+      let(:parent_col1) { FactoryBot.create(:collection_lw, title: ['Parent Collection'], id: 'pcol1') }
+      let(:parent_col2) { FactoryBot.create(:collection_lw, title: ['Parent Collection'], id: 'pcol2') }
+
+      before do
+        work.member_of_collections = [parent_col1, parent_col2]
+      end
+
+      it 'sets member_of_collection_ids to the parent collection ids' do
+        expect(subject.build.member_of_collection_ids).to match_valkyrie_ids_with_active_fedora_ids(['pcol1', 'pcol2'])
+      end
+    end
   end
 
   context 'with _id attributes' do
@@ -271,39 +337,6 @@ RSpec.describe Wings::ModelTransformer do
                               contributor: book.contributor,
                               description: book.description
         expect(subject.build.page_ids).to match_valkyrie_ids_with_active_fedora_ids(['pg1', 'pg2'])
-      end
-    end
-  end
-
-  context 'with members' do
-    let(:pcdm_object) { parent_work }
-    let(:parent_work) { FactoryBot.create(:work, id: 'pw', title: ['Parent Work']) }
-    let(:child_work1) { FactoryBot.create(:work, id: 'cw1', title: ['Child Work 1']) }
-    let(:child_work2) { FactoryBot.create(:work, id: 'cw2', title: ['Child Work 2']) }
-
-    context 'and members are ordered' do
-      before do
-        parent_work.ordered_members << child_work1
-        parent_work.ordered_members << child_work2
-      end
-
-      describe '#build' do
-        it 'sets member_ids to the ids of the ordered members' do
-          expect(subject.build.member_ids).to match_valkyrie_ids_with_active_fedora_ids(['cw1', 'cw2'])
-        end
-      end
-    end
-
-    context 'and members are unordered' do
-      before do
-        parent_work.members << child_work1
-        parent_work.members << child_work2
-      end
-
-      describe '#build' do
-        it 'sets member_ids to the ids of the unordered members' do
-          expect(subject.build.member_ids).to match_valkyrie_ids_with_active_fedora_ids(['cw1', 'cw2'])
-        end
       end
     end
   end
