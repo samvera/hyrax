@@ -6,11 +6,11 @@ volumes:
 services:
   web:
     build: .
+    working_dir: /data/.internal_test_app
     volumes:
       - .:/data
       - bundled:/usr/local/bundle
-    command: /data/build/install_gems.sh
-    command: sh -ic "cd /data/.internal_test_app && bundle exec puma -b tcp://0.0.0.0:3000"
+    command: sh -ic "bundle exec puma -b tcp://0.0.0.0:3000"
     ports:
       - "3000:3000"
     stdin_open: true

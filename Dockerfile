@@ -40,6 +40,3 @@ RUN ./build/install_gems.sh
 
 # Generate test app
 RUN bundle exec rake engine_cart:generate
-
-RUN cd ./.internal_test_app
-RUN /data/build/install_gems.sh
