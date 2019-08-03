@@ -1,12 +1,16 @@
 version: '3'
 
+volumes:
+  bundled:
+  
 services:
   web:
     build: .
     volumes:
       - .:/data
-    working_dir: /data/.internal_test_app
-    command: sh -ic "pwd && bundle exec puma -b tcp://0.0.0.0:3000"
+      - bundled:/usr/local/bundle
+    command: /data/build/install_gems.sh
+    command: sh -ic "cd /data/.internal_test_app && bundle exec puma -b tcp://0.0.0.0:3000"
     ports:
       - "3000:3000"
     stdin_open: true
