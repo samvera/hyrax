@@ -412,6 +412,8 @@ en:
         header:
           actions: Action
           title: Collection title
+      form_permission:
+        visibility: Visibility <small>Who should be able to view or download this content?</small>
       form_permission_under_embargo:
         help_html: "<strong>This work is under embargo.</strong> You can change the settings of the embargo here, or you can visit the %{edit_link} to deactivate it."
         legend_html: Visibility <small>Who should be able to view or download this content?</small>
@@ -1099,8 +1101,6 @@ en:
         save: Save Revision
         save_your_note: You must click &quot;Save Revision&quot; to revert a previous version of this file
         upload: Upload New Version
-    form_permission:
-      visibility: Visibility <small>Who should be able to view or download this content?</small>
     help:
       header: User Support
       override_text: Use app/views/static/help.html.erb to override this file.
