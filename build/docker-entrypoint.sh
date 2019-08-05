@@ -16,8 +16,11 @@ do
   sleep 1
 done
 
-cd /data/solr/config
-zip -1 -r solr_config.zip ./*
+#cd /data/.internal_test_app/solr/config
+#zip -1 -r solr_config.zip ./*
+#zip -1 -r solr_config.zip . -i /data/.internal_test_app/solr/config/*
+#zip -1 -r solr_config.zip /data/.internal_test_app/solr/config/*
+zip -r solr_config.zip /data/.internal_test_app/solr/config/*
 
 curl -H "Content-type:application/octet-stream" --data-binary @solr_config.zip "http://$solr_host:$solr_port >>/solr/admin/configs?action=UPLOAD&name=solrconfig"
 

@@ -21,7 +21,7 @@ RUN gem install bundler
 
 # --allow-unauthenticated needed for yarn package
 RUN apt-get update && apt-get upgrade -y && \
-  apt-get install --no-install-recommends -y ca-certificates nodejs yarn \
+  apt-get install --no-install-recommends -y ca-certificates nodejs yarn netcat zip \
   build-essential libpq-dev unzip ghostscript vim \
   ffmpeg \
   clamav-freshclam clamav-daemon libclamav-dev \
@@ -42,4 +42,4 @@ RUN ./build/install_gems.sh
 # Generate test app
 RUN bundle exec rake engine_cart:generate
 
-ENTRYPOINT ["/bin/sh", "/data/build/docker-entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "/data/build/docker-entrypoint.sh"]

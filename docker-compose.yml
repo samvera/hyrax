@@ -10,8 +10,20 @@ services:
     volumes:
       - .:/data
       - bundled:/usr/local/bundle
-    command: sh -ic "bundle exec puma -b tcp://0.0.0.0:3000"
+    environment:
+      SOLR_URL: http://solr-dev:8983/solr/development
+    #command: bash -ic "bundle exec puma -b tcp://0.0.0.0:3000"
     ports:
       - "3000:3000"
+    depends_on:
+      - solr-dev
     stdin_open: true
     tty: true
+    
+  ##
+  # SOLR Index server
+  solr-dev: &solr-dev
+    image: solr:7-alpine
+    expose:
+      - 8983
+    command: bin/solr -cloud -noprompt -f -p 8983
