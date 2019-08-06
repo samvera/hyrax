@@ -1,0 +1,39 @@
+# frozen_string_literal: true
+require 'wings_helper'
+require 'wings/services/file_node_builder'
+
+RSpec.describe Wings::FileNodeBuilder do
+  subject do
+    described_class.new(storage_adapter: Hyrax.storage_adapter,
+                        persister:       Hyrax.persister)
+  end
+
+  let(:af_file_set)   { create(:file_set, id: 'fileset_id') }
+  let!(:file_set)     { af_file_set.valkyrie_resource }
+
+  let(:io_wrapper)    { instance_double(JobIoWrapper, file: file, original_name: original_name, mime_type: mime_type, size: file.size) }
+  let(:file)          { File.open(File.join(fixture_path, original_name)) }
+  let(:original_name) { 'sample-file.pdf' }
+  let(:mime_type)     { 'application/pdf' }
+  let(:use)           { Valkyrie::Vocab::PCDMUse.OriginalFile }
+
+  let(:node) do
+    Hyrax::FileNode.new(label: original_name,
+                        original_filename: original_name,
+                        mime_type: mime_type,
+                        use: [use])
+  end
+
+  describe '#create(io_wrapper:, node:, file_set:)' do
+    it 'creates a file node' do
+      file_node = subject.create(io_wrapper: io_wrapper, node: node, file_set: file_set)
+      expect(file_node).to be_kind_of Hyrax::FileNode
+      expect(file_node.original_file?).to be true
+      expect(file_node.file_set_id.id).to eq file_set.id.id
+      expect(file_node.label).to contain_exactly(original_name)
+      expect(file_node.original_filename).to contain_exactly(original_name)
+      expect(file_node.mime_type).to contain_exactly(mime_type)
+      expect(file_node.use).to contain_exactly(use)
+    end
+  end
+end
