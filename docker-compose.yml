@@ -12,6 +12,7 @@ services:
     volumes:
       - .:/data
       - bundled:/usr/local/bundle
+      - solr_config:/data/.internal_test_app/solr/config
     environment:
       SOLR_URL: http://solr-dev:8983/solr/hyrax-dev
       SOLR_CORE: hyrax-dev
@@ -23,7 +24,7 @@ services:
       #- solr
     stdin_open: true
     tty: true
-    
+
   ##
   # SOLR Index server
   solr-dev: &solr-dev
@@ -39,4 +40,4 @@ services:
       - hyrax-dev
       - /hyrax_config
 
-  
+
