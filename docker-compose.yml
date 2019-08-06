@@ -12,7 +12,7 @@ services:
     volumes:
       - .:/data
       - bundled:/usr/local/bundle
-      - solr_config:/data/.internal_test_app/solr/config
+      - solr_config:/data/.internal_test_app/solr/conf
     environment:
       SOLR_URL: http://solr-dev:8983/solr/hyrax-dev
       SOLR_CORE: hyrax-dev
@@ -32,12 +32,12 @@ services:
     ports:
       - "8983:8983"
     volumes:
-      - solr_config:/hyrax_config
+      - solr_config:/solr_config
       - solr-dev:/opt/solr/server/solr/mycores
     entrypoint:
       - docker-entrypoint.sh
       - solr-precreate
       - hyrax-dev
-      - /hyrax_config
+      - "/solr_config"
 
 
