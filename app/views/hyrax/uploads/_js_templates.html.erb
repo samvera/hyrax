@@ -18,13 +18,13 @@
             {% if (!i && !o.options.autoUpload) { %}
                 <button class="btn btn-primary start" disabled>
                     <i class="glyphicon glyphicon-upload"></i>
-                    <span>Start</span>
+                    <span><%= t('.start') %></span>
                 </button>
             {% } %}
             {% if (!i) { %}
                 <button class="btn btn-sm btn-warning cancel">
                     <i class="glyphicon glyphicon-ban-circle"></i>
-                    <span>Cancel</span>
+                    <span><%= t('helpers.action.cancel') %></span>
                 </button>
             {% } %}
         </td>
@@ -68,14 +68,14 @@
               <span class="size">{%=o.formatFileSize(file.size)%}</span>
               <button class="btn btn-sm btn-danger delete pull-right" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
                   <i class="glyphicon glyphicon-trash"></i>
-                  <span>Delete</span>
+                  <span><%= t('helpers.action.delete') %></span>
               </button>
             </div>
           </div>
           <div class="row">
             <div class="col-sm-12 form-horizontal">
               <div class="form-group">
-                <label for="title_{%=file.id%}" class="col-sm-5 control-label">Display label</label>
+                <label for="title_{%=file.id%}" class="col-sm-5 control-label"><%= t('.display_label') %></label>
                 <div class="col-sm-7 padding-bottom">
                   <input type="text" class="form-control" name="title[{%=file.id%}]" id="title_{%=file.id%}" value="{%=file.name%}">
                 </div>
@@ -84,7 +84,7 @@
                   <select class="form-control resource_type_dropdown" multiple="multiple" size="6" name="resource_type[{%=file.id%}][]" id="resource_type_{%=file.id%}" value="{%=file.name%}">
                     <%= options_for_select(Hyrax::ResourceTypesService.select_options) %>
                   </select>
-                  <button class="btn btn-default pull-right resource_type_button" onClick="setAllResourceTypes({%= file.id %}); return false;">Set all to this Resource Type</button>
+                  <button class="btn btn-default pull-right resource_type_button" onClick="setAllResourceTypes({%= file.id %}); return false;"><%= t('.set_all_to_this_resource_type') %></button>
                 </div>
               </div>
             </div>
@@ -116,7 +116,7 @@
                 <input type="hidden" name="uploaded_files[]" value="{%=file.id%}">
             </p>
             {% if (file.error) { %}
-                <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+                <div><span class="label label-danger"><%= t('.error') %></span> {%=file.error%}</div>
             {% } %}
         </td>
         <td>
@@ -125,7 +125,7 @@
         <td class="text-right">
             <button class="btn btn-sm btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
                 <i class="glyphicon glyphicon-trash"></i>
-                Delete
+                <%= t('helpers.action.delete') %>
             </button>
         </td>
     </tr>

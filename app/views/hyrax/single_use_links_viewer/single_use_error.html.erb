@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html lang="<%= I18n.locale.to_s %>">
   <head>
-    <title>Single use link Not Found</title>
+    <title><%= t('.link_not_found') %></title>
   </head>
   <body>
     <div class="columns two-a">
       <div class="column second">
-        <h1>Single Use Link Expired or Not Found</h1>
+        <h1><%= t('.link_expired_not_found') %></h1>
         <p>
-          <%= application_name %> could not locate the single use link.
-          This link either expired or had been used previously.  We apologize
-          for the inconvenience. You might be interested in using
-          <a href="/help/">the help page</a> for looking up
-          solutions.
+          <%= t('.help', application_name: application_name) %> 
         </p>
       </div>
   </body>

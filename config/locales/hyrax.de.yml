@@ -103,7 +103,7 @@ de:
             workflow: Der Workflow des Admin-Sets wurde aktualisiert.
           tabs:
             description: Beschreibung
-            participants: Teilnehmer
+            participants: Nutzerfreigaben
             visibility: Sichtbarkeit
             workflow: Workflow
         form_participant_table:
@@ -121,7 +121,7 @@ de:
             action: Aktion
             agent_name: Manager in diesem Admin-Set
             empty: Es wurden keine Manager zu diesem Admin-Set hinzugefügt.
-            help: Manager können innerhalb diese Admin-Sets die eingestellten Metadaten, Teilnehmer und Freigabe- und Sichtbarkeitseinstellungen bearbeiten. Manager können auch Metadaten von Arbeiten bearbeiten, Dateien hinzufügen oder entfernen und neue Arbeiten hinzufügen.
+            help: Manager können innerhalb diese Admin-Sets die eingestellten Metadaten, Nutzer und Freigabe- und Sichtbarkeitseinstellungen bearbeiten. Manager können auch Metadaten von Arbeiten bearbeiten, Dateien hinzufügen oder entfernen und neue Arbeiten hinzufügen.
             remove: Entfernen
             title: Manager
             type: Art
@@ -136,9 +136,9 @@ de:
             type: Art
         form_participants:
           add_group: 'Gruppe hinzufügen:'
-          add_participants: Teilnehmer hinzufügen
+          add_participants: Nutzer hinzufügen
           add_user: 'Benutzer hinzufügen:'
-          current_participants: Aktuelle Teilnehmer
+          current_participants: Aktuelle Nutzer
         form_visibility:
           cancel: Abbrechen
           page_description: Freigabe- und Sichtbarkeitseinstellungen festlegen, wenn Arbeiten, die diesem Admin-Set hinzugefügt werden, zur Ansicht und zum Download zur Verfügung gestellt werden und wer sie betrachten und herunterladen darf.
@@ -200,7 +200,7 @@ de:
           tab:
             appearance: Emblemfarbe
             metadata: Beschreibung
-            participants: Teilnehmer
+            participants: Nutzer
             settings: Einstellungen
         form_participant_table:
           creators:
@@ -219,14 +219,14 @@ de:
             type: Typ
         form_participants:
           add_group: Gruppe hinzufügen
-          add_participants: Teilnehmer hinzufügen
+          add_participants: Nutzer hinzufügen
           add_user: Benutzer hinzufügen
-          current_participants: Aktuelle Teilnehmer
-          header: Sammlungs-Teilnehmer
+          current_participants: Aktuelle Nutzer
+          header: Sammlungs-Nutzer
           instructions: Sie können sowohl Gruppen als auch Benutzer als Ersteller und Manager von Sammlungen dieses Typs festlegen
-          remove_success: Teilnehmer wurde entfernt
+          remove_success: Nutzer wurde entfernt
           submit: Hinzufügen
-          update_notice: Teilnehmer aktualisiert
+          update_notice: Nutzer aktualisiert
         form_settings:
           instructions: Diese Einstellungen legen fest, wie Sammlungen dieses Typs verwaltet und ermittelt werden können.
           warning: 'Warnung: Diese Einstellungen können nicht geändert werden, nachdem eine Sammlung dieses Typs erstellt wurde.'

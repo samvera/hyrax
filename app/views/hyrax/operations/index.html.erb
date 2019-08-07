@@ -1,6 +1,6 @@
 <% provide :page_title, 'Operations' %>
 <% provide :page_header do %>
-  <h1>Operations</h1>
+  <h1><%= t('.title') %></h1>
 <% end %>
 
 <div class="row">
@@ -8,9 +8,9 @@
     <%= page_entries_info @operations %>
     <table class="table">
       <thead>
-        <th>Operation Type</th>
-        <th>Status</th>
-        <th>Updated</th>
+        <th><%= t('.operation_type') %></th>
+        <th><%= t('.status') %></th>
+        <th><%= t('.updated') %></th>
       </thead>
       <tbody>
         <% @operations.each do |op| %>

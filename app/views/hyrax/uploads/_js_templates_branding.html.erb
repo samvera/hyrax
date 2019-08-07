@@ -46,17 +46,17 @@
                   <input type="hidden" name="banner_files[]" value="{%=file.id%}">
                 </span>
                 {% if (file.error) { %}
-                  <span><span class="label label-danger">Error</span> {%=file.error%}</span>
+                  <span><span class="label label-danger"><%= t('.error') %></span> {%=file.error%}</span>
                 {% } %}
               </div>
 
               <div class="col-sm-2">
                 <button class="btn btn-link remove branding-banner-remove" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}" onclick=$("#banner").remove(); {% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
                   <span class="glyphicon glyphicon-remove"></span>
-                  <span class="controls-remove-text">Remove</span>
+                  <span class="controls-remove-text"><%= t('.remove') %></span>
                   <span class="sr-only">
-                    previous
-                    <span class="controls-field-name-text">Remove New Banner</span>
+                    <%= t('.previous') %>
+                    <span class="controls-field-name-text"><%= t('.remove_new_banner') %></span>
                   </span>
                 </button>
               </div> <!-- end col-sm-2 -->
@@ -93,10 +93,10 @@
               </div>
 
               <div class="col-sm-4 branding-logo-input">
-                <label for="linkurl">Link URL:
+                <label for="linkurl"><%= t('.link_url') %>
                   <input id="linkurl" class="branding-logo-input" type="text" name="linkurl[]"></input>
                 </label>
-                <label for="alttext">Alt Text:
+                <label for="alttext"><%= t('.alt_text') %>
                   <input id="alttext" class="branding-logo-input" type="text" name="alttext[]"></input>
                 </label>
               </div>
@@ -107,8 +107,8 @@
                     <span class="glyphicon glyphicon-remove"></span>
                     <span class="controls-remove-text">Remove</span>
                     <span class="sr-only">
-                      previous
-                      <span class="controls-field-name-text">Remove New Logo</span>
+                      <%= t('.previous') %>
+                      <span class="controls-field-name-text"><%= t('.remove_new_logo') %></span>
                     </span>
                   </button>
                 </span>

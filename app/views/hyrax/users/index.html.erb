@@ -1,15 +1,15 @@
 <div id="search">
   <%= render 'search_form' %>
-  <h1><%= application_name %> Users</h1>
+  <h1><%= application_name %> <%= t('.users') %></h1>
 </div>
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Avatar</th>
-            <th class="sorts"><i id="name" class="<%= params[:sort].blank? ? 'caret up' : params[:sort] == "name desc" ? 'caret' : params[:sort] == "name" ? 'caret up' : '' %>"></i> User Name</th>
-            <th class="sorts"><i id="login" class="<%= params[:sort] == "login desc" ? 'caret' : params[:sort] == "login" ? 'caret up' : '' %>"></i> User Id</th>
-            <th class="sorts"><i id="department" class="<%= params[:sort] == "department desc" ? 'caret' : params[:sort] == "department" ? 'caret up' : '' %>"></i> Department</th>
-            <th>Works Created</th>
+            <th><%= t('.avatar') %></th>
+            <th class="sorts"><i id="name" class="<%= params[:sort].blank? ? 'caret up' : params[:sort] == "name desc" ? 'caret' : params[:sort] == "name" ? 'caret up' : '' %>"></i> <%= t('.user_name') %></th>
+            <th class="sorts"><i id="login" class="<%= params[:sort] == "login desc" ? 'caret' : params[:sort] == "login" ? 'caret up' : '' %>"></i> <%= t('.user_id') %></th>
+            <th class="sorts"><i id="department" class="<%= params[:sort] == "department desc" ? 'caret' : params[:sort] == "department" ? 'caret up' : '' %>"></i> <%= t('.department') %></th>
+            <th><%= t('.works_created') %></th>
         </tr>
     </thead>
     <tbody>
