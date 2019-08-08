@@ -669,13 +669,14 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
         # add required file
         click_link "Files" # switch tab
-        within('span#addfiles') do
+        within('div#add-files') do
           attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/image.jp2", visible: false)
         end
         # set required metadata
         click_link "Descriptions" # switch tab
         fill_in('Title', with: 'New Work for Collection')
         fill_in('Creator', with: 'Doe, Jane')
+
         select('In Copyright', from: 'Rights statement')
         # check required acceptance
         check('agreement')

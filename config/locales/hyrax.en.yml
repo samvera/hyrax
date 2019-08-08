@@ -40,6 +40,7 @@ en:
       extension_whitelist_error: 'You are not allowed to upload %{extension} files, allowed types: %{allowed_types}'
   helpers:
     action:
+      accept: Accept
       add: Add
       admin_set:
         new: Create new administrative set
@@ -267,6 +268,7 @@ en:
         collections: Collections
         configuration: Configuration
         content_blocks: Content Blocks
+        delete_all: Delete All
         notifications: Notifications
         pages: Pages
         profile: Profile
@@ -281,6 +283,7 @@ en:
         workflow_review: Review Submissions
         workflow_roles: Workflow Roles
         works: Works
+        works_listing: Works listing
       stats:
         deposited_form:
           end_label: end [defaults to now]
@@ -348,8 +351,17 @@ en:
         default: The resource you attempted to modify cannot be modified according to your request.
     background_attribution_html: ''
     base:
+      attributes:
+        table_attribute_name: Attribute Name
+        table_heading_attributes: Attributes
+        table_values: Value
+        visibility: Visibility
       citations:
+        citations: Citations
+        endnote: EndNote
         header: 'Citations:'
+        mendeley: Mendeley
+        zotero: Zotero
       file_manager:
         back_to: Back to
         toolbar: Toolbar
@@ -365,6 +377,7 @@ en:
       form_child_work_relationships:
         actions:
           remove: Remove from this work
+        add: Add
         attach_new_work: Deposit new work as child of this work
         caption: This work currently contains these child works
         confirm:
@@ -377,6 +390,7 @@ en:
       form_files:
         add_files: Add files...
         add_folder: Add folder...
+        cancel_upload: Cancel upload
         dropzone: Drop files here.
         local_upload_browse_everything_html: |
           <p>You can add one or more files to associate with this work. Add files
@@ -389,6 +403,7 @@ en:
       form_member_of_collections:
         actions:
           remove: Remove from collection
+        add: Add
         caption: This work is currently in these collections
         confirm:
           cancel: Cancel
@@ -397,6 +412,8 @@ en:
         header:
           actions: Action
           title: Collection title
+      form_permission:
+        visibility: Visibility <small>Who should be able to view or download this content?</small>
       form_permission_under_embargo:
         help_html: "<strong>This work is under embargo.</strong> You can change the settings of the embargo here, or you can visit the %{edit_link} to deactivate it."
         legend_html: Visibility <small>Who should be able to view or download this content?</small>
@@ -410,6 +427,7 @@ en:
         required_descriptions: Describe your work
         required_files: Add files
         requirements: Requirements
+        saving_your_work: Saving your work. This may take a few moments
         yourself: Yourself
       form_rendering:
         help_html: Select file(s) to be offered as a download for every image in Universal Viewer, for example a PDF of the whole work.
@@ -418,14 +436,36 @@ en:
         help_html: Select the file with media that represents this work.
         legend_html: Representative Media
       form_share:
+        access_type_to_grant: Access type to grant
+        account_label_without_suffix: "%{account_label} (without the %{suffix} part)"
         add_sharing: Add Sharing
+        add_this_group: Add<span class="sr-only"> this group</span>
         currently_sharing: Currently Shared With
+        depositor: Depositor
         directions: Regardless of the visibility settings for this work, you can also share it with other users and groups.
+        group: Group
+        permissions_save_note: Permissions are <strong>not</strong> saved until the &quot;Save&quot; button is pressed at the bottom of the page.
+        use_add_button: Use the add button to give access to one %{account_label}  at a time (it will be added to the list below). Select the user, by name or %{account_label} \. Then select the access level you wish to grant and click on Add this  %{account_label} to complete adding the permission.
       form_thumbnail:
         help_html: Select the file to be used as the thumbnail for this work.
         legend_html: Thumbnail
       form_visibility_component:
         visibility: Visibility
+      inspect_work:
+        back_to: Back to
+        entity_id: Entity ID
+        id: ID
+        name: Name
+        object_name: Object Name
+        persistence: Persistence
+        processing_entity_id: Processing Entity ID
+        proxy_for: Proxy for
+        roles: Roles
+        state: State
+        state_name: State Name
+        users: Users
+        workflow: Workflow
+        workflow_comments: Workflow Comments
       items:
         actions: Actions
         date_uploaded: Date Uploaded
@@ -461,13 +501,46 @@ en:
         google: Google+
         tumblr: Tumblr
         twitter: Twitter
+      unauthorized:
+        id: 'ID: %{id}'
+        is_private: The %{type} you have tried to access is private
+        page_is_private: The page you have tried to access is private
+        unauthorized: Unauthorized
+      work_button_row:
+        analytics: Analytics
+        attach: Attach %{type}
+        delete: Delete
+        delete_type: Delete this %{type}?
+        edit: Edit
+        feature: Feature
+        unfeature: Unfeature
+      workflow_actions:
+        actions: Actions
+        previous_comments: Previous Comments
+        review_comment: Review Comment
+        title: Review and Approval
+    base/unauthorized:
+      is_private: The %{type} you have tried to access is private
+      unauthorized: Unauthorized
     batch:
       help:
         resource_type: You may select multiple types to apply to all files
         title: Filename will be the default title. Please provide a more meaningful title, and filenames will still be preserved by the system.
     batch_edits:
+      check_all:
+        select_to_access_selection_options: Select to access selection option
       delete_selected:
         button_label: Delete Selected
+        deleting_file_from: Deleting a file from %{application_name} is permanent. Click OK to delete this file from %{application_name}, or Cancel to cancel this operation
+      edit:
+        apply_changes_to: 'Changes will be applied to: (%{x_number_of} works)'
+        batch_edit_descriptions: Batch Edit Descriptions &nbsp;&nbsp;&nbsp;<small>Click on labels below to edit work descriptions.</small>
+        clear_batch: Clear Batch
+        descriptions: Descriptions
+        descriptions_title: 'Descriptions:'
+        permissions: Permissions
+        sharing: Sharing
+        visibility: Visibility
     batch_uploads:
       disabled: Feature disabled by administrator
       files:
@@ -483,6 +556,9 @@ en:
         header: Save Works
     bread_crumb:
       search_results: Back to search results
+    citations:
+      work:
+        citation_formats: Citation Formats
     collection:
       actions:
         add_existing_works:
@@ -710,9 +786,32 @@ en:
           show_less_parent_collections: "...show less"
           show_more_parent_collections: show more...
           subcollection_count: Subcollections
+        show_descriptions:
+          descriptions: Descriptions
+        show_document_list:
+          action: Action
+          date_added: Date added
+          list_items_in_collection: List of items in this collection
+          owner: Owner
+          title: Title
+          visibility: Visibility
+        show_document_list_menu:
+          select: Select
+        show_document_list_row:
+          creator: 'Creator:'
+          depositor: 'Depositor:'
+          edit_access: 'Edit Access:'
         sort_and_per_page:
           show_par_page_html: Show %{select} per page
           sort_by: 'Sort By:'
+        work_action_menu:
+          delete_work: Delete Work
+          deleting_from_work: Deleting a work from %{application_name} is permanent. Click OK to delete this work from %{application_name}, or Cancel to cancel this operation
+          edit_work: Edit Work
+          press_to: Press to
+          remove_from_collection: Remove from collection
+          select_an_action: Select an action
+          transfer_ownership_of_work: Transfer Ownership of Work
       create_work: Create Work
       current_proxies: Current Proxies
       delete_notification: Delete Notification
@@ -780,6 +879,7 @@ en:
         heading:
           access: Access
           action: Actions
+          caption: List of items in this collection
           collection_type: Collection Type
           date_modified: Last Modified
           date_uploaded: Date Added
@@ -796,6 +896,7 @@ en:
           check_all_label: Select all files to be added to a collection or edited
           detail_label: Display summary details of
           listing: Listing of items you have deposited in
+          number_of_results_to_display_per_page: Number of results to display per page
           press_to: Press to
           results_per_page: Number of results to display per page
           show_label: Display all details of
@@ -811,6 +912,17 @@ en:
       no_proxies: There are no proxies assigned
       no_transfer_requests: You haven't received any work transfer requests
       no_transfers: You haven't transferred any work
+      profiles:
+        edit_primary:
+          change_picture: <i class="glyphicon glyphicon-camera"></i> Change picture
+          delete_picture: Delete picture
+          delete_picture_data_content: If you would like to remove your picture entirely, check the box and save your profile.
+          delete_picture_data_original_title: Delete Picture
+          facebook_handle: <i class="fa fa-facebook" aria-hidden="true"></i> Facebook Handle
+          google_handle: <i class="fa fa-google-plus"></i> Google+ Handle
+          help_change_picture_type: JPG, GIF, or PNG (less than 2MB)
+          save_profile: <i class="glyphicon glyphicon-save"></i> Save Profile
+          twitter_handle: <i class="fa fa-twitter" aria-hidden="true"></i> Twitter Handle
       proxy_activity: Proxy Activity
       proxy_delete: Delete Proxy
       proxy_help: Select a user who can deposit works on your behalf. Both you and your proxy will be able to make changes to these works. You can revoke a proxy by clicking the Delete Proxy button. To revoke their ability to edit a work they previously submitted, remove them from the Sharing tab on each work.
@@ -878,6 +990,7 @@ en:
         deactivate: Deactivate Embargo
         deactivate_selected: Deactivate Embargoes for Selected
         missing: There are no expired embargoes in effect at this time.
+        select_all: Select All
       table_headers:
         release_date: Embargo Release Date
         title: Title
@@ -895,12 +1008,14 @@ en:
         download: Download the file
         downloadable_content:
           audio_link: Download audio
+          audio_tag_not_supported: Your browser does not support the audio tag.
           default_link: Download file
           heading: Downloadable Content
           image_link: Download image
           office_link: Download file
           pdf_link: Download PDF
           video_link: Download video
+          video_tag_not_supported: Your browser does not support the video tag.
     file_sets:
       actions:
         delete: Delete
@@ -911,6 +1026,7 @@ en:
         edit: Edit
         edit_title: Edit %{file_set}
         header: Select an action
+        press_to: Press to
         versions: Versions
         versions_title: Display previous versions
       asset_deleted_flash:
@@ -921,11 +1037,17 @@ en:
           other: The files %{saved_files} have been saved.
       asset_updated_flash:
         message: The file %{link_to_file} has been updated.
+      descriptions:
+        save: Save Descriptions
+        title: Descriptions
       edit:
         descriptions: Descriptions
         header: Edit %{file_set}
         permissions: Permissions
         versions: Versions
+      extra_fields_modal:
+        additional: Additional
+        label: Additional %{label}(s)
       form:
         attach_to: Attach to %{parent}
         cancel: Cancel
@@ -936,10 +1058,19 @@ en:
       permission:
         save: Save
       permission_form:
+        add_new_group_skel: Add this group
+        add_new_user_skel: Add this %{account_label}
         applied_to: "(applied to all files just uploaded)"
+        bulk: Bulk
         depositor: Depositor
         enter: Enter %{account_label} (one at a time)
         header: Permissions
+        new_group_help_text: Use the add button to give access to one group at a time (it will be added to the list below).
+        new_group_name_skel: Group
+        new_group_permission_skel: Access type to grant
+        new_user_help_text: Use the add button to give access to one %{account_label} at a time (it will be added to the list below).  Select the user, by name or %{account_label} . Then select the access level youwish to grant and click on Add this %{account_label} to complete adding the permission.
+        new_user_name_skel: "%{account_label} (without the %{suffix} part)"
+        new_user_permission_skel: Access type to grant
         optional: "(optional)"
         save_note_html: Permissions are <strong>not</strong> saved until the &quot;Save&quot; button is pressed at the bottom of the page.
         select_group: Select a group
@@ -947,6 +1078,8 @@ en:
         table_title_access: Access Level
         table_title_user: Person/Group
         user_search: Search for a user
+      proxy:
+        message: "%{sending_user} has deposited the file %{title} on your behalf."
       show_actions:
         analytics: Analytics
         confirm_delete_this: Delete this %{type}?
@@ -966,6 +1099,7 @@ en:
         restore: Restore Previous Version
         restore_from: Restore From
         save: Save Revision
+        save_your_note: You must click &quot;Save Revision&quot; to revert a previous version of this file
         upload: Upload New Version
     help:
       header: User Support
@@ -1063,13 +1197,17 @@ en:
     my:
       count:
         collections:
+          collections_listing: Collections listing
           in_repo: "<strong>%{total_count} collections</strong> in the repository"
           you_manage: "<strong>%{total_count} collections</strong> you can manage in the repository"
           you_own: "<strong>%{total_count} collections</strong> you own in the repository"
         works:
           in_repo: "<strong>%{total_count} works</strong> in the repository"
+          works_listing: Works listing
           you_manage: "<strong>%{total_count} works</strong> you can manage in the repository"
           you_own: "<strong>%{total_count} works</strong> you own in the repository"
+      sort_and_per_page:
+        number_of_results_to_display_per_page: Number of results to display per page
     nav_safety:
       change_tab_message: Are you sure you want to leave this tab?  Any unsaved data will be lost.
     notifications:
@@ -1109,6 +1247,12 @@ en:
         pending_review:
           message: "%{title} (%{link}) was deposited by %{user} and is awaiting approval %{comment}"
           subject: Deposit needs review
+    operations:
+      index:
+        operations_type: Operations Type
+        status: Status
+        title: Operations
+        updated: Updated
     pages:
       cancel: Cancel
       tabs:
@@ -1164,7 +1308,21 @@ en:
         link: Link
         no_links: No links have been generated
       title: Single-Use Links
+    single_use_links_viewer:
+      single_use_error:
+        help: '%{application_name} could not locate the single use link. This link either expired or had been used previously.  We apologize for the inconvenience. You might be interested in using <a href="/help/">the help page</a> for looking up solutions.'
+        link_expired_not_found: Single Use Link Expired or Not Found
+        link_not_found: Single use link Not Found
     sort_label: Sort the listing of items
+    static:
+      mendeley:
+        contact_form: Contact Form
+        export_to_mendeley: Export to Mendeley
+        export_to_mendeley_details: 'Exporting to Mendeley is supported via embedded metadata.  If Mendeley does not automatically pick up metadata for deposited files, please report the issue via the '
+      zotero:
+        contact_form: Contact Form
+        export_to_zotero: Export to Zotero
+        export_to_zotero_details: 'Exporting to Zotero is supported via embedded metadata.  If Zotero does not automatically pick up metadata for deposited files, please report the issue via the '
     toolbar:
       dashboard:
         menu: Dashboard
@@ -1185,6 +1343,29 @@ en:
         placeholder: Search for a user
         sr_only_description: Select a user to transfer "%{work_title}" to, add optional comments and then press transfer.
         title: Transfer Ownership of "%{work_title}"
+      received:
+        accept: Accept
+        accept_the_file_and_allow_the_original_depositor_to_retain_access_and_authorize: Accept the file and allow the original depositor to retain access and authorize the original depositor as a proxy to deposit file on your behalf.
+        accept_the_file_and_allow_the_original_depositor_to_retain_access_to_edit_the_file_and_metadata: Accept the file and allow the original depositor to retain access to edit the file and metadata.
+        accept_the_file_remove_access_from_the_original_depositor: Accept the file remove access from the original depositor.
+        allow_depositor_to_retain_edit_access: Allow depositor to retain edit access
+        are_you_sure_you_want_to_reject_this_request: Are you sure you want to reject this request?
+        authorize_depositor_as_proxy: Authorize depositor as proxy
+        comments: Comments
+        date: Date
+        from: From
+        reject: Reject
+        remove_depositor_access: Remove depositor access
+        status: Status
+        title: Title
+      sent:
+        are_you_sure_you_want_to_cancel_this_request: Are you sure you want to cancel this request?
+        cancel: Cancel
+        comments: Comments
+        date: Date
+        from: From
+        status: Status
+        title: Title
     upload:
       alert:
         contact_href_text: contact form
@@ -1211,6 +1392,20 @@ en:
         tab_label: My Computer
       permissions_message: Updating file permissions. This may take a few minutes. You may want to refresh your browser or return to this record later to see the updated file permissions.
       processing: File is being processed; you may edit when processing has completed
+    uploads:
+      js_templates:
+        display_label: Display label
+        error: Error
+        set_all_to_this_resource_type: Set all to this Resource Type
+        start: Start
+      js_templates_branding:
+        alt_text: 'Alt Text:'
+        error: Error
+        link_url: 'Link URL:'
+        previous: previous
+        remove: Remove
+        remove_new_banner: Remove New Banner
+        remove_new_logo: Remove New Logo
     user_profile:
       orcid:
         alt: ORCID icon
@@ -1223,6 +1418,24 @@ en:
         connected: Connected!
         label: Zotero Profile
         unlinked: Link with Zotero
+    users:
+      activity_log:
+        date: Date
+        user_activity: User Activity
+      index:
+        avatar: Avatar
+        department: Department
+        user_id: User Id
+        user_name: User Name
+        users: Users
+        works_created: Works Created
+      left_sidebar:
+        view_users: View Users
+      proxies:
+        proxies: Proxies
+      search_form:
+        go: Go
+        search_users: Search Users
     visibility:
       authenticated:
         note_html: Restrict access to %{institution}.
@@ -1242,6 +1455,8 @@ en:
         note_html: Keep to myself with option to share.
         text: Private
       restricted_title_attr: Change the visibility of this resource
+    work_button_row:
+      attach_child: Attach Child
     workflow:
       default:
         deposit: Deposit

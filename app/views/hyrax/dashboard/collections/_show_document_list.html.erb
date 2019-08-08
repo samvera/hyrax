@@ -1,14 +1,14 @@
 <table class="table table-striped collections-list-table collection-works-table">
-  <caption class="sr-only">List of items in this collection</caption>
+  <caption class="sr-only"><%= t('hyrax.dashboard.collections.show_document_list.list_items_in_collection') %></caption>
   <thead>
   <tr>
     <th>&nbsp;</th>
-    <th class="title-column">Title</th>
-    <th>Date added</th>
-    <th>Owner</th>
-    <th>Visibility</th>
+    <th class="title-column"><%= t('hyrax.dashboard.collections.show_document_list.title') %></th>
+    <th><%= t('hyrax.dashboard.collections.show_document_list.date_added') %></th>
+    <th><%= t('hyrax.dashboard.collections.show_document_list.owner') %></th>
+    <th><%= t('hyrax.dashboard.collections.show_document_list.visibility') %></th>
     <% if current_user %>
-      <th>Action</th>
+      <th><%= t('hyrax.dashboard.collections.show_document_list.action') %></th>
     <% end %>
   </tr>
   </thead>

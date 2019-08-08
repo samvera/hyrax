@@ -121,10 +121,13 @@ RSpec.describe Wings::ModelTransformer do
       let(:minted_id) { 'bobross' }
 
       before do
+        Hyrax.config.enable_noids = true
         allow_any_instance_of(::Noid::Rails.config.minter_class)
           .to receive(:mint)
           .and_return(minted_id)
       end
+
+      after { Hyrax.config.enable_noids = false }
 
       it { expect(factory.build).to have_a_valkyrie_alternate_id_of minted_id }
     end
@@ -134,7 +137,7 @@ RSpec.describe Wings::ModelTransformer do
       let(:work) { FactoryBot.create(:embargoed_work) }
 
       it 'has the correct embargo id' do
-        expect(subject.build.embargo_id.to_s).to eq work.embargo.id
+        expect(subject.build.embargo.id.id).to eq work.embargo.id
       end
     end
 
@@ -142,7 +145,15 @@ RSpec.describe Wings::ModelTransformer do
       let(:work) { FactoryBot.create(:leased_work) }
 
       it 'has the correct lease id' do
-        expect(subject.build.lease_id.to_s).to eq work.lease.id
+        expect(subject.build.lease.id.id).to eq work.lease.id
+      end
+    end
+
+    context 'with an unsaved embargo' do
+      let(:work) { FactoryBot.build(:embargoed_work) }
+
+      it 'has the correct embargo details' do
+        expect(factory.build.embargo).to have_attributes work.embargo.attributes.symbolize_keys
       end
     end
 
@@ -152,7 +163,15 @@ RSpec.describe Wings::ModelTransformer do
       it 'has the correct embargo id' do
         work.embargo.save
 
-        expect(subject.build.embargo_id.to_s).to eq work.embargo.id
+        expect(subject.build.embargo.id.id).to eq work.embargo.id
+      end
+    end
+
+    context 'with an unsaved lease' do
+      let(:work) { FactoryBot.build(:leased_work) }
+
+      it 'has the correct lease details' do
+        expect(factory.build.lease).to have_attributes work.lease.attributes.symbolize_keys
       end
     end
 
@@ -162,7 +181,73 @@ RSpec.describe Wings::ModelTransformer do
       it 'has the correct lease id' do
         work.lease.save
 
-        expect(subject.build.lease_id.to_s).to eq work.lease.id
+        expect(subject.build.lease.id.id).to eq work.lease.id
+      end
+    end
+
+    context 'with files and derivatives in fileset' do
+      let(:file_set)            { Hydra::Works::FileSet.new }
+      let(:original_file)       { File.open(File.join(fixture_path, 'world.png')) }
+      let(:thumbnail_file)      { File.open(File.join(fixture_path, 'image.jpg')) }
+      let(:extracted_text_file) { File.open(File.join(fixture_path, 'updated-file.txt')) }
+      let(:original_type)       { :original_file }
+      let(:thumbnail_type)      { :thumbnail }
+      let(:extracted_text_type) { :extracted_text }
+
+      before do
+        Hydra::Works::AddFileToFileSet.call(file_set, original_file, original_type)
+        Hydra::Works::AddFileToFileSet.call(file_set, thumbnail_file, thumbnail_type)
+        Hydra::Works::AddFileToFileSet.call(file_set, extracted_text_file, extracted_text_type)
+      end
+
+      it 'has the correct reflection ids' do
+        resource = described_class.new(pcdm_object: file_set).build
+        expect(resource.file_ids).to match_valkyrie_ids_with_active_fedora_ids(file_set.files.map(&:id))
+        expect(resource.original_file_ids).to match_valkyrie_ids_with_active_fedora_ids([file_set.original_file.id])
+        expect(resource.thumbnail_ids).to match_valkyrie_ids_with_active_fedora_ids([file_set.thumbnail.id])
+        expect(resource.extracted_text_ids).to match_valkyrie_ids_with_active_fedora_ids([file_set.extracted_text.id])
+      end
+    end
+
+    context 'with members' do
+      let(:work)        { FactoryBot.create(:work, id: 'pw', title: ['Parent Work']) }
+      let(:child_work1) { FactoryBot.create(:work, id: 'cw1', title: ['Child Work 1']) }
+      let(:child_work2) { FactoryBot.create(:work, id: 'cw2', title: ['Child Work 2']) }
+
+      context 'and members are ordered' do
+        before do
+          work.ordered_members << child_work1
+          work.ordered_members << child_work2
+        end
+
+        it 'sets member_ids to the ids of the ordered members' do
+          expect(subject.build.member_ids).to match_valkyrie_ids_with_active_fedora_ids(['cw1', 'cw2'])
+        end
+      end
+
+      context 'and members are unordered' do
+        before do
+          work.members << child_work1
+          work.members << child_work2
+        end
+
+        it 'sets member_ids to the ids of the unordered members' do
+          expect(subject.build.member_ids).to match_valkyrie_ids_with_active_fedora_ids(['cw1', 'cw2'])
+        end
+      end
+    end
+
+    context 'with parent collections' do
+      let(:work) { FactoryBot.create(:work_with_representative_file, with_admin_set: true) }
+      let(:parent_col1) { FactoryBot.create(:collection_lw, title: ['Parent Collection'], id: 'pcol1') }
+      let(:parent_col2) { FactoryBot.create(:collection_lw, title: ['Parent Collection'], id: 'pcol2') }
+
+      before do
+        work.member_of_collections = [parent_col1, parent_col2]
+      end
+
+      it 'sets member_of_collection_ids to the parent collection ids' do
+        expect(subject.build.member_of_collection_ids).to match_valkyrie_ids_with_active_fedora_ids(['pcol1', 'pcol2'])
       end
     end
   end

@@ -9,6 +9,34 @@ module Wings
   # indivdual value types from the source data.
   class ConverterValueMapper < ::Valkyrie::ValueMapper; end
 
+  class NestedEmbargoValue < ::Valkyrie::ValueMapper
+    ConverterValueMapper.register(self)
+
+    def self.handles?(value)
+      value.first == :embargo
+    end
+
+    def result
+      embargo = ActiveFedoraConverter.new(resource: Hyrax::Embargo.new(**value.last)).convert
+
+      [:embargo, embargo]
+    end
+  end
+
+  class NestedLeaseValue < ::Valkyrie::ValueMapper
+    ConverterValueMapper.register(self)
+
+    def self.handles?(value)
+      value.first == :lease
+    end
+
+    def result
+      lease = ActiveFedoraConverter.new(resource: Hyrax::Lease.new(**value.last)).convert
+
+      [:lease, lease]
+    end
+  end
+
   class NestedResourceArrayValue < ::Valkyrie::ValueMapper
     ConverterValueMapper.register(self)
     def self.handles?(value)

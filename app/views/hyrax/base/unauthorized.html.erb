@@ -1,7 +1,7 @@
-<h1>Unauthorized</h1>
+<h1><%= t('.unauthorized') %></h1>
 <% if respond_to?(:curation_concern) && curation_concern %>
-  <p>The <%= curation_concern.human_readable_type.downcase %> you have tried to access is private<p>
-  <p>ID: <%= curation_concern.id %>
+  <p><%= t('.is_private', type: curation_concern.human_readable_type.downcase ) %><p>
+  <p><%= t('.id', id: curation_concern.id) %>
 <% else %>
-  <p>The page you have tried to access is private<p>
+  <p><%= t('.page_is_private') %><p>
 <% end %>

@@ -1,11 +1,11 @@
 <table class="table table-striped <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
-  <caption class="table-heading"><h2>Attributes</h2></caption>
+  <caption class="table-heading"><h2>t("hyrax.base.attributes.table_heading_attributes")</h2></caption>
   <thead>
-    <tr><th>Attribute Name</th><th>Values</th></tr>
+    <tr><th>t("hyrax.base.attributes.table_attribute_name")</th><th>t("hyrax.base.attributes.table_values")</th></tr>
   </thead>
   <tbody>
     <%= render 'attribute_rows', presenter: presenter %>
-    <%= presenter.attribute_to_html(:permission_badge, label: 'Visibility') %>
+    <%= presenter.attribute_to_html(:permission_badge, label: t('hyrax.base.attributes.visibility')) %>
     <%= presenter.attribute_to_html(:embargo_release_date, render_as: :date) %>
     <%= presenter.attribute_to_html(:lease_expiration_date, render_as: :date) %>
     <%= presenter.attribute_to_html(:license, render_as: :license) %>

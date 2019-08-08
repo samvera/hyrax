@@ -72,20 +72,18 @@ module Hyrax
       # @return [Boolean] true if create was successful
       def create(env)
         intention = Intention.new(env.attributes)
-        attributes = intention.sanitize_params
-        new_env = Environment.new(env.curation_concern, env.current_ability, attributes)
-        validate(env, intention, attributes) && apply_visibility(new_env, intention) &&
-          next_actor.create(new_env)
+        env.attributes = intention.sanitize_params
+        validate(env, intention, env.attributes) && apply_visibility(env, intention) &&
+          next_actor.create(env)
       end
 
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if update was successful
       def update(env)
         intention = Intention.new(env.attributes)
-        attributes = intention.sanitize_params
-        new_env = Environment.new(env.curation_concern, env.current_ability, attributes)
-        validate(env, intention, attributes) && apply_visibility(new_env, intention) &&
-          next_actor.update(new_env)
+        env.attributes = intention.sanitize_params
+        validate(env, intention, env.attributes) && apply_visibility(env, intention) &&
+          next_actor.update(env)
       end
 
       private

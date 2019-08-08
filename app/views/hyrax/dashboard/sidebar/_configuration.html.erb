@@ -28,9 +28,12 @@
         <% end %>
       <% end %>
     </li>
+
     <% if can?(:manage, Sipity::WorkflowResponsibility) %>
       <%= menu.nav_link(hyrax.admin_workflow_roles_path) do %>
         <span class="fa fa-users" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.workflow_roles') %></span>
       <% end %>
-    <% end # end of configuration block %>
+    <% end %>
+
+    <%= render 'hyrax/dashboard/sidebar/menu_partials', menu: menu, section: :configuration %>
   <% end %>

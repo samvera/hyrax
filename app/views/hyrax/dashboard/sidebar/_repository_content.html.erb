@@ -9,3 +9,5 @@
                     also_active_for: hyrax.dashboard_works_path) do %>
     <span class="fa fa-file" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.works') %></span>
   <% end %>
+
+  <%= render 'hyrax/dashboard/sidebar/menu_partials', menu: menu, section: :repository_content %>

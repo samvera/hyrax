@@ -1,36 +1,36 @@
 <h1><%= t("inspect_work.link_text") %></h1>
 <ul class="breadcrumb">
   <li>
-    Back to <%= link_to @presenter.to_s, [main_app, @presenter] %>
+    <%= t('.back_to') %> <%= link_to @presenter.to_s, [main_app, @presenter] %>
   </li>
 </ul>
 
-<h3>Workflow</h3>
+<h3><%= t('.workflow') %></h3>
 <dl>
   <% workflow = @presenter.inspect_work.workflow %>
-  <dt>Object Name</dt>
+  <dt><%= t('.object_name') %></dt>
   <dd><%= @presenter.to_s %></dd>
-  <dt>Processing Entity ID</dt>
-  <dd>Entity ID: <%= workflow[:entity_id] %> (Proxy for <%= workflow[:proxy_for] %>)</dd>
-  <dt>Workflow</dt>
-  <dd>Name: <%= workflow[:workflow_name] %> (ID=<%= workflow[:workflow_id] %>)</dd>
-  <dt>State</dt>
-  <dd>State Name: <%= workflow[:state_name] %> (ID=<%= workflow[:state_id] %>)</dd>
-  <dt>Workflow Comments</dt>
+  <dt><%= t('.processing_entity_id') %></dt>
+  <dd><%= t('.entity_id') %>: <%= workflow[:entity_id] %> (<%= t('.proxy_for') %> <%= workflow[:proxy_for] %>)</dd>
+  <dt><%= t('.workflow') %></dt>
+  <dd><%= t('.name') %>: <%= workflow[:workflow_name] %> (<%= t('.id') %>=<%= workflow[:workflow_id] %>)</dd>
+  <dt><%= t('.state') %></dt>
+  <dd><%= t('.state_name') %>: <%= workflow[:state_name] %> (<%= t('.id') %>=<%= workflow[:state_id] %>)</dd>
+  <dt><%= t('.workflow_comments') %></dt>
   <dd>
     <% workflow[:comments].each do |comment| %>
         <dd><%= comment[:created_at] %>, <%= comment[:comment] %></dd>
     <% end %>
   </dd>
-  <dt>Roles</dt>
+  <dt><%= t('.roles') %></dt>
   <dd>
     <% workflow[:roles].each do |role| %>
-      <dd><%= role[:name] %> (ID=<%= role[:id] %>) <%= role[:description] %> Users: <%= role[:users] %></dd>
+      <dd><%= role[:name] %> (<%= t('.entity_id') %>=<%= role[:id] %>) <%= role[:description] %> <%= t('.users') %>: <%= role[:users] %></dd>
   <% end %>
   </dd>
 </dl>
 
-<h3>Persistence</h3>
+<h3><%= t('.persistence') %></h3>
 <dl>
   <dt>Solr</dt>
   <dd><%= @presenter.inspect_work.solr %></dd>

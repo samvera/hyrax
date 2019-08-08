@@ -23,7 +23,7 @@
       <%= render 'tabs' if can?(:read, :admin_dashboard) %>
       <div class="panel-body">
         <%= render 'search_header' %>
-        <h2 class="sr-only">Works listing</h2>
+        <h2 class="sr-only"><%= t('hyrax.admin.sidebar.works_listing') %></h2>
         <%= render 'document_list' %>
 
         <%= render 'results_pagination' %>

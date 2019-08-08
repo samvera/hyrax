@@ -22,6 +22,7 @@ module Wings
   #
   #   resource.alternate_ids # => [#<Valkyrie::ID:0x... id: 'an_identifier'>]
   #
+  # rubocop:disable Metrics/ClassLength
   class ModelTransformer
     ##
     # @!attribute [rw] pcdm_object
@@ -53,7 +54,8 @@ module Wings
                       .keys
                       .reject { |k| k.to_s.include?('id') }
                       .map { |k| k.to_s.singularize + '_ids' }
-      relationships.delete(:member_ids) # Remove here.  Members will be extracted as ordered_members in attributes method.
+      relationships.delete('member_ids') # Remove here.  Members will be extracted as ordered_members in attributes method.
+      relationships.delete('ordered_member_proxy_ids') # This does not have a Valkyrie equivalent.
       relationships
     end
 
@@ -65,9 +67,13 @@ module Wings
       klass = ResourceClassCache.instance.fetch(pcdm_object) do
         self.class.to_valkyrie_resource_class(klass: pcdm_object.class)
       end
-      pcdm_object.id = minted_id if pcdm_object.id.nil?
+
+      mint_id unless pcdm_object.id
+
       attrs = attributes.tap { |hash| hash[:new_record] = pcdm_object.new_record? }
-      klass.new(alternate_ids: [::Valkyrie::ID.new(pcdm_object.id)], **attrs)
+      attrs[:alternate_ids] = [::Valkyrie::ID.new(pcdm_object.id)] if pcdm_object.id
+
+      klass.new(**attrs)
     end
 
     ##
@@ -111,6 +117,8 @@ module Wings
     def self.base_for(klass:)
       if klass == Hydra::AccessControls::Embargo
         Hyrax::Embargo
+      elsif klass == Hydra::AccessControls::Lease
+        Hyrax::Lease
       else
         Hyrax::Resource
       end
@@ -189,26 +197,45 @@ module Wings
 
     class AttributeTransformer
       def self.run(obj, keys)
-        keys.each_with_object({}) do |attr_name, mem|
-          next unless obj.respond_to? attr_name
+        # TODO: There is an open question about whether we want to treat all these relationships the same.  See Issue #3904.
+        attrs = keys.select { |k| k.to_s.end_with? '_ids' }.each_with_object({}) do |attr_name, mem|
+          mem[attr_name.to_sym] =
+            TransformerValueMapper.for(obj.try(attr_name)).result ||
+            TransformerValueMapper.for(attribute_ids_for(name: attr_name.chomp('_ids'), obj: obj)).result ||
+            TransformerValueMapper.for(attribute_ids_for(name: attr_name.chomp('_ids').pluralize, obj: obj)).result || []
+        end
+        keys.each_with_object(attrs) do |attr_name, mem|
+          next unless obj.respond_to?(attr_name) && !mem.key?(attr_name.to_sym)
           mem[attr_name.to_sym] = TransformerValueMapper.for(obj.public_send(attr_name)).result
         end
+      end
+
+      def self.attribute_ids_for(name:, obj:)
+        attribute_value = obj.try(name)
+        return unless attribute_value.present?
+        Array(attribute_value).map(&:id)
       end
     end
 
     private
 
-      def minted_id
-        ::Noid::Rails.config.minter_class.new.mint
+      def mint_id
+        id = pcdm_object.assign_id
+
+        pcdm_object.id = id unless id.blank?
       end
 
       def attributes
         all_keys =
           pcdm_object.attributes.keys +
           self.class.relationship_keys_for(reflections: pcdm_object.reflections)
-        AttributeTransformer.run(pcdm_object, all_keys)
-                            .merge reflection_ids
-          .merge(additional_attributes)
+
+        result = AttributeTransformer.run(pcdm_object, all_keys).merge(reflection_ids).merge(additional_attributes)
+
+        append_embargo(result)
+        append_lease(result)
+
+        result
       end
 
       def reflection_ids
@@ -220,14 +247,37 @@ module Wings
       def additional_attributes
         { created_at: pcdm_object.try(:create_date),
           updated_at: pcdm_object.try(:modified_date),
-          embargo_id: pcdm_object.try(:embargo)&.id || pcdm_object.try(:embargo_id),
-          lease_id:   pcdm_object.try(:lease)&.id   || pcdm_object.try(:lease_id),
           read_groups: pcdm_object.try(:read_groups),
           read_users: pcdm_object.try(:read_users),
           edit_groups: pcdm_object.try(:edit_groups),
           edit_users: pcdm_object.try(:edit_users),
-          member_ids: pcdm_object.try(:ordered_member_ids) } # We want members in order, so extract from ordered_members.
+          member_ids: member_ids }
+      end
+
+      # Prefer ordered members, but if ordered members don't exist, use non-ordered members.
+      def member_ids
+        ordered_member_ids = pcdm_object.try(:ordered_member_ids)
+        return ordered_member_ids if ordered_member_ids.present?
+        pcdm_object.try(:member_ids)
+      end
+
+      def append_embargo(attrs)
+        return unless pcdm_object.try(:embargo)
+        embargo_attrs = pcdm_object.embargo.attributes.symbolize_keys
+        embargo_attrs[:embargo_history] = embargo_attrs[:embargo_history].to_a
+        embargo_attrs[:id] = ::Valkyrie::ID.new(embargo_attrs[:id]) if embargo_attrs[:id]
+
+        attrs[:embargo] = Hyrax::Embargo.new(**embargo_attrs)
+      end
+
+      def append_lease(attrs)
+        return unless pcdm_object.try(:lease)
+        lease_attrs = pcdm_object.lease.attributes.symbolize_keys
+        lease_attrs[:lease_history] = lease_attrs[:embargo_history].to_a
+        lease_attrs[:id] = ::Valkyrie::ID.new(lease_attrs[:id]) if lease_attrs[:id]
+
+        attrs[:lease] = Hyrax::Lease.new(**lease_attrs)
       end
   end
-  # rubocop:enable Style/ClassVars
+  # rubocop:enable Style/ClassVars Metrics/ClassLength
 end

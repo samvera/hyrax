@@ -5,7 +5,8 @@
 # * embargo
 class VisibilityCopyJob < Hyrax::ApplicationJob
   # @api public
-  # @param [#file_sets, #visibility, #lease, #embargo] work - a Work model
+  # @param [Hyrax::WorkBehavior, Hyrax::Resource] work - a Work model,
+  #   using ActiveFedora or Valkyrie
   def perform(work)
     Hyrax::VisibilityPropagator.for(source: work).propagate
   end

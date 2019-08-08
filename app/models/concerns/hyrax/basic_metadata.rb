@@ -20,7 +20,7 @@ module Hyrax
       property :abstract, predicate: ::RDF::Vocab::DC.abstract
       property :keyword, predicate: ::RDF::Vocab::SCHEMA.keywords
       # Used for a license
-      property :license, predicate: ::RDF::Vocab::DC.rights
+      property :license, predicate: ::RDF::URI.new('http://dublincore.org/documents/dcmi-terms/#terms-license'), multiple: true
 
       property :rights_notes, predicate: ::RDF::URI.new('http://purl.org/dc/elements/1.1/rights'), multiple: true
 

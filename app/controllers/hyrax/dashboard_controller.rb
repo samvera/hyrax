@@ -6,6 +6,15 @@ module Hyrax
     before_action :authenticate_user!
     before_action :build_breadcrumbs, only: [:show]
 
+    ##
+    # @!attribute [rw] sidebar_partials
+    #   @return [Hash]
+    #
+    # @example Add a custom partial to the tasks sidebar block
+    #   Hyrax::DashboardController.sidebar_partials[:tasks] << "hyrax/dashboard/sidebar/custom_task"
+    class_attribute :sidebar_partials
+    self.sidebar_partials = { activity: [], configuration: [], repository_content: [], tasks: [] }
+
     def show
       if can? :read, :admin_dashboard
         @presenter = Hyrax::Admin::DashboardPresenter.new
