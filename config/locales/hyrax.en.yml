@@ -46,6 +46,7 @@ en:
       batch:
         new: Create batch of works
       cancel: Cancel
+      okay: OK
       close: Close
       collection:
         new: New Collection
@@ -236,19 +237,19 @@ en:
           description: Collection types enable you to define settings that govern collections that serve different purposes in your repository.  You can define as many collection types as you need.
           header: Collection Types
           modal:
-            can_delete_body_html: "<p>Deleting this collection type will permanently remove the type and its settings from the repository.  Are you sure you want to delete this collection type?</p>"
-            cannot_delete_body_html: "<p>You cannot delete this collection type because one or more collections of this type have already been created.</p> <p>To delete this collection type, first ensure that all collections of this type have been deleted.</p>"
+            can_delete_body_html: '<p>Deleting this collection type will permanently remove the type and its settings from the repository.  Are you sure you want to delete this collection type?</p>'
+            cannot_delete_body_html: '<p>You cannot delete this collection type because one or more collections of this type have already been created.</p> <p>To delete this collection type, first ensure that all collections of this type have been deleted.</p>'
             header_can_delete: Delete Collection Type?
             header_cannot_delete: Cannot Delete Collection Type
             view_collections: View collections of this type
-          more_toggle_content_html: "<p>Typical scenarios for collection types include:</p> <ul> <li><strong>User Collections</strong> that any registered user can create to organize items they deposit.</li> <li><strong>Exhibits</strong> that staff create and curate for public display, where items can be included in any number of exhibits.</li> <li><strong>Controlled Collections</strong> created and managed by staff and not intended for public display, such as collections associated with organizational units or departments.</li> <li><strong>Community Collections</strong> that are intended for public display, similar to how DSpace communities and collections are sometimes used.</li> </ul>"
-          more_toggle_header_html: "<span>More</span> about collection types"
+          more_toggle_content_html: '<p>Typical scenarios for collection types include:</p> <ul> <li><strong>User Collections</strong> that any registered user can create to organize items they deposit.</li> <li><strong>Exhibits</strong> that staff create and curate for public display, where items can be included in any number of exhibits.</li> <li><strong>Controlled Collections</strong> created and managed by staff and not intended for public display, such as collections associated with organizational units or departments.</li> <li><strong>Community Collections</strong> that are intended for public display, similar to how DSpace communities and collections are sometimes used.</li> </ul>'
+          more_toggle_header_html: '<span>More</span> about collection types'
           table:
             actions: Actions
             name: Name
         multiple_membership_checker:
           error_preamble: 'Error: You have specified more than one of the same single-membership collection type '
-          error_type_and_collections: "(type: %{type}, collections: %{collections})"
+          error_type_and_collections: '(type: %{type}, collections: %{collections})'
         new:
           header: Create New Collection Type
           submit: Save
@@ -385,7 +386,7 @@ en:
           files within a short period of time, the provider may not be able to
           accommodate your request. If you experience errors uploading from the
           cloud, let us know via the %{contact_href}.</p>
-        local_upload_html: "<p>You can add one or more files to associate with this work.</p>"
+        local_upload_html: '<p>You can add one or more files to associate with this work.</p>'
       form_member_of_collections:
         actions:
           remove: Remove from collection
@@ -398,11 +399,11 @@ en:
           actions: Action
           title: Collection title
       form_permission_under_embargo:
-        help_html: "<strong>This work is under embargo.</strong> You can change the settings of the embargo here, or you can visit the %{edit_link} to deactivate it."
+        help_html: '<strong>This work is under embargo.</strong> You can change the settings of the embargo here, or you can visit the %{edit_link} to deactivate it.'
         legend_html: Visibility <small>Who should be able to view or download this content?</small>
         management_page: Embargo Management Page
       form_permission_under_lease:
-        help_html: "<strong>This work is under lease.</strong> You can change the settings of the lease here, or you can visit the %{edit_link} to deactivate it."
+        help_html: '<strong>This work is under lease.</strong> You can change the settings of the lease here, or you can visit the %{edit_link} to deactivate it.'
         legend_html: Visibility <small>Who should be able to view or download this content?</small>
         management_page: Lease Management Page
       form_progress:
@@ -442,7 +443,7 @@ en:
         label: 'In %{type}:'
       share_with:
         definition_heading: Permission Definitions
-        definitions_html: "<strong>View/Download:</strong> this file (both contents and metadata) is accessible from within %{application_name}.<br /> <strong>Edit:</strong> this file (both contents and metadata) can be edited. You may only grant this permission to %{institution_name} users and/or groups."
+        definitions_html: '<strong>View/Download:</strong> this file (both contents and metadata) is accessible from within %{application_name}.<br /> <strong>Edit:</strong> this file (both contents and metadata) can be edited. You may only grant this permission to %{institution_name} users and/or groups.'
         share_with_html: You may grant &quot;View/Download&quot; or &quot;Edit&quot; access for specific users and/or groups to files. Enter a valid %{account_name}, one at a time, select the access level for that user, and click +Add.
       show:
         items: Items
@@ -551,14 +552,14 @@ en:
         no_visible_parent_collections: There are no visible parent collections.
         no_visible_subcollections: There are no visible subcollections.
         parent_collection_header: Parent Collections
-        show_less_parent_collections: "...show less"
+        show_less_parent_collections: '...show less'
         show_more_parent_collections: show more...
         subcollection_count: Subcollections
         works_in_collection: Works
       sort_and_per_page:
         number_of_results_to_display_per_page: Number of results to display per page
         results_per_page: 'Results per page:'
-        sort_by_html: "<span>Sort by:</span>"
+        sort_by_html: '<span>Sort by:</span>'
     contact_form:
       button_label: Send
       email_label: Your Email
@@ -653,6 +654,7 @@ en:
             remove_from_collection_description: Removing this collection will not remove it from the repository, only as a parent of this collection.  Are you sure you want to remove this collection?
             remove_parent_collection_deny: You do not have sufficient privileges for the parent collection to be able to remove it.
             remove_this_sub_collection_description: Removing this sub-collection will not remove it from the repository, only from this parent collection.  Are you sure you want to remove this sub-collection?
+            switch_tabs_confirmation: It is best to "Save changes" before moving to another tab, or your changes may be lost. Do you want to change tab?
           sub_collections_of_collection_description: These collections are currently sub-collections of this collection
           table:
             action: Action
@@ -707,7 +709,7 @@ en:
           parent_collection_header: Parent Collections
           public_view_label: Public view of Collection
           search_results: Search Results within this Collection
-          show_less_parent_collections: "...show less"
+          show_less_parent_collections: '...show less'
           show_more_parent_collections: show more...
           subcollection_count: Subcollections
         sort_and_per_page:
@@ -859,9 +861,9 @@ en:
         embargo_apply: Apply Embargo
         embargo_cancel: Cancel and manage all embargoes
         embargo_deactivate: Deactivate Embargo
-        embargo_false_html: "<strong>This %{cc} is not currently under embargo.</strong> If you would like to apply an embargo, provide the information here."
+        embargo_false_html: '<strong>This %{cc} is not currently under embargo.</strong> If you would like to apply an embargo, provide the information here.'
         embargo_return: Return to editing this %{cc}
-        embargo_true_html: "<strong>This %{cc} is under embargo.</strong>"
+        embargo_true_html: '<strong>This %{cc} is under embargo.</strong>'
         embargo_update: Update Embargo
         header:
           current: Current Embargo
@@ -936,11 +938,11 @@ en:
       permission:
         save: Save
       permission_form:
-        applied_to: "(applied to all files just uploaded)"
+        applied_to: '(applied to all files just uploaded)'
         depositor: Depositor
         enter: Enter %{account_label} (one at a time)
         header: Permissions
-        optional: "(optional)"
+        optional: '(optional)'
         save_note_html: Permissions are <strong>not</strong> saved until the &quot;Save&quot; button is pressed at the bottom of the page.
         select_group: Select a group
         share_with: Share With
@@ -1014,9 +1016,9 @@ en:
         lease_apply: Apply Lease
         lease_cancel: Cancel and manage all leases
         lease_deactivate: Deactivate Lease
-        lease_false_html: "<strong>This %{cc} is not currently under lease.</strong> If you would like to apply a lease, provide the information here."
+        lease_false_html: '<strong>This %{cc} is not currently under lease.</strong> If you would like to apply a lease, provide the information here.'
         lease_return: Return to editing this %{cc}
-        lease_true_html: "<strong>This %{cc} is under lease.</strong>"
+        lease_true_html: '<strong>This %{cc} is under lease.</strong>'
         lease_update: Update Lease
         manage_leases_html: Manage Leases for %{cc} <span class='human_readable_type'>(%{cc_type})</span>
       index:
@@ -1063,13 +1065,13 @@ en:
     my:
       count:
         collections:
-          in_repo: "<strong>%{total_count} collections</strong> in the repository"
-          you_manage: "<strong>%{total_count} collections</strong> you can manage in the repository"
-          you_own: "<strong>%{total_count} collections</strong> you own in the repository"
+          in_repo: '<strong>%{total_count} collections</strong> in the repository'
+          you_manage: '<strong>%{total_count} collections</strong> you can manage in the repository'
+          you_own: '<strong>%{total_count} collections</strong> you own in the repository'
         works:
-          in_repo: "<strong>%{total_count} works</strong> in the repository"
-          you_manage: "<strong>%{total_count} works</strong> you can manage in the repository"
-          you_own: "<strong>%{total_count} works</strong> you own in the repository"
+          in_repo: '<strong>%{total_count} works</strong> in the repository'
+          you_manage: '<strong>%{total_count} works</strong> you can manage in the repository'
+          you_own: '<strong>%{total_count} works</strong> you own in the repository'
     nav_safety:
       change_tab_message: Are you sure you want to leave this tab?  Any unsaved data will be lost.
     notifications:
@@ -1086,7 +1088,7 @@ en:
         subject: File Import Error
       proxy_deposit_request:
         transfer_on_create:
-          message: "%{user_link} wants to transfer a work to you. Review all %{transfer_link}"
+          message: '%{user_link} wants to transfer a work to you. Review all %{transfer_link}'
           subject: Ownership Change Request
           transfer_link_label: transfer requests
         transfer_on_update:
@@ -1094,7 +1096,7 @@ en:
           message: Your transfer request was %{status}.
           subject: Ownership Change %{status}
       proxy_depositor_added:
-        grantee_message: "%{grantor} has assigned you as a proxy depositor"
+        grantee_message: '%{grantor} has assigned you as a proxy depositor'
         grantor_message: You have assigned %{grantee} as a proxy depositor
         subject: Proxy Depositor Added
       workflow:
@@ -1104,10 +1106,10 @@ en:
              '%{comment}'
           subject: Your deposit requires changes
         deposited:
-          message: "%{title} (%{link}) was approved by %{user}. %{comment}"
+          message: '%{title} (%{link}) was approved by %{user}. %{comment}'
           subject: Deposit has been approved
         pending_review:
-          message: "%{title} (%{link}) was deposited by %{user} and is awaiting approval %{comment}"
+          message: '%{title} (%{link}) was deposited by %{user} and is awaiting approval %{comment}'
           subject: Deposit needs review
     pages:
       cancel: Cancel
@@ -1198,11 +1200,11 @@ en:
         sr_tab_label: Access Files from
         tab_label: Cloud Providers
       change_access_flash_message: Updating file access levels. This may take a few minutes. You may want to refresh your browser or return to this record later to see the updated file access levels.
-      change_access_message_html: "<p>You have changed the access level on work <i>%{curation_concern}</i>, making it accessible to other users or groups to view or edit.</p><p>Would you like change all of the files within the work to have the same access users, groups and visibility as well?</p>"
+      change_access_message_html: '<p>You have changed the access level on work <i>%{curation_concern}</i>, making it accessible to other users or groups to view or edit.</p><p>Would you like change all of the files within the work to have the same access users, groups and visibility as well?</p>'
       change_access_no_message: No. I'll update it manually.
       change_access_title_html: Apply changes to contents?
       change_access_yes_message: Yes please.
-      change_permissions_message_html: "<p>You have changed the permissions on this %{curation_concern_human_readable_type}, <i>%{curation_concern}</i>, making it visible to <b>%{visibility_badge}</b>.</p><p>Would you like change all of the files within the %{curation_concern_human_readable_type} to <b>%{visibility_badge}</b> as well?</p>"
+      change_permissions_message_html: '<p>You have changed the permissions on this %{curation_concern_human_readable_type}, <i>%{curation_concern}</i>, making it visible to <b>%{visibility_badge}</b>.</p><p>Would you like change all of the files within the %{curation_concern_human_readable_type} to <b>%{visibility_badge}</b> as well?</p>'
       local_ingest:
         tab_label: Network/Server Location
       my_computer:
@@ -1226,7 +1228,7 @@ en:
     visibility:
       authenticated:
         note_html: Restrict access to %{institution}.
-        text: "%{institution}"
+        text: '%{institution}'
       embargo:
         note_html: Set date for future release.
         text: Embargo

@@ -848,6 +848,65 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
     end
 
+    context "edit collection navigating through tabs", js: true do
+      let!(:empty_collection) { create(:public_collection_lw, title: ['Empty Collection'], user: user, with_permission_template: true) }
+      let(:collection_id) { create(:collection_lw, user: user, collection_type_settings: [:brandable, :discoverable, :sharable], with_permission_template: true).id }
+      before do
+        sign_in user
+        visit "/dashboard/collections/#{collection_id}/edit"
+        new_description = 'New Description'
+        fill_in('Description', with: new_description)
+      end
+      context 'edit collection description' do
+        it 'change tab without saving changes prompts a confirm' do
+          # Navigate to Sharing tab without saving changes
+          click_link('Sharing')
+
+          # Prompts the confirmation
+          expect(page).to have_selector("div#collection-edit-switch-tabs-modal", visible: true)
+          within("div#collection-edit-switch-tabs-modal") do
+            click_button('OK')
+          end
+
+          # Tab changes
+          expect(page).to have_selector(".form-inline.add-users .select2-container")
+
+          # Go back to previous tab
+          click_link('Description')
+          # Collection's description is reset to previous value (empty string)
+          expect(page).to have_field('collection_description', with: '')
+        end
+        it 'dismiss confirmation goes back to previous tab' do
+          # Go to Sharing tab without saving changes
+          click_link('Sharing')
+
+          # Prompts the confirmation
+          expect(page).to have_selector("div#collection-edit-switch-tabs-modal", visible: true)
+          within("div#collection-edit-switch-tabs-modal") do
+            click_button('Cancel')
+          end
+
+          # Collection's description does not contain the new value
+          expect(page).to have_field('collection_description', with: 'New Description')
+        end
+        it 'change tab after saving changes' do
+          # Save changes
+          within('.panel-footer') do
+            click_button('Save changes')
+          end
+
+          # Go to Sharing tab after saving changes
+          click_link('Sharing')
+          expect(page).to have_selector(".form-inline.add-users .select2-container")
+
+          # Go back to Description tab
+          click_link('Description')
+          # Collection's description contains the new value
+          expect(page).to have_field('collection_description', with: 'New Description')
+        end
+      end
+    end
+
     context "edit view tabs" do
       before do
         sign_in user
