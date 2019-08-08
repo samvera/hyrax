@@ -9,7 +9,7 @@ Riiif::Image.info_service = lambda do |id, _file|
   resp = Hyrax::SolrService.get("id:#{fs_id}")
   doc = resp['response']['docs'].first
   raise "Unable to find solr document with id:#{fs_id}" unless doc
-  { height: doc['height_is'], width: doc['width_is'], format: doc['mime_type_ssi'] }
+  { height: doc['height_is'], width: doc['width_is'], format: doc['mime_type_ssi'], channels: doc['alpha_channels_ssi'] }
 end
 
 Riiif::Image.file_resolver.id_to_uri = lambda do |id|
@@ -23,4 +23,4 @@ Riiif::Image.authorization_service = Hyrax::IIIFAuthorizationService
 Riiif.not_found_image = Rails.root.join('app', 'assets', 'images', 'us_404.svg')
 Riiif.unauthorized_image = Rails.root.join('app', 'assets', 'images', 'us_404.svg')
 
-Riiif::Engine.config.cache_duration_in_days = 365
+Riiif::Engine.config.cache_duration = 365.days

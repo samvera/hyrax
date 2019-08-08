@@ -10,7 +10,7 @@ module Hyrax
           :capture_device, :scanning_software, :gps_timestamp, :latitude, :longitude,
           :file_format, :file_title, :page_count, :duration, :sample_rate,
           :format_label, :file_size, :filename, :well_formed, :last_modified,
-          :original_checksum, :mime_type
+          :original_checksum, :mime_type, :alpha_channels
         ]
       end
     end

@@ -86,7 +86,7 @@ RSpec.describe Hyrax::FileSetPresenter do
        "subject", "language", "license", "format_label", "file_size",
        "height", "width", "filename", "well_formed", "page_count",
        "file_title", "last_modified", "original_checksum", "mime_type",
-       "duration", "sample_rate"]
+       "duration", "sample_rate", "alpha_channels"]
     end
 
     it "delegates to the solr_document" do
@@ -364,7 +364,7 @@ RSpec.describe Hyrax::FileSetPresenter do
           context 'with custom image url builder' do
             let(:id) { file_set.original_file.id }
             let(:custom_builder) do
-              ->(file_id, base_url, _size) { "#{base_url}/downloads/#{file_id.split('/').first}" }
+              ->(file_id, base_url, _size, _format) { "#{base_url}/downloads/#{file_id.split('/').first}" }
             end
 
             around do |example|
