@@ -42,6 +42,7 @@ module Hyrax
       # Cast back to multi-value when saving
       # Reads from form
       def self.model_attributes(attributes)
+        byebug
         attrs = super
         return attrs unless attributes[:title]
 
@@ -187,6 +188,7 @@ module Hyrax
       # are going into a mediated deposit workflow.
       def self.sanitize_params(form_params)
         admin_set_id = form_params[:admin_set_id]
+        byebug
         return super if admin_set_id && workflow_for(admin_set_id: admin_set_id).allows_access_grant?
         params_without_permissions = permitted_params.reject { |arg| arg.respond_to?(:key?) && arg.key?(:permissions_attributes) }
         form_params.permit(*params_without_permissions)

@@ -23,6 +23,7 @@ module Hyrax
         # get a current copy of attributes, to protect against future mutations
         attributes        = env.attributes.clone
 
+byebug
         validate_files(files, env) &&
           next_actor.update(env) &&
           attach_files(files, env.curation_concern, attributes)
@@ -55,7 +56,9 @@ module Hyrax
 
         # Fetch uploaded_files from the database
         def uploaded_files(uploaded_file_ids)
+          byebug
           return [] if uploaded_file_ids.empty?
+          byebug
           UploadedFile.find(uploaded_file_ids)
         end
     end

@@ -51,6 +51,7 @@ module Hyrax
     end
 
     def create
+      byebug
       if actor.create(actor_environment)
         after_create_response
       else
@@ -258,6 +259,7 @@ module Hyrax
       def attributes_for_actor
         raw_params = params[hash_key_for_curation_concern]
         attributes = if raw_params
+          byebug
                        work_form_service.form_class(curation_concern).model_attributes(raw_params)
                      else
                        {}

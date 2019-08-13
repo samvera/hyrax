@@ -38,6 +38,7 @@ module Hyrax
     end
 
     def collection_type_participant_params
+      byebug
       params.require(:collection_type_participant).permit(:access, :agent_id, :agent_type, :hyrax_collection_type_id)
     end
   end

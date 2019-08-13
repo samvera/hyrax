@@ -341,6 +341,7 @@ module Hyrax
           Deprecation.warn(self, "Passing in permissions_attributes parameter with a new collection is deprecated and support will be removed from Hyrax 3.0. " \
                                  "Use Hyrax::PermissionTemplate instead to grant Manage, Deposit, or View access.")
           participants = []
+          byebug
           permissions.each do |p|
             access = access(p)
             participants << { agent_type: agent_type(p), agent_id: p["name"], access: access } if access
@@ -349,6 +350,7 @@ module Hyrax
         end
 
         def agent_type(permission)
+          byebug
           # TODO: REMOVE in 3.0 - part of deprecation of permission attributes
           return 'group' if permission["type"] == 'group'
           'user'
