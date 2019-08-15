@@ -3,7 +3,6 @@ module Hyrax
     include DenyAccessOverrideBehavior
 
     before_action :authenticate_user!
-    before_action :validate_users, only: :create
 
     layout :decide_layout
 
@@ -17,7 +16,10 @@ module Hyrax
     def create
       grantor = authorize_and_return_grantor
       grantee = ::User.from_url_component(params[:grantee_id])
-      if grantor.can_receive_deposits_from.include?(grantee)
+
+      if grantor == grantee
+        render_json_response(response_type: :unprocessable_entity, message: view_context.t('hyrax.dashboard.proxy_add_deny'))
+      elsif grantor.can_receive_deposits_from.include?(grantee)
         head :ok
       else
         grantor.can_receive_deposits_from << grantee
@@ -30,10 +32,6 @@ module Hyrax
       grantor = authorize_and_return_grantor
       grantor.can_receive_deposits_from.delete(::User.from_url_component(params[:id]))
       head :ok
-    end
-
-    def validate_users
-      head :ok if params[:user_id] == params[:grantee_id]
     end
 
     private
