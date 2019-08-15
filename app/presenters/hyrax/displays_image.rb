@@ -58,6 +58,5 @@ module Hyrax
         end
         result
       end
-    end
   end
 end
