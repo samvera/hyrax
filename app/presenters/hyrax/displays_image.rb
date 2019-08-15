@@ -23,8 +23,8 @@ module Hyrax
       )
       # @see https://github.com/samvera-labs/iiif_manifest
       IIIFManifest::DisplayImage.new(url,
-                                     width: 640,
-                                     height: 480,
+                                     width: solr_document[:width_is],
+                                     height: solr_document[:height_is],
                                      iiif_endpoint: iiif_endpoint(original_file.id))
     end
 
@@ -36,6 +36,24 @@ module Hyrax
           Hyrax.config.iiif_info_url_builder.call(file_id, request.base_url),
           profile: Hyrax.config.iiif_image_compliance_level_uri
         )
+      end
+
+      def image_format(channels)
+        channels.find { |c| c.include?('rgba') }.nil? ? 'jpg' : 'png'
+      end
+
+      def unindexed_current_file_version
+        Rails.logger.warn "Indexed current_file_version for #{id} not found, falling back to Fedora."
+        ActiveFedora::File.uri_to_id(::FileSet.find(id).current_content_version_uri)
+      end
+
+      def lookup_original_file_id
+        result = original_file_id
+        if result.blank?
+          Rails.logger.warn "original_file_id for #{id} not found, falling back to Fedora."
+          result = ActiveFedora::File.uri_to_id(::FileSet.find(id).current_content_version_uri)
+        end
+        result
       end
   end
 end
