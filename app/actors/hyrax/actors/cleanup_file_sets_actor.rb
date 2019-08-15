@@ -6,9 +6,17 @@ module Hyrax
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if destroy was successful
       def destroy(env)
+        byebug
         cleanup_file_sets(env.curation_concern)
         next_actor.destroy(env)
       end
+
+      #def create(env)
+      #  byebug
+      #  cleanup_file_sets(env.curation_concern)
+      #  next_actor.create(env)
+      #end
+
 
       private
 
@@ -18,6 +26,7 @@ module Hyrax
           # this would take too long.
 
           # Get list of member file_sets from Solr
+          byebug
           fs = curation_concern.file_sets
           curation_concern.list_source.destroy
           # Remove Work from Solr after it was removed from Fedora so that the

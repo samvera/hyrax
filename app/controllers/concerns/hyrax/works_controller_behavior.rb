@@ -166,6 +166,7 @@ module Hyrax
       end
 
       def actor
+        byebug
         @actor ||= Hyrax::CurationConcern.actor
       end
 

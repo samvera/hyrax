@@ -16,9 +16,11 @@ module Hyrax
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if create was successful
       def create(env)
+        byebug
         apply_creation_data_to_curation_concern(env)
         apply_save_data_to_curation_concern(env)
 
+        byebug
         save(env, use_valkyrie: false) &&
           next_actor.create(env) &&
           run_callbacks(:after_create_concern, env)
@@ -51,6 +53,7 @@ module Hyrax
         end
 
         def apply_creation_data_to_curation_concern(env)
+          byebug
           apply_depositor_metadata(env)
           apply_deposit_date(env)
         end
@@ -60,19 +63,23 @@ module Hyrax
         end
 
         def apply_depositor_metadata(env)
+          byebug
           env.curation_concern.depositor = env.user.user_key
         end
 
         def apply_deposit_date(env)
+          byebug
           env.curation_concern.date_uploaded = TimeService.time_in_utc
         end
 
         def save(env, use_valkyrie: false)
+          byebug
           return env.curation_concern.save unless use_valkyrie
-
+byebug
           env.curation_concern.embargo&.save
+          byebug
           env.curation_concern.lease&.save
-
+byebug
           resource = Hyrax.persister.save(resource: env.curation_concern.valkyrie_resource)
 
           env.curation_concern = Hyrax.metadata_adapter.resource_factory.from_resource(resource: resource)
@@ -84,7 +91,9 @@ module Hyrax
         end
 
         def apply_save_data_to_curation_concern(env)
+          byebug
           env.curation_concern.attributes = clean_attributes(env.attributes)
+          byebug
           env.curation_concern.date_modified = TimeService.time_in_utc
         end
 

@@ -18,6 +18,7 @@ class CreateWorkJob < Hyrax::ApplicationJob
     work = model.constantize.new
     current_ability = Ability.new(user)
     env = Hyrax::Actors::Environment.new(work, current_ability, attributes)
+    byebug
     status = work_actor.create(env)
     return operation.success! if status
     operation.fail!(work.errors.full_messages.join(' '))

@@ -14,7 +14,10 @@ module Hyrax
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if create was successful
       def create(env)
-        model_actor(env).create(env)
+        byebug
+        a = model_actor(env).create(env)
+        b = 1
+        a
       end
 
       # @param [Hyrax::Actors::Environment] env
@@ -27,6 +30,7 @@ module Hyrax
       private
 
         def model_actor(env)
+          byebug
           actor_identifier = env.curation_concern.class
           klass = "Hyrax::Actors::#{actor_identifier}Actor".constantize
           klass.new(next_actor)

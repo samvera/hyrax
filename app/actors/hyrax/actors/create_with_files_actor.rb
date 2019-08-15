@@ -9,7 +9,6 @@ module Hyrax
         files             = uploaded_files(uploaded_file_ids)
         # get a current copy of attributes, to protect against future mutations
         attributes        = env.attributes.clone
-
         validate_files(files, env) &&
           next_actor.create(env) &&
           attach_files(files, env.curation_concern, attributes)
@@ -23,7 +22,6 @@ module Hyrax
         # get a current copy of attributes, to protect against future mutations
         attributes        = env.attributes.clone
 
-byebug
         validate_files(files, env) &&
           next_actor.update(env) &&
           attach_files(files, env.curation_concern, attributes)

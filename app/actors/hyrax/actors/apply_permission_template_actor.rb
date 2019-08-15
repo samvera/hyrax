@@ -7,6 +7,8 @@ module Hyrax
       # @return [Boolean] true if create was successful
       def create(env)
         add_edit_users(env)
+        # This is where it happens
+        byebug
         next_actor.create(env)
       end
 

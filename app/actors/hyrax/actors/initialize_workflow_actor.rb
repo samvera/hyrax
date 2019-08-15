@@ -12,6 +12,7 @@ module Hyrax
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if create was successful
       def create(env)
+        byebug
         next_actor.create(env) && create_workflow(env)
       end
 
@@ -19,6 +20,7 @@ module Hyrax
 
         # @return [TrueClass]
         def create_workflow(env)
+          byebug
           workflow_factory.create(env.curation_concern, env.attributes, env.user)
         end
     end
