@@ -32,7 +32,7 @@ WORKDIR /data
 RUN mkdir /data/build
 
 ADD ./build/install_gems.sh /data/build
-ADD ./build/docker-entrypoint.sh /data/build
+#ADD ./build/docker-entrypoint.sh /data/build
 
 # Add the application code
 ADD . /data
@@ -42,4 +42,4 @@ RUN ./build/install_gems.sh
 # Generate test app
 RUN bundle exec rake engine_cart:generate
 
-ENTRYPOINT ["/bin/bash", "/data/build/docker-entrypoint.sh"]
+#ENTRYPOINT ["/bin/bash", "/data/build/docker-entrypoint.sh"]

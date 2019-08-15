@@ -1,10 +1,5 @@
 version: '3'
 
-volumes:
-  bundled:
-  solr_config:
-  solr-dev:
-
 services:
   web:
     build: .
@@ -12,16 +7,14 @@ services:
     volumes:
       - .:/data
       - bundled:/usr/local/bundle
-      - solr_config:/data/.internal_test_app/solr/conf
     environment:
       SOLR_URL: http://solr-dev:8983/solr/hyrax-dev
       SOLR_CORE: hyrax-dev
-    #command: bash -ic "bundle exec puma -b tcp://0.0.0.0:3000"
+    command: bash -ic "bundle exec puma -b tcp://0.0.0.0:3000"
     ports:
       - "3000:3000"
     depends_on:
       - solr-dev
-      #- solr
     stdin_open: true
     tty: true
 
@@ -32,12 +25,13 @@ services:
     ports:
       - "8983:8983"
     volumes:
-      - solr_config:/solr_config
       - solr-dev:/opt/solr/server/solr/mycores
     entrypoint:
       - docker-entrypoint.sh
       - solr-precreate
       - hyrax-dev
-      - "/solr_config"
 
+volumes:
+  bundled:
+  solr-dev:
 
