@@ -12,7 +12,7 @@ module Hyrax
     def display_image
       return nil unless ::FileSet.exists?(id) && solr_document.image? && current_ability.can?(:read, id)
 
-      latest_file_id = original_file_id || unindexed_current_file_version
+      latest_file_id = lookup_original_file_id
 
       return nil unless latest_file_id
 
@@ -20,17 +20,14 @@ module Hyrax
         latest_file_id,
         request.base_url,
         Hyrax.config.iiif_image_size_default,
-        format: image_format(original_file.alpha_channels)
+        format: image_format(solr_document[:alpha_channels_ssi])
       )
-
-      # @todo this is slow, find a better way (perhaps index iiif url):
-      original_file = ::FileSet.find(id).original_file
 
       # @see https://github.com/samvera-labs/iiif_manifest
       IIIFManifest::DisplayImage.new(url,
-                                     format: image_format(original_file.alpha_channels),
-                                     width: original_file.width,
-                                     height: original_file.height,
+                                     format: image_format(solr_document[:alpha_channels_ssi]),
+                                     width: solr_document[:width_is],
+                                     height: solr_document[:height_is],
                                      iiif_endpoint: iiif_endpoint(latest_file_id))
     end
 
@@ -52,5 +49,15 @@ module Hyrax
         Rails.logger.warn "Indexed current_file_version for #{id} not found, falling back to Fedora."
         ActiveFedora::File.uri_to_id(::FileSet.find(id).current_content_version_uri)
       end
+
+      def lookup_original_file_id
+        result = original_file_id
+        if result.blank?
+          Rails.logger.warn "original_file_id for #{id} not found, falling back to Fedora."
+          result = ActiveFedora::File.uri_to_id(::FileSet.find(id).current_content_version_uri)
+        end
+        result
+      end
+    end
   end
 end

@@ -21,7 +21,7 @@ module Hyrax
                  duration:          opts.fetch(:duration, []),
                  sample_rate:       opts.fetch(:sample_rate, []),
                  versions:          opts.fetch(:versions, []),
-                 uri:               opts.fetch(:versions, []))
+                 uri:               opts.fetch(:uri, []))
     end
   end
 end
