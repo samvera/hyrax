@@ -232,9 +232,24 @@ RSpec.describe Hyrax::FileSetsController do
       end
 
       context "without a referer" do
+        let(:work) do
+          create(:generic_work, :public,
+                 title: ['test title'],
+                 user: user)
+        end
+
+        before do
+          work.ordered_members << file_set
+          work.save!
+          file_set.save!
+        end
+
         it "shows me the file and set breadcrumbs" do
           expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Works', Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('test file', main_app.hyrax_file_set_path(file_set, locale: 'en'))
           get :show, params: { id: file_set }
           expect(response).to be_successful
           expect(flash).to be_empty
@@ -275,7 +290,18 @@ RSpec.describe Hyrax::FileSetsController do
       let(:creator) { create(:user, email: 'archivist1@example.com') }
       let(:public_file_set) { create(:file_set, user: creator, read_groups: ['public']) }
 
-      before { sign_in user }
+      let(:work) do
+        create(:generic_work, :public,
+               title: ['test title'],
+               user: user)
+      end
+
+      before do
+        sign_in user
+        work.ordered_members << public_file_set
+        work.save!
+        public_file_set.save!
+      end
 
       describe '#edit' do
         it 'gives me the unauthorized page' do
@@ -298,6 +324,18 @@ RSpec.describe Hyrax::FileSetsController do
   context 'when not signed in' do
     let(:private_file_set) { create(:file_set) }
     let(:public_file_set) { create(:file_set, read_groups: ['public']) }
+
+    let(:work) do
+      create(:generic_work, :public,
+             title: ['test title'],
+             user: user)
+    end
+
+    before do
+      work.ordered_members << public_file_set
+      work.save!
+      public_file_set.save!
+    end
 
     describe '#edit' do
       it 'requires login' do

@@ -55,10 +55,14 @@ RSpec.describe Hyrax::GenericWorksController do
       before { sign_out user }
 
       context "without a referer" do
-        it "sets the default breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+        it "sets breadcrumbs with complete path" do
+          expect(controller).to receive(:add_breadcrumb).with('Home', main_app.root_path(locale: 'en'))
+          expect(controller).not_to receive(:add_breadcrumb).with('Dashboard', hyrax.dashboard_path(locale: 'en'))
+          expect(controller).not_to receive(:add_breadcrumb).with('Your Works', hyrax.my_works_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('public thing', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
           get :show, params: { id: work }
           expect(response).to be_successful
+          expect(response).to render_template("layouts/hyrax/1_column")
         end
       end
 
@@ -91,7 +95,9 @@ RSpec.describe Hyrax::GenericWorksController do
       context "without a referer" do
         it "sets breadcrumbs" do
           expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with("Dashboard", hyrax.dashboard_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Dashboard', hyrax.dashboard_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('Works', hyrax.my_works_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
           get :show, params: { id: work }
           expect(response).to be_successful
         end
@@ -171,6 +177,7 @@ RSpec.describe Hyrax::GenericWorksController do
           allow(controller).to receive(:presenter).and_return(presenter)
           allow(presenter).to receive(:export_as_ttl).and_return("ttl graph")
           allow(presenter).to receive(:editor?).and_return(true)
+          allow(presenter).to receive(:to_model).and_return(stub_model(GenericWork))
         end
 
         it 'renders a turtle file' do
@@ -231,6 +238,9 @@ RSpec.describe Hyrax::GenericWorksController do
       end
 
       context 'with a user granted workflow permission' do
+        before do
+          allow(document).to receive(:hydra_model).and_return(GenericWork)
+        end
         let(:document_list) { [document] }
         let(:document) { instance_double(SolrDocument) }
 

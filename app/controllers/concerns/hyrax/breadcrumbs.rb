@@ -7,6 +7,8 @@ module Hyrax
         trail_from_referer
       else
         default_trail
+        add_breadcrumb_for_controller if user_signed_in?
+        add_breadcrumb_for_action
       end
     end
 
