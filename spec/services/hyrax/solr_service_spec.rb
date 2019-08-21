@@ -143,7 +143,7 @@ RSpec.describe Hyrax::SolrService do
     end
   end
 
-  describe '.insatnce' do
+  describe '.instance' do
     let(:mock_instance) { double("instance", conn: mock_conn) }
 
     it 'is deprecated' do
