@@ -33,6 +33,9 @@ module Hyrax
          """
 
     def run_required_generators
+      Bundler.with_clean_env do
+        run 'bundle install'
+      end
       say_status('info', '[Hyrax] GENERATING BLACKLIGHT', :blue)
       generate 'blacklight:install --devise'
       say_status('info', '[Hyrax] GENERATING HYDRA-HEAD', :blue)
