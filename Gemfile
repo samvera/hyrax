@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 # Please see hyrax.gemspec for dependency information.
 gemspec
+gem 'engine_cart', git: 'https://github.com/jrgriffiniii/engine_cart.git', branch: 'sass-rails-6'
 
 group :development, :test do
   gem 'coveralls', require: false
