@@ -1,16 +1,16 @@
-# TODO: This should live in Hyrax::AddFileNodeToFileSet service and should work for all valkyrie adapters.
+# TODO: This should live in Hyrax::AddFileMetadataToFileSet service and should work for all valkyrie adapters.
 module Wings::Works
-  class AddFileNodeToFileSet
+  class AddFileMetadataToFileSet
     # Adds a file to the file_set
     # @param file_set [Valkyrie::Resource] adding file to this file set
-    # @param file_node [Valkyrie::Resource] uploaded file and its metadata
+    # @param file_metadata [Hyrax::FileMetadata] uploaded file and its metadata
     # @param update_existing [Boolean] whether to update an existing file if there is one. When set to true, performs a create_or_update.
     #   When set to false, always creates a new file within file_set.files.
-    # @param versioning [Boolean] whether to create new version entries (only applicable if file_node's +type+ corresponds to a versionable file)
+    # @param versioning [Boolean] whether to create new version entries (only applicable if file_metadata's +type+ corresponds to a versionable file)
 
-    def self.call(file_set:, file_node:, file:, update_existing: true, versioning: true)
+    def self.call(file_set:, file_metadata:, file:, update_existing: true, versioning: true)
       raise ArgumentError, 'supplied object must be a file set' unless file_set.file_set?
-      raise ArgumentError, 'supplied object must be a file node' unless file_node.is_a? Hyrax::FileNode
+      raise ArgumentError, 'supplied object must be a file node' unless file_metadata.is_a? Hyrax::FileMetadata
       raise ArgumentError, 'supplied file must respond to read' unless file.respond_to? :read
 
       # TODO: required as a workaround for https://github.com/samvera/active_fedora/pull/858
@@ -19,19 +19,19 @@ module Wings::Works
       af_file_set = Wings::ActiveFedoraConverter.new(resource: file_set).convert
 
       updater_class = versioning ? VersioningUpdater : Updater
-      updater = updater_class.new(af_file_set, file_node, file, update_existing)
+      updater = updater_class.new(af_file_set, file_metadata, file, update_existing)
       status = updater.update
       status ? file_set : false
     end
 
     class Updater
-      attr_reader :af_file_set, :file_node, :file, :current_file
+      attr_reader :af_file_set, :file_metadata, :file, :current_file
 
-      def initialize(af_file_set, file_node, file, update_existing)
+      def initialize(af_file_set, file_metadata, file, update_existing)
         @af_file_set = af_file_set
-        @file_node = file_node
+        @file_metadata = file_metadata
         @file = file
-        @current_file = find_or_create_file(association_type(file_node.use), update_existing)
+        @current_file = find_or_create_file(association_type(file_metadata.use), update_existing)
       end
 
       # @param [#read] file object that will be interrogated using the methods: :path, :original_name, :original_filename, :mime_type, :content_type
@@ -63,14 +63,14 @@ module Wings::Works
           else
             current_file.save
           end
-          file_node.file_identifiers = [current_file.id.split('/')[-1]]
+          file_metadata.file_identifiers = [current_file.id.split('/')[-1]]
         end
 
         def attach_attributes
           current_file.content = file
-          current_file.original_name = file_node.original_filename.first
-          current_file.mime_type = file_node.mime_type.first
-          set_metadata_node_values(current_file.metadata_node, attributes_from_file_node)
+          current_file.original_name = file_metadata.original_filename.first
+          current_file.mime_type = file_metadata.mime_type.first
+          set_metadata_node_values(current_file.metadata_node, attributes_from_file_metadata)
           persist
         end
 
@@ -83,11 +83,11 @@ module Wings::Works
           metadata_node.original_checksum = attributes[:checksum]
           metadata_node.file_size = attributes[:size]
           metadata_node.file_name = attributes[:original_filename]
-          # TODO: May need to add others.  FileNode class definition has the full list of attrs for metadata_node
+          # TODO: May need to add others.  FileMetadata class definition has the full list of attrs for metadata_node
         end
 
-        def attributes_from_file_node
-          attrs = file_node.attributes.dup
+        def attributes_from_file_metadata
+          attrs = file_metadata.attributes.dup
           attrs.delete(:file_identifiers)
           attrs.delete(:id)
           attrs.delete(:alternate_ids)

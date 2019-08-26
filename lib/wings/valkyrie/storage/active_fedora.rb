@@ -1,4 +1,4 @@
-require 'wings/hydra/works/services/add_file_node_to_file_set'
+require 'wings/hydra/works/services/add_file_metadata_to_file_set'
 
 # frozen_string_literal: true
 module Wings::Storage
@@ -12,15 +12,15 @@ module Wings::Storage
     # @param extra_arguments [Hash] additional arguments which may be passed to other adapters
     # @return [Valkyrie::StorageAdapter::StreamFile]
     def upload(file:, original_filename:, resource:, resource_uri_transformer: default_resource_uri_transformer, **_extra_arguments) # rubocop:disable Lint/UnusedMethodArgument
-      Wings::Works::AddFileNodeToFileSet.call(file_set: file_set(resource), file_node: resource, file: file)
+      Wings::Works::AddFileMetadataToFileSet.call(file_set: file_set(resource), file_metadata: resource, file: file)
       identifier = resource_uri_transformer.call(resource, base_url)
       find_by(id: Valkyrie::ID.new(identifier.to_s.sub(/^.+\/\//, PROTOCOL)))
     end
 
     private
 
-      def file_set(file_node)
-        file_set_id = file_node.file_set_id
+      def file_set(file_metadata)
+        file_set_id = file_metadata.file_set_id
         Hyrax.query_service.find_by(id: file_set_id)
       end
   end

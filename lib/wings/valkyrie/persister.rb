@@ -16,7 +16,7 @@ module Wings
       # @param [Valkyrie::Resource] resource
       # @return [Valkyrie::Resource] the persisted/updated resource
       def save(resource:)
-        return save_file(file_node: resource) if resource.is_a? Hyrax::FileNode
+        return save_file(file_metadata: resource) if resource.is_a? Hyrax::FileMetadata
         af_object = resource_factory.from_resource(resource: resource)
         af_object.save!
         resource_factory.to_resource(object: af_object)
@@ -24,13 +24,13 @@ module Wings
         raise FailedSaveError.new(err.message, obj: af_object)
       end
 
-      def save_file(file_node:)
+      def save_file(file_metadata:)
         # This is a no-op when the file is being created or updated through the FileActor.
         # There may be other scenarios where something needs to happen here.
 
         # TODO: SKIP for now, but potentially need to...
         #   find existing af File
-        #   convert file_node resource into af File metadata
+        #   convert file_metadata resource into af File metadata
         #   save af File
       end
 

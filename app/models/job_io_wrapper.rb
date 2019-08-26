@@ -71,16 +71,16 @@ class JobIoWrapper < ApplicationRecord
     Hyrax::Actors::FileActor.new(file_set, relation.to_sym, user)
   end
 
-  # @return [Hyrax::FileNode, FalseClass] the created file node on success, false on failure
+  # @return [Hyrax::FileMetadata, FalseClass] the created file node on success, false on failure
   def ingest_file
     file_actor.ingest_file(self)
   end
 
-  def to_file_node
-    Hyrax::FileNode.new(label: original_name,
-                        original_filename: original_name,
-                        mime_type: mime_type,
-                        use: [Valkyrie::Vocab::PCDMUse.OriginalFile])
+  def to_file_metadata
+    Hyrax::FileMetadata.new(label: original_name,
+                            original_filename: original_name,
+                            mime_type: mime_type,
+                            use: [Valkyrie::Vocab::PCDMUse.OriginalFile])
   end
 
   # The magic that switches *once* between local filepath and CarrierWave file

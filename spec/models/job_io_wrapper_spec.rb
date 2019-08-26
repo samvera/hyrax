@@ -223,9 +223,9 @@ RSpec.describe JobIoWrapper, type: :model do
     end
   end
 
-  describe '#to_file_node' do
-    it 'creates and returns file_node' do
-      expect(subject.to_file_node).to be_a_kind_of(Hyrax::FileNode)
+  describe '#to_file_metadata' do
+    it 'creates and returns file_metadata' do
+      expect(subject.to_file_metadata).to be_a_kind_of(Hyrax::FileMetadata)
     end
   end
 

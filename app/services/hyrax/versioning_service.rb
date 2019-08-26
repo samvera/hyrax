@@ -1,41 +1,41 @@
-require 'wings/services/file_node_builder'
+require 'wings/services/file_metadata_builder'
 
 module Hyrax
   class VersioningService
     class << self
       # Make a version and record the version committer
-      # @param [ActiveFedora::File | Hyrax::FileNode] content
+      # @param [ActiveFedora::File | Hyrax::FileMetadata] content
       # @param [User, String] user
       def create(content, user = nil)
-        use_valkyrie = content.is_a? Hyrax::FileNode
+        use_valkyrie = content.is_a? Hyrax::FileMetadata
         perform_create(content, user, use_valkyrie)
       end
 
-      # @param [ActiveFedora::File | Hyrax::FileNode] content
+      # @param [ActiveFedora::File | Hyrax::FileMetadata] content
       def latest_version_of(file)
         file.versions.last
       end
 
       # Record the version committer of the last version
-      # @param [ActiveFedora::File | Hyrax::FileNode] content
+      # @param [ActiveFedora::File | Hyrax::FileMetadata] content
       # @param [User, String] user_key
       def record_committer(content, user_key)
         user_key = user_key.user_key if user_key.respond_to?(:user_key)
         version = latest_version_of(content)
         return if version.nil?
-        version_id = content.is_a?(Hyrax::FileNode) ? version.id.to_s : version.uri
+        version_id = content.is_a?(Hyrax::FileMetadata) ? version.id.to_s : version.uri
         Hyrax::VersionCommitter.create(version_id: version_id, committer_login: user_key)
       end
 
       # TODO: WINGS - Copied from valkyrie6 branch.  Need to explore whether this is needed?
       # # @param [FileSet] file_set
-      # # @param [Hyrax::FileNode] content
+      # # @param [Hyrax::FileMetadata] content
       # # @param [String] revision_id
       # # @param [User, String] user
       # def restore_version(file_set, content, revision_id, user = nil)
       #   found_version = content.versions.find { |x| x.label == Array.wrap(revision_id) }
       #   return unless found_version
-      #   node = Wings::FileNodeBuilder.new(storage_adapter: nil, persister: indexing_adapter.persister).attach_file_node(node: found_version, file_set: file_set)
+      #   node = Wings::FileMetadataBuilder.new(storage_adapter: nil, persister: indexing_adapter.persister).attach_file_metadata(node: found_version, file_set: file_set)
       #   create(node, user)
       # end
 
