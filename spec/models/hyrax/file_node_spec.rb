@@ -1,30 +1,17 @@
 # frozen_string_literal: true
-require 'wings/models/file_node'
-require 'wings/models/multi_checksum'
 
-RSpec.describe Wings::FileNode do
-  let(:adapter) { Wings::Valkyrie::MetadataAdapter.new }
-  let(:persister) { adapter.persister }
-  let(:storage_adapter) { Valkyrie::Storage::Memory.new }
+require 'valkyrie/specs/shared_specs'
+
+RSpec.describe Hyrax::FileNode do
+  it_behaves_like 'a Valkyrie::Resource' do
+    let(:resource_klass) { described_class }
+  end
+
   let(:file) { Rack::Test::UploadedFile.new('spec/fixtures/world.png', 'image/png') }
   let(:subject) do
     described_class.for(file: file).new(id: 'test_id', format_label: 'test_format_label')
   end
-  let(:uploaded_file) do
-    storage_adapter.upload(file: file,
-                           original_filename: file.original_filename,
-                           resource: subject)
-  end
   let(:pcdm_file_uri) { RDF::URI('http://pcdm.org/models#File') }
-
-  before do
-    stub_request(:get, 'http://test_id/original').to_return(status: 200, body: "", headers: {})
-
-    subject.file_identifiers = uploaded_file.id
-    subject.checksum = Wings::MultiChecksum.for(uploaded_file)
-    subject.size = uploaded_file.size
-    persister.save(resource: subject)
-  end
 
   it 'sets the proper attributes' do
     expect(subject.id.to_s).to eq 'test_id'
@@ -92,30 +79,6 @@ RSpec.describe Wings::FileNode do
     end
   end
 
-  describe '#file_node?' do
-    it 'is a file_node' do
-      expect(subject).to be_file_node
-    end
-  end
-
-  describe '#file_set?' do
-    it 'is not a file_set' do
-      expect(subject).not_to be_file_set
-    end
-  end
-
-  describe '#work?' do
-    it 'is not a work' do
-      expect(subject).not_to be_work
-    end
-  end
-
-  describe '#collection?' do
-    it 'is not a collection' do
-      expect(subject).not_to be_collection
-    end
-  end
-
   describe "#valid?" do
     it 'is valid' do
       pending 'TODO: Fix issue when using in-memory storage adapter.'
@@ -133,12 +96,13 @@ RSpec.describe Wings::FileNode do
   describe '#versions' do
     context 'when no versions saved' do
       it 'returns empty array' do
+        pending 'TODO: write test when Wings file versioning is implemented (Issue #3923)'
         expect(subject.versions).to eq []
       end
     end
     context 'when versions saved' do
       it 'returns a set of file_nodes for previous versions' do
-        pending 'TODO: write test when Wings file versioning is implemented'
+        pending 'TODO: write test when Wings file versioning is implemented (Issue #3923)'
         expect(false).to be true
       end
     end

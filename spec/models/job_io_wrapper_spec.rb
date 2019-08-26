@@ -225,7 +225,7 @@ RSpec.describe JobIoWrapper, type: :model do
 
   describe '#to_file_node' do
     it 'creates and returns file_node' do
-      expect(subject.to_file_node).to be_a_kind_of(Wings::FileNode)
+      expect(subject.to_file_node).to be_a_kind_of(Hyrax::FileNode)
     end
   end
 

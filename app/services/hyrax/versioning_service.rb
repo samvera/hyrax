@@ -1,36 +1,35 @@
-require 'wings/models/file_node'
 require 'wings/services/file_node_builder'
 
 module Hyrax
   class VersioningService
     class << self
       # Make a version and record the version committer
-      # @param [ActiveFedora::File | Wings::FileNode] content
+      # @param [ActiveFedora::File | Hyrax::FileNode] content
       # @param [User, String] user
       def create(content, user = nil)
-        use_valkyrie = content.is_a? Wings::FileNode
+        use_valkyrie = content.is_a? Hyrax::FileNode
         perform_create(content, user, use_valkyrie)
       end
 
-      # @param [ActiveFedora::File | Wings::FileNode] content
+      # @param [ActiveFedora::File | Hyrax::FileNode] content
       def latest_version_of(file)
         file.versions.last
       end
 
       # Record the version committer of the last version
-      # @param [ActiveFedora::File | Wings::FileNode] content
+      # @param [ActiveFedora::File | Hyrax::FileNode] content
       # @param [User, String] user_key
       def record_committer(content, user_key)
         user_key = user_key.user_key if user_key.respond_to?(:user_key)
         version = latest_version_of(content)
         return if version.nil?
-        version_id = content.is_a?(Wings::FileNode) ? version.id.to_s : version.uri
+        version_id = content.is_a?(Hyrax::FileNode) ? version.id.to_s : version.uri
         Hyrax::VersionCommitter.create(version_id: version_id, committer_login: user_key)
       end
 
       # TODO: WINGS - Copied from valkyrie6 branch.  Need to explore whether this is needed?
       # # @param [FileSet] file_set
-      # # @param [Wings::FileNode] content
+      # # @param [Hyrax::FileNode] content
       # # @param [String] revision_id
       # # @param [User, String] user
       # def restore_version(file_set, content, revision_id, user = nil)

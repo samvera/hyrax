@@ -1,6 +1,3 @@
-require 'wings/models/file_node'
-require 'wings/valkyrie/query_service'
-
 # Primarily for jobs like IngestJob to revivify an equivalent FileActor to one that existed on
 # the caller's side of an asynchronous Job invocation.  This involves providing slots
 # for the metadata that might travel w/ the actor's various supported types of @file.
@@ -74,13 +71,13 @@ class JobIoWrapper < ApplicationRecord
     Hyrax::Actors::FileActor.new(file_set, relation.to_sym, user)
   end
 
-  # @return [FileNode, FalseClass] the created file node on success, false on failure
+  # @return [Hyrax::FileNode, FalseClass] the created file node on success, false on failure
   def ingest_file
     file_actor.ingest_file(self)
   end
 
   def to_file_node
-    Wings::FileNode.new(label: original_name,
+    Hyrax::FileNode.new(label: original_name,
                         original_filename: original_name,
                         mime_type: mime_type,
                         use: [Valkyrie::Vocab::PCDMUse.OriginalFile])

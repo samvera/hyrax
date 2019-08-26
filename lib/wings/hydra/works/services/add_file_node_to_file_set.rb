@@ -10,7 +10,7 @@ module Wings::Works
 
     def self.call(file_set:, file_node:, file:, update_existing: true, versioning: true)
       raise ArgumentError, 'supplied object must be a file set' unless file_set.file_set?
-      raise ArgumentError, 'supplied object must be a file node' unless file_node.file_node?
+      raise ArgumentError, 'supplied object must be a file node' unless file_node.is_a? Hyrax::FileNode
       raise ArgumentError, 'supplied file must respond to read' unless file.respond_to? :read
 
       # TODO: required as a workaround for https://github.com/samvera/active_fedora/pull/858
