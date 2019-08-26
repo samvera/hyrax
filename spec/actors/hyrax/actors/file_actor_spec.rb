@@ -1,4 +1,3 @@
-require 'wings/models/file_node'
 require 'wings/services/file_node_builder'
 require 'wings/valkyrie/query_service'
 
@@ -143,7 +142,7 @@ RSpec.describe Hyrax::Actors::FileActor do
     let(:query_service) { Wings::Valkyrie::QueryService.new(adapter: metadata_adapter) }
     let(:file_node) do
       node_builder = Wings::FileNodeBuilder.new(storage_adapter: storage_adapter, persister: persister)
-      node = Wings::FileNode.for(file: fixture)
+      node = Hyrax::FileNode.for(file: fixture)
       node_builder.create(file: fixture, node: node, file_set: file_set)
     end
 
@@ -152,7 +151,7 @@ RSpec.describe Hyrax::Actors::FileActor do
 
       it 'uses the relation from the actor' do
         pending 'implementation of Wings::Valkyrie::Persister #save_file_node'
-        expect(Hyrax::VersioningService).to receive(:create).with(Wings::FileNode, user)
+        expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileNode, user)
         expect(CharacterizeJob).to receive(:perform_later)
         saved_node = actor.ingest_file(io)
         reloaded = query_service.find_by(id: file_set.id)
@@ -164,7 +163,7 @@ RSpec.describe Hyrax::Actors::FileActor do
 
         it 'converts relation to URI before using the relation from the actor' do
           pending 'implementation of Wings::Valkyrie::Persister #save_file_node'
-          expect(Hyrax::VersioningService).to receive(:create).with(Wings::FileNode, user)
+          expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileNode, user)
           expect(CharacterizeJob).to receive(:perform_later)
           saved_node = actor.ingest_file(io)
           reloaded = query_service.find_by(id: file_set.id)
@@ -176,7 +175,7 @@ RSpec.describe Hyrax::Actors::FileActor do
     xit 'uses the provided mime_type' do
       pending 'implementation of Wings::Valkyrie::Persister #save_file_node'
       allow(fixture).to receive(:content_type).and_return('image/gif')
-      expect(Hyrax::VersioningService).to receive(:create).with(Wings::FileNode, user)
+      expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileNode, user)
       expect(CharacterizeJob).to receive(:perform_later)
       saved_node = actor.ingest_file(io)
       expect(saved_node.mime_type).to eq ['image/gif']
@@ -197,8 +196,8 @@ RSpec.describe Hyrax::Actors::FileActor do
 
       before do
         # TODO: WINGS - When #ingest_file works, these should be uncommented.
-        # expect(Hyrax::VersioningService).to receive(:create).with(Wings::FileNode, user)
-        # expect(Hyrax::VersioningService).to receive(:create).with(Wings::FileNode, user2)
+        # expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileNode, user)
+        # expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileNode, user2)
         # expect(CharacterizeJob).to receive(:perform_later)
         allow(CharacterizeJob).to receive(:perform_later)
         actor.ingest_file(io)
@@ -223,7 +222,7 @@ RSpec.describe Hyrax::Actors::FileActor do
     describe '#ingest_file' do
       it 'when the file is available' do
         pending 'implementation of Wings::Valkyrie::Persister #save_file_node'
-        expect(Hyrax::VersioningService).to receive(:create).with(Wings::FileNode, user)
+        expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileNode, user)
         expect(CharacterizeJob).to receive(:perform_later)
         actor.ingest_file(io)
         reloaded = query_service.find_by(id: file_set.id)
@@ -231,7 +230,7 @@ RSpec.describe Hyrax::Actors::FileActor do
       end
       # rubocop:disable RSpec/AnyInstance
       it 'returns false when save fails' do
-        expect(Hyrax::VersioningService).not_to receive(:create).with(Wings::FileNode, user)
+        expect(Hyrax::VersioningService).not_to receive(:create).with(Hyrax::FileNode, user)
         expect(CharacterizeJob).not_to receive(:perform_later)
         allow_any_instance_of(Wings::FileNodeBuilder).to receive(:create).and_raise(StandardError)
         expect(actor.ingest_file(io)).to be_falsey

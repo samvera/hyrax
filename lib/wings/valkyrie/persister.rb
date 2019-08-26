@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require 'wings/models/file_node'
-
 module Wings
   module Valkyrie
     class Persister
@@ -18,7 +16,7 @@ module Wings
       # @param [Valkyrie::Resource] resource
       # @return [Valkyrie::Resource] the persisted/updated resource
       def save(resource:)
-        return save_file(file_node: resource) if resource.is_a? Wings::FileNode
+        return save_file(file_node: resource) if resource.is_a? Hyrax::FileNode
         af_object = resource_factory.from_resource(resource: resource)
         af_object.save!
         resource_factory.to_resource(object: af_object)
