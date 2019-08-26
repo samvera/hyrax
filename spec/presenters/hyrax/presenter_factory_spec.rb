@@ -3,9 +3,9 @@ RSpec.describe Hyrax::PresenterFactory do
     let(:presenter_class) { Hyrax::FileSetPresenter }
 
     before do
-      allow(Hyrax::SolrService).to receive(:query)
-        .with("{!terms f=id}12,13", method: :post, rows: 1000)
-        .and_return(results)
+      allow(Hyrax::SolrService).to receive(:post)
+        .with("{!terms f=id}12,13", rows: 1000)
+        .and_return('response' => { 'docs' => results })
     end
 
     subject { described_class.build_for(ids: ['12', '13'], presenter_class: presenter_class, presenter_args: nil) }
