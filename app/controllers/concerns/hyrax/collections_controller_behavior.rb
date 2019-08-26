@@ -25,8 +25,7 @@ module Hyrax
     end
 
     def show
-      valkyrie_obj = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id])
-      @curation_concern ||= Wings::ActiveFedoraConverter.new(resource: valkyrie_obj).convert
+      @curation_concern ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id])
       presenter
       query_collection_members
     end
