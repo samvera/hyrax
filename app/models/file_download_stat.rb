@@ -13,7 +13,8 @@ class FileDownloadStat < Hyrax::Statistic
       end
       profile.hyrax__download(sort: 'date',
                               start_date: start_date,
-                              end_date: Date.yesterday)
+                              end_date: Date.yesterday,
+                              limit: 10_000)
              .for_file(file.id)
     end
 
