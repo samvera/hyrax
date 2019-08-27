@@ -6,8 +6,8 @@ RSpec.describe Valkyrie::Indexing::Solr::IndexingAdapter, :clean_index do
   subject(:adapter) { Valkyrie::IndexingAdapter.find(:solr_index) }
   let(:persister) { Wings::Valkyrie::Persister.new(adapter: metadata_adapter) }
   let(:metadata_adapter) { Wings::Valkyrie::MetadataAdapter.new }
-  let(:resource) { FactoryBot.create_for_repository(:hyrax_resource) }
-  let(:resource2) { FactoryBot.create_for_repository(:hyrax_resource) }
+  let(:resource) { FactoryBot.valkyrie_create(:hyrax_resource) }
+  let(:resource2) { FactoryBot.valkyrie_create(:hyrax_resource) }
 
   describe "#connection" do
     it "returns connection" do
