@@ -55,7 +55,7 @@ module Hyrax
         # Persists file as part of file_set and records a new version.
         # Also spawns an async job to characterize and create derivatives.
         # @param [JobIoWrapper] io the file to save in the repository, with mime_type and original_name
-        # @return [FileMetadata, FalseClass] the created file node on success, false on failure
+        # @return [FileMetadata, FalseClass] the created file metadata on success, false on failure
         # @todo create a job to monitor the temp directory (or in a multi-worker system, directories!) to prune old files that have made it into the repo
         def perform_ingest_file(io, use_valkyrie: false)
           use_valkyrie ? perform_ingest_file_through_valkyrie(io) : perform_ingest_file_through_active_fedora(io)
@@ -76,21 +76,21 @@ module Hyrax
 
         def perform_ingest_file_through_valkyrie(io)
           # Skip versioning because versions will be minted by VersionCommitter as necessary during save_characterize_and_record_committer.
-          unsaved_node = io.to_file_metadata
-          unsaved_node.use = relation
+          unsaved_file_metadata = io.to_file_metadata
+          unsaved_file_metadata.use = relation
           begin
-            saved_node = node_builder.create(io_wrapper: io, node: unsaved_node, file_set: file_set)
-          rescue StandardError => e # Handle error persisting file node
+            saved_file_metadata = file_metadata_builder.create(io_wrapper: io, file_metadata: unsaved_file_metadata, file_set: file_set)
+          rescue StandardError => e # Handle error persisting file metadata
             Rails.logger.error("Failed to save file_metadata through valkyrie: #{e.message}")
             return false
           end
-          Hyrax::VersioningService.create(saved_node, user)
+          Hyrax::VersioningService.create(saved_file_metadata, user)
           pathhint = io.uploaded_file.uploader.path if io.uploaded_file # in case next worker is on same filesystem
-          id = Hyrax.config.translate_uri_to_id.call saved_node.file_identifiers.first
+          id = Hyrax.config.translate_uri_to_id.call saved_file_metadata.file_identifiers.first
           CharacterizeJob.perform_later(file_set, id, pathhint || io.path)
         end
 
-        def node_builder
+        def file_metadata_builder
           Wings::FileMetadataBuilder.new(storage_adapter: Hyrax.storage_adapter,
                                          persister:       Hyrax.persister)
         end

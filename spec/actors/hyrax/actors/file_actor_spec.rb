@@ -143,7 +143,7 @@ RSpec.describe Hyrax::Actors::FileActor do
     let(:file_metadata) do
       metadata_builder = Wings::FileMetadataBuilder.new(storage_adapter: storage_adapter, persister: persister)
       file_metadata = Hyrax::FileMetadata.for(file: fixture)
-      metadata_builder.create(file: fixture, node: file_metadata, file_set: file_set)
+      metadata_builder.create(file: fixture, file_metadata: file_metadata, file_set: file_set)
     end
 
     context 'relation' do
