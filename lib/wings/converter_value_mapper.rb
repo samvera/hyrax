@@ -9,6 +9,26 @@ module Wings
   # indivdual value types from the source data.
   class ConverterValueMapper < ::Valkyrie::ValueMapper; end
 
+  class PermissionValue < ::Valkyrie::ValueMapper
+    ConverterValueMapper.register(self)
+
+    def self.handles?(value)
+      value.first == :permissions
+    end
+
+    def result
+      value.last.map! do |permission_attrs|
+        hsh = { type: 'person',
+                access: permission_attrs[:mode].to_s,
+                name: permission_attrs[:agent] }
+        hsh[:id] = permission_attrs[:id] if permission_attrs[:id]
+        Hydra::AccessControls::Permission.new(hsh)
+      end
+
+      value
+    end
+  end
+
   class NestedEmbargoValue < ::Valkyrie::ValueMapper
     ConverterValueMapper.register(self)
 

@@ -7,10 +7,10 @@ RSpec::Matchers.define :grant_permission do |acl_type|
     agent_match =
       if user_id
         permission.type == 'person' &&
-          permission.agent.first.id.include?(user_id)
+          permission.agent.first.id.include?(user_id.to_s)
       elsif group_id
         permission.type == 'group' &&
-          permission.agent.first.id.include?(group_id)
+          permission.agent.first.id.include?(group_id.to_s)
       else
         true
       end
