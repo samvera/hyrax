@@ -52,3 +52,20 @@ Valkyrie.config.storage_adapter = :active_fedora
  Hyrax::CustomQueries::Navigators::ChildWorksNavigator].each do |query_handler|
   Valkyrie.config.metadata_adapter.query_service.custom_queries.register_query_handler(query_handler)
 end
+
+Hydra::AccessControl.define_method(:valkyrie_resource) do
+  attrs = attributes.symbolize_keys
+  attrs[:new_record]  = new_record?
+  attrs[:created_at]  = create_date
+  attrs[:updated_at]  = modified_date
+
+  attrs[:permissions] = permissions.map do |permission|
+    Hyrax::Permission.new(id: permission.id,
+                          mode: permission.access.to_sym,
+                          agent: permission.agent_name,
+                          access_to: Valkyrie::ID.new(permission.access_to_id),
+                          new_record: permission.new_record?)
+  end
+
+  Hyrax::AccessControl.new(**attrs)
+end

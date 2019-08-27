@@ -26,7 +26,7 @@ RSpec.describe Hyrax::AccessControlList do
         expect { acl.grant(mode).to(user) }
           .to change { acl.permissions }
           .to contain_exactly(have_attributes(mode:      mode,
-                                              agent:     user.id,
+                                              agent:     user.id.to_s,
                                               access_to: resource.id))
       end
     end

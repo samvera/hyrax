@@ -112,7 +112,7 @@ module Hyrax
         private
 
           def id_for(agent: user_or_group)
-            agent.id
+            agent.id.to_s
           end
       end
 
@@ -131,7 +131,7 @@ module Hyrax
         def from(user_or_group)
           permission_for_deletion = @acl.permissions.find do |p|
             p.mode == @mode &&
-              p.agent == id_for(agent: user_or_group)
+              p.agent.to_s == id_for(agent: user_or_group)
           end
 
           @acl.delete(permission_for_deletion) if permission_for_deletion

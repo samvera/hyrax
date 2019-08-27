@@ -119,6 +119,29 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       end
     end
 
+    context 'when converting to ACL directly' do
+      let(:resource) { FactoryBot.build(:access_control) }
+
+      context 'when empty' do
+        let(:resource) { Hyrax::AccessControl.new }
+
+        it 'gives an empty acl' do
+          expect(converter.convert).to have_attributes permissions: be_empty
+        end
+      end
+
+      context 'with permissions' do
+        it 'converts to an ACL with permissions' do
+          agent = resource.permissions.first.agent
+          mode  = resource.permissions.first.mode
+
+          expect(converter.convert)
+            .to have_attributes permissions: contain_exactly(grant_permission(mode)
+                                                             .to_user(agent))
+        end
+      end
+    end
+
     context 'with relationships' do
       subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
 
