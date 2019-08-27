@@ -27,7 +27,7 @@ module Wings
       def save_file(file_metadata:)
         # This is a no-op when the file is being created or updated through the FileActor.
         # There may be other scenarios where something needs to happen here.
-        file_node
+        file_metadata
 
         # TODO: potentially need to...
         #   find existing af File

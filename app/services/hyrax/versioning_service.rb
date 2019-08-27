@@ -35,8 +35,8 @@ module Hyrax
       # def restore_version(file_set, content, revision_id, user = nil)
       #   found_version = content.versions.find { |x| x.label == Array.wrap(revision_id) }
       #   return unless found_version
-      #   node = Wings::FileMetadataBuilder.new(storage_adapter: nil, persister: indexing_adapter.persister).attach_file_metadata(node: found_version, file_set: file_set)
-      #   create(node, user)
+      #   file_metadata = Wings::FileMetadataBuilder.new(storage_adapter: nil, persister: indexing_adapter.persister).attach_file_metadata(file_metadata: found_version, file_set: file_set)
+      #   create(file_metadata, user)
       # end
 
       private

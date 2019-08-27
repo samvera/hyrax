@@ -10,7 +10,7 @@ module Wings::Works
 
     def self.call(file_set:, file_metadata:, file:, update_existing: true, versioning: true)
       raise ArgumentError, 'supplied object must be a file set' unless file_set.file_set?
-      raise ArgumentError, 'supplied object must be a file node' unless file_metadata.is_a? Hyrax::FileMetadata
+      raise ArgumentError, 'supplied object must be an instance of Hyrax::FileMetadata' unless file_metadata.is_a? Hyrax::FileMetadata
       raise ArgumentError, 'supplied file must respond to read' unless file.respond_to? :read
 
       # TODO: required as a workaround for https://github.com/samvera/active_fedora/pull/858
@@ -70,11 +70,11 @@ module Wings::Works
           current_file.content = file
           current_file.original_name = file_metadata.original_filename.first
           current_file.mime_type = file_metadata.mime_type.first
-          set_metadata_node_values(current_file.metadata_node, attributes_from_file_metadata)
+          set_active_fedora_metadata_node_values(current_file.metadata_node, attributes_from_file_metadata)
           persist
         end
 
-        def set_metadata_node_values(metadata_node, attributes)
+        def set_active_fedora_metadata_node_values(metadata_node, attributes)
           metadata_node.label = attributes[:label]
           metadata_node.mime_type = attributes[:mime_type]
           metadata_node.format_label = attributes[:format_label]

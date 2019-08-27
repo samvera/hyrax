@@ -71,7 +71,7 @@ class JobIoWrapper < ApplicationRecord
     Hyrax::Actors::FileActor.new(file_set, relation.to_sym, user)
   end
 
-  # @return [Hyrax::FileMetadata, FalseClass] the created file node on success, false on failure
+  # @return [Hyrax::FileMetadata, FalseClass] the created file metadata on success, false on failure
   def ingest_file
     file_actor.ingest_file(self)
   end
