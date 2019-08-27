@@ -1,11 +1,11 @@
 # frozen_string_literal: true
-require 'wings/hydra/works/services/add_file_node_to_file_set'
+require 'wings/hydra/works/services/add_file_metadata_to_file_set'
 
-# TODO: The file_node resource and the file_node_builder should be in Hyrax as they will be needed for non-wings valkyrie implementations too.
+# TODO: The file_metadata resource and the file_metadata_builder should be in Hyrax as they will be needed for non-wings valkyrie implementations too.
 
 module Wings
-  # Stores a file and an associated Hyrax::FileNode
-  class FileNodeBuilder
+  # Stores a file and an associated Hyrax::FileMetadata
+  class FileMetadataBuilder
     include Hyrax::Noid
 
     attr_reader :storage_adapter, :persister
@@ -15,9 +15,9 @@ module Wings
     end
 
     # @param io_wrapper [JobIOWrapper] with details about the uploaded file
-    # @param node [Hyrax::FileNode] the metadata to represent the file
+    # @param node [Hyrax::FileMetadata] the metadata to represent the file
     # @param file_set [Valkyrie::Resouce, Hydra::Works::FileSet] the associated FileSet # TODO: WINGS - Remove Hydra::Works::FileSet as a potential type when valkyrization is complete.
-    # @return [Hyrax::FileNode] the persisted metadata node that represents the file
+    # @return [Hyrax::FileMetadata] the persisted metadata node that represents the file
     def create(io_wrapper:, node:, file_set:)
       io_wrapper = build_file(io_wrapper, node.use)
       file_set.save unless file_set.persisted?
@@ -29,17 +29,17 @@ module Wings
                                            resource: node,
                                            resource_uri_transformer: Hyrax.config.resource_id_to_uri_transformer)
       node.file_identifiers = [stored_file.id]
-      attach_file_node(node: node, file_set: file_set)
+      attach_file_metadata(node: node, file_set: file_set)
     end
 
-    # @param node [Hyrax::FileNode] the metadata to represent the file
+    # @param node [Hyrax::FileMetadata] the metadata to represent the file
     # @param file_set [Valkyrie::Resouce, Hydra::Works::FileSet] the associated FileSet # TODO: WINGS - Remove Hydra::Works::FileSet as a potential type when valkyrization is complete.
-    # @return [Hyrax::FileNode] the persisted metadata node that represents the file
-    def attach_file_node(node:, file_set:)
-      file_set.is_a?(::Valkyrie::Resource) ? attach_file_node_to_valkyrie_file_set(node, file_set) : node
+    # @return [Hyrax::FileMetadata] the persisted metadata node that represents the file
+    def attach_file_metadata(node:, file_set:)
+      file_set.is_a?(::Valkyrie::Resource) ? attach_file_metadata_to_valkyrie_file_set(node, file_set) : node
     end
 
-    def attach_file_node_to_valkyrie_file_set(node, file_set)
+    def attach_file_metadata_to_valkyrie_file_set(node, file_set)
       # This is for storage adapters other than wings.  The wings storage adapter already attached the file to the file_set.
       # This process is a no-op for wings.  # TODO: WINGS - May need to verify this is a no-op for wings once file_set is passed in as a resource.
       # TODO: WINGS - Need to test this against other adapters once they are available for use.

@@ -1,4 +1,4 @@
-require 'wings/services/file_node_builder'
+require 'wings/services/file_metadata_builder'
 
 module Hyrax
   module Actors
@@ -55,7 +55,7 @@ module Hyrax
         # Persists file as part of file_set and records a new version.
         # Also spawns an async job to characterize and create derivatives.
         # @param [JobIoWrapper] io the file to save in the repository, with mime_type and original_name
-        # @return [FileNode, FalseClass] the created file node on success, false on failure
+        # @return [FileMetadata, FalseClass] the created file node on success, false on failure
         # @todo create a job to monitor the temp directory (or in a multi-worker system, directories!) to prune old files that have made it into the repo
         def perform_ingest_file(io, use_valkyrie: false)
           use_valkyrie ? perform_ingest_file_through_valkyrie(io) : perform_ingest_file_through_active_fedora(io)
@@ -76,12 +76,12 @@ module Hyrax
 
         def perform_ingest_file_through_valkyrie(io)
           # Skip versioning because versions will be minted by VersionCommitter as necessary during save_characterize_and_record_committer.
-          unsaved_node = io.to_file_node
+          unsaved_node = io.to_file_metadata
           unsaved_node.use = relation
           begin
             saved_node = node_builder.create(io_wrapper: io, node: unsaved_node, file_set: file_set)
           rescue StandardError => e # Handle error persisting file node
-            Rails.logger.error("Failed to save file_node through valkyrie: #{e.message}")
+            Rails.logger.error("Failed to save file_metadata through valkyrie: #{e.message}")
             return false
           end
           Hyrax::VersioningService.create(saved_node, user)
@@ -91,8 +91,8 @@ module Hyrax
         end
 
         def node_builder
-          Wings::FileNodeBuilder.new(storage_adapter: Hyrax.storage_adapter,
-                                     persister:       Hyrax.persister)
+          Wings::FileMetadataBuilder.new(storage_adapter: Hyrax.storage_adapter,
+                                         persister:       Hyrax.persister)
         end
 
         def normalize_relation(relation, use_valkyrie: false)

@@ -2,7 +2,7 @@
 
 require 'valkyrie/specs/shared_specs'
 
-RSpec.describe Hyrax::FileNode do
+RSpec.describe Hyrax::FileMetadata do
   it_behaves_like 'a Valkyrie::Resource' do
     let(:resource_klass) { described_class }
   end
@@ -101,7 +101,7 @@ RSpec.describe Hyrax::FileNode do
       end
     end
     context 'when versions saved' do
-      it 'returns a set of file_nodes for previous versions' do
+      it 'returns a set of file_metadatas for previous versions' do
         pending 'TODO: write test when Wings file versioning is implemented (Issue #3923)'
         expect(false).to be true
       end

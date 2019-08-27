@@ -1,4 +1,4 @@
-require 'wings/services/file_node_builder'
+require 'wings/services/file_metadata_builder'
 require 'wings/valkyrie/query_service'
 
 RSpec.describe Hyrax::Actors::FileActor do
@@ -140,45 +140,45 @@ RSpec.describe Hyrax::Actors::FileActor do
     let(:metadata_adapter) { Hyrax.metadata_adapter }
     let(:persister) { metadata_adapter.persister }
     let(:query_service) { Wings::Valkyrie::QueryService.new(adapter: metadata_adapter) }
-    let(:file_node) do
-      node_builder = Wings::FileNodeBuilder.new(storage_adapter: storage_adapter, persister: persister)
-      node = Hyrax::FileNode.for(file: fixture)
-      node_builder.create(file: fixture, node: node, file_set: file_set)
+    let(:file_metadata) do
+      metadata_builder = Wings::FileMetadataBuilder.new(storage_adapter: storage_adapter, persister: persister)
+      file_metadata = Hyrax::FileMetadata.for(file: fixture)
+      metadata_builder.create(file: fixture, node: file_metadata, file_set: file_set)
     end
 
     context 'relation' do
       let(:relation) { RDF::URI.new("http://pcdm.org/use#remastered") }
 
       it 'uses the relation from the actor' do
-        pending 'implementation of Wings::Valkyrie::Persister #save_file_node'
-        expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileNode, user)
+        pending 'implementation of Wings::Valkyrie::Persister #save_file_metadata'
+        expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileMetadata, user)
         expect(CharacterizeJob).to receive(:perform_later)
-        saved_node = actor.ingest_file(io)
+        saved_metadata = actor.ingest_file(io)
         reloaded = query_service.find_by(id: file_set.id)
-        expect(reloaded.member_by(use: relation).id).to eq saved_node.id
+        expect(reloaded.member_by(use: relation).id).to eq saved_metadata.id
       end
 
       context 'when relation is a string' do
         let(:relation) { 'thumbnail_file' }
 
         it 'converts relation to URI before using the relation from the actor' do
-          pending 'implementation of Wings::Valkyrie::Persister #save_file_node'
-          expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileNode, user)
+          pending 'implementation of Wings::Valkyrie::Persister #save_file_metadata'
+          expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileMetadata, user)
           expect(CharacterizeJob).to receive(:perform_later)
-          saved_node = actor.ingest_file(io)
+          saved_metadata = actor.ingest_file(io)
           reloaded = query_service.find_by(id: file_set.id)
-          expect(reloaded.member_by(use: relation).id).to eq saved_node.id
+          expect(reloaded.member_by(use: relation).id).to eq saved_metadata.id
         end
       end
     end
 
     xit 'uses the provided mime_type' do
-      pending 'implementation of Wings::Valkyrie::Persister #save_file_node'
+      pending 'implementation of Wings::Valkyrie::Persister #save_file_metadata'
       allow(fixture).to receive(:content_type).and_return('image/gif')
-      expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileNode, user)
+      expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileMetadata, user)
       expect(CharacterizeJob).to receive(:perform_later)
-      saved_node = actor.ingest_file(io)
-      expect(saved_node.mime_type).to eq ['image/gif']
+      saved_metadata = actor.ingest_file(io)
+      expect(saved_metadata.mime_type).to eq ['image/gif']
     end
 
     context 'with two existing versions from different users' do
@@ -196,8 +196,8 @@ RSpec.describe Hyrax::Actors::FileActor do
 
       before do
         # TODO: WINGS - When #ingest_file works, these should be uncommented.
-        # expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileNode, user)
-        # expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileNode, user2)
+        # expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileMetadata, user)
+        # expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileMetadata, user2)
         # expect(CharacterizeJob).to receive(:perform_later)
         allow(CharacterizeJob).to receive(:perform_later)
         actor.ingest_file(io)
@@ -205,7 +205,7 @@ RSpec.describe Hyrax::Actors::FileActor do
       end
 
       it 'has two versions' do
-        pending 'implementation of Wings::Valkyrie::Persister #save_file_node'
+        pending 'implementation of Wings::Valkyrie::Persister #save_file_metadata'
         expect(versions.count).to eq 2
         # the current version
         reloaded = query_service.find_by(id: file_set.id)
@@ -221,8 +221,8 @@ RSpec.describe Hyrax::Actors::FileActor do
 
     describe '#ingest_file' do
       it 'when the file is available' do
-        pending 'implementation of Wings::Valkyrie::Persister #save_file_node'
-        expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileNode, user)
+        pending 'implementation of Wings::Valkyrie::Persister #save_file_metadata'
+        expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileMetadata, user)
         expect(CharacterizeJob).to receive(:perform_later)
         actor.ingest_file(io)
         reloaded = query_service.find_by(id: file_set.id)
@@ -230,9 +230,9 @@ RSpec.describe Hyrax::Actors::FileActor do
       end
       # rubocop:disable RSpec/AnyInstance
       it 'returns false when save fails' do
-        expect(Hyrax::VersioningService).not_to receive(:create).with(Hyrax::FileNode, user)
+        expect(Hyrax::VersioningService).not_to receive(:create).with(Hyrax::FileMetadata, user)
         expect(CharacterizeJob).not_to receive(:perform_later)
-        allow_any_instance_of(Wings::FileNodeBuilder).to receive(:create).and_raise(StandardError)
+        allow_any_instance_of(Wings::FileMetadataBuilder).to receive(:create).and_raise(StandardError)
         expect(actor.ingest_file(io)).to be_falsey
       end
       # rubocop:enable RSpec/AnyInstance
