@@ -5,9 +5,8 @@ module Hyrax
   # This class replaces `ActiveFedora::SolrService`, which is deprecated for
   # internal use.
   class SolrService
-    extend Forwardable
 
-    def_delegators :@old_service, :add, :count, :delete
+    COMMIT_PARAMS = { softCommit: true }.freeze
 
     def initialize
       @old_service = ActiveFedora::SolrService
@@ -97,6 +96,32 @@ module Hyrax
       else
         self.class.instance.conn.delete_by_query(query, params: args)
       end
+    end
+
+    # Wraps rsolr delete
+    def delete(id, use_valkyrie: Hyrax.config.query_index_from_valkyrie)
+      if use_valkyrie
+        valkyrie_index.connection.delete_by_id(id, params: COMMIT_PARAMS)
+      else
+        self.class.instance.conn.delete_by_id(id, params: COMMIT_PARAMS)
+      end
+    end
+
+    # Wraps rsolr add
+    # @return [Hash] the hash straight form rsolr
+    def add(solr_doc, use_valkyrie: Hyrax.config.query_index_from_valkyrie, commit: true)
+      if use_valkyrie
+        valkyrie_index.connection.add(solr_doc, params: COMMIT_PARAMS)
+      else
+        self.class.instance.conn.add(solr_doc, params: COMMIT_PARAMS)
+      end
+    end
+
+    # Wraps rsolr count
+    # @return [Hash] the hash straight form rsolr
+    def count(query, use_valkyrie: Hyrax.config.query_index_from_valkyrie)
+      args = { rows: 0 }
+      get(query, use_valkyrie: use_valkyrie, **args)['response']['numFound'].to_i
     end
 
     private

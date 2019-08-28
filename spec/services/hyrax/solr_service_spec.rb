@@ -143,6 +143,28 @@ RSpec.describe Hyrax::SolrService do
     end
   end
 
+  describe ".delete" do
+    before do
+      expect(mock_conn).to receive(:delete_by_id) do |_, opts|
+        expect(opts).to eq(params: { softCommit: true })
+      end
+    end
+
+    it "calls solr" do
+      allow(described_class).to receive(:instance).and_return(double("instance", conn: mock_conn))
+      described_class.delete("fade_solr_id#01")
+    end
+
+    context "when use_valkyrie: true" do
+      let(:service) { described_class.new }
+
+      it "accepts and passes through use_valkyrie:true" do
+        allow(service).to receive(:valkyrie_index).and_return(double("valkyrie_index", connection: mock_conn))
+        service.delete("fade_solr_id#01", use_valkyrie: true)
+      end
+    end
+  end
+
   describe '.instance' do
     let(:mock_instance) { double("instance", conn: mock_conn) }
 
@@ -151,6 +173,47 @@ RSpec.describe Hyrax::SolrService do
       allow(Deprecation).to receive(:warn)
       allow(described_class).to receive(:instance).and_return(mock_instance)
       described_class.instance.commit
+    end
+  end
+
+  describe "#add" do
+    let(:mock_doc) { { "id" => "test_solr_doc#01" } }
+
+    before do
+      expect(mock_conn).to receive(:add) do |_, opts|
+        expect(opts).to eq(params: { softCommit: true })
+      end
+    end
+
+    it "calls solr" do
+      stub_result = double("Result")
+      allow(described_class).to receive(:instance).and_return(double("instance", conn: mock_conn))
+      expect(described_class.add(mock_doc)).to eq true
+    end
+
+    it "uses the valkyrie solr core" do
+      service = described_class.new
+      allow(service).to receive(:valkyrie_index).and_return(double("valkyrie_index", connection: mock_conn))
+      expect(service.add(mock_doc, use_valkyrie: true)).to eq true
+    end
+  end
+
+  describe "#count" do
+    let(:stub_result) { { 'response' => { 'numFound' => '2' } } }
+
+    it "calls solr" do
+      expect(mock_conn).to receive(:get).with('select', params: { rows: 0, q: 'querytext', qt: 'standard' }).and_return(stub_result)
+      allow(described_class).to receive(:instance).and_return(double("instance", conn: mock_conn))
+      expect(described_class.count('querytext')).to eq 2
+    end
+
+    context "when use_valkyrie: true" do
+      it "uses the valkyrie solr core" do
+        service = described_class.new
+        expect(mock_conn).to receive(:get).with('select', params: { rows: 0, q: 'querytext' }).and_return(stub_result)
+        allow(service).to receive(:valkyrie_index).and_return(double("valkyrie_index", connection: mock_conn))
+        expect(service.count('querytext', use_valkyrie: true)).to eq 2
+      end
     end
   end
 end
