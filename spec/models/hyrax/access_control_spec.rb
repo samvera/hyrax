@@ -28,6 +28,23 @@ RSpec.describe Hyrax::AccessControl do
         .to change { access_control.access_to }
         .to target_id
     end
+
+    context 'with permissions and target' do
+      let(:access_control) { build(:access_control, :with_target) }
+      let(:permission)     { access_control.permissions.first }
+
+      it 'retains its own access_to target' do
+        expect(Hyrax.persister.save(resource: access_control))
+          .to have_attributes access_to: access_control.access_to
+      end
+
+      it 'retains access_to target on the created permissions' do
+        expect(Hyrax.persister.save(resource: access_control))
+          .to have_attributes(permissions: contain_exactly(have_attributes(mode:  permission.mode,
+                                                                           agent: permission.agent,
+                                                                           access_to: permission.access_to)))
+      end
+    end
   end
 
   describe '#permissions' do
