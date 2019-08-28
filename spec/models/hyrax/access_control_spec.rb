@@ -20,6 +20,58 @@ RSpec.describe Hyrax::AccessControl do
     expect(Hyrax.query_service.find_by(id: saved.id).permissions).to be_empty
   end
 
+  describe '.for' do
+    let(:resource) { valkyrie_create(:hyrax_resource) }
+
+    it 'returns an access control model for the resource given' do
+      expect(described_class.for(resource: resource))
+        .to have_attributes(access_to: resource.id)
+    end
+
+    it 'returns an empty access control for an unpersisted resource' do
+      expect(described_class.for(resource: resource))
+        .to have_attributes(permissions: be_empty)
+    end
+
+    context 'when an AccessControl already exists' do
+      before do
+        FactoryBot.valkyrie_create(:access_control, access_to: resource.id)
+      end
+
+      it 'reloads persisted data' do
+        expect(described_class.for(resource: resource)).to be_persisted
+      end
+    end
+
+    context 'using the test adapter' do
+      let(:adapter)       { Valkyrie::MetadataAdapter.find(:test_adapter) }
+      let(:persister)     { adapter.persister }
+      let(:resource)      { persister.save(resource: build(:hyrax_resource)) }
+      let(:query_service) { adapter.query_service }
+
+      it 'returns an access control model for the resource given' do
+        expect(described_class.for(resource: resource, query_service: query_service))
+          .to have_attributes(access_to: resource.id)
+      end
+
+      it 'returns an empty access control for an unpersisted resource' do
+        expect(described_class.for(resource: resource, query_service: query_service))
+          .to have_attributes(permissions: be_empty)
+      end
+
+      context 'when an AccessControl already exists' do
+        before do
+          persister.save(resource: described_class.new(access_to: resource.id))
+        end
+
+        it 'reloads persisted data' do
+          expect(described_class.for(resource: resource, query_service: query_service))
+            .to be_persisted
+        end
+      end
+    end
+  end
+
   describe '#access_to' do
     let(:target_id) { Valkyrie::ID.new('moomin') }
 

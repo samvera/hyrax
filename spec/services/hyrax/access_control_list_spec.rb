@@ -114,11 +114,11 @@ RSpec.describe Hyrax::AccessControlList do
       it 'deletes the permission policy' do
         delete_me = acl.permissions.first
         acl.delete(delete_me)
+        rest = acl.permissions.clone
 
-        acl.save
-
-        expect { query_service.find_by(id: delete_me.id) }
-          .to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
+        expect { acl.save }
+          .to change { Hyrax::AccessControl.for(resource: resource, query_service: acl.query_service).permissions }
+          .to contain_exactly(*rest)
       end
     end
   end
