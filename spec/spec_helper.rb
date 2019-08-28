@@ -146,6 +146,12 @@ Valkyrie::MetadataAdapter.register(
   Valkyrie::Persistence::Memory::MetadataAdapter.new, :test_adapter
 )
 
+Valkyrie::MetadataAdapter
+  .find(:test_adapter)
+  .query_service
+  .custom_queries
+  .register_query_handler(Hyrax::CustomQueries::FindAccessControl)
+
 require 'active_fedora/cleaner'
 RSpec.configure do |config|
   config.disable_monkey_patching!
