@@ -5,7 +5,6 @@ require 'wings/active_fedora_converter'
 
 RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
   subject(:converter) { described_class.new(resource: resource) }
-  let(:adapter)       { Valkyrie::Persistence::Memory::MetadataAdapter.new }
   let(:attributes)    { { id: id } }
   let(:id)            { 'moomin_id' }
   let(:resource)      { work.valkyrie_resource }
@@ -152,6 +151,45 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
             .to have_attributes permissions: contain_exactly(grant_permission(mode)
                                                                .on(resource.access_to)
                                                                .to_user(agent))
+        end
+      end
+
+      context 'with existing access controls' do
+        let(:adapter)  { Wings::Valkyrie::MetadataAdapter.new }
+        let(:discover) { build(:permission, mode: :discover, access_to: resource.access_to) }
+        let(:resource) { work.permission_delegate.valkyrie_resource }
+        let(:work)     { create(:generic_work) }
+
+        it 'can delete permissions' do
+          resource.permissions = []
+
+          expect(converter.convert).to have_attributes permissions: be_empty
+        end
+
+        it 'can persist deleted permissions' do
+          resource.permissions = []
+
+          expect { adapter.persister.save(resource: resource) }
+            .to change { work.reload.permissions }
+            .to be_empty
+        end
+
+        it 'can replace new permissions to the work' do
+          resource.permissions = [discover]
+
+          expect { adapter.persister.save(resource: resource) }
+            .to change { work.reload.permissions }
+            .to contain_exactly grant_permission(:discover).to_user(discover.agent).on(work.id)
+        end
+
+        it 'can persist new permissions to the work' do
+          resource.permissions << discover
+
+          expect { adapter.persister.save(resource: resource) }
+            .to change { work.reload.permissions }
+            .to contain_exactly(grant_permission(:discover).to_user(discover.agent).on(work.id),
+                                grant_permission(:read).on(work.id),
+                                grant_permission(:write).on(work.id))
         end
       end
     end
