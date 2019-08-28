@@ -160,12 +160,16 @@ module Wings
 
       # Add attributes from resource which aren't AF properties into af_object
       def add_access_control_attributes(af_object)
-        return unless af_object.is_a? Hydra::AccessControls::Permissions
-
-        af_object.read_users = attributes[:read_users]
-        af_object.edit_users = attributes[:edit_users]
-        af_object.read_groups = attributes[:read_groups]
-        af_object.edit_groups = attributes[:edit_groups]
+        if af_object.is_a? Hydra::AccessControls::Permissions
+          af_object.read_users = attributes[:read_users]
+          af_object.edit_users = attributes[:edit_users]
+          af_object.read_groups = attributes[:read_groups]
+          af_object.edit_groups = attributes[:edit_groups]
+        elsif af_object.is_a? Hydra::AccessControl
+          af_object.permissions.map do |permission|
+            permission.access_to_id = resource.try(:access_to)&.id
+          end
+        end
       end
   end
 end

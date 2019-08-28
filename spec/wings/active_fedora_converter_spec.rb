@@ -140,6 +140,20 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
                                                              .to_user(agent))
         end
       end
+
+      context 'with an #access_to grant' do
+        let(:resource) { FactoryBot.build(:access_control, :with_target) }
+
+        it 'applies the access target to permissions' do
+          agent = resource.permissions.first.agent
+          mode  = resource.permissions.first.mode
+
+          expect(converter.convert)
+            .to have_attributes permissions: contain_exactly(grant_permission(mode)
+                                                               .on(resource.access_to)
+                                                               .to_user(agent))
+        end
+      end
     end
 
     context 'with relationships' do
