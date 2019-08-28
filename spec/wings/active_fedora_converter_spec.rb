@@ -183,13 +183,29 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
         end
 
         it 'can persist new permissions to the work' do
+          existing_permission_expectations = resource.permissions.map do |p|
+            grant_permission(p.mode).to_user(p.agent).on(work.id)
+          end
+
           resource.permissions << discover
 
           expect { adapter.persister.save(resource: resource) }
             .to change { work.reload.permissions }
             .to contain_exactly(grant_permission(:discover).to_user(discover.agent).on(work.id),
-                                grant_permission(:read).on(work.id),
-                                grant_permission(:write).on(work.id))
+                                *existing_permission_expectations)
+        end
+
+        it 'can persist group permissions to the work' do
+          existing_permission_expectations = resource.permissions.map do |p|
+            grant_permission(p.mode).to_user(p.agent).on(work.id)
+          end
+
+          resource.permissions << discover
+
+          expect { adapter.persister.save(resource: resource) }
+            .to change { work.reload.permissions }
+            .to contain_exactly(grant_permission(:discover).to_user(discover.agent).on(work.id),
+                                *existing_permission_expectations)
         end
       end
     end
