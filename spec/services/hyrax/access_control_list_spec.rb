@@ -97,8 +97,8 @@ RSpec.describe Hyrax::AccessControlList do
 
       it 'saves the permission policies' do
         expect { acl.save }
-          .to change { acl.permissions }
-          .to contain_exactly(be_persisted, be_persisted)
+          .to change { Hyrax::AccessControl.for(resource: resource, query_service: acl.query_service).permissions }
+          .to contain_exactly(*permissions)
       end
     end
 

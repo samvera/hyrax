@@ -34,7 +34,7 @@ module Hyrax
     def <<(permission)
       permission.access_to = resource.id
 
-      additions << permission
+      change_set.permissions += [permission]
 
       true
     end
@@ -45,8 +45,7 @@ module Hyrax
     #
     # @return [Boolean]
     def delete(permission)
-      additions.delete(permission)
-      deletions << permission
+      change_set.permissions -= [permission]
 
       true
     end
@@ -63,15 +62,13 @@ module Hyrax
     ##
     # @return [Boolean]
     def pending_changes?
-      additions.any? || deletions.any?
+      change_set.changed?
     end
 
     ##
     # @return [Enumerable<Hyrax::Permission>]
     def permissions
-      Set.new(query_service.find_inverse_references_by(resource: resource, property: :access_to)) -
-        deletions |
-        additions
+      change_set.permissions
     end
 
     ##
@@ -90,11 +87,9 @@ module Hyrax
     def save
       return true unless pending_changes?
 
-      deletions.each { |p| persister.delete(resource: p) }
-      deletions.clear
-
-      additions.each { |p| persister.save(resource: p) }
-      additions.clear
+      change_set.sync
+      persister.save(resource: change_set.resource)
+      @change_set = nil
 
       true
     end
@@ -139,12 +134,16 @@ module Hyrax
         end
       end
 
-      def additions
-        @additions ||= Set.new
+      def access_control_model
+        AccessControl.for(resource: resource, query_service: query_service)
       end
 
-      def deletions
-        @deletions ||= Set.new
+      def change_set
+        @change_set ||= ChangeSet.new(access_control_model)
+      end
+
+      class ChangeSet < Valkyrie::ChangeSet
+        self.fields = [:permissions]
       end
   end
 end
