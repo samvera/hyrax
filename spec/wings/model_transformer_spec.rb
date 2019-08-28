@@ -47,15 +47,6 @@ RSpec.describe Wings::ModelTransformer do
     end
   end
 
-  describe '.convert_class_name_to_valkyrie_resource_class' do
-    context 'when given a ActiveFedora class name (eg. a constant that responds to #properties)' do
-      it 'creates a Valkyrie::Resource class' do
-        subject = described_class.convert_class_name_to_valkyrie_resource_class('GenericWork')
-        expect(subject.new).to be_a Valkyrie::Resource
-      end
-    end
-  end
-
   describe '.to_valkyrie_resource_class' do
     context 'when given a ActiveFedora class (eg. a constant that responds to #properties)' do
       context 'for the returned object (e.g. a class)' do
