@@ -113,6 +113,7 @@ module Wings
       attrs = attributes.reject { |k, _| k.to_s.end_with? '_ids' }
 
       attrs.delete(:internal_resource)
+      attrs.delete(:access_to)
       attrs.delete(:new_record)
       attrs.delete(:id)
       attrs.delete(:alternate_ids)

@@ -67,5 +67,7 @@ Hydra::AccessControl.define_method(:valkyrie_resource) do
                           new_record: permission.new_record?)
   end
 
+  attrs[:access_to] = attrs[:permissions].find { |p| p.access_to&.id&.present? }&.access_to
+
   Hyrax::AccessControl.new(**attrs)
 end
