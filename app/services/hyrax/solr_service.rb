@@ -5,7 +5,6 @@ module Hyrax
   # This class replaces `ActiveFedora::SolrService`, which is deprecated for
   # internal use.
   class SolrService
-
     COMMIT_PARAMS = { softCommit: true }.freeze
 
     def initialize
@@ -110,10 +109,12 @@ module Hyrax
     # Wraps rsolr add
     # @return [Hash] the hash straight form rsolr
     def add(solr_doc, use_valkyrie: Hyrax.config.query_index_from_valkyrie, commit: true)
+      params = { softCommit: commit }
+
       if use_valkyrie
-        valkyrie_index.connection.add(solr_doc, params: COMMIT_PARAMS)
+        valkyrie_index.connection.add(solr_doc, params: params)
       else
-        self.class.instance.conn.add(solr_doc, params: COMMIT_PARAMS)
+        self.class.instance.conn.add(solr_doc, params: params)
       end
     end
 
