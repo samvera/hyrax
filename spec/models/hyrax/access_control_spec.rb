@@ -115,7 +115,7 @@ RSpec.describe Hyrax::AccessControl do
                                                                            agent: permission.agent)))
       end
 
-      xit 'can delete permissions' do
+      it 'can delete permissions' do
         saved = Hyrax.persister.save(resource: access_control)
         saved.permissions = []
 

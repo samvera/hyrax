@@ -66,9 +66,9 @@ module Hyrax
     end
 
     ##
-    # @return [Enumerable<Hyrax::Permission>]
+    # @return [Set<Hyrax::Permission>]
     def permissions
-      change_set.permissions
+      Set.new(change_set.permissions)
     end
 
     ##
