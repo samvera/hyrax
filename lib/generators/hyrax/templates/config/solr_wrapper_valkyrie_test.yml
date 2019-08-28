@@ -3,6 +3,5 @@ port: 8987
 instance_dir: tmp/solr-valkyrie-test
 collection:
     persist: false
-    dir: solr/config
+    dir: solr/conf
     name: hyrax-valkyrie-test
-

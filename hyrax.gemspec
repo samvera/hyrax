@@ -31,7 +31,7 @@ SUMMARY
   # http://guides.rubyonrails.org/maintenance_policy.html
   spec.add_dependency 'rails', '~> 5.0'
 
-  spec.add_dependency 'active-fedora', '~> 12.0'
+  spec.add_dependency 'active-fedora', '~> 13.0'
   spec.add_dependency 'almond-rails', '~> 0.1'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
   spec.add_dependency 'blacklight', '~> 6.14'
@@ -50,7 +50,7 @@ SUMMARY
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
   spec.add_dependency 'hydra-derivatives', '~> 3.3'
   spec.add_dependency 'hydra-editor', '~> 5.0'
-  spec.add_dependency 'hydra-head', '>= 10.6.1'
+  spec.add_dependency 'hydra-head', '>= 10.7.0'
   spec.add_dependency 'hydra-works', '>= 0.16', '< 2.0'
   spec.add_dependency 'iiif_manifest', '>= 0.3', '< 0.7'
   spec.add_dependency 'jquery-datatables-rails', '~> 3.4'
@@ -110,4 +110,7 @@ SUMMARY
   ########################################################
   # Temporarily pinned dependencies. INCLUDE EXPLANATIONS.
   #
+  # Pin sass-rails to 5.x because rails 5.x apps have this same dependency in their generated Gemfiles
+  # See https://github.com/samvera/hyrax/issues/3919
+  spec.add_dependency 'sass-rails', '~> 5.0'
 end
