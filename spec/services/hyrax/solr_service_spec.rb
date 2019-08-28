@@ -186,7 +186,6 @@ RSpec.describe Hyrax::SolrService do
     end
 
     it "calls solr" do
-      stub_result = double("Result")
       allow(described_class).to receive(:instance).and_return(double("instance", conn: mock_conn))
       expect(described_class.add(mock_doc)).to eq true
     end
