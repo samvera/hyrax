@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 require 'wings_helper'
-require 'wings/model_transformer'
+require 'wings/orm_converter'
 
 RSpec.describe Wings::Works::WorkValkyrieBehavior, :clean_repo do
-  subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
+  subject(:factory) { Wings::OrmConverter.new(pcdm_object: pcdm_object) }
 
   let(:resource) { subject.build }
 

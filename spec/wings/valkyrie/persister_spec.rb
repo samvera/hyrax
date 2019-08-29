@@ -22,7 +22,7 @@ RSpec.describe Wings::Valkyrie::Persister do
     let(:adapter) { Wings::Valkyrie::MetadataAdapter.new }
     let(:query_service) { adapter.query_service }
     let(:af_resource_class) { Book }
-    let(:resource_class) { Wings::ModelTransformer.to_valkyrie_resource_class(klass: af_resource_class) }
+    let(:resource_class) { Wings::OrmConverter.to_valkyrie_resource_class(klass: af_resource_class) }
     let(:resource) { resource_class.new(title: ['Foo']) }
 
     # it_behaves_like "a Valkyrie::Persister", :no_deep_nesting, :no_mixed_nesting

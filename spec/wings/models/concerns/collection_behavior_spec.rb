@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 require 'wings_helper'
-require 'wings/model_transformer'
+require 'wings/orm_converter'
 
 RSpec.describe Wings::CollectionBehavior do
-  subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
+  subject(:factory) { Wings::OrmConverter.new(pcdm_object: pcdm_object) }
 
   let(:resource) { subject.build }
 
@@ -21,10 +21,10 @@ RSpec.describe Wings::CollectionBehavior do
     let(:parent_collection_resource) { resource }
 
     context 'when new_member_ids are valkyrie ids' do
-      let(:collection_resource2) { Wings::ModelTransformer.new(pcdm_object: collection2).build }
-      let(:collection_resource3) { Wings::ModelTransformer.new(pcdm_object: collection3).build }
-      let(:work_resource1) { Wings::ModelTransformer.new(pcdm_object: work1).build }
-      let(:work_resource2) { Wings::ModelTransformer.new(pcdm_object: work2).build }
+      let(:collection_resource2) { Wings::OrmConverter.new(pcdm_object: collection2).build }
+      let(:collection_resource3) { Wings::OrmConverter.new(pcdm_object: collection3).build }
+      let(:work_resource1) { Wings::OrmConverter.new(pcdm_object: work1).build }
+      let(:work_resource2) { Wings::OrmConverter.new(pcdm_object: work2).build }
 
       it 'adds the collections and works to the parent collection' do
         valkyrie_ids = [collection_resource2.id, collection_resource3.id, work_resource1.id, work_resource2.id]

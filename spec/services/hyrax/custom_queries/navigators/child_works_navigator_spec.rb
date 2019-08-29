@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::CustomQueries::Navigators::ChildWorksNavigator, :clean_repo do
-  subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
+  subject(:factory) { Wings::OrmConverter.new(pcdm_object: pcdm_object) }
 
   let(:resource) { subject.build }
   let(:custom_query_service) { Hyrax.query_service.custom_queries }

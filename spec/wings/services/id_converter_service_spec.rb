@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 require 'wings_helper'
-require 'wings/model_transformer'
+require 'wings/orm_converter'
 
 RSpec.describe Wings::IdConverterService do
   let(:collection1) { create(:public_collection_lw, id: 'col1', title: ['Collection 1']) }
   let(:work1)       { create(:work, id: 'wk1', title: ['Work 1']) }
-  let(:collection_resource1) { Wings::ModelTransformer.new(pcdm_object: collection1).build }
-  let(:work_resource1) { Wings::ModelTransformer.new(pcdm_object: work1).build }
+  let(:collection_resource1) { Wings::OrmConverter.new(pcdm_object: collection1).build }
+  let(:work_resource1) { Wings::OrmConverter.new(pcdm_object: work1).build }
   let(:active_fedora_ids) { [collection1.id, work1.id] }
   let(:resource_ids) { [collection_resource1.id, work_resource1.id] }
 

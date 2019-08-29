@@ -120,7 +120,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
     end
 
     context 'with relationships' do
-      subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
+      subject(:factory) { Wings::OrmConverter.new(pcdm_object: pcdm_object) }
 
       let(:resource) { subject.build }
 
