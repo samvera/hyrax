@@ -18,11 +18,11 @@ module Hyrax
   class VisibilityWriter
     ##
     # @!attribute [rw] resource
-    #   @return [Valkyrie::Resource::AccessControls]
+    #   @return [Valkyrie::Resource]
     attr_accessor :resource
 
     ##
-    # @param resource [Valkyrie::Resource::AccessControls]
+    # @param resource [Valkyrie::Resource]
     def initialize(resource:)
       self.resource = resource
     end

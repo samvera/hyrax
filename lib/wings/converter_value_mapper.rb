@@ -18,9 +18,17 @@ module Wings
 
     def result
       value.last.map! do |permission_attrs|
-        hsh = { type: 'person',
-                access: permission_attrs[:mode].to_s,
-                name: permission_attrs[:agent] }
+        if permission_attrs[:agent].starts_with? 'group/'
+          type = 'group'
+          name = permission_attrs[:agent].dup
+          name.slice!('group/')
+        else
+          type = 'person'
+          name = permission_attrs[:agent].dup
+          name.slice!('person/')
+        end
+
+        hsh = { type: type, access: permission_attrs[:mode].to_s, name: name }
         hsh[:id] = permission_attrs[:id] if permission_attrs[:id]
         Hydra::AccessControls::Permission.new(hsh)
       end

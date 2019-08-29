@@ -200,11 +200,12 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
             grant_permission(p.mode).to_user(p.agent).on(work.id)
           end
 
-          resource.permissions << discover
+          public_read = build(:permission, mode: :read, access_to: resource.access_to, agent: 'group/public')
+          resource.permissions << public_read
 
           expect { adapter.persister.save(resource: resource) }
             .to change { work.reload.permissions }
-            .to contain_exactly(grant_permission(:discover).to_user(discover.agent).on(work.id),
+            .to contain_exactly(grant_permission(:read).to_group('public').on(work.id),
                                 *existing_permission_expectations)
         end
       end
