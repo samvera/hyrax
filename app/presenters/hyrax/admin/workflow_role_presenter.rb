@@ -20,7 +20,7 @@ module Hyrax
         attr_accessor :workflow, :role, :source_id
 
         def admin_set_label(id)
-          result = ActiveFedora::Base.search_by_id(id, fl: 'title_tesim')
+          result = Hyrax::Base.search_by_id(id, fl: 'title_tesim')
           result['title_tesim'].first
         rescue ActiveFedora::ObjectNotFoundError
           "[AdminSet ID=#{id}]"
