@@ -5,11 +5,11 @@ module Hyrax
   module Analytics
     # Loads configuration options from config/analytics.yml. Expected structure:
     # `analytics:`
-    # `  app_name: GOOGLE_OAUTH_APP_NAME`
-    # `  app_version: GOOGLE_OAUTH_APP_VERSION`
-    # `  privkey_path: GOOGLE_OAUTH_PRIVATE_KEY_PATH`
-    # `  privkey_secret: GOOGLE_OAUTH_PRIVATE_KEY_SECRET`
-    # `  client_email: GOOGLE_OAUTH_CLIENT_EMAIL`
+    # `  app_name: <%= ENV['GOOGLE_OAUTH_APP_NAME']`
+    # `  app_version: <%= ENV['GOOGLE_OAUTH_APP_VERSION']`
+    # `  privkey_path: <%= ENV['GOOGLE_OAUTH_PRIVATE_KEY_PATH']`
+    # `  privkey_secret: <%= ENV['GOOGLE_OAUTH_PRIVATE_KEY_SECRET']`
+    # `  client_email: <%= ENV['GOOGLE_OAUTH_CLIENT_EMAIL']`
     # @return [Config]
     def self.config
       @config ||= Config.load_from_yaml
@@ -19,7 +19,7 @@ module Hyrax
     class Config
       def self.load_from_yaml
         filename = Rails.root.join('config', 'analytics.yml')
-        yaml = YAML.safe_load(File.read(filename))
+        yaml = YAML.safe_load(ERB.new(File.read(filename)).result)
         unless yaml
           Rails.logger.error("Unable to fetch any keys from #{filename}.")
           return new({})
