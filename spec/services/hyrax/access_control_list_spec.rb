@@ -18,15 +18,24 @@ RSpec.describe Hyrax::AccessControlList do
   end
 
   describe 'grant DSL' do
-    let(:mode) { :read }
-    let(:user) { ::User.find(permission.agent) }
+    let(:mode)  { :read }
+    let(:user)  { ::User.find_by_user_key(permission.agent) }
+    let(:group) { Hyrax::Group.new('public') }
 
     describe '#grant' do
       it 'grants a permission' do
         expect { acl.grant(mode).to(user) }
           .to change { acl.permissions }
           .to contain_exactly(have_attributes(mode:      mode,
-                                              agent:     user.id.to_s,
+                                              agent:     user.user_key.to_s,
+                                              access_to: resource.id))
+      end
+
+      it 'grants a permission to a group' do
+        expect { acl.grant(mode).to(group) }
+          .to change { acl.permissions }
+          .to contain_exactly(have_attributes(mode:      mode,
+                                              agent:     "group/#{group.name}",
                                               access_to: resource.id))
       end
     end

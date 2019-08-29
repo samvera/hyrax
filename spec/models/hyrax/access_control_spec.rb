@@ -126,5 +126,17 @@ RSpec.describe Hyrax::AccessControl do
           .to be_empty
       end
     end
+
+    context 'with group permissions' do
+      let(:permission) { build(:permission, access_to: Valkyrie::ID.new('moomin'), agent: 'group/public') }
+
+      it 'can save a group permission' do
+        access_control.permissions = [permission]
+
+        expect(Hyrax.persister.save(resource: access_control))
+          .to have_attributes(permissions: contain_exactly(have_attributes(mode:  permission.mode,
+                                                                           agent: permission.agent)))
+      end
+    end
   end
 end
