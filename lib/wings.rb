@@ -57,9 +57,11 @@ Hydra::AccessControl.define_method(:valkyrie_resource) do
   attrs[:updated_at]  = modified_date
 
   attrs[:permissions] = permissions.map do |permission|
+    agent = permission.type == 'group' ? "group/#{permission.agent_name}" : permission.agent_name
+
     Hyrax::Permission.new(id: permission.id,
                           mode: permission.access.to_sym,
-                          agent: permission.agent_name,
+                          agent: agent,
                           access_to: Valkyrie::ID.new(permission.access_to_id),
                           new_record: permission.new_record?)
   end
