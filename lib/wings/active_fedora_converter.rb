@@ -158,29 +158,21 @@ module Wings
         af_object.apply_depositor_metadata(attributes[:depositor]) unless attributes[:depositor].blank?
       end
 
-      # rubocop:disable Metrics/MethodLength planning to remove half this method shortly
       # Add attributes from resource which aren't AF properties into af_object
       def add_access_control_attributes(af_object)
-        if af_object.is_a? Hydra::AccessControls::Permissions
-          af_object.read_users = attributes[:read_users]
-          af_object.edit_users = attributes[:edit_users]
-          af_object.read_groups = attributes[:read_groups]
-          af_object.edit_groups = attributes[:edit_groups]
-        elsif af_object.is_a? Hydra::AccessControl
-          cache = af_object.permissions.to_a
+        return unless af_object.is_a? Hydra::AccessControl
+        cache = af_object.permissions.to_a
 
-          # if we've saved this before, it has a cache that won't clear
-          # when setting permissions! we need to reset it manually and
-          # rewrite with the values already in there, or saving will fail
-          # to delete cached items
-          af_object.permissions.reset if af_object.persisted?
+        # if we've saved this before, it has a cache that won't clear
+        # when setting permissions! we need to reset it manually and
+        # rewrite with the values already in there, or saving will fail
+        # to delete cached items
+        af_object.permissions.reset if af_object.persisted?
 
-          af_object.permissions = cache.map do |permission|
-            permission.access_to_id = resource.try(:access_to)&.id
-            permission
-          end
+        af_object.permissions = cache.map do |permission|
+          permission.access_to_id = resource.try(:access_to)&.id
+          permission
         end
       end
-    # rubocop:enable Metrics/MethodLength
   end
 end

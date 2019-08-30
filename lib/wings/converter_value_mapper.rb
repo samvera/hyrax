@@ -25,7 +25,6 @@ module Wings
         else
           type = 'person'
           name = permission_attrs[:agent].dup
-          name.slice!('person/')
         end
 
         hsh = { type: type, access: permission_attrs[:mode].to_s, name: name }

@@ -27,18 +27,6 @@ RSpec.describe Wings::Valkyrie::Persister do
 
     # it_behaves_like "a Valkyrie::Persister", :no_deep_nesting, :no_mixed_nesting
 
-    describe 'persists permissions' do
-      let(:depositor) { create(:user) }
-      let(:v_work) { resource_class.new(title: ['test_work'], depositor: depositor.user_key, read_groups: ['registered']) }
-
-      it 'has permissions once saved' do
-        saved = persister.save(resource: v_work)
-        expect(saved.read_groups).to contain_exactly 'registered'
-        expect(saved.depositor).to eq(depositor.user_key)
-        expect(saved.edit_users).to include(depositor.user_key)
-      end
-    end
-
     it { is_expected.to respond_to(:save).with_keywords(:resource) }
     it { is_expected.to respond_to(:save_all).with_keywords(:resources) }
     it { is_expected.to respond_to(:delete).with_keywords(:resource) }
