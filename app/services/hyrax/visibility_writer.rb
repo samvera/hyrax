@@ -17,14 +17,18 @@ module Hyrax
   #
   class VisibilityWriter
     ##
+    # @!attribute [r] permission_manager
+    #   @return [Hyrax::PermissionManager]
     # @!attribute [rw] resource
     #   @return [Valkyrie::Resource]
     attr_accessor :resource
+    attr_reader   :permission_manager
 
     ##
     # @param resource [Valkyrie::Resource]
     def initialize(resource:)
-      self.resource = resource
+      self.resource       = resource
+      @permission_manager = resource.permission_manager
     end
 
     ##
@@ -32,8 +36,10 @@ module Hyrax
     #
     # @return [void]
     def assign_access_for(visibility:)
-      resource.read_groups -= visibility_map.deletions_for(visibility: visibility)
-      resource.read_groups += visibility_map.additions_for(visibility: visibility)
+      permission_manager.read_groups =
+        permission_manager.read_groups.to_a - visibility_map.deletions_for(visibility: visibility)
+
+      permission_manager.read_groups += visibility_map.additions_for(visibility: visibility)
     end
 
     def visibility_map
