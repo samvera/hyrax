@@ -72,6 +72,12 @@ module Hyrax
     end
 
     ##
+    # @return [Array<Hyrax::Permission>]
+    def permissions=(new_permissions)
+      change_set.permissions = new_permissions.to_a
+    end
+
+    ##
     # @example
     #    user = User.find('user_id')
     #

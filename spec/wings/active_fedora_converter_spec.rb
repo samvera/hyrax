@@ -69,48 +69,27 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       end
     end
 
-    context 'when specifying visibility' do
-      let(:attributes) do
-        FactoryBot.attributes_for(:generic_work)
-      end
-
-      let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
-
-      before { resource.visibility = visibility }
-
-      it 'sets the visibility' do
-        expect(converter.convert).to have_attributes(visibility: visibility)
-      end
-
-      context 'when restricted' do
-        let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED }
-
-        it 'sets the visibility' do
-          expect(converter.convert).to have_attributes(visibility: visibility)
-        end
-      end
-
-      context 'when private' do
-        let(:visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
-
-        it 'sets the visibility' do
-          expect(converter.convert).to have_attributes(visibility: visibility)
-        end
-      end
-    end
-
     context 'when setting ACLs' do
+      let(:resource)    { valkyrie_create(:hyrax_resource) }
+      let(:permissions) { Hyrax::PermissionManager.new(resource: resource) }
+      let(:user_key)    { create(:user).user_key }
+
       it 'converts ACLs' do
-        expect { resource.read_users = ['moomin'] }
+        permissions.read_users = [user_key]
+
+        expect { permissions.acl.save }
           .to change { described_class.new(resource: resource).convert }
-          .to have_attributes(read_users: contain_exactly('moomin'))
+          .to have_attributes(read_users: contain_exactly(user_key))
       end
 
       context 'when ACLs exist' do
-        let(:work) { FactoryBot.create(:public_work) }
+        let(:work)     { FactoryBot.create(:public_work) }
+        let(:resource) { work.valkyrie_resource }
 
         it 'can delete ACLs' do
-          expect { resource.read_groups = [] }
+          permissions.read_groups = []
+
+          expect { permissions.acl.save }
             .to change { described_class.new(resource: resource).convert }
             .from(have_attributes(read_groups: contain_exactly('public')))
             .to have_attributes(read_groups: be_empty)

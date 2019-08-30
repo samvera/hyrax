@@ -35,12 +35,12 @@ module Hyrax
     ##
     # @!attribute [rw] acl
     #   @return [Hyrax::AccessControlList]
-    attr_reader :acl
+    attr_accessor :acl
 
     ##
     # @param resource [Valkyrie::Resource]
     def initialize(resource:, acl_class: Hyrax::AccessControlList)
-      @acl = acl_class.new(resource: resource)
+      self.acl = acl_class.new(resource: resource)
     end
 
     ##

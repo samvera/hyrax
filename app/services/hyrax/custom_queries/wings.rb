@@ -42,11 +42,12 @@ module Hyrax
       # @raise [Valkyrie::Persistence::ObjectNotFoundError]
       def find_access_control_for(resource:)
         if resource.respond_to?(:access_control_id)
+          raise Valkyrie::Persistence::ObjectNotFoundError if resource.access_control_id.blank?
           result = query_service.find_by(id: resource.access_control_id)
           result.access_to = resource.id # access_to won't be set in wings if there are no permissions
-          return result
+          result
         else
-          raise Valkyrie::Persistence::ObjectNotFoundError
+          raise Valkyrie::Persistence::ObjectNotFoundError,
                 "#{resource.internal_resource} is not a `Hydra::AccessControls::Permissions` implementer"
         end
       end

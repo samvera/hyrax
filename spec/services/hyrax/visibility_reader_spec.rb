@@ -9,7 +9,7 @@ RSpec.describe Hyrax::VisibilityReader do
 
   describe '#read' do
     context 'when public group can read' do
-      before { resource.read_groups = [open] }
+      before { resource.permission_manager.read_groups = [open] }
 
       it 'is open' do
         expect(reader.read).to eq 'open'
@@ -17,14 +17,14 @@ RSpec.describe Hyrax::VisibilityReader do
     end
 
     context 'when authenticated group can read' do
-      before { resource.read_groups = [auth] }
+      before { resource.permission_manager.read_groups = [auth] }
 
       it 'is authenticated' do
         expect(reader.read).to eq 'authenticated'
       end
 
       it 'and public can also read is open' do
-        resource.read_groups += [open]
+        resource.permission_manager.read_groups += [open]
         expect(reader.read).to eq 'open'
       end
     end

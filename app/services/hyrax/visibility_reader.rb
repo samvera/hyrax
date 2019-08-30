@@ -14,22 +14,26 @@ module Hyrax
   #
   class VisibilityReader
     ##
+    # @!attribute [r] permission_manager
+    #   @return [Hyrax::PermissionManager]
     # @!attribute [rw] resource
-    #   @return [Valkyrie::Resource::AccessControls]
+    #   @return [Valkyrie::Resource]
+    attr_reader   :permission_manager
     attr_accessor :resource
 
     ##
     # @param resource [Valkyrie::Resource::AccessControls]
     def initialize(resource:)
       self.resource = resource
+      @permission_manager = resource.permission_manager
     end
 
     ##
     # @return [String]
     def read
-      if resource.read_groups.include? Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC
+      if permission_manager.read_groups.include? Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC
         visibility_map.visibility_for(group: Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC)
-      elsif resource.read_groups.include? Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED
+      elsif permission_manager.read_groups.include? Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED
         visibility_map.visibility_for(group: Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED)
       else
         visibility_map.visibility_for(group: :PRIVATE)

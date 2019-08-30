@@ -73,7 +73,14 @@ module Wings
       attrs = attributes.tap { |hash| hash[:new_record] = pcdm_object.new_record? }
       attrs[:alternate_ids] = [::Valkyrie::ID.new(pcdm_object.id)] if pcdm_object.id
 
-      klass.new(**attrs)
+      klass.new(**attrs).tap { |resource| ensure_current_permissions(resource) }
+    end
+
+    def ensure_current_permissions(resource)
+      return unless pcdm_object.try(:access_control).present?
+
+      resource.permission_manager.acl.permissions =
+        pcdm_object.access_control.valkyrie_resource.permissions
     end
 
     ##
@@ -230,13 +237,9 @@ module Wings
       end
 
       def additional_attributes
-        { created_at: pcdm_object.try(:create_date),
-          updated_at: pcdm_object.try(:modified_date),
-          read_groups: pcdm_object.try(:read_groups),
-          read_users: pcdm_object.try(:read_users),
-          edit_groups: pcdm_object.try(:edit_groups),
-          edit_users: pcdm_object.try(:edit_users),
-          member_ids: member_ids }
+        { created_at:  pcdm_object.try(:create_date),
+          updated_at:  pcdm_object.try(:modified_date),
+          member_ids:  member_ids }
       end
 
       # Prefer ordered members, but if ordered members don't exist, use non-ordered members.

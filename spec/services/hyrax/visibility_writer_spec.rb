@@ -11,7 +11,7 @@ RSpec.describe Hyrax::VisibilityWriter do
     context 'when setting to public' do
       it 'adds public read group' do
         expect { writer.assign_access_for(visibility: open) }
-          .to change { resource.read_groups }
+          .to change { writer.permission_manager.read_groups.to_a }
           .to contain_exactly(writer.visibility_map[open][:permission])
       end
     end
@@ -21,7 +21,7 @@ RSpec.describe Hyrax::VisibilityWriter do
         writer.assign_access_for(visibility: open)
 
         expect { writer.assign_access_for(visibility: auth) }
-          .to change { resource.read_groups }
+          .to change { writer.permission_manager.read_groups.to_a }
           .to contain_exactly(writer.visibility_map[auth][:permission])
       end
     end
@@ -31,7 +31,7 @@ RSpec.describe Hyrax::VisibilityWriter do
         writer.assign_access_for(visibility: open)
 
         expect { writer.assign_access_for(visibility: restricted) }
-          .to change { resource.read_groups }
+          .to change { writer.permission_manager.read_groups.to_a }
           .to be_empty
       end
 
@@ -39,7 +39,7 @@ RSpec.describe Hyrax::VisibilityWriter do
         writer.assign_access_for(visibility: auth)
 
         expect { writer.assign_access_for(visibility: restricted) }
-          .to change { resource.read_groups }
+          .to change { writer.permission_manager.read_groups.to_a }
           .to be_empty
       end
     end

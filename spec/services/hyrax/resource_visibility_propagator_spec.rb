@@ -25,7 +25,7 @@ RSpec.describe Hyrax::ResourceVisibilityPropagator do
     before do
       fs = file_sets.first
       fs.visibility = 'open'
-      Hyrax.persister.save(resource: fs)
+      fs.permission_manager.acl.save
     end
 
     it 'copies visibility' do
@@ -50,7 +50,7 @@ RSpec.describe Hyrax::ResourceVisibilityPropagator do
     before do
       fs = file_sets.first
       fs.visibility = 'restricted'
-      Hyrax.persister.save(resource: fs)
+      fs.permission_manager.acl.save
     end
 
     it 'copies visibility' do
@@ -59,7 +59,7 @@ RSpec.describe Hyrax::ResourceVisibilityPropagator do
         .to contain_exactly(work.visibility, work.visibility)
     end
 
-    it 'applies a copy of the embargo' do
+    it 'applies a copy of the lease' do
       release_date = work.lease.lease_expiration_date
 
       expect { propagator.propagate }
