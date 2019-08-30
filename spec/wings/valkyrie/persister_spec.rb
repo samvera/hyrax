@@ -33,7 +33,7 @@ RSpec.describe Wings::Valkyrie::Persister do
 
       it 'has permissions once saved' do
         saved = persister.save(resource: v_work)
-        expect(saved.read_groups).to eq(['registered'])
+        expect(saved.read_groups).to contain_exactly 'registered'
         expect(saved.depositor).to eq(depositor.user_key)
         expect(saved.edit_users).to include(depositor.user_key)
       end
