@@ -27,6 +27,11 @@ module Hyrax
   #
   #   permissions.acl.save
   #
+  # @see Hyrax::VisibilityReader
+  # @see Hyrax::VisibilityWriter
+  # @see Hyrax::AccessControlList
+  # @see Hyrax::AccessControl
+  # @see Hyrax::Permission
   class PermissionManager
     DISCOVER = :discover
     EDIT     = :edit
