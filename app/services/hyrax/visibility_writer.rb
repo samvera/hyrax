@@ -39,7 +39,8 @@ module Hyrax
       permission_manager.read_groups =
         permission_manager.read_groups.to_a - visibility_map.deletions_for(visibility: visibility)
 
-      permission_manager.read_groups += visibility_map.additions_for(visibility: visibility)
+      permission_manager.read_groups =
+        permission_manager.read_groups.to_a + visibility_map.additions_for(visibility: visibility)
     end
 
     def visibility_map

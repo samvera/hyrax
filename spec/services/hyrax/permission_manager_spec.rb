@@ -50,7 +50,7 @@ RSpec.describe Hyrax::PermissionManager do
     let(:added_group) { 'totally_new_group' }
 
     it 'allows addition of discover groups' do
-      expect { manager.discover_groups += [added_group] }
+      expect { manager.discover_groups = manager.discover_groups.to_a + [added_group] }
         .to change { manager.discover_groups }
         .to contain_exactly(public_group, custom_group, added_group)
     end
@@ -83,7 +83,7 @@ RSpec.describe Hyrax::PermissionManager do
     let(:added_user) { create(:user).user_key.to_s }
 
     it 'allows addition of discover users' do
-      expect { manager.discover_users += [added_user] }
+      expect { manager.discover_users = manager.discover_users.to_a + [added_user] }
         .to change { manager.discover_users }
         .to contain_exactly(user, other_user, added_user)
     end
@@ -116,7 +116,7 @@ RSpec.describe Hyrax::PermissionManager do
     let(:added_group) { 'totally_new_group' }
 
     it 'allows addition of edit groups' do
-      expect { manager.edit_groups += [added_group] }
+      expect { manager.edit_groups = manager.edit_groups.to_a + [added_group] }
         .to change { manager.edit_groups }
         .to contain_exactly(public_group, custom_group, added_group)
     end
@@ -149,7 +149,7 @@ RSpec.describe Hyrax::PermissionManager do
     let(:added_user) { create(:user).user_key.to_s }
 
     it 'allows addition of edit users' do
-      expect { manager.edit_users += [added_user] }
+      expect { manager.edit_users = manager.edit_users.to_a + [added_user] }
         .to change { manager.edit_users }
         .to contain_exactly(user, other_user, added_user)
     end
@@ -182,7 +182,7 @@ RSpec.describe Hyrax::PermissionManager do
     let(:added_group) { 'totally_new_group' }
 
     it 'allows addition of read groups' do
-      expect { manager.read_groups += [added_group] }
+      expect { manager.read_groups = manager.read_groups.to_a + [added_group] }
         .to change { manager.read_groups }
         .to contain_exactly(public_group, custom_group, added_group)
     end
@@ -215,7 +215,7 @@ RSpec.describe Hyrax::PermissionManager do
     let(:added_user) { create(:user).user_key.to_s }
 
     it 'allows addition of read users' do
-      expect { manager.read_users += [added_user] }
+      expect { manager.read_users = manager.read_users.to_a + [added_user] }
         .to change { manager.read_users }
         .to contain_exactly(user, other_user, added_user)
     end
