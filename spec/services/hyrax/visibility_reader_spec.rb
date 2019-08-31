@@ -24,7 +24,9 @@ RSpec.describe Hyrax::VisibilityReader do
       end
 
       it 'and public can also read is open' do
-        resource.permission_manager.read_groups += [open]
+        resource.permission_manager.read_groups =
+          resource.permission_manager.read_groups.to_a + [open]
+
         expect(reader.read).to eq 'open'
       end
     end
