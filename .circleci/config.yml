@@ -88,6 +88,9 @@ jobs:
       bundler_version:
         type: string
         default: 1.17.3
+      hyrax_valkyrie:
+        type: string
+        default: "false"
     executor:
       name: 'samvera/ruby_fcrepo_solr_redis'
       ruby_version: << parameters.ruby_version >>
@@ -95,6 +98,7 @@ jobs:
     parallelism: 10
     environment:
       COVERALLS_PARALLEL: true
+      HYRAX_VALKYRIE: << parameters.hyrax_valkyrie >>
       VALKYRIE_SOLR_PORT: 8985
     steps:
       - attach_workspace:
@@ -161,5 +165,11 @@ workflows:
       - test:
           name: "ruby2-6-2"
           ruby_version: "2.6.2"
+          requires:
+            - build
+      - test:
+          name: "ruby2-6-2-valkyrie"
+          ruby_version: "2.6.2"
+          hyrax_valkyrie: "true"
           requires:
             - build
