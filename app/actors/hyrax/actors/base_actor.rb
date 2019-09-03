@@ -69,17 +69,7 @@ module Hyrax
 
         def save(env, use_valkyrie: false)
           return env.curation_concern.save unless use_valkyrie
-
-          env.curation_concern.embargo&.save
-          env.curation_concern.lease&.save
-
-          resource    = env.curation_concern.valkyrie_resource
-          permissions = resource.permission_manager.acl.permissions
-          resource    = Hyrax.persister.save(resource: resource)
-
-          resource.permission_manager.acl.permissions = permissions
-          resource.permission_manager.acl.save
-
+          resource = valkyrie_save(resource: env.curation_concern.valkyrie_resource)
           env.curation_concern.id = resource.id.id unless env.curation_concern.id
           env.curation_concern.reload
         rescue Wings::Valkyrie::Persister::FailedSaveError => _err
@@ -118,6 +108,15 @@ module Hyrax
         # Return the hash of attributes that are multivalued and not uploaded files
         def multivalued_form_attributes(attributes)
           attributes.select { |_, v| v.respond_to?(:select) && !v.respond_to?(:read) }
+        end
+
+        def valkyrie_save(resource:)
+          permissions = resource.permission_manager.acl.permissions
+          resource    = Hyrax.persister.save(resource: resource)
+
+          resource.permission_manager.acl.permissions = permissions
+          resource.permission_manager.acl.save
+          resource
         end
     end
   end
