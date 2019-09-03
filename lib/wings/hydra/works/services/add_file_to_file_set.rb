@@ -17,10 +17,7 @@ module Wings::Works
         af_type = normalize_type(type)
         raise ArgumentError, "supplied type (#{type}) is not supported" unless af_type.present?
 
-        # TODO: required as a workaround for https://github.com/samvera/active_fedora/pull/858
         af_file_set = Wings::ActiveFedoraConverter.new(resource: file_set).convert
-        af_file_set.save
-
         result = Hydra::Works::AddFileToFileSet.call(af_file_set, file, af_type, update_existing: update_existing, versioning: versioning)
 
         # TODO: model_transformer/file_converter_service should create FileMetadata and set ids and attributes

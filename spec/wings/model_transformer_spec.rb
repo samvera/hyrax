@@ -331,4 +331,39 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
       end
     end
   end
+
+  context 'build for file' do
+    let(:id)       { '123' }
+    let(:file_set) { create(:file_set, id: id) }
+    let(:file) { file_set.build_original_file }
+    let(:pcdm_object) { file_set }
+
+    context 'with content' do
+      before do
+        file.content = 'foo'
+      end
+
+      it 'sets file id in file set resource' do
+        expect(subject.build.original_file_ids).to match_valkyrie_ids_with_active_fedora_ids([file.id])
+      end
+    end
+
+    context 'with empty content' do
+      before do
+        file.content = ''
+      end
+
+      it 'sets file id in file set resource' do
+        expect(subject.build.original_file_ids).to match_valkyrie_ids_with_active_fedora_ids([file.id])
+      end
+    end
+
+    context 'when no file' do
+      let(:file_set) { create(:file_set) }
+
+      it 'does not set file id in file set resource' do
+        expect(subject.build.original_file_ids).to eq []
+      end
+    end
+  end
 end

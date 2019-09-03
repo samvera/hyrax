@@ -204,7 +204,7 @@ module Wings
 
       def self.attribute_ids_for(name:, obj:)
         attribute_value = obj.try(name)
-        return unless attribute_value.present?
+        return unless attribute_value.respond_to? :id
         Array(attribute_value).map(&:id)
       end
     end
