@@ -73,9 +73,15 @@ module Hyrax
           env.curation_concern.embargo&.save
           env.curation_concern.lease&.save
 
-          resource = Hyrax.persister.save(resource: env.curation_concern.valkyrie_resource)
+          resource    = env.curation_concern.valkyrie_resource
+          permissions = resource.permission_manager.acl.permissions
+          resource    = Hyrax.persister.save(resource: resource)
 
-          env.curation_concern = Hyrax.metadata_adapter.resource_factory.from_resource(resource: resource)
+          resource.permission_manager.acl.permissions = permissions
+          resource.permission_manager.acl.save
+
+          env.curation_concern.id = resource.id.id unless env.curation_concern.id
+          env.curation_concern.reload
         rescue Wings::Valkyrie::Persister::FailedSaveError => _err
           # for now, just hit the validation error again
           # later we should capture the _err.obj and pass it back
