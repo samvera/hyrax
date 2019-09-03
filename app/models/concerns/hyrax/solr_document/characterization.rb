@@ -103,7 +103,7 @@ module Hyrax
       end
 
       def alpha_channels
-        self[ActiveFedora.index_field_mapper.solr_name("alpha_channels")]
+        self["alpha_channels_ssi"]
       end
     end
   end
