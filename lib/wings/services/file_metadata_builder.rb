@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require 'wings/hydra/works/services/add_file_metadata_to_file_set'
-
 # TODO: The file_metadata resource and the file_metadata_builder should be in Hyrax as they will be needed for non-wings valkyrie implementations too.
 
 module Wings
