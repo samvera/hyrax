@@ -19,6 +19,7 @@ jobs:
     resource_class: medium+
     environment:
       RAILS_VERSION: << parameters.rails_version >>
+      HYRAX_VALKYRIE: true
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
     steps:
       - samvera/cached_checkout

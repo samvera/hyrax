@@ -19,7 +19,7 @@ module Hyrax
         apply_creation_data_to_curation_concern(env)
         apply_save_data_to_curation_concern(env)
 
-        save(env, use_valkyrie: true) &&
+        save(env, use_valkyrie: Hyrax.config.use_valkyrie?) &&
           next_actor.create(env) &&
           run_callbacks(:after_create_concern, env)
       end
