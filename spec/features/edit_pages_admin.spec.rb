@@ -1,4 +1,4 @@
-RSpec.describe 'Editing content blocks as admin', :js do
+RSpec.describe 'Editing pages as admin', :js do
   let(:user) { create(:admin) }
 
   context 'when user wants to change tabs' do
@@ -8,54 +8,54 @@ RSpec.describe 'Editing content blocks as admin', :js do
       sign_in user
       visit '/dashboard'
       click_link 'Settings'
-      click_link 'Content Blocks'
+      click_link 'Pages'
     end
 
     it "does not display a confirmation message when form data has not changed" do
       expect(page).to have_content('Content Blocks')
-      expect(page).to have_content('Announcement')
-      click_link 'Marketing Text'
+      expect(page).to have_content('About')
+      click_link 'Help Page'
       expect(page).not_to have_content(confirm_modal_text)
     end
 
     it "displays a confirmation message when form data has changed" do
       expect(page).to have_content('Content Blocks')
-      expect(page).to have_content('Announcement')
-      expect(page).to have_selector('#content_block_announcement_ifr')
-      within_frame('content_block_announcement_ifr') do
+      expect(page).to have_content('About')
+      expect(page).to have_selector('#content_block_about_ifr')
+      within_frame('content_block_about_ifr') do
         find('body').set('Updated text.')
       end
-      click_link 'Marketing Text'
+      click_link 'Help Page'
       within('#nav-safety-modal') do
         expect(page).to have_content(confirm_modal_text)
       end
     end
 
-    it "change tab when user dismisses the confirmation" do
-      expect(page).to have_selector('#announcement_text', class: 'active')
-      expect(page).not_to have_selector('#marketing', class: 'active')
-      within_frame('content_block_announcement_ifr') do
+    it "changes tab when user dismisses the confirmation by clicking OK" do
+      expect(page).to have_selector('#about', class: 'active')
+      expect(page).not_to have_selector('#help', class: 'active')
+      within_frame('content_block_about_ifr') do
         find('body').set('Updated text.')
       end
-      click_link 'Marketing Text'
+      click_link 'Help Page'
       within('#nav-safety-modal') do
         click_button('OK')
       end
-      expect(page).to have_selector('#marketing', class: 'active')
-      expect(page).not_to have_selector('#announcement_text', class: 'active')
+      expect(page).to have_selector('#help', class: 'active')
+      expect(page).not_to have_selector('#about', class: 'active')
     end
 
     it "does not redisplay the confirmation unless form data is changed" do
-      expect(page).to have_selector('#announcement_text', class: 'active')
-      expect(page).not_to have_selector('#marketing', class: 'active')
-      within_frame('content_block_announcement_ifr') do
+      expect(page).to have_selector('#about', class: 'active')
+      expect(page).not_to have_selector('#help', class: 'active')
+      within_frame('content_block_about_ifr') do
         find('body').set('Updated text.')
       end
-      click_link 'Marketing Text'
+      click_link 'Help Page'
       within('#nav-safety-modal') do
         click_button('OK')
       end
-      click_link 'Marketing Text'
+      click_link 'Deposit Agreement'
       expect(page).not_to have_content(confirm_modal_text)
     end
   end

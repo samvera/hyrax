@@ -2,7 +2,8 @@
     <%= simple_form_for [main_app, file_set],
                         html: { multipart: true,
                                 id: 'permission',
-                                data: { param_key: file_set.model_name.param_key }
+                                data: { param_key: file_set.model_name.param_key },
+                                class: 'nav-safety'
                               } do |f| %>
       <%= hidden_field_tag('redirect_tab', 'permissions') %>
       <%= render "permission_form", f: f %>

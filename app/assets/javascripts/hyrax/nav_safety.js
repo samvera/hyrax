@@ -4,7 +4,9 @@
 // - Add the nav-safety class to the form element.
 
 Blacklight.onLoad(function() {
+  var clickedTab;
   $('.nav-safety-confirm').on('click', function(evt) {
+    clickedTab = $(this).attr('href');
     var dirtyData = $('#nav-safety-modal[dirtyData=true]');
     if (dirtyData.length > 0) {
       evt.preventDefault();
@@ -14,9 +16,9 @@ Blacklight.onLoad(function() {
   });
   
   $('#nav-safety-dismiss').on('click', function(evt) {
-    // evt.preventDefault();
     nav_safety_off();
-    // $('#nav-safety-change-tab').modal('hide');
+    // Navigate away from active tab to clicked tab
+    window.location = clickedTab;
   });
   
   $('form.nav-safety').on('change', function(evt) {
