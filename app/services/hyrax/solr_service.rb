@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   ##
   # Supports a range of basic Solr interactions.
