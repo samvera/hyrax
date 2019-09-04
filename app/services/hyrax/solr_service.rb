@@ -136,7 +136,7 @@ module Hyrax
       end
 
       def rsolr_call_warning
-        "Calling Hyrax::SolrService.instance are deprecated and support will be removed from Hyrax 3.0. Use methods in Hyrax::SolrService instead."
+        "Calls to Hyrax::SolrService.instance are deprecated and support will be removed from Hyrax 4.0. Use methods in Hyrax::SolrService instead."
       end
   end
 end
