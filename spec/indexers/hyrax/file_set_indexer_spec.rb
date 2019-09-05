@@ -111,7 +111,7 @@ RSpec.describe Hyrax::FileSetIndexer do
 
     context "when original_file is not versioned" do
       before do
-        allow(version_graph).to receive(:fedora_versions) { [] }
+        allow(version_graph).to receive(:fedora_versions).and_return([])
       end
 
       it "does not have version info indexed" do

@@ -12,7 +12,7 @@ RSpec.describe Hyrax::VersioningService do
 
     context 'without version data' do
       before do
-        allow(file.original_file).to receive(:has_versions?) { false }
+        allow(file.original_file).to receive(:has_versions?).and_return(false)
       end
       it { is_expected.to eq file.original_file.id }
     end
