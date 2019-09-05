@@ -54,7 +54,7 @@ module Hyrax
         result = original_file_id
         if result.blank?
           Rails.logger.warn "original_file_id for #{id} not found, falling back to Fedora."
-          result = ActiveFedora::File.uri_to_id(::FileSet.find(id).current_content_version_uri)
+          result = Hyrax::VersioningService.versioned_file_id ::FileSet.find(id).original_file
         end
         result
       end

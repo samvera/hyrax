@@ -35,8 +35,21 @@ RSpec.describe Hyrax::FileSetIndexer do
       page_count: ['1'],
       file_title: ['title'],
       duration: ['0:1'],
-      sample_rate: ['sample rate']
+      sample_rate: ['sample rate'],
+      versions: version_graph
     )
+  end
+
+  let(:resource_version) do
+    ActiveFedora::VersionsGraph::ResourceVersion.new.tap do |v|
+      v.uri = 'http://test.example/rest/example/foo123/files/1001/fcr:versions/version1'
+      v.label = 'version1'
+      v.created = '2019-08-07T06:05:43.210Z'
+    end
+  end
+
+  let(:version_graph) do
+    ActiveFedora::VersionsGraph.new
   end
 
   let(:mock_text) do
@@ -53,6 +66,7 @@ RSpec.describe Hyrax::FileSetIndexer do
       allow(Hyrax::ThumbnailPathService).to receive(:call).and_return('/downloads/foo123?file=thumbnail')
       allow(file_set).to receive(:original_file).and_return(mock_file)
       allow(file_set).to receive(:extracted_text).and_return(mock_text)
+      allow(version_graph).to receive(:fedora_versions) { [resource_version] }
     end
     subject { indexer.generate_solr_document }
 
@@ -92,7 +106,17 @@ RSpec.describe Hyrax::FileSetIndexer do
       expect(subject['file_title_tesim']).to eq ['title']
       expect(subject['duration_tesim']).to eq ['0:1']
       expect(subject['sample_rate_tesim']).to eq ['sample rate']
-      expect(subject['original_file_id_ssi']).to eq file_set.original_file.id
+      expect(subject['original_file_id_ssi']).to eq "foo123/files/#{file_set.original_file.id}/fcr:versions/version1"
+    end
+
+    context "when original_file is not versioned" do
+      before do
+        allow(version_graph).to receive(:fedora_versions) { [] }
+      end
+
+      it "does not have version info indexed" do
+        expect(subject['original_file_id_ssi']).to eq file_set.original_file.id
+      end
     end
   end
 
