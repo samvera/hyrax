@@ -42,7 +42,7 @@ RSpec.describe Hyrax::FileSetIndexer do
 
   let(:resource_version) do
     ActiveFedora::VersionsGraph::ResourceVersion.new.tap do |v|
-      v.uri = 'http://test.example/rest/example/foo123/files/1001/fcr:versions/version1'
+      v.uri = "http://test.example/rest/example/foo123/files/#{mock_file.id}/fcr:versions/version1"
       v.label = 'version1'
       v.created = '2019-08-07T06:05:43.210Z'
     end
