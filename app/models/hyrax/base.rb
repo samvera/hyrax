@@ -4,7 +4,7 @@ module Hyrax
       opts = opts.merge(rows: 1)
       result = Hyrax::SolrService.query("id:#{id}", opts)
 
-      raise ActiveFedora::ObjectNotFoundError, "Object '#{id}' not found in solr" if result.empty?
+      raise Hyrax::ObjectNotFoundError, "Object '#{id}' not found in solr" if result.empty?
       result.first
     end
   end
