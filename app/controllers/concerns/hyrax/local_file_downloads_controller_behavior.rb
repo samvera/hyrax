@@ -66,7 +66,7 @@ module Hyrax
         response.headers['Content-Type'] = local_file_mime_type
         response.headers['Content-Length'] ||= local_file_size.to_s
         # Prevent Rack::ETag from calculating a digest over body
-        response.headers['Last-Modified'] ||= local_file_last_modified.httpdate
+        response.headers['Last-Modified'] = local_file_last_modified.httpdate
         self.content_type = local_file_mime_type
       end
 
