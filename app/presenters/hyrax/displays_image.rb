@@ -42,12 +42,7 @@ module Hyrax
       end
 
       def image_format(channels)
-        channels.find { |c| c.include?('rgba') }.nil? ? 'jpg' : 'png'
-      end
-
-      def unindexed_current_file_version
-        Rails.logger.warn "Indexed current_file_version for #{id} not found, falling back to Fedora."
-        ActiveFedora::File.uri_to_id(::FileSet.find(id).current_content_version_uri)
+        channels&.include?('rgba') ? 'png' : 'jpg'
       end
 
       def lookup_original_file_id
