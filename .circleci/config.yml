@@ -148,3 +148,18 @@ workflows:
           ruby_version: "2.6.2"
           requires:
             - build
+  rails6-0-0:
+    jobs:
+      - bundle:
+          ruby_version: "2.6.2"
+          rails_version: "6.0.0"
+      - build:
+          ruby_version: "2.6.2"
+          rails_version: "6.0.0"
+          requires:
+            - bundle
+      - test:
+          name: "ruby2-6-2"
+          ruby_version: "2.6.2"
+          requires:
+            - build
