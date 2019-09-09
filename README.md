@@ -114,7 +114,7 @@ Hyrax includes support for transcoding audio and video files with ffmpeg > 1.0 i
 
 On OSX, you can use Homebrew to install ffmpeg:
 
-`brew install ffmpeg --with-fdk-aac --with-libvpx --with-libvorbis`
+`brew install libvpx ffmpeg`
 
 Otherwise, to compile ffmpeg yourself, see the [ffmpeg compilation guide](https://trac.ffmpeg.org/wiki/CompilationGuide).
 
