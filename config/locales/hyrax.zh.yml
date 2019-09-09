@@ -40,6 +40,7 @@ zh:
       extension_whitelist_error: "%{extension} 的文件不能上传, 可上传的扩展类型: %{allowed_types}"
   helpers:
     action:
+      accept: 接受
       add: 加
       admin_set:
         new: 创建新管理集
@@ -267,6 +268,7 @@ zh:
         collections: 收藏
         configuration: 配置
         content_blocks: 内容块
+        delete_all: 删除所有
         notifications: 通知
         pages: 网页
         profile: 个人资料
@@ -281,6 +283,7 @@ zh:
         workflow_review: 评审提交
         workflow_roles: 工作流程角色
         works: 作品
+        works_listing: 作品清单
       stats:
         deposited_form:
           end_label: 结束 [默认到此刻]
@@ -348,8 +351,17 @@ zh:
         default: 您试着要修改的资源按照您的请求无法被修改。
     background_attribution_html: ''
     base:
+      attributes:
+        table_attribute_name: 属性名称
+        table_heading_attributes: 属性
+        table_values: 值
+        visibility: 能见度
       citations:
+        citations: 引文
+        endnote: 的EndNote
         header: '引文:'
+        mendeley: Mendeley
+        zotero: Zotero只
       file_manager:
         back_to: 回到
         toolbar: 工具条
@@ -365,6 +377,7 @@ zh:
       form_child_work_relationships:
         actions:
           remove: 从这个工作中删除
+        add: 加
         attach_new_work: 作为这项工作的孩子存入新的工作
         caption: 这项工作目前包含这些儿童作品
         confirm:
@@ -377,6 +390,7 @@ zh:
       form_files:
         add_files: 添加文件
         add_folder: 添加文件夹
+        cancel_upload: 取消上传
         dropzone: 请将文件拖放此处。
         local_upload_browse_everything_html: |
           <p>您可以添加一个或多个文件与该工作相关联。</p>
@@ -386,6 +400,7 @@ zh:
       form_member_of_collections:
         actions:
           remove: 从收藏中删除
+        add: 加
         caption: 这项工作目前在这些收藏
         confirm:
           cancel: 取消
@@ -394,6 +409,8 @@ zh:
         header:
           actions: 行动
           title: 集合标题
+      form_permission:
+        visibility: 可见性<small>谁应该能够查看或下载此内容？</ small>
       form_permission_under_embargo:
         help_html: "<strong>这件作品限制公开。</strong>您可以在此更改设置，也可以访问%{edit_link}以取消限制。"
         legend_html: 公开度<small>谁可以查看或下载此内容？</small>
@@ -407,6 +424,7 @@ zh:
         required_descriptions: 描述您的作品
         required_files: 添加文件
         requirements: 必要条件
+        saving_your_work: 保存你的工作。这可能需要一些时间
         yourself: 自己
       form_rendering:
         help_html: 在Universal Viewer中选择要作为每个图像下载的文件，例如整个作品的PDF。
@@ -415,14 +433,36 @@ zh:
         help_html: 选择代表这项工作的媒体文件。
         legend_html: 代表媒体
       form_share:
+        access_type_to_grant: 要授予的访问类型
+        account_label_without_suffix: "%{account_label}（没有%{suffix}部分）"
         add_sharing: 添加共享
+        add_this_group: 添加<span class =“sr-only”>此组</ span>
         currently_sharing: 目前与...共享
+        depositor: 储户
         directions: 无论此工作的可见性设置如何，您也可以与其他用户和组共享。
+        group: 组
+        permissions_save_note: 权限<strong> </ strong>保存，直到“保存”为止。按钮在页面底部按下。
+        use_add_button: 使用添加按钮一次可以访问一个%{account_label}（它将被添加到下面的列表中）。按名称或%{account_label} \选择用户。然后选择您要授予的访问级别，并单击“添加此%{account_label}”以完成添加权限。
       form_thumbnail:
         help_html: 选择要用作此作品缩略图的文件。
         legend_html: 缩略图
       form_visibility_component:
         visibility: 可见性
+      inspect_work:
+        back_to: 回到
+        entity_id: 实体ID
+        id: ID
+        name: 名称
+        object_name: 对象名称
+        persistence: 坚持
+        processing_entity_id: 处理实体ID
+        proxy_for: 代理
+        roles: 角色
+        state: 州
+        state_name: 州名
+        users: 用户
+        workflow: 工作流程
+        workflow_comments: 工作流程评论
       items:
         actions: 行动
         date_uploaded: 上传日期
@@ -458,13 +498,46 @@ zh:
         google: Google+
         tumblr: Tumblr
         twitter: Twitter
+      unauthorized:
+        id: ID：%{id}
+        is_private: 您尝试访问的%{type}是私有的
+        page_is_private: 您尝试访问的页面是私有的
+        unauthorized: 擅自
+      work_button_row:
+        analytics: Analytics（分析）
+        attach: 附上%{type}
+        delete: 删除
+        delete_type: 删除这个%{type}？
+        edit: 编辑
+        feature: 特征
+        unfeature: Unfeature
+      workflow_actions:
+        actions: 操作
+        previous_comments: 以前的评论
+        review_comment: 评论评论
+        title: 审核和批准
+    base/unauthorized:
+      is_private: 您尝试访问的%{type}是私有的
+      unauthorized: 擅自
     batch:
       help:
         resource_type: 您可以选择适用于所有文件的多种类型
         title: 文件名将作为默认标题。请提供更有意义的标题，文件名将会在系统内保留。
     batch_edits:
+      check_all:
+        select_to_access_selection_options: 选择以访问选择选项
       delete_selected:
         button_label: 删除选择
+        deleting_file_from: 从%{application_name}删除文件是永久性的。单击“确定”从%{application_name}中删除此文件，或单击“取消”以取消此操作
+      edit:
+        apply_changes_to: 更改将应用于：（%{x_number_of}有效）
+        batch_edit_descriptions: 批量修改说明＆nbsp;＆nbsp;＆nbsp; <small>点击下面的标签编辑工作说明。</ small>
+        clear_batch: 清除批次
+        descriptions: 说明
+        descriptions_title: 说明：
+        permissions: 权限
+        sharing: 分享
+        visibility: 能见度
     batch_uploads:
       disabled: 功能被管理员禁用
       files:
@@ -480,6 +553,9 @@ zh:
         header: 保存作品
     bread_crumb:
       search_results: 回到检索结果
+    citations:
+      work:
+        citation_formats: 引文格式
     collection:
       actions:
         add_existing_works:
@@ -707,9 +783,32 @@ zh:
           show_less_parent_collections: "...显示较少"
           show_more_parent_collections: 展示更多...
           subcollection_count: 子集合
+        show_descriptions:
+          descriptions: 说明
+        show_document_list:
+          action: 行动
+          date_added: 添加日期
+          list_items_in_collection: 此集合中的项目列表
+          owner: 所有者
+          title: 标题
+          visibility: 能见度
+        show_document_list_menu:
+          select: 选择
+        show_document_list_row:
+          creator: 创建者：
+          depositor: 储户：
+          edit_access: 编辑权限：
         sort_and_per_page:
           show_par_page_html: 显示%{select}每页
           sort_by: 排序：
+        work_action_menu:
+          delete_work: 删除工作
+          deleting_from_work: 从%{application_name}删除作品是永久性的。单击“确定”从%{application_name}中删除此工作，或单击“取消”取消此操作
+          edit_work: 编辑工作
+          press_to: 按到
+          remove_from_collection: 从收藏中删除
+          select_an_action: 选择一个动作
+          transfer_ownership_of_work: 转移工作所有权
       create_work: 创建作品
       current_proxies: 目前代理
       delete_notification: 删除通知
@@ -777,6 +876,7 @@ zh:
         heading:
           access: 访问
           action: 行动
+          caption: 此集合中的项目列表
           collection_type: 集合类型
           date_modified: 上一次更改
           date_uploaded: 上传日期
@@ -793,6 +893,7 @@ zh:
           check_all_label: 选择添加或编辑所有文件
           detail_label: 展示概括细节
           listing: 您存储细项列单
+          number_of_results_to_display_per_page: 每页显示的结果数
           press_to: 按击
           results_per_page: 每页显示的结果数量
           show_label: 展示所有细节
@@ -808,7 +909,19 @@ zh:
       no_proxies: 没有代理分配
       no_transfer_requests: 您没有收到任何在作品转让请求
       no_transfers: 您没有转让任何作品
+      profiles:
+        edit_primary:
+          change_picture: "<i class =“glyphicon glyphicon-camera”> </ i>更改图片"
+          delete_picture: 删除图片
+          delete_picture_data_content: 如果您想完全删除图片，请选中相应复选框并保存您的个人资料。
+          delete_picture_data_original_title: 删除图片
+          facebook_handle: "<i class =“fa fa-facebook”aria-hidden =“true”> </ i> Facebook句柄"
+          google_handle: "<i class =“fa fa-google-plus”> </ i> Google+处理"
+          help_change_picture_type: JPG，GIF或PNG（小于2MB）
+          save_profile: "<i class =“glyphicon glyphicon-save”> </ i>保存个人资料"
+          twitter_handle: "<i class =“fa fa-twitter”aria-hidden =“true”> </ i> Twitter句柄"
       proxy_activity: 代理活动
+      proxy_add_deny: 你不能让自己成为代理人
       proxy_delete: 删除代理
       proxy_help: 选择一个可以代表您存放作品的用户。您将成为该用户为您存储的作品的所有者。您可以通过单击删除代理按钮来撤销代理。
       proxy_user: 代理用户
@@ -875,6 +988,7 @@ zh:
         deactivate: 停用限制
         deactivate_selected: 停用选定的限制
         missing: 目前没有有效的限制。
+        select_all: 全选
       table_headers:
         release_date: 限制发布日期
         title: 标题
@@ -892,12 +1006,14 @@ zh:
         download: 下载文件
         downloadable_content:
           audio_link: 下载音频
+          audio_tag_not_supported: 您的浏览器不支持音频标签。
           default_link: 下载文件
           heading: 可下载的内容
           image_link: 下载图片
           office_link: 下载文件
           pdf_link: 下载PDF文件
           video_link: 下载视频
+          video_tag_not_supported: 您的浏览器不支持视频标记。
     file_sets:
       actions:
         delete: 删除
@@ -908,6 +1024,7 @@ zh:
         edit: 编辑
         edit_title: 编辑%{file_set}
         header: 选择一个动作
+        press_to: 按到
         versions: 版本
         versions_title: 显示以前的版本
       asset_deleted_flash:
@@ -918,11 +1035,17 @@ zh:
           other: 该文件%{saved_files}已经保存。
       asset_updated_flash:
         message: 该文件%{link_to_file}已经更新。
+      descriptions:
+        save: 保存说明
+        title: 说明
       edit:
         descriptions: 说明
         header: 编辑%{file_set}
         permissions: 权限
         versions: 版本
+      extra_fields_modal:
+        additional: 额外
+        label: 附加%{label}（s）
       form:
         attach_to: 附加到%{parent}
         cancel: 取消
@@ -933,10 +1056,19 @@ zh:
       permission:
         save: 保存
       permission_form:
+        add_new_group_skel: 添加此组
+        add_new_user_skel: 添加此%{account_label}
         applied_to: "（适用于刚刚上传的所有文件）"
+        bulk: 块
         depositor: 储户
         enter: 输入%{account_label}（一次一个）
         header: 权限
+        new_group_help_text: 使用添加按钮一次可以访问一个组（它将添加到下面的列表中）。
+        new_group_name_skel: 组
+        new_group_permission_skel: 要授予的访问类型
+        new_user_help_text: 使用添加按钮一次可以访问一个%{account_label}（它将被添加到下面的列表中）。按名称或%{account_label}选择用户。然后选择您希望授予的访问级别，并单击Add this %{account_label}以完成添加权限。
+        new_user_name_skel: "%{account_label}（没有%{suffix}部分）"
+        new_user_permission_skel: 要授予的访问类型
         optional: "（可选的）"
         save_note_html: 在页面底部按“保存”按钮之前， <strong>不会</strong>保存权限。
         select_group: 选择一个组
@@ -944,6 +1076,8 @@ zh:
         table_title_access: 访问权限
         table_title_user: 人/组
         user_search: 搜索用户
+      proxy:
+        message: "%{sending_user}代表您存放了%{title}文件。"
       show_actions:
         analytics: 分析
         confirm_delete_this: 删除这一%{type}吗？
@@ -963,6 +1097,7 @@ zh:
         restore: 恢复以前的版本
         restore_from: 还原自
         save: 保存修订
+        save_your_note: 您必须点击“保存修订版”还原此文件的先前版本
         upload: 上传新版本
     help:
       header: 用户支持
@@ -1060,13 +1195,17 @@ zh:
     my:
       count:
         collections:
+          collections_listing: 收藏清单
           in_repo: 存储库中的<strong> %{total_count}集合</ strong>
           you_manage: 您可以在存储库中管理<strong> %{total_count}集合</ strong>
           you_own: 您在存储库中拥有<strong> %{total_count}集合</ strong>
         works:
           in_repo: 存储库中的<strong> %{total_count}有效</ strong>
+          works_listing: 作品清单
           you_manage: 您可以在存储库中管理<strong> %{total_count}作品</ strong>
           you_own: 您在存储库中拥有<strong> %{total_count}作品</ strong>
+      sort_and_per_page:
+        number_of_results_to_display_per_page: 每页显示的结果数
     nav_safety:
       change_tab_message: 你确定要离开这个标签吗？任何未保存的数据都将丢失。
     notifications:
@@ -1106,6 +1245,12 @@ zh:
         pending_review:
           message: "%{title}（%{link}）由%{user}存放，正在等待批准%{comment}"
           subject: 存款需要审核
+    operations:
+      index:
+        operations_type: 运营类型
+        status: 状态
+        title: 操作
+        updated: 更新
     pages:
       cancel: 取消
       tabs:
@@ -1161,7 +1306,21 @@ zh:
         link: 链接
         no_links: 链接未生成
       title: 单次使用链接
+    single_use_links_viewer:
+      single_use_error:
+        help: '%{application_name}无法找到单次使用链接。此链接已过期或之前已使用过。我们对不便表示抱歉。您可能有兴趣使用<a href="/help/">帮助页面</a>查找解决方案。'
+        link_expired_not_found: 单次使用链接已过期或未找到
+        link_not_found: 单用链接未找到
     sort_label: 对清单中单件排序
+    static:
+      mendeley:
+        contact_form: 联系表
+        export_to_mendeley: 出口到门德利
+        export_to_mendeley_details: 通过嵌入式元数据支持导出到Mendeley。如果Mendeley没有自动获取存放文件的元数据，请通过以下方式报告问题
+      zotero:
+        contact_form: 联系表
+        export_to_zotero: 导出到Zotero
+        export_to_zotero_details: 通过嵌入式元数据支持导出到Zotero。如果Zotero没有自动获取存放文件的元数据，请通过以下方式报告问题
     toolbar:
       dashboard:
         menu: 控件板
@@ -1182,6 +1341,29 @@ zh:
         placeholder: 搜索用户
         sr_only_description: 选择要转让 “％{work_title}” 的用户，添加可选注释，然后按转让。
         title: 转让所有权 "%{work_title}"
+      received:
+        accept: 接受
+        accept_the_file_and_allow_the_original_depositor_to_retain_access_and_authorize: 接受该文件并允许原始存款人保留访问权并授权原始存款人代表您存放文件。
+        accept_the_file_and_allow_the_original_depositor_to_retain_access_to_edit_the_file_and_metadata: 接受该文件并允许原始存款人保留访问权以编辑文件和元数据。
+        accept_the_file_remove_access_from_the_original_depositor: 接受文件删除原始存款人的访问权限。
+        allow_depositor_to_retain_edit_access: 允许存款人保留编辑权限
+        are_you_sure_you_want_to_reject_this_request: 您确定要拒绝此请求吗？
+        authorize_depositor_as_proxy: 授权存款人作为代理人
+        comments: 评论
+        date: 日期
+        from: 从
+        reject: 拒绝
+        remove_depositor_access: 删除存款人访问权限
+        status: 状态
+        title: 标题
+      sent:
+        are_you_sure_you_want_to_cancel_this_request: 您确定要取消此请求吗？
+        cancel: 取消
+        comments: 评论
+        date: 日期
+        from: 从
+        status: 状态
+        title: 标题
     upload:
       alert:
         contact_href_text: 联系表格
@@ -1208,6 +1390,20 @@ zh:
         tab_label: 我的电脑
       permissions_message: 文件许可正在更新中。稍等片刻。您可能需要刷新浏览器或稍后回访查询该文件访问许可是否更新
       processing: 文件正在处理。 等处理完毕，您可以开始编辑。
+    uploads:
+      js_templates:
+        display_label: 显示标签
+        error: 错误
+        set_all_to_this_resource_type: 将all设置为此资源类型
+        start: 开始
+      js_templates_branding:
+        alt_text: 替代文字：
+        error: 错误
+        link_url: 链接网址：
+        previous: 以前
+        remove: 去掉
+        remove_new_banner: 删除新横幅
+        remove_new_logo: 删除新徽标
     user_profile:
       orcid:
         alt: ORCID 图标
@@ -1220,6 +1416,24 @@ zh:
         connected: 已连接!
         label: Zotero 个人资料
         unlinked: 与Zotero链接
+    users:
+      activity_log:
+        date: 日期
+        user_activity: 用户活动
+      index:
+        avatar: 阿凡达
+        department: 部门
+        user_id: 用户身份
+        user_name: 用户名
+        users: 用户
+        works_created: 作品创作
+      left_sidebar:
+        view_users: 查看用户
+      proxies:
+        proxies: 代理
+      search_form:
+        go: 走
+        search_users: 搜索用户
     visibility:
       authenticated:
         note_html: 访问仅限于%{institution}
@@ -1239,6 +1453,8 @@ zh:
         note_html: 非公开保留分享权限。
         text: 非公开
       restricted_title_attr: 更改此资源的公开度
+    work_button_row:
+      attach_child: 附上孩子
     workflow:
       default:
         deposit: 存储
@@ -1302,6 +1518,8 @@ zh:
         share_applies_to_new_works: 当直接在集合中创建新作品时，根据其集合角色为新作品授予共享用户和组的权限。
         title: ''
       defaults:
+        abstract: 研究文章，论文，评论，会议程序或对特定主题的任何深入分析的简要概述。
+        access_right: 包含有关谁可以访问资源或其安全状态指示的信息。
         based_near: 与作品相关的地名，例如出版品的地点，或者是作品中涉及的城市，州、或国家。 参见<a href='http://www.geonames.org'>GeoNames web service</a>。
         contributor: 个人与团体，虽未担任主要职责，却对作品创建做出贡献。
         creator: 对作品负责的个人与团体。通常指作品内容的作者。 个人姓名应该先输入姓氏，例如 &quot;Smith, John.&quot;。
@@ -1335,6 +1553,8 @@ zh:
         share_applies_to_new_works: 适用于新作品
         title: 类型名称
       defaults:
+        abstract: 抽象
+        access_right: 访问权限
         admin_set_id: 在行政
         based_near: 地点
         creator: 创建者
