@@ -22,7 +22,7 @@ module Wings
       attributes = value.attributes.symbolize_keys
       nested_object = Wings::ActiveFedoraConverter::NestedResource.new(attributes)
       klass = Wings::ModelTransformer::ResourceClassCache.instance.fetch(Wings::ActiveFedoraConverter::NestedResource) do
-        ModelTransformer.to_valkyrie_resource_class(klass: nested_object.class)
+        OrmConverter.to_valkyrie_resource_class(klass: nested_object.class)
       end
       klass.new(attributes)
     end

@@ -30,8 +30,8 @@ RSpec.describe Wings::Valkyrie::QueryService do
   let(:persister) { Wings::Valkyrie::Persister.new(adapter: adapter) }
   let(:af_resource_class) { Book }
   let(:af_image_resource_class) { Image }
-  let(:resource_class) { Wings::ModelTransformer.to_valkyrie_resource_class(klass: af_resource_class) }
-  let(:image_resource_class) { Wings::ModelTransformer.to_valkyrie_resource_class(klass: af_image_resource_class) }
+  let(:resource_class) { Wings::OrmConverter.to_valkyrie_resource_class(klass: af_resource_class) }
+  let(:image_resource_class) { Wings::OrmConverter.to_valkyrie_resource_class(klass: af_image_resource_class) }
   let(:resource) { resource_class.new(title: ['Foo']) }
 
   # it_behaves_like "a Valkyrie query provider"
@@ -256,7 +256,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
     context "filtering by model" do
       subject { query_service.find_members(resource: parent, model: resource_class) }
       let(:gw_resource_class) { GenericWork }
-      let(:parent_resource_class) { Wings::ModelTransformer.to_valkyrie_resource_class(klass: gw_resource_class) }
+      let(:parent_resource_class) { Wings::OrmConverter.to_valkyrie_resource_class(klass: gw_resource_class) }
 
       context "when the object has members" do
         let(:child1) { persister.save(resource: resource_class.new(title: ['Child 1'])) }
