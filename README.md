@@ -67,10 +67,6 @@ v2.5.0__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
-## Quickstart
-
-If you're looking to spin up a vanilla Hyrax application very quickly for demonstration purposes, you may be interested in [the samvera-vagrant project](https://github.com/samvera-labs/samvera-vagrant) which may be used to "kick the tires" of Hyrax and [Hyku](https://github.com/samvera-labs/hyku). It requires VirtualBox and Vagrant.
-
 ## Prerequisites
 
 Prerequisites are required for both creating a Hyrax\-based app and contributing new features to Hyrax. After installing the prerequisites...
