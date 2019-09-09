@@ -1,3 +1,4 @@
+<%= render "shared/nav_safety_modal" %>
 <% provide :page_title, curation_concern_page_title(curation_concern) %>
 <% provide :page_header do %>
   <h1><span class="fa fa-edit" aria-hidden="true"></span><%= t('.header', file_set: curation_concern) %></h1>
@@ -11,13 +12,13 @@
     <div class="panel panel-default tabs">
       <ul class="nav nav-tabs" role="tablist">
         <li id="edit_descriptions_link" class="active">
-          <a href="#descriptions_display" data-toggle="tab"><i class="fa fa-tags" aria-hidden="true"></i></span> <%= t('.descriptions') %></a>
+          <a href="#descriptions_display" data-toggle="tab" class="nav-safety-confirm"><i class="fa fa-tags" aria-hidden="true"></i></span> <%= t('.descriptions') %></a>
         </li>
         <li id="edit_versioning_link">
-          <a href="#versioning_display" data-toggle="tab"><i class="fa fa-sitemap" aria-hidden="true"></i> <%= t('.versions') %></a>
+          <a href="#versioning_display" data-toggle="tab" class="nav-safety-confirm"><i class="fa fa-sitemap" aria-hidden="true"></i> <%= t('.versions') %></a>
         </li>
         <li id="edit_permissions_link">
-          <a href="#permissions_display" data-toggle="tab"><i class="fa fa-key" aria-hidden="true"></i> <%= t('.permissions') %></a>
+          <a href="#permissions_display" data-toggle="tab" class="nav-safety-confirm"><i class="fa fa-key" aria-hidden="true"></i> <%= t('.permissions') %></a>
         </li>
       </ul>
       <div class="panel-body">

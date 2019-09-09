@@ -1,6 +1,6 @@
 <div id="versioning_display" class="tab-pane">
   <h2><%= t('.header') %></h2>
-  <%= simple_form_for [main_app, curation_concern], html: { multipart: true } do |f| %>
+  <%= simple_form_for [main_app, curation_concern], html: { multipart: true, class: 'nav-safety' } do |f| %>
     <%= hidden_field_tag('redirect_tab', 'versions') %>
     <h3><%= t('.upload') %></h3>
     <%= f.input :files, as: :multifile, wrapper: :vertical_file_input, required: true %>
@@ -10,7 +10,7 @@
   <% end %>
 
   <%= form_for [main_app, curation_concern],
-               html: { class: 'edit_file_set_previous_version' } do |f| %>
+               html: { class: 'edit_file_set_previous_version nav-safety' } do |f| %>
     <h3><%= t('.restore') %></h3>
     <% @version_list.each do |version| %>
       <div class="radio">

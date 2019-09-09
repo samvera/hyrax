@@ -1,28 +1,29 @@
+<%= render "shared/nav_safety_modal" %>
 <div class="panel panel-default tabs" id="collection-edit-controls">
   <ul class="nav nav-tabs" role="tablist">
     <li class="active">
-      <a href="#description" role="tab" data-toggle="tab"><%= t('.tabs.description') %></a>
+      <a href="#description" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.description') %></a>
     </li>
     <% if @form.persisted? %>
       <% if @collection.brandable? %>
       <li>
-        <a href="#branding" role="tab" data-toggle="tab"><%= t('.tabs.branding') %></a>
+        <a href="#branding" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.branding') %></a>
       </li>
       <% end %>
       <% if @collection.discoverable? %>
       <li>
-        <a href="#discovery" role="tab" data-toggle="tab"><%= t('.tabs.discovery') %></a>
+        <a href="#discovery" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.discovery') %></a>
       </li>
       <% end %>
       <% if @collection.sharable? %>
       <li>
-        <a href="#sharing" role="tab" data-toggle="tab"><%= t('.tabs.sharing') %></a>
+        <a href="#sharing" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.sharing') %></a>
       </li>
       <% end %>
     <% end %>
   </ul>
 
-  <%= simple_form_for @form, url: [hyrax, :dashboard, @form], html: { class: 'editor' } do |f| %>
+  <%= simple_form_for @form, url: [hyrax, :dashboard, @form], html: { class: 'editor nav-safety' } do |f| %>
     <div class="tab-content">
       <div id="description" class="tab-pane active">
         <div class="panel panel-default labels">

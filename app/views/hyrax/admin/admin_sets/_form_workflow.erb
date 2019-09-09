@@ -2,7 +2,7 @@
                   <div class="panel panel-default labels">
                     <%= simple_form_for @form.permission_template,
                       url: [hyrax, :admin, @form, :permission_template],
-                      html: { id: 'form_workflows' } do |f| %>
+                      html: { id: 'form_workflows', class: 'nav-safety' } do |f| %>
                       <% if f.object.available_workflows.any? %>
                         <div class="panel-body">
                           <p><%= t('.page_description') %></p>

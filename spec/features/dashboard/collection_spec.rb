@@ -827,23 +827,63 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
         end
       end
 
-      context 'for an admin set' do
+      context 'edits an admin set' do
+        let!(:confirm_modal_text) { 'Are you sure you want to leave this tab?  Any unsaved data will be lost.' }
+        let!(:new_description) { 'New Description' }
+
         before do
           admin_user
           admin_set_a
           sign_in admin_user
           visit '/dashboard/my/collections'
-        end
-
-        it 'edits admin set', :js do
-          # URL: /dashboard/my/collections
-          expect(page).to have_content(admin_set_a.title.first)
           within("#document_#{admin_set_a.id}") do
             find('button.dropdown-toggle').click
             click_link('Edit collection')
           end
-          # URL: /dashboard/collections/collection-id/edit
+        end
+
+        it "shows edit form" do
           expect(page).to have_selector('h1', text: "Edit Administrative Set: #{admin_set_a.title.first}")
+          expect(page).to have_field('admin_set_description', with: admin_set_a.description.first)
+        end
+
+        it "does not display a confirmation message when form data has not changed" do
+          expect(page).to have_content('Description')
+          click_link 'Participants'
+          expect(page).to have_selector('#nav-safety-modal', visible: false)
+        end
+
+        it "displays a confirmation when form data has changed" do
+          page.fill_in('Description', with: new_description)
+          click_link('Workflow')
+          within('#nav-safety-modal') do
+            expect(page).to have_content(confirm_modal_text)
+          end
+        end
+
+        it "changes tab when user dismisses the confirmation by clicking OK" do
+          page.fill_in('Description', with: new_description)
+          click_link('Workflow')
+          within('#nav-safety-modal') do
+            expect(page).to have_content(confirm_modal_text)
+          end
+          within("#nav-safety-modal") do
+            click_button('OK')
+          end
+          expect(page).to have_selector('#nav-safety-modal', visible: false)
+          expect(page).to have_selector('#form_workflows')
+        end
+
+        it "does not redisplay the confirmation unless form data is changed" do
+          expect(page).to have_selector('#description', class: 'active')
+          expect(page).not_to have_selector('#workflow', class: 'active')
+          fill_in('Description', with: new_description)
+          click_link 'Workflow'
+          within('#nav-safety-modal') do
+            click_button('OK')
+          end
+          click_link 'Description'
+          expect(page).to have_selector('#nav-safety-modal', visible: false)
         end
       end
     end
@@ -910,6 +950,57 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
           visit "/dashboard/collections/#{not_sharable_collection_id}/edit"
           expect(page).not_to have_link('Sharing', href: '#sharing')
         end
+      end
+    end
+
+    context "navigate through tabs", js: true do
+      let!(:empty_collection) { create(:public_collection_lw, title: ['Empty Collection'], user: user, with_permission_template: true) }
+      let(:collection_id) { create(:collection_lw, user: user, collection_type_settings: [:brandable, :discoverable, :sharable], with_permission_template: true).id }
+      let!(:confirm_modal_text) { 'Are you sure you want to leave this tab?  Any unsaved data will be lost.' }
+      let!(:new_description) { 'New Description' }
+
+      before do
+        sign_in user
+        visit "/dashboard/collections/#{collection_id}/edit"
+      end
+
+      it "does not display a confirmation message when form data has not changed" do
+        expect(page).to have_selector('#description', class: 'active')
+        expect(page).to have_content('Description')
+        click_link 'Branding'
+        expect(page).not_to have_content(confirm_modal_text)
+      end
+
+      it "displays a confirmation when form data has changed" do
+        fill_in('Description', with: new_description)
+        click_link('Sharing')
+        within('#nav-safety-modal') do
+          expect(page).to have_content(confirm_modal_text)
+        end
+      end
+
+      it "changes tab when user dismisses the confirmation by clicking OK" do
+        fill_in('Description', with: new_description)
+        click_link('Sharing')
+        within('#nav-safety-modal') do
+          expect(page).to have_content(confirm_modal_text)
+        end
+        within("#nav-safety-modal") do
+          click_button('OK')
+        end
+        expect(page).to have_selector('#sharing', class: 'active')
+      end
+
+      it "does not redisplay the confirmation unless form data is changed" do
+        expect(page).to have_selector('#description', class: 'active')
+        expect(page).not_to have_selector('#discovery', class: 'active')
+        fill_in('Description', with: new_description)
+        click_link 'Discovery'
+        within('#nav-safety-modal') do
+          click_button('OK')
+        end
+        click_link 'Description'
+        expect(page).not_to have_content(confirm_modal_text)
       end
     end
   end

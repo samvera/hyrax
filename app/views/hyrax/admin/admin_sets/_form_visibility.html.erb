@@ -1,7 +1,8 @@
           <div id="visibility" class="tab-pane">
             <div class="panel panel-default labels">
               <%= simple_form_for @form.permission_template,
-                                  url: [hyrax, :admin, @form, :permission_template] do |f| %>
+                                  url: [hyrax, :admin, @form, :permission_template],
+                                  html: { class: 'nav-safety' } do |f| %>
                 <div class="panel-body">
                   <p><%= t('.page_description') %></p>
                   <h3><%= t('.release.title') %></h3>
