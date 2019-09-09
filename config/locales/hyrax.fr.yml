@@ -31,10 +31,6 @@ fr:
       filters:
         title: 'Filtrage par:'
       start_over: Effacer les filtres
-      view:
-        gallery: Galerie
-        masonry: Mur
-        slideshow: Diaporama
   errors:
     messages:
       carrierwave_download_error: Impossible de télécharger l'image.
@@ -44,6 +40,7 @@ fr:
       extension_whitelist_error: 'Vous n''êtes pas autorisé à télécharger des fichiers %{extension}, types autorisés: %{allowed_types}'
   helpers:
     action:
+      accept: Acceptez
       add: Ajouter
       admin_set:
         new: Créer un nouvel ensemble administratif
@@ -271,6 +268,7 @@ fr:
         collections: Collections
         configuration: Configuration
         content_blocks: Blocs de contenu
+        delete_all: Supprimer tout
         notifications: Notifications
         pages: Pages
         profile: Profil
@@ -285,6 +283,7 @@ fr:
         workflow_review: Soumissions de révision
         workflow_roles: Rôles de workflow
         works: Travaux
+        works_listing: Liste des travaux
       stats:
         deposited_form:
           end_label: Fin [par défaut pour maintenant]
@@ -352,8 +351,17 @@ fr:
         default: La ressource que vous avez tenté de modifier ne peut pas être modifiée selon votre demande.
     background_attribution_html: ''
     base:
+      attributes:
+        table_attribute_name: Nom d'attribut
+        table_heading_attributes: Les attributs
+        table_values: Valeur
+        visibility: Visibilité
       citations:
+        citations: Citations
+        endnote: EndNote
         header: 'Citations:'
+        mendeley: Mendeley
+        zotero: Zotero
       file_manager:
         back_to: Revenir à
         toolbar: Outils
@@ -369,6 +377,7 @@ fr:
       form_child_work_relationships:
         actions:
           remove: Supprimer de ce travail
+        add: Ajouter
         attach_new_work: Déposer un nouveau travail en tant qu'enfant de ce travail
         caption: Ce travail contient actuellement ces travaux d'enfants
         confirm:
@@ -381,6 +390,7 @@ fr:
       form_files:
         add_files: Ajouter des fichiers
         add_folder: Ajouter un dossier
+        cancel_upload: Annuler le téléchargement
         dropzone: Déposez les fichiers ici.
         local_upload_browse_everything_html: |
           <p>Vous pouvez ajouter un ou plusieurs fichiers à associer à ce travail.</p>
@@ -393,6 +403,7 @@ fr:
       form_member_of_collections:
         actions:
           remove: Supprimer de la collection
+        add: Ajouter
         caption: Ce travail est actuellement dans ces collections
         confirm:
           cancel: Annuler
@@ -401,6 +412,8 @@ fr:
         header:
           actions: action
           title: Titre de la collection
+      form_permission:
+        visibility: Visibilité <small> Qui devrait être en mesure d’afficher ou de télécharger ce contenu? </ Small>
       form_permission_under_embargo:
         help_html: "<strong>Ce travail est sous embargo.</strong> Vous pouvez modifier les paramètres de l'embargo ici, ou vous pouvez visiter le %{edit_link} pour le désactiver."
         legend_html: Visibilité <small>Qui devrait pouvoir afficher ou télécharger ce contenu?</small>
@@ -414,6 +427,7 @@ fr:
         required_descriptions: Décrivez votre travail
         required_files: Ajouter des fichiers
         requirements: Exigences
+        saving_your_work: Sauvegarder votre travail. Ceci peut prendre un certain temps
         yourself: Vous-même
       form_rendering:
         help_html: Sélectionnez le (s) fichier (s) à télécharger en téléchargement pour chaque image dans Universal Viewer, par exemple un PDF de l'ensemble de l'œuvre.
@@ -422,14 +436,36 @@ fr:
         help_html: Sélectionnez le fichier avec le média qui représente ce travail.
         legend_html: Médias représentatifs
       form_share:
+        access_type_to_grant: Type d'accès à accorder
+        account_label_without_suffix: "%{account_label} (sans la partie %{suffix})"
         add_sharing: Ajouter un partage
+        add_this_group: Ajouter <span class = "sr-only"> ce groupe </ span>
         currently_sharing: Actuellement partagé avec
+        depositor: Déposant
         directions: Indépendamment des paramètres de visibilité pour ce travail, vous pouvez également le partager avec d'autres utilisateurs et groupes.
+        group: Groupe
+        permissions_save_note: Les autorisations ne sont <strong> pas </ strong> enregistrées tant que le & quot; Enregistrer & quot; bouton est enfoncé en bas de la page.
+        use_add_button: Utilisez le bouton Ajouter pour donner accès à un %{account_label} à la fois (il sera ajouté à la liste ci-dessous). Sélectionnez l'utilisateur, par son nom ou par %{account_label} \. Ensuite, sélectionnez le niveau d'accès que vous souhaitez accorder et cliquez sur Ajouter ce %{account_label} pour terminer l'ajout de l'autorisation.
       form_thumbnail:
         help_html: Sélectionnez le fichier à utiliser comme vignette pour ce travail.
         legend_html: La vignette
       form_visibility_component:
         visibility: Visibilité
+      inspect_work:
+        back_to: Retour à
+        entity_id: ID d'entité
+        id: ID
+        name: prénom
+        object_name: Nom d'objet
+        persistence: Persistance
+        processing_entity_id: ID de l'entité de traitement
+        proxy_for: Procuration pour
+        roles: Rôles
+        state: Etat
+        state_name: Nom d'état
+        users: Utilisateurs
+        workflow: Flux de travail
+        workflow_comments: Commentaires sur le workflow
       items:
         actions: actes
         date_uploaded: Date de téléchargement
@@ -465,13 +501,46 @@ fr:
         google: Google+
         tumblr: Tumblr
         twitter: Gazouillement
+      unauthorized:
+        id: 'ID: %{id}'
+        is_private: Le %{type} auquel vous avez essayé d'accéder est privé
+        page_is_private: La page à laquelle vous avez essayé d'accéder est privée
+        unauthorized: Non autorisé
+      work_button_row:
+        analytics: Analytique
+        attach: Joindre %{type}
+        delete: Effacer
+        delete_type: Supprimer ce %{type}?
+        edit: modifier
+        feature: Fonctionnalité
+        unfeature: Manque de fonctionnalité
+      workflow_actions:
+        actions: actes
+        previous_comments: Commentaires précédents
+        review_comment: Commentaire d'examen
+        title: Révision et approbation
+    base/unauthorized:
+      is_private: Le %{type} auquel vous avez essayé d'accéder est privé
+      unauthorized: Non autorisé
     batch:
       help:
         resource_type: Vous pouvez sélectionner plusieurs types à appliquer à tous les fichiers
         title: Nom de fichier sera le titre par défaut. Veuillez fournir un titre plus significatif et les noms de fichiers seront conservés par le système.
     batch_edits:
+      check_all:
+        select_to_access_selection_options: Sélectionner pour accéder à l'option de sélection
       delete_selected:
         button_label: Supprimer la sélection
+        deleting_file_from: La suppression d'un fichier de %{application_name} est permanente. Cliquez sur OK pour supprimer ce fichier de %{application_name} ou sur Annuler pour annuler cette opération.
+      edit:
+        apply_changes_to: 'Les modifications seront appliquées à: (%{x_number_of} fonctionne)'
+        batch_edit_descriptions: Modifier les descriptions par lots & nbsp; & nbsp; & nbsp; <small> Cliquez sur les étiquettes ci-dessous pour modifier les descriptions de travail. </ Small>
+        clear_batch: Lot clair
+        descriptions: Descriptions
+        descriptions_title: 'Descriptions:'
+        permissions: Les permissions
+        sharing: Partage
+        visibility: Visibilité
     batch_uploads:
       disabled: Fonction désactivée par l'administrateur
       files:
@@ -487,6 +556,9 @@ fr:
         header: Sauvegarder les travaux
     bread_crumb:
       search_results: Retour aux résultats de recherche
+    citations:
+      work:
+        citation_formats: Formats de citation
     collection:
       actions:
         add_existing_works:
@@ -714,9 +786,32 @@ fr:
           show_less_parent_collections: "...montre moins"
           show_more_parent_collections: montre plus...
           subcollection_count: Sous-collections
+        show_descriptions:
+          descriptions: Descriptions
+        show_document_list:
+          action: action
+          date_added: Date ajoutée
+          list_items_in_collection: Liste des articles de cette collection
+          owner: Propriétaire
+          title: Titre
+          visibility: Visibilité
+        show_document_list_menu:
+          select: Sélectionner
+        show_document_list_row:
+          creator: 'Créateur:'
+          depositor: 'Déposant:'
+          edit_access: 'Modifier l''accès:'
         sort_and_per_page:
           show_par_page_html: Afficher %{select} collections par page
           sort_by: 'Trier par:'
+        work_action_menu:
+          delete_work: Supprimer le travail
+          deleting_from_work: Supprimer un travail de %{application_name} est permanent. Cliquez sur OK pour supprimer ce travail de %{application_name} ou sur Annuler pour annuler cette opération.
+          edit_work: Modifier le travail
+          press_to: Appuyez sur pour
+          remove_from_collection: Retirer de la collection
+          select_an_action: Sélectionnez une action
+          transfer_ownership_of_work: Transfert de la propriété du travail
       create_work: Créer un travail
       current_proxies: Proxies actuelles
       delete_notification: Supprimer la notification
@@ -784,6 +879,7 @@ fr:
         heading:
           access: Accès
           action: Actes
+          caption: Liste des articles de cette collection
           collection_type: Type de collection
           date_modified: Dernière modification
           date_uploaded: Date Ajoutée
@@ -800,6 +896,7 @@ fr:
           check_all_label: Sélectionnez tous les fichiers à ajouter à une collection ou édités
           detail_label: Afficher les détails sommaires de
           listing: Liste des éléments que vous avez déposés dans
+          number_of_results_to_display_per_page: Nombre de résultats à afficher par page
           press_to: Appuyez sur pour
           results_per_page: Nombre de résultats à afficher par page
           show_label: Afficher tous les détails de
@@ -815,7 +912,19 @@ fr:
       no_proxies: Il n'y a pas de proxy attribués
       no_transfer_requests: Vous n'avez reçu aucune demande de transfert de travail
       no_transfers: Vous n'avez transféré aucun travail
+      profiles:
+        edit_primary:
+          change_picture: <i class = "glyphicon glyphicon-camera"> </ i> Changer photo
+          delete_picture: Supprimer la photo
+          delete_picture_data_content: Si vous souhaitez supprimer entièrement votre image, cochez la case et enregistrez votre profil.
+          delete_picture_data_original_title: Supprimer l'image
+          facebook_handle: <i class = "fa fa-facebook" aria-hidden = "true"> </ i> Poignée Facebook
+          google_handle: <i class = "fa fa-google-plus"> </ i> Poignée Google+
+          help_change_picture_type: JPG, GIF ou PNG (moins de 2 Mo)
+          save_profile: <i class = "glyphicon glyphicon-save"> </ i> Enregistrer le profil
+          twitter_handle: <i class = "fa fa-twitter" aria-hidden = "true"> </ i> Poignée Twitter
       proxy_activity: Activité de procuration
+      proxy_add_deny: Vous ne pouvez pas vous faire un proxy
       proxy_delete: Supprimer le proxy
       proxy_help: Sélectionnez un utilisateur qui peut déposer des œuvres en votre nom. Vous serez le propriétaire des œuvres que cet utilisateur dépose pour vous. Vous pouvez révoquer un proxy en cliquant sur le bouton Supprimer le proxy.
       proxy_user: Utilisateur proxy
@@ -882,6 +991,7 @@ fr:
         deactivate: Désactiver Embargo
         deactivate_selected: Désactiver les embargos pour la sélection
         missing: Il n'y a pas d'embargos expirés en vigueur en ce moment.
+        select_all: Tout sélectionner
       table_headers:
         release_date: Date de sortie de l'embargo
         title: Titre
@@ -899,12 +1009,14 @@ fr:
         download: Télécharger le fichier
         downloadable_content:
           audio_link: Télécharger l'audio
+          audio_tag_not_supported: Votre navigateur ne supporte pas la balise audio.
           default_link: Télécharger un fichier
           heading: Contenu téléchargeable
           image_link: Télécharger l'image
           office_link: Télécharger un fichier
           pdf_link: Télécharger le fichier PDF
           video_link: Télécharger la video
+          video_tag_not_supported: Votre navigateur ne supporte pas le tag vidéo.
     file_sets:
       actions:
         delete: Effacer
@@ -915,6 +1027,7 @@ fr:
         edit: modifier
         edit_title: Modifier %{file_set}
         header: Sélectionnez une action
+        press_to: Appuyez sur pour
         versions: Versions
         versions_title: Afficher les versions précédentes
       asset_deleted_flash:
@@ -925,11 +1038,17 @@ fr:
           other: Les fichiers %{saved_files} ont été enregistrés.
       asset_updated_flash:
         message: Le fichier %{link_to_file} a été mis à jour.
+      descriptions:
+        save: Sauvegarder les descriptions
+        title: Descriptions
       edit:
         descriptions: Les descriptions
         header: Modifier %{file_set}
         permissions: Autorisations
         versions: Des versions
+      extra_fields_modal:
+        additional: Additionnel
+        label: "%{label} supplémentaire (s)"
       form:
         attach_to: Joindre à %{parent}
         cancel: Annuler
@@ -940,10 +1059,19 @@ fr:
       permission:
         save: sauvegarder
       permission_form:
+        add_new_group_skel: Ajouter ce groupe
+        add_new_user_skel: Ajouter cette %{account_label}
         applied_to: "(appliqué à tous les fichiers que vous venez de télécharger)"
+        bulk: Masse
         depositor: Déposant
         enter: Entrez %{account_label} (un à la fois)
         header: Autorisations
+        new_group_help_text: Utilisez le bouton Ajouter pour donner accès à un groupe à la fois (il sera ajouté à la liste ci-dessous).
+        new_group_name_skel: Groupe
+        new_group_permission_skel: Type d'accès à accorder
+        new_user_help_text: Utilisez le bouton Ajouter pour donner accès à un %{account_label} à la fois (il sera ajouté à la liste ci-dessous). Sélectionnez l'utilisateur, par son nom ou par %{account_label}. Ensuite, sélectionnez le niveau d'accès que vous souhaitez accorder et cliquez sur Ajouter ce %{account_label} pour terminer l'ajout de l'autorisation.
+        new_user_name_skel: "%{account_label} (sans la partie %{suffix})"
+        new_user_permission_skel: Type d'accès à accorder
         optional: "(optionnel)"
         save_note_html: Les autorisations <strong>ne</strong> sont <strong>pas</strong> enregistrées tant que le bouton "Enregistrer" n'est pas enfoncé en bas de la page.
         select_group: Sélectionnez un groupe
@@ -951,6 +1079,8 @@ fr:
         table_title_access: Niveau d'accès
         table_title_user: Personne / groupe
         user_search: Rechercher un utilisateur
+      proxy:
+        message: "%{sending_user} a déposé le fichier %{title} en votre nom."
       show_actions:
         analytics: Statistiques
         confirm_delete_this: Supprimer ce %{type}?
@@ -970,6 +1100,7 @@ fr:
         restore: Restaurer la version précédente
         restore_from: Restauration à partir de
         save: Enregistrer la révision
+        save_your_note: Vous devez cliquer sur "Enregistrer la révision". pour revenir à une version précédente de ce fichier
         upload: Télécharger une nouvelle version
     help:
       header: Support utilisateur
@@ -1067,13 +1198,17 @@ fr:
     my:
       count:
         collections:
+          collections_listing: Liste des collections
           in_repo: "<strong> Collections %{total_count} </ strong> dans le référentiel"
           you_manage: "<strong> collections %{total_count} </ strong> que vous pouvez gérer dans le référentiel"
           you_own: "<strong> collections %{total_count} </ strong> que vous possédez dans le référentiel"
         works:
           in_repo: "<strong> %{total_count} fonctionne </ strong> dans le référentiel"
+          works_listing: Liste des travaux
           you_manage: "<strong> %{total_count} fonctionne </ strong> vous pouvez gérer dans le référentiel"
           you_own: "<strong> %{total_count} fonctionne </ strong> que vous possédez dans le référentiel"
+      sort_and_per_page:
+        number_of_results_to_display_per_page: Nombre de résultats à afficher par page
     nav_safety:
       change_tab_message: Êtes-vous sûr de vouloir quitter cet onglet? Toutes les données non enregistrées seront perdues.
     notifications:
@@ -1113,6 +1248,12 @@ fr:
         pending_review:
           message: "%{title} (%{link}) a été déposé par %{user} et est en attente d'approbation. %{comment}"
           subject: Examen des besoins de dépôt
+    operations:
+      index:
+        operations_type: Type d'opération
+        status: Statut
+        title: Opérations
+        updated: Mis à jour
     pages:
       cancel: Annuler
       tabs:
@@ -1168,7 +1309,21 @@ fr:
         link: Lien
         no_links: Aucun lien n'a été généré
       title: Liens à usage unique
+    single_use_links_viewer:
+      single_use_error:
+        help: '%{application_name} n''a pas pu localiser le lien à usage unique. Ce lien a expiré ou a déjà été utilisé. Nous nous excusons pour le dérangement. Vous pouvez être intéressé par <a href="/help/"> la page d''aide </a> pour rechercher des solutions.'
+        link_expired_not_found: Lien à usage unique expiré ou introuvable
+        link_not_found: Lien à usage unique introuvable
     sort_label: Trier la liste des articles
+    static:
+      mendeley:
+        contact_form: Formulaire de contact
+        export_to_mendeley: Exporter vers Mendeley
+        export_to_mendeley_details: L'exportation vers Mendeley est prise en charge via des métadonnées intégrées. Si Mendeley ne récupère pas automatiquement les métadonnées des fichiers déposés, veuillez signaler le problème via le
+      zotero:
+        contact_form: Formulaire de contact
+        export_to_zotero: Exporter vers Zotero
+        export_to_zotero_details: L'exportation vers Zotero est prise en charge via des métadonnées intégrées. Si Zotero ne récupère pas automatiquement les métadonnées des fichiers déposés, veuillez signaler le problème via le
     toolbar:
       dashboard:
         menu: Tableau de bord
@@ -1189,6 +1344,29 @@ fr:
         placeholder: Rechercher un utilisateur
         sr_only_description: Sélectionnez un utilisateur pour transférer "% {work_title}" à, ajoutez des commentaires facultatifs, puis appuyez sur transférer.
         title: Propriété de transfert de "%{work_title}"
+      received:
+        accept: Acceptez
+        accept_the_file_and_allow_the_original_depositor_to_retain_access_and_authorize: Acceptez le fichier et permettez au déposant initial de conserver l'accès et autorisez le déposant original en tant que mandataire à déposer le fichier en votre nom.
+        accept_the_file_and_allow_the_original_depositor_to_retain_access_to_edit_the_file_and_metadata: Acceptez le fichier et autorisez le déposant d'origine à conserver l'accès pour éditer le fichier et les métadonnées.
+        accept_the_file_remove_access_from_the_original_depositor: Accepter le fichier supprimer l'accès du déposant d'origine.
+        allow_depositor_to_retain_edit_access: Autoriser le déposant à conserver l'accès en édition
+        are_you_sure_you_want_to_reject_this_request: Êtes-vous sûr de vouloir rejeter cette demande?
+        authorize_depositor_as_proxy: Autoriser le déposant en tant que mandataire
+        comments: commentaires
+        date: Rendez-vous amoureux
+        from: De
+        reject: Rejeter
+        remove_depositor_access: Supprimer l'accès des déposants
+        status: Statut
+        title: Titre
+      sent:
+        are_you_sure_you_want_to_cancel_this_request: Êtes-vous sûr de vouloir annuler cette demande?
+        cancel: Annuler
+        comments: commentaires
+        date: Rendez-vous amoureux
+        from: De
+        status: Statut
+        title: Titre
     upload:
       alert:
         contact_href_text: Formulaire de contact
@@ -1215,6 +1393,20 @@ fr:
         tab_label: Mon ordinateur
       permissions_message: Mise à jour des autorisations de fichier. Cela peut prendre quelques minutes. Vous pouvez actualiser votre navigateur ou revenir à cet enregistrement plus tard pour voir les autorisations de fichier mises à jour.
       processing: Le fichier est en cours de traitement; Vous pouvez modifier lorsque le traitement est terminé
+    uploads:
+      js_templates:
+        display_label: Étiquette d'affichage
+        error: Erreur
+        set_all_to_this_resource_type: Définir tout pour ce type de ressource
+        start: Début
+      js_templates_branding:
+        alt_text: 'Texte alternatif:'
+        error: Erreur
+        link_url: 'URL du lien:'
+        previous: précédent
+        remove: Retirer
+        remove_new_banner: Supprimer la nouvelle bannière
+        remove_new_logo: Supprimer le nouveau logo
     user_profile:
       orcid:
         alt: Icône ORCID
@@ -1227,6 +1419,24 @@ fr:
         connected: Connecté!
         label: Profil de Zotero
         unlinked: Lien avec Zotero
+    users:
+      activity_log:
+        date: Rendez-vous amoureux
+        user_activity: Activité de l'utilisateur
+      index:
+        avatar: Avatar
+        department: département
+        user_id: Identifiant d'utilisateur
+        user_name: Nom d'utilisateur
+        users: Utilisateurs
+        works_created: Œuvres créées
+      left_sidebar:
+        view_users: Afficher les utilisateurs
+      proxies:
+        proxies: Les procurations
+      search_form:
+        go: Aller
+        search_users: Rechercher des utilisateurs
     visibility:
       authenticated:
         note_html: Limiter l'accès aux utilisateurs et / ou groupes exclus de %{institution}
@@ -1246,6 +1456,8 @@ fr:
         note_html: Seuls les utilisateurs et / ou les groupes ayant reçu un accès spécifique dans la section "Partager avec".
         text: Privé
       restricted_title_attr: Modifier la visibilité de cette ressource
+    work_button_row:
+      attach_child: Attacher l'enfant
     workflow:
       default:
         deposit: Dépôt
@@ -1309,6 +1521,8 @@ fr:
         share_applies_to_new_works: Lorsque de nouveaux travaux sont créés directement dans la collection, accordez aux utilisateurs et aux groupes des autorisations de partage pour le nouveau travail en fonction de leurs rôles de collection.
         title: ''
       defaults:
+        abstract: Un bref résumé d'un article de recherche, d'une thèse, d'un compte rendu, d'une procédure de conférence ou de toute analyse approfondie d'un sujet particulier.
+        access_right: Contient des informations sur les personnes pouvant accéder à la ressource ou une indication de son statut de sécurité.
         based_near: Un nom de lieu lié au travail, tel que son site de publication, ou la ville, l'état ou le pays sur lequel se trouvent les contenus du travail. Appelle le <a href='http://www.geonames.org'> service web GeoNames </a>.
         contributor: Une personne ou un groupe que vous souhaitez reconnaître pour avoir joué un rôle dans la création du travail, mais pas le rôle principal.
         creator: La personne ou le groupe responsable du travail. Habituellement, c'est l'auteur du contenu. Les noms personnels doivent être saisis d'abord avec le nom de famille, par ex. "Smith, John".
@@ -1342,6 +1556,8 @@ fr:
         share_applies_to_new_works: APPLIQUEZ AUX NOUVEAUX TRAVAUX
         title: Nom du type
       defaults:
+        abstract: Abstrait
+        access_right: Des droits d'accès
         admin_set_id: L'ensemble Administratif
         based_near: Emplacement
         creator: Créateur
