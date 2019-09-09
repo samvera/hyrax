@@ -74,6 +74,15 @@ RSpec.describe Hyrax::DownloadsController do
             get :show, params: { id: file_set, file: 'thumbnail' }
           end
 
+          it 'sends 304 response when client has valid cached data' do
+            get :show, params: { id: file_set, file: 'thumbnail' }
+            expect(response).to have_http_status :success
+            request.env['HTTP_IF_MODIFIED_SINCE'] = response.headers['Last-Modified']
+            request.env['HTTP_IF_NONE_MATCH'] = response.headers['ETag']
+            get :show, params: { id: file_set, file: 'thumbnail' }
+            expect(response).to have_http_status :not_modified
+          end
+
           context "stream" do
             it "head request" do
               request.env["HTTP_RANGE"] = 'bytes=0-15'

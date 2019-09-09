@@ -41,7 +41,7 @@ module Hyrax
 
       def original_file_id
         return unless object.original_file
-        object.original_file.id
+        Hyrax::VersioningService.versioned_file_id object.original_file
       end
 
       def file_format

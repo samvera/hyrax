@@ -16,6 +16,16 @@ module Hyrax
         file.versions.last
       end
 
+      # @param [ActiveFedora::File | Hyrax::FileMetadata] content
+      def versioned_file_id(file)
+        versions = file.versions.all
+        if versions.present?
+          ActiveFedora::File.uri_to_id versions.last.uri
+        else
+          file.id
+        end
+      end
+
       # Record the version committer of the last version
       # @param [ActiveFedora::File | Hyrax::FileMetadata] content
       # @param [User, String] user_key
