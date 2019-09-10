@@ -24,5 +24,14 @@ RSpec.describe Wings::OrmConverter do
         expect { described_class.to_valkyrie_resource_class(klass: String) }.to raise_error
       end
     end
+
+    context 'when given a registered class' do
+      it 'returns a subclass of the corresponding native valkyrie resource' do
+        klass = Wings::ModelRegistry.lookup(Hyrax::Test::BookResource)
+
+        expect(described_class.to_valkyrie_resource_class(klass: klass).ancestors)
+          .to include Hyrax::Test::BookResource
+      end
+    end
   end
 end
