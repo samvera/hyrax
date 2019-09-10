@@ -21,6 +21,15 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       expect(converter.convert).to eq work
     end
 
+    context 'when given a valkyrie native model' do
+      let(:resource) { BookResource.new }
+
+      it 'gives a default work' do
+        expect(converter.convert)
+          .to be_a Wings::ActiveFedoraConverter::DefaultWork
+      end
+    end
+
     context 'with attributes' do
       let(:attributes) do
         FactoryBot.attributes_for(:generic_work)
