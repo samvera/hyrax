@@ -257,7 +257,7 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
     let(:page2)       { page_class.new(id: 'pg2') }
 
     let(:book_class) do
-      Book = Class.new(ActiveFedora::Base) do
+      Monograph = Class.new(ActiveFedora::Base) do
         has_many :pages
         property :title, predicate: ::RDF::Vocab::DC.title
         property :contributor, predicate: ::RDF::Vocab::DC.contributor
@@ -273,7 +273,7 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
 
     after do
       Object.send(:remove_const, :Page)
-      Object.send(:remove_const, :Book)
+      Object.send(:remove_const, :Monograph)
     end
 
     let(:attributes) do

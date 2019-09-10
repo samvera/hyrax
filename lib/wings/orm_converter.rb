@@ -29,13 +29,7 @@ module Wings
     #
     # @return [Class]
     def self.base_for(klass:)
-      if klass == Hydra::AccessControls::Embargo
-        Hyrax::Embargo
-      elsif klass == Hydra::AccessControls::Lease
-        Hyrax::Lease
-      else
-        Hyrax::Resource
-      end
+      ModelRegistry.reverse_lookup(klass) || Hyrax::Resource
     end
 
     ##

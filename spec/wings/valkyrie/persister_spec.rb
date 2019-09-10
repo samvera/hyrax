@@ -6,22 +6,26 @@ require 'wings'
 RSpec.describe Wings::Valkyrie::Persister do
   context "When passing a Valkyrie::Resource converted from an ActiveFedora::Base" do
     before do
-      class Book < ActiveFedora::Base
-        include Hydra::AccessControls::Permissions
-        include Hyrax::CoreMetadata
-        include Hydra::WithDepositor
-        property :title, predicate: ::RDF::Vocab::DC.title, multiple: true
+      module Hyrax::Test
+        module Persister
+          class Book < ActiveFedora::Base
+            include Hydra::AccessControls::Permissions
+            include Hyrax::CoreMetadata
+            include Hydra::WithDepositor
+            property :title, predicate: ::RDF::Vocab::DC.title, multiple: true
+          end
+        end
       end
     end
 
     after do
-      Object.send(:remove_const, :Book)
+      Hyrax::Test.send(:remove_const, :Persister)
     end
 
     subject(:persister) { described_class.new(adapter: adapter) }
     let(:adapter) { Wings::Valkyrie::MetadataAdapter.new }
     let(:query_service) { adapter.query_service }
-    let(:af_resource_class) { Book }
+    let(:af_resource_class) { Hyrax::Test::Persister::Book }
     let(:resource_class) { Wings::OrmConverter.to_valkyrie_resource_class(klass: af_resource_class) }
     let(:resource) { resource_class.new(title: ['Foo']) }
 

@@ -15,11 +15,50 @@
 # However, these dependencies should be considered temprorary: this code will
 # be deprecated for removal in a future release.
 #
+# @example casting an ActiveFedora model to Valkyrie
+#   work     = GenericWork.create(title: ['Comet in Moominland'])
+#   resource = work.valkyrie_resource
+#
+#   resource.title # => ["Comet in Moominland"]
+#   resource.title = ["Mumintrollet på kometjakt"]
+#
+#   Hyrax.persister.save(resource: resource)
+#
+#   work.reload
+#   work.title # => ["Mumintrollet på kometjakt"]
+#
+# @example defining a native Valkyrie model for use with Wings
+#   # given an `ActiveFodora` model like
+#   class Book < ActiveFedora::Base
+#     property :author, predicate: ::RDF::URI('http://example.com/ns/author')
+#     property :title,  predicate: ::RDF::URI('http://example.com/ns/title')
+#   end
+#
+#   # define a `Valkyrie` model with matching attributes,
+#   class BookResource < Hyrax::Resource
+#     attribute :author, Valkyrie::Types::String
+#     attribute :title,  Valkyrie::Types::String
+#   end
+#
+#   # and register the relationship with `Wings`
+#   Wings::ModelRegistry.register(BookResource, Book)
+#
+#   # `Wings` will cast the `BookResource` to a `Book` to persist via `ActiveFedora`
+#   resource = BookResource.new(author: 'Tove Jansson', title: 'Comet in Moominland')
+#   adapter  = Wings::Valkyrie::MetadataAdapter.new
+#   resource = adapter.persister.save(resource: resource)
+#
+#   resource.title  # => ["Comet in Moominland"]
+#   resource.author # => ["Tove Jansson"]
+#
+#   resource.is_a?(BookResource) # => true
+#
 # @see https://wiki.duraspace.org/display/samvera/Hyrax-Valkyrie+Development+Working+Group
 #      for further context regarding the approach
 module Wings; end
 
 require 'valkyrie'
+require 'wings/model_registry'
 require 'wings/model_transformer'
 require 'wings/orm_converter'
 require 'wings/attribute_transformer'
@@ -51,6 +90,10 @@ Valkyrie.config.storage_adapter = :active_fedora
  Hyrax::CustomQueries::FindAccessControl].each do |query_handler|
   Valkyrie.config.metadata_adapter.query_service.custom_queries.register_query_handler(query_handler)
 end
+
+Wings::ModelRegistry.register(Hyrax::AccessControl, Hydra::AccessControl)
+Wings::ModelRegistry.register(Hyrax::Embargo,       Hydra::AccessControls::Embargo)
+Wings::ModelRegistry.register(Hyrax::Lease,         Hydra::AccessControls::Lease)
 
 Hydra::AccessControl.send(:define_method, :valkyrie_resource) do
   attrs = attributes.symbolize_keys

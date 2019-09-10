@@ -22,11 +22,24 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
     end
 
     context 'when given a valkyrie native model' do
-      let(:resource) { BookResource.new }
+      let(:resource) { klass.new }
+
+      let(:klass) do
+        class ConverterDummyResource < Valkyrie::Resource; end
+        ConverterDummyResource
+      end
 
       it 'gives a default work' do
         expect(converter.convert)
           .to be_a Wings::ActiveFedoraConverter::DefaultWork
+      end
+
+      context 'and it is registered' do
+        let(:resource) { Hyrax::Test::BookResource.new }
+
+        it 'maps to the registered ActiveFedora class' do
+          expect(converter.convert).to be_a Hyrax::Test::Book
+        end
       end
     end
 
