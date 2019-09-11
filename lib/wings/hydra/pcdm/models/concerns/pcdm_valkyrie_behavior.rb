@@ -132,24 +132,9 @@ module Wings
         in_collections(valkyrie: valkyrie).map(&:id)
       end
 
-      ##
-      # Any method not implemented is sent to the ActiveFedora version of the resource.
-      def method_missing(name, *args, &block)
-        # TODO: Remove the puts and this method when all methods are valkyrized
+      def original_file
         af_object = Wings::ActiveFedoraConverter.new(resource: self).convert
-        unless af_object.respond_to? name
-          Rails.logger.warn "#{af_object.class} does not respond to method #{name}"
-          super
-        end
-        Rails.logger.info "Calling through Method Missing with name: #{name}    args: #{args}   block_given? #{block_given?}"
-        args.delete_if { |arg| arg.is_a?(Hash) && arg.key?(:valkyrie) }
-        return af_object.send(name, args, block) if block_given?
-        return af_object.send(name, args) if args.present?
-        af_object.send(name)
-      end
-
-      def respond_to_missing?(_name, _include_private = false)
-        true
+        af_object.original_file
       end
 
       # @param valkyrie [Boolean] Should the returned ids be for Valkyrie or AF objects?
