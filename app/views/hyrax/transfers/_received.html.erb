@@ -1,11 +1,11 @@
 <table class="table table-striped" id="incoming-transfers">
   <thead>
     <tr>
-      <th>t(".title")</th>
-      <th>t(".date")</th>
-      <th>t(".from")</th>
-      <th>t(".status")</th>
-      <th>t(".comments")</th>
+      <th><%= t(".title") %></th>
+      <th><%= t(".date") %></th>
+      <th><%= t(".from") %></th>
+      <th><%= t(".status") %></th>
+      <th><%= t(".comments") %></th>
     </tr>
   </thead>
   <tbody>
@@ -22,7 +22,7 @@
       <td>
         <% if req.pending? %>
             <div class="btn-group">
-              <button class="btn btn-sm btn-primary" href="#">t(".accept")</button>
+              <button class="btn btn-sm btn-primary" href="#"><%= t(".accept") %></button>
               <button class="btn btn-sm dropdown-toggle accept" data-toggle="dropdown" href="#"><span class="caret"></span></button>
               <ul class="dropdown-menu">
                 <li>
