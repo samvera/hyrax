@@ -889,6 +889,10 @@ en:
           title: Title
           type: Type
           visibility: Visibility
+          collection:
+            visibility: Visibility of Collection
+          work:
+            visibility: Visibility of Work
         highlighted: My Highlights
         shared: Works Shared with Me
         sr:
