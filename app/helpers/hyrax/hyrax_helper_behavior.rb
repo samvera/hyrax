@@ -305,9 +305,15 @@ module Hyrax
       # @param [Hash] facet
       # @note Ignores all but the first facet.  Probably a bug.
       def search_state_with_facets(params, facet = {})
-        state = Blacklight::SearchState.new(params, CatalogController.blacklight_config)
+        state = Blacklight::SearchState.new([], CatalogController.blacklight_config)
         return state.params if facet.none?
-        state.add_facet_params(facet.keys.first.to_s + "_sim", facet.values.first)
+
+        facet_type = state.add_facet_params(facet.keys.first.to_s + "_sim", facet.values.first)
+        facet_search = state.add_facet_params(params[:search_field] + "_ssim", params[:q].delete('"'))
+
+        query = Hash.new {}
+        query["f"] = facet_type["f"].merge(facet_search["f"])
+        query
       end
 
       def institution
