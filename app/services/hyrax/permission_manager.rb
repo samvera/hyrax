@@ -144,8 +144,8 @@ module Hyrax
         Enumerator.new do |yielder|
           acl.permissions.each do |permission|
             next unless permission.mode == mode
-            next unless permission.agent.starts_with?('group/')
-            yielder << permission.agent.gsub('group/', '')
+            next unless permission.agent.starts_with?(Hyrax::Group.name_prefix)
+            yielder << permission.agent.gsub(Hyrax::Group.name_prefix, '')
           end
         end
       end
@@ -155,9 +155,9 @@ module Hyrax
 
         acl.permissions.each do |permission|
           next unless permission.mode == mode
-          next unless permission.agent.starts_with?('group/')
+          next unless permission.agent.starts_with?(Hyrax::Group.name_prefix)
 
-          group_name = permission.agent.gsub('group/', '')
+          group_name = permission.agent.gsub(Hyrax::Group.name_prefix, '')
           next if groups.include?(group_name)
 
           acl.revoke(mode).from(Group.new(group_name))
@@ -176,7 +176,7 @@ module Hyrax
 
         acl.permissions.each do |permission|
           next unless permission.mode == mode
-          next if permission.agent.starts_with?('group/')
+          next if permission.agent.starts_with?(Hyrax::Group.name_prefix)
           next if users.include? permission.agent
 
           user_for_existing_permission = ::User.find_by_user_key(permission.agent)
@@ -190,7 +190,7 @@ module Hyrax
         Enumerator.new do |yielder|
           acl.permissions.each do |permission|
             next unless permission.mode == mode
-            next if permission.agent.starts_with?('group/')
+            next if permission.agent.starts_with?(Hyrax::Group.name_prefix)
             yielder << permission.agent
           end
         end

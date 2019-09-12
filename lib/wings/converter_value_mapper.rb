@@ -18,10 +18,10 @@ module Wings
 
     def result
       value.last.map! do |permission_attrs|
-        if permission_attrs[:agent].starts_with? 'group/'
+        if permission_attrs[:agent].starts_with? Hyrax::Group.name_prefix
           type = 'group'
           name = permission_attrs[:agent].dup
-          name.slice!('group/')
+          name.slice!(Hyrax::Group.name_prefix)
         else
           type = 'person'
           name = permission_attrs[:agent].dup

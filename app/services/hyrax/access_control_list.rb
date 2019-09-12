@@ -115,7 +115,7 @@ module Hyrax
           def id_for(agent: user_or_group)
             case agent
             when Hyrax::Group
-              "group/#{agent.name}"
+              "#{Hyrax::Group.name_prefix}#{agent.name}"
             else
               agent.user_key.to_s
             end

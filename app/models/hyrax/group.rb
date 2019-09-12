@@ -1,5 +1,11 @@
 module Hyrax
   class Group
+    DEFAULT_NAME_PREFIX = 'group/'.freeze
+
+    def self.name_prefix
+      DEFAULT_NAME_PREFIX
+    end
+
     def initialize(name)
       @name = name
     end
