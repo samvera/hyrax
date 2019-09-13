@@ -41,9 +41,9 @@ SUMMARY
   spec.add_dependency 'carrierwave', '~> 1.0'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
   spec.add_dependency 'dry-equalizer', '~> 0.2'
-  spec.add_dependency 'dry-struct', '~> 0.4'
+  spec.add_dependency 'dry-struct', '~> 1.0'
   spec.add_dependency 'dry-transaction', '~> 0.11'
-  spec.add_dependency 'dry-validation', '~> 0.9'
+  spec.add_dependency 'dry-validation', '~> 1.3'
   spec.add_dependency 'flipflop', '~> 2.3'
   # Pin more tightly because 0.x gems are potentially unstable
   spec.add_dependency 'flot-rails', '~> 0.0.6'
@@ -77,7 +77,7 @@ SUMMARY
   spec.add_dependency 'select2-rails', '~> 3.5'
   spec.add_dependency 'signet'
   spec.add_dependency 'tinymce-rails', '~> 4.1'
-  spec.add_dependency 'valkyrie', '~> 1.6'
+  spec.add_dependency 'valkyrie', '~> 2.0'
 
   # temporary pin to 2.17 due to failures caused in 2.18.0
   spec.add_development_dependency "capybara", '~> 2.4', '< 2.18.0'

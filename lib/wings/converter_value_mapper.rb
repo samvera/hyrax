@@ -23,6 +23,22 @@ module Wings
     end
   end
 
+  class IdValueMapper < ::Valkyrie::ValueMapper
+    ConverterValueMapper.register(self)
+
+    def self.handles?(value)
+      value.last.is_a? ::Valkyrie::ID
+    end
+
+    def result
+      [value.first, values]
+    end
+
+    def values
+      value.last.id
+    end
+  end
+
   class NestedLeaseValue < ::Valkyrie::ValueMapper
     ConverterValueMapper.register(self)
 
@@ -40,7 +56,7 @@ module Wings
   class NestedResourceArrayValue < ::Valkyrie::ValueMapper
     ConverterValueMapper.register(self)
     def self.handles?(value)
-      value.last.is_a?(Array) && value.last.map { |x| x.try(:class) }.include?(Hash)
+      value.last.is_a?(Array) && value.last.any? { |x| x.is_a? Dry::Struct }
     end
 
     def result
@@ -54,14 +70,32 @@ module Wings
     end
   end
 
-  class NestedResourceValue < ::Valkyrie::ValueMapper
+  class ArrayValue < ::Valkyrie::ValueMapper
     ConverterValueMapper.register(self)
+
     def self.handles?(value)
-      value.last.is_a?(Hash)
+      value.last.is_a?(Array)
     end
 
     def result
-      attrs = ActiveFedoraAttributes.new(value.last).result
+      [value.first, values]
+    end
+
+    def values
+      value.last.map do |val|
+        calling_mapper.for([value.first, val]).result
+      end.flat_map(&:last)
+    end
+  end
+
+  class NestedResourceValue < ::Valkyrie::ValueMapper
+    ConverterValueMapper.register(self)
+    def self.handles?(value)
+      value.last.is_a?(Dry::Struct)
+    end
+
+    def result
+      attrs = ActiveFedoraAttributes.new(value.last.attributes).result
       attrs.delete(:read_groups)
       attrs.delete(:read_users)
       attrs.delete(:edit_groups)

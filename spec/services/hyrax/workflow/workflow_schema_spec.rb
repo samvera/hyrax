@@ -1,6 +1,8 @@
 module Hyrax
   module Workflow
-    RSpec.describe 'WorkflowSchema' do
+    RSpec.describe WorkflowSchema do
+      subject(:schema) { described_class.new }
+
       let(:valid_data) do
         {
           workflows: [
@@ -51,12 +53,12 @@ module Hyrax
         Object.send(:remove_const, :DoTheThing)
       end
 
-      it 'validates valid data by returning an empty message' do
-        expect(WorkflowSchema.call(valid_data).messages).to be_empty
+      it 'validates valid data by returning an empty error set' do
+        expect(schema.call(valid_data).errors).to be_empty
       end
 
       it 'reports invalid data via the returned messages' do
-        expect(WorkflowSchema.call(invalid_data).messages).not_to be_empty
+        expect(schema.call(invalid_data).errors).not_to be_empty
       end
 
       describe 'notification names' do
@@ -64,7 +66,7 @@ module Hyrax
           let(:notification_name) { 'FooBar' }
 
           it 'is invalid' do
-            expect(WorkflowSchema.call(valid_data).messages).not_to be_empty
+            expect(schema.call(valid_data).errors).not_to be_empty
           end
         end
 
@@ -76,8 +78,8 @@ module Hyrax
           after { Hyrax::Workflow.send(:remove_const, :DoTheThing) }
           let(:notification_name) { 'Hyrax::Workflow::DoTheThing' }
 
-          it 'returns an empty message because valid' do
-            expect(WorkflowSchema.call(valid_data).messages).to be_empty
+          it 'returns an empty error set because valid' do
+            expect(schema.call(valid_data).errors).to be_empty
           end
         end
       end
