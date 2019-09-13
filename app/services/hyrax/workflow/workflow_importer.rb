@@ -113,7 +113,7 @@ module Hyrax
         end
 
         def default_schema
-          Hyrax::Workflow::WorkflowSchema
+          Hyrax::Workflow::WorkflowSchema.new
         end
 
         def validate!
@@ -170,7 +170,7 @@ module Hyrax
           def self.call(data:, schema:, logger:)
             result = schema.call(data)
             return true if result.success?
-            message = result.messages(full: true).inspect
+            message = result.errors(full: true).inspect
             logger.error(message)
             raise message
           end
