@@ -62,10 +62,8 @@ module Hyrax
         end
 
         def new_works_for(env, new_work_ids)
-          query_service = Valkyrie.config.metadata_adapter.query_service
-
           (new_work_ids - env.curation_concern.in_works_ids).map do |work_id|
-            query_service.find_by_alternate_identifier(alternate_identifier: work_id, use_valkyrie: false)
+            Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: work_id, use_valkyrie: false)
           end
         end
 

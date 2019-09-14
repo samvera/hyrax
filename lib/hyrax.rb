@@ -56,18 +56,38 @@ module Hyrax
     config.curation_concerns.first
   end
 
+  ##
+  # The Valkyrie persister used for PCDM models throughout Hyrax
+  #
+  # @note always use this method to retrieve the persister when data
+  #   interoperability with Hyrax is required
   def self.persister
     metadata_adapter.persister
   end
 
+  ##
+  # The Valkyrie metadata adapter used for PCDM models throughout Hyrax
+  #
+  # @note always use this method to retrieve the metadata adapter when data
+  #   interoperability with Hyrax is required
   def self.metadata_adapter
     Valkyrie.config.metadata_adapter
   end
 
+  ##
+  # The Valkyrie storage_adapter used for PCDM files throughout Hyrax
+  #
+  # @note always use this method to retrieve the storage adapter when handling
+  #   files that will be used by Hyrax
   def self.storage_adapter
     Valkyrie.config.storage_adapter
   end
 
+  ##
+  # The Valkyrie query service used for PCDM files throughout Hyrax
+  #
+  # @note always use this method to retrieve the query service when data
+  #   interoperability with Hyrax is required
   def self.query_service
     metadata_adapter.query_service
   end
