@@ -30,10 +30,6 @@ require 'wings/valkyrie/storage/active_fedora'
 
 ActiveFedora::Base.include Wings::Valkyrizable
 
-Valkyrie.config.resource_class_resolver = lambda do |_klass_name|
-  Wings::ModelTransformer.convert_class_name_to_valkyrie_resource_class(internal_resource)
-end
-
 Valkyrie::MetadataAdapter.register(
   Wings::Valkyrie::MetadataAdapter.new, :wings_adapter
 )

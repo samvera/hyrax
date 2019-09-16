@@ -125,21 +125,6 @@ module Wings
     end
 
     ##
-    # @note The method signature is to conform to Valkyrie's method signature
-    #   for ::Valkyrie.config.resource_class_resolver
-    #
-    # @param class_name [String] a string representation of an `ActiveFedora`
-    #   model
-    #
-    # @return [Class] a dynamically generated `Valkyrie::Resource` subclass
-    #   mirroring the provided class name
-    #
-    def self.convert_class_name_to_valkyrie_resource_class(class_name)
-      klass = class_name.constantize
-      to_valkyrie_resource_class(klass: klass)
-    end
-
-    ##
     # @param klass [String] an `ActiveFedora` model
     #
     # @return [Class] a dyamically generated `Valkyrie::Resource` subclass
