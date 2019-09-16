@@ -161,7 +161,7 @@ module Hyrax
       # removes edit access for the depositor.
       def trophy_abilities
         can [:create, :destroy], Trophy do |t|
-          doc = Hyrax::Base.search_by_id(t.work_id, fl: 'depositor_ssim')
+          doc = Hyrax::SolrService.search_by_id(t.work_id, fl: 'depositor_ssim')
           current_user.user_key == doc.fetch('depositor_ssim').first
         end
       end
