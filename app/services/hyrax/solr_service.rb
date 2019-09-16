@@ -32,7 +32,7 @@ module Hyrax
                                    'Use `Hyrax.config.solr_select_path` instead'
       end
 
-      delegate :add, :commit, :count, :delete, :get, :instance, :post, :query, :delete_by_query, to: :new
+      delegate :add, :commit, :count, :delete, :get, :instance, :post, :query, :delete_by_query, :search_by_id, to: :new
     end
 
     # Wraps rsolr get
@@ -128,6 +128,16 @@ module Hyrax
     def count(query)
       args = { rows: 0 }
       get(query, **args)['response']['numFound'].to_i
+    end
+
+    # Wraps ActiveFedora::Base#search_by_id(id, opts)
+    # @return [Array<SolrHit>] the response docs wrapped in SolrHit objects
+    def search_by_id(id, opts = {})
+      opts = opts.merge(rows: 1)
+      result = Hyrax::SolrService.query("id:#{id}", opts)
+
+      raise Hyrax::ObjectNotFoundError, "Object '#{id}' not found in solr" if result.empty?
+      result.first
     end
 
     private
