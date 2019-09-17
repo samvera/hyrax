@@ -203,12 +203,20 @@ module Hyrax
         def apply_lease(env, intention)
           return true unless intention.wants_lease?
           env.curation_concern.apply_lease(*intention.lease_params)
+          # apply_lease returns true if there has been a change in the lease period,
+          # otherwise it returns nil.  Since we want to continue processing, even when the date
+          # does not change, we return true from this method.
+          true
         end
 
         # If they want an embargo, we can assume it's valid
         def apply_embargo(env, intention)
           return true unless intention.wants_embargo?
           env.curation_concern.apply_embargo(*intention.embargo_params)
+          # apply_embargo returns true if there has been a change in the embargo period,
+          # otherwise it returns nil.  Since we want to continue processing, even when the date
+          # does not change, we return true from this method.
+          true
         end
     end
   end

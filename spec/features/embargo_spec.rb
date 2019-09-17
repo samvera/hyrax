@@ -30,6 +30,23 @@ RSpec.describe 'embargo' do
 
       click_button 'Update Embargo'
       expect(page).to have_content(later_future_date.to_date.to_formatted_s(:standard))
+
+      click_link 'Edit'
+      fill_in 'Title', with: 'Embargo test CHANGED'
+      click_button 'Save'
+
+      expect(page).to have_content('CHANGED')
+
+      click_link 'Edit'
+      click_link "Files" # switch tab
+      expect(page).to have_content "Add files"
+      expect(page).to have_content "Add folder"
+      within('div#add-files') do
+        attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/image.jp2", visible: false)
+      end
+
+      click_button 'Save' # Save the work
+      expect(page).to have_content('CHANGED')
     end
   end
 
