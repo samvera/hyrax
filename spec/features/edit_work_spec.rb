@@ -1,5 +1,6 @@
 RSpec.describe 'Editing a work', type: :feature do
-  let(:user) { create(:user) }
+  let(:user) { create(:user, groups: 'librarians') }
+  let(:user_admin) { create(:user, groups: 'admin') }
   let(:work) { build(:work, user: user, admin_set: another_admin_set) }
   let(:default_admin_set) do
     create(:admin_set, id: AdminSet::DEFAULT_ID,
@@ -56,6 +57,24 @@ RSpec.describe 'Editing a work', type: :feature do
       visit edit_hyrax_generic_work_path(work)
       click_link "Relationships" # switch tab
       expect(page).to have_select('generic_work_admin_set_id', selected: another_admin_set.title)
+    end
+
+    it 'selects group assigned to user' do
+      visit edit_hyrax_generic_work_path(work)
+      click_link "Sharing" # switch tab
+      expect(page).to have_selector('#new_group_name_skel', text: 'librarians')
+    end
+  end
+
+  context 'when logged in as admin' do
+    before do
+      sign_in user_admin
+    end
+
+    it 'selects group all available groups' do
+      visit edit_hyrax_generic_work_path(work)
+      click_link "Sharing" # switch tab
+      expect(page).to have_selector('#new_group_name_skel', text: 'archivist admin_policy_object_editor donor researcher patron')
     end
   end
 end

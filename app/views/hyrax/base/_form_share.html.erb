@@ -3,7 +3,7 @@
 
 <% depositor = f.object.depositor %>
 
-<div class="alert alert-info hidden" id="save_perm_note"><%= t('.permissions_save_note') %></div>
+<div class="alert alert-info hidden" id="save_perm_note"><%= raw t('.permissions_save_note') %></div>
 
 <div class="alert alert-warning hidden" role="alert" id="permissions_error">
   <span id="permissions_error_text"></span>
@@ -18,7 +18,11 @@
   </legend>
   <div class="col-sm-9 form-inline">
     <label for="new_group_name_skel" class="sr-only"><%= t(".group") %></label>
-    <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + current_user.groups), class: 'form-control' %>
+    <% if current_ability.admin? %>
+      <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + current_user.group_service.map.keys), class: 'form-control' %>
+    <% else %>
+      <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + current_user.groups), class: 'form-control' %>
+    <% end %>
     <label for="new_group_permission_skel" class="sr-only"><%= t(".access_type_to_grant") %></label>
     <%= select_tag 'new_group_permission_skel', options_for_select(Hyrax.config.permission_options), class: 'form-control' %>
 
