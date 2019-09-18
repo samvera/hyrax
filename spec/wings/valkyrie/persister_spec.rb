@@ -108,7 +108,6 @@ RSpec.describe Wings::Valkyrie::Persister do
     let(:query_service) { adapter.query_service }
     before do
       class CustomResource < Valkyrie::Resource
-        include Valkyrie::Resource::AccessControls
         attribute :title
         attribute :author
         attribute :member_ids
@@ -117,9 +116,21 @@ RSpec.describe Wings::Valkyrie::Persister do
         attribute :ordered_authors, Valkyrie::Types::Array.of(Valkyrie::Types::Anything).meta(ordered: true)
         attribute :ordered_nested, Valkyrie::Types::Array.of(CustomResource).meta(ordered: true)
       end
+      
+      class Custom < ActiveFedora::Base
+        property :title,    predicate: ::RDF::URI('http://example.com/ns/title')
+        property :author,   predicate: ::RDF::URI('http://example.com/ns/author')
+        property :member_ids, predicate: ::RDF::URI.new('http://www.example.com/member_ids'), multiple: true
+        property :nested_resource, predicate: ::RDF::URI("http://example.com/nested_resource"), class_name: CustomResource
+        property :depositor,     predicate: ::RDF::URI("http://example.com/ns/depositor")
+        property :ordered_authors, predicate: ::RDF::Vocab::DC.creator
+        property :ordered_nested, predicate: ::RDF::URI("http://example.com/ordered_nested")
+        accepts_nested_attributes_for :nested_resource
+      end
     end
     after do
       Object.send(:remove_const, :CustomResource)
+      Object.send(:remove_const, :Custom)
     end
 
     subject { persister }
@@ -333,7 +344,8 @@ RSpec.describe Wings::Valkyrie::Persister do
     # not sure how to fix this one. When a resource wasn't ever in AF, it is persisted as
     # internal_resource="Wings::ActiveFedoraConverter::DefaultWork"
     # so the CustomResource defined above will not be persisted as such.
-    xit "can find that resource again" do
+    it "can find that resource again" do
+      Wings::ModelRegistry.register(resource_class, Custom)
       id = persister.save(resource: resource).id
       item = query_service.find_by(id: id)
       expect(item).to be_kind_of resource_class
