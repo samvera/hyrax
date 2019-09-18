@@ -263,7 +263,7 @@ RSpec.describe Wings::Valkyrie::Persister do
       expect(reloaded.author.first.zone).to eq('UTC')
     end
 
-    xit "can store Floats" do
+    it "can store Floats" do
       decimal = 5.5
       book = persister.save(resource: resource_class.new(title: [decimal]))
       reloaded = query_service.find_by(id: book.id)
