@@ -116,13 +116,13 @@ RSpec.describe Wings::Valkyrie::Persister do
         attribute :ordered_authors, Valkyrie::Types::Array.of(Valkyrie::Types::Anything).meta(ordered: true)
         attribute :ordered_nested, Valkyrie::Types::Array.of(CustomResource).meta(ordered: true)
       end
-      
+
       class Custom < ActiveFedora::Base
         property :title,    predicate: ::RDF::URI('http://example.com/ns/title')
         property :author,   predicate: ::RDF::URI('http://example.com/ns/author')
         property :member_ids, predicate: ::RDF::URI.new('http://www.example.com/member_ids'), multiple: true
         property :nested_resource, predicate: ::RDF::URI("http://example.com/nested_resource"), class_name: CustomResource
-        property :depositor,     predicate: ::RDF::URI("http://example.com/ns/depositor")
+        property :depositor, predicate: ::RDF::URI("http://example.com/ns/depositor")
         property :ordered_authors, predicate: ::RDF::Vocab::DC.creator
         property :ordered_nested, predicate: ::RDF::URI("http://example.com/ordered_nested")
         accepts_nested_attributes_for :nested_resource
