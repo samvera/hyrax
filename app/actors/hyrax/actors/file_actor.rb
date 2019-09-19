@@ -5,16 +5,16 @@ module Hyrax
     # Actions for a file identified by file_set and relation (maps to use predicate)
     # @note Spawns asynchronous jobs
     class FileActor
-      attr_reader :file_set, :relation, :user
+      attr_reader :file_set, :relation, :user, :use_valkyrie
 
       # @param [FileSet] file_set the parent FileSet
       # @param [Symbol, #to_sym] relation the type/use for the file
       # @param [User] user the user to record as the Agent acting upon the file
       def initialize(file_set, relation, user, use_valkyrie: false)
-        @file_set = file_set
-        @relation = normalize_relation(relation, use_valkyrie: use_valkyrie)
-        @user = user
         @use_valkyrie = use_valkyrie
+        @file_set = file_set
+        @relation = normalize_relation(relation)
+        @user = user
       end
 
       # Persists file as part of file_set and spawns async job to characterize and create derivatives.
@@ -24,7 +24,7 @@ module Hyrax
       # @see IngestJob
       # @todo create a job to monitor the temp directory (or in a multi-worker system, directories!) to prune old files that have made it into the repo
       def ingest_file(io)
-        perform_ingest_file(io, use_valkyrie: @use_valkyrie)
+        perform_ingest_file(io)
       end
 
       # Reverts file and spawns async job to characterize and create derivatives.
@@ -57,7 +57,7 @@ module Hyrax
         # @param [JobIoWrapper] io the file to save in the repository, with mime_type and original_name
         # @return [FileMetadata, FalseClass] the created file metadata on success, false on failure
         # @todo create a job to monitor the temp directory (or in a multi-worker system, directories!) to prune old files that have made it into the repo
-        def perform_ingest_file(io, use_valkyrie: false)
+        def perform_ingest_file(io)
           use_valkyrie ? perform_ingest_file_through_valkyrie(io) : perform_ingest_file_through_active_fedora(io)
         end
 
@@ -95,7 +95,7 @@ module Hyrax
                                          persister:       Hyrax.persister)
         end
 
-        def normalize_relation(relation, use_valkyrie: false)
+        def normalize_relation(relation)
           use_valkyrie ? normalize_relation_for_valkyrie(relation) : normalize_relation_for_active_fedora(relation)
         end
 

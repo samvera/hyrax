@@ -9,8 +9,11 @@ module Hyrax
   class SolrService
     COMMIT_PARAMS = { softCommit: true }.freeze
 
-    def initialize
+    attr_reader :use_valkyrie
+
+    def initialize(use_valkyrie: Hyrax.config.query_index_from_valkyrie)
       @old_service = ActiveFedora::SolrService
+      @use_valkyrie = use_valkyrie
     end
 
     def instance
@@ -34,7 +37,7 @@ module Hyrax
 
     # Wraps rsolr get
     # @return [Hash] the hash straight form rsolr
-    def get(query = nil, use_valkyrie: Hyrax.config.query_index_from_valkyrie, **args)
+    def get(query = nil, **args)
       # Make Hyrax.config.solr_select_path the default SOLR path
       solr_path = args.delete(:path) || Hyrax.config.solr_select_path
       args = args.merge(q: query) unless query.blank?
@@ -49,7 +52,7 @@ module Hyrax
 
     # Wraps rsolr post
     # @return [Hash] the hash straight form rsolr
-    def post(query = nil, use_valkyrie: Hyrax.config.query_index_from_valkyrie, **args)
+    def post(query = nil, **args)
       # Make Hyrax.config.solr_select_path the default SOLR path
       solr_path = args.delete(:path) || Hyrax.config.solr_select_path
       args = args.merge(q: query) unless query.blank?
@@ -64,15 +67,15 @@ module Hyrax
 
     # Wraps get by default
     # @return [Array<SolrHit>] the response docs wrapped in SolrHit objects
-    def query(query, use_valkyrie: Hyrax.config.query_index_from_valkyrie, **args)
+    def query(query, **args)
       Rails.logger.warn rows_warning unless args.key?(:rows)
       method = args.delete(:method) || :get
 
       result = case method
                when :get
-                 get(query, use_valkyrie: use_valkyrie, **args)
+                 get(query, **args)
                when :post
-                 post(query, use_valkyrie: use_valkyrie, **args)
+                 post(query, **args)
                else
                  raise "Unsupported HTTP method for querying SolrService (#{method.inspect})"
                end
@@ -82,7 +85,7 @@ module Hyrax
     end
 
     # Wraps rsolr :commit
-    def commit(use_valkyrie: Hyrax.config.query_index_from_valkyrie)
+    def commit
       if use_valkyrie
         valkyrie_index.connection.commit
       else
@@ -91,7 +94,7 @@ module Hyrax
     end
 
     # Wraps rsolr :delete_by_query
-    def delete_by_query(query, use_valkyrie: Hyrax.config.query_index_from_valkyrie, **args)
+    def delete_by_query(query, **args)
       if use_valkyrie
         valkyrie_index.connection.delete_by_query(query, params: args)
       else
@@ -100,7 +103,7 @@ module Hyrax
     end
 
     # Wraps rsolr delete
-    def delete(id, use_valkyrie: Hyrax.config.query_index_from_valkyrie)
+    def delete(id)
       if use_valkyrie
         valkyrie_index.connection.delete_by_id(id, params: COMMIT_PARAMS)
       else
@@ -110,7 +113,7 @@ module Hyrax
 
     # Wraps rsolr add
     # @return [Hash] the hash straight form rsolr
-    def add(solr_doc, use_valkyrie: Hyrax.config.query_index_from_valkyrie, commit: true)
+    def add(solr_doc, commit: true)
       params = { softCommit: commit }
 
       if use_valkyrie
@@ -122,9 +125,9 @@ module Hyrax
 
     # Wraps rsolr count
     # @return [Hash] the hash straight form rsolr
-    def count(query, use_valkyrie: Hyrax.config.query_index_from_valkyrie)
+    def count(query)
       args = { rows: 0 }
-      get(query, use_valkyrie: use_valkyrie, **args)['response']['numFound'].to_i
+      get(query, **args)['response']['numFound'].to_i
     end
 
     private
