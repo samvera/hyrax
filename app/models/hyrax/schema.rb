@@ -50,7 +50,8 @@ module Hyrax
     # @see https://github.com/samvera-labs/houndstooth
     class SimpleSchemaLoader
       SCHEMAS = {
-        core_metadata: Hyrax::Metadata::Core.new
+        core_metadata: Hyrax::Metadata::Core.new,
+        basic_metadata: Hyrax::Metadata::Basic.new
       }.freeze
 
       ##

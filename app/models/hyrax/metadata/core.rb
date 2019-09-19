@@ -2,6 +2,8 @@
 
 module Hyrax
   module Metadata
+    ##
+    # @api private
     class Core
       ATTRIBUTES = {
         title:         Valkyrie::Types::Array.of(Valkyrie::Types::String),
