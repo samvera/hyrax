@@ -35,12 +35,8 @@ module Hyrax
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if destroy was successful
       def destroy(env)
-        env.curation_concern.in_collection_ids.each do |id|
-          destination_collection = ::Collection.find(id)
-          destination_collection.members.delete(env.curation_concern)
-          destination_collection.update_index
-        end
-        env.curation_concern.destroy
+        delete_collection_member(env)
+        delete(env, use_valkyrie: Hyrax.config.use_valkyrie?) && next_actor.destroy(env)
       end
 
       private
@@ -82,6 +78,21 @@ module Hyrax
           # later we should capture the _err.obj and pass it back
           # through the environment
           env.curation_concern.save
+        end
+
+        def delete(env, use_valkyrie: false)
+          return env.curation_concern.destroy unless use_valkyrie
+
+          resource = env.curation_concern.valkyrie_resource
+          Hyrax.persister.delete(resource: resource)
+        end
+
+        def delete_collection_member(env)
+          env.curation_concern.in_collection_ids.each do |id|
+            destination_collection = ::Collection.find(id)
+            destination_collection.members.delete(env.curation_concern)
+            destination_collection.update_index
+          end
         end
 
         def apply_save_data_to_curation_concern(env)
