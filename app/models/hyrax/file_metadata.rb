@@ -11,6 +11,7 @@ module Hyrax
     attribute :original_filename, ::Valkyrie::Types::Set
     attribute :mime_type, ::Valkyrie::Types::Set
     attribute :use, ::Valkyrie::Types::Set # AF::File type
+    attribute :content, ::Valkyrie::Types::Set
 
     # attributes set by fits
     attribute :format_label, ::Valkyrie::Types::Set
