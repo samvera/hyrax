@@ -64,6 +64,7 @@ require 'wings/model_transformer'
 require 'wings/orm_converter'
 require 'wings/attribute_transformer'
 require 'wings/services/custom_queries/find_access_control'
+require 'wings/services/custom_queries/find_file_metadata'
 require 'wings/services/custom_queries/find_many_by_alternate_ids'
 require 'wings/valkyrizable'
 require 'wings/valkyrie/metadata_adapter'
@@ -92,6 +93,7 @@ custom_queries = [Hyrax::CustomQueries::Navigators::ChildCollectionsNavigator,
                   Hyrax::CustomQueries::Navigators::ChildFilesetsNavigator,
                   Hyrax::CustomQueries::Navigators::ChildWorksNavigator,
                   Wings::CustomQueries::FindAccessControl, # override Hyrax::CustomQueries::FindAccessControl
+                  Wings::CustomQueries::FindFileMetadata, # override Hyrax::CustomQueries::FindFileMetadata
                   Wings::CustomQueries::FindManyByAlternateIds] # override Hyrax::CustomQueries::FindManyByAlternateIds
 custom_queries.each do |query_handler|
   Valkyrie.config.metadata_adapter.query_service.custom_queries.register_query_handler(query_handler)
