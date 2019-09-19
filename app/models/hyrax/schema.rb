@@ -50,18 +50,13 @@ module Hyrax
     # @see https://github.com/samvera-labs/houndstooth
     class SimpleSchemaLoader
       SCHEMAS = {
-        core_metadata: {
-          title:         Valkyrie::Types::Array.of(Valkyrie::Types::String),
-          date_modified: Valkyrie::Types::DateTime,
-          date_uploaded: Valkyrie::Types::DateTime,
-          depositor:     Valkyrie::Types::String
-        }.freeze
+        core_metadata: Hyrax::Metadata::Core.new
       }.freeze
 
       ##
       # @param [Symbol] schema
       def attributes_for(schema:)
-        SCHEMAS[schema] || raise(ArgumentError, "No schema defined: #{schema}")
+        SCHEMAS[schema]&.attributes || raise(ArgumentError, "No schema defined: #{schema}")
       end
     end
 
