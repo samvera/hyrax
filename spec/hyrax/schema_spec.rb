@@ -84,9 +84,8 @@ RSpec.describe Hyrax::Schema do
     it 'persists basic attributes' do
       saved = Hyrax.persister.save(resource: resource)
 
-      matchers = attributes.each_with_object({}) do |hash, (k, v)|
+      matchers = attributes.each_with_object({}) do |(k, v), hash|
         v.is_a?(Array) ? hash[k] = contain_exactly(*v) : v
-        hash
       end
 
       expect(saved).to have_attributes(**matchers)

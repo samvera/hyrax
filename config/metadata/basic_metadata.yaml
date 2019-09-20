@@ -1,0 +1,67 @@
+attributes:
+  abstract:
+    type: string
+    multiple: true
+  access_right:
+    type: string
+    multiple: true
+  alternative_title:
+    type: string
+    multiple: true
+  based_near:
+    type: string
+    multiple: true
+  bibliographic_citation:
+    type: string
+    multiple: true
+  contributor:
+    type: string
+    multiple: true
+  creator:
+    type: string
+    multiple: true
+  date_created:
+    type: date_time
+    multiple: true
+  description:
+    type: string
+    multiple: true
+  identifier:
+    type: string
+    multiple: true
+  import_url:
+    type: string
+  keyword:
+    type: string
+    multiple: true
+  publisher:
+    type: string
+    multiple: true
+  label:
+    type: string
+  language:
+    type: string
+    multiple: true
+  license:
+    type: string
+    multiple: true
+  relative_path:
+    type: string
+  related_url:
+    type: string
+    multiple: true
+  resource_type:
+    type: string
+    multiple: true
+  rights_notes:
+    type: string
+    multiple: true
+  rights_statement:
+    type: string
+    multiple: true
+  source:
+    type: string
+    multiple: true
+  subject:
+    type: string
+    multiple: true
