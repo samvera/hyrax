@@ -22,7 +22,7 @@ RSpec.describe Wings::FileConverterService do
     subject { described_class.af_file_to_resource(af_file: af_file) }
     it 'copies attributes to resource' do # rubocop:disable RSpec/ExampleLength
       expect(subject.id.to_s).to eq af_file_id
-      expect(subject.alternate_id).to match_valkyrie_ids_with_active_fedora_ids [af_file_id]
+      expect(subject.alternate_ids).to match_valkyrie_ids_with_active_fedora_ids [af_file_id]
       expect(subject.file_identifiers).to match_valkyrie_ids_with_active_fedora_ids [af_file_id]
       expect(subject.created_at).to eq af_file.create_date
       expect(subject.updated_at).to eq af_file.modified_date
@@ -42,7 +42,7 @@ RSpec.describe Wings::FileConverterService do
     let(:valkyrie_id) { ::Valkyrie::ID.new(id) }
     let(:valkyrie_attrs) { plain_text_valkyrie_attrs }
     let(:file_metadata) do
-      valkyrie_attrs[:alternate_id] = valkyrie_id
+      valkyrie_attrs[:alternate_ids] = valkyrie_id
       valkyrie_attrs[:file_identifiers] = valkyrie_id
       valkyrie_attrs[:word_count] = plain_text_valkyrie_attrs[:content].split(' ').count
       valkyrie_attrs[:size] = plain_text_valkyrie_attrs[:content].size

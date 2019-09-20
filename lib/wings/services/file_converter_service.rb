@@ -11,8 +11,8 @@ module Wings
       end
 
       def resource_to_af_file(metadata_resource:)
-        return unless metadata_resource&.alternate_id.present?
-        af_file = Hydra::PCDM::File.new(id: metadata_resource.alternate_id.first.to_s)
+        return unless metadata_resource&.alternate_ids.present?
+        af_file = Hydra::PCDM::File.new(id: metadata_resource.alternate_ids.first.to_s)
         af_file.content = content(metadata_resource)
         af_file.original_name = metadata_resource.original_filename.first
         af_file.mime_type = metadata_resource.mime_type.first
@@ -27,7 +27,7 @@ module Wings
         def base_af_file_attributes(af_file:)
           id = ::Valkyrie::ID.new(af_file.id)
           { id: id,
-            alternate_id: [id],
+            alternate_ids: [id],
             file_identifiers: [id],
             created_at: af_file.create_date,
             updated_at: af_file.modified_date,
