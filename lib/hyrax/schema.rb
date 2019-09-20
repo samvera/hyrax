@@ -2,13 +2,38 @@
 
 module Hyrax
   ##
+  # @api public
+  #
+  # Builds a schema module for a Valkyrie resource. The schema itself is
+  # resolved by schema loader, which must respond to
+  # `#attributes_for(schema: :name)` with a hash from attribute names to
+  # `Dry::Type` types.
+  #
+  # For the default schema loader, configuration is loaded from
+  # `config/metadata/{name}.yaml`. Custom schema loaders can be provided
+  # for other types.
+  #
+  # @note `Valkyrie::Resources`/`Hyrax::Resources` are not required to use this
+  # interface, and may define custom attributes using the base
+  # `Valkyrie::Resource.attribute` interface. This mechanism is provided to
+  # allow schemas to be defined in a unified way that don't require programmer
+  # intervention ("configurable schemas"). While the default usage defines
+  # schemas in application configuration, they could also be held in repository
+  # storage, an external schema service, etc... by using a custom schema loader.
+  #
   # @param [Symbol] schema_name
   #
-  # @return [Module]
+  # @return [Module] a module that, when included, applies a schema to a
+  #   `Valkyire::Resource`
   #
   # @example
   #   class Monograph < Valkyrie::Resource
   #     include Hyrax::Schema(:book)
+  #   end
+  #
+  # @example with a custom schema loader
+  #   class Monograph < Valkyrie::Resource
+  #     include Hyrax::Schema(:book, schema_loader: MySchemaLoader.new)
   #   end
   #
   # @since 3.0.0
@@ -17,7 +42,13 @@ module Hyrax
   end
 
   ##
-  # Specify a schema
+  # @api private
+  #
+  # A module specifying a Schema (set of attributes and types) that can be
+  # applied to a `Valkyrie::Resource`. This provides the internals for the
+  # recommended module builder syntax: `Hyrax::Schema(:schema_name)`
+  #
+  # @see Hyrax.Schema
   class Schema < Module
     ##
     # @!attribute [r] name
@@ -39,58 +70,6 @@ module Hyrax
     # @return [Hash{Symbol => Dry::Types::Type}]
     def attributes
       @schema_loader.attributes_for(schema: name)
-    end
-
-    ##
-    # @api private
-    #
-    # This is a simple yaml config-driven schema loader
-    #
-    # @see config/metadata/basic_metadata.yaml for an example configuration
-    class SimpleSchemaLoader
-      ##
-      # @param [Symbol] schema
-      def attributes_for(schema:)
-        attributes = schema_config(schema)['attributes']
-
-        attributes.each_with_object({}) do |(name, config), hash|
-          wrapper = config['multiple'] ? Valkyrie::Types::Array : NullWrapper
-
-          hash[name.to_sym] = wrapper.of(type_for(config['type']))
-        end
-      end
-
-      ##
-      # @api private
-      class NullWrapper
-        def self.of(content_type)
-          content_type
-        end
-      end
-
-      private
-
-        def type_for(type)
-          case type
-          when 'uri'
-            Valkyrie::Types::URI
-          when 'date_time'
-            Valkyrie::Types::DateTime
-          else
-            "Valkyrie::Types::#{type.capitalize}".constantize
-          end
-        end
-
-        def schema_config(schema_name)
-          raise(ArgumentError, "No schema defined: #{schema_name}") unless
-            File.exist?(config_path(schema_name))
-
-          YAML.safe_load(File.open(config_path(schema_name)))
-        end
-
-        def config_path(schema_name)
-          "config/metadata/#{schema_name}.yaml"
-        end
     end
 
     private
