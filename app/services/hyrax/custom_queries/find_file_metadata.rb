@@ -21,8 +21,8 @@ module Hyrax
         query_service.find_by(id: id)
       end
 
-      def find_file_metadata_by_alternate_identifier(alternate_id:)
-        query_service.find_by_alternate_identifier(alternate_id: alternate_id)
+      def find_file_metadata_by_alternate_identifier(alternate_identifier:)
+        query_service.find_by_alternate_identifier(alternate_identifier: alternate_identifier)
       end
     end
   end
