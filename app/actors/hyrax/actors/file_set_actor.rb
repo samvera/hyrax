@@ -1,11 +1,12 @@
 module Hyrax
   module Actors
     # Actions are decoupled from controller logic so that they may be called from a controller or a background job.
-    class FileSetActor
+    class FileSetActor # rubocop:disable Metrics/ClassLength
       include Lockable
-      attr_reader :file_set, :user, :attributes
+      attr_reader :file_set, :user, :attributes, :use_valkyrie
 
-      def initialize(file_set, user)
+      def initialize(file_set, user, use_valkyrie: false)
+        @use_valkyrie = use_valkyrie
         @file_set = file_set
         @user = user
       end
@@ -21,7 +22,8 @@ module Hyrax
         # If the file set doesn't have a title or label assigned, set a default.
         file_set.label ||= label_for(file)
         file_set.title = [file_set.label] if file_set.title.blank?
-        return false unless file_set.save # Need to save to get an id
+        @file_set = perform_save(file_set) # Need to save to get an id # TODO: change this to `save(file_set)` when fully valkyrized
+        return false unless file_set
         if from_url
           # If ingesting from URL, don't spawn an IngestJob; instead
           # reach into the FileActor and run the ingest with the file instance in
@@ -160,6 +162,41 @@ module Hyrax
           work.representative = nil if work.representative_id == file_set.id
           work.rendering_ids -= [file_set.id]
           work.save!
+        end
+
+        # method to use when fully valkyrized
+        def save(resource)
+          Hyrax.persister.save(resource: resource)
+        rescue StandardError
+          false
+        end
+
+        # switches between using valkyrie to save or active fedora to save
+        # TODO: Remove this method when fully valkyrized
+        def perform_save(object)
+          obj_to_save = object_to_act_on(object)
+          if valkyrie_object?(obj_to_save)
+            saved_resource = save(obj_to_save)
+            # return the same type of object that was passed in
+            saved_object_to_return = valkyrie_object?(object) ? saved_resource : Wings::ActiveFedoraConverter.new(resource: saved_resource).convert
+          else
+            obj_to_save.save
+            saved_object_to_return = obj_to_save
+          end
+          saved_object_to_return
+        end
+
+        # if passed a resource or if use_valkyrie==true, object to act on is the valkyrie resource
+        # TODO: Remove this method when fully valkyrized
+        def object_to_act_on(object)
+          return object if valkyrie_object?(object)
+          use_valkyrie ? object.valkyrie_resource : object
+        end
+
+        # determine if the object is a valkyrie resource
+        # TODO: Remove this method when fully valkyrized
+        def valkyrie_object?(object)
+          object.is_a? Valkyrie::Resource
         end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/CyclomaticComplexity
