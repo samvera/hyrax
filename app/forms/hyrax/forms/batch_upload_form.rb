@@ -2,7 +2,6 @@ module Hyrax
   module Forms
     class BatchUploadForm < Hyrax::Forms::WorkForm
       self.model_class = BatchUploadItem
-      include HydraEditor::Form::Permissions
 
       self.terms -= [:title, :resource_type]
 
