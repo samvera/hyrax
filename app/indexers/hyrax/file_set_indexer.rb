@@ -21,7 +21,7 @@ module Hyrax
         solr_doc['mime_type_ssi']  = object.mime_type
         # Index the Fedora-generated SHA1 digest to create a linkage between
         # files on disk (in fcrepo.binary-store-path) and objects in the repository.
-        solr_doc['digest_ssim'] = digest_from_content
+        solr_doc['digest_ssim']             = [digest_from_content]
         solr_doc['page_count_tesim']        = object.page_count
         solr_doc['file_title_tesim']        = object.file_title
         solr_doc['duration_tesim']          = object.duration
