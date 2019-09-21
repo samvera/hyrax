@@ -97,8 +97,8 @@ SUMMARY
   spec.add_development_dependency 'rspec_junit_formatter'
   spec.add_development_dependency "selenium-webdriver"
   spec.add_development_dependency 'solr_wrapper', '>= 1.1', '< 3.0'
-  spec.add_development_dependency 'i18n-debug' if ENV['I18N_DEBUG']
-  spec.add_development_dependency 'i18n_yaml_sorter' unless ENV['TRAVIS']
+  spec.add_development_dependency 'i18n-debug'
+  spec.add_development_dependency 'i18n_yaml_sorter'
   spec.add_development_dependency 'rails-controller-testing', '~> 1'
   # the hyrax style guide is based on `bixby`. see `.rubocop.yml`
   spec.add_development_dependency 'bixby', '~> 1.0.0'
