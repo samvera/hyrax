@@ -17,7 +17,7 @@ module Hyrax
     # include filters into the query to only include the admin_set members (regardless of status)
     def in_admin_set(solr_parameters)
       solr_parameters[:fq] ||= []
-      solr_parameters[:fq] << "{!term f=isPartOf_ssim}#{collection.id}"
+      solr_parameters[:fq] << "{!term f=#{Hyrax.config.admin_set_predicate.qname.last}_ssim}#{collection.id}"
     end
   end
 end
