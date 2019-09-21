@@ -3,7 +3,7 @@
 module Hyrax
   class FileMetadata < Valkyrie::Resource
     attribute :file_identifiers, ::Valkyrie::Types::Set # id of the file stored by the storage adapter
-    attribute :alternate_id, ::Valkyrie::Types::Set # id of the Hydra::PCDM::File which holds metadata and the file in ActiveFedora
+    attribute :alternate_ids, Valkyrie::Types::Set.of(Valkyrie::Types::ID) # id of the Hydra::PCDM::File which holds metadata and the file in ActiveFedora
     attribute :file_set_id, ::Valkyrie::Types::ID # id of parent file set resource
 
     # all remaining attributes are on AF::File metadata_node unless otherwise noted

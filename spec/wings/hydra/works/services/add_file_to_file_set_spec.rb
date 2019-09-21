@@ -33,11 +33,9 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
         expect(ids.first).to be_a Valkyrie::ID
         expect(ids.first.to_s).to start_with "#{file_set.id}/files/"
 
-        # file_metadata = Hyrax::query_service.find_by(id: ids.first) # TODO: Can't do this b/c Wings tries to get an ActiveFedora::Base object instead of FileMetadata Resource
-        # expect(file_metadata.content).to start_with('%PDF-1.3')
-        af_file_set = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: file_set.id, use_valkyrie: false)
-        expect(af_file_set.original_file.content).to start_with('%PDF-1.3')
-        expect(af_file_set.original_file.mime_type).to eq(pdf_mimetype)
+        file_metadata = Hyrax.query_service.custom_queries.find_file_metadata_by(id: ids.first)
+        expect(file_metadata.content.first).to start_with('%PDF-1.3')
+        expect(file_metadata.mime_type.first).to eq pdf_mimetype
       end
     end
 
@@ -52,11 +50,9 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
         expect(ids.first).to be_a Valkyrie::ID
         expect(ids.first.to_s).to start_with "#{file_set.id}/files/"
 
-        # file_metadata = Hyrax::query_service.find_by(id: ids.first) # TODO: Can't do this b/c Wings tries to get an ActiveFedora::Base object instead of FileMetadata Resource
-        # expect(file_metadata.content).to start_with('some updated content')
-        af_file_set = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: file_set.id, use_valkyrie: false)
-        expect(af_file_set.extracted_text.content).to start_with('some updated content')
-        expect(af_file_set.extracted_text.mime_type).to eq(text_mimetype)
+        file_metadata = Hyrax.query_service.custom_queries.find_file_metadata_by(id: ids.first)
+        expect(file_metadata.content.first).to start_with('some updated content')
+        expect(file_metadata.mime_type.first).to eq text_mimetype
       end
     end
 
@@ -68,11 +64,9 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
         expect(ids.first).to be_a Valkyrie::ID
         expect(ids.first.to_s).to start_with "#{file_set.id}/files/"
 
-        # file_metadata = Hyrax::query_service.find_by(id: ids.first) # TODO: Can't do this b/c Wings tries to get an ActiveFedora::Base object instead of FileMetadata Resource
-        # expect(file_metadata.content).to start_with('some updated content')
-        af_file_set = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: file_set.id, use_valkyrie: false)
-        expect(af_file_set.thumbnail).to have_content
-        expect(af_file_set.thumbnail.mime_type).to eq(image_mimetype)
+        file_metadata = Hyrax.query_service.custom_queries.find_file_metadata_by(id: ids.first)
+        expect(file_metadata.content.first.present?).to eq true
+        expect(file_metadata.mime_type.first).to eq image_mimetype
       end
     end
   end
