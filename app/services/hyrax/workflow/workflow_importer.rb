@@ -165,14 +165,27 @@ module Hyrax
           # @param data [Hash]
           # @param schema [#call]
           #
-          # @return true if the data validates from the schema
-          # @raise Exceptions::InvalidSchemaError if the data does not validate against the schema
+          # @return [Boolean] true if the data validates from the schema
+          # @raise [RuntimeError] if the data does not validate against the schema
           def self.call(data:, schema:, logger:)
             result = schema.call(data)
             return true if result.success?
-            message = result.errors(full: true).inspect
+            message = format_message(result)
             logger.error(message)
             raise message
+          end
+
+          ##
+          # @param result [Dry::Validation::Result]
+          #
+          # @return [String]
+          def self.format_message(result)
+            messages = result.errors(full: true).map do |msg|
+              "Error on workflow entry #{msg.path}\n\t#{msg.text}\n\tGot: #{msg.input || '[no entry]'}"
+            end
+
+            messages << "Input was:\n\t#{result.to_h}"
+            messages.join("\n")
           end
         end
     end
