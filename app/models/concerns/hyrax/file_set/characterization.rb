@@ -1,4 +1,4 @@
-# This module points the FileSet to the location of the technical metdata.
+# This module points the FileSet to the location of the technical metadata.
 # By default, the file holding the metadata is :original_file and the terms
 # are listed under ::characterization_terms.
 # Implementations may define their own terms or use a different source file, but

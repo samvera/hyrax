@@ -342,6 +342,7 @@ RSpec.describe Hyrax::Actors::FileSetActor do
         end
 
         it "restores the first versions's content and metadata" do
+          pending 'implementation of valkyrized versioning of files' if use_valkyrie
           actor.revert_content(version1)
           expect(restored_content.original_name).to eq file1
         end
