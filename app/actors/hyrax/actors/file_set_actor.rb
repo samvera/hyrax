@@ -117,7 +117,7 @@ module Hyrax
         end
 
         def build_file_actor(relation)
-          file_actor_class.new(file_set, relation, user)
+          file_actor_class.new(file_set, relation, user, use_valkyrie: use_valkyrie)
         end
 
         # uses create! because object must be persisted to serialize for jobs
@@ -164,15 +164,16 @@ module Hyrax
           work.save!
         end
 
-        # method to use when fully valkyrized
+        # save a valkyrie resource returning false if FailedSaveError is raised
+        # TODO: Change calls to `#perform_save` to call `#save` instead when env passes resources instead of active fedora objects
         def save(resource)
           Hyrax.persister.save(resource: resource)
-        rescue StandardError
+        rescue FailedSaveError
           false
         end
 
         # switches between using valkyrie to save or active fedora to save
-        # TODO: Remove this method when fully valkyrized
+        # TODO: Remove this method when env passes resources instead of active fedora objects
         def perform_save(object)
           obj_to_save = object_to_act_on(object)
           if valkyrie_object?(obj_to_save)
@@ -187,14 +188,14 @@ module Hyrax
         end
 
         # if passed a resource or if use_valkyrie==true, object to act on is the valkyrie resource
-        # TODO: Remove this method when fully valkyrized
+        # TODO: Remove this method when env passes resources instead of active fedora objects
         def object_to_act_on(object)
           return object if valkyrie_object?(object)
           use_valkyrie ? object.valkyrie_resource : object
         end
 
         # determine if the object is a valkyrie resource
-        # TODO: Remove this method when fully valkyrized
+        # TODO: Remove this method when env passes resources instead of active fedora objects
         def valkyrie_object?(object)
           object.is_a? Valkyrie::Resource
         end
