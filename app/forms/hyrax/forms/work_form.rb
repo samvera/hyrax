@@ -174,13 +174,6 @@ module Hyrax
         model.works
       end
 
-      # Get a list of collection id/title pairs for the select form
-      def collections_for_select
-        service = Hyrax::CollectionsService.new(@controller)
-        CollectionOptionsPresenter.new(service).select_options(:edit)
-      end
-      deprecation_deprecate collections_for_select: "will be removed in Hyrax 3"
-
       # Sanitize the parameters coming from the form. This ensures that the client
       # doesn't send us any more parameters than we expect.
       # In particular we are discarding any access grant parameters for works that
