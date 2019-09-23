@@ -124,14 +124,6 @@ module Hyrax
       member_object_ids.collect { |work_id| size_for_work(work_id) }.sum
     end
 
-    # @api public
-    # Retrieve the permission template for this collection.
-    # @return [Hyrax::PermissionTemplate]
-    # @raise [ActiveRecord::RecordNotFound]
-    def permission_template
-      Hyrax::PermissionTemplate.find_by!(source_id: id)
-    end
-
     # Calculate and update who should have read/edit access to the collections based on who
     # has access in PermissionTemplateAccess
     def reset_access_controls!
@@ -142,25 +134,6 @@ module Hyrax
     end
 
     private
-
-      def permission_template_edit_users
-        permission_template.agent_ids_for(access: 'manage', agent_type: 'user')
-      end
-
-      def permission_template_edit_groups
-        permission_template.agent_ids_for(access: 'manage', agent_type: 'group')
-      end
-
-      def permission_template_read_users
-        (permission_template.agent_ids_for(access: 'view', agent_type: 'user') +
-          permission_template.agent_ids_for(access: 'deposit', agent_type: 'user')).uniq
-      end
-
-      def permission_template_read_groups
-        (permission_template.agent_ids_for(access: 'view', agent_type: 'group') +
-          permission_template.agent_ids_for(access: 'deposit', agent_type: 'group')).uniq -
-          [::Ability.registered_group_name, ::Ability.public_group_name]
-      end
 
       def visibility_group
         return [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC] if visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC

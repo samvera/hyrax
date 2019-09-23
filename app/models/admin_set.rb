@@ -20,6 +20,7 @@ class AdminSet < ActiveFedora::Base
   include Hyrax::Noid
   include Hyrax::HumanReadableType
   include Hyrax::HasRepresentative
+  include Hyrax::Permissions::PermissionTemplates
 
   DEFAULT_ID = 'admin_set/default'.freeze
   DEFAULT_TITLE = ['Default Admin Set'].freeze
@@ -70,14 +71,6 @@ class AdminSet < ActiveFedora::Base
   end
 
   # @api public
-  # A bit of an analogue for a `has_one :admin_set` as it crosses from Fedora to the DB
-  # @return [Hyrax::PermissionTemplate]
-  # @raise [ActiveRecord::RecordNotFound]
-  def permission_template
-    Hyrax::PermissionTemplate.find_by!(source_id: id)
-  end
-
-  # @api public
   #
   # @return [Sipity::Workflow]
   # @raise [ActiveRecord::RecordNotFound]
@@ -97,31 +90,6 @@ class AdminSet < ActiveFedora::Base
   end
 
   private
-
-    def permission_template_edit_users
-      permission_template.agent_ids_for(access: 'manage', agent_type: 'user')
-    end
-
-    def permission_template_edit_groups
-      permission_template.agent_ids_for(access: 'manage', agent_type: 'group')
-    end
-
-    def permission_template_read_users
-      (permission_template.agent_ids_for(access: 'view', agent_type: 'user') +
-          permission_template.agent_ids_for(access: 'deposit', agent_type: 'user')).uniq
-    end
-
-    def permission_template_read_groups
-      (permission_template.agent_ids_for(access: 'view', agent_type: 'group') +
-        permission_template.agent_ids_for(access: 'deposit', agent_type: 'group')).uniq -
-        [::Ability.registered_group_name, ::Ability.public_group_name]
-    end
-
-    def destroy_permission_template
-      permission_template.destroy
-    rescue ActiveRecord::RecordNotFound
-      true
-    end
 
     def check_if_empty
       return true if members.empty?
