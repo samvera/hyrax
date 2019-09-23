@@ -14,16 +14,6 @@ module Hyrax
       def build_for(ids:, presenter_class:, presenter_args: [])
         new(ids: ids, presenter_class: presenter_class, presenter_args: presenter_args).build
       end
-
-      # @deprecated use .build_for instead
-      # @param [Array] ids the list of ids to load
-      # @param [Class] klass the class of presenter to make
-      # @param [Array] args any other arguments to pass to the presenters
-      # @return [Array] presenters for the documents in order of the ids
-      def build_presenters(ids, klass, *args)
-        Deprecation.warn(self, "build_presenters is deprecated and will be removed from Hyrax 3.0 (use .build_for instead)")
-        build_for(ids: ids, presenter_class: klass, presenter_args: args)
-      end
     end
 
     attr_reader :ids, :presenter_class, :presenter_args
