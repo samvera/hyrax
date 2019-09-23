@@ -100,6 +100,12 @@ RSpec.describe Wings::Valkyrie::Persister do
       persister.wipe!
       expect(query_service.find_all.to_a.length).to eq 0
     end
+
+    it "maintains visibility" do
+      resource.visibility = 'open'
+      saved = persister.save(resource: resource)
+      expect(saved.visibility).to eq 'open'
+    end
   end
 
   context "When passing a Valkyrie::Resource that was never an ActiveFedora::Base" do
