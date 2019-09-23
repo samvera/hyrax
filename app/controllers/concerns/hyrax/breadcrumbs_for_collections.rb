@@ -14,7 +14,7 @@ module Hyrax
     def add_breadcrumb_for_action
       case action_name
       when 'edit'.freeze
-        add_breadcrumb I18n.t("hyrax.collection.browse_view"), collection_path(params["id"]), mark_active_action
+        add_breadcrumb I18n.t("hyrax.collection.edit_view"), collection_path(params["id"]), mark_active_action
       when 'show'.freeze
         add_breadcrumb presenter.to_s, polymorphic_path(presenter), mark_active_action
       end

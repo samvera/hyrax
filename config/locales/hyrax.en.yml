@@ -596,6 +596,7 @@ en:
         no_visible_works: The collection is either empty or does not contain items to which you have access.
       edit:
         manage_items: Manage Items in this Collection
+      edit_view: Edit View
       form:
         additional_fields: Additional fields
         description: Descriptions
