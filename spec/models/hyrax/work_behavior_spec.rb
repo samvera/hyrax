@@ -33,11 +33,6 @@ RSpec.describe Hyrax::WorkBehavior do
     it 'has a default' do
       expect(subject.human_readable_type).to eq 'Essential Work'
     end
-    it 'is settable (deprecated)' do
-      allow(Deprecation).to receive(:warn)
-      EssentialWork.human_readable_type = 'Custom Type'
-      expect(subject.human_readable_type).to eq 'Custom Type'
-    end
   end
 
   it 'inherits (and extends) to_solr behaviors from superclass' do
