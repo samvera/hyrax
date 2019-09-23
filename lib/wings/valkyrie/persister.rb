@@ -18,6 +18,7 @@ module Wings
       def save(resource:)
         return save_file(file_metadata: resource) if resource.is_a? Hyrax::FileMetadata
         af_object = resource_factory.from_resource(resource: resource)
+        af_object.visibility = resource.visibility if resource.respond_to? :visibility
         af_object.save!
         resource_factory.to_resource(object: af_object)
       rescue ActiveFedora::RecordInvalid => err
