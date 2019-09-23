@@ -26,7 +26,7 @@ module Hyrax
     # @param [Symbol] access :read or :edit
     # @param join_field [String] how are we joining the admin_set ids (by default "isPartOf_ssim")
     # @return [Array<Hyrax::AdminSetService::SearchResultForWorkCount>] a list with document, then work and file count
-    def search_results_with_work_count(access, join_field: "isPartOf_ssim")
+    def search_results_with_work_count(access, join_field: "#{Hyrax.config.admin_set_predicate.qname.last}_ssim")
       admin_sets = search_results(access)
       ids = admin_sets.map(&:id).join(',')
       query = "{!terms f=#{join_field}}#{ids}"
