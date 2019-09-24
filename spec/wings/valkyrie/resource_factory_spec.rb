@@ -29,4 +29,12 @@ RSpec.describe Wings::Valkyrie::ResourceFactory do
       end
     end
   end
+
+  describe 'round trip starting from unsaved af object' do
+    let(:work) { build(:work) }
+    let(:resource) { factory.to_resource(object: work).save }
+    it 'allows af object to be reloaded' do
+      expect(work.reload.id).to eq resource.alternate_id.to_s
+    end
+  end
 end
