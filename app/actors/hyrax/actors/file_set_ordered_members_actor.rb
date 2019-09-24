@@ -10,6 +10,7 @@ module Hyrax
         file_set.visibility = work.visibility unless assign_visibility?(file_set_params)
         work.representative = file_set if work.representative_id.blank?
         work.thumbnail = file_set if work.thumbnail_id.blank?
+        work
       end
     end
   end

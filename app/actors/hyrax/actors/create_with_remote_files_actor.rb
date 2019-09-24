@@ -68,7 +68,7 @@ module Hyrax
           ::FileSet.new(import_url: import_url, label: file_name) do |fs|
             actor = Hyrax::Actors::FileSetActor.new(fs, env.user)
             actor.create_metadata(visibility: env.curation_concern.visibility)
-            actor.attach_to_work(env.curation_concern)
+            env.curation_concern = actor.attach_to_work(env.curation_concern)
             fs.save!
             if uri.scheme == 'file'
               # Turn any %20 into spaces.

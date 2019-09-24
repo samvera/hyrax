@@ -22,7 +22,7 @@ module Hyrax
         # If the file set doesn't have a title or label assigned, set a default.
         file_set.label ||= label_for(file)
         file_set.title = [file_set.label] if file_set.title.blank?
-        @file_set = perform_save(file_set) # Need to save to get an id # TODO: change this to `save(file_set)` when fully valkyrized
+        @file_set = perform_save(file_set) # Need to save to get an id
         return false unless file_set
         if from_url
           # If ingesting from URL, don't spawn an IngestJob; instead
@@ -70,19 +70,10 @@ module Hyrax
 
       # Adds a FileSet to the work using ore:Aggregations.
       # Locks to ensure that only one process is operating on the list at a time.
+      # @param [Valkyrie::Resource, ActiveFedora::Base] the work
+      # @param [Hash] params being set on file_set
       def attach_to_work(work, file_set_params = {})
-        acquire_lock_for(work.id) do
-          # Ensure we have an up-to-date copy of the members association, so that we append to the end of the list.
-          work.reload unless work.new_record?
-          file_set.visibility = work.visibility unless assign_visibility?(file_set_params)
-          work.ordered_members << file_set
-          work.representative = file_set if work.representative_id.blank?
-          work.thumbnail = file_set if work.thumbnail_id.blank?
-          # Save the work so the association between the work and the file_set is persisted (head_id)
-          # NOTE: the work may not be valid, in which case this save doesn't do anything.
-          work.save
-          Hyrax.config.callback.run(:after_create_fileset, file_set, user)
-        end
+        perform_attach_to_work(work, file_set_params)
       end
       alias attach_file_to_work attach_to_work
       deprecation_deprecate attach_file_to_work: "use attach_to_work instead"
@@ -172,14 +163,48 @@ module Hyrax
           false
         end
 
-        # switches between using valkyrie to save or active fedora to save
+        # copy visibility from the work resource to the file_set resource
+        def propagate_visibility(work, file_set)
+          file_set.visibility = work.visibility
+          file_set.permission_manager.acl.save
+          Hyrax.persister.save(resource: file_set)
+        end
+
+        # Adds a FileSet to the work using ore:Aggregations.
+        # Locks to ensure that only one process is operating on the list at a time.
+        # @param [Valkyrie::Resource] the work
+        # @param [Valkyrie::Resource] the file_set # TODO: Remove when @file_set is a resource.  The method will get file_set using the attr_reader.
+        # @param [Hash] params being set on file_set
+        # TODO: This method should become a public method replacing `#attach_to_work` when env passes resources instead of active fedora objects
+        # TODO: Drop the file_set parameter as it will be read using the attr_reader for @file_set when @file_set is a resource instead of an active fedora object
+        def valk_attach_to_work(work, file_set, file_set_params = {})
+          acquire_lock_for(work.id) do
+            # Ensure we have an up-to-date copy of the members association, so that we append to the end of the list.
+            # work.reload unless work.new_record?
+            propagate_visibility(work, file_set) unless assign_visibility?(file_set_params)
+            # work.ordered_members_ids << file_set.id
+            work.member_ids << file_set.id
+            work.representative_id = file_set.id if work.representative_id.blank?
+            work.thumbnail_id = file_set.id if work.thumbnail_id.blank?
+            # Save the work so the association between the work and the file_set is persisted (head_id)
+            # NOTE: the work may not be valid, in which case this save doesn't do anything.
+            work = perform_save(work)
+
+            # TODO: Remove conversion and pass file_set resource to callback when it supports receiving a resource.
+            af_file_set = convert_to_af_object(file_set)
+            Hyrax.config.callback.run(:after_create_fileset, af_file_set, user)
+          end
+          convert_to_af_object work
+        end
+
+        # switches between using valkyrie to save and using active fedora
         # TODO: Remove this method when env passes resources instead of active fedora objects
         def perform_save(object)
           obj_to_save = object_to_act_on(object)
           if valkyrie_object?(obj_to_save)
             saved_resource = save(obj_to_save)
             # return the same type of object that was passed in
-            saved_object_to_return = valkyrie_object?(object) ? saved_resource : Wings::ActiveFedoraConverter.new(resource: saved_resource).convert
+            saved_object_to_return = valkyrie_object?(object) ? saved_resource : convert_to_af_object(saved_resource)
           else
             obj_to_save.save
             saved_object_to_return = obj_to_save
@@ -189,15 +214,60 @@ module Hyrax
 
         # if passed a resource or if use_valkyrie==true, object to act on is the valkyrie resource
         # TODO: Remove this method when env passes resources instead of active fedora objects
-        def object_to_act_on(object)
+        def object_to_act_on(object, force_use_valkyrie = use_valkyrie)
           return object if valkyrie_object?(object)
-          use_valkyrie ? object.valkyrie_resource : object
+          force_use_valkyrie ? object.valkyrie_resource : object
+        end
+
+        # if passed an ActiveFedora object, return it; otherwise, convert resource to an ActiveFedora object and return
+        # TODO: Remove this method when env passes resources instead of active fedora objects
+        def convert_to_af_object(object)
+          return object if af_object?(object)
+          Wings::ActiveFedoraConverter.new(resource: object).convert
         end
 
         # determine if the object is a valkyrie resource
         # TODO: Remove this method when env passes resources instead of active fedora objects
         def valkyrie_object?(object)
           object.is_a? Valkyrie::Resource
+        end
+
+        # determine if the object is an ActiveFedora object
+        # TODO: Remove this method when env passes resources instead of active fedora objects
+        def af_object?(object)
+          object.is_a? ActiveFedora::Base
+        end
+
+        # switches between using valkyrie to attach_to_work and using active fedora
+        # TODO: Remove this method when env passes resources instead of active fedora objects
+        def perform_attach_to_work(work, file_set_params)
+          force_use_valkyrie = use_valkyrie || valkyrie_object?(work) || valkyrie_object?(file_set)
+          if force_use_valkyrie
+            source_work = object_to_act_on(work, force_use_valkyrie)
+            target_file_set = object_to_act_on(file_set, force_use_valkyrie)
+            updated_work = valk_attach_to_work(source_work, target_file_set)
+            work_to_return = valkyrie_object?(work) ? updated_work : convert_to_af_object(updated_work)
+          else
+            work_to_return = af_attach_to_work(work, file_set_params)
+          end
+          work_to_return
+        end
+
+        # TODO: Remove this method when env passes resources instead of active fedora objects
+        def af_attach_to_work(work, file_set_params)
+          acquire_lock_for(work.id) do
+            # Ensure we have an up-to-date copy of the members association, so that we append to the end of the list.
+            work.reload unless work.new_record?
+            file_set.visibility = work.visibility unless assign_visibility?(file_set_params)
+            work.ordered_members << file_set
+            work.representative = file_set if work.representative_id.blank?
+            work.thumbnail = file_set if work.thumbnail_id.blank?
+            # Save the work so the association between the work and the file_set is persisted (head_id)
+            # NOTE: the work may not be valid, in which case this save doesn't do anything.
+            work.save
+            Hyrax.config.callback.run(:after_create_fileset, file_set, user)
+          end
+          work
         end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/CyclomaticComplexity

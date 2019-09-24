@@ -70,7 +70,7 @@ module Hyrax
         ::FileSet.new(import_url: uri.to_s, label: file_name) do |fs|
           actor = file_set_actor_class.new(fs, env.user)
           actor.create_metadata(visibility: env.curation_concern.visibility)
-          actor.attach_to_work(env.curation_concern)
+          env.curation_concern = actor.attach_to_work(env.curation_concern)
           fs.save!
           ordered_members << fs
           if uri.scheme == 'file'
