@@ -11,6 +11,7 @@ module Hyrax
     include Hyrax::HasRepresentative
     include Hyrax::Permissions
     include Hyrax::CollectionNesting
+    include Wings::CollectionBehavior
 
     included do
       validates_with HasOneTitleValidator
@@ -49,47 +50,48 @@ module Hyrax
       self.collection_type_gid = new_collection_type.gid
     end
 
+
     # Add members using the members association.
     # TODO: Confirm if this is ever used.  I believe all relationships are done through
     #       add_member_objects using the member_of_collections relationship.  Deprecate?
-    def add_members(new_member_ids)
-      return if new_member_ids.blank?
-      members << Hyrax.query_service.custom_queries.find_many_by_alternate_ids(alternate_ids: new_member_ids, use_valkyrie: false)
-    end
+    # def add_members(new_member_ids)
+    #   return if new_member_ids.blank?
+    #   members << Hyrax.query_service.custom_queries.find_many_by_alternate_ids(alternate_ids: new_member_ids, use_valkyrie: false)
+    # end
 
     # Add member objects by adding this collection to the objects' member_of_collection association.
     # @param [Enumerable<String>] the ids of the new child collections and works collection ids
     # Valkyrie Version: Wings::CollectionBehavior#add_collections_and_works aliased to #add_member_objects
     #                   lib/wings/models/concerns/collection_behavior.rb
-    def add_member_objects(new_member_ids)
-      Array(new_member_ids).collect do |member_id|
-        member = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: member_id, use_valkyrie: false)
-        message = Hyrax::MultipleMembershipChecker.new(item: member).check(collection_ids: id, include_current_members: true)
-        if message
-          member.errors.add(:collections, message)
-        else
-          member.member_of_collections << self
-          member.save!
-        end
-        member
-      end
-    end
+    # def add_member_objects(new_member_ids)
+    #   Array(new_member_ids).collect do |member_id|
+    #     member = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: member_id, use_valkyrie: false)
+    #     message = Hyrax::MultipleMembershipChecker.new(item: member).check(collection_ids: id, include_current_members: true)
+    #     if message
+    #       member.errors.add(:collections, message)
+    #     else
+    #       member.member_of_collections << self
+    #       member.save!
+    #     end
+    #     member
+    #   end
+    # end
 
     # @return [Enumerable<ActiveFedora::Base>] an enumerable over the children of this collection
     # Valkyrie Version: Wings::CollectionBehavior#child_collections_and_works aliased to #member_objects
     #                   lib/wings/models/concerns/collection_behavior.rb
-    def member_objects
-      ActiveFedora::Base.where("member_of_collection_ids_ssim:#{id}")
-    end
+    # def member_objects
+    #   ActiveFedora::Base.where("member_of_collection_ids_ssim:#{id}")
+    # end
 
     # Use this query to get the ids of the member objects (since the containment
     # association has been flipped)
     # Valkyrie Version: Wings::CollectionBehavior#child_collections_and_works_ids aliased to #member_object_ids
     #                   lib/wings/models/concerns/collection_behavior.rb
-    def member_object_ids
-      return [] unless id
-      member_objects.map(&:id)
-    end
+    # def member_object_ids
+    #   return [] unless id
+    #   member_objects.map(&:id)
+    # end
 
     def to_s
       title.present? ? title.join(' | ') : 'No Title'
