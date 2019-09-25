@@ -315,6 +315,10 @@ module Hyrax
     end
     # rubocop:enable Metrics/LineLength
 
+    def use_valkyrie?
+      ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_VALKYRIE', false))
+    end
+
     def geonames_username=(username)
       Qa::Authorities::Geonames.username = username
     end

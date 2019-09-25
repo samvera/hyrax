@@ -19,7 +19,7 @@ module Hyrax
         apply_creation_data_to_curation_concern(env)
         apply_save_data_to_curation_concern(env)
 
-        save(env, use_valkyrie: false) &&
+        save(env, use_valkyrie: Hyrax.config.use_valkyrie?) &&
           next_actor.create(env) &&
           run_callbacks(:after_create_concern, env)
       end
@@ -70,12 +70,13 @@ module Hyrax
         def save(env, use_valkyrie: false)
           return env.curation_concern.save unless use_valkyrie
 
-          env.curation_concern.embargo&.save
-          env.curation_concern.lease&.save
+          resource = valkyrie_save(resource: env.curation_concern.valkyrie_resource)
 
-          resource = Hyrax.persister.save(resource: env.curation_concern.valkyrie_resource)
-
-          env.curation_concern = Hyrax.metadata_adapter.resource_factory.from_resource(resource: resource)
+          # we need to manually set the id and reload, because the actor stack requires
+          # `env.curation_concern` to be the exact same instance throughout.
+          # casting back to ActiveFedora doesn't satisfy this.
+          env.curation_concern.id = resource.alternate_ids.first.id unless env.curation_concern.id
+          env.curation_concern.reload
         rescue Wings::Valkyrie::Persister::FailedSaveError => _err
           # for now, just hit the validation error again
           # later we should capture the _err.obj and pass it back
@@ -112,6 +113,15 @@ module Hyrax
         # Return the hash of attributes that are multivalued and not uploaded files
         def multivalued_form_attributes(attributes)
           attributes.select { |_, v| v.respond_to?(:select) && !v.respond_to?(:read) }
+        end
+
+        def valkyrie_save(resource:)
+          permissions = resource.permission_manager.acl.permissions
+          resource    = Hyrax.persister.save(resource: resource)
+
+          resource.permission_manager.acl.permissions = permissions
+          resource.permission_manager.acl.save
+          resource
         end
     end
   end
