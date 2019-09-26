@@ -272,7 +272,7 @@ de:
         notifications: Benachrichtigungen
         pages: Seiten
         profile: Profil
-        repository_objects: Inhalt Repositorium
+        repository_objects: Inhalt des Repositoriums
         settings: Einstellungen
         statistics: Statistik
         tasks: Aufgaben
@@ -283,7 +283,7 @@ de:
         workflow_review: Review-Rückmeldung
         workflow_roles: Workflow-Rollen
         works: Arbeiten
-        works_listing: Works-Auflistung
+        works_listing: Auflistung der Arbeiten
       stats:
         deposited_form:
           end_label: Ende [Voreinstellung]
@@ -355,7 +355,7 @@ de:
         table_attribute_name: Attributname
         table_heading_attributes: Attribute
         table_values: Wert
-        visibility: Sichtweite
+        visibility: Sichtbarbeit
       citations:
         citations: Zitate
         endnote: EndNote
@@ -435,7 +435,7 @@ de:
         add_sharing: Hinzufügen von individuellen Freigaben
         add_this_group: Fügen Sie <span class = "sr-only"> diese Gruppe hinzu </ span>
         currently_sharing: Derzeit freigegeben für
-        depositor: Einzahler
+        depositor: Deponent
         directions: Unabhängig von den Sichtbarkeitseinstellungen für diese Arbeit können Sie sie auch für andere Benutzer und Gruppen freigeben.
         group: Gruppe
         permissions_save_note: Berechtigungen werden <strong> nicht </ strong> gespeichert, bis die Option & quot; Speichern & quot; Die Taste wird unten auf der Seite gedrückt.
@@ -448,21 +448,21 @@ de:
       inspect_work:
         back_to: Zurück zu
         entity_id: Mandanten-ID
-        id: ICH WÜRDE
+        id: ID
         name: Name
         object_name: Objektname
-        persistence: Beharrlichkeit
+        persistence: Persistenz
         processing_entity_id: Entitäts-ID wird verarbeitet
-        proxy_for: Proxy für
+        proxy_for: Vertreter für
         roles: Rollen
-        state: Zustand
-        state_name: Name des Bundesstaates
+        state: Status
+        state_name: Statusname
         users: Benutzer
-        workflow: Arbeitsablauf
-        workflow_comments: Workflow-Kommentare
+        workflow: Workflow
+        workflow_comments: Workflow Kommentare
       items:
         actions: Aktionen
-        date_uploaded: Datum Hochgeladen
+        date_uploaded: Hochladedatum
         empty: Diese %{type} hat keine Dateien zugeordnet. Klicken Sie auf „Bearbeiten“, um weitere Dateien hinzuzufügen.
         header: Artikel
         thumbnail: Miniaturansicht
@@ -522,21 +522,21 @@ de:
         title: Dateiname ist der Standardtitel. Bitte geben Sie einen aussagekräftigeren Titel, und Dateinamen werden noch vom System bewahrt.
     batch_edits:
       check_all:
-        select_to_access_selection_options: Wählen Sie, um auf die Auswahloption zuzugreifen
+        select_to_access_selection_options: Wählen Sie aus, um auf die Option zuzugreifen
       delete_selected:
         button_label: Ausgewählte Löschen
         deleting_file_from: Das Löschen einer Datei aus %{application_name} ist permanent. Klicken Sie auf OK, um diese Datei von %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
       edit:
-        apply_changes_to: 'Änderungen werden angewendet auf: (%{x_number_of} funktioniert)'
+        apply_changes_to: 'Änderungen werden angewendet auf: (%{x_number_of} Arbeiten)'
         batch_edit_descriptions: Stapelbearbeitung von Beschreibungen & nbsp; & nbsp; & nbsp; <small> Klicken Sie unten auf die Beschriftungen, um die Arbeitsbeschreibungen zu bearbeiten. </ Small>
-        clear_batch: Stapel löschen
+        clear_batch: Stapelauswahl löschen
         descriptions: Beschreibungen
         descriptions_title: 'Beschreibungen:'
         permissions: Berechtigungen
         sharing: Teilen
-        visibility: Sichtweite
+        visibility: Sichtbarkeit
     batch_uploads:
-      disabled: Diese Funktion vom Administrator des Repositoriums deaktiviert
+      disabled: Diese Funktion wurde vom Administrator des Repositoriums deaktiviert
       files:
         button_label: Neue Arbeit hinzufügen
         instructions: Jede Datei wird in eine separate, neue Arbeit hochgeladen, d.h. somit wird eine Arbeit pro hochgeladener Datei erstellt.
@@ -785,15 +785,15 @@ de:
         show_document_list:
           action: Aktion
           date_added: Datum hinzugefügt
-          list_items_in_collection: Liste der Artikel in dieser Sammlung
-          owner: Inhaber
+          list_items_in_collection: Liste der Arbeiten in dieser Sammlung
+          owner: Besitzer
           title: Titel
-          visibility: Sichtweite
+          visibility: Sichtbarkeit
         show_document_list_menu:
-          select: Wählen
+          select: Auswählen
         show_document_list_row:
           creator: 'Schöpfer:'
-          depositor: 'Einzahler:'
+          depositor: 'Deponent:'
           edit_access: 'Zugang bearbeiten:'
         sort_and_per_page:
           show_par_page_html: Zeige %{select} pro Seite
@@ -873,10 +873,10 @@ de:
         heading:
           access: Zugriff
           action: Aktionen
-          caption: Liste der Artikel in dieser Sammlung
+          caption: Liste der Arbeiten in dieser Sammlung
           collection_type: Sammlungsart
           date_modified: Zuletzt bearbeitet
-          date_uploaded: Hochlade-Datum
+          date_uploaded: Hochladedatum
           highlighted: Hervorgehoben
           items: Elemente
           last_modified: Zuletzt bearbeitet
@@ -909,9 +909,9 @@ de:
       profiles:
         edit_primary:
           change_picture: <i class = "glyphicon glyphicon-camera"> </ i> Bild ändern
-          delete_picture: Foto löschen
+          delete_picture: Bild löschen
           delete_picture_data_content: Wenn Sie Ihr Bild vollständig entfernen möchten, aktivieren Sie das Kontrollkästchen und speichern Sie Ihr Profil.
-          delete_picture_data_original_title: Foto löschen
+          delete_picture_data_original_title: Bild löschen
           facebook_handle: <i class = "fa fa-facebook" aria-hidden = "true"> </ i> Facebook-Handle
           google_handle: <i class = "fa-fa-google-plus"> </ i> Google+ Handle
           help_change_picture_type: JPG, GIF oder PNG (weniger als 2 MB)
@@ -985,7 +985,7 @@ de:
         deactivate: Embargo deaktivieren
         deactivate_selected: Embargos für Auswahl deaktivieren
         missing: Es sind zu diesem Zeitpunkt keine abgelaufenen Embargos vorhanden.
-        select_all: Wählen Sie Alle
+        select_all: Alle auswählen
       table_headers:
         release_date: Embargo Erscheinungsdatum
         title: Titel
@@ -1021,7 +1021,7 @@ de:
         edit: Bearbeiten
         edit_title: Bearbeite %{file_set}
         header: Wählen Sie eine Aktion
-        press_to: drücke um zu
+        press_to: klicke um zu
         versions: Versionen
         versions_title: Vorherige Versionen anzeigen
       asset_deleted_flash:
@@ -1198,7 +1198,7 @@ de:
           you_own: "<strong> %{total_count} Sammlungen </ strong>, die Sie im Repository besitzen"
         works:
           in_repo: "<strong> %{total_count} funktioniert </ strong> im Repository"
-          works_listing: Works-Auflistung
+          works_listing: Auflistung der Arbeiten 
           you_manage: "<strong> %{total_count} funktioniert </ strong>, das Sie im Repository verwalten können"
           you_own: "<strong> %{total_count} funktioniert </ strong>, das Sie im Repository besitzen"
       sort_and_per_page:
@@ -1244,7 +1244,7 @@ de:
           subject: Einreichung muss überprüft werden
     operations:
       index:
-        operations_type: Vorgangsart
+        operations_type: Operationstyp
         status: Status
         title: Operationen
         updated: Aktualisierte
@@ -1283,7 +1283,7 @@ de:
       name: Arbeit
     share_button: Arbeit hinzufügen
     single_use_links:
-      button: Einweg-Link zur Datei
+      button: Einweglink zur Datei
       copy:
         button: Kopieren
         tooltip: Kopiert!
@@ -1302,7 +1302,7 @@ de:
         key: Schlüssel
         link: Verknüpfung
         no_links: Es wurden keine Links generiert
-      title: Einweg-Links
+      title: Einweglinks
     single_use_links_viewer:
       single_use_error:
         help: '%{application_name} konnte den Einweglink nicht finden. Dieser Link ist entweder abgelaufen oder wurde bereits verwendet. Wir entschuldigen uns für die Unannehmlichkeiten. Möglicherweise möchten Sie <a href="/help/"> die Hilfeseite </a> verwenden, um nach Lösungen zu suchen.'
@@ -1340,17 +1340,17 @@ de:
         title: Übertragung des Eigentums von „%{work_title}“
       received:
         accept: Akzeptieren
-        accept_the_file_and_allow_the_original_depositor_to_retain_access_and_authorize: Akzeptieren Sie die Datei und gestatten Sie dem ursprünglichen Einleger, den Zugriff zu behalten und den ursprünglichen Einleger als Proxy zu autorisieren, um die Datei in Ihrem Namen zu hinterlegen.
-        accept_the_file_and_allow_the_original_depositor_to_retain_access_to_edit_the_file_and_metadata: Akzeptieren Sie die Datei und erlauben Sie dem ursprünglichen Einleger, den Zugriff zum Bearbeiten der Datei und der Metadaten beizubehalten.
-        accept_the_file_remove_access_from_the_original_depositor: Akzeptieren Sie die Datei und entfernen Sie den Zugriff vom ursprünglichen Einzahler.
-        allow_depositor_to_retain_edit_access: Dem Einzahler erlauben, den Bearbeitungszugriff beizubehalten
+        accept_the_file_and_allow_the_original_depositor_to_retain_access_and_authorize: Akzeptieren Sie die Datei und gestatten Sie dem ursprünglichen Deponenten, den Zugriff zu behalten und den ursprünglichen Deponenten als Verwalter zu autorisieren, um die Datei in Ihrem Namen zu hinterlegen.
+        accept_the_file_and_allow_the_original_depositor_to_retain_access_to_edit_the_file_and_metadata: Akzeptieren Sie die Datei und erlauben Sie dem ursprünglichen Deponeneten, den Zugriff zum Bearbeiten der Datei und der Metadaten beizubehalten.
+        accept_the_file_remove_access_from_the_original_depositor: Akzeptieren Sie die Datei und entfernen Sie den Zugriff vom ursprünglichen Deponenten.
+        allow_depositor_to_retain_edit_access: Dem Deponeneten erlauben, den Bearbeitungszugriff beizubehalten
         are_you_sure_you_want_to_reject_this_request: Möchten Sie diese Anfrage wirklich ablehnen?
-        authorize_depositor_as_proxy: Bevollmächtigen Sie den Einzahler als Stellvertreter
+        authorize_depositor_as_proxy: Bevollmächtigen Sie den Deponeneten als Vertreter
         comments: Bemerkungen
         date: Datum
         from: Von
         reject: Ablehnen
-        remove_depositor_access: Einzahlerzugang entfernen
+        remove_depositor_access: Zugriff des Deponenten entfernen
         status: Status
         title: Titel
       sent:
@@ -1390,12 +1390,12 @@ de:
     uploads:
       js_templates:
         display_label: Beschriftung anzeigen
-        error: Error
+        error: Fehler
         set_all_to_this_resource_type: Stellen Sie alle auf diesen Ressourcentyp ein
         start: Start
       js_templates_branding:
-        alt_text: 'Alt-Text:'
-        error: Error
+        alt_text: 'Alternativtext:'
+        error: fehler
         link_url: 'URL verknüpfen:'
         previous: Bisherige
         remove: Löschen
@@ -1423,13 +1423,13 @@ de:
         user_id: Benutzeridentifikation
         user_name: Nutzername
         users: Benutzer
-        works_created: Werke erstellt
+        works_created: Arbeiten erstellt
       left_sidebar:
         view_users: Benutzer anzeigen
       proxies:
-        proxies: Proxies
+        proxies: Verwalter
       search_form:
-        go: Gehen
+        go: Los
         search_users: Benutzer suchen
     visibility:
       authenticated:
@@ -1451,7 +1451,7 @@ de:
         text: Privat
       restricted_title_attr: Ändern Sie die Sichtbarkeit dieser Ressource
     work_button_row:
-      attach_child: Kind anhängen
+      attach_child: Unterarbeit anhängen
     workflow:
       default:
         deposit: Deponieren
@@ -1550,7 +1550,7 @@ de:
         share_applies_to_new_works: GILT FÜR NEUE ARBEITEN
         title: Typname
       defaults:
-        abstract: Abstrakt
+        abstract: Zusammenfassung
         access_right: Zugangsrechte
         admin_set_id: Admin-Set
         based_near: Ort
