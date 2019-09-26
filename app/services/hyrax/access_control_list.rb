@@ -150,11 +150,7 @@ module Hyrax
       end
 
       def change_set
-        @change_set ||= ChangeSet.new(access_control_model)
-      end
-
-      class ChangeSet < Valkyrie::ChangeSet
-        self.fields = [:permissions]
+        @change_set ||= Hyrax::ChangeSet.for(access_control_model)
       end
   end
 end
