@@ -52,12 +52,15 @@ module Wings
         include Wings::Works::WorkValkyrieBehavior if klass.included_modules.include?(Hyrax::WorkBehavior)
         include Wings::Works::FileSetValkyrieBehavior if klass.included_modules.include?(Hyrax::FileSetBehavior)
 
-        # Based on Valkyrie implementation, we call Class.to_s to define
-        # the internal resource.
+        # Based on Valkyrie implementation, we call Class.to_s to define the internal resource.
         @internal_resource = klass.to_s
 
         class << self
           attr_reader :internal_resource
+
+          def name
+            ancestors[1..-1].find { |parent| parent < ::Valkyrie::Resource }&.name
+          end
         end
 
         def self.to_s
@@ -76,10 +79,6 @@ module Wings
           attribute property_name, ::Valkyrie::Types::ID
         end
 
-        # Defined after properties in case we have an `internal_resource` property.
-        # This may not be ideal, but based on my understanding of the `internal_resource`
-        # usage in Valkyrie, I'd rather keep synchronized the instance_method and class_method value for
-        # `internal_resource`
         def internal_resource
           self.class.internal_resource
         end
@@ -87,3 +86,5 @@ module Wings
     end
   end
 end
+# rubocop:enable Metrics/AbcSize
+# rubocop:enable Metrics/MethodLength
