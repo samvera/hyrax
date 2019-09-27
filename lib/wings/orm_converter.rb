@@ -59,7 +59,7 @@ module Wings
           attr_reader :internal_resource
 
           def name
-            ancestors[1..-1].find { |parent| parent < ::Valkyrie::Resource }&.name
+            ancestors[1..-1].find { |parent| parent < ::Valkyrie::Resource }.name
           end
         end
 
