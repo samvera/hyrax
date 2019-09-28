@@ -229,5 +229,22 @@ module Hyrax
                .where('sipity_workflow_roles.role_id' => approving_role.id).any?
         end
       end
+
+      ##
+      # @api private
+      #
+      # Overwrite extract subjects to map permissions
+      #
+      # @note this shims in support for using existing abilities when passing
+      #   Valkyrie::Resources. We'll need to support valkyrie resources natively
+      #   as well.
+      def extract_subjects(subject)
+        return super unless subject.is_a?(Hyrax::Resource)
+
+        legacy_model = Wings::ActiveFedoraConverter.new(resource: subject).convert
+        subject      = ::SolrDocument.new(legacy_model.to_solr)
+
+        super
+      end
   end
 end

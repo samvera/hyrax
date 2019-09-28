@@ -3,8 +3,6 @@
 module Hyrax
   module Test
     class SimpleWork < Hyrax::Resource
-      # use the *private* initalizer here to ensure the module gets loaded
-      # use `include Hyrax::Schema(:core_metadata)
       include Hyrax::Schema(:core_metadata)
     end
 
