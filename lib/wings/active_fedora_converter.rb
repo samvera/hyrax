@@ -60,6 +60,7 @@ module Wings
         apply_depositor_to(af_object)
         convert_members(af_object)
         convert_member_of_collections(af_object)
+        convert_files(af_object)
       end
     end
 
@@ -134,6 +135,22 @@ module Wings
           member_of_collections << ActiveFedora::Base.find(valkyrie_id.id)
         end
         af_object.member_of_collections = member_of_collections
+      end
+
+      def convert_files(af_object)
+        convert_file(af_object, :original_file)
+        convert_file(af_object, :thumbnail_file)
+        convert_file(af_object, :extracted_text_file)
+        # TODO: How to identify and convert files added with URI relationships (e.g. Valkyrie::Vocab::PCDMUse.Transcript)
+        # TODO: How to identify and convert customizations that add file relationships (e.g. :remastered)
+      end
+
+      def convert_file(af_object, relation)
+        resource_relation = "#{relation}_ids".to_sym
+        related_file_ids = resource.try(resource_relation)
+        return unless related_file_ids.present?
+        pcdm_file = Hydra::PCDM::File.new(related_file_ids.first.to_s)
+        af_object.association(relation).target = pcdm_file
       end
 
       # Normalizes the attributes parsed from the resource

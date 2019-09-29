@@ -328,6 +328,26 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
           expect(converter.convert.ordered_member_ids).to eq [work2.id, work3.id]
         end
       end
+
+      context 'for files' do
+        let(:pcdm_object) { fileset1 }
+
+        let(:fileset1) { create(:file_set) }
+        let(:file_id) { fileset1.original_file.id }
+
+        before do
+          binary = StringIO.new("hey")
+          Hydra::Works::AddFileToFileSet.call(fileset1, binary, :original_file)
+          expect(fileset1.original_file).not_to be_nil
+          expect(resource.original_file_ids.first.to_s).to eq file_id
+        end
+
+        it 'has same original_file id as valkyrie resource' do
+          converted_file_set = converter.convert
+          expect(converted_file_set.original_file).not_to be_nil
+          expect(converted_file_set.original_file.id).to eq file_id
+        end
+      end
     end
   end
 end
