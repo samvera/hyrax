@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 module Hyrax
   module Test
+    ##
+    # A simple Hyrax::Resource with some metadata.
+    #
+    # Use this for testing valkyrie models generically, with Hyrax assumptions
+    # but no PCDM modelling behavior.
     class BookResource < Hyrax::Resource
       attribute :author,   Valkyrie::Types::String
       attribute :created,  Valkyrie::Types::Date

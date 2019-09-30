@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+##
+# Use this factory for generic Hyrax/HydraWorks Works in valkyrie.
 FactoryBot.define do
   factory :hyrax_work, class: 'Hyrax::Test::SimpleWork' do
     trait :under_embargo do
