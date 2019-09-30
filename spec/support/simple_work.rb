@@ -2,6 +2,14 @@
 
 module Hyrax
   module Test
+    ##
+    # A generic PCDM Work, with only Hyrax "core" (required) metadata.
+    #
+    # @example building with FactoryBot
+    #   work = FactoryBot.build(:work, :public, title: ['Comet in Moominland'])
+    #
+    # @example creating with FactoryBot
+    #   work = FactoryBot.valkyrie_create(:work, :public, title: ['Comet in Moominland'])
     class SimpleWork < Hyrax::Resource
       # use the *private* initalizer here to ensure the module gets loaded
       # use `include Hyrax::Schema(:core_metadata)
