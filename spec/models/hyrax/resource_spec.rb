@@ -1,24 +1,9 @@
 # frozen_string_literal: true
 
-require 'valkyrie/specs/shared_specs'
+require 'hyrax/specs/shared_specs/hydra_works'
 
 RSpec.describe Hyrax::Resource do
-  subject(:resource) { described_class.new }
-  let(:adapter)      { Valkyrie::Persistence::Memory::MetadataAdapter.new }
-
-  it_behaves_like 'a Valkyrie::Resource' do
-    let(:resource_klass) { described_class }
-  end
-
-  describe '#alternate_ids' do
-    let(:id) { Valkyrie::ID.new('fake_identifier') }
-
-    it 'has an attribute for alternate ids' do
-      expect { resource.alternate_ids = id }
-        .to change { resource.alternate_ids }
-        .to contain_exactly id
-    end
-  end
+  it_behaves_like 'a Hyrax::Resource'
 
   describe '#embargo' do
     subject(:resource) { described_class.new(embargo: embargo) }
