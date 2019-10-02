@@ -16,11 +16,16 @@
 
 .activity-display {
   max-height: 100%;
-  overflow: scroll;
-  padding-bottom: 300px;
+  overflow-y: auto;
+  padding-bottom: 0;
   position: relative;
 
   .activity-date {
     padding-right: 130px;
   }
+}
+
+.tab-content .activity-display {
+  max-height: 30em;
+  position: absolute;
 }
