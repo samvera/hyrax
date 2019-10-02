@@ -6,7 +6,7 @@ RSpec.describe Hyrax::Schema do
 
   let(:resource_class) do
     module Hyrax::Test::Schema
-      class Resource < Valkyrie::Resource; end
+      class Resource < Hyrax::Resource; end
     end
 
     Hyrax::Test::Schema::Resource
@@ -23,6 +23,13 @@ RSpec.describe Hyrax::Schema do
 
     it 'raises for an missing schema' do
       expect { resource_class.include(Hyrax::Schema(:FAKE_SCHEMA)) } .to raise_error ArgumentError
+    end
+
+    it 'creates accessors for fields' do
+      expect { resource_class.include(Hyrax::Schema(:core_metadata)) }
+        .to change { resource_class.instance_methods }
+        .to include(:title=, :date_modified=, :date_uploaded=, :depositor=,
+                    :title, :date_modified, :date_uploaded, :depositor)
     end
   end
 
