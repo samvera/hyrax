@@ -3,6 +3,9 @@
 require 'hyrax/specs/shared_specs/hydra_works'
 
 RSpec.describe Hyrax::Resource do
+  subject(:resource) { described_class.new }
+  let(:adapter)      { Valkyrie::Persistence::Memory::MetadataAdapter.new }
+
   it_behaves_like 'a Hyrax::Resource'
 
   describe '#embargo' do

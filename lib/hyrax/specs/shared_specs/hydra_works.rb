@@ -1,4 +1,5 @@
 require 'valkyrie/specs/shared_specs'
+require 'hyrax/specs/shared_specs/metadata'
 
 RSpec.shared_examples 'a Hyrax::Resource' do
   subject(:resource) { described_class.new }
@@ -17,4 +18,9 @@ RSpec.shared_examples 'a Hyrax::Resource' do
         .to contain_exactly id
     end
   end
+end
+
+RSpec.shared_examples 'a Hyrax::Work' do
+  it_behaves_like 'a Hyrax::Resource'
+  it_behaves_like 'a model with core metadata'
 end
