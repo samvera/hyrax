@@ -55,6 +55,36 @@ module Hyrax
       result
     end
 
+    ##
+    # @return [Boolean]
+    def collection?
+      false
+    end
+
+    ##
+    # @return [Boolean]
+    def file?
+      false
+    end
+
+    ##
+    # @return [Boolean]
+    def file_set?
+      false
+    end
+
+    ##
+    # @return [Boolean]
+    def pcdm_object?
+      false
+    end
+
+    ##
+    # @return [Boolean]
+    def work?
+      false
+    end
+
     def permission_manager
       @permission_manager ||= Hyrax::PermissionManager.new(resource: self)
     end
