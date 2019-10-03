@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+##
+# Use for generic Resources, with Hyrax assumptions.
 FactoryBot.define do
   factory :hyrax_resource, class: "Hyrax::Resource" do
     trait :under_embargo do

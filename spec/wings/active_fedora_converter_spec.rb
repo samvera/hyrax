@@ -35,10 +35,10 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       end
 
       context 'and it is registered' do
-        let(:resource) { Hyrax::Test::BookResource.new }
+        let(:resource) { build(:hyrax_work) }
 
         it 'maps to the registered ActiveFedora class' do
-          expect(converter.convert).to be_a Hyrax::Test::Book
+          expect(converter.convert).to be_a Hyrax::Test::SimpleWorkLegacy
         end
       end
     end

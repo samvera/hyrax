@@ -55,6 +55,11 @@ unless ENV['SKIP_MALEFICENT']
   end
 end
 
+# rubocop:disable Lint/Void
+# ensure Hyrax::Schema gets loaded is resolvable for `support/` models
+Hyrax::Schema
+# rubocop:enable Lint/Void
+
 # Require supporting ruby files from spec/support/ and subdirectories.  Note: engine, not Rails.root context.
 Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each { |f| require f }
 
