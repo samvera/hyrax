@@ -41,6 +41,9 @@ module Hyrax
     ##
     # @deprecated ClamAV is replaced by Clamby
     def clam_av_scanner
+      Deprecation.warn(self, "The ClamAV has been replaced by Clamby " \
+                             "as the supported virus scanner for Hyrax. " \
+                             "ClamAV support will be removed in Hyrax 4.0.0.")
       scan_result = ClamAV.instance.method(:scanfile).call(file)
       return false if scan_result.zero?
       warning "A virus was found in #{file}: #{scan_result}"
