@@ -1,10 +1,9 @@
-# The default virus scanner Hyrax::Works, ported from hydra_works.
-# If ClamAV is present, it will be used to check for the presence of a virus. If ClamAV is not
-# installed or otherwise not available to your application, Hyrax::Works does no virus checking
+# If Clamby is present, it will be used to check for the presence of a virus. If Clamby is not
+# installed or otherwise not available to your application, Hyrax does no virus checking
 # add assumes files have no viruses.
 #
 # To use a virus checker other than ClamAV:
-#   class MyScanner < Hyrax::Works::VirusScanner
+#   class MyScanner < Hyrax::VirusScanner
 #     def infected?
 #       my_result = Scanner.check_for_viruses(file)
 #       [return true or false]
@@ -30,18 +29,36 @@ module Hyrax
     # Override this method to use your own virus checking software
     # @return [Boolean]
     def infected?
-      defined?(Clamby) ? clam_av_scanner : null_scanner
+      if defined?(Clamby)
+        clamby_scanner
+      elsif defined?(ClamAV)
+        clam_av_scanner
+      else
+        null_scanner
+      end
     end
 
+    ##
+    # @deprecated ClamAV is replaced by Clamby
     def clam_av_scanner
-      scan_result = Clamby.virus?(file)
-      return false if scan_result == false
+      scan_result = ClamAV.instance.method(:scanfile).call(file)
+      return false if scan_result.zero?
       warning "A virus was found in #{file}: #{scan_result}"
       true
     end
 
-    # Always return zero if there's nothing available to check for viruses. This means that
+    ##
+    # @return [Boolean]
+    def clamby_scanner
+      scan_result = Clamby.virus?(file)
+      warning("A virus was found in #{file}") if scan_result
+      scan_result
+    end
+
+    # Always return false if there's nothing available to check for viruses. This means that
     # we assume all files have no viruses because we can't conclusively say if they have or not.
+    ##
+    # @return [Boolean]
     def null_scanner
       warning "Unable to check #{file} for viruses because no virus scanner is defined"
       false
