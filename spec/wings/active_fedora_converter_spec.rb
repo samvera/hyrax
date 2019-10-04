@@ -43,6 +43,29 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       end
     end
 
+    context 'when given a valkyrie Work' do
+      let(:resource) { FactoryBot.valkyrie_create(:hyrax_work) }
+
+      it 'gives a work' do
+        expect(converter.convert).to be_work
+      end
+
+      context 'with members' do
+        let(:resource)   { FactoryBot.valkyrie_create(:hyrax_work, :with_member_works) }
+        let(:member_ids) { resource.member_ids.map(&:id) }
+
+        it 'saves members' do
+          expect(converter.convert).to have_attributes(member_ids: member_ids)
+        end
+
+        it 'can access member models from converted object' do
+          expect(converter.convert.members)
+            .to contain_exactly(an_instance_of(Hyrax::Test::SimpleWorkLegacy),
+                                an_instance_of(Hyrax::Test::SimpleWorkLegacy))
+        end
+      end
+    end
+
     context 'with attributes' do
       let(:attributes) do
         FactoryBot.attributes_for(:generic_work)
