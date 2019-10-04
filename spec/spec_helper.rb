@@ -95,17 +95,11 @@ ActiveJob::Base.queue_adapter = :test
 # HttpLogger.ignore = [/localhost:8983\/solr/]
 # HttpLogger.colorize = false
 
-if defined?(ClamAV)
-  ClamAV.instance.loaddb
-else
-  class ClamAV
+unless defined?(Clamby)
+  class Clamby
     include Singleton
-    def scanfile(_f)
-      0
-    end
-
-    def loaddb
-      nil
+    def virus?(_f)
+      false
     end
   end
 end

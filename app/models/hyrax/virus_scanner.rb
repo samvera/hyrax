@@ -30,12 +30,12 @@ module Hyrax
     # Override this method to use your own virus checking software
     # @return [Boolean]
     def infected?
-      defined?(ClamAV) ? clam_av_scanner : null_scanner
+      defined?(Clamby) ? clam_av_scanner : null_scanner
     end
 
     def clam_av_scanner
-      scan_result = ClamAV.instance.method(:scanfile).call(file)
-      return false if scan_result.zero?
+      scan_result = Clamby.virus?(file)
+      return false if scan_result == false
       warning "A virus was found in #{file}: #{scan_result}"
       true
     end

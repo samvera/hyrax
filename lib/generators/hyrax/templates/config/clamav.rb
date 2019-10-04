@@ -1,1 +1,1 @@
-ClamAV.instance.loaddb if defined? ClamAV
+# ClamAV.instance.loaddb if defined? ClamAV
