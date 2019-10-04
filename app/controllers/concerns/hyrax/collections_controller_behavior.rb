@@ -87,7 +87,7 @@ module Hyrax
       end
 
       def collection_object
-        action_name == 'show' ? Collection.find(collection.id) : collection
+        action_name == 'show' ? ::Collection.find(collection.id) : collection
       end
 
       def member_subcollections
