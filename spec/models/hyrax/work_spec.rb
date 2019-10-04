@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'spec_helper'
 require 'hyrax/specs/shared_specs/hydra_works'
 
 RSpec.describe Hyrax::Work do
