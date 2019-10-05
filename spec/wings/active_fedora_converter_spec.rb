@@ -43,6 +43,38 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       end
     end
 
+    context 'when given a valkyrie Collection' do
+      let(:resource) { FactoryBot.valkyrie_create(:hyrax_collection) }
+
+      it 'gives a collection' do
+        expect(converter.convert).to be_collection
+      end
+
+      it 'maps to an application Collection model' do
+        expect(converter.convert).to be_a ::Collection
+      end
+
+      it 'has the given collection type' do
+        expect(converter.convert.collection_type.to_global_id.to_s).to eq resource.collection_type_gid
+      end
+
+      context 'with work members' do
+        let(:resource) { FactoryBot.valkyrie_create(:hyrax_collection, :with_member_works) }
+
+        it 'retains the members' do
+          expect(converter.convert).to have_attributes member_ids: resource.member_ids.map(&:id)
+        end
+      end
+
+      context 'with collection members' do
+        let(:resource) { FactoryBot.valkyrie_create(:hyrax_collection, :with_member_collections) }
+
+        it 'retains the members' do
+          expect(converter.convert).to have_attributes member_ids: resource.member_ids.map(&:id)
+        end
+      end
+    end
+
     context 'when given a valkyrie Work' do
       let(:resource) { FactoryBot.valkyrie_create(:hyrax_work) }
 

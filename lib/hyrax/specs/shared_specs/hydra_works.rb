@@ -89,4 +89,14 @@ RSpec.shared_examples 'a Hyrax::Collection' do
   it_behaves_like 'a Hyrax::Resource'
   it_behaves_like 'a model with core metadata'
   it_behaves_like 'has members'
+
+  describe '#collection_type_gid' do
+    let(:gid) { Hyrax::CollectionType.find_or_create_default_collection_type.to_global_id.to_s }
+
+    it 'has a GlobalID for a collection type' do
+      expect { collection.collection_type_gid = gid }
+        .to change { collection.collection_type_gid }
+        .to gid
+    end
+  end
 end

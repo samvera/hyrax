@@ -99,7 +99,12 @@ custom_queries.each do |query_handler|
   Valkyrie.config.metadata_adapter.query_service.custom_queries.register_query_handler(query_handler)
 end
 
+# rubocop:disable Lint/Void
+Hyrax::Schema
+# rubocop:enable Lint/Void
+
 Wings::ModelRegistry.register(Hyrax::AccessControl, Hydra::AccessControl)
+Wings::ModelRegistry.register(Hyrax::Collection,    Collection)
 Wings::ModelRegistry.register(Hyrax::Embargo,       Hydra::AccessControls::Embargo)
 Wings::ModelRegistry.register(Hyrax::Lease,         Hydra::AccessControls::Lease)
 
