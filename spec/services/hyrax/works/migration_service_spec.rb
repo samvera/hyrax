@@ -3,10 +3,10 @@ RSpec.describe Hyrax::Works::MigrationService, clean_repo: true do
   let(:predicate_from) { ::RDF::Vocab::DC11.description }
   let(:predicate_to) { ::RDF::Vocab::SCHEMA.description }
   let(:predicate_from2) { ::RDF::Vocab::DC.rights }
-  let(:predicate_to2) { ::RDF::URI.new('http://dublincore.org/documents/dcmi-terms/#terms-license') }
+  let(:predicate_to2) { ::RDF::Vocab::DC.license }
 
   describe "#migrate_predicate" do
-    it "uses DC description and terms-license license by default" do
+    it "uses DC description and DC license by default" do
       @work = GenericWork.create(title: ["War and Peace"], description: ["war", "peace"],
                                  license: ["the_license_string"])
       expect(@work.ldp_source.content).to include("http://purl.org/dc/elements/1.1/description")
