@@ -38,7 +38,7 @@ namespace :hyrax do
     # Migrate any orphan fedora data from the first to the second predicate
     task migrate_keyword_predicate: :environment do
       Hyrax::Works::MigrationService.migrate_predicate(::RDF::Vocab::DC11.relation, ::RDF::Vocab::SCHEMA.keywords)
-      Hyrax::Works::MigrationService.migrate_predicate(::RDF::Vocab::DC.rights, ::RDF::URI.new('http://dublincore.org/documents/dcmi-terms/#terms-license'))
+      Hyrax::Works::MigrationService.migrate_predicate(::RDF::Vocab::DC.rights, ::RDF::Vocab::DC.license)
     end
   end
 end
