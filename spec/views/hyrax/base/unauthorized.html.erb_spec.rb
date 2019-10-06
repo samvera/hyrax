@@ -7,14 +7,14 @@ RSpec.describe 'hyrax/base/unauthorized.html.erb' do
       render
     end
     it "shows a message to the user" do
-      expect(rendered).to have_content "Unauthorized The book you have tried to access is private ID: 777"
+      expect(rendered).to have_content "The book you have tried to access is private\n  ID: 777"
     end
 
     context "and the concern is nil" do
       let(:concern) { nil }
 
       it "shows a message to the user" do
-        expect(rendered).to have_content "Unauthorized The page you have tried to access is private"
+        expect(rendered).to have_content "The page you have tried to access is private"
       end
     end
   end
@@ -24,7 +24,7 @@ RSpec.describe 'hyrax/base/unauthorized.html.erb' do
       render
     end
     it "shows a message to the user" do
-      expect(rendered).to have_content "Unauthorized The page you have tried to access is private"
+      expect(rendered).to have_content "The page you have tried to access is private"
     end
   end
 end

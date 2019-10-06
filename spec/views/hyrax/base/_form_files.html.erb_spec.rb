@@ -31,7 +31,7 @@ RSpec.describe 'hyrax/base/_form_files.html.erb', type: :view do
     end
 
     it 'shows user timing warning' do
-      expect(rendered).to have_content 'Note that if you use a cloud provider to upload a large number of files'
+      expect(rendered).to have_content 'Note that if you use a cloud provider to upload a large number'
       expect(rendered).to have_selector("button[id='browse-btn'][data-target='#edit_generic_work_#{form.model.id}']")
     end
   end

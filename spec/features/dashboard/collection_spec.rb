@@ -828,7 +828,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       end
 
       context 'edits an admin set' do
-        let!(:confirm_modal_text) { 'Are you sure you want to leave this tab?  Any unsaved data will be lost.' }
+        let!(:confirm_modal_text) { 'Are you sure you want to leave this tab? Any unsaved data will be lost.' }
         let!(:new_description) { 'New Description' }
 
         before do
@@ -956,7 +956,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
     context "navigate through tabs", js: true do
       let!(:empty_collection) { create(:public_collection_lw, title: ['Empty Collection'], user: user, with_permission_template: true) }
       let(:collection_id) { create(:collection_lw, user: user, collection_type_settings: [:brandable, :discoverable, :sharable], with_permission_template: true).id }
-      let!(:confirm_modal_text) { 'Are you sure you want to leave this tab?  Any unsaved data will be lost.' }
+      let!(:confirm_modal_text) { 'Are you sure you want to leave this tab? Any unsaved data will be lost.' }
       let!(:new_description) { 'New Description' }
 
       before do

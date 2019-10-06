@@ -40,7 +40,7 @@ RSpec.describe 'hyrax/admin/collection_types/index.html.erb', type: :view do
   end
 
   it 'displays the collection type count correctly' do
-    expect(rendered).to have_content '4 collection types in this repository'
+    expect(rendered).to have_content '4 collection types'
   end
 
   it 'has edit buttons for custom and predefined collection types' do
