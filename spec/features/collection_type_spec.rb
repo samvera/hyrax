@@ -322,7 +322,7 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
   describe 'delete collection type' do
     context 'when there are no collections of this type' do
       let!(:empty_collection_type) { create(:collection_type, title: 'Empty Type', creator_user: admin_user) }
-      let!(:delete_modal_text) { 'Deleting this collection type will permanently remove the type and its settings from the repository.  Are you sure you want to delete this collection type?' }
+      let!(:delete_modal_text) { 'Deleting this collection type will permanently remove the type and its settings from the repository. Are you sure you want to delete this collection type?' }
       let!(:deleted_flash_text) { "The collection type #{empty_collection_type.title} has been deleted." }
 
       before do
@@ -369,7 +369,7 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
         find(:xpath, "//tr[td[contains(.,'#{not_empty_collection_type.title}')]]/td/button", text: 'Delete').click
 
         within('div#deleteDenyModal') do
-          expect(page).to have_content(deny_delete_modal_text)
+          expect(page).to have_content(deny_delete_modal_text, :all)
           click_link('View collections of this type')
         end
         sleep 3

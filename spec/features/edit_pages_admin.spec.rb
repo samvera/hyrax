@@ -2,7 +2,7 @@ RSpec.describe 'Editing pages as admin', :js do
   let(:user) { create(:admin) }
 
   context 'when user wants to change tabs' do
-    let!(:confirm_modal_text) { 'Are you sure you want to leave this tab?  Any unsaved data will be lost.' }
+    let!(:confirm_modal_text) { 'Are you sure you want to leave this tab? Any unsaved data will be lost.' }
 
     before do
       sign_in user
