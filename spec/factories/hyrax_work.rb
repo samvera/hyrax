@@ -13,6 +13,7 @@ FactoryBot.define do
     end
 
     transient do
+      collections        { nil }
       members            { nil }
       visibility_setting { nil }
     end
@@ -24,7 +25,8 @@ FactoryBot.define do
           .assign_access_for(visibility: evaluator.visibility_setting)
       end
 
-      work.member_ids = evaluator.members.map(&:id) if evaluator.members
+      work.member_of_collection_ids = evaluator.collections.map(&:id) if evaluator.collections
+      work.member_ids               = evaluator.members.map(&:id)     if evaluator.members
     end
 
     after(:create) do |work, evaluator|
@@ -44,6 +46,12 @@ FactoryBot.define do
     trait :with_member_works do
       transient do
         members { [valkyrie_create(:hyrax_work), valkyrie_create(:hyrax_work)] }
+      end
+    end
+
+    trait :as_member_of_collections do
+      transient do
+        collections { [valkyrie_create(:hyrax_collection), valkyrie_create(:hyrax_collection)] }
       end
     end
   end

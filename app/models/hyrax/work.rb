@@ -8,6 +8,7 @@ module Hyrax
   class Work < Hyrax::Resource
     include Hyrax::Schema(:core_metadata)
 
+    attribute :member_of_collection_ids, Valkyrie::Types::Set.of(Valkyrie::Types::ID)
     attribute :member_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID).meta(ordered: true)
 
     ##

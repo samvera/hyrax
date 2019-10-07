@@ -32,7 +32,6 @@ RSpec.shared_examples 'has members' do
   let(:persister)     { adapter.persister }
   let(:query_service) { adapter.query_service }
 
-
   describe 'members' do
     it 'has empty member_ids by default' do
       expect(model.member_ids).to be_empty
@@ -69,12 +68,65 @@ RSpec.shared_examples 'has members' do
   end
 end
 
+RSpec.shared_examples 'belongs to collections' do
+  # save model for inverse reference search
+  subject(:model)     { described_class.new }
+  let(:adapter)       { Valkyrie::MetadataAdapter.find(:test_adapter) }
+  let(:persister)     { adapter.persister }
+  let(:property)      { :member_of_collection_ids }
+  let(:query_service) { adapter.query_service }
+
+  describe 'collection membership' do
+    it 'has empty member_of_collection_ids by default' do
+      expect(model.member_of_collection_ids).to be_empty
+    end
+
+    it 'has empty collection membership by default' do
+      expect(query_service.find_references_by(resource: model, property: property))
+        .to be_empty
+    end
+
+    context 'as member of collections' do
+      let(:parent_collections) do
+        [FactoryBot.build(:hyrax_collection), FactoryBot.build(:hyrax_collection), FactoryBot.build(:hyrax_collection)]
+          .map! { |w| persister.save(resource: w) }
+      end
+
+      let(:collection_ids) { parent_collections.map(&:id) }
+
+      before { model.member_of_collection_ids = collection_ids }
+
+      it 'has collection ids' do
+        expect(model.member_of_collection_ids).to contain_exactly(*collection_ids)
+      end
+
+      it 'has collections' do
+        expect(query_service.find_references_by(resource: model, property: property))
+          .to contain_exactly(*parent_collections)
+      end
+
+      it 'is in collections' do
+        saved = persister.save(resource: model)
+
+        expect(query_service.find_inverse_references_by(resource: parent_collections.first, property: property))
+          .to include(saved)
+      end
+
+      it 'cannot be a member of a collection multiple times' do
+        expect { model.member_of_collection_ids << collection_ids.first }
+          .not_to change { query_service.find_references_by(resource: model, property: property) }
+      end
+    end
+  end
+end
+
 RSpec.shared_examples 'a Hyrax::Work' do
   subject(:work) { described_class.new }
 
   it_behaves_like 'a Hyrax::Resource'
   it_behaves_like 'a model with core metadata'
   it_behaves_like 'has members'
+  it_behaves_like 'belongs to collections'
 
   it { is_expected.not_to be_collection }
   it { is_expected.not_to be_file }
@@ -89,6 +141,7 @@ RSpec.shared_examples 'a Hyrax::Collection' do
   it_behaves_like 'a Hyrax::Resource'
   it_behaves_like 'a model with core metadata'
   it_behaves_like 'has members'
+  it_behaves_like 'belongs to collections'
 
   describe '#collection_type_gid' do
     let(:gid) { Hyrax::CollectionType.find_or_create_default_collection_type.to_global_id.to_s }

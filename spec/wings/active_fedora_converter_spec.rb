@@ -96,6 +96,22 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
                                 an_instance_of(Hyrax::Test::SimpleWorkLegacy))
         end
       end
+
+      context 'as member of collection' do
+        let(:resource)       { FactoryBot.valkyrie_create(:hyrax_work, :as_member_of_collections) }
+        let(:collection_ids) { resource.member_of_collection_ids.map(&:id) }
+
+        it 'saves collection membership' do
+          expect(converter.convert)
+            .to have_attributes(member_of_collection_ids: contain_exactly(*collection_ids))
+        end
+
+        it 'can access collection models from converted object' do
+          expect(converter.convert.member_of_collections)
+            .to contain_exactly(an_instance_of(::Collection),
+                                an_instance_of(::Collection))
+        end
+      end
     end
 
     context 'with attributes' do
