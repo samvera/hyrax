@@ -32,7 +32,7 @@ module Hyrax
         end
 
         def build_collections(xml)
-          Collection.search_in_batches(public_access) do |doc_set|
+          ::Collection.search_in_batches(public_access) do |doc_set|
             build_resources(xml, doc_set, hyrax_routes)
           end
         end

@@ -59,7 +59,7 @@ module Hyrax
         # Adds the item to the ordered members so that it displays in the items
         # along side the FileSets on the show page
         def add(env, id)
-          collection = Collection.find(id)
+          collection = ::Collection.find(id)
           collection.reindex_extent = Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX
 
           return unless env.current_ability.can?(:deposit, collection)
@@ -68,7 +68,7 @@ module Hyrax
 
         # Remove the object from the members set and the ordered members list
         def remove(curation_concern, id)
-          collection = Collection.find(id)
+          collection = ::Collection.find(id)
           curation_concern.member_of_collections.delete(collection)
         end
 

@@ -9,8 +9,8 @@ module Hyrax
         self.default_query_service = Hyrax::Collections::NestedCollectionQueryService
         self.default_persistence_service = Hyrax::Collections::NestedCollectionPersistenceService
 
-        # @param parent [Collection, NilClass]
-        # @param child [Collection, NilClass]
+        # @param parent [::Collection, NilClass]
+        # @param child [::Collection, NilClass]
         # @param context [#can?,#repository,#blacklight_config]
         # @param query_service [Hyrax::Collections::NestedCollectionQueryService]
         # @param persistence_service [Hyrax::Collections::NestedCollectionPersistenceService] responsible for persisting the parent/child relationship

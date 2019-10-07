@@ -71,7 +71,7 @@ module Hyrax
 
     # Method to return the ActiveFedora model
     def hydra_model
-      first("has_model_ssim").constantize
+      "::#{first('has_model_ssim')}".constantize
     end
 
     def depositor(default = '')
