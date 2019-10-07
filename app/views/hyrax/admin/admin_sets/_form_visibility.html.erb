@@ -30,7 +30,7 @@
                           <%= f.radio_button :release_varies, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE %>
                           <%= t('.release.varies.between') %>
                         </label>
-                        <%= f.date_field :release_date, wrapper: :inline, class: 'datepicker form-control' %>
+                        <%= f.date_field :release_date, wrapper: :inline, class: 'datepicker form-control', placeholder: 'mm/dd/yyyy' %>
                       </li>
                       <li class="radio form-inline">
                         <label>
@@ -46,7 +46,7 @@
                       <%= f.radio_button :release_period, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED %>
                       <%= t('.release.fixed') %>
                     </label>
-                    <%= f.date_field :release_date, wrapper: :inline, class: 'datepicker form-control' %>
+                    <%= f.date_field :release_date, wrapper: :inline, class: 'datepicker form-control', placeholder: 'mm/dd/yyyy' %>
                   </div>
                   <h3><%= t('.visibility.title') %></h3>
                   <p><%= t('.visibility.description') %></p>
