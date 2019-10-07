@@ -8,8 +8,8 @@ module Hyrax
       # Migrate all legacy collections to extended collections with collection type assigned.  Legacy collections are those
       # created before Hyrax 2.1.0 and are identified by the lack of the collection having a collection type gid.
       def self.migrate_all_collections
-        Rails.logger.info "*** Migrating #{Collection.count} collections"
-        Collection.all.each do |col|
+        Rails.logger.info "*** Migrating #{::Collection.count} collections"
+        ::Collection.all.each do |col|
           migrate_collection(col)
           Rails.logger.info "  migrating collection - id: #{col.id}, title: #{col.title}"
         end
@@ -26,7 +26,7 @@ module Hyrax
       # Migrate a single legacy collection to extended collections with collection type assigned.  Legacy collections are those
       # created before Hyrax 2.1.0 and are identified by the lack of the collection having a collection type gid.
       #
-      # @param collection [Collection] collection object to be migrated
+      # @param collection [::Collection] collection object to be migrated
       def self.migrate_collection(collection)
         return if collection.collection_type_gid.present? # already migrated
         collection.collection_type_gid = Hyrax::CollectionType.find_or_create_default_collection_type.gid
@@ -56,7 +56,7 @@ module Hyrax
       # the default collection type are ignored.
       def self.repair_migrated_collections
         Rails.logger.info "*** Repairing migrated collections"
-        Collection.all.each do |col|
+        ::Collection.all.each do |col|
           repair_migrated_collection(col)
           Rails.logger.info "  repairing collection - id: #{col.id}, title: #{col.title}"
         end
@@ -71,7 +71,7 @@ module Hyrax
       #
       # Validate and repair a migrated collection if needed.
       #
-      # @param collection [Collection] collection object to be migrated/repaired
+      # @param collection [::Collection] collection object to be migrated/repaired
       def self.repair_migrated_collection(collection)
         return if collection.collection_type_gid.present? && collection.collection_type_gid != Hyrax::CollectionType.find_or_create_default_collection_type.gid
         collection.collection_type_gid = Hyrax::CollectionType.find_or_create_default_collection_type.gid

@@ -3,7 +3,7 @@ module Hyrax
     # Responsible for searching for collections of the same type that are not the given collection
     class NestedCollectionsSearchBuilder < ::Hyrax::CollectionSearchBuilder
       # @param access [Symbol] :edit, :read, :discover - With the given :access what all can
-      # @param collection [Collection]
+      # @param collection [::Collection]
       # @param scope [Object] Typically a controller that responds to #current_ability, #blackligh_config
       # @param nesting_attributes [NestingAttributes] an object encapsulating nesting attributes of the collection
       # @param nest_direction [Symbol] (:as_parent or :as_child) the direction we are adding nesting to this collection
@@ -27,7 +27,7 @@ module Hyrax
         solr_parameters[:fq] ||= []
         solr_parameters[:fq] += [
           "-" + Hyrax::SolrQueryBuilderService.construct_query_for_ids([limit_ids]),
-          Hyrax::SolrQueryBuilderService.construct_query(Collection.collection_type_gid_document_field_name => @collection.collection_type_gid)
+          Hyrax::SolrQueryBuilderService.construct_query(::Collection.collection_type_gid_document_field_name => @collection.collection_type_gid)
         ]
         solr_parameters[:fq] += limit_clause if limit_clause # add limits to prevent illegal nesting arrangements
       end

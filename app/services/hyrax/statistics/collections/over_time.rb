@@ -5,7 +5,7 @@ module Hyrax
         private
 
           def relation
-            Collection
+            ::Collection
           end
       end
     end
