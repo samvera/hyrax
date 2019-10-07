@@ -25,7 +25,8 @@ module Hyrax
     # Updates a batch of embargos
     def update
       filter_docs_with_edit_access!
-      copy_visibility = params[:embargoes].values.map { |h| h[:copy_visibility] }
+      copy_visibility = []
+      copy_visibility = params[:embargoes].values.map { |h| h[:copy_visibility] } if params[:embargoes]
       af_objects = Hyrax.query_service.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie: false)
       af_objects.each do |curation_concern|
         Hyrax::Actors::EmbargoActor.new(curation_concern).destroy

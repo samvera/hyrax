@@ -102,6 +102,18 @@ RSpec.describe Hyrax::EmbargoesController do
       context 'with an expired embargo' do
         let(:release_date) { Time.zone.today - 2 }
 
+        it 'deactivates embargo, do not update the file set visibility, and redirect' do
+          patch :update, params: { batch_document_ids: [a_work.id], embargoes: {} }
+          expect(a_work.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+          expect(file_set.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+          expect(response).to redirect_to embargoes_path
+          expect(flash[:notice]).to be_present
+        end
+      end
+
+      context 'with an expired embargo' do
+        let(:release_date) { Time.zone.today - 2 }
+
         it 'deactivates embargo, update the visibility and redirect' do
           patch :update, params: { batch_document_ids: [a_work.id], embargoes: { '0' => { copy_visibility: a_work.id } } }
           expect(a_work.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
