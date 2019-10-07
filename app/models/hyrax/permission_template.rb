@@ -29,7 +29,7 @@ module Hyrax
     has_one :active_workflow, -> { where(active: true) }, class_name: 'Sipity::Workflow', foreign_key: :permission_template_id
 
     # A bit of an analogue for a `belongs_to :source_model` as it crosses from Fedora to the DB
-    # @return [AdminSet | Collection]
+    # @return [AdminSet, ::Collection]
     # @raise [Hyrax::ObjectNotFoundError] when neither an AdminSet or Collection is found
     def source_model
       admin_set
@@ -51,7 +51,7 @@ module Hyrax
     # @return [Collection]
     # @raise [Hyrax::ObjectNotFoundError] when the we cannot find the Collection
     def collection
-      return Collection.find(source_id) if Collection.exists?(source_id)
+      return ::Collection.find(source_id) if ::Collection.exists?(source_id)
       raise Hyrax::ObjectNotFoundError
     rescue ActiveFedora::ActiveFedoraError # TODO: remove the rescue when active_fedora issue #1276 is fixed
       raise Hyrax::ObjectNotFoundError

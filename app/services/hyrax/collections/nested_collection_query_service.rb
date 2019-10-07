@@ -28,7 +28,7 @@ module Hyrax
       #
       # What possible collections can be nested within the given parent collection?
       #
-      # @param parent [Collection]
+      # @param parent [::Collection]
       # @param scope [Object] Typically a controller object that responds to `repository`, `can?`, `blacklight_config`, `current_ability`
       # @param limit_to_id [nil, String] Limit the query to just check if the given id is in the response. Useful for validation.
       # @return [Array<SolrDocument>]
@@ -42,7 +42,7 @@ module Hyrax
       #
       # What possible collections can the given child be nested within?
       #
-      # @param child [Collection]
+      # @param child [::Collection]
       # @param scope [Object] Typically a controller object that responds to `repository`, `can?`, `blacklight_config`, `current_ability`
       # @param limit_to_id [nil, String] Limit the query to just check if the given id is in the response. Useful for validation.
       # @return [Array<SolrDocument>]
@@ -56,7 +56,7 @@ module Hyrax
       #
       # What collections is the given child nested within?
       #
-      # @param child [Collection]
+      # @param child [::Collection]
       # @param scope [Object] Typically a controller object that responds to `repository`, `can?`, `blacklight_config`, `current_ability`
       # @param page [Integer] Starting page for pagination
       # @param limit [Integer] Limit to number of collections for pagination
@@ -110,8 +110,8 @@ module Hyrax
       #
       # Is it valid to nest the given child within the given parent?
       #
-      # @param parent [Collection]
-      # @param child [Collection]
+      # @param parent [::Collection]
+      # @param child [::Collection]
       # @param scope [Object] Typically a controller object that responds to `repository`, `can?`, `blacklight_config`, `current_ability`
       # @return [Boolean] true if the parent can nest the child; false otherwise
       # @todo Consider expanding from same collection type to a lookup table that says "This collection type can have within it, these collection types"
@@ -127,8 +127,8 @@ module Hyrax
       #
       # Does the nesting depth fall within defined limit?
       #
-      # @param parent [Collection]
-      # @param child [nil, Collection] will be nil if we are nesting a new collection under the parent
+      # @param parent [::Collection]
+      # @param child [nil, ::Collection] will be nil if we are nesting a new collection under the parent
       # @param scope [Object] Typically a controller object that responds to `repository`, `can?`, `blacklight_config`, `current_ability`
       # @return [Boolean] true if the parent can nest the child; false otherwise
       def self.valid_combined_nesting_depth?(parent:, child: nil, scope:)
@@ -143,7 +143,7 @@ module Hyrax
       #
       # Get the child collection's nesting depth
       #
-      # @param child [Collection]
+      # @param child [::Collection]
       # @return [Fixnum] the largest number of collections in a path nested under this collection (including this collection)
       def self.child_nesting_depth(child:, scope:)
         return 1 if child.nil?
@@ -175,7 +175,7 @@ module Hyrax
       #
       # Get the parent collection's nesting depth
       #
-      # @param parent [Collection]
+      # @param parent [::Collection]
       # @return [Fixnum] the largest number of collections above this collection (includes this collection)
       def self.parent_nesting_depth(parent:, scope:)
         return 1 if parent.nil?

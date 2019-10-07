@@ -21,14 +21,14 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
       let!(:col_mg) { build(:typeless_collection, user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], do_save: true) }
 
       it 'sets gid and adds permissions' do # rubocop:disable RSpec/ExampleLength
-        Collection.all.each do |col|
+        ::Collection.all.each do |col|
           expect(col.collection_type_gid).to be_nil
           expect { Hyrax::PermissionTemplate.find_by!(source_id: col.id) }.to raise_error ActiveRecord::RecordNotFound
         end
 
         Hyrax::Collections::MigrationService.migrate_all_collections
 
-        Collection.all.each do |col|
+        ::Collection.all.each do |col|
           expect(col.collection_type_gid).to eq default_gid
           pt_id = Hyrax::PermissionTemplate.find_by!(source_id: col.id)
           expect(pt_id).not_to be_nil
@@ -54,7 +54,7 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
       let!(:edit_users) { collection.edit_users }
 
       before do
-        allow(Collection).to receive(:all).and_return([collection])
+        allow(::Collection).to receive(:all).and_return([collection])
       end
 
       it "doesn't change the collection" do
@@ -165,14 +165,14 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
         let!(:col_mg) { build(:typeless_collection_lw, user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], do_save: true) }
 
         it 'sets gid and adds permissions' do # rubocop:disable RSpec/ExampleLength
-          Collection.all.each do |col|
+          ::Collection.all.each do |col|
             expect(col.collection_type_gid).to be_nil
             expect { Hyrax::PermissionTemplate.find_by!(source_id: col.id) }.to raise_error ActiveRecord::RecordNotFound
           end
 
           Hyrax::Collections::MigrationService.repair_migrated_collections
 
-          Collection.all.each do |col|
+          ::Collection.all.each do |col|
             expect(col.collection_type_gid).to eq default_gid
             pt_id = Hyrax::PermissionTemplate.find_by!(source_id: col.id)
             expect(pt_id).not_to be_nil
@@ -251,7 +251,7 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
         end
 
         it 'sets gid' do # rubocop:disable RSpec/ExampleLength
-          Collection.all.each do |col|
+          ::Collection.all.each do |col|
             expect(col.collection_type_gid).to be_nil
             pt_id = Hyrax::PermissionTemplate.find_by!(source_id: col.id)
             expect(pt_id).not_to be_nil
@@ -263,7 +263,7 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
 
           Hyrax::Collections::MigrationService.repair_migrated_collections
 
-          Collection.all.each do |col|
+          ::Collection.all.each do |col|
             expect(col.collection_type_gid).to eq default_gid
             pt_id = Hyrax::PermissionTemplate.find_by!(source_id: col.id)
             expect(pt_id).not_to be_nil
@@ -295,7 +295,7 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
         end
 
         it 'sets gid and adds access permissions' do # rubocop:disable RSpec/ExampleLength
-          Collection.all.each do |col|
+          ::Collection.all.each do |col|
             expect(col.collection_type_gid).to be_nil
             pt_id = Hyrax::PermissionTemplate.find_by!(source_id: col.id)
             expect(pt_id).not_to be_nil

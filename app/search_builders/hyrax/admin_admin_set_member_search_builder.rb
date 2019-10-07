@@ -8,7 +8,7 @@ module Hyrax
     attr_reader :collection
 
     # @param [scope] Typically the controller object
-    # @param [Collection]
+    # @param [::Collection]
     def initialize(scope:, collection:)
       @collection = collection
       super(scope)

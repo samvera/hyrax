@@ -5,7 +5,7 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
                      'rights_tesim' => ["http://creativecommons.org/licenses/by-sa/3.0/us/"])
   end
   let(:ability) { double }
-  let(:collection) { mock_model(Collection) }
+  let(:collection) { mock_model(::Collection) }
   let(:presenter) { Hyrax::CollectionPresenter.new(document, ability) }
   let(:collection_type) { double }
 

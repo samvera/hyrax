@@ -66,7 +66,7 @@ module Hyrax
       def member_of_collections
         base = model.member_of_collections
         return base unless @controller.params[:add_works_to_collection]
-        base + [Collection.find(@controller.params[:add_works_to_collection])]
+        base + [::Collection.find(@controller.params[:add_works_to_collection])]
       end
 
       # @return [String] an etag representing the current version of this form
