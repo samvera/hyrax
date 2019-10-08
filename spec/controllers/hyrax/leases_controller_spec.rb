@@ -105,6 +105,17 @@ RSpec.describe Hyrax::LeasesController do
       context 'with an expired lease' do
         let(:expiration_date) { Time.zone.today - 2 }
 
+        it 'deactivates lease, do not update the visibility, and redirect' do
+          patch :update, params: { batch_document_ids: [a_work.id], leases: {} }
+          expect(a_work.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+          expect(file_set.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+          expect(response).to redirect_to leases_path
+        end
+      end
+
+      context 'with an expired lease' do
+        let(:expiration_date) { Time.zone.today - 2 }
+
         it 'deactivates lease, update the visibility and redirect' do
           patch :update, params: { batch_document_ids: [a_work.id], leases: { '0' => { copy_visibility: a_work.id } } }
           expect(a_work.reload.visibility).to eq Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
