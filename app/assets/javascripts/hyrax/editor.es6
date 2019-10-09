@@ -22,6 +22,7 @@ export default class {
     this.controlledVocabularies()
     this.sharingTab()
     this.relationshipsControl()
+    this.repopulateForm()
     this.saveWorkControl()
     this.saveWorkFixed()
     this.authoritySelect()
@@ -113,5 +114,25 @@ export default class {
   saveWorkFixed() {
       // Fixedsticky will polyfill position:sticky
       this.element.find('#savewidget').fixedsticky()
+  }
+
+  // Populate the form with data from localStorage of the browser
+  repopulateForm() {
+    const $form = this.element.find("#form-progress").closest('form');
+    if(localStorage) {
+      for(let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+        const input = $form.find(`input[name="${key}"], select[name="${key}"]`);
+        if(input.length > 1) {
+          var values = localStorage.getItem(key).split('-');
+          input.map(function(index) {
+            input.eq(index).val(values[index]);
+          })
+        } else {
+          input.val(localStorage.getItem(key));
+        }
+      }
+    }
+    window.localStorage.clear();
   }
 }

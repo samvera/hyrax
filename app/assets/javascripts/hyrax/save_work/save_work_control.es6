@@ -41,6 +41,42 @@ export default class SaveWorkControl {
     this.form.on('submit', (evt) => {
       if (!this.isValid())
         evt.preventDefault();
+
+      const form = $(this)[0].form;
+      const formData = form.serializeArray();
+
+      $.ajax({
+        type: "POST",
+        url: form.attr('action'),
+        data: formData,
+        dataType: 'html',
+        error: function(XMLHttpRequest) {
+          if (XMLHttpRequest.readyState == 0 || XMLHttpRequest.readyState == 4) {
+            localStorage.clear();
+
+            var allKeys = [];
+            formData.forEach(elem => {
+              allKeys.push({ key: elem.name, data: []});
+            });
+            const uniqueKeys = allKeys.filter((v,i) => allKeys.indexOf(v) === i);
+    
+            formData.forEach(elem => {
+              uniqueKeys.find(item => {
+                if(item.key === elem.name) {
+                  item.data.push(elem.value);
+                }
+              })
+            })
+            uniqueKeys.forEach(element => {
+              const dataString = element.data.join('-');
+              localStorage.setItem(element.key, dataString);
+            });
+          }
+          else {
+            return;
+          }
+      }
+      });
     })
   }
 
