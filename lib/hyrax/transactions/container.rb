@@ -26,15 +26,35 @@ module Hyrax
       require 'hyrax/transactions/steps/destroy_work'
       require 'hyrax/transactions/steps/ensure_admin_set'
       require 'hyrax/transactions/steps/ensure_permission_template'
+      require 'hyrax/transactions/steps/save'
       require 'hyrax/transactions/steps/save_work'
       require 'hyrax/transactions/steps/set_default_admin_set'
       require 'hyrax/transactions/steps/set_modified_date'
       require 'hyrax/transactions/steps/set_uploaded_date'
+      require 'hyrax/transactions/steps/validate'
 
       extend Dry::Container::Mixin
 
       # Disable BlockLength rule for DSL code
       # rubocop:disable Metrics/BlockLength
+      namespace 'change_set' do |ops|
+        ops.register 'save' do
+          Steps::Save.new
+        end
+
+        ops.register 'set_modified_date' do
+          Steps::SetModifiedDate.new
+        end
+
+        ops.register 'set_uploaded_date' do
+          Steps::SetUploadedDate.new
+        end
+
+        ops.register 'validate' do
+          Steps::Validate.new
+        end
+      end
+
       namespace 'work' do |ops|
         ops.register 'apply_collection_permission_template' do
           Steps::ApplyCollectionPermissionTemplate.new
