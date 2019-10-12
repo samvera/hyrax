@@ -3,21 +3,30 @@ module Hyrax
   module Transactions
     module Steps
       ##
-      # A `dry-transaction` step that sets the modified date to now for an
-      # input work.
+      # A step that sets the modified date to now for an input resource or
+      # change_set
       #
       # @since 2.4.0
       class SetModifiedDate
-        include Dry::Transaction::Operation
+        include Dry::Monads[:result]
 
         ##
-        # @param [Hyrax::WorkBehavior] work
+        # @param [#time_in_utc] time_service
+        def initialize(time_service: Hyrax::TimeService)
+          @time_service = time_service
+        end
+
+        ##
+        # @param [#date_modified=] obj
         #
         # @return [Dry::Monads::Result]
-        def call(work)
-          work.date_modified = Hyrax::TimeService.time_in_utc
+        def call(obj)
+          return Failure[:no_date_modified_attribute, obj] unless
+            obj.respond_to?(:date_modified=)
 
-          Success(work)
+          obj.date_modified = @time_service.time_in_utc
+
+          Success(obj)
         end
       end
     end

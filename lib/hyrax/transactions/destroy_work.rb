@@ -12,6 +12,10 @@ module Hyrax
     # @since 3.0.0
     #
     # @see https://dry-rb.org/gems/dry-transaction/
+    #
+    # @deprecated Development on Dry::Transaction has been discontinued, we're
+    #   removing existing transactions and replacing them with Dry::Monad-based
+    #   valkyrie versions.
     class DestroyWork
       include Dry::Transaction(container: Hyrax::Transactions::Container)
 

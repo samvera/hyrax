@@ -42,6 +42,10 @@ module Hyrax
     # @todo validate PermissionTemplate against visibility, lease, and embargo (see: `InterpretVisibilityActor`)
     # @todo add locking/transactionality. Just do better than the Actor Stack
     # @todo add support for proxy deposit (see: TransferRequestActor)
+    #
+    # @deprecated Development on Dry::Transaction has been discontinued, we're
+    #   removing existing transactions and replacing them with Dry::Monad-based
+    #   valkyrie versions.
     class CreateWork
       include Dry::Transaction(container: Hyrax::Transactions::Container)
 
