@@ -30,6 +30,7 @@ module Hyrax
 
       # Need to define here in order to override setter defined by ActiveTriples
       def collection_type_gid=(new_collection_type_gid)
+        new_collection_type_gid = new_collection_type_gid&.to_s
         raise "Can't modify collection type of this collection" if persisted? && !collection_type_gid_was.nil? && collection_type_gid_was != new_collection_type_gid
         new_collection_type = Hyrax::CollectionType.find_by_gid!(new_collection_type_gid)
         super
