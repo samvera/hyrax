@@ -26,53 +26,66 @@ RSpec.shared_examples 'a Hyrax::Resource' do
   it { is_expected.to respond_to :work? }
 end
 
-RSpec.shared_examples 'a Hyrax::Work' do
-  subject(:work)      { described_class.new }
+RSpec.shared_examples 'has members' do
+  subject(:model)     { described_class.new }
   let(:adapter)       { Valkyrie::MetadataAdapter.find(:test_adapter) }
   let(:persister)     { adapter.persister }
   let(:query_service) { adapter.query_service }
 
+  describe 'members' do
+    it 'has empty member_ids by default' do
+      expect(model.member_ids).to be_empty
+    end
+
+    it 'has empty members by default' do
+      expect(query_service.find_members(resource: model)).to be_empty
+    end
+
+    context 'with members' do
+      let(:member_works) do
+        [described_class.new, described_class.new, described_class.new]
+          .map! { |w| persister.save(resource: w) }
+      end
+
+      let(:member_ids) { member_works.map(&:id) }
+
+      before { model.member_ids = member_ids }
+
+      it 'has member_ids' do
+        expect(model.member_ids).to eq member_ids
+      end
+
+      it 'can query members' do
+        expect(query_service.find_members(resource: model)).to eq member_works
+      end
+
+      it 'can have the same member multiple times' do
+        expect { model.member_ids << member_ids.first }
+          .to change { query_service.find_members(resource: model) }
+          .to eq(member_works + [member_works.first])
+      end
+    end
+  end
+end
+
+RSpec.shared_examples 'a Hyrax::PcdmCollection' do
+  subject(:collection) { described_class.new }
+
   it_behaves_like 'a Hyrax::Resource'
   it_behaves_like 'a model with core metadata'
+  it_behaves_like 'has members'
+end
+
+RSpec.shared_examples 'a Hyrax::Work' do
+  subject(:work)      { described_class.new }
+
+  it_behaves_like 'a Hyrax::Resource'
+  it_behaves_like 'a model with core metadata'
+  it_behaves_like 'has members'
 
   it { is_expected.not_to be_collection }
   it { is_expected.not_to be_file }
   it { is_expected.not_to be_file_set }
   it { is_expected.to be_pcdm_object }
   it { is_expected.to be_work }
-
-  describe 'members' do
-    it 'has empty member_ids by default' do
-      expect(work.member_ids).to be_empty
-    end
-
-    it 'has empty members by default' do
-      expect(query_service.find_members(resource: work)).to be_empty
-    end
-
-    context 'with members' do
-      let(:other_works) do
-        [described_class.new, described_class.new, described_class.new]
-          .map! { |w| persister.save(resource: w) }
-      end
-
-      let(:member_ids) { other_works.map(&:id) }
-
-      before { work.member_ids = member_ids }
-
-      it 'has member_ids' do
-        expect(work.member_ids).to eq member_ids
-      end
-
-      it 'can query members' do
-        expect(query_service.find_members(resource: work)).to eq other_works
-      end
-
-      it 'can have the same member multiple times' do
-        expect { work.member_ids << member_ids.first }
-          .to change { query_service.find_members(resource: work) }
-          .to eq(other_works + [other_works.first])
-      end
-    end
-  end
 end
