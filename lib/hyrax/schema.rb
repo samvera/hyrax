@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'hyrax/metadata/basic'
+require 'hyrax/metadata/core'
+
 module Hyrax
   ##
   # @param [Symbol] schema_name

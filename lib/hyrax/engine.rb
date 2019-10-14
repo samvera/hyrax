@@ -15,9 +15,11 @@ module Hyrax
     require 'qa'
     require 'clipboard/rails'
     require 'legato'
+    require 'valkyrie'
 
     require 'hydra/derivatives'
     require 'hyrax/controller_resource'
+    require 'hyrax/schema'
     require 'hyrax/search_state'
     require 'hyrax/errors'
 
@@ -72,14 +74,6 @@ module Hyrax
     initializer 'requires' do
       require 'power_converters'
       require 'wings'
-      begin
-        require 'valkyrie'
-      rescue LoadError
-        message  = "Hyrax::Engine.initializer did not load Valkyrie. We are in the process\n"
-        message += "\tof adding Valkyrie to Hyrax; For now you need do nothing. However,\n"
-        message += "\tstay tuned for release notes on what are the steps for incorporating Valkyrie."
-        Rails.logger.info(message)
-      end
     end
 
     initializer 'routing' do
