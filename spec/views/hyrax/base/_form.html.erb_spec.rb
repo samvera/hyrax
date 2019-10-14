@@ -37,7 +37,7 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
         render
       end
       it 'shows batch uploads' do
-        expect(rendered).to have_link('Batch upload')
+        expect(rendered).to have_link('Batch upload', href: hyrax.new_batch_upload_path(payload_concern: 'GenericWork'))
         expect(rendered).to have_selector("form[action='/concern/generic_works'][data-param-key='generic_work']")
         # Draws the "Share" tab, with data for the javascript.
         expect(rendered).to have_selector('#share[data-param-key="generic_work"]')
@@ -50,7 +50,7 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
         render
       end
       it 'hides batch uploads' do
-        expect(rendered).not_to have_link('Batch upload')
+        expect(rendered).not_to have_link('Batch upload', href: hyrax.new_batch_upload_path(payload_concern: 'GenericWork'))
       end
     end
   end
