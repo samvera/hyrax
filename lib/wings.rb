@@ -99,9 +99,10 @@ custom_queries.each do |query_handler|
   Valkyrie.config.metadata_adapter.query_service.custom_queries.register_query_handler(query_handler)
 end
 
-Wings::ModelRegistry.register(Hyrax::AccessControl, Hydra::AccessControl)
-Wings::ModelRegistry.register(Hyrax::Embargo,       Hydra::AccessControls::Embargo)
-Wings::ModelRegistry.register(Hyrax::Lease,         Hydra::AccessControls::Lease)
+Wings::ModelRegistry.register(Hyrax::AccessControl,  Hydra::AccessControl)
+Wings::ModelRegistry.register(Hyrax::PcdmCollection, ::Collection)
+Wings::ModelRegistry.register(Hyrax::Embargo,        Hydra::AccessControls::Embargo)
+Wings::ModelRegistry.register(Hyrax::Lease,          Hydra::AccessControls::Lease)
 
 Hydra::AccessControl.send(:define_method, :valkyrie_resource) do
   attrs = attributes.symbolize_keys
