@@ -11,7 +11,9 @@ module Hyrax
   #   Hyrax::ChangeSet(Monograph)
   def self.ChangeSet(resource_class)
     Class.new(Hyrax::ChangeSet) do
-      self.fields = resource_class.fields - resource_class.reserved_attributes
+      (resource_class.fields - resource_class.reserved_attributes).each do |field|
+        property field, default: nil
+      end
     end
   end
 
