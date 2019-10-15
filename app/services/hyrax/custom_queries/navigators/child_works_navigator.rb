@@ -14,22 +14,20 @@ module Hyrax
           @query_service = query_service
         end
 
+        ##
         # Find child works of a given resource, and map to Valkyrie Resources
+        #
         # @param [Valkyrie::Resource]
         # @return [Array<Valkyrie::Resource>]
-        # TODO: By storing all children in a single relationship, it requires that the full resource be constructed for all children
-        #       and then selecting only the children of a particular type to return.
         def find_child_works(resource:)
           query_service.find_members(resource: resource).select(&:work?)
         end
 
+        ##
         # Find the ids of child works of a given resource, and map to Valkyrie Resources
+        #
         # @param [Valkyrie::Resource]
         # @return [Array<Valkyrie::ID>]
-        # TODO: By storing all children in a single relationship, it requires that the full resource be constructed for all children
-        #       and then selecting only the children of a particular type.  If we stored works in a works relationship and filesets
-        #       in a filesets relationship, then a request for IDs would return all ids from the relationship and not instantiate
-        #       any resources.
         def find_child_work_ids(resource:)
           find_child_works(resource: resource).map(&:id)
         end
