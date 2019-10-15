@@ -8,7 +8,7 @@ module Hyrax::FileSetHelper
   end
 
   # REVIEW: Since this media display could theoretically work for
-  #         any object that inplements to_s and the Mime Type methos (image? audio? ...),
+  #         any object that implements to_s and the Mime Type methods (image? audio? ...),
   #         Should this really be in file_set or could it be in it's own helper class like media_helper?
   def media_display(presenter, locals = {})
     render media_display_partial(presenter),
@@ -17,15 +17,15 @@ module Hyrax::FileSetHelper
 
   def media_display_partial(file_set)
     'hyrax/file_sets/media_display/' +
-      if file_set.image?
+      if Hyrax::MimeTypeService.image? file_set.mime_type
         'image'
-      elsif file_set.video?
+      elsif Hyrax::MimeTypeService.video? file_set.mime_type
         'video'
-      elsif file_set.audio?
+      elsif Hyrax::MimeTypeService.audio? file_set.mime_type
         'audio'
-      elsif file_set.pdf?
+      elsif Hyrax::MimeTypeService.pdf? file_set.mime_type
         'pdf'
-      elsif file_set.office_document?
+      elsif Hyrax::MimeTypeService.office_document? file_set.mime_type
         'office_document'
       else
         'default'
