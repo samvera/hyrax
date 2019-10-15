@@ -113,4 +113,7 @@ SUMMARY
   # simple_form 3.5.1 broke hydra-editor for certain model types;
   #   see: https://github.com/plataformatec/simple_form/issues/1549
   spec.add_dependency 'simple_form', '~> 3.2', '<= 3.5.0'
+  # Pin sass-rails to 5.x because rails 5.x apps have this same dependency in their generated Gemfiles
+  # See https://github.com/samvera/hyrax/issues/3919
+  spec.add_dependency 'sass-rails',  '~> 5.0'
 end
