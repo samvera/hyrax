@@ -17,19 +17,14 @@ module Hyrax
         # Find child collections of a given resource, and map to Valkyrie Resources
         # @param [Valkyrie::Resource]
         # @return [Array<Valkyrie::Resource>]
-        # TODO: By storing all children in a single relationship, it requires that the full resource be constructed for all children
-        #       and then selecting only the children of a particular type to return.
         def find_child_collections(resource:)
-          query_service.find_inverse_references_by(resource: resource, property: :member_of_collection_ids).select(&:collection?)
+          query_service
+            .find_inverse_references_by(resource: resource, property: :member_of_collection_ids)
         end
 
         # Find the ids of child collections of a given resource, and map to Valkyrie Resources
         # @param [Valkyrie::Resource]
         # @return [Array<Valkyrie::ID>]
-        # TODO: By storing all children in a single relationship, it requires that the full resource be constructed for all children
-        #       and then selecting only the children of a particular type.  If we stored collections in a collections relationship and
-        #       works in a works relationship, then a request for IDs would return all ids from the relationship and not instantiate
-        #       any resources.
         def find_child_collection_ids(resource:)
           find_child_collections(resource: resource).map(&:id)
         end
