@@ -42,7 +42,7 @@ module Hyrax
     attribute :label, ::Valkyrie::Types::Set
     attribute :original_filename, ::Valkyrie::Types::Set
     attribute :mime_type, ::Valkyrie::Types::String.default(GENERIC_MIME_TYPE)
-    attribute :type, ::Valkyrie::Types::Set.default([Use::ORIGINAL_FILE])
+    attribute :type, ::Valkyrie::Types::Set.default([Use::ORIGINAL_FILE].freeze)
     attribute :content, ::Valkyrie::Types::Set
 
     # attributes set by fits
