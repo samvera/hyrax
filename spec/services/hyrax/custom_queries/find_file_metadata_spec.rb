@@ -51,7 +51,6 @@ RSpec.describe Hyrax::CustomQueries::FindFileMetadata do
       end
       let(:valk_id) { valk_id1 }
       it 'returns file metadata resource' do
-        expect(subject.is_a?(Hyrax::FileMetadata)).to be true
         expect(subject.id.to_s).to eq id1
         expect(subject.alternate_ids.first.to_s).to eq alt_id1
         expect(subject.content.first).to eq content1
@@ -81,7 +80,6 @@ RSpec.describe Hyrax::CustomQueries::FindFileMetadata do
       end
       let(:valk_alt_id) { valk_alt_id2 }
       it 'returns file metadata resource' do
-        expect(subject.is_a?(Hyrax::FileMetadata)).to be true
         expect(subject.id.to_s).to eq id2
         expect(subject.alternate_ids.first.to_s).to eq alt_id2
         expect(subject.content.first).to eq content2
@@ -114,9 +112,6 @@ RSpec.describe Hyrax::CustomQueries::FindFileMetadata do
         expect(file_metadata2.id).not_to be_empty
       end
       it 'returns file metadata resources' do
-        expect(subject).to be_a Array
-        expect(subject.size).to eq 2
-        expect(subject.first.is_a?(Hyrax::FileMetadata)).to be true
         expect(subject.map { |fm| fm.id.to_s }).to match_array(ids.map(&:to_s))
       end
     end
@@ -132,9 +127,6 @@ RSpec.describe Hyrax::CustomQueries::FindFileMetadata do
         expect(file_metadata2.id).not_to be_empty
       end
       it 'only includes file metadata resources' do
-        expect(subject).to be_a Array
-        expect(subject.size).to eq 2
-        expect(subject.first.is_a?(Hyrax::FileMetadata)).to be true
         expect(subject.map { |fm| fm.id.to_s }).to match_array [file_metadata1.id.to_s, file_metadata2.id.to_s]
       end
     end
@@ -144,14 +136,14 @@ RSpec.describe Hyrax::CustomQueries::FindFileMetadata do
       let!(:non_existent_id) { ::Valkyrie::ID.new('BOGUS') }
       let(:ids) { [non_file_metadata_resource.id, non_existent_id] }
       it 'returns empty array' do
-        expect(subject).to eq []
+        expect(subject).to be_empty
       end
     end
 
     context 'when passed empty ids array' do
       let(:ids) { [] }
       it 'returns empty array' do
-        expect(subject).to eq []
+        expect(subject).to be_empty
       end
     end
   end

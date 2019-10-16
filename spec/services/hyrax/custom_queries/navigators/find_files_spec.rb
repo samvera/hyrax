@@ -8,17 +8,14 @@ RSpec.describe Hyrax::CustomQueries::Navigators::FindFiles do
       let!(:file_metadata2) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata) }
       let!(:fileset) { FactoryBot.create_using_test_adapter(:hyrax_pcdm_file_set, files: [file_metadata1, file_metadata2]) }
       it 'returns file metadata resource' do
-        expect(subject).to be_a Array
-        expect(subject.size).to eq 2
         expect(subject.map(&:id).map(&:to_s)).to match_array [file_metadata1.id.to_s, file_metadata2.id.to_s]
-        expect(subject.first).to be_a Hyrax::FileMetadata
       end
     end
 
     context 'when files do not exist' do
       let!(:fileset) { FactoryBot.build(:hyrax_pcdm_file_set) }
       it 'returns an empty array' do
-        expect(subject).to eq []
+        expect(subject).to be_empty
       end
     end
   end
@@ -29,7 +26,6 @@ RSpec.describe Hyrax::CustomQueries::Navigators::FindFiles do
       let!(:original_file) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata) }
       let!(:fileset) { FactoryBot.create_using_test_adapter(:hyrax_pcdm_file_set, files: [original_file], original_file: original_file) }
       it 'returns file metadata resource' do
-        expect(subject).to be_a Hyrax::FileMetadata
         expect(subject.id.to_s).to eq original_file.id.to_s
       end
     end
@@ -55,7 +51,6 @@ RSpec.describe Hyrax::CustomQueries::Navigators::FindFiles do
       let!(:extracted_text) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata) }
       let!(:fileset) { FactoryBot.create_using_test_adapter(:hyrax_pcdm_file_set, files: [extracted_text], extracted_text: extracted_text) }
       it 'returns file metadata resource' do
-        expect(subject).to be_a Hyrax::FileMetadata
         expect(subject.id.to_s).to eq extracted_text.id.to_s
       end
     end
@@ -81,7 +76,6 @@ RSpec.describe Hyrax::CustomQueries::Navigators::FindFiles do
       let!(:thumbnail) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata) }
       let!(:fileset) { FactoryBot.create_using_test_adapter(:hyrax_pcdm_file_set, files: [thumbnail], thumbnail: thumbnail) }
       it 'returns file metadata resource' do
-        expect(subject).to be_a Hyrax::FileMetadata
         expect(subject.id.to_s).to eq thumbnail.id.to_s
       end
     end

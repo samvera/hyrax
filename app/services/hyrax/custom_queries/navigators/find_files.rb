@@ -2,7 +2,7 @@ module Hyrax
   module CustomQueries
     module Navigators
       class FindFiles
-        # Use:
+        # @example
         #   Hyrax.query_service.custom_queries.find_files(file_set: file_set_resource)
         #   Hyrax.query_service.custom_queries.find_original_file(file_set: file_set_resource)
         #   Hyrax.query_service.custom_queries.find_extracted_text_file(file_set: file_set_resource)

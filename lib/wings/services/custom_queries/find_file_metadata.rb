@@ -59,11 +59,13 @@ module Wings
       def find_many_file_metadata_by_ids(ids:, use_valkyrie: true)
         results = []
         ids.each do |alt_id|
-          # For Wings, the id and alt_id are the same, so just use alt id querying.
-          file_metadata = query_service.custom_queries.find_file_metadata_by_alternate_identifier(alternate_identifier: alt_id, use_valkyrie: use_valkyrie)
-          results << file_metadata
-        rescue Hyrax::ObjectNotFoundError # ignores non-existent ids
-          next
+          begin
+            # For Wings, the id and alt_id are the same, so just use alt id querying.
+            file_metadata = query_service.custom_queries.find_file_metadata_by_alternate_identifier(alternate_identifier: alt_id, use_valkyrie: use_valkyrie)
+            results << file_metadata
+          rescue Hyrax::ObjectNotFoundError # ignores non-existent ids
+            next
+          end
         end
         results
       end
