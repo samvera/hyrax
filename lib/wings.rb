@@ -92,6 +92,7 @@ Valkyrie.config.storage_adapter = :active_fedora
 custom_queries = [Hyrax::CustomQueries::Navigators::ChildCollectionsNavigator,
                   Hyrax::CustomQueries::Navigators::ChildFilesetsNavigator,
                   Hyrax::CustomQueries::Navigators::ChildWorksNavigator,
+                  Hyrax::CustomQueries::Navigators::FindFiles,
                   Wings::CustomQueries::FindAccessControl, # override Hyrax::CustomQueries::FindAccessControl
                   Wings::CustomQueries::FindFileMetadata, # override Hyrax::CustomQueries::FindFileMetadata
                   Wings::CustomQueries::FindManyByAlternateIds] # override Hyrax::CustomQueries::FindManyByAlternateIds
@@ -101,6 +102,7 @@ end
 
 Wings::ModelRegistry.register(Hyrax::AccessControl,  Hydra::AccessControl)
 Wings::ModelRegistry.register(Hyrax::PcdmCollection, ::Collection)
+Wings::ModelRegistry.register(Hyrax::FileSet,        FileSet)
 Wings::ModelRegistry.register(Hyrax::Embargo,        Hydra::AccessControls::Embargo)
 Wings::ModelRegistry.register(Hyrax::Lease,          Hydra::AccessControls::Lease)
 
