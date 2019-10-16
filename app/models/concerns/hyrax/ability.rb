@@ -15,6 +15,7 @@ module Hyrax
       self.public_group_name = 'public' # TODO: find hard coded values and replace with this
       self.ability_logic += [:admin_permissions,
                              :curation_concerns_permissions,
+                             :valkyrie_hydra_works_permissions,
                              :operation_abilities,
                              :add_to_collection,
                              :user_abilities,
@@ -212,7 +213,7 @@ module Hyrax
       end
 
       def curation_concerns_models
-        [::FileSet, ::Collection] + Hyrax.config.curation_concerns
+        [::FileSet, ::Collection] + Hyrax.config.curation_concerns + Hyrax::Work
       end
 
       def can_review_submissions?
