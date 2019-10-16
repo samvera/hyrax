@@ -1,5 +1,5 @@
 module Hyrax
-  module FileSet
+  class FileSet
     module Derivatives
       extend ActiveSupport::Concern
 
