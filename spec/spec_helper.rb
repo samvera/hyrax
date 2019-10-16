@@ -153,7 +153,8 @@ Valkyrie::MetadataAdapter.register(
 )
 
 query_service = Valkyrie::MetadataAdapter.find(:test_adapter).query_service
-custom_queries = [Hyrax::CustomQueries::Navigators::FindFiles,
+custom_queries = [Hyrax::CustomQueries::FindFileMetadata,
+                  Hyrax::CustomQueries::Navigators::FindFiles,
                   Hyrax::CustomQueries::FindAccessControl]
 custom_queries.each { |query_handler| query_service.custom_queries.register_query_handler(query_handler) }
 

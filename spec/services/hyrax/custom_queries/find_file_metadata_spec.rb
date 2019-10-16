@@ -101,4 +101,58 @@ RSpec.describe Hyrax::CustomQueries::FindFileMetadata do
       end
     end
   end
+
+  describe '.find_many_file_metadata_by_ids' do
+    let(:query_service) { Valkyrie::MetadataAdapter.find(:test_adapter).query_service }
+    subject { query_service.custom_queries.find_many_file_metadata_by_ids(ids: ids) }
+    context 'when files exists' do
+      let!(:file_metadata1) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata) }
+      let!(:file_metadata2) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata) }
+      let(:ids) { [file_metadata1.id, file_metadata2.id] }
+      before do
+        expect(file_metadata1.id).not_to be_empty
+        expect(file_metadata2.id).not_to be_empty
+      end
+      it 'returns file metadata resources' do
+        expect(subject).to be_a Array
+        expect(subject.size).to eq 2
+        expect(subject.first.is_a?(Hyrax::FileMetadata)).to be true
+        expect(subject.map { |fm| fm.id.to_s }).to match_array(ids.map(&:to_s))
+      end
+    end
+
+    context 'when some ids are for non-file metadata resources' do
+      let!(:file_metadata1) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata) }
+      let!(:file_metadata2) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata) }
+      let!(:non_file_metadata_resource) { FactoryBot.create_using_test_adapter(:hyrax_resource) }
+      let!(:non_existent_id) { ::Valkyrie::ID.new('BOGUS') }
+      let(:ids) { [file_metadata1.id, file_metadata2.id, non_file_metadata_resource.id, non_existent_id] }
+      before do
+        expect(file_metadata1.id).not_to be_empty
+        expect(file_metadata2.id).not_to be_empty
+      end
+      it 'only includes file metadata resources' do
+        expect(subject).to be_a Array
+        expect(subject.size).to eq 2
+        expect(subject.first.is_a?(Hyrax::FileMetadata)).to be true
+        expect(subject.map { |fm| fm.id.to_s }).to match_array [file_metadata1.id.to_s, file_metadata2.id.to_s]
+      end
+    end
+
+    context 'when not passed any valid ids' do
+      let!(:non_file_metadata_resource) { FactoryBot.create_using_test_adapter(:hyrax_resource) }
+      let!(:non_existent_id) { ::Valkyrie::ID.new('BOGUS') }
+      let(:ids) { [non_file_metadata_resource.id, non_existent_id] }
+      it 'returns empty array' do
+        expect(subject).to eq []
+      end
+    end
+
+    context 'when passed empty ids array' do
+      let(:ids) { [] }
+      it 'returns empty array' do
+        expect(subject).to eq []
+      end
+    end
+  end
 end

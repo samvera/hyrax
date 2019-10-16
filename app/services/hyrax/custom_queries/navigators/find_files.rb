@@ -3,10 +3,16 @@ module Hyrax
     module Navigators
       class FindFiles
         # Use:
-        #   Hyrax.query_service.custom_queries.find_files(resource: file_set_resource)
+        #   Hyrax.query_service.custom_queries.find_files(file_set: file_set_resource)
+        #   Hyrax.query_service.custom_queries.find_original_file(file_set: file_set_resource)
+        #   Hyrax.query_service.custom_queries.find_extracted_text_file(file_set: file_set_resource)
+        #   Hyrax.query_service.custom_queries.find_thumbnail(file_set: file_set_resource)
 
         def self.queries
-          [:find_files]
+          [:find_files,
+           :find_original_file,
+           :find_extracted_text,
+           :find_thumbnail]
         end
 
         def initialize(query_service:)
@@ -16,12 +22,56 @@ module Hyrax
         attr_reader :query_service
         delegate :resource_factory, to: :query_service
 
-        # Find file ids of a given resource, and map to file resources
-        # @param resource [Valkyrie::Resource] typically, this will be an instance of Hyrax::FileSet
-        # @return [Array<Valkyrie::Resource>] typically, file resources will be instances of Hyrax::FileMetadata
-        def find_files(resource:)
-          return [] unless resource.respond_to?(:file_ids) && resource.file_ids.present?
-          query_service.find_many_by_ids(ids: resource.file_ids)
+        # Find file ids of a given file set resource, and map to file metadata resources
+        # @param file_set [Hyrax::PcdmFileSet]
+        # @return [Array<Hyrax::FileMetadata>]
+        def find_files(file_set:)
+          if file_set.respond_to?(:file_ids)
+            return [] unless file_set.file_ids.present?
+            query_service.custom_queries.find_many_file_metadata_by_ids(ids: file_set.file_ids)
+          else
+            raise ::Valkyrie::Persistence::ObjectNotFoundError,
+                  "#{file_set.internal_resource} is not a `Hydra::PcdmFileSet` implementer"
+          end
+        end
+
+        # Find original file id of a given file set resource, and map to file metadata resource
+        # @param file_set [Hyrax::PcdmFileSet]
+        # @return [Hyrax::FileMetadata]
+        def find_original_file(file_set:)
+          if file_set.respond_to?(:original_file_id)
+            raise ::Valkyrie::Persistence::ObjectNotFoundError, "File set's original file is blank" if file_set.original_file_id.blank?
+            query_service.custom_queries.find_file_metadata_by(id: file_set.original_file_id)
+          else
+            raise ::Valkyrie::Persistence::ObjectNotFoundError,
+                  "#{file_set.internal_resource} is not a `Hydra::PcdmFileSet` implementer"
+          end
+        end
+
+        # Find extracted text id of a given file set resource, and map to file metadata resource
+        # @param file_set [Hyrax::PcdmFileSet]
+        # @return [Hyrax::FileMetadata]
+        def find_extracted_text(file_set:)
+          if file_set.respond_to?(:extracted_text_id)
+            raise ::Valkyrie::Persistence::ObjectNotFoundError, "File set's extracted text is blank" if file_set.extracted_text_id.blank?
+            query_service.custom_queries.find_file_metadata_by(id: file_set.extracted_text_id)
+          else
+            raise ::Valkyrie::Persistence::ObjectNotFoundError,
+                  "#{file_set.internal_resource} is not a `Hydra::PcdmFileSet` implementer"
+          end
+        end
+
+        # Find thumbnail id of a given file set resource, and map to file metadata resource
+        # @param file_set [Hyrax::PcdmFileSet]
+        # @return [Hyrax::FileMetadata]
+        def find_thumbnail(file_set:)
+          if file_set.respond_to?(:thumbnail_id)
+            raise ::Valkyrie::Persistence::ObjectNotFoundError, "File set's thumbnail is blank" if file_set.thumbnail_id.blank?
+            query_service.custom_queries.find_file_metadata_by(id: file_set.thumbnail_id)
+          else
+            raise ::Valkyrie::Persistence::ObjectNotFoundError,
+                  "#{file_set.internal_resource} is not a `Hydra::PcdmFileSet` implementer"
+          end
         end
       end
     end

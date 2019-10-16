@@ -9,7 +9,8 @@ module Wings
 
       def self.queries
         [:find_file_metadata_by,
-         :find_file_metadata_by_alternate_identifier]
+         :find_file_metadata_by_alternate_identifier,
+         :find_many_file_metadata_by_ids]
       end
 
       def initialize(query_service:)
@@ -49,6 +50,22 @@ module Wings
         object = Hydra::PCDM::File.find(alternate_identifier.to_s)
         return object if use_valkyrie == false
         Wings::FileConverterService.af_file_to_resource(af_file: object)
+      end
+
+      # Find an array of file metadata using Valkyrie IDs, and map them to Hyrax::FileMetadata maintaining order based on given ids
+      # @param [Array<Valkyrie::ID, String>] ids
+      # @return [Array<Hyrax::FileMetadata>] or empty array if there are no ids or none of the ids map to Hyrax::FileMetadata
+      # NOTE: Ignores non-existent ids and ids for non-file metadata resources.
+      def find_many_file_metadata_by_ids(ids:, use_valkyrie: true)
+        results = []
+        ids.each do |alt_id|
+          # For Wings, the id and alt_id are the same, so just use alt id querying.
+          file_metadata = query_service.custom_queries.find_file_metadata_by_alternate_identifier(alternate_identifier: alt_id, use_valkyrie: use_valkyrie)
+          results << file_metadata
+        rescue Hyrax::ObjectNotFoundError # ignores non-existent ids
+          next
+        end
+        results
       end
     end
   end
