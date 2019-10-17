@@ -124,6 +124,7 @@ end
 
 require 'factories/strategies/valkyrie_resource'
 FactoryBot.register_strategy(:valkyrie_create, ValkyrieCreateStrategy)
+FactoryBot.register_strategy(:create_using_test_adapter, ValkyrieTestAdapterCreateStrategy)
 FactoryBot.register_strategy(:json, JsonStrategy)
 FactoryBot.definition_file_paths = [File.expand_path("../factories", __FILE__)]
 FactoryBot.find_definitions
@@ -151,11 +152,14 @@ Valkyrie::MetadataAdapter.register(
   Valkyrie::Persistence::Memory::MetadataAdapter.new, :test_adapter
 )
 
-Valkyrie::MetadataAdapter
-  .find(:test_adapter)
-  .query_service
-  .custom_queries
-  .register_query_handler(Hyrax::CustomQueries::FindAccessControl)
+query_registration_target =
+  Valkyrie::MetadataAdapter.find(:test_adapter).query_service.custom_queries
+[Hyrax::CustomQueries::FindAccessControl,
+ Hyrax::CustomQueries::FindManyByAlternateIds,
+ Hyrax::CustomQueries::FindFileMetadata,
+ Hyrax::CustomQueries::Navigators::FindFiles].each do |handler|
+  query_registration_target.register_query_handler(handler)
+end
 
 require 'active_fedora/cleaner'
 RSpec.configure do |config|
