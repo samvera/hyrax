@@ -56,6 +56,12 @@ module Hyrax
     end
 
     ##
+    # @return [String] a human readable name for the model
+    def self.human_readable_type
+      I18n.translate("hyrax.models.#{model_name.i18n_key}", default: model_name.human)
+    end
+
+    ##
     # @return [Boolean]
     def collection?
       false
