@@ -38,23 +38,6 @@ module Hyrax
              :read_groups, :read_groups=,
              :read_users,  :read_users=, to: :permission_manager
 
-    def self.attributes(new_schema)
-      result = super
-
-      new_schema.each_key do |key|
-        key = key.to_s.chomp('?').to_sym
-        next if instance_methods.include?("#{key}=".to_sym)
-
-        class_eval(<<-RUBY)
-          def #{key}=(value)
-            set_value("#{key}".to_sym, value)
-          end
-        RUBY
-      end
-
-      result
-    end
-
     ##
     # @return [Boolean]
     def collection?
