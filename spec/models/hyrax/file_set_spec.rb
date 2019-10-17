@@ -3,6 +3,6 @@
 require 'spec_helper'
 require 'hyrax/specs/shared_specs/hydra_works'
 
-RSpec.describe Hyrax::PcdmFileSet do
-  it_behaves_like 'a Hyrax::PcdmFileSet'
+RSpec.describe Hyrax::FileSet do
+  it_behaves_like 'a Hyrax::FileSet'
 end

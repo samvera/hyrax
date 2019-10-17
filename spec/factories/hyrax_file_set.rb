@@ -3,7 +3,7 @@
 ##
 # Use this factory for generic Hyrax/HydraWorks FileSets in valkyrie.
 FactoryBot.define do
-  factory :hyrax_pcdm_file_set, class: 'Hyrax::PcdmFileSet' do
+  factory :hyrax_file_set, class: 'Hyrax::FileSet' do
     transient do
       files              { nil }
       original_file      { nil }
