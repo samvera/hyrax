@@ -147,7 +147,7 @@ module Hyrax
       # @param action an object that can be converted into a Sipity::WorkflowAction#name
       # @return [Boolean]
       def authorized_for_processing?(user:, entity:, action:)
-        action_name = PowerConverter.convert_to_sipity_action_name(action)
+        action_name = Sipity::WorkflowAction.name_for(action)
         scope_permitted_workflow_actions_available_for_current_state(user: user, entity: entity)
           .find_by(Sipity::WorkflowAction.arel_table[:name].eq(action_name)).present?
       end
