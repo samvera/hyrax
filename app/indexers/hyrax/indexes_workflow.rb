@@ -21,11 +21,11 @@ module Hyrax
     # Write the workflow roles and state so one can see where the document moves to next
     # @param [Hash] solr_document the solr document to add the field to
     def index_workflow_fields(solr_document)
-      return unless object.persisted?
-      entity = PowerConverter.convert_to_sipity_entity(object)
-      return if entity.nil?
+      entity = Sipity::Entity(object)
       solr_document[workflow_role_field] = workflow_roles(entity).map { |role| "#{entity.workflow.permission_template.source_id}-#{entity.workflow.name}-#{role}" }
       solr_document[workflow_state_name_field] = entity.workflow_state.name if entity.workflow_state
+    rescue Sipity::ConversionError
+      nil
     end
 
     def workflow_state_name_field

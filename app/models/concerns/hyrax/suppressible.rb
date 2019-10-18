@@ -22,7 +22,7 @@ module Hyrax
     ##
     # @deprecated Use `PowerConverter.convert_to_sipity_entity(obj)` instead.
     def to_sipity_entity
-      Deprecation.warn "Use `PowerConverter.convert_to_sipity_entity(obj)` instead."
+      Deprecation.warn "Use `Sipity::Entity(entity)` instead."
       raise "Can't create an entity until the model has been persisted" unless persisted?
       @sipity_entity ||= Sipity::Entity.find_by(proxy_for_global_id: to_global_id.to_s)
     end

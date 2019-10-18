@@ -4,7 +4,7 @@ module Hyrax
     def initialize(work, user)
       @work = work
       @user = user
-      @entity = PowerConverter.convert(work, to: :sipity_entity)
+      @entity = Sipity::Entity(work)
       @agent = PowerConverter.convert(user, to: :sipity_agent)
     end
 

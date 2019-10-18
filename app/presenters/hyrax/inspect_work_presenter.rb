@@ -27,7 +27,7 @@ module Hyrax
     private
 
       def sipity_entity
-        @sipity_entity ||= PowerConverter.convert(solr_document, to: :sipity_entity)
+        @sipity_entity ||= Sipity::Entity(solr_document)
       end
 
       def sipity_entity_roles

@@ -27,18 +27,14 @@ module Sipity
     ##
     # @param [Object] input
     # @return [String]
-    def self.name_for(input)
+    def self.name_for(input, &block)
       result = case input
                when String, Symbol
                  input.to_s.sub(/[\?\!]\Z/, '')
                when Sipity::WorkflowAction
                  input.name
                end
-      result ||= input.try(:to_sipity_action_name)
-      return result unless result.nil?
-      return yield if block_given?
-
-      raise ConversionError.new(input) # rubocop:disable Style/RaiseArgs
+      Sipity.handle_conversion(result, &block)
     end
   end
 end

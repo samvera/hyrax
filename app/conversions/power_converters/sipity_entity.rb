@@ -1,4 +1,5 @@
 PowerConverter.define_conversion_for(:sipity_entity) do |input|
+  Deprecation.warn('PowerConverter is deprecated. Use `Sipity::Entity(input)` instead')
   case input
   when URI::GID
     Sipity::Entity.find_by(proxy_for_global_id: input.to_s)
