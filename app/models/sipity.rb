@@ -55,6 +55,20 @@ module Sipity
   end
   module_function :WorkflowAction
 
+  ##
+  # Cast an object to a WorkflowState in a given workflow
+  def WorkflowState(input, workflow, &block) # rubocop:disable Naming/MethodName
+    result = case input
+             when Sipity::WorkflowState
+               input
+             when Symbol, String
+               WorkflowState.find_by(workflow_id: workflow.id, name: input)
+             end
+
+    handle_conversion(input, result, :to_sipity_workflow_state, &block)
+  end
+  module_function :WorkflowState
+
   class ConversionError < PowerConverter::ConversionError
     def initialize(value, **options)
       options[:scope] ||= nil

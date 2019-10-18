@@ -1,6 +1,8 @@
 require 'power_converter'
 
 PowerConverter.define_conversion_for(:sipity_workflow_state) do |input, workflow|
+  Deprecation.warn('PowerConverter is deprecated. Use `Sipity::WorkflowState(input, workflow)` instead')
+
   case input
   when Sipity::WorkflowState
     input

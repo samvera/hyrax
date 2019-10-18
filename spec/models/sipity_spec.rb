@@ -135,4 +135,26 @@ RSpec.describe Sipity do
       end
     end
   end
+
+  describe '.WorkflowState' do
+    let(:workflow_state) { Sipity::WorkflowState.new(id: 1, name: 'hello') }
+    let(:workflow) { create(:workflow) }
+
+    it 'will convert a Sipity::WorkflowState' do
+      expect(described_class.WorkflowState(workflow_state, workflow))
+        .to eq workflow_state
+    end
+
+    it 'will convert a string based on scope' do
+      state = create(:workflow_state, workflow_id: workflow.id, name: 'hello')
+
+      expect(described_class.WorkflowState('hello', workflow))
+        .to eq state
+    end
+
+    it 'will attempt convert a string based on scope' do
+      expect { described_class.WorkflowState('missing', workflow) }
+        .to raise_error(PowerConverter::ConversionError)
+    end
+  end
 end
