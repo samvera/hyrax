@@ -5,7 +5,7 @@ module Hyrax
       @work = work
       @user = user
       @entity = Sipity::Entity(work)
-      @agent = PowerConverter.convert(user, to: :sipity_agent)
+      @agent = Sipity::Agent(user)
     end
 
     attr_reader :entity, :agent, :user, :work

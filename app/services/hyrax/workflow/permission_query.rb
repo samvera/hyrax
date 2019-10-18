@@ -163,9 +163,9 @@ module Hyrax
       def scope_processing_agents_for(user:)
         return Sipity::Agent.none if user.blank?
         return Sipity::Agent.none unless user.persisted?
-        user_agent = PowerConverter.convert_to_sipity_agent(user)
+        user_agent = Sipity::Agent(user)
         group_agents = user.groups.map do |g|
-          PowerConverter.convert_to_sipity_agent(Hyrax::Group.new(g))
+          Sipity::Agent(Hyrax::Group.new(g))
         end
         Sipity::Agent.where(id: group_agents + [user_agent])
       end

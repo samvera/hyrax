@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 module Sipity
+  def Agent(input, &block) # rubocop:disable Naming/MethodName
+    result = case input
+             when Sipity::Agent
+               input
+             end
+
+    handle_conversion(input, result, :to_sipity_agent, &block)
+  end
+  module_function :Agent
+
   ##
   # Cast an object to an Entity
   # rubocop:disable Naming/MethodName, Metrics/CyclomaticComplexity, Metrics/MethodLength

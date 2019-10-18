@@ -55,7 +55,7 @@ module Hyrax
         attr_reader :entity, :agents, :action_names, :roles
 
         def agents=(input)
-          @agents = Array.wrap(input).map { |agent| PowerConverter.convert_to_sipity_agent(agent) }
+          @agents = Array.wrap(input).map { |agent| Sipity::Agent(agent) }
         end
 
         def action_names=(input)

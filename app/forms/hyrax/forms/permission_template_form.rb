@@ -149,7 +149,7 @@ module Hyrax
                     else
                       Hyrax::Group.new(grant[:agent_id])
                     end
-            PowerConverter.convert_to_sipity_agent(agent)
+            Sipity::Agent(agent)
           end
         end
 

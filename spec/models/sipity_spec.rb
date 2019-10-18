@@ -1,4 +1,21 @@
 RSpec.describe Sipity do
+  describe '.Agent' do
+    it 'will convert a Sipity::Agent' do
+      object = Sipity::Agent.new
+      expect(described_class.Agent(object)).to eq(object)
+    end
+
+    it 'will convert an object that responds to #to_sipity_agent' do
+      object = double(to_sipity_agent: :a_sipity_agent)
+      expect(described_class.Agent(object)).to eq(:a_sipity_agent)
+    end
+
+    it 'will raise an exception if it cannot convert the given object' do
+      expect { described_class.Agent(double) }
+        .to raise_error(PowerConverter::ConversionError)
+    end
+  end
+
   describe '.Entity' do
     context "with a Sipity::Entity" do
       let(:object) { Sipity::Entity.new }
