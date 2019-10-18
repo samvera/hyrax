@@ -16,7 +16,7 @@ RSpec.describe Hyrax::AdminSetIndexer do
   describe 'alt_title' do
     it 'is stored searchable' do
       expect(indexer.generate_solr_document)
-        .to match a_hash_including('alt_title_sim' => admin_set.alt_title)
+        .to match a_hash_including('alt_title_tesim' => admin_set.alt_title)
     end
   end
 
@@ -30,7 +30,7 @@ RSpec.describe Hyrax::AdminSetIndexer do
   describe 'description' do
     it 'is stored searchable' do
       expect(indexer.generate_solr_document)
-        .to match a_hash_including('description_sim' => admin_set.description)
+        .to match a_hash_including('description_tesim' => admin_set.description)
     end
   end
 
