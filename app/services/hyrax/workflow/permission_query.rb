@@ -67,7 +67,7 @@ module Hyrax
       # @return [ActiveRecord::Relation<Sipity::Agent>] augmented with
       def scope_agents_associated_with_entity_and_role(entity:, role:)
         entity = Sipity::Entity(entity)
-        role = PowerConverter.convert_to_sipity_role(role)
+        role = Sipity::Role(role)
 
         agents = Sipity::Agent.arel_table
 
@@ -241,7 +241,7 @@ module Hyrax
       # @return [ActiveRecord::Relation<User>]
       def scope_users_for_entity_and_roles(entity:, roles:)
         entity = Sipity::Entity(entity)
-        role_ids = Array.wrap(roles).map { |role| PowerConverter.convert_to_sipity_role(role).id }
+        role_ids = Array.wrap(roles).map { |role| Sipity::Role(role).id }
         user_polymorphic_type = PowerConverter.convert_to_polymorphic_type(::User)
 
         user_table = ::User.arel_table
