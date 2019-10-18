@@ -86,8 +86,39 @@ RSpec.shared_examples 'a Hyrax::PcdmCollection' do
   end
 end
 
+RSpec.shared_examples 'a Hyrax::AdministrativeSet' do
+  subject(:admin_set) { described_class.new }
+
+  it 'has an #alt_title' do
+    expect { admin_set.alt_title = ['Moomin'] }
+      .to change { admin_set.alt_title }
+      .to contain_exactly('Moomin')
+  end
+
+  it 'has an #creator' do
+    expect { admin_set.creator = ['user1'] }
+      .to change { admin_set.creator }
+      .to contain_exactly('user1')
+  end
+
+  it 'has an #description' do
+    expect { admin_set.description = ['lorem ipsum'] }
+      .to change { admin_set.description }
+      .to contain_exactly('lorem ipsum')
+  end
+
+  it 'has an #title' do
+    expect { admin_set.title = ['Moomin'] }
+      .to change { admin_set.title }
+      .to contain_exactly('Moomin')
+  end
+end
+
 RSpec.shared_examples 'a Hyrax::Work' do
   subject(:work)      { described_class.new }
+  let(:adapter)       { Valkyrie::MetadataAdapter.find(:test_adapter) }
+  let(:persister)     { adapter.persister }
+  let(:query_service) { adapter.query_service }
 
   it_behaves_like 'a Hyrax::Resource'
   it_behaves_like 'a model with core metadata'
@@ -98,6 +129,31 @@ RSpec.shared_examples 'a Hyrax::Work' do
   it { is_expected.not_to be_file_set }
   it { is_expected.to be_pcdm_object }
   it { is_expected.to be_work }
+
+  describe '#admin_set_id' do
+    it 'is nil by default' do
+      expect(work.admin_set_id).to be_nil
+    end
+
+    it 'has admin_set_id' do
+      expect { work.admin_set_id = 'admin_set_1' }
+        .to change { work.admin_set_id&.id }
+        .to 'admin_set_1'
+    end
+
+    context 'with a saved admin set' do
+      let(:admin_set) { persister.save(resource: Hyrax::AdministrativeSet.new) }
+
+      before { work.admin_set_id = admin_set.id }
+
+      it 'can query admin set' do
+        saved = persister.save(resource: work)
+
+        expect(query_service.find_references_by(resource: saved, property: :admin_set_id))
+          .to contain_exactly admin_set
+      end
+    end
+  end
 end
 
 RSpec.shared_examples 'a Hyrax::FileSet' do

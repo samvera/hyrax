@@ -8,7 +8,8 @@ module Hyrax
   class Work < Hyrax::Resource
     include Hyrax::Schema(:core_metadata)
 
-    attribute :member_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID).meta(ordered: true)
+    attribute :admin_set_id, Valkyrie::Types::ID
+    attribute :member_ids,   Valkyrie::Types::Array.of(Valkyrie::Types::ID).meta(ordered: true)
 
     ##
     # @return [Boolean] true
