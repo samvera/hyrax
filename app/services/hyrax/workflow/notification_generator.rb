@@ -57,7 +57,7 @@ module Hyrax
         attr_reader :scope
 
         def assign_scope!
-          @scope = PowerConverter.convert_to_sipity_action(notification_configuration.scope, scope: workflow)
+          @scope = Sipity::WorkflowAction(notification_configuration.scope, workflow)
         end
     end
   end
