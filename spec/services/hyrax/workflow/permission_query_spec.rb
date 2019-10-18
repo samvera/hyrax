@@ -26,7 +26,7 @@ module Hyrax
       before { Hyrax::Workflow::WorkflowImporter.generate_from_hash(data: workflow_config, permission_template: sipity_workflow.permission_template) }
 
       def expect_actions_for(user:, entity:, actions:)
-        actions = Array.wrap(actions).map { |action| PowerConverter.convert_to_sipity_action(action, scope: entity.workflow) }
+        actions = Array.wrap(actions).map { |action| Sipity::WorkflowAction(action, entity.workflow) }
         expect(described_class.scope_permitted_workflow_actions_available_for_current_state(user: user, entity: entity)).to eq(actions)
       end
 

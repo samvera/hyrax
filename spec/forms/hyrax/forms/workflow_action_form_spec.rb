@@ -20,7 +20,7 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm do
 
   context 'if the given user cannot perform the given action' do
     before do
-      allow(PowerConverter).to receive(:convert_to_sipity_action).with('an_action', scope: sipity_entity.workflow).and_return(an_action)
+      allow(described_class).to receive(:workflow_action_for).with('an_action', scope: sipity_entity.workflow).and_return(an_action)
       expect(Hyrax::Workflow::PermissionQuery).to receive(:authorized_for_processing?).and_return(false)
     end
 
@@ -53,7 +53,7 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm do
 
   context 'if the given user can perform the given action' do
     before do
-      allow(PowerConverter).to receive(:convert_to_sipity_action).with('an_action', scope: sipity_entity.workflow).and_return(an_action)
+      allow(described_class).to receive(:workflow_action_for).with('an_action', scope: sipity_entity.workflow).and_return(an_action)
       expect(Hyrax::Workflow::PermissionQuery).to receive(:authorized_for_processing?)
         .and_return(true)
     end
