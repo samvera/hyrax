@@ -23,5 +23,22 @@ module Sipity
              dependent: :destroy,
              as: :scope_for_notification,
              class_name: 'Sipity::NotifiableContext'
+
+    ##
+    # @param [Object] input
+    # @return [String]
+    def self.name_for(input)
+      result = case input
+               when String, Symbol
+                 input.to_s.sub(/[\?\!]\Z/, '')
+               when Sipity::WorkflowAction
+                 input.name
+               end
+      result ||= input.try(:to_sipity_action_name)
+      return result unless result.nil?
+      return yield if block_given?
+
+      raise ConversionError.new(input) # rubocop:disable Style/RaiseArgs
+    end
   end
 end
