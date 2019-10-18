@@ -67,7 +67,7 @@ module Hyrax
         end
 
         def entity=(entity)
-          @entity = PowerConverter.convert_to_sipity_entity(entity)
+          @entity = Sipity::Entity(entity)
         end
 
       public

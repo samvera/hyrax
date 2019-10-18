@@ -43,7 +43,7 @@ module Hyrax
       # * Actions to which the user Only actions permitted to the user
       #
       # @param user [User]
-      # @param entity [#to_sipity_entity] an object that can be converted into a Sipity::Entity
+      # @param entity [Object] an object that can be converted into a Sipity::Entity
       # @return [ActiveRecord::Relation<Sipity::WorkflowAction>]
       def scope_permitted_workflow_actions_available_for_current_state(user:, entity:)
         workflow_actions_scope = scope_workflow_actions_available_for_current_state(entity: entity)
@@ -66,7 +66,7 @@ module Hyrax
       # @param role [Object] that can be converted into a Sipity::Role
       # @return [ActiveRecord::Relation<Sipity::Agent>] augmented with
       def scope_agents_associated_with_entity_and_role(entity:, role:)
-        entity = PowerConverter.convert_to_sipity_entity(entity)
+        entity = Sipity::Entity(entity)
         role = PowerConverter.convert_to_sipity_role(role)
 
         agents = Sipity::Agent.arel_table
@@ -126,7 +126,7 @@ module Hyrax
       # @param entity [Object] that can be converted into a Sipity::Entity
       # @return [ActiveRecord::Relation<Sipity::Role>]
       def scope_roles_associated_with_the_given_entity(entity:)
-        entity = PowerConverter.convert_to_sipity_entity(entity)
+        entity = Sipity::Entity(entity)
         return Sipity::Role.none unless entity
         Sipity::Role.where(
           Sipity::Role.arel_table[:id].in(
@@ -240,7 +240,7 @@ module Hyrax
       # @param entity an object that can be converted into a Sipity::Entity
       # @return [ActiveRecord::Relation<User>]
       def scope_users_for_entity_and_roles(entity:, roles:)
-        entity = PowerConverter.convert_to_sipity_entity(entity)
+        entity = Sipity::Entity(entity)
         role_ids = Array.wrap(roles).map { |role| PowerConverter.convert_to_sipity_role(role).id }
         user_polymorphic_type = PowerConverter.convert_to_polymorphic_type(::User)
 
@@ -290,7 +290,7 @@ module Hyrax
       # @param entity an object that can be converted into a Sipity::Entity
       # @return [ActiveRecord::Relation<Sipity::WorkflowRole>]
       def scope_processing_workflow_roles_for_user_and_entity(user:, entity:)
-        entity = PowerConverter.convert_to_sipity_entity(entity)
+        entity = Sipity::Entity(entity)
         workflow_scope = scope_processing_workflow_roles_for_user_and_workflow(user: user, workflow: entity.workflow)
 
         entity_specific_scope = scope_processing_workflow_roles_for_user_and_entity_specific(user: user, entity: entity)
@@ -335,7 +335,7 @@ module Hyrax
       # @param entity an object that can be converted into a Sipity::Entity
       # @return [ActiveRecord::Relation<Sipity::WorkflowRole>]
       def scope_processing_workflow_roles_for_user_and_entity_specific(user:, entity:)
-        entity = PowerConverter.convert_to_sipity_entity(entity)
+        entity = Sipity::Entity(entity)
         agent_scope = scope_processing_agents_for(user: user)
 
         Sipity::WorkflowRole.where(
@@ -373,7 +373,7 @@ module Hyrax
       # @param entity an object that can be converted into a Sipity::Entity
       # @return [ActiveRecord::Relation<Sipity::WorkflowStateAction>]
       def scope_permitted_entity_workflow_state_actions(user:, entity:)
-        entity = PowerConverter.convert_to_sipity_entity(entity)
+        entity = Sipity::Entity(entity)
         workflow_state_actions = Sipity::WorkflowStateAction
         permissions = Sipity::WorkflowStateActionPermission
         role_scope = scope_processing_workflow_roles_for_user_and_entity(user: user, entity: entity)
@@ -405,7 +405,7 @@ module Hyrax
       # @param entity an object that can be converted into a Sipity::Entity
       # @return [ActiveRecord::Relation<Sipity::WorkflowAction>]
       def scope_workflow_actions_for_current_state(entity:)
-        entity = PowerConverter.convert_to_sipity_entity(entity)
+        entity = Sipity::Entity(entity)
         state_actions_table = Sipity::WorkflowStateAction.arel_table
         Sipity::WorkflowAction.where(
           Sipity::WorkflowAction.arel_table[:id].in(
