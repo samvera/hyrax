@@ -63,7 +63,7 @@ module Hyrax
         end
 
         def roles=(input)
-          @roles = Array.wrap(input).map { |role| PowerConverter.convert_to_sipity_role(role) }
+          @roles = Array.wrap(input).map { |role| Sipity::Role(role) }
         end
 
         def entity=(entity)

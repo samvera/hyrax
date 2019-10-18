@@ -26,6 +26,20 @@ module Sipity
   # rubocop:enable Naming/MethodName, Metrics/CyclomaticComplexity, Metrics/MethodLength
 
   ##
+  # Cast an object to an Role
+  def Role(input, &block) # rubocop:disable Naming/MethodName
+    result = case input
+             when Sipity::Role
+               input
+             when String, Symbol
+               Sipity::Role.find_or_create_by(name: input)
+             end
+
+    handle_conversion(input, result, :to_sipity_role, &block)
+  end
+  module_function :Role
+
+  ##
   # Cast an object to a WorkflowAction in a given workflow
   def WorkflowAction(input, workflow, &block) # rubocop:disable Naming/MethodName
     workflow_id = PowerConverter.convert_to_sipity_workflow_id(workflow)

@@ -39,7 +39,7 @@ module Hyrax
           notification_configuration.recipients.slice(:to, :cc, :bcc).each do |(recipient_strategy, recipient_roles)|
             Array.wrap(recipient_roles).each do |role|
               notification.recipients.find_or_create_by!(
-                role: PowerConverter.convert_to_sipity_role(role), recipient_strategy: recipient_strategy.to_s
+                role: Sipity::Role(role), recipient_strategy: recipient_strategy.to_s
               )
             end
           end

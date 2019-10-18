@@ -64,6 +64,36 @@ RSpec.describe Sipity do
     end
   end
 
+  describe '.Role' do
+    it "converts Sipity::Role" do
+      object = Sipity::Role.new
+      expect(described_class.Role(object)).to eq object
+    end
+
+    it "converts a #to_sipity_role object" do
+      object = double(to_sipity_role: Sipity::Role.new)
+      expect(described_class.Role(object)).to eq object.to_sipity_role
+    end
+
+    it "converts a string to a Sipity::Role if there exists a Sipity::Role with a name equal to the string" do
+      Sipity::Role.create!(name: 'hello')
+      expect(described_class.Role('hello')).to be_a(Sipity::Role)
+    end
+
+    it "creates a new role if given a string and no Sipity::Role exists with that name" do
+      expect { described_class.Role('new_role_name') }.to change { Sipity::Role.count }.by(1)
+    end
+
+    it "converts a base object with composed attributes delegator" do
+      base_object = Sipity::Role.new
+      expect(described_class.Role(base_object)).to eq(base_object)
+    end
+
+    it 'does not convert an arbitrary object' do
+      expect { described_class.Role(double) }.to raise_error(PowerConverter::ConversionError)
+    end
+  end
+
   describe '.WorkflowAction' do
     let(:workflow_id) { 1 }
     let(:action) { Sipity::WorkflowAction.new(id: 4, name: 'show', workflow_id: workflow_id) }
