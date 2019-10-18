@@ -31,12 +31,6 @@ module Hyrax
       self.default_system_virus_scanner = Hyrax::VirusScanner
     end
 
-    # TODO: This can be removed when we upgrade to ActiveFedora 12.0
-    def etag
-      raise "Unable to produce an etag for a unsaved object" unless persisted?
-      ldp_source.head.etag
-    end
-
     module ClassMethods
       # This governs which partial to draw when you render this type of object
       def _to_partial_path #:nodoc:
