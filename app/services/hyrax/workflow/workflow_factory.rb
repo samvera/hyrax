@@ -22,7 +22,7 @@ module Hyrax
         new(work, attributes, user).create
       end
 
-      # @param work [#to_global_id, #active_workflow]
+      # @param work [#to_global_id, #admin_set_id]
       # @param user [User]
       # @param attributes [Hash]
       def initialize(work, attributes, user)
@@ -48,7 +48,7 @@ module Hyrax
 
         def create_workflow_entity!
           Sipity::Entity.create!(proxy_for_global_id: work.to_global_id.to_s,
-                                 workflow: work.active_workflow,
+                                 workflow: workflow_for(work),
                                  workflow_state: nil)
         end
 
@@ -56,7 +56,7 @@ module Hyrax
           Hyrax::Workflow::PermissionGenerator.call(agents: user,
                                                     entity: entity,
                                                     roles: depositing_role,
-                                                    workflow: work.active_workflow)
+                                                    workflow: workflow_for(work))
         end
 
         def run_workflow_action!
@@ -69,9 +69,13 @@ module Hyrax
         # # @return [Sipity::WorkflowAction]
         def find_deposit_action
           actions_that_lead_to_states = Sipity::WorkflowStateAction.all.pluck(:workflow_action_id)
-          relation = Sipity::WorkflowAction.where(workflow: work.active_workflow)
+          relation = Sipity::WorkflowAction.where(workflow: workflow_for(work))
           relation = relation.where('id NOT IN (?)', actions_that_lead_to_states) if actions_that_lead_to_states.any?
           relation.first!
+        end
+
+        def workflow_for(work)
+          Sipity::Workflow.find_active_workflow_for(admin_set_id: work.admin_set_id)
         end
     end
   end
