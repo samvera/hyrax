@@ -34,7 +34,7 @@ module Sipity
                when Sipity::WorkflowAction
                  input.name
                end
-      Sipity.handle_conversion(result, &block)
+      Sipity.handle_conversion(input, result, :to_sipity_action_name, &block)
     end
   end
 end

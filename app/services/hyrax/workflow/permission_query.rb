@@ -242,7 +242,7 @@ module Hyrax
       def scope_users_for_entity_and_roles(entity:, roles:)
         entity = Sipity::Entity(entity)
         role_ids = Array.wrap(roles).map { |role| Sipity::Role(role).id }
-        user_polymorphic_type = PowerConverter.convert_to_polymorphic_type(::User)
+        user_polymorphic_type = ::User.base_class
 
         user_table = ::User.arel_table
         agent_table = Sipity::Agent.arel_table
