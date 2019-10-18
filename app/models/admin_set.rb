@@ -20,6 +20,7 @@ class AdminSet < ActiveFedora::Base
   include Hyrax::Noid
   include Hyrax::HumanReadableType
   include Hyrax::HasRepresentative
+  include Hyrax::Serializers
 
   DEFAULT_ID = 'admin_set/default'.freeze
   DEFAULT_TITLE = ['Default Admin Set'].freeze
@@ -63,10 +64,6 @@ class AdminSet < ActiveFedora::Base
   def self.find_or_create_default_admin_set_id
     Hyrax::AdminSetCreateService.create_default_admin_set(admin_set_id: DEFAULT_ID, title: DEFAULT_TITLE) unless exists?(DEFAULT_ID)
     DEFAULT_ID
-  end
-
-  def to_s
-    title.present? ? title : 'No Title'
   end
 
   # @api public
