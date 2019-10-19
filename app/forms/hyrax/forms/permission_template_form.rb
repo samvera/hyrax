@@ -163,7 +163,8 @@ module Hyrax
                 Hyrax::Group.new(access.agent_id)
               end
             end
-            authorized_agents.map { |agent| PowerConverter.convert_to_sipity_agent(agent) }
+
+            authorized_agents.map { |agent| Sipity::Agent(agent) }
           end
         end
 
