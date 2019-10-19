@@ -1,9 +1,8 @@
 module Hyrax
   module CustomQueries
+    # @example
+    #   Hyrax.query_service.custom_queries.find_access_control_for(resource: resource)
     class FindAccessControl
-      # Use:
-      #   Hyrax.query_service.custom_queries.find_access_control_for(resource: resource)
-
       def self.queries
         [:find_access_control_for]
       end
