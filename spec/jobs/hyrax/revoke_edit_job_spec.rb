@@ -1,11 +1,23 @@
 RSpec.describe Hyrax::RevokeEditJob do
   let(:depositor) { create(:user) }
-  let(:file_set) { build(:file_set, user: depositor) }
 
-  it 'revokes edit access from a FileSet' do
-    expect(FileSet).to receive(:find).with(file_set.id).and_return(file_set)
-    expect(file_set).to receive(:edit_users=).with([])
-    expect(file_set).to receive(:save!)
-    described_class.perform_now(file_set.id, depositor.user_key)
+  context 'when use_valkyire is false' do
+    let(:file_set) { create(:file_set, user: depositor) }
+
+    it "revokes a user's edit access to a FileSet" do
+      described_class.perform_now(file_set.id, depositor.user_key, use_valkyrie: false)
+      file_set.reload
+      expect(file_set.edit_users).not_to include depositor.user_key
+    end
+  end
+
+  context 'when use_valkyire is true' do
+    let(:valk_file_set) { valkyrie_create(:hyrax_file_set) }
+
+    it "revokes a user's edit access to a FileSet" do
+      described_class.perform_now(valk_file_set.id.to_s, depositor.user_key, use_valkyrie: true)
+      reloaded_file_set = Hyrax.query_service.find_by(id: valk_file_set.id)
+      expect(reloaded_file_set.edit_users.to_a).not_to include depositor.user_key
+    end
   end
 end
