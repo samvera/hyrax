@@ -1,3 +1,4 @@
+# coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'hyrax/version'
@@ -50,7 +51,7 @@ SUMMARY
   spec.add_dependency 'flot-rails', '~> 0.0.6'
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
   spec.add_dependency 'hydra-derivatives', '~> 3.3'
-  spec.add_dependency 'hydra-editor', '>= 3.3', '< 5.0'
+  spec.add_dependency 'hydra-editor', '~> 5.0'
   spec.add_dependency 'hydra-head', '>= 10.6.1'
   spec.add_dependency 'hydra-works', '>= 0.16', '< 2.0'
   spec.add_dependency 'iiif_manifest', '>= 0.3', '< 0.6'
@@ -112,5 +113,5 @@ SUMMARY
   #
   # simple_form 3.5.1 broke hydra-editor for certain model types;
   #   see: https://github.com/plataformatec/simple_form/issues/1549
-  spec.add_dependency 'simple_form', '~> 3.2', '<= 3.5.0'
+  spec.add_dependency 'sass-rails', '~> 5.0'
 end
