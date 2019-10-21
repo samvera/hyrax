@@ -1,3 +1,4 @@
+# coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'hyrax/version'
@@ -76,6 +77,7 @@ SUMMARY
   spec.add_dependency 'redlock', '>= 0.1.2'
   spec.add_dependency 'retriable', '>= 2.9', '< 4.0'
   spec.add_dependency 'samvera-nesting_indexer', '~> 2.0'
+  spec.add_dependency 'sass-rails', '~> 5.0'
   spec.add_dependency 'select2-rails', '~> 3.5'
   spec.add_dependency 'signet'
   spec.add_dependency 'tinymce-rails', '~> 4.1'
@@ -83,7 +85,6 @@ SUMMARY
   # temporary pin to 2.17 due to failures caused in 2.18.0
   spec.add_development_dependency "capybara", '~> 2.4', '< 2.18.0'
   spec.add_development_dependency 'capybara-maleficent', '~> 0.3.0'
-  spec.add_development_dependency 'chromedriver-helper', '~> 2.1'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
   spec.add_development_dependency 'engine_cart', '~> 2.2'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
@@ -105,12 +106,6 @@ SUMMARY
   spec.add_development_dependency 'bixby', '~> 1.0.0'
   spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
+  spec.add_development_dependency 'webdrivers', '~> 4.0'
   spec.add_development_dependency 'webmock'
-
-  ########################################################
-  # Temporarily pinned dependencies. INCLUDE EXPLANATIONS.
-  #
-  # simple_form 3.5.1 broke hydra-editor for certain model types;
-  #   see: https://github.com/plataformatec/simple_form/issues/1549
-  spec.add_dependency 'simple_form', '~> 3.2', '<= 3.5.0'
 end
