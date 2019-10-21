@@ -1,6 +1,6 @@
 module Hyrax
   # Grants edit access for the supplied user for the members attached to a work
-  class GrantEditToMembersJob <  Hyrax::ApplicationJob
+  class GrantEditToMembersJob < ApplicationJob
     queue_as Hyrax.config.ingest_queue_name
 
     # @param [ActiveFedora::Base] work - the work object
