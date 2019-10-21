@@ -13,7 +13,7 @@ RSpec.describe Hyrax::GrantEditToMembersJob do
       file_set_ids.each do |file_set_id|
         expect(Hyrax::GrantEditJob).to receive(:perform_now).with(file_set_id, depositor.user_key, use_valkyrie: false).once
       end
-      described_class.perform_now(work, depositor.user_key, use_valkyrie: false)
+      described_class.perform_now(work, depositor.user_key)
     end
   end
   context "when use_valkyrie is true" do
@@ -25,7 +25,7 @@ RSpec.describe Hyrax::GrantEditToMembersJob do
       work.member_ids.each do |file_set_id|
         expect(Hyrax::GrantEditJob).to receive(:perform_now).with(file_set_id, depositor.user_key, use_valkyrie: true).once
       end
-      described_class.perform_now(work, depositor.user_key, use_valkyrie: true)
+      described_class.perform_now(work, depositor.user_key)
     end
   end
 end
