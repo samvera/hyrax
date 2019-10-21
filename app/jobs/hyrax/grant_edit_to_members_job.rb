@@ -5,11 +5,11 @@ module Hyrax
 
     # @param [ActiveFedora::Base] work - the work object
     # @param [String] user_key - the user to add
-    def perform(work, user_key)
+    def perform(work, user_key, use_valkyrie: Hyrax.config.use_valkyrie?)
       # Iterate over ids because reifying objects is slow.
       file_set_ids(work).each do |file_set_id|
         # Call this synchronously, since we're already in a job
-        GrantEditJob.perform_now(file_set_id, user_key)
+        GrantEditJob.perform_now(file_set_id, user_key, use_valkyrie)
       end
     end
 
