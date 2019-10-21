@@ -12,9 +12,9 @@ module Hyrax
         @model ||= Sipity::WorkflowResponsibility.new
       end
 
-      def to_model
-        model_instance
-      end
+      # def to_model
+      #   model_instance
+      # end
 
       delegate :model_name, :to_key, :workflow_role_id, :persisted?, :save!, to: :model_instance
 
