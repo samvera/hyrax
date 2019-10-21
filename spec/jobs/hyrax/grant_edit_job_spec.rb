@@ -1,14 +1,23 @@
 RSpec.describe Hyrax::GrantEditJob do
-  [true, false].each do |use_valkyrie|
-    context "when use_valkyrie is #{use_valkyrie}" do
-      let(:depositor) { create(:user) }
-      let(:file_set) { create(:file_set) }
+  let(:depositor) { create(:user) }
 
-      it 'grants a user edit access to a FileSet' do
-        described_class.perform_now(file_set.id, depositor.user_key, use_valkyrie: use_valkyrie)
-        file_set.reload
-        expect(file_set.edit_users).to include depositor.user_key
-      end
+  context "when use_valkyrie is false" do
+    let(:file_set) { create(:file_set) }
+
+    it 'grants a user edit access to a FileSet' do
+      described_class.perform_now(file_set.id, depositor.user_key, use_valkyrie: false)
+      file_set.reload
+      expect(file_set.edit_users).to include depositor.user_key
+    end
+  end
+
+  context "when use_valkyrie is true" do
+    let(:file_set) { valkyrie_create(:hyrax_file_set) }
+
+    it 'grants a user edit access to a FileSet' do
+      described_class.perform_now(file_set.id, depositor.user_key, use_valkyrie: true)
+      reloaded_file_set = Hyrax.query_service.find_by(id: file_set.id)
+      expect(reloaded_file_set.edit_users).to include depositor.user_key
     end
   end
 end
