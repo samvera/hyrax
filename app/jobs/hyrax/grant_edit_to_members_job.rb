@@ -10,7 +10,7 @@ module Hyrax
       # Iterate over ids because reifying objects is slow.
       file_set_ids(work).each do |file_set_id|
         # Call this synchronously, since we're already in a job
-        GrantEditJob.perform_now(file_set_id, user_key, use_valkyrie)
+        GrantEditJob.perform_now(file_set_id, user_key, use_valkyrie: use_valkyrie)
       end
     end
 

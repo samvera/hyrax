@@ -11,7 +11,7 @@ RSpec.describe Hyrax::GrantEditToMembersJob do
 
     it 'loops over FileSet IDs, spawning a job for each' do
       file_set_ids.each do |file_set_id|
-        expect(Hyrax::GrantEditJob).to receive(:perform_now).with(file_set_id, depositor.user_key, false).once
+        expect(Hyrax::GrantEditJob).to receive(:perform_now).with(file_set_id, depositor.user_key, use_valkyrie: false).once
       end
       described_class.perform_now(work, depositor.user_key, use_valkyrie: false)
     end
@@ -23,7 +23,7 @@ RSpec.describe Hyrax::GrantEditToMembersJob do
 
     it 'loops over FileSet IDs, spawning a job for each' do
       work.member_ids.each do |file_set_id|
-        expect(Hyrax::GrantEditJob).to receive(:perform_now).with(file_set_id, depositor.user_key, true).once
+        expect(Hyrax::GrantEditJob).to receive(:perform_now).with(file_set_id, depositor.user_key, use_valkyrie: true).once
       end
       described_class.perform_now(work, depositor.user_key, use_valkyrie: true)
     end
