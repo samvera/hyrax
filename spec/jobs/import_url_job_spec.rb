@@ -70,7 +70,7 @@ RSpec.describe ImportUrlJob do
     it 'creates the content and updates the associated operation' do
       expect(actor).to receive(:create_content).with(File, from_url: true).and_return(true)
       described_class.perform_now(file_set, operation)
-      expect(operation).to be_success
+      expect(operation).to be_successful
     end
 
     it 'leaves the temp directory in place' do

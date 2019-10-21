@@ -56,7 +56,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
 
         it 'defines a presenter' do
           get :show, params: { id: admin_set }
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(assigns[:presenter]).to be_kind_of Hyrax::AdminSetPresenter
           expect(assigns[:presenter].id).to eq admin_set.id
         end
@@ -81,7 +81,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
 
           it 'defines a form' do
             get :edit, params: { id: admin_set }
-            expect(response).to be_success
+            expect(response).to be_successful
             expect(assigns[:form]).to be_kind_of Hyrax::Forms::AdminSetForm
           end
         end
@@ -118,7 +118,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
     describe "#index" do
       it 'allows an authorized user to view the page' do
         get :index
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(assigns[:admin_sets]).to be_kind_of Array
       end
     end
@@ -126,7 +126,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
     describe "#new" do
       it 'allows an authorized user to view the page' do
         get :new
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
 
@@ -175,7 +175,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
 
         it 'defines a presenter' do
           get :show, params: { id: admin_set }
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(assigns[:presenter]).to be_kind_of Hyrax::AdminSetPresenter
           expect(assigns[:presenter].id).to eq admin_set.id
         end
@@ -187,7 +187,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
 
       it 'defines a form' do
         get :edit, params: { id: admin_set }
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(assigns[:form]).to be_kind_of Hyrax::Forms::AdminSetForm
       end
     end
@@ -197,7 +197,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
 
       it 'shows a list of member files' do
         get :files, params: { id: admin_set }, format: :json
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
 

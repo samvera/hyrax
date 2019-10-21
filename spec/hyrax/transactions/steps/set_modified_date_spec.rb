@@ -12,7 +12,7 @@ RSpec.describe Hyrax::Transactions::Steps::SetModifiedDate do
 
   describe '#call' do
     it 'is success' do
-      expect(step.call(work)).to be_success
+      expect(step.call(work)).to be_successful
     end
 
     it 'sets the modified date' do

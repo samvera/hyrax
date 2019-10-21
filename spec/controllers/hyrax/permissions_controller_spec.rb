@@ -16,7 +16,7 @@ RSpec.describe Hyrax::PermissionsController do
 
     it 'draws the page' do
       get :confirm, params: { id: work }
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 
@@ -36,7 +36,7 @@ RSpec.describe Hyrax::PermissionsController do
 
     it 'draws the page' do
       get :confirm_access, params: { id: work }
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 

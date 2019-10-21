@@ -7,7 +7,7 @@ RSpec.describe Hyrax::Transactions::Steps::DestroyWork do
   let(:work)     { build(:generic_work) }
 
   it 'is a success' do
-    expect(step.call(work)).to be_success
+    expect(step.call(work)).to be_successful
   end
 
   context 'with an existing work' do

@@ -31,7 +31,7 @@ RSpec.describe Hyrax::Transactions::CreateWork do
     end
 
     it 'is a success' do
-      expect(transaction.call(work)).to be_success
+      expect(transaction.call(work)).to be_successful
     end
 
     it 'persists the work' do
@@ -131,7 +131,7 @@ RSpec.describe Hyrax::Transactions::CreateWork do
     end
 
     it 'is a success' do
-      expect(transaction.call(work)).to be_success
+      expect(transaction.call(work)).to be_successful
     end
 
     it 'retains the set admin set' do

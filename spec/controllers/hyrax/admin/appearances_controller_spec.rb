@@ -25,7 +25,7 @@ RSpec.describe Hyrax::Admin::AppearancesController do
         expect(controller).to receive(:add_breadcrumb).with('Appearance', "/admin/appearance")
         get :show
         expect(assigns[:form]).to be_kind_of Hyrax::Forms::Admin::Appearance
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
   end

@@ -18,7 +18,7 @@ RSpec.describe Hyrax::Transactions::Steps::EnsureAdminSet do
       let(:work)      { build(:generic_work, admin_set_id: admin_set.id) }
 
       it 'is a success' do
-        expect(step.call(work)).to be_success
+        expect(step.call(work)).to be_successful
       end
     end
   end

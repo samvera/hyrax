@@ -63,7 +63,7 @@ RSpec.describe Hyrax::DownloadsController do
 
           it 'sends requested file content' do
             get :show, params: { id: file_set, file: 'thumbnail' }
-            expect(response).to be_success
+            expect(response).to be_successful
             expect(response.body).to eq content
             expect(response.headers['Content-Length']).to eq "4218"
             expect(response.headers['Accept-Ranges']).to eq "bytes"

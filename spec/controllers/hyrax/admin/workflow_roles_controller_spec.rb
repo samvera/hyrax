@@ -10,7 +10,7 @@ RSpec.describe Hyrax::Admin::WorkflowRolesController do
         expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with('Workflow Roles', admin_workflow_roles_path(locale: 'en'))
         get :index
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(assigns[:presenter]).to be_kind_of Hyrax::Admin::WorkflowRolesPresenter
         expect(response).to render_template('hyrax/dashboard')
       end

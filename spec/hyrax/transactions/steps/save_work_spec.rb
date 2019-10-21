@@ -8,7 +8,7 @@ RSpec.describe Hyrax::Transactions::Steps::SaveWork do
 
   describe '#call' do
     it 'is success' do
-      expect(step.call(work)).to be_success
+      expect(step.call(work)).to be_successful
     end
 
     it 'persists the work' do

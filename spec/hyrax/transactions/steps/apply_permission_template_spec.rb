@@ -17,7 +17,7 @@ RSpec.describe Hyrax::Transactions::Steps::ApplyPermissionTemplate do
     let(:admin_set) { create(:admin_set, with_permission_template: true) }
 
     it 'is a success' do
-      expect(step.call(work)).to be_success
+      expect(step.call(work)).to be_successful
     end
 
     context 'with users and groups' do

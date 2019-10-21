@@ -9,7 +9,7 @@ RSpec.describe Hyrax::TrophiesController do
       end
       it "creates a trophy for a work" do
         post :toggle_trophy, params: { id: work.id }
-        expect(response).to be_success
+        expect(response).to be_successful
         json = JSON.parse(response.body)
         expect(json['user_id']).to eq user.id
         expect(json['work_id']).to eq work.id
@@ -22,7 +22,7 @@ RSpec.describe Hyrax::TrophiesController do
           expect { post :toggle_trophy, params: { id: work.id } }
             .to change { Trophy.count }.by(-1)
 
-          expect(response).to be_success
+          expect(response).to be_successful
           json = JSON.parse(response.body)
           expect(json['user_id']).to eq user.id
           expect(json['work_id']).to eq work.id
@@ -33,7 +33,7 @@ RSpec.describe Hyrax::TrophiesController do
     context "for a work that we don't have edit access on" do
       it "does not create a trophy" do
         post :toggle_trophy, params: { id: work.id }
-        expect(response).not_to be_success
+        expect(response).not_to be_successful
       end
     end
   end
