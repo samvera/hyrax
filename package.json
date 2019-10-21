@@ -1,0 +1,26 @@
+{
+  "name": "hyrax-frontend",
+  "version": "3.0.0-alpha",
+  "description": "[![Build Status](https://travis-ci.org/samvera/hyrax.png?branch=master)](https://travis-ci.org/projectblacklight/blacklight) [![Gem Version](https://badge.fury.io/rb/blacklight.png)](http://badge.fury.io/rb/blacklight) [![Coverage Status](https://coveralls.io/repos/github/projectblacklight/blacklight/badge.svg?branch=master)](https://coveralls.io/github/projectblacklight/blacklight?branch=master)",
+  "main": "app/javascripts/hyrax",
+  "scripts": {
+    "js-compile-bundle": "shx cat app/javascripts/hyrax/batch.js app/javascripts/hyrax/single_use_links_manager.js app/javascripts/hyrax/fileupload.js app/javascripts/hyrax/uploader.js app/javascripts/hyrax/sorting.js app/javascripts/hyrax/turbolinks_events.js app/javascripts/hyrax/dashboard_actions.js app/javascripts/hyrax/user_search.js app/javascripts/hyrax/initialize.js app/javascripts/hyrax/nav_safety.js app/javascripts/hyrax/tabs.js app/javascripts/hyrax/featured_works.js app/javascripts/hyrax/trophy.js app/javascripts/hyrax/browse_everything.js app/javascripts/hyrax/proxy_rights.js app/javascripts/hyrax/content_blocks.js app/javascripts/hyrax/ga_events.js app/javascripts/hyrax/relationships.js app/javascripts/hyrax/batch_edit.js app/javascripts/hyrax/facets.js app/javascripts/hyrax/collections.js app/javascripts/hyrax/flot_stats.js app/javascripts/hyrax/batch_select_all.js app/javascripts/hyrax/search.js app/javascripts/hyrax/permissions.js app/javascripts/hyrax/select_submit.js app/javascripts/hyrax/thumbnail_select.es6 app/javascripts/hyrax/autocomplete.es6 app/javascripts/hyrax/select_collection_type.es6 app/javascripts/hyrax/save_work/save_work_control.es6 app/javascripts/hyrax/save_work/visibility_component.es6 app/javascripts/hyrax/save_work/uploaded_files.es6 app/javascripts/hyrax/save_work/checklist_item.es6 app/javascripts/hyrax/save_work/required_fields.es6 app/javascripts/hyrax/save_work/deposit_agreement.es6 app/javascripts/hyrax/save_work.es6 app/javascripts/hyrax/autocomplete/resource.es6 app/javascripts/hyrax/autocomplete/default.es6 app/javascripts/hyrax/autocomplete/linked_data.es6 app/javascripts/hyrax/collections_v2.es6 app/javascripts/hyrax/notification.es6 app/javascripts/hyrax/tabbed_form.es6 app/javascripts/hyrax/admin/admin_set_controls.es6 app/javascripts/hyrax/admin/graphs.es6 app/javascripts/hyrax/admin/admin_set/group_participants.es6 app/javascripts/hyrax/admin/admin_set/participants.es6 app/javascripts/hyrax/admin/admin_set/visibility.es6 app/javascripts/hyrax/admin/admin_set/registered_users.es6 app/javascripts/hyrax/admin/collection_type/participants.es6 app/javascripts/hyrax/admin/collection_type/settings.es6 app/javascripts/hyrax/admin/collection_type_controls.es6 app/javascripts/hyrax/select_work_type.es6 app/javascripts/hyrax/permissions/user_controls.es6 app/javascripts/hyrax/permissions/registry.es6 app/javascripts/hyrax/permissions/control.es6 app/javascripts/hyrax/permissions/group_controls.es6 app/javascripts/hyrax/permissions/person.es6 app/javascripts/hyrax/permissions/registry_entry.es6 app/javascripts/hyrax/permissions/grant.es6 app/javascripts/hyrax/permissions/group.es6 app/javascripts/hyrax/editor.es6 app/javascripts/hyrax/authority_select.es6 app/javascripts/hyrax/file_manager/save_manager.es6 app/javascripts/hyrax/file_manager/sorting.es6 app/javascripts/hyrax/file_manager/member.es6 app/javascripts/hyrax/file_manager.es6 app/javascripts/hyrax/batch_select.es6 app/javascripts/hyrax/sort_and_per_page.es6 app/javascripts/hyrax/collection_types.es6 app/javascripts/hyrax/collections/editor.es6 app/javascripts/hyrax/relationships/resource.es6 app/javascripts/hyrax/relationships/confirm_remove_dialog.es6 app/javascripts/hyrax/relationships/registry.es6 app/javascripts/hyrax/relationships/control.es6 app/javascripts/hyrax/relationships/registry_entry.es6 app/javascripts/hyrax/collections_utils.es6 app/javascripts/hyrax/editor/controlled_vocabulary.es6 app/javascripts/hyrax/editor/admin_set_widget.es6 app/javascripts/hyrax/i18n_helper.es6 app/javascripts/hyrax.js | shx sed \"s/^(import|export).*//\" > app/assets/javascripts/hyrax.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samvera/hyrax.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/samvera/hyrax/issues"
+  },
+  "homepage": "https://github.com/samvera/hyrax#readme",
+  "devDependencies": {
+    "shx": "^0.3.2"
+  },
+  "dependencies": {
+    "jquery": "^3.4.1",
+    "typeahead.js": "^0.11.1"
+  }
+}
