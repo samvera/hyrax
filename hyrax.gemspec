@@ -79,7 +79,6 @@ SUMMARY
   spec.add_dependency 'tinymce-rails', '~> 4.1'
   spec.add_dependency 'valkyrie', '~> 2.0', '>= 2.0.2'
 
-  # temporary pin to 2.17 due to failures caused in 2.18.0
   spec.add_development_dependency "capybara", '~> 3.29'
   spec.add_development_dependency 'capybara-maleficent', '~> 0.3.0'
   spec.add_development_dependency 'chromedriver-helper', '~> 2.1'
