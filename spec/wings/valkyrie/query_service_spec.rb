@@ -83,16 +83,30 @@ RSpec.describe Wings::Valkyrie::QueryService do
       allow(Hyrax.config).to receive(:curation_concerns).and_return(Hyrax.config.curation_concerns.append(::Collection).append(af_resource_class))
     end
 
-    it "returns all created resources and no access control objects" do
+    it "returns all created resources" do
       work = create(:generic_work)
       resource1 = persister.save(resource: resource_class.new)
       resource2 = persister.save(resource: resource_class.new)
 
-      expect(query_service.find_all.map(&:id)).to contain_exactly resource1.id, resource2.id, Valkyrie::ID.new(work.id)
+      expect(query_service.find_all.map(&:id))
+        .to include(resource1.id, resource2.id, Valkyrie::ID.new(work.id))
     end
 
     it "returns an empty array if there are none" do
       expect(query_service.find_all.to_a).to eq []
+    end
+
+    context 'with valkyrie native model' do
+      let!(:resources) do
+        [FactoryBot.valkyrie_create(:hyrax_work),
+         FactoryBot.valkyrie_create(:hyrax_work),
+         FactoryBot.valkyrie_create(:hyrax_work)]
+      end
+
+      it 'finds the resources' do
+        expect(query_service.find_all.map(&:id))
+          .to include(*resources.map(&:id))
+      end
     end
   end
 
