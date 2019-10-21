@@ -5,6 +5,7 @@ module Hyrax
 
     # @param [String] file_set_id - the identifier of the object to grant access to
     # @param [String] user_key - the user to add
+    # @param [Boolean] use_valkyrie - whether to use valkyrie support
     def perform(file_set_id, user_key, use_valkyrie: Hyrax.config.use_valkyrie?)
       if use_valkyrie
         id = Valkyrie::ID.new(file_set_id)
