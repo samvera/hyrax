@@ -1,6 +1,7 @@
 module Hyrax
   # Revokes edit access for the supplied user for the members attached to a work
-  class RevokeEditFromMembersJob < MembersPermissionJob
+  class RevokeEditFromMembersJob < ApplicationJob
+    include MembersPermissionJobBehavior
     # @param work [ActiveFedora::Base] the work object
     # @param user_key [String] the user to remove
     def perform(work, user_key)

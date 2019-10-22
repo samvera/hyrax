@@ -1,6 +1,7 @@
 module Hyrax
   # Grants edit access for the supplied user for the members attached to a work
-  class GrantEditToMembersJob < MembersPermissionJob
+  class GrantEditToMembersJob < ApplicationJob
+    include MembersPermissionJobBehavior
     # @param work [ActiveFedora::Base] the work object
     # @param user_key [String] the user to add
     def perform(work, user_key)

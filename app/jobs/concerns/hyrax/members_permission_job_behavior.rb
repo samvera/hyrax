@@ -1,8 +1,6 @@
 module Hyrax
   # Grants read access for the supplied user for the members attached to a work
-  class MembersPermissionJob < ApplicationJob
-    queue_as Hyrax.config.ingest_queue_name
-
+  module MembersPermissionJobBehavior
     private
 
       # Filter the member ids and return only the FileSet ids (filter out child works)

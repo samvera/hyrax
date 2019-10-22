@@ -1,6 +1,7 @@
 module Hyrax
   # Revokes the user's edit access on the provided FileSet
-  class RevokeEditJob < PermissionJob
+  class RevokeEditJob < ApplicationJob
+    include PermissionJobBehavior
     # @param file_set_id [String] the identifier of the object to revoke access from
     # @param user_key [String] the user to remove
     # @param use_valkyrie [Boolean] use valkyrie resources for this operation?
