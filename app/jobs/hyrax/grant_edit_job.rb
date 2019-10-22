@@ -1,6 +1,7 @@
 module Hyrax
   # Grants the user's edit access on the provided FileSet
-  class GrantEditJob < PermissionJob
+  class GrantEditJob < ApplicationJob
+    include PermissionJobBehavior
     # @param file_set_id [String] the identifier of the object to grant access to
     # @param user_key [String] the user to add
     # @param use_valkyrie [Boolean] whether to use valkyrie support

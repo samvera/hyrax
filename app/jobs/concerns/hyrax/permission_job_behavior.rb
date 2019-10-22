@@ -1,8 +1,6 @@
 module Hyrax
   # Grants the user's edit access on the provided FileSet
-  class PermissionJob < ApplicationJob
-    queue_as Hyrax.config.ingest_queue_name
-
+  module PermissionJobBehavior
     private
 
       def acl(id)

@@ -1,6 +1,7 @@
 module Hyrax
   # Grants the user's read access on the provided FileSet
-  class GrantReadJob < PermissionJob
+  class GrantReadJob < ApplicationJob
+    include PermissionJobBehavior
     # @param file_set_id [String] the identifier of the object to grant access to
     # @param user_key [String] the user to add
     # @param use_valkyrie [Boolean] use valkyrie resources for this operation?
