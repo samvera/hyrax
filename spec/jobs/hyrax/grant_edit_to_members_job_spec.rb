@@ -1,7 +1,7 @@
 RSpec.describe Hyrax::GrantEditToMembersJob do
   let(:depositor) { create(:user) }
 
-  context "when use_valkyrie is false" do
+  context "when using active fedora" do
     let(:work) { create(:work) }
     let(:file_set_ids) { ['xyz123abc', 'abc789zyx'] }
 
@@ -16,7 +16,8 @@ RSpec.describe Hyrax::GrantEditToMembersJob do
       described_class.perform_now(work, depositor.user_key)
     end
   end
-  context "when use_valkyrie is true" do
+
+  context "when using valkyrie" do
     let(:file_set1) { valkyrie_create(:hyrax_file_set) }
     let(:file_set2) { valkyrie_create(:hyrax_file_set) }
     let(:work) { valkyrie_create(:hyrax_work, member_ids: [file_set1.id, file_set2.id]) }
