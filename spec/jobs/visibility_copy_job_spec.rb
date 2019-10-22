@@ -6,8 +6,9 @@ RSpec.describe VisibilityCopyJob do
     let(:resource) { FactoryBot.create(:work_with_files).valkyrie_resource }
     let(:queries)  { Hyrax.query_service.custom_queries }
 
-    it 'serializes proxies' do
-      expect { described_class.perform_later(proxy) }.not_to raise_error
+    it 'converts resource to proxy when enqueuing' do
+      expect { described_class.perform_later(resource) }
+        .to have_enqueued_job.with("_aj_globalid" => proxy.to_global_id.to_s)
     end
 
     it 'copies visibility to file sets' do
