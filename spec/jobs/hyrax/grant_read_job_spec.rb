@@ -2,7 +2,7 @@ RSpec.describe Hyrax::GrantReadJob do
   let(:depositor) { create(:user) }
 
   context "when use_valkyrie is false" do
-    let(:file_set) { create(:file_set, user: depositor) }
+    let(:file_set) { create(:file_set) }
 
     it 'grants a user read access to a FileSet' do
       described_class.perform_now(file_set.id, depositor.user_key, use_valkyrie: false)
@@ -12,12 +12,12 @@ RSpec.describe Hyrax::GrantReadJob do
   end
 
   context "when use_valkyrie is true" do
-    let(:valk_file_set) { valkyrie_create(:hyrax_file_set) }
+    let(:file_set) { valkyrie_create(:hyrax_file_set) }
 
     it 'grants a user read access to a FileSet' do
-      described_class.perform_now(valk_file_set.id.to_s, depositor.user_key, use_valkyrie: true)
-      reloaded_file_set = Hyrax.query_service.find_by(id: valk_file_set.id)
-      expect(reloaded_file_set.read_users.to_a).to include depositor.user_key
+      described_class.perform_now(file_set.id.to_s, depositor.user_key, use_valkyrie: true)
+      reloaded_file_set = Hyrax.query_service.find_by(id: file_set.id)
+      expect(reloaded_file_set.read_users).to include depositor.user_key
     end
   end
 end
