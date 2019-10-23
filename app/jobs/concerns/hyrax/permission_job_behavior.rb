@@ -1,6 +1,12 @@
 module Hyrax
   # Grants the user's edit access on the provided FileSet
   module PermissionJobBehavior
+    extend ActiveSupport::Concern
+
+    included do
+      queue_as Hyrax.config.ingest_queue_name
+    end
+
     private
 
       def acl(id)
