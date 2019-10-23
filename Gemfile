@@ -3,6 +3,8 @@ source 'https://rubygems.org'
 # Please see hyrax.gemspec for dependency information.
 gemspec
 
+gem 'hydra-works', github: 'samvera/hydra-works'
+
 group :development, :test do
   gem 'coveralls', require: false
   gem 'easy_translate'
