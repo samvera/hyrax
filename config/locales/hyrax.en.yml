@@ -1200,6 +1200,10 @@ en:
         single: has been saved.
         subject: Batch upload complete
         title: Files uploaded successfully
+    models:
+      hyrax/file_set: File Set
+      hyrax/pcdm_collection: Collection
+      hyrax/work: Work
     my:
       count:
         collections:
