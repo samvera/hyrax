@@ -50,3 +50,4 @@ end
 # rubocop:enable Bundler/DuplicatedGem
 
 eval_gemfile File.expand_path('spec/test_app_templates/Gemfile.extra', File.dirname(__FILE__)) unless File.exist?(file)
+gem "hydra-editor", github: "samvera/hydra-editor", branch: "delete_record_controller"
