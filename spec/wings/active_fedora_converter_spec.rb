@@ -43,6 +43,14 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       end
     end
 
+    context 'when given a valkyrie Admin Set' do
+      let(:resource) { FactoryBot.valkyrie_create(:hyrax_admin_set) }
+
+      it 'gives an AdminSet' do
+        expect(converter.convert).to be_a AdminSet
+      end
+    end
+
     context 'when given a valkyrie Work' do
       let(:resource) { FactoryBot.valkyrie_create(:hyrax_work) }
 
@@ -62,6 +70,17 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
           expect(converter.convert.members)
             .to contain_exactly(an_instance_of(Hyrax::Test::SimpleWorkLegacy),
                                 an_instance_of(Hyrax::Test::SimpleWorkLegacy))
+        end
+      end
+
+      context 'as Admin Set member' do
+        let(:admin_set_id) { AdminSet.find_or_create_default_admin_set_id }
+
+        before { resource.admin_set_id = admin_set_id }
+
+        it 'is a member of the admin set' do
+          expect(converter.convert.admin_set)
+            .to eq AdminSet.find(AdminSet::DEFAULT_ID)
         end
       end
     end
