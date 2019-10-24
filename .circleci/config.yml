@@ -91,11 +91,14 @@ jobs:
       hyrax_valkyrie:
         type: string
         default: "false"
+      parallelism:
+        type: integer
+        default: 10
     executor:
       name: 'samvera/ruby_fcrepo_solr_redis'
       ruby_version: << parameters.ruby_version >>
     resource_class: medium+
-    parallelism: 10
+    parallelism: << parameters.parallelism >>
     environment:
       COVERALLS_PARALLEL: true
       HYRAX_VALKYRIE: << parameters.hyrax_valkyrie >>
@@ -132,8 +135,23 @@ workflows:
           requires:
             - bundle
       - test:
+          filters:
+            branches:
+              # Forked pull requests have CIRCLE_BRANCH set to pull/XXX
+              ignore: /pull\/[0-9]+/
           name: "ruby2-4-7"
           ruby_version: "2.4.7"
+          requires:
+            - build
+            - lint
+      - test:
+          filters:
+            branches:
+              # Forked pull requests have CIRCLE_BRANCH set to pull/XXX
+              only: /pull\/[0-9]+/
+          name: "ruby2-4-7"
+          ruby_version: "2.4.7"
+          parallelism: 4
           requires:
             - build
             - lint
@@ -148,8 +166,22 @@ workflows:
           requires:
             - bundle
       - test:
+          filters:
+            branches:
+              # Forked pull requests have CIRCLE_BRANCH set to pull/XXX
+              ignore: /pull\/[0-9]+/
           name: "ruby2-5-5"
           ruby_version: "2.5.5"
+          requires:
+            - build
+      - test:
+          filters:
+            branches:
+              # Forked pull requests have CIRCLE_BRANCH set to pull/XXX
+              only: /pull\/[0-9]+/
+          name: "ruby2-5-5"
+          ruby_version: "2.5.5"
+          parallelism: 4
           requires:
             - build
   ruby2-6-2:
@@ -163,13 +195,42 @@ workflows:
           requires:
             - bundle
       - test:
+          filters:
+            branches:
+              # Forked pull requests have CIRCLE_BRANCH set to pull/XXX
+              ignore: /pull\/[0-9]+/
           name: "ruby2-6-2"
           ruby_version: "2.6.2"
           requires:
             - build
       - test:
+          filters:
+            branches:
+              # Forked pull requests have CIRCLE_BRANCH set to pull/XXX
+              only: /pull\/[0-9]+/
+          name: "ruby2-6-2"
+          ruby_version: "2.6.2"
+          parallelism: 4
+          requires:
+            - build
+      - test:
+          filters:
+            branches:
+              # Forked pull requests have CIRCLE_BRANCH set to pull/XXX
+              ignore: /pull\/[0-9]+/
           name: "ruby2-6-2-valkyrie"
           ruby_version: "2.6.2"
           hyrax_valkyrie: "true"
+          requires:
+            - build
+      - test:
+          filters:
+            branches:
+              # Forked pull requests have CIRCLE_BRANCH set to pull/XXX
+              only: /pull\/[0-9]+/
+          name: "ruby2-6-2-valkyrie"
+          ruby_version: "2.6.2"
+          hyrax_valkyrie: "true"
+          parallelism: 4
           requires:
             - build
