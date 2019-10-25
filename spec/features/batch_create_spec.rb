@@ -10,7 +10,10 @@ RSpec.describe 'Batch creation of works', type: :feature do
           with_permission_template: { deposit_groups: [::Ability.registered_group_name] })
   end
 
-  before { sign_in user }
+  before do
+    sign_in user
+    allow(Flipflop).to receive(:batch_upload?).and_return true
+  end
 
   it "renders the batch create form" do
     visit hyrax.new_batch_upload_path
