@@ -32,15 +32,17 @@ module Hyrax
     # @return [AdminSet, ::Collection]
     # @raise [Hyrax::ObjectNotFoundError] when neither an AdminSet or Collection is found
     def source_model
-      admin_set
-    rescue Hyrax::ObjectNotFoundError
-      collection
+      ActiveFedora::Base.find(source_id)
+    rescue ActiveFedora::ObjectNotFoundError
+      raise Hyrax::ObjectNotFoundError
     end
 
     # A bit of an analogue for a `belongs_to :admin_set` as it crosses from Fedora to the DB
+    # @deprecated Use #source_model instead
     # @return [AdminSet]
     # @raise [Hyrax::ObjectNotFoundError] when the we cannot find the AdminSet
     def admin_set
+      Deprecation.warn('Use #source_model instead')
       return AdminSet.find(source_id) if AdminSet.exists?(source_id)
       raise Hyrax::ObjectNotFoundError
     rescue ActiveFedora::ActiveFedoraError # TODO: remove the rescue when active_fedora issue #1276 is fixed
@@ -48,9 +50,11 @@ module Hyrax
     end
 
     # A bit of an analogue for a `belongs_to :collection` as it crosses from Fedora to the DB
+    # @deprecated Use #source_model instead
     # @return [Collection]
     # @raise [Hyrax::ObjectNotFoundError] when the we cannot find the Collection
     def collection
+      Deprecation.warn('Use #source_model instead')
       return ::Collection.find(source_id) if ::Collection.exists?(source_id)
       raise Hyrax::ObjectNotFoundError
     rescue ActiveFedora::ActiveFedoraError # TODO: remove the rescue when active_fedora issue #1276 is fixed
