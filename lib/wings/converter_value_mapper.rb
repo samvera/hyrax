@@ -9,6 +9,49 @@ module Wings
   # indivdual value types from the source data.
   class ConverterValueMapper < ::Valkyrie::ValueMapper; end
 
+  class ReservedAttributeValue < ::Valkyrie::ValueMapper
+    ConverterValueMapper.register(self)
+
+    ATTRIBUTES = [:internal_resource, :access_to, :new_record, :id,
+                  :alternate_ids, :created_at, :updated_at].freeze
+
+    def self.handles?(value)
+      ATTRIBUTES.include?(value.first)
+    end
+
+    def result
+      nil
+    end
+  end
+
+  class ReflectionIdValue < ::Valkyrie::ValueMapper
+    ConverterValueMapper.register(self)
+
+    def self.handles?(value)
+      value.first.to_s.end_with?('_id')
+    end
+
+    def result
+      return nil if value.last.blank?
+
+      [value.first, value.last.to_s]
+    end
+  end
+
+  ##
+  # @todo ensure reflections round trip correctly, even though we avoid handling ids
+  class ReflectionIdsValue < ::Valkyrie::ValueMapper
+    ConverterValueMapper.register(self)
+
+    def self.handles?(value)
+      value.first.to_s.end_with?('_ids')
+    end
+
+    def result
+      nil
+    end
+  end
+
   class PermissionValue < ::Valkyrie::ValueMapper
     ConverterValueMapper.register(self)
 
@@ -127,11 +170,6 @@ module Wings
 
     def result
       attrs = ActiveFedoraAttributes.new(value.last.attributes).result
-      attrs.delete(:read_groups)
-      attrs.delete(:read_users)
-      attrs.delete(:edit_groups)
-      attrs.delete(:edit_users)
-
       [value.first, attrs]
     end
   end
@@ -139,39 +177,15 @@ module Wings
   class ActiveFedoraAttributes
     attr_reader :attributes
     def initialize(attributes)
-      @attributes = attributes
+      @attributes = attributes.compact
     end
 
     def result
       Hash[
-        filter_attributes.map do |value|
+        attributes.map do |value|
           ConverterValueMapper.for(value).result
         end.select(&:present?)
       ]
-    end
-
-    ##
-    # @return [Hash<Symbol, Object>]
-    def filter_attributes
-      # avoid reflections for now; `*_ids` can't be passed as attributes.
-      # handling for reflections needs to happen in future work
-      attrs = attributes.reject { |k, _| k.to_s.end_with? '_ids' }
-
-      attrs.delete(:internal_resource)
-      attrs.delete(:access_to)
-      attrs.delete(:new_record)
-      attrs.delete(:id)
-      attrs.delete(:alternate_ids)
-      attrs.delete(:created_at)
-      attrs.delete(:updated_at)
-      attrs.delete(:member_ids)
-
-      # remove reflection id attributes and reinsert as strings
-      attrs.select { |k| k.to_s.end_with? '_id' }.each_key do |k|
-        val = attrs.delete(k)
-        attrs[k] = val.to_s unless val.blank?
-      end
-      attrs.compact
     end
   end
 end
