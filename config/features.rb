@@ -28,7 +28,7 @@ Flipflop.configure do
           description: "Require an active acceptance of the deposit agreement by checking a checkbox"
 
   feature :batch_upload,
-          default: true,
+          default: false,
           description: "Enable uploading batches of works"
 
   feature :hide_private_items,

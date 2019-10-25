@@ -26,8 +26,8 @@ RSpec.describe Flipflop do
   describe "batch_upload?" do
     subject { described_class.batch_upload? }
 
-    it "defaults to true" do
-      is_expected.to be true
+    it "defaults to false" do
+      is_expected.to be false
     end
   end
 
