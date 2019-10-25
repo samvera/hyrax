@@ -33,12 +33,8 @@ module Wings
       # Find all work/collection records, and map to Valkyrie Resources
       # @return [Array<Valkyrie::Resource>]
       def find_all
-        klasses = Hyrax.config.curation_concerns.append(::Collection)
-        objects = ::ActiveFedora::Base.all.select do |object|
-          klasses.include? object.class
-        end
-        objects.map do |id|
-          resource_factory.to_resource(object: id)
+        ::ActiveFedora::Base.all.map do |obj|
+          resource_factory.to_resource(object: obj)
         end
       end
 
@@ -46,12 +42,8 @@ module Wings
       # @param [Valkyrie::ResourceClass]
       # @return [Array<Valkyrie::Resource>]
       def find_all_of_model(model:)
-        find_model = model.internal_resource.constantize
-        objects = ::ActiveFedora::Base.all.select do |object|
-          object.class == find_model
-        end
-        objects.map do |id|
-          resource_factory.to_resource(object: id)
+        model_class_for(model).all.map do |obj|
+          resource_factory.to_resource(object: obj)
         end
       end
 
@@ -99,8 +91,8 @@ module Wings
         return [] unless resource.respond_to?(:member_ids) && resource.member_ids.present?
         all_members = find_many_by_ids(ids: resource.member_ids)
         return all_members unless model
-        find_model = model.internal_resource.constantize if model
-        all_members.select { |member_resource| member_resource.internal_resource.constantize == find_model }
+        find_model = model_class_for(model)
+        all_members.select { |member_resource| model_class_for(member_resource) == find_model }
       end
 
       # Find the Valkyrie Resources referenced by another Valkyrie Resource
@@ -172,6 +164,10 @@ module Wings
           return reference if reference.class == String
           # not a supported type
           ''
+        end
+
+        def model_class_for(model)
+          model.internal_resource.constantize
         end
     end
   end
