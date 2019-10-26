@@ -25,8 +25,9 @@ class EventJob < Hyrax::ApplicationJob
   end
 
   # create an event with an action and a timestamp for the user
+  # Use Hyrax time service!
   def event
-    @event ||= Hyrax::Event.create(action, Time.current.to_i)
+    @event ||= Hyrax::Event.create_now(action)
   end
 
   # log the event to the users event stream
