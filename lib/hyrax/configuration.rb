@@ -480,6 +480,11 @@ module Hyrax
                                 "Edit" => "edit" }
     end
 
+    attr_writer :publisher
+    def publisher
+      @publisher ||= Hyrax::Publisher.instance
+    end
+
     attr_writer :translate_uri_to_id
 
     def translate_uri_to_id
