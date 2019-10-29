@@ -28,21 +28,11 @@ class AdminSet < ActiveFedora::Base
   validates_with Hyrax::HasOneTitleValidator
   class_attribute :human_readable_short_description
   self.indexer = Hyrax::AdminSetIndexer
-  property :title, predicate: ::RDF::Vocab::DC.title do |index|
-    index.as :stored_searchable, :facetable
-  end
 
-  property :alt_title, predicate: ::RDF::Vocab::DC.alternative do |index|
-    index.as :stored_searchable
-  end
-
-  property :description, predicate: ::RDF::Vocab::DC.description do |index|
-    index.as :stored_searchable
-  end
-
-  property :creator, predicate: ::RDF::Vocab::DC11.creator do |index|
-    index.as :symbol
-  end
+  property :title,       predicate: ::RDF::Vocab::DC.title
+  property :alt_title,   predicate: ::RDF::Vocab::DC.alternative
+  property :description, predicate: ::RDF::Vocab::DC.description
+  property :creator,     predicate: ::RDF::Vocab::DC11.creator
   has_many :members,
            predicate:  Hyrax.config.admin_set_predicate,
            class_name: 'ActiveFedora::Base'

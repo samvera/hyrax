@@ -60,14 +60,24 @@ RSpec.describe AdminSet, type: :model do
   describe "#to_solr" do
     let(:admin_set) do
       build(:admin_set, title: ['A good title'],
-                        creator: ['jcoyne@justincoyne.com'])
+                        creator: ['jcoyne@justincoyne.com'],
+                        alt_title: ['A bad title'],
+                        description: ['a description'])
     end
-    let(:solr_document) { admin_set.to_solr }
 
     it "has title and creator information" do
-      expect(solr_document).to include 'title_tesim' => ['A good title'],
-                                       'title_sim' => ['A good title'],
-                                       'creator_ssim' => ['jcoyne@justincoyne.com']
+      expect(admin_set.to_solr).to include 'title_tesim' => ['A good title'],
+                                           'title_sim' => ['A good title'],
+                                           'creator_ssim' => ['jcoyne@justincoyne.com']
+    end
+
+    it 'indexes all properties' do
+      keys = ["system_create_dtsi", "system_modified_dtsi", "has_model_ssim",
+              :id, "title_tesim", "title_sim", "alt_title_tesim", "description_tesim",
+              "creator_ssim", "thumbnail_path_ss", "generic_type_sim",
+              "human_readable_type_sim", "human_readable_type_tesim"]
+
+      expect(admin_set.to_solr.keys).to contain_exactly(*keys)
     end
   end
 

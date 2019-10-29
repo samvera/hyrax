@@ -21,5 +21,11 @@ FactoryBot.define do
       # false, true, or Hash with keys for permission_template
       with_permission_template { false }
     end
+
+    factory :complete_admin_set do
+      alt_title   { ['alternate admin set title'] }
+      creator     { ['moomin', 'snufkin'] }
+      description { ['Before a revolution happens', 'it is perceived as impossible'] }
+    end
   end
 end
