@@ -438,12 +438,12 @@ es:
         access_type_to_grant: Tipo de acceso a otorgar
         account_label_without_suffix: "%{account_label} (sin la parte %{suffix})"
         add_sharing: Agregar Compartir
-        add_this_group: Agregue <span class = "sr-only"> este grupo </span>
+        add_this_group_html: Agregue <span class = "sr-only"> este grupo </span>
         currently_sharing: Actualmente compartido con
         depositor: Depositor
         directions: Independientemente de la configuración de visibilidad para este trabajo, también puede compartirlo con otros usuarios y grupos.
         group: Grupo
-        permissions_save_note: Los permisos <strong> no </strong> se guardan hasta que & quot; Guardar & quot; Se presiona el botón en la parte inferior de la página.
+        permissions_save_note_html: Los permisos <strong> no </strong> se guardan hasta que & quot; Guardar & quot; Se presiona el botón en la parte inferior de la página.
         use_add_button: Use el botón Agregar para dar acceso a un %{account_label} a la vez (se agregará a la lista a continuación). Seleccione el usuario, por nombre o %{account_label} \. Luego seleccione el nivel de acceso que desea otorgar y haga clic en Agregar este %{account_label} para completar la adición del permiso.
       form_thumbnail:
         help_html: Seleccione el archivo que se utilizará como miniatura para este trabajo.

@@ -439,12 +439,12 @@ en:
         access_type_to_grant: Access type to grant
         account_label_without_suffix: "%{account_label} (without the %{suffix} part)"
         add_sharing: Add Sharing
-        add_this_group: Add<span class="sr-only"> this group</span>
+        add_this_group_html: Add<span class="sr-only"> this group</span>
         currently_sharing: Currently Shared With
         depositor: Depositor
         directions: Regardless of the visibility settings for this work, you can also share it with other users and groups.
         group: Group
-        permissions_save_note: Permissions are <strong>not</strong> saved until the &quot;Save&quot; button is pressed at the bottom of the page.
+        permissions_save_note_html: Permissions are <strong>not</strong> saved until the &quot;Save&quot; button is pressed at the bottom of the page.
         use_add_button: Use the add button to give access to one %{account_label}  at a time (it will be added to the list below). Select the user, by name or %{account_label} \. Then select the access level you wish to grant and click on Add this  %{account_label} to complete adding the permission.
       form_thumbnail:
         help_html: Select the file to be used as the thumbnail for this work.
