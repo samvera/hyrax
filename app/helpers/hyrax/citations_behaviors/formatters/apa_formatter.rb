@@ -30,6 +30,7 @@ module Hyrax
         public
 
         def format_authors(authors_list = [])
+          return '' if authors_list.blank?
           authors_list = Array.wrap(authors_list).collect { |name| abbreviate_name(surname_first(name)).strip }
           text = ''
           text << authors_list.first if authors_list.first
