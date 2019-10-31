@@ -1115,6 +1115,7 @@ en:
         link: View all collections
         tab_label: Explore Collections
         title: Explore Collections
+        thumbnail: " thumbnail"
       featured_researcher:
         missing: No researchers have been featured.
         tab_label: Featured Researcher
