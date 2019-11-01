@@ -25,8 +25,23 @@ module Hyrax
   #   class MyIndexer < ValkyrieIndexer
   #     def to_solr
   #       super.tap do |index_hash|
-  #         index_hash['my_field_tesim']   = resource.my_field.map(&:to_s)
-  #         index_hash['other_field_ssim'] = resource.other_field
+  #         index_hash[:my_field_tesim]   = resource.my_field.map(&:to_s)
+  #         index_hash[:other_field_ssim] = resource.other_field
+  #       end
+  #     end
+  #   end
+  #
+  # @example pairing an indexer with a model class
+  #   class Book < Hyrax::Resource
+  #     attribute :author
+  #   end
+  #
+  #   class BookIndexer < ValkyrieIndexer
+  #     Hyrax::ValkyrieIndexer.register self, as_indexer_for: Book
+  #
+  #     def to_solr
+  #       super.tap do |index_hash|
+  #         index_hash[:author_si] = resource.author
   #       end
   #     end
   #   end
@@ -35,25 +50,47 @@ module Hyrax
   class ValkyrieIndexer
     ##
     # @!attribute [r] resource
+    #   @api public
     #   @return [Valkyrie::Resource]
     attr_reader :resource
 
     ##
+    # @api public
     # @param [Valkyrie::Resource] resource
     #
     # @return [#to_solr]
     def self.for(resource:)
-      ValkyrieIndexer.new(resource: resource)
+      registry.fetch(resource.class, ValkyrieIndexer).new(resource: resource)
     end
 
     ##
+    # @api public
+    # @param [Class] klass
+    # @param [Class, Array<Class>] as_indexer_for
+    #
+    # @return [void]
+    def self.register(klass, as_indexer_for: [])
+      Array(as_indexer_for).each do |target|
+        registry[target] = klass
+      end
+    end
+
+    ##
+    # @api private
+    def self.registry
+      @registry ||= {}
+    end
+
+    ##
+    # @api public
     # @param [Valkyrie::Resource] resource
     def initialize(resource:)
       @resource = resource
     end
 
     ##
-    # @return [Hash<String, Object>]
+    # @api public
+    # @return [Hash<Symbol, Object>]
     def to_solr
       {
         "id": resource.id.to_s,
