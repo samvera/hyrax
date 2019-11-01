@@ -8,12 +8,12 @@
   data-post-delete-url="<%= hyrax.dashboard_collection_path(id) %>">
 
     <div class="collection-title-row-content">
-      <h3 class="collection-title">
+      <h2 class="collection-title">
         <% # List multiple titles %>
         <% presenter.title.each_with_index do |title, index| %>
           <span><%= title %></span>
         <% end %>
-      </h3>
+      </h2>
       <%= presenter.permission_badge %>
       <%= presenter.collection_type_badge %>
     </div>
