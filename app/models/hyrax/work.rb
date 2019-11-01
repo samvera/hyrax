@@ -22,5 +22,11 @@ module Hyrax
     def work?
       true
     end
+
+    ##
+    # @return [#to_solr]
+    def indexer
+      Hyrax::ValkyrieWorkIndexer.new(resource: self)
+    end
   end
 end
