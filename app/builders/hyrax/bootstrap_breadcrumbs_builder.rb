@@ -27,6 +27,6 @@ class Hyrax::BootstrapBreadcrumbsBuilder < BreadcrumbsOnRails::Breadcrumbs::Buil
   end
 
   def breadcrumbs_options
-    { class: 'breadcrumb', role: "region", "aria-label" => "Breadcrumb" }
+    { class: 'breadcrumb', role: "navigation", "aria-label" => "Breadcrumb" }
   end
 end
