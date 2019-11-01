@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hyrax::ValkyrieIndexers::BaseIndexer do
+RSpec.describe Hyrax::ValkyrieIndexer do
   let(:indexer) { described_class.new(resource: resource) }
   let(:resource) { FactoryBot.valkyrie_create(:hyrax_resource) }
 
