@@ -168,12 +168,12 @@ export default class {
       // Detect mm/dd/yyyy format
       const regex = /^\d{2}[./-]\d{2}[./-]\d{4}$/;
 
-      let $form = $('form');
+      let $form = this.element.find('form');
       $form.on('submit', function() {
         let data = $(this).serializeArray();
         let releaseDate = data.find(item => item.name === 'permission_template[release_date]');
 
-        if(releaseDate.value.match(regex)) {
+        if(releaseDate && releaseDate.value.match(regex)) {
           const [mm, dd, yyyy] = releaseDate.value.split('/');
           releaseDate.value = yyyy + '-' + mm + '-' + dd;
         }
