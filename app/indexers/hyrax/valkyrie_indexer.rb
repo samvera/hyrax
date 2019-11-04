@@ -82,7 +82,7 @@ module Hyrax
     end
 
     ##
-    # @api public
+    # @api private
     # @param [Valkyrie::Resource] resource
     def initialize(resource:)
       @resource = resource
