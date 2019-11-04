@@ -3,9 +3,11 @@
 module Hyrax
   module Listeners
     ##
-    # Listens for events related to batch activity
-    class BatchEventListener
+    # Listens for events related to batch activity and creates notifications
+    class BatchNotificationListener
       ##
+      # Notify requesting users of batch success/failure
+      #
       # @param event [Dry::Event]
       def on_batch_created(event)
         case event[:result]
