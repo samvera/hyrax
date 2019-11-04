@@ -1,0 +1,32 @@
+# frozen_string_literal: true
+
+module Hyrax
+  module Listeners
+    ##
+    # Listens for events related to Hydra Works FileSets and sends
+    # notifications where needed.
+    class FileSetLifecycleNotificationListener
+      ##
+      # Send a notification to the depositor for failed checksum audits.
+      #
+      # @param event [Dry::Event]
+      def on_file_set_audited(event)
+        return unless event[:result] == :failure # do nothing on success
+
+        Hyrax::FixityCheckFailureService
+          .new(event[:file_set], checksum_audit_log: event[:audit_log])
+          .call
+      end
+
+      ##
+      # Send a notification to the depositing user for FileSet url import
+      # failures.
+      #
+      # @param event [Dry::Event]
+      def on_file_set_url_imported(event)
+        Hyrax::ImportUrlFailureService.new(event[:file_set], event[:user]).call if
+          event[:result] == :failure
+      end
+    end
+  end
+end

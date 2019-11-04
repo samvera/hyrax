@@ -3,6 +3,7 @@
 Hyrax.publisher.subscribe(Hyrax::Listeners::BatchNotificationListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::ObjectLifecycleListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::FileSetLifecycleListener.new)
+Hyrax.publisher.subscribe(Hyrax::Listeners::FileSetLifecycleNotificationListener.new)
 
 # These events are triggered by actions within Hyrax Actors
 Hyrax.config.callback.set(:after_create_concern) do |curation_concern, user|
