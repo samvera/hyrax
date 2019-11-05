@@ -54,6 +54,9 @@
           color: $navbar-transparent-link-hover-color;
         }
       }
+      li {
+        background-color: #286090;
+      }
     }
 
     @media only screen and (max-width: 767px) {
