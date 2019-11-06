@@ -57,6 +57,12 @@ module Hyrax
   end
 
   ##
+  # @return [Valkyrie::IndexingAdapter]
+  def self.index_adapter
+    config.index_adapter
+  end
+
+  ##
   # The Valkyrie persister used for PCDM models throughout Hyrax
   #
   # @note always use this method to retrieve the persister when data
