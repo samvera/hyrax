@@ -31,7 +31,7 @@ RSpec.describe Hyrax::Transactions::CreateWork do
     end
 
     it 'is a success' do
-      expect(transaction.call(work)).to be_successful
+      expect(transaction.call(work)).to be_success
     end
 
     it 'persists the work' do
