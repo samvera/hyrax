@@ -18,7 +18,7 @@ RSpec.describe Hyrax::Transactions::Steps::EnsurePermissionTemplate do
       let(:admin_set) { create(:admin_set, with_permission_template: true) }
 
       it 'is success' do
-        expect(step.call(work)).to be_successful
+        expect(step.call(work)).to be_success
       end
 
       context 'missing PermissionTemplate' do
