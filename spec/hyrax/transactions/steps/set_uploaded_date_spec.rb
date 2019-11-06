@@ -11,7 +11,7 @@ RSpec.describe Hyrax::Transactions::Steps::SetUploadedDate do
 
   describe '#call' do
     it 'is success' do
-      expect(step.call(work)).to be_successful
+      expect(step.call(work)).to be_success
     end
 
     it 'sets the uploaded date' do
