@@ -440,6 +440,18 @@ module Hyrax
     end
     attr_writer :iiif_metadata_fields
 
+    ##
+    # @return [#save, #save_all, #delete, #wipe] an indexing adapter
+    def index_adapter
+      @index_adapter ||= Valkyrie::IndexingAdapter.find(:solr_index)
+    end
+
+    ##
+    # @param [#to_sym] adapter
+    def index_adapter=(adapter)
+      @index_adapter ||= Valkyrie::IndexingAdapter.find(adapter.to_sym)
+    end
+
     attr_writer :index_field_mapper
     def index_field_mapper
       @index_field_mapper ||= ActiveFedora.index_field_mapper

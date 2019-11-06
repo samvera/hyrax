@@ -142,7 +142,7 @@ module Hyrax
     private
 
       def valkyrie_index
-        Valkyrie::IndexingAdapter.find(:solr_index)
+        Hyrax.index_adapter
       end
 
       def rows_warning
