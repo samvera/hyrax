@@ -25,7 +25,7 @@ RSpec.describe Hyrax::Transactions::Steps::SetDefaultAdminSet do
       let(:work)      { build(:generic_work, admin_set: admin_set) }
 
       it 'is success' do
-        expect(step.call(work)).to be_successful
+        expect(step.call(work)).to be_success
       end
 
       it 'does not change the admin_set' do
