@@ -7,7 +7,7 @@ RSpec.describe Hyrax::Transactions::Steps::ApplyCollectionPermissionTemplate do
   let(:work)     { build(:generic_work) }
 
   it 'is a success' do
-    expect(step.call(work)).to be_successful
+    expect(step.call(work)).to be_success
   end
 
   context 'when collection has no template' do
