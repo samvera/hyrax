@@ -8,7 +8,7 @@ RSpec.describe Hyrax::Transactions::DestroyWork do
 
   describe '#call' do
     it 'is a success' do
-      expect(transaction.call(work)).to be_successful
+      expect(transaction.call(work)).to be_success
     end
 
     it 'destroys the work' do
