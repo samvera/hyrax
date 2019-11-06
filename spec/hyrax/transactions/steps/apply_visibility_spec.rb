@@ -8,7 +8,7 @@ RSpec.describe Hyrax::Transactions::Steps::ApplyVisibility do
 
   describe '#call' do
     it 'is a success' do
-      expect(step.call(work)).to be_successful
+      expect(step.call(work)).to be_success
     end
 
     context 'without a visibility' do
