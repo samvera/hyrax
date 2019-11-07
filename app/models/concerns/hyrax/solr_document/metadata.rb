@@ -40,7 +40,7 @@ module Hyrax
       end
 
       included do
-        attribute :alt_title, Solr::Array, "alt_title_tesim"
+        attribute :alternative_title, Solr::Array, "alternative_title_tesim"
         attribute :identifier, Solr::Array, "identifier_tesim"
         attribute :based_near, Solr::Array, "based_near_tesim"
         attribute :based_near_label, Solr::Array, "based_near_label_tesim"

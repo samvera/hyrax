@@ -56,7 +56,7 @@ RSpec.describe Hyrax::Schema do
     let(:attributes) do
       { abstract:               ['lorem ipsum', 'sit dolor'],
         access_right:           ['lorem ipsum', 'sit dolor'],
-        alt_title:              [RDF::Literal('Finn Family Moomintroll', language: :en)],
+        alternative_title:      [RDF::Literal('Finn Family Moomintroll', language: :en)],
         based_near:             ['lorem ipsum', 'sit dolor'],
         contributor:            ['moominpapa', 'moominmama'],
         creator:                ['moomin'],
