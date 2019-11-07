@@ -9,6 +9,7 @@
   data-post-delete-url="<%= is_admin_set ? hyrax.admin_admin_set_path(id) : hyrax.dashboard_collection_path(id) %>">
 
   <td>
+    <label class="sr-only" for="batch_document_<%= id %>"><%= t('hyrax.dashboard.my.sr.batch_checkbox') %></label>
     <% if collection_presenter.allow_batch? %>
         <input type="checkbox" name="batch_document_ids[]" id="batch_document_<%= id %>" value="<%= id %>" class="batch_document_selector"
                data-hasaccess="<%= (can?(:edit, collection_presenter.solr_document)) %>" />
@@ -22,7 +23,7 @@
         <% if (collection_presenter.thumbnail_path == nil) %>
           <span class="<%= Hyrax::ModelIcon.css_class_for(::Collection) %> collection-icon-small"></span>
         <% else %>
-          <%= image_tag(collection_presenter.thumbnail_path) %>
+          <%= image_tag(collection_presenter.thumbnail_path, alt: "#{collection_presenter.title_or_label} #{t('hyrax.dashboard.my.sr.thumbnail')}") %>
         <% end %>
       </div>
       <%= link_to collection_presenter.show_path, id: "src_copy_link#{id}" do %>

@@ -4,7 +4,7 @@
 
 <div class="panel panel-default user-activity">
   <div class="panel-heading">
-    <h3 class="panel-title "><%= t("hyrax.dashboard.user_activity.title") %></h3>
+    <h2 class="panel-title "><%= t("hyrax.dashboard.user_activity.title") %></h2>
   </div>
   <div class="panel-body">
     <%= @presenter.render_recent_activity %>
@@ -13,7 +13,7 @@
 
 <div class="panel panel-default" id="notifications">
   <div class="panel-heading">
-    <h3 class="panel-title "><%= t("hyrax.dashboard.user_notifications") %></h3>
+    <h2 class="panel-title "><%= t("hyrax.dashboard.user_notifications") %></h2>
   </div>
   <div class="panel-body">
     <%= @presenter.render_recent_notifications %>
@@ -24,7 +24,7 @@
 <% if Flipflop.proxy_deposit? %>
   <div class="panel panel-default" id="proxy_management">
     <div class="panel-heading">
-      <h3 class="panel-title "><%= t("hyrax.dashboard.current_proxies") %></h3>
+      <h2 class="panel-title "><%= t("hyrax.dashboard.current_proxies") %></h2>
     </div>
     <div class="panel-body">
       <%= render 'hyrax/dashboard/_index_partials/current_proxy_rights', user: current_user %>
@@ -35,7 +35,7 @@
 
 <div class="panel panel-default transfers">
   <div class="panel-heading">
-    <h3 class="panel-title "><%= t("hyrax.dashboard.transfer_of_ownership") %></h3>
+    <h2 class="panel-title "><%= t("hyrax.dashboard.transfer_of_ownership") %></h2>
   </div>
   <div class="panel-body">
     <%= render 'hyrax/dashboard/_index_partials/transfers', presenter: @presenter.transfers %>
