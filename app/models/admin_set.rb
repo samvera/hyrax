@@ -29,10 +29,10 @@ class AdminSet < ActiveFedora::Base
   class_attribute :human_readable_short_description
   self.indexer = Hyrax::AdminSetIndexer
 
-  property :title,       predicate: ::RDF::Vocab::DC.title
-  property :alt_title,   predicate: ::RDF::Vocab::DC.alternative
-  property :description, predicate: ::RDF::Vocab::DC.description
-  property :creator,     predicate: ::RDF::Vocab::DC11.creator
+  property :title,             predicate: ::RDF::Vocab::DC.title
+  property :alternative_title, predicate: ::RDF::Vocab::DC.alternative
+  property :description,       predicate: ::RDF::Vocab::DC.description
+  property :creator,           predicate: ::RDF::Vocab::DC11.creator
   has_many :members,
            predicate:  Hyrax.config.admin_set_predicate,
            class_name: 'ActiveFedora::Base'

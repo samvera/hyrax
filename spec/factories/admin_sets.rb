@@ -23,9 +23,9 @@ FactoryBot.define do
     end
 
     factory :complete_admin_set do
-      alt_title   { ['alternate admin set title'] }
-      creator     { ['moomin', 'snufkin'] }
-      description { ['Before a revolution happens', 'it is perceived as impossible'] }
+      alternative_title { ['alternative admin set title'] }
+      creator           { ['moomin', 'snufkin'] }
+      description       { ['Before a revolution happens', 'it is perceived as impossible'] }
     end
   end
 end

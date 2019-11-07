@@ -17,9 +17,9 @@ module Hyrax
                :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo,
                :visibility_during_lease, :lease_expiration_date, :visibility_after_lease,
                :visibility, :in_works_ids, :depositor, :on_behalf_of, :permissions,
-               :member_ids, :alt_title, to: :model
+               :member_ids, :alternative_title, to: :model
 
-      self.terms = [:title, :alt_title, :creator, :contributor, :description, :abstract,
+      self.terms = [:title, :alternative_title, :creator, :contributor, :description, :abstract,
                     :keyword, :license, :rights_statement, :access_right, :rights_notes, :publisher, :date_created,
                     :subject, :language, :identifier, :based_near, :related_url,
                     :representative_id, :thumbnail_id, :rendering_ids, :files,
@@ -46,8 +46,8 @@ module Hyrax
         return attrs unless attributes[:title]
 
         attrs[:title] = Array(attributes[:title])
-        return attrs if attributes[:alt_title].nil?
-        Array(attributes[:alt_title]).each do |value|
+        return attrs if attributes[:alternative_title].nil?
+        Array(attributes[:alternative_title]).each do |value|
           attrs["title"] << value if value != ""
         end
         attrs
@@ -119,9 +119,9 @@ module Hyrax
         return model.member_of_collection_ids if key == :member_of_collection_ids
         if key == :title
           @attributes["title"].each do |value|
-            @attributes["alt_title"] << value
+            @attributes["alternative_title"] << value
           end
-          @attributes["alt_title"].delete(@attributes["alt_title"].sort.first) unless @attributes["alt_title"].empty?
+          @attributes["alternative_title"].delete(@attributes["alternative_title"].sort.first) unless @attributes["alternative_title"].empty?
           return @attributes[key.to_s].sort.first
         end
         super

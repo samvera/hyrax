@@ -5,14 +5,14 @@ RSpec.describe 'records/edit_fields/_title.html.erb', type: :view do
   let(:form_template) do
     %(
       <%= simple_form_for [main_app, @form] do |f| %>
-        <%= render "records/edit_fields/alt_title", f: f, key: 'description' %>
+        <%= render "records/edit_fields/alternative_title", f: f, key: 'description' %>
       <% end %>
     )
   end
 
   before do
     work.title = ["bbb", "aaa", "ccc"]
-    work.alt_title = []
+    work.alternative_title = []
     assign(:form, form)
   end
 

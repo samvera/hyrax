@@ -8,7 +8,7 @@ module Hyrax
       ATTRIBUTES = {
         abstract:               Valkyrie::Types::Array.of(Valkyrie::Types::String),
         access_right:           Valkyrie::Types::Array.of(Valkyrie::Types::String),
-        alt_title:              Valkyrie::Types::Array.of(Valkyrie::Types::String),
+        alternative_title:      Valkyrie::Types::Array.of(Valkyrie::Types::String),
         based_near:             Valkyrie::Types::Array.of(Valkyrie::Types::String),
         contributor:            Valkyrie::Types::Array.of(Valkyrie::Types::String),
         creator:                Valkyrie::Types::Array.of(Valkyrie::Types::String),

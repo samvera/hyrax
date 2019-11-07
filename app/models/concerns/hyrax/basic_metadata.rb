@@ -6,7 +6,7 @@ module Hyrax
     extend ActiveSupport::Concern
 
     included do
-      property :alt_title, predicate: ::RDF::Vocab::DC.alternative
+      property :alternative_title, predicate: ::RDF::Vocab::DC.alternative
 
       property :label, predicate: ActiveFedora::RDF::Fcrepo::Model.downloadFilename, multiple: false
 

@@ -89,9 +89,9 @@ end
 RSpec.shared_examples 'a Hyrax::AdministrativeSet' do
   subject(:admin_set) { described_class.new }
 
-  it 'has an #alt_title' do
-    expect { admin_set.alt_title = ['Moomin'] }
-      .to change { admin_set.alt_title }
+  it 'has an #alternative_title' do
+    expect { admin_set.alternative_title = ['Moomin'] }
+      .to change { admin_set.alternative_title }
       .to contain_exactly('Moomin')
   end
 

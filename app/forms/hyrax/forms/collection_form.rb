@@ -7,7 +7,8 @@ module Hyrax
       # Used by the search builder
       attr_reader :scope
 
-      delegate :id, :depositor, :permissions, :human_readable_type, :member_ids, :nestable?, :alt_title, to: :model
+      delegate :id, :depositor, :permissions, :human_readable_type, :member_ids, :nestable?,
+               :alternative_title, to: :model
 
       class_attribute :membership_service_class
 
@@ -20,7 +21,7 @@ module Hyrax
 
       delegate :blacklight_config, to: Hyrax::CollectionsController
 
-      self.terms = [:alt_title, :resource_type, :title, :creator, :contributor, :description,
+      self.terms = [:alternative_title, :resource_type, :title, :creator, :contributor, :description,
                     :keyword, :license, :publisher, :date_created, :subject, :language,
                     :representative_id, :thumbnail_id, :identifier, :based_near,
                     :related_url, :visibility, :collection_type_gid]
@@ -48,8 +49,8 @@ module Hyrax
         return attrs unless attributes[:title]
 
         attrs[:title] = Array(attributes[:title])
-        return attrs if attributes[:alt_title].nil?
-        Array(attributes[:alt_title]).each do |value|
+        return attrs if attributes[:alternative_title].nil?
+        Array(attributes[:alternative_title]).each do |value|
           attrs["title"] << value if value != ""
         end
         attrs
@@ -62,9 +63,9 @@ module Hyrax
         return model.member_of_collection_ids if key == :member_of_collection_ids
         if key == :title
           @attributes["title"].each do |value|
-            @attributes["alt_title"] << value
+            @attributes["alternative_title"] << value
           end
-          @attributes["alt_title"].delete(@attributes["alt_title"].sort.first) unless @attributes["alt_title"].empty?
+          @attributes["alternative_title"].delete(@attributes["alternative_title"].sort.first) unless @attributes["alternative_title"].empty?
           return @attributes["title"].sort.first unless @attributes["title"].empty?
           return ""
         end
@@ -90,7 +91,7 @@ module Hyrax
 
       # Terms that appear within the accordion
       def secondary_terms
-        [:alt_title,
+        [:alternative_title,
          :creator,
          :contributor,
          :keyword,
