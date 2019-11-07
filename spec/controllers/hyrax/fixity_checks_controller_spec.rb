@@ -16,7 +16,7 @@ RSpec.describe Hyrax::FixityChecksController do
       let(:json_response) { JSON.parse(response.body) }
 
       it "returns json with the result" do
-        expect(response).to be_success
+        expect(response).to be_successful
         # json is a structure like this:
         #   { file_id => [{ "checked_uri" => "...4-4d71-83ba-1bc52a5e4300/fcr:versions/version1", "passed" => true },
         #                 { "checked_uri" => ".../version2", "passed" => false },

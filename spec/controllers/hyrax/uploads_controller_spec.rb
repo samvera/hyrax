@@ -10,7 +10,7 @@ RSpec.describe Hyrax::UploadsController do
       end
       it "is successful" do
         post :create, params: { files: [file], format: 'json' }
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(assigns(:upload)).to be_kind_of Hyrax::UploadedFile
         expect(assigns(:upload)).to be_persisted
         expect(assigns(:upload).user).to eq user

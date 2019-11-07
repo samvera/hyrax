@@ -28,7 +28,7 @@ RSpec.describe CatalogController, type: :controller do
 
       it 'finds works, not files' do
         get :index
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response).to render_template('catalog/index')
 
         ids = assigns(:document_list).map(&:id)
@@ -44,7 +44,7 @@ RSpec.describe CatalogController, type: :controller do
 
       it 'finds collections' do
         get :index, params: { q: 'rocks' }, xhr: true
-        expect(response).to be_success
+        expect(response).to be_successful
         doc_list = assigns(:document_list)
         expect(doc_list.map(&:id)).to match_array [collection.id, rocks.id]
       end
@@ -55,7 +55,7 @@ RSpec.describe CatalogController, type: :controller do
 
       it 'finds works with the given search term' do
         get :index, params: { q: 'rocks', owner: 'all' }
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response).to render_template('catalog/index')
         expect(assigns(:document_list).map(&:id)).to contain_exactly(rocks.id)
       end
@@ -69,7 +69,7 @@ RSpec.describe CatalogController, type: :controller do
       end
 
       it 'finds faceted works' do
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response).to render_template('catalog/index')
         expect(assigns(:document_list).map(&:id)).to contain_exactly(clouds.id)
       end
@@ -80,7 +80,7 @@ RSpec.describe CatalogController, type: :controller do
 
       it 'finds matching records' do
         get :index, params: { q: 'full_textfull_text' }
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response).to render_template('catalog/index')
         expect(assigns(:document_list).map(&:id)).to contain_exactly(clouds.id)
       end

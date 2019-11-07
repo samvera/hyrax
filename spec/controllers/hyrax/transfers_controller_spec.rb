@@ -21,7 +21,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
       it "is successful" do
         expect(controller).to receive(:add_breadcrumb).exactly(3).times
         get :index
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(assigns[:presenter]).to be_instance_of Hyrax::TransfersPresenter
       end
     end
@@ -34,7 +34,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
           expect(controller).to receive(:add_breadcrumb).exactly(3).times
           sign_in user
           get :new, params: { id: work.id }
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(assigns[:work]).to eq(work)
           expect(assigns[:proxy_deposit_request]).to be_kind_of ProxyDepositRequest
           expect(assigns[:proxy_deposit_request].work_id).to eq(work.id)
@@ -74,7 +74,7 @@ RSpec.describe Hyrax::TransfersController, type: :controller do
         end.not_to change(ProxyDepositRequest, :count)
         expect(assigns[:proxy_deposit_request].errors[:transfer_to]).to eq(['must be an existing user'])
         expect(assigns[:work]).to be_instance_of GenericWork
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
 

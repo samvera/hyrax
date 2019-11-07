@@ -9,7 +9,7 @@ RSpec.describe Hyrax::Dashboard::ProfilesController do
   describe "#show" do
     it "show the user profile if user exists" do
       get :show, params: { id: user.user_key }
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it "redirects to root if user does not exist" do
@@ -22,7 +22,7 @@ RSpec.describe Hyrax::Dashboard::ProfilesController do
   describe "#edit" do
     it "show edit form when user edits own profile" do
       get :edit, params: { id: user.user_key }
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response).to render_template('hyrax/dashboard/profiles/edit')
       expect(flash[:alert]).to be_nil
     end
@@ -45,7 +45,7 @@ RSpec.describe Hyrax::Dashboard::ProfilesController do
 
         it "allows user to edit another user's profile" do
           get :edit, params: { id: another_user.to_param }
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(response).not_to redirect_to(routes.url_helpers.dashboard_profile_path(another_user.to_param, locale: 'en'))
           expect(flash[:alert]).to be_nil
         end
@@ -62,7 +62,7 @@ RSpec.describe Hyrax::Dashboard::ProfilesController do
 
       it "show the user profile if user exists" do
         get :edit, params: { id: user.user_key }
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(assigns[:trophies]).to all(be_kind_of Hyrax::TrophyPresenter)
         expect(assigns[:trophies].map(&:id)).to match_array [work1.id, work2.id, work3.id]
       end
