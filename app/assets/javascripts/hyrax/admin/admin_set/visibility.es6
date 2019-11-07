@@ -4,6 +4,7 @@ export default class {
   }
 
   setup() {
+    this.formatDateOnLoad();
     // Watch for changes to "release_period" radio inputs
     let releasePeriodInput = this.element.find("input[type='radio'][name$='[release_period]']")
     $(releasePeriodInput).on('change', () => { this.releasePeriodSelected() })
@@ -13,6 +14,7 @@ export default class {
     let releaseVariesInput = this.element.find("input[type='radio'][name$='[release_varies]']")
     $(releaseVariesInput).on('change', () => { this.releaseVariesSelected() })
     this.releaseVariesSelected()
+    this.validateEmbargoDate();
   }
 
   // Based on the "release_period" radio selected, enable/disable other options
@@ -130,5 +132,60 @@ export default class {
   // Enable visibility "Restricted" option
   enableVisibilityRestricted() {
     this.element.find("input[type='radio'][name$='[visibility]'][value='restricted']").prop("disabled", false)
+  }
+
+  // Check whether the browser supports input[type="date"]
+  isDateSupported() {
+    let input = document.createElement('input');
+    input.setAttribute('type', 'date');
+    return (input.type === 'date');
+  }
+
+  // Change date form on from yyyy-mm-dd to mm/dd/yyyy on display
+  formatDateOnLoad() {
+    if(!this.isDateSupported()) {
+      // Detect yyyy-mm-dd format
+      const regex = /^\d{4}[./-]\d{2}[./-]\d{2}$/;
+
+      // Get all the input fields
+      let $inputs = this.element.find(':input');
+
+      $inputs.each(function() {
+        if($(this).attr('type') === 'date') {
+          let value = $(this).val();
+          if(value.match(regex)) {
+            const [yyyy, mm, dd] = value.split('-');
+            $(this).val(mm + '/' + dd + '/' + yyyy);
+          }
+        }
+      });
+    }
+  }
+
+  // Change date format from mm/dd/yyyy to yyyy-mm-dd on form submit
+  validateEmbargoDate() {
+    if(!this.isDateSupported()) {
+      // Detect mm/dd/yyyy format
+      const regex = /^\d{2}[./-]\d{2}[./-]\d{4}$/;
+
+      let $form = this.element.find('form');
+      $form.on('submit', function() {
+        let data = $(this).serializeArray();
+        let releaseDate = data.find(item => item.name === 'permission_template[release_date]');
+
+        if(releaseDate && releaseDate.value.match(regex)) {
+          const [mm, dd, yyyy] = releaseDate.value.split('/');
+          releaseDate.value = yyyy + '-' + mm + '-' + dd;
+        }
+
+        // Request with modified data
+        $.ajax({
+            type: "POST",
+            url: $(this).attr('action'),
+            data: data
+        });
+        return false; // prevents normal behaviour
+      });
+    }
   }
 }

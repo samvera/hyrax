@@ -24,7 +24,7 @@ RSpec.describe Hyrax::SingleUseLinksViewerController do
         expect(controller).to receive(:send_file_headers!).with(filename: 'world.png', disposition: 'attachment', type: 'image/png')
         get :download, params: { id: download_link_hash }
         expect(response.body).to eq expected_content
-        expect(response).to be_success
+        expect(response).to be_successful
         expect { SingleUseLink.find_by_download_key!(download_link_hash) }.to raise_error ActiveRecord::RecordNotFound
       end
 
@@ -41,7 +41,7 @@ RSpec.describe Hyrax::SingleUseLinksViewerController do
     describe "GET 'show'" do
       it "renders the file set's show page and deletes the link from the database" do
         get 'show', params: { id: show_link_hash }
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(assigns[:presenter].id).to eq file.id
         expect { SingleUseLink.find_by_download_key!(show_link_hash) }.to raise_error ActiveRecord::RecordNotFound
       end

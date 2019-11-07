@@ -16,11 +16,15 @@ module Hyrax
 
       # implements a combination of two Valkyrie queries:
       # => find_many_by_ids & find_by_alternate_identifier
+      #
       # @param alternate_ids [Enumerator<#to_s>] list of ids
-      # @return [Array<Valkyrie::Resource>, Array<ActiveFedora::Base>]
+      # @return [Enumerable<Valkyrie::Resource>, Enumerable<ActiveFedora::Base>]
       def find_many_by_alternate_ids(alternate_ids:)
-        alternate_ids.uniq.map(&:to_s).each_with_object([]) do |id, resources|
-          resources << query_service.find_by_alternate_identifier(alternate_identifier: id)
+        return enum_for(:find_many_by_alternate_ids, alternate_ids: alternate_ids) unless
+          block_given?
+
+        alternate_ids.uniq do |id|
+          yield query_service.find_by_alternate_identifier(alternate_identifier: id.to_s)
         end
       end
     end

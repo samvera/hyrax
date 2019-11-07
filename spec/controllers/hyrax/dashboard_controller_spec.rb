@@ -34,7 +34,7 @@ RSpec.describe Hyrax::DashboardController, type: :controller do
 
     it "is successful" do
       get :show
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(assigns[:admin_set_rows]).to eq results
       expect(response).to render_template('show_admin')
     end

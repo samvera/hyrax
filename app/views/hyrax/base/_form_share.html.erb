@@ -3,7 +3,7 @@
 
 <% depositor = f.object.depositor %>
 
-<div class="alert alert-info hidden" id="save_perm_note"><%= raw t('.permissions_save_note') %></div>
+<div class="alert alert-info hidden" id="save_perm_note"><%= t('.permissions_save_note_html') %></div>
 
 <div class="alert alert-warning hidden" role="alert" id="permissions_error">
   <span id="permissions_error_text"></span>
@@ -27,7 +27,7 @@
     <%= select_tag 'new_group_permission_skel', options_for_select(Hyrax.config.permission_options), class: 'form-control' %>
 
     <button class="btn btn-default" id="add_new_group_skel">
-      <span><%= raw(t(".add_this_group")) %></span>
+      <span><%= t(".add_this_group_html") %></span>
     </button>
     <br /><span id="directory_group_result"></span>
   </div>

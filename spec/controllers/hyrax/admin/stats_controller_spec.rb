@@ -23,7 +23,7 @@ RSpec.describe Hyrax::Admin::StatsController, type: :controller do
       it 'allows an authorized user to view the page' do
         get :show
 
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(assigns[:presenter]).to be_kind_of Hyrax::AdminStatsPresenter
         expect(assigns[:presenter])
           .to have_attributes(limit: 5, stats_filters: {})

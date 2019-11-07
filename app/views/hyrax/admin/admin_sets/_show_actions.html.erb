@@ -1,9 +1,10 @@
-    <% if can? :edit, presenter.solr_document %>
+
       <div class="panel-heading">
         <div class="row">
           <div class="col-sm-8">
             <h2 class="panel-title display-page"><%= presenter.to_s %></h2>
           </div>
+          <% if can? :edit, presenter.solr_document %>
           <div class="col-sm-4">
             <div class="pull-right">
               <%= link_to edit_admin_admin_set_path(presenter), class: 'btn btn-primary' do %>
@@ -22,6 +23,6 @@
               <% end %>
             </div>
           </div>
+          <% end %>
         </div>
       </div>
-    <% end %>

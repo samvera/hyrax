@@ -21,7 +21,7 @@ RSpec.describe Hyrax::LeasesController do
         expect(controller).to receive(:add_breadcrumb).with('Manage Leases', leases_path)
 
         get :index
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response).to render_template('dashboard')
       end
     end
@@ -43,7 +43,7 @@ RSpec.describe Hyrax::LeasesController do
         expect(controller).to receive(:add_breadcrumb).with('Update Lease', '#')
 
         get :edit, params: { id: a_work }
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response).to render_template('dashboard')
       end
     end

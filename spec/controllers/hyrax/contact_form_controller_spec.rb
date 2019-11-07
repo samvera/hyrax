@@ -16,7 +16,7 @@ RSpec.describe Hyrax::ContactFormController do
     subject { response }
 
     before { get :new }
-    it { is_expected.to be_success }
+    it { is_expected.to be_successful }
   end
 
   describe "#create" do

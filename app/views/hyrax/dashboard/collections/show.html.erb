@@ -46,6 +46,7 @@
               <% if has_collection_search_parameters? %>
                   <%= t('hyrax.dashboard.collections.show.search_results') %>
               <% end %>
+              <p class="sr-only"><%= t('hyrax.dashboard.collections.show.search_results') %></p>
             </h2>
           </div>
       <% end %>
@@ -63,7 +64,7 @@
       <!-- Subcollections -->
       <% if @presenter.collection_type_is_nestable? %>
         <section id="sub-collections-wrapper" class="sub-collections-wrapper">
-          <h4><%= t('.subcollection_count') %> (<%= @subcollection_count %>)</h4>
+          <h3><%= t('.subcollection_count') %> (<%= @subcollection_count %>)</h3>
           <div class="row">
             <div class="col-md-7">
               <%= render 'subcollection_list', id: @presenter.id, collection: @subcollection_docs %>
@@ -79,7 +80,7 @@
 
       <!-- Works -->
       <section class="works-wrapper">
-        <h4><%= t('.item_count') %> (<%= @members_count %>)</h4>
+        <h3><%= t('.item_count') %> (<%= @members_count %>)</h3>
         <% unless has_collection_search_parameters? %>
           <%= render 'show_add_items_actions', presenter: @presenter %>
         <% end %>

@@ -88,7 +88,7 @@ RSpec.describe Hyrax::GenericWorksController do
 
       it 'shows me the page' do
         get :show, params: { id: work }
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(assigns(:presenter)).to be_kind_of Hyrax::WorkShowPresenter
       end
 
@@ -128,7 +128,7 @@ RSpec.describe Hyrax::GenericWorksController do
 
         it "sets the parent presenter" do
           get :show, params: { id: work, parent_id: parent }
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(assigns[:parent_presenter]).to be_instance_of Hyrax::GenericWorkPresenter
         end
       end
@@ -166,7 +166,7 @@ RSpec.describe Hyrax::GenericWorksController do
         it 'shows me the page' do
           expect(controller). to receive(:additional_response_formats).with(ActionController::MimeResponds::Collector)
           get :show, params: { id: work }
-          expect(response).to be_success
+          expect(response).to be_successful
         end
       end
 
@@ -196,7 +196,7 @@ RSpec.describe Hyrax::GenericWorksController do
 
       it 'someone elses private work should show me the page' do
         get :show, params: { id: work }
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
 
@@ -258,7 +258,7 @@ RSpec.describe Hyrax::GenericWorksController do
     context 'my work' do
       it 'shows me the page' do
         get :new
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkForm
         expect(assigns[:form].depositor).to eq user.user_key
         expect(assigns[:curation_concern]).to be_kind_of GenericWork
@@ -408,7 +408,7 @@ RSpec.describe Hyrax::GenericWorksController do
         expect(controller).to receive(:add_breadcrumb).with('Edit', main_app.edit_hyrax_generic_work_path(work.id))
 
         get :edit, params: { id: work }
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkForm
         expect(response).to render_template("layouts/hyrax/dashboard")
       end
@@ -441,7 +441,7 @@ RSpec.describe Hyrax::GenericWorksController do
 
       it 'someone elses private work should show me the page' do
         get :edit, params: { id: work }
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
   end
@@ -600,7 +600,7 @@ RSpec.describe Hyrax::GenericWorksController do
     end
     it "is successful" do
       get :file_manager, params: { id: work.id }
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(assigns(:form)).not_to be_blank
     end
   end

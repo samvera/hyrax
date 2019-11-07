@@ -13,7 +13,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
 
       it 'finds the featured researcher' do
         get :index
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(assigns(:featured_researcher)).to eq frodo
       end
     end
@@ -21,7 +21,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
     context 'with no featured researcher' do
       it "sets featured researcher" do
         get :index
-        expect(response).to be_success
+        expect(response).to be_successful
         assigns(:featured_researcher).tap do |researcher|
           expect(researcher).to be_kind_of ContentBlock
           expect(researcher.name).to eq 'featured_researcher'
@@ -31,7 +31,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
 
     it "sets marketing text" do
       get :index
-      expect(response).to be_success
+      expect(response).to be_successful
       assigns(:marketing_text).tap do |marketing|
         expect(marketing).to be_kind_of ContentBlock
         expect(marketing.name).to eq 'marketing_text'
@@ -40,7 +40,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
 
     it "does not include other user's private documents in recent documents" do
       get :index
-      expect(response).to be_success
+      expect(response).to be_successful
       titles = assigns(:recent_documents).map { |d| d['title_tesim'][0] }
       expect(titles).not_to include('Test Private Document')
     end
@@ -69,7 +69,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
 
       it "sets recent documents in the right order" do
         get :index
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(assigns(:recent_documents).length).to be <= 4
         create_times = assigns(:recent_documents).map { |d| d['date_uploaded_dtsi'] }
         expect(create_times).to eq create_times.sort.reverse
@@ -93,7 +93,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
                                                                ["collection results"])
                                                          .and_return(presenter)
         get :index
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(assigns(:presenter)).to eq presenter
       end
     end
@@ -107,14 +107,14 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
 
       it "sets featured works" do
         get :index
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(assigns(:featured_work_list)).to be_kind_of FeaturedWorkList
       end
     end
 
     it "sets announcement content block" do
       get :index
-      expect(response).to be_success
+      expect(response).to be_successful
       assigns(:announcement_text).tap do |announcement|
         expect(announcement).to be_kind_of ContentBlock
         expect(announcement.name).to eq 'announcement_text'
@@ -129,7 +129,7 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
 
       it "errors gracefully" do
         get :index
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(assigns(:admin_sets)).to be_blank
         expect(assigns(:recent_documents)).to be_blank
       end

@@ -64,5 +64,9 @@ RSpec.describe 'hyrax/admin/admin_sets/_show_actions.html.erb', type: :view do
       expect(rendered).not_to have_selector(:css, "a.btn-danger")
       expect(rendered).not_to have_selector(:css, "a.btn-primary")
     end
+
+    it "displays the admin_set title" do
+      expect(rendered).to have_selector(:css, "h2.panel-title")
+    end
   end
 end

@@ -55,7 +55,13 @@ module Hyrax
   def self.primary_work_type
     config.curation_concerns.first
   end
-
+   
+  ##
+  # @return [Valkyrie::IndexingAdapter]
+  def self.index_adapter
+    config.index_adapter
+  end
+  
   ##
   # @return [Dry::Events::Publisher]
   def self.publisher

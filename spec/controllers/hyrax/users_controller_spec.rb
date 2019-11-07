@@ -6,7 +6,7 @@ RSpec.describe Hyrax::UsersController, type: :controller do
   describe "#show" do
     it "show the user profile if user exists" do
       get :show, params: { id: user.user_key }
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(assigns[:presenter]).to be_kind_of Hyrax::UserProfilePresenter
     end
 

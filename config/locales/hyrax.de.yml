@@ -433,12 +433,12 @@ de:
         access_type_to_grant: Zu gewährende Zugriffsart
         account_label_without_suffix: "%{account_label} (ohne den Teil %{suffix})"
         add_sharing: Hinzufügen von individuellen Freigaben
-        add_this_group: Fügen Sie <span class = "sr-only"> diese Gruppe hinzu </ span>
+        add_this_group_html: Fügen Sie <span class = "sr-only"> diese Gruppe hinzu </ span>
         currently_sharing: Derzeit freigegeben für
         depositor: Deponent
         directions: Unabhängig von den Sichtbarkeitseinstellungen für diese Arbeit können Sie sie auch für andere Benutzer und Gruppen freigeben.
         group: Gruppe
-        permissions_save_note: Berechtigungen werden <strong> nicht </ strong> gespeichert, bis die Option & quot; Speichern & quot; Die Taste wird unten auf der Seite gedrückt.
+        permissions_save_note_html: Berechtigungen werden <strong> nicht </ strong> gespeichert, bis die Option & quot; Speichern & quot; Die Taste wird unten auf der Seite gedrückt.
         use_add_button: Verwenden Sie die Schaltfläche "Hinzufügen", um Zugriff auf jeweils eine %{account_label} zu gewähren (diese wird der folgenden Liste hinzugefügt). Wählen Sie den Benutzer nach Name oder %{account_label} \ aus. Wählen Sie dann die Zugriffsebene aus, die Sie gewähren möchten, und klicken Sie auf Add this %{account_label}, um das Hinzufügen der Berechtigung abzuschließen.
       form_thumbnail:
         help_html: Wählen Sie die Datei aus, die als Miniaturansicht für diese Arbeit verwendet werden soll.

@@ -22,7 +22,7 @@ RSpec.describe Hyrax::StatsController do
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.file_set.browse_view'), Rails.application.routes.url_helpers.hyrax_file_set_path(file_set, locale: 'en'))
         get :file, params: { id: file_set }
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response).to render_template('stats/file')
       end
     end
@@ -32,7 +32,7 @@ RSpec.describe Hyrax::StatsController do
 
       it 'renders the stats view' do
         get :file, params: { id: file_set }
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(response).to render_template('stats/file')
       end
     end
@@ -66,7 +66,7 @@ RSpec.describe Hyrax::StatsController do
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
       expect(controller).to receive(:add_breadcrumb).with('Test title', main_app.hyrax_generic_work_path(work, locale: 'en'))
       get :work, params: { id: work }
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response).to render_template('stats/work')
     end
   end

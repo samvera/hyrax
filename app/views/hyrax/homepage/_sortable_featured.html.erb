@@ -13,6 +13,7 @@
               data: {behavior: 'unfeature'} do %>
               <i class='glyphicon glyphicon-remove'></i>
             <% end %>
+            <p class="sr-only"><%= t 'helpers.action.remove' %></p>
           </h3>
         <% end %>
         <%= render 'hyrax/homepage/featured_fields', featured: presenter %>

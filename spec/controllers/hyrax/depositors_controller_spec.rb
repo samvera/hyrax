@@ -29,7 +29,7 @@ RSpec.describe Hyrax::DepositorsController do
 
         it 'is successful' do
           expect { request_to_grant_proxy }.to change { ProxyDepositRights.count }.by(1)
-          expect(response).to be_success
+          expect(response).to be_successful
         end
 
         it 'sends a message to the grantor' do
@@ -53,7 +53,7 @@ RSpec.describe Hyrax::DepositorsController do
 
         it 'does not add the user, and returns an unsuccessful response, with an error message' do
           expect { redundant_request_to_grant_proxy }.to change { ProxyDepositRights.count }.by(0)
-          expect(response).not_to be_success
+          expect(response).not_to be_successful
           expect(response.body).to have_content "You cannot make yourself a proxy"
         end
 
