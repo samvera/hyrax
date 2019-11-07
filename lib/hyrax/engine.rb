@@ -6,6 +6,7 @@ module Hyrax
     require 'breadcrumbs_on_rails'
     require 'dry/struct'
     require 'dry/equalizer'
+    require 'dry/events'
     require 'dry/validation'
     require 'jquery-ui-rails'
     require 'flot-rails'
@@ -19,6 +20,7 @@ module Hyrax
 
     require 'hydra/derivatives'
     require 'hyrax/controller_resource'
+    require 'hyrax/publisher'
     require 'hyrax/schema'
     require 'hyrax/search_state'
     require 'hyrax/errors'

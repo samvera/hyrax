@@ -63,6 +63,12 @@ module Hyrax
   end
 
   ##
+  # @return [Dry::Events::Publisher]
+  def self.publisher
+    config.publisher
+  end
+
+  ##
   # The Valkyrie persister used for PCDM models throughout Hyrax
   #
   # @note always use this method to retrieve the persister when data
