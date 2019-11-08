@@ -112,7 +112,7 @@ module Hyrax
       title = curation_concern.to_s
       env = Actors::Environment.new(curation_concern, current_ability, {})
       return unless actor.destroy(env)
-      Hyrax.config.callback.run(:after_destroy, curation_concern.id, current_user)
+      Hyrax.config.callback.run(:after_destroy, curation_concern.id, current_user, warn: false)
       after_destroy_response(title)
     end
 

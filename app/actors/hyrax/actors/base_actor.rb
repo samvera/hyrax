@@ -46,7 +46,7 @@ module Hyrax
       private
 
         def run_callbacks(hook, env)
-          Hyrax.config.callback.run(hook, env.curation_concern, env.user)
+          Hyrax.config.callback.run(hook, env.curation_concern, env.user, warn: false)
           true
         end
 

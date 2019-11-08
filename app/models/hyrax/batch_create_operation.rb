@@ -5,12 +5,12 @@ module Hyrax
 
     def batch_success_message
       return unless Hyrax.config.callback.set?(:after_batch_create_success)
-      Hyrax.config.callback.run(:after_batch_create_success, user)
+      Hyrax.config.callback.run(:after_batch_create_success, user, warn: false)
     end
 
     def batch_failure_message
       return unless Hyrax.config.callback.set?(:after_batch_create_failure)
-      Hyrax.config.callback.run(:after_batch_create_failure, user, rollup_messages)
+      Hyrax.config.callback.run(:after_batch_create_failure, user, rollup_messages, warn: false)
     end
   end
 end

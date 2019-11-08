@@ -19,7 +19,7 @@ module Hyrax
           work.ordered_members = ordered_members
           work.save
           ordered_members.each do |file_set|
-            Hyrax.config.callback.run(:after_create_fileset, file_set, user)
+            Hyrax.config.callback.run(:after_create_fileset, file_set, user, warn: false)
           end
         end
       end
