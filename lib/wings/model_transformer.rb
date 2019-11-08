@@ -135,6 +135,8 @@ module Wings
         ordered_member_ids = pcdm_object.try(:ordered_member_ids)
         return ordered_member_ids if ordered_member_ids.present?
         pcdm_object.try(:member_ids)
+      rescue FrozenError
+        []
       end
 
       def append_embargo(attrs)
