@@ -5,7 +5,8 @@ Hyrax.publisher.subscribe(Hyrax::Listeners::ObjectLifecycleListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::FileSetLifecycleListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::FileSetLifecycleNotificationListener.new)
 
-# These events are triggered by actions within Hyrax Actors
+# Publish events from old style Hyrax::Callbacks to trigger the listeners
+# When callbacks are removed and replaced with direct event publication, drop these blocks
 Hyrax.config.callback.set(:after_create_concern, warn: false) do |curation_concern, user|
   Hyrax.publisher.publish('object.deposited', object: curation_concern, user: user)
 end
