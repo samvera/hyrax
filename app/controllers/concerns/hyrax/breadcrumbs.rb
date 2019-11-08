@@ -4,12 +4,18 @@ module Hyrax
     extend ActiveSupport::Concern
 
     def build_breadcrumbs
-      if request.referer
-        trail_from_referer
-      else
-        default_trail
-        add_breadcrumb_for_controller if user_signed_in?
-        add_breadcrumb_for_action
+      return if build_breadcrumbs_skip
+      trail_from_referer
+    end
+
+    def build_breadcrumbs_skip
+      return true if request.referer.blank?
+      referer_path = URI(request.referer).path
+      begin
+        Rails.application.routes.recognize_path(referer_path)
+        false
+      rescue ActionController::RoutingError
+        true
       end
     end
 

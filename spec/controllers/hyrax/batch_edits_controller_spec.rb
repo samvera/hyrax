@@ -18,9 +18,10 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       expect(controller).to receive(:can?).with(:edit, one.id).and_return(true)
       expect(controller).to receive(:can?).with(:edit, two.id).and_return(true)
       expect(controller).to receive(:can?).with(:edit, three.id).and_return(false)
+      request.env['HTTP_REFERER'] = Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en')
     end
 
-    it "is successful" do
+    it "is successful and sets breadcrumbs" do
       expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
       expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
@@ -67,7 +68,7 @@ RSpec.describe Hyrax::BatchEditsController, type: :controller do
       expect(controller).to receive(:can?).with(:edit, three.id).and_return(false)
     end
 
-    it "is successful" do
+    it "is successful and does not set breadcrumbs" do
       put :update, params: { update_type: "delete_all" }
       expect(response).to redirect_to(dashboard_path(locale: 'en'))
       expect { GenericWork.find(one.id) }.to raise_error(Ldp::Gone)

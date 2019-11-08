@@ -351,11 +351,8 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         end
       end
 
-      it "returns the collection and its members" do
-        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('My collection', collection_path(collection.id, locale: 'en'), "aria-current" => "page")
+      it "returns the collection and its members and does not set breadcrumbs" do
+        expect(controller).not_to receive(:add_breadcrumb)
         get :show, params: { id: collection }
         expect(response).to be_successful
         expect(assigns[:presenter]).to be_kind_of Hyrax::CollectionPresenter
@@ -368,6 +365,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
       context "and searching" do
         it "returns some works and collections" do
+          expect(controller).not_to receive(:add_breadcrumb)
           # "/dashboard/collections/4m90dv529?utf8=%E2%9C%93&cq=King+Louie&sort="
           get :show, params: { id: collection, cq: "Second" }
           expect(assigns[:presenter]).to be_kind_of Hyrax::CollectionPresenter
@@ -380,6 +378,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
       context 'when the page parameter is passed' do
         it 'loads the collection (paying no attention to the page param)' do
+          expect(controller).not_to receive(:add_breadcrumb)
           get :show, params: { id: collection, page: '2' }
           expect(response).to be_successful
           expect(assigns[:presenter]).to be_kind_of Hyrax::CollectionPresenter
@@ -388,19 +387,28 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       end
 
       context "without a referer" do
-        it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('My collection', collection_path(collection.id, locale: 'en'), "aria-current" => "page")
+        it "does not set breadcrumbs" do
+          expect(controller).not_to receive(:add_breadcrumb)
           get :show, params: { id: collection }
           expect(response).to be_successful
         end
       end
 
-      context "with a referer" do
+      context "with an external referer" do
         before do
           request.env['HTTP_REFERER'] = 'http://test.host/foo'
+        end
+
+        it "does not set breadcrumbs" do
+          expect(controller).not_to receive(:add_breadcrumb)
+          get :show, params: { id: collection }
+          expect(response).to be_successful
+        end
+      end
+
+      context "with a collection referer" do
+        before do
+          request.env['HTTP_REFERER'] = collection_path(collection.id, locale: 'en')
         end
 
         it "sets breadcrumbs" do
@@ -488,19 +496,28 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
     end
 
     context "without a referer" do
-      it "sets breadcrumbs" do
-        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t("hyrax.collection.edit_view"), collection_path(collection.id, locale: 'en'), "aria-current" => "page")
+      it "does not set breadcrumbs" do
+        expect(controller).not_to receive(:add_breadcrumb)
         get :edit, params: { id: collection }
         expect(response).to be_successful
       end
     end
 
-    context "with a referer" do
+    context "with an external referer" do
       before do
         request.env['HTTP_REFERER'] = 'http://test.host/foo'
+      end
+
+      it "does not set breadcrumbs" do
+        expect(controller).not_to receive(:add_breadcrumb)
+        get :edit, params: { id: collection }
+        expect(response).to be_successful
+      end
+    end
+
+    context "with a collection referer" do
+      before do
+        request.env['HTTP_REFERER'] = collection_path(collection.id, locale: 'en')
       end
 
       it "sets breadcrumbs" do

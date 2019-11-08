@@ -4,16 +4,47 @@ RSpec.describe Hyrax::CitationsController do
     let(:user) { create(:user) }
     let(:work) { create(:work, user: user) }
 
-    context "with an authenticated_user" do
+    context "with an authenticated_user and sets breadcrumbs" do
       before do
         sign_in user
-        request.env['HTTP_REFERER'] = 'http://test.host/foo'
+        request.env['HTTP_REFERER'] = Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en')
         create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
       end
 
       it "is successful" do
         expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+        get :work, params: { id: work }
+        expect(response).to be_successful
+        expect(response).to render_template('layouts/hyrax/1_column')
+        expect(assigns(:presenter)).to be_kind_of Hyrax::WorkShowPresenter
+      end
+    end
+
+    context "with an authenticated_user from without referer" do
+      before do
+        sign_in user
+        create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
+      end
+
+      it "is successful and does not set breadcrumbs" do
+        expect(controller).not_to receive(:add_breadcrumb)
+        get :work, params: { id: work }
+        expect(response).to be_successful
+        expect(response).to render_template('layouts/hyrax/1_column')
+        expect(assigns(:presenter)).to be_kind_of Hyrax::WorkShowPresenter
+      end
+    end
+
+    context "with an authenticated_user from an external referer" do
+      before do
+        sign_in user
+        request.env['HTTP_REFERER'] = 'http://test.host/foo'
+        create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
+      end
+
+      it "is successful and does not set breadcrumbs" do
+        expect(controller).not_to receive(:add_breadcrumb)
         get :work, params: { id: work }
         expect(response).to be_successful
         expect(response).to render_template('layouts/hyrax/1_column')
@@ -34,15 +65,44 @@ RSpec.describe Hyrax::CitationsController do
     let(:user) { create(:user) }
     let(:file_set) { create(:file_set, user: user) }
 
-    context "with an authenticated_user" do
+    context "with an authenticated_user and sets breadcrumbs" do
+      before do
+        sign_in user
+        request.env['HTTP_REFERER'] = Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en')
+      end
+
+      it "is successful and sets breadcrumbs" do
+        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+        get :file, params: { id: file_set }
+        expect(response).to be_successful
+        expect(response).to render_template('layouts/hyrax/1_column')
+        expect(assigns(:presenter)).to be_kind_of Hyrax::FileSetPresenter
+      end
+    end
+
+    context "with an authenticated_user without referer" do
+      before do
+        sign_in user
+      end
+
+      it "is successful and does not set breadcrumbs" do
+        expect(controller).not_to receive(:add_breadcrumb)
+        get :file, params: { id: file_set }
+        expect(response).to be_successful
+        expect(response).to render_template('layouts/hyrax/1_column')
+        expect(assigns(:presenter)).to be_kind_of Hyrax::FileSetPresenter
+      end
+    end
+
+    context "with an authenticated_user from an external referer" do
       before do
         sign_in user
         request.env['HTTP_REFERER'] = 'http://test.host/foo'
       end
 
-      it "is successful" do
-        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+      it "is successful and does not set breadcrumbs" do
+        expect(controller).not_to receive(:add_breadcrumb)
         get :file, params: { id: file_set }
         expect(response).to be_successful
         expect(response).to render_template('layouts/hyrax/1_column')

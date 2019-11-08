@@ -47,25 +47,66 @@ RSpec.describe Hyrax::FileSetsController do
         end
       end
 
-      before do
-        binary = StringIO.new("hey")
-        Hydra::Works::AddFileToFileSet.call(file_set, binary, :original_file, versioning: true)
-        request.env['HTTP_REFERER'] = 'http://test.host/foo'
+      context "without a referer" do
+        before do
+          binary = StringIO.new("hey")
+          Hydra::Works::AddFileToFileSet.call(file_set, binary, :original_file, versioning: true)
+        end
+
+        it "has no breadcrumbs and sets versions presenter" do
+          expect(controller).not_to receive(:add_breadcrumb)
+          get :edit, params: { id: file_set }
+
+          expect(response).to be_success
+          expect(assigns[:file_set]).to eq file_set
+          expect(assigns[:version_list]).to be_kind_of Hyrax::VersionListPresenter
+          expect(assigns[:parent]).to eq parent
+          expect(response).to render_template(:edit)
+          expect(response).to render_template('dashboard')
+        end
       end
 
-      it "sets the breadcrumbs and versions presenter" do
-        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.file_set.browse_view'), Rails.application.routes.url_helpers.hyrax_file_set_path(file_set, locale: 'en'))
-        get :edit, params: { id: file_set }
+      context "with an external referer" do
+        before do
+          request.env['HTTP_REFERER'] = 'http://test.host/foo'
+          binary = StringIO.new("hey")
+          Hydra::Works::AddFileToFileSet.call(file_set, binary, :original_file, versioning: true)
+        end
 
-        expect(response).to be_successful
-        expect(assigns[:file_set]).to eq file_set
-        expect(assigns[:version_list]).to be_kind_of Hyrax::VersionListPresenter
-        expect(assigns[:parent]).to eq parent
-        expect(response).to render_template(:edit)
-        expect(response).to render_template('dashboard')
+        it "has no breadcrumbs and sets versions presenter" do
+          expect(controller).not_to receive(:add_breadcrumb)
+          get :edit, params: { id: file_set }
+
+          expect(response).to be_success
+          expect(assigns[:file_set]).to eq file_set
+          expect(assigns[:version_list]).to be_kind_of Hyrax::VersionListPresenter
+          expect(assigns[:parent]).to eq parent
+          expect(response).to render_template(:edit)
+          expect(response).to render_template('dashboard')
+        end
+      end
+
+      context "with browse file_set referer" do
+        before do
+          request.env['HTTP_REFERER'] = Rails.application.routes.url_helpers.hyrax_file_set_path(file_set, locale: 'en')
+          binary = StringIO.new("hey")
+          Hydra::Works::AddFileToFileSet.call(file_set, binary, :original_file, versioning: true)
+        end
+
+        it "sets the breadcrumbs and versions presenter" do
+          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
+          expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.file_set.browse_view'), Rails.application.routes.url_helpers.hyrax_file_set_path(file_set, locale: 'en'))
+          get :edit, params: { id: file_set }
+
+          expect(response).to be_success
+          expect(assigns[:file_set]).to eq file_set
+          expect(assigns[:version_list]).to be_kind_of Hyrax::VersionListPresenter
+          expect(assigns[:parent]).to eq parent
+          expect(response).to render_template(:edit)
+          expect(response).to render_template('dashboard')
+        end
       end
     end
 
@@ -255,7 +296,8 @@ RSpec.describe Hyrax::FileSetsController do
 
       context "without a referer" do
         let(:work) do
-          create(:generic_work, :public,
+          create(:generic_work,
+                 :public,
                  title: ['test title'],
                  user: user)
         end
@@ -266,12 +308,8 @@ RSpec.describe Hyrax::FileSetsController do
           file_set.save!
         end
 
-        it "shows me the file and set breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('Works', Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('test file', main_app.hyrax_file_set_path(file_set, locale: 'en'))
+        it "does not show me breadcrumbs" do
+          expect(controller).not_to receive(:add_breadcrumb)
           get :show, params: { id: file_set }
           expect(response).to be_successful
           expect(flash).to be_empty
@@ -282,9 +320,10 @@ RSpec.describe Hyrax::FileSetsController do
         end
       end
 
-      context "with a referer" do
+      context "with an external referer" do
         let(:work) do
-          create(:generic_work, :public,
+          create(:generic_work,
+                 :public,
                  title: ['test title'],
                  user: user)
         end
@@ -296,15 +335,46 @@ RSpec.describe Hyrax::FileSetsController do
           file_set.save!
         end
 
-        it "shows me the breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('Works', Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('test file', main_app.hyrax_file_set_path(file_set, locale: 'en'))
+        it "does not show me breadcrumbs" do
+          expect(controller).not_to receive(:add_breadcrumb)
           get :show, params: { id: file_set }
           expect(response).to be_successful
         end
+      end
+    end
+
+    context "with parent generic work referer" do
+      let(:file_set) do
+        create(:file_set, title: ['test file'], user: user)
+      end
+
+      let(:work) do
+        create(:generic_work,
+               :public,
+               title: ['test title'],
+               user: user)
+      end
+
+      before do
+        request.env['HTTP_REFERER'] = main_app.hyrax_generic_work_path(work.id, locale: 'en')
+        work.ordered_members << file_set
+        work.save!
+        file_set.save!
+      end
+
+      it "shows me the file set with breadcrumbs" do
+        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('Works', Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
+        expect(controller).to receive(:add_breadcrumb).with('test file', main_app.hyrax_file_set_path(file_set, locale: 'en'))
+        get :show, params: { id: file_set }
+        expect(response).to be_successful
+        expect(flash).to be_empty
+        expect(assigns[:presenter]).to be_kind_of Hyrax::FileSetPresenter
+        expect(assigns[:presenter].id).to eq file_set.id
+        expect(assigns[:presenter].events).to be_kind_of Array
+        expect(assigns[:presenter].fixity_check_status).to eq 'Fixity checks have not yet been run on this object'
       end
     end
 
@@ -313,7 +383,8 @@ RSpec.describe Hyrax::FileSetsController do
       let(:public_file_set) { create(:file_set, user: creator, read_groups: ['public']) }
 
       let(:work) do
-        create(:generic_work, :public,
+        create(:generic_work,
+               :public,
                title: ['test title'],
                user: user)
       end
@@ -348,7 +419,8 @@ RSpec.describe Hyrax::FileSetsController do
     let(:public_file_set) { create(:file_set, read_groups: ['public']) }
 
     let(:work) do
-      create(:generic_work, :public,
+      create(:generic_work,
+             :public,
              title: ['test title'],
              user: user)
     end

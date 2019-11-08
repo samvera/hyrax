@@ -58,20 +58,30 @@ RSpec.describe Hyrax::GenericWorksController do
       before { sign_out user }
 
       context "without a referer" do
-        it "sets breadcrumbs with complete path" do
-          expect(controller).to receive(:add_breadcrumb).with('Home', main_app.root_path(locale: 'en'))
-          expect(controller).not_to receive(:add_breadcrumb).with('Dashboard', hyrax.dashboard_path(locale: 'en'))
-          expect(controller).not_to receive(:add_breadcrumb).with('Your Works', hyrax.my_works_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('public thing', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
+        it "does not set breadcrumbs" do
+          expect(controller).not_to receive(:add_breadcrumb)
           get :show, params: { id: work }
           expect(response).to be_successful
           expect(response).to render_template("layouts/hyrax/1_column")
         end
       end
 
-      context "with a referer" do
+      context "with an external referer" do
         before do
           request.env['HTTP_REFERER'] = 'http://test.host/foo'
+        end
+
+        it "does not set breadcrumbs" do
+          expect(controller).not_to receive(:add_breadcrumb)
+          get :show, params: { id: work }
+          expect(response).to be_successful
+          expect(response).to render_template("layouts/hyrax/1_column")
+        end
+      end
+
+      context "with a generic work referer" do
+        before do
+          request.env['HTTP_REFERER'] = main_app.hyrax_generic_work_path(work.id, locale: 'en')
         end
 
         it "sets breadcrumbs to authorized pages" do
@@ -96,19 +106,29 @@ RSpec.describe Hyrax::GenericWorksController do
       end
 
       context "without a referer" do
-        it "sets breadcrumbs" do
-          expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('Dashboard', hyrax.dashboard_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('Works', hyrax.my_works_path(locale: 'en'))
-          expect(controller).to receive(:add_breadcrumb).with('test title', main_app.hyrax_generic_work_path(work.id, locale: 'en'))
+        it "does not set breadcrumbs" do
+          expect(controller).not_to receive(:add_breadcrumb)
           get :show, params: { id: work }
           expect(response).to be_successful
         end
       end
 
-      context "with a referer" do
+      context "with an external referer" do
         before do
           request.env['HTTP_REFERER'] = 'http://test.host/foo'
+        end
+
+        it "does not set breadcrumbs" do
+          expect(controller).not_to receive(:add_breadcrumb)
+          get :show, params: { id: work }
+          expect(response).to be_successful
+          expect(response).to render_template("layouts/hyrax/1_column")
+        end
+      end
+
+      context "with a work referer" do
+        before do
+          request.env['HTTP_REFERER'] = main_app.hyrax_generic_work_path(work.id, locale: 'en')
         end
 
         it "sets breadcrumbs" do
@@ -397,8 +417,11 @@ RSpec.describe Hyrax::GenericWorksController do
   end
 
   describe '#edit' do
-    context 'my own private work' do
+    context 'my own private work from generic work' do
       let(:work) { create(:private_generic_work, user: user) }
+      before do
+        request.env['HTTP_REFERER'] = main_app.edit_hyrax_generic_work_path(work.id)
+      end
 
       it 'shows me the page and sets breadcrumbs' do
         expect(controller).to receive(:add_breadcrumb).with("Home", root_path(locale: 'en'))
@@ -409,6 +432,35 @@ RSpec.describe Hyrax::GenericWorksController do
 
         get :edit, params: { id: work }
         expect(response).to be_successful
+        expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkForm
+        expect(response).to render_template("layouts/hyrax/dashboard")
+      end
+    end
+
+    context 'my own private work without referer' do
+      let(:work) { create(:private_generic_work, user: user) }
+
+      it 'shows me the page without breadcrumbs' do
+        expect(controller).not_to receive(:add_breadcrumb)
+
+        get :edit, params: { id: work }
+        expect(response).to be_success
+        expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkForm
+        expect(response).to render_template("layouts/hyrax/dashboard")
+      end
+    end
+
+    context 'my own private work from external referer' do
+      let(:work) { create(:private_generic_work, user: user) }
+      before do
+        request.env['HTTP_REFERER'] = 'http://test.host/foo'
+      end
+
+      it 'shows me the page without breadcrumbs' do
+        expect(controller).not_to receive(:add_breadcrumb)
+
+        get :edit, params: { id: work }
+        expect(response).to be_success
         expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkForm
         expect(response).to render_template("layouts/hyrax/dashboard")
       end
