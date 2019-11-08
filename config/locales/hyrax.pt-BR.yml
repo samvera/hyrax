@@ -1516,7 +1516,7 @@ pt-BR:
         title: ''
       defaults:
         abstract: Um breve resumo de um artigo de pesquisa, tese, revisão, processo de conferência ou qualquer análise aprofundada de um determinado assunto.
-        access_right: Contém informações sobre quem pode acessar o recurso ou uma indicação de seu status de segurança.
+        access_rights: Contém informações sobre quem pode acessar o recurso ou uma indicação de seu status de segurança.
         based_near: Um nome de local relacionado à obra, como seu local de publicação, ou a cidade, estado ou país a que se refere o conteúdo da obra. Solicita o <a href='http://www.geonames.org'> serviço de Web GeoNames </a>.
         contributor: Uma pessoa ou grupo que você deseja reconhecer por desempenhar um papel na criação da obra, mas não o papel principal.
         creator: A pessoa ou grupo responsável pelo obra. Normalmente é o autor do conteúdo. Os nomes pessoais devem ser entrados com o sobrenome primeiro, p.ex. "Smith, John.".
@@ -1551,7 +1551,7 @@ pt-BR:
         title: Digite o nome
       defaults:
         abstract: Resumo
-        access_right: Direitos de acesso
+        access_rights: Direitos de acesso
         admin_set_id: Conjunto Administrativo
         based_near: Localização
         creator: Criador

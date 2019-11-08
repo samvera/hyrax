@@ -7,7 +7,7 @@ module Hyrax
     class Basic
       ATTRIBUTES = {
         abstract:               Valkyrie::Types::Array.of(Valkyrie::Types::String),
-        access_right:           Valkyrie::Types::Array.of(Valkyrie::Types::String),
+        access_rights:           Valkyrie::Types::Array.of(Valkyrie::Types::String),
         alternative_title:      Valkyrie::Types::Array.of(Valkyrie::Types::String),
         based_near:             Valkyrie::Types::Array.of(Valkyrie::Types::String),
         contributor:            Valkyrie::Types::Array.of(Valkyrie::Types::String),

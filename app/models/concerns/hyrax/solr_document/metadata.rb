@@ -65,7 +65,7 @@ module Hyrax
         attribute :date_created, Solr::Array, "date_created_tesim"
         attribute :rights_statement, Solr::Array, "rights_statement_tesim"
         attribute :rights_notes, Solr::Array, "rights_notes_tesim"
-        attribute :access_right, Solr::Array, "access_right_tesim"
+        attribute :access_rights, Solr::Array, "access_rights_tesim"
         attribute :mime_type, Solr::String, "mime_type_ssi"
         attribute :workflow_state, Solr::String, "workflow_state_name_ssim"
         attribute :human_readable_type, Solr::String, "human_readable_type_tesim"

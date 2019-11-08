@@ -1519,7 +1519,7 @@ zh:
         title: ''
       defaults:
         abstract: 研究文章，论文，评论，会议程序或对特定主题的任何深入分析的简要概述。
-        access_right: 包含有关谁可以访问资源或其安全状态指示的信息。
+        access_rights: 包含有关谁可以访问资源或其安全状态指示的信息。
         based_near: 与作品相关的地名，例如出版品的地点，或者是作品中涉及的城市，州、或国家。 参见<a href='http://www.geonames.org'>GeoNames web service</a>。
         contributor: 个人与团体，虽未担任主要职责，却对作品创建做出贡献。
         creator: 对作品负责的个人与团体。通常指作品内容的作者。 个人姓名应该先输入姓氏，例如 &quot;Smith, John.&quot;。
@@ -1554,7 +1554,7 @@ zh:
         title: 类型名称
       defaults:
         abstract: 抽象
-        access_right: 访问权限
+        access_rights: 访问权限
         admin_set_id: 在行政
         based_near: 地点
         creator: 创建者

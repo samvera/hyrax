@@ -112,7 +112,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
         rights_statement: 'http://rightsstatements.org/vocab/InC-EDU/1.0/',
         rights_notes: ['Notes on the rights'],
         license: ['http://creativecommons.org/licenses/by/3.0/us/'],
-        access_right: ['Only accessible via login.']
+        access_rights: ['Only accessible via login.']
       }
     end
 
@@ -131,7 +131,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
       expect(subject['license']).to eq ['http://creativecommons.org/licenses/by/3.0/us/']
       expect(subject['rights_statement']).to eq 'http://rightsstatements.org/vocab/InC-EDU/1.0/'
       expect(subject['rights_notes']).to eq ['Notes on the rights']
-      expect(subject['access_right']).to eq ['Only accessible via login.']
+      expect(subject['access_rights']).to eq ['Only accessible via login.']
     end
 
     it 'excludes non-permitted params' do

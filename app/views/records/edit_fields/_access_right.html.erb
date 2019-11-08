@@ -1,5 +1,0 @@
-<% if f.object.multiple? key %>
-  <%= f.input :access_right, as: :multi_value, input_html: { rows: '14', type: 'textarea'}, required: f.object.required?(key) %>
-<% else %>
-  <%= f.input :access_right, as: :text, input_html: { rows: '14' }, required: f.object.required?(key) %>
-<% end %>

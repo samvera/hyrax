@@ -1521,7 +1521,7 @@ it:
         title: ''
       defaults:
         abstract: Un breve riassunto di un articolo di ricerca, tesi, revisione, atti del convegno o qualsiasi analisi approfondita di un particolare argomento.
-        access_right: Contiene informazioni su chi può accedere alla risorsa o un'indicazione del suo stato di sicurezza.
+        access_rights: Contiene informazioni su chi può accedere alla risorsa o un'indicazione del suo stato di sicurezza.
         based_near: Un nome di posto relativo al lavoro, come il suo sito di pubblicazione, o la città, lo stato o il paese sono i contenuti del lavoro. Chiama il <a href='http://www.geonames.org'> servizio Web di GeoNames </a>.
         contributor: Una persona o un gruppo che si desidera riconoscere per svolgere un ruolo nella creazione del lavoro, ma non il ruolo primario.
         creator: La persona o il gruppo responsabile del lavoro. Di solito questo è l'autore del contenuto. Devono essere inseriti i nomi personali con l'ultimo nome, ad esempio & Quot; Smith, John. & Quot ;.
@@ -1556,7 +1556,7 @@ it:
         title: Digita il nome
       defaults:
         abstract: Astratto
-        access_right: Diritti di accesso
+        access_rights: Diritti di accesso
         admin_set_id: Set Amministrativo
         based_near: luogo
         creator: Creatore
