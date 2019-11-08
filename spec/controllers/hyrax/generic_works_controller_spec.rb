@@ -1,5 +1,7 @@
 # This tests the Hyrax::WorksControllerBehavior module
 # which is included into .internal_test_app/app/controllers/hyrax/generic_works_controller.rb
+require 'hyrax/specs/spy_listener'
+
 RSpec.describe Hyrax::GenericWorksController do
   routes { Rails.application.routes }
   let(:main_app) { Rails.application.routes.url_helpers }
@@ -546,6 +548,11 @@ RSpec.describe Hyrax::GenericWorksController do
     let(:work_to_be_deleted) { create(:private_generic_work, user: user) }
     let(:parent_collection) { build(:collection_lw) }
 
+    let(:listener) { Hyrax::Specs::SpyListener.new }
+
+    before { Hyrax.publisher.subscribe(listener) }
+    after  { Hyrax.publisher.unsubscribe(listener) }
+
     it 'deletes the work' do
       delete :destroy, params: { id: work_to_be_deleted }
       expect(response).to redirect_to Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en')
@@ -566,9 +573,9 @@ RSpec.describe Hyrax::GenericWorksController do
     end
 
     it "invokes the after_destroy callback" do
-      expect(Hyrax.config.callback).to receive(:run)
-        .with(:after_destroy, work_to_be_deleted.id, user)
-      delete :destroy, params: { id: work_to_be_deleted }
+      expect { delete :destroy, params: { id: work_to_be_deleted } }
+        .to change { listener.object_deleted&.payload }
+        .to eq id: work_to_be_deleted.id, user: user
     end
 
     context 'someone elses public work' do
