@@ -1,4 +1,5 @@
 require 'redlock'
+require 'hyrax/specs/spy_listener'
 
 RSpec.describe Hyrax::Actors::GenericWorkActor do
   include ActionDispatch::TestProcess
@@ -13,6 +14,11 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
     allow(Redlock::Client).to receive(:new).and_return(client)
     client
   end
+
+  let(:listener) { Hyrax::Specs::SpyListener.new }
+
+  before { Hyrax.publisher.subscribe(listener) }
+  after  { Hyrax.publisher.unsubscribe(listener) }
 
   subject { Hyrax::CurationConcern.actor }
 
@@ -52,10 +58,10 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       end
       let(:attributes) { { title: ['Foo Bar'], admin_set_id: admin_set.id } }
 
-      it "invokes the after_create_concern callback" do
-        expect(Hyrax.config.callback).to receive(:run)
-          .with(:after_create_concern, curation_concern, user)
-        middleware.create(env)
+      it 'publishes an object.deposited event' do
+        expect { middleware.create(env) }
+          .to change { listener.object_deposited&.payload }
+          .to eq object: curation_concern, user: user
       end
     end
 
@@ -123,14 +129,13 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
           before do
             allow(Hyrax::TimeService).to receive(:time_in_utc) { xmas }
             allow(Hyrax::Actors::FileActor).to receive(:new).and_return(file_actor)
-            allow(Hyrax.config.callback).to receive(:run).with(:after_create_concern, GenericWork, user)
           end
 
-          it 'stamps each file with the access rights and runs callbacks' do
-            expect(Hyrax.config.callback).to receive(:run).with(:after_create_fileset, FileSet, user)
-
+          it 'stamps each file with the access rights and runs publishes events' do
             expect(file_actor).to receive(:ingest_file).and_return(true)
             expect(middleware.create(env)).to be true
+            expect(listener.object_deposited.payload).to eq object: env.curation_concern, user: user
+            expect(listener.file_set_attached.payload).to match file_set: an_instance_of(FileSet), user: user
             curation_concern.reload
             expect(curation_concern).to be_persisted
             expect(curation_concern.date_uploaded).to eq xmas
@@ -209,9 +214,9 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
       let(:attributes) { { title: ['Other Title'] } }
 
       it "invokes the after_update_metadata callback" do
-        expect(Hyrax.config.callback).to receive(:run)
-          .with(:after_update_metadata, curation_concern, user)
-        subject.update(env)
+        expect { subject.update(env) }
+          .to change { listener.object_metadata_updated&.payload }
+          .to eq object: curation_concern, user: user
       end
     end
 

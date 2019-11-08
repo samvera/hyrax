@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe IngestLocalFileJob do
   let(:user) { create(:user) }
 
@@ -34,7 +36,7 @@ RSpec.describe IngestLocalFileJob do
     end
 
     it "invokes the file failure callback" do
-      expect(callback).to have_received(:run).with(:after_import_local_file_failure, file_set, user, path)
+      expect(callback).to have_received(:run).with(:after_import_local_file_failure, file_set, user, path, warn: false)
     end
   end
 end
