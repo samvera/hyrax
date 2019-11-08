@@ -40,7 +40,7 @@ RSpec.describe 'hyrax/collections/show.html.erb', type: :view do
   it 'draws the page' do
     expect(rendered).to have_content('Make Collections Great Again')
     expect(rendered).to have_content('Collection Details')
-    expect(rendered).to have_css('header.hyc-banner')
+    expect(rendered).to have_css('div.hyc-banner')
     expect(rendered).to have_css('div.hyc-description')
     expect(rendered).to have_css('div.hyc-metadata')
     expect(rendered).to have_css('div.hyc-logos')

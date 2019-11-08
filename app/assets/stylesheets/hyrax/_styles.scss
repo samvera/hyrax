@@ -62,3 +62,13 @@ label.disabled {
   align-items: center;
   display: flex;
 }
+
+.navbar-default {
+  .navbar-nav {
+    li {
+      a {
+        color: #666;
+      }
+    }
+  }
+}

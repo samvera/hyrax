@@ -4,9 +4,9 @@
     <div class="col-md-12">
 
       <% unless @presenter.banner_file.blank? %>
-          <header class="hyc-banner" style="background-image:url(<%= @presenter.banner_file %>)">
+          <div class="hyc-banner" style="background-image:url(<%= @presenter.banner_file %>)">
       <% else %>
-          <header class="hyc-generic">
+          <div class="hyc-generic">
       <% end %>
 
       <div class="hyc-title">
@@ -79,11 +79,11 @@
   <!-- Search results label -->
   <% if @members_count > 0 || @presenter.subcollection_count > 0 %>
     <div class="hyc-blacklight hyc-bl-title">
+    <% if has_collection_search_parameters? %>
       <h2>
-        <% if has_collection_search_parameters? %>
-            <%= t('hyrax.dashboard.collections.show.search_results') %>
-        <% end %>
+        <%= t('hyrax.dashboard.collections.show.search_results') %>
       </h2>
+    <% end %>
     </div>
   <% end %>
 
@@ -97,7 +97,7 @@
   <!-- Subcollections -->
   <% if @presenter.collection_type_is_nestable? && @subcollection_count > 0 %>
       <div class="hyc-blacklight hyc-bl-title">
-        <h4><%= t('.subcollection_count') %> (<%= @subcollection_count %>)</h4>
+        <h2><%= t('.subcollection_count') %> (<%= @subcollection_count %>)</h2>
       </div>
       <div class="hyc-blacklight hyc-bl-results">
         <%= render 'subcollection_list', collection: @subcollection_docs %>
@@ -107,7 +107,7 @@
   <!-- Works -->
   <% if @members_count > 0 %>
       <div class="hyc-blacklight hyc-bl-title">
-        <h4><%= t('.works_in_collection') %> (<%= @members_count %>)</h4>
+        <h2><%= t('.works_in_collection') %> (<%= @members_count %>)</h2>
       </div>
 
       <div class="hyc-blacklight hyc-bl-sort">
