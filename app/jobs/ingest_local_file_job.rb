@@ -10,13 +10,13 @@ class IngestLocalFileJob < Hyrax::ApplicationJob
     actor = Hyrax::Actors::FileSetActor.new(file_set, user)
 
     if actor.create_content(File.open(path))
-      Hyrax.config.callback.run(:after_import_local_file_success, file_set, user, path)
+      Hyrax.config.callback.run(:after_import_local_file_success, file_set, user, path, warn: false)
     else
-      Hyrax.config.callback.run(:after_import_local_file_failure, file_set, user, path)
+      Hyrax.config.callback.run(:after_import_local_file_failure, file_set, user, path, warn: false)
     end
   rescue SystemCallError
     # This is generic in order to handle Errno constants raised when accessing files
     # @see https://ruby-doc.org/core-2.5.3/Errno.html
-    Hyrax.config.callback.run(:after_import_local_file_failure, file_set, user, path)
+    Hyrax.config.callback.run(:after_import_local_file_failure, file_set, user, path, warn: false)
   end
 end

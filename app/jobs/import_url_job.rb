@@ -76,7 +76,7 @@ class ImportUrlJob < Hyrax::ApplicationJob
     def send_error(error_message)
       user = User.find_by_user_key(file_set.depositor)
       @file_set.errors.add('Error:', error_message)
-      Hyrax.config.callback.run(:after_import_url_failure, @file_set, user)
+      Hyrax.config.callback.run(:after_import_url_failure, @file_set, user, warn: false)
       @operation.fail!(@file_set.errors.full_messages.join(' '))
     end
 

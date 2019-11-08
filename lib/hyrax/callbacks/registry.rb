@@ -23,7 +23,8 @@ module Hyrax
       end
 
       # Defines a callback for a given hook.
-      def set(hook, &block)
+      def set(hook, warn: true, &block)
+        Deprecation.warn(self, warning_for_set) if warn
         raise NoBlockGiven, "a block is required when setting a callback" unless block_given?
         @callbacks[hook] = proc(&block)
       end
@@ -34,11 +35,26 @@ module Hyrax
       end
 
       # Runs the callback defined for a given hook, with the arguments provided
-      def run(hook, *args)
+      def run(hook, *args, warn: true, **opts)
+        Deprecation.warn(self, warning_for_run) if warn
         raise NotEnabled unless enabled?(hook)
         return nil unless set?(hook)
-        @callbacks[hook].call(*args)
+        @callbacks[hook].call(*args, **opts)
       end
+
+      private
+
+        def warning_for_set
+          "Hyrax.config.callback is deprecated; register your callback handler " \
+            "as a listener on Hyrax.publisher instead. See Hyrax::Publisher " \
+            "and Dry::Events"
+        end
+
+        def warning_for_run
+          "Hyrax.config.callback is deprecated; to trigger handlers publish " \
+            "events to Hyrax.publisher instead of running callbacks. See " \
+            "Hyrax::Publisher and Dry::Events"
+        end
     end
 
     # Custom exceptions

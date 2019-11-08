@@ -6,14 +6,14 @@ RSpec.describe "hyrax_events using Hyrax callbacks" do
   describe "after_create_concern" do
     it "queues a ContentDepositEventJob" do
       expect(ContentDepositEventJob).to receive(:perform_later).with(curation_concern, user)
-      Hyrax.config.callback.run(:after_create_concern, curation_concern, user)
+      Hyrax.config.callback.run(:after_create_concern, curation_concern, user, warn: false)
     end
   end
 
   describe "after_create_fileset" do
     it "queues a FileSetAttachedEventJob" do
       expect(FileSetAttachedEventJob).to receive(:perform_later).with(file_set, user)
-      Hyrax.config.callback.run(:after_create_fileset, file_set, user)
+      Hyrax.config.callback.run(:after_create_fileset, file_set, user, warn: false)
     end
   end
 
@@ -22,14 +22,14 @@ RSpec.describe "hyrax_events using Hyrax callbacks" do
 
     it "queues a ContentRestoredVersionEventJob" do
       expect(ContentRestoredVersionEventJob).to receive(:perform_later).with(file_set, user, revision)
-      Hyrax.config.callback.run(:after_revert_content, file_set, user, revision)
+      Hyrax.config.callback.run(:after_revert_content, file_set, user, revision, warn: false)
     end
   end
 
   describe "after_update_metadata" do
     it "queues a ContentUpdateEventJob" do
       expect(ContentUpdateEventJob).to receive(:perform_later).with(curation_concern, user)
-      Hyrax.config.callback.run(:after_update_metadata, curation_concern, user)
+      Hyrax.config.callback.run(:after_update_metadata, curation_concern, user, warn: false)
     end
   end
 
@@ -38,7 +38,7 @@ RSpec.describe "hyrax_events using Hyrax callbacks" do
 
     it "queues a ContentDeleteEventJob" do
       expect(ContentDeleteEventJob).to receive(:perform_later).with(id, user)
-      Hyrax.config.callback.run(:after_destroy, id, user)
+      Hyrax.config.callback.run(:after_destroy, id, user, warn: false)
     end
   end
 end

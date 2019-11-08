@@ -81,7 +81,7 @@ module Hyrax
           # Save the work so the association between the work and the file_set is persisted (head_id)
           # NOTE: the work may not be valid, in which case this save doesn't do anything.
           work.save
-          Hyrax.config.callback.run(:after_create_fileset, file_set, user)
+          Hyrax.config.callback.run(:after_create_fileset, file_set, user, warn: false)
         end
       end
       alias attach_file_to_work attach_to_work
@@ -92,7 +92,7 @@ module Hyrax
       # @return [Boolean] true on success, false otherwise
       def revert_content(revision_id, relation = :original_file)
         return false unless build_file_actor(relation).revert_to(revision_id)
-        Hyrax.config.callback.run(:after_revert_content, file_set, user, revision_id)
+        Hyrax.config.callback.run(:after_revert_content, file_set, user, revision_id, warn: false)
         true
       end
 
@@ -104,7 +104,7 @@ module Hyrax
       def destroy
         unlink_from_work
         file_set.destroy
-        Hyrax.config.callback.run(:after_destroy, file_set.id, user)
+        Hyrax.config.callback.run(:after_destroy, file_set.id, user, warn: false)
       end
 
       class_attribute :file_actor_class
