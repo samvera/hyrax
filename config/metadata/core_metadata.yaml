@@ -2,6 +2,9 @@ attributes:
   title:
     type: string
     multiple: true
+    index_keys:
+      - "title_sim"
+      - "title_tesim"
   date_modified:
     type: date_time
   date_uploaded:

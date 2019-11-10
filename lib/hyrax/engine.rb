@@ -20,6 +20,7 @@ module Hyrax
 
     require 'hydra/derivatives'
     require 'hyrax/controller_resource'
+    require 'hyrax/indexer'
     require 'hyrax/publisher'
     require 'hyrax/schema'
     require 'hyrax/search_state'

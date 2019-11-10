@@ -6,7 +6,7 @@ module Hyrax
   class ValkyrieWorkIndexer < Hyrax::ValkyrieIndexer
     Hyrax::ValkyrieIndexer.register self, as_indexer_for: Hyrax::Work
 
-    include Hyrax::CoreMetadataIndexer
     include Hyrax::ResourceIndexer
+    include Hyrax::Indexer(:core_metadata)
   end
 end
