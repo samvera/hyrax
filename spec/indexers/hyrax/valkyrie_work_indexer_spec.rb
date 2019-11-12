@@ -9,4 +9,14 @@ RSpec.describe Hyrax::ValkyrieWorkIndexer do
 
   it_behaves_like 'a Hyrax::Resource indexer'
   it_behaves_like 'a Core metadata indexer'
+
+  context 'when extending with basic metadata' do
+    let(:indexer_class) do
+      Class.new(described_class) do
+        include Hyrax::Indexer(:basic_metadata)
+      end
+    end
+
+    it_behaves_like 'a Basic metadata indexer'
+  end
 end
