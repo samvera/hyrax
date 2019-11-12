@@ -34,6 +34,8 @@ attributes:
   keyword:
     type: string
     multiple: true
+    index_keys:
+      - "keyword_sim"
   publisher:
     type: string
     multiple: true
@@ -65,3 +67,6 @@ attributes:
   subject:
     type: string
     multiple: true
+    index_keys:
+      - "subject_sim"
+      - "subject_tesim"

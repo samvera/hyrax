@@ -13,6 +13,33 @@ RSpec.shared_examples 'a Hyrax::Resource indexer' do
   end
 end
 
+RSpec.shared_examples 'a Basic metadata indexer' do
+  subject(:indexer) { indexer_class.new(resource: resource) }
+  let(:resource)    { resource_class.new(**attributes) }
+
+  let(:attributes) do
+    {
+      keyword: ['comic strip'],
+      subject: ['moomins', 'snorks']
+    }
+  end
+
+  let(:resource_class) do
+    Class.new(Hyrax::Work) do
+      include Hyrax::Schema(:basic_metadata)
+    end
+  end
+
+  describe '#to_solr' do
+    it 'indexes basic metadata' do
+      expect(indexer.to_solr)
+        .to include(keyword_sim: a_collection_containing_exactly(*attributes[:keyword]),
+                    subject_tesim: a_collection_containing_exactly(*attributes[:subject]),
+                    subject_sim:   a_collection_containing_exactly(*attributes[:subject]))
+    end
+  end
+end
+
 RSpec.shared_examples 'a Core metadata indexer' do
   subject(:indexer) { indexer_class.new(resource: resource) }
   let(:titles)      { ['Comet in Moominland', 'Finn Family Moomintroll'] }
