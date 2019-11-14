@@ -37,11 +37,7 @@ module Wings
     end
 
     def register(valkyrie, active_fedora)
-      active_fedora  = active_fedora.constantize if active_fedora.is_a?(String)
       @map[valkyrie] = active_fedora
-    rescue NameError => err
-      Hyrax.logger.info("Failed to constantize #{active_fedora}")
-      raise(err) if ENV['RAILS_ENV'] == 'production'
     end
 
     def lookup(valkyrie)
