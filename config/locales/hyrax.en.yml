@@ -498,9 +498,13 @@ en:
         unfeature: Unfeature
       social_media:
         facebook: Facebook
+        facebook_share: Share on Facebook
         google: Google+
+        google_share: Share on Google+
         tumblr: Tumblr
+        tumblr_share: Share on Tumblr
         twitter: Twitter
+        twitter_share: Share on Twitter
       unauthorized:
         id: 'ID: %{id}'
         is_private: The %{type} you have tried to access is private
