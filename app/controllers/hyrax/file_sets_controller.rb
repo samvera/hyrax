@@ -85,11 +85,16 @@ module Hyrax
           actor.revert_content(params[:revision])
         elsif params.key?(:file_set)
           if params[:file_set].key?(:files)
-            actor.update_content(params[:file_set][:files].first)
+            actor.update_content(uploaded_file_from_path)
           else
             update_metadata
           end
         end
+      end
+
+      def uploaded_file_from_path
+        uploaded_file = CarrierWave::SanitizedFile.new(params[:file_set][:files].first)
+        Hyrax::UploadedFile.create(user_id: current_user.id, file: uploaded_file)
       end
 
       def after_update_response
