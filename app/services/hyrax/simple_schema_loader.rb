@@ -117,7 +117,7 @@ module Hyrax
       end
 
       def config_path(schema_name)
-        "config/metadata/#{schema_name}.yaml"
+        Hyrax::Engine.root.to_s + "/config/metadata/#{schema_name}.yaml"
       end
   end
 end
