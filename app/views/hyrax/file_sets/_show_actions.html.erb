@@ -1,6 +1,8 @@
 <div class="form-actions">
   <% if Hyrax.config.analytics? %>
-    <%= link_to t('.analytics'), @presenter.stats_path, id: 'stats', class: 'btn btn-default' %>
+    <% # turbolinks needs to be turned off or the page will use the cache and the %>
+    <% # analytics graph will not show unless the page is refreshed. %>
+    <%= link_to t('.analytics'), @presenter.stats_path, id: 'stats', class: 'btn btn-default', data: { turbolinks: false } %>
   <% end %>
 
   <% if @presenter.editor? %>
