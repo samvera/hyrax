@@ -16,7 +16,9 @@
           class: presenter.display_unfeature_link? ? 'btn btn-default' : 'btn btn-default collapse' %>
     <% end %>
     <% if Hyrax.config.analytics? %>
-      <%= link_to t('.analytics'), presenter.stats_path, id: 'stats', class: 'btn btn-default' %>
+      <% # turbolinks needs to be turned off or the page will use the cache and the %>
+      <% # analytics graph will not show unless the page is refreshed. %>
+      <%= link_to t('.analytics'), presenter.stats_path, id: 'stats', class: 'btn btn-default', data: { turbolinks: false } %>
     <% end %>
   </div>
 
