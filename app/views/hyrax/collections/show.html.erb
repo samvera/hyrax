@@ -20,10 +20,10 @@
             <% @presenter.logo_record.each_with_index  do |lr, i| %>
 
                 <% if lr[:linkurl].blank? %>
-                    <img alt="<%= lr[:alttext] %>" src="<%= lr[:file_location] %>" />
+                    <img alt="<%= lr[:alttext] %>" src="<%= lr[:file_location] %>" onerror="this.style.display='none'"/>
                 <% else %>
                     <a href="<%= lr[:linkurl] %>">
-                      <img alt="<%= lr[:alttext] %>" src="<%= lr[:file_location] %>" />
+                      <img alt="<%= lr[:alttext] %>" src="<%= lr[:file_location] %>" onerror="this.style.display='none'"/>
                     </a>
                 <% end %>
 
