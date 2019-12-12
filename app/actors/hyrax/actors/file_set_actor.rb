@@ -131,12 +131,12 @@ module Hyrax
         # @note This is only useful for labeling the file_set, because of the recourse to import_url
         def label_for(file)
           if file.is_a?(Hyrax::UploadedFile) # filename not present for uncached remote file!
-            file.uploader.filename.present? ? file.uploader.filename : File.basename(Addressable::URI.parse(file.file_url).path)
+            file.uploader.filename.present? ? file.uploader.filename : File.basename(Addressable::URI.unencode(file.file_url))
           elsif file.respond_to?(:original_name) # e.g. Hydra::Derivatives::IoDecorator
             file.original_name
           elsif file_set.import_url.present?
             # This path is taken when file is a Tempfile (e.g. from ImportUrlJob)
-            File.basename(Addressable::URI.parse(file_set.import_url).path)
+            File.basename(Addressable::URI.unencode(file.file_url))
           else
             File.basename(file)
           end
