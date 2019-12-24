@@ -2,10 +2,33 @@
 
 module Hyrax
   ##
+  # @api public
+  #
   # ACLs for `Hyrax::Resource` models
   #
   # Allows managing `Hyrax::Permission` entries referring to a specific
   # `Hyrax::Resource` using a simple add/delete model.
+  #
+  # @example Using the Grant DSL
+  #   my_resource = Hyrax.query_service.find_by(id: 'my_id')
+  #
+  #   acl = Hyrax::AccessControlList.new(resource: resource)
+  #   acl.permissions # => #<Set: {}>
+  #
+  #   user  = User.first
+  #   group = Group.new('public')
+  #
+  #   acl.grant(:read).to(group)
+  #   acl.grant(:edit).to(user)
+  #
+  #   acl.permissions
+  #   # => #<Set: {#<Hyrax::Permission access_to=#<Valkyrie::ID:0x000055628b0ae0b8 @id="my_id"> agent="group/public" mode=:read>,
+  #     #<Hyrax::Permission access_to=#<Valkyrie::ID:0x000055628be41388 @id="my_id"> agent="user1@example.com" mode=:edit>}>
+  #
+  #   acl.revoke(:edit).from(user)
+  #
+  #   acl.permissions
+  #   # => #<Set: {#<Hyrax::Permission access_to=#<Valkyrie::ID:0x000055628b0ae0b8 @id="my_id"> agent="group/public" mode=:read>}>
   class AccessControlList
     ##
     # @!attribute [rw] resource
@@ -18,9 +41,12 @@ module Hyrax
     attr_accessor :resource
 
     ##
+    # @api public
+    #
     # @param resource [Valkyrie::Resource]
-    # @param persister [#save]
-    # @param query_service [#find_inverse_references_by]
+    # @param persister [#save] defaults to the configured Hyrax persister
+    # @param query_service [#find_inverse_references_by] defaults to the
+    #   configured Hyrax query service
     def initialize(resource:, persister: Hyrax.persister, query_service: Hyrax.query_service)
       self.resource  = resource
       @persister     = persister
@@ -28,6 +54,8 @@ module Hyrax
     end
 
     ##
+    # @api public
+    #
     # @param permission [Hyrax::Permission]
     #
     # @return [Boolean]
@@ -41,6 +69,8 @@ module Hyrax
     alias add <<
 
     ##
+    # @api public
+    #
     # @param permission [Hyrax::Permission]
     #
     # @return [Boolean]
@@ -51,6 +81,8 @@ module Hyrax
     end
 
     ##
+    # @api public
+    #
     # @example
     #    user = User.find('user_id')
     #
@@ -60,24 +92,32 @@ module Hyrax
     end
 
     ##
+    # @api public
+    #
     # @return [Boolean]
     def pending_changes?
       change_set.changed?
     end
 
     ##
+    # @api public
+    #
     # @return [Set<Hyrax::Permission>]
     def permissions
       Set.new(change_set.permissions)
     end
 
     ##
+    # @api public
+    #
     # @return [Array<Hyrax::Permission>]
     def permissions=(new_permissions)
       change_set.permissions = new_permissions.to_a
     end
 
     ##
+    # @api public
+    #
     # @example
     #    user = User.find('user_id')
     #
@@ -87,6 +127,8 @@ module Hyrax
     end
 
     ##
+    # @api public
+    #
     # Saves the ACL for the resource, by saving each permission policy
     #
     # @return [Boolean]
@@ -105,6 +147,7 @@ module Hyrax
 
       ##
       # @abstract
+      # @api private
       class ModeEditor
         def initialize(acl, mode)
           @acl  = acl
@@ -123,8 +166,14 @@ module Hyrax
           end
       end
 
+      ##
+      # @api private
+      #
+      # A short-term memory object for the permission granting DSL. Use with
+      # method chaining, as in: `acl.grant(:edit).to(user)`.
       class ModeGrant < ModeEditor
         ##
+        # @api public
         # @return [Hyrax::AccessControlList]
         def to(user_or_group)
           agent_id = id_for(agent: user_or_group)
@@ -134,7 +183,15 @@ module Hyrax
         end
       end
 
+      ##
+      # @api private
+      #
+      # A short-term memory object for the permission revoking DSL. Use with
+      # method chaining, as in: `acl.revoke(:edit).from(user)`.
       class ModeRevoke < ModeEditor
+        ##
+        # @api public
+        # @return [Hyrax::AccessControlList]
         def from(user_or_group)
           permission_for_deletion = @acl.permissions.find do |p|
             p.mode == @mode &&
@@ -146,10 +203,14 @@ module Hyrax
         end
       end
 
+      ##
+      # @api private
       def access_control_model
         AccessControl.for(resource: resource, query_service: query_service)
       end
 
+      ##
+      # @api private
       def change_set
         @change_set ||= Hyrax::ChangeSet.for(access_control_model)
       end
