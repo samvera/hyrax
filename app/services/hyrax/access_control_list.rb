@@ -95,6 +95,7 @@ module Hyrax
 
       change_set.sync
       persister.save(resource: change_set.resource)
+      Hyrax.publisher.publish('object.acl.updated', acl: self, result: :success)
       @change_set = nil
 
       true

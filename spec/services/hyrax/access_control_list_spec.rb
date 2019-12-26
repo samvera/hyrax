@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'hyrax/specs/spy_listener'
+
 RSpec.describe Hyrax::AccessControlList do
   subject(:acl) do
     described_class.new(resource:      resource,
@@ -92,10 +94,21 @@ RSpec.describe Hyrax::AccessControlList do
   end
 
   describe '#save' do
+    let(:listener) { Hyrax::Specs::SpyListener.new }
+
+    before { Hyrax.publisher.subscribe(listener) }
+    after  { Hyrax.publisher.unsubscribe(listener) }
+
     it 'leaves permissions unchanged by default' do
       expect { acl.save }
         .not_to change { acl.permissions }
         .from be_empty
+    end
+
+    it 'does not publish when permissions are unchanged' do
+      expect { acl.save }
+        .not_to change { listener.object_acl_updated }
+        .from nil
     end
 
     context 'with additions' do
@@ -108,6 +121,12 @@ RSpec.describe Hyrax::AccessControlList do
         expect { acl.save }
           .to change { Hyrax::AccessControl.for(resource: resource, query_service: acl.query_service).permissions }
           .to contain_exactly(*permissions)
+      end
+
+      it 'publishes a successful event' do
+        expect { acl.save }
+          .to change { listener.object_acl_updated&.payload }
+          .to include(result: :success)
       end
     end
 
