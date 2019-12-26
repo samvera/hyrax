@@ -441,9 +441,9 @@ module Hyrax
     attr_writer :iiif_metadata_fields
 
     ##
-    # @return [#save, #save_all, #delete, #wipe] an indexing adapter
+    # @return [#save, #save_all, #delete, #wipe!] an indexing adapter
     def index_adapter
-      @index_adapter ||= Valkyrie::IndexingAdapter.find(:solr_index)
+      @index_adapter ||= Valkyrie::IndexingAdapter.find(:null_index)
     end
 
     ##
