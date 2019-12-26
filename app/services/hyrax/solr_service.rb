@@ -9,7 +9,12 @@ module Hyrax
   class SolrService
     COMMIT_PARAMS = { softCommit: true }.freeze
 
+    ##
+    # @!attribute [r] use_valkyrie
+    #   @private
     attr_reader :use_valkyrie
+
+    delegate :commit, to: :connection
 
     def initialize(use_valkyrie: Hyrax.config.query_index_from_valkyrie)
       @old_service = ActiveFedora::SolrService
@@ -42,12 +47,8 @@ module Hyrax
       solr_path = args.delete(:path) || Hyrax.config.solr_select_path
       args = args.merge(q: query) unless query.blank?
 
-      if use_valkyrie
-        valkyrie_index.connection.get(solr_path, params: args)
-      else
-        args = args.merge(qt: 'standard') unless query.blank?
-        self.class.instance.conn.get(solr_path, params: args)
-      end
+      args = args.merge(qt: 'standard') unless query.blank? || use_valkyrie
+      connection.get(solr_path, params: args)
     end
 
     # Wraps rsolr post
@@ -57,12 +58,8 @@ module Hyrax
       solr_path = args.delete(:path) || Hyrax.config.solr_select_path
       args = args.merge(q: query) unless query.blank?
 
-      if use_valkyrie
-        valkyrie_index.connection.post(solr_path, data: args)
-      else
-        args = args.merge(qt: 'standard') unless query.blank?
-        self.class.instance.conn.post(solr_path, data: args)
-      end
+      args = args.merge(qt: 'standard') unless query.blank? || use_valkyrie
+      connection.post(solr_path, data: args)
     end
 
     # Wraps get by default
@@ -84,43 +81,20 @@ module Hyrax
       end
     end
 
-    # Wraps rsolr :commit
-    def commit
-      if use_valkyrie
-        valkyrie_index.connection.commit
-      else
-        self.class.instance.conn.commit
-      end
-    end
-
     # Wraps rsolr :delete_by_query
     def delete_by_query(query, **args)
-      if use_valkyrie
-        valkyrie_index.connection.delete_by_query(query, params: args)
-      else
-        self.class.instance.conn.delete_by_query(query, params: args)
-      end
+      connection.delete_by_query(query, params: args)
     end
 
     # Wraps rsolr delete
     def delete(id)
-      if use_valkyrie
-        valkyrie_index.connection.delete_by_id(id, params: COMMIT_PARAMS)
-      else
-        self.class.instance.conn.delete_by_id(id, params: COMMIT_PARAMS)
-      end
+      connection.delete_by_id(id, params: COMMIT_PARAMS)
     end
 
     # Wraps rsolr add
     # @return [Hash] the hash straight form rsolr
     def add(solr_doc, commit: true)
-      params = { softCommit: commit }
-
-      if use_valkyrie
-        valkyrie_index.connection.add(solr_doc, params: params)
-      else
-        self.class.instance.conn.add(solr_doc, params: params)
-      end
+      connection.add(solr_doc, params: { softCommit: commit })
     end
 
     # Wraps rsolr count
@@ -141,8 +115,17 @@ module Hyrax
 
     private
 
+      ##
+      # @api private
       def valkyrie_index
         Hyrax.index_adapter
+      end
+
+      ##
+      # @api private
+      def connection
+        return self.class.instance.conn unless use_valkyrie
+        valkyrie_index.connection
       end
 
       def rows_warning
