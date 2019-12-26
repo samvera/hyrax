@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+Hyrax.publisher.subscribe(Hyrax::Listeners::AclIndexListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::BatchNotificationListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::ObjectLifecycleListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::FileSetLifecycleListener.new)
