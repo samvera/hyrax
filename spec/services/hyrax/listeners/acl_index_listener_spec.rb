@@ -5,22 +5,9 @@ RSpec.describe Hyrax::Listeners::AclIndexListener do
   let(:acl)          { Hyrax::AccessControlList.new(resource: resource) }
   let(:data)         { { result: result, resource: resource, acl: acl } }
   let(:event)        { Dry::Events::Event.new(event_type, data) }
+  let(:fake_adapter) { FakeIndexingAdapter.new }
   let(:result)       { :success }
   let(:resource)     { FactoryBot.valkyrie_create(:hyrax_resource) }
-
-  let(:fake_adapter) do
-    Class.new do
-      attr_reader :saved_resources
-
-      def initialize
-        @saved_resources = []
-      end
-
-      def save(resource:)
-        @saved_resources << resource
-      end
-    end.new
-  end
 
   # the listener always uses the currently configured Hyrax Index Adapter
   before do
