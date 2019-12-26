@@ -116,9 +116,15 @@ module Hyrax
     private
 
       ##
-      # @api private
+      # @private
+      # Return the valkyrie solr index.
+      #
+      # Since this module depends closely on RSolr internals and makes use
+      # of `#connection`, it will always need to connect to a Solr index. Other
+      # valkyrie indexers used here would, at minimum, need to provide a
+      # functioning `rsolr` connection.
       def valkyrie_index
-        Hyrax.index_adapter
+        Valkyrie::IndexingAdapter.find(:solr_index)
       end
 
       ##
