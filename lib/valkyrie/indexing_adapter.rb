@@ -22,7 +22,7 @@ module Valkyrie
       def find(short_name)
         symbolized_key = short_name.to_sym
         return adapters[symbolized_key] if adapters.key?(symbolized_key)
-        raise "Unable to find unregistered adapter `#{short_name}'"
+        raise KeyError, "Unable to find unregistered adapter `#{short_name}'"
       end
     end
   end
