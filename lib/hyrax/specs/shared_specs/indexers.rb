@@ -13,6 +13,25 @@ RSpec.shared_examples 'a Hyrax::Resource indexer' do
   end
 end
 
+RSpec.shared_examples 'a visibility indexer' do
+  subject(:indexer) { indexer_class.new(resource: resource) }
+  let(:resource)    { FactoryBot.build(:hyrax_work) }
+
+  describe '#to_solr' do
+    it 'indexes visibility' do
+      expect(indexer.to_solr).to include(visibility_ssi: 'restricted')
+    end
+
+    context 'when resource is public' do
+      let(:resource) { FactoryBot.valkyrie_create(:hyrax_work, :public) }
+
+      it 'indexes as open' do
+        expect(indexer.to_solr).to include(visibility_ssi: 'open')
+      end
+    end
+  end
+end
+
 RSpec.shared_examples 'a Basic metadata indexer' do
   subject(:indexer) { indexer_class.new(resource: resource) }
   let(:resource)    { resource_class.new(**attributes) }
