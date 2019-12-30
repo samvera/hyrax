@@ -13,6 +13,35 @@ RSpec.shared_examples 'a Hyrax::Resource indexer' do
   end
 end
 
+RSpec.shared_examples 'a permission indexer' do
+  subject(:indexer) { indexer_class.new(resource: resource) }
+  let(:edit_groups) { [:managers] }
+  let(:edit_users)  { [FactoryBot.create(:user)] }
+  let(:read_users)  { [FactoryBot.create(:user)] }
+
+  let(:resource) do
+    FactoryBot.valkyrie_create(:hyrax_work, :public,
+                               read_users: read_users,
+                               edit_groups: edit_groups,
+                               edit_users: edit_users)
+  end
+
+
+  describe '#to_solr' do
+    it 'indexes read permissions' do
+      expect(indexer.to_solr)
+        .to include(Hydra.config.permissions.read.group => ['public'],
+                    Hydra.config.permissions.read.individual => read_users.map(&:user_key))
+    end
+
+    it 'indexes edit permissions' do
+      expect(indexer.to_solr)
+        .to include(Hydra.config.permissions.edit.group => edit_groups.map(&:to_s),
+                    Hydra.config.permissions.edit.individual => edit_users.map(&:user_key))
+    end
+  end
+end
+
 RSpec.shared_examples 'a visibility indexer' do
   subject(:indexer) { indexer_class.new(resource: resource) }
   let(:resource)    { FactoryBot.build(:hyrax_work) }

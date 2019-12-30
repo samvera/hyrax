@@ -13,6 +13,9 @@ FactoryBot.define do
     end
 
     transient do
+      edit_users         { [] }
+      edit_groups        { [] }
+      read_users         { [] }
       members            { nil }
       visibility_setting { nil }
     end
@@ -24,15 +27,25 @@ FactoryBot.define do
           .assign_access_for(visibility: evaluator.visibility_setting)
       end
 
+      work.permission_manager.edit_groups = evaluator.edit_groups
+      work.permission_manager.edit_users  = evaluator.edit_users
+      work.permission_manager.read_users  = evaluator.read_users
+
       work.member_ids = evaluator.members.map(&:id) if evaluator.members
     end
 
     after(:create) do |work, evaluator|
       if evaluator.visibility_setting
-        writer = Hyrax::VisibilityWriter.new(resource: work)
-        writer.assign_access_for(visibility: evaluator.visibility_setting)
-        writer.permission_manager.acl.save
+        Hyrax::VisibilityWriter
+          .new(resource: work)
+          .assign_access_for(visibility: evaluator.visibility_setting)
       end
+
+      work.permission_manager.edit_groups = evaluator.edit_groups
+      work.permission_manager.edit_users  = evaluator.edit_users
+      work.permission_manager.read_users  = evaluator.read_users
+
+      work.permission_manager.acl.save
     end
 
     trait :public do
