@@ -17,6 +17,12 @@ module Hyrax
       include WorkBehavior
       include CoreMetadata
     end
+
+    class SimpleWorkSearchBuilder < Hyrax::WorkSearchBuilder
+      def work_types
+        [Hyrax::Test::SimpleWorkLegacy]
+      end
+    end
   end
 end
 
