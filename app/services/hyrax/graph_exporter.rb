@@ -71,7 +71,7 @@ module Hyrax
         route_key = if Hyrax.config.curation_concerns.include?(klass)
                       klass.model_name.singular_route_key
                     else
-                      SolrDocument.model_name.singular_route_key
+                      ::SolrDocument.model_name.singular_route_key
                     end
         routes = Rails.application.routes.url_helpers
         builder = ActionDispatch::Routing::PolymorphicRoutes::HelperMethodBuilder

@@ -231,19 +231,5 @@ module Hyrax
                .where('sipity_workflow_roles.role_id' => approving_role.id).any?
         end
       end
-
-      ##
-      # @api private
-      #
-      # Overwrite extract subjects to map permissions
-      #
-      # @note this shims in support for using existing abilities when passing
-      #   Valkyrie::Resources. We'll need to support valkyrie resources natively
-      #   as well.
-      def extract_subjects(subject)
-        subject = subject.alternate_ids&.first&.id if subject.is_a?(Hyrax::Resource)
-
-        super
-      end
   end
 end
