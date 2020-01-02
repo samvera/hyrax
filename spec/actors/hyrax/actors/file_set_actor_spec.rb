@@ -12,6 +12,22 @@ RSpec.describe Hyrax::Actors::FileSetActor do
   let(:relation)      { :original_file }
   let(:file_actor)    { Hyrax::Actors::FileActor.new(file_set, relation, user) }
 
+  describe 'non ascii characters in filenames' do
+    let(:file_path)     { File.join(fixture_path, '世界.png') }
+    let(:file)          { fixture_file_upload(file_path, 'image/png') }
+    let(:local_file)    { File.open(file_path) }
+    let(:file_set)      { build(:file_set) }
+
+    before do
+      actor.create_content(file)
+      actor.file_set.reload
+    end
+
+    it 'retains the filename with the japanese characters' do
+      expect(file_set.label).to start_with('世界')
+    end
+  end
+
   describe 'private' do
     let(:file_set) { build(:file_set) } # avoid 130+ LDP requests
 
