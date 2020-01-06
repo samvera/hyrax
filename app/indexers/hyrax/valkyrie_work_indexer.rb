@@ -7,6 +7,8 @@ module Hyrax
     Hyrax::ValkyrieIndexer.register self, as_indexer_for: Hyrax::Work
 
     include Hyrax::ResourceIndexer
+    include Hyrax::PermissionIndexer
+    include Hyrax::VisibilityIndexer
     include Hyrax::Indexer(:core_metadata)
   end
 end

@@ -9,6 +9,8 @@ RSpec.describe Hyrax::ValkyrieWorkIndexer do
 
   it_behaves_like 'a Hyrax::Resource indexer'
   it_behaves_like 'a Core metadata indexer'
+  it_behaves_like 'a permission indexer'
+  it_behaves_like 'a visibility indexer'
 
   context 'when extending with basic metadata' do
     let(:indexer_class) do
