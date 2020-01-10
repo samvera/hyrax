@@ -4,7 +4,7 @@ module Hyrax
   module ModelProxy
     delegate :to_param, :to_key, :id, to: :solr_document
 
-    delegate :model_name, :valid_child_concerns, to: :_delegated_to
+    delegate :model_name, to: :_delegated_to
 
     def to_partial_path
       _delegated_to._to_partial_path
@@ -16,6 +16,10 @@ module Hyrax
 
     def to_model
       self
+    end
+
+    def valid_child_concerns
+      Hyrax::ChildTypes.for(parent: solr_document.hydra_model)
     end
 
     private
