@@ -18,7 +18,11 @@ module Hyrax
       self
     end
 
+    ##
+    # @deprecated this isn't related to the ModelProxy issue, and has been moved
+    #   to `WorkShowPresenter`.
     def valid_child_concerns
+      Deprecation.warn "#{self.class}#valid_child_concerns will be removed in Hyrax 4.0."
       Hyrax::ChildTypes.for(parent: solr_document.hydra_model)
     end
 
