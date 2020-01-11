@@ -72,9 +72,8 @@ module Hyrax
       respond_to do |wants|
         wants.html { presenter && parent_presenter }
         wants.json do
-          # load and authorize @curation_concern manually because it's skipped for html
+          # load @curation_concern manually because it's skipped for html
           @curation_concern = _curation_concern_type.find(params[:id]) unless curation_concern
-          authorize! :show, @curation_concern
           render :show, status: :ok
         end
         additional_response_formats(wants)
