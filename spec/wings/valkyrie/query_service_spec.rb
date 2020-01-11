@@ -124,6 +124,16 @@ RSpec.describe Wings::Valkyrie::QueryService do
 
       expect(query_service.find_all_of_model(model: image_resource_class).to_a).to eq []
     end
+
+    context 'with a native resource class' do
+      it 'returns all of the model' do
+        persister.save(resource: resource_class.new)
+        saved = persister.save(resource: Hyrax::Test::SimpleWork.new)
+
+        expect(query_service.find_all_of_model(model: Hyrax::Test::SimpleWork).map(&:id))
+          .to contain_exactly saved.id
+      end
+    end
   end
 
   describe ".find_by_alternate_identifier" do

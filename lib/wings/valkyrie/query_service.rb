@@ -39,7 +39,7 @@ module Wings
       end
 
       # Find all work/collection records of a given model, and map to Valkyrie Resources
-      # @param [Valkyrie::ResourceClass]
+      # @param model [Class]
       # @return [Array<Valkyrie::Resource>]
       def find_all_of_model(model:)
         model_class_for(model).all.map do |obj|
@@ -84,8 +84,8 @@ module Wings
       end
 
       # Find all members of a given resource, and map to Valkyrie Resources
-      # @param [Valkyrie::Resource]
-      # @param [Valkyrie::ResourceClass]
+      # @param resource [Valkyrie::Resource]
+      # @param model [Class]
       # @return [Array<Valkyrie::Resource>]
       def find_members(resource:, model: nil)
         return [] unless resource.respond_to?(:member_ids) && resource.member_ids.present?
@@ -96,8 +96,8 @@ module Wings
       end
 
       # Find the Valkyrie Resources referenced by another Valkyrie Resource
-      # @param [<Valkyrie::Resource>]
-      # @param [Symbol] the property holding the references to another resource
+      # @param resource [<Valkyrie::Resource>]
+      # @param property [Symbol] the property holding the references to another resource
       # @return [Array<Valkyrie::Resource>]
       def find_references_by(resource:, property:)
         object = resource_factory.from_resource(resource: resource)
@@ -167,7 +167,7 @@ module Wings
         end
 
         def model_class_for(model)
-          model.internal_resource.constantize
+          ModelRegistry.lookup(model) || model.internal_resource.constantize
         end
     end
   end
