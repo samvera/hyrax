@@ -79,13 +79,13 @@ module Hyrax
         end
         additional_response_formats(wants)
         wants.ttl do
-          render body: presenter.export_as_ttl, content_type: 'text/turtle'
+          render body: presenter.export_as_ttl, mime_type: Mime[:ttl]
         end
         wants.jsonld do
-          render body: presenter.export_as_jsonld, content_type: 'application/ld+json'
+          render body: presenter.export_as_jsonld, mime_type: Mime[:jsonld]
         end
         wants.nt do
-          render body: presenter.export_as_nt, content_type: 'application/n-triples'
+          render body: presenter.export_as_nt, mime_type: Mime[:nt]
         end
       end
     end
