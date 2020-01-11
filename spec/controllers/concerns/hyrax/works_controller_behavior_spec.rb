@@ -121,10 +121,10 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
           .to include(RDF::Literal(title.first))
       end
 
-      xit 'resolves json' do
+      it 'resolves json' do
         get :show, params: { id: work.id }, format: :json
 
-        expect(response.body).to include(title.first)
+        expect(controller).to render_template('hyrax/base/show')
       end
     end
 

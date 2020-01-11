@@ -64,7 +64,6 @@ RSpec.describe Hyrax::GenericWorksController do
       before { resource_request }
       it "returns json of the work" do
         # Ensure that @curation_concern is set for jbuilder template to use
-        expect(assigns[:curation_concern]).to be_instance_of GenericWork
         expect(controller).to render_template('hyrax/base/show')
         expect(response.code).to eq "200"
       end
