@@ -3,12 +3,7 @@ module Hyrax
   # object represented by the solr document.
   module ModelProxy
     delegate :to_param, :to_key, :id, to: :solr_document
-
-    delegate :model_name, to: :_delegated_to
-
-    def to_partial_path
-      _delegated_to._to_partial_path
-    end
+    delegate :model_name, :to_partial_path, to: :_delegated_to
 
     def persisted?
       true
@@ -29,7 +24,7 @@ module Hyrax
     private
 
       def _delegated_to
-        @_delegated_to ||= solr_document.hydra_model
+        solr_document.to_model
       end
   end
 end

@@ -240,11 +240,8 @@ RSpec.describe Hyrax::GenericWorksController do
       end
 
       context 'with a user granted workflow permission' do
-        before do
-          allow(document).to receive(:hydra_model).and_return(GenericWork)
-        end
+        let(:document) { SolrDocument.new(id: work.id, has_model_ssim: ["GenericWork"]) }
         let(:document_list) { [document] }
-        let(:document) { instance_double(SolrDocument) }
 
         it 'renders without the unauthorized message' do
           get :show, params: { id: work.id }
