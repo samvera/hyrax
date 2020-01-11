@@ -1,6 +1,6 @@
 require 'cancan/matchers'
 
-RSpec.describe "Ability on embargos and leases" do
+RSpec.describe Hyrax::Ability do
   subject { Ability.new(current_user) }
 
   let(:current_user) { create(:user) }

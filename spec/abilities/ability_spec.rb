@@ -1,9 +1,7 @@
 require 'cancan/matchers'
 
-RSpec.describe 'Hyrax::Ability', type: :model do
-  let(:ability) { Ability.new(user) }
-
-  subject { ability }
+RSpec.describe Hyrax::Ability do
+  subject(:ability) { Ability.new(user) }
 
   describe '.admin_group_name' do
     let(:user) { create(:user) }

@@ -1,9 +1,7 @@
 require 'cancan/matchers'
 
-RSpec.describe 'PermissionTemplateAbility' do
-  subject { ability }
-
-  let(:ability) { Ability.new(current_user) }
+RSpec.describe Hyrax::Ability do
+  subject(:ability) { Ability.new(current_user) }
   let(:user) { create(:user) }
   let(:current_user) { user }
   let(:collection_type_gid) { create(:collection_type).gid }

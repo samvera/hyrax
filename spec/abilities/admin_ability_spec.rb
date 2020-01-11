@@ -1,6 +1,6 @@
 require 'cancan/matchers'
 
-RSpec.describe 'Hyrax::Ability', type: :model do
+RSpec.describe Hyrax::Ability do
   context "with a registered user" do
     let(:user) { create(:user) }
 

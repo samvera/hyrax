@@ -1,6 +1,6 @@
 require 'cancan/matchers'
 
-RSpec.describe 'Abilities for Operations', type: :model do
+RSpec.describe Hyrax::Ability do
   describe "a registered user" do
     subject { Ability.new(user) }
 
