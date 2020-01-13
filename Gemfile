@@ -4,7 +4,6 @@ source 'https://rubygems.org'
 gemspec
 
 group :development, :test do
-  gem 'coveralls', require: false
   gem 'easy_translate'
   gem 'i18n-tasks'
   gem 'pry' unless ENV['CI']

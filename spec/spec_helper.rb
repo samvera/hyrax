@@ -6,13 +6,8 @@ def ci_build?
 end
 
 require 'simplecov'
-require 'coveralls'
-Coveralls.wear!
 SimpleCov.root(File.expand_path('../..', __FILE__))
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
-                                                                 Coveralls::SimpleCov::Formatter,
-                                                                 SimpleCov::Formatter::HTMLFormatter
-                                                               ])
+
 SimpleCov.start('rails') do
   add_filter '/.internal_test_app'
   add_filter '/lib/generators'

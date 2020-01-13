@@ -97,7 +97,6 @@ jobs:
     resource_class: medium+
     parallelism: 10
     environment:
-      COVERALLS_PARALLEL: true
       HYRAX_VALKYRIE: << parameters.hyrax_valkyrie >>
       VALKYRIE_SOLR_PORT: 8985
     steps:
