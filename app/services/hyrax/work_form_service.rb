@@ -1,4 +1,6 @@
 module Hyrax
+  ##
+  # A factory that builds work forms based on the `#model_name` of the work.
   class WorkFormService
     def self.build(curation_concern, current_ability, *extra)
       form_class(curation_concern).new(curation_concern, current_ability, *extra)
