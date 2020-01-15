@@ -58,7 +58,6 @@
 module Wings; end
 
 require 'valkyrie'
-require 'wings/indexing_configuration'
 require 'wings/model_registry'
 require 'wings/model_transformer'
 require 'wings/orm_converter'
