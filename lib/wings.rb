@@ -55,7 +55,25 @@
 #
 # @see https://wiki.duraspace.org/display/samvera/Hyrax-Valkyrie+Development+Working+Group
 #      for further context regarding the approach
-module Wings; end
+module Wings
+  ##
+  # @api public
+  #
+  # Provides a search builder for new valkyrie types that are indexed as their
+  # corresponding legacy ActiveFedora classes.
+  #
+  # @example
+  #   builder = Wings::WorkSearchBuilder(Monograph)
+  def self.WorkSearchBuilder(work_type) # rubocop:disable Naming/MethodName
+    Class.new(Hyrax::WorkSearchBuilder) do
+      @@_legacy_type = Wings::ModelRegistry.lookup(work_type) # rubocop:disable Style/ClassVars
+
+      def work_types
+        [@@_legacy_type]
+      end
+    end
+  end
+end
 
 require 'valkyrie'
 require 'wings/model_registry'
