@@ -143,10 +143,6 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
-Valkyrie::MetadataAdapter.register(
-  Valkyrie::Persistence::Memory::MetadataAdapter.new, :test_adapter
-)
-
 query_registration_target =
   Valkyrie::MetadataAdapter.find(:test_adapter).query_service.custom_queries
 [Hyrax::CustomQueries::FindAccessControl,
