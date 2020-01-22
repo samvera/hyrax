@@ -1,15 +1,13 @@
 require 'cancan/matchers'
 
-RSpec.describe 'Proxy and Transfer Abilities' do
-  subject { ability }
-
-  let(:ability) { Ability.new(user) }
+RSpec.describe Hyrax::Ability do
+  subject(:ability) { Ability.new(user) }
   let(:user) { create(:user) }
 
   describe "Transfers" do
     before do
       allow(Flipflop).to receive(:transfer_works?).and_return(transfer_enabled)
-      allow(ability).to receive(:user_is_depositor?).with('777').and_return(mine)
+      allow(ability).to receive(:user_is_depositor?).with('777').and_return(mine) # rubocop:disable RSpec/SubjectStub
       allow(Flipflop).to receive(:proxy_deposit?).and_return(proxy_enabled)
     end
     let(:work_id) { '777' }
