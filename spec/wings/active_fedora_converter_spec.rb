@@ -21,6 +21,22 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       expect(converter.convert).to eq work
     end
 
+    context 'fedora objState' do
+      let(:resource) { build(:hyrax_work) }
+
+      it 'is active by default' do
+        expect(converter.convert)
+          .to have_attributes state: Hyrax::ResourceStatus::ACTIVE
+      end
+
+      it 'converts non-active states' do
+        resource.state = Hyrax::ResourceStatus::INACTIVE
+
+        expect(converter.convert)
+          .to have_attributes state: Hyrax::ResourceStatus::INACTIVE
+      end
+    end
+
     context 'when given a valkyrie native model' do
       let(:resource) { klass.new }
 

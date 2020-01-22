@@ -14,9 +14,7 @@ module Hyrax
     #
     # Override this method if you have some criteria by which records should not display in the search results.
     def suppressed?
-      return false if state.nil?
-
-      state == Vocab::FedoraResourceStatus.inactive
+      Hyrax::ResourceStatus.new(resource: self).inactive?
     end
 
     ##

@@ -13,4 +13,10 @@ RSpec.describe Hyrax::Work do
       expect(work.human_readable_type).to eq 'Work'
     end
   end
+
+  describe '#state' do
+    it 'is active by default' do
+      expect(work.state).to eq Hyrax::ResourceStatus::ACTIVE
+    end
+  end
 end
