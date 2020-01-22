@@ -1,0 +1,22 @@
+# frozen_string_literal: true
+
+# Generated via
+#  `rails generate hyrax:work <%= class_name %>`
+module Hyrax
+  # Generated controller for <%= class_name %>
+  class <%= class_name.pluralize %>Controller < ApplicationController
+    # Adds Hyrax behaviors to the controller.
+    include Hyrax::WorksControllerBehavior
+    include Hyrax::BreadcrumbsForWorks
+    self.curation_concern_type = ::<%= class_name %>
+
+    # Use the Wings search builder for Valkyrie models until legacy ActiveFedora
+    # indexing is turned off. See:
+    # https://github.com/samvera/hyrax/wiki/Hyrax-Valkyrie-Usage-Guide#indexing
+    self.search_builder_class = Wings::WorkSearchBuilder(::<%= class_name %>)
+
+    # Use a Valkyrie aware form service to generate Valkyrie::ChangeSet style
+    # forms.
+    self.work_form_service = Hyrax::FormFactory.new
+  end
+end

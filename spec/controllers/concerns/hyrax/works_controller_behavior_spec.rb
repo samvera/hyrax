@@ -19,7 +19,8 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     include Hyrax::WorksControllerBehavior
 
     self.curation_concern_type = Hyrax::Test::SimpleWork
-    self.search_builder_class  = Hyrax::Test::SimpleWorkSearchBuilder
+    self.search_builder_class  = Wings::WorkSearchBuilder(Hyrax::Test::SimpleWork)
+    self.work_form_service     = Hyrax::FormFactory.new
   end
 
   shared_context 'with a logged in user' do
@@ -75,7 +76,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
       expect(response).to redirect_to paths.new_user_session_path(locale: :en)
     end
 
-    xcontext 'with a logged in user' do
+    context 'with a logged in user' do
       include_context 'with a logged in user'
 
       it 'is successful' do
@@ -84,10 +85,16 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         expect(response).to be_successful
       end
 
-      it 'renders a form' do
+      it 'assigns a change_set as the form' do
         get :new
 
-        expect(assigns[:form]).to be_kind_of Hyrax::WorkForm
+        expect(assigns[:form]).to be_a Valkyrie::ChangeSet
+      end
+
+      it 'renders form' do
+        get :new
+
+        expect(controller).to render_template('hyrax/base/new')
       end
     end
   end
