@@ -5,7 +5,7 @@ module Hyrax
   # A factory class for Hyrax forms.
   #
   # @note We use a factory class (rather than a factory method like `.for`) to
-  #   provide compatibility with the legacy `Hyrax::WorkFormService`.y
+  #   provide compatibility with the legacy `Hyrax::WorkFormService`.
   #
   # @example
   #   factory = Hyrax::FormFactory.new
