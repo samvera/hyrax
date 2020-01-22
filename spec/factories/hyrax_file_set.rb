@@ -44,5 +44,12 @@ FactoryBot.define do
         files { [valkyrie_create(:hyrax_file_metadata), valkyrie_create(:hyrax_file_metadata)] }
       end
     end
+
+    trait :with_original_file do
+      transient do
+        # assumes that the file set was also created with hyrax adapter or is not saved
+        original_file { valkyrie_create(:hyrax_file_metadata) }
+      end
+    end
   end
 end

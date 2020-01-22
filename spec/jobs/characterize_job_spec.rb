@@ -34,12 +34,27 @@ RSpec.describe CharacterizeJob do
   end
 
   context 'when the characterization proxy content is present' do
-    it 'runs Hydra::Works::CharacterizationService and creates a CreateDerivativesJob' do
-      expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
-      expect(file).to receive(:save!)
-      expect(file_set).to receive(:update_index)
-      expect(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
-      described_class.perform_now(file_set, file.id)
+    context 'and use_valkyrie is false' do
+      it 'runs Hydra::Works::CharacterizationService and creates a CreateDerivativesJob' do
+        expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
+        expect(file).to receive(:save!)
+        expect(file_set).to receive(:update_index)
+        expect(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
+        described_class.perform_now(file_set, file.id, use_valkyrie: false)
+      end
+    end
+
+    context 'and use_valkyrie is true' do
+      let(:file_set) { valkyrie_create(:hyrax_file_set, :with_original_file) }
+
+      it 'runs Hydra::Works::CharacterizationService and creates a CreateDerivativesJob' do
+        byebug
+        expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
+        expect(file).to receive(:save!)
+        expect(file_set).to receive(:update_index)
+        expect(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
+        described_class.perform_now(file_set, file.id, use_valkyrie: true)
+      end
     end
   end
 
