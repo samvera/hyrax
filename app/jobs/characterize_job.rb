@@ -16,4 +16,22 @@ class CharacterizeJob < Hyrax::ApplicationJob
     file_set.parent&.in_collections&.each(&:update_index)
     CreateDerivativesJob.perform_later(file_set, file_id, filepath)
   end
+
+  private
+
+    def characterize(file_set, _file_id, filepath)
+      Hydra::Works::CharacterizationService.run(file_set.characterization_proxy, filepath)
+      Rails.logger.debug "Ran characterization on #{file_set.characterization_proxy.id} (#{file_set.characterization_proxy.mime_type})"
+      file_set.characterization_proxy.alpha_channels = channels(filepath) if file_set.image? && Hyrax.config.iiif_image_server?
+      file_set.characterization_proxy.save!
+      file_set.update_index
+    end
+
+    def channels(filepath)
+      ch = MiniMagick::Tool::Identify.new do |cmd|
+        cmd.format '%[channels]'
+        cmd << filepath
+      end
+      [ch]
+    end
 end
