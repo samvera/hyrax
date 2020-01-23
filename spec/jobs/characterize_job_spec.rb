@@ -44,18 +44,29 @@ RSpec.describe CharacterizeJob do
       end
     end
 
-    context 'and use_valkyrie is true' do
-      let(:file_set) { valkyrie_create(:hyrax_file_set, :with_original_file) }
+    # AMC WORKING HERE <!------->
+    # context 'and use_valkyrie is true' do
+    #   let(:file_set) { valkyrie_create(:hyrax_file_set) }
+    #   # let(:original_file) { valkyrie_create(:hyrax_file_metadata) }
+    #   # let(:pcdm_object) { fileset1 }
 
-      it 'runs Hydra::Works::CharacterizationService and creates a CreateDerivativesJob' do
-        byebug
-        expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
-        expect(file).to receive(:save!)
-        expect(file_set).to receive(:update_index)
-        expect(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
-        described_class.perform_now(file_set, file.id, use_valkyrie: true)
-      end
-    end
+    #   # let(:fileset1) { create(:file_set) }
+    #   # let(:file_id) { fileset1.original_file.id }
+
+    #   before do
+    #     Hydra::Works::AddFileToFileSet.call(file_set, file, :original_file)
+    #   end
+
+    #   it 'runs Hydra::Works::CharacterizationService and creates a CreateDerivativesJob' do
+    #     byebug
+    #     expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
+    #     expect(file).to receive(:save!)
+    #     expect(file_set).to receive(:update_index)
+    #     expect(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
+    #     described_class.perform_now(file_set, file.id, use_valkyrie: true)
+    #   end
+    # end
+    # AMC WORKING TO HERE <!------->
   end
 
   context 'when the characterization proxy content is absent' do

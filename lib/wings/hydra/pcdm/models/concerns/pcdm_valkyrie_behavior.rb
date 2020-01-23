@@ -133,7 +133,6 @@ module Wings
       end
 
       def original_file
-        byebug
         af_object = Wings::ActiveFedoraConverter.new(resource: self).convert
         af_object.original_file
       end
