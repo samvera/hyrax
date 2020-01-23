@@ -19,7 +19,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     include Hyrax::WorksControllerBehavior
 
     self.curation_concern_type = Hyrax::Test::SimpleWork
-    self.search_builder_class  = Wings::WorkSearchBuilder(Hyrax::Test::SimpleWork)
+    self.search_builder_class  = SpicyWings::WorkSearchBuilder(Hyrax::Test::SimpleWork)
     self.work_form_service     = Hyrax::FormFactory.new
   end
 
@@ -148,7 +148,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
 
     context 'when indexed as public' do
       let(:index_document) do
-        Wings::ActiveFedoraConverter.convert(resource: work).to_solr.tap do |doc|
+        SpicyWings::ActiveFedoraConverter.convert(resource: work).to_solr.tap do |doc|
           doc[Hydra.config.permissions.read.group] = 'public'
         end
       end
@@ -162,7 +162,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
       include_context 'with a logged in user'
 
       let(:index_document) do
-        Wings::ActiveFedoraConverter.convert(resource: work).to_solr.tap do |doc|
+        SpicyWings::ActiveFedoraConverter.convert(resource: work).to_solr.tap do |doc|
           doc[Hydra.config.permissions.read.individual] = [user.user_key]
         end
       end

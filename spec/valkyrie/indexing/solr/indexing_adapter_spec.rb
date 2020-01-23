@@ -4,8 +4,8 @@ require 'valkyrie/indexing/solr/indexing_adapter'
 
 RSpec.describe Valkyrie::Indexing::Solr::IndexingAdapter, :clean_index do
   subject(:adapter) { Valkyrie::IndexingAdapter.find(:solr_index) }
-  let(:persister) { Wings::Valkyrie::Persister.new(adapter: metadata_adapter) }
-  let(:metadata_adapter) { Wings::Valkyrie::MetadataAdapter.new }
+  let(:persister) { SpicyWings::Valkyrie::Persister.new(adapter: metadata_adapter) }
+  let(:metadata_adapter) { SpicyWings::Valkyrie::MetadataAdapter.new }
   let(:resource) { FactoryBot.valkyrie_create(:hyrax_resource) }
   let(:resource2) { FactoryBot.valkyrie_create(:hyrax_resource) }
 

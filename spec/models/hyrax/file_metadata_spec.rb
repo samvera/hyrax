@@ -96,13 +96,13 @@ RSpec.describe Hyrax::FileMetadata do
   describe '#versions' do
     context 'when no versions saved' do
       it 'returns empty array' do
-        pending 'TODO: write test when Wings file versioning is implemented (Issue #3923)'
+        pending 'TODO: write test when SpicyWings file versioning is implemented (Issue #3923)'
         expect(subject.versions).to eq []
       end
     end
     context 'when versions saved' do
       it 'returns a set of file_metadatas for previous versions' do
-        pending 'TODO: write test when Wings file versioning is implemented (Issue #3923)'
+        pending 'TODO: write test when SpicyWings file versioning is implemented (Issue #3923)'
         expect(false).to be true
       end
     end

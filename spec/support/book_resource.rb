@@ -24,4 +24,4 @@ module Hyrax
   end
 end
 
-Wings::ModelRegistry.register(Hyrax::Test::BookResource, Hyrax::Test::Book)
+SpicyWings::ModelRegistry.register(Hyrax::Test::BookResource, Hyrax::Test::Book)

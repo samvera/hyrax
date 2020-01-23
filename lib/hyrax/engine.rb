@@ -1,3 +1,4 @@
+# coding: utf-8
 module Hyrax
   class Engine < ::Rails::Engine
     isolate_namespace Hyrax
@@ -76,7 +77,7 @@ module Hyrax
 
     initializer 'requires' do
       require 'power_converters'
-      require 'wings'
+      require 'spicy_wings'
     end
 
     initializer 'routing' do

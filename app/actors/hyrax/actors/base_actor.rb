@@ -77,7 +77,7 @@ module Hyrax
           # casting back to ActiveFedora doesn't satisfy this.
           env.curation_concern.id = resource.alternate_ids.first.id unless env.curation_concern.id
           env.curation_concern.reload
-        rescue Wings::Valkyrie::Persister::FailedSaveError => _err
+        rescue SpicyWings::Valkyrie::Persister::FailedSaveError => _err
           # for now, just hit the validation error again
           # later we should capture the _err.obj and pass it back
           # through the environment

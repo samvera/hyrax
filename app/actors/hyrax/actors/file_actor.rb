@@ -1,4 +1,4 @@
-require 'wings/services/file_metadata_builder'
+require 'spicy_wings/services/file_metadata_builder'
 
 module Hyrax
   module Actors
@@ -91,8 +91,8 @@ module Hyrax
         end
 
         def file_metadata_builder
-          Wings::FileMetadataBuilder.new(storage_adapter: Hyrax.storage_adapter,
-                                         persister:       Hyrax.persister)
+          SpicyWings::FileMetadataBuilder.new(storage_adapter: Hyrax.storage_adapter,
+                                              persister:       Hyrax.persister)
         end
 
         def normalize_relation(relation)

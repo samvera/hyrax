@@ -51,7 +51,7 @@ module Hyrax
           return true unless env.curation_concern.is_a? Valkyrie::Resource
 
           env.curation_concern =
-            Wings::ActiveFedoraConverter.convert(resource: env.curation_concern)
+            SpicyWings::ActiveFedoraConverter.convert(resource: env.curation_concern)
 
           true
         end

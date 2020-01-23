@@ -179,7 +179,7 @@ module Hyrax
           if valkyrie_object?(obj_to_save)
             saved_resource = save(obj_to_save)
             # return the same type of object that was passed in
-            saved_object_to_return = valkyrie_object?(object) ? saved_resource : Wings::ActiveFedoraConverter.new(resource: saved_resource).convert
+            saved_object_to_return = valkyrie_object?(object) ? saved_resource : SpicyWings::ActiveFedoraConverter.new(resource: saved_resource).convert
           else
             obj_to_save.save
             saved_object_to_return = obj_to_save
