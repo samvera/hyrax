@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax
   # A model name that provides routes that are namespaced to Hyrax,
   # without changing the param key.
