@@ -11,9 +11,8 @@ module Hyrax
       case source
       when Hyrax::FileSetBehavior # ActiveFedora
         FileSetCharacterizer.new(source: source)
-      when Hyrax::Resource # Valkyrie
-        byebug
-        ResourceVisibilityPropagator.new(source: source)
+      when Hyrax::FileSet # Valkyrie
+        FileSetCharacterizer.new(source: source)
       end
     end
   end

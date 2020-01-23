@@ -20,6 +20,7 @@ module Hyrax
     #
     # @raise [RuntimeError] if visibility propogation fails
     def characterize
+      byebug
       Hydra::Works::CharacterizationService.run(source.characterization_proxy, filepath)
       Rails.logger.debug "Ran characterization on #{source.characterization_proxy.id} (#{source.characterization_proxy.mime_type})"
       source.characterization_proxy.alpha_channels = channels(filepath) if source.image? && Hyrax.config.iiif_image_server?
