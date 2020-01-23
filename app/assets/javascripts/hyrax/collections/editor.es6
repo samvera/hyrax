@@ -4,6 +4,9 @@ import tabifyForm from 'hyrax/tabbed_form'
 
 // Controls the behavior of the Collections edit form
 // Add search for thumbnail to the edit descriptions
+// this method used to simply replace the string edit
+// but now replaces the last url part if and only if
+// that part is edit
 export default class {
   constructor(elem) {
     let field = elem.find('#collection_thumbnail_id')
@@ -16,7 +19,9 @@ export default class {
 
   url() {
     let urlParts = window.location.pathname.split("/")
-    urlParts[urlParts.length - 1] = "files"
+    if urlParts[urlParts.length - 1] === "edit" {
+      urlParts[urlParts.length - 1] = "files"
+    }
     return urlParts.join("/") 
   }
 }
