@@ -39,7 +39,7 @@ RSpec.describe CharacterizeJob do
       expect(file).to receive(:save!)
       expect(file_set).to receive(:update_index)
       expect(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
-      described_class.perform_now(file_set, file.id)
+      described_class.perform_now(file_set)
     end
   end
 
