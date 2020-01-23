@@ -125,7 +125,7 @@ module Wings
         raise ArgumentError, "Provide resource or id" unless resource || id
         id ||= resource.alternate_ids.first
         raise ArgumentError, "Resource has no id; is it persisted?" unless id
-        uri = ActiveFedora::Base.id_to_uri(id.to_s)
+        uri = Hyrax::Base.id_to_uri(id.to_s)
         ActiveFedora::Base.where("+(#{property}_ssim: \"#{uri}\" OR #{property}_ssim: \"#{id}\")").map do |obj|
           resource_factory.to_resource(object: obj)
         end
@@ -160,7 +160,7 @@ module Wings
         end
 
         def find_id_for(reference)
-          return ::ActiveFedora::Base.uri_to_id(reference.id) if reference.class == ActiveTriples::Resource
+          return ::Hyrax::Base.uri_to_id(reference.id) if reference.class == ActiveTriples::Resource
           return reference if reference.class == String
           # not a supported type
           ''

@@ -52,7 +52,7 @@ module Hyrax
               proxy.prev.next = curation_concern.ordered_member_proxies.last.next
               break
             end
-            proxy.proxy_for = ActiveFedora::Base.id_to_uri(new_order[index])
+            proxy.proxy_for = Hyrax::Base.id_to_uri(new_order[index])
             proxy.target = nil
           end
           curation_concern.list_source.order_will_change!

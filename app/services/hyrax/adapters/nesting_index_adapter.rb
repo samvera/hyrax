@@ -21,7 +21,7 @@ module Hyrax
       def self.find_preservation_parent_ids_for(id:)
         # Not everything is guaranteed to have library_collection_ids
         # If it doesn't have it, what do we do?
-        fedora_object = ActiveFedora::Base.uncached do
+        fedora_object = Hyrax::Base.uncached do
           fedora_object = ActiveFedora::Base.find(id)
         end
 
@@ -47,7 +47,7 @@ module Hyrax
       # rubocop:disable Lint/UnusedMethodArgument
       def self.each_perservation_document_id_and_parent_ids(&block)
         ActiveFedora::Base.descendant_uris(ActiveFedora.fedora.base_uri, exclude_uri: true).each do |uri|
-          id = ActiveFedora::Base.uri_to_id(uri)
+          id = Hyrax::Base.uri_to_id(uri)
           object = ActiveFedora::Base.find(id)
           parent_ids = object.try(:member_of_collection_ids) || []
 
@@ -70,7 +70,7 @@ module Hyrax
       # @param nesting_document [Samvera::NestingIndexer::Documents::IndexDocument]
       # @return Hash - the attributes written to the indexing layer
       def self.write_nesting_document_to_index_layer(nesting_document:)
-        solr_doc = ActiveFedora::Base.uncached do
+        solr_doc = Hyrax::Base.uncached do
           ActiveFedora::Base.find(nesting_document.id).to_solr # What is the current state of the solr document
         end
 
