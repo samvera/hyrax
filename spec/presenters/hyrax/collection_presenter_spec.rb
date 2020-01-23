@@ -3,7 +3,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     subject { described_class.terms }
 
     it do
-      is_expected.to eq [:total_items, :size, :resource_type, :creator,
+      is_expected.to eq [:total_items, :resource_type, :creator,
                          :contributor, :keyword, :license, :publisher,
                          :date_created, :subject, :language, :identifier,
                          :based_near, :related_url]
@@ -24,9 +24,6 @@ RSpec.describe Hyrax::CollectionPresenter do
   let(:ability) { double }
   let(:presenter) { described_class.new(solr_doc, ability) }
   let(:solr_doc) { SolrDocument.new(collection.to_solr) }
-
-  # Mock bytes so collection does not have to be saved.
-  before { allow(collection).to receive(:bytes).and_return(0) }
 
   describe "collection type methods" do
     subject { presenter }
@@ -81,7 +78,6 @@ RSpec.describe Hyrax::CollectionPresenter do
 
     it do
       is_expected.to eq [:total_items,
-                         :size,
                          :resource_type,
                          :keyword,
                          :date_created,
@@ -124,12 +120,6 @@ RSpec.describe Hyrax::CollectionPresenter do
     subject { presenter.to_key }
 
     it { is_expected.to eq ['adc12v'] }
-  end
-
-  describe "#size", :clean_repo do
-    subject { presenter.size }
-
-    it { is_expected.to eq '0 Bytes' }
   end
 
   describe "#total_items", :clean_repo do
@@ -282,12 +272,6 @@ RSpec.describe Hyrax::CollectionPresenter do
 
       it { is_expected.to eq 0 }
     end
-  end
-
-  describe "#size", :clean_repo do
-    subject { presenter.size }
-
-    it { is_expected.to eq '0 Bytes' }
   end
 
   describe "#parent_collection_count" do

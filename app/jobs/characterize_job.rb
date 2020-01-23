@@ -21,7 +21,6 @@ class CharacterizeJob < Hyrax::ApplicationJob
       file_set.characterization_proxy.alpha_channels = channels(filepath) if file_set.image? && Hyrax.config.iiif_image_server?
       file_set.characterization_proxy.save!
       file_set.update_index
-      file_set.parent&.in_collections&.each(&:update_index)
     end
 
     def channels(filepath)

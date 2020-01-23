@@ -12,8 +12,6 @@ module Hyrax
       super.tap do |solr_doc|
         # Makes Collections show under the "Collections" tab
         solr_doc['generic_type_sim'] = ["Collection"]
-        # Index the size of the collection in bytes
-        solr_doc['bytes_lts'] = object.bytes
         solr_doc['visibility_ssi'] = object.visibility
 
         object.in_collections.each do |col|
