@@ -19,7 +19,7 @@ export default class {
 
   url() {
     let urlParts = window.location.pathname.split("/")
-    if urlParts[urlParts.length - 1] === "edit" {
+    if(urlParts[urlParts.length - 1] === "edit") {
       urlParts[urlParts.length - 1] = "files"
     }
     return urlParts.join("/") 
