@@ -31,7 +31,7 @@ module Hyrax
       # This method is called once for each statement in the graph.
       def replacer
         lambda do |resource_id, _graph|
-          parent_id = ActiveFedora::Base.uri_to_id(parent_url)
+          parent_id = Hyrax::Base.uri_to_id(parent_url)
           return parent_url + resource_id.sub(parent_id, '') if resource_id.start_with?(parent_id)
           Rails.application.routes.url_helpers.solr_document_url(resource_id, host: hostname)
         end

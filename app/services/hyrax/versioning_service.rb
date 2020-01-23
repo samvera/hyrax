@@ -20,7 +20,7 @@ module Hyrax
       def versioned_file_id(file)
         versions = file.versions.all
         if versions.present?
-          ActiveFedora::File.uri_to_id versions.last.uri
+          Hyrax::Base.uri_to_id(versions.last.uri)
         else
           file.id
         end
