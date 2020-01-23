@@ -10,7 +10,6 @@ RSpec.describe Hyrax::CollectionIndexer do
   let(:doc) do
     {
       'generic_type_sim' => ['Collection'],
-      'bytes_lts' => 1000,
       'thumbnail_path_ss' => '/downloads/1234?file=thumbnail',
       'member_of_collection_ids_ssim' => [col1id, col2id],
       'member_of_collections_ssim' => [col1title, col2title],
@@ -20,7 +19,6 @@ RSpec.describe Hyrax::CollectionIndexer do
 
   describe "#generate_solr_document" do
     before do
-      allow(collection).to receive(:bytes).and_return(1000)
       allow(collection).to receive(:in_collections).and_return([col1, col2])
       allow(Hyrax::ThumbnailPathService).to receive(:call).and_return("/downloads/1234?file=thumbnail")
     end

@@ -41,7 +41,7 @@ module Hyrax
     # Terms is the list of fields displayed by
     # app/views/collections/_show_descriptions.html.erb
     def self.terms
-      [:total_items, :size, :resource_type, :creator, :contributor, :keyword, :license, :publisher, :date_created, :subject,
+      [:total_items, :resource_type, :creator, :contributor, :keyword, :license, :publisher, :date_created, :subject,
        :language, :identifier, :based_near, :related_url]
     end
 
@@ -51,17 +51,11 @@ module Hyrax
 
     def [](key)
       case key
-      when :size
-        size
       when :total_items
         total_items
       else
         solr_document.send key
       end
-    end
-
-    def size
-      number_to_human_size(@solr_document['bytes_lts'])
     end
 
     def total_items
