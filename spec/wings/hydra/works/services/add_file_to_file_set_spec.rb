@@ -42,9 +42,6 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
     context 'and requesting extracted text' do
       subject { described_class.call(file_set: file_set, file: text_file, type: [extracted_text_use]) }
       it "builds and uses the association's target" do
-        pending 'fix failing spec'
-        # TODO: LDP fails to write the file to Fedora even though the LDP put request looks correct and
-        #       has the correct file with expected content as part of the put request.
         ids = subject.extracted_text_ids
         expect(ids.size).to eq 1
         expect(ids.first).to be_a Valkyrie::ID
