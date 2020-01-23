@@ -16,6 +16,7 @@ RSpec.describe CharacterizeJob do
       allow(f).to receive(:save!)
     end
   end
+  let(:resource) { FactoryBot.create(:work_with_files).valkyrie_resource }
 
   before do
     allow(FileSet).to receive(:find).with(file_set_id).and_return(file_set)
@@ -34,12 +35,15 @@ RSpec.describe CharacterizeJob do
   end
 
   context 'when the characterization proxy content is present' do
-    it 'runs Hydra::Works::CharacterizationService and creates a CreateDerivativesJob' do
-      expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
-      expect(file).to receive(:save!)
-      expect(file_set).to receive(:update_index)
-      expect(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
-      described_class.perform_now(file_set)
+    context 'when the work is an ActiveFedora FileSet' do
+      it 'runs Hydra::Works::CharacterizationService and creates a CreateDerivativesJob' do
+        byebug
+        expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
+        expect(file).to receive(:save!)
+        expect(file_set).to receive(:update_index)
+        expect(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
+        described_class.perform_now(file_set)
+      end
     end
   end
 
