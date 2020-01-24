@@ -24,16 +24,6 @@ RSpec.describe CharacterizeJob do
       allow(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
     end
 
-    context 'with valid filepath param' do
-      let(:filename) { File.join(fixture_path, 'world.png') }
-
-      it 'skips Hyrax::WorkingDirectory' do
-        expect(Hyrax::WorkingDirectory).not_to receive(:find_or_retrieve)
-        expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
-        described_class.perform_now(file_set, file.id, filename)
-      end
-    end
-
     context 'when the characterization proxy content is present' do
       it 'runs Hydra::Works::CharacterizationService and creates a CreateDerivativesJob' do
         expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
@@ -47,7 +37,7 @@ RSpec.describe CharacterizeJob do
     context 'when the characterization proxy content is absent' do
       before { allow(file_set).to receive(:characterization_proxy?).and_return(false) }
       it 'raises an error' do
-        expect { described_class.perform_now(file_set, file.id) }.to raise_error(StandardError, /original_file was not found/)
+        expect { described_class.perform_now(file_set) }.to raise_error(StandardError, /original_file was not found/)
       end
     end
 
@@ -61,7 +51,7 @@ RSpec.describe CharacterizeJob do
       end
       it "reindexes the collection" do
         expect(collection).to receive(:update_index)
-        described_class.perform_now(file_set, file.id)
+        described_class.perform_now(file_set)
       end
     end
   end

@@ -20,16 +20,21 @@ module Hyrax
     #
     # @raise [RuntimeError] if visibility propogation fails
     def characterize
-      Hydra::Works::CharacterizationService.run(source.characterization_proxy, filepath)
-      Rails.logger.debug "Ran characterization on #{source.characterization_proxy.id} (#{source.characterization_proxy.mime_type})"
-      source.characterization_proxy.alpha_channels = channels(filepath) if source.image? && Hyrax.config.iiif_image_server?
-      source.characterization_proxy.save!
+      Hydra::Works::CharacterizationService.run(characterization_proxy, filepath)
+      Rails.logger.debug "Ran characterization on #{characterization_proxy.id} (#{characterization_proxy.mime_type})"
+      characterization_proxy.alpha_channels = channels(filepath) if source.image? && Hyrax.config.iiif_image_server?
+      characterization_proxy.save!
       source.update_index
       source.parent&.in_collections&.each(&:update_index)
       CreateDerivativesJob.perform_later(source, source.original_file.id, filepath)
     end
 
     private
+
+      def characterization_proxy
+        raise "#{source.class.characterization_proxy} was not found for FileSet #{source.id}" unless source.characterization_proxy?
+        source.characterization_proxy
+      end
 
       def filepath
         Hyrax::WorkingDirectory.find_or_retrieve(source.original_file.id, source.id)
