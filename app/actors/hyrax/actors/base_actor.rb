@@ -18,7 +18,7 @@ module Hyrax
       def create(env)
         apply_creation_data_to_curation_concern(env)
         apply_save_data_to_curation_concern(env)
-
+        
         save(env, use_valkyrie: Hyrax.config.use_valkyrie?) &&
           next_actor.create(env) &&
           run_callbacks(:after_create_concern, env)
@@ -78,7 +78,11 @@ module Hyrax
           # `env.curation_concern` to be the exact same instance throughout.
           # casting back to ActiveFedora doesn't satisfy this.
           env.curation_concern.id = resource.alternate_ids.first.id unless env.curation_concern.id
-          env.curation_concern.reload unless valkyrie_resource?(env.curation_concern)
+          if valkyrie_resource?(env.curation_concern)
+            true
+          else
+            env.curation_concern.reload
+          end
         rescue Wings::Valkyrie::Persister::FailedSaveError => _err
           # for now, just hit the validation error again
           # later we should capture the _err.obj and pass it back
