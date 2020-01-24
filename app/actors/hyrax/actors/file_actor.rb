@@ -103,10 +103,10 @@ module Hyrax
           return relation if relation.is_a? Symbol
           return relation.to_sym if relation.respond_to? :to_sym
 
-          # TODO: whereever these are set, they should use Valkyrie::Vocab::PCDMUse... making the casecmp unnecessary
-          return :original_file if relation.to_s.casecmp(Valkyrie::Vocab::PCDMUse.original_file.to_s)
-          return :extracted_file if relation.to_s.casecmp(Valkyrie::Vocab::PCDMUse.extracted_file.to_s)
-          return :thumbnail_file if relation.to_s.casecmp(Valkyrie::Vocab::PCDMUse.thumbnail_file.to_s)
+          # TODO: whereever these are set, they should use FileSet.*_use... making the casecmp unnecessary
+          return :original_file if relation.to_s.casecmp(Hyrax::FileSet.original_file_use.to_s)
+          return :extracted_file if relation.to_s.casecmp(Hyrax::FileSet.extracted_text_use.to_s)
+          return :thumbnail_file if relation.to_s.casecmp(Hyrax::FileSet.thumbnail_use.to_s)
           :original_file
         end
 
@@ -114,10 +114,10 @@ module Hyrax
           # TODO: When this is fully switched to valkyrie, this should probably be removed and relation should always be passed
           #       in as a valid URI already set to the file's use
           relation = relation.to_s.to_sym
-          return Valkyrie::Vocab::PCDMUse.original_file if relation == :original_file
-          return Valkyrie::Vocab::PCDMUse.extracted_file if relation == :extracted_file
-          return Valkyrie::Vocab::PCDMUse.thumbnail_file if relation == :thumbnail_file
-          Valkyrie::Vocab::PCDMUse.original_file
+          return Hyrax::FileSet.original_file_use if relation == :original_file
+          return FileSet.extracted_file_use if relation == :extracted_file
+          return FileSet.thumbnail_file_use if relation == :thumbnail_file
+          Hyrax::FileSet.original_file_use
         end
     end
   end

@@ -6,9 +6,9 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
   let(:af_file_set)             { create(:file_set, id: 'fileset_id') }
   let!(:file_set)               { af_file_set.valkyrie_resource }
 
-  let(:original_file_use)  { Valkyrie::Vocab::PCDMUse.OriginalFile }
-  let(:extracted_text_use) { Valkyrie::Vocab::PCDMUse.ExtractedText }
-  let(:thumbnail_use)      { Valkyrie::Vocab::PCDMUse.Thumbnail }
+  let(:original_file_use)  { Hyrax::FileSet.original_file_use }
+  let(:extracted_text_use) { Hyrax::FileSet.extracted_text_use }
+  let(:thumbnail_use)      { Hyrax::FileSet.thumbnail_use }
 
   let(:pdf_filename)  { 'sample-file.pdf' }
   let(:pdf_mimetype)  { 'application/pdf' }
@@ -72,18 +72,18 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
     let(:transcript_use)   { Valkyrie::Vocab::PCDMUse.Transcript }
     let(:service_file_use) { Valkyrie::Vocab::PCDMUse.ServiceFile }
 
-    subject do 
+    subject do
       updated_file_set = described_class.call(file_set: file_set, file: pdf_file, type: service_file_use)
       described_class.call(file_set: updated_file_set, file: text_file, type: transcript_use)
     end
     it 'adds the given file and applies the specified RDF::URI use to it' do
-      ids = subject.file_ids      
+      ids = subject.file_ids
       expect(ids.size).to eq 2
       expect(ids.first).to be_a Valkyrie::ID
       expect(ids.first.to_s).to start_with "#{file_set.id}/files/"
 
-      expect(Hyrax.query_service.custom_queries.find_file_metadata_by_use(resource: subject, use: transcript_use).first.content.first).to start_with('some updated content')
-      expect(Hyrax.query_service.custom_queries.find_file_metadata_by_use(resource: subject, use: service_file_use).first.content.first).to start_with('%PDF-1.3')
+      expect(Hyrax.query_service.custom_queries.find_many_file_metadata_by_use(resource: subject, use: transcript_use).first.content.first).to start_with('some updated content')
+      expect(Hyrax.query_service.custom_queries.find_many_file_metadata_by_use(resource: subject, use: service_file_use).first.content.first).to start_with('%PDF-1.3')
     end
   end
 

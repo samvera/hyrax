@@ -138,12 +138,13 @@ module Wings
       end
 
       def convert_files(af_object)
+        return unless resource.respond_to? :file_ids
         files = []
         resource.file_ids.each do |fid|
           pcdm_file = Hydra::PCDM::File.new(fid.id)
           af_object.association(:original_file).target = pcdm_file if pcdm_file.metadata_node.type.include? RDF::URI.new('http://pcdm.org/use#OriginalFile')
-          af_object.association(:extracted_text_file).target = pcdm_file if pcdm_file.metadata_node.type.include? RDF::URI.new('http://pcdm.org/use#ExtractedText')
-          af_object.association(:thumbnail_file).target = pcdm_file if pcdm_file.metadata_node.type.include? RDF::URI.new('http://pcdm.org/use#Thumbnail')
+          af_object.association(:extracted_text).target = pcdm_file if pcdm_file.metadata_node.type.include? RDF::URI.new('http://pcdm.org/use#ExtractedText')
+          af_object.association(:thumbnail).target = pcdm_file if pcdm_file.metadata_node.type.include? RDF::URI.new('http://pcdm.org/use#Thumbnail')
           files << pcdm_file
         end
         af_object.files = files

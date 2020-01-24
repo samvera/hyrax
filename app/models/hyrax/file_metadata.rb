@@ -76,19 +76,19 @@ module Hyrax
       new(label: file.original_filename,
           original_filename: file.original_filename,
           mime_type: file.content_type,
-          use: file.try(:use) || [::Valkyrie::Vocab::PCDMUse.OriginalFile])
+          use: file.try(:use) || [Hyrax::FileSet.original_file_use])
     end
 
     def original_file?
-      use.include?(::Valkyrie::Vocab::PCDMUse.OriginalFile)
+      use.include?(Hyrax::FileSet.original_file_use)
     end
 
     def thumbnail_file?
-      use.include?(::Valkyrie::Vocab::PCDMUse.ThumbnailImage)
+      use.include?(Hyrax::FileSet.thumbnail_use)
     end
 
     def extracted_file?
-      use.include?(::Valkyrie::Vocab::PCDMUse.ExtractedImage)
+      use.include?(Hyrax::FileSet.extracted_text_use)
     end
 
     def title
