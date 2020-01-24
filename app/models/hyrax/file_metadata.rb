@@ -10,7 +10,7 @@ module Hyrax
     attribute :label, ::Valkyrie::Types::Set
     attribute :original_filename, ::Valkyrie::Types::Set
     attribute :mime_type, ::Valkyrie::Types::Set
-    attribute :use, ::Valkyrie::Types::Set # AF::File type
+    attribute :type, ::Valkyrie::Types::Set # AF::File type
     attribute :content, ::Valkyrie::Types::Set
 
     # attributes set by fits
@@ -76,19 +76,19 @@ module Hyrax
       new(label: file.original_filename,
           original_filename: file.original_filename,
           mime_type: file.content_type,
-          use: file.try(:use) || [Hyrax::FileSet.original_file_use])
+          type: file.try(:type) || [Hyrax::FileSet.original_file_use])
     end
 
     def original_file?
-      use.include?(Hyrax::FileSet.original_file_use)
+      type.include?(Hyrax::FileSet.original_file_use)
     end
 
     def thumbnail_file?
-      use.include?(Hyrax::FileSet.thumbnail_use)
+      type.include?(Hyrax::FileSet.thumbnail_use)
     end
 
     def extracted_file?
-      use.include?(Hyrax::FileSet.extracted_text_use)
+      type.include?(Hyrax::FileSet.extracted_text_use)
     end
 
     def title

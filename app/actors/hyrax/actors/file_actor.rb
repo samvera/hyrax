@@ -77,7 +77,7 @@ module Hyrax
         def perform_ingest_file_through_valkyrie(io)
           # Skip versioning because versions will be minted by VersionCommitter as necessary during save_characterize_and_record_committer.
           unsaved_file_metadata = io.to_file_metadata
-          unsaved_file_metadata.use = relation
+          unsaved_file_metadata.type = [relation]
           begin
             saved_file_metadata = file_metadata_builder.create(io_wrapper: io, file_metadata: unsaved_file_metadata, file_set: file_set)
           rescue StandardError => e # Handle error persisting file metadata

@@ -158,7 +158,7 @@ RSpec.describe Wings::CustomQueries::FindFileMetadata, :clean_repo do
           expect(result.size).to eq 1
           expect(result.first).to be_a Hyrax::FileMetadata
           expect(result.first.content.first).to start_with('some updated content')
-          expect(result.first.use.first).to eq extracted_text_use
+          expect(result.first.type).to include extracted_text_use
         end
       end
     end

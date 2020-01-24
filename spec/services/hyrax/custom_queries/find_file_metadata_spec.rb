@@ -99,9 +99,9 @@ RSpec.describe Hyrax::CustomQueries::FindFileMetadata do
   end
 
   describe '.find_file_metadata_by_use' do
-    let!(:of_file_metadata) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata, use: original_file_use) }
-    let!(:et_file_metadata) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata, use: extracted_text_use) }
-    let!(:th_file_metadata) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata, use: thumbnail_use) }
+    let!(:of_file_metadata) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata, type: original_file_use) }
+    let!(:et_file_metadata) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata, type: extracted_text_use) }
+    let!(:th_file_metadata) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata, type: thumbnail_use) }
 
     let(:original_file_use)  { Hyrax::FileSet.original_file_use }
     let(:extracted_text_use) { Hyrax::FileSet.extracted_text_use }
@@ -114,7 +114,7 @@ RSpec.describe Hyrax::CustomQueries::FindFileMetadata do
         result = query_handler.find_many_file_metadata_by_use(resource: file_set, use: extracted_text_use)
         expect(result.size).to eq 1
         expect(result.first).to be_a Hyrax::FileMetadata
-        expect(result.first.use.first).to eq extracted_text_use
+        expect(result.first.type.first).to eq extracted_text_use
       end
     end
 

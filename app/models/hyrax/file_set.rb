@@ -29,7 +29,6 @@ module Hyrax
     # Gives file metadata for the file filling the http://pcdm.org/OriginalFile use
     # @return [FileMetadata] the FileMetadata resource of the original file
     def original_file
-      Hyrax.query_service.custom_queries.find_file_metadata_by(id: original_file_id)
       Hyrax.query_service.custom_queries.find_many_file_metadata_by_use(resource: self, use: Hyrax::FileSet.original_file_use)
     end
 
@@ -37,7 +36,6 @@ module Hyrax
     # Gives file metadata for the file filling the http://pcdm.org/ExtractedText use
     # @return [FileMetadata] the FileMetadata resource of the extracted text
     def extracted_text
-      # Hyrax.query_service.custom_queries.find_file_metadata_by(id: extracted_text_id)
       Hyrax.query_service.custom_queries.find_many_file_metadata_by_use(resource: self, use: Hyrax::FileSet.extracted_text_use)
     end
 
@@ -45,7 +43,6 @@ module Hyrax
     # Gives file metadata for the file filling the http://pcdm.org/Thumbnail use
     # @return [FileMetadata] the FileMetadata resource of the thumbnail
     def thumbnail
-      # Hyrax.query_service.custom_queries.find_file_metadata_by(id: thumbnail_id)
       Hyrax.query_service.custom_queries.find_many_file_metadata_by_use(resource: self, use: Hyrax::FileSet.thumbnail_use)
     end
 

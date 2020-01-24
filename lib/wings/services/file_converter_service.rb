@@ -34,7 +34,8 @@ module Wings
             content: af_file.content,
             size: af_file.size,
             original_filename: [af_file.original_name],
-            mime_type: [af_file.mime_type] }
+            mime_type: [af_file.mime_type],
+            type: af_file.metadata_node.type.to_a }
         end
 
         # extracts attributes that come from the metadata_node
@@ -47,7 +48,7 @@ module Wings
 
         def valkyrie_attributes_to_af_file(attributes:, af_file:)
           attributes.each do |k, v|
-            next if [:id, :content].include? k
+            next if [:id, :content, :type].include? k
             mname = (k.to_s + '=').to_sym
             if af_file.respond_to? mname
               af_file.send(mname, v)
