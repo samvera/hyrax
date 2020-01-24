@@ -2,7 +2,7 @@
 
 module Hyrax
   ##
-  # Indexes properties common to Hryax::Resource types
+  # Indexes properties common to Hyrax::Resource types
   module ResourceIndexer
     def to_solr
       super.tap do |index_document|
