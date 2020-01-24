@@ -24,12 +24,16 @@ module Hyrax
       Rails.logger.debug "Ran characterization on #{characterization_proxy.id} (#{characterization_proxy.mime_type})"
       characterization_proxy.alpha_channels = channels(filepath) if source.image? && Hyrax.config.iiif_image_server?
       characterization_proxy.save!
-      source.update_index
-      source.parent&.in_collections&.each(&:update_index)
+      update_source
       CreateDerivativesJob.perform_later(source, source.original_file.id, filepath)
     end
 
     private
+
+      def update_source
+        source.update_index
+        source.parent&.in_collections&.each(&:update_index)
+      end
 
       def characterization_proxy
         raise "#{source.class.characterization_proxy} was not found for FileSet #{source.id}" unless source.characterization_proxy?
