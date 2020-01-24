@@ -10,21 +10,97 @@ module Valkyrie
     #   arguments, but we actually want to raise ArgumentError when the caller
     #   isn't using the correct signature.
     class NullIndexingAdapter
-      def save(resource:)
-        :noop
-      end
+      COMMIT_PARAMS = { softCommit: true }.freeze
+        ##
+        # @!attribute [r] connection
+        #   @return [RSolr::Client]
+        # @!attribute [r] resource_indexer
+        #   @return [Class]
+        attr_reader :connection, :resource_indexer
 
-      def save_all(resources:)
-        :noop
-      end
+        ##
+        # @param connection [RSolr::Client] The RSolr connection to index to.
+        # @param resource_indexer [Class, #to_solr] An indexer which is able to
+        #   receive a `resource` argument and then has an instance method `#to_solr`
+        def initialize(connection: default_connection, resource_indexer: default_indexer)
+          @connection = connection
+          @resource_indexer = resource_indexer
+        end
 
-      def delete(resource:)
-        :noop
-      end
+        def save(resource:)
+          persist([resource])
+        end
 
-      def wipe!
-        :noop
-      end
+        def save_all(resources:)
+          persist(resources)
+        end
+
+        # Deletes a Solr Document using the ID
+        # @return [Array<Valkyrie::Resource>] resources which have been deleted from Solr
+        def delete(resource:)
+          connection.delete_by_id resource.id.to_s, params: COMMIT_PARAMS
+        end
+
+        # Delete the Solr index of all Documents
+        def wipe!
+          connection.delete_by_query("*:*")
+          connection.commit
+        end
+
+        private
+
+          def persist(resources)
+            documents = resources.map do |resource|
+              solr_document(resource)
+            end
+            add_documents(documents)
+          end
+
+          def solr_document(resource)
+            resource_indexer.for(resource: resource).to_solr
+          end
+
+          def add_documents(documents)
+            connection.add documents, params: COMMIT_PARAMS
+          end
+
+          ##
+          # Index configuration based on the blacklight connection.
+          def blacklight_based_config
+            begin
+              # If Blacklight raises an error, we're hopefully running a
+              # generator now (if not, the application has bigger problems
+              # than this missing configuration)
+              bl_index = Blacklight.default_index.connection.uri
+            rescue RuntimeError
+              return {}
+            end
+
+            { 'host' => bl_index.host,
+              'port' => bl_index.port,
+              'core' => 'hyrax-valkyrie' }
+          end
+
+          def connection_url
+            config = begin
+                       Rails.application.config_for(:valkyrie_index).compact
+                     rescue RuntimeError
+                       {}
+                     end
+
+            # if any configuration is missing, derive it from Blacklight
+            config = blacklight_based_config.merge(config)
+
+            "http://#{config['host']}:#{config['port']}/solr/#{config['core']}"
+          end
+
+          def default_connection
+            RSolr.connect(url: connection_url)
+          end
+
+          def default_indexer
+            Valkyrie::Persistence::Solr::MetadataAdapter::NullIndexer
+          end
     end
     # rubocop:enable Lint/UnusedMethodArgument
   end

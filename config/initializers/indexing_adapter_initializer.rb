@@ -6,11 +6,11 @@ require 'valkyrie/indexing/null_indexing_adapter'
 Rails.application.config.to_prepare do
   Valkyrie::IndexingAdapter.register(
     Valkyrie::Indexing::Solr::IndexingAdapter.new(
-      resource_indexer: Hyrax::ValkyrieIndexer
+      resource_indexer: Hyrax::ValkyrieWorkIndexer
     ),
     :solr_index
   )
-  Valkyrie::IndexingAdapter.register(
-    Valkyrie::Indexing::NullIndexingAdapter.new, :null_index
-  )
+  # Valkyrie::IndexingAdapter.register(
+  #   Valkyrie::Indexing::NullIndexingAdapter.new, :null_index
+  # )
 end

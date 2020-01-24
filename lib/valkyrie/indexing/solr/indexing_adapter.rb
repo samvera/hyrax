@@ -94,7 +94,7 @@ module Valkyrie
           end
 
           def default_indexer
-            Valkyrie::Persistence::Solr::MetadataAdapter::NullIndexer
+            Valkyrie::Indexing::NullIndexer
           end
       end
     end

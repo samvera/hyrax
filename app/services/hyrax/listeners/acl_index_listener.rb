@@ -13,6 +13,7 @@ module Hyrax
       #
       # @param event [Dry::Event]
       def on_object_acl_updated(event)
+        byebug
         return unless event[:result] == :success # do nothing on failure
         Hyrax.index_adapter.save(resource: event[:acl].resource)
       end
