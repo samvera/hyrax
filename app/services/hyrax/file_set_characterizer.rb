@@ -2,38 +2,33 @@
 
 module Hyrax
   ##
-  # Propogates visibility from a given Work to its FileSets
+  # Characterizes an ActiveFedora based FileSet
   class FileSetCharacterizer
     ##
     # @!attribute [rw] source
-    #   @return [#visibility]
+    #   @return [#characterize]
     attr_accessor :source
 
     ##
-    # @param source [#visibility] the object to propogate visibility from
+    # @param source the object to characterize
     def initialize(source:)
-      self.source = source
+      @source = source
     end
 
     ##
     # @return [void]
     #
-    # @raise [RuntimeError] if visibility propogation fails
+    # @raise [RuntimeError] if FileSet is missing the characterization_proxy
     def characterize
       Hydra::Works::CharacterizationService.run(characterization_proxy, filepath)
       Rails.logger.debug "Ran characterization on #{characterization_proxy.id} (#{characterization_proxy.mime_type})"
       characterization_proxy.alpha_channels = channels(filepath) if source.image? && Hyrax.config.iiif_image_server?
       characterization_proxy.save!
-      update_source
+      source.update_index
       CreateDerivativesJob.perform_later(source, source.original_file.id, filepath)
     end
 
     private
-
-      def update_source
-        source.update_index
-        source.parent&.in_collections&.each(&:update_index)
-      end
 
       def characterization_proxy
         raise "#{source.class.characterization_proxy} was not found for FileSet #{source.id}" unless source.characterization_proxy?

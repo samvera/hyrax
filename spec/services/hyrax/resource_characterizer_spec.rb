@@ -1,6 +1,5 @@
 RSpec.describe Hyrax::ResourceCharacterizer do
   subject(:characterizer) { described_class.new(source: resource) }
-  let(:resource) { FactoryBot.create(:file_set).valkyrie_resource }
 
   before do
     allow(Hyrax::FileSet).to receive(:find).with(resource.id).and_return(resource)

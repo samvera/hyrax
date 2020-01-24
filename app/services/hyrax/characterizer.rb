@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 module Hyrax
   ##
-  # @abstract Propogates visibility from a provided object (e.g. a Work) to some
-  # group of its members (e.g. file_sets).
+  # Determines which characterizer to run based on the file_set type
+  # allowing implementation of Valkyrie file_sets
   class Characterizer
     ##
-    # @param source [#visibility] the object to propogate visibility from
+    # @param source: the object to run a characterizer on
     #
-    # @return [#propogate]
+    # @return [#characterize]
     def self.for(source:)
       case source
       when Hyrax::FileSetBehavior # ActiveFedora
