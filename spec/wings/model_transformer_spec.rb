@@ -257,8 +257,8 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
     let(:page2)       { page_class.new(id: 'pg2') }
 
     let(:book_class) do
-      Monograph = Class.new(ActiveFedora::Base) do
-        has_many :pages
+      ActiveFedoraMonograph = Class.new(ActiveFedora::Base) do
+        has_many :active_fedora_pages
         property :title, predicate: ::RDF::Vocab::DC.title
         property :contributor, predicate: ::RDF::Vocab::DC.contributor
         property :description, predicate: ::RDF::Vocab::DC.description
@@ -266,14 +266,14 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
     end
 
     let(:page_class) do
-      Page = Class.new(ActiveFedora::Base) do
-        belongs_to :book_with_pages, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf
+      ActiveFedoraPage = Class.new(ActiveFedora::Base) do
+        belongs_to :active_fedora_book_with_active_fedora_pages, predicate: ActiveFedora::RDF::Fcrepo::RelsExt.isPartOf
       end
     end
 
     after do
-      Object.send(:remove_const, :Page)
-      Object.send(:remove_const, :Monograph)
+      Object.send(:remove_const, :ActiveFedoraPage)
+      Object.send(:remove_const, :ActiveFedoraMonograph)
     end
 
     let(:attributes) do
@@ -281,7 +281,7 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
         title: ['fake title', 'fake title 2'],
         contributor: ['user1'],
         description: ['a description'],
-        pages: [page1, page2]
+        active_fedora_pages: [page1, page2]
       }
     end
 
@@ -305,7 +305,7 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
           .to have_attributes title: book.title,
                               contributor: book.contributor,
                               description: book.description
-        expect(subject.build.page_ids).to match_valkyrie_ids_with_active_fedora_ids(['pg1', 'pg2'])
+        expect(subject.build.active_fedora_page_ids).to match_valkyrie_ids_with_active_fedora_ids(['pg1', 'pg2'])
       end
     end
   end
