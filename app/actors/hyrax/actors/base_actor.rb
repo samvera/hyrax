@@ -69,14 +69,16 @@ module Hyrax
 
         def save(env, use_valkyrie: false)
           return env.curation_concern.save unless use_valkyrie
-
-          resource = valkyrie_save(resource: env.curation_concern.valkyrie_resource)
+          
+          resource = valkyrie_save(resource: 
+            valkyrie_resource?(env.curation_concern) ? env.curation_concern : env.curation_concern.valkyrie_resource
+          )
 
           # we need to manually set the id and reload, because the actor stack requires
           # `env.curation_concern` to be the exact same instance throughout.
           # casting back to ActiveFedora doesn't satisfy this.
           env.curation_concern.id = resource.alternate_ids.first.id unless env.curation_concern.id
-          env.curation_concern.reload
+          env.curation_concern.reload unless valkyrie_resource?(env.curation_concern)
         rescue Wings::Valkyrie::Persister::FailedSaveError => _err
           # for now, just hit the validation error again
           # later we should capture the _err.obj and pass it back
@@ -85,7 +87,11 @@ module Hyrax
         end
 
         def apply_save_data_to_curation_concern(env)
-          env.curation_concern.attributes = clean_attributes(env.attributes)
+          if valkyrie_resource?(env.curation_concern)
+            clean_attributes(env.attributes).each_pair {|k,v| env.curation_concern.send("#{k}=", v)}
+          else
+            env.curation_concern.attributes = clean_attributes(env.attributes)
+          end
           env.curation_concern.date_modified = TimeService.time_in_utc
         end
 
@@ -122,6 +128,10 @@ module Hyrax
           resource.permission_manager.acl.permissions = permissions
           resource.permission_manager.acl.save
           resource
+        end
+
+        def valkyrie_resource?(work)
+          work.is_a? Valkyrie::Resource
         end
     end
   end
