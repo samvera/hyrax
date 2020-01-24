@@ -313,7 +313,7 @@ RSpec.describe Hyrax::FileSetPresenter do
     let(:solr_document) { SolrDocument.new(file_set.to_solr) }
     let(:request) { double(base_url: 'http://test.host') }
     let(:presenter) { described_class.new(solr_document, ability, request) }
-    let(:id) { ActiveFedora::File.uri_to_id(file_set.original_file.versions.last.uri) }
+    let(:id) { Hyrax::Base.uri_to_id(file_set.original_file.versions.last.uri) }
     let(:read_permission) { true }
 
     before do

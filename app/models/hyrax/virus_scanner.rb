@@ -3,7 +3,7 @@
 # installed or otherwise not available to your application, Hyrax::Works does no virus checking
 # add assumes files have no viruses.
 #
-# To use a virus checker other than ClamAV:
+# @example to use a virus checker other than Hyrax::VirusScanner:
 #   class MyScanner < Hyrax::Works::VirusScanner
 #     def infected?
 #       my_result = Scanner.check_for_viruses(file)
@@ -11,8 +11,8 @@
 #     end
 #   end
 #
-# Then set Hyrax::Works to use your scanner either in a config file or initializer:
-#   Hyrax::Works.default_system_virus_scanner = MyScanner
+#   # Then set Hyrax::Works to use your scanner either in a config file or initializer:
+#   Hyrax.config.virus_scanner = MyScanner
 module Hyrax
   class VirusScanner
     attr_reader :file

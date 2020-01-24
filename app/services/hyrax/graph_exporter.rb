@@ -36,7 +36,7 @@ module Hyrax
       # This method is called once for each statement in the graph.
       def replacer
         lambda do |resource_id, graph|
-          url = ActiveFedora::Base.id_to_uri(resource_id)
+          url = Hyrax::Base.id_to_uri(resource_id)
           klass = graph.query([:s, ActiveFedora::RDF::Fcrepo::Model.hasModel, :o]).first.object.to_s.constantize
 
           # if the subject URL matches

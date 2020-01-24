@@ -13,7 +13,7 @@ Riiif::Image.info_service = lambda do |id, _file|
 end
 
 Riiif::Image.file_resolver.id_to_uri = lambda do |id|
-  ActiveFedora::Base.id_to_uri(CGI.unescape(id)).tap do |url|
+  Hyrax::Base.id_to_uri(CGI.unescape(id)).tap do |url|
     Rails.logger.info "Riiif resolved #{id} to #{url}"
   end
 end

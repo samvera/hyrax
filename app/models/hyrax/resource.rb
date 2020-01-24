@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_dependency 'hyrax/resource_name'
+
 module Hyrax
   ##
   # The base Valkyrie model for Hyrax.
@@ -29,6 +31,8 @@ module Hyrax
   #   implementations).
   #
   class Resource < Valkyrie::Resource
+    include Hyrax::Naming
+
     attribute :alternate_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
     attribute :embargo,       Hyrax::Embargo.optional
     attribute :lease,         Hyrax::Lease.optional
@@ -38,10 +42,22 @@ module Hyrax
              :read_groups, :read_groups=,
              :read_users,  :read_users=, to: :permission_manager
 
-    ##
-    # @return [String] a human readable name for the model
-    def self.human_readable_type
-      I18n.translate("hyrax.models.#{model_name.i18n_key}", default: model_name.human)
+    class << self
+      ##
+      # @return [String] a human readable name for the model
+      def human_readable_type
+        I18n.translate("hyrax.models.#{model_name.i18n_key}", default: model_name.human)
+      end
+
+      private
+
+        ##
+        # @api private
+        #
+        # @return [Class] an ActiveModel::Name compatible class
+        def _hyrax_default_name_class
+          Hyrax::ResourceName
+        end
     end
 
     ##

@@ -42,9 +42,6 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
     context 'and requesting extracted text' do
       subject { described_class.call(file_set: file_set, file: text_file, type: [extracted_text_use]) }
       it "builds and uses the association's target" do
-        pending 'fix failing spec'
-        # TODO: LDP fails to write the file to Fedora even though the LDP put request looks correct and
-        #       has the correct file with expected content as part of the put request.
         ids = subject.extracted_text_ids
         expect(ids.size).to eq 1
         expect(ids.first).to be_a Valkyrie::ID
@@ -91,7 +88,6 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
     let(:versioning) { true }
     subject { described_class.call(file_set: file_set, file: pdf_file, type: original_file_use, versioning: versioning) }
     it 'updates the file and creates a version' do
-      pending 'Valkyrization of versioning for files'
       expect(subject.original_file.versions.all.count).to eq(1)
       expect(subject.original_file.content).to start_with('%PDF-1.3')
     end
@@ -116,7 +112,6 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
     end
     subject { described_class.call(file_set: file_set, file: text_file, type: original_file_use, versioning: versioning) }
     it 'skips creating versions' do
-      pending 'Valkyrization of versioning for files'
       expect(subject.original_file.versions.all.count).to eq(0)
       expect(subject.original_file.content).to eq("some updated content\n")
     end

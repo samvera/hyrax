@@ -276,6 +276,10 @@ Hyrax.config do |config|
   # mount point.
   #
   # config.whitelisted_ingest_dirs = []
+
+  ##
+  # Set the system-wide virus scanner
+  config.virus_scanner = Hyrax::VirusScanner
 end
 
 Date::DATE_FORMATS[:standard] = "%m/%d/%Y"
