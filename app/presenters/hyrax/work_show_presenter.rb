@@ -231,6 +231,12 @@ module Hyrax
       collections.present? || current_ability.can?(:create_any, ::Collection)
     end
 
+    ##
+    # @return [Array<Class>]
+    def valid_child_concerns
+      Hyrax::ChildTypes.for(parent: solr_document.hydra_model).to_a
+    end
+
     private
 
       # list of item ids to display is based on ordered_ids
