@@ -30,7 +30,7 @@ module Hyrax
       af_objects = Hyrax.query_service.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie: false)
       af_objects.each do |curation_concern|
         Hyrax::Actors::EmbargoActor.new(curation_concern).destroy
-        # if the concern is a FileSet, set its visibility and visibility propogation
+        # if the concern is a FileSet, set its visibility and visibility propagation
         if curation_concern.file_set?
           curation_concern.visibility = curation_concern.to_solr["visibility_after_embargo_ssim"]
           curation_concern.save!
