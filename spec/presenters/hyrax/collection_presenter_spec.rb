@@ -3,7 +3,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     subject { described_class.terms }
 
     it do
-      is_expected.to eq [:total_items, :resource_type, :creator,
+      is_expected.to eq [:total_items, :size, :resource_type, :creator,
                          :contributor, :keyword, :license, :publisher,
                          :date_created, :subject, :language, :identifier,
                          :based_near, :related_url]
@@ -78,6 +78,7 @@ RSpec.describe Hyrax::CollectionPresenter do
 
     it do
       is_expected.to eq [:total_items,
+                         :size,
                          :resource_type,
                          :keyword,
                          :date_created,
@@ -120,6 +121,13 @@ RSpec.describe Hyrax::CollectionPresenter do
     subject { presenter.to_key }
 
     it { is_expected.to eq ['adc12v'] }
+  end
+
+  describe '#size' do
+    it 'returns a hard-coded string and issues a deprecation warning' do
+      expect(Deprecation).to receive(:warn).once
+      expect(presenter.size).to eq('unknown')
+    end
   end
 
   describe "#total_items", :clean_repo do
