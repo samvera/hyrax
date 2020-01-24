@@ -55,24 +55,4 @@ RSpec.describe CharacterizeJob do
       end
     end
   end
-
-  context 'when the work is a Valkyrie FileSet' do
-    let(:resource) { FactoryBot.create(:file_set, content: File.open(fixture_path + '/world.png')).valkyrie_resource }
-
-    before do
-      allow(Hydra::Works::CharacterizationService).to receive(:run) # .with(resource.characterization_proxy, resource.original_file.file_name)
-      allow(Hyrax.persister).to receive(:save) # .with(resource.characterization_proxy, resource.original_file.file_name)
-      # allow(CreateDerivativesJob).to receive(:perform_later).with(file_set, file.id, filename)
-    end
-
-    it 'runs Hydra::Works::CharacterizationService and creates a CreateDerivativesJob' do
-      # expect(Hydra::Works::CharacterizationService).to receive(:run).with(file, filename)
-      # expect(file).to receive(:save!)
-      # expect(file_set).to receive(:update_index)
-      # byebug
-      expect(CreateDerivativesJob).to receive(:perform_later).with(resource, resource.original_file.id, anything)
-      expect(Hyrax.persister).to receive(:save).twice
-      described_class.perform_now(resource)
-    end
-  end
 end
