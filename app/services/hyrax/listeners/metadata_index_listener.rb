@@ -16,7 +16,17 @@ module Hyrax
       #
       # @param event [Dry::Event]
       def on_object_metadata_updated(event)
-        Hyrax.index_adapter.save(resource: event[:object])
+        Hyrax.index_adapter.save(resource:
+          Hyrax::ValkyrieIndexer.for(resource: event[:object]).resource)
+      end
+
+      ##
+      # Index the resource.
+      #
+      # @param event [Dry::Event]
+      def on_object_metadata_created(event)
+        Hyrax.index_adapter.save(resource: 
+          Hyrax::ValkyrieIndexer.for(resource: event[:object]).resource)
       end
     end
   end

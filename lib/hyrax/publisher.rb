@@ -58,6 +58,7 @@ module Hyrax
     register_event('object.deleted')
     register_event('object.deposited')
     register_event('object.acl.updated')
+    register_event('object.metadata.created')
     register_event('object.metadata.updated')
   end
 end
