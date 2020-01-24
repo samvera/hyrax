@@ -93,6 +93,17 @@ module Hyrax
       end
     end
 
+    # @deprecated to be removed in 4.0.0; this feature was replaced with a
+    #   hard-coded null implementation
+    # @return [Fixnum] 0
+    def bytes
+      Deprecation.warn('#bytes has been deprecated for removal in Hyrax 4.0.0; ' \
+                       'The implementation of the indexed Collection size ' \
+                       'feature is extremely inefficient, so it has been removed. ' \
+                       'This method now returns a hard-coded `0` for compatibility.')
+      0
+    end
+
     # @api public
     # Retrieve the permission template for this collection.
     # @return [Hyrax::PermissionTemplate]

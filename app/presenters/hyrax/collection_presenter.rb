@@ -41,7 +41,7 @@ module Hyrax
     # Terms is the list of fields displayed by
     # app/views/collections/_show_descriptions.html.erb
     def self.terms
-      [:total_items, :resource_type, :creator, :contributor, :keyword, :license, :publisher, :date_created, :subject,
+      [:total_items, :size, :resource_type, :creator, :contributor, :keyword, :license, :publisher, :date_created, :subject,
        :language, :identifier, :based_near, :related_url]
     end
 
@@ -49,13 +49,30 @@ module Hyrax
       self.class.terms.select { |t| self[t].present? }
     end
 
+    ##
+    # @param [Symbol] key
+    # @return [Object]
     def [](key)
       case key
+      when :size
+        size
       when :total_items
         total_items
       else
         solr_document.send key
       end
+    end
+
+    # @deprecated to be removed in 4.0.0; this feature was replaced with a
+    #   hard-coded null implementation
+    # @return [String] 'unknown'
+    def size
+      Deprecation.warn('#size has been deprecated for removal in Hyrax 4.0.0; ' \
+                       'The implementation of the indexed Collection size ' \
+                       'feature is extremely inefficient, so it has been removed. ' \
+                       'This method now returns a hard-coded `"unknown"` for ' \
+                       'compatibility.')
+      'unknown'
     end
 
     def total_items
