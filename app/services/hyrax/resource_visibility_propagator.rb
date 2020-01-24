@@ -21,7 +21,7 @@ module Hyrax
     attr_reader :embargo_manager, :lease_manager, :persister, :queries
 
     ##
-    # @param source [#visibility] the object to propogate visibility from
+    # @param source [#visibility] the object to propagate visibility from
     def initialize(source:,
                    embargo_manager: Hyrax::EmbargoManager,
                    lease_manager:   Hyrax::LeaseManager,
@@ -37,7 +37,7 @@ module Hyrax
     ##
     # @return [void]
     #
-    # @raise [RuntimeError] if visibility propogation fails
+    # @raise [RuntimeError] if visibility propagation fails
     def propagate
       queries.find_child_filesets(resource: source).each do |file_set|
         file_set.visibility = source.visibility

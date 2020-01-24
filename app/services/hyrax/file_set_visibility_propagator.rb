@@ -2,7 +2,7 @@
 
 module Hyrax
   ##
-  # Propogates visibility from a given Work to its FileSets
+  # Propagates visibility from a given Work to its FileSets
   class FileSetVisibilityPropagator
     ##
     # @!attribute [rw] source
@@ -10,7 +10,7 @@ module Hyrax
     attr_accessor :source
 
     ##
-    # @param source [#visibility] the object to propogate visibility from
+    # @param source [#visibility] the object to propagate visibility from
     def initialize(source:)
       self.source = source
     end
@@ -18,7 +18,7 @@ module Hyrax
     ##
     # @return [void]
     #
-    # @raise [RuntimeError] if visibility propogation fails
+    # @raise [RuntimeError] if visibility propagation fails
     def propagate
       source.file_sets.each do |file|
         file.visibility = source.visibility # visibility must come first, because it can clear an embargo/lease
