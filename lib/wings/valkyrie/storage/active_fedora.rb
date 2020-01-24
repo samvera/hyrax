@@ -6,7 +6,7 @@ module Wings::Storage
   class ActiveFedora < Valkyrie::Storage::Fedora
     # @param file [IO]
     # @param original_filename [String]
-    # @param resource [Valkyrie::Resource]
+    # @param resource [Valkyrie::Resource] FileMetadata resource
     # @param content_type [String] content type of file (e.g. 'image/tiff') (default='application/octet-stream')
     # @param resource_uri_transformer [Lambda] transforms the resource's id (e.g. 'DDS78RK') into a uri (optional)
     # @param extra_arguments [Hash] additional arguments which may be passed to other adapters

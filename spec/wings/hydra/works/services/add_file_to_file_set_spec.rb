@@ -72,15 +72,18 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
     let(:transcript_use)   { Valkyrie::Vocab::PCDMUse.Transcript }
     let(:service_file_use) { Valkyrie::Vocab::PCDMUse.ServiceFile }
 
-    subject { described_class.call(file_set: file_set, file: text_file, type: transcript_use) }
-    before do
-      described_class.call(file_set: file_set, file: pdf_file, type: service_file_use)
+    subject do 
+      updated_file_set = described_class.call(file_set: file_set, file: pdf_file, type: service_file_use)
+      described_class.call(file_set: updated_file_set, file: text_file, type: transcript_use)
     end
     it 'adds the given file and applies the specified RDF::URI use to it' do
-      pending 'fix failing spec'
-      # TODO: Valkyrie resource needs to support filter_files_by_type
-      expect(subject.filter_files_by_type(transcript_use).first.content).to start_with('some updated content')
-      expect(subject.filter_files_by_type(service_file_use).first.content).to start_with('%PDF-1.3')
+      ids = subject.file_ids      
+      expect(ids.size).to eq 2
+      expect(ids.first).to be_a Valkyrie::ID
+      expect(ids.first.to_s).to start_with "#{file_set.id}/files/"
+
+      expect(Hyrax.query_service.custom_queries.find_file_metadata_by_use(resource: subject, use: transcript_use).first.content.first).to start_with('some updated content')
+      expect(Hyrax.query_service.custom_queries.find_file_metadata_by_use(resource: subject, use: service_file_use).first.content.first).to start_with('%PDF-1.3')
     end
   end
 
@@ -93,12 +96,11 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
     end
 
     context 'and there are already versions' do
-      before do
-        described_class.call(file_set: file_set, file: pdf_file, type: original_file_use, versioning: versioning)
+      subject do
+        updated_file_set = described_class.call(file_set: file_set, file: pdf_file, type: original_file_use, versioning: versioning)
+        described_class.call(file_set: updated_file_set, file: text_file, type: original_file_use, versioning: versioning)
       end
-      subject { described_class.call(file_set: file_set, file: text_file, type: original_file_use, versioning: versioning) }
       it 'adds to the version history' do
-        pending 'Valkyrization of versioning for files'
         expect(subject.original_file.versions.all.count).to eq(2)
         expect(subject.original_file.content).to eq("some updated content\n")
       end
@@ -107,10 +109,10 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
 
   context 'when :versioning => false' do
     let(:versioning) { false }
-    before do
-      described_class.call(file_set: file_set, file: pdf_file, type: original_file_use, versioning: versioning)
+    subject do
+      updated_file_set = described_class.call(file_set: file_set, file: pdf_file, type: original_file_use, versioning: versioning)
+      described_class.call(file_set: updated_file_set, file: text_file, type: original_file_use, versioning: versioning)
     end
-    subject { described_class.call(file_set: file_set, file: text_file, type: original_file_use, versioning: versioning) }
     it 'skips creating versions' do
       expect(subject.original_file.versions.all.count).to eq(0)
       expect(subject.original_file.content).to eq("some updated content\n")

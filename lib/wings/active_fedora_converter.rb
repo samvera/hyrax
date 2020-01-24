@@ -138,19 +138,15 @@ module Wings
       end
 
       def convert_files(af_object)
-        convert_file(af_object, :original_file)
-        convert_file(af_object, :thumbnail_file)
-        convert_file(af_object, :extracted_text_file)
-        # TODO: How to identify and convert files added with URI relationships (e.g. Valkyrie::Vocab::PCDMUse.Transcript)
-        # TODO: How to identify and convert customizations that add file relationships (e.g. :remastered)
-      end
-
-      def convert_file(af_object, relation)
-        resource_relation = "#{relation}_ids".to_sym
-        related_file_ids = resource.try(resource_relation)
-        return unless related_file_ids.present?
-        pcdm_file = Hydra::PCDM::File.new(related_file_ids.first.to_s)
-        af_object.association(relation).target = pcdm_file
+        files = []
+        resource.file_ids.each do |fid|
+          pcdm_file = Hydra::PCDM::File.new(fid.id)
+          af_object.association(:original_file).target = pcdm_file if pcdm_file.metadata_node.type.include? RDF::URI.new('http://pcdm.org/use#OriginalFile')
+          af_object.association(:extracted_text_file).target = pcdm_file if pcdm_file.metadata_node.type.include? RDF::URI.new('http://pcdm.org/use#ExtractedText')
+          af_object.association(:thumbnail_file).target = pcdm_file if pcdm_file.metadata_node.type.include? RDF::URI.new('http://pcdm.org/use#Thumbnail')
+          files << pcdm_file
+        end
+        af_object.files = files
       end
 
       # Normalizes the attributes parsed from the resource

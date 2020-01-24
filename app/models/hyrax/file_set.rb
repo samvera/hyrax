@@ -24,5 +24,17 @@ module Hyrax
     def file_set?
       true
     end
+
+    def original_file
+      Hyrax.query_service.custom_queries.find_file_metadata_by(id: original_file_id)
+    end
+
+    def extracted_text
+      Hyrax.query_service.custom_queries.find_file_metadata_by(id: extracted_text_id)
+    end
+
+    def thumbnail
+      Hyrax.query_service.custom_queries.find_file_metadata_by(id: thumbnail_id)
+    end
   end
 end

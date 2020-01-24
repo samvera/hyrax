@@ -9,7 +9,8 @@ module Wings
       def self.queries
         [:find_file_metadata_by,
          :find_file_metadata_by_alternate_identifier,
-         :find_many_file_metadata_by_ids]
+         :find_many_file_metadata_by_ids,
+         :find_file_metadata_by_use]
       end
 
       def initialize(query_service:)
@@ -67,6 +68,21 @@ module Wings
           end
         end
         results
+      end
+
+      ##
+      # Find files within a rource that have the requested use.
+      #
+      # @param use [RDF::URI] uri for the desired Type
+      # @return [Enumerable<Valkyrie::Resource>]
+      #
+      # @example
+      #   Hyrax.query_service.find_file_metadata_by_use(use: ::RDF::URI("http://pcdm.org/ExtractedText"))
+      def find_file_metadata_by_use(resource:, use:)
+        resource.file_ids.collect do |file_id|
+          pcdm_file = Hydra::PCDM::File.find(file_id.id)
+          Wings::FileConverterService.af_file_to_resource(af_file: pcdm_file) if pcdm_file.metadata_node.type.include?(use)
+        end.compact
       end
     end
   end
