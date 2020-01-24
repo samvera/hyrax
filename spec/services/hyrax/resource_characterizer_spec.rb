@@ -3,6 +3,7 @@ RSpec.describe Hyrax::ResourceCharacterizer do
   let(:resource) { FactoryBot.create(:file_set).valkyrie_resource }
 
   before do
+    allow(Hyrax::FileSet).to receive(:find).with(resource.id).and_return(resource)
     allow(Hydra::Works::CharacterizationService).to receive(:run)
     allow(Hyrax.persister).to receive(:save)
     allow(CreateDerivativesJob).to receive(:perform_later)
