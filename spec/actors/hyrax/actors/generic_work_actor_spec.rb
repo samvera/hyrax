@@ -63,6 +63,12 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
           .to change { listener.object_deposited&.payload }
           .to eq object: curation_concern, user: user
       end
+
+      it 'publishes an object.metadata.updated event' do
+        expect { middleware.create(env) }
+          .to change { listener.object_metadata_updated&.payload }
+          .to eq object: curation_concern, user: user
+      end
     end
 
     context 'valid attributes', perform_enqueued: [AttachFilesToWorkJob, IngestJob] do
