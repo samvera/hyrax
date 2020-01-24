@@ -60,7 +60,8 @@ module Hyrax
     #
     # @return [#to_solr]
     def self.for(resource:)
-      registry.fetch(resource.class.name.constantize, ValkyrieIndexer).new(resource: resource)
+      # resource.class.name.constantize
+      registry.fetch(resource.class, ValkyrieIndexer).new(resource: resource)
     end
 
     ##
