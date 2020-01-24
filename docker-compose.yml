@@ -1,29 +1,24 @@
 version: '3.6'
 
 services:
-  solr:
-    image: solr:7
+  solr-test:
+    image: solr:8
     volumes:
-      - ./solr/conf/:/myconfig
-    # command: solr-create -c hydra-test -d /myconfig
-    # ports:
-    #  - 8985:8983
-  # solr-valkyrie-test:
-  #   image: solr:7
-  #   volumes:
-  #     - ./solr/conf/:/myconfig
-  #   command: solr-create -c hyrax-valkyrie-test -d /myconfig
-  #   ports:
-  #     - 8987:8983
+      - ./.internal_test_app/solr/conf/:/myconfig
+    command: solr-create -c hydra-test -d /myconfig
+    ports:
+     - 8985:8983
+  solr-valkyrie-test:
+    image: solr:8
+    volumes:
+      - ./.interanl_test_app/solr/conf/:/myconfig
+    command: solr-create -c hyrax-valkyrie-test -d /myconfig
+    ports:
+      - 8987:8983
       # fcrepo:
   #   image: yinlinchen/fcrepo4-docker
   #   ports:
   #     - 8983:8080
-  solr-test:
-    extends: solr
-    command: solr-create -c hydra-test -d /myconfig
-    ports:
-      - 8985:898
   redis:
     image: redis
     ports:
