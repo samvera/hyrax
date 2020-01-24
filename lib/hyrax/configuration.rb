@@ -183,6 +183,18 @@ module Hyrax
       @bagit_dir ||= "tmp/descriptions"
     end
 
+    # @!attribute [w] virus_scanner
+    #   @return [Hyrax::VirusScanner] the default system virus scanner
+    attr_writer :virus_scanner
+    def virus_scanner
+      @virus_scanner ||=
+        if Hyrax.primary_work_type.respond_to?(:default_system_virus_scanner)
+          Hyrax.primary_work_type.default_system_virus_scanner
+        else
+          Hyrax::VirusScanner
+        end
+    end
+
     # @!attribute [w] whitelisted_ingest_dirs
     #   List of directories which can be used for local file system ingestion.
     attr_writer :whitelisted_ingest_dirs

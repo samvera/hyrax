@@ -11,7 +11,7 @@ module Hyrax
       new(original_file).file_has_virus?
     end
 
-    def initialize(original_file, system_virus_scanner = Hyrax.primary_work_type.default_system_virus_scanner)
+    def initialize(original_file, system_virus_scanner = Hyrax.config.virus_scanner)
       self.original_file = original_file
       self.system_virus_scanner = system_virus_scanner
     end
