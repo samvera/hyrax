@@ -12,7 +12,7 @@ module Hyrax
       when Hyrax::FileSetBehavior # ActiveFedora
         FileSetCharacterizer.new(source: source)
       when Hyrax::FileSet # Valkyrie
-        FileSetCharacterizer.new(source: source)
+        ResourceCharacterizer.new(source: source)
       end
     end
   end

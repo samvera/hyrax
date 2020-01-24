@@ -3,7 +3,7 @@
 module Hyrax
   ##
   # Propogates visibility from a given Work to its FileSets
-  class FileSetCharacterizer
+  class ResourceCharacterizer
     ##
     # @!attribute [rw] source
     #   @return [#visibility]
@@ -23,16 +23,15 @@ module Hyrax
       Hydra::Works::CharacterizationService.run(source.characterization_proxy, filepath)
       Rails.logger.debug "Ran characterization on #{source.characterization_proxy.id} (#{source.characterization_proxy.mime_type})"
       source.characterization_proxy.alpha_channels = channels(filepath) if source.image? && Hyrax.config.iiif_image_server?
-      source.characterization_proxy.save!
-      source.update_index
-      source.parent&.in_collections&.each(&:update_index)
+      Hyrax.persister.save(resource: source.characterization_proxy)
+      Hyrax.persister.save(resource: source)
       CreateDerivativesJob.perform_later(source, source.original_file.id, filepath)
     end
 
     private
 
       def filepath
-        Hyrax::WorkingDirectory.find_or_retrieve(source.original_file.id, source.id)
+        Hyrax::WorkingDirectory.find_or_retrieve(source.original_file.id, source.id.id)
       end
 
       def channels(path)

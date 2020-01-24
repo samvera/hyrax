@@ -7,6 +7,8 @@ module Hyrax
   # @see https://wiki.duraspace.org/display/samvera/Hydra%3A%3AWorks+Shared+Modeling
   class FileSet < Hyrax::Resource
     include Hyrax::Schema(:core_metadata)
+    include Hyrax::FileSet::Characterization
+    include Hydra::Works::MimeTypes
 
     attribute :file_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID) # id for FileMetadata resources
     attribute :original_file_id, Valkyrie::Types::ID # id for FileMetadata resource
