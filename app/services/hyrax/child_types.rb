@@ -23,6 +23,7 @@ module Hyrax
 
     ##
     # @params [Class] parent
+    # @return [Enumerable<Class>] a list of classes that are valid as child types for `parent`
     def self.for(parent:)
       return new(parent.valid_child_concerns) if
         parent.respond_to?(:valid_child_concerns)
