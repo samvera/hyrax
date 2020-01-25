@@ -29,7 +29,17 @@ module Wings
     #
     # @return [Class]
     def self.base_for(klass:)
-      ModelRegistry.reverse_lookup(klass) || Hyrax::Resource
+      ModelRegistry.reverse_lookup(klass) || valkyrie_resource_class(klass)
+    end
+
+    def self.valkyrie_resource_class(klass)
+      if klass.name.starts_with?('Wings::')
+        klass.name.gsub('Wings::', '').gsub('__', '::').constantize
+      else
+        Hyrax::Resource
+      end
+    rescue NameError
+      Hyrax::Resource
     end
 
     ##
