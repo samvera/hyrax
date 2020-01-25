@@ -2,6 +2,8 @@
 
 module Hyrax
   class FileMetadata < Valkyrie::Resource
+    GENERIC_MIME_TYPE = 'application/octet-stream'
+
     attribute :file_identifiers, ::Valkyrie::Types::Set # id of the file stored by the storage adapter
     attribute :alternate_ids, Valkyrie::Types::Set.of(Valkyrie::Types::ID) # id of the Hydra::PCDM::File which holds metadata and the file in ActiveFedora
     attribute :file_set_id, ::Valkyrie::Types::ID # id of parent file set resource
@@ -9,7 +11,7 @@ module Hyrax
     # all remaining attributes are on AF::File metadata_node unless otherwise noted
     attribute :label, ::Valkyrie::Types::Set
     attribute :original_filename, ::Valkyrie::Types::Set
-    attribute :mime_type, ::Valkyrie::Types::Set
+    attribute :mime_type, ::Valkyrie::Types::String.default(GENERIC_MIME_TYPE)
     attribute :type, ::Valkyrie::Types::Set # AF::File type
     attribute :content, ::Valkyrie::Types::Set
 
@@ -79,14 +81,27 @@ module Hyrax
           type: file.try(:type) || [Hyrax::FileSet::ORIGINAL_FILE_USE])
     end
 
+    ##
+    # @param [Symbol] use
+    # @return [Boolean]
+    def used_for?(use)
+      public_send("#{use}?")
+    end
+
+    ##
+    # @return [Boolean]
     def original_file?
       type.include?(Hyrax::FileSet::ORIGINAL_FILE_USE)
     end
 
+    ##
+    # @return [Boolean]
     def thumbnail_file?
       type.include?(Hyrax::FileSet::THUMBNAIL_USE)
     end
 
+    ##
+    # @return [Boolean]
     def extracted_file?
       type.include?(Hyrax::FileSet::EXTRACTED_TEXT_USE)
     end

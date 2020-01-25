@@ -32,7 +32,7 @@ RSpec.describe Wings::FileMetadataBuilder do
       expect(built_file_metadata.file_set_id.id).to eq file_set.id.id
       expect(built_file_metadata.label).to contain_exactly(original_name)
       expect(built_file_metadata.original_filename).to contain_exactly(original_name)
-      expect(built_file_metadata.mime_type).to contain_exactly(mime_type)
+      expect(built_file_metadata.mime_type).to eq mime_type
       expect(built_file_metadata.type).to contain_exactly(use)
     end
   end

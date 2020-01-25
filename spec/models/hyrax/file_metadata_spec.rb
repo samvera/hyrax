@@ -7,19 +7,29 @@ RSpec.describe Hyrax::FileMetadata do
     let(:resource_klass) { described_class }
   end
 
-  let(:file) { Rack::Test::UploadedFile.new('spec/fixtures/world.png', 'image/png') }
-  let(:subject) do
+  subject(:file_metadata) do
     described_class.for(file: file).new(id: 'test_id', format_label: 'test_format_label')
   end
+
+  let(:file) { Rack::Test::UploadedFile.new('spec/fixtures/world.png', 'image/png') }
   let(:pcdm_file_uri) { RDF::URI('http://pcdm.org/models#File') }
 
   it 'sets the proper attributes' do
     expect(subject.id.to_s).to eq 'test_id'
     expect(subject.label).to contain_exactly('world.png')
     expect(subject.original_filename).to contain_exactly('world.png')
-    expect(subject.mime_type).to contain_exactly('image/png')
+    expect(subject.mime_type).to eq('image/png')
     expect(subject.format_label).to contain_exactly('test_format_label')
     expect(subject.type).to contain_exactly(Hyrax::FileSet::ORIGINAL_FILE_USE)
+  end
+
+  describe '#used_for?' do
+    it 'is true when use matches' do
+      expect { file_metadata.use = [Valkyrie::Vocab::PCDMUse.ThumbnailImage] }
+        .to change { file_metadata.used_for?(:original_file) }
+        .from(true)
+        .to false
+    end
   end
 
   describe '#original_file?' do
