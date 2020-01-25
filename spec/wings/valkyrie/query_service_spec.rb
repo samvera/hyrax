@@ -80,7 +80,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
 
   describe ".find_all", clean_repo: true do
     before do
-      allow(Hyrax.config).to receive(:curation_concerns).and_return(Hyrax.config.curation_concerns.append(::Collection).append(af_resource_class))
+      allow(Hyrax.config).to receive(:curation_concerns).and_return(Hyrax.config.work_types.append(::Collection).append(af_resource_class))
     end
 
     it "returns all created resources" do

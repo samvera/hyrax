@@ -72,7 +72,7 @@ module ActionDispatch::Routing
 
       # @return [Array<String>] the list of works to build routes for
       def concerns_to_route
-        Hyrax.config.registered_curation_concern_types.map(&:tableize)
+        Hyrax.config.registered_work_types.map(&:tableize)
       end
   end
 end

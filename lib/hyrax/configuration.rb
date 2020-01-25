@@ -217,24 +217,68 @@ module Hyrax
                     :after_destroy, :after_import_url_success,
                     :after_import_url_failure
 
+    ##
+    # @deprecated use `Hyrax.config.register_work_type` instead
+    #
     # Registers the given curation concern model in the configuration
     # @param [Array<Symbol>,Symbol] curation_concern_types
     def register_curation_concern(*curation_concern_types)
+      Deprecation.warn('Hyrax.config.register_curation_concern is deprecated for ' \
+                       'removal in Hyrax 4.0.0. Use ' \
+                       '`Hyrax.config.register_work_type` instead')
+
       Array.wrap(curation_concern_types).flatten.compact.each do |cc_type|
-        @registered_concerns << cc_type unless @registered_concerns.include?(cc_type)
+        register_work_type(cc_type)
       end
     end
 
+    ##
+    # Registers the given work model in the configuration
+    #
+    # @param [Symbol] work_type
+    # @return [void]
+    def register_work_type(work_type)
+      @work_type_names << work_type unless @work_type_names&.include?(work_type)
+    end
+
+    ##
+    # @deprecated use `Hyrax.config.registered_work_types` instead
+    #
     # The normalization done by this method must occur after the initialization process
     # so it can take advantage of irregular inflections from config/initializers/inflections.rb
     # @return [Array<String>] the class names of the registered curation concerns
     def registered_curation_concern_types
-      @registered_concerns.map { |cc_type| normalize_concern_name(cc_type) }
+      Deprecation.warn('Hyrax.config.registered_curation_concern_types is ' \
+                       'deprecated for removal in Hyrax 4.0.0. Use ' \
+                       '`Hyrax.config.registered_work_types` instead')
+
+      registered_work_types
     end
 
+    ##
+    # @note The normalization done by this method must occur after the initialization process
+    #   so it can take advantage of irregular inflections from config/initializers/inflections.rb
+    #
+    # @return [Array<String>] the class names of the registered work types
+    def registered_work_types
+      @work_type_names.map { |cc_type| normalize_concern_name(cc_type) }
+    end
+
+    ##
+    # @deprecated use `Hyrax.config.work_types` instead
+    #
     # @return [Array<Class>] the registered curation concerns
     def curation_concerns
-      registered_curation_concern_types.map(&:constantize)
+      Deprecation.warn('Hyrax.config.curation_concerns is deprecated for ' \
+                       'removal in Hyrax 4.0.0. Use ' \
+                       '`Hyrax.config.work_types` instead')
+      work_types
+    end
+
+    ##
+    # @return [Array<Class>] the registered work type classes
+    def work_types
+      registered_work_types.map(&:constantize)
     end
 
     # A configuration point for changing the behavior of the license service.

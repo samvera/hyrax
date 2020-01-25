@@ -46,6 +46,24 @@ class Hyrax::WorkResourceGenerator < Rails::Generators::NamedBase
              File.join('spec/views/', class_path, "#{plural_file_name}/_#{file_name}.html.erb_spec.rb"))
   end
 
+  # Inserts after the last registered work, or at the top of the config block
+  def register_work
+    config = 'config/initializers/hyrax.rb'
+    lastmatch = nil
+    in_root do
+      File.open(config).each_line do |line|
+        lastmatch = line if (line =~ /config.register_work_type :(?!#{file_name})/) ||
+                            (line =~ /config.register_curation_concern/)
+      end
+      content = "  # Injected via `rails g hyrax:work #{class_name}`\n" \
+                "  config.register_work_type #{registration_path_symbol}\n"
+      anchor = lastmatch || "Hyrax.config do |config|\n"
+      inject_into_file config, after: anchor do
+        content
+      end
+    end
+  end
+
   private
 
     def rspec_installed?

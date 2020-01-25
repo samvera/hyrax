@@ -55,8 +55,8 @@ module Hyrax
     # Returns true if can create at least one type of work and they can deposit
     # into at least one AdminSet
     def can_create_any_work?
-      Hyrax.config.curation_concerns.any? do |curation_concern_type|
-        can?(:create, curation_concern_type)
+      Hyrax.config.work_types.any? do |work_type|
+        can?(:create, work_type)
       end && admin_set_with_deposit?
     end
 
@@ -214,7 +214,7 @@ module Hyrax
       end
 
       def curation_concerns_models
-        [::FileSet, ::Collection] + Hyrax.config.curation_concerns
+        [::FileSet, ::Collection] + Hyrax.config.work_types
       end
 
       def can_review_submissions?

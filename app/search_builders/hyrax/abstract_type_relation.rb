@@ -22,7 +22,7 @@ module Hyrax
 
     class DummyModel
       def self.primary_concern
-        Hyrax.config.curation_concerns.first
+        Hyrax.config.work_types.first
       end
 
       def self.delegated_attributes

@@ -68,7 +68,7 @@ module Hyrax
       end
 
       def subject_replacer(klass, resource_id, anchor = nil)
-        route_key = if Hyrax.config.curation_concerns.include?(klass)
+        route_key = if Hyrax.config.work_types.include?(klass)
                       klass.model_name.singular_route_key
                     else
                       ::SolrDocument.model_name.singular_route_key

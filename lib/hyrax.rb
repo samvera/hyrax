@@ -54,7 +54,7 @@ module Hyrax
   end
 
   def self.primary_work_type
-    config.curation_concerns.first
+    config.work_types.first
   end
 
   ##

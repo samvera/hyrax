@@ -20,7 +20,7 @@ RSpec.describe 'Creating a new Work' do
   end
 
   it 'catapults should behave like generic works' do
-    expect(Hyrax.config.curation_concerns).to include Catapult
+    expect(Hyrax.config.work_types).to include Catapult
     expect(defined? Hyrax::Actors::CatapultActor).to eq 'constant'
     expect(Hyrax::CatapultsController.show_presenter).to eq Hyrax::CatapultPresenter
     expect(defined? Hyrax::CatapultForm).to eq 'constant'

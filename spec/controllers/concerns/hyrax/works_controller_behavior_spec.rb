@@ -6,11 +6,11 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
   let(:work)  { FactoryBot.valkyrie_create(:hyrax_work, alternate_ids: [id], title: title) }
   let(:id)    { '123' }
 
-  before(:context) { Hyrax.config.register_curation_concern(Hyrax::Test::SimpleWork) }
+  before(:context) { Hyrax.config.register_work_type(:"hyrax/test/simple_work") }
 
   after(:context) do
     config = Hyrax.config
-    types  = config.registered_curation_concern_types - ["Hyrax::Test::SimpleWork"]
+    types  = config.registered_work_types - [:"hyrax/test/simple_work"]
 
     Hyrax.config.instance_variable_set(:@registered_concerns, types)
   end

@@ -40,7 +40,7 @@ module Hyrax
       # types from appearing in search results
       # @return [Array<Class>] the list of work types to include in searches
       def work_types
-        Hyrax.config.curation_concerns
+        Hyrax.config.work_types
       end
 
       def work_classes

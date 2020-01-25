@@ -140,7 +140,7 @@ module Hyrax
     end
 
     def presenter_types
-      Hyrax.config.registered_curation_concern_types.map(&:underscore) + ["collection"]
+      Hyrax.config.registered_work_types.map(&:underscore) + ["collection"]
     end
 
     # @return [Array] presenters grouped by model name, used to show the parents of this object

@@ -29,7 +29,7 @@ RSpec.describe Hyrax::CollectionMemberSearchBuilder do
       let(:include_models) { :works }
 
       it 'returns only work members' do
-        expect(subject).to eq(Hyrax.config.curation_concerns)
+        expect(subject).to eq(Hyrax.config.work_types)
       end
     end
 

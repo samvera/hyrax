@@ -15,7 +15,7 @@ RSpec.describe Hyrax::QuickClassificationQuery do
 
       before do
         # Ensure that no other test has altered the configuration:
-        allow(Hyrax.config).to receive(:registered_curation_concern_types).and_return(['GenericWork'])
+        allow(Hyrax.config).to receive(:registered_work_types).and_return(['GenericWork'])
       end
       it "calls the block once for every model" do
         expect(thing).to receive(:test).with(GenericWork)
