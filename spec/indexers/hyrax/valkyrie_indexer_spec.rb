@@ -23,6 +23,7 @@ RSpec.describe Hyrax::ValkyrieIndexer do
       end
     end
 
+    # Fails unless MonographIndexer has been pre-loaded
     context 'with registered Monograph indexer' do
       let(:resource) { build(:monograph) }
       let(:indexer_class) { MonographIndexer }

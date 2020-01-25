@@ -10,5 +10,6 @@ module Hyrax
     include Hyrax::PermissionIndexer
     include Hyrax::VisibilityIndexer
     include Hyrax::Indexer(:core_metadata)
+    include Hyrax::Indexer(:basic_metadata)
   end
 end
