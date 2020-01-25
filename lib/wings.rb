@@ -117,3 +117,10 @@ rescue NameError, Hyrax::SimpleSchemaLoader::UndefinedSchemaError => err
   raise(err) if ENV['RAILS_ENV'] == 'production'
   :noop
 end
+
+# some aliases for use by diners of varying sophistication
+BuffaloWings = Wings
+MightyWings = Wings
+HotWings = Wings
+SpicyWings = Wings
+SwissWings = Wings
