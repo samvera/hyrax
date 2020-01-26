@@ -37,6 +37,14 @@ class Hyrax::WorkResourceGenerator < Rails::Generators::NamedBase
     template('indexer.rb.erb', File.join('app/indexers/', class_path, "#{file_name}_indexer.rb"))
   end
 
+  def register_indexer
+    config = 'config/initializers/indexers.rb'
+    register_line = "  Hyrax::ValkyrieIndexer.register #{class_name}Indexer, as_indexer_for: #{class_name}\n"
+    inject_into_file config, after: "# Register Indexers\n" do # rubocop:disable Style/MultilineIfModifier
+      register_line
+    end unless File.read(config).include?(register_line)
+  end
+
   def create_views
     create_file File.join('app/views/hyrax', class_path, "#{plural_file_name}/_#{file_name}.html.erb") do
       "<%# This is a search result view %>\n" \
