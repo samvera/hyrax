@@ -21,7 +21,7 @@ RSpec.describe Wings::FileMetadataBuilder do
     Hyrax::FileMetadata.new(label: original_name,
                             original_filename: original_name,
                             mime_type: mime_type,
-                            use: [use])
+                            type: [use])
   end
 
   describe '#create(io_wrapper:, file_metadata:, file_set:)' do
@@ -33,7 +33,7 @@ RSpec.describe Wings::FileMetadataBuilder do
       expect(built_file_metadata.label).to contain_exactly(original_name)
       expect(built_file_metadata.original_filename).to contain_exactly(original_name)
       expect(built_file_metadata.mime_type).to contain_exactly(mime_type)
-      expect(built_file_metadata.use).to contain_exactly(use)
+      expect(built_file_metadata.type).to contain_exactly(use)
     end
   end
 end
