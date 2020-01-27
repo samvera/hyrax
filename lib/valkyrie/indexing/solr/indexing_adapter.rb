@@ -90,7 +90,7 @@ module Valkyrie
           end
 
           def default_indexer
-            Valkyrie::Persistence::Solr::MetadataAdapter::NullIndexer
+            Hyrax::ValkyrieIndexer
           end
       end
     end
