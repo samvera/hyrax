@@ -26,15 +26,14 @@ module Hyrax
       solr_parameters[:fq] << "#{collection_membership_field}:#{collection.id}"
     end
 
-    # This overrides the models in FilterByType
-    def models
-      case search_includes_models
-      when :collections
-        collection_classes
-      when :works
-        work_classes
-      else super # super includes both works and collections
+    private
+
+      def only_works?
+        search_includes_models == :works
       end
-    end
+
+      def only_collections?
+        search_includes_models == :collections
+      end
   end
 end
