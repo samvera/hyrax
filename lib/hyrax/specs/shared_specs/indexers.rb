@@ -100,6 +100,11 @@ RSpec.shared_examples 'a Collection indexer' do
       expect(indexer.to_solr)
         .to include(generic_type_sim: a_collection_containing_exactly('Collection'))
     end
+
+    it 'indexes thumbnail' do
+      expect(indexer.to_solr)
+        .to include(thumbnail_path_ss: include('assets/collection', '.png'))
+    end
   end
 end
 
