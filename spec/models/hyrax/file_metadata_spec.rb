@@ -80,15 +80,14 @@ RSpec.describe Hyrax::FileMetadata do
   end
 
   describe "#valid?" do
-    it 'is valid' do
-      pending 'TODO: Fix issue when using in-memory storage adapter.'
-      expect(subject).to be_valid
+    it do
+      pending 'TODO: configure and test checksums'
+      is_expected.to be_valid
     end
   end
 
   describe '#file' do
     it 'returns file from storage adapter' do
-      pending 'TODO: Fix issue when using in-memory storage adapter.'
       expect(subject.file).to be_a Valkyrie::StorageAdapter::StreamFile
     end
   end
