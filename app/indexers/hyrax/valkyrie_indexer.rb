@@ -14,7 +14,7 @@ module Hyrax
   # Custom indexers inheriting from others are responsible for providing a full
   # index hash. A common pattern for doing this is to employ method composition
   # to retrieve the parent's data, then modify it:
-  # `def to_solr; super.tap { |index_hash| transform(index_hash) }; end`.
+  # `def to_solr; super.tap { |index_document| transform(index_document) }; end`.
   # This technique creates infinitely composible index building behavior, with
   # indexers that can always see the state of the resource and the full current
   # index document.
@@ -24,9 +24,9 @@ module Hyrax
   # @example defining a custom indexer with composition
   #   class MyIndexer < ValkyrieIndexer
   #     def to_solr
-  #       super.tap do |index_hash|
-  #         index_hash[:my_field_tesim]   = resource.my_field.map(&:to_s)
-  #         index_hash[:other_field_ssim] = resource.other_field
+  #       super.tap do |index_document|
+  #         index_document[:my_field_tesim]   = resource.my_field.map(&:to_s)
+  #         index_document[:other_field_ssim] = resource.other_field
   #       end
   #     end
   #   end
@@ -40,8 +40,8 @@ module Hyrax
   #     Hyrax::ValkyrieIndexer.register self, as_indexer_for: Book
   #
   #     def to_solr
-  #       super.tap do |index_hash|
-  #         index_hash[:author_si] = resource.author
+  #       super.tap do |index_document|
+  #         index_document[:author_si] = resource.author
   #       end
   #     end
   #   end

@@ -59,5 +59,7 @@ FactoryBot.define do
         members { [valkyrie_create(:hyrax_work), valkyrie_create(:hyrax_work)] }
       end
     end
+
+    factory :monograph, class: 'Monograph'
   end
 end

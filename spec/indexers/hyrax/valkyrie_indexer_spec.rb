@@ -22,6 +22,16 @@ RSpec.describe Hyrax::ValkyrieIndexer do
           .to be_a indexer_class
       end
     end
+
+    context 'with registered Monograph indexer' do
+      let(:resource) { build(:monograph) }
+      let(:indexer_class) { MonographIndexer }
+
+      it 'gives an instance of MonographIndexer for Monograph' do
+        expect(described_class.for(resource: resource))
+          .to be_a indexer_class
+      end
+    end
   end
 
   describe "#to_solr" do
