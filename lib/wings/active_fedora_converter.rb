@@ -120,34 +120,33 @@ module Wings
       def convert_members(af_object)
         return unless resource.respond_to?(:member_ids) && resource.member_ids
         # TODO: It would be better to find a way to add the members without resuming all the member AF objects
-        ordered_members = []
-        resource.member_ids.each do |valkyrie_id|
-          ordered_members << ActiveFedora::Base.find(valkyrie_id.id)
-        end
-        af_object.ordered_members = ordered_members
+        af_object.ordered_members = resource.member_ids.each_with_object([]) { |valkyrie_id, arr| arr << ActiveFedora::Base.find(valkyrie_id.id) }
       end
 
       def convert_member_of_collections(af_object)
         return unless resource.respond_to?(:member_of_collection_ids) && resource.member_of_collection_ids
         # TODO: It would be better to find a way to set the parent collections without resuming all the collection AF objects
-        member_of_collections = []
-        resource.member_of_collection_ids.each do |valkyrie_id|
-          member_of_collections << ActiveFedora::Base.find(valkyrie_id.id)
-        end
-        af_object.member_of_collections = member_of_collections
+        af_object.member_of_collections = resource.member_of_collection_ids.each_with_object([]) { |valkyrie_id, arr| arr << ActiveFedora::Base.find(valkyrie_id.id) }
       end
 
       def convert_files(af_object)
         return unless resource.respond_to? :file_ids
-        files = []
-        resource.file_ids.each do |fid|
+        af_object.files = resource.file_ids.each_with_object([]) do |fid, arr|
           pcdm_file = Hydra::PCDM::File.new(fid.id)
-          af_object.association(:original_file).target = pcdm_file if pcdm_file.metadata_node.type.include? RDF::URI.new('http://pcdm.org/use#OriginalFile')
-          af_object.association(:extracted_text).target = pcdm_file if pcdm_file.metadata_node.type.include? RDF::URI.new('http://pcdm.org/use#ExtractedText')
-          af_object.association(:thumbnail).target = pcdm_file if pcdm_file.metadata_node.type.include? RDF::URI.new('http://pcdm.org/use#Thumbnail')
-          files << pcdm_file
+          assign_association_target(af_object, pcdm_file)
+          arr << pcdm_file
         end
-        af_object.files = files
+      end
+
+      def assign_association_target(af_object, pcdm_file)
+        case pcdm_file.metadata_node.type
+        when ->(types) { types.include?(RDF::URI.new('http://pcdm.org/use#OriginalFile')) }
+          af_object.association(:original_file).target = pcdm_file
+        when ->(types) { types.include?(RDF::URI.new('http://pcdm.org/use#ExtractedText')) }
+          af_object.association(:extracted_text).target = pcdm_file
+        when ->(types) { types.include?(RDF::URI.new('http://pcdm.org/use#Thumbnail')) }
+          af_object.association(:thumbnail).target = pcdm_file
+        end
       end
 
       # Normalizes the attributes parsed from the resource
@@ -155,16 +154,13 @@ module Wings
       #   ActiveFedora::Base Class)
       # @return [Hash]
       def normal_attributes
-        normalized = {}
-        attributes.each_pair do |attr, value|
+        attributes.each_with_object({}) do |(attr, value), hash|
           property = active_fedora_class.properties[attr.to_s]
-          # This handles some cases where the attributes do not directly map to an
-          #   RDF property value
-          normalized[attr] = value
+          # This handles some cases where the attributes do not directly map to an RDF property value
+          hash[attr] = value
           next if property.nil?
-          normalized[attr] = Array.wrap(value) if property.multiple?
+          hash[attr] = Array.wrap(value) if property.multiple?
         end
-        normalized
       end
 
       def apply_depositor_to(af_object)
