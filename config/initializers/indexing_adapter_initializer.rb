@@ -5,7 +5,7 @@ require 'valkyrie/indexing/null_indexing_adapter'
 
 Rails.application.config.to_prepare do
   Valkyrie::IndexingAdapter.register(
-    Valkyrie::Indexing::Solr::IndexingAdapter.new(),
+    Valkyrie::Indexing::Solr::IndexingAdapter.new,
     :solr_index
   )
   Valkyrie::IndexingAdapter.register(
