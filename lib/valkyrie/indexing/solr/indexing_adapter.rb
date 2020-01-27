@@ -9,17 +9,13 @@ module Valkyrie
         ##
         # @!attribute [r] connection
         #   @return [RSolr::Client]
-        # @!attribute [r] resource_indexer
-        #   @return [Class]
         attr_reader :connection, :resource_indexer
 
         ##
         # @param connection [RSolr::Client] The RSolr connection to index to.
-        # @param resource_indexer [Class, #to_solr] An indexer which is able to
-        #   receive a `resource` argument and then has an instance method `#to_solr`
-        def initialize(connection: default_connection, resource_indexer: default_indexer)
+        def initialize(connection: default_connection)
           @connection = connection
-          @resource_indexer = resource_indexer
+          @resource_indexer = default_indexer
         end
 
         def save(resource:)
