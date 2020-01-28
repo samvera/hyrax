@@ -24,41 +24,5 @@ module Hyrax
     def file_set?
       true
     end
-
-    ##
-    # Gives file metadata for the file filling the http://pcdm.org/OriginalFile use
-    # @return [FileMetadata] the FileMetadata resource of the original file
-    def original_file
-      filter_files_by_type(Hyrax::FileMetadata::Use::ORIGINAL_FILE).first
-    end
-
-    ##
-    # Gives file metadata for the file filling the http://pcdm.org/ExtractedText use
-    # @return [FileMetadata] the FileMetadata resource of the extracted text
-    def extracted_text
-      filter_files_by_type(Hyrax::FileMetadata::Use::EXTRACTED_TEXT).first
-    end
-
-    ##
-    # Gives file metadata for the file filling the http://pcdm.org/Thumbnail use
-    # @return [FileMetadata] the FileMetadata resource of the thumbnail
-    def thumbnail
-      filter_files_by_type(Hyrax::FileMetadata::Use::THUMBNAIL).first
-    end
-
-    private
-
-      ##
-      # @api private
-      #
-      # Gives file metadata for files that have the requested RDF Type for use
-      # @param [RDF::URI] uri for the desired Type
-      # @return [Enumerable<FileMetadata>] the FileMetadata resources
-      #
-      # @example
-      #   filter_files_by_type(::RDF::URI("http://pcdm.org/ExtractedText"))
-      def filter_files_by_type(uri)
-        Hyrax.query_service.custom_queries.find_many_file_metadata_by_use(resource: self, use: uri)
-      end
   end
 end

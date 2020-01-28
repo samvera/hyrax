@@ -39,16 +39,28 @@ module Wings
 
     private
 
+      ##
+      # @api private
       def attach_file_metadata_to_valkyrie_file_set(file_metadata, file_set)
         # This is for storage adapters other than wings.  The wings storage adapter already attached the file to the file_set.
         # This process is a no-op for wings.  # TODO: WINGS - May need to verify this is a no-op for wings once file_set is passed in as a resource.
         # TODO: WINGS - Need to test this against other adapters once they are available for use.
-        existing_file_metadata = file_set.original_file || file_metadata
+        existing_file_metadata = current_original_file(file_set) || file_metadata
         file_metadata = existing_file_metadata.new(file_metadata.to_h.except(:id))
         saved_file_metadata = persister.save(resource: file_metadata)
         file_set.file_ids = [saved_file_metadata.id]
         persister.save(resource: file_set)
         saved_file_metadata
+      end
+
+      ##
+      # @api private
+      # @return [Hyrax::FileMetadata, nil]
+      def current_original_file(file_set)
+        Hyrax.query_service
+             .custom_queries
+             .find_many_file_metadata_by_use(resource: file_set, use: Hyrax::FileMetadata::Use::ORIGINAL_FILE)
+             .first
       end
 
       # Class for wrapping the file being ingested
