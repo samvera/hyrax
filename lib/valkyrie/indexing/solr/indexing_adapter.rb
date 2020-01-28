@@ -9,7 +9,7 @@ module Valkyrie
         ##
         # @!attribute [r] connection
         #   @return [RSolr::Client]
-        attr_reader :connection, :resource_indexer
+        attr_reader :connection
 
         ##
         # @param connection [RSolr::Client] The RSolr connection to index to.
