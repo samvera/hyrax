@@ -50,7 +50,7 @@ module Hyrax
       obj.attributes = work_params(admin_set_id: obj.admin_set_id).except(*visibility_params)
       obj.date_modified = Time.current.ctime
 
-      InheritPermissionsJob.perform_now(obj)
+      InheritPermissionsJob.perform_now(obj, use_valkyrie: false)
       VisibilityCopyJob.perform_now(obj)
 
       obj.save
