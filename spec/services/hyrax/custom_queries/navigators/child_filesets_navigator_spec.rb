@@ -1,7 +1,7 @@
 RSpec.describe Hyrax::CustomQueries::Navigators::ChildFilesetsNavigator, :clean_repo do
   subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
   let(:resource) { subject.build }
-  let(:custom_query_service) { Hyrax.query_service.custom_queries }
+  let(:custom_query_service) { Hyrax.custom_queries }
 
   let(:work1)    { build(:work, id: 'wk1', title: ['Work 1']) }
   let(:work2)    { build(:work, id: 'wk2', title: ['Child Work 1']) }

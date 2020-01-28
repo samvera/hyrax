@@ -3,7 +3,7 @@ module Wings
     class FindManyByAlternateIds
       # Custom query override specific to Wings
       # Use:
-      #   Hyrax.query_service.custom_queries.find_many_by_alternate_ids(alternate_ids: ids, use_valkyrie: true)
+      #   Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: ids, use_valkyrie: true)
 
       def self.queries
         [:find_many_by_alternate_ids]

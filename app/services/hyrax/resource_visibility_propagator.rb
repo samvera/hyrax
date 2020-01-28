@@ -26,7 +26,7 @@ module Hyrax
                    embargo_manager: Hyrax::EmbargoManager,
                    lease_manager:   Hyrax::LeaseManager,
                    persister:       Hyrax.persister,
-                   queries:         Hyrax.query_service.custom_queries)
+                   queries:         Hyrax.custom_queries)
       @persister       = persister
       @queries         = queries
       self.source      = source

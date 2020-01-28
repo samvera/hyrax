@@ -2,7 +2,7 @@
 
 RSpec.describe Hyrax::ResourceVisibilityPropagator do
   subject(:propagator) { described_class.new(source: work) }
-  let(:queries)        { Hyrax.query_service.custom_queries }
+  let(:queries)        { Hyrax.custom_queries }
   let(:work)           { FactoryBot.create(:work_with_files).valkyrie_resource }
   let(:file_sets)      { queries.find_child_filesets(resource: work) }
 

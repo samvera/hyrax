@@ -55,7 +55,7 @@ module Hyrax
     #       add_member_objects using the member_of_collections relationship.  Deprecate?
     def add_members(new_member_ids)
       return if new_member_ids.blank?
-      members << Hyrax.query_service.custom_queries.find_many_by_alternate_ids(alternate_ids: new_member_ids, use_valkyrie: false)
+      members << Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: new_member_ids, use_valkyrie: false)
     end
 
     # Add member objects by adding this collection to the objects' member_of_collection association.

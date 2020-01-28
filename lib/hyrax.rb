@@ -104,4 +104,10 @@ module Hyrax
   def self.query_service
     metadata_adapter.query_service
   end
+
+  ##
+  # The custom queries common to Hyrax
+  def self.custom_queries
+    query_service.custom_queries
+  end
 end

@@ -16,7 +16,7 @@ module Hyrax
         when ActiveFedora::Base
           ::FileSet.search_with_conditions(id: work.member_ids).map(&:id)
         when Valkyrie::Resource
-          Hyrax.query_service.custom_queries.find_child_fileset_ids(resource: work)
+          Hyrax.custom_queries.find_child_fileset_ids(resource: work)
         end
       end
 

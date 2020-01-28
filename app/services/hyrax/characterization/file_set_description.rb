@@ -38,7 +38,7 @@ module Hyrax
         ##
         # @api private
         def queries
-          Hyrax.query_service.custom_queries
+          Hyrax.custom_queries
         end
     end
   end
