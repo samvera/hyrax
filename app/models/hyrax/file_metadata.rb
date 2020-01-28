@@ -10,7 +10,7 @@ module Hyrax
     module Use
       ORIGINAL_FILE = ::Valkyrie::Vocab::PCDMUse.OriginalFile
       EXTRACTED_TEXT = ::Valkyrie::Vocab::PCDMUse.ExtractedText
-      THUMBNAIL = ::Valkyrie::Vocab::PCDMUse.Thumbnail
+      THUMBNAIL = ::Valkyrie::Vocab::PCDMUse.ThumbnailImage
 
       ##
       # @param use [Symbol]
