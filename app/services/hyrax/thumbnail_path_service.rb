@@ -32,7 +32,7 @@ module Hyrax
         # @return the network path to the thumbnail
         # @param [FileSet] thumbnail the object that is the thumbnail
         def thumbnail_path(thumbnail)
-          Hyrax::Engine.routes.url_helpers.download_path(tuhmbnail.id,
+          Hyrax::Engine.routes.url_helpers.download_path(thumbnail.id,
                                                          file: 'thumbnail')
         end
 
