@@ -20,12 +20,12 @@ RSpec.describe Hyrax::FileMetadata do
     expect(subject.original_filename).to contain_exactly('world.png')
     expect(subject.mime_type).to eq('image/png')
     expect(subject.format_label).to contain_exactly('test_format_label')
-    expect(subject.type).to contain_exactly(Hyrax::FileSet::ORIGINAL_FILE_USE)
+    expect(subject.type).to contain_exactly(described_class::Use::ORIGINAL_FILE)
   end
 
   describe '#used_for?' do
-    it 'is true when use matches' do
-      expect { file_metadata.use = [Valkyrie::Vocab::PCDMUse.ThumbnailImage] }
+    it 'is true when type matches' do
+      expect { file_metadata.type = [Valkyrie::Vocab::PCDMUse.ThumbnailImage] }
         .to change { file_metadata.used_for?(:original_file) }
         .from(true)
         .to false
@@ -34,13 +34,13 @@ RSpec.describe Hyrax::FileMetadata do
 
   describe '#original_file?' do
     context 'when use says file is the original file' do
-      before { subject.type = [Hyrax::FileSet::ORIGINAL_FILE_USE, pcdm_file_uri] }
+      before { subject.type = [described_class::Use::ORIGINAL_FILE, pcdm_file_uri] }
       it 'returns true' do
         expect(subject).to be_original_file
       end
     end
     context 'when use does not say file is the original file' do
-      before { subject.type = [Hyrax::FileSet::THUMBNAIL_USE, pcdm_file_uri] }
+      before { subject.type = [described_class::Use::THUMBNAIL, pcdm_file_uri] }
       it 'returns false' do
         expect(subject).not_to be_original_file
       end
@@ -49,13 +49,13 @@ RSpec.describe Hyrax::FileMetadata do
 
   describe '#thumbnail_file?' do
     context 'when use says file is the thumbnail file' do
-      before { subject.type = [Hyrax::FileSet::THUMBNAIL_USE, pcdm_file_uri] }
+      before { subject.type = [described_class::Use::THUMBNAIL, pcdm_file_uri] }
       it 'returns true' do
         expect(subject).to be_thumbnail_file
       end
     end
     context 'when use does not say file is the thumbnail file' do
-      before { subject.type = [Hyrax::FileSet::ORIGINAL_FILE_USE, pcdm_file_uri] }
+      before { subject.type = [described_class::Use::ORIGINAL_FILE, pcdm_file_uri] }
       it 'returns false' do
         expect(subject).not_to be_thumbnail_file
       end
@@ -64,13 +64,13 @@ RSpec.describe Hyrax::FileMetadata do
 
   describe '#extracted_file?' do
     context 'when use says file is the extracted file' do
-      before { subject.type = [Hyrax::FileSet::EXTRACTED_TEXT_USE, pcdm_file_uri] }
+      before { subject.type = [described_class::Use::EXTRACTED_TEXT, pcdm_file_uri] }
       it 'returns true' do
         expect(subject).to be_extracted_file
       end
     end
     context 'when use does not say file is the extracted file' do
-      before { subject.type = [Hyrax::FileSet::ORIGINAL_FILE_USE, pcdm_file_uri] }
+      before { subject.type = [described_class::Use::ORIGINAL_FILE, pcdm_file_uri] }
       it 'returns false' do
         expect(subject).not_to be_extracted_file
       end

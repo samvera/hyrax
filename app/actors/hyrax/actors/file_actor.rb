@@ -104,9 +104,9 @@ module Hyrax
           return relation.to_sym if relation.respond_to? :to_sym
 
           # TODO: whereever these are set, they should use FileSet.*_use... making the casecmp unnecessary
-          return :original_file if relation.to_s.casecmp(Hyrax::FileSet::ORIGINAL_FILE_USE.to_s)
-          return :extracted_file if relation.to_s.casecmp(Hyrax::FileSet::EXTRACTED_TEXT_USE.to_s)
-          return :thumbnail_file if relation.to_s.casecmp(Hyrax::FileSet::THUMBNAIL_USE.to_s)
+          return :original_file if relation.to_s.casecmp(Hyrax::FileMetadata::Use::ORIGINAL_FILE.to_s)
+          return :extracted_file if relation.to_s.casecmp(Hyrax::FileMetadata::Use::EXTRACTED_TEXT.to_s)
+          return :thumbnail_file if relation.to_s.casecmp(Hyrax::FileMetadata::Use::THUMBNAIL.to_s)
           :original_file
         end
 
@@ -115,13 +115,13 @@ module Hyrax
           #       in as a valid URI already set to the file's use
           case relation.to_s.to_sym
           when :original_file
-            Hyrax::FileSet::ORIGINAL_FILE_USE
+            Hyrax::FileMetadata::Use::ORIGINAL_FILE
           when :extracted_file
-            Hyrax::FileSet.EXTRACTED_TEXT_USE
+            Hyrax::FileMetadata::Use::EXTRACTED_TEXT
           when :thumbnail_file
-            Hyrax::FileSet::THUMBNAIL_USE
+            Hyrax::FileMetadata::Use::THUMBNAIL
           else
-            Hyrax::FileSet::ORIGINAL_FILE_USE
+            Hyrax::FileMetadata::Use::ORIGINAL_FILE
           end
         end
     end

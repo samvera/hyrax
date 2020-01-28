@@ -8,10 +8,6 @@ module Hyrax
   class FileSet < Hyrax::Resource
     include Hyrax::Schema(:core_metadata)
 
-    ORIGINAL_FILE_USE = ::Valkyrie::Vocab::PCDMUse.OriginalFile
-    EXTRACTED_TEXT_USE = ::Valkyrie::Vocab::PCDMUse.ExtractedText
-    THUMBNAIL_USE = ::Valkyrie::Vocab::PCDMUse.Thumbnail
-
     attribute :file_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID) # id for FileMetadata resources
     attribute :original_file_id, Valkyrie::Types::ID # id for FileMetadata resource
     attribute :thumbnail_id, Valkyrie::Types::ID # id for FileMetadata resource
@@ -33,31 +29,36 @@ module Hyrax
     # Gives file metadata for the file filling the http://pcdm.org/OriginalFile use
     # @return [FileMetadata] the FileMetadata resource of the original file
     def original_file
-      filter_files_by_type(Hyrax::FileSet::ORIGINAL_FILE_USE).first
+      filter_files_by_type(Hyrax::FileMetadata::Use::ORIGINAL_FILE).first
     end
 
     ##
     # Gives file metadata for the file filling the http://pcdm.org/ExtractedText use
     # @return [FileMetadata] the FileMetadata resource of the extracted text
     def extracted_text
-      filter_files_by_type(Hyrax::FileSet::EXTRACTED_TEXT_USE).first
+      filter_files_by_type(Hyrax::FileMetadata::Use::EXTRACTED_TEXT).first
     end
 
     ##
     # Gives file metadata for the file filling the http://pcdm.org/Thumbnail use
     # @return [FileMetadata] the FileMetadata resource of the thumbnail
     def thumbnail
-      filter_files_by_type(Hyrax::FileSet::THUMBNAIL_USE).first
+      filter_files_by_type(Hyrax::FileMetadata::Use::THUMBNAIL).first
     end
 
-    ##
-    # Gives file metadata for files that have the requested RDF Type for use
-    # @param [RDF::URI] uri for the desired Type
-    # @return [Enumerable<FileMetadata>] the FileMetadata resources
-    # @example
-    #   filter_files_by_type(::RDF::URI("http://pcdm.org/ExtractedText"))
-    def filter_files_by_type(uri)
-      Hyrax.query_service.custom_queries.find_many_file_metadata_by_use(resource: self, use: uri)
-    end
+    private
+
+      ##
+      # @api private
+      #
+      # Gives file metadata for files that have the requested RDF Type for use
+      # @param [RDF::URI] uri for the desired Type
+      # @return [Enumerable<FileMetadata>] the FileMetadata resources
+      #
+      # @example
+      #   filter_files_by_type(::RDF::URI("http://pcdm.org/ExtractedText"))
+      def filter_files_by_type(uri)
+        Hyrax.query_service.custom_queries.find_many_file_metadata_by_use(resource: self, use: uri)
+      end
   end
 end

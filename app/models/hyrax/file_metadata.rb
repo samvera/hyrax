@@ -4,6 +4,15 @@ module Hyrax
   class FileMetadata < Valkyrie::Resource
     GENERIC_MIME_TYPE = 'application/octet-stream'
 
+    ##
+    # Constants for PCDM Use URIs; use these constants in place of hard-coded
+    # URIs in the `::Valkyrie::Vocab::PCDMUse` vocabulary.
+    module Use
+      ORIGINAL_FILE = ::Valkyrie::Vocab::PCDMUse.OriginalFile
+      EXTRACTED_TEXT = ::Valkyrie::Vocab::PCDMUse.ExtractedText
+      THUMBNAIL = ::Valkyrie::Vocab::PCDMUse.Thumbnail
+    end
+
     attribute :file_identifiers, ::Valkyrie::Types::Set # id of the file stored by the storage adapter
     attribute :alternate_ids, Valkyrie::Types::Set.of(Valkyrie::Types::ID) # id of the Hydra::PCDM::File which holds metadata and the file in ActiveFedora
     attribute :file_set_id, ::Valkyrie::Types::ID # id of parent file set resource
@@ -78,7 +87,7 @@ module Hyrax
       new(label: file.original_filename,
           original_filename: file.original_filename,
           mime_type: file.content_type,
-          type: file.try(:type) || [Hyrax::FileSet::ORIGINAL_FILE_USE])
+          type: file.try(:type) || [Use::ORIGINAL_FILE])
     end
 
     ##
@@ -91,19 +100,19 @@ module Hyrax
     ##
     # @return [Boolean]
     def original_file?
-      type.include?(Hyrax::FileSet::ORIGINAL_FILE_USE)
+      type.include?(Use::ORIGINAL_FILE)
     end
 
     ##
     # @return [Boolean]
     def thumbnail_file?
-      type.include?(Hyrax::FileSet::THUMBNAIL_USE)
+      type.include?(Use::THUMBNAIL)
     end
 
     ##
     # @return [Boolean]
     def extracted_file?
-      type.include?(Hyrax::FileSet::EXTRACTED_TEXT_USE)
+      type.include?(Use::EXTRACTED_TEXT)
     end
 
     def title

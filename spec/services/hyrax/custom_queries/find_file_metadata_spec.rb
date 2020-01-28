@@ -103,9 +103,9 @@ RSpec.describe Hyrax::CustomQueries::FindFileMetadata do
     let!(:et_file_metadata) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata, type: extracted_text_use) }
     let!(:th_file_metadata) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata, type: thumbnail_use) }
 
-    let(:original_file_use)  { Hyrax::FileSet::ORIGINAL_FILE_USE }
-    let(:extracted_text_use) { Hyrax::FileSet::EXTRACTED_TEXT_USE }
-    let(:thumbnail_use)      { Hyrax::FileSet::THUMBNAIL_USE }
+    let(:original_file_use)  { Hyrax::FileMetadata::Use::ORIGINAL_FILE }
+    let(:extracted_text_use) { Hyrax::FileMetadata::Use::EXTRACTED_TEXT }
+    let(:thumbnail_use)      { Hyrax::FileMetadata::Use::THUMBNAIL }
 
     context 'when file set has files of the requested use' do
       let!(:file_set) { FactoryBot.create_using_test_adapter(:hyrax_file_set, files: [of_file_metadata, et_file_metadata, th_file_metadata]) }

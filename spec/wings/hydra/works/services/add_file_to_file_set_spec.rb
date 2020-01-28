@@ -6,9 +6,9 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
   let(:af_file_set)             { create(:file_set, id: 'fileset_id') }
   let!(:file_set)               { af_file_set.valkyrie_resource }
 
-  let(:original_file_use)  { Hyrax::FileSet::ORIGINAL_FILE_USE }
-  let(:extracted_text_use) { Hyrax::FileSet::EXTRACTED_TEXT_USE }
-  let(:thumbnail_use)      { Hyrax::FileSet::THUMBNAIL_USE }
+  let(:original_file_use)  { Hyrax::FileMetadata::Use::ORIGINAL_FILE }
+  let(:extracted_text_use) { Hyrax::FileMetadata::Use::EXTRACTED_TEXT }
+  let(:thumbnail_use)      { Hyrax::FileMetadata::Use::THUMBNAIL }
 
   let(:pdf_filename)  { 'sample-file.pdf' }
   let(:pdf_mimetype)  { 'application/pdf' }
