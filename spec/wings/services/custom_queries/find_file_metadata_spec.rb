@@ -119,9 +119,9 @@ RSpec.describe Wings::CustomQueries::FindFileMetadata, :clean_repo do
     let(:af_file_set)             { create(:file_set, id: 'fileset_id') }
     let!(:file_set)               { af_file_set.valkyrie_resource }
 
-    let(:original_file_use)  { Hyrax::FileSet.original_file_use }
-    let(:extracted_text_use) { Hyrax::FileSet.extracted_text_use }
-    let(:thumbnail_use)      { Hyrax::FileSet.thumbnail_use }
+    let(:original_file_use)  { Hyrax::FileSet::ORIGINAL_FILE_USE }
+    let(:extracted_text_use) { Hyrax::FileSet::EXTRACTED_TEXT_USE }
+    let(:thumbnail_use)      { Hyrax::FileSet::THUMBNAIL_USE }
 
     let(:pdf_filename)  { 'sample-file.pdf' }
     let(:pdf_mimetype)  { 'application/pdf' }

@@ -15,7 +15,7 @@ RSpec.describe Wings::FileMetadataBuilder do
   let(:file)          { File.open(File.join(fixture_path, original_name)) }
   let(:original_name) { 'sample-file.pdf' }
   let(:mime_type)     { 'application/pdf' }
-  let(:use)           { Hyrax::FileSet.original_file_use }
+  let(:use)           { Hyrax::FileSet::ORIGINAL_FILE_USE }
 
   let(:original_file_metadata) do
     Hyrax::FileMetadata.new(label: original_name,

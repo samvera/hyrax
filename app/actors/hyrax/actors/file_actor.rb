@@ -104,9 +104,9 @@ module Hyrax
           return relation.to_sym if relation.respond_to? :to_sym
 
           # TODO: whereever these are set, they should use FileSet.*_use... making the casecmp unnecessary
-          return :original_file if relation.to_s.casecmp(Hyrax::FileSet.original_file_use.to_s)
-          return :extracted_file if relation.to_s.casecmp(Hyrax::FileSet.extracted_text_use.to_s)
-          return :thumbnail_file if relation.to_s.casecmp(Hyrax::FileSet.thumbnail_use.to_s)
+          return :original_file if relation.to_s.casecmp(Hyrax::FileSet::ORIGINAL_FILE_USE.to_s)
+          return :extracted_file if relation.to_s.casecmp(Hyrax::FileSet::EXTRACTED_TEXT_USE.to_s)
+          return :thumbnail_file if relation.to_s.casecmp(Hyrax::FileSet::THUMBNAIL_USE.to_s)
           :original_file
         end
 
@@ -114,10 +114,10 @@ module Hyrax
           # TODO: When this is fully switched to valkyrie, this should probably be removed and relation should always be passed
           #       in as a valid URI already set to the file's use
           relation = relation.to_s.to_sym
-          return Hyrax::FileSet.original_file_use if relation == :original_file
+          return Hyrax::FileSet::ORIGINAL_FILE_USE if relation == :original_file
           return FileSet.extracted_file_use if relation == :extracted_file
           return FileSet.thumbnail_file_use if relation == :thumbnail_file
-          Hyrax::FileSet.original_file_use
+          Hyrax::FileSet::ORIGINAL_FILE_USE
         end
     end
   end

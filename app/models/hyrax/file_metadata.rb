@@ -76,19 +76,19 @@ module Hyrax
       new(label: file.original_filename,
           original_filename: file.original_filename,
           mime_type: file.content_type,
-          type: file.try(:type) || [Hyrax::FileSet.original_file_use])
+          type: file.try(:type) || [Hyrax::FileSet::ORIGINAL_FILE_USE])
     end
 
     def original_file?
-      type.include?(Hyrax::FileSet.original_file_use)
+      type.include?(Hyrax::FileSet::ORIGINAL_FILE_USE)
     end
 
     def thumbnail_file?
-      type.include?(Hyrax::FileSet.thumbnail_use)
+      type.include?(Hyrax::FileSet::THUMBNAIL_USE)
     end
 
     def extracted_file?
-      type.include?(Hyrax::FileSet.extracted_text_use)
+      type.include?(Hyrax::FileSet::EXTRACTED_TEXT_USE)
     end
 
     def title

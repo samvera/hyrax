@@ -131,7 +131,7 @@ RSpec.describe Hyrax::Actors::FileActor do
   context 'when using valkyrie' do
     let(:user)     { create(:user) }
     let(:file_set) { create(:file_set) }
-    let(:relation) { Hyrax::FileSet.original_file_use }
+    let(:relation) { Hyrax::FileSet::ORIGINAL_FILE_USE }
     let(:actor)    { described_class.new(file_set, relation, user, use_valkyrie: true) }
     let(:fixture)  { fixture_file_upload('/world.png', 'image/png') }
     let(:huf) { Hyrax::UploadedFile.new(user: user, file: fixture) }
