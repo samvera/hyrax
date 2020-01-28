@@ -48,7 +48,7 @@ module Valkyrie
           end
 
           def solr_document(resource)
-            resource_indexer.for(resource: resource).to_solr
+            @resource_indexer.for(resource: resource).to_solr
           end
 
           def add_documents(documents)
