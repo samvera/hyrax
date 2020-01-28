@@ -21,7 +21,7 @@ module Hyrax
     attribute :label, ::Valkyrie::Types::Set
     attribute :original_filename, ::Valkyrie::Types::Set
     attribute :mime_type, ::Valkyrie::Types::String.default(GENERIC_MIME_TYPE)
-    attribute :type, ::Valkyrie::Types::Set # AF::File type
+    attribute :type, ::Valkyrie::Types::Set.default([Use::ORIGINAL_FILE])
     attribute :content, ::Valkyrie::Types::Set
 
     # attributes set by fits
@@ -86,8 +86,7 @@ module Hyrax
     def self.for(file:)
       new(label: file.original_filename,
           original_filename: file.original_filename,
-          mime_type: file.content_type,
-          type: file.try(:type) || [Use::ORIGINAL_FILE])
+          mime_type: file.content_type)
     end
 
     ##
