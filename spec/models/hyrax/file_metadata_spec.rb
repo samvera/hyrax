@@ -23,15 +23,6 @@ RSpec.describe Hyrax::FileMetadata do
     expect(subject.type).to contain_exactly(described_class::Use::ORIGINAL_FILE)
   end
 
-  describe '#used_for?' do
-    it 'is true when type matches' do
-      expect { file_metadata.type = [Valkyrie::Vocab::PCDMUse.ThumbnailImage] }
-        .to change { file_metadata.used_for?(:original_file) }
-        .from(true)
-        .to false
-    end
-  end
-
   describe '#original_file?' do
     context 'when use says file is the original file' do
       before { subject.type = [described_class::Use::ORIGINAL_FILE, pcdm_file_uri] }

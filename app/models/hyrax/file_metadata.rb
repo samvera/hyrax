@@ -11,6 +11,25 @@ module Hyrax
       ORIGINAL_FILE = ::Valkyrie::Vocab::PCDMUse.OriginalFile
       EXTRACTED_TEXT = ::Valkyrie::Vocab::PCDMUse.ExtractedText
       THUMBNAIL = ::Valkyrie::Vocab::PCDMUse.Thumbnail
+
+      ##
+      # @param use [Symbol]
+      #
+      # @return [RDF::URI]
+      # @raise [ArgumentError] if no use is known for the argument
+      def uri_for(use:)
+        case use
+        when :original_file
+          ORIGINAL_FILE
+        when :extracted_file
+          EXTRACTED_TEXT
+        when :thumbnail_file
+          THUMBNAIL
+        else
+          raise ArgumentError, "No PCDM use is recognized for #{use}"
+        end
+      end
+      module_function :uri_for
     end
 
     attribute :file_identifiers, ::Valkyrie::Types::Set # id of the file stored by the storage adapter
@@ -87,13 +106,6 @@ module Hyrax
       new(label: file.original_filename,
           original_filename: file.original_filename,
           mime_type: file.content_type)
-    end
-
-    ##
-    # @param [Symbol] use
-    # @return [Boolean]
-    def used_for?(use)
-      public_send("#{use}?")
     end
 
     ##

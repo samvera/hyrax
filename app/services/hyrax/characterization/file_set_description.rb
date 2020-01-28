@@ -20,22 +20,25 @@ module Hyrax
       #   used for characterization
       def initialize(file_set:, primary_file: :original_file)
         self.file_set = file_set
-        @primary_file = primary_file
+
+        @primary_file_type_uri =
+          Hyrax::FileMetadata::Use.uri_for(use: primary_file)
       end
 
       ##
       # @api public
       # @return [Hyrax::FileMetadata] the member file to use for characterization
       def primary_file
-        files.find { |f| f.used_for?(@primary_file) } || Hyrax::FileMetadata.new
+        queries.find_many_file_metadata_by_use(resource: file_set, use: @primary_file_type_uri).first ||
+          Hyrax::FileMetadata.new
       end
 
       private
 
         ##
         # @api private
-        def files
-          @__files__ ||= Hyrax.query_service.custom_queries.find_files(file_set: file_set)
+        def queries
+          Hyrax.query_service.custom_queries
         end
     end
   end
