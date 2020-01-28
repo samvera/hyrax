@@ -6,7 +6,8 @@ RSpec.describe Hyrax::CustomQueries::FindFileMetadata do
     it 'lists queries' do
       expect(described_class.queries).to eq [:find_file_metadata_by,
                                              :find_file_metadata_by_alternate_identifier,
-                                             :find_many_file_metadata_by_ids]
+                                             :find_many_file_metadata_by_ids,
+                                             :find_many_file_metadata_by_use]
     end
   end
 

@@ -9,7 +9,8 @@ module Hyrax
       def self.queries
         [:find_file_metadata_by,
          :find_file_metadata_by_alternate_identifier,
-         :find_many_file_metadata_by_ids]
+         :find_many_file_metadata_by_ids,
+         :find_many_file_metadata_by_use]
       end
 
       def initialize(query_service:)
