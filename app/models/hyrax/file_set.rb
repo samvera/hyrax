@@ -33,21 +33,21 @@ module Hyrax
     # Gives file metadata for the file filling the http://pcdm.org/OriginalFile use
     # @return [FileMetadata] the FileMetadata resource of the original file
     def original_file
-      Hyrax.query_service.custom_queries.find_many_file_metadata_by_use(resource: self, use: Hyrax::FileSet::ORIGINAL_FILE_USE).first
+      filter_files_by_type(Hyrax::FileSet::ORIGINAL_FILE_USE).first
     end
 
     ##
     # Gives file metadata for the file filling the http://pcdm.org/ExtractedText use
     # @return [FileMetadata] the FileMetadata resource of the extracted text
     def extracted_text
-      Hyrax.query_service.custom_queries.find_many_file_metadata_by_use(resource: self, use: Hyrax::FileSet::EXTRACTED_TEXT_USE).first
+      filter_files_by_type(Hyrax::FileSet::EXTRACTED_TEXT_USE).first
     end
 
     ##
     # Gives file metadata for the file filling the http://pcdm.org/Thumbnail use
     # @return [FileMetadata] the FileMetadata resource of the thumbnail
     def thumbnail
-      Hyrax.query_service.custom_queries.find_many_file_metadata_by_use(resource: self, use: Hyrax::FileSet::THUMBNAIL_USE).first
+      filter_files_by_type(Hyrax::FileSet::THUMBNAIL_USE).first
     end
 
     ##

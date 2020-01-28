@@ -113,11 +113,16 @@ module Hyrax
         def normalize_relation_for_valkyrie(relation)
           # TODO: When this is fully switched to valkyrie, this should probably be removed and relation should always be passed
           #       in as a valid URI already set to the file's use
-          relation = relation.to_s.to_sym
-          return Hyrax::FileSet::ORIGINAL_FILE_USE if relation == :original_file
-          return FileSet.extracted_file_use if relation == :extracted_file
-          return FileSet.thumbnail_file_use if relation == :thumbnail_file
-          Hyrax::FileSet::ORIGINAL_FILE_USE
+          case relation.to_s.to_sym
+          when :original_file
+            Hyrax::FileSet::ORIGINAL_FILE_USE
+          when :extracted_file
+            Hyrax::FileSet.EXTRACTED_TEXT_USE
+          when :thumbnail_file
+            Hyrax::FileSet::THUMBNAIL_USE
+          else
+            Hyrax::FileSet::ORIGINAL_FILE_USE
+          end
         end
     end
   end

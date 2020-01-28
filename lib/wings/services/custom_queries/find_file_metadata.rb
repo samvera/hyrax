@@ -80,10 +80,7 @@ module Wings
       #   Hyrax.query_service.find_file_metadata_by_use(use: ::RDF::URI("http://pcdm.org/ExtractedText"))
       def find_many_file_metadata_by_use(resource:, use:, use_valkyrie: true)
         pcdm_files = find_many_file_metadata_by_ids(ids: resource.file_ids, use_valkyrie: false)
-        pcdm_files.select! do |pcdm_file|
-          pcdm_file.metadata_node.type.include?(use)
-        end
-        # pcdm_files.select { |pcdm_file| pcdm_file.metadata_node.type.include?(use) }
+        pcdm_files.select! { |pcdm_file| pcdm_file.metadata_node.type.include?(use) }
         return pcdm_files if use_valkyrie == false
         pcdm_files.collect { |pcdm_file| Wings::FileConverterService.af_file_to_resource(af_file: pcdm_file) }
       end

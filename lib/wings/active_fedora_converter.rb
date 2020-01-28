@@ -120,21 +120,20 @@ module Wings
       def convert_members(af_object)
         return unless resource.respond_to?(:member_ids) && resource.member_ids
         # TODO: It would be better to find a way to add the members without resuming all the member AF objects
-        af_object.ordered_members = resource.member_ids.each_with_object([]) { |valkyrie_id, arr| arr << ActiveFedora::Base.find(valkyrie_id.id) }
+        af_object.ordered_members = resource.member_ids.map { |valkyrie_id| ActiveFedora::Base.find(valkyrie_id.id) }
       end
 
       def convert_member_of_collections(af_object)
         return unless resource.respond_to?(:member_of_collection_ids) && resource.member_of_collection_ids
         # TODO: It would be better to find a way to set the parent collections without resuming all the collection AF objects
-        af_object.member_of_collections = resource.member_of_collection_ids.each_with_object([]) { |valkyrie_id, arr| arr << ActiveFedora::Base.find(valkyrie_id.id) }
+        af_object.member_of_collections = resource.member_of_collection_ids.map { |valkyrie_id| ActiveFedora::Base.find(valkyrie_id.id) }
       end
 
       def convert_files(af_object)
         return unless resource.respond_to? :file_ids
-        af_object.files = resource.file_ids.each_with_object([]) do |fid, arr|
+        af_object.files = resource.file_ids.map do |fid|
           pcdm_file = Hydra::PCDM::File.new(fid.id)
           assign_association_target(af_object, pcdm_file)
-          arr << pcdm_file
         end
       end
 
@@ -146,6 +145,8 @@ module Wings
           af_object.association(:extracted_text).target = pcdm_file
         when ->(types) { types.include?(RDF::URI.new('http://pcdm.org/use#Thumbnail')) }
           af_object.association(:thumbnail).target = pcdm_file
+        else
+          pcdm_file
         end
       end
 
