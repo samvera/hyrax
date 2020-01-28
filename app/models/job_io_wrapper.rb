@@ -80,7 +80,7 @@ class JobIoWrapper < ApplicationRecord
     Hyrax::FileMetadata.new(label: original_name,
                             original_filename: original_name,
                             mime_type: mime_type,
-                            use: [Valkyrie::Vocab::PCDMUse.OriginalFile])
+                            use: [Hyrax::FileSet::ORIGINAL_FILE_USE])
   end
 
   # The magic that switches *once* between local filepath and CarrierWave file

@@ -22,7 +22,8 @@ RSpec.describe Wings::CustomQueries::FindFileMetadata, :clean_repo do
     it 'lists queries' do
       expect(described_class.queries).to eq [:find_file_metadata_by,
                                              :find_file_metadata_by_alternate_identifier,
-                                             :find_many_file_metadata_by_ids]
+                                             :find_many_file_metadata_by_ids,
+                                             :find_many_file_metadata_by_use]
     end
   end
 
@@ -110,6 +111,75 @@ RSpec.describe Wings::CustomQueries::FindFileMetadata, :clean_repo do
       let(:ids) { [] }
       it 'result is empty' do
         expect(query_handler.find_many_file_metadata_by_ids(ids: ids)).to be_empty
+      end
+    end
+  end
+
+  describe '.find_file_metadata_by_use' do
+    let(:af_file_set)             { create(:file_set, id: 'fileset_id') }
+    let!(:file_set)               { af_file_set.valkyrie_resource }
+
+    let(:original_file_use)  { Hyrax::FileSet::ORIGINAL_FILE_USE }
+    let(:extracted_text_use) { Hyrax::FileSet::EXTRACTED_TEXT_USE }
+    let(:thumbnail_use)      { Hyrax::FileSet::THUMBNAIL_USE }
+
+    let(:pdf_filename)  { 'sample-file.pdf' }
+    let(:pdf_mimetype)  { 'application/pdf' }
+    let(:pdf_file)      { File.open(File.join(fixture_path, pdf_filename)) }
+
+    let(:text_filename) { 'updated-file.txt' }
+    let(:text_mimetype) { 'text/plain' }
+    let(:text_file)     { File.open(File.join(fixture_path, text_filename)) }
+
+    let(:image_filename) { 'world.png' }
+    let(:image_mimetype) { 'image/png' }
+    let(:image_file)     { File.open(File.join(fixture_path, image_filename)) }
+
+    context 'when file set has files of the requested use' do
+      let!(:file_set) do
+        file_set = af_file_set.valkyrie_resource
+        file_set = Wings::Works::AddFileToFileSet.call(file_set: file_set, file: pdf_file, type: original_file_use)
+        file_set = Wings::Works::AddFileToFileSet.call(file_set: file_set, file: text_file, type: extracted_text_use)
+        Wings::Works::AddFileToFileSet.call(file_set: file_set, file: image_file, type: thumbnail_use)
+      end
+
+      context 'and use_valkyrie is false' do
+        it 'returns AF Files matching use' do
+          result = query_handler.find_many_file_metadata_by_use(resource: file_set, use: original_file_use, use_valkyrie: false)
+          expect(result.size).to eq 1
+          expect(result.first).to be_a Hydra::PCDM::File
+          expect(result.first.content).to start_with('%PDF-1.3')
+        end
+      end
+
+      context 'and use_valkyrie is true' do
+        it 'returns Hyrax::FileMetadata resources matching use' do
+          result = query_handler.find_many_file_metadata_by_use(resource: file_set, use: extracted_text_use, use_valkyrie: true)
+          expect(result.size).to eq 1
+          expect(result.first).to be_a Hyrax::FileMetadata
+          expect(result.first.content.first).to start_with('some updated content')
+          expect(result.first.type).to include extracted_text_use
+        end
+      end
+    end
+
+    context 'when file set has no files of the requested use' do
+      let!(:file_set) do
+        file_set = af_file_set.valkyrie_resource
+        file_set = Wings::Works::AddFileToFileSet.call(file_set: file_set, file: pdf_file, type: original_file_use)
+        Wings::Works::AddFileToFileSet.call(file_set: file_set, file: image_file, type: thumbnail_use)
+      end
+
+      it 'result is empty' do
+        result = query_handler.find_many_file_metadata_by_use(resource: file_set, use: extracted_text_use)
+        expect(result).to be_empty
+      end
+    end
+
+    context 'when file set has no files' do
+      it 'result is empty' do
+        result = query_handler.find_many_file_metadata_by_use(resource: file_set, use: original_file_use)
+        expect(result).to be_empty
       end
     end
   end

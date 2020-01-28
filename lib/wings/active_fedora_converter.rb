@@ -120,37 +120,34 @@ module Wings
       def convert_members(af_object)
         return unless resource.respond_to?(:member_ids) && resource.member_ids
         # TODO: It would be better to find a way to add the members without resuming all the member AF objects
-        ordered_members = []
-        resource.member_ids.each do |valkyrie_id|
-          ordered_members << ActiveFedora::Base.find(valkyrie_id.id)
-        end
-        af_object.ordered_members = ordered_members
+        af_object.ordered_members = resource.member_ids.map { |valkyrie_id| ActiveFedora::Base.find(valkyrie_id.id) }
       end
 
       def convert_member_of_collections(af_object)
         return unless resource.respond_to?(:member_of_collection_ids) && resource.member_of_collection_ids
         # TODO: It would be better to find a way to set the parent collections without resuming all the collection AF objects
-        member_of_collections = []
-        resource.member_of_collection_ids.each do |valkyrie_id|
-          member_of_collections << ActiveFedora::Base.find(valkyrie_id.id)
-        end
-        af_object.member_of_collections = member_of_collections
+        af_object.member_of_collections = resource.member_of_collection_ids.map { |valkyrie_id| ActiveFedora::Base.find(valkyrie_id.id) }
       end
 
       def convert_files(af_object)
-        convert_file(af_object, :original_file)
-        convert_file(af_object, :thumbnail_file)
-        convert_file(af_object, :extracted_text_file)
-        # TODO: How to identify and convert files added with URI relationships (e.g. Valkyrie::Vocab::PCDMUse.Transcript)
-        # TODO: How to identify and convert customizations that add file relationships (e.g. :remastered)
+        return unless resource.respond_to? :file_ids
+        af_object.files = resource.file_ids.map do |fid|
+          pcdm_file = Hydra::PCDM::File.new(fid.id)
+          assign_association_target(af_object, pcdm_file)
+        end
       end
 
-      def convert_file(af_object, relation)
-        resource_relation = "#{relation}_ids".to_sym
-        related_file_ids = resource.try(resource_relation)
-        return unless related_file_ids.present?
-        pcdm_file = Hydra::PCDM::File.new(related_file_ids.first.to_s)
-        af_object.association(relation).target = pcdm_file
+      def assign_association_target(af_object, pcdm_file)
+        case pcdm_file.metadata_node.type
+        when ->(types) { types.include?(RDF::URI.new('http://pcdm.org/use#OriginalFile')) }
+          af_object.association(:original_file).target = pcdm_file
+        when ->(types) { types.include?(RDF::URI.new('http://pcdm.org/use#ExtractedText')) }
+          af_object.association(:extracted_text).target = pcdm_file
+        when ->(types) { types.include?(RDF::URI.new('http://pcdm.org/use#Thumbnail')) }
+          af_object.association(:thumbnail).target = pcdm_file
+        else
+          pcdm_file
+        end
       end
 
       # Normalizes the attributes parsed from the resource
@@ -158,16 +155,13 @@ module Wings
       #   ActiveFedora::Base Class)
       # @return [Hash]
       def normal_attributes
-        normalized = {}
-        attributes.each_pair do |attr, value|
+        attributes.each_with_object({}) do |(attr, value), hash|
           property = active_fedora_class.properties[attr.to_s]
-          # This handles some cases where the attributes do not directly map to an
-          #   RDF property value
-          normalized[attr] = value
+          # This handles some cases where the attributes do not directly map to an RDF property value
+          hash[attr] = value
           next if property.nil?
-          normalized[attr] = Array.wrap(value) if property.multiple?
+          hash[attr] = Array.wrap(value) if property.multiple?
         end
-        normalized
       end
 
       def apply_depositor_to(af_object)

@@ -37,9 +37,9 @@ module Wings::Works
         end
 
         def type_to_association_type(type)
-          return :original_file if type.to_s.casecmp?(Valkyrie::Vocab::PCDMUse.original_file.to_s)
-          return :extracted_text if type.to_s.casecmp?(Valkyrie::Vocab::PCDMUse.extracted_text.to_s)
-          return :thumbnail if type.to_s.casecmp?(Valkyrie::Vocab::PCDMUse.thumbnail.to_s)
+          return :original_file if type.to_s.casecmp?(Hyrax::FileSet::ORIGINAL_FILE_USE.to_s)
+          return :extracted_text if type.to_s.casecmp?(Hyrax::FileSet::EXTRACTED_TEXT_USE.to_s)
+          return :thumbnail if type.to_s.casecmp?(Hyrax::FileSet::THUMBNAIL_USE.to_s)
         end
 
         def type_to_rdf_uri(type)

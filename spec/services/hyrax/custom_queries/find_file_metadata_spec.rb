@@ -97,4 +97,42 @@ RSpec.describe Hyrax::CustomQueries::FindFileMetadata do
       end
     end
   end
+
+  describe '.find_file_metadata_by_use' do
+    let!(:of_file_metadata) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata, type: original_file_use) }
+    let!(:et_file_metadata) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata, type: extracted_text_use) }
+    let!(:th_file_metadata) { FactoryBot.create_using_test_adapter(:hyrax_file_metadata, type: thumbnail_use) }
+
+    let(:original_file_use)  { Hyrax::FileSet::ORIGINAL_FILE_USE }
+    let(:extracted_text_use) { Hyrax::FileSet::EXTRACTED_TEXT_USE }
+    let(:thumbnail_use)      { Hyrax::FileSet::THUMBNAIL_USE }
+
+    context 'when file set has files of the requested use' do
+      let!(:file_set) { FactoryBot.create_using_test_adapter(:hyrax_file_set, files: [of_file_metadata, et_file_metadata, th_file_metadata]) }
+
+      it 'returns Hyrax::FileMetadata resources matching use' do
+        result = query_handler.find_many_file_metadata_by_use(resource: file_set, use: extracted_text_use)
+        expect(result.size).to eq 1
+        expect(result.first).to be_a Hyrax::FileMetadata
+        expect(result.first.type.first).to eq extracted_text_use
+      end
+    end
+
+    context 'when file set has no files of the requested use' do
+      let!(:file_set) { FactoryBot.create_using_test_adapter(:hyrax_file_set, files: [of_file_metadata, th_file_metadata]) }
+
+      it 'result is empty' do
+        result = query_handler.find_many_file_metadata_by_use(resource: file_set, use: extracted_text_use)
+        expect(result).to be_empty
+      end
+    end
+
+    context 'when file set has no files' do
+      let!(:file_set) { FactoryBot.create_using_test_adapter(:hyrax_file_set) }
+      it 'result is empty' do
+        result = query_handler.find_many_file_metadata_by_use(resource: file_set, use: original_file_use)
+        expect(result).to be_empty
+      end
+    end
+  end
 end

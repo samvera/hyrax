@@ -17,7 +17,7 @@ module Wings
     # @param file_set [Valkyrie::Resouce, Hydra::Works::FileSet] the associated FileSet # TODO: WINGS - Remove Hydra::Works::FileSet as a potential type when valkyrization is complete.
     # @return [Hyrax::FileMetadata] the persisted metadata file_metadata that represents the file
     def create(io_wrapper:, file_metadata:, file_set:)
-      io_wrapper = build_file(io_wrapper, file_metadata.use)
+      io_wrapper = build_file(io_wrapper, file_metadata.type)
       file_set.save unless file_set.persisted?
       file_metadata.id = ::Valkyrie::ID.new(assign_id)
       file_metadata.file_set_id = file_set.id

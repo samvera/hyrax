@@ -132,11 +132,6 @@ module Wings
         in_collections(valkyrie: valkyrie).map(&:id)
       end
 
-      def original_file
-        af_object = Wings::ActiveFedoraConverter.new(resource: self).convert
-        af_object.original_file
-      end
-
       ##
       # @return [Boolean] whether this instance is an audio.
       def audio?

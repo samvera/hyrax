@@ -9,7 +9,8 @@ module Wings
       def self.queries
         [:find_file_metadata_by,
          :find_file_metadata_by_alternate_identifier,
-         :find_many_file_metadata_by_ids]
+         :find_many_file_metadata_by_ids,
+         :find_many_file_metadata_by_use]
       end
 
       def initialize(query_service:)
@@ -53,7 +54,8 @@ module Wings
 
       # Find an array of file metadata using Valkyrie IDs, and map them to Hyrax::FileMetadata maintaining order based on given ids
       # @param ids [Array<Valkyrie::ID, String>]
-      # @return [Array<Hyrax::FileMetadata>] or empty array if there are no ids or none of the ids map to Hyrax::FileMetadata
+      # @param use_valkyrie [boolean] defaults to true; optionally return ActiveFedora::File objects if false
+      # @return [Array<Hyrax::FileMetadata, Hydra::PCDM::File>] or empty array if there are no ids or none of the ids map to Hyrax::FileMetadata
       # NOTE: Ignores non-existent ids and ids for non-file metadata resources.
       def find_many_file_metadata_by_ids(ids:, use_valkyrie: true)
         results = []
@@ -67,6 +69,20 @@ module Wings
           end
         end
         results
+      end
+
+      ##
+      # Find file metadata for files within a resource that have the requested use.
+      # @param use [RDF::URI] uri for the desired use Type
+      # @param use_valkyrie [boolean] defaults to true; optionally return ActiveFedora::File objects if false
+      # @return [Array<Hyrax::FileMetadata, Hydra::PCDM::File>] or empty array if there are no files with the requested use
+      # @example
+      #   Hyrax.query_service.find_file_metadata_by_use(use: ::RDF::URI("http://pcdm.org/ExtractedText"))
+      def find_many_file_metadata_by_use(resource:, use:, use_valkyrie: true)
+        pcdm_files = find_many_file_metadata_by_ids(ids: resource.file_ids, use_valkyrie: false)
+        pcdm_files.select! { |pcdm_file| pcdm_file.metadata_node.type.include?(use) }
+        return pcdm_files if use_valkyrie == false
+        pcdm_files.collect { |pcdm_file| Wings::FileConverterService.af_file_to_resource(af_file: pcdm_file) }
       end
     end
   end

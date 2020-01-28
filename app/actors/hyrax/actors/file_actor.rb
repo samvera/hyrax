@@ -77,7 +77,7 @@ module Hyrax
         def perform_ingest_file_through_valkyrie(io)
           # Skip versioning because versions will be minted by VersionCommitter as necessary during save_characterize_and_record_committer.
           unsaved_file_metadata = io.to_file_metadata
-          unsaved_file_metadata.use = relation
+          unsaved_file_metadata.type = [relation]
           begin
             saved_file_metadata = file_metadata_builder.create(io_wrapper: io, file_metadata: unsaved_file_metadata, file_set: file_set)
           rescue StandardError => e # Handle error persisting file metadata
@@ -103,21 +103,26 @@ module Hyrax
           return relation if relation.is_a? Symbol
           return relation.to_sym if relation.respond_to? :to_sym
 
-          # TODO: whereever these are set, they should use Valkyrie::Vocab::PCDMUse... making the casecmp unnecessary
-          return :original_file if relation.to_s.casecmp(Valkyrie::Vocab::PCDMUse.original_file.to_s)
-          return :extracted_file if relation.to_s.casecmp(Valkyrie::Vocab::PCDMUse.extracted_file.to_s)
-          return :thumbnail_file if relation.to_s.casecmp(Valkyrie::Vocab::PCDMUse.thumbnail_file.to_s)
+          # TODO: whereever these are set, they should use FileSet.*_use... making the casecmp unnecessary
+          return :original_file if relation.to_s.casecmp(Hyrax::FileSet::ORIGINAL_FILE_USE.to_s)
+          return :extracted_file if relation.to_s.casecmp(Hyrax::FileSet::EXTRACTED_TEXT_USE.to_s)
+          return :thumbnail_file if relation.to_s.casecmp(Hyrax::FileSet::THUMBNAIL_USE.to_s)
           :original_file
         end
 
         def normalize_relation_for_valkyrie(relation)
           # TODO: When this is fully switched to valkyrie, this should probably be removed and relation should always be passed
           #       in as a valid URI already set to the file's use
-          relation = relation.to_s.to_sym
-          return Valkyrie::Vocab::PCDMUse.original_file if relation == :original_file
-          return Valkyrie::Vocab::PCDMUse.extracted_file if relation == :extracted_file
-          return Valkyrie::Vocab::PCDMUse.thumbnail_file if relation == :thumbnail_file
-          Valkyrie::Vocab::PCDMUse.original_file
+          case relation.to_s.to_sym
+          when :original_file
+            Hyrax::FileSet::ORIGINAL_FILE_USE
+          when :extracted_file
+            Hyrax::FileSet.EXTRACTED_TEXT_USE
+          when :thumbnail_file
+            Hyrax::FileSet::THUMBNAIL_USE
+          else
+            Hyrax::FileSet::ORIGINAL_FILE_USE
+          end
         end
     end
   end

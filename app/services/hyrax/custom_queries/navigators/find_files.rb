@@ -5,7 +5,7 @@ module Hyrax
         # @example
         #   Hyrax.query_service.custom_queries.find_files(file_set: file_set_resource)
         #   Hyrax.query_service.custom_queries.find_original_file(file_set: file_set_resource)
-        #   Hyrax.query_service.custom_queries.find_extracted_text_file(file_set: file_set_resource)
+        #   Hyrax.query_service.custom_queries.find_extracted_text(file_set: file_set_resource)
         #   Hyrax.query_service.custom_queries.find_thumbnail(file_set: file_set_resource)
 
         def self.queries

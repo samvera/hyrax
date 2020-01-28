@@ -26,6 +26,7 @@ RSpec.describe Wings::FileConverterService do
       expect(subject.file_identifiers).to match_valkyrie_ids_with_active_fedora_ids [af_file_id]
       expect(subject.created_at).to eq af_file.create_date
       expect(subject.updated_at).to eq af_file.modified_date
+      expect(subject.type).to match_array af_file.metadata_node.type
       expect(subject.original_filename).to eq Array(plain_text_af_attrs[:original_name])
       expect(subject.mime_type).to eq Array(plain_text_af_attrs[:mime_type])
       expect(subject.content).to eq Array(plain_text_af_attrs[:content])
@@ -72,6 +73,7 @@ RSpec.describe Wings::FileConverterService do
   private
 
     def validate_af_file_metadata(expected_attrs) # rubocop:disable Metrics/AbcSize
+      expect(subject.metadata_node.type).to match_array expected_attrs[:type]
       expect(subject.mime_type).to eq expected_attrs[:mime_type]
       expect(subject.content).to eq expected_attrs[:content]
       expect(subject.format_label).to eq Array(expected_attrs[:format_label])
@@ -86,7 +88,11 @@ RSpec.describe Wings::FileConverterService do
         mime_type: 'text/plain',
         content: 'some text content for af_file_to_resource test',
         format_label: 'Plain Text',
-        language: 'en' }
+        language: 'en',
+        type: [RDF::URI.new('http://pcdm.org/models#File'),
+               RDF::URI.new('http://fedora.info/definitions/v4/repository#Binary'),
+               RDF::URI.new('http://fedora.info/definitions/v4/repository#Resource'),
+               RDF::URI.new('http://www.w3.org/ns/ldp#NonRDFSource')] }
     end
 
     def plain_text_valkyrie_attrs
@@ -95,6 +101,7 @@ RSpec.describe Wings::FileConverterService do
         content: '<h3>different text content for valkyrie_to_af_file test</h3>',
         format_label: 'HTML Text',
         language: 'en',
+        type: [RDF::URI.new('http://pcdm.org/models#File')],
         created_at: Time.now.getlocal - 5.days,
         updated_at: Time.now.getlocal }
     end
