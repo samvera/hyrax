@@ -100,29 +100,28 @@ module Hyrax
         end
 
         def normalize_relation_for_active_fedora(relation)
-          return relation if relation.is_a? Symbol
           return relation.to_sym if relation.respond_to? :to_sym
 
-          # TODO: whereever these are set, they should use FileSet.*_use... making the casecmp unnecessary
-          return :original_file if relation.to_s.casecmp(Hyrax::FileMetadata::Use::ORIGINAL_FILE.to_s)
-          return :extracted_file if relation.to_s.casecmp(Hyrax::FileMetadata::Use::EXTRACTED_TEXT.to_s)
-          return :thumbnail_file if relation.to_s.casecmp(Hyrax::FileMetadata::Use::THUMBNAIL.to_s)
-          :original_file
+          case relation
+          when Hyrax::FileMetadata::Use::ORIGINAL_FILE
+            :original_file
+          when Hyrax::FileMetadata::Use::EXTRACTED_TEXT
+            :extracted_file
+          when Hyrax::FileMetadata::Use::THUMBNAIL
+            :thumbnail_file
+          else
+            :original_file
+          end
         end
 
+        ##
+        # @return [RDF::URI]
         def normalize_relation_for_valkyrie(relation)
-          # TODO: When this is fully switched to valkyrie, this should probably be removed and relation should always be passed
-          #       in as a valid URI already set to the file's use
-          case relation.to_s.to_sym
-          when :original_file
-            Hyrax::FileMetadata::Use::ORIGINAL_FILE
-          when :extracted_file
-            Hyrax::FileMetadata::Use::EXTRACTED_TEXT
-          when :thumbnail_file
-            Hyrax::FileMetadata::Use::THUMBNAIL
-          else
-            Hyrax::FileMetadata::Use::ORIGINAL_FILE
-          end
+          return relation if relation.is_a?(RDF::URI)
+
+          Hyrax::FileMetadata::Use.uri_for(use: relation.to_sym)
+        rescue ArgumentError
+          Hyrax::FileMetadata::Use::ORIGINAL_FILE
         end
     end
   end
