@@ -15,7 +15,6 @@ module Valkyrie
         # @param connection [RSolr::Client] The RSolr connection to index to.
         def initialize(connection: default_connection)
           @connection = connection
-          @resource_indexer = default_indexer
         end
 
         def save(resource:)
@@ -48,7 +47,7 @@ module Valkyrie
           end
 
           def solr_document(resource)
-            @resource_indexer.for(resource: resource).to_solr
+            resource_indexer.for(resource: resource).to_solr
           end
 
           def add_documents(documents)
@@ -89,7 +88,7 @@ module Valkyrie
             RSolr.connect(url: connection_url)
           end
 
-          def default_indexer
+          def resource_indexer
             Hyrax::ValkyrieIndexer
           end
       end
