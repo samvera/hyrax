@@ -51,7 +51,7 @@ SUMMARY
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
   spec.add_dependency 'hydra-derivatives', '~> 3.3'
   spec.add_dependency 'hydra-editor', '~> 5.0'
-  spec.add_dependency 'hydra-head', '>= 10.7.0'
+  spec.add_dependency 'hydra-head', '= 11.0.0.rc2'
   spec.add_dependency 'hydra-works', '>= 0.16', '< 2.0'
   spec.add_dependency 'iiif_manifest', '>= 0.3', '< 0.7'
   spec.add_dependency 'jquery-datatables-rails', '~> 3.4'
