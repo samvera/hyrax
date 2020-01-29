@@ -88,6 +88,26 @@ RSpec.shared_examples 'a Basic metadata indexer' do
   end
 end
 
+RSpec.shared_examples 'a Collection indexer' do
+  subject(:indexer) { indexer_class.new(resource: resource) }
+  let(:resource)    { Hyrax::PcdmCollection.new }
+
+  it_behaves_like 'a permission indexer'
+  it_behaves_like 'a visibility indexer'
+
+  describe '#to_solr' do
+    it 'indexes generic type' do
+      expect(indexer.to_solr)
+        .to include(generic_type_sim: a_collection_containing_exactly('Collection'))
+    end
+
+    it 'indexes thumbnail' do
+      expect(indexer.to_solr)
+        .to include(thumbnail_path_ss: include('assets/collection', '.png'))
+    end
+  end
+end
+
 RSpec.shared_examples 'a Core metadata indexer' do
   subject(:indexer) { indexer_class.new(resource: resource) }
   let(:titles)      { ['Comet in Moominland', 'Finn Family Moomintroll'] }

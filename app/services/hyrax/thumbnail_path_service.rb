@@ -1,10 +1,10 @@
 module Hyrax
   class ThumbnailPathService
     class << self
-      # @param [Work, FileSet] object - to get the thumbnail for
+      # @param [#id] object - to get the thumbnail for
       # @return [String] a path to the thumbnail
       def call(object)
-        return default_image unless object.thumbnail_id
+        return default_image unless object.try(:thumbnail_id)
 
         thumb = fetch_thumbnail(object)
 

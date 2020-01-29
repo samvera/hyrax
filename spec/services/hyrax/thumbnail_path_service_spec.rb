@@ -3,6 +3,35 @@ RSpec.describe Hyrax::ThumbnailPathService do
 
   subject { described_class.call(object) }
 
+  context 'with a Valkyrie resource' do
+    subject(:service) { described_class }
+    let(:object) { FactoryBot.build(:hyrax_resource) }
+
+    describe '#call' do
+      it 'returns the default image path' do
+        expect(service.call(object)).to include('/assets/default', '.png')
+      end
+
+      context 'when it is a Work with a thumbnail_id' do
+        it 'returns the thumbnail path for the file_set'
+      end
+
+      context 'when it is a FileSet' do
+        let(:object) { build(:hyrax_file_set) }
+
+        it 'returns the default image path' do
+          expect(service.call(object)).to include('/assets/default', '.png')
+        end
+
+        context 'when it has a thumbnail id' do
+          let(:object) { build(:hyrax_file_set, thumbnail_id: '123') }
+
+          it 'returns the thumbnail file path'
+        end
+      end
+    end
+  end
+
   context "with a FileSet" do
     let(:object) { build(:file_set, id: '999') }
 
