@@ -13,12 +13,14 @@ module Hyrax
       THUMBNAIL = ::Valkyrie::Vocab::PCDMUse.ThumbnailImage
 
       ##
-      # @param use [Symbol]
+      # @param use [RDF::URI, Symbol]
       #
       # @return [RDF::URI]
       # @raise [ArgumentError] if no use is known for the argument
       def uri_for(use:)
         case use
+        when RDF::URI
+          use
         when :original_file
           ORIGINAL_FILE
         when :extracted_file
