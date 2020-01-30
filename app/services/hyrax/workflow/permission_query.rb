@@ -52,7 +52,7 @@ module Hyrax
           workflow_actions_scope.arel_table[:id].in(
             workflow_state_actions_scope.arel_table.project(
               workflow_state_actions_scope.arel_table[:workflow_action_id]
-            ).where(workflow_state_actions_scope.constraints.reduce)
+            ).where(workflow_state_actions_scope.arel.constraints.reduce)
           )
         )
       end
@@ -428,7 +428,7 @@ module Hyrax
       # @return [ActiveRecord::Relation<Sipity::WorkflowAction>]
       def scope_workflow_actions_available_for_current_state(entity:)
         workflow_actions_for_current_state = scope_workflow_actions_for_current_state(entity: entity)
-        Sipity::WorkflowAction.where(workflow_actions_for_current_state.constraints.reduce)
+        Sipity::WorkflowAction.where(workflow_actions_for_current_state.arel.constraints.reduce)
       end
     end
   end
