@@ -2,7 +2,7 @@ module Hyrax
   module CustomQueries
     class FindManyByAlternateIds
       # Use:
-      #   Hyrax.query_service.custom_queries.find_many_by_alternate_ids(alternate_ids: ids)
+      #   Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: ids)
 
       def self.queries
         [:find_many_by_alternate_ids]

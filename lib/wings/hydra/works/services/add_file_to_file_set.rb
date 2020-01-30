@@ -37,9 +37,14 @@ module Wings::Works
         end
 
         def type_to_association_type(type)
-          return :original_file if type.to_s.casecmp?(Hyrax::FileSet::ORIGINAL_FILE_USE.to_s)
-          return :extracted_text if type.to_s.casecmp?(Hyrax::FileSet::EXTRACTED_TEXT_USE.to_s)
-          return :thumbnail if type.to_s.casecmp?(Hyrax::FileSet::THUMBNAIL_USE.to_s)
+          case type
+          when Hyrax::FileMetadata::Use::ORIGINAL_FILE
+            :original_file
+          when Hyrax::FileMetadata::Use::EXTRACTED_TEXT
+            :extracted_text
+          when Hyrax::FileMetadata::Use::THUMBNAIL
+            :thumbnail
+          end
         end
 
         def type_to_rdf_uri(type)

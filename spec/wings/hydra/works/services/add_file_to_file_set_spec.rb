@@ -6,9 +6,9 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
   let(:af_file_set)             { create(:file_set, id: 'fileset_id') }
   let!(:file_set)               { af_file_set.valkyrie_resource }
 
-  let(:original_file_use)  { Hyrax::FileSet::ORIGINAL_FILE_USE }
-  let(:extracted_text_use) { Hyrax::FileSet::EXTRACTED_TEXT_USE }
-  let(:thumbnail_use)      { Hyrax::FileSet::THUMBNAIL_USE }
+  let(:original_file_use)  { Hyrax::FileMetadata::Use::ORIGINAL_FILE }
+  let(:extracted_text_use) { Hyrax::FileMetadata::Use::EXTRACTED_TEXT }
+  let(:thumbnail_use)      { Hyrax::FileMetadata::Use::THUMBNAIL }
 
   let(:pdf_filename)  { 'sample-file.pdf' }
   let(:pdf_mimetype)  { 'application/pdf' }
@@ -33,7 +33,7 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
         expect(ids.first).to be_a Valkyrie::ID
         expect(ids.first.to_s).to start_with "#{file_set.id}/files/"
 
-        file_metadata = Hyrax.query_service.custom_queries.find_file_metadata_by(id: ids.first)
+        file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: ids.first)
         expect(file_metadata.content.first).to start_with('%PDF-1.3')
         expect(file_metadata.mime_type.first).to eq pdf_mimetype
       end
@@ -47,7 +47,7 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
         expect(ids.first).to be_a Valkyrie::ID
         expect(ids.first.to_s).to start_with "#{file_set.id}/files/"
 
-        file_metadata = Hyrax.query_service.custom_queries.find_file_metadata_by(id: ids.first)
+        file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: ids.first)
         expect(file_metadata.content.first).to start_with('some updated content')
         expect(file_metadata.mime_type.first).to eq text_mimetype
       end
@@ -61,7 +61,7 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
         expect(ids.first).to be_a Valkyrie::ID
         expect(ids.first.to_s).to start_with "#{file_set.id}/files/"
 
-        file_metadata = Hyrax.query_service.custom_queries.find_file_metadata_by(id: ids.first)
+        file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: ids.first)
         expect(file_metadata.content.first.present?).to eq true
         expect(file_metadata.mime_type.first).to eq image_mimetype
       end
@@ -82,8 +82,8 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
       expect(ids.first).to be_a Valkyrie::ID
       expect(ids.first.to_s).to start_with "#{file_set.id}/files/"
 
-      expect(Hyrax.query_service.custom_queries.find_many_file_metadata_by_use(resource: subject, use: transcript_use).first.content.first).to start_with('some updated content')
-      expect(Hyrax.query_service.custom_queries.find_many_file_metadata_by_use(resource: subject, use: service_file_use).first.content.first).to start_with('%PDF-1.3')
+      expect(Hyrax.custom_queries.find_many_file_metadata_by_use(resource: subject, use: transcript_use).first.content.first).to start_with('some updated content')
+      expect(Hyrax.custom_queries.find_many_file_metadata_by_use(resource: subject, use: service_file_use).first.content.first).to start_with('%PDF-1.3')
     end
   end
 

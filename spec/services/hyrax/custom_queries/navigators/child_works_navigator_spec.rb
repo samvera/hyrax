@@ -2,7 +2,7 @@ RSpec.describe Hyrax::CustomQueries::Navigators::ChildWorksNavigator, :clean_rep
   subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
 
   let(:resource) { subject.build }
-  let(:custom_query_service) { Hyrax.query_service.custom_queries }
+  let(:custom_query_service) { Hyrax.custom_queries }
 
   let(:collection1)    { build(:collection, id: 'col1', title: ['Collection 1']) }
   let(:collection2)    { build(:collection, id: 'col2', title: ['Child Collection 1']) }

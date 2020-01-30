@@ -2,6 +2,36 @@
 
 module Hyrax
   class FileMetadata < Valkyrie::Resource
+    GENERIC_MIME_TYPE = 'application/octet-stream'
+
+    ##
+    # Constants for PCDM Use URIs; use these constants in place of hard-coded
+    # URIs in the `::Valkyrie::Vocab::PCDMUse` vocabulary.
+    module Use
+      ORIGINAL_FILE = ::Valkyrie::Vocab::PCDMUse.OriginalFile
+      EXTRACTED_TEXT = ::Valkyrie::Vocab::PCDMUse.ExtractedText
+      THUMBNAIL = ::Valkyrie::Vocab::PCDMUse.ThumbnailImage
+
+      ##
+      # @param use [Symbol]
+      #
+      # @return [RDF::URI]
+      # @raise [ArgumentError] if no use is known for the argument
+      def uri_for(use:)
+        case use
+        when :original_file
+          ORIGINAL_FILE
+        when :extracted_file
+          EXTRACTED_TEXT
+        when :thumbnail_file
+          THUMBNAIL
+        else
+          raise ArgumentError, "No PCDM use is recognized for #{use}"
+        end
+      end
+      module_function :uri_for
+    end
+
     attribute :file_identifiers, ::Valkyrie::Types::Set # id of the file stored by the storage adapter
     attribute :alternate_ids, Valkyrie::Types::Set.of(Valkyrie::Types::ID) # id of the Hydra::PCDM::File which holds metadata and the file in ActiveFedora
     attribute :file_set_id, ::Valkyrie::Types::ID # id of parent file set resource
@@ -9,8 +39,8 @@ module Hyrax
     # all remaining attributes are on AF::File metadata_node unless otherwise noted
     attribute :label, ::Valkyrie::Types::Set
     attribute :original_filename, ::Valkyrie::Types::Set
-    attribute :mime_type, ::Valkyrie::Types::Set
-    attribute :type, ::Valkyrie::Types::Set # AF::File type
+    attribute :mime_type, ::Valkyrie::Types::String.default(GENERIC_MIME_TYPE)
+    attribute :type, ::Valkyrie::Types::Set.default([Use::ORIGINAL_FILE])
     attribute :content, ::Valkyrie::Types::Set
 
     # attributes set by fits
@@ -75,20 +105,25 @@ module Hyrax
     def self.for(file:)
       new(label: file.original_filename,
           original_filename: file.original_filename,
-          mime_type: file.content_type,
-          type: file.try(:type) || [Hyrax::FileSet::ORIGINAL_FILE_USE])
+          mime_type: file.content_type)
     end
 
+    ##
+    # @return [Boolean]
     def original_file?
-      type.include?(Hyrax::FileSet::ORIGINAL_FILE_USE)
+      type.include?(Use::ORIGINAL_FILE)
     end
 
+    ##
+    # @return [Boolean]
     def thumbnail_file?
-      type.include?(Hyrax::FileSet::THUMBNAIL_USE)
+      type.include?(Use::THUMBNAIL)
     end
 
+    ##
+    # @return [Boolean]
     def extracted_file?
-      type.include?(Hyrax::FileSet::EXTRACTED_TEXT_USE)
+      type.include?(Use::EXTRACTED_TEXT)
     end
 
     def title

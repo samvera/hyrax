@@ -3,7 +3,7 @@ module Wings
     class FindAccessControl
       # Custom query override specific to Wings
       # Use:
-      #   Hyrax.query_service.custom_queries.find_access_control_for(resource: resource)
+      #   Hyrax.custom_queries.find_access_control_for(resource: resource)
 
       def self.queries
         [:find_access_control_for]

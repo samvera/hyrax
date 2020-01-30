@@ -4,7 +4,7 @@ RSpec.describe VisibilityCopyJob do
   context 'context with a valkyrie resource' do
     let(:proxy)    { Hyrax::ActiveJobProxy.new(resource: resource) }
     let(:resource) { FactoryBot.create(:work_with_files).valkyrie_resource }
-    let(:queries)  { Hyrax.query_service.custom_queries }
+    let(:queries)  { Hyrax.custom_queries }
 
     it 'converts resource to proxy when enqueuing' do
       expect { described_class.perform_later(resource) }

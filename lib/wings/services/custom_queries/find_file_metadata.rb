@@ -1,7 +1,7 @@
 # Custom query override specific to Wings for finding Hydra::PCDM::File and converting to Hyrax::FileMetadata.
 # @example
-#   Hyrax.query_service.custom_queries.find_file_metadata_by(id: valkyrie_id, use_valkyrie: true)
-#   Hyrax.query_service.custom_queries.find_file_metadata_by_alternate_identifier(alternate_identifier: id, use_valkyrie: true)
+#   Hyrax.custom_queries.find_file_metadata_by(id: valkyrie_id, use_valkyrie: true)
+#   Hyrax.custom_queries.find_file_metadata_by_alternate_identifier(alternate_identifier: id, use_valkyrie: true)
 require 'wings/services/file_converter_service'
 module Wings
   module CustomQueries

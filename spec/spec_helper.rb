@@ -310,4 +310,12 @@ RSpec.configure do |config|
     ActiveJob::Base.queue_adapter.perform_enqueued_jobs    = false
     ActiveJob::Base.queue_adapter.perform_enqueued_at_jobs = false
   end
+
+  config.before(:example, :valkyrie_adapter) do |example|
+    adapter_name = example.metadata[:valkyrie_adapter]
+
+    allow(Hyrax)
+      .to receive(:metadata_adapter)
+      .and_return(Valkyrie::MetadataAdapter.find(adapter_name))
+  end
 end
