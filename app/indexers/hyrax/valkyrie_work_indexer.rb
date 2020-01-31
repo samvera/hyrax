@@ -4,6 +4,7 @@ module Hyrax
   ##
   # Indexes Hyrax::Work objects
   class ValkyrieWorkIndexer < Hyrax::ValkyrieIndexer
+    # Registration needs to happen for each object that is generated through the system
     Hyrax::ValkyrieIndexer.register self, as_indexer_for: Hyrax::Work
 
     include Hyrax::ResourceIndexer
