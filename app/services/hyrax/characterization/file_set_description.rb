@@ -16,9 +16,9 @@ module Hyrax
 
       ##
       # @param [Hyrax::FileSet] file_set
-      # @param [Symbol] primary_file  a symbol mapping to the file_set member
-      #   used for characterization
-      def initialize(file_set:, primary_file: :original_file)
+      # @param [RDF::URI, Symbol] primary_file  the type of file_set member to
+      #   use for characterization
+      def initialize(file_set:, primary_file: Hyrax::FileMetadata::Use::ORIGINAL_FILE)
         self.file_set = file_set
 
         @primary_file_type_uri =

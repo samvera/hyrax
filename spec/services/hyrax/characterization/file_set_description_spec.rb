@@ -7,6 +7,7 @@ RSpec.describe Hyrax::Characterization::FileSetDescription, valkyrie_adapter: :t
   let(:file) { Rack::Test::UploadedFile.new('spec/fixtures/world.png', ctype) }
   let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set, file_ids: file_ids) }
   let(:file_ids) { [] }
+  let(:original_file) { Hyrax.persister.save(resource: Hyrax::FileMetadata.for(file: file)) }
 
   describe '#mime_type' do
     context 'before the file set is saved' do
@@ -25,12 +26,30 @@ RSpec.describe Hyrax::Characterization::FileSetDescription, valkyrie_adapter: :t
 
     context 'when it has an original file' do
       let(:file_ids) { [original_file.id] }
-      let(:original_file) { Hyrax.persister.save(resource: Hyrax::FileMetadata.for(file: file)) }
 
       it { is_expected.to be_image }
 
       it 'has a mime type from a file' do
         expect(description.mime_type).to eq ctype
+      end
+    end
+
+    context 'when it uses a custom URI type' do
+      subject(:description) { described_class.new(file_set: file_set, primary_file: custom_type) }
+      let(:file_ids) { [custom_file.id, original_file.id] }
+      let(:custom_type) { RDF::URI('http://example.com/HyraxTestCustomType') }
+      let(:other_ctype) { 'image/jpg' }
+      let(:other_file) { Rack::Test::UploadedFile.new('spec/fixtures/1.5mb-avatar.jpg', other_ctype) }
+
+      let(:custom_file) do
+        resource = Hyrax::FileMetadata.for(file: other_file).new(type: custom_type)
+        Hyrax.persister.save(resource: resource)
+      end
+
+      it { is_expected.to be_image }
+
+      it 'has a mime type from a file' do
+        expect(description.mime_type).to eq other_ctype
       end
     end
   end
