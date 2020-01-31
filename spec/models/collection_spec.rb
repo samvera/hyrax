@@ -5,6 +5,13 @@ RSpec.describe Collection, type: :model do
     expect(collection.read_groups).to eq ['public']
   end
 
+  describe '#bytes' do
+    it 'returns a hard-coded integer and issues a deprecation warning' do
+      expect(Deprecation).to receive(:warn).once
+      expect(collection.bytes).to eq(0)
+    end
+  end
+
   describe "#validates_with" do
     before { collection.title = nil }
     it "ensures the collection has a title" do

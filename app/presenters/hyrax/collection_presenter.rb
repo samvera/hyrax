@@ -49,6 +49,9 @@ module Hyrax
       self.class.terms.select { |t| self[t].present? }
     end
 
+    ##
+    # @param [Symbol] key
+    # @return [Object]
     def [](key)
       case key
       when :size
@@ -60,8 +63,16 @@ module Hyrax
       end
     end
 
+    # @deprecated to be removed in 4.0.0; this feature was replaced with a
+    #   hard-coded null implementation
+    # @return [String] 'unknown'
     def size
-      number_to_human_size(@solr_document['bytes_lts'])
+      Deprecation.warn('#size has been deprecated for removal in Hyrax 4.0.0; ' \
+                       'The implementation of the indexed Collection size ' \
+                       'feature is extremely inefficient, so it has been removed. ' \
+                       'This method now returns a hard-coded `"unknown"` for ' \
+                       'compatibility.')
+      'unknown'
     end
 
     def total_items

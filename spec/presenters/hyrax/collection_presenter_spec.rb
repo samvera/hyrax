@@ -25,9 +25,6 @@ RSpec.describe Hyrax::CollectionPresenter do
   let(:presenter) { described_class.new(solr_doc, ability) }
   let(:solr_doc) { SolrDocument.new(collection.to_solr) }
 
-  # Mock bytes so collection does not have to be saved.
-  before { allow(collection).to receive(:bytes).and_return(0) }
-
   describe "collection type methods" do
     subject { presenter }
 
@@ -126,10 +123,11 @@ RSpec.describe Hyrax::CollectionPresenter do
     it { is_expected.to eq ['adc12v'] }
   end
 
-  describe "#size", :clean_repo do
-    subject { presenter.size }
-
-    it { is_expected.to eq '0 Bytes' }
+  describe '#size' do
+    it 'returns a hard-coded string and issues a deprecation warning' do
+      expect(Deprecation).to receive(:warn).once
+      expect(presenter.size).to eq('unknown')
+    end
   end
 
   describe "#total_items", :clean_repo do
@@ -282,12 +280,6 @@ RSpec.describe Hyrax::CollectionPresenter do
 
       it { is_expected.to eq 0 }
     end
-  end
-
-  describe "#size", :clean_repo do
-    subject { presenter.size }
-
-    it { is_expected.to eq '0 Bytes' }
   end
 
   describe "#parent_collection_count" do
