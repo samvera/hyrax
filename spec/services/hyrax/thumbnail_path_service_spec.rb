@@ -23,8 +23,8 @@ RSpec.describe Hyrax::ThumbnailPathService do
           expect(service.call(object)).to include('/assets/default', '.png')
         end
 
-        context 'when it has a thumbnail id' do
-          let(:object) { build(:hyrax_file_set, thumbnail_id: '123') }
+        context 'when it has a thumbnail' do
+          let(:object) { build(:hyrax_file_set) }
 
           it 'returns the thumbnail file path'
         end

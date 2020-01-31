@@ -9,9 +9,6 @@ module Hyrax
     include Hyrax::Schema(:core_metadata)
 
     attribute :file_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID) # id for FileMetadata resources
-    attribute :original_file_id, Valkyrie::Types::ID # id for FileMetadata resource
-    attribute :thumbnail_id, Valkyrie::Types::ID # id for FileMetadata resource
-    attribute :extracted_text_id, Valkyrie::Types::ID # id for FileMetadata resource
 
     ##
     # @return [Boolean] true
