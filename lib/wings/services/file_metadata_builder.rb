@@ -57,10 +57,9 @@ module Wings
       # @api private
       # @return [Hyrax::FileMetadata, nil]
       def current_original_file(file_set)
-        Hyrax.query_service
-             .custom_queries
-             .find_many_file_metadata_by_use(resource: file_set, use: Hyrax::FileMetadata::Use::ORIGINAL_FILE)
-             .first
+        Hyrax.custom_queries.find_original_file(file_set: file_set)
+      rescue ::Valkyrie::Persistence::ObjectNotFoundError
+        nil
       end
 
       # Class for wrapping the file being ingested

@@ -61,6 +61,8 @@ module Hyrax
       # @example
       #   Hyrax.query_service.find_file_metadata_by_use(use: ::RDF::URI("http://pcdm.org/ExtractedText"))
       def find_many_file_metadata_by_use(resource:, use:)
+        return [] unless resource.try(:file_ids)
+
         results = find_many_file_metadata_by_ids(ids: resource.file_ids)
         results.select { |fm| fm.type.include?(use) }
       end
