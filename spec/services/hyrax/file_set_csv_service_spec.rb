@@ -24,7 +24,7 @@ RSpec.describe Hyrax::FileSetCSVService do
 
       it { is_expected.to eq "123abc,My Title,jilluser@example.com,\"Von, Creator\",restricted,Book|Other,Mine,pdf\n" }
       it "parses as valid csv" do
-        expect(CSV.parse(subject)).to eq([["123abc", "My Title", "jilluser@example.com", "Von, Creator", "restricted", "Book|Other", "Mine", "pdf"]])
+        expect(::CSV.parse(subject)).to eq([["123abc", "My Title", "jilluser@example.com", "Von, Creator", "restricted", "Book|Other", "Mine", "pdf"]])
       end
     end
 
