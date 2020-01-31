@@ -33,7 +33,7 @@ module Wings
     end
 
     ##
-    # @param klass [String] an `ActiveFedora` model
+    # @param klass [Class] an `ActiveFedora` model class
     #
     # @return [Class] a dyamically generated `Valkyrie::Resource` subclass
     #   mirroring the provided `ActiveFedora` model
