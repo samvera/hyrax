@@ -87,8 +87,6 @@ Capybara.javascript_driver = :selenium_chrome_headless_sandboxless # This is slo
 # non-visible elements
 Webdrivers::Chromedriver.version = '72.0.3626.69'
 
-ActiveJob::Base.queue_adapter = :test
-
 # require 'http_logger'
 # HttpLogger.logger = Logger.new(STDOUT)
 # HttpLogger.ignore = [/localhost:8983\/solr/]
@@ -143,6 +141,17 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+query_registration_target =
+  Valkyrie::MetadataAdapter.find(:test_adapter).query_service.custom_queries
+[Hyrax::CustomQueries::FindAccessControl,
+ Hyrax::CustomQueries::FindManyByAlternateIds,
+ Hyrax::CustomQueries::FindFileMetadata,
+ Hyrax::CustomQueries::Navigators::FindFiles].each do |handler|
+  query_registration_target.register_query_handler(handler)
+end
+
+ActiveJob::Base.queue_adapter = :test
 
 require 'active_fedora/cleaner'
 RSpec.configure do |config|
@@ -281,20 +290,32 @@ RSpec.configure do |config|
   #
   #   ActiveJob::Base.queue_adapter.filter = [JobClass]
   #
-  config.before(:example, :perform_enqueued) do |example|
+  config.around(:example, :perform_enqueued) do |example|
     ActiveJob::Base.queue_adapter.filter =
       example.metadata[:perform_enqueued].try(:to_a)
-
     ActiveJob::Base.queue_adapter.perform_enqueued_jobs    = true
     ActiveJob::Base.queue_adapter.perform_enqueued_at_jobs = true
-  end
 
-  config.after(:example, :perform_enqueued) do
-    ActiveJob::Base.queue_adapter.filter         = nil
-    ActiveJob::Base.queue_adapter.enqueued_jobs  = []
-    ActiveJob::Base.queue_adapter.performed_jobs = []
+    example.run
 
+    ActiveJob::Base.queue_adapter.filter = nil
     ActiveJob::Base.queue_adapter.perform_enqueued_jobs    = false
     ActiveJob::Base.queue_adapter.perform_enqueued_at_jobs = false
+  end
+
+  # Ensuring we have a clear queue between each spec. This appears to
+  # resolve a "flappy spec" problem (found in seed 2816 for
+  # SHA da3b4632b45a8bf22100f691612d299a0ac79448 of the code base)
+  config.after do
+    ActiveJob::Base.queue_adapter.enqueued_jobs  = []
+    ActiveJob::Base.queue_adapter.performed_jobs = []
+  end
+
+  config.before(:example, :valkyrie_adapter) do |example|
+    adapter_name = example.metadata[:valkyrie_adapter]
+
+    allow(Hyrax)
+      .to receive(:metadata_adapter)
+      .and_return(Valkyrie::MetadataAdapter.find(adapter_name))
   end
 end
