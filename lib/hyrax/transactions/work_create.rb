@@ -8,7 +8,9 @@ module Hyrax
     #
     # @since 3.0.0
     class WorkCreate < Transaction
-      DEFAULT_STEPS = ['change_set.apply'].freeze
+      DEFAULT_STEPS = ['change_set.set_default_admin_set',
+                       'change_set.ensure_admin_set',
+                       'change_set.apply'].freeze
 
       ##
       # @see Hyrax::Transactions::Transaction

@@ -3,21 +3,22 @@ module Hyrax
   module Transactions
     module Steps
       ##
-      # A `dry-transaction` step that sets the `AdminSet` for an input work to
-      # the default admin set, if none is already set. Creates the default
-      # admin set if it doesn't already exist.
+      # A step that sets the `AdminSet` for an input work to the default admin
+      # set if none is already set. Creates the default admin set if it doesn't
+      # already exist.
+      #
+      # @since 2.4.0
       class SetDefaultAdminSet
-        include Dry::Transaction::Operation
+        include Dry::Monads[:result]
 
         ##
-        # @param [Hyrax::WorkBehavior] work
+        # @param [#admin_set_id=] obj
         #
         # @return [Dry::Monads::Result]
-        def call(work)
-          work.admin_set ||=
-            AdminSet.find(AdminSet.find_or_create_default_admin_set_id)
+        def call(obj)
+          obj.admin_set_id ||= AdminSet.find_or_create_default_admin_set_id
 
-          Success(work)
+          Success(obj)
         end
       end
     end

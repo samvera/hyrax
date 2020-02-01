@@ -3,19 +3,19 @@ module Hyrax
   module Transactions
     module Steps
       ##
-      # A `dry-transaction` step that ensures the input `work` has an AdminSet.
+      # A step that ensures the input object has an `#admin_set_id`.
       #
       # @since 2.4.0
       class EnsureAdminSet
-        include Dry::Transaction::Operation
+        include Dry::Monads[:result]
 
         ##
-        # @param [Hyrax::WorkBehavior] work
+        # @param [#admin_set_id] obj
         #
         # @return [Dry::Monads::Result] `Failure` if there is no `AdminSet` for
         #   the input; `Success(input)`, otherwise.
-        def call(work)
-          work.admin_set_id ? Success(work) : Failure(:no_admin_set_id)
+        def call(obj)
+          obj.admin_set_id ? Success(obj) : Failure(:no_admin_set_id)
         end
       end
     end
