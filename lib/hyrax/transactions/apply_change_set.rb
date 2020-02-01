@@ -27,7 +27,6 @@ module Hyrax
                        'change_set.validate',
                        'change_set.save'].freeze
 
-
       ##
       # @see Hyrax::Transactions::Transaction
       def initialize(container: Container, steps: DEFAULT_STEPS)

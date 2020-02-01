@@ -44,8 +44,16 @@ module Hyrax
           ApplyChangeSet.new
         end
 
+        ops.register 'ensure_admin_set' do
+          Steps::EnsureAdminSet.new
+        end
+
         ops.register 'save' do
           Steps::Save.new
+        end
+
+        ops.register 'set_default_admin_set' do
+          Steps::SetDefaultAdminSet.new
         end
 
         ops.register 'set_modified_date' do
