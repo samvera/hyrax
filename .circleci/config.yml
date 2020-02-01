@@ -20,6 +20,7 @@ jobs:
     environment:
       RAILS_VERSION: << parameters.rails_version >>
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
+      RAILS_MAX_THREADS: 50
     steps:
       - samvera/cached_checkout
       - samvera/bundle_for_gem:
