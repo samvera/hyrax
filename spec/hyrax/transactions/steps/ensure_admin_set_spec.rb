@@ -4,7 +4,7 @@ require 'hyrax/transactions'
 
 RSpec.describe Hyrax::Transactions::Steps::EnsureAdminSet do
   subject(:step) { described_class.new }
-  let(:work)     { build(:generic_work) }
+  let(:work)     { build(:hyrax_work) }
 
   describe '#call' do
     context 'without an admin set' do
