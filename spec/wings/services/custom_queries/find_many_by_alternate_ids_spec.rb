@@ -48,8 +48,8 @@ RSpec.describe Wings::CustomQueries::FindManyByAlternateIds do
     context 'when list includes an invalid id' do
       let(:id_list) { [work1.id, work2.id, '1212121212'] }
 
-      it 'returns error' do
-        expect { subject } .to raise_error
+      it 'raises an exception' do
+        expect { subject } .to raise_error(NameError)
       end
     end
   end

@@ -48,7 +48,7 @@ RSpec.describe Wings::OrmConverter do
 
     context 'when given a non-ActiveFedora class' do
       it 'raises an exception' do
-        expect { described_class.to_valkyrie_resource_class(klass: String) }.to raise_error
+        expect { described_class.to_valkyrie_resource_class(klass: String) }.to raise_error(NoMethodError)
       end
     end
 
