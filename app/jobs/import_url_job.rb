@@ -8,7 +8,7 @@ require 'browse_everything/retriever'
 # and CreateWithRemoteFilesActor when files are located in some other service.
 class ImportUrlJob < Hyrax::ApplicationJob
   queue_as Hyrax.config.ingest_queue_name
-  attr_reader :file_set, :operation
+  attr_reader :file_set, :operation, :headers
 
   before_enqueue do |job|
     operation = job.arguments[1]
@@ -17,34 +17,43 @@ class ImportUrlJob < Hyrax::ApplicationJob
 
   # @param [FileSet] file_set
   # @param [Hyrax::BatchCreateOperation] operation
-  def perform(file_set, operation, headers = {})
-    operation.performing!
-    user = User.find_by_user_key(file_set.depositor)
-    uri = URI(file_set.import_url)
-    name = file_set.label
-
+  # @param [Hash] headers - header data to use in interaction with remote url
+  def perform(file_set, operation, headers = {}, use_valkyrie: Hyrax.config.use_valkyrie?)
     @file_set = file_set
     @operation = operation
-
-    unless BrowseEverything::Retriever.can_retrieve?(uri, headers)
-      send_error('Expired URL')
-      return false
-    end
-
-    # @todo Use Hydra::Works::AddExternalFileToFileSet instead of manually
-    #       copying the file here. This will be gnarly.
-    copy_remote_file(uri, name, headers) do |f|
-      # reload the FileSet once the data is copied since this is a long running task
-      file_set.reload
-
-      # FileSetActor operates synchronously so that this tempfile is available.
-      # If asynchronous, the job might be invoked on a machine that did not have this temp file on its file system!
-      # NOTE: The return status may be successful even if the content never attaches.
-      log_import_status(uri, f, user)
+    @headers = headers
+    if use_valkyrie
+      # TODO
+    else
+      perform_af
     end
   end
 
   private
+
+    def perform_af
+      operation.performing!
+      user = User.find_by_user_key(file_set.depositor)
+      uri = URI(file_set.import_url)
+      name = file_set.label
+
+      unless BrowseEverything::Retriever.can_retrieve?(uri, headers)
+        send_error('Expired URL')
+        return false
+      end
+
+      # @todo Use Hydra::Works::AddExternalFileToFileSet instead of manually
+      #       copying the file here. This will be gnarly.
+      copy_remote_file(uri, name, headers) do |f|
+        # reload the FileSet once the data is copied since this is a long running task
+        file_set.reload
+
+        # FileSetActor operates synchronously so that this tempfile is available.
+        # If asynchronous, the job might be invoked on a machine that did not have this temp file on its file system!
+        # NOTE: The return status may be successful even if the content never attaches.
+        log_import_status(uri, f, user)
+      end
+    end
 
     # Download file from uri, yields a block with a file in a temporary directory.
     # It is important that the file on disk has the same file name as the URL,
@@ -75,9 +84,9 @@ class ImportUrlJob < Hyrax::ApplicationJob
     # @param error_message [String] the download error message
     def send_error(error_message)
       user = User.find_by_user_key(file_set.depositor)
-      @file_set.errors.add('Error:', error_message)
-      Hyrax.config.callback.run(:after_import_url_failure, @file_set, user, warn: false)
-      @operation.fail!(@file_set.errors.full_messages.join(' '))
+      file_set.errors.add('Error:', error_message)
+      Hyrax.config.callback.run(:after_import_url_failure, file_set, user, warn: false)
+      operation.fail!(file_set.errors.full_messages.join(' '))
     end
 
     # Write file to the stream
@@ -97,7 +106,7 @@ class ImportUrlJob < Hyrax::ApplicationJob
     # @param f [IO] the stream to write to
     # @param user [User]
     def log_import_status(uri, f, user)
-      if Hyrax::Actors::FileSetActor.new(@file_set, user).create_content(f, from_url: true)
+      if Hyrax::Actors::FileSetActor.new(file_set, user).create_content(f, from_url: true)
         operation.success!
       else
         send_error(uri.path, nil)
