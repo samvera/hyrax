@@ -22,9 +22,14 @@ module Hyrax
         #   applied and the resource is saved;
         #   `Failure([#to_s, change_set.resource])`, otherwise.
         def call(change_set)
-          change_set.sync
+          saved = @persister.save(resource: change_set.sync)
 
-          Success(@persister.save(resource: change_set.resource))
+          depositor = ::User.find_by_user_key(saved.try(:depositor))
+          Hyrax.publisher.publish('object.metadata.updated',
+                                  object: saved,
+                                  user: depositor)
+
+          Success(saved)
         rescue StandardError => err
           Failure([err.message, change_set.resource])
         end
