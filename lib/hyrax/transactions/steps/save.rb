@@ -5,7 +5,13 @@ module Hyrax
   module Transactions
     module Steps
       ##
-      # Saves a given work, returning a Result (Success|Failure)
+      # Saves a given work from a change_set, returning a `Dry::Monads::Result`
+      # (`Success`|`Failure`).
+      #
+      # If the save is successful, publishes an `object.metadata.updated` event
+      # for the affected resource.
+      #
+      # @see https://dry-rb.org/gems/dry-monads/1.0/result/
       class Save
         include Dry::Monads[:result]
 
@@ -22,9 +28,14 @@ module Hyrax
         #   applied and the resource is saved;
         #   `Failure([#to_s, change_set.resource])`, otherwise.
         def call(change_set)
-          change_set.sync
+          saved = @persister.save(resource: change_set.sync)
 
-          Success(@persister.save(resource: change_set.resource))
+          depositor = ::User.find_by_user_key(saved.try(:depositor))
+          Hyrax.publisher.publish('object.metadata.updated',
+                                  object: saved,
+                                  user: depositor)
+
+          Success(saved)
         rescue StandardError => err
           Failure([err.message, change_set.resource])
         end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 require 'hyrax/transactions/steps/save'
+require 'hyrax/specs/spy_listener'
 
 RSpec.describe Hyrax::Transactions::Steps::Save do
   subject(:step)      { described_class.new(persister: persister) }
@@ -9,6 +10,10 @@ RSpec.describe Hyrax::Transactions::Steps::Save do
   let(:persister)     { adapter.persister }
   let(:resource)      { build(:hyrax_work) }
   let(:query_service) { adapter.query_service }
+  let(:listener)      { Hyrax::Specs::SpyListener.new }
+
+  before { Hyrax.publisher.subscribe(listener) }
+  after  { Hyrax.publisher.unsubscribe(listener) }
 
   let(:change_set_class) do
     Class.new(Hyrax::ChangeSet) { self.fields = [:title] }
@@ -21,6 +26,25 @@ RSpec.describe Hyrax::Transactions::Steps::Save do
 
     it 'saves the resource' do
       expect(step.call(change_set).value!).to be_persisted
+    end
+
+    it 'publishes an event' do
+      created = step.call(change_set).value!
+
+      expect(listener.object_metadata_updated&.payload)
+        .to eq object: created, user: nil
+    end
+
+    context 'when the object has a depositor' do
+      let(:resource) { build(:hyrax_work, depositor: user.user_key) }
+      let(:user)     { create(:user) }
+
+      it 'publishes an event with the depositor' do
+        created = step.call(change_set).value!
+
+        expect(listener.object_metadata_updated&.payload)
+          .to eq object: created, user: user
+      end
     end
 
     context 'when the save fails' do
