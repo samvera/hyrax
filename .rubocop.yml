@@ -4,7 +4,7 @@ inherit_gem:
 inherit_from: .rubocop_fixme.yml
 
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.4
   DisplayCopNames: true
   Exclude:
     - 'db/**/*'
