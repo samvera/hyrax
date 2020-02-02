@@ -121,10 +121,6 @@ RSpec/DescribeClass:
 RSpec/MessageSpies:
   Enabled: false
 
-RSpec/InstanceVariable:
-  Exclude:
-    - 'spec/services/hyrax/derivative_service_spec.rb'
-
 RSpec/ExpectActual:
   Enabled: false
 

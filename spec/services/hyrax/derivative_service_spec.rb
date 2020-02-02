@@ -6,11 +6,10 @@ RSpec.describe Hyrax::DerivativeService do
   subject { described_class.new(file_set) }
 
   it_behaves_like "a Hyrax::DerivativeService"
-  before do
-    @cached_services = described_class.services
-  end
-  after do
-    described_class.services = @cached_services
+  around do |example|
+    cached_services = described_class.services
+    example.run
+    described_class.services = cached_services
   end
 
   describe ".services=" do
