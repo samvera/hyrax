@@ -44,7 +44,6 @@ Metrics/MethodLength:
     - 'app/inputs/multi_value_select_input.rb'
     - 'app/models/concerns/hyrax/solr_document/export.rb'
     - 'app/services/hyrax/workflow/permission_query.rb'
-    - 'lib/generators/hyrax/install_generator.rb'
     - 'lib/hyrax/rails/routes.rb'
     - 'spec/support/**/*'
 
