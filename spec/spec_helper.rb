@@ -142,15 +142,6 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
-query_registration_target =
-  Valkyrie::MetadataAdapter.find(:test_adapter).query_service.custom_queries
-[Hyrax::CustomQueries::FindAccessControl,
- Hyrax::CustomQueries::FindManyByAlternateIds,
- Hyrax::CustomQueries::FindFileMetadata,
- Hyrax::CustomQueries::Navigators::FindFiles].each do |handler|
-  query_registration_target.register_query_handler(handler)
-end
-
 ActiveJob::Base.queue_adapter = :test
 
 require 'active_fedora/cleaner'
@@ -309,13 +300,5 @@ RSpec.configure do |config|
   config.after do
     ActiveJob::Base.queue_adapter.enqueued_jobs  = []
     ActiveJob::Base.queue_adapter.performed_jobs = []
-  end
-
-  config.before(:example, :valkyrie_adapter) do |example|
-    adapter_name = example.metadata[:valkyrie_adapter]
-
-    allow(Hyrax)
-      .to receive(:metadata_adapter)
-      .and_return(Valkyrie::MetadataAdapter.find(adapter_name))
   end
 end
