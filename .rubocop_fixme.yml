@@ -53,19 +53,8 @@ Naming/PredicateName:
   Exclude:
     - 'app/helpers/hyrax/collections_helper.rb'
 
-
-# TODO: remove when https://github.com/bbatsov/rubocop/issues/4539 is fixed
-Style/FormatStringToken:
-  Exclude:
-    - 'config/routes.rb'
-
 Style/DateTime:
   Enabled: false
-
-# TODO: remove when https://github.com/bbatsov/rubocop/issues/5161 is fixed
-Style/CommentedKeyword:
-  Exclude:
-    - 'app/models/vocab/fedora_resource_status.rb'
 
 Style/SpecialGlobalVars:
   Exclude:
