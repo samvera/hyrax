@@ -32,10 +32,6 @@ Metrics/BlockLength:
     - 'lib/tasks/*.rake'
     - 'spec/**/*.rb'
 
-# Naming/FileName: # https://github.com/bbatsov/rubocop/issues/2973
-#   Exclude:
-#     - 'Gemfile'
-
 Style/AsciiComments:
   Enabled: false
 
@@ -58,10 +54,6 @@ Style/MethodMissing:
   Exclude:
     - 'app/models/concerns/hyrax/file_set/characterization.rb'
 
-Style/NumericPredicate:
-  Exclude:
-    - 'app/controllers/hyrax/file_sets_controller.rb'
-
 Style/SymbolArray:
   Enabled: false
 
@@ -70,10 +62,6 @@ Style/ClassAndModuleChildren:
 
 Style/SingleLineBlockParams:
   Enabled: false
-
-Style/ZeroLengthPredicate:
-  Exclude:
-    - 'app/controllers/hyrax/file_sets_controller.rb'
 
 Rails/ApplicationJob:
   Enabled: false
