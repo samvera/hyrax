@@ -4,7 +4,17 @@ require 'hyrax/transactions/transaction'
 module Hyrax
   module Transactions
     ##
-    # Applies and saves a ChangeSet.
+    # Applies and saves a `ChangeSet`.
+    #
+    # This transaction is intended to ensure appropriate results for a Hyrax
+    # model when saving changes from a `ChangeSet`. For example: it will set the
+    # system-managed metadata like modified date.
+    #
+    # If your application has custom system managed metadata, this is an
+    # appropriate place to inject that behavior.
+    #
+    # This will also validate the `ChangeSet`. Which validations to use is
+    # delegated on the `ChangeSet` itself.
     #
     # @since 3.0.0
     #
