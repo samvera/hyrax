@@ -44,7 +44,6 @@ Metrics/MethodLength:
     - 'app/inputs/multi_value_select_input.rb'
     - 'app/models/concerns/hyrax/solr_document/export.rb'
     - 'app/services/hyrax/workflow/permission_query.rb'
-    - 'lib/generators/hyrax/install_generator.rb'
     - 'lib/hyrax/rails/routes.rb'
     - 'spec/support/**/*'
 
@@ -53,19 +52,8 @@ Naming/PredicateName:
   Exclude:
     - 'app/helpers/hyrax/collections_helper.rb'
 
-
-# TODO: remove when https://github.com/bbatsov/rubocop/issues/4539 is fixed
-Style/FormatStringToken:
-  Exclude:
-    - 'config/routes.rb'
-
 Style/DateTime:
   Enabled: false
-
-# TODO: remove when https://github.com/bbatsov/rubocop/issues/5161 is fixed
-Style/CommentedKeyword:
-  Exclude:
-    - 'app/models/vocab/fedora_resource_status.rb'
 
 Style/SpecialGlobalVars:
   Exclude:
@@ -145,22 +133,16 @@ RSpec/SubjectStub:
 RSpec/AnyInstance:
   Exclude:
     - 'spec/actors/hyrax/actors/generic_work_actor_spec.rb'
-    - 'spec/controllers/hyrax/admin/admin_sets_controller_spec.rb'
     - 'spec/controllers/hyrax/api/items_controller_spec.rb'
     - 'spec/controllers/hyrax/api/zotero_controller_spec.rb'
     - 'spec/controllers/hyrax/batch_edits_controller_spec.rb'
-    - 'spec/controllers/hyrax/dashboard_controller_spec.rb'
     - 'spec/controllers/hyrax/stats_controller_spec.rb'
-    - 'spec/jobs/file_set_attached_event_job_spec.rb'
-    - 'spec/jobs/content_update_event_job_spec.rb'
+    - 'spec/controllers/hyrax/users_controller_spec.rb'
     - 'spec/jobs/content_restored_version_event_job_spec.rb'
-    - 'spec/jobs/content_new_version_event_job_spec.rb'
-    - 'spec/jobs/content_depositor_change_event_job_spec.rb'
-    - 'spec/jobs/content_deposit_event_job_spec.rb'
+    - 'spec/jobs/file_set_attached_event_job_spec.rb'
     - 'spec/jobs/hyrax/grant_edit_to_members_job_spec.rb'
     - 'spec/jobs/hyrax/grant_read_to_members_job_spec.rb'
     - 'spec/jobs/hyrax/revoke_edit_from_members_job_spec.rb'
-    - 'spec/lib/hyrax/arkivo/actor_spec.rb'
     - 'spec/lib/hyrax/arkivo/create_subscription_job_spec.rb'
     - 'spec/presenters/hyrax/file_usage_spec.rb'
     - 'spec/presenters/hyrax/work_usage_spec.rb'
