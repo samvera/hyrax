@@ -15,7 +15,7 @@ module Hyrax
 
       def given_name_first(name)
         name = clean_end_punctuation(name)
-        return name unless name =~ /,/
+        return name unless name.include?(',')
         temp_name = name.split(/,\s*/)
         temp_name.last + " " + temp_name.first
       end
