@@ -106,7 +106,7 @@ module Hyrax::User
     #   2. the orcid field is blank
     #   3. the orcid is already in its normalized form
     return if errors[:orcid].first.present? || orcid.blank? || orcid.starts_with?('https://orcid.org/')
-    bare_orcid = Hyrax::OrcidValidator.match(orcid)
+    bare_orcid = Hyrax::OrcidValidator.extract_bare_orcid(from: orcid)
     self.orcid = "https://orcid.org/#{bare_orcid}"
   end
 
