@@ -41,7 +41,7 @@ module Hyrax
               text << ", " << author
             end
           end
-          text << "." unless text =~ /\.$/
+          text << "." unless text.end_with?(".")
           text
         end
 
