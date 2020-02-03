@@ -66,6 +66,8 @@ module Hyrax
       attr_accessor :container, :steps
 
       ##
+      # @api public
+      #
       # @param [Container] container
       # @param [Array<String>] steps
       def initialize(container: Container, steps:)
@@ -74,6 +76,8 @@ module Hyrax
       end
 
       ##
+      # @api public
+      #
       # Run each step name in `#steps` by resolving the name in the given
       # `container` and passing a value to call. Each step must return a
       # `Result`. In the event of a `Success`, the wrapped value is passed
@@ -88,10 +92,50 @@ module Hyrax
       def call(value)
         Success(
           steps.inject(value) do |val, step_name|
-            yield container[step_name].call(val)
+            yield container[step_name].call(val, *step_arguments_for(step_name))
           end
         )
       end
+
+      ##
+      # @param [Hash<Object, Array>] args
+      #
+      # @return [Transaction] returns self
+      def with_step_args(args)
+        raise(ArgumentError, key_err_msg(args.keys)) if
+          args.keys.any? { |key| !step?(key) }
+
+        @_step_args = args
+        self
+      end
+
+      private
+
+        ##
+        # @api private
+        # @param [String, Symbol] step_name
+        # @return [Array]
+        def step_arguments_for(step_name)
+          Array.wrap((@_step_args || {})[step_name])
+        end
+
+        ##
+        # @api private
+        # @param [Array] keys
+        # @return [String]
+        def key_err_msg(keys)
+          missing_steps = keys.select { |key| !step?(key) }
+
+          "Tried to pass step aguments for unknown steps #{missing_steps.join(', ')}\n" \
+          "\tSteps defined for this transaction are: #{@steps.join(', ')}"
+        end
+
+        ##
+        # @api private
+        # @param [String, Symbol] step_name
+        def step?(step_name)
+          steps.include?(step_name)
+        end
     end
   end
 end
