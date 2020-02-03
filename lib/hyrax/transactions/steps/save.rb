@@ -23,17 +23,17 @@ module Hyrax
 
         ##
         # @param [Hyrax::ChangeSet] change_set
+        # @param [::User, nil] user
         #
         # @return [Dry::Monads::Result] `Success(work)` if the change_set is
         #   applied and the resource is saved;
         #   `Failure([#to_s, change_set.resource])`, otherwise.
-        def call(change_set)
+        def call(change_set, user: nil)
           saved = @persister.save(resource: change_set.sync)
 
-          depositor = ::User.find_by_user_key(saved.try(:depositor))
           Hyrax.publisher.publish('object.metadata.updated',
                                   object: saved,
-                                  user: depositor)
+                                  user: user)
 
           Success(saved)
         rescue StandardError => err
