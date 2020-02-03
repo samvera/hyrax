@@ -24,7 +24,7 @@ module Hyrax
     #   change_set.title = ['Comet in Moominland']
     #
     #   transaction = Hyrax::Transactions::ApplyChangeSet.new
-    #   result = transaction.call(change_set)
+    #   result = transaction.call(change_set) # => Success(#<Hyrax::Work ...>)
     #
     #   result.bind(&:persisted?) => true
     #
