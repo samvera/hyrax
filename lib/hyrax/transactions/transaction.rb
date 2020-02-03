@@ -44,7 +44,7 @@ module Hyrax
     #
     # @example a pattern for subclassing to create new transactions
     #   class CustomTransaction < Transaction
-    #     DEFAULT_STEPS ['step.1', 'step.2', 'step.3']
+    #     DEFAULT_STEPS = ['step.1', 'step.2', 'step.3'].freeze
     #
     #     def initialize(container: Container, steps: DEFAULT_STEPS)
     #       super
