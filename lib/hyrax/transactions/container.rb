@@ -32,7 +32,7 @@ module Hyrax
       require 'hyrax/transactions/steps/save_work'
       require 'hyrax/transactions/steps/set_default_admin_set'
       require 'hyrax/transactions/steps/set_modified_date'
-      require 'hyrax/transactions/steps/set_uploaded_date'
+      require 'hyrax/transactions/steps/set_uploaded_date_unless_present'
       require 'hyrax/transactions/steps/validate'
 
       extend Dry::Container::Mixin
@@ -60,8 +60,8 @@ module Hyrax
           Steps::SetModifiedDate.new
         end
 
-        ops.register 'set_uploaded_date' do
-          Steps::SetUploadedDate.new
+        ops.register 'set_uploaded_date_unless_present' do
+          Steps::SetUploadedDateUnlessPresent.new
         end
 
         ops.register 'validate' do
@@ -106,8 +106,8 @@ module Hyrax
           Steps::SetModifiedDate.new
         end
 
-        ops.register 'set_uploaded_date' do
-          Steps::SetUploadedDate.new
+        ops.register 'set_uploaded_date_unless_present' do
+          Steps::SetUploadedDateUnlessPresent.new
         end
       end
       # rubocop:enable Metrics/BlockLength

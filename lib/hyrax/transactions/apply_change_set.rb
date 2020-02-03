@@ -33,7 +33,7 @@ module Hyrax
     #
     class ApplyChangeSet < Transaction
       DEFAULT_STEPS = ['change_set.set_modified_date',
-                       'change_set.set_uploaded_date',
+                       'change_set.set_uploaded_date_unless_present',
                        'change_set.validate',
                        'change_set.save'].freeze
 
