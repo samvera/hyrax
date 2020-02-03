@@ -102,12 +102,24 @@ RSpec.describe Wings::Valkyrie::Persister do
     end
   end
 
+  context 'when passing a Valkyrie::Resource generated with hyrax:work_resource' do
+    subject(:persister) { described_class.new(adapter: adapter) }
+    let(:adapter) { Wings::Valkyrie::MetadataAdapter.new }
+    let(:query_service) { adapter.query_service }
+    let(:resource_class) { Monograph }
+    let(:resource) { resource_class.new }
+
+    it 'returns the correct Class after save' do
+      expect(persister.save(resource: resource)).to be_a(resource_class)
+    end
+  end
+
   context "When passing a Valkyrie::Resource that was never an ActiveFedora::Base" do
     subject(:persister) { described_class.new(adapter: adapter) }
     let(:adapter) { Wings::Valkyrie::MetadataAdapter.new }
     let(:query_service) { adapter.query_service }
     before do
-      class CustomResource < Valkyrie::Resource
+      class CustomResource < Hyrax::Resource
         attribute :title
         attribute :author
         attribute :member_ids
