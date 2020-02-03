@@ -3,11 +3,26 @@ module Hyrax
   module Transactions
     module Steps
       ##
-      # A step that sets the uploaded date to now for an input resource or
-      # change_set
+      # A step that sets the uploaded date for an input `Valkyrie::Resource` or
+      # `ValkyrieChangeSet`.
       #
-      # @since 2.4.0
-      class SetUploadedDate
+      # The uploaded date is derived in the following way:
+      #
+      #   - if a `date_uploaded` is already present, keep it;
+      #   - if there is no current `date_uploaded` but `date_modified` is
+      #     present, use the value of `date_modified`.
+      #   - if neither `date_uploaded` nor `date_modified` is present, set the
+      #     time to now using the given `time_service`. `Hyrax::TimeService`
+      #     is used by default.
+      #
+      # A useful pattern is to run this step immediately following one to set
+      # the `date_modified` to now, and just before validation and save. This
+      # pattern ensures the times for a newly created object have the same
+      # value as close to the actual save time as practicable, and avoids
+      # overwriting `date_uploaded` for existing objects.
+      #
+      # @since 3.0.0
+      class SetUploadedDateUnlessPresent
         include Dry::Monads[:result]
 
         ##
