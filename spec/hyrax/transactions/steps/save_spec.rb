@@ -35,15 +35,14 @@ RSpec.describe Hyrax::Transactions::Steps::Save do
         .to eq object: created, user: nil
     end
 
-    context 'when the object has a depositor' do
-      let(:resource) { build(:hyrax_work, depositor: user.user_key) }
+    context 'when the caller passes a user' do
+      let(:resource) { build(:hyrax_work) }
       let(:user)     { create(:user) }
 
-      it 'publishes an event with the depositor' do
-        created = step.call(change_set).value!
-
-        expect(listener.object_metadata_updated&.payload)
-          .to eq object: created, user: user
+      it 'publishes an event with a user' do
+        expect { step.call(change_set, user: user) }
+          .to change { listener.object_metadata_updated&.payload }
+          .to match object: an_instance_of(resource.class), user: user
       end
     end
 

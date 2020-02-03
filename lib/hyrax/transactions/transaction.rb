@@ -66,6 +66,8 @@ module Hyrax
       attr_accessor :container, :steps
 
       ##
+      # @api public
+      #
       # @param [Container] container
       # @param [Array<String>] steps
       def initialize(container: Container, steps:)
@@ -74,6 +76,8 @@ module Hyrax
       end
 
       ##
+      # @api public
+      #
       # Run each step name in `#steps` by resolving the name in the given
       # `container` and passing a value to call. Each step must return a
       # `Result`. In the event of a `Success`, the wrapped value is passed
@@ -88,10 +92,67 @@ module Hyrax
       def call(value)
         Success(
           steps.inject(value) do |val, step_name|
-            yield container[step_name].call(val)
+            yield container[step_name].call(val, *step_arguments_for(step_name))
           end
         )
       end
+
+      ##
+      # Sets arguments to pass to a given step in the transaction.
+      #
+      # This makes it easy for individual steps to require peices of information
+      # without other steps having to handle them. This is desirable since it
+      # avoids passing mutable values between steps, which commonly results in
+      # tight intedependence and less flexible composibility between steps.
+      #
+      # Instead we expect the caller to provide the correct data to each step
+      # when the transaction starts.
+      #
+      # @param [Hash<Object, Array>] args
+      #
+      # @return [Transaction] returns self
+      #
+      # @example passing arguments for a named step
+      #   tx = Hyrax::Transactions::Transaction.new(steps: [:first_step, :second_step])
+      #   result = tx.with_step_args(second_step: {named_parameter: :param_value}).call(:value)
+      #
+      def with_step_args(args)
+        raise(ArgumentError, key_err_msg(args.keys)) if
+          args.keys.any? { |key| !step?(key) }
+
+        @_step_args = args
+        self
+      end
+
+      private
+
+        ##
+        # @api private
+        # @param [String, Symbol] step_name
+        # @return [Array]
+        def step_arguments_for(step_name)
+          step_args = @_step_args || {}
+
+          Array.wrap(step_args[step_name])
+        end
+
+        ##
+        # @api private
+        # @param [Array] keys
+        # @return [String]
+        def key_err_msg(keys)
+          missing_steps = keys.select { |key| !step?(key) }
+
+          "Tried to pass step arguments for unknown steps #{missing_steps.join(', ')}\n" \
+          "\tSteps defined for this transaction are: #{@steps.join(', ')}"
+        end
+
+        ##
+        # @api private
+        # @param [String, Symbol] step_name
+        def step?(step_name)
+          steps.include?(step_name)
+        end
     end
   end
 end
