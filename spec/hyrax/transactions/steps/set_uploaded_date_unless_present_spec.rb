@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'hyrax/transactions'
 
-RSpec.describe Hyrax::Transactions::Steps::SetUploadedDate do
+RSpec.describe Hyrax::Transactions::Steps::SetUploadedDateUnlessPresent do
   subject(:step) { described_class.new }
   let(:work)     { build(:hyrax_work) }
   let(:xmas)     { DateTime.parse('2018-12-25 11:30').iso8601 }

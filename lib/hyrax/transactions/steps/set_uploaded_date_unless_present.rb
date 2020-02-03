@@ -6,8 +6,8 @@ module Hyrax
       # A step that sets the uploaded date to now for an input resource or
       # change_set
       #
-      # @since 2.4.0
-      class SetUploadedDate
+      # @since 3.0.0
+      class SetUploadedDateUnlessPresent
         include Dry::Monads[:result]
 
         ##

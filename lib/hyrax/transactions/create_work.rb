@@ -55,7 +55,7 @@ module Hyrax
       step :apply_collection_template, with: 'work.apply_collection_permission_template'
       step :apply_visibility,          with: 'work.apply_visibility'
       step :set_modified_date,         with: 'work.set_modified_date'
-      step :set_uploaded_date,         with: 'work.set_uploaded_date'
+      step :set_uploaded_date,         with: 'work.set_uploaded_date_unless_present'
       step :save_work,                 with: 'work.save_work'
     end
   end
