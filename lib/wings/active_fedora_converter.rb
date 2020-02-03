@@ -69,7 +69,7 @@ module Wings
 
       return klass if klass <= ActiveFedora::Base
 
-      ModelRegistry.lookup(klass) || DefaultWork
+      ModelRegistry.lookup(klass) || Wings::ActiveFedoraConverter::DefaultWork(klass)
     end
 
     ##
@@ -84,6 +84,15 @@ module Wings
       resource.alternate_ids.first.to_s
     end
 
+    def self.DefaultWork(valkyrie_class)
+      "Wings::#{dynamic_active_fedora_class_name(valkyrie_class)}".constantize
+    rescue NameError
+      Wings.const_set(dynamic_active_fedora_class_name(valkyrie_class), Class.new(DefaultWork))
+    end
+
+    def self.dynamic_active_fedora_class_name(valkyrie_class)
+      valkyrie_class.name.gsub('::', '__')
+    end
     # A dummy work class for valkyrie resources that don't have corresponding
     # hyrax ActiveFedora::Base models.
     #

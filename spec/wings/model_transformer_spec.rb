@@ -54,6 +54,29 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
   end
 
   describe '#build' do
+    context 'when it was saved as a generated Valkyrie Resource' do
+      let(:work) { Wings::ActiveFedoraConverter.new(resource: Monograph.new(id: id, **attributes)).convert }
+
+      it 'returns a Monograph' do
+        expect(factory.build).to be_a Monograph
+      end
+    end
+
+    context 'when it was saved as a generated and Namespaced Valkyrie Resource' do
+      before do
+        module My
+          class SpecialMonograph < Valkyrie::Resource
+          end
+        end
+      end
+      let(:ns_class) { My::SpecialMonograph }
+      let(:work) { Wings::ActiveFedoraConverter.new(resource: ns_class.new(id: id, **attributes)).convert }
+
+      it 'returns a My::SpecialMonograph' do
+        expect(factory.build).to be_a ns_class
+      end
+    end
+
     it 'returns a Valkyrie::Resource' do
       expect(factory.build).to be_a Valkyrie::Resource
     end

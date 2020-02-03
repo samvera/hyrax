@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
+# This is necessary to force the indexers to register themselves properly
 Rails.application.config.to_prepare do
-  # Register Indexers
-  Hyrax::ValkyrieIndexer.register Hyrax::ValkyrieWorkIndexer, as_indexer_for: Hyrax::Work
+  Hyrax::ValkyrieWorkIndexer
+  # Namespace::YourWorkIndexer
 end

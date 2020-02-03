@@ -47,7 +47,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
 
       it 'gives a default work' do
         expect(converter.convert)
-          .to be_a Wings::ActiveFedoraConverter::DefaultWork
+          .to be_a Wings::ConverterDummyResource
       end
 
       context 'and it is registered' do
