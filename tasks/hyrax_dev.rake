@@ -46,15 +46,6 @@ if Gem.loaded_specs.key? 'engine_cart'
       puts 'Creating default collection type...'
       EngineCart.within_test_app do
         raise "EngineCart failed on with: #{$?}" unless system "bundle exec rake hyrax:default_collection_types:create"
-
-        # Replace the default sqlite timeout to 15000 (which should triple the timeout). Based on some
-        # googling, this may help address the "ActiveRecord::StatementInvalid:SQLite3::BusyException:"
-        # exception that is occassionally breaking the build.
-        database_yml_content = File.read("config/database.yml")
-        new_database_yml_content = database_yml_content.gsub(/timeout: +(\d+)/, 'timeout: 15000')
-        File.open("config/database.yml", "w+") do |f|
-          f.puts new_database_yml_content
-        end
       end
     end
   end
