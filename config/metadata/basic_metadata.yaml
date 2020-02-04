@@ -5,96 +5,12 @@ attributes:
     index_keys:
       - "abstract_sim"
       - "abstract_tesim"
-  creator:
-    type: string
-    multiple: true
-    index_keys:
-      - "creator_sim"
-      - "creator_tesim"
-  contributor:
-    type: string
-    multiple: true
-    index_keys:
-      - "contributor_sim"
-      - "contributor_tesim"
-  subject:
-    type: string
-    multiple: true
-    index_keys:
-      - "subject_sim"
-      - "subject_tesim"
-  publisher:
-    type: string
-    multiple: true
-    index_keys:
-      - "publisher_sim"
-      - "publisher_tesim"
-  language:
-    type: string
-    multiple: true
-    index_keys:
-      - "language_sim"
-      - "language_tesim"
-  identifier:
-    type: string
-    multiple: true
-    index_keys:
-      - "identifier_sim"
-      - "identifier_tesim"
-  keyword:
-    type: string
-    multiple: true
-    index_keys:
-      - "keyword_sim"
-      - "keyword_tesim"
-  date_created:
-    type: date_time
-    multiple: true
-    index_keys:
-      - "date_created_sim"
-      - "date_created_tesim"
-  related_url:
-    type: string
-    multiple: true
-    index_keys:
-      - "related_url_sim"
-      - "related_url_tesim"
-  resource_type:
-    type: string
-    multiple: true
-    index_keys:
-      - "resource_type_sim"
-      - "resource_type_tesim"
-  source:
-    type: string
-    multiple: true
-    index_keys:
-      - "source_sim"
-      - "source_tesim"
-  rights_statement:
-    type: string
-    multiple: true
-    index_keys:
-      - "rights_statement_sim"
-      - "rights_statement_tesim"
-  rights_notes:
-    type: string
-    multiple: true
-    index_keys:
-      - "rights_notes_sim"
-      - "rights_notes_tesim"
   access_right:
     type: string
     multiple: true
     index_keys:
       - "access_right_sim"
       - "access_right_tesim"
-  license:
-    type: string
-    multiple: true
-    index_keys:
-      - "license_sim"
-      - "license_tesim"
   alternative_title:
     type: string
     multiple: true
@@ -110,23 +26,107 @@ attributes:
     index_keys:
       - "bibliographic_citation_sim"
       - "bibliographic_citation_tesim"
+  creator:
+    type: string
+    multiple: true
+    index_keys:
+      - "creator_sim"
+      - "creator_tesim"
+  contributor:
+    type: string
+    multiple: true
+    index_keys:
+      - "contributor_sim"
+      - "contributor_tesim"
+  date_created:
+    type: date_time
+    multiple: true
+    index_keys:
+      - "date_created_sim"
+      - "date_created_tesim"
   description:
     type: string
     multiple: true
     index_keys:
       - "description_sim"
       - "description_tesim"
+  identifier:
+    type: string
+    multiple: true
+    index_keys:
+      - "identifier_sim"
+      - "identifier_tesim"
   import_url:
     type: string
     index_keys:
       - "import_url_sim"
       - "import_url_tesim"
+  keyword:
+    type: string
+    multiple: true
+    index_keys:
+      - "keyword_sim"
+      - "keyword_tesim"
   label:
     type: string
     index_keys:
       - "label_sim"
       - "label_tesim"
+  language:
+    type: string
+    multiple: true
+    index_keys:
+      - "language_sim"
+      - "language_tesim"
+  license:
+    type: string
+    multiple: true
+    index_keys:
+      - "license_sim"
+      - "license_tesim"
+  publisher:
+    type: string
+    multiple: true
+    index_keys:
+      - "publisher_sim"
+      - "publisher_tesim"
+  related_url:
+    type: string
+    multiple: true
+    index_keys:
+      - "related_url_sim"
+      - "related_url_tesim"
   relative_path:
     type: string
     index_keys:
       - "relative_path_sim"
+  resource_type:
+    type: string
+    multiple: true
+    index_keys:
+      - "resource_type_sim"
+      - "resource_type_tesim"
+  rights_notes:
+    type: string
+    multiple: true
+    index_keys:
+      - "rights_notes_sim"
+      - "rights_notes_tesim"
+  rights_statement:
+    type: string
+    multiple: true
+    index_keys:
+      - "rights_statement_sim"
+      - "rights_statement_tesim"
+  source:
+    type: string
+    multiple: true
+    index_keys:
+      - "source_sim"
+      - "source_tesim"
+  subject:
+    type: string
+    multiple: true
+    index_keys:
+      - "subject_sim"
+      - "subject_tesim"
