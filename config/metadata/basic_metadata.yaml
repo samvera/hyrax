@@ -26,18 +26,18 @@ attributes:
     index_keys:
       - "bibliographic_citation_sim"
       - "bibliographic_citation_tesim"
-  creator:
-    type: string
-    multiple: true
-    index_keys:
-      - "creator_sim"
-      - "creator_tesim"
   contributor:
     type: string
     multiple: true
     index_keys:
       - "contributor_sim"
       - "contributor_tesim"
+  creator:
+    type: string
+    multiple: true
+    index_keys:
+      - "creator_sim"
+      - "creator_tesim"
   date_created:
     type: date_time
     multiple: true
