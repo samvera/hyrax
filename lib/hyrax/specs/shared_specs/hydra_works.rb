@@ -26,6 +26,63 @@ RSpec.shared_examples 'a Hyrax::Resource' do
   it { is_expected.to respond_to :work? }
 end
 
+RSpec.shared_examples 'belongs to collections' do
+  subject(:model)        { described_class.new }
+  let(:adapter)          { Valkyrie::MetadataAdapter.find(:test_adapter) }
+  let(:persister)        { adapter.persister }
+  let(:query_service)    { adapter.query_service }
+  let(:collection_class) { Hyrax::PcdmCollection }
+
+  describe 'collection membership' do
+    it 'is in no collections default' do
+      expect(model.member_of_collection_ids).to be_empty
+    end
+
+    it 'can be added to collections' do
+      collection_ids = [Valkyrie::ID.new('coll_1'), Valkyrie::ID.new('coll_2')]
+
+      expect { model.member_of_collection_ids = collection_ids }
+        .to change { model.member_of_collection_ids }
+        .to contain_exactly(*collection_ids)
+    end
+
+    it 'is not in the same collection twice' do
+      id = Valkyrie::ID.new('coll_1')
+      collection_ids = [id, id]
+
+      expect { model.member_of_collection_ids = collection_ids }
+        .to change { model.member_of_collection_ids }
+        .to contain_exactly id
+    end
+
+    context 'when in collections' do
+      let!(:model) do
+        m = described_class.new(member_of_collection_ids: collections.map(&:id))
+        persister.save(resource: m)
+      end
+
+      let(:collections) do
+        [collection_class.new, collection_class.new, collection_class.new]
+          .map! { |w| persister.save(resource: w) }
+      end
+
+      it 'can query membership' do
+        expect(
+          query_service.find_references_by(resource: model,
+                                           property: :member_of_collection_ids)
+        ).to contain_exactly(*collections)
+      end
+
+      it 'can query members of collection' do
+        expect(
+          query_service.find_inverse_references_by(resource: collections.first,
+                                                   property: :member_of_collection_ids)
+        ).to contain_exactly model
+      end
+    end
+  end
+end
+
 RSpec.shared_examples 'has members' do
   subject(:model)     { described_class.new }
   let(:adapter)       { Valkyrie::MetadataAdapter.find(:test_adapter) }
@@ -122,6 +179,7 @@ RSpec.shared_examples 'a Hyrax::Work' do
 
   it_behaves_like 'a Hyrax::Resource'
   it_behaves_like 'a model with core metadata'
+  it_behaves_like 'belongs to collections'
   it_behaves_like 'has members'
 
   it { is_expected.not_to be_collection }

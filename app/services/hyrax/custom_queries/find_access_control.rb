@@ -19,6 +19,8 @@ module Hyrax
           .find_inverse_references_by(resource: resource, property: :access_to)
           .find { |r| r.is_a?(Hyrax::AccessControl) } ||
           raise(Valkyrie::Persistence::ObjectNotFoundError)
+      rescue ArgumentError # some adapters raise ArgumentError for missing resources
+        raise(Valkyrie::Persistence::ObjectNotFoundError)
       end
     end
   end
