@@ -64,12 +64,12 @@ jobs:
     environment:
       RAILS_VERSION: << parameters.rails_version >>
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
-      ENGINE_CART_RAILS_OPTIONS: --skip-git --skip-bundle --skip-listen --skip-spring --skip-keeps --skip-test --skip-bootsnap
+      ENGINE_CART_RAILS_OPTIONS: --database=postgresql --skip-git --skip-bundle --skip-listen --skip-spring --skip-keeps --skip-test --skip-bootsnap
     steps:
       - attach_workspace:
           at: ~/
       - samvera/engine_cart_generate:
-          cache_key: v1-internal-test-app-{{ checksum "hyrax.gemspec" }}-{{ checksum ".regen" }}-<< parameters.rails_version >>-<< parameters.ruby_version >>
+          cache_key: v1-internal-test-app-jnf1-{{ checksum "hyrax.gemspec" }}-{{ checksum ".regen" }}-<< parameters.rails_version >>-<< parameters.ruby_version >>
       - samvera/bundle_for_gem:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
@@ -92,7 +92,7 @@ jobs:
         type: string
         default: "false"
     executor:
-      name: 'samvera/ruby_fcrepo_solr_redis'
+      name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
     resource_class: medium+
     parallelism: 10
