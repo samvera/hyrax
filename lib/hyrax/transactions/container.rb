@@ -22,6 +22,7 @@ module Hyrax
       require 'hyrax/transactions/create_work'
       require 'hyrax/transactions/destroy_work'
       require 'hyrax/transactions/work_create'
+      require 'hyrax/transactions/steps/add_to_collections'
       require 'hyrax/transactions/steps/apply_collection_permission_template'
       require 'hyrax/transactions/steps/apply_permission_template'
       require 'hyrax/transactions/steps/apply_visibility'
@@ -40,6 +41,10 @@ module Hyrax
       # Disable BlockLength rule for DSL code
       # rubocop:disable Metrics/BlockLength
       namespace 'change_set' do |ops|
+        ops.register 'add_to_collections' do
+          Steps::AddToCollections.new
+        end
+
         ops.register 'apply' do
           ApplyChangeSet.new
         end
