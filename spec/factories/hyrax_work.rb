@@ -60,6 +60,18 @@ FactoryBot.define do
       end
     end
 
+    trait :as_collection_member do
+      member_of_collection_ids { [valkyrie_create(:hyrax_collection).id] }
+    end
+
+    trait :as_member_of_multiple_collections do
+      member_of_collection_ids do
+        [valkyrie_create(:hyrax_collection).id,
+         valkyrie_create(:hyrax_collection).id,
+         valkyrie_create(:hyrax_collection).id]
+      end
+    end
+
     factory :monograph, class: 'Monograph'
   end
 end
