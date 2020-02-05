@@ -1,4 +1,4 @@
-Riiif::Image.file_resolver = Riiif::HTTPFileResolver.new
+Riiif::Image.file_resolver = Riiif::HttpFileResolver.new
 Riiif::Image.info_service = lambda do |id, _file|
   # id will look like a path to a pcdm:file
   # (e.g. rv042t299%2Ffiles%2F6d71677a-4f80-42f1-ae58-ed1063fd79c7)
