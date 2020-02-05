@@ -31,5 +31,21 @@ RSpec.describe Hyrax::Transactions::WorkCreate do
           .to have_attributes admin_set_id: admin_set.id
       end
     end
+
+    context 'when adding to collections' do
+      let(:collections) do
+        [FactoryBot.valkyrie_create(:hyrax_collection),
+         FactoryBot.valkyrie_create(:hyrax_collection)]
+      end
+
+      let(:collection_ids) { collections.map(&:id) }
+
+      it 'adds to the collections' do
+        tx.with_step_args('change_set.add_to_collections' => { collection_ids: collection_ids })
+
+        expect(tx.call(change_set).value!)
+          .to have_attributes member_of_collection_ids: contain_exactly(*collection_ids)
+      end
+    end
   end
 end
