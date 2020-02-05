@@ -34,7 +34,7 @@ RSpec.shared_examples 'belongs to collections' do
   let(:collection_class) { Hyrax::PcdmCollection }
 
   describe 'collection membership' do
-    it 'is in no collections default' do
+    it 'is in no collections by default' do
       expect(model.member_of_collection_ids).to be_empty
     end
 
