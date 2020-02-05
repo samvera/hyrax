@@ -100,10 +100,10 @@ module Hyrax
       ##
       # Sets arguments to pass to a given step in the transaction.
       #
-      # This makes it easy for individual steps to require peices of information
+      # This makes it easy for individual steps to require pieces of information
       # without other steps having to handle them. This is desirable since it
       # avoids passing mutable values between steps, which commonly results in
-      # tight intedependence and less flexible composibility between steps.
+      # tight interdependence and less flexible composibility between steps.
       #
       # Instead we expect the caller to provide the correct data to each step
       # when the transaction starts.
