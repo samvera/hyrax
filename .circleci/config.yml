@@ -14,7 +14,7 @@ jobs:
         type: string
         default: '5.2.2'
     executor:
-      name: 'samvera/ruby'
+      name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
     resource_class: medium+
     environment:
@@ -58,7 +58,7 @@ jobs:
         type: string
         default: '5.2.2'
     executor:
-      name: 'samvera/ruby'
+      name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
     resource_class: medium+
     environment:
@@ -112,6 +112,11 @@ jobs:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
           project: hyrax
+      - run:
+          command: |
+            cd .internal_test_app
+            bundle install
+            bundle exec rake db:migrate
       - samvera/parallel_rspec
 
 workflows:
