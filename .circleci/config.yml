@@ -69,7 +69,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - samvera/engine_cart_generate:
-          cache_key: v1-internal-test-app-jnf3-{{ checksum "hyrax.gemspec" }}-{{ checksum ".regen" }}-<< parameters.rails_version >>-<< parameters.ruby_version >>
+          cache_key: v1-internal-test-app-jnf4-{{ checksum "hyrax.gemspec" }}-{{ checksum ".regen" }}-<< parameters.rails_version >>-<< parameters.ruby_version >>
       - samvera/bundle_for_gem:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
