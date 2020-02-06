@@ -42,6 +42,9 @@ module Hyrax
     # @example unwapping values safely with handling for failures
     #   tx.call(change_set).value_or { |failure| "uh oh: #{failure} }
     #
+    # @example when there is no need to unwrap the value, handle errors with `#or`
+    #   tx.call(change_set).or { |failure| "uh oh: #{failure} }
+    #
     # @example a pattern for subclassing to create new transactions
     #   class CustomTransaction < Transaction
     #     DEFAULT_STEPS = ['step.1', 'step.2', 'step.3'].freeze
