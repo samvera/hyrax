@@ -9,6 +9,19 @@ class TestAppGenerator < Rails::Generators::Base
     generate 'hyrax:install', '-f'
   end
 
+  def allow_postgresql
+    gsub_file 'config/database.yml',
+              "test:\n  <<: *default\n  database: db/test.sqlite3\n",
+              <<-EOS.strip_heredoc
+              test:
+                <<: *default
+                adapter: <%= ENV["POSTGRES_DB"].nil? ? "sqlite3" : "postgresql" %>
+                database: <%= ENV["POSTGRES_DB"].nil? ? "db/test.sqlite3" : ENV["POSTGRES_DB"] %>
+                <%= "host: "+ENV["POSTGRES_HOST"] unless ENV["POSTGRES_HOST"].nil? %>
+                <%= "username: "+ENV["POSTGRES_USER"] unless ENV["POSTGRES_USER"].nil? %>
+              EOS
+  end
+
   def browse_everything_install
     generate "browse_everything:install --skip-assets"
   end
