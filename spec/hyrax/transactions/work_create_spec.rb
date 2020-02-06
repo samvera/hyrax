@@ -32,6 +32,17 @@ RSpec.describe Hyrax::Transactions::WorkCreate do
       end
     end
 
+    context 'when providing a depositor' do
+      let(:user) { FactoryBot.create(:user) }
+
+      it 'sets the given user as the depositor' do
+        tx.with_step_args('change_set.set_user_as_depositor' => { user: user })
+
+        expect(tx.call(change_set).value!)
+          .to have_attributes depositor: user.user_key
+      end
+    end
+
     context 'when adding to collections' do
       let(:collections) do
         [FactoryBot.valkyrie_create(:hyrax_collection),

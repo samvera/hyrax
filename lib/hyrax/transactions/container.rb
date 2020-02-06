@@ -34,6 +34,7 @@ module Hyrax
       require 'hyrax/transactions/steps/set_default_admin_set'
       require 'hyrax/transactions/steps/set_modified_date'
       require 'hyrax/transactions/steps/set_uploaded_date_unless_present'
+      require 'hyrax/transactions/steps/set_user_as_depositor'
       require 'hyrax/transactions/steps/validate'
 
       extend Dry::Container::Mixin
@@ -67,6 +68,10 @@ module Hyrax
 
         ops.register 'set_uploaded_date_unless_present' do
           Steps::SetUploadedDateUnlessPresent.new
+        end
+
+        ops.register 'set_user_as_depositor' do
+          Steps::SetUserAsDepositor.new
         end
 
         ops.register 'validate' do
