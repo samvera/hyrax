@@ -25,6 +25,7 @@ module Hyrax
     # @param query [String] the query string
     def search(query)
       clause = query.blank? ? nil : "%" + query.downcase + "%"
+      base = ::User
       base = ::User.where(*base_query) if base_query.present?
       base = base.where("#{Hydra.config.user_key_field} like lower(?) OR display_name like lower(?)", clause, clause) if clause.present?
       base.registered
