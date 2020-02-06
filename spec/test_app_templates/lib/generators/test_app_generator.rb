@@ -5,22 +5,70 @@ class TestAppGenerator < Rails::Generators::Base
   # so the following path gets us to /path/to/hyrax/spec/test_app_templates/
   source_root File.expand_path('../../../../spec/test_app_templates/', __FILE__)
 
+  def conditional_postgresql_for_ci_environment
+    # For now, postgresql is something we are looking at adding to CircleCI
+    # as such, don't poke around with that configuration unless we are in a
+    # CI run environment
+    return true unless ENV['CI']
+    db_config = Psych.load(File.read("config/database.yml"))
+    # We are looking for the "internal_test" database name, which means
+    # EngineCart built the internal app using the "--database=postgresql"
+    # switch (see `.circleci/config.yml` with nested key:
+    #   jobs > build > environment > ENGINE_CART_RAILS_OPTIONS
+    # )
+    return true unless db_config.fetch("default").fetch("adapter") == 'postgresql'
+    content = <<-EOS.strip_heredoc
+              # WARNING:
+              #   This config/database.yml is currently intended for CircleCI
+              #   test runs. It _might_ work locally, but that is not its
+              #   current purpose.
+              #
+              # This config/database.yml was generated from the following file:
+              #   #{__FILE__}
+              #
+              # By default, we have top-level keys of "default", "test",
+              # "development", and "production". In the YAML file, "default"
+              # establishes parameters that are inherited by the other
+              # environments. However we've built you a custom config/database.yml
+              # so you don't need the "default".
+              #
+              # Similarly, we are building a test application run by CI (or developers).
+              # Therefore, you don't need a production environment.
+              #
+              # NOTE:
+              #   The development and test environments look very similar. This is by
+              #   design. Yes, they are likely to have the same database name. That's
+              #   okay. You, developer, wouldn't want that if you were running the
+              #   internal test app on your machine; After all the test environment
+              #   cleans itself up after each test; Not ideal for local development.
+              development:
+                adapter: postgresql
+                encoding: unicode
+                pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+                database: <%= ENV.fetch("POSTGRES_DB") { 'internal_development' } %>
+                <% if ENV["POSTGRES_HOST"]%>host: <%= ENV["POSTGRES_HOST"] %><% end %>
+                <% if ENV["POSTGRES_USER"]%>user: <%= ENV["POSTGRES_USER"] %><% end %>
+              test:
+                adapter: postgresql
+                encoding: unicode
+                pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+                database: <%= ENV.fetch("POSTGRES_DB") { 'internal_test' } %>
+                <% if ENV["POSTGRES_HOST"]%>host: <%= ENV["POSTGRES_HOST"] %><% end %>
+                <% if ENV["POSTGRES_USER"]%>user: <%= ENV["POSTGRES_USER"] %><% end %>
+              EOS
+
+    File.open("config/database.yml", "w+") do |f|
+      f.puts content
+    end
+
+    rake "db:create:all"
+    rake "db:test:prepare"
+  end
+
   def install_engine
     generate 'hyrax:install', '-f'
   end
 
-  def allow_postgresql
-    gsub_file 'config/database.yml',
-              "test:\n  <<: *default\n  database: db/test.sqlite3\n",
-              <<-EOS.strip_heredoc
-              test:
-                <<: *default
-                adapter: <%= ENV["POSTGRES_DB"].nil? ? "sqlite3" : "postgresql" %>
-                database: <%= ENV["POSTGRES_DB"].nil? ? "db/test.sqlite3" : ENV["POSTGRES_DB"] %>
-                <%= "host: "+ENV["POSTGRES_HOST"] unless ENV["POSTGRES_HOST"].nil? %>
-                <%= "username: "+ENV["POSTGRES_USER"] unless ENV["POSTGRES_USER"].nil? %>
-              EOS
-  end
 
   def browse_everything_install
     generate "browse_everything:install --skip-assets"
