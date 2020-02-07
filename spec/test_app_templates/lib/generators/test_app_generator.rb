@@ -61,6 +61,7 @@ class TestAppGenerator < Rails::Generators::Base
       f.puts content
     end
 
+    rake "db:drop:all"
     rake "db:create:all"
     rake "db:test:prepare"
   end
