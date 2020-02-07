@@ -213,6 +213,22 @@ RSpec.shared_examples 'a Hyrax::Work' do
     end
   end
 
+  describe '#on_behalf_of' do
+    it 'can set a proxy deposit target' do
+      expect { work.on_behalf_of = 'moomin@example.com' }
+        .to change { work.on_behalf_of }
+        .to eq 'moomin@example.com'
+    end
+  end
+
+  describe '#proxy_depositor' do
+    it 'can set a proxy deposit source' do
+      expect { work.proxy_depositor = 'snufkin@example.com' }
+        .to change { work.proxy_depositor }
+        .to eq 'snufkin@example.com'
+    end
+  end
+
   describe '#state' do
     it 'accepts URIS' do
       uri = RDF::URI('http://example.com/ns/moomin_state')
