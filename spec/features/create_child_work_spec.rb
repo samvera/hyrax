@@ -28,6 +28,9 @@ RSpec.describe 'Creating a new child Work', :workflow do
       fill_in('Title', with: work_title)
       click_on('Save')
     end
+    require 'byebug'; debugger; true
+    # Verify that the GenericWork has been created
+    expect(page.status_code).to match(%r{^3}), "The response code indicates that we failed to create a generic work"
     visit "/concern/generic_works/#{parent.id}"
     expect(page).to have_content work_title
   end
