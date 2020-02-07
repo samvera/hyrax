@@ -11,6 +11,8 @@ module Hyrax
     attribute :admin_set_id,             Valkyrie::Types::ID
     attribute :member_ids,               Valkyrie::Types::Array.of(Valkyrie::Types::ID).meta(ordered: true)
     attribute :member_of_collection_ids, Valkyrie::Types::Set.of(Valkyrie::Types::ID)
+    attribute :on_behalf_of,             Valkyrie::Types::String
+    attribute :proxy_depositor,          Valkyrie::Types::String
     attribute :state,                    Valkyrie::Types::URI.default(Hyrax::ResourceStatus::ACTIVE)
 
     ##
