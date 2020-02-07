@@ -126,3 +126,4 @@ HotWings = Wings
 SpicyWings = Wings
 SwissWings = Wings
 BuffaloCauliflowerWings = Wings
+FlappyWings = Wings
