@@ -5,7 +5,8 @@ module Hyrax
   # @see Hyrax::Event
   module WithEvents
     def stream
-      Nest.new(event_class)[to_param]
+      Deprecation.warn("#{class}#stream is being moved to a private method. At least that is the aspiration.")
+      stream_store
     end
 
     # @return [String]
@@ -26,9 +27,13 @@ module Hyrax
       def event_store
         RedisEventStore
       end
+    
+      def stream_store
+        Nest.new(event_class)[to_param]
+      end
 
       def event_stream
-        event_store.for(stream[:event])
+        event_store.for(stream_store[:event])
       end
   end
 end
