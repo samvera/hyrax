@@ -4,6 +4,7 @@ module Hyrax
       Nest.new(event_class)[to_param]
     end
 
+    # @return [String]
     def event_class
       model_name.name
     end
