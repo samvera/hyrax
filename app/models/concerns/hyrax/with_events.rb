@@ -10,7 +10,7 @@ module Hyrax
 
     # @return [String]
     def event_class
-      self.class.name
+      model_name.name
     end
 
     def events(size = -1)
