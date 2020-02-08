@@ -1,4 +1,8 @@
 module Hyrax
+  # A mixin module intended to provide an interface into creating the paper trail
+  # of activity on the target model of the mixin.
+  #
+  # @see Hyrax::Event
   module WithEvents
     def stream
       Nest.new(event_class)[to_param]
