@@ -13,6 +13,10 @@ module Hyrax
       model_name.name
     end
 
+    ##
+    # @param [Integer] size  the maximum number of events to fetch from the log.
+    #   Offset by 1; to get one event, use `0`, for two, use `1`, etc...
+    #   `-1` gives all events.
     def events(size = -1)
       event_stream.fetch(size)
     end
