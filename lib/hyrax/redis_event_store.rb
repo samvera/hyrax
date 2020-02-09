@@ -1,11 +1,10 @@
 module Hyrax
-  class RedisEventStore
+  ##
+  # @todo stop swallowing all errors! let clients determine how to handle
+  #   failure cases.
+  class RedisEventStore < EventStore
     class << self
-      def for(key)
-        new(key)
-      end
-
-      # @return [Fixnum] the id of the event
+      # @return [Fixnum, nil] the id of the event, or `nil` on failure(?!)
       def create(action, timestamp)
         event_id = instance.incr("events:latest_id")
         instance.hmset("events:#{event_id}", "action", action, "timestamp", timestamp)
@@ -15,8 +14,13 @@ module Hyrax
         nil
       end
 
-      delegate :logger, to: Hyrax
-
+      ##
+      # @api private
+      #
+      # @note this is NOT a singleton-ilke `.instance` method, it returns a
+      #   `Redis` client.
+      #
+      # @return [Redis]
       def instance
         if Redis.current.is_a? Redis::Namespace
           Redis.current.namespace = namespace
@@ -26,15 +30,18 @@ module Hyrax
         Redis.current
       end
 
+      ##
+      # @api private
+      # @return [String]
       def namespace
         Hyrax.config.redis_namespace
       end
     end
 
-    def initialize(key)
-      @key = key
-    end
-
+    ##
+    # @param [Integer] size
+    #
+    # @return [Enumerable<Hash<Symbol, String>>]
     def fetch(size)
       RedisEventStore.instance.lrange(@key, 0, size).map do |event_id|
         {
@@ -47,7 +54,12 @@ module Hyrax
       []
     end
 
+    ##
     # Adds a value to the end of a list identified by key
+    #
+    # @param [Integer] value
+    #
+    # @return [Integer, nil] the value successfully pushed; or `nil` on failure(!?)
     def push(value)
       RedisEventStore.instance.lpush(@key, value)
     rescue Redis::CommandError, Redis::CannotConnectError
