@@ -31,7 +31,6 @@ RSpec.describe ContentRestoredVersionEventJob do
   context "when use_valkyrie is true" do
     let(:resource) { valkyrie_create(:hyrax_work, edit_users: [user], title: ['BethsMac']) }
     let(:file_set) { valkyrie_create(:hyrax_file_set, title: ['Hamlet']) }
-    let(:user2) { create(:user) }
 
     before do
       resource.member_ids = Array(file_set.id)
