@@ -33,7 +33,6 @@ module Hyrax
   class Resource < Valkyrie::Resource
     include Hyrax::Naming
     include Hyrax::WithEvents
-    include Hyrax::WithDepositor
 
     attribute :alternate_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
     attribute :embargo,       Hyrax::Embargo.optional
