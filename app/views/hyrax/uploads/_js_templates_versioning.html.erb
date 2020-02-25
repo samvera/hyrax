@@ -1,0 +1,172 @@
+<!-- The template to display files available for upload -->
+<% fade_class_if_not_test = Rails.env.test? ? '' : 'fade' %>
+<script id="versioning-template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload <%= fade_class_if_not_test %>">
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error text-danger"></strong>
+        </td>
+        <td>
+            <p class="size">Processing...</p>
+            <div class="progress progress-striped active"
+                 role="progressbar"
+                 aria-valuemin="0"
+                 aria-valuemax="100"
+                 aria-valuenow="0">
+               <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+             </div>
+        </td>
+        <td class="text-right">
+            {% if (!i && !o.options.autoUpload) { %}
+                <button class="btn btn-primary start" disabled>
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span><%= t('.start') %></span>
+                </button>
+            {% } %}
+            {% if (!i) { %}
+                <button class="btn btn-sm btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span><%= t('helpers.action.cancel') %></span>
+                </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+
+<!-- function used by the following template -->
+<script type="text/javascript">
+  function setAllResourceTypesVersioning(resourceTypeId) {
+    var firstResourceType = $("#resource_type_" + resourceTypeId.toString())[0];
+    var selected_options = [];
+    for (var i = 0; i < firstResourceType.length; i++) {
+      if (firstResourceType.options[i].selected) {
+        selected_options.push(firstResourceType.options[i].value);
+      }
+    }
+    $(".resource_type_dropdown").each(function(index, element) {
+      for(var i=0; i< this.length; i++) {
+        this.options[i].selected =
+            $.inArray(this.options[i].value, selected_options) > -1 ? true : false;
+      }
+    });
+  }
+</script>
+
+<!-- The template to display files available for download -->
+<script id="versioning-batch-template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download add-batch-work-file-wrapper <%= fade_class_if_not_test %>">
+        <td>
+          <div class="row padding-bottom">
+            <div class="col-sm-6 name">
+                <span>{%=file.name%}</span>
+                <input type="hidden" name="uploaded_files[]" value="{%=file.id%}">
+            </div>
+            <div class="col-sm-6">
+              {% if (file.error) { %}
+                  <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+              {% } %}
+              <span class="size">{%=o.formatFileSize(file.size)%}</span>
+              <button class="btn btn-sm btn-danger delete pull-right"
+                      data-type="{%=file.deleteType%}"
+                      data-url="{%=file.deleteUrl%}"
+                      {% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                  <i class="glyphicon glyphicon-trash"></i>
+                  <span><%= t('helpers.action.delete') %></span>
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 form-horizontal">
+              <div class="form-group">
+                <label for="title_{%=file.id%}" class="col-sm-5 control-label"><%= t('.display_label') %></label>
+                <div class="col-sm-7 padding-bottom">
+                  <input type="text" class="form-control" name="title[{%=file.id%}]" id="title_{%=file.id%}" value="{%=file.name%}">
+                </div>
+                <label for="resource_type_{%=file.id%}" class="col-sm-5 control-label">Resource Type</label>
+                <div class="col-sm-7 padding-bottom">
+                  <select class="form-control resource_type_dropdown"
+                          multiple="multiple"
+                          size="6"
+                          name="resource_type[{%=file.id%}][]"
+                           id="resource_type_{%=file.id%}"
+                           value="{%=file.name%}">
+                    <%= options_for_select(Hyrax::ResourceTypesService.select_options) %>
+                  </select>
+                  <button class="btn btn-default pull-right resource_type_button"
+                          onClick="setAllResourceTypesVersioning({%= file.id %}); return false;">
+                          <%= t('.set_all_to_this_resource_type') %>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </td>
+    </tr>
+{% } %}
+</script>
+
+<!-- Simpler display of files available for download. Originally from hyrax/base/_form_files -->
+<!-- TODO: further consolidate with template-download above -->
+<!-- The template to display the files once upload is complete -->
+<script id="versioning-template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+        <span class="template-download fade">
+          <div id="files">
+            <div class="row versioning-files-row">
+              <div class="col-sm-3">
+                <span class="name">
+                  <span>{%=file.name%}</span>
+                  <input type="hidden" name="files_files[]" value="{%=file.id%}">
+                </span>
+                {% if (file.error) { %}
+                  <span><span class="label label-danger"><%= t('.error') %></span> {%=file.error%}</span>
+                {% } %}
+              </div>
+
+              <div class="col-sm-2">
+                <button class="btn btn-link remove versioning-files-remove"
+                        data-type="{%=file.deleteType%}"
+                        data-url="{%=file.deleteUrl%}"
+                        onclick=$("#files").remove(); {% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                  <span class="glyphicon glyphicon-remove"></span>
+                  <span class="controls-remove-text"><%= t('.remove') %></span>
+                  <span class="sr-only">
+                    <%= t('.previous') %>
+                    <span class="controls-field-name-text"><%= t('.remove_new_version') %></span>
+                  </span>
+                </button>
+              </div> <!-- end col-sm-2 -->
+            </div> <!-- row versioning-files-row -->
+          </div> <!-- end container files -->
+        </span>
+{% }  $("div#files").remove(); %}
+</script>
+
+<script>
+    $(function () {
+        // will run after DOM is loaded
+        $('#fileuploadVersioning').hyraxUploader({downloadTemplateId: 'versioning-template-download',
+            uploadTemplateId: 'versioning-template-upload',
+            // The regular expression for allowed file types, matches
+            // against either file type or file name:
+            //acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+            // The maximum allowed file size in bytes:
+            maxFileSize: <%= Hyrax.config.uploader[:maxFileSize] %>,
+            // The minimum allowed file size in bytes:
+            //minFileSize: undefined, // No minimal file size
+            // The limit of files to be uploaded:
+            //maxNumberOfFiles: 100,
+            messages: {
+                acceptFileTypes: '<%= t(".options.messages.accept_file_types") %>',
+                maxFileSize: '<%= t(".options.messages.max_file_size") %>',
+                maxNumberOfFiles: '<%= t(".options.messages.max_number_of_files") %>',
+                minFileSize: '<%= t(".options.messages.min_file_size") %>',
+            }});
+    });
+</script>
