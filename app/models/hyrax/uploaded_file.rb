@@ -10,5 +10,15 @@ module Hyrax
              class_name: 'JobIoWrapper',
              dependent: :destroy
     belongs_to :user, class_name: '::User'
+
+    def add_file_set!(file_set)
+      uri = case file_set
+            when ActiveFedora::Base
+              file_set.uri
+            when Hyrax::Resource
+              file_set.id
+            end
+      update!(file_set_uri: uri)
+    end
   end
 end
