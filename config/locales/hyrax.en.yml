@@ -1105,8 +1105,13 @@ en:
         fixity_check: Fixity Check
         not_yet_characterized: Not Yet Characterized
       versioning:
+        choose_file: Choose New Version File
         current: Current Version
         header: Versions
+        previous: Previous
+        remove: Remove
+        remove_current_files: Remove Current Files
+        remove_new_version: Remove New Version File
         restore: Restore Previous Version
         restore_from: Restore From
         save: Save Revision
@@ -1422,6 +1427,20 @@ en:
         remove: Remove
         remove_new_banner: Remove New Banner
         remove_new_logo: Remove New Logo
+      js_templates_versioning:
+        display_label: Display label
+        error: Error
+        previous: previous
+        remove: Remove
+        remove_new_version: Remove New Version File
+        set_all_to_this_resource_type: Set all to this Resource Type
+        start: Start
+        options:
+          messages:
+            accept_file_types:   File type not allowed
+            max_file_size:       File is too large
+            max_number_of_files: Maximum number of files exceeded
+            min_file_size:       File is too small
     user_profile:
       orcid:
         alt: ORCID icon

@@ -48,3 +48,30 @@ table.files td.preview img {
 .edit_file_set_previous_version {
   margin-top: 3em;
 }
+
+input.versioning-files-input {
+  width: 250px;
+}
+
+div.versioning-files-input {
+  text-align: right;
+}
+
+div.versioning-files-row {
+  border-top: solid 1px #dddddd;
+  padding-top: 10px;
+}
+
+div.versioning-files-progress {
+  margin-top: -25px;
+}
+
+button.versioning-files-remove,
+button.versioning-files-remove:hover {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: $brand-danger;
+  font-weight: normal;
+  text-decoration: underline;
+}
+

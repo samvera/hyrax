@@ -89,7 +89,7 @@ RSpec.describe Hyrax::FileSetsController do
         end
       end
 
-      context "when updating the attached file" do
+      context "when updating the attached file direct upload" do
         let(:actor) { double }
 
         before do
@@ -102,6 +102,22 @@ RSpec.describe Hyrax::FileSetsController do
           file = fixture_file_upload('/world.png', 'image/png')
           post :update, params: { id: file_set, filedata: file, file_set: { keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] } }
           post :update, params: { id: file_set, file_set: { files: [file], keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] } }
+        end
+      end
+
+      context "when updating the attached file already uploaded" do
+        let(:actor) { double }
+
+        before do
+          allow(Hyrax::Actors::FileActor).to receive(:new).and_return(actor)
+        end
+
+        it "spawns a ContentNewVersionEventJob", perform_enqueued: [IngestJob] do
+          expect(actor).to receive(:ingest_file).with(JobIoWrapper).and_return(true)
+          expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
+          file = fixture_file_upload('/world.png', 'image/png')
+          allow(Hyrax::UploadedFile).to receive(:find).with(["1"]).and_return([file])
+          post :update, params: { id: file_set, files_files: ["1"] }
         end
       end
 
