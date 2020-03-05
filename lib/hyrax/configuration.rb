@@ -431,6 +431,16 @@ module Hyrax
     end
     attr_writer :iiif_metadata_fields
 
+    # Duration in which we should cache the generated IIIF manifest.
+    # Default is 30 days (in seconds).
+    #
+    # @return [Integer] number of seconds
+    # @see https://api.rubyonrails.org/classes/ActiveSupport/Cache/Store.html#method-i-fetch
+    def iiif_manifest_cache_duration
+      @iiif_manifest_cache_duration ||= 30.days.to_i
+    end
+    attr_writer :iiif_manifest_cache_duration
+
     # Should a button with "Share my work" show on the front page to users who are not logged in?
     attr_writer :display_share_button_when_not_logged_in
     def display_share_button_when_not_logged_in?

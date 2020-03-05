@@ -127,9 +127,12 @@ module Hyrax
 
     def manifest
       headers['Access-Control-Allow-Origin'] = '*'
+
+      json = Hyrax::ManifestBuilderService.as_json(presenter: presenter)
+
       respond_to do |wants|
-        wants.json { render json: manifest_builder.to_h }
-        wants.html { render json: manifest_builder.to_h }
+        wants.json { render json: json }
+        wants.html { render json: json }
       end
     end
 
@@ -155,10 +158,6 @@ module Hyrax
 
       def build_form
         @form = work_form_service.build(curation_concern, current_ability, self)
-      end
-
-      def manifest_builder
-        ::IIIFManifest::ManifestFactory.new(presenter)
       end
 
       def actor

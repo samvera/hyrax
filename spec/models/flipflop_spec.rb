@@ -46,4 +46,15 @@ RSpec.describe Flipflop do
       is_expected.to be true
     end
   end
+
+  describe "cache_work_iiif_manifest?" do
+    subject { described_class.cache_work_iiif_manifest? }
+
+    # This was the previous behavior. At a certain point, we'll likely
+    # flip the default behavior to `true`. But for now, the goal is to
+    # not introduce a code change
+    it "defaults to false" do
+      is_expected.to be false
+    end
+  end
 end
