@@ -127,7 +127,7 @@ module Hyrax
     def manifest
       headers['Access-Control-Allow-Origin'] = '*'
 
-      json = sanitize_manifest(JSON.parse(manifest_builder.to_h.to_json))
+      json = Hyrax::ManifestBuilderService.as_json(presenter: presenter)
 
       respond_to do |wants|
         wants.json { render json: json }
@@ -157,10 +157,6 @@ module Hyrax
 
       def build_form
         @form = work_form_service.build(curation_concern, current_ability, self)
-      end
-
-      def manifest_builder
-        ::IIIFManifest::ManifestFactory.new(presenter)
       end
 
       def actor
@@ -325,22 +321,6 @@ module Hyrax
 
       def permissions_changed?
         @saved_permissions != curation_concern.permissions.map(&:to_hash)
-      end
-
-      def sanitize_manifest(hash)
-        hash['label'] = sanitize_value(hash['label']) if hash.key?('label')
-        hash['description'] = hash['description']&.collect { |elem| sanitize_value(elem) } if hash.key?('description')
-
-        hash['sequences']&.each do |sequence|
-          sequence['canvases']&.each do |canvas|
-            canvas['label'] = sanitize_value(canvas['label'])
-          end
-        end
-        hash
-      end
-
-      def sanitize_value(text)
-        Loofah.fragment(text.to_s).scrub!(:prune).to_s
       end
   end
 end

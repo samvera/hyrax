@@ -38,4 +38,8 @@ Flipflop.configure do
   feature :hide_users_list,
           default: true,
           description: "Do not show users list unless user has authenticated."
+
+  feature :cache_work_iiif_manifest,
+          default: false,
+          description: "Use Rails.cache to cache the JSON document for IIIF manifests"
 end
