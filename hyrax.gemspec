@@ -77,7 +77,7 @@ SUMMARY
   spec.add_dependency 'select2-rails', '~> 3.5'
   spec.add_dependency 'signet'
   spec.add_dependency 'tinymce-rails', '~> 4.1'
-  spec.add_dependency 'valkyrie', '~> 2.1'
+  spec.add_dependency 'valkyrie', '>= 2.1.1', "< 3.0"
 
   spec.add_development_dependency "capybara", '~> 3.29'
   spec.add_development_dependency 'capybara-maleficent', '~> 0.3.0'
