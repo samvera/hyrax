@@ -2,7 +2,7 @@
 class UserEditProfileEventJob < EventJob
   def perform(editor)
     @editor = editor
-    super
+    super(editor)
   end
 
   def action
