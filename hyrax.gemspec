@@ -33,20 +33,19 @@ SUMMARY
   spec.add_dependency 'active-fedora', '~> 13.1.2'
   spec.add_dependency 'almond-rails', '~> 0.1'
   spec.add_dependency 'awesome_nested_set', '~> 3.1'
-  spec.add_dependency 'blacklight', '~> 6.14'
   spec.add_dependency 'blacklight-gallery', '~> 0.7'
+  spec.add_dependency 'blacklight', '~> 6.14'
   spec.add_dependency 'breadcrumbs_on_rails', '~> 3.0'
   spec.add_dependency 'browse-everything', '>= 0.16', '< 2.0'
   spec.add_dependency 'carrierwave', '~> 1.0'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
-  spec.add_dependency 'dry-events', '~> 0.2.0'
   spec.add_dependency 'dry-equalizer', '~> 0.2'
+  spec.add_dependency 'dry-events', '~> 0.2.0'
   spec.add_dependency 'dry-struct', '~> 1.0'
   spec.add_dependency 'dry-transaction', '~> 0.11'
   spec.add_dependency 'dry-validation', '~> 1.3'
   spec.add_dependency 'flipflop', '~> 2.3'
-  # Pin more tightly because 0.x gems are potentially unstable
-  spec.add_dependency 'flot-rails', '~> 0.0.6'
+  spec.add_dependency 'flot-rails', '~> 0.0.6' # Pin more tightly because 0.x gems are potentially unstable
   spec.add_dependency 'font-awesome-rails', '~> 4.2'
   spec.add_dependency 'hydra-derivatives', '~> 3.3'
   spec.add_dependency 'hydra-editor', '~> 5.0'
@@ -56,8 +55,7 @@ SUMMARY
   spec.add_dependency 'jquery-datatables-rails', '~> 3.4'
   spec.add_dependency 'jquery-ui-rails', '~> 6.0'
   spec.add_dependency 'json-schema' # for Arkivo
-  # Pin more tightly because 0.x gems are potentially unstable
-  spec.add_dependency 'kaminari_route_prefix', '~> 0.1.1'
+  spec.add_dependency 'kaminari_route_prefix', '~> 0.1.1' # Pin more tightly because 0.x gems are potentially unstable
   spec.add_dependency 'legato', '~> 0.3'
   spec.add_dependency 'linkeddata' # Required for getting values from geonames
   spec.add_dependency 'mailboxer', '~> 0.12'
@@ -79,32 +77,31 @@ SUMMARY
   spec.add_dependency 'tinymce-rails', '~> 4.1'
   spec.add_dependency 'valkyrie', '>= 2.1.1', "< 3.0"
 
-  spec.add_development_dependency "capybara", '~> 3.29'
+  spec.add_development_dependency 'bixby', '~> 1.0.0' # the hyrax style guide is based on `bixby`. see `.rubocop.yml`
   spec.add_development_dependency 'capybara-maleficent', '~> 0.3.0'
   spec.add_development_dependency 'chromedriver-helper', '~> 2.1'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
   spec.add_development_dependency 'engine_cart', '~> 2.2'
-  spec.add_development_dependency "equivalent-xml", '~> 0.5'
-  spec.add_development_dependency "factory_bot", '~> 4.4'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.5', '>= 0.5.1'
-  spec.add_development_dependency "jasmine", '~> 2.3', '< 2.99'
-  spec.add_development_dependency "jasmine-core", '~> 2.3', '< 2.99'
+  spec.add_development_dependency 'i18n_yaml_sorter'
+  spec.add_development_dependency 'i18n-debug'
   spec.add_development_dependency 'mida', '~> 0.3'
+  spec.add_development_dependency 'rails-controller-testing', '~> 1'
+  spec.add_development_dependency 'rspec_junit_formatter'
   spec.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0'
   spec.add_development_dependency 'rspec-its', '~> 1.1'
   spec.add_development_dependency 'rspec-rails', '~> 3.1'
-  spec.add_development_dependency 'rspec_junit_formatter'
-  spec.add_development_dependency "selenium-webdriver"
-  spec.add_development_dependency 'solr_wrapper', '>= 1.1', '< 3.0'
-  spec.add_development_dependency 'i18n-debug'
-  spec.add_development_dependency 'i18n_yaml_sorter'
-  spec.add_development_dependency 'rails-controller-testing', '~> 1'
-  # the hyrax style guide is based on `bixby`. see `.rubocop.yml`
-  spec.add_development_dependency 'bixby', '~> 1.0.0'
   spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
+  spec.add_development_dependency 'solr_wrapper', '>= 1.1', '< 3.0'
   spec.add_development_dependency 'webdrivers', '~> 3.0'
   spec.add_development_dependency 'webmock'
+  spec.add_development_dependency "capybara", '~> 3.29'
+  spec.add_development_dependency "equivalent-xml", '~> 0.5'
+  spec.add_development_dependency "factory_bot", '~> 4.4'
+  spec.add_development_dependency "jasmine-core", '~> 2.3', '< 2.99'
+  spec.add_development_dependency "jasmine", '~> 2.3', '< 2.99'
+  spec.add_development_dependency "selenium-webdriver"
 
   ########################################################
   # Temporarily pinned dependencies. INCLUDE EXPLANATIONS.
