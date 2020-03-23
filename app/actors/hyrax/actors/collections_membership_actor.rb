@@ -42,11 +42,15 @@ module Hyrax
           attributes_collection = attributes_collection.sort_by { |i, _| i.to_i }.map { |_, attributes| attributes }
           # checking for existing works to avoid rewriting/loading works that are already attached
           existing_collections = env.curation_concern.member_of_collection_ids
+          little_boolean = ActiveModel::Type::Boolean.new
           attributes_collection.each do |attributes|
             next if attributes['id'].blank?
-            if existing_collections.include?(attributes['id'])
-              remove(env.curation_concern, attributes['id']) if
-                ActiveModel::Type::Boolean.new.cast(attributes['_destroy'])
+            if little_boolean.cast(attributes['_destroy'])
+              # Likely someone in the UI sought to add the collection, then
+              # changed their mind and checked the "delete" checkbox and posted
+              # their update.
+              next unless existing_collections.include?(attributes['id'])
+              remove(env.curation_concern, attributes['id'])
             else
               add(env, attributes['id'])
             end
