@@ -7,26 +7,10 @@ class FileSetAttachedEventJob < ContentEventJob
   end
 
   def action
-    "User #{link_to_profile depositor} has attached #{file_link} to #{work_link}"
+    "User #{link_to_profile depositor} has attached #{polymorphic_link_to(repo_object)} to #{polymorphic_link_to(curation_concern)}"
   end
 
   private
-
-    def file_link
-      link_to file_title, polymorphic_path(repo_object)
-    end
-
-    def work_link
-      link_to work_title, polymorphic_path(curation_concern)
-    end
-
-    def file_title
-      repo_object.title.first
-    end
-
-    def work_title
-      curation_concern.title.first
-    end
 
     def curation_concern
       repo_object.in_works.first

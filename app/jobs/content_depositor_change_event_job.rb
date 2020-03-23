@@ -2,9 +2,6 @@
 #
 # @attr [Boolean] reset (false) should the access controls be reset. This means revoking edit access from the depositor
 class ContentDepositorChangeEventJob < ContentEventJob
-  include Rails.application.routes.url_helpers
-  include ActionDispatch::Routing::PolymorphicRoutes
-
   attr_accessor :reset
 
   # @param [ActiveFedora::Base] work the work to be transfered
@@ -16,11 +13,7 @@ class ContentDepositorChangeEventJob < ContentEventJob
   end
 
   def action
-    "User #{link_to_profile work.proxy_depositor} has transferred #{link_to_work work.title.first} to user #{link_to_profile depositor}"
-  end
-
-  def link_to_work(text)
-    link_to text, polymorphic_path(work)
+    "User #{link_to_profile work.proxy_depositor} has transferred #{polymorphic_link_to work} to user #{link_to_profile depositor}"
   end
 
   # Log the event to the work's stream

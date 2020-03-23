@@ -19,4 +19,11 @@ class ContentEventJob < EventJob
   def log_user_event(depositor)
     depositor.log_profile_event(event)
   end
+
+  def polymorphic_link_to(object, *args)
+    link_to(
+      object.title.first,
+      Rails.application.routes.url_helpers.polymorphic_path(object, *args)
+    )
+  end
 end

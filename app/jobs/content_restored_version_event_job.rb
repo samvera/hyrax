@@ -8,6 +8,6 @@ class ContentRestoredVersionEventJob < ContentEventJob
   end
 
   def action
-    "User #{link_to_profile depositor} has restored a version '#{revision_id}' of #{link_to repo_object.title.first, Rails.application.routes.url_helpers.hyrax_file_set_path(repo_object)}"
+    "User #{link_to_profile depositor} has restored a version '#{revision_id}' of #{polymorphic_link_to(repo_object)}"
   end
 end
