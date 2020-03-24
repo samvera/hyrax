@@ -9,6 +9,12 @@ RSpec.describe Hyrax::Resource do
 
   it_behaves_like 'a Hyrax::Resource'
 
+  describe '#events' do
+    it 'includes Hyrax::WithEvents' do
+      expect(resource).to respond_to(:events)
+    end
+  end
+
   describe '#embargo' do
     subject(:resource) { described_class.new(embargo: embargo) }
     let(:embargo)      { FactoryBot.build(:hyrax_embargo) }
