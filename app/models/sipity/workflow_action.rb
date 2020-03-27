@@ -12,11 +12,21 @@ module Sipity
     self.table_name = 'sipity_workflow_actions'
 
     belongs_to :workflow, class_name: 'Sipity::Workflow'
+
+    # Not all workflow actions will change state. For example, leaving a comment
+    # is an action, but likely not one to advance the state. Whereas, remove from
+    # public view is something that would likely advance the state.
     belongs_to :resulting_workflow_state,
                optional: true,
                class_name: 'Sipity::WorkflowState'
 
+    # In what states can this (eg. self) action be taken
     has_many :workflow_state_actions, dependent: :destroy, class_name: 'Sipity::WorkflowStateAction'
+
+    # These are arbitrary "lambdas" that you can call when the action is taken
+    #   * Need to send an email?
+    #   * Need to publish a WEBHOOK callback?
+    #   * Need to update the ACLs for the record?
     has_many :triggered_methods, dependent: :destroy, class_name: 'Sipity::Method'
 
     has_many :notifiable_contexts,
