@@ -46,10 +46,15 @@ module Hyrax
           attributes_collection = attributes_collection.sort_by { |i, _| i.to_i }.map { |_, attributes| attributes }
           # checking for existing works to avoid rewriting/loading works that are already attached
           existing_collections = env.curation_concern.member_of_collection_ids
+          boolean_type_caster = ActiveModel::Type::Boolean.new
           attributes_collection.each do |attributes|
             next if attributes['id'].blank?
-            if existing_collections.include?(attributes['id'])
-              remove(env.curation_concern, attributes['id']) if has_destroy_flag?(attributes)
+            if boolean_type_caster.cast(attributes['_destroy'])
+              # Likely someone in the UI sought to add the collection, then
+              # changed their mind and checked the "delete" checkbox and posted
+              # their update.
+              next unless existing_collections.include?(attributes['id'])
+              remove(env.curation_concern, attributes['id'])
             else
               add(env, attributes['id'])
             end
@@ -114,13 +119,6 @@ module Hyrax
           collection = Collection.find(id)
           curation_concern.member_of_collections.delete(collection)
         end
-
-        # Determines if a hash contains a truthy _destroy key.
-        # rubocop:disable Naming/PredicateName
-        def has_destroy_flag?(hash)
-          ActiveFedora::Type::Boolean.new.cast(hash['_destroy'])
-        end
-        # rubocop:enable Naming/PredicateName
 
         # Extact a singleton collection id from the collection attributes and save it in env.  Later in the actor stack,
         # in apply_permission_template_actor.rb, `env.attributes[:collection_id]` will be used to apply the

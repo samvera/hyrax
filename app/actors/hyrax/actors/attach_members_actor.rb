@@ -30,10 +30,16 @@ module Hyrax
           # checking for existing works to avoid rewriting/loading works that are
           # already attached
           existing_works = env.curation_concern.member_ids
+          boolean_type_caster = ActiveModel::Type::Boolean.new
+
           attributes_collection.each do |attributes|
             next if attributes['id'].blank?
-            if existing_works.include?(attributes['id'])
-              remove(env.curation_concern, attributes['id']) if has_destroy_flag?(attributes)
+            if boolean_type_caster.cast(attributes['_destroy'])
+              # Likely someone in the UI sought to add the collection, then
+              # changed their mind and checked the "delete" checkbox and posted
+              # their update.
+              next unless existing_works.include?(attributes['id'])
+              remove(env.curation_concern, attributes['id'])
             else
               add(env, attributes['id'])
             end
