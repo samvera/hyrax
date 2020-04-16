@@ -488,20 +488,20 @@ module Hyrax
 
     attr_writer :permission_levels
     def permission_levels
-      @permission_levels ||= { "View/Download" => "read",
-                               "Edit access" => "edit" }
+      @permission_levels ||= { I18n.t('hyrax.permission_levels.read') => "read",
+                               I18n.t('hyrax.permission_levels.edit') => "edit" }
     end
 
     attr_writer :owner_permission_levels
     def owner_permission_levels
-      @owner_permission_levels ||= { "Edit access" => "edit" }
+      @owner_permission_levels ||= { I18n.t('hyrax.permission_levels.owner.edit') => "edit" }
     end
 
     attr_writer :permission_options
     def permission_options
-      @permission_options ||= { "Choose Access" => "none",
-                                "View/Download" => "read",
-                                "Edit" => "edit" }
+      @permission_options ||= { I18n.t('hyrax.permission_levels.options.none') => "none",
+                                I18n.t('hyrax.permission_levels.options.read') => "read",
+                                I18n.t('hyrax.permission_levels.options.edit') => "edit" }
     end
 
     attr_writer :publisher
