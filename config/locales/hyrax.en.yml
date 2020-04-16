@@ -1283,6 +1283,15 @@ en:
         terms_page: Terms of Use
       updated: Pages updated.
     passive_consent_to_agreement: By saving this work I agree to the
+    permission_levels:
+      edit: "Edit access"
+      read: "View/Download"
+      owner:
+        edit: "Edit access"
+      options:
+        edit: "Edit"
+        none: "Choose Access"
+        read: "View/Download"
     search:
       button:
         html: <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Go
