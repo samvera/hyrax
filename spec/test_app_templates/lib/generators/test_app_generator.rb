@@ -128,7 +128,7 @@ class TestAppGenerator < Rails::Generators::Base
   end
 
   def install_universal_viewer
-    system './bin/yarn install'
+    raise '`yarn install` failed!' unless system('./bin/yarn install')
   end
 
 end
