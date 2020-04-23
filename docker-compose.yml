@@ -1,0 +1,142 @@
+# rails _5.2.4.3_ new .hyrax_app -m ./template.rb --database=postgresql
+# rm .hyrax_app/config/database.yml # use ENV for database configuration
+# docker-compose build
+# docker-compose up
+version: '3.5'
+services:
+  app: &app
+    build:
+      context: .
+      args:
+        RAILS_ENV: development
+        BUNDLE_WITHOUT: test
+        EXTRA_APK_PACKAGES: 'git postgresql-dev'
+    stdin_open: true
+    tty: true
+    environment:
+      - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
+      - FCREPO_PORT=8080
+      - FCREPO_HOST=fcrepo
+      - REDIS_HOST=redis
+      - SOLR_URL=http://solr:8983/solr/hyrax
+    depends_on:
+      # - create_admin_set
+      - create_collection_types
+      - db_migrate
+      - fcrepo
+      - memcached
+      - postgres
+      - redis
+      - solr
+    ports:
+      - 3000:3000
+    volumes:
+      - .hyrax_app:/data
+
+  # create_admin_set:
+  #   <<: *app
+  #   environment:
+  #     - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
+  #     - FCREPO_PORT=8080
+  #     - FCREPO_HOST=fcrepo
+  #     - REDIS_HOST=redis
+  #     - SOLR_URL=http://solr:8983/solr/hyrax
+  #   command:
+  #     - bundle
+  #     - exec
+  #     - rake
+  #     - hyrax:default_admin_set:create
+  #   depends_on:
+  #     - fcrepo
+  #     - solr
+  #     - postgres
+  #   ports: []
+
+  create_collection_types:
+    <<: *app
+    environment:
+      - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
+      - FCREPO_PORT=8080
+      - FCREPO_HOST=fcrepo
+      - REDIS_HOST=redis
+      - SOLR_URL=http://solr:8983/solr/hyrax
+    command:
+      - bundle
+      - exec
+      - rake
+      - hyrax:default_collection_types:create
+    depends_on:
+      - postgres
+    ports: []
+    volumes:
+      - .hyrax_app:/data
+
+  db_migrate:
+    <<: *app
+    environment:
+      - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
+      - FCREPO_PORT=8080
+      - FCREPO_HOST=fcrepo
+      - REDIS_HOST=redis
+      - SOLR_URL=http://solr:8983/solr/hyrax
+    command:
+      - bundle
+      - exec
+      - rails
+      - db:create
+      - db:migrate
+    depends_on:
+      - postgres
+    ports: []
+    volumes:
+      - .hyrax_app:/data
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=hyrax_user
+      - POSTGRES_PASSWORD=hyrax_password
+      - POSTGRES_DB=hyrax
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  fcrepo:
+    image: cbeer/fcrepo4:4.7
+    volumes:
+      - fcrepo:/data
+    ports:
+      - 8080:8080
+    environment:
+      - JAVA_OPTS=${JAVA_OPTS} -Dfcrepo.modeshape.configuration="classpath:/config/file-simple/repository.json" -Dfcrepo.object.directory="/data/objects" -Dfcrepo.binary.directory="/data/binaries"
+
+  memcached:
+    image: bitnami/memcached
+    ports:
+      - '11211:11211'
+
+  redis:
+    image: redis:5-alpine
+    volumes:
+      - redis:/data
+
+  solr: &solr
+    image: solr:7
+    ports:
+      - 8983:8983
+    command:
+      - solr-precreate
+      - hyrax
+      - /opt/solr/server/configsets/hyraxconf
+    volumes:
+      - solr_home:/opt/solr/server/solr
+      - .hyrax_app/solr/conf:/opt/solr/server/configsets/hyraxconf
+
+volumes:
+  db:
+  fcrepo:
+  redis:
+  solr_home:
