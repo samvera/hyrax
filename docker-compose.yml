@@ -1,15 +1,112 @@
 version: '3.5'
 services:
-  app:
+  app: &app
     build:
       context: .
       args:
         RAILS_ENV: development
         BUNDLE_WITHOUT: test
-        APP_PATH: .dassie
     stdin_open: true
     tty: true
+    environment:
+      - DATABASE_URL=postgresql://postgres/hyrax?pool=5
+      - FEDORA_PORT=8080
+      - FEDORA_HOST=fcrepo
+      - REDIS_HOST=redis
+      - SOLR_URL=http://solr:8983/solr/hyrax
+    depends_on:
+      - create_admin_set
+      - create_collection_types
+      - db_migrate
+      - fcrepo
+      - memcached
+      - postgres
+      - redis
+      - solr
     ports:
       - 3000:3000
     volumes:
       - .dassie:/data
+
+  create_admin_set:
+    <<: *app
+    command:
+      - bundle
+      - exec
+      - rake
+      - hyrax:default_admin_set:create
+    depends_on:
+      - fcrepo
+      - postgres
+    ports: []
+
+  create_collection_types:
+    <<: *app
+    command:
+      - bundle
+      - exec
+      - rake
+      - hyrax:default_collection_types:create
+    depends_on:
+      - postgres
+    ports: []
+
+  db_migrate:
+    <<: *app
+    command:
+      - bundle
+      - exec
+      - rails
+      - db:create
+      - db:migrate
+    depends_on:
+      - postgres
+    ports: []
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_DB=hyrax
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  fcrepo:
+    image: cbeer/fcrepo4:4.7
+    volumes:
+      - fcrepo:/data
+    ports:
+      - 8080:8080
+    environment:
+      - JAVA_OPTS=${JAVA_OPTS} -Dfcrepo.modeshape.configuration="classpath:/config/file-simple/repository.json" -Dfcrepo.object.directory="/data/objects" -Dfcrepo.binary.directory="/data/binaries"
+
+  memcached:
+    image: bitnami/memcached
+    ports:
+      - '11211:11211'
+
+  redis:
+    image: redis:5-alpine
+    volumes:
+      - redis:/data
+
+  solr: &solr
+    image: solr:7
+    ports:
+      - 8983:8983
+    command:
+      - solr-precreate
+      - hyrax
+      - /opt/solr/server/configsets/hyraxconf
+    volumes:
+      - solr_home:/opt/solr/server/solr
+      - .dassie/solr/conf:/opt/solr/server/configsets/hyraxconf
+
+volumes:
+  db:
+  fcrepo:
+  redis:
+  solr_home:

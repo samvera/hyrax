@@ -30,8 +30,6 @@ WORKDIR $APP_HOME
 
 RUN bundle install
 
-COPY docker-entrypoint.sh /app-data/samvera/
-
 ADD https://time.is/just /app-data/build-time
 
 CMD ["bundle", "exec", "puma", "-v", "-b", "tcp://0.0.0.0:3000"]
