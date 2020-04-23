@@ -8,7 +8,7 @@
 "scripts": {
   "preinstall": "rm -rf ./public/uv",
   "postinstall": "yarn run uv-install && yarn run uv-config",
-  "uv-install": "shx cp -r ./node_modules/universalviewer/uv ./public/",
+  "uv-install": "shx cp -r ./node_modules/universalviewer/dist ./public/uv",
   "uv-config": "shx cp ./config/uv/uv.html ./public/uv/uv.html & shx cp ./config/uv/uv-config.json ./public/uv/"
   },
   "devDependencies": {
