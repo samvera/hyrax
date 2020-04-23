@@ -1,0 +1,9 @@
+.git
+./tmp
+./log
+.internal_test_app/*
+
+*.rdb
+
+artifacts/*
+coverage/*
