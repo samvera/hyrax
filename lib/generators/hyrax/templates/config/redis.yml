@@ -5,5 +5,5 @@ test:
   host: <%= ENV.fetch('REDIS_HOST', 'localhost') %>
   port: <%= ENV.fetch('REDIS_PORT', 6379) %>
 production:
-  host: <%= ENV.fetch('REDIS_HOST') %>
+  host: <%= ENV.fetch('REDIS_HOST', 'localhost') %>
   port: <%= ENV.fetch('REDIS_PORT', 6379) %>
