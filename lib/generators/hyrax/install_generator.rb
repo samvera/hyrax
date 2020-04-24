@@ -6,6 +6,8 @@ module Hyrax
 
     class_option :'skip-riiif', type: :boolean, default: false, desc: "Skip generating RIIIF image service."
 
+    class_option :'skip-health-check', type: :boolean, default: true, desc: "Generate the default health check endpoints."
+
     desc """
   This generator makes the following changes to your application:
   1. Runs installers for blacklight & hydra-head (which also install & configure devise)
@@ -168,6 +170,10 @@ module Hyrax
 
     def noid_rails_database_minter_initialize
       generate 'noid:rails:install'
+    end
+
+    def health_check
+      generate 'hyrax:health_check' unless options[:'skip-health-check']
     end
 
     def riiif_image_server
