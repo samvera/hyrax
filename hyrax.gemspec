@@ -90,6 +90,7 @@ SUMMARY
   spec.add_development_dependency "jasmine", '~> 2.3', '< 2.99'
   spec.add_development_dependency "jasmine-core", '~> 2.3', '< 2.99'
   spec.add_development_dependency 'mida', '~> 0.3'
+  spec.add_development_dependency 'okcomputer'
   spec.add_development_dependency 'rspec-activemodel-mocks', '~> 1.0'
   spec.add_development_dependency 'rspec-its', '~> 1.1'
   spec.add_development_dependency 'rspec-rails', '~> 3.1'

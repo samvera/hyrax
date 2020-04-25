@@ -12,6 +12,10 @@
 begin
   OkComputer.mount_at = 'healthz'
 
+  require 'hyrax/health_checks'
+
+  OkComputer::Registry.register 'solr', Hyrax::HealthChecks::SolrCheck.new
+
   # check cache
   if ENV['MEMCACHED_HOST']
     OkComputer::Registry
