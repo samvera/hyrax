@@ -37,7 +37,7 @@ module Hyrax
                                    'Use `Hyrax.config.solr_select_path` instead'
       end
 
-      delegate :add, :commit, :count, :delete, :get, :instance, :post, :query, :delete_by_query, :search_by_id, to: :new
+      delegate :add, :commit, :count, :delete, :get, :instance, :ping, :post, :query, :delete_by_query, :search_by_id, to: :new
     end
 
     # Wraps rsolr get
@@ -49,6 +49,15 @@ module Hyrax
 
       args = args.merge(qt: 'standard') unless query.blank? || use_valkyrie
       connection.get(solr_path, params: args)
+    end
+
+    ##
+    # Sends a ping request to solr
+    #
+    # @return [Boolean] `true` if the ping is successful
+    def ping
+      response = connection.get('admin/ping')
+      response['status'] == "OK"
     end
 
     # Wraps rsolr post

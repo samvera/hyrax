@@ -41,10 +41,28 @@ RSpec.describe Hyrax::SolrService do
     end
   end
 
+  describe '#ping' do
+    subject(:service) { described_class.new }
+
+    it 'gives true when the connection is working' do
+      expect(service.ping).to be true
+    end
+
+    context 'with valkyrie index configuration' do
+      subject(:service) { described_class.new(use_valkyrie: true) }
+
+      it 'gives true when the connection is working' do
+        expect(mock_conn).to receive(:get).with('admin/ping').and_return('status' => 'OK')
+        expect(service.ping).to be true
+      end
+    end
+  end
+
   describe "#post" do
     it "calls solr" do
       stub_result = double("Result")
       expect(mock_conn).to receive(:post).with('select', data: { q: 'querytext', qt: 'standard' }).and_return(stub_result)
+      allow(described_class).to receive(:instance).and_return(double("instance", conn: mock_conn))
       expect(described_class.post('querytext')).to eq stub_result
     end
 
