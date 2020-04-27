@@ -1,5 +1,13 @@
 RSpec.describe Hyrax::SolrService do
   let(:mock_conn) { instance_double(RSolr::Client) }
+  let(:valkyrie_index) { double("valkyrie_index", connection: mock_conn) }
+
+  before do
+    allow(Valkyrie::IndexingAdapter)
+      .to receive(:find)
+      .with(:solr_index)
+      .and_return(valkyrie_index)
+  end
 
   describe '.select_path' do
     it 'raises NotImplementedError' do
@@ -23,18 +31,11 @@ RSpec.describe Hyrax::SolrService do
     end
 
     context "when use_valkyrie: true" do
-      before do
-        Hyrax.config.query_index_from_valkyrie = true
-      end
-      after do
-        Hyrax.config.query_index_from_valkyrie = false
-      end
+      subject(:service) { described_class.new(use_valkyrie: true) }
 
       it "uses valkyrie solr based on config query_index_from_valkyrie" do
-        service = described_class.new
         stub_result = double("Valkyrie Result")
         expect(mock_conn).to receive(:get).with('select', params: { q: 'querytext' }).and_return(stub_result)
-        allow(service).to receive(:valkyrie_index).and_return(double("valkyrie_index", connection: mock_conn))
         expect(service.get('querytext')).to eq stub_result
       end
     end
@@ -44,7 +45,6 @@ RSpec.describe Hyrax::SolrService do
     it "calls solr" do
       stub_result = double("Result")
       expect(mock_conn).to receive(:post).with('select', data: { q: 'querytext', qt: 'standard' }).and_return(stub_result)
-      allow(described_class).to receive(:instance).and_return(double("instance", conn: mock_conn))
       expect(described_class.post('querytext')).to eq stub_result
     end
 
@@ -56,18 +56,13 @@ RSpec.describe Hyrax::SolrService do
     end
 
     context "when use_valkyrie: true" do
-      before do
-        Hyrax.config.query_index_from_valkyrie = true
-      end
-      after do
-        Hyrax.config.query_index_from_valkyrie = false
-      end
+      subject(:service) { described_class.new(use_valkyrie: true) }
 
       it "uses valkyrie solr based on config query_index_from_valkyrie" do
-        service = described_class.new
         stub_result = double("Valkyrie Result")
+
         expect(mock_conn).to receive(:post).with('select', data: { q: 'querytext' }).and_return(stub_result)
-        allow(service).to receive(:valkyrie_index).and_return(double("valkyrie_index", connection: mock_conn))
+
         expect(service.post('querytext')).to eq stub_result
       end
     end
@@ -113,19 +108,13 @@ RSpec.describe Hyrax::SolrService do
     end
 
     context "when use_valkyrie: true" do
+      subject(:service) { described_class.new(use_valkyrie: true) }
+
       let(:doc) { { 'id' => 'valkyrie-x' } }
 
-      before do
-        Hyrax.config.query_index_from_valkyrie = true
-      end
-      after do
-        Hyrax.config.query_index_from_valkyrie = false
-      end
-
       it "uses valkyrie solr based on config query_index_from_valkyrie" do
-        service = described_class.new
         expect(mock_conn).to receive(:get).with('select', params: { q: 'querytext' }).and_return(stub_result)
-        allow(service).to receive(:valkyrie_index).and_return(double("valkyrie_index", connection: mock_conn))
+
         result = service.query('querytext')
         expect(result.first.id).to eq 'valkyrie-x'
       end
@@ -140,18 +129,11 @@ RSpec.describe Hyrax::SolrService do
     end
 
     context "when use_valkyrie: true" do
-      let(:service) { described_class.new }
-
-      before do
-        Hyrax.config.query_index_from_valkyrie = true
-      end
-      after do
-        Hyrax.config.query_index_from_valkyrie = false
-      end
+      subject(:service) { described_class.new(use_valkyrie: true) }
 
       it "uses valkyrie solr based on config query_index_from_valkyrie" do
         expect(mock_conn).to receive(:commit)
-        allow(service).to receive(:valkyrie_index).and_return(double("valkyrie_index", connection: mock_conn))
+
         service.commit
       end
     end
@@ -165,18 +147,11 @@ RSpec.describe Hyrax::SolrService do
     end
 
     context "when use_valkyrie: true" do
-      let(:service) { described_class.new }
-
-      before do
-        Hyrax.config.query_index_from_valkyrie = true
-      end
-      after do
-        Hyrax.config.query_index_from_valkyrie = false
-      end
+      let(:service) { described_class.new(use_valkyrie: true) }
 
       it "uses valkyrie solr based on config query_index_from_valkyrie" do
         expect(mock_conn).to receive(:delete_by_query).with("*:*", params: {})
-        allow(service).to receive(:valkyrie_index).and_return(double("valkyrie_index", connection: mock_conn))
+
         service.delete_by_query("*:*")
       end
     end
@@ -195,18 +170,10 @@ RSpec.describe Hyrax::SolrService do
     end
 
     context "when use_valkyrie: true" do
-      let(:service) { described_class.new }
-
-      before do
-        Hyrax.config.query_index_from_valkyrie = true
-      end
-      after do
-        Hyrax.config.query_index_from_valkyrie = false
-      end
+      subject(:service) { described_class.new(use_valkyrie: true) }
 
       it "uses valkyrie solr based on config query_index_from_valkyrie" do
-        allow(service).to receive(:valkyrie_index).and_return(double("valkyrie_index", connection: mock_conn))
-        service.delete("fade_solr_id#01")
+        expect(service.delete("fade_solr_id#01")).to eq true
       end
     end
   end
@@ -237,16 +204,9 @@ RSpec.describe Hyrax::SolrService do
     end
 
     context "when use_valkyrie: true" do
-      before do
-        Hyrax.config.query_index_from_valkyrie = true
-      end
-      after do
-        Hyrax.config.query_index_from_valkyrie = false
-      end
+      subject(:service) { described_class.new(use_valkyrie: true) }
 
       it "uses valkyrie solr based on config query_index_from_valkyrie" do
-        service = described_class.new
-        allow(service).to receive(:valkyrie_index).and_return(double("valkyrie_index", connection: mock_conn))
         expect(service.add(mock_doc)).to eq true
       end
     end
@@ -262,17 +222,10 @@ RSpec.describe Hyrax::SolrService do
     end
 
     context "when use_valkyrie: true" do
-      before do
-        Hyrax.config.query_index_from_valkyrie = true
-      end
-      after do
-        Hyrax.config.query_index_from_valkyrie = false
-      end
+      subject(:service) { described_class.new(use_valkyrie: true) }
 
       it "uses valkyrie solr based on config query_index_from_valkyrie" do
-        service = described_class.new
         expect(mock_conn).to receive(:get).with('select', params: { rows: 0, q: 'querytext' }).and_return(stub_result)
-        allow(service).to receive(:valkyrie_index).and_return(double("valkyrie_index", connection: mock_conn))
         expect(service.count('querytext')).to eq 2
       end
     end
