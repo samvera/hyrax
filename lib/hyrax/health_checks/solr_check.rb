@@ -8,7 +8,10 @@ module Hyrax
       end
 
       def check
-        @service.get
+        return if @service.ping
+
+        mark_message 'Solr connection failed'
+        mark_failure
       rescue RSolr::Error::ConnectionRefused => err
         mark_message "Solr connection refused: #{err.message}"
         mark_failure

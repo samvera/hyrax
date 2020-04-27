@@ -14,7 +14,7 @@ RSpec.describe Hyrax::HealthChecks::SolrCheck do
     subject(:check) { described_class.new(service: solr_service) }
     let(:solr_service) { double(Hyrax::SolrService) }
 
-    before { allow(solr_service).to receive(:get).and_raise('oh no!') }
+    before { allow(solr_service).to receive(:ping).and_raise('oh no!') }
 
     it 'marks a failure' do
       expect { check.check }
