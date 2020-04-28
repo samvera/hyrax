@@ -16,6 +16,7 @@ require 'hydra/works'
 require 'hyrax/engine'
 require 'hyrax/version'
 require 'hyrax/inflections'
+require 'hyrax/name'
 require 'hyrax/valkyrie_can_can_adapter'
 require 'kaminari_route_prefix'
 
