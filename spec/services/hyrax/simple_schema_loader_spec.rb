@@ -17,4 +17,10 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
         .to raise_error described_class::UndefinedSchemaError
     end
   end
+
+  describe '#index_rules_for' do
+    it 'provides index configuration' do
+      expect(schema_loader.index_rules_for(schema: :core_metadata)).to include(title_sim: :title, title_tesim: :title)
+    end
+  end
 end

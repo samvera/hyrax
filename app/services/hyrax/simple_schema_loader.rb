@@ -10,12 +10,19 @@ module Hyrax
   class SimpleSchemaLoader
     ##
     # @param [Symbol] schema
+    #
+    # @return [Hash<Symbol, Dry::Types::Type>] a map from attribute names to
+    #   types
     def attributes_for(schema:)
       definitions(schema).each_with_object({}) do |definition, hash|
         hash[definition.name] = definition.type
       end
     end
 
+    ##
+    # @param [Symbol] schema
+    #
+    # @return [Hash<Symbol, Symbol>] a map from index keys to attribute names
     def index_rules_for(schema:)
       definitions(schema).each_with_object({}) do |definition, hash|
         definition.index_keys.each do |key|
@@ -45,7 +52,7 @@ module Hyrax
       ##
       # @return [Enumerable<Symbol>]
       def index_keys
-        config['index_keys']&.map(&:to_sym) || []
+        config.fetch('index_keys', []).map(&:to_sym)
       end
 
       ##
