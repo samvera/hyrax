@@ -24,6 +24,13 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  describe '.model_class' do
+    it 'is the class of the configured work' do
+      expect(Hyrax::Forms::ResourceForm(work.class).model_class)
+        .to eq work.class
+    end
+  end
+
   describe '#[]' do
     it 'supports access to work attributes' do
       expect(form[:title]).to eq work.title
@@ -41,6 +48,12 @@ RSpec.describe Hyrax::Forms::ResourceForm do
       expect { form[:title] = new_title }
         .to change { form[:title] }
         .to new_title
+    end
+  end
+
+  describe '#model_class' do
+    it 'is the class of the model' do
+      expect(form.model_class).to eq work.class
     end
   end
 

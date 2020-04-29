@@ -13,6 +13,8 @@ module Hyrax
     #
     def self.ResourceForm(work_class)
       Class.new(Hyrax::Forms::ResourceForm) do
+        self.model_class = work_class
+
         (work_class.fields - work_class.reserved_attributes).each do |field|
           property field, default: nil
         end
@@ -24,6 +26,8 @@ module Hyrax
     #
     # This form wraps `Hyrax::ChangeSet` in the `HydraEditor::Form` interface.
     class ResourceForm < Hyrax::ChangeSet
+      class_attribute :model_class
+
       class << self
         ##
         # @api public
@@ -66,6 +70,14 @@ module Hyrax
       # @return [Object] the set value
       def []=(attr, value)
         public_send("#{attr}=".to_sym, value)
+      end
+
+      ##
+      # @deprecated use model.class instead
+      #
+      # @return [Class]
+      def model_class # rubocop:disable Rails/Delegate
+        model.class
       end
     end
   end
