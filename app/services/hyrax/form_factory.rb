@@ -19,7 +19,7 @@ module Hyrax
     # @param ability    [Hyrax::Ability]
     # @param controller [ApplicationController]
     def build(model, _ability, _controller)
-      Hyrax::ChangeSet.for(model)
+      Hyrax::Forms::ResourceForm.for(model)
     end
   end
 end
