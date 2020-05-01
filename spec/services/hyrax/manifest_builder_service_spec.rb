@@ -1,4 +1,4 @@
-require 'hyrax/specs/shared_specs'
+# frozen_string_literal: true
 
 RSpec.describe Hyrax::ManifestBuilderService, :clean_repo do
   # Presenters requires a whole lot of context and therefore a whole lot of preamble
