@@ -14,7 +14,7 @@ module Hyrax
       self.show_presenter = Hyrax::WorkShowPresenter
       self.work_form_service = Hyrax::WorkFormService
       self.search_builder_class = WorkSearchBuilder
-      self.iiif_manifest_builder = Hyrax::ManifestBuilderService
+      self.iiif_manifest_builder = (Flipflop.cache_work_iiif_manifest? ? Hyrax::CachingIiifManifestBuilder.new : Hyrax::ManifestBuilderService.new)
       attr_accessor :curation_concern
       helper_method :curation_concern, :contextual_path
 
@@ -129,7 +129,7 @@ module Hyrax
     def manifest
       headers['Access-Control-Allow-Origin'] = '*'
 
-      json = iiif_manifest_builder.as_json(presenter: presenter)
+      json = iiif_manifest_builder.manifest_for(presenter: presenter)
 
       respond_to do |wants|
         wants.json { render json: json }
