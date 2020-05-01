@@ -175,23 +175,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
 
   describe '#manifest' do
     include_context 'with a logged in user'
-    xit 'resolves json' do
-      # When I attempt to get this working, I encounter the following error:
-      # ```console
-      # ActionController::UrlGenerationError:
-      #   No route matches {
-      #    :action=>"manifest",
-      #    :controller=>"anonymous",
-      #    :id=>#<Valkyrie::ID:0x00007fb61f7b1470 @id="123">
-      #   }
-      # ```
-      # I'm uncertain how to proceed so am leaving this here
-      expect(Hyrax::ManifestBuilderService).to(
-        receive(:as_json)
-        .and_return("hello" => "world")
-      )
-      get :show, params: { id: work.id }, format: :json
-      expect(response).to be_success
-    end
+
+    it 'resolves json'
   end
 end

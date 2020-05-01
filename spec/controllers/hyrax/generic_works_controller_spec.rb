@@ -623,6 +623,14 @@ RSpec.describe Hyrax::GenericWorksController do
         .and_return(manifest_factory)
     end
 
+    it 'uses the configured service' do
+      custom_builder = double(manifest_for: { test: 'cached manifest' })
+      allow(described_class).to receive(:iiif_manifest_builder).and_return(custom_builder)
+
+      get :manifest, params: { id: work, format: :json }
+      expect(response.body).to eq "{\"test\":\"cached manifest\"}"
+    end
+
     it "produces a manifest for a json request" do
       get :manifest, params: { id: work, format: :json }
       expect(response.body).to eq "{\"test\":\"manifest\"}"
