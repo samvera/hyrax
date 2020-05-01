@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hyrax::ManifestBuilderService, :clean_repo do
-  # Presenters requires a whole lot of context and therefore a whole lot of preamble
+RSpec.describe Hyrax::CachingIiifManifestBuilder, :clean_repo do
   let(:id) { "123" }
   let(:manifest_url) { File.join("https://samvera.org", "show", id) }
   let(:solr_document) { { "_version_" => 1 } }
@@ -18,12 +17,12 @@ RSpec.describe Hyrax::ManifestBuilderService, :clean_repo do
       file_set_presenters: [file_set_presenter]
     )
   end
-  subject { described_class.manifest_for(presenter: presenter) }
 
-  describe ".as_json" do
-    it "will be a Ruby hash" do
-      expect(Rails.cache).not_to receive(:fetch)
-      expect(subject).to be_a(Hash)
-    end
+  subject(:builder) { described_class.new }
+
+  it 'hits the cache' do
+    expect(Rails.cache).to receive(:fetch).and_yield
+
+    builder.manifest_for(presenter: presenter)
   end
 end
