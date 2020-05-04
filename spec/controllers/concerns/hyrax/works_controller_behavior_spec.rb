@@ -68,6 +68,35 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         expect(response.status).to eq 401
       end
     end
+
+    context 'when the user has edit access' do
+      include_context 'with a logged in user'
+
+      before do
+        allow(controller.current_ability)
+          .to receive(:can?)
+          .with(any_args)
+          .and_return true
+      end
+
+      it 'is a success' do
+        get :edit, params: { id: work.id }
+
+        expect(response.status).to eq 200
+      end
+
+      it 'assigns a form with the current work as model' do
+        get :edit, params: { id: work.id }
+
+        expect(assigns[:form].model.id).to eq work.id
+      end
+
+      it 'renders the form' do
+        get :edit, params: { id: work.id }
+
+        expect(controller).to render_template('hyrax/base/edit')
+      end
+    end
   end
 
   describe '#new' do
