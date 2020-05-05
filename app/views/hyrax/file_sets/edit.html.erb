@@ -1,5 +1,5 @@
 <%= render "shared/nav_safety_modal" %>
-<% provide :page_title, curation_concern_page_title(curation_concern) %>
+<% provide :page_title, title_presenter(curation_concern).page_title %>
 <% provide :page_header do %>
   <h1><span class="fa fa-edit" aria-hidden="true"></span><%= t('.header', file_set: curation_concern) %></h1>
 <% end %>
