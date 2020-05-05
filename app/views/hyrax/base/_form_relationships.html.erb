@@ -1,5 +1,5 @@
 <% if Flipflop.assign_admin_set? %>
-  <%# TODO: consider `Hyrax::AdminSetOptionsPresenter.select_options_for(controller: controller)` instead %>
+  <%# TODO: avoid direct dependency on AdminSetService and AdminSetOptionsPresenter in the view!! make the controller provide the options! %>
   <%= f.input :admin_set_id, as: :select,
       include_blank: false,
       collection: Hyrax::AdminSetOptionsPresenter.new(Hyrax::AdminSetService.new(controller)).select_options,
