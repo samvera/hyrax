@@ -6,7 +6,7 @@ module Hyrax
       elsif label.present?
         label
       else
-        'No Title'
+        I18n.t('hyrax.works.missing_title')
       end
     end
   end

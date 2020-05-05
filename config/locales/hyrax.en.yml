@@ -1508,6 +1508,7 @@ en:
         state_error: 'The workflow: %{workflow_name} has not been updated.  You are removing a state: %{state_name} with %{entity_count} entity/ies.  A state may not be removed while it has active entities!'
       unauthorized: The work is not currently available because it has not yet completed the approval process
     works:
+      missing_title: 'No Title'
       create:
         after_create_html: Your files are being processed by %{application_name} in the background. The metadata and access controls you specified are being applied. You may need to refresh this page to see these updates.
         breadcrumb: Add New Work

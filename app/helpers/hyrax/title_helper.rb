@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hyrax::TitleHelper
   def application_name
     t('hyrax.product_name', default: super)
@@ -8,11 +10,7 @@ module Hyrax::TitleHelper
   end
 
   def curation_concern_page_title(curation_concern)
-    if curation_concern.persisted?
-      construct_page_title(curation_concern.to_s, "#{curation_concern.human_readable_type} [#{curation_concern.to_param}]")
-    else
-      construct_page_title("New #{curation_concern.human_readable_type}")
-    end
+    Hyrax::PageTitleDecorator.new(curation_concern).page_title
   end
 
   def default_page_title
