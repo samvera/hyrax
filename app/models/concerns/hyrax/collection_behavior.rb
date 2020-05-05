@@ -92,9 +92,9 @@ module Hyrax
       member_objects.map(&:id)
     end
 
-    def to_s
-      title.present? ? title.join(' | ') : 'No Title'
-    end
+    # def to_s
+    #   title.present? ? title.join(' | ') : 'No Title'
+    # end
 
     module ClassMethods
       # This governs which partial to draw when you render this type of object

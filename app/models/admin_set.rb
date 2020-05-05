@@ -55,9 +55,9 @@ class AdminSet < ActiveFedora::Base
     DEFAULT_ID
   end
 
-  def to_s
-    title.present? ? title : 'No Title'
-  end
+  # def to_s
+  #   title.present? ? title : 'No Title'
+  # end
 
   # @api public
   # A bit of an analogue for a `has_one :admin_set` as it crosses from Fedora to the DB
