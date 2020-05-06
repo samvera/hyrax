@@ -34,7 +34,7 @@
     </div>
     <div class="col-sm-4">
       <label for="new_user_permission_skel" class="sr-only"><%= t('.new_user_permission_skel') %></label>
-      <%= select_tag 'new_user_permission_skel', options_for_select(Hyrax.config.permission_options), class: 'form-control' %>
+      <%= select_tag 'new_user_permission_skel', options_for_select(configured_permission_options), class: 'form-control' %>
     </div>
     <div class="col-sm-3">
       <button class="btn btn-default" id="add_new_user_skel">
@@ -55,7 +55,7 @@
     </div>
     <div class="col-sm-4">
       <label for="new_group_permission_skel" class="sr-only"><%= t('.new_group_permission_skel') %></label>
-      <%= select_tag 'new_group_permission_skel', options_for_select(Hyrax.config.permission_options), class: 'form-control' %>
+      <%= select_tag 'new_group_permission_skel', options_for_select(configured_permission_options), class: 'form-control' %>
     </div>
     <div class="col-sm-3">
       <span class="sr-only"><%= t('.add_new_group_skel') %></span>
@@ -77,7 +77,7 @@
       <% end %>
     </td>
     <td>
-      <%= Hyrax.config.owner_permission_levels.keys[0] %>
+      <%= configured_owner_permission_levels.keys.first %>
     </td>
   </tr>
   <%= f.fields_for :permissions do |permission_fields| %>
