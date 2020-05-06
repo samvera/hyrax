@@ -46,10 +46,6 @@ class Hyrax::ConfigGenerator < Rails::Generators::Base
     copy_file 'config/initializers/hyrax.rb'
   end
 
-  def create_initializer_indexers_file
-    copy_file 'config/initializers/indexers.rb'
-  end
-
   # Add mini-magick configuration
   def minimagick_config
     copy_file 'config/initializers/mini_magick.rb'

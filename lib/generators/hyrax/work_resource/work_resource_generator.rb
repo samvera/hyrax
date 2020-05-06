@@ -38,10 +38,12 @@ class Hyrax::WorkResourceGenerator < Rails::Generators::NamedBase
   end
 
   def register_indexer
-    config = 'config/initializers/indexers.rb'
-    register_line = "  Hyrax::ValkyrieIndexer.register #{class_name}Indexer, as_indexer_for: #{class_name}\n"
-    inject_into_file config, after: "# Register Indexers\n" do
-      return if File.read(config).include?(register_line)
+    config = 'config/initializers/hyrax.rb'
+    register_line = "Hyrax::ValkyrieIndexer.register #{class_name}Indexer, as_indexer_for: #{class_name}\n"
+
+    return if File.read(config).include?(register_line)
+
+    append_to_file config do
       register_line
     end
   end

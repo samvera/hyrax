@@ -3,7 +3,7 @@
 # Generated via
 #  `rails generate hyrax:work_resource <%= class_name %>`
 class <%= class_name %>Indexer < Hyrax::ValkyrieWorkIndexer
-  Hyrax::ValkyrieIndexer.register self, as_indexer_for: <%= class_name %>
+  include Hyrax::Indexer(:basic_metadata)
 
   # Uncomment this block if you want to add custom indexing behavior:
   #  def to_solr
