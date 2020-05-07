@@ -84,6 +84,33 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
       end
     end
 
+    context "when working through Rails nested attribute scenarios" do
+      let(:collection_to_remove) { create(:collection_lw, user: user, title: ['Already Member and Remove'], with_permission_template: true) }
+      let(:collection_to_skip) { create(:collection_lw, user: user, title: ['Not a Member'], with_permission_template: true) }
+      let(:collection_to_keep) { create(:collection_lw, user: user, title: ['Is a member and we want to keep'], with_permission_template: true) }
+      let(:collection_to_add) { create(:collection_lw, user: user, title: ['Not a Member but want to add'], with_permission_template: true) }
+      let(:attributes) do
+        {
+          member_of_collections_attributes: {
+            '0' => { id: collection_to_remove.id, _destroy: 'true' }, # colleciton is a member and we're removing it
+            '1' => { id: collection_to_skip.id, _destroy: 'true' }, # colleciton is a NOT member and is marked for deletion; This is a UI introduced option
+            '2' => { id: collection_to_keep.id },
+            '3' => { id: collection_to_add.id }
+          }
+        }
+      end
+
+      before do
+        curation_concern.member_of_collections = [collection_to_remove, collection_to_keep]
+        curation_concern.save!
+      end
+
+      it "removes the work from that collection" do
+        expect(subject.create(env)).to be true
+        expect(curation_concern.member_of_collections).to match_array [collection_to_keep, collection_to_add]
+      end
+    end
+
     context "when work is in another user's collection" do
       let(:other_user) { create(:user) }
       let(:other_collection) { build(:collection_lw, user: other_user, title: ['A good title'], with_permission_template: true) }
