@@ -1,3 +1,4 @@
+require 'csv'
 module Hyrax
   #
   # Generates CSV from a FileSet
