@@ -63,9 +63,30 @@ module Hyrax
     end
 
     ##
+    # @return [Boolean]
+    def enforced?
+      lease.visibility_during_lease.to_s == resource.visibility
+    end
+
+    ##
     # @return [Hyrax::Lease]
     def lease
       resource.lease || Lease.new
+    end
+
+    ##
+    # @return [Boolean]
+    def release
+      return false if under_lease?
+      return true if lease.visibility_after_lease.nil?
+
+      resource.visibility = lease.visibility_after_lease
+    end
+
+    ##
+    # @return [void]
+    def release!
+      release || raise(NotReleasableError)
     end
 
     ##
