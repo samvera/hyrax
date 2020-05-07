@@ -31,7 +31,7 @@ module Hyrax
         # @param env [Hyrax::Actors::Enviornment]
         # @return [Boolean]
         #
-        # rubocop:disable Metrics/MethodLength
+        # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
         # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         def assign_nested_attributes_for_collection(env)
           attributes_collection = env.attributes.delete(:member_of_collections_attributes)
@@ -56,13 +56,14 @@ module Hyrax
               next unless existing_collections.include?(attributes['id'])
               remove(env.curation_concern, attributes['id'])
             else
+              next if existing_collections.include?(attributes['id'])
               add(env, attributes['id'])
             end
           end
 
           true
         end
-        # rubocop:enable Metrics/MethodLength
+        # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
         # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
         ##

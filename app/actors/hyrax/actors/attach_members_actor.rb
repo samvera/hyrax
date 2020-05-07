@@ -41,6 +41,7 @@ module Hyrax
               next unless existing_works.include?(attributes['id'])
               remove(env.curation_concern, attributes['id'])
             else
+              next if existing_works.include?(attributes['id'])
               add(env, attributes['id'])
             end
           end
