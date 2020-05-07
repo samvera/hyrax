@@ -95,7 +95,7 @@ jobs:
       name: 'samvera/ruby_fcrepo_solr_redis'
       ruby_version: << parameters.ruby_version >>
     resource_class: medium+
-    parallelism: 10
+    parallelism: 8
     environment:
       HYRAX_VALKYRIE: << parameters.hyrax_valkyrie >>
       VALKYRIE_SOLR_PORT: 8985
