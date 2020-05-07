@@ -21,7 +21,7 @@ RSpec.describe Hyrax::EmbargoManager do
       end
     end
 
-    context 'with expried embargo' do
+    context 'with expired embargo' do
       include_context 'with expired embargo'
 
       it 'is a no-op' do
@@ -52,7 +52,7 @@ RSpec.describe Hyrax::EmbargoManager do
         .from nil
     end
 
-    context 'with expried embargo' do
+    context 'with expired embargo' do
       include_context 'with expired embargo'
 
       it 'does not copy the embargo' do
@@ -83,6 +83,36 @@ RSpec.describe Hyrax::EmbargoManager do
     end
   end
 
+  describe '#enforced' do
+    it { is_expected.not_to be_enforced }
+
+    context 'when under embargo' do
+      include_context 'when under embargo'
+
+      it { is_expected.not_to be_enforced }
+
+      context 'and it is applied' do
+        before { manager.apply! }
+
+        it { is_expected.to be_enforced }
+      end
+    end
+
+    context 'with expired embargo' do
+      include_context 'with expired embargo'
+
+      it { is_expected.not_to be_enforced }
+    end
+
+    context 'with an embargo that is in force, but expired' do
+      include_context 'with expired embargo'
+
+      before { resource.visibility = embargo.visibility_during_embargo }
+
+      it { is_expected.to be_enforced }
+    end
+  end
+
   describe '#embargo' do
     it 'gives an inactive embargo' do
       expect(manager.embargo).not_to be_active
@@ -101,6 +131,44 @@ RSpec.describe Hyrax::EmbargoManager do
                               visibility_during_embargo: 'authenticated',
                               embargo_release_date: an_instance_of(Date),
                               embargo_history: be_empty
+      end
+    end
+  end
+
+  describe '#release' do
+    context 'with no embargo' do
+      it 'is a no-op' do
+        expect { manager.release }
+          .not_to change { resource.visibility }
+      end
+    end
+
+    context 'with expired embargo' do
+      include_context 'with expired embargo'
+
+      it 'ensures the post-embargo visibility is set' do
+        manager.release
+        expect(resource.visibility).to eq embargo.visibility_after_embargo
+      end
+
+      context 'and embargo was applied' do
+        before { resource.visibility = embargo.visibility_during_embargo }
+
+        it 'ensures the post-embargo visibility is set' do
+          expect { manager.release }
+            .to change { resource.visibility }
+            .from(embargo.visibility_during_embargo)
+            .to embargo.visibility_after_embargo
+        end
+      end
+    end
+
+    context 'when under embargo' do
+      include_context 'when under embargo'
+
+      it 'is a no-op' do
+        expect { manager.release }
+          .not_to change { resource.visibility }
       end
     end
   end
