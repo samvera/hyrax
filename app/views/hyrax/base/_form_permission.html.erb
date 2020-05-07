@@ -1,7 +1,7 @@
 <% # This is used by works and by FileSet and the layout (col-6 vs col-12) is different for both %>
-<% if f.object.embargo_release_date %>
+<% if embargo_enforced?(f.object) %>
   <%= render 'form_permission_under_embargo', f: f %>
-<% elsif f.object.lease_expiration_date %>
+<% elsif lease_enforced?(f.object) %>
   <%= render 'form_permission_under_lease', f: f %>
 <% else %>
   <fieldset class="set-access-controls">
