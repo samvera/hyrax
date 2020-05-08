@@ -4,6 +4,64 @@ RSpec.describe Hyrax::LeaseHelper do
   let(:resource) { build(:monograph) }
 
   describe 'lease_enforced?' do
+    context 'with a Hyrax::Work' do
+      let(:resource) { build(:hyrax_work) }
+
+      it 'returns false' do
+        expect(lease_enforced?(resource)).to be false
+      end
+
+      context 'when a lease is enforced on the resource' do
+        let(:resource) { build(:hyrax_work, :under_lease) }
+
+        before { Hyrax::LeaseManager.apply_lease_for!(resource: resource) }
+
+        it 'returns true' do
+          expect(lease_enforced?(resource)).to be true
+        end
+
+        context 'and the lease is expired' do
+          before do
+            resource.lease.lease_expiration_date = Time.zone.today - 1
+          end
+
+          it 'returns true' do
+            expect(lease_enforced?(resource)).to be true
+          end
+        end
+      end
+    end
+
+    context 'with a change set' do
+      let(:resource) { Hyrax::ChangeSet.for(build(:hyrax_work)) }
+
+      it 'returns false' do
+        expect(lease_enforced?(resource)).to be false
+      end
+
+      context 'when a lease is enforced on the resource' do
+        let(:resource) { Hyrax::ChangeSet.for(build(:hyrax_work, :under_lease)) }
+
+        before do
+          Hyrax::LeaseManager.apply_lease_for!(resource: resource.model)
+        end
+
+        it 'returns true' do
+          expect(lease_enforced?(resource)).to be true
+        end
+
+        context 'and the lease is expired' do
+          before do
+            resource.model.lease.lease_expiration_date = Time.zone.today - 1
+          end
+
+          it 'returns true' do
+            expect(lease_enforced?(resource)).to be true
+          end
+        end
+      end
+    end
+
     context 'with an ActiveFedora resource' do
       let(:resource) { build(:work) }
 
