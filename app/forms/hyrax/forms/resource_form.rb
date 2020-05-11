@@ -28,6 +28,21 @@ module Hyrax
     class ResourceForm < Hyrax::ChangeSet
       class_attribute :model_class
 
+      delegate :human_readable_type, to: :model
+
+      property :visibility # visibility has an accessor on the model
+
+      property :agreement_accepted, virtual: true, default: false, prepopulator: ->(_opts) { self.agreement_accepted = !model.new_record }
+
+      # virtual properties for embargo/lease;
+      property :embargo_release_date, virtual: true, prepopulator: ->(_opts) { self.embargo_release_date = embargo&.embargo_release_date }
+      property :visibility_after_embargo, virtual: true, prepopulator: ->(_opts) { self.visibility_after_embargo = embargo&.visibility_after_embargo }
+      property :visibility_during_embargo, virtual: true, prepopulator: ->(_opts) { self.visibility_during_embargo = embargo&.visibility_during_embargo }
+
+      property :lease_expiration_date, virtual: true,  prepopulator: ->(_opts) { self.lease_expiration_date = lease&.lease_expiration_date }
+      property :visibility_after_lease, virtual: true, prepopulator: ->(_opts) { self.visibility_after_lease = lease&.visibility_after_lease }
+      property :visibility_during_lease, virtual: true, prepopulator: ->(_opts) { self.visibility_during_lease = lease&.visibility_during_lease }
+
       class << self
         ##
         # @api public
@@ -78,6 +93,18 @@ module Hyrax
       # @return [Class]
       def model_class # rubocop:disable Rails/Delegate
         model.class
+      end
+
+      def primary_terms
+        []
+      end
+
+      def secondary_terms
+        []
+      end
+
+      def display_additional_fields?
+        secondary_terms.any?
       end
     end
   end
