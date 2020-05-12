@@ -92,5 +92,23 @@ RSpec.describe Hyrax::EmbargoHelper do
         end
       end
     end
+
+    context 'with a HydraEditor::Form' do
+      let(:resource) { Hyrax::GenericWorkForm.new(build(:work), ability, form_controller) }
+      let(:ability) { :FAKE_ABILITY }
+      let(:form_controller) { :FAKE_CONTROLLER }
+
+      it 'returns false' do
+        expect(embargo_enforced?(resource)).to be false
+      end
+
+      context 'when the wrapped work is under embargo' do
+        let(:resource) { Hyrax::GenericWorkForm.new(build(:embargoed_work), ability, form_controller) }
+
+        it 'returns true' do
+          expect(embargo_enforced?(resource)).to be true
+        end
+      end
+    end
   end
 end

@@ -23,6 +23,8 @@ module Hyrax
       case resource
       when Hydra::AccessControls::Embargoable
         !resource.lease_expiration_date.nil?
+      when HydraEditor::Form
+        lease_enforced?(resource.model)
       when Valkyrie::ChangeSet
         Hyrax::LeaseManager.new(resource: resource.model).enforced?
       else

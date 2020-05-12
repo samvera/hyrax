@@ -23,9 +23,10 @@ module Hyrax
       case resource
       when Hydra::AccessControls::Embargoable
         !resource.embargo_release_date.nil?
+      when HydraEditor::Form
+        embargo_enforced?(resource.model)
       when Valkyrie::ChangeSet
         Hyrax::EmbargoManager.new(resource: resource.model).enforced?
-
       else
         Hyrax::EmbargoManager.new(resource: resource).enforced?
       end
