@@ -32,6 +32,8 @@ module Hyrax
         # @return [Boolean]
         #
         # rubocop:disable Metrics/MethodLength
+        # rubocop:disable Metrics/PerceivedComplexity
+        # rubocop:disable Metrics/CyclomaticComplexity
         def assign_nested_attributes_for_collection(env)
           attributes_collection = env.attributes.delete(:member_of_collections_attributes)
           return true unless attributes_collection
@@ -52,13 +54,16 @@ module Hyrax
               next unless existing_collections.include?(attributes['id'])
               remove(env.curation_concern, attributes['id'])
             else
+              # Let's not try to add an item already
+              next if existing_collections.include?(attributes['id'])
               add(env, attributes['id'])
             end
           end
-
           true
         end
         # rubocop:enable Metrics/MethodLength
+        # rubocop:enable Metrics/PerceivedComplexity
+        # rubocop:enable Metrics/CyclomaticComplexity
 
         # Adds the item to the ordered members so that it displays in the items
         # along side the FileSets on the show page
