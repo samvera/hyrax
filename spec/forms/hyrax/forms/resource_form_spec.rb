@@ -117,6 +117,28 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  describe '#permissions' do
+    it 'for a new object has empty permissions' do
+      expect(form.permissions).to be_empty
+    end
+
+    it 'for a new object prepopulates with empty permissions' do
+      expect { form.prepopulate! }
+        .not_to change { form.permissions }
+        .from(be_empty)
+    end
+
+    context 'with existing permissions' do
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :public) }
+
+      it 'prepopulates with the work permissions' do
+        expect { form.prepopulate! }
+          .to change { form.permissions }
+          .to contain_exactly(have_attributes(agent_name: 'group/public', access: :read))
+      end
+    end
+  end
+
   describe '#human_readable_type' do
     it 'delegates to model' do
       expect(form.human_readable_type).to eq work.human_readable_type

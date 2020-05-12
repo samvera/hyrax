@@ -26,6 +26,18 @@ module Hyrax
     #
     # This form wraps `Hyrax::ChangeSet` in the `HydraEditor::Form` interface.
     class ResourceForm < Hyrax::ChangeSet
+      ##
+      # Nested form for permissions.
+      #
+      # @note due to historical oddities with Hydra::AccessControls and Hydra
+      #   Editor, Hyrax's views rely on `agent_name` and `access` as field
+      #   names. we provide these as virtual fields andprepopulate these from
+      #   `Hyrax::Permission`.
+      class Permission < Hyrax::ChangeSet
+        property :agent_name, virtual: true, prepopulator: ->(_opts) { self.agent_name = model.agent }
+        property :access, virtual: true, prepopulator: ->(_opts) { self.access = model.mode }
+      end
+
       class_attribute :model_class
 
       delegate :human_readable_type, to: :model
@@ -33,6 +45,8 @@ module Hyrax
       property :visibility # visibility has an accessor on the model
 
       property :agreement_accepted, virtual: true, default: false, prepopulator: ->(_opts) { self.agreement_accepted = !model.new_record }
+
+      collection :permissions, virtual: true, default: [], form: Permission, prepopulator: ->(_opts) { self.permissions = Hyrax::AccessControl.for(resource: model).permissions }
 
       # virtual properties for embargo/lease;
       property :embargo_release_date, virtual: true, prepopulator: ->(_opts) { self.embargo_release_date = embargo&.embargo_release_date }
