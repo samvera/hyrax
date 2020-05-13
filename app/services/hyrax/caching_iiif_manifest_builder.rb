@@ -6,6 +6,8 @@ module Hyrax
   # this approach avoids long manifest build times for some kinds of requests,
   # at the cost of introducing cache invalidation issues.
   class CachingIiifManifestBuilder < ManifestBuilderService
+    KEY_PREFIX = 'iiif-cache-v1'
+
     attr_accessor :expires_in
 
     ##
@@ -32,13 +34,24 @@ module Hyrax
     private
 
       ##
-      # By adding the Solr '_version_' field to the cache key, we shouldn't
-      # run into the problem of fetching an outdated version of the manifest.
-      # @param presenter [Hyrax::WorkShowPresenter]
+      # @note adding a version_for suffix helps us manage cache expiration,
+      #   reducing false cache hits
+      #
+      # @param presenter [Hyrax::IiifManifestPresenter]
       #
       # @return [String]
       def manifest_cache_key(presenter:)
-        "#{presenter.id}/#{presenter.solr_document['_version_']}"
+        "#{KEY_PREFIX}_#{presenter.id}/#{version_for(presenter)}"
+      end
+
+      ##
+      # @note `etag` is a better option than the solr document `_version_`; the
+      #   latter isn't always available, depending on how the presenter was
+      #   built!
+      #
+      # @return [String]
+      def version_for(presenter)
+        presenter.etag
       end
   end
 end
