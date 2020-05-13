@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'iiif_manifest'
-
 module Hyrax
   ##
   # A class responsible for converting a Hyrax::Work like thing into a IIIF
