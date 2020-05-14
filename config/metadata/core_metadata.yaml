@@ -5,6 +5,10 @@ attributes:
     index_keys:
       - "title_sim"
       - "title_tesim"
+    form:
+      required: true
+      primary: true
+      multiple: false
   date_modified:
     type: date_time
   date_uploaded:

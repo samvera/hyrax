@@ -15,9 +15,7 @@ module Hyrax
       Class.new(Hyrax::Forms::ResourceForm) do
         self.model_class = work_class
 
-        (work_class.fields - work_class.reserved_attributes).each do |field|
-          property field, default: nil
-        end
+        include Hyrax::FormFields(:core_metadata)
       end
     end
 
@@ -40,7 +38,7 @@ module Hyrax
 
       class_attribute :model_class
 
-      delegate :human_readable_type, to: :model
+      delegate :depositor, :human_readable_type, to: :model
 
       property :visibility # visibility has an accessor on the model
 
@@ -49,13 +47,16 @@ module Hyrax
       collection :permissions, virtual: true, default: [], form: Permission, prepopulator: ->(_opts) { self.permissions = Hyrax::AccessControl.for(resource: model).permissions }
 
       # virtual properties for embargo/lease;
-      property :embargo_release_date, virtual: true, prepopulator: ->(_opts) { self.embargo_release_date = embargo&.embargo_release_date }
-      property :visibility_after_embargo, virtual: true, prepopulator: ->(_opts) { self.visibility_after_embargo = embargo&.visibility_after_embargo }
-      property :visibility_during_embargo, virtual: true, prepopulator: ->(_opts) { self.visibility_during_embargo = embargo&.visibility_during_embargo }
+      property :embargo_release_date, virtual: true, prepopulator: ->(_opts) { self.embargo_release_date = model.embargo&.embargo_release_date }
+      property :visibility_after_embargo, virtual: true, prepopulator: ->(_opts) { self.visibility_after_embargo = model.embargo&.visibility_after_embargo }
+      property :visibility_during_embargo, virtual: true, prepopulator: ->(_opts) { self.visibility_during_embargo = model.embargo&.visibility_during_embargo }
 
-      property :lease_expiration_date, virtual: true,  prepopulator: ->(_opts) { self.lease_expiration_date = lease&.lease_expiration_date }
-      property :visibility_after_lease, virtual: true, prepopulator: ->(_opts) { self.visibility_after_lease = lease&.visibility_after_lease }
-      property :visibility_during_lease, virtual: true, prepopulator: ->(_opts) { self.visibility_during_lease = lease&.visibility_during_lease }
+      property :lease_expiration_date, virtual: true,  prepopulator: ->(_opts) { self.lease_expiration_date = model.lease&.lease_expiration_date }
+      property :visibility_after_lease, virtual: true, prepopulator: ->(_opts) { self.visibility_after_lease = model.lease&.visibility_after_lease }
+      property :visibility_during_lease, virtual: true, prepopulator: ->(_opts) { self.visibility_during_lease = model.lease&.visibility_during_lease }
+
+      # pcdm relationships
+      property :admin_set_id
 
       class << self
         ##
