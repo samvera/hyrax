@@ -20,7 +20,16 @@ module Hyrax
     # @return [Boolean] whether the resource has an embargo that is currently
     #   enforced (regardless of whether it has expired)
     def embargo_enforced?(resource)
-      !resource.embargo_release_date.nil?
+      case resource
+      when Hydra::AccessControls::Embargoable
+        !resource.embargo_release_date.nil?
+      when HydraEditor::Form
+        embargo_enforced?(resource.model)
+      when Valkyrie::ChangeSet
+        Hyrax::EmbargoManager.new(resource: resource.model).enforced?
+      else
+        Hyrax::EmbargoManager.new(resource: resource).enforced?
+      end
     end
   end
 end

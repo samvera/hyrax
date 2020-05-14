@@ -1,11 +1,16 @@
 module Hyrax
   # Presents the options for the AdminSet widget on the create/edit form
   class AdminSetOptionsPresenter
+    ##
+    # @param [Hyrax::AdminSetService] service
     def initialize(service)
       @service = service
     end
 
     # Return AdminSet selectbox options based on access type
+    #
+    # @todo this hits the Solr from the view. it would be better to avoid this.
+    #
     # @param [Symbol] access :deposit, :read, or :edit
     def select_options(access = :deposit)
       @service.search_results(access).map do |admin_set|

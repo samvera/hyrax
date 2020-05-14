@@ -13,6 +13,8 @@ module Hyrax
     #
     def self.ResourceForm(work_class)
       Class.new(Hyrax::Forms::ResourceForm) do
+        self.model_class = work_class
+
         (work_class.fields - work_class.reserved_attributes).each do |field|
           property field, default: nil
         end
@@ -24,6 +26,37 @@ module Hyrax
     #
     # This form wraps `Hyrax::ChangeSet` in the `HydraEditor::Form` interface.
     class ResourceForm < Hyrax::ChangeSet
+      ##
+      # Nested form for permissions.
+      #
+      # @note due to historical oddities with Hydra::AccessControls and Hydra
+      #   Editor, Hyrax's views rely on `agent_name` and `access` as field
+      #   names. we provide these as virtual fields andprepopulate these from
+      #   `Hyrax::Permission`.
+      class Permission < Hyrax::ChangeSet
+        property :agent_name, virtual: true, prepopulator: ->(_opts) { self.agent_name = model.agent }
+        property :access, virtual: true, prepopulator: ->(_opts) { self.access = model.mode }
+      end
+
+      class_attribute :model_class
+
+      delegate :human_readable_type, to: :model
+
+      property :visibility # visibility has an accessor on the model
+
+      property :agreement_accepted, virtual: true, default: false, prepopulator: ->(_opts) { self.agreement_accepted = !model.new_record }
+
+      collection :permissions, virtual: true, default: [], form: Permission, prepopulator: ->(_opts) { self.permissions = Hyrax::AccessControl.for(resource: model).permissions }
+
+      # virtual properties for embargo/lease;
+      property :embargo_release_date, virtual: true, prepopulator: ->(_opts) { self.embargo_release_date = embargo&.embargo_release_date }
+      property :visibility_after_embargo, virtual: true, prepopulator: ->(_opts) { self.visibility_after_embargo = embargo&.visibility_after_embargo }
+      property :visibility_during_embargo, virtual: true, prepopulator: ->(_opts) { self.visibility_during_embargo = embargo&.visibility_during_embargo }
+
+      property :lease_expiration_date, virtual: true,  prepopulator: ->(_opts) { self.lease_expiration_date = lease&.lease_expiration_date }
+      property :visibility_after_lease, virtual: true, prepopulator: ->(_opts) { self.visibility_after_lease = lease&.visibility_after_lease }
+      property :visibility_during_lease, virtual: true, prepopulator: ->(_opts) { self.visibility_during_lease = lease&.visibility_during_lease }
+
       class << self
         ##
         # @api public
@@ -66,6 +99,26 @@ module Hyrax
       # @return [Object] the set value
       def []=(attr, value)
         public_send("#{attr}=".to_sym, value)
+      end
+
+      ##
+      # @deprecated use model.class instead
+      #
+      # @return [Class]
+      def model_class # rubocop:disable Rails/Delegate
+        model.class
+      end
+
+      def primary_terms
+        []
+      end
+
+      def secondary_terms
+        []
+      end
+
+      def display_additional_fields?
+        secondary_terms.any?
       end
     end
   end

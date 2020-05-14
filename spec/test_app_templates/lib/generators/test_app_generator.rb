@@ -13,10 +13,6 @@ class TestAppGenerator < Rails::Generators::Base
     generate "browse_everything:install --skip-assets"
   end
 
-  def create_work
-    generate 'hyrax:work_resource Monograph'
-  end
-
   def create_generic_work
     generate 'hyrax:work GenericWork'
   end
@@ -65,6 +61,10 @@ class TestAppGenerator < Rails::Generators::Base
       end
       EOS
     end
+  end
+
+  def create_work
+    generate 'hyrax:work_resource Monograph'
   end
 
   def banner

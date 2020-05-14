@@ -28,9 +28,24 @@ module Hyrax
           .apply
       end
 
+      def apply_lease_for!(resource:, query_service: Hyrax.query_service)
+        new(resource: resource, query_service: query_service)
+          .apply!
+      end
+
       def lease_for(resource:, query_service: Hyrax.query_service)
         new(resource: resource, query_service: query_service)
           .lease
+      end
+
+      def release_lease_for(resource:, query_service: Hyrax.query_service)
+        new(resource: resource, query_service: query_service)
+          .release
+      end
+
+      def release_lease_for!(resource:, query_service: Hyrax.query_service)
+        new(resource: resource, query_service: query_service)
+          .release!
       end
     end
 

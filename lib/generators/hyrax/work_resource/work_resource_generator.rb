@@ -33,6 +33,23 @@ class Hyrax::WorkResourceGenerator < Rails::Generators::NamedBase
       rspec_installed?
   end
 
+  # Inserts after the last registered work, or at the top of the config block
+  def register_work
+    config = 'config/initializers/hyrax.rb'
+    lastmatch = nil
+    in_root do
+      File.open(config).each_line do |line|
+        lastmatch = line if line.match?(/config.register_curation_concern :(?!#{file_name})/)
+      end
+      content = "  # Injected via `rails g hyrax:work_resource #{class_name}`\n" \
+                "  config.register_curation_concern #{registration_path_symbol}\n"
+      anchor = lastmatch || "Hyrax.config do |config|\n"
+      inject_into_file config, after: anchor do
+        content
+      end
+    end
+  end
+
   def create_indexer
     template('indexer.rb.erb', File.join('app/indexers/', class_path, "#{file_name}_indexer.rb"))
   end
@@ -65,6 +82,13 @@ class Hyrax::WorkResourceGenerator < Rails::Generators::NamedBase
 
     def rspec_installed?
       defined?(RSpec) && defined?(RSpec::Rails)
+    end
+
+    def registration_path_symbol
+      return ":#{file_name}" if class_path.blank?
+      # creates a symbol with a path like "abc/scholarly_paper" where abc
+      # is the namespace and scholarly_paper is the resource name
+      ":\"#{File.join(class_path, file_name)}\""
     end
 
     def revoking?

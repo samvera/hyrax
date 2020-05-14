@@ -29,7 +29,7 @@ module Hyrax
       end
 
       def models_to_solr_clause
-        models.map(&:to_rdf_representation).join(',')
+        models.map { |model| model.try(:to_rdf_representation) || model.name }.join(',')
       end
 
       def generic_type_field

@@ -20,7 +20,16 @@ module Hyrax
     # @return [Boolean] whether the resource has an lease that is currently
     #   enforced (regardless of whether it has expired)
     def lease_enforced?(resource)
-      !resource.lease_expiration_date.nil?
+      case resource
+      when Hydra::AccessControls::Embargoable
+        !resource.lease_expiration_date.nil?
+      when HydraEditor::Form
+        lease_enforced?(resource.model)
+      when Valkyrie::ChangeSet
+        Hyrax::LeaseManager.new(resource: resource.model).enforced?
+      else
+        Hyrax::LeaseManager.new(resource: resource).enforced?
+      end
     end
   end
 end
