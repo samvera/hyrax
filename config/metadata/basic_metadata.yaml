@@ -97,7 +97,7 @@ attributes:
     type: string
     multiple: true
     form:
-      primary: false
+      primary: true
   source:
     type: string
     multiple: true
