@@ -33,6 +33,10 @@ class Hyrax::WorkResourceGenerator < Rails::Generators::NamedBase
       rspec_installed?
   end
 
+  def create_form
+    template('form.rb.erb', File.join('app/forms/', class_path, "#{file_name}_form.rb"))
+  end
+
   # Inserts after the last registered work, or at the top of the config block
   def register_work
     config = 'config/initializers/hyrax.rb'
