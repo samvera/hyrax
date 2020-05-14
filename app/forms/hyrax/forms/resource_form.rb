@@ -112,17 +112,34 @@ module Hyrax
         model.class
       end
 
+      ##
+      # @return [Array<Symbol>] terms for display 'above-the-fold', or in the most
+      #   prominent form real estate
       def primary_terms
-        []
+        _form_field_definitions
+          .select { |_, definition| definition[:primary] }
+          .keys.map(&:to_sym)
       end
 
+      ##
+      # @return [Array<Symbol>] terms for display 'below-the-fold'
       def secondary_terms
-        []
+        _form_field_definitions
+          .select { |_, definition| definition[:display] && !definition[:primary] }
+          .keys.map(&:to_sym)
       end
 
+      ##
+      # @return [Boolean] whether there are terms to display 'below-the-fold'
       def display_additional_fields?
         secondary_terms.any?
       end
+
+      private
+
+        def _form_field_definitions
+          self.class.definitions
+        end
     end
   end
 end
