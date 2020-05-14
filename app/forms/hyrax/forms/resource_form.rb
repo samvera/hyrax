@@ -68,6 +68,8 @@ module Hyrax
         #   monograph  = Monograph.new
         #   change_set = Hyrax::Forms::ResourceForm.for(monograph)
         def for(work)
+          "#{work.class}Form".constantize.new(work)
+        rescue NameError => _err
           Hyrax::Forms::ResourceForm(work.class).new(work)
         end
 
