@@ -9,7 +9,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
 
     let(:form_class) do
       Class.new(Hyrax::Forms::ResourceForm(work.class)) do
-        self.required_fields = [:title]
+        property :depositor
       end
     end
 
@@ -146,26 +146,20 @@ RSpec.describe Hyrax::Forms::ResourceForm do
   end
 
   describe '#required?' do
-    it 'is false for non-required fields' do
-      expect(form.required?(:title)).to eq false
+    subject(:form) { form_class.new(work) }
+
+    let(:form_class) do
+      Class.new(Hyrax::Forms::ResourceForm(work.class)) do
+        property :depositor
+      end
     end
 
-    context 'when some fields are required' do
-      subject(:form) { form_class.new(work) }
+    it 'is true for required fields' do
+      expect(form.required?(:title)).to eq true
+    end
 
-      let(:form_class) do
-        Class.new(Hyrax::Forms::ResourceForm(work.class)) do
-          self.required_fields = [:title]
-        end
-      end
-
-      it 'is true for required fields' do
-        expect(form.required?(:title)).to eq true
-      end
-
-      it 'is false for non-required fields' do
-        expect(form.required?(:depositor)).to eq false
-      end
+    it 'is false for non-required fields' do
+      expect(form.required?(:depositor)).to eq false
     end
   end
 

@@ -2,33 +2,52 @@ attributes:
   abstract:
     type: string
     multiple: true
+    form:
+      primary: false
   access_right:
     type: string
     multiple: true
+    form:
+      primary: false
   alternative_title:
     type: string
     multiple: true
+    form:
+      primary: false
   based_near:
     type: string
     multiple: true
+    form:
+      primary: false
   bibliographic_citation:
     type: string
     multiple: true
   contributor:
     type: string
     multiple: true
+    form:
+      primary: false
   creator:
     type: string
     multiple: true
+    form:
+      required: true
+      primary: true
   date_created:
     type: date_time
     multiple: true
+    form:
+      primary: false
   description:
     type: string
     multiple: true
+    form:
+      primary: false
   identifier:
     type: string
     multiple: true
+    form:
+      primary: false
   import_url:
     type: string
   keyword:
@@ -36,37 +55,59 @@ attributes:
     multiple: true
     index_keys:
       - "keyword_sim"
+    form:
+      primary: false
   publisher:
     type: string
     multiple: true
+    form:
+      primary: false
   label:
     type: string
+    form:
+      primary: false
   language:
     type: string
     multiple: true
+    form:
+      primary: false
   license:
     type: string
     multiple: true
+    form:
+      primary: false
   relative_path:
     type: string
   related_url:
     type: string
     multiple: true
+    form:
+      primary: false
   resource_type:
     type: string
     multiple: true
+    form:
+      primary: false
   rights_notes:
     type: string
     multiple: true
+    form:
+      primary: false
   rights_statement:
     type: string
     multiple: true
+    form:
+      primary: false
   source:
     type: string
     multiple: true
+    form:
+      primary: false
   subject:
     type: string
     multiple: true
     index_keys:
       - "subject_sim"
       - "subject_tesim"
+    form:
+      primary: false

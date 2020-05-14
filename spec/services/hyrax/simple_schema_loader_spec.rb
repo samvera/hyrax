@@ -23,4 +23,11 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
       expect(schema_loader.index_rules_for(schema: :core_metadata)).to include(title_sim: :title, title_tesim: :title)
     end
   end
+
+  describe '#form_definitions_for' do
+    it 'provides form configuration' do
+      expect(schema_loader.form_definitions_for(schema: :core_metadata))
+        .to eq(title: { required: true, primary: true, multiple: false })
+    end
+  end
 end

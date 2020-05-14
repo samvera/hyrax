@@ -22,6 +22,18 @@ module Hyrax
     ##
     # @param [Symbol] schema
     #
+    # @return [Hash{Symbol => Hash{Symbol => Object}}]
+    def form_definitions_for(schema:)
+      definitions(schema).each_with_object({}) do |definition, hash|
+        next if definition.form_options.empty?
+
+        hash[definition.name] = definition.form_options
+      end
+    end
+
+    ##
+    # @param [Symbol] schema
+    #
     # @return [Hash<Symbol, Symbol>] a map from index keys to attribute names
     def index_rules_for(schema:)
       definitions(schema).each_with_object({}) do |definition, hash|
@@ -47,6 +59,12 @@ module Hyrax
       def initialize(name, config)
         @config = config
         @name   = name.to_sym
+      end
+
+      ##
+      # @return [Hash{Symbol => Object}]
+      def form_options
+        config.fetch('form', {}).symbolize_keys
       end
 
       ##
