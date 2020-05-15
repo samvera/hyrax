@@ -1,10 +1,10 @@
-<% if show_sort_and_per_page? && active_sort_fields.many? %>
+<% if show_sort_and_per_page? && collection_member_sort_fields.many? %>
   <%= form_tag collection_path(collection), method: :get, class: 'per_page form-horizontal' do %>
     <%= render 'view_type_group' %>
     <fieldset class="pull-left">
       <legend class="sr-only"><%= t('hyrax.sort_label') %></legend>
       <%= label_tag(:sort, t('.sort_by_html')) %>
-      <%= select_tag(:sort, options_from_collection_for_select(active_sort_fields, 'first', lambda {|field| field.last.label}, h(params[:sort]))) %>
+      <%= select_tag(:sort, options_from_collection_for_select(collection_member_sort_fields, 'first', lambda {|field| field.last.label}, h(params[:sort]))) %>
       <%= label_tag(:per_page) do %>
         <span class="tiny-nudge"><%= t('.results_per_page') %></span>
         <%= select_tag(:per_page, options_for_select(['10', '20', '50', '100'], h(params[:per_page])), title: t('.number_of_results_to_display_per_page')) %>

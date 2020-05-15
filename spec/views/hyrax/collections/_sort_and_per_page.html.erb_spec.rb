@@ -17,19 +17,19 @@ RSpec.describe 'hyrax/collections/_sort_and_per_page.html.erb', type: :view do
     end
 
     it "renders the sort options without any selected when no sort param given" do
-      render(subject, collection: collection, active_sort_fields: active_sort_fields)
+      render(subject, collection: collection, collection_member_sort_fields: active_sort_fields)
       expect(rendered).to have_select('sort', options: ["sort field label 1", "sort field label 2"], with_selected: [])
     end
 
     it "renders the sort options with the correct option selected when a valid sort param given" do
       allow(view).to receive(:params).and_return(sort: "sort field value 1")
-      render(subject, collection: collection, active_sort_fields: active_sort_fields)
+      render(subject, collection: collection, collection_member_sort_fields: active_sort_fields)
       expect(rendered).to have_select('sort', options: ["sort field label 1", "sort field label 2"], with_selected: ["sort field label 1"])
     end
 
     it "renders the sort options without any selected when an invalid sort param given" do
       allow(view).to receive(:params).and_return(sort: "sort field value DNE")
-      render(subject, collection: collection, active_sort_fields: active_sort_fields)
+      render(subject, collection: collection, collection_member_sort_fields: active_sort_fields)
       expect(rendered).to have_select('sort', options: ["sort field label 1", "sort field label 2"], with_selected: [])
     end
   end
@@ -42,7 +42,7 @@ RSpec.describe 'hyrax/collections/_sort_and_per_page.html.erb', type: :view do
     end
 
     it "does not render sort options" do
-      render(subject, collection: collection, active_sort_fields: active_sort_fields)
+      render(subject, collection: collection, collection_member_sort_fields: active_sort_fields)
       expect(rendered).not_to have_select('sort')
     end
   end
@@ -53,7 +53,7 @@ RSpec.describe 'hyrax/collections/_sort_and_per_page.html.erb', type: :view do
     end
 
     it "does not render sort options" do
-      render(subject, collection: collection, active_sort_fields: active_sort_fields)
+      render(subject, collection: collection, collection_member_sort_fields: active_sort_fields)
       expect(rendered).not_to have_select('sort')
     end
   end
