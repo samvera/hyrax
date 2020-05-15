@@ -11,7 +11,7 @@ module Hyrax
         ##
         # @return [Array<Symbol>
         def self.queries
-          [:find_child_works, :find_child_work_ids]
+          [:find_collections_for, :find_members_of]
         end
         ##
         # @!attribute [r] query_service

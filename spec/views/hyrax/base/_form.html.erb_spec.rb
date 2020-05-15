@@ -17,11 +17,6 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
     let(:form) { Hyrax::Forms::ResourceForm.for(work) }
     let(:work) { build(:monograph, title: 'comet in moominland') }
 
-    before do
-      # TODO: unstub these when they are supported by the form
-      stub_template('hyrax/base/_form_member_of_collections.html.erb' => 'collection membership')
-    end
-
     context 'for a new object' do
       it 'renders a form' do
         render
