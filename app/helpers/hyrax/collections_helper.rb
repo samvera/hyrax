@@ -8,6 +8,14 @@ module Hyrax
       Hyrax::PresenterRenderer.new(presenter, self).fields(terms, &block)
     end
 
+    ##
+    # @since 3.0.0
+    #
+    # @see Blacklight::ConfigurationHelperBehavior#active_sort_fields
+    def collection_member_sort_fields
+      active_sort_fields
+    end
+
     def render_collection_links(solr_doc)
       collection_list = Hyrax::CollectionMemberService.run(solr_doc, controller.current_ability)
       return if collection_list.empty?
