@@ -20,7 +20,8 @@ Valkyrie.config.storage_adapter = :active_fedora
 
 # TODO: Custom query registration is not Wings specific.  These custom_queries need to be registered for other adapters too.
 #       A refactor is needed to add the default implementations to hyrax.rb and only handle the wings specific overrides here.
-custom_queries = [Hyrax::CustomQueries::Navigators::ChildCollectionsNavigator,
+custom_queries = [Hyrax::CustomQueries::Navigators::CollectionMembers,
+                  Hyrax::CustomQueries::Navigators::ChildCollectionsNavigator,
                   Hyrax::CustomQueries::Navigators::ChildFilesetsNavigator,
                   Hyrax::CustomQueries::Navigators::ChildWorksNavigator,
                   Hyrax::CustomQueries::Navigators::FindFiles,

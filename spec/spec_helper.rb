@@ -143,7 +143,8 @@ end
 
 query_registration_target =
   Valkyrie::MetadataAdapter.find(:test_adapter).query_service.custom_queries
-[Hyrax::CustomQueries::FindAccessControl,
+[Hyrax::CustomQueries::Navigators::CollectionMembers,
+ Hyrax::CustomQueries::FindAccessControl,
  Hyrax::CustomQueries::FindManyByAlternateIds,
  Hyrax::CustomQueries::FindFileMetadata,
  Hyrax::CustomQueries::Navigators::FindFiles].each do |handler|
