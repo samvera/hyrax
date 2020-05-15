@@ -73,19 +73,39 @@ module Hyrax
       def attach_to_work(work, file_set_params = {})
         acquire_lock_for(work.id) do
           # Ensure we have an up-to-date copy of the members association, so that we append to the end of the list.
-          work.reload unless work.new_record?
-          file_set.visibility = work.visibility unless assign_visibility?(file_set_params)
-          work.ordered_members << file_set
-          work.representative = file_set if work.representative_id.blank?
-          work.thumbnail = file_set if work.thumbnail_id.blank?
-          # Save the work so the association between the work and the file_set is persisted (head_id)
-          # NOTE: the work may not be valid, in which case this save doesn't do anything.
-          work.save
+          if valkyrie_object?(work)
+            attach_to_valkyrie_work(work, file_set_params)
+          else
+            attach_to_af_work(work, file_set_params)
+          end
           Hyrax.config.callback.run(:after_create_fileset, file_set, user, warn: false)
         end
       end
       alias attach_file_to_work attach_to_work
       deprecation_deprecate attach_file_to_work: "use attach_to_work instead"
+
+      def attach_to_valkyrie_work(work, file_set_params)
+        work = Hyrax.query_service.find_by(id: work.id) unless work.new_record
+        file_set.visibility = work.visibility unless assign_visibility?(file_set_params)
+        Hyrax.persister.save(resource: file_set)
+        work.member_ids << file_set.id
+        work.representative_id = file_set.id if work.representative_id.blank?
+        work.thumbnail_id = file_set.id if work.thumbnail_id.blank?
+        # Save the work so the association between the work and the file_set is persisted (head_id)
+        # NOTE: the work may not be valid, in which case this save doesn't do anything.
+        Hyrax.persister.save(resource: work)
+      end
+
+      def attach_to_af_work(work, file_set_params)
+        work.reload unless work.new_record?
+        file_set.visibility = work.visibility unless assign_visibility?(file_set_params)
+        work.ordered_members << file_set
+        work.representative = file_set if work.representative_id.blank?
+        work.thumbnail = file_set if work.thumbnail_id.blank?
+        # Save the work so the association between the work and the file_set is persisted (head_id)
+        # NOTE: the work may not be valid, in which case this save doesn't do anything.
+        work.save
+      end
 
       # @param [String] revision_id the revision to revert to
       # @param [Symbol, #to_sym] relation
