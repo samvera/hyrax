@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::CollectionsController do
+RSpec.describe Hyrax::CollectionsController, clean_repo: true do
   routes { Hyrax::Engine.routes }
   let(:user)  { create(:user) }
   let(:other) { build(:user) }
