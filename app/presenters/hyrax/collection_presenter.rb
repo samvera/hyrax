@@ -76,7 +76,7 @@ module Hyrax
     end
 
     def total_items
-      ActiveFedora::Base.where("member_of_collection_ids_ssim:#{id}").count
+      Hyrax::SolrService.new.count("member_of_collection_ids_ssim:#{id}")
     end
 
     def total_viewable_items
