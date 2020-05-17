@@ -1,5 +1,5 @@
 RSpec.describe Hyrax::FileSetFixityCheckService do
-  let(:f)                 { create(:file_set, content: File.open(fixture_path + '/world.png')) }
+  let(:f)                 { create(:file_set, :image) }
   let(:service_by_object) { described_class.new(f) }
   let(:service_by_id)     { described_class.new(f.id) }
 

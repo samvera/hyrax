@@ -59,6 +59,10 @@ FactoryBot.define do
       before(:create) { |work, evaluator| 2.times { work.ordered_members << create(:file_set, user: evaluator.user) } }
     end
 
+    factory :work_with_image_files do
+      before(:create) { |work, evaluator| 2.times { work.ordered_members << create(:file_set, :image, user: evaluator.user) } }
+    end
+
     factory :work_with_ordered_files do
       before(:create) do |work, evaluator|
         work.ordered_members << create(:file_set, user: evaluator.user)
