@@ -129,7 +129,7 @@ module Hyrax
     def manifest
       headers['Access-Control-Allow-Origin'] = '*'
 
-      json = iiif_manifest_builder.manifest_for(presenter: presenter)
+      json = iiif_manifest_builder.manifest_for(presenter: iiif_manifest_presenter)
 
       respond_to do |wants|
         wants.json { render json: json }
@@ -141,6 +141,13 @@ module Hyrax
 
       def iiif_manifest_builder
         self.class.iiif_manifest_builder
+      end
+
+      def iiif_manifest_presenter
+        IiifManifestPresenter.new(curation_concern_from_search_results).tap do |p|
+          p.hostname = request.hostname
+          p.ability = current_ability
+        end
       end
 
       def user_collections

@@ -54,6 +54,7 @@ module Hyrax
         attribute :read_groups, Solr::Array, ::Ability.read_group_field
         attribute :collection_ids, Solr::Array, 'collection_ids_tesim'
         attribute :admin_set, Solr::Array, solr_name('admin_set')
+        attribute :member_ids, Solr::Array, "member_ids_ssim"
         attribute :member_of_collection_ids, Solr::Array, solr_name('member_of_collection_ids', :symbol)
         attribute :description, Solr::Array, solr_name('description')
         attribute :title, Solr::Array, solr_name('title')

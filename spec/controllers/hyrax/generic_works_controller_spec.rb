@@ -605,7 +605,7 @@ RSpec.describe Hyrax::GenericWorksController do
                                           File.open(fixture_path + '/world.png'),
                                           :original_file)
       allow(IIIFManifest::ManifestFactory).to receive(:new)
-        .with(Hyrax::WorkShowPresenter)
+        .with(Hyrax::IiifManifestPresenter)
         .and_return(manifest_factory)
     end
 

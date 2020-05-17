@@ -61,10 +61,20 @@ module Hyrax
       @model ||= ModelWrapper.new(hydra_model, id)
     end
 
+    ##
+    # @return [Boolean]
     def collection?
       hydra_model == ::Collection
     end
 
+    ##
+    # @return [Boolean]
+    def file_set?
+      hydra_model == ::FileSet
+    end
+
+    ##
+    # @return [Boolean]
     def admin_set?
       hydra_model == ::AdminSet
     end
