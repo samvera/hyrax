@@ -12,6 +12,7 @@ module Hyrax
     include Hyrax::ChartsHelper
     include Hyrax::DashboardHelperBehavior
     include Hyrax::IiifHelper
+    include Hyrax::MembershipHelper
     include Hyrax::PermissionLevelsHelper
 
     # Which translations are available for the user to select
