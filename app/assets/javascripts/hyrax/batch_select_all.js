@@ -81,6 +81,11 @@ Blacklight.onLoad(function() {
     $("input:checkbox").prop('checked', $(this).prop("checked"));
   });
 
+  // Check files within
+  $('[checks="active"]').on('click', function(evt) {
+     $("[value=" + this.value + "]").prop('checked', $(this).prop("checked"));
+  });
+
   // toggle button on or off based on boxes being clicked
   $(".batch_document_selector").bind('click', function(e) {
      toggleButtons();
