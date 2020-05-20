@@ -60,6 +60,10 @@ module Hyrax
       property :member_ids, default: []
       property :member_of_collection_ids, default: []
 
+      # backs the child work search element;
+      # @todo: look for a way for the view template not to depend on this
+      property :find_child_work, default: nil, virtual: true
+
       class << self
         ##
         # @api public
