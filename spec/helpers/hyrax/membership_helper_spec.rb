@@ -46,12 +46,73 @@ RSpec.describe Hyrax::MembershipHelper do
         end
       end
     end
+
     context 'with a WorkForm' do
       let(:resource) { double(Hyrax::Forms::WorkForm) }
 
       it 'calls the form json implementation and returns its result' do
         expect(resource).to receive(:member_of_collections_json).and_return(:FAKE_JSON)
         expect(helper.member_of_collections_json(resource)).to eq :FAKE_JSON
+      end
+    end
+  end
+
+  describe '.work_members_json' do
+    context 'with a ChangeSet form' do
+      let(:resource) { Hyrax::Forms::ResourceForm.for(work) }
+      let(:work) { build(:monograph) }
+
+      context 'when it has no members' do
+        it 'gives an empty JSON array' do
+          expect(helper.work_members_json(resource)).to eq [].to_json
+        end
+      end
+
+      context 'when it is a member of a collection' do
+        let(:work) { FactoryBot.valkyrie_create(:monograph, :with_member_works) }
+
+        it 'gives member work details' do
+          expect(JSON.parse(helper.work_members_json(resource)))
+            .to contain_exactly(include('id' => an_instance_of(String),
+                                        'label' => nil,
+                                        'path' => an_instance_of(String)),
+                                include('id' => an_instance_of(String),
+                                        'label' => nil,
+                                        'path' => an_instance_of(String)))
+        end
+      end
+    end
+
+    context 'with a Valkyrie work' do
+      let(:resource) { build(:monograph) }
+
+      context 'when it has no members' do
+        it 'gives an empty JSON array' do
+          expect(helper.work_members_json(resource)).to eq [].to_json
+        end
+      end
+
+      context 'when it has work members' do
+        let(:resource) { FactoryBot.valkyrie_create(:monograph, :with_member_works) }
+
+        it 'gives member work details' do
+          expect(JSON.parse(helper.work_members_json(resource)))
+            .to contain_exactly(include('id' => an_instance_of(String),
+                                        'label' => nil,
+                                        'path' => an_instance_of(String)),
+                                include('id' => an_instance_of(String),
+                                        'label' => nil,
+                                        'path' => an_instance_of(String)))
+        end
+      end
+    end
+
+    context 'with a WorkForm' do
+      let(:resource) { double(Hyrax::Forms::WorkForm) }
+
+      it 'calls the form json implementation and returns its result' do
+        expect(resource).to receive(:work_members_json).and_return(:FAKE_JSON)
+        expect(helper.work_members_json(resource)).to eq :FAKE_JSON
       end
     end
   end

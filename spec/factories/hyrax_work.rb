@@ -72,6 +72,12 @@ FactoryBot.define do
       end
     end
 
-    factory :monograph, class: 'Monograph'
+    factory :monograph, class: 'Monograph' do
+      trait :with_member_works do
+        transient do
+          members { [valkyrie_create(:monograph), valkyrie_create(:monograph)] }
+        end
+      end
+    end
   end
 end
