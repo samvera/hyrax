@@ -103,7 +103,7 @@ module Hyrax
     # @see Blacklight::SearchState#initialize
     def link_to_field(name, value, label = nil, facet_hash = {})
       label ||= value
-      params = { search_field: name, q: "\"#{value}\"" }
+      params = { search_field: name, q: "\"#{value}\"" } if name != ''
       state = search_state_with_facets(params, facet_hash)
       link_to(label, main_app.search_catalog_path(state))
     end
@@ -305,11 +305,21 @@ module Hyrax
 
       # @param [ActionController::Parameters] params first argument for Blacklight::SearchState.new
       # @param [Hash] facet
-      # @note Ignores all but the first facet.  Probably a bug.
+      # @note Assumes one facet is passed in. If a second facet is passed, then it must be the depositor
+      # facet used by the Profile page.
       def search_state_with_facets(params, facet = {})
         state = Blacklight::SearchState.new(params, CatalogController.blacklight_config)
         return state.params if facet.none?
-        state.add_facet_params(facet.keys.first.to_s + "_sim", facet.values.first)
+
+        # facet should contain one or two values. If it has two values,
+        # the second is assumed to be the depositor facet.
+        facet_type = state.add_facet_params(facet.keys.first.to_s + "_sim", facet.values.first)
+        return facet_type if facet.length == 1
+
+        facet_depositor = state.add_facet_params(facet.keys[1].to_s + "_ssim", facet.values[1])
+        facet_all = Hash.new {}
+        facet_all["f"] = facet_type["f"].merge(facet_depositor["f"])
+        facet_all
       end
 
       def institution
