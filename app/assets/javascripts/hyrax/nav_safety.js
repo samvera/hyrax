@@ -8,6 +8,9 @@ Blacklight.onLoad(function() {
     clickedTab = $(evt.target).attr('href');
     var previousTab = $(evt.relatedTarget).attr('href')
     var formId = $(previousTab).find('form').attr('id');
+    if (typeof(formId)==="undefined") {
+      formId = $(previousTab).closest('form').attr('id');
+    }
     var dirtyData = $('#nav-safety-modal[dirtyData=true]');
     if (dirtyData.length > 0) {
       evt.preventDefault();
@@ -21,8 +24,10 @@ Blacklight.onLoad(function() {
   $('#nav-safety-dismiss').on('click', function(evt) {
     nav_safety_off();
     // Reset form content before navigating away
-    formId = '#'+$(this).data('form_id');
-    $(formId)[0].reset();
+    if ($(this).data('form_id')) {
+      formId = '#'+$(this).data('form_id');
+      $(formId)[0].reset();
+    }
     // Navigate away from active tab to clicked tab
     window.location = $(this).data('new_tab');
   });
