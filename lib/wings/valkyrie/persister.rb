@@ -18,6 +18,9 @@ module Wings
       def save(resource:)
         return save_file(file_metadata: resource) if resource.is_a? Hyrax::FileMetadata
         af_object = resource_factory.from_resource(resource: resource)
+
+        check_lock_tokens(af_object: af_object, resource: resource)
+
         af_object.save!
         resource_factory.to_resource(object: af_object)
       rescue ActiveFedora::RecordInvalid => err
@@ -68,6 +71,43 @@ module Wings
           super(msg)
         end
       end
+
+      private
+
+        ##
+        # @return [void]
+        # @raise [::Valkyrie::Persistence::StaleObjectError]
+        def check_lock_tokens(af_object:, resource:)
+          return unless resource.optimistic_locking_enabled?
+          return if af_object.new_record?
+          return if
+            etag_lock_token_valid?(af_object: af_object, resource: resource) &&
+            last_modified_lock_token_valid?(af_object: af_object, resource: resource)
+
+          raise(::Valkyrie::Persistence::StaleObjectError, resource.id.to_s)
+        end
+
+        ##
+        # @return [Boolean]
+        def etag_lock_token_valid?(af_object:, resource:)
+          etag = resource.optimistic_lock_token.find { |t| t.adapter_id == 'wings-fedora-etag' }
+
+          return true unless etag
+          return true if af_object.etag == etag.token
+
+          false
+        end
+
+        ##
+        # @return [Boolean]
+        def last_modified_lock_token_valid?(af_object:, resource:)
+          modified = resource.optimistic_lock_token.find { |t| t.adapter_id == 'wings-fedora-last-modified' }
+
+          return true unless modified
+          return true if Time.zone.parse(af_object.ldp_source.head.last_modified) <= Time.zone.parse(modified.token)
+
+          false
+        end
     end
   end
 end
