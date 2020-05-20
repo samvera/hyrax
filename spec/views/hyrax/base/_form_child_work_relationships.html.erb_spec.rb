@@ -1,13 +1,6 @@
 RSpec.describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view do
-  let(:work) do
-    stub_model(GenericWork, id: '456', title: ["MyWork"])
-  end
-
-  let(:ability) { double }
-
-  let(:form) do
-    Hyrax::GenericWorkForm.new(work, ability, controller)
-  end
+  let(:work) { valkyrie_create(:monograph, :with_member_works) }
+  let(:form) { Hyrax::Forms::ResourceForm.for(work) }
 
   let(:f) do
     view.simple_form_for(form, url: '/update') do |work_form|
@@ -16,9 +9,6 @@ RSpec.describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view
   end
 
   before do
-    # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
-    allow(work).to receive(:new_record?).and_return(false)
-
     allow(view).to receive(:params).and_return(id: work.id)
     allow(view).to receive(:curation_concern).and_return(work)
     allow(view).to receive(:f).and_return(f)
