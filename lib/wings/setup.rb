@@ -1,4 +1,12 @@
+# frozen_string_literal: true
+
 ActiveFedora::Base.include Wings::Valkyrizable
+
+module ActiveFedora
+  def self.model_mapper
+    ActiveFedora::DefaultModelMapper.new(classifier_class: Wings::ActiveFedoraClassifier)
+  end
+end
 
 Valkyrie::MetadataAdapter.register(
   Wings::Valkyrie::MetadataAdapter.new, :wings_adapter

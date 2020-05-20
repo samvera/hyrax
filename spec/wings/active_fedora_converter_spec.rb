@@ -50,6 +50,10 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
           .to be_a Wings::ActiveFedoraConverter::DefaultWork
       end
 
+      it 'round trips as the existing class' do
+        expect(converter.convert.valkyrie_resource).to be_a klass
+      end
+
       context 'and it is registered' do
         let(:resource) { build(:hyrax_work) }
 

@@ -107,10 +107,10 @@ RSpec.describe Wings::Valkyrie::Persister do
     let(:adapter) { Wings::Valkyrie::MetadataAdapter.new }
     let(:query_service) { adapter.query_service }
     before do
-      class CustomResource < Valkyrie::Resource
+      class CustomResource < Hyrax::Resource
         attribute :title
         attribute :author
-        attribute :member_ids
+        attribute :member_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
         attribute :nested_resource
         attribute :depositor, Valkyrie::Types::String.optional
         attribute :ordered_authors, Valkyrie::Types::Array.of(Valkyrie::Types::Anything).meta(ordered: true)
@@ -126,6 +126,7 @@ RSpec.describe Wings::Valkyrie::Persister do
         property :ordered_authors, predicate: ::RDF::Vocab::DC.creator
         property :ordered_nested, predicate: ::RDF::URI("http://example.com/ordered_nested")
         accepts_nested_attributes_for :nested_resource
+        include Hydra::Works::WorkBehavior
       end
     end
     after do

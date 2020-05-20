@@ -65,11 +65,15 @@ module Wings
     end
 
     def active_fedora_class
-      klass = resource.internal_resource.constantize
+      klass = begin
+                resource.internal_resource.constantize
+              rescue NameError
+                Wings::ActiveFedoraClassifier.new(resource.internal_resource).best_model
+              end
 
       return klass if klass <= ActiveFedora::Base
 
-      ModelRegistry.lookup(klass) || DefaultWork
+      ModelRegistry.lookup(klass) || self.class.DefaultWork(klass)
     end
 
     ##
@@ -84,6 +88,16 @@ module Wings
       resource.alternate_ids.first.to_s
     end
 
+    def self.DefaultWork(resource_class)
+      Class.new(DefaultWork) do
+        self.valkyrie_class = resource_class
+
+        # nested attributes in AF don't inherit! this needs to be here until
+        # we can drop it completely.
+        accepts_nested_attributes_for :nested_resource
+      end
+    end
+
     # A dummy work class for valkyrie resources that don't have corresponding
     # hyrax ActiveFedora::Base models.
     #
@@ -96,6 +110,25 @@ module Wings
       property :nested_resource, predicate: ::RDF::URI("http://example.com/nested_resource"), class_name: "Wings::ActiveFedoraConverter::NestedResource"
       include ::Hyrax::BasicMetadata
       accepts_nested_attributes_for :nested_resource
+
+      class_attribute :valkyrie_class
+      self.valkyrie_class = Hyrax::Resource
+
+      def self.model_name(*)
+        _hyrax_default_name_class.new(valkyrie_class)
+      end
+
+      def self.human_readable_type
+        valkyrie_class.human_readable_type
+      end
+
+      def self.to_rdf_representation
+        "Wings(#{valkyrie_class})"
+      end
+
+      def to_global_id
+        GlobalID.create(valkyrie_class.new(id: id))
+      end
 
       # self.indexer = <%= class_name %>Indexer
     end
@@ -120,13 +153,13 @@ module Wings
       def convert_members(af_object)
         return unless resource.respond_to?(:member_ids) && resource.member_ids
         # TODO: It would be better to find a way to add the members without resuming all the member AF objects
-        af_object.ordered_members = resource.member_ids.map { |valkyrie_id| ActiveFedora::Base.find(valkyrie_id.id) }
+        af_object.ordered_members = resource.member_ids.map { |valkyrie_id| ActiveFedora::Base.find(valkyrie_id.to_s) }
       end
 
       def convert_member_of_collections(af_object)
         return unless resource.respond_to?(:member_of_collection_ids) && resource.member_of_collection_ids
         # TODO: It would be better to find a way to set the parent collections without resuming all the collection AF objects
-        af_object.member_of_collections = resource.member_of_collection_ids.map { |valkyrie_id| ActiveFedora::Base.find(valkyrie_id.id) }
+        af_object.member_of_collections = resource.member_of_collection_ids.map { |valkyrie_id| ActiveFedora::Base.find(valkyrie_id.to_s) }
       end
 
       def convert_files(af_object)

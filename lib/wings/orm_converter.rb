@@ -29,7 +29,9 @@ module Wings
     #
     # @return [Class]
     def self.base_for(klass:)
-      ModelRegistry.reverse_lookup(klass) || Hyrax::Resource
+      klass.try(:valkyrie_class) ||
+        ModelRegistry.reverse_lookup(klass) ||
+        Hyrax::Resource
     end
 
     ##
@@ -39,6 +41,7 @@ module Wings
     #   mirroring the provided `ActiveFedora` model
     #
     # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/CyclomaticComplexity
     # rubocop:disable Metrics/MethodLength because metaprogramming a class
     #   results in long methods
     def self.to_valkyrie_resource_class(klass:)
@@ -52,8 +55,8 @@ module Wings
         include Wings::Works::WorkValkyrieBehavior if klass.included_modules.include?(Hyrax::WorkBehavior)
         include Wings::Works::FileSetValkyrieBehavior if klass.included_modules.include?(Hyrax::FileSetBehavior)
 
-        # Based on Valkyrie implementation, we call Class.to_s to define the internal resource.
-        @internal_resource = klass.to_s
+        # store a string we can resolve to the internal resource
+        @internal_resource = klass.try(:to_rdf_representation) || klass.name
 
         class << self
           attr_reader :internal_resource
@@ -88,3 +91,5 @@ module Wings
 end
 # rubocop:enable Metrics/AbcSize
 # rubocop:enable Metrics/MethodLength
+# rubocop:enable Metrics/CyclomaticComplexity
+# rubocop:enable Metrics/PerceivedComplexity

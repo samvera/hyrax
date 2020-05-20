@@ -76,6 +76,7 @@ module Wings
 end
 
 require 'valkyrie'
+require 'wings/active_fedora_classifier'
 require 'wings/model_registry'
 require 'wings/model_transformer'
 require 'wings/orm_converter'
