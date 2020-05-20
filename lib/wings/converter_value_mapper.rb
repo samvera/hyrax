@@ -13,7 +13,8 @@ module Wings
     ConverterValueMapper.register(self)
 
     ATTRIBUTES = [:internal_resource, :access_to, :new_record, :id,
-                  :alternate_ids, :created_at, :updated_at].freeze
+                  :alternate_ids, :created_at, :updated_at,
+                  :optimistic_lock_token].freeze
 
     def self.handles?(value)
       ATTRIBUTES.include?(value.first)

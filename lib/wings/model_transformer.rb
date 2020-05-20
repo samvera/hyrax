@@ -125,9 +125,10 @@ module Wings
       end
 
       def additional_attributes
-        { created_at:  pcdm_object.try(:create_date),
-          updated_at:  pcdm_object.try(:modified_date),
-          member_ids:  member_ids }
+        { :created_at =>  pcdm_object.try(:create_date),
+          :updated_at =>  pcdm_object.try(:modified_date),
+          :member_ids =>  member_ids,
+          ::Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK => lock_token }
       end
 
       # Prefer ordered members, but if ordered members don't exist, use non-ordered members.
@@ -135,6 +136,16 @@ module Wings
         ordered_member_ids = pcdm_object.try(:ordered_member_ids)
         return ordered_member_ids if ordered_member_ids.present?
         pcdm_object.try(:member_ids)
+      end
+
+      def lock_token
+        result = []
+        result << ::Valkyrie::Persistence::OptimisticLockToken.new(adapter_id: 'wings-fedora-etag', token: pcdm_object.etag) unless pcdm_object.new_record?
+
+        last_modified_literal = pcdm_object.resource.first_object([nil, RDF::URI("http://fedora.info/definitions/v4/repository#lastModified"), nil])
+        token = last_modified_literal&.object&.to_s
+        result << ::Valkyrie::Persistence::OptimisticLockToken.new(adapter_id: 'wings-fedora-last-modified', token: token) if token
+        result
       end
 
       def append_embargo(attrs)
