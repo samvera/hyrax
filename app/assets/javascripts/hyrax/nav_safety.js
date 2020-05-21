@@ -5,7 +5,6 @@
 
 Blacklight.onLoad(function() {
   $('.nav-safety-confirm').on('show.bs.tab', function(evt) {
-    clickedTab = $(evt.target).attr('href');
     var previousTab = $(evt.relatedTarget).attr('href')
     var formId = $(previousTab).find('form').attr('id');
     if (typeof(formId)==="undefined") {
