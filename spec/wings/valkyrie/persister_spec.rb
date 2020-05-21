@@ -262,17 +262,14 @@ RSpec.describe Wings::Valkyrie::Persister do
       expect(reloaded.title).to contain_exactly(*boolean)
     end
 
-    xit "can store DateTimes" do
+    it "can store DateTimes" do
       time1 = DateTime.current
       time2 = Time.current.in_time_zone
-      book = persister.save(resource: resource_class.new(title: [time1], author: [time2]))
+      book = persister.save(resource: resource_class.new(title: [time1, time2]))
 
       reloaded = query_service.find_by(id: book.id)
 
-      expect(reloaded.title.first.to_i).to eq(time1.to_i)
-      expect(reloaded.title.first.zone).to eq('UTC')
-      expect(reloaded.author.first.to_i).to eq(time2.to_i)
-      expect(reloaded.author.first.zone).to eq('UTC')
+      expect(reloaded.title).to contain_exactly(time1, time2)
     end
 
     it "can store Floats" do
