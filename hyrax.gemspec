@@ -77,6 +77,7 @@ SUMMARY
   spec.add_dependency 'samvera-nesting_indexer', '~> 2.0'
   spec.add_dependency 'select2-rails', '~> 3.5'
   spec.add_dependency 'signet'
+  spec.add_dependency 'solrizer', '>= 3.4', '< 5'
   spec.add_dependency 'tinymce-rails', '~> 4.1'
 
   # temporary pin to 2.17 due to failures caused in 2.18.0
