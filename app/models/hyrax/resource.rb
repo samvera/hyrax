@@ -31,6 +31,8 @@ module Hyrax
   #   implementations).
   #
   class Resource < Valkyrie::Resource
+    enable_optimistic_locking
+
     include Hyrax::Naming
     include Hyrax::WithEvents
 
