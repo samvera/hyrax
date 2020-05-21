@@ -6,13 +6,13 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.5.5
+        default: 2.5.8
       bundler_version:
         type: string
         default: 1.17.3
       rails_version:
         type: string
-        default: '5.2.2'
+        default: '5.2.4.3'
       cache_version:
         type: string
         default: '1-2.x'
@@ -39,7 +39,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.5.5
+        default: 2.5.8
       cache_version:
         type: string
         default: '1-2.x'
@@ -56,13 +56,13 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.5.5
+        default: 2.5.8
       bundler_version:
         type: string
         default: 1.17.3
       rails_version:
         type: string
-        default: '5.2.2'
+        default: '5.2.4.3'
       cache_version:
         type: string
         default: '1-2.x'
@@ -94,7 +94,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.5.5
+        default: 2.5.8
       bundler_version:
         type: string
         default: 1.17.3
@@ -126,29 +126,29 @@ workflows:
   ci:
     jobs:
       - bundle:
-          ruby_version: "2.5.5"
-          rails_version: "5.1.7"
+          ruby_version: "2.5.8"
+          rails_version: "5.2.4.3"
           cache_version: "1-2.x"
       - lint:
-          ruby_version: "2.5.5"
+          ruby_version: "2.5.8"
           cache_version: "1-2.x"
           requires:
             - bundle
       - build:
-          ruby_version: "2.5.5"
-          rails_version: "5.1.7"
+          ruby_version: "2.5.8"
+          rails_version: "5.2.4.3"
           cache_version: "1-2.x"
           requires:
             - bundle
       - test:
-          name: "ruby2-5-5"
-          ruby_version: "2.5.5"
+          name: "ruby2-5-8"
+          ruby_version: "2.5.8"
           requires:
             - build
             - lint
       - test:
-          name: "ruby2-6-2"
-          ruby_version: "2.6.2"
+          name: "ruby2-6-6"
+          ruby_version: "2.6.6"
           cache_version: "1-2.x"
           requires:
             - build
