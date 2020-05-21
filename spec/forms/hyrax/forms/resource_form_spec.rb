@@ -111,6 +111,20 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  describe '#member_ids' do
+    it 'for a new object has empty membership' do
+      expect(form.member_ids).to be_empty
+    end
+
+    context 'when the object has members' do
+      let(:work) { FactoryBot.build(:monograph, :with_member_works) }
+
+      it 'gives member work ids' do
+        expect(form.member_ids).to contain_exactly(*work.member_ids.map(&:id))
+      end
+    end
+  end
+
   describe '#model_class' do
     it 'is the class of the model' do
       expect(form.model_class).to eq work.class

@@ -57,6 +57,7 @@ module Hyrax
 
       # pcdm relationships
       property :admin_set_id
+      property :member_ids, default: []
       property :member_of_collection_ids, default: []
 
       class << self

@@ -25,5 +25,24 @@ module Hyrax
           path: url_for(collection) }
       end.to_json
     end
+
+    ##
+    # @param resource [#work_members_json]
+    #
+    # @return [String] JSON for `data-members`
+    #
+    # @see app/assets/javascripts/hyrax/relationships.js
+    def work_members_json(resource)
+      return resource.work_members_json if
+        resource.respond_to?(:work_members_json)
+
+      resource = resource.model if resource.respond_to?(:model)
+
+      Hyrax.custom_queries.find_child_works(resource: resource).map do |member|
+        { id: member.id.to_s,
+          label: member.title.first,
+          path: url_for(member) }
+      end.to_json
+    end
   end
 end
