@@ -120,14 +120,14 @@ workflows:
     jobs:
       - bundle:
           ruby_version: "2.4.10"
-          rails_version: "5.2.3"
+          rails_version: "5.2.4.3"
       - lint:
           ruby_version: "2.4.10"
           requires:
             - bundle
       - build:
           ruby_version: "2.4.10"
-          rails_version: "5.2.3"
+          rails_version: "5.2.4.3"
           requires:
             - bundle
       - test:
@@ -140,10 +140,10 @@ workflows:
     jobs:
       - bundle:
           ruby_version: "2.5.8"
-          rails_version: "5.2.3"
+          rails_version: "5.2.4.3"
       - build:
           ruby_version: "2.5.8"
-          rails_version: "5.2.3"
+          rails_version: "5.2.4.3"
           requires:
             - bundle
       - test:
@@ -155,10 +155,10 @@ workflows:
     jobs:
       - bundle:
           ruby_version: "2.6.6"
-          rails_version: "5.2.3"
+          rails_version: "5.2.4.3"
       - build:
           ruby_version: "2.6.6"
-          rails_version: "5.2.3"
+          rails_version: "5.2.4.3"
           requires:
             - bundle
       - test:
