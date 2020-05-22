@@ -116,26 +116,6 @@ jobs:
 
 workflows:
   version: 2
-  ruby2-4-10:
-    jobs:
-      - bundle:
-          ruby_version: "2.4.10"
-          rails_version: "5.2.4.3"
-      - lint:
-          ruby_version: "2.4.10"
-          requires:
-            - bundle
-      - build:
-          ruby_version: "2.4.10"
-          rails_version: "5.2.4.3"
-          requires:
-            - bundle
-      - test:
-          name: "ruby2-4-10"
-          ruby_version: "2.4.10"
-          requires:
-            - build
-            - lint
   ruby2-5-8:
     jobs:
       - bundle:
@@ -172,3 +152,26 @@ workflows:
           hyrax_valkyrie: "true"
           requires:
             - build
+  ruby2-7-1:
+    jobs:
+      - bundle:
+          ruby_version: "2.7.1"
+          rails_version: "5.2.4.3"
+          bundler_version: "2.1.4"
+      - lint:
+          ruby_version: "2.7.1"
+          requires:
+            - bundle
+      - build:
+          ruby_version: "2.7.1"
+          rails_version: "5.2.4.3"
+          bundler_version: "2.1.4"
+          requires:
+            - bundle
+      - test:
+          name: "ruby2-7-1"
+          ruby_version: "2.7.1"
+          bundler_version: "2.1.4"
+          requires:
+            - build
+            - lint
