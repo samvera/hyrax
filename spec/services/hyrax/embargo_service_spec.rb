@@ -1,4 +1,4 @@
-RSpec.describe Hyrax::EmbargoService do
+RSpec.describe Hyrax::EmbargoService, clean_repo: true do
   subject { described_class }
 
   let(:future_date) { 2.days.from_now }
