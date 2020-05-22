@@ -84,6 +84,26 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
                             source: work.source
     end
 
+    context 'when handling an auto-generated object' do
+      let(:pcdm_object) { Wings::ActiveFedoraConverter.convert(resource: resource) }
+      let(:resource) { Hyrax::Test::Transformer::Book.new }
+
+      before do
+        module Hyrax::Test
+          module Transformer
+            class Book < Valkyrie::Resource
+            end
+          end
+        end
+      end
+
+      after { Hyrax::Test.send(:remove_const, :Transformer) }
+
+      it 'reconstitutes as the correct class' do
+        expect(factory.build).to be_a Hyrax::Test::Transformer::Book
+      end
+    end
+
     # rubocop:disable RSpec/AnyInstance
     context 'without an existing id' do
       let(:id)        { nil }
