@@ -150,7 +150,7 @@ RSpec.describe User, type: :model do
     end
 
     it 'will fail if the User is not persisted' do
-      expect { subject }.to raise_error(ActiveRecord::StatementInvalid)
+      expect { subject }.to raise_error
     end
 
     context "when another process makes the agent" do
