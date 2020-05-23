@@ -38,12 +38,21 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
     end
 
     context 'when given a valkyrie native model' do
-      let(:resource) { klass.new }
+      let(:resource) { klass.new(title: ['comet in moominland'], distant_relation: ['Snufkin']) }
+      let(:klass) { Hyrax::Test::Converter::Resource }
 
-      let(:klass) do
-        class ConverterDummyResource < Valkyrie::Resource; end
-        ConverterDummyResource
+      before do
+        module Hyrax::Test
+          module Converter
+            class Resource < Valkyrie::Resource
+              attribute :title, Valkyrie::Types::Array.of(Valkyrie::Types::String)
+              attribute :distant_relation, Valkyrie::Types::String
+            end
+          end
+        end
       end
+
+      after { Hyrax::Test.send(:remove_const, :Converter) }
 
       it 'gives a default work' do
         expect(converter.convert)
@@ -53,6 +62,15 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       it 'round trips as the existing class' do
         expect(converter.convert.valkyrie_resource).to be_a klass
       end
+
+      it 'converts arbitrary metadata' do
+        expect(converter.convert)
+          .to have_attributes(title: ['comet in moominland'], distant_relation: ['Snufkin'])
+      end
+
+      it 'does not add superflous metadata'
+      it 'converts single-valued fields'
+      it 'supports nested resources'
 
       context 'and it is registered' do
         let(:resource) { build(:hyrax_work) }
