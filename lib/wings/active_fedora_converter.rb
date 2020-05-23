@@ -43,12 +43,10 @@ module Wings
 
     ##
     # Accesses and parses the attributes from the resource through ConverterValueMapper
-    # @return [Hash]
+    #
+    # @return [Hash] attributes with values mapped for building an ActiveFedora model
     def attributes
-      @attribs ||= begin
-        wrapper = self.class.attributes_class.new(resource.attributes)
-        wrapper.result
-      end
+      @attributes ||= self.class.attributes_class.mapped_attributes(attributes: resource.attributes)
     end
 
     ##
@@ -82,9 +80,9 @@ module Wings
     # then the id hasn't been minted and shouldn't yet be set.
     # @return [String]
     def id
-      id_attr = resource[:id]
-      return id_attr.to_s if id_attr.present? && id_attr.is_a?(::Valkyrie::ID) && !id_attr.blank?
+      return resource[:id].to_s if resource[:id]&.is_a?(::Valkyrie::ID) && !resource[:id].blank?
       return "" unless resource.respond_to?(:alternate_ids)
+
       resource.alternate_ids.first.to_s
     end
 
@@ -93,16 +91,13 @@ module Wings
         self.valkyrie_class = resource_class
 
         resource_class.schema.each do |schema_key|
-          attributes_to_skip =
-            resource_class.reserved_attributes + [:embargo, :lease, :optimistic_lock_token, :member_ids, :admin_set_id, :depositor]
-          next if attributes_to_skip.include?(schema_key.name)
-          next if properties.keys.include?schema_key.name.to_s
-
+          next if resource_class.reserved_attributes.include?(schema_key.name) ||
+                  protected_property_name?(schema_key.name) ||
+                  properties.keys.include?(schema_key.name.to_s)
           property schema_key.name, predicate: RDF::URI("http://hyrax.samvera.org/ns/wings##{schema_key.name}")
         end
 
-        # nested attributes in AF don't inherit! this needs to be here until
-        # we can drop it completely.
+        # nested attributes in AF don't inherit! this needs to be here until we can drop it completely.
         accepts_nested_attributes_for :nested_resource
       end
     end
@@ -138,6 +133,7 @@ module Wings
       property :title, predicate: ::RDF::Vocab::DC.title
       property :ordered_authors, predicate: ::RDF::Vocab::DC.creator
       property :ordered_nested, predicate: ::RDF::URI("http://example.com/ordered_nested")
+
       def initialize(uri = RDF::Node.new, _parent = ActiveTriples::Resource.new)
         uri = if uri.try(:node?)
                 RDF::URI("#nested_resource_#{uri.to_s.gsub('_:', '')}")
@@ -146,6 +142,7 @@ module Wings
               end
         super
       end
+
       include ::Hyrax::BasicMetadata
     end
 
@@ -165,6 +162,7 @@ module Wings
 
       def convert_files(af_object)
         return unless resource.respond_to? :file_ids
+
         af_object.files = resource.file_ids.map do |fid|
           pcdm_file = Hydra::PCDM::File.new(fid.id)
           assign_association_target(af_object, pcdm_file)
@@ -191,10 +189,7 @@ module Wings
       def normal_attributes
         attributes.each_with_object({}) do |(attr, value), hash|
           property = active_fedora_class.properties[attr.to_s]
-          # This handles some cases where the attributes do not directly map to an RDF property value
-          hash[attr] = value
-          next if property.nil?
-          hash[attr] = Array.wrap(value) if property.multiple?
+          hash[attr] = property&.multiple? ? Array.wrap(value) : value
         end
       end
 
