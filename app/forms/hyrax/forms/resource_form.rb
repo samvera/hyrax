@@ -43,6 +43,26 @@ module Hyrax
         property :access, virtual: true, prepopulator: ->(_opts) { self.access = model.mode }
       end
 
+      ##
+      # @api private
+      #
+      # @note includes special handling for Wings, to support compatibility
+      #   with `etag`-driven, application-side lock checks. for non-wings adapters
+      #   we want to move away from application side lock validation and rely
+      #   on the adapter/database features instead.
+      LockKeyPopulator = lambda do |_options|
+        self.version =
+          case Hyrax.metadata_adapter
+          when Wings::Valkyrie::MetadataAdapter
+            model.persisted? ? Wings::ActiveFedoraConverter.convert(resource: model).etag : ''
+          else
+            Hyrax.logger.info 'trying to prepopulate a lock token for ' \
+                              "#{self.class.inspect}, but optimistic locking isn't " \
+                              "supported for the configured adapter: #{Hyrax.metadata_adapter.class}"
+            ''
+          end
+      end
+
       class_attribute :model_class
 
       delegate :depositor, :human_readable_type, to: :model
@@ -66,6 +86,16 @@ module Hyrax
       property :admin_set_id
       property :member_ids, default: []
       property :member_of_collection_ids, default: []
+
+      # provide a lock token for optimistic locking; we name this `version` for
+      # backwards compatibility
+      #
+      # Hyrax handles lock token validation on the application side for legacy
+      # models and Wings so we provide a token even if optimistic locking on
+      # the model is disabled
+      #
+      # @see https://github.com/samvera/valkyrie/wiki/Optimistic-Locking
+      property :version, virtual: true, prepopulator: LockKeyPopulator
 
       # backs the child work search element;
       # @todo: look for a way for the view template not to depend on this

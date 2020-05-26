@@ -242,6 +242,43 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  describe '#version' do
+    context 'when using wings', valkyrie_adapter: :wings_adapter do
+      it 'prepopulates as empty before save' do
+        form.prepopulate!
+        expect(form.version).to eq ''
+      end
+
+      context 'with a saved work' do
+        let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
+
+        it 'prepopulates with the etag' do
+          af_object = Wings::ActiveFedoraConverter.convert(resource: work)
+
+          form.prepopulate!
+          expect(form.version).to eq af_object.etag
+        end
+      end
+    end
+
+    context 'when using a generic valkyrie adapter', valkyrie_adapter: :test_adapter do
+      it 'prepopulates as empty before save' do
+        form.prepopulate!
+        expect(form.version).to eq ''
+      end
+
+      context 'with a saved work' do
+        let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
+
+        it 'prepopulates empty' do
+          form.prepopulate!
+
+          expect(form.version).to eq ''
+        end
+      end
+    end
+  end
+
   describe '#visibility' do
     it 'can set visibility' do
       form.visibility = 'open'
