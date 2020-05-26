@@ -92,6 +92,7 @@ module Hyrax
         elsif params.key?(:files_files) # version file already uploaded with ref id in :files_files array
           uploaded_files = Array(Hyrax::UploadedFile.find(params[:files_files]))
           actor.update_content(uploaded_files.first)
+          update_metadata
         end
       end
 
