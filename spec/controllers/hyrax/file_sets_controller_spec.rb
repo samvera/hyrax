@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Hyrax::FileSetsController do
   routes { Rails.application.routes }
   let(:user) { create(:user) }
@@ -69,7 +71,7 @@ RSpec.describe Hyrax::FileSetsController do
 
     describe "#update" do
       let(:file_set) do
-        create(:file_set, user: user)
+        create(:file_set, user: user, title: ['test title'])
       end
 
       context "when updating metadata" do
@@ -86,6 +88,7 @@ RSpec.describe Hyrax::FileSetsController do
             }
           }
           expect(response).to redirect_to main_app.hyrax_file_set_path(file_set, locale: 'en')
+          expect(assigns[:file_set].modified_date).not_to be file_set.modified_date
         end
       end
 
@@ -102,6 +105,25 @@ RSpec.describe Hyrax::FileSetsController do
           file = fixture_file_upload('/world.png', 'image/png')
           post :update, params: { id: file_set, filedata: file, file_set: { keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] } }
           post :update, params: { id: file_set, file_set: { files: [file], keyword: [''], permissions_attributes: [{ type: 'person', name: 'archivist1', access: 'edit' }] } }
+        end
+      end
+
+      context "when updating the attached file already uploaded" do
+        let(:actor) { double }
+
+        before do
+          allow(Hyrax::Actors::FileActor).to receive(:new).and_return(actor)
+        end
+
+        it "spawns a ContentNewVersionEventJob", perform_enqueued: [IngestJob] do
+          expect(actor).to receive(:ingest_file).with(JobIoWrapper).and_return(true)
+          expect(ContentNewVersionEventJob).to receive(:perform_later).with(file_set, user)
+          file = fixture_file_upload('/world.png', 'image/png')
+          allow(Hyrax::UploadedFile).to receive(:find).with(["1"]).and_return([file])
+
+          post :update, params: { id: file_set, files_files: ["1"] }
+          expect(assigns[:file_set].modified_date).not_to be file_set.modified_date
+          expect(assigns[:file_set].title).to eq file_set.title
         end
       end
 
