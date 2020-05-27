@@ -36,6 +36,12 @@ module Hyrax
       @definition_loader.form_definitions_for(schema: name)
     end
 
+    ##
+    # @return [String]
+    def inspect
+      "#{self.class}(#{@name})"
+    end
+
     private
 
       def included(descendant)

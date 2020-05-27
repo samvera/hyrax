@@ -72,6 +72,12 @@ module Hyrax
       @schema_loader.attributes_for(schema: name)
     end
 
+    ##
+    # @return [String]
+    def inspect
+      "#{self.class}(#{@name})"
+    end
+
     private
 
       ##
