@@ -20,5 +20,11 @@ RSpec.describe Hyrax::Actors::ModelActor do
     it "preserves the namespacing" do
       is_expected.to be_kind_of Hyrax::Actors::MusicalWork::CoverActor
     end
+
+    context 'when no actor exists for the work' do
+      let(:work) { Class.new(ActiveFedora::Base).new }
+
+      it { is_expected.to be_kind_of Hyrax::Actors::NullActor }
+    end
   end
 end
