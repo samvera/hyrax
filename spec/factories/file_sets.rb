@@ -20,6 +20,10 @@ FactoryBot.define do
       read_groups { ["registered"] }
     end
 
+    trait :image do
+      content { File.open(Hyrax::Engine.root + 'spec/fixtures/world.png') }
+    end
+
     factory :file_with_work do
       after(:build) do |file, _evaluator|
         file.title = ['testfile']
