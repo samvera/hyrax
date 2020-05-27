@@ -43,12 +43,10 @@ module Wings
 
     ##
     # Accesses and parses the attributes from the resource through ConverterValueMapper
-    # @return [Hash]
+    #
+    # @return [Hash] attributes with values mapped for building an ActiveFedora model
     def attributes
-      @attribs ||= begin
-        wrapper = self.class.attributes_class.new(resource.attributes)
-        wrapper.result
-      end
+      @attributes ||= self.class.attributes_class.mapped_attributes(attributes: resource.attributes)
     end
 
     ##
@@ -57,7 +55,6 @@ module Wings
       active_fedora_class.new(normal_attributes).tap do |af_object|
         af_object.id = id unless id.empty?
         add_access_control_attributes(af_object)
-        apply_depositor_to(af_object)
         convert_members(af_object)
         convert_member_of_collections(af_object)
         convert_files(af_object)
@@ -82,9 +79,9 @@ module Wings
     # then the id hasn't been minted and shouldn't yet be set.
     # @return [String]
     def id
-      id_attr = resource[:id]
-      return id_attr.to_s if id_attr.present? && id_attr.is_a?(::Valkyrie::ID) && !id_attr.blank?
+      return resource[:id].to_s if resource[:id]&.is_a?(::Valkyrie::ID) && !resource[:id].blank?
       return "" unless resource.respond_to?(:alternate_ids)
+
       resource.alternate_ids.first.to_s
     end
 
@@ -92,24 +89,27 @@ module Wings
       Class.new(DefaultWork) do
         self.valkyrie_class = resource_class
 
-        # nested attributes in AF don't inherit! this needs to be here until
-        # we can drop it completely.
+        # extract AF properties from the Valkyrie schema;
+        # skip reserved attributes, proctected properties, and those already defined
+        resource_class.schema.each do |schema_key|
+          next if resource_class.reserved_attributes.include?(schema_key.name)
+          next if protected_property_name?(schema_key.name)
+          next if properties.keys.include?(schema_key.name.to_s)
+
+          property schema_key.name, predicate: RDF::URI("http://hyrax.samvera.org/ns/wings##{schema_key.name}")
+        end
+
+        # nested attributes in AF don't inherit! this needs to be here until we can drop it completely.
         accepts_nested_attributes_for :nested_resource
       end
     end
 
-    # A dummy work class for valkyrie resources that don't have corresponding
-    # hyrax ActiveFedora::Base models.
-    #
-    # A possible improvement would be to dynamically generate properties based
-    # on what's found in the resource.
+    ##
+    # A base model class for valkyrie resources that don't have corresponding
+    # ActiveFedora::Base models.
     class DefaultWork < ActiveFedora::Base
       include Hyrax::WorkBehavior
-      property :ordered_authors, predicate: ::RDF::Vocab::DC.creator
-      property :ordered_nested, predicate: ::RDF::URI("http://example.com/ordered_nested")
       property :nested_resource, predicate: ::RDF::URI("http://example.com/nested_resource"), class_name: "Wings::ActiveFedoraConverter::NestedResource"
-      include ::Hyrax::BasicMetadata
-      accepts_nested_attributes_for :nested_resource
 
       class_attribute :valkyrie_class
       self.valkyrie_class = Hyrax::Resource
@@ -129,14 +129,13 @@ module Wings
       def to_global_id
         GlobalID.create(valkyrie_class.new(id: id))
       end
-
-      # self.indexer = <%= class_name %>Indexer
     end
 
     class NestedResource < ActiveTriples::Resource
       property :title, predicate: ::RDF::Vocab::DC.title
       property :ordered_authors, predicate: ::RDF::Vocab::DC.creator
       property :ordered_nested, predicate: ::RDF::URI("http://example.com/ordered_nested")
+
       def initialize(uri = RDF::Node.new, _parent = ActiveTriples::Resource.new)
         uri = if uri.try(:node?)
                 RDF::URI("#nested_resource_#{uri.to_s.gsub('_:', '')}")
@@ -145,6 +144,7 @@ module Wings
               end
         super
       end
+
       include ::Hyrax::BasicMetadata
     end
 
@@ -164,6 +164,7 @@ module Wings
 
       def convert_files(af_object)
         return unless resource.respond_to? :file_ids
+
         af_object.files = resource.file_ids.map do |fid|
           pcdm_file = Hydra::PCDM::File.new(fid.id)
           assign_association_target(af_object, pcdm_file)
@@ -190,15 +191,8 @@ module Wings
       def normal_attributes
         attributes.each_with_object({}) do |(attr, value), hash|
           property = active_fedora_class.properties[attr.to_s]
-          # This handles some cases where the attributes do not directly map to an RDF property value
-          hash[attr] = value
-          next if property.nil?
-          hash[attr] = Array.wrap(value) if property.multiple?
+          hash[attr] = property&.multiple? ? Array.wrap(value) : value
         end
-      end
-
-      def apply_depositor_to(af_object)
-        af_object.apply_depositor_metadata(attributes[:depositor]) unless attributes[:depositor].blank?
       end
 
       # Add attributes from resource which aren't AF properties into af_object

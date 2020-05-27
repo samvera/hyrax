@@ -177,8 +177,13 @@ module Wings
 
   class ActiveFedoraAttributes
     attr_reader :attributes
+
     def initialize(attributes)
       @attributes = attributes.compact
+    end
+
+    def self.mapped_attributes(attributes:)
+      new(attributes).result
     end
 
     def result
