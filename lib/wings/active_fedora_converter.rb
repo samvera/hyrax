@@ -114,16 +114,18 @@ module Wings
       class_attribute :valkyrie_class
       self.valkyrie_class = Hyrax::Resource
 
-      def self.model_name(*)
-        _hyrax_default_name_class.new(valkyrie_class)
-      end
+      class << self
+        delegate :human_readable_type, to: :valkyrie_class
 
-      def self.human_readable_type
-        valkyrie_class.human_readable_type
-      end
+        def model_name(*)
+          _hyrax_default_name_class.new(valkyrie_class)
+        end
 
-      def self.to_rdf_representation
-        "Wings(#{valkyrie_class})"
+        def to_rdf_representation
+          "Wings(#{valkyrie_class})"
+        end
+        alias inspect to_rdf_representation
+        alias to_s inspect
       end
 
       def to_global_id
