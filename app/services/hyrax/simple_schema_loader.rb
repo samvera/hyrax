@@ -135,14 +135,18 @@ module Hyrax
       # @param [#to_s] schema_name
       # @return [Hash]
       def schema_config(schema_name)
-        raise(UndefinedSchemaError, "No schema defined: #{schema_name}") unless
-          File.exist?(config_path(schema_name))
+        schema_config_path = config_paths(schema_name).find { |path| File.exist? path }
+        raise(UndefinedSchemaError, "No schema defined: #{schema_name}") unless schema_config_path
 
-        YAML.safe_load(File.open(config_path(schema_name)))
+        YAML.safe_load(File.open(schema_config_path))
       end
 
-      def config_path(schema_name)
-        Hyrax::Engine.root.to_s + "/config/metadata/#{schema_name}.yaml"
+      def config_paths(schema_name)
+        config_search_paths.collect { |root_path| root_path.to_s + "/config/metadata/#{schema_name}.yaml" }
+      end
+
+      def config_search_paths
+        [Rails.root, Hyrax::Engine.root]
       end
   end
 end
