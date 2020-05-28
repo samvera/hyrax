@@ -14,7 +14,7 @@ RSpec.describe Hyrax::FileSetPresenter do
           depositor: user.user_key,
           label: "filename.tif")
   end
-  let(:user) { create(:user) }
+  let(:user) { create(:admin) }
 
   describe 'stats_path' do
     before do
@@ -311,11 +311,6 @@ RSpec.describe Hyrax::FileSetPresenter do
     let(:request) { double('request', base_url: 'http://test.host') }
     let(:presenter) { described_class.new(solr_document, ability, request) }
     let(:id) { Hyrax::Base.uri_to_id(file_set.original_file.versions.last.uri) }
-    let(:read_permission) { true }
-
-    before do
-      allow(ability).to receive(:can?).with(:read, solr_document.id).and_return(read_permission)
-    end
 
     describe "#display_image" do
       subject { presenter.display_image }
@@ -380,7 +375,7 @@ RSpec.describe Hyrax::FileSetPresenter do
           end
 
           context "when the user doesn't have permission to view the image" do
-            let(:read_permission) { false }
+            let(:user) { create(:user) }
 
             it { is_expected.to be_nil }
           end
