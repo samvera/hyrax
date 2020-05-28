@@ -3,7 +3,7 @@ require 'iiif_manifest'
 RSpec.describe Hyrax::FileSetPresenter do
   subject(:presenter) { described_class.new(solr_document, ability) }
   let(:solr_document) { SolrDocument.new(attributes) }
-  let(:ability) { double "Ability" }
+  let(:ability) { Ability.new(user) }
   let(:attributes) { file.to_solr }
 
   let(:file) do
