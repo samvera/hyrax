@@ -65,6 +65,12 @@ class TestAppGenerator < Rails::Generators::Base
 
   def create_work
     generate 'hyrax:work_resource Monograph'
+    append_file 'config/metadata/monograph.yaml' do
+      <<-EOS.strip_heredoc
+          monograph_title:
+            type: string
+      EOS
+    end
   end
 
   def banner

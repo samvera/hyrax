@@ -4,6 +4,8 @@
 #  `rails generate hyrax:work_resource <%= class_name %>`
 class <%= class_name %>Indexer < Hyrax::ValkyrieWorkIndexer
   include Hyrax::Indexer(:basic_metadata)
+  # Uncomment if using simple yaml metadata configuration
+  # include Hyrax::Indexer(:<%= file_name %>)
 
   # Uncomment this block if you want to add custom indexing behavior:
   #  def to_solr
