@@ -24,6 +24,14 @@ class Hyrax::WorkResourceGenerator < Rails::Generators::NamedBase
     template('controller.rb.erb', File.join('app/controllers/hyrax', class_path, "#{plural_file_name}_controller.rb"))
   end
 
+  def create_metadata_config
+    template('metadata.yaml', File.join('config/metadata/', "#{file_name}.yaml"))
+    return unless attributes.present?
+    gsub_file File.join('config/metadata/', "#{file_name}.yaml"),
+              'attributes: {}',
+              { 'attributes' => attributes.collect { |arg| [arg.name, { 'type' => arg.type.to_s }] }.to_h }.to_yaml
+  end
+
   def create_model
     template('work.rb.erb', File.join('app/models/', class_path, "#{file_name}.rb"))
   end
