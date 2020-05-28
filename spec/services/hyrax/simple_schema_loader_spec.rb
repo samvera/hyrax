@@ -12,6 +12,13 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
                     depositor: Valkyrie::Types::String)
     end
 
+    context 'with generated resource' do
+      it 'provides an attributes hash' do
+        expect(schema_loader.attributes_for(schema: :monograph))
+          .to include(monograph_title: Valkyrie::Types::Array.of(Valkyrie::Types::String))
+      end
+    end
+
     it 'raises an error for an undefined schema' do
       expect { schema_loader.attributes_for(schema: :NOT_A_SCHEMA) }
         .to raise_error described_class::UndefinedSchemaError
