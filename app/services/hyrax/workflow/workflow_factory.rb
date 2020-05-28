@@ -2,10 +2,11 @@ module Hyrax
   module Workflow
     # Responsible for:
     #
-    # * Creating a workflow entity
-    # * Assigning specific roles to the entity (but not the workflow)
+    # * Creating a Sipity::Entity (aka a database proxy for the given work)
+    # * Assigning specific roles to the Sipity::Entity (but not the workflow)
     # * Running the deposit_action
     #
+    # @see Sipity:Entity
     # @see Hyrax::Workflow::WorkflowActionService
     # @see Hyrax::Workflow::PermissionGenerator
     # @see Hyrax::RoleRegistry

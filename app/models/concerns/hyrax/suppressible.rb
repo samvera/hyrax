@@ -22,7 +22,7 @@ module Hyrax
     def to_sipity_entity
       Deprecation.warn "Use `Sipity::Entity(entity)` instead."
       raise "Can't create an entity until the model has been persisted" unless persisted?
-      @sipity_entity ||= Sipity::Entity.find_by(proxy_for_global_id: to_global_id.to_s)
+      @sipity_entity ||= Sipity::Entity(to_global_id)
     end
   end
 end
