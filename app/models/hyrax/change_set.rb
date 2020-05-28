@@ -14,6 +14,13 @@ module Hyrax
       (resource_class.fields - resource_class.reserved_attributes).each do |field|
         property field, default: nil
       end
+
+      ##
+      # @return [String]
+      def self.inspect
+        return "Hyrax::ChangeSet(#{model_class})" unless name.present?
+        super
+      end
     end
   end
 

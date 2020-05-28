@@ -16,6 +16,13 @@ module Hyrax
         self.model_class = work_class
 
         include Hyrax::FormFields(:core_metadata)
+
+        ##
+        # @return [String]
+        def self.inspect
+          return "Hyrax::Forms::ResourceForm(#{model_class})" unless name.present?
+          super
+        end
       end
     end
 
