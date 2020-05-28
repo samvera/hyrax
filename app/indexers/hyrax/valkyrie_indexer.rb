@@ -36,15 +36,16 @@ module Hyrax
   #     attribute :author
   #   end
   #
+  #   # match by name "#{model_class}Indexer"
   #   class BookIndexer < ValkyrieIndexer
-  #     Hyrax::ValkyrieIndexer.register self, as_indexer_for: Book
-  #
   #     def to_solr
   #       super.tap do |index_document|
   #         index_document[:author_si] = resource.author
   #       end
   #     end
   #   end
+  #
+  #   ValkyrieIndexer.for(resource: Book.new) # => #<BookIndexer:0x0000563715a9f1f8 ...>
   #
   # @see Valkyrie::Indexing::Solr::IndexingAdapter
   class ValkyrieIndexer
@@ -60,7 +61,14 @@ module Hyrax
     #
     # @return [#to_solr]
     def self.for(resource:)
-      registry.fetch(resource.class, ValkyrieIndexer).new(resource: resource)
+      indexer_class =
+        begin
+          registry.fetch(resource.class) { "#{resource.class}Indexer".constantize }
+        rescue NameError
+          ValkyrieIndexer
+        end
+
+      indexer_class.new(resource: resource)
     end
 
     ##
