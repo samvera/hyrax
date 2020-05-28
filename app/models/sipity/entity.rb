@@ -1,7 +1,8 @@
 module Sipity
-  # A proxy for the entity that is being processed.
+  # A proxy for the entity that is being processed via workflows.
+  #
   # By using a proxy, we need not worry about polluting the proxy's concerns
-  # with things related to processing.
+  # with things related to workflow processing.
   #
   # The goal is to keep this behavior separate, so that we can possibly
   # extract the information.
