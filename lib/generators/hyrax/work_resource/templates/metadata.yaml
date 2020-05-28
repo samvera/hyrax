@@ -19,4 +19,4 @@
 # Generated via
 #  `rails generate hyrax:work_resource <%= class_name %>`
 
-attributes:
+attributes: {}

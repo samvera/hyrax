@@ -7,8 +7,7 @@
 # @see https://github.com/samvera/valkyrie/wiki/ChangeSets-and-Dirty-Tracking
 class <%= class_name %>Form < Hyrax::Forms::ResourceForm(<%= class_name %>)
   include Hyrax::FormFields(:basic_metadata)
-  # Uncomment if using simple yaml metadata configuration
-  # include Hyrax::FormFields(:<%= file_name %>)
+  include Hyrax::FormFields(:<%= file_name %>)
 
   # Define custom form fields using the Valkyrie::ChangeSet interface
   #

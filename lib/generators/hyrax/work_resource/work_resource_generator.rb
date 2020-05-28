@@ -26,6 +26,10 @@ class Hyrax::WorkResourceGenerator < Rails::Generators::NamedBase
 
   def create_metadata_config
     template('metadata.yaml', File.join('config/metadata/', "#{file_name}.yaml"))
+    return unless attributes.present?
+    gsub_file File.join('config/metadata/', "#{file_name}.yaml"),
+              'attributes: {}',
+              {'attributes' => attributes.collect { |arg| [arg.name, {'type' => arg.type.to_s}] }.to_h }.to_yaml
   end
 
   def create_model
