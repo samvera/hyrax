@@ -166,8 +166,6 @@ RSpec.describe Hyrax::FileSetPresenter do
   end
 
   describe "characterization" do
-    let(:user) { double(User, user_key: 'user') }
-
     describe "#characterization_metadata" do
       subject { presenter.characterization_metadata }
 
