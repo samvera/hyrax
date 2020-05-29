@@ -115,7 +115,8 @@ RSpec.describe Wings::Valkyrie::QueryService do
       persister.save(resource: resource_class.new)
       resource2 = persister.save(resource: image_resource_class.new)
 
-      expect(query_service.find_all_of_model(model: image_resource_class).map(&:id)).to contain_exactly resource2.id
+      expect(query_service.find_all_of_model(model: image_resource_class))
+        .to contain_exactly(have_attributes(id: resource2.id))
     end
 
     it "returns an empty array if there are none" do

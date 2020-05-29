@@ -41,7 +41,10 @@ module Wings
     end
 
     def lookup(valkyrie)
-      @map[valkyrie]
+      valkyrie = valkyrie._canonical_valkyrie_model if
+        valkyrie.respond_to?(:_canonical_valkyrie_model)
+
+      @map.fetch(valkyrie) { ActiveFedoraConverter::DefaultWork(valkyrie) }
     end
 
     def reverse_lookup(active_fedora)

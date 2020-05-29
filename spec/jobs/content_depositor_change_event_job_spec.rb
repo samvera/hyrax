@@ -31,21 +31,26 @@ RSpec.describe ContentDepositorChangeEventJob do
   end
 
   context "when use_valkyrie is true" do
-    let(:generic_work) { valkyrie_create(:hyrax_work, title: ['BethsMac'], depositor: user.user_key) }
+    let(:monograph) { valkyrie_create(:monograph, title: ['BethsMac'], depositor: user.user_key) }
+
+    let(:event) do
+      { action: "User <a href=\"/users/#{user.to_param}\">#{user.user_key}</a> " \
+                "has transferred <a href=\"/concern/monographs/#{monograph.id}\">BethsMac</a> " \
+                "to user <a href=\"/users/#{another_user.to_param}\">#{another_user.user_key}</a>",
+        timestamp: '1' }
+    end
 
     it "logs the event to the proxy depositor's profile, the depositor's dashboard, and the FileSet" do
-      allow(subject).to receive(:hyrax_test_simple_work_path).and_return("/concern/generic_works/#{generic_work.id}")
-
-      expect { subject.perform(generic_work, another_user) }
+      expect { subject.perform(monograph, another_user) }
         .to change { user.profile_events.length }
         .by(1)
         .and change { another_user.events.length }
         .by(1)
-        .and change { generic_work.events.length }
+        .and change { monograph.events.length }
         .by(1)
       expect(user.profile_events.first).to eq(event)
       expect(another_user.events.first).to eq(event)
-      expect(generic_work.events.first).to eq(event)
+      expect(monograph.events.first).to eq(event)
     end
   end
 end

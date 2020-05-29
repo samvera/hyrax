@@ -70,7 +70,7 @@ module Wings
 
       return klass if klass <= ActiveFedora::Base
 
-      ModelRegistry.lookup(klass) || self.class.DefaultWork(klass)
+      ModelRegistry.lookup(klass)
     end
 
     ##
