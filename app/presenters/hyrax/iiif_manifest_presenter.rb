@@ -15,6 +15,14 @@ module Hyrax
   class IiifManifestPresenter < Draper::Decorator
     delegate_all
 
+    class << self
+      def for(model)
+        klass = model.file_set? ? DisplayImagePresenter : IiifManifestPresenter
+
+        klass.new(model)
+      end
+    end
+
     ##
     # @return [String]
     def description
@@ -24,12 +32,11 @@ module Hyrax
     ##
     # @return [Boolean]
     def file_set?
-      model.try(:file_set?) ||
-        Array(model[:has_model_ssim]).include?('FileSet')
+      model.try(:file_set?) || Array(model[:has_model_ssim]).include?('FileSet')
     end
 
     ##
-    # @return [Array<IiifManifestPresenter>]
+    # @return [Array<DisplayImagePresenter>]
     def file_set_presenters
       member_presenters.select(&:file_set?)
     end
@@ -46,7 +53,7 @@ module Hyrax
       metadata_fields.map do |field_name|
         {
           'label' => I18n.t("simple_form.labels.defaults.#{field_name}"),
-          'value' => Array.wrap(self[field_name]).map { |value| scrub(value.to_s) }
+          'value' => Array(self[field_name]).map { |value| scrub(value.to_s) }
         }
       end
     end
@@ -71,7 +78,7 @@ module Hyrax
     # @return [Array<IiifManifestPresenter>]
     def member_presenters
       @member_presesnters_cache ||=
-        PresenterFactory.build_for(ids: member_ids, presenter_class: self.class)
+        Factory.build_for(ids: member_ids, presenter_class: self.class)
     end
 
     ##
@@ -85,14 +92,65 @@ module Hyrax
     ##
     # @return [Boolean]
     def work?
-      object.try(:work?) ||
-        !file_set?
+      object.try(:work?) || !file_set?
     end
 
     ##
     # @return [Array<IiifManifestPresenter>]
     def work_presenters
       member_presenters.select(&:work?)
+    end
+
+    class Factory < PresenterFactory
+      ##
+      # @return [Array]
+      def build
+        ids.map do |id|
+          solr_doc = load_docs.find { |doc| doc.id == id }
+          presenter_class.for(solr_doc) if solr_doc
+        end.compact
+      end
+
+      private
+
+        ##
+        # cache the docs in this method, rather than #build;
+        # this can probably be pushed up to the parent class
+        def load_docs
+          @cached_docs ||= super
+        end
+    end
+
+    class DisplayImagePresenter < Draper::Decorator
+      delegate_all
+
+      include Hyrax::DisplaysImage
+
+      ##
+      # Creates a display image only where #model is an image.
+      #
+      # @return [IIIFManifest::DisplayImage] the display image required by the manifest builder.
+      def display_image
+        return nil unless model.image?
+        return nil unless latest_file_id
+
+        IIIFManifest::DisplayImage
+          .new(display_image_url(hostname),
+               format: image_format(alpha_channels),
+               width: width,
+               height: height,
+               iiif_endpoint: iiif_endpoint(latest_file_id, base_url: hostname))
+      end
+
+      def hostname
+        'http://example.com'
+      end
+
+      ##
+      # @return [Boolean] false
+      def work?
+        false
+      end
     end
 
     private

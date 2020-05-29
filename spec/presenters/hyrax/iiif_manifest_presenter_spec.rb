@@ -14,9 +14,12 @@ RSpec.describe Hyrax::IiifManifestPresenter do
     end
 
     context 'with file set and work members' do
-      let(:work) { create(:work_with_file_and_work) }
+      let(:work) { create(:work_with_image_files) }
 
-      it 'generates a manifest with nested content'
+      it 'generates a manifest with nested content' do
+        expect(builder_service.manifest_for(presenter: presenter))
+          .to include('@context' => 'http://iiif.io/api/presentation/2/context.json')
+      end
     end
   end
 

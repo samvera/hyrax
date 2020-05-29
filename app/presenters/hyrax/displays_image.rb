@@ -11,20 +11,10 @@ module Hyrax
     # @return [IIIFManifest::DisplayImage] the display image required by the manifest builder.
     def display_image
       return nil unless ::FileSet.exists?(id) && solr_document.image? && current_ability.can?(:read, id)
-
-      latest_file_id = lookup_original_file_id
-
       return nil unless latest_file_id
 
-      url = Hyrax.config.iiif_image_url_builder.call(
-        latest_file_id,
-        request.base_url,
-        Hyrax.config.iiif_image_size_default,
-        format: image_format(alpha_channels)
-      )
-
       # @see https://github.com/samvera-labs/iiif_manifest
-      IIIFManifest::DisplayImage.new(url,
+      IIIFManifest::DisplayImage.new(display_image_url(request.base_url),
                                      format: image_format(alpha_channels),
                                      width: width,
                                      height: height,
@@ -33,10 +23,19 @@ module Hyrax
 
     private
 
-      def iiif_endpoint(file_id)
+      def display_image_url(base_url)
+        Hyrax.config.iiif_image_url_builder.call(
+          latest_file_id,
+          base_url,
+          Hyrax.config.iiif_image_size_default,
+          format: image_format(alpha_channels)
+        )
+      end
+
+      def iiif_endpoint(file_id, base_url: request.base_url)
         return unless Hyrax.config.iiif_image_server?
         IIIFManifest::IIIFEndpoint.new(
-          Hyrax.config.iiif_info_url_builder.call(file_id, request.base_url),
+          Hyrax.config.iiif_info_url_builder.call(file_id, base_url),
           profile: Hyrax.config.iiif_image_compliance_level_uri
         )
       end
@@ -45,13 +44,18 @@ module Hyrax
         channels&.include?('rgba') ? 'png' : 'jpg'
       end
 
-      def lookup_original_file_id
-        result = original_file_id
-        if result.blank?
-          Rails.logger.warn "original_file_id for #{id} not found, falling back to Fedora."
-          result = Hyrax::VersioningService.versioned_file_id ::FileSet.find(id).original_file
-        end
-        result
+      def latest_file_id
+        @latest_file_id ||=
+          begin
+            result = original_file_id
+
+            if result.blank?
+              Rails.logger.warn "original_file_id for #{id} not found, falling back to Fedora."
+              result = Hyrax::VersioningService.versioned_file_id ::FileSet.find(id).original_file
+            end
+
+            result
+          end
       end
   end
 end
