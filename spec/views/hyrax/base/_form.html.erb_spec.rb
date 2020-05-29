@@ -7,6 +7,7 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
     # mock the admin set options presenter to avoid hitting Solr
     allow(Hyrax::AdminSetOptionsPresenter).to receive(:new).and_return(options_presenter)
     allow(controller).to receive(:current_user).and_return(stub_model(User))
+    allow(view).to receive(:curation_concern).and_return(work)
     assign(:form, form)
     allow(controller).to receive(:action_name).and_return(controller_action)
     allow(controller).to receive(:repository).and_return(controller_class.new.repository)
@@ -39,12 +40,8 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
     context 'with an existing object' do
       let(:work) { FactoryBot.valkyrie_create(:monograph) }
 
-      xit 'renders a form' do
-        # pending handling for #version/optimistic locking, and maybe other
-        # issues. a good way to make progress on ChangeSet forms is to enable
-        # this test, analyze the stacktrace, and try to patch.
+      it 'renders a form' do
         render
-
         expect(rendered).to have_selector("form[action='/concern/monographs/#{work.id}']")
       end
     end
@@ -65,7 +62,6 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
       # TODO: stub_model is not stubbing new_record? correctly on ActiveFedora models.
       allow(work).to receive(:new_record?).and_return(true)
       allow(work).to receive(:member_ids).and_return([1, 2])
-      allow(view).to receive(:curation_concern).and_return(work)
       allow(controller).to receive(:controller_name).and_return('batch_uploads')
       allow(form).to receive(:permissions).and_return([])
       allow(form).to receive(:visibility).and_return('public')
