@@ -30,6 +30,12 @@ module Hyrax
           actor_identifier = env.curation_concern.class
           klass = "Hyrax::Actors::#{actor_identifier}Actor".constantize
           klass.new(next_actor)
+        rescue NameError => error
+          Hyrax.logger.info 'No ModelActor provided for ' \
+                            "#{env.curation_concern.class}; falling back on " \
+                            "NullActor\n\t#{error}"
+
+          NullActor.new(next_actor)
         end
     end
   end
