@@ -131,4 +131,7 @@ class TestAppGenerator < Rails::Generators::Base
     raise '`yarn install` failed!' unless system('./bin/yarn install')
   end
 
+  def create_sample_metadata_configuration
+    copy_file 'sample_metadata.yaml', 'config/metadata/sample_metadata.yaml'
+  end
 end
