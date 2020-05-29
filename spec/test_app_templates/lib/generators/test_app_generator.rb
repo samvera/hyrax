@@ -64,7 +64,7 @@ class TestAppGenerator < Rails::Generators::Base
   end
 
   def create_work
-    generate 'hyrax:work_resource Monograph'
+    generate 'hyrax:work_resource Monograph monograph_title:string'
   end
 
   def banner
