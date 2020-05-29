@@ -23,7 +23,7 @@ RSpec.describe Hyrax::ValkyrieIndexer do
       end
     end
 
-    context 'with registered Monograph indexer' do
+    context 'with a matching indexer by naming convention' do
       let(:resource) { build(:monograph) }
       let(:indexer_class) { MonographIndexer }
 
