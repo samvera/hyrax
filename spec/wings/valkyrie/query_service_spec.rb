@@ -424,7 +424,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
   end
 
   describe ".find_parents" do
-    it "returns all parent resources" do
+    it "returns parent resources" do
       child1 = persister.save(resource: resource_class.new(title: ['child 1']))
       child2 = persister.save(resource: resource_class.new(title: ['child 2']))
       parent = persister.save(resource: resource_class.new(title: ['parent'], member_ids: [child1.id, child2.id]))
