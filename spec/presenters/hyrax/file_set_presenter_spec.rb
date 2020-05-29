@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'iiif_manifest'
 
+# rubocop:disable RSpec/SubjectStub
 RSpec.describe Hyrax::FileSetPresenter do
   subject(:presenter) { described_class.new(solr_document, ability) }
   let(:solr_document) { SolrDocument.new(attributes) }
@@ -421,3 +422,4 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
   end
 end
+# rubocop:enable RSpec/SubjectStub

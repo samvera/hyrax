@@ -41,6 +41,7 @@ module Wings
     #   mirroring the provided `ActiveFedora` model
     #
     # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/BlockLength
     # rubocop:disable Metrics/CyclomaticComplexity
     # rubocop:disable Metrics/MethodLength because metaprogramming a class
     #   results in long methods
@@ -62,7 +63,13 @@ module Wings
           attr_reader :internal_resource
 
           def name
-            ancestors[1..-1].find { |parent| parent < ::Valkyrie::Resource }&.name
+            _canonical_valkyrie_model&.name
+          end
+
+          ##
+          # @api private
+          def _canonical_valkyrie_model
+            ancestors[1..-1].find { |parent| parent < ::Valkyrie::Resource }
           end
         end
 
@@ -90,6 +97,6 @@ module Wings
   end
 end
 # rubocop:enable Metrics/AbcSize
+# rubocop:enable Metrics/BlockLength
 # rubocop:enable Metrics/MethodLength
 # rubocop:enable Metrics/CyclomaticComplexity
-# rubocop:enable Metrics/PerceivedComplexity

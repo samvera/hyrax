@@ -92,7 +92,7 @@ module Wings
         all_members = find_many_by_ids(ids: resource.member_ids)
         return all_members unless model
         find_model = model_class_for(model)
-        all_members.select { |member_resource| model_class_for(member_resource) == find_model }
+        all_members.select { |member_resource| model_class_for(member_resource.class) == find_model }
       end
 
       # Find the Valkyrie Resources referenced by another Valkyrie Resource
@@ -167,7 +167,9 @@ module Wings
       end
 
       def model_class_for(model)
-        ModelRegistry.lookup(model) || model.internal_resource.constantize
+        internal_resource = model.respond_to?(:internal_resource) ? model.internal_resource : nil
+
+        internal_resource&.safe_constantize || ModelRegistry.lookup(model)
       end
     end
   end
