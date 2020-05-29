@@ -1,12 +1,23 @@
 # frozen_string_literal: true
 
+require 'hyrax/specs/spy_listener'
+
 RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
   let(:paths) { Rails.application.routes.url_helpers }
   let(:title) { ['Comet in Moominland'] }
   let(:work)  { FactoryBot.valkyrie_create(:hyrax_work, alternate_ids: [id], title: title) }
   let(:id)    { '123' }
 
-  before(:context) { Hyrax.config.register_curation_concern(Hyrax::Test::SimpleWork) }
+  let(:listener) { Hyrax::Specs::SpyListener.new }
+
+  before { Hyrax.publisher.subscribe(listener) }
+  after  { Hyrax.publisher.unsubscribe(listener) }
+
+  before(:context) do
+    Hyrax.config.register_curation_concern(Hyrax::Test::SimpleWork)
+
+    Rails.application.routes.draw { curation_concerns_basic_routes }
+  end
 
   after(:context) do
     config = Hyrax.config
@@ -30,19 +41,29 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
   end
 
   describe '#create' do
+    let(:params) { { 'test_simple_work' => attributes } }
+    let(:attributes) { { 'title' => 'Comet in Moominland' } }
+
     it 'redirects to new user login' do
-      get :create, params: {}
+      get :create, params: params
 
       expect(response).to redirect_to paths.new_user_session_path(locale: :en)
     end
 
-    xcontext 'with a logged in user' do
+    context 'with a logged in user' do
       include_context 'with a logged in user'
 
       it 'is successful' do
-        get :create, params: {}
+        get :create, params: params
 
         expect(response).to be_successful
+      end
+
+      it 'publishes a work deposited event' do
+        get :create, params: params
+
+        expect(listener.object_deposited)
+          .to have_attributes(payload: {})
       end
     end
   end

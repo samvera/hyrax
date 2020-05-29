@@ -27,6 +27,6 @@ RSpec.describe 'Creating a new Monograph work', :js, :workflow, valkyrie_adapter
     choose('monograph_visibility_open')
     check('agreement')
 
-    # click_on('Save')
+    click_on('Save')
   end
 end

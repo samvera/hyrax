@@ -50,6 +50,10 @@ module Hyrax
           ApplyChangeSet.new
         end
 
+        ops.register 'create_work' do
+          WorkCreate.new
+        end
+
         ops.register 'ensure_admin_set' do
           Steps::EnsureAdminSet.new
         end

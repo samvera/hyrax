@@ -52,7 +52,10 @@ module Hyrax
     end
 
     def create
-      if actor.create(actor_environment)
+      @curation_concern = create_work
+
+      if curation_concern.persisted?
+        Hyrax.publisher.publish('object.deposited', object: curation_concern, user: current_user)
         after_create_response
       else
         respond_to do |wants|
@@ -60,7 +63,7 @@ module Hyrax
             build_form
             render 'new', status: :unprocessable_entity
           end
-          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: errors }) }
         end
       end
     end
@@ -103,7 +106,7 @@ module Hyrax
             build_form
             render 'edit', status: :unprocessable_entity
           end
-          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: errors }) }
         end
       end
     end
@@ -137,6 +140,33 @@ module Hyrax
     end
 
     private
+
+      ##
+      # @return [#persisted?]
+      def create_work
+        case curation_concern
+        when Valkyrie::Resource
+          build_form.validate(params[hash_key_for_curation_concern])
+
+          transactions['change_set.create_work'].call(@form).value_or do |reason, change_set|
+            Hyrax.publisher.publish('object.failed_deposit',
+                                    object: change_set.model,
+                                    reason: reason,
+                                    change_set: change_set,
+                                    user: current_user)
+            change_set.model
+          end
+        else
+          actor.create(actor_environment)
+          curation_concern
+        end
+      end
+
+      ##
+      # @return [ActiveModel::Errors]
+      def errors
+        @form.try(:errors) || curation_concern.errors
+      end
 
       def iiif_manifest_builder
         self.class.iiif_manifest_builder
@@ -326,6 +356,10 @@ module Hyrax
 
       def permissions_changed?
         @saved_permissions != curation_concern.permissions.map(&:to_hash)
+      end
+
+      def transactions
+        Hyrax::Transactions::Container
       end
   end
 end
