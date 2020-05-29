@@ -37,8 +37,15 @@ class Hyrax::WorkResourceGenerator < Rails::Generators::NamedBase
   end
 
   def create_model_spec
-    template('work_spec.rb.erb', File.join('spec/models/', class_path, "#{file_name}_spec.rb")) if
-      rspec_installed?
+    return unless rspec_installed?
+    filepath = File.join('spec/models/', class_path, "#{file_name}_spec.rb")
+    template('work_spec.rb.erb', filepath)
+    return unless attributes.present?
+    inject_into_file filepath, after: /it_behaves_like 'a Hyrax::Work'\n/ do
+      "\n  context 'includes schema defined metadata' do\n"\
+      "#{attributes.collect { |arg| "    it { is_expected.to respond_to(:#{arg.name}) }\n" }.join}" \
+      "  end\n"
+    end
   end
 
   def create_form
