@@ -41,7 +41,7 @@ module Wings
     end
 
     def lookup(valkyrie)
-      @map[valkyrie]
+      @map.fetch(valkyrie) { ActiveFedoraConverter::DefaultWork(valkyrie) }
     end
 
     def reverse_lookup(active_fedora)
