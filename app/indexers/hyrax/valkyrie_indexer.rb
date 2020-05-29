@@ -61,32 +61,9 @@ module Hyrax
     #
     # @return [#to_solr]
     def self.for(resource:)
-      indexer_class =
-        begin
-          registry.fetch(resource.class) { "#{resource.class}Indexer".constantize }
-        rescue NameError
-          ValkyrieIndexer
-        end
+      indexer_class = "#{resource.class}Indexer".safe_constantize || ValkyrieIndexer
 
       indexer_class.new(resource: resource)
-    end
-
-    ##
-    # @api public
-    # @param [Class] klass
-    # @param [Class, Array<Class>] as_indexer_for
-    #
-    # @return [void]
-    def self.register(klass, as_indexer_for: [])
-      Array(as_indexer_for).each do |target|
-        registry[target] = klass
-      end
-    end
-
-    ##
-    # @api private
-    def self.registry
-      @registry ||= {}
     end
 
     ##
