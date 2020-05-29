@@ -4,8 +4,6 @@ module Hyrax
   ##
   # Indexes properties common to PCDM Collections
   class ValkyrieCollectionIndexer < Hyrax::ValkyrieIndexer
-    Hyrax::ValkyrieIndexer.register self, as_indexer_for: Hyrax::PcdmCollection
-
     include Hyrax::ResourceIndexer
     include Hyrax::PermissionIndexer
     include Hyrax::VisibilityIndexer

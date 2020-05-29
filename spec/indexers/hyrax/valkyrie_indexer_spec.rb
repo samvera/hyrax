@@ -9,20 +9,6 @@ RSpec.describe Hyrax::ValkyrieIndexer do
         .to eq described_class
     end
 
-    context 'with a registered indexer' do
-      before do
-        described_class.register indexer_class, as_indexer_for: work_class
-      end
-
-      let(:indexer_class) { Class.new(described_class) }
-      let(:work_class)    { Class.new(Hyrax::Work) }
-
-      it 'gives an instance of Hyrax::ValkyrieWorkIndexer for Work' do
-        expect(described_class.for(resource: work_class.new))
-          .to be_a indexer_class
-      end
-    end
-
     context 'with a matching indexer by naming convention' do
       let(:resource) { build(:monograph) }
       let(:indexer_class) { MonographIndexer }
