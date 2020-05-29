@@ -87,7 +87,7 @@ module Hyrax
       # pcdm relationships
       property :admin_set_id
       property :member_ids, default: [], type: Valkyrie::Types::Array
-      property :member_of_collection_ids, default: [],  type: Valkyrie::Types::Array
+      property :member_of_collection_ids, default: [], type: Valkyrie::Types::Array
 
       # provide a lock token for optimistic locking; we name this `version` for
       # backwards compatibility
