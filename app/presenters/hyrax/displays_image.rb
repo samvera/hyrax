@@ -10,7 +10,7 @@ module Hyrax
     #
     # @return [IIIFManifest::DisplayImage] the display image required by the manifest builder.
     def display_image
-      return nil unless ::FileSet.exists?(id) && solr_document.image? && current_ability.can?(:read, id)
+      return nil unless solr_document.image? && current_ability.can?(:read, solr_document)
 
       latest_file_id = lookup_original_file_id
 

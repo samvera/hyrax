@@ -1,10 +1,11 @@
 require 'iiif_manifest'
 
 RSpec.describe Hyrax::FileSetPresenter do
+  subject(:presenter) { described_class.new(solr_document, ability) }
   let(:solr_document) { SolrDocument.new(attributes) }
-  let(:ability) { double "Ability" }
-  let(:presenter) { described_class.new(solr_document, ability) }
+  let(:ability) { Ability.new(user) }
   let(:attributes) { file.to_solr }
+
   let(:file) do
     build(:file_set,
           id: '123abc',
@@ -13,7 +14,7 @@ RSpec.describe Hyrax::FileSetPresenter do
           depositor: user.user_key,
           label: "filename.tif")
   end
-  let(:user) { double(user_key: 'sarah') }
+  let(:user) { create(:admin) }
 
   describe 'stats_path' do
     before do
@@ -22,8 +23,6 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
     it { expect(presenter.stats_path).to eq Hyrax::Engine.routes.url_helpers.stats_file_path(id: file, locale: 'en') }
   end
-
-  subject { presenter }
 
   describe "#to_s" do
     subject { presenter.to_s }
@@ -144,8 +143,8 @@ RSpec.describe Hyrax::FileSetPresenter do
   describe '#events' do
     subject(:events) { presenter.events }
 
-    let(:event_stream) { double }
-    let(:response) { double }
+    let(:event_stream) { double('event stream') }
+    let(:response) { double('response') }
 
     before do
       allow(presenter).to receive(:event_stream).and_return(event_stream)
@@ -158,7 +157,7 @@ RSpec.describe Hyrax::FileSetPresenter do
   end
 
   describe '#event_stream' do
-    let(:object_stream) { double }
+    let(:object_stream) { double('object_stream') }
 
     it 'returns a Nest stream' do
       expect(Hyrax::RedisEventStore).to receive(:for).with(Nest).and_return(object_stream)
@@ -167,8 +166,6 @@ RSpec.describe Hyrax::FileSetPresenter do
   end
 
   describe "characterization" do
-    let(:user) { double(user_key: 'user') }
-
     describe "#characterization_metadata" do
       subject { presenter.characterization_metadata }
 
@@ -311,14 +308,9 @@ RSpec.describe Hyrax::FileSetPresenter do
 
     let(:file_set) { create(:file_set) }
     let(:solr_document) { SolrDocument.new(file_set.to_solr) }
-    let(:request) { double(base_url: 'http://test.host') }
+    let(:request) { double('request', base_url: 'http://test.host') }
     let(:presenter) { described_class.new(solr_document, ability, request) }
     let(:id) { Hyrax::Base.uri_to_id(file_set.original_file.versions.last.uri) }
-    let(:read_permission) { true }
-
-    before do
-      allow(ability).to receive(:can?).with(:read, solr_document.id).and_return(read_permission)
-    end
 
     describe "#display_image" do
       subject { presenter.display_image }
@@ -383,7 +375,7 @@ RSpec.describe Hyrax::FileSetPresenter do
           end
 
           context "when the user doesn't have permission to view the image" do
-            let(:read_permission) { false }
+            let(:user) { create(:user) }
 
             it { is_expected.to be_nil }
           end
