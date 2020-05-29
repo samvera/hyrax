@@ -116,6 +116,12 @@ RSpec.describe Hyrax::Forms::ResourceForm do
       expect(form.member_ids).to be_empty
     end
 
+    it 'casts to an array' do
+      expect { form.validate(member_ids: '123') }
+        .to change { form.member_ids }
+        .to contain_exactly('123')
+    end
+
     context 'when the object has members' do
       let(:work) { FactoryBot.build(:monograph, :with_member_works) }
 
