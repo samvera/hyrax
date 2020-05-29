@@ -69,6 +69,8 @@ module Hyrax
 
       property :visibility # visibility has an accessor on the model
 
+      property :date_modified, readable: false
+      property :date_uploaded, readable: false
       property :agreement_accepted, virtual: true, default: false, prepopulator: ->(_opts) { self.agreement_accepted = !model.new_record }
 
       collection :permissions, virtual: true, default: [], form: Permission, prepopulator: ->(_opts) { self.permissions = Hyrax::AccessControl.for(resource: model).permissions }
@@ -84,8 +86,8 @@ module Hyrax
 
       # pcdm relationships
       property :admin_set_id
-      property :member_ids, default: []
-      property :member_of_collection_ids, default: []
+      property :member_ids, default: [], type: Valkyrie::Types::Array
+      property :member_of_collection_ids, default: [],  type: Valkyrie::Types::Array
 
       # provide a lock token for optimistic locking; we name this `version` for
       # backwards compatibility
