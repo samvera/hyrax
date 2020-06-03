@@ -2,12 +2,15 @@ Description:
   This generator creates the necessary files for valkyrie-native work types.
 
 Example:
-  rails generate hyrax:work_resource Monograph
+  rails generate hyrax:work_resource Monograph field:type author:string created:date isbn:string publisher:string title:string
 
   This will create:
-    app/models/monograph.rb
     app/controllers/hyrax/monographs_controller.rb
-    app/indexer/monograph_indexer.rb
-    app/views/monographs/_monograph.html.erb
+    app/forms/monograph_form.rb
+    app/indexers/monograph_indexer.rb
+    app/models/monograph.rb
+    app/views/hyrax/monographs/_monograph.html.erb
+    config/initializers/hyrax.rb
+    config/metadata/monograph.yaml
     spec/models/monograph_spec.rb
     spec/views/monographs/_monograph.html.erb_spec.rb
