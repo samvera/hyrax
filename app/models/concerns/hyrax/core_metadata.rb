@@ -13,6 +13,8 @@ module Hyrax
         index.as :stored_searchable, :facetable
       end
 
+      property :alternative_title, predicate: ::RDF::Vocab::DC.alternative
+
       def first_title
         title.first
       end

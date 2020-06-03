@@ -9,6 +9,11 @@ attributes:
       required: true
       primary: true
       multiple: false
+  alternative_title:
+    type: string
+    multiple: true
+    form:
+      primary: false
   date_modified:
     type: date_time
   date_uploaded:

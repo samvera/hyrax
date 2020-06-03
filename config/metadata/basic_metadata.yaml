@@ -9,11 +9,6 @@ attributes:
     multiple: true
     form:
       primary: false
-  alternative_title:
-    type: string
-    multiple: true
-    form:
-      primary: false
   based_near:
     type: string
     multiple: true
