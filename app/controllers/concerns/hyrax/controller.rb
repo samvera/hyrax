@@ -1,4 +1,11 @@
 # frozen_string_literal: true
+
+##
+# A mixin for Hyrax support methods. This is meant to be included in
+# `ApplicationController`.
+#
+# @note private methods within this module are normally still "public API",
+#   since they are meant to be called by inheriting controllers.
 module Hyrax::Controller
   extend ActiveSupport::Concern
 
@@ -22,6 +29,21 @@ module Hyrax::Controller
   end
 
   private
+
+  ##
+  # @api public
+  #
+  # @return [#[]] a resolver for Hyrax's Transactions; this *should* be a
+  #   thread-safe Dry::Container, but callers to this method should strictly
+  #   use #[] for access
+  #
+  # @example
+  #   transactions['change_set.create_work'].call(my_form)
+  #
+  # @see https://dry-rb.org/gems/dry-container
+  def transactions
+    Hyrax::Transactions::Container
+  end
 
   def set_locale
     I18n.locale = params[:locale] || I18n.default_locale

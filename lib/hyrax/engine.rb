@@ -26,6 +26,7 @@ module Hyrax
     require 'hyrax/publisher'
     require 'hyrax/schema'
     require 'hyrax/search_state'
+    require 'hyrax/transactions'
     require 'hyrax/errors'
 
     # Force these models to be added to Legato's registry in development mode
