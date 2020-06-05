@@ -19,13 +19,12 @@ module Hyrax
       url = Hyrax.config.iiif_image_url_builder.call(
         latest_file_id,
         request.base_url,
-        Hyrax.config.iiif_image_size_default,
-        format: image_format(alpha_channels)
+        Hyrax.config.iiif_image_size_default
       )
 
       # @see https://github.com/samvera-labs/iiif_manifest
       IIIFManifest::DisplayImage.new(url,
-                                     format: image_format(alpha_channels),
+                                     format: image_format([]),
                                      width: width,
                                      height: height,
                                      iiif_endpoint: iiif_endpoint(latest_file_id))

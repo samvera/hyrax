@@ -33,6 +33,10 @@ module Hyrax
              :original_file_id,
              to: :solr_document
 
+    def alpha_channels
+      []
+    end
+
     def single_use_links
       @single_use_links ||= SingleUseLink.where(itemId: id).map { |link| link_presenter_class.new(link) }
     end
