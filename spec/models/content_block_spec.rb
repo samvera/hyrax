@@ -5,12 +5,12 @@ RSpec.describe ContentBlock, type: :model do
         expect { described_class.for(nil) }.to raise_error(ArgumentError)
       end
     end
-    context 'with a non-whitelisted value' do
+    context 'with a non-registered value' do
       it 'raises an ArgumentError' do
         expect { described_class.for(:destroy_all) }.to raise_error(ArgumentError)
       end
     end
-    context 'with a whitelisted value as a symbol' do
+    context 'with a registered value as a symbol' do
       subject { described_class.for(:about) }
 
       it 'returns a new instance' do
@@ -19,7 +19,7 @@ RSpec.describe ContentBlock, type: :model do
         expect(subject).to be_persisted
       end
     end
-    context 'with a whitelisted value as a string' do
+    context 'with a registered value as a string' do
       subject { described_class.for('about') }
 
       it 'returns a new instance' do

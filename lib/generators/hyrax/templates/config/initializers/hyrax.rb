@@ -261,7 +261,7 @@ Hyrax.config do |config|
     config.browse_everything = nil
   end
 
-  ## Whitelist all directories which can be used to ingest from the local file
+  ## Register all directories which can be used to ingest from the local file
   # system.
   #
   # Any file, and only those, that is anywhere under one of the specified
@@ -275,7 +275,7 @@ Hyrax.config do |config|
   # ingest files from the file system that are not part of the BrowseEverything
   # mount point.
   #
-  # config.whitelisted_ingest_dirs = []
+  # config.registered_ingest_dirs = []
 
   ##
   # Set the system-wide virus scanner

@@ -195,11 +195,25 @@ module Hyrax
         end
     end
 
-    # @!attribute [w] whitelisted_ingest_dirs
-    #   List of directories which can be used for local file system ingestion.
-    attr_writer :whitelisted_ingest_dirs
+    # @deprecated
     def whitelisted_ingest_dirs
-      @whitelisted_ingest_dirs ||= \
+      Deprecation.warn(self, "Samvera is deprecating #{self.class}#whitelisted_ingest_dirs " \
+        "in Hyrax 3.0. Instead use #{self.class}#registered_ingest_dirs.")
+      registered_ingest_dirs
+    end
+
+    # @deprecated
+    def whitelisted_ingest_dirs=(input)
+      Deprecation.warn(self, "Samvera is deprecating #{self.class}#whitelisted_ingest_dirs= " \
+        "in Hyrax 3.0. Instead use #{self.class}#registered_ingest_dirs=.")
+      self.registered_ingest_dirs = input
+    end
+
+    # @!attribute [w] registered_ingest_dirs
+    #   List of directories which can be used for local file system ingestion.
+    attr_writer :registered_ingest_dirs
+    def registered_ingest_dirs
+      @registered_ingest_dirs ||= \
         if defined? BrowseEverything
           file_system_dirs = Array.wrap(BrowseEverything.config['file_system'].try(:[], :home)).compact
           # Include the Rails tmp directory for cases where the BrowseEverything provider is required to download the file to a temporary directory first

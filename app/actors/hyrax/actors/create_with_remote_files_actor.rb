@@ -25,15 +25,15 @@ module Hyrax
 
       private
 
-        def whitelisted_ingest_dirs
-          Hyrax.config.whitelisted_ingest_dirs
+        def registered_ingest_dirs
+          Hyrax.config.registered_ingest_dirs
         end
 
         # @param uri [URI] the uri fo the resource to import
         def validate_remote_url(uri)
           if uri.scheme == 'file'
             path = File.absolute_path(CGI.unescape(uri.path))
-            whitelisted_ingest_dirs.any? do |dir|
+            registered_ingest_dirs.any? do |dir|
               path.start_with?(dir) && path.length > dir.length
             end
           else
