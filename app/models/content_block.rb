@@ -18,12 +18,18 @@ class ContentBlock < ActiveRecord::Base
   # `for` is a reserved word in Ruby.
   def self.for(key)
     key = key.respond_to?(:to_sym) ? key.to_sym : key
-    raise ArgumentError, "#{key} is not a ContentBlock name" unless whitelisted?(key)
+    raise ArgumentError, "#{key} is not a ContentBlock name" unless registered?(key)
     ContentBlock.public_send(NAME_REGISTRY[key])
   end
 
   class << self
+    # @deprecated
     def whitelisted?(key)
+      Deprecation.warn(self, "Samvera is deprecating '#{self}.whitelisted?' in Hyrax 3.0. Use #{self}.registered? instead.")
+      registered?(key)
+    end
+
+    def registered?(key)
       NAME_REGISTRY.include?(key)
     end
 

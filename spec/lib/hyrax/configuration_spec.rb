@@ -81,13 +81,13 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:translate_id_to_uri) }
   it { is_expected.to respond_to(:translate_uri_to_id) }
   it { is_expected.to respond_to(:upload_path) }
-  it { is_expected.to respond_to(:whitelisted_ingest_dirs) }
-  it { is_expected.to respond_to(:whitelisted_ingest_dirs=) }
+  it { is_expected.to respond_to(:registered_ingest_dirs) }
+  it { is_expected.to respond_to(:registered_ingest_dirs=) }
   it { is_expected.to respond_to(:work_requires_files?) }
 
-  describe "#whitelisted_ingest_dirs" do
+  describe "#registered_ingest_dirs" do
     it "provides the Rails tmp directory for temporary downloads for cloud files" do
-      expect(configuration.whitelisted_ingest_dirs).to include(Rails.root.join('tmp').to_s)
+      expect(configuration.registered_ingest_dirs).to include(Rails.root.join('tmp').to_s)
     end
   end
 end
