@@ -53,7 +53,7 @@ module Hyrax
     end
 
     def create
-      if actor.create(actor_environment)
+      if create_work
         after_create_response
       else
         respond_to do |wants|
@@ -168,6 +168,20 @@ module Hyrax
 
     def actor
       @actor ||= Hyrax::CurationConcern.actor
+    end
+
+    ##
+    # @return [#errors]
+    def create_work
+      case curation_concern
+      when ActiveFedora::Base
+        actor.create(actor_environment)
+      else
+        form = build_form
+
+        @curation_concern = form.validate(params[hash_key_for_curation_concern]) &&
+                            transactions['change_set.create_work'].call(form).value!
+      end
     end
 
     def presenter
