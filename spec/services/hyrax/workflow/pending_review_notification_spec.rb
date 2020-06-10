@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Workflow::PendingReviewNotification do
   let(:depositor) { create(:user) }
   let(:to_user) { create(:user) }

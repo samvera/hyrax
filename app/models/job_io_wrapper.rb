@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Primarily for jobs like IngestJob to revivify an equivalent FileActor to one that existed on
 # the caller's side of an asynchronous Job invocation.  This involves providing slots
 # for the metadata that might travel w/ the actor's various supported types of @file.

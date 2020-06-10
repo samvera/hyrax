@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::SolrService do
   let(:mock_conn) { instance_double(RSolr::Client) }
   let(:valkyrie_index) { double("valkyrie_index", connection: mock_conn) }

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module UrlHelper
     # generated models get registered as curation concerns and need a

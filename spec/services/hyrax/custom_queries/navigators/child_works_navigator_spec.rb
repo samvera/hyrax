@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::CustomQueries::Navigators::ChildWorksNavigator, :clean_repo do
   subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
 

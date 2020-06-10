@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module ResourceSync
     # TODO: the big assumption I'm making here is that the repository has fewer

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::AbstractTypeRelation, :clean_repo do
   before do
     stub_const 'AnotherWork', Class.new

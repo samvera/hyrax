@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe "work show view" do
   include Selectors::Dashboard
 

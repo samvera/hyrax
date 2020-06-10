@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Overrides FilterSuppressed filter to hide documents marked as
   # suppressed when the current user is permitted to take no workflow

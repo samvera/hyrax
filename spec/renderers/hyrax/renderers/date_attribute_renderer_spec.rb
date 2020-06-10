@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Renderers::DateAttributeRenderer do
   subject { Nokogiri::HTML(renderer.render) }
 

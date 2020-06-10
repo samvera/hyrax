@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec::Matchers.define :require_membership do
   match do |actual|
     actual&.require_membership?

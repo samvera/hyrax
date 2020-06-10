@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Forms::FileManagerForm do
   let(:work) { create(:work) }
   let(:ability) { instance_double Ability }

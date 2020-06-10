@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::TransfersController, type: :controller do
   describe "without a signed in user" do
     describe "#index" do

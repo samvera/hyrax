@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sipity
   # Represents a "comment" placed by the given :agent in regards to the give :entity
   class Comment < ActiveRecord::Base

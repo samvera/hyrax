@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Actors
     # Responsible for "applying" the various edit and read attributes to the given curation concern.

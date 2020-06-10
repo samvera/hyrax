@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'hyrax/callbacks'
 require 'hyrax/role_registry'
 require 'samvera/nesting_indexer'
@@ -13,7 +14,7 @@ module Hyrax
       @nested_relationship_reindexer = default_nested_relationship_reindexer
     end
 
-    DEFAULT_ACTIVE_WORKFLOW_NAME = 'default'.freeze
+    DEFAULT_ACTIVE_WORKFLOW_NAME = 'default'
     private_constant :DEFAULT_ACTIVE_WORKFLOW_NAME
 
     # @api public

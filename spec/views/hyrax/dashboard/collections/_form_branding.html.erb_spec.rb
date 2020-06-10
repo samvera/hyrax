@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/collections/_form_branding.html.erb', type: :view do
   let(:banner_info) { { file: "banner.gif" } }
   let(:logo_info) { [{ file: "logo.gif", alttext: "Logo alt text", linkurl: "http://abc.com" }] }

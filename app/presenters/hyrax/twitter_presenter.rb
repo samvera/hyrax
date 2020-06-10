@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Repeatable logic for presenting twitter handles.
   #

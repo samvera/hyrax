@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'select2-rails'
 require 'nest'
 require 'redis-namespace'

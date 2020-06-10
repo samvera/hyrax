@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Workflow
     # Responsible for writing the database records for the given :action and :method list.

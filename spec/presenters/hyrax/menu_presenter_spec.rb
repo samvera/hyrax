@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::MenuPresenter do
   let(:instance) { described_class.new(context) }
   let(:context) { ActionView::TestCase::TestController.new.view_context }

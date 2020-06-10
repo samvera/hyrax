@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # @see https://github.com/thoughtbot/factory_bot/blob/master/GETTING_STARTED.md#custom-strategies
 # @example
 #   let(:resource) { FactoryBot.valkyrie_create(:hyrax_work) }

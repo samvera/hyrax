@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 PowerConverter.define_conversion_for(:sipity_action) do |input, scope|
   Deprecation.warn('PowerConverter is deprecated. Use `Sipity::WorkflowAction(input, workflow)` instead')
   workflow_id = PowerConverter.convert_to_sipity_workflow_id(scope)

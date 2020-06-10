@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sipity
   # A named thing that happens within the bounds of a :workflow.
   #

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/collections/_show_document_list.html.erb', type: :view do
   let(:documents) { ["Hello", "World"] }
 

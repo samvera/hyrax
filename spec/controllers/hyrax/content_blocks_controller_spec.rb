@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::ContentBlocksController, type: :controller do
   let!(:announcement_text) do
     create(:content_block, name: 'announcement_text')

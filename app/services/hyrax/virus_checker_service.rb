@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Responsible for checking if the given file is a virus. Coordinates
   # with the underlying system virus scanner.

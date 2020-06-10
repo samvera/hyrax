@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/collections/_sort_and_per_page.html.erb', type: :view do
   let(:subject) { 'hyrax/collections/sort_and_per_page' }
   let(:collection) { instance_double(Collection) }

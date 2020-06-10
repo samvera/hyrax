@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class TransfersController < ApplicationController
     before_action :authenticate_user!

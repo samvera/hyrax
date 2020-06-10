@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
   let(:ability) { double }
   let(:user) { stub_model(User) }

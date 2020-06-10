@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class LeasesController < ApplicationController
     include Hyrax::LeasesControllerBehavior

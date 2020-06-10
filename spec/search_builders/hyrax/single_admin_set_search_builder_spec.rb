@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::SingleAdminSetSearchBuilder do
   let(:ability) { instance_double(Ability, admin?: true) }
   let(:context) do

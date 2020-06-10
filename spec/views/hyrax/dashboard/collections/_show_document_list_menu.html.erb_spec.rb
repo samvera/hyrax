@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/collections/_show_document_list_menu.html.erb', type: :view do
   context 'when user is viewing a collection' do
     let(:user) { create :user }

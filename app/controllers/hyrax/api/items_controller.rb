@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module API
     # Adds an endpoint that consumes and RESTfully emits JSON from Arkivo

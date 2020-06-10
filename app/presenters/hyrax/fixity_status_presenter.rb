@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Creates fixity status messages to display to user, for a fileset.
   # Determines status by looking up existing recorded ChecksumAuditLog objects,

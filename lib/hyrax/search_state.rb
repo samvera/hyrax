@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class SearchState < Blacklight::SearchState
     delegate :hyrax, :main_app, to: :controller

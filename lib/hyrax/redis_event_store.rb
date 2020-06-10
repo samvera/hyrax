@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   ##
   # @todo stop swallowing all errors! let clients determine how to handle

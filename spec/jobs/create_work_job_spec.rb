@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe CreateWorkJob do
   let(:user) { create(:user) }
   let(:log) do

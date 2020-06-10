@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/file_sets/_single_use_links.html.erb', type: :view do
   let(:user)          { create(:user) }
   let(:solr_document) { SolrDocument.new(id: '1234', 'has_model_ssim' => 'FileSet') }

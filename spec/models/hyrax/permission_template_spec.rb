@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::PermissionTemplate, :clean_repo do
   let(:admin_set) { create(:admin_set) }
   let(:collection) { create(:collection) }

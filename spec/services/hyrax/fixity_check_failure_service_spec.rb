@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::FixityCheckFailureService do
   let!(:depositor) { create(:user) }
   let!(:log_date) { '2015-07-15 03:06:59' }

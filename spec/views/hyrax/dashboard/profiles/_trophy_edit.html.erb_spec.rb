@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/profiles/_trophy_edit.html.erb', type: :view do
   let(:user) { stub_model(User, user_key: 'mjg') }
   let(:page) { Capybara::Node::Simple.new(rendered) }

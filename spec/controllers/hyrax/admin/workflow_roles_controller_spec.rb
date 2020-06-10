@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Admin::WorkflowRolesController do
   describe '#index' do
     context "when you have permission" do

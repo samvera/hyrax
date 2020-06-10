@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Actors
     # This is a proxy for the model specific actor

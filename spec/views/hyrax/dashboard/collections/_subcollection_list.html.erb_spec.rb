@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/collections/_subcollection_list.html.erb', type: :view do
   let(:user) { create :user }
   let(:ability) { instance_double("Ability") }

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class AbstractMessageService
     attr_reader :file_set, :user

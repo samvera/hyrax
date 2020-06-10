@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'Editing a work', type: :feature do
   let(:user) { create(:user, groups: 'librarians') }
   let(:user_admin) { create(:user, groups: 'admin') }

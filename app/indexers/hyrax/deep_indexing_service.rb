@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'linkeddata' # we need all the linked data types, because we don't know what types a service might return.
 module Hyrax
   class DeepIndexingService < BasicMetadataIndexer
@@ -48,7 +49,7 @@ module Hyrax
 
     def fetch_value(value)
       Rails.logger.info "Fetching #{value.rdf_subject} from the authorative source. (this is slow)"
-      value.fetch(headers: { 'Accept'.freeze => default_accept_header })
+      value.fetch(headers: { 'Accept' => default_accept_header })
     rescue IOError, SocketError => e
       # IOError could result from a 500 error on the remote server
       # SocketError results if there is no server to connect to

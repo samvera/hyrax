@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Navigate from a resource to the child filesets in the resource.
 module Hyrax
   module CustomQueries

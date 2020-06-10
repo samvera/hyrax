@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::ThumbnailPathService do
   include Hyrax::FactoryHelpers
 

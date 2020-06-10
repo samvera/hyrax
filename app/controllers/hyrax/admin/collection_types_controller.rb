@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class Admin::CollectionTypesController < ApplicationController
     before_action do
@@ -66,12 +67,10 @@ module Hyrax
     private
 
     def report_error_msg
-      error_msg = @collection_type.errors.messages
-      msg = 'Save was not successful because '
-      error_msg.each { |k, v| msg << k.to_s + ' ' + v.join(', ') + ', and ' }
-      msg.chomp!(', and ')
-      msg << '.'
-      flash[:error] = msg
+      messages = @collection_type.errors.messages
+      msg = 'Save was not successful because ' +
+            messages.map { |k, v| k.to_s + ' ' + v.join(', ') + ', and ' }.join
+      flash[:error] = msg.chomp(', and ') + '.'
     end
 
     def update_referer

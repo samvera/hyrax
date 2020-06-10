@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe FileViewStat, type: :model do
   let(:file_id) { file.id }
   let(:user_id) { 123 }

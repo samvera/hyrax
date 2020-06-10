@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'Legacy GenericFile routes', type: :request do
   it 'redirects to the work' do
     get '/files/gm80hv36p'

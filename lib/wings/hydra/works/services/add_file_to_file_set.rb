@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # TODO: This should live in Hyrax::AddFileMetadataToFileSet service and should work for all valkyrie adapters.
 module Wings::Works
   class AddFileToFileSet

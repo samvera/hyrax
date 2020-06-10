@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Log object deletion to activity streams
 #
 # @attr_reader deleted_work_id The id of the work that has been deleted by the user

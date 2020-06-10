@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::LicenseService do
   before do
     # Configure QA to use fixtures

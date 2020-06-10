@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   ### Allows :deposit as a valid type
   class AdminSetSearchBuilder < ::SearchBuilder

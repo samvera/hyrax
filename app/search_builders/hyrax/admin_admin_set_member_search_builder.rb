@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Builds a query to find the members of an admin set.
   # For use on the admin menu, so it includes works regardless of status.

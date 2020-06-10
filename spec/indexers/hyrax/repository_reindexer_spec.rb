@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::RepositoryReindexer do
   let(:subject) { Samvera::NestingIndexer }
 

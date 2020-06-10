@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 module Hyrax
   class Group
-    DEFAULT_NAME_PREFIX = 'group/'.freeze
+    DEFAULT_NAME_PREFIX = 'group/'
 
     def self.name_prefix
       DEFAULT_NAME_PREFIX

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class OrcidValidator < ActiveModel::Validator
     ORCID_REGEXP = %r{^(?<prefix>https?://orcid.org/)?(?<orcid>\d{4}-\d{4}-\d{4}-\d{3}[\dX])/?$}.freeze

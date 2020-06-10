@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Selectors
   module Dashboard
     def db_item_actions_toggle(item)

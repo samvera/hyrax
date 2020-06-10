@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 require_relative 'downloader'
 require 'rdf/rdfxml'
 module Hyrax
   module ControlledVocabulary
     module Importer
       class Language
-        URL = 'http://www.lexvo.org/resources/lexvo_2013-02-09.rdf.gz'.freeze
+        URL = 'http://www.lexvo.org/resources/lexvo_2013-02-09.rdf.gz'
 
         def initialize
           stdout_logger = Logger.new(STDOUT)

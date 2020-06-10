@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Revokes the user's edit access on the provided FileSet
   class RevokeEditJob < ApplicationJob

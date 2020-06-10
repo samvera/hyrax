@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/base/_form_metadata.html.erb', type: :view do
   before do
     allow(form).to receive(:display_additional_fields?).and_return(additional_fields)

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Actors
     # Actions are decoupled from controller logic so that they may be called from a controller or a background job.

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'uri'
 require 'tmpdir'
 require 'browse_everything/retriever'

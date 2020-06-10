@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class FixityChecksController < ApplicationController
     before_action :authenticate_user!

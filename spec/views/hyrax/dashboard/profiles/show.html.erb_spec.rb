@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/profiles/show.html.erb', type: :view do
   let(:join_date) { 1.day.ago }
   let(:user) { stub_model(User, user_key: 'mjg', created_at: join_date) }

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Responsible for extracting information related to Schema.org microdata.
   #
@@ -10,7 +11,7 @@ module Hyrax
   class Microdata
     include Singleton
     FILENAME = Hyrax::Engine.root + 'config/schema_org.yml'
-    TOP_KEY = 'schema_org'.freeze
+    TOP_KEY = 'schema_org'
 
     # @api private (See note regarding specific methods)
     #

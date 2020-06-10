@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::FileSetSearchBuilder do
   let(:processor_chain) { [:filter_models] }
   let(:ability) { double('ability') }

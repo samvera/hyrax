@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe "hyrax/homepage/_featured_works.html.erb", type: :view do
   let(:list) { FeaturedWorkList.new }
 

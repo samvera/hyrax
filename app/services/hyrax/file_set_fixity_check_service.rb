@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # This class runs fixity checks on a FileSet, potentially on multiple
   # files each with multiple versions in the FileSet.

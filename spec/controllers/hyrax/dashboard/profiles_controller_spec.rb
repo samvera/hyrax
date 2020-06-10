@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Dashboard::ProfilesController do
   let(:user) { create(:user) }
 

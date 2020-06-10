@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::LeasePresenter do
   let(:document) { SolrDocument.new(attributes) }
   let(:presenter) { described_class.new(document) }

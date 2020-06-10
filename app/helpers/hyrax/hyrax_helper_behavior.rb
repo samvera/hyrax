@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module HyraxHelperBehavior
     include Hyrax::CitationsBehavior
@@ -274,13 +275,9 @@ module Hyrax
     end
 
     def count_classes_for(unread_count)
-      'count label '.tap do |classes|
-        classes << if unread_count.zero?
-                     'invisible label-default'
-                   else
-                     'label-danger'
-                   end
-      end
+      classes = unread_count.zero? ? 'invisible label-default' : 'label-danger'
+
+      "count label #{classes}"
     end
 
     def search_action_for_dashboard

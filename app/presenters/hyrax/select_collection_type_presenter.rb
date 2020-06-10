@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class SelectCollectionTypePresenter
     # @param [CollectionType] a Hyrax::CollectionType

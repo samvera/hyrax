@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Mailer for contacting the administrator
   class ContactMailer < ApplicationMailer

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::ResourceSync::SourceDescriptionWriter do
   let(:sitemap) { 'http://www.sitemaps.org/schemas/sitemap/0.9' }
   let(:rs) { 'http://www.openarchives.org/rs/terms/' }

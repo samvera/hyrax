@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class BatchUploadsController < ApplicationController
     include Hydra::Controller::ControllerBehavior

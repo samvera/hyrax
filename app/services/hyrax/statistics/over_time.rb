@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Statistics
     # An abstract class for generating cumulative graphs

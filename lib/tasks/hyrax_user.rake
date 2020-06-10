@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 namespace :hyrax do
   namespace :user do
     desc "list user's email"

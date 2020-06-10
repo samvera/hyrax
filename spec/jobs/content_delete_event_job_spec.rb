@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe ContentDeleteEventJob do
   let(:user) { create(:user) }
   let(:mock_time) { Time.zone.at(1) }

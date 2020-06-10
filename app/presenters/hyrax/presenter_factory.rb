@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Responsible building an Array of presenters based on IDs and presenter class given
   # @todo Extract a SolrDocument finder class that takes a list of pids and returns/yields a ::SolrDocument for each hit in SOLR.

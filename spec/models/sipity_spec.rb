@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Sipity do
   describe '.Agent' do
     it 'will convert a Sipity::Agent' do

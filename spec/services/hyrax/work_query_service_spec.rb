@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   RSpec.describe WorkQueryService do
     let(:user) { create(:user) }

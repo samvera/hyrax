@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Dashboard::NestedCollectionsSearchBuilder do
   let(:collection) { double(id: 'Collection_123', collection_type_gid: 'gid/abc') }
   let(:scope) { double(current_ability: ability, blacklight_config: CatalogController.blacklight_config) }

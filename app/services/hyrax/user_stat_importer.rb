@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Cache work view, file view & file download stats for all users
   # this is called by 'rake hyrax:stats:user_stats'

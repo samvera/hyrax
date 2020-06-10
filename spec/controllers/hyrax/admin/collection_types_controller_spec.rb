@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Admin::CollectionTypesController, type: :controller, clean_repo: true do
   context "anonymous user" do
     describe "#index" do

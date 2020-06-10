@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'catalog/_thumbnail_list_collection.html.erb', type: :view do
   context "When the collection thumbnail is attached" do
     let(:attributes) do

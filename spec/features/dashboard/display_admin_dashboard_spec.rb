@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe "The dashboard as viewed by a admin user", type: :feature do
   before do
     sign_in create(:admin)

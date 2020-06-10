@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module CitationsBehaviors
     module TitleBehavior
@@ -41,7 +42,7 @@ module Hyrax
         if title.present?
           title = CGI.escapeHTML(title)
           title_info = clean_end_punctuation(title.strip)
-          text << title_info
+          text += title_info
         end
 
         return nil if text.strip.blank?

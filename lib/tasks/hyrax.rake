@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 namespace :hyrax do
   desc 'Print a count of each object type'
   task count: [:environment] do

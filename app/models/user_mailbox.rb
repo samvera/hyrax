@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class UserMailbox
   attr_reader :user
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # rubocop:disable RSpec/InstanceVariable
 RSpec.describe Hyrax::Works::MigrationService, clean_repo: true do
   let(:predicate_from) { ::RDF::Vocab::DC11.description }

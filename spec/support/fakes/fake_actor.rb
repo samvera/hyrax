@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class FakeActor < Hyrax::Actors::AbstractActor
   attr_accessor :created, :destroyed, :updated
 

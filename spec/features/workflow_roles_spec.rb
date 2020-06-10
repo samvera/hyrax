@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe "Manage workflow roles", type: :feature do
   let(:user) { create(:admin) }
   let(:one_step_workflow) do

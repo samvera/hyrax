@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Configuration do
   subject(:configuration) { described_class.new }
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Forms::CollectionForm do
   let(:collection) { build(:collection_lw) }
   let(:ability) { Ability.new(create(:user)) }

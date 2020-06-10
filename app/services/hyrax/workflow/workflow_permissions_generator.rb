@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Workflow
     # Responsible for creating database entries for the given workflow's permissions

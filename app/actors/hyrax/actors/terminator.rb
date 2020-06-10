@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Actors
     # This is always the last middleware on the actor middleware stack.

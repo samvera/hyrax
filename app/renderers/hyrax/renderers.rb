@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Module that will contain Renderer classes
   # @since 0.14.0

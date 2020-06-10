@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module ContentBlockHelperBehavior
     def displayable_content_block(content_block, **options)

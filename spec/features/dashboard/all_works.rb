@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe "As an admin user I should be able to see all works", :clean_repo do
   let!(:work1) { create(:work, title: ['Testing #1'], admin_set: adminset, member_of_collections: [collection]) }
   let!(:work2) { create(:work, title: ['Testing #2'], admin_set: adminset, member_of_collections: [collection]) }

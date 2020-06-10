@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class MultifileInput < SimpleForm::Inputs::CollectionInput
   def input(wrapper_options = nil)
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)

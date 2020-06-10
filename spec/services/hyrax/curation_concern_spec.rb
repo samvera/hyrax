@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::CurationConcern do
   let(:work) { GenericWork.new }
   let(:user) { double(current_user: double) }

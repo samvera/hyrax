@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::ChangeContentDepositorService do
   let!(:depositor) { create(:user) }
   let!(:receiver) { create(:user) }

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::WorkflowPresenter do
   let(:solr_document) { SolrDocument.new(attributes) }
   let(:attributes) do

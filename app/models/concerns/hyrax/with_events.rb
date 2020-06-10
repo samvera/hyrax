@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # A mixin module intended to provide an interface into creating the paper trail
   # of activity on the target model of the mixin.

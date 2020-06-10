@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'Collection Permission Templates Routes', type: :routing do
   routes { Hyrax::Engine.routes }
 

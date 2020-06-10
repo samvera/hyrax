@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'hyrax/move_all_works_to_admin_set'
 
 RSpec.describe MoveAllWorksToAdminSet, :clean_repo do

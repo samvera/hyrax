@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/batch_uploads/_form.html.erb', type: :view do
   let(:work) { GenericWork.new }
   let(:ability) { double('ability', current_user: user) }

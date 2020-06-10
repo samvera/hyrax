@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Actors
     # Attach or remove child works to/from this work. This decodes parameters

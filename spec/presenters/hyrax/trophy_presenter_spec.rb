@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::TrophyPresenter do
   let(:presenter) { described_class.new(solr_document) }
   let(:solr_document) { SolrDocument.new(id: '123456', has_model_ssim: 'GenericWork', title_tesim: ['A Title']) }

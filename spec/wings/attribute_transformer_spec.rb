@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'wings/attribute_transformer'
 
 RSpec.describe Wings::AttributeTransformer do

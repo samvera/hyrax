@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module CollectionsHelper
     # TODO: we could move this to CollectionPresenter if it had a view_context

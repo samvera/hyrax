@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Admin::AdminSetsController do
   routes { Hyrax::Engine.routes }
   let(:user) { create(:user) }

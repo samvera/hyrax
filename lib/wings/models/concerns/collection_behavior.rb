@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'wings/services/id_converter_service'
 require 'wings/hydra/works/models/concerns/collection_valkyrie_behavior'
 

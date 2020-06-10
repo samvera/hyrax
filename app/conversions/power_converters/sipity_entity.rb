@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 PowerConverter.define_conversion_for(:sipity_entity) do |input|
   Deprecation.warn('PowerConverter is deprecated. Use `Sipity::Entity(input)` instead')
   case input

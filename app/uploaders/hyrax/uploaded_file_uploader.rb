@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class UploadedFileUploader < CarrierWave::Uploader::Base
     # Override the directory where uploaded files will be stored.

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'hyrax/controlled_vocabulary/importer/downloader'
 
 RSpec.describe Hyrax::ControlledVocabulary::Importer::Downloader do

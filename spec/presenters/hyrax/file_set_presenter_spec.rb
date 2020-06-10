@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'iiif_manifest'
 
 RSpec.describe Hyrax::FileSetPresenter do

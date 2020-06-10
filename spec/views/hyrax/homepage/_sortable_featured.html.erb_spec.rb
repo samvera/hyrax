@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/homepage/_sortable_featured.html.erb', type: :view do
   let(:form_builder)  { double }
   let(:work)          { stub_model(GenericWork, id: "99", title: ['Foo']) }

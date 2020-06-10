@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/file_sets/show.html.erb', type: :view do
   let(:user) { double(user_key: 'sarah', twitter_handle: 'test') }
   let(:ability) { double }

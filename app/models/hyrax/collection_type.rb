@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class CollectionType < ActiveRecord::Base
     self.table_name = 'hyrax_collection_types'
@@ -9,10 +10,10 @@ module Hyrax
     before_destroy :ensure_no_collections
     has_many :collection_type_participants, class_name: 'Hyrax::CollectionTypeParticipant', foreign_key: 'hyrax_collection_type_id', dependent: :destroy
 
-    USER_COLLECTION_MACHINE_ID    = 'user_collection'.freeze
+    USER_COLLECTION_MACHINE_ID    = 'user_collection'
     USER_COLLECTION_DEFAULT_TITLE = I18n.t('hyrax.collection_type.default_title', default: 'User Collection').freeze
 
-    ADMIN_SET_MACHINE_ID = 'admin_set'.freeze
+    ADMIN_SET_MACHINE_ID = 'admin_set'
     ADMIN_SET_DEFAULT_TITLE = I18n.t('hyrax.collection_type.admin_set_title', default: 'Admin Set').freeze
 
     def title=(value)

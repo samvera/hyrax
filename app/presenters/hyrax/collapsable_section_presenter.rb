@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Draws a collapsable list widget using the Bootstrap 3 / Collapse.js plugin
   class CollapsableSectionPresenter

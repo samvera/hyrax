@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'collection', type: :feature, clean_repo: true do
   include Selectors::Dashboard
 

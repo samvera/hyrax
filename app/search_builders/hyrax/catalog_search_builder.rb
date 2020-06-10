@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 ##
 # The default Blacklight catalog `search_builder_class` for Hyrax.
 #

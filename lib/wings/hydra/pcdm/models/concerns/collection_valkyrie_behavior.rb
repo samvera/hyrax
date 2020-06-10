@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'wings/hydra/pcdm/models/concerns/pcdm_valkyrie_behavior'
 
 module Wings

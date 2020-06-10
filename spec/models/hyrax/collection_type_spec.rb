@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::CollectionType, type: :model do
   let(:collection_type) { build(:collection_type) }
 

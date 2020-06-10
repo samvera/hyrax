@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/admin/admin_sets/_show_document_list_row.html.erb', type: :view do
   let(:user) { create(:user, groups: 'admin') }
   let(:ability) { Ability.new(user) }

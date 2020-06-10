@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::HomepageController, type: :controller do
   routes { Hyrax::Engine.routes }
 

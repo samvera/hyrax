@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::SelectCollectionTypeListPresenter, :clean_repo do
   let(:user) { create(:user) }
   let(:instance) { described_class.new(user) }

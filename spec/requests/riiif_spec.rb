@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'IIIF image API', type: :request do
   let(:user) { create(:user) }
   let(:work) { create(:work_with_one_file, user: user) }

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Statistics::Collections::OverTime do
   let(:service) { described_class.new }
 

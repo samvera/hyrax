@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Statistics::QueryService, :clean_repo do
   let(:service) { described_class.new }
 

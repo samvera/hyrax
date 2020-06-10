@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Workflow::NotificationService do
   let(:creating_user) { Sipity::Role.new(name: 'creating_user') }
   let(:recipient1) do

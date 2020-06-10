@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe AdminSet, type: :model do
   let(:gf1) { create(:generic_work, user: user) }
   let(:gf2) { create(:generic_work, user: user) }

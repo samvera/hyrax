@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Actors
     # If there is a key `:remote_files' in the attributes, it attaches the files at the specified URIs

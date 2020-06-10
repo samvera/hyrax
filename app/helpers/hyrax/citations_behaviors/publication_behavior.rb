@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module CitationsBehaviors
     module PublicationBehavior
@@ -24,17 +25,16 @@ module Hyrax
       def setup_pub_info(work, include_date = false)
         pub_info = ""
         if (place = setup_pub_place(work))
-          pub_info << CGI.escapeHTML(place)
+          pub_info += CGI.escapeHTML(place)
         end
         if (publisher = setup_pub_publisher(work))
-          pub_info << ": " << CGI.escapeHTML(publisher)
+          pub_info += ": #{CGI.escapeHTML(publisher)}"
         end
 
         pub_date = include_date ? setup_pub_date(work) : nil
-        pub_info << ", " << pub_date unless pub_date.nil?
+        pub_info += ", #{pub_date}" unless pub_date.nil?
 
-        pub_info.strip!
-        pub_info.presence
+        pub_info.strip.presence
       end
     end
   end

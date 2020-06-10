@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module IndexesWorkflow
     mattr_accessor :suppressed_field, instance_writer: false do

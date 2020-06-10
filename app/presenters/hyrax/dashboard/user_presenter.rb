@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Dashboard
     # Presenter for dashboard of a non-admin user

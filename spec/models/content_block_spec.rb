@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe ContentBlock, type: :model do
   describe '.for' do
     context 'with a nil' do

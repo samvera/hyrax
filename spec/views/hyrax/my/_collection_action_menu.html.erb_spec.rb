@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/my/_collection_action_menu.html.erb' do
   let(:id) { '123' }
   let(:collection_doc) { SolrDocument.new(id: id, has_model_ssim: 'Collection') }

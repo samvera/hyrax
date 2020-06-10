@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Grants the user's read access on the provided FileSet
   class GrantReadJob < ApplicationJob

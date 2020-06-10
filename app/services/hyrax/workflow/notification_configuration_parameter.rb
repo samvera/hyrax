@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Workflow
     # Helps consolidate and map a notification configuration.

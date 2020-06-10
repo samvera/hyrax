@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Provide the ActiveModel methods so that this object routes the same as the
   # object represented by the solr document.

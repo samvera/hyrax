@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe FeaturedWorkList, type: :model do
   let(:work1) { create(:generic_work) }
   let(:work2) { create(:generic_work) }

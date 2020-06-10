@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class DeactivatedEmbargoSearchBuilder < EmbargoSearchBuilder
     self.default_processor_chain += [:with_deactivated_embargos]

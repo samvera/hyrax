@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Hyrax::ResourceSyncController < ApplicationController
   # We don't need locale here
   def default_url_options

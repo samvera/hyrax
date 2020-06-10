@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::PermissionTemplateApplicator do
   subject(:applicator) { described_class.new(template: template) }
   let(:manage_groups)  { ['edit_group_1', 'edit_group_2'] }

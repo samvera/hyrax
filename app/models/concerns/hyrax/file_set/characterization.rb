@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # This module points the FileSet to the location of the technical metadata.
 # By default, the file holding the metadata is :original_file and the terms
 # are listed under ::characterization_terms.

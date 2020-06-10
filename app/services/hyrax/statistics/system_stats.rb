@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Statistics
     # A class that retrieves system level statistics about the system

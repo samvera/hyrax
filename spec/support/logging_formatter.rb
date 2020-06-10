@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec::Support.require_rspec_core "formatters/base_text_formatter"
 class LoggingFormatter < RSpec::Core::Formatters::ProgressFormatter
   RSpec::Core::Formatters.register self, :example_started, :example_passed, :dump_profile

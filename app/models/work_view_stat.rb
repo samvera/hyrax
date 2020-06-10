@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class WorkViewStat < Hyrax::Statistic
   self.cache_column = :work_views
   self.event_type = :pageviews

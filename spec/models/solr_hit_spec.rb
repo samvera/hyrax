@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe SolrHit do
   subject(:solr_hit) { described_class.new "id" => "my:_ID1_" }
 

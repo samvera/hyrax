@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class ManifestHelper
     include Rails.application.routes.url_helpers

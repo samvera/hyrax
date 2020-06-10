@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/collections/_default_group.html.erb', type: :view do
   let(:ability) { double }
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Actors::ApplyOrderActor do
   let(:curation_concern) { create(:work_with_two_children, user: user) }
   let(:ability) { ::Ability.new(user) }

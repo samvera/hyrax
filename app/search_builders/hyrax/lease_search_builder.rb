@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Finds objects under lease
   class LeaseSearchBuilder < Blacklight::SearchBuilder

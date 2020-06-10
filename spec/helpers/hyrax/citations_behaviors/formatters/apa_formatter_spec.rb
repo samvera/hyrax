@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::CitationsBehaviors::Formatters::ApaFormatter do
   subject(:formatter) { described_class.new(:no_context) }
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Hyrax::HomepageController < ApplicationController
   # Adds Hydra behaviors into the application controller
   include Blacklight::SearchContext

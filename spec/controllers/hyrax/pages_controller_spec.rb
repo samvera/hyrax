@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::PagesController, type: :controller do
   let(:user) { create(:user) }
 

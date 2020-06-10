@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::UploadedFile do
   let(:file1) { File.open(fixture_path + '/world.png') }
 

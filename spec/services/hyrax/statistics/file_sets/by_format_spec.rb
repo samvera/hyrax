@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Statistics::FileSets::ByFormat, :clean_repo do
   describe ".query" do
     let(:fs1) { build(:file_set, id: '1234567') }

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/collections/_show_add_items_actions.html.erb', type: :view do
   let(:presenter) { double('Hyrax::CollectionPresenter', solr_document: solr_document, id: '123', title: 'Collection 1') }
   let(:solr_document) { double('Solr Document') }

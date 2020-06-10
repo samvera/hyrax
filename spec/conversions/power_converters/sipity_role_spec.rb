@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'PowerConverter' do
   context 'role' do
     it "converts Sipity::Role" do

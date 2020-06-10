@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class VersionListPresenter
     def initialize(version_list)

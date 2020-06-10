@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sipity
   # Responsible for defining who receives what email and in what capacity
   # (eg to:, cc:, bcc:)

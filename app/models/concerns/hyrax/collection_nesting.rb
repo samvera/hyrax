@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Responsible for adding the necessary callbacks for updating the nested collection information
   # This is part of the after update index because it is a potentially very expensive process.

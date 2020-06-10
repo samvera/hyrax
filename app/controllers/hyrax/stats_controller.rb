@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class StatsController < ApplicationController
     include Hyrax::SingularSubresourceController
@@ -21,9 +22,9 @@ module Hyrax
 
     def add_breadcrumb_for_action
       case action_name
-      when 'file'.freeze
+      when 'file'
         add_breadcrumb I18n.t("hyrax.file_set.browse_view"), main_app.hyrax_file_set_path(params["id"])
-      when 'work'.freeze
+      when 'work'
         add_breadcrumb @work.to_s, main_app.polymorphic_path(@work)
       end
     end

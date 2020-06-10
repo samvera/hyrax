@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Actors
     # Ensures that the default AdminSet id is set if this form doesn't have

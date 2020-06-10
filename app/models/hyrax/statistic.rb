@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class Statistic < ActiveRecord::Base
     self.abstract_class = true

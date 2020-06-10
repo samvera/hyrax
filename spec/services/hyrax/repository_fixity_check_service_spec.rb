@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::RepositoryFixityCheckService do
   let!(:file) do
     create(:file_set).tap do |file|

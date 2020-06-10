@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe "hyrax/embargoes/index.html.erb", type: :view do
   before do
     stub_template 'hyrax/embargoes/_list_deactivated_embargoes' => 'rendered list_deactivated_embargoes'

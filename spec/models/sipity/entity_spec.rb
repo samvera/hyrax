@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sipity
   RSpec.describe Entity, type: :model do
     describe 'database configuration' do

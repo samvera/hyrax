@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sipity
   # A bridge for defining the "contexts" in which emails are sent.
   #
@@ -21,6 +22,6 @@ module Sipity
     belongs_to :scope_for_notification, polymorphic: true
     belongs_to :notification, class_name: 'Sipity::Notification'
 
-    REASON_ACTION_IS_TAKEN = 'action_is_taken'.freeze
+    REASON_ACTION_IS_TAKEN = 'action_is_taken'
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax::Works
   module Metadata
     extend ActiveSupport::Concern

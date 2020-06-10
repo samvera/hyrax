@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::FileSetFixityCheckService do
   let(:f)                 { create(:file_set, :image) }
   let(:service_by_object) { described_class.new(f) }

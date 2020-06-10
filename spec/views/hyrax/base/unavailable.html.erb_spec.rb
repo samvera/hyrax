@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/base/unavailable.html.erb', type: :view do
   let(:model) do
     double('model',

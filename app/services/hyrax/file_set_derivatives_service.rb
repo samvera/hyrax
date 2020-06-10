@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Responsible for creating and cleaning up the derivatives of a file_set
   class FileSetDerivativesService

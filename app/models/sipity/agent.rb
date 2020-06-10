@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sipity
   # A proxy for something that can take an action.
   #
@@ -6,8 +7,8 @@ module Sipity
   class Agent < ActiveRecord::Base
     self.table_name = 'sipity_agents'
 
-    ENTITY_LEVEL_AGENT_RELATIONSHIP = 'entity_level'.freeze
-    WORKFLOW_LEVEL_AGENT_RELATIONSHIP = 'workflow_level'.freeze
+    ENTITY_LEVEL_AGENT_RELATIONSHIP = 'entity_level'
+    WORKFLOW_LEVEL_AGENT_RELATIONSHIP = 'workflow_level'
 
     has_many :workflow_responsibilities, dependent: :destroy, class_name: 'Sipity::WorkflowResponsibility'
     has_many :entity_specific_responsibilities, dependent: :destroy, class_name: 'Sipity::EntitySpecificResponsibility'

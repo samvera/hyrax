@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Added to allow for the My controller to show only things I have edit access to
 class Hyrax::My::HighlightsSearchBuilder < Hyrax::SearchBuilder
   include Hyrax::My::SearchBuilderBehavior

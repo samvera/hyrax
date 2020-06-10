@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Workflow::ActionTakenService do
   let(:triggered_methods) { [instance_double(Sipity::Method, service_name: 'FooBar')] }
   let(:triggered_methods_rel) do

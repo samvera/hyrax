@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'spec_helper'
 
 RSpec.describe 'hyrax/dashboard/collections/_work_action_menu.html.erb', type: :view do

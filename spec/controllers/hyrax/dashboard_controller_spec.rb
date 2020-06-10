@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::DashboardController, type: :controller do
   context "with an unauthenticated user" do
     it "redirects to sign-in page" do

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sipity
   # An actor can take the given action
   class WorkflowStateAction < ActiveRecord::Base

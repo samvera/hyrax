@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class FixityCheckJob < Hyrax::ApplicationJob
   # A Job class that runs a fixity check (using ActiveFedora::FixityService,
   # which contacts fedora and requests a fixity check), and stores the results

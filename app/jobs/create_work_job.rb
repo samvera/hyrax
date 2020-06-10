@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # This is a job spawned by the BatchCreateJob
 class CreateWorkJob < Hyrax::ApplicationJob
   queue_as Hyrax.config.ingest_queue_name

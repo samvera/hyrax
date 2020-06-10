@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sipity
   # A proxy for the entity that is being processed via workflows.
   #

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # This class gets called by ActiveFedora::IndexingService#olrize_rdf_assertions
   class BasicMetadataIndexer < ActiveFedora::RDF::IndexingService

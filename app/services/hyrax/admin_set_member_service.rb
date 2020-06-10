@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Responsible for retrieving admin set's members
   class AdminSetMemberService

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe BlacklightHelper, type: :helper do
   let(:blacklight_config) { CatalogController.blacklight_config }
   let(:attributes) do

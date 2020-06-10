@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # This is a replacement for the OpenStruct usage. The idea is to expose
 # an object with a common interface.
 class SpecStatistic

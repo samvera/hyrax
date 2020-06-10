@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::TrophyHelper, type: :helper do
   describe "#display_trophy_link" do
     let(:user) { create(:user) }

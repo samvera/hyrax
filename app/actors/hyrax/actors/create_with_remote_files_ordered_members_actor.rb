@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Actors
     # When adding member FileSets to a Work, Hyrax saves

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/single_use_links_viewer/show.html.erb' do
   let(:solr_document) { SolrDocument.new(has_model_ssim: ['FileSet']) }
   let(:ability) { double }

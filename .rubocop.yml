@@ -48,13 +48,6 @@ Style/CollectionMethods:
     detect: 'find'
     find_all: 'select'
 
-# disable frozen string literal comment. We can't safely introduce this
-# system-wide until a major version because it freezes strings that downstream
-# users might be mutating. Please use the frozen string literal pragma on new
-# files
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
 Style/SymbolArray:
   Enabled: false
 

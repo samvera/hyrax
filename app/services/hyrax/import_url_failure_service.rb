@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class ImportUrlFailureService < AbstractMessageService
     def message

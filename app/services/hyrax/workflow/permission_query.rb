@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Workflow
     # Welcome intrepid developer. You have stumbled into some complex data

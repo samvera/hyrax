@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # These are the metadata elements that Hyrax internally requires of
   # all managed Collections, Works and FileSets will have.

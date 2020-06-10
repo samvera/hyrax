@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::RightsStatementService do
   let(:service) { described_class.new }
 

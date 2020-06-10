@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/base/relationships', type: :view do
   let(:user) { create(:user, groups: 'admin') }
   let(:ability) { Ability.new(user) }

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Operation do
   describe '#status' do
     it 'is protected by enum enforcement' do

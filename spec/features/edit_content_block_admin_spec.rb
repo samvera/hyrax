@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'Editing content blocks as admin', :js do
   let(:user) { create(:admin) }
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::CitationsController do
   describe "#work" do
     let(:user) { create(:user) }

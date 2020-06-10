@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Workflow
     # Responsible for writing the database records for the given :workflow and :notification_configuration.

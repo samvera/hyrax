@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module BreadcrumbsForWorks
     extend ActiveSupport::Concern
@@ -29,12 +30,12 @@ module Hyrax
 
     def add_breadcrumb_for_action
       case action_name
-      when 'edit'.freeze
+      when 'edit'
         add_breadcrumb curation_concern.to_s, main_app.polymorphic_path(curation_concern)
         add_breadcrumb t(:'hyrax.works.edit.breadcrumb'), request.path
-      when 'new'.freeze
+      when 'new'
         add_breadcrumb t(:'hyrax.works.create.breadcrumb'), request.path
-      when 'show'.freeze
+      when 'show'
         add_breadcrumb presenter.to_s, main_app.polymorphic_path(presenter)
       end
     end

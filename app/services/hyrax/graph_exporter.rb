@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Retrieves the graph for an object with the internal triples removed
   # and the uris translated to external uris.

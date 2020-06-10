@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe ChecksumAuditLog do
   let(:f) do
     file = FileSet.create do |gf|

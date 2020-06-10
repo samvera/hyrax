@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Service class for checking an item's collection memberships, to
   # make sure that the item is not added to multiple single-membership

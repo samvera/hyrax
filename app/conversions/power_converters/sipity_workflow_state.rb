@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'power_converter'
 
 PowerConverter.define_conversion_for(:sipity_workflow_state) do |input, workflow|

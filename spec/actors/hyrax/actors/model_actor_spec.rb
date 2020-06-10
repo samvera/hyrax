@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module MusicalWork
   class Cover < ActiveFedora::Base
   end

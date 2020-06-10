@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Methods in this class are from/based on ActiveFedora::SolrQueryBuilder
   class SolrQueryBuilderService
@@ -20,7 +21,7 @@ module Hyrax
       # @example
       #   construct_query([['library_id_ssim', '123'], ['owner_ssim', 'Fred']])
       #   # => "_query_:\"{!field f=library_id_ssim}123\" AND _query_:\"{!field f=owner_ssim}Fred\""
-      def construct_query(field_pairs, join_with = default_join_with, type = 'field'.freeze)
+      def construct_query(field_pairs, join_with = default_join_with, type = 'field')
         clauses = pairs_to_clauses(field_pairs, type)
         return "" if clauses.count.zero?
         return clauses.first if clauses.count == 1

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Defines behavior that is applied to objects added as members of an AdminSet
   #
@@ -62,16 +63,16 @@ module Hyrax
     end
 
     # Valid Release Period values
-    RELEASE_TEXT_VALUE_FIXED = 'fixed'.freeze
-    RELEASE_TEXT_VALUE_NO_DELAY = 'now'.freeze
+    RELEASE_TEXT_VALUE_FIXED = 'fixed'
+    RELEASE_TEXT_VALUE_NO_DELAY = 'now'
 
     # Valid Release Varies sub-options
-    RELEASE_TEXT_VALUE_BEFORE_DATE = 'before'.freeze
-    RELEASE_TEXT_VALUE_EMBARGO = 'embargo'.freeze
-    RELEASE_TEXT_VALUE_6_MONTHS = '6mos'.freeze
-    RELEASE_TEXT_VALUE_1_YEAR = '1yr'.freeze
-    RELEASE_TEXT_VALUE_2_YEARS = '2yrs'.freeze
-    RELEASE_TEXT_VALUE_3_YEARS = '3yrs'.freeze
+    RELEASE_TEXT_VALUE_BEFORE_DATE = 'before'
+    RELEASE_TEXT_VALUE_EMBARGO = 'embargo'
+    RELEASE_TEXT_VALUE_6_MONTHS = '6mos'
+    RELEASE_TEXT_VALUE_1_YEAR = '1yr'
+    RELEASE_TEXT_VALUE_2_YEARS = '2yrs'
+    RELEASE_TEXT_VALUE_3_YEARS = '3yrs'
 
     # Key/value pair of valid embargo periods. Values are number of months embargoed.
     RELEASE_EMBARGO_PERIODS = {

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 namespace :hyrax do
   namespace :universal_viewer do
     desc "Install Universal Viewer"

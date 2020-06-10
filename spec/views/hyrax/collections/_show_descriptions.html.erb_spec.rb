@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/collections/_show_descriptions.html.erb', type: :view do
   context 'displaying a custom collection' do
     let(:collection) do

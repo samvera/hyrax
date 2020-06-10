@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'catalog/index.html.erb', type: :view do
   let(:doc) do
     SolrDocument.new(id: "abc123",

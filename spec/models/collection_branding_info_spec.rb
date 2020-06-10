@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe CollectionBrandingInfo, type: :model do
   let(:banner_info) do
     described_class.new(

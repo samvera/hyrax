@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'wings/hydra/works/services/add_file_to_file_set'
 
 # frozen_string_literal: true

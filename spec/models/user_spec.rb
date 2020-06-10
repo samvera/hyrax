@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe User, type: :model do
   let(:user) { build(:user) }
   let(:another_user) { build(:user) }

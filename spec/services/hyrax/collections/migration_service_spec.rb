@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
   let(:user) { create(:user) }
   let(:editor1) { create(:user) }

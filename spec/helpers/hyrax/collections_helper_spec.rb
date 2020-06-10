@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::CollectionsHelper do
   let(:user) { create(:user, groups: ['admin']) }
   let(:ability) { Ability.new(user) }

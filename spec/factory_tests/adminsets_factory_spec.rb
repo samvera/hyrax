@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'AdminSets Factory' do # rubocop:disable RSpec/DescribeClass
   let(:user) { build(:user, email: 'user@example.com') }
   let(:user_mgr) { build(:user, email: 'user_mgr@example.com') }

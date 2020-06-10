@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # View Helpers for Hydra Batch Edit functionality
 module Hyrax
   module BatchEditsHelper

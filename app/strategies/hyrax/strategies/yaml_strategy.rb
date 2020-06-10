@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax::Strategies
   class YamlStrategy < Flipflop::Strategies::AbstractStrategy
     class << self

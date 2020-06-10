@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # A work should be able to be filtered out of search results if it's inactive
   module Suppressible

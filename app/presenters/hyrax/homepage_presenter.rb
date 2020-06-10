@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class HomepagePresenter
     class_attribute :create_work_presenter_class

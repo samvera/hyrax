@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::GrantReadToMembersJob do
   let(:depositor) { create(:user) }
 

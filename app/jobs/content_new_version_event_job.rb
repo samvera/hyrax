@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Log new version of a file to activity streams
 class ContentNewVersionEventJob < ContentEventJob
   def action

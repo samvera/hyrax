@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 PowerConverter.define_conversion_for(:sipity_workflow_id) do |input|
   case input
   when Sipity::Workflow

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Called by the stats controller, it finds cached file pageview data,
 # and prepares it for visualization in /app/views/stats/file.html.erb
 module Hyrax

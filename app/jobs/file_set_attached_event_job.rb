@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Log a fileset attachment to activity streams
 class FileSetAttachedEventJob < ContentEventJob
   # Log the event to the fileset's and its container's streams

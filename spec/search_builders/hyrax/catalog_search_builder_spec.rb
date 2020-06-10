@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::CatalogSearchBuilder do
   let(:context) { double }
   let(:builder) { described_class.new(context).with(blacklight_params) }

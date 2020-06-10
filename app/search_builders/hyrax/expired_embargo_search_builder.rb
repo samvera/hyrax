@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Finds embargoed objects with release dates in the past
   class ExpiredEmbargoSearchBuilder < EmbargoSearchBuilder

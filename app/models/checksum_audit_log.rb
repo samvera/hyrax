@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ChecksumAuditLog < ActiveRecord::Base
   def failed?
     !passed?

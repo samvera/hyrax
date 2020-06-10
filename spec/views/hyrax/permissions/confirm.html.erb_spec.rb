@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/permissions/confirm.html.erb', type: :view do
   let(:curation_concern) { stub_model(GenericWork) }
   let(:page) { Capybara::Node::Simple.new(rendered) }

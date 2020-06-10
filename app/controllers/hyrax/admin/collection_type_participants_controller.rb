@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class Admin::CollectionTypeParticipantsController < ApplicationController
     before_action do

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sipity
   RSpec.describe Role, type: :model do
     context 'class methods' do

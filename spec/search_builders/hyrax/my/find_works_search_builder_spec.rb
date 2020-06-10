@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::My::FindWorksSearchBuilder do
   let(:controller) { Qa::TermsController.new }
   let(:user) { create(:user) }

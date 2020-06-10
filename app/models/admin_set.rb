@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # There is an interplay between an AdminSet and a PermissionTemplate. Given
 # that AdminSet is an ActiveFedora::Base and PermissionTemplate is ActiveRecord::Base
 # we don't have the usual :has_many or :belongs_to methods to assist in defining that
@@ -21,7 +22,7 @@ class AdminSet < ActiveFedora::Base
   include Hyrax::HumanReadableType
   include Hyrax::HasRepresentative
 
-  DEFAULT_ID = 'admin_set/default'.freeze
+  DEFAULT_ID = 'admin_set/default'
   DEFAULT_TITLE = ['Default Admin Set'].freeze
   DEFAULT_WORKFLOW_NAME = Hyrax.config.default_active_workflow_name
 

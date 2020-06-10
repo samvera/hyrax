@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe "hyrax/base/_form_child_work_relationships.html.erb", type: :view do
   let(:work) { valkyrie_create(:monograph, :with_member_works) }
   let(:form) { Hyrax::Forms::ResourceForm.for(work) }

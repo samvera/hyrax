@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module LeaseHelper
     def assets_with_expired_leases

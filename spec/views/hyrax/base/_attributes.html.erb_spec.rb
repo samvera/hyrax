@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/base/_attributes.html.erb' do
   let(:creator)     { 'Bilbo' }
   let(:contributor) { 'Frodo' }

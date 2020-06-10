@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Renderers
     # This is used by PresentsAttributes to show licenses

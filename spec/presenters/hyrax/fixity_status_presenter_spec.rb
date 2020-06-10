@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::FixityStatusPresenter do
   let(:file_set_id) { "xw42n7888" }
   let(:file_ids) do

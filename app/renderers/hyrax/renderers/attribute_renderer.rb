@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "rails_autolink/helpers"
 
 module Hyrax
@@ -21,29 +22,34 @@ module Hyrax
 
       # Draw the table row for the attribute
       def render
-        markup = ''
+        return '' if values.blank? && !options[:include_empty]
 
-        return markup if values.blank? && !options[:include_empty]
-        markup << %(<tr><th>#{label}</th>\n<td><ul class='tabular'>)
+        markup = %(<tr><th>#{label}</th>\n<td><ul class='tabular'>)
+
         attributes = microdata_object_attributes(field).merge(class: "attribute attribute-#{field}")
-        Array(values).each do |value|
-          markup << "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value.to_s)}</li>"
-        end
-        markup << %(</ul></td></tr>)
+
+        markup += Array(values).map do |value|
+          "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value.to_s)}</li>"
+        end.join
+
+        markup += %(</ul></td></tr>)
+
         markup.html_safe
       end
 
       # Draw the dl row for the attribute
       def render_dl_row
-        markup = ''
+        return '' if values.blank? && !options[:include_empty]
 
-        return markup if values.blank? && !options[:include_empty]
-        markup << %(<dt>#{label}</dt>\n<dd><ul class='tabular'>)
+        markup = %(<dt>#{label}</dt>\n<dd><ul class='tabular'>)
+
         attributes = microdata_object_attributes(field).merge(class: "attribute attribute-#{field}")
-        Array(values).each do |value|
-          markup << "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value.to_s)}</li>"
-        end
-        markup << %(</ul></dd>)
+
+        markup += Array(values).map do |value|
+          "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value.to_s)}</li>"
+        end.join
+        markup += %(</ul></dd>)
+
         markup.html_safe
       end
 
@@ -70,12 +76,10 @@ module Hyrax
       end
 
       def html_attributes(attributes)
-        buffer = ""
-        attributes.each do |k, v|
-          buffer << " #{k}"
-          buffer << %(="#{v}") if v.present?
-        end
-        buffer
+        attributes.map do |key, value|
+          value_set = value.present? ? %(="#{value}") : nil
+          " #{key}#{value_set}"
+        end.join
       end
 
       def li_value(value)

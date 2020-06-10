@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Conversion service for going between files on a valkyrie resource and files on an active fedora object
 module Wings
   class FileConverterService

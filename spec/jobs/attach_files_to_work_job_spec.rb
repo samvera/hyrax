@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe AttachFilesToWorkJob, perform_enqueued: [AttachFilesToWorkJob] do
   let(:file1) { File.open(fixture_path + '/world.png') }
   let(:file2) { File.open(fixture_path + '/image.jp2') }

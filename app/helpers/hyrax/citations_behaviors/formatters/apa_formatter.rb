@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module CitationsBehaviors
     module Formatters
@@ -7,10 +8,10 @@ module Hyrax
 
         def format(work)
           text = ''
-          text << authors_text_for(work)
-          text << pub_date_text_for(work)
-          text << add_title_text_for(work)
-          text << add_publisher_text_for(work)
+          text += authors_text_for(work)
+          text += pub_date_text_for(work)
+          text += add_title_text_for(work)
+          text += add_publisher_text_for(work)
           text.html_safe
         end
 
@@ -33,15 +34,15 @@ module Hyrax
           return '' if authors_list.blank?
           authors_list = Array.wrap(authors_list).collect { |name| abbreviate_name(surname_first(name)).strip }
           text = ''
-          text << authors_list.first if authors_list.first
+          text += authors_list.first if authors_list.first
           authors_list[1..-1].each do |author|
-            if author == authors_list.last # last
-              text << ", &amp; " << author
-            else # all others
-              text << ", " << author
-            end
+            text += if author == authors_list.last # last
+                      ", &amp; #{author}"
+                    else # all others
+                      ", #{author}"
+                    end
           end
-          text << "." unless text.end_with?(".")
+          text += "." unless text.end_with?(".")
           text
         end
 

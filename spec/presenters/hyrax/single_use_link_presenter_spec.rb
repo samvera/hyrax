@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::SingleUseLinkPresenter do
   subject { described_class.new(link) }
 

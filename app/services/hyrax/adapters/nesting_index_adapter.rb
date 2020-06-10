@@ -1,8 +1,9 @@
+# frozen_string_literal: true
 module Hyrax
   module Adapters
     module NestingIndexAdapter
-      FULL_REINDEX = "full".freeze
-      LIMITED_REINDEX = "limited".freeze
+      FULL_REINDEX = "full"
+      LIMITED_REINDEX = "limited"
 
       # @!group Providing interface for a Samvera::NestingIndexer::Adapter
       # @api public

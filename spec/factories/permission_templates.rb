@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 FactoryBot.define do
   factory :permission_template, class: Hyrax::PermissionTemplate do
     # Given that there is a one to one strong relation between permission_template and admin_set,

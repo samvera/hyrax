@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module IiifHelper
     def iiif_viewer_display(work_presenter, locals = {})

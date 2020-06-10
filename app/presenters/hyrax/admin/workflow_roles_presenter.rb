@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Admin
     # Displays a list of users and their associated workflow roles

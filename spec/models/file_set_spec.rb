@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # This tests the FileSet model that is inserted into the host app by hyrax:models
 # It includes the Hyrax::FileSetBehavior module and nothing else
 # So this test covers both the FileSetBehavior module and the generated FileSet model

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/base/show.json.jbuilder' do
   let(:curation_concern) do
     stub_model(GenericWork, title: ['Test title'])

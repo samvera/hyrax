@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Converson service for going between valkyrie_ids and fedora_ids
 # NOTE: This is pretty heavy handed since it loads objects to get the converted ids.
 module Wings

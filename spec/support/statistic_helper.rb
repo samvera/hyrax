@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module StatisticHelper
   def statistic_date(date)
     date.to_datetime.to_i * 1000

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
   let(:controller_action) { 'new' }
   let(:controller_class)  { Hyrax::MonographsController }

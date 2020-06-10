@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Qa::Authorities
   class FindWorks < Qa::Authorities::Base
     class_attribute :search_builder_class

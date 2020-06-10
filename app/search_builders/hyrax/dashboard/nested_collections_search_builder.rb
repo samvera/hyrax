@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Dashboard
     # Responsible for searching for collections of the same type that are not the given collection

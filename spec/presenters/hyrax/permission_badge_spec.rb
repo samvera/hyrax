@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::PermissionBadge do
   context "with a SolrDocument" do
     let(:badge) { described_class.new(solr_doc.visibility) }

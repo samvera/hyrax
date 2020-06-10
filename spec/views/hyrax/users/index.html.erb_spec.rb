@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/users/index.html.erb', type: :view do
   let(:join_date) { 5.days.ago }
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CharacterizeJob < Hyrax::ApplicationJob
   queue_as Hyrax.config.ingest_queue_name
 

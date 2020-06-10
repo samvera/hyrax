@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::StatsController do
   let(:user) { create(:user) }
   let(:usage) { double }

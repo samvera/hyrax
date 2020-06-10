@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Overrides CanCan so that attributes are not automatically assigned
   # to loaded resources

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sipity
   # A role is a responsibility to do things. That is to take actions. It is
   # easy to conflate a person's role with the groups to which they belong.

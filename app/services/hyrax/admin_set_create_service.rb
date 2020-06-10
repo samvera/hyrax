@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Responsible for creating an AdminSet and its corresponding data:
   #

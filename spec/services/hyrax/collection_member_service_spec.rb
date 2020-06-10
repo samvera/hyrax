@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::CollectionMemberService, :clean_repo do
   let(:user) { create(:user, groups: 'potato') }
   let!(:ability) { ::Ability.new(user) }

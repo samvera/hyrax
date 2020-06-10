@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ActionDispatch::Routing
   class Mapper
     # @yield If a block is passed it is yielded for each curation_concern

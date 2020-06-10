@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/my/works/index.html.erb', type: :view do
   let(:resp) { double(docs: "", total_count: 11) }
 

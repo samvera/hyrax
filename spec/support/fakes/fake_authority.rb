@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class FakeAuthority
   def initialize(map)
     @map = map

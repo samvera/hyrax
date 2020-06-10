@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Admin::UsersController, type: :controller do
   before do
     expect(controller).to receive(:authorize!).with(:read, :admin_dashboard).and_return(true)

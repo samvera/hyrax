@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/admin/collection_types/_form_participant_table.html.erb', type: :view do
   let(:user) { create(:user) }
   let(:collection_type) { stub_model(Hyrax::CollectionType) }

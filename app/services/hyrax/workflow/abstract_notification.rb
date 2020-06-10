@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Workflow
     # @abstract A notification that happens when a state transition occurs. Subclass AbstractNotification to create a notification.

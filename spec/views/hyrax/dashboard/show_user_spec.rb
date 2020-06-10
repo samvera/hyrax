@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe "hyrax/dashboard/show_user.html.erb", type: :view do
   before do
     allow(controller).to receive(:current_user).and_return(user)

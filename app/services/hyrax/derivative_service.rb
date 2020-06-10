@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Hyrax::DerivativeService
   class_attribute :services
   self.services = [Hyrax::FileSetDerivativesService]

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/base/_attribute_rows.html.erb', type: :view do
   let(:url) { "http://example.com" }
   let(:rights_statement_uri) { 'http://rightsstatements.org/vocab/InC/1.0/' }

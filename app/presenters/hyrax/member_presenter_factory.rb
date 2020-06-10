@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Creates the presenters of the members (member works and file sets) of a specific object
   class MemberPresenterFactory

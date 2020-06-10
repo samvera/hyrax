@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'shared/_select_work_type_modal.html.erb', type: :view do
   let(:presenter) { instance_double Hyrax::SelectTypeListPresenter }
   let(:row1) do

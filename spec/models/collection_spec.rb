@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe ::Collection, type: :model do
   let(:collection) { build(:public_collection_lw) }
 

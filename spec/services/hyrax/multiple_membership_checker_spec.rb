@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
   let(:item) { double }
 

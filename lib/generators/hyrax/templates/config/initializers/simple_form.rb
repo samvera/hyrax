@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # NOTE: This is a modified version of simple_form's default config file.
 #       The only changes were to move the input to after the hint and error.
 

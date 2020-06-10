@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::TrophiesController do
   describe "#toggle_trophy" do
     let(:user) { create(:user) }

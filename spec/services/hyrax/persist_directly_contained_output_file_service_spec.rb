@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::PersistDirectlyContainedOutputFileService do
   # PersistDirectlyContainedOutputFileService is used by FullTextExtract.output_file_service
   let(:file_set) { create(:file_set, user: user) }

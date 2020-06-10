@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::AdminStatsPresenter do
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }

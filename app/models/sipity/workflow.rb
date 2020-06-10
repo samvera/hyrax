@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sipity
   # A named workflow for processing an entity. Originally I had thought of
   # calling this a Type, but once I extracted the Processing submodule,
@@ -15,7 +16,7 @@ module Sipity
     # @see Sipity::Workflow.activate!
     belongs_to :permission_template, class_name: 'Hyrax::PermissionTemplate', optional: false
 
-    DEFAULT_INITIAL_WORKFLOW_STATE = 'new'.freeze
+    DEFAULT_INITIAL_WORKFLOW_STATE = 'new'
     def initial_workflow_state
       workflow_states.find_or_create_by!(name: DEFAULT_INITIAL_WORKFLOW_STATE)
     end

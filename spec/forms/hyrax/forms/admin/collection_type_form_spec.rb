@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm do
   let(:collection_type) { build(:collection_type) }
   let(:form) { described_class.new }

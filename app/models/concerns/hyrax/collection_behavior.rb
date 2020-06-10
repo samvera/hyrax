@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module CollectionBehavior
     extend ActiveSupport::Concern
@@ -102,7 +103,7 @@ module Hyrax
         @_to_partial_path ||= begin
           element = ActiveSupport::Inflector.underscore(ActiveSupport::Inflector.demodulize(name))
           collection = ActiveSupport::Inflector.tableize(name)
-          "hyrax/#{collection}/#{element}".freeze
+          "hyrax/#{collection}/#{element}"
         end
       end
 

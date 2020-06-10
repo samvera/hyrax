@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class TransfersPresenter
     def initialize(current_user, view_context)

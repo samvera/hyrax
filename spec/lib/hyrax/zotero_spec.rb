@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Zotero do
   describe '.publications_url' do
     let(:user_id) { 'foobar' }

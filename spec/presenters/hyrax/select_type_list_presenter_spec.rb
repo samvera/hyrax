@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Note: test app generates multiple work types (concerns) now
 RSpec.describe Hyrax::SelectTypeListPresenter do
   let(:instance) { described_class.new(user) }

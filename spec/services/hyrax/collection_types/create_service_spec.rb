@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::CollectionTypes::CreateService do
   describe '.create_collection_type' do
     it 'create collection type with default options when no options are received' do # rubocop:disable RSpec/ExampleLength

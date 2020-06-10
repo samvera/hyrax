@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::DerivativePath do
   let(:id)     { '123' }
   let(:object) { double(id: id) }

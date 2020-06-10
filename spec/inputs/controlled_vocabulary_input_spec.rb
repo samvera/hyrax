@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'ControlledVocabularyInput', type: :input do
   let(:work) { GenericWork.new }
   let(:builder) { SimpleForm::FormBuilder.new(:generic_work, work, view, {}) }

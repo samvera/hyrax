@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Workflow
     # Responsible for coordinating the behavior of an action taken within a workflow

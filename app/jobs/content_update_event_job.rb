@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Log content update to activity streams
 class ContentUpdateEventJob < ContentEventJob
   def action

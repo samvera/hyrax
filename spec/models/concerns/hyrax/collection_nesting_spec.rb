@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::CollectionNesting do
   describe 'including this module' do
     let(:klass) do

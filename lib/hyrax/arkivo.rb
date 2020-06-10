@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'hyrax/arkivo/config'
 require 'hyrax/arkivo/schema_validator'
 require 'hyrax/arkivo/metadata_munger'

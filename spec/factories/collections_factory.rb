@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 FactoryBot.define do
   factory :collection do
     # DEPRECATION: This factory is being replaced by collection_lw defined in collections.rb.  New tests should use the

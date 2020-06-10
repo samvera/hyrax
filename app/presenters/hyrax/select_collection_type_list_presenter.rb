@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Presents the list of collection type options that a user may choose from when deciding to create a new work
   class SelectCollectionTypeListPresenter
