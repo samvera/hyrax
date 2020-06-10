@@ -56,7 +56,7 @@ describe "FileManager Save Button", ->
       save_manager.persist()
 
       expect($("button").hasClass("disabled")).toEqual(true)
-      expect($("button").text()).toEqual("Saving...")
+      expect($("button").text()).toEqual("Save ...")
     it "calls persist on each registered handler", ->
       spyOn(handler, "persist").and.callThrough()
       save_manager.push_changed(handler)
