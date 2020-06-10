@@ -92,16 +92,16 @@ module Hyrax
 
     private
 
-      def link_presenter_class
-        SingleUseLinkPresenter
-      end
+    def link_presenter_class
+      SingleUseLinkPresenter
+    end
 
-      def fetch_parent_presenter
-        ids = Hyrax::SolrService.query("{!field f=member_ids_ssim}#{id}", fl: Hyrax.config.id_field)
-                                .map { |x| x.fetch(Hyrax.config.id_field) }
-        Hyrax::PresenterFactory.build_for(ids: ids,
-                                          presenter_class: WorkShowPresenter,
-                                          presenter_args: current_ability).first
-      end
+    def fetch_parent_presenter
+      ids = Hyrax::SolrService.query("{!field f=member_ids_ssim}#{id}", fl: Hyrax.config.id_field)
+                              .map { |x| x.fetch(Hyrax.config.id_field) }
+      Hyrax::PresenterFactory.build_for(ids: ids,
+                                        presenter_class: WorkShowPresenter,
+                                        presenter_args: current_ability).first
+    end
   end
 end

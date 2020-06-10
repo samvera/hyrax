@@ -38,23 +38,23 @@ module Hyrax
 
     private
 
-      def object_name
-        @object_name ||= concern.model_name.i18n_key
-      end
+    def object_name
+      @object_name ||= concern.model_name.i18n_key
+    end
 
-      def translate(key)
-        defaults = []
-        defaults << :"hyrax.select_type.#{object_name}.#{key}"
-        defaults << :"hyrax.select_type.#{key}"
-        defaults << ''
-        I18n.t(defaults.shift, default: defaults)
-      end
+    def translate(key)
+      defaults = []
+      defaults << :"hyrax.select_type.#{object_name}.#{key}"
+      defaults << :"hyrax.select_type.#{key}"
+      defaults << ''
+      I18n.t(defaults.shift, default: defaults)
+    end
 
-      def collection_id(params)
-        return nil unless params
-        collection_id = params[:add_works_to_collection]
-        collection_id ||= params[:id] if params[:id] && params[:controller] == 'hyrax/dashboard/collections'
-        collection_id
-      end
+    def collection_id(params)
+      return nil unless params
+      collection_id = params[:add_works_to_collection]
+      collection_id ||= params[:id] if params[:id] && params[:controller] == 'hyrax/dashboard/collections'
+      collection_id
+    end
   end
 end

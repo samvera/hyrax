@@ -47,18 +47,18 @@ module Hyrax
 
       private
 
-        attr_reader :current_user, :view_context, :since
-        delegate :render, :t, :hyrax, :link_to, to: :view_context
+      attr_reader :current_user, :view_context, :since
+      delegate :render, :t, :hyrax, :link_to, to: :view_context
 
-        # @return [Integer] how long ago to query (in seconds)
-        def activity_seconds_ago
-          return since.to_i if since.present?
-          DateTime.current.to_i - Hyrax.config.activity_to_show_default_seconds_since_now
-        end
+      # @return [Integer] how long ago to query (in seconds)
+      def activity_seconds_ago
+        return since.to_i if since.present?
+        DateTime.current.to_i - Hyrax.config.activity_to_show_default_seconds_since_now
+      end
 
-        def notifications_for_dashboard
-          notifications.limit(Hyrax.config.max_notifications_for_dashboard)
-        end
+      def notifications_for_dashboard
+        notifications.limit(Hyrax.config.max_notifications_for_dashboard)
+      end
     end
   end
 end

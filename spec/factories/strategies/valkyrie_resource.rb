@@ -14,9 +14,9 @@ class ValkyrieCreateStrategy
 
   private
 
-    def persister
-      Hyrax.persister
-    end
+  def persister
+    Hyrax.persister
+  end
 end
 
 # @see https://github.com/thoughtbot/factory_bot/blob/master/GETTING_STARTED.md#custom-strategies
@@ -25,7 +25,7 @@ end
 class ValkyrieTestAdapterCreateStrategy < ValkyrieCreateStrategy
   private
 
-    def persister
-      Valkyrie::MetadataAdapter.find(:test_adapter).persister
-    end
+  def persister
+    Valkyrie::MetadataAdapter.find(:test_adapter).persister
+  end
 end

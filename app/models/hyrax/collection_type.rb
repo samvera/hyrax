@@ -112,45 +112,45 @@ module Hyrax
 
     private
 
-      def assign_machine_id
-        # FIXME: This method allows for the possibility of collisions
-        self.machine_id ||= title.parameterize.underscore.to_sym if title.present?
-      end
+    def assign_machine_id
+      # FIXME: This method allows for the possibility of collisions
+      self.machine_id ||= title.parameterize.underscore.to_sym if title.present?
+    end
 
-      def ensure_no_collections
-        return true unless collections?
-        errors[:base] << I18n.t('hyrax.admin.collection_types.errors.not_empty')
-        throw :abort
-      end
+    def ensure_no_collections
+      return true unless collections?
+      errors[:base] << I18n.t('hyrax.admin.collection_types.errors.not_empty')
+      throw :abort
+    end
 
-      def ensure_no_settings_changes_for_admin_set_type
-        return true unless admin_set? && exists_for_machine_id?(ADMIN_SET_MACHINE_ID)
-        return true unless collection_type_settings_changed?
-        errors[:base] << I18n.t('hyrax.admin.collection_types.errors.no_settings_change_for_admin_sets')
-        throw :abort
-      end
+    def ensure_no_settings_changes_for_admin_set_type
+      return true unless admin_set? && exists_for_machine_id?(ADMIN_SET_MACHINE_ID)
+      return true unless collection_type_settings_changed?
+      errors[:base] << I18n.t('hyrax.admin.collection_types.errors.no_settings_change_for_admin_sets')
+      throw :abort
+    end
 
-      def ensure_no_settings_changes_for_user_collection_type
-        return true unless user_collection? && exists_for_machine_id?(USER_COLLECTION_MACHINE_ID)
-        return true unless collection_type_settings_changed?
-        errors[:base] << I18n.t('hyrax.admin.collection_types.errors.no_settings_change_for_user_collections')
-        throw :abort
-      end
+    def ensure_no_settings_changes_for_user_collection_type
+      return true unless user_collection? && exists_for_machine_id?(USER_COLLECTION_MACHINE_ID)
+      return true unless collection_type_settings_changed?
+      errors[:base] << I18n.t('hyrax.admin.collection_types.errors.no_settings_change_for_user_collections')
+      throw :abort
+    end
 
-      def ensure_no_settings_changes_if_collections_exist
-        return true unless collections?
-        return true unless collection_type_settings_changed?
-        errors[:base] << I18n.t('hyrax.admin.collection_types.errors.no_settings_change_if_not_empty')
-        throw :abort
-      end
+    def ensure_no_settings_changes_if_collections_exist
+      return true unless collections?
+      return true unless collection_type_settings_changed?
+      errors[:base] << I18n.t('hyrax.admin.collection_types.errors.no_settings_change_if_not_empty')
+      throw :abort
+    end
 
-      def collection_type_settings_changed?
-        (changes.keys & ['nestable', 'brandable', 'discoverable', 'sharable', 'share_applies_to_new_works', 'allow_multiple_membership',
-                         'require_membership', 'assigns_workflow', 'assigns_visibility']).any?
-      end
+    def collection_type_settings_changed?
+      (changes.keys & ['nestable', 'brandable', 'discoverable', 'sharable', 'share_applies_to_new_works', 'allow_multiple_membership',
+                       'require_membership', 'assigns_workflow', 'assigns_visibility']).any?
+    end
 
-      def exists_for_machine_id?(machine_id)
-        Hyrax::CollectionType.exists?(machine_id: machine_id)
-      end
+    def exists_for_machine_id?(machine_id)
+      Hyrax::CollectionType.exists?(machine_id: machine_id)
+    end
   end
 end

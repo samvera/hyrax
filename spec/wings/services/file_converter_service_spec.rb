@@ -72,37 +72,37 @@ RSpec.describe Wings::FileConverterService do
 
   private
 
-    def validate_af_file_metadata(expected_attrs) # rubocop:disable Metrics/AbcSize
-      expect(subject.metadata_node.type).to match_array expected_attrs[:type]
-      expect(subject.mime_type).to eq expected_attrs[:mime_type]
-      expect(subject.content).to eq expected_attrs[:content]
-      expect(subject.format_label).to eq Array(expected_attrs[:format_label])
-      expect(subject.language).to eq Array(expected_attrs[:language])
-      expect(subject.word_count).to eq Array(expected_attrs[:content].split(' ').count)
-      expect(subject.size).to eq expected_attrs[:content].size
-      expect(subject.character_count).to eq Array(expected_attrs[:content].size)
-    end
+  def validate_af_file_metadata(expected_attrs) # rubocop:disable Metrics/AbcSize
+    expect(subject.metadata_node.type).to match_array expected_attrs[:type]
+    expect(subject.mime_type).to eq expected_attrs[:mime_type]
+    expect(subject.content).to eq expected_attrs[:content]
+    expect(subject.format_label).to eq Array(expected_attrs[:format_label])
+    expect(subject.language).to eq Array(expected_attrs[:language])
+    expect(subject.word_count).to eq Array(expected_attrs[:content].split(' ').count)
+    expect(subject.size).to eq expected_attrs[:content].size
+    expect(subject.character_count).to eq Array(expected_attrs[:content].size)
+  end
 
-    def plain_text_af_attrs
-      { original_name: 'my_file.txt',
-        mime_type: 'text/plain',
-        content: 'some text content for af_file_to_resource test',
-        format_label: 'Plain Text',
-        language: 'en',
-        type: [RDF::URI.new('http://pcdm.org/models#File'),
-               RDF::URI.new('http://fedora.info/definitions/v4/repository#Binary'),
-               RDF::URI.new('http://fedora.info/definitions/v4/repository#Resource'),
-               RDF::URI.new('http://www.w3.org/ns/ldp#NonRDFSource')] }
-    end
+  def plain_text_af_attrs
+    { original_name: 'my_file.txt',
+      mime_type: 'text/plain',
+      content: 'some text content for af_file_to_resource test',
+      format_label: 'Plain Text',
+      language: 'en',
+      type: [RDF::URI.new('http://pcdm.org/models#File'),
+             RDF::URI.new('http://fedora.info/definitions/v4/repository#Binary'),
+             RDF::URI.new('http://fedora.info/definitions/v4/repository#Resource'),
+             RDF::URI.new('http://www.w3.org/ns/ldp#NonRDFSource')] }
+  end
 
-    def plain_text_valkyrie_attrs
-      { original_filename: 'my_file.html',
-        mime_type: 'text/html',
-        content: '<h3>different text content for valkyrie_to_af_file test</h3>',
-        format_label: 'HTML Text',
-        language: 'en',
-        type: [RDF::URI.new('http://pcdm.org/models#File')],
-        created_at: Time.now.getlocal - 5.days,
-        updated_at: Time.now.getlocal }
-    end
+  def plain_text_valkyrie_attrs
+    { original_filename: 'my_file.html',
+      mime_type: 'text/html',
+      content: '<h3>different text content for valkyrie_to_af_file test</h3>',
+      format_label: 'HTML Text',
+      language: 'en',
+      type: [RDF::URI.new('http://pcdm.org/models#File')],
+      created_at: Time.now.getlocal - 5.days,
+      updated_at: Time.now.getlocal }
+  end
 end

@@ -6,8 +6,8 @@ RSpec.describe Hyrax::VisibilityIntentionApplicator do
   let(:intention) do
     instance_double(Hyrax::VisibilityIntention,
                     'wants_embargo?': false,
-                    'wants_lease?':   false,
-                    visibility:       Hyrax::VisibilityIntention::PUBLIC)
+                    'wants_lease?': false,
+                    visibility: Hyrax::VisibilityIntention::PUBLIC)
   end
 
   describe '#apply' do
@@ -33,9 +33,9 @@ RSpec.describe Hyrax::VisibilityIntentionApplicator do
       let(:intention) do
         instance_double(Hyrax::VisibilityIntention,
                         'wants_embargo?': true,
-                        'wants_lease?':   false,
+                        'wants_lease?': false,
                         'valid_embargo?': true,
-                        embargo_params:   params)
+                        embargo_params: params)
       end
 
       it 'applies an embargo' do
@@ -54,9 +54,9 @@ RSpec.describe Hyrax::VisibilityIntentionApplicator do
       let(:intention) do
         instance_double(Hyrax::VisibilityIntention,
                         'wants_embargo?': false,
-                        'wants_lease?':   true,
-                        'valid_lease?':   true,
-                        lease_params:     params)
+                        'wants_lease?': true,
+                        'valid_lease?': true,
+                        lease_params: params)
       end
 
       it 'applies an lease' do

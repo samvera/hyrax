@@ -33,12 +33,12 @@ module Hyrax
 
       private
 
-        def build_presenter(stats_filters, limit)
-          presenter_class = self.class.admin_stats_presenter
-          services_opts   = self.class.admin_stats_services
+      def build_presenter(stats_filters, limit)
+        presenter_class = self.class.admin_stats_presenter
+        services_opts   = self.class.admin_stats_services
 
-          presenter_class.new(stats_filters, limit, **services_opts)
-        end
+        presenter_class.new(stats_filters, limit, **services_opts)
+      end
     end
   end
 end

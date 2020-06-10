@@ -1,7 +1,11 @@
+inherit_from:
+  - .rubocop_todo.yml
+  - .rubocop_fixme.yml
+
 inherit_gem:
   bixby: bixby_default.yml
 
-inherit_from: .rubocop_fixme.yml
+
 
 AllCops:
   TargetRubyVersion: 2.4
@@ -50,10 +54,6 @@ Style/CollectionMethods:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-Style/MethodMissing:
-  Exclude:
-    - 'app/models/concerns/hyrax/file_set/characterization.rb'
-
 Style/SymbolArray:
   Enabled: false
 
@@ -67,6 +67,9 @@ Rails/ApplicationJob:
   Enabled: false
 
 Rails/ApplicationRecord:
+  Enabled: false
+
+Rails/RakeEnvironment:
   Enabled: false
 
 # We define custom methods like `find_by_user_key`,

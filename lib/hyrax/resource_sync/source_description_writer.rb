@@ -12,19 +12,19 @@ module Hyrax
 
       private
 
-        def builder
-          Nokogiri::XML::Builder.new do |xml|
-            xml.urlset('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9',
-                       'xmlns:rs' => 'http://www.openarchives.org/rs/terms/') do
-              xml['rs'].ln(rel: "up", href: capability_list_url)
-              xml['rs'].md(capability: "description")
-              xml.url do
-                xml.loc capability_list_url
-                xml['rs'].md(capability: 'capabilitylist')
-              end
+      def builder
+        Nokogiri::XML::Builder.new do |xml|
+          xml.urlset('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9',
+                     'xmlns:rs' => 'http://www.openarchives.org/rs/terms/') do
+            xml['rs'].ln(rel: "up", href: capability_list_url)
+            xml['rs'].md(capability: "description")
+            xml.url do
+              xml.loc capability_list_url
+              xml['rs'].md(capability: 'capabilitylist')
             end
           end
         end
+      end
     end
   end
 end

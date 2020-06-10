@@ -141,40 +141,40 @@ module Hyrax
 
     private
 
-      def permission_template_edit_users
-        permission_template.agent_ids_for(access: 'manage', agent_type: 'user')
-      end
+    def permission_template_edit_users
+      permission_template.agent_ids_for(access: 'manage', agent_type: 'user')
+    end
 
-      def permission_template_edit_groups
-        permission_template.agent_ids_for(access: 'manage', agent_type: 'group')
-      end
+    def permission_template_edit_groups
+      permission_template.agent_ids_for(access: 'manage', agent_type: 'group')
+    end
 
-      def permission_template_read_users
-        (permission_template.agent_ids_for(access: 'view', agent_type: 'user') +
-          permission_template.agent_ids_for(access: 'deposit', agent_type: 'user')).uniq
-      end
+    def permission_template_read_users
+      (permission_template.agent_ids_for(access: 'view', agent_type: 'user') +
+        permission_template.agent_ids_for(access: 'deposit', agent_type: 'user')).uniq
+    end
 
-      def permission_template_read_groups
-        (permission_template.agent_ids_for(access: 'view', agent_type: 'group') +
-          permission_template.agent_ids_for(access: 'deposit', agent_type: 'group')).uniq -
-          [::Ability.registered_group_name, ::Ability.public_group_name]
-      end
+    def permission_template_read_groups
+      (permission_template.agent_ids_for(access: 'view', agent_type: 'group') +
+        permission_template.agent_ids_for(access: 'deposit', agent_type: 'group')).uniq -
+        [::Ability.registered_group_name, ::Ability.public_group_name]
+    end
 
-      def visibility_group
-        return [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC] if visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-        return [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED] if visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-        []
-      end
+    def visibility_group
+      return [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC] if visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+      return [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED] if visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+      []
+    end
 
-      # Solr field name works use to index member ids
-      def member_ids_field
-        "member_ids_ssim"
-      end
+    # Solr field name works use to index member ids
+    def member_ids_field
+      "member_ids_ssim"
+    end
 
-      def destroy_permission_template
-        permission_template.destroy
-      rescue ActiveRecord::RecordNotFound
-        true
-      end
+    def destroy_permission_template
+      permission_template.destroy
+    rescue ActiveRecord::RecordNotFound
+      true
+    end
   end
 end

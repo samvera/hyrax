@@ -19,9 +19,9 @@ module Hyrax
 
       private
 
-        def member_presenter_factory
-          MemberPresenterFactory.new(model, current_ability)
-        end
+      def member_presenter_factory
+        MemberPresenterFactory.new(model, current_ability)
+      end
     end
   end
 end

@@ -35,37 +35,37 @@ module Hyrax
 
       private
 
-        # Update user if they sent user params, otherwise return true.
-        # This is important because this controller is also handling removing trophies.
-        # (but we should move that to a different controller)
-        def conditionally_update
-          return true unless params[:user]
-          @user.update(user_params)
-        end
+      # Update user if they sent user params, otherwise return true.
+      # This is important because this controller is also handling removing trophies.
+      # (but we should move that to a different controller)
+      def conditionally_update
+        return true unless params[:user]
+        @user.update(user_params)
+      end
 
-        def handle_successful_update
-          # TODO: this should be moved to TrophiesController
-          process_trophy_removal
-          UserEditProfileEventJob.perform_later(@user)
-        end
+      def handle_successful_update
+        # TODO: this should be moved to TrophiesController
+        process_trophy_removal
+        UserEditProfileEventJob.perform_later(@user)
+      end
 
-        # if the user wants to remove any trophies, do that here.
-        def process_trophy_removal
-          params.keys.select { |k, _v| k.starts_with? 'remove_trophy_' }.each do |smash_trophy|
-            smash_trophy = smash_trophy.sub(/^remove_trophy_/, '')
-            current_user.trophies.where(work_id: smash_trophy).destroy_all
-          end
+      # if the user wants to remove any trophies, do that here.
+      def process_trophy_removal
+        params.keys.select { |k, _v| k.starts_with? 'remove_trophy_' }.each do |smash_trophy|
+          smash_trophy = smash_trophy.sub(/^remove_trophy_/, '')
+          current_user.trophies.where(work_id: smash_trophy).destroy_all
         end
+      end
 
-        def user_params
-          params.require(:user).permit(:avatar, :facebook_handle, :twitter_handle,
-                                       :googleplus_handle, :linkedin_handle, :remove_avatar, :orcid)
-        end
+      def user_params
+        params.require(:user).permit(:avatar, :facebook_handle, :twitter_handle,
+                                     :googleplus_handle, :linkedin_handle, :remove_avatar, :orcid)
+      end
 
-        def find_user
-          @user = ::User.from_url_component(params[:id])
-          raise ActiveRecord::RecordNotFound unless @user
-        end
+      def find_user
+        @user = ::User.from_url_component(params[:id])
+        raise ActiveRecord::RecordNotFound unless @user
+      end
     end
   end
 end

@@ -98,10 +98,10 @@ RSpec.describe Hyrax::CollectionTypes::CreateService do
     context 'when participants are incomplete' do
       let(:participants) do
         [{ agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE,
-           agent_id:   'test_group',
-           access:     Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
+           agent_id: 'test_group',
+           access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS },
          { agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE,
-           agent_id:   'test_group' }]
+           agent_id: 'test_group' }]
       end
 
       it 'logs and raises an error' do

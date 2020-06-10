@@ -193,12 +193,12 @@ module Hyrax
 
     private
 
-      def clone_attributes
-        embargo.attributes.slice(*core_attribute_keys)
-      end
+    def clone_attributes
+      embargo.attributes.slice(*core_attribute_keys)
+    end
 
-      def core_attribute_keys
-        [:visibility_after_embargo, :visibility_during_embargo, :embargo_release_date]
-      end
+    def core_attribute_keys
+      [:visibility_after_embargo, :visibility_during_embargo, :embargo_release_date]
+    end
   end
 end

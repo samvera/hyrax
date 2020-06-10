@@ -34,7 +34,7 @@ module Hyrax
         pub_info << ", " << pub_date unless pub_date.nil?
 
         pub_info.strip!
-        pub_info.blank? ? nil : pub_info
+        pub_info.presence
       end
     end
   end

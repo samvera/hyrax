@@ -27,12 +27,12 @@ module Hyrax
 
     private
 
-      def event_store
-        RedisEventStore
-      end
+    def event_store
+      RedisEventStore
+    end
 
-      def event_stream
-        event_store.for(stream[:event])
-      end
+    def event_stream
+      event_store.for(stream[:event])
+    end
   end
 end

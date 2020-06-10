@@ -34,10 +34,10 @@ RSpec.describe Hyrax::Transactions::Steps::ApplyVisibility do
       let(:after)      { 'restricted' }
       let(:during)     { 'open' }
       let(:opts) do
-        { visibility:   visibility,
+        { visibility: visibility,
           release_date: end_date,
-          after:        after,
-          during:       during }
+          after: after,
+          during: during }
       end
 
       it 'interprets and applies the lease' do
@@ -60,10 +60,10 @@ RSpec.describe Hyrax::Transactions::Steps::ApplyVisibility do
       let(:during)     { 'restricted' }
 
       let(:opts) do
-        { visibility:   visibility,
+        { visibility: visibility,
           release_date: end_date,
-          after:        after,
-          during:       during }
+          after: after,
+          during: during }
       end
 
       it 'interprets and applies the embargo' do

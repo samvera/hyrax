@@ -23,18 +23,18 @@ module Hyrax
 
     private
 
-      # @api public
-      #
-      # set up a member search builder admin set members
-      # @return [AdminAdminSetMemberSearchBuilder] new or existing
-      def members_search_builder
-        @members_search_builder ||= Hyrax::AdminAdminSetMemberSearchBuilder.new(scope: scope, collection: collection)
-      end
+    # @api public
+    #
+    # set up a member search builder admin set members
+    # @return [AdminAdminSetMemberSearchBuilder] new or existing
+    def members_search_builder
+      @members_search_builder ||= Hyrax::AdminAdminSetMemberSearchBuilder.new(scope: scope, collection: collection)
+    end
 
-      # @api private
-      #
-      def query_solr(query_builder:, query_params:)
-        repository.search(query_builder.with(query_params).query)
-      end
+    # @api private
+    #
+    def query_solr(query_builder:, query_params:)
+      repository.search(query_builder.with(query_params).query)
+    end
   end
 end

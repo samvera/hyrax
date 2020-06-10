@@ -27,9 +27,9 @@ RSpec.describe Hyrax::Transactions::Steps::ApplyCollectionPermissionTemplate do
 
     let(:permissions) do
       { manage_groups: manage_groups,
-        manage_users:  manage_users,
-        view_groups:   view_groups,
-        view_users:    view_users }
+        manage_users: manage_users,
+        view_groups: view_groups,
+        view_users: view_users }
     end
 
     it 'assigns edit users from template' do

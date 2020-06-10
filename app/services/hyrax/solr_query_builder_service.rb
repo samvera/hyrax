@@ -33,39 +33,39 @@ module Hyrax
 
       private
 
-        # @param [Array<Array>] pairs a list of (key, value) pairs. The value itself may
-        # @param [String] type  The type of query to run. Either 'raw' or 'field'
-        # @return [Array] a list of solr clauses
-        def pairs_to_clauses(pairs, type)
-          pairs.flat_map do |field, value|
-            condition_to_clauses(field, value, type)
+      # @param [Array<Array>] pairs a list of (key, value) pairs. The value itself may
+      # @param [String] type  The type of query to run. Either 'raw' or 'field'
+      # @return [Array] a list of solr clauses
+      def pairs_to_clauses(pairs, type)
+        pairs.flat_map do |field, value|
+          condition_to_clauses(field, value, type)
+        end
+      end
+
+      # @param [String] field
+      # @param [String, Array<String>] values
+      # @param [String] type The type of query to run. Either 'raw' or 'field'
+      # @return [Array<String>]
+      def condition_to_clauses(field, values, type)
+        values = Array(values)
+        values << nil if values.empty?
+        values.map do |value|
+          if value.present?
+            query_clause(type, field, value)
+          else
+            # Check that the field is not present. In SQL: "WHERE field IS NULL"
+            "-#{field}:[* TO *]"
           end
         end
+      end
 
-        # @param [String] field
-        # @param [String, Array<String>] values
-        # @param [String] type The type of query to run. Either 'raw' or 'field'
-        # @return [Array<String>]
-        def condition_to_clauses(field, values, type)
-          values = Array(values)
-          values << nil if values.empty?
-          values.map do |value|
-            if value.present?
-              query_clause(type, field, value)
-            else
-              # Check that the field is not present. In SQL: "WHERE field IS NULL"
-              "-#{field}:[* TO *]"
-            end
-          end
-        end
-
-        # Create a raw query clause suitable for sending to solr as an fq element
-        # @param [String] type The type of query to run. Either 'raw' or 'field'
-        # @param [String] key
-        # @param [String] value
-        def query_clause(type, key, value)
-          "_query_:\"{!#{type} f=#{key}}#{value.gsub('"', '\"')}\""
-        end
+      # Create a raw query clause suitable for sending to solr as an fq element
+      # @param [String] type The type of query to run. Either 'raw' or 'field'
+      # @param [String] key
+      # @param [String] value
+      def query_clause(type, key, value)
+        "_query_:\"{!#{type} f=#{key}}#{value.gsub('"', '\"')}\""
+      end
     end
   end
 end

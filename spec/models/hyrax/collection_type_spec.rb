@@ -104,15 +104,15 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     let(:nonexistent_gid) { 'gid://internal/hyrax-collectiontype/NO_EXIST' }
 
     it 'returns instance of collection type when one with the gid exists' do
-      expect(Hyrax::CollectionType.find_by_gid(collection_type.gid)).to eq collection_type
+      expect(described_class.find_by_gid(collection_type.gid)).to eq collection_type
     end
 
     it 'returns false if collection type with gid does NOT exist' do
-      expect(Hyrax::CollectionType.find_by_gid(nonexistent_gid)).to eq false
+      expect(described_class.find_by_gid(nonexistent_gid)).to eq false
     end
 
     it 'returns false if gid is nil' do
-      expect(Hyrax::CollectionType.find_by_gid(nil)).to eq false
+      expect(described_class.find_by_gid(nil)).to eq false
     end
   end
 
@@ -121,15 +121,15 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     let(:nonexistent_gid) { 'gid://internal/hyrax-collectiontype/NO_EXIST' }
 
     it 'returns instance of collection type when one with the gid exists' do
-      expect(Hyrax::CollectionType.find_by_gid(collection_type.gid)).to eq collection_type
+      expect(described_class.find_by_gid(collection_type.gid)).to eq collection_type
     end
 
     it 'raises error if collection type with gid does NOT exist' do
-      expect { Hyrax::CollectionType.find_by_gid!(nonexistent_gid) }.to raise_error(ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID '#{nonexistent_gid}'")
+      expect { described_class.find_by_gid!(nonexistent_gid) }.to raise_error(ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID '#{nonexistent_gid}'")
     end
 
     it 'raises error if passed nil' do
-      expect { Hyrax::CollectionType.find_by_gid!(nil) }.to raise_error(ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID ''")
+      expect { described_class.find_by_gid!(nil) }.to raise_error(ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID ''")
     end
   end
 

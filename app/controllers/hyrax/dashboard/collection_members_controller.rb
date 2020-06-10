@@ -40,35 +40,35 @@ module Hyrax
 
       private
 
-        def validate
-          return t('hyrax.dashboard.my.action.members_no_access') if batch_ids.blank?
-          return t('hyrax.dashboard.my.action.collection_deny_add_members') unless current_ability.can?(:deposit, collection)
-          return t('hyrax.dashboard.my.action.add_to_collection_only') unless member_action == "add" # should never happen
-        end
+      def validate
+        return t('hyrax.dashboard.my.action.members_no_access') if batch_ids.blank?
+        return t('hyrax.dashboard.my.action.collection_deny_add_members') unless current_ability.can?(:deposit, collection)
+        return t('hyrax.dashboard.my.action.add_to_collection_only') unless member_action == "add" # should never happen
+      end
 
-        def success_return_path
-          dashboard_collection_path(collection_id)
-        end
+      def success_return_path
+        dashboard_collection_path(collection_id)
+      end
 
-        def err_return_path
-          dashboard_collections_path
-        end
+      def err_return_path
+        dashboard_collections_path
+      end
 
-        def collection_id
-          params[:id]
-        end
+      def collection_id
+        params[:id]
+      end
 
-        def collection
-          @collection ||= ::Collection.find(collection_id)
-        end
+      def collection
+        @collection ||= ::Collection.find(collection_id)
+      end
 
-        def batch_ids
-          params[:batch_document_ids]
-        end
+      def batch_ids
+        params[:batch_document_ids]
+      end
 
-        def member_action
-          params[:collection][:members]
-        end
+      def member_action
+        params[:collection][:members]
+      end
     end
   end
 end

@@ -28,11 +28,11 @@ module Sipity
 
     context '#destroy' do
       it 'will not allow registered role names to be destroyed' do
-        role = Sipity::Role.create!(name: Hyrax::RoleRegistry::MANAGING)
+        role = described_class.create!(name: Hyrax::RoleRegistry::MANAGING)
         expect { role.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
       end
       it 'will allow unregistered role names to be destroyed' do
-        role = Sipity::Role.create!(name: 'gong_farming')
+        role = described_class.create!(name: 'gong_farming')
         expect { role.destroy! }.not_to raise_error
       end
     end

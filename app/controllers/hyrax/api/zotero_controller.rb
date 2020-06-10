@@ -34,52 +34,52 @@ module Hyrax
 
       private
 
-        def authorize_user!
-          authorize! :create, Hyrax.primary_work_type
-        rescue CanCan::AccessDenied
-          return redirect_to root_url, alert: 'You are not authorized to perform this operation'
-        end
+      def authorize_user!
+        authorize! :create, Hyrax.primary_work_type
+      rescue CanCan::AccessDenied
+        redirect_to root_url, alert: 'You are not authorized to perform this operation'
+      end
 
-        def validate_params
-          if malformed_request?
-            redirect_to hyrax.edit_dashboard_profile_path(current_user.to_param),
-                        alert: "Malformed request from Zotero"
-          elsif invalid_token?
-            redirect_to hyrax.edit_dashboard_profile_path(current_user.to_param),
-                        alert: "You have not yet connected to Zotero"
-          end
+      def validate_params
+        if malformed_request?
+          redirect_to hyrax.edit_dashboard_profile_path(current_user.to_param),
+                      alert: "Malformed request from Zotero"
+        elsif invalid_token?
+          redirect_to hyrax.edit_dashboard_profile_path(current_user.to_param),
+                      alert: "You have not yet connected to Zotero"
         end
+      end
 
-        def malformed_request?
-          params[:oauth_token].blank? || params[:oauth_verifier].blank?
-        end
+      def malformed_request?
+        params[:oauth_token].blank? || params[:oauth_verifier].blank?
+      end
 
-        def invalid_token?
-          !current_token || current_token.params[:oauth_token] != params[:oauth_token]
-        end
+      def invalid_token?
+        !current_token || current_token.params[:oauth_token] != params[:oauth_token]
+      end
 
-        def client
-          ::OAuth::Consumer.new(Hyrax::Zotero.config['client_key'], Hyrax::Zotero.config['client_secret'], options)
-        end
+      def client
+        ::OAuth::Consumer.new(Hyrax::Zotero.config['client_key'], Hyrax::Zotero.config['client_secret'], options)
+      end
 
-        def current_token
-          current_user.zotero_token
-        end
+      def current_token
+        current_user.zotero_token
+      end
 
-        def callback_url
-          "#{request.base_url}/api/zotero/callback"
-        end
+      def callback_url
+        "#{request.base_url}/api/zotero/callback"
+      end
 
-        def options
-          {
-            site: 'https://www.zotero.org',
-            scheme: :query_string,
-            http_method: :get,
-            request_token_path: '/oauth/request',
-            access_token_path: '/oauth/access',
-            authorize_path: '/oauth/authorize'
-          }
-        end
+      def options
+        {
+          site: 'https://www.zotero.org',
+          scheme: :query_string,
+          http_method: :get,
+          request_token_path: '/oauth/request',
+          access_token_path: '/oauth/access',
+          authorize_path: '/oauth/authorize'
+        }
+      end
     end
   end
 end

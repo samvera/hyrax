@@ -19,45 +19,45 @@ module Hyrax
 
     private
 
-      # TODO: this should move to a service.
-      # Returns a list of users excluding the system users and guest_users
-      # @param query [String] the query string
-      def search(query)
-        clause = query.blank? ? nil : "%" + query.downcase + "%"
-        base = ::User.where(*base_query)
-        base = base.where("#{Hydra.config.user_key_field} like lower(?) OR display_name like lower(?)", clause, clause) if clause.present?
-        base.registered
-            .where("#{Hydra.config.user_key_field} not in (?)",
-                   [::User.batch_user_key, ::User.audit_user_key])
-            .references(:trophies)
-            .order(sort_value)
-            .page(params[:page]).per(10)
-      end
+    # TODO: this should move to a service.
+    # Returns a list of users excluding the system users and guest_users
+    # @param query [String] the query string
+    def search(query)
+      clause = query.blank? ? nil : "%" + query.downcase + "%"
+      base = ::User.where(*base_query)
+      base = base.where("#{Hydra.config.user_key_field} like lower(?) OR display_name like lower(?)", clause, clause) if clause.present?
+      base.registered
+          .where("#{Hydra.config.user_key_field} not in (?)",
+                 [::User.batch_user_key, ::User.audit_user_key])
+          .references(:trophies)
+          .order(sort_value)
+          .page(params[:page]).per(10)
+    end
 
-      # You can override base_query to return a list of arguments
-      def base_query
-        [nil]
-      end
+    # You can override base_query to return a list of arguments
+    def base_query
+      [nil]
+    end
 
-      def find_user
-        @user = ::User.from_url_component(params[:id])
-        redirect_to root_path, alert: "User '#{params[:id]}' does not exist" if @user.nil?
-      end
+    def find_user
+      @user = ::User.from_url_component(params[:id])
+      redirect_to root_path, alert: "User '#{params[:id]}' does not exist" if @user.nil?
+    end
 
-      def sort_value
-        sort = params[:sort].blank? ? "name" : params[:sort]
-        case sort
-        when 'name'
-          'display_name'
-        when 'name desc'
-          'display_name DESC'
-        when 'login'
-          Hydra.config.user_key_field
-        when 'login desc'
-          "#{Hydra.config.user_key_field} DESC"
-        else
-          sort
-        end
+    def sort_value
+      sort = params[:sort].presence || "name"
+      case sort
+      when 'name'
+        'display_name'
+      when 'name desc'
+        'display_name DESC'
+      when 'login'
+        Hydra.config.user_key_field
+      when 'login desc'
+        "#{Hydra.config.user_key_field} DESC"
+      else
+        sort
       end
+    end
   end
 end

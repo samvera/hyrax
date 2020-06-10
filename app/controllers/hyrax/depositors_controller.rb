@@ -36,29 +36,29 @@ module Hyrax
 
     private
 
-      def authorize_and_return_grantor
-        grantor = ::User.from_url_component(params[:user_id])
-        authorize! :edit, grantor
-        grantor
-      end
+    def authorize_and_return_grantor
+      grantor = ::User.from_url_component(params[:user_id])
+      authorize! :edit, grantor
+      grantor
+    end
 
-      def send_proxy_depositor_added_messages(grantor, grantee)
-        message_to_grantee = I18n.t('hyrax.notifications.proxy_depositor_added.grantee_message', grantor: grantor.name)
-        message_to_grantor = I18n.t('hyrax.notifications.proxy_depositor_added.grantor_message', grantee: grantee.name)
-        Hyrax::MessengerService.deliver(::User.batch_user, grantor, message_to_grantor,
-                                        I18n.t('hyrax.notifications.proxy_depositor_added.subject'))
-        Hyrax::MessengerService.deliver(::User.batch_user, grantee, message_to_grantee,
-                                        I18n.t('hyrax.notifications.proxy_depositor_added.subject'))
-      end
+    def send_proxy_depositor_added_messages(grantor, grantee)
+      message_to_grantee = I18n.t('hyrax.notifications.proxy_depositor_added.grantee_message', grantor: grantor.name)
+      message_to_grantor = I18n.t('hyrax.notifications.proxy_depositor_added.grantor_message', grantee: grantee.name)
+      Hyrax::MessengerService.deliver(::User.batch_user, grantor, message_to_grantor,
+                                      I18n.t('hyrax.notifications.proxy_depositor_added.subject'))
+      Hyrax::MessengerService.deliver(::User.batch_user, grantee, message_to_grantee,
+                                      I18n.t('hyrax.notifications.proxy_depositor_added.subject'))
+    end
 
-      def decide_layout
-        layout = case action_name
-                 when 'index'
-                   'dashboard'
-                 else
-                   '1_column'
-                 end
-        File.join(theme, layout)
-      end
+    def decide_layout
+      layout = case action_name
+               when 'index'
+                 'dashboard'
+               else
+                 '1_column'
+               end
+      File.join(theme, layout)
+    end
   end
 end

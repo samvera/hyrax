@@ -51,31 +51,31 @@ module Hyrax
 
       private
 
-        # # TODO: WINGS - Should we create and use indexing adapter for persistence?  This is what was used in branch valkyrie6.  See issue #3800.
-        # def indexing_adapter
-        #   Valkyrie::MetadataAdapter.find(:indexing_persister)
-        # end
+      # # TODO: WINGS - Should we create and use indexing adapter for persistence?  This is what was used in branch valkyrie6.  See issue #3800.
+      # def indexing_adapter
+      #   Valkyrie::MetadataAdapter.find(:indexing_persister)
+      # end
 
-        def perform_create(content, user, use_valkyrie)
-          use_valkyrie ? perform_create_through_valkyrie(content, user) : perform_create_through_active_fedora(content, user)
-        end
+      def perform_create(content, user, use_valkyrie)
+        use_valkyrie ? perform_create_through_valkyrie(content, user) : perform_create_through_active_fedora(content, user)
+      end
 
-        def perform_create_through_active_fedora(content, user)
-          content.create_version
-          record_committer(content, user) if user
-        end
+      def perform_create_through_active_fedora(content, user)
+        content.create_version
+        record_committer(content, user) if user
+      end
 
-        def perform_create_through_valkyrie(content, user)
-          return # TODO: WINGS - Just return for now.  This method won't work until #indexing_adapter method is complete.  See issue #3800.
-          # rubocop:disable Lint/UnreachableCode
-          new_version = content.new(id: nil)
-          new_version.label = "version#{content.member_ids.length + 1}"
-          new_version = indexing_adapter.persister.save(resource: new_version)
-          content.member_ids = content.member_ids + [new_version.id]
-          content = indexing_adapter.persister.save(resource: content)
-          record_committer(content, user) if user
-          # rubocop:enable Lint/UnreachableCode
-        end
+      def perform_create_through_valkyrie(content, user)
+        return # TODO: WINGS - Just return for now.  This method won't work until #indexing_adapter method is complete.  See issue #3800.
+        # rubocop:disable Lint/UnreachableCode
+        new_version = content.new(id: nil)
+        new_version.label = "version#{content.member_ids.length + 1}"
+        new_version = indexing_adapter.persister.save(resource: new_version)
+        content.member_ids = content.member_ids + [new_version.id]
+        content = indexing_adapter.persister.save(resource: content)
+        record_committer(content, user) if user
+        # rubocop:enable Lint/UnreachableCode
+      end
     end
   end
 end

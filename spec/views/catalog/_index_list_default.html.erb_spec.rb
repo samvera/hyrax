@@ -1,11 +1,11 @@
 RSpec.describe 'catalog/_index_list_default', type: :view do
   let(:attributes) do
-    { 'creator_tesim'        => [''],
-      'depositor_tesim'      => [''],
+    { 'creator_tesim' => [''],
+      'depositor_tesim' => [''],
       'proxy_depositor_ssim' => [''],
-      'description_tesim'    => [''],
-      'date_uploaded_dtsi'   => 'a date',
-      'date_modified_dtsi'   => 'a date',
+      'description_tesim' => [''],
+      'date_uploaded_dtsi' => 'a date',
+      'date_modified_dtsi' => 'a date',
       'rights_statement_tesim' => [''],
       'embargo_release_date_dtsi' => 'a date',
       'lease_expiration_date_dtsi' => 'a date',

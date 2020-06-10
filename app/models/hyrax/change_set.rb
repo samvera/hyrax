@@ -18,7 +18,7 @@ module Hyrax
       ##
       # @return [String]
       def self.inspect
-        return "Hyrax::ChangeSet(#{model_class})" unless name.present?
+        return "Hyrax::ChangeSet(#{model_class})" if name.blank?
         super
       end
     end

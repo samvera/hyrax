@@ -18,9 +18,9 @@ module Hyrax
 
     private
 
-      def default_work_relation
-        Hyrax::WorkRelation.new
-      end
+    def default_work_relation
+      Hyrax::WorkRelation.new
+    end
 
     public
 
@@ -43,16 +43,16 @@ module Hyrax
 
     private
 
-      def solr_doc
-        @solr_doc ||= ::SolrDocument.new(solr_response['response']['docs'].first, solr_response)
-      end
+    def solr_doc
+      @solr_doc ||= ::SolrDocument.new(solr_response['response']['docs'].first, solr_response)
+    end
 
-      def solr_response
-        @solr_response ||= Hyrax::SolrService.get(query)
-      end
+    def solr_response
+      @solr_response ||= Hyrax::SolrService.get(query)
+    end
 
-      def query
-        Hyrax::SolrQueryBuilderService.construct_query_for_ids([id])
-      end
+    def query
+      Hyrax::SolrQueryBuilderService.construct_query_for_ids([id])
+    end
   end
 end

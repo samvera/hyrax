@@ -37,9 +37,9 @@ module Hyrax
 
     private
 
-      def user_unregistered?
-        current_ability.current_user.new_record? ||
-          current_ability.current_user.guest?
-      end
+    def user_unregistered?
+      current_ability.current_user.new_record? ||
+        current_ability.current_user.guest?
+    end
   end
 end

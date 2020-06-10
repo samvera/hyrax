@@ -67,31 +67,31 @@ module Hyrax
 
     private
 
-      def data
-        @data ||= flatten(yaml)
-      end
+    def data
+      @data ||= flatten(yaml)
+    end
 
-      def yaml
-        yaml = {}
-        self.class.load_paths.each do |path|
-          from_file = YAML.safe_load(File.open(path))[TOP_KEY]
-          yaml.deep_merge!(from_file) if from_file
-        end
-        yaml
+    def yaml
+      yaml = {}
+      self.class.load_paths.each do |path|
+        from_file = YAML.safe_load(File.open(path))[TOP_KEY]
+        yaml.deep_merge!(from_file) if from_file
       end
+      yaml
+    end
 
-      # Given a deeply nested hash, return a single hash
-      def flatten(hash)
-        hash.each_with_object({}) do |(key, value), h|
-          if value.instance_of?(Hash)
-            value.map do |k, v|
-              # We could add recursion here if we ever had more than 2 levels
-              h["#{key}.#{k}"] = v
-            end
-          else
-            h[key] = value
+    # Given a deeply nested hash, return a single hash
+    def flatten(hash)
+      hash.each_with_object({}) do |(key, value), h|
+        if value.instance_of?(Hash)
+          value.map do |k, v|
+            # We could add recursion here if we ever had more than 2 levels
+            h["#{key}.#{k}"] = v
           end
+        else
+          h[key] = value
         end
       end
+    end
   end
 end

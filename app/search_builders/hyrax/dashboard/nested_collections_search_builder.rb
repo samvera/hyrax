@@ -42,80 +42,80 @@ module Hyrax
 
       private
 
-        def collection_ids_for_deposit
-          Hyrax::Collections::PermissionsService.collection_ids_for_deposit(ability: current_ability)
-        end
+      def collection_ids_for_deposit
+        Hyrax::Collections::PermissionsService.collection_ids_for_deposit(ability: current_ability)
+      end
 
-        # My intention in this implementation is that if I need at least edit access on the queried document,
-        # then I must have one of the following access-levels
-        ACCESS_LEVELS_FOR_LEVEL = ActiveSupport::HashWithIndifferentAccess.new(
-          edit: ["edit"],
-          deposit: ["deposit"],
-          read: ["edit", "read"],
-          discover: ["edit", "discover", "read"]
-        ).freeze
-        def extract_discovery_permissions(access)
-          ACCESS_LEVELS_FOR_LEVEL.fetch(access)
-        end
+      # My intention in this implementation is that if I need at least edit access on the queried document,
+      # then I must have one of the following access-levels
+      ACCESS_LEVELS_FOR_LEVEL = ActiveSupport::HashWithIndifferentAccess.new(
+        edit: ["edit"],
+        deposit: ["deposit"],
+        read: ["edit", "read"],
+        discover: ["edit", "discover", "read"]
+      ).freeze
+      def extract_discovery_permissions(access)
+        ACCESS_LEVELS_FOR_LEVEL.fetch(access)
+      end
 
-        def limit_ids
-          # exclude current collection from returned list
-          limit_ids = [@collection.id]
-          # cannot add a parent that is already a parent
-          limit_ids += @nesting_attributes.parents if @nesting_attributes.parents && @nest_direction == :as_parent
-          limit_ids
-        end
+      def limit_ids
+        # exclude current collection from returned list
+        limit_ids = [@collection.id]
+        # cannot add a parent that is already a parent
+        limit_ids += @nesting_attributes.parents if @nesting_attributes.parents && @nest_direction == :as_parent
+        limit_ids
+      end
 
-        # remove collections from list in order to to prevent illegal nesting arrangements
-        def limit_clause
-          case @nest_direction
-          when :as_parent
-            eligible_to_be_a_parent
-          when :as_child
-            eligible_to_be_a_child
-          end
+      # remove collections from list in order to to prevent illegal nesting arrangements
+      def limit_clause
+        case @nest_direction
+        when :as_parent
+          eligible_to_be_a_parent
+        when :as_child
+          eligible_to_be_a_child
         end
+      end
 
-        # To be eligible to be a parent collection of child "Collection G":
-        # 1) cannot have any pathnames containing Collection G's ID
-        # 2) cannot already be Collection G's direct parent
-        # => this is handled through limit_ids method
-        def eligible_to_be_a_parent
-          # Using a !lucene query allows us to get items using a wildcard query, a feature not supported via AF query builder.
-          ["-_query_:\"{!lucene df=#{Samvera::NestingIndexer.configuration.solr_field_name_for_storing_pathnames}}*#{@collection.id}*\""]
-        end
+      # To be eligible to be a parent collection of child "Collection G":
+      # 1) cannot have any pathnames containing Collection G's ID
+      # 2) cannot already be Collection G's direct parent
+      # => this is handled through limit_ids method
+      def eligible_to_be_a_parent
+        # Using a !lucene query allows us to get items using a wildcard query, a feature not supported via AF query builder.
+        ["-_query_:\"{!lucene df=#{Samvera::NestingIndexer.configuration.solr_field_name_for_storing_pathnames}}*#{@collection.id}*\""]
+      end
 
-        # To be eligible to be a child collection of parent "Collection F":
-        # 1) Cannot have any pathnames containing any of Collection F's pathname or ancestors
-        # 2) cannot already be Collection F's direct child
-        def eligible_to_be_a_child
-          exclude_path = []
-          exclude_path << exclude_if_paths_contain_collection
-          exclude_path << exclude_if_already_parent
-        end
+      # To be eligible to be a child collection of parent "Collection F":
+      # 1) Cannot have any pathnames containing any of Collection F's pathname or ancestors
+      # 2) cannot already be Collection F's direct child
+      def eligible_to_be_a_child
+        exclude_path = []
+        exclude_path << exclude_if_paths_contain_collection
+        exclude_path << exclude_if_already_parent
+      end
 
-        def exclude_if_paths_contain_collection
-          # 1) Exclude any pathnames containing any of Collection F's pathname or ancestors
-          array_to_exclude = [] + @nesting_attributes.pathnames unless @nesting_attributes.pathnames.nil?
-          array_to_exclude += @nesting_attributes.ancestors unless @nesting_attributes.ancestors.nil?
-          # build a unique string containing all of Collection F's pathnames and ancestors
-          exclude_list = ""
-          array_to_exclude&.uniq&.each do |element|
-            exclude_list += ' ' unless exclude_list.empty?
-            exclude_list += element.to_s
-          end
-          # Using a !lucene query allows us to get items which match any individual element
-          # from the list. Building the query via the AF builder created a !field query which
-          # only searches the field for an exact string and doesn't allow an "OR" connection
-          # between the elements.
-          return "-_query_:\"{!lucene q.op=OR df=#{Samvera::NestingIndexer.configuration.solr_field_name_for_storing_pathnames}}#{exclude_list}\"" unless exclude_list.empty?
-          ""
+      def exclude_if_paths_contain_collection
+        # 1) Exclude any pathnames containing any of Collection F's pathname or ancestors
+        array_to_exclude = [] + @nesting_attributes.pathnames unless @nesting_attributes.pathnames.nil?
+        array_to_exclude += @nesting_attributes.ancestors unless @nesting_attributes.ancestors.nil?
+        # build a unique string containing all of Collection F's pathnames and ancestors
+        exclude_list = ""
+        array_to_exclude&.uniq&.each do |element|
+          exclude_list += ' ' unless exclude_list.empty?
+          exclude_list += element.to_s
         end
+        # Using a !lucene query allows us to get items which match any individual element
+        # from the list. Building the query via the AF builder created a !field query which
+        # only searches the field for an exact string and doesn't allow an "OR" connection
+        # between the elements.
+        return "-_query_:\"{!lucene q.op=OR df=#{Samvera::NestingIndexer.configuration.solr_field_name_for_storing_pathnames}}#{exclude_list}\"" unless exclude_list.empty?
+        ""
+      end
 
-        def exclude_if_already_parent
-          # 2) Exclude any of Collection F's direct children
-          "-" + ActiveFedora::SolrQueryBuilder.construct_query(Samvera::NestingIndexer.configuration.solr_field_name_for_storing_parent_ids => @collection.id)
-        end
+      def exclude_if_already_parent
+        # 2) Exclude any of Collection F's direct children
+        "-" + ActiveFedora::SolrQueryBuilder.construct_query(Samvera::NestingIndexer.configuration.solr_field_name_for_storing_parent_ids => @collection.id)
+      end
     end
   end
 end

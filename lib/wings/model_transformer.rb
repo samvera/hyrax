@@ -57,7 +57,7 @@ module Wings
     end
 
     def ensure_current_permissions(resource)
-      return unless pcdm_object.try(:access_control).present?
+      return if pcdm_object.try(:access_control).blank?
 
       resource.permission_manager.acl.permissions =
         pcdm_object.access_control.valkyrie_resource.permissions
@@ -99,71 +99,71 @@ module Wings
 
     private
 
-      def mint_id
-        id = pcdm_object.assign_id
+    def mint_id
+      id = pcdm_object.assign_id
 
-        pcdm_object.id = id unless id.blank?
+      pcdm_object.id = id if id.present?
+    end
+
+    def attributes
+      all_keys =
+        pcdm_object.attributes.keys +
+        OrmConverter.relationship_keys_for(reflections: pcdm_object.reflections)
+
+      result = AttributeTransformer.run(pcdm_object, all_keys).merge(reflection_ids).merge(additional_attributes)
+
+      append_embargo(result)
+      append_lease(result)
+
+      result
+    end
+
+    def reflection_ids
+      pcdm_object.reflections.keys.select { |k| k.to_s.end_with? '_id' }.each_with_object({}) do |k, mem|
+        mem[k] = pcdm_object.try(k)
       end
+    end
 
-      def attributes
-        all_keys =
-          pcdm_object.attributes.keys +
-          OrmConverter.relationship_keys_for(reflections: pcdm_object.reflections)
+    def additional_attributes
+      { :created_at => pcdm_object.try(:create_date),
+        :updated_at => pcdm_object.try(:modified_date),
+        :member_ids => member_ids,
+        ::Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK => lock_token }
+    end
 
-        result = AttributeTransformer.run(pcdm_object, all_keys).merge(reflection_ids).merge(additional_attributes)
+    # Prefer ordered members, but if ordered members don't exist, use non-ordered members.
+    def member_ids
+      ordered_member_ids = pcdm_object.try(:ordered_member_ids)
+      return ordered_member_ids if ordered_member_ids.present?
+      pcdm_object.try(:member_ids)
+    end
 
-        append_embargo(result)
-        append_lease(result)
+    def lock_token
+      result = []
+      result << ::Valkyrie::Persistence::OptimisticLockToken.new(adapter_id: 'wings-fedora-etag', token: pcdm_object.etag) unless pcdm_object.new_record?
 
-        result
-      end
+      last_modified_literal = pcdm_object.resource.first_object([nil, RDF::URI("http://fedora.info/definitions/v4/repository#lastModified"), nil])
+      token = last_modified_literal&.object&.to_s
+      result << ::Valkyrie::Persistence::OptimisticLockToken.new(adapter_id: 'wings-fedora-last-modified', token: token) if token
+      result
+    end
 
-      def reflection_ids
-        pcdm_object.reflections.keys.select { |k| k.to_s.end_with? '_id' }.each_with_object({}) do |k, mem|
-          mem[k] = pcdm_object.try(k)
-        end
-      end
+    def append_embargo(attrs)
+      return unless pcdm_object.try(:embargo)
+      embargo_attrs = pcdm_object.embargo.attributes.symbolize_keys
+      embargo_attrs[:embargo_history] = embargo_attrs[:embargo_history].to_a
+      embargo_attrs[:id] = ::Valkyrie::ID.new(embargo_attrs[:id]) if embargo_attrs[:id]
 
-      def additional_attributes
-        { :created_at =>  pcdm_object.try(:create_date),
-          :updated_at =>  pcdm_object.try(:modified_date),
-          :member_ids =>  member_ids,
-          ::Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK => lock_token }
-      end
+      attrs[:embargo] = Hyrax::Embargo.new(**embargo_attrs)
+    end
 
-      # Prefer ordered members, but if ordered members don't exist, use non-ordered members.
-      def member_ids
-        ordered_member_ids = pcdm_object.try(:ordered_member_ids)
-        return ordered_member_ids if ordered_member_ids.present?
-        pcdm_object.try(:member_ids)
-      end
+    def append_lease(attrs)
+      return unless pcdm_object.try(:lease)
+      lease_attrs = pcdm_object.lease.attributes.symbolize_keys
+      lease_attrs[:lease_history] = lease_attrs[:embargo_history].to_a
+      lease_attrs[:id] = ::Valkyrie::ID.new(lease_attrs[:id]) if lease_attrs[:id]
 
-      def lock_token
-        result = []
-        result << ::Valkyrie::Persistence::OptimisticLockToken.new(adapter_id: 'wings-fedora-etag', token: pcdm_object.etag) unless pcdm_object.new_record?
-
-        last_modified_literal = pcdm_object.resource.first_object([nil, RDF::URI("http://fedora.info/definitions/v4/repository#lastModified"), nil])
-        token = last_modified_literal&.object&.to_s
-        result << ::Valkyrie::Persistence::OptimisticLockToken.new(adapter_id: 'wings-fedora-last-modified', token: token) if token
-        result
-      end
-
-      def append_embargo(attrs)
-        return unless pcdm_object.try(:embargo)
-        embargo_attrs = pcdm_object.embargo.attributes.symbolize_keys
-        embargo_attrs[:embargo_history] = embargo_attrs[:embargo_history].to_a
-        embargo_attrs[:id] = ::Valkyrie::ID.new(embargo_attrs[:id]) if embargo_attrs[:id]
-
-        attrs[:embargo] = Hyrax::Embargo.new(**embargo_attrs)
-      end
-
-      def append_lease(attrs)
-        return unless pcdm_object.try(:lease)
-        lease_attrs = pcdm_object.lease.attributes.symbolize_keys
-        lease_attrs[:lease_history] = lease_attrs[:embargo_history].to_a
-        lease_attrs[:id] = ::Valkyrie::ID.new(lease_attrs[:id]) if lease_attrs[:id]
-
-        attrs[:lease] = Hyrax::Lease.new(**lease_attrs)
-      end
+      attrs[:lease] = Hyrax::Lease.new(**lease_attrs)
+    end
   end
 end

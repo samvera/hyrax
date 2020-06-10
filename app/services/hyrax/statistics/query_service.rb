@@ -43,13 +43,13 @@ module Hyrax
 
       private
 
-        def where_access_is(access_level)
-          relation.where Hydra.config.permissions.read.group => access_level
-        end
+      def where_access_is(access_level)
+        relation.where Hydra.config.permissions.read.group => access_level
+      end
 
-        def date_format
-          "%Y-%m-%dT%H:%M:%SZ"
-        end
+      def date_format
+        "%Y-%m-%dT%H:%M:%SZ"
+      end
     end
   end
 end

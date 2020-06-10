@@ -62,38 +62,38 @@ module Hyrax
 
       private
 
-        def build_within_form
-          child = ::Collection.find(params.fetch(:child_id))
-          authorize! :read, child
-          parent = params.key?(:parent_id) ? ::Collection.find(params[:parent_id]) : nil
-          form_class.new(child: child, parent: parent, context: self)
-        end
+      def build_within_form
+        child = ::Collection.find(params.fetch(:child_id))
+        authorize! :read, child
+        parent = params.key?(:parent_id) ? ::Collection.find(params[:parent_id]) : nil
+        form_class.new(child: child, parent: parent, context: self)
+      end
 
-        def build_under_form
-          parent = ::Collection.find(params.fetch(:parent_id))
-          authorize! :deposit, parent
-          child = params.key?(:child_id) ? ::Collection.find(params[:child_id]) : nil
-          form_class.new(child: child, parent: parent, context: self)
-        end
+      def build_under_form
+        parent = ::Collection.find(params.fetch(:parent_id))
+        authorize! :deposit, parent
+        child = params.key?(:child_id) ? ::Collection.find(params[:child_id]) : nil
+        form_class.new(child: child, parent: parent, context: self)
+      end
 
-        def build_create_collection_form
-          parent = ::Collection.find(params.fetch(:parent_id))
-          authorize! :deposit, parent
-          form_class.new(child: nil, parent: parent, context: self)
-        end
+      def build_create_collection_form
+        parent = ::Collection.find(params.fetch(:parent_id))
+        authorize! :deposit, parent
+        form_class.new(child: nil, parent: parent, context: self)
+      end
 
-        def build_remove_form
-          child = ::Collection.find(params.fetch(:child_id))
-          parent = ::Collection.find(params.fetch(:parent_id))
-          authorize! :edit, parent
-          form_class.new(child: child, parent: parent, context: self)
-        end
+      def build_remove_form
+        child = ::Collection.find(params.fetch(:child_id))
+        parent = ::Collection.find(params.fetch(:parent_id))
+        authorize! :edit, parent
+        form_class.new(child: child, parent: parent, context: self)
+      end
 
-        # determine appropriate redirect location depending on specified source
-        def redirect_path(item:)
-          return my_collections_path if params[:source] == 'my'
-          dashboard_collection_path(item)
-        end
+      # determine appropriate redirect location depending on specified source
+      def redirect_path(item:)
+        return my_collections_path if params[:source] == 'my'
+        dashboard_collection_path(item)
+      end
     end
   end
 end

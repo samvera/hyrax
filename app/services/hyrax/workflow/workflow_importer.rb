@@ -19,7 +19,7 @@ module Hyrax
 
         private
 
-          attr_writer :load_errors
+        attr_writer :load_errors
       end
 
       # @api public
@@ -100,25 +100,25 @@ module Hyrax
 
       private
 
-        attr_reader :data, :logger
+      attr_reader :data, :logger
 
-        def data=(input)
-          @data = input.deep_symbolize_keys
-        end
+      def data=(input)
+        @data = input.deep_symbolize_keys
+      end
 
-        attr_accessor :validator, :permission_template, :schema
+      attr_accessor :validator, :permission_template, :schema
 
-        def default_validator
-          SchemaValidator.method(:call)
-        end
+      def default_validator
+        SchemaValidator.method(:call)
+      end
 
-        def default_schema
-          Hyrax::Workflow::WorkflowSchema.new
-        end
+      def default_schema
+        Hyrax::Workflow::WorkflowSchema.new
+      end
 
-        def validate!
-          validator.call(data: data, schema: schema, logger: logger)
-        end
+      def validate!
+        validator.call(data: data, schema: schema, logger: logger)
+      end
 
       public
 
@@ -142,52 +142,52 @@ module Hyrax
 
       private
 
-        def find_or_create_from(configuration:)
-          workflow = Sipity::Workflow.find_or_initialize_by(name: configuration.fetch(:name), permission_template: permission_template)
-          generate_state_diagram!(workflow: workflow, actions_configuration: configuration.fetch(:actions))
+      def find_or_create_from(configuration:)
+        workflow = Sipity::Workflow.find_or_initialize_by(name: configuration.fetch(:name), permission_template: permission_template)
+        generate_state_diagram!(workflow: workflow, actions_configuration: configuration.fetch(:actions))
 
-          find_or_create_workflow_permissions!(
-            workflow: workflow, workflow_permissions_configuration: configuration.fetch(:workflow_permissions, [])
-          )
-          workflow.label = configuration.fetch(:label, nil)
-          workflow.description = configuration.fetch(:description, nil)
-          workflow.allows_access_grant = configuration.fetch(:allows_access_grant, nil)
-          workflow.save!
-          logger.info(%(Loaded Sipity::Workflow "#{workflow.name}" for #{permission_template.class} ID=#{permission_template.id}))
-          workflow
+        find_or_create_workflow_permissions!(
+          workflow: workflow, workflow_permissions_configuration: configuration.fetch(:workflow_permissions, [])
+        )
+        workflow.label = configuration.fetch(:label, nil)
+        workflow.description = configuration.fetch(:description, nil)
+        workflow.allows_access_grant = configuration.fetch(:allows_access_grant, nil)
+        workflow.save!
+        logger.info(%(Loaded Sipity::Workflow "#{workflow.name}" for #{permission_template.class} ID=#{permission_template.id}))
+        workflow
+      end
+
+      extend Forwardable
+      def_delegator WorkflowPermissionsGenerator, :call, :find_or_create_workflow_permissions!
+      def_delegator SipityActionsGenerator, :call, :generate_state_diagram!
+
+      module SchemaValidator
+        # @param data [Hash]
+        # @param schema [#call]
+        #
+        # @return [Boolean] true if the data validates from the schema
+        # @raise [RuntimeError] if the data does not validate against the schema
+        def self.call(data:, schema:, logger:)
+          result = schema.call(data)
+          return true if result.success?
+          message = format_message(result)
+          logger.error(message)
+          raise message
         end
 
-        extend Forwardable
-        def_delegator WorkflowPermissionsGenerator, :call, :find_or_create_workflow_permissions!
-        def_delegator SipityActionsGenerator, :call, :generate_state_diagram!
-
-        module SchemaValidator
-          # @param data [Hash]
-          # @param schema [#call]
-          #
-          # @return [Boolean] true if the data validates from the schema
-          # @raise [RuntimeError] if the data does not validate against the schema
-          def self.call(data:, schema:, logger:)
-            result = schema.call(data)
-            return true if result.success?
-            message = format_message(result)
-            logger.error(message)
-            raise message
+        ##
+        # @param result [Dry::Validation::Result]
+        #
+        # @return [String]
+        def self.format_message(result)
+          messages = result.errors(full: true).map do |msg|
+            "Error on workflow entry #{msg.path}\n\t#{msg.text}\n\tGot: #{msg.input || '[no entry]'}"
           end
 
-          ##
-          # @param result [Dry::Validation::Result]
-          #
-          # @return [String]
-          def self.format_message(result)
-            messages = result.errors(full: true).map do |msg|
-              "Error on workflow entry #{msg.path}\n\t#{msg.text}\n\tGot: #{msg.input || '[no entry]'}"
-            end
-
-            messages << "Input was:\n\t#{result.to_h}"
-            messages.join("\n")
-          end
+          messages << "Input was:\n\t#{result.to_h}"
+          messages.join("\n")
         end
+      end
     end
   end
 end

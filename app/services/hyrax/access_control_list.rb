@@ -145,74 +145,74 @@ module Hyrax
 
     private
 
-      ##
-      # @abstract
-      # @api private
-      class ModeEditor
-        def initialize(acl, mode)
-          @acl  = acl
-          @mode = mode.to_sym
-        end
-
-        private
-
-          def id_for(agent: user_or_group)
-            case agent
-            when Hyrax::Group
-              "#{Hyrax::Group.name_prefix}#{agent.name}"
-            else
-              agent.user_key.to_s
-            end
-          end
+    ##
+    # @abstract
+    # @api private
+    class ModeEditor
+      def initialize(acl, mode)
+        @acl  = acl
+        @mode = mode.to_sym
       end
 
-      ##
-      # @api private
-      #
-      # A short-term memory object for the permission granting DSL. Use with
-      # method chaining, as in: `acl.grant(:edit).to(user)`.
-      class ModeGrant < ModeEditor
-        ##
-        # @api public
-        # @return [Hyrax::AccessControlList]
-        def to(user_or_group)
-          agent_id = id_for(agent: user_or_group)
+      private
 
-          @acl << Hyrax::Permission.new(access_to: @acl.resource.id, agent: agent_id, mode: @mode)
-          @acl
+      def id_for(agent: user_or_group)
+        case agent
+        when Hyrax::Group
+          "#{Hyrax::Group.name_prefix}#{agent.name}"
+        else
+          agent.user_key.to_s
         end
       end
+    end
 
+    ##
+    # @api private
+    #
+    # A short-term memory object for the permission granting DSL. Use with
+    # method chaining, as in: `acl.grant(:edit).to(user)`.
+    class ModeGrant < ModeEditor
       ##
-      # @api private
-      #
-      # A short-term memory object for the permission revoking DSL. Use with
-      # method chaining, as in: `acl.revoke(:edit).from(user)`.
-      class ModeRevoke < ModeEditor
-        ##
-        # @api public
-        # @return [Hyrax::AccessControlList]
-        def from(user_or_group)
-          permission_for_deletion = @acl.permissions.find do |p|
-            p.mode == @mode &&
-              p.agent.to_s == id_for(agent: user_or_group)
-          end
+      # @api public
+      # @return [Hyrax::AccessControlList]
+      def to(user_or_group)
+        agent_id = id_for(agent: user_or_group)
 
-          @acl.delete(permission_for_deletion) if permission_for_deletion
-          @acl
+        @acl << Hyrax::Permission.new(access_to: @acl.resource.id, agent: agent_id, mode: @mode)
+        @acl
+      end
+    end
+
+    ##
+    # @api private
+    #
+    # A short-term memory object for the permission revoking DSL. Use with
+    # method chaining, as in: `acl.revoke(:edit).from(user)`.
+    class ModeRevoke < ModeEditor
+      ##
+      # @api public
+      # @return [Hyrax::AccessControlList]
+      def from(user_or_group)
+        permission_for_deletion = @acl.permissions.find do |p|
+          p.mode == @mode &&
+            p.agent.to_s == id_for(agent: user_or_group)
         end
-      end
 
-      ##
-      # @api private
-      def access_control_model
-        AccessControl.for(resource: resource, query_service: query_service)
+        @acl.delete(permission_for_deletion) if permission_for_deletion
+        @acl
       end
+    end
 
-      ##
-      # @api private
-      def change_set
-        @change_set ||= Hyrax::ChangeSet.for(access_control_model)
-      end
+    ##
+    # @api private
+    def access_control_model
+      AccessControl.for(resource: resource, query_service: query_service)
+    end
+
+    ##
+    # @api private
+    def change_set
+      @change_set ||= Hyrax::ChangeSet.for(access_control_model)
+    end
   end
 end

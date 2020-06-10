@@ -1,6 +1,6 @@
 module Hyrax
   # Mailer for contacting the administrator
-  class ContactMailer < ActionMailer::Base
+  class ContactMailer < ApplicationMailer
     def contact(contact_form)
       @contact_form = contact_form
       # Check for spam

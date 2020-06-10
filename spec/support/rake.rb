@@ -29,7 +29,7 @@ module RakeHelper
     rescue SystemExit => e
       puts "error = #{e.inspect}"
     end
-    return "Output: #{out.string}\n Errors:#{err.string}"
+    "Output: #{out.string}\n Errors:#{err.string}"
   ensure
     $stdout = STDOUT
     $stdout = STDERR

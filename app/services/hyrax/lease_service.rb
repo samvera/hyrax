@@ -24,9 +24,9 @@ module Hyrax
 
       private
 
-        def presenter_class
-          Hyrax::LeasePresenter
-        end
+      def presenter_class
+        Hyrax::LeasePresenter
+      end
     end
   end
 end

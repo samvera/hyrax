@@ -4,9 +4,9 @@ module Hyrax
   class ControllerResource < CanCan::ControllerResource
     private
 
-      # Override resource_params to make this a nop. Hyrax uses actors to assign attributes
-      def resource_params
-        {}
-      end
+    # Override resource_params to make this a nop. Hyrax uses actors to assign attributes
+    def resource_params
+      {}
+    end
   end
 end

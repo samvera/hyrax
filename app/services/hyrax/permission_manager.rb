@@ -140,60 +140,60 @@ module Hyrax
 
     private
 
-      def groups_for(mode:)
-        Enumerator.new do |yielder|
-          acl.permissions.each do |permission|
-            next unless permission.mode == mode
-            next unless permission.agent.starts_with?(Hyrax::Group.name_prefix)
-            yielder << permission.agent.gsub(Hyrax::Group.name_prefix, '')
-          end
-        end
-      end
-
-      def update_groups_for(mode:, groups:)
-        groups = groups.map(&:to_s)
-
+    def groups_for(mode:)
+      Enumerator.new do |yielder|
         acl.permissions.each do |permission|
           next unless permission.mode == mode
           next unless permission.agent.starts_with?(Hyrax::Group.name_prefix)
-
-          group_name = permission.agent.gsub(Hyrax::Group.name_prefix, '')
-          next if groups.include?(group_name)
-
-          acl.revoke(mode).from(Group.new(group_name))
+          yielder << permission.agent.gsub(Hyrax::Group.name_prefix, '')
         end
+      end
+    end
 
-        groups.each { |g| acl.grant(mode).to(Group.new(g)) }
+    def update_groups_for(mode:, groups:)
+      groups = groups.map(&:to_s)
+
+      acl.permissions.each do |permission|
+        next unless permission.mode == mode
+        next unless permission.agent.starts_with?(Hyrax::Group.name_prefix)
+
+        group_name = permission.agent.gsub(Hyrax::Group.name_prefix, '')
+        next if groups.include?(group_name)
+
+        acl.revoke(mode).from(Group.new(group_name))
       end
 
-      def update_users_for(mode:, users:)
-        users = users.map(&:to_s)
+      groups.each { |g| acl.grant(mode).to(Group.new(g)) }
+    end
 
-        user_objects = users.map do |user|
-          ::User.find_by_user_key(user) ||
-            raise(ArgumentError, "No user exists for user key: #{user}")
-        end
+    def update_users_for(mode:, users:)
+      users = users.map(&:to_s)
 
+      user_objects = users.map do |user|
+        ::User.find_by_user_key(user) ||
+          raise(ArgumentError, "No user exists for user key: #{user}")
+      end
+
+      acl.permissions.each do |permission|
+        next unless permission.mode == mode
+        next if permission.agent.starts_with?(Hyrax::Group.name_prefix)
+        next if users.include? permission.agent
+
+        user_for_existing_permission = ::User.find_by_user_key(permission.agent)
+        acl.revoke(mode).from(user_for_existing_permission) if user_for_existing_permission
+      end
+
+      user_objects.each { |u| acl.grant(mode).to(u) }
+    end
+
+    def users_for(mode:)
+      Enumerator.new do |yielder|
         acl.permissions.each do |permission|
           next unless permission.mode == mode
           next if permission.agent.starts_with?(Hyrax::Group.name_prefix)
-          next if users.include? permission.agent
-
-          user_for_existing_permission = ::User.find_by_user_key(permission.agent)
-          acl.revoke(mode).from(user_for_existing_permission) if user_for_existing_permission
-        end
-
-        user_objects.each { |u| acl.grant(mode).to(u) }
-      end
-
-      def users_for(mode:)
-        Enumerator.new do |yielder|
-          acl.permissions.each do |permission|
-            next unless permission.mode == mode
-            next if permission.agent.starts_with?(Hyrax::Group.name_prefix)
-            yielder << permission.agent
-          end
+          yielder << permission.agent
         end
       end
+    end
   end
 end

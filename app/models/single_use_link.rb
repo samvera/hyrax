@@ -21,17 +21,17 @@ class SingleUseLink < ActiveRecord::Base
 
   private
 
-    def expiration_date_cannot_be_in_the_past
-      errors.add(:expires, "can't be in the past") if expired?
-    end
+  def expiration_date_cannot_be_in_the_past
+    errors.add(:expires, "can't be in the past") if expired?
+  end
 
-    def cannot_be_destroyed
-      errors[:base] << "Single Use Link has already been used" if destroyed?
-    end
+  def cannot_be_destroyed
+    errors[:base] << "Single Use Link has already been used" if destroyed?
+  end
 
-    def set_defaults
-      return unless new_record?
-      self.expires ||= DateTime.current.advance(hours: 24)
-      self.download_key ||= (Digest::SHA2.new << rand(1_000_000_000).to_s).to_s
-    end
+  def set_defaults
+    return unless new_record?
+    self.expires ||= DateTime.current.advance(hours: 24)
+    self.download_key ||= (Digest::SHA2.new << rand(1_000_000_000).to_s).to_s
+  end
 end

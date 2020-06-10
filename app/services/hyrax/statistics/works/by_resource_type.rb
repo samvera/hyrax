@@ -4,9 +4,9 @@ module Hyrax
       class ByResourceType < Statistics::TermQuery
         private
 
-          def index_key
-            "resource_type_sim"
-          end
+        def index_key
+          "resource_type_sim"
+        end
       end
     end
   end

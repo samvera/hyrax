@@ -13,7 +13,6 @@ module Sipity
     has_many :entity_specific_responsibilities, dependent: :destroy, class_name: 'Sipity::EntitySpecificResponsibility'
 
     has_many :comments,
-             foreign_key: :agent_id,
              dependent: :destroy,
              class_name: 'Sipity::Comment'
 

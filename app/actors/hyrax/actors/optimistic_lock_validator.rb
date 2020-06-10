@@ -15,18 +15,18 @@ module Hyrax
 
       private
 
-        # @return [Boolean] returns true if the lock is missing or
-        #                   if it matches the current object version.
-        def validate_lock(env, version)
-          return true if version.blank? || version == env.curation_concern.etag
-          env.curation_concern.errors.add(:base, :conflict)
-          false
-        end
+      # @return [Boolean] returns true if the lock is missing or
+      #                   if it matches the current object version.
+      def validate_lock(env, version)
+        return true if version.blank? || version == env.curation_concern.etag
+        env.curation_concern.errors.add(:base, :conflict)
+        false
+      end
 
-        # Removes the version attribute
-        def version_attribute(attributes)
-          attributes.delete(version_field)
-        end
+      # Removes the version attribute
+      def version_attribute(attributes)
+        attributes.delete(version_field)
+      end
     end
   end
 end

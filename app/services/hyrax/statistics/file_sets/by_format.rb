@@ -4,10 +4,10 @@ module Hyrax
       class ByFormat < Statistics::TermQuery
         private
 
-          # Returns 'file_format_sim'
-          def index_key
-            "file_format_sim"
-          end
+        # Returns 'file_format_sim'
+        def index_key
+          "file_format_sim"
+        end
       end
     end
   end

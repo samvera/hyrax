@@ -4,8 +4,8 @@ require 'hyrax/specs/spy_listener'
 
 RSpec.describe Hyrax::AccessControlList do
   subject(:acl) do
-    described_class.new(resource:      resource,
-                        persister:     persister,
+    described_class.new(resource: resource,
+                        persister: persister,
                         query_service: query_service)
   end
 
@@ -28,16 +28,16 @@ RSpec.describe Hyrax::AccessControlList do
       it 'grants a permission' do
         expect { acl.grant(mode).to(user) }
           .to change { acl.permissions }
-          .to contain_exactly(have_attributes(mode:      mode,
-                                              agent:     user.user_key.to_s,
+          .to contain_exactly(have_attributes(mode: mode,
+                                              agent: user.user_key.to_s,
                                               access_to: resource.id))
       end
 
       it 'grants a permission to a group' do
         expect { acl.grant(mode).to(group) }
           .to change { acl.permissions }
-          .to contain_exactly(have_attributes(mode:      mode,
-                                              agent:     "group/#{group.name}",
+          .to contain_exactly(have_attributes(mode: mode,
+                                              agent: "group/#{group.name}",
                                               access_to: resource.id))
       end
     end
@@ -66,8 +66,8 @@ RSpec.describe Hyrax::AccessControlList do
     it 'adds the new permission with access_to' do
       expect { acl << permission }
         .to change { acl.permissions }
-        .to contain_exactly(have_attributes(mode:      permission.mode,
-                                            agent:     permission.agent,
+        .to contain_exactly(have_attributes(mode: permission.mode,
+                                            agent: permission.agent,
                                             access_to: resource.id))
     end
   end
@@ -85,8 +85,8 @@ RSpec.describe Hyrax::AccessControlList do
       it 'removes the permission' do
         expect { acl.delete(permission) }
           .to change { acl.permissions }
-          .from(contain_exactly(have_attributes(mode:      permission.mode,
-                                                agent:     permission.agent,
+          .from(contain_exactly(have_attributes(mode: permission.mode,
+                                                agent: permission.agent,
                                                 access_to: resource.id)))
           .to be_empty
       end

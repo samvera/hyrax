@@ -18,9 +18,9 @@ module Wings::Storage
 
     private
 
-      def file_set(file_metadata)
-        file_set_id = file_metadata.file_set_id
-        Hyrax.query_service.find_by(id: file_set_id)
-      end
+    def file_set(file_metadata)
+      file_set_id = file_metadata.file_set_id
+      Hyrax.query_service.find_by(id: file_set_id)
+    end
   end
 end

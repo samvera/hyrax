@@ -18,9 +18,9 @@ RSpec.describe Hyrax::PermissionTemplateApplicator do
     let(:template) do
       create(:permission_template,
              manage_groups: manage_groups,
-             manage_users:  manage_users,
-             view_groups:   view_groups,
-             view_users:    view_users)
+             manage_users: manage_users,
+             view_groups: view_groups,
+             view_users: view_users)
     end
 
     it 'applies edit groups' do

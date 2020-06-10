@@ -4,9 +4,9 @@ module Hyrax
       class OverTime < Statistics::OverTime
         private
 
-          def relation
-            Hyrax::WorkRelation.new
-          end
+        def relation
+          Hyrax::WorkRelation.new
+        end
       end
     end
   end

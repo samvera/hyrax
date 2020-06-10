@@ -34,13 +34,13 @@ module Hyrax
 
     private
 
-      def build_contact_form
-        @contact_form = Hyrax::ContactForm.new(contact_form_params)
-      end
+    def build_contact_form
+      @contact_form = Hyrax::ContactForm.new(contact_form_params)
+    end
 
-      def contact_form_params
-        return {} unless params.key?(:contact_form)
-        params.require(:contact_form).permit(:contact_method, :category, :name, :email, :subject, :message)
-      end
+    def contact_form_params
+      return {} unless params.key?(:contact_form)
+      params.require(:contact_form).permit(:contact_method, :category, :name, :email, :subject, :message)
+    end
   end
 end

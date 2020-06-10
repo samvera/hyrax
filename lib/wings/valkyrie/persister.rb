@@ -74,40 +74,40 @@ module Wings
 
       private
 
-        ##
-        # @return [void]
-        # @raise [::Valkyrie::Persistence::StaleObjectError]
-        def check_lock_tokens(af_object:, resource:)
-          return unless resource.optimistic_locking_enabled?
-          return if af_object.new_record?
-          return if
-            etag_lock_token_valid?(af_object: af_object, resource: resource) &&
-            last_modified_lock_token_valid?(af_object: af_object, resource: resource)
+      ##
+      # @return [void]
+      # @raise [::Valkyrie::Persistence::StaleObjectError]
+      def check_lock_tokens(af_object:, resource:)
+        return unless resource.optimistic_locking_enabled?
+        return if af_object.new_record?
+        return if
+          etag_lock_token_valid?(af_object: af_object, resource: resource) &&
+          last_modified_lock_token_valid?(af_object: af_object, resource: resource)
 
-          raise(::Valkyrie::Persistence::StaleObjectError, resource.id.to_s)
-        end
+        raise(::Valkyrie::Persistence::StaleObjectError, resource.id.to_s)
+      end
 
-        ##
-        # @return [Boolean]
-        def etag_lock_token_valid?(af_object:, resource:)
-          etag = resource.optimistic_lock_token.find { |t| t.adapter_id == 'wings-fedora-etag' }
+      ##
+      # @return [Boolean]
+      def etag_lock_token_valid?(af_object:, resource:)
+        etag = resource.optimistic_lock_token.find { |t| t.adapter_id == 'wings-fedora-etag' }
 
-          return true unless etag
-          return true if af_object.etag == etag.token
+        return true unless etag
+        return true if af_object.etag == etag.token
 
-          false
-        end
+        false
+      end
 
-        ##
-        # @return [Boolean]
-        def last_modified_lock_token_valid?(af_object:, resource:)
-          modified = resource.optimistic_lock_token.find { |t| t.adapter_id == 'wings-fedora-last-modified' }
+      ##
+      # @return [Boolean]
+      def last_modified_lock_token_valid?(af_object:, resource:)
+        modified = resource.optimistic_lock_token.find { |t| t.adapter_id == 'wings-fedora-last-modified' }
 
-          return true unless modified
-          return true if Time.zone.parse(af_object.ldp_source.head.last_modified) <= Time.zone.parse(modified.token)
+        return true unless modified
+        return true if Time.zone.parse(af_object.ldp_source.head.last_modified) <= Time.zone.parse(modified.token)
 
-          false
-        end
+        false
+      end
     end
   end
 end

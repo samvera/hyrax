@@ -55,7 +55,7 @@ RSpec.describe User, type: :model do
       it 'is findable by user_key' do
         user.save
 
-        expect(User.find_by_user_key(value)).to eq user
+        expect(described_class.find_by_user_key(value)).to eq user
       end
     end
   end
@@ -183,7 +183,7 @@ RSpec.describe User, type: :model do
 
       before do
         user.sipity_agent # load up and cache the association
-        User.find(user.id).create_sipity_agent!
+        described_class.find(user.id).create_sipity_agent!
       end
       it "returns the existing agent" do
         expect { subject }.not_to change { Sipity::Agent.count }
@@ -263,8 +263,8 @@ RSpec.describe User, type: :model do
   describe "scope Users" do
     let!(:basic_user) { create(:user) }
     let!(:guest_user) { create(:user, :guest) }
-    let!(:audit_user) { User.audit_user }
-    let!(:batch_user) { User.batch_user }
+    let!(:audit_user) { described_class.audit_user }
+    let!(:batch_user) { described_class.batch_user }
 
     context "without_system_accounts" do
       subject { described_class.without_system_accounts }

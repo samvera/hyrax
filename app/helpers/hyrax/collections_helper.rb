@@ -25,7 +25,7 @@ module Hyrax
         collection_links << link
         collection_links << ', ' unless links[n + 1].nil?
       end
-      content_tag :span, safe_join([t('hyrax.collection.is_part_of'), ': '] + collection_links)
+      tag.span safe_join([t('hyrax.collection.is_part_of'), ': '] + collection_links)
     end
 
     def render_other_collection_links(solr_doc, collection_id)
@@ -38,7 +38,7 @@ module Hyrax
         collection_links << link
         collection_links << ', ' unless links[n + 1].nil?
       end
-      content_tag :span, safe_join([t('hyrax.collection.also_belongs_to'), ': '] + collection_links)
+      tag.span safe_join([t('hyrax.collection.also_belongs_to'), ': '] + collection_links)
     end
 
     ##
@@ -78,9 +78,9 @@ module Hyrax
 
     private
 
-      # add hidden fields to a form for performing an action on a single document on a collection
-      def single_item_action_form_fields(form, document, action)
-        render 'hyrax/dashboard/collections/single_item_action_fields', form: form, document: document, action: action
-      end
+    # add hidden fields to a form for performing an action on a single document on a collection
+    def single_item_action_form_fields(form, document, action)
+      render 'hyrax/dashboard/collections/single_item_action_fields', form: form, document: document, action: action
+    end
   end
 end

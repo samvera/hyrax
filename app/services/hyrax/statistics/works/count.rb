@@ -42,18 +42,18 @@ module Hyrax
 
         private
 
-          def query_service
-            @query_service ||= Hyrax::Statistics::QueryService.new
-          end
+        def query_service
+          @query_service ||= Hyrax::Statistics::QueryService.new
+        end
 
-          def by_date_and_permission
-            works_count = {}
-            works_count[:total] = query_service.find_by_date_created(start_date, end_date).count
-            works_count[:public] = query_service.find_public_in_date_range(start_date, end_date).count
-            works_count[:registered] = query_service.find_registered_in_date_range(start_date, end_date).count
-            works_count[:private] = works_count[:total] - (works_count[:registered] + works_count[:public])
-            works_count
-          end
+        def by_date_and_permission
+          works_count = {}
+          works_count[:total] = query_service.find_by_date_created(start_date, end_date).count
+          works_count[:public] = query_service.find_public_in_date_range(start_date, end_date).count
+          works_count[:registered] = query_service.find_registered_in_date_range(start_date, end_date).count
+          works_count[:private] = works_count[:total] - (works_count[:registered] + works_count[:public])
+          works_count
+        end
       end
     end
   end

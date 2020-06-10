@@ -62,20 +62,20 @@ module Hyrax
 
     private
 
-      def authorize_depositor_by_id
-        @id = params[:id]
-        authorize! :transfer, @id
-        @proxy_deposit_request.work_id = @id
-      rescue CanCan::AccessDenied
-        redirect_to root_url, alert: 'You are not authorized to transfer this work.'
-      end
+    def authorize_depositor_by_id
+      @id = params[:id]
+      authorize! :transfer, @id
+      @proxy_deposit_request.work_id = @id
+    rescue CanCan::AccessDenied
+      redirect_to root_url, alert: 'You are not authorized to transfer this work.'
+    end
 
-      def load_proxy_deposit_request
-        @proxy_deposit_request = ProxyDepositRequest.new(proxy_deposit_request_params)
-      end
+    def load_proxy_deposit_request
+      @proxy_deposit_request = ProxyDepositRequest.new(proxy_deposit_request_params)
+    end
 
-      def proxy_deposit_request_params
-        params.require(:proxy_deposit_request).permit(:transfer_to, :sender_comment)
-      end
+    def proxy_deposit_request_params
+      params.require(:proxy_deposit_request).permit(:transfer_to, :sender_comment)
+    end
   end
 end

@@ -19,23 +19,23 @@ module Hyrax
 
     private
 
-      def current_work
-        ::SolrDocument.find(blacklight_params[:id])
-      end
+    def current_work
+      ::SolrDocument.find(blacklight_params[:id])
+    end
 
-      def user_has_active_workflow_role?
-        Hyrax::Workflow::PermissionQuery.scope_permitted_workflow_actions_available_for_current_state(user: current_ability.current_user, entity: current_work).any?
-      rescue PowerConverter::ConversionError
-        # The current_work doesn't have a sipity workflow entity
-        false
-      end
+    def user_has_active_workflow_role?
+      Hyrax::Workflow::PermissionQuery.scope_permitted_workflow_actions_available_for_current_state(user: current_ability.current_user, entity: current_work).any?
+    rescue PowerConverter::ConversionError
+      # The current_work doesn't have a sipity workflow entity
+      false
+    end
 
-      def depositor?
-        depositors = current_work[DepositSearchBuilder.depositor_field]
+    def depositor?
+      depositors = current_work[DepositSearchBuilder.depositor_field]
 
-        return false if depositors.nil?
+      return false if depositors.nil?
 
-        depositors.first == current_ability.current_user.user_key
-      end
+      depositors.first == current_ability.current_user.user_key
+    end
   end
 end

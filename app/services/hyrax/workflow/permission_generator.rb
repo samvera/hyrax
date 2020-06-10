@@ -51,24 +51,24 @@ module Hyrax
 
       private
 
-        attr_accessor :workflow, :workflow_state
-        attr_reader :entity, :agents, :action_names, :roles
+      attr_accessor :workflow, :workflow_state
+      attr_reader :entity, :agents, :action_names, :roles
 
-        def agents=(input)
-          @agents = Array.wrap(input).map { |agent| Sipity::Agent(agent) }
-        end
+      def agents=(input)
+        @agents = Array.wrap(input).map { |agent| Sipity::Agent(agent) }
+      end
 
-        def action_names=(input)
-          @action_names = Array.wrap(input)
-        end
+      def action_names=(input)
+        @action_names = Array.wrap(input)
+      end
 
-        def roles=(input)
-          @roles = Array.wrap(input).map { |role| Sipity::Role(role) }
-        end
+      def roles=(input)
+        @roles = Array.wrap(input).map { |role| Sipity::Role(role) }
+      end
 
-        def entity=(entity)
-          @entity = Sipity::Entity(entity)
-        end
+      def entity=(entity)
+        @entity = Sipity::Entity(entity)
+      end
 
       public
 
@@ -83,37 +83,37 @@ module Hyrax
 
       private
 
-        def create_action_and_permission_for_actions(workflow_role)
-          action_names.each do |action_name|
-            create_action_and_permission_for(action_name, workflow_role)
-          end
+      def create_action_and_permission_for_actions(workflow_role)
+        action_names.each do |action_name|
+          create_action_and_permission_for(action_name, workflow_role)
         end
+      end
 
-        def create_action_and_permission_for(action_name, workflow_role)
-          workflow_action = Sipity::WorkflowAction.find_or_create_by!(workflow: workflow, name: action_name)
-          return if workflow_state.blank?
-          state_action = Sipity::WorkflowStateAction.find_or_create_by!(
-            workflow_action: workflow_action, originating_workflow_state: workflow_state
-          )
-          Sipity::WorkflowStateActionPermission
-            .find_or_create_by!(workflow_role: workflow_role, workflow_state_action: state_action)
-        end
+      def create_action_and_permission_for(action_name, workflow_role)
+        workflow_action = Sipity::WorkflowAction.find_or_create_by!(workflow: workflow, name: action_name)
+        return if workflow_state.blank?
+        state_action = Sipity::WorkflowStateAction.find_or_create_by!(
+          workflow_action: workflow_action, originating_workflow_state: workflow_state
+        )
+        Sipity::WorkflowStateActionPermission
+          .find_or_create_by!(workflow_role: workflow_role, workflow_state_action: state_action)
+      end
 
-        def associate_workflow_role_at_workflow_level(workflow_role)
-          return if entity
-          # TODO: What if we don't have an entity? If that is the case then we want to associate the
-          #   agent at the workflow level.
-          agents.each { |agent| Sipity::WorkflowResponsibility.find_or_create_by!(workflow_role: workflow_role, agent: agent) }
-        end
+      def associate_workflow_role_at_workflow_level(workflow_role)
+        return if entity
+        # TODO: What if we don't have an entity? If that is the case then we want to associate the
+        #   agent at the workflow level.
+        agents.each { |agent| Sipity::WorkflowResponsibility.find_or_create_by!(workflow_role: workflow_role, agent: agent) }
+      end
 
-        def associate_workflow_role_at_entity_level(workflow_role)
-          return unless entity
-          # TODO: What if we don't have an entity? If that is the case then we want to associate the
-          #   agent at the workflow level.
-          agents.each do |agent|
-            Sipity::EntitySpecificResponsibility.find_or_create_by!(workflow_role: workflow_role, entity: entity, agent: agent)
-          end
+      def associate_workflow_role_at_entity_level(workflow_role)
+        return unless entity
+        # TODO: What if we don't have an entity? If that is the case then we want to associate the
+        #   agent at the workflow level.
+        agents.each do |agent|
+          Sipity::EntitySpecificResponsibility.find_or_create_by!(workflow_role: workflow_role, entity: entity, agent: agent)
         end
+      end
     end
   end
 end

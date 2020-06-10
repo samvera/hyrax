@@ -1,23 +1,23 @@
 RSpec.describe BlacklightHelper, type: :helper do
   let(:blacklight_config) { CatalogController.blacklight_config }
   let(:attributes) do
-    { 'creator_tesim'          => ['Justin', 'Joe'],
-      'depositor_tesim'        => ['jcoyne@justincoyne.com'],
-      'proxy_depositor_ssim'   => ['atz@stanford.edu'],
-      'description_tesim'      => ['This links to http://example.com/ What about that?'],
-      'date_uploaded_dtsi'     => '2013-03-14T00:00:00Z',
+    { 'creator_tesim' => ['Justin', 'Joe'],
+      'depositor_tesim' => ['jcoyne@justincoyne.com'],
+      'proxy_depositor_ssim' => ['atz@stanford.edu'],
+      'description_tesim' => ['This links to http://example.com/ What about that?'],
+      'date_uploaded_dtsi' => '2013-03-14T00:00:00Z',
       'license_tesim' => ["http://creativecommons.org/publicdomain/zero/1.0/",
                           "http://creativecommons.org/publicdomain/mark/1.0/",
                           "http://www.europeana.eu/portal/rights/rr-r.html"],
       'rights_statement_tesim' => ['http://rightsstatements.org/vocab/InC/1.0/'],
-      'identifier_tesim'       => ['65434567654345654'],
-      'keyword_tesim'          => ['taco', 'mustache'],
-      'subject_tesim'          => ['Awesome'],
-      'contributor_tesim'      => ['Bird, Big'],
-      'publisher_tesim'        => ['Penguin Random House'],
+      'identifier_tesim' => ['65434567654345654'],
+      'keyword_tesim' => ['taco', 'mustache'],
+      'subject_tesim' => ['Awesome'],
+      'contributor_tesim' => ['Bird, Big'],
+      'publisher_tesim' => ['Penguin Random House'],
       'based_near_label_tesim' => ['Pennsylvania'],
-      'language_tesim'         => ['English'],
-      'resource_type_tesim'    => ['Capstone Project'] }
+      'language_tesim' => ['English'],
+      'resource_type_tesim' => ['Capstone Project'] }
   end
 
   let(:document) { SolrDocument.new(attributes) }

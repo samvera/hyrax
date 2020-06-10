@@ -23,8 +23,8 @@ module Hyrax
 
     private
 
-      def _delegated_to
-        solr_document.to_model
-      end
+    def _delegated_to
+      solr_document.to_model
+    end
   end
 end

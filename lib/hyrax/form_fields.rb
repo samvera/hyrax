@@ -44,12 +44,12 @@ module Hyrax
 
     private
 
-      def included(descendant)
-        super
+    def included(descendant)
+      super
 
-        form_field_definitions.each do |field_name, options|
-          descendant.property field_name.to_sym, options.merge(display: true, default: [])
-        end
+      form_field_definitions.each do |field_name, options|
+        descendant.property field_name.to_sym, options.merge(display: true, default: [])
       end
+    end
   end
 end

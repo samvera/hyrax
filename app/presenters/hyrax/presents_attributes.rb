@@ -45,31 +45,31 @@ module Hyrax
 
     private
 
-      def find_renderer_class(name)
-        renderer = nil
-        ['Renderer', 'AttributeRenderer'].each do |suffix|
-          const_name = "#{name.to_s.camelize}#{suffix}".to_sym
-          renderer = begin
-            Renderers.const_get(const_name)
-          rescue NameError
-            nil
-          end
-          break unless renderer.nil?
+    def find_renderer_class(name)
+      renderer = nil
+      ['Renderer', 'AttributeRenderer'].each do |suffix|
+        const_name = "#{name.to_s.camelize}#{suffix}".to_sym
+        renderer = begin
+          Renderers.const_get(const_name)
+                   rescue NameError
+                     nil
         end
-        raise NameError, "unknown renderer type `#{name}`" if renderer.nil?
-        renderer
+        break unless renderer.nil?
       end
+      raise NameError, "unknown renderer type `#{name}`" if renderer.nil?
+      renderer
+    end
 
-      def renderer_for(_field, options)
-        if options[:render_as]
-          find_renderer_class(options[:render_as])
-        else
-          Renderers::AttributeRenderer
-        end
+    def renderer_for(_field, options)
+      if options[:render_as]
+        find_renderer_class(options[:render_as])
+      else
+        Renderers::AttributeRenderer
       end
+    end
 
-      def microdata_type_key
-        "resource_type.#{human_readable_type}"
-      end
+    def microdata_type_key
+      "resource_type.#{human_readable_type}"
+    end
   end
 end

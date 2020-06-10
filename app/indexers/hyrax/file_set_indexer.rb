@@ -34,24 +34,24 @@ module Hyrax
 
     private
 
-      def digest_from_content
-        return unless object.original_file
-        object.original_file.digest.first.to_s
-      end
+    def digest_from_content
+      return unless object.original_file
+      object.original_file.digest.first.to_s
+    end
 
-      def original_file_id
-        return unless object.original_file
-        Hyrax::VersioningService.versioned_file_id object.original_file
-      end
+    def original_file_id
+      return unless object.original_file
+      Hyrax::VersioningService.versioned_file_id object.original_file
+    end
 
-      def file_format
-        if object.mime_type.present? && object.format_label.present?
-          "#{object.mime_type.split('/').last} (#{object.format_label.join(', ')})"
-        elsif object.mime_type.present?
-          object.mime_type.split('/').last
-        elsif object.format_label.present?
-          object.format_label
-        end
+    def file_format
+      if object.mime_type.present? && object.format_label.present?
+        "#{object.mime_type.split('/').last} (#{object.format_label.join(', ')})"
+      elsif object.mime_type.present?
+        object.mime_type.split('/').last
+      elsif object.format_label.present?
+        object.format_label
       end
+    end
   end
 end

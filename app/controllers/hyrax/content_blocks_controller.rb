@@ -22,18 +22,18 @@ module Hyrax
 
     private
 
-      def permitted_params
-        params.require(:content_block).permit(:marketing,
-                                              :announcement,
-                                              :researcher)
-      end
+    def permitted_params
+      params.require(:content_block).permit(:marketing,
+                                            :announcement,
+                                            :researcher)
+    end
 
-      # When a request comes to the controller, it will be for one and
-      # only one of the content blocks. Params always looks like:
-      #   {'about_page' => 'Here is an awesome about page!'}
-      # So reach into permitted params and pull out the first value.
-      def update_value_from_params
-        permitted_params.values.first
-      end
+    # When a request comes to the controller, it will be for one and
+    # only one of the content blocks. Params always looks like:
+    #   {'about_page' => 'Here is an awesome about page!'}
+    # So reach into permitted params and pull out the first value.
+    def update_value_from_params
+      permitted_params.values.first
+    end
   end
 end

@@ -44,14 +44,14 @@ RSpec.describe Hyrax::Dashboard::NestedCollectionsSearchBuilder do
 
       it 'will build the search for valid children' do
         subject
-        # rubocop:disable Metrics/LineLength
+        # rubocop:disable Layout/LineLength
         expect(solr_params.fetch(:fq)).to contain_exactly(
           "-{!terms f=id}#{collection.id}",
           "_query_:\"{!field f=collection_type_gid_ssim}#{collection.collection_type_gid}\"",
           "-_query_:\"{!lucene q.op=OR df=nesting_collection__pathnames_ssim}#{nesting_attributes.pathnames.first} #{nesting_attributes.pathnames.last} #{nesting_attributes.ancestors.first} #{nesting_attributes.ancestors.last}\"",
           "-_query_:\"{!field f=nesting_collection__parent_ids_ssim}#{collection.id}\""
         )
-        # rubocop:enable Metrics/LineLength
+        # rubocop:enable Layout/LineLength
       end
     end
   end

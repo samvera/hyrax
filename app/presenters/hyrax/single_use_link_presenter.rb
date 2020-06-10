@@ -41,12 +41,12 @@ module Hyrax
 
     private
 
-      def download?
-        link.path =~ /downloads/
-      end
+    def download?
+      link.path =~ /downloads/
+    end
 
-      def hours
-        (link.expires - Time.zone.now).to_i / 3600
-      end
+    def hours
+      (link.expires - Time.zone.now).to_i / 3600
+    end
   end
 end

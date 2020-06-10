@@ -42,20 +42,20 @@ module Hyrax
 
       private
 
-        def drilldown_hash
-          {
-            name: @key,
-            y: @value.values.inject(&:+),
-            drilldown: @key
-          }
-        end
+      def drilldown_hash
+        {
+          name: @key,
+          y: @value.values.inject(&:+),
+          drilldown: @key
+        }
+      end
 
-        def series_hash
-          {
-            name: @key,
-            y: @value
-          }
-        end
+      def series_hash
+        {
+          name: @key,
+          y: @value
+        }
+      end
     end
   end
 end

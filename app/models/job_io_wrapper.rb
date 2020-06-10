@@ -91,30 +91,30 @@ class JobIoWrapper < ApplicationRecord
 
   private
 
-    def extracted_original_name
-      eon = uploaded_file.uploader.filename if uploaded_file
-      eon ||= File.basename(path) if path.present? # note: uploader.filename is `nil` with uncached remote files (e.g. AWSFile)
-      eon
-    end
+  def extracted_original_name
+    eon = uploaded_file.uploader.filename if uploaded_file
+    eon ||= File.basename(path) if path.present? # note: uploader.filename is `nil` with uncached remote files (e.g. AWSFile)
+    eon
+  end
 
-    def extracted_mime_type
-      uploaded_file ? uploaded_file.uploader.content_type : Hydra::PCDM::GetMimeTypeForFile.call(original_name)
-    end
+  def extracted_mime_type
+    uploaded_file ? uploaded_file.uploader.content_type : Hydra::PCDM::GetMimeTypeForFile.call(original_name)
+  end
 
-    # @return [File, StringIO] depending on CarrierWave configuration
-    # @raise when uploaded_file *becomes* required but is missing
-    def file_from_uploaded_file!
-      raise("path '#{path}' was unusable and uploaded_file empty") unless uploaded_file
-      self.path = uploaded_file.uploader.file.path # old path useless now
-      uploaded_file.uploader.sanitized_file.file
-    end
+  # @return [File, StringIO] depending on CarrierWave configuration
+  # @raise when uploaded_file *becomes* required but is missing
+  def file_from_uploaded_file!
+    raise("path '#{path}' was unusable and uploaded_file empty") unless uploaded_file
+    self.path = uploaded_file.uploader.file.path # old path useless now
+    uploaded_file.uploader.sanitized_file.file
+  end
 
-    # @return [File, nil] nil if the path doesn't exist on this (worker) system or can't be read
-    def file_from_path
-      File.open(path, 'rb') if path && File.exist?(path) && File.readable?(path)
-    end
+  # @return [File, nil] nil if the path doesn't exist on this (worker) system or can't be read
+  def file_from_path
+    File.open(path, 'rb') if path && File.exist?(path) && File.readable?(path)
+  end
 
-    def static_defaults
-      self.relation ||= 'original_file'
-    end
+  def static_defaults
+    self.relation ||= 'original_file'
+  end
 end

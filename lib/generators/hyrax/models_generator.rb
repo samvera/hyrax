@@ -52,7 +52,7 @@ class Hyrax::ModelsGenerator < Rails::Generators::Base
 
   private
 
-    def rspec_installed?
-      defined?(RSpec) && defined?(RSpec::Rails)
-    end
+  def rspec_installed?
+    defined?(RSpec) && defined?(RSpec::Rails)
+  end
 end

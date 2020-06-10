@@ -23,7 +23,7 @@ module Hyrax
     end
 
     # The list of workflows that could be activated; It includes the active workflow
-    has_many :available_workflows, class_name: 'Sipity::Workflow', dependent: :destroy, foreign_key: :permission_template_id
+    has_many :available_workflows, class_name: 'Sipity::Workflow', dependent: :destroy
 
     # In a perfect world, there would be a join table that enforced uniqueness on the ID.
     has_one :active_workflow, -> { where(active: true) }, class_name: 'Sipity::Workflow', foreign_key: :permission_template_id
@@ -140,22 +140,22 @@ module Hyrax
 
     private
 
-      # If template requires no delays, check if date is exactly today
-      def check_no_delay_requirements(date)
-        return true unless release_no_delay?
-        date == Time.zone.today
-      end
+    # If template requires no delays, check if date is exactly today
+    def check_no_delay_requirements(date)
+      return true unless release_no_delay?
+      date == Time.zone.today
+    end
 
-      # If template requires a release before a specific date, check this date is valid
-      def check_before_date_requirements(date)
-        return true unless release_before_date? && release_date.present?
-        date <= release_date
-      end
+    # If template requires a release before a specific date, check this date is valid
+    def check_before_date_requirements(date)
+      return true unless release_before_date? && release_date.present?
+      date <= release_date
+    end
 
-      # If template requires an exact date, check this date matches
-      def check_fixed_date_requirements(date)
-        return true unless release_fixed_date? && release_date.present?
-        date == release_date
-      end
+    # If template requires an exact date, check this date matches
+    def check_fixed_date_requirements(date)
+      return true unless release_fixed_date? && release_date.present?
+      date == release_date
+    end
   end
 end

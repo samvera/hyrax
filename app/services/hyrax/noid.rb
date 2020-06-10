@@ -10,8 +10,8 @@ module Hyrax
 
     private
 
-      def service
-        @service ||= ::Noid::Rails::Service.new
-      end
+    def service
+      @service ||= ::Noid::Rails::Service.new
+    end
   end
 end

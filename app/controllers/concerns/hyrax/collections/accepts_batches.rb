@@ -16,38 +16,38 @@ module Hyrax
 
       private
 
-        def batch_ids_from_params
-          if params['batch_document_ids'].blank?
-            []
-          elsif params['batch_document_ids'] == 'all'
-            SearchService.new(session, current_user.user_key).last_search_documents.map(&:id)
-          else
-            params['batch_document_ids']
-          end
+      def batch_ids_from_params
+        if params['batch_document_ids'].blank?
+          []
+        elsif params['batch_document_ids'] == 'all'
+          SearchService.new(session, current_user.user_key).last_search_documents.map(&:id)
+        else
+          params['batch_document_ids']
         end
+      end
 
-        def filter_docs_with_read_access!
-          filter_docs_with_access!(:read)
-        end
+      def filter_docs_with_read_access!
+        filter_docs_with_access!(:read)
+      end
 
-        def filter_docs_with_edit_access!
-          filter_docs_with_access!(:edit)
-        end
+      def filter_docs_with_edit_access!
+        filter_docs_with_access!(:edit)
+      end
 
-        def filter_docs_with_access!(access_type = :edit)
-          no_permissions = []
-          if batch.empty?
-            flash[:notice] = 'Select something first'
-          else
-            batch.dup.each do |doc_id|
-              unless can?(access_type, doc_id)
-                batch.delete(doc_id)
-                no_permissions << doc_id
-              end
+      def filter_docs_with_access!(access_type = :edit)
+        no_permissions = []
+        if batch.empty?
+          flash[:notice] = 'Select something first'
+        else
+          batch.dup.each do |doc_id|
+            unless can?(access_type, doc_id)
+              batch.delete(doc_id)
+              no_permissions << doc_id
             end
-            flash[:notice] = "You do not have permission to edit the documents: #{no_permissions.join(', ')}" unless no_permissions.empty?
           end
+          flash[:notice] = "You do not have permission to edit the documents: #{no_permissions.join(', ')}" unless no_permissions.empty?
         end
+      end
     end
   end
 end

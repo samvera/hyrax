@@ -14,15 +14,15 @@ module Hyrax
 
       private
 
-        def new_users
-          Hyrax::Statistics::Users::OverTime.new(x_min: @x_min,
-                                                 x_output: @date_format).points
-        end
+      def new_users
+        Hyrax::Statistics::Users::OverTime.new(x_min: @x_min,
+                                               x_output: @date_format).points
+      end
 
-        # TODO: using google analytics
-        def returning_users
-          []
-        end
+      # TODO: using google analytics
+      def returning_users
+        []
+      end
     end
   end
 end

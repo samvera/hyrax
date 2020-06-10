@@ -22,81 +22,81 @@ module Hyrax
 
       private
 
-        def builder
-          Nokogiri::XML::Builder.new do |xml|
-            xml.urlset('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9',
-                       'xmlns:rs' => 'http://www.openarchives.org/rs/terms/') do
-              xml['rs'].ln(rel: "up", href: capability_list_url)
-              xml['rs'].md(capability: "changelist", from: from)
-              build_changes(xml)
-            end
+      def builder
+        Nokogiri::XML::Builder.new do |xml|
+          xml.urlset('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9',
+                     'xmlns:rs' => 'http://www.openarchives.org/rs/terms/') do
+            xml['rs'].ln(rel: "up", href: capability_list_url)
+            xml['rs'].md(capability: "changelist", from: from)
+            build_changes(xml)
           end
         end
+      end
 
-        # return the earliest change. Otherwise BEGINNING_OF_TIME
-        def from
-          @from ||= begin
-                      results = relation.search_with_conditions(public_access, rows: 1, sort: MODIFIED_DATE_FIELD + ' asc')
-                      if results.present?
-                        results.first.fetch(MODIFIED_DATE_FIELD)
-                      else
-                        BEGINNING_OF_TIME
-                      end
+      # return the earliest change. Otherwise BEGINNING_OF_TIME
+      def from
+        @from ||= begin
+                    results = relation.search_with_conditions(public_access, rows: 1, sort: MODIFIED_DATE_FIELD + ' asc')
+                    if results.present?
+                      results.first.fetch(MODIFIED_DATE_FIELD)
+                    else
+                      BEGINNING_OF_TIME
                     end
-        end
+                  end
+      end
 
-        def sort
-          { sort: MODIFIED_DATE_FIELD + ' desc' }
-        end
+      def sort
+        { sort: MODIFIED_DATE_FIELD + ' desc' }
+      end
 
-        def relation
-          @relation ||= Hyrax::ExposedModelsRelation.new
-        end
+      def relation
+        @relation ||= Hyrax::ExposedModelsRelation.new
+      end
 
-        def build_changes(xml)
-          relation.search_in_batches(public_access, sort) do |doc_set|
-            build_resources(xml, doc_set)
+      def build_changes(xml)
+        relation.search_in_batches(public_access, sort) do |doc_set|
+          build_resources(xml, doc_set)
+        end
+      end
+
+      def build_resources(xml, doc_set)
+        doc_set.each do |doc|
+          model = doc.fetch('has_model_ssim', []).first.constantize
+          if model == ::Collection
+            build_resource(xml, doc, model, hyrax_routes)
+          else
+            build_resource(xml, doc, model, main_app_routes)
           end
         end
+      end
 
-        def build_resources(xml, doc_set)
-          doc_set.each do |doc|
-            model = doc.fetch('has_model_ssim', []).first.constantize
-            if model == ::Collection
-              build_resource(xml, doc, model, hyrax_routes)
-            else
-              build_resource(xml, doc, model, main_app_routes)
-            end
-          end
+      # @param xml [Nokogiri::XML::Builder]
+      # @param doc [Hash]
+      # @param routes [Module] has the routes for the object
+      def build_resource(xml, doc, model, routes)
+        modified_date = doc.fetch("system_modified_dtsi")
+        created_date = doc.fetch("system_create_dtsi")
+        xml.url do
+          key = model.model_name.singular_route_key
+          xml.loc routes.send(key + "_url", doc['id'], host: resource_host)
+          xml.lastmod modified_date
+          xml['rs'].md(change: modified_date == created_date ? "created" : "updated")
         end
+      end
 
-        # @param xml [Nokogiri::XML::Builder]
-        # @param doc [Hash]
-        # @param routes [Module] has the routes for the object
-        def build_resource(xml, doc, model, routes)
-          modified_date = doc.fetch("system_modified_dtsi")
-          created_date = doc.fetch("system_create_dtsi")
-          xml.url do
-            key = model.model_name.singular_route_key
-            xml.loc routes.send(key + "_url", doc['id'], host: resource_host)
-            xml.lastmod modified_date
-            xml['rs'].md(change: modified_date == created_date ? "created" : "updated")
-          end
-        end
+      def main_app_routes
+        Rails.application.routes.url_helpers
+      end
 
-        def main_app_routes
-          Rails.application.routes.url_helpers
-        end
+      def hyrax_routes
+        Hyrax::Engine.routes.url_helpers
+      end
 
-        def hyrax_routes
-          Hyrax::Engine.routes.url_helpers
-        end
+      delegate :collection_url, to: :routes
 
-        delegate :collection_url, to: :routes
-
-        def public_access
-          { Hydra.config.permissions.read.group => 'public' }
-        end
+      def public_access
+        { Hydra.config.permissions.read.group => 'public' }
+      end
     end
   end
 end

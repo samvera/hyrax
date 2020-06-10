@@ -26,17 +26,17 @@ module Hyrax
 
       private
 
-        def model_actor(env)
-          actor_identifier = env.curation_concern.class
-          klass = "Hyrax::Actors::#{actor_identifier}Actor".constantize
-          klass.new(next_actor)
-        rescue NameError => error
-          Hyrax.logger.info 'No ModelActor provided for ' \
-                            "#{env.curation_concern.class}; falling back on " \
-                            "NullActor\n\t#{error}"
+      def model_actor(env)
+        actor_identifier = env.curation_concern.class
+        klass = "Hyrax::Actors::#{actor_identifier}Actor".constantize
+        klass.new(next_actor)
+      rescue NameError => error
+        Hyrax.logger.info 'No ModelActor provided for ' \
+                          "#{env.curation_concern.class}; falling back on " \
+                          "NullActor\n\t#{error}"
 
-          NullActor.new(next_actor)
-        end
+        NullActor.new(next_actor)
+      end
     end
   end
 end

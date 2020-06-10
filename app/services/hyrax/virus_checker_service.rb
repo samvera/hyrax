@@ -24,29 +24,29 @@ module Hyrax
 
     private
 
-      # Returns a path for reading the content of +file+
-      # @param [File] file object to retrieve a path for
-      def local_path_for_file(file)
-        return file.path if file.respond_to?(:path)
-        return file.content.path if file.content.respond_to?(:path)
+    # Returns a path for reading the content of +file+
+    # @param [File] file object to retrieve a path for
+    def local_path_for_file(file)
+      return file.path if file.respond_to?(:path)
+      return file.content.path if file.content.respond_to?(:path)
 
-        Tempfile.open('') do |t|
-          t.binmode
-          write_to_temp_file(file, t)
-          t.close
-          t.path
+      Tempfile.open('') do |t|
+        t.binmode
+        write_to_temp_file(file, t)
+        t.close
+        t.path
+      end
+    end
+
+    def write_to_temp_file(file, temp_file)
+      if file.new_record?
+        temp_file.write(file.content.read)
+        file.content.rewind
+      else
+        file.stream.each do |chunk|
+          temp_file.write(chunk)
         end
       end
-
-      def write_to_temp_file(file, temp_file)
-        if file.new_record?
-          temp_file.write(file.content.read)
-          file.content.rewind
-        else
-          file.stream.each do |chunk|
-            temp_file.write(chunk)
-          end
-        end
-      end
+    end
   end
 end

@@ -46,21 +46,21 @@ module Hyrax
 
     private
 
-      # TODO: Extract a presenter object that wrangles all of these instance variables.
-      def prepare_instance_variables_for_batch_control_display
-        # set up some parameters for allowing the batch controls to show appropriately
-        max_batch_size = 80
-        count_on_page = @document_list.count { |doc| batch.index(doc.id) }
-        @disable_select_all = @document_list.count > max_batch_size
-        @result_set_size = @response.response["numFound"]
-        @empty_batch = batch.empty?
-        @all_checked = (count_on_page == @document_list.count)
-        @add_works_to_collection = params.fetch(:add_works_to_collection, '')
-        @add_works_to_collection_label = params.fetch(:add_works_to_collection_label, '')
-      end
+    # TODO: Extract a presenter object that wrangles all of these instance variables.
+    def prepare_instance_variables_for_batch_control_display
+      # set up some parameters for allowing the batch controls to show appropriately
+      max_batch_size = 80
+      count_on_page = @document_list.count { |doc| batch.index(doc.id) }
+      @disable_select_all = @document_list.count > max_batch_size
+      @result_set_size = @response.response["numFound"]
+      @empty_batch = batch.empty?
+      @all_checked = (count_on_page == @document_list.count)
+      @add_works_to_collection = params.fetch(:add_works_to_collection, '')
+      @add_works_to_collection_label = params.fetch(:add_works_to_collection_label, '')
+    end
 
-      def query_solr
-        search_results(params)
-      end
+    def query_solr
+      search_results(params)
+    end
   end
 end

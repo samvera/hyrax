@@ -25,8 +25,8 @@ module Hyrax
 
     private
 
-      def user_mailbox
-        UserMailbox.new(current_user)
-      end
+    def user_mailbox
+      UserMailbox.new(current_user)
+    end
   end
 end

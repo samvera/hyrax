@@ -12,9 +12,9 @@ class ProxyDepositRequest < ActiveRecord::Base
 
   private
 
-    def work_query_service
-      @work_query_service ||= work_query_service_class.new(id: work_id)
-    end
+  def work_query_service
+    @work_query_service ||= work_query_service_class.new(id: work_id)
+  end
 
   public
 
@@ -61,18 +61,18 @@ class ProxyDepositRequest < ActiveRecord::Base
 
   private
 
-    def transfer_to_should_be_a_valid_username
-      errors.add(:transfer_to, "must be an existing user") unless receiving_user
-    end
+  def transfer_to_should_be_a_valid_username
+    errors.add(:transfer_to, "must be an existing user") unless receiving_user
+  end
 
-    def sending_user_should_not_be_receiving_user
-      errors.add(:transfer_to, 'specify a different user to receive the work') if receiving_user && receiving_user.user_key == sending_user.user_key
-    end
+  def sending_user_should_not_be_receiving_user
+    errors.add(:transfer_to, 'specify a different user to receive the work') if receiving_user && receiving_user.user_key == sending_user.user_key
+  end
 
-    def should_not_be_already_part_of_a_transfer
-      transfers = ProxyDepositRequest.where(work_id: work_id, status: PENDING)
-      errors.add(:open_transfer, 'must close open transfer on the work before creating a new one') unless transfers.blank? || (transfers.count == 1 && transfers[0].id == id)
-    end
+  def should_not_be_already_part_of_a_transfer
+    transfers = ProxyDepositRequest.where(work_id: work_id, status: PENDING)
+    errors.add(:open_transfer, 'must close open transfer on the work before creating a new one') unless transfers.blank? || (transfers.count == 1 && transfers[0].id == id)
+  end
 
   public
 
@@ -86,25 +86,25 @@ class ProxyDepositRequest < ActiveRecord::Base
 
   private
 
-    def send_request_transfer_message_as_part_of_create
-      user_link = link_to(sending_user.name, Hyrax::Engine.routes.url_helpers.user_path(sending_user))
-      transfer_link = link_to(I18n.t('hyrax.notifications.proxy_deposit_request.transfer_on_create.transfer_link_label'), Hyrax::Engine.routes.url_helpers.transfers_path)
-      message = I18n.t('hyrax.notifications.proxy_deposit_request.transfer_on_create.message', user_link: user_link,
-                                                                                               transfer_link: transfer_link)
-      Hyrax::MessengerService.deliver(::User.batch_user, receiving_user, message,
-                                      I18n.t('hyrax.notifications.proxy_deposit_request.transfer_on_create.subject'))
-    end
+  def send_request_transfer_message_as_part_of_create
+    user_link = link_to(sending_user.name, Hyrax::Engine.routes.url_helpers.user_path(sending_user))
+    transfer_link = link_to(I18n.t('hyrax.notifications.proxy_deposit_request.transfer_on_create.transfer_link_label'), Hyrax::Engine.routes.url_helpers.transfers_path)
+    message = I18n.t('hyrax.notifications.proxy_deposit_request.transfer_on_create.message', user_link: user_link,
+                                                                                             transfer_link: transfer_link)
+    Hyrax::MessengerService.deliver(::User.batch_user, receiving_user, message,
+                                    I18n.t('hyrax.notifications.proxy_deposit_request.transfer_on_create.subject'))
+  end
 
-    def send_request_transfer_message_as_part_of_update
-      message = I18n.t('hyrax.notifications.proxy_deposit_request.transfer_on_update.message', status: status)
-      if receiver_comment.present?
-        message += " " + I18n.t('hyrax.notifications.proxy_deposit_request.transfer_on_update.comments',
-                                receiver_comment: receiver_comment)
-      end
-      Hyrax::MessengerService.deliver(::User.batch_user, sending_user, message,
-                                      I18n.t('hyrax.notifications.proxy_deposit_request.transfer_on_update.subject',
-                                             status: status))
+  def send_request_transfer_message_as_part_of_update
+    message = I18n.t('hyrax.notifications.proxy_deposit_request.transfer_on_update.message', status: status)
+    if receiver_comment.present?
+      message += " " + I18n.t('hyrax.notifications.proxy_deposit_request.transfer_on_update.comments',
+                              receiver_comment: receiver_comment)
     end
+    Hyrax::MessengerService.deliver(::User.batch_user, sending_user, message,
+                                    I18n.t('hyrax.notifications.proxy_deposit_request.transfer_on_update.subject',
+                                           status: status))
+  end
 
   public
 
@@ -139,10 +139,10 @@ class ProxyDepositRequest < ActiveRecord::Base
 
   private
 
-    def fulfill!(status:, comment: nil)
-      self.receiver_comment = comment if comment
-      self.status = status
-      self.fulfillment_date = Time.current
-      save!
-    end
+  def fulfill!(status:, comment: nil)
+    self.receiver_comment = comment if comment
+    self.status = status
+    self.fulfillment_date = Time.current
+    save!
+  end
 end

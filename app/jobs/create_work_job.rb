@@ -25,7 +25,7 @@ class CreateWorkJob < Hyrax::ApplicationJob
 
   private
 
-    def work_actor
-      Hyrax::CurationConcern.actor
-    end
+  def work_actor
+    Hyrax::CurationConcern.actor
+  end
 end

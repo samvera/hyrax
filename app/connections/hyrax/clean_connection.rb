@@ -13,13 +13,13 @@ module Hyrax
 
     private
 
-      def omit_uris
-        [
-          ::RDF::Vocab::Fcrepo4.ServerManaged,
-          ::RDF::Vocab::LDP.PreferContainment,
-          ::RDF::Vocab::LDP.PreferEmptyContainer,
-          ::RDF::Vocab::LDP.PreferMembership
-        ]
-      end
+    def omit_uris
+      [
+        ::RDF::Vocab::Fcrepo4.ServerManaged,
+        ::RDF::Vocab::LDP.PreferContainment,
+        ::RDF::Vocab::LDP.PreferEmptyContainer,
+        ::RDF::Vocab::LDP.PreferMembership
+      ]
+    end
   end
 end

@@ -28,12 +28,12 @@ module Hyrax
 
     private
 
-      def only_works?
-        search_includes_models == :works
-      end
+    def only_works?
+      search_includes_models == :works
+    end
 
-      def only_collections?
-        search_includes_models == :collections
-      end
+    def only_collections?
+      search_includes_models == :collections
+    end
   end
 end

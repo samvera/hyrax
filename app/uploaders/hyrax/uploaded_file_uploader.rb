@@ -12,12 +12,12 @@ module Hyrax
 
     private
 
-      def configured_upload_path
-        Hyrax.config.upload_path.call
-      end
+    def configured_upload_path
+      Hyrax.config.upload_path.call
+    end
 
-      def configured_cache_path
-        Hyrax.config.cache_path.call
-      end
+    def configured_cache_path
+      Hyrax.config.cache_path.call
+    end
   end
 end

@@ -10,7 +10,7 @@ class IiifManifestCachePrewarmJob < Hyrax::ApplicationJob
 
   private
 
-    def manifest_builder
-      Hyrax::CachingIiifManifestBuilder.new
-    end
+  def manifest_builder
+    Hyrax::CachingIiifManifestBuilder.new
+  end
 end

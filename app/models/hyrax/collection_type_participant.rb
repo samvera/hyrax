@@ -1,7 +1,7 @@
 module Hyrax
   class CollectionTypeParticipant < ActiveRecord::Base
     self.table_name = 'collection_type_participants'
-    belongs_to :hyrax_collection_type, class_name: 'CollectionType', foreign_key: 'hyrax_collection_type_id'
+    belongs_to :hyrax_collection_type, class_name: 'CollectionType'
 
     MANAGE_ACCESS = 'manage'.freeze
     CREATE_ACCESS = 'create'.freeze

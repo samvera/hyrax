@@ -35,11 +35,11 @@ module Hyrax
 
       private
 
-        ##
-        # @api private
-        def queries
-          Hyrax.custom_queries
-        end
+      ##
+      # @api private
+      def queries
+        Hyrax.custom_queries
+      end
     end
   end
 end

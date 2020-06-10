@@ -49,32 +49,32 @@ module Hyrax
 
     private
 
-      def single_membership_collections(collection_ids)
-        return [] if collection_ids.blank?
-        ::Collection.where(id: collection_ids, collection_type_gid_ssim: single_membership_types)
-      end
+    def single_membership_collections(collection_ids)
+      return [] if collection_ids.blank?
+      ::Collection.where(id: collection_ids, collection_type_gid_ssim: single_membership_types)
+    end
 
-      def single_membership_types
-        Hyrax::CollectionType.where(allow_multiple_membership: false).map(&:gid)
-      end
+    def single_membership_types
+      Hyrax::CollectionType.where(allow_multiple_membership: false).map(&:gid)
+    end
 
-      def build_error_message(problematic_collections)
-        error_message_clauses = problematic_collections.map do |gid, list|
-          I18n.t('hyrax.admin.collection_types.multiple_membership_checker.error_type_and_collections',
-                 type: collection_type_title_from_gid(gid),
-                 collections: collection_titles_from_list(list))
-        end
-        "#{I18n.t('hyrax.admin.collection_types.multiple_membership_checker.error_preamble')}#{error_message_clauses.join('; ')}"
+    def build_error_message(problematic_collections)
+      error_message_clauses = problematic_collections.map do |gid, list|
+        I18n.t('hyrax.admin.collection_types.multiple_membership_checker.error_type_and_collections',
+               type: collection_type_title_from_gid(gid),
+               collections: collection_titles_from_list(list))
       end
+      "#{I18n.t('hyrax.admin.collection_types.multiple_membership_checker.error_preamble')}#{error_message_clauses.join('; ')}"
+    end
 
-      def collection_type_title_from_gid(gid)
-        Hyrax::CollectionType.find_by_gid(gid).title
-      end
+    def collection_type_title_from_gid(gid)
+      Hyrax::CollectionType.find_by_gid(gid).title
+    end
 
-      def collection_titles_from_list(collection_list)
-        collection_list.each do |collection|
-          collection.title.first
-        end.to_sentence
-      end
+    def collection_titles_from_list(collection_list)
+      collection_list.each do |collection|
+        collection.title.first
+      end.to_sentence
+    end
   end
 end

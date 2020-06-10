@@ -13,7 +13,7 @@ module Sipity
 
     # Each PermissionTemplate has multiple potential workflows. But only one "active" workflow
     # @see Sipity::Workflow.activate!
-    belongs_to :permission_template, class_name: 'Hyrax::PermissionTemplate', required: true
+    belongs_to :permission_template, class_name: 'Hyrax::PermissionTemplate', optional: false
 
     DEFAULT_INITIAL_WORKFLOW_STATE = 'new'.freeze
     def initial_workflow_state
@@ -68,22 +68,22 @@ module Sipity
 
     private
 
-      # Give workflow responsibilites to the provided agents for the given role
-      # @param [Sipity::Role] role
-      # @param [Array<Sipity::Agent>] agents
-      def add_workflow_responsibilities(role, agents)
-        Hyrax::Workflow::PermissionGenerator.call(roles: role,
-                                                  workflow: self,
-                                                  agents: agents)
-      end
+    # Give workflow responsibilites to the provided agents for the given role
+    # @param [Sipity::Role] role
+    # @param [Array<Sipity::Agent>] agents
+    def add_workflow_responsibilities(role, agents)
+      Hyrax::Workflow::PermissionGenerator.call(roles: role,
+                                                workflow: self,
+                                                agents: agents)
+    end
 
-      # Find any workflow_responsibilities held by agents not in the allowed_agents
-      # and remove them
-      # @param [Sipity::Role] role
-      # @param [Array<Sipity::Agent>] allowed_agents
-      def remove_workflow_responsibilities(role, allowed_agents)
-        wf_role = Sipity::WorkflowRole.find_by(workflow: self, role_id: role)
-        wf_role.workflow_responsibilities.where.not(agent: allowed_agents).destroy_all
-      end
+    # Find any workflow_responsibilities held by agents not in the allowed_agents
+    # and remove them
+    # @param [Sipity::Role] role
+    # @param [Array<Sipity::Agent>] allowed_agents
+    def remove_workflow_responsibilities(role, allowed_agents)
+      wf_role = Sipity::WorkflowRole.find_by(workflow: self, role_id: role)
+      wf_role.workflow_responsibilities.where.not(agent: allowed_agents).destroy_all
+    end
   end
 end

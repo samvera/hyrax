@@ -47,13 +47,13 @@ module Hyrax
 
       private
 
-        def cast(env)
-          return true unless env.curation_concern.is_a? ActiveFedora::Base
+      def cast(env)
+        return true unless env.curation_concern.is_a? ActiveFedora::Base
 
-          env.curation_concern = env.curation_concern.valkyrie_resource
+        env.curation_concern = env.curation_concern.valkyrie_resource
 
-          true
-        end
+        true
+      end
     end
   end
 end

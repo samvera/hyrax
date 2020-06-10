@@ -45,7 +45,7 @@ module Hyrax
     def get(query = nil, **args)
       # Make Hyrax.config.solr_select_path the default SOLR path
       solr_path = args.delete(:path) || Hyrax.config.solr_select_path
-      args = args.merge(q: query) unless query.blank?
+      args = args.merge(q: query) if query.present?
 
       args = args.merge(qt: 'standard') unless query.blank? || use_valkyrie
       connection.get(solr_path, params: args)
@@ -65,7 +65,7 @@ module Hyrax
     def post(query = nil, **args)
       # Make Hyrax.config.solr_select_path the default SOLR path
       solr_path = args.delete(:path) || Hyrax.config.solr_select_path
-      args = args.merge(q: query) unless query.blank?
+      args = args.merge(q: query) if query.present?
 
       args = args.merge(qt: 'standard') unless query.blank? || use_valkyrie
       connection.post(solr_path, data: args)
@@ -124,31 +124,31 @@ module Hyrax
 
     private
 
-      ##
-      # @private
-      # Return the valkyrie solr index.
-      #
-      # Since this module depends closely on RSolr internals and makes use
-      # of `#connection`, it will always need to connect to a Solr index. Other
-      # valkyrie indexers used here would, at minimum, need to provide a
-      # functioning `rsolr` connection.
-      def valkyrie_index
-        Valkyrie::IndexingAdapter.find(:solr_index)
-      end
+    ##
+    # @private
+    # Return the valkyrie solr index.
+    #
+    # Since this module depends closely on RSolr internals and makes use
+    # of `#connection`, it will always need to connect to a Solr index. Other
+    # valkyrie indexers used here would, at minimum, need to provide a
+    # functioning `rsolr` connection.
+    def valkyrie_index
+      Valkyrie::IndexingAdapter.find(:solr_index)
+    end
 
-      ##
-      # @api private
-      def connection
-        return self.class.instance.conn unless use_valkyrie
-        valkyrie_index.connection
-      end
+    ##
+    # @api private
+    def connection
+      return self.class.instance.conn unless use_valkyrie
+      valkyrie_index.connection
+    end
 
-      def rows_warning
-        "Calling Hyrax::SolrService.get without passing an explicit value for ':rows' is not recommended. You will end up with Solr's default (usually set to 10)\nCalled by #{caller[0]}"
-      end
+    def rows_warning
+      "Calling Hyrax::SolrService.get without passing an explicit value for ':rows' is not recommended. You will end up with Solr's default (usually set to 10)\nCalled by #{caller[0]}"
+    end
 
-      def rsolr_call_warning
-        "Calls to Hyrax::SolrService.instance are deprecated and support will be removed from Hyrax 4.0. Use methods in Hyrax::SolrService instead."
-      end
+    def rsolr_call_warning
+      "Calls to Hyrax::SolrService.instance are deprecated and support will be removed from Hyrax 4.0. Use methods in Hyrax::SolrService instead."
+    end
   end
 end

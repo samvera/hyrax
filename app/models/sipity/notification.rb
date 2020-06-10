@@ -8,12 +8,10 @@ module Sipity
 
     has_many :notifiable_contexts,
              dependent: :destroy,
-             foreign_key: :notification_id,
              class_name: 'Sipity::NotifiableContext'
 
     has_many :recipients,
              dependent: :destroy,
-             foreign_key: :notification_id,
              class_name: 'Sipity::NotificationRecipient'
 
     NOTIFICATION_TYPE_EMAIL = 'email'.freeze

@@ -19,10 +19,10 @@ module Hyrax
 
     private
 
-      def list_search_builder(access)
-        list_search_builder_class.new(context)
-                                 .rows(100)
-                                 .with_access(access)
-      end
+    def list_search_builder(access)
+      list_search_builder_class.new(context)
+                               .rows(100)
+                               .with_access(access)
+    end
   end
 end

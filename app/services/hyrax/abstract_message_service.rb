@@ -26,8 +26,8 @@ module Hyrax
 
     private
 
-      def job_user
-        ::User.audit_user
-      end
+    def job_user
+      ::User.audit_user
+    end
   end
 end

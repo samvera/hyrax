@@ -1,6 +1,6 @@
 RSpec.describe CollectionBrandingInfo, type: :model do
   let(:banner_info) do
-    CollectionBrandingInfo.new(
+    described_class.new(
       collection_id: "123",
       filename: "banner.gif",
       role: "banner",
@@ -10,7 +10,7 @@ RSpec.describe CollectionBrandingInfo, type: :model do
   end
 
   let(:logo_info) do
-    CollectionBrandingInfo.new(
+    described_class.new(
       collection_id: "123",
       filename: "logo.gif",
       role: "logo",

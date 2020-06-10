@@ -101,65 +101,65 @@ module Hyrax
 
     private
 
-      def update_referer
-        hyrax.edit_admin_admin_set_path(@admin_set) + (params[:referer_anchor] || '')
-      end
+    def update_referer
+      hyrax.edit_admin_admin_set_path(@admin_set) + (params[:referer_anchor] || '')
+    end
 
-      def ensure_manager!
-        # TODO: Review for possible removal.  Doesn't appear to apply anymore.
-        # Even though the user can view this admin set, they may not be able to view
-        # it on the admin page.
-        authorize! :manage_any, AdminSet
-      end
+    def ensure_manager!
+      # TODO: Review for possible removal.  Doesn't appear to apply anymore.
+      # Even though the user can view this admin set, they may not be able to view
+      # it on the admin page.
+      authorize! :manage_any, AdminSet
+    end
 
-      def ensure_viewer!
-        # Even though the user can view this admin set, they may not be able to view
-        # it on the admin page if access is granted as a public or registered user only.
-        authorize! :view_admin_show, @admin_set
-      end
+    def ensure_viewer!
+      # Even though the user can view this admin set, they may not be able to view
+      # it on the admin page if access is granted as a public or registered user only.
+      authorize! :view_admin_show, @admin_set
+    end
 
-      def create_admin_set
-        admin_set_create_service.call(admin_set: @admin_set, creating_user: current_user)
-      end
+    def create_admin_set
+      admin_set_create_service.call(admin_set: @admin_set, creating_user: current_user)
+    end
 
-      def setup_form
-        add_breadcrumb t(:'hyrax.controls.home'), root_path
-        add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
-        add_breadcrumb t(:'hyrax.dashboard.my.collections'), hyrax.my_collections_path
-        add_breadcrumb action_breadcrumb, request.path
-        form
-      end
+    def setup_form
+      add_breadcrumb t(:'hyrax.controls.home'), root_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.dashboard.my.collections'), hyrax.my_collections_path
+      add_breadcrumb action_breadcrumb, request.path
+      form
+    end
 
-      # initialize the form object
-      def form
-        @form ||= form_class.new(@admin_set, current_ability, repository)
-      end
+    # initialize the form object
+    def form
+      @form ||= form_class.new(@admin_set, current_ability, repository)
+    end
 
-      def action_breadcrumb
-        case action_name
-        when 'edit', 'update'
-          t(:'helpers.action.edit')
-        else
-          t(:'helpers.action.admin_set.new')
-        end
+    def action_breadcrumb
+      case action_name
+      when 'edit', 'update'
+        t(:'helpers.action.edit')
+      else
+        t(:'helpers.action.admin_set.new')
       end
+    end
 
-      def admin_set_params
-        form_class.model_attributes(params[:admin_set])
-      end
+    def admin_set_params
+      form_class.model_attributes(params[:admin_set])
+    end
 
-      def repository_class
-        blacklight_config.repository_class
-      end
+    def repository_class
+      blacklight_config.repository_class
+    end
 
-      def after_delete_success
-        if request.referer.include? "my/collections"
-          redirect_to hyrax.my_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
-        elsif request.referer.include? "collections"
-          redirect_to hyrax.dashboard_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
-        else
-          redirect_to hyrax.my_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
-        end
+    def after_delete_success
+      if request.referer.include? "my/collections"
+        redirect_to hyrax.my_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
+      elsif request.referer.include? "collections"
+        redirect_to hyrax.dashboard_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
+      else
+        redirect_to hyrax.my_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
       end
+    end
   end
 end

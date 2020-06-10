@@ -47,14 +47,14 @@ module Hyrax
 
       private
 
-        def cast(env)
-          return true unless env.curation_concern.is_a? Valkyrie::Resource
+      def cast(env)
+        return true unless env.curation_concern.is_a? Valkyrie::Resource
 
-          env.curation_concern =
-            Wings::ActiveFedoraConverter.convert(resource: env.curation_concern)
+        env.curation_concern =
+          Wings::ActiveFedoraConverter.convert(resource: env.curation_concern)
 
-          true
-        end
+        true
+      end
     end
   end
 end

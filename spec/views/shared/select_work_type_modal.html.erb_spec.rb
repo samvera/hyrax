@@ -33,8 +33,8 @@ RSpec.describe 'shared/_select_work_type_modal.html.erb', type: :view do
       render 'shared/select_work_type_modal', create_work_presenter: presenter
     end
     it 'draws the modal with collection id' do
-      expect(rendered).to have_selector 'input[type="radio"][data-single="/concern/generic_works/new?add_works_to_collection=1"][data-batch="/batch_uploads/new?add_works_to_collection=1&payload_concern=GenericWork"]' # rubocop:disable Metrics/LineLength
-      expect(rendered).to have_selector 'input[type="radio"][data-single="/concern/namespaced_works/nested_works/new?add_works_to_collection=1"][data-batch="/batch_uploads/new?add_works_to_collection=1&payload_concern=NamespacedWorks%3A%3ANestedWork"]' # rubocop:disable Metrics/LineLength
+      expect(rendered).to have_selector 'input[type="radio"][data-single="/concern/generic_works/new?add_works_to_collection=1"][data-batch="/batch_uploads/new?add_works_to_collection=1&payload_concern=GenericWork"]' # rubocop:disable Layout/LineLength
+      expect(rendered).to have_selector 'input[type="radio"][data-single="/concern/namespaced_works/nested_works/new?add_works_to_collection=1"][data-batch="/batch_uploads/new?add_works_to_collection=1&payload_concern=NamespacedWorks%3A%3ANestedWork"]' # rubocop:disable Layout/LineLength
     end
   end
 
@@ -44,8 +44,8 @@ RSpec.describe 'shared/_select_work_type_modal.html.erb', type: :view do
       render 'shared/select_work_type_modal', create_work_presenter: presenter
     end
     it 'draws the modal with collection id' do
-      expect(rendered).to have_selector 'input[type="radio"][data-single="/concern/generic_works/new?add_works_to_collection=1"][data-batch="/batch_uploads/new?add_works_to_collection=1&payload_concern=GenericWork"]' # rubocop:disable Metrics/LineLength
-      expect(rendered).to have_selector 'input[type="radio"][data-single="/concern/namespaced_works/nested_works/new?add_works_to_collection=1"][data-batch="/batch_uploads/new?add_works_to_collection=1&payload_concern=NamespacedWorks%3A%3ANestedWork"]' # rubocop:disable Metrics/LineLength
+      expect(rendered).to have_selector 'input[type="radio"][data-single="/concern/generic_works/new?add_works_to_collection=1"][data-batch="/batch_uploads/new?add_works_to_collection=1&payload_concern=GenericWork"]' # rubocop:disable Layout/LineLength
+      expect(rendered).to have_selector 'input[type="radio"][data-single="/concern/namespaced_works/nested_works/new?add_works_to_collection=1"][data-batch="/batch_uploads/new?add_works_to_collection=1&payload_concern=NamespacedWorks%3A%3ANestedWork"]' # rubocop:disable Layout/LineLength
     end
   end
 end

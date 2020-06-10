@@ -48,18 +48,18 @@ module Hyrax
 
     private
 
-      def migrations
-        Dir.chdir(self.class.migrations_dir) { Dir.glob('db/migrate/[0-9]*_*.rb.erb') }.sort
-      end
+    def migrations
+      Dir.chdir(self.class.migrations_dir) { Dir.glob('db/migrate/[0-9]*_*.rb.erb') }.sort
+    end
 
-      def parse_basename_from(filename)
-        # Add engine name to filename to mimic ``ActiveRecord::Migration.copy` behavior
-        filename.slice(/(?<dateprefix>\d)+_(?<basename>.+)\.erb/, 'basename').sub('.', '.hyrax.')
-      end
+    def parse_basename_from(filename)
+      # Add engine name to filename to mimic ``ActiveRecord::Migration.copy` behavior
+      filename.slice(/(?<dateprefix>\d)+_(?<basename>.+)\.erb/, 'basename').sub('.', '.hyrax.')
+    end
 
-      def migration_version
-        # Specify the current major.minor version of Rails for AR migrations
-        "[#{Rails::VERSION::MAJOR}.#{Rails::VERSION::MINOR}]"
-      end
+    def migration_version
+      # Specify the current major.minor version of Rails for AR migrations
+      "[#{Rails::VERSION::MAJOR}.#{Rails::VERSION::MINOR}]"
+    end
   end
 end

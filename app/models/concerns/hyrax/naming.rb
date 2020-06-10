@@ -19,9 +19,9 @@ module Hyrax
 
       private
 
-        def _hyrax_default_name_class
-          Hyrax::Name
-        end
+      def _hyrax_default_name_class
+        Hyrax::Name
+      end
     end
   end
 end

@@ -14,18 +14,18 @@ class ImportExportJob < ApplicationJob
 
   private
 
-    def internal_call(command)
-      stdin, stdout, stderr, wait_thr = popen3(command)
-      begin
-        out = stdout.read
-        err = stderr.read
-        exit_status = wait_thr.value
-        raise "Fedora command failed: \"#{command}\"\n#{err}" unless exit_status.success?
-        out
-      ensure
-        stdin.close
-        stdout.close
-        stderr.close
-      end
+  def internal_call(command)
+    stdin, stdout, stderr, wait_thr = popen3(command)
+    begin
+      out = stdout.read
+      err = stderr.read
+      exit_status = wait_thr.value
+      raise "Fedora command failed: \"#{command}\"\n#{err}" unless exit_status.success?
+      out
+    ensure
+      stdin.close
+      stdout.close
+      stderr.close
     end
+  end
 end

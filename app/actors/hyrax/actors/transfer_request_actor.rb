@@ -11,13 +11,13 @@ module Hyrax
 
       private
 
-        def create_proxy_deposit_request(env)
-          proxy = env.curation_concern.on_behalf_of
-          return true if proxy.blank?
-          ContentDepositorChangeEventJob.perform_later(env.curation_concern,
-                                                       ::User.find_by_user_key(proxy))
-          true
-        end
+      def create_proxy_deposit_request(env)
+        proxy = env.curation_concern.on_behalf_of
+        return true if proxy.blank?
+        ContentDepositorChangeEventJob.perform_later(env.curation_concern,
+                                                     ::User.find_by_user_key(proxy))
+        true
+      end
     end
   end
 end

@@ -65,20 +65,20 @@ module Hyrax
 
     private
 
-      def values_for(term)
-        Array.wrap(characterization_metadata[term])
-      end
+    def values_for(term)
+      Array.wrap(characterization_metadata[term])
+    end
 
-      def truncate_all(values)
-        values.map { |v| v.to_s.truncate(250) }
-      end
+    def truncate_all(values)
+      values.map { |v| v.to_s.truncate(250) }
+    end
 
-      def build_characterization_metadata
-        self.class.characterization_terms.each do |term|
-          value = send(term)
-          additional_characterization_metadata[term.to_sym] = value if value.present?
-        end
-        additional_characterization_metadata
+    def build_characterization_metadata
+      self.class.characterization_terms.each do |term|
+        value = send(term)
+        additional_characterization_metadata[term.to_sym] = value if value.present?
       end
+      additional_characterization_metadata
+    end
   end
 end

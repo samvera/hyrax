@@ -26,7 +26,7 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
           expect { Hyrax::PermissionTemplate.find_by!(source_id: col.id) }.to raise_error ActiveRecord::RecordNotFound
         end
 
-        Hyrax::Collections::MigrationService.migrate_all_collections
+        described_class.migrate_all_collections
 
         ::Collection.all.each do |col|
           expect(col.collection_type_gid).to eq default_gid
@@ -62,7 +62,7 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
         expect(Hyrax::PermissionTemplate.find_by!(source_id: collection.id).id).to eq permission_template.id
         expect_access(permission_template.id, 'user', :manage, [user.user_key, manager1.user_key])
 
-        Hyrax::Collections::MigrationService.migrate_all_collections
+        described_class.migrate_all_collections
 
         expect(collection.collection_type_gid).to eq collection_type_gid
         expect(Hyrax::PermissionTemplate.find_by!(source_id: collection.id).id).to eq permission_template.id
@@ -89,7 +89,7 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
           expect(adminset.read_users).to eq []
         end
 
-        Hyrax::Collections::MigrationService.migrate_all_collections
+        described_class.migrate_all_collections
 
         AdminSet.all.each do |adminset|
           pt_id = Hyrax::PermissionTemplate.find_by!(source_id: adminset.id)
@@ -135,7 +135,7 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
         expect_solr_access(pt_id, 'user', :view, adminset.read_users)
         expect_solr_access(pt_id, 'group', :view, adminset.read_groups)
 
-        Hyrax::Collections::MigrationService.migrate_all_collections
+        described_class.migrate_all_collections
 
         pt_id = Hyrax::PermissionTemplate.find_by!(source_id: adminset.id).id
         expect(pt_id).to eq permission_template.id
@@ -170,7 +170,7 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
             expect { Hyrax::PermissionTemplate.find_by!(source_id: col.id) }.to raise_error ActiveRecord::RecordNotFound
           end
 
-          Hyrax::Collections::MigrationService.repair_migrated_collections
+          described_class.repair_migrated_collections
 
           ::Collection.all.each do |col|
             expect(col.collection_type_gid).to eq default_gid
@@ -197,7 +197,7 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
             expect { Hyrax::PermissionTemplate.find_by!(source_id: col.id) }.to raise_error ActiveRecord::RecordNotFound
           end
 
-          Hyrax::Collections::MigrationService.repair_migrated_collections
+          described_class.repair_migrated_collections
 
           Collection.all.each do |col|
             expect(col.collection_type_gid).to eq default_gid
@@ -261,7 +261,7 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
             expect_access(pt_id, 'group', :view, col.read_groups)
           end
 
-          Hyrax::Collections::MigrationService.repair_migrated_collections
+          described_class.repair_migrated_collections
 
           ::Collection.all.each do |col|
             expect(col.collection_type_gid).to eq default_gid
@@ -305,7 +305,7 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
             expect_no_access(pt_id, 'group', :view, col.read_groups)
           end
 
-          Hyrax::Collections::MigrationService.repair_migrated_collections
+          described_class.repair_migrated_collections
 
           Collection.all.each do |col|
             expect(col.collection_type_gid).to eq default_gid
@@ -334,7 +334,7 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
         expect(Hyrax::PermissionTemplate.find_by!(source_id: collection.id).id).to eq permission_template.id
         expect_access(permission_template.id, 'user', :manage, edit_users)
 
-        Hyrax::Collections::MigrationService.repair_migrated_collections
+        described_class.repair_migrated_collections
 
         expect(collection.collection_type_gid).to eq collection_type_gid
         expect(Hyrax::PermissionTemplate.find_by!(source_id: collection.id).id).to eq permission_template.id
@@ -361,7 +361,7 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
           expect(adminset.read_users).to eq []
         end
 
-        Hyrax::Collections::MigrationService.repair_migrated_collections
+        described_class.repair_migrated_collections
 
         AdminSet.all.each do |adminset|
           pt_id = Hyrax::PermissionTemplate.find_by!(source_id: adminset.id)
@@ -407,7 +407,7 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
         expect_solr_access(pt_id, 'user', :view, adminset.read_users)
         expect_solr_access(pt_id, 'group', :view, adminset.read_groups)
 
-        Hyrax::Collections::MigrationService.repair_migrated_collections
+        described_class.repair_migrated_collections
 
         pt_id = Hyrax::PermissionTemplate.find_by!(source_id: adminset.id).id
         expect(pt_id).to eq permission_template.id

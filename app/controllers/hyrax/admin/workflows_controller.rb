@@ -20,8 +20,8 @@ module Hyrax
 
     private
 
-      def ensure_authorized!
-        authorize! :review, :submissions
-      end
+    def ensure_authorized!
+      authorize! :review, :submissions
+    end
   end
 end

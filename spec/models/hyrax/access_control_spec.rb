@@ -92,7 +92,7 @@ RSpec.describe Hyrax::AccessControl do
 
       it 'retains access_to target on the created permissions' do
         expect(Hyrax.persister.save(resource: access_control))
-          .to have_attributes(permissions: contain_exactly(have_attributes(mode:  permission.mode,
+          .to have_attributes(permissions: contain_exactly(have_attributes(mode: permission.mode,
                                                                            agent: permission.agent,
                                                                            access_to: permission.access_to)))
       end
@@ -111,7 +111,7 @@ RSpec.describe Hyrax::AccessControl do
 
       it 'can save with default adapter' do
         expect(Hyrax.persister.save(resource: access_control))
-          .to have_attributes(permissions: contain_exactly(have_attributes(mode:  permission.mode,
+          .to have_attributes(permissions: contain_exactly(have_attributes(mode: permission.mode,
                                                                            agent: permission.agent)))
       end
 
@@ -121,7 +121,7 @@ RSpec.describe Hyrax::AccessControl do
 
         expect { Hyrax.persister.save(resource: saved) }
           .to change { Hyrax.query_service.find_by(id: saved.id).permissions }
-          .from(contain_exactly(have_attributes(mode:  permission.mode,
+          .from(contain_exactly(have_attributes(mode: permission.mode,
                                                 agent: permission.agent)))
           .to be_empty
       end
@@ -134,7 +134,7 @@ RSpec.describe Hyrax::AccessControl do
         access_control.permissions = [permission]
 
         expect(Hyrax.persister.save(resource: access_control))
-          .to have_attributes(permissions: contain_exactly(have_attributes(mode:  permission.mode,
+          .to have_attributes(permissions: contain_exactly(have_attributes(mode: permission.mode,
                                                                            agent: permission.agent)))
       end
     end

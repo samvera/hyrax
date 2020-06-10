@@ -23,8 +23,8 @@ module Hyrax
 
     private
 
-      def pageviews
-        to_flots WorkViewStat.statistics(model, created, user_id)
-      end
+    def pageviews
+      to_flots WorkViewStat.statistics(model, created, user_id)
+    end
   end
 end

@@ -65,8 +65,8 @@ module Hyrax
 
     private
 
-      def reindex_nested_relationships_for(id:, extent:)
-        Hyrax.config.nested_relationship_reindexer.call(id: id, extent: extent)
-      end
+    def reindex_nested_relationships_for(id:, extent:)
+      Hyrax.config.nested_relationship_reindexer.call(id: id, extent: extent)
+    end
   end
 end

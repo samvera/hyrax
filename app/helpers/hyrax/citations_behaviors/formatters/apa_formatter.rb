@@ -16,16 +16,16 @@ module Hyrax
 
         private
 
-          def authors_text_for(work)
-            # setup formatted author list
-            authors_list = author_list(work).reject(&:blank?)
-            author_text = format_authors(authors_list)
-            if author_text.blank?
-              author_text
-            else
-              "<span class=\"citation-author\">#{author_text}</span> "
-            end
+        def authors_text_for(work)
+          # setup formatted author list
+          authors_list = author_list(work).reject(&:blank?)
+          author_text = format_authors(authors_list)
+          if author_text.blank?
+            author_text
+          else
+            "<span class=\"citation-author\">#{author_text}</span> "
           end
+        end
 
         public
 
@@ -47,27 +47,27 @@ module Hyrax
 
         private
 
-          def pub_date_text_for(work)
-            # Get Pub Date
-            pub_date = setup_pub_date(work)
-            format_date(pub_date)
-          end
+        def pub_date_text_for(work)
+          # Get Pub Date
+          pub_date = setup_pub_date(work)
+          format_date(pub_date)
+        end
 
-          def add_title_text_for(work)
-            # setup title info
-            title_info = setup_title_info(work)
-            format_title(title_info)
-          end
+        def add_title_text_for(work)
+          # setup title info
+          title_info = setup_title_info(work)
+          format_title(title_info)
+        end
 
-          def add_publisher_text_for(work)
-            # Publisher info
-            pub_info = clean_end_punctuation(setup_pub_info(work))
-            if pub_info.nil?
-              ''
-            else
-              pub_info + "."
-            end
+        def add_publisher_text_for(work)
+          # Publisher info
+          pub_info = clean_end_punctuation(setup_pub_info(work))
+          if pub_info.nil?
+            ''
+          else
+            pub_info + "."
           end
+        end
 
         public
 

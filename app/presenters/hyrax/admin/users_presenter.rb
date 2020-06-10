@@ -28,10 +28,10 @@ module Hyrax
 
       private
 
-        # Returns a list of users excluding the system users and guest_users
-        def search
-          ::User.registered.without_system_accounts
-        end
+      # Returns a list of users excluding the system users and guest_users
+      def search
+        ::User.registered.without_system_accounts
+      end
     end
   end
 end

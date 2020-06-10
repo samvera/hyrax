@@ -16,14 +16,14 @@ module Hyrax
 
         private
 
-          def relation
-            ::User.registered
-          end
+        def relation
+          ::User.registered
+        end
 
-          # Override to make an activerecord date range query
-          def query(min, max)
-            { created_at: min..max }
-          end
+        # Override to make an activerecord date range query
+        def query(min, max)
+          { created_at: min..max }
+        end
       end
     end
   end

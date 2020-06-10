@@ -116,7 +116,7 @@ module Hyrax
         next unless rendering
 
         { '@id' => Hyrax::Engine.routes.url_helpers.download_url(rendering.id, host: hostname),
-          'format' => rendering.mime_type.present? ? rendering.mime_type : I18n.t("hyrax.manifest.unknown_mime_text"),
+          'format' => rendering.mime_type.presence || I18n.t("hyrax.manifest.unknown_mime_text"),
           'label' => I18n.t("hyrax.manifest.download_text") + (rendering.label || '') }
       end.flatten
     end
@@ -155,12 +155,12 @@ module Hyrax
 
       private
 
-        ##
-        # cache the docs in this method, rather than #build;
-        # this can probably be pushed up to the parent class
-        def load_docs
-          @cached_docs ||= super
-        end
+      ##
+      # cache the docs in this method, rather than #build;
+      # this can probably be pushed up to the parent class
+      def load_docs
+        @cached_docs ||= super
+      end
     end
 
     ##
@@ -207,16 +207,16 @@ module Hyrax
 
     private
 
-      def hostname
-        @hostname || 'localhost'
-      end
+    def hostname
+      @hostname || 'localhost'
+    end
 
-      def metadata_fields
-        Hyrax.config.iiif_metadata_fields
-      end
+    def metadata_fields
+      Hyrax.config.iiif_metadata_fields
+    end
 
-      def scrub(value)
-        Loofah.fragment(value).scrub!(:whitewash).to_s
-      end
+    def scrub(value)
+      Loofah.fragment(value).scrub!(:whitewash).to_s
+    end
   end
 end

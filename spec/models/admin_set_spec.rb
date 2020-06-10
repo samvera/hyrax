@@ -114,13 +114,13 @@ RSpec.describe AdminSet, type: :model do
   describe ".default_set?" do
     context "with default AdminSet ID" do
       it "returns true" do
-        expect(AdminSet.default_set?(described_class::DEFAULT_ID)).to be true
+        expect(described_class.default_set?(described_class::DEFAULT_ID)).to be true
       end
     end
 
     context "with a non-default  ID" do
       it "returns false" do
-        expect(AdminSet.default_set?('different-id')).to be false
+        expect(described_class.default_set?('different-id')).to be false
       end
     end
   end
@@ -168,7 +168,7 @@ RSpec.describe AdminSet, type: :model do
 
       it "does not delete adminset or member works" do
         expect(subject.errors.full_messages).to eq ["Administrative set cannot be deleted as it is not empty"]
-        expect(AdminSet.exists?(subject.id)).to be true
+        expect(described_class.exists?(subject.id)).to be true
         expect(GenericWork.exists?(gf1.id)).to be true
         expect(GenericWork.exists?(gf2.id)).to be true
       end
@@ -182,7 +182,7 @@ RSpec.describe AdminSet, type: :model do
       end
 
       it "deletes the adminset" do
-        expect(AdminSet.exists?(subject.id)).to be false
+        expect(described_class.exists?(subject.id)).to be false
       end
     end
 
@@ -196,7 +196,7 @@ RSpec.describe AdminSet, type: :model do
 
       it "does not delete the adminset" do
         expect(subject.errors.full_messages).to eq ["Administrative set cannot be deleted as it is the default set"]
-        expect(AdminSet.exists?(described_class::DEFAULT_ID)).to be true
+        expect(described_class.exists?(described_class::DEFAULT_ID)).to be true
       end
     end
   end

@@ -4,9 +4,9 @@ module Hyrax
       class ByDepositor < Statistics::TermQuery
         private
 
-          def index_key
-            DepositSearchBuilder.depositor_field
-          end
+        def index_key
+          DepositSearchBuilder.depositor_field
+        end
       end
     end
   end

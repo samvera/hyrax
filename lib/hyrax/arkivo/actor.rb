@@ -52,54 +52,54 @@ module Hyrax
 
       private
 
-        def current_ability
-          @current_ability ||= ::Ability.new(user)
-        end
+      def current_ability
+        @current_ability ||= ::Ability.new(user)
+      end
 
-        # @return [Hash<String, Array>] a list of properties to set on the work. Keys must be strings in order for them to correctly merge with the values from arkivio (in `@item`)
-        # rubocop:disable Metrics/MethodLength
-        def default_attributes
-          {
-            "resource_type" => [],
-            "title" => [],
-            "rights" => [],
-            "keyword" => [],
-            "creator" => [],
-            "description" => [],
-            "publisher" => [],
-            "date_created" => [],
-            "based_near" => [],
-            "identifier" => [],
-            "related_url" => [],
-            "language" => [],
-            "contributor" => []
-          }
-        end
-        # rubocop:enable Metrics/MethodLength
+      # @return [Hash<String, Array>] a list of properties to set on the work. Keys must be strings in order for them to correctly merge with the values from arkivio (in `@item`)
+      # rubocop:disable Metrics/MethodLength
+      def default_attributes
+        {
+          "resource_type" => [],
+          "title" => [],
+          "rights" => [],
+          "keyword" => [],
+          "creator" => [],
+          "description" => [],
+          "publisher" => [],
+          "date_created" => [],
+          "based_near" => [],
+          "identifier" => [],
+          "related_url" => [],
+          "language" => [],
+          "contributor" => []
+        }
+      end
+      # rubocop:enable Metrics/MethodLength
 
-        def default_visibility
-          Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-        end
+      def default_visibility
+        Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+      end
 
-        def attributes
-          Hyrax::Arkivo::MetadataMunger.new(item['metadata']).call
-        end
+      def attributes
+        Hyrax::Arkivo::MetadataMunger.new(item['metadata']).call
+      end
 
-        def file
-          extract_file_from_item
-        end
+      def file
+        extract_file_from_item
+      end
 
-        def extract_file_from_item
-          encoded = item['file']['base64']
-          content = Base64.decode64(encoded)
-          tmp = Tempfile.new(item['file']['md5'], encoding: Encoding::UTF_8)
-          tmp.binmode
-          tmp.original_filename = item['file']['filename']
-          tmp.content_type = item['file']['contentType']
-          tmp.write(content)
-          tmp.rewind
-          tmp
-        end
+      def extract_file_from_item
+        encoded = item['file']['base64']
+        content = Base64.decode64(encoded)
+        tmp = Tempfile.new(item['file']['md5'], encoding: Encoding::UTF_8)
+        tmp.binmode
+        tmp.original_filename = item['file']['filename']
+        tmp.content_type = item['file']['contentType']
+        tmp.write(content)
+        tmp.rewind
+        tmp
+      end
     end
   end
 end

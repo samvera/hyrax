@@ -23,15 +23,15 @@ module Hyrax
 
     private
 
-      attr_reader :current_user, :view_context, :since
-      delegate :render, :t, to: :view_context
+    attr_reader :current_user, :view_context, :since
+    delegate :render, :t, to: :view_context
 
-      def incoming_proxy_deposits
-        @incoming ||= ProxyDepositRequest.incoming_for(user: current_user)
-      end
+    def incoming_proxy_deposits
+      @incoming ||= ProxyDepositRequest.incoming_for(user: current_user)
+    end
 
-      def outgoing_proxy_deposits
-        @outgoing ||= ProxyDepositRequest.outgoing_for(user: current_user)
-      end
+    def outgoing_proxy_deposits
+      @outgoing ||= ProxyDepositRequest.outgoing_for(user: current_user)
+    end
   end
 end

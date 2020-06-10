@@ -5,7 +5,7 @@ require 'wings/services/file_metadata_builder'
 RSpec.describe Wings::FileMetadataBuilder do
   subject do
     described_class.new(storage_adapter: Hyrax.storage_adapter,
-                        persister:       Hyrax.persister)
+                        persister: Hyrax.persister)
   end
 
   let(:af_file_set)   { create(:file_set, id: 'fileset_id') }

@@ -50,20 +50,20 @@ module Hyrax
 
       private
 
-        class << self
-          def workflow_action_for(name, scope:)
-            Sipity::WorkflowAction(name, scope) { nil }
-          end
+      class << self
+        def workflow_action_for(name, scope:)
+          Sipity::WorkflowAction(name, scope) { nil }
         end
+      end
 
-        def convert_to_sipity_objects!
-          @subject = WorkflowActionInfo.new(work, current_user)
-          @sipity_workflow_action = self.class.workflow_action_for(name, scope: subject.entity.workflow)
-        end
+      def convert_to_sipity_objects!
+        @subject = WorkflowActionInfo.new(work, current_user)
+        @sipity_workflow_action = self.class.workflow_action_for(name, scope: subject.entity.workflow)
+      end
 
-        attr_reader :subject, :sipity_workflow_action
+      attr_reader :subject, :sipity_workflow_action
 
-        delegate :current_user, to: :current_ability
+      delegate :current_user, to: :current_ability
     end
   end
 end

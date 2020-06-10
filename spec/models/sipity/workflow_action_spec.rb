@@ -23,7 +23,7 @@ module Sipity
         [:submit, 'submit'],
         [:submit?, 'submit'],
         [:attach, 'attach'],
-        [Sipity::WorkflowAction.new(name: 'hello'), 'hello']
+        [described_class.new(name: 'hello'), 'hello']
       ].each_with_index do |(original, expected), index|
         it "will convert #{original.inspect} to #{expected.inspect} (scenario ##{index})" do
           expect(described_class.name_for(original)).to eq(expected)

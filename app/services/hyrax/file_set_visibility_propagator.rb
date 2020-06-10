@@ -30,12 +30,12 @@ module Hyrax
 
     private
 
-      def copy_visibility_modifier(source:, file:, modifier:)
-        source_modifier = source.public_send(modifier)
-        return unless source_modifier
-        file.public_send("build_#{modifier}") unless file.public_send(modifier)
-        file.public_send(modifier).attributes = source_modifier.attributes.except('id')
-        file.public_send(modifier).save
-      end
+    def copy_visibility_modifier(source:, file:, modifier:)
+      source_modifier = source.public_send(modifier)
+      return unless source_modifier
+      file.public_send("build_#{modifier}") unless file.public_send(modifier)
+      file.public_send(modifier).attributes = source_modifier.attributes.except('id')
+      file.public_send(modifier).save
+    end
   end
 end

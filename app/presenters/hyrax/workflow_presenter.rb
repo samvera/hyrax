@@ -32,19 +32,19 @@ module Hyrax
 
     def badge
       return unless state
-      content_tag(:span, state_label, class: "state state-#{state} label label-primary")
+      tag.span(state_label, class: "state state-#{state} label label-primary")
     end
 
     private
 
-      def action_label(action)
-        I18n.t("hyrax.workflow.#{action.workflow.name}.#{action.name}", default: action.name.titleize)
-      end
+    def action_label(action)
+      I18n.t("hyrax.workflow.#{action.workflow.name}.#{action.name}", default: action.name.titleize)
+    end
 
-      def sipity_entity
-        Sipity::Entity(solr_document)
-      rescue PowerConverter::ConversionError
-        nil
-      end
+    def sipity_entity
+      Sipity::Entity(solr_document)
+    rescue PowerConverter::ConversionError
+      nil
+    end
   end
 end

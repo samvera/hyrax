@@ -39,25 +39,25 @@ class FixityCheckJob < Hyrax::ApplicationJob
 
   private
 
-    def run_check(file_set_id, file_id, uri)
-      service = ActiveFedora::FixityService.new(uri)
-      begin
-        fixity_ok = service.check
-        expected_result = service.expected_message_digest
-      rescue Ldp::NotFound
-        # Either the #check or #expected_message_digest could raise this exception
-        error_msg = 'resource not found'
-      end
-
-      log = ChecksumAuditLog.create_and_prune!(passed: fixity_ok, file_set_id: file_set_id, checked_uri: uri, file_id: file_id, expected_result: expected_result)
-      # Note that the after_fixity_check_failure will be called if the fixity check fail. This
-      # logging is for additional information related to the failure. Wondering if we should
-      # also include the error message?
-      logger.error "FIXITY CHECK FAILURE: Fixity failed for #{uri} #{error_msg}: #{log}" unless fixity_ok
-      log
+  def run_check(file_set_id, file_id, uri)
+    service = ActiveFedora::FixityService.new(uri)
+    begin
+      fixity_ok = service.check
+      expected_result = service.expected_message_digest
+    rescue Ldp::NotFound
+      # Either the #check or #expected_message_digest could raise this exception
+      error_msg = 'resource not found'
     end
 
-    def logger
-      Hyrax.logger
-    end
+    log = ChecksumAuditLog.create_and_prune!(passed: fixity_ok, file_set_id: file_set_id, checked_uri: uri, file_id: file_id, expected_result: expected_result)
+    # Note that the after_fixity_check_failure will be called if the fixity check fail. This
+    # logging is for additional information related to the failure. Wondering if we should
+    # also include the error message?
+    logger.error "FIXITY CHECK FAILURE: Fixity failed for #{uri} #{error_msg}: #{log}" unless fixity_ok
+    log
+  end
+
+  def logger
+    Hyrax.logger
+  end
 end

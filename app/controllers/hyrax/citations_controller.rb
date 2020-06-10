@@ -24,8 +24,8 @@ module Hyrax
 
     private
 
-      def show_presenter
-        WorkShowPresenter
-      end
+    def show_presenter
+      WorkShowPresenter
+    end
   end
 end

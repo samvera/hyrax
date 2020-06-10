@@ -19,8 +19,8 @@ module Qa::Authorities
 
     private
 
-      def search_builder(controller)
-        search_builder_class.new(controller)
-      end
+    def search_builder(controller)
+      search_builder_class.new(controller)
+    end
   end
 end

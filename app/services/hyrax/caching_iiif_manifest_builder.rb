@@ -33,25 +33,25 @@ module Hyrax
 
     private
 
-      ##
-      # @note adding a version_for suffix helps us manage cache expiration,
-      #   reducing false cache hits
-      #
-      # @param presenter [Hyrax::IiifManifestPresenter]
-      #
-      # @return [String]
-      def manifest_cache_key(presenter:)
-        "#{KEY_PREFIX}_#{presenter.id}/#{version_for(presenter)}"
-      end
+    ##
+    # @note adding a version_for suffix helps us manage cache expiration,
+    #   reducing false cache hits
+    #
+    # @param presenter [Hyrax::IiifManifestPresenter]
+    #
+    # @return [String]
+    def manifest_cache_key(presenter:)
+      "#{KEY_PREFIX}_#{presenter.id}/#{version_for(presenter)}"
+    end
 
-      ##
-      # @note `etag` is a better option than the solr document `_version_`; the
-      #   latter isn't always available, depending on how the presenter was
-      #   built!
-      #
-      # @return [String]
-      def version_for(presenter)
-        presenter.etag
-      end
+    ##
+    # @note `etag` is a better option than the solr document `_version_`; the
+    #   latter isn't always available, depending on how the presenter was
+    #   built!
+    #
+    # @return [String]
+    def version_for(presenter)
+      presenter.etag
+    end
   end
 end

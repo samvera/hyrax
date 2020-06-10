@@ -49,8 +49,8 @@ module Hyrax
 
     private
 
-      def warning(msg)
-        Hyrax.logger&.warn(msg)
-      end
+    def warning(msg)
+      Hyrax.logger&.warn(msg)
+    end
   end
 end
