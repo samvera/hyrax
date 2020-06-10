@@ -78,15 +78,9 @@ module Hyrax
           render :show, status: :ok
         end
         additional_response_formats(wants)
-        wants.ttl do
-          render body: presenter.export_as_ttl, mime_type: Mime[:ttl]
-        end
-        wants.jsonld do
-          render body: presenter.export_as_jsonld, mime_type: Mime[:jsonld]
-        end
-        wants.nt do
-          render body: presenter.export_as_nt, mime_type: Mime[:nt]
-        end
+        wants.ttl { render body: presenter.export_as_ttl, mime_type: Mime[:ttl] }
+        wants.jsonld { render body: presenter.export_as_jsonld, mime_type: Mime[:jsonld] }
+        wants.nt { render body: presenter.export_as_nt, mime_type: Mime[:nt] }
       end
     end
 
@@ -231,19 +225,11 @@ module Hyrax
           flash[:notice] = message
           render 'unavailable', status: :unauthorized
         end
-        wants.json do
-          render plain: message, status: :unauthorized
-        end
+        wants.json { render plain: message, status: :unauthorized }
         additional_response_formats(wants)
-        wants.ttl do
-          render plain: message, status: :unauthorized
-        end
-        wants.jsonld do
-          render plain: message, status: :unauthorized
-        end
-        wants.nt do
-          render plain: message, status: :unauthorized
-        end
+        wants.ttl { render plain: message, status: :unauthorized }
+        wants.jsonld { render plain: message, status: :unauthorized }
+        wants.nt { render plain: message, status: :unauthorized }
       end
     end
 
@@ -261,8 +247,12 @@ module Hyrax
       File.join(theme, layout)
     end
 
+    ##
+    # @todo should the controller know so much about browse_everything?
+    #   hopefully this can be refactored to be more reusable.
+    #
     # Add uploaded_files to the parameters received by the actor.
-    def attributes_for_actor
+    def attributes_for_actor # rubocop:disable Metrics/MethodLength
       raw_params = params[hash_key_for_curation_concern]
       attributes = if raw_params
                      work_form_service.form_class(curation_concern).model_attributes(raw_params)

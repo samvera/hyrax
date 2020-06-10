@@ -1,11 +1,11 @@
 RSpec.describe Hyrax::Forms::CollectionForm do
+  let(:collection) { build(:collection_lw) }
+  let(:ability) { Ability.new(create(:user)) }
+  let(:repository) { double }
+  let(:form) { described_class.new(collection, ability, repository) }
+
   describe "#terms" do
     subject { described_class.terms }
-
-    let(:collection) { build(:collection_lw) }
-    let(:ability) { Ability.new(create(:user)) }
-    let(:repository) { double }
-    let(:form) { described_class.new(collection, ability, repository) }
 
     it do
       is_expected.to eq [:alternative_title,

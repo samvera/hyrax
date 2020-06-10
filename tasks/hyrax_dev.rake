@@ -1,3 +1,4 @@
+require 'English'
 require 'rspec/core/rake_task'
 require 'engine_cart/rake_task'
 require 'rubocop/rake_task'
@@ -45,7 +46,8 @@ if Gem.loaded_specs.key? 'engine_cart'
     task :after_generate do
       puts 'Creating default collection type...'
       EngineCart.within_test_app do
-        raise "EngineCart failed on with: #{$?}" unless system "bundle exec rake hyrax:default_collection_types:create"
+        raise "EngineCart failed on with: #{$CHILD_STATUS}" unless
+          system('bundle exec rake hyrax:default_collection_types:create')
       end
     end
   end

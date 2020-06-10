@@ -4,7 +4,7 @@ module Hyrax
     include Hyrax::IndexesBasicMetadata
     STORED_LONG = ActiveFedora::Indexing::Descriptor.new(:long, :stored)
 
-    def generate_solr_document
+    def generate_solr_document # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       super.tap do |solr_doc|
         solr_doc['hasRelatedMediaFragment_ssim'] = object.representative_id
         solr_doc['hasRelatedImage_ssim'] = object.thumbnail_id

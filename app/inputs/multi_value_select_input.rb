@@ -14,7 +14,7 @@ class MultiValueSelectInput < MultiValueInput
     end
   end
 
-  def build_field_options(value)
+  def build_field_options(value) # rubocop:disable Metrics/MethodLength (builder method)
     field_options = input_html_options.dup
 
     field_options[:value] = value

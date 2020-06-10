@@ -50,9 +50,18 @@ module Hyrax
       uri.to_s
     end
 
+    ##
     # @return [Boolean]
-    def has_collection_search_parameters?
+    def collection_search_parameters?
       params[:cq].present?
+    end
+
+    ##
+    # @deprecated
+    # @return [Boolean]
+    def has_collection_search_parameters? # rubocop:disable Naming/PredicateName:
+      Deprecation.warn('use #collection_search_parameters? helper instead')
+      collection_search_parameters?
     end
 
     def button_for_remove_from_collection(collection, document, label: 'Remove From Collection', btn_class: 'btn-primary')

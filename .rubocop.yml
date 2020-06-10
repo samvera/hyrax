@@ -1,11 +1,8 @@
 inherit_from:
-  - .rubocop_todo.yml
   - .rubocop_fixme.yml
 
 inherit_gem:
   bixby: bixby_default.yml
-
-
 
 AllCops:
   TargetRubyVersion: 2.4
@@ -20,6 +17,10 @@ AllCops:
 Lint/ImplicitStringConcatenation:
   Exclude:
     - 'lib/generators/hyrax/**/*'
+
+Rails/Output:
+  Exclude:
+    - 'lib/generators/**/*'
 
 Metrics/BlockLength:
   ExcludedMethods: ['included']

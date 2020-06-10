@@ -5,7 +5,7 @@ module ActionDispatch::Routing
     #   curation_concerns_basic_routes do
     #     concerns :exportable
     #   end
-    def curation_concerns_basic_routes(&block)
+    def curation_concerns_basic_routes(&block) # rubocop:disable Metrics/MethodLength
       resources :upload_sets, only: [:edit, :update]
 
       namespace :hyrax, path: :concern do

@@ -161,19 +161,6 @@ RSpec.describe HyraxHelper, type: :helper do
     end
   end
 
-  describe "has_collection_search_parameters?" do
-    subject { helper }
-
-    context "when cq is set" do
-      before { allow(helper).to receive(:params).and_return(cq: 'foo') }
-      it { is_expected.to have_collection_search_parameters }
-    end
-    context "when cq is not set" do
-      before { allow(helper).to receive(:params).and_return(cq: '') }
-      it { is_expected.not_to have_collection_search_parameters }
-    end
-  end
-
   describe "#collection_thumbnail" do
     let(:document) { SolrDocument.new(has_model_ssim: ['Collection']) }
 
