@@ -156,15 +156,6 @@ RSpec/AnyInstance:
 RSpec/ExpectInHook:
   Enabled: false
 
-# Offense count: 31
-RSpec/LetBeforeExamples:
-  Exclude:
-    - 'spec/forms/hyrax/forms/collection_form_spec.rb'
-    - 'spec/presenters/hyrax/collection_presenter_spec.rb'
-    - 'spec/presenters/hyrax/trophy_presenter_spec.rb'
-    - 'spec/services/hyrax/workflow/action_taken_service_spec.rb'
-    - 'spec/services/hyrax/workflow/notification_service_spec.rb'
-
 # Offense count: 27
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: and_return, block

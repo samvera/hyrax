@@ -1,10 +1,4 @@
 RSpec.describe Hyrax::Workflow::ActionTakenService do
-  context 'class methods' do
-    subject { described_class }
-
-    it { is_expected.to respond_to(:handle_action_taken) }
-  end
-
   let(:triggered_methods) { [instance_double(Sipity::Method, service_name: 'FooBar')] }
   let(:triggered_methods_rel) do
     double('Sipity::Method::ActiveRecord_Relation',
@@ -19,6 +13,12 @@ RSpec.describe Hyrax::Workflow::ActionTakenService do
                         action: action,
                         comment: "A pleasant read",
                         user: user)
+  end
+
+  context 'class methods' do
+    subject { described_class }
+
+    it { is_expected.to respond_to(:handle_action_taken) }
   end
 
   describe "#call" do

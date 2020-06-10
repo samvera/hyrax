@@ -1,10 +1,4 @@
 RSpec.describe Hyrax::Workflow::NotificationService do
-  context 'class methods' do
-    subject { described_class }
-
-    it { is_expected.to respond_to(:deliver_on_action_taken) }
-  end
-
   let(:creating_user) { Sipity::Role.new(name: 'creating_user') }
   let(:recipient1) do
     Sipity::NotificationRecipient.new(recipient_strategy: 'to',
@@ -28,6 +22,12 @@ RSpec.describe Hyrax::Workflow::NotificationService do
                         action: action,
                         comment: "A pleasant read",
                         user: user)
+  end
+
+  context 'class methods' do
+    subject { described_class }
+
+    it { is_expected.to respond_to(:deliver_on_action_taken) }
   end
 
   describe "#call" do

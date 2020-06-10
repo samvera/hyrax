@@ -1,15 +1,4 @@
 RSpec.describe Hyrax::CollectionPresenter do
-  describe ".terms" do
-    subject { described_class.terms }
-
-    it do
-      is_expected.to eq [:total_items, :size, :resource_type, :creator,
-                         :contributor, :keyword, :license, :publisher,
-                         :date_created, :subject, :language, :identifier,
-                         :based_near, :related_url]
-    end
-  end
-
   let(:collection) do
     build(:collection_lw,
           id: 'adc12v',
@@ -24,6 +13,17 @@ RSpec.describe Hyrax::CollectionPresenter do
   let(:ability) { double }
   let(:presenter) { described_class.new(solr_doc, ability) }
   let(:solr_doc) { SolrDocument.new(collection.to_solr) }
+
+  describe ".terms" do
+    subject { described_class.terms }
+
+    it do
+      is_expected.to eq [:total_items, :size, :resource_type, :creator,
+                         :contributor, :keyword, :license, :publisher,
+                         :date_created, :subject, :language, :identifier,
+                         :based_near, :related_url]
+    end
+  end
 
   describe "collection type methods" do
     subject { presenter }

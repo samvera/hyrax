@@ -2,6 +2,11 @@ RSpec.describe Hyrax::Forms::CollectionForm do
   describe "#terms" do
     subject { described_class.terms }
 
+    let(:collection) { build(:collection_lw) }
+    let(:ability) { Ability.new(create(:user)) }
+    let(:repository) { double }
+    let(:form) { described_class.new(collection, ability, repository) }
+
     it do
       is_expected.to eq [:alternative_title,
                          :resource_type,
@@ -24,11 +29,6 @@ RSpec.describe Hyrax::Forms::CollectionForm do
                          :collection_type_gid]
     end
   end
-
-  let(:collection) { build(:collection_lw) }
-  let(:ability) { Ability.new(create(:user)) }
-  let(:repository) { double }
-  let(:form) { described_class.new(collection, ability, repository) }
 
   describe "#primary_terms" do
     subject { form.primary_terms }
