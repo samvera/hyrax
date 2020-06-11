@@ -70,6 +70,7 @@ SUMMARY
   spec.add_dependency 'qa', '~> 2.0' # questioning_authority
   spec.add_dependency 'rails_autolink', '~> 1.1'
   spec.add_dependency 'rdf-rdfxml' # controlled vocabulary importer
+  spec.add_dependency 'rdf-vocab', '< 3.1.5'
   spec.add_dependency 'redis-namespace', '~> 1.5'
   spec.add_dependency 'redlock', '>= 0.1.2'
   spec.add_dependency 'retriable', '>= 2.9', '< 4.0'
