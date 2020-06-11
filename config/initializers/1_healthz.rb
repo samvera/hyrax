@@ -27,7 +27,7 @@ rescue NameError => err
   raise(err) unless err.message.include?('OkComputer')
 
   Hyrax.logger.info 'OkComputer not installed. ' \
-                    'Skipping health endpoint at `/healthz`' \
+                    'Skipping health endpoint at `/healthz`. ' \
                     'Add `gem "OkComputer"` to your Gemfile if you want to ' \
                     'install default health checks.'
 end
