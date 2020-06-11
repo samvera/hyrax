@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Admin::PermissionTemplatesController do
   routes { Hyrax::Engine.routes }
   before do

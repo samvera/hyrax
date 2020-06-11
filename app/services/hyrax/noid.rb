@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Noid
     extend ActiveSupport::Concern
@@ -10,8 +11,8 @@ module Hyrax
 
     private
 
-      def service
-        @service ||= ::Noid::Rails::Service.new
-      end
+    def service
+      @service ||= ::Noid::Rails::Service.new
+    end
   end
 end

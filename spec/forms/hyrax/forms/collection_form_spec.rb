@@ -1,4 +1,10 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Forms::CollectionForm do
+  let(:collection) { build(:collection_lw) }
+  let(:ability) { Ability.new(create(:user)) }
+  let(:repository) { double }
+  let(:form) { described_class.new(collection, ability, repository) }
+
   describe "#terms" do
     subject { described_class.terms }
 
@@ -24,11 +30,6 @@ RSpec.describe Hyrax::Forms::CollectionForm do
                          :collection_type_gid]
     end
   end
-
-  let(:collection) { build(:collection_lw) }
-  let(:ability) { Ability.new(create(:user)) }
-  let(:repository) { double }
-  let(:form) { described_class.new(collection, ability, repository) }
 
   describe "#primary_terms" do
     subject { form.primary_terms }

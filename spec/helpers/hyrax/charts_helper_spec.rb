@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::ChartsHelper do
   describe '#hash_to_chart' do
     subject { helper.hash_to_chart(data) }

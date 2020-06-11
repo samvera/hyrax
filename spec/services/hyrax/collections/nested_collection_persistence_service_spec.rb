@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Collections::NestedCollectionPersistenceService, with_nested_reindexing: true do
   let(:parent) { build(:collection_lw) }
   let(:child) { create(:collection) }

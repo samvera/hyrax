@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # rubocop:disable Metrics/ClassLength
 module Hyrax
   module Forms
@@ -216,13 +217,13 @@ module Hyrax
 
       private
 
-        # @return [Array<FileSetPresenter>] presenters for the file sets in order of the ids
-        def file_presenters
-          @file_sets ||=
-            Hyrax::PresenterFactory.build_for(ids: model.member_ids,
-                                              presenter_class: FileSetPresenter,
-                                              presenter_args: current_ability)
-        end
+      # @return [Array<FileSetPresenter>] presenters for the file sets in order of the ids
+      def file_presenters
+        @file_sets ||=
+          Hyrax::PresenterFactory.build_for(ids: model.member_ids,
+                                            presenter_class: FileSetPresenter,
+                                            presenter_args: current_ability)
+      end
     end
   end
 end

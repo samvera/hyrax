@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # There is an interplay between an AdminSet and a PermissionTemplate. Given
 # that AdminSet is an ActiveFedora::Base and PermissionTemplate is ActiveRecord::Base
 # we don't have the usual :has_many or :belongs_to methods to assist in defining that
@@ -21,7 +22,7 @@ class AdminSet < ActiveFedora::Base
   include Hyrax::HumanReadableType
   include Hyrax::HasRepresentative
 
-  DEFAULT_ID = 'admin_set/default'.freeze
+  DEFAULT_ID = 'admin_set/default'
   DEFAULT_TITLE = ['Default Admin Set'].freeze
   DEFAULT_WORKFLOW_NAME = Hyrax.config.default_active_workflow_name
 
@@ -34,7 +35,7 @@ class AdminSet < ActiveFedora::Base
   property :description,       predicate: ::RDF::Vocab::DC.description
   property :creator,           predicate: ::RDF::Vocab::DC11.creator
   has_many :members,
-           predicate:  Hyrax.config.admin_set_predicate,
+           predicate: Hyrax.config.admin_set_predicate,
            class_name: 'ActiveFedora::Base'
   # rubocop:enable Rails/HasManyOrHasOneDependent
 
@@ -56,7 +57,7 @@ class AdminSet < ActiveFedora::Base
   end
 
   def to_s
-    title.present? ? title : 'No Title'
+    title.presence || 'No Title'
   end
 
   # @api public
@@ -88,40 +89,40 @@ class AdminSet < ActiveFedora::Base
 
   private
 
-    def permission_template_edit_users
-      permission_template.agent_ids_for(access: 'manage', agent_type: 'user')
-    end
+  def permission_template_edit_users
+    permission_template.agent_ids_for(access: 'manage', agent_type: 'user')
+  end
 
-    def permission_template_edit_groups
-      permission_template.agent_ids_for(access: 'manage', agent_type: 'group')
-    end
+  def permission_template_edit_groups
+    permission_template.agent_ids_for(access: 'manage', agent_type: 'group')
+  end
 
-    def permission_template_read_users
-      (permission_template.agent_ids_for(access: 'view', agent_type: 'user') +
-          permission_template.agent_ids_for(access: 'deposit', agent_type: 'user')).uniq
-    end
+  def permission_template_read_users
+    (permission_template.agent_ids_for(access: 'view', agent_type: 'user') +
+        permission_template.agent_ids_for(access: 'deposit', agent_type: 'user')).uniq
+  end
 
-    def permission_template_read_groups
-      (permission_template.agent_ids_for(access: 'view', agent_type: 'group') +
-        permission_template.agent_ids_for(access: 'deposit', agent_type: 'group')).uniq -
-        [::Ability.registered_group_name, ::Ability.public_group_name]
-    end
+  def permission_template_read_groups
+    (permission_template.agent_ids_for(access: 'view', agent_type: 'group') +
+      permission_template.agent_ids_for(access: 'deposit', agent_type: 'group')).uniq -
+      [::Ability.registered_group_name, ::Ability.public_group_name]
+  end
 
-    def destroy_permission_template
-      permission_template.destroy
-    rescue ActiveRecord::RecordNotFound
-      true
-    end
+  def destroy_permission_template
+    permission_template.destroy
+  rescue ActiveRecord::RecordNotFound
+    true
+  end
 
-    def check_if_empty
-      return true if members.empty?
-      errors[:base] << I18n.t('hyrax.admin.admin_sets.delete.error_not_empty')
-      throw :abort
-    end
+  def check_if_empty
+    return true if members.empty?
+    errors[:base] << I18n.t('hyrax.admin.admin_sets.delete.error_not_empty')
+    throw :abort
+  end
 
-    def check_if_not_default_set
-      return true unless default_set?
-      errors[:base] << I18n.t('hyrax.admin.admin_sets.delete.error_default_set')
-      throw :abort
-    end
+  def check_if_not_default_set
+    return true unless default_set?
+    errors[:base] << I18n.t('hyrax.admin.admin_sets.delete.error_default_set')
+    throw :abort
+  end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Forms::WorkflowActionForm do
   let(:work) { create(:work) }
   let(:sipity_entity) do

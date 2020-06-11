@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sipity
   # Who can trigger this event?
   class WorkflowStateActionPermission < ActiveRecord::Base

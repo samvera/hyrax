@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # This stands in for ActiveFedora::CleanConnection. It behaves the same way,
   # but it doesn't clear the has_model assertion
@@ -13,13 +14,13 @@ module Hyrax
 
     private
 
-      def omit_uris
-        [
-          ::RDF::Vocab::Fcrepo4.ServerManaged,
-          ::RDF::Vocab::LDP.PreferContainment,
-          ::RDF::Vocab::LDP.PreferEmptyContainer,
-          ::RDF::Vocab::LDP.PreferMembership
-        ]
-      end
+    def omit_uris
+      [
+        ::RDF::Vocab::Fcrepo4.ServerManaged,
+        ::RDF::Vocab::LDP.PreferContainment,
+        ::RDF::Vocab::LDP.PreferEmptyContainer,
+        ::RDF::Vocab::LDP.PreferMembership
+      ]
+    end
   end
 end

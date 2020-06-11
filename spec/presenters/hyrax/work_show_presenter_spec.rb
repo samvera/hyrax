@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::WorkShowPresenter do
   let(:solr_document) { SolrDocument.new(attributes) }
   let(:request) { double(host: 'example.org', base_url: 'http://example.org') }

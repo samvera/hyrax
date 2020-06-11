@@ -79,7 +79,7 @@ module Wings
     # then the id hasn't been minted and shouldn't yet be set.
     # @return [String]
     def id
-      return resource[:id].to_s if resource[:id]&.is_a?(::Valkyrie::ID) && !resource[:id].blank?
+      return resource[:id].to_s if resource[:id]&.is_a?(::Valkyrie::ID) && resource[:id].present?
       return "" unless resource.respond_to?(:alternate_ids)
 
       resource.alternate_ids.first.to_s
@@ -152,66 +152,66 @@ module Wings
 
     private
 
-      def convert_members(af_object)
-        return unless resource.respond_to?(:member_ids) && resource.member_ids
-        # TODO: It would be better to find a way to add the members without resuming all the member AF objects
-        af_object.ordered_members = resource.member_ids.map { |valkyrie_id| ActiveFedora::Base.find(valkyrie_id.to_s) }
+    def convert_members(af_object)
+      return unless resource.respond_to?(:member_ids) && resource.member_ids
+      # TODO: It would be better to find a way to add the members without resuming all the member AF objects
+      af_object.ordered_members = resource.member_ids.map { |valkyrie_id| ActiveFedora::Base.find(valkyrie_id.to_s) }
+    end
+
+    def convert_member_of_collections(af_object)
+      return unless resource.respond_to?(:member_of_collection_ids) && resource.member_of_collection_ids
+      # TODO: It would be better to find a way to set the parent collections without resuming all the collection AF objects
+      af_object.member_of_collections = resource.member_of_collection_ids.map { |valkyrie_id| ActiveFedora::Base.find(valkyrie_id.to_s) }
+    end
+
+    def convert_files(af_object)
+      return unless resource.respond_to? :file_ids
+
+      af_object.files = resource.file_ids.map do |fid|
+        pcdm_file = Hydra::PCDM::File.new(fid.id)
+        assign_association_target(af_object, pcdm_file)
       end
+    end
 
-      def convert_member_of_collections(af_object)
-        return unless resource.respond_to?(:member_of_collection_ids) && resource.member_of_collection_ids
-        # TODO: It would be better to find a way to set the parent collections without resuming all the collection AF objects
-        af_object.member_of_collections = resource.member_of_collection_ids.map { |valkyrie_id| ActiveFedora::Base.find(valkyrie_id.to_s) }
+    def assign_association_target(af_object, pcdm_file)
+      case pcdm_file.metadata_node.type
+      when ->(types) { types.include?(RDF::URI.new('http://pcdm.org/use#OriginalFile')) }
+        af_object.association(:original_file).target = pcdm_file
+      when ->(types) { types.include?(RDF::URI.new('http://pcdm.org/use#ExtractedText')) }
+        af_object.association(:extracted_text).target = pcdm_file
+      when ->(types) { types.include?(RDF::URI.new('http://pcdm.org/use#Thumbnail')) }
+        af_object.association(:thumbnail).target = pcdm_file
+      else
+        pcdm_file
       end
+    end
 
-      def convert_files(af_object)
-        return unless resource.respond_to? :file_ids
-
-        af_object.files = resource.file_ids.map do |fid|
-          pcdm_file = Hydra::PCDM::File.new(fid.id)
-          assign_association_target(af_object, pcdm_file)
-        end
+    # Normalizes the attributes parsed from the resource
+    #   (This ensures that scalar values are passed to the constructor for the
+    #   ActiveFedora::Base Class)
+    # @return [Hash]
+    def normal_attributes
+      attributes.each_with_object({}) do |(attr, value), hash|
+        property = active_fedora_class.properties[attr.to_s]
+        hash[attr] = property&.multiple? ? Array.wrap(value) : value
       end
+    end
 
-      def assign_association_target(af_object, pcdm_file)
-        case pcdm_file.metadata_node.type
-        when ->(types) { types.include?(RDF::URI.new('http://pcdm.org/use#OriginalFile')) }
-          af_object.association(:original_file).target = pcdm_file
-        when ->(types) { types.include?(RDF::URI.new('http://pcdm.org/use#ExtractedText')) }
-          af_object.association(:extracted_text).target = pcdm_file
-        when ->(types) { types.include?(RDF::URI.new('http://pcdm.org/use#Thumbnail')) }
-          af_object.association(:thumbnail).target = pcdm_file
-        else
-          pcdm_file
-        end
+    # Add attributes from resource which aren't AF properties into af_object
+    def add_access_control_attributes(af_object)
+      return unless af_object.is_a? Hydra::AccessControl
+      cache = af_object.permissions.to_a
+
+      # if we've saved this before, it has a cache that won't clear
+      # when setting permissions! we need to reset it manually and
+      # rewrite with the values already in there, or saving will fail
+      # to delete cached items
+      af_object.permissions.reset if af_object.persisted?
+
+      af_object.permissions = cache.map do |permission|
+        permission.access_to_id = resource.try(:access_to)&.id
+        permission
       end
-
-      # Normalizes the attributes parsed from the resource
-      #   (This ensures that scalar values are passed to the constructor for the
-      #   ActiveFedora::Base Class)
-      # @return [Hash]
-      def normal_attributes
-        attributes.each_with_object({}) do |(attr, value), hash|
-          property = active_fedora_class.properties[attr.to_s]
-          hash[attr] = property&.multiple? ? Array.wrap(value) : value
-        end
-      end
-
-      # Add attributes from resource which aren't AF properties into af_object
-      def add_access_control_attributes(af_object)
-        return unless af_object.is_a? Hydra::AccessControl
-        cache = af_object.permissions.to_a
-
-        # if we've saved this before, it has a cache that won't clear
-        # when setting permissions! we need to reset it manually and
-        # rewrite with the values already in there, or saving will fail
-        # to delete cached items
-        af_object.permissions.reset if af_object.persisted?
-
-        af_object.permissions = cache.map do |permission|
-          permission.access_to_id = resource.try(:access_to)&.id
-          permission
-        end
-      end
+    end
   end
 end

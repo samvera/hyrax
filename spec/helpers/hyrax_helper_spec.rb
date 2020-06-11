@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 def new_state
   Blacklight::SearchState.new({}, CatalogController.blacklight_config)
 end
@@ -158,19 +159,6 @@ RSpec.describe HyraxHelper, type: :helper do
                              "Imaging</a>~" \
                              "<a href=\"/catalog?f%5Bdocument_types_sim%5D%5B%5D=Object+Photography\">Object Photography</a>")
       end
-    end
-  end
-
-  describe "has_collection_search_parameters?" do
-    subject { helper }
-
-    context "when cq is set" do
-      before { allow(helper).to receive(:params).and_return(cq: 'foo') }
-      it { is_expected.to have_collection_search_parameters }
-    end
-    context "when cq is not set" do
-      before { allow(helper).to receive(:params).and_return(cq: '') }
-      it { is_expected.not_to have_collection_search_parameters }
     end
   end
 
@@ -337,7 +325,7 @@ RSpec.describe HyraxHelper, type: :helper do
     it "maps the url to a link with a label" do
       expect(helper.license_links(
                value: ["http://creativecommons.org/publicdomain/zero/1.0/"]
-      )).to eq("<a href=\"http://creativecommons.org/publicdomain/zero/1.0/\">Creative Commons CC0 1.0 Universal</a>")
+             )).to eq("<a href=\"http://creativecommons.org/publicdomain/zero/1.0/\">Creative Commons CC0 1.0 Universal</a>")
     end
 
     it "converts multiple licenses to a sentence" do
@@ -345,7 +333,7 @@ RSpec.describe HyraxHelper, type: :helper do
                value: ["http://creativecommons.org/publicdomain/zero/1.0/",
                        "http://creativecommons.org/publicdomain/mark/1.0/",
                        "http://www.europeana.eu/portal/rights/rr-r.html"]
-      )).to eq("<a href=\"http://creativecommons.org/publicdomain/zero/1.0/\">Creative Commons CC0 1.0 Universal</a>, " \
+             )).to eq("<a href=\"http://creativecommons.org/publicdomain/zero/1.0/\">Creative Commons CC0 1.0 Universal</a>, " \
                "<a href=\"http://creativecommons.org/publicdomain/mark/1.0/\">Creative Commons Public Domain Mark 1.0</a>, " \
                "and <a href=\"http://www.europeana.eu/portal/rights/rr-r.html\">All rights reserved</a>")
     end
@@ -355,7 +343,7 @@ RSpec.describe HyraxHelper, type: :helper do
     it "maps the url to a link with a label" do
       expect(helper.rights_statement_links(
                value: ["http://rightsstatements.org/vocab/InC/1.0/"]
-      )).to eq("<a href=\"http://rightsstatements.org/vocab/InC/1.0/\">In Copyright</a>")
+             )).to eq("<a href=\"http://rightsstatements.org/vocab/InC/1.0/\">In Copyright</a>")
     end
   end
 

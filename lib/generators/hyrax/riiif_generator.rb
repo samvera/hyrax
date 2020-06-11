@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails/generators'
 
 class Hyrax::RiiifGenerator < Rails::Generators::Base

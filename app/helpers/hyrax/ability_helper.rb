@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module AbilityHelper
     def visibility_options(variant)
@@ -41,9 +42,9 @@ module Hyrax
 
     private
 
-      def visibility_text(value)
-        return institution_name if value == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-        t("hyrax.visibility.#{value}.text")
-      end
+    def visibility_text(value)
+      return institution_name if value == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+      t("hyrax.visibility.#{value}.text")
+    end
   end
 end

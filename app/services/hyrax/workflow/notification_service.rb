@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Workflow
     # Responsible for determining the appropriate notification(s) to deliver based on the given

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Hyrax::Engine.routes.draw do
   # Downloads controller route
   resources :homepage, only: 'index'

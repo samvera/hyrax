@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class AdminSetIndexer < ActiveFedora::IndexingService
     include Hyrax::IndexesThumbnails

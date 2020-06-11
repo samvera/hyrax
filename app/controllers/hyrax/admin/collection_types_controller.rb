@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class Admin::CollectionTypesController < ApplicationController
     before_action do
@@ -65,43 +66,41 @@ module Hyrax
 
     private
 
-      def report_error_msg
-        error_msg = @collection_type.errors.messages
-        msg = 'Save was not successful because '
-        error_msg.each { |k, v| msg << k.to_s + ' ' + v.join(', ') + ', and ' }
-        msg.chomp!(', and ')
-        msg << '.'
-        flash[:error] = msg
-      end
+    def report_error_msg
+      messages = @collection_type.errors.messages
+      msg = 'Save was not successful because ' +
+            messages.map { |k, v| k.to_s + ' ' + v.join(', ') + ', and ' }.join
+      flash[:error] = msg.chomp(', and ') + '.'
+    end
 
-      def update_referer
-        hyrax.edit_admin_collection_type_path(@collection_type) + (params[:referer_anchor] || '')
-      end
+    def update_referer
+      hyrax.edit_admin_collection_type_path(@collection_type) + (params[:referer_anchor] || '')
+    end
 
-      def add_common_breadcrumbs
-        add_breadcrumb t(:'hyrax.controls.home'), root_path
-        add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
-        add_breadcrumb t(:'hyrax.admin.sidebar.configuration'), '#'
-        add_breadcrumb t(:'hyrax.admin.collection_types.index.breadcrumb'), hyrax.admin_collection_types_path
-      end
+    def add_common_breadcrumbs
+      add_breadcrumb t(:'hyrax.controls.home'), root_path
+      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
+      add_breadcrumb t(:'hyrax.admin.sidebar.configuration'), '#'
+      add_breadcrumb t(:'hyrax.admin.collection_types.index.breadcrumb'), hyrax.admin_collection_types_path
+    end
 
-      # initialize the form object
-      def form
-        @form ||= form_class.new(collection_type: @collection_type)
-      end
-      alias setup_form form
+    # initialize the form object
+    def form
+      @form ||= form_class.new(collection_type: @collection_type)
+    end
+    alias setup_form form
 
-      def setup_participants_form
-        @collection_type_participant = Hyrax::Forms::Admin::CollectionTypeParticipantForm.new(collection_type_participant: @collection_type.collection_type_participants.build)
-      end
+    def setup_participants_form
+      @collection_type_participant = Hyrax::Forms::Admin::CollectionTypeParticipantForm.new(collection_type_participant: @collection_type.collection_type_participants.build)
+    end
 
-      def set_collection_type
-        @collection_type = Hyrax::CollectionType.find(params[:id])
-      end
+    def set_collection_type
+      @collection_type = Hyrax::CollectionType.find(params[:id])
+    end
 
-      def collection_type_params
-        params.require(:collection_type).permit(:title, :description, :nestable, :brandable, :discoverable, :sharable, :share_applies_to_new_works,
-                                                :allow_multiple_membership, :require_membership, :assigns_workflow, :assigns_visibility, :badge_color)
-      end
+    def collection_type_params
+      params.require(:collection_type).permit(:title, :description, :nestable, :brandable, :discoverable, :sharable, :share_applies_to_new_works,
+                                              :allow_multiple_membership, :require_membership, :assigns_workflow, :assigns_visibility, :badge_color)
+    end
   end
 end

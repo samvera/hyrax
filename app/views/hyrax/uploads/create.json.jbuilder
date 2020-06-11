@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 json.files [@upload] do |uploaded_file|
   json.id uploaded_file.id
   json.name uploaded_file.file.file.filename

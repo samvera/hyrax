@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe "The admin dashboard", :clean_repo do
   let(:user) { create :admin }
   let(:admin_set_1) do

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Our parent class is the generated SearchBuilder descending from Blacklight::SearchBuilder
   # It includes Blacklight::Solr::SearchBuilderBehavior, Hydra::AccessControlsEnforcement, Hyrax::SearchFilters
@@ -49,18 +50,18 @@ module Hyrax
 
     private
 
-      def collection_ids_for_deposit
-        Hyrax::Collections::PermissionsService.collection_ids_for_deposit(ability: current_ability)
-      end
+    def collection_ids_for_deposit
+      Hyrax::Collections::PermissionsService.collection_ids_for_deposit(ability: current_ability)
+    end
 
-      ACCESS_LEVELS_FOR_LEVEL = ActiveSupport::HashWithIndifferentAccess.new(
-        edit: ["edit"],
-        deposit: ["deposit"],
-        read: ["edit", "read"]
-      ).freeze
-      def extract_discovery_permissions(access)
-        access = :read if access.blank?
-        ACCESS_LEVELS_FOR_LEVEL.fetch(access)
-      end
+    ACCESS_LEVELS_FOR_LEVEL = ActiveSupport::HashWithIndifferentAccess.new(
+      edit: ["edit"],
+      deposit: ["deposit"],
+      read: ["edit", "read"]
+    ).freeze
+    def extract_discovery_permissions(access)
+      access = :read if access.blank?
+      ACCESS_LEVELS_FOR_LEVEL.fetch(access)
+    end
   end
 end

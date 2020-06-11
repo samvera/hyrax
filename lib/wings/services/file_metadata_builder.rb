@@ -39,52 +39,52 @@ module Wings
 
     private
 
-      ##
-      # @api private
-      def attach_file_metadata_to_valkyrie_file_set(file_metadata, file_set)
-        # This is for storage adapters other than wings.  The wings storage adapter already attached the file to the file_set.
-        # This process is a no-op for wings.  # TODO: WINGS - May need to verify this is a no-op for wings once file_set is passed in as a resource.
-        # TODO: WINGS - Need to test this against other adapters once they are available for use.
-        existing_file_metadata = current_original_file(file_set) || file_metadata
-        file_metadata = existing_file_metadata.new(file_metadata.to_h.except(:id))
-        saved_file_metadata = persister.save(resource: file_metadata)
-        file_set.file_ids = [saved_file_metadata.id]
-        persister.save(resource: file_set)
-        saved_file_metadata
-      end
+    ##
+    # @api private
+    def attach_file_metadata_to_valkyrie_file_set(file_metadata, file_set)
+      # This is for storage adapters other than wings.  The wings storage adapter already attached the file to the file_set.
+      # This process is a no-op for wings.  # TODO: WINGS - May need to verify this is a no-op for wings once file_set is passed in as a resource.
+      # TODO: WINGS - Need to test this against other adapters once they are available for use.
+      existing_file_metadata = current_original_file(file_set) || file_metadata
+      file_metadata = existing_file_metadata.new(file_metadata.to_h.except(:id))
+      saved_file_metadata = persister.save(resource: file_metadata)
+      file_set.file_ids = [saved_file_metadata.id]
+      persister.save(resource: file_set)
+      saved_file_metadata
+    end
 
-      ##
-      # @api private
-      # @return [Hyrax::FileMetadata, nil]
-      def current_original_file(file_set)
-        Hyrax.custom_queries.find_original_file(file_set: file_set)
-      rescue ::Valkyrie::Persistence::ObjectNotFoundError
-        nil
-      end
+    ##
+    # @api private
+    # @return [Hyrax::FileMetadata, nil]
+    def current_original_file(file_set)
+      Hyrax.custom_queries.find_original_file(file_set: file_set)
+    rescue ::Valkyrie::Persistence::ObjectNotFoundError
+      nil
+    end
 
-      # Class for wrapping the file being ingested
-      class IoDecorator < SimpleDelegator
-        attr_reader :original_filename, :content_type, :length, :use, :tempfile
+    # Class for wrapping the file being ingested
+    class IoDecorator < SimpleDelegator
+      attr_reader :original_filename, :content_type, :length, :use, :tempfile
 
-        # @param [IO] io stream for the file content
-        # @param [String] original_filename
-        # @param [String] content_type
-        # @param [RDF::URI] use the URI for the PCDM predicate indicating the use for this resource
-        def initialize(io, original_filename, content_type, content_length, use)
-          @original_filename = original_filename
-          @content_type = content_type
-          @length = content_length
-          @use = use
-          @tempfile = io
-          super(io)
-        end
-      end
-
-      # Constructs the IoDecorator for ingesting the intermediate file
-      # @param [JobIOWrapper] io wrapper with details about the uploaded file
+      # @param [IO] io stream for the file content
+      # @param [String] original_filename
+      # @param [String] content_type
       # @param [RDF::URI] use the URI for the PCDM predicate indicating the use for this resource
-      def build_file(io_wrapper, use)
-        IoDecorator.new(io_wrapper.file, io_wrapper.original_name, io_wrapper.mime_type, io_wrapper.size, use)
+      def initialize(io, original_filename, content_type, content_length, use)
+        @original_filename = original_filename
+        @content_type = content_type
+        @length = content_length
+        @use = use
+        @tempfile = io
+        super(io)
       end
+    end
+
+    # Constructs the IoDecorator for ingesting the intermediate file
+    # @param [JobIOWrapper] io wrapper with details about the uploaded file
+    # @param [RDF::URI] use the URI for the PCDM predicate indicating the use for this resource
+    def build_file(io_wrapper, use)
+      IoDecorator.new(io_wrapper.file, io_wrapper.original_name, io_wrapper.mime_type, io_wrapper.size, use)
+    end
   end
 end

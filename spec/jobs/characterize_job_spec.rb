@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe CharacterizeJob do
   let(:file_set_id) { 'abc12345' }
   let(:filename)    { Rails.root.join('tmp', 'uploads', 'ab', 'c1', '23', '45', 'abc12345', 'picture.png').to_s }

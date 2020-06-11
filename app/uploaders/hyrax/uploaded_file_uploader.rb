@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class UploadedFileUploader < CarrierWave::Uploader::Base
     # Override the directory where uploaded files will be stored.
@@ -12,12 +13,12 @@ module Hyrax
 
     private
 
-      def configured_upload_path
-        Hyrax.config.upload_path.call
-      end
+    def configured_upload_path
+      Hyrax.config.upload_path.call
+    end
 
-      def configured_cache_path
-        Hyrax.config.cache_path.call
-      end
+    def configured_cache_path
+      Hyrax.config.cache_path.call
+    end
   end
 end

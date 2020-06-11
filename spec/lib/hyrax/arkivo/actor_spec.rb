@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Arkivo::Actor do
   before do
     # Don't test characterization on these items; it breaks TravisCI and it's slow

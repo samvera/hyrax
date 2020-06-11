@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 module Hyrax
   class OrcidValidator < ActiveModel::Validator
-    ORCID_REGEXP = %r{^(?<prefix>https?://orcid.org/)?(?<orcid>\d{4}-\d{4}-\d{4}-\d{3}[\dX])/?$}
+    ORCID_REGEXP = %r{^(?<prefix>https?://orcid.org/)?(?<orcid>\d{4}-\d{4}-\d{4}-\d{3}[\dX])/?$}.freeze
     def validate(record)
       return if record.orcid.blank?
       record.errors.add(:orcid, 'must be a string of 19 characters, e.g., "0000-0000-0000-0000"') unless ORCID_REGEXP.match?(record.orcid)

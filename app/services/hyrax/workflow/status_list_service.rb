@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Workflow
     # Finds a list of works that we can perform a workflow action on
@@ -27,39 +28,39 @@ module Hyrax
 
       private
 
-        delegate :logger, to: :context
+      delegate :logger, to: :context
 
-        # @return [Hash<String,SolrDocument>] a hash of id to solr document
-        def solr_documents
-          search_solr.map { |result| ::SolrDocument.new(result) }
-        end
+      # @return [Hash<String,SolrDocument>] a hash of id to solr document
+      def solr_documents
+        search_solr.map { |result| ::SolrDocument.new(result) }
+      end
 
-        def search_solr
-          actionable_roles = roles_for_user
-          logger.debug("Actionable roles for #{user.user_key} are #{actionable_roles}")
-          return [] if actionable_roles.empty?
-          WorkRelation.new.search_with_conditions(query(actionable_roles), rows: 1000, method: :post)
-        end
+      def search_solr
+        actionable_roles = roles_for_user
+        logger.debug("Actionable roles for #{user.user_key} are #{actionable_roles}")
+        return [] if actionable_roles.empty?
+        WorkRelation.new.search_with_conditions(query(actionable_roles), rows: 1000, method: :post)
+      end
 
-        def query(actionable_roles)
-          ["{!terms f=actionable_workflow_roles_ssim}#{actionable_roles.join(',')}",
-           @filter_condition]
-        end
+      def query(actionable_roles)
+        ["{!terms f=actionable_workflow_roles_ssim}#{actionable_roles.join(',')}",
+         @filter_condition]
+      end
 
-        # @return [Array<String>] the list of workflow-role combinations this user has
-        def roles_for_user
-          Sipity::Workflow.all.flat_map do |wf|
-            workflow_roles_for_user_and_workflow(wf).map do |wf_role|
-              "#{wf.permission_template.source_id}-#{wf.name}-#{wf_role.role.name}"
-            end
+      # @return [Array<String>] the list of workflow-role combinations this user has
+      def roles_for_user
+        Sipity::Workflow.all.flat_map do |wf|
+          workflow_roles_for_user_and_workflow(wf).map do |wf_role|
+            "#{wf.permission_template.source_id}-#{wf.name}-#{wf_role.role.name}"
           end
         end
+      end
 
-        # @param workflow [Sipity::Workflow]
-        # @return [ActiveRecord::Relation<Sipity::WorkflowRole>]
-        def workflow_roles_for_user_and_workflow(workflow)
-          Hyrax::Workflow::PermissionQuery.scope_processing_workflow_roles_for_user_and_workflow(user: user, workflow: workflow)
-        end
+      # @param workflow [Sipity::Workflow]
+      # @return [ActiveRecord::Relation<Sipity::WorkflowRole>]
+      def workflow_roles_for_user_and_workflow(workflow)
+        Hyrax::Workflow::PermissionQuery.scope_processing_workflow_roles_for_user_and_workflow(user: user, workflow: workflow)
+      end
     end
   end
 end

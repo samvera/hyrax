@@ -150,9 +150,9 @@ RSpec.describe Hyrax::Transactions::CreateWork do
         create(:permission_template,
                with_admin_set: true,
                manage_groups: manage_groups,
-               manage_users:  manage_users,
-               view_groups:   view_groups,
-               view_users:    view_users)
+               manage_users: manage_users,
+               view_groups: view_groups,
+               view_users: view_users)
       end
 
       it 'assigns edit groups from template' do
@@ -191,9 +191,9 @@ RSpec.describe Hyrax::Transactions::CreateWork do
 
     let(:permissions) do
       { manage_groups: manage_groups,
-        manage_users:  manage_users,
-        view_groups:   view_groups,
-        view_users:    view_users }
+        manage_users: manage_users,
+        view_groups: view_groups,
+        view_users: view_users }
     end
 
     it 'assigns edit groups from template' do

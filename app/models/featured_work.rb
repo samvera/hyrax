@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class FeaturedWork < ActiveRecord::Base
   FEATURE_LIMIT = 5
   validate :count_within_limit, on: :create

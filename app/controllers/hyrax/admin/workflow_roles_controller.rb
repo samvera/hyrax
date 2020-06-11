@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Admin
     class WorkflowRolesController < ApplicationController
@@ -31,9 +32,9 @@ module Hyrax
 
       private
 
-        def require_permissions
-          authorize! :read, :admin_dashboard
-        end
+      def require_permissions
+        authorize! :read, :admin_dashboard
+      end
     end
   end
 end

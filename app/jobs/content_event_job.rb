@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # A generic job for sending events about repository objects to a user and their followers.
 #
 # @attr [String] repo_object the object event is specified for

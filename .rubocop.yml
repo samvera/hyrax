@@ -1,7 +1,8 @@
+inherit_from:
+  - .rubocop_fixme.yml
+
 inherit_gem:
   bixby: bixby_default.yml
-
-inherit_from: .rubocop_fixme.yml
 
 AllCops:
   TargetRubyVersion: 2.4
@@ -16,6 +17,10 @@ AllCops:
 Lint/ImplicitStringConcatenation:
   Exclude:
     - 'lib/generators/hyrax/**/*'
+
+Rails/Output:
+  Exclude:
+    - 'lib/generators/**/*'
 
 Metrics/BlockLength:
   ExcludedMethods: ['included']
@@ -43,17 +48,6 @@ Style/CollectionMethods:
     detect: 'find'
     find_all: 'select'
 
-# disable frozen string literal comment. We can't safely introduce this
-# system-wide until a major version because it freezes strings that downstream
-# users might be mutating. Please use the frozen string literal pragma on new
-# files
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
-Style/MethodMissing:
-  Exclude:
-    - 'app/models/concerns/hyrax/file_set/characterization.rb'
-
 Style/SymbolArray:
   Enabled: false
 
@@ -67,6 +61,9 @@ Rails/ApplicationJob:
   Enabled: false
 
 Rails/ApplicationRecord:
+  Enabled: false
+
+Rails/RakeEnvironment:
   Enabled: false
 
 # We define custom methods like `find_by_user_key`,

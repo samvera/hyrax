@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Admin::CollectionTypeParticipantsController, type: :controller do
   context 'anonymous user' do
     let(:collection_type) { create(:collection_type) }

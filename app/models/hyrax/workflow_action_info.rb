@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # A simple data object for holding a user, work and their workflow proxies
   class WorkflowActionInfo

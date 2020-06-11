@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Behavior for the my controller search builder to allow the my controller to only get access to
 # items I have edit access to.
 #

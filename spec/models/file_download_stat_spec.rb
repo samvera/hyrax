@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe FileDownloadStat, type: :model do
   let(:file_id) { file.id }
   let(:date) { Time.current }

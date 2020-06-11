@@ -101,52 +101,52 @@ module Hyrax
 
       private
 
-        ##
-        # Maps a configuration string value to a `Valkyrie::Type`.
-        #
-        # @param [String]
-        # @return [Dry::Types::Type]
-        def type_for(type)
-          case type
-          when 'uri'
-            Valkyrie::Types::URI
-          when 'date_time'
-            Valkyrie::Types::DateTime
-          else
-            "Valkyrie::Types::#{type.capitalize}".constantize
-          end
+      ##
+      # Maps a configuration string value to a `Valkyrie::Type`.
+      #
+      # @param [String]
+      # @return [Dry::Types::Type]
+      def type_for(type)
+        case type
+        when 'uri'
+          Valkyrie::Types::URI
+        when 'date_time'
+          Valkyrie::Types::DateTime
+        else
+          "Valkyrie::Types::#{type.capitalize}".constantize
         end
+      end
     end
 
     class UndefinedSchemaError < ArgumentError; end
 
     private
 
-      ##
-      # @param [#to_s] schema_name
-      # @return [Enumerable<AttributeDefinition]
-      def definitions(schema_name)
-        schema_config(schema_name)['attributes'].map do |name, config|
-          AttributeDefinition.new(name, config)
-        end
+    ##
+    # @param [#to_s] schema_name
+    # @return [Enumerable<AttributeDefinition]
+    def definitions(schema_name)
+      schema_config(schema_name)['attributes'].map do |name, config|
+        AttributeDefinition.new(name, config)
       end
+    end
 
-      ##
-      # @param [#to_s] schema_name
-      # @return [Hash]
-      def schema_config(schema_name)
-        schema_config_path = config_paths(schema_name).find { |path| File.exist? path }
-        raise(UndefinedSchemaError, "No schema defined: #{schema_name}") unless schema_config_path
+    ##
+    # @param [#to_s] schema_name
+    # @return [Hash]
+    def schema_config(schema_name)
+      schema_config_path = config_paths(schema_name).find { |path| File.exist? path }
+      raise(UndefinedSchemaError, "No schema defined: #{schema_name}") unless schema_config_path
 
-        YAML.safe_load(File.open(schema_config_path))
-      end
+      YAML.safe_load(File.open(schema_config_path))
+    end
 
-      def config_paths(schema_name)
-        config_search_paths.collect { |root_path| root_path.to_s + "/config/metadata/#{schema_name}.yaml" }
-      end
+    def config_paths(schema_name)
+      config_search_paths.collect { |root_path| root_path.to_s + "/config/metadata/#{schema_name}.yaml" }
+    end
 
-      def config_search_paths
-        [Rails.root, Hyrax::Engine.root]
-      end
+    def config_search_paths
+      [Rails.root, Hyrax::Engine.root]
+    end
   end
 end

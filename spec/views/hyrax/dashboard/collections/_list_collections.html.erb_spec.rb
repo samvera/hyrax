@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/collections/_list_collections.html.erb', type: :view do
   let(:ability) { double }
   let(:solr_document) { SolrDocument.new(collection_doc) }

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails/generators'
 require 'rails/generators/model_helpers'
 
@@ -114,19 +115,19 @@ class Hyrax::WorkGenerator < Rails::Generators::NamedBase
 
   private
 
-    def rspec_installed?
-      defined?(RSpec) && defined?(RSpec::Rails)
-    end
+  def rspec_installed?
+    defined?(RSpec) && defined?(RSpec::Rails)
+  end
 
-    def revoking?
-      behavior == :revoke
-    end
+  def revoking?
+    behavior == :revoke
+  end
 
-    def registration_path_symbol
-      return ":#{file_name}" if class_path.blank?
-      # this next line creates a symbol with a path like
-      # "abc/scholarly_paper" where abc is the namespace and
-      #                              scholarly_paper is the concern
-      ":\"#{File.join(class_path, file_name)}\""
-    end
+  def registration_path_symbol
+    return ":#{file_name}" if class_path.blank?
+    # this next line creates a symbol with a path like
+    # "abc/scholarly_paper" where abc is the namespace and
+    #                              scholarly_paper is the concern
+    ":\"#{File.join(class_path, file_name)}\""
+  end
 end

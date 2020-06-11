@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Collections
     # Responsible for retrieving collection members
@@ -40,52 +41,52 @@ module Hyrax
 
       private
 
-        # @api private
-        #
-        # set up a member search builder for works only
-        # @return [CollectionMemberSearchBuilder] new or existing
-        def works_search_builder
-          @works_search_builder ||= Hyrax::CollectionMemberSearchBuilder.new(scope: scope, collection: collection, search_includes_models: :works)
-        end
+      # @api private
+      #
+      # set up a member search builder for works only
+      # @return [CollectionMemberSearchBuilder] new or existing
+      def works_search_builder
+        @works_search_builder ||= Hyrax::CollectionMemberSearchBuilder.new(scope: scope, collection: collection, search_includes_models: :works)
+      end
 
-        # @api private
-        #
-        # set up a member search builder for collections only
-        # @return [CollectionMemberSearchBuilder] new or existing
-        def subcollections_search_builder
-          @subcollections_search_builder ||= Hyrax::CollectionMemberSearchBuilder.new(scope: scope, collection: collection, search_includes_models: :collections)
-        end
+      # @api private
+      #
+      # set up a member search builder for collections only
+      # @return [CollectionMemberSearchBuilder] new or existing
+      def subcollections_search_builder
+        @subcollections_search_builder ||= Hyrax::CollectionMemberSearchBuilder.new(scope: scope, collection: collection, search_includes_models: :collections)
+      end
 
-        # @api private
-        #
-        # set up a member search builder for returning work ids only
-        # @return [CollectionMemberSearchBuilder] new or existing
-        def work_ids_search_builder
-          @work_ids_search_builder ||= Hyrax::CollectionMemberSearchBuilder.new(scope: scope, collection: collection, search_includes_models: :works)
-        end
+      # @api private
+      #
+      # set up a member search builder for returning work ids only
+      # @return [CollectionMemberSearchBuilder] new or existing
+      def work_ids_search_builder
+        @work_ids_search_builder ||= Hyrax::CollectionMemberSearchBuilder.new(scope: scope, collection: collection, search_includes_models: :works)
+      end
 
-        # @api private
-        #
-        def query_solr(query_builder:, query_params:)
-          repository.search(query_builder.with(query_params).query)
-        end
+      # @api private
+      #
+      def query_solr(query_builder:, query_params:)
+        repository.search(query_builder.with(query_params).query)
+      end
 
-        # @api private
-        #
-        def query_solr_with_field_selection(query_builder:, fl:)
-          repository.search(query_builder.merge(fl: fl).query)
-        end
+      # @api private
+      #
+      def query_solr_with_field_selection(query_builder:, fl:)
+        repository.search(query_builder.merge(fl: fl).query)
+      end
 
-        # @api private
-        #
-        # Blacklight pagination still needs to be overridden and set up for the subcollections.
-        # @return <Hash> the additional inputs required for the subcollection member search builder
-        def params_for_subcollections
-          # To differentiate current page for works vs subcollections, we have to use a sub_collection_page
-          # param. Map this to the page param before querying for subcollections, if it's present
-          params[:page] = params.delete(:sub_collection_page)
-          params
-        end
+      # @api private
+      #
+      # Blacklight pagination still needs to be overridden and set up for the subcollections.
+      # @return <Hash> the additional inputs required for the subcollection member search builder
+      def params_for_subcollections
+        # To differentiate current page for works vs subcollections, we have to use a sub_collection_page
+        # param. Map this to the page param before querying for subcollections, if it's present
+        params[:page] = params.delete(:sub_collection_page)
+        params
+      end
     end
   end
 end

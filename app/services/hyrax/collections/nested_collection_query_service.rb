@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Collections
     module NestedCollectionQueryService
@@ -100,7 +101,7 @@ module Hyrax
       def self.clean_lucene_error(builder:)
         # TODO: Need to investigate further to understand why these particular queries using the where cause fail when others in the app apparently work
         query = builder.query.to_hash
-        query['q'].gsub!('{!lucene}', '') if query.key? 'q'
+        query['q'] = query['q'].gsub('{!lucene}', '') if query.key?('q')
         query
       end
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe AttachFilesToWorkJob, perform_enqueued: [AttachFilesToWorkJob] do
   let(:file1) { File.open(fixture_path + '/world.png') }
   let(:file2) { File.open(fixture_path + '/image.jp2') }
@@ -9,7 +10,7 @@ RSpec.describe AttachFilesToWorkJob, perform_enqueued: [AttachFilesToWorkJob] do
   context "when use_valkyrie is false" do
     let(:generic_work) { create(:public_generic_work) }
 
-    shared_examples 'a file attacher', perform_enqueued: [AttachFilesToWorkJob, IngestJob] do
+    shared_examples 'a file attacher', perform_enqueued: [described_class, IngestJob] do
       it 'attaches files, copies visibility and permissions and updates the uploaded files' do
         expect(CharacterizeJob).to receive(:perform_later).twice
         described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2])
@@ -85,7 +86,7 @@ RSpec.describe AttachFilesToWorkJob, perform_enqueued: [AttachFilesToWorkJob] do
   context "when use_valkyrie is true" do
     let(:generic_work) { valkyrie_create(:hyrax_work, :public, title: ['BethsMac'], depositor: user.user_key) }
 
-    shared_examples 'a file attacher', perform_enqueued: [AttachFilesToWorkJob, IngestJob] do
+    shared_examples 'a file attacher', perform_enqueued: [described_class, IngestJob] do
       it 'attaches files, copies visibility and permissions and updates the uploaded files' do
         id = generic_work.id
         expect(CharacterizeJob).to receive(:perform_later).twice

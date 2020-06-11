@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::PermissionTemplateAccess do
   let(:permission_template) { create(:permission_template) }
   let(:permission_template_access) do

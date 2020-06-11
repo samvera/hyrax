@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module OptionalExample
   RSpec.configure do |config|
     config.after do |example|

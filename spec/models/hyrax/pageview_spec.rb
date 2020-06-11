@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Pageview, type: :model do
   it 'has a pageviews metric' do
     expect(described_class.metrics).to be == Legato::ListParameter.new(:metrics, [:pageviews])

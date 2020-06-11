@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Stats
     class WorkStatusSearchBuilder < ::SearchBuilder
@@ -17,9 +18,9 @@ module Hyrax
 
       private
 
-        def only_works?
-          true
-        end
+      def only_works?
+        true
+      end
     end
   end
 end

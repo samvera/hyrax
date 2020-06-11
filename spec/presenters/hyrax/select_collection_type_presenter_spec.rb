@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::SelectCollectionTypePresenter do
   subject { described_class.new(collection_type) }
 

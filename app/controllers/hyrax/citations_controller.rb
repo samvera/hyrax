@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class CitationsController < ApplicationController
     include WorksControllerBehavior
@@ -24,8 +25,8 @@ module Hyrax
 
     private
 
-      def show_presenter
-        WorkShowPresenter
-      end
+    def show_presenter
+      WorkShowPresenter
+    end
   end
 end

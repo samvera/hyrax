@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'samvera/nesting_indexer/adapters/interface_behavior_spec'
 
 RSpec.describe Hyrax::Adapters::NestingIndexAdapter do

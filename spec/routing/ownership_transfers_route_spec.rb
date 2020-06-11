@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe "proxy deposit and transfers routing", type: :routing do
   routes { Hyrax::Engine.routes }
 

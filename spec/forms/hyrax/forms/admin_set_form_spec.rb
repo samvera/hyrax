@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Forms::AdminSetForm do
   let(:ability) { Ability.new(create(:user)) }
   let(:repository) { double }

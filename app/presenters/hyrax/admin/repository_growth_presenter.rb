@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Admin
     class RepositoryGrowthPresenter
@@ -14,15 +15,15 @@ module Hyrax
 
       private
 
-        def works
-          Hyrax::Statistics::Works::OverTime.new(x_min: @x_min,
-                                                 x_output: @date_format).points
-        end
+      def works
+        Hyrax::Statistics::Works::OverTime.new(x_min: @x_min,
+                                               x_output: @date_format).points
+      end
 
-        def collections
-          Hyrax::Statistics::Collections::OverTime.new(x_min: @x_min,
-                                                       x_output: @date_format).points
-        end
+      def collections
+        Hyrax::Statistics::Collections::OverTime.new(x_min: @x_min,
+                                                     x_output: @date_format).points
+      end
     end
   end
 end

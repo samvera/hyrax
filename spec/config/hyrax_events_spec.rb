@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe "hyrax_events using Hyrax callbacks" do
   let(:curation_concern) { create(:work) }
   let(:file_set) { create(:file_set) }

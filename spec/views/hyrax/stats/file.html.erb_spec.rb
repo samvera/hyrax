@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/stats/file.html.erb', type: :view do
   describe 'usage statistics' do
     before do

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   ##
   # Dynamic presenter which instantiates a file set presenter if given an object

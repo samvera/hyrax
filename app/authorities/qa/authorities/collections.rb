@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Qa::Authorities
   class Collections < Qa::Authorities::Base
     class_attribute :search_builder_class
@@ -19,12 +20,12 @@ module Qa::Authorities
 
     private
 
-      def search_builder(controller)
-        access = controller.params[:access] || 'read'
-        search_builder_class.new(controller)
-                            .where(controller.params[:q])
-                            .with_access(access)
-                            .rows(100)
-      end
+    def search_builder(controller)
+      access = controller.params[:access] || 'read'
+      search_builder_class.new(controller)
+                          .where(controller.params[:q])
+                          .with_access(access)
+                          .rows(100)
+    end
   end
 end

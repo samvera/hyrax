@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Admin
     module UsersControllerBehavior
@@ -18,9 +19,9 @@ module Hyrax
 
       private
 
-        def ensure_admin!
-          authorize! :read, :admin_dashboard
-        end
+      def ensure_admin!
+        authorize! :read, :admin_dashboard
+      end
     end
   end
 end

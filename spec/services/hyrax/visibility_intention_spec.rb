@@ -31,10 +31,10 @@ RSpec.describe Hyrax::VisibilityIntention do
 
     context 'when an embargo is requested with specific visibilities' do
       let(:attributes) do
-        { visibility:   described_class::EMBARGO_REQUEST,
+        { visibility: described_class::EMBARGO_REQUEST,
           release_date: date,
-          after:       after,
-          during:      during }
+          after: after,
+          during: during }
       end
 
       let(:after)  { 'custom_after_embargo_visibility' }
@@ -76,8 +76,8 @@ RSpec.describe Hyrax::VisibilityIntention do
       let(:attributes) do
         { visibility: described_class::LEASE_REQUEST,
           release_date: date,
-          after:       after,
-          during:      during }
+          after: after,
+          during: during }
       end
 
       let(:after)  { 'custom_after_lease_visibility' }

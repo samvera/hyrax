@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 FactoryBot.define do
   factory :collection_branding_info do
     collection_id { "1" }

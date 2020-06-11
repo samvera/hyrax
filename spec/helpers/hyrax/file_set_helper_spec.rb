@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::FileSetHelper do
   describe '#media_display' do
     let(:file_set) { SolrDocument.new(mime_type_ssi: mime_type) }

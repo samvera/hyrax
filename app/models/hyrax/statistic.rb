@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class Statistic < ActiveRecord::Base
     self.abstract_class = true
@@ -42,25 +43,25 @@ module Hyrax
 
       private
 
-        def cached_stats(object, start_date, _method)
-          stats = statistics_for(object).order(date: :asc)
-          ga_start_date = stats.any? ? stats[stats.size - 1].date + 1.day : start_date.to_date
-          { ga_start_date: ga_start_date, cached_stats: stats.to_a }
-        end
+      def cached_stats(object, start_date, _method)
+        stats = statistics_for(object).order(date: :asc)
+        ga_start_date = stats.any? ? stats[stats.size - 1].date + 1.day : start_date.to_date
+        { ga_start_date: ga_start_date, cached_stats: stats.to_a }
+      end
 
-        def combined_stats(object, start_date, object_method, ga_key, user_id = nil)
-          stat_cache_info = cached_stats(object, start_date, object_method)
-          stats = stat_cache_info[:cached_stats]
-          if stat_cache_info[:ga_start_date] < Time.zone.today
-            ga_stats = ga_statistics(stat_cache_info[:ga_start_date], object)
-            ga_stats.each do |stat|
-              lstat = build_for(object, date: stat[:date], object_method => stat[ga_key], user_id: user_id)
-              lstat.save unless Date.parse(stat[:date]) == Time.zone.today
-              stats << lstat
-            end
+      def combined_stats(object, start_date, object_method, ga_key, user_id = nil)
+        stat_cache_info = cached_stats(object, start_date, object_method)
+        stats = stat_cache_info[:cached_stats]
+        if stat_cache_info[:ga_start_date] < Time.zone.today
+          ga_stats = ga_statistics(stat_cache_info[:ga_start_date], object)
+          ga_stats.each do |stat|
+            lstat = build_for(object, date: stat[:date], object_method => stat[ga_key], user_id: user_id)
+            lstat.save unless Date.parse(stat[:date]) == Time.zone.today
+            stats << lstat
           end
-          stats
         end
+        stats
+      end
     end
 
     def to_flot

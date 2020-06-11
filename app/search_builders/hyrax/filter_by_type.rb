@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module FilterByType
     extend ActiveSupport::Concern
@@ -14,44 +15,44 @@ module Hyrax
 
     private
 
-      def only_collections?
-        generic_type_field.include?('Collection')
-      end
+    def only_collections?
+      generic_type_field.include?('Collection')
+    end
 
-      def only_works?
-        generic_type_field.include?('Work')
-      end
+    def only_works?
+      generic_type_field.include?('Work')
+    end
 
-      # Override this method if you want to filter for a different set of models.
-      # @return [Array<Class>] a list of classes to include
-      def models
-        work_classes + collection_classes
-      end
+    # Override this method if you want to filter for a different set of models.
+    # @return [Array<Class>] a list of classes to include
+    def models
+      work_classes + collection_classes
+    end
 
-      def models_to_solr_clause
-        models.map { |model| model.try(:to_rdf_representation) || model.name }.join(',')
-      end
+    def models_to_solr_clause
+      models.map { |model| model.try(:to_rdf_representation) || model.name }.join(',')
+    end
 
-      def generic_type_field
-        Array.wrap(blacklight_params.fetch(:f, {}).fetch(:generic_type_sim, []))
-      end
+    def generic_type_field
+      Array.wrap(blacklight_params.fetch(:f, {}).fetch(:generic_type_sim, []))
+    end
 
-      # Override this method if you want to limit some of the registered
-      # types from appearing in search results
-      # @return [Array<Class>] the list of work types to include in searches
-      def work_types
-        Hyrax.config.curation_concerns
-      end
+    # Override this method if you want to limit some of the registered
+    # types from appearing in search results
+    # @return [Array<Class>] the list of work types to include in searches
+    def work_types
+      Hyrax.config.curation_concerns
+    end
 
-      def work_classes
-        return [] if only_collections?
-        work_types
-      end
+    def work_classes
+      return [] if only_collections?
+      work_types
+    end
 
-      def collection_classes
-        return [] if only_works?
-        # to_class_uri is deprecated in AF 11
-        [::Collection]
-      end
+    def collection_classes
+      return [] if only_works?
+      # to_class_uri is deprecated in AF 11
+      [::Collection]
+    end
   end
 end

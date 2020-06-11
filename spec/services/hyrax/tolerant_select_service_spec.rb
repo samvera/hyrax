@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::TolerantSelectService do
   subject(:select_service) { described_class.new(authority_name) }
 

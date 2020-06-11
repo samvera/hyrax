@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/admin/admin_sets/_form_visibility.html.erb', type: :view do
   let(:template) { stub_model(Hyrax::PermissionTemplate) }
   let(:pt_form) { Hyrax::Forms::PermissionTemplateForm.new(template) }

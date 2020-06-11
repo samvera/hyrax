@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
   let(:document) do
     SolrDocument.new(id: 'xyz123z4',
@@ -79,9 +80,7 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
 
   context 'when search results exist' do
     before do
-      # rubocop:disable RSpec/AnyInstance
-      allow_any_instance_of(Hyrax::CollectionsHelper).to receive(:has_collection_search_parameters?).and_return(true)
-      # rubocop:enable RSpec/AnyInstance
+      allow_any_instance_of(Hyrax::CollectionsHelper).to receive(:collection_search_parameters?).and_return(true) # rubocop:disable RSpec/AnyInstance
     end
 
     context 'and only works are in search results' do

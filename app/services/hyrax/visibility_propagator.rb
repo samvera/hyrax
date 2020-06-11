@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   ##
   # @abstract Propagates visibility from a provided object (e.g. a Work) to some

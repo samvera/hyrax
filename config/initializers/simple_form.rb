@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'simple_form'
 # Use this setup block to configure all options available in SimpleForm.
 SimpleForm.setup do |config|

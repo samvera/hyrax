@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Forms
     module Admin
@@ -112,27 +113,27 @@ module Hyrax
 
         private
 
-          def darken_color(hex_color, adjustment = 0.2)
-            amount = 1.0 - adjustment
-            hex_color = hex_color.delete('#')
-            rgb = hex_color.scan(/../).map(&:hex)
-            rgb[0] = (rgb[0].to_i * amount).round
-            rgb[1] = (rgb[1].to_i * amount).round
-            rgb[2] = (rgb[2].to_i * amount).round
-            format("#%02x%02x%02x", *rgb)
-          end
+        def darken_color(hex_color, adjustment = 0.2)
+          amount = 1.0 - adjustment
+          hex_color = hex_color.delete('#')
+          rgb = hex_color.scan(/../).map(&:hex)
+          rgb[0] = (rgb[0].to_i * amount).round
+          rgb[1] = (rgb[1].to_i * amount).round
+          rgb[2] = (rgb[2].to_i * amount).round
+          format("#%02x%02x%02x", *rgb)
+        end
 
-          def block_for(name, default_value)
-            block = ContentBlock.find_by(name: name)
-            block ? block.value : default_value
-          end
+        def block_for(name, default_value)
+          block = ContentBlock.find_by(name: name)
+          block ? block.value : default_value
+        end
 
-          # Persist a key/value tuple as a ContentBlock
-          # @param [Symbol] name the identifier for the ContentBlock
-          # @param [String] value the value to set
-          def update_block(name, value)
-            ContentBlock.find_or_create_by(name: name.to_s).update!(value: value)
-          end
+        # Persist a key/value tuple as a ContentBlock
+        # @param [Symbol] name the identifier for the ContentBlock
+        # @param [String] value the value to set
+        def update_block(name, value)
+          ContentBlock.find_or_create_by(name: name.to_s).update!(value: value)
+        end
       end
     end
   end

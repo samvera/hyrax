@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Name do
   let(:name) { described_class.new(GenericWork) }
 

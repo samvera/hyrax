@@ -1,9 +1,10 @@
+# frozen_string_literal: true
 require 'rdf'
 module Vocab
   class FedoraResourceStatus < RDF::StrictVocabulary('http://fedora.info/definitions/1/0/access/ObjState#')
-    term :objState, label: 'Object State'.freeze, type: 'owl:ObjectProperty'.freeze
-    term :active,   label: 'active'.freeze,       type: 'owl:NamedIndividual'.freeze
-    term :deleted,  label: 'deleted'.freeze,      type: 'owl:NamedIndividual'.freeze
-    term :inactive, label: 'inactive'.freeze,     type: 'owl:NamedIndividual'.freeze
+    term :objState, label: 'Object State', type: 'owl:ObjectProperty'
+    term :active,   label: 'active',       type: 'owl:NamedIndividual'
+    term :deleted,  label: 'deleted',      type: 'owl:NamedIndividual'
+    term :inactive, label: 'inactive',     type: 'owl:NamedIndividual'
   end
 end

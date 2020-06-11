@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   RSpec.describe Workflow::StateMachineGenerator do
     let(:workflow) { create(:workflow, name: 'hello') }

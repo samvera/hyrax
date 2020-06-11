@@ -1,7 +1,7 @@
-# rubocop:disable Naming/FileName
+# frozen_string_literal: true
+
 require 'samvera/nesting_indexer'
 require 'hyrax/repository_reindexer'
-# rubocop:enable Naming/FileName
 
 Samvera::NestingIndexer.configure do |config|
   # How many layers of nesting are allowed for collections

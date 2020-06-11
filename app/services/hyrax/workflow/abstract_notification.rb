@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Workflow
     # @abstract A notification that happens when a state transition occurs. Subclass AbstractNotification to create a notification.
@@ -55,27 +56,27 @@ module Hyrax
 
       private
 
-        def subject
-          raise NotImplementedError, "Implement #subject in a child class"
-        end
+      def subject
+        raise NotImplementedError, "Implement #subject in a child class"
+      end
 
-        def message
-          "#{title} (#{link_to work_id, document_path}) was advanced in the workflow by #{user.user_key} and is awaiting approval #{comment}"
-        end
+      def message
+        "#{title} (#{link_to work_id, document_path}) was advanced in the workflow by #{user.user_key} and is awaiting approval #{comment}"
+      end
 
-        # @return [ActiveFedora::Base] the document (work) the the Abstract WorkFlow is creating a notification for
-        def document
-          @entity.proxy_for
-        end
+      # @return [ActiveFedora::Base] the document (work) the the Abstract WorkFlow is creating a notification for
+      def document
+        @entity.proxy_for
+      end
 
-        def document_path
-          key = document.model_name.singular_route_key
-          Rails.application.routes.url_helpers.send(key + "_path", document.id)
-        end
+      def document_path
+        key = document.model_name.singular_route_key
+        Rails.application.routes.url_helpers.send(key + "_path", document.id)
+      end
 
-        def users_to_notify
-          recipients.fetch(:to, []) + recipients.fetch(:cc, [])
-        end
+      def users_to_notify
+        recipients.fetch(:to, []) + recipients.fetch(:cc, [])
+      end
     end
   end
 end

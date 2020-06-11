@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # returns a list of solr documents for collections the item is a part of
 module Hyrax
   class CollectionMemberService

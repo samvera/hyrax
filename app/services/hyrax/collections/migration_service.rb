@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Collections
     # Responsible for migrating legacy collections.  Legacy collections are those created before Hyrax 2.1.0 and

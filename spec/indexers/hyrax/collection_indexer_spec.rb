@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::CollectionIndexer do
   let(:indexer) { described_class.new(collection) }
   let(:collection) { build(:collection_lw) }

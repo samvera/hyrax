@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe "hyrax/admin/admin_sets/index.json.jbuilder" do
   context "when no admin sets exists" do
     it "renders no admin sets" do

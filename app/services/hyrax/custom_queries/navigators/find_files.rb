@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module CustomQueries
     module Navigators
@@ -27,7 +28,7 @@ module Hyrax
         # @return [Array<Hyrax::FileMetadata>]
         def find_files(file_set:)
           if file_set.respond_to?(:file_ids)
-            return [] unless file_set.file_ids.present?
+            return [] if file_set.file_ids.blank?
             query_service.custom_queries.find_many_file_metadata_by_ids(ids: file_set.file_ids)
           else
             raise ::Valkyrie::Persistence::ObjectNotFoundError,
@@ -67,20 +68,20 @@ module Hyrax
 
         private
 
-          ##
-          # @api private
-          #
-          # @return [Hyrax::FileMetadata]
-          # @raise [Valkyrie::Persistence::ObjectNotFoundError]
-          def find_exactly_one_file_by_use(file_set:, use:)
-            files =
-              query_service.custom_queries.find_many_file_metadata_by_use(resource: file_set, use: use)
+        ##
+        # @api private
+        #
+        # @return [Hyrax::FileMetadata]
+        # @raise [Valkyrie::Persistence::ObjectNotFoundError]
+        def find_exactly_one_file_by_use(file_set:, use:)
+          files =
+            query_service.custom_queries.find_many_file_metadata_by_use(resource: file_set, use: use)
 
-            raise Valkyrie::Persistence::ObjectNotFoundError, "FileSet #{file_set.id}'s #{use.fragment} is missing." if
-              files.empty?
+          raise Valkyrie::Persistence::ObjectNotFoundError, "FileSet #{file_set.id}'s #{use.fragment} is missing." if
+            files.empty?
 
-            files.first
-          end
+          files.first
+        end
       end
     end
   end

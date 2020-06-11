@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class PermissionsController < ApplicationController
     helper_method :curation_concern

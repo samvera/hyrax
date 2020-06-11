@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Admin::AppearancesController do
   describe "#show" do
     before do

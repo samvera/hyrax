@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec::Support.require_rspec_core "formatters/base_text_formatter"
 class LoggingFormatter < RSpec::Core::Formatters::ProgressFormatter
   RSpec::Core::Formatters.register self, :example_started, :example_passed, :dump_profile
@@ -43,24 +44,24 @@ class LoggingFormatter < RSpec::Core::Formatters::ProgressFormatter
 
   private
 
-    def dump_most_ldp_exampes(_prof)
-      output.puts "Examples with the most LDP requests"
-      top = @profile.sort_by { |hash| hash[:count] }.last(10)
-      top.each do |hash|
-        result = hash[:count_by_name].select { |_, v| v.positive? }
-        next if result.empty?
-        output.puts "  #{hash[:description]}"
-        output.puts "    #{hash[:location]}"
-        output.puts "    Total LDP: #{hash[:count]} #{result}"
-      end
+  def dump_most_ldp_exampes(_prof)
+    output.puts "Examples with the most LDP requests"
+    top = @profile.sort_by { |hash| hash[:count] }.last(10)
+    top.each do |hash|
+      result = hash[:count_by_name].select { |_, v| v.positive? }
+      next if result.empty?
+      output.puts "  #{hash[:description]}"
+      output.puts "    #{hash[:location]}"
+      output.puts "    Total LDP: #{hash[:count]} #{result}"
     end
+  end
 
-    def dump_slowest_examples(profile)
-      output.puts "Slowest examples"
-      profile.slowest_examples.each do |slowest_example|
-        output.puts "  #{slowest_example.full_description}"
-        output.puts "    #{slowest_example.location}"
-        output.puts "    #{slowest_example.execution_result.run_time} seconds"
-      end
+  def dump_slowest_examples(profile)
+    output.puts "Slowest examples"
+    profile.slowest_examples.each do |slowest_example|
+      output.puts "  #{slowest_example.full_description}"
+      output.puts "    #{slowest_example.location}"
+      output.puts "    #{slowest_example.execution_result.run_time} seconds"
     end
+  end
 end

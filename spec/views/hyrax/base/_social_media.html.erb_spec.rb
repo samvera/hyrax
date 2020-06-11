@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/base/_social_media.html.erb', type: :view do
   let(:url) { 'http://example.com/' }
   let(:title) { 'Example' }

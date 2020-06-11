@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::LockManager do
   subject do
     described_class.new(Hyrax.config.lock_time_to_live,

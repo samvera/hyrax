@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class FileSet
     module Derivatives
@@ -53,9 +54,9 @@ module Hyrax
 
       private
 
-        def file_set_derivatives_service
-          Hyrax::DerivativeService.for(self)
-        end
+      def file_set_derivatives_service
+        Hyrax::DerivativeService.for(self)
+      end
     end
   end
 end

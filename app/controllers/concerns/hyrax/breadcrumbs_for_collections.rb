@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module BreadcrumbsForCollections
     extend ActiveSupport::Concern
@@ -13,9 +14,9 @@ module Hyrax
 
     def add_breadcrumb_for_action
       case action_name
-      when 'edit'.freeze
+      when 'edit'
         add_breadcrumb I18n.t("hyrax.collection.edit_view"), collection_path(params["id"]), mark_active_action
-      when 'show'.freeze
+      when 'show'
         add_breadcrumb presenter.to_s, polymorphic_path(presenter), mark_active_action
       end
     end

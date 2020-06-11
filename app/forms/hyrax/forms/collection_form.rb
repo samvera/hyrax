@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Forms
     # rubocop:disable Metrics/ClassLength
@@ -163,26 +164,26 @@ module Hyrax
 
       private
 
-        def all_files_with_access
-          member_presenters(member_work_ids).flat_map(&:file_set_presenters).map { |x| [x.to_s, x.id] }
-        end
+      def all_files_with_access
+        member_presenters(member_work_ids).flat_map(&:file_set_presenters).map { |x| [x.to_s, x.id] }
+      end
 
-        # Override this method if you have a different way of getting the member's ids
-        def member_work_ids
-          response = collection_member_service.available_member_work_ids.response
-          response.fetch('docs').map { |doc| doc['id'] }
-        end
+      # Override this method if you have a different way of getting the member's ids
+      def member_work_ids
+        response = collection_member_service.available_member_work_ids.response
+        response.fetch('docs').map { |doc| doc['id'] }
+      end
 
-        def collection_member_service
-          @collection_member_service ||= membership_service_class.new(scope: scope, collection: collection, params: blacklight_config.default_solr_params)
-        end
+      def collection_member_service
+        @collection_member_service ||= membership_service_class.new(scope: scope, collection: collection, params: blacklight_config.default_solr_params)
+      end
 
-        def member_presenters(member_ids)
-          PresenterFactory.build_for(ids: member_ids,
-                                     presenter_class: WorkShowPresenter,
-                                     presenter_args: [nil])
-        end
+      def member_presenters(member_ids)
+        PresenterFactory.build_for(ids: member_ids,
+                                   presenter_class: WorkShowPresenter,
+                                   presenter_args: [nil])
+      end
     end
-    # rubocop:enable ClassLength
+    # rubocop:enable Metrics/ClassLength
   end
 end

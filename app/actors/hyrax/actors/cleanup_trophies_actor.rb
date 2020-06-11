@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 module Hyrax
   module Actors
@@ -12,9 +13,9 @@ module Hyrax
 
       private
 
-        def cleanup_trophies(env)
-          Trophy.where(work_id: env.curation_concern.id).destroy_all
-        end
+      def cleanup_trophies(env)
+        Trophy.where(work_id: env.curation_concern.id).destroy_all
+      end
     end
   end
 end

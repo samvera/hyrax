@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'wings/services/file_metadata_builder'
 require 'wings/valkyrie/query_service'
 

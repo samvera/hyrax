@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Admin::DashboardPresenter do
   let(:instance) { described_class.new }
 

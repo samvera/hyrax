@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::API::ItemsController, type: :controller do
   let(:arkivo_actor) { double Hyrax::Arkivo::Actor }
   let!(:user) { create(:user) }
@@ -26,7 +27,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       before { get :show, params: { format: :json, id: default_work.id } }
 
       it "is unauthorized" do
-        expect(subject).to have_http_status(401)
+        expect(subject).to have_http_status(:unauthorized)
         expect(subject.body).to include('invalid user token:')
       end
     end
@@ -36,7 +37,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       let(:get_token) { 'foobar' }
 
       it "is unauthorized" do
-        expect(subject).to have_http_status(401)
+        expect(subject).to have_http_status(:unauthorized)
         expect(subject.body).to include("invalid user token: #{get_token}")
       end
     end
@@ -48,7 +49,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       end
 
       it 'is unauthorized' do
-        expect(subject).to have_http_status(401)
+        expect(subject).to have_http_status(:unauthorized)
         expect(assigns[:work]).to eq default_work
         expect(subject.body).to include("#{user} lacks access to #{default_work}")
       end
@@ -61,7 +62,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       end
 
       it "is forbidden" do
-        expect(subject).to have_http_status(403)
+        expect(subject).to have_http_status(:forbidden)
         expect(subject.body).to include("Forbidden: #{default_work} not deposited via Arkivo")
       end
     end
@@ -76,7 +77,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       end
 
       it "is not found" do
-        expect(subject).to have_http_status(404)
+        expect(subject).to have_http_status(:not_found)
         expect(subject.body).to include("id '#{default_work.id}' not found")
       end
     end
@@ -85,7 +86,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       before { get :show, params: { format: :json, id: default_work.id, token: token } }
 
       specify do
-        expect(subject).to have_http_status(204)
+        expect(subject).to have_http_status(:no_content)
         expect(subject.body).to be_blank
       end
     end
@@ -96,7 +97,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       before { post :create, params: { format: :json } }
 
       it "is an bad request" do
-        expect(subject).to have_http_status(400)
+        expect(subject).to have_http_status(:bad_request)
         expect(subject.body).to include('no item parameter')
       end
     end
@@ -106,7 +107,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       let(:item) { { foo: 'bar' }.to_json }
 
       it "is a bad request" do
-        expect(subject).to have_http_status(400)
+        expect(subject).to have_http_status(:bad_request)
         expect(subject.body).to include('The property \'#/\' did not contain a required property of \'token\'')
       end
     end
@@ -237,7 +238,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       end
 
       it "is not found" do
-        expect(subject).to have_http_status(404)
+        expect(subject).to have_http_status(:not_found)
         expect(subject.body).to include("id '#{gw.id}' not found")
       end
     end
@@ -282,7 +283,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       end
 
       it "is a bad request" do
-        expect(subject).to have_http_status(400)
+        expect(subject).to have_http_status(:bad_request)
         expect(subject.body).to include('The property \'#/\' did not contain a required property of \'token\'')
       end
     end
@@ -307,7 +308,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       before { delete :destroy, params: { format: :json, id: gw.id } }
 
       it "is unauthorized." do
-        expect(subject).to have_http_status(401)
+        expect(subject).to have_http_status(:unauthorized)
         expect(subject.body).to include('invalid user token:')
       end
     end
@@ -322,7 +323,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       end
 
       specify do
-        expect(subject).to have_http_status(401)
+        expect(subject).to have_http_status(:unauthorized)
         expect(subject.body).to include("invalid user token: #{bad_token}")
       end
     end
@@ -336,7 +337,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       end
 
       it 'is unauthorized' do
-        expect(subject).to have_http_status(401)
+        expect(subject).to have_http_status(:unauthorized)
         expect(assigns[:work]).to eq gw
         expect(subject.body).to include("#{user} lacks access to #{gw}")
       end
@@ -357,7 +358,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       end
 
       it "is forbidden" do
-        expect(subject).to have_http_status(403)
+        expect(subject).to have_http_status(:forbidden)
         expect(subject.body).to include("Forbidden: #{gw} not deposited via Arkivo")
       end
     end
@@ -373,7 +374,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       end
 
       it "is not found" do
-        expect(subject).to have_http_status(404)
+        expect(subject).to have_http_status(:not_found)
         expect(subject.body).to include("id '#{not_found_id}' not found")
       end
     end
@@ -390,7 +391,7 @@ RSpec.describe Hyrax::API::ItemsController, type: :controller do
       it "calls the actor to destroy the work" do
         expect(arkivo_actor).to receive(:destroy_work)
         delete :destroy, params: { format: :json, id: gw.id, token: token }
-        expect(subject).to have_http_status(204)
+        expect(subject).to have_http_status(:no_content)
         expect(subject.body).to be_blank
       end
     end

@@ -129,33 +129,33 @@ module Hyrax
 
       private
 
-        ##
-        # @api private
-        # @param [String, Symbol] step_name
-        # @return [Array]
-        def step_arguments_for(step_name)
-          step_args = @_step_args || {}
+      ##
+      # @api private
+      # @param [String, Symbol] step_name
+      # @return [Array]
+      def step_arguments_for(step_name)
+        step_args = @_step_args || {}
 
-          Array.wrap(step_args[step_name])
-        end
+        Array.wrap(step_args[step_name])
+      end
 
-        ##
-        # @api private
-        # @param [Array] keys
-        # @return [String]
-        def key_err_msg(keys)
-          missing_steps = keys.select { |key| !step?(key) }
+      ##
+      # @api private
+      # @param [Array] keys
+      # @return [String]
+      def key_err_msg(keys)
+        missing_steps = keys.select { |key| !step?(key) }
 
-          "Tried to pass step arguments for unknown steps #{missing_steps.join(', ')}\n" \
-          "\tSteps defined for this transaction are: #{@steps.join(', ')}"
-        end
+        "Tried to pass step arguments for unknown steps #{missing_steps.join(', ')}\n" \
+        "\tSteps defined for this transaction are: #{@steps.join(', ')}"
+      end
 
-        ##
-        # @api private
-        # @param [String, Symbol] step_name
-        def step?(step_name)
-          steps.include?(step_name)
-        end
+      ##
+      # @api private
+      # @param [String, Symbol] step_name
+      def step?(step_name)
+        steps.include?(step_name)
+      end
     end
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   ##
   # Events are timestamped, named actions that provide a streamed 'paper trail'

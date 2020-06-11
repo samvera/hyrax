@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'redlock'
 require 'hyrax/specs/spy_listener'
 

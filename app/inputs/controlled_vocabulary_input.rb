@@ -9,79 +9,79 @@ class ControlledVocabularyInput < MultiValueInput
 
   private
 
-    def build_field(value, index)
-      options = input_html_options.dup
-      value = value.resource if value.is_a? ActiveFedora::Base
+  def build_field(value, index)
+    options = input_html_options.dup
+    value = value.resource if value.is_a? ActiveFedora::Base
 
-      build_options(value, index, options) if value.respond_to?(:rdf_label)
-      options[:required] = nil if @rendered_first_element
-      options[:class] ||= []
-      options[:class] += ["#{input_dom_id} form-control multi-text-field"]
-      options[:'aria-labelledby'] = label_id
-      @rendered_first_element = true
-      text_field(options) + hidden_id_field(value, index) + destroy_widget(attribute_name, index)
-    end
+    build_options(value, index, options) if value.respond_to?(:rdf_label)
+    options[:required] = nil if @rendered_first_element
+    options[:class] ||= []
+    options[:class] += ["#{input_dom_id} form-control multi-text-field"]
+    options[:'aria-labelledby'] = label_id
+    @rendered_first_element = true
+    text_field(options) + hidden_id_field(value, index) + destroy_widget(attribute_name, index)
+  end
 
-    def text_field(options)
-      if options.delete(:type) == 'textarea'
-        @builder.text_area(attribute_name, options)
-      else
-        @builder.text_field(attribute_name, options)
-      end
+  def text_field(options)
+    if options.delete(:type) == 'textarea'
+      @builder.text_area(attribute_name, options)
+    else
+      @builder.text_field(attribute_name, options)
     end
+  end
 
-    def id_for_hidden_label(index)
-      id_for(attribute_name, index, 'hidden_label')
-    end
+  def id_for_hidden_label(index)
+    id_for(attribute_name, index, 'hidden_label')
+  end
 
-    def destroy_widget(attribute_name, index)
-      @builder.hidden_field(attribute_name,
-                            name: name_for(attribute_name, index, '_destroy'),
-                            id: id_for(attribute_name, index, '_destroy'),
-                            value: '', data: { destroy: true })
-    end
+  def destroy_widget(attribute_name, index)
+    @builder.hidden_field(attribute_name,
+                          name: name_for(attribute_name, index, '_destroy'),
+                          id: id_for(attribute_name, index, '_destroy'),
+                          value: '', data: { destroy: true })
+  end
 
-    def hidden_id_field(value, index)
-      name = name_for(attribute_name, index, 'id')
-      id = id_for(attribute_name, index, 'id')
-      hidden_value = value.node? ? '' : value.rdf_subject
-      @builder.hidden_field(attribute_name, name: name, id: id, value: hidden_value, data: { id: 'remote' })
-    end
+  def hidden_id_field(value, index)
+    name = name_for(attribute_name, index, 'id')
+    id = id_for(attribute_name, index, 'id')
+    hidden_value = value.node? ? '' : value.rdf_subject
+    @builder.hidden_field(attribute_name, name: name, id: id, value: hidden_value, data: { id: 'remote' })
+  end
 
-    def build_options(value, index, options)
-      options[:name] = name_for(attribute_name, index, 'hidden_label')
-      options[:data] ||= {}
-      options[:data][:attribute] = attribute_name
-      options[:id] = id_for_hidden_label(index)
-      if value.node?
-        build_options_for_new_row(attribute_name, index, options)
-      else
-        build_options_for_existing_row(attribute_name, index, value, options)
-      end
+  def build_options(value, index, options)
+    options[:name] = name_for(attribute_name, index, 'hidden_label')
+    options[:data] ||= {}
+    options[:data][:attribute] = attribute_name
+    options[:id] = id_for_hidden_label(index)
+    if value.node?
+      build_options_for_new_row(attribute_name, index, options)
+    else
+      build_options_for_existing_row(attribute_name, index, value, options)
     end
+  end
 
-    def build_options_for_new_row(_attribute_name, _index, options)
-      options[:value] = ''
-    end
+  def build_options_for_new_row(_attribute_name, _index, options)
+    options[:value] = ''
+  end
 
-    def build_options_for_existing_row(_attribute_name, _index, value, options)
-      options[:value] = value.rdf_label.first || "Unable to fetch label for #{value.rdf_subject}"
-      options[:readonly] = true
-    end
+  def build_options_for_existing_row(_attribute_name, _index, value, options)
+    options[:value] = value.rdf_label.first || "Unable to fetch label for #{value.rdf_subject}"
+    options[:readonly] = true
+  end
 
-    def name_for(attribute_name, index, field)
-      "#{@builder.object_name}[#{attribute_name}_attributes][#{index}][#{field}]"
-    end
+  def name_for(attribute_name, index, field)
+    "#{@builder.object_name}[#{attribute_name}_attributes][#{index}][#{field}]"
+  end
 
-    def id_for(attribute_name, index, field)
-      [@builder.object_name, "#{attribute_name}_attributes", index, field].join('_')
-    end
+  def id_for(attribute_name, index, field)
+    [@builder.object_name, "#{attribute_name}_attributes", index, field].join('_')
+  end
 
-    def collection
-      @collection ||= begin
-                        val = object[attribute_name]
-                        col = val.respond_to?(:to_ary) ? val.to_ary : val
-                        col.reject { |value| value.to_s.strip.blank? }
-                      end
-    end
+  def collection
+    @collection ||= begin
+                      val = object[attribute_name]
+                      col = val.respond_to?(:to_ary) ? val.to_ary : val
+                      col.reject { |value| value.to_s.strip.blank? }
+                    end
+  end
 end

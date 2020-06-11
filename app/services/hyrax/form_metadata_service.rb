@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Answers queries about the cardinality of each field on the form.
   class FormMetadataService < HydraEditor::FieldMetadataService

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe "The homepage", :clean_repo do
   let(:work1) { create(:work, :public, title: ["Work 1"], date_uploaded: (DateTime.current - 1.day)) }
   let(:work2) { create(:work, :public, title: ["Work 2"], date_uploaded: (DateTime.current - 1.year)) }

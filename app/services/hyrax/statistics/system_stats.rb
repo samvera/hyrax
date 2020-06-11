@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Statistics
     # A class that retrieves system level statistics about the system
@@ -50,15 +51,15 @@ module Hyrax
 
       private
 
-        def validate_limit(count)
-          if count.blank? || count < 5
-            5
-          elsif count > 20
-            20
-          else
-            count
-          end
+      def validate_limit(count)
+        if count.blank? || count < 5
+          5
+        elsif count > 20
+          20
+        else
+          count
         end
+      end
     end
   end
 end

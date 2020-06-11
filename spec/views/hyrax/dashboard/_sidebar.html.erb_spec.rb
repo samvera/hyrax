@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
   let(:user) { stub_model(User, user_key: 'mjg', name: 'Foobar') }
   let(:read_admin_dashboard) { false }

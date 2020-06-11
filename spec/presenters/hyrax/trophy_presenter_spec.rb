@@ -1,4 +1,8 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::TrophyPresenter do
+  let(:presenter) { described_class.new(solr_document) }
+  let(:solr_document) { SolrDocument.new(id: '123456', has_model_ssim: 'GenericWork', title_tesim: ['A Title']) }
+
   describe "find_by_user" do
     let(:user) { create(:user) }
     let(:work1) { create(:work, user: user) }
@@ -15,9 +19,6 @@ RSpec.describe Hyrax::TrophyPresenter do
       expect(subject).to all(be_kind_of described_class)
     end
   end
-
-  let(:presenter) { described_class.new(solr_document) }
-  let(:solr_document) { SolrDocument.new(id: '123456', has_model_ssim: 'GenericWork', title_tesim: ['A Title']) }
 
   describe "id" do
     subject { presenter.id }

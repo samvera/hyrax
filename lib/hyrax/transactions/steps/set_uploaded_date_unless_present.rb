@@ -49,13 +49,9 @@ module Hyrax
 
         private
 
-          def date_uploaded(obj)
-            if obj.try(:date_modified).present?
-              obj.try(:date_modified)
-            else
-              @time_service.time_in_utc
-            end
-          end
+        def date_uploaded(obj)
+          obj.try(:date_modified).presence || @time_service.time_in_utc
+        end
       end
     end
   end

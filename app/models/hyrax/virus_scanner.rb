@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # The default virus scanner Hyrax::Works, ported from hydra_works.
 # If ClamAV is present, it will be used to check for the presence of a virus. If ClamAV is not
 # installed or otherwise not available to your application, Hyrax::Works does no virus checking
@@ -49,8 +50,8 @@ module Hyrax
 
     private
 
-      def warning(msg)
-        Hyrax.logger&.warn(msg)
-      end
+    def warning(msg)
+      Hyrax.logger&.warn(msg)
+    end
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::CollectionsHelper do
   let(:user) { create(:user, groups: ['admin']) }
   let(:ability) { Ability.new(user) }
@@ -89,17 +90,17 @@ RSpec.describe Hyrax::CollectionsHelper do
     end
   end
 
-  describe "has_collection_search_parameters?" do
+  describe '#collection_search_parameters?' do
     subject { helper }
 
     context "when cq is set" do
       before { allow(helper).to receive(:params).and_return(cq: 'foo') }
-      it { is_expected.to have_collection_search_parameters }
+      it { is_expected.to be_collection_search_parameters }
     end
 
     context "when cq is not set" do
       before { allow(helper).to receive(:params).and_return(cq: '') }
-      it { is_expected.not_to have_collection_search_parameters }
+      it { is_expected.not_to be_collection_search_parameters }
     end
   end
 

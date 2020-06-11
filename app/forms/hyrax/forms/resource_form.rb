@@ -20,7 +20,7 @@ module Hyrax
         ##
         # @return [String]
         def self.inspect
-          return "Hyrax::Forms::ResourceForm(#{model_class})" unless name.present?
+          return "Hyrax::Forms::ResourceForm(#{model_class})" if name.blank?
           super
         end
       end
@@ -182,9 +182,9 @@ module Hyrax
 
       private
 
-        def _form_field_definitions
-          self.class.definitions
-        end
+      def _form_field_definitions
+        self.class.definitions
+      end
     end
   end
 end

@@ -31,9 +31,9 @@ RSpec.describe Hyrax::Transactions::Steps::ApplyPermissionTemplate do
         create(:permission_template,
                with_admin_set: true,
                manage_groups: manage_groups,
-               manage_users:  manage_users,
-               view_groups:   view_groups,
-               view_users:    view_users)
+               manage_users: manage_users,
+               view_groups: view_groups,
+               view_users: view_users)
       end
 
       it 'assigns edit users from template' do

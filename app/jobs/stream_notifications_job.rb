@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class StreamNotificationsJob < Hyrax::ApplicationJob
   def perform(users)
     # Do not use the ActionCable machinery if the feature is disabled

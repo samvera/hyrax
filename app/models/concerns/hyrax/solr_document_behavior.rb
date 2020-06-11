@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module SolrDocumentBehavior
     extend ActiveSupport::Concern
@@ -86,7 +87,7 @@ module Hyrax
 
     def depositor(default = '')
       val = first("depositor_tesim")
-      val.present? ? val : default
+      val.presence || default
     end
 
     def creator

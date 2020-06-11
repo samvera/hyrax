@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::ApplicationCable::Channel do
   subject { described_class.new(connection, identifier) }
 

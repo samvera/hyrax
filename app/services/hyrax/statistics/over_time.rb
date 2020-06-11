@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Statistics
     # An abstract class for generating cumulative graphs
@@ -30,26 +31,26 @@ module Hyrax
 
       private
 
-        def point(min, max)
-          relation.where(query(min, max)).count
-        end
+      def point(min, max)
+        relation.where(query(min, max)).count
+      end
 
-        def query(min, max)
-          query_service.build_date_query(min, max)
-        end
+      def query(min, max)
+        query_service.build_date_query(min, max)
+      end
 
-        def query_service
-          Hyrax::Statistics::QueryService.new
-        end
+      def query_service
+        Hyrax::Statistics::QueryService.new
+      end
 
-        # How many points are in this data set
-        def size
-          ((@x_max - @x_min) / @delta_x.days.to_i).ceil
-        end
+      # How many points are in this data set
+      def size
+        ((@x_max - @x_min) / @delta_x.days.to_i).ceil
+      end
 
-        def relation
-          raise NotImplementedError, "Implement the relation method in a concrete class"
-        end
+      def relation
+        raise NotImplementedError, "Implement the relation method in a concrete class"
+      end
     end
   end
 end

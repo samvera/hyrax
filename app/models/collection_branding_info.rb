@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CollectionBrandingInfo < ApplicationRecord
   # i = ColectionImageInfo.new()
 

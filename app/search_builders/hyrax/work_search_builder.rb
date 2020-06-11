@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Finds a single work result. It returns no result if you don't have
   # access to the requested work.  If the work is suppressed (due to being in a

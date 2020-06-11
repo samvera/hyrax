@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/uploads/create.json.jbuilder' do
   let(:file) { double(filename: 'foo.jpg', size: 777) }
   let(:uploader) { instance_double(Hyrax::UploadedFileUploader, file: file) }

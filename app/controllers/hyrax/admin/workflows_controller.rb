@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Presents a list of works in workflow
   class Admin::WorkflowsController < ApplicationController
@@ -20,8 +21,8 @@ module Hyrax
 
     private
 
-      def ensure_authorized!
-        authorize! :review, :submissions
-      end
+    def ensure_authorized!
+      authorize! :review, :submissions
+    end
   end
 end

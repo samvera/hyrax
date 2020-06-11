@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/collections/_form_for_select_collection.html.erb', type: :view do
   let(:collections) do
     [

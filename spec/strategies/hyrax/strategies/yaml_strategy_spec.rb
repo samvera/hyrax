@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Strategies::YamlStrategy do
   subject { described_class.new(config: "test_file") }
 

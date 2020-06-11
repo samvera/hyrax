@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class BatchEditsController < ApplicationController
     include FileSetHelper
@@ -71,59 +72,59 @@ module Hyrax
 
     private
 
-      def add_breadcrumb_for_controller
-        add_breadcrumb I18n.t('hyrax.dashboard.my.works'), hyrax.my_works_path
-      end
+    def add_breadcrumb_for_controller
+      add_breadcrumb I18n.t('hyrax.dashboard.my.works'), hyrax.my_works_path
+    end
 
-      def _prefixes
-        # This allows us to use the templates in hyrax/base, while prefering
-        # our local paths. Thus we are unable to just override `self.local_prefixes`
-        @_prefixes ||= super + ['hyrax/base']
-      end
+    def _prefixes
+      # This allows us to use the templates in hyrax/base, while prefering
+      # our local paths. Thus we are unable to just override `self.local_prefixes`
+      @_prefixes ||= super + ['hyrax/base']
+    end
 
-      def destroy_batch
-        batch.each { |id| Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: id, use_valkyrie: false).destroy }
-        after_update
-      end
+    def destroy_batch
+      batch.each { |id| Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: id, use_valkyrie: false).destroy }
+      after_update
+    end
 
-      def form_class
-        Forms::BatchEditForm
-      end
+    def form_class
+      Forms::BatchEditForm
+    end
 
-      def terms
-        form_class.terms
-      end
+    def terms
+      form_class.terms
+    end
 
-      def work_params(extra_params = {})
-        work_params = params[form_class.model_name.param_key] || ActionController::Parameters.new
-        form_class.model_attributes(work_params.merge(extra_params))
-      end
+    def work_params(extra_params = {})
+      work_params = params[form_class.model_name.param_key] || ActionController::Parameters.new
+      form_class.model_attributes(work_params.merge(extra_params))
+    end
 
-      def interpret_visiblity_params(obj)
-        stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
-          middleware.use Hyrax::Actors::InterpretVisibilityActor
-        end
-        env = Hyrax::Actors::Environment.new(obj, current_ability, work_params(admin_set_id: obj.admin_set_id))
-        last_actor = Hyrax::Actors::Terminator.new
-        stack.build(last_actor).update(env)
+    def interpret_visiblity_params(obj)
+      stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
+        middleware.use Hyrax::Actors::InterpretVisibilityActor
       end
+      env = Hyrax::Actors::Environment.new(obj, current_ability, work_params(admin_set_id: obj.admin_set_id))
+      last_actor = Hyrax::Actors::Terminator.new
+      stack.build(last_actor).update(env)
+    end
 
-      def visibility_params
-        ['visibility',
-         'lease_expiration_date',
-         'visibility_during_lease',
-         'visibility_after_lease',
-         'embargo_release_date',
-         'visibility_during_embargo',
-         'visibility_after_embargo']
-      end
+    def visibility_params
+      ['visibility',
+       'lease_expiration_date',
+       'visibility_during_lease',
+       'visibility_after_lease',
+       'embargo_release_date',
+       'visibility_during_embargo',
+       'visibility_after_embargo']
+    end
 
-      def redirect_to_return_controller
-        if params[:return_controller]
-          redirect_to hyrax.url_for(controller: params[:return_controller], only_path: true)
-        else
-          redirect_to hyrax.dashboard_path
-        end
+    def redirect_to_return_controller
+      if params[:return_controller]
+        redirect_to hyrax.url_for(controller: params[:return_controller], only_path: true)
+      else
+        redirect_to hyrax.dashboard_path
       end
+    end
   end
 end

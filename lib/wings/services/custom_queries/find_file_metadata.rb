@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Custom query override specific to Wings for finding Hydra::PCDM::File and converting to Hyrax::FileMetadata.
 # @example
 #   Hyrax.custom_queries.find_file_metadata_by(id: valkyrie_id, use_valkyrie: true)

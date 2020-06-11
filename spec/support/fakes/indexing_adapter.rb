@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class FakeIndexingAdapter
   attr_reader :saved_resources
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/collections/_subcollection_list.html.erb', type: :view do
   let(:subject) { render('subcollection_list.html.erb', collection: subcollection) }
   let(:collection) { stub_model(Collection, id: '123') }

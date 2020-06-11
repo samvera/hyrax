@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/base/unauthorized.html.erb' do
   context "when it responds to curation_concern" do
     let(:concern) { double(human_readable_type: 'Book', id: '777') }

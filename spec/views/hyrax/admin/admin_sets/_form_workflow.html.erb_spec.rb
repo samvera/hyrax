@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/admin/admin_sets/_form_workflow.html.erb', type: :view do
   let(:template) { stub_model(Hyrax::PermissionTemplate) }
   let(:workflow) { stub_model(Sipity::Workflow, name: "my_name", description: "random workflow", label: "my label") }

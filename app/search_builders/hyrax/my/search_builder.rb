@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module My
     # Search builder for things that the current user has deposited and has edit access to

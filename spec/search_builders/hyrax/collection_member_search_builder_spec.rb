@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::CollectionMemberSearchBuilder do
   subject(:builder) { described_class.new(scope: context, collection: collection, search_includes_models: include_models) }
   let(:context) { double("context", blacklight_config: CatalogController.blacklight_config) }

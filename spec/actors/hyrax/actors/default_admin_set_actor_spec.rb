@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Actors::DefaultAdminSetActor do
   let(:depositor) { create(:user) }
   let(:depositor_ability) { ::Ability.new(depositor) }

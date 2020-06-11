@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Log work depositor change to activity streams
 #
 # @attr [Boolean] reset (false) should the access controls be reset. This means revoking edit access from the depositor

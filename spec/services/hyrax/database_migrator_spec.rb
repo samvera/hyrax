@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::DatabaseMigrator do
   describe '.copy' do
     let(:mock_migrator) { double }

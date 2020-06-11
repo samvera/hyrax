@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Renderers
     module ConfiguredMicrodata
@@ -38,9 +39,9 @@ module Hyrax
 
       private
 
-        def translate_microdata(field:, field_context:, default: true)
-          Microdata.fetch("#{field}.#{field_context}", default: default)
-        end
+      def translate_microdata(field:, field_context:, default: true)
+        Microdata.fetch("#{field}.#{field_context}", default: default)
+      end
     end
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe "Sending an email via the contact form", type: :feature do
   before { sign_in(:user) }
 

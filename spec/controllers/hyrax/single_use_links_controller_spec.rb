@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::SingleUseLinksController, type: :controller do
   routes { Hyrax::Engine.routes }
 
@@ -16,9 +17,7 @@ RSpec.describe Hyrax::SingleUseLinksController, type: :controller do
     before { sign_in user }
 
     context "POST create" do
-      before do
-        expect(Digest::SHA2).to receive(:new).and_return(hash)
-      end
+      before { expect(SingleUseLink).to receive(:generate_download_key).and_return(hash) }
 
       describe "creating a single-use download link" do
         it "returns a link for downloading" do

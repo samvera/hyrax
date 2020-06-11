@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sipity
   # A proxy for the entity that is being processed via workflows.
   #
@@ -24,7 +25,6 @@ module Sipity
     has_many :entity_specific_responsibilities, dependent: :destroy, class_name: 'Sipity::EntitySpecificResponsibility'
 
     has_many :comments,
-             foreign_key: :entity_id,
              dependent: :destroy,
              class_name: 'Sipity::Comment'
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class EmbargoService < RestrictionService
     class << self
@@ -27,9 +28,9 @@ module Hyrax
 
       private
 
-        def presenter_class
-          Hyrax::EmbargoPresenter
-        end
+      def presenter_class
+        Hyrax::EmbargoPresenter
+      end
     end
   end
 end

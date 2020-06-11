@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::IiifHelper, type: :helper do
   let(:solr_document) { SolrDocument.new }
   let(:request) { double }

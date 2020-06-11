@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'ResourceSync Routes', type: :routing do
   routes { Hyrax::Engine.routes }
 

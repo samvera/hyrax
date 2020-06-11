@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::ContentBlocksController, type: :controller do
   let!(:announcement_text) do
     create(:content_block, name: 'announcement_text')
@@ -19,14 +20,14 @@ RSpec.describe Hyrax::ContentBlocksController, type: :controller do
     describe "GET #edit" do
       it "denies the request" do
         get :edit
-        expect(response).to have_http_status(401)
+        expect(response).to have_http_status(:unauthorized)
       end
     end
 
     describe "PATCH #update" do
       it "denies the request" do
         patch :update, params: { id: 1 }
-        expect(response).to have_http_status(401)
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end
@@ -41,7 +42,7 @@ RSpec.describe Hyrax::ContentBlocksController, type: :controller do
         expect(controller).to receive(:add_breadcrumb).with('Configuration', '#')
         expect(controller).to receive(:add_breadcrumb).with('Content Blocks', edit_content_blocks_path)
         get :edit
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(:ok)
       end
     end
 

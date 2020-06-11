@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Noid do
   let(:class_with_noids) do
     Class.new do

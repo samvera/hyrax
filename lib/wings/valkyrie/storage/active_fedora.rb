@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'wings/hydra/works/services/add_file_to_file_set'
 
 # frozen_string_literal: true
@@ -18,9 +19,9 @@ module Wings::Storage
 
     private
 
-      def file_set(file_metadata)
-        file_set_id = file_metadata.file_set_id
-        Hyrax.query_service.find_by(id: file_set_id)
-      end
+    def file_set(file_metadata)
+      file_set_id = file_metadata.file_set_id
+      Hyrax.query_service.find_by(id: file_set_id)
+    end
   end
 end

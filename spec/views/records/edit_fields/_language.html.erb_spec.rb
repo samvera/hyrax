@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'records/edit_fields/_language.html.erb', type: :view do
   let(:work) { GenericWork.new }
   let(:form) { Hyrax::GenericWorkForm.new(work, nil, controller) }

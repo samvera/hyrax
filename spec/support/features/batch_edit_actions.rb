@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 def batch_edit_fields
   # skipping based_near because it's a select2 field, which is hard to test via capybara
   [

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::QaSelectService do
   let(:authority_map) do
     [

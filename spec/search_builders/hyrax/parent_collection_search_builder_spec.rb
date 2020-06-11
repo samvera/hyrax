@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::ParentCollectionSearchBuilder do
   let(:solr_params) { { fq: [] } }
   let(:item) { double(id: '12345', member_of_collection_ids: ['col1']) }

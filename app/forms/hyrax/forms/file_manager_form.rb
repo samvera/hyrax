@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Forms
     class FileManagerForm
@@ -19,9 +20,9 @@ module Hyrax
 
       private
 
-        def member_presenter_factory
-          MemberPresenterFactory.new(model, current_ability)
-        end
+      def member_presenter_factory
+        MemberPresenterFactory.new(model, current_ability)
+      end
     end
   end
 end

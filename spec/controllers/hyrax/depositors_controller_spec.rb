@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::DepositorsController do
   let(:user) { create(:user) }
   let(:grantee) { create(:user) }

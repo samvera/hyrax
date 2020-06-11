@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Admin::WorkflowsController do
   describe "#index" do
     before do

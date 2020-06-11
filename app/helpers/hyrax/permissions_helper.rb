@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module PermissionsHelper
     def help_text(file)
@@ -6,14 +7,14 @@ module Hyrax
 
     private
 
-      def capture_content(file)
-        capture do
-          render file
-        end
+    def capture_content(file)
+      capture do
+        render file
       end
+    end
 
-      def help_icon
-        content_tag 'i', '', 'aria-hidden' => true, class: 'help-icon'
-      end
+    def help_icon
+      tag.i '', 'aria-hidden': true, class: 'help-icon'
+    end
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::FileSetCSVService do
   let(:mock_file) do
     Hydra::PCDM::File.new

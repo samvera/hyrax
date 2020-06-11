@@ -16,7 +16,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
   end
 
   controller(ApplicationController) do
-    include Hyrax::WorksControllerBehavior
+    include Hyrax::WorksControllerBehavior # rubocop:disable RSpec/DescribedClass
 
     self.curation_concern_type = Hyrax::Test::SimpleWork
     self.search_builder_class  = Wings::WorkSearchBuilder(Hyrax::Test::SimpleWork)

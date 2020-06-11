@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Workflow::MethodGenerator do
   describe ".call" do
     let(:workflow_action) { create(:workflow_action) }

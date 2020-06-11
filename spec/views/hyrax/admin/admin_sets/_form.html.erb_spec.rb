@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/admin/admin_sets/_form.html.erb', type: :view do
   let(:admin_set) { stub_model(AdminSet) }
   let(:form) { Hyrax::Forms::AdminSetForm.new(admin_set, double, double) }

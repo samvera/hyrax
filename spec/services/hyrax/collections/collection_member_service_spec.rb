@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
   let(:blacklight_config) { CatalogController.blacklight_config }
   let(:repository) { Blacklight::Solr::Repository.new(blacklight_config) }

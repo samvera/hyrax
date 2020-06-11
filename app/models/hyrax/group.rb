@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 module Hyrax
   class Group
-    DEFAULT_NAME_PREFIX = 'group/'.freeze
+    DEFAULT_NAME_PREFIX = 'group/'
 
     def self.name_prefix
       DEFAULT_NAME_PREFIX
@@ -18,12 +19,12 @@ module Hyrax
 
     private
 
-      def sipity_agent
-        Sipity::Agent.find_by(proxy_for_id: name, proxy_for_type: self.class.name)
-      end
+    def sipity_agent
+      Sipity::Agent.find_by(proxy_for_id: name, proxy_for_type: self.class.name)
+    end
 
-      def create_sipity_agent!
-        Sipity::Agent.create!(proxy_for_id: name, proxy_for_type: self.class.name)
-      end
+    def create_sipity_agent!
+      Sipity::Agent.create!(proxy_for_id: name, proxy_for_type: self.class.name)
+    end
   end
 end

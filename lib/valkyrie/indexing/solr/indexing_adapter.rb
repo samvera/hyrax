@@ -39,58 +39,58 @@ module Valkyrie
 
         private
 
-          def persist(resources)
-            documents = resources.map do |resource|
-              solr_document(resource)
-            end
-            add_documents(documents)
+        def persist(resources)
+          documents = resources.map do |resource|
+            solr_document(resource)
+          end
+          add_documents(documents)
+        end
+
+        def solr_document(resource)
+          resource_indexer.for(resource: resource).to_solr
+        end
+
+        def add_documents(documents)
+          connection.add documents, params: COMMIT_PARAMS
+        end
+
+        ##
+        # Index configuration based on the blacklight connection.
+        def blacklight_based_config
+          begin
+            # If Blacklight raises an error, we're hopefully running a
+            # generator now (if not, the application has bigger problems
+            # than this missing configuration)
+            bl_index = Blacklight.default_index.connection.uri
+          rescue RuntimeError
+            return {}
           end
 
-          def solr_document(resource)
-            resource_indexer.for(resource: resource).to_solr
-          end
+          { 'host' => bl_index.host,
+            'port' => bl_index.port,
+            'core' => 'hyrax-valkyrie' }
+        end
 
-          def add_documents(documents)
-            connection.add documents, params: COMMIT_PARAMS
-          end
+        def connection_url
+          config = begin
+                     Rails.application.config_for(:valkyrie_index).compact
+                   rescue RuntimeError
+                     {}
+                   end
 
-          ##
-          # Index configuration based on the blacklight connection.
-          def blacklight_based_config
-            begin
-              # If Blacklight raises an error, we're hopefully running a
-              # generator now (if not, the application has bigger problems
-              # than this missing configuration)
-              bl_index = Blacklight.default_index.connection.uri
-            rescue RuntimeError
-              return {}
-            end
+          # if any configuration is missing, derive it from Blacklight
+          config = blacklight_based_config.merge(config)
 
-            { 'host' => bl_index.host,
-              'port' => bl_index.port,
-              'core' => 'hyrax-valkyrie' }
-          end
+          "http://#{config['host']}:#{config['port']}/solr/#{config['core']}"
+        end
 
-          def connection_url
-            config = begin
-                       Rails.application.config_for(:valkyrie_index).compact
-                     rescue RuntimeError
-                       {}
-                     end
+        def default_connection
+          RSolr.connect(url: connection_url)
+        end
 
-            # if any configuration is missing, derive it from Blacklight
-            config = blacklight_based_config.merge(config)
-
-            "http://#{config['host']}:#{config['port']}/solr/#{config['core']}"
-          end
-
-          def default_connection
-            RSolr.connect(url: connection_url)
-          end
-
-          def resource_indexer
-            Hyrax::ValkyrieIndexer
-          end
+        def resource_indexer
+          Hyrax::ValkyrieIndexer
+        end
       end
     end
   end

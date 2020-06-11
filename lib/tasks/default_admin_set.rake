@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 namespace :hyrax do
   namespace :default_admin_set do
     desc "Create the Default Admin Set"

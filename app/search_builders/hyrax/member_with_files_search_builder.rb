@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Finds the child objects contained within a collection
   class MemberWithFilesSearchBuilder < ::SearchBuilder
@@ -19,8 +20,8 @@ module Hyrax
 
     private
 
-      def collection_id
-        blacklight_params.fetch('id')
-      end
+    def collection_id
+      blacklight_params.fetch('id')
+    end
   end
 end

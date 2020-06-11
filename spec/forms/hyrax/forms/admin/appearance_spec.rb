@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Forms::Admin::Appearance do
   let(:form) { described_class.new(arguments) }
 

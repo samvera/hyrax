@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'redlock'
 
 RSpec.describe 'Creating a new child Work', :workflow do

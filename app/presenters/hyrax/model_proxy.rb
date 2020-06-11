@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Provide the ActiveModel methods so that this object routes the same as the
   # object represented by the solr document.
@@ -23,8 +24,8 @@ module Hyrax
 
     private
 
-      def _delegated_to
-        solr_document.to_model
-      end
+    def _delegated_to
+      solr_document.to_model
+    end
   end
 end

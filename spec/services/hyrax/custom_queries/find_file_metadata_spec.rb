@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::CustomQueries::FindFileMetadata do
   let(:query_service) { Valkyrie::MetadataAdapter.find(:test_adapter).query_service }
   subject(:query_handler) { described_class.new(query_service: query_service) }

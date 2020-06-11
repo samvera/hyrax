@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # This is a job spawned by the BatchCreateJob
 class CreateWorkJob < Hyrax::ApplicationJob
   queue_as Hyrax.config.ingest_queue_name
@@ -25,7 +26,7 @@ class CreateWorkJob < Hyrax::ApplicationJob
 
   private
 
-    def work_actor
-      Hyrax::CurationConcern.actor
-    end
+  def work_actor
+    Hyrax::CurationConcern.actor
+  end
 end

@@ -80,13 +80,13 @@ module Hyrax
 
     private
 
-      ##
-      # @param [Module] descendant
-      #
-      # @api private
-      def included(descendant)
-        super
-        descendant.attributes(attributes)
-      end
+    ##
+    # @param [Module] descendant
+    #
+    # @api private
+    def included(descendant)
+      super
+      descendant.attributes(attributes)
+    end
   end
 end

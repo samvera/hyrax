@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module CitationsBehaviors
     module NameBehavior
@@ -42,9 +43,9 @@ module Hyrax
         return name unless name.include?(' ') || name.include?(',')
         name = surname_first(name)
         name_segments = name.split(/,\s*/)
-        abbreviated_name << name_segments.first
-        abbreviated_name << ", #{name_segments.last.first}" if name_segments[1]
-        abbreviated_name << "."
+        abbreviated_name += name_segments.first
+        abbreviated_name += ", #{name_segments.last.first}" if name_segments[1]
+        abbreviated_name + "."
       end
     end
   end

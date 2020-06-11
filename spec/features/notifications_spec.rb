@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe "Notifications page", type: :feature do
   before do
     sign_in create(:user_with_mail)

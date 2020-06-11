@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Qa::Authorities::Collections, :clean_repo do
   let(:controller) { Qa::TermsController.new }
   let(:user1) { build(:user) }

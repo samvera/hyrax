@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class AdminStatsPresenter
     attr_reader :limit, :stats_filters
@@ -56,10 +57,10 @@ module Hyrax
 
     private
 
-      def extract_date_from_stats_filters(key:, as_of:)
-        return if stats_filters[key].blank?
-        Time.zone.parse(stats_filters[key]).public_send(as_of)
-      end
+    def extract_date_from_stats_filters(key:, as_of:)
+      return if stats_filters[key].blank?
+      Time.zone.parse(stats_filters[key]).public_send(as_of)
+    end
 
     public
 
@@ -72,9 +73,9 @@ module Hyrax
     # @see Hyrax::Statistics::SystemStats.recent_users
     def recent_users
       @recent_users ||=
-        system_stats.recent_users(limit:      limit,
+        system_stats.recent_users(limit: limit,
                                   start_date: start_date,
-                                  end_date:   end_date)
+                                  end_date: end_date)
     end
 
     # @see Hyrax::Statistics::Works::ByDepositor

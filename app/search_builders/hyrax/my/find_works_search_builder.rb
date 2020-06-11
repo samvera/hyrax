@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Search for possible works that user can edit and could be a work's child or parent.
 class Hyrax::My::FindWorksSearchBuilder < Hyrax::My::SearchBuilder
   include Hyrax::FilterByType

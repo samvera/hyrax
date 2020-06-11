@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Actors::EmbargoActor do
   let(:actor) { described_class.new(work) }
 

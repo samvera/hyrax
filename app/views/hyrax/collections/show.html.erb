@@ -69,7 +69,7 @@
 
     </div>
     <div class="col-md-4 hyc-metadata">
-      <% unless has_collection_search_parameters? %>
+      <% unless collection_search_parameters? %>
           <h2><%= t('hyrax.dashboard.collections.show.metadata_header') %></h2>
           <%= render 'show_descriptions' %>
       <% end %>
@@ -79,7 +79,7 @@
   <!-- Search results label -->
   <% if @members_count > 0 || @presenter.subcollection_count > 0 %>
     <div class="hyc-blacklight hyc-bl-title">
-    <% if has_collection_search_parameters? %>
+    <% if collection_search_parameters? %>
       <h2>
         <%= t('hyrax.dashboard.collections.show.search_results') %>
       </h2>

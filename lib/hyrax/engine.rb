@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class Engine < ::Rails::Engine
     isolate_namespace Hyrax
@@ -34,7 +35,7 @@ module Hyrax
     ]
 
     config.action_dispatch.rescue_responses.merge!(
-      "ActiveFedora::ObjectNotFoundError" =>     :not_found, # We can remove this when we use ActiveFedora 11.2
+      "ActiveFedora::ObjectNotFoundError" => :not_found, # We can remove this when we use ActiveFedora 11.2
       "Blacklight::Exceptions::RecordNotFound" => :not_found,
       "Valkyrie::Persistence::ObjectNotFoundError" => :not_found,
       "Hyrax::ObjectNotFoundError" => :not_found
@@ -55,16 +56,16 @@ module Hyrax
       can_connect = begin
         ActiveRecord::Base.connection
         true
-      rescue StandardError
-        false
+                    rescue StandardError
+                      false
       end
 
       can_persist = can_connect && begin
         Hyrax.config.persist_registered_roles!
         Rails.logger.info("Hyrax::Engine.after_initialize - persisting registered roles!")
         true
-      rescue ActiveRecord::StatementInvalid
-        false
+                                   rescue ActiveRecord::StatementInvalid
+                                     false
       end
 
       unless can_persist

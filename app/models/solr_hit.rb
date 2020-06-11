@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class SolrHit < Delegator
   def __getobj__
     @document # return object we are delegating to, required

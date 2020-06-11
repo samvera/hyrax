@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Admin
     class AppearancesController < ApplicationController
@@ -21,13 +22,13 @@ module Hyrax
 
       private
 
-        def update_params
-          params.require(:admin_appearance).permit(form_class.permitted_params)
-        end
+      def update_params
+        params.require(:admin_appearance).permit(form_class.permitted_params)
+      end
 
-        def require_permissions
-          authorize! :update, :appearance
-        end
+      def require_permissions
+        authorize! :update, :appearance
+      end
     end
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Injects a search builder filter to hide documents marked as suppressed
   module FilterSuppressed

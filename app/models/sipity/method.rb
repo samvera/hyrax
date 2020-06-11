@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sipity
   # When a Sipity::Action is taken, each Sipity::Method is loaded and
   # it's service_name is instantiated and called (all of this done via

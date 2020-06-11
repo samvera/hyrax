@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe "hyrax/leases/index", type: :view do
   before do
     stub_template 'hyrax/leases/_list_deactivated_leases' => 'rendered list_deactivated_leases'

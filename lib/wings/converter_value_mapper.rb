@@ -66,22 +66,22 @@ module Wings
 
     private
 
-      def permissions
-        value.last.map do |permission_attrs|
-          if permission_attrs[:agent].starts_with? Hyrax::Group.name_prefix
-            type = 'group'
-            name = permission_attrs[:agent].dup
-            name.slice!(Hyrax::Group.name_prefix)
-          else
-            type = 'person'
-            name = permission_attrs[:agent].dup
-          end
-
-          hsh = { type: type, access: permission_attrs[:mode].to_s, name: name }
-          hsh[:id] = permission_attrs[:id] if permission_attrs[:id]
-          Hydra::AccessControls::Permission.new(hsh)
+    def permissions
+      value.last.map do |permission_attrs|
+        if permission_attrs[:agent].starts_with? Hyrax::Group.name_prefix
+          type = 'group'
+          name = permission_attrs[:agent].dup
+          name.slice!(Hyrax::Group.name_prefix)
+        else
+          type = 'person'
+          name = permission_attrs[:agent].dup
         end
+
+        hsh = { type: type, access: permission_attrs[:mode].to_s, name: name }
+        hsh[:id] = permission_attrs[:id] if permission_attrs[:id]
+        Hydra::AccessControls::Permission.new(hsh)
       end
+    end
   end
 
   class NestedEmbargoValue < ::Valkyrie::ValueMapper

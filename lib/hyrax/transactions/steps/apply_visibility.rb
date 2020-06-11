@@ -20,12 +20,12 @@ module Hyrax
         # @return [Dry::Monads::Result] `Failure` if there is no
         #   `PermissionTemplate` for the input; `Success(input)`, otherwise.
         def call(work, visibility: nil, release_date: nil, during: nil, after: nil)
-          return Success(work) unless visibility.present?
+          return Success(work) if visibility.blank?
 
-          intention = Hyrax::VisibilityIntention.new(visibility:   visibility,
+          intention = Hyrax::VisibilityIntention.new(visibility: visibility,
                                                      release_date: release_date,
-                                                     during:       during,
-                                                     after:        after)
+                                                     during: during,
+                                                     after: after)
 
           Hyrax::VisibilityIntentionApplicator.apply(intention).to(model: work)
 

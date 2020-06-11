@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class SingleAdminSetSearchBuilder < Hyrax::AdminSetSearchBuilder
     include Hyrax::SingleResult

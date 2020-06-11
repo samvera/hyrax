@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/batch_edits/edit.html.erb', type: :view do
   let(:generic_work) { stub_model(GenericWork, id: '999', depositor: 'bob', license: ['']) }
   let(:batch) { ['999'] }

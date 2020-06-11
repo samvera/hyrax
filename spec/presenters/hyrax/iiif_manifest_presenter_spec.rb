@@ -210,4 +210,4 @@ RSpec.describe Hyrax::IiifManifestPresenter do
     end
   end
 end
-# rubocop:enable BracesAroundHashParameters
+# rubocop:enable Style/BracesAroundHashParameters

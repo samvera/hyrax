@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class IIIFAuthorizationService
     attr_reader :controller
@@ -12,8 +13,8 @@ module Hyrax
 
     private
 
-      def file_set_id_for(object)
-        object.id.split('/').first
-      end
+    def file_set_id_for(object)
+      object.id.split('/').first
+    end
   end
 end

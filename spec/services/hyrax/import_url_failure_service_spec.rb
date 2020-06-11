@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 RSpec.describe Hyrax::ImportUrlFailureService do
   let!(:depositor) { create(:user) }

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/users/_user_info.html.erb', type: :view do
   let(:user) { stub_model(User, user_key: 'jdoe42', orcid: '000-000', zotero_userid: 'jdoe42zotero') }
   let(:arkivo_api) { true }

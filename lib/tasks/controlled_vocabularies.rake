@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 namespace :hyrax do
   namespace :controlled_vocabularies do
     desc "Load the lexvo vocabulary into the database"

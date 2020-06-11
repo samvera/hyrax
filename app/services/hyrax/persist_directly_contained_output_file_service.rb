@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # This Service is an implementation of the Hydra::Derivatives::PersistOutputFileService
   # It supports directly contained files

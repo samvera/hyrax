@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 namespace :hyrax do
   namespace :stats do
     desc "Cache work view, file view & file download stats for all users"

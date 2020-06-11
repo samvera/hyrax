@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module My
     class CollectionsController < MyController
@@ -32,22 +33,22 @@ module Hyrax
 
       private
 
-        def search_action_url(*args)
-          hyrax.my_collections_url(*args)
-        end
+      def search_action_url(*args)
+        hyrax.my_collections_url(*args)
+      end
 
-        # The url of the "more" link for additional facet values
-        def search_facet_path(args = {})
-          hyrax.my_dashboard_collections_facet_path(args[:id])
-        end
+      # The url of the "more" link for additional facet values
+      def search_facet_path(args = {})
+        hyrax.my_dashboard_collections_facet_path(args[:id])
+      end
 
-        def collection_type_list_presenter
-          @collection_type_list_presenter ||= Hyrax::SelectCollectionTypeListPresenter.new(current_user)
-        end
+      def collection_type_list_presenter
+        @collection_type_list_presenter ||= Hyrax::SelectCollectionTypeListPresenter.new(current_user)
+      end
 
-        def managed_collections_count
-          @managed_collection_count = Hyrax::Collections::ManagedCollectionsService.managed_collections_count(scope: self)
-        end
+      def managed_collections_count
+        @managed_collection_count = Hyrax::Collections::ManagedCollectionsService.managed_collections_count(scope: self)
+      end
     end
   end
 end

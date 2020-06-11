@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Forms
     module Dashboard
@@ -69,29 +70,29 @@ module Hyrax
 
         private
 
-          attr_accessor :query_service, :persistence_service, :context, :collection
+        attr_accessor :query_service, :persistence_service, :context, :collection
 
-          # ideally we would love to be able to eliminate collections which exceed the
-          # maximum nesting depth from the lists of available collections, but the queries
-          # needed to make the determination are too expensive to do for every possible
-          # collection, so we only test for this situation prior to saving the new
-          # relationship.
-          def nesting_within_maximum_depth
-            return true if query_service.valid_combined_nesting_depth?(parent: parent, child: child, scope: context)
-            errors.add(:collection, :exceeds_maximum_nesting_depth)
-            false
-          end
+        # ideally we would love to be able to eliminate collections which exceed the
+        # maximum nesting depth from the lists of available collections, but the queries
+        # needed to make the determination are too expensive to do for every possible
+        # collection, so we only test for this situation prior to saving the new
+        # relationship.
+        def nesting_within_maximum_depth
+          return true if query_service.valid_combined_nesting_depth?(parent: parent, child: child, scope: context)
+          errors.add(:collection, :exceeds_maximum_nesting_depth)
+          false
+        end
 
-          def parent_and_child_can_be_nested
-            if parent.try(:nestable?) && child.try(:nestable?)
-              return true if query_service.parent_and_child_can_nest?(parent: parent, child: child, scope: context)
-              errors.add(:parent, :cannot_have_child_nested)
-              errors.add(:child, :cannot_nest_in_parent)
-            else
-              errors.add(:parent, :is_not_nestable) unless parent.try(:nestable?)
-              errors.add(:child, :is_not_nestable) unless child.try(:nestable?)
-            end
+        def parent_and_child_can_be_nested
+          if parent.try(:nestable?) && child.try(:nestable?)
+            return true if query_service.parent_and_child_can_nest?(parent: parent, child: child, scope: context)
+            errors.add(:parent, :cannot_have_child_nested)
+            errors.add(:child, :cannot_nest_in_parent)
+          else
+            errors.add(:parent, :is_not_nestable) unless parent.try(:nestable?)
+            errors.add(:child, :is_not_nestable) unless child.try(:nestable?)
           end
+        end
       end
     end
   end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class UserMailbox
   attr_reader :user
 
@@ -42,22 +43,22 @@ class UserMailbox
 
   private
 
-    def delete_message(msg)
-      msg.move_to_trash(msg.participants[0])
-      msg.move_to_trash(msg.participants[1])
-    end
+  def delete_message(msg)
+    msg.move_to_trash(msg.participants[0])
+    msg.move_to_trash(msg.participants[1])
+  end
 
-    def preferred_locale
-      user.preferred_locale || I18n.default_locale
-    end
+  def preferred_locale
+    user.preferred_locale || I18n.default_locale
+  end
 
-    def empty_trash(user)
-      user.mailbox.trash.each do |conv|
-        conv.messages.each do |notify|
-          notify.receipts.each(&:delete)
-          notify.delete
-        end
-        conv.delete
+  def empty_trash(user)
+    user.mailbox.trash.each do |conv|
+      conv.messages.each do |notify|
+        notify.receipts.each(&:delete)
+        notify.delete
       end
+      conv.delete
     end
+  end
 end

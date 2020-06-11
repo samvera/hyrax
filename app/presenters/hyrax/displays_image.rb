@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'iiif_manifest'
 
 module Hyrax
@@ -23,39 +24,39 @@ module Hyrax
 
     private
 
-      def display_image_url(base_url)
-        Hyrax.config.iiif_image_url_builder.call(
-          latest_file_id,
-          base_url,
-          Hyrax.config.iiif_image_size_default,
-          format: image_format(alpha_channels)
-        )
-      end
+    def display_image_url(base_url)
+      Hyrax.config.iiif_image_url_builder.call(
+        latest_file_id,
+        base_url,
+        Hyrax.config.iiif_image_size_default,
+        format: image_format(alpha_channels)
+      )
+    end
 
-      def iiif_endpoint(file_id, base_url: request.base_url)
-        return unless Hyrax.config.iiif_image_server?
-        IIIFManifest::IIIFEndpoint.new(
-          Hyrax.config.iiif_info_url_builder.call(file_id, base_url),
-          profile: Hyrax.config.iiif_image_compliance_level_uri
-        )
-      end
+    def iiif_endpoint(file_id, base_url: request.base_url)
+      return unless Hyrax.config.iiif_image_server?
+      IIIFManifest::IIIFEndpoint.new(
+        Hyrax.config.iiif_info_url_builder.call(file_id, base_url),
+        profile: Hyrax.config.iiif_image_compliance_level_uri
+      )
+    end
 
-      def image_format(channels)
-        channels&.include?('rgba') ? 'png' : 'jpg'
-      end
+    def image_format(channels)
+      channels&.include?('rgba') ? 'png' : 'jpg'
+    end
 
-      def latest_file_id
-        @latest_file_id ||=
-          begin
-            result = original_file_id
+    def latest_file_id
+      @latest_file_id ||=
+        begin
+          result = original_file_id
 
-            if result.blank?
-              Rails.logger.warn "original_file_id for #{id} not found, falling back to Fedora."
-              result = Hyrax::VersioningService.versioned_file_id ::FileSet.find(id).original_file
-            end
-
-            result
+          if result.blank?
+            Rails.logger.warn "original_file_id for #{id} not found, falling back to Fedora."
+            result = Hyrax::VersioningService.versioned_file_id ::FileSet.find(id).original_file
           end
-      end
+
+          result
+        end
+    end
   end
 end

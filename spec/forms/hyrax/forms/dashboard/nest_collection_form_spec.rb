@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
   let(:parent) { double(nestable?: true) }
   let(:child) { double(nestable?: true) }

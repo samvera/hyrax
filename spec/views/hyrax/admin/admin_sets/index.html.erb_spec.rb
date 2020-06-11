@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "spec_helper"
 
 RSpec.describe "hyrax/admin/admin_sets/index.html.erb", type: :view do

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # TODO: This should live in Hyrax::AddFileMetadataToFileSet service and should work for all valkyrie adapters.
 module Wings::Works
   class AddFileToFileSet
@@ -15,7 +16,7 @@ module Wings::Works
         raise ArgumentError, 'supplied file must respond to read' unless file.respond_to? :read
 
         af_type = normalize_type(type)
-        raise ArgumentError, "supplied type (#{type}) is not supported" unless af_type.present?
+        raise ArgumentError, "supplied type (#{type}) is not supported" if af_type.blank?
 
         af_file_set = Wings::ActiveFedoraConverter.new(resource: file_set).convert
         result = Hydra::Works::AddFileToFileSet.call(af_file_set, file, af_type, update_existing: update_existing, versioning: versioning)
@@ -26,31 +27,31 @@ module Wings::Works
 
       private
 
-        def normalize_type(original_type)
-          type = original_type.is_a?(Array) && !original_type.size.zero? ? original_type.first : original_type
-          association_type(type) || type_to_rdf_uri(type)
-        end
+      def normalize_type(original_type)
+        type = original_type.is_a?(Array) && !original_type.size.zero? ? original_type.first : original_type
+        association_type(type) || type_to_rdf_uri(type)
+      end
 
-        def association_type(type)
-          return type if [:original_file, :extracted_text, :thumbnail].include? type
-          type_to_association_type type
-        end
+      def association_type(type)
+        return type if [:original_file, :extracted_text, :thumbnail].include? type
+        type_to_association_type type
+      end
 
-        def type_to_association_type(type)
-          case type
-          when Hyrax::FileMetadata::Use::ORIGINAL_FILE
-            :original_file
-          when Hyrax::FileMetadata::Use::EXTRACTED_TEXT
-            :extracted_text
-          when Hyrax::FileMetadata::Use::THUMBNAIL
-            :thumbnail
-          end
+      def type_to_association_type(type)
+        case type
+        when Hyrax::FileMetadata::Use::ORIGINAL_FILE
+          :original_file
+        when Hyrax::FileMetadata::Use::EXTRACTED_TEXT
+          :extracted_text
+        when Hyrax::FileMetadata::Use::THUMBNAIL
+          :thumbnail
         end
+      end
 
-        def type_to_rdf_uri(type)
-          return type if type.is_a? RDF::URI
-          return RDF::URI.new(type) if type.is_a? String
-        end
+      def type_to_rdf_uri(type)
+        return type if type.is_a? RDF::URI
+        return RDF::URI.new(type) if type.is_a? String
+      end
     end
   end
 end

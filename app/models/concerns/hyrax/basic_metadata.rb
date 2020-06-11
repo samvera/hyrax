@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # An optional model mixin to define some simple properties. This must be mixed
   # after all other properties are defined because no other properties will

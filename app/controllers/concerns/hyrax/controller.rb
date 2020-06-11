@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax::Controller
   extend ActiveSupport::Concern
 
@@ -22,47 +23,47 @@ module Hyrax::Controller
 
   private
 
-    def set_locale
-      I18n.locale = params[:locale] || I18n.default_locale
-    end
+  def set_locale
+    I18n.locale = params[:locale] || I18n.default_locale
+  end
 
-    # render a json response for +response_type+
-    def render_json_response(response_type: :success, message: nil, options: {})
-      json_body = Hyrax::API.generate_response_body(response_type: response_type, message: message, options: options)
-      render json: json_body, status: response_type
-    end
+  # render a json response for +response_type+
+  def render_json_response(response_type: :success, message: nil, options: {})
+    json_body = Hyrax::API.generate_response_body(response_type: response_type, message: message, options: options)
+    render json: json_body, status: response_type
+  end
 
-    # Called by Hydra::Controller::ControllerBehavior when CanCan::AccessDenied is caught
-    # @param [CanCan::AccessDenied] exception error to handle
-    def deny_access(exception)
-      # For the JSON message, we don't want to display the default CanCan messages,
-      # just custom Hydra messages such as "This item is under embargo.", etc.
-      json_message = exception.message if exception.is_a? Hydra::AccessDenied
-      if current_user&.persisted?
-        deny_access_for_current_user(exception, json_message)
-      else
-        deny_access_for_anonymous_user(exception, json_message)
-      end
+  # Called by Hydra::Controller::ControllerBehavior when CanCan::AccessDenied is caught
+  # @param [CanCan::AccessDenied] exception error to handle
+  def deny_access(exception)
+    # For the JSON message, we don't want to display the default CanCan messages,
+    # just custom Hydra messages such as "This item is under embargo.", etc.
+    json_message = exception.message if exception.is_a? Hydra::AccessDenied
+    if current_user&.persisted?
+      deny_access_for_current_user(exception, json_message)
+    else
+      deny_access_for_anonymous_user(exception, json_message)
     end
+  end
 
-    def deny_access_for_current_user(exception, json_message)
-      respond_to do |wants|
-        wants.html do
-          if [:show, :edit, :create, :update, :destroy].include? exception.action
-            render 'hyrax/base/unauthorized', status: :unauthorized
-          else
-            redirect_to main_app.root_url, alert: exception.message
-          end
+  def deny_access_for_current_user(exception, json_message)
+    respond_to do |wants|
+      wants.html do
+        if [:show, :edit, :create, :update, :destroy].include? exception.action
+          render 'hyrax/base/unauthorized', status: :unauthorized
+        else
+          redirect_to main_app.root_url, alert: exception.message
         end
-        wants.json { render_json_response(response_type: :forbidden, message: json_message) }
       end
+      wants.json { render_json_response(response_type: :forbidden, message: json_message) }
     end
+  end
 
-    def deny_access_for_anonymous_user(exception, json_message)
-      session['user_return_to'.freeze] = request.url
-      respond_to do |wants|
-        wants.html { redirect_to main_app.new_user_session_path, alert: exception.message }
-        wants.json { render_json_response(response_type: :unauthorized, message: json_message) }
-      end
+  def deny_access_for_anonymous_user(exception, json_message)
+    session['user_return_to'] = request.url
+    respond_to do |wants|
+      wants.html { redirect_to main_app.new_user_session_path, alert: exception.message }
+      wants.json { render_json_response(response_type: :unauthorized, message: json_message) }
     end
+  end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Flipflop do
   describe "assign_admin_set?" do
     subject { described_class.assign_admin_set? }

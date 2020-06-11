@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'wings/active_fedora_converter'
 
 module Wings

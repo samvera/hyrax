@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
   let(:user) { create(:user) }
   let!(:ability) { ::Ability.new(user) }

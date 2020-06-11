@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Actors
     # Responsible for generating the workflow for the given curation_concern.
@@ -17,10 +18,10 @@ module Hyrax
 
       private
 
-        # @return [TrueClass]
-        def create_workflow(env)
-          workflow_factory.create(env.curation_concern, env.attributes, env.user)
-        end
+      # @return [TrueClass]
+      def create_workflow(env)
+        workflow_factory.create(env.curation_concern, env.attributes, env.user)
+      end
     end
   end
 end

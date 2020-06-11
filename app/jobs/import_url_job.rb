@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'uri'
 require 'tmpdir'
 require 'browse_everything/retriever'
@@ -40,77 +41,77 @@ class ImportUrlJob < Hyrax::ApplicationJob
 
   private
 
-    def can_retrieve_remote?
-      return true if BrowseEverything::Retriever.can_retrieve?(uri, headers)
-      send_error('Expired URL')
-      false
+  def can_retrieve_remote?
+    return true if BrowseEverything::Retriever.can_retrieve?(uri, headers)
+    send_error('Expired URL')
+    false
+  end
+
+  def perform_af
+    name = file_set.label
+
+    # @todo Use Hydra::Works::AddExternalFileToFileSet instead of manually
+    #       copying the file here. This will be gnarly.
+    copy_remote_file(name) do |f|
+      # reload the FileSet once the data is copied since this is a long running task
+      file_set.reload
+
+      # FileSetActor operates synchronously so that this tempfile is available.
+      # If asynchronous, the job might be invoked on a machine that did not have this temp file on its file system!
+      # NOTE: The return status may be successful even if the content never attaches.
+      log_import_status(f)
     end
+  end
 
-    def perform_af
-      name = file_set.label
+  # Download file from uri, yields a block with a file in a temporary directory.
+  # It is important that the file on disk has the same file name as the URL,
+  # because when the file in added into Fedora the file name will get persisted in the
+  # metadata.
+  # @param name [String] the human-readable name of the file
+  # @yield [IO] the stream to write to
+  def copy_remote_file(name)
+    filename = File.basename(name)
+    dir = Dir.mktmpdir
+    Rails.logger.debug("ImportUrlJob: Copying <#{uri}> to #{dir}")
 
-      # @todo Use Hydra::Works::AddExternalFileToFileSet instead of manually
-      #       copying the file here. This will be gnarly.
-      copy_remote_file(name) do |f|
-        # reload the FileSet once the data is copied since this is a long running task
-        file_set.reload
-
-        # FileSetActor operates synchronously so that this tempfile is available.
-        # If asynchronous, the job might be invoked on a machine that did not have this temp file on its file system!
-        # NOTE: The return status may be successful even if the content never attaches.
-        log_import_status(f)
+    File.open(File.join(dir, filename), 'wb') do |f|
+      begin
+        write_file(f)
+        yield f
+      rescue StandardError => e
+        send_error(e.message)
       end
     end
+    Rails.logger.debug("ImportUrlJob: Closing #{File.join(dir, filename)}")
+  end
 
-    # Download file from uri, yields a block with a file in a temporary directory.
-    # It is important that the file on disk has the same file name as the URL,
-    # because when the file in added into Fedora the file name will get persisted in the
-    # metadata.
-    # @param name [String] the human-readable name of the file
-    # @yield [IO] the stream to write to
-    def copy_remote_file(name)
-      filename = File.basename(name)
-      dir = Dir.mktmpdir
-      Rails.logger.debug("ImportUrlJob: Copying <#{uri}> to #{dir}")
+  # Send message to user on download failure
+  # @param filename [String] the filename of the file to download
+  # @param error_message [String] the download error message
+  def send_error(error_message)
+    file_set.errors.add('Error:', error_message)
+    Hyrax.config.callback.run(:after_import_url_failure, file_set, user, warn: false)
+    operation.fail!(file_set.errors.full_messages.join(' '))
+  end
 
-      File.open(File.join(dir, filename), 'wb') do |f|
-        begin
-          write_file(f)
-          yield f
-        rescue StandardError => e
-          send_error(e.message)
-        end
-      end
-      Rails.logger.debug("ImportUrlJob: Closing #{File.join(dir, filename)}")
+  # Write file to the stream
+  # @param f [IO] the stream to write to
+  def write_file(f)
+    retriever = BrowseEverything::Retriever.new
+    uri_spec = ActiveSupport::HashWithIndifferentAccess.new(url: uri, headers: headers)
+    retriever.retrieve(uri_spec) do |chunk|
+      f.write(chunk)
     end
+    f.rewind
+  end
 
-    # Send message to user on download failure
-    # @param filename [String] the filename of the file to download
-    # @param error_message [String] the download error message
-    def send_error(error_message)
-      file_set.errors.add('Error:', error_message)
-      Hyrax.config.callback.run(:after_import_url_failure, file_set, user, warn: false)
-      operation.fail!(file_set.errors.full_messages.join(' '))
+  # Set the import operation status
+  # @param f [IO] the stream to write to
+  def log_import_status(f)
+    if Hyrax::Actors::FileSetActor.new(file_set, user).create_content(f, from_url: true)
+      operation.success!
+    else
+      send_error(uri.path)
     end
-
-    # Write file to the stream
-    # @param f [IO] the stream to write to
-    def write_file(f)
-      retriever = BrowseEverything::Retriever.new
-      uri_spec = ActiveSupport::HashWithIndifferentAccess.new(url: uri, headers: headers)
-      retriever.retrieve(uri_spec) do |chunk|
-        f.write(chunk)
-      end
-      f.rewind
-    end
-
-    # Set the import operation status
-    # @param f [IO] the stream to write to
-    def log_import_status(f)
-      if Hyrax::Actors::FileSetActor.new(file_set, user).create_content(f, from_url: true)
-        operation.success!
-      else
-        send_error(uri.path)
-      end
-    end
+  end
 end

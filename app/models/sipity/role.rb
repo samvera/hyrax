@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sipity
   # A role is a responsibility to do things. That is to take actions. It is
   # easy to conflate a person's role with the groups to which they belong.
@@ -30,7 +31,6 @@ module Sipity
 
     has_many :email_recipients,
              dependent: :destroy,
-             foreign_key: :role_id,
              class_name: 'Sipity::NotificationRecipient'
 
     before_destroy :prevent_registered_roles_from_being_destroyed
@@ -45,8 +45,8 @@ module Sipity
 
     private
 
-      def prevent_registered_roles_from_being_destroyed
-        throw :abort if Hyrax.config.registered_role?(name: name)
-      end
+    def prevent_registered_roles_from_being_destroyed
+      throw :abort if Hyrax.config.registered_role?(name: name)
+    end
   end
 end

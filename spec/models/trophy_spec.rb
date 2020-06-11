@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Trophy, type: :model do
   let(:trophy) { described_class.create(user_id: 99, work_id: "99") }
 

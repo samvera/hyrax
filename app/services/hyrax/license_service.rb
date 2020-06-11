@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Provide select options for the license (dcterms:rights) field
   class LicenseService < QaSelectService

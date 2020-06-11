@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class RepositoryFixityCheckService
     # This is a service that folks can use in their own rake tasks,

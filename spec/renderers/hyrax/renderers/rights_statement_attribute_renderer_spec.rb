@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Renderers::RightsStatementAttributeRenderer do
   let(:field) { :rights_statement }
   let(:renderer) { described_class.new(field, ['http://rightsstatements.org/vocab/InC/1.0/']) }

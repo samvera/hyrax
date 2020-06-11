@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Workflow
     # Welcome intrepid developer. You have stumbled into some complex data
@@ -17,6 +18,8 @@ module Hyrax
     #   as understood as of the commit that has the @api tag. However, these are
     #   public methods because they have been tested in isolation and are used
     #   to help compose the `@api public` methods.
+    #
+    # @todo Refactor the large ABC methods in this module.
     module PermissionQuery
       module_function
 
@@ -65,6 +68,8 @@ module Hyrax
       # @param entity [Object] that can be converted into a Sipity::Entity
       # @param role [Object] that can be converted into a Sipity::Role
       # @return [ActiveRecord::Relation<Sipity::Agent>] augmented with
+      #
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/MethodLength
       def scope_agents_associated_with_entity_and_role(entity:, role:)
         entity = Sipity::Entity(entity)
         role = Sipity::Role(role)
@@ -119,6 +124,7 @@ module Hyrax
         # name of the model that I'm using.
         Sipity::Agent.from(agents.create_table_alias(agents_select_manager, agents.table_name)).all
       end
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
       # @api public
       #
@@ -186,6 +192,8 @@ module Hyrax
       # @param [User] user
       #
       # @return [ActiveRecord::Relation<Sipity::Entity>]
+      #
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def scope_entities_for_the_user(user:)
         entities = Sipity::Entity.arel_table
         workflow_state_actions = Sipity::WorkflowStateAction.arel_table
@@ -226,6 +234,7 @@ module Hyrax
           .or(entities[:id].in(workflow_specific_joins.where(workflow_specific_where)))
         )
       end
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
       # @api public
       #
@@ -239,6 +248,8 @@ module Hyrax
       # @param roles [Sipity::Role]
       # @param entity an object that can be converted into a Sipity::Entity
       # @return [ActiveRecord::Relation<User>]
+      #
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def scope_users_for_entity_and_roles(entity:, roles:)
         entity = Sipity::Entity(entity)
         role_ids = Array.wrap(roles).map { |role| Sipity::Role(role).id }
@@ -275,6 +286,7 @@ module Hyrax
 
         ::User.where(user_table[:id].in(sub_query_for_user))
       end
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
       def user_emails_for_entity_and_roles(entity:, roles:)
         scope_users_for_entity_and_roles(entity: entity, roles: roles).pluck(:email)
@@ -334,7 +346,7 @@ module Hyrax
       # @param user [User]
       # @param entity an object that can be converted into a Sipity::Entity
       # @return [ActiveRecord::Relation<Sipity::WorkflowRole>]
-      def scope_processing_workflow_roles_for_user_and_entity_specific(user:, entity:)
+      def scope_processing_workflow_roles_for_user_and_entity_specific(user:, entity:) # rubocop:disable Metrics/MethodLength
         entity = Sipity::Entity(entity)
         agent_scope = scope_processing_agents_for(user: user)
 
@@ -372,7 +384,8 @@ module Hyrax
       # @param user [User]
       # @param entity an object that can be converted into a Sipity::Entity
       # @return [ActiveRecord::Relation<Sipity::WorkflowStateAction>]
-      def scope_permitted_entity_workflow_state_actions(user:, entity:)
+      #
+      def scope_permitted_entity_workflow_state_actions(user:, entity:) # rubocop:disable Metrics/MethodLength
         entity = Sipity::Entity(entity)
         workflow_state_actions = Sipity::WorkflowStateAction
         permissions = Sipity::WorkflowStateActionPermission

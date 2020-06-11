@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Shows the about and help page
   class PagesController < ApplicationController
@@ -30,23 +31,23 @@ module Hyrax
 
     private
 
-      def permitted_params
-        params.require(:content_block).permit(:about,
-                                              :agreement,
-                                              :help,
-                                              :terms)
-      end
+    def permitted_params
+      params.require(:content_block).permit(:about,
+                                            :agreement,
+                                            :help,
+                                            :terms)
+    end
 
-      # When a request comes to the controller, it will be for one and
-      # only one of the content blocks. Params always looks like:
-      #   {'about_page' => 'Here is an awesome about page!'}
-      # So reach into permitted params and pull out the first value.
-      def update_value_from_params
-        permitted_params.values.first
-      end
+    # When a request comes to the controller, it will be for one and
+    # only one of the content blocks. Params always looks like:
+    #   {'about_page' => 'Here is an awesome about page!'}
+    # So reach into permitted params and pull out the first value.
+    def update_value_from_params
+      permitted_params.values.first
+    end
 
-      def pages_layout
-        action_name == 'show' ? 'homepage' : 'hyrax/dashboard'
-      end
+    def pages_layout
+      action_name == 'show' ? 'homepage' : 'hyrax/dashboard'
+    end
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::ResourceSyncController do
   before do
     Rails.cache.clear

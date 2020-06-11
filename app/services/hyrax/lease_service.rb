@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class LeaseService < RestrictionService
     class << self
@@ -24,9 +25,9 @@ module Hyrax
 
       private
 
-        def presenter_class
-          Hyrax::LeasePresenter
-        end
+      def presenter_class
+        Hyrax::LeasePresenter
+      end
     end
   end
 end

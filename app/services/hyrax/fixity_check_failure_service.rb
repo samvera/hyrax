@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class FixityCheckFailureService < AbstractMessageService
     attr_reader :log_date, :checksum_audit_log, :file_set

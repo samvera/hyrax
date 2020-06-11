@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::API::ZoteroController, type: :controller do
   let(:user) { create(:user) }
 
@@ -8,7 +9,7 @@ RSpec.describe Hyrax::API::ZoteroController, type: :controller do
       before { get :initiate }
 
       specify do
-        expect(subject).to have_http_status(302)
+        expect(subject).to have_http_status(:found)
         expect(flash[:alert]).to eq 'You need to sign in or sign up before continuing.'
       end
     end
@@ -21,7 +22,7 @@ RSpec.describe Hyrax::API::ZoteroController, type: :controller do
       end
 
       specify do
-        expect(subject).to have_http_status(302)
+        expect(subject).to have_http_status(:found)
         expect(subject).to redirect_to(root_path)
         expect(flash[:alert]).to eq 'You are not authorized to perform this operation'
       end
@@ -41,7 +42,7 @@ RSpec.describe Hyrax::API::ZoteroController, type: :controller do
       let(:broken_config) { Hash.new(client_key: 'foo', client_secret: 'bar') }
 
       specify do
-        expect(subject).to have_http_status(302)
+        expect(subject).to have_http_status(:found)
         expect(subject).to redirect_to(root_path)
         expect(flash[:alert]).to eq 'Invalid Zotero client key pair'
       end
@@ -72,7 +73,7 @@ RSpec.describe Hyrax::API::ZoteroController, type: :controller do
       end
 
       specify do
-        expect(subject).to have_http_status(302)
+        expect(subject).to have_http_status(:found)
         expect(flash[:alert]).to be_nil
         expect(subject.headers['Location']).to include('oauth_callback=http%3A%2F%2Ftest.host%2Fapi%2Fzotero%2Fcallback')
       end
@@ -84,7 +85,7 @@ RSpec.describe Hyrax::API::ZoteroController, type: :controller do
       before { get :callback }
 
       specify do
-        expect(subject).to have_http_status(302)
+        expect(subject).to have_http_status(:found)
         expect(flash[:alert]).to eq 'You need to sign in or sign up before continuing.'
       end
     end
@@ -97,7 +98,7 @@ RSpec.describe Hyrax::API::ZoteroController, type: :controller do
       end
 
       specify do
-        expect(subject).to have_http_status(302)
+        expect(subject).to have_http_status(:found)
         expect(subject).to redirect_to(root_path)
         expect(flash[:alert]).to eq 'You are not authorized to perform this operation'
       end
@@ -110,7 +111,7 @@ RSpec.describe Hyrax::API::ZoteroController, type: :controller do
       end
 
       specify do
-        expect(subject).to have_http_status(302)
+        expect(subject).to have_http_status(:found)
         expect(subject).to redirect_to(routes.url_helpers.edit_dashboard_profile_path(user, locale: 'en'))
         expect(flash[:alert]).to eq 'Malformed request from Zotero'
       end
@@ -123,7 +124,7 @@ RSpec.describe Hyrax::API::ZoteroController, type: :controller do
       end
 
       specify do
-        expect(subject).to have_http_status(302)
+        expect(subject).to have_http_status(:found)
         expect(subject).to redirect_to(routes.url_helpers.edit_dashboard_profile_path(user, locale: 'en'))
         expect(flash[:alert]).to eq 'You have not yet connected to Zotero'
       end
@@ -150,7 +151,7 @@ RSpec.describe Hyrax::API::ZoteroController, type: :controller do
       end
 
       specify do
-        expect(subject).to have_http_status(302)
+        expect(subject).to have_http_status(:found)
         expect(Hyrax::Arkivo::CreateSubscriptionJob).to have_received(:perform_later)
         expect(subject).to redirect_to(routes.url_helpers.dashboard_profile_path(user, locale: 'en'))
         expect(flash[:alert]).to be_nil

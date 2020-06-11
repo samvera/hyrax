@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 RSpec.describe 'hyrax/batch_edits/_check_all.html.erb', type: :view do
   before do

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'MultifileInput', type: :input do
   class Foo
     extend ActiveModel::Naming

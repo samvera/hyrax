@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::WorkflowActionsController, type: :controller do
   let(:user) { create(:user) }
   let(:generic_work) { stub_model(GenericWork, id: '123') }

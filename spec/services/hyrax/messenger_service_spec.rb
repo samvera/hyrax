@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::MessengerService do
   describe '#deliver' do
     let(:sender) { create(:user) }

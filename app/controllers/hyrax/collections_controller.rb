@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class CollectionsController < ApplicationController
     include CollectionsControllerBehavior
@@ -16,18 +17,18 @@ module Hyrax
 
     private
 
-      def form
-        @form ||= form_class.new(@collection, current_ability, repository)
-      end
+    def form
+      @form ||= form_class.new(@collection, current_ability, repository)
+    end
 
-      def decide_layout
-        layout = case action_name
-                 when 'show'
-                   '1_column'
-                 else
-                   'dashboard'
-                 end
-        File.join(theme, layout)
-      end
+    def decide_layout
+      layout = case action_name
+               when 'show'
+                 '1_column'
+               else
+                 'dashboard'
+               end
+      File.join(theme, layout)
+    end
   end
 end

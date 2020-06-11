@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::AdminSetIndexer do
   let(:indexer) { described_class.new(admin_set) }
   let(:admin_set) { build(:complete_admin_set) }

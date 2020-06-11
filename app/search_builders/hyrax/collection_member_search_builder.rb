@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # This search builder requires that a accessor named "collection" exists in the scope
   class CollectionMemberSearchBuilder < ::SearchBuilder
@@ -28,12 +29,12 @@ module Hyrax
 
     private
 
-      def only_works?
-        search_includes_models == :works
-      end
+    def only_works?
+      search_includes_models == :works
+    end
 
-      def only_collections?
-        search_includes_models == :collections
-      end
+    def only_collections?
+      search_includes_models == :collections
+    end
   end
 end

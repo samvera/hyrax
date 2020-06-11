@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
   let(:terminator) { Hyrax::Actors::Terminator.new }
   let(:actor) { stack.build(terminator) }

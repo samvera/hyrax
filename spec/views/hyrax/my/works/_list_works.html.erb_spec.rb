@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/my/works/_list_works.html.erb', type: :view do
   let(:id) { "3197z511f" }
   let(:work_data) do

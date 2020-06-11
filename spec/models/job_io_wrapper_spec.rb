@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe JobIoWrapper, type: :model do
   let(:user) { build(:user) }
   let(:path) { fixture_path + '/world.png' }
@@ -25,7 +26,7 @@ RSpec.describe JobIoWrapper, type: :model do
 
       it 'creates a JobIoWrapper' do
         expected_create_args = { user: user, relation: relation.to_s, file_set_id: file_set.id, path: file.path, original_name: 'world.png' }
-        expect(JobIoWrapper).to receive(:create!).with(expected_create_args)
+        expect(described_class).to receive(:create!).with(expected_create_args)
         subject
       end
     end
@@ -35,7 +36,7 @@ RSpec.describe JobIoWrapper, type: :model do
 
       it 'creates a JobIoWrapper' do
         expected_create_args = { user: user, relation: relation.to_s, file_set_id: file_set.id, path: file.path }
-        expect(JobIoWrapper).to receive(:create!).with(expected_create_args)
+        expect(described_class).to receive(:create!).with(expected_create_args)
         subject
       end
     end
@@ -45,7 +46,7 @@ RSpec.describe JobIoWrapper, type: :model do
 
       it 'creates a JobIoWrapper' do
         expected_create_args = { user: user, relation: relation.to_s, file_set_id: file_set.id, uploaded_file: file, path: file.uploader.path }
-        expect(JobIoWrapper).to receive(:create!).with(expected_create_args)
+        expect(described_class).to receive(:create!).with(expected_create_args)
         subject
       end
     end

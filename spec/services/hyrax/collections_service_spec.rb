@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::CollectionsService do
   let(:controller) { ::CatalogController.new }
 

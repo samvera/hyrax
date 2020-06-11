@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class PersistDerivatives < Hydra::Derivatives::PersistOutputFileService
     # Persists a derivative to the local file system.

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::PresenterFactory do
   describe "#build_for" do
     let(:presenter_class) { Hyrax::FileSetPresenter }

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Actors::CreateWithFilesOrderedMembersActor do
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }

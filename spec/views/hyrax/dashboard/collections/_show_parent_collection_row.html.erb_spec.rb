@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/collections/_show_parent_collection_row.html.erb', type: :view do
   let(:child_collection) { double('Collection', id: '123') }
   let(:parent_collection_doc) do

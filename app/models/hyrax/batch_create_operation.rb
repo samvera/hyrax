@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class BatchCreateOperation < Operation
     set_callback :success, :after, :batch_success_message

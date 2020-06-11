@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::ContactFormController do
   let(:user) { create(:user) }
   let(:required_params) do

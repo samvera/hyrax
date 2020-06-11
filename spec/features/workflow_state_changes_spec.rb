@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe "Workflow state changes", type: :feature do
   let(:workflow_name) { 'with_comment' }
   let(:approving_user) { create(:admin) }

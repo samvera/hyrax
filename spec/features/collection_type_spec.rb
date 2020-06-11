@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'collection_type', type: :feature, clean_repo: true do
   let(:admin_user) { create(:admin) }
   let(:exhibit_title) { 'Exhibit' }

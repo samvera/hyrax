@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
   let(:id) { "3197z511f" }
   let(:modified_date) {  DateTime.new(2014, 1, 1).iso8601 }

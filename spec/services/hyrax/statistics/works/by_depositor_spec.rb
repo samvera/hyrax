@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Statistics::Works::ByDepositor do
   describe ".query", :clean_repo do
     let(:user1) { create(:user) }

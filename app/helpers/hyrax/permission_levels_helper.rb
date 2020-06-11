@@ -6,8 +6,8 @@ module Hyrax
     # @return [Hash<String, String>] a map from i18nized strings to permission
     #   level keywords
     def configured_permission_levels
-      Hyrax.config.permission_levels.values.each_with_object({}) do |level, hsh|
-        hsh[I18n.t("hyrax.permission_levels.#{level}")] = level
+      Hyrax.config.permission_levels.values.index_by do |level|
+        I18n.t("hyrax.permission_levels.#{level}")
       end
     end
 
@@ -15,8 +15,8 @@ module Hyrax
     # @return [Hash<String, String>] a map from i18nized strings to permission
     #   level keywords
     def configured_owner_permission_levels
-      Hyrax.config.owner_permission_levels.values.each_with_object({}) do |level, hsh|
-        hsh[I18n.t("hyrax.permission_levels.owner.#{level}")] = level
+      Hyrax.config.owner_permission_levels.values.index_by do |level|
+        I18n.t("hyrax.permission_levels.owner.#{level}")
       end
     end
 
@@ -24,8 +24,8 @@ module Hyrax
     # @return [Hash<String, String>] a map from i18nized strings to permission
     #   level keywords
     def configured_permission_options
-      Hyrax.config.permission_options.values.each_with_object({}) do |option, hsh|
-        hsh[I18n.t("hyrax.permission_levels.options.#{option}")] = option
+      Hyrax.config.permission_options.values.index_by do |option|
+        I18n.t("hyrax.permission_levels.options.#{option}")
       end
     end
   end

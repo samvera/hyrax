@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module ResourceSync
     class CapabilityListWriter
@@ -16,25 +17,25 @@ module Hyrax
       # rubocop:disable Metrics/MethodLength
       private
 
-        def builder
-          Nokogiri::XML::Builder.new do |xml|
-            xml.urlset('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9',
-                       'xmlns:rs' => 'http://www.openarchives.org/rs/terms/') do
-              xml['rs'].ln(rel: "up", href: description_url)
-              xml['rs'].md(capability: "capabilitylist")
+      def builder
+        Nokogiri::XML::Builder.new do |xml|
+          xml.urlset('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9',
+                     'xmlns:rs' => 'http://www.openarchives.org/rs/terms/') do
+            xml['rs'].ln(rel: "up", href: description_url)
+            xml['rs'].md(capability: "capabilitylist")
 
-              xml.url do
-                xml.loc resource_list_url
-                xml['rs'].md(capability: 'resourcelist')
-              end
+            xml.url do
+              xml.loc resource_list_url
+              xml['rs'].md(capability: 'resourcelist')
+            end
 
-              xml.url do
-                xml.loc change_list_url
-                xml['rs'].md(capability: 'changelist')
-              end
+            xml.url do
+              xml.loc change_list_url
+              xml['rs'].md(capability: 'changelist')
             end
           end
         end
+      end
       # rubocop:enable Metrics/MethodLength
     end
   end

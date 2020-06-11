@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe '/_user_util_links.html.erb', type: :view do
   let(:join_date) { 5.days.ago }
   let(:can_create_file) { true }

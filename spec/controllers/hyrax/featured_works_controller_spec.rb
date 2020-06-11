@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::FeaturedWorksController, type: :controller do
   describe "#create" do
     before do

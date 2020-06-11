@@ -106,7 +106,7 @@ module Wings
           resource_factory.to_resource(object: ::ActiveFedora::Base.find(af_id))
         end
       rescue ActiveFedora::ObjectNotFoundError
-        return []
+        []
       end
 
       # Get all resources which link to a resource or id with a given property.
@@ -152,23 +152,23 @@ module Wings
 
       private
 
-        # Determines whether or not an Object is a Valkyrie ID
-        # @param [Object] id
-        # @raise [ArgumentError]
-        def validate_id(id)
-          raise ArgumentError, 'id must be a Valkyrie::ID' unless id.is_a? ::Valkyrie::ID
-        end
+      # Determines whether or not an Object is a Valkyrie ID
+      # @param [Object] id
+      # @raise [ArgumentError]
+      def validate_id(id)
+        raise ArgumentError, 'id must be a Valkyrie::ID' unless id.is_a? ::Valkyrie::ID
+      end
 
-        def find_id_for(reference)
-          return ::Hyrax::Base.uri_to_id(reference.id) if reference.class == ActiveTriples::Resource
-          return reference if reference.class == String
-          # not a supported type
-          ''
-        end
+      def find_id_for(reference)
+        return ::Hyrax::Base.uri_to_id(reference.id) if reference.class == ActiveTriples::Resource
+        return reference if reference.class == String
+        # not a supported type
+        ''
+      end
 
-        def model_class_for(model)
-          ModelRegistry.lookup(model) || model.internal_resource.constantize
-        end
+      def model_class_for(model)
+        ModelRegistry.lookup(model) || model.internal_resource.constantize
+      end
     end
   end
 end

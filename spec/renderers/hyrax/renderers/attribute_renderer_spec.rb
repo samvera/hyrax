@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Renderers::AttributeRenderer do
   let(:field) { :name }
   let(:renderer) { described_class.new(field, ['Bob', 'Jessica']) }

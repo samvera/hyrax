@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Selectors
   module Dashboard
     def db_item_actions_toggle(item)
@@ -40,7 +41,7 @@ module Selectors
     # For use with javascript collection selector that allows for searching for an existing collection from add to collection modal.
     # Does not save the selection.  The calling test is expected to click Save and validate the collection membership was added to the work.
     # @param [Collection] collection to select
-    def select_member_of_collection(collection)
+    def select_member_of_collection(collection) # rubocop:disable Metrics/MethodLength
       find('#s2id_member_of_collection_ids').click
       find('.select2-input').set(collection.title.first)
       # Crude way of waiting for the AJAX response

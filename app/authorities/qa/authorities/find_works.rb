@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Qa::Authorities
   class FindWorks < Qa::Authorities::Base
     class_attribute :search_builder_class
@@ -19,8 +20,8 @@ module Qa::Authorities
 
     private
 
-      def search_builder(controller)
-        search_builder_class.new(controller)
-      end
+    def search_builder(controller)
+      search_builder_class.new(controller)
+    end
   end
 end

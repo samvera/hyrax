@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class FeaturedWorkListsController < ApplicationController
     def create
@@ -11,8 +12,8 @@ module Hyrax
 
     private
 
-      def list_params
-        params.require(:featured_work_list).permit(featured_works_attributes: [:id, :order])
-      end
+    def list_params
+      params.require(:featured_work_list).permit(featured_works_attributes: [:id, :order])
+    end
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module My
     class WorksController < MyController
@@ -33,22 +34,22 @@ module Hyrax
 
       private
 
-        def collections_service
-          Hyrax::CollectionsService.new(self)
-        end
+      def collections_service
+        Hyrax::CollectionsService.new(self)
+      end
 
-        def search_action_url(*args)
-          hyrax.my_works_url(*args)
-        end
+      def search_action_url(*args)
+        hyrax.my_works_url(*args)
+      end
 
-        # The url of the "more" link for additional facet values
-        def search_facet_path(args = {})
-          hyrax.my_dashboard_works_facet_path(args[:id])
-        end
+      # The url of the "more" link for additional facet values
+      def search_facet_path(args = {})
+        hyrax.my_dashboard_works_facet_path(args[:id])
+      end
 
-        def managed_works_count
-          @managed_works_count = Hyrax::Works::ManagedWorksService.managed_works_count(scope: self)
-        end
+      def managed_works_count
+        @managed_works_count = Hyrax::Works::ManagedWorksService.managed_works_count(scope: self)
+      end
     end
   end
 end

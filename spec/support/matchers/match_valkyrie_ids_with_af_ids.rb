@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax::Matchers
   class MatchValkyrieIdsWithActiveFedoraIds < RSpec::Matchers::BuiltIn::ContainExactly
     def match_when_sorted?

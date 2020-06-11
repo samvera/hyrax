@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Workflow::StatusListService do
   describe "#each" do
     let(:user) { create(:user) }

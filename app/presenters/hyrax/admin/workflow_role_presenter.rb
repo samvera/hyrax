@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Admin
     # Displays a single workflow role
@@ -17,14 +18,14 @@ module Hyrax
 
       private
 
-        attr_accessor :workflow, :role, :source_id
+      attr_accessor :workflow, :role, :source_id
 
-        def admin_set_label(id)
-          result = Hyrax::SolrService.search_by_id(id, fl: 'title_tesim')
-          result['title_tesim'].first
-        rescue ActiveFedora::ObjectNotFoundError
-          "[AdminSet ID=#{id}]"
-        end
+      def admin_set_label(id)
+        result = Hyrax::SolrService.search_by_id(id, fl: 'title_tesim')
+        result['title_tesim'].first
+      rescue ActiveFedora::ObjectNotFoundError
+        "[AdminSet ID=#{id}]"
+      end
     end
   end
 end

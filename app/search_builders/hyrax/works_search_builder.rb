@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Returns all works, either active or suppressed.
   # This should only be used by an admin user

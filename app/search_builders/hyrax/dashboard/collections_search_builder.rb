@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Dashboard
     class CollectionsSearchBuilder < Hyrax::CollectionSearchBuilder
@@ -34,11 +35,11 @@ module Hyrax
 
       private
 
-        def collection_ids_for_deposit
-          Hyrax::Collections::PermissionsService.source_ids_for_deposit(ability: current_ability,
-                                                                        exclude_groups: [::Ability.registered_group_name,
-                                                                                         ::Ability.public_group_name])
-        end
+      def collection_ids_for_deposit
+        Hyrax::Collections::PermissionsService.source_ids_for_deposit(ability: current_ability,
+                                                                      exclude_groups: [::Ability.registered_group_name,
+                                                                                       ::Ability.public_group_name])
+      end
     end
   end
 end

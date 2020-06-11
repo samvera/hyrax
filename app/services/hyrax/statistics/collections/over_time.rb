@@ -1,12 +1,13 @@
+# frozen_string_literal: true
 module Hyrax
   module Statistics
     module Collections
       class OverTime < Statistics::OverTime
         private
 
-          def relation
-            ::Collection
-          end
+        def relation
+          ::Collection
+        end
       end
     end
   end

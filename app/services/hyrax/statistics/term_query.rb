@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Statistics
     # An abstract class for running a query against the Solr terms component

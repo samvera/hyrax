@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Arkivo do
   describe '.config' do
     it 'returns a hash with the :url key' do

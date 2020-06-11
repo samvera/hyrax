@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Collections::PermissionsCreateService do
   let(:user) { create(:user) }
   let(:user2) { create(:user) }

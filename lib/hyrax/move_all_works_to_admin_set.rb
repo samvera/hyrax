@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # If you want to move all your works to an admin set run this.
 class MoveAllWorksToAdminSet
   def self.run(admin_set)

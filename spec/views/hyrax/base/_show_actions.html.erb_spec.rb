@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
   let(:presenter) { Hyrax::WorkShowPresenter.new(solr_document, ability) }
   let(:solr_document) { SolrDocument.new(attributes) }

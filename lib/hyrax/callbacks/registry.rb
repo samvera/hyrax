@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Callbacks
     class Registry
@@ -44,17 +45,17 @@ module Hyrax
 
       private
 
-        def warning_for_set
-          "Hyrax.config.callback is deprecated; register your callback handler " \
-            "as a listener on Hyrax.publisher instead. See Hyrax::Publisher " \
-            "and Dry::Events"
-        end
+      def warning_for_set
+        "Hyrax.config.callback is deprecated; register your callback handler " \
+          "as a listener on Hyrax.publisher instead. See Hyrax::Publisher " \
+          "and Dry::Events"
+      end
 
-        def warning_for_run
-          "Hyrax.config.callback is deprecated; to trigger handlers publish " \
-            "events to Hyrax.publisher instead of running callbacks. See " \
-            "Hyrax::Publisher and Dry::Events"
-        end
+      def warning_for_run
+        "Hyrax.config.callback is deprecated; to trigger handlers publish " \
+          "events to Hyrax.publisher instead of running callbacks. See " \
+          "Hyrax::Publisher and Dry::Events"
+      end
     end
 
     # Custom exceptions

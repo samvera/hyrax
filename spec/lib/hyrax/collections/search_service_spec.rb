@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Collections::SearchService do
   let(:login) { 'vanessa' }
   let(:session) { { history: [17, 14, 12, 9] } }

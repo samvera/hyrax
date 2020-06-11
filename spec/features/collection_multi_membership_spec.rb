@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_repo: true, js: true do
   include Selectors::Dashboard
   let(:admin_user) { create(:admin, email: 'admin@example.com') }

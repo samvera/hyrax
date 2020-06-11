@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class CollectionIndexer < Hydra::PCDM::CollectionIndexer
     include Hyrax::IndexesThumbnails

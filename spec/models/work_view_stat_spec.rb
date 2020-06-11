@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe WorkViewStat, type: :model do
   let(:work_id) { work.id }
   let(:user_id) { 123 }

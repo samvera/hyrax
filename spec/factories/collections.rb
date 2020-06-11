@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 FactoryBot.define do
   # Tests that create a Fedora Object are very slow.  This factory lets you control which parts of the object ecosystem
   # get built.

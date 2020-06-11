@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class VersionPresenter
     attr_reader :version, :current

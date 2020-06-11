@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/collections/_show_parent_collections.html.erb', type: :view do
   let(:collection_doc) do
     {

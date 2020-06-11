@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module TrophyHelper
     def display_trophy_link(user, id, args = {}, &_block)

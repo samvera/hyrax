@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Called by the stats controller, it finds cached file pageview data,
 # and prepares it for visualization in /app/views/stats/file.html.erb
 module Hyrax
@@ -26,12 +27,12 @@ module Hyrax
 
     private
 
-      def downloads
-        to_flots(FileDownloadStat.statistics(model, created, user_id))
-      end
+    def downloads
+      to_flots(FileDownloadStat.statistics(model, created, user_id))
+    end
 
-      def pageviews
-        to_flots(FileViewStat.statistics(model, created, user_id))
-      end
+    def pageviews
+      to_flots(FileViewStat.statistics(model, created, user_id))
+    end
   end
 end

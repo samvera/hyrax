@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Dashboard::NestCollectionsController do
   routes { Hyrax::Engine.routes }
   let(:child_id) { 'child1' }

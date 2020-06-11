@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::EmbargoesController do
   let(:user) { create(:user) }
   let(:a_work) { create(:generic_work, user: user) }

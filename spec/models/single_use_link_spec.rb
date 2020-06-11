@@ -1,14 +1,16 @@
+# frozen_string_literal: true
 RSpec.describe SingleUseLink do
+  subject(:link) { described_class.new item_id: '99999', path: path }
   let(:file) { FileSet.new(id: 'abc123') }
+  let(:hash) { "sha2hash#{DateTime.current.to_f}" }
+  let(:path) { '/foo/file/99999' }
+
+  before do
+    allow(described_class).to receive(:generate_download_key).and_return(hash)
+  end
 
   describe "default attributes" do
-    let(:hash) { "sha2hash#{DateTime.current.to_f}" }
-    let(:path) { '/foo/file/99999' }
-
-    subject { described_class.new item_id: '99999', path: path }
-
     it "creates link" do
-      expect(Digest::SHA2).to receive(:new).and_return(hash)
       expect(subject.download_key).to eq hash
       expect(subject.item_id).to eq '99999'
       expect(subject.path).to eq path
@@ -16,13 +18,7 @@ RSpec.describe SingleUseLink do
   end
 
   describe "attribute aliases" do
-    let(:hash) { "sha2hash#{DateTime.current.to_f}" }
-    let(:path) { '/foo/file/99999' }
-
-    subject { described_class.new itemId: '99999', path: path }
-
     it "creates link" do
-      expect(Digest::SHA2).to receive(:new).and_return(hash)
       expect(subject.downloadKey).to eq hash
       expect(subject.itemId).to eq '99999'
       expect(subject.path).to eq path

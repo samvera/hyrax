@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class AbstractMessageService
     attr_reader :file_set, :user
@@ -26,8 +27,8 @@ module Hyrax
 
     private
 
-      def job_user
-        ::User.audit_user
-      end
+    def job_user
+      ::User.audit_user
+    end
   end
 end

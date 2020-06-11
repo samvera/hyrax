@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'hyrax/controlled_vocabulary/importer/language'
 
 RSpec.describe Hyrax::ControlledVocabulary::Importer::Language do

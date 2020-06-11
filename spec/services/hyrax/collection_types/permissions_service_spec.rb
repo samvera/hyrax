@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::CollectionTypes::PermissionsService do
   let(:user_cg) { create(:user, groups: 'create_group') }
   let(:user_mg) { create(:user, groups: 'manage_group') }

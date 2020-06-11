@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'hyrax/callbacks'
 require 'hyrax/role_registry'
 require 'samvera/nesting_indexer'
@@ -13,7 +14,7 @@ module Hyrax
       @nested_relationship_reindexer = default_nested_relationship_reindexer
     end
 
-    DEFAULT_ACTIVE_WORKFLOW_NAME = 'default'.freeze
+    DEFAULT_ACTIVE_WORKFLOW_NAME = 'default'
     private_constant :DEFAULT_ACTIVE_WORKFLOW_NAME
 
     # @api public
@@ -325,7 +326,7 @@ module Hyrax
       @arkivo_api ||= false
     end
 
-    # rubocop:disable Metrics/LineLength
+    # rubocop:disable Layout/LineLength
     attr_writer :realtime_notifications
     def realtime_notifications?
       # Coerce @realtime_notifications to false if server software
@@ -339,7 +340,7 @@ module Hyrax
       return @realtime_notifications unless @realtime_notifications.nil?
       @realtime_notifications = true
     end
-    # rubocop:enable Metrics/LineLength
+    # rubocop:enable Layout/LineLength
 
     def use_valkyrie?
       ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_VALKYRIE', false))
@@ -602,19 +603,19 @@ module Hyrax
 
     private
 
-      # @param [Symbol, #to_s] model_name - symbol representing the model
-      # @return [String] the class name for the model
-      def normalize_concern_name(model_name)
-        model_name.to_s.camelize
-      end
+    # @param [Symbol, #to_s] model_name - symbol representing the model
+    # @return [String] the class name for the model
+    def normalize_concern_name(model_name)
+      model_name.to_s.camelize
+    end
 
-      # @return [Hash] config options for the uploader
-      def default_uploader_config
-        {
-          limitConcurrentUploads: 6,
-          maxNumberOfFiles: 100,
-          maxFileSize: 500.megabytes
-        }
-      end
+    # @return [Hash] config options for the uploader
+    def default_uploader_config
+      {
+        limitConcurrentUploads: 6,
+        maxNumberOfFiles: 100,
+        maxFileSize: 500.megabytes
+      }
+    end
   end
 end

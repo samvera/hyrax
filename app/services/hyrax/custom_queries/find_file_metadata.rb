@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Provide custom queries for finding Hyrax::FileMetadata
 # @example
 #   Hyrax.custom_queries.find_file_metadata_by(id: valkyrie_id)

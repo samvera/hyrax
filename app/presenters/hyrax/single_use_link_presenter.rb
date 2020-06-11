@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class SingleUseLinkPresenter
     include ActionView::Helpers::TranslationHelper
@@ -41,12 +42,12 @@ module Hyrax
 
     private
 
-      def download?
-        link.path =~ /downloads/
-      end
+    def download?
+      link.path =~ /downloads/
+    end
 
-      def hours
-        (link.expires - Time.zone.now).to_i / 3600
-      end
+    def hours
+      (link.expires - Time.zone.now).to_i / 3600
+    end
   end
 end

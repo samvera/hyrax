@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Sipity
   RSpec.describe WorkflowStateActionPermission, type: :model do
     subject { described_class }

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Admin::WorkflowRolePresenter do
   let(:presenter) { described_class.new(workflow_role) }
   let(:role) { Sipity::Role[:depositor] }

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails/generators'
 require 'rails/generators/model_helpers'
 
@@ -26,7 +27,7 @@ class Hyrax::WorkResourceGenerator < Rails::Generators::NamedBase
 
   def create_metadata_config
     template('metadata.yaml', File.join('config/metadata/', "#{file_name}.yaml"))
-    return unless attributes.present?
+    return if attributes.blank?
     gsub_file File.join('config/metadata/', "#{file_name}.yaml"),
               'attributes: {}',
               { 'attributes' => attributes.collect { |arg| [arg.name, { 'type' => arg.type.to_s }] }.to_h }.to_yaml
@@ -40,7 +41,7 @@ class Hyrax::WorkResourceGenerator < Rails::Generators::NamedBase
     return unless rspec_installed?
     filepath = File.join('spec/models/', class_path, "#{file_name}_spec.rb")
     template('work_spec.rb.erb', filepath)
-    return unless attributes.present?
+    return if attributes.blank?
     inject_into_file filepath, after: /it_behaves_like 'a Hyrax::Work'\n/ do
       "\n  context 'includes schema defined metadata' do\n"\
       "#{attributes.collect { |arg| "    it { is_expected.to respond_to(:#{arg.name}) }\n" }.join}" \
@@ -88,18 +89,18 @@ class Hyrax::WorkResourceGenerator < Rails::Generators::NamedBase
 
   private
 
-    def rspec_installed?
-      defined?(RSpec) && defined?(RSpec::Rails)
-    end
+  def rspec_installed?
+    defined?(RSpec) && defined?(RSpec::Rails)
+  end
 
-    def registration_path_symbol
-      return ":#{file_name}" if class_path.blank?
-      # creates a symbol with a path like "abc/scholarly_paper" where abc
-      # is the namespace and scholarly_paper is the resource name
-      ":\"#{File.join(class_path, file_name)}\""
-    end
+  def registration_path_symbol
+    return ":#{file_name}" if class_path.blank?
+    # creates a symbol with a path like "abc/scholarly_paper" where abc
+    # is the namespace and scholarly_paper is the resource name
+    ":\"#{File.join(class_path, file_name)}\""
+  end
 
-    def revoking?
-      behavior == :revoke
-    end
+  def revoking?
+    behavior == :revoke
+  end
 end

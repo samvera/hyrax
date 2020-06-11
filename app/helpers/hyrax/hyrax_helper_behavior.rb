@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module HyraxHelperBehavior
     include Hyrax::CitationsBehavior
@@ -58,10 +59,9 @@ module Hyrax
               'aria-label' => mailbox.label(params[:locale]),
               class: 'notify-number') do
         capture do
-          concat content_tag(:span, '', class: 'fa fa-bell')
+          concat tag.span('', class: 'fa fa-bell')
           concat "\n"
-          concat content_tag(:span,
-                             unread_notifications,
+          concat tag.span(unread_notifications,
                              class: count_classes_for(unread_notifications))
         end
       end
@@ -257,7 +257,7 @@ module Hyrax
 
     # Used by the gallery view
     def collection_thumbnail(_document, _image_options = {}, _url_options = {})
-      content_tag(:span, "", class: [Hyrax::ModelIcon.css_class_for(::Collection), "collection-icon-search"])
+      tag.span("", class: [Hyrax::ModelIcon.css_class_for(::Collection), "collection-icon-search"])
     end
 
     def collection_title_by_id(id)
@@ -270,60 +270,56 @@ module Hyrax
 
     private
 
-      def user_agent
-        request.user_agent || ''
+    def user_agent
+      request.user_agent || ''
+    end
+
+    def count_classes_for(unread_count)
+      classes = unread_count.zero? ? 'invisible label-default' : 'label-danger'
+
+      "count label #{classes}"
+    end
+
+    def search_action_for_dashboard
+      case params[:controller]
+      when "hyrax/my/collections"
+        hyrax.my_collections_path
+      when "hyrax/my/shares"
+        hyrax.dashboard_shares_path
+      when "hyrax/my/highlights"
+        hyrax.dashboard_highlights_path
+      when "hyrax/dashboard/works"
+        hyrax.dashboard_works_path
+      when "hyrax/dashboard/collections"
+        hyrax.dashboard_collections_path
+      else
+        # hyrax/my/works controller and default cases.
+        hyrax.my_works_path
       end
+    end
+    # rubocop:enable Metrics/MethodLength
 
-      def count_classes_for(unread_count)
-        'count label '.tap do |classes|
-          classes << if unread_count.zero?
-                       'invisible label-default'
-                     else
-                       'label-danger'
-                     end
-        end
-      end
+    # @param [ActionController::Parameters] params first argument for Blacklight::SearchState.new
+    # @param [Hash] facet
+    # @note Assumes one facet is passed in. If a second facet is passed, then it must be the depositor
+    # facet used by the Profile page.
+    def search_state_with_facets(params, facet = {})
+      state = Blacklight::SearchState.new(params, CatalogController.blacklight_config)
+      return state.params if facet.none?
 
-      def search_action_for_dashboard
-        case params[:controller]
-        when "hyrax/my/collections"
-          hyrax.my_collections_path
-        when "hyrax/my/shares"
-          hyrax.dashboard_shares_path
-        when "hyrax/my/highlights"
-          hyrax.dashboard_highlights_path
-        when "hyrax/dashboard/works"
-          hyrax.dashboard_works_path
-        when "hyrax/dashboard/collections"
-          hyrax.dashboard_collections_path
-        else
-          # hyrax/my/works controller and default cases.
-          hyrax.my_works_path
-        end
-      end
-      # rubocop:enable Metrics/MethodLength
+      # facet should contain one or two values. If it has two values,
+      # the second is assumed to be the depositor facet.
+      facet_type = state.add_facet_params(facet.keys.first.to_s + "_sim", facet.values.first)
+      return facet_type if facet.length == 1
 
-      # @param [ActionController::Parameters] params first argument for Blacklight::SearchState.new
-      # @param [Hash] facet
-      # @note Assumes one facet is passed in. If a second facet is passed, then it must be the depositor
-      # facet used by the Profile page.
-      def search_state_with_facets(params, facet = {})
-        state = Blacklight::SearchState.new(params, CatalogController.blacklight_config)
-        return state.params if facet.none?
+      facet_depositor = state.add_facet_params(facet.keys[1].to_s + "_ssim", facet.values[1])
+      facet_all = Hash.new {}
+      facet_all["f"] = facet_type["f"].merge(facet_depositor["f"])
+      facet_all
+    end
 
-        # facet should contain one or two values. If it has two values,
-        # the second is assumed to be the depositor facet.
-        facet_type = state.add_facet_params(facet.keys.first.to_s + "_sim", facet.values.first)
-        return facet_type if facet.length == 1
-
-        facet_depositor = state.add_facet_params(facet.keys[1].to_s + "_ssim", facet.values[1])
-        facet_all = Hash.new {}
-        facet_all["f"] = facet_type["f"].merge(facet_depositor["f"])
-        facet_all
-      end
-
-      def institution
-        Institution
-      end
+    def institution
+      Institution
+    end
   end
 end

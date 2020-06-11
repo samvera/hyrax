@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class WorkflowActionsController < ApplicationController
     before_action :authenticate_user!
@@ -15,27 +16,27 @@ module Hyrax
 
     private
 
-      def curation_concern
-        @curation_concern ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id], use_valkyrie: false)
-      end
+    def curation_concern
+      @curation_concern ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id], use_valkyrie: false)
+    end
 
-      def workflow_action_form
-        @workflow_action_form ||= Hyrax::Forms::WorkflowActionForm.new(
-          current_ability: current_ability,
-          work: curation_concern,
-          attributes: workflow_action_params
-        )
-      end
+    def workflow_action_form
+      @workflow_action_form ||= Hyrax::Forms::WorkflowActionForm.new(
+        current_ability: current_ability,
+        work: curation_concern,
+        attributes: workflow_action_params
+      )
+    end
 
-      def workflow_action_params
-        params.require(:workflow_action).permit(:name, :comment)
-      end
+    def workflow_action_params
+      params.require(:workflow_action).permit(:name, :comment)
+    end
 
-      def after_update_response
-        respond_to do |wants|
-          wants.html { redirect_to [main_app, curation_concern], notice: "The #{curation_concern.human_readable_type} has been updated." }
-          wants.json { render 'hyrax/base/show', status: :ok, location: polymorphic_path([main_app, curation_concern]) }
-        end
+    def after_update_response
+      respond_to do |wants|
+        wants.html { redirect_to [main_app, curation_concern], notice: "The #{curation_concern.human_readable_type} has been updated." }
+        wants.json { render 'hyrax/base/show', status: :ok, location: polymorphic_path([main_app, curation_concern]) }
       end
+    end
   end
 end

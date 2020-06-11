@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/file_sets/show.json.jbuilder' do
   let(:presenter) do
     instance_double(Hyrax::FileSetPresenter,

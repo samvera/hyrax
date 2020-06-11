@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module SolrDocument
     # TODO: aside from height and width, I don't think any of these other terms are indexed by default. - Justin 3/2016

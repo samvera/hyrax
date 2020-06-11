@@ -19,8 +19,8 @@ module Hyrax
 
     private
 
-      def visibility_reader
-        Hyrax::VisibilityReader.new(resource: resource)
-      end
+    def visibility_reader
+      Hyrax::VisibilityReader.new(resource: resource)
+    end
   end
 end

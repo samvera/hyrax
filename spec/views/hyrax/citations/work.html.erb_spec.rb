@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/citations/work.html.erb', type: :view do
   context "full work metadata" do
     let(:object_profile) { ["{\"id\":\"999\"}"] }

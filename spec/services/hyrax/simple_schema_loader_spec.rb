@@ -8,7 +8,7 @@ RSpec.describe Hyrax::SimpleSchemaLoader do
   describe '#attributes_for' do
     it 'provides an attributes hash' do
       expect(schema_loader.attributes_for(schema: :core_metadata))
-        .to include(title:     Valkyrie::Types::Array.of(Valkyrie::Types::String),
+        .to include(title: Valkyrie::Types::Array.of(Valkyrie::Types::String),
                     depositor: Valkyrie::Types::String)
     end
 

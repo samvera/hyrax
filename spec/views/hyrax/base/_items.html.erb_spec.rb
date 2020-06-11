@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/base/_items.html.erb', type: :view do
   let(:ability) { double }
   let(:request) { double "request", params: params }

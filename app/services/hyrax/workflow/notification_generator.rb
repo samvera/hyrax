@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Workflow
     # Responsible for writing the database records for the given :workflow and :notification_configuration.
@@ -28,37 +29,37 @@ module Hyrax
 
       private
 
-        def persist_notification
-          Sipity::Notification.find_or_create_by!(
-            name: notification_configuration.notification_name,
-            notification_type: notification_configuration.notification_type
-          )
-        end
+      def persist_notification
+        Sipity::Notification.find_or_create_by!(
+          name: notification_configuration.notification_name,
+          notification_type: notification_configuration.notification_type
+        )
+      end
 
-        def assign_recipients_to(notification:)
-          notification_configuration.recipients.slice(:to, :cc, :bcc).each do |(recipient_strategy, recipient_roles)|
-            Array.wrap(recipient_roles).each do |role|
-              notification.recipients.find_or_create_by!(
-                role: Sipity::Role(role), recipient_strategy: recipient_strategy.to_s
-              )
-            end
+      def assign_recipients_to(notification:)
+        notification_configuration.recipients.slice(:to, :cc, :bcc).each do |(recipient_strategy, recipient_roles)|
+          Array.wrap(recipient_roles).each do |role|
+            notification.recipients.find_or_create_by!(
+              role: Sipity::Role(role), recipient_strategy: recipient_strategy.to_s
+            )
           end
         end
+      end
 
-        def assign_scope_and_reason_to(notification:)
-          Sipity::NotifiableContext.find_or_create_by!(
-            scope_for_notification: scope,
-            reason_for_notification: notification_configuration.reason,
-            notification: notification
-          )
-        end
+      def assign_scope_and_reason_to(notification:)
+        Sipity::NotifiableContext.find_or_create_by!(
+          scope_for_notification: scope,
+          reason_for_notification: notification_configuration.reason,
+          notification: notification
+        )
+      end
 
-        attr_accessor :workflow, :notification_configuration
-        attr_reader :scope
+      attr_accessor :workflow, :notification_configuration
+      attr_reader :scope
 
-        def assign_scope!
-          @scope = Sipity::WorkflowAction(notification_configuration.scope, workflow)
-        end
+      def assign_scope!
+        @scope = Sipity::WorkflowAction(notification_configuration.scope, workflow)
+      end
     end
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Responsible for adding the necessary callbacks for updating the nested collection information
   # This is part of the after update index because it is a potentially very expensive process.
@@ -65,8 +66,8 @@ module Hyrax
 
     private
 
-      def reindex_nested_relationships_for(id:, extent:)
-        Hyrax.config.nested_relationship_reindexer.call(id: id, extent: extent)
-      end
+    def reindex_nested_relationships_for(id:, extent:)
+      Hyrax.config.nested_relationship_reindexer.call(id: id, extent: extent)
+    end
   end
 end

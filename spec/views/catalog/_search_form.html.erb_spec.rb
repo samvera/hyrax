@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'catalog/_search_form.html.erb', type: :view do
   before do
     allow(view).to receive(:search_form_action).and_return("/catalog")

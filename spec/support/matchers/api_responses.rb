@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # RSpec matchers for API default JSON responses.
 # Creates a matcher like respond_forbidden or respond_not_found corresponding to each of the Api::V1.default_responses
 # Accepts optional overrides to the expected response body.

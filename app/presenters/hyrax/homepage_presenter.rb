@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class HomepagePresenter
     class_attribute :create_work_presenter_class
@@ -37,9 +38,9 @@ module Hyrax
 
     private
 
-      def user_unregistered?
-        current_ability.current_user.new_record? ||
-          current_ability.current_user.guest?
-      end
+    def user_unregistered?
+      current_ability.current_user.new_record? ||
+        current_ability.current_user.guest?
+    end
   end
 end

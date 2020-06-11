@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe "hyrax/pages/show", type: :view do
   let(:content_block) { create(:content_block, name: 'terms_page') }
 

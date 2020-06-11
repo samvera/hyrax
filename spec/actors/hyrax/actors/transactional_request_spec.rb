@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Actors::TransactionalRequest do
   let(:bad_actor) do
     Class.new(Hyrax::Actors::AbstractActor) do

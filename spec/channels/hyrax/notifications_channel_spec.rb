@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::NotificationsChannel do
   subject { described_class.new(connection, nil) }
 

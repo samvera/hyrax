@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Qa::Authorities::FindWorks do
   let(:controller) { Qa::TermsController.new }
   let(:user1) { create(:user) }

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Arkivo::SchemaValidator do
   let(:item) { JSON.parse(FactoryBot.json(:post_item)) }
 

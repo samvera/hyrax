@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/file_sets/_actions.html.erb', type: :view do
   let(:solr_document) { double("Solr Doc", id: 'file_set_id') }
   let(:user) { build(:user) }

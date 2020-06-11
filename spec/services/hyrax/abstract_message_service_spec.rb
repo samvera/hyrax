@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::AbstractMessageService do
   let(:file_set) { double }
   let(:user) { build(:user) }

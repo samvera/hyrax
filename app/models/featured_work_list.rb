@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class FeaturedWorkList
   include ActiveModel::Model
 
@@ -26,24 +27,24 @@ class FeaturedWorkList
 
   private
 
-    def add_solr_document_to_works
-      work_presenters.each do |presenter|
-        work_with_id(presenter.id).presenter = presenter
-      end
+  def add_solr_document_to_works
+    work_presenters.each do |presenter|
+      work_with_id(presenter.id).presenter = presenter
     end
+  end
 
-    def ids
-      @works.pluck(:work_id)
-    end
+  def ids
+    @works.pluck(:work_id)
+  end
 
-    def work_presenters
-      ability = nil
-      Hyrax::PresenterFactory.build_for(ids: ids,
-                                        presenter_class: Hyrax::WorkShowPresenter,
-                                        presenter_args: ability)
-    end
+  def work_presenters
+    ability = nil
+    Hyrax::PresenterFactory.build_for(ids: ids,
+                                      presenter_class: Hyrax::WorkShowPresenter,
+                                      presenter_args: ability)
+  end
 
-    def work_with_id(id)
-      @works.find { |w| w.work_id == id }
-    end
+  def work_with_id(id)
+    @works.find { |w| w.work_id == id }
+  end
 end

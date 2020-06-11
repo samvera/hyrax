@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class SingleUseLinksViewerController < DownloadsController
     include Blacklight::Base
@@ -35,62 +36,62 @@ module Hyrax
 
     private
 
-      def search_builder_class
-        SingleUseLinkSearchBuilder
-      end
+    def search_builder_class
+      SingleUseLinkSearchBuilder
+    end
 
-      def content_options
-        super.tap do |options|
-          options[:disposition] = 'attachment' if action_name == 'download'
+    def content_options
+      super.tap do |options|
+        options[:disposition] = 'attachment' if action_name == 'download'
+      end
+    end
+
+    # This is called in a before filter. It causes @asset to be set.
+    def authorize_download!
+      authorize! :read, asset
+    end
+
+    def single_use_link
+      @single_use_link ||= SingleUseLink.find_by_download_key!(params[:id])
+    end
+
+    def not_found_exception
+      SingleUseError.new('Single-Use Link Not Found')
+    end
+
+    def asset
+      @asset ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: single_use_link.item_id, use_valkyrie: false)
+    end
+
+    def current_ability
+      @current_ability ||= SingleUseLinksViewerController::Ability.new current_user, single_use_link
+    end
+
+    def render_single_use_error(exception)
+      logger.error("Rendering PAGE due to exception: #{exception.inspect} - #{exception.backtrace if exception.respond_to? :backtrace}")
+      render 'single_use_error', layout: "error", status: 404
+    end
+
+    def _prefixes
+      # This allows us to use the attributes templates in hyrax/base, while prefering
+      # our local paths. Thus we are unable to just override `self.local_prefixes`
+      @_prefixes ||= super + ['hyrax/base']
+    end
+
+    class Ability
+      include CanCan::Ability
+
+      attr_reader :single_use_link
+
+      def initialize(user, single_use_link)
+        @user = user || ::User.new
+        return unless single_use_link
+
+        @single_use_link = single_use_link
+        can :read, [ActiveFedora::Base, ::SolrDocument] do |obj|
+          single_use_link.valid? && single_use_link.item_id == obj.id && single_use_link.destroy!
         end
       end
-
-      # This is called in a before filter. It causes @asset to be set.
-      def authorize_download!
-        authorize! :read, asset
-      end
-
-      def single_use_link
-        @single_use_link ||= SingleUseLink.find_by_download_key!(params[:id])
-      end
-
-      def not_found_exception
-        SingleUseError.new('Single-Use Link Not Found')
-      end
-
-      def asset
-        @asset ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: single_use_link.item_id, use_valkyrie: false)
-      end
-
-      def current_ability
-        @current_ability ||= SingleUseLinksViewerController::Ability.new current_user, single_use_link
-      end
-
-      def render_single_use_error(exception)
-        logger.error("Rendering PAGE due to exception: #{exception.inspect} - #{exception.backtrace if exception.respond_to? :backtrace}")
-        render 'single_use_error', layout: "error", status: 404
-      end
-
-      def _prefixes
-        # This allows us to use the attributes templates in hyrax/base, while prefering
-        # our local paths. Thus we are unable to just override `self.local_prefixes`
-        @_prefixes ||= super + ['hyrax/base']
-      end
-
-      class Ability
-        include CanCan::Ability
-
-        attr_reader :single_use_link
-
-        def initialize(user, single_use_link)
-          @user = user || ::User.new
-          return unless single_use_link
-
-          @single_use_link = single_use_link
-          can :read, [ActiveFedora::Base, ::SolrDocument] do |obj|
-            single_use_link.valid? && single_use_link.item_id == obj.id && single_use_link.destroy!
-          end
-        end
-      end
+    end
   end
 end

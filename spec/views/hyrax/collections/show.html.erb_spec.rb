@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/collections/show.html.erb', type: :view do
   let(:document) do
     SolrDocument.new(id: 'xyz123z4',

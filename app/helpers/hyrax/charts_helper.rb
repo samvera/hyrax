@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module ChartsHelper
     # @example A chart with a drilldown

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Given the id of a work, find the collections it is a member of
   class ParentCollectionSearchBuilder < Hyrax::CollectionSearchBuilder

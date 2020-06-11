@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Download, type: :model do
   it 'has an events metric' do
     expect(described_class.metrics).to be == Legato::ListParameter.new(:metrics, [:totalEvents])

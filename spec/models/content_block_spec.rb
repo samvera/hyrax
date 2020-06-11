@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe ContentBlock, type: :model do
   describe '.for' do
     context 'with a nil' do
@@ -15,7 +16,7 @@ RSpec.describe ContentBlock, type: :model do
 
       it 'returns a new instance' do
         expect(described_class).to receive(:about_page).and_call_original
-        expect(subject).to be_instance_of ContentBlock
+        expect(subject).to be_instance_of described_class
         expect(subject).to be_persisted
       end
     end
@@ -24,7 +25,7 @@ RSpec.describe ContentBlock, type: :model do
 
       it 'returns a new instance' do
         expect(described_class).to receive(:about_page).and_call_original
-        expect(subject).to be_instance_of ContentBlock
+        expect(subject).to be_instance_of described_class
         expect(subject).to be_persisted
       end
     end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/admin/collection_types/_form_settings.html.erb', type: :view do
   # TODO: add fields as they become available:
   # collection_type_assigns_workflow

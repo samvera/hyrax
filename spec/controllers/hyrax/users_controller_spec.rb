@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::UsersController, type: :controller do
   let(:user) { create(:user) }
 
@@ -122,7 +123,7 @@ RSpec.describe Hyrax::UsersController, type: :controller do
         it 'does not render the user list' do
           get :index
           expect(flash[:alert]).to eq 'You need to sign in or sign up before continuing.'
-          expect(response).to have_http_status(302)
+          expect(response).to have_http_status(:found)
           expect(response).to redirect_to('/users/sign_in')
         end
 

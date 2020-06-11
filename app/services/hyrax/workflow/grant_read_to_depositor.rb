@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Workflow
     # This is a built in function for workflow, so that a workflow action can be created that

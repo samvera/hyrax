@@ -52,13 +52,13 @@ module Hyrax
 
       private
 
-        ##
-        # @api private
-        #
-        # @return [Class] an ActiveModel::Name compatible class
-        def _hyrax_default_name_class
-          Hyrax::ResourceName
-        end
+      ##
+      # @api private
+      #
+      # @return [Class] an ActiveModel::Name compatible class
+      def _hyrax_default_name_class
+        Hyrax::ResourceName
+      end
     end
 
     ##
@@ -105,12 +105,12 @@ module Hyrax
 
     protected
 
-      def visibility_writer
-        Hyrax::VisibilityWriter.new(resource: self)
-      end
+    def visibility_writer
+      Hyrax::VisibilityWriter.new(resource: self)
+    end
 
-      def visibility_reader
-        Hyrax::VisibilityReader.new(resource: self)
-      end
+    def visibility_reader
+      Hyrax::VisibilityReader.new(resource: self)
+    end
   end
 end

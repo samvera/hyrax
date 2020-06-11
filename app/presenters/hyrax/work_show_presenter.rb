@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class WorkShowPresenter
     include ModelProxy
@@ -239,65 +240,65 @@ module Hyrax
 
     private
 
-      # list of item ids to display is based on ordered_ids
-      def authorized_item_ids
-        @member_item_list_ids ||= begin
-          items = ordered_ids
-          items.delete_if { |m| !current_ability.can?(:read, m) } if Flipflop.hide_private_items?
-          items
-        end
+    # list of item ids to display is based on ordered_ids
+    def authorized_item_ids
+      @member_item_list_ids ||= begin
+        items = ordered_ids
+        items.delete_if { |m| !current_ability.can?(:read, m) } if Flipflop.hide_private_items?
+        items
       end
+    end
 
-      # Uses kaminari to paginate an array to avoid need for solr documents for items here
-      def paginated_item_list(page_array:)
-        Kaminari.paginate_array(page_array, total_count: page_array.size).page(current_page).per(rows_from_params)
-      end
+    # Uses kaminari to paginate an array to avoid need for solr documents for items here
+    def paginated_item_list(page_array:)
+      Kaminari.paginate_array(page_array, total_count: page_array.size).page(current_page).per(rows_from_params)
+    end
 
-      def total_items
-        authorized_item_ids.size
-      end
+    def total_items
+      authorized_item_ids.size
+    end
 
-      def rows_from_params
-        request.params[:rows].nil? ? Hyrax.config.show_work_item_rows : request.params[:rows].to_i
-      end
+    def rows_from_params
+      request.params[:rows].nil? ? Hyrax.config.show_work_item_rows : request.params[:rows].to_i
+    end
 
-      def current_page
-        page = request.params[:page].nil? ? 1 : request.params[:page].to_i
-        page > total_pages ? total_pages : page
-      end
+    def current_page
+      page = request.params[:page].nil? ? 1 : request.params[:page].to_i
+      page > total_pages ? total_pages : page
+    end
 
-      def manifest_helper
-        @manifest_helper ||= ManifestHelper.new(request.base_url)
-      end
+    def manifest_helper
+      @manifest_helper ||= ManifestHelper.new(request.base_url)
+    end
 
-      def featured?
-        @featured = FeaturedWork.where(work_id: solr_document.id).exists? if @featured.nil?
-        @featured
-      end
+    def featured?
+      @featured = FeaturedWork.where(work_id: solr_document.id).exists? if @featured.nil?
+      @featured
+    end
 
-      def user_can_feature_works?
-        current_ability.can?(:create, FeaturedWork)
-      end
+    def user_can_feature_works?
+      current_ability.can?(:create, FeaturedWork)
+    end
 
-      def presenter_factory_arguments
-        [current_ability, request]
-      end
+    def presenter_factory_arguments
+      [current_ability, request]
+    end
 
-      def member_presenter_factory
-        MemberPresenterFactory.new(solr_document, current_ability, request)
-      end
+    def member_presenter_factory
+      MemberPresenterFactory.new(solr_document, current_ability, request)
+    end
 
-      def graph
-        GraphExporter.new(solr_document, request).fetch
-      end
+    def graph
+      GraphExporter.new(solr_document, request).fetch
+    end
 
-      def member_of_authorized_parent_collections
-        # member_of_collection_ids with current_ability access
-        @member_of ||= Hyrax::CollectionMemberService.run(solr_document, current_ability).map(&:id)
-      end
+    def member_of_authorized_parent_collections
+      # member_of_collection_ids with current_ability access
+      @member_of ||= Hyrax::CollectionMemberService.run(solr_document, current_ability).map(&:id)
+    end
 
-      def members_include_viewable_image?
-        file_set_presenters.any? { |presenter| presenter.image? && current_ability.can?(:read, presenter.id) }
-      end
+    def members_include_viewable_image?
+      file_set_presenters.any? { |presenter| presenter.image? && current_ability.can?(:read, presenter.id) }
+    end
   end
 end

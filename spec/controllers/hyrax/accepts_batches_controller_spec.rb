@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AcceptsBatchesController < ApplicationController
   include Hyrax::Collections::AcceptsBatches
 end

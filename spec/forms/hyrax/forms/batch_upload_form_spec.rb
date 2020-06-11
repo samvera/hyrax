@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Forms::BatchUploadForm do
   let(:model) { GenericWork.new }
   let(:controller) { instance_double(Hyrax::BatchUploadsController) }

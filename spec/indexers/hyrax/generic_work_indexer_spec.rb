@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe GenericWorkIndexer do
   subject(:solr_document) { service.generate_solr_document }
 

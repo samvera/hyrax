@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Zotero do
   it { is_expected.to respond_to(:config) }
 

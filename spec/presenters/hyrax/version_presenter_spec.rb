@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::VersionPresenter do
   let(:resource_version) do
     ActiveFedora::VersionsGraph::ResourceVersion.new.tap do |v|

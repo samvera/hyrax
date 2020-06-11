@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Grants read access for the supplied user for the members attached to a work
   class GrantReadToMembersJob < ApplicationJob

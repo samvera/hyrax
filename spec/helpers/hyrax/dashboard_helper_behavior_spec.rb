@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::DashboardHelperBehavior, type: :helper do
   describe "#on_the_dashboard?" do
     it "returns false for controllers that aren't a part of the dashboard" do

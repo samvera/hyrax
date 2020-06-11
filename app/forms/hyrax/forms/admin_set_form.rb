@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Forms
     class AdminSetForm < Hyrax::Forms::CollectionForm
@@ -48,9 +49,9 @@ module Hyrax
 
       private
 
-        def member_work_ids
-          model.member_ids
-        end
+      def member_work_ids
+        model.member_ids
+      end
     end
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   # Responsible building an Array of presenters based on IDs and presenter class given
   # @todo Extract a SolrDocument finder class that takes a list of pids and returns/yields a ::SolrDocument for each hit in SOLR.
@@ -38,16 +39,16 @@ module Hyrax
 
     private
 
-      # @return [Array<SolrDocument>] a list of solr documents in no particular order
-      def load_docs
-        query("{!terms f=id}#{ids.join(',')}", rows: 1000)
-          .map { |res| ::SolrDocument.new(res) }
-      end
+    # @return [Array<SolrDocument>] a list of solr documents in no particular order
+    def load_docs
+      query("{!terms f=id}#{ids.join(',')}", rows: 1000)
+        .map { |res| ::SolrDocument.new(res) }
+    end
 
-      # Query solr using POST so that the query doesn't get too large for a URI
-      def query(query, args = {})
-        result = Hyrax::SolrService.post(query, args)
-        result.fetch('response').fetch('docs')
-      end
+    # Query solr using POST so that the query doesn't get too large for a URI
+    def query(query, args = {})
+      result = Hyrax::SolrService.post(query, args)
+      result.fetch('response').fetch('docs')
+    end
   end
 end

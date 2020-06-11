@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Forms::Admin::CollectionTypeParticipantForm do
   let(:collection_type_participant) { build(:collection_type_participant) }
   let(:form) { described_class.new(collection_type_participant: collection_type_participant) }

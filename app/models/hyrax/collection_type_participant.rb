@@ -1,13 +1,14 @@
+# frozen_string_literal: true
 module Hyrax
   class CollectionTypeParticipant < ActiveRecord::Base
     self.table_name = 'collection_type_participants'
-    belongs_to :hyrax_collection_type, class_name: 'CollectionType', foreign_key: 'hyrax_collection_type_id'
+    belongs_to :hyrax_collection_type, class_name: 'CollectionType'
 
-    MANAGE_ACCESS = 'manage'.freeze
-    CREATE_ACCESS = 'create'.freeze
+    MANAGE_ACCESS = 'manage'
+    CREATE_ACCESS = 'create'
 
-    GROUP_TYPE = 'group'.freeze
-    USER_TYPE = 'user'.freeze
+    GROUP_TYPE = 'group'
+    USER_TYPE = 'user'
 
     validates :agent_id, presence: true
     validates :agent_type, presence: true, inclusion: { in: [GROUP_TYPE, USER_TYPE],

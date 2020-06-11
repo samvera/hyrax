@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class QuickClassificationQuery
     attr_reader :user
@@ -28,11 +29,11 @@ module Hyrax
 
     private
 
-      attr_reader :concern_name_normalizer, :models
+    attr_reader :concern_name_normalizer, :models
 
-      # Transform the list of requested model names into a list of class names
-      def normalized_model_names
-        models.map { |name| concern_name_normalizer.call(name) }
-      end
+    # Transform the list of requested model names into a list of class names
+    def normalized_model_names
+      models.map { |name| concern_name_normalizer.call(name) }
+    end
   end
 end

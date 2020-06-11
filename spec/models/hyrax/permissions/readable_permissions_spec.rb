@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Permissions::Readable do
   class SubjectClass
     include Hyrax::Permissions::Readable

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::Dashboard::WorksSearchBuilder do
   let(:context) do
     double(blacklight_config: CatalogController.blacklight_config,

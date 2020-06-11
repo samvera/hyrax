@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   ### Allows :deposit as a valid type
   class AdminSetSearchBuilder < ::SearchBuilder
@@ -35,12 +36,12 @@ module Hyrax
 
     private
 
-      # IDs of admin_sets into which a user can deposit.
-      #
-      # @return [Array<String>] IDs of admin_sets into which the user can deposit
-      # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
-      def admin_set_ids_for_deposit
-        Hyrax::Collections::PermissionsService.source_ids_for_deposit(ability: current_ability)
-      end
+    # IDs of admin_sets into which a user can deposit.
+    #
+    # @return [Array<String>] IDs of admin_sets into which the user can deposit
+    # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
+    def admin_set_ids_for_deposit
+      Hyrax::Collections::PermissionsService.source_ids_for_deposit(ability: current_ability)
+    end
   end
 end

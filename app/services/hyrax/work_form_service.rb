@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   ##
   # A factory that builds work forms based on the `#model_name` of the work.

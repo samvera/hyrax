@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails/generators'
 
 class Hyrax::AssetsGenerator < Rails::Generators::Base
@@ -31,7 +32,7 @@ class Hyrax::AssetsGenerator < Rails::Generators::Base
 
   private
 
-    def hyrax_javascript_installed?
-      IO.read("app/assets/javascripts/application.js").include?('hyrax')
-    end
+  def hyrax_javascript_installed?
+    IO.read("app/assets/javascripts/application.js").include?('hyrax')
+  end
 end

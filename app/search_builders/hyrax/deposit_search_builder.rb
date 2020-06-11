@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class DepositSearchBuilder < ::SearchBuilder
     # includes the depositor_facet to get information on deposits.
@@ -22,8 +23,8 @@ module Hyrax
 
     private
 
-      def only_works?
-        true
-      end
+    def only_works?
+      true
+    end
   end
 end

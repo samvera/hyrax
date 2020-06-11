@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe 'hyrax/admin/collection_types/_form.html.erb', type: :view do
   let(:collection_type) { build(:collection_type) }
   let(:form) { Hyrax::Forms::Admin::CollectionTypeForm.new(collection_type: collection_type) }

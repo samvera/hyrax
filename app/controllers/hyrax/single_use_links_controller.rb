@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   class SingleUseLinksController < ApplicationController
     include Blacklight::SearchHelper
@@ -39,12 +40,12 @@ module Hyrax
 
     private
 
-      def authorize_user!
-        authorize! :edit, params[:id]
-      end
+    def authorize_user!
+      authorize! :edit, params[:id]
+    end
 
-      def asset_show_path
-        polymorphic_path([main_app, fetch(params[:id]).last])
-      end
+    def asset_show_path
+      polymorphic_path([main_app, fetch(params[:id]).last])
+    end
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hyrax::CustomQueries::Navigators::FindFiles, valkyrie_adapter: :test_adapter do
   subject(:query_handler) do
     described_class.new(query_service: Hyrax.query_service)

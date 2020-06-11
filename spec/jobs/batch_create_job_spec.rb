@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe BatchCreateJob do
   let(:user) { create(:user) }
   let(:operation) { create(:batch_create_operation, user: user) }
