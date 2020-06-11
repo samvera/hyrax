@@ -25,7 +25,7 @@ module Hyrax
       else
         grantor.can_receive_deposits_from << grantee
         send_proxy_depositor_added_messages(grantor, grantee)
-        render json: { name: grantee.name, delete_path: hyrax.user_depositor_path(grantor.user_key, grantee.user_key) }
+        render json: { name: grantee.name, delete_path: sanitize_route_string(hyrax.user_depositor_path(grantor.user_key, grantee.user_key)) }
       end
     end
 
@@ -36,6 +36,13 @@ module Hyrax
     end
 
     private
+
+    # The reason the period has to be converted to -dot- is because in the destroy method
+    # ::User.from_url_component is called, and from_url_componet expects -dot- in place of
+    # a period.  I believe this is done because Rails does not like periods in urls.
+    def sanitize_route_string(route)
+      route.gsub("\.", "-dot-")
+    end
 
     def authorize_and_return_grantor
       grantor = ::User.from_url_component(params[:user_id])
