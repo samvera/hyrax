@@ -13,9 +13,6 @@ jobs:
       rails_version:
         type: string
         default: '5.2.2'
-      cache_version:
-        type: string
-        default: '1-2.x'
     executor:
       name: 'samvera/ruby'
       ruby_version: << parameters.ruby_version >>
@@ -39,10 +36,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.5.5
-      cache_version:
-        type: string
-        default: '1-2.x'
+        default: 2.5.8
     executor:
       name: 'samvera/ruby'
       ruby_version: << parameters.ruby_version >>
@@ -63,9 +57,6 @@ jobs:
       rails_version:
         type: string
         default: '5.2.2'
-      cache_version:
-        type: string
-        default: '2-2.x'
     executor:
       name: 'samvera/ruby'
       ruby_version: << parameters.ruby_version >>
@@ -78,11 +69,10 @@ jobs:
       - attach_workspace:
           at: ~/
       - samvera/engine_cart_generate:
-          cache_key: v<< parameters.cache_version >>--internal-test-app-{{ checksum "hyrax.gemspec" }}-{{ checksum "spec/test_app_templates/lib/generators/test_app_generator.rb" }}-{{ checksum "lib/generators/hyrax/install_generator.rb" }}-<< parameters.rails_version >>-<< parameters.ruby_version >>
+          cache_key: v1-2.x-internal-test-app-{{ checksum "hyrax.gemspec" }}-{{ checksum ".regen" }}-<< parameters.rails_version >>-<< parameters.ruby_version >>
       - samvera/bundle_for_gem:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
-          cache_version: << parameters.cache_version >>
           project: hyrax
       - persist_to_workspace:
           root: ~/
@@ -98,9 +88,6 @@ jobs:
       bundler_version:
         type: string
         default: 1.17.3
-      cache_version:
-        type: string
-        default: '1-2.x'
     executor:
       name: 'samvera/ruby_fcrepo_solr_redis'
       ruby_version: << parameters.ruby_version >>
@@ -117,7 +104,6 @@ jobs:
       - samvera/bundle_for_gem:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
-          cache_version: << parameters.cache_version >>
           project: hyrax
       - samvera/parallel_rspec
 
@@ -128,16 +114,13 @@ workflows:
       - bundle:
           ruby_version: "2.5.5"
           rails_version: "5.1.7"
-          cache_version: "1-2.x"
       - lint:
           ruby_version: "2.5.5"
-          cache_version: "1-2.x"
           requires:
             - bundle
       - build:
           ruby_version: "2.5.5"
           rails_version: "5.1.7"
-          cache_version: "1-2.x"
           requires:
             - bundle
       - test:
@@ -149,7 +132,6 @@ workflows:
       - test:
           name: "ruby2-6-2"
           ruby_version: "2.6.2"
-          cache_version: "1-2.x"
           requires:
             - build
             - lint
