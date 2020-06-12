@@ -24,7 +24,7 @@ export default class SaveManager {
   }
 
   check_button() {
-    if(this.is_changed && this.save_button.text() == "Save") {
+    if(this.is_changed && this.save_button.selector.valueOf("data-action") === "*[data-action='save-actions']") {
       this.save_button.removeClass("disabled")
     } else {
       this.save_button.addClass("disabled")
@@ -41,13 +41,14 @@ export default class SaveManager {
         .fail((element) => { this.push_changed(element) })
       )
     })
-    this.save_button.text("Saving...")
+    var label = this.save_button.text()
+    this.save_button.text(label + " ...")
     this.save_button.addClass("disabled")
-    $.when.apply($, promises).always(() => { this.reset_save_button() })
+    $.when.apply($, promises).always(() => { this.reset_save_button(label) })
   }
   
-  reset_save_button() {
-    this.save_button.text("Save")
+  reset_save_button(label) {
+    this.save_button.text(label)
     this.check_button()
   }
 
