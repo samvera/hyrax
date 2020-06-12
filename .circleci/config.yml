@@ -65,7 +65,7 @@ jobs:
         default: '5.2.2'
       cache_version:
         type: string
-        default: '1-2.x'
+        default: '2-2.x'
     executor:
       name: 'samvera/ruby'
       ruby_version: << parameters.ruby_version >>

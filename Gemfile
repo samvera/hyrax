@@ -3,6 +3,8 @@ source 'https://rubygems.org'
 # Please see hyrax.gemspec for dependency information.
 gemspec
 
+gem 'active-fedora', github: 'samvera/active_fedora', branch: 'backport-1423-12.x'
+
 group :development, :test do
   gem 'coveralls', require: false
   gem 'i18n-tasks'
