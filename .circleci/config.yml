@@ -6,7 +6,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.5.5
+        default: 2.5.8
       bundler_version:
         type: string
         default: 1.17.3
@@ -50,7 +50,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.5.5
+        default: 2.5.8
       bundler_version:
         type: string
         default: 1.17.3
@@ -84,7 +84,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: 2.5.5
+        default: 2.5.8
       bundler_version:
         type: string
         default: 1.17.3
@@ -112,20 +112,20 @@ workflows:
   ci:
     jobs:
       - bundle:
-          ruby_version: "2.5.5"
+          ruby_version: "2.5.8"
           rails_version: "5.1.7"
       - lint:
           ruby_version: "2.5.5"
           requires:
             - bundle
       - build:
-          ruby_version: "2.5.5"
+          ruby_version: "2.5.8"
           rails_version: "5.1.7"
           requires:
             - bundle
       - test:
-          name: "ruby2-5-5"
-          ruby_version: "2.5.5"
+          name: "ruby2-5-8"
+          ruby_version: "2.5.8"
           requires:
             - build
             - lint
