@@ -69,6 +69,7 @@
 
     </div>
     <div class="col-md-4 hyc-metadata">
+      <%= render 'hyrax/collections/media_display', presenter: @presenter %>
       <% unless collection_search_parameters? %>
           <h2><%= t('hyrax.dashboard.collections.show.metadata_header') %></h2>
           <%= render 'show_descriptions' %>
