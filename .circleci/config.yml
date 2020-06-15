@@ -12,7 +12,7 @@ jobs:
         default: 1.17.3
       rails_version:
         type: string
-        default: '5.2.2'
+        default: '5.1.7'
       cache_version:
         type: string
         default: '1-2.x'
@@ -62,7 +62,7 @@ jobs:
         default: 1.17.3
       rails_version:
         type: string
-        default: '5.2.2'
+        default: '5.1.7'
       cache_version:
         type: string
         default: '1-2.x'
