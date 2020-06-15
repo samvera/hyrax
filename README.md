@@ -125,7 +125,7 @@ Note here that the following commands assume you're setting up Hyrax in a develo
 
 First, you'll need a working Ruby installation. You can install this via your operating system's package manager -- you are likely to get farther with OSX, Linux, or UNIX than Windows but your mileage may vary -- but we recommend using a Ruby version manager such as [RVM](https://rvm.io/) or [rbenv](https://github.com/sstephenson/rbenv).
 
-Hyrax supports Ruby 2.4, 2.5, and 2.6. When starting a new project, we recommend using the latest Ruby 2.6 version.
+Hyrax supports Ruby 2.5, 2.6, and 2.7. When starting a new project, we recommend using the latest Ruby 2.7 version.
 
 ## Redis
 
