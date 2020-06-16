@@ -11,8 +11,6 @@ group :development, :test do
   gem "simplecov", require: false
 end
 
-gem 'sparql', '~> 3.1.2'
-
 # rubocop:disable Bundler/DuplicatedGem
 # BEGIN ENGINE_CART BLOCK
 # engine_cart: 1.1.0
