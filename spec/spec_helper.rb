@@ -38,19 +38,6 @@ require 'equivalent-xml'
 require 'equivalent-xml/rspec_matchers'
 require 'database_cleaner'
 
-unless ENV['SKIP_MALEFICENT']
-  # See https://github.com/jeremyf/capybara-maleficent
-  # Wrap Capybara matchers with sleep intervals to reduce fragility of specs.
-  require 'capybara/maleficent/spindle'
-
-  Capybara::Maleficent.configure do |c|
-    # Quieting down maleficent's logging
-    logger = Logger.new(STDOUT)
-    logger.level = Logger::INFO
-    c.logger = logger
-  end
-end
-
 # rubocop:disable Lint/Void
 # ensure Hyrax::Schema gets loaded is resolvable for `support/` models
 Hyrax::Schema

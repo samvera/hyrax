@@ -84,7 +84,6 @@ SUMMARY
   spec.add_dependency 'valkyrie', '>= 2.1.1', "< 3.0"
 
   spec.add_development_dependency "capybara", '~> 3.29'
-  spec.add_development_dependency 'capybara-maleficent', '~> 0.3.0'
   spec.add_development_dependency 'chromedriver-helper', '~> 2.1'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
   spec.add_development_dependency 'engine_cart', '~> 2.2'
