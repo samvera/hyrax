@@ -24,7 +24,7 @@ SUMMARY
   spec.version       = Hyrax::VERSION
   spec.license       = 'Apache-2.0'
 
-  spec.required_ruby_version = '>= 2.4'
+  spec.required_ruby_version = '>= 2.5'
 
   # Note: rails does not follow sem-ver conventions, it's
   # minor version releases can include breaking changes; see
