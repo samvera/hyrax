@@ -52,14 +52,79 @@ module Hyrax
       build_form
     end
 
+
+      def apply_creation_data_to_curation_concern(env)
+        apply_depositor_metadata(env)
+        apply_deposit_date(env)
+      end
+
+      def apply_depositor_metadata(env)
+        curation_concern.depositor = env.user.user_key
+      end
+
+      def apply_deposit_date(env)
+        curation_concern.date_uploaded = TimeService.time_in_utc
+      end
+
+      def apply_save_data_to_curation_concern(env)
+        #env.curation_concern.attributes = env.attributes
+        #attributes = clean_attributes(env.attributes)
+        attributes = env.attributes
+        attributes.delete("member_of_collections_attributes")
+        attributes[:license] = Array(attributes[:license]) if attributes.key? :license
+        attributes[:rights_statement] = Array(attributes[:rights_statement]) if attributes.key? :rights_statement        
+        attributes.delete("remote_files")
+        attributes.delete("uploaded_files");
+
+        attributes.delete("visibility_during_embargo")
+        attributes.delete("embargo_release_date")
+        attributes.delete("visibility_after_embargo")
+        attributes.delete("visibility_during_lease")
+        attributes.delete("lease_expiration_date")
+        attributes.delete("visibility_after_leas")
+
+        attributes.each do |key, value|
+          method_name = key.to_s+"="
+          if defined? curation_concern.send(method_name)
+            curation_concern.send(method_name, value)
+          end
+        end
+
+        curation_concern.date_modified = TimeService.time_in_utc
+      end
+
+      def clean_attributes(attributes)
+        attributes[:license] = Array(attributes[:license]) if attributes.key? :license
+        attributes[:rights_statement] = Array(attributes[:rights_statement]) if attributes.key? :rights_statement
+        attributes
+        #remove_blank_attributes!(attributes)
+      end
+
+      def remove_blank_attributes!(attributes)
+        multivalued_form_attributes(attributes).each_with_object(attributes) do |(k, v), h|
+          h[k] = v.instance_of?(Array) ? v.select(&:present?) : v
+        end
+      end
+
+      def multivalued_form_attributes(attributes)
+        attributes.select { |_, v| v.respond_to?(:select) && !v.respond_to?(:read) }
+      end      
+
+
+    #  This is where it starts
     def create
       if actor.create(actor_environment)
         after_create_response
       else
+        #Need to fill in the curation concern data for the actor.
+        #this code comes from app/actors/hyrax/actors/base_actor.rb - method:  create
+        apply_creation_data_to_curation_concern(actor_environment)
+        apply_save_data_to_curation_concern(actor_environment)
+
         respond_to do |wants|
           wants.html do
             build_form
-            render 'new', status: :unprocessable_entity
+            render 'edit', status: :unprocessable_entity
           end
           wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
         end
