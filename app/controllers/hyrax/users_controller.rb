@@ -29,11 +29,11 @@ module Hyrax
       base = ::User.where(*base_query) if base_query.present?
       base = base.where("#{Hydra.config.user_key_field} like lower(?) OR display_name like lower(?)", clause, clause) if clause.present?
       base.registered
-        .where("#{Hydra.config.user_key_field} not in (?)",
+          .where("#{Hydra.config.user_key_field} not in (?)",
                [::User.batch_user_key, ::User.audit_user_key])
-        .references(:trophies)
-        .order(sort_value)
-        .page(params[:page]).per(10)
+          .references(:trophies)
+          .order(sort_value)
+          .page(params[:page]).per(10)
     end
 
     # You can override base_query to return a list of arguments
