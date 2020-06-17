@@ -4,6 +4,9 @@ module Hyrax
     before_action :build_contact_form
     layout 'homepage'
 
+    class_attribute :model_class
+    self.model_class = Hyrax::ContactForm
+
     def new; end
 
     def create
@@ -12,7 +15,7 @@ module Hyrax
         ContactMailer.contact(@contact_form).deliver_now
         flash.now[:notice] = 'Thank you for your message!'
         after_deliver
-        @contact_form = ContactForm.new
+        @contact_form = model_class.new
       else
         flash.now[:error] = 'Sorry, this message was not sent successfully. ' +
                             @contact_form.errors.full_messages.map(&:to_s).join(", ")
@@ -36,7 +39,7 @@ module Hyrax
     private
 
     def build_contact_form
-      @contact_form = Hyrax::ContactForm.new(contact_form_params)
+      @contact_form = model_class.new(contact_form_params)
     end
 
     def contact_form_params
