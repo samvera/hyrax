@@ -3,6 +3,7 @@ module Hyrax
   module HyraxHelperBehavior
     include Hyrax::CitationsBehavior
     include ERB::Util # provides html_escape
+    include Hyrax::ContactFormHelper
     include Hyrax::TitleHelper
     include Hyrax::FileSetHelper
     include Hyrax::AbilityHelper
