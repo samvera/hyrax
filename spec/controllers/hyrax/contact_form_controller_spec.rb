@@ -13,6 +13,22 @@ RSpec.describe Hyrax::ContactFormController do
 
   before { sign_in(user) }
 
+  describe '.model_class' do
+    let(:fake_contact_form_class) { Class.new(Hyrax::ContactForm) }
+
+    it 'is Hyrax::ContactForm by default' do
+      expect(described_class.model_class).to eq Hyrax::ContactForm
+    end
+
+    it 'builds an instance of the class for assigns' do
+      allow(described_class).to receive(:model_class).and_return(fake_contact_form_class)
+
+      get :new
+
+      expect(assigns[:contact_form]).to be_a fake_contact_form_class
+    end
+  end
+
   describe "#new" do
     subject { response }
 
