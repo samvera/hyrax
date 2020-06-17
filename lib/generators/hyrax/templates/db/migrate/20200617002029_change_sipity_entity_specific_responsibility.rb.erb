@@ -1,0 +1,5 @@
+class UpdateSingleUseLinksColumnNames < ActiveRecord::Migration<%= migration_version %>
+  def change
+    change_column :sipity_entity_specific_responsibilities, :entity_id, :integer
+  end
+end
