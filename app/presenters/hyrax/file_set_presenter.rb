@@ -30,7 +30,12 @@ module Hyrax
              :embargo_release_date, :lease_expiration_date,
              :depositor, :keyword, :title_or_label, :keyword,
              :date_created, :date_modified, :itemtype,
+             :original_file_id,
              to: :solr_document
+
+    def alpha_channels
+      []
+    end
 
     def single_use_links
       @single_use_links ||= SingleUseLink.where(itemId: id).map { |link| link_presenter_class.new(link) }

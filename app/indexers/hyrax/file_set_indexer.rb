@@ -27,6 +27,7 @@ module Hyrax
         solr_doc['duration_tesim']          = object.duration
         solr_doc['sample_rate_tesim']       = object.sample_rate
         solr_doc['original_checksum_tesim'] = object.original_checksum
+        solr_doc['alpha_channels_ssi']      = object.try(:alpha_channels)
         solr_doc['original_file_id_ssi']    = original_file_id
       end
     end
@@ -40,7 +41,11 @@ module Hyrax
 
       def original_file_id
         return unless object.original_file
-        object.original_file.id
+        if object.original_file.versions.present?
+          ActiveFedora::File.uri_to_id(object.current_content_version_uri)
+        else
+          object.original_file.id
+        end
       end
 
       def file_format

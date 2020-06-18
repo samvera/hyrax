@@ -99,7 +99,11 @@ module Hyrax
       end
 
       def original_checksum
-        self[Solrizer.solr_name("original_checksum")]
+        self["original_checksum_tesim"]
+      end
+
+      def alpha_channels
+        self["alpha_channels_ssi"]
       end
     end
   end
