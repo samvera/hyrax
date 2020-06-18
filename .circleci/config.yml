@@ -112,26 +112,32 @@ workflows:
   ci:
     jobs:
       - bundle:
-          ruby_version: "2.5.5"
+          ruby_version: "2.5.8"
           rails_version: "5.1.7"
       - lint:
-          ruby_version: "2.5.5"
+          ruby_version: "2.5.8"
           requires:
             - bundle
       - build:
-          ruby_version: "2.5.5"
+          ruby_version: "2.5.8"
           rails_version: "5.1.7"
           requires:
             - bundle
       - test:
-          name: "ruby2-5-5"
-          ruby_version: "2.5.5"
+          name: "ruby2-5-8"
+          ruby_version: "2.5.8"
           requires:
             - build
             - lint
       - test:
-          name: "ruby2-6-2"
-          ruby_version: "2.6.2"
+          name: "ruby2-6-6"
+          ruby_version: "2.6.6"
+          requires:
+            - build
+            - lint
+      - test:
+          name: "ruby2-7-1"
+          ruby_version: "2.7.1"
           requires:
             - build
             - lint
