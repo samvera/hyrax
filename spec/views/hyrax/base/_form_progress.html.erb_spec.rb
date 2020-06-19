@@ -32,7 +32,7 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
       end
 
       it "shows options for proxy" do
-        expect(page).to have_content 'On behalf of'
+        expect(page).to have_content 'Proxy Depositors - Select the user on whose behalf you are depositing'
         expect(page).to have_selector("select#generic_work_on_behalf_of option[value=\"\"]", text: 'Yourself')
         expect(page).to have_selector("select#generic_work_on_behalf_of option[value=\"bob@example.com\"]")
       end
@@ -43,7 +43,7 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
         end
 
         it "does not show options for proxy" do
-          expect(page).not_to have_content 'On behalf of'
+          expect(page).not_to have_content 'Proxy Depositors - Select the user on whose behalf you are depositing'
           expect(page).not_to have_selector("select#generic_work_on_behalf_of option[value=\"\"]", text: 'Yourself')
           expect(page).not_to have_selector("select#generic_work_on_behalf_of option[value=\"bob@example.com\"]")
         end
@@ -57,7 +57,7 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
         allow(user).to receive(:can_make_deposits_for).and_return(proxies)
       end
       it "doesn't show options for proxy" do
-        expect(page).not_to have_content 'On behalf of'
+        expect(page).not_to have_content 'Proxy Depositors - Select the user on whose behalf you are depositing'
         expect(page).not_to have_selector 'select#generic_work_on_behalf_of'
       end
     end
