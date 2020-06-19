@@ -23,7 +23,7 @@
     </div>
     <% if Flipflop.proxy_deposit? && current_user.can_make_deposits_for.any? %>
         <div class="list-group-item">
-          <%= f.input :on_behalf_of, collection: current_user.can_make_deposits_for, prompt: t(".yourself"), value_method: :user_key %>
+          <%= f.input :on_behalf_of, label: t(".proxy_depositors"), collection: current_user.can_make_deposits_for, prompt: t(".yourself"), value_method: :user_key %>
         </div>
     <% end %>
   </div>

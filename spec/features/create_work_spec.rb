@@ -85,7 +85,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
       find('body').click
       choose('generic_work_visibility_open')
       expect(page).to have_content('Please note, making something visible to the world (i.e. marking this as Public) may be viewed as publishing which could impact your ability to')
-      select(second_user.user_key, from: 'On behalf of')
+      select(second_user.user_key, from: 'Proxy Depositors - Select the user on whose behalf you are depositing')
       check('agreement')
       # These lines are for debugging, should this test fail
       # puts "Required metadata: #{page.evaluate_script(%{$('#form-progress').data('save_work_control').requiredFields.areComplete})}"

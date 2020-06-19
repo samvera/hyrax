@@ -423,6 +423,7 @@ en:
         legend_html: Visibility <small>Who should be able to view or download this content?</small>
         management_page: Lease Management Page
       form_progress:
+        proxy_depositors: Proxy Depositors - Select the user on whose behalf you are depositing
         required_agreement: Check deposit agreement
         required_descriptions: Describe your work
         required_files: Add files

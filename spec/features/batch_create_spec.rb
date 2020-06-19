@@ -58,7 +58,7 @@ RSpec.describe 'Batch creation of works', type: :feature do
 
       choose('batch_upload_item_visibility_open')
       expect(page).to have_content('Please note, making something visible to the world (i.e. marking this as Public) may be viewed as publishing which could impact your ability to')
-      select(second_user.user_key, from: 'On behalf of')
+      select(second_user.user_key, from: 'Proxy Depositors - Select the user on whose behalf you are depositing')
       check('agreement')
       click_on('Save')
 
