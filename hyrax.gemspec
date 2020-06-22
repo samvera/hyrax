@@ -58,7 +58,7 @@ SUMMARY
   # Pin more tightly because 0.x gems are potentially unstable
   spec.add_dependency 'kaminari_route_prefix', '~> 0.1.1'
   spec.add_dependency 'legato', '~> 0.3'
-  spec.add_dependency 'linkeddata' # Required for getting values from geonames
+  spec.add_dependency 'linkeddata', '~> 3.1' # Required for getting values from geonames
   spec.add_dependency 'mailboxer', '~> 0.12'
   spec.add_dependency 'nest', '~> 3.1'
   spec.add_dependency 'noid-rails', '~> 3.0.0'
