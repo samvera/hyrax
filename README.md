@@ -138,11 +138,11 @@ Starting up Redis will depend on your operating system, and may in fact already 
 
 ## Rails
 
-Hyrax requires Rails 5. We recommend the latest Rails 5.1 release.
+Hyrax 2.x supports Rails 5.1 and 5.2. We recommend the latest Rails 5.2 release.
 
 ```
 # If you don't already have Rails at your disposal...
-gem install rails -v 5.1.6
+gem install rails -v '5.2.4.3'
 ```
 
 ### JavaScript runtime
@@ -158,7 +158,7 @@ NOTE: The steps need to be done in order to create a new Hyrax based app.
 Generate a new Rails application using the template.
 
 ```
-rails _5.1.6_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v2.7.2/template.rb
+rails _5.2.4.3_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v2.8.0/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:
