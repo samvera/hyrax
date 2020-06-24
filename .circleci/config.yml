@@ -25,6 +25,7 @@ jobs:
       - samvera/bundle_for_gem:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
+          cache_version: '{{ checksum ".regen" }}'
           project: hyrax
       - persist_to_workspace:
           root: ~/
@@ -73,6 +74,7 @@ jobs:
       - samvera/bundle_for_gem:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
+          cache_version: '{{ checksum ".regen" }}'
           project: hyrax
       - persist_to_workspace:
           root: ~/
@@ -104,6 +106,7 @@ jobs:
       - samvera/bundle_for_gem:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
+          cache_version: '{{ checksum ".regen" }}'
           project: hyrax
       - samvera/parallel_rspec
 
