@@ -167,13 +167,16 @@ workflows:
       - bundle:
           ruby_version: "2.7.1"
           rails_version: "5.2.4.3"
+          bundler_version: "2.1.2"
       - build:
           ruby_version: "2.7.1"
           rails_version: "5.2.4.3"
+          bundler_version: "2.1.2"
           requires:
             - bundle
       - test:
           name: "ruby2-7-1"
           ruby_version: "2.7.1"
+          bundler_version: "2.1.2"
           requires:
             - build
