@@ -14,7 +14,7 @@ module Hyrax
 
     def only_active_leases(solr_params)
       solr_params[:fq] ||= []
-      solr_params[:fq] = 'lease_expiration_date_dtsi:*'
+      solr_params[:fq] = 'lease_expiration_date_dtsi:[* TO *]'
     end
   end
 end

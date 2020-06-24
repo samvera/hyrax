@@ -14,7 +14,7 @@ module Hyrax
 
     def only_active_embargoes(solr_params)
       solr_params[:fq] ||= []
-      solr_params[:fq] = 'embargo_release_date_dtsi:*'
+      solr_params[:fq] = 'embargo_release_date_dtsi:[* TO *]'
     end
   end
 end
