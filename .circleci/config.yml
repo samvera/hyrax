@@ -161,7 +161,7 @@ workflows:
           requires:
             - bundle
       - lint:
-          ruby_version: "2.5.8"
+          ruby_version: "2.6.6"
           requires:
             - bundle
       - test:
@@ -178,6 +178,10 @@ workflows:
       - build:
           ruby_version: "2.7.1"
           rails_version: "5.2.4.3"
+          requires:
+            - bundle
+      - lint:
+          ruby_version: "2.6.6"
           requires:
             - bundle
       - test:
