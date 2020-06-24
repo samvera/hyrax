@@ -11,7 +11,8 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
                      keyword_tesim: ['bacon', 'sausage', 'eggs'],
                      rights_statement_tesim: ['http://example.org/rs/1'],
                      rights_notes_tesim: ['Notes on the rights'],
-                     date_created_tesim: ['1984-01-02'])
+                     date_created_tesim: ['1984-01-02'],
+                     publisher_tesim: ['French Press'])
   end
 
   let(:file_set_solr_document) do
@@ -47,7 +48,7 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
   before do
     allow(presenter).to receive(:workflow).and_return(workflow_presenter)
     allow(presenter).to receive(:representative_presenter).and_return(representative_presenter)
-    allow(presenter).to receive(:representative_id).and_return('123')
+    allow(presenter).to receive(:representative_id).and_return(representative_presenter&.id)
     allow(presenter).to receive(:tweeter).and_return("@#{depositor.twitter_handle}")
     allow(presenter).to receive(:human_readable_type).and_return("Work")
     allow(controller).to receive(:current_user).and_return(depositor)
@@ -104,7 +105,12 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
   describe 'google scholar' do
     it 'appears in meta tags' do
       gscholar_meta_tags = Nokogiri::HTML(rendered).xpath("//meta[contains(@name, 'citation_')]")
-      expect(gscholar_meta_tags.count).to eq(5)
+      expect(gscholar_meta_tags.count).to eq(7)
+    end
+
+    it 'displays description' do
+      tag = Nokogiri::HTML(rendered).xpath("//meta[@name='description']")
+      expect(tag.attribute('content').value).to eq('Lorem ipsum lorem ipsum.')
     end
 
     it 'displays title' do
@@ -126,6 +132,67 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
     it 'displays download URL' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_pdf_url']")
       expect(tag.attribute('content').value).to eq('http://test.host/downloads/123')
+    end
+
+    it 'displays keyword' do
+      tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_keywords']")
+      expect(tag.attribute('content').value).to eq('bacon; sausage; eggs')
+    end
+
+    it 'displays publisher' do
+      tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_publisher']")
+      expect(tag.attribute('content').value).to eq('French Press')
+    end
+
+    context 'with minimal record' do
+      let(:work_solr_document) do
+        SolrDocument.new(id: '999',
+                         title_tesim: ['My Title'],
+                         date_modified_dtsi: '2011-04-01',
+                         has_model_ssim: ['GenericWork'],
+                         depositor_tesim: depositor.user_key)
+      end
+      let(:representative_presenter) { nil }
+
+      it 'appears in meta tags' do
+        gscholar_meta_tags = Nokogiri::HTML(rendered).xpath("//meta[contains(@name, 'citation_')]")
+        expect(gscholar_meta_tags.count).to eq(1)
+      end
+
+      it 'displays title as description' do
+        tag = Nokogiri::HTML(rendered).xpath("//meta[@name='description']")
+        expect(tag.attribute('content').value).to eq('My Title')
+      end
+
+      it 'displays title' do
+        tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_title']")
+        expect(tag.attribute('content').value).to eq('My Title')
+      end
+
+      it 'displays authors' do
+        tags = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_author']")
+        expect(tags).to be_blank
+      end
+
+      it 'displays publication date' do
+        tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_publication_date']")
+        expect(tag).to be_blank
+      end
+
+      it 'displays download URL' do
+        tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_pdf_url']")
+        expect(tag).to be_blank
+      end
+
+      it 'displays keyword' do
+        tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_keywords']")
+        expect(tag).to be_blank
+      end
+
+      it 'displays publisher' do
+        tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_publisher']")
+        expect(tag).to be_blank
+      end
     end
   end
 

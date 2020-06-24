@@ -15,12 +15,29 @@
 <% end %>
 
 <% content_for(:gscholar_meta) do %>
+  <meta name="description" content="<%= @presenter.description.first.truncate(200) rescue @presenter.title.first %>" />
   <meta name="citation_title" content="<%= @presenter.title.first %>" />
+
   <% @presenter.creator.each do |creator| %>
   <meta name="citation_author" content="<%= creator %>" />
   <% end %>
+
+  <% unless @presenter.date_created.blank? %>
   <meta name="citation_publication_date" content="<%= @presenter.date_created.first %>" />
+  <% end %>
+
+  <% unless @presenter.download_url.blank? %>
   <meta name="citation_pdf_url" content="<%= @presenter.download_url %>" />
+  <% end %>
+
+  <% unless @presenter.keyword.blank? %>
+  <meta name="citation_keywords" content="<%= @presenter.keyword.join('; ') %>" />
+  <% end %>
+
+  <% unless @presenter.publisher.blank? %>
+  <meta name="citation_publisher" content="<%= @presenter.publisher.join('; ') %>" />
+  <% end %>
+
   <!-- Hyrax does not yet support these metadata -->
   <!--
     <meta name="citation_journal_title" content=""/>
