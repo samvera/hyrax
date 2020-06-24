@@ -10,7 +10,5 @@ module Hyrax
              class_name: 'JobIoWrapper',
              dependent: :destroy
     belongs_to :user, class_name: '::User'
-
-    before_destroy :remove_file!
   end
 end
