@@ -10,10 +10,11 @@ RSpec.describe FeaturedWorkList, type: :model do
     end
 
     it 'is a list of the featured work objects, each with the generic_work\'s solr_doc' do
-      expect(subject.featured_works.size).to eq 2
-      presenter = subject.featured_works.first.presenter
-      expect(presenter).to be_kind_of Hyrax::WorkShowPresenter
-      expect(presenter.id).to eq work1.id
+      presenter_ids = subject.featured_works.map { |fw| fw.presenter.id }
+      expect(presenter_ids).to contain_exactly(work1.id, work2.id)
+      subject.featured_works.each do |fw|
+        expect(fw.presenter).to be_kind_of Hyrax::WorkShowPresenter
+      end
     end
 
     context 'when one of the files is deleted' do
