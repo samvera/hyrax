@@ -49,14 +49,14 @@ RSpec.describe Hyrax::PagesController, type: :controller do
     context 'with an unprivileged user' do
       describe "GET #edit" do
         it "denies the request" do
-          get :edit
+          get :edit, params: { id: ContentBlock.first.id }
           expect(response).to have_http_status(401)
         end
       end
 
       describe "PATCH #update" do
         it "denies the request" do
-          patch :update, params: { id: 1 }
+          patch :update, params: { id: ContentBlock.first.id }
           expect(response).to have_http_status(401)
         end
       end

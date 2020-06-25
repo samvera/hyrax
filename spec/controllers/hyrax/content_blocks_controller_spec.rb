@@ -25,7 +25,7 @@ RSpec.describe Hyrax::ContentBlocksController, type: :controller do
 
     describe "PATCH #update" do
       it "denies the request" do
-        patch :update, params: { id: 1 }
+        patch :update, params: { id: ContentBlock.first.to_param }
         expect(response).to have_http_status(401)
       end
     end
