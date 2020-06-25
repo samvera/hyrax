@@ -36,7 +36,7 @@ RSpec.describe BatchCreateJob do
                                                               keyword: [],
                                                               title: ['File One'],
                                                               resource_type: ["Article"],
-                                                              uploaded_files: ['1']
+                                                              uploaded_files: [upload1.id.to_s]
                                                             },
                                                             child_operation).and_return(true)
       expect(CreateWorkJob).to receive(:perform_later).with(user,
@@ -45,7 +45,7 @@ RSpec.describe BatchCreateJob do
                                                               keyword: [],
                                                               title: ['File Two'],
                                                               resource_type: ["Image"],
-                                                              uploaded_files: ['2']
+                                                              uploaded_files: [upload2.id.to_s]
                                                             },
                                                             child_operation).and_return(true)
       subject
@@ -61,7 +61,7 @@ RSpec.describe BatchCreateJob do
                                                                 keyword: [],
                                                                 title: ['File One'],
                                                                 resource_type: ["Article", 'Text'],
-                                                                uploaded_files: ['1']
+                                                                uploaded_files: [upload1.id.to_s]
                                                               },
                                                               child_operation).and_return(true)
         expect(CreateWorkJob).to receive(:perform_later).with(user,
@@ -70,7 +70,7 @@ RSpec.describe BatchCreateJob do
                                                                 keyword: [],
                                                                 title: ['File Two'],
                                                                 resource_type: ["Image", 'Text'],
-                                                                uploaded_files: ['2']
+                                                                uploaded_files: [upload2.id.to_s]
                                                               },
                                                               child_operation).and_return(true)
         subject
