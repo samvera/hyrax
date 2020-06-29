@@ -9,23 +9,16 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
   routes { Rails.application.routes.dup }
 
   before do
+    allow(Hyrax.config)
+      .to receive(:registered_curation_concern_types)
+      .and_return([work.model_name.name])
+
     routes.draw do # draw minimal routes for this controller mixin
       mount Hyrax::Engine, at: '/'
       namespaced_resources 'hyrax/test/simple_work_legacies', except: [:index]
       devise_for :users
       resources :solr_documents, only: [:show], path: '/catalog', controller: 'catalog'
     end
-  end
-
-  before(:context) do
-    Hyrax.config.register_curation_concern(Hyrax::Test::SimpleWork)
-  end
-
-  after(:context) do
-    config = Hyrax.config
-    types  = config.registered_curation_concern_types - ["Hyrax::Test::SimpleWork"]
-
-    Hyrax.config.instance_variable_set(:@registered_concerns, types)
   end
 
   controller(ApplicationController) do
