@@ -1,24 +1,29 @@
 # frozen_string_literal: true
 
 RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
-  let(:paths) { Rails.application.routes.url_helpers }
+  let(:paths) { controller.main_app }
   let(:title) { ['Comet in Moominland'] }
   let(:work)  { FactoryBot.valkyrie_create(:hyrax_work, alternate_ids: [id], title: title) }
   let(:id)    { '123' }
 
-  routes { Rails.application.routes.dup }
+  let(:main_app_routes) do
+    ActionDispatch::Routing::RouteSet.new.tap do |r|
+      r.draw do # draw minimal routes for this controller mixin
+        mount Hyrax::Engine, at: '/'
+        namespaced_resources 'hyrax/test/simple_work_legacy', except: [:index]
+        devise_for :users
+        resources :solr_documents, only: [:show], path: '/catalog', controller: 'catalog'
+      end
+    end
+  end
 
   before do
     allow(Hyrax.config)
       .to receive(:registered_curation_concern_types)
       .and_return([work.model_name.name])
 
-    routes.draw do # draw minimal routes for this controller mixin
-      mount Hyrax::Engine, at: '/'
-      namespaced_resources 'hyrax/test/simple_work_legacies', except: [:index]
-      devise_for :users
-      resources :solr_documents, only: [:show], path: '/catalog', controller: 'catalog'
-    end
+    controller.main_app.instance_variable_set(:@routes, main_app_routes)
+    controller.main_app.instance_variable_set(:@helpers, main_app_routes.url_helpers)
   end
 
   controller(ApplicationController) do
