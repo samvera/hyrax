@@ -22,6 +22,7 @@ module Hyrax
       require 'hyrax/transactions/create_work'
       require 'hyrax/transactions/destroy_work'
       require 'hyrax/transactions/work_create'
+      require 'hyrax/transactions/update_work'
       require 'hyrax/transactions/steps/add_to_collections'
       require 'hyrax/transactions/steps/apply_collection_permission_template'
       require 'hyrax/transactions/steps/apply_permission_template'
@@ -76,6 +77,10 @@ module Hyrax
 
         ops.register 'set_user_as_depositor' do
           Steps::SetUserAsDepositor.new
+        end
+
+        ops.register 'update_work' do
+          UpdateWork.new
         end
 
         ops.register 'validate' do

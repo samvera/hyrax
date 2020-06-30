@@ -58,6 +58,8 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
       end
 
       context 'with invalid form data' do
+        let(:work) { FactoryBot.build(:hyrax_work) }
+
         before do
           allow(controller.class.work_form_service)
             .to receive(:build)
@@ -232,5 +234,38 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     include_context 'with a logged in user'
 
     it 'resolves json'
+  end
+
+  describe '#update' do
+    it 'redirects to new user login' do
+      patch :update, params: { id: id }
+
+      expect(response).to redirect_to paths.new_user_session_path(locale: :en)
+    end
+
+    context 'when the user has edit access' do
+      include_context 'with a logged in user'
+
+      before do
+        allow(controller.current_ability)
+          .to receive(:can?)
+          .with(any_args)
+          .and_return true
+      end
+
+      it 'redirects to updated work' do
+        patch :update, params: { id: id, test_simple_work: { title: 'new title' } }
+
+        expect(response)
+          .to redirect_to paths.hyrax_test_simple_work_legacy_path(id: id, locale: :en)
+      end
+
+      it 'updates the work metadata' do
+        patch :update, params: { id: id, test_simple_work: { title: 'new title' } }
+
+        expect(Hyrax.query_service.find_by(id: id))
+          .to have_attributes title: contain_exactly('new title')
+      end
+    end
   end
 end
