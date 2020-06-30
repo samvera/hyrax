@@ -32,12 +32,12 @@ module Hyrax
       end
 
       def expect_agents_for(agents:, entity:, role:)
-        agents = Array.wrap(agents).map { |agent| PowerConverter.convert_to_sipity_agent(agent) }
+        agents = Array.wrap(agents).map { |agent| Sipity::Agent(agent) }
         expect(described_class.scope_agents_associated_with_entity_and_role(role: role, entity: entity)).to eq(agents)
       end
 
       def expect_roles_for(entity:, roles:)
-        roles = Array.wrap(roles).map { |role| PowerConverter.convert_to_sipity_role(role) }
+        roles = Array.wrap(roles).map { |role| Sipity::Role.find_or_create_by(name: role) }
         expect(described_class.scope_roles_associated_with_the_given_entity(entity: entity)).to eq(roles)
       end
 
@@ -54,7 +54,7 @@ module Hyrax
       end
 
       def expect_entities_for(user:, entities:)
-        entities = Array.wrap(entities).map { |entity| PowerConverter.convert(entity, to: :sipity_entity) }
+        entities = Array.wrap(entities).map { |entity| Sipity::Entity(entity) }
         expect(described_class.scope_entities_for_the_user(user: user)).to eq(entities)
       end
 
@@ -197,8 +197,8 @@ module Hyrax
           subject { described_class.scope_processing_agents_for(user: user) }
 
           it 'will equal [kind_of(Sipity::Agent)]' do
-            is_expected.to contain_exactly(PowerConverter.convert_to_sipity_agent(user),
-                                           PowerConverter.convert_to_sipity_agent(Group.new('librarians')))
+            is_expected.to contain_exactly(Sipity::Agent(user),
+                                           Sipity::Agent(Group.new('librarians')))
           end
         end
       end
