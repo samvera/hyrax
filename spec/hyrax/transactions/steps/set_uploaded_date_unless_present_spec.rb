@@ -55,7 +55,7 @@ RSpec.describe Hyrax::Transactions::Steps::SetUploadedDateUnlessPresent do
 
         before { change_set.date_uploaded = xmas_past }
 
-        it 'sets the uploaded date to the modified date' do
+        it 'does not overwrite the existing uploaded date' do
           expect { step.call(change_set) }
             .not_to change { change_set.date_uploaded }
             .from xmas_past
