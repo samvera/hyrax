@@ -42,7 +42,7 @@ module Hyrax
           return Failure[:no_date_uploaded_attribute, obj] unless
             obj.respond_to?(:date_uploaded=)
 
-          obj.date_uploaded = date_uploaded(obj)
+          obj.date_uploaded = date_uploaded(obj) if obj.date_uploaded.blank?
 
           Success(obj)
         end
