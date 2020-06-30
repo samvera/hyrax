@@ -25,19 +25,32 @@ module Hyrax
     # @param query [String] the query string
     def search(query)
       clause = query.blank? ? nil : "%" + query.downcase + "%"
-      base = ::User.where(*base_query)
+      base = ::User
+      base = base.where(*Array.wrap(base_query))
       base = base.where("#{Hydra.config.user_key_field} like lower(?) OR display_name like lower(?)", clause, clause) if clause.present?
       base.registered
-          .where("#{Hydra.config.user_key_field} not in (?)",
-                 [::User.batch_user_key, ::User.audit_user_key])
+          .without_system_accounts
           .references(:trophies)
           .order(sort_value)
           .page(params[:page]).per(10)
     end
 
+    # @api public
+    #
     # You can override base_query to return a list of arguments
+    #
+    # @note This changed a default from `[nil]` to `{}`.  In part
+    # there were errors in the specs regarding this behavior.
+    #
+    # @example
+    #   def base_query
+    #     { custom_field: true }
+    #   end
+    #
+    # @return Hash (or more appropriate something that maps to the
+    # method signature of ActiveRecord::Base.where)
     def base_query
-      [nil]
+      {}
     end
 
     def find_user
