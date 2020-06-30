@@ -124,6 +124,13 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
 
         expect(controller).to render_template('hyrax/base/edit')
       end
+
+      it 'prepopulates the form' do
+        get :edit, params: { id: work.id }
+
+        expect(assigns[:form])
+          .to have_attributes(title: work.title.first, version: an_instance_of(String))
+      end
     end
   end
 

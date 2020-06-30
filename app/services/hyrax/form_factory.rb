@@ -15,11 +15,15 @@ module Hyrax
   # @since 3.0.0
   class FormFactory
     ##
+    # Builds and prepopulates a form for the given model.
+    #
     # @param model      [Object]
     # @param ability    [Hyrax::Ability]
     # @param controller [ApplicationController]
+    #
+    # @see https://trailblazer.to/2.0/gems/reform/prepopulator.html
     def build(model, _ability, _controller)
-      Hyrax::Forms::ResourceForm.for(model)
+      Hyrax::Forms::ResourceForm.for(model).prepopulate!
     end
   end
 end
