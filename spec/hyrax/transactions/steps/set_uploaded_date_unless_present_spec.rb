@@ -50,6 +50,18 @@ RSpec.describe Hyrax::Transactions::Steps::SetUploadedDateUnlessPresent do
           .to xmas
       end
 
+      context 'when an uploaded date exists' do
+        let(:xmas_past) { DateTime.parse('2009-12-25 11:30').iso8601 }
+
+        before { change_set.date_uploaded = xmas_past }
+
+        it 'does not overwrite the existing uploaded date' do
+          expect { step.call(change_set) }
+            .not_to change { change_set.date_uploaded }
+            .from xmas_past
+        end
+      end
+
       context 'when a modified date exists' do
         let(:xmas_past) { DateTime.parse('2009-12-25 11:30').iso8601 }
 
