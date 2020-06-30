@@ -66,10 +66,15 @@ module Wings
   #   builder = Wings::WorkSearchBuilder(Monograph)
   def self.WorkSearchBuilder(work_type) # rubocop:disable Naming/MethodName
     Class.new(Hyrax::WorkSearchBuilder) do
+      @@_given_work_type = work_type # rubocop:disable Style/ClassVars
       @@_legacy_type = Wings::ModelRegistry.lookup(work_type) # rubocop:disable Style/ClassVars
 
       def work_types
         [@@_legacy_type]
+      end
+
+      def self.inspect
+        "Wings::WorkSearchBuilder(#{@@_given_work_type} -> #{@@_legacy_type})"
       end
     end
   end
