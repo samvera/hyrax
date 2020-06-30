@@ -11,5 +11,14 @@ RSpec.describe Hyrax::FormFactory do
     it 'returns a change set' do
       expect(factory.build(model, ability, controller)).to be_a Hyrax::ChangeSet
     end
+
+    context 'when the work is persisted' do
+      let(:model) { FactoryBot.valkyrie_create(:hyrax_work) }
+
+      it 'prepopulates the changeset with a lock token' do
+        expect(factory.build(model, ability, controller))
+          .to have_attributes(version: an_instance_of(String))
+      end
+    end
   end
 end
