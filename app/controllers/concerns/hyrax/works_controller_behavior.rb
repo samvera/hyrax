@@ -90,7 +90,7 @@ module Hyrax
     end
 
     def update
-      if actor.update(actor_environment)
+      if update_work
         after_update_response
       else
         respond_to do |wants|
@@ -181,6 +181,18 @@ module Hyrax
 
         @curation_concern = form.validate(params[hash_key_for_curation_concern]) &&
                             transactions['change_set.create_work'].call(form).value!
+      end
+    end
+
+    def update_work
+      case curation_concern
+      when ActiveFedora::Base
+        actor.update(actor_environment)
+      else
+        form = build_form
+
+        @curation_concern = form.validate(params[hash_key_for_curation_concern]) &&
+                            transactions['change_set.update_work'].call(form).value!
       end
     end
 
@@ -367,7 +379,13 @@ module Hyrax
     end
 
     def save_permissions
-      @saved_permissions = curation_concern.permissions.map(&:to_hash)
+      @saved_permissions =
+        case curation_concern
+        when ActiveFedora::Base
+          curation_concern.permissions.map(&:to_hash)
+        else
+          Hyrax::AccessControl.for(resource: curation_concern).permissions
+        end
     end
 
     def permissions_changed?
