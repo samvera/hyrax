@@ -1,18 +1,29 @@
 # frozen_string_literal: true
 
 RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
-  let(:paths) { Rails.application.routes.url_helpers }
+  let(:paths) { controller.main_app }
   let(:title) { ['Comet in Moominland'] }
   let(:work)  { FactoryBot.valkyrie_create(:hyrax_work, alternate_ids: [id], title: title) }
   let(:id)    { '123' }
 
-  before(:context) { Hyrax.config.register_curation_concern(Hyrax::Test::SimpleWork) }
+  let(:main_app_routes) do
+    ActionDispatch::Routing::RouteSet.new.tap do |r|
+      r.draw do # draw minimal routes for this controller mixin
+        mount Hyrax::Engine, at: '/'
+        namespaced_resources 'hyrax/test/simple_work_legacy', except: [:index]
+        devise_for :users
+        resources :solr_documents, only: [:show], path: '/catalog', controller: 'catalog'
+      end
+    end
+  end
 
-  after(:context) do
-    config = Hyrax.config
-    types  = config.registered_curation_concern_types - ["Hyrax::Test::SimpleWork"]
+  before do
+    allow(Hyrax.config)
+      .to receive(:registered_curation_concern_types)
+      .and_return([work.model_name.name])
 
-    Hyrax.config.instance_variable_set(:@registered_concerns, types)
+    controller.main_app.instance_variable_set(:@routes, main_app_routes)
+    controller.main_app.instance_variable_set(:@helpers, main_app_routes.url_helpers)
   end
 
   controller(ApplicationController) do
@@ -36,13 +47,28 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
       expect(response).to redirect_to paths.new_user_session_path(locale: :en)
     end
 
-    xcontext 'with a logged in user' do
+    context 'with a logged in user' do
       include_context 'with a logged in user'
 
-      it 'is successful' do
-        get :create, params: {}
+      it 'redirects to a new work' do
+        get :create, params: { test_simple_work: { title: 'comet in moominland' } }
 
-        expect(response).to be_successful
+        expect(response)
+          .to redirect_to paths.hyrax_test_simple_work_legacy_path(id: assigns(:curation_concern).id, locale: :en)
+      end
+
+      context 'with invalid form data' do
+        before do
+          allow(controller.class.work_form_service)
+            .to receive(:build)
+            .and_return(Hyrax::Test::FormWithValidations.new(work))
+        end
+
+        it 'gives UNPROCESSABLE ENTITY' do
+          get :create, params: { test_simple_work: { title: '' } }
+
+          expect(response.status).to eq 422
+        end
       end
     end
   end
