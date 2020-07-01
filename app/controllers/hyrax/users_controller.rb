@@ -20,13 +20,20 @@ module Hyrax
     private
 
       # TODO: this should move to a service.
+      #
+      # @todo Given that this method sends its methods to ::User, I
+      # believe it could be extracted to User; I don't think the
+      # base_query can be as it may require controller level context
+      #
       # Returns a list of users excluding the system users and guest_users
       # @param query [String] the query string
       def search(query)
-        clause = query.blank? ? nil : "%" + query.downcase + "%"
         base = ::User
+        clause = query.blank? ? nil : "%#{base.sanitize_sql_like(query.downcase)}%"
         base = base.where(*Array.wrap(base_query))
-        base = base.where("#{Hydra.config.user_key_field} like lower(?) OR display_name like lower(?)", clause, clause) if clause.present?
+        # This may have some DB adapter specific behavior, which is
+        # definitely logic I'd like to keep out of a controller.
+        base = base.where("LOWER(#{Hydra.config.user_key_field}) LIKE :clause OR LOWER(display_name) LIKE :clause", clause: clause) if clause.present?
         base.registered
             .without_system_accounts
             .references(:trophies)
