@@ -62,7 +62,10 @@ RSpec.describe Hyrax::GenericWorksController do
     end
 
     describe 'found' do
-      before { resource_request }
+      before do
+        allow(controller).to receive(:authorize!).and_return(true)
+        resource_request
+      end
       it "returns json of the work" do
         # Ensure that @curation_concern is set for jbuilder template to use
         expect(controller).to render_template('hyrax/base/show')
