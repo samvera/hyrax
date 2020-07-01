@@ -25,7 +25,7 @@ module Hyrax
         end
 
         ##
-        # Find the ids of child works of a given resource, and map to Valkyrie Resources
+        # Find the ids of child works of a given resource, and map to Valkyrie Resources IDs
         #
         # @param [Valkyrie::Resource]
         # @return [Array<Valkyrie::ID>]

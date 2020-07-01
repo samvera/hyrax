@@ -23,7 +23,7 @@ module Hyrax
             .find_inverse_references_by(resource: resource, property: :member_of_collection_ids)
         end
 
-        # Find the ids of child collections of a given resource, and map to Valkyrie Resources
+        # Find the ids of child collections of a given resource, and map to Valkyrie Resources IDs
         # @param [Valkyrie::Resource]
         # @return [Array<Valkyrie::ID>]
         def find_child_collection_ids(resource:)
