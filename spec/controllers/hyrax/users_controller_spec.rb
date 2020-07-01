@@ -85,15 +85,6 @@ RSpec.describe Hyrax::UsersController, type: :controller do
         end
       end
 
-      it "uses the base query" do
-        u3 = create(:user)
-        allow(controller).to receive(:base_query).and_return(["email == \"#{u3.email}\""])
-        get :index
-        expect(assigns[:users]).to include(u3)
-        expect(assigns[:users]).not_to include(u1, u2)
-        u3.destroy
-      end
-
       it "uses the base query with hash as where clause" do
         u3 = create(:user)
         allow(controller).to receive(:base_query).and_return({ Hydra.config.user_key_field => u3.email })
