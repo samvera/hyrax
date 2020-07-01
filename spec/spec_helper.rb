@@ -103,7 +103,7 @@ class JsonStrategy
   end
 end
 
-require 'factories/strategies/valkyrie_resource'
+require 'hyrax/specs/shared_specs/factories/strategies/valkyrie_resource'
 FactoryBot.register_strategy(:valkyrie_create, ValkyrieCreateStrategy)
 FactoryBot.register_strategy(:create_using_test_adapter, ValkyrieTestAdapterCreateStrategy)
 FactoryBot.register_strategy(:json, JsonStrategy)
