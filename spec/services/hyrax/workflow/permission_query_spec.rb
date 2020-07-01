@@ -33,7 +33,7 @@ module Hyrax
 
       def expect_agents_for(agents:, entity:, role:)
         agents = Array.wrap(agents).map { |agent| Sipity::Agent(agent) }
-        expect(described_class.scope_agents_associated_with_entity_and_role(role: role, entity: entity)).to eq(agents)
+        expect(described_class.scope_agents_associated_with_entity_and_role(role: role, entity: entity)).to contain_exactly(*agents)
       end
 
       def expect_roles_for(entity:, roles:)
