@@ -68,6 +68,7 @@ module Hyrax
 
     # Finds a solr document matching the id and sets @presenter
     # @raise CanCan::AccessDenied if the document is not found or the user doesn't have access to it.
+    # rubocop:disable Metrics/AbcSize
     def show
       @user_collections = user_collections
 
@@ -76,6 +77,7 @@ module Hyrax
         wants.json do
           # load @curation_concern manually because it's skipped for html
           @curation_concern = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id])
+          curation_concern # This is here for authorization checks (we could add authorize! but let's use the same method for CanCanCan)
           render :show, status: :ok
         end
         additional_response_formats(wants)
@@ -84,6 +86,7 @@ module Hyrax
         wants.nt { render body: presenter.export_as_nt, mime_type: Mime[:nt] }
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     def edit
       build_form
