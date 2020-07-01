@@ -35,8 +35,8 @@ RSpec.describe Hyrax::CustomQueries::Navigators::ChildCollectionsNavigator, :cle
     end
 
     it 'returns Valkyrie ids for child collections only' do
-      child_collections = custom_query_service.find_child_collections(resource: collection1_resource)
-      expect(child_collections.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([collection2.id, collection3.id])
+      child_collection_ids = custom_query_service.find_child_collection_ids(resource: collection1_resource)
+      expect(child_collection_ids).to match_valkyrie_ids_with_active_fedora_ids([collection2.id, collection3.id])
     end
   end
 end

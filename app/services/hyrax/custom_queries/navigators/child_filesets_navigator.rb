@@ -22,7 +22,7 @@ module Hyrax
           query_service.find_members(resource: resource).select(&:file_set?)
         end
 
-        # Find the ids of child filesets of a given resource, and map to Valkyrie Resources
+        # Find the ids of child filesets of a given resource, and map to Valkyrie Resources IDs
         # @param [Valkyrie::Resource]
         # @return [Array<Valkyrie::ID>]
         def find_child_fileset_ids(resource:)
