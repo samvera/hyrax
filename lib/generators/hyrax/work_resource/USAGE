@@ -13,4 +13,5 @@ Example:
     config/initializers/hyrax.rb
     config/metadata/monograph.yaml
     spec/models/monograph_spec.rb
+    spec/indexers/monograph_indexer_spec.rb
     spec/views/monographs/_monograph.html.erb_spec.rb
