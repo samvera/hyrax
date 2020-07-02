@@ -74,6 +74,12 @@ class Hyrax::WorkResourceGenerator < Rails::Generators::NamedBase
     template('indexer.rb.erb', File.join('app/indexers/', class_path, "#{file_name}_indexer.rb"))
   end
 
+  def create_indexer_spec
+    return unless rspec_installed?
+    filepath = File.join('spec/indexers/', class_path, "#{file_name}_indexer_spec.rb")
+    template('indexer_spec.rb.erb', filepath)
+  end
+
   def create_views
     create_file File.join('app/views/hyrax', class_path, "#{plural_file_name}/_#{file_name}.html.erb") do
       "<%# This is a search result view %>\n" \
