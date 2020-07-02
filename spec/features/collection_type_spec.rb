@@ -370,7 +370,8 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
         find(:xpath, "//tr[td[contains(.,'#{not_empty_collection_type.title}')]]/td/button", text: 'Delete').click
 
         within('div#deleteDenyModal') do
-          expect(page).to have_content(deny_delete_modal_text, :all)
+          # Check both hidden and visible HTML attributes
+          expect(page).to have_content(:all, deny_delete_modal_text)
           click_link('View collections of this type')
         end
         sleep 3
