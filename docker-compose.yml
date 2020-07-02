@@ -6,12 +6,13 @@ services:
       args:
         RAILS_ENV: development
         BUNDLE_WITHOUT: test
+        EXTRA_APK_PACKAGES: 'git postgresql-dev sqlite-dev'
     stdin_open: true
     tty: true
     environment:
-      - DATABASE_URL=postgresql://postgres/hyrax?pool=5
-      - FEDORA_PORT=8080
-      - FEDORA_HOST=fcrepo
+      - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
+      - FCREPO_PORT=8080
+      - FCREPO_HOST=fcrepo
       - REDIS_HOST=redis
       - SOLR_URL=http://solr:8983/solr/hyrax
     depends_on:
@@ -30,6 +31,12 @@ services:
 
   create_admin_set:
     <<: *app
+    environment:
+      - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
+      - FCREPO_PORT=8080
+      - FCREPO_HOST=fcrepo
+      - REDIS_HOST=redis
+      - SOLR_URL=http://solr:8983/solr/hyrax
     command:
       - bundle
       - exec
@@ -42,6 +49,12 @@ services:
 
   create_collection_types:
     <<: *app
+    environment:
+      - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
+      - FCREPO_PORT=8080
+      - FCREPO_HOST=fcrepo
+      - REDIS_HOST=redis
+      - SOLR_URL=http://solr:8983/solr/hyrax
     command:
       - bundle
       - exec
@@ -53,6 +66,12 @@ services:
 
   db_migrate:
     <<: *app
+    environment:
+      - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
+      - FCREPO_PORT=8080
+      - FCREPO_HOST=fcrepo
+      - REDIS_HOST=redis
+      - SOLR_URL=http://solr:8983/solr/hyrax
     command:
       - bundle
       - exec
@@ -67,6 +86,8 @@ services:
     image: postgres:latest
     restart: always
     environment:
+      - POSTGRES_USER=hyrax_user
+      - POSTGRES_PASSWORD=hyrax_password
       - POSTGRES_DB=hyrax
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
