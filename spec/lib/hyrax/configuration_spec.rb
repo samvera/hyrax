@@ -54,6 +54,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:iiif_image_size_default=) }
   it { is_expected.to respond_to(:iiif_metadata_fields) }
   it { is_expected.to respond_to(:iiif_metadata_fields=) }
+  it { is_expected.to respond_to(:iiif_manifest_cache_duration) }
+  it { is_expected.to respond_to(:iiif_manifest_cache_duration=) }
   it { is_expected.to respond_to(:libreoffice_path) }
   it { is_expected.to respond_to(:license_service_class) }
   it { is_expected.to respond_to(:license_service_class=) }

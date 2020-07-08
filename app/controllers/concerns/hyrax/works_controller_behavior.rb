@@ -10,10 +10,11 @@ module Hyrax
       with_themed_layout :decide_layout
       copy_blacklight_config_from(::CatalogController)
 
-      class_attribute :_curation_concern_type, :show_presenter, :work_form_service, :search_builder_class
+      class_attribute :_curation_concern_type, :show_presenter, :work_form_service, :search_builder_class, :iiif_manifest_builder
       self.show_presenter = Hyrax::WorkShowPresenter
       self.work_form_service = Hyrax::WorkFormService
       self.search_builder_class = WorkSearchBuilder
+      self.iiif_manifest_builder = (Flipflop.cache_work_iiif_manifest? ? Hyrax::CachingIiifManifestBuilder.new : Hyrax::ManifestBuilderService.new)
       attr_accessor :curation_concern
       helper_method :curation_concern, :contextual_path
 
@@ -127,13 +128,27 @@ module Hyrax
 
     def manifest
       headers['Access-Control-Allow-Origin'] = '*'
+
+      json = iiif_manifest_builder.manifest_for(presenter: iiif_manifest_presenter)
+
       respond_to do |wants|
-        wants.json { render json: manifest_builder.to_h }
-        wants.html { render json: manifest_builder.to_h }
+        wants.json { render json: json }
+        wants.html { render json: json }
       end
     end
 
     private
+
+      def iiif_manifest_builder
+        self.class.iiif_manifest_builder
+      end
+
+      def iiif_manifest_presenter
+        IiifManifestPresenter.new(curation_concern_from_search_results).tap do |p|
+          p.hostname = request.hostname
+          p.ability = current_ability
+        end
+      end
 
       def user_collections
         collections_service.search_results(:deposit)
@@ -155,10 +170,6 @@ module Hyrax
 
       def build_form
         @form = work_form_service.build(curation_concern, current_ability, self)
-      end
-
-      def manifest_builder
-        ::IIIFManifest::ManifestFactory.new(presenter)
       end
 
       def actor

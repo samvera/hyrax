@@ -605,8 +605,16 @@ RSpec.describe Hyrax::GenericWorksController do
                                           File.open(fixture_path + '/world.png'),
                                           :original_file)
       allow(IIIFManifest::ManifestFactory).to receive(:new)
-        .with(Hyrax::WorkShowPresenter)
+        .with(Hyrax::IiifManifestPresenter)
         .and_return(manifest_factory)
+    end
+
+    it 'uses the configured service' do
+      custom_builder = double(manifest_for: { test: 'cached manifest' })
+      allow(described_class).to receive(:iiif_manifest_builder).and_return(custom_builder)
+
+      get :manifest, params: { id: work, format: :json }
+      expect(response.body).to eq "{\"test\":\"cached manifest\"}"
     end
 
     it "produces a manifest for a json request" do
