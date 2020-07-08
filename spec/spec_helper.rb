@@ -176,7 +176,7 @@ RSpec.configure do |config|
     # using :workflow is preferable to :clean_repo, use the former if possible
     # It's important that this comes after DatabaseCleaner.start
     ensure_deposit_available_for(user) if example.metadata[:workflow]
-    if example.metadata[:clean_repo]
+    if example.metadata[:clean_repo] || example.metadata[:type] == :feature
       ActiveFedora::Cleaner.clean!
       # The JS is executed in a different thread, so that other thread
       # may think the root path has already been created:
