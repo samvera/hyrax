@@ -5,6 +5,7 @@ module Hyrax
     # These gems must be required outside of an initializer or they don't get loaded.
     require 'awesome_nested_set'
     require 'breadcrumbs_on_rails'
+    require 'draper'
     require 'jquery-ui-rails'
     require 'flot-rails'
     require 'almond-rails'

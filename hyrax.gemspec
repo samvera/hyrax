@@ -39,6 +39,7 @@ SUMMARY
   spec.add_dependency 'browse-everything', '>= 0.16'
   spec.add_dependency 'carrierwave', '~> 1.0'
   spec.add_dependency 'clipboard-rails', '~> 1.5'
+  spec.add_dependency 'draper', '~> 4.0'
   spec.add_dependency 'dry-equalizer', '~> 0.2'
   spec.add_dependency 'dry-struct', '>= 0.1', '< 2.0'
   spec.add_dependency 'dry-transaction', '~> 0.11'
