@@ -2,15 +2,9 @@
 
 RSpec.describe 'Batch creation of works', type: :feature do
   let(:user) { create(:user) }
-  let!(:default_admin_set) do
-    build(:admin_set,
-          id: AdminSet::DEFAULT_ID,
-          title: ["Default Admin Set"],
-          description: ["A description"],
-          with_permission_template: { deposit_groups: [::Ability.registered_group_name] })
-  end
 
   before do
+    AdminSet.find_or_create_default_admin_set_id
     sign_in user
     allow(Flipflop).to receive(:batch_upload?).and_return true
   end
