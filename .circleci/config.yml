@@ -69,10 +69,9 @@ jobs:
           at: ~/
       - samvera/engine_cart_generate:
           cache_key: v1-internal-test-app-{{ checksum "hyrax.gemspec" }}-{{ checksum ".regen" }}-<< parameters.rails_version >>-<< parameters.ruby_version >>
-      - samvera/bundle_for_gem:
+      - samvera/bundle:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
-          project: hyrax
       - persist_to_workspace:
           root: ~/
           paths:
@@ -107,10 +106,9 @@ jobs:
           solr_config_path: .internal_test_app/solr/conf
           core_name: hyrax-valkyrie-test
       # Rerun bundler in case this is a different ruby version than bundle and build steps
-      - samvera/bundle_for_gem:
+      - samvera/bundle:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
-          project: hyrax
       - samvera/parallel_rspec
 
 workflows:
