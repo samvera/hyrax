@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  samvera: samvera/circleci-orb@dev:a34fec0
+  samvera: samvera/circleci-orb@dev:282f020
 jobs:
   bundle:
     parameters:
@@ -22,10 +22,9 @@ jobs:
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
     steps:
       - samvera/cached_checkout
-      - samvera/bundle_for_gem:
+      - samvera/bundle:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
-          project: hyrax
       - persist_to_workspace:
           root: ~/
           paths:
