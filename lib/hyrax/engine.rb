@@ -5,6 +5,7 @@ module Hyrax
 
     require 'awesome_nested_set'
     require 'breadcrumbs_on_rails'
+    require 'draper'
     require 'dry/struct'
     require 'dry/equalizer'
     require 'dry/events'
