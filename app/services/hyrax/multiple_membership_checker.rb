@@ -34,7 +34,7 @@ module Hyrax
     # @return [nil, String] nil if no conflicts; an error message string if so
     def check(collection_ids:, include_current_members: false)
       # short-circuit if no single membership types have been created
-      return if single_membership_types.blank?
+      return if collection_type_gids_that_disallow_multiple_membership.blank?
       # short-circuit if no new single_membership_collections passed in
       new_single_membership_collections = single_membership_collections(collection_ids)
       return if new_single_membership_collections.blank?
@@ -52,11 +52,11 @@ module Hyrax
 
     def single_membership_collections(collection_ids)
       return [] if collection_ids.blank?
-      ::Collection.where(id: collection_ids, collection_type_gid_ssim: single_membership_types)
+      ::Collection.where(id: collection_ids, collection_type_gid_ssim: collection_type_gids_that_disallow_multiple_membership)
     end
 
-    def single_membership_types
-      Hyrax::CollectionType.where(allow_multiple_membership: false).map(&:gid)
+    def collection_type_gids_that_disallow_multiple_membership
+      Hyrax::CollectionType.gids_that_do_not_allow_multiple_membership
     end
 
     def build_error_message(problematic_collections)
