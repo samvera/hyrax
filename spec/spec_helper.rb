@@ -166,6 +166,12 @@ RSpec.configure do |config|
   end
 
   config.before do |example|
+    # Many of the specs push data into Redis. This ensures that we
+    # have a clean slate when processing.  It is possible that we
+    # could narrow the call for this method to be done for clean_repo
+    # or feature specs.
+    Hyrax::RedisEventStore.instance.redis.flushdb
+
     if example.metadata[:type] == :feature && Capybara.current_driver != :rack_test
       DatabaseCleaner.strategy = :truncation
     else
