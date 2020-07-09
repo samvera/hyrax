@@ -73,6 +73,15 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     end
   end
 
+  describe ".gids_that_do_not_allow_multiple_membership" do
+    let!(:type_allows_multiple_membership) { create(:collection_type, allow_multiple_membership: true) }
+    let!(:type_disallows_multiple_membership) { create(:collection_type, allow_multiple_membership: false) }
+
+    subject { described_class.gids_that_do_not_allow_multiple_membership }
+
+    it { is_expected.to match_array(type_disallows_multiple_membership.gid) }
+  end
+
   describe ".find_or_create_admin_set_type" do
     subject { described_class.find_or_create_admin_set_type }
 

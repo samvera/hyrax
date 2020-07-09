@@ -44,6 +44,14 @@ module Hyrax
       false
     end
 
+    # Return an array of global identifiers for collection types that do not allow multiple membership.
+    # @return [Array<String>] an array of Global Identifiers
+    # @see {#gid}
+    # @see Hyrax::MultipleMembershipChecker for usage
+    def self.gids_that_do_not_allow_multiple_membership
+      where(allow_multiple_membership: false).map(&:gid)
+    end
+
     # Find the collection type associated with the Global Identifier (gid)
     # @param [String] gid - Global Identifier for this collection_type (e.g. gid://internal/hyrax-collectiontype/3)
     # @return [Hyrax::CollectionType] an instance of Hyrax::CollectionType with id = the model_id portion of the gid (e.g. 3)
