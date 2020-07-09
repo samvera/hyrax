@@ -4,7 +4,7 @@ RSpec.describe 'proxy', type: :feature do
   let(:second_user) { create(:user) }
 
   describe 'add proxy in profile', :js do
-    it "create a proxy, then deletes a proxy, and verifies deletion" do
+    it "creates a proxy, then deletes a proxy, and verifies deletion" do
       sign_in user
       # Prior to capturing the after sign in path, this code was later
       # re-signing to get to this captured path.
