@@ -45,6 +45,24 @@ module Hyrax
       channels&.include?('rgba') ? 'png' : 'jpg'
     end
 
+    ##
+    # @api private
+    #
+    # Get the id for the latest version of original file. If
+    # `#originial_file_id` is available on the object, simply use that value.
+    # Otherwise, retrieve the original file directly from the datastore and
+    # resolve the current version using `VersioningService`.
+    #
+    # The fallback lookup normally happens when a File Set was indexed prior
+    # to the introduction of `#original_file_id` to the index document,
+    # but is useful as a generalized failsafe to ensure we have done our best
+    # to resolve the content.
+    #
+    # @note this method caches agressively. it's here to support IIIF
+    #   manifest generation and we expect this object to exist only for
+    #   the generation of a single manifest document. this insulates callers
+    #   from the complex lookup behavior and protects against expensive and
+    #   unnecessary database lookups.
     def latest_file_id
       @latest_file_id ||=
         begin
