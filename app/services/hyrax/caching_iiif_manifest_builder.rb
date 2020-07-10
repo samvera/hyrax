@@ -51,7 +51,7 @@ module Hyrax
     #
     # @return [String]
     def version_for(presenter)
-      presenter.etag
+      presenter.version
     end
   end
 end

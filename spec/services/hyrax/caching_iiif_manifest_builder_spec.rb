@@ -11,7 +11,7 @@ RSpec.describe Hyrax::CachingIiifManifestBuilder, :clean_repo do
     double(
       'Presenter',
       id: id,
-      etag: etag,
+      version: etag,
       work_presenters: [work_presenter],
       manifest_url: manifest_url,
       description: ["A Treatise on Coding in Samvera"],
