@@ -216,7 +216,7 @@ RSpec.describe Hyrax::IiifManifestPresenter do
     it 'returns a string' do
       expect(presenter.version).to be_a String
     end
-    
+
     it 'changes when the work changes' do
       expect { work.save }.to change { presenter.version }
     end
