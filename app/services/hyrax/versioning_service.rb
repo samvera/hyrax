@@ -22,5 +22,14 @@ module Hyrax
       return if version.nil?
       VersionCommitter.create(version_id: version.uri, committer_login: user_key)
     end
+
+    # @param [ActiveFedora::File | Hyrax::FileMetadata] content
+    def self.versioned_file_id(file)
+      versions = file.versions.all
+
+      return ActiveFedora::Base.uri_to_id(versions.last.uri) if versions.present?
+
+      file.id
+    end
   end
 end
