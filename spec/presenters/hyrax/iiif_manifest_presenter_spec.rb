@@ -62,6 +62,20 @@ RSpec.describe Hyrax::IiifManifestPresenter do
           expect(presenter.display_image).to be_nil
         end
       end
+
+      context 'when no original file is indexed' do
+        let(:solr_doc) do
+          index_hash = file_set.to_solr
+          index_hash.delete('original_file_id_ssi')
+
+          SolrDocument.new(index_hash)
+        end
+
+        it 'can still resolve the image' do
+          expect(presenter.display_image.to_json)
+            .to include 'fcr:versions%2Fversion1/full'
+        end
+      end
     end
   end
 
