@@ -170,5 +170,21 @@ RSpec.describe Hyrax::IiifManifestPresenter do
       end
     end
   end
+
+  describe '#version' do
+    let(:work) { create(:work) }
+
+    it 'returns a string' do
+      expect(presenter.version).to be_a String
+    end
+
+    context 'when the work is unsaved' do
+      let(:work) { build(:work) }
+
+      it 'is still a string' do
+        expect(presenter.version).to be_a String
+      end
+    end
+  end
 end
 # rubocop:enable BracesAroundHashParameters

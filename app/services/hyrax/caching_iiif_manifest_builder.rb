@@ -45,13 +45,9 @@ module Hyrax
       end
 
       ##
-      # @note `etag` is a better option than the solr document `_version_`; the
-      #   latter isn't always available, depending on how the presenter was
-      #   built!
-      #
       # @return [String]
       def version_for(presenter)
-        presenter.etag
+        presenter.version
       end
   end
 end
