@@ -134,6 +134,16 @@ module Hyrax
     end
 
     ##
+    # @note ideally, this value will be cheap to retrieve, and will reliably
+    #   change any time the manifest JSON will change. the current implementation
+    #   is more blunt than this, changing only when the work itself changes.
+    #
+    # @return [String] a string tag suitable for cache keys for this manifiest
+    def version
+      object.try(:modified_date)&.to_s || ''
+    end
+
+    ##
     # An Ability-like object that gives `true` for all `can?` requests
     class NullAbility
       ##
