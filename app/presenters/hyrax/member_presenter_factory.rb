@@ -37,7 +37,6 @@ module Hyrax
       @work_presenters ||= member_presenters(ordered_ids - file_set_ids, work_presenter_class)
     end
 
-    # TODO: Extract this to ActiveFedora::Aggregations::ListSource
     def ordered_ids
       @ordered_ids ||= begin
                          Hyrax::SolrService.query("proxy_in_ssi:#{id}",

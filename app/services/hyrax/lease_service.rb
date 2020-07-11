@@ -4,7 +4,6 @@ module Hyrax
     class << self
       # Returns all assets with lease expiration date set to a date in the past
       def assets_with_expired_leases
-        # ActiveFedora::Base.where('lease_expiration_date_dtsi:[* TO NOW]')
         builder = Hyrax::ExpiredLeaseSearchBuilder.new(self)
         presenters(builder)
       end
