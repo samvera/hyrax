@@ -67,6 +67,7 @@ end
 
 Capybara.default_driver = :rack_test # This is a faster driver
 Capybara.javascript_driver = :selenium_chrome_headless_sandboxless # This is slower
+Capybara.default_max_wait_time = 10 # We may have a slow application, let's give it some time.
 
 # FIXME: Pin to older version of chromedriver to avoid issue with clicking non-visible elements
 Webdrivers::Chromedriver.version = '72.0.3626.69'

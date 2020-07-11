@@ -47,7 +47,7 @@ module Selectors
       # Crude way of waiting for the AJAX response
       select2_results = []
       time_elapsed = 0
-      while select2_results.empty? && time_elapsed < 30
+      while select2_results.empty? && time_elapsed < 60
         begin_time = Time.now.to_f
         doc = Nokogiri::XML.parse(page.body)
         select2_results = doc.xpath('//html:li[contains(@class,"select2-result")]', html: 'http://www.w3.org/1999/xhtml')
