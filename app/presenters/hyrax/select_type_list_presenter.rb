@@ -23,8 +23,9 @@ module Hyrax
 
     # Return or yield the first model in the list. This is used when the list
     # only has a single element.
-    # @yieldparam [Class] model a class that decends from ActiveFedora::Base
-    # @return [Class] a class that decends from ActiveFedora::Base
+    #
+    # @yieldparam [Class] model a model class
+    # @return [Class] a model class
     def first_model
       yield(authorized_models.first) if block_given?
       authorized_models.first
