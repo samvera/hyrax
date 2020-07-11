@@ -101,6 +101,11 @@ module Hyrax
       @microdata_default_type ||= 'http://schema.org/CreativeWork'
     end
 
+    attr_writer :fixity_service
+    def fixity_service
+      @fixity_service ||= Hyrax::Fixity::ActiveFedoraFixityService
+    end
+
     attr_writer :max_days_between_fixity_checks
     def max_days_between_fixity_checks
       @max_days_between_fixity_checks ||= 7

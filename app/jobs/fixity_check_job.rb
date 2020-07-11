@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class FixityCheckJob < Hyrax::ApplicationJob
-  # A Job class that runs a fixity check (using ActiveFedora::FixityService,
+  # A Job class that runs a fixity check (using Hyrax.config.fixity_service)
   # which contacts fedora and requests a fixity check), and stores the results
   # in an ActiveRecord ChecksumAuditLog row. It also prunes old ChecksumAuditLog
   # rows after creating a new one, to keep old ones you don't care about from
@@ -25,40 +25,38 @@ class FixityCheckJob < Hyrax::ApplicationJob
   # @param file_set_id [FileSet] the id for FileSet parent object of URI being checked.
   # @param file_id [String] File#id, used for logging/reporting.
   def perform(uri, file_set_id:, file_id:)
-    uri = uri.to_s # sometimes we get an RDF::URI gah
-    log = run_check(file_set_id, file_id, uri)
-
-    if log.failed? && Hyrax.config.callback.set?(:after_fixity_check_failure)
+    run_check(file_set_id, file_id, uri).tap do |audit|
+      result   = audit.failed? ? :failure : :success
       file_set = ::FileSet.find(file_set_id)
-      Hyrax.config.callback.run(:after_fixity_check_failure,
-                                file_set,
-                                checksum_audit_log: log, warn: false)
-    end
 
-    log
+      Hyrax.publisher.publish('file.set.audited', file_set: file_set, audit_log: audit, result: result)
+
+      # @todo remove this callback call for Hyrax 4.0.0
+      if audit.failed? && Hyrax.config.callback.set?(:after_fixity_check_failure)
+        Hyrax.config.callback.run(:after_fixity_check_failure,
+                                  file_set,
+                                  checksum_audit_log: audit, warn: false)
+      end
+    end
   end
 
   private
 
+  ##
+  # @api private
   def run_check(file_set_id, file_id, uri)
-    service = ActiveFedora::FixityService.new(uri)
-    begin
-      fixity_ok = service.check
-      expected_result = service.expected_message_digest
-    rescue Ldp::NotFound
-      # Either the #check or #expected_message_digest could raise this exception
-      error_msg = 'resource not found'
-    end
+    service = fixity_service_for(id: uri)
+    expected_result = service.expected_message_digest
 
-    log = ChecksumAuditLog.create_and_prune!(passed: fixity_ok, file_set_id: file_set_id, checked_uri: uri, file_id: file_id, expected_result: expected_result)
-    # Note that the after_fixity_check_failure will be called if the fixity check fail. This
-    # logging is for additional information related to the failure. Wondering if we should
-    # also include the error message?
-    logger.error "FIXITY CHECK FAILURE: Fixity failed for #{uri} #{error_msg}: #{log}" unless fixity_ok
-    log
+    ChecksumAuditLog.create_and_prune!(passed: service.check, file_set_id: file_set_id, checked_uri: uri.to_s, file_id: file_id, expected_result: expected_result)
+  rescue Hyrax::Fixity::MissingContentError
+    ChecksumAuditLog.create_and_prune!(passed: false, file_set_id: file_set_id, checked_uri: uri.to_s, file_id: file_id, expected_result: expected_result)
   end
 
-  def logger
-    Hyrax.logger
+  ##
+  # @api private
+  # @return [Class]
+  def fixity_service_for(id:)
+    Hyrax.config.fixity_service.new(id)
   end
 end

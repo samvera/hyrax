@@ -30,10 +30,6 @@ Hyrax.config.callback.set(:after_destroy, warn: false) do |id, user|
   Hyrax.publisher.publish('object.deleted', id: id, user: user)
 end
 
-Hyrax.config.callback.set(:after_fixity_check_failure, warn: false) do |file_set, checksum_audit_log:|
-  Hyrax.publisher.publish('file.set.audited', file_set: file_set, audit_log: checksum_audit_log, result: :failure)
-end
-
 Hyrax.config.callback.set(:after_batch_create_success, warn: false) do |user|
   Hyrax.publisher.publish('batch.created', user: user, messages: [], result: :success)
 end
