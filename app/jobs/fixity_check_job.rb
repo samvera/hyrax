@@ -52,16 +52,7 @@ class FixityCheckJob < Hyrax::ApplicationJob
       error_msg = 'resource not found'
     end
 
-    log = ChecksumAuditLog.create_and_prune!(passed: fixity_ok, file_set_id: file_set_id, checked_uri: uri.to_s, file_id: file_id, expected_result: expected_result)
-    # Note that the after_fixity_check_failure will be called if the fixity check fail. This
-    # logging is for additional information related to the failure. Wondering if we should
-    # also include the error message?
-    logger.error "FIXITY CHECK FAILURE: Fixity failed for #{uri} #{error_msg}: #{log}" unless fixity_ok
-    log
-  end
-
-  def logger
-    Hyrax.logger
+    ChecksumAuditLog.create_and_prune!(passed: fixity_ok, file_set_id: file_set_id, checked_uri: uri.to_s, file_id: file_id, expected_result: expected_result)
   end
 
   ##
