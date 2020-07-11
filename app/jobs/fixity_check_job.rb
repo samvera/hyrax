@@ -25,7 +25,6 @@ class FixityCheckJob < Hyrax::ApplicationJob
   # @param file_set_id [FileSet] the id for FileSet parent object of URI being checked.
   # @param file_id [String] File#id, used for logging/reporting.
   def perform(uri, file_set_id:, file_id:)
-    uri = uri.to_s # sometimes we get an RDF::URI gah
     log = run_check(file_set_id, file_id, uri)
 
     if log.failed? && Hyrax.config.callback.set?(:after_fixity_check_failure)
@@ -50,7 +49,7 @@ class FixityCheckJob < Hyrax::ApplicationJob
       error_msg = 'resource not found'
     end
 
-    log = ChecksumAuditLog.create_and_prune!(passed: fixity_ok, file_set_id: file_set_id, checked_uri: uri, file_id: file_id, expected_result: expected_result)
+    log = ChecksumAuditLog.create_and_prune!(passed: fixity_ok, file_set_id: file_set_id, checked_uri: uri.to_s, file_id: file_id, expected_result: expected_result)
     # Note that the after_fixity_check_failure will be called if the fixity check fail. This
     # logging is for additional information related to the failure. Wondering if we should
     # also include the error message?
