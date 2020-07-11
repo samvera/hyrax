@@ -25,16 +25,19 @@ class FixityCheckJob < Hyrax::ApplicationJob
   # @param file_set_id [FileSet] the id for FileSet parent object of URI being checked.
   # @param file_id [String] File#id, used for logging/reporting.
   def perform(uri, file_set_id:, file_id:)
-    log = run_check(file_set_id, file_id, uri)
-
-    if log.failed? && Hyrax.config.callback.set?(:after_fixity_check_failure)
+    run_check(file_set_id, file_id, uri).tap do |audit|
+      result   = audit.failed? ? :failure : :success
       file_set = ::FileSet.find(file_set_id)
-      Hyrax.config.callback.run(:after_fixity_check_failure,
-                                file_set,
-                                checksum_audit_log: log, warn: false)
-    end
 
-    log
+      Hyrax.publisher.publish('file.set.audited', file_set: file_set, audit_log: audit, result: :result)
+
+      # @todo remove this callback call for Hyrax 4.0.0
+      if audit.failed? && Hyrax.config.callback.set?(:after_fixity_check_failure)
+        Hyrax.config.callback.run(:after_fixity_check_failure,
+                                  file_set,
+                                  checksum_audit_log: audit, warn: false)
+      end
+    end
   end
 
   private
