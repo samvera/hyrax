@@ -23,7 +23,7 @@ module Hyrax
       def admin_set_label(id)
         result = Hyrax::SolrService.search_by_id(id, fl: 'title_tesim')
         result['title_tesim'].first
-      rescue ActiveFedora::ObjectNotFoundError
+      rescue Hyrax::ObjectNotFoundError
         "[AdminSet ID=#{id}]"
       end
     end
