@@ -20,7 +20,7 @@ module Hyrax
         copy_repository_resource_to_working_directory(repository_file, id)
       end
 
-      # @param [ActiveFedora::File] file the resource in the repo
+      # @param [#original_name, #id] file the resource in the repo
       # @param [String] id the identifier of the FileSet
       # @return [String] path of the working file
       def copy_repository_resource_to_working_directory(file, id)

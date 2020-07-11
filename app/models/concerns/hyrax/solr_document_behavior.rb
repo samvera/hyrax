@@ -54,8 +54,8 @@ module Hyrax
       end
     end
     ##
-    # Offer the source (ActiveFedora-based) model to Rails for some of the
-    # Rails methods (e.g. link_to).
+    # Offer the source model to Rails for some of the Rails methods (e.g. link_to).
+    #
     # @example
     #   link_to '...', SolrDocument(:id => 'bXXXXXX5').new => <a href="/dams_object/bXXXXXX5">...</a>
     def to_model
@@ -80,7 +80,7 @@ module Hyrax
       hydra_model == ::AdminSet
     end
 
-    # Method to return the ActiveFedora model
+    # Method to return the model
     def hydra_model
       "::#{first('has_model_ssim')}".safe_constantize
     end
