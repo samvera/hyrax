@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class FixityCheckJob < Hyrax::ApplicationJob
-  # A Job class that runs a fixity check (using ActiveFedora::FixityService,
+  # A Job class that runs a fixity check (using Hyrax.config.fixity_service)
   # which contacts fedora and requests a fixity check), and stores the results
   # in an ActiveRecord ChecksumAuditLog row. It also prunes old ChecksumAuditLog
   # rows after creating a new one, to keep old ones you don't care about from
@@ -41,7 +41,7 @@ class FixityCheckJob < Hyrax::ApplicationJob
   private
 
   def run_check(file_set_id, file_id, uri)
-    service = ActiveFedora::FixityService.new(uri)
+    service = fixity_service.new(uri)
     begin
       fixity_ok = service.check
       expected_result = service.expected_message_digest
@@ -60,5 +60,11 @@ class FixityCheckJob < Hyrax::ApplicationJob
 
   def logger
     Hyrax.logger
+  end
+
+  ##
+  # @return [Class]
+  def fixity_service
+    Hyrax.config.fixity_service
   end
 end
