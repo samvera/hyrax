@@ -45,7 +45,7 @@ class FixityCheckJob < Hyrax::ApplicationJob
     begin
       fixity_ok = service.check
       expected_result = service.expected_message_digest
-    rescue Ldp::NotFound
+    rescue Hyrax::Fixity::MissingContentError
       # Either the #check or #expected_message_digest could raise this exception
       error_msg = 'resource not found'
     end

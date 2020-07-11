@@ -103,7 +103,7 @@ module Hyrax
 
     attr_writer :fixity_service
     def fixity_service
-      @fixity_service ||= ActiveFedora::FixityService
+      @fixity_service ||= Hyrax::Fixity::ActiveFedoraFixityService
     end
 
     attr_writer :max_days_between_fixity_checks
