@@ -29,7 +29,7 @@ class FixityCheckJob < Hyrax::ApplicationJob
       result   = audit.failed? ? :failure : :success
       file_set = ::FileSet.find(file_set_id)
 
-      Hyrax.publisher.publish('file.set.audited', file_set: file_set, audit_log: audit, result: :result)
+      Hyrax.publisher.publish('file.set.audited', file_set: file_set, audit_log: audit, result: result)
 
       # @todo remove this callback call for Hyrax 4.0.0
       if audit.failed? && Hyrax.config.callback.set?(:after_fixity_check_failure)
@@ -42,22 +42,21 @@ class FixityCheckJob < Hyrax::ApplicationJob
 
   private
 
+  ##
+  # @api private
   def run_check(file_set_id, file_id, uri)
-    service = fixity_service.new(uri)
-    begin
-      fixity_ok = service.check
-      expected_result = service.expected_message_digest
-    rescue Hyrax::Fixity::MissingContentError
-      # Either the #check or #expected_message_digest could raise this exception
-      error_msg = 'resource not found'
-    end
+    service = fixity_service_for(id: uri)
+    expected_result = service.expected_message_digest
 
-    ChecksumAuditLog.create_and_prune!(passed: fixity_ok, file_set_id: file_set_id, checked_uri: uri.to_s, file_id: file_id, expected_result: expected_result)
+    ChecksumAuditLog.create_and_prune!(passed: service.check, file_set_id: file_set_id, checked_uri: uri.to_s, file_id: file_id, expected_result: expected_result)
+  rescue Hyrax::Fixity::MissingContentError
+    ChecksumAuditLog.create_and_prune!(passed: false, file_set_id: file_set_id, checked_uri: uri.to_s, file_id: file_id, expected_result: expected_result)
   end
 
   ##
+  # @api private
   # @return [Class]
-  def fixity_service
-    Hyrax.config.fixity_service
+  def fixity_service_for(id:)
+    Hyrax.config.fixity_service.new(id)
   end
 end
