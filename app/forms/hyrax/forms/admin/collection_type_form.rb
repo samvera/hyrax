@@ -12,10 +12,14 @@ module Hyrax
                  :assigns_visibility, :id, :collection_type_participants, :persisted?,
                  :admin_set?, :user_collection?, :badge_color, to: :collection_type
 
+        ##
+        # @return [Boolean]
         def all_settings_disabled?
           collections? || admin_set? || user_collection?
         end
 
+        ##
+        # @return [Boolean]
         def share_options_disabled?
           all_settings_disabled? || !sharable
         end

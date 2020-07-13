@@ -14,7 +14,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form_settings.html.erb', type: :vi
     collection_type_allow_multiple_membership
   ].freeze
 
-  let(:collection_type_form) { Hyrax::Forms::Admin::CollectionTypeForm.new }
+  let(:collection_type_form) { Hyrax::Forms::Admin::CollectionTypeForm.new(collection_type: collection_type) }
   let(:collection_type) { stub_model(Hyrax::CollectionType) }
 
   let(:form) do
@@ -24,7 +24,6 @@ RSpec.describe 'hyrax/admin/collection_types/_form_settings.html.erb', type: :vi
   end
 
   before do
-    collection_type_form.collection_type = collection_type
     allow(view).to receive(:f).and_return(form)
     allow(form).to receive(:object).and_return(collection_type_form)
   end
@@ -32,7 +31,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form_settings.html.erb', type: :vi
   context 'for non-special collection types' do
     context "when collection_type.collections? is false" do
       before do
-        allow(collection_type).to receive(:collections?).and_return(false)
+        allow(collection_type_form).to receive(:collections?).and_return(false)
         render
       end
 
@@ -52,8 +51,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form_settings.html.erb', type: :vi
 
     context "when collection_type.collections? is true" do
       before do
-        collection_type_form.collection_type = collection_type
-        allow(collection_type).to receive(:collections?).and_return(true)
+        allow(collection_type_form).to receive(:collections?).and_return(true)
         assign(:form, collection_type_form)
         allow(view).to receive(:f).and_return(form)
         render
@@ -72,7 +70,7 @@ RSpec.describe 'hyrax/admin/collection_types/_form_settings.html.erb', type: :vi
   context 'when all_settings_disabled? is true (admin_set or user collection type)' do
     before do
       allow(collection_type_form).to receive(:all_settings_disabled?).and_return(true)
-      allow(collection_type).to receive(:collections?).and_return(false)
+      allow(collection_type_form).to receive(:collections?).and_return(false)
       render
     end
 
