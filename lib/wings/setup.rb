@@ -34,6 +34,7 @@ custom_queries = [Hyrax::CustomQueries::Navigators::CollectionMembers,
                   Hyrax::CustomQueries::Navigators::ChildWorksNavigator,
                   Hyrax::CustomQueries::Navigators::FindFiles,
                   Wings::CustomQueries::FindAccessControl, # override Hyrax::CustomQueries::FindAccessControl
+                  Wings::CustomQueries::FindCollectionsByType,
                   Wings::CustomQueries::FindFileMetadata, # override Hyrax::CustomQueries::FindFileMetadata
                   Wings::CustomQueries::FindManyByAlternateIds] # override Hyrax::CustomQueries::FindManyByAlternateIds
 custom_queries.each do |query_handler|
