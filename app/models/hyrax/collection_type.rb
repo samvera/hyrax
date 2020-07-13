@@ -73,9 +73,13 @@ module Hyrax
       ActiveFedora::Base.where(collection_type_gid_ssim: gid.to_s)
     end
 
+    ##
+    # @deprecated Use #collections.any? instead
+    #
     # @return [Boolean] True if there is at least one collection of this type
     def collections?
-      collections.count.positive?
+      Deprecation.warn('Use #collections.any? instead.')
+      collections.any?
     end
 
     # @return [Boolean] True if this is the Admin Set type
@@ -127,7 +131,7 @@ module Hyrax
     end
 
     def ensure_no_collections
-      return true unless collections?
+      return true unless collections.any?
       errors[:base] << I18n.t('hyrax.admin.collection_types.errors.not_empty')
       throw :abort
     end
@@ -147,7 +151,7 @@ module Hyrax
     end
 
     def ensure_no_settings_changes_if_collections_exist
-      return true unless collections?
+      return true unless collections.any?
       return true unless collection_type_settings_changed?
       errors[:base] << I18n.t('hyrax.admin.collection_types.errors.no_settings_change_if_not_empty')
       throw :abort

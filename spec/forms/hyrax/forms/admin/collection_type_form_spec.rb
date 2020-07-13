@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm do
-  let(:collection_type) { build(:collection_type) }
-  let(:form) { described_class.new }
+  subject(:form) { described_class.new }
+  let(:collection_type) { FactoryBot.build(:collection_type) }
 
-  subject { form }
+  shared_context 'with a collection' do
+    let(:collection_type) { FactoryBot.create(:collection_type) }
+
+    before do
+      FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: collection_type.gid)
+    end
+  end
 
   it { is_expected.to delegate_method(:title).to(:collection_type) }
   it { is_expected.to delegate_method(:description).to(:collection_type) }
@@ -17,7 +23,6 @@ RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm do
   it { is_expected.to delegate_method(:assigns_visibility).to(:collection_type) }
   it { is_expected.to delegate_method(:id).to(:collection_type) }
   it { is_expected.to delegate_method(:persisted?).to(:collection_type) }
-  it { is_expected.to delegate_method(:collections?).to(:collection_type) }
   it { is_expected.to delegate_method(:admin_set?).to(:collection_type) }
   it { is_expected.to delegate_method(:user_collection?).to(:collection_type) }
   it { is_expected.to delegate_method(:badge_color).to(:collection_type) }
@@ -48,9 +53,7 @@ RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm do
     end
 
     context 'when there are collections of this collection type' do
-      before do
-        allow(form).to receive(:collections?).and_return(true)
-      end
+      include_context 'with a collection'
 
       it 'returns true' do
         expect(subject.all_settings_disabled?).to be true
@@ -61,7 +64,6 @@ RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm do
       before do
         allow(form).to receive(:admin_set?).and_return(false)
         allow(form).to receive(:user_collection?).and_return(false)
-        allow(form).to receive(:collections?).and_return(false)
       end
 
       it 'returns false' do
