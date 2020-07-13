@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::CollectionPresenter do
+  subject(:presenter) { described_class.new(solr_doc, ability) }
   let(:collection) do
     build(:collection_lw,
           id: 'adc12v',
@@ -12,7 +13,6 @@ RSpec.describe Hyrax::CollectionPresenter do
           date_created: ['some date'])
   end
   let(:ability) { double }
-  let(:presenter) { described_class.new(solr_doc, ability) }
   let(:solr_doc) { SolrDocument.new(collection.to_solr) }
 
   describe ".terms" do
@@ -27,8 +27,6 @@ RSpec.describe Hyrax::CollectionPresenter do
   end
 
   describe "collection type methods" do
-    subject { presenter }
-
     it { is_expected.to delegate_method(:collection_type_is_nestable?).to(:collection_type).as(:nestable?) }
     it { is_expected.to delegate_method(:collection_type_is_brandable?).to(:collection_type).as(:brandable?) }
     it { is_expected.to delegate_method(:collection_type_is_discoverable?).to(:collection_type).as(:discoverable?) }
@@ -69,9 +67,7 @@ RSpec.describe Hyrax::CollectionPresenter do
   end
 
   describe "#resource_type" do
-    subject { presenter.resource_type }
-
-    it { is_expected.to eq ['Collection'] }
+    it { is_expected.to have_attributes resource_type: collection.resource_type }
   end
 
   describe "#terms_with_values" do
@@ -91,31 +87,23 @@ RSpec.describe Hyrax::CollectionPresenter do
   describe '#to_s' do
     subject { presenter.to_s }
 
-    it { is_expected.to eq 'A clever title' }
+    it { is_expected.to eq collection.title.first }
   end
 
   describe "#title" do
-    subject { presenter.title }
-
-    it { is_expected.to eq ['A clever title'] }
+    it { is_expected.to have_attributes title: collection.title }
   end
 
   describe '#keyword' do
-    subject { presenter.keyword }
-
-    it { is_expected.to eq ['neologism'] }
+    it { is_expected.to have_attributes keyword: collection.keyword }
   end
 
   describe "#based_near" do
-    subject { presenter.based_near }
-
-    it { is_expected.to eq ['Over there'] }
+    it { is_expected.to have_attributes based_near: collection.based_near }
   end
 
   describe "#related_url" do
-    subject { presenter.related_url }
-
-    it { is_expected.to eq ['http://example.com/'] }
+    it { is_expected.to have_attributes related_url: collection.related_url }
   end
 
   describe '#to_key' do
@@ -354,6 +342,8 @@ RSpec.describe Hyrax::CollectionPresenter do
   end
 
   describe "banner_file" do
+    let(:solr_doc) { SolrDocument.new(id: '123') }
+
     let(:banner_info) do
       CollectionBrandingInfo.new(
         collection_id: "123",
@@ -374,7 +364,6 @@ RSpec.describe Hyrax::CollectionPresenter do
     end
 
     before do
-      allow(presenter).to receive(:id).and_return('123')
       allow(CollectionBrandingInfo).to receive(:where).with(collection_id: '123', role: 'banner').and_return([banner_info])
       allow(banner_info).to receive(:local_path).and_return("/temp/public/branding/123/banner/banner.gif")
       allow(CollectionBrandingInfo).to receive(:where).with(collection_id: '123', role: 'logo').and_return([logo_info])
@@ -389,8 +378,6 @@ RSpec.describe Hyrax::CollectionPresenter do
       expect(presenter.logo_record).to eq([{ file: "logo.gif", file_location: "/branding/123/logo/logo.gif", alttext: "This is the logo", linkurl: "http://logo.com" }])
     end
   end
-
-  subject { presenter }
 
   it { is_expected.to delegate_method(:resource_type).to(:solr_document) }
   it { is_expected.to delegate_method(:based_near).to(:solr_document) }
