@@ -57,9 +57,8 @@ module Hyrax
     # @return [Hyrax::CollectionType] an instance of Hyrax::CollectionType with id = the model_id portion of the gid (e.g. 3)
     # @raise [ActiveRecord::RecordNotFound] if record matching gid is not found
     def self.find_by_gid!(gid)
-      result = find_by_gid(gid)
-      raise ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID '#{gid}'" unless result
-      result
+      find_by_gid(gid) ||
+        raise(ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID '#{gid}'")
     end
 
     # Return the Global Identifier for this collection type.
@@ -68,8 +67,11 @@ module Hyrax
       URI::GID.build(app: GlobalID.app, model_name: model_name.name.parameterize.to_sym, model_id: id).to_s if id
     end
 
-    def collections
+    ##
+    # @return [Enumerable<Collection, PcdmCollection>]
+    def collections(use_valkyrie: false)
       return [] unless gid
+      return Hyrax.custom_queries.find_collections_by_type(global_id: gid) if use_valkyrie
       ActiveFedora::Base.where(collection_type_gid_ssim: gid.to_s)
     end
 
@@ -78,8 +80,7 @@ module Hyrax
     #
     # @return [Boolean] True if there is at least one collection of this type
     def collections?
-      Deprecation.warn('Use #collections.any? instead.')
-      collections.any?
+      Deprecation.warn('Use #collections.any? instead.') && collections.any?
     end
 
     # @return [Boolean] True if this is the Admin Set type
