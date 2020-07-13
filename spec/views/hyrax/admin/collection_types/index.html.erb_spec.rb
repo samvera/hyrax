@@ -4,22 +4,22 @@ require 'spec_helper'
 RSpec.describe 'hyrax/admin/collection_types/index.html.erb', type: :view do
   let(:user_collection_type) do
     stub_model(Hyrax::CollectionType,
-               collections?: false,
+               collections: [],
                title: 'User Collection')
   end
   let(:admin_set_collection_type) do
     stub_model(Hyrax::CollectionType,
-               collections?: false,
+               collections: [],
                title: 'Admin Set')
   end
   let(:custom1) do
     stub_model(Hyrax::CollectionType,
-               collections?: false,
+               collections: [],
                title: 'Test Title 1')
   end
   let(:custom2) do
     stub_model(Hyrax::CollectionType,
-               collections?: false,
+               collections: [],
                title: 'Test Title 2')
   end
 
