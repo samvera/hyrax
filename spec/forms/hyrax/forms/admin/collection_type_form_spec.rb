@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm do
-  subject(:form) { described_class.new }
+RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm, :clean_repo do
+  subject(:form) { described_class.new(collection_type: collection_type) }
   let(:collection_type) { FactoryBot.build(:collection_type) }
 
   shared_context 'with a collection' do
@@ -28,13 +28,9 @@ RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm do
   it { is_expected.to delegate_method(:badge_color).to(:collection_type) }
 
   describe '#all_settings_disabled?' do
-    before do
-      allow(form).to receive(:collection_type).and_return(collection_type)
-    end
-
     context 'when editing admin set collection type' do
       before do
-        allow(form).to receive(:admin_set?).and_return(true)
+        allow(collection_type).to receive(:admin_set?).and_return(true)
       end
 
       it 'returns true' do
@@ -44,7 +40,7 @@ RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm do
 
     context 'when editing user collection type' do
       before do
-        allow(form).to receive(:user_collection?).and_return(true)
+        allow(collection_type).to receive(:user_collection?).and_return(true)
       end
 
       it 'returns true' do
@@ -62,8 +58,8 @@ RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm do
 
     context 'when not admin set collection type AND not user collection type AND there are no collections of this collection type' do
       before do
-        allow(form).to receive(:admin_set?).and_return(false)
-        allow(form).to receive(:user_collection?).and_return(false)
+        allow(collection_type).to receive(:admin_set?).and_return(false)
+        allow(collection_type).to receive(:user_collection?).and_return(false)
       end
 
       it 'returns false' do
@@ -72,14 +68,10 @@ RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm do
     end
   end
 
-  describe 'share_options_disabled?' do
-    before do
-      allow(form).to receive(:collection_type).and_return(collection_type)
-    end
-
+  describe '#share_options_disabled?' do
     context 'when all settings are disabled' do
       before do
-        allow(form).to receive(:all_settings_disabled?).and_return(true)
+        allow(collection_type).to receive(:user_collection?).and_return(true)
       end
 
       it 'returns true' do
@@ -89,22 +81,22 @@ RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm do
 
     context 'when collection type sharable setting is off' do
       before do
-        allow(form).to receive(:sharable).and_return(false)
+        allow(collection_type).to receive(:sharable).and_return(false)
       end
 
       it 'returns true' do
-        expect(subject.share_options_disabled?).to be true
+        expect(form.share_options_disabled?).to be true
       end
     end
 
     context 'when all options are not disabled and the collection type sharable setting is on' do
       before do
-        allow(form).to receive(:all_settings_disabled?).and_return(false)
-        allow(form).to receive(:sharable).and_return(true)
+        allow(collection_type).to receive(:all_settings_disabled?).and_return(false)
+        allow(collection_type).to receive(:sharable).and_return(true)
       end
 
       it 'returns false' do
-        expect(subject.share_options_disabled?).to be false
+        expect(form.share_options_disabled?).to be false
       end
     end
   end
