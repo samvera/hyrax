@@ -163,7 +163,7 @@ module Hyrax
     end
 
     def exists_for_machine_id?(machine_id)
-      Hyrax::CollectionType.exists?(machine_id: machine_id)
+      self.class.exists?(machine_id: machine_id)
     end
   end
 end
