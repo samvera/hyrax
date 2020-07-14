@@ -630,6 +630,7 @@ en:
         buttons:
           remove_from_collection: Remove
           remove_this_sub_collection: Remove
+        item_count: Item
         no_visible_parent_collections: There are no visible parent collections.
         no_visible_subcollections: There are no visible subcollections.
         parent_collection_header: Parent Collections
