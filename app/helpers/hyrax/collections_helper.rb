@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 module Hyrax
   module CollectionsHelper
-    # TODO: we could move this to CollectionPresenter if it had a view_context
     # @param presenter [Hyrax::CollectionPresenter]
     # @param terms [Array<Symbol>,:all] the list of terms to draw
     def present_terms(presenter, terms = :all, &block)
