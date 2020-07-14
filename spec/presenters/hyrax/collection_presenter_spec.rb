@@ -12,7 +12,7 @@ RSpec.describe Hyrax::CollectionPresenter do
           related_url: ['http://example.com/'],
           date_created: ['some date'])
   end
-  let(:ability) { double }
+  let(:ability) { double(::Ability) }
   let(:solr_doc) { SolrDocument.new(collection.to_solr) }
 
   describe ".terms" do
@@ -141,13 +141,8 @@ RSpec.describe Hyrax::CollectionPresenter do
 
   describe "#total_viewable_items", :clean_repo do
     subject { presenter.total_viewable_items }
-
+    let(:ability) { double(::Ability, user_groups: ['public'], current_user: user) }
     let(:user) { create(:user) }
-
-    before do
-      allow(ability).to receive(:user_groups).and_return(['public'])
-      allow(ability).to receive(:current_user).and_return(user)
-    end
 
     context "empty collection" do
       it { is_expected.to eq 0 }
@@ -193,13 +188,8 @@ RSpec.describe Hyrax::CollectionPresenter do
 
   describe "#total_viewable_works", :clean_repo do
     subject { presenter.total_viewable_works }
-
+    let(:ability) { double(::Ability, user_groups: ['public'], current_user: user) }
     let(:user) { create(:user) }
-
-    before do
-      allow(ability).to receive(:user_groups).and_return(['public'])
-      allow(ability).to receive(:current_user).and_return(user)
-    end
 
     context "empty collection" do
       it { is_expected.to eq 0 }
@@ -233,13 +223,8 @@ RSpec.describe Hyrax::CollectionPresenter do
 
   describe "#total_viewable_collections", :clean_repo do
     subject { presenter.total_viewable_collections }
-
+    let(:ability) { double(::Ability, user_groups: ['public'], current_user: user) }
     let(:user) { create(:user) }
-
-    before do
-      allow(ability).to receive(:user_groups).and_return(['public'])
-      allow(ability).to receive(:current_user).and_return(user)
-    end
 
     context "empty collection" do
       it { is_expected.to eq 0 }
@@ -305,6 +290,7 @@ RSpec.describe Hyrax::CollectionPresenter do
 
   describe "#collection_type_badge" do
     let(:collection_type) { create(:collection_type) }
+
     before do
       allow(collection_type).to receive(:badge_color).and_return("#ffa510")
       allow(presenter).to receive(:collection_type).and_return(collection_type)
@@ -405,7 +391,7 @@ RSpec.describe Hyrax::CollectionPresenter do
       end
     end
 
-    context 'when manager' do
+    context 'when viewer' do
       before do
         allow(ability).to receive(:can?).with(:edit, solr_doc).and_return(false)
         allow(ability).to receive(:can?).with(:deposit, solr_doc).and_return(false)
