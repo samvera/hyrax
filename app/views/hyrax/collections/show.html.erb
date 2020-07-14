@@ -35,7 +35,7 @@
           <div class="hyc-bugs">
             <div class="hyc-item-count">
               <b><%= @presenter.total_viewable_items %></b>
-              <%= 'Item'.pluralize(@presenter.total_viewable_items) %></div>
+              <%= pluralize(@presenter.total_viewable_items, t('.item_count')) %></div>
 
             <% unless @presenter.creator.blank? %>
                 <div class="hyc-created-by">Created by: <%= @presenter.creator.first %></div>
