@@ -16,6 +16,7 @@ module Hyrax
     include Hyrax::IiifHelper
     include Hyrax::MembershipHelper
     include Hyrax::PermissionLevelsHelper
+    include Hyrax::WorkFormHelper
 
     # Which translations are available for the user to select
     # @return [Hash<String,String>] locale abbreviations as keys and flags as values
