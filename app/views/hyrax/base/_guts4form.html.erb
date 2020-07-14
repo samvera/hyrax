@@ -1,5 +1,11 @@
 <% # we will yield to content_for for each tab, e.g. :files_tab %>
-<% tabs ||= %w[metadata files relationships] # default tab order %>
+<%# Not passing tabs local param to this partial is deprecated and the tabs param will be required in Hyrax 3.0 %>
+<% unless defined?(tabs) %>
+  <% Deprecation.warn(self, "Passing the tabs local param to the _guts4form partial will be required in Hyrax 3.0.  " \
+                            "Consider removing overriding view partials and customizing the tab list " \
+                            "by overriding the new form_tabs_for(form:) helper.") %>
+  <% tabs = form_tabs_for(form: f.object) # default tab order %>
+<% end %>
 <div class="row">
   <div class="col-xs-12 col-sm-8">
     <div class="panel panel-default tabs" role="main">
