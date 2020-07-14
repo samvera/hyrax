@@ -46,17 +46,33 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
         expect(rendered).to have_selector("form[action='/concern/monographs/#{work.id}']")
       end
     end
+
+    context 'with non-default tabs' do
+      let(:tab_order) { ['metadata', 'relationships', 'newtab'] }
+
+      before do
+        allow(view).to receive(:form_tabs_for).with(form: form).and_return(tab_order)
+        allow(view).to receive(:t).and_call_original
+        allow(view).to receive(:t).with('hyrax.works.form.tab.newtab').and_return('New Tab')
+        stub_template 'hyrax/base/_form_newtab.html.erb' => 'NewTab Content'
+      end
+
+      it 'renders the expected tabs' do
+        render
+        expect(rendered).to have_link('Descriptions')
+        expect(rendered).to have_link('Relationships')
+        expect(rendered).to have_link('New Tab')
+        expect(rendered).to have_link('Sharing')
+        expect(rendered).not_to have_link('Files')
+        expect(rendered).to match(/NewTab Content/)
+      end
+    end
   end
 
   context 'with a legacy GenericWork' do
-    let(:work) do
-      stub_model(GenericWork, id: '456')
-    end
+    let(:work) { stub_model(GenericWork, id: '456') }
     let(:ability) { double }
-
-    let(:form) do
-      Hyrax::GenericWorkForm.new(work, ability, controller)
-    end
+    let(:form) { Hyrax::GenericWorkForm.new(work, ability, controller) }
 
     before do
       stub_template('hyrax/base/_form_progress.html.erb' => 'Progress')
@@ -66,6 +82,7 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
       allow(controller).to receive(:controller_name).and_return('batch_uploads')
       allow(form).to receive(:permissions).and_return([])
       allow(form).to receive(:visibility).and_return('public')
+      allow(form).to receive(:select_files).and_return([])
       stub_template 'hyrax/base/_form_files.html.erb' => 'files'
     end
 
@@ -97,13 +114,10 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
     end
 
     context "for a persisted object" do
-      let(:work) { stub_model(GenericWork, id: '456') }
-
       before do
         # Add an error to the work
         work.errors.add :base, 'broken'
         work.errors.add :visibility, 'visibility_error'
-        allow(form).to receive(:select_files).and_return([])
         render
       end
 
@@ -116,6 +130,27 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
         # It diplays form errors
         expect(rendered).to have_content("broken")
         expect(rendered).to have_content("visibility_error")
+      end
+    end
+
+    context 'with non-default tabs' do
+      let(:tab_order) { ['metadata', 'relationships', 'newtab'] }
+
+      before do
+        allow(view).to receive(:form_tabs_for).with(form: form).and_return(tab_order)
+        allow(view).to receive(:t).and_call_original
+        allow(view).to receive(:t).with('hyrax.works.form.tab.newtab').and_return('New Tab')
+        stub_template 'hyrax/base/_form_newtab.html.erb' => 'NewTab Content'
+      end
+
+      it 'renders the expected tabs' do
+        render
+        expect(rendered).to have_link('Descriptions')
+        expect(rendered).to have_link('Relationships')
+        expect(rendered).to have_link('New Tab')
+        expect(rendered).to have_link('Sharing')
+        expect(rendered).not_to have_link('Files')
+        expect(rendered).to match(/NewTab Content/)
       end
     end
   end
