@@ -8,6 +8,10 @@ module Hyrax
       @view_context = view_context
     end
 
+    ##
+    # Renders a collection field partial
+    #
+    # @return [ActiveSupport::SafeBuffer] an html safe string containing the value markup
     def value(field_name, locals = {})
       render_show_field_partial(field_name, locals)
     end
@@ -18,7 +22,10 @@ module Hyrax
         default: [:"defaults.#{field}", field.to_s.humanize]).presence
     end
 
+    ##
+    # @deprecated
     def fields(terms, &_block)
+      Deprecation.warn("Fields is deprecated for removal in Hyrax 4.0.0. use #value and #label directly instead.")
       @view_context.safe_join(terms.map { |term| yield self, term })
     end
 

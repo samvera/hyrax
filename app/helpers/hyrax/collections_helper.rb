@@ -1,9 +1,29 @@
 # frozen_string_literal: true
 module Hyrax
   module CollectionsHelper
+    ##
+    # @since 3.0.0
+    # @return [#to_s]
+    def collection_metadata_label(collection, field)
+      Hyrax::PresenterRenderer.new(collection, self).label(field)
+    end
+
+    ##
+    # @since 3.0.0
+    # @return [#to_s]
+    def collection_metadata_value(collection, field)
+      Hyrax::PresenterRenderer.new(collection, self).value(field)
+    end
+
+    ##
+    # @deprecated Use #collection_metadata_label and #collection_metadata_value instead.
+    #
     # @param presenter [Hyrax::CollectionPresenter]
     # @param terms [Array<Symbol>,:all] the list of terms to draw
     def present_terms(presenter, terms = :all, &block)
+      Deprecation.warn("the .present_terms is deprecated for removal in Hyrax 4.0.0; " \
+                       "use #collection_metadata_label/value instead")
+
       terms = presenter.terms if terms == :all
       Hyrax::PresenterRenderer.new(presenter, self).fields(terms, &block)
     end
