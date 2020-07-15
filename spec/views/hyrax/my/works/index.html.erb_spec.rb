@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/my/works/index.html.erb', type: :view do
   let(:resp) { double(docs: "", total_count: 11) }
+  let(:ability) { instance_double(Ability, can_create_any_work?: true, admin?: false) }
+  let(:batch_enabled) { true }
+  let(:presenter) { instance_double(Hyrax::SelectTypeListPresenter, many?: true) }
 
   before do
     allow(view).to receive(:current_ability).and_return(ability)
@@ -11,7 +14,6 @@ RSpec.describe 'hyrax/my/works/index.html.erb', type: :view do
     allow(view).to receive(:can?).and_return(true)
     allow(Flipflop).to receive(:batch_upload?).and_return(batch_enabled)
     stub_template 'shared/_select_work_type_modal.html.erb' => 'modal'
-    stub_template 'hyrax/my/works/_tabs.html.erb' => 'tabs'
     stub_template 'hyrax/my/works/_search_header.html.erb' => 'search'
     stub_template 'hyrax/my/works/_document_list.html.erb' => 'list'
     stub_template 'hyrax/my/works/_results_pagination.html.erb' => 'pagination'
@@ -20,13 +22,24 @@ RSpec.describe 'hyrax/my/works/index.html.erb', type: :view do
     render
   end
 
+  describe 'tabs' do
+    it 'shows managed works and my works' do
+      expect(rendered).to have_link('Managed Works')
+      expect(rendered).to have_link('Your Works')
+    end
+
+    context 'as admin' do
+      let(:ability) { instance_double(Ability, can_create_any_work?: true, admin?: true) }
+
+      it 'shows all works and my works' do
+        expect(rendered).to have_link('All Works')
+        expect(rendered).to have_link('Your Works')
+      end
+    end
+  end
+
   context "when the user can add works" do
-    let(:ability) { instance_double(Ability, can_create_any_work?: true) }
-    let(:batch_enabled) { true }
-
     context 'with many presenters' do
-      let(:presenter) { instance_double(Hyrax::SelectTypeListPresenter, many?: true) }
-
       it 'the line item displays the work and its actions' do
         expect(rendered).to have_selector('h1', text: 'Works')
         expect(rendered).to have_link('Create batch of works')
@@ -42,7 +55,6 @@ RSpec.describe 'hyrax/my/works/index.html.erb', type: :view do
       end
     end
 
-    # GH-929
     context 'without many presenters' do
       let(:presenter) do
         instance_double(
