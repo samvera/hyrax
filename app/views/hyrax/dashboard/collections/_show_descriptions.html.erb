@@ -1,7 +1,7 @@
 <h2 class="sr-only"><%= t('.descriptions') %></h2>
 <dl class="dl-horizontal metadata-collections">
-  <% present_terms(@presenter, @presenter.terms_with_values) do |r, term| %>
-      <dt><%= r.label(term) %></dt>
-      <dd><%= r.value(term) %></dd>
+  <% @presenter.terms_with_values.each do |field_name| %>
+    <dt><%= collection_metadata_label(@presenter, field_name) %></dt>
+    <dd><%= collection_metadata_value(@presenter, field_name) %></dd>
   <% end %>
 </dl>

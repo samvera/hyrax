@@ -28,4 +28,10 @@ RSpec.describe Hyrax::PresenterRenderer, type: :view do
       it { is_expected.to eq 'Date uploaded' }
     end
   end
+
+  describe "#value" do
+    it 'provides an HTML safe string' do
+      expect(renderer.value(:date_created)).to be_html_safe
+    end
+  end
 end
