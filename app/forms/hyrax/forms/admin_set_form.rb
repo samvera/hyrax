@@ -8,14 +8,6 @@ module Hyrax
       # Cast any array values on the model to scalars.
       def [](key)
         return super if key == :thumbnail_id
-        if key == :title
-          @attributes["title"].each do |value|
-            @attributes["alternative_title"] << value
-          end
-          @attributes["alternative_title"].delete(@attributes["alternative_title"].sort.first) unless @attributes["alternative_title"].empty?
-          return @attributes["title"].sort.first unless @attributes["title"].empty?
-          return ""
-        end
         super.first
       end
 
