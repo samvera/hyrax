@@ -37,7 +37,6 @@ class AdminSet < ActiveFedora::Base
   has_many :members,
            predicate: Hyrax.config.admin_set_predicate,
            class_name: 'ActiveFedora::Base'
-  # rubocop:enable Rails/HasManyOrHasOneDependent
 
   before_destroy :check_if_not_default_set, :check_if_empty
   after_destroy :destroy_permission_template

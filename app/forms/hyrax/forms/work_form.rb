@@ -40,20 +40,6 @@ module Hyrax
         super(model)
       end
 
-      # Cast back to multi-value when saving
-      # Reads from form
-      def self.model_attributes(attributes)
-        attrs = super
-        return attrs unless attributes[:title]
-
-        attrs[:title] = Array(attributes[:title])
-        return attrs if attributes[:alternative_title].nil?
-        Array(attributes[:alternative_title]).each do |value|
-          attrs["title"] << value if value != ""
-        end
-        attrs
-      end
-
       ##
       # @return [Boolean] whether the deposit agreement has already been
       #   accepted
@@ -62,6 +48,7 @@ module Hyrax
       end
       alias agreement_accepted agreement_accepted?
 
+      ##
       # when the add_works_to_collection parameter is set, they mean to create
       # a new work and add it to that collection.
       def member_of_collections
@@ -115,16 +102,8 @@ module Hyrax
 
       # @param [Symbol] key the field to read
       # @return the value of the form field.
-      # For display in edit page
       def [](key)
         return model.member_of_collection_ids if key == :member_of_collection_ids
-        if key == :title
-          @attributes["title"].each do |value|
-            @attributes["alternative_title"] << value
-          end
-          @attributes["alternative_title"].delete(@attributes["alternative_title"].sort.first) unless @attributes["alternative_title"].empty?
-          return @attributes[key.to_s].sort.first
-        end
         super
       end
 

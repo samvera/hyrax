@@ -91,7 +91,7 @@ RSpec.describe Hyrax::GenericWorkForm do
       end
 
       it 'removes blank parameters' do
-        expect(subject['title']).to eq ['']
+        expect(subject['title']).to be_empty
         expect(subject['description']).to be_empty
         expect(subject['license']).to be_empty
         expect(subject['keyword']).to be_empty
