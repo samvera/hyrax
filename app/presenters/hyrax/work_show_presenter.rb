@@ -4,6 +4,10 @@ module Hyrax
     include ModelProxy
     include PresentsAttributes
 
+    ##
+    # @!attribute [w] member_presenter_factory
+    #   @return [MemberPresenterFactory]
+    attr_writer :member_presenter_factory
     attr_accessor :solr_document, :current_ability, :request
 
     class_attribute :collection_presenter_class
@@ -285,7 +289,8 @@ module Hyrax
     end
 
     def member_presenter_factory
-      MemberPresenterFactory.new(solr_document, current_ability, request)
+      @member_presenter_factory ||=
+        MemberPresenterFactory.new(solr_document, current_ability, request)
     end
 
     def graph

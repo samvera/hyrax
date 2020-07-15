@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::WorkShowPresenter do
+  subject(:presenter) { described_class.new(solr_document, ability, request) }
+  let(:ability) { double Ability }
   let(:solr_document) { SolrDocument.new(attributes) }
   let(:request) { double(host: 'example.org', base_url: 'http://example.org') }
   let(:user_key) { 'a_user_key' }
+  let(:representative_id) { nil }
 
   let(:attributes) do
     { "id" => '888888',
@@ -10,12 +13,9 @@ RSpec.describe Hyrax::WorkShowPresenter do
       "human_readable_type_tesim" => ["Generic Work"],
       "has_model_ssim" => ["GenericWork"],
       "date_created_tesim" => ['an unformatted date'],
-      "depositor_tesim" => user_key }
+      "depositor_tesim" => user_key,
+      "hasRelatedMediaFragment_ssim" => representative_id }
   end
-  let(:ability) { double Ability }
-  let(:presenter) { described_class.new(solr_document, ability, request) }
-
-  subject { described_class.new(double, double) }
 
   it { is_expected.to delegate_method(:to_s).to(:solr_document) }
   it { is_expected.to delegate_method(:human_readable_type).to(:solr_document) }
@@ -48,47 +48,59 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe '#iiif_viewer?' do
-    let(:id_present) { false }
-    let(:representative_presenter) { double('representative', present?: false) }
     let(:image_boolean) { false }
     let(:iiif_enabled) { true }
-    let(:file_set_presenter) { Hyrax::FileSetPresenter.new(solr_document, ability) }
+    let(:file_set_presenter) { double(Hyrax::FileSetPresenter, id: '888888', image?: true) }
     let(:file_set_presenters) { [file_set_presenter] }
+    let(:member_presenter_factory) { instance_double(Hyrax::MemberPresenterFactory) }
     let(:read_permission) { true }
+    let(:representative_present) { false }
+
+    let(:representative_presenter) do
+      double('representative', present?: representative_present, image?: image_boolean)
+    end
 
     before do
-      allow(presenter).to receive(:representative_id).and_return(id_present)
-      allow(presenter).to receive(:representative_presenter).and_return(representative_presenter)
-      allow(presenter).to receive(:file_set_presenters).and_return(file_set_presenters)
-      allow(file_set_presenter).to receive(:image?).and_return(true)
+      presenter.member_presenter_factory = member_presenter_factory
+
+      allow(member_presenter_factory)
+        .to receive(:member_presenters)
+        .with(['representative-123'])
+        .and_return([representative_presenter])
+
+      allow(member_presenter_factory)
+        .to receive(:file_set_presenters)
+        .and_return(file_set_presenters)
+
       allow(ability).to receive(:can?).with(:read, solr_document.id).and_return(read_permission)
-      allow(representative_presenter).to receive(:image?).and_return(image_boolean)
       allow(Hyrax.config).to receive(:iiif_image_server?).and_return(iiif_enabled)
     end
 
     subject { presenter.iiif_viewer? }
 
     context 'with no representative_id' do
+      let(:representative_id) { nil }
+
       it { is_expected.to be false }
     end
 
     context 'with no representative_presenter' do
-      let(:id_present) { true }
+      let(:representative_id) { 'representative-123' }
 
       it { is_expected.to be false }
     end
 
     context 'with non-image representative_presenter' do
-      let(:id_present) { true }
-      let(:representative_presenter) { double('representative', present?: true) }
+      let(:representative_id) { 'representative-123' }
+      let(:representative_present) { true }
       let(:image_boolean) { false }
 
       it { is_expected.to be false }
     end
 
     context 'with IIIF image server turned off' do
-      let(:id_present) { true }
-      let(:representative_presenter) { double('representative', present?: true) }
+      let(:representative_id) { 'representative-123' }
+      let(:representative_present) { true }
       let(:image_boolean) { true }
       let(:iiif_enabled) { false }
 
@@ -96,8 +108,8 @@ RSpec.describe Hyrax::WorkShowPresenter do
     end
 
     context 'with representative image and IIIF turned on' do
-      let(:id_present) { true }
-      let(:representative_presenter) { double('representative', present?: true) }
+      let(:representative_id) { 'representative-123' }
+      let(:representative_present) { true }
       let(:image_boolean) { true }
       let(:iiif_enabled) { true }
 
@@ -243,14 +255,18 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
   describe "#list_of_item_ids_to_display" do
     let(:subject) { presenter.list_of_item_ids_to_display }
-    let(:items_list) { ['item0', 'item1', 'item2', 'item3', 'item4', 'item5', 'item6', 'item7', 'item8', 'item9'] }
+    let(:items_list) { (0..9).map { |i| "item#{i}" } }
+    let(:request) { double(host: 'example.org', base_url: 'http://example.org', params: { rows: rows, page: page }) }
     let(:rows) { 10 }
     let(:page) { 1 }
     let(:ability) { double "Ability" }
     let(:current_ability) { ability }
 
+    let(:member_presenter_factory) { instance_double(Hyrax::MemberPresenterFactory, ordered_ids: items_list) }
+
     before do
-      allow(presenter).to receive(:ordered_ids).and_return(items_list)
+      presenter.member_presenter_factory = member_presenter_factory
+
       allow(current_ability).to receive(:can?).with(:read, 'item0').and_return true
       allow(current_ability).to receive(:can?).with(:read, 'item1').and_return false
       allow(current_ability).to receive(:can?).with(:read, 'item2').and_return true
@@ -261,13 +277,10 @@ RSpec.describe Hyrax::WorkShowPresenter do
       allow(current_ability).to receive(:can?).with(:read, 'item7').and_return true
       allow(current_ability).to receive(:can?).with(:read, 'item8').and_return false
       allow(current_ability).to receive(:can?).with(:read, 'item9').and_return true
-      allow(presenter).to receive(:rows_from_params).and_return(rows)
-      allow(presenter).to receive(:current_page).and_return(page)
-      allow(Flipflop).to receive(:hide_private_items?).and_return(answer)
     end
 
     context 'when hiding private items' do
-      let(:answer) { true }
+      before { allow(Flipflop).to receive(:hide_private_items?).and_return(true) }
 
       it "returns viewable items" do
         expect(subject.size).to eq 6
@@ -275,8 +288,9 @@ RSpec.describe Hyrax::WorkShowPresenter do
         expect(subject).to include("item0", "item2", "item4", "item5", "item7", "item9")
       end
     end
+
     context 'when including private items' do
-      let(:answer) { false }
+      before { allow(Flipflop).to receive(:hide_private_items?).and_return(false) }
 
       it "returns appropriate items" do
         expect(subject.size).to eq 10
@@ -284,11 +298,13 @@ RSpec.describe Hyrax::WorkShowPresenter do
         expect(subject).to eq(items_list)
       end
     end
+
     context 'with pagination' do
       let(:rows) { 3 }
       let(:page) { 2 }
 
-      let(:answer) { true }
+      before { allow(Flipflop).to receive(:hide_private_items?).and_return(true) }
+
       it 'partitions the item list and excluding hidden items' do
         expect(subject).to eq(['item5', 'item7', 'item9'])
       end
@@ -296,18 +312,19 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#total_pages" do
-    let(:subject) { presenter.total_pages }
     let(:items) { 17 }
+    let(:items_list) { (0..16).map { |i| "item#{i}" } }
+    let(:member_presenter_factory) { instance_double(Hyrax::MemberPresenterFactory, ordered_ids: items_list) }
+    let(:request) { double(host: 'example.org', base_url: 'http://example.org', params: { rows: rows }) }
     let(:rows) { 4 }
 
     before do
+      presenter.member_presenter_factory = member_presenter_factory
       allow(Flipflop).to receive(:hide_private_items?).and_return(false)
-      allow(presenter).to receive(:total_items).and_return(items)
-      allow(presenter).to receive(:rows_from_params).and_return(rows)
     end
 
     it 'calculates number of pages from items and rows' do
-      expect(subject).to eq(5)
+      expect(presenter.total_pages).to eq(5)
     end
   end
 
