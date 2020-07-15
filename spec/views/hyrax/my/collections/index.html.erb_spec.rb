@@ -9,7 +9,6 @@ RSpec.describe "hyrax/my/collections/index.html.erb", type: :view do
     allow(view).to receive(:can?).with(any_args).and_return(false)
 
     stub_template "hyrax/my/collections/_scripts" => " "
-    stub_template "hyrax/my/collections/_tabs" => " "
     stub_template "hyrax/my/collections/_default_group" => " "
     stub_template "hyrax/my/collections/_search_header" => " "
     stub_template "hyrax/my/collections/_results_pagination" => " "
@@ -31,5 +30,30 @@ RSpec.describe "hyrax/my/collections/index.html.erb", type: :view do
   it 'indicate the number of collections to be 11' do
     render
     expect(rendered).to have_content("11 collections in the repository")
+  end
+
+  describe 'tabs' do
+    let(:ability) { instance_double(Ability, admin?: false) }
+
+    before do
+      assign(:managed_collection_count, 1)
+      allow(view).to receive(:current_ability).and_return(ability)
+    end
+
+    it 'shows managed and my collections' do
+      render
+      expect(rendered).to have_link('Managed Collections')
+      expect(rendered).to have_link('Your Collections')
+    end
+
+    context 'as admin' do
+      let(:ability) { instance_double(Ability, admin?: true) }
+
+      it 'shows all and my collections' do
+        render
+        expect(rendered).to have_link('All Collections')
+        expect(rendered).to have_link('Your Collections')
+      end
+    end
   end
 end
