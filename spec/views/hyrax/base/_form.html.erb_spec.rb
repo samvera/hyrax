@@ -77,4 +77,43 @@ RSpec.describe 'hyrax/base/_form.html.erb', type: :view do
       expect(rendered).to have_content("visibility_error")
     end
   end
+
+  describe "tabs" do
+    let(:work) { stub_model(GenericWork, id: '456') }
+
+    before do
+      allow(form).to receive(:select_files).and_return([])
+    end
+
+    context "wtth default tabs" do
+      it 'renders the expected tabs' do
+        render
+        expect(rendered).to have_link('Descriptions')
+        expect(rendered).to have_link('Files')
+        expect(rendered).to have_link('Relationships')
+        expect(rendered).to have_link('Sharing')
+      end
+    end
+
+    context 'with non-default tabs' do
+      let(:tab_order) { ['metadata', 'relationships', 'newtab'] }
+
+      before do
+        allow(view).to receive(:form_tabs_for).with(form: form).and_return(tab_order)
+        allow(view).to receive(:t).and_call_original
+        allow(view).to receive(:t).with('hyrax.works.form.tab.newtab').and_return('New Tab')
+        stub_template 'hyrax/base/_form_newtab.html.erb' => 'NewTab Content'
+      end
+
+      it 'renders the expected tabs' do
+        render
+        expect(rendered).to have_link('Descriptions')
+        expect(rendered).to have_link('Relationships')
+        expect(rendered).to have_link('New Tab')
+        expect(rendered).to have_link('Sharing')
+        expect(rendered).not_to have_link('Files')
+        expect(rendered).to match(/NewTab Content/)
+      end
+    end
+  end
 end

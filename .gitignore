@@ -78,3 +78,4 @@ _yardoc
 lib/bundler/man
 spec/reports
 /spec/examples.txt
+node_modules
