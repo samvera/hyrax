@@ -26,6 +26,10 @@
           <%= f.input :on_behalf_of, collection: current_user.can_make_deposits_for.map(&:user_key), prompt: "Yourself" %>
         </div>
     <% end %>
+
+    <% form_progress_sections_for(form: f.object).each do |section| %>
+      <%= render "form_progress_#{section}", f: f %>
+    <% end %>
   </div>
   <div class="panel-footer text-center">
     <% if ::Flipflop.show_deposit_agreement? %>
