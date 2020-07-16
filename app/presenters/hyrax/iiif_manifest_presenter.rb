@@ -87,7 +87,12 @@ module Hyrax
     ##
     # @return [Array<#to_s>]
     def member_ids
-      Array(model.try(:member_ids))
+      case model
+      when Valkyrie::Resource
+        Array(model.try(:member_ids))
+      else
+        Hyrax::SolrDocument::OrderedMembers.decorate(model).ordered_member_ids
+      end
     end
 
     ##
