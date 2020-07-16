@@ -114,12 +114,6 @@ jobs:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
           project: hyrax
-      - run:
-          command: |
-            cd .internal_test_app
-            bundle install
-            bundle exec rake hyrax:install:migrations
-            bundle exec rake db:migrate
       - samvera/parallel_rspec
 
 workflows:

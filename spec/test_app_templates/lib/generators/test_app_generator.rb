@@ -143,4 +143,10 @@ class TestAppGenerator < Rails::Generators::Base
   def create_sample_metadata_configuration
     copy_file 'sample_metadata.yaml', 'config/metadata/sample_metadata.yaml'
   end
+
+  def run_finishing_migrations
+    # Because other upstream methods may have installed migrations, we
+    # should catch them here.
+    rake "db:migrate"
+  end
 end
