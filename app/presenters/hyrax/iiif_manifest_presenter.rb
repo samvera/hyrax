@@ -92,7 +92,7 @@ module Hyrax
     #
     # @return [Array<#to_s>]
     def member_ids
-      Hyrax::MemberPresenterFactory.new(model).ordered_ids
+      Hyrax::MemberPresenterFactory.new(model, ability, :FAKE_REQUEST).ordered_ids
     end
 
     ##
