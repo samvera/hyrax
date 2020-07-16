@@ -85,12 +85,14 @@ module Hyrax
     end
 
     ##
+    # @todo the hard coded dependency on `MemberPresenterFactory` is
+    #   undesirable and very weird. it's the only thing talking to the index
+    #   layer that knows about order, so here we are; extract ordered member
+    #   queries to someplace more reusable.
+    #
     # @return [Array<#to_s>]
     def member_ids
-      ordered = Array(model.try(:ordered_member_ids))
-      unordered = Array(model.try(:member_ids)) - ordered
-
-      ordered + unordered
+      Hyrax::MemberPresenterFactory.new(model).ordered_ids
     end
 
     ##
