@@ -31,4 +31,35 @@ RSpec.describe Hyrax::WorkFormHelper do
       end
     end
   end
+
+  describe 'form_progress_sections_for' do
+    context 'with a change set style form' do
+      let(:work) { build(:hyrax_work) }
+      let(:form) { Hyrax::Forms::ResourceForm.for(work) }
+
+      it 'returns an empty list' do
+        expect(form_progress_sections_for(form: form)).to eq []
+      end
+    end
+
+    context 'with a legacy GenericWork form' do
+      let(:work) { stub_model(GenericWork, id: '456') }
+      let(:ability) { double }
+      let(:form) { Hyrax::GenericWorkForm.new(work, ability, controller) }
+
+      it 'returns an empty list' do
+        expect(form_progress_sections_for(form: form)).to eq []
+      end
+    end
+
+    context 'with a batch upload form' do
+      let(:work) { stub_model(GenericWork, id: '456') }
+      let(:ability) { double }
+      let(:form) { Hyrax::Forms::BatchUploadForm.new(work, ability, controller) }
+
+      it 'returns an empty list' do
+        expect(form_progress_sections_for(form: form)).to eq []
+      end
+    end
+  end
 end

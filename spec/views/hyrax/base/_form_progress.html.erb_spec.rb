@@ -129,4 +129,22 @@ RSpec.describe 'hyrax/base/_form_progress.html.erb', type: :view do
       expect(page).to have_selector("input#generic_work_version[value=\"123456\"]", visible: false)
     end
   end
+
+  context 'when additional sections are added' do
+    let(:work) { stub_model(GenericWork, id: '456', etag: '123456') }
+
+    before do
+      allow(work).to receive(:new_record?).and_return(false)
+      assign(:form, form)
+      allow(Hyrax.config).to receive(:active_deposit_agreement_acceptance)
+        .and_return(true)
+
+      allow(view).to receive(:form_progress_sections_for).with(form: form).and_return(['newsection'])
+      stub_template 'hyrax/base/_form_progress_newsection.html.erb' => '<div class="list-group-item">New Section</div>'
+    end
+
+    it 'renders the additional sections' do
+      expect(page).to have_text('New Section')
+    end
+  end
 end
