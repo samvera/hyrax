@@ -87,7 +87,10 @@ module Hyrax
     ##
     # @return [Array<#to_s>]
     def member_ids
-      Array(model.try(:member_ids))
+      ordered = Array(model.try(:ordered_member_ids))
+      unordered = Array(model.try(:member_ids)) - ordered
+
+      ordered + unordered
     end
 
     ##
