@@ -87,7 +87,7 @@ module Hyrax
     ##
     # @return [Array<#to_s>]
     def member_ids
-      Array(model.try(:member_ids))
+      Hyrax::SolrDocument::OrderedMembers.decorate(model).ordered_member_ids
     end
 
     ##
