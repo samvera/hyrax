@@ -58,13 +58,14 @@ jobs:
         type: string
         default: '5.2.2'
     executor:
-      name: 'samvera/ruby'
+      name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
     resource_class: medium+
     environment:
       RAILS_VERSION: << parameters.rails_version >>
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
-      ENGINE_CART_RAILS_OPTIONS: --skip-git --skip-bundle --skip-listen --skip-spring --skip-keeps --skip-test --skip-bootsnap
+      ENGINE_CART_RAILS_OPTIONS: --database=postgresql --skip-git --skip-bundle --skip-listen --skip-spring --skip-keeps --skip-test --skip-bootsnap
+      DATABASE_URL: postgresql://postgres@127.0.0.1/circle_test # Hard-coded with data from CircleCI orb, related to https://github.com/samvera-labs/samvera-circleci-orb/issues/42
     steps:
       - attach_workspace:
           at: ~/
@@ -92,13 +93,14 @@ jobs:
         type: string
         default: "false"
     executor:
-      name: 'samvera/ruby_fcrepo_solr_redis'
+      name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
     resource_class: medium+
     parallelism: 10
     environment:
       HYRAX_VALKYRIE: << parameters.hyrax_valkyrie >>
       VALKYRIE_SOLR_PORT: 8985
+      DATABASE_URL: postgresql://postgres@127.0.0.1/circle_test # Hard-coded with data from CircleCI orb, related to https://github.com/samvera-labs/samvera-circleci-orb/issues/42
     steps:
       - attach_workspace:
           at: ~/
@@ -112,6 +114,12 @@ jobs:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
           project: hyrax
+      - run:
+          command: |
+            cd .internal_test_app
+            bundle install
+            bundle exec rake hyrax:install:migrations
+            bundle exec rake db:migrate
       - samvera/parallel_rspec
 
 workflows:
