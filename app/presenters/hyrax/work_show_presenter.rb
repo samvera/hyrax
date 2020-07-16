@@ -96,11 +96,7 @@ module Hyrax
         begin
           result = member_presenters_for([representative_id]).first
           return nil if result.try(:id) == id
-          if result.respond_to?(:representative_presenter)
-            result.representative_presenter
-          else
-            result
-          end
+          result.try(:representative_presenter) || result
         end
     end
 
@@ -205,13 +201,9 @@ module Hyrax
     #
     # @return [Array] array of rendering hashes
     def sequence_rendering
-      renderings = []
-      if solr_document.rendering_ids.present?
-        solr_document.rendering_ids.each do |file_set_id|
-          renderings << manifest_helper.build_rendering(file_set_id)
-        end
-      end
-      renderings.flatten
+      solr_document.rendering_ids.each_with_object([]) do |file_set_id, renderings|
+        renderings << manifest_helper.build_rendering(file_set_id)
+      end.flatten
     end
 
     # IIIF metadata for inclusion in the manifest
@@ -219,14 +211,12 @@ module Hyrax
     #
     # @return [Array] array of metadata hashes
     def manifest_metadata
-      metadata = []
-      Hyrax.config.iiif_metadata_fields.each do |field|
+      Hyrax.config.iiif_metadata_fields.each_with_object([]) do |field, metadata|
         metadata << {
           'label' => I18n.t("simple_form.labels.defaults.#{field}"),
           'value' => Array.wrap(send(field).map { |f| Loofah.fragment(f.to_s).scrub!(:whitewash).to_s })
         }
       end
-      metadata
     end
 
     # determine if the user can add this work to a collection
@@ -245,12 +235,9 @@ module Hyrax
     private
 
     # list of item ids to display is based on ordered_ids
-    def authorized_item_ids
-      @member_item_list_ids ||= begin
-        items = ordered_ids
-        items.delete_if { |m| !current_ability.can?(:read, m) } if Flipflop.hide_private_items?
-        items
-      end
+    def authorized_item_ids(filter_unreadable: Flipflop.hide_private_items?)
+      @member_item_list_ids ||=
+        filter_unreadable ? ordered_ids.reject { |id| !current_ability.can?(:read, id) } : ordered_ids
     end
 
     # Uses kaminari to paginate an array to avoid need for solr documents for items here
@@ -276,6 +263,7 @@ module Hyrax
     end
 
     def featured?
+      # only look this up if it's not boolean; ||= won't work here
       @featured = FeaturedWork.where(work_id: solr_document.id).exists? if @featured.nil?
       @featured
     end
@@ -297,8 +285,8 @@ module Hyrax
       GraphExporter.new(solr_document, request).fetch
     end
 
+    # @return [Array<String>] member_of_collection_ids with current_ability access
     def member_of_authorized_parent_collections
-      # member_of_collection_ids with current_ability access
       @member_of ||= Hyrax::CollectionMemberService.run(solr_document, current_ability).map(&:id)
     end
 
