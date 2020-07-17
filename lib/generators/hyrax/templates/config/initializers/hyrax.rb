@@ -281,6 +281,11 @@ Hyrax.config do |config|
   ##
   # Set the system-wide virus scanner
   config.virus_scanner = Hyrax::VirusScanner
+
+  ## Remote identifiers configuration
+  # Add registrar implementations by uncommenting and adding to the hash below.
+  # See app/services/hyrax/identifier/registrar.rb for the registrar interface
+  # config.identifier_registrars = {}
 end
 
 Date::DATE_FORMATS[:standard] = "%m/%d/%Y"
