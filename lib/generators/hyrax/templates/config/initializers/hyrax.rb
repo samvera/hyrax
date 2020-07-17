@@ -266,6 +266,11 @@ Hyrax.config do |config|
   # mount point.
   #
   # config.whitelisted_ingest_dirs = []
+
+  ## Remote identifiers configuration
+  # Add registrar implementations by uncommenting and adding to the hash below.
+  # See app/services/hyrax/identifier/registrar.rb for the registrar interface
+  # config.identifier_registrars = {}
 end
 
 Date::DATE_FORMATS[:standard] = "%m/%d/%Y"
