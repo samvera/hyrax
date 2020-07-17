@@ -10,7 +10,7 @@ module Hyrax
     self.work_presenter_class = WorkShowPresenter
 
     def initialize(work, ability, request = nil)
-      @work = work
+      @work = Hyrax::SolrDocument::OrderedMembers.decorate(work)
       @current_ability = ability
       @request = request
     end
@@ -38,12 +38,7 @@ module Hyrax
     end
 
     def ordered_ids
-      @ordered_ids ||= begin
-                         Hyrax::SolrService.query("proxy_in_ssi:#{id}",
-                                                  rows: 10_000,
-                                                  fl: "ordered_targets_ssim")
-                                           .flat_map { |x| x.fetch("ordered_targets_ssim", []) }
-                       end
+      @work.ordered_member_ids
     end
 
     private
