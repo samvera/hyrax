@@ -26,25 +26,32 @@ jobs:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
           project: hyrax
+
+      # Run rubocop in parallel with caching
+      # This should get added to the orb once proven here
+
+      - restore_cache:
+          name: Restore rubocop cache
+          keys:
+            - v1-ruby<< parameters.ruby_version >>-bundle{{ checksum "Gemfile.lock" }}
+            - v1-ruby<< parameters.ruby_version >>
+            - v1
+
+      - run:
+          name: Run rubocop in parallel
+          command: bundle exec rubocop --parallel
+
+      - save_cache:
+          name: Save rubocop cache
+          key: v1-ruby<< parameters.ruby_version >>-bundle{{ checksum "Gemfile.lock" }}
+          paths:
+            - ~/.cache
+
       - persist_to_workspace:
           root: ~/
           paths:
           - project/*
           - project/**/*
-
-  lint:
-    parameters:
-      ruby_version:
-        type: string
-        default: 2.5.8
-    executor:
-      name: 'samvera/ruby'
-      ruby_version: << parameters.ruby_version >>
-    resource_class: medium+
-    steps:
-      - attach_workspace:
-          at: ~/
-      - samvera/rubocop
 
   build:
     parameters:
@@ -125,71 +132,52 @@ workflows:
       - bundle:
           ruby_version: "2.5.8"
           rails_version: "5.2.4.3"
-      - lint:
-          ruby_version: "2.5.8"
-          requires:
-            - bundle
       - build:
           ruby_version: "2.5.8"
           rails_version: "5.2.4.3"
           requires:
             - bundle
-            - lint
       - test:
           name: "ruby2-5-8"
           ruby_version: "2.5.8"
           requires:
             - build
-            - lint
   ruby2-6-6:
     jobs:
       - bundle:
           ruby_version: "2.6.6"
           rails_version: "5.2.4.3"
-      - lint:
-          ruby_version: "2.6.6"
-          requires:
-            - bundle
       - build:
           ruby_version: "2.6.6"
           rails_version: "5.2.4.3"
           requires:
             - bundle
-            - lint
       - test:
           name: "ruby2-6-6"
           ruby_version: "2.6.6"
           requires:
             - build
-            - lint
       - test:
           name: "ruby2-6-6-valkyrie"
           ruby_version: "2.6.6"
           hyrax_valkyrie: "true"
           requires:
             - build
-            - lint
   ruby2-7-1:
     jobs:
       - bundle:
           ruby_version: "2.7.1"
           rails_version: "5.2.4.3"
           bundler_version: "2.1.4"
-      - lint:
-          ruby_version: "2.7.1"
-          requires:
-            - bundle
       - build:
           ruby_version: "2.7.1"
           rails_version: "5.2.4.3"
           bundler_version: "2.1.4"
           requires:
             - bundle
-            - lint
       - test:
           name: "ruby2-7-1"
           ruby_version: "2.7.1"
           bundler_version: "2.1.4"
           requires:
             - build
-            - lint
