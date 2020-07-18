@@ -10,13 +10,17 @@ class ValkyrieCreateStrategy
     result = persister.save(resource: evaluation.object)
 
     evaluation.notify(:after_create, result)
-    result
+    query_service.find_by(id: result.id)
   end
 
   private
 
   def persister
     Hyrax.persister
+  end
+
+  def query_service
+    Hyrax.query_service
   end
 end
 
@@ -28,5 +32,9 @@ class ValkyrieTestAdapterCreateStrategy < ValkyrieCreateStrategy
 
   def persister
     Valkyrie::MetadataAdapter.find(:test_adapter).persister
+  end
+
+  def query_service
+    Valkyrie::MetadataAdapter.find(:test_adapter).query_service
   end
 end
