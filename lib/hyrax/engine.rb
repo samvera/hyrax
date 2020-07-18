@@ -24,6 +24,7 @@ module Hyrax
     require 'hyrax/controller_resource'
     require 'hyrax/form_fields'
     require 'hyrax/indexer'
+    require 'hyrax/model_decorator'
     require 'hyrax/publisher'
     require 'hyrax/schema'
     require 'hyrax/search_state'

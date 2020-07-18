@@ -16,9 +16,7 @@ module Hyrax
     #
     #   solr_document.ordered_member_ids # => ['abc', '123']
     #
-    class OrderedMembers < Draper::Decorator
-      delegate_all
-
+    class OrderedMembers < Hyrax::ModelDecorator
       ##
       # @note the purpose of this method is to provide fast access to member
       #   order. currently this is achieved by accessing indexed list proxies
