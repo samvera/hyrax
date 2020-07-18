@@ -190,9 +190,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
     end
 
     describe "#editor?" do
-      subject { presenter.editor? }
-
-      it { is_expected.to be true }
+      it { is_expected.to be_editor }
     end
   end
 
