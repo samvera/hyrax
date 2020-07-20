@@ -7,11 +7,11 @@ module Hyrax
     # Use this for testing valkyrie models generically, with Hyrax assumptions
     # but no PCDM modelling behavior.
     class BookResource < Hyrax::Resource
-      attribute :author,   Valkyrie::Types::String
-      attribute :created,  Valkyrie::Types::Date
-      attribute :isbn,     Valkyrie::Types::String
-      attribute :pubisher, Valkyrie::Types::String
-      attribute :title,    Valkyrie::Types::String
+      attribute :author,    Valkyrie::Types::String
+      attribute :created,   Valkyrie::Types::Date
+      attribute :isbn,      Valkyrie::Types::String
+      attribute :publisher, Valkyrie::Types::String
+      attribute :title,     Valkyrie::Types::String
     end
 
     class Book < ActiveFedora::Base
