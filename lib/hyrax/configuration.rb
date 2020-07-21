@@ -524,6 +524,11 @@ module Hyrax
       ->(id:, extent:) { Samvera::NestingIndexer.reindex_relationships(id: id, extent: extent) }
     end
 
+    attr_writer :identifier_registrars
+    def identifier_registrars
+      @identifier_registrars ||= {}
+    end
+
     private
 
       # @param [Symbol, #to_s] model_name - symbol representing the model
