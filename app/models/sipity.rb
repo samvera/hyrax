@@ -22,6 +22,8 @@ module Sipity
                Entity.find_by(proxy_for_global_id: input.to_s)
              when SolrDocument
                Entity(input.to_model)
+             when Draper::Decorator
+               Entity(input.model)
              when Sipity::Comment
                Entity(input.entity)
              else

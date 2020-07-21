@@ -27,7 +27,7 @@ module Hyrax
     # @param [ActionDispatch::Request] request the http request context. Used so
     #                                  the GraphExporter knows what URLs to draw.
     def initialize(solr_document, current_ability, request = nil)
-      @solr_document = solr_document
+      @solr_document = Hyrax::SolrDocument::OrderedMembers.decorate(solr_document)
       @current_ability = current_ability
       @request = request
     end
