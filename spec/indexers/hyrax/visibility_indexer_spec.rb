@@ -8,6 +8,7 @@ RSpec.describe Hyrax::VisibilityIndexer do
       include Hyrax::VisibilityIndexer
     end
   end
+  let(:resource) { Hyrax::Resource.new }
 
   it_behaves_like 'a visibility indexer'
 end

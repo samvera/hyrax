@@ -13,6 +13,7 @@ RSpec.describe Hyrax::Indexer do
   end
 
   context 'with core metadata schema' do
+    let(:resource) { work }
     it_behaves_like 'a Core metadata indexer'
   end
 

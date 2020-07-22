@@ -7,6 +7,7 @@ module Hyrax
     include Hyrax::ResourceIndexer
     include Hyrax::PermissionIndexer
     include Hyrax::VisibilityIndexer
+    include Hyrax::Indexer(:core_metadata)
 
     def to_solr
       super.tap do |index_document|

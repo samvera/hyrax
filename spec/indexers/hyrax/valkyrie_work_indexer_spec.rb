@@ -3,18 +3,21 @@
 require 'hyrax/specs/shared_specs'
 
 RSpec.describe Hyrax::ValkyrieWorkIndexer do
+  let(:resource) { FactoryBot.valkyrie_create(:hyrax_work) }
   let(:indexer_class) { described_class }
 
-  it_behaves_like 'a Hyrax::Resource indexer'
-  it_behaves_like 'a Core metadata indexer'
-  it_behaves_like 'a permission indexer'
-  it_behaves_like 'a visibility indexer'
+  it_behaves_like 'a Work indexer'
 
   context 'when extending with basic metadata' do
     let(:indexer_class) do
       Class.new(described_class) do
         include Hyrax::Indexer(:basic_metadata)
       end
+    end
+    let(:resource) do
+      Class.new(Hyrax::Work) do
+        include Hyrax::Schema(:basic_metadata)
+      end.new
     end
 
     it_behaves_like 'a Basic metadata indexer'
@@ -42,9 +45,6 @@ RSpec.describe Hyrax::ValkyrieWorkIndexer do
     let(:resource) { Hyrax.persister.save(resource: Hyrax::Test::Custom::Work.new(broader: ['term1', 'term2'])) }
     let(:indexer_class) { Hyrax::Test::Custom::WorkIndexer }
 
-    it_behaves_like 'a Hyrax::Resource indexer'
-    it_behaves_like 'a Core metadata indexer'
-    it_behaves_like 'a permission indexer'
-    it_behaves_like 'a visibility indexer'
+    it_behaves_like 'a Work indexer'
   end
 end
