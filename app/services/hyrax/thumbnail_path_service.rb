@@ -5,7 +5,7 @@ module Hyrax
       # @param [#id] object - to get the thumbnail for
       # @return [String] a path to the thumbnail
       def call(object)
-        return default_image unless object.try(:thumbnail_id)&.to_s&.present?
+        return default_image if object.try(:thumbnail_id).blank?
 
         thumb = fetch_thumbnail(object)
 
