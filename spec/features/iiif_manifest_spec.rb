@@ -10,7 +10,7 @@ RSpec.describe 'building a IIIF Manifest' do
 
   before do
     work.ordered_members += file_sets
-    work.members += member_works
+    work.ordered_members += member_works
     work.save
 
     sign_in user
