@@ -155,7 +155,7 @@ NOTE: The steps need to be done in order to create a new Hyrax based app.
 Generate a new Rails application using the template.
 
 ```
-rails _5.2.3_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v3.0.0.pre.rc2/template.rb
+rails _5.2.4.3_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v3.0.0-rc2/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:
