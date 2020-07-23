@@ -32,7 +32,7 @@ RSpec.describe Hyrax::IiifManifestPresenter do
 
         it 'includes items with read permissions' do
           readable = FactoryBot.create(:file_set, :image, user: user)
-          work.members << readable
+          work.ordered_members << readable
           work.save
 
           expect(builder_service.manifest_for(presenter: presenter)['sequences'].first['canvases'].count)
@@ -112,7 +112,7 @@ RSpec.describe Hyrax::IiifManifestPresenter do
 
           it 'has file sets the user can read' do
             readable = FactoryBot.create(:file_set, :image, user: user)
-            work.members << readable
+            work.ordered_members << readable
             work.save
 
             expect(presenter.file_set_presenters)
