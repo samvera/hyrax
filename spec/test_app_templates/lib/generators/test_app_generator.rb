@@ -7,15 +7,6 @@ class TestAppGenerator < Rails::Generators::Base
 
   def install_engine
     generate 'hyrax:install', '-f'
-
-    # When we were using Sqlite, the database was stored in the the
-    # .internal_test_app directory.  That was naturally cleaned as
-    # part of the regeneration.  However, with postgresql, we need to
-    # do some additional work.  This ensures we clean the database
-    # that now sits outside of the .internal_test_app directory.
-    rake "db:drop:all"
-    rake "db:create:all"
-    rake "db:test:prepare"
   end
 
   def browse_everything_install
