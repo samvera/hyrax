@@ -13,12 +13,6 @@ Valkyrie::MetadataAdapter.register(
 )
 Valkyrie.config.metadata_adapter = :wings_adapter
 
-if ENV['RAILS_ENV'] == 'test'
-  Valkyrie::MetadataAdapter.register(
-    Valkyrie::Persistence::Memory::MetadataAdapter.new, :test_adapter
-  )
-end
-
 Valkyrie::StorageAdapter.register(
   Wings::Storage::ActiveFedora
     .new(connection: Ldp::Client.new(ActiveFedora.fedora.host), base_path: ActiveFedora.fedora.base_path),

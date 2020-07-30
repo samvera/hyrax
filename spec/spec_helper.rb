@@ -43,6 +43,9 @@ require 'database_cleaner'
 Hyrax::Schema
 # rubocop:enable Lint/Void
 
+Valkyrie::MetadataAdapter
+  .register(Valkyrie::Persistence::Memory::MetadataAdapter.new, :test_adapter)
+
 # Require supporting ruby files from spec/support/ and subdirectories.  Note: engine, not Rails.root context.
 Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each { |f| require f }
 
