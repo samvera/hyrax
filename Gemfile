@@ -4,6 +4,8 @@ source 'https://rubygems.org'
 # Please see hyrax.gemspec for dependency information.
 gemspec
 
+gem 'hydra-head', git: 'https://github.com/samvera/hydra-head', branch: 'visibility_dirty'
+
 group :development, :test do
   gem 'easy_translate'
   gem 'i18n-tasks'
