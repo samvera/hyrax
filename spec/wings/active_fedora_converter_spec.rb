@@ -44,7 +44,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       before do
         module Hyrax::Test
           module Converter
-            class Resource < Valkyrie::Resource
+            class Resource < Hyrax::Resource
               attribute :title, Valkyrie::Types::Array.of(Valkyrie::Types::String)
               attribute :distant_relation, Valkyrie::Types::String
             end
