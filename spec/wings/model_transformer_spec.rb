@@ -91,7 +91,7 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
       before do
         module Hyrax::Test
           module Transformer
-            class Book < Valkyrie::Resource
+            class Book < Hyrax::Resource
             end
           end
         end
