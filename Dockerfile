@@ -30,6 +30,8 @@ WORKDIR $APP_HOME
 
 RUN bundle install
 
+COPY bin/db-wait.sh db-wait.sh
+
 ADD https://time.is/just /app-data/build-time
 
 CMD ["bundle", "exec", "puma", "-v", "-b", "tcp://0.0.0.0:3000"]
