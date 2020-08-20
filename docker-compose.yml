@@ -20,7 +20,7 @@ services:
       - REDIS_HOST=redis
       - SOLR_URL=http://solr:8983/solr/hyrax
     depends_on:
-      # - create_admin_set
+      - create_admin_set
       - create_collection_types
       - db_migrate
       - fcrepo
@@ -33,26 +33,7 @@ services:
     volumes:
       - .hyrax_app:/data
 
-  # create_admin_set:
-  #   <<: *app
-  #   environment:
-  #     - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
-  #     - FCREPO_PORT=8080
-  #     - FCREPO_HOST=fcrepo
-  #     - REDIS_HOST=redis
-  #     - SOLR_URL=http://solr:8983/solr/hyrax
-  #   command:
-  #     - bundle
-  #     - exec
-  #     - rake
-  #     - hyrax:default_admin_set:create
-  #   depends_on:
-  #     - fcrepo
-  #     - solr
-  #     - postgres
-  #   ports: []
-
-  create_collection_types:
+  create_admin_set:
     <<: *app
     environment:
       - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
@@ -61,6 +42,31 @@ services:
       - REDIS_HOST=redis
       - SOLR_URL=http://solr:8983/solr/hyrax
     command:
+      - ./db-wait.sh
+      - postgres:5432
+      - ./db-wait.sh
+      - fcrepo:8080
+      - ./db-wait.sh
+      - solr:8983
+      - bundle
+      - exec
+      - rake
+      - hyrax:default_admin_set:create
+    depends_on:
+      - fcrepo
+      - solr
+      - postgres
+    ports: []
+
+  create_collection_types:
+    <<: *app
+    environment:
+      - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
+      - REDIS_HOST=redis
+      - SOLR_URL=http://solr:8983/solr/hyrax
+    command:
+      - ./db-wait.sh
+      - postgres:5432
       - bundle
       - exec
       - rake
@@ -75,11 +81,9 @@ services:
     <<: *app
     environment:
       - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
-      - FCREPO_PORT=8080
-      - FCREPO_HOST=fcrepo
-      - REDIS_HOST=redis
-      - SOLR_URL=http://solr:8983/solr/hyrax
     command:
+      - ./db-wait.sh
+      - postgres:5432
       - bundle
       - exec
       - rails
