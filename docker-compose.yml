@@ -6,7 +6,6 @@ services:
       target: hyrax-engine-dev
       args:
         BUNDLE_WITHOUT: test
-        EXTRA_APK_PACKAGES: 'git postgresql-dev'
     image: hyrax-engine-dev
     stdin_open: true
     tty: true
