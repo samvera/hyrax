@@ -1,22 +1,23 @@
-# rails _5.2.4.3_ new .hyrax_app -m ./template.rb --database=postgresql
-# rm .hyrax_app/config/database.yml # use ENV for database configuration
-# docker-compose build
-# docker-compose up
 version: '3.5'
 services:
   app: &app
     build:
       context: .
+      target: hyrax-engine-dev
       args:
-        RAILS_ENV: development
         BUNDLE_WITHOUT: test
         EXTRA_APK_PACKAGES: 'git postgresql-dev'
+    image: hyrax-engine-dev
     stdin_open: true
     tty: true
     environment:
       - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
       - FCREPO_PORT=8080
       - FCREPO_HOST=fcrepo
+      - FCREPO_REST_PATH=fcrepo/rest
+      - HYRAX_ENGINE_PATH=/app-data/samvera/hyrax-engine
+      - RACK_ENV=development
+      - RAILS_ENV=development
       - REDIS_HOST=redis
       - SOLR_URL=http://solr:8983/solr/hyrax
     depends_on:
@@ -31,22 +32,25 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - .hyrax_app:/data
+      - .dassie:/app-data/samvera/hyrax-webapp
+      - .:/app-data/samvera/hyrax-engine
 
   create_admin_set:
-    <<: *app
+    image: hyrax-engine-dev
     environment:
       - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
       - FCREPO_PORT=8080
       - FCREPO_HOST=fcrepo
+      - FCREPO_REST_PATH=fcrepo/rest
+      - HYRAX_ENGINE_PATH=/app-data/samvera/hyrax-engine
       - REDIS_HOST=redis
       - SOLR_URL=http://solr:8983/solr/hyrax
     command:
-      - ./db-wait.sh
+      - /app-data/samvera/db-wait.sh
       - postgres:5432
-      - ./db-wait.sh
+      - /app-data/samvera/db-wait.sh
       - fcrepo:8080
-      - ./db-wait.sh
+      - /app-data/samvera/db-wait.sh
       - solr:8983
       - bundle
       - exec
@@ -56,16 +60,19 @@ services:
       - fcrepo
       - solr
       - postgres
-    ports: []
+    volumes:
+      - .dassie:/app-data/samvera/hyrax-webapp
+      - .:/app-data/samvera/hyrax-engine
 
   create_collection_types:
-    <<: *app
+    image: hyrax-engine-dev
     environment:
       - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
+      - HYRAX_ENGINE_PATH=/app-data/samvera/hyrax-engine
       - REDIS_HOST=redis
       - SOLR_URL=http://solr:8983/solr/hyrax
     command:
-      - ./db-wait.sh
+      - /app-data/samvera/db-wait.sh
       - postgres:5432
       - bundle
       - exec
@@ -73,16 +80,17 @@ services:
       - hyrax:default_collection_types:create
     depends_on:
       - postgres
-    ports: []
     volumes:
-      - .hyrax_app:/data
+      - .dassie:/app-data/samvera/hyrax-webapp
+      - .:/app-data/samvera/hyrax-engine
 
   db_migrate:
-    <<: *app
+    image: hyrax-engine-dev
     environment:
       - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
+      - HYRAX_ENGINE_PATH=/app-data/samvera/hyrax-engine
     command:
-      - ./db-wait.sh
+      - /app-data/samvera/db-wait.sh
       - postgres:5432
       - bundle
       - exec
@@ -91,9 +99,9 @@ services:
       - db:migrate
     depends_on:
       - postgres
-    ports: []
     volumes:
-      - .hyrax_app:/data
+      - .dassie:/app-data/samvera/hyrax-webapp
+      - .:/app-data/samvera/hyrax-engine
 
   postgres:
     image: postgres:latest
@@ -137,7 +145,7 @@ services:
       - /opt/solr/server/configsets/hyraxconf
     volumes:
       - solr_home:/opt/solr/server/solr
-      - .hyrax_app/solr/conf:/opt/solr/server/configsets/hyraxconf
+      - .dassie/solr/conf:/opt/solr/server/configsets/hyraxconf
 
 volumes:
   db:

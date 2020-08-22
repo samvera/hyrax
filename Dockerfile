@@ -1,9 +1,6 @@
 ARG RUBY_VERSION=2.6.6
-FROM ruby:$RUBY_VERSION-alpine
+FROM ruby:$RUBY_VERSION-alpine as hyrax-base
 
-ARG RAILS_ENV=production
-ARG APP_PATH=.hyrax_app
-ARG BUNDLE_WITHOUT=development:test
 ARG EXTRA_APK_PACKAGES="git sqlite-dev"
 
 RUN apk --no-cache upgrade && \
@@ -14,24 +11,29 @@ RUN apk --no-cache upgrade && \
 
 RUN gem update bundler
 
-ENV RAILS_ENV $RAILS_ENV
-ENV RACK_ENV $RAILS_ENV
-ENV BUNDLE_WITHOUT $BUNDLE_WITHOUT
+RUN mkdir -p /app-data/samvera/hyrax-webapp
+WORKDIR /app-data/samvera/hyrax-webapp
 
-ENV APP_HOME /app-data/samvera/$APP_PATH
-RUN mkdir -p APP_HOME
+COPY ./bin /app-data/samvera
 
-ENV BUNDLE_PATH /usr/local/bundle
-ENV BUNDLE_GEMFILE $APP_HOME/Gemfile
-ENV BUNDLE_JOBS 4
+CMD ["bundle", "exec", "puma", "-v", "-b", "tcp://0.0.0.0:3000"]
 
-COPY $APP_PATH $APP_HOME
-WORKDIR $APP_HOME
 
-RUN bundle install
+FROM hyrax-base as hyrax-engine-dev
 
-COPY bin/db-wait.sh db-wait.sh
+ARG APP_PATH=.dassie
+
+COPY $APP_PATH/* /app-data/samvera/hyrax-webapp/
+COPY . /app-data/samvera/hyrax-engine
+
+RUN bundle install --jobs 4
 
 ADD https://time.is/just /app-data/build-time
 
-CMD ["bundle", "exec", "puma", "-v", "-b", "tcp://0.0.0.0:3000"]
+
+FROM hyrax-base as hyrax
+
+ARG APP_PATH=.
+
+ONBUILD COPY $APP_PATH/* /app-data/samvera/hyrax-webapp/
+ONBUILD RUN bundle install --jobs 4
