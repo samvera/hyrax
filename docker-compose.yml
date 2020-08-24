@@ -20,8 +20,6 @@ services:
       - REDIS_HOST=redis
       - SOLR_URL=http://solr:8983/solr/hyrax
     depends_on:
-      - create_admin_set
-      - create_collection_types
       - db_migrate
       - fcrepo
       - memcached
@@ -34,7 +32,7 @@ services:
       - .dassie:/app-data/samvera/hyrax-webapp
       - .:/app-data/samvera/hyrax-engine
 
-  create_admin_set:
+  db_migrate:
     image: hyrax-engine-dev
     environment:
       - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
@@ -42,7 +40,6 @@ services:
       - FCREPO_HOST=fcrepo
       - FCREPO_REST_PATH=fcrepo/rest
       - HYRAX_ENGINE_PATH=/app-data/samvera/hyrax-engine
-      - REDIS_HOST=redis
       - SOLR_URL=http://solr:8983/solr/hyrax
     command:
       - /app-data/samvera/db-wait.sh
@@ -53,49 +50,10 @@ services:
       - solr:8983
       - bundle
       - exec
-      - rake
-      - hyrax:default_admin_set:create
-    depends_on:
-      - fcrepo
-      - solr
-      - postgres
-    volumes:
-      - .dassie:/app-data/samvera/hyrax-webapp
-      - .:/app-data/samvera/hyrax-engine
-
-  create_collection_types:
-    image: hyrax-engine-dev
-    environment:
-      - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
-      - HYRAX_ENGINE_PATH=/app-data/samvera/hyrax-engine
-      - REDIS_HOST=redis
-      - SOLR_URL=http://solr:8983/solr/hyrax
-    command:
-      - /app-data/samvera/db-wait.sh
-      - postgres:5432
-      - bundle
-      - exec
-      - rake
-      - hyrax:default_collection_types:create
-    depends_on:
-      - postgres
-    volumes:
-      - .dassie:/app-data/samvera/hyrax-webapp
-      - .:/app-data/samvera/hyrax-engine
-
-  db_migrate:
-    image: hyrax-engine-dev
-    environment:
-      - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
-      - HYRAX_ENGINE_PATH=/app-data/samvera/hyrax-engine
-    command:
-      - /app-data/samvera/db-wait.sh
-      - postgres:5432
-      - bundle
-      - exec
       - rails
-      - db:create
+      - db:setup
       - db:migrate
+      - db:seed
     depends_on:
       - postgres
     volumes:
