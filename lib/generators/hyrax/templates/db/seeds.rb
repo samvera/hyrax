@@ -16,8 +16,9 @@
 #     ActiveFedora::Cleaner.clean!
 #     exit
 #   rake db:drop db:create db:migrate
-#   bin/rails hyrax:default_admin_set:create
 #   rake db:seed
+
+Hyrax::Engine.load_seed
 
 # ---------------------------------
 # methods to create various objects
