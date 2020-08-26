@@ -4,21 +4,12 @@ services:
     build:
       context: .
       target: hyrax-engine-dev
-      args:
-        BUNDLE_WITHOUT: test
     image: hyrax-engine-dev
     stdin_open: true
     tty: true
-    environment:
-      - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
-      - FCREPO_PORT=8080
-      - FCREPO_HOST=fcrepo
-      - FCREPO_REST_PATH=fcrepo/rest
-      - HYRAX_ENGINE_PATH=/app-data/samvera/hyrax-engine
-      - RACK_ENV=development
-      - RAILS_ENV=development
-      - REDIS_HOST=redis
-      - SOLR_URL=http://solr:8983/solr/hyrax
+    user: root
+    env_file:
+      - .env
     depends_on:
       - db_migrate
       - fcrepo
@@ -29,36 +20,25 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - .dassie:/app-data/samvera/hyrax-webapp
-      - .:/app-data/samvera/hyrax-engine
+      - .dassie:/app/samvera/hyrax-webapp
+      - .:/app/samvera/hyrax-engine
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
 
   db_migrate:
     image: hyrax-engine-dev
-    environment:
-      - DATABASE_URL=postgresql://hyrax_user:hyrax_password@postgres/hyrax?pool=5
-      - FCREPO_PORT=8080
-      - FCREPO_HOST=fcrepo
-      - FCREPO_REST_PATH=fcrepo/rest
-      - HYRAX_ENGINE_PATH=/app-data/samvera/hyrax-engine
-      - SOLR_URL=http://solr:8983/solr/hyrax
-    command:
-      - /app-data/samvera/db-wait.sh
-      - postgres:5432
-      - /app-data/samvera/db-wait.sh
-      - fcrepo:8080
-      - /app-data/samvera/db-wait.sh
-      - solr:8983
-      - bundle
-      - exec
-      - rails
-      - db:setup
-      - db:migrate
-      - db:seed
+    user: root
+    env_file:
+      - .env
+    entrypoint: ["sh", "-c"]
+    command: db-migrate-seed.sh
     depends_on:
       - postgres
     volumes:
-      - .dassie:/app-data/samvera/hyrax-webapp
-      - .:/app-data/samvera/hyrax-engine
+      - .dassie:/app/samvera/hyrax-webapp:cached
+      - .:/app/samvera/hyrax-engine:cached
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
 
   postgres:
     image: postgres:latest
@@ -92,7 +72,7 @@ services:
     volumes:
       - redis:/data
 
-  solr: &solr
+  solr:
     image: solr:7
     ports:
       - 8983:8983
@@ -107,5 +87,7 @@ services:
 volumes:
   db:
   fcrepo:
+  rails-public:
+  rails-tmp:
   redis:
   solr_home:
