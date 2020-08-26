@@ -6,7 +6,7 @@ module Hyrax
   module ResourceIndexer
     def to_solr
       super.tap do |index_document|
-        index_document[:alternate_ids_sm] = resource.alternate_ids.map(&:to_s)
+        index_document[:alternate_ids_sim] = resource.alternate_ids.map(&:to_s)
       end
     end
   end

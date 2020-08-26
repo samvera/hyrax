@@ -18,7 +18,7 @@ RSpec.shared_examples 'a Hyrax::Resource indexer' do
   describe '#to_solr' do
     it 'indexes alternate_ids' do
       expect(indexer.to_solr)
-        .to include(alternate_ids_sm: a_collection_containing_exactly(*ids))
+        .to include(alternate_ids_sim: a_collection_containing_exactly(*ids))
     end
   end
 end
