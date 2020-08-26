@@ -16,9 +16,10 @@ RSpec.shared_examples 'a Hyrax::Resource indexer' do
   let(:ids)          { ['id1', 'id2'] }
 
   describe '#to_solr' do
-    it 'indexes alternate_ids' do
+    it 'indexes base resource fields' do
       expect(indexer.to_solr)
-        .to include(alternate_ids_sim: a_collection_containing_exactly(*ids))
+        .to include(has_model_tesim: resource.class.name,
+                    alternate_ids_sim: a_collection_containing_exactly(*ids))
     end
   end
 end
