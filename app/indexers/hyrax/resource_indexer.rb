@@ -7,6 +7,7 @@ module Hyrax
     def to_solr
       super.tap do |index_document|
         index_document[:has_model_ssim] = resource.class.name
+        index_document[:human_readable_type_tesim] = resource.human_readable_type
         index_document[:alternate_ids_sim] = resource.alternate_ids.map(&:to_s)
       end
     end

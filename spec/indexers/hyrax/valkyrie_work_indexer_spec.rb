@@ -9,16 +9,23 @@ RSpec.describe Hyrax::ValkyrieWorkIndexer do
   it_behaves_like 'a Work indexer'
 
   context 'when extending with basic metadata' do
+    before do
+      module Hyrax::Test
+        module Basic
+          class Work < Hyrax::Work
+            include Hyrax::Schema(:basic_metadata)
+          end
+        end
+      end
+    end
+    after { Hyrax::Test.send(:remove_const, :Basic) }
+
     let(:indexer_class) do
       Class.new(described_class) do
         include Hyrax::Indexer(:basic_metadata)
       end
     end
-    let(:resource) do
-      Class.new(Hyrax::Work) do
-        include Hyrax::Schema(:basic_metadata)
-      end.new
-    end
+    let(:resource) { Hyrax::Test::Basic::Work.new }
 
     it_behaves_like 'a Basic metadata indexer'
   end
