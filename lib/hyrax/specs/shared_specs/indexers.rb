@@ -19,6 +19,7 @@ RSpec.shared_examples 'a Hyrax::Resource indexer' do
     it 'indexes base resource fields' do
       expect(indexer.to_solr)
         .to include(has_model_ssim: resource.class.name,
+                    human_readable_type_tesim: resource.human_readable_type,
                     alternate_ids_sim: a_collection_containing_exactly(*ids))
     end
   end
