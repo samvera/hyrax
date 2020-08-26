@@ -10,6 +10,7 @@ services:
     user: root
     env_file:
       - .env
+      - .dassie/.env
     depends_on:
       - db_migrate
       - fcrepo
