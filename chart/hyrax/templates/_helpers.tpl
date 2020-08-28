@@ -61,3 +61,28 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Create default fully qualified service names.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "hyrax.memcached.fullname" -}}
+{{- printf "%s-%s" .Release.Name "memcached" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "hyrax.postgresql.fullname" -}}
+{{- printf "%s-%s" "dassie" "postgresql" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+
+{{- define "hyrax.redis.fullname" -}}
+{{- printf "%s-%s" .Release.Name "redis" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+
+{{- define "hyrax.solr.fullname" -}}
+{{- printf "%s-%s" .Release.Name "solr" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- define "hyrax.zk.fullname" -}}
+{{- printf "%s-%s" .Release.Name "zookeeper" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
