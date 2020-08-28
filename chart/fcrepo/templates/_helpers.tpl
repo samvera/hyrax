@@ -63,6 +63,6 @@ Create the name of the service account to use
 {{- end }}
 
 {{- define "fcrepo.postgresql.fullname" -}}
-{{- $name := default .Values.postgresql.nameOverride "postgresql" -}}
+{{- $name := default "postgresql" .Values.postgresql.nameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

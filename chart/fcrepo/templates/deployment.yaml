@@ -42,6 +42,19 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
+        {{- if not .Values.postgresql.enabled }}
+        - name: "init-db"
+          image: {{ .Values.postgresql.image.repository | default "bitnami/postgresql" }}:{{ .Values.postgresql.image.tag | default "latest" }}
+          command:
+            - sh
+            - -c
+            - PGPASSWORD=$DATABASE_PASSWORD PGHOST=$DATABASE_HOST PGUSER=$DATABASE_USER psql -tc "SELECT 1 FROM pg_database WHERE datname = '$DATABASE_NAME'" | grep -q 1 || createdb -e -w $DATABASE_NAME
+          envFrom:
+            - configMapRef:
+                name: {{ include "fcrepo.fullname" . }}-env
+            - secretRef:
+                name: {{ include .Values.fcrepoSecretName . }}
+        {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -52,7 +65,11 @@ spec:
             - configMapRef:
                 name: {{ include "fcrepo.fullname" . }}-env
             - secretRef:
+                {{- if .Values.postgresql.enabled }}
                 name: {{ template "fcrepo.fullname" . }}
+                {{- else }}
+                name: {{ include .Values.fcrepoSecretName . }}
+                {{- end }}
           ports:
             - name: http
               containerPort: 8080
@@ -64,12 +81,12 @@ spec:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: {{ default .Values.healthCheck.initialDelay 15 }}
+            initialDelaySeconds: {{ default 15 .Values.healthCheck.initialDelay }}
           readinessProbe:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: {{ default .Values.healthCheck.initialDelay 15 }}
+            initialDelaySeconds: {{ default 15 .Values.healthCheck.initialDelay }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
