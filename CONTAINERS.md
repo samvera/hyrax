@@ -35,17 +35,33 @@ It also runs database migrations.
 We also provide a base image which can be reused for Hyrax applications: `hyrax`.
 
 ```sh
-echo "FROM hyrax" > Dockerfile
+echo "FROM samveralabs/hyrax" > Dockerfile
 ```
 
 ### Maintaining
 
-At the moment, we don't publish hyrax images anywhere (TODO). If you want to use them, you need to build them yourself:
+We publish several Hyrax images to hub.docker.com under the
+[`samveralabs` group][dockerhub-samveralabs]. To build them, do:
 
 ```sh
 # build an image for an app using Postgresql (`gem 'pg'`)
-docker build --target hyrax --tag hyrax .
+docker build --target hyrax --tag samveralabs/hyrax:(git rev-parse HEAD) .
+docker push samveralabs/hyrax:(git rev-parse HEAD)
 
 # or; build a development image with sqlite
-docker build --target hyrax --tag hyrax-sqlite --build-arg DATABASE_APK_PACKAGE="sqlite" .
+docker build --target hyrax --tag samveralabs/hyrax:(git rev-parse HEAD)-sqlite --build-arg DATABASE_APK_PACKAGE="sqlite" .
+docker push samveralabs/hyrax:(git rev-parse HEAD)-sqlite
 ```
+
+We also publish an image for the stable test application `dassie`:
+
+```sh
+docker build --target hyrax-engine-dev --tag samveralabs/dassie:(git rev-parse HEAD) .
+
+docker tag samveralabs/dassie:(git rev-parse HEAD) samveralabs/dassie:$HYRAX_VERSION
+
+docker push samveralabs/dassie:(git rev-parse HEAD)
+docker push samveralabs/dassie:$HYRAX_VERSION
+```
+
+[dockerhub-samveralabs]: https://hub.docker.com/r/samveralabs
