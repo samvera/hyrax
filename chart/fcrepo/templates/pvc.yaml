@@ -1,0 +1,20 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "fcrepo.fullname" . }}
+  labels:
+    app: {{ template "fcrepo.name" . }}
+    chart: {{ template "fcrepo.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: fcrepo
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ default .Values.storage.size "1Gi" }}
+  {{- if .Values.storage.className }}
+  storageClassName: "{{ .Values.storage.ClassName }}"
+  {{- end }}
