@@ -5,6 +5,9 @@ type: application
 version: 0.2.0
 appVersion: 3.0.0-rc2
 dependencies:
+  - name: fcrepo
+    version: 0.1.6
+    repository: file://../fcrepo
   - name: memcached
     version: 4.2.21
     repository: https://charts.bitnami.com/bitnami

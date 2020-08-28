@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "fcrepo.fullname" . }}-env
+  labels:
+    app.kubernetes.io/name: {{ include "fcrepo.name" . }}
+    helm.sh/chart: {{ include "fcrepo.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+  DATABASE_NAME: {{ .Values.postgresql.postgresqlDatabase }}
+  DATABASE_USER: {{ .Values.postgresql.postgresqlUsername }}

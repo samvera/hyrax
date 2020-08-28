@@ -9,8 +9,8 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
   {{- if .Values.postgresql.enabled }}
-  DATABASE_URL: postgresql://{{ .Values.postgresql.postgresqlUsername }}:{{ .Values.postgresql.postgresqlPassword }}@{{ template "hyrax.postgresql.fullname" }}/{{ .Values.postgresql.postgresqlDatabase }}?pool=5
-  DB_HOST: {{ template "hyrax.postgresql.fullname" }}
+  DATABASE_URL: postgresql://{{ .Values.postgresql.postgresqlUsername }}:{{ .Values.postgresql.postgresqlPassword }}@{{ template "hyrax.postgresql.fullname" . }}/{{ .Values.postgresql.postgresqlDatabase }}?pool=5
+  DB_HOST: {{ template "hyrax.postgresql.fullname" . }}
   DB_PORT: "5432"
   {{- end }}
   {{- if .Values.memcached.enabled }}
@@ -20,6 +20,11 @@ data:
   RAILS_ENV: production
   {{- if .Values.redis.enabled }}
   REDIS_HOST: {{ template "hyrax.redis.fullname" . }}-master
+  {{- end }}
+  {{- if .Values.fcrepo.enabled }}
+  FCREPO_PORT: "80"
+  FCREPO_HOST: {{ template "hyrax.fcrepo.fullname" . }}
+  FCREPO_REST_PATH: {{ default .Values.fcrepo.restPath "fcrepo/rest" }}
   {{- end }}
   {{- if .Values.solr.enabled }}
   SOLR_HOST: {{ template "hyrax.solr.fullname" . }}-svc
