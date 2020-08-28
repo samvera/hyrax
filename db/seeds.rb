@@ -1,3 +1,5 @@
+ActiveFedora.fedora.connection.send(:init_base_path)
+
 puts "\n== Creating default collection types"
 Hyrax::CollectionType.find_or_create_default_collection_type
 Hyrax::CollectionType.find_or_create_admin_set_type

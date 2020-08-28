@@ -24,8 +24,9 @@ data:
   {{- if .Values.fcrepo.enabled }}
   FCREPO_PORT: "80"
   FCREPO_HOST: {{ template "hyrax.fcrepo.fullname" . }}
-  FCREPO_REST_PATH: {{ default .Values.fcrepo.restPath "fcrepo/rest" }}
+  FCREPO_REST_PATH: {{ default "fcrepo/rest" .Values.fcrepo.restPath }}
   {{- end }}
+  FCREPO_BASE_PATH: {{ default "hyrax" .Values.fcrepo.basePath }}
   {{- if .Values.solr.enabled }}
   SOLR_HOST: {{ template "hyrax.solr.fullname" . }}-svc
   SOLR_PORT: "8983"
