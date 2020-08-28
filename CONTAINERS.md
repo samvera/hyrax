@@ -66,4 +66,17 @@ docker push samveralabs/dassie:(git rev-parse HEAD)
 docker push samveralabs/dassie:$HYRAX_VERSION
 ```
 
+## Helm Chart
+
+Also under development is a Helm chart, which we are developing into a robust,
+configurable production environment for Hyrax applications.
+
+If you have a Kubernetes cluster configured (`kubectl cluster-info`), you can
+deploy the `dassie` test applications with:
+
+```sh
+helm dependency update chart/hyrax
+helm install -n hyrax --set image.repository=samveralabs/dassie --set image.tag=(git rev-parse HEAD) dassie chart/hyrax
+```
+
 [dockerhub-samveralabs]: https://hub.docker.com/r/samveralabs

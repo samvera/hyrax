@@ -9,7 +9,6 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
   {{- if .Values.postgresql.enabled }}
-  DATABASE_URL: postgresql://{{ .Values.postgresql.postgresqlUsername }}:{{ .Values.postgresql.postgresqlPassword }}@{{ template "hyrax.postgresql.fullname" . }}/{{ .Values.postgresql.postgresqlDatabase }}?pool=5
   DB_HOST: {{ template "hyrax.postgresql.fullname" . }}
   DB_PORT: "5432"
   {{- end }}
@@ -22,11 +21,10 @@ data:
   REDIS_HOST: {{ template "hyrax.redis.fullname" . }}-master
   {{- end }}
   {{- if .Values.fcrepo.enabled }}
-  FCREPO_PORT: "80"
+  FCREPO_PORT: {{ .Values.fcrepo.servicePort | default 8080 | quote }}
   FCREPO_HOST: {{ template "hyrax.fcrepo.fullname" . }}
-  FCREPO_REST_PATH: {{ default "fcrepo/rest" .Values.fcrepo.restPath }}
+  FCREPO_REST_PATH: {{ .Values.fcrepo.restPath | default "fcrepo/rest" }}
   {{- end }}
-  FCREPO_BASE_PATH: {{ default "hyrax" .Values.fcrepo.basePath }}
   {{- if .Values.solr.enabled }}
   SOLR_HOST: {{ template "hyrax.solr.fullname" . }}-svc
   SOLR_PORT: "8983"

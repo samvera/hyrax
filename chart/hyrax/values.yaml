@@ -54,10 +54,11 @@ resources: {}
 
 fcrepo:
   enabled: true
+  fcrepoSecretName: "hyrax.fcrepo.fullname"
+  externalDatabaseUsername: "hyrax"
+  servicePort: 8080
   postgresql:
-    nameOverride: fcrepo-psql
-  healthCheck:
-    initialDelay: 1000
+    enabled: false
 
 memcached:
   enabled: false

@@ -8,5 +8,10 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
+  {{- if .Values.postgresql.enabled }}
   DATABASE_NAME: {{ .Values.postgresql.postgresqlDatabase }}
   DATABASE_USER: {{ .Values.postgresql.postgresqlUsername }}
+  {{- else }}
+  DATABASE_NAME: {{ .Values.externalDatabaseName | default "fcrepo" }}
+  DATABASE_USER: {{ .Values.externalDatabaseUsername }}
+  {{- end }}
