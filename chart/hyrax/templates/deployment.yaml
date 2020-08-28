@@ -20,6 +20,19 @@ spec:
       labels:
         {{- include "hyrax.selectorLabels" . | nindent 8 }}
     spec:
+      initContainers:
+        - name: db-setup
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "hyrax.fullname" . }}-env
+            - secretRef:
+                name: {{ template "hyrax.fullname" . }}
+          command:
+            - sh
+            - -c
+            - db-migrate-seed.sh
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -33,9 +46,14 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "hyrax.fullname" . }}-env
+            - secretRef:
+                name: {{ template "hyrax.fullname" . }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 3000
               protocol: TCP
           livenessProbe:
             httpGet:

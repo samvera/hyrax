@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: nginx
+  repository: samveralabs/dassie
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -64,6 +64,29 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
+
+memcached:
+  enabled: false
+
+postgresql:
+  enabled: true
+  image:
+    repository: bitnami/postgresql
+    tag: 12.3.0
+  postgresqlUsername: hyrax
+  postgresqlPassword: hyrax_pass
+  postgresqlDatabase: hyrax
+  servicePort: 5432
+  # cpu: 1000m
+  # memory: 1Gi
+  # persistence:
+  #   size: 10Gi
+
+redis:
+  enabled: true
+
+solr:
+  enabled: true
 
 autoscaling:
   enabled: false
