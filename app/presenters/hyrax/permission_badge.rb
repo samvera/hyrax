@@ -24,7 +24,7 @@ module Hyrax
     private
 
     def dom_label_class
-      VISIBILITY_LABEL_CLASS.fetch(@visibility.to_sym)
+      VISIBILITY_LABEL_CLASS.fetch(@visibility.to_sym, 'label-info')
     end
 
     def text
