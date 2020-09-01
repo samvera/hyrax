@@ -12,6 +12,8 @@ data:
   DATABASE_NAME: {{ .Values.postgresql.postgresqlDatabase }}
   DATABASE_USER: {{ .Values.postgresql.postgresqlUsername }}
   {{- else }}
+  {{- if .Values.externalDatabaseUsername }}
   DATABASE_NAME: {{ .Values.externalDatabaseName | default "fcrepo" }}
   DATABASE_USER: {{ .Values.externalDatabaseUsername }}
+  {{- end }}
   {{- end }}

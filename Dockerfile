@@ -24,6 +24,7 @@ WORKDIR /app/samvera/hyrax-webapp
 COPY --chown=1001:101 ./bin /app/samvera
 ENV PATH="/app/samvera:$PATH"
 ENV RAILS_ROOT="/app/samvera/hyrax-webapp"
+ENV RAILS_SERVE_STATIC_FILES="1"
 
 ENTRYPOINT ["hyrax-entrypoint.sh"]
 CMD ["bundle", "exec", "puma", "-v", "-b", "tcp://0.0.0.0:3000"]
