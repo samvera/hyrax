@@ -76,7 +76,7 @@ deploy the `dassie` test applications with:
 
 ```sh
 helm dependency update chart/hyrax
-helm install -n hyrax --set image.repository=samveralabs/dassie --set image.tag=(git rev-parse HEAD) dassie chart/hyrax
+helm install -n hyrax --set image.tag=(git rev-parse HEAD) dassie chart/hyrax
 ```
 
 [dockerhub-samveralabs]: https://hub.docker.com/r/samveralabs

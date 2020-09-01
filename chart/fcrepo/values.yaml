@@ -11,6 +11,8 @@ image:
   pullPolicy: IfNotPresent
   tag: ""
 
+fcrepoSecretName: ""
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -52,7 +54,7 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: fcrepo.local
-      paths: []
+      paths: ['/']
   tls: []
   #  - secretName: fcrepo-tls
   #    hosts:

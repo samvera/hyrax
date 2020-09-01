@@ -43,6 +43,7 @@ spec:
             - name: data
               mountPath: /data
         {{- if not .Values.postgresql.enabled }}
+        {{- if .Values.fcrepoSecretName }}
         - name: "init-db"
           image: {{ .Values.postgresql.image.repository | default "bitnami/postgresql" }}:{{ .Values.postgresql.image.tag | default "latest" }}
           command:
@@ -55,6 +56,7 @@ spec:
             - secretRef:
                 name: {{ include .Values.fcrepoSecretName . }}
         {{- end }}
+        {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -64,12 +66,15 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ include "fcrepo.fullname" . }}-env
+            {{- if .Values.postgresql.enabled }}
             - secretRef:
-                {{- if .Values.postgresql.enabled }}
                 name: {{ template "fcrepo.fullname" . }}
-                {{- else }}
+            {{- else }}
+            {{- if .Values.fcrepoSecretName }}
+            - secretRef:
                 name: {{ include .Values.fcrepoSecretName . }}
-                {{- end }}
+            {{- end }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 8080
