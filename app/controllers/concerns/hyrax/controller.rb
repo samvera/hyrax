@@ -52,7 +52,7 @@ module Hyrax::Controller
   # render a json response for +response_type+
   def render_json_response(response_type: :success, message: nil, options: {})
     json_body = Hyrax::API.generate_response_body(response_type: response_type, message: message, options: options)
-    render json: json_body, status: response_type
+    render json: json_body, status: Hyrax::API::DEFAULT_RESPONSES[response_type][:code]
   end
 
   # Called by Hydra::Controller::ControllerBehavior when CanCan::AccessDenied is caught
