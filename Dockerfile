@@ -38,7 +38,6 @@ ONBUILD COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 ONBUILD RUN bundle install --jobs "$(nproc)"
 ONBUILD RUN DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
 
-
 FROM hyrax-base as hyrax-engine-dev
 
 ARG APP_PATH=.dassie
