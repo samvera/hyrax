@@ -9,23 +9,22 @@ RSpec.describe Hyrax::ValkyrieWorkIndexer do
   it_behaves_like 'a Work indexer'
 
   context 'when extending with basic metadata' do
-    before do
-      module Hyrax::Test
-        module Basic
-          class Work < Hyrax::Work
-            include Hyrax::Schema(:basic_metadata)
-          end
-        end
-      end
-    end
-    after { Hyrax::Test.send(:remove_const, :Basic) }
-
     let(:indexer_class) do
       Class.new(described_class) do
         include Hyrax::Indexer(:basic_metadata)
       end
     end
-    let(:resource) { Hyrax::Test::Basic::Work.new }
+    let(:resource) do
+      Class.new(Hyrax::Work) do
+        # Included to address a `ArgumentError: Class name cannot be
+        # blank. You need to supply a name argument when anonymous
+        # class given`"
+        def self.model_name
+          ActiveModel::Name.new(self, nil, "TemporaryResource")
+        end
+        include Hyrax::Schema(:basic_metadata)
+      end.new
+    end
 
     it_behaves_like 'a Basic metadata indexer'
   end
