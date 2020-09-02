@@ -306,7 +306,9 @@ module Hyrax
     # rubocop:enable Metrics/MethodLength
 
     # @param [ActionController::Parameters] params first argument for Blacklight::SearchState.new
-    # @param [Hash] facet
+    # @param [Hash] facet(s)
+    # @return [Hash]
+    #
     # @note Assumes one facet is passed in. If a second facet is passed, then it must be the depositor
     # facet used by the Profile page.
     def search_state_with_facets(params, facet = {})
