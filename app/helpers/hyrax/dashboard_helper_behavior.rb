@@ -5,8 +5,9 @@ module Hyrax
       params[:controller].match(%r{^hyrax/dashboard|hyrax/my})
     end
 
-    def number_of_works(user = current_user)
-      Hyrax::WorkRelation.new.where(DepositSearchBuilder.depositor_field => user.user_key).count
+    def number_of_works(user = current_user, where: {})
+      where_clause = where.merge(DepositSearchBuilder.depositor_field => user.user_key)
+      Hyrax::WorkRelation.new.where(where_clause).count
     rescue RSolr::Error::ConnectionRefused
       'n/a'
     end
