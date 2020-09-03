@@ -79,5 +79,12 @@ FactoryBot.define do
         end
       end
     end
+
+    factory :monograph_with_aggressive_title_setting, class: 'Monograph' do
+      after(:create) do |work, _eval|
+        work.title = ['FORCED TITLE']
+        Hyrax.persister.save(resource: work)
+      end
+    end
   end
 end

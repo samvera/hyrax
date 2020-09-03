@@ -19,4 +19,15 @@ RSpec.describe Hyrax::Work do
       expect(work.state).to eq Hyrax::ResourceStatus::ACTIVE
     end
   end
+
+  it 'can be changed in after_create' do
+    work = FactoryBot.valkyrie_create(:monograph_with_aggressive_title_setting)
+    expect(work.title).to contain_exactly 'FORCED TITLE'
+  end
+
+  it 'matches attributes of reloaded work' do
+    work = FactoryBot.valkyrie_create(:monograph_with_aggressive_title_setting)
+
+    expect(work.attributes).to eq(Hyrax.query_service.find_by(id: work.id).attributes)
+  end
 end
