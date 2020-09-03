@@ -421,5 +421,77 @@ RSpec.describe Hyrax::FileSetPresenter do
       end
     end
   end
+
+  describe "#parent" do
+    let(:read_permission) { true }
+    let(:edit_permission) { false }
+    let(:parent_work_active) do
+      create(:work, :public, state: ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#active'))
+    end
+    let(:file_set_active) do
+      create(:file_set, read_groups: ['public']).tap do |file_set|
+        parent_work_active.ordered_members << file_set
+        parent_work_active.save!
+      end
+    end
+    let(:parent_work_inactive) do
+      create(:work, :public, state: ::RDF::URI('http://fedora.info/definitions/1/0/access/ObjState#inactive'))
+    end
+    let(:file_set_inactive) do
+      create(:file_set, read_groups: ['public']).tap do |file_set|
+        parent_work_inactive.ordered_members << file_set
+        parent_work_inactive.save!
+      end
+    end
+
+    describe "active parent" do
+      let(:read_permission) { true }
+      let(:edit_permission) { false }
+      let(:solr_document) { SolrDocument.new(file_set_active.to_solr) }
+      let(:solr_document_work) { SolrDocument.new(parent_work_active.to_solr) }
+      let(:request) { double(base_url: 'http://test.host') }
+      let(:presenter) { described_class.new(solr_document, ability, request) }
+
+      before do
+        allow(ability).to receive(:can?).with(:read, anything) do |_read, solr_doc|
+          solr_document_work.id == solr_doc.id && read_permission
+        end
+        allow(ability).to receive(:can?).with(:edit, anything) do |_read, solr_doc|
+          solr_document_work.id == solr_doc.id && edit_permission
+        end
+      end
+
+      context "is created when parent work is active" do
+        subject { presenter.parent }
+
+        it { is_expected.not_to be_nil }
+      end
+    end
+
+    describe "inactive parent" do
+      let(:read_permission) { true }
+      let(:edit_permission) { false }
+      let(:solr_document) { SolrDocument.new(file_set_inactive.to_solr) }
+      let(:solr_document_work) { SolrDocument.new(parent_work_inactive.to_solr) }
+      let(:request) { double(base_url: 'http://test.host') }
+      let(:presenter) { described_class.new(solr_document, ability, request) }
+
+      before do
+        allow(ability).to receive(:can?).with(:read, anything) do |_read, solr_doc|
+          solr_document_work.id == solr_doc.id && read_permission
+        end
+        allow(ability).to receive(:can?).with(:edit, anything) do |_read, solr_doc|
+          solr_document_work.id == solr_doc.id && edit_permission
+        end
+      end
+
+      context "is created when parent work is active" do
+        subject { presenter.parent }
+        it "raises an error" do
+          expect { subject }.to raise_error(Hyrax::WorkflowAuthorizationException)
+        end
+      end
+    end
+  end
 end
 # rubocop:enable RSpec/SubjectStub

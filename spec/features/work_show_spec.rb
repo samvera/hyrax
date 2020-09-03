@@ -19,6 +19,7 @@ RSpec.describe "work show view" do
              ordered_members: [file_set],
              representative_id: file_set.id)
     end
+
     let(:user) { FactoryBot.create(:user) }
     let(:file_set) { FactoryBot.create(:file_set, user: user, title: ['A Contained FileSet'], content: file) }
     let(:file) { File.open(fixture_path + '/world.png') }
@@ -26,6 +27,8 @@ RSpec.describe "work show view" do
     let!(:collection) { FactoryBot.create(:collection_lw, user: user, collection_type: multi_membership_type_1) }
 
     before do
+      work.ordered_members << file_set
+      work.save!
       sign_in user
       visit work_path
     end

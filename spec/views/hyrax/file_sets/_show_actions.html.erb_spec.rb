@@ -49,6 +49,7 @@ RSpec.describe 'hyrax/file_sets/_show_actions.html.erb', type: :view do
 
   describe 'editor' do
     before do
+      allow(ability).to receive(:can?).with(:edit, solr_document).and_return(true)
       allow(presenter).to receive(:editor?).and_return(true)
       assign(:presenter, presenter)
       view.lookup_context.view_paths.push 'app/views/hyrax/base'

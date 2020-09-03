@@ -50,6 +50,11 @@ module Hyrax
       @workflow ||= WorkflowPresenter.new(solr_document, current_ability)
     end
 
+    def workflow_restriction?
+      return false if current_ability.can?(:edit, @solr_document)
+      @solr_document.suppressed? # && current_ability.can?(:read, @solr_document)
+    end
+
     def inspect_work
       @inspect_workflow ||= InspectWorkPresenter.new(solr_document, current_ability)
     end

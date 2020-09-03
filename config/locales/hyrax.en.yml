@@ -1510,6 +1510,7 @@ en:
       load:
         state_error: 'The workflow: %{workflow_name} has not been updated.  You are removing a state: %{state_name} with %{entity_count} entity/ies.  A state may not be removed while it has active entities!'
       unauthorized: The work is not currently available because it has not yet completed the approval process
+      unauthorized_parent: The file is not currently available because its parent work has not yet completed the approval process
     works:
       missing_title: 'No Title'
       create:

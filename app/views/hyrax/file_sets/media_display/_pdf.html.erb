@@ -1,5 +1,5 @@
-<% if Hyrax.config.display_media_download_link? %>
-    <div>
+<% if Hyrax.config.display_media_download_link? && !@presenter.try(:workflow_restriction?) %>
+  <div>
       <h2 class="sr-only"><%= t('hyrax.file_set.show.downloadable_content.heading') %></h2>
       <%= image_tag thumbnail_url(file_set),
                     class: "representative-media",

@@ -46,6 +46,7 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
   end
 
   before do
+    allow(ability).to receive(:can?).with(:edit, work_solr_document).and_return(false)
     allow(presenter).to receive(:workflow).and_return(workflow_presenter)
     allow(presenter).to receive(:representative_presenter).and_return(representative_presenter)
     allow(presenter).to receive(:representative_id).and_return(representative_presenter&.id)
