@@ -27,6 +27,8 @@ RSpec.describe 'hyrax/file_sets/show.html.erb', type: :view do
 
   before do
     view.lookup_context.prefixes.push 'hyrax/base'
+    allow(view).to receive(:can?).with(:edit, Hyrax::SolrDocument::OrderedMembers).and_return(false)
+    allow(ability).to receive(:can?).with(:edit, Hyrax::SolrDocument::OrderedMembers).and_return(false)
     allow(view).to receive(:can?).with(:edit, SolrDocument).and_return(false)
     allow(ability).to receive(:can?).with(:edit, SolrDocument).and_return(false)
     allow(presenter).to receive(:fixity_status).and_return(mock_metadata)

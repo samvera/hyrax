@@ -15,6 +15,8 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
                      publisher_tesim: ['French Press'])
   end
 
+  let(:decorated_work_solr_document) { Hyrax::SolrDocument::OrderedMembers.decorate(work_solr_document) }
+
   let(:file_set_solr_document) do
     SolrDocument.new(id: '123',
                      title_tesim: ['My FileSet'],
@@ -46,7 +48,7 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
   end
 
   before do
-    allow(ability).to receive(:can?).with(:edit, work_solr_document).and_return(false)
+    allow(ability).to receive(:can?).with(:edit, decorated_work_solr_document).and_return(false)
     allow(presenter).to receive(:workflow).and_return(workflow_presenter)
     allow(presenter).to receive(:representative_presenter).and_return(representative_presenter)
     allow(presenter).to receive(:representative_id).and_return(representative_presenter&.id)
