@@ -60,6 +60,11 @@ RSpec.describe Hyrax::FileSetPresenter do
     subject { presenter.user_can_perform_any_action? }
     let(:current_ability) { ability }
 
+    it 'is deprecated' do
+      expect(Deprecation).to receive(:warn)
+      subject
+    end
+
     context 'when user can perform at least 1 action' do
       before do
         expect(current_ability).to receive(:can?).with(:edit, presenter.id).and_return false
