@@ -432,7 +432,7 @@ RSpec.describe Hyrax::FileSetsController do
       it "shows active parent" do
         expect(controller).to receive(:additional_response_formats).with(ActionController::MimeResponds::Collector)
         get :show, params: { id: file_set_active }
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it "shows not currently available for inactive parent" do
