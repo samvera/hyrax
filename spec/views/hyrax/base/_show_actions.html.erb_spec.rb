@@ -10,6 +10,7 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
 
   before do
     allow(ability).to receive(:can?).with(:create, FeaturedWork).and_return(false)
+    allow(presenter).to receive(:workflow_restriction?).and_return(false)
   end
 
   context "as an unregistered user" do

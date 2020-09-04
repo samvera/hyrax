@@ -44,10 +44,11 @@ module Hyrax
 
     # GET /concern/parent/:parent_id/file_sets/:id
     def show
-      workflow_check(parent_id: params[:parent_id])
+      presenter
+      guard_for_workflow_restriction_on!(parent: presenter.parent)
       respond_to do |wants|
-        wants.html { presenter }
-        wants.json { presenter }
+        wants.html
+        wants.json
         additional_response_formats(wants)
       end
     end
@@ -55,7 +56,7 @@ module Hyrax
     # DELETE /concern/file_sets/:id
     def destroy
       parent = curation_concern.parent
-      workflow_check(parent_id: parent.id)
+      guard_for_workflow_restriction_on!(parent: parent)
       actor.destroy
       redirect_to [main_app, parent], notice: view_context.t('hyrax.file_sets.asset_deleted_flash.message')
     end
@@ -63,7 +64,7 @@ module Hyrax
     # PATCH /concern/file_sets/:id
     def update
       parent = curation_concern.parent
-      workflow_check(parent_id: parent.id)
+      guard_for_workflow_restriction_on!(parent: parent)
       if attempt_update
         after_update_response
       else
@@ -152,22 +153,35 @@ module Hyrax
 
     def initialize_edit_form
       @parent = @file_set.in_objects.first
-      workflow_check(parent_id: @parent.id)
+      guard_for_workflow_restriction_on!(parent: @parent)
       original = @file_set.original_file
       @version_list = Hyrax::VersionListPresenter.new(original ? original.versions.all : [])
       @groups = current_user.groups
     end
 
-    def workflow_check(parent_id: nil)
-      return if current_ability.can?(:edit, @solr_document)
-      if parent_id.nil?
-        curation_concern = ::FileSet.find(params[:id])
-        parent = curation_concern.parent
-        parent_id = parent.id
-      end
-      doc = ::SolrDocument.find(parent_id)
-      return if current_ability.can?(:edit, doc)
-      raise WorkflowAuthorizationException if doc.suppressed?
+    # @see Hyrax::WorkShowPresenter#workflow_restriction?
+    # @see Hyrax::FileSetShowPresenter#workflow_restriction?
+    # @see #presenter
+    #
+    # Note, this method echoes the logic of the #workflow_restriction?
+    # in presenter classes.  My preference would be to rely on that
+    # method.  However, in specs the :parent parameter is of two
+    # different types:
+    #
+    # - Hyrax::WorkShowPresenter (for show actions)
+    # - GenericWork (for edit/delete/update actions)
+    #
+    # @todo How is this related to the presenter logic around building the presenter?
+    #
+    # @param parent [Hyrax::WorkShowPresenter, GenericWork, #suppressed?] an
+    #        object on which we check if the current can take action.
+    #
+    # @return true if we did not encounter any workflow restrictions
+    # @raise WorkflowAuthorizationException if we encountered some workflow_restriction
+    def guard_for_workflow_restriction_on!(parent:)
+      return true if current_ability.can?(:edit, parent)
+      return true unless parent.suppressed?
+      raise WorkflowAuthorizationException
     end
 
     def actor
