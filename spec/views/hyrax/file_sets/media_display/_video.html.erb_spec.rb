@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/file_sets/media_display/_video.html.erb', type: :view do
-  let(:file_set) { stub_model(FileSet) }
+  let(:file_set) { stub_model(FileSet, parent: parent) }
+  let(:parent) { double }
   let(:config) { double }
   let(:link) { true }
 
   before do
     allow(Hyrax.config).to receive(:display_media_download_link?).and_return(link)
+    allow(view).to receive(:workflow_restriction?).with(parent).and_return(false)
     render 'hyrax/file_sets/media_display/video', file_set: file_set
   end
 

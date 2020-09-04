@@ -12,7 +12,7 @@ RSpec.describe 'hyrax/dashboard/collections/_show_document_list_menu.html.erb', 
     end
 
     it "displays the action list in a drop down for an individual work the user can edit" do
-      allow(ability).to receive(:can?).with(:edit, document).and_return(true)
+      allow(ability).to receive(:can?).with(:edit, anything).and_return(true)
       render('show_document_list_menu', document: document, current_user: user)
       expect(rendered).to have_content 'Select'
       expect(rendered).to have_content 'Edit'
@@ -21,7 +21,7 @@ RSpec.describe 'hyrax/dashboard/collections/_show_document_list_menu.html.erb', 
     end
 
     it "displays the action list in a drop down for an individual work the user cannot edit" do
-      allow(ability).to receive(:can?).with(:edit, document).and_return(false)
+      allow(ability).to receive(:can?).with(:edit, anything).and_return(false)
       render('show_document_list_menu', document: document, current_user: user)
       expect(rendered).to have_content 'Select'
       expect(rendered).not_to have_content 'Edit'
