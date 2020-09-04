@@ -1,4 +1,4 @@
-<% if Hyrax.config.display_media_download_link? && !@presenter.try(:workflow_restriction?) %>
+<% if Hyrax.config.display_media_download_link? && !workflow_restriction?(@presenter) %>
   <div>
       <h2 class="sr-only"><%= t('hyrax.file_set.show.downloadable_content.heading') %></h2>
       <video controls="controls" class="video-js vjs-default-skin" style="width:100%" data-setup="{}" controlsList="nodownload" preload="auto">

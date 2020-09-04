@@ -1,4 +1,4 @@
-<% if file_set.user_can_perform_any_action? && !@presenter.try(:workflow_restriction?) %>
+<% if file_set.user_can_perform_any_action? && !workflow_restriction?(@presenter) %>
   <div class="btn-group">
     <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button" id="dropdownMenu_<%= file_set.id %>" aria-haspopup="true" aria-expanded="false">
       <span class="sr-only"><%= t('.press_to') %> </span>
