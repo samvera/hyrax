@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module WorkflowsHelper
     # Does a workflow restriction exist for the given :object and
@@ -23,9 +24,16 @@ module Hyrax
     # @note This is Jeremy, I encourage you to look at the views that
     #       call this method to understand the conceptual space this
     #       method covers.
-    def workflow_restriction?(object, with_ability: current_ability)
+    #
+    # @todo As I noodle on this, I'm fairly certain we should be
+    #       registering a CanCan ability check.  I believe in
+    #       promoting this to a helper method it will be easier to
+    #       incorporate this into an ability.
+    def workflow_restriction?(object, ability: current_ability)
       return object.workflow_restriction? if object.respond_to?(:workflow_restriction?)
-      return false
+      return false if ability.can?(:edit, object)
+      return object.suppressed? if object.respond_to?(:suppressed?)
+      false
     end
   end
 end
