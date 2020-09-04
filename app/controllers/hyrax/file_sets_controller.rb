@@ -159,28 +159,14 @@ module Hyrax
       @groups = current_user.groups
     end
 
-    # @see Hyrax::WorkShowPresenter#workflow_restriction?
-    # @see Hyrax::FileSetShowPresenter#workflow_restriction?
-    # @see #presenter
-    #
-    # Note, this method echoes the logic of the #workflow_restriction?
-    # in presenter classes.  My preference would be to rely on that
-    # method.  However, in specs the :parent parameter is of two
-    # different types:
-    #
-    # - Hyrax::WorkShowPresenter (for show actions)
-    # - GenericWork (for edit/delete/update actions)
-    #
-    # @todo How is this related to the presenter logic around building the presenter?
-    #
+    include WorkflowsHelper # Provides #workflow_restriction?, and yes I mean include not helper; helper exposes the module methods
     # @param parent [Hyrax::WorkShowPresenter, GenericWork, #suppressed?] an
     #        object on which we check if the current can take action.
     #
     # @return true if we did not encounter any workflow restrictions
     # @raise WorkflowAuthorizationException if we encountered some workflow_restriction
     def guard_for_workflow_restriction_on!(parent:)
-      return true if current_ability.can?(:edit, parent)
-      return true unless parent.suppressed?
+      return true unless workflow_restriction?(parent, ability: current_ability)
       raise WorkflowAuthorizationException
     end
 

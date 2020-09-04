@@ -29,6 +29,8 @@ module Hyrax
     #       registering a CanCan ability check.  I believe in
     #       promoting this to a helper method it will be easier to
     #       incorporate this into an ability.
+    #
+    # @see Hyrax::FileSetsController for non-view usage.
     def workflow_restriction?(object, ability: current_ability)
       return object.workflow_restriction? if object.respond_to?(:workflow_restriction?)
       return false if ability.can?(:edit, object)
