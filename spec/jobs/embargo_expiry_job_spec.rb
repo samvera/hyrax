@@ -22,14 +22,13 @@ RSpec.describe EmbargoExpiryJob do
     it 'returns all records with expired embargos' do
       records = described_class.new.records_with_expired_embargos
       expect(records).to include work_with_expired_embargo
-      expect(records).to include embargoed_file_set
+      expect(records).to include file_set_with_expired_embargo
     end
   end
 
   describe '#perform' do
     it "Enqueues an Expire Embargo job " do
-      expect { described_class.perform }.to change(ActiveJob::Base.queue_adapter.enqueued_jobs, :size).by(1)
-      expect { described_class.perform }.to have_enqueued_job(ExpireEmbargoJob)
+      expect { described_class.perform_now }.to change(ActiveJob::Base.queue_adapter.enqueued_jobs, :size).by(described_class.new.records_with_expired_embargos.count)
     end
   end
 end
