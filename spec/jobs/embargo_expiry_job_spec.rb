@@ -1,4 +1,6 @@
+# frozen_string_literal: true
 Rspec.describe EmbargoExpiryJob do
+  subject { described_class }
 
   let(:work) { create(:embargoed_work) }
   let(:past_date) { 2.days.ago }
@@ -9,18 +11,17 @@ Rspec.describe EmbargoExpiryJob do
     end
   end
 
-  describe '#get_records_with_expired_embargos' do
+  describe '#records_with_expired_embargos' do
     it 'returns an Array of works with expired embargos' do
-      works = described_class.new.get_records_with_expired_embargos
+      works = described_class.new.records_with_expired_embargos
       expect(works).to include work
     end
 
     it 'returns an array of expired file sets' do
-      records = described_class.new.get_records_with_expired_embargos
+      records = described_class.new.records_with_expired_embargos
       expect(records).to include embargoed_file_set
     end
   end
-
 
   describe '#perform' do
     it "Expires all embargos automatically" do

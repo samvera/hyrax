@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe ExpireEmbargoJob do
   subject { described_class }
 
@@ -19,5 +20,4 @@ RSpec.describe ExpireEmbargoJob do
       expect(file_set.visibility).to eq(embargoed_file_set.visibility_after_embargo)
     end
   end
-
 end
