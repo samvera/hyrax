@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-Rspec.describe EmbargoExpiryJob do
+RSpec.describe EmbargoExpiryJob do
   subject { described_class }
 
   let(:work) { create(:embargoed_work) }
