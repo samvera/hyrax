@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class EmbargoExpiryJob < Hyrax::ActiveJob
+class EmbargoExpiryJob < Hyrax::ApplicationJob
   def perform
     get_records_with_expired_embargos.each do |record|
       ExpireEmbargoJob.perform_later(record)
