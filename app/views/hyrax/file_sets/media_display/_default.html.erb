@@ -1,6 +1,6 @@
 <div class="no-preview">
   <%= t('hyrax.works.show.no_preview') %>
-  <% if Hyrax.config.display_media_download_link? && !workflow_restriction?(file_set.parent) %>
+  <% if Hyrax.config.display_media_download_link? && !workflow_restriction?(file_set.try(:parent)) %>
     <p /><%= link_to t('hyrax.file_set.show.download'),
       hyrax.download_path(file_set),
       id: "file_download",

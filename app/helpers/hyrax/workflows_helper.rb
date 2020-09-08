@@ -32,6 +32,7 @@ module Hyrax
     #
     # @see Hyrax::FileSetsController for non-view usage.
     def workflow_restriction?(object, ability: current_ability)
+      return false if object.nil? # Yup, we may get nil, and there's no restriction on nil
       return object.workflow_restriction? if object.respond_to?(:workflow_restriction?)
       return false if ability.can?(:edit, object)
       return object.suppressed? if object.respond_to?(:suppressed?)

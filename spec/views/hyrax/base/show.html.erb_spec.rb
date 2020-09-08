@@ -54,6 +54,7 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
     allow(presenter).to receive(:representative_id).and_return(representative_presenter&.id)
     allow(presenter).to receive(:tweeter).and_return("@#{depositor.twitter_handle}")
     allow(presenter).to receive(:human_readable_type).and_return("Work")
+    allow(representative_presenter).to receive(:parent).and_return(presenter)
     allow(controller).to receive(:current_user).and_return(depositor)
     allow(User).to receive(:find_by_user_key).and_return(depositor.user_key)
     allow(view).to receive(:blacklight_config).and_return(Blacklight::Configuration.new)

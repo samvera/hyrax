@@ -4,6 +4,11 @@ RSpec.describe Hyrax::WorkflowsHelper do
     let(:ability) { double }
     before { allow(controller).to receive(:current_ability).and_return(ability) }
     subject { helper.workflow_restriction?(object) }
+
+    describe "when given nil" do
+      let(:object) { nil }
+      it { is_expected.to be_falsey }
+    end
     describe "when given object responds to #workflow_restriction?" do
       let(:object) { double(workflow_restriction?: returning_value) }
       context "with true" do
