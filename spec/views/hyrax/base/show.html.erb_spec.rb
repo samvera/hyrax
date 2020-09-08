@@ -108,38 +108,26 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
       expect(gscholar_meta_tags.count).to eq(7)
     end
 
-    it 'displays description' do
+    it 'displays the spectrum of meta data tags' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='description']")
       expect(tag.attribute('content').value).to eq('Lorem ipsum lorem ipsum.')
-    end
 
-    it 'displays title' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_title']")
       expect(tag.attribute('content').value).to eq('My Title')
-    end
 
-    it 'displays authors' do
       tags = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_author']")
       expect(tags.first.attribute('content').value).to eq('Doe, John')
       expect(tags.last.attribute('content').value).to eq('Doe, Jane')
-    end
 
-    it 'displays publication date' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_publication_date']")
       expect(tag.attribute('content').value).to eq('1984-01-02')
-    end
 
-    it 'displays download URL' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_pdf_url']")
       expect(tag.attribute('content').value).to eq('http://test.host/downloads/123')
-    end
 
-    it 'displays keyword' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_keywords']")
       expect(tag.attribute('content').value).to eq('bacon; sausage; eggs')
-    end
 
-    it 'displays publisher' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_publisher']")
       expect(tag.attribute('content').value).to eq('French Press')
     end
@@ -159,37 +147,26 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
         expect(gscholar_meta_tags.count).to eq(1)
       end
 
-      it 'displays title as description' do
+      it 'displays the spectrum of meta data tags' do
+        # it 'displays title as description'
         tag = Nokogiri::HTML(rendered).xpath("//meta[@name='description']")
         expect(tag.attribute('content').value).to eq('My Title')
-      end
 
-      it 'displays title' do
         tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_title']")
         expect(tag.attribute('content').value).to eq('My Title')
-      end
 
-      it 'displays authors' do
         tags = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_author']")
         expect(tags).to be_blank
-      end
 
-      it 'displays publication date' do
         tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_publication_date']")
         expect(tag).to be_blank
-      end
 
-      it 'displays download URL' do
         tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_pdf_url']")
         expect(tag).to be_blank
-      end
 
-      it 'displays keyword' do
         tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_keywords']")
         expect(tag).to be_blank
-      end
 
-      it 'displays publisher' do
         tag = Nokogiri::HTML(rendered).xpath("//meta[@name='citation_publisher']")
         expect(tag).to be_blank
       end
@@ -202,67 +179,43 @@ RSpec.describe 'hyrax/base/show.html.erb', type: :view do
       expect(twitter_meta_tags.count).to eq(13)
     end
 
-    it 'displays twitter:card' do
+    it 'displays the spectrum of twitter meta attributes' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='twitter:card']")
       expect(tag.attribute('content').value).to eq('product')
-    end
 
-    it 'displays twitter:site' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='twitter:site']")
       expect(tag.attribute('content').value).to eq('@SamveraRepo')
-    end
 
-    it 'displays twitter:creator' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='twitter:creator']")
       expect(tag.attribute('content').value).to eq('@bot4lib')
-    end
 
-    it 'displays og:site_name' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@property='og:site_name']")
       expect(tag.attribute('content').value).to eq('Hyrax')
-    end
 
-    it 'displays og:type' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@property='og:type']")
       expect(tag.attribute('content').value).to eq('object')
-    end
 
-    it 'displays og:title' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@property='og:title']")
       expect(tag.attribute('content').value).to eq('My Title')
-    end
 
-    it 'displays og:description' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@property='og:description']")
       expect(tag.attribute('content').value).to eq('Lorem ipsum lorem ipsum.')
-    end
 
-    it 'displays og:image' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@property='og:image']")
       expect(tag.attribute('content').value).to eq('http://test.host/downloads/123')
-    end
 
-    it 'displays og:url' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@property='og:url']")
       expect(tag.attribute('content').value).to eq('http://test.host/concern/generic_works/999')
-    end
 
-    it 'displays twitter:data1' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='twitter:data1']")
       expect(tag.attribute('content').value).to eq('bacon, sausage, eggs')
-    end
 
-    it 'displays twitter:label1' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='twitter:label1']")
       expect(tag.attribute('content').value).to eq('Keywords')
-    end
 
-    it 'displays twitter:data2' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='twitter:data2']")
       expect(tag.attribute('content').value).to eq('http://example.org/rs/1')
-    end
 
-    it 'displays twitter:label2' do
       tag = Nokogiri::HTML(rendered).xpath("//meta[@name='twitter:label2']")
       expect(tag.attribute('content').value).to eq('Rights Statement')
     end
