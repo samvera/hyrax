@@ -61,7 +61,7 @@ module Hyrax
     #
     # @return [#to_solr]
     def self.for(resource:)
-      indexer_class = "#{resource.class}Indexer".safe_constantize || ValkyrieIndexer
+      indexer_class = "#{resource.class.name}Indexer".safe_constantize || ValkyrieIndexer
 
       indexer_class.new(resource: resource)
     end
