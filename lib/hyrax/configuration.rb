@@ -491,7 +491,7 @@ module Hyrax
     ##
     # @param [#to_sym] adapter
     def index_adapter=(adapter)
-      @index_adapter ||= Valkyrie::IndexingAdapter.find(adapter.to_sym)
+      @index_adapter = Valkyrie::IndexingAdapter.find(adapter.to_sym)
     end
 
     attr_writer :index_field_mapper
