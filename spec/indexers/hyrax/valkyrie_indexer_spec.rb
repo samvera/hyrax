@@ -17,6 +17,15 @@ RSpec.describe Hyrax::ValkyrieIndexer do
         expect(described_class.for(resource: resource))
           .to be_a indexer_class
       end
+
+      context 'and resource was converted using wings' do
+        let(:resource) { valkyrie_create(:monograph) }
+
+        it 'gives an instance of MonographIndexer for Monograph' do
+          expect(described_class.for(resource: resource))
+            .to be_a indexer_class
+        end
+      end
     end
   end
 
