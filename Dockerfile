@@ -22,6 +22,7 @@ WORKDIR /app/samvera/hyrax-webapp
 
 COPY --chown=1001:101 ./bin /app/samvera
 ENV PATH="/app/samvera:$PATH"
+ENV RAILS_ROOT="/app/samvera/hyrax-webapp"
 
 ENTRYPOINT ["hyrax-entrypoint.sh"]
 CMD ["bundle", "exec", "puma", "-v", "-b", "tcp://0.0.0.0:3000"]
@@ -44,4 +45,4 @@ ARG BUNDLE_WITHOUT=
 COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 COPY --chown=1001:101 . /app/samvera/hyrax-engine
 
-RUN bundle install --jobs "$(nproc)"
+RUN cd /app/samvera/hyrax-engine; bundle install --jobs "$(nproc)"

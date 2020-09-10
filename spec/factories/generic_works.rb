@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :work, aliases: [:generic_work, :private_generic_work], class: GenericWork do
+  factory :work, aliases: [:generic_work, :private_generic_work], class: 'GenericWork' do
     transient do
       user { create(:user) }
       # Set to true (or a hash) if you want to create an admin set
@@ -193,7 +193,7 @@ FactoryBot.define do
   end
 
   # Doesn't set up any edit_users
-  factory :work_without_access, class: GenericWork do
+  factory :work_without_access, class: 'GenericWork' do
     title { ['Test title'] }
     depositor { create(:user).user_key }
   end
