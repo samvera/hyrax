@@ -56,17 +56,6 @@ module Hyrax
     attr_reader :resource
 
     ##
-    # @api public
-    # @param [Valkyrie::Resource] resource
-    #
-    # @return [#to_solr]
-    def self.for(resource:)
-      indexer_class = "#{resource.class.name}Indexer".safe_constantize || ValkyrieIndexer
-
-      indexer_class.new(resource: resource)
-    end
-
-    ##
     # @api private
     # @param [Valkyrie::Resource] resource
     def initialize(resource:)
@@ -82,6 +71,31 @@ module Hyrax
         "created_at_dtsi": resource.created_at,
         "updated_at_dtsi": resource.updated_at
       }
+    end
+
+    class << self
+      ##
+      # @api public
+      # @param resource [Valkyrie::Resource] an instance of a Valkyrie::Resource or an inherited class
+      # @note This will attempt to return an indexer following a naming convention where the indexer for a resource
+      #       class is expected to be the class name appended with 'Indexer'.  It will return default ValkyrieIndexer
+      #       if an indexer following the naming convention is not found or the resource is the reserved Hyrax::Resource
+      #       which should use ValkyrieIndexer instead of the base implementation in Hyrax::ResourceIndexer.
+      # @example
+      #     resource class:  Book
+      #     indexer class:   BookIndexer
+      # @return [Valkyrie::Indexer] an instance of ValkyrieIndexer or an inherited class based on naming convention
+      #
+      def for(resource:)
+        indexer_class = resource.class.name == 'Hyrax::Resource' ? ValkyrieIndexer : indexer_from_classname(resource)
+        indexer_class.new(resource: resource)
+      end
+
+      private
+
+      def indexer_from_classname(resource)
+        "#{resource.class.name}Indexer".safe_constantize || ValkyrieIndexer
+      end
     end
   end
 end
