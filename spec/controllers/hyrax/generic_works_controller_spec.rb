@@ -293,7 +293,7 @@ RSpec.describe Hyrax::GenericWorksController do
       it 'draws the form again' do
         post :create, params: { generic_work: { title: ['a title'] } }
         expect(response.status).to eq 422
-        expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkForm
+        expect(assigns[:form]).to be_kind_of Hyrax::Forms::FailedSubmissionFormWrapper
         expect(response).to render_template 'new'
       end
     end
