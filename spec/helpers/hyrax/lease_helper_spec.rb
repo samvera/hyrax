@@ -108,5 +108,24 @@ RSpec.describe Hyrax::LeaseHelper do
         end
       end
     end
+
+    context 'with a Hyrax::Forms::FailedSubmissionFormWrapper' do
+      let(:resource) { Hyrax::Forms::FailedSubmissionFormWrapper.new(form: form, input_params: {}, permitted_params: {}) }
+      let(:form) { Hyrax::GenericWorkForm.new(build(:work), ability, form_controller) }
+      let(:ability) { :FAKE_ABILITY }
+      let(:form_controller) { :FAKE_CONTROLLER }
+
+      it 'returns false' do
+        expect(lease_enforced?(resource)).to be false
+      end
+
+      context 'when the wrapped work is under embargo' do
+        let(:form) { Hyrax::GenericWorkForm.new(build(:leased_work), ability, form_controller) }
+
+        it 'returns true' do
+          expect(lease_enforced?(resource)).to be true
+        end
+      end
+    end
   end
 end

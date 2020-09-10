@@ -53,12 +53,17 @@ module Hyrax
     end
 
     def create
+      # Caching the original input params in case the form is not valid
+      original_input_params_for_form = params[hash_key_for_curation_concern].deep_dup
       if create_work
         after_create_response
       else
         respond_to do |wants|
           wants.html do
             build_form
+            # Creating a form object that can re-render most of the
+            # submitted parameters
+            @form = Hyrax::Forms::FailedSubmissionFormWrapper.new(form: @form, input_params: original_input_params_for_form)
             render 'new', status: :unprocessable_entity
           end
           wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }

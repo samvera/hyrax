@@ -20,11 +20,15 @@ module Hyrax
     #
     # @return [Boolean] whether the resource has an embargo that is currently
     #   enforced (regardless of whether it has expired)
+    #
+    # @note Hyrax::Forms::Failedsubmissionformwrapper is a place
+    #   holder until we switch to Valkyrie::ChangeSet instead of Form
+    #   objects
     def embargo_enforced?(resource)
       case resource
       when Hydra::AccessControls::Embargoable
         !resource.embargo_release_date.nil?
-      when HydraEditor::Form
+      when HydraEditor::Form, Hyrax::Forms::FailedSubmissionFormWrapper
         embargo_enforced?(resource.model)
       when Valkyrie::ChangeSet
         Hyrax::EmbargoManager.new(resource: resource.model).enforced?

@@ -5,6 +5,11 @@ module Hyrax
       property :title
 
       validates :title, presence: true
+
+      # Added to comply with Hyrax::Forms::FailedSubmissionFormWrapper
+      def permitted_params
+        { title: [] }
+      end
     end
   end
 end
