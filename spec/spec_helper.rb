@@ -1,5 +1,7 @@
 # frozen_string_literal: true
-ENV["RAILS_ENV"] ||= 'test'
+ENV['RAILS_ENV'] = 'test'
+ENV['DATABASE_URL'] = ENV['DATABASE_TEST_URL'] if ENV['DATABASE_TEST_URL']
+
 require "bundler/setup"
 
 def ci_build?
@@ -19,8 +21,20 @@ SimpleCov.start('rails') do
 end
 
 require 'factory_bot'
-require 'engine_cart'
-EngineCart.load_application!
+
+if ENV['IN_DOCKER']
+  require File.expand_path("config/environment", '../hyrax-webapp')
+  db_config = ActiveRecord::Base.configurations[ENV['RAILS_ENV']]
+  ActiveRecord::Tasks::DatabaseTasks.create(db_config)
+
+  ActiveRecord::Migrator.migrations_paths = [Pathname.new(ENV['RAILS_ROOT']).join('db', 'migrate').to_s]
+  ActiveRecord::Tasks::DatabaseTasks.migrate
+else
+  require 'engine_cart'
+  EngineCart.load_application!
+end
+
+ActiveRecord::Migration.maintain_test_schema!
 
 require 'devise'
 require 'devise/version'
@@ -50,7 +64,8 @@ Valkyrie::MetadataAdapter
 Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each { |f| require f }
 
 require 'webmock/rspec'
-WebMock.disable_net_connect!(allow_localhost: true, allow: 'chromedriver.storage.googleapis.com')
+allowed_hosts = %w[chromedriver.storage.googleapis.com fcrepo solr]
+WebMock.disable_net_connect!(allow_localhost: true, allow: allowed_hosts)
 
 require 'i18n/debug' if ENV['I18N_DEBUG']
 require 'byebug' unless ci_build?

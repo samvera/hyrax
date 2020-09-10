@@ -11,6 +11,8 @@ services:
     env_file:
       - .env
       - .dassie/.env
+    environment:
+      - RAILS_ROOT=/app/samvera/hyrax-webapp
     depends_on:
       - db_migrate
       - fcrepo
@@ -78,9 +80,9 @@ services:
     ports:
       - 8983:8983
     command:
-      - solr-precreate
-      - hyrax
-      - /opt/solr/server/configsets/hyraxconf
+      - sh
+      - "-c"
+      - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf; solr-precreate hyrax /opt/solr/server/configsets/hyraxconf"
     volumes:
       - solr_home:/opt/solr/server/solr
       - .dassie/solr/conf:/opt/solr/server/configsets/hyraxconf

@@ -7,3 +7,8 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 Hyrax::Engine.load_seed
+
+puts "\n== Loading users"
+User.where(email: 'admin@example.com').first_or_create do |f|
+  f.password = 'admin_password'
+end
