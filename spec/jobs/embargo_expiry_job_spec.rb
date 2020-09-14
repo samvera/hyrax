@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe EmbargoExpiryJob do
+RSpec.describe EmbargoExpiryJob, :clean_repo do
   subject { described_class }
 
   let(:past_date) { 2.days.ago }
@@ -7,13 +7,13 @@ RSpec.describe EmbargoExpiryJob do
   let(:embargoed_work) { create(:embargoed_work) }
 
   let!(:work_with_expired_embargo) do
-    build(:work, embargo_release_date: past_date.to_s).tap do |work|
+    build(:work, embargo_release_date: past_date.to_s, visibility_during_embargo: 'restricted', visibility_after_embargo: 'open').tap do |work|
       work.save(validate: false)
     end
   end
 
   let!(:file_set_with_expired_embargo) do
-    build(:file_set, embargo_release_date: past_date.to_s).tap do |file_set|
+    build(:file_set, embargo_release_date: past_date.to_s, visibility_during_embargo: 'restricted', visibility_after_embargo: 'open').tap do |file_set|
       file_set.save(validate: false)
     end
   end
@@ -21,14 +21,28 @@ RSpec.describe EmbargoExpiryJob do
   describe '#records_with_expired_embargos' do
     it 'returns all records with expired embargos' do
       records = described_class.new.records_with_expired_embargos
-      expect(records).to include work_with_expired_embargo, file_set_with_expired_embargo
-      expect(records).not_to include embargoed_work
+      expect(records).to include work_with_expired_embargo.id, file_set_with_expired_embargo.id
+      expect(records).not_to include embargoed_work.id
     end
   end
 
   describe '#perform' do
-    it "Enqueues an Expire Embargo job for each expired record" do
-      expect { described_class.perform_now }.to change(ActiveJob::Base.queue_adapter.enqueued_jobs, :size).by(described_class.new.records_with_expired_embargos.count)
+    it 'expires embargos on works with expired embargos' do
+      described_class.new.perform
+      work_with_expired_embargo.reload
+      expect(work_with_expired_embargo.visibility).to eq('open')
+    end
+
+    it 'expires embargos on file sets with expired embargos' do
+      described_class.new.perform
+      file_set_with_expired_embargo.reload
+      expect(file_set_with_expired_embargo.visibility).to eq('open')
+    end
+
+    it "Doesn't expire embargos that are still in effect" do
+      described_class.new.perform
+      embargoed_work.reload
+      expect(embargoed_work.visibility).to eq('restricted')
     end
   end
 end
