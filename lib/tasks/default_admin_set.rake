@@ -4,6 +4,11 @@ namespace :hyrax do
     desc "Create the Default Admin Set"
     task create: :environment do
       id = AdminSet.find_or_create_default_admin_set_id
+      # I have found that when I come back to a development
+      # environment, that I may have an AdminSet in Fedora, but it is
+      # not indexed in Solr.  This remediates that situation by
+      # ensuring we have an indexed AdminSet
+      AdminSet.find(id).update_index
       if Hyrax::PermissionTemplate.find_by(source_id: id)
         puts "Successfully created default admin set"
       else
