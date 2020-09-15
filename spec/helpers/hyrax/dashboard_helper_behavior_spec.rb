@@ -26,11 +26,15 @@ RSpec.describe Hyrax::DashboardHelperBehavior, type: :helper do
       create_models("GenericWork", user1, user2)
     end
 
-    it "finds 3 works" do
-      expect(helper.number_of_works(user1)).to eq(3)
+    it "finds 2 works" do
+      expect(helper.number_of_works(user1)).to eq(2)
     end
 
-    context "with a :where clause" do
+    context "with an over-riddent :where clause" do
+      it "finds 3 works when passed an empty where" do
+        expect(helper.number_of_works(user1, where: {})).to eq(3)
+      end
+
       it "limits to those matching the where clause" do
         expect(helper.number_of_works(user1, where: { "generic_type_sim" => "Big Work" })).to eq(1)
       end
