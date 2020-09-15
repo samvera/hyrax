@@ -8,8 +8,7 @@
 </div>
 
 <div class="list-group-item">
-  <%# "Note the `{ generic_type_sim: "Work" }` for number_of_works aligns with the link_to_field's {generic_type: 'Work'} key/value pair." %>
-  <span class="badge"><%= number_of_works(user, where: { generic_type_sim: "Work" }) %></span>
+  <span class="badge"><%= number_of_works(user) %></span>
   <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> <%= link_to_field('', '', t("hyrax.dashboard.stats.works"), {generic_type: "Work", depositor: user.to_s}) %>
 
   <ul class="views-downloads-dashboard list-unstyled">
