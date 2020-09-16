@@ -9,7 +9,7 @@ module Hyrax
   # reflect the kinds of resources the event applied to.
   #
   #   - `batch`: events related to the performance of `BatchCreateJob`
-  #   - `file_set`: events related to the lifecycle of Hydra Works FileSets
+  #   - `file.set`: events related to the lifecycle of Hydra Works FileSets
   #   - `object`: events related to the lifecycle of all PCDM Objects
   #
   # Applications *SHOULD* publish events whenever the relevant actions are
@@ -37,12 +37,40 @@ module Hyrax
   # @example use Hyrax.publisher
   #   Hyrax.publisher.publish('object.deposited', object: deposited_object, user: depositing_user)
   #
+  # Below is an example of subscribing using an anonymous block.  A
+  # potential disadvantage of an anonymous block is that you cannot
+  # easily unsubscribe to that block.
+  #
   # @example subscribing to an event type/stream with a block handler
   #   publisher = Hyrax::Publisher.instance
   #
-  #   publisher.subscribe('object.deposited') do |event |
+  #   publisher.subscribe('object.deposited') do |event|
   #     do_something(event[:object])
   #   end
+  #
+  # Below is an example of subscribing using an object.  A potential
+  # advantage of subscribing with an object is that you can later
+  # unsubscribe the object.
+  #
+  # @example subscribing to an event type/stream with an event listener.
+  #
+  #   class EventListener
+  #     # @param event [#[]] The given event[:object] should be the deposited object.
+  #     def on_object_deposited(event)
+  #       do_something(event[:object])
+  #     end
+  #   end
+  #   event_listener = EventListener.new
+  #
+  #   publisher = Hyrax::Publisher.instance
+  #
+  #   publisher.subscribe(event_listener)
+  #
+  #   # The above subscribed event_listener instance will receive an #on_object_deposited message
+  #   # with an event that has two keys: `:object` and `:user`
+  #   publisher.publish('object.deposited', object: deposited_object, user: depositing_user)
+  #
+  #   publisher.unsubscribe(event_listener)
   #
   # @see https://dry-rb.org/gems/dry-events/0.2/
   # @see Dry::Events::Publisher
