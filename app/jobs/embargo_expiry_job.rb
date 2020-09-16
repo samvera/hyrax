@@ -7,6 +7,8 @@ class EmbargoExpiryJob < Hyrax::ApplicationJob
     end
   end
 
+  ##
+  # @return [Enumerator<String>] ids for all the objects that have expired active embargoes
   def records_with_expired_embargos
     Hyrax::EmbargoService.assets_with_expired_embargoes.map(&:id)
   end
