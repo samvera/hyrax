@@ -24,6 +24,10 @@ module Hyrax
 
       private
 
+      # This method:
+      #
+      # - ensures that the env.attributes[:admin_set_id] is set
+      # - ensures that the permission template for the admin set is correct
       def ensure_admin_set_attribute!(env)
         if env.attributes[:admin_set_id].present?
           ensure_permission_template!(admin_set_id: env.attributes[:admin_set_id])
@@ -36,16 +40,11 @@ module Hyrax
       end
 
       def ensure_permission_template!(admin_set_id:)
-        Hyrax::PermissionTemplate.find_by(source_id: admin_set_id) || create_permission_template!(source_id: admin_set_id)
+        Hyrax::PermissionTemplate.find_or_create_by!(source_id: admin_set_id)
       end
 
       def default_admin_set_id
         AdminSet.find_or_create_default_admin_set_id
-      end
-
-      # Creates a Hyrax::PermissionTemplate for the given AdminSet
-      def create_permission_template!(source_id:)
-        Hyrax::PermissionTemplate.create!(source_id: source_id)
       end
     end
   end
