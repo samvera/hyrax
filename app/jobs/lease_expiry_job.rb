@@ -7,6 +7,8 @@ class LeaseExpiryJob < Hyrax::ApplicationJob
     end
   end
 
+  ##
+  # @return [Enumerator<String>] ids for all the objects that have expired active leases
   def records_with_expired_leases
     Hyrax::LeaseService.assets_with_expired_leases.map(&:id)
   end
