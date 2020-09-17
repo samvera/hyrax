@@ -243,6 +243,9 @@ Hyrax.config do |config|
   # also need to update your Blacklight configuration.
   # config.query_index_from_valkyrie = false
 
+  ## Configure index adapter for Valkyrie::Resources to use solr readonly indexer
+  # config.index_adapter = :solr_index
+
   ## Fedora import/export tool
   #
   # Path to the Fedora import export tool jar file
