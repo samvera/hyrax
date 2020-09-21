@@ -56,7 +56,7 @@ module Hyrax
     #       add_member_objects using the member_of_collections relationship.  Deprecate?
     def add_members(new_member_ids)
       return if new_member_ids.blank?
-      members << Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: new_member_ids, use_valkyrie: false)
+      members << Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: new_member_ids, use_valkyrie: Hyrax.config.use_valkyrie?)
     end
 
     # Add member objects by adding this collection to the objects' member_of_collection association.
@@ -65,7 +65,7 @@ module Hyrax
     #                   lib/wings/models/concerns/collection_behavior.rb
     def add_member_objects(new_member_ids)
       Array(new_member_ids).collect do |member_id|
-        member = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: member_id, use_valkyrie: false)
+        member = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: member_id, use_valkyrie: Hyrax.config.use_valkyrie?)
         message = Hyrax::MultipleMembershipChecker.new(item: member).check(collection_ids: id, include_current_members: true)
         if message
           member.errors.add(:collections, message)

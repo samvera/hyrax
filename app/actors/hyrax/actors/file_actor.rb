@@ -11,7 +11,7 @@ module Hyrax
       # @param [FileSet] file_set the parent FileSet
       # @param [Symbol, #to_sym] relation the type/use for the file
       # @param [User] user the user to record as the Agent acting upon the file
-      def initialize(file_set, relation, user, use_valkyrie: false)
+      def initialize(file_set, relation, user, use_valkyrie: Hyrax.config.use_valkyrie?)
         @use_valkyrie = use_valkyrie
         @file_set = file_set
         @relation = normalize_relation(relation)

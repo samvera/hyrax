@@ -68,7 +68,7 @@ module Hyrax
         env.curation_concern.date_uploaded = TimeService.time_in_utc
       end
 
-      def save(env, use_valkyrie: false)
+      def save(env, use_valkyrie: Hyrax.config.use_valkyrie?)
         return env.curation_concern.save unless use_valkyrie
 
         resource = valkyrie_save(resource: env.curation_concern.valkyrie_resource)

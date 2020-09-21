@@ -6,7 +6,7 @@ module Hyrax
       include Lockable
       attr_reader :file_set, :user, :attributes, :use_valkyrie
 
-      def initialize(file_set, user, use_valkyrie: false)
+      def initialize(file_set, user, use_valkyrie: Hyrax.config.use_valkyrie?)
         @use_valkyrie = use_valkyrie
         @file_set = file_set
         @user = user

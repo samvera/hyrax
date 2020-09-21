@@ -43,7 +43,7 @@ module Hyrax
 
       def cleanup_ids_to_remove_from_curation_concern(env, new_work_ids)
         (env.curation_concern.in_works_ids - new_work_ids).each do |old_id|
-          work = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: old_id, use_valkyrie: false)
+          work = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: old_id, use_valkyrie: Hyrax.config.use_valkyrie?)
           work.ordered_members.delete(env.curation_concern)
           work.members.delete(env.curation_concern)
           work.save!
@@ -64,7 +64,7 @@ module Hyrax
 
       def new_works_for(env, new_work_ids)
         (new_work_ids - env.curation_concern.in_works_ids).map do |work_id|
-          Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: work_id, use_valkyrie: false)
+          Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: work_id, use_valkyrie: Hyrax.config.use_valkyrie?)
         end
       end
 

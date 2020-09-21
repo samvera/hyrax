@@ -69,7 +69,7 @@ module Hyrax
 
     ##
     # @return [Enumerable<Collection, PcdmCollection>]
-    def collections(use_valkyrie: false)
+    def collections(use_valkyrie: Hyrax.config.use_valkyrie?)
       return [] unless gid
       return Hyrax.custom_queries.find_collections_by_type(global_id: gid) if use_valkyrie
       ActiveFedora::Base.where(collection_type_gid_ssim: gid.to_s)
