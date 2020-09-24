@@ -45,7 +45,7 @@ RSpec.describe Hyrax::Transactions::Steps::SetDefaultAdminSet do
 
       it 'sets the default admin_set' do
         expect { step.call(work) }
-          .to change { work.admin_set&.id }
+          .to change { work.admin_set_id }
           .from(nil)
           .to(admin_set_id)
       end
