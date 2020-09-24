@@ -6,8 +6,17 @@ module Hyrax
     # Hyrax::Actors::InitializeWorkflowActor, so that the correct
     # workflow can be kicked off.
     #
+    # @see Hyrax::EnsureWellFormedAdminSetService
+    #
     # @note Creates AdminSet, Hyrax::PermissionTemplate, Sipity::Workflow (with activation)
     class DefaultAdminSetActor < Hyrax::Actors::AbstractActor
+      # Hyrax provides a service that ensures well formed admin sets.
+      # It is possible that downstream implementers might seek to
+      # override this behavior.  The class attribute provicdes a means
+      # to override that behavior.
+      class_attribute :ensure_well_formed_admin_set_service
+      self.ensure_well_formed_admin_set_service = Hyrax::EnsureWellFormedAdminSetService
+
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if create was successful
       def create(env)
@@ -29,22 +38,13 @@ module Hyrax
       # - ensures that the env.attributes[:admin_set_id] is set
       # - ensures that the permission template for the admin set is correct
       def ensure_admin_set_attribute!(env)
-        if env.attributes[:admin_set_id].present?
-          ensure_permission_template!(admin_set_id: env.attributes[:admin_set_id])
-        elsif env.curation_concern.admin_set_id.present?
-          env.attributes[:admin_set_id] = env.curation_concern.admin_set_id
-          ensure_permission_template!(admin_set_id: env.attributes[:admin_set_id])
-        else
-          env.attributes[:admin_set_id] = default_admin_set_id
-        end
-      end
-
-      def ensure_permission_template!(admin_set_id:)
-        Hyrax::PermissionTemplate.find_or_create_by!(source_id: admin_set_id)
-      end
-
-      def default_admin_set_id
-        AdminSet.find_or_create_default_admin_set_id
+        # These logical hoops copy the prior behavior of the code;
+        # With a small logical caveat.  If the given curation_concern
+        # has an admin_set_id, we now verify that that admin set is
+        # well formed.
+        given_admin_set_id = env.attributes[:admin_set_id].presence || env.curation_concern.admin_set_id.presence
+        admin_set_id = ensure_well_formed_admin_set_service.call(admin_set_id: given_admin_set_id)
+        env.attributes[:admin_set_id] = given_admin_set_id || admin_set_id
       end
     end
   end

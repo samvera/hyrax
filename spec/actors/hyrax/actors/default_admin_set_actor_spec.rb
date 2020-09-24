@@ -26,7 +26,7 @@ RSpec.describe Hyrax::Actors::DefaultAdminSetActor do
           expect(k.attributes).to eq("admin_set_id" => default_id)
           true
         end
-        expect(AdminSet).to receive(:find_or_create_default_admin_set_id).and_return(default_id)
+        expect(Hyrax::EnsureWellFormedAdminSetService).to receive(:call).with(admin_set_id: nil).and_return(default_id)
         middleware.create(env)
       end
     end
@@ -34,15 +34,13 @@ RSpec.describe Hyrax::Actors::DefaultAdminSetActor do
     context "when admin_set_id is provided" do
       let(:attributes) { { admin_set_id: admin_set.id } }
 
-      it "uses the provided id, ensures a permission template, and returns true" do
+      it "uses the provided id, ensures a well formed admin set, and returns true" do
         expect(terminator).to receive(:create).with(Hyrax::Actors::Environment) do |k|
           expect(k.attributes).to eq("admin_set_id" => admin_set.id)
           true
         end
-        expect(AdminSet).not_to receive(:find_or_create_default_admin_set_id)
-        expect do
-          expect(middleware.create(env)).to be true
-        end.to change { Hyrax::PermissionTemplate.count }.by(1)
+        expect(Hyrax::EnsureWellFormedAdminSetService).to receive(:call).with(admin_set_id: admin_set.id).and_return(admin_set.id)
+        expect(middleware.create(env)).to be true
       end
     end
   end
@@ -60,7 +58,7 @@ RSpec.describe Hyrax::Actors::DefaultAdminSetActor do
           expect(k.attributes).to eq('title' => 'new title', 'admin_set_id' => admin_set.id)
           true
         end
-        expect(AdminSet).not_to receive(:find_or_create_default_admin_set_id)
+        expect(Hyrax::EnsureWellFormedAdminSetService).to receive(:call).with(admin_set_id: admin_set.id).and_return(admin_set.id)
         expect(middleware.update(env)).to be true
       end
     end
@@ -69,12 +67,12 @@ RSpec.describe Hyrax::Actors::DefaultAdminSetActor do
       let(:admin_set2) { build(:admin_set, id: 'admin_set_2') }
       let(:attributes) { { title: 'new title', admin_set_id: admin_set2.id } }
 
-      it "uses the provided id, ensures a permission template, and returns true" do
+      it "uses the provided id, ensures ensures a well formed admin set, and returns true" do
         expect(terminator).to receive(:update).with(Hyrax::Actors::Environment) do |k|
           expect(k.attributes).to eq('title' => 'new title', 'admin_set_id' => admin_set2.id)
           true
         end
-        expect(AdminSet).not_to receive(:find_or_create_default_admin_set_id)
+        expect(Hyrax::EnsureWellFormedAdminSetService).to receive(:call).with(admin_set_id: admin_set2.id).and_return(admin_set2.id)
         expect(middleware.update(env)).to be true
       end
     end
