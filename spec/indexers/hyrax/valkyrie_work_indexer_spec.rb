@@ -66,10 +66,8 @@ RSpec.describe Hyrax::ValkyrieWorkIndexer do
 
     it 'includes attributes defined outside Hyrax::Schema include' do
       expect(solr_document.fetch('generic_type_sim')).to match_array ['Work']
-      expect(solr_document.fetch('admin_set_sim')).to match_array [admin_set_title]
-      expect(solr_document.fetch('admin_set_tesim')).to match_array [admin_set_title]
+      expect(solr_document.fetch('admin_set_id_ssim')).to match_array [admin_set.id]
       expect(solr_document.fetch('member_ids_ssim')).to match_array work.member_ids
-      expect(solr_document.fetch('member_of_collections_ssim')).to match_array [collection_title]
       expect(solr_document.fetch('member_of_collection_ids_ssim')).to match_array [col1.id]
     end
   end
