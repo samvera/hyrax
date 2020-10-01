@@ -70,5 +70,19 @@ RSpec.describe Hyrax::ValkyrieWorkIndexer do
       expect(solr_document.fetch('member_ids_ssim')).to match_array work.member_ids
       expect(solr_document.fetch('member_of_collection_ids_ssim')).to match_array [col1.id]
     end
+
+    context 'when work is inactive' do
+      before { allow(work).to receive(:state).and_return(Hyrax::ResourceStatus::INACTIVE) }
+      it 'sets suppressed to true' do
+        expect(solr_document.fetch('suppressed_bsi')).to be true
+      end
+    end
+
+    context 'when work is active' do
+      before { allow(work).to receive(:state).and_return(Hyrax::ResourceStatus::ACTIVE) }
+      it 'sets suppressed to false' do
+        expect(solr_document.fetch('suppressed_bsi')).to be false
+      end
+    end
   end
 end
