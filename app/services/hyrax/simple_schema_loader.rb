@@ -108,6 +108,8 @@ module Hyrax
       # @return [Dry::Types::Type]
       def type_for(type)
         case type
+        when 'id'
+          Valkyrie::Types::ID
         when 'uri'
           Valkyrie::Types::URI
         when 'date_time'
