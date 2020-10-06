@@ -576,7 +576,7 @@ en:
           desc: Deposit new work through this collection
           label: Deposit new work through this collection
         delete:
-          confirmation: Delete this collection?
+          confirmation: Deleting this collection will permanently remove this collection from the repository. Any items in this collection will remain in the repository. Are you sure you want to delete this collection?
           desc: Delete this collection
           label: Delete collection
         edit:
