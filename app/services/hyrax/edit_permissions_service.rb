@@ -22,13 +22,13 @@ module Hyrax
     # @param [Hash] one set of permission fields for object {:name, :access}
     # @return [Boolean] true if user cannot edit the given permissions
     def cannot_edit_permissions?(permission_hash)
-      @unauthorized_managers.include?(permission_hash[:name]) && permission_hash[:access] == "edit"
+      permission_hash.fetch(:access) == "edit" && @unauthorized_managers.include?(permission_hash.fetch(:name))
     end
 
     # @param [Hash] one set of permission fields for object {:name, :access}
     # @return [Boolean] true if given permissions are one of fixed exclusions
     def excluded_permission?(permission_hash)
-      exclude_from_display.include? permission_hash[:name].downcase
+      exclude_from_display.include? permission_hash.fetch(:name).downcase
     end
 
     private
