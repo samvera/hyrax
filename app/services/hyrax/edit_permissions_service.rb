@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 module Hyrax
+  # Encapsulates the logic to determine which object permissions may be edited by a given user
+  #  - user is permitted to update any work permissions coming ONLY from collections they manage
+  #  - user is not permitted to update a work permission if it comes from a collection they do not manage, even if also from a managed collection
+  #  - user is permitted to update only non-manager permissions from any Collections
+  #  - user is permitted to update any non-collection permissions
   class EditPermissionsService
-    # Encapsulates the logic to determine which object permissions may be edited by a given user
-    #  - user is permitted to update any work permissions coming ONLY from collections they manage
-    #  - user is not permitted to update a work permission if it comes from a collection they do not manage, even if also from a managed collection
-    #  - user is permitted to update only non-manager permissions from any Collections
-    #  - user is permitted to update any non-collection permissions
     attr_reader :depositor, :unauthorized_collection_managers
 
     # @param [Object] GenericWorkForm (if called for object) or GenericWork (if called for file set)
