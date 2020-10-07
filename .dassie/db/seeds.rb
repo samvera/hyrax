@@ -12,3 +12,7 @@ puts "\n== Loading users"
 User.where(email: 'admin@example.com').first_or_create do |f|
   f.password = 'admin_password'
 end
+
+User.where(email: 'user@example.com').first_or_create do |f|
+  f.password = 'password'
+end
