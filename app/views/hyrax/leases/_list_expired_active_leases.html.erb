@@ -17,6 +17,7 @@
 <% else %>
 
   <%= form_tag leases_path, method: :patch do %>
+    <fieldset>
     <%= submit_tag t('.deactivate_selected'), class: 'btn btn-primary' %>
     <table class="leases table">
       <thead>
@@ -49,5 +50,5 @@
       </tbody>
     </table>
   <% end %>
-
+  </fieldset>
 <% end %>
