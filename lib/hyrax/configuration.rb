@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'hyrax/callbacks'
 require 'hyrax/role_registry'
 require 'samvera/nesting_indexer'
 
