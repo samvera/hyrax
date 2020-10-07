@@ -82,6 +82,8 @@ module Hyrax
                                                 unauthorized_collection_ids = object_member_of - object_managed_collection_ids
                                                 if unauthorized_collection_ids.any?
                                                   unauthorized_collection_ids.each do |id|
+                                                    # TODO: Can we instead use a SOLR query?  This seems to be somewhat expensive.  However, as this is
+                                                    # used in administration instead of user front-end displays, I'm not as concerned.
                                                     collection = ActiveFedora::Base.find(id)
                                                     limited_access << id if (collection.instance_of? AdminSet) || collection.share_applies_to_new_works?
                                                   end
@@ -96,9 +98,7 @@ module Hyrax
       @object_member_of ||= begin
                               belongs_to = []
                               # get all of work's collection ids from the form
-                              @object.member_of_collections.each do |collection|
-                                belongs_to << collection.id
-                              end
+                              belongs_to += @object.member_of_collection_ids
                               belongs_to << @object.admin_set_id unless @object.admin_set_id.empty?
                               belongs_to
                             end
