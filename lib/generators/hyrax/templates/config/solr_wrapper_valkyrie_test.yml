@@ -1,4 +1,5 @@
 # config/solr_wrapper_valkyrie_test.yml
+version: 8.6.2
 port: 8987
 instance_dir: tmp/solr-valkyrie-test
 collection:

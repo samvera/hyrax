@@ -13,6 +13,7 @@ class Hyrax::ConfigGenerator < Rails::Generators::Base
     * TinyMCE
     * i18n
     * Valkyrie index
+    * SOLR wrapper shims
        """
 
   source_root File.expand_path('../templates', __FILE__)
@@ -36,6 +37,14 @@ class Hyrax::ConfigGenerator < Rails::Generators::Base
   def configure_redis
     copy_file 'config/redis.yml'
     copy_file 'config/initializers/redis_config.rb'
+  end
+
+  # @note We added these to address the fact that the SOLR schema we
+  # use broke in the SOLR 8.6.3 release.  We envision this to be a
+  # stop-gap.
+  def configure_solr_wrappers
+    copy_file 'config/solr_wrapper_test.yml', force: true
+    copy_file 'config/solr_wrapper_dev.yml', force: true
   end
 
   def configure_valkyrie_index

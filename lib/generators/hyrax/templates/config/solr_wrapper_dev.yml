@@ -1,0 +1,8 @@
+#config/solr_wrapper_test.yml
+version: 8.6.2
+port: 8983
+instance_dir: tmp/solr-development
+collection:
+    persist: false
+    dir: solr/conf
+    name: hydra-development
