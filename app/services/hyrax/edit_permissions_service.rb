@@ -19,16 +19,81 @@ module Hyrax
       @unauthorized_collection_managers = unauthorized.unauthorized_collection_managers
     end
 
+    # @api private
+    # @todo refactor this code to use "can_edit?"; Thinking in negations can be challenging.
+    #
     # @param [Hash] one set of permission fields for object {:name, :access}
     # @return [Boolean] true if user cannot edit the given permissions
     def cannot_edit_permissions?(permission_hash)
       permission_hash.fetch(:access) == "edit" && @unauthorized_managers.include?(permission_hash.fetch(:name))
     end
 
+    # @api private
+    #
     # @param [Hash] one set of permission fields for object {:name, :access}
     # @return [Boolean] true if given permissions are one of fixed exclusions
     def excluded_permission?(permission_hash)
       exclude_from_display.include? permission_hash.fetch(:name).downcase
+    end
+
+    # @api public
+    #
+    # This method either:
+    #
+    # * returns false if the given permission_hash is part of the fixed exclusions.
+    # * yields a PermissionPresenter to provide additional logic and text for rendering
+    #
+    # @param permission_hash [Hash<:name, :access>]
+    # @return false if the given permission_hash is a fixed exclusion
+    # @yield PermissionPresenter
+    #
+    # @see #excluded_permission?
+    def with_applicable_permission(permission_hash:)
+      return false if excluded_permission?(permission_hash)
+      yield(PermissionPresenter.new(service: self, permission_hash: permission_hash))
+    end
+
+    # @api private
+    #
+    # A helper class to contain specific presentation logic related to
+    # the EditPermissionsService
+    class PermissionPresenter
+      # @param service [Hyrax::EditPermissionsService]
+      # @param permission_hash [Hash]
+      def initialize(service:, permission_hash:)
+        @service = service
+        @permission_hash = permission_hash
+      end
+
+      # A hint at how permissions are granted.
+      #
+      # @return String
+      # rubocop:disable Rails/OutputSafety
+      def granted_by_html_hint
+        html = ""
+        @service.unauthorized_collection_managers.each do |managers|
+          next unless name == managers.fetch(:name)
+          html += "<br />Access granted via collection #{managers.fetch(:id)}"
+        end
+        html.html_safe
+      end
+      # rubocop:enable Rails/OutputSafety
+
+      # @return String
+      def name
+        @permission_hash.fetch(:name)
+      end
+
+      # @return String
+      def access
+        @permission_hash.fetch(:access)
+      end
+
+      # @return Boolean
+      # @see EditPermissionsService#cannot_edit_permissions?
+      def can_edit?
+        !@service.cannot_edit_permissions?(@permission_hash)
+      end
     end
 
     private

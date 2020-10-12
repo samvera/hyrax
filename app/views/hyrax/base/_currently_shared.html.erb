@@ -37,30 +37,27 @@ end %>
     </td>
   </tr>
   <%= f.fields_for :permissions do |permission_fields| %>
-    <% perm_hash = permission_fields.object.to_hash %>
-    <% next if permission_service.excluded_permission?(perm_hash) %>
-    <% cannot_edit_perms = permission_service.cannot_edit_permissions?(perm_hash) %>
+    <% permission_service.with_applicable_permission(permission_hash: permission_fields.object.to_hash) do |permission| %>
     <tr>
       <td>
         <%= permission_fields.label :agent_name, class: "control-label" do %>
-          <%= user_display_name_and_key(perm_hash[:name]) %>
-          <% permission_service.unauthorized_collection_managers.select {|mgrs| mgrs[:name] == perm_hash[:name] }.each do |coll| %>
-            <br />Access granted via collection <%= coll[:id] %>
-          <% end %>
+          <%= user_display_name_and_key(permission.name) %>
+          <%= permission.granted_by_html_hint %>
         <% end %>
       </td>
       <td>
         <div class="col-sm-10">
-        <% if cannot_edit_perms %>
-          <%= Hyrax.config.permission_levels.key(perm_hash[:access]) %>
-        <% else %>
+        <% if permission.can_edit? %>
           <%= permission_fields.select :access, Hyrax.config.permission_levels, {}, class: 'form-control select_perm' %>
+        <% else %>
+          <%= Hyrax.config.permission_levels.key(permission.access) %>
         <% end %>
         </div>
-        <% if !cannot_edit_perms %>
+        <% if permission.can_edit? %>
           <button class="btn close remove_perm" data-index="<%= permission_fields.index %>">&times;</button>
         <% end %>
       </td>
     </tr>
+    <% end %>
   <% end %>
 </table>
