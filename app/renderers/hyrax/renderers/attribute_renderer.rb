@@ -14,6 +14,9 @@ module Hyrax
       # @param [Symbol] field
       # @param [Array] values
       # @param [Hash] options
+      # @option options [String] :label The field label to render
+      # @option options [String] :include_empty Do we render if if the values are empty?
+      # @option options [String] :work_type Used for some I18n logic
       def initialize(field, values, options = {})
         @field = field
         @values = values
@@ -53,16 +56,23 @@ module Hyrax
         markup.html_safe
       end
 
+      # Defaults to the label provided in the options, otherwise, it
+      # fallsback to the inner logic of the method.
+      #
       # @return The human-readable label for this field.
       # @note This is a central location for determining the label of a field
       #   name. Can be overridden if more complicated logic is needed.
       def label
-        translate(
-          :"blacklight.search.fields.#{work_type_label_key}.show.#{field}",
-          default: [:"blacklight.search.fields.show.#{field}",
-                    :"blacklight.search.fields.#{field}",
-                    options.fetch(:label, field.to_s.humanize)]
-        )
+        if options&.key?(:label)
+          options.fetch(:label)
+        else
+          translate(
+            :"blacklight.search.fields.#{work_type_label_key}.show.#{field}",
+            default: [:"blacklight.search.fields.show.#{field}",
+                      :"blacklight.search.fields.#{field}",
+                      field.to_s.humanize]
+          )
+        end
       end
 
       private

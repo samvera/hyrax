@@ -95,6 +95,14 @@ RSpec.describe Hyrax::Renderers::AttributeRenderer do
 
   describe "#label" do
     subject { renderer }
+    context 'with label provided as an option' do
+      let(:given_label) { "Peeps we know" }
+      let(:renderer) { described_class.new(field, ['Bob', 'Jessica'], label: given_label) }
+
+      it 'renders the provided label' do
+        expect(subject.label).to eq(given_label)
+      end
+    end
 
     context 'with work type option' do
       let(:work_type) { "GenericWork".underscore }
