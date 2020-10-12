@@ -109,5 +109,41 @@ RSpec.describe Hyrax::DefaultMiddlewareStack, :clean_repo do
         expect(GenericWork.new.assign_id).not_to eq work.id
       end
     end
+
+    describe 'when adding embargo' do
+      let(:embargo_date) { 7.days.from_now }
+      let(:attributes) do
+        { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
+          visibility_during_embargo: 'restricted',
+          visibility_after_embargo: 'open',
+          embargo_release_date: embargo_date.to_s }
+      end
+
+      it "sets the embargo release date on the given work" do
+        expect(work.embargo_release_date).to be_falsey
+        actor.create(env)
+        expect(work.class.find(work.id).embargo_release_date).to be_present
+      end
+    end
+  end
+
+  describe '#update' do
+    context 'when changing embargo meta data' do
+      let(:work) { create(:embargoed_work, with_embargo_attributes: { embargo_date: previous_embargo_date.to_s }) }
+      let(:previous_embargo_date) { 7.days.from_now }
+      let(:new_embargo_date) { 14.days.from_now }
+      let(:attributes) do
+        { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO,
+          visibility_during_embargo: 'restricted',
+          visibility_after_embargo: 'open',
+          embargo_release_date: new_embargo_date.to_s }
+      end
+      it 'updates the persistence layer for the curation concern' do
+        expect { actor.update(env) }
+          .to change { work.class.find(work.id).embargo_release_date.strftime("%Y-%m-%d") }
+          .from(previous_embargo_date.strftime("%Y-%m-%d"))
+          .to(new_embargo_date.strftime("%Y-%m-%d"))
+      end
+    end
   end
 end
