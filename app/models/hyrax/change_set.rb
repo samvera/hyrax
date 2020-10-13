@@ -7,10 +7,14 @@ module Hyrax
   # Build a changeset class for the given resource class. The ChangeSet will
   # have fields to match the resource class given.
   #
+  # To define a custom changeset with validations, use naming convention with "ChangeSet" appended to the end
+  # of the resource class name. (e.g. for BookResource, name the change set BookResourceChangeSet)
+  #
   # @example
   #   Hyrax::ChangeSet(Monograph)
   def self.ChangeSet(resource_class)
-    Class.new(Hyrax::ChangeSet) do
+    klass = (resource_class.to_s + "ChangeSet").safe_constantize || Hyrax::ChangeSet
+    Class.new(klass) do
       (resource_class.fields - resource_class.reserved_attributes).each do |field|
         property field, default: nil
       end

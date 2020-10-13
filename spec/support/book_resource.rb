@@ -14,6 +14,15 @@ module Hyrax
       attribute :title,     Valkyrie::Types::String
     end
 
+    ##
+    # A simple Hyrax::ChangeSet with one custom validation.
+    #
+    # Hyrax::Test::BookResource will use this based on naming convention by adding `ChangeSet`
+    # to the end of the resource class name.
+    class BookResourceChangeSet < Hyrax::ChangeSet
+      validates :isbn, presence: true
+    end
+
     class Book < ActiveFedora::Base
       property :author,    predicate: ::RDF::URI('http://example.com/ns/author')
       property :created,   predicate: ::RDF::URI('http://example.com/ns/created')
