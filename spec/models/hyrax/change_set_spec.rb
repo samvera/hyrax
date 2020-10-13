@@ -48,4 +48,39 @@ RSpec.describe Hyrax::ChangeSet do
         .to have_attributes(title: contain_exactly(*titles))
     end
   end
+
+  describe ".for" do
+    context 'when custom change set does not exist' do
+      it 'returns an instance of described_class' do
+        expect(subject).to be_kind_of described_class
+      end
+    end
+
+    context 'when custom change set does exist' do
+      let(:resource) { Hyrax::Test::BookResource.new }
+
+      it 'returns an instance of custom change set' do
+        expect(subject).to be_kind_of Hyrax::Test::BookResourceChangeSet
+      end
+
+      context 'and value for custom validation is correct' do
+        let(:resource) do
+          book = Hyrax::Test::BookResource.new
+          book.isbn = '123-4-56-789123-0'
+          book
+        end
+        it 'passes validation' do
+          # NOTE isbn has validation presence: true
+          expect(subject.valid?).to eq true
+        end
+      end
+
+      context 'and value for custom validation is incorrect' do
+        it 'passes validation' do
+          # NOTE isbn has validation presence: true
+          expect(subject.valid?).to eq false
+        end
+      end
+    end
+  end
 end
