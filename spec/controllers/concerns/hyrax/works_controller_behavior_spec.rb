@@ -50,6 +50,8 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     context 'with a logged in user' do
       include_context 'with a logged in user'
 
+      before { AdminSet.find_or_create_default_admin_set_id }
+
       it 'redirects to a new work' do
         get :create, params: { test_simple_work: { title: 'comet in moominland' } }
 
@@ -155,6 +157,14 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         expect(assigns[:form]).to be_a Valkyrie::ChangeSet
       end
 
+      it 'prepopulates depositor and admin set' do
+        get :new
+
+        expect(assigns[:form])
+          .to have_attributes(depositor: user.user_key,
+                              admin_set_id: AdminSet::DEFAULT_ID)
+      end
+
       it 'renders form' do
         get :new
 
@@ -254,6 +264,8 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
       include_context 'with a logged in user'
 
       before do
+        AdminSet.find_or_create_default_admin_set_id
+
         allow(controller.current_ability)
           .to receive(:can?)
           .with(any_args)

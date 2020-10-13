@@ -51,6 +51,18 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  describe '#admin_set_id' do
+    it 'is nil' do
+      expect(form.admin_set_id).to be_nil
+    end
+
+    it 'prepopulates to the default admin set' do
+      expect { form.prepopulate! }
+        .to change { form.admin_set_id }
+        .to AdminSet::DEFAULT_ID
+    end
+  end
+
   describe '#agreement_accepted' do
     it { is_expected.to have_attributes(agreement_accepted: false) }
 
