@@ -99,6 +99,9 @@ jobs:
       hyrax_valkyrie:
         type: string
         default: "false"
+      solr_version:
+        type: string
+        default: '8.6.3-alpine'
     executor:
       name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
