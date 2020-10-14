@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+# Generated via
+#  `rails generate hyrax:work_resource <%= class_name %>`
+require 'rails_helper'
+require 'hyrax/specs/shared_specs/hydra_works'
+
+RSpec.describe <%= class_name %>ChangeSet do
+  subject(:change_set) { described_class.for(resource) }
+  let(:resource) { <%= class_name %>.new }
+
+  it_behaves_like 'a Hyrax::ChangeSet'
+end

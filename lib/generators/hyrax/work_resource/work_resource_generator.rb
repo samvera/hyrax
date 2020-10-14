@@ -49,6 +49,16 @@ class Hyrax::WorkResourceGenerator < Rails::Generators::NamedBase
     end
   end
 
+  def create_change_set
+    template('change_set.rb.erb', File.join('app/models/', class_path, "#{file_name}_change_set.rb"))
+  end
+
+  def create_change_set_spec
+    return unless rspec_installed?
+    filepath = File.join('spec/models/', class_path, "#{file_name}_change_set_spec.rb")
+    template('change_set_spec.rb.erb', filepath)
+  end
+
   def create_form
     template('form.rb.erb', File.join('app/forms/', class_path, "#{file_name}_form.rb"))
   end

@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
+require 'spec_helper'
+require 'hyrax/specs/shared_specs/hydra_works'
+
 RSpec.describe Hyrax::ChangeSet do
   subject(:change_set) { described_class.for(resource) }
   let(:resource)       { build(:hyrax_work) }
   let(:titles)         { ['comet in moominland', 'finn family moomintroll'] }
+
+  it_behaves_like 'a Hyrax::ChangeSet'
 
   describe 'properties' do
     it 'changes when changed' do

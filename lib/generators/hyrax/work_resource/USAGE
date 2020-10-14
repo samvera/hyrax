@@ -9,9 +9,11 @@ Example:
     app/forms/monograph_form.rb
     app/indexers/monograph_indexer.rb
     app/models/monograph.rb
+    app/models/monograph_change_set.rb
     app/views/hyrax/monographs/_monograph.html.erb
     config/initializers/hyrax.rb
     config/metadata/monograph.yaml
     spec/models/monograph_spec.rb
+    spec/models/monograph_change_set_spec.rb
     spec/indexers/monograph_indexer_spec.rb
     spec/views/monographs/_monograph.html.erb_spec.rb
