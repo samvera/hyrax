@@ -19,6 +19,9 @@ attributes:
     multiple: true
     form:
       primary: false
+    index_keys:
+      - "based_near_sim"
+      - "based_near_tesim"
   bibliographic_citation:
     type: string
     multiple: true
@@ -38,6 +41,8 @@ attributes:
     multiple: true
     form:
       primary: false
+    index_keys:
+      - "date_created_tesim"
   description:
     type: string
     multiple: true
@@ -55,6 +60,7 @@ attributes:
     multiple: true
     index_keys:
       - "keyword_sim"
+      - "keyword_tesim"
     form:
       primary: false
   publisher:
@@ -83,11 +89,16 @@ attributes:
     multiple: true
     form:
       primary: false
+    index_keys:
+      - "related_url_tesim"
   resource_type:
     type: string
     multiple: true
     form:
       primary: false
+    index_keys:
+      - "resource_type_sim"
+      - "resource_type_tesim"
   rights_notes:
     type: string
     multiple: true

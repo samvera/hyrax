@@ -2,7 +2,7 @@
 RSpec.describe Hyrax::CollectionPresenter do
   subject(:presenter) { described_class.new(solr_doc, ability) }
   let(:collection) do
-    build(:collection_lw,
+    build(:hyrax_collection,
           id: 'adc12v',
           description: ['a nice collection'],
           based_near: ['Over there'],
@@ -13,7 +13,8 @@ RSpec.describe Hyrax::CollectionPresenter do
           date_created: ['some date'])
   end
   let(:ability) { double(::Ability) }
-  let(:solr_doc) { SolrDocument.new(collection.to_solr) }
+  let(:solr_doc) { SolrDocument.new(solr_hash) }
+  let(:solr_hash) { Hyrax::ValkyrieIndexer.for(resource: collection).to_solr }
 
   describe ".terms" do
     subject { described_class.terms }
@@ -71,23 +72,15 @@ RSpec.describe Hyrax::CollectionPresenter do
   end
 
   describe "#terms_with_values" do
-    subject { presenter.terms_with_values }
-
-    it do
-      is_expected.to eq [:total_items,
-                         :size,
-                         :resource_type,
-                         :keyword,
-                         :date_created,
-                         :based_near,
-                         :related_url]
+    it 'gives the list of terms that have values' do
+      expect(presenter.terms_with_values)
+        .to contain_exactly(:total_items, :size, :resource_type, :keyword,
+                            :date_created, :based_near, :related_url)
     end
   end
 
   describe '#to_s' do
-    subject { presenter.to_s }
-
-    it { is_expected.to eq collection.title.first }
+    it { expect(presenter.to_s).to eq collection.title.first }
   end
 
   describe "#title" do
@@ -107,9 +100,7 @@ RSpec.describe Hyrax::CollectionPresenter do
   end
 
   describe '#to_key' do
-    subject { presenter.to_key }
-
-    it { is_expected.to eq ['adc12v'] }
+    it { expect(presenter.to_key).to eq ['adc12v'] }
   end
 
   describe '#size' do
@@ -120,22 +111,29 @@ RSpec.describe Hyrax::CollectionPresenter do
   end
 
   describe "#total_items", :clean_repo do
-    subject { presenter.total_items }
-
     context "empty collection" do
-      it { is_expected.to eq 0 }
+      let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection) }
+
+      it 'returns 0' do
+        expect(presenter.total_items).to eq 0
+      end
     end
 
-    context "collection with work" do
-      let!(:work) { create(:work, member_of_collections: [collection]) }
+    context "collection with works" do
+      let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection) }
+      let!(:work) { FactoryBot.valkyrie_create(:hyrax_work, member_of_collection_ids: [collection.id]) }
 
-      it { is_expected.to eq 1 }
+      it 'returns 1' do
+        expect(presenter.total_items).to eq 1
+      end
     end
 
     context "null members" do
       let(:presenter) { described_class.new(SolrDocument.new(id: '123'), nil) }
 
-      it { is_expected.to eq 0 }
+      it 'returns 0' do
+        expect(presenter.total_items).to eq 0
+      end
     end
   end
 
@@ -143,6 +141,8 @@ RSpec.describe Hyrax::CollectionPresenter do
     subject { presenter.total_viewable_items }
     let(:ability) { double(::Ability, user_groups: ['public'], current_user: user) }
     let(:user) { create(:user) }
+    let(:collection) { FactoryBot.create(:collection_lw) }
+    let(:solr_hash) { collection.to_solr }
 
     context "empty collection" do
       it { is_expected.to eq 0 }
@@ -190,6 +190,8 @@ RSpec.describe Hyrax::CollectionPresenter do
     subject { presenter.total_viewable_works }
     let(:ability) { double(::Ability, user_groups: ['public'], current_user: user) }
     let(:user) { create(:user) }
+    let(:collection) { FactoryBot.create(:collection_lw) }
+    let(:solr_hash) { collection.to_solr }
 
     context "empty collection" do
       it { is_expected.to eq 0 }
@@ -225,6 +227,8 @@ RSpec.describe Hyrax::CollectionPresenter do
     subject { presenter.total_viewable_collections }
     let(:ability) { double(::Ability, user_groups: ['public'], current_user: user) }
     let(:user) { create(:user) }
+    let(:collection) { FactoryBot.create(:collection_lw) }
+    let(:solr_hash) { collection.to_solr }
 
     context "empty collection" do
       it { is_expected.to eq 0 }
@@ -312,13 +316,13 @@ RSpec.describe Hyrax::CollectionPresenter do
   end
 
   describe "#user_can_create_new_nest_collection?" do
+    let(:collection_type) { Hyrax::CollectionType.find_by_gid(collection.collection_type_gid.to_s) }
+
     before do
-      allow(ability).to receive(:can?).with(:create_collection_of_type, collection.collection_type).and_return(true)
+      allow(ability).to receive(:can?).with(:create_collection_of_type, collection_type).and_return(true)
     end
 
-    subject { presenter.user_can_create_new_nest_collection? }
-
-    it { is_expected.to eq true }
+    it { expect(presenter.user_can_create_new_nest_collection?).to eq true }
   end
 
   describe '#show_path' do
