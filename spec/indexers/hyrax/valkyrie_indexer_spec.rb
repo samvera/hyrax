@@ -9,6 +9,15 @@ RSpec.describe Hyrax::ValkyrieIndexer do
         .to eq described_class
     end
 
+    context 'for a collection' do
+      let(:resource) { build(:hyrax_collection) }
+
+      it 'gives an instance of ValkyrieCollectionIndexer' do
+        expect(described_class.for(resource: resource))
+          .to be_a Hyrax::PcdmCollectionIndexer
+      end
+    end
+
     context 'with a matching indexer by naming convention' do
       let(:resource) { build(:monograph) }
       let(:indexer_class) { MonographIndexer }
