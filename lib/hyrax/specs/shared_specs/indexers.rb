@@ -119,7 +119,11 @@ RSpec.shared_examples 'a Basic metadata indexer' do
 
   let(:attributes) do
     {
+      based_near: ['helsinki', 'finland'],
+      date_created: ['tuesday'],
       keyword: ['comic strip'],
+      related_url: ['http://example.com/moomin'],
+      resource_type: ['book'],
       subject: ['moomins', 'snorks']
     }
   end
@@ -127,9 +131,15 @@ RSpec.shared_examples 'a Basic metadata indexer' do
   describe '#to_solr' do
     it 'indexes basic metadata' do
       expect(indexer.to_solr)
-        .to include(keyword_sim:   a_collection_containing_exactly(*attributes[:keyword]),
+        .to include(based_near_tesim: a_collection_containing_exactly(*attributes[:based_near]),
+                    based_near_sim: a_collection_containing_exactly(*attributes[:based_near]),
+                    date_created_tesim: a_collection_containing_exactly(*attributes[:date_created]),
+                    keyword_sim: a_collection_containing_exactly(*attributes[:keyword]),
+                    related_url_tesim: a_collection_containing_exactly(*attributes[:related_url]),
+                    resource_type_tesim: a_collection_containing_exactly(*attributes[:resource_type]),
+                    resource_type_sim: a_collection_containing_exactly(*attributes[:resource_type]),
                     subject_tesim: a_collection_containing_exactly(*attributes[:subject]),
-                    subject_sim:   a_collection_containing_exactly(*attributes[:subject]))
+                    subject_sim: a_collection_containing_exactly(*attributes[:subject]))
     end
   end
 end
@@ -164,6 +174,11 @@ RSpec.shared_examples 'a Collection indexer' do
   it_behaves_like 'a visibility indexer'
 
   describe '#to_solr' do
+    it 'indexes collection type gid' do
+      expect(indexer.to_solr)
+        .to include(collection_type_gid_ssim: a_collection_containing_exactly(an_instance_of(String)))
+    end
+
     it 'indexes generic type' do
       expect(indexer.to_solr)
         .to include(generic_type_sim: a_collection_containing_exactly('Collection'))

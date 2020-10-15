@@ -130,6 +130,7 @@ RSpec.shared_examples 'a Hyrax::PcdmCollection' do
 
   it_behaves_like 'a Hyrax::Resource'
   it_behaves_like 'a model with core metadata'
+  it_behaves_like 'a model with basic metadata'
   it_behaves_like 'has members'
 
   describe '#collection_type_gid' do
