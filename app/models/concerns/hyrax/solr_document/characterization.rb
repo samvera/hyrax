@@ -1,28 +1,39 @@
 # frozen_string_literal: true
 module Hyrax
   module SolrDocument
-    # TODO: aside from height and width, I don't think any of these other terms are indexed by default. - Justin 3/2016
     module Characterization
+      ##
+      # @todo this might not be indexed normally. deprecate?
       def byte_order
         self["byte_order_tesim"]
       end
 
+      ##
+      # @todo this might not be indexed normally. deprecate?
       def capture_device
         self["capture_device_tesim"]
       end
 
+      ##
+      # @todo this might not be indexed normally. deprecate?
       def color_map
         self["color_map_tesim"]
       end
 
+      ##
+      # @todo this might not be indexed normally. deprecate?
       def color_space
         self["color_space_tesim"]
       end
 
+      ##
+      # @todo this might not be indexed normally. deprecate?
       def compression
         self["compression_tesim"]
       end
 
+      ##
+      # @todo this might not be indexed normally. deprecate?
       def gps_timestamp
         self["gps_timestamp_tesim"]
       end
@@ -31,30 +42,44 @@ module Hyrax
         self['height_is']
       end
 
+      ##
+      # @todo this might not be indexed normally. deprecate?
       def image_producer
         self["image_producer_tesim"]
       end
 
+      ##
+      # @todo this might not be indexed normally. deprecate?
       def latitude
         self["latitude_tesim"]
       end
 
+      ##
+      # @todo this might not be indexed normally. deprecate?
       def longitude
         self["longitude_tesim"]
       end
 
+      ##
+      # @todo this might not be indexed normally. deprecate?
       def orientation
         self["orientation_tesim"]
       end
 
+      ##
+      # @todo this might not be indexed normally. deprecate?
       def profile_name
         self["profile_name_tesim"]
       end
 
+      ##
+      # @todo this might not be indexed normally. deprecate?
       def profile_version
         self["profile_version_tesim"]
       end
 
+      ##
+      # @todo this might not be indexed normally. deprecate?
       def scanning_software
         self["scanning_software_tesim"]
       end
@@ -63,18 +88,24 @@ module Hyrax
         self['width_is']
       end
 
+      ##
+      # @todo this might not be indexed normally. deprecate?
       def format_label
         self["format_label_tesim"]
       end
 
       def file_size
-        self["file_size_tesim"]
+        self["file_size_lts"]
       end
 
+      ##
+      # @todo this might not be indexed normally. deprecate?
       def filename
         self["filename_tesim"]
       end
 
+      ##
+      # @todo this might not be indexed normally. deprecate?
       def well_formed
         self["well_formed_tesim"]
       end
@@ -95,6 +126,8 @@ module Hyrax
         self["sample_rate_tesim"]
       end
 
+      ##
+      # @todo this might not be indexed normally. deprecate?
       def last_modified
         self["last_modified_tesim"]
       end
