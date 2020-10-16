@@ -23,8 +23,8 @@ module Hyrax
       id
     end
 
-    def to_s
-      title_or_label
+    def to_s # rubocop:disable Rails/Delegate
+      title_or_label.to_s
     end
 
     class ModelWrapper
