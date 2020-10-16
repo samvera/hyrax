@@ -12,7 +12,7 @@ RSpec.describe Hyrax::ValkyrieIndexer do
     context 'for a collection' do
       let(:resource) { build(:hyrax_collection) }
 
-      it 'gives an instance of ValkyrieCollectionIndexer' do
+      it 'gives an instance of PcdmCollectionIndexer' do
         expect(described_class.for(resource: resource))
           .to be_a Hyrax::PcdmCollectionIndexer
       end
