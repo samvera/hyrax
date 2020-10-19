@@ -34,5 +34,23 @@ RSpec.describe Hyrax::Transactions::UpdateWork, valkyrie_adapter: :test_adapter 
 
       expect(tx.call(change_set).value!).to have_attributes(date_uploaded: uploaded)
     end
+
+    context 'when called multiple times' do
+      let(:monograph) { Monograph.new }
+
+      it 'is a success every time' do
+        monograph.title = "Monograph"
+        1.upto(3) do |idx|
+          new_title = "#{monograph.title.first}#{idx}"
+          change_set = MonographChangeSet.for(monograph)
+          change_set.monograph_title = new_title
+          result = tx.call(change_set)
+          expect(result.success?).to eq true
+          monograph = result.value!
+          expect(monograph.title).to eq [new_title]
+        end
+        expect(monograph.title).to eq ["Monograph123"]
+      end
+    end
   end
 end
