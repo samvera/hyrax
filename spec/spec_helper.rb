@@ -221,6 +221,8 @@ RSpec.configure do |config|
 
   config.before(:each, type: :view) do
     initialize_controller_helpers(view)
+    # disallow network connections to services within the stack for view specs;
+    # no db/metadata/index calls
     WebMock.disable_net_connect!(allow_localhost: false, allow: 'chromedriver.storage.googleapis.com')
 
     allow(Hyrax)
@@ -229,7 +231,7 @@ RSpec.configure do |config|
   end
 
   config.after(:each, type: :view) do
-    WebMock.disable_net_connect!(allow_localhost: true, allow: 'chromedriver.storage.googleapis.com')
+    WebMock.disable_net_connect!(allow_localhost: true, allow: allowed_hosts)
   end
 
   config.before(:all, type: :feature) do
