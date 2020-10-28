@@ -43,8 +43,8 @@ RSpec.describe Hyrax::VirusScanner do
   context 'when ClamAV is not defined' do
     before { Object.send(:remove_const, :ClamAV) if defined?(ClamAV) }
 
-    it 'returns false with a warning' do
-      expect(Hyrax.logger).to receive(:warn).with(kind_of(String))
+    it 'returns false' do
+      # we used to test the warning here, but we suppress it for the test env now
       is_expected.not_to be_infected
     end
   end
