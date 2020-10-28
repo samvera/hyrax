@@ -5,6 +5,7 @@ module Hyrax
       # Define collection specific filter facets.
       def self.configure_facets
         configure_blacklight do |config|
+          config.search_builder_class = Hyrax::My::WorksSearchBuilder
           config.add_facet_field "admin_set_sim", limit: 5
           config.add_facet_field "member_of_collections_ssim", limit: 5
         end
@@ -13,12 +14,6 @@ module Hyrax
 
       class_attribute :create_work_presenter_class
       self.create_work_presenter_class = Hyrax::SelectTypeListPresenter
-
-      # Search builder for a list of works that belong to me
-      # Override of Blacklight::RequestBuilders
-      def search_builder_class
-        Hyrax::My::WorksSearchBuilder
-      end
 
       def index
         # The user's collections for the "add to collection" form

@@ -2,6 +2,9 @@
 module Hyrax
   module My
     class CollectionsController < MyController
+      configure_blacklight do |config|
+        config.search_builder_class = Hyrax::My::CollectionsSearchBuilder
+      end
       # Define collection specific filter facets.
       def self.configure_facets
         configure_blacklight do |config|
@@ -17,10 +20,6 @@ module Hyrax
         end
       end
       configure_facets
-
-      def search_builder_class
-        Hyrax::My::CollectionsSearchBuilder
-      end
 
       def index
         add_breadcrumb t(:'hyrax.controls.home'), root_path

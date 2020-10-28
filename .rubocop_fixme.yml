@@ -127,6 +127,10 @@ RSpec/AnyInstance:
     - 'spec/services/hyrax/workflow/sipity_actions_generator_spec.rb'
     - 'spec/services/hyrax/workflow/state_machine_generator_spec.rb'
     - 'spec/services/hyrax/workflow/workflow_permissions_generator_spec.rb'
+    - 'spec/controllers/hyrax/homepage_controller_spec.rb'
+    - 'spec/controllers/hyrax/my/collections_controller_spec.rb'
+    - 'spec/controllers/hyrax/my/works_controller_spec.rb'
+    - 'spec/presenters/hyrax/admin/repository_object_presenter_spec.rb'
 
 # Offense count: 51
 RSpec/ExpectInHook:

@@ -22,8 +22,9 @@ module Hyrax
       end
 
       def search_builder
-        Stats::WorkStatusSearchBuilder.new(self)
+        search_service.search_builder
       end
+      deprecation_deprecate :search_builder
 
       # results come from Solr in an array where the first item is the status and
       # the second item is the count
@@ -31,8 +32,12 @@ module Hyrax
       #   [ "true", 55, "false", 205, nil, 11 ]
       # @return [#each] an enumerable object of tuples (status and count)
       def results
-        facet_results = repository.search(search_builder)
+        facet_results, _docs = search_service.search_results
         facet_results.facet_fields[IndexesWorkflow.suppressed_field].each_slice(2)
+      end
+
+      def search_service
+        Hyrax::SearchService.new(config: CatalogController.blacklight_config, user_params: {}, scope: self, search_builder_class: Stats::WorkStatusSearchBuilder)
       end
     end
   end

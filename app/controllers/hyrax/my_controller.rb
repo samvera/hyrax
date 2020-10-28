@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module Hyrax
   class MyController < ApplicationController
+    extend Deprecation
     include Hydra::Catalog
     include Hyrax::Collections::AcceptsBatches
 
@@ -35,7 +36,9 @@ module Hyrax
 
     def index
       @user = current_user
-      (@response, @document_list) = query_solr
+      Deprecation.silence(Hyrax::MyController) do
+        (@response, @document_list) = query_solr
+      end
       prepare_instance_variables_for_batch_control_display
 
       respond_to do |format|
@@ -61,7 +64,12 @@ module Hyrax
     end
 
     def query_solr
-      search_results(params)
+      search_service.search_results
+    end
+    deprecation_deprecate :query_solr
+
+    def search_service
+      Hyrax::SearchService.new(config: blacklight_config, user_params: params, scope: self)
     end
   end
 end

@@ -14,6 +14,10 @@ module Hyrax
 
     helper_method :curation_concern
     copy_blacklight_config_from(::CatalogController)
+    # Define collection specific filter facets.
+    configure_blacklight do |config|
+      config.search_builder_class = Hyrax::FileSetSearchBuilder
+    end
 
     class_attribute :show_presenter, :form_class
     self.show_presenter = Hyrax::FileSetPresenter
@@ -140,11 +144,6 @@ module Hyrax
       end
     end
 
-    # Override of Blacklight::RequestBuilders
-    def search_builder_class
-      Hyrax::FileSetSearchBuilder
-    end
-
     def initialize_edit_form
       @parent = @file_set.in_objects.first
       original = @file_set.original_file
@@ -162,11 +161,21 @@ module Hyrax
 
     def presenter
       @presenter ||= begin
-        _, document_list = search_results(params)
-        curation_concern = document_list.first
-        raise CanCan::AccessDenied unless curation_concern
-        show_presenter.new(curation_concern, current_ability, request)
+        show_presenter.new(curation_concern_document, current_ability, request)
       end
+    end
+
+    def curation_concern_document
+      # Query Solr for the collection.
+      # run the solr query to find the collection members
+      response, _docs = single_item_search_service.search_results
+      curation_concern = response.documents.first
+      raise CanCan::AccessDenied unless curation_concern
+      curation_concern
+    end
+
+    def single_item_search_service
+      Hyrax::SearchService.new(config: blacklight_config, user_params: params.except(:q, :page), scope: self, search_builder_class: search_builder_class)
     end
 
     def wants_to_revert?

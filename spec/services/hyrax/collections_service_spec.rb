@@ -5,6 +5,7 @@ RSpec.describe Hyrax::CollectionsService do
   let(:context) do
     double(current_ability: Ability.new(user1),
            repository: controller.repository,
+           params: {},
            blacklight_config: controller.blacklight_config)
   end
 

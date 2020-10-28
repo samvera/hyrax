@@ -7,9 +7,8 @@ module Qa::Authorities
     def search(_q, controller)
       # The My::FindWorksSearchBuilder expects a current_user
       return [] unless controller.current_user
-      repo = CatalogController.new.repository
-      builder = search_builder(controller)
-      response = repo.search(builder)
+
+      response, _docs = search_response(controller)
       docs = response.documents
       docs.map do |doc|
         id = doc.id
@@ -20,8 +19,24 @@ module Qa::Authorities
 
     private
 
-    def search_builder(controller)
-      search_builder_class.new(controller)
+    def search_service(controller)
+      @search_service ||= Hyrax::SearchService.new(
+        config: controller.blacklight_config,
+        user_params: controller.params,
+        search_builder_class: search_builder_class,
+        scope: controller,
+        current_ability: controller.current_ability
+      )
+    end
+
+    def search_response(controller)
+      access = controller.params[:access] || 'read'
+
+      search_service(controller).search_results do |builder|
+        builder.where(controller.params[:q])
+               .with_access(access)
+               .rows(100)
+      end
     end
   end
 end

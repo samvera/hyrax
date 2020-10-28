@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Hyrax
-  class CollectionsService
+  class CollectionsService < Hyrax::SearchService
     attr_reader :context
 
     class_attribute :list_search_builder_class
@@ -8,22 +8,22 @@ module Hyrax
 
     # @param [#repository,#blacklight_config,#current_ability] context
     def initialize(context)
-      @context = context
+      super(config: context.blacklight_config, user_params: context.params, search_builder_class: self.class.list_search_builder_class, scope: context)
+      @current_ability = context.current_ability
     end
 
     # @param [Symbol] access :read or :edit
-    def search_results(access)
-      builder = list_search_builder(access)
-      response = context.repository.search(builder)
+    def search_results(access = nil)
+      response, _docs = super() do |builder|
+        builder.with_access(access) if access
+        builder.rows(100)
+
+        yield builder if block_given?
+
+        builder
+      end
+
       response.documents
-    end
-
-    private
-
-    def list_search_builder(access)
-      list_search_builder_class.new(context)
-                               .rows(100)
-                               .with_access(access)
     end
   end
 end

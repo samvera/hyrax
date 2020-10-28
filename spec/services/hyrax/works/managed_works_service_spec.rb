@@ -4,7 +4,7 @@ RSpec.describe Hyrax::Works::ManagedWorksService, clean_repo: true do
   let(:repository) { Blacklight::Solr::Repository.new(blacklight_config) }
 
   let(:current_ability) { instance_double(Ability, admin?: true) }
-  let(:scope) { double('Scope', can?: true, current_ability: current_ability, repository: repository, blacklight_config: blacklight_config) }
+  let(:scope) { double('Scope', params: {}, can?: true, current_ability: current_ability, repository: repository, blacklight_config: blacklight_config) }
 
   describe '.managed_works_count' do
     subject { described_class.managed_works_count(scope: scope) }
