@@ -44,7 +44,8 @@ module Hyrax
     # Always return zero if there's nothing available to check for viruses. This means that
     # we assume all files have no viruses because we can't conclusively say if they have or not.
     def null_scanner
-      warning "Unable to check #{file} for viruses because no virus scanner is defined"
+      warning "Unable to check #{file} for viruses because no virus scanner is defined" unless
+        Rails.env.test?
       false
     end
 
