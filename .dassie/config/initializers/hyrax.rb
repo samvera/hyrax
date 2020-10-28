@@ -9,6 +9,8 @@ Hyrax.config do |config|
   config.register_curation_concern :generic_work
   # Injected via `rails g hyrax:work NamespacedWorks::NestedWork`
   config.register_curation_concern :"namespaced_works/nested_work"
+  # Injected via `rails g hyrax:work_resource Monograph`
+  config.register_curation_concern :monograph
 
   config.iiif_image_server = true
 
