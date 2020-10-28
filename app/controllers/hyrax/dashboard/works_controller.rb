@@ -3,10 +3,9 @@ module Hyrax
   module Dashboard
     ## Shows a list of all works to the admins
     class WorksController < Hyrax::My::WorksController
-      # Search builder for a list of works
-      # Override of Blacklight::RequestBuilders
-      def search_builder_class
-        Hyrax::Dashboard::WorksSearchBuilder
+      # Define collection specific filter facets.
+      configure_blacklight do |config|
+        config.search_builder_class = Hyrax::Dashboard::WorksSearchBuilder
       end
 
       private

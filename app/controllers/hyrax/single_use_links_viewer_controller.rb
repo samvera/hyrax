@@ -13,15 +13,16 @@ module Hyrax
     self.presenter_class = FileSetPresenter
     copy_blacklight_config_from(::CatalogController)
 
+    configure_blacklight do |config|
+      config.search_builder_class = SingleUseLinkSearchBuilder
+    end
+
     def download
       raise not_found_exception unless single_use_link.path == hyrax.download_path(id: @asset)
       send_content
     end
 
     def show
-      _, document_list = search_results(id: single_use_link.item_id)
-      curation_concern = document_list.first
-
       # Authorize using SingleUseLinksViewerController::Ability
       authorize! :read, curation_concern
       raise not_found_exception unless single_use_link.path == polymorphic_path([main_app, curation_concern])
@@ -36,8 +37,13 @@ module Hyrax
 
     private
 
-    def search_builder_class
-      SingleUseLinkSearchBuilder
+    def curation_concern
+      response, _document_list = search_service.search_results
+      response.documents.first
+    end
+
+    def search_service
+      Hyrax::SearchService.new(config: blacklight_config, user_params: { id: single_use_link.item_id }, scope: self)
     end
 
     def content_options

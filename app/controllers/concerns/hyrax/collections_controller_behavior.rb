@@ -39,20 +39,29 @@ module Hyrax
 
     def presenter
       @presenter ||= begin
-        # Query Solr for the collection.
-        # run the solr query to find the collection members
-        response = repository.search(single_item_search_builder.query)
-        curation_concern = response.documents.first
-        raise CanCan::AccessDenied unless curation_concern
         presenter_class.new(curation_concern, current_ability)
       end
+    end
+
+    def curation_concern
+      # Query Solr for the collection.
+      # run the solr query to find the collection members
+      response, _docs = search_service.search_results
+      curation_concern = response.documents.first
+      raise CanCan::AccessDenied unless curation_concern
+      curation_concern
+    end
+
+    def search_service
+      Hyrax::SearchService.new(config: blacklight_config, user_params: params.except(:q, :page), scope: self, search_builder_class: single_item_search_builder_class)
     end
 
     # Instantiates the search builder that builds a query for a single item
     # this is useful in the show view.
     def single_item_search_builder
-      single_item_search_builder_class.new(self).with(params.except(:q, :page))
+      search_service.search_builder
     end
+    deprecation_deprecate :single_item_search_builder
 
     def collection_params
       form_class.model_attributes(params[:collection])

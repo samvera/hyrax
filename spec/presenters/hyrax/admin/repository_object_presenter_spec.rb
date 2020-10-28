@@ -5,7 +5,6 @@ RSpec.describe Hyrax::Admin::RepositoryObjectPresenter do
   describe "#as_json" do
     subject { instance.as_json }
 
-    let(:stub_repo) { double(search: response) }
     let(:response) { Blacklight::Solr::Response.new(solr_data, {}) }
     let(:solr_data) do
       { "facet_counts" => {
@@ -14,7 +13,7 @@ RSpec.describe Hyrax::Admin::RepositoryObjectPresenter do
     end
 
     before do
-      allow(instance).to receive(:repository).and_return(stub_repo)
+      allow_any_instance_of(Hyrax::SearchService).to receive(:search_results).and_return([response, nil])
     end
     it do
       is_expected.to eq [{ label: "Published", value: 1 },
