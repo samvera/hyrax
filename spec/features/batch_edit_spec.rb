@@ -37,33 +37,33 @@ RSpec.describe 'batch', type: :feature, clean_repo: true, js: true do
         page.find("input#generic_work_creator[value='NEW creator']")
       end
       batch_edit_expand("contributor") do
-        page.find("input#generic_work_contributor[value='NEW contributor']")
+        page.find("input#generic_work_contributor[value='NEW contributor']", visible: false)
       end
       batch_edit_expand("description") do
-        page.find("textarea#generic_work_description", text: 'NEW description')
+        page.find("textarea#generic_work_description", text: 'NEW description', visible: false)
       end
       batch_edit_expand("keyword") do
-        page.find("input#generic_work_keyword[value='NEW keyword']")
+        page.find("input#generic_work_keyword[value='NEW keyword']", visible: false)
       end
       batch_edit_expand("publisher") do
-        page.find "input#generic_work_publisher[value='NEW publisher']"
+        page.find("input#generic_work_publisher[value='NEW publisher']", visible: false)
       end
       batch_edit_expand("date_created") do
-        page.find("input#generic_work_date_created[value='NEW date_created']")
+        page.find("input#generic_work_date_created[value='NEW date_created']", visible: false)
       end
       batch_edit_expand("subject") do
-        page.find("input#generic_work_subject[value='NEW subject']")
+        page.find("input#generic_work_subject[value='NEW subject']", visible: false)
       end
       batch_edit_expand("language") do
-        page.find("input#generic_work_language[value='NEW language']")
+        page.find("input#generic_work_language[value='NEW language']", visible: false)
       end
       batch_edit_expand("identifier") do
-        page.find("input#generic_work_identifier[value='NEW identifier']")
+        page.find("input#generic_work_identifier[value='NEW identifier']", visible: false)
       end
       # batch_edit_expand("based_near")
       # expect(page).to have_css "input#generic_work_based_near[value*='NEW based_near']"
       batch_edit_expand("related_url") do
-        page.find("input#generic_work_related_url[value='NEW related_url']")
+        page.find("input#generic_work_related_url[value='NEW related_url']", visible: false)
       end
     end
 

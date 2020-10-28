@@ -14,6 +14,7 @@ services:
     environment:
       - RAILS_ROOT=/app/samvera/hyrax-webapp
     depends_on:
+      - chrome
       - db_migrate
       - fcrepo
       - memcached
@@ -27,6 +28,17 @@ services:
       - .:/app/samvera/hyrax-engine
       - rails-public:/app/samvera/hyrax-webapp/public
       - rails-tmp:/app/samvera/hyrax-webapp/tmp
+
+  chrome:
+    image: selenium/standalone-chrome:3.141
+    logging:
+      driver: none
+    volumes:
+      - /dev/shm:/dev/shm
+    shm_size: 2G
+    ports:
+      - "4444:4444"
+      - "5959:5900"
 
   db_migrate:
     image: hyrax-engine-dev

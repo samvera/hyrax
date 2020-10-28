@@ -47,11 +47,13 @@ RSpec.describe "work show view" do
         expect(page).to have_selector '.attribute-filename', text: 'A Contained FileSet'
       end
 
+      server_host = ENV.fetch('CAPYBARA_SERVER', 'http://www.example.com')
+
       # IIIF manifest does not include locale query param
       expect(find('div.viewer-wrapper iframe')['src']).to eq(
-        "http://www.example.com/uv/uv.html#?manifest=" \
-        "http://www.example.com/concern/generic_works/#{work.id}/manifest&" \
-        "config=http://www.example.com/uv/uv-config.json"
+        "#{server_host}/uv/uv.html#?manifest=" \
+        "#{server_host}/concern/generic_works/#{work.id}/manifest&" \
+        "config=#{server_host}/uv/uv-config.json"
       )
     end
 
