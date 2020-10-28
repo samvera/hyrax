@@ -82,7 +82,7 @@ services:
     command:
       - sh
       - "-c"
-      - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf; solr-precreate hyrax /opt/solr/server/configsets/hyraxconf"
+      - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf; precreate-core hyrax-valkyrie-test /opt/solr/server/configsets/hyraxconf; solr-precreate hyrax /opt/solr/server/configsets/hyraxconf"
     volumes:
       - solr_home:/opt/solr/server/solr
       - .dassie/solr/conf:/opt/solr/server/configsets/hyraxconf
