@@ -307,7 +307,8 @@ module Hyrax
     attr_writer :analytics
     attr_reader :analytics
     def analytics?
-      @analytics ||= false
+      @analytics ||=
+        ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_ANALYTICS', false))
     end
 
     attr_writer :citations
