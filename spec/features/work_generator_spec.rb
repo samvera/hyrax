@@ -5,14 +5,14 @@ require 'redlock'
 RSpec.describe 'Creating a new Work' do
   before do
     Rails::Generators.invoke('hyrax:work', ['Catapult', '--quiet'], destination_root: Rails.root)
-    load "#{EngineCart.destination}/app/indexers/catapult_indexer.rb"
-    load "#{EngineCart.destination}/app/models/catapult.rb"
-    load "#{EngineCart.destination}/app/presenters/hyrax/catapult_presenter.rb"
-    load "#{EngineCart.destination}/app/controllers/hyrax/catapults_controller.rb"
-    load "#{EngineCart.destination}/app/actors/hyrax/actors/catapult_actor.rb"
-    load "#{EngineCart.destination}/app/forms/hyrax/catapult_form.rb"
-    load "#{EngineCart.destination}/config/initializers/hyrax.rb"
-    load "#{EngineCart.destination}/config/routes.rb"
+    load Rails.root.join('app', 'indexers', 'catapult_indexer.rb')
+    load Rails.root.join('app', 'models', 'catapult.rb')
+    load Rails.root.join('app', 'presenters', 'hyrax', 'catapult_presenter.rb')
+    load Rails.root.join('app', 'controllers', 'hyrax', 'catapults_controller.rb')
+    load Rails.root.join('app', 'actors', 'hyrax', 'actors', 'catapult_actor.rb')
+    load Rails.root.join('app', 'forms', 'hyrax', 'catapult_form.rb')
+    load Rails.root.join('config', 'initializers', 'hyrax.rb')
+    load Rails.root.join('config', 'routes.rb')
     load "app/helpers/hyrax/url_helper.rb"
   end
 
