@@ -1,7 +1,7 @@
 class TimeSpan < ActiveTriples::Resource
   def initialize(uri = RDF::Node.new, _parent = ActiveTriples::Resource.new)
     uri = if uri.try(:node?)
-            RDF::URI("#timespan_\#{uri.to_s.gsub('_:', '')}")
+            RDF::URI("#timespan_#{uri.to_s.gsub('_:', '')}")
           elsif uri.to_s.include?('#')
             RDF::URI(uri)
           end
