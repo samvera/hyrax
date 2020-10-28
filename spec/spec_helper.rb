@@ -30,6 +30,7 @@ if ENV['IN_DOCKER']
 
   ActiveRecord::Migrator.migrations_paths = [Pathname.new(ENV['RAILS_ROOT']).join('db', 'migrate').to_s]
   ActiveRecord::Tasks::DatabaseTasks.migrate
+  ActiveRecord::Base.descendants.each(&:reset_column_information)
 else
   require 'engine_cart'
   EngineCart.load_application!
