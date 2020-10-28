@@ -46,18 +46,13 @@ require 'rspec/rails'
 require 'rspec/its'
 require 'rspec/matchers'
 require 'rspec/active_model/mocks'
-require 'capybara/rspec'
-require 'capybara/rails'
-require 'selenium-webdriver'
-require 'webdrivers'
 require 'equivalent-xml'
 require 'equivalent-xml/rspec_matchers'
 require 'database_cleaner'
+require 'hyrax/specs/capybara'
 
-# rubocop:disable Lint/Void
 # ensure Hyrax::Schema gets loaded is resolvable for `support/` models
-Hyrax::Schema
-# rubocop:enable Lint/Void
+Hyrax::Schema # rubocop:disable Lint/Void
 
 Valkyrie::MetadataAdapter
   .register(Valkyrie::Persistence::Memory::MetadataAdapter.new, :test_adapter)
@@ -66,31 +61,11 @@ Valkyrie::MetadataAdapter
 Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each { |f| require f }
 
 require 'webmock/rspec'
-allowed_hosts = %w[chromedriver.storage.googleapis.com fcrepo solr]
+allowed_hosts = %w[chrome chromedriver.storage.googleapis.com fcrepo solr]
 WebMock.disable_net_connect!(allow_localhost: true, allow: allowed_hosts)
 
 require 'i18n/debug' if ENV['I18N_DEBUG']
 require 'byebug' unless ci_build?
-
-# @note In January 2018, TravisCI disabled Chrome sandboxing in its Linux
-#       container build environments to mitigate Meltdown/Spectre
-#       vulnerabilities, at which point Hyrax could no longer use the
-#       Capybara-provided :selenium_chrome_headless driver (which does not
-#       include the `--no-sandbox` argument).
-Capybara.register_driver :selenium_chrome_headless_sandboxless do |app|
-  browser_options = ::Selenium::WebDriver::Chrome::Options.new
-  browser_options.args << '--headless'
-  browser_options.args << '--disable-gpu'
-  browser_options.args << '--no-sandbox'
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
-end
-
-Capybara.default_driver = :rack_test # This is a faster driver
-Capybara.javascript_driver = :selenium_chrome_headless_sandboxless # This is slower
-Capybara.default_max_wait_time = 10 # We may have a slow application, let's give it some time.
-
-# FIXME: Pin to older version of chromedriver to avoid issue with clicking non-visible elements
-Webdrivers::Chromedriver.version = '72.0.3626.69'
 
 # require 'http_logger'
 # HttpLogger.logger = Logger.new(STDOUT)

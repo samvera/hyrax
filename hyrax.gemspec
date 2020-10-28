@@ -85,7 +85,7 @@ SUMMARY
   spec.add_dependency 'valkyrie', '>= 2.1.1', "< 3.0"
 
   spec.add_development_dependency "capybara", '~> 3.29'
-  spec.add_development_dependency 'chromedriver-helper', '~> 2.1'
+  spec.add_development_dependency 'capybara-screenshot', '~> 1.0'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
   spec.add_development_dependency 'engine_cart', '~> 2.2'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
@@ -100,7 +100,6 @@ SUMMARY
   spec.add_development_dependency 'rspec-rails', '~> 3.1'
   spec.add_development_dependency 'rspec_junit_formatter'
   spec.add_development_dependency "selenium-webdriver"
-  spec.add_development_dependency 'solr_wrapper', '>= 1.1', '< 3.0'
   spec.add_development_dependency 'i18n-debug'
   spec.add_development_dependency 'i18n_yaml_sorter'
   spec.add_development_dependency 'rails-controller-testing', '~> 1'
@@ -108,7 +107,7 @@ SUMMARY
   spec.add_development_dependency 'bixby', '~> 3.0', ">= 3.0.2"
   spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
-  spec.add_development_dependency 'webdrivers', '~> 3.0'
+  spec.add_development_dependency 'webdrivers', '~> 4.4'
   spec.add_development_dependency 'webmock'
 
   ########################################################
