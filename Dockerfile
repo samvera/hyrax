@@ -6,6 +6,7 @@ ARG EXTRA_APK_PACKAGES="git"
 
 RUN apk --no-cache upgrade && \
   apk --no-cache add build-base \
+  imagemagick \
   tzdata \
   nodejs \
   yarn \
