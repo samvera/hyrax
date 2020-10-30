@@ -192,12 +192,7 @@ RSpec.configure do |config|
 
   config.include Shoulda::Matchers::Independent
 
-  if Devise::VERSION >= '4.2'
-    config.include Devise::Test::ControllerHelpers, type: :controller
-  else
-    config.include Devise::TestHelpers, type: :controller
-  end
-
+  config.include Devise::Test::ControllerHelpers, type: :controller
   config.include EngineRoutes, type: :controller
   config.include Warden::Test::Helpers, type: :request
   config.include Warden::Test::Helpers, type: :feature
