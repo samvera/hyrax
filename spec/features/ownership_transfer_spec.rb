@@ -70,6 +70,7 @@ RSpec.describe 'Transferring work ownership:', type: :feature do
     end
 
     it 'I should be able to accept it' do
+      skip if ci_build?
       within('#notifications') do
         expect(page).to have_content "#{original_owner.name} wants to transfer a work to you"
       end
