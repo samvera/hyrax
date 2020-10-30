@@ -49,8 +49,10 @@ require 'rspec/active_model/mocks'
 require 'equivalent-xml'
 require 'equivalent-xml/rspec_matchers'
 require 'database_cleaner'
+
 require 'hyrax/specs/capybara'
 require 'hyrax/specs/clamav'
+require 'hyrax/specs/engine_routes'
 
 # ensure Hyrax::Schema gets loaded is resolvable for `support/` models
 Hyrax::Schema # rubocop:disable Lint/Void
@@ -73,22 +75,13 @@ require 'byebug' unless ci_build?
 # HttpLogger.ignore = [/localhost:8983\/solr/]
 # HttpLogger.colorize = false
 
+require 'hyrax/specs/shared_specs/factories/strategies/json_strategy'
 require 'hyrax/specs/shared_specs/factories/strategies/valkyrie_resource'
 FactoryBot.register_strategy(:valkyrie_create, ValkyrieCreateStrategy)
 FactoryBot.register_strategy(:create_using_test_adapter, ValkyrieTestAdapterCreateStrategy)
 FactoryBot.register_strategy(:json, JsonStrategy)
 FactoryBot.definition_file_paths = [File.expand_path("../factories", __FILE__)]
 FactoryBot.find_definitions
-
-module EngineRoutes
-  def self.included(base)
-    base.routes { Hyrax::Engine.routes }
-  end
-
-  def main_app
-    Rails.application.class.routes.url_helpers
-  end
-end
 
 require 'shoulda/matchers'
 require 'shoulda/callback/matchers'
