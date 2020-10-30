@@ -73,18 +73,6 @@ require 'byebug' unless ci_build?
 # HttpLogger.ignore = [/localhost:8983\/solr/]
 # HttpLogger.colorize = false
 
-class JsonStrategy
-  def initialize
-    @strategy = FactoryBot.strategy_by_name(:create).new
-  end
-
-  delegate :association, to: :@strategy
-
-  def result(evaluation)
-    @strategy.result(evaluation).to_json
-  end
-end
-
 require 'hyrax/specs/shared_specs/factories/strategies/valkyrie_resource'
 FactoryBot.register_strategy(:valkyrie_create, ValkyrieCreateStrategy)
 FactoryBot.register_strategy(:create_using_test_adapter, ValkyrieTestAdapterCreateStrategy)
