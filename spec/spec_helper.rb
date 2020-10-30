@@ -38,6 +38,7 @@ end
 
 ActiveRecord::Migration.maintain_test_schema!
 
+require 'active_fedora/cleaner'
 require 'devise'
 require 'devise/version'
 require 'mida'
@@ -70,11 +71,6 @@ WebMock.disable_net_connect!(allow_localhost: true, allow: allowed_hosts)
 require 'i18n/debug' if ENV['I18N_DEBUG']
 require 'byebug' unless ci_build?
 
-# require 'http_logger'
-# HttpLogger.logger = Logger.new(STDOUT)
-# HttpLogger.ignore = [/localhost:8983\/solr/]
-# HttpLogger.colorize = false
-
 require 'hyrax/specs/shared_specs/factories/strategies/json_strategy'
 require 'hyrax/specs/shared_specs/factories/strategies/valkyrie_resource'
 FactoryBot.register_strategy(:valkyrie_create, ValkyrieCreateStrategy)
@@ -106,7 +102,13 @@ end
 
 ActiveJob::Base.queue_adapter = :test
 
-require 'active_fedora/cleaner'
+def clean_active_fedora_repository
+  ActiveFedora::Cleaner.clean!
+  # The JS is executed in a different thread, so that other thread
+  # may think the root path has already been created:
+  ActiveFedora.fedora.connection.send(:init_base_path)
+end
+
 RSpec.configure do |config|
   config.disable_monkey_patching!
   config.include Shoulda::Matchers::ActiveRecord, type: :model
@@ -118,9 +120,7 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = File.expand_path("../fixtures", __FILE__)
-
   config.use_transactional_fixtures = false
 
   config.before :suite do
@@ -148,12 +148,6 @@ RSpec.configure do |config|
     # using :workflow is preferable to :clean_repo, use the former if possible
     # It's important that this comes after DatabaseCleaner.start
     ensure_deposit_available_for(user) if example.metadata[:workflow]
-    if example.metadata[:clean_repo] || example.metadata[:type] == :feature
-      ActiveFedora::Cleaner.clean!
-      # The JS is executed in a different thread, so that other thread
-      # may think the root path has already been created:
-      ActiveFedora.fedora.connection.send(:init_base_path) if example.metadata[:js]
-    end
   end
 
   config.include(ControllerLevelHelpers, type: :view)
@@ -186,6 +180,9 @@ RSpec.configure do |config|
 
   config.after do
     DatabaseCleaner.clean
+    # Ensuring we have a clear queue between each spec.
+    ActiveJob::Base.queue_adapter.enqueued_jobs  = []
+    ActiveJob::Base.queue_adapter.performed_jobs = []
   end
 
   # If true, the base class of anonymous controllers will be inferred
@@ -204,6 +201,12 @@ RSpec.configure do |config|
   config.include EngineRoutes, type: :controller
   config.include Warden::Test::Helpers, type: :request
   config.include Warden::Test::Helpers, type: :feature
+
+  config.before(:each, type: :feature) do |example|
+    clean_active_fedora_repository unless
+      example.metadata[:clean_repo] # trust clean_repo if present
+  end
+
   config.after(:each, type: :feature) do
     Warden.test_reset!
     Capybara.reset_sessions!
@@ -235,6 +238,10 @@ RSpec.configure do |config|
 
   config.profile_examples = 10
 
+  config.before(:example, :clean_repo) do
+    clean_active_fedora_repository
+  end
+
   # Use this example metadata when you want to perform jobs inline during testing.
   #
   #   describe '#my_method`, :perform_enqueued do
@@ -264,14 +271,6 @@ RSpec.configure do |config|
     ActiveJob::Base.queue_adapter.perform_enqueued_at_jobs = false
   end
 
-  # Ensuring we have a clear queue between each spec. This appears to
-  # resolve a "flappy spec" problem (found in seed 2816 for
-  # SHA da3b4632b45a8bf22100f691612d299a0ac79448 of the code base)
-  config.after do
-    ActiveJob::Base.queue_adapter.enqueued_jobs  = []
-    ActiveJob::Base.queue_adapter.performed_jobs = []
-  end
-
   config.before(:example, :valkyrie_adapter) do |example|
     adapter_name = example.metadata[:valkyrie_adapter]
 
@@ -280,6 +279,9 @@ RSpec.configure do |config|
       .and_return(Valkyrie::MetadataAdapter.find(adapter_name))
   end
 
+  # turn on the default nested reindexer; we use a null implementation for most
+  # tests because it's (supposedly?) much faster. why is it faster but doesn't
+  # impact most tests? maybe we should fix this in the implementation instead?
   config.around(:example, :with_nested_reindexing) do |example|
     original_indexer = Hyrax.config.nested_relationship_reindexer
     Hyrax.config.nested_relationship_reindexer =
