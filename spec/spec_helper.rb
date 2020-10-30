@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-$VERBOSE = nil # silence loud Ruby 2.7 deprecations
+$VERBOSE = nil unless ENV['RUBY_LOUD'] # silence loud Ruby 2.7 deprecations
 ENV['RAILS_ENV'] = 'test'
 ENV['DATABASE_URL'] = ENV['DATABASE_TEST_URL'] if ENV['DATABASE_TEST_URL']
 
