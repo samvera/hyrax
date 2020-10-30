@@ -127,6 +127,8 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
     # Noid minting causes extra LDP requests which slow the test suite.
     Hyrax.config.enable_noids = false
+    # Don't use the nested relationship reindexer. Null is much faster
+    Hyrax.config.nested_relationship_reindexer = ->(id:, extent:) {}
   end
 
   config.before do |example|
@@ -152,13 +154,6 @@ RSpec.configure do |config|
       # may think the root path has already been created:
       ActiveFedora.fedora.connection.send(:init_base_path) if example.metadata[:js]
     end
-    Hyrax.config.nested_relationship_reindexer = if example.metadata[:with_nested_reindexing]
-                                                   # Use the default relationship reindexer (and the cascading reindexing of child documents)
-                                                   Hyrax.config.default_nested_relationship_reindexer
-                                                 else
-                                                   # Don't use the nested relationship reindexer. This slows everything down quite a bit.
-                                                   ->(id:, extent:) {}
-                                                 end
   end
 
   config.include(ControllerLevelHelpers, type: :view)
@@ -283,5 +278,13 @@ RSpec.configure do |config|
     allow(Hyrax)
       .to receive(:metadata_adapter)
       .and_return(Valkyrie::MetadataAdapter.find(adapter_name))
+  end
+
+  config.around(:example, :with_nested_reindexing) do |example|
+    original_indexer = Hyrax.config.nested_relationship_reindexer
+    Hyrax.config.nested_relationship_reindexer =
+      Hyrax.config.default_nested_relationship_reindexer
+    example.run
+    Hyrax.config.nested_relationship_reindexer = original_indexer
   end
 end
