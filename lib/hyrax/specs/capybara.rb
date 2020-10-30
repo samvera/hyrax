@@ -66,6 +66,7 @@ Capybara::Screenshot.register_driver(:selenium_chrome_headless_sandboxless) do |
 end
 
 Capybara::Screenshot.autosave_on_failure = false
+Capybara::Screenshot.prune_strategy = { keep: 10 }
 
 # Save CircleCI artifacts
 
@@ -76,14 +77,22 @@ def save_timestamped_page_and_screenshot(page, meta)
   time_now = Time.zone.now
   timestamp = "#{time_now.strftime('%Y-%m-%d-%H-%M-%S.')}#{'%03d' % (time_now.usec / 1000).to_i}"
 
+  artifact_dir = ENV['CI'] ? "/tmp/test-results" : Rails.root.join('tmp' 'capybara')
+
   screenshot_name = "screenshot-#{filename}-#{line_number}-#{timestamp}.png"
-  screenshot_path = "#{Rails.root.join('tmp/capybara')}/#{screenshot_name}"
+  screenshot_path = "#{artifact_dir}/#{screenshot_name}"
   page.save_screenshot(screenshot_path)
 
   page_name = "html-#{filename}-#{line_number}-#{timestamp}.html"
-  page_path = "#{Rails.root.join('tmp/capybara')}/#{page_name}"
+  page_path = "#{artifact_dir}/#{page_name}"
   page.save_page(page_path)
 
-  puts "\n  Screenshot: tmp/capybara/#{screenshot_name}"
-  puts "  HTML: tmp/capybara/#{page_name}"
+  puts "\n  Screenshot: #{screenshot_path}"
+  puts "  HTML: #{page_path}"
+end
+
+RSpec.configure do |config|
+  config.after(:each, :js) do |example|
+    save_timestamped_page_and_screenshot(Capybara.page, example.metadata) if example.exception
+  end
 end
