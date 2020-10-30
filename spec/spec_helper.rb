@@ -124,6 +124,7 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
   config.before :suite do
+    Hyrax::RedisEventStore.instance.redis.flushdb
     DatabaseCleaner.clean_with(:truncation)
     # Noid minting causes extra LDP requests which slow the test suite.
     Hyrax.config.enable_noids = false
@@ -132,12 +133,6 @@ RSpec.configure do |config|
   end
 
   config.before do |example|
-    # Many of the specs push data into Redis. This ensures that we
-    # have a clean slate when processing.  It is possible that we
-    # could narrow the call for this method to be done for clean_repo
-    # or feature specs.
-    Hyrax::RedisEventStore.instance.redis.flushdb
-
     if example.metadata[:type] == :feature && Capybara.current_driver != :rack_test
       DatabaseCleaner.strategy = :truncation
     else
@@ -235,6 +230,7 @@ RSpec.configure do |config|
 
   config.before(:example, :clean_repo) do
     clean_active_fedora_repository
+    Hyrax::RedisEventStore.instance.redis.flushdb
   end
 
   # Use this example metadata when you want to perform jobs inline during testing.
