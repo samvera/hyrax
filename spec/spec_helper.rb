@@ -50,6 +50,7 @@ require 'equivalent-xml'
 require 'equivalent-xml/rspec_matchers'
 require 'database_cleaner'
 require 'hyrax/specs/capybara'
+require 'hyrax/specs/clamav'
 
 # ensure Hyrax::Schema gets loaded is resolvable for `support/` models
 Hyrax::Schema # rubocop:disable Lint/Void
@@ -71,21 +72,6 @@ require 'byebug' unless ci_build?
 # HttpLogger.logger = Logger.new(STDOUT)
 # HttpLogger.ignore = [/localhost:8983\/solr/]
 # HttpLogger.colorize = false
-
-if defined?(ClamAV)
-  ClamAV.instance.loaddb
-else
-  class ClamAV
-    include Singleton
-    def scanfile(_f)
-      0
-    end
-
-    def loaddb
-      nil
-    end
-  end
-end
 
 class JsonStrategy
   def initialize
