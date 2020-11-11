@@ -88,7 +88,7 @@ services:
       - redis:/data
 
   solr:
-    image: solr:8
+    image: solr:8.6.2
     ports:
       - 8983:8983
     command:
