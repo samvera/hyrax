@@ -88,7 +88,7 @@ Prerequisites are required for both creating a Hyrax\-based app and contributing
 
 Hyrax requires the following software to work:
 
-1. [Solr](http://lucene.apache.org/solr/) version >= 5.x (tested up to 7.0.0)
+1. [Solr](http://lucene.apache.org/solr/) version >= 5.x (tested up to 8.7.0)
 1. [Fedora Commons](http://www.fedora-commons.org/) digital repository version >= 4.5.1 (tested up to 4.7.5)
 1. A SQL RDBMS (MySQL, PostgreSQL), though **note** that SQLite will be used by default if you're looking to get up and running quickly
 1. [Redis](http://redis.io/), a key-value store
