@@ -84,7 +84,7 @@
     <!-- A PointField based date field for faster date range queries and date faceting. -->
     <fieldType name="tdate" class="solr.DatePointField" docValues="true"/>
     <!-- A DateRange based date field for truly faster date range queries. -->
-    <fieldType name="dateRange" class="solr.DateRangeField"/>
+    <fieldType name="dateRange" class="solr.DateRangeField" omitNorms="true" omitTermFreqAndPositions="true"/>
 
     <!-- This point type indexes the coordinates as separate fields (subFields)
       If subFieldType is defined, it references a type, and a dynamic field
@@ -261,10 +261,10 @@
     <!-- date range (_dr...) (for faster AND better range queries) -->
     <dynamicField name="*_dri" type="dateRange" stored="false" indexed="true" multiValued="false"/>
     <dynamicField name="*_drim" type="dateRange" stored="false" indexed="true" multiValued="true"/>
-    <dynamicField name="*_drs" type="dateRange" stored="true" indexed="false" multiValued="false"/>
-    <dynamicField name="*_drsm" type="dateRange" stored="true" indexed="false" multiValued="true"/>
     <dynamicField name="*_drsi" type="dateRange" stored="true" indexed="true" multiValued="false"/>
     <dynamicField name="*_drsim" type="dateRange" stored="true" indexed="true" multiValued="true"/>
+    <dynamicField name="*_drs" type="dateRange" stored="true" indexed="true" multiValued="false"/> <!-- indexed anyway because DateRangeField errors otherwise -->
+    <dynamicField name="*_drsm" type="dateRange" stored="true" indexed="true" multiValued="true"/> <!-- indexed anyway because DateRangeField errors otherwise -->
 
     <!-- long (_l...) -->
     <dynamicField name="*_li" type="long" stored="false" indexed="true" multiValued="false"/>
