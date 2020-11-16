@@ -30,6 +30,18 @@ This starts containers for:
 
 It also runs database migrations.
 
+In the engine development `app` container, the `.dassie` test application is setup as a docker
+bind mount to `/app/samvera/hyrax-webapp`, and your local development copy of Hyrax is bound to
+`/app/samvera/hyrax-engine`.
+
+This should bring up a development application on `http://localhost:3000`.
+
+You should now also be able to run `rspec` with:
+
+```sh
+docker-compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rspec spec/actors/hyrax/actors/file_actor_spec.rb"
+```
+
 ## Hyrax Image
 
 We also provide a base image which can be reused for your Hyrax applications: `hyrax`.
