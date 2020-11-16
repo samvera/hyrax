@@ -28,7 +28,8 @@ jobs:
           project: hyrax
 
       # Run rubocop in parallel with caching
-      - samvera/rubocop
+      - samvera/rubocop:
+          cache_version: '2'
 
       - persist_to_workspace:
           root: ~/
