@@ -16,7 +16,7 @@ module Hyrax
     end
 
     def name
-      translate('name')
+      translate('name', object_name.to_s.titleize)
     end
 
     def switch_to_new_work_path(route_set:, params:)
@@ -43,9 +43,10 @@ module Hyrax
       @object_name ||= concern.model_name.i18n_key
     end
 
-    def translate(key)
+    def translate(key, default = nil)
       defaults = []
       defaults << :"hyrax.select_type.#{object_name}.#{key}"
+      defaults << default
       defaults << :"hyrax.select_type.#{key}"
       defaults << ''
       I18n.t(defaults.shift, default: defaults)
