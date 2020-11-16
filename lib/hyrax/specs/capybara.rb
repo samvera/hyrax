@@ -53,6 +53,9 @@ else
     browser_options.args << '--headless'
     browser_options.args << '--disable-gpu'
     browser_options.args << '--no-sandbox'
+    browser_options.args << 'acceptInsecureCerts'
+    browser_options.args << '--allow-insecure-localhost'
+    browser_options.args << '--ignore-certificate-errors'
     Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
   end
 end

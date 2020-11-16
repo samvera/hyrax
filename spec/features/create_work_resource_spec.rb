@@ -9,6 +9,7 @@ RSpec.describe 'Creating a new Hyrax::Work Resource', :js, :workflow, :clean_rep
     let!(:uploaded_file2) { Hyrax::UploadedFile.create(file: file2, user: user) }
   
     before do
+      visit root_path
       # Grant the user access to deposit into an admin set.
       create(:permission_template_access,
              :deposit,
