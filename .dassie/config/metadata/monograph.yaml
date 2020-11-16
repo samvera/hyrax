@@ -23,4 +23,31 @@
 attributes:
   monograph_title:
     type: string
-
+  record_info:
+    type: string
+    form:
+      required: true
+      primary: true
+  place_of_publication:
+    type: string
+    form:
+      required: false
+      primary: true
+  genre:
+    type: string
+    form:
+      primary: true
+  series_title:
+    type: string
+    form:
+      primary: false
+  target_audience:
+    type: string
+    form:
+      multiple: true
+  table_of_contents:
+    type: string
+    form:
+      multiple: false
+  date_of_issuance:
+    type: string
