@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  samvera: samvera/circleci-orb@0
+  samvera: samvera/circleci-orb@dev:rubocop
 jobs:
   bundle:
     parameters:
@@ -28,24 +28,7 @@ jobs:
           project: hyrax
 
       # Run rubocop in parallel with caching
-      # This should get added to the orb once proven here
-
-      - restore_cache:
-          name: Restore rubocop cache
-          keys:
-            - v1-ruby<< parameters.ruby_version >>-bundle{{ checksum "Gemfile.lock" }}
-            - v1-ruby<< parameters.ruby_version >>
-            - v1
-
-      - run:
-          name: Run rubocop in parallel
-          command: bundle exec rubocop --parallel
-
-      - save_cache:
-          name: Save rubocop cache
-          key: v1-ruby<< parameters.ruby_version >>-bundle{{ checksum "Gemfile.lock" }}
-          paths:
-            - ~/.cache
+      - samvera/rubocop
 
       - persist_to_workspace:
           root: ~/
