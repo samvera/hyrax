@@ -65,8 +65,39 @@ class TestAppGenerator < Rails::Generators::Base
 
   def create_work
     generate 'hyrax:work_resource Monograph monograph_title:string'
-  end
 
+    append_file 'config/metadata/monograph.yaml' do
+      <<-EOS.strip_heredoc
+  publisher:
+    type: string
+    form:
+      required: true
+  place_of_publication:
+    type: string
+    form:
+      required: false
+  genre:
+    type: string
+    form:
+      primary: true
+  series_title:
+    type: string
+    form:
+      primary: false
+  bibliographic_citation: 
+    type: string
+    form:
+      multiple: true
+  table_of_contents:
+    type: string
+    form:
+      multiple: false
+  date_of_issuance:
+    type: string
+EOS
+    end
+  end
+  
   def banner
     say_status("info", "ADDING OVERRIDES FOR TEST ENVIRONMENT", :blue)
   end
