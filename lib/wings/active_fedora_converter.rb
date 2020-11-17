@@ -14,7 +14,7 @@ module Wings
   #
   # @note the `Valkyrie::Resource` object passed to this class **must** have an
   #   `#internal_resource` mapping it to an `ActiveFedora::Base` class.
-  class ActiveFedoraConverter
+  class ActiveFedoraConverter # rubocop:disable Metrics/ClassLength
     ##
     # Accesses the Class implemented for handling resource attributes
     # @return [Class]
@@ -47,7 +47,7 @@ module Wings
     # @return [Hash] attributes with values mapped for building an ActiveFedora model
     def attributes
       @attributes ||= attributes_class.mapped_attributes(attributes: resource.attributes).select do |attr|
-        attr == :permissions || attr.to_s.end_with?('_attributes') || active_fedora_class.properties.key?(attr.to_s) || active_fedora_class.reflections.key?(attr.to_sym)
+        active_fedora_class.supports_property?(attr)
       end
     end
 
@@ -203,7 +203,15 @@ module Wings
     def normal_attributes
       attributes.each_with_object({}) do |(attr, value), hash|
         property = active_fedora_class.properties[attr.to_s]
-        hash[attr] = property&.multiple? ? Array.wrap(value) : value
+        hash[attr] = if property.nil?
+                       value
+                     elsif property.multiple?
+                       Array.wrap(value)
+                     elsif Array.wrap(value).length < 2
+                       Array.wrap(value).first
+                     else
+                       value
+                     end
       end
     end
 

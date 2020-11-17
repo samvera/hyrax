@@ -20,6 +20,15 @@ module ActiveFedora
   def self.model_mapper
     ActiveFedora::DefaultModelMapper.new(classifier_class: Wings::ActiveFedoraClassifier)
   end
+
+  class Base
+    def self.supports_property?(property)
+      property == :permissions ||
+        property.to_s.end_with?('_attributes') ||
+        properties.key?(property.to_s) ||
+        reflections.key?(property.to_sym)
+    end
+  end
 end
 
 Valkyrie::MetadataAdapter.register(

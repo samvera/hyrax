@@ -43,6 +43,7 @@ module Wings
     # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/BlockLength
     # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     # rubocop:disable Metrics/MethodLength because metaprogramming a class
     #   results in long methods
     def self.to_valkyrie_resource_class(klass:)
@@ -78,14 +79,22 @@ module Wings
         end
 
         klass.properties.each_key do |property_name|
-          attribute property_name.to_sym, ::Valkyrie::Types::String
+          next if fields.include?(property_name.to_sym)
+
+          if klass.properties[property_name].multiple?
+            attribute property_name.to_sym, ::Valkyrie::Types::Set.of(::Valkyrie::Types::Anything).optional
+          else
+            attribute property_name.to_sym, ::Valkyrie::Types::Anything.optional
+          end
         end
 
         relationship_keys.each do |linked_property_name|
+          next if fields.include?(linked_property_name.to_sym)
           attribute linked_property_name.to_sym, ::Valkyrie::Types::Set.of(::Valkyrie::Types::ID)
         end
 
         reflection_id_keys.each do |property_name|
+          next if fields.include?(property_name.to_sym)
           attribute property_name, ::Valkyrie::Types::ID
         end
 
@@ -100,3 +109,4 @@ end
 # rubocop:enable Metrics/BlockLength
 # rubocop:enable Metrics/MethodLength
 # rubocop:enable Metrics/CyclomaticComplexity
+# rubocop:enable Metrics/PerceivedComplexity
