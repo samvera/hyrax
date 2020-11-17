@@ -39,7 +39,7 @@ This should bring up a development application on `http://localhost:3000`.
 You should now also be able to run `rspec` with:
 
 ```sh
-docker-compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rspec spec/actors/hyrax/actors/file_actor_spec.rb"
+docker-compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rspec"
 ```
 
 ## Hyrax Image
