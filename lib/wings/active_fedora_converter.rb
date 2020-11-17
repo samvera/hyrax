@@ -46,7 +46,9 @@ module Wings
     #
     # @return [Hash] attributes with values mapped for building an ActiveFedora model
     def attributes
-      @attributes ||= self.class.attributes_class.mapped_attributes(attributes: resource.attributes)
+      @attributes ||= attributes_class.mapped_attributes(attributes: resource.attributes).select do |attr|
+        attr == :permissions || attr.to_s.end_with?('_attributes') || active_fedora_class.properties.key?(attr.to_s) || active_fedora_class.reflections.key?(attr.to_sym)
+      end
     end
 
     ##
@@ -54,6 +56,7 @@ module Wings
     def convert
       active_fedora_class.new(normal_attributes).tap do |af_object|
         af_object.id = id unless id.empty?
+        normal_attributes.each_key { |key| af_object.send(:attribute_will_change!, key) }
         add_access_control_attributes(af_object)
         convert_members(af_object)
         convert_member_of_collections(af_object)
@@ -135,6 +138,9 @@ module Wings
 
     class NestedResource < ActiveTriples::Resource
       property :title, predicate: ::RDF::Vocab::DC.title
+      property :author, predicate: ::RDF::URI('http://example.com/ns/author')
+      property :depositor, predicate: ::RDF::URI('http://example.com/ns/depositor')
+      property :nested_resource, predicate: ::RDF::URI("http://example.com/nested_resource"), class_name: NestedResource
       property :ordered_authors, predicate: ::RDF::Vocab::DC.creator
       property :ordered_nested, predicate: ::RDF::URI("http://example.com/ordered_nested")
 
@@ -151,6 +157,10 @@ module Wings
     end
 
     private
+
+    def attributes_class
+      self.class.attributes_class
+    end
 
     def convert_members(af_object)
       return unless resource.respond_to?(:member_ids) && resource.member_ids
