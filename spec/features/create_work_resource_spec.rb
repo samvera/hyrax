@@ -131,7 +131,7 @@ RSpec.describe 'Creating a new Hyrax::Work Resource', :js, :workflow, :clean_rep
       # TODO: Fails to load display page due to known error.  Remove commented out lines when Issue #4559
       begin
         click_on('Save')
-      rescue Exception
+      rescue Exception # rubocop:disable Lint/RescueException - TODO: remove this rescue when #4559 is fixed
         # ignore
       end
       # expect(page).to have_content('My Test Work')
