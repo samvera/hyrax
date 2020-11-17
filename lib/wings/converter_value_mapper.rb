@@ -25,6 +25,32 @@ module Wings
     end
   end
 
+  class FedoraProtectedAttributes < ::Valkyrie::ValueMapper
+    ConverterValueMapper.register(self)
+
+    ATTRIBUTES = [:create_date, :modified_date, :head, :tail, :has_model].freeze
+
+    def self.handles?(value)
+      ATTRIBUTES.include?(value.first)
+    end
+
+    def result
+      nil
+    end
+  end
+
+  class NilAttributeValue < ::Valkyrie::ValueMapper
+    ConverterValueMapper.register(self)
+
+    def self.handles?(value)
+      value.last.nil?
+    end
+
+    def result
+      value
+    end
+  end
+
   class ReflectionIdValue < ::Valkyrie::ValueMapper
     ConverterValueMapper.register(self)
 
@@ -165,13 +191,15 @@ module Wings
 
   class NestedResourceValue < ::Valkyrie::ValueMapper
     ConverterValueMapper.register(self)
+
     def self.handles?(value)
       value.last.is_a?(Dry::Struct)
     end
 
     def result
-      attrs = ActiveFedoraAttributes.new(value.last.attributes).result
-      [value.first, attrs]
+      attrs = ActiveFedoraConverter.new(resource: value.last).attributes
+
+      [value.first, ActiveFedoraAttributes.new(attrs).result]
     end
   end
 
@@ -179,7 +207,7 @@ module Wings
     attr_reader :attributes
 
     def initialize(attributes)
-      @attributes = attributes.compact
+      @attributes = attributes
     end
 
     def self.mapped_attributes(attributes:)
