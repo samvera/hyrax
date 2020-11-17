@@ -3,7 +3,7 @@ require 'wings_helper'
 require 'wings/services/file_metadata_builder'
 
 RSpec.describe Wings::FileMetadataBuilder do
-  subject do
+  subject(:builder) do
     described_class.new(storage_adapter: Hyrax.storage_adapter,
                         persister: Hyrax.persister)
   end
@@ -26,7 +26,7 @@ RSpec.describe Wings::FileMetadataBuilder do
 
   describe '#create(io_wrapper:, file_metadata:, file_set:)' do
     it 'creates file metadata' do
-      built_file_metadata = subject.create(io_wrapper: io_wrapper, file_metadata: original_file_metadata, file_set: file_set)
+      built_file_metadata = builder.create(io_wrapper: io_wrapper, file_metadata: original_file_metadata, file_set: file_set)
       expect(built_file_metadata).to be_kind_of Hyrax::FileMetadata
       expect(built_file_metadata.original_file?).to be true
       expect(built_file_metadata.file_set_id.id).to eq file_set.id.id

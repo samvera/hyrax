@@ -178,9 +178,10 @@ module Wings
       return unless resource.respond_to? :file_ids
 
       af_object.files = resource.file_ids.map do |fid|
+        next if fid.blank?
         pcdm_file = Hydra::PCDM::File.new(fid.id)
         assign_association_target(af_object, pcdm_file)
-      end
+      end.compact
     end
 
     def assign_association_target(af_object, pcdm_file)
