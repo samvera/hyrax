@@ -12,7 +12,9 @@ We suport a `docker-compose`-based development environment for folks working on
 the Hyrax engine. This environment is substantially more like a Hyrax production
 setup than the older `fedora_wrapper`/`solr_wrapper` approach.
 
-Start the development setup with:
+First, make sure you have installed [Docker](https://www.docker.com/).  Then clone [the Hyrax repository](https://github.com/samvera/hyrax).
+
+Within your cloned repository, tell Docker to get started installing your development environment:
 
 ```sh
 docker-compose build
@@ -28,7 +30,11 @@ This starts containers for:
   - Redis
   - Memcached
 
-It also runs database migrations.  This will also bring up a development application on `http://localhost:3000`.
+It also runs database migrations. This will also bring up a development application on `http://localhost:3000`.
+
+To stop the containers for the Hyrax-based application, type <kbd>Ctrl</kbd>+<kbd>c</kbd>.  To restart the containers you need only run `docker-compose up`.
+
+_**Note:** Starting and stopping Docker in this way will preserve your data between restarts._
 
 ### Tasks on Development Environment
 
