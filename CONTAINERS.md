@@ -28,7 +28,35 @@ This starts containers for:
   - Redis
   - Memcached
 
-It also runs database migrations.
+It also runs database migrations.  This will also bring up a development application on `http://localhost:3000`.
+
+### Tasks on Development Environment
+
+In the engine development `app` container, the `.dassie` test Hyrax-based application is setup as a docker
+bind mount to `/app/samvera/hyrax-webapp`, and your local development copy of Hyrax (eg. the clone [samvera/hyrax](https://github.com/samvera/hyrax)) is bound to
+`/app/samvera/hyrax-engine`.  Those directories are defined as part of the [Dockerfile](Dockerfile) configuration.
+
+What does this structure mean? Let's look at an example.  The following command will list the rake tasks for the Hyrax-based application running in Docker:
+
+```sh
+docker-compose exec -w /app/samvera/hyrax-webapp app sh -c "bundle exec rake -T"
+```
+
+And this command lists the rake tasks for the Hyrax engine that is in Docker:
+
+```sh
+docker-compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rake -T"
+```
+
+_**Note**: The `/app/samvera/hyrax-webapp` is analogous to the `.internal_test_app` that we generate as part of the Hyrax engine Continuous Integation._
+
+You should now be able to run `rspec` with the following:
+
+```sh
+docker-compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rspec"
+```
+
+Again, notice that we're running `rspec` on `hyrax-engine` (e.g. the Hyrax engine).
 
 In the engine development `app` container, the `.dassie` test application is setup as a docker
 bind mount to `/app/samvera/hyrax-webapp`, and your local development copy of Hyrax is bound to
