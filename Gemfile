@@ -11,6 +11,8 @@ group :development, :test do
   gem 'pry' unless ENV['CI']
   gem 'pry-byebug' unless ENV['CI']
   gem "simplecov", require: false
+  gem 'benchmark-ips'
+  gem 'ruby-prof', require: false
 end
 
 test_app_path    = ENV['RAILS_ROOT'] ||
