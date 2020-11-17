@@ -24,7 +24,7 @@ RSpec.describe Wings::AttributeTransformer do
 
   it "transform the attributes" do
     expect(subject).to include title: work.title,
-                               contributor: work.contributor,
-                               description: work.description
+                               contributor: work.contributor.first,
+                               description: work.description.first
   end
 end

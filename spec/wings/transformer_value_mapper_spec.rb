@@ -50,10 +50,10 @@ RSpec.describe Wings::TransformerValueMapper do
     context 'with a numeric value'
 
     context 'with an enumerable value' do
-      let(:value) { ['a value'] }
+      let(:value) { ['a value', 'another value'] }
 
-      it 'maps internal values' do
-        expect(mapper.result).to eq value
+      it 'maps single values' do
+        expect(mapper.result).to contain_exactly(*value)
       end
     end
   end
