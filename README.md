@@ -47,7 +47,7 @@ Jump in: [![Slack Status](http://slack.samvera.org/badge.svg)](http://slack.samv
 
 Hyrax is a [Ruby on Rails Engine](https://guides.rubyonrails.org/engines.html) built by the [Samvera community](https://samvera.org). Hyrax provides a foundation for creating many different digital repository applications.
 
-_**Note:** As a Rails Engine, Hyrax is not an web application. To build your digital repository using Hyrax you must mount the Hyrax engine within a Rails application. We call an application that mounts Hyrax a "Hyrax-based application" (or sometimes a "Hyrax Application")._
+_**Note:** As a Rails Engine, Hyrax is not a web application. To build your digital repository using Hyrax you must mount the Hyrax engine within a Rails application. We call an application that mounts Hyrax a "Hyrax-based application" (or sometimes a "Hyrax Application")._
 
 Hyrax offers the ability to:
 
@@ -55,7 +55,7 @@ Hyrax offers the ability to:
 * Deposit content via multiple configurable workflows
 * Describe content with flexible metadata
 * Enable/disable optional features via an administrative dashboard
-* And more
+* And more (https://hyrax.samvera.org/about/)
 
 # Feature Documentation
 
