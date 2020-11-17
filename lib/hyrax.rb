@@ -37,6 +37,7 @@ module Hyrax
     autoload :RedisEventStore
     autoload :ResourceSync
     autoload :Zotero
+    autoload :Listeners
   end
 
   # @api public
