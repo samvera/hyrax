@@ -5,8 +5,6 @@ namespace :wings do
     load 'rails/tasks/engine.rake'
   end
   task benchmark_save: :environment do
-    # Base Case: 1.4 / Second
-    Rails.logger = Logger.new(STDOUT)
     Benchmark.ips do |x|
       x.report "save a Valkyrie object" do
         save_object
