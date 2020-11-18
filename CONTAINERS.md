@@ -1,10 +1,14 @@
 Hyrax-in-a-Container
 ====================
 
-We're experimentally supporting a number of container environments for Hyrax.
-While our goal is to provide a practical, reusable 'reference environment' for
-applications, this support is in early stages. If you use these containers, plan
-to get your hands dirty.
+Our goal is to provide a practical, reusable "reference environment for applications.  The first step is providing
+on on-ramp for Hyrax engine development.  Then providing help with Hyrax-based application development.  Finally,
+providing better guidance around deployment.
+
+Where are we at?  It's complicated.  What we have below is experimental support, but one that we want to push
+towards.  We need your help to keep pushing in this direction.  So dig in and prepare to get your hands dirty.
+
+The [Hyrax Engine Development](#hyrax-engine-development) is further along than the [Docker Image for Hyrax-based Applications](docker-image-for-hyrax-based-applications) which is further along than [Deploying to Production](#deploying-to-production).
 
 <!-- NOTE: This title is referenced in the top-level README.md. Keep that in mind if you change it. -->
 ## Hyrax Engine Development
@@ -127,7 +131,7 @@ docker push samveralabs/dassie:(git rev-parse HEAD)
 docker push samveralabs/dassie:$HYRAX_VERSION
 ```
 
-## Helm Chart
+## Deploying to Production
 
 Also under development is a Helm chart, which we are developing into a robust,
 configurable production environment for Hyrax applications.
