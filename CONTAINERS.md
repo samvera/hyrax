@@ -33,17 +33,50 @@ This starts containers for:
 
 It also runs database migrations. This will also bring up a development application on `http://localhost:3000`.
 
-To stop the containers for the Hyrax-based application, type <kbd>Ctrl</kbd>+<kbd>c</kbd>.  To restart the containers you need only run `docker-compose up`.
+To stop the containers for the Hyrax-based application, type <kbd>Ctrl</kbd>+<kbd>c</kbd>. To restart the containers you need only run `docker-compose up`.
 
 _**Note:** Starting and stopping Docker in this way will preserve your data between restarts._
 
-### Tasks on Development Environment
+### Code Changes and Testing
+
+With `docker-compose up` running, any changes you make to your cloned Hyrax code-base should show up in `http://localhost:3000`; There may be cases where you need to restart your test application (e.g. stop the containers and start them up again).
+
+Any changes you make to Hyrax should be tested. You can run the full test suite using the following command:
+
+```sh
+docker-compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rspec"
+```
+
+Let's break down the above command:
+
+<dl>
+<dt><code>docker-compose exec</code></dt>
+<dd>Tell docker to run the following:</dd>
+<dt><code>-w /app/samvera/hyrax-engine</code></dt>
+<dd>In the working directory "/app/samvera/hyrax-engine" (e.g. your cloned Hyrax repository)</dd>
+<dt><code>app</code></dt>
+<dd>of the container named "app"</dd>
+<dt><code>sh -c</code>
+<dd>run the following shell script</dd>
+<dt><code>"bundle exec rspec"</code></dt>
+<dd>run the rspec test suite</dd>
+</dl>
+
+_**Note:**_ The `bundle exec rspec` portion of the command runs the whole test suite. See the [rspec command documentation](https://github.com/rspec/rspec-core#the-rspec-command) for how to refine your test runs.
+
+_**Note**: The `/app/samvera/hyrax-webapp` is analogous to the `.internal_test_app` that we generate as part of the Hyrax engine Continuous Integration._
+
+### The Docker Container Named "app"
+
+As a developer, you may need to run commands against the Hyrax-based application and/or the Hyrax engine.  Examples
+of those commands are `rails db:migrate` and `rspec`.  You would run `rails db:migrate` on the Hyrax-based
+application, and `rspec` on the Hyrax engine.
 
 In the engine development `app` container, the `.dassie` test Hyrax-based application is setup as a docker
 bind mount to `/app/samvera/hyrax-webapp`, and your local development copy of Hyrax (eg. the clone [samvera/hyrax](https://github.com/samvera/hyrax)) is bound to
 `/app/samvera/hyrax-engine`.  Those directories are defined as part of the [Dockerfile](Dockerfile) configuration.
-
-What does this structure mean? Let's look at an example.  The following command will list the rake tasks for the Hyrax-based application running in Docker:
+                                                                                                                                 .
+What does this structure mean? Let's look at an example. The following command will list the rake tasks for the Hyrax-based application running in Docker:
 
 ```sh
 docker-compose exec -w /app/samvera/hyrax-webapp app sh -c "bundle exec rake -T"
@@ -55,27 +88,7 @@ And this command lists the rake tasks for the Hyrax engine that is in Docker:
 docker-compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rake -T"
 ```
 
-_**Note**: The `/app/samvera/hyrax-webapp` is analogous to the `.internal_test_app` that we generate as part of the Hyrax engine Continuous Integation._
-
-You should now be able to run `rspec` with the following:
-
-```sh
-docker-compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rspec"
-```
-
-Again, notice that we're running `rspec` on `hyrax-engine` (e.g. the Hyrax engine).
-
-In the engine development `app` container, the `.dassie` test application is setup as a docker
-bind mount to `/app/samvera/hyrax-webapp`, and your local development copy of Hyrax is bound to
-`/app/samvera/hyrax-engine`.
-
-This should bring up a development application on `http://localhost:3000`.
-
-You should now also be able to run `rspec` with:
-
-```sh
-docker-compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rspec"
-```
+In the two examples, note the difference in the `-w` switch. In the first case, it's referencing the Hyrax-based application. In the latter case, it's referencing the Hyrax engine.
 
 <!-- NOTE: This title is referenced in the top-level documentation/developing-your-hyrax-based-app.md. Keep that in mind if you change it. -->
 ## Docker Image for Hyrax-based Applications
