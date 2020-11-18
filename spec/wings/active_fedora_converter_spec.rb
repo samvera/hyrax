@@ -16,8 +16,10 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
     end
 
     it 'gives equivilent classes' do
-      expect(described_class.convert(resource: Monograph.new).class <= described_class.convert(resource: Monograph.new).class)
-        .to eq true
+      first_class = described_class.convert(resource: Monograph.new).class
+      second_class = described_class.convert(resource: Monograph.new).class
+
+      expect(first_class <= second_class).to eq true
     end
   end
 
