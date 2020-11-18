@@ -6,7 +6,8 @@ While our goal is to provide a practical, reusable 'reference environment' for
 applications, this support is in early stages. If you use these containers, plan
 to get your hands dirty.
 
-## Engine Development
+<!-- NOTE: This title is referenced in the top-level README.md. Keep that in mind if you change it. -->
+## Hyrax Engine Development
 
 We suport a `docker-compose`-based development environment for folks working on
 the Hyrax engine. This environment is substantially more like a Hyrax production
@@ -76,7 +77,8 @@ You should now also be able to run `rspec` with:
 docker-compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rspec"
 ```
 
-## Hyrax Image
+<!-- NOTE: This title is referenced in the top-level documentation/developing-your-hyrax-based-app.md. Keep that in mind if you change it. -->
+## Docker Image for Hyrax-based Applications
 
 We also provide a base image which can be reused for your Hyrax applications: `hyrax`.
 
