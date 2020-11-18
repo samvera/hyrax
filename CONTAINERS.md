@@ -13,7 +13,7 @@ The [Hyrax Engine Development](#hyrax-engine-development) is further along than 
 <!-- NOTE: This title is referenced in the top-level README.md. Keep that in mind if you change it. -->
 ## Hyrax Engine Development
 
-We suport a `docker-compose`-based development environment for folks working on
+We support a `docker-compose`-based development environment for folks working on
 the Hyrax engine. This environment is substantially more like a Hyrax production
 setup than the older `fedora_wrapper`/`solr_wrapper` approach.
 
