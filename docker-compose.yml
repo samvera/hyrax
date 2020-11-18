@@ -5,6 +5,8 @@ services:
     build:
       context: .
       target: hyrax-engine-dev
+      args:
+        - EXTRA_APK_PACKAGES=git less
     image: hyrax-engine-dev
     stdin_open: true
     tty: true
