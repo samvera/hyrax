@@ -25,8 +25,8 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - .dassie:/app/samvera/hyrax-webapp
-      - .:/app/samvera/hyrax-engine
+      - .dassie:/app/samvera/hyrax-webapp:cached
+      - .:/app/samvera/hyrax-engine:cached
       - rails-public:/app/samvera/hyrax-webapp/public
       - rails-tmp:/app/samvera/hyrax-webapp/tmp
 
