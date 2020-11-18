@@ -36,6 +36,7 @@ Metrics/BlockLength:
     - 'lib/hyrax/rails/routes.rb'
     - 'lib/tasks/*.rake'
     - 'spec/**/*.rb'
+    - 'tasks/benchmark.rake'
 
 Style/AsciiComments:
   Enabled: false
