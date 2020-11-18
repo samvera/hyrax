@@ -118,12 +118,6 @@ Hydra::AccessControl.send(:define_method, :valkyrie_resource) do
   Hyrax::AccessControl.new(**attrs)
 end
 
-ActiveTriples::Properties::ClassMethods.send(:define_method, :protected_property_name?) do |name|
-  name = name.to_sym
-  return false if fields.include?(name)
-  return true if instance_methods.include?(name)
-end
-
 begin
   require 'wings/setup'
 rescue NameError, Hyrax::SimpleSchemaLoader::UndefinedSchemaError => err
