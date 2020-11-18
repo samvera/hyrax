@@ -96,7 +96,7 @@ module Wings
         # skip reserved attributes, proctected properties, and those already defined
         resource_class.schema.each do |schema_key|
           next if resource_class.reserved_attributes.include?(schema_key.name)
-          next if protected_property_name?(schema_key.name)
+          next if self.instance_methods.find { |x| x == schema_key.name }
           next if properties.keys.include?(schema_key.name.to_s)
 
           property schema_key.name, predicate: RDF::URI("http://hyrax.samvera.org/ns/wings##{schema_key.name}")
