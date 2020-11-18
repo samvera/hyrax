@@ -23,6 +23,14 @@ module Wings
     end
 
     ##
+    # A class level cache mapping from Valkyrie resource classes to generated
+    # ActiveFedora classes
+    # @return [Hash<Class, Class>]
+    def self.class_cache
+      @class_cache ||= {}
+    end
+
+    ##
     # @params [Valkyrie::Resource] resource
     #
     # @return [ActiveFedora::Base]
@@ -92,7 +100,7 @@ module Wings
     end
 
     def self.DefaultWork(resource_class)
-      Class.new(DefaultWork) do
+      class_cache[resource_class] ||= Class.new(DefaultWork) do
         self.valkyrie_class = resource_class
 
         # extract AF properties from the Valkyrie schema;

@@ -14,6 +14,11 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
     it 'returns the ActiveFedora model' do
       expect(described_class.convert(resource: resource)).to eq work
     end
+
+    it 'gives equivilent classes' do
+      expect(described_class.convert(resource: Monograph.new).class <= described_class.convert(resource: Monograph.new).class)
+        .to eq true
+    end
   end
 
   describe '#convert' do
