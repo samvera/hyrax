@@ -5,14 +5,14 @@ source 'https://rubygems.org'
 gemspec
 
 group :development, :test do
+  gem 'benchmark-ips'
   gem 'easy_translate'
   gem 'i18n-tasks'
   gem 'okcomputer'
   gem 'pry' unless ENV['CI']
   gem 'pry-byebug' unless ENV['CI']
-  gem "simplecov", require: false
-  gem 'benchmark-ips'
   gem 'ruby-prof', require: false
+  gem "simplecov", require: false
 end
 
 test_app_path    = ENV['RAILS_ROOT'] ||

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable Metrics/ClassLength
 
 require 'wings/converter_value_mapper'
 
@@ -237,3 +238,4 @@ module Wings
     end
   end
 end
+# rubocop:enable Metrics/ClassLength
