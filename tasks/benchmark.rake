@@ -13,6 +13,7 @@ namespace :wings do
   end
   task profile_save: :environment do
     require 'ruby-prof'
+    save_object
     result = RubyProf.profile(include_threads: [Thread.current], merge_fibers: true) do
       save_object
     end
