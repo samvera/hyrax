@@ -20,14 +20,11 @@ Jump in: [![Slack Status](http://slack.samvera.org/badge.svg)](http://slack.samv
 * [Help](#help)
 * [Working with Hyrax](#working-with-hyrax)
   * [Developing the Hyrax Engine](#developing-the-hyrax-engine)
+    * [Contributing](#contributing)
+    * [Release process](#release-process)
   * [Developing your Hyrax\-based Application](#developing-your-hyrax-based-application)
-* [License](#license)
-* [Contributing](#contributing)
-* [Development](#development)
-  * [Reporting Security Issues](#reporting-security-issues)
-  * [Workflow Relationship Diagram](#workflow-relationship-diagram)
-* [Release process](#release-process)
 * [Acknowledgments](#acknowledgments)
+* [License](#license)
 
 <aside>Table of contents created by <a href="https://github.com/ekalinin/github-markdown-toc.go">gh-md-toc</a></aside>
 
@@ -50,6 +47,7 @@ Hyrax offers the ability to:
 * List of features: [Feature Matrix](https://github.com/samvera/hyrax/wiki/Feature-matrix)
 * Configuration and enabling features: [Hyrax Management Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide)
 * Walk-through on using features: [Hyrax Feature Guides](https://samvera.github.io/intro-to.html)
+* [Entity Relationship Diagram](./artifacts/entity-relationship-diagram.pdf)
 * For general information about Hyrax: [Hyrax Site](https://hyrax.samvera.org/)
 * A note about [versions of Hyrax](./documentation/note-about-versions.md)
 
@@ -70,21 +68,11 @@ This is where you work on the code-base that will be used by yours and other Hyr
 
 <aside><p><em><strong>Note:</em></strong> This is not the only path for Hyrax-engine development.  In the past, <a href="./documentation/legacyREADME.md">we documented extensive steps</a> to install the various dependencies for Hyrax-engine development.  By moving to Docker, we are encoding the documentation steps for standing up a Hyrax-engine development environment.</p></aside>
 
-### Developing your Hyrax-based Application
-
-For those familiar with Rails, this is where you create your own application (via `rails new`) and add Hyrax as a gem to your `Gemfile`.  Your Hyrax-based application is the place for you to create features specific to your Hyrax-based application.
-
-For more information, see [our documentation on developing your Hyrax-based application](./documentation/developing-your-hyrax-based-app.md).
-
-## License
-
-Hyrax is available under [the Apache 2.0 license](LICENSE.md).
-
-## Contributing
+#### Contributing
 
 We'd love to accept your contributions.  Please see our guide to [contributing to Hyrax](./.github/CONTRIBUTING.md).
 
-If you'd like to help the development effort and you're not sure where to get started, you can always grab a ticket in the "Ready" column from our [Waffle board](https://waffle.io/samvera/hyrax). There are other ways to help, too.
+Here are possible ways to help:
 
 * The Hyrax user interface is translated into a number of languages, and many of these translations come from Google Translate. If you are a native or fluent speaker of a non-English language, your help improving these translations are most welcome. (Hyrax currently supports English, Spanish, Chinese, Italian, German, French, and Portuguese.)
   * Do you see English in the application where you would expect to see one of the languages above? If so, [file an issue](https://github.com/samvera/hyrax/issues/new) and suggest a translation, please.
@@ -92,21 +80,15 @@ If you'd like to help the development effort and you're not sure where to get st
 * Help us improve [Hyrax's test coverage](https://coveralls.io/r/samvera/hyrax) or [documentation coverage](https://inch-ci.org/github/samvera/hyrax).
 * Refactor away [code smells](https://codeclimate.com/github/samvera/hyrax).
 
-## Development
-
-The [Hyrax Development Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide) is for people who want to modify Hyrax itself, not an application that uses Hyrax. See especially the [Quick Start](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide#quick-start-for-hyrax-development) guide and instructions for running the [Hyrax test suite](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide#run-the-test-suite).
-
-### Reporting Security Issues
-
-To report a security vulnerability, email [samvera-steering@googlegroups.com](mailto:samvera-steering@googlegroups.com) and the Steering Group will coordinate the community response. In your message, please document to the best of your ability cases (relevant software versions, conditions, etc.) where the vulnerability is applicable, the potential negative effects, and any known workarounds or fixes to mitigate the risk. Steering will communicate this to the Partners and the rest of the community in a timely fashion.
-
-### Workflow Relationship Diagram
-
-* [Entity Relationship Diagram](./artifacts/entity-relationship-diagram.pdf)
-
-## Release process
+#### Release process
 
 See the [release management process](https://github.com/samvera/hyrax/wiki/Release-management-process).
+
+### Developing your Hyrax-based Application
+
+For those familiar with Rails, this is where you create your own application (via `rails new`) and add Hyrax as a gem to your `Gemfile`.  Your Hyrax-based application is the place for you to create features specific to your Hyrax-based application.
+
+For more information, see [our documentation on developing your Hyrax-based application](./documentation/developing-your-hyrax-based-app.md).
 
 ## Acknowledgments
 
@@ -114,3 +96,7 @@ This software has been developed by and is brought to you by the Samvera communi
 [Samvera website](http://samvera.org/).
 
 ![Samvera Logo](https://wiki.duraspace.org/download/thumbnails/87459292/samvera-fall-font2-200w.png?version=1&modificationDate=1498550535816&api=v2)
+
+## License
+
+Hyrax is available under [the Apache 2.0 license](LICENSE.md).
