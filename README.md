@@ -64,7 +64,7 @@ There are two primary Hyrax development concerns:
 
 ### Developing the Hyrax Engine
 
-This is where you work on the code-base that will be used by yours and other Hyrax-based applications.  We recommend using [Docker and Hyrax's engine development containers](./CONTAINERS.MD).
+This is where you work on the code-base that will be used by yours and other Hyrax-based applications.  We recommend using [Docker and Hyrax's engine development containers](./CONTAINERS.md).
 
 <aside><p><em><strong>Note:</em></strong> This is not the only path for Hyrax-engine development.  In the past, <a href="./documentation/legacyREADME.md">we documented extensive steps</a> to install the various dependencies for Hyrax-engine development.  By moving to Docker, we are encoding the documentation steps for standing up a Hyrax-engine development environment.</p></aside>
 
