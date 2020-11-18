@@ -72,6 +72,7 @@ module Wings
     ##
     # @return [Enumerable<Object>]
     def result
+      return calling_mapper.for(value.first).result if value.length < 2
       value.map { |v| calling_mapper.for(v).result }
     end
   end

@@ -177,6 +177,24 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  describe '#proxy_depositor' do
+    let(:user1) { FactoryBot.create(:user).to_s }
+    let(:user2) { FactoryBot.create(:user).to_s }
+    let(:work) { FactoryBot.valkyrie_create(:hyrax_work, on_behalf_of: user2, proxy_depositor: user1) }
+    it 'delegates to model' do
+      expect(form.proxy_depositor).to eq user1
+    end
+  end
+
+  describe '#on_behalf_of' do
+    let(:user1) { create(:user).to_s }
+    let(:user2) { create(:user).to_s }
+    let(:work) { FactoryBot.valkyrie_create(:hyrax_work, on_behalf_of: user2, proxy_depositor: user1) }
+    it 'delegates to model' do
+      expect(form.on_behalf_of).to eq user2
+    end
+  end
+
   describe '#primary_terms' do
     it 'lists the core metadata primary terms' do
       expect(form.primary_terms).to contain_exactly(:title)

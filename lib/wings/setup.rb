@@ -2,9 +2,32 @@
 
 ActiveFedora::Base.include Wings::Valkyrizable
 
+module ActiveTriples
+  class NodeConfig
+    ##
+    # all ActiveTriples nodes are multiple
+    #
+    # this is a commonly used method on ActiveFedora's node configurations
+    # adding the method here gives us a more consistent interface from
+    # `ActiveFedora::Base.properties`.
+    def multiple?
+      true
+    end
+  end
+end
+
 module ActiveFedora
   def self.model_mapper
     ActiveFedora::DefaultModelMapper.new(classifier_class: Wings::ActiveFedoraClassifier)
+  end
+
+  class Base
+    def self.supports_property?(property)
+      property == :permissions ||
+        property.to_s.end_with?('_attributes') ||
+        properties.key?(property.to_s) ||
+        reflections.key?(property.to_sym)
+    end
   end
 end
 

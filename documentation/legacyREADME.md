@@ -1,24 +1,14 @@
-# Hyrax: A Digital Repository Framework
+# Legacy README
 
-![Samvera's Hyrax Logo](https://raw.githubusercontent.com/samvera/hyrax/gh-pages/assets/images/hyrax_logo_horizontal_white_background.png)
+This is a deprecated document that might have some useful information.
 
-Code: [![Version](https://badge.fury.io/rb/hyrax.png)](http://badge.fury.io/rb/hyrax)
-[![CircleCI](https://circleci.com/gh/samvera/hyrax.svg?style=svg)](https://circleci.com/gh/samvera/hyrax)
-[![Code Climate](https://codeclimate.com/github/samvera/hyrax/badges/gpa.svg)](https://codeclimate.com/github/samvera/hyrax)
-
-Docs: [![Documentation Status](https://inch-ci.org/github/samvera/hyrax.svg?branch=master)](https://inch-ci.org/github/samvera/hyrax)
-[![API Docs](http://img.shields.io/badge/API-docs-blue.svg)](http://rubydoc.info/gems/hyrax)
-[![Contribution Guidelines](http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg)](./.github/CONTRIBUTING.md)
-[![Apache 2.0 License](http://img.shields.io/badge/APACHE2-license-blue.svg)](./LICENSE)
-
-Jump in: [![Slack Status](http://slack.samvera.org/badge.svg)](http://slack.samvera.org/)
-
-## Table of Contents
+# Table of Contents
 
   * [What is Hyrax?](#what-is-hyrax)
   * [Feature Documentation](#feature-documentation)
   * [Help](#help)
   * [Getting started](#getting-started)
+    * [Note about Versions](#note-about-versions)
     * [Prerequisites](#prerequisites)
       * [Characterization](#characterization)
       * [Derivatives](#derivatives)
@@ -36,48 +26,49 @@ Jump in: [![Slack Status](http://slack.samvera.org/badge.svg)](http://slack.samv
     * [Enable notifications](#enable-notifications)
   * [Managing a Hyrax\-based app](#managing-a-hyrax-based-app)
     * [Toggling Features](#toggling-features)
-  * [License](#license)
   * [Contributing](#contributing)
   * [Development](#development)
     * [Reporting Security Issues](#reporting-security-issues)
     * [Workflow Relationship Diagram](#workflow-relationship-diagram)
-  * [Release process](#release-process)
   * [Acknowledgments](#acknowledgments)
 
-## What is Hyrax?
+# What is Hyrax?
 
-Hyrax is a [Ruby on Rails Engine](https://guides.rubyonrails.org/engines.html) built by the [Samvera community](https://samvera.org). Hyrax provides a foundation for creating many different digital repository applications.
+Hyrax is a front-end based on the robust [Samvera](http://samvera.org) framework, providing a user interface for common repository features. Hyrax offers the ability to create repository object types on demand, to deposit content via multiple configurable workflows, and to describe content with flexible metadata. Numerous optional features may be turned on in the administrative dashboard or added through plugins. It is implemented as a Rails engine, so it may be the base of, or added to, a Rails application. Hyrax is the consolidation of Sufia and the CurationConcerns gems and behaves in much the same way.
 
-_**Note:** As a Rails Engine, Hyrax is not a web application. To build your digital repository using Hyrax you must mount the Hyrax engine within a Rails application. We call an application that mounts Hyrax a "Hyrax-based application" (or sometimes a "Hyrax Application")._
-
-Hyrax offers the ability to:
-
-* Create repository object types on demand
-* Deposit content via multiple configurable workflows
-* Describe content with flexible metadata
-* Enable/disable optional features via an administrative dashboard
-* And more (https://hyrax.samvera.org/about/)
-
-## Feature Documentation
+# Feature Documentation
 
 * List of features: [Feature Matrix](https://github.com/samvera/hyrax/wiki/Feature-matrix)
 * Configuration and enabling features: [Hyrax Management Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide)
 * Walk-through on using features: [Hyrax Feature Guides](https://samvera.github.io/intro-to.html)
 * For general information about Hyrax: [Hyrax Site](https://hyrax.samvera.org/)
-* A note about [versions of Hyrax](./documentation/note-about-versions.md)
 
-## Help
+# Help
 
 The Samvera community is here to help. Please see our [support guide](./.github/SUPPORT.md).
 
-## Getting started
+# Getting started
 
 This document contains instructions specific to setting up an app with __Hyrax
 v3.0.0-rc2__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
-### Prerequisites
+## Note about Versions
+
+Hyrax has far more tags than released versions. This section provides context and wayfinding on navigating that reality.
+
+The history of Hyrax involves the merging of [Sufia](https://github.com/samvera-deprecated/sufia) and [Curation Concerns](https://github.com/samvera-deprecated/curation_concerns). Each of those projects had their own releases and tags. In preserving commit history of the work, we collectively brought along those past tags (for better or for worse).
+
+This means that we have a mix of Hyrax releases and associated tags as well as tags for those other gems' releases. Which can be confusing.
+
+When you include Hyrax in your Gemfile, and reference a version (eg. `gem "hyrax", "~> 2.7"`), you are getting that version from Rubygems.  When you reference a tag (eg. `gem "hyrax", github: "samvera/hyrax", ref: "v2.7.0"`) you are getting that information from Github. Both are reasonable and dependent on your situation. In the case of the former, you're likely wanting stable releases. In the case of the latter, you may be looking to use specific commits that include unreleased bug fixes.
+
+The place to find the canonical Hyrax releases is at https://rubygems.org/gems/hyrax, there you can find a list of versions. Those versions map to tags in Hyrax (e.g. you can expect that the version in Rubygems and the tag in Hyrax have the same code). The release notes for those versions will be further described in [Hyrax's releases](https://github.com/samvera/hyrax/releases/). However, within the Hyrax releases, you'll also see other non-released Hyrax versions. These are likely the tags from the preceding gems (`sufia` and `curation_concern`).
+
+_**NOTE**: In our [2020-07-29 Samvera Tech call](https://wiki.lyrasis.org/display/samvera/Samvera+Tech+Call+2020-07-29), some of the contributors discussed how to proceed with our current state. This section is our effort to provide wayfinding around the confusing tag proliferation in our repository._
+
+## Prerequisites
 
 Prerequisites are required for both creating a Hyrax\-based app and contributing new features to Hyrax. After installing the prerequisites...
 
@@ -97,7 +88,7 @@ Hyrax requires the following software to work:
 
 **NOTE: The [Hyrax Development Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide) has instructions for installing Solr and Fedora in a development environment.**
 
-#### Characterization
+### Characterization
 
 FITS can be installed on OSX using Homebrew by running the command: `brew install fits`
 
@@ -110,7 +101,7 @@ FITS can be installed on OSX using Homebrew by running the command: `brew instal
     1. Adding the full fits.sh path to your PATH (e.g., in your .bash\_profile), **OR**
     1. Changing `config/initializers/hyrax.rb` to point to your FITS location:  `config.fits_path = "/<your full path>/fits.sh"`
 
-#### Derivatives
+### Derivatives
 
 Install [LibreOffice](https://www.libreoffice.org/). If `which soffice` returns a path, you're done. Otherwise, add the full path to soffice to your PATH (in your `.bash_profile`, for instance). On OSX, soffice is **inside** LibreOffice.app. Your path may look like "/path/to/LibreOffice.app/Contents/MacOS/"
 
@@ -118,7 +109,7 @@ You may also require [ghostscript](http://www.ghostscript.com/) if it does not c
 
 **NOTE**: Derivatives are served from the filesystem in Hyrax.
 
-#### Transcoding
+### Transcoding
 
 Hyrax includes support for transcoding audio and video files with ffmpeg > 1.0 installed.
 
@@ -130,38 +121,38 @@ Otherwise, to compile ffmpeg yourself, see the [ffmpeg compilation guide](https:
 
 Once ffmpeg has been installed, enable transcoding by setting `config.enable_ffmpeg = true` in `config/initializers/hyrax.rb`.  You may also configure the location of ffmpeg using `config.ffmpeg_path`.
 
-### Environments
+## Environments
 
 Note here that the following commands assume you're setting up Hyrax in a development environment (using the Rails built-in development environment). If you're setting up a production or production-like environment, you may wish to tell Rails that by prepending `RAILS_ENV=production` to the commands that follow, e.g., `rails`, `rake`, `bundle`, and so on.
 
-### Ruby
+## Ruby
 
 First, you'll need a working Ruby installation. You can install this via your operating system's package manager -- you are likely to get farther with OSX, Linux, or UNIX than Windows but your mileage may vary -- but we recommend using a Ruby version manager such as [RVM](https://rvm.io/) or [rbenv](https://github.com/sstephenson/rbenv).
 
 Hyrax supports Ruby 2.5, 2.6, and 2.7. When starting a new project, we recommend using the latest Ruby 2.7 version.
 
-### Redis
+## Redis
 
 [Redis](http://redis.io/) is a key-value store that Hyrax uses to provide activity streams on repository objects and users, and to prevent race conditions as a global mutex when modifying order-persisting objects.
 
 Starting up Redis will depend on your operating system, and may in fact already be started on your system. You may want to consult the [Redis documentation](http://redis.io/documentation) for help doing this.
 
-### Rails
+## Rails
 
 Hyrax requires Rails 5. We recommend the latest Rails 5.2 release.
 
 ```
-## If you don't already have Rails at your disposal...
+# If you don't already have Rails at your disposal...
 gem install rails -v 5.2.4.3
 ```
 
-#### JavaScript runtime
+### JavaScript runtime
 
 Rails requires that you have a JavaScript runtime installed (e.g. nodejs or rubyracer). Either install nodejs or uncomment the `rubyracer` line in your Gemfile and run `bundle install` before running Hyrax's install generator.
 
 NOTE: nodejs is preinstalled on most Mac computers and doesn't require a gem.  To test if nodejs is already installed, execute `node -v` in the terminal and the version of nodejs will be displayed if it is installed.
 
-## Creating a Hyrax-based app
+# Creating a Hyrax-based app
 
 NOTE: The steps need to be done in order to create a new Hyrax based app.
 
@@ -180,7 +171,7 @@ Generating a new Rails application using Hyrax's template above takes cares of a
 * Loading Hyrax's default workflows into your application's database
 * Create default collection types (e.g. Admin Set, User Collection)
 
-### Start servers
+## Start servers
 
 To test-drive your new Hyrax application in development mode, spin up the servers that Hyrax needs (Solr, Fedora, and Rails):
 
@@ -194,7 +185,7 @@ Notes:
 * This web server is purely for development purposes. You will want to use a more fully featured [web server](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide#web-server) for production-like environments.
 * You have the option to start each of these services individually.  More information on [solr_wrapper](https://github.com/cbeer/solr_wrapper) and [fcrepo_wrapper](https://github.com/cbeer/fcrepo_wrapper) will help you set this up.  Start rails with `rails s`.
 
-### Start background workers
+## Start background workers
 
 Many of the services performed by Hyrax are resource intensive, and therefore are well suited to running as background jobs that can be managed and executed by a message queuing system. Examples include:
 
@@ -228,7 +219,7 @@ end
 
 **For production applications** you will want to use a more robust message queue system such as [Sidekiq](http://sidekiq.org/). The Hyrax Development Guide has a detailed walkthrough of [installing and configuring Sidekiq](https://github.com/samvera/hyrax/wiki/Using-Sidekiq-with-Hyrax).
 
-### Create default administrative set
+## Create default administrative set
 
 **After** Fedora and Solr are running, create the default administrative set -- into which all works will be deposited unless assigned to other administrative sets -- by running the following command:
 
@@ -240,7 +231,7 @@ This command also makes sure that Hyrax's built-in workflows are loaded for your
 
 **NOTE**: You will want to run this command the first time this code is deployed to a new environment as well.
 
-### Generate a work type
+## Generate a work type
 
 Using Hyrax requires generating at least one type of repository object, or "work type." Hyrax allows you to generate the work types required in your application by using a Rails generator-based tool. You may generate one or more of these work types.
 
@@ -264,7 +255,7 @@ rails generate hyrax:work My/MovingImage
 
 You may wish to [customize your work type](https://github.com/samvera/hyrax/wiki/Customizing-your-work-types) now that it's been generated.
 
-### Enable notifications
+## Enable notifications
 
 Hyrax 2 uses a WebSocket-based user notifications system, which requires Redis. To enable user notifications, make sure that you have configured ActionCable to use Redis as the adapter in your application's `config/cable.yml`. E.g., for the `development` Rails environment:
 
@@ -284,7 +275,7 @@ And then run `bundle update redis`.
 
 Note that the Hyrax Management Guide contains additional information on [how to configure ActionCable in production environments](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide#notifications).
 
-## Managing a Hyrax-based app
+# Managing a Hyrax-based app
 
 The [Hyrax Management Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Management-Guide) provides tips for how to manage, customize, and enhance your Hyrax application, including guidance specific to:
 
@@ -297,7 +288,7 @@ The [Hyrax Management Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Managem
 * Virus checking
 * Workflows
 
-### Toggling Features
+## Toggling Features
 
 Some features in Hyrax can be flipped on and off from either the Administrative
 Dashboard or via a YAML configuration file at `config/features.yml`. An example
@@ -313,11 +304,7 @@ proxy_deposit:
 If both options exist, whichever option is set from the Administrative Dashboard
 will take precedence.
 
-## License
-
-Hyrax is available under [the Apache 2.0 license](LICENSE.md).
-
-## Contributing
+# Contributing
 
 We'd love to accept your contributions.  Please see our guide to [contributing to Hyrax](./.github/CONTRIBUTING.md).
 
@@ -329,23 +316,19 @@ If you'd like to help the development effort and you're not sure where to get st
 * Help us improve [Hyrax's test coverage](https://coveralls.io/r/samvera/hyrax) or [documentation coverage](https://inch-ci.org/github/samvera/hyrax).
 * Refactor away [code smells](https://codeclimate.com/github/samvera/hyrax).
 
-## Development
+# Development
 
 The [Hyrax Development Guide](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide) is for people who want to modify Hyrax itself, not an application that uses Hyrax. See especially the [Quick Start](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide#quick-start-for-hyrax-development) guide and instructions for running the [Hyrax test suite](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide#run-the-test-suite).
 
-### Reporting Security Issues
+## Reporting Security Issues
 
 To report a security vulnerability, email [samvera-steering@googlegroups.com](mailto:samvera-steering@googlegroups.com) and the Steering Group will coordinate the community response. In your message, please document to the best of your ability cases (relevant software versions, conditions, etc.) where the vulnerability is applicable, the potential negative effects, and any known workarounds or fixes to mitigate the risk. Steering will communicate this to the Partners and the rest of the community in a timely fashion.
 
-### Workflow Relationship Diagram
+## Workflow Relationship Diagram
 
 * [Entity Relationship Diagram](./artifacts/entity-relationship-diagram.pdf)
 
-## Release process
-
-See the [release management process](https://github.com/samvera/hyrax/wiki/Release-management-process).
-
-## Acknowledgments
+# Acknowledgments
 
 This software has been developed by and is brought to you by the Samvera community.  Learn more at the
 [Samvera website](http://samvera.org/).

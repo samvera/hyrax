@@ -14,7 +14,7 @@ module Wings
   #
   # @note the `Valkyrie::Resource` object passed to this class **must** have an
   #   `#internal_resource` mapping it to an `ActiveFedora::Base` class.
-  class ActiveFedoraConverter
+  class ActiveFedoraConverter # rubocop:disable Metrics/ClassLength
     ##
     # Accesses the Class implemented for handling resource attributes
     # @return [Class]
@@ -46,7 +46,9 @@ module Wings
     #
     # @return [Hash] attributes with values mapped for building an ActiveFedora model
     def attributes
-      @attributes ||= self.class.attributes_class.mapped_attributes(attributes: resource.attributes)
+      @attributes ||= attributes_class.mapped_attributes(attributes: resource.attributes).select do |attr|
+        active_fedora_class.supports_property?(attr)
+      end
     end
 
     ##
@@ -54,6 +56,7 @@ module Wings
     def convert
       active_fedora_class.new(normal_attributes).tap do |af_object|
         af_object.id = id unless id.empty?
+        normal_attributes.each_key { |key| af_object.send(:attribute_will_change!, key) }
         add_access_control_attributes(af_object)
         convert_members(af_object)
         convert_member_of_collections(af_object)
@@ -135,6 +138,9 @@ module Wings
 
     class NestedResource < ActiveTriples::Resource
       property :title, predicate: ::RDF::Vocab::DC.title
+      property :author, predicate: ::RDF::URI('http://example.com/ns/author')
+      property :depositor, predicate: ::RDF::URI('http://example.com/ns/depositor')
+      property :nested_resource, predicate: ::RDF::URI("http://example.com/nested_resource"), class_name: NestedResource
       property :ordered_authors, predicate: ::RDF::Vocab::DC.creator
       property :ordered_nested, predicate: ::RDF::URI("http://example.com/ordered_nested")
 
@@ -152,6 +158,10 @@ module Wings
 
     private
 
+    def attributes_class
+      self.class.attributes_class
+    end
+
     def convert_members(af_object)
       return unless resource.respond_to?(:member_ids) && resource.member_ids
       # TODO: It would be better to find a way to add the members without resuming all the member AF objects
@@ -168,9 +178,10 @@ module Wings
       return unless resource.respond_to? :file_ids
 
       af_object.files = resource.file_ids.map do |fid|
+        next if fid.blank?
         pcdm_file = Hydra::PCDM::File.new(fid.id)
         assign_association_target(af_object, pcdm_file)
-      end
+      end.compact
     end
 
     def assign_association_target(af_object, pcdm_file)
@@ -193,7 +204,15 @@ module Wings
     def normal_attributes
       attributes.each_with_object({}) do |(attr, value), hash|
         property = active_fedora_class.properties[attr.to_s]
-        hash[attr] = property&.multiple? ? Array.wrap(value) : value
+        hash[attr] = if property.nil?
+                       value
+                     elsif property.multiple?
+                       Array.wrap(value)
+                     elsif Array.wrap(value).length < 2
+                       Array.wrap(value).first
+                     else
+                       value
+                     end
       end
     end
 
