@@ -2,6 +2,8 @@
 
 If you have questions or need help, please email [the Samvera community tech list](mailto:samvera-tech@googlegroups.com) or stop by the #dev channel in [the Samvera community Slack team](https://wiki.duraspace.org/pages/viewpage.action?pageId=87460391#Getintouch!-Slack).
 
+The [Hyrax wiki](https://github.com/samvera/hyrax/wiki) gathers documentation as the community tries things and learns what works. There is useful knowledge and history there but please keep in mind that this information can age quickly. Refer to the [README.md](./README.md) for the best updated guidance we have to offer.
+
 You can also look in the [Samvera Community Knowledge Base](https://samvera.github.io) for help with Hyrax or other Samvera Community questions.
 
 ## Reporting Issues
