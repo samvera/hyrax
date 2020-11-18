@@ -23,6 +23,7 @@ Jump in: [![Slack Status](http://slack.samvera.org/badge.svg)](http://slack.samv
     * [Contributing](#contributing)
     * [Release process](#release-process)
   * [Developing your Hyrax\-based Application](#developing-your-hyrax-based-application)
+  * [Deploying your Hyrax\-based Application to production](#deploying-your-hyrax-based-application-to-production)
 * [Acknowledgments](#acknowledgments)
 * [License](#license)
 
@@ -89,6 +90,13 @@ See the [release management process](https://github.com/samvera/hyrax/wiki/Relea
 For those familiar with Rails, this is where you create your own application (via `rails new`) and add Hyrax as a gem to your `Gemfile`.  Your Hyrax-based application is the place for you to create features specific to your Hyrax-based application.
 
 For more information, see [our documentation on developing your Hyrax-based application](./documentation/developing-your-hyrax-based-app.md).
+
+### Deploying your Hyrax-based Application to production
+
+Steps to deploy a Hyrax-based application to production will vary depending on your particular ecosystem but here are some methods and things to consider:
+
+ * [Samvera Community Knowledge Base: Running in Production](https://samvera.github.io/service-stack.html)
+ * [Helm Chart](./CONTAINERS.md#deploying-to-production) (for cloud-based Kubernetes-style deployments)
 
 ## Acknowledgments
 
