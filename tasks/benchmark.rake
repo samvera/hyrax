@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 namespace :wings do
-  APP_RAKEFILE = File.expand_path("Rakefile", Pathname.new(__dir__).join("..", "..", "hyrax-webapp"))
-  load 'rails/tasks/engine.rake'
+  unless Module.const_defined?(:APP_RAKEFILE)
+    APP_RAKEFILE = File.expand_path("Rakefile", Pathname.new(__dir__).join("..", "..", "hyrax-webapp"))
+    load 'rails/tasks/engine.rake'
+  end
   task benchmark_save: :environment do
     # Base Case: 11.76 seconds
     Rails.logger = Logger.new(STDOUT)
