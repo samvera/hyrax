@@ -77,7 +77,7 @@ def save_timestamped_page_and_screenshot(page, meta)
   time_now = Time.zone.now
   timestamp = "#{time_now.strftime('%Y-%m-%d-%H-%M-%S.')}#{'%03d' % (time_now.usec / 1000).to_i}"
 
-  artifact_dir = ENV['CI'] ? "/tmp/test-results" : Rails.root.join('tmp' 'capybara')
+  artifact_dir = ENV['CI'] ? "/tmp/test-results" : Rails.root.join('tmp', 'capybara')
 
   screenshot_name = "screenshot-#{filename}-#{line_number}-#{timestamp}.png"
   screenshot_path = "#{artifact_dir}/#{screenshot_name}"
