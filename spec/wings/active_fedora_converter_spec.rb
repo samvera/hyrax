@@ -101,7 +101,8 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
         let(:member_ids) { resource.member_ids.map(&:id) }
 
         it 'saves members' do
-          expect(converter.convert).to have_attributes(member_ids: member_ids)
+          expect(converter.convert)
+            .to have_attributes(member_ids: contain_exactly(*member_ids))
         end
 
         it 'can access member models from converted object' do
@@ -143,7 +144,8 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
         let(:resource) { FactoryBot.valkyrie_create(:hyrax_collection, :with_member_works) }
 
         it 'retains the members' do
-          expect(converter.convert).to have_attributes member_ids: resource.member_ids.map(&:id)
+          expect(converter.convert)
+            .to have_attributes member_ids: contain_exactly(*resource.member_ids.map(&:id))
         end
       end
 
@@ -151,7 +153,8 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
         let(:resource) { FactoryBot.valkyrie_create(:hyrax_collection, :with_member_collections) }
 
         it 'retains the members' do
-          expect(converter.convert).to have_attributes member_ids: resource.member_ids.map(&:id)
+          expect(converter.convert)
+            .to have_attributes member_ids: contain_exactly(*resource.member_ids.map(&:id))
         end
       end
     end
