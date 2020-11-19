@@ -404,7 +404,7 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
       collection1.save!
     end
 
-    it { expect(resource.member_collections).to eq([collection2, collection3]) }
+    it { expect(resource.member_collections).to contain_exactly(collection2, collection3) }
   end
 
   describe '#member_collection_ids' do
@@ -415,7 +415,7 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
       collection1.save!
     end
 
-    it { expect(resource.member_collection_ids).to eq([collection2.id, collection3.id]) }
+    it { expect(resource.member_collection_ids).to contain_exactly(collection2.id, collection3.id) }
   end
 
   describe '#member_works' do
@@ -426,7 +426,7 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
       collection1.save!
     end
 
-    it { expect(resource.member_works).to eq([work1, work2]) }
+    it { expect(resource.member_works).to contain_exactly(work1, work2) }
   end
 
   describe '#member_work_ids' do
@@ -437,6 +437,6 @@ RSpec.describe Wings::Pcdm::PcdmValkyrieBehavior, :clean_repo do
       collection1.save!
     end
 
-    it { expect(resource.member_work_ids).to eq([work1.id, work2.id]) }
+    it { expect(resource.member_work_ids).to contain_exactly(work1.id, work2.id) }
   end
 end
