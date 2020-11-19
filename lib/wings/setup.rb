@@ -29,6 +29,10 @@ module ActiveFedora
         reflections.key?(property.to_sym)
     end
   end
+
+  class File
+    alias eql? ==
+  end
 end
 
 Valkyrie::MetadataAdapter.register(

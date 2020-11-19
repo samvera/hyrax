@@ -9,20 +9,7 @@ module Wings
       included do
         attribute :member_of_collection_ids, ::Valkyrie::Types::Set.of(::Valkyrie::Types::ID)
         attribute :member_ids, ::Valkyrie::Types::Array.of(::Valkyrie::Types::ID).meta(ordered: true)
-        # TODO: get/set via members and ordered_members
-        #   * get objs - For both, this is the same as #objects. Because the Array in Valkyrie is ordered, everything will be ordered
-        #   * get ids - always returns valkyrie ids -- can't define a method for member_ids(valkyrie: false) which would return af ids
-        #   * set - In AF, members and ordered_members are enumerable and can be set using operators << and +=.
-        #           Since member_ids is all that keeps these in wings, how can we do that here?
       end
-
-      # TODO: Methods requiring further investigation...
-      #   #type_validator class method
-      #   #ancestor?
-
-      # TODO: Should these method NOT USED BY HYRAX be converted...
-      #   #related_object_ids
-      #   #related_objects
 
       ##
       # @return [Enumerable<ActiveFedora::Base> | Enumerable<Valkyrie::Resource>] an enumerable over the parent collections

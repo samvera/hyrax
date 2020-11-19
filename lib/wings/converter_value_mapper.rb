@@ -65,6 +65,32 @@ module Wings
     end
   end
 
+  class MemberIds < ::Valkyrie::ValueMapper
+    ConverterValueMapper.register(self)
+
+    def self.handles?(value)
+      value.first == :member_ids
+    end
+
+    def result
+      members = value.last.map { |id| ActiveFedora::Base.find(id.id) }
+      [:members, members]
+    end
+  end
+
+  class FileIds < ::Valkyrie::ValueMapper
+    ConverterValueMapper.register(self)
+
+    def self.handles?(value)
+      value.first == :file_ids
+    end
+
+    def result
+      files = value.last.map { |id| Hydra::PCDM::File.new(id.id) }
+      [:files, files]
+    end
+  end
+
   ##
   # @todo ensure reflections round trip correctly, even though we avoid handling ids
   class ReflectionIdsValue < ::Valkyrie::ValueMapper

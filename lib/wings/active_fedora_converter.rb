@@ -62,18 +62,15 @@ module Wings
     ##
     # @return [ActiveFedora::Base]
     def convert
-      active_fedora_class.new(normal_attributes).tap do |af_object|
-        af_object.id = id unless id.empty?
-        normal_attributes.each_key { |key| af_object.send(:attribute_will_change!, key) }
-        add_access_control_attributes(af_object)
-        convert_members(af_object)
+      instance.tap do |af_object|
+        af_object.id ||= id unless id.empty?
+        apply_attributes_to_model(af_object)
         convert_member_of_collections(af_object)
-        convert_files(af_object)
       end
     end
 
     def active_fedora_class
-      @active_fedora_class ||=
+      @active_fedora_class ||= # cache the class at the instance level
         begin
           klass = begin
                     resource.internal_resource.constantize
@@ -169,43 +166,20 @@ module Wings
 
     private
 
-    def attributes_class
-      self.class.attributes_class
+    def instance
+      active_fedora_class.find(id)
+    rescue ActiveFedora::ObjectNotFoundError
+      active_fedora_class.new
     end
 
-    def convert_members(af_object)
-      return unless resource.respond_to?(:member_ids) && resource.member_ids
-      # TODO: It would be better to find a way to add the members without resuming all the member AF objects
-      af_object.ordered_members = resource.member_ids.map { |valkyrie_id| ActiveFedora::Base.find(valkyrie_id.to_s) }
+    def attributes_class
+      self.class.attributes_class
     end
 
     def convert_member_of_collections(af_object)
       return unless resource.respond_to?(:member_of_collection_ids) && resource.member_of_collection_ids
       # TODO: It would be better to find a way to set the parent collections without resuming all the collection AF objects
       af_object.member_of_collections = resource.member_of_collection_ids.map { |valkyrie_id| ActiveFedora::Base.find(valkyrie_id.to_s) }
-    end
-
-    def convert_files(af_object)
-      return unless resource.respond_to? :file_ids
-
-      af_object.files = resource.file_ids.map do |fid|
-        next if fid.blank?
-        pcdm_file = Hydra::PCDM::File.new(fid.id)
-        assign_association_target(af_object, pcdm_file)
-      end.compact
-    end
-
-    def assign_association_target(af_object, pcdm_file)
-      case pcdm_file.metadata_node.type
-      when ->(types) { types.include?(RDF::URI.new('http://pcdm.org/use#OriginalFile')) }
-        af_object.association(:original_file).target = pcdm_file
-      when ->(types) { types.include?(RDF::URI.new('http://pcdm.org/use#ExtractedText')) }
-        af_object.association(:extracted_text).target = pcdm_file
-      when ->(types) { types.include?(RDF::URI.new('http://pcdm.org/use#Thumbnail')) }
-        af_object.association(:thumbnail).target = pcdm_file
-      else
-        pcdm_file
-      end
     end
 
     # Normalizes the attributes parsed from the resource
@@ -227,21 +201,27 @@ module Wings
       end
     end
 
+    ##
+    # apply attributes to the ActiveFedora model
+    def apply_attributes_to_model(af_object)
+      case af_object
+      when Hydra::AccessControl
+        add_access_control_attributes(af_object)
+      else
+        converted_attrs = normal_attributes
+        members = converted_attrs.delete(:members)
+        af_object.attributes = converted_attrs
+        af_object.ordered_members = members if members
+      end
+    end
+
     # Add attributes from resource which aren't AF properties into af_object
     def add_access_control_attributes(af_object)
-      return unless af_object.is_a? Hydra::AccessControl
-      cache = af_object.permissions.to_a
-
-      # if we've saved this before, it has a cache that won't clear
-      # when setting permissions! we need to reset it manually and
-      # rewrite with the values already in there, or saving will fail
-      # to delete cached items
-      af_object.permissions.reset if af_object.persisted?
-
-      af_object.permissions = cache.map do |permission|
-        permission.access_to_id = resource.try(:access_to)&.id
-        permission
+      normal_attributes[:permissions].each do |permission|
+        permission.access_to_id = resource.access_to&.id
       end
+
+      af_object.permissions = normal_attributes[:permissions]
     end
   end
 end

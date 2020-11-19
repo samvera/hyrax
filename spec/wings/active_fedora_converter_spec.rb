@@ -97,14 +97,14 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
     end
 
     context 'when given a valkyrie Work' do
-      let(:resource) { FactoryBot.valkyrie_create(:hyrax_work) }
+      let(:resource) { FactoryBot.build(:hyrax_work) }
 
       it 'gives a work' do
         expect(converter.convert).to be_work
       end
 
       context 'with members' do
-        let(:resource)   { FactoryBot.valkyrie_create(:hyrax_work, :with_member_works) }
+        let(:resource)   { FactoryBot.build(:hyrax_work, :with_member_works) }
         let(:member_ids) { resource.member_ids.map(&:id) }
 
         it 'saves members' do
@@ -360,9 +360,9 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       context 'for members' do
         let(:pcdm_object) { work1 }
 
-        let(:work1)       { build(:work, id: 'wk1', title: ['Work 1']) }
-        let(:work2)       { build(:work, id: 'wk2', title: ['Work 2']) }
-        let(:work3)       { build(:work, id: 'wk3', title: ['Work 3']) }
+        let(:work1) { build(:work, id: 'wk1', title: ['Work 1']) }
+        let(:work2) { build(:work, id: 'wk2', title: ['Work 2']) }
+        let(:work3) { build(:work, id: 'wk3', title: ['Work 3']) }
 
         before do
           work1.ordered_members = [work2, work3]
@@ -384,15 +384,14 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
         let(:fileset1) { create(:file_set) }
         let(:file_id) { fileset1.original_file.id }
 
-        before do
+        it 'has same original_file id as valkyrie resource' do
           binary = StringIO.new("hey")
           Hydra::Works::AddFileToFileSet.call(fileset1, binary, :original_file)
           expect(fileset1.original_file).not_to be_nil
           expect(resource.original_file_ids.first.to_s).to eq file_id
-        end
 
-        it 'has same original_file id as valkyrie resource' do
           converted_file_set = converter.convert
+
           expect(converted_file_set.original_file).not_to be_nil
           expect(converted_file_set.original_file.id).to eq file_id
         end
