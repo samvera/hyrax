@@ -27,15 +27,15 @@ module Wings
         raise FailedSaveError.new(err.message, obj: af_object)
       end
 
+      # if we're trying to save a file metadata with wings, we should have
+      # already persisted the file, and AF has a metadata node. repopulate from
+      # there
       def save_file(file_metadata:)
-        # This is a no-op when the file is being created or updated through the FileActor.
-        # There may be other scenarios where something needs to happen here.
+        if file_metadata.id.blank?
+          files = FileSet.find(file_metadata.file_set_id.id).files.to_a
+          file_metadata.id = files.find { |f| file_metadata.original_filename.include?(f.original_name) }.id
+        end
         file_metadata
-
-        # TODO: potentially need to...
-        #   find existing af File
-        #   convert file_metadata resource into af File metadata
-        #   save af File
       end
 
       # Persists a resource using ActiveFedora
