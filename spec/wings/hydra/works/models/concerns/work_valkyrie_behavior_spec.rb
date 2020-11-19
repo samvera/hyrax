@@ -28,6 +28,8 @@ RSpec.describe Wings::Works::WorkValkyrieBehavior, :clean_repo do
     work5.save!
     work1.ordered_members = [work2, work3, fileset1, fileset2]
     work1.save!
+    work1.reload
+    expect(work1.members.map(&:id)).to contain_exactly('wk2', 'wk3', 'fs1', 'fs2')
   end
 
   describe 'type check methods on valkyrie resource' do
