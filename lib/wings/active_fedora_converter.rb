@@ -14,7 +14,7 @@ module Wings
   #
   # @note the `Valkyrie::Resource` object passed to this class **must** have an
   #   `#internal_resource` mapping it to an `ActiveFedora::Base` class.
-  class ActiveFedoraConverter # rubocop:disable Metrics/ClassLength
+  class ActiveFedoraConverter
     ##
     # Accesses the Class implemented for handling resource attributes
     # @return [Class]
@@ -65,7 +65,6 @@ module Wings
       instance.tap do |af_object|
         af_object.id ||= id unless id.empty?
         apply_attributes_to_model(af_object)
-        convert_member_of_collections(af_object)
       end
     end
 
@@ -174,12 +173,6 @@ module Wings
 
     def attributes_class
       self.class.attributes_class
-    end
-
-    def convert_member_of_collections(af_object)
-      return unless resource.respond_to?(:member_of_collection_ids) && resource.member_of_collection_ids
-      # TODO: It would be better to find a way to set the parent collections without resuming all the collection AF objects
-      af_object.member_of_collections = resource.member_of_collection_ids.map { |valkyrie_id| ActiveFedora::Base.find(valkyrie_id.to_s) }
     end
 
     # Normalizes the attributes parsed from the resource
