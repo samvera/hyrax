@@ -7,14 +7,14 @@ RSpec.describe Wings::CollectionBehavior do
 
   let(:resource) { subject.build }
 
-  let(:collection1) { build(:public_collection_lw, id: 'col1', title: ['Collection 1']) }
-  let(:collection2) { create(:public_collection_lw, id: 'col2', title: ['Collection 2']) }
-  let(:collection3) { create(:public_collection_lw, id: 'col3', title: ['Collection 3']) }
-  let(:work1)       { create(:work, id: 'wk1', title: ['Work 1']) }
-  let(:work2)       { create(:work, id: 'wk2', title: ['Work 2']) }
-  let(:work3)       { build(:work, id: 'wk3', title: ['Work 3']) }
-  let(:fileset1)    { build(:file_set, id: 'fs1', title: ['Fileset 1']) }
-  let(:fileset2)    { build(:file_set, id: 'fs2', title: ['Fileset 2']) }
+  let(:collection1) { create(:public_collection_lw, title: ['Collection 1']) }
+  let(:collection2) { create(:public_collection_lw, title: ['Collection 2']) }
+  let(:collection3) { create(:public_collection_lw, title: ['Collection 3']) }
+  let(:work1)       { create(:work, title: ['Work 1']) }
+  let(:work2)       { create(:work, title: ['Work 2']) }
+  let(:work3)       { build(:work, title: ['Work 3']) }
+  let(:fileset1)    { build(:file_set, title: ['Fileset 1']) }
+  let(:fileset2)    { build(:file_set, title: ['Fileset 2']) }
 
   describe '#add_collections_and_works' do
     let(:pcdm_object) { collection1 }
