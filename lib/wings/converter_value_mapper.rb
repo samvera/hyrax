@@ -65,6 +65,19 @@ module Wings
     end
   end
 
+  class MemberOfCollectionIds < ::Valkyrie::ValueMapper
+    ConverterValueMapper.register(self)
+
+    def self.handles?(value)
+      value.first == :member_of_collection_ids
+    end
+
+    def result
+      collections = value.last.map { |id| ActiveFedora::Base.find(id.id) }
+      [:member_of_collections, collections]
+    end
+  end
+
   class MemberIds < ::Valkyrie::ValueMapper
     ConverterValueMapper.register(self)
 
