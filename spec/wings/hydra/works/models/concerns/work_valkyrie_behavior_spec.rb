@@ -9,11 +9,11 @@ RSpec.describe Wings::Works::WorkValkyrieBehavior, :clean_repo do
 
   let(:collection1) { build(:collection, id: 'col1', title: ['Collection 1']) }
   let(:collection2) { build(:collection, id: 'col2', title: ['Collection 2']) }
-  let(:work1)       { build(:work, id: 'wk1', title: ['Work 1']) }
-  let(:work2)       { build(:work, id: 'wk2', title: ['Child Work 1']) }
-  let(:work3)       { build(:work, id: 'wk3', title: ['Child Work 2']) }
-  let(:work4)       { build(:work, id: 'wk4', title: ['Parent Work 1']) }
-  let(:work5)       { build(:work, id: 'wk5', title: ['Parent Work 2']) }
+  let(:work1)       { build(:work, title: ['Work 1']) }
+  let(:work2)       { build(:work, title: ['Child Work 1']) }
+  let(:work3)       { build(:work, title: ['Child Work 2']) }
+  let(:work4)       { build(:work, title: ['Parent Work 1']) }
+  let(:work5)       { build(:work, title: ['Parent Work 2']) }
   let(:fileset1)    { build(:file_set, id: 'fs1', title: ['Child File Set 1']) }
   let(:fileset2)    { build(:file_set, id: 'fs2', title: ['Child File Set 2']) }
 
