@@ -2,7 +2,7 @@
 require 'wings_helper'
 require 'wings/services/file_metadata_builder'
 
-RSpec.describe Wings::FileMetadataBuilder do
+RSpec.describe Wings::FileMetadataBuilder, :clean_repo do
   subject(:builder) do
     described_class.new(storage_adapter: Hyrax.storage_adapter,
                         persister: Hyrax.persister)
