@@ -4,10 +4,33 @@ namespace :wings do
     APP_RAKEFILE = File.expand_path("Rakefile", Pathname.new(__dir__).join("..", "..", "hyrax-webapp"))
     load 'rails/tasks/engine.rake'
   end
+
+  task benchmark_convert: :environment do
+    setup_logger
+
+    monograph = Monograph.new
+    generic_work_resource = GenericWork.new.valkyrie_resource
+
+    Benchmark.ips do |x|
+      x.report "convert a Monograph object to ActiveFedora" do
+        Wings::ActiveFedoraConverter.convert(resource: monograph)
+      end
+
+      x.report "convert a derived Valkyrie object back to ActiveFedora" do
+        Wings::ActiveFedoraConverter.convert(resource: generic_work_resource)
+      end
+    end
+  end
+
   task benchmark_save: :environment do
+    # Base Case: 1.4 / Second
+    setup_logger
+
+    persister = Hyrax.persister
+
     Benchmark.ips do |x|
       x.report "save a Valkyrie object" do
-        save_object
+        save_object(persister)
       end
     end
   end
@@ -21,9 +44,13 @@ namespace :wings do
     printer.print(File.open("tmp/save_benchmark.html", "w"), min_percent: 1)
   end
 
-  def save_object
-    persister = Hyrax.persister
+  def save_object(persister)
     monograph = Monograph.new
     persister.save(resource: monograph)
+  end
+
+  def setup_logger
+    $VERBOSE = nil unless ENV['RUBY_LOUD']
+    Rails.logger.level = ENV.fetch('BM_LOG_LEVEL', :error)
   end
 end
