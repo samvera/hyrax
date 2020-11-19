@@ -140,17 +140,6 @@ module Wings
         af_object.audio?
       end
 
-      # TODO: This can be removed when we upgrade to ActiveFedora 12.0
-      # @return [String] the etag from the response headers
-      #
-      # @raise [RuntimeError] when the resource is new and has no etag
-      # @raise [Ldp::Gone]    when the resource is deleted
-      def etag
-        raise "Unable to produce an etag for a unsaved object" unless persisted?
-        af_object = Wings::ActiveFedoraConverter.new(resource: self).convert
-        af_object.ldp_source.head.etag
-      end
-
       # @param valkyrie [Boolean] Should the returned ids be for Valkyrie or AF objects?
       # @return [Enumerable<Hydra::Works::Work>] The works this work is contained in
       # @note This method avoids using the Hydra::Works version of parent_works because of Issue #361
