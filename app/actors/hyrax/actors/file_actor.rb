@@ -87,7 +87,7 @@ module Hyrax
         end
         Hyrax::VersioningService.create(saved_file_metadata, user)
         pathhint = io.uploaded_file.uploader.path if io.uploaded_file # in case next worker is on same filesystem
-        id = Hyrax.config.translate_uri_to_id.call saved_file_metadata.file_identifiers.first
+        id = Hyrax.config.translate_uri_to_id.call saved_file_metadata.file_identifier
         CharacterizeJob.perform_later(file_set, id, pathhint || io.path)
       end
 

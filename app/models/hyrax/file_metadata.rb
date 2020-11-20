@@ -34,7 +34,7 @@ module Hyrax
       module_function :uri_for
     end
 
-    attribute :file_identifiers, ::Valkyrie::Types::Set # id of the file stored by the storage adapter
+    attribute :file_identifier, Valkyrie::Types::ID # id of the file stored by the storage adapter
     attribute :alternate_ids, Valkyrie::Types::Set.of(Valkyrie::Types::ID) # id of the Hydra::PCDM::File which holds metadata and the file in ActiveFedora
     attribute :file_set_id, ::Valkyrie::Types::ID # id of parent file set resource
 
@@ -141,7 +141,7 @@ module Hyrax
     end
 
     def file
-      Hyrax.storage_adapter.find_by(id: file_identifiers.first)
+      Hyrax.storage_adapter.find_by(id: file_identifier)
     end
   end
 end

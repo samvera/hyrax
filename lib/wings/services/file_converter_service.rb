@@ -29,7 +29,7 @@ module Wings
         id = ::Valkyrie::ID.new(af_file.id)
         { id: id,
           alternate_ids: [id],
-          file_identifiers: [id],
+          file_identifier: id,
           created_at: af_file.create_date,
           updated_at: af_file.modified_date,
           content: af_file.content,

@@ -26,7 +26,7 @@ module Wings
                                            content_type: io_wrapper.content_type,
                                            resource: file_metadata,
                                            resource_uri_transformer: Hyrax.config.resource_id_to_uri_transformer)
-      file_metadata.file_identifiers = [stored_file.id]
+      file_metadata.file_identifier = stored_file.id
       attach_file_metadata(file_metadata: file_metadata, file_set: file_set)
     end
 
