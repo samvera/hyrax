@@ -562,7 +562,7 @@ module Hyrax
     attr_writer :resource_id_to_uri_transformer
     def resource_id_to_uri_transformer
       @resource_id_to_uri_transformer ||= lambda do |resource, base_url|
-        file_id = CGI.escape(resource.file_identifiers.first.to_s)
+        file_id = CGI.escape(resource.file_identifier.to_s)
         fs_id = CGI.escape(resource.file_set_id.to_s)
         "#{base_url}#{::Noid::Rails.treeify(fs_id)}/files/#{file_id}"
       end
