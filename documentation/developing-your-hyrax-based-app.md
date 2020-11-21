@@ -20,6 +20,7 @@
   * [Enable notifications](#enable-notifications)
 * [Managing a Hyrax\-based app](#managing-a-hyrax-based-app)
   * [Toggling Features](#toggling-features)
+* [Dockerizing a Hyrax\-based App for Development](#dockerizing-a-hyrax-based-app-for-development)
 
 ## Introduction
 
@@ -269,3 +270,158 @@ proxy_deposit:
 
 If both options exist, whichever option is set from the Administrative Dashboard
 will take precedence.
+
+## Dockerizing a Hyrax Based App for Development
+It is now possible develop a Hyrax based app using a Docker workflow. The process utilizes **docker-compose** to build and run the services necessary for Hyrax based applications.
+
+### Switch to Postgres
+The image that you will build your app's image on uses **Postgres**. If you have just created your Hyrax-based app, for example, you'll need to update your `Gemfile`
+	- `gem "sqlite3", "~> 1.3.0"` ---> `gem "pg"`
+
+### Building the image
+Next you'll want to build the image that your Hyrax container will run from. For that, you will need to create a Dockerfile, build the image from it, and push it to a repository you can fetch from later.
+
+**Build image**
+- Run `cd <hyrax_app_name>`
+- Visit [samveralabs/hyrax](https://hub.docker.com/r/samveralabs/hyrax/tags) and grab the latest image **tag**
+- Run `echo "FROM samveralabs/hyrax:7<tag>" > Dockerfile` to create the Dockerfile
+- Run `docker build .`
+
+**Push image to a repo (assumes dockerhub.io)**
+- On completion, the above command will return an image **sha**, **copy it**
+- Run `docker tag <sha-you-copied> <your-docker-username>/<name-of-your-image>:<tag>`
+- Run `docker push <your-docker-username>/<name-of-your-image>`
+
+### Configure the docker-compose.yml
+Since Hyrax relies on serveral different services to run, you'll need to set up a **docker-compose.yml** to tell Docker how to run all those services together.
+
+- Create a **docker-compose.yml** file your application root
+```
+version: '3.8'
+services:
+  app: &app
+    build:
+      context: .
+      target: hyrax-engine-dev
+    image: <your-image-location> # (e.g. username/image-name:tag) 
+    stdin_open: true
+    tty: true
+    user: root
+    env_file:
+      - .env
+    environment:
+      - RAILS_ROOT=/app/samvera/hyrax-webapp
+    depends_on:
+      - chrome
+      - db_migrate
+      - fcrepo
+      - memcached
+      - postgres
+      - redis
+      - solr
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/app/samvera/hyrax-webapp
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
+
+  chrome:
+    image: selenium/standalone-chrome:3.141
+    logging:
+      driver: none
+    volumes:
+      - /dev/shm:/dev/shm
+    shm_size: 2G
+    ports:
+      - "4444:4444"
+      - "5959:5900"
+
+  db_migrate:
+    image: <your-image-location> # (e.g. username/image-name:tag) 
+    user: root
+    env_file:
+      - .env
+    entrypoint: ["sh", "-c"]
+    command: db-migrate-seed.sh
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app/samvera/hyrax-engine:cached
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=hyrax_user
+      - POSTGRES_PASSWORD=hyrax_password
+      - POSTGRES_DB=hyrax
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  fcrepo:
+    image: cbeer/fcrepo4:4.7
+    volumes:
+      - fcrepo:/data
+    ports:
+      - 8080:8080
+    environment:
+      - JAVA_OPTS=${JAVA_OPTS} -Dfcrepo.modeshape.configuration="classpath:/config/file-simple/repository.json" -Dfcrepo.object.directory="/data/objects" -Dfcrepo.binary.directory="/data/binaries"
+
+  memcached:
+    image: bitnami/memcached
+    ports:
+      - '11211:11211'
+
+  redis:
+    image: redis:5-alpine
+    volumes:
+      - redis:/data
+
+  solr:
+    image: solr:8
+    ports:
+      - 8983:8983
+    command:
+      - sh
+      - "-c"
+      - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf; precreate-core hyrax-valkyrie-test /opt/solr/server/configsets/hyraxconf; solr-precreate hyrax /opt/solr/server/configsets/hyraxconf"
+    volumes:
+      - solr_home:/opt/solr/server/solr
+      - .dassie/solr/conf:/opt/solr/server/configsets/hyraxconf
+
+volumes:
+  db:
+  fcrepo:
+  rails-public:
+  rails-tmp:
+  redis:
+  solr_home:
+```
+  - *Note*: This is essentially the same docker-compose.yml for engine development except without *.dassie* and pointing to *your image*
+
+### Create an .env file
+You'll need an **.env** file to pass some configuration along. You can start with the `.env` file from the engine repo, replacing `HYRAX_ENGINE_PATH` like so:
+```
+HYRAX_ENGINE_PATH=<relative-path-to-hyrax-repo>/hyrax/app/samvera/hyrax-engine
+```
+
+### Run it
+With all that you should be able to tell Docker to spin up your Hyrax app.
+
+- Run `docker-compose up`
+- When all the containers have finished spinning up, your app should be reachable at **localhost:3000**
+
+### Run some specs
+
+**To run the specs**
+- In another terminal window, run `docker-compose exec web sh`
+	- This will open the **web container's** shell
+- At **container's** the shell prompt, run `rspec` to see the pending specs
+- Open up the app repo in your text editor of choice and write some specs
+- Running `rspec` will reflect your spec changes
