@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'wings/services/file_metadata_builder'
 
 module Hyrax
   class VersioningService
@@ -38,27 +37,12 @@ module Hyrax
         Hyrax::VersionCommitter.create(version_id: version_id, committer_login: user_key)
       end
 
-      # TODO: WINGS - Copied from valkyrie6 branch.  Need to explore whether this is needed?
-      # # @param [FileSet] file_set
-      # # @param [Hyrax::FileMetadata] content
-      # # @param [String] revision_id
-      # # @param [User, String] user
-      # def restore_version(file_set, content, revision_id, user = nil)
-      #   found_version = content.versions.find { |x| x.label == Array.wrap(revision_id) }
-      #   return unless found_version
-      #   file_metadata = Wings::FileMetadataBuilder.new(storage_adapter: nil, persister: indexing_adapter.persister).attach_file_metadata(file_metadata: found_version, file_set: file_set)
-      #   create(file_metadata, user)
-      # end
-
       private
-
-      # # TODO: WINGS - Should we create and use indexing adapter for persistence?  This is what was used in branch valkyrie6.  See issue #3800.
-      # def indexing_adapter
-      #   Valkyrie::MetadataAdapter.find(:indexing_persister)
-      # end
 
       def perform_create(content, user, use_valkyrie)
         use_valkyrie ? perform_create_through_valkyrie(content, user) : perform_create_through_active_fedora(content, user)
+      rescue NotImplementedError
+        Rails.logger.warn "Declining to create a Version for #{content}; #{self} doesn't support versioning with use_valkyrie: #{use_valkyrie}"
       end
 
       def perform_create_through_active_fedora(content, user)
@@ -66,16 +50,8 @@ module Hyrax
         record_committer(content, user) if user
       end
 
-      def perform_create_through_valkyrie(content, user)
-        return # TODO: WINGS - Just return for now.  This method won't work until #indexing_adapter method is complete.  See issue #3800.
-        # rubocop:disable Lint/UnreachableCode
-        new_version = content.new(id: nil)
-        new_version.label = "version#{content.member_ids.length + 1}"
-        new_version = indexing_adapter.persister.save(resource: new_version)
-        content.member_ids = content.member_ids + [new_version.id]
-        content = indexing_adapter.persister.save(resource: content)
-        record_committer(content, user) if user
-        # rubocop:enable Lint/UnreachableCode
+      def perform_create_through_valkyrie(content, user) # no-op
+        raise NotImplementedError
       end
     end
   end
