@@ -40,10 +40,9 @@ module Hyrax
 
     # all remaining attributes are on AF::File metadata_node unless otherwise noted
     attribute :label, ::Valkyrie::Types::Set
-    attribute :original_filename, ::Valkyrie::Types::Set
+    attribute :original_filename, ::Valkyrie::Types::String
     attribute :mime_type, ::Valkyrie::Types::String.default(GENERIC_MIME_TYPE)
     attribute :type, ::Valkyrie::Types::Set.default([Use::ORIGINAL_FILE].freeze)
-    attribute :content, ::Valkyrie::Types::Set
 
     # attributes set by fits
     attribute :format_label, ::Valkyrie::Types::Set
@@ -138,6 +137,18 @@ module Hyrax
 
     def valid?
       file.valid?(size: size.first, digests: { sha256: checksum&.first&.sha256 })
+    end
+
+    ##
+    # @deprecated get content from #file instead
+    #
+    # @return [#to_s]
+    def content
+      Deprecation.warn('This convienince method has been deprecated. ' \
+                       'Retrieve the file from the storage adapter instead.')
+      file.read
+    rescue Valkyrie::StorageAdapter::FileNotFound
+      ''
     end
 
     def file

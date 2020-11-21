@@ -42,9 +42,9 @@ module Wings
     ##
     # Builds a `Valkyrie::Resource` equivalent to the `pcdm_object`
     #
-    # @return [::Valkyrie::Resource] a resource mirroiring `pcdm_object`
+    # @return [::Valkyrie::Resource] a resource mirroring `pcdm_object`
     def build
-      klass = ResourceClassCache.instance.fetch(pcdm_object) do
+      klass = cache.fetch(pcdm_object) do
         OrmConverter.to_valkyrie_resource_class(klass: pcdm_object.class)
       end
 
@@ -61,6 +61,12 @@ module Wings
 
       resource.permission_manager.acl.permissions =
         pcdm_object.access_control.valkyrie_resource.permissions
+    end
+
+    ##
+    # @return [ResourceClassCache]
+    def cache
+      ResourceClassCache.instance
     end
 
     ##
@@ -106,11 +112,16 @@ module Wings
     end
 
     def attributes
-      all_keys =
-        pcdm_object.attributes.keys +
-        OrmConverter.relationship_keys_for(reflections: pcdm_object.reflections)
+      attribute_source = pcdm_object.try(:metadata_node) || pcdm_object
 
-      result = AttributeTransformer.run(pcdm_object, all_keys).merge(reflection_ids).merge(additional_attributes)
+      all_keys =
+        attribute_source.attributes.keys +
+        OrmConverter.relationship_keys_for(reflections: pcdm_object.try(:reflections))
+
+      result = AttributeTransformer.for(pcdm_object)
+                                   .run(pcdm_object, all_keys)
+                                   .merge(reflection_ids)
+                                   .merge(additional_attributes)
 
       append_embargo(result)
       append_lease(result)
@@ -119,7 +130,9 @@ module Wings
     end
 
     def reflection_ids
-      pcdm_object.reflections.keys.select { |k| k.to_s.end_with? '_id' }.each_with_object({}) do |k, mem|
+      keys = pcdm_object.try(:reflections)&.keys || []
+
+      keys.select { |k| k.to_s.end_with? '_id' }.each_with_object({}) do |k, mem|
         mem[k] = pcdm_object.try(k)
       end
     end
@@ -142,7 +155,8 @@ module Wings
       result = []
       result << ::Valkyrie::Persistence::OptimisticLockToken.new(adapter_id: 'wings-fedora-etag', token: pcdm_object.etag) unless pcdm_object.new_record?
 
-      last_modified_literal = pcdm_object.resource.first_object([nil, RDF::URI("http://fedora.info/definitions/v4/repository#lastModified"), nil])
+      graph_node = pcdm_object.try(:resource) || pcdm_object.metadata_node
+      last_modified_literal = graph_node.first_object([nil, RDF::URI("http://fedora.info/definitions/v4/repository#lastModified"), nil])
       token = last_modified_literal&.object&.to_s
       result << ::Valkyrie::Persistence::OptimisticLockToken.new(adapter_id: 'wings-fedora-last-modified', token: token) if token
       result

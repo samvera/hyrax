@@ -1,11 +1,10 @@
 # frozen_string_literal: true
-# Custom query override specific to Wings for finding Hydra::PCDM::File and converting to Hyrax::FileMetadata.
-# @example
-#   Hyrax.custom_queries.find_file_metadata_by(id: valkyrie_id, use_valkyrie: true)
-#   Hyrax.custom_queries.find_file_metadata_by_alternate_identifier(alternate_identifier: id, use_valkyrie: true)
-require 'wings/services/file_converter_service'
 module Wings
   module CustomQueries
+    # Custom query override specific to Wings for finding Hydra::PCDM::File and converting to Hyrax::FileMetadata.
+    # @example
+    #   Hyrax.custom_queries.find_file_metadata_by(id: valkyrie_id, use_valkyrie: true)
+    #   Hyrax.custom_queries.find_file_metadata_by_alternate_identifier(alternate_identifier: id, use_valkyrie: true)
     class FindFileMetadata
       def self.queries
         [:find_file_metadata_by,
@@ -50,7 +49,7 @@ module Wings
         raise Hyrax::ObjectNotFoundError unless Hydra::PCDM::File.exists?(alternate_identifier.to_s)
         object = Hydra::PCDM::File.find(alternate_identifier.to_s)
         return object if use_valkyrie == false
-        Wings::FileConverterService.af_file_to_resource(af_file: object)
+        object.valkyrie_resource
       end
 
       # Find an array of file metadata using Valkyrie IDs, and map them to Hyrax::FileMetadata maintaining order based on given ids
@@ -83,7 +82,7 @@ module Wings
         pcdm_files = find_many_file_metadata_by_ids(ids: resource.file_ids, use_valkyrie: false)
         pcdm_files.select! { |pcdm_file| pcdm_file.metadata_node.type.include?(use) }
         return pcdm_files if use_valkyrie == false
-        pcdm_files.collect { |pcdm_file| Wings::FileConverterService.af_file_to_resource(af_file: pcdm_file) }
+        pcdm_files.map(&:valkyrie_resource)
       end
     end
   end

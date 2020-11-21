@@ -34,8 +34,7 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
         expect(ids.first.to_s).to start_with "#{file_set.id}/files/"
 
         file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: ids.first)
-        expect(file_metadata.content.first).to start_with('%PDF-1.3')
-        expect(file_metadata.mime_type.first).to eq pdf_mimetype
+        expect(file_metadata.mime_type).to eq pdf_mimetype
       end
     end
 
@@ -48,8 +47,7 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
         expect(ids.first.to_s).to start_with "#{file_set.id}/files/"
 
         file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: ids.first)
-        expect(file_metadata.content.first).to start_with('some updated content')
-        expect(file_metadata.mime_type.first).to eq text_mimetype
+        expect(file_metadata.mime_type).to eq text_mimetype
       end
     end
 
@@ -62,8 +60,7 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
         expect(ids.first.to_s).to start_with "#{file_set.id}/files/"
 
         file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: ids.first)
-        expect(file_metadata.content.first.present?).to eq true
-        expect(file_metadata.mime_type.first).to eq image_mimetype
+        expect(file_metadata.mime_type).to eq image_mimetype
       end
     end
   end
@@ -82,8 +79,10 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
       expect(ids.first).to be_a Valkyrie::ID
       expect(ids.first.to_s).to start_with "#{file_set.id}/files/"
 
-      expect(Hyrax.custom_queries.find_many_file_metadata_by_use(resource: subject, use: transcript_use).first.content.first).to start_with('some updated content')
-      expect(Hyrax.custom_queries.find_many_file_metadata_by_use(resource: subject, use: service_file_use).first.content.first).to start_with('%PDF-1.3')
+      expect(Hyrax.custom_queries.find_many_file_metadata_by_use(resource: subject, use: transcript_use).first.type)
+        .to include transcript_use
+      expect(Hyrax.custom_queries.find_many_file_metadata_by_use(resource: subject, use: service_file_use).first.type)
+        .to include service_file_use
     end
   end
 

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 ActiveFedora::Base.include Wings::Valkyrizable
+ActiveFedora::File.include Wings::Valkyrizable
 
 module ActiveTriples
   class NodeConfig
@@ -32,6 +33,14 @@ module ActiveFedora
 
   class File
     alias eql? ==
+
+    def self.supports_property?(property)
+      properties.key?(property.to_s)
+    end
+
+    def self.properties
+      metadata.properties
+    end
   end
 end
 
@@ -68,3 +77,4 @@ Wings::ModelRegistry.register(Hyrax::PcdmCollection,    ::Collection)
 Wings::ModelRegistry.register(Hyrax::FileSet,           FileSet)
 Wings::ModelRegistry.register(Hyrax::Embargo,           Hydra::AccessControls::Embargo)
 Wings::ModelRegistry.register(Hyrax::Lease,             Hydra::AccessControls::Lease)
+Wings::ModelRegistry.register(Hyrax::FileMetadata,      Hydra::PCDM::File)

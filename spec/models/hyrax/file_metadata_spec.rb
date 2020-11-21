@@ -17,7 +17,7 @@ RSpec.describe Hyrax::FileMetadata do
   it 'sets the proper attributes' do
     expect(subject.id.to_s).to eq 'test_id'
     expect(subject.label).to contain_exactly('world.png')
-    expect(subject.original_filename).to contain_exactly('world.png')
+    expect(subject.original_filename).to eq 'world.png'
     expect(subject.mime_type).to eq('image/png')
     expect(subject.format_label).to contain_exactly('test_format_label')
     expect(subject.type).to contain_exactly(described_class::Use::ORIGINAL_FILE)
