@@ -178,6 +178,62 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       it 'populates reflections'
     end
 
+    context 'with a file set' do
+      let(:resource) { FactoryBot.build(:hyrax_file_set) }
+
+      it 'is a FileSet' do
+        expect(converter.convert).to be_a FileSet
+      end
+
+      context 'with file metadata' do
+        let(:resource) { FactoryBot.build(:hyrax_file_set, :with_files) }
+
+        it 'persists the files'
+      end
+    end
+
+    context 'with file metadata' do
+      let(:resource) { FactoryBot.build(:hyrax_file_metadata, line_count: 17_426, duration: 'thousands of years') }
+
+      it 'converts to a PCDM::File' do
+        expect(converter.convert).to be_a Hydra::PCDM::File
+      end
+
+      it 'converts file metadata' do
+        expect(converter.convert)
+          .to have_attributes line_count: [17_426], duration: ['thousands of years']
+      end
+
+      context 'when there is already an AF::File' do
+        let(:resource) { FactoryBot.build(:hyrax_file_metadata, id: file.id, bit_rate: ['300 Mbit/s']) }
+
+        let(:file) do
+          Hydra::PCDM::File.new.tap do |f|
+            f.content = 'a file'
+            f.bit_rate = ['90 bpm']
+            f.save
+          end
+        end
+
+        let(:custom_type) { ::RDF::URI.new('http://example.com/MyType') }
+
+        it 'converts with correct id' do
+          expect(converter.convert).to have_attributes id: file.id
+        end
+
+        it 'converts with existing content & updates metadata attributes' do
+          expect(converter.convert)
+            .to have_attributes content: 'a file', bit_rate: ['300 Mbit/s']
+        end
+
+        it 'converts pcdm use URIs as types' do
+          expect { resource.type = custom_type }
+            .to change { converter.convert.metadata_node.type }
+            .to contain_exactly(custom_type)
+        end
+      end
+    end
+
     context 'with an embargo' do
       let(:work) { FactoryBot.create(:embargoed_work) }
 

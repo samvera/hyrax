@@ -4,6 +4,10 @@ require 'valkyrie/specs/shared_specs'
 require 'wings'
 
 RSpec.describe Wings::Valkyrie::Persister do
+  subject(:persister) { described_class.new(adapter: adapter) }
+  let(:adapter) { Wings::Valkyrie::MetadataAdapter.new }
+  let(:query_service) { adapter.query_service }
+
   context "When passing a Valkyrie::Resource converted from an ActiveFedora::Base" do
     before do
       module Hyrax::Test
@@ -23,9 +27,6 @@ RSpec.describe Wings::Valkyrie::Persister do
       Hyrax::Test.send(:remove_const, :Persister)
     end
 
-    subject(:persister) { described_class.new(adapter: adapter) }
-    let(:adapter) { Wings::Valkyrie::MetadataAdapter.new }
-    let(:query_service) { adapter.query_service }
     let(:af_resource_class) { Hyrax::Test::Persister::Book }
     let(:resource_class) { Wings::OrmConverter.to_valkyrie_resource_class(klass: af_resource_class) }
     let(:resource) { resource_class.new(title: ['Foo']) }
@@ -114,10 +115,44 @@ RSpec.describe Wings::Valkyrie::Persister do
     end
   end
 
+  context 'when passing a FileMetadata node' do
+    let(:resource) { Hyrax::FileMetadata.new }
+
+    it 'raises an error because AF declines to save files that do not have content' do
+      expect { persister.save(resource: resource) }
+        .to raise_error described_class::FailedSaveError
+    end
+
+    context 'and it corresponds to a File' do
+      let(:resource) { Hyrax::FileMetadata.new(id: file.id, file_identifier: file.id) }
+      let(:file) do
+        Hydra::PCDM::File.new.tap do |f|
+          f.content = "moomin\n"
+          f.save
+        end
+      end
+
+      it 'returns itself' do
+        expect(persister.save(resource: resource).id).to eq resource.id
+      end
+
+      it 'can update metadata' do
+        resource.bit_rate = ['1000']
+
+        expect { persister.save(resource: resource) }
+          .to change { Hydra::PCDM::File.find(file.id).bit_rate }
+          .to contain_exactly '1000'
+      end
+
+      it 'does not update existing content' do
+        persister.save(resource: resource)
+        file.reload
+        expect(file.content).to eq("moomin\n")
+      end
+    end
+  end
+
   context "When passing a Valkyrie::Resource that was never an ActiveFedora::Base" do
-    subject(:persister) { described_class.new(adapter: adapter) }
-    let(:adapter) { Wings::Valkyrie::MetadataAdapter.new }
-    let(:query_service) { adapter.query_service }
     before do
       class CustomResource < Hyrax::Resource
         attribute :title
@@ -147,7 +182,6 @@ RSpec.describe Wings::Valkyrie::Persister do
       Object.send(:remove_const, :Custom)
     end
 
-    subject { persister }
     let(:resource_class) { CustomResource }
     let(:resource) { resource_class.new }
 

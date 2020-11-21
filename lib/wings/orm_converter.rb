@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'wings/transformer_value_mapper'
 require 'wings/models/concerns/collection_behavior'
 require 'wings/hydra/works/models/concerns/work_valkyrie_behavior'
 require 'wings/hydra/works/models/concerns/file_set_valkyrie_behavior'
@@ -15,6 +14,7 @@ module Wings
     #
     # @return [Array<Symbol>]
     def self.relationship_keys_for(reflections:)
+      return [] unless reflections
       relationships = reflections
                       .keys
                       .reject { |k| k.to_s.include?('id') }

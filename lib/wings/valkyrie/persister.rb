@@ -16,26 +16,16 @@ module Wings
       # @param [Valkyrie::Resource] resource
       # @return [Valkyrie::Resource] the persisted/updated resource
       def save(resource:)
-        return save_file(file_metadata: resource) if resource.is_a? Hyrax::FileMetadata
         af_object = resource_factory.from_resource(resource: resource)
 
         check_lock_tokens(af_object: af_object, resource: resource)
 
-        af_object.save!
-        resource_factory.to_resource(object: af_object)
-      rescue ActiveFedora::RecordInvalid => err
-        raise FailedSaveError.new(err.message, obj: af_object)
-      end
+        af_object.save! ||
+          raise(FailedSaveError.new("#{af_object.class}#save! returned non-true. It might be missing required content.", obj: af_object))
 
-      # if we're trying to save a file metadata with wings, we should have
-      # already persisted the file, and AF has a metadata node. repopulate from
-      # there
-      def save_file(file_metadata:)
-        if file_metadata.id.blank?
-          files = FileSet.find(file_metadata.file_set_id.id).files.to_a
-          file_metadata.id = files.find { |f| file_metadata.original_filename.include?(f.original_name) }.id
-        end
-        file_metadata
+        resource_factory.to_resource(object: af_object)
+      rescue ActiveFedora::RecordInvalid, RuntimeError => err
+        raise FailedSaveError.new(err.message, obj: af_object)
       end
 
       # Persists a resource using ActiveFedora

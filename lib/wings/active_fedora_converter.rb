@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'wings/converter_value_mapper'
+require 'wings/active_fedora_converter/default_work'
+require 'wings/active_fedora_converter/nested_resource'
 
 module Wings
   ##
@@ -77,7 +79,7 @@ module Wings
                     Wings::ActiveFedoraClassifier.new(resource.internal_resource).best_model
                   end
 
-          return klass if klass <= ActiveFedora::Base
+          return klass if klass <= ActiveFedora::Common
 
           ModelRegistry.lookup(klass)
         end
@@ -95,78 +97,10 @@ module Wings
       resource.alternate_ids.first.to_s
     end
 
-    def self.DefaultWork(resource_class)
-      class_cache[resource_class] ||= Class.new(DefaultWork) do
-        self.valkyrie_class = resource_class
-
-        # extract AF properties from the Valkyrie schema;
-        # skip reserved attributes, proctected properties, and those already defined
-        resource_class.schema.each do |schema_key|
-          next if resource_class.reserved_attributes.include?(schema_key.name)
-          next if protected_property_name?(schema_key.name)
-          next if properties.keys.include?(schema_key.name.to_s)
-
-          property schema_key.name, predicate: RDF::URI("http://hyrax.samvera.org/ns/wings##{schema_key.name}")
-        end
-
-        # nested attributes in AF don't inherit! this needs to be here until we can drop it completely.
-        accepts_nested_attributes_for :nested_resource
-      end
-    end
-
-    ##
-    # A base model class for valkyrie resources that don't have corresponding
-    # ActiveFedora::Base models.
-    class DefaultWork < ActiveFedora::Base
-      include Hyrax::WorkBehavior
-      property :nested_resource, predicate: ::RDF::URI("http://example.com/nested_resource"), class_name: "Wings::ActiveFedoraConverter::NestedResource"
-
-      class_attribute :valkyrie_class
-      self.valkyrie_class = Hyrax::Resource
-
-      class << self
-        delegate :human_readable_type, to: :valkyrie_class
-
-        def model_name(*)
-          _hyrax_default_name_class.new(valkyrie_class)
-        end
-
-        def to_rdf_representation
-          "Wings(#{valkyrie_class})"
-        end
-        alias inspect to_rdf_representation
-        alias to_s inspect
-      end
-
-      def to_global_id
-        GlobalID.create(valkyrie_class.new(id: id))
-      end
-    end
-
-    class NestedResource < ActiveTriples::Resource
-      property :title, predicate: ::RDF::Vocab::DC.title
-      property :author, predicate: ::RDF::URI('http://example.com/ns/author')
-      property :depositor, predicate: ::RDF::URI('http://example.com/ns/depositor')
-      property :nested_resource, predicate: ::RDF::URI("http://example.com/nested_resource"), class_name: NestedResource
-      property :ordered_authors, predicate: ::RDF::Vocab::DC.creator
-      property :ordered_nested, predicate: ::RDF::URI("http://example.com/ordered_nested")
-
-      def initialize(uri = RDF::Node.new, _parent = ActiveTriples::Resource.new)
-        uri = if uri.try(:node?)
-                RDF::URI("#nested_resource_#{uri.to_s.gsub('_:', '')}")
-              elsif uri.to_s.include?('#')
-                RDF::URI(uri)
-              end
-        super
-      end
-
-      include ::Hyrax::BasicMetadata
-    end
-
     private
 
     def instance
-      active_fedora_class.find(id)
+      id.present? ? active_fedora_class.find(id) : active_fedora_class.new
     rescue ActiveFedora::ObjectNotFoundError
       active_fedora_class.new
     end
@@ -200,6 +134,8 @@ module Wings
       case af_object
       when Hydra::AccessControl
         add_access_control_attributes(af_object)
+      when ActiveFedora::File
+        add_file_attributes(af_object)
       else
         converted_attrs = normal_attributes
         members = converted_attrs.delete(:members)
@@ -210,11 +146,17 @@ module Wings
 
     # Add attributes from resource which aren't AF properties into af_object
     def add_access_control_attributes(af_object)
-      normal_attributes[:permissions].each do |permission|
-        permission.access_to_id = resource.access_to&.id
-      end
-
+      normal_attributes[:permissions].each { |p| p.access_to_id = resource.access_to&.id }
       af_object.permissions = normal_attributes[:permissions]
+    end
+
+    # for files, add attributes to metadata_node, plus some other work
+    def add_file_attributes(af_object)
+      af_object.metadata_node.attributes = normal_attributes
+      af_object.original_name = resource.original_filename
+      new_type = (resource.type - af_object.metadata_node.type.to_a).first
+      af_object.metadata_node.type = new_type if new_type
+      af_object.mime_type = resource.mime_type
     end
   end
 end
