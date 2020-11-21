@@ -50,7 +50,7 @@ Valkyrie::MetadataAdapter.register(
 Valkyrie.config.metadata_adapter = :wings_adapter
 
 Valkyrie::StorageAdapter.register(
-  Wings::Storage::ActiveFedora
+  Valkyrie::Storage::Fedora
     .new(connection: Ldp::Client.new(ActiveFedora.fedora.host), base_path: ActiveFedora.fedora.base_path),
   :active_fedora
 )

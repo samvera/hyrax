@@ -95,7 +95,6 @@ require 'wings/valkyrie/metadata_adapter'
 require 'wings/valkyrie/resource_factory'
 require 'wings/valkyrie/persister'
 require 'wings/valkyrie/query_service'
-require 'wings/valkyrie/storage/active_fedora'
 
 Hydra::AccessControl.send(:define_method, :valkyrie_resource) do
   attrs = attributes.symbolize_keys
