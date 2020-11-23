@@ -479,10 +479,14 @@ module Hyrax
     attr_writer :translate_uri_to_id
 
     def translate_uri_to_id
-      @translate_uri_to_id ||= lambda do |uri|
-        baseparts = 2 + [(::Noid::Rails.config.template.gsub(/\.[rsz]/, '').length.to_f / 2).ceil, 4].min
-        uri.to_s.sub("#{ActiveFedora.fedora.host}#{ActiveFedora.fedora.base_path}", '').split('/', baseparts).last
-      end
+      @translate_uri_to_id ||=
+        begin
+          baseparts = 2 + [(::Noid::Rails.config.template.gsub(/\.[rsz]/, '').length.to_f / 2).ceil, 4].min
+
+          lambda do |uri|
+            uri.to_s.split(ActiveFedora.fedora.base_path).last.split('/', baseparts).last
+          end
+        end
     end
 
     attr_writer :translate_id_to_uri
