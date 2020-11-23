@@ -3,7 +3,7 @@ RSpec.describe Hyrax::FileSetIndexer do
 
   let(:file_set) do
     FileSet.new(
-      id: 'foo123',
+      id: 'foo12345',
       contributor: ['Mohammad'],
       creator: ['Allah'],
       title: ['The Work'],
@@ -50,15 +50,15 @@ RSpec.describe Hyrax::FileSetIndexer do
       # https://github.com/samvera/active_fedora/issues/1251
       allow(file_set).to receive(:persisted?).and_return(true)
       allow(file_set).to receive(:label).and_return('CastoriaAd.tiff')
-      allow(Hyrax::ThumbnailPathService).to receive(:call).and_return('/downloads/foo123?file=thumbnail')
+      allow(Hyrax::ThumbnailPathService).to receive(:call).and_return('/downloads/foo12345?file=thumbnail')
       allow(file_set).to receive(:original_file).and_return(mock_file)
       allow(file_set).to receive(:extracted_text).and_return(mock_text)
     end
     subject { indexer.generate_solr_document }
 
     it 'has fields' do
-      expect(subject['hasRelatedMediaFragment_ssim']).to eq 'foo123'
-      expect(subject['hasRelatedImage_ssim']).to eq 'foo123'
+      expect(subject['hasRelatedMediaFragment_ssim']).to eq 'foo12345'
+      expect(subject['hasRelatedImage_ssim']).to eq 'foo12345'
       expect(subject['date_uploaded_tesim']).to be_nil
       expect(subject['date_modified_tesim']).to be_nil
       expect(subject['date_uploaded_dtsi']).to eq '2011-01-01T00:00:00Z'
@@ -82,7 +82,7 @@ RSpec.describe Hyrax::FileSetIndexer do
       expect(subject['identifier_tesim']).to eq ['urn:isbn:1234567890']
       expect(subject['based_near_tesim']).to eq ['Medina, Saudi Arabia']
       expect(subject['mime_type_ssi']).to eq 'image/jpeg'
-      expect(subject['thumbnail_path_ss']).to eq '/downloads/foo123?file=thumbnail'
+      expect(subject['thumbnail_path_ss']).to eq '/downloads/foo12345?file=thumbnail'
       expect(subject['all_text_timv']).to eq('abcxyz')
       expect(subject['height_is']).to eq 500
       expect(subject['width_is']).to eq 600
