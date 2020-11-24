@@ -35,7 +35,7 @@ module Hyrax
         repository_file = related_file
         repository_file.restore_version(revision_id)
         return false unless file_set.save
-        Hyrax::VersioningService.create(repository_file, user)
+        create_version(repository_file, user)
         CharacterizeJob.perform_later(file_set, repository_file.id)
       end
 
@@ -48,6 +48,16 @@ module Hyrax
 
       private
 
+      ##
+      # Wraps the verisoning service with erro handling. if the service's
+      # create handler isn't implemented, we want to accept that quietly here.
+      def create_version(content, user)
+        Hyrax::VersioningService.create(content, user)
+      rescue NotImplementedError
+        :no_op
+      end
+
+      ##
       # @return [Hydra::PCDM::File] the file referenced by relation
       def related_file
         file_set.public_send(normalize_relation(relation)) || raise("No #{relation} returned for FileSet #{file_set.id}")
@@ -70,13 +80,12 @@ module Hyrax
                                             versioning: false)
         return false unless file_set.save
         repository_file = related_file
-        Hyrax::VersioningService.create(repository_file, user)
+        create_version(repository_file, user)
         pathhint = io.uploaded_file.uploader.path if io.uploaded_file # in case next worker is on same filesystem
         CharacterizeJob.perform_later(file_set, repository_file.id, pathhint || io.path)
       end
 
       def perform_ingest_file_through_valkyrie(io)
-        # Skip versioning because versions will be minted by VersionCommitter as necessary during save_characterize_and_record_committer.
         unsaved_file_metadata = io.to_file_metadata
         unsaved_file_metadata.type = [relation]
         begin
@@ -85,7 +94,7 @@ module Hyrax
           Rails.logger.error("Failed to save file_metadata through valkyrie: #{e.message}")
           return false
         end
-        Hyrax::VersioningService.create(saved_file_metadata, user)
+        create_version(saved_file_metadata, user)
         pathhint = io.uploaded_file.uploader.path if io.uploaded_file # in case next worker is on same filesystem
         id = Hyrax.config.translate_uri_to_id.call saved_file_metadata.file_identifier
         CharacterizeJob.perform_later(file_set, id, pathhint || io.path)

@@ -139,8 +139,10 @@ module Wings
       else
         converted_attrs = normal_attributes
         members = converted_attrs.delete(:members)
+        files = converted_attrs.delete(:files)
         af_object.attributes = converted_attrs
         af_object.ordered_members = members if members
+        af_object.files.build_or_set(files) if files
       end
     end
 

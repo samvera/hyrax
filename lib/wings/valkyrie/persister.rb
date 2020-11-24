@@ -20,6 +20,9 @@ module Wings
 
         check_lock_tokens(af_object: af_object, resource: resource)
 
+        # the #save! api differs between ActiveFedora::Base and ActiveFedora::File objects,
+        # if we get a falsey response, we expect we have a File that has failed to save due
+        # to empty content
         af_object.save! ||
           raise(FailedSaveError.new("#{af_object.class}#save! returned non-true. It might be missing required content.", obj: af_object))
 
