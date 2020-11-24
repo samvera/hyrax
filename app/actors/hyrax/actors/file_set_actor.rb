@@ -189,7 +189,7 @@ module Hyrax
       # TODO: Change calls to `#perform_save` to call `#save` instead when env passes resources instead of active fedora objects
       def save(resource)
         Hyrax.persister.save(resource: resource)
-      rescue FailedSaveError
+      rescue Wings::Valkyrie::Persister::FailedSaveError
         false
       end
 
