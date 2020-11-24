@@ -56,6 +56,28 @@ RSpec.describe Wings::CustomQueries::FindFileMetadata, :clean_repo do
         expect { query_handler.find_file_metadata_by(id: valk_id1) }.to raise_error Hyrax::ObjectNotFoundError
       end
     end
+
+    context 'when it was created with the storage adapter' do
+      let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
+      let(:storage) { Valkyrie::StorageAdapter.find(:active_fedora) }
+
+      let(:file) do
+        Valkyrie::StorageAdapter
+          .find(:active_fedora)
+          .upload(file: upload, resource: file_set, original_filename: 'name.png')
+      end
+
+      let(:upload) do
+        f = Tempfile.new('valkyrie-tmp')
+        f.write 'some content'
+        f.rewind
+        f
+      end
+
+      it 'returns an existing metadata node' do
+        expect(query_handler.find_file_metadata_by(id: file.id)).to be_persisted
+      end
+    end
   end
 
   describe '.find_many_file_metadata_by_ids' do

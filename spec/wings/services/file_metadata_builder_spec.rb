@@ -29,11 +29,9 @@ RSpec.describe Wings::FileMetadataBuilder, :clean_repo do
       built_file_metadata = builder.create(io_wrapper: io_wrapper, file_metadata: original_file_metadata, file_set: file_set)
       expect(built_file_metadata).to be_kind_of Hyrax::FileMetadata
       expect(built_file_metadata.original_file?).to be true
-      expect(built_file_metadata.file_set_id.id).to eq file_set.id.id
-      expect(built_file_metadata.label).to contain_exactly(original_name)
-      expect(built_file_metadata.original_filename).to contain_exactly(original_name)
+      expect(built_file_metadata.original_filename).to eq original_name
       expect(built_file_metadata.mime_type).to eq mime_type
-      expect(built_file_metadata.type).to contain_exactly(use)
+      expect(built_file_metadata.type).to include(use)
     end
   end
 end
