@@ -94,6 +94,7 @@ require 'wings/valkyrizable'
 require 'wings/valkyrie/metadata_adapter'
 require 'wings/valkyrie/resource_factory'
 require 'wings/valkyrie/persister'
+require 'wings/valkyrie/storage'
 require 'wings/valkyrie/query_service'
 
 Hydra::AccessControl.send(:define_method, :valkyrie_resource) do

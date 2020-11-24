@@ -561,6 +561,8 @@ module Hyrax
 
     attr_writer :resource_id_to_uri_transformer
     def resource_id_to_uri_transformer
+      Deprecation.warn('Use Hyrax.config.translate_uri_to_id instead.')
+
       @resource_id_to_uri_transformer ||= lambda do |resource, base_url|
         file_id = CGI.escape(resource.file_identifier.to_s)
         fs_id = CGI.escape(resource.file_set_id.to_s)

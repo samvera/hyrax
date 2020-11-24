@@ -22,8 +22,7 @@ module Wings
       delegate :resource_factory, to: :query_service
 
       ##
-      # Find a file metadata using a Valkyrie ID, and map it to a Hyrax::FileMetadata
-      # or Hydra::PCDM::File, if use_valkyrie is true or false, respectively.
+      # Find a Hyrax::FileMetadata using a Valkyrie ID,
       #
       # @param id [Valkyrie::ID, String]
       # @param use_valkyrie [boolean] defaults to true; optionally return
@@ -37,9 +36,8 @@ module Wings
         find_file_metadata_by_alternate_identifier(alternate_identifier: id, use_valkyrie: use_valkyrie)
       end
 
-      # Find a file metadata using an alternate ID, and map it to a
-      # Hyrax::FileMetadata or Hydra::PCDM::File, if use_valkyrie is true or
-      # false, respectively.
+      # Find a Hyrax::FileMetadata using an alternate ID, and map it to a
+      #
       #
       # @param alternate_identifier [Valkyrie::ID, String]
       # @param use_valkyrie [boolean] defaults to true; optionally return
