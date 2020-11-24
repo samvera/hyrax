@@ -42,6 +42,24 @@ module ActiveFedora
       metadata.properties
     end
   end
+
+  module Associations
+    class ContainerProxy
+      delegate :build_or_set, to: :@association
+    end
+
+    class ContainsAssociation
+      def build_or_set(attributes, &block)
+        if attributes.is_a?(Array)
+          attributes.collect { |attr| build_or_set(attr, &block) }
+        else
+          add_to_target(reflection.build_association(attributes)) do |record|
+            yield(record) if block_given?
+          end
+        end
+      end
+    end
+  end
 end
 
 Valkyrie::MetadataAdapter.register(
