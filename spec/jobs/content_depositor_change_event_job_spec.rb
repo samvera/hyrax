@@ -14,7 +14,7 @@ RSpec.describe ContentDepositorChangeEventJob do
     allow(Time).to receive(:now).at_least(:once).and_return(mock_time)
   end
 
-  context "when use_valkyrie is false" do
+  context "when passing an ActiveFedora work" do
     let(:generic_work) { create(:generic_work, title: ['BethsMac'], user: user) }
 
     it "logs the event to the proxy depositor's profile, the depositor's dashboard, and the FileSet" do
@@ -31,7 +31,7 @@ RSpec.describe ContentDepositorChangeEventJob do
     end
   end
 
-  context "when use_valkyrie is true" do
+  context "when passing a valkyrie work" do
     let(:monograph) { valkyrie_create(:monograph, title: ['BethsMac'], depositor: user.user_key) }
 
     let(:event) do
