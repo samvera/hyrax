@@ -31,11 +31,14 @@ module Hyrax
         work.permission_manager.acl.permissions = []
         work.permission_manager.acl.save
       end
+
       work.proxy_depositor = work.depositor
       apply_depositor_metadata(work, user)
-      work.file_sets.each do |f|
+
+      Hyrax.custom_queries.find_child_filesets(resource: work).each do |f|
         apply_depositor_metadata(f, user)
       end
+
       work
     end
     private_class_method :call_valkyrie

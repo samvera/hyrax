@@ -27,7 +27,9 @@ module Wings
     # A base model class for valkyrie resources that don't have corresponding
     # ActiveFedora::Base models.
     class DefaultWork < ActiveFedora::Base
-      include Hyrax::WorkBehavior
+      include Hyrax::Noid
+      include Hyrax::Permissions
+      include Hydra::AccessControls::Embargoable
       property :nested_resource, predicate: ::RDF::URI("http://example.com/nested_resource"), class_name: "Wings::ActiveFedoraConverter::NestedResource"
 
       class_attribute :valkyrie_class
@@ -37,7 +39,7 @@ module Wings
         delegate :human_readable_type, to: :valkyrie_class
 
         def model_name(*)
-          _hyrax_default_name_class.new(valkyrie_class)
+          Hyrax::Name.new(valkyrie_class)
         end
 
         def to_rdf_representation
