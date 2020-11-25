@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 module Wings
   module Valkyrie
+    ##
+    # A valkyrie persister that aims for data consistency/backwards compatibility with ActiveFedora.
+    #
+    # The guiding principle of design for this persister is that resources persisted with it should
+    # be directly readable by `Hydra::Works`-style ActiveFedora models. It aims to be as complete as
+    # possible as a Valkyrie Persister, given that limitation.
     class Persister
       attr_reader :adapter
       extend Forwardable
