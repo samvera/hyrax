@@ -253,35 +253,55 @@ RSpec.describe Wings::Valkyrie::Persister do
       expect(reloaded.title).to contain_exactly custom_rdf
     end
 
-    xit "can handle Date RDF properties" do
+    it "can handle Date RDF properties" do
+      pending 'ActiveFedora casts literals to Literal#object, where possible. '\
+              'Without an RDFLiteral in Valkyrie::Types to specify casting back, we ' \
+              "can't know what the model wants." # pending so if this passes, we fail CI
+
       date_rdf = RDF::Literal.new(Date.current)
       book = persister.save(resource: resource_class.new(title: [date_rdf]))
       reloaded = query_service.find_by(id: book.id)
       expect(reloaded.title).to contain_exactly date_rdf
     end
 
-    xit "can handle DateTime RDF properties" do
+    it "can handle DateTime RDF properties" do
+      pending 'ActiveFedora casts literals to Literal#object, where possible. '\
+              'Without an RDFLiteral in Valkyrie::Types to specify casting back, we ' \
+              "can't know what the model wants." # pending so if this passes, we fail CI
+
       datetime_rdf = RDF::Literal.new(DateTime.current)
       book = persister.save(resource: resource_class.new(title: [datetime_rdf]))
       reloaded = query_service.find_by(id: book.id)
       expect(reloaded.title).to contain_exactly datetime_rdf
     end
 
-    xit "can handle Decimal RDF properties" do
+    it "can handle Decimal RDF properties" do
+      pending 'ActiveFedora casts literals to Literal#object, where possible. '\
+              'Without an RDFLiteral in Valkyrie::Types to specify casting back, we ' \
+              "can't know what the model wants." # pending so if this passes, we fail CI
+
       decimal_rdf = RDF::Literal.new(BigDecimal(5.5, 10))
       book = persister.save(resource: resource_class.new(title: [decimal_rdf]))
       reloaded = query_service.find_by(id: book.id)
       expect(reloaded.title).to contain_exactly decimal_rdf
     end
 
-    xit "can handle Double RDF properties" do
+    it "can handle Double RDF properties" do
+      pending 'ActiveFedora casts literals to Literal#object, where possible. '\
+              'Without an RDFLiteral in Valkyrie::Types to specify casting back, we ' \
+              "can't know what the model wants." # pending so if this passes, we fail CI
+
       double_rdf = RDF::Literal.new(5.5)
       book = persister.save(resource: resource_class.new(title: [double_rdf]))
       reloaded = query_service.find_by(id: book.id)
       expect(reloaded.title).to contain_exactly double_rdf
     end
 
-    xit "can handle Integer RDF properties" do
+    it "can handle Integer RDF properties" do
+      pending 'ActiveFedora casts literals to Literal#object, where possible. '\
+              'Without an RDFLiteral in Valkyrie::Types to specify casting back, we ' \
+              "can't know what the model wants." # pending so if this passes, we fail CI
+
       int_rdf = RDF::Literal.new(17)
       book = persister.save(resource: resource_class.new(title: [int_rdf]))
       reloaded = query_service.find_by(id: book.id)
@@ -295,7 +315,11 @@ RSpec.describe Wings::Valkyrie::Persister do
       expect(reloaded.title).to contain_exactly "Test1", language_rdf
     end
 
-    xit "can handle Time RDF properties" do
+    it "can handle Time RDF properties" do
+      pending 'ActiveFedora casts literals to Literal#object, where possible. '\
+              'Without an RDFLiteral in Valkyrie::Types to specify casting back, we ' \
+              "can't know what the model wants." # pending so if this passes, we fail CI
+
       time_rdf = RDF::Literal.new(Time.current)
       book = persister.save(resource: resource_class.new(title: [time_rdf]))
       reloaded = query_service.find_by(id: book.id)
@@ -339,7 +363,7 @@ RSpec.describe Wings::Valkyrie::Persister do
       expect(reloaded.title).to contain_exactly RDF::URI("http://example.com")
     end
 
-    xit "can store Valkyrie::IDs" do
+    it "can store Valkyrie::IDs" do
       shared_title = persister.save(resource: resource_class.new)
       book = persister.save(resource: resource_class.new(title: [shared_title.id, Valkyrie::ID.new("adapter://1"), "test"]))
       reloaded = query_service.find_by(id: book.id)
