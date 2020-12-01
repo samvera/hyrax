@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'wings/services/file_metadata_builder'
 require 'wings/valkyrie/query_service'
 
 RSpec.describe Hyrax::Actors::FileActor do
@@ -131,112 +130,56 @@ RSpec.describe Hyrax::Actors::FileActor do
 
   context 'when using valkyrie' do
     let(:user)     { create(:user) }
-    let(:file_set) { create(:file_set) }
+    let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
     let(:relation) { Hyrax::FileMetadata::Use::ORIGINAL_FILE }
     let(:actor)    { described_class.new(file_set, relation, user, use_valkyrie: true) }
     let(:fixture)  { fixture_file_upload('/world.png', 'image/png') }
     let(:huf) { Hyrax::UploadedFile.new(user: user, file: fixture) }
     let(:io) { JobIoWrapper.new(file_set_id: file_set.id, user: user, uploaded_file: huf, path: huf.uploader.path) }
-    let(:storage_adapter) { Hyrax.storage_adapter }
     let(:metadata_adapter) { Hyrax.metadata_adapter }
     let(:persister) { metadata_adapter.persister }
     let(:query_service) { Wings::Valkyrie::QueryService.new(adapter: metadata_adapter) }
     let(:file_metadata) do
-      metadata_builder = Wings::FileMetadataBuilder.new(storage_adapter: storage_adapter, persister: persister)
-      file_metadata = Hyrax::FileMetadata.for(file: fixture)
-      metadata_builder.create(file: fixture, file_metadata: file_metadata, file_set: file_set)
+      stored = Hyrax.storage_adapter.upload(file: io, resource: file_set, original_filename: io.original_name)
+      Hyrax.custom_queries.find_file_metadata_by(id: stored.id)
     end
 
     context 'relation' do
       let(:relation) { RDF::URI.new("http://pcdm.org/use#remastered") }
 
       it 'uses the relation from the actor' do
-        pending 'implementation of Wings::Valkyrie::Persister #save_file_metadata'
         expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileMetadata, user)
         expect(CharacterizeJob).to receive(:perform_later)
-        saved_metadata = actor.ingest_file(io)
-        reloaded = query_service.find_by(id: file_set.id)
-        expect(reloaded.member_by(use: relation).id).to eq saved_metadata.id
-      end
 
-      context 'when relation is a string' do
-        let(:relation) { 'thumbnail_file' }
+        metadata = actor.ingest_file(io)
 
-        it 'converts relation to URI before using the relation from the actor' do
-          pending 'implementation of Wings::Valkyrie::Persister #save_file_metadata'
-          expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileMetadata, user)
-          expect(CharacterizeJob).to receive(:perform_later)
-          saved_metadata = actor.ingest_file(io)
-          reloaded = query_service.find_by(id: file_set.id)
-          expect(reloaded.member_by(use: relation).id).to eq saved_metadata.id
-        end
+        expect(Hyrax.custom_queries.find_many_file_metadata_by_use(resource: file_set, use: relation).map(&:id))
+          .to contain_exactly(metadata.id)
       end
     end
 
-    xit 'uses the provided mime_type' do
-      pending 'implementation of Wings::Valkyrie::Persister #save_file_metadata'
+    it 'uses the provided mime_type' do
       allow(fixture).to receive(:content_type).and_return('image/gif')
       expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileMetadata, user)
       expect(CharacterizeJob).to receive(:perform_later)
-      saved_metadata = actor.ingest_file(io)
-      expect(saved_metadata.mime_type).to eq ['image/gif']
-    end
 
-    context 'with two existing versions from different users' do
-      let(:fixture2) { fixture_file_upload('/small_file.txt', 'text/plain') }
-      let(:huf2) { Hyrax::UploadedFile.new(user: user2, file: fixture2) }
-      let(:io2) { JobIoWrapper.new(file_set_id: file_set.id, user: user2, uploaded_file: huf2, path: huf2.uploader.path) }
-      let(:user2) { create(:user) }
-      let(:actor2) { described_class.new(file_set, relation, user2) }
-      let(:adapter) { Hyrax.metadata_adapter }
-      let(:query_service) { Wings::Valkyrie::QueryService.new(adapter: adapter) }
-      let(:versions) do
-        reloaded = query_service.find_by(id: file_set.id)
-        reloaded.original_file.versions
-      end
-
-      before do
-        # TODO: WINGS - When #ingest_file works, these should be uncommented.
-        # expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileMetadata, user)
-        # expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileMetadata, user2)
-        # expect(CharacterizeJob).to receive(:perform_later)
-        allow(CharacterizeJob).to receive(:perform_later)
-        actor.ingest_file(io)
-        actor2.ingest_file(io2)
-      end
-
-      it 'has two versions' do
-        pending 'implementation of Wings::Valkyrie::Persister #save_file_metadata'
-        expect(versions.count).to eq 2
-        # the current version
-        reloaded = query_service.find_by(id: file_set.id)
-        expect(Hyrax::VersioningService.latest_version_of(reloaded.original_file).label).to eq ['version2']
-        expect(file_set.original_file.mime_type).to eq ['text/plain']
-        expect(file_set.original_file.original_filename).to eq ['small_file.txt']
-        expect(file_set.original_file.file.read).to eq fixture2.open.read
-        # the user for each versioe
-        expect(Hyrax::VersionCommitter.where(version_id: versions.first.id.to_s).pluck(:committer_login)).to eq [user.user_key]
-        expect(Hyrax::VersionCommitter.where(version_id: versions.last.id.to_s).pluck(:committer_login)).to eq [user2.user_key]
-      end
+      expect(actor.ingest_file(io).mime_type).to eq 'image/gif'
     end
 
     describe '#ingest_file' do
-      it 'when the file is available' do
-        pending 'implementation of Wings::Valkyrie::Persister #save_file_metadata'
-        expect(Hyrax::VersioningService).to receive(:create).with(Hyrax::FileMetadata, user)
-        expect(CharacterizeJob).to receive(:perform_later)
-        actor.ingest_file(io)
-        reloaded = query_service.find_by(id: file_set.id)
-        expect(reloaded.member_by(use: relation)).not_to be_nil
+      it 'ingestes the file' do
+        expect { actor.ingest_file(io) }
+          .to change { Hyrax.custom_queries.find_many_file_metadata_by_use(resource: file_set, use: relation) }
+          .from(be_empty)
       end
-      # rubocop:disable RSpec/AnyInstance
+
       it 'returns false when save fails' do
-        expect(Hyrax::VersioningService).not_to receive(:create).with(Hyrax::FileMetadata, user)
+        allow(Hyrax.storage_adapter).to receive(:upload).with(any_args).and_raise(Wings::StorageError)
+
+        expect(Hyrax::VersioningService).not_to receive(:create)
         expect(CharacterizeJob).not_to receive(:perform_later)
-        allow_any_instance_of(Wings::FileMetadataBuilder).to receive(:create).and_raise(StandardError)
         expect(actor.ingest_file(io)).to be_falsey
       end
-      # rubocop:enable RSpec/AnyInstance
     end
   end
 end

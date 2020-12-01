@@ -2,11 +2,14 @@
 
 module Wings
   # Stores a file and an associated Hyrax::FileMetadata
+  #
+  # @deprecated use `Hyrax.storage_adapter` instead
   class FileMetadataBuilder
     include Hyrax::Noid
 
     attr_reader :storage_adapter, :persister
     def initialize(storage_adapter:, persister:)
+      Deprecation.warn('This class is deprecated; use Wings::Valkyrie::Storage instead.')
       @storage_adapter = storage_adapter
       @persister = persister
     end
@@ -15,7 +18,11 @@ module Wings
     # @param file_metadata [Hyrax::FileMetadata] the metadata to represent the file
     # @param file_set [Valkyrie::Resouce, Hydra::Works::FileSet] the associated FileSet # TODO: WINGS - Remove Hydra::Works::FileSet as a potential type when valkyrization is complete.
     # @return [Hyrax::FileMetadata] the persisted metadata file_metadata that represents the file
+    #
+    # @deprecated use `Hyrax.storage_adapter` instead
     def create(io_wrapper:, file_metadata:, file_set:)
+      Deprecation.warn('Use storage_adapter.upload, Fedora creates a `FileMetadata` (describedBy) implictly. ' \
+                       'Query it with Hyrax.custom_queries.find_file_metadata_by(id: stored_file.id).')
       io_wrapper = build_file(io_wrapper, file_metadata.type)
       stored_file = storage_adapter.upload(file: io_wrapper,
                                            original_filename: io_wrapper.original_filename,
