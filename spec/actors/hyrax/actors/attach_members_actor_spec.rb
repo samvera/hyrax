@@ -12,34 +12,31 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
     stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|
       middleware.use described_class
     end
+
     stack.build(terminator)
   end
 
   describe "#update" do
-    subject { middleware.update(env) }
-
-    before do
-      work.ordered_members << existing_child_work
-    end
+    before { work.ordered_members << existing_child_work }
 
     context "without useful attributes" do
       let(:attributes) { {} }
 
-      it { is_expected.to be true }
+      it { expect(middleware.update(env)).to be true }
     end
 
     context "when the id already exists in the members" do
       let(:attributes) { HashWithIndifferentAccess.new(work_members_attributes: { '0' => { id: existing_child_work.id } }) }
 
       it "does nothing" do
-        expect { subject }.not_to change { env.curation_concern.ordered_members.to_a }
+        expect { middleware.update(env) }.not_to change { env.curation_concern.ordered_members.to_a }
       end
 
       context "and the _destroy flag is set" do
         let(:attributes) { HashWithIndifferentAccess.new(work_members_attributes: { '0' => { id: existing_child_work.id, _destroy: 'true' } }) }
 
         it "removes from the member and the ordered members" do
-          expect { subject }.to change { env.curation_concern.ordered_members.to_a }
+          expect { middleware.update(env) }.to change { env.curation_concern.ordered_members.to_a }
           expect(env.curation_concern.ordered_member_ids).not_to include(existing_child_work.id)
           expect(env.curation_concern.member_ids).not_to include(existing_child_work.id)
         end
@@ -60,7 +57,7 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
         HashWithIndifferentAccess.new(
           work_members_attributes: {
             '0' => { id: work_to_remove.id, _destroy: 'true' }, # colleciton is a member and we're removing it
-            '1' => { id: work_to_skip.id, _destroy: 'true' }, # colleciton is a NOT member and is marked for deletion; This is a UI introduced option
+            '1' => { id: work_to_skip.id, _destroy: 'true' }, # collection is a NOT member and is marked for deletion; This is a UI introduced option
             '2' => { id: existing_child_work.id },
             '3' => { id: work_to_add.id }
           }
@@ -68,7 +65,7 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
       end
 
       it "handles destroy/non-destroy and keep/add behaviors" do
-        expect { subject }.to change { env.curation_concern.ordered_members.to_a }
+        expect { middleware.update(env) }.to change { env.curation_concern.ordered_members.to_a }
         expect(env.curation_concern.ordered_member_ids).to match_array [existing_child_work.id, work_to_add.id]
         expect(env.curation_concern.member_ids).to match_array [existing_child_work.id, work_to_add.id]
       end
@@ -83,14 +80,14 @@ RSpec.describe Hyrax::Actors::AttachMembersActor do
           allow(ability).to receive(:can?).with(:edit, String).and_return(true)
         end
         it "is added to the ordered members" do
-          expect { subject }.to change { env.curation_concern.ordered_members.to_a }
+          expect { middleware.update(env) }.to change { env.curation_concern.ordered_members.to_a }
           expect(env.curation_concern.ordered_member_ids).to include(existing_child_work.id, another_work.id)
         end
       end
 
       context "and I can not edit that object" do
         it "does nothing" do
-          expect { subject }.not_to change { env.curation_concern.ordered_members.to_a }
+          expect { middleware.update(env) }.not_to change { env.curation_concern.ordered_members.to_a }
         end
       end
     end
