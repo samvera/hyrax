@@ -156,7 +156,7 @@ module Hyrax
 
       private
 
-      def id_for(agent: user_or_group)
+      def id_for(agent:)
         case agent
         when Hyrax::Group
           "#{Hyrax::Group.name_prefix}#{agent.name}"
