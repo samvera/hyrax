@@ -59,6 +59,10 @@ module Wings
     def ensure_current_permissions(resource)
       return if pcdm_object.try(:access_control).blank?
 
+      # set permissions on the locally cached permission manager if one is present,
+      # otherwise, we can just rely on the `access_control_ids`.
+      return unless resource.respond_to?(:permission_manager)
+
       resource.permission_manager.acl.permissions =
         pcdm_object.access_control.valkyrie_resource.permissions
     end
