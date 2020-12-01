@@ -25,7 +25,7 @@ module Hyrax
       # @see IngestJob
       # @todo create a job to monitor the temp directory (or in a multi-worker system, directories!) to prune old files that have made it into the repo
       def ingest_file(io)
-        perform_ingest_file(io)
+        use_valkyrie ? perform_ingest_file_through_valkyrie(io) : perform_ingest_file_through_active_fedora(io)
       end
 
       # Reverts file and spawns async job to characterize and create derivatives.
@@ -63,15 +63,6 @@ module Hyrax
         file_set.public_send(normalize_relation(relation)) || raise("No #{relation} returned for FileSet #{file_set.id}")
       end
 
-      # Persists file as part of file_set and records a new version.
-      # Also spawns an async job to characterize and create derivatives.
-      # @param [JobIoWrapper] io the file to save in the repository, with mime_type and original_name
-      # @return [FileMetadata, FalseClass] the created file metadata on success, false on failure
-      # @todo create a job to monitor the temp directory (or in a multi-worker system, directories!) to prune old files that have made it into the repo
-      def perform_ingest_file(io)
-        use_valkyrie ? perform_ingest_file_through_valkyrie(io) : perform_ingest_file_through_active_fedora(io)
-      end
-
       def perform_ingest_file_through_active_fedora(io)
         # Skip versioning because versions will be minted by VersionCommitter as necessary during save_characterize_and_record_committer.
         Hydra::Works::AddFileToFileSet.call(file_set,
@@ -81,28 +72,24 @@ module Hyrax
         return false unless file_set.save
         repository_file = related_file
         create_version(repository_file, user)
-        pathhint = io.uploaded_file.uploader.path if io.uploaded_file # in case next worker is on same filesystem
-        CharacterizeJob.perform_later(file_set, repository_file.id, pathhint || io.path)
+        CharacterizeJob.perform_later(file_set, repository_file.id, pathhint(io))
       end
 
       def perform_ingest_file_through_valkyrie(io)
-        unsaved_file_metadata = io.to_file_metadata
-        unsaved_file_metadata.type = [relation]
-        begin
-          saved_file_metadata = file_metadata_builder.create(io_wrapper: io, file_metadata: unsaved_file_metadata, file_set: file_set)
-        rescue StandardError => e # Handle error persisting file metadata
-          Rails.logger.error("Failed to save file_metadata through valkyrie: #{e.message}")
-          return false
-        end
-        create_version(saved_file_metadata, user)
-        pathhint = io.uploaded_file.uploader.path if io.uploaded_file # in case next worker is on same filesystem
-        id = Hyrax.config.translate_uri_to_id.call saved_file_metadata.file_identifier
-        CharacterizeJob.perform_later(file_set, id, pathhint || io.path)
-      end
-
-      def file_metadata_builder
-        Wings::FileMetadataBuilder.new(storage_adapter: Hyrax.storage_adapter,
-                                       persister: Hyrax.persister)
+        file =
+          begin
+            Hyrax.storage_adapter.upload(resource: file_set, file: io, original_filename: io.original_name, use: relation)
+          rescue StandardError => err
+            Rails.logger.error("Failed to save file_metadata through valkyrie: #{err.message}")
+            return false
+          end
+        file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: file.id)
+        create_version(file_metadata, user)
+        id = file_metadata.file_identifier
+        file_set.file_ids << id
+        Hyrax.persister.save(resource: file_set)
+        CharacterizeJob.perform_later(file_set, id.to_s, pathhint(io))
+        file_metadata
       end
 
       def normalize_relation(relation)
@@ -132,6 +119,10 @@ module Hyrax
         Hyrax::FileMetadata::Use.uri_for(use: relation.to_sym)
       rescue ArgumentError
         Hyrax::FileMetadata::Use::ORIGINAL_FILE
+      end
+
+      def pathhint(io)
+        io.uploaded_file&.uploader&.path || io.path
       end
     end
   end

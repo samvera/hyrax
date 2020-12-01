@@ -47,7 +47,6 @@ module Hyrax
       def update_content(file, relation = :original_file)
         IngestJob.perform_later(wrapper!(file: file, relation: relation), notification: true)
       end
-
       # @!endgroup
 
       # Adds the appropriate metadata, visibility and relationships to file_set
@@ -138,7 +137,8 @@ module Hyrax
       end
 
       def build_file_actor(relation)
-        file_actor_class.new(file_set, relation, user, use_valkyrie: use_valkyrie)
+        fs = use_valkyrie ? file_set.valkyrie_resource : file_set
+        file_actor_class.new(fs, relation, user, use_valkyrie: use_valkyrie)
       end
 
       # uses create! because object must be persisted to serialize for jobs
