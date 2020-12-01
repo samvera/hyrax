@@ -152,6 +152,14 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
           it 'converts membership' do
             expect(converter.convert).to have_attributes member_ids: contain_exactly(*member_ids)
           end
+
+          it 'deletes membership' do
+            saved = Wings::Valkyrie::MetadataAdapter.new.persister.save(resource: resource)
+            saved.member_ids = []
+
+            expect(described_class.convert(resource: saved).ordered_members.to_a).to be_empty
+            expect(described_class.convert(resource: saved).members).to be_empty
+          end
         end
       end
 

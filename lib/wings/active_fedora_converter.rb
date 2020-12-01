@@ -138,10 +138,11 @@ module Wings
         add_file_attributes(af_object)
       else
         converted_attrs = normal_attributes
-        members = converted_attrs.delete(:members)
+        members = Array.wrap(converted_attrs.delete(:members))
         files = converted_attrs.delete(:files)
         af_object.attributes = converted_attrs
-        af_object.ordered_members = members if members
+        members.empty? ? af_object.try(:ordered_members)&.clear : af_object.try(:ordered_members=, members)
+        af_object.try(:members)&.replace(members)
         af_object.files.build_or_set(files) if files
       end
     end
