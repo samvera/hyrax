@@ -2,23 +2,91 @@
 
 module Wings
   class ActiveFedoraConverter
+    def self.apply_properties(klass, schema)
+      schema.each { |schema_key| PropertyApplicator.new(schema_key).apply(klass) }
+    end
+
+    ##
+    # Constructs an ActiveFedora property from a Dry::Types schema key. This applicator
+    # is intended to handle details like assocation types, where needed.
+    #
+    # @example
+    #   MyValkyrieResource.schema.each do |schema_key|
+    #     PropertyApplicator.new(schema_key).apply(MyActiveFedoraClass)
+    #   end
+    class PropertyApplicator
+      ##
+      # @param [Dry::Types::Schema::Key] key
+      def initialize(key)
+        @key = key
+      end
+
+      ##
+      # @note this method is a silent no-op if the property is already defined
+      #   or is a protected property on the target class
+      #
+      # @return [void] apply the property
+      def apply(klass)
+        return if klass.properties.keys.include?(name) ||
+                  klass.protected_property_name?(name)
+        klass.send(definition_method, name, options)
+      end
+
+      ##
+      # @return [Symbol] the method name for property/association definition
+      def definition_method
+        return :ordered_aggregation if @key.name == :member_ids
+        return :indirectly_contains if @key.name == :member_of_collection_ids
+        :property
+      end
+
+      ##
+      # @return [Symbol]
+      def name
+        return :members if @key.name == :member_ids
+        return :member_of_collections if @key.name == :member_of_collection_ids
+        @key.name
+      end
+
+      ##
+      # @return [Hash<Symbol, Object>]
+      def options
+        return { has_member_relation: predicate, class_name: 'ActiveFedora::Base', through: :list_source } if
+          @key.name == :member_ids
+
+        if @key.name == :member_of_collection_ids
+          return { has_member_relation: predicate, class_name: 'ActiveFedora::Base',
+                   inserted_content_relation: RDF::Vocab::ORE.proxyFor, through: 'ActiveFedora::Aggregation::Proxy',
+                   foreign_key: :target }
+        end
+
+        { predicate: predicate }
+      end
+
+      ##
+      # @return [RDF::URI]
+      def predicate
+        return Hydra::PCDM::Vocab::PCDMTerms.hasMember if @key.name == :member_ids
+        return Hydra::PCDM::Vocab::PCDMTerms.memberOf if @key.name == :member_of_collection_ids
+
+        RDF::URI.intern("http://hyrax.samvera.org/ns/wings##{name}")
+      end
+    end
+
     ##
     # default work class builder
     def self.DefaultWork(resource_class) # rubocop:disable Naming/MethodName
       class_cache[resource_class] ||= Class.new(DefaultWork) do
         self.valkyrie_class = resource_class
 
-        # extract AF properties from the Valkyrie schema;
-        # skip reserved attributes, proctected properties, and those already defined
-        resource_class.schema.each do |schema_key|
-          next if resource_class.reserved_attributes.include?(schema_key.name)
-          next if protected_property_name?(schema_key.name)
-          next if properties.keys.include?(schema_key.name.to_s)
-
-          property schema_key.name, predicate: RDF::URI("http://hyrax.samvera.org/ns/wings##{schema_key.name}")
+        # skip reserved attributes, we assume we don't need to translate valkyrie internals
+        schema = resource_class.schema.reject do |key|
+          resource_class.reserved_attributes.include?(key.name)
         end
 
-        # nested attributes in AF don't inherit! this needs to be here until we can drop it completely.
+        Wings::ActiveFedoraConverter.apply_properties(self, schema)
+
+        # nested attributes in AF don't inherit! this needs to be here until we can drop it completely.y
         accepts_nested_attributes_for :nested_resource
       end
     end

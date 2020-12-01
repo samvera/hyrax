@@ -119,6 +119,42 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
         end
       end
 
+      context 'with a custom, unmapped resource class' do
+        let(:resource) { Hyrax::Test::Converter::Resource.new }
+
+        before do
+          module Hyrax::Test
+            module Converter
+              class Resource < Valkyrie::Resource
+                attribute :member_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID)
+              end
+            end
+          end
+        end
+
+        after { Hyrax::Test.send(:remove_const, :Converter) }
+
+        context 'and no members' do
+          it 'converts empty membership' do
+            expect(converter.convert).to have_attributes member_ids: be_empty
+          end
+        end
+
+        context 'and member ids' do
+          let(:resource) { Hyrax::Test::Converter::Resource.new(member_ids: member_ids) }
+          let(:member_ids) { members.map { |m| m.id.id } }
+
+          let(:members) do
+            [FactoryBot.valkyrie_create(:hyrax_work),
+             FactoryBot.valkyrie_create(:hyrax_work)]
+          end
+
+          it 'converts membership' do
+            expect(converter.convert).to have_attributes member_ids: contain_exactly(*member_ids)
+          end
+        end
+      end
+
       context 'as Admin Set member' do
         let(:admin_set_id) { AdminSet.find_or_create_default_admin_set_id }
 
