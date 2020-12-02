@@ -11,7 +11,7 @@ module Hyrax
 
         return unless thumb
         return call(thumb) unless thumb.file_set?
-        if thumb.audio?
+        if audio?(thumb)
           audio_image
         elsif thumbnail?(thumb)
           thumbnail_path(thumb)
@@ -21,6 +21,11 @@ module Hyrax
       end
 
       private
+
+      def audio?(thumb)
+        service = thumb.respond_to?(:audio?) ? thumb : Hyrax::FileSetTypeService.new(file_set: thumb)
+        service.audio?
+      end
 
       def fetch_thumbnail(object)
         return object if object.thumbnail_id == object.id
