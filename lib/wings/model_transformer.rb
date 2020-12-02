@@ -44,7 +44,7 @@ module Wings
     #
     # @return [::Valkyrie::Resource] a resource mirroring `pcdm_object`
     def build
-      klass = cache.fetch(pcdm_object) do
+      klass = cache.fetch(pcdm_object.class) do
         OrmConverter.to_valkyrie_resource_class(klass: pcdm_object.class)
       end
 
