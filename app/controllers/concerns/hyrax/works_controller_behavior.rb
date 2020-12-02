@@ -361,7 +361,7 @@ module Hyrax
     end
 
     def after_update_response
-      if curation_concern.file_sets.present?
+      if concern_has_file_sets?
         return redirect_to hyrax.confirm_access_permission_path(curation_concern) if permissions_changed?
         return redirect_to main_app.confirm_hyrax_permission_path(curation_concern) if curation_concern.visibility_changed?
       end
@@ -398,6 +398,15 @@ module Hyrax
 
     def permissions_changed?
       @saved_permissions != curation_concern.permissions.map(&:to_hash)
+    end
+
+    def concern_has_file_sets?
+      case curation_concern
+      when ActiveFedora::Common
+        curation_concern.file_sets.present?
+      else
+        Hyrax.custom_queries.find_child_fileset_ids(resource: curation_concern).any?
+      end
     end
   end
 end
