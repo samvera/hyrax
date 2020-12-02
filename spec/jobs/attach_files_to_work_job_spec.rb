@@ -92,8 +92,9 @@ RSpec.describe AttachFilesToWorkJob, perform_enqueued: [AttachFilesToWorkJob] do
         expect(CharacterizeJob).to receive(:perform_later).twice
         described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2])
         generic_work = Hyrax.query_service.find_by(id: id)
-        expect(generic_work.file_sets.count).to eq 2
-        expect(generic_work.file_sets.map(&:visibility)).to all(eq 'open')
+        file_sets = Hyrax.custom_queries.find_child_filesets(resource: generic_work)
+        expect(file_sets.count).to eq 2
+        expect(file_sets.map(&:visibility)).to all(eq 'open')
         expect(uploaded_file1.reload.file_set_uri).not_to be_nil
         expect(ImportUrlJob).not_to have_been_enqueued
       end
@@ -142,9 +143,12 @@ RSpec.describe AttachFilesToWorkJob, perform_enqueued: [AttachFilesToWorkJob] do
         generic_work.on_behalf_of = user.user_key
         generic_work.permission_manager.acl.save
       end
+
       it_behaves_like 'a file attacher' do
         it 'records the depositor(s) in edit_users' do
-          expect(generic_work.file_sets.map(&:edit_users)).to all(match_array([user.user_key]))
+          file_sets = Hyrax.custom_queries.find_child_filesets(resource: generic_work)
+
+          expect(file_sets.map(&:edit_users)).to all(match_array([user.user_key]))
         end
       end
     end
@@ -154,9 +158,12 @@ RSpec.describe AttachFilesToWorkJob, perform_enqueued: [AttachFilesToWorkJob] do
         generic_work.on_behalf_of = ''
         generic_work.permission_manager.acl.save
       end
+
       it_behaves_like 'a file attacher' do
         it 'records the depositor(s) in edit_users' do
-          expect(generic_work.file_sets.map(&:edit_users)).to all(match_array([generic_work.depositor]))
+          file_sets = Hyrax.custom_queries.find_child_filesets(resource: generic_work)
+
+          expect(file_sets.map(&:edit_users)).to all(match_array([generic_work.depositor]))
         end
       end
     end
