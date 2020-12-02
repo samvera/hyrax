@@ -1,27 +1,19 @@
 # frozen_string_literal: true
 
-require 'wings/models/concerns/collection_behavior'
-require 'wings/hydra/works/models/concerns/work_valkyrie_behavior'
-require 'wings/hydra/works/models/concerns/file_set_valkyrie_behavior'
-
 module Wings
   ##
   # Transform AF object class to Valkyrie::Resource class representation.
-  #
   class OrmConverter
     ##
     # @param reflections [Hash<Symbol, Object>]
     #
     # @return [Array<Symbol>]
     def self.relationship_keys_for(reflections:)
-      return [] unless reflections
-      relationships = reflections
-                      .keys
-                      .reject { |k| k.to_s.include?('id') }
-                      .map { |k| k.to_s.singularize + '_ids' }
-      relationships.delete('member_ids') # Remove here.  Members will be extracted as ordered_members in attributes method.
-      relationships.delete('ordered_member_proxy_ids') # This does not have a Valkyrie equivalent.
-      relationships
+      Hash(reflections).keys.map do |k|
+        key_string = k.to_s
+        next if key_string.include?('id') || key_string.include?('proxies')
+        key_string.singularize + '_ids'
+      end.compact
     end
 
     ##
@@ -29,9 +21,9 @@ module Wings
     #
     # @return [Class]
     def self.base_for(klass:)
-      klass.try(:valkyrie_class) ||
-        ModelRegistry.reverse_lookup(klass) ||
-        Hyrax::Resource
+      mapped_class = klass.try(:valkyrie_class) || ModelRegistry.reverse_lookup(klass)
+      return mapped_class if mapped_class
+      klass < Hydra::Works::WorkBehavior ? Hyrax::Work : Hyrax::Resource
     end
 
     ##
@@ -48,15 +40,9 @@ module Wings
     #   results in long methods
     def self.to_valkyrie_resource_class(klass:)
       relationship_keys = klass.respond_to?(:reflections) ? relationship_keys_for(reflections: klass.reflections) : []
-      relationship_keys.delete('member_ids')
-      relationship_keys.delete('member_of_collection_ids')
       reflection_id_keys = klass.respond_to?(:reflections) ? klass.reflections.keys.select { |k| k.to_s.end_with? '_id' } : []
 
       Class.new(base_for(klass: klass)) do
-        include Wings::CollectionBehavior if klass.included_modules.include?(Hyrax::CollectionBehavior)
-        include Wings::Works::WorkValkyrieBehavior if klass.included_modules.include?(Hyrax::WorkBehavior)
-        include Wings::Works::FileSetValkyrieBehavior if klass.included_modules.include?(Hyrax::FileSetBehavior)
-
         # store a string we can resolve to the internal resource
         @internal_resource = klass.try(:to_rdf_representation) || klass.name
 

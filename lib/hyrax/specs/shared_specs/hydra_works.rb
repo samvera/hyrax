@@ -128,6 +128,11 @@ end
 RSpec.shared_examples 'a Hyrax::PcdmCollection' do
   subject(:collection) { described_class.new }
 
+  it { is_expected.to be_collection }
+  it { is_expected.to be_pcdm_object }
+  it { is_expected.not_to be_file_set }
+  it { is_expected.not_to be_work }
+
   it_behaves_like 'a Hyrax::Resource'
   it_behaves_like 'a model with core metadata'
   it_behaves_like 'a model with basic metadata'
