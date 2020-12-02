@@ -106,7 +106,8 @@ RSpec.describe AttachFilesToWorkJob, perform_enqueued: [AttachFilesToWorkJob] do
       end
       it_behaves_like 'a file attacher' do
         it 'records the depositor(s) in edit_users' do
-          expect(generic_work.file_sets.map(&:edit_users)).to all(match_array([generic_work.depositor, 'userz@bbb.ddd']))
+          file_sets = Hyrax.custom_queries.find_child_filesets(resource: generic_work)
+          expect(file_sets.map(&:edit_users)).to all(match_array([generic_work.depositor, 'userz@bbb.ddd']))
         end
 
         describe 'with existing files' do
@@ -115,10 +116,10 @@ RSpec.describe AttachFilesToWorkJob, perform_enqueued: [AttachFilesToWorkJob] do
 
           it 'skips files that already have a FileSet' do
             id = generic_work.id
-            expect(generic_work.file_sets.count).to eq 0
+            expect(Hyrax.custom_queries.find_child_filesets(resource: generic_work).count).to eq 0
             described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2])
             generic_work = Hyrax.query_service.find_by(id: id)
-            expect(generic_work.file_sets.count).to eq 1
+            expect(Hyrax.custom_queries.find_child_filesets(resource: generic_work).count).to eq 1
           end
         end
       end
