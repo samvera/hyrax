@@ -19,5 +19,17 @@ module Hyrax
     def self._hyrax_default_name_class
       Hyrax::CollectionName
     end
+
+    ##
+    # @return [Boolean] true
+    def collection?
+      true
+    end
+
+    ##
+    # @return [Boolean] true
+    def pcdm_object?
+      true
+    end
   end
 end

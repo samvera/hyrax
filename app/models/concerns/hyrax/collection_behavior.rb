@@ -61,8 +61,6 @@ module Hyrax
 
     # Add member objects by adding this collection to the objects' member_of_collection association.
     # @param [Enumerable<String>] the ids of the new child collections and works collection ids
-    # Valkyrie Version: Wings::CollectionBehavior#add_collections_and_works aliased to #add_member_objects
-    #                   lib/wings/models/concerns/collection_behavior.rb
     def add_member_objects(new_member_ids)
       Array(new_member_ids).collect do |member_id|
         member = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: member_id, use_valkyrie: false)
@@ -78,16 +76,12 @@ module Hyrax
     end
 
     # @return [Enumerable<ActiveFedora::Base>] an enumerable over the children of this collection
-    # Valkyrie Version: Wings::CollectionBehavior#child_collections_and_works aliased to #member_objects
-    #                   lib/wings/models/concerns/collection_behavior.rb
     def member_objects
       ActiveFedora::Base.where("member_of_collection_ids_ssim:#{id}")
     end
 
     # Use this query to get the ids of the member objects (since the containment
     # association has been flipped)
-    # Valkyrie Version: Wings::CollectionBehavior#child_collections_and_works_ids aliased to #member_object_ids
-    #                   lib/wings/models/concerns/collection_behavior.rb
     def member_object_ids
       return [] unless id
       member_objects.map(&:id)

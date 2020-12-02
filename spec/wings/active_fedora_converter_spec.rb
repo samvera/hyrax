@@ -436,9 +436,8 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
     end
 
     context 'with relationships' do
-      subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
-
-      let(:resource) { subject.build }
+      let(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
+      let(:resource) { factory.build }
 
       context 'for member_of_collections' do
         let(:pcdm_object) { collection1 }
@@ -453,7 +452,8 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
         end
 
         it 'converts member_of_collection_ids back to af_object' do
-          expect(converter.convert.member_of_collections.map(&:id)).to match_array [collection2.id, collection3.id]
+          expect(converter.convert.member_of_collections.map(&:id))
+            .to match_array [collection2.id, collection3.id]
         end
       end
 
