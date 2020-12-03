@@ -106,7 +106,7 @@ Steps to deploy a Hyrax-based application to production will vary depending on y
 This software has been developed by and is brought to you by the Samvera community.  Learn more at the
 [Samvera website](http://samvera.org/).
 
-![Samvera Logo](https://wiki.duraspace.org/download/thumbnails/87459292/samvera-fall-font2-200w.png?version=1&modificationDate=1498550535816&api=v2)
+![Samvera Logo](https://wiki.lyrasis.org/download/thumbnails/87459292/samvera-fall-font2-200w.png?version=1&modificationDate=1498550535816&api=v2)
 
 ## License
 
