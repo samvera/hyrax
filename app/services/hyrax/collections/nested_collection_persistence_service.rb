@@ -11,7 +11,7 @@ module Hyrax
       # @param child [::Collection]
       # @note There is odd permission arrangement based on the NestedCollectionQueryService:
       #       You can nest the child within a parent if you can edit the parent and read the child.
-      #       See https://wiki.duraspace.org/display/samvera/Samvera+Tech+Call+2017-08-23 for tech discussion.
+      #       See https://wiki.lyrasis.org/display/samvera/Samvera+Tech+Call+2017-08-23 for tech discussion.
       # @note Adding the member_of_collections method doesn't trigger reindexing of the child so we have to do it manually.
       #       However it save and reindexes the parent unnecessarily!!
       def self.persist_nested_collection_for(parent:, child:)

@@ -18,7 +18,7 @@ All code contributors must have an Individual Contributor License Agreement
 an institution, the institution must have a Corporate Contributor License
 Agreement (cCLA) on file.
 
-https://wiki.duraspace.org/display/samvera/Samvera+Community+Intellectual+Property+Licensing+and+Ownership
+https://wiki.lyrasis.org/display/samvera/Samvera+Community+Intellectual+Property+Licensing+and+Ownership
 
 You should also add yourself to the `CONTRIBUTORS.md` file in the root of the project.
 
