@@ -19,14 +19,3 @@ class ValkyrieCreateStrategy
     Hyrax.persister
   end
 end
-
-# @see https://github.com/thoughtbot/factory_bot/blob/master/GETTING_STARTED.md#custom-strategies
-# @example
-#   let(:resource) { FactoryBot.create_using_test_adapter(:hyrax_work) }
-class ValkyrieTestAdapterCreateStrategy < ValkyrieCreateStrategy
-  private
-
-  def persister
-    Valkyrie::MetadataAdapter.find(:test_adapter).persister
-  end
-end
