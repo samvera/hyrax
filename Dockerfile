@@ -10,6 +10,10 @@ RUN apk --no-cache upgrade && \
   tzdata \
   nodejs \
   yarn \
+  bash  \
+  openjdk8-jre \
+  perl \
+  mediainfo \
   $DATABASE_APK_PACKAGE \
   $EXTRA_APK_PACKAGES
 
@@ -18,6 +22,15 @@ RUN addgroup -S --gid 101 app && \
 USER app
 
 RUN gem update bundler
+
+#Install Fits
+WORKDIR /app
+RUN wget http://projects.iq.harvard.edu/files/fits/files/fits-1.0.5.zip \
+    && unzip fits-1.0.5.zip \
+    && rm fits-1.0.5.zip \
+    && mv fits-1.0.5 fits \
+    && chmod a+x fits/fits.sh
+ENV PATH="${PATH}:/app/fits"
 
 RUN mkdir -p /app/samvera/hyrax-webapp
 WORKDIR /app/samvera/hyrax-webapp
