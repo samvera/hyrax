@@ -59,6 +59,36 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
           .to redirect_to paths.hyrax_test_simple_work_legacy_path(id: assigns(:curation_concern).id, locale: :en)
       end
 
+      context 'and files' do
+        let(:uploads) { FactoryBot.create_list(:uploaded_file, 2, user: user) }
+
+        it 'attaches the files' do
+          pending 'it should actually attach the files'
+          params = { test_simple_work: { title: 'comet in moominland' },
+                     uploaded_files: uploads.map(&:id) }
+
+          get :create, params: params
+
+          expect(flash[:notice]).to be_html_safe
+          expect(flash[:notice]).to eq "Your files are being processed by Hyrax in the background. " \
+                                       "The metadata and access controls you specified are being applied. " \
+                                       "You may need to refresh this page to see these updates."
+          expect(assigns(:curation_concern)).to have_file_set_members
+        end
+
+        let(:uploads) { FactoryBot.create_list(:uploaded_file, 2, user: user) }
+
+        it 'rejects files from another user' do
+          pending 'the controller (NOT the actor stack/transaction!) should validate that the uploader and current user are the same'
+          uploads << FactoryBot.create(:uploaded_file)
+          params = { test_simple_work: { title: 'comet in moominland' }, uploaded_files: uploads.map(&:id) }
+
+          get :create, params: params
+
+          expect(response.status).to eq 422
+        end
+      end
+
       context 'with invalid form data' do
         let(:work) { FactoryBot.build(:hyrax_work) }
 
