@@ -73,7 +73,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
           expect(flash[:notice]).to eq "Your files are being processed by Hyrax in the background. " \
                                        "The metadata and access controls you specified are being applied. " \
                                        "You may need to refresh this page to see these updates."
-          expect(assigns(:curation_concern)).to have_file_set_members
+          expect(assigns(:curation_concern)).to have_file_set_members(be_persisted, be_persisted)
         end
 
         let(:uploads) { FactoryBot.create_list(:uploaded_file, 2, user: user) }
