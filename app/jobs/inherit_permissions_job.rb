@@ -48,11 +48,10 @@ class InheritPermissionsJob < Hyrax::ApplicationJob
   def valkyrie_perform(work)
     work_permissions = Hyrax::AccessControlList.new(resource: work).permissions
 
-    file_sets_for(work).each do |file|
-      file_acl = Hyrax::AccessControlList.new(resource: file)
-      file_acl.permissions = []
-      work_permissions.each { |permission| file_acl << permission }
-      file_acl.save
+    file_sets_for(work).each do |file_set|
+      acl = Hyrax::AccessControlList.new(resource: file_set)
+      acl.permissions = work_permissions
+      acl.save
     end
   end
 end
