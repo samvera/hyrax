@@ -27,7 +27,7 @@ A Hyrax-based application includes lots of dependencies. We provide a [Docker im
 
 <aside><p><em><strong>Note:</em></strong> The Docker image describes the canonical dependencies. In a way, it is executable documentation. The following documentation is our best effort to transcribe that executable documentation into a narrative. In other words, this documentation may drift away from the Docker details.</p></aside>
 
-You can also try [Running Hyrax-based application in local VM](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide#running-hyrax-based-application-in-local-vm) using Ubuntu.
+You can also try [Running Hyrax-based application in local VM](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide#running-hyrax-based-application-in-local-vm) which uses Ubuntu.
 
 This document contains instructions specific to setting up an app with __Hyrax
 v3.0.0-rc2__. If you are looking for instructions on installing a different
