@@ -99,7 +99,7 @@ Hyrax supports Ruby 2.5, 2.6, and 2.7. When starting a new project, we recommend
 
 ## Redis
 
-[Redis](http://redis.io/) is a key-value store that Hyrax uses to provide activity streams on repository objects and users, and to prevent race conditions as a global mutex when modifying order-persisting objects.
+[Redis](http://redis.io/) is a key-value store that Hyrax uses to provide activity streams on repository objects and users, and helps when modifying order-persisting objects by managing multi-threaded actions on data (preventing race conditions as a global mutex).
 
 Starting up Redis will depend on your operating system, and may in fact already be started on your system. You may want to consult the [Redis documentation](http://redis.io/documentation) for help doing this.
 
@@ -116,7 +116,7 @@ gem install rails -v 5.2.4.3
 
 Rails requires that you have a JavaScript runtime installed (e.g. nodejs or rubyracer). Either install nodejs or uncomment the `rubyracer` line in your Gemfile and run `bundle install` before running Hyrax's install generator.
 
-NOTE: nodejs is preinstalled on most Mac computers and doesn't require a gem.  To test if nodejs is already installed, execute `node -v` in the terminal and the version of nodejs will be displayed if it is installed.
+NOTE: [nodejs](https://nodejs.org/en/) is preinstalled on most Mac computers and doesn't require a gem.  To test if nodejs is already installed, execute `node -v` in the terminal and the version of nodejs will be displayed if it is installed.
 
 ## Creating a Hyrax-based app
 
@@ -204,19 +204,19 @@ Using Hyrax requires generating at least one type of repository object, or "work
 Pass a (CamelCased) model name to Hyrax's work generator to get started, e.g.:
 
 ```
-rails generate hyrax:work Work
+bin/rails generate hyrax:work Work
 ```
 
 or
 
 ```
-rails generate hyrax:work MovingImage
+bin/rails generate hyrax:work MovingImage
 ```
 
-If your applications requires your work type to be namespaced, namespaces can be included in the by adding a slash to the model name which creates a new class called `MovingImage` within the `My` namespace:
+If your applications requires your work type to be namespaced, namespaces can be included by adding a slash to the model name which creates a new class called `MovingImage` within the `My` namespace:
 
 ```
-rails generate hyrax:work My/MovingImage
+bin/rails generate hyrax:work My/MovingImage
 ```
 
 You may wish to [customize your work type](https://github.com/samvera/hyrax/wiki/Customizing-your-work-types) now that it's been generated.
