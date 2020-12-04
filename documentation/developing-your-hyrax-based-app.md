@@ -190,7 +190,7 @@ end
 **After** Fedora and Solr are running, create the default administrative set -- into which all works will be deposited unless assigned to other administrative sets -- by running the following command:
 
 ```
-bin/rails hyrax:default_admin_set:create
+rails hyrax:default_admin_set:create
 ```
 
 This command also makes sure that Hyrax's built-in workflows are loaded for your application and available for the default administrative set.
@@ -204,19 +204,19 @@ Using Hyrax requires generating at least one type of repository object, or "work
 Pass a (CamelCased) model name to Hyrax's work generator to get started, e.g.:
 
 ```
-bin/rails generate hyrax:work Work
+rails generate hyrax:work Work
 ```
 
 or
 
 ```
-bin/rails generate hyrax:work MovingImage
+rails generate hyrax:work MovingImage
 ```
 
 If your applications requires your work type to be namespaced, namespaces can be included by adding a slash to the model name which creates a new class called `MovingImage` within the `My` namespace:
 
 ```
-bin/rails generate hyrax:work My/MovingImage
+rails generate hyrax:work My/MovingImage
 ```
 
 You may wish to [customize your work type](https://github.com/samvera/hyrax/wiki/Customizing-your-work-types) now that it's been generated.
