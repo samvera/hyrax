@@ -46,12 +46,11 @@ class InheritPermissionsJob < Hyrax::ApplicationJob
   #
   # @param work containing access level and filesets
   def valkyrie_perform(work)
-    work_permissions = Hyrax::AccessControlList.new(resource: work).permissions
+    work_acl = Hyrax::AccessControlList.new(resource: work)
 
     file_sets_for(work).each do |file_set|
-      acl = Hyrax::AccessControlList.new(resource: file_set)
-      acl.permissions = work_permissions
-      acl.save
+      Hyrax::AccessControlList
+        .copy_permissions(source: work_acl, target: file_set)
     end
   end
 end

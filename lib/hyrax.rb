@@ -40,6 +40,7 @@ module Hyrax
     autoload :Listeners
   end
 
+  ##
   # @api public
   #
   # Exposes the Hyrax configuration
