@@ -112,7 +112,8 @@ module Hyrax
     #
     # @return [Array<Hyrax::Permission>]
     def permissions=(new_permissions)
-      change_set.permissions = new_permissions.to_a
+      change_set.permissions = []
+      new_permissions.each { |p| self << p }
     end
 
     ##

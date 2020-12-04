@@ -9,7 +9,7 @@ RSpec.describe Hyrax::AccessControlList do
                         query_service: query_service)
   end
 
-  let(:permission)    { build(:permission) }
+  let(:permission)    { FactoryBot.build(:permission) }
   let(:adapter)       { Valkyrie::MetadataAdapter.find(:test_adapter) }
   let(:persister)     { adapter.persister }
   let(:query_service) { adapter.query_service }
@@ -59,6 +59,20 @@ RSpec.describe Hyrax::AccessControlList do
   describe '#permissions' do
     it 'is empty by default' do
       expect(acl.permissions).to be_empty
+    end
+  end
+
+  describe '#permissions=' do
+    let(:group) { Hyrax::Group.new('public') }
+
+    before { acl.grant(:read).to(group) }
+
+    it 'sets the permissions with access_to' do
+      expect { acl.permissions = [permission] }
+        .to change { acl.permissions }
+        .to contain_exactly(have_attributes(mode: permission.mode,
+                                            agent: permission.agent,
+                                            access_to: resource.id))
     end
   end
 
