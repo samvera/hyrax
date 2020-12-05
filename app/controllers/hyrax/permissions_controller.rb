@@ -6,6 +6,7 @@ module Hyrax
     def confirm
       # intentional noop to display default view
     end
+    deprecation_deprecate confirm: "Use the #confirm_access action instead."
 
     def copy
       authorize! :edit, curation_concern

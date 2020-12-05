@@ -361,10 +361,8 @@ module Hyrax
     end
 
     def after_update_response
-      if concern_has_file_sets?
-        return redirect_to hyrax.confirm_access_permission_path(curation_concern) if permissions_changed?
-        return redirect_to main_app.confirm_hyrax_permission_path(curation_concern) if curation_concern.visibility_changed?
-      end
+      return redirect_to hyrax.confirm_access_permission_path(curation_concern) if permissions_changed? && concern_has_file_sets?
+
       respond_to do |wants|
         wants.html { redirect_to [main_app, curation_concern], notice: "Work \"#{curation_concern}\" successfully updated." }
         wants.json { render :show, status: :ok, location: polymorphic_path([main_app, curation_concern]) }
@@ -397,7 +395,13 @@ module Hyrax
     end
 
     def permissions_changed?
-      @saved_permissions != curation_concern.permissions.map(&:to_hash)
+      @saved_permissions !=
+        case curation_concern
+        when ActiveFedora::Base
+          curation_concern.permissions.map(&:to_hash)
+        else
+          Hyrax::AccessControl.for(resource: curation_concern).permissions
+        end
     end
 
     def concern_has_file_sets?
