@@ -69,8 +69,9 @@ module Hyrax
       return true if Array.wrap(files).empty? # short circuit to avoid aquiring a lock we won't use
 
       acquire_lock_for(work.id) do
-        files.each { |file| make_file_set_and_ingest(file) }
+        event_payloads = files.each_with_object([]) { |file, arry| arry << make_file_set_and_ingest(file) }
         Hyrax.persister.save(resource: work)
+        event_payloads.each { |payload| Hyrax.publisher.publish('file.set.attached', payload) }
       end
     end
 
@@ -78,16 +79,25 @@ module Hyrax
 
     def make_file_set_and_ingest(file)
       file_set = @persister.save(resource: Hyrax::FileSet.new(file_set_args(file)))
+      Hyrax.publisher.publish('object.deposited', object: file_set, user: file.user)
       file.add_file_set!(file_set)
 
       # copy ACLs; should we also be propogating embargo/lease?
       Hyrax::AccessControlList.copy_permissions(source: target_permissions, target: file_set)
+      append_to_work(file_set)
+      IngestJob.perform_later(wrap_file(file, file_set))
+      { file_set: file_set, user: file.user }
+    end
 
+    ##
+    # @api private
+    # @todo figure out how to know less about Work's ideas about FileSet use here. Maybe post-Wings, work.
+    def append_to_work(file_set)
       work.member_ids << file_set.id
       work.representative_id = file_set.id if work.respond_to?(:representative_id) && work.representative_id.blank?
       work.thumbnail_id = file_set.id if work.respond_to?(:thumbnail_id) && work.thumbnail_id.blank?
-      IngestJob.perform_later(wrap_file(file, file_set))
     end
+
 
     ##
     # @api private

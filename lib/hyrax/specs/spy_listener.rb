@@ -42,5 +42,24 @@ module Hyrax
         end
       end
     end
+
+    ##
+    # A spy listener that accumulates events, so multiple events published by
+    # one unit-under-test can be collected for inspection.
+    class AppendingSpyListener
+      Hyrax::Publisher.events.each_value do |registered_event|
+        listener_method = registered_event.listener_method
+        attr_name = registered_event.listener_method.to_s.sub(/^on_/, '')
+
+        define_method attr_name.to_sym do
+          instance_variable_get("@#{attr_name}") ||
+            instance_variable_set("@#{attr_name}", [])
+        end
+
+        define_method listener_method do |published_event|
+          send(attr_name.to_sym) << published_event
+        end
+      end
+    end
   end
 end
