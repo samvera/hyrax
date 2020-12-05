@@ -45,5 +45,20 @@ RSpec.describe Hyrax::WorkUploadsHandler do
                                     be_a_resource_with_permissions(have_attributes(mode: :read, agent: 'group/public')))
       end
     end
+
+    context 'with existing file_sets' do
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :public, :with_member_file_sets) }
+
+      it 'appends the new file sets' do
+        first_id, second_id = work.member_ids
+
+        service.add(files: uploads).attach
+        expect(work).to have_file_set_members(have_attributes(id: first_id),
+                                              have_attributes(id: second_id),
+                                              be_persisted,
+                                              be_persisted,
+                                              be_persisted)
+      end
+    end
   end
 end

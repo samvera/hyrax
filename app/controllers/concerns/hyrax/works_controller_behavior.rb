@@ -187,8 +187,11 @@ module Hyrax
       else
         form = build_form
 
-        @curation_concern = form.validate(params[hash_key_for_curation_concern]) &&
-                            transactions['change_set.create_work'].call(form).value!
+        @curation_concern =
+          form.validate(params[hash_key_for_curation_concern]) &&
+          transactions['change_set.create_work']
+          .with_step_args('work_resource.add_file_sets' => { uploaded_files: uploaded_files })
+          .call(form).value!
       end
     end
 
@@ -199,8 +202,11 @@ module Hyrax
       else
         form = build_form
 
-        @curation_concern = form.validate(params[hash_key_for_curation_concern]) &&
-                            transactions['change_set.update_work'].call(form).value!
+        @curation_concern =
+          form.validate(params[hash_key_for_curation_concern]) &&
+          transactions['change_set.update_work']
+          .with_step_args('work_resource.add_file_sets' => { uploaded_files: uploaded_files })
+          .call(form).value!
       end
     end
 
@@ -411,6 +417,10 @@ module Hyrax
       else
         Hyrax.custom_queries.find_child_fileset_ids(resource: curation_concern).any?
       end
+    end
+
+    def uploaded_files
+      UploadedFile.find(params.fetch(:uploaded_files, []))
     end
   end
 end
