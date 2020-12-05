@@ -58,5 +58,16 @@ RSpec.describe Hyrax::Transactions::WorkCreate do
           .to have_attributes member_of_collection_ids: contain_exactly(*collection_ids)
       end
     end
+
+    context 'when attaching uploaded files' do
+      let(:uploaded_files) { FactoryBot.create_list(:uploaded_file, 4) }
+
+      it 'adds uploaded files' do
+        tx.with_step_args('work_resource.add_file_sets' => { uploaded_files: uploaded_files })
+
+        expect(tx.call(change_set).value!)
+          .to have_file_set_members(be_persisted, be_persisted, be_persisted, be_persisted)
+      end
+    end
   end
 end

@@ -12,7 +12,8 @@ module Hyrax
                        'change_set.ensure_admin_set',
                        'change_set.set_user_as_depositor',
                        'change_set.add_to_collections',
-                       'change_set.apply'].freeze
+                       'change_set.apply',
+                       'work_resource.add_file_sets'].freeze
 
       ##
       # @see Hyrax::Transactions::Transaction

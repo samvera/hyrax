@@ -23,6 +23,7 @@ module Hyrax
       require 'hyrax/transactions/destroy_work'
       require 'hyrax/transactions/work_create'
       require 'hyrax/transactions/update_work'
+      require 'hyrax/transactions/steps/add_file_sets'
       require 'hyrax/transactions/steps/add_to_collections'
       require 'hyrax/transactions/steps/apply_collection_permission_template'
       require 'hyrax/transactions/steps/apply_permission_template'
@@ -88,7 +89,13 @@ module Hyrax
         end
       end
 
-      namespace 'work' do |ops|
+      namespace 'work_resource' do |ops| # valkyrie works
+        ops.register 'add_file_sets' do
+          Steps::AddFileSets.new
+        end
+      end
+
+      namespace 'work' do |ops| # legacy AF works
         ops.register 'apply_collection_permission_template' do
           Steps::ApplyCollectionPermissionTemplate.new
         end
