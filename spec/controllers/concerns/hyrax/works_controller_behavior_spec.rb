@@ -63,7 +63,6 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         let(:uploads) { FactoryBot.create_list(:uploaded_file, 2, user: user) }
 
         it 'attaches the files' do
-          pending 'it should actually attach the files'
           params = { test_simple_work: { title: 'comet in moominland' },
                      uploaded_files: uploads.map(&:id) }
 
@@ -314,6 +313,18 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
 
         expect(Hyrax.query_service.find_by(id: id))
           .to have_attributes title: contain_exactly('new title')
+      end
+
+      context 'and files' do
+        let(:uploads) { FactoryBot.create_list(:uploaded_file, 2, user: user) }
+
+        it 'attaches the files' do
+          params = { id: id, test_simple_work: { title: 'comet in moominland' },
+                     uploaded_files: uploads.map(&:id) }
+
+          get :update, params: params
+          expect(assigns(:curation_concern)).to have_file_set_members(be_persisted, be_persisted)
+        end
       end
     end
   end

@@ -60,6 +60,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_member_file_sets do
+      transient do
+        members { [valkyrie_create(:hyrax_file_set), valkyrie_create(:hyrax_file_set)] }
+      end
+    end
+
     trait :as_collection_member do
       member_of_collection_ids { [valkyrie_create(:hyrax_collection).id] }
     end
