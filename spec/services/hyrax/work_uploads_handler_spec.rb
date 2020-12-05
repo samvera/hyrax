@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'hyrax/specs/spy_listener'
 
-RSpec.describe Hyrax::WorkUploadsHandler do
+RSpec.describe Hyrax::WorkUploadsHandler, valkyrie_adapter: :test_adapter do
   subject(:service) { described_class.new(work: work) }
 
   let(:uploads) { FactoryBot.create_list(:uploaded_file, 3) }
