@@ -10,7 +10,8 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
     when ActiveFedora::Base
       perform_af(work, uploaded_files, work_attributes)
     else
-      Hyrax::WorkUploadsHandler.new(work: work).add(files: uploaded_files).attach
+      Hyrax::WorkUploadsHandler.new(work: work).add(files: uploaded_files).attach ||
+        raise("Could not complete AttachFilesToWorkJob. Some of these are probably in an undesirable state: #{uploaded_files}")
     end
   end
 

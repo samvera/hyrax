@@ -2,6 +2,8 @@
 
 module Hyrax
   ##
+  # @api public
+  #
   # Mediates uploads to a work.
   #
   # Given an existing Work object, `#add` some set of files, then call `#attach`
@@ -25,6 +27,13 @@ module Hyrax
   # all of the `files` have been processed, the work will be saved with the
   # added members. While this is happening, we take a lock on the work via
   # `Lockable` (Redis/Redlock).
+  #
+  # This also publishes events as required by `Hyrax.publisher`.
+  #
+  # @todo make this genuinely retry-able. if we fail after creating some of
+  #   the file_sets, but not attaching them to works, we should resolve that
+  #   incomplete work on subsequent runs.
+  #
   #
   # @example
   #   Hyrax::WorkUploadsHandler.new(work: my_work)
@@ -50,6 +59,13 @@ module Hyrax
     end
 
     ##
+    # @api public
+    #
+    # @note we immediately and silently discard uploads with an existing
+    #   file_set_uri, in a half-considered attempt at supporting idempotency
+    #   (for job retries). this is for legacy/AttachFilesToWorkJob
+    #   compatibility, but could stand for a roubst reimplementation.
+    #
     # @param [Enumberable<Hyrax::UploadedFile>] files  files to add
     #
     # @return [WorkFileSetManager] self
@@ -62,6 +78,8 @@ module Hyrax
     end
 
     ##
+    # @api public
+    #
     # Create filesets for each added file
     #
     # @return [Boolean] true if all requested files were attached
@@ -77,6 +95,8 @@ module Hyrax
 
     private
 
+    ##
+    # @api private
     def make_file_set_and_ingest(file)
       file_set = @persister.save(resource: Hyrax::FileSet.new(file_set_args(file)))
       Hyrax.publisher.publish('object.deposited', object: file_set, user: file.user)
@@ -91,6 +111,7 @@ module Hyrax
 
     ##
     # @api private
+    #
     # @todo figure out how to know less about Work's ideas about FileSet use here. Maybe post-Wings, work.
     def append_to_work(file_set)
       work.member_ids << file_set.id
@@ -98,9 +119,9 @@ module Hyrax
       work.thumbnail_id = file_set.id if work.respond_to?(:thumbnail_id) && work.thumbnail_id.blank?
     end
 
-
     ##
     # @api private
+    #
     # @return [Hash{Symbol => Object}]
     def file_set_args(file)
       { depositor: file.user.user_key,
@@ -112,6 +133,8 @@ module Hyrax
     end
 
     ##
+    # @api private
+    #
     # @note cache these per instance to avoid repeated lookups.
     #
     # @return [Hyrax::AccessControlList] permissions to set on created filesets
