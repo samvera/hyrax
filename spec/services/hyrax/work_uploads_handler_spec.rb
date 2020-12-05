@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'hyrax/specs/spy_listener'
 
 RSpec.describe Hyrax::WorkUploadsHandler do
   subject(:service) { described_class.new(work: work) }
@@ -7,10 +8,19 @@ RSpec.describe Hyrax::WorkUploadsHandler do
   let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :public) }
 
   describe '#attach' do
+    let(:listener) { Hyrax::Specs::AppendingSpyListener.new }
+    before { Hyrax.publisher.subscribe(listener) }
+    after  { Hyrax.publisher.unsubscribe(listener) }
+
     it 'when no files are added returns uneventfully' do
       expect { service.attach }
         .not_to change { work.member_ids }
         .from be_empty
+    end
+
+    it 'does not publish events' do
+      expect(listener.object_deposited).to be_empty
+      expect(listener.file_set_attached).to be_empty
     end
 
     context 'after adding files' do
@@ -43,6 +53,22 @@ RSpec.describe Hyrax::WorkUploadsHandler do
           .to have_file_set_members(be_a_resource_with_permissions(have_attributes(mode: :read, agent: 'group/public')),
                                     be_a_resource_with_permissions(have_attributes(mode: :read, agent: 'group/public')),
                                     be_a_resource_with_permissions(have_attributes(mode: :read, agent: 'group/public')))
+      end
+
+      it 'publishes object.created events for file_sets' do
+        expect { service.attach }
+          .to change { listener.object_deposited }
+          .to contain_exactly(have_attributes(payload: include(object: be_file_set)),
+                              have_attributes(payload: include(object: be_file_set)),
+                              have_attributes(payload: include(object: be_file_set)))
+      end
+
+      it 'publishes file.set.attached events' do
+        expect { service.attach }
+          .to change { listener.file_set_attached }
+          .to contain_exactly(have_attributes(payload: include(file_set: be_file_set)),
+                              have_attributes(payload: include(file_set: be_file_set)),
+                              have_attributes(payload: include(file_set: be_file_set)))
       end
     end
 
