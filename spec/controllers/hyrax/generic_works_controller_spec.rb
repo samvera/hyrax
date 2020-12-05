@@ -476,8 +476,6 @@ RSpec.describe Hyrax::GenericWorksController do
       end
 
       describe 'changing rights' do
-        let(:visibility_changed) { true }
-
         context 'when the work has file sets attached' do
           before do
             allow(GenericWork).to receive(:find).and_return(work)
@@ -485,8 +483,8 @@ RSpec.describe Hyrax::GenericWorksController do
           end
 
           it 'prompts to change the files access' do
-            patch :update, params: { id: work, generic_work: {} }
-            expect(response).to redirect_to main_app.confirm_hyrax_permission_path(controller.curation_concern, locale: 'en')
+            patch :update, params: { id: work, generic_work: { visibility: 'restricted' } }
+            expect(response).to redirect_to hyrax.confirm_access_permission_path(controller.curation_concern, locale: 'en')
           end
         end
 
