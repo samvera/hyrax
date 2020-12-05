@@ -84,8 +84,8 @@ module Hyrax
       Hyrax::AccessControlList.copy_permissions(source: target_permissions, target: file_set)
 
       work.member_ids << file_set.id
-      work.representative_id = file_set.id if work.representative_id.blank?
-      work.thumbnail_id = file_set.id if work.thumbnail_id.blank?
+      work.representative_id = file_set.id if work.respond_to?(:representative_id) && work.representative_id.blank?
+      work.thumbnail_id = file_set.id if work.respond_to?(:thumbnail_id) && work.thumbnail_id.blank?
       IngestJob.perform_later(wrap_file(file, file_set))
     end
 
