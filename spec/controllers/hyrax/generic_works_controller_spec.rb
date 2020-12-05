@@ -447,20 +447,12 @@ RSpec.describe Hyrax::GenericWorksController do
   end
 
   describe '#update' do
-    let(:work) { stub_model(GenericWork) }
-    let(:visibility_changed) { false }
-    let(:actor) { double(update: true) }
-
-    before do
-      allow(Hyrax::CurationConcern).to receive(:actor).and_return(actor)
-      allow(GenericWork).to receive(:find).and_return(work)
-      allow(work).to receive(:visibility_changed?).and_return(visibility_changed)
-    end
+    let(:work) { FactoryBot.create(:work, :public) }
 
     context "when the user has write access to the file" do
-      before do
-        allow(controller).to receive(:authorize!).with(:update, work).and_return(true)
-      end
+      let(:work) { FactoryBot.create(:work, :public, user: user) }
+      let(:file_set) { FactoryBot.create(:file_set, user: user) }
+
       context "when the work has no file sets" do
         it 'updates the work' do
           patch :update, params: { id: work, generic_work: {} }
@@ -479,22 +471,19 @@ RSpec.describe Hyrax::GenericWorksController do
       end
 
       it "can update file membership" do
-        patch :update, params: { id: work, generic_work: { ordered_member_ids: ['foo_123'] } }
-        expect(actor).to have_received(:update).with(Hyrax::Actors::Environment) do |env|
-          expect(env.attributes).to eq("ordered_member_ids" => ['foo_123'],
-                                       "remote_files" => [],
-                                       "uploaded_files" => [])
-        end
+        patch :update, params: { id: work, generic_work: { ordered_member_ids: [file_set.id] } }
+        expect(work.reload.ordered_members.to_a).to contain_exactly(file_set)
       end
 
       describe 'changing rights' do
         let(:visibility_changed) { true }
-        let(:actor) { double(update: true) }
 
         context 'when the work has file sets attached' do
           before do
+            allow(GenericWork).to receive(:find).and_return(work)
             allow(work).to receive(:file_sets).and_return(double(present?: true))
           end
+
           it 'prompts to change the files access' do
             patch :update, params: { id: work, generic_work: {} }
             expect(response).to redirect_to main_app.confirm_hyrax_permission_path(controller.curation_concern, locale: 'en')
@@ -512,8 +501,10 @@ RSpec.describe Hyrax::GenericWorksController do
       describe 'update failed' do
         let(:actor) { double(update: false) }
 
+        before { allow(Hyrax::CurationConcern).to receive(:actor).and_return(actor) }
+
         it 'renders the form' do
-          patch :update, params: { id: work, generic_work: {} }
+          patch :update, params: { id: work.id, generic_work: {} }
           expect(assigns[:form]).to be_kind_of Hyrax::GenericWorkForm
           expect(response).to render_template('edit')
         end
