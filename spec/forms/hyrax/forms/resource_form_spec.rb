@@ -172,8 +172,14 @@ RSpec.describe Hyrax::Forms::ResourceForm do
   end
 
   describe '#human_readable_type' do
-    it 'delegates to model' do
+    it 'reads from model' do
       expect(form.human_readable_type).to eq work.human_readable_type
+    end
+
+    it 'cannot be overwritten' do
+      form.human_readable_type = 'NOPE'
+
+      expect { form.sync }.not_to change { work.human_readable_type }
     end
   end
 
@@ -181,6 +187,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     let(:user1) { FactoryBot.create(:user).to_s }
     let(:user2) { FactoryBot.create(:user).to_s }
     let(:work) { FactoryBot.valkyrie_create(:hyrax_work, on_behalf_of: user2, proxy_depositor: user1) }
+
     it 'delegates to model' do
       expect(form.proxy_depositor).to eq user1
     end
@@ -190,6 +197,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     let(:user1) { create(:user).to_s }
     let(:user2) { create(:user).to_s }
     let(:work) { FactoryBot.valkyrie_create(:hyrax_work, on_behalf_of: user2, proxy_depositor: user1) }
+
     it 'delegates to model' do
       expect(form.on_behalf_of).to eq user2
     end
