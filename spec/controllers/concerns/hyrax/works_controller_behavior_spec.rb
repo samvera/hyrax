@@ -59,6 +59,12 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
           .to redirect_to paths.hyrax_test_simple_work_legacy_path(id: assigns(:curation_concern).id, locale: :en)
       end
 
+      it 'sets current user as depositor' do
+        post :create, params: { test_simple_work: { title: 'comet in moominland' } }
+
+        expect(assigns[:curation_concern].depositor).to eq user.user_key
+      end
+
       context 'and files' do
         let(:uploads) { FactoryBot.create_list(:uploaded_file, 2, user: user) }
 
@@ -324,6 +330,16 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
 
           get :update, params: params
           expect(assigns(:curation_concern)).to have_file_set_members(be_persisted, be_persisted)
+        end
+      end
+
+      context 'and editing visibility' do
+        let(:update_params) { { title: 'new title', visibility: 'open' } }
+
+        xit 'can make work public' do
+          patch :update, params: { id: id, test_simple_work: update_params }
+
+          expect(Hyrax::VisibilityReader.new(resource: assigns(:curation_concern)).read).to eq 'open'
         end
       end
     end

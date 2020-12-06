@@ -190,7 +190,8 @@ module Hyrax
         @curation_concern =
           form.validate(params[hash_key_for_curation_concern]) &&
           transactions['change_set.create_work']
-          .with_step_args('work_resource.add_file_sets' => { uploaded_files: uploaded_files })
+          .with_step_args('work_resource.add_file_sets' => { uploaded_files: uploaded_files },
+                          'change_set.set_user_as_depositor' => { user: current_user })
           .call(form).value!
       end
     end
