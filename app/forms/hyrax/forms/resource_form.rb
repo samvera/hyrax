@@ -65,7 +65,9 @@ module Hyrax
 
       class_attribute :model_class
 
-      delegate :depositor, :human_readable_type, :on_behalf_of, :proxy_depositor, to: :model
+      delegate :depositor, :on_behalf_of, :proxy_depositor, to: :model
+
+      property :human_readable_type, writable: false
 
       property :visibility # visibility has an accessor on the model
 
