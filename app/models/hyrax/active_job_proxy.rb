@@ -31,7 +31,7 @@ module Hyrax
     ##
     # @return [Valkyrie::Resource]
     def self.find(id)
-      Hyrax.query_adapter.find_by(id: id)
+      Hyrax.query_service.find_by(id: id)
     end
 
     ##
