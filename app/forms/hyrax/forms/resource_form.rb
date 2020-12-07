@@ -36,7 +36,7 @@ module Hyrax
       #
       # @note due to historical oddities with Hydra::AccessControls and Hydra
       #   Editor, Hyrax's views rely on `agent_name` and `access` as field
-      #   names. we provide these as virtual fields andprepopulate these from
+      #   names. we provide these as virtual fields and prepopulate these from
       #   `Hyrax::Permission`.
       class Permission < Hyrax::ChangeSet
         property :agent_name, virtual: true, prepopulator: ->(_opts) { self.agent_name = model.agent }
@@ -71,7 +71,7 @@ module Hyrax
       property :on_behalf_of
       property :proxy_depositor
 
-      property :visibility # visibility has an accessor on the model
+      property :visibility, default: VisibilityIntention::PRIVATE
 
       property :date_modified, readable: false
       property :date_uploaded, readable: false

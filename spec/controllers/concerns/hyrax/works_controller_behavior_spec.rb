@@ -65,6 +65,16 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         expect(assigns[:curation_concern].depositor).to eq user.user_key
       end
 
+      context 'when setting visibility' do
+        let(:create_params) { { title: 'comet in moominland', visibility: 'open' } }
+
+        it 'can set work to public' do
+          post :create, params: { test_simple_work: create_params }
+
+          expect(assigns[:curation_concern]).to have_attributes(visibility: 'open')
+        end
+      end
+
       context 'and files' do
         let(:uploads) { FactoryBot.create_list(:uploaded_file, 2, user: user) }
 
@@ -336,7 +346,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
       context 'and editing visibility' do
         let(:update_params) { { title: 'new title', visibility: 'open' } }
 
-        xit 'can make work public' do
+        it 'can make work public' do
           patch :update, params: { id: id, test_simple_work: update_params }
 
           expect(Hyrax::VisibilityReader.new(resource: assigns(:curation_concern)).read).to eq 'open'
