@@ -30,7 +30,7 @@ module Sipity
       workflows = Sipity::Workflow.arel_table
       Sipity::Workflow.where(active: true).where(
         workflows[:permission_template_id].in(
-          templates.project(templates[:id]).where(templates[:source_id].eq(admin_set_id))
+          templates.project(templates[:id]).where(templates[:source_id].eq(admin_set_id.to_s))
         )
       ).first!
     end

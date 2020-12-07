@@ -26,6 +26,8 @@ module Sipity
                Entity(input.model)
              when Sipity::Comment
                Entity(input.entity)
+             when Valkyrie::Resource
+               Entity(Hyrax::GlobalID(input))
              else
                Entity(input.to_global_id) if input.respond_to?(:to_global_id)
              end

@@ -71,7 +71,7 @@ RSpec.describe Sipity do
       end
     end
 
-    it 'will return the to_processing_entity if the object responds to the processing entity' do
+    it 'will return the to_sipity_entity if the object responds to that method' do
       object = double(to_sipity_entity: :processing_entity)
       expect(described_class.Entity(object)).to eq(:processing_entity)
     end

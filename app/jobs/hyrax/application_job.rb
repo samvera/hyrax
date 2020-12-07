@@ -6,7 +6,12 @@ module Hyrax
   class ApplicationJob < ::ApplicationJob
     before_enqueue do |job|
       job.arguments.map! do |arg|
-        arg.is_a?(Valkyrie::Resource) ? Hyrax::ActiveJobProxy.new(resource: arg) : arg
+        case arg
+        when Valkyrie::Resource
+          Hyrax::ValkyrieGlobalIdProxy.new(resource: arg)
+        else
+          arg
+        end
       end
     end
   end
