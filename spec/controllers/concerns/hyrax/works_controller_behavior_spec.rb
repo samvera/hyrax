@@ -22,6 +22,10 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
       .to receive(:registered_curation_concern_types)
       .and_return([work.model_name.name])
 
+    # note: we can't run jobs that rely on routes (i.e. those that send notifications)
+    # from here because of this stubbing. it's proabably best just to not do that
+    # anyway. if these tests depend on specific job behavior, they may be testing too
+    # much.
     controller.main_app.instance_variable_set(:@routes, main_app_routes)
     controller.main_app.instance_variable_set(:@helpers, main_app_routes.url_helpers)
   end
@@ -63,6 +67,16 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         post :create, params: { test_simple_work: { title: 'comet in moominland' } }
 
         expect(assigns[:curation_concern].depositor).to eq user.user_key
+      end
+
+      context 'when depositing as a proxy for (on_behalf_of) another user' do
+        let(:create_params) { { title: 'comet in moominland', on_behalf_of: target_user.user_key } }
+        let(:target_user) { FactoryBot.create(:user) }
+
+        it 'transfers depositor status to proxy target' do
+          expect { post :create, params: { test_simple_work: create_params } }
+            .to have_enqueued_job(ContentDepositorChangeEventJob)
+        end
       end
 
       context 'when setting visibility' do

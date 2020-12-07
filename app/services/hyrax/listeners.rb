@@ -16,5 +16,6 @@ module Hyrax
     autoload :FileSetLifecycleNotificationListener
     autoload :MetadataIndexListener
     autoload :ObjectLifecycleListener
+    autoload :ProxyDepositListener
   end
 end
