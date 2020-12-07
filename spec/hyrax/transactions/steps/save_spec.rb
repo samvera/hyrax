@@ -46,6 +46,25 @@ RSpec.describe Hyrax::Transactions::Steps::Save do
       end
     end
 
+    context 'when setting visibility' do
+      let(:change_set_class) do
+        Class.new(Hyrax::ChangeSet) { self.fields = [:title, :visibility] }
+      end
+
+      before { change_set.visibility = 'open' }
+
+      # visibility is special because, though it's modeled in terms of an
+      # inverse relation (a Hyrax::AccessControl, pointing at this object),
+      # for historical reasons we edit it as an attribute. if the change_set
+      # has a `visibility`, it wants to set permissions on the AccessControl.
+      # when we save the model, we *never* save those permissions, but we need
+      # to make sure we repopulate our changes to the saved work's in-memory
+      # copy. here's a test to make sure that happens.
+      it 'retains visibility changes on unwrapped work' do
+        expect(step.call(change_set).value!).to have_attributes(visibility: 'open')
+      end
+    end
+
     context 'when the save fails' do
       before do
         allow(persister)
