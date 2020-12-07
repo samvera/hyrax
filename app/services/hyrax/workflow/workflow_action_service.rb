@@ -20,7 +20,7 @@ module Hyrax
         comment = create_sipity_comment
         handle_sipity_notifications(comment: comment)
         handle_additional_sipity_workflow_action_processing(comment: comment)
-        subject.work.update_index # So that the new actions and state are written into solr.
+        subject.work.try(:update_index) # So that the new actions and state are written into solr.
       end
 
       private

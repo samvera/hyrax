@@ -4,7 +4,7 @@ module Hyrax
     # @example
     #   collection_type = Hyrax::CollectionType.find(1)
     #
-    #   Hyrax.custom_queries.find_collections_by_type(global_id: collection_type.to_global_id)
+    #   Hyrax.custom_queries.find_collections_by_type(global_id: Hyrax::GlobalID(collection_type))
     #
     # @see https://github.com/samvera/valkyrie/wiki/Queries#custom-queries
     class FindCollectionsByType

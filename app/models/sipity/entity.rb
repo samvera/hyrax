@@ -9,7 +9,7 @@ module Sipity
   # extract the information.
   # @example To get the Sipity::Entity for a work
   #   work = GenericWork.first
-  #   work_global_id = work.to_global_id.to_s
+  #   work_global_id = Hyrax::GlobalID(work).to_s
   #   => "gid://whatever/GenericWork/3x816m604"
   #   Sipity::Entity.where(proxy_for_global_id: work_global_id).first
   #   => #<Sipity::Entity id: 1, proxy_for_global_id: "gid://whatever/GenericWork/3x816m604",

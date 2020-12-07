@@ -6,22 +6,34 @@ RSpec.describe Hyrax::Workflow::WorkflowFactory do
 
   let(:attributes) { {} }
   let(:deposit_action) { Sipity::WorkflowAction.create!(workflow: workflow, name: 'start') }
-  let(:permission_template) { Hyrax::PermissionTemplate.find_by!(source_id: work.admin_set_id) }
+  let(:permission_template) { Hyrax::PermissionTemplate.find_by!(source_id: work.admin_set_id.to_s) }
   let(:user) { FactoryBot.create(:user) }
   let(:work) { create(:work, with_admin_set: { with_permission_template: true }) }
   let(:workflow) { FactoryBot.create(:workflow, active: true, permission_template: permission_template) }
 
-  describe '.create' do
+  shared_examples 'a workflow initializer' do
     it 'creates a Sipity::Entity, assign entity specific responsibility (but not to the full workflow) then runs the WorkflowActionService' do
       expect(Hyrax::Workflow::WorkflowActionService)
-        .to receive(:run)
-        .with(subject: kind_of(Hyrax::WorkflowActionInfo), action: deposit_action)
+        .to receive(:run).with(subject: kind_of(Hyrax::WorkflowActionInfo), action: deposit_action)
 
-      expect do
-        expect { factory.create(work, attributes, user) }
-          .to change { Sipity::Entity.count }.by(1)
-          .and change { Sipity::EntitySpecificResponsibility.count }.by(1)
-      end.not_to change { Sipity::WorkflowResponsibility.count }
+      initial_workflow_responsibility_count = Sipity::WorkflowResponsibility.count
+      expect { factory.create(work, attributes, user) }
+        .to change { Sipity::Entity.count }
+        .by(1)
+        .and change { Sipity::EntitySpecificResponsibility.count }
+        .by(1)
+      expect(Sipity::WorkflowResponsibility.count).to eq initial_workflow_responsibility_count
+    end
+  end
+
+  describe '.create' do
+    it_behaves_like 'a workflow initializer'
+
+    context 'with a valkyrie work' do
+      let(:admin_set) { FactoryBot.create(:admin_set, with_permission_template: true) }
+      let(:work)      { FactoryBot.valkyrie_create(:hyrax_work, admin_set_id: admin_set.id) }
+
+      it_behaves_like 'a workflow initializer'
     end
   end
 end

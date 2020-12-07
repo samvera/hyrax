@@ -49,7 +49,7 @@ module Hyrax
       private
 
       def create_workflow_entity!
-        Sipity::Entity.create!(proxy_for_global_id: work.to_global_id.to_s,
+        Sipity::Entity.create!(proxy_for_global_id: Hyrax::GlobalID(work).to_s,
                                workflow: workflow_for(work),
                                workflow_state: nil)
       end
