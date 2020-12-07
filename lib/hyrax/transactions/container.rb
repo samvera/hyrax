@@ -33,6 +33,7 @@ module Hyrax
       require 'hyrax/transactions/steps/ensure_permission_template'
       require 'hyrax/transactions/steps/save'
       require 'hyrax/transactions/steps/save_work'
+      require 'hyrax/transactions/steps/save_access_control'
       require 'hyrax/transactions/steps/set_default_admin_set'
       require 'hyrax/transactions/steps/set_modified_date'
       require 'hyrax/transactions/steps/set_uploaded_date_unless_present'
@@ -92,6 +93,10 @@ module Hyrax
       namespace 'work_resource' do |ops| # valkyrie works
         ops.register 'add_file_sets' do
           Steps::AddFileSets.new
+        end
+
+        ops.register 'save_acl' do
+          Steps::SaveAccessControl.new
         end
       end
 

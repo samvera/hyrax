@@ -5,6 +5,7 @@ module Hyrax
     # @since 3.0.0
     class UpdateWork < Transaction
       DEFAULT_STEPS = ['change_set.apply',
+                       'work_resource.save_acl',
                        'work_resource.add_file_sets'].freeze
 
       ##

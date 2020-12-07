@@ -73,6 +73,13 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
 
           expect(assigns[:curation_concern]).to have_attributes(visibility: 'open')
         end
+
+        it 'saves the visibility' do
+          post :create, params: { test_simple_work: create_params }
+
+          expect(Hyrax::AccessControlList(assigns[:curation_concern]).permissions)
+            .to include(have_attributes(mode: :read, agent: 'group/public'))
+        end
       end
 
       context 'and files' do
@@ -350,6 +357,13 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
           patch :update, params: { id: id, test_simple_work: update_params }
 
           expect(Hyrax::VisibilityReader.new(resource: assigns(:curation_concern)).read).to eq 'open'
+        end
+
+        it 'saves the visibility' do
+          patch :update, params: { id: id, test_simple_work: update_params }
+
+          expect(Hyrax::AccessControlList(assigns[:curation_concern]).permissions)
+            .to include(have_attributes(mode: :read, agent: 'group/public'))
         end
       end
     end
