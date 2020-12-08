@@ -33,6 +33,8 @@ module Sipity
           templates.project(templates[:id]).where(templates[:source_id].eq(admin_set_id.to_s))
         )
       ).first!
+    rescue ActiveRecord::RecordNotFound => err
+      raise NoActiveWorkflowError, err.message
     end
 
     # @api public
@@ -45,9 +47,10 @@ module Sipity
     # @param workflow_name [String] The name of the workflow within the given permission template that should be activated
     # @return [Sipity::Workflow] active workflow
     # @raise [ActiveRecord::RecordNotFound] When we have a mismatch on permission template and workflow id or workflow name
-    # @raise [RuntimeError] When you don't specify a workflow_id or workflow_name
+    # @raise [ArgumentError] When you don't specify a workflow_id or workflow_name
     def self.activate!(permission_template:, workflow_id: nil, workflow_name: nil)
-      raise "You must specify a workflow_id or workflow_name to activate!" if workflow_id.blank? && workflow_name.blank?
+      raise(ArgumentError, "You must specify a workflow_id or workflow_name to activate!") if
+        workflow_id.blank? && workflow_name.blank?
       workflow_to_activate = Sipity::Workflow.find_by!({ permission_template: permission_template, id: workflow_id, name: workflow_name }.compact)
       active_workflow = Sipity::Workflow.where(permission_template: permission_template, active: true)
       return workflow_to_activate if workflow_to_activate == active_workflow.first
@@ -55,6 +58,21 @@ module Sipity
         active_workflow.update(active: nil)
         workflow.update!(active: true)
       end
+    end
+
+    ##
+    # @api public
+    # Find an action in this workflow that has no starting state. This is the deposit action.
+    #
+    # @return [Sipity::WorkflowAction]
+    # @raise [Sipity::StateError]
+    def find_deposit_action
+      actions_that_lead_to_states = Sipity::WorkflowStateAction.all.pluck(:workflow_action_id)
+      relation = Sipity::WorkflowAction.where(workflow: self)
+      relation = relation.where('id NOT IN (?)', actions_that_lead_to_states) if actions_that_lead_to_states.any?
+      relation.first!
+    rescue ActiveRecord::RecordNotFound => err
+      raise NoActiveWorkflowError, err.message
     end
 
     # Grant a workflow responsibility to a set of agents and remove it from any
@@ -86,5 +104,7 @@ module Sipity
       wf_role = Sipity::WorkflowRole.find_by(workflow: self, role_id: role)
       wf_role.workflow_responsibilities.where.not(agent: allowed_agents).destroy_all
     end
+
+    class NoActiveWorkflowError < StateError; end
   end
 end

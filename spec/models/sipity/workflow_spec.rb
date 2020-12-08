@@ -33,10 +33,10 @@ module Sipity
       end
 
       it 'raises an exception if you do not pass a workflow_id nor workflow_name' do
-        expect do
-          described_class.activate!(permission_template: other_permission_template)
-        end.to raise_error(RuntimeError)
+        expect { described_class.activate!(permission_template: other_permission_template) }
+          .to raise_error(ArgumentError)
       end
+
       it 'raises an exception on a mismatch' do
         expect do
           described_class.activate!(permission_template: other_permission_template, workflow_id: active_workflow.id)
@@ -78,7 +78,9 @@ module Sipity
 
       it 'raises an exception when none exists' do
         create(:workflow, active: false, permission_template: permission_template)
-        expect { described_class.find_active_workflow_for(admin_set_id: source_id) }.to raise_error(ActiveRecord::RecordNotFound)
+
+        expect { described_class.find_active_workflow_for(admin_set_id: source_id) }
+          .to raise_error(Sipity::StateError)
       end
     end
   end

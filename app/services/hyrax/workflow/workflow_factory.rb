@@ -40,9 +40,10 @@ module Hyrax
       # The Sipity::Entity acts as a proxy to a work within a workflow
       # @return [TrueClass]
       def create
+        action = find_deposit_action
         entity = create_workflow_entity!
         assign_specific_roles_to(entity: entity)
-        run_workflow_action!
+        run_workflow_action!(action: action)
         true
       end
 
@@ -61,23 +62,24 @@ module Hyrax
                                                   workflow: workflow_for(work))
       end
 
-      def run_workflow_action!
+      def run_workflow_action!(action:)
         subject = WorkflowActionInfo.new(work, user)
         Workflow::WorkflowActionService.run(subject: subject,
-                                            action: find_deposit_action)
+                                            action: action)
       end
 
       # Find an action that has no starting state. This is the deposit action.
-      # # @return [Sipity::WorkflowAction]
+      # @return [Sipity::WorkflowAction]
+      # @raise [Sipity::StateError]
       def find_deposit_action
-        actions_that_lead_to_states = Sipity::WorkflowStateAction.all.pluck(:workflow_action_id)
-        relation = Sipity::WorkflowAction.where(workflow: workflow_for(work))
-        relation = relation.where('id NOT IN (?)', actions_that_lead_to_states) if actions_that_lead_to_states.any?
-        relation.first!
+        workflow_for(work).find_deposit_action
       end
 
+      ##
+      # @return [Sipity::Workflow]
+      # @raise [Sipity::StateError]
       def workflow_for(work)
-        Sipity::Workflow.find_active_workflow_for(admin_set_id: work.admin_set_id)
+        Sipity::Workflow.find_active_workflow_for(admin_set_id: work.try(:admin_set_id))
       end
     end
   end
