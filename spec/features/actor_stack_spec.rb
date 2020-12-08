@@ -160,4 +160,18 @@ RSpec.describe Hyrax::DefaultMiddlewareStack, :clean_repo do
       end
     end
   end
+
+  describe '#destroy' do
+    context 'when the work is featured' do
+      let(:work) { FactoryBot.create(:work) }
+
+      before { FeaturedWork.create(work_id: work.id) }
+
+      it 'deletes featured status' do
+        expect { actor.destroy(env) }
+          .to change { FeaturedWork.where(work_id: work.id).count }
+          .from(1).to(0)
+      end
+    end
+  end
 end
