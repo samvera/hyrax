@@ -21,8 +21,7 @@ RSpec.describe Hyrax::DefaultMiddlewareStack do
         Hyrax::Actors::CleanupFileSetsActor,
         Hyrax::Actors::CleanupTrophiesActor,
         Hyrax::Actors::FeaturedWorkActor,
-        Hyrax::Actors::ModelActor,
-        Hyrax::Actors::InitializeWorkflowActor
+        Hyrax::Actors::ModelActor
       ]
     end
   end

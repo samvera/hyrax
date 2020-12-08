@@ -46,9 +46,6 @@ module Hyrax
 
         # Persist the metadata changes on the resource
         middleware.use Hyrax::Actors::ModelActor
-
-        # Start the workflow for this work
-        middleware.use Hyrax::Actors::InitializeWorkflowActor
       end
     end
     # rubocop:enable Metrics/MethodLength

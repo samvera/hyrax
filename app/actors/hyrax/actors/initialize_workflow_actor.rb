@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 module Hyrax
   module Actors
+    ##
+    # @deprecated
+    #
     # Responsible for generating the workflow for the given curation_concern.
     # Done through direct collaboration with the configured Hyrax::Actors::InitializeWorkflowActor.workflow_factory
     #
@@ -13,6 +16,7 @@ module Hyrax
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if create was successful
       def create(env)
+        Deprecation.warn('Use Hyrax::Listeners::WorkflowListener instead.')
         next_actor.create(env) && create_workflow(env)
       end
 
@@ -20,6 +24,10 @@ module Hyrax
 
       # @return [TrueClass]
       def create_workflow(env)
+        # if the entity exists, this is already initialized
+        Sipity::Entity(env.curation_concern)
+        true
+      rescue Sipity::ConversionError
         workflow_factory.create(env.curation_concern, env.attributes, env.user)
       end
     end
