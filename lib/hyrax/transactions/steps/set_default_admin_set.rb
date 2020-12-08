@@ -16,7 +16,7 @@ module Hyrax
         #
         # @return [Dry::Monads::Result]
         def call(obj)
-          obj.admin_set_id ||= AdminSet.find_or_create_default_admin_set_id
+          obj.admin_set_id ||= Hyrax::EnsureWellFormedAdminSetService.call
 
           Success(obj)
         end

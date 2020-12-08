@@ -69,6 +69,19 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         expect(assigns[:curation_concern].depositor).to eq user.user_key
       end
 
+      it 'grants edit permissions to current user (as depositor)' do
+        post :create, params: { test_simple_work: { title: 'comet in moominland' } }
+
+        expect(Hyrax::AccessControlList(assigns[:curation_concern]).permissions)
+          .to include(have_attributes(agent: user.user_key, mode: :edit))
+      end
+
+      it 'sets workflow state as "deposited"; uses default workflow' do
+        post :create, params: { test_simple_work: { title: 'comet in moominland' } }
+
+        expect(Sipity::Entity(assigns[:curation_concern]).workflow_state).to have_attributes(name: "deposited")
+      end
+
       context 'when depositing as a proxy for (on_behalf_of) another user' do
         let(:create_params) { { title: 'comet in moominland', on_behalf_of: target_user.user_key } }
         let(:target_user) { FactoryBot.create(:user) }

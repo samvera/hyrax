@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "spec_helper"
 
-RSpec.describe Hyrax::Workflow::WorkflowImporter do
+RSpec.describe Hyrax::Workflow::WorkflowImporter, :clean_repo do
   let(:permission_template) { create(:permission_template) }
   let(:data) do
     {

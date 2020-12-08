@@ -3,7 +3,7 @@ require 'spec_helper'
 require 'hyrax/transactions'
 require 'dry/container/stub'
 
-RSpec.describe Hyrax::Transactions::WorkCreate do
+RSpec.describe Hyrax::Transactions::WorkCreate, :clean_repo do
   subject(:tx)     { described_class.new }
   let(:change_set) { Hyrax::ChangeSet.for(resource) }
   let(:resource)   { build(:hyrax_work) }
