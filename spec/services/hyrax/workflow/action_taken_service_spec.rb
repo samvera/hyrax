@@ -6,7 +6,7 @@ RSpec.describe Hyrax::Workflow::ActionTakenService do
            order: triggered_methods,
            any?: true)
   end
-  let(:work) { instance_double(GenericWork, id: '9999') }
+  let(:work) { FactoryBot.create(:work) }
   let(:action) { instance_double(Sipity::WorkflowAction, triggered_methods: triggered_methods_rel) }
   let(:user) { User.new }
   let(:instance) do
@@ -45,7 +45,7 @@ RSpec.describe Hyrax::Workflow::ActionTakenService do
         it "calls the method and saves the object" do
           expect(work).not_to receive(:save)
           expect(FooBar).to receive(:call).with(target: work, user: user, comment: "A pleasant read").and_return(false)
-          expect(Rails.logger).to receive(:error).with("Not all workflow methods were successful, so not saving (9999)")
+          expect(Rails.logger).to receive(:error).with("Not all workflow methods were successful, so not saving (#{work.id})")
           subject
         end
       end
@@ -59,7 +59,7 @@ RSpec.describe Hyrax::Workflow::ActionTakenService do
       end
       it "logs an error" do
         expect(Rails.logger).to receive(:error).with("Expected 'FooBar' to respond to 'call', but it didn't, so not running workflow callback")
-        expect(Rails.logger).to receive(:error).with("Not all workflow methods were successful, so not saving (9999)")
+        expect(Rails.logger).to receive(:error).with("Not all workflow methods were successful, so not saving (#{work.id})")
         subject
       end
     end
@@ -67,7 +67,7 @@ RSpec.describe Hyrax::Workflow::ActionTakenService do
     context "when the notification doesn't exist" do
       it "logs an error" do
         expect(Rails.logger).to receive(:error).with("Unable to find 'FooBar', so not running workflow callback")
-        expect(Rails.logger).to receive(:error).with("Not all workflow methods were successful, so not saving (9999)")
+        expect(Rails.logger).to receive(:error).with("Not all workflow methods were successful, so not saving (#{work.id})")
         subject
       end
     end

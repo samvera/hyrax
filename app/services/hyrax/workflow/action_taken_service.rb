@@ -32,7 +32,7 @@ module Hyrax
           status
         end
 
-        return target.save if success
+        return save_target if success
         Rails.logger.error "Not all workflow methods were successful, so not saving (#{target.id})"
         false
       end
@@ -62,6 +62,19 @@ module Hyrax
         return klass if klass.respond_to?(:call)
         Rails.logger.error "Expected '#{class_name}' to respond to 'call', but it didn't, so not running workflow callback"
         nil
+      end
+
+      private
+
+      ##
+      # @api private
+      def save_target
+        case target
+        when ActiveFedora::Base
+          target.save
+        else
+          Hyrax.persister.save(resource: target)
+        end
       end
     end
   end
