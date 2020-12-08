@@ -16,6 +16,16 @@ RSpec.describe Hyrax::Workflow::GrantEditToDepositor do
                            user: user)
     end
 
+    context 'with no depositor' do
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, depositor: nil) }
+
+      it 'does not change edit access' do
+        expect { described_class.call(target: work, comment: "A pleasant read", user: user) }
+          .not_to change { work.edit_users.to_a }
+          .from(be_empty)
+      end
+    end
+
     context "with no additional editors" do
       let(:work) { create(:work_without_access, depositor: depositor.user_key) }
 
