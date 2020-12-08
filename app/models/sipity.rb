@@ -83,6 +83,10 @@ module Sipity
   end
   module_function :WorkflowState
 
+  ##
+  # A parent error class for all workflow errors caused by bad state
+  class StateError < RuntimeError; end
+
   class ConversionError < PowerConverter::ConversionError
     def initialize(value, **options)
       options[:scope] ||= nil

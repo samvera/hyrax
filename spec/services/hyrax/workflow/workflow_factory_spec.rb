@@ -29,6 +29,13 @@ RSpec.describe Hyrax::Workflow::WorkflowFactory do
   describe '.create' do
     it_behaves_like 'a workflow initializer'
 
+    it 'rejects models without an admin_set_id' do
+      resource = FactoryBot.valkyrie_create(:hyrax_resource)
+
+      expect { factory.create(resource, attributes, user) }
+        .to raise_error Sipity::StateError
+    end
+
     context 'with a valkyrie work' do
       let(:admin_set) { FactoryBot.create(:admin_set, with_permission_template: true) }
       let(:work)      { FactoryBot.valkyrie_create(:hyrax_work, admin_set_id: admin_set.id) }
