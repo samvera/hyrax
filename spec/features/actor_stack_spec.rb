@@ -27,6 +27,13 @@ RSpec.describe Hyrax::DefaultMiddlewareStack, :clean_repo do
         .to true
     end
 
+    it 'starts the workflow, carries out first action' do
+      actor.create(env)
+
+      expect(Sipity::Entity(env.curation_concern).workflow_state)
+        .to have_attributes name: 'deposited'
+    end
+
     context 'when adding to a work' do
       let(:other_work) { FactoryBot.create(:work, user: user) }
       let(:attributes) { { 'in_works_ids' => [other_work.id] } }
