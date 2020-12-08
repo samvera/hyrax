@@ -37,6 +37,7 @@ module Hyrax
           saved.permission_manager.acl.permissions = unsaved.permission_manager.acl.permissions if
             unsaved.respond_to?(:permission_manager)
 
+          user ||= ::User.find_by_user_key(saved.depositor)
           Hyrax.publisher.publish('object.deposited', object: saved, user: user) if unsaved.new_record
           Hyrax.publisher.publish('object.metadata.updated', object: saved, user: user)
 
