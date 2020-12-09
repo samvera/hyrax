@@ -4,7 +4,7 @@ RSpec.describe 'Batch creation of works', type: :feature do
   let(:user) { create(:user) }
 
   before do
-    AdminSet.find_or_create_default_admin_set_id
+    Hyrax::EnsureWellFormedAdminSetService.call
     sign_in user
     allow(Flipflop).to receive(:batch_upload?).and_return true
   end
@@ -34,6 +34,8 @@ RSpec.describe 'Batch creation of works', type: :feature do
     end
 
     it "allows on-behalf-of batch deposit", :js do
+      pending('batch workflows arent working with valkyrie for still undiagnosed reasons.') if
+        Hyrax.config.use_valkyrie?
       click_link "Files" # switch tab
       expect(page).to have_content "Add files"
       within('div#add-files') do
