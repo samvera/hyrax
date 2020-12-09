@@ -284,7 +284,7 @@ Next you'll want to build the image that your Hyrax container will run from. For
 **Build image**
 - Run `cd <hyrax_app_name>`
 - Visit [samveralabs/hyrax](https://hub.docker.com/r/samveralabs/hyrax/tags) and grab the latest image **tag**
-- Run `echo "FROM samveralabs/hyrax:7<tag>" > Dockerfile` to create the Dockerfile
+- Run `echo "FROM samveralabs/hyrax:<tag>" > Dockerfile` to create the Dockerfile
 - Run `docker build .`
 
 **Push image to a repo (assumes dockerhub.io)**
