@@ -74,10 +74,14 @@ module Hyrax
   #
   # @see https://dry-rb.org/gems/dry-events/0.2/
   # @see Dry::Events::Publisher
+  # @see https://github.com/samvera/hyrax/wiki/Hyrax's-Event-Bus-(Hyrax::Publisher)
   class Publisher
     include Singleton
     include Dry::Events::Publisher[:hyrax]
 
+    # are you adding an event?
+    # make sure Hyrax is publishing events in the correct places (this is be non-trivial!)
+    # and add it to the list at https://github.com/samvera/hyrax/wiki/Hyrax's-Event-Bus-(Hyrax::Publisher)
     register_event('batch.created')
     register_event('file.set.audited')
     register_event('file.set.attached')
