@@ -281,16 +281,12 @@ The image that you will build your app's image on uses **Postgres**. If you have
 ### Building the image
 Next you'll want to build the image that your Hyrax container will run from. For that, you will need to create a Dockerfile, build the image from it, and push it to a repository you can fetch from later.
 
-**Build image**
+**Build and push image (assumes dockerhub.io registry)**
 - Run `cd <hyrax_app_name>`
 - Visit [samveralabs/hyrax](https://hub.docker.com/r/samveralabs/hyrax/tags) and grab the latest image **tag**
 - Run `echo "FROM samveralabs/hyrax:<tag>" > Dockerfile` to create the Dockerfile
-- Run `docker build .`
-
-**Push image to a repo (assumes dockerhub.io)**
-- On completion, the above command will return an image **sha**, **copy it**
-- Run `docker tag <sha-you-copied> <your-docker-username>/<name-of-your-image>:<tag>`
-- Run `docker push <your-docker-username>/<name-of-your-image>`
+- Run `docker build . -t <hyrax_app_name>:dev`
+- Run `docker push <your-docker-username>/<hyrax_app_name>:dev`
 
 ### Configure the docker-compose.yml
 Since Hyrax relies on serveral different services to run, you'll need to set up a **docker-compose.yml** to tell Docker how to run all those services together.
