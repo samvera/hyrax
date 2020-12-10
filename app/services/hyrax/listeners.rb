@@ -17,5 +17,6 @@ module Hyrax
     autoload :MetadataIndexListener
     autoload :ObjectLifecycleListener
     autoload :ProxyDepositListener
+    autoload :WorkflowListener
   end
 end
