@@ -14,7 +14,7 @@ RSpec.describe Hyrax::UsersController, type: :controller do
     it "redirects to root if user does not exist" do
       get :show, params: { id: 'johndoe666' }
       expect(response).to redirect_to(root_path)
-      expect(flash[:alert]).to include("User 'johndoe666' does not exist")
+      expect(flash[:alert]).to include("User does not exist")
     end
   end
 
