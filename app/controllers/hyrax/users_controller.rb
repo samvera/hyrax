@@ -62,7 +62,7 @@ module Hyrax
 
     def find_user
       @user = ::User.from_url_component(params[:id])
-      redirect_to root_path, alert: "User '#{params[:id]}' does not exist" if @user.nil?
+      redirect_to root_path, alert: "User does not exist" unless @user
     end
 
     def sort_value
