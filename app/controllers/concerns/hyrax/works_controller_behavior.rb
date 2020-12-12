@@ -147,7 +147,7 @@ module Hyrax
 
     def iiif_manifest_presenter
       IiifManifestPresenter.new(search_result_document(id: params[:id])).tap do |p|
-        p.hostname = request.hostname
+        p.hostname = request.base_url
         p.ability = current_ability
       end
     end
