@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 
 module Hyrax
@@ -79,18 +80,54 @@ module Hyrax
     include Singleton
     include Dry::Events::Publisher[:hyrax]
 
+    # @!group Registered Events
+    #
+    # 🛑 👀 ❓
     # are you adding an event?
     # make sure Hyrax is publishing events in the correct places (this is be non-trivial!)
     # and add it to the list at https://github.com/samvera/hyrax/wiki/Hyrax's-Event-Bus-(Hyrax::Publisher)
+
+    # @!macro [new] a_registered_event
+    #   @!attribute [r] $1
+
+    # @since 3.0.0
+    # @macro a_registered_event
     register_event('batch.created')
+
+    # @since 3.0.0
+    # @macro a_registered_event
     register_event('file.set.audited')
+
+    # @since 3.0.0
+    # @macro a_registered_event
     register_event('file.set.attached')
+
+    # @since 3.0.0
+    # @macro a_registered_event
     register_event('file.set.url.imported')
+
+    # @since 3.0.0
+    # @macro a_registered_event
     register_event('file.set.restored')
+
+    # @since 3.0.0
+    # @macro a_registered_event
     register_event('object.deleted')
+
+    # @since 3.0.0
+    # @macro a_registered_event
     register_event('object.failed_deposit')
+
+    # @since 3.0.0
+    # @macro a_registered_event
     register_event('object.deposited')
+
+    # @since 3.0.0
+    # @macro a_registered_event
     register_event('object.acl.updated')
+
+    # @since 3.0.0
+    # @macro a_registered_event
     register_event('object.metadata.updated')
   end
 end
