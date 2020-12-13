@@ -95,7 +95,7 @@ module Hyrax
       delegate :collection_url, to: :routes
 
       def public_access
-        { Hydra.config.permissions.read.group => 'public' }
+        { Hydra.config.permissions.read.group => Hyrax.config.public_user_group_name }
       end
     end
   end

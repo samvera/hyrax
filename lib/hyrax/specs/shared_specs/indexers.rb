@@ -45,7 +45,7 @@ RSpec.shared_examples 'a permission indexer' do
   describe '#to_solr' do
     it 'indexes read permissions' do
       expect(indexer.to_solr)
-        .to include(Hydra.config.permissions.read.group => ['public'],
+        .to include(Hydra.config.permissions.read.group => [Hyrax.config.public_user_group_name],
                     Hydra.config.permissions.read.individual => read_users.map(&:user_key))
     end
 
