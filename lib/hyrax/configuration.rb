@@ -139,7 +139,7 @@ module Hyrax
 
     attr_writer :fits_path
     def fits_path
-      @fits_path ||= 'fits.sh'
+      @fits_path ||= ENV.fetch('HYRAX_FITS_PATH', 'fits.sh')
     end
 
     # Override characterization runner
