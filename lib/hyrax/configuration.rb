@@ -48,6 +48,42 @@ module Hyrax
       true
     end
 
+    # @!group Hyrax Group Configuration
+
+    ##
+    # @!attribute [w] admin_user_group_name
+    #   @return [String]
+    # @!attribute [w] public_user_group_name
+    #   @return [String]
+    # @!attribute [w] registered_user_group_name
+    #   @return [String]
+    attr_writer :admin_user_group_name
+    attr_writer :public_user_group_name
+    attr_writer :registered_user_group_name
+
+    ##
+    # @api public
+    # @return [String]
+    def admin_user_group_name
+      @admin_user_group_name ||= 'admin'
+    end
+
+    ##
+    # @api public
+    # @return [String]
+    def public_user_group_name
+      @public_user_group_name ||= 'public'
+    end
+
+    ##
+    # @api public
+    # @return [String]
+    def registered_user_group_name
+      @registered_user_group_name ||= 'registered'
+    end
+
+    # @!endgroup
+
     # Path on the local file system where derivatives will be stored
     attr_writer :derivatives_path
     def derivatives_path
