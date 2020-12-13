@@ -253,7 +253,7 @@ end
 
 puts 'Create Expired, Authenticated Embargo works'
 1.times do |i|
-  GenericWork.create(title: ["Expired Authenticated #{i}"], read_groups: ['registered']) do |work|
+  GenericWork.create(title: ["Expired Authenticated #{i}"], read_groups: [Hyrax.config.registered_user_group_name]) do |work|
     work.apply_depositor_metadata(user)
     work.apply_embargo(Date.yesterday.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
   end
@@ -261,7 +261,7 @@ end
 
 puts 'Create Expired, Public Embargo works'
 3.times do |i|
-  GenericWork.create(title: ["Expired Public #{i}"], read_groups: ['public']) do |work|
+  GenericWork.create(title: ["Expired Public #{i}"], read_groups: [Hyrax.config.public_user_group_name]) do |work|
     work.apply_depositor_metadata(user)
     work.apply_embargo(Date.yesterday.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC)
   end
@@ -269,7 +269,7 @@ end
 
 puts 'Create Active, Public Lease works'
 3.times do |i|
-  GenericWork.create(title: ["Active Public #{i}"], read_groups: ['public']) do |work|
+  GenericWork.create(title: ["Active Public #{i}"], read_groups: [Hyrax.config.public_user_group_name]) do |work|
     work.apply_depositor_metadata(user)
     work.apply_lease(Date.tomorrow.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE)
   end
@@ -277,7 +277,7 @@ end
 
 puts 'Create Active, Authenticated Lease works'
 2.times do |i|
-  GenericWork.create(title: ["Active Authenticated #{i}"], read_groups: ['registered']) do |work|
+  GenericWork.create(title: ["Active Authenticated #{i}"], read_groups: [Hyrax.config.registered_user_group_name]) do |work|
     work.apply_depositor_metadata(user)
     work.apply_lease(Date.tomorrow.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE)
   end
@@ -285,7 +285,7 @@ end
 
 puts 'Create Expired, Authenticated Lease works'
 1.times do |i|
-  GenericWork.create(title: ["Expired Authenticated #{i}"], read_groups: ['registered']) do |work|
+  GenericWork.create(title: ["Expired Authenticated #{i}"], read_groups: [Hyrax.config.registered_user_group_name]) do |work|
     work.apply_depositor_metadata(user)
     work.apply_lease(Date.yesterday.to_s, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED)
   end

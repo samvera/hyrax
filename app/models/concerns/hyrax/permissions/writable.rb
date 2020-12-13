@@ -14,8 +14,8 @@ module Hyrax
         class_attribute :paranoid_edit_permissions
         self.paranoid_edit_permissions =
           [
-            { key: :edit_groups, message: 'Public cannot have edit access', condition: ->(obj) { obj.edit_groups.include?('public') } },
-            { key: :edit_groups, message: 'Registered cannot have edit access', condition: ->(obj) { obj.edit_groups.include?('registered') } }
+            { key: :edit_groups, message: 'Public cannot have edit access', condition: ->(obj) { obj.edit_groups.include?(::Ability.public_group_name) } },
+            { key: :edit_groups, message: 'Registered cannot have edit access', condition: ->(obj) { obj.edit_groups.include?(::Ability.registered_group_name) } }
           ]
       end
 

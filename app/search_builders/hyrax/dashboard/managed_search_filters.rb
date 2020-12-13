@@ -15,7 +15,7 @@ module Hyrax
         return [] if groups.empty?
         permission_types.map do |type|
           field = solr_field_for(type, 'group')
-          user_groups = type == 'read' ? groups - ['public', 'registered'] : groups
+          user_groups = type == 'read' ? groups - [::Ability.public_group_name, ::Ability.registered_group_name] : groups
           next if user_groups.empty?
           "({!terms f=#{field}}#{user_groups.join(',')})" # parens required to properly OR the clauses together.
         end
