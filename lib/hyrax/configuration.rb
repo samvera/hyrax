@@ -74,7 +74,7 @@ module Hyrax
 
     attr_writer :ffmpeg_path
     def ffmpeg_path
-      @ffmpeg_path ||= 'ffmpeg'
+      @ffmpeg_path ||= ENV.fetch('HYRAX_FFMPEG_PATH', 'ffmpeg')
     end
 
     attr_writer :fits_message_length
