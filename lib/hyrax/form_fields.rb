@@ -14,7 +14,7 @@ module Hyrax
   ##
   # @api private
   #
-  # @see Hyrax.FormFields
+  # @see .FormFields
   class FormFields < Module
     attr_reader :name
 
