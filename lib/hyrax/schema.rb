@@ -10,7 +10,7 @@ module Hyrax
   # `Dry::Type` types.
   #
   # For the default schema loader, configuration is loaded from
-  # `config/metadata/{name}.yaml`. Custom schema loaders can be provided
+  # `config/metadata/[name]}.yaml`. Custom schema loaders can be provided
   # for other types.
   #
   # @note `Valkyrie::Resources`/`Hyrax::Resources` are not required to use this
@@ -48,7 +48,7 @@ module Hyrax
   # applied to a `Valkyrie::Resource`. This provides the internals for the
   # recommended module builder syntax: `Hyrax::Schema(:schema_name)`
   #
-  # @see Hyrax.Schema
+  # @see .Schema
   class Schema < Module
     ##
     # @!attribute [r] name
