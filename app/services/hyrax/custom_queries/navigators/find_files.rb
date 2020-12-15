@@ -8,6 +8,9 @@ module Hyrax
       #   Hyrax.custom_queries.find_original_file(file_set: file_set_resource)
       #   Hyrax.custom_queries.find_extracted_text(file_set: file_set_resource)
       #   Hyrax.custom_queries.find_thumbnail(file_set: file_set_resource)
+      #
+      # @see https://github.com/samvera/valkyrie/wiki/Queries#custom-queries
+      # @since 3.0.0
       class FindFiles
         def self.queries
           [:find_files,

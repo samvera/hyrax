@@ -4,22 +4,22 @@ module Hyrax
   ##
   # @api public
   #
-  # Transforms {Valkyrie::Resource} models to solr-ready key-value hashes. Use
-  # `#to_solr` to retrieve the indexable hash.
+  # Transforms +Valkyrie::Resource+ models to solr-ready key-value hashes. Use
+  # {#to_solr} to retrieve the indexable hash.
   #
   # The default {Hyrax::ValkyrieIndexer} implementation provides minimal
-  # indexing for the Valkyrie id and the reserved `#created_at` and
-  # `#updated_at` attributes.
+  # indexing for the Valkyrie id and the reserved +#created_at+ and
+  # +#updated_at+ attributes.
   #
   # Custom indexers inheriting from others are responsible for providing a full
   # index hash. A common pattern for doing this is to employ method composition
   # to retrieve the parent's data, then modify it:
-  # `def to_solr; super.tap { |index_document| transform(index_document) }; end`.
+  # +def to_solr; super.tap { |index_document| transform(index_document) }; end+.
   # This technique creates infinitely composible index building behavior, with
   # indexers that can always see the state of the resource and the full current
   # index document.
   #
-  # It's recommended to *never* modify the state of `resource` in an indexer.
+  # It's recommended to *never* modify the state of +resource+ in an indexer.
   #
   # @example defining a custom indexer with composition
   #   class MyIndexer < ValkyrieIndexer
@@ -76,16 +76,19 @@ module Hyrax
     class << self
       ##
       # @api public
-      # @param resource [Valkyrie::Resource] an instance of a Valkyrie::Resource or an inherited class
-      # @note This will attempt to return an indexer following a naming convention where the indexer for a resource
-      #       class is expected to be the class name appended with 'Indexer'.  It will return default ValkyrieIndexer
-      #       if an indexer following the naming convention is not found or the resource is the reserved Hyrax::Resource
-      #       which should use ValkyrieIndexer instead of the base implementation in Hyrax::ResourceIndexer.
-      # @example
-      #     resource class:  Book
-      #     indexer class:   BookIndexer
+      # @param resource [Valkyrie::Resource] an instance of a +Valkyrie::Resource+
+      #   or an inherited class
+      # @note This factory will attempt to return an indexer following a naming convention
+      #   where the indexer for a resource class is expected to be the class name
+      #   appended with 'Indexer'.  It will return default {ValkyrieIndexer} if
+      #   an indexer following the naming convention is not found or the resource
+      #   is the reserved {Hyrax::Resource} which should use {ValkyrieIndexer}
+      #   instead of the base implementation in {Hyrax::ResourceIndexer}.
+      #
       # @return [Valkyrie::Indexer] an instance of ValkyrieIndexer or an inherited class based on naming convention
       #
+      # @example
+      #     ValkyrieIndexer.for(resource: Book.new) # => #<BookIndexer ...>
       def for(resource:)
         indexer_class = resource.class.name == 'Hyrax::Resource' ? ValkyrieIndexer : indexer_from_classname(resource)
         indexer_class.new(resource: resource)

@@ -2,7 +2,21 @@
 
 module Hyrax
   ##
-  # @public
+  # @api public
+  #
+  # Build an indexer module from a schema. Generates custom indexer behavior
+  # from rules provided by `index_loader`.
+  #
+  # @param [Symbol] schema_name
+  # @param [#index_rule_for] index_loader
+  #
+  # @return [Module]
+  #
+  # @example building a module as a mixin
+  #
+  #   class MyIndexer < Hyrax::ValkyrieIndexer
+  #     include Hyrax::Indexer(:core_metadata)
+  #   end
   #
   # @since 3.0.0
   def self.Indexer(schema_name, index_loader: SimpleSchemaLoader.new)
@@ -10,10 +24,12 @@ module Hyrax
   end
 
   ##
-  # @private
+  # @api private
+  #
+  # @see .Indexer
   class Indexer < Module
     ##
-    # @param [Symbol] schema
+    # @param [Hash{Symbol => Symbol}] rules
     def initialize(rules)
       define_method :to_solr do |*args|
         super(*args).tap do |document|

@@ -2,13 +2,10 @@
 module Hyrax
   module Collections
     module NestedCollectionQueryService
+      ##
       # @api private
       #
       # an encapsulation of a collection's nesting index attributes
-      #
-      # @param id [String] a collection id
-      # @param scope [Object] Typically a controller object that responds to `repository`, `can?`, `blacklight_config`, `current_ability`
-      # @return object [NestingAttributes]
       class NestingAttributes
         attr_accessor :parents, :pathnames, :ancestors, :depth, :id
 
@@ -25,6 +22,7 @@ module Hyrax
         end
       end
 
+      ##
       # @api public
       #
       # What possible collections can be nested within the given parent collection?
@@ -39,13 +37,17 @@ module Hyrax
         query_solr(collection: parent, access: :read, scope: scope, limit_to_id: limit_to_id, nest_direction: :as_child).documents
       end
 
+      ##
       # @api public
       #
       # What possible collections can the given child be nested within?
       #
       # @param child [::Collection]
-      # @param scope [Object] Typically a controller object that responds to `repository`, `can?`, `blacklight_config`, `current_ability`
-      # @param limit_to_id [nil, String] Limit the query to just check if the given id is in the response. Useful for validation.
+      # @param scope [Object] Typically a controller object that responds
+      #   to +repository+, +can?+, +blacklight_config+, +current_ability+
+      # @param limit_to_id [nil, String] Limit the query to just check if
+      #   the given id is in the response. Useful for validation.
+      #
       # @return [Array<SolrDocument>]
       def self.available_parent_collections(child:, scope:, limit_to_id: nil)
         return [] unless child.try(:nestable?)
@@ -53,14 +55,16 @@ module Hyrax
         query_solr(collection: child, access: :deposit, scope: scope, limit_to_id: limit_to_id, nest_direction: :as_parent).documents
       end
 
+      ##
       # @api public
       #
       # What collections is the given child nested within?
       #
       # @param child [::Collection]
-      # @param scope [Object] Typically a controller object that responds to `repository`, `can?`, `blacklight_config`, `current_ability`
+      # @param scope [Object] Typically a controller object that responds
+      #   to +repository+, +can?+, +blacklight_config+, +current_ability+
       # @param page [Integer] Starting page for pagination
-      # @param limit [Integer] Limit to number of collections for pagination
+      #
       # @return [Blacklight::Solr::Response]
       def self.parent_collections(child:, scope:, page: 1)
         return [] unless child.try(:nestable?)
@@ -69,12 +73,15 @@ module Hyrax
         scope.repository.search(query)
       end
 
+      ##
       # @api private
       #
       # @param collection [Collection]
       # @param access [Symbol] I need this kind of permission on the queried objects.
-      # @param scope [Object] Typically a controller object that responds to `repository`, `can?`, `blacklight_config`, `current_ability`
-      # @param limit_to_id [nil, String] Limit the query to just check if the given id is in the response. Useful for validation.
+      # @param scope [Object] Typically a controller object that responds
+      #   to +repository+, +can?+, +blacklight_config+, +current_ability+
+      # @param limit_to_id [nil, String] Limit the query to just check if the given
+      #   id is in the response. Useful for validation.
       # @param nest_direction [Symbol] :as_child or :as_parent
       def self.query_solr(collection:, access:, scope:, limit_to_id:, nest_direction:)
         nesting_attributes = NestingAttributes.new(id: collection.id, scope: scope)
@@ -92,30 +99,38 @@ module Hyrax
       end
       private_class_method :query_solr
 
+      ##
       # @api private
       #
-      # clean query for {!lucene} error
+      # clean query for +{!lucene}+ error
       #
       # @param builder [SearchBuilder]
       # @return [Blacklight::Solr::Request] cleaned and functional query
       def self.clean_lucene_error(builder:)
-        # TODO: Need to investigate further to understand why these particular queries using the where cause fail when others in the app apparently work
+        # TODO: Need to investigate further to understand why these particular queries
+        # using the where cause fail when others in the app apparently work
         query = builder.query.to_hash
         query['q'] = query['q'].gsub('{!lucene}', '') if query.key?('q')
         query
       end
 
+      ##
       # @api public
       #
-      # @note There is a short-circuit of logic; To be robust, we should ensure that the child and parent are in the corresponding available collections
+      # @note There is a short-circuit of logic; To be robust, we should ensure that the child
+      #   and parent are in the corresponding available collections
       #
       # Is it valid to nest the given child within the given parent?
       #
       # @param parent [::Collection]
       # @param child [::Collection]
-      # @param scope [Object] Typically a controller object that responds to `repository`, `can?`, `blacklight_config`, `current_ability`
+      # @param scope [Object] Typically a controller object that responds
+      #   to +repository+, +can?+, +blacklight_config+, +current_ability+
+      #
       # @return [Boolean] true if the parent can nest the child; false otherwise
-      # @todo Consider expanding from same collection type to a lookup table that says "This collection type can have within it, these collection types"
+      #
+      # @todo Consider expanding from same collection type to a lookup table that
+      #   says "This collection type can have within it, these collection types"
       def self.parent_and_child_can_nest?(parent:, child:, scope:)
         return false if parent == child # Short-circuit
         return false unless parent.collection_type_gid == child.collection_type_gid
@@ -129,8 +144,11 @@ module Hyrax
       # Does the nesting depth fall within defined limit?
       #
       # @param parent [::Collection]
-      # @param child [nil, ::Collection] will be nil if we are nesting a new collection under the parent
-      # @param scope [Object] Typically a controller object that responds to `repository`, `can?`, `blacklight_config`, `current_ability`
+      # @param child [nil, ::Collection] will be nil if we are nesting a new
+      #   collection under the parent
+      # @param scope [Object] Typically a controller object that responds
+      #   to +repository+, +can?+, +blacklight_config+, +current_ability+
+      #
       # @return [Boolean] true if the parent can nest the child; false otherwise
       def self.valid_combined_nesting_depth?(parent:, child: nil, scope:)
         # We limit the total depth of collections to the size specified in the samvera-nesting_indexer configuration.
@@ -145,7 +163,8 @@ module Hyrax
       # Get the child collection's nesting depth
       #
       # @param child [::Collection]
-      # @return [Fixnum] the largest number of collections in a path nested under this collection (including this collection)
+      # @return [Fixnum] the largest number of collections in a path nested
+      #   under this collection (including this collection)
       def self.child_nesting_depth(child:, scope:)
         return 1 if child.nil?
         # The nesting depth of a child collection is found by finding the largest nesting depth
@@ -177,7 +196,8 @@ module Hyrax
       # Get the parent collection's nesting depth
       #
       # @param parent [::Collection]
-      # @return [Fixnum] the largest number of collections above this collection (includes this collection)
+      # @return [Fixnum] the largest number of collections above
+      #   this collection (includes this collection)
       def self.parent_nesting_depth(parent:, scope:)
         return 1 if parent.nil?
         NestingAttributes.new(id: parent.id, scope: scope).depth

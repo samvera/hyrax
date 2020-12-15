@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Hyrax
   module Actors
-    # If there is a key `:remote_files' in the attributes, it attaches the files at the specified URIs
+    # If there is a key +:remote_files+ in the attributes, it attaches the files at the specified URIs
     # to the work. e.g.:
     #     attributes[:remote_files] = filenames.map do |name|
     #       { url: "https://example.com/file/#{name}", file_name: name }

@@ -7,7 +7,7 @@ module Wings
         @persister ||= Wings::Valkyrie::Persister.new(adapter: self)
       end
 
-      # @return [Class] {Valkyrie::Persistence::Postgres::QueryService}
+      # @return [Class] +Valkyrie::Persistence::Postgres::QueryService+
       def query_service
         @query_service ||= Wings::Valkyrie::QueryService.new(adapter: self)
       end
@@ -20,7 +20,7 @@ module Wings
         end
       end
 
-      # @return [Class] {Valkyrie::Persistence::Postgres::ResourceFactory}
+      # @return [Class] +Valkyrie::Persistence::Postgres::ResourceFactory+
       def resource_factory
         @resource_factory ||= Wings::Valkyrie::ResourceFactory.new(adapter: self)
       end

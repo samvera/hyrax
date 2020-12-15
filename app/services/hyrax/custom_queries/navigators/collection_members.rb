@@ -6,6 +6,7 @@ module Hyrax
       ##
       # Find members of collections and collections for members
       #
+      # @see https://github.com/samvera/valkyrie/wiki/Queries#custom-queries
       # @since 3.0.0
       class CollectionMembers
         ##

@@ -249,37 +249,37 @@ module Hyrax
       search_result_document(search_params)
     end
 
+    ##
     # Only returns unsuppressed documents the user has read access to
     #
     # @api public
     #
     # @param search_params [ActionController::Parameters] this should
-    # include an :id key, but based on implementation and use of the
-    # WorkSearchBuilder, it need not.
+    #   include an :id key, but based on implementation and use of the
+    #   WorkSearchBuilder, it need not.
     #
     # @return [SolrDocument]
     #
-    #
     # @raise [WorkflowAuthorizationException] when the object is not
-    # found via the search builder's search logic BUT the object is
-    # suppressed AND the user can read it (Yeah, it's confusing but
-    # after a lot of debugging that's the logic)
+    #   found via the search builder's search logic BUT the object is
+    #   suppressed AND the user can read it (Yeah, it's confusing but
+    #   after a lot of debugging that's the logic)
     #
     # @raise [CanCan::AccessDenied] when the object is not found via
-    # the search builder's search logic BUT the object is not
-    # supressed OR not readable by the user (Yeah.)
-
-    # @note This is Jeremy, I have suspicions about the first line of
-    #       this comment (eg, "Only return unsuppressed...").  The
-    #       reason is that I've encounter situations in the specs
-    #       where the document_list is empty but if I then query Solr
-    #       for the object by ID, I get a document that is NOT
-    #       suppressed AND can be read.  In other words, I believe
-    #       there is more going on in the search_results method
-    #       (e.g. a filter is being applied that is beyond what the
-    #       comment indicates)
+    #   the search builder's search logic BUT the object is not
+    #   supressed OR not readable by the user (Yeah.)
     #
-    # @see {#document_not_found!}
+    # @note This is Jeremy, I have suspicions about the first line of
+    #   this comment (eg, "Only return unsuppressed...").  The
+    #   reason is that I've encounter situations in the specs
+    #   where the document_list is empty but if I then query Solr
+    #   for the object by ID, I get a document that is NOT
+    #   suppressed AND can be read.  In other words, I believe
+    #   there is more going on in the search_results method
+    #   (e.g. a filter is being applied that is beyond what the
+    #   comment indicates)
+    #
+    # @see #document_not_found!
     def search_result_document(search_params)
       _, document_list = search_results(search_params)
       return document_list.first unless document_list.empty?

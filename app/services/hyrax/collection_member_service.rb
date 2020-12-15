@@ -1,6 +1,8 @@
 # frozen_string_literal: true
-# returns a list of solr documents for collections the item is a part of
+
 module Hyrax
+  ##
+  # Returns a list of solr documents for collections the item is a part of
   class CollectionMemberService
     include Blacklight::Configurable
     include Blacklight::SearchHelper
@@ -9,7 +11,9 @@ module Hyrax
 
     copy_blacklight_config_from(CatalogController)
 
+    ##
     # @param [SolrDocument] item represents a work
+    # @param [Hyrax::Ability] ability
     def self.run(item, ability)
       new(item, ability).list_collections
     end

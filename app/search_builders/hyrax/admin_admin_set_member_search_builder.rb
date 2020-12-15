@@ -8,14 +8,20 @@ module Hyrax
 
     attr_reader :collection
 
-    # @param [scope] Typically the controller object
-    # @param [::Collection]
+    ##
+    # @param [Object] scope Typically the controller object
+    # @param [::Collection] collection
     def initialize(scope:, collection:)
       @collection = collection
       super(scope)
     end
 
+    ##
     # include filters into the query to only include the admin_set members (regardless of status)
+    #
+    # @param [Hash] solr_parameters
+    #
+    # @return [void]
     def in_admin_set(solr_parameters)
       solr_parameters[:fq] ||= []
       solr_parameters[:fq] << "{!term f=#{Hyrax.config.admin_set_predicate.qname.last}_ssim}#{collection.id}"
