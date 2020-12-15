@@ -2,8 +2,8 @@
 
 module Hyrax
   ##
-  # This presenter wraps objects in the interface required by `IIIFManifiest`.
-  # It will accept either a Work-like resource or a SolrDocument.
+  # This presenter wraps objects in the interface required by +IIIFManifiest+.
+  # It will accept either a Work-like resource or a {SolrDocument}.
   #
   # @example with a work
   #
@@ -27,7 +27,7 @@ module Hyrax
 
     class << self
       ##
-      # @param [Hyrax::Resource, SolrDocument]
+      # @param [Hyrax::Resource, SolrDocument] model
       def for(model)
         klass = model.file_set? ? DisplayImagePresenter : IiifManifestPresenter
 

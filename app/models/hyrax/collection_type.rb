@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 module Hyrax
   class CollectionType < ActiveRecord::Base
+    # @!method id
+    #   @return [Integer]
+    # @!method description
+    #   @return [String]
+    # @!method machine_id
+    #   @return [String]
+    # @!method title
+    #   @return [String]
     self.table_name = 'hyrax_collection_types'
     validates :title, presence: true, uniqueness: true
     validates :machine_id, presence: true, uniqueness: true
@@ -16,6 +24,9 @@ module Hyrax
     ADMIN_SET_MACHINE_ID = 'admin_set'
     ADMIN_SET_DEFAULT_TITLE = I18n.t('hyrax.collection_type.admin_set_title', default: 'Admin Set').freeze
 
+    ##
+    # @note mints a #machine_id (?!)
+    # @return [void]
     def title=(value)
       super
       assign_machine_id
@@ -46,8 +57,8 @@ module Hyrax
 
     # Return an array of global identifiers for collection types that do not allow multiple membership.
     # @return [Array<String>] an array of Global Identifiers
-    # @see {#gid}
-    # @see Hyrax::MultipleMembershipChecker for usage
+    # @see #gid
+    # @see Hyrax::MultipleMembershipChecker
     def self.gids_that_do_not_allow_multiple_membership
       where(allow_multiple_membership: false).map(&:gid)
     end

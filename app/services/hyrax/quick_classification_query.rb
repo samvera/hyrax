@@ -12,9 +12,8 @@ module Hyrax
     attr_reader :user
 
     # @param [::User] user the current user
-    # @param [Hash] options
-    # @option options [#call] :concern_name_normalizer (String#constantize) a proc that translates names to classes
-    # @option options [Array<String>] :models the options to display, defaults to everything.
+    # @param [#call] concern_name_normalizer (String#constantize) a proc that translates names to classes
+    # @param [Array<String>] models the options to display, defaults to everything.
     def initialize(user,
                    models: Hyrax.config.registered_curation_concern_types,
                    concern_name_normalizer: ->(str) { str.constantize })

@@ -170,8 +170,6 @@ module Hyrax
       #
       # What types of collection can the user create or manage
       #
-      # @param user [User] user - The user requesting to create/manage a Collection
-      # @param roles [String] type of access, Hyrax::CollectionTypeParticipant::MANAGE_ACCESS and/or Hyrax::CollectionTypeParticipant::CREATE_ACCESS
       # @return [Array<Hyrax::CollectionType>]
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
       #   If calling from Abilities, pass the ability.  If you try to get the ability from the user, you end up in an infinit loop.

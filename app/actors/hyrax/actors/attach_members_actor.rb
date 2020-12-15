@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module Hyrax
   module Actors
+    ##
     # Attach or remove child works to/from this work. This decodes parameters
     # that follow the rails nested parameters conventions:
     # e.g.
@@ -9,12 +10,12 @@ module Hyrax
     #     '1' => { 'id' => '99981228', '_destroy' => 'true' }
     #   }
     #
-    # The goal of this actor is to mutate the ordered_members with as few writes
-    # as possible, because changing ordered_members is slow. This class only
+    # The goal of this actor is to mutate the +#ordered_members+ with as few writes
+    # as possible, because changing +#ordered_members+ is slow. This class only
     # writes changes, not the full ordered list.
     #
-    # The `env` for this actor may contain a `Valkyrie::Resource` or an
-    # `ActiveFedora::Base` model, as required by the
+    # The +env+ for this actor may contain a +Valkyrie::Resource+ or an
+    # +ActiveFedora::Base+ model, as required by the caller.
     class AttachMembersActor < Hyrax::Actors::AbstractActor
       # @param [Hyrax::Actors::Environment] env
       # @return [Boolean] true if update was successful
@@ -27,7 +28,8 @@ module Hyrax
       private
 
       # Attaches any unattached members.  Deletes those that are marked _delete
-      # @param [Hash<Hash>] a collection of members
+      # @param [Hyrax::Actors::Environment] env
+      # @param [Hash<Hash>] attributes_collection a collection of members
       #
       # rubocop:disable Metrics/CyclomaticComplexity
       # Complexity in this method is incleased by dual AF/Valkyrie support

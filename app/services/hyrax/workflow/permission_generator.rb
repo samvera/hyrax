@@ -3,6 +3,7 @@ require 'active_support/core_ext/array/wrap'
 
 module Hyrax
   module Workflow
+    ##
     # @api public
     #
     # This has three major uses:
@@ -17,28 +18,32 @@ module Hyrax
     # information.
     #
     # See the specs for more on what is happening, however the general idea is
-    # to encapsulate the logic of assigning :agents to the :role either for
-    # the :entity or the :workflow. Then creating the given :action_names for
-    # the :workflow and :workflow_state and granting permission in that
-    # :workflow_state for the given :role.
+    # to encapsulate the logic of assigning +:agents+ to the +:role+ either for
+    # the +:entity+ or the +:workflow+. Then creating the given +:action_names+ for
+    # the +:workflow+ and +:workflow_state+ and granting permission in that
+    # +:workflow_state+ for the given :role.
     #
     # @see Sipity::WorkflowResponsibility
     # @see Sipity::EntitySpecificResponsibility
-    # @note And yes this violates some kind of single responsibility principle as it has many different access points
+    # @note Yes this violates some kind of single responsibility principle as it has many different access points
     class PermissionGenerator
+      ##
       # @todo Extract public class level methods that expose each of the primary purposes (instead of relying on parameters)
       def self.call(**keywords, &block)
         new(**keywords, &block).call
       end
 
+      ##
       # @param [Array<Sipity::Role, #string>] roles - converted to Sipity::Role
       # @param [Sipity::Workflow] workflow -
       # @param [Array<Object>] agents -
-      # @param [Sipity::Entity] entity - if given
-      #                                          - will grant the given :agents the given :roles for the given :entity (e.g. Sipity::EntitySpecificResponsibility)
+      # @param keywords
+      # @option keywords [Sipity::Entity] :entity - if given
+      #                                          - will grant the given +:agents+ the given +:roles+ for the given +:entity+ (e.g. Sipity::EntitySpecificResponsibility)
       #                                  if NOT given
-      #                                          - will grant the given :agents the given :roles for the given :workflow (e.g. Sipity::WorkflowResponsibility)
-      # @param [Array<String>] action_names - it will wire-up the workflow, allowing the given :roles to take the given :actions
+      #                                          - will grant the given +:agents+ the given +:roles+ for the given +:workflow+ (e.g. Sipity::WorkflowResponsibility)
+      # @option keywords [Array<String>] action_names - it will wire-up the workflow, allowing the given +:roles+ to take the given +:actions+
+      #
       # @todo Extract public class level methods that expose each of the options (and don't rely on an external parameter list)
       def initialize(roles:, workflow:, agents: [], **keywords)
         self.roles = roles
