@@ -83,6 +83,8 @@ module Hyrax
       Hyrax::FixityStatusPresenter.new(id).render_file_set_status
     end
 
+    ##
+    # @return [WorkShowPresenter, nil] +nil+ if no parent can be found
     def parent
       @parent_presenter ||= fetch_parent_presenter
     end
