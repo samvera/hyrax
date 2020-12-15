@@ -102,6 +102,7 @@ module Hyrax
     def fetch_parent_presenter
       ids = Hyrax::SolrService.query("{!field f=member_ids_ssim}#{id}", fl: Hyrax.config.id_field)
                               .map { |x| x.fetch(Hyrax.config.id_field) }
+      Hyrax.logger.warn("Couldn't find a parent work for FileSet: #{id}.") if ids.empty?
       Hyrax::PresenterFactory.build_for(ids: ids,
                                         presenter_class: WorkShowPresenter,
                                         presenter_args: current_ability).first
