@@ -1,27 +1,27 @@
 # frozen_string_literal: true
 module Hyrax
-  # This class runs fixity checks on a FileSet, potentially on multiple
-  # files each with multiple versions in the FileSet.
+  ##
+  # This class runs fixity checks on a {FileSetBehavior}, potentially on multiple
+  # files each with multiple versions in the +FileSet+.
   #
-  # The FixityCheck itself is performed by FixityCheckJob, which
+  # The fixity check itself is performed by {FixityCheckJob}, which
   # just uses the fedora service to ask for fixity verification.
-  # The outcome will be some created ChecksumAuditLog (ActiveRecord)
+  # The outcome will be some created {ChecksumAuditLog} (ActiveRecord)
   # objects, recording the checks and their results.
   #
-  # By default this runs the checks async using ActiveJob, so
-  # returns no useful info -- the checks are still going on. Use
-  # FixityStatusService if you'd like a human-readable status based on
-  # latest recorded checks, or ChecksumAuditLog.latest_for_fileset_id
-  # if you'd like the the machine-readable checks.
+  # By default this runs the checks async using +ActiveJob+, so
+  # returns no useful info -- the checks are still going Use
+  # {ChecksumAuditLog.latest_for_file_set_id} to retrieve the latest
+  # machine-readable checks.
   #
-  # But if you initialize with `async_jobs: false`, checks will be done
-  # blocking in foreground, and you can get back the ChecksumAuditLog
+  # But if you initialize with +async_jobs: false+, checks will be done
+  # blocking in foreground, and you can get back the {ChecksumAuditLog}
   # records created.
   #
   # It will only run fixity checks if there are not recent
-  # ChecksumAuditLogs on record. "recent" is defined by
-  # `max_days_between_fixity_checks` arg, which defaults to config'd
-  # `Hyrax.config.max_days_between_fixity_checks`
+  # {ChecksumAuditLog}s on record. "recent" is defined by
+  # +max_days_between_fixity_checks+ arg, which defaults to configured
+  # {Hyrax::Configuration#max_days_between_fixity_checks}
   class FileSetFixityCheckService
     attr_reader :id, :latest_version_only,
                 :async_jobs, :max_days_between_fixity_checks
@@ -30,8 +30,8 @@ module Hyrax
     # @param async_jobs [Boolean] Run actual fixity checks in background. Default true.
     # @param max_days_between_fixity_checks [int] if an exisitng fixity check is
     #   recorded within this window, no new one will be created. Default
-    #   `Hyrax.config.max_days_between_fixity_checks`. Set to -1 to force
-    #    check.
+    #   {Hyrax::Configuration#max_days_between_fixity_checks}. Set to -1 to force
+    #   check.
     # @param latest_version_only [Booelan]. Check only latest version instead of all
     #   versions. Default false.
     def initialize(file_set,
@@ -68,7 +68,6 @@ module Hyrax
     # Retrieve or generate the fixity check for a file
     # (all versions are checked for versioned files unless latest_version_only set)
     # @param [ActiveFedora::File] file to fixity check
-    # @param [Array] log container for messages
     def fixity_check_file(file)
       versions = file.has_versions? ? file.versions.all : [file]
 

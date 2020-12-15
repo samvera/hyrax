@@ -11,8 +11,8 @@ module Hyrax
     # Defines which search_params_logic should be used when searching for Collection members
     self.default_processor_chain += [:member_of_collection]
 
-    # @param [scope] Typically the controller object
-    # @param [Symbol] :works, :collections, (anything else retrieves both)
+    # @param [Object] scope Typically the controller object
+    # @param [Symbol] search_includes_models +:works+ or +:collections+; (anything else retrieves both)
     def initialize(*args,
                    scope: nil,
                    collection: nil,

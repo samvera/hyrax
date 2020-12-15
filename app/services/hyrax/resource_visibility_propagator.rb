@@ -17,7 +17,7 @@ module Hyrax
     # @!attribute [r] persister
     #   @return [#save]
     # @!attribute [r] queries
-    #   @returrn [Valkyrie::Persistence::CustomQueryContainer]
+    #   @return [Valkyrie::Persistence::CustomQueryContainer]
     attr_reader :embargo_manager, :lease_manager, :persister, :queries
 
     ##
