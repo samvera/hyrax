@@ -139,7 +139,7 @@ module Hyrax
       when 'edit'
         add_breadcrumb I18n.t("hyrax.file_set.browse_view"), main_app.hyrax_file_set_path(params["id"])
       when 'show'
-        add_breadcrumb presenter.parent.to_s, main_app.polymorphic_path(presenter.parent)
+        add_breadcrumb presenter.parent.to_s, main_app.polymorphic_path(presenter.parent) if presenter.parent.present?
         add_breadcrumb presenter.to_s, main_app.polymorphic_path(presenter)
       end
     end
