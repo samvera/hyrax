@@ -4,18 +4,16 @@ module Hyrax
   # Events are timestamped, named actions that provide a streamed 'paper trail'
   # of certain repository activities.
   #
-  # Not to be confused with the `Dry::Events`-based pub/sub interface at
-  # `Hyrax::Publisher`.
+  # Not to be confused with the +Dry::Events+-based pub/sub interface at
+  # {Hyrax::Publisher}.
   #
-  # @see `Hyrax::RedisEventStore`
+  # @see Hyrax::RedisEventStore
   class Event
     ##
     # Creates an event in Redis
     #
-    # @note it's advisable to use Hyrax::TimeService for timestamps, or use the
-    #   `.create_now` method provided
-    #
-    # @example
+    # @note it's advisable to use {Hyrax::TimeService} for timestamps, or use the
+    #   {.create_now} method provided
     #
     # @param [String] action
     # @param [Integer] timestamp

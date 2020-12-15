@@ -3,19 +3,22 @@ require 'rails/generators/actions'
 require 'rails/generators/active_record'
 
 module Hyrax
-  # Hyrax::DatabaseMigrator is responsible for copying Hyrax's required database
-  # migrations into applications. Rails engines typically use the built-in
-  # `{ENGINE_NAME}:install:migrations` task to handle this; instead Hyrax
-  # follows the practice used by Devise to dynamically subclass migrations with
-  # the version of `ActiveRecord::Migration` corresponding to the version of
-  # Rails used by the application. This class was added to resolve Hyrax issue
-  # #2347
+  ##
+  # {Hyrax::DatabaseMigrator} is responsible for copying {Hyrax}'s required database
+  # migrations into applications.
+  #
+  # Rails engines typically use the built-in +[ENGINE_NAME]:install:migrations+
+  # task to handle this; instead {Hyrax} follows the practice used by +Devise+
+  # to dynamically subclass migrations with he version of +ActiveRecord::Migration+
+  # corresponding to the version of Rails used by the application.
   #
   # @see https://github.com/samvera/hyrax/issues/2347
   #
-  # @note Hyrax::DatabaseMigrator uses Rails' generator internals to avoid
-  #       having to re-implement code that knows how to copy migrations only if
-  #       needed
+  # @note {Hyrax::DatabaseMigrator} uses Rails' generator internals to avoid
+  #   having to re-implement code that knows how to copy migrations only if
+  #   needed.
+  #
+  # @note This class was added to resolve Hyrax issue #2347
   class DatabaseMigrator < Rails::Generators::Base
     # @note included to pick up AR's migration numbering algorithm
     include ActiveRecord::Generators::Migration

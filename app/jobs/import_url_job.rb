@@ -3,10 +3,14 @@ require 'uri'
 require 'tmpdir'
 require 'browse_everything/retriever'
 
-# Given a FileSet that has an import_url property,
-# download that file and put it into Fedora
-# Called by AttachFilesToWorkJob (when files are uploaded to s3)
-# and CreateWithRemoteFilesActor when files are located in some other service.
+##
+# Given a {FileSet} that has an +#import_url+ property, download that file and
+# deposit into Fedora.
+#
+# @note this is commonly called during deposit by {AttachFilesToWorkJob} (when
+#   files are uploaded directly as {Hyrax::UploadedFile}) and
+#   {Hyrax::Actors::CreateWithRemoteFilesActor} when files are located in
+#   some other service.
 class ImportUrlJob < Hyrax::ApplicationJob
   queue_as Hyrax.config.ingest_queue_name
   attr_reader :file_set, :operation, :headers, :user, :uri
@@ -16,6 +20,7 @@ class ImportUrlJob < Hyrax::ApplicationJob
     operation.pending_job(job)
   end
 
+  ##
   # @param [FileSet] file_set
   # @param [Hyrax::BatchCreateOperation] operation
   # @param [Hash] headers - header data to use in interaction with remote url
@@ -85,8 +90,9 @@ class ImportUrlJob < Hyrax::ApplicationJob
     Rails.logger.debug("ImportUrlJob: Closing #{File.join(dir, filename)}")
   end
 
+  ##
   # Send message to user on download failure
-  # @param filename [String] the filename of the file to download
+  #
   # @param error_message [String] the download error message
   def send_error(error_message)
     file_set.errors.add('Error:', error_message)

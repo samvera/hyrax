@@ -3,6 +3,7 @@
 module Hyrax
   ##
   # @abstract
+  #
   # The event store provides an interface to log numbered events into a storage
   # system, e.g. a key-value store.
   #
@@ -21,6 +22,10 @@ module Hyrax
   # @see Hyrax::Event
   class EventStore
     class << self
+      ##
+      # @!method logger
+      #   @return [Logger]
+      #   @see Hyrax.logger
       delegate :logger, to: Hyrax
 
       ##

@@ -1,41 +1,36 @@
 # frozen_string_literal: true
 module Hyrax
   module Actors
-    # When adding member FileSets to a Work, Hyrax saves
-    #   and reloads the work for each new member FileSet.
-    #   This can significantly slow down ingest for Works
-    #   with many member FileSets. The saving and reloading
-    #   happens in FileSetActor#attach_to_work.
+    ##
+    # When adding member {FileSetBehavior}s to a {WorkBehavior}, {Hyrax} saves
+    # and reloads the work for each new member FileSet. This can significantly
+    # slow down ingest for Works with many member FileSets. The saving and
+    # reloading happens in {FileSetActor#attach_to_work}.
     #
-    # This is a 'swappable' alternative approach. It will
-    #   be of most value to Hyrax applications dealing with
-    #   works with many filesets. Anecdotally, a 600 fileset
-    #   can be processed in ~15 mins versus >3 hours
-    #   with the standard approach.
+    # This is a 'swappable' alternative approach. It will be of most value to
+    # Hyrax applications dealing with works with many filesets. Anecdotally, a
+    # 600 FileSet work can be processed in ~15 mins versus >3 hours with the
+    # standard approach.
     #
-    # The tradeoff is that the ordered members are now added in a
-    #   single step after the creation of all the FileSets, thus
-    #   introducing a slight risk of orphan filesets if the upload
-    #   fails before the addition of the ordered members. This
-    #   has not been observed in practice.
+    # The tradeoff is that the ordered members are now added in a single step
+    # after the creation of all the FileSets, thus introducing a slight risk of
+    # orphan filesets if the upload fails before the addition of the ordered members.
+    # This has not been observed in practice.
     #
     # Swapping out the actors can be achieved thus:
     #
-    # In `config/initializers/hyrax.rb`:
-    # ```
-    # Hyrax::CurationConcern.actor_factory.swap(Hyrax::Actors::CreateWithFilesActor,
-    #   Hyrax::Actors::CreateWithRemoteFilesOrderedMembersActor)
-    # ```
-    # Alternatively, in `config/application.rb`:
-    # ```
-    # config.to_prepare
-    #   Hyrax::CurationConcern.actor_factory.swap(Hyrax::Actors::CreateWithFilesActor,
+    # In +config/initializers/hyrax.rb+:
+    #   Hyrax::CurationConcern.actor_factory.swap(Hyrax::Actors::CreateWithRemoteFilesActor,
     #     Hyrax::Actors::CreateWithRemoteFilesOrderedMembersActor)
-    # end
-    # ```
     #
-    # If there is a key `:remote_files' in the attributes, it attaches the files at the specified URIs
-    # to the work. e.g.:
+    # Alternatively, in +config/application.rb+:
+    #  config.to_prepare
+    #    Hyrax::CurationConcern.actor_factory.swap(Hyrax::Actors::CreateWithRemoteFilesActor,
+    #      Hyrax::Actors::CreateWithRemoteFilesOrderedMembersActor)
+    #  end
+    #
+    # If there is a key +:remote_files+ in the attributes, it attaches the files at
+    # the specified URIs to the work. e.g.:
     #     attributes[:remote_files] = filenames.map do |name|
     #       { url: "https://example.com/file/#{name}", file_name: name }
     #     end

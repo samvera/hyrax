@@ -34,7 +34,7 @@ module Hyrax
     ##
     # @param [Symbol] schema
     #
-    # @return [Hash<Symbol, Symbol>] a map from index keys to attribute names
+    # @return [{Symbol => Symbol}] a map from index keys to attribute names
     def index_rules_for(schema:)
       definitions(schema).each_with_object({}) do |definition, hash|
         definition.index_keys.each do |key|
