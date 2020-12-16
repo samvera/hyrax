@@ -163,21 +163,21 @@ workflows:
           hyrax_valkyrie: "true"
           requires:
             - build
-  ruby2-7-1:
+  ruby2-7-2:
     jobs:
       - bundle:
-          ruby_version: "2.7.1"
+          ruby_version: "2.7.2"
           rails_version: "5.2.4.3"
           bundler_version: "2.1.4"
       - build:
-          ruby_version: "2.7.1"
+          ruby_version: "2.7.2"
           rails_version: "5.2.4.3"
           bundler_version: "2.1.4"
           requires:
             - bundle
       - test:
-          name: "ruby2-7-1"
-          ruby_version: "2.7.1"
+          name: "ruby2-7-2"
+          ruby_version: "2.7.2"
           bundler_version: "2.1.4"
           requires:
             - build
