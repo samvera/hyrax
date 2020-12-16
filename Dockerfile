@@ -1,4 +1,4 @@
-ARG RUBY_VERSION=2.7.1
+ARG RUBY_VERSION=2.7.2
 FROM ruby:$RUBY_VERSION-alpine as hyrax-base
 
 ARG DATABASE_APK_PACKAGE="postgresql-dev"
