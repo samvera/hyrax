@@ -34,6 +34,7 @@ This starts containers for:
   - Postgresql
   - Redis
   - Memcached
+  - SideKiq (for background jobs)
 
 It also runs database migrations. This will also bring up a development application on `http://localhost:3000`.
 
