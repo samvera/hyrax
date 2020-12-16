@@ -29,6 +29,8 @@ services:
     volumes:
       - .dassie:/app/samvera/hyrax-webapp:cached
       - .:/app/samvera/hyrax-engine:cached
+      - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
+      - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
       - rails-public:/app/samvera/hyrax-webapp/public
       - rails-tmp:/app/samvera/hyrax-webapp/tmp
 
@@ -90,6 +92,21 @@ services:
     volumes:
       - redis:/data
 
+  sidekiq:
+    build:
+      context: .
+      target: hyrax-engine-dev-worker
+    env_file:
+      - .env
+      - .dassie/.env
+    volumes:
+      - .dassie:/app/samvera/hyrax-webapp:cached
+      - .:/app/samvera/hyrax-engine:cached
+      - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
+      - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
+      - sidekiq-public:/app/samvera/hyrax-webapp/public
+      - sidekiq-tmp:/app/samvera/hyrax-webapp/tmp
+
   solr:
     image: solr:8.7
     ports:
@@ -105,7 +122,11 @@ services:
 volumes:
   db:
   fcrepo:
+  hyrax-derivatives:
+  hyrax-uploads:
   rails-public:
   rails-tmp:
   redis:
+  sidekiq-public:
+  sidekiq-tmp:
   solr_home:

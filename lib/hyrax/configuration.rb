@@ -282,13 +282,25 @@ module Hyrax
     # Path on the local file system where derivatives will be stored
     attr_writer :derivatives_path
     def derivatives_path
-      @derivatives_path ||= ENV.fetch('HYRAX_DERIVATIVE_PATH', Rails.root.join('tmp', 'derivatives'))
+      @derivatives_path ||= ENV.fetch('HYRAX_DERIVATIVES_PATH', Rails.root.join('tmp', 'derivatives'))
     end
 
     # Path on the local file system where originals will be staged before being ingested into Fedora.
     attr_writer :working_path
     def working_path
       @working_path ||= ENV.fetch('HYRAX_UPLOAD_PATH', Rails.root.join('tmp', 'uploads'))
+    end
+
+    # @todo do we use both upload_path and working path?
+    # Path on the local file system where originals will be staged before being ingested into Fedora.
+    attr_writer :upload_path
+    def upload_path
+      @upload_path ||= ->() { ENV.fetch('HYRAX_UPLOAD_PATH') { Rails.root.join('tmp', 'uploads') } }
+    end
+
+    attr_writer :cache_path
+    def cache_path
+      @cache_path ||= ->() { ENV.fetch('HYRAX_CACHE_PATH') { Rails.root.join('tmp', 'cache') } }
     end
 
     # Path on the local file system where where log and banners will be stored.
@@ -619,17 +631,6 @@ module Hyrax
     attr_writer :audit_user_key
     def audit_user_key
       @audit_user_key ||= 'audituser@example.com'
-    end
-
-    # NOTE: This used to be called `working_path` in CurationConcerns
-    attr_writer :upload_path
-    def upload_path
-      @upload_path ||= ->() { Rails.root + 'tmp' + 'uploads' }
-    end
-
-    attr_writer :cache_path
-    def cache_path
-      @cache_path ||= ->() { Rails.root + 'tmp' + 'uploads' + 'cache' }
     end
 
     attr_writer :id_field
