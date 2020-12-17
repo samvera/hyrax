@@ -37,18 +37,19 @@ module Wings
     end
 
     def register(valkyrie, active_fedora)
-      @map[valkyrie] = active_fedora
+      @map[valkyrie.name] = active_fedora.name
     end
 
     def lookup(valkyrie)
       valkyrie = valkyrie._canonical_valkyrie_model if
         valkyrie.respond_to?(:_canonical_valkyrie_model)
 
-      @map.fetch(valkyrie) { ActiveFedoraConverter::DefaultWork(valkyrie) }
+      @map[valkyrie.name]&.safe_constantize ||
+        ActiveFedoraConverter::DefaultWork(valkyrie)
     end
 
     def reverse_lookup(active_fedora)
-      @map.rassoc(active_fedora)&.first
+      @map.rassoc(active_fedora.name)&.first&.safe_constantize
     end
   end
 end

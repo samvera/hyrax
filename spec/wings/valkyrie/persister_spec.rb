@@ -415,7 +415,6 @@ RSpec.describe Wings::Valkyrie::Persister do
     # internal_resource="Wings::ActiveFedoraConverter::DefaultWork"
     # so the CustomResource defined above will not be persisted as such.
     it "can find that resource again" do
-      Wings::ModelRegistry.register(resource_class, Custom)
       id = persister.save(resource: resource).id
       item = query_service.find_by(id: id)
       expect(item).to be_kind_of resource_class
