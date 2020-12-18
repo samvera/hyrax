@@ -90,7 +90,7 @@ spec:
             initialDelaySeconds: {{ default 15 .Values.healthCheck.initialDelay }}
           readinessProbe:
             httpGet:
-              path: /
+              path: /fcrepo
               port: http
             initialDelaySeconds: {{ default 15 .Values.healthCheck.initialDelay }}
           resources:
