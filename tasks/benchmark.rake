@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 namespace :wings do
-  unless Module.const_defined?(:APP_RAKEFILE) || ENV['CI']
+  if ENV['IN_DOCKER'] && !Module.const_defined?(:APP_RAKEFILE)
     APP_RAKEFILE = File.expand_path("Rakefile", Pathname.new(__dir__).join("..", "..", "hyrax-webapp"))
     load 'rails/tasks/engine.rake'
   end
