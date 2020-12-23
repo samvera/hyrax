@@ -98,11 +98,9 @@ RSpec.describe 'Collections Factory' do # rubocop:disable RSpec/DescribeClass
     end
 
     context 'with_nesting_attributes' do
-      let(:collection_type) { create(:collection_type) }
-      let(:blacklight_config) { CatalogController.blacklight_config }
-      let(:repository) { Blacklight::Solr::Repository.new(blacklight_config) }
+      let(:collection_type) { FactoryBot.create(:collection_type) }
       let(:current_ability) { instance_double(Ability, admin?: true) }
-      let(:scope) { double('Scope', can?: true, current_ability: current_ability, repository: repository, blacklight_config: blacklight_config) }
+      let(:scope) { FakeSearchBuilderScope.new(current_ability: current_ability) }
       let(:solr_doc) { Hyrax::SolrService.get("id:#{col.id}")["response"]["docs"].first }
       let(:nesting_attributes) do
         Hyrax::Collections::NestedCollectionQueryService::NestingAttributes.new(id: col.id, scope: scope)

@@ -1,57 +1,44 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::CollectionSearchBuilder do
-  let(:scope) do
-    double(blacklight_config: CatalogController.blacklight_config,
-           current_ability: ability)
-  end
-  let(:user) { create(:user) }
-  let(:ability) { ::Ability.new(user) }
-  let(:builder) { described_class.new(scope).with_access(access) }
+  subject(:builder) { described_class.new(scope).with_access(access) }
+  let(:access) { :read }
+  let(:user) { FactoryBot.create(:user) }
+  let(:scope) { FakeSearchBuilderScope.new(current_user: user) }
 
   describe '#sort_field' do
-    let(:access) { :read }
-
-    subject { builder.sort_field }
-
-    it { is_expected.to eq('title_si') }
+    its(:sort_field) { is_expected.to eq('title_si') }
   end
 
   describe '#models' do
-    let(:access) { :read }
-
-    subject { builder.models }
-
-    it { is_expected.to eq([Collection]) }
+    its(:models) { is_expected.to eq([Collection]) }
   end
 
   describe '#discovery_permissions' do
-    subject { builder.discovery_permissions }
-
     context 'when access is read' do
       let(:access) { :read }
 
-      it { is_expected.to eq %w[edit read] }
+      its(:discovery_permissions) { is_expected.to eq %w[edit read] }
     end
 
     context 'when access is edit' do
       let(:access) { :edit }
 
-      it { is_expected.to eq %w[edit] }
+      its(:discovery_permissions) { is_expected.to eq %w[edit] }
     end
 
     context 'when access is deposit' do
       let(:access) { :deposit }
 
-      it { is_expected.to eq %w[deposit] }
+      its(:discovery_permissions) { is_expected.to eq %w[deposit] }
     end
   end
 
   describe '#gated_discovery_filters' do
-    subject { builder.gated_discovery_filters(access, ability) }
+    subject { builder.gated_discovery_filters(access, ::Ability.new(user)) }
 
     context 'when access is :deposit' do
       let(:access) { "deposit" }
-      let!(:collection) { create(:collection_lw, with_permission_template: attributes) }
+      let!(:collection) { FactoryBot.create(:collection_lw, with_permission_template: attributes) }
 
       context 'and user has access' do
         let(:attributes) { { deposit_users: [user.user_key] } }
