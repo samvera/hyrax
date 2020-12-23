@@ -1,6 +1,6 @@
 # Search Builders
 
-Building searches is core to any Blacklight app, and Hyrax is no exception.  
+Building searches is core to any Blacklight app, and Hyrax is no exception.
 This directory contains our Search Builders, so named because the design followed a builder pattern, meaning
 that when invoked to set values, methods return the object itself, so that invocations can be chained, like:
 
@@ -11,13 +11,13 @@ builder = Blacklight::SearchBuilder.new(processor_chain, scope)
             .with(q: 'Abraham Lincoln')
 ```
 
-However, at this level, many if not most of the additional methods do not follow this pattern.  
+However, at this level, many if not most of the additional methods do not follow this pattern.
 Refer to the `Blacklight::SearchBuilder` class if you want to be certain.  That leads to the next topic...
 
 ## Ancestry
 
 Most of the SearchBuilders have `::SearchBuilder` as a parent or ancestor.  `::SearchBuilder` does not exist in any repo: it is generated
-by Blacklight and modified by Hyrax.  Others descend from `Blacklight::SearchBuilder`, or various other relatives.  
+by Blacklight and modified by Hyrax.  Others descend from `Blacklight::SearchBuilder`, or various other relatives.
 
 ### ::SearchBuilder
 
