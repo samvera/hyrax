@@ -1,31 +1,19 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::My::WorksSearchBuilder do
-  let(:me) { create(:user) }
-  let(:config) { CatalogController.blacklight_config }
-  let(:scope) do
-    double('The scope',
-           blacklight_config: config,
-           params: {},
-           current_ability: Ability.new(me),
-           current_user: me)
-  end
-  let(:builder) { described_class.new(scope) }
+  subject(:builder) { described_class.new(scope) }
+  let(:me) { FactoryBot.create(:user) }
+  let(:scope) { FakeSearchBuilderScope.new(current_user: me) }
 
   describe "#to_hash" do
     before do
-      # This prevents any generated classes from interfering with this test:
-      allow(builder).to receive(:work_classes).and_return([GenericWork])
-
       allow(ActiveFedora::SolrQueryBuilder).to receive(:construct_query_for_rel)
         .with(depositor: me.user_key)
         .and_return("depositor")
     end
 
-    subject { builder.to_hash['fq'] }
-
     it "filters works that we are the depositor of" do
-      expect(subject).to eq ["{!terms f=has_model_ssim}GenericWork",
-                             "depositor"]
+      expect(builder.to_hash['fq'])
+        .to contain_exactly start_with("{!terms f=has_model_ssim}"), "depositor"
     end
   end
 

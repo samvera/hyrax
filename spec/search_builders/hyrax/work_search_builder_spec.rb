@@ -1,13 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::WorkSearchBuilder do
-  let(:me) { create(:user) }
-  let(:config) { CatalogController.blacklight_config }
-  let(:scope) do
-    double('The scope',
-           blacklight_config: config,
-           current_ability: Ability.new(me),
-           current_user: me)
-  end
+  let(:me) { FactoryBot.create(:user) }
+  let(:scope) { FakeSearchBuilderScope.new(current_user: me) }
   let(:builder) { described_class.new(scope).with(params) }
   let(:params) { { id: '123abc' } }
 
