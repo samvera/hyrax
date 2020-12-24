@@ -81,8 +81,9 @@ module Hyrax
     end
 
     # Method to return the model
-    def hydra_model
-      "::#{first('has_model_ssim')}".safe_constantize
+    def hydra_model(classifier: ActiveFedora.model_mapper)
+      "::#{first('has_model_ssim')}".safe_constantize ||
+        classifier.classifier(self).best_model
     end
 
     def depositor(default = '')
