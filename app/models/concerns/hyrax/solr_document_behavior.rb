@@ -1,5 +1,17 @@
 # frozen_string_literal: true
 module Hyrax
+  ##
+  # @api public
+  #
+  # Hyrax extensions for +Blacklight+'s generated +SolrDocument+.
+  #
+  # @example using with +Blacklight::Solr::Document+
+  #   class SolrDocument
+  #     include Blacklight::Solr::Document
+  #     include Hyrax::SolrDocumentBehavior
+  #   end
+  #
+  # @see https://github.com/projectblacklight/blacklight/wiki/Understanding-Rails-and-Blacklight#models
   module SolrDocumentBehavior
     extend ActiveSupport::Concern
     include Hydra::Works::MimeTypes
