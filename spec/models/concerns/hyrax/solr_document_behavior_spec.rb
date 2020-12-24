@@ -11,6 +11,36 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
     end
   end
 
+  describe '#hydra_model' do
+    it 'gives ActiveFedora::Base by default' do
+      expect(solr_document.hydra_model).to eq ActiveFedora::Base
+    end
+
+    context 'with an ActiveFedora model name' do
+      let(:solr_hash) { { 'has_model_ssim' => 'GenericWork' } }
+
+      it 'resolves the correct model name' do
+        expect(solr_document.hydra_model).to eq GenericWork
+      end
+    end
+
+    context 'with a Valkyrie model name' do
+      let(:solr_hash) { { 'has_model_ssim' => 'Monograph' } }
+
+      it 'resolves the correct model name' do
+        expect(solr_document.hydra_model).to eq Monograph
+      end
+    end
+
+    context 'with a Wings model name' do
+      let(:solr_hash) { { 'has_model_ssim' => 'Wings(Monograph)' } }
+
+      it 'gives an appropriate generated ActiveFedora class' do
+        expect(solr_document.hydra_model.inspect).to eq 'Wings(Monograph)'
+      end
+    end
+  end
+
   describe '#itemtype' do
     it 'defaults to CreativeWork' do
       expect(solr_document.itemtype).to eq 'http://schema.org/CreativeWork'
