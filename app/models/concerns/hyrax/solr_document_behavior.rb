@@ -27,28 +27,47 @@ module Hyrax
       title_or_label.to_s
     end
 
+    ##
+    # Given a model class and an +id+, provides +ActiveModel+ style model methods.
+    #
+    # @note access this via {SolrDocumentBehavior#to_model}.
     class ModelWrapper
+      ##
+      # @api private
+      #
+      # @param [Class] model
+      # @param [String, nil] id
       def initialize(model, id)
         @model = model
         @id = id
       end
 
+      ##
+      # @api public
       def persisted?
         true
       end
 
+      ##
+      # @api public
       def to_param
         @id
       end
 
+      ##
+      # @api public
       def model_name
         @model.model_name
       end
 
+      ##
+      # @api public
       def to_partial_path
         @model._to_partial_path
       end
 
+      ##
+      # @api public
       def to_global_id
         URI::GID.build app: GlobalID.app, model_name: model_name.name, model_id: @id
       end

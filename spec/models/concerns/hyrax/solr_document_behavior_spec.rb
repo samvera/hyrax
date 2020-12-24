@@ -93,6 +93,40 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
     end
   end
 
+  describe '#to_model' do
+    it 'defaults to a wrapped ActiveFedora::Base' do
+      expect(solr_document.to_model.model_name.to_s).to eq 'ActiveFedora::Base'
+    end
+
+    context 'with an ActiveFedora model name' do
+      let(:solr_hash) { { 'has_model_ssim' => 'GenericWork' } }
+
+      it 'wraps the specified model' do
+        expect(solr_document.to_model.model_name.to_s).to eq 'GenericWork'
+      end
+    end
+
+    context 'with a Valkyrie model name' do
+      let(:solr_hash) { { 'has_model_ssim' => 'Monograph' } }
+
+      it 'resolves the correct model name' do
+        expect(solr_document.to_model.model_name.to_s).to eq 'Monograph'
+      end
+    end
+
+    context 'with a Wings model name' do
+      let(:solr_hash) { { 'has_model_ssim' => 'Wings(Monograph)', 'id' => '123' } }
+
+      it 'gives the original valkyrie class' do
+        expect(solr_document.to_model.model_name.to_s).to eq 'Monograph'
+      end
+
+      it 'gives the global id for the valkyrie class' do
+        expect(solr_document.to_model.to_global_id.to_s).to end_with('Monograph/123')
+      end
+    end
+  end
+
   describe '#to_s' do
     it 'defaults to empty string' do
       expect(solr_document.to_s).to eq ''
