@@ -1,5 +1,24 @@
 # frozen_string_literal: true
 module Hyrax
+  ##
+  # Provides Hyrax's engine level user/group permissions.
+  #
+  # @note This is intended as a mixin layered over
+  # +Blacklight::AccessControls::Ability+ and +Hydra::AccessControls+. Its
+  # implementation may depend in part on behavioral details of either of those
+  # two mixins. As of Hyrax 3.0.0 there's an ongoing effort to clarify and
+  # document the specific dependencies.
+  #
+  # @example creating an application Ability
+  #
+  # # app/models/ability.rb
+  # class Ability
+  #   include Hydra::Ability
+  #   include Hyrax::Ability
+  # end
+  #
+  # @see https://www.rubydoc.info/github/CanCanCommunity/cancancan
+  # @see https://www.rubydoc.info/gems/blacklight-access_controls/
   module Ability
     extend ActiveSupport::Concern
 
