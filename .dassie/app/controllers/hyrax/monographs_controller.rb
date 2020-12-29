@@ -10,11 +10,6 @@ module Hyrax
     include Hyrax::BreadcrumbsForWorks
     self.curation_concern_type = ::Monograph
 
-    # Use the Wings search builder for Valkyrie models until legacy ActiveFedora
-    # indexing is turned off. See:
-    # https://github.com/samvera/hyrax/wiki/Hyrax-Valkyrie-Usage-Guide#indexing
-    self.search_builder_class = Wings::WorkSearchBuilder(::Monograph)
-
     # Use a Valkyrie aware form service to generate Valkyrie::ChangeSet style
     # forms.
     self.work_form_service = Hyrax::FormFactory.new

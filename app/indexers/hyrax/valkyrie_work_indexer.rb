@@ -13,9 +13,9 @@ module Hyrax
       super.tap do |solr_doc|
         solr_doc['generic_type_sim'] = ['Work']
         solr_doc['suppressed_bsi'] = suppressed?(resource)
-        solr_doc['admin_set_id_ssim'] = [resource.admin_set_id]
-        solr_doc['member_of_collection_ids_ssim'] = resource.member_of_collection_ids
-        solr_doc['member_ids_ssim'] = resource.member_ids
+        solr_doc['admin_set_id_ssim'] = [resource.admin_set_id.to_s]
+        solr_doc['member_of_collection_ids_ssim'] = resource.member_of_collection_ids.map(&:to_s)
+        solr_doc['member_ids_ssim'] = resource.member_ids.map(&:to_s)
       end
     end
 

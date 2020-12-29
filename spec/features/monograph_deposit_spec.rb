@@ -27,7 +27,7 @@ RSpec.describe 'Creating a new Monograph (Valkyrie work)', :js, :workflow, :clea
     end
 
     click_link "Descriptions" # switch tab
-    fill_in('Title', with: 'Monograph Work')
+    fill_in('Title', with: 'Monograph Work (created by test)')
     fill_in('Creator', with: 'Tove Jansson')
     fill_in('Record info', with: 'some details about the record')
 
@@ -40,8 +40,10 @@ RSpec.describe 'Creating a new Monograph (Valkyrie work)', :js, :workflow, :clea
     monograph = Hyrax.query_service.find_by(id: monograph_id)
 
     expect(monograph)
-      .to have_attributes(title: contain_exactly('Monograph Work'),
+      .to have_attributes(title: contain_exactly('Monograph Work (created by test)'),
                           creator: contain_exactly('Tove Jansson'),
                           record_info: 'some details about the record')
+
+    expect(page).to have_content('Monograph Work (created by test)')
   end
 end
