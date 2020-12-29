@@ -75,6 +75,10 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
           .to have_attributes(title: ['comet in moominland'], distant_relation: ['Snufkin'])
       end
 
+      it 'supports indexing' do
+        expect(converter.convert.indexing_service).to be_a Hyrax::ValkyrieIndexer
+      end
+
       it 'does not add superflous metadata'
       it 'converts single-valued fields'
       it 'supports nested resources'

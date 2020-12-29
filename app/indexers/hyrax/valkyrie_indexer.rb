@@ -73,6 +73,13 @@ module Hyrax
       }
     end
 
+    ##
+    # @api private
+    # @note provided for ActiveFedora compatibility.
+    def generate_solr_document
+      to_solr.stringify_keys
+    end
+
     class << self
       ##
       # @api public
@@ -81,23 +88,27 @@ module Hyrax
       # @note This factory will attempt to return an indexer following a naming convention
       #   where the indexer for a resource class is expected to be the class name
       #   appended with 'Indexer'.  It will return default {ValkyrieIndexer} if
-      #   an indexer following the naming convention is not found or the resource
-      #   is the reserved {Hyrax::Resource} which should use {ValkyrieIndexer}
-      #   instead of the base implementation in {Hyrax::ResourceIndexer}.
+      #   an indexer class following the naming convention is not found.
       #
       # @return [Valkyrie::Indexer] an instance of ValkyrieIndexer or an inherited class based on naming convention
       #
       # @example
       #     ValkyrieIndexer.for(resource: Book.new) # => #<BookIndexer ...>
       def for(resource:)
-        indexer_class = resource.class.name == 'Hyrax::Resource' ? ValkyrieIndexer : indexer_from_classname(resource)
-        indexer_class.new(resource: resource)
+        indexer_class_for(resource).new(resource: resource)
       end
 
       private
 
-      def indexer_from_classname(resource)
-        "#{resource.class.name}Indexer".safe_constantize || ValkyrieIndexer
+      ##
+      # @param [Object]
+      # @return [Class]
+      def indexer_class_for(resource)
+        indexer_class = "#{resource.class.name}Indexer".safe_constantize
+
+        return indexer_class if indexer_class.is_a?(Class) &&
+                                indexer_class.instance_methods.include?(:to_solr)
+        ValkyrieIndexer
       end
     end
   end

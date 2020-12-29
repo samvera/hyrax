@@ -117,6 +117,10 @@ module Wings
         alias to_s inspect
       end
 
+      def indexing_service
+        Hyrax::ValkyrieIndexer.for(resource: valkyrie_resource)
+      end
+
       def to_global_id
         GlobalID.create(valkyrie_class.new(id: id))
       end
