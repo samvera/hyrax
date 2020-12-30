@@ -25,7 +25,6 @@ module Hyrax
       # @return [String] path of the working file
       def copy_repository_resource_to_working_directory(file, id)
         Rails.logger.debug "Loading #{file.original_name} (#{file.id}) from the repository to the working directory"
-        # TODO: this causes a load into memory, which we'd like to avoid
         copy_stream_to_working_directory(id, file.original_name, StringIO.new(file.content))
       end
 

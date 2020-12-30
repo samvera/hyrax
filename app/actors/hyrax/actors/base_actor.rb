@@ -92,7 +92,6 @@ module Hyrax
 
       # Cast any singular values from the form to multiple values for persistence
       # also remove any blank assertions
-      # TODO this method could move to the work form.
       def clean_attributes(attributes)
         attributes[:license] = Array(attributes[:license]) if attributes.key? :license
         attributes[:rights_statement] = Array(attributes[:rights_statement]) if attributes.key? :rights_statement

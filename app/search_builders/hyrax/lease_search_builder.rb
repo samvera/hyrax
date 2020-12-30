@@ -4,7 +4,6 @@ module Hyrax
   class LeaseSearchBuilder < Blacklight::SearchBuilder
     self.default_processor_chain = [:with_pagination, :with_sorting, :only_active_leases]
 
-    # TODO: add more complex pagination
     def with_pagination(solr_params)
       solr_params[:rows] = 1000
     end

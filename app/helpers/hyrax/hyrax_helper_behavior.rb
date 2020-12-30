@@ -175,7 +175,6 @@ module Hyrax
     # @option field [Array] :value array of values for the field
     # @param show_link [Boolean]
     # @return [ActiveSupport::SafeBuffer]
-    # @todo stop being a helper_method, start being part of the Blacklight render stack?
     def iconify_auto_link(field, show_link = true)
       if field.is_a? Hash
         options = field[:config].separator_options || {}

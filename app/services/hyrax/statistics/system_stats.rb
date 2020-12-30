@@ -2,7 +2,6 @@
 module Hyrax
   module Statistics
     # A class that retrieves system level statistics about the system
-    # TODO: this class could be refactored into several classes.
     #
     # @attr_reader [Integer] limit      limits the results returned from top_depositors and top_formats
     #                             Default is 5, maximum is 20, minimum is 5

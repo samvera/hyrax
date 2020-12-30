@@ -38,8 +38,7 @@ module Hyrax
             path.start_with?(dir) && path.length > dir.length
           end
         else
-          # TODO: It might be a good idea to validate other URLs as well.
-          #       The server can probably access URLs the user can't.
+          Rails.logger.debug "Assuming #{uri.scheme} uri is valid without a serious attempt to validate: #{uri}"
           true
         end
       end

@@ -40,7 +40,6 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
     )
   end
 
-  # TODO: extract to Valkyrie?
   define :have_a_valkyrie_alternate_id_of do |expected_id_str|
     match do |valkyrie_resource|
       valkyrie_resource.alternate_ids.map(&:id).include?(expected_id_str)

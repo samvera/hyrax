@@ -17,7 +17,6 @@ module Hyrax
                    end
     end
 
-    # TODO: make this a lazy enumerator
     def to_flots(stats)
       stats.map(&:to_flot)
     end
