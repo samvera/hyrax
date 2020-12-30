@@ -24,11 +24,6 @@ module Hyrax
           can :view_admin_show, AdminSet do |admin_set| # admin show page # for test by solr_doc, see collection_ability.rb
             Hyrax::Collections::PermissionsService.can_view_admin_show_for_collection?(ability: self, collection_id: admin_set.id)
           end
-
-          # TODO: I don't think these are needed anymore since there isn't a public show page.  Should be checking :view_admin_show ability
-          can :read, AdminSet do |admin_set| # for test by solr_doc, see solr_document_ability.rb
-            test_read(admin_set.id)
-          end
         end
 
         # TODO: I'm not sure why this is checked with AdminSet abilities.  It was before the refactor and since I'm not sure what the connection is, I left it here.
