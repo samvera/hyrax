@@ -18,8 +18,6 @@ module Hyrax
     end
 
     attr_reader :ids, :presenter_class, :presenter_args
-    alias klass presenter_class
-    deprecation_deprecate klass: "use #presenter_class instead"
 
     def initialize(ids:, presenter_class:, presenter_args:)
       @ids = ids
