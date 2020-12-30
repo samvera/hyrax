@@ -50,7 +50,6 @@ module Hyrax
           DepositSearchBuilder.new([:include_depositor_facet, :filter_models], self)
         end
 
-        # TODO: This can probably be pushed into the DepositSearchBuilder
         def query
           search_builder.merge(q: date_query).query
         end

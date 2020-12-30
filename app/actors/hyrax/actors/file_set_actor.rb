@@ -186,7 +186,6 @@ module Hyrax
       end
 
       # switches between using valkyrie to save or active fedora to save
-      # TODO: Remove this method when env passes resources instead of active fedora objects
       def perform_save(object)
         obj_to_save = object_to_act_on(object)
         if valkyrie_object?(obj_to_save)
@@ -201,14 +200,12 @@ module Hyrax
       end
 
       # if passed a resource or if use_valkyrie==true, object to act on is the valkyrie resource
-      # TODO: Remove this method when env passes resources instead of active fedora objects
       def object_to_act_on(object)
         return object if valkyrie_object?(object)
         use_valkyrie ? object.valkyrie_resource : object
       end
 
       # determine if the object is a valkyrie resource
-      # TODO: Remove this method when env passes resources instead of active fedora objects
       def valkyrie_object?(object)
         object.is_a? Valkyrie::Resource
       end

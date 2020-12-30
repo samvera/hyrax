@@ -42,7 +42,6 @@ module Hyrax
       # @param ability [Ability] the ability coming from cancan ability check
       # @return [Array<String>] IDs of admin sets for which the user has specified roles
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
-      # TODO: MOVE TO ABILITY
       def self.admin_set_ids_for_user(access:, ability:)
         source_ids_for_user(access: access, ability: ability, source_type: 'admin_set')
       end

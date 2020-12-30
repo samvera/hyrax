@@ -22,12 +22,10 @@ module Hyrax
 
     private
 
-    # TODO: could this be moved to Blacklight::AccessControls::Enforcement?
     def current_user_key
       current_user.user_key
     end
 
-    # TODO: could this be moved to Blacklight::AccessControls::Enforcement?
     def current_user
       scope.current_user
     end
