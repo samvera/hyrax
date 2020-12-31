@@ -81,7 +81,7 @@ module Hyrax
     ##
     # @return [Enumerable<Collection, PcdmCollection>]
     def collections(use_valkyrie: false)
-      return [] unless gid
+      return [] unless id
       return Hyrax.custom_queries.find_collections_by_type(global_id: gid) if use_valkyrie
       ActiveFedora::Base.where(collection_type_gid_ssim: gid.to_s)
     end
@@ -149,15 +149,13 @@ module Hyrax
     end
 
     def ensure_no_settings_changes_for_admin_set_type
-      return true unless admin_set? && exists_for_machine_id?(ADMIN_SET_MACHINE_ID)
-      return true unless collection_type_settings_changed?
+      return true unless admin_set? && collection_type_settings_changed? && exists_for_machine_id?(ADMIN_SET_MACHINE_ID)
       errors[:base] << I18n.t('hyrax.admin.collection_types.errors.no_settings_change_for_admin_sets')
       throw :abort
     end
 
     def ensure_no_settings_changes_for_user_collection_type
-      return true unless user_collection? && exists_for_machine_id?(USER_COLLECTION_MACHINE_ID)
-      return true unless collection_type_settings_changed?
+      return true unless user_collection? && collection_type_settings_changed? && exists_for_machine_id?(USER_COLLECTION_MACHINE_ID)
       errors[:base] << I18n.t('hyrax.admin.collection_types.errors.no_settings_change_for_user_collections')
       throw :abort
     end
@@ -170,8 +168,7 @@ module Hyrax
     end
 
     def collection_type_settings_changed?
-      (changes.keys & ['nestable', 'brandable', 'discoverable', 'sharable', 'share_applies_to_new_works', 'allow_multiple_membership',
-                       'require_membership', 'assigns_workflow', 'assigns_visibility']).any?
+      (changes.keys & ['nestable', 'brandable', 'discoverable', 'sharable', 'share_applies_to_new_works', 'allow_multiple_membership', 'require_membership', 'assigns_workflow', 'assigns_visibility']).any?
     end
 
     def exists_for_machine_id?(machine_id)
