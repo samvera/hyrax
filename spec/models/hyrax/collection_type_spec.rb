@@ -206,9 +206,7 @@ RSpec.describe Hyrax::CollectionType, type: :model do
   end
 
   describe '#save' do
-    before do
-      allow(collection_type).to receive(:changes).and_return('nestable' => false)
-    end
+    before { collection_type.nestable = !collection_type.nestable }
 
     context 'for non-special collection type' do
       include_context 'with a collection'
