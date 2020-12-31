@@ -40,7 +40,7 @@ module Hyrax
       end
     end
 
-    delegate(*Hyrax::CollectionType.collection_type_settings_methods, to: :collection_type)
+    delegate(*Hyrax::CollectionType.settings_attributes, to: :collection_type)
 
     # Get the collection_type when accessed
     def collection_type

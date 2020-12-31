@@ -27,7 +27,7 @@ module Hyrax
     delegate :stringify_keys, :human_readable_type, :collection?, :representative_id,
              :to_s, to: :solr_document
 
-    delegate(*Hyrax::CollectionType.collection_type_settings_methods, to: :collection_type, prefix: :collection_type_is)
+    delegate(*Hyrax::CollectionType.settings_attributes, to: :collection_type, prefix: :collection_type_is)
 
     def collection_type
       @collection_type ||= Hyrax::CollectionType.find_by_gid!(collection_type_gid)

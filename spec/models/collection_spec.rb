@@ -148,11 +148,11 @@ RSpec.describe ::Collection, type: :model do
 
     it 'throws ActiveRecord::RecordNotFound if cannot find collection type for the gid' do
       gid = 'gid://internal/hyrax-collectiontype/999'
-      expect { collection.collection_type_gid = gid }.to raise_error(ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID '#{gid}'")
+      expect { collection.collection_type_gid = gid }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'throws ActiveRecord::RecordNotFound if set to nil' do
-      expect { collection.collection_type_gid = nil }.to raise_error(ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID ''")
+      expect { collection.collection_type_gid = nil }.to raise_error(URI::InvalidURIError)
     end
 
     it 'updates the collection_type instance variable' do
