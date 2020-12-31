@@ -1,33 +1,43 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::CollectionType, type: :model do
-  let(:collection_type) { build(:collection_type) }
+  subject(:collection_type) { FactoryBot.build(:collection_type) }
 
   shared_context 'with a collection' do
-    let(:collection_type) { create(:collection_type) }
-
-    before do
-      FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: collection_type.gid)
-    end
+    let(:collection_type) { FactoryBot.create(:collection_type) }
+    let!(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: collection_type.gid) }
   end
 
   describe '.collection_type_settings_methods' do
-    subject { described_class.collection_type_settings_methods }
-
-    it { is_expected.to be_a(Array) }
+    it 'lists collection settings methods' do # deprecated
+      expect(described_class.collection_type_settings_methods)
+        .to include(:nestable?, :discoverable?, :brandable?)
+    end
   end
 
   describe '#collection_type_settings_methods' do
-    subject { described_class.new.collection_type_settings_methods }
-
-    it { is_expected.to be_a(Array) }
+    it 'lists collection settings methods' do # deprecated
+      expect(collection_type.collection_type_settings_methods)
+        .to include(:nestable?, :discoverable?, :brandable?)
+    end
   end
 
-  it "has basic metadata" do
-    expect(collection_type).to respond_to(:title)
-    expect(collection_type.title).not_to be_empty
-    expect(collection_type).to respond_to(:description)
+  describe '.settings_attributes' do
+    it 'lists collection settings methods' do
+      expect(described_class.settings_attributes)
+        .to include(:nestable?, :discoverable?, :brandable?)
+    end
+  end
+
+  it 'has a description' do
     expect(collection_type.description).not_to be_empty
-    expect(collection_type).to respond_to(:machine_id)
+  end
+
+  it 'has a machine_id' do
+    expect(collection_type.machine_id).not_to be_empty
+  end
+
+  it 'has a title' do
+    expect(collection_type.title).not_to be_empty
   end
 
   it "has configuration properties with defaults" do
@@ -143,11 +153,12 @@ RSpec.describe Hyrax::CollectionType, type: :model do
     end
 
     it 'raises error if collection type with gid does NOT exist' do
-      expect { described_class.find_by_gid!(nonexistent_gid) }.to raise_error(ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID '#{nonexistent_gid}'")
+      expect { described_class.find_by_gid!(nonexistent_gid) }
+        .to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'raises error if passed nil' do
-      expect { described_class.find_by_gid!(nil) }.to raise_error(ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID ''")
+      expect { described_class.find_by_gid!(nil) }.to raise_error(URI::InvalidURIError)
     end
   end
 

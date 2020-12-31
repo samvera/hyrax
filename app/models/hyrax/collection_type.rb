@@ -18,6 +18,10 @@ module Hyrax
     before_destroy :ensure_no_collections
     has_many :collection_type_participants, class_name: 'Hyrax::CollectionTypeParticipant', foreign_key: 'hyrax_collection_type_id', dependent: :destroy
 
+    SETTINGS_ATTRIBUTES = # these need to updated in tandem with database migrations, use `.settings_attributes`
+      [:nestable?, :discoverable?, :brandable?, :sharable?, :share_applies_to_new_works?, :allow_multiple_membership?,
+       :require_membership?, :assigns_workflow?, :assigns_visibility?].freeze
+
     USER_COLLECTION_MACHINE_ID    = 'user_collection'
     USER_COLLECTION_DEFAULT_TITLE = I18n.t('hyrax.collection_type.default_title', default: 'User Collection').freeze
 
@@ -32,10 +36,13 @@ module Hyrax
       assign_machine_id
     end
 
+    # this class attribute is deprecated in favor of {.settings_attributes}
+    # these need to carefully align with boolean flag attributes/table columns,
+    # so making it settable is a liability. deprecating is challenging because
+    # +class_attribute+ calls +singleton_class.class_eval { redefine_method }+
+    # as the +name=+ implementation. there should be few callers outside hyrax.
     class_attribute :collection_type_settings_methods, instance_writer: false
-    self.collection_type_settings_methods = [:nestable?, :discoverable?, :brandable?, :sharable?, :share_applies_to_new_works?,
-                                             :allow_multiple_membership?, :require_membership?, :assigns_workflow?,
-                                             :assigns_visibility?]
+    self.collection_type_settings_methods = SETTINGS_ATTRIBUTES
 
     # These are provided as a convenience method based on prior design discussions.
     alias_attribute :discovery, :discoverable
@@ -50,7 +57,7 @@ module Hyrax
     # @return [Hyrax::CollectionType] if record matching gid is found, an instance of Hyrax::CollectionType with id = the model_id portion of the gid (e.g. 3)
     # @return [False] if record matching gid is not found
     def self.find_by_gid(gid)
-      find(GlobalID.new(gid).model_id)
+      find_by_gid!(gid)
     rescue ActiveRecord::RecordNotFound, URI::InvalidURIError
       false
     end
@@ -68,8 +75,15 @@ module Hyrax
     # @return [Hyrax::CollectionType] an instance of Hyrax::CollectionType with id = the model_id portion of the gid (e.g. 3)
     # @raise [ActiveRecord::RecordNotFound] if record matching gid is not found
     def self.find_by_gid!(gid)
-      find_by_gid(gid) ||
-        raise(ActiveRecord::RecordNotFound, "Couldn't find Hyrax::CollectionType matching GID '#{gid}'")
+      find(GlobalID.new(gid).model_id)
+    end
+
+    ##
+    # @note this replaces the deprecated +.collection_type_settings_methods+
+    # @return [Array<Symbol>] the predicates for collection type settings flags
+    #   (e.g. {#nestable?})
+    def self.settings_attributes
+      SETTINGS_ATTRIBUTES
     end
 
     # Return the Global Identifier for this collection type.
@@ -138,7 +152,6 @@ module Hyrax
     private
 
     def assign_machine_id
-      # FIXME: This method allows for the possibility of collisions
       self.machine_id ||= title.parameterize.underscore.to_sym if title.present?
     end
 
@@ -168,7 +181,8 @@ module Hyrax
     end
 
     def collection_type_settings_changed?
-      (changes.keys & ['nestable', 'brandable', 'discoverable', 'sharable', 'share_applies_to_new_works', 'allow_multiple_membership', 'require_membership', 'assigns_workflow', 'assigns_visibility']).any?
+      (changes.keys & ['nestable', 'brandable', 'discoverable', 'sharable', 'share_applies_to_new_works',
+                       'allow_multiple_membership', 'require_membership', 'assigns_workflow', 'assigns_visibility']).any?
     end
 
     def exists_for_machine_id?(machine_id)

@@ -101,7 +101,7 @@ module Hyrax
     # @return [String] The CollectionType's title if found, else the gid
     def collection_type_label(collection_type_gid)
       CollectionType.find_by_gid!(collection_type_gid).title
-    rescue ActiveRecord::RecordNotFound, URI::BadURIError
+    rescue ActiveRecord::RecordNotFound, URI::InvalidURIError, URI::BadURIError
       CollectionType.find_or_create_default_collection_type.title
     end
 
