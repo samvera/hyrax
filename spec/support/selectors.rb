@@ -14,7 +14,6 @@ module Selectors
     def select_user(user, role = 'Depositor')
       first('a.select2-choice').click
       find('.select2-input').set(user.user_key)
-      sleep 1
       first('div.select2-result-label').click
       within('div.add-users') do
         select(role)
