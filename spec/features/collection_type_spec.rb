@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe 'collection_type', type: :feature, clean_repo: true do
+RSpec.describe 'collection_type', type: :feature do
   let(:admin_user) { create(:admin) }
   let(:exhibit_title) { 'Exhibit' }
   let(:exhibit_description) { 'Description for exhibit collection type.' }
@@ -352,8 +352,9 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
     end
 
     context 'when collections exist of this type' do
-      let!(:not_empty_collection_type) { create(:collection_type, title: 'Not Empty Type', creator_user: admin_user) }
-      let!(:collection1) { create(:public_collection_lw, user: admin_user, collection_type_gid: not_empty_collection_type.gid) }
+      let!(:not_empty_collection_type) { FactoryBot.create(:collection_type, title: 'Not Empty Type', creator_user: admin_user) }
+      let!(:collection1) { FactoryBot.create(:public_collection_lw, user: admin_user, collection_type_gid: not_empty_collection_type.gid) }
+
       let(:deny_delete_modal_text) do
         'You cannot delete this collection type because one or more collections of this type have already been created. ' \
         'To delete this collection type, first ensure that all collections of this type have been deleted.'
@@ -374,7 +375,6 @@ RSpec.describe 'collection_type', type: :feature, clean_repo: true do
           expect(page).to have_content(:all, deny_delete_modal_text)
           click_link('View collections of this type')
         end
-        sleep 3
 
         # forwards to Dashboard -> Collections -> All Collections
         within('li.active') do
