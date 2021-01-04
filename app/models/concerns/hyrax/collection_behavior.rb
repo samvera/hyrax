@@ -101,7 +101,8 @@ module Hyrax
       end
 
       def collection_type_gid_document_field_name
-        "collection_type_gid_ssim"
+        Deprecation.warn('use Hyrax.config.collection_type_index_field instead')
+        Hyrax.config.collection_type_index_field
       end
     end
 

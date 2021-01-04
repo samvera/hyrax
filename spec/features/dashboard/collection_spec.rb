@@ -6,7 +6,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   let(:admin_user) { create(:admin) }
   let(:collection_type) { create(:collection_type, creator_user: user) }
   let(:user_collection_type) { create(:user_collection_type) }
-  let(:solr_gid_field) { Collection.collection_type_gid_document_field_name }
+  let(:solr_gid_field) { Hyrax.config.collection_type_index_field }
   let(:solr_model_field) { 'has_model_ssim' }
 
   # Setting Title on admin sets to avoid false positive matches with collections.

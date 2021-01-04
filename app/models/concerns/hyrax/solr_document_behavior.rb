@@ -142,7 +142,7 @@ module Hyrax
     end
 
     def collection_type_gid
-      first('collection_type_gid_ssim')
+      first(Hyrax.config.collection_type_index_field)
     end
   end
 end

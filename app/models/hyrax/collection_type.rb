@@ -97,7 +97,7 @@ module Hyrax
     def collections(use_valkyrie: false)
       return [] unless id
       return Hyrax.custom_queries.find_collections_by_type(global_id: gid) if use_valkyrie
-      ActiveFedora::Base.where(collection_type_gid_ssim: gid.to_s)
+      ActiveFedora::Base.where(Hyrax.config.collection_type_index_field.to_sym => gid.to_s)
     end
 
     ##
