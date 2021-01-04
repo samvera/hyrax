@@ -12,7 +12,7 @@ module Hyrax
 
     def to_solr
       super.tap do |index_document|
-        index_document[:collection_type_gid_ssim] = Array(resource.try(:collection_type_gid)&.to_s)
+        index_document[Hyrax.config.collection_type_index_field.to_sym] = Array(resource.try(:collection_type_gid)&.to_s)
         index_document[:generic_type_sim] = ['Collection']
         index_document[:thumbnail_path_ss] = Hyrax::CollectionThumbnailPathService.call(resource)
       end

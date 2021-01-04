@@ -40,7 +40,7 @@
                  <% unless collection_type.admin_set? || collection_type.user_collection? %>
                   <button class="btn btn-danger btn-sm delete-collection-type"
                           data-collection-type="<%= collection_type.to_json %>"
-                          data-collection-type-index="<%= hyrax.dashboard_collections_path({ 'f[collection_type_gid_ssim][]' => collection_type.gid, 'f[has_model_ssim][]' => 'Collection' }) %>"
+                          data-collection-type-index="<%= hyrax.dashboard_collections_path({ "f[collection_type_gid_ssim][]" => collection_type.gid, 'f[has_model_ssim][]' => 'Collection' }) %>"
                           data-has-collections="<%= collection_type.collections? %>">
                     <%= t('helpers.action.delete') %>
                   </button>

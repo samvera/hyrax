@@ -52,7 +52,8 @@ module Hyrax
 
     def single_membership_collections(collection_ids)
       return [] if collection_ids.blank?
-      ::Collection.where(id: collection_ids, collection_type_gid_ssim: collection_type_gids_that_disallow_multiple_membership)
+
+      ::Collection.where(:id => collection_ids, Hyrax.config.collection_type_index_field.to_sym => collection_type_gids_that_disallow_multiple_membership)
     end
 
     def collection_type_gids_that_disallow_multiple_membership

@@ -1,12 +1,16 @@
 # frozen_string_literal: true
+
 RSpec.describe 'collection_type', type: :feature do
-  let(:admin_user) { create(:admin) }
-  let(:exhibit_title) { 'Exhibit' }
-  let(:exhibit_description) { 'Description for exhibit collection type.' }
-  let(:exhibit_collection_type) { create(:collection_type, title: exhibit_title, description: exhibit_description, creator_user: admin_user) }
-  let(:user_collection_type) { create(:user_collection_type) }
-  let(:admin_set_type) { create(:admin_set_collection_type) }
-  let(:solr_gid) { Collection.collection_type_gid_document_field_name }
+  let(:admin_user) { FactoryBot.create(:admin) }
+  let(:exhibit_collection_type) do
+    FactoryBot.create(:collection_type,
+                      title: 'Exhibit',
+                      description: 'Description for exhibit collection type.',
+                      creator_user: admin_user)
+  end
+  let(:user_collection_type) { FactoryBot.create(:user_collection_type) }
+  let(:admin_set_type) { FactoryBot.create(:admin_set_collection_type) }
+  let(:solr_gid) { Hyrax.config.collection_type_index_field }
 
   describe 'index' do
     before do
@@ -118,11 +122,6 @@ RSpec.describe 'collection_type', type: :feature do
 
   describe 'edit collection type' do
     context 'when there are no collections of this type' do
-      let(:title_old) { exhibit_title }
-      let(:description_old) { exhibit_description }
-      let(:title_new) { 'Exhibit modified' }
-      let(:description_new) { 'Change in description for exhibit collection type.' }
-
       before do
         exhibit_collection_type
         sign_in admin_user
@@ -130,7 +129,7 @@ RSpec.describe 'collection_type', type: :feature do
       end
 
       it 'modifies metadata values of a collection type', :js do
-        expect(page).to have_content "Edit Collection Type: #{title_old}"
+        expect(page).to have_content "Edit Collection Type: Exhibit"
 
         # confirm all tabs are visible
         expect(page).to have_link('Description', href: '#metadata')
@@ -138,20 +137,20 @@ RSpec.describe 'collection_type', type: :feature do
         expect(page).to have_link('Participants', href: '#participants')
 
         # confirm metadata fields have original values
-        expect(page).to have_selector "input#collection_type_title[value='#{title_old}']"
-        expect(page).to have_selector 'textarea#collection_type_description', text: description_old
+        expect(page).to have_selector "input#collection_type_title[value='Exhibit']"
+        expect(page).to have_selector 'textarea#collection_type_description', text: 'Description for exhibit collection type.'
 
         # set values and save
-        fill_in('Type name', with: title_new)
-        fill_in('Type description', with: description_new)
+        fill_in('Type name', with: 'Exhibit modified')
+        fill_in('Type description', with: 'Change in description for exhibit collection type.')
 
         click_button('Save changes')
 
-        expect(page).to have_content "Edit Collection Type: #{title_new}"
+        expect(page).to have_content "Edit Collection Type: Exhibit modified"
 
         # confirm values were set
-        expect(page).to have_selector "input#collection_type_title[value='#{title_new}']"
-        expect(page).to have_selector 'textarea#collection_type_description', text: description_new
+        expect(page).to have_selector "input#collection_type_title[value='Exhibit modified']"
+        expect(page).to have_selector 'textarea#collection_type_description', text: 'Change in description for exhibit collection type.'
 
         click_link('Settings', href: '#settings')
 

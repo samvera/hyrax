@@ -9,9 +9,9 @@ module Hyrax
       def self.configure_facets
         configure_blacklight do |config|
           # Name of pivot facet must match field name that uses helper_method
-          config.add_facet_field ::Collection.collection_type_gid_document_field_name,
+          config.add_facet_field Hyrax.config.collection_type_index_field,
                                  helper_method: :collection_type_label, limit: 5,
-                                 pivot: ['has_model_ssim', ::Collection.collection_type_gid_document_field_name],
+                                 pivot: ['has_model_ssim', Hyrax.config.collection_type_index_field],
                                  label: I18n.t('hyrax.dashboard.my.heading.collection_type')
           # This causes AdminSets to also be shown with the Collection Type label
           config.add_facet_field 'has_model_ssim',
