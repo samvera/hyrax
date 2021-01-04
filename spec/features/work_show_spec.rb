@@ -66,7 +66,6 @@ RSpec.describe "work show view" do
       click_button 'Save changes'
 
       # forwards to collection show page
-      sleep 5
       expect(page).to have_content persisted_collection.title.first
       expect(page).to have_content work.title.first
       expect(page).to have_selector '.alert-success', text: 'Collection was successfully updated.'
