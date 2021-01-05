@@ -130,7 +130,7 @@ RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
 
     context "updates env" do
       let!(:collection_type) { create(:collection_type) }
-      let!(:collection) { create(:collection_lw, collection_type_gid: collection_type.gid, with_permission_template: true) }
+      let!(:collection) { FactoryBot.create(:collection_lw, collection_type: collection_type, with_permission_template: true) }
 
       subject(:middleware) do
         stack = ActionDispatch::MiddlewareStack.new.tap do |middleware|

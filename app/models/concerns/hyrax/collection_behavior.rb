@@ -47,7 +47,7 @@ module Hyrax
     end
 
     def collection_type=(new_collection_type)
-      self.collection_type_gid = new_collection_type.gid
+      self.collection_type_gid = new_collection_type.to_global_id
     end
 
     # Add members using the members association.

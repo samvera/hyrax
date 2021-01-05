@@ -13,7 +13,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
   let(:coll_a) do
     build(:public_collection,
           id: 'Collection_A',
-          collection_type_gid: collection_type.gid,
+          collection_type: collection_type,
           with_nesting_attributes:
           { ancestors: [],
             parent_ids: [],
@@ -23,7 +23,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
   let(:coll_b) do
     build(:public_collection,
           id: 'Collection_B',
-          collection_type_gid: collection_type.gid,
+          collection_type: collection_type,
           member_of_collections: [coll_a],
           with_nesting_attributes:
           { ancestors: ['Collection_A'],
@@ -34,7 +34,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
   let(:coll_c) do
     build(:public_collection,
           id: 'Collection_C',
-          collection_type_gid: collection_type.gid,
+          collection_type: collection_type,
           member_of_collections: [coll_b],
           with_nesting_attributes:
           { ancestors: ["Collection_A",
@@ -46,7 +46,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
   let(:coll_d) do
     build(:public_collection,
           id: 'Collection_D',
-          collection_type_gid: collection_type.gid,
+          collection_type: collection_type,
           member_of_collections: [coll_c],
           with_nesting_attributes:
           { ancestors: ["Collection_A",
@@ -59,7 +59,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
   let(:coll_e) do
     build(:public_collection,
           id: 'Collection_E',
-          collection_type_gid: collection_type.gid,
+          collection_type: collection_type,
           member_of_collections: [coll_d],
           with_nesting_attributes:
           { ancestors: ["Collection_A",
@@ -73,7 +73,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
   let(:another) do
     build(:public_collection,
           id: 'Another_One',
-          collection_type_gid: collection_type.gid,
+          collection_type: collection_type,
           with_nesting_attributes:
           { ancestors: [],
             parent_ids: [],
@@ -83,7 +83,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
   let(:wrong) do
     build(:public_collection,
           id: 'Wrong_Type',
-          collection_type_gid: another_collection_type.gid,
+          collection_type: another_collection_type,
           with_nesting_attributes:
           { ancestors: [],
             parent_ids: [],
@@ -156,14 +156,14 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
         let(:coll_a) do
           build(:public_collection_lw,
                 id: 'Collection_A',
-                collection_type_gid: collection_type.gid,
+                collection_type: collection_type,
                 user: user,
                 with_permission_template: true)
         end
         let(:coll_b) do
           build(:public_collection_lw,
                 id: 'Collection_B',
-                collection_type_gid: collection_type.gid,
+                collection_type: collection_type,
                 user: user,
                 with_permission_template: true,
                 member_of_collections: [coll_a])
@@ -171,7 +171,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
         let(:coll_c) do
           build(:public_collection_lw,
                 id: 'Collection_C',
-                collection_type_gid: collection_type.gid,
+                collection_type: collection_type,
                 user: user,
                 with_permission_template: true,
                 member_of_collections: [coll_b])
@@ -179,7 +179,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
         let(:coll_d) do
           build(:public_collection_lw,
                 id: 'Collection_D',
-                collection_type_gid: collection_type.gid,
+                collection_type: collection_type,
                 user: user,
                 with_permission_template: true,
                 member_of_collections: [coll_c])
@@ -187,7 +187,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
         let(:coll_e) do
           create(:public_collection_lw,
                  id: 'Collection_E',
-                 collection_type_gid: collection_type.gid,
+                 collection_type: collection_type,
                  user: user,
                  with_permission_template: true,
                  member_of_collections: [coll_d])
@@ -195,14 +195,14 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
         let(:another) do
           create(:public_collection_lw,
                  id: 'Another_One',
-                 collection_type_gid: collection_type.gid,
+                 collection_type: collection_type,
                  user: user,
                  with_permission_template: true)
         end
         let(:wrong) do
           build(:public_collection_lw,
                 id: 'Wrong_Type',
-                collection_type_gid: another_collection_type.gid,
+                collection_type: another_collection_type,
                 user: user,
                 with_permission_template: true)
         end
@@ -248,14 +248,14 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
         let!(:parent) do
           create(:public_collection_lw,
                  id: 'Parent_Collecton',
-                 collection_type_gid: collection_type.gid,
+                 collection_type: collection_type,
                  user: user,
                  with_permission_template: true)
         end
         let!(:child) do
           create(:public_collection_lw,
                  id: 'Child_Collection',
-                 collection_type_gid: collection_type.gid,
+                 collection_type: collection_type,
                  user: user,
                  with_permission_template: true)
         end
@@ -326,12 +326,13 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
 
   describe 'nesting attributes object', with_nested_reindexing: true do
     let(:user) { create(:user) }
-    let!(:parent) { build(:collection_lw, id: 'Parent_Coll', collection_type_gid: collection_type.gid, user: user) }
-    let!(:child) { create(:user_collection_lw, id: 'Child_Coll', collection_type_gid: collection_type.gid, user: user) }
+    let(:parent) { FactoryBot.build(:collection_lw, id: 'Parent_Coll', collection_type: collection_type, user: user) }
+    let(:child) { FactoryBot.create(:collection_lw, id: 'Child_Coll', collection_type: collection_type, user: user) }
     let(:nesting_attributes) { Hyrax::Collections::NestedCollectionQueryService::NestingAttributes.new(id: child.id, scope: scope) }
 
     before do
-      Hyrax::Collections::NestedCollectionPersistenceService.persist_nested_collection_for(parent: parent, child: child)
+      Hyrax::Collections::NestedCollectionPersistenceService
+        .persist_nested_collection_for(parent: parent, child: child)
     end
 
     it 'will respond to expected methods' do

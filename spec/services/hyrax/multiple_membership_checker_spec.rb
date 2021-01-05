@@ -79,7 +79,7 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
 
       context 'with multiple single membership collection types' do
         let!(:collection_type_2) { create(:collection_type, title: 'Doc', allow_multiple_membership: false) }
-        let(:collection_type_gids) { [collection_type.gid, collection_type_2.gid] }
+        let(:collection_type_gids) { [collection_type.to_global_id, collection_type_2.to_global_id] }
 
         it 'returns an error' do
           expect(item).not_to receive(:member_of_collection_ids)
@@ -110,7 +110,7 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
 
       context 'with multiple single membership collection types' do
         let!(:collection_type_2) { create(:collection_type, title: 'Doc', allow_multiple_membership: false) }
-        let(:collection_type_gids) { [collection_type.gid, collection_type_2.gid] }
+        let(:collection_type_gids) { [collection_type.to_global_id, collection_type_2.to_global_id] }
 
         it 'returns an error' do
           expect(item).to receive(:member_of_collection_ids)
@@ -127,7 +127,7 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
       let(:collections) { [collection1, collection2] }
       let(:collection_ids) { collections.map(&:id) }
       let(:collection_type_2) { create(:collection_type, title: 'Doc', allow_multiple_membership: false) }
-      let(:collection_type_gids) { [collection_type.gid, collection_type_2.gid] }
+      let(:collection_type_gids) { [collection_type.to_global_id, collection_type_2.to_global_id] }
 
       it 'returns nil' do
         expect(item).not_to receive(:member_of_collection_ids)

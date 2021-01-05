@@ -87,14 +87,13 @@ FactoryBot.define do
   factory :user_collection, class: Collection do
     transient do
       user { create(:user) }
+      collection_type { create(:user_collection_type) }
     end
 
     sequence(:title) { |n| ["User Collection Title #{n}"] }
 
     after(:build) do |collection, evaluator|
       collection.apply_depositor_metadata(evaluator.user.user_key)
-      collection_type = create(:user_collection_type)
-      collection.collection_type_gid = collection_type.gid
     end
   end
 

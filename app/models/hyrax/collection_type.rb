@@ -95,18 +95,24 @@ module Hyrax
       SETTINGS_ATTRIBUTES
     end
 
+    ##
+    # @deprecation use #to_global_id
+    #
     # Return the Global Identifier for this collection type.
-    # @return [String] Global Identifier (gid) for this collection_type (e.g. gid://internal/hyrax-collectiontype/3)
+    # @return [String, nil] Global Identifier (gid) for this collection_type (e.g. gid://internal/hyrax-collectiontype/3)
+    #
+    # @see https://github.com/rails/globalid#usage
     def gid
-      URI::GID.build(app: GlobalID.app, model_name: model_name.name.parameterize.to_sym, model_id: id).to_s if id
+      Deprecation.warn('use #to_global_id.')
+      to_global_id.to_s if id
     end
 
     ##
     # @return [Enumerable<Collection, PcdmCollection>]
     def collections(use_valkyrie: false)
       return [] unless id
-      return Hyrax.custom_queries.find_collections_by_type(global_id: gid) if use_valkyrie
-      ActiveFedora::Base.where(Hyrax.config.collection_type_index_field.to_sym => gid.to_s)
+      return Hyrax.custom_queries.find_collections_by_type(global_id: to_global_id) if use_valkyrie
+      ActiveFedora::Base.where(Hyrax.config.collection_type_index_field.to_sym => to_global_id.to_s)
     end
 
     ##

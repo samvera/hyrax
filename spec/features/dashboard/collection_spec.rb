@@ -12,10 +12,10 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   # Setting Title on admin sets to avoid false positive matches with collections.
   let(:admin_set_a) { create(:admin_set, creator: [admin_user.user_key], title: ['Set A'], with_permission_template: true) }
   let(:admin_set_b) { create(:admin_set, creator: [user.user_key], title: ['Set B'], edit_users: [user.user_key], with_permission_template: true) }
-  let(:collection1) { create(:public_collection_lw, user: user, collection_type_gid: collection_type.gid, with_permission_template: true) }
-  let(:collection2) { create(:public_collection_lw, user: user, collection_type_gid: collection_type.gid, with_permission_template: true) }
-  let(:collection3) { create(:public_collection_lw, user: admin_user, collection_type_gid: collection_type.gid, with_permission_template: true) }
-  let(:collection4) { create(:public_collection_lw, user: admin_user, collection_type_gid: user_collection_type.gid, with_permission_template: true) }
+  let(:collection1) { FactoryBot.create(:public_collection_lw, user: user, collection_type: collection_type, with_permission_template: true) }
+  let(:collection2) { FactoryBot.create(:public_collection_lw, user: user, collection_type: collection_type, with_permission_template: true) }
+  let(:collection3) { FactoryBot.create(:public_collection_lw, user: admin_user, collection_type: collection_type, with_permission_template: true) }
+  let(:collection4) { FactoryBot.create(:public_collection_lw, user: admin_user, collection_type: user_collection_type, with_permission_template: true) }
 
   describe 'Your Collections tab' do
     context 'when non-admin user' do
@@ -57,11 +57,11 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
                                   href: /visibility_ssi.+#{Regexp.escape(CGI.escape(collection3.visibility))}/
         expect(page).to have_button 'Collection Type'
         expect(page).to have_link collection_type.title,
-                                  href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(collection_type.gid))}/
+                                  href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(collection_type.to_global_id.to_s))}/
         expect(page).to have_link 'AdminSet',
                                   href: /#{solr_model_field}.+#{Regexp.escape('AdminSet')}/
         expect(page).not_to have_link user_collection_type.title,
-                                      href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.gid))}/
+                                      href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.to_global_id.to_s))}/
         expect(page).not_to have_link 'Collection',
                                       href: /#{solr_model_field}.+#{Regexp.escape('Collection')}/
       end
@@ -109,9 +109,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
                                   href: /visibility_ssi.+#{Regexp.escape(CGI.escape(collection3.visibility))}/
         expect(page).to have_button 'Collection Type'
         expect(page).to have_link collection_type.title,
-                                  href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(collection_type.gid))}/
+                                  href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(collection_type.to_global_id.to_s))}/
         expect(page).to have_link user_collection_type.title,
-                                  href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.gid))}/
+                                  href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.to_global_id.to_s))}/
         expect(page).to have_link 'AdminSet',
                                   href: /#{solr_model_field}.+#{Regexp.escape('AdminSet')}/
         expect(page).not_to have_link 'Collection',
@@ -153,9 +153,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
                                 href: /visibility_ssi.+#{Regexp.escape(CGI.escape(collection1.visibility))}/
       expect(page).to have_button 'Collection Type'
       expect(page).to have_link collection_type.title,
-                                href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(collection_type.gid))}/
+                                href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(collection_type.to_global_id.to_s))}/
       expect(page).to have_link user_collection_type.title,
-                                href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.gid))}/
+                                href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.to_global_id.to_s))}/
       expect(page).to have_link 'AdminSet',
                                 href: /#{solr_model_field}.+#{Regexp.escape('AdminSet')}/
       expect(page).not_to have_link 'Collection',
@@ -214,9 +214,9 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
                                 href: /visibility_ssi.+#{Regexp.escape(CGI.escape(collection1.visibility))}/
       expect(page).to have_button 'Collection Type'
       expect(page).to have_link collection_type.title,
-                                href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(collection_type.gid))}/
+                                href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(collection_type.to_global_id.to_s))}/
       expect(page).to have_link user_collection_type.title,
-                                href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.gid))}/
+                                href: /#{solr_gid_field}.+#{Regexp.escape(CGI.escape(user_collection_type.to_global_id.to_s))}/
       expect(page).not_to have_link 'AdminSet',
                                     href: /#{solr_model_field}.+#{Regexp.escape('AdminSet')}/
       expect(page).not_to have_link 'Collection',

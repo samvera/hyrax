@@ -3,7 +3,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
   routes { Hyrax::Engine.routes }
   let(:user)  { create(:user) }
   let(:other) { build(:user) }
-  let(:collection_type_gid) { create(:user_collection_type).gid }
+  let(:collection_type_gid) { FactoryBot.create(:user_collection_type).to_global_id.to_s }
 
   let(:collection) do
     create(:public_collection_lw, title: ["My collection"],
@@ -105,10 +105,11 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       it "creates a Collection of specified type" do
         expect do
           post :create, params: {
-            collection: collection_attrs, collection_type_gid: collection_type.gid
+            collection: collection_attrs, collection_type_gid: collection_type.to_global_id.to_s
           }
         end.to change { Collection.count }.by(1)
-        expect(assigns[:collection].collection_type_gid).to eq collection_type.gid
+
+        expect(assigns[:collection].collection_type_gid).to eq collection_type.to_global_id.to_s
       end
     end
 

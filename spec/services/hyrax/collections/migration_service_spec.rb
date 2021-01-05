@@ -11,7 +11,7 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
   let(:depositor2) { create(:user) }
   let(:viewer1) { create(:user) }
   let(:viewer2) { create(:user) }
-  let(:default_gid) { create(:user_collection_type).gid }
+  let(:default_gid) { FactoryBot.create(:user_collection_type).to_global_id.to_s }
 
   describe ".migrate_all_collections" do
     context 'when legacy collections are found (e.g. collections created before Hyrax 2.1.0)' do
