@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Hyrax
-  class CollectionType < ActiveRecord::Base
+  class CollectionType < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
     # @!method id
     #   @return [Integer]
     # @!method description
@@ -197,5 +197,5 @@ module Hyrax
     def exists_for_machine_id?(machine_id)
       self.class.exists?(machine_id: machine_id)
     end
-  end
+  end # rubocop:enable Metrics/ClassLength
 end
