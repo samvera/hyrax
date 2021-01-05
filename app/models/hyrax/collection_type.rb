@@ -75,6 +75,15 @@ module Hyrax
     # @return [Hyrax::CollectionType] an instance of Hyrax::CollectionType with id = the model_id portion of the gid (e.g. 3)
     # @raise [ActiveRecord::RecordNotFound] if record matching gid is not found
     def self.find_by_gid!(gid)
+      raise(URI::InvalidURIError) if gid.nil?
+      GlobalID::Locator.locate(gid)
+    rescue NameError
+      Rails.logger.warn "#{self.class}##{__method__} called with #{gid}, which is " \
+                        "a legacy collection type global id format. If this " \
+                        "collection type gid is attached to a collection in " \
+                        "your repository you'll want to run " \
+                        "`hyrax:collections:update_collection_type_global_ids` to " \
+                        "update references. see: https://github.com/samvera/hyrax/issues/4696"
       find(GlobalID.new(gid).model_id)
     end
 

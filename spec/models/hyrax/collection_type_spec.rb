@@ -129,14 +129,17 @@ RSpec.describe Hyrax::CollectionType, type: :model do
 
   describe '.find_by_gid' do
     let(:collection_type) { create(:collection_type) }
-    let(:nonexistent_gid) { 'gid://internal/hyrax-collectiontype/NO_EXIST' }
 
-    it 'returns instance of collection type when one with the gid exists' do
+    it 'returns the same collection type the gid exists' do
       expect(described_class.find_by_gid(collection_type.gid)).to eq collection_type
     end
 
+    it 'returns the same collection type with `#to_global_id`' do
+      expect(described_class.find_by_gid(collection_type.to_global_id)).to eq collection_type
+    end
+
     it 'returns false if collection type with gid does NOT exist' do
-      expect(described_class.find_by_gid(nonexistent_gid)).to eq false
+      expect(described_class.find_by_gid('gid://internal/hyrax-collectiontype/NO_EXIST')).to eq false
     end
 
     it 'returns false if gid is nil' do
@@ -145,15 +148,18 @@ RSpec.describe Hyrax::CollectionType, type: :model do
   end
 
   describe '.find_by_gid!' do
-    let(:collection_type) { create(:collection_type) }
-    let(:nonexistent_gid) { 'gid://internal/hyrax-collectiontype/NO_EXIST' }
+    let(:collection_type) { FactoryBot.create(:collection_type) }
 
     it 'returns instance of collection type when one with the gid exists' do
       expect(described_class.find_by_gid(collection_type.gid)).to eq collection_type
     end
 
+    it 'returns the same collection type with `#to_global_id`' do
+      expect(described_class.find_by_gid!(collection_type.to_global_id)).to eq collection_type
+    end
+
     it 'raises error if collection type with gid does NOT exist' do
-      expect { described_class.find_by_gid!(nonexistent_gid) }
+      expect { described_class.find_by_gid!('gid://internal/hyrax-collectiontype/NO_EXIST') }
         .to raise_error(ActiveRecord::RecordNotFound)
     end
 
