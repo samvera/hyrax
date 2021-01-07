@@ -24,7 +24,6 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
         visit '/dashboard/my/works'
         check 'check_all'
         click_button 'Add to collection' # opens the modal
-        sleep 5
         select_member_of_collection(new_collection)
         click_button 'Save changes'
 
@@ -119,9 +118,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, clean_re
 
           select_collection(new_collection)
           check('agreement')
-          sleep 3
           choose('generic_work_visibility_open')
-          sleep 3
 
           within('div#savewidget') do
             element = nil
