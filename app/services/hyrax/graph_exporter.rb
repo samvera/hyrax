@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Hyrax
   ##
+  # @api public
+  #
   # Retrieves the graph for an object with the internal triples removed
   # and the uris translated to external uris.
   class GraphExporter
@@ -30,6 +32,7 @@ module Hyrax
     attr_reader :solr_document, :request, :additional_resources, :hostname
     deprecation_deprecate :request
 
+    ##
     # @return [RDF::Graph]
     def fetch
       clean_graph_repository.find(solr_document.id).tap do |g|
@@ -74,10 +77,10 @@ module Hyrax
 
       if @visited_subresources.add?(resource_id)
         additional_resources << ListSourceExporter.new(
-          resource_id,
-          nil,
-          subject_replacer(parent_klass, parent_id),
-          hostname: hostname
+          id: resource_id,
+          parent_url: subject_replacer(parent_klass, parent_id),
+          hostname: hostname,
+          connection: connection
         ).fetch
       end
 
@@ -102,6 +105,46 @@ module Hyrax
     def object_replacer(id, _graph)
       id, anchor = id.split('/', 2)
       Rails.application.routes.url_helpers.solr_document_url(id, host: hostname, anchor: anchor)
+    end
+
+    ##
+    # @api private
+    class ListSourceExporter
+      def initialize(hostname:, id:, parent_url:, connection: CleanConnection.new(ActiveFedora.fedora.connection))
+        @connection = connection
+        @id = id
+        @hostname = hostname
+        @parent_url = parent_url
+      end
+
+      # @!attribute [r] hostname
+      #   @return [String]
+      # @!attribute [r] id
+      #   @return [String]
+      # @!attribute [r] parent_url
+      #   @return [String]
+      attr_reader :hostname, :id, :parent_url
+
+      ##
+      # @return [RDF::Graph]
+      def fetch
+        clean_graph_repository.find(id)
+      end
+
+      private
+
+      def clean_graph_repository
+        Hydra::ContentNegotiation::CleanGraphRepository.new(@connection, replacer)
+      end
+
+      # This method is called once for each statement in the graph.
+      def replacer
+        lambda do |resource_id, _graph|
+          parent_id = Hyrax::Base.uri_to_id(parent_url)
+          return parent_url + resource_id.sub(parent_id, '') if resource_id.start_with?(parent_id)
+          Rails.application.routes.url_helpers.solr_document_url(resource_id, host: hostname)
+        end
+      end
     end
   end
 end

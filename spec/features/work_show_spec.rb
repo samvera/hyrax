@@ -5,7 +5,7 @@ RSpec.describe "work show view" do
   let(:work_path) { "/concern/generic_works/#{work.id}" }
 
   before do
-    create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
+    FactoryBot.create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
   end
 
   context "as the work owner" do
@@ -19,11 +19,11 @@ RSpec.describe "work show view" do
              ordered_members: [file_set],
              representative_id: file_set.id)
     end
-    let(:user) { create(:user) }
-    let(:file_set) { create(:file_set, user: user, title: ['A Contained FileSet'], content: file) }
+    let(:user) { FactoryBot.create(:user) }
+    let(:file_set) { FactoryBot.create(:file_set, user: user, title: ['A Contained FileSet'], content: file) }
     let(:file) { File.open(fixture_path + '/world.png') }
-    let(:multi_membership_type_1) { create(:collection_type, :allow_multiple_membership, title: 'Multi-membership 1') }
-    let!(:collection) { create(:collection_lw, user: user, collection_type_gid: multi_membership_type_1.gid) }
+    let(:multi_membership_type_1) { FactoryBot.create(:collection_type, :allow_multiple_membership, title: 'Multi-membership 1') }
+    let!(:collection) { FactoryBot.create(:collection_lw, user: user, collection_type_gid: multi_membership_type_1.gid) }
 
     before do
       sign_in user
