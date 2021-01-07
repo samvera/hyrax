@@ -1,40 +1,36 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::GraphExporter do
-  let(:work) { create(:work_with_one_file, visibility: 'open') }
+  subject(:service) { described_class.new(document, hostname: 'localhost') }
+  let(:work) { FactoryBot.create(:work_with_one_file, visibility: 'open') }
   let(:document) { double(id: work.id) }
-  let(:request) { double(host: 'localhost') }
-  let(:service) { described_class.new(document, request) }
 
   describe "fetch" do
-    subject { service.fetch }
-
-    let(:ttl) { subject.dump(:ntriples) }
-
     it "transforms suburis to hashcodes" do
-      expect(ttl).to match %r{<http://localhost/concern/generic_works/#{work.id}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://projecthydra.org/works/models#Work>}
-      expect(ttl).to match %r{<http://purl\.org/dc/terms/title> "Test title"}
-      expect(ttl).to match %r{<http://www\.w3\.org/ns/auth/acl#accessControl> <http://localhost/catalog/}
+      graph = service.fetch
+      expect(graph.dump(:ntriples)).to match %r{<http://localhost/concern/generic_works/#{work.id}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://projecthydra.org/works/models#Work>}
+      expect(graph.dump(:ntriples)).to match %r{<http://purl\.org/dc/terms/title> "Test title"}
+      expect(graph.dump(:ntriples)).to match %r{<http://www\.w3\.org/ns/auth/acl#accessControl> <http://localhost/catalog/}
 
-      query = subject.query([RDF::URI("http://localhost/concern/generic_works/#{work.id}"),
-                             RDF::URI("http://www.iana.org/assignments/relation/first"),
-                             nil])
-      proxy = query.to_a.first.object
-
-      expect(proxy.to_s).to match %r{http://localhost/concern/generic_works/#{work.id}/list_source#g\d+}
+      proxy = graph.query([RDF::URI("http://localhost/concern/generic_works/#{work.id}"),
+                           RDF::URI("http://www.iana.org/assignments/relation/first"),
+                           nil])
+                   .first_object
+      expect(proxy).to match %r{http://localhost/concern/generic_works/#{work.id}/list_source#g\d+}
 
       # It includes the list nodes on the graph
-      expect(subject.query([proxy, nil, nil]).count).to eq 2
+      expect(graph.query([proxy, nil, nil]).count).to eq 2
     end
 
     context "when a Ldp::NotFound is raised" do
-      let(:mock_service) { instance_double(Hydra::ContentNegotiation::CleanGraphRepository) }
-
       before do
-        allow(service).to receive(:clean_graph_repository).and_return(mock_service)
-        allow(mock_service).to receive(:find).and_raise(Ldp::NotFound)
+        mock_repository_service = instance_double(Hydra::ContentNegotiation::CleanGraphRepository)
+        allow(mock_repository_service).to receive(:find).and_raise(Ldp::NotFound)
+
+        allow(service).to receive(:clean_graph_repository).and_return(mock_repository_service)
       end
+
       it "raises a error that the controller catches and handles" do
-        expect { subject }.to raise_error ActiveFedora::ObjectNotFoundError
+        expect { service.fetch }.to raise_error ActiveFedora::ObjectNotFoundError
       end
     end
 
@@ -48,11 +44,9 @@ RSpec.describe Hyrax::GraphExporter do
 
       it 'includes each nested resources once' do
         resource_fragments = work.created.map { |ts| ts.rdf_subject.fragment }
-        mapped_fragments   = subject.query(predicate: RDF.type, object: RDF::Vocab::EDM.TimeSpan)
-                                    .subjects
-                                    .map(&:fragment)
+        time_spans = service.fetch.query(predicate: RDF.type, object: RDF::Vocab::EDM.TimeSpan).subjects
 
-        expect(mapped_fragments).to contain_exactly(*resource_fragments)
+        expect(time_spans.map(&:fragment)).to contain_exactly(*resource_fragments)
       end
     end
   end
