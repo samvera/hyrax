@@ -114,6 +114,9 @@ module Hyrax
     # Add this to your {.ability_logic} if you want all logged in users to be able
     # to submit content.
     #
+    # @note this is normally injected into an application +::Ability+ by the
+    #   hyrax install generator.
+    #
     # @example
     #   self.ability_logic += [:everyone_can_create_curation_concerns]
     def everyone_can_create_curation_concerns
