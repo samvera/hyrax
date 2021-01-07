@@ -43,17 +43,15 @@ module Selectors
     def select_member_of_collection(collection) # rubocop:disable Metrics/MethodLength
       find('#s2id_member_of_collection_ids').click
       find('.select2-input').set(collection.title.first)
+
       # Crude way of waiting for the AJAX response
-      select2_results = []
-      time_elapsed = 0
-      while select2_results.empty? && time_elapsed < 60
-        begin_time = Time.now.to_f
-        doc = Nokogiri::XML.parse(page.body)
-        select2_results = doc.xpath('//html:li[contains(@class,"select2-result")]', html: 'http://www.w3.org/1999/xhtml')
-        end_time = Time.now.to_f
-        time_elapsed += end_time - begin_time
+      select2_results = false
+      begin_time = current_time = Time.now.to_f
+      while !select2_results && (current_time - begin_time) < 3
+        select2_results = page.has_css?('li.select2-result')
+        current_time = Time.now.to_f
       end
-      expect(page).to have_css('.select2-result')
+
       within ".select2-result" do
         find("span", text: collection.title.first).click
       end
