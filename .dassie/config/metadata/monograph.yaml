@@ -28,6 +28,8 @@ attributes:
     form:
       required: true
       primary: true
+    index_keys:
+      - "record_info_tesim"
   place_of_publication:
     type: string
     form:

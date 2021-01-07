@@ -36,6 +36,8 @@ attributes:
     form:
       required: true
       primary: true
+    index_keys:
+      - "creator_tesim"
   date_created:
     type: date_time
     multiple: true

@@ -27,9 +27,14 @@ RSpec.describe 'Creating a new Monograph (Valkyrie work)', :js, :workflow, :clea
     end
 
     click_link "Descriptions" # switch tab
+    # form fields for basic metadata
     fill_in('Title', with: 'Monograph Work (created by test)')
+    click_on("Additional fields")
+    fill_in('Abstract', with: 'A formal abstract.')
+    fill_in('Access Right', with: 'Open Access')
     fill_in('Creator', with: 'Tove Jansson')
-    fill_in('Record info', with: 'some details about the record')
+    # end basic metadata
+    fill_in('Record info', with: 'some details about the record') # required in monograph schema
 
     choose('monograph_visibility_open')
     check('agreement')
@@ -41,9 +46,12 @@ RSpec.describe 'Creating a new Monograph (Valkyrie work)', :js, :workflow, :clea
 
     expect(monograph)
       .to have_attributes(title: contain_exactly('Monograph Work (created by test)'),
+                          abstract: contain_exactly('A formal abstract.'),
+                          access_right: contain_exactly('Open Access'),
                           creator: contain_exactly('Tove Jansson'),
                           record_info: 'some details about the record')
 
     expect(page).to have_content('Monograph Work (created by test)')
+    expect(page).to have_content('Tove Jansson')
   end
 end
