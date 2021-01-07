@@ -282,7 +282,7 @@ module Hyrax
     end
 
     def graph
-      GraphExporter.new(solr_document, request).fetch
+      GraphExporter.new(solr_document, hostname: request.host).fetch
     end
 
     # @return [Array<String>] member_of_collection_ids with current_ability access

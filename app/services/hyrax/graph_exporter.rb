@@ -1,18 +1,34 @@
 # frozen_string_literal: true
 module Hyrax
+  ##
   # Retrieves the graph for an object with the internal triples removed
   # and the uris translated to external uris.
   class GraphExporter
-    # @param [SolrDocument] solr_document idea here is that in the future, ActiveFedora may serialize the object as JSON+LD
+    ##
+    # @param [SolrDocument, #id] solr_document idea here is that in the future, ActiveFedora may serialize the object as JSON+LD
     # @param [ActionDispatch::Request] request the http request context
-    def initialize(solr_document, request)
+    # @param [String] hostname  the current http host
+    def initialize(solr_document, request = nil, hostname: nil)
+      Deprecation.warn('passing `request` is deprecated; pass a host as `hostname:` instead.') if request
       @solr_document = solr_document
       @request = request
+      @hostname = hostname || request.host
       @additional_resources = []
       @visited_subresources = Set.new
     end
 
-    attr_reader :solr_document, :request, :additional_resources
+    ##
+    # @!attribute [r] additional_resources
+    #   @return [Array<RDF::Graph>]
+    # @!attribute [r] request
+    #   @deprecated use {#hostname} to access the host
+    #   @return [ActionDispatch::Request]
+    # @!attribute [r] solr_document
+    #   @return [#id]
+    # @!attribute [r] hostname
+    #   @return [String]
+    attr_reader :solr_document, :request, :additional_resources, :hostname
+    deprecation_deprecate :request
 
     # @return [RDF::Graph]
     def fetch
@@ -59,8 +75,9 @@ module Hyrax
       if @visited_subresources.add?(resource_id)
         additional_resources << ListSourceExporter.new(
           resource_id,
-          request,
-          subject_replacer(parent_klass, parent_id)
+          nil,
+          subject_replacer(parent_klass, parent_id),
+          hostname: hostname
         ).fetch
       end
 
@@ -85,10 +102,6 @@ module Hyrax
     def object_replacer(id, _graph)
       id, anchor = id.split('/', 2)
       Rails.application.routes.url_helpers.solr_document_url(id, host: hostname, anchor: anchor)
-    end
-
-    def hostname
-      request.host
     end
   end
 end
