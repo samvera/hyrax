@@ -21,13 +21,8 @@ RSpec.describe Hyrax::GraphExporter do
       expect(graph.query([proxy, nil, nil]).count).to eq 2
     end
 
-    context "when a Ldp::NotFound is raised" do
-      before do
-        mock_repository_service = instance_double(Hydra::ContentNegotiation::CleanGraphRepository)
-        allow(mock_repository_service).to receive(:find).and_raise(Ldp::NotFound)
-
-        allow(service).to receive(:clean_graph_repository).and_return(mock_repository_service)
-      end
+    context "when the resource doesn't exist" do
+      let(:document) { double(id: 'a_missing_id') }
 
       it "raises a error that the controller catches and handles" do
         expect { service.fetch }.to raise_error ActiveFedora::ObjectNotFoundError
