@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 RSpec.describe CreateWorkJob do
-  let(:user) { create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   let(:log) do
     Hyrax::Operation.create!(user: user,
                              operation_type: "Create Work")
@@ -21,13 +21,6 @@ RSpec.describe CreateWorkJob do
     let(:work) { double(errors: errors) }
     let(:actor) { double(curation_concern: work) }
 
-    subject do
-      described_class.perform_later(user,
-                                    'GenericWork',
-                                    metadata,
-                                    log)
-    end
-
     before do
       allow(Hyrax::CurationConcern).to receive(:actor).and_return(actor)
       allow(GenericWork).to receive(:new).and_return(work)
@@ -44,7 +37,7 @@ RSpec.describe CreateWorkJob do
                                        "visibility" => "open",
                                        "uploaded_files" => [upload1.id])
         end.and_return(true)
-        subject
+        described_class.perform_later(user, 'GenericWork', metadata, log)
         expect(log.reload.status).to eq 'success'
       end
     end
@@ -52,7 +45,7 @@ RSpec.describe CreateWorkJob do
     context "when the actor does not create the work" do
       it "logs the failure" do
         expect(actor).to receive(:create).and_return(false)
-        subject
+        described_class.perform_later(user, 'GenericWork', metadata, log)
         expect(log.reload.status).to eq 'failure'
         expect(log.message).to eq "It's broke!"
       end
