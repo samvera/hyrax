@@ -26,13 +26,13 @@
               <button class="btn btn-sm dropdown-toggle accept" data-toggle="dropdown" href="#"><span class="caret"></span></button>
               <ul class="dropdown-menu">
                 <li>
-                  <%= link_to t(".allow_depositor_to_retain_edit_access"), hyrax.accept_transfer_path(req), method: :put, class: 'accept-retain', title: t(".accept_the_file_and_allow_the_original_depositor_to_retain_access_to_edit_the_file_and_metadata") %>
+                  <%= link_to t(".allow_depositor_to_retain_edit_access"), hyrax.accept_transfer_path(req), method: :put, class: 'accept-retain', id: 'accept-retain', title: t(".accept_the_file_and_allow_the_original_depositor_to_retain_access_to_edit_the_file_and_metadata") %>
                 </li>
                 <li>
-                  <%= link_to t(".remove_depositor_access"), hyrax.accept_transfer_path(req, reset: true), method: :put, class: 'accept-reset', title: t(".accept_the_file_remove_access_from_the_original_depositor") %>
+                  <%= link_to t(".remove_depositor_access"), hyrax.accept_transfer_path(req, reset: true), method: :put, class: 'accept-reset', id: 'accept-reset', title: t(".accept_the_file_remove_access_from_the_original_depositor") %>
                 </li>
                 <li>
-                  <%= link_to t(".authorize_depositor_as_proxy"), hyrax.accept_transfer_path(req, sticky: true), method: :put, class: 'accept-stick', title: t(".accept_the_file_and_allow_the_original_depositor_to_retain_access_and_authorize") %>
+                  <%= link_to t(".authorize_depositor_as_proxy"), hyrax.accept_transfer_path(req, sticky: true), method: :put, class: 'accept-stick', id: 'accept-stick', title: t(".accept_the_file_and_allow_the_original_depositor_to_retain_access_and_authorize") %>
                 </li>
               </ul>
             </div>
