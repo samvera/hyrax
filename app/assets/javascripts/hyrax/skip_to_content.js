@@ -4,7 +4,7 @@ Blacklight.onLoad(function () {
   $(".skip-to-content").click(function(event) {
     event.preventDefault();
     // element to focus on
-    let skipTo = '#' + $(this)[0].firstElementChild.hash.split('#')[1];
+    var skipTo = '#' + $(this)[0].firstElementChild.hash.split('#')[1];
 
     // Setting 'tabindex' to -1 takes an element out of normal
     // tab flow but allows it to be focused via javascript
