@@ -1,25 +1,30 @@
 # frozen_string_literal: true
+
+# DON'T EVEN LOOK AT THESE TESTS!
+# the service tested here is deprecated for removal and is only called from a
+# rake task no one should be using after the 2.1.0 upgrade. if you're looking
+# at these# tests, save yourself the trouble and move on
 RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
-  let(:user) { create(:user) }
-  let(:editor1) { create(:user) }
-  let(:editor2) { create(:user) }
-  let(:reader1) { create(:user) }
-  let(:reader2) { create(:user) }
-  let(:manager1) { create(:user) }
-  let(:manager2) { create(:user) }
-  let(:depositor1) { create(:user) }
-  let(:depositor2) { create(:user) }
-  let(:viewer1) { create(:user) }
-  let(:viewer2) { create(:user) }
-  let(:default_gid) { create(:user_collection_type).gid }
+  let(:user) { FactoryBot.create(:user) }
+  let(:editor1) { FactoryBot.create(:user) }
+  let(:editor2) { FactoryBot.create(:user) }
+  let(:reader1) { FactoryBot.create(:user) }
+  let(:reader2) { FactoryBot.create(:user) }
+  let(:manager1) { FactoryBot.create(:user) }
+  let(:manager2) { FactoryBot.create(:user) }
+  let(:depositor1) { FactoryBot.create(:user) }
+  let(:depositor2) { FactoryBot.create(:user) }
+  let(:viewer1) { FactoryBot.create(:user) }
+  let(:viewer2) { FactoryBot.create(:user) }
+  let(:default_gid) { FactoryBot.create(:user_collection_type).gid }
 
   describe ".migrate_all_collections" do
     context 'when legacy collections are found (e.g. collections created before Hyrax 2.1.0)' do
-      let!(:col_none) { build(:typeless_collection, user: user, edit_users: [user.user_key], do_save: true) }
-      let!(:col_vu) { build(:typeless_collection, user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key], do_save: true) }
-      let!(:col_vg) { build(:typeless_collection, user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'], do_save: true) }
-      let!(:col_mu) { build(:typeless_collection, user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key], do_save: true) }
-      let!(:col_mg) { build(:typeless_collection, user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], do_save: true) }
+      let(:col_none) { FactoryBot.build(:typeless_collection, user: user, edit_users: [user.user_key], do_save: true) }
+      let(:col_vu) { FactoryBot.build(:typeless_collection, user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key], do_save: true) }
+      let(:col_vg) { FactoryBot.build(:typeless_collection, user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'], do_save: true) }
+      let(:col_mu) { FactoryBot.build(:typeless_collection, user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key], do_save: true) }
+      let(:col_mg) { FactoryBot.build(:typeless_collection, user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], do_save: true) }
 
       it 'sets gid and adds permissions' do # rubocop:disable RSpec/ExampleLength
         ::Collection.all.each do |col|
@@ -44,19 +49,15 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
     end
 
     context 'when newer collections are found (e.g. collections created at or after Hyrax 2.1.0)' do
-      let!(:collection) do
-        build(:collection_lw,
-              id: 'col_newer', user: user,
-              with_permission_template: { manage_users: [manager1.user_key] },
-              with_solr_document: true)
+      let(:collection) do
+        FactoryBot.create(:collection_lw,
+                          id: 'col_newer', user: user,
+                          with_permission_template: { manage_users: [manager1.user_key] },
+                          with_solr_document: true)
       end
-      let!(:permission_template) { collection.permission_template }
-      let!(:collection_type_gid) { collection.collection_type_gid }
-      let!(:edit_users) { collection.edit_users }
-
-      before do
-        allow(::Collection).to receive(:all).and_return([collection])
-      end
+      let(:permission_template) { collection.permission_template }
+      let(:collection_type_gid) { collection.collection_type_gid }
+      let(:edit_users) { collection.edit_users }
 
       it "doesn't change the collection" do
         expect(collection.collection_type_gid).to eq collection_type_gid
@@ -72,13 +73,13 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
     end
 
     context 'when legacy adminsets are found (e.g. adminsets created before Hyrax 2.1.0)' do
-      let!(:as_none) { build(:no_solr_grants_adminset, id: 'as_none', user: user) }
-      let!(:as_vu) { build(:no_solr_grants_adminset, id: 'as_vu', user: user, with_permission_template: { view_users: [reader1.user_key, reader2.user_key] }) }
-      let!(:as_vg) { build(:no_solr_grants_adminset, id: 'as_vg', user: user, with_permission_template: { view_groups: ['read_group_1', 'read_group_2'] }) }
-      let!(:as_du) { build(:no_solr_grants_adminset, id: 'as_du', user: user, with_permission_template: { deposit_users: [depositor1.user_key, depositor2.user_key] }) }
-      let!(:as_dg) { build(:no_solr_grants_adminset, id: 'as_dg', user: user, with_permission_template: { deposit_groups: ['deposit_group_1', 'deposit_group_2'] }) }
-      let!(:as_mu) { build(:no_solr_grants_adminset, id: 'as_mu', user: user, with_permission_template: { manage_users: [editor1.user_key, editor2.user_key] }) }
-      let!(:as_mg) { build(:no_solr_grants_adminset, id: 'as_mg', user: user, with_permission_template: { manage_groups: ['edit_group_1', 'edit_group_2'] }) }
+      let(:as_none) { FactoryBot.build(:no_solr_grants_adminset, id: 'as_none', user: user) }
+      let(:as_vu) { FactoryBot.build(:no_solr_grants_adminset, id: 'as_vu', user: user, with_permission_template: { view_users: [reader1.user_key, reader2.user_key] }) }
+      let(:as_vg) { FactoryBot.build(:no_solr_grants_adminset, id: 'as_vg', user: user, with_permission_template: { view_groups: ['read_group_1', 'read_group_2'] }) }
+      let(:as_du) { FactoryBot.build(:no_solr_grants_adminset, id: 'as_du', user: user, with_permission_template: { deposit_users: [depositor1.user_key, depositor2.user_key] }) }
+      let(:as_dg) { FactoryBot.build(:no_solr_grants_adminset, id: 'as_dg', user: user, with_permission_template: { deposit_groups: ['deposit_group_1', 'deposit_group_2'] }) }
+      let(:as_mu) { FactoryBot.build(:no_solr_grants_adminset, id: 'as_mu', user: user, with_permission_template: { manage_users: [editor1.user_key, editor2.user_key] }) }
+      let(:as_mg) { FactoryBot.build(:no_solr_grants_adminset, id: 'as_mg', user: user, with_permission_template: { manage_groups: ['edit_group_1', 'edit_group_2'] }) }
 
       before do
         allow(AdminSet).to receive(:all).and_return([as_none, as_vu, as_vg, as_du, as_dg, as_mu, as_mg])
@@ -106,8 +107,8 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
     end
 
     context 'when newer adminsets are found (e.g. adminsets created at or after Hyrax 2.1.0)' do
-      let!(:adminset) do
-        build(:adminset_lw,
+      let(:adminset) do
+        FactoryBot.build(:adminset_lw,
               id: 'as_newer', user: user,
               with_permission_template: {
                 manage_users: [editor1.user_key, editor2.user_key],
@@ -119,8 +120,8 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
               },
               with_solr_document: true)
       end
-      let!(:permission_template) { adminset.permission_template }
-      let!(:edit_users) { adminset.edit_users }
+      let(:permission_template) { adminset.permission_template }
+      let(:edit_users) { adminset.edit_users }
 
       before do
         allow(AdminSet).to receive(:all).and_return([adminset])
@@ -152,18 +153,18 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
 
   describe ".repair_migrated_collections" do
     context 'when legacy collections are found (e.g. collections created before Hyrax 2.1.0)' do
-      let!(:col_none) { build(:typeless_collection, id: 'col_none', user: user, edit_users: [user.user_key], do_save: true) }
-      let!(:col_vu) { build(:typeless_collection, id: 'col_vu', user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key], do_save: true) }
-      let!(:col_vg) { build(:typeless_collection, id: 'col_vg', user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'], do_save: true) }
-      let!(:col_mu) { build(:typeless_collection, id: 'col_mu', user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key], do_save: true) }
-      let!(:col_mg) { build(:typeless_collection, id: 'col_mg', user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], do_save: true) }
+      let(:col_none) { FactoryBot.build(:typeless_collection, id: 'col_none', user: user, edit_users: [user.user_key], do_save: true) }
+      let(:col_vu) { FactoryBot.build(:typeless_collection, id: 'col_vu', user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key], do_save: true) }
+      let(:col_vg) { FactoryBot.build(:typeless_collection, id: 'col_vg', user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'], do_save: true) }
+      let(:col_mu) { FactoryBot.build(:typeless_collection, id: 'col_mu', user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key], do_save: true) }
+      let(:col_mg) { FactoryBot.build(:typeless_collection, id: 'col_mg', user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], do_save: true) }
 
       context "and collection wasn't migrated at all" do
-        let!(:col_none) { build(:typeless_collection_lw, user: user, edit_users: [user.user_key], read_users: [], do_save: true) }
-        let!(:col_vu) { build(:typeless_collection_lw, user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key], do_save: true) }
-        let!(:col_vg) { build(:typeless_collection_lw, user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'], do_save: true) }
-        let!(:col_mu) { build(:typeless_collection_lw, user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key], do_save: true) }
-        let!(:col_mg) { build(:typeless_collection_lw, user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], do_save: true) }
+        let(:col_none) { FactoryBot.build(:typeless_collection_lw, user: user, edit_users: [user.user_key], read_users: [], do_save: true) }
+        let(:col_vu) { FactoryBot.build(:typeless_collection_lw, user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key], do_save: true) }
+        let(:col_vg) { FactoryBot.build(:typeless_collection_lw, user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'], do_save: true) }
+        let(:col_mu) { FactoryBot.build(:typeless_collection_lw, user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key], do_save: true) }
+        let(:col_mg) { FactoryBot.build(:typeless_collection_lw, user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], do_save: true) }
 
         it 'sets gid and adds permissions' do # rubocop:disable RSpec/ExampleLength
           ::Collection.all.each do |col|
@@ -186,11 +187,25 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
       end
 
       context "and collection type gid is set but permission template doesn't exist" do
-        let!(:col_none) { build(:user_collection_lw, id: 'col_none', user: user, edit_users: [user.user_key], collection_type_gid: default_gid) }
-        let!(:col_vu) { build(:user_collection_lw, id: 'col_vu', user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key], collection_type_gid: default_gid) }
-        let!(:col_vg) { build(:user_collection_lw, id: 'col_vg', user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'], collection_type_gid: default_gid) }
-        let!(:col_mu) { build(:user_collection_lw, id: 'col_mu', user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key], collection_type_gid: default_gid) }
-        let!(:col_mg) { build(:user_collection_lw, id: 'col_mg', user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], collection_type_gid: default_gid) }
+        let(:col_none) do
+          FactoryBot.build(:user_collection_lw, id: 'col_none', user: user, edit_users: [user.user_key], collection_type_gid: default_gid)
+        end
+
+        let(:col_vu) do
+          FactoryBot.build(:user_collection_lw, id: 'col_vu', user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key], collection_type_gid: default_gid)
+        end
+
+        let(:col_vg) do
+          FactoryBot.build(:user_collection_lw, id: 'col_vg', user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'], collection_type_gid: default_gid)
+        end
+
+        let(:col_mu) do
+          FactoryBot.build(:user_collection_lw, id: 'col_mu', user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key], collection_type_gid: default_gid)
+        end
+
+        let(:col_mg) do
+          FactoryBot.build(:user_collection_lw, id: 'col_mg', user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], collection_type_gid: default_gid)
+        end
 
         it 'sets gid and adds permissions' do # rubocop:disable RSpec/ExampleLength
           Collection.all.each do |col|
@@ -213,22 +228,22 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
       end
 
       context "and collection type gid isn't set but permission template exists with access set" do
-        let!(:col_none) { build(:typeless_collection, user: user, edit_users: [user.user_key], do_save: true, with_permission_template: true) }
-        let!(:col_vu) do
-          build(:typeless_collection, user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key],
-                                      do_save: true, with_permission_template: true)
+        let(:col_none) { FactoryBot.build(:typeless_collection, user: user, edit_users: [user.user_key], do_save: true, with_permission_template: true) }
+
+        let(:col_vu) do
+          FactoryBot.build(:typeless_collection, user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key], do_save: true, with_permission_template: true)
         end
-        let!(:col_vg) do
-          build(:typeless_collection, user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'],
-                                      do_save: true, with_permission_template: true)
+
+        let(:col_vg) do
+          FactoryBot.build(:typeless_collection, user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'], do_save: true, with_permission_template: true)
         end
-        let!(:col_mu) do
-          build(:typeless_collection, user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key],
-                                      do_save: true, with_permission_template: true)
+
+        let(:col_mu) do
+          FactoryBot.build(:typeless_collection, user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key], do_save: true, with_permission_template: true)
         end
-        let!(:col_mg) do
-          build(:typeless_collection, user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'],
-                                      do_save: true, with_permission_template: true)
+
+        let(:col_mg) do
+          FactoryBot.build(:typeless_collection, user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], do_save: true, with_permission_template: true)
         end
 
         before do
@@ -277,22 +292,22 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
       end
 
       context "and collection type gid isn't set and permission template exists with access not set" do
-        let!(:col_none) { build(:typeless_collection, user: user, edit_users: [user.user_key], do_save: true, with_permission_template: true) }
-        let!(:col_vu) do
-          build(:typeless_collection, user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key],
-                                      do_save: true, with_permission_template: true)
+        let(:col_none) { FactoryBot.build(:typeless_collection, user: user, edit_users: [user.user_key], do_save: true, with_permission_template: true) }
+
+        let(:col_vu) do
+          FactoryBot.build(:typeless_collection, user: user, edit_users: [user.user_key], read_users: [reader1.user_key, reader2.user_key], do_save: true, with_permission_template: true)
         end
-        let!(:col_vg) do
-          build(:typeless_collection, user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'],
-                                      do_save: true, with_permission_template: true)
+
+        let(:col_vg) do
+          FactoryBot.build(:typeless_collection, user: user, edit_users: [user.user_key], read_groups: ['read_group_1', 'read_group_2'], do_save: true, with_permission_template: true)
         end
-        let!(:col_mu) do
-          build(:typeless_collection, user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key],
-                                      do_save: true, with_permission_template: true)
+
+        let(:col_mu) do
+          FactoryBot.build(:typeless_collection, user: user, edit_users: [user.user_key, editor1.user_key, editor2.user_key], do_save: true, with_permission_template: true)
         end
-        let!(:col_mg) do
-          build(:typeless_collection, user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'],
-                                      do_save: true, with_permission_template: true)
+
+        let(:col_mg) do
+          FactoryBot.build(:typeless_collection, user: user, edit_users: [user.user_key], edit_groups: ['edit_group_1', 'edit_group_2'], do_save: true, with_permission_template: true)
         end
 
         it 'sets gid and adds access permissions' do # rubocop:disable RSpec/ExampleLength
@@ -322,13 +337,13 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
     end
 
     context 'when newer collections are found (e.g. collections created at or after Hyrax 2.1.0)' do
-      let!(:collection) do
-        build(:collection_lw, id: 'col_newer', user: user, with_permission_template: true, collection_type_settings: [:discoverable],
-                              edit_users: [user.user_key])
+      let(:collection) do
+        FactoryBot.build(:collection_lw, id: 'col_newer', user: user, with_permission_template: true, collection_type_settings: [:discoverable], edit_users: [user.user_key])
       end
-      let!(:permission_template) { collection.permission_template }
-      let!(:collection_type_gid) { collection.collection_type_gid }
-      let!(:edit_users) { collection.edit_users }
+
+      let(:permission_template) { collection.permission_template }
+      let(:collection_type_gid) { collection.collection_type_gid }
+      let(:edit_users) { collection.edit_users }
 
       it "doesn't change the collection" do
         expect(collection.collection_type_gid).to eq collection_type_gid
@@ -344,13 +359,13 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
     end
 
     context 'when legacy adminsets are found (e.g. adminsets created before Hyrax 2.1.0)' do
-      let!(:as_none) { build(:no_solr_grants_adminset, id: 'as_none', user: user) }
-      let!(:as_vu) { build(:no_solr_grants_adminset, id: 'as_vu', user: user, with_permission_template: { view_users: [reader1.user_key, reader2.user_key] }) }
-      let!(:as_vg) { build(:no_solr_grants_adminset, id: 'as_vg', user: user, with_permission_template: { view_groups: ['read_group_1', 'read_group_2'] }) }
-      let!(:as_du) { build(:no_solr_grants_adminset, id: 'as_du', user: user, with_permission_template: { deposit_users: [depositor1.user_key, depositor2.user_key] }) }
-      let!(:as_dg) { build(:no_solr_grants_adminset, id: 'as_dg', user: user, with_permission_template: { deposit_groups: ['deposit_group_1', 'deposit_group_2'] }) }
-      let!(:as_mu) { build(:no_solr_grants_adminset, id: 'as_mu', user: user, with_permission_template: { manage_users: [editor1.user_key, editor2.user_key] }) }
-      let!(:as_mg) { build(:no_solr_grants_adminset, id: 'as_mg', user: user, with_permission_template: { manage_groups: ['edit_group_1', 'edit_group_2'] }) }
+      let(:as_none) { FactoryBot.build(:no_solr_grants_adminset, id: 'as_none', user: user) }
+      let(:as_vu) { FactoryBot.build(:no_solr_grants_adminset, id: 'as_vu', user: user, with_permission_template: { view_users: [reader1.user_key, reader2.user_key] }) }
+      let(:as_vg) { FactoryBot.build(:no_solr_grants_adminset, id: 'as_vg', user: user, with_permission_template: { view_groups: ['read_group_1', 'read_group_2'] }) }
+      let(:as_du) { FactoryBot.build(:no_solr_grants_adminset, id: 'as_du', user: user, with_permission_template: { deposit_users: [depositor1.user_key, depositor2.user_key] }) }
+      let(:as_dg) { FactoryBot.build(:no_solr_grants_adminset, id: 'as_dg', user: user, with_permission_template: { deposit_groups: ['deposit_group_1', 'deposit_group_2'] }) }
+      let(:as_mu) { FactoryBot.build(:no_solr_grants_adminset, id: 'as_mu', user: user, with_permission_template: { manage_users: [editor1.user_key, editor2.user_key] }) }
+      let(:as_mg) { FactoryBot.build(:no_solr_grants_adminset, id: 'as_mg', user: user, with_permission_template: { manage_groups: ['edit_group_1', 'edit_group_2'] }) }
 
       before do
         allow(AdminSet).to receive(:all).and_return([as_none, as_vu, as_vg, as_du, as_dg, as_mu, as_mg])
@@ -378,21 +393,21 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
     end
 
     context 'when newer adminsets are found (e.g. adminsets created at or after Hyrax 2.1.0)' do
-      let!(:adminset) do
-        build(:adminset_lw,
-              id: 'as_newer', user: user,
-              with_permission_template: {
-                manage_users: [editor1.user_key, editor2.user_key],
-                deposit_users: [depositor1.user_key, depositor2.user_key],
-                view_users: [viewer1.user_key, viewer2.user_key],
-                manage_groups: ['manage_group_1', 'manage_group_2'],
-                deposit_groups: ['deposit_group_1', 'deposit_group_2'],
-                view_groups: ['view_group_1', 'view_group_2']
-              },
-              with_solr_document: true)
+      let(:adminset) do
+        FactoryBot.create(:adminset_lw,
+                          id: 'as_newer', user: user,
+                          with_permission_template: {
+                            manage_users: [editor1.user_key, editor2.user_key],
+                            deposit_users: [depositor1.user_key, depositor2.user_key],
+                            view_users: [viewer1.user_key, viewer2.user_key],
+                            manage_groups: ['manage_group_1', 'manage_group_2'],
+                            deposit_groups: ['deposit_group_1', 'deposit_group_2'],
+                            view_groups: ['view_group_1', 'view_group_2']
+                          },
+                          with_solr_document: true)
       end
-      let!(:permission_template) { adminset.permission_template }
-      let!(:edit_users) { adminset.edit_users }
+      let(:permission_template) { adminset.permission_template }
+      let(:edit_users) { adminset.edit_users }
 
       before do
         allow(AdminSet).to receive(:all).and_return([adminset])
@@ -424,11 +439,11 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
 
   def create_access(permission_template_id, agent_type, access, agent_ids)
     agent_ids.each do |agent_id|
-      create(:permission_template_access,
-             access,
-             permission_template: permission_template_id,
-             agent_type: agent_type,
-             agent_id: agent_id)
+      FactoryBot.create(:permission_template_access,
+                        access,
+                        permission_template: permission_template_id,
+                        agent_type: agent_type,
+                        agent_id: agent_id)
     end
   end
 
@@ -450,19 +465,6 @@ RSpec.describe Hyrax::Collections::MigrationService, clean_repo: true do
 
   def expect_solr_access(permission_template_id, pt_agent_type, pt_access, solrdoc_access)
     ptas = Hyrax::PermissionTemplateAccess.where(permission_template_id: permission_template_id, agent_type: pt_agent_type, access: pt_access)
-    expect_solr_group_access(ptas, solrdoc_access) if pt_agent_type == 'group'
-    expect_solr_user_access(ptas, solrdoc_access) if pt_agent_type == 'user'
-  end
-
-  def expect_solr_group_access(permission_templates, solrdoc_access)
-    permission_templates.each do |pta|
-      expect(solrdoc_access).to include pta.agent_id
-    end
-  end
-
-  def expect_solr_user_access(permission_templates, solrdoc_access)
-    permission_templates.each do |pta|
-      expect(solrdoc_access).to include pta.agent_id
-    end
+    expect(solrdoc_access).to include(*ptas.map(&:agent_id))
   end
 end
