@@ -34,7 +34,7 @@ module Hyrax
       # @param collection [::Collection] collection object to be migrated
       def self.migrate_collection(collection)
         return if collection.collection_type_gid.present? # already migrated
-        collection.collection_type_gid = Hyrax::CollectionType.find_or_create_default_collection_type.gid
+        collection.collection_type_gid = Hyrax::CollectionType.find_or_create_default_collection_type.to_global_id
         create_permissions(collection)
         collection.save
       end
@@ -80,8 +80,8 @@ module Hyrax
       #
       # @param collection [::Collection] collection object to be migrated/repaired
       def self.repair_migrated_collection(collection)
-        return if collection.collection_type_gid.present? && collection.collection_type_gid != Hyrax::CollectionType.find_or_create_default_collection_type.gid
-        collection.collection_type_gid = Hyrax::CollectionType.find_or_create_default_collection_type.gid
+        return if collection.collection_type_gid.present? && collection.collection_type_gid != Hyrax::CollectionType.find_or_create_default_collection_type.to_global_id
+        collection.collection_type_gid = Hyrax::CollectionType.find_or_create_default_collection_type.to_global_id
         permission_template = Hyrax::PermissionTemplate.find_by(source_id: collection.id)
         if permission_template.present?
           collection.reset_access_controls!

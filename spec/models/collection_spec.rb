@@ -8,7 +8,7 @@ RSpec.describe ::Collection, type: :model do
 
   describe '#bytes' do
     it 'returns a hard-coded integer and issues a deprecation warning' do
-      expect(Deprecation).to receive(:warn).once
+      expect(Deprecation).to receive(:warn).at_least(:once)
       expect(collection.bytes).to eq(0)
     end
   end
@@ -119,7 +119,7 @@ RSpec.describe ::Collection, type: :model do
     end
 
     let(:member) { Member.create }
-    let(:collection) { OtherCollection.create(title: ['test title'], collection_type_gid: create(:user_collection_type).gid) }
+    let(:collection) { OtherCollection.create(title: ['test title'], collection_type: FactoryBot.create(:user_collection_type)) }
 
     it "have members that know about the collection", clean_repo: true do
       member.reload
@@ -128,12 +128,12 @@ RSpec.describe ::Collection, type: :model do
   end
 
   describe '#collection_type_gid', :clean_repo do
-    subject(:collection) { described_class.new(collection_type_gid: collection_type.gid) }
+    subject(:collection) { described_class.new(collection_type_gid: collection_type.to_global_id) }
 
-    let(:collection_type) { create(:collection_type) }
+    let(:collection_type) { FactoryBot.create(:collection_type) }
 
     it 'has a collection_type_gid' do
-      expect(collection.collection_type_gid).to eq collection_type.gid
+      expect(collection.collection_type_gid).to eq collection_type.to_global_id.to_s
     end
   end
 
@@ -142,12 +142,12 @@ RSpec.describe ::Collection, type: :model do
     let(:collection_type) { create(:collection_type) }
 
     it 'sets gid' do
-      collection.collection_type_gid = collection_type.gid
-      expect(collection.collection_type_gid).to eq collection_type.gid
+      collection.collection_type_gid = collection_type.to_global_id
+      expect(collection.collection_type_gid).to eq collection_type.to_global_id.to_s
     end
 
     it 'throws ActiveRecord::RecordNotFound if cannot find collection type for the gid' do
-      gid = 'gid://internal/hyrax-collectiontype/999'
+      gid = 'gid://internal/Hyrax::CollectionType/999'
       expect { collection.collection_type_gid = gid }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
@@ -156,13 +156,16 @@ RSpec.describe ::Collection, type: :model do
     end
 
     it 'updates the collection_type instance variable' do
-      expect { collection.collection_type_gid = collection_type.gid }.to change { collection.collection_type }.from(create(:user_collection_type)).to(collection_type)
+      expect { collection.collection_type_gid = collection_type.to_global_id }
+        .to change { collection.collection_type }
+        .from(create(:user_collection_type)).to(collection_type)
     end
 
     it 'throws ArgumentError if collection has already been persisted with a collection type' do
       collection.save!
       expect(collection.collection_type_gid).not_to be_nil
-      expect { collection.collection_type_gid = create(:collection_type).gid }.to raise_error(RuntimeError, "Can't modify collection type of this collection")
+      expect { collection.collection_type_gid = FactoryBot.create(:collection_type).to_global_id }
+        .to raise_error(RuntimeError, "Can't modify collection type of this collection")
     end
   end
 
@@ -173,7 +176,6 @@ RSpec.describe ::Collection, type: :model do
     it 'returns a collection_type instance from the collection_type_gid' do
       expect(collection.collection_type).to be_kind_of(Hyrax::CollectionType)
       expect(collection.collection_type).to eq collection_type
-      expect(collection.collection_type.gid).to eq collection_type.gid
     end
   end
 
@@ -201,7 +203,7 @@ RSpec.describe ::Collection, type: :model do
   describe '#reset_access_controls!' do
     let!(:user) { build(:user) }
     let(:collection_type) { create(:collection_type) }
-    let!(:collection) { build(:collection_lw, user: user, collection_type_gid: collection_type.gid) }
+    let!(:collection) { FactoryBot.build(:collection_lw, user: user, collection_type: collection_type) }
     let!(:permission_template) { build(:permission_template) }
 
     before do
@@ -303,7 +305,7 @@ RSpec.describe ::Collection, type: :model do
         let(:coll123) do
           build(:collection_lw,
                 id: 'Collection123',
-                collection_type_gid: collection_type.gid,
+                collection_type_gid: collection_type.to_global_id,
                 with_nesting_attributes:
                 { ancestors: ['Parent_1'],
                   parent_ids: ['Parent_1'],

@@ -114,14 +114,15 @@ create_user('vw2@example.com', 'pppppp')
 genuser = create_user('general_user@example.com', 'pppppp')
 
 puts 'Create collection types for QA'
-_discoverable_gid = create_collection_type('discoverable_collection_type', title: 'Discoverable', description: 'Sample collection type allowing collections to be discovered.', discoverable: true).gid
-_sharable_gid = create_collection_type('sharable_collection_type', title: 'Sharable', description: 'Sample collection type allowing collections to be shared.', sharable: true).gid
+_discoverable_gid = create_collection_type('discoverable_collection_type', title: 'Discoverable', description: 'Sample collection type allowing collections to be discovered.', discoverable: true)
+                    .to_global_id
+_sharable_gid = create_collection_type('sharable_collection_type', title: 'Sharable', description: 'Sample collection type allowing collections to be shared.', sharable: true).to_global_id
 options = { title: 'Multi-membership', description: 'Sample collection type allowing works to belong to multiple collections.', allow_multiple_membership: true }
 _multi_membership_gid = create_collection_type('multi_membership_collection_type', options)
-_nestable_1_gid = create_collection_type('nestable_1_collection_type', title: 'Nestable 1', description: 'A sample collection type allowing nesting.', nestable: true).gid
-_nestable_2_gid = create_collection_type('nestable_2_collection_type', title: 'Nestable 2', description: 'Another sample collection type allowing nesting.', nestable: true).gid
-_empty_gid = create_collection_type('empty_collection_type', title: 'Test Empty Collection Type', description: 'A collection type with 0 collections of this type').gid
-inuse_gid = create_collection_type('inuse_collection_type', title: 'Test In-Use Collection Type', description: 'A collection type with at least one collection of this type').gid
+_nestable_1_gid = create_collection_type('nestable_1_collection_type', title: 'Nestable 1', description: 'A sample collection type allowing nesting.', nestable: true).to_global_id
+_nestable_2_gid = create_collection_type('nestable_2_collection_type', title: 'Nestable 2', description: 'Another sample collection type allowing nesting.', nestable: true).to_global_id
+_empty_gid = create_collection_type('empty_collection_type', title: 'Test Empty Collection Type', description: 'A collection type with 0 collections of this type').to_global_id
+inuse_gid = create_collection_type('inuse_collection_type', title: 'Test In-Use Collection Type', description: 'A collection type with at least one collection of this type').to_global_id
 
 puts 'Create collections for QA'
 inuse_col = create_public_collection(genuser, inuse_gid, 'inuse_col1', title: ['Public Collection of type In-Use'], description: ['Public collection of the type Test In-Use Collection Type.'])
@@ -158,11 +159,11 @@ user = create_user('foo@example.com', 'foobarbaz')
 puts 'Create collection types for collection nesting ad hoc testing'
 options = { title: 'Nestable Collection', description: 'Sample collection type that allows nesting of collections.',
             nestable: true, discoverable: true, sharable: true, allow_multiple_membership: true }
-nestable_gid = create_collection_type('nestable_collection', options).gid
+nestable_gid = create_collection_type('nestable_collection', options).to_global_id
 
 options = { title: 'Non-Nestable Collection', description: 'Sample collection type that DOES NOT allow nesting of collections.',
             nestable: false, discoverable: true, sharable: true, allow_multiple_membership: true }
-_nonnestable_gid = create_collection_type('nonnestable_collection', options).gid
+_nonnestable_gid = create_collection_type('nonnestable_collection', options).to_global_id
 
 puts 'Create collections for collection nesting ad hoc testing'
 pnc = create_public_collection(user, nestable_gid, 'public_nestable', title: ['Public Nestable Collection'], description: ['Public nestable collection for use in ad hoc tests.'])

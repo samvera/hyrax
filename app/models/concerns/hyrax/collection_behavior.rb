@@ -29,11 +29,11 @@ module Hyrax
       validates :collection_type_gid, presence: true
 
       # Need to define here in order to override setter defined by ActiveTriples
-      def collection_type_gid=(new_collection_type_gid)
+      def collection_type_gid=(new_collection_type_gid, force: false)
         new_collection_type_gid = new_collection_type_gid&.to_s
-        raise "Can't modify collection type of this collection" if persisted? && !collection_type_gid_was.nil? && collection_type_gid_was != new_collection_type_gid
+        raise "Can't modify collection type of this collection" if !force && persisted? && !collection_type_gid_was.nil? && collection_type_gid_was != new_collection_type_gid
         new_collection_type = Hyrax::CollectionType.find_by_gid!(new_collection_type_gid)
-        super
+        super(new_collection_type_gid)
         @collection_type = new_collection_type
         collection_type_gid
       end
@@ -47,7 +47,7 @@ module Hyrax
     end
 
     def collection_type=(new_collection_type)
-      self.collection_type_gid = new_collection_type.gid
+      self.collection_type_gid = new_collection_type.to_global_id
     end
 
     # Add members using the members association.

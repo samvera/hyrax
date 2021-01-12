@@ -60,7 +60,7 @@ module Hyrax
         # Coming from the UI, a collection type id should always be present.  Coming from the API, if a collection type id is not specified,
         # use the default collection type (provides backward compatibility with versions < Hyrax 2.1.0)
         collection_type_id = params[:collection_type_id].presence || default_collection_type.id
-        @collection.collection_type_gid = CollectionType.find(collection_type_id).gid
+        @collection.collection_type_gid = CollectionType.find(collection_type_id).to_global_id
         add_breadcrumb t(:'hyrax.controls.home'), root_path
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
         add_breadcrumb t('.header', type_title: @collection.collection_type.title), request.path
@@ -111,7 +111,7 @@ module Hyrax
         authorize! :create, @collection
         # Coming from the UI, a collection type gid should always be present.  Coming from the API, if a collection type gid is not specified,
         # use the default collection type (provides backward compatibility with versions < Hyrax 2.1.0)
-        @collection.collection_type_gid = params[:collection_type_gid].presence || default_collection_type.gid
+        @collection.collection_type_gid = params[:collection_type_gid].presence || default_collection_type.to_global_id
         @collection.attributes = collection_params.except(:members, :parent_id, :collection_type_gid)
         @collection.apply_depositor_metadata(current_user.user_key)
         add_members_to_collection unless batch.empty?

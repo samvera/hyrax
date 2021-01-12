@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Hyrax
-  class CollectionType < ActiveRecord::Base
+  class CollectionType < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
     # @!method id
     #   @return [Integer]
     # @!method description
@@ -75,6 +75,15 @@ module Hyrax
     # @return [Hyrax::CollectionType] an instance of Hyrax::CollectionType with id = the model_id portion of the gid (e.g. 3)
     # @raise [ActiveRecord::RecordNotFound] if record matching gid is not found
     def self.find_by_gid!(gid)
+      raise(URI::InvalidURIError) if gid.nil?
+      GlobalID::Locator.locate(gid)
+    rescue NameError
+      Rails.logger.warn "#{self.class}##{__method__} called with #{gid}, which is " \
+                        "a legacy collection type global id format. If this " \
+                        "collection type gid is attached to a collection in " \
+                        "your repository you'll want to run " \
+                        "`hyrax:collections:update_collection_type_global_ids` to " \
+                        "update references. see: https://github.com/samvera/hyrax/issues/4696"
       find(GlobalID.new(gid).model_id)
     end
 
@@ -86,18 +95,24 @@ module Hyrax
       SETTINGS_ATTRIBUTES
     end
 
+    ##
+    # @deprecation use #to_global_id
+    #
     # Return the Global Identifier for this collection type.
-    # @return [String] Global Identifier (gid) for this collection_type (e.g. gid://internal/hyrax-collectiontype/3)
+    # @return [String, nil] Global Identifier (gid) for this collection_type (e.g. gid://internal/hyrax-collectiontype/3)
+    #
+    # @see https://github.com/rails/globalid#usage
     def gid
-      URI::GID.build(app: GlobalID.app, model_name: model_name.name.parameterize.to_sym, model_id: id).to_s if id
+      Deprecation.warn('use #to_global_id.')
+      to_global_id.to_s if id
     end
 
     ##
     # @return [Enumerable<Collection, PcdmCollection>]
     def collections(use_valkyrie: false)
       return [] unless id
-      return Hyrax.custom_queries.find_collections_by_type(global_id: gid) if use_valkyrie
-      ActiveFedora::Base.where(Hyrax.config.collection_type_index_field.to_sym => gid.to_s)
+      return Hyrax.custom_queries.find_collections_by_type(global_id: to_global_id) if use_valkyrie
+      ActiveFedora::Base.where(Hyrax.config.collection_type_index_field.to_sym => to_global_id.to_s)
     end
 
     ##
@@ -188,5 +203,5 @@ module Hyrax
     def exists_for_machine_id?(machine_id)
       self.class.exists?(machine_id: machine_id)
     end
-  end
+  end # rubocop:enable Metrics/ClassLength
 end

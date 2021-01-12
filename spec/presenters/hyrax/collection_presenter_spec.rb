@@ -58,7 +58,7 @@ RSpec.describe Hyrax::CollectionPresenter do
     let(:collection_type) { create(:collection_type) }
 
     describe 'when solr_document#collection_type_gid exists' do
-      let(:collection) { build(:collection_lw, collection_type_gid: collection_type.gid) }
+      let(:collection) { FactoryBot.build(:collection_lw, collection_type: collection_type) }
       let(:solr_doc) { SolrDocument.new(collection.to_solr) }
 
       it 'finds the collection type based on the solr_document#collection_type_gid if one exists' do

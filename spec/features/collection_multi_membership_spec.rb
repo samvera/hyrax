@@ -12,11 +12,11 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, js: true
   end
 
   describe 'when both collections support multiple membership' do
-    let(:old_collection) { build(:collection_lw, user: admin_user, collection_type_gid: multi_membership_type_1.gid, title: ['OldCollectionTitle']) }
+    let(:old_collection) { FactoryBot.build(:collection_lw, user: admin_user, collection_type: multi_membership_type_1, title: ['OldCollectionTitle']) }
     let!(:work) { create(:generic_work, user: admin_user, member_of_collections: [old_collection], title: ['The highly valued work that everyone wants in their collection']) }
 
     context 'and are of different types' do
-      let!(:new_collection) { create(:collection_lw, user: admin_user, collection_type_gid: multi_membership_type_2.gid, title: ['NewCollectionTitle']) }
+      let!(:new_collection) { FactoryBot.create(:collection_lw, user: admin_user, collection_type: multi_membership_type_2, title: ['NewCollectionTitle']) }
 
       it 'then the work is added to both collections' do
         # Add to second multi-membership collection of a different type
@@ -35,7 +35,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, js: true
     end
 
     context 'and are of the same type' do
-      let!(:new_collection) { create(:collection_lw, user: admin_user, collection_type_gid: multi_membership_type_1.gid, title: ['NewCollectionTitle']) }
+      let!(:new_collection) { FactoryBot.create(:collection_lw, user: admin_user, collection_type: multi_membership_type_1, title: ['NewCollectionTitle']) }
 
       it 'then the work is added to both collections' do
         # Add to second multi-membership collection of a different type
@@ -55,7 +55,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, js: true
   end
 
   describe 'when both collections require single membership' do
-    let(:old_collection) { build(:collection_lw, user: admin_user, collection_type_gid: single_membership_type_1.gid, title: ['OldCollectionTitle']) }
+    let(:old_collection) { FactoryBot.build(:collection_lw, user: admin_user, collection_type: single_membership_type_1, title: ['OldCollectionTitle']) }
     let!(:work) do
       create(:generic_work,
              user: admin_user,
@@ -66,7 +66,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, js: true
     end
 
     context 'and are of different types' do
-      let!(:new_collection) { create(:collection_lw, user: admin_user, collection_type_gid: single_membership_type_2.gid, title: ['NewCollectionTitle']) }
+      let!(:new_collection) { FactoryBot.create(:collection_lw, user: admin_user, collection_type: single_membership_type_2, title: ['NewCollectionTitle']) }
 
       it 'then the work is added to both collections' do
         # Add to second single-membership collection of a different type
@@ -85,7 +85,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, js: true
     end
 
     context 'and are of the same type' do
-      let!(:new_collection) { create(:collection_lw, user: admin_user, collection_type_gid: single_membership_type_1.gid, title: ['NewCollectionTitle']) }
+      let!(:new_collection) { FactoryBot.create(:collection_lw, user: admin_user, collection_type: single_membership_type_1, title: ['NewCollectionTitle']) }
 
       context 'then the work fails to add to the second collection' do
         it 'from the dashboard->works batch add to collection' do
@@ -156,7 +156,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, js: true
     let!(:work) { create(:generic_work, user: admin_user, member_of_collections: [old_collection], title: ['The highly valued work that everyone wants in their collection']) }
 
     context 'allowing multi-membership' do
-      let(:old_collection) { create(:collection_lw, user: admin_user, collection_type_gid: multi_membership_type_1.gid, title: ['CollectionTitle']) }
+      let(:old_collection) { FactoryBot.create(:collection_lw, user: admin_user, collection_type: multi_membership_type_1, title: ['CollectionTitle']) }
       let!(:new_collection) { old_collection }
 
       it 'then the add is treated as a success' do
@@ -176,7 +176,7 @@ RSpec.describe 'Adding a work to multiple collections', type: :feature, js: true
     end
 
     context 'requiring single-membership' do
-      let(:old_collection) { create(:collection_lw, user: admin_user, collection_type_gid: single_membership_type_1.gid, title: ['CollectionTitle']) }
+      let(:old_collection) { FactoryBot.create(:collection_lw, user: admin_user, collection_type: single_membership_type_1, title: ['CollectionTitle']) }
       let!(:new_collection) { old_collection }
 
       it 'then the add is treated as a success' do

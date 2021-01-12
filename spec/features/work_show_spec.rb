@@ -23,7 +23,7 @@ RSpec.describe "work show view" do
     let(:file_set) { FactoryBot.create(:file_set, user: user, title: ['A Contained FileSet'], content: file) }
     let(:file) { File.open(fixture_path + '/world.png') }
     let(:multi_membership_type_1) { FactoryBot.create(:collection_type, :allow_multiple_membership, title: 'Multi-membership 1') }
-    let!(:collection) { FactoryBot.create(:collection_lw, user: user, collection_type_gid: multi_membership_type_1.gid) }
+    let!(:collection) { FactoryBot.create(:collection_lw, user: user, collection_type: multi_membership_type_1) }
 
     before do
       sign_in user
@@ -61,7 +61,7 @@ RSpec.describe "work show view" do
       click_button "Add to collection" # opens the modal
       # Really ensure that this Collection model is persisted
       Collection.all.map(&:destroy!)
-      persisted_collection = create(:collection_lw, user: user, collection_type_gid: multi_membership_type_1.gid)
+      persisted_collection = FactoryBot.create(:collection_lw, user: user, collection_type: multi_membership_type_1)
       select_member_of_collection(persisted_collection)
       click_button 'Save changes'
 
@@ -88,7 +88,7 @@ RSpec.describe "work show view" do
     let(:file_set) { create(:file_set, user: user, title: ['A Contained FileSet'], content: file) }
     let(:file) { File.open(fixture_path + '/world.png') }
     let(:multi_membership_type_1) { create(:collection_type, :allow_multiple_membership, title: 'Multi-membership 1') }
-    let!(:collection) { create(:collection_lw, user: viewer, collection_type_gid: multi_membership_type_1.gid) }
+    let!(:collection) { FactoryBot.create(:collection_lw, user: viewer, collection_type: multi_membership_type_1) }
 
     before do
       sign_in viewer

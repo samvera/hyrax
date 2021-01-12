@@ -7,7 +7,7 @@ RSpec.describe Hyrax::Forms::Admin::CollectionTypeForm, :clean_repo do
     let(:collection_type) { FactoryBot.create(:collection_type) }
 
     before do
-      FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: collection_type.gid)
+      FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: collection_type.to_global_id)
     end
   end
 

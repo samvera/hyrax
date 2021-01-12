@@ -47,7 +47,7 @@ FactoryBot.define do
   #
   # @example Build a collection generating its collection type with specific settings. Light Weight.
   #          NOTE: Do not use this approach if you need access to the collection type in the test.
-  #          DEFAULT: If `collection_type_settings` and `collection_type_gid` are not specified, then the default
+  #          DEFAULT: If `collection_type_settings` and `collection_type` are not specified, then the default
   #          User Collection type will be used.
   #   # Any not specified default to ON.  At least one setting should be specified.
   #   let(:settings) { [
@@ -70,7 +70,7 @@ FactoryBot.define do
   #                      :allow_multiple_membership, # OR :not_allow_multiple_membership
   #                    ] }
   #   let(:collection_type) { create(:collection_lw_type, settings) }
-  #   let(:collection) { build(:collection_lw, collection_type_gid: collection_type.gid) }
+  #   let(:collection) { build(:collection_lw, collection_type: collection_type) }
   #
   # @example Build a collection with nesting fields set in the solr document.  Light weight.
   #          NOTE: The property `with_nesting_attributes` is only supported for building collections.  The attributes will
@@ -103,6 +103,7 @@ FactoryBot.define do
     transient do
       user { create(:user) }
 
+      collection_type { nil }
       collection_type_settings { nil }
       with_permission_template { false }
       with_nesting_attributes { nil }
@@ -111,6 +112,7 @@ FactoryBot.define do
     sequence(:title) { |n| ["Collection Title #{n}"] }
 
     after(:build) do |collection, evaluator|
+      collection.collection_type_gid = evaluator.collection_type.to_global_id if evaluator.collection_type&.id.present?
       collection.apply_depositor_metadata(evaluator.user.user_key)
 
       CollectionLwFactoryHelper.process_collection_type_settings(collection, evaluator)
@@ -163,14 +165,13 @@ FactoryBot.define do
   factory :user_collection_lw, class: Collection do
     transient do
       user { create(:user) }
+      collection_type { create(:user_collection_type) }
     end
 
     sequence(:title) { |n| ["User Collection Title #{n}"] }
 
     after(:build) do |collection, evaluator|
       collection.apply_depositor_metadata(evaluator.user.user_key)
-      collection_type = create(:user_collection_type)
-      collection.collection_type_gid = collection_type.gid
     end
   end
 

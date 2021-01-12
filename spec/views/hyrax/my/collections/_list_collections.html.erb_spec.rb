@@ -18,13 +18,13 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
         "title_tesim" => ["Collection Title"],
         "description_tesim" => ["Collection Description"],
         "thumbnail_path_ss" => Hyrax::CollectionIndexer.thumbnail_path_service.default_image,
-        "collection_type_gid_ssim" => [collection_type.gid],
+        "collection_type_gid_ssim" => [collection_type.to_global_id.to_s],
         "system_modified_dtsi" => modified_date
       }
     end
 
     let(:doc) { SolrDocument.new(attributes) }
-    let(:collection_type) { build(:collection_type) }
+    let(:collection_type) { FactoryBot.build(:collection_type, id: 'coltype_id') }
     let(:collection_presenter) { Hyrax::CollectionPresenter.new(doc, Ability.new(build(:user)), nil) }
 
     before do
@@ -67,7 +67,7 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
         "title_tesim" => ["AdminSet Title"],
         "description_tesim" => ["Admin Description"],
         "thumbnail_path_ss" => Hyrax::AdminSetIndexer.thumbnail_path_service.default_image,
-        "collection_type_gid_ssim" => [collection_type.gid],
+        "collection_type_gid_ssim" => [collection_type.to_global_id.to_s],
         "system_modified_dtsi" => modified_date
       }
     end

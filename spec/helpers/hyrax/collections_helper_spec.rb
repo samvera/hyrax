@@ -131,7 +131,8 @@ RSpec.describe Hyrax::CollectionsHelper do
       let(:test_collection_type) { FactoryBot.create(:collection_type) }
 
       it "returns the CollectionType title" do
-        expect(collection_type_label(test_collection_type.gid)).to eq test_collection_type.title
+        expect(collection_type_label(test_collection_type.to_global_id))
+          .to eq test_collection_type.title
       end
     end
 
