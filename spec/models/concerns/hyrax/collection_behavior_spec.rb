@@ -2,7 +2,7 @@
 
 RSpec.describe Hyrax::CollectionBehavior, clean_repo: true do
   let(:collection) { create(:collection_lw) }
-  let(:work) { create(:work) }
+  let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
 
   describe "#destroy" do
     it "removes the collection id from associated members" do
@@ -12,7 +12,7 @@ RSpec.describe Hyrax::CollectionBehavior, clean_repo: true do
       collection_via_query = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: collection.id, use_valkyrie: false)
 
       expect { collection_via_query.destroy }
-        .to change { work.class.find(work.id).member_of_collection_ids }
+        .to change { Hyrax.query_service.find_by(id: work.id).member_of_collection_ids }
         .from([collection.id])
         .to([])
     end

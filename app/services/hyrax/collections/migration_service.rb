@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Hyrax
   module Collections
+    ##
+    # @deprecated this migration tool should no longer be useful after Hyrax 2.1.0; Removal is planned for 4.0
     # Responsible for migrating legacy collections.  Legacy collections are those created before Hyrax 2.1.0 and
     # are identified by the lack of the collection having a collection type gid.
     class MigrationService
@@ -9,6 +11,8 @@ module Hyrax
       # Migrate all legacy collections to extended collections with collection type assigned.  Legacy collections are those
       # created before Hyrax 2.1.0 and are identified by the lack of the collection having a collection type gid.
       def self.migrate_all_collections
+        Deprecation.warn('This migration tool will be removed in Hyrax 4.0.0.')
+
         Rails.logger.info "*** Migrating #{::Collection.count} collections"
         ::Collection.all.each do |col|
           migrate_collection(col)
@@ -56,6 +60,8 @@ module Hyrax
       # access created and associated with the collection.  Any collection without collection type gid as nil or assigned
       # the default collection type are ignored.
       def self.repair_migrated_collections
+        Deprecation.warn('This migration tool will be removed in Hyrax 4.0.0.')
+
         Rails.logger.info "*** Repairing migrated collections"
         ::Collection.all.each do |col|
           repair_migrated_collection(col)
