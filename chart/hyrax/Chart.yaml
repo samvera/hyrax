@@ -3,7 +3,7 @@ name: hyrax
 description: An open-source, Samvera-powered digital repository system
 type: application
 version: 0.4.1
-appVersion: 3.0.0-rc2
+appVersion: 3.0.0-rc3
 dependencies:
   - name: fcrepo
     version: 0.4.1
