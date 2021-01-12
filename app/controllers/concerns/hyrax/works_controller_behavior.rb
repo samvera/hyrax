@@ -11,11 +11,12 @@ module Hyrax
       with_themed_layout :decide_layout
       copy_blacklight_config_from(::CatalogController)
 
-      class_attribute :_curation_concern_type, :show_presenter, :work_form_service, :search_builder_class, :iiif_manifest_builder
+      class_attribute :_curation_concern_type, :show_presenter, :work_form_service, :search_builder_class
+      class_attribute :iiif_manifest_builder, instance_accessor: false
       self.show_presenter = Hyrax::WorkShowPresenter
       self.work_form_service = Hyrax::WorkFormService
       self.search_builder_class = WorkSearchBuilder
-      self.iiif_manifest_builder = (Flipflop.cache_work_iiif_manifest? ? Hyrax::CachingIiifManifestBuilder.new : Hyrax::ManifestBuilderService.new)
+      self.iiif_manifest_builder = nil
       attr_accessor :curation_concern
       helper_method :curation_concern, :contextual_path
 
@@ -142,7 +143,8 @@ module Hyrax
     private
 
     def iiif_manifest_builder
-      self.class.iiif_manifest_builder
+      self.class.iiif_manifest_builder ||
+        (Flipflop.cache_work_iiif_manifest? ? Hyrax::CachingIiifManifestBuilder.new : Hyrax::ManifestBuilderService.new)
     end
 
     def iiif_manifest_presenter
