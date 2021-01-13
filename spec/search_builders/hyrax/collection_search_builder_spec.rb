@@ -10,7 +10,7 @@ RSpec.describe Hyrax::CollectionSearchBuilder do
   end
 
   describe '#models' do
-    its(:models) { is_expected.to eq([Collection]) }
+    its(:models) { is_expected.to eq([Collection, Hyrax::PcdmCollection]) }
   end
 
   describe '#discovery_permissions' do
