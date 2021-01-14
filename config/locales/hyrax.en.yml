@@ -647,11 +647,11 @@ en:
       email_label: Your Email
       header: Contact Form
       issue_types:
-        browsing: Browsing and searching
-        changing: Making changes to my content
         depositing: Depositing content
-        general: General inquiry or request
+        changing: Making changes to my content
+        browsing: Browsing and searching
         reporting: Reporting a problem
+        general: General inquiry or request
       message_label: Message
       name_label: Your Name
       notice: Please use the contact form to submit inquiries about this system; to report a problem you are experiencing with the system; to request assistance using the system; or to provide general feedback. See the Help page for additional information about this system.

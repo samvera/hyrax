@@ -24,13 +24,7 @@ module Hyrax
     end
 
     def self.issue_types_for_locale
-      [
-        I18n.t('hyrax.contact_form.issue_types.depositing'),
-        I18n.t('hyrax.contact_form.issue_types.changing'),
-        I18n.t('hyrax.contact_form.issue_types.browsing'),
-        I18n.t('hyrax.contact_form.issue_types.reporting'),
-        I18n.t('hyrax.contact_form.issue_types.general')
-      ]
+      I18n.t('hyrax.contact_form.issue_types').values.select(&:present?)
     end
   end
 end
