@@ -1,3 +1,5 @@
+<% provide :page_title, I18n.t('hyrax.contact_form.title') %>
+
 <div class="alert alert-info">
   <%= render 'directions' %>
 </div>
@@ -20,7 +22,7 @@
   <div class="form-group">
     <%= f.label :category, t('hyrax.contact_form.type_label'), class: "col-sm-2 control-label" %>
     <div class="col-sm-10">
-      <%= f.select 'category', options_for_select(contact_form_issue_type_options), {}, {class: 'form-control', required: true } %>
+      <%= f.select 'category', options_for_select(contact_form_issue_type_options), { include_blank: t('hyrax.contact_form.select_type') }, {class: 'form-control', required: true } %>
     </div>
   </div>
 

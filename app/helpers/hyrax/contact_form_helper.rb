@@ -17,8 +17,7 @@ module Hyrax
     #
     # @see https://apidock.com/rails/ActionView/Helpers/FormOptionsHelper/options_for_select
     def contact_form_issue_type_options
-      types = Hyrax::ContactForm.issue_types_for_locale.dup
-      types.unshift([t('hyrax.contact_form.select_type'), nil])
+      Hyrax::ContactForm.issue_types_for_locale.dup
     end
   end
 end
