@@ -22,15 +22,14 @@ module Hyrax
 
       def self.filter_source(source_type:, ids:)
         return [] if ids.empty?
-        id_clause = "{!terms f=id}#{ids.join(',')}"
-        query = case source_type
+        model = case source_type
                 when 'admin_set'
-                  "_query_:\"{!raw f=has_model_ssim}AdminSet\""
+                  Hyrax::AdministrativeSet
                 when 'collection'
-                  "_query_:\"{!raw f=has_model_ssim}Collection\""
+                  Hyrax::PcdmCollection
                 end
-        query += " AND #{id_clause}"
-        Hyrax::SolrService.query(query, fl: 'id', rows: ids.count).map { |hit| hit['id'] }
+
+        Hyrax.custom_queries.find_ids_by_model(model: model, ids: ids).to_a
       end
       private_class_method :filter_source
 
