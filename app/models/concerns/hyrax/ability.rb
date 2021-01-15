@@ -367,8 +367,8 @@ module Hyrax
                                     .select(:source_id)
                                     .distinct
                                     .pluck(:source_id)
-      query = "_query_:\"{!raw f=has_model_ssim}AdminSet\" AND {!terms f=id}#{ids.join(',')}"
-      Hyrax::SolrService.count(query).positive?
+
+      Hyrax.custom_queries.find_ids_by_model(model: Hyrax::AdministrativeSet, ids: ids).any?
     end
 
     def registered_user?
