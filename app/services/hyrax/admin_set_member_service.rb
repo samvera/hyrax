@@ -18,7 +18,7 @@ module Hyrax
     delegate :repository, to: :scope
 
     ##
-    # @param [#repository] scope Typically acontroller object which responds to :repository
+    # @param [#repository] scope Typically a controller object which responds to +#repository+
     # @param [::Collection] collection an collection of type admin set
     # @param [ActionController::Parameters] params query params
     def initialize(scope:, collection:, params:)

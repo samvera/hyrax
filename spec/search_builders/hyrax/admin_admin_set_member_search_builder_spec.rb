@@ -1,33 +1,23 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::AdminAdminSetMemberSearchBuilder do
-  let(:context) do
-    double(blacklight_config: CatalogController.blacklight_config,
-           current_ability: ability)
-  end
-  let(:user_groups) { [] }
-  let(:ability) do
-    instance_double(Ability,
-                    admin?: true,
-                    user_groups: user_groups,
-                    current_user: user)
-  end
-  let(:user) { create(:user) }
-  let(:admin_set) { double(id: '123') }
-  let(:builder) { described_class.new(scope: context, collection: admin_set) }
+  subject(:builder) { described_class.new(scope: scope, collection: admin_set) }
+  let(:ability) { Ability.new(user) }
+  let(:admin_set) { :FAKE_ADMIN_SET }
+  let(:scope) { FakeSearchBuilderScope.new(current_ability: ability) }
+  let(:user) { FactoryBot.build(:user) }
+
+  let(:solr_params) { { fq: [] } }
 
   describe '#filter_models' do
-    before do
-      # This prevents any generated classes from interfering with this test:
-      allow(builder).to receive(:work_classes).and_return([GenericWork])
-      builder.filter_models(solr_params)
-    end
-    let(:solr_params) { { fq: [] } }
+    before { allow(Hyrax.config).to receive(:curation_concerns).and_return([Monograph]) }
 
     it 'searches for valid work types' do
-      expect(solr_params[:fq].first).to include('{!terms f=has_model_ssim}GenericWork,Collection')
+      expect(builder.filter_models(solr_params))
+        .to contain_exactly('{!terms f=has_model_ssim}Monograph,Collection')
     end
+
     it 'does not limit to active only' do
-      expect(solr_params[:fq].first).not_to include('-suppressed_bsi:true')
+      expect(builder.filter_models(solr_params)).not_to include('-suppressed_bsi:true')
     end
   end
 
