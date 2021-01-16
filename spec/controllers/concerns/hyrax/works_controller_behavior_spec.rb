@@ -300,13 +300,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     end
 
     context 'when indexed as public' do
-      let(:index_document) do
-        Wings::ActiveFedoraConverter.convert(resource: work).to_solr.tap do |doc|
-          doc[Hydra.config.permissions.read.group] = 'public'
-        end
-      end
-
-      before { ActiveFedora::SolrService.add(index_document, softCommit: true) }
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :public, alternate_ids: [id], title: title) }
 
       it_behaves_like 'allows show access'
     end
@@ -314,13 +308,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     context 'when the user has read access' do
       include_context 'with a logged in user'
 
-      let(:index_document) do
-        Wings::ActiveFedoraConverter.convert(resource: work).to_solr.tap do |doc|
-          doc[Hydra.config.permissions.read.individual] = [user.user_key]
-        end
-      end
-
-      before { ActiveFedora::SolrService.add(index_document, softCommit: true) }
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, alternate_ids: [id], title: title, read_users: [user]) }
 
       it_behaves_like 'allows show access'
     end
