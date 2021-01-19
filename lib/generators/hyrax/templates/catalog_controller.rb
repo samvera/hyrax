@@ -20,6 +20,10 @@ class CatalogController < ApplicationController
     config.view.gallery.partials = [:index_header, :index]
     config.view.slideshow.partials = [:index]
 
+    # Because too many times on Samvera tech people raise a problem regarding a failed query to SOLR.
+    # Often, it's because they inadvertantly exceeded the character limit of a GET request.
+    config.http_method = :post
+
     ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
     config.default_solr_params = {
       qt: "search",
