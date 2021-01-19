@@ -33,31 +33,7 @@ module Hyrax
         solr_parameters[:fq] += limit_clause if limit_clause # add limits to prevent illegal nesting arrangements
       end
 
-      # If :deposit access is requested, check to see which collections the user has
-      # deposit or manage access to.
-      # @return [Array<String>] a list of filters to apply to the solr query
-      def gated_discovery_filters(permission_types = discovery_permissions, ability = current_ability)
-        return super unless permission_types.include?("deposit")
-        ["{!terms f=id}#{collection_ids_for_deposit.join(',')}"]
-      end
-
       private
-
-      def collection_ids_for_deposit
-        Hyrax::Collections::PermissionsService.collection_ids_for_deposit(ability: current_ability)
-      end
-
-      # My intention in this implementation is that if I need at least edit access on the queried document,
-      # then I must have one of the following access-levels
-      ACCESS_LEVELS_FOR_LEVEL = ActiveSupport::HashWithIndifferentAccess.new(
-        edit: ["edit"],
-        deposit: ["deposit"],
-        read: ["edit", "read"],
-        discover: ["edit", "discover", "read"]
-      ).freeze
-      def extract_discovery_permissions(access)
-        ACCESS_LEVELS_FOR_LEVEL.fetch(access)
-      end
 
       def limit_ids
         # exclude current collection from returned list
