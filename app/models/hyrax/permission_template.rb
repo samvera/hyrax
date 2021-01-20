@@ -35,6 +35,14 @@ module Hyrax
     has_one :active_workflow, -> { where(active: true) }, class_name: 'Sipity::Workflow', foreign_key: :permission_template_id
 
     ##
+    # @note this is a convenience method for +Hyrax.query_service.find_by(id: template.source_id)+
+    #
+    # @return [Hyrax::Resource] the collection this template is associated with
+    def source
+      Hyrax.query_service.find_by(id: source_id)
+    end
+
+    ##
     #
     # A bit of an analogue for a `belongs_to :source_model` as it crosses from Fedora to the DB
     # @return [AdminSet, ::Collection]

@@ -28,6 +28,31 @@ RSpec.describe Hyrax::PermissionTemplate, valkyrie_adapter: :test_adapter do
     end
   end
 
+  describe "#source" do
+    context 'when source is an AdminSet' do
+      it 'returns the source admin set' do
+        expect(permission_template.source).to eq admin_set
+      end
+    end
+
+    context 'when source is a Collection' do
+      let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection) }
+      let(:attributes) { { source_id: collection.id } }
+
+      it 'returns a Hyrax::PcdmCollection' do
+        expect(permission_template.source).to eq collection
+      end
+    end
+
+    context 'when source is any Resource' do
+      let(:admin_set) { FactoryBot.valkyrie_create(:hyrax_resource) }
+
+      it 'returns the source model' do
+        expect(permission_template.source).to eq admin_set
+      end
+    end
+  end
+
   describe "#source_model" do
     context 'when source is an AdminSet' do
       let(:admin_set) { FactoryBot.create(:admin_set) }
