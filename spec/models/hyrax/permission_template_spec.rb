@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::PermissionTemplate, :clean_repo do
-  let(:admin_set) { create(:admin_set) }
-  let(:collection) { create(:collection) }
-  let(:permission_template) { described_class.new(attributes) }
-  let(:attributes) { { source_id: admin_set.id } }
+  subject(:permission_template) { described_class.new(attributes) }
 
-  subject { permission_template }
+  let(:admin_set) { FactoryBot.create(:admin_set) }
+  let(:collection) { FactoryBot.create(:collection) }
+  let(:attributes) { { source_id: admin_set.id } }
 
   it { is_expected.to have_many(:available_workflows).dependent(:destroy) }
   it { is_expected.to have_one(:active_workflow).conditions(active: true).dependent(nil) }
