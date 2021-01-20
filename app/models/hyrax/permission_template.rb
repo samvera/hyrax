@@ -43,7 +43,6 @@ module Hyrax
     end
 
     ##
-    #
     # A bit of an analogue for a `belongs_to :source_model` as it crosses from Fedora to the DB
     # @return [AdminSet, ::Collection]
     # @raise [Hyrax::ObjectNotFoundError] when neither an AdminSet or Collection is found
