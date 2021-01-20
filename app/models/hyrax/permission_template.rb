@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 module Hyrax
+  ##
   # Defines behavior that is applied to objects added as members of an AdminSet
   #
   #  * access rights to stamp on each object
@@ -14,10 +15,14 @@ module Hyrax
     has_many :access_grants, class_name: 'Hyrax::PermissionTemplateAccess', dependent: :destroy
     accepts_nested_attributes_for :access_grants, reject_if: :all_blank
 
+    ##
     # @api public
+    #
     # Retrieve the agent_ids associated with the given agent_type and access
+    #
     # @param [String] agent_type
     # @param [String] access
+    #
     # @return [Array<String>] of agent_ids that match the given parameters
     def agent_ids_for(agent_type:, access:)
       access_grants.where(agent_type: agent_type, access: access).pluck(:agent_id)
@@ -29,6 +34,8 @@ module Hyrax
     # In a perfect world, there would be a join table that enforced uniqueness on the ID.
     has_one :active_workflow, -> { where(active: true) }, class_name: 'Sipity::Workflow', foreign_key: :permission_template_id
 
+    ##
+    #
     # A bit of an analogue for a `belongs_to :source_model` as it crosses from Fedora to the DB
     # @return [AdminSet, ::Collection]
     # @raise [Hyrax::ObjectNotFoundError] when neither an AdminSet or Collection is found
