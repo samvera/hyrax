@@ -44,7 +44,7 @@ module Hyrax
       # @return [ActiveFedora::Base, Hyrax::Resource] object
       def assign_for(object:, attribute: :identifier)
         record = registrar.register!(object: object)
-        object.public_send("#{attribute}=".to_sym, [record.identifier])
+        object.public_send("#{attribute}=".to_sym, Array.wrap(record.identifier))
         object
       end
 
