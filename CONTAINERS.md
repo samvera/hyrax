@@ -42,6 +42,8 @@ To stop the containers for the Hyrax-based application, type <kbd>Ctrl</kbd>+<kb
 
 _**Note:** Starting and stopping Docker in this way will preserve your data between restarts._
 
+_**Note:** I (Jeremy) encountered a problem using `docker-compose build`. I ran `bundle update` in `./hyrax` as well as within `./hyrax/.dassie`. That appeared to clear up the problem of a failure to build a gem._
+
 ### Code Changes and Testing
 
 With `docker-compose up` running, any changes you make to your cloned Hyrax code-base should show up in `http://localhost:3000`; There may be cases where you need to restart your test application (e.g. stop the containers and start them up again).
