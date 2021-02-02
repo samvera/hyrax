@@ -757,11 +757,12 @@ module Hyrax
     # @!attribute [w] range_for_number_of_results_to_display_per_page
     #   A configuration point for changing the available range for
     #   selecting per page results
+    # @note This has no impact on the default page size of the controller.
     attr_writer :range_for_number_of_results_to_display_per_page
 
     # @return [Array<Integer>]
     def range_for_number_of_results_to_display_per_page
-      @number_of_results_to_display_per_page ||= [10, 20, 50, 100]
+      @range_for_number_of_results_to_display_per_page ||= [10, 20, 50, 100]
     end
 
     private

@@ -85,6 +85,8 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:upload_path) }
   it { is_expected.to respond_to(:registered_ingest_dirs) }
   it { is_expected.to respond_to(:registered_ingest_dirs=) }
+  it { is_expected.to respond_to(:range_for_number_of_results_to_display_per_page) }
+  it { is_expected.to respond_to(:range_for_number_of_results_to_display_per_page=) }
   it { is_expected.to respond_to(:work_requires_files?) }
 
   describe "#registered_ingest_dirs" do
