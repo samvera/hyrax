@@ -53,7 +53,7 @@ module Hyrax
     # TODO: Extract a presenter object that wrangles all of these instance variables.
     def prepare_instance_variables_for_batch_control_display
       # set up some parameters for allowing the batch controls to show appropriately
-      max_batch_size = 80
+      max_batch_size = Hyrax.config.range_for_number_of_results_to_display_per_page.max
       count_on_page = @document_list.count { |doc| batch.index(doc.id) }
       @disable_select_all = @document_list.count > max_batch_size
       @result_set_size = @response.response["numFound"]

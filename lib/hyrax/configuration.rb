@@ -751,6 +751,19 @@ module Hyrax
       @identifier_registrars ||= {}
     end
 
+    # A configuration point for changing the available range for
+    # selecting per page results
+    #
+    # @!attribute [w] range_for_number_of_results_to_display_per_page
+    #   A configuration point for changing the available range for
+    #   selecting per page results
+    attr_writer :range_for_number_of_results_to_display_per_page
+
+    # @return [Array<Integer>]
+    def range_for_number_of_results_to_display_per_page
+      @number_of_results_to_display_per_page ||= [10, 20, 50, 100]
+    end
+
     private
 
     # @param [Symbol, #to_s] model_name - symbol representing the model
