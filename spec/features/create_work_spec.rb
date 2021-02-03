@@ -8,6 +8,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
   let!(:uploaded_file2) { Hyrax::UploadedFile.create(file: file2, user: user) }
 
   before do
+    Hyrax::EnsureWellFormedAdminSetService.call
     # Grant the user access to deposit into an admin set.
     create(:permission_template_access,
            :deposit,
@@ -60,6 +61,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
     let(:second_user) { create(:user) }
 
     before do
+      Hyrax::EnsureWellFormedAdminSetService.call
       ProxyDepositRights.create!(grantor: second_user, grantee: user)
       sign_in user
       click_link 'Works'

@@ -3,6 +3,7 @@ RSpec.describe 'Creating a new Monograph (Valkyrie work)', :js, :workflow, :clea
   let(:user) { FactoryBot.create(:user) }
 
   before do
+    Hyrax::EnsureWellFormedAdminSetService.call
     FactoryBot
       .create(:permission_template_access,
               :deposit,
