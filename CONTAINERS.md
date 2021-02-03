@@ -97,6 +97,16 @@ docker-compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rake -T"
 
 In the two examples, note the difference in the `-w` switch. In the first case, it's referencing the Hyrax-based application. In the latter case, it's referencing the Hyrax engine.
 
+### Debugging
+
+I (Jeremy) find myself wanting to debug the application.  This requires a somewhat different approach than running Hyrax bare-metal.  You need to use `docker attach` to debug the running docker instance.
+
+1. With `docker-compose up` running open a new Terminal session.
+2. In that new Terminal session, using `docker container ls` find the "CONTAINER ID" for the `hyrax-engine-dev`.
+3. With the "CONTAINER ID", run `docker attach <CONTAINER ID>`.
+
+This advice comes from [Debugging Rails App With Docker Compose: How to use Byebug in a dockerized rails app](https://medium.com/gogox-technology/debugging-rails-app-with-docker-compose-39a3767962f4).
+
 <!-- NOTE: This title is referenced in the top-level documentation/developing-your-hyrax-based-app.md. Keep that in mind if you change it. -->
 ## Docker Image for Hyrax-based Applications
 
