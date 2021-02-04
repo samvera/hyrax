@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 module Hyrax
   module HyraxHelperBehavior
@@ -192,6 +193,7 @@ module Hyrax
     # *Sometimes* a Blacklight index field helper_method
     # @param [String,User,Hash{Symbol=>Array}] args if a hash, the user_key must be under :value
     # @return [ActiveSupport::SafeBuffer] the html_safe link
+    # rubocop:disable Metrics/CyclomaticComplexity
     def link_to_profile(args)
       user_or_key = args.is_a?(Hash) ? args[:value].first : args
       user = case user_or_key
@@ -202,8 +204,20 @@ module Hyrax
              end
       return user_or_key if user.nil?
       text = user.respond_to?(:name) ? user.name : user_or_key
-      link_to text, Hyrax::Engine.routes.url_helpers.user_path(user)
+      user_path_params = [user]
+
+      # Oh the antics, because in some cases (stares at
+      # jobs/content_deposit_event_job_spec.rb) the controller is nil,
+      # which means calling params will raise a NoMethodError.  I also
+      # suppose it's possible that the controller won't have a set
+      # params. These precautions should help with that.  I'd love to
+      # use params[:locale] in this case, but the & try syntax doesn't
+      # work with that.  So you get this lovely bit of logic.
+      locale = controller&.params&.fetch(:locale, nil) || controller&.params&.fetch('locale', nil)
+      user_path_params << { locale: locale } if locale
+      link_to text, Hyrax::Engine.routes.url_helpers.user_path(*user_path_params)
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
 
     # A Blacklight index field helper_method
     # @param [Hash] options from blacklight helper_method invocation. Maps license URIs to links with labels.
