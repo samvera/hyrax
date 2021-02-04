@@ -3,6 +3,7 @@ RSpec.describe Hyrax::CustomQueries::FindIdsByModel, valkyrie_adapter: :test_ada
   subject(:query_handler) { described_class.new(query_service: Hyrax.query_service) }
 
   after { Hyrax.persister.wipe! }
+  before { Hyrax.persister.wipe! }
 
   describe '#find_ids_by_model' do
     let(:monographs) { [FactoryBot.valkyrie_create(:monograph), FactoryBot.valkyrie_create(:monograph), FactoryBot.valkyrie_create(:monograph)] }
