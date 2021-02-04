@@ -799,6 +799,7 @@ es:
         show_document_list_row:
           creator: 'Creador:'
           depositor: 'Depositor:'
+          owner: 'Propietario:'
           edit_access: 'Editar acceso:'
         sort_and_per_page:
           show_par_page_html: "%{select} Por página"
@@ -1111,6 +1112,7 @@ es:
         link: Ver todas las colecciones
         tab_label: Explorar Colecciones
         title: Explorar Colecciones
+        thumbnail: Miniatura
       featured_researcher:
         missing: No hay investigadores destacados
         tab_label: Investigador destacado
@@ -1570,6 +1572,7 @@ es:
         lease_expiration_date: hasta
         license: Licencia
         member_of_collection_ids: Añadir a la colección
+        owner: Propietario
         related_url: URL relacionada
         rights_notes: Notas de derechos
         rights_statement: Declaración de derechos

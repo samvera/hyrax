@@ -19,6 +19,7 @@ es:
           date_created_tesim: Fecha de Creacion
           date_modified_dtsi: Fecha Modificada
           date_uploaded_dtsi: Fecha de Subida
+          depositor_tesim: Propietario
           description_tesim: Descripción
           file_format_tesim: Formato de Archivo
           identifier_tesim: Identificador
@@ -35,6 +36,7 @@ es:
           date_created_tesim: Fecha de Creacion
           date_modified_dtsi: Fecha Modificada
           date_uploaded_dtsi: Fecha de Subida
+          depositor_tesim: Propietario
           description_tesim: Descripción
           file_format_tesim: Formato de Archivo
           identifier_tesim: Identificador
