@@ -19,6 +19,7 @@ es:
           date_created_tesim: Fecha de Creacion
           date_modified_dtsi: Fecha Modificada
           date_uploaded_dtsi: Fecha de Subida
+          depositor_tesim: Propietario
           description_tesim: Descripción
           file_format_tesim: Formato de Archivo
           identifier_tesim: Identificador
@@ -35,6 +36,7 @@ es:
           date_created_tesim: Fecha de Creacion
           date_modified_dtsi: Fecha Modificada
           date_uploaded_dtsi: Fecha de Subida
+          depositor_tesim: Propietario
           description_tesim: Descripción
           file_format_tesim: Formato de Archivo
           identifier_tesim: Identificador
@@ -51,7 +53,7 @@ es:
       suffix: "@example.org"
     footer:
       copyright_html: "<strong>Copyright &copy; 2018 Samvera</strong> bajo licencia de Apache, Version 2.0"
-      service_html: Un servicio de <a href="http://samvera.org/" class="navbar-link" target="_blank">Samvera/a>.
+      service_html: Un servicio de <a href="http://samvera.org/" class="navbar-link" target="_blank">Samvera</a>.
     institution_name: institución
     institution_name_full: El nombre de la institución
     product_name: Hyrax
