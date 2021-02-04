@@ -4,7 +4,7 @@
     <% doc_presenter = index_presenter(document) %>
     <% index_fields(document).each do |field_name, field| -%>
       <% if should_render_index_field? document, field %>
-          <dt><%= render_index_field_label document, field: field_name %></dt>
+          <dt data-solr-field-name="<%= field_name %>"><%= render_index_field_label document, field: field_name %></dt>
           <dd><%= doc_presenter.field_value field %></dd>
       <% end %>
     <% end %>
