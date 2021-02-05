@@ -44,7 +44,7 @@ RSpec.describe Hyrax::ChangeContentDepositorService do
     it "changes the depositor of the child file sets" do
       file.reload
       expect(file.depositor).to eq receiver.user_key
-      expect(file.edit_users).to include(receiver.user_key, depositor.user_key)
+      expect(file.edit_users).to contain_exactly(receiver.user_key)
     end
   end
 end
