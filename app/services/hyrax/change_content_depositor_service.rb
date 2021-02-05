@@ -54,7 +54,7 @@ module Hyrax
 
     def self.apply_depositor_metadata(resource, depositor)
       depositor_id = depositor.respond_to?(:user_key) ? depositor.user_key : depositor
-      resource.depositor = depositor_id if resource.respond_to? :depositor
+      resource.depositor = depositor_id if resource.respond_to? :depositor=
       Hyrax::AccessControlList.new(resource: resource).grant(:edit).to(::User.find_by_user_key(depositor_id)).save
     end
     private_class_method :apply_depositor_metadata
