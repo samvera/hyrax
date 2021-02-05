@@ -70,13 +70,23 @@ FactoryBot.define do
 
     trait :with_member_works do
       transient do
-        members { [valkyrie_create(:hyrax_work), valkyrie_create(:hyrax_work)] }
+        members do
+          # If you set a depositor on the containing work, propogate that into these members
+          additional_attributes = {}
+          additional_attributes[:depositor] = depositor if depositor
+          [valkyrie_create(:hyrax_work, additional_attributes), valkyrie_create(:hyrax_work, additional_attributes)]
+        end
       end
     end
 
     trait :with_member_file_sets do
       transient do
-        members { [valkyrie_create(:hyrax_file_set), valkyrie_create(:hyrax_file_set)] }
+        members do
+          # If you set a depositor on the containing work, propogate that into these members
+          additional_attributes = {}
+          additional_attributes[:depositor] = depositor if depositor
+          [valkyrie_create(:hyrax_file_set, additional_attributes), valkyrie_create(:hyrax_file_set, additional_attributes)]
+        end
       end
     end
 
