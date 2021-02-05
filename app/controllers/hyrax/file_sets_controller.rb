@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Hyrax
   class FileSetsController < ApplicationController
+    rescue_from WorkflowAuthorizationException, with: :render_unavailable
+
     include Blacklight::Base
     include Blacklight::AccessControls::Catalog
     include Hyrax::Breadcrumbs
@@ -42,9 +44,11 @@ module Hyrax
 
     # GET /concern/parent/:parent_id/file_sets/:id
     def show
+      presenter
+      guard_for_workflow_restriction_on!(parent: presenter.parent)
       respond_to do |wants|
-        wants.html { presenter }
-        wants.json { presenter }
+        wants.html
+        wants.json
         additional_response_formats(wants)
       end
     end
@@ -52,12 +56,15 @@ module Hyrax
     # DELETE /concern/file_sets/:id
     def destroy
       parent = curation_concern.parent
+      guard_for_workflow_restriction_on!(parent: parent)
       actor.destroy
       redirect_to [main_app, parent], notice: view_context.t('hyrax.file_sets.asset_deleted_flash.message')
     end
 
     # PATCH /concern/file_sets/:id
     def update
+      parent = curation_concern.parent
+      guard_for_workflow_restriction_on!(parent: parent)
       if attempt_update
         after_update_response
       else
@@ -146,9 +153,21 @@ module Hyrax
 
     def initialize_edit_form
       @parent = @file_set.in_objects.first
+      guard_for_workflow_restriction_on!(parent: @parent)
       original = @file_set.original_file
       @version_list = Hyrax::VersionListPresenter.new(original ? original.versions.all : [])
       @groups = current_user.groups
+    end
+
+    include WorkflowsHelper # Provides #workflow_restriction?, and yes I mean include not helper; helper exposes the module methods
+    # @param parent [Hyrax::WorkShowPresenter, GenericWork, #suppressed?] an
+    #        object on which we check if the current can take action.
+    #
+    # @return true if we did not encounter any workflow restrictions
+    # @raise WorkflowAuthorizationException if we encountered some workflow_restriction
+    def guard_for_workflow_restriction_on!(parent:)
+      return true unless workflow_restriction?(parent, ability: current_ability)
+      raise WorkflowAuthorizationException
     end
 
     def actor
@@ -161,8 +180,10 @@ module Hyrax
 
     def presenter
       @presenter ||= begin
-        show_presenter.new(curation_concern_document, current_ability, request)
-      end
+                       presenter = show_presenter.new(curation_concern_document, current_ability, request)
+                       raise WorkflowAuthorizationException if presenter.parent.blank?
+                       presenter
+                     end
     end
 
     def curation_concern_document
@@ -199,6 +220,36 @@ module Hyrax
                  'dashboard'
                end
       File.join(theme, layout)
+    end
+
+    # rubocop:disable Metrics/MethodLength
+    def render_unavailable
+      message = I18n.t("hyrax.workflow.unauthorized_parent")
+      respond_to do |wants|
+        wants.html do
+          unavailable_presenter
+          flash[:notice] = message
+          render 'unavailable', status: :unauthorized
+        end
+        wants.json do
+          render plain: message, status: :unauthorized
+        end
+        additional_response_formats(wants)
+        wants.ttl do
+          render plain: message, status: :unauthorized
+        end
+        wants.jsonld do
+          render plain: message, status: :unauthorized
+        end
+        wants.nt do
+          render plain: message, status: :unauthorized
+        end
+      end
+    end
+    # rubocop:enable Metrics/MethodLength
+
+    def unavailable_presenter
+      @presenter ||= show_presenter.new(::SolrDocument.find(params[:id]), current_ability, request)
     end
   end
 end

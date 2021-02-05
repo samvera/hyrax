@@ -1,19 +1,21 @@
 <div class="row show-actions button-row-top-two-column">
   <div class="col-sm-6">
-    <% if presenter.show_deposit_for?(collections: @user_collections) %>
-      <input type="checkbox"  style="display:none" name="batch_document_ids[]" id="batch_document_<%= presenter.id %>" value="<%= presenter.id %>" class="batch_document_selector" checked="checked" />
-      <%= button_tag t('hyrax.dashboard.my.action.add_to_collection'),
-                    class: 'btn btn-default submits-batches submits-batches-add',
-                    data: { toggle: "modal", target: "#collection-list-container" } %>
-    <% end %>
-    <% if presenter.work_featurable? %>
-      <%= link_to t('.feature'), hyrax.featured_work_path(presenter, format: :json),
-          data: { behavior: 'feature' },
-          class: presenter.display_feature_link? ? 'btn btn-default' : 'btn btn-default collapse' %>
+    <% if !workflow_restriction?(presenter) %>
+      <% if presenter.show_deposit_for?(collections: @user_collections) %>
+        <input type="checkbox"  style="display:none" name="batch_document_ids[]" id="batch_document_<%= presenter.id %>" value="<%= presenter.id %>" class="batch_document_selector" checked="checked" />
+        <%= button_tag t('hyrax.dashboard.my.action.add_to_collection'),
+                      class: 'btn btn-default submits-batches submits-batches-add',
+                      data: { toggle: "modal", target: "#collection-list-container" } %>
+      <% end %>
+      <% if presenter.work_featurable? %>
+        <%= link_to t('.feature'), hyrax.featured_work_path(presenter, format: :json),
+            data: { behavior: 'feature' },
+            class: presenter.display_feature_link? ? 'btn btn-default' : 'btn btn-default collapse' %>
 
-      <%= link_to t('.unfeature'), hyrax.featured_work_path(presenter, format: :json),
-          data: { behavior: 'unfeature' },
-          class: presenter.display_unfeature_link? ? 'btn btn-default' : 'btn btn-default collapse' %>
+        <%= link_to t('.unfeature'), hyrax.featured_work_path(presenter, format: :json),
+            data: { behavior: 'unfeature' },
+            class: presenter.display_unfeature_link? ? 'btn btn-default' : 'btn btn-default collapse' %>
+      <% end %>
     <% end %>
     <% if Hyrax.config.analytics? %>
       <% # turbolinks needs to be turned off or the page will use the cache and the %>
@@ -23,7 +25,7 @@
   </div>
 
   <div class="col-sm-6 text-right">
-    <% if presenter.editor? %>
+    <% if presenter.editor? && !workflow_restriction?(presenter) %>
       <%= link_to t('.edit'), edit_polymorphic_path([main_app, presenter]), class: 'btn btn-default' %>
       <% if presenter.member_presenters.size > 1 %>
           <%= link_to t("hyrax.file_manager.link_text"), polymorphic_path([main_app, :file_manager, presenter]), class: 'btn btn-default' %>

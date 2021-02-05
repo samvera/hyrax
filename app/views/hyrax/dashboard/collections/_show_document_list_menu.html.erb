@@ -2,7 +2,7 @@
   <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"><%= t('.select') %> <span class="caret"></span>
   </button>
   <ul class="dropdown-menu dropdown-menu-right">
-    <% if can? :edit, document %>
+    <% if can?( :edit, document ) && !workflow_restriction?(@presenter) %>
       <li>
         <%= link_to [main_app, :edit, document],
                     class: "itemicon itemedit",

@@ -37,7 +37,7 @@ module Hyrax
     end
 
     # CurationConcern methods
-    delegate :stringify_keys, :human_readable_type, :collection?, :to_s,
+    delegate :stringify_keys, :human_readable_type, :collection?, :to_s, :suppressed?,
              to: :solr_document
 
     # Metadata Methods

@@ -3,11 +3,15 @@ RSpec.describe Hyrax::FileSetCSVService do
   let(:mock_file) do
     Hydra::PCDM::File.new
   end
+  let(:work) { create(:work, title: ['test title'], creator: ['Von, Creator']) }
+  let(:file_set_id) { '123abc456' }
   let(:file) do
-    FileSet.new(id: '123abc', title: ['My Title'], creator: ['Von, Creator'],
-                resource_type: ['Book', 'Other'], license: ['Mine']) do |f|
-      f.apply_depositor_metadata('jilluser@example.com')
-    end
+    f = create(:file_set, id: file_set_id, title: ['My Title'], creator: ['Von, Creator'],
+                          resource_type: ['Book', 'Other'], license: ['Mine'])
+    f.apply_depositor_metadata('jilluser@example.com')
+    work.ordered_members << f
+    work.save!
+    f
   end
   let(:solr_document) { SolrDocument.new(file.to_solr) }
 
@@ -23,9 +27,9 @@ RSpec.describe Hyrax::FileSetCSVService do
     describe "csv" do
       subject { csv_service.csv }
 
-      it { is_expected.to eq "123abc,My Title,jilluser@example.com,\"Von, Creator\",restricted,Book|Other,Mine,pdf\n" }
+      it { is_expected.to eq "#{file_set_id},My Title,jilluser@example.com,\"Von, Creator\",restricted,Book|Other,Mine,pdf\n" }
       it "parses as valid csv" do
-        expect(::CSV.parse(subject)).to eq([["123abc", "My Title", "jilluser@example.com", "Von, Creator", "restricted", "Book|Other", "Mine", "pdf"]])
+        expect(::CSV.parse(subject)).to eq([[file_set_id, "My Title", "jilluser@example.com", "Von, Creator", "restricted", "Book|Other", "Mine", "pdf"]])
       end
     end
 
@@ -42,7 +46,7 @@ RSpec.describe Hyrax::FileSetCSVService do
     describe "csv" do
       subject { csv_service.csv }
 
-      it { is_expected.to eq "123abc,My Title,Book|Other\n" }
+      it { is_expected.to eq "#{file_set_id},My Title,Book|Other\n" }
     end
     describe "csv_header" do
       subject { csv_service.csv_header }
@@ -57,7 +61,7 @@ RSpec.describe Hyrax::FileSetCSVService do
     describe "csv" do
       subject { csv_service.csv }
 
-      it { is_expected.to eq "123abc,My Title,jilluser@example.com,\"Von, Creator\",restricted,Book&&Other,Mine,pdf\n" }
+      it { is_expected.to eq "#{file_set_id},My Title,jilluser@example.com,\"Von, Creator\",restricted,Book&&Other,Mine,pdf\n" }
     end
 
     describe "csv_header" do
@@ -73,7 +77,7 @@ RSpec.describe Hyrax::FileSetCSVService do
     describe "csv" do
       subject { csv_service.csv }
 
-      it { is_expected.to eq "123abc,My Title,Book*$*Other\n" }
+      it { is_expected.to eq "#{file_set_id},My Title,Book*$*Other\n" }
     end
     describe "csv_header" do
       subject { csv_service.csv_header }

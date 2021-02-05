@@ -18,6 +18,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   it { is_expected.to delegate_method(:to_s).to(:solr_document) }
+  it { is_expected.to delegate_method(:suppressed?).to(:solr_document) }
   it { is_expected.to delegate_method(:human_readable_type).to(:solr_document) }
   it { is_expected.to delegate_method(:date_created).to(:solr_document) }
   it { is_expected.to delegate_method(:date_modified).to(:solr_document) }

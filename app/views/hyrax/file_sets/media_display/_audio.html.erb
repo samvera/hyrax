@@ -1,5 +1,5 @@
-<% if Hyrax.config.display_media_download_link? %>
-    <div>
+<% if Hyrax.config.display_media_download_link? && !workflow_restriction?(file_set.try(:parent)) %>
+  <div>
       <h2 class="sr-only"><%= t('hyrax.file_set.show.downloadable_content.heading') %></h2>
       <audio controls="controls" class="audiojs" style="width:100%" controlsList="nodownload" preload="auto">
         <source src="<%= hyrax.download_path(file_set, file: 'ogg') %>" type="audio/ogg" />

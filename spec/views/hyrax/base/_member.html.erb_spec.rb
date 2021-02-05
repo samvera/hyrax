@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/base/_member.html.erb' do
+  let(:work_solr_document) do
+    SolrDocument.new(id: '900', title_tesim: ['My Title'])
+  end
   let(:solr_document) do
     SolrDocument.new(id: '999',
                      has_model_ssim: ['FileSet'],
@@ -12,9 +15,14 @@ RSpec.describe 'hyrax/base/_member.html.erb' do
   # Ability is checked in FileSetPresenter#link_name
   let(:ability) { double(can?: true) }
   let(:presenter) { Hyrax::FileSetPresenter.new(solr_document, ability) }
+  let(:parent_presenter) { Hyrax::WorkShowPresenter.new(work_solr_document, ability) }
 
   before do
+    allow(controller).to receive(:current_ability).and_return(ability)
     assign(:presenter, presenter)
+    assign(:parent_presenter, parent_presenter)
+    allow(presenter).to receive(:parent_presenter).and_return parent_presenter
+    allow(presenter).to receive(:parent).and_return parent_presenter
     allow(view).to receive(:current_search_session).and_return nil
     allow(view).to receive(:search_session).and_return({})
     # abilities called in _actions.html.erb
@@ -28,7 +36,7 @@ RSpec.describe 'hyrax/base/_member.html.erb' do
   end
 
   it 'checks the :download ability' do
-    expect(view).to have_received(:can?).with(:download, kind_of(String)).once
+    expect(view).to have_received(:can?).with(:download, kind_of(String)).at_least(1).times
   end
 
   it 'renders the view' do

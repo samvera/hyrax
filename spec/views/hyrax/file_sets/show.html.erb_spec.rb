@@ -20,13 +20,23 @@ RSpec.describe 'hyrax/file_sets/show.html.erb', type: :view do
       logged_fixity_status: "Fixity checks have not yet been run on this file"
     }
   end
+  let(:work_solr_document) do
+    SolrDocument.new(id: '900', title_tesim: ['My Title'])
+  end
+  let(:parent_presenter) { Hyrax::WorkShowPresenter.new(work_solr_document, ability) }
 
   before do
+    allow(view).to receive(:workflow_restriction?).and_return(false)
     view.lookup_context.prefixes.push 'hyrax/base'
+    allow(view).to receive(:can?).with(:edit, Hyrax::SolrDocument::OrderedMembers).and_return(false)
+    allow(ability).to receive(:can?).with(:edit, Hyrax::SolrDocument::OrderedMembers).and_return(false)
     allow(view).to receive(:can?).with(:edit, SolrDocument).and_return(false)
     allow(ability).to receive(:can?).with(:edit, SolrDocument).and_return(false)
     allow(presenter).to receive(:fixity_status).and_return(mock_metadata)
     assign(:presenter, presenter)
+    assign(:parent_presenter, parent_presenter)
+    allow(presenter).to receive(:parent).and_return(parent_presenter)
+    allow(presenter).to receive(:parent_presenter).and_return parent_presenter
     assign(:document, solr_doc)
     assign(:fixity_status, "none")
   end

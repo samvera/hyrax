@@ -1,5 +1,5 @@
 <h1>
-    <%= @presenter %> <%= @presenter.workflow.badge %>
+    <%= @presenter %> <%= @presenter.try(:workflow).try(:badge) %>
 </h1>
 <% if @parent_presenter %>
     <ul class="breadcrumb">

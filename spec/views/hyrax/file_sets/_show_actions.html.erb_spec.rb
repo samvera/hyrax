@@ -15,11 +15,13 @@ RSpec.describe 'hyrax/file_sets/_show_actions.html.erb', type: :view do
       rights_tesim: ['http://creativecommons.org/licenses/by/3.0/us/']
     )
   end
+  let(:decorated_solr_document) { Hyrax::SolrDocument::OrderedMembers.decorate(solr_document) }
   let(:ability) { Ability.new(user) }
   let(:presenter) do
     Hyrax::WorkShowPresenter.new(solr_document, ability)
   end
   let(:page) { Capybara::Node::Simple.new(rendered) }
+  before { allow(controller).to receive(:current_ability).and_return(ability) }
 
   describe 'citations' do
     before do
@@ -49,6 +51,7 @@ RSpec.describe 'hyrax/file_sets/_show_actions.html.erb', type: :view do
 
   describe 'editor' do
     before do
+      allow(ability).to receive(:can?).with(:edit, anything).and_return(true)
       allow(presenter).to receive(:editor?).and_return(true)
       assign(:presenter, presenter)
       view.lookup_context.view_paths.push 'app/views/hyrax/base'
