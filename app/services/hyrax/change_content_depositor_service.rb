@@ -1,9 +1,17 @@
 # frozen_string_literal: true
 module Hyrax
   class ChangeContentDepositorService
-    # @param [ActiveFedora::Base, Valkyrie::Resource] work
-    # @param [User] user
-    # @param [TrueClass, FalseClass] reset
+    # Set the given `user` as the depositor of the given `work`; If
+    # `reset` is true, first remove all previous permissions.
+    #
+    # @param work [ActiveFedora::Base, Valkyrie::Resource] the work
+    #             that is receiving a change of depositor
+    # @param user [User] the user that will "become" the depositor of
+    #             the given work
+    # @param reset [TrueClass, FalseClass] when true, first clear
+    #              permissions for the given work and contained file
+    #              sets; regardless of true/false make the given user
+    #              the depositor of the given work
     def self.call(work, user, reset)
       case work
       when ActiveFedora::Base
