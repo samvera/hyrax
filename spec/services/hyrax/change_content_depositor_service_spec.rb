@@ -50,4 +50,56 @@ RSpec.describe Hyrax::ChangeContentDepositorService do
       end
     end
   end
+
+  context "for Valkyrie objects" do
+    let!(:base_work) { valkyrie_create(:hyrax_work, :with_member_file_sets, title: ['SoonToBeSomeoneElses'], depositor: depositor.user_key, edit_users: [depositor]) }
+    before do
+      work_acl = Hyrax::AccessControlList.new(resource: base_work)
+      Hyrax.custom_queries.find_child_filesets(resource: base_work).each do |file_set|
+        Hyrax::AccessControlList.copy_permissions(source: work_acl, target: file_set)
+      end
+    end
+
+    context "by default, when permissions are not reset" do
+      it "changes the depositor and records an original depositor" do
+        described_class.call(base_work, receiver, false)
+        work = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: base_work.id, use_valkyrie: true)
+        expect(work.depositor).to eq receiver.user_key
+        expect(work.proxy_depositor).to eq depositor.user_key
+        expect(work.edit_users.to_a).to include(receiver.user_key, depositor.user_key)
+      end
+
+      it "changes the depositor of the child file sets" do
+        described_class.call(base_work, receiver, false)
+        file_sets = Hyrax.custom_queries.find_child_filesets(resource: base_work)
+        expect(file_sets.size).not_to eq 0 # A quick check to make sure our each block works
+
+        file_sets.each do |file_set|
+          expect(file_set.depositor).to eq receiver.user_key
+          expect(file_set.edit_users.to_a).to include(receiver.user_key, depositor.user_key)
+        end
+      end
+    end
+
+    context "when permissions are reset" do
+      it "changes the depositor and records an original depositor" do
+        described_class.call(base_work, receiver, true)
+        work = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: base_work.id, use_valkyrie: true)
+        expect(work.depositor).to eq receiver.user_key
+        expect(work.proxy_depositor).to eq depositor.user_key
+        expect(work.edit_users.to_a).to contain_exactly(receiver.user_key)
+      end
+
+      it "changes the depositor of the child file sets" do
+        described_class.call(base_work, receiver, true)
+        file_sets = Hyrax.custom_queries.find_child_filesets(resource: base_work)
+        expect(file_sets.size).not_to eq 0 # A quick check to make sure our each block works
+
+        file_sets.each do |file_set|
+          expect(file_set.depositor).to eq receiver.user_key
+          expect(file_set.edit_users.to_a).to contain_exactly(receiver.user_key)
+        end
+      end
+    end
+  end
 end

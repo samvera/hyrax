@@ -35,6 +35,8 @@ module Hyrax
     end
     private_class_method :call_af
 
+    # @todo Should this include some dependency injection regarding
+    # the Hyrax.persister and Hyrax.custom_queries?
     def self.call_valkyrie(work, user, reset)
       if reset
         work.permission_manager.acl.permissions = []
@@ -44,10 +46,9 @@ module Hyrax
       work.proxy_depositor = work.depositor
       apply_depositor_metadata(work, user)
 
-      Hyrax.custom_queries.find_child_filesets(resource: work).each do |f|
-        apply_depositor_metadata(f, user)
-      end
+      apply_valkyrie_changes_to_file_sets(work: work, user: user, reset: reset)
 
+      Hyrax.persister.save(resource: work)
       work
     end
     private_class_method :call_valkyrie
@@ -58,5 +59,17 @@ module Hyrax
       Hyrax::AccessControlList.new(resource: resource).grant(:edit).to(::User.find_by_user_key(depositor_id)).save
     end
     private_class_method :apply_depositor_metadata
+
+    def self.apply_valkyrie_changes_to_file_sets(work:, user:, reset:)
+      Hyrax.custom_queries.find_child_filesets(resource: work).each do |f|
+        if reset
+          f.permission_manager.acl.permissions = []
+          f.permission_manager.acl.save
+        end
+        apply_depositor_metadata(f, user)
+        Hyrax.persister.save(resource: f)
+      end
+    end
+    private_class_method :apply_valkyrie_changes_to_file_sets
   end
 end
