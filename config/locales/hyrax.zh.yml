@@ -420,6 +420,7 @@ zh:
         legend_html: 公开度<small>谁可以查看或下载此内容？</small>
         management_page: 租约管理页面
       form_progress:
+        proxy_depositors: 代理存款人-选择您代表其存款的用户
         required_agreement: 核对存储协议
         required_descriptions: 描述您的作品
         required_files: 添加文件
@@ -495,9 +496,13 @@ zh:
         unfeature: Unfeature
       social_media:
         facebook: Facebook
+        facebook_share: 在脸书上分享
         google: Google+
+        google_share: 在Google+上分享
         tumblr: Tumblr
+        tumblr_share: 分享到Tumblr
         twitter: Twitter
+        twitter_share: 分享到Twitter
       unauthorized:
         id: ID：%{id}
         is_private: 您尝试访问的%{type}是私有的
@@ -593,6 +598,7 @@ zh:
         no_visible_works: 您访问的收藏集是空集
       edit:
         manage_items: 管理收藏集的单件
+      edit_view: 编辑视图
       form:
         additional_fields: 额外字段
         description: 描述
@@ -621,6 +627,7 @@ zh:
         buttons:
           remove_from_collection: 去掉
           remove_this_sub_collection: 去掉
+        item_count: 物品
         no_visible_parent_collections: 没有可见的父集合。
         no_visible_subcollections: 没有可见的子集合。
         parent_collection_header: 家长集合
@@ -647,6 +654,7 @@ zh:
       notice: 请用联系表格提交查询, 报告问题, 请求帮助, 或提供反馈。有关使用此系统的更多信息，请参见帮助页面。
       select_type: 选择问题类型
       subject_label: 主题
+      title: 联系我们
       type_label: 问题类型
     content_blocks:
       cancel: 取消
@@ -877,6 +885,8 @@ zh:
           access: 访问
           action: 行动
           caption: 此集合中的项目列表
+          collection:
+            visibility: 收集的可见性
           collection_type: 集合类型
           date_modified: 上一次更改
           date_uploaded: 上传日期
@@ -886,6 +896,8 @@ zh:
           title: 标题
           type: 类型
           visibility: 公开度
+          work:
+            visibility: 工作的可视性
         highlighted: 我的重点
         shared: 与我分享的作品
         sr:
@@ -897,6 +909,7 @@ zh:
           press_to: 按击
           results_per_page: 每页显示的结果数量
           show_label: 展示所有细节
+          thumbnail: 缩图
         works: 您的作品
         your_collections: 你的收藏
         your_works: 你的作品
@@ -1092,8 +1105,13 @@ zh:
         fixity_check: 固定性检查
         not_yet_characterized: 没有特征
       versioning:
+        choose_file: 选择新版本文件
         current: 当前版本
         header: 版本
+        previous: 以前的
+        remove: 消除
+        remove_current_files: 删除当前文件
+        remove_new_version: 删除新版本文件
         restore: 恢复以前的版本
         restore_from: 还原自
         save: 保存修订
@@ -1106,6 +1124,7 @@ zh:
       admin_sets:
         link: 查看所有收藏
         tab_label: 探索收藏集
+        thumbnail: 缩图
         title: 探索收藏集
       featured_researcher:
         missing: 没有特色研究员。
@@ -1192,6 +1211,10 @@ zh:
         single: 已保存。
         subject: 批量上传完成
         title: 文件上传成功
+    models:
+      hyrax/file_set: 文件集
+      hyrax/pcdm_collection: 收藏
+      hyrax/work: 工作
     my:
       count:
         collections:
@@ -1260,6 +1283,15 @@ zh:
         terms_page: 使用条款
       updated: 页面更新。
     passive_consent_to_agreement: 保存这件作品表明我同意
+    permission_levels:
+      edit: 编辑权限
+      options:
+        edit: 编辑
+        none: 选择访问
+        read: 查看/下载
+      owner:
+        edit: 编辑权限
+      read: 查看/下载
     search:
       button:
         html: <span class="glyphicon glyphicon-search"></span> 转到
@@ -1404,6 +1436,20 @@ zh:
         remove: 去掉
         remove_new_banner: 删除新横幅
         remove_new_logo: 删除新徽标
+      js_templates_versioning:
+        display_label: 显示标签
+        error: 错误
+        options:
+          messages:
+            accept_file_types: 不允许的文件类型
+            max_file_size: 档案太大
+            max_number_of_files: 超出最大文件数
+            min_file_size: 文件太小
+        previous: 以前的
+        remove: 消除
+        remove_new_version: 删除新版本文件
+        set_all_to_this_resource_type: 全部设置为此资源类型
+        start: 开始
     user_profile:
       orcid:
         alt: ORCID 图标
@@ -1461,6 +1507,7 @@ zh:
       load:
         state_error: '工作流程：%{workflow_name}尚未更新。 您在移除%{entity_count}条目的状况: %{state_name}。 在包含有效条目时，状况不能被移除!'
       unauthorized: 该作品目前还在审批中，目前不可用
+      unauthorized_parent: 该文件当前不可用，因为其父级工作尚未完成批准过程
     works:
       create:
         after_create_html: 您的文件正在后台被%{application_name}处理。 您所指定的元数据和访问权限已添加。请刷新后查看更新。
@@ -1479,6 +1526,7 @@ zh:
           relationships: 关联
           share: 分享
         visibility_until: 一直到
+      missing_title: 无题
       progress:
         header: 保存作品
       show:

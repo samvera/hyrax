@@ -417,6 +417,7 @@ de:
         legend_html: Sichtbarkeit <small>Wer soll in der Lage sein, diesen Inhalt anzusehen oder herunterzuladen?</small>
         management_page: Leasing-Management-Seite
       form_progress:
+        proxy_depositors: Proxy-Einzahler - Wählen Sie den Benutzer aus, in dessen Namen Sie einzahlen
         required_agreement: Deponierungsvereinbarung zustimmen
         required_descriptions: Beschreiben Sie Ihre Arbeit
         required_files: Dateien hinzufügen
@@ -492,9 +493,13 @@ de:
         unfeature: Hervorhebung entfernen
       social_media:
         facebook: Facebook
+        facebook_share: Auf Facebook teilen
         google: Google+
+        google_share: Auf Google+ teilen
         tumblr: Tumblr
+        tumblr_share: Auf Tumblr teilen
         twitter: Twitter
+        twitter_share: Auf Twitter teilen
       unauthorized:
         id: 'ID: %{id}'
         is_private: Das %{type}, auf das Sie zugreifen wollten, ist privat
@@ -590,6 +595,7 @@ de:
         no_visible_works: Die Sammlung ist entweder leer oder enthält keine Gegenstände, auf die Sie zugreifen können.
       edit:
         manage_items: Verwalten von Inhalten in dieser Sammlung
+      edit_view: Ansicht bearbeiten
       form:
         additional_fields: Zusätzliche Felder
         description: Beschreibungen
@@ -618,6 +624,7 @@ de:
         buttons:
           remove_from_collection: Entfernen
           remove_this_sub_collection: Entfernen
+        item_count: Artikel
         no_visible_parent_collections: Es gibt keine sichtbaren übergeordneten Sammlungen.
         no_visible_subcollections: Es gibt keine sichtbaren Untersammlungen.
         parent_collection_header: Übergeordnete Sammlungen
@@ -644,6 +651,7 @@ de:
       notice: Bitte benutzen Sie das Kontaktformular, um Anfragen zu diesem System einzureichen. Um ein Problem zu melden, das Sie mit dem System erleben; Um die Unterstützung des Systems anzufordern, oder um ein Feedback zu geben. Weitere Informationen zu diesem System finden Sie auf der Hilfeseite.
       select_type: Wählen Sie einen Anfragen-Typ aus
       subject_label: Betreff
+      title: Kontaktiere uns
       type_label: Anfragentyp
     content_blocks:
       cancel: Abbrechen
@@ -874,6 +882,8 @@ de:
           access: Zugriff
           action: Aktionen
           caption: Liste der Arbeiten in dieser Sammlung
+          collection:
+            visibility: Sichtbarkeit der Sammlung
           collection_type: Sammlungsart
           date_modified: Zuletzt bearbeitet
           date_uploaded: Hochladedatum
@@ -883,6 +893,8 @@ de:
           title: Titel
           type: Typ
           visibility: Sichtbarkeit
+          work:
+            visibility: Sichtbarkeit der Arbeit
         highlighted: Meine Hervorhebungen
         shared: Arbeiten, welche mir freigegeben wurden
         sr:
@@ -894,6 +906,7 @@ de:
           press_to: Drücken Sie auf
           results_per_page: Anzahl der Ergebnisse pro Seite
           show_label: Zeige alle Details von
+          thumbnail: Miniaturansicht
         works: Ihre Arbeiten
         your_collections: Ihre Sammlungen
         your_works: Ihre Werke
@@ -1089,8 +1102,13 @@ de:
         fixity_check: Beständigkeit überprüfen
         not_yet_characterized: Noch nicht charakterisiert
       versioning:
+        choose_file: Wählen Sie Neue Versionsdatei
         current: Aktuelle Version
         header: Versionen
+        previous: Bisherige
+        remove: Entfernen
+        remove_current_files: Aktuelle Dateien entfernen
+        remove_new_version: Neue Versionsdatei entfernen
         restore: Vorherige Version wiederherstellen
         restore_from: Wiederherstellen von
         save: Überarbeitete Version speichern
@@ -1103,6 +1121,7 @@ de:
       admin_sets:
         link: Alle Sammlungen anzeigen
         tab_label: Erforschen Sie Sammlungen
+        thumbnail: Miniaturansicht
         title: Erforschen Sie Sammlungen
       featured_researcher:
         missing: Es wurden keine Forscher vorgestellt.
@@ -1189,6 +1208,10 @@ de:
         single: wurde gespeichert.
         subject: Stapelweises Hochladen abgeschlossen
         title: Dateien erfolgreich hochgeladen
+    models:
+      hyrax/file_set: Dateisatz
+      hyrax/pcdm_collection: Sammlung
+      hyrax/work: Arbeit
     my:
       count:
         collections:
@@ -1198,7 +1221,7 @@ de:
           you_own: "<strong> %{total_count} Sammlungen </ strong>, die Sie im Repository besitzen"
         works:
           in_repo: "<strong> %{total_count} funktioniert </ strong> im Repository"
-          works_listing: Auflistung der Arbeiten 
+          works_listing: Auflistung der Arbeiten
           you_manage: "<strong> %{total_count} funktioniert </ strong>, das Sie im Repository verwalten können"
           you_own: "<strong> %{total_count} funktioniert </ strong>, das Sie im Repository besitzen"
       sort_and_per_page:
@@ -1257,6 +1280,15 @@ de:
         terms_page: Nutzungsbedingungen
       updated: Seiten aktualisiert.
     passive_consent_to_agreement: Durch das Speichern dieser Arbeit stimme ich der ... zu.
+    permission_levels:
+      edit: Zugriff bearbeiten
+      options:
+        edit: Bearbeiten
+        none: Wählen Sie Zugriff
+        read: Download anzeigen
+      owner:
+        edit: Zugriff bearbeiten
+      read: Download anzeigen
     search:
       button:
         html: <span class="glyphicon glyphicon-search"></span> Suchen
@@ -1401,6 +1433,20 @@ de:
         remove: Löschen
         remove_new_banner: Neues Banner entfernen
         remove_new_logo: Neues Logo entfernen
+      js_templates_versioning:
+        display_label: Etikett anzeigen
+        error: Error
+        options:
+          messages:
+            accept_file_types: Dateityp nicht erlaubt
+            max_file_size: Datei ist zu groß
+            max_number_of_files: Maximale Anzahl von Dateien überschritten
+            min_file_size: Datei ist zu klein
+        previous: Bisherige
+        remove: Entfernen
+        remove_new_version: Neue Versionsdatei entfernen
+        set_all_to_this_resource_type: Stellen Sie alle auf diesen Ressourcentyp ein
+        start: Start
     user_profile:
       orcid:
         alt: ORCID-Symbol
@@ -1458,6 +1504,7 @@ de:
       load:
         state_error: 'Der Workflow: %{workflow_name} wurde nicht aktualisiert. Sie entfernen einen Zustand: %{state_name} mit %{entity_count} Entität(en). Ein Zustand darf nicht entfernt werden, während er aktive Entitäten hat!'
       unauthorized: Die Arbeit ist derzeit nicht verfügbar, da der Begutachtungsprozess noch nicht abgeschlossen ist
+      unauthorized_parent: Die Datei ist derzeit nicht verfügbar, da die übergeordnete Arbeit den Genehmigungsprozess noch nicht abgeschlossen hat
     works:
       create:
         after_create_html: Ihre Dateien werden von %{application_name} im Hintergrund verarbeitet. Die von Ihnen angegebenen Metadaten und Zugriffsberechtigungen werden angewendet. Möglicherweise müssen Sie diese Seite aktualisieren, um diese Updates zu sehen.
@@ -1476,6 +1523,7 @@ de:
           relationships: Beziehungen
           share: Freigaben
         visibility_until: bis
+      missing_title: Kein Titel
       progress:
         header: Arbeit speichern
       show:

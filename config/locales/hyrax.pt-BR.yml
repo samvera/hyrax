@@ -417,6 +417,7 @@ pt-BR:
         legend_html: Acesso <small>Quem pode acessar ou fazer o download desse conteúdo?</small>
         management_page: Página de Gerenciamento de Empréstimo
       form_progress:
+        proxy_depositors: Depositantes proxy - Selecione o usuário em cujo nome você está depositando
         required_agreement: Verifique o acordo de depósito
         required_descriptions: Descreva sua obra
         required_files: Acrescente arquivos
@@ -492,9 +493,13 @@ pt-BR:
         unfeature: Unfeature
       social_media:
         facebook: Facebook
+        facebook_share: Compartilhar no Facebook
         google: Google+
+        google_share: Compartilhe no Google+
         tumblr: Tumblr
+        tumblr_share: Compartilhe no Tumblr
         twitter: Twitter
+        twitter_share: Compartilhar no Twitter
       unauthorized:
         id: 'ID: %{id}'
         is_private: O %{type} que você tentou acessar é privado
@@ -590,6 +595,7 @@ pt-BR:
         no_visible_works: A coleção está vazia ou não contém itens aos quais você tenha acesso.
       edit:
         manage_items: Curatelar itens nesta coleção
+      edit_view: Editar visualização
       form:
         additional_fields: Campos adicionais
         description: Descrições
@@ -618,6 +624,7 @@ pt-BR:
         buttons:
           remove_from_collection: Remover
           remove_this_sub_collection: Remover
+        item_count: Item
         no_visible_parent_collections: Não há coleção mãe acessível.
         no_visible_subcollections: Não há sub-coleções acessíveis.
         parent_collection_header: Coleções mães
@@ -644,6 +651,7 @@ pt-BR:
       notice: Use o formulário de contato para fazer perguntas sobre este sistema; para registrar um problema no sistema; para solicitar assistência quanto ao uso do sistema; ou para fazer comentários ou sugestões. Consulte a página de Ajuda para mais informações sobre este sistema.
       select_type: Selecione um Tipo de Problema
       subject_label: Assunto
+      title: Entre em contato conosco
       type_label: Tipo de problema
     content_blocks:
       cancel: Cancelar
@@ -874,6 +882,8 @@ pt-BR:
           access: Acesso
           action: Ações
           caption: Lista de itens nesta coleção
+          collection:
+            visibility: Visibilidade da coleção
           collection_type: Tipo de Coleção
           date_modified: Última modificação
           date_uploaded: Data de carga
@@ -883,6 +893,8 @@ pt-BR:
           title: Título
           type: Tipo
           visibility: Acesso
+          work:
+            visibility: Visibilidade do Trabalho
         highlighted: Meus Destaques
         shared: Obras compartilhadas comigo
         sr:
@@ -894,6 +906,7 @@ pt-BR:
           press_to: Pressione para
           results_per_page: Número de resultados a serem exibidos por página
           show_label: Exibir todos os detalhes de
+          thumbnail: miniatura
         works: Obras
         your_collections: Suas coleções
         your_works: Suas obras
@@ -1089,8 +1102,13 @@ pt-BR:
         fixity_check: Fixidez De Seleção
         not_yet_characterized: Ainda Não Caracterizados
       versioning:
+        choose_file: Escolha o arquivo da nova versão
         current: Versão corrente
         header: Versões
+        previous: Anterior
+        remove: Retirar
+        remove_current_files: Remover arquivos atuais
+        remove_new_version: Remover arquivo de nova versão
         restore: Restaurar a Versão Anterior
         restore_from: Restaurar a partir de
         save: Salvar Revisão
@@ -1103,6 +1121,7 @@ pt-BR:
       admin_sets:
         link: Acessar todas as coleções
         tab_label: Explorar coleções
+        thumbnail: miniatura
         title: Explorar coleções
       featured_researcher:
         missing: Nenhum pesquisador foi destacado.
@@ -1189,6 +1208,10 @@ pt-BR:
         single: Foi salvo.
         subject: Carga em lote completo
         title: Arquivos carregados com sucesso
+    models:
+      hyrax/file_set: Conjunto de arquivos
+      hyrax/pcdm_collection: Coleção
+      hyrax/work: Trabalhar
     my:
       count:
         collections:
@@ -1257,6 +1280,15 @@ pt-BR:
         terms_page: Termos de uso
       updated: Páginas atualizadas.
     passive_consent_to_agreement: Ao salvar esta obra, aceito o
+    permission_levels:
+      edit: Editar acesso
+      options:
+        edit: Editar
+        none: Escolha o acesso
+        read: Visualizar download
+      owner:
+        edit: Editar acesso
+      read: Visualizar download
     search:
       button:
         html: <span class="glyphicon glyphicon-search"></span> Ir
@@ -1401,6 +1433,20 @@ pt-BR:
         remove: Remover
         remove_new_banner: Remover novo banner
         remove_new_logo: Remover novo logotipo
+      js_templates_versioning:
+        display_label: Etiqueta de exibição
+        error: Erro
+        options:
+          messages:
+            accept_file_types: Tipo de arquivo não permitido
+            max_file_size: O arquivo é muito grande
+            max_number_of_files: Número máximo de arquivos excedido
+            min_file_size: Arquivo muito pequeno
+        previous: anterior
+        remove: Retirar
+        remove_new_version: Remover arquivo de nova versão
+        set_all_to_this_resource_type: Definir tudo para este tipo de recurso
+        start: Começar
     user_profile:
       orcid:
         alt: Ícone ORCID
@@ -1458,6 +1504,7 @@ pt-BR:
       load:
         state_error: 'O fluxo de trabalho: %{workflow_name} não foi atualizado. Você está tentando remover um estado: %{state_name} com %{entity_count} entidade(s). Um estado não pode ser removido enquanto ele possui entidades ativas!'
       unauthorized: A obra não está disponível no momento porque ainda não completou o processo de aprovação
+      unauthorized_parent: O arquivo não está disponível no momento porque seu trabalho principal ainda não concluiu o processo de aprovação
     works:
       create:
         after_create_html: Seus arquivos estão sendo processados ​​pelo %{application_name} em segundo plano. Os metadados e os controles de acesso que você especificou estão sendo aplicados. Talvez seja necessário recarregar esta página para ver essas atualizações.
@@ -1476,6 +1523,7 @@ pt-BR:
           relationships: Relações
           share: Compartilhamento
         visibility_until: até
+      missing_title: Sem Título
       progress:
         header: Salvar obra
       show:

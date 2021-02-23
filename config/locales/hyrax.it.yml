@@ -422,6 +422,7 @@ it:
         legend_html: Visibilità <small>Chi dovrebbe essere in grado di visualizzare o scaricare questo contenuto?</small>
         management_page: Gestione delle locazioni
       form_progress:
+        proxy_depositors: Depositanti proxy - Seleziona l'utente per conto del quale stai depositando
         required_agreement: Controllare l'accordo di deposito
         required_descriptions: Descrivi il tuo lavoro
         required_files: Aggiungere i file
@@ -497,9 +498,13 @@ it:
         unfeature: Unfeature
       social_media:
         facebook: Facebook
+        facebook_share: Condividi su Facebook
         google: Google+
+        google_share: Condividi su Google+
         tumblr: Tumblr
+        tumblr_share: Condividi su Tumblr
         twitter: cinguettio
+        twitter_share: Condividi su Twitter
       unauthorized:
         id: 'ID: %{id}'
         is_private: Lo %{type} a cui hai provato ad accedere è privato
@@ -595,6 +600,7 @@ it:
         no_visible_works: La raccolta è vuota o non contiene elementi a cui è possibile accedere.
       edit:
         manage_items: Gestisci elementi in questa raccolta
+      edit_view: Modifica visualizzazione
       form:
         additional_fields: Campi aggiuntivi
         description: descrizioni
@@ -623,6 +629,7 @@ it:
         buttons:
           remove_from_collection: Rimuovere
           remove_this_sub_collection: Rimuovere
+        item_count: Articolo
         no_visible_parent_collections: Non ci sono raccolte genitori visibili.
         no_visible_subcollections: Non ci sono sottoraccolte visibili.
         parent_collection_header: Collezioni principali
@@ -649,6 +656,7 @@ it:
       notice: Utilizza il modulo di contatto per inviare domande su questo sistema; Per segnalare un problema che si sta verificando con il sistema; Richiedere l'assistenza tramite il sistema; O per fornire risposte generali. Consultare la pagina della Guida per ulteriori informazioni su questo sistema.
       select_type: Selezionare un tipo di problema
       subject_label: Soggetto
+      title: Contattaci
       type_label: tipo di problema
     content_blocks:
       cancel: Annulla
@@ -879,6 +887,8 @@ it:
           access: Accesso
           action: Azioni
           caption: Elenco di articoli in questa raccolta
+          collection:
+            visibility: Visibilità della raccolta
           collection_type: Tipo di raccolta
           date_modified: Ultima modifica
           date_uploaded: Data aggiunta
@@ -888,6 +898,8 @@ it:
           title: Titolo
           type: genere
           visibility: Visibilità
+          work:
+            visibility: Visibilità del lavoro
         highlighted: I miei punti salienti
         shared: Opere condivise con me
         sr:
@@ -899,6 +911,7 @@ it:
           press_to: Premere per
           results_per_page: Numero di risultati da visualizzare per pagina
           show_label: Visualizza tutti i dettagli di
+          thumbnail: miniatura
         works: Le tue opere
         your_collections: Le tue collezioni
         your_works: I tuoi lavori
@@ -1094,8 +1107,13 @@ it:
         fixity_check: Fissità Di Controllo
         not_yet_characterized: Non Ancora Caratterizzati
       versioning:
+        choose_file: Scegli New Version File
         current: Versione attuale
         header: versioni
+        previous: Precedente
+        remove: Rimuovere
+        remove_current_files: Rimuovi file correnti
+        remove_new_version: Rimuovi nuovo file versione
         restore: Ripristina la versione precedente
         restore_from: Ripristina da
         save: Salva revisione
@@ -1108,6 +1126,7 @@ it:
       admin_sets:
         link: Visualizza tutte le collezioni
         tab_label: Esplora collezioni
+        thumbnail: miniatura
         title: Esplora collezioni
       featured_researcher:
         missing: Nessun ricercatore è stato presentato.
@@ -1194,6 +1213,10 @@ it:
         single: È stato salvato.
         subject: Caricamento batch completato
         title: I file sono stati caricati correttamente
+    models:
+      hyrax/file_set: Set di file
+      hyrax/pcdm_collection: Collezione
+      hyrax/work: Opera
     my:
       count:
         collections:
@@ -1262,6 +1285,15 @@ it:
         terms_page: Condizioni d'uso
       updated: Pagine aggiornate.
     passive_consent_to_agreement: Salvo questo lavoro accetto il
+    permission_levels:
+      edit: Accesso in modifica
+      options:
+        edit: modificare
+        none: Scegli Accesso
+        read: Visualizza / Scarica
+      owner:
+        edit: Accesso in modifica
+      read: Visualizza / Scarica
     search:
       button:
         html: <span class="glyphicon glyphicon-search"></span> Partire
@@ -1406,6 +1438,20 @@ it:
         remove: Rimuovere
         remove_new_banner: Rimuovi nuovo banner
         remove_new_logo: Rimuovi nuovo logo
+      js_templates_versioning:
+        display_label: Etichetta display
+        error: Errore
+        options:
+          messages:
+            accept_file_types: Tipo di file non consentito
+            max_file_size: Il file è troppo grande
+            max_number_of_files: Numero massimo di file superato
+            min_file_size: Il file è troppo piccolo
+        previous: precedente
+        remove: Rimuovere
+        remove_new_version: Rimuovi nuovo file versione
+        set_all_to_this_resource_type: Imposta tutto su questo tipo di risorsa
+        start: Inizio
     user_profile:
       orcid:
         alt: Icona ORCID
@@ -1463,6 +1509,7 @@ it:
       load:
         state_error: 'Il flusso di lavoro: %{workflow_name} non è stato aggiornato. Stai rimuovendo uno stato: %{state_name} con entità / i %{entity_count}. Uno stato non può essere rimosso mentre ha entità attive!'
       unauthorized: Il lavoro non è attualmente disponibile perché non ha ancora completato il processo di approvazione
+      unauthorized_parent: Il file non è attualmente disponibile perché il suo lavoro principale non ha ancora completato il processo di approvazione
     works:
       create:
         after_create_html: I file vengono elaborati da %{application_name} in background. I metadati e i controlli di accesso specificati vengono applicati. Potrebbe essere necessario aggiornare questa pagina per visualizzare questi aggiornamenti.
@@ -1481,6 +1528,7 @@ it:
           relationships: Le relazioni
           share: Condividere
         visibility_until: fino a
+      missing_title: Senza titolo
       progress:
         header: Salva lavoro
       show:

@@ -423,6 +423,7 @@ fr:
         legend_html: Visibilité <small>Qui devrait pouvoir afficher ou télécharger ce contenu?</small>
         management_page: Page de gestion du bail
       form_progress:
+        proxy_depositors: Proxy Depositors - Sélectionnez l'utilisateur au nom duquel vous déposez
         required_agreement: Contrôler l'accord de dépôt
         required_descriptions: Décrivez votre travail
         required_files: Ajouter des fichiers
@@ -498,9 +499,13 @@ fr:
         unfeature: Ne plus mettre à la une
       social_media:
         facebook: Facebook
+        facebook_share: Partager sur Facebook
         google: Google+
+        google_share: Partager sur Google+
         tumblr: Tumblr
+        tumblr_share: Partager sur Tumblr
         twitter: Gazouillement
+        twitter_share: Partager sur Twitter
       unauthorized:
         id: 'ID: %{id}'
         is_private: Le %{type} auquel vous avez essayé d'accéder est privé
@@ -596,6 +601,7 @@ fr:
         no_visible_works: La collection est vide ou ne contient pas d'éléments auxquels vous avez accès.
       edit:
         manage_items: Gérer les articles dans cette collection
+      edit_view: Modifier vue
       form:
         additional_fields: Champs supplémentaires
         description: Descriptions
@@ -624,6 +630,7 @@ fr:
         buttons:
           remove_from_collection: Retirer
           remove_this_sub_collection: Retirer
+        item_count: Article
         no_visible_parent_collections: Il n'y a pas de collections parent visibles.
         no_visible_subcollections: Il n'y a pas de sous-collections visibles.
         parent_collection_header: Collections de parents
@@ -650,6 +657,7 @@ fr:
       notice: Veuillez utiliser le formulaire de contact pour envoyer des questions sur ce système; Signaler un problème que vous rencontrez avec le système; Demander de l'aide en utilisant le système; Ou pour fournir des commentaires généraux. Consultez la page d'aide pour plus d'informations sur ce système.
       select_type: Sélectionnez un type de problème
       subject_label: Assujettir
+      title: Nous contacter
       type_label: type de probleme
     content_blocks:
       cancel: Annuler
@@ -880,6 +888,8 @@ fr:
           access: Accès
           action: Actes
           caption: Liste des articles de cette collection
+          collection:
+            visibility: Visibilité de la collection
           collection_type: Type de collection
           date_modified: Dernière modification
           date_uploaded: Date Ajoutée
@@ -889,6 +899,8 @@ fr:
           title: Titre
           type: Type
           visibility: Visibilité
+          work:
+            visibility: Visibilité du travail
         highlighted: Mes faits saillants
         shared: Travaux partagés avec moi
         sr:
@@ -900,6 +912,7 @@ fr:
           press_to: Appuyez sur pour
           results_per_page: Nombre de résultats à afficher par page
           show_label: Afficher tous les détails de
+          thumbnail: la vignette
         works: Vos travaux
         your_collections: Vos collections
         your_works: Vos œuvres
@@ -1095,8 +1108,13 @@ fr:
         fixity_check: Vérification de la fixité
         not_yet_characterized: Pas encore caractérisé
       versioning:
+        choose_file: Choisissez un nouveau fichier de version
         current: Version actuelle
         header: Des versions
+        previous: Précédent
+        remove: Supprimer
+        remove_current_files: Supprimer les fichiers actuels
+        remove_new_version: Supprimer le nouveau fichier de version
         restore: Restaurer la version précédente
         restore_from: Restauration à partir de
         save: Enregistrer la révision
@@ -1109,6 +1127,7 @@ fr:
       admin_sets:
         link: Voir toutes les collections
         tab_label: Explorer les collections
+        thumbnail: la vignette
         title: Explorer les collections
       featured_researcher:
         missing: Aucun chercheur n'a été présenté.
@@ -1195,6 +1214,10 @@ fr:
         single: a été enregistré.
         subject: Téléchargement par lots complet
         title: Fichiers téléchargés avec succès
+    models:
+      hyrax/file_set: Ensemble de fichiers
+      hyrax/pcdm_collection: Collection
+      hyrax/work: Travailler
     my:
       count:
         collections:
@@ -1263,6 +1286,15 @@ fr:
         terms_page: Conditions d'utilisation
       updated: Pages mises à jour.
     passive_consent_to_agreement: En enregistrant ce travail, j'accepte le
+    permission_levels:
+      edit: Modifier l'accès
+      options:
+        edit: Éditer
+        none: Choisissez l'accès
+        read: Voir le téléchargement
+      owner:
+        edit: Modifier l'accès
+      read: Voir le téléchargement
     search:
       button:
         html: <span class="glyphicon glyphicon-search"></span> Aller
@@ -1407,6 +1439,20 @@ fr:
         remove: Retirer
         remove_new_banner: Supprimer la nouvelle bannière
         remove_new_logo: Supprimer le nouveau logo
+      js_templates_versioning:
+        display_label: Afficher l'étiquette
+        error: Erreur
+        options:
+          messages:
+            accept_file_types: Type de fichier non autorisé
+            max_file_size: Le fichier est trop grand
+            max_number_of_files: Nombre maximum de fichiers dépassé
+            min_file_size: Le fichier est trop petit
+        previous: précédent
+        remove: Supprimer
+        remove_new_version: Supprimer le nouveau fichier de version
+        set_all_to_this_resource_type: Définir tout sur ce type de ressource
+        start: Début
     user_profile:
       orcid:
         alt: Icône ORCID
@@ -1464,6 +1510,7 @@ fr:
       load:
         state_error: 'Le flux de travail: %{workflow_name} n''a pas été mis à jour. Vous supprimez un état: %{state_name} avec %{entity_count} entity / s. Un état peut ne pas être supprimé s''il possède des entités actives!'
       unauthorized: Le travail n'est actuellement pas disponible car il n'a pas encore terminé le processus d'approbation
+      unauthorized_parent: Le fichier n'est actuellement pas disponible car son travail parent n'a pas encore terminé le processus d'approbation
     works:
       create:
         after_create_html: Vos fichiers sont en cours de traitement par %{application_name} en arrière-plan. Les contrôles de métadonnées et d'accès que vous avez spécifiés sont appliqués. Vous devrez peut-être actualiser cette page pour voir ces mises à jour.
@@ -1482,6 +1529,7 @@ fr:
           relationships: Des relations
           share: Partager
         visibility_until: jusqu'à
+      missing_title: Pas de titre
       progress:
         header: Enregistrer le travail
       show:
