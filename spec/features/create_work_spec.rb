@@ -6,15 +6,11 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
   let(:file2) { File.open(fixture_path + '/image.jp2') }
   let!(:uploaded_file1) { Hyrax::UploadedFile.create(file: file1, user: user) }
   let!(:uploaded_file2) { Hyrax::UploadedFile.create(file: file2, user: user) }
+  let(:permission_template) { create(:permission_template, source_id: 'admin_set/default', with_admin_set: true, with_active_workflow: true) }
 
   before do
-    Hyrax::EnsureWellFormedAdminSetService.call
     # Grant the user access to deposit into an admin set.
-    create(:permission_template_access,
-           :deposit,
-           permission_template: create(:permission_template, with_admin_set: true, with_active_workflow: true),
-           agent_type: 'user',
-           agent_id: user.user_key)
+    create(:permission_template_access, :deposit, permission_template: permission_template, agent_type: 'user', agent_id: user.user_key)
     # stub out characterization. Travis doesn't have fits installed, and it's not relevant to the test.
     allow(CharacterizeJob).to receive(:perform_later)
   end
@@ -61,7 +57,7 @@ RSpec.describe 'Creating a new Work', :js, :workflow, :clean_repo do
     let(:second_user) { create(:user) }
 
     before do
-      Hyrax::EnsureWellFormedAdminSetService.call
+      create(:permission_template_access, :deposit, permission_template: permission_template, agent_type: 'user', agent_id: second_user.user_key)
       ProxyDepositRights.create!(grantor: second_user, grantee: user)
       sign_in user
       click_link 'Works'
