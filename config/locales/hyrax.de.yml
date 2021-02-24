@@ -18,7 +18,7 @@ de:
       fields:
         facet:
           admin_set_sim: Sammlung
-          collection_type_gid_ssim: Sammlungsart
+          collection_type_gid_ssim: Sammlungstyp
           member_of_collections_ssim: Sammlung
           resource_type_sim: Ressourcentyp
           suppressed_bsi: Status
@@ -189,7 +189,7 @@ de:
         delete:
           notification: Der Sammlungstyp %{name} wurde gelöscht.
         edit:
-          header: Sammlungsart bearbeiten
+          header: Sammlungstyp bearbeiten
           submit: Änderungen speichern
         errors:
           no_settings_change_for_admin_sets: Die Einstellungen für den Sammlungstyp können für diesen Typ vom Admin-Set nicht geändert werden
@@ -206,14 +206,14 @@ de:
           creators:
             action: Aktion
             agent_name: Sammlungs-Ersteller
-            empty: Zu dieser Sammlungsart wurden keine Ersteller hinzugefügt.
+            empty: Zu diesem Sammlungstyp wurden keine Ersteller hinzugefügt.
             help: Ersteller von Sammlungen dieses Typs können eigene Sammlungen erstellen und verwalten.
             title: Ersteller
             type: Typ
           managers:
             action: Aktion
             agent_name: Sammlungs-Manager
-            empty: Dieser Sammlungsart wurden keine Manager hinzugefügt.
+            empty: Diesem Sammlungstyp wurden keine Manager hinzugefügt.
             help: Manager von Sammlungen dieses Typs können Sammlungen bearbeiten, die andere Benutzer erstellt haben, einschließlich Hinzufügen und Entfernen von Arbeiten aus einer Sammlung, Ändern von Sammlungsmetadaten und Löschen von Sammlungen.
             title: Manager
             type: Typ
@@ -232,12 +232,12 @@ de:
           warning: 'Warnung: Diese Einstellungen können nicht geändert werden, nachdem eine Sammlung dieses Typs erstellt wurde.'
         index:
           breadcrumb: Sammlungstypen
-          create_new_button: Erstellen Sie eine neue Sammlungsart
+          create_new_button: Erstellen Sie einen neuen Sammlungstyp
           description: Mit Sammlungstypen können Sie Einstellungen definieren, die Sammlungen steuern. Somit können Sammlungen unterschiedliche Zwecke in Ihrem Repositorium erfüllen. Sie können so viele Sammlungstypen definieren, wie Sie benötigen.
           header: Sammlungstypen
           modal:
-            can_delete_body_html: "<p> Durch das Löschen dieses Sammlumgs-Types werden der Typ und seine Einstellungen dauerhaft aus dem Repository entfernt. Möchten Sie diesen Sammlungstyp wirklich löschen? </p>"
-            cannot_delete_body_html: "<p> Sie können diesen Sammlungsart nicht löschen, da mindestens eine Sammlung dieses Typs bereits erstellt wurde. </p><p> Um diesen Erfassungstyp zu löschen, stellen Sie zunächst sicher, dass alle Sammlungen dieses Typs gelöscht wurden.</p>"
+            can_delete_body_html: "<p> Durch das Löschen dieses Sammlungstypes werden der Typ und seine Einstellungen dauerhaft aus dem Repository entfernt. Möchten Sie diesen Sammlungstyp wirklich löschen? </p>"
+            cannot_delete_body_html: "<p> Sie können diesen Sammlungstyp nicht löschen, da mindestens eine Sammlung dieses Typs bereits erstellt wurde. </p><p> Um diesen Erfassungstyp zu löschen, stellen Sie zunächst sicher, dass alle Sammlungen dieses Typs gelöscht wurden.</p>"
             header_can_delete: Sammlungstyp löschen?
             header_cannot_delete: Sammlungstyp kann nicht gelöscht werden
             view_collections: Sammlungen dieses Typs anzeigen
@@ -774,7 +774,7 @@ de:
         heading:
           access: Zugriff
           action: Aktionen
-          collection_type: Sammlungsart
+          collection_type: Sammlungstyp
           date_modified: Zuletzt bearbeitet
           date_uploaded: Hochlade-Datum
           highlighted: Hervorgehoben
@@ -1291,7 +1291,7 @@ de:
         assigns_visibility: Sammlungen dieses Typs erlauben, einer neuen Arbeit initiale Sichtbarkeitseinstellungen zuzuweisen
         assigns_workflow: Sammlungen dieses Typs erlauben, Arbeitsabläufe einer neuen Arbeit zuzuweisen
         brandable: Sammlungen dieses Typs dürfen als Marken gekennzeichnet werden
-        description: Eine kurze Erklärung des allgemeinen Zwecks dieser Sammlungsart. Benutzer sehen dies, wenn beim Erstellen einer neuen Sammlung mehrere Sammlungstypen zur Auswahl stehen.
+        description: Eine kurze Erklärung des allgemeinen Zwecks dieses Sammlungstyps. Benutzer sehen dies, wenn beim Erstellen einer neuen Sammlung mehrere Sammlungstypen zur Auswahl stehen.
         discoverable: Sammlungen dieses Typs können sichtbar gemacht werden
         nestable: Sammlungen dieses Typs können geschachtelt werden (eine Sammlung kann andere Sammlungen enthalten)
         require_membership: Eine Arbeit muss zu mindestens einer Sammlung dieses Typs gehören
