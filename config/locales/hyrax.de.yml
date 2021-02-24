@@ -411,13 +411,13 @@ de:
       form_permission_under_embargo:
         help_html: "<strong>Diese Arbeit ist unter Embargo.</strong> Hier können Sie die Einstellungen des Embargos ändern, oder Sie können den %{edit_link} besuchen, um ihn zu deaktivieren."
         legend_html: Sichtbarkeit <small>Wer sollte in der Lage sein, diesen Inhalt anzusehen oder herunterzuladen?</small>
-        management_page: Embargo Management Seite
+        management_page: Embargo-Management-Seite
       form_permission_under_lease:
         help_html: "<strong>Diese Arbeit ist verleast.</strong> Hier können Sie die Einstellungen des Leasingvertrages ändern oder den %{edit_link} besuchen, um ihn zu deaktivieren."
         legend_html: Sichtbarkeit <small>Wer soll in der Lage sein, diesen Inhalt anzusehen oder herunterzuladen?</small>
         management_page: Leasing-Management-Seite
       form_progress:
-        proxy_depositors: Proxy-Einzahler - Wählen Sie den Benutzer aus, in dessen Namen Sie einzahlen
+        proxy_depositors: Proxy-Deponent - Wählen Sie den Benutzer aus, in dessen Namen Sie Arbeiten einstellen
         required_agreement: Deponierungsvereinbarung zustimmen
         required_descriptions: Beschreiben Sie Ihre Arbeit
         required_files: Dateien hinzufügen
@@ -624,7 +624,7 @@ de:
         buttons:
           remove_from_collection: Entfernen
           remove_this_sub_collection: Entfernen
-        item_count: Artikel
+        item_count: Element
         no_visible_parent_collections: Es gibt keine sichtbaren übergeordneten Sammlungen.
         no_visible_subcollections: Es gibt keine sichtbaren Untersammlungen.
         parent_collection_header: Übergeordnete Sammlungen
@@ -651,7 +651,7 @@ de:
       notice: Bitte benutzen Sie das Kontaktformular, um Anfragen zu diesem System einzureichen. Um ein Problem zu melden, das Sie mit dem System erleben; Um die Unterstützung des Systems anzufordern, oder um ein Feedback zu geben. Weitere Informationen zu diesem System finden Sie auf der Hilfeseite.
       select_type: Wählen Sie einen Anfragen-Typ aus
       subject_label: Betreff
-      title: Kontaktiere uns
+      title: Kontaktieren sie uns
       type_label: Anfragentyp
     content_blocks:
       cancel: Abbrechen
@@ -1102,13 +1102,13 @@ de:
         fixity_check: Beständigkeit überprüfen
         not_yet_characterized: Noch nicht charakterisiert
       versioning:
-        choose_file: Wählen Sie Neue Versionsdatei
+        choose_file: Neue Dateiversion wählen 
         current: Aktuelle Version
         header: Versionen
         previous: Bisherige
         remove: Entfernen
         remove_current_files: Aktuelle Dateien entfernen
-        remove_new_version: Neue Versionsdatei entfernen
+        remove_new_version: Neue Dateiversion entfernen
         restore: Vorherige Version wiederherstellen
         restore_from: Wiederherstellen von
         save: Überarbeitete Version speichern
@@ -1284,11 +1284,11 @@ de:
       edit: Zugriff bearbeiten
       options:
         edit: Bearbeiten
-        none: Wählen Sie Zugriff
-        read: Download anzeigen
+        none: Zugriffsberechtigung wählen
+        read: Lesen/Download
       owner:
         edit: Zugriff bearbeiten
-      read: Download anzeigen
+      read: Lesen/Download
     search:
       button:
         html: <span class="glyphicon glyphicon-search"></span> Suchen
@@ -1434,13 +1434,13 @@ de:
         remove_new_banner: Neues Banner entfernen
         remove_new_logo: Neues Logo entfernen
       js_templates_versioning:
-        display_label: Etikett anzeigen
-        error: Error
+        display_label: Label anzeigen
+        error: Fehler
         options:
           messages:
-            accept_file_types: Dateityp nicht erlaubt
+            accept_file_types: Dateityp ist nicht erlaubt
             max_file_size: Datei ist zu groß
-            max_number_of_files: Maximale Anzahl von Dateien überschritten
+            max_number_of_files: Maximale Anzahl von Dateien ist überschritten
             min_file_size: Datei ist zu klein
         previous: Bisherige
         remove: Entfernen
@@ -1504,7 +1504,7 @@ de:
       load:
         state_error: 'Der Workflow: %{workflow_name} wurde nicht aktualisiert. Sie entfernen einen Zustand: %{state_name} mit %{entity_count} Entität(en). Ein Zustand darf nicht entfernt werden, während er aktive Entitäten hat!'
       unauthorized: Die Arbeit ist derzeit nicht verfügbar, da der Begutachtungsprozess noch nicht abgeschlossen ist
-      unauthorized_parent: Die Datei ist derzeit nicht verfügbar, da die übergeordnete Arbeit den Genehmigungsprozess noch nicht abgeschlossen hat
+      unauthorized_parent: Die Datei ist derzeit nicht verfügbar, da ihre übergeordnete Arbeit den Freigabeprozess noch nicht abgeschlossen hat
     works:
       create:
         after_create_html: Ihre Dateien werden von %{application_name} im Hintergrund verarbeitet. Die von Ihnen angegebenen Metadaten und Zugriffsberechtigungen werden angewendet. Möglicherweise müssen Sie diese Seite aktualisieren, um diese Updates zu sehen.
