@@ -647,11 +647,11 @@ en:
       email_label: Your Email
       header: Contact Form
       issue_types:
-        depositing: Depositing content
-        changing: Making changes to my content
         browsing: Browsing and searching
-        reporting: Reporting a problem
+        changing: Making changes to my content
+        depositing: Depositing content
         general: General inquiry or request
+        reporting: Reporting a problem
       message_label: Message
       name_label: Your Name
       notice: Please use the contact form to submit inquiries about this system; to report a problem you are experiencing with the system; to request assistance using the system; or to provide general feedback. See the Help page for additional information about this system.
@@ -888,6 +888,8 @@ en:
           access: Access
           action: Actions
           caption: List of items in this collection
+          collection:
+            visibility: Visibility of Collection
           collection_type: Collection Type
           date_modified: Last Modified
           date_uploaded: Date Added
@@ -897,8 +899,6 @@ en:
           title: Title
           type: Type
           visibility: Visibility
-          collection:
-            visibility: Visibility of Collection
           work:
             visibility: Visibility of Work
         highlighted: My Highlights
@@ -1127,8 +1127,8 @@ en:
       admin_sets:
         link: View all collections
         tab_label: Explore Collections
-        title: Explore Collections
         thumbnail: thumbnail
+        title: Explore Collections
       featured_researcher:
         missing: No researchers have been featured.
         tab_label: Featured Researcher
@@ -1287,14 +1287,14 @@ en:
       updated: Pages updated.
     passive_consent_to_agreement: By saving this work I agree to the
     permission_levels:
-      edit: "Edit access"
-      read: "View/Download"
-      owner:
-        edit: "Edit access"
+      edit: Edit access
       options:
-        edit: "Edit"
-        none: "Choose Access"
-        read: "View/Download"
+        edit: Edit
+        none: Choose Access
+        read: View/Download
+      owner:
+        edit: Edit access
+      read: View/Download
     search:
       button:
         html: <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Go
@@ -1442,17 +1442,17 @@ en:
       js_templates_versioning:
         display_label: Display label
         error: Error
+        options:
+          messages:
+            accept_file_types: File type not allowed
+            max_file_size: File is too large
+            max_number_of_files: Maximum number of files exceeded
+            min_file_size: File is too small
         previous: previous
         remove: Remove
         remove_new_version: Remove New Version File
         set_all_to_this_resource_type: Set all to this Resource Type
         start: Start
-        options:
-          messages:
-            accept_file_types:   File type not allowed
-            max_file_size:       File is too large
-            max_number_of_files: Maximum number of files exceeded
-            min_file_size:       File is too small
     user_profile:
       orcid:
         alt: ORCID icon
@@ -1512,7 +1512,6 @@ en:
       unauthorized: The work is not currently available because it has not yet completed the approval process
       unauthorized_parent: The file is not currently available because its parent work has not yet completed the approval process
     works:
-      missing_title: 'No Title'
       create:
         after_create_html: Your files are being processed by %{application_name} in the background. The metadata and access controls you specified are being applied. You may need to refresh this page to see these updates.
         breadcrumb: Add New Work
@@ -1530,6 +1529,7 @@ en:
           relationships: Relationships
           share: Sharing
         visibility_until: until
+      missing_title: No Title
       progress:
         header: Save Work
       show:

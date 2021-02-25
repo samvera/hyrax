@@ -18,7 +18,7 @@ de:
       fields:
         facet:
           admin_set_sim: Sammlung
-          collection_type_gid_ssim: Sammlungsart
+          collection_type_gid_ssim: Sammlungstyp
           member_of_collections_ssim: Sammlung
           resource_type_sim: Ressourcentyp
           suppressed_bsi: Status
@@ -190,7 +190,7 @@ de:
         delete:
           notification: Der Sammlungstyp %{name} wurde gelöscht.
         edit:
-          header: Sammlungsart bearbeiten
+          header: Sammlungstyp bearbeiten
           submit: Änderungen speichern
         errors:
           no_settings_change_for_admin_sets: Die Einstellungen für den Sammlungstyp können für diesen Typ vom Admin-Set nicht geändert werden
@@ -207,14 +207,14 @@ de:
           creators:
             action: Aktion
             agent_name: Sammlungs-Ersteller
-            empty: Zu dieser Sammlungsart wurden keine Ersteller hinzugefügt.
+            empty: Zu diesem Sammlungstyp wurden keine Ersteller hinzugefügt.
             help: Ersteller von Sammlungen dieses Typs können eigene Sammlungen erstellen und verwalten.
             title: Ersteller
             type: Typ
           managers:
             action: Aktion
             agent_name: Sammlungs-Manager
-            empty: Dieser Sammlungsart wurden keine Manager hinzugefügt.
+            empty: Diesem Sammlungstyp wurden keine Manager hinzugefügt.
             help: Manager von Sammlungen dieses Typs können Sammlungen bearbeiten, die andere Benutzer erstellt haben, einschließlich Hinzufügen und Entfernen von Arbeiten aus einer Sammlung, Ändern von Sammlungsmetadaten und Löschen von Sammlungen.
             title: Manager
             type: Typ
@@ -233,12 +233,12 @@ de:
           warning: 'Warnung: Diese Einstellungen können nicht geändert werden, nachdem eine Sammlung dieses Typs erstellt wurde.'
         index:
           breadcrumb: Sammlungstypen
-          create_new_button: Erstellen Sie eine neue Sammlungsart
+          create_new_button: Erstellen Sie einen neuen Sammlungstyp
           description: Mit Sammlungstypen können Sie Einstellungen definieren, die Sammlungen steuern. Somit können Sammlungen unterschiedliche Zwecke in Ihrem Repositorium erfüllen. Sie können so viele Sammlungstypen definieren, wie Sie benötigen.
           header: Sammlungstypen
           modal:
-            can_delete_body_html: "<p> Durch das Löschen dieses Sammlumgs-Types werden der Typ und seine Einstellungen dauerhaft aus dem Repository entfernt. Möchten Sie diesen Sammlungstyp wirklich löschen? </p>"
-            cannot_delete_body_html: "<p> Sie können diesen Sammlungsart nicht löschen, da mindestens eine Sammlung dieses Typs bereits erstellt wurde. </p><p> Um diesen Erfassungstyp zu löschen, stellen Sie zunächst sicher, dass alle Sammlungen dieses Typs gelöscht wurden.</p>"
+            can_delete_body_html: "<p> Durch das Löschen dieses Sammlungstypes werden der Typ und seine Einstellungen dauerhaft aus dem Repository entfernt. Möchten Sie diesen Sammlungstyp wirklich löschen? </p>"
+            cannot_delete_body_html: "<p> Sie können diesen Sammlungstyp nicht löschen, da mindestens eine Sammlung dieses Typs bereits erstellt wurde. </p><p> Um diesen Erfassungstyp zu löschen, stellen Sie zunächst sicher, dass alle Sammlungen dieses Typs gelöscht wurden.</p>"
             header_can_delete: Sammlungstyp löschen?
             header_cannot_delete: Sammlungstyp kann nicht gelöscht werden
             view_collections: Sammlungen dieses Typs anzeigen
@@ -411,12 +411,13 @@ de:
       form_permission_under_embargo:
         help_html: "<strong>Diese Arbeit ist unter Embargo.</strong> Hier können Sie die Einstellungen des Embargos ändern, oder Sie können den %{edit_link} besuchen, um ihn zu deaktivieren."
         legend_html: Sichtbarkeit <small>Wer sollte in der Lage sein, diesen Inhalt anzusehen oder herunterzuladen?</small>
-        management_page: Embargo Management Seite
+        management_page: Embargo-Management-Seite
       form_permission_under_lease:
         help_html: "<strong>Diese Arbeit ist verleast.</strong> Hier können Sie die Einstellungen des Leasingvertrages ändern oder den %{edit_link} besuchen, um ihn zu deaktivieren."
         legend_html: Sichtbarkeit <small>Wer soll in der Lage sein, diesen Inhalt anzusehen oder herunterzuladen?</small>
         management_page: Leasing-Management-Seite
       form_progress:
+        proxy_depositors: Proxy-Deponent - Wählen Sie den Benutzer aus, in dessen Namen Sie Arbeiten einstellen
         required_agreement: Deponierungsvereinbarung zustimmen
         required_descriptions: Beschreiben Sie Ihre Arbeit
         required_files: Dateien hinzufügen
@@ -492,9 +493,13 @@ de:
         unfeature: Hervorhebung entfernen
       social_media:
         facebook: Facebook
+        facebook_share: Auf Facebook teilen
         google: Google+
+        google_share: Auf Google+ teilen
         tumblr: Tumblr
+        tumblr_share: Auf Tumblr teilen
         twitter: Twitter
+        twitter_share: Auf Twitter teilen
       unauthorized:
         id: 'ID: %{id}'
         is_private: Das %{type}, auf das Sie zugreifen wollten, ist privat
@@ -590,6 +595,7 @@ de:
         no_visible_works: Die Sammlung ist entweder leer oder enthält keine Gegenstände, auf die Sie zugreifen können.
       edit:
         manage_items: Verwalten von Inhalten in dieser Sammlung
+      edit_view: Ansicht bearbeiten
       form:
         additional_fields: Zusätzliche Felder
         description: Beschreibungen
@@ -618,6 +624,7 @@ de:
         buttons:
           remove_from_collection: Entfernen
           remove_this_sub_collection: Entfernen
+        item_count: Element
         no_visible_parent_collections: Es gibt keine sichtbaren übergeordneten Sammlungen.
         no_visible_subcollections: Es gibt keine sichtbaren Untersammlungen.
         parent_collection_header: Übergeordnete Sammlungen
@@ -644,6 +651,7 @@ de:
       notice: Bitte benutzen Sie das Kontaktformular, um Anfragen zu diesem System einzureichen. Um ein Problem zu melden, das Sie mit dem System erleben; Um die Unterstützung des Systems anzufordern, oder um ein Feedback zu geben. Weitere Informationen zu diesem System finden Sie auf der Hilfeseite.
       select_type: Wählen Sie einen Anfragen-Typ aus
       subject_label: Betreff
+      title: Kontaktieren sie uns
       type_label: Anfragentyp
     content_blocks:
       cancel: Abbrechen
@@ -874,7 +882,9 @@ de:
           access: Zugriff
           action: Aktionen
           caption: Liste der Arbeiten in dieser Sammlung
-          collection_type: Sammlungsart
+          collection:
+            visibility: Sichtbarkeit der Sammlung
+          collection_type: Sammlungstyp
           date_modified: Zuletzt bearbeitet
           date_uploaded: Hochladedatum
           highlighted: Hervorgehoben
@@ -883,6 +893,8 @@ de:
           title: Titel
           type: Typ
           visibility: Sichtbarkeit
+          work:
+            visibility: Sichtbarkeit der Arbeit
         highlighted: Meine Hervorhebungen
         shared: Arbeiten, welche mir freigegeben wurden
         sr:
@@ -894,6 +906,7 @@ de:
           press_to: Drücken Sie auf
           results_per_page: Anzahl der Ergebnisse pro Seite
           show_label: Zeige alle Details von
+          thumbnail: Miniaturansicht
         works: Ihre Arbeiten
         your_collections: Ihre Sammlungen
         your_works: Ihre Werke
@@ -1089,8 +1102,13 @@ de:
         fixity_check: Beständigkeit überprüfen
         not_yet_characterized: Noch nicht charakterisiert
       versioning:
+        choose_file: Neue Dateiversion wählen 
         current: Aktuelle Version
         header: Versionen
+        previous: Bisherige
+        remove: Entfernen
+        remove_current_files: Aktuelle Dateien entfernen
+        remove_new_version: Neue Dateiversion entfernen
         restore: Vorherige Version wiederherstellen
         restore_from: Wiederherstellen von
         save: Überarbeitete Version speichern
@@ -1103,6 +1121,7 @@ de:
       admin_sets:
         link: Alle Sammlungen anzeigen
         tab_label: Erforschen Sie Sammlungen
+        thumbnail: Miniaturansicht
         title: Erforschen Sie Sammlungen
       featured_researcher:
         missing: Es wurden keine Forscher vorgestellt.
@@ -1189,6 +1208,10 @@ de:
         single: wurde gespeichert.
         subject: Stapelweises Hochladen abgeschlossen
         title: Dateien erfolgreich hochgeladen
+    models:
+      hyrax/file_set: Dateisatz
+      hyrax/pcdm_collection: Sammlung
+      hyrax/work: Arbeit
     my:
       count:
         collections:
@@ -1198,7 +1221,7 @@ de:
           you_own: "<strong> %{total_count} Sammlungen </ strong>, die Sie im Repository besitzen"
         works:
           in_repo: "<strong> %{total_count} funktioniert </ strong> im Repository"
-          works_listing: Auflistung der Arbeiten 
+          works_listing: Auflistung der Arbeiten
           you_manage: "<strong> %{total_count} funktioniert </ strong>, das Sie im Repository verwalten können"
           you_own: "<strong> %{total_count} funktioniert </ strong>, das Sie im Repository besitzen"
       sort_and_per_page:
@@ -1257,6 +1280,15 @@ de:
         terms_page: Nutzungsbedingungen
       updated: Seiten aktualisiert.
     passive_consent_to_agreement: Durch das Speichern dieser Arbeit stimme ich der ... zu.
+    permission_levels:
+      edit: Zugriff bearbeiten
+      options:
+        edit: Bearbeiten
+        none: Zugriffsberechtigung wählen
+        read: Lesen/Download
+      owner:
+        edit: Zugriff bearbeiten
+      read: Lesen/Download
     search:
       button:
         html: <span class="glyphicon glyphicon-search"></span> Suchen
@@ -1401,6 +1433,20 @@ de:
         remove: Löschen
         remove_new_banner: Neues Banner entfernen
         remove_new_logo: Neues Logo entfernen
+      js_templates_versioning:
+        display_label: Label anzeigen
+        error: Fehler
+        options:
+          messages:
+            accept_file_types: Dateityp ist nicht erlaubt
+            max_file_size: Datei ist zu groß
+            max_number_of_files: Maximale Anzahl von Dateien ist überschritten
+            min_file_size: Datei ist zu klein
+        previous: Bisherige
+        remove: Entfernen
+        remove_new_version: Neue Versionsdatei entfernen
+        set_all_to_this_resource_type: Stellen Sie alle auf diesen Ressourcentyp ein
+        start: Start
     user_profile:
       orcid:
         alt: ORCID-Symbol
@@ -1458,6 +1504,7 @@ de:
       load:
         state_error: 'Der Workflow: %{workflow_name} wurde nicht aktualisiert. Sie entfernen einen Zustand: %{state_name} mit %{entity_count} Entität(en). Ein Zustand darf nicht entfernt werden, während er aktive Entitäten hat!'
       unauthorized: Die Arbeit ist derzeit nicht verfügbar, da der Begutachtungsprozess noch nicht abgeschlossen ist
+      unauthorized_parent: Die Datei ist derzeit nicht verfügbar, da ihre übergeordnete Arbeit den Freigabeprozess noch nicht abgeschlossen hat
     works:
       create:
         after_create_html: Ihre Dateien werden von %{application_name} im Hintergrund verarbeitet. Die von Ihnen angegebenen Metadaten und Zugriffsberechtigungen werden angewendet. Möglicherweise müssen Sie diese Seite aktualisieren, um diese Updates zu sehen.
@@ -1476,6 +1523,7 @@ de:
           relationships: Beziehungen
           share: Freigaben
         visibility_until: bis
+      missing_title: Kein Titel
       progress:
         header: Arbeit speichern
       show:
@@ -1507,7 +1555,7 @@ de:
         assigns_visibility: Sammlungen dieses Typs erlauben, einer neuen Arbeit initiale Sichtbarkeitseinstellungen zuzuweisen
         assigns_workflow: Sammlungen dieses Typs erlauben, Arbeitsabläufe einer neuen Arbeit zuzuweisen
         brandable: Sammlungen dieses Typs dürfen als Marken gekennzeichnet werden
-        description: Eine kurze Erklärung des allgemeinen Zwecks dieser Sammlungsart. Benutzer sehen dies, wenn beim Erstellen einer neuen Sammlung mehrere Sammlungstypen zur Auswahl stehen.
+        description: Eine kurze Erklärung des allgemeinen Zwecks dieses Sammlungstyps. Benutzer sehen dies, wenn beim Erstellen einer neuen Sammlung mehrere Sammlungstypen zur Auswahl stehen.
         discoverable: Sammlungen dieses Typs können sichtbar gemacht werden
         nestable: Sammlungen dieses Typs können geschachtelt werden (eine Sammlung kann andere Sammlungen enthalten)
         require_membership: Eine Arbeit muss zu mindestens einer Sammlung dieses Typs gehören

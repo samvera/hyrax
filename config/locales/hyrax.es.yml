@@ -422,6 +422,7 @@ es:
         legend_html: Visibilidad <small>¿Quién debería ser capaz de ver o descargar este contenido?</small>
         management_page: Página de Gestión de Arrendamiento
       form_progress:
+        proxy_depositors: 'Depositantes apoderados: seleccione el usuario en cuyo nombre está depositando'
         required_agreement: Comprobar el acuerdo de depósito
         required_descriptions: Describa su trabajo
         required_files: Añadir archivos
@@ -497,9 +498,13 @@ es:
         unfeature: Unfeature
       social_media:
         facebook: Facebook
+        facebook_share: Compartir en Facebook
         google: Google+
+        google_share: Compartir en Google+
         tumblr: Tumblr
+        tumblr_share: Compartir en Tumblr
         twitter: Twitter
+        twitter_share: Compartir en Twitter
       unauthorized:
         id: 'ID: %{id}'
         is_private: El %{type} al que ha intentado acceder es privado.
@@ -595,6 +600,7 @@ es:
         no_visible_works: La colección está vacía o no contiene elementos a los que tenga acceso.
       edit:
         manage_items: Administrar Elementos en esta Colección
+      edit_view: Editar vista
       form:
         additional_fields: Campos adicionales
         description: Descripciones
@@ -623,6 +629,7 @@ es:
         buttons:
           remove_from_collection: retirar
           remove_this_sub_collection: retirar
+        item_count: Artículo
         no_visible_parent_collections: No hay colecciones de padres visibles.
         no_visible_subcollections: No hay subcolecciones visibles.
         parent_collection_header: Colecciones de padres
@@ -649,6 +656,7 @@ es:
       notice: Por favor, utilice el formulario de contacto para enviar preguntas sobre este sistema; para reportar un problema que está experimentando con el sistema; solicitar ayuda usando el sistema; o para comentarios generales. Consulte la página de ayuda para obtener información adicional acerca de este sistema.
       select_type: Seleccionar el Tipo de Problema
       subject_label: Tema
+      title: Contáctenos
       type_label: Tipo de Problema
     content_blocks:
       cancel: Cancelar
@@ -799,8 +807,8 @@ es:
         show_document_list_row:
           creator: 'Creador:'
           depositor: 'Depositor:'
-          owner: 'Propietario:'
           edit_access: 'Editar acceso:'
+          owner: 'Propietario:'
         sort_and_per_page:
           show_par_page_html: "%{select} Por página"
           sort_by: 'Ordenar Por:'
@@ -880,6 +888,8 @@ es:
           access: Acceso
           action: Acciones
           caption: Lista de artículos en esta colección
+          collection:
+            visibility: Visibilidad de la colección
           collection_type: Tipo de colección
           date_modified: Última modificación
           date_uploaded: Fecha añadida
@@ -889,6 +899,8 @@ es:
           title: Título
           type: Tipo
           visibility: Visibilidad
+          work:
+            visibility: Visibilidad del trabajo
         highlighted: Mis aspectos destacados
         shared: Trabajos compartidos conmigo
         sr:
@@ -900,6 +912,7 @@ es:
           press_to: Presionar para
           results_per_page: Número de resultados para mostrar por página
           show_label: Ver todos los detalles de
+          thumbnail: miniatura
         works: Mis Trabajos
         your_collections: Tus colecciones
         your_works: Tus trabajos
@@ -1097,8 +1110,13 @@ es:
         fixity_check: La Fijeza De Verificación
         not_yet_characterized: Aún No Se Caracteriza
       versioning:
+        choose_file: Elija el archivo de nueva versión
         current: Versión actual
         header: Versiones
+        previous: Anterior
+        remove: Eliminar
+        remove_current_files: Eliminar archivos actuales
+        remove_new_version: Eliminar archivo de nueva versión
         restore: Restaurar la versión anterior
         restore_from: Restaurar desde
         save: Guardar revisión
@@ -1111,8 +1129,8 @@ es:
       admin_sets:
         link: Ver todas las colecciones
         tab_label: Explorar Colecciones
-        title: Explorar Colecciones
         thumbnail: Miniatura
+        title: Explorar Colecciones
       featured_researcher:
         missing: No hay investigadores destacados
         tab_label: Investigador destacado
@@ -1198,6 +1216,10 @@ es:
         single: ha sido guardado.
         subject: Subida en lote completa
         title: Archivos cargados satisfactoriamente
+    models:
+      hyrax/file_set: Conjunto de archivos
+      hyrax/pcdm_collection: Colección
+      hyrax/work: Trabaja
     my:
       count:
         collections:
@@ -1266,6 +1288,15 @@ es:
         terms_page: Términos de Uso
       updated: Páginas actualizadas.
     passive_consent_to_agreement: Al guardar este trabajo acepto a
+    permission_levels:
+      edit: Editar acceso
+      options:
+        edit: Editar
+        none: Elija acceso
+        read: Ver descarga
+      owner:
+        edit: Editar acceso
+      read: Ver descarga
     search:
       button:
         html: <span class="glyphicon glyphicon-search"></span> Ir
@@ -1410,6 +1441,20 @@ es:
         remove: retirar
         remove_new_banner: Eliminar nuevo banner
         remove_new_logo: Eliminar nuevo logotipo
+      js_templates_versioning:
+        display_label: Etiqueta de visualización
+        error: Error
+        options:
+          messages:
+            accept_file_types: Tipo de archivo no permitido
+            max_file_size: El archivo es demasiado grande
+            max_number_of_files: Se superó el número máximo de archivos
+            min_file_size: El archivo es demasiado pequeño
+        previous: anterior
+        remove: Eliminar
+        remove_new_version: Eliminar archivo de nueva versión
+        set_all_to_this_resource_type: Establecer todo en este tipo de recurso
+        start: Comienzo
     user_profile:
       orcid:
         alt: Icono ORCID
@@ -1467,6 +1512,7 @@ es:
       load:
         state_error: El flujo de trabajo %{workflow_name} no se ha actualizado. Está eliminando un estado, %{state_name}, con %{entity_count} entidad/es. ¡Un estado no puede ser borrado mientras tiene enidades activas!
       unauthorized: El trabajo no está disponible en este momento porque aún no se ha completado el proceso de aprobación
+      unauthorized_parent: El archivo no está disponible actualmente porque su trabajo principal aún no ha completado el proceso de aprobación.
     works:
       create:
         after_create_html: Tus archivos están siendo procesados por %{application_name} de forma paralela. Los metadatos y controles de acceso que ha especificado han sido aplicados. Quizás deba recargar la página para ver las actualizaciones.
@@ -1485,6 +1531,7 @@ es:
           relationships: Relaciones
           share: Compartir
         visibility_until: hasta
+      missing_title: Sin título
       progress:
         header: Guardar Trabajo
       show:
