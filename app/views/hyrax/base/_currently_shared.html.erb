@@ -1,21 +1,4 @@
-<%#
-# form object.class = SimpleForm::FormBuilder
-#   For works (i.e. GenericWork):
-#   - form object.object = Hyrax::GenericWorkForm
-#   - form object.object.model = GenericWork
-#   - use the work itself
-#   For file_sets:
-#   - form object.object.class = FileSet
-#   - use work the file_set is in
-#   No other object types are supported by this view. %>
-<% if f.object.respond_to?(:model) && f.object.model.work?
-  object_acting_upon = f.object
-elsif f.object.file_set?
-  object_acting_upon = f.object.in_works.first
-end %>
-
-<% permission_service = Hyrax::EditPermissionsService.new(object: object_acting_upon, ability: current_ability) %>
-<% depositor = permission_service.depositor %>
+<% permission_service = Hyrax::EditPermissionsService.build_service_object_from(form: f, ability: current_ability) %>
 
 <h2><%= t('.currently_sharing') %></h2>
 
@@ -27,7 +10,7 @@ end %>
   <tr id="file_permissions">
     <td>
       <%= label_tag :owner_access, class: "control-label" do %>
-        Depositor (<span id="file_owner" data-depositor="<%= depositor %>"><%= link_to_profile depositor %></span>)
+        Depositor (<span id="file_owner" data-depositor="<%= permission_service.depositor %>"><%= link_to_profile permission_service.depositor %></span>)
       <% end %>
     </td>
     <td>

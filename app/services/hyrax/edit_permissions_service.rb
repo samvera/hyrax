@@ -6,6 +6,31 @@ module Hyrax
   #  - user is permitted to update only non-manager permissions from any Collections
   #  - user is permitted to update any non-collection permissions
   class EditPermissionsService
+    # @api public
+    # @since v3.0.0
+    #
+    # @param form [SimpleForm::FormBuilder]
+    # @param current_ability [Ability]
+    # @return [Hyrax::EditPermissionService]
+    #
+    # @note
+    #   form object.class = SimpleForm::FormBuilder
+    #     For works (i.e. GenericWork):
+    #     - form object.object = Hyrax::GenericWorkForm
+    #     - form object.object.model = GenericWork
+    #     - use the work itself
+    #     For file_sets:
+    #     - form object.object.class = FileSet
+    #     - use work the file_set is in
+    #     No other object types are supported by this view. %>
+    def self.build_service_object_from(form:, ability:)
+      if form.object.respond_to?(:model) && form.object.model.work?
+        new(object: form.object, ability: ability)
+      elsif form.object.file_set?
+        new(object: form.object.in_works.first, ability: ability)
+      end
+    end
+
     attr_reader :depositor, :unauthorized_collection_managers
 
     # @param object [#depositor, #admin_set_id, #member_of_collection_ids] GenericWorkForm (if called for object) or GenericWork (if called for file set)
