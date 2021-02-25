@@ -8,8 +8,8 @@ module Hyrax
   class EditPermissionsService
     attr_reader :depositor, :unauthorized_collection_managers
 
-    # @param [Object] GenericWorkForm (if called for object) or GenericWork (if called for file set)
-    # @param [Ability] user's current_ability
+    # @param object [#depositor, #admin_set_id, #member_of_collection_ids] GenericWorkForm (if called for object) or GenericWork (if called for file set)
+    # @param ability [Ability] user's current_ability
     def initialize(object:, ability:)
       @object = object
       @ability = ability
@@ -22,7 +22,7 @@ module Hyrax
     # @api private
     # @todo refactor this code to use "can_edit?"; Thinking in negations can be challenging.
     #
-    # @param [Hash] one set of permission fields for object {:name, :access}
+    # @param permission_hash [Hash] one set of permission fields for object {:name, :access}
     # @return [Boolean] true if user cannot edit the given permissions
     def cannot_edit_permissions?(permission_hash)
       permission_hash.fetch(:access) == "edit" && @unauthorized_managers.include?(permission_hash.fetch(:name))
@@ -30,7 +30,7 @@ module Hyrax
 
     # @api private
     #
-    # @param [Hash] one set of permission fields for object {:name, :access}
+    # @param permission_hash [Hash] one set of permission fields for object {:name, :access}
     # @return [Boolean] true if given permissions are one of fixed exclusions
     def excluded_permission?(permission_hash)
       exclude_from_display.include? permission_hash.fetch(:name).downcase
@@ -119,13 +119,11 @@ module Hyrax
     def manager_permissions_to_block
       unauthorized_managers = []
       unauthorized_collection_managers = []
-      if object_unauthorized_collection_ids.any?
-        object_unauthorized_collection_ids.each do |id|
-          Hyrax::PermissionTemplate.find_by(source_id: id).access_grants.each do |grant|
-            if grant.access == "manage"
-              unauthorized_managers << grant.agent_id
-              unauthorized_collection_managers += Array.wrap({ name: grant.agent_id }.merge(id: id))
-            end
+      object_unauthorized_collection_ids.each do |id|
+        Hyrax::PermissionTemplate.find_by(source_id: id).access_grants.each do |grant|
+          if grant.access == "manage"
+            unauthorized_managers << grant.agent_id
+            unauthorized_collection_managers += Array.wrap({ name: grant.agent_id }.merge(id: id))
           end
         end
       end
@@ -164,7 +162,7 @@ module Hyrax
                               belongs_to = []
                               # get all of work's collection ids from the form
                               belongs_to += @object.member_of_collection_ids
-                              belongs_to << @object.admin_set_id unless @object.admin_set_id.empty?
+                              belongs_to << @object.admin_set_id if @object.admin_set_id.present?
                               belongs_to
                             end
     end
