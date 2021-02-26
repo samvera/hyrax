@@ -17,6 +17,7 @@ module Hyrax
     require 'flipflop'
     require 'qa'
     require 'clipboard/rails'
+    require 'tinymce-rails'
     require 'legato'
     require 'valkyrie'
 

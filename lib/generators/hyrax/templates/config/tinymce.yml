@@ -3,10 +3,11 @@ default: &default
 content_block:
   <<: *default
   menubar: false
-  toolbar1: styleselect | bold italic | link image | undo redo
-  toolbar2: table | fullscreen | uploadimage
+  toolbar1: styleselect | bold italic | undo redo
+  toolbar2: table | fullscreen | image
   plugins:
     - table
     - fullscreen
+    - image
 custom:
   <<: *default
