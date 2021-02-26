@@ -17,6 +17,7 @@ Jump in: [![Slack Status](http://slack.samvera.org/badge.svg)](http://slack.samv
 
 * [What is Hyrax?](#what-is-hyrax)
 * [Feature Documentation](#feature-documentation)
+* [Support Policies](#support-policies)
 * [Help](#help)
 * [Working with Hyrax](#working-with-hyrax)
   * [Developing the Hyrax Engine](#developing-the-hyrax-engine)
@@ -51,6 +52,10 @@ Hyrax offers the ability to:
 * [Entity Relationship Diagram](./artifacts/entity-relationship-diagram.pdf)
 * For general information about Hyrax: [Hyrax Site](https://hyrax.samvera.org/)
 * A note about [versions of Hyrax](./documentation/note-about-versions.md)
+
+## Support Policies
+
+* Hyrax 3.x supports the latest browser versions for Chrome, Firefox, Edge, and Safari.
 
 ## Help
 
