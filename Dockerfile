@@ -51,7 +51,7 @@ COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 COPY --chown=1001:101 . /app/samvera/hyrax-engine
 
 RUN cd /app/samvera/hyrax-engine; bundle install --jobs "$(nproc)"
-RUN DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
+RUN DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake yarn:install
 
 
 FROM hyrax-engine-dev as hyrax-engine-dev-worker
