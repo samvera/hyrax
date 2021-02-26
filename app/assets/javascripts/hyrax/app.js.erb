@@ -18,20 +18,10 @@ Hyrax = {
         this.collectionTypeEditor();
         this.collectionUtilities();
         this.adminStatisticsGraphs();
-        this.tinyMCE();
         this.sortAndPerPage();
         this.sidebar();
         this.batchSelect();
         this.internationalizationHelper();
-    },
-
-    // Add WYSIWYG editor functionality to editable content blocks
-    tinyMCE: function() {
-        if (typeof tinyMCE === "undefined")
-            return;
-        tinyMCE.init({
-            selector: 'textarea.tinymce'
-        });
     },
 
     // The AdminSet edit page

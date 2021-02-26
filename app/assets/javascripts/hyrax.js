@@ -30,6 +30,7 @@
 //= require morris/morris.min
 
 //= require clipboard
+//= require tinymce
 
 // This is required for Jasmine tests, specifically to polyfill the Symbol() function
 //= require babel/polyfill
