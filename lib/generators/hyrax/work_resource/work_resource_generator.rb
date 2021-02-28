@@ -13,6 +13,17 @@ class Hyrax::WorkResourceGenerator < Rails::Generators::NamedBase
 
   argument :attributes, type: :array, default: [], banner: 'field:type field:type'
 
+  def self.exit_on_failure?
+    true
+  end
+
+  def validate_name
+    return unless name.strip.casecmp("work").zero?
+    raise Thor::MalformattedArgumentError,
+          set_color("Error: A work resource with the name '#{name}' would cause name-space clashes. "\
+                    "Please use a different name.", :red)
+  end
+
   def banner
     if revoking?
       say_status("info", "DESTROYING VALKYRIE WORK MODEL: #{class_name}", :blue)
