@@ -1,0 +1,46 @@
+<% permission_service = Hyrax::EditPermissionsService.build_service_object_from(form: f, ability: current_ability) %>
+
+<h2><%= t('.currently_sharing') %></h2>
+
+<table class="table table-bordered">
+  <tr>
+    <th><%= t('.table_title_user') %></th>
+    <th><div class="col-sm-10"><%= t('.table_title_access') %></div></th>
+  </tr>
+  <tr id="file_permissions">
+    <td>
+      <%= label_tag :owner_access, class: "control-label" do %>
+        Depositor (<span id="file_owner" data-depositor="<%= permission_service.depositor %>"><%= link_to_profile permission_service.depositor %></span>)
+      <% end %>
+    </td>
+    <td>
+    <div class="col-sm-10">
+      <%= Hyrax.config.owner_permission_levels.keys[0] %>
+    </div>
+    </td>
+  </tr>
+  <%= f.fields_for :permissions do |permission_fields| %>
+    <% permission_service.with_applicable_permission(permission_hash: permission_fields.object.to_hash) do |permission| %>
+    <tr>
+      <td>
+        <%= permission_fields.label :agent_name, class: "control-label" do %>
+          <%= user_display_name_and_key(permission.name) %>
+          <%= permission.granted_by_html_hint %>
+        <% end %>
+      </td>
+      <td>
+        <div class="col-sm-10">
+        <% if permission.can_edit? %>
+          <%= permission_fields.select :access, Hyrax.config.permission_levels, {}, class: 'form-control select_perm' %>
+        <% else %>
+          <%= Hyrax.config.permission_levels.key(permission.access) %>
+        <% end %>
+        </div>
+        <% if permission.can_edit? %>
+          <button class="btn close remove_perm" data-index="<%= permission_fields.index %>">&times;</button>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+  <% end %>
+</table>

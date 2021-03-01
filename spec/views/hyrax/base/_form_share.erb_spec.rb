@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/base/_form_share.html.erb', type: :view do
-  let(:ability) { double }
+  let(:ability) { instance_double(Ability, admin?: false, user_groups: [], current_user: user) }
+  let(:user) { stub_model(User) }
   let(:work) { GenericWork.new }
   let(:form) do
     Hyrax::GenericWorkForm.new(work, ability, controller)
@@ -24,10 +25,8 @@ RSpec.describe 'hyrax/base/_form_share.html.erb', type: :view do
   end
 
   before do
-    user = stub_model(User)
     allow(view).to receive(:current_ability).and_return(ability)
     allow(view).to receive(:current_user).and_return(user)
-    allow(ability).to receive(:admin?).and_return(false)
     allow(view).to receive(:action_name).and_return('new')
   end
 

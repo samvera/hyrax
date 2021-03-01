@@ -20,6 +20,17 @@ RSpec.describe 'Editing a work', type: :feature do
     work.ordered_members << create(:file_set, user: user, title: ['ABC123xyz'])
     work.read_groups = []
     work.save!
+
+    create(:permission_template_access,
+           :deposit,
+           permission_template: create(:permission_template, source_id: default_admin_set.id, with_admin_set: true, with_active_workflow: true),
+           agent_type: 'user',
+           agent_id: user.user_key)
+    create(:permission_template_access,
+           :deposit,
+           permission_template: create(:permission_template, source_id: another_admin_set.id, with_admin_set: true, with_active_workflow: true),
+           agent_type: 'user',
+           agent_id: user.user_key)
   end
 
   context 'when the user changes permissions' do
@@ -41,19 +52,6 @@ RSpec.describe 'Editing a work', type: :feature do
   end
 
   context 'when form loads' do
-    before do
-      create(:permission_template_access,
-             :deposit,
-             permission_template: create(:permission_template, source_id: default_admin_set.id, with_admin_set: true, with_active_workflow: true),
-             agent_type: 'user',
-             agent_id: user.user_key)
-      create(:permission_template_access,
-             :deposit,
-             permission_template: create(:permission_template, source_id: another_admin_set.id, with_admin_set: true, with_active_workflow: true),
-             agent_type: 'user',
-             agent_id: user.user_key)
-    end
-
     it 'selects admin set already assigned' do
       visit edit_hyrax_generic_work_path(work)
       click_link "Relationships" # switch tab

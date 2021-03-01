@@ -65,37 +65,8 @@
   </div>
 </div>
 
-<table class="table table-bordered">
-  <tr>
-    <th width="60%"><%= t('.table_title_user') %></th>
-    <th width="40%"><%= t('.table_title_access') %></th>
-  </tr>
-  <tr id="file_permissions">
-    <td>
-      <%= label_tag :owner_access, class: "control-label" do %>
-        <%= t('.depositor') %> (<span id="file_owner" data-depositor="<%= depositor %>"><%= link_to_profile depositor %></span>)
-      <% end %>
-    </td>
-    <td>
-      <%= configured_owner_permission_levels.keys.first %>
-    </td>
-  </tr>
-  <%= f.fields_for :permissions do |permission_fields| %>
-    <%# skip the public, registered, and depositor perms as they are displayed first at the top %>
-    <% next if ['public', 'registered', depositor].include? permission_fields.object.agent_name.downcase %>
-    <tr>
-      <td><%= permission_fields.label :agent_name, class: "control-label" do %>
-        <%= user_display_name_and_key(permission_fields.object.agent_name) %>
-      <% end %></td>
-      <td>
-        <div class="col-sm-8">
-          <%= permission_fields.select :access, Hyrax.config.permission_levels, {}, class: 'form-control select_perm' %>
-        </div>
-        <button class="btn close remove_perm" data-index="<%= permission_fields.index %>">X</button>
-      </td>
-    </tr>
-  <% end %>
-</table>
+<%= render 'currently_shared', f: f %>
+
 <script type="text/x-tmpl" id="tmpl-file-set-grant">
 <tr>
   <td><label class="control-label">{%= o.name %}</label></td>
