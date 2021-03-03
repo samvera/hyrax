@@ -1,5 +1,6 @@
 ARG RUBY_VERSION=2.7.2
-FROM ruby:$RUBY_VERSION-alpine as hyrax-base
+# lock at alpine3.12 because 3.13 has dns resolver problems
+FROM ruby:$RUBY_VERSION-alpine3.12 as hyrax-base
 
 ARG DATABASE_APK_PACKAGE="postgresql-dev"
 ARG EXTRA_APK_PACKAGES="git"
@@ -50,7 +51,7 @@ ENV HYRAX_ENGINE_PATH /app/samvera/hyrax-engine
 COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 COPY --chown=1001:101 . /app/samvera/hyrax-engine
 
-RUN cd /app/samvera/hyrax-engine; bundle install --jobs "$(nproc)"
+RUN cd /app/samvera/hyrax-engine && bundle install --jobs "$(nproc)"
 RUN DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake yarn:install
 
 
@@ -65,11 +66,12 @@ RUN apk --no-cache add bash \
   mediainfo
 USER app
 
-RUN wget http://projects.iq.harvard.edu/files/fits/files/fits-1.0.5.zip -O fits.zip \
-    && unzip fits.zip -d /app \
-    && rm fits.zip \
-    && mv /app/fits-1.0.5 /app/fits \
-    && chmod a+x /app/fits/fits.sh
+RUN mkdir -p /app/fits && \
+    cd /app/fits && \
+    wget https://github.com/harvard-lts/fits/releases/download/1.5.0/fits-1.5.0.zip -O fits.zip && \
+    unzip fits.zip && \
+    rm fits.zip && \
+    chmod a+x /app/fits/fits.sh
 ENV PATH="${PATH}:/app/fits"
 
 CMD bundle exec sidekiq
