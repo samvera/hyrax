@@ -14,11 +14,14 @@
   <meta name="twitter:label2" content="Rights Statement" />
 <% end %>
 
+<% gscholar_presenter = Hyrax::GoogleScholarPresenter.new(@presenter) %>
+
+<% if gscholar_presenter.scholarly? %>
 <% content_for(:gscholar_meta) do %>
   <meta name="description" content="<%= @presenter.description.first.truncate(200) rescue @presenter.title.first %>" />
   <meta name="citation_title" content="<%= @presenter.title.first %>" />
 
-  <% @presenter.creator.each do |creator| %>
+  <% gscholar_presenter.each do |creator| %>
   <meta name="citation_author" content="<%= creator %>" />
   <% end %>
 
@@ -46,4 +49,5 @@
     <meta name="citation_firstpage" content=""/>
     <meta name="citation_lastpage" content=""/>
   -->
+<% end %>
 <% end %>
