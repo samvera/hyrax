@@ -362,6 +362,10 @@ fr:
         header: 'Citations:'
         mendeley: Mendeley
         zotero: Zotero
+      currently_shared:
+        currently_sharing: Actuellement partagé avec
+        table_title_access: Niveau d'accès
+        table_title_user: Personne / Groupe
       file_manager:
         back_to: Revenir à
         toolbar: Outils
@@ -534,6 +538,10 @@ fr:
     batch_edits:
       check_all:
         select_to_access_selection_options: Sélectionner pour accéder à l'option de sélection
+      currently_shared:
+        share_batch_with: Partager le lot avec
+        table_title_access: Niveau d'accès
+        table_title_user: Personne / Groupe
       delete_selected:
         button_label: Supprimer la sélection
         deleting_file_from: La suppression d'un fichier de %{application_name} est permanente. Cliquez sur OK pour supprimer ce fichier de %{application_name} ou sur Annuler pour annuler cette opération.
@@ -1255,6 +1263,10 @@ fr:
           comments: 'Commentaires: %{receiver_comment}'
           message: Votre demande de transfert était %{status}.
           subject: Changement de propriété %{status}
+        validation:
+          open_transfer: Doit fermer le transfert ouvert sur l'œuvre avant d'en créer un nouveau
+          sender_is_not_receiver: Spécifiez un autre utilisateur pour recevoir le travail
+          valid_username: Doit être un utilisateur existant
       proxy_depositor_added:
         grantee_message: "%{grantor} vous a assigné comme déposant par procuration"
         grantor_message: Vous avez affecté %{grantee} en tant que déposant par procuration.

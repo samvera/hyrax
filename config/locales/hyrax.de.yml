@@ -362,6 +362,10 @@ de:
         header: 'Zitate:'
         mendeley: Mendeley
         zotero: Zotero
+      currently_shared:
+        currently_sharing: Derzeit geteilt mit
+        table_title_access: Zugriffsebene
+        table_title_user: Person / Gruppe
       file_manager:
         back_to: Zurück zu
         toolbar: Symbolleiste
@@ -528,6 +532,10 @@ de:
     batch_edits:
       check_all:
         select_to_access_selection_options: Wählen Sie aus, um auf die Option zuzugreifen
+      currently_shared:
+        share_batch_with: Batch mit teilen
+        table_title_access: Zugriffsebene
+        table_title_user: Person / Gruppe
       delete_selected:
         button_label: Ausgewählte Löschen
         deleting_file_from: Das Löschen einer Datei aus %{application_name} ist permanent. Klicken Sie auf OK, um diese Datei von %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
@@ -1102,7 +1110,7 @@ de:
         fixity_check: Beständigkeit überprüfen
         not_yet_characterized: Noch nicht charakterisiert
       versioning:
-        choose_file: Neue Dateiversion wählen 
+        choose_file: Neue Dateiversion wählen
         current: Aktuelle Version
         header: Versionen
         previous: Bisherige
@@ -1249,6 +1257,10 @@ de:
           comments: 'Kommentare: %{receiver_comment}'
           message: Ihre Übertragungsanforderung lautete %{status}.
           subject: Eigentümerwechsel %{status}
+        validation:
+          open_transfer: Die offene Übertragung der Arbeit muss geschlossen werden, bevor eine neue erstellt wird
+          sender_is_not_receiver: Geben Sie einen anderen Benutzer an, der die Arbeit erhalten soll
+          valid_username: Muss ein vorhandener Benutzer sein
       proxy_depositor_added:
         grantee_message: "%{grantor} hat Sie als Proxy-Deponent beauftragt"
         grantor_message: Sie haben %{grantee} als Proxy-Deponent zugewiesen

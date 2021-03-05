@@ -362,6 +362,10 @@ it:
         header: 'citazioni:'
         mendeley: Mendeley
         zotero: Zotero
+      currently_shared:
+        currently_sharing: Attualmente condiviso con
+        table_title_access: Livello di accesso
+        table_title_user: Persona / Gruppo
       file_manager:
         back_to: Torna alla
         toolbar: Barra degli strumenti
@@ -533,6 +537,10 @@ it:
     batch_edits:
       check_all:
         select_to_access_selection_options: Selezionare per accedere all'opzione di selezione
+      currently_shared:
+        share_batch_with: Condividi batch con
+        table_title_access: Livello di accesso
+        table_title_user: Persona / Gruppo
       delete_selected:
         button_label: Elimina Selezionato
         deleting_file_from: L'eliminazione di un file da %{application_name} è permanente. Fare clic su OK per eliminare questo file da %{application_name} o Annulla per annullare questa operazione
@@ -1254,6 +1262,10 @@ it:
           comments: 'Commenti: %{receiver_comment}'
           message: La tua richiesta di trasferimento era %{status}.
           subject: Modifica proprietà %{status}
+        validation:
+          open_transfer: È necessario chiudere il trasferimento aperto sull'opera prima di crearne uno nuovo
+          sender_is_not_receiver: Specifica un altro utente per ricevere il lavoro
+          valid_username: Deve essere un utente esistente
       proxy_depositor_added:
         grantee_message: "%{grantor} ti ha assegnato come depositante proxy"
         grantor_message: Hai assegnato %{grantee} come depositante proxy
