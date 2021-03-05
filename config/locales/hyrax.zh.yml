@@ -1094,8 +1094,6 @@ zh:
         save_note_html: 在页面底部按“保存”按钮之前， <strong>不会</strong>保存权限。
         select_group: 选择一个组
         share_with: 与某人分享
-        table_title_access: 访问权限
-        table_title_user: 人/组
         user_search: 搜索用户
       proxy:
         message: "%{sending_user}代表您存放了%{title}文件。"

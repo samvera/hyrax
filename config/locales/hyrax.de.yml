@@ -1091,8 +1091,6 @@ de:
         save_note_html: Berechtigungen werden <strong>nicht</strong> gespeichert, bis die Schaltfläche „Speichern“ am unteren Rand der Seite gedrückt wird.
         select_group: Wählen Sie eine Gruppe aus
         share_with: Teilen mit
-        table_title_access: Zugriffsebene
-        table_title_user: Person / Gruppe
         user_search: Nach einem Benutzer suchen
       proxy:
         message: "%{sending_user} hat die Datei %{title} in Ihrem Namen hinterlegt."

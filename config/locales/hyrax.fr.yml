@@ -1097,8 +1097,6 @@ fr:
         save_note_html: Les autorisations <strong>ne</strong> sont <strong>pas</strong> enregistrées tant que le bouton "Enregistrer" n'est pas enfoncé en bas de la page.
         select_group: Sélectionnez un groupe
         share_with: Partager avec
-        table_title_access: Niveau d'accès
-        table_title_user: Personne / groupe
         user_search: Rechercher un utilisateur
       proxy:
         message: "%{sending_user} a déposé le fichier %{title} en votre nom."
