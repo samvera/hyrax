@@ -109,7 +109,7 @@ RSpec.describe ProxyDepositRequest, type: :model do
       it 'raises an error' do
         subject.transfer_to = 'dave'
         expect(subject).not_to be_valid
-        expect(subject.errors[:transfer_to]).to eq(['must be an existing user'])
+        expect(subject.errors[:transfer_to]).to eq(['Must be an existing user'])
       end
     end
 
@@ -140,7 +140,7 @@ RSpec.describe ProxyDepositRequest, type: :model do
       it 'raises an error' do
         subject.transfer_to = sender.user_key
         expect(subject).not_to be_valid
-        expect(subject.errors[:transfer_to]).to eq(['specify a different user to receive the work'])
+        expect(subject.errors[:transfer_to]).to eq(['Specify a different user to receive the work'])
       end
 
       context 'but they are an admin' do
@@ -161,7 +161,7 @@ RSpec.describe ProxyDepositRequest, type: :model do
       it 'raises an error' do
         subject.save!
         expect(subject2).not_to be_valid
-        expect(subject2.errors[:open_transfer]).to eq(['must close open transfer on the work before creating a new one'])
+        expect(subject2.errors[:open_transfer]).to eq(['Must close open transfer on the work before creating a new one'])
       end
 
       context 'when the first transfer is closed' do
