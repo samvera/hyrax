@@ -1096,8 +1096,6 @@ it:
         save_note_html: Le autorizzazioni <strong>non</strong> vengono salvate finché <strong>non</strong> viene premuto il pulsante "Salva" nella parte inferiore della pagina.
         select_group: Seleziona un gruppo
         share_with: Condividi con
-        table_title_access: Livello di accesso
-        table_title_user: Persona / Gruppo
         user_search: Cerca un utente
       proxy:
         message: "%{sending_user} ha depositato il file %{title} per tuo conto."

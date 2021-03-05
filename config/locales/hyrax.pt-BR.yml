@@ -1091,8 +1091,6 @@ pt-BR:
         save_note_html: As permissões <strong>não</strong> são salvas até que o botão de  &quot;Salvar&quot; abaixo seja pressionado.
         select_group: Selecionar um grupo
         share_with: Compartilhar com
-        table_title_access: Nível de acesso
-        table_title_user: Pessoa/Grupo
         user_search: Procurar um usuário
       proxy:
         message: "%{sending_user} depositou o arquivo %{title} em seu nome."

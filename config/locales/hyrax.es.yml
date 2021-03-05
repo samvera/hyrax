@@ -816,7 +816,6 @@ es:
           creator: 'Creador:'
           depositor: 'Depositor:'
           edit_access: 'Editar acceso:'
-          owner: 'Propietario:'
         sort_and_per_page:
           show_par_page_html: "%{select} Por página"
           sort_by: 'Ordenar Por:'
@@ -1099,8 +1098,6 @@ es:
         save_note_html: Los permisos <strong>no se</strong> guardan hasta que se presiona el botón "Guardar" en la parte inferior de la página.
         select_group: Seleccione un grupo
         share_with: Compartir con
-        table_title_access: Nivel de acceso
-        table_title_user: Persona / Grupo
         user_search: Buscar un usuario
       proxy:
         message: "%{sending_user} ha depositado el archivo %{title} en su nombre."
@@ -1631,7 +1628,6 @@ es:
         lease_expiration_date: hasta
         license: Licencia
         member_of_collection_ids: Añadir a la colección
-        owner: Propietario
         related_url: URL relacionada
         rights_notes: Notas de derechos
         rights_statement: Declaración de derechos
