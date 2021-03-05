@@ -362,6 +362,10 @@ zh:
         header: '引文:'
         mendeley: Mendeley
         zotero: Zotero只
+      currently_shared:
+        currently_sharing: 目前与之共享
+        table_title_access: 访问权限
+        table_title_user: 人/组
       file_manager:
         back_to: 回到
         toolbar: 工具条
@@ -531,6 +535,10 @@ zh:
     batch_edits:
       check_all:
         select_to_access_selection_options: 选择以访问选择选项
+      currently_shared:
+        share_batch_with: 与共享批次
+        table_title_access: 访问权限
+        table_title_user: 人/组
       delete_selected:
         button_label: 删除选择
         deleting_file_from: 从%{application_name}删除文件是永久性的。单击“确定”从%{application_name}中删除此文件，或单击“取消”以取消此操作
@@ -1252,6 +1260,10 @@ zh:
           comments: 评论：%{receiver_comment}
           message: 您的转移请求是%{status}。
           subject: 所有权变更%{status}
+        validation:
+          open_transfer: 必须先关闭工作的公开转储，然后再创建新的转储
+          sender_is_not_receiver: 指定其他用户接收作品
+          valid_username: 必须是现有用户
       proxy_depositor_added:
         grantee_message: "%{grantor}已指定您为代理存款人"
         grantor_message: 您已将%{grantee}指定为代理存款人
