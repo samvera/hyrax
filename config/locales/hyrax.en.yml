@@ -1261,6 +1261,10 @@ en:
           comments: 'Comments: %{receiver_comment}'
           message: Your transfer request was %{status}.
           subject: Ownership Change %{status}
+        validation:
+          open_transfer: Must close the open transfer on the work before creating a new one
+          sender_is_not_receiver: Specify a different user to receive the work
+          valid_username: Must be an existing user
       proxy_depositor_added:
         grantee_message: "%{grantor} has assigned you as a proxy depositor"
         grantor_message: You have assigned %{grantee} as a proxy depositor
