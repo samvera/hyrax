@@ -5,6 +5,7 @@ RSpec.describe ProxyDepositRequest, type: :model do
   let(:sender) { create(:user) }
   let(:receiver) { create(:user) }
   let(:receiver2) { create(:user) }
+  let(:admin) { create(:admin) }
   let(:work_id) { '123abc' }
   let(:stubbed_work_query_service_class) { double(new: work_query_service) }
   let(:work_query_service) { double(work: work) }
@@ -140,6 +141,17 @@ RSpec.describe ProxyDepositRequest, type: :model do
         subject.transfer_to = sender.user_key
         expect(subject).not_to be_valid
         expect(subject.errors[:transfer_to]).to eq(['specify a different user to receive the work'])
+      end
+
+      context 'but they are an admin' do
+        subject do
+          described_class.new(work_id: work_id, sending_user: admin,
+                              receiving_user: admin, sender_comment: "admin is taking this")
+        end
+
+        it 'does not raise an error' do
+          expect(subject).to be_valid
+        end
       end
     end
 

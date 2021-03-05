@@ -42,7 +42,7 @@ class ProxyDepositRequest < ActiveRecord::Base
 
   validates :sending_user, :work_id, presence: true
   validate :transfer_to_should_be_a_valid_username
-  validate :sending_user_should_not_be_receiving_user
+  validate :sending_user_should_not_be_receiving_user, unless: :sender_is_admin?
   validate :should_not_be_already_part_of_a_transfer
 
   after_save :send_request_transfer_message
@@ -73,6 +73,10 @@ class ProxyDepositRequest < ActiveRecord::Base
   def should_not_be_already_part_of_a_transfer
     transfers = ProxyDepositRequest.where(work_id: work_id, status: PENDING)
     errors.add(:open_transfer, 'must close open transfer on the work before creating a new one') unless transfers.blank? || (transfers.count == 1 && transfers[0].id == id)
+  end
+
+  def sender_is_admin?
+    sending_user.ability.admin?
   end
 
   public
