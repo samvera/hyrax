@@ -161,7 +161,7 @@ RSpec.describe ProxyDepositRequest, type: :model do
       it 'raises an error' do
         subject.save!
         expect(subject2).not_to be_valid
-        expect(subject2.errors[:open_transfer]).to eq(['Must close open transfer on the work before creating a new one'])
+        expect(subject2.errors[:open_transfer]).to eq(['Must close the open transfer on the work before creating a new one'])
       end
 
       context 'when the first transfer is closed' do
