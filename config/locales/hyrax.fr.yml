@@ -1262,9 +1262,9 @@ fr:
           message: Votre demande de transfert était %{status}.
           subject: Changement de propriété %{status}
         validation:
-          open_transfer: Doit fermer le transfert ouvert sur l'œuvre avant d'en créer un nouveau
+          open_transfer: Veuillez fermer le transfert en cours sur le travail avant d'en créer un nouveau
           sender_is_not_receiver: Spécifiez un autre utilisateur pour recevoir le travail
-          valid_username: Doit être un utilisateur existant
+          valid_username: Sélectionnez un utilisateur existant
       proxy_depositor_added:
         grantee_message: "%{grantor} vous a assigné comme déposant par procuration"
         grantor_message: Vous avez affecté %{grantee} en tant que déposant par procuration.
