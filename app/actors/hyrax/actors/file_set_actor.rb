@@ -6,7 +6,7 @@ module Hyrax
       include Lockable
       attr_reader :file_set, :user, :attributes, :use_valkyrie
 
-      def initialize(file_set, user, use_valkyrie: false)
+      def initialize(file_set, user, use_valkyrie: Hyrax.config.query_index_from_valkyrie)
         @use_valkyrie = use_valkyrie
         @file_set = file_set
         @user = user
@@ -87,7 +87,7 @@ module Hyrax
       def attach_to_valkyrie_work(work, file_set_params)
         work = Hyrax.query_service.find_by(id: work.id) unless work.new_record
         file_set.visibility = work.visibility unless assign_visibility?(file_set_params)
-        Hyrax.persister.save(resource: file_set)
+        @file_set = Hyrax.persister.save(resource: file_set)
         work.member_ids << file_set.id
         work.representative_id = file_set.id if work.representative_id.blank?
         work.thumbnail_id = file_set.id if work.thumbnail_id.blank?

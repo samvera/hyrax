@@ -95,7 +95,12 @@ module Hyrax
       # @example
       #     ValkyrieIndexer.for(resource: Book.new) # => #<BookIndexer ...>
       def for(resource:)
-        indexer_class_for(resource).new(resource: resource)
+        case resource
+        when Hyrax::FileSet
+          Hyrax::ValkyrieFileSetIndexer.new(resource: resource)
+        else
+          indexer_class_for(resource).new(resource: resource)
+        end
       end
 
       private

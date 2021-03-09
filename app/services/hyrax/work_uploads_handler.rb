@@ -64,7 +64,7 @@ module Hyrax
     # @note we immediately and silently discard uploads with an existing
     #   file_set_uri, in a half-considered attempt at supporting idempotency
     #   (for job retries). this is for legacy/AttachFilesToWorkJob
-    #   compatibility, but could stand for a roubst reimplementation.
+    #   compatibility, but could stand for a robust reimplementation.
     #
     # @param [Enumberable<Hyrax::UploadedFile>] files  files to add
     #
@@ -106,6 +106,7 @@ module Hyrax
       Hyrax::AccessControlList.copy_permissions(source: target_permissions, target: file_set)
       append_to_work(file_set)
       IngestJob.perform_later(wrap_file(file, file_set))
+      Hyrax.publisher.publish('object.metadata.updated', object: file_set, user: file.user)
       { file_set: file_set, user: file.user }
     end
 

@@ -11,7 +11,7 @@ module Hyrax
       # @param [FileSet] file_set the parent FileSet
       # @param [Symbol, #to_sym] relation the type/use for the file
       # @param [User] user the user to record as the Agent acting upon the file
-      def initialize(file_set, relation, user, use_valkyrie: false)
+      def initialize(file_set, relation, user, use_valkyrie: Hyrax.config.query_index_from_valkyrie)
         @use_valkyrie = use_valkyrie
         @file_set = file_set
         @relation = normalize_relation(relation)
@@ -75,7 +75,7 @@ module Hyrax
         CharacterizeJob.perform_later(file_set, repository_file.id, pathhint(io))
       end
 
-      def perform_ingest_file_through_valkyrie(io)
+      def perform_ingest_file_through_valkyrie(io) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
         file =
           begin
             Hyrax.storage_adapter.upload(resource: file_set, file: io, original_filename: io.original_name, use: relation)
@@ -87,7 +87,9 @@ module Hyrax
         create_version(file_metadata, user)
         id = file_metadata.file_identifier
         file_set.file_ids << id
+        file_set.original_file_id = id
         Hyrax.persister.save(resource: file_set)
+        Hyrax.publisher.publish('object.metadata.updated', object: file_set, user: user)
         CharacterizeJob.perform_later(file_set, id.to_s, pathhint(io))
         file_metadata
       end

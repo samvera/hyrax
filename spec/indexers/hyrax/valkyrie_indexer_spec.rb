@@ -18,6 +18,15 @@ RSpec.describe Hyrax::ValkyrieIndexer do
       end
     end
 
+    context 'for a Hyrax::FileSet' do
+      let(:resource) { build(:hyrax_file_set) }
+
+      it 'gives an instance of ValkyrieFileSetIndexer' do
+        expect(described_class.for(resource: resource))
+          .to be_a Hyrax::ValkyrieFileSetIndexer
+      end
+    end
+
     context 'with a matching indexer by naming convention' do
       let(:resource) { build(:monograph) }
       let(:indexer_class) { MonographIndexer }
