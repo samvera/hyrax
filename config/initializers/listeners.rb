@@ -19,10 +19,12 @@ end
 
 Hyrax.config.callback.set(:after_create_fileset, warn: false) do |file_set, user|
   Hyrax.publisher.publish('file.set.attached', file_set: file_set, user: user)
+  Hyrax.publisher.publish('object.metadata.updated', object: file_set, user: user)
 end
 
 Hyrax.config.callback.set(:after_revert_content, warn: false) do |file_set, user, revision|
   Hyrax.publisher.publish('file.set.restored', file_set: file_set, user: user, revision: revision)
+  Hyrax.publisher.publish('object.metadata.updated', object: file_set, user: user)
 end
 
 Hyrax.config.callback.set(:after_update_metadata, warn: false) do |curation_concern, user|
