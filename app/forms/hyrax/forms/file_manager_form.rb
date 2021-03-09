@@ -6,10 +6,17 @@ module Hyrax
       self.terms = []
       delegate :id, :thumbnail_id, :representative_id, :to_s, to: :model
       attr_reader :current_ability, :request
-      def initialize(work, ability)
+
+      ##
+      # @param work [Object] a work with members
+      # @param ability [::Ability] the current ability
+      # @param member_factory [Class] the member_presenter factory object to use
+      #   when constructing presenters
+      def initialize(work, ability, member_factory: MemberPresenterFactory)
         super(work)
         @current_ability = ability
         @request = nil
+        @member_factory = member_factory
       end
 
       def version
@@ -21,7 +28,7 @@ module Hyrax
       private
 
       def member_presenter_factory
-        MemberPresenterFactory.new(model, current_ability)
+        @member_factory.new(model, current_ability)
       end
     end
   end
