@@ -14,28 +14,31 @@
   <meta name="twitter:label2" content="Rights Statement" />
 <% end %>
 
+<% gscholar = Hyrax::GoogleScholarPresenter.new(@presenter) %>
+
+<% if gscholar.scholarly? %>
 <% content_for(:gscholar_meta) do %>
-  <meta name="description" content="<%= @presenter.description.first.truncate(200) rescue @presenter.title.first %>" />
-  <meta name="citation_title" content="<%= @presenter.title.first %>" />
+  <meta name="description" content="<%= gscholar.description %>" />
+  <meta name="citation_title" content="<%= gscholar.title %>" />
 
-  <% @presenter.creator.each do |creator| %>
-  <meta name="citation_author" content="<%= creator %>" />
+  <% gscholar.authors.each do |author| %>
+  <meta name="citation_author" content="<%= author %>" />
   <% end %>
 
-  <% unless @presenter.date_created.blank? %>
-  <meta name="citation_publication_date" content="<%= @presenter.date_created.first %>" />
+  <% if gscholar.publication_date.present? %>
+  <meta name="citation_publication_date" content="<%= gscholar.publication_date %>" />
   <% end %>
 
-  <% unless @presenter.download_url.blank? %>
-  <meta name="citation_pdf_url" content="<%= @presenter.download_url %>" />
+  <% if gscholar.pdf_url.present? %>
+  <meta name="citation_pdf_url" content="<%= gscholar.pdf_url %>" />
   <% end %>
 
-  <% unless @presenter.keyword.blank? %>
-  <meta name="citation_keywords" content="<%= @presenter.keyword.join('; ') %>" />
+  <% if gscholar.keywords.present? %>
+  <meta name="citation_keywords" content="<%= gscholar.keywords %>" />
   <% end %>
 
-  <% unless @presenter.publisher.blank? %>
-  <meta name="citation_publisher" content="<%= @presenter.publisher.join('; ') %>" />
+  <% if gscholar.publisher.present? %>
+  <meta name="citation_publisher" content="<%= gscholar.publisher %>" />
   <% end %>
 
   <!-- Hyrax does not yet support these metadata -->
@@ -46,4 +49,5 @@
     <meta name="citation_firstpage" content=""/>
     <meta name="citation_lastpage" content=""/>
   -->
+<% end %>
 <% end %>
