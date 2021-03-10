@@ -16,7 +16,11 @@ module Hyrax
       #
       # @param event [Dry::Event]
       def on_object_metadata_updated(event)
-        Hyrax.index_adapter.save(resource: event[:object])
+        return Hyrax.index_adapter.save(resource: event[:object]) if
+          event[:object].is_a?(Valkyrie::Resource)
+
+        Hyrax.logger.info('Skipping object reindex because the object ' \
+                          "#{event[:object]} was not a Valkyrie::Resource.")
       end
     end
   end

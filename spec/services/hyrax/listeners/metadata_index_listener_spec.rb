@@ -20,5 +20,14 @@ RSpec.describe Hyrax::Listeners::MetadataIndexListener do
         .to change { fake_adapter.saved_resources }
         .to contain_exactly(resource)
     end
+
+    context 'when it gets a non-resource as payload' do
+      let(:resource) { ActiveFedora::Base.new }
+
+      it 'returns as a no-op' do
+        expect { listener.on_object_metadata_updated(event) }
+          .not_to change { fake_adapter.saved_resources }
+      end
+    end
   end
 end
