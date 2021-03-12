@@ -62,7 +62,8 @@ module Hyrax
       end
 
       def create_file_from_url(env, uri, file_name, auth_header)
-        if env.curation_concern.is_a? Valkyrie::Resource
+        case env.curation_concern
+        when Valkyrie::Resource
           create_file_from_url_through_valkyrie(env, uri, file_name, auth_header)
         else
           create_file_from_url_through_active_fedora(env, uri, file_name, auth_header)

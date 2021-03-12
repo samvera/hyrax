@@ -68,7 +68,6 @@ module Hyrax
         yield(file_set) if block_given?
       end
 
-      # Adds a FileSet to the work using ore:Aggregations.
       # Locks to ensure that only one process is operating on the list at a time.
       def attach_to_work(work, file_set_params = {})
         acquire_lock_for(work.id) do
@@ -87,15 +86,18 @@ module Hyrax
       def attach_to_valkyrie_work(work, file_set_params)
         work = Hyrax.query_service.find_by(id: work.id) unless work.new_record
         file_set.visibility = work.visibility unless assign_visibility?(file_set_params)
-        @file_set = Hyrax.persister.save(resource: file_set)
-        work.member_ids << file_set.id
-        work.representative_id = file_set.id if work.representative_id.blank?
-        work.thumbnail_id = file_set.id if work.thumbnail_id.blank?
+        fs = Hyrax.persister.save(resource: file_set)
+        Hyrax.publisher.publish('object.metadata.updated', object: fs, user: user)
+        work.member_ids << fs.id
+        work.representative_id = fs.id if work.representative_id.blank?
+        work.thumbnail_id = fs.id if work.thumbnail_id.blank?
         # Save the work so the association between the work and the file_set is persisted (head_id)
         # NOTE: the work may not be valid, in which case this save doesn't do anything.
         Hyrax.persister.save(resource: work)
+        Hyrax.publisher.publish('object.metadata.updated', object: work, user: user)
       end
 
+      # Adds a FileSet to the work using ore:Aggregations.
       def attach_to_af_work(work, file_set_params)
         work.reload unless work.new_record?
         file_set.visibility = work.visibility unless assign_visibility?(file_set_params)
