@@ -87,6 +87,11 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- define "hyrax.solr.fullname" -}}
 {{- printf "%s-%s" .Release.Name "solr" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{- define "hyrax.solr.url" -}}
+{{- printf "http://%s:%s@%s:%s/solr/%s" .Values.solr.authentication.adminUsername .Values.solr.authentication.adminPassword (include "hyrax.solr.fullname" .) "8983" "hyrax" -}}
+{{- end -}}
+
 {{- define "hyrax.zk.fullname" -}}
 {{- printf "%s-%s" .Release.Name "zookeeper" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

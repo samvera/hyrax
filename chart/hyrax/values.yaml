@@ -59,6 +59,9 @@ fcrepo:
   servicePort: 8080
   postgresql:
     enabled: false
+    image:
+      repository: bitnami/postgresql
+      tag: 12.3.0
 
 memcached:
   enabled: false
@@ -82,6 +85,23 @@ redis:
 
 solr:
   enabled: true
+  image:
+    repository: bitnami/solr
+    tag: 8.8.1
+  authentication:
+    enabled: true
+    adminUsername: admin
+    adminPassword: admin
+  coreName: hyrax
+  collection: hyrax
+  cloudBootstrap: true
+  cloudEnabled: true
+  persistence:
+    enabled: true
+  zookeeper:
+    enabled: true
+    persistence:
+      enabled: true
 
 autoscaling:
   enabled: false

@@ -7,10 +7,12 @@ ARG EXTRA_APK_PACKAGES="git"
 
 RUN apk --no-cache upgrade && \
   apk --no-cache add build-base \
+  curl \
   imagemagick \
   tzdata \
   nodejs \
   yarn \
+  zip \
   $DATABASE_APK_PACKAGE \
   $EXTRA_APK_PACKAGES
 
@@ -39,7 +41,7 @@ ARG BUNDLE_WITHOUT="development test"
 
 ONBUILD COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 ONBUILD RUN bundle install --jobs "$(nproc)"
-ONBUILD RUN DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
+ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
 
 FROM hyrax-base as hyrax-engine-dev
 
@@ -52,7 +54,7 @@ COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 COPY --chown=1001:101 . /app/samvera/hyrax-engine
 
 RUN cd /app/samvera/hyrax-engine && bundle install --jobs "$(nproc)"
-RUN DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake yarn:install
+RUN RAILS_ENV=production SECRET_KEY_BASE='fakesecret1234' DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
 
 
 FROM hyrax-engine-dev as hyrax-engine-dev-worker
