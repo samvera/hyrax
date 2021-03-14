@@ -69,14 +69,30 @@ spec:
             - name: http
               containerPort: 3000
               protocol: TCP
+          {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds | default 5 }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds | default 5 }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold | default 3 }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds | default 10}}
+            successThreshold: {{ .Values.livenessProbe.successThreshold | default 1 }}
             httpGet:
-              path: /
-              port: http
+              scheme: "HTTP"
+              path: {{ .Values.livenessProbe.path | default "/" }}
+              port: 3000
+          {{- end }}
+          {{- if .Values.readinessProbe.enabled }}
           readinessProbe:
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds | default 5 }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds | default 5 }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold | default 3 }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds | default 10 }}
+            successThreshold: {{ .Values.readinessProbe.successThreshold | default 1 }}
             httpGet:
-              path: /
-              port: http
+              scheme: "HTTP"
+              path: {{ .Values.readinessProbe.path | default "/" }}
+              port: 3000
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
