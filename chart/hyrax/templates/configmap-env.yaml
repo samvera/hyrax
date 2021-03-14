@@ -28,6 +28,7 @@ data:
   SOLR_ADMIN_USER: {{ template "hyrax.solr.username" . }}
   SOLR_ADMIN_PASSWORD: {{ template "hyrax.solr.password" . }}
   SOLR_COLLECTION_NAME: {{ template "hyrax.solr.collectionName" . }}
+  SOLR_CONFIGSET_NAME: {{ template "hyrax.fullname" . }}
   SOLR_HOST: {{ template "hyrax.solr.host" . }}
   SOLR_PORT: "8983"
   SOLR_URL: {{ template "hyrax.solr.url" . }}

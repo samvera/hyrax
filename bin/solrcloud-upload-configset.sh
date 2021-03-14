@@ -10,12 +10,12 @@ fi
 
 # Solr Cloud ConfigSet API URLs
 solr_config_list_url="http://$SOLR_HOST:$SOLR_PORT/api/cluster/configs?omitHeader=true"
-solr_config_upload_url="http://$SOLR_HOST:$SOLR_PORT/solr/admin/configs?action=UPLOAD&name=solrconfig"
+solr_config_upload_url="http://$SOLR_HOST:$SOLR_PORT/solr/admin/configs?action=UPLOAD&name=$SOLR_CONFIGSET_NAME"
 
 while [ $COUNTER -lt 30 ]; do
   echo "-- Looking for Solr (${SOLR_HOST}:${SOLR_PORT})..."
   if nc -z "${SOLR_HOST}" "${SOLR_PORT}"; then
-    if curl --silent $solr_user_settings "$solr_config_list_url" | grep -q 'solrconfig'; then
+    if curl --silent $solr_user_settings "$solr_config_list_url" | grep -q "$SOLR_CONFIGSET_NAME"; then
       echo "-- ConfigSet already exists; skipping creation ...";
     else
       echo "-- ConfigSet for ${CONFDIR} does not exist; creating ..."
