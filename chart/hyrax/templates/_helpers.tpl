@@ -88,8 +88,40 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" .Release.Name "solr" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "hyrax.solr.host" -}}
+{{- if .Values.solr.enabled }}
+{{- include "hyrax.solr.fullname" . }}
+{{- else }}
+{{- .Values.externalSolrHost }}
+{{- end }}
+{{- end -}}
+
+{{- define "hyrax.solr.collectionName" -}}
+{{- if .Values.solr.enabled }}
+{{- .Values.solr.collection | default "hyrax" }}
+{{- else }}
+{{- .Values.externalSolrCollection | default "hyrax" }}
+{{- end }}
+{{- end -}}
+
+{{- define "hyrax.solr.username" -}}
+{{- if .Values.solr.enabled }}
+{{- .Values.solr.authentication.adminUsername }}
+{{- else }}
+{{- .Values.externalSolrUser }}
+{{- end }}
+{{- end -}}
+
+{{- define "hyrax.solr.password" -}}
+{{- if .Values.solr.enabled }}
+{{- .Values.solr.authentication.adminPassword }}
+{{- else }}
+{{- .Values.externalSolrPassword }}
+{{- end }}
+{{- end -}}
+
 {{- define "hyrax.solr.url" -}}
-{{- printf "http://%s:%s@%s:%s/solr/%s" .Values.solr.authentication.adminUsername .Values.solr.authentication.adminPassword (include "hyrax.solr.fullname" .) "8983" "hyrax" -}}
+{{- printf "http://%s:%s@%s:%s/solr/%s" (include "hyrax.solr.username" .) (include "hyrax.solr.password" .) (include "hyrax.solr.host" .) "8983" (include "hyrax.solr.collectionName" .)  -}}
 {{- end -}}
 
 {{- define "hyrax.zk.fullname" -}}

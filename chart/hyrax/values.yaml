@@ -12,6 +12,12 @@ image:
 
 # use false to skip the configset management init container
 loadSolrConfigSet: true
+# the host and auth details for an external solr service;
+#   ignored if `solr.enabled` is true
+externalSolrHost: ""
+externalSolrUser: ""
+externalSolrPassword: ""
+externalSolrCollection: "hyrax"
 
 imagePullSecrets: []
 nameOverride: ""
