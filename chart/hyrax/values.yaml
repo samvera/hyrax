@@ -10,6 +10,9 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+# use false to skip the configset management init container
+loadSolrConfigSet: true
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
