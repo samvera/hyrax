@@ -172,7 +172,7 @@ module Hyrax
         alias_action :file_manager, to: :update
 
         return if admin?
-        cannot :index, Hydra::AccessControls::Embargo
+        cannot :manage, Hydra::AccessControls::Embargo
         cannot :index, Hydra::AccessControls::Lease
       end
 
