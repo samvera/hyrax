@@ -28,7 +28,7 @@ SUMMARY
   # Note: rails does not follow sem-ver conventions, it's
   # minor version releases can include breaking changes; see
   # http://guides.rubyonrails.org/maintenance_policy.html
-  spec.add_dependency 'rails', '~> 5.0'
+  spec.add_dependency 'rails', '~> 5.2.4'
 
   spec.add_dependency 'active-fedora', '>= 11.5.2', '< 12.2'
   spec.add_dependency 'almond-rails', '~> 0.1'
@@ -86,10 +86,10 @@ SUMMARY
   spec.add_development_dependency 'capybara-maleficent', '~> 0.3.0'
   spec.add_development_dependency 'chromedriver-helper', '~> 2.1'
   spec.add_development_dependency 'database_cleaner', '~> 1.3'
-  spec.add_development_dependency 'engine_cart', '~> 2.2'
+  spec.add_development_dependency 'engine_cart', '~> 2.2.0'
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "factory_bot", '~> 4.4'
-  spec.add_development_dependency 'fcrepo_wrapper', '~> 0.5', '>= 0.5.1'
+  spec.add_development_dependency 'fcrepo_wrapper', '~> 0.9'
   spec.add_development_dependency "jasmine", '~> 2.3', '< 2.99'
   spec.add_development_dependency "jasmine-core", '~> 2.3', '< 2.99'
   spec.add_development_dependency 'mida', '~> 0.3'
@@ -98,7 +98,7 @@ SUMMARY
   spec.add_development_dependency 'rspec-rails', '~> 3.1'
   spec.add_development_dependency 'rspec_junit_formatter'
   spec.add_development_dependency "selenium-webdriver"
-  spec.add_development_dependency 'solr_wrapper', '>= 1.1', '< 3.0'
+  spec.add_development_dependency 'solr_wrapper', '>= 3'
   spec.add_development_dependency 'i18n-debug' if ENV['I18N_DEBUG']
   spec.add_development_dependency 'i18n_yaml_sorter' unless ENV['TRAVIS']
   spec.add_development_dependency 'rails-controller-testing', '~> 1'
