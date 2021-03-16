@@ -39,6 +39,7 @@ The chart populates the following environment variables:
 | RACK_ENV          | app environment ('production') | n/a                    |
 | RAILS_ENV         | app environment ('production') | n/a                    |
 | REDIS_HOST        | Redis service host             | `redis.enabled`        |
+| FCREPO_BASE_PATH  | Fedora Commons root path       | n/a                    |
 | FCREPO_HOST       | Fedora Commons host            | n/a                    |
 | FCREPO_PORT       | Fedora Commons port            | n/a                    |
 | FCREPO_REST_PATH  | Fedora Commons REST endpoint   | n/a                    |
