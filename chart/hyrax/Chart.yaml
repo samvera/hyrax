@@ -6,8 +6,8 @@ version: 0.6.0
 appVersion: 3.0.0-rc4
 dependencies:
   - name: fcrepo
-    version: 0.5.0
-    repository: file://../fcrepo
+    version: 0.6.0
+    repository: https://samvera-labs.github.com/fcrepo-charts
     condition: fcrepo.enabled
   - name: memcached
     version: 4.2.21

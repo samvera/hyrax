@@ -86,7 +86,6 @@ resources: {}
 
 fcrepo:
   enabled: true
-  fcrepoSecretName: "hyrax.fcrepo.fullname"
   externalDatabaseUsername: "hyrax"
   servicePort: 8080
   postgresql:
@@ -141,6 +140,11 @@ autoscaling:
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+
+global:
+  postgresql:
+    postgresqlUsername: hyrax
+    postgresqlPassword: hyrax_pass
 
 nodeSelector: {}
 
