@@ -70,6 +70,15 @@ RSpec.describe Hyrax::WorkUploadsHandler, valkyrie_adapter: :test_adapter do
                               have_attributes(payload: include(file_set: be_file_set)),
                               have_attributes(payload: include(file_set: be_file_set)))
       end
+
+      it 'publishes object.metadata.updated event for work' do
+        expect { service.attach }
+          .to change { listener.object_metadata_updated }
+          .to contain_exactly(have_attributes(payload: include(object: be_work)),
+                              have_attributes(payload: include(object: be_file_set)),
+                              have_attributes(payload: include(object: be_file_set)),
+                              have_attributes(payload: include(object: be_file_set)))
+      end
     end
 
     context 'with existing file_sets' do
