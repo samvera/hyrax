@@ -24,6 +24,13 @@ externalSolrCollection: "hyrax"
 externalFcrepoHost: ""
 fcrepoBasePathOverride: ""
 
+# database configuration for an external postgresql;
+#   ignored if `postgresql.enabled` is true
+externalPostgresql: {}
+#  username:
+#  password:
+#  database:
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""

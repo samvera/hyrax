@@ -8,10 +8,8 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
-  {{- if .Values.postgresql.enabled }}
-  DB_HOST: {{ template "hyrax.postgresql.fullname" . }}
+  DB_HOST: {{ template "hyrax.postgresql.host" . }}
   DB_PORT: "5432"
-  {{- end }}
   {{- if .Values.memcached.enabled }}
   MEMCACHED_HOST: {{ template "hyrax.memcached.fullname" . }}
   {{- end }}
