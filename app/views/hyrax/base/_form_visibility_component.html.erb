@@ -1,4 +1,6 @@
-<% if f.object.embargo_release_date %>
+ <%# When I put a byebug here from the test in spec/features/embargo_spec.rb:85 current_user.groups = []
+current_user.can?(:edit, Hydra::AccessControls::Embargo) = false %>
+<% if f.object.embargo_release_date && current_user.can?(:edit, Hydra::AccessControls::Embargo) %>
   <%= render 'form_permission_under_embargo', f: f %>
 <% elsif f.object.lease_expiration_date %>
   <%= render 'form_permission_under_lease', f: f %>

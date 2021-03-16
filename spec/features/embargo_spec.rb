@@ -1,39 +1,68 @@
 RSpec.describe 'embargo' do
   let(:user) { create(:user) }
+  let(:admin) { create(:admin) }
 
-  before do
-    sign_in user
-  end
   describe 'creating an embargoed object' do
     let(:future_date) { 5.days.from_now }
     let(:later_future_date) { 10.days.from_now }
 
-    it 'can be created, displayed and updated', :clean_repo, :workflow do
-      visit '/concern/generic_works/new'
-      fill_in 'Title', with: 'Embargo test'
-      choose 'Embargo'
-      fill_in 'generic_work_embargo_release_date', with: future_date
-      select 'Private', from: 'Restricted to'
-      select 'Public', from: 'then open it up to'
-      click_button 'Save'
+    context 'as an admin user' do
+      before do
+        sign_in admin
+      end
 
-      # chosen embargo date is on the show page
-      expect(page).to have_content(future_date.to_date.to_formatted_s(:standard))
+      it 'can be created, displayed and updated', :clean_repo, :workflow do
+        visit '/concern/generic_works/new'
+        fill_in 'Title', with: 'Embargo test'
+        choose 'Embargo'
+        fill_in 'generic_work_embargo_release_date', with: future_date
+        select 'Private', from: 'Restricted to'
+        select 'Public', from: 'then open it up to'
+        click_button 'Save'
 
-      click_link 'Edit'
-      click_link 'Embargo Management Page'
+        # chosen embargo date is on the show page
+        expect(page).to have_content(future_date.to_date.to_formatted_s(:standard))
 
-      expect(page).to have_content('This Generic Work is under embargo.')
-      expect(page).to have_xpath("//input[@name='generic_work[embargo_release_date]' and @value='#{future_date.to_datetime.iso8601}']") # current embargo date is pre-populated in edit field
+        click_link 'Edit'
+        click_link 'Embargo Management Page'
 
-      fill_in 'until', with: later_future_date.to_s
+        expect(page).to have_content('This Generic Work is under embargo.')
+        expect(page).to have_xpath("//input[@name='generic_work[embargo_release_date]' and @value='#{future_date.to_datetime.iso8601}']") # current embargo date is pre-populated in edit field
 
-      click_button 'Update Embargo'
-      expect(page).to have_content(later_future_date.to_date.to_formatted_s(:standard))
+        fill_in 'until', with: later_future_date.to_s
+
+        click_button 'Update Embargo'
+        expect(page).to have_content(later_future_date.to_date.to_formatted_s(:standard))
+      end
+    end
+
+    context 'as a regular user' do
+      before do
+        sign_in user
+      end
+
+      it 'can be created and displayed, and cannot be updated', :clean_repo, :workflow do
+        visit '/concern/generic_works/new'
+        fill_in 'Title', with: 'Embargo test'
+        choose 'Embargo'
+        fill_in 'generic_work_embargo_release_date', with: future_date
+        select 'Private', from: 'Restricted to'
+        select 'Public', from: 'then open it up to'
+        click_button 'Save'
+
+        # chosen embargo date is on the show page
+        expect(page).to have_content(future_date.to_date.to_formatted_s(:standard))
+
+        click_link 'Edit'
+        expect(page).not_to have_link('Embargo Management Page')
+      end
     end
   end
 
-  describe 'updating embargoed object' do
+  describe 'updating embargoed object as an admin' do
+    before do
+      sign_in admin
+    end
     let(:my_admin_set) do
       create(:admin_set,
              title: ['admin set with embargo range'],
@@ -53,13 +82,16 @@ RSpec.describe 'embargo' do
       create(:work, title: ['embargoed work1'],
                     embargo_release_date: future_date.to_datetime.iso8601,
                     admin_set_id: my_admin_set.id,
-                    edit_users: [user])
+                    edit_users: [admin])
     end
 
     it 'can be updated with a valid date' do
       visit "/concern/generic_works/#{work.id}"
-
       click_link 'Edit'
+      expect(admin.reload.groups).to eq ["admin"]
+      expect(admin.reload.can?(:edit, Hydra::AccessControls::Embargo)).to eq true
+      # Would expect at this point that the admin from the test would have the same qualities
+      # as current_user in app/views/hyrax/base/_form_visibility_component.html.erb
       click_link 'Embargo Management Page'
 
       expect(page).to have_content('This Generic Work is under embargo.')
