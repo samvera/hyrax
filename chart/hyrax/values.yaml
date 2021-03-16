@@ -109,6 +109,7 @@ postgresql:
 
 redis:
   enabled: true
+  password: mysecret
 
 solr:
   enabled: true
