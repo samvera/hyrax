@@ -20,6 +20,7 @@ data:
   {{- if .Values.redis.enabled }}
   REDIS_HOST: {{ template "hyrax.redis.fullname" . }}-master
   {{- end }}
+  FCREPO_BASE_PATH: {{ .Values.fcrepoBasePathOverride | default (printf "/%s" (include "hyrax.fullname" .)) | quote }}
   FCREPO_HOST: {{ template "hyrax.fcrepo.host" . }}
   FCREPO_PORT: {{ .Values.fcrepo.servicePort | default 8080 | quote }}
   FCREPO_REST_PATH: {{ .Values.fcrepo.restPath | default "fcrepo/rest" }}
