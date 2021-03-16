@@ -19,6 +19,10 @@ externalSolrUser: ""
 externalSolrPassword: ""
 externalSolrCollection: "hyrax"
 
+# configuration for an external/existing fcrepo service;
+#   ignored if `fcrepo.enabled` is true
+externalFcrepoHost: ""
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""

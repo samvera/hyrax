@@ -70,6 +70,14 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" .Release.Name "fcrepo" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "hyrax.fcrepo.host" -}}
+{{- if .Values.fcrepo.enabled }}
+{{- include "hyrax.fcrepo.fullname" . }}
+{{- else }}
+{{- .Values.externalFcrepoHost }}
+{{- end }}
+{{- end -}}
+
 {{- define "hyrax.memcached.fullname" -}}
 {{- printf "%s-%s" .Release.Name "memcached" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

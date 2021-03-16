@@ -8,6 +8,7 @@ dependencies:
   - name: fcrepo
     version: 0.5.0
     repository: file://../fcrepo
+    condition: fcrepo.enabled
   - name: memcached
     version: 4.2.21
     repository: https://charts.bitnami.com/bitnami
@@ -24,4 +25,3 @@ dependencies:
     version: 0.2.2
     repository: https://charts.bitnami.com/bitnami
     condition: solr.enabled
-  # need something for fcrepo

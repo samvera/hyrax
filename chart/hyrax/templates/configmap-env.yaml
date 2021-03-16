@@ -20,11 +20,9 @@ data:
   {{- if .Values.redis.enabled }}
   REDIS_HOST: {{ template "hyrax.redis.fullname" . }}-master
   {{- end }}
-  {{- if .Values.fcrepo.enabled }}
+  FCREPO_HOST: {{ template "hyrax.fcrepo.host" . }}
   FCREPO_PORT: {{ .Values.fcrepo.servicePort | default 8080 | quote }}
-  FCREPO_HOST: {{ template "hyrax.fcrepo.fullname" . }}
   FCREPO_REST_PATH: {{ .Values.fcrepo.restPath | default "fcrepo/rest" }}
-  {{- end }}
   SOLR_ADMIN_USER: {{ template "hyrax.solr.username" . }}
   SOLR_ADMIN_PASSWORD: {{ template "hyrax.solr.password" . }}
   SOLR_COLLECTION_NAME: {{ template "hyrax.solr.collectionName" . }}
