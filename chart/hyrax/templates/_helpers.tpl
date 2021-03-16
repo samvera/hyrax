@@ -86,6 +86,37 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" .Release.Name "postgresql" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "hyrax.postgresql.host" -}}
+{{- if .Values.postgresql.enabled }}
+{{- include "hyrax.postgresql.fullname" . }}
+{{- else }}
+{{- .Values.externalPostgresql.host }}
+{{- end }}
+{{- end -}}
+
+{{- define "hyrax.postgresql.database" -}}
+{{- if .Values.postgresql.enabled }}
+{{- .Values.postgresql.postgresqlDatabase }}
+{{- else }}
+{{- .Values.externalPostgresql.database | default ( include "hyrax.fullname" . ) }}
+{{- end }}
+{{- end -}}
+
+{{- define "hyrax.postgresql.username" -}}
+{{- if .Values.postgresql.enabled }}
+{{- .Values.postgresql.postgresqlUsername }}
+{{- else }}
+{{- .Values.externalPostgresql.username | default "postgres" }}
+{{- end }}
+{{- end -}}
+
+{{- define "hyrax.postgresql.password" -}}
+{{- if .Values.postgresql.enabled }}
+{{- .Values.postgresql.postgresqlPassword }}
+{{- else }}
+{{- .Values.externalPostgresql.password }}
+{{- end }}
+{{- end -}}
 
 {{- define "hyrax.redis.fullname" -}}
 {{- printf "%s-%s" .Release.Name "redis" | trunc 63 | trimSuffix "-" -}}
