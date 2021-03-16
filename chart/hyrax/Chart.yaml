@@ -14,7 +14,7 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     condition: memcached.enabled
   - name: postgresql
-    version: 9.3.3
+    version: 10.3.13
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
   - name: redis
