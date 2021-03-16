@@ -88,7 +88,8 @@ module Hyrax
 
       acquire_lock_for(work.id) do
         event_payloads = files.each_with_object([]) { |file, arry| arry << make_file_set_and_ingest(file) }
-        Hyrax.persister.save(resource: work)
+        @persister.save(resource: work)
+        Hyrax.publisher.publish('object.metadata.updated', object: work, user: files.first.user)
         event_payloads.each { |payload| Hyrax.publisher.publish('file.set.attached', payload) }
       end
     end
@@ -105,6 +106,7 @@ module Hyrax
       # copy ACLs; should we also be propogating embargo/lease?
       Hyrax::AccessControlList.copy_permissions(source: target_permissions, target: file_set)
       append_to_work(file_set)
+
       IngestJob.perform_later(wrap_file(file, file_set))
       Hyrax.publisher.publish('object.metadata.updated', object: file_set, user: file.user)
       { file_set: file_set, user: file.user }
