@@ -131,6 +131,8 @@ RSpec.configure do |config|
     Hyrax.config.enable_noids = false
     # Don't use the nested relationship reindexer. Null is much faster
     Hyrax.config.nested_relationship_reindexer = ->(id:, extent:) {}
+    # setup a test group service
+    User.group_service = TestHydraGroupService.new
   end
 
   config.before do |example|
@@ -143,7 +145,7 @@ RSpec.configure do |config|
 
     # using :workflow is preferable to :clean_repo, use the former if possible
     # It's important that this comes after DatabaseCleaner.start
-    ensure_deposit_available_for(user) if example.metadata[:workflow]
+    ensure_deposit_available_for(user) if example.metadata[:workflow] && defined?(user)
   end
 
   config.include(ControllerLevelHelpers, type: :view)
@@ -179,6 +181,7 @@ RSpec.configure do |config|
     # Ensuring we have a clear queue between each spec.
     ActiveJob::Base.queue_adapter.enqueued_jobs  = []
     ActiveJob::Base.queue_adapter.performed_jobs = []
+    User.group_service.clear
   end
 
   # If true, the base class of anonymous controllers will be inferred
