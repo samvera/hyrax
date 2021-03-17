@@ -34,7 +34,25 @@ RSpec.describe Hyrax::EmbargoesController do
         expect(flash[:alert]).to eq 'You are not authorized to access this page.'
       end
     end
-    context 'when I have permission to edit the object' do
+    context 'when I have permission to edit the object, but not the embargo' do
+      it 'does not show me the embargo' do
+        get :index, params: { id: a_work }
+
+        expect(user.can?(:index, Hydra::AccessControls::Embargo)).to eq false
+        expect(response.status).to eq 302
+        expect(flash[:alert]).to eq 'You are not authorized to access this page.'
+      end
+      it 'does not show me the edit page' do
+        get :edit, params: { id: a_work }
+
+        expect(user.can?(:edit, Hydra::AccessControls::Embargo)).to eq false
+        expect(response.status).to eq 302
+        expect(flash[:alert]).to eq 'You are not authorized to access this page.'
+      end
+    end
+
+    context "when I have permission to edit the embargo as an admin" do
+      let(:user) { create(:user, groups: ['admin']) }
       it 'shows me the page' do
         expect(controller).to receive(:add_breadcrumb).with('Home', root_path)
         expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path)

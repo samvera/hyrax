@@ -52,6 +52,7 @@ module Hyrax
       add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
       add_breadcrumb t(:'hyrax.embargoes.index.manage_embargoes'), hyrax.embargoes_path
       add_breadcrumb t(:'hyrax.embargoes.edit.embargo_update'), '#'
+      authorize! :edit, Hydra::AccessControls::Embargo
     end
   end
 end

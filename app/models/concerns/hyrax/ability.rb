@@ -309,9 +309,8 @@ module Hyrax
       # user can version if they can edit
       alias_action :versions, to: :update
       alias_action :file_manager, to: :update
-
       return if admin?
-      cannot :index, Hydra::AccessControls::Embargo
+      cannot :manage, Hydra::AccessControls::Embargo
       cannot :index, Hydra::AccessControls::Lease
     end
 

@@ -1,4 +1,8 @@
-<% if embargo_enforced?(f.object) %>
+<% puts "user can edit Embargoes? from form: #{current_user.can?(:edit, Hydra::AccessControls::Embargo)}"
+   puts "user groups from form: #{current_user.groups}" # Locally from test spec/features/embargo_spec.rb:106 is [], expecting ["admin"]
+   puts "User display name from form: #{current_user.display_name}"
+%>
+<% if embargo_enforced?(f.object) && current_user.can?(:edit, Hydra::AccessControls::Embargo) %>
   <%= render 'form_permission_under_embargo', f: f %>
 <% elsif lease_enforced?(f.object) %>
   <%= render 'form_permission_under_lease', f: f %>
