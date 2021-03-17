@@ -19,7 +19,7 @@
   <div class="col-sm-9 form-inline">
     <label for="new_group_name_skel" class="sr-only"><%= t(".group") %></label>
     <% if current_ability.admin? %>
-      <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + current_user.group_service.map.keys), class: 'form-control' %>
+      <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + available_user_groups), class: 'form-control' %>
     <% else %>
       <%= select_tag 'new_group_name_skel', options_for_select(["Select a group"] + current_user.groups), class: 'form-control' %>
     <% end %>
