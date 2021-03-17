@@ -20,6 +20,12 @@ module Hyrax
     include Hyrax::WorkFormHelper
     include Hyrax::WorkflowsHelper
 
+    ##
+    # @return [Array<String>] the list of all user groups
+    def available_user_groups
+      ::User.group_service.role_names
+    end
+
     # Which translations are available for the user to select
     # @return [Hash{String => String}] locale abbreviations as keys and flags as values
     def available_translations
