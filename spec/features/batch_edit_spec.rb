@@ -11,7 +11,7 @@ RSpec.describe 'batch', type: :feature, clean_repo: true, js: true do
   let!(:file_set)    { create(:file_set) }
 
   before do
-    RoleMapper.byname[current_user.user_key] << 'donor'
+    ::User.group_service.add(user: current_user, groups: ['donor'])
     sign_in current_user
     visit '/dashboard/my/works'
     check 'check_all'
