@@ -140,11 +140,8 @@ module Wings
       def find_references_by(resource:, property:, model: nil)
         return find_many_by_ids(ids: Array(resource.send(property))) unless model
 
-        object = resource_factory.from_resource(resource: resource)
-
-        results = object.send(property).map do |reference|
-          af_id = find_id_for(reference)
-          resource_factory.to_resource(object: ::ActiveFedora::Base.find(af_id))
+        results = resource.public_send(property).map do |reference|
+          resource_factory.to_resource(object: ::ActiveFedora::Base.find(reference))
         end
 
         results.select { |r| r.class.name == model.name }
