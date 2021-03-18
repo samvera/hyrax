@@ -29,7 +29,7 @@ module Wings
         # the #save! api differs between ActiveFedora::Base and ActiveFedora::File objects,
         # if we get a falsey response, we expect we have a File that has failed to save due
         # to empty content
-        af_object.save! ||
+        af_object.save!(validate: false) ||
           raise(FailedSaveError.new("#{af_object.class}#save! returned non-true. It might be missing required content.", obj: af_object))
 
         resource_factory.to_resource(object: af_object)
