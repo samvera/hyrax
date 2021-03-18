@@ -12,7 +12,7 @@
             <%= link_to t.to_s, [main_app, t] %>
             <% if presenter.current_user? %>
               <%= display_trophy_link current_user, t.id, class: 'glyphicon glyphicon-star', data: { removerow: true } do %>
-                <i class='trophy-on glyphicon glyphicon-remove'></i>
+                <span class='trophy-on glyphicon glyphicon-remove'></span>
               <% end %>
             <% end %>
           </td>
