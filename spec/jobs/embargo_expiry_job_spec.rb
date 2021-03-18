@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe EmbargoExpiryJob, :clean_repo do
   subject { described_class }
-
   let(:past_date) { 2.days.ago }
-
   let(:embargoed_work) { create(:embargoed_work) }
 
   let!(:work_with_expired_embargo) do
@@ -21,8 +19,10 @@ RSpec.describe EmbargoExpiryJob, :clean_repo do
   describe '#records_with_expired_embargos' do
     it 'returns all records with expired embargos' do
       records = described_class.new.records_with_expired_embargos
-      expect(records).to include work_with_expired_embargo.id, file_set_with_expired_embargo.id
-      expect(records).not_to include embargoed_work.id
+
+      expect(records.map(&:id))
+        .to contain_exactly(work_with_expired_embargo.id,
+                            file_set_with_expired_embargo.id)
     end
   end
 

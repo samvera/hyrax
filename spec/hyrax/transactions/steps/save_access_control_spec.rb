@@ -17,7 +17,7 @@ RSpec.describe Hyrax::Transactions::Steps::SaveAccessControl, valkyrie_adapter: 
 
     it 'persists the new permissions' do
       expect { step.call(work) }
-        .to change { Hyrax::AccessControlList(work).permissions }
+        .to change { Hyrax::AccessControlList.new(resource: work).permissions }
         .to contain_exactly(have_attributes(mode: :read, agent: user.user_key))
     end
   end
