@@ -3,7 +3,7 @@ require 'spec_helper'
 require 'valkyrie/specs/shared_specs'
 require 'wings'
 
-RSpec.describe Wings::Valkyrie::QueryService do
+RSpec.describe Wings::Valkyrie::QueryService, :clean_repo do
   before do
     module Hyrax::Test
       module QueryService
@@ -38,7 +38,7 @@ RSpec.describe Wings::Valkyrie::QueryService do
   let(:image_resource_class) { Wings::OrmConverter.to_valkyrie_resource_class(klass: af_image_resource_class) }
   let(:resource) { resource_class.new(title: ['Foo']) }
 
-  # it_behaves_like "a Valkyrie query provider"
+  # it_behaves_like "a Valkyrie query provider" # 11 failing tests
 
   # rubocop:disable RSpec/ExampleLength
   it 'responds to expected methods' do
@@ -69,12 +69,22 @@ RSpec.describe Wings::Valkyrie::QueryService do
       expect(found).to be_persisted
     end
 
-    it "returns a Hyrax::ObjectNotFoundError for a non-found ID" do
-      expect { query_service.find_by(id: ::Valkyrie::ID.new("123123123")) }.to raise_error Hyrax::ObjectNotFoundError
+    it "returns a Valkyrie::Persistence::ObjectNotFoundError for a non-found ID" do
+      expect { query_service.find_by(id: ::Valkyrie::ID.new("123123123")) }
+        .to raise_error Valkyrie::Persistence::ObjectNotFoundError
     end
 
     it 'raises an error if the id is not a Valkyrie::ID or a string' do
       expect { query_service.find_by(id: 123) }.to raise_error ArgumentError
+    end
+  end
+
+  describe ".count_all_of_model" do
+    it "counts all of that model" do
+      persister.save(resource: resource_class.new)
+      persister.save(resource: Monograph.new)
+      persister.save(resource: Monograph.new)
+      expect(query_service.count_all_of_model(model: Monograph)).to eq(2)
     end
   end
 
@@ -155,17 +165,21 @@ RSpec.describe Wings::Valkyrie::QueryService do
     # Not a use case that Hyrax has; everything has to have an alternate_id
     #   We can't make this test pass because we can't persist an object without
     #   an alternate_id
-    xit 'raises a Hyrax::ObjectNotFoundError when persisted objects do not have alternate_ids' do
+    xit 'raises a Valkyrie::Persistence::ObjectNotFoundError when persisted objects do not have alternate_ids' do
       persister.save(resource: SecondResource.new)
-      expect { query_service.find_by_alternate_identifier(alternate_identifier: Valkyrie::ID.new("123123123")) }.to raise_error Hyrax::ObjectNotFoundError
+
+      expect { query_service.find_by_alternate_identifier(alternate_identifier: Valkyrie::ID.new("123123123")) }
+        .to raise_error Valkyrie::Persistence::ObjectNotFoundError
     end
 
-    it "raises a Hyrax::ObjectNotFoundError for a non-found alternate identifier" do
-      expect { query_service.find_by_alternate_identifier(alternate_identifier: Valkyrie::ID.new("123123123")) }.to raise_error Hyrax::ObjectNotFoundError
+    it "raises a Valkyrie::Persistence::ObjectNotFoundError for a non-found alternate identifier" do
+      expect { query_service.find_by_alternate_identifier(alternate_identifier: Valkyrie::ID.new("123123123")) }
+        .to raise_error Valkyrie::Persistence::ObjectNotFoundError
     end
 
     it 'raises an error if the alternate identifier is not a Valkyrie::ID or a string' do
-      expect { query_service.find_by_alternate_identifier(alternate_identifier: 123) }.to raise_error ArgumentError
+      expect { query_service.find_by_alternate_identifier(alternate_identifier: 123) }
+        .to raise_error ArgumentError
     end
 
     it 'can have multiple alternate identifiers' do
@@ -196,7 +210,8 @@ RSpec.describe Wings::Valkyrie::QueryService do
       end
 
       it 'returns an ActiveFedora error' do
-        expect { query_service.find_by_alternate_identifier(alternate_identifier: Valkyrie::ID.new("123123123"), use_valkyrie: false) }.to raise_error ActiveFedora::ObjectNotFoundError
+        expect { query_service.find_by_alternate_identifier(alternate_identifier: Valkyrie::ID.new("123123123"), use_valkyrie: false) }
+          .to raise_error ActiveFedora::ObjectNotFoundError
       end
     end
   end

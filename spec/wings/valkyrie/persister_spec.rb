@@ -93,7 +93,9 @@ RSpec.describe Wings::Valkyrie::Persister do
     it "can delete objects" do
       persisted = persister.save(resource: resource)
       persister.delete(resource: persisted)
-      expect { query_service.find_by(id: persisted.id) }.to raise_error Hyrax::ObjectNotFoundError
+
+      expect { query_service.find_by(id: persisted.id) }
+        .to raise_error Valkyrie::Persistence::ObjectNotFoundError
     end
 
     it "can delete all objects" do
@@ -423,7 +425,9 @@ RSpec.describe Wings::Valkyrie::Persister do
     it "can delete objects" do
       persisted = persister.save(resource: resource)
       persister.delete(resource: persisted)
-      expect { query_service.find_by(id: persisted.id) }.to raise_error Hyrax::ObjectNotFoundError
+
+      expect { query_service.find_by(id: persisted.id) }
+        .to raise_error Valkyrie::Persistence::ObjectNotFoundError
     end
 
     it "can delete all objects" do
