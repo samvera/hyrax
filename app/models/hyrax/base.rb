@@ -8,11 +8,11 @@ module Hyrax
     end
 
     def self.uri_to_id(uri)
-      ActiveFedora::Base.uri_to_id(uri)
+      Hyrax.config.translate_uri_to_id.call(uri)
     end
 
     def self.id_to_uri(id)
-      ActiveFedora::Base.id_to_uri(id)
+      Hyrax.config.translate_id_to_uri.call(id)
     end
   end
 end
