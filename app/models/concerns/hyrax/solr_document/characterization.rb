@@ -67,7 +67,7 @@ module Hyrax
       end
 
       def file_size
-        self[Solrizer.solr_name("file_size")]
+        self["file_size_lts"]
       end
 
       def filename
