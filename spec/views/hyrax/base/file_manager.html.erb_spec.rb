@@ -22,8 +22,6 @@ RSpec.describe "hyrax/base/file_manager.html.erb" do
     )
   end
 
-  let(:parent) { stub_model(GenericWork, title: ["Test title"]) }
-
   let(:form) do
     Hyrax::Forms::FileManagerForm.new(parent, nil)
   end
