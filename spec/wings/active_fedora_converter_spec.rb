@@ -121,6 +121,18 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
             .to contain_exactly(an_instance_of(Hyrax::Test::SimpleWorkLegacy),
                                 an_instance_of(Hyrax::Test::SimpleWorkLegacy))
         end
+
+        it 'does not increase proxy count' do
+          expect { converter.convert }
+            .not_to change { ActiveFedora::Aggregation::Proxy.count }
+        end
+
+        it 'does not increase object count' do
+          converter.convert
+
+          expect { converter.convert }
+            .not_to change { ActiveFedora::Base.count }
+        end
       end
 
       context 'with a custom, unmapped resource class' do
