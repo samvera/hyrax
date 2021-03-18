@@ -131,6 +131,16 @@ RSpec.describe Hyrax::DefaultMiddlewareStack, :clean_repo do
         actor.create(env)
         expect(work.class.find(work.id).embargo_release_date).to be_present
       end
+
+      context 'and the embargo date is in the past' do
+        let(:embargo_date) { 7.days.ago }
+
+        it 'populates meaningful errors on the work' do
+          expect { actor.create(env) }
+            .to change { env.curation_concern.errors.messages }
+            .to include(embargo_release_date: ["Must be a future date."])
+        end
+      end
     end
 
     describe 'when doing a proxy deposit' do
