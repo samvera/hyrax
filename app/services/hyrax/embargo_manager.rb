@@ -175,7 +175,7 @@ module Hyrax
 
     ##
     # @return [void]
-    # @raise [NotEnforcableError] when trying to release an embargo that
+    # @raise [NotReleasableError] when trying to release an embargo that
     #   is currently active
     def release!
       release || raise(NotReleasableError)
