@@ -14,7 +14,7 @@ module Hyrax
     when AccessControlList
       obj
     else
-      AccessControlList.new(resource: obj)
+      obj.try(:permission_manager)&.acl || AccessControlList.new(resource: obj)
     end
   end
 
