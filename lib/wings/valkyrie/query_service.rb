@@ -47,25 +47,30 @@ module Wings
         end
       end
 
-      # Find an array of record using Valkyrie IDs, and map them to Valkyrie Resources maintaining order based on given ids
+      ##
+      # Find an array of record using Valkyrie IDs, and map them to Valkyrie
+      # Resources maintaining order based on given ids
+      #
+      # @note ignores non-existent ids.
+      #
       # @param [Array<Valkyrie::ID, String>] ids
+      #
       # @return [Array<Valkyrie::Resource>]
-      # NOTE: Ignores non-existent ids.
+      # @raise [ArgumentError]
       def find_many_by_ids(ids:)
-        ids.each do |id|
-          id = ::Valkyrie::ID.new(id.to_s) if id.is_a?(String)
-          validate_id(id)
-        end
-        resources = []
-        ids.uniq.map(&:to_s).each do |id|
+        ids.all? { |i| i.respond_to?(:to_str) } ||
+          raise(ArgumentError, 'id must be a Valkyrie::ID')
+
+        return enum_for(:find_many_by_ids, ids: ids) unless block_given?
+
+        ids.map(&:to_s).uniq.each do |id|
           begin
             af_object = ActiveFedora::Base.find(id)
-            resources << resource_factory.to_resource(object: af_object)
+            yield resource_factory.to_resource(object: af_object)
           rescue ::ActiveFedora::ObjectNotFoundError, Ldp::Gone
             next
           end
         end
-        resources
       end
 
       # Find a record using an alternate ID, and map it to a Valkyrie Resource
@@ -74,12 +79,14 @@ module Wings
       # @return [Valkyrie::Resource]
       # @raise [Hyrax::ObjectNotFoundError]
       def find_by_alternate_identifier(alternate_identifier:, use_valkyrie: true)
-        alternate_identifier = ::Valkyrie::ID.new(alternate_identifier.to_s) if alternate_identifier.is_a?(String)
-        validate_id(alternate_identifier)
-        object = ::ActiveFedora::Base.find(alternate_identifier.to_s)
-        return object if use_valkyrie == false
-        resource_factory.to_resource(object: object)
-      rescue ActiveFedora::ObjectNotFoundError, Ldp::Gone
+        raise(ArgumentError, 'id must be a Valkyrie::ID') unless
+          alternate_identifier.respond_to?(:to_str)
+
+        af_object = ActiveFedora::Base.find(alternate_identifier.to_s)
+
+        use_valkyrie ? resource_factory.to_resource(object: af_object) : af_object
+      rescue ActiveFedora::ObjectNotFoundError, Ldp::Gone => err
+        raise err unless use_valkyrie
         raise Hyrax::ObjectNotFoundError
       end
 
@@ -88,11 +95,12 @@ module Wings
       # @param model [Class]
       # @return [Array<Valkyrie::Resource>]
       def find_members(resource:, model: nil)
-        return [] unless resource.respond_to?(:member_ids) && resource.member_ids.present?
-        all_members = find_many_by_ids(ids: resource.member_ids)
-        return all_members unless model
+        return [] if resource.try(:member_ids).blank?
+        return find_many_by_ids(ids: resource.member_ids) unless model
+
         find_model = model_class_for(model)
-        all_members.select { |member_resource| model_class_for(member_resource.class) == find_model }
+        find_many_by_ids(ids: resource.member_ids)
+          .select { |member_resource| model_class_for(member_resource.class) == find_model }
       end
 
       # Find the Valkyrie Resources referenced by another Valkyrie Resource
@@ -160,10 +168,14 @@ module Wings
       end
 
       def find_id_for(reference)
-        return ::Hyrax::Base.uri_to_id(reference.id) if reference.class == ActiveTriples::Resource
-        return reference if reference.class == String
-        # not a supported type
-        ''
+        case reference
+        when ActiveTriples::Resource
+          ::Hyrax::Base.uri_to_id(reference.id)
+        when String
+          reference
+        else # not a supported type
+          ''
+        end
       end
 
       def model_class_for(model)
