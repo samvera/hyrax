@@ -20,7 +20,7 @@ module Hyrax
       def versioned_file_id(file)
         versions = file.versions.all
         if versions.present?
-          Hyrax::Base.uri_to_id(versions.last.uri)
+          Hyrax.config.translate_uri_to_id.call(versions.last.uri)
         else
           file.id
         end
