@@ -6,6 +6,7 @@ module Hyrax
       # A `dry-transcation` step that destroys a Work.
       #
       # @since 3.0.0
+      # @deprecated
       class DestroyWork
         include Dry::Transaction::Operation
 

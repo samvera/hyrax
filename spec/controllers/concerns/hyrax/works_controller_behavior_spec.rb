@@ -51,10 +51,9 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
       FactoryBot.valkyrie_create(:hyrax_work,
                                  alternate_ids: [id],
                                  title: title,
-                                 edit_users: [user] )
+                                 edit_users: [user])
     end
   end
-
 
   describe '#create' do
     it 'redirects to new user login' do
@@ -168,7 +167,6 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     end
   end
 
-
   describe '#destroy' do
     it 'redirect to user login' do
       delete :destroy, params: { id: work.id }
@@ -184,20 +182,26 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
       end
     end
 
-    xcontext 'when the user has edit access' do
+    context 'when the user has edit access' do
       include_context 'with a user with edit access'
 
       it 'is a success' do
         delete :destroy, params: { id: work.id }
 
-        expect(response).to be_successful
+        expect(response.status).to eq 302 # redirect on success
       end
 
       it 'deletes the work' do
-        expect { delete :destroy, params: { id: work.id } }
-          .to change { work.persisted? }
-          .from(true)
-          .to false
+        delete :destroy, params: { id: work.id }
+
+        expect { Hyrax.query_service.find_by(id: work.id) }
+          .to raise_error Hyrax::ObjectNotFoundError
+      end
+
+      it 'tells the user what they deleted' do
+        delete :destroy, params: { id: work.id }
+
+        expect(flash[:notice]).to include work.title.first
       end
     end
   end
