@@ -13,7 +13,7 @@ module Hyrax
       #   If calling from Abilities, pass the ability.  If you try to get the ability from the user, you end up in an infinit loop.
       def self.collection_type_ids_for_user(roles:, user: nil, ability: nil)
         return false unless user.present? || ability.present?
-        return Hyrax::CollectionType.all.pluck('DISTINCT id') if user_admin?(user, ability)
+        return Hyrax::CollectionType.all.pluck(Arel.sql('DISTINCT id')) if user_admin?(user, ability)
         Hyrax::CollectionTypeParticipant.where(agent_type: Hyrax::CollectionTypeParticipant::USER_TYPE,
                                                agent_id: user_id(user, ability),
                                                access: roles)
@@ -21,7 +21,7 @@ module Hyrax
                                           Hyrax::CollectionTypeParticipant.where(agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE,
                                                                                  agent_id: user_groups(user, ability),
                                                                                  access: roles)
-                                        ).pluck('DISTINCT hyrax_collection_type_id')
+                                        ).pluck(Arel.sql('DISTINCT hyrax_collection_type_id'))
       end
 
       # @api public
@@ -174,7 +174,7 @@ module Hyrax
       def self.agent_ids_for(collection_type:, agent_type:, access:)
         Hyrax::CollectionTypeParticipant.where(hyrax_collection_type_id: collection_type.id,
                                                agent_type: agent_type,
-                                               access: access).pluck('DISTINCT agent_id')
+                                               access: access).pluck(Arel.sql('DISTINCT agent_id'))
       end
       private_class_method :agent_ids_for
 

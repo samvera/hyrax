@@ -73,7 +73,7 @@ module Hyrax
         ids = PermissionTemplateAccess.for_user(ability: self,
                                                 access: ['deposit', 'manage'])
                                       .joins(:permission_template)
-                                      .pluck('DISTINCT source_id')
+                                      .pluck(Arel.sql('DISTINCT source_id'))
         query = "_query_:\"{!raw f=has_model_ssim}AdminSet\" AND {!terms f=id}#{ids.join(',')}"
         ActiveFedora::SolrService.count(query).positive?
       end
