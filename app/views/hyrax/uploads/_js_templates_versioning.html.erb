@@ -23,13 +23,13 @@
         <td class="text-right">
             {% if (!i && !o.options.autoUpload) { %}
                 <button class="btn btn-primary start" disabled>
-                    <i class="glyphicon glyphicon-upload"></i>
+                    <span class="glyphicon glyphicon-upload"></span>
                     <span><%= t('.start') %></span>
                 </button>
             {% } %}
             {% if (!i) { %}
                 <button class="btn btn-sm btn-warning cancel">
-                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span class="glyphicon glyphicon-ban-circle"></span>
                     <span><%= t('helpers.action.cancel') %></span>
                 </button>
             {% } %}
@@ -76,7 +76,7 @@
                       data-type="{%=file.deleteType%}"
                       data-url="{%=file.deleteUrl%}"
                       {% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
-                  <i class="glyphicon glyphicon-trash"></i>
+                  <span class="glyphicon glyphicon-trash"></span>
                   <span><%= t('helpers.action.delete') %></span>
               </button>
             </div>
