@@ -21,7 +21,7 @@ module Hyrax
                                           Hyrax::CollectionTypeParticipant.where(agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE,
                                                                                  agent_id: user_groups(user, ability),
                                                                                  access: roles)
-        ).pluck(Arel.sql('DISTINCT hyrax_collection_type_id'))
+                                        ).pluck(Arel.sql('DISTINCT hyrax_collection_type_id'))
       end
 
       # @api public
