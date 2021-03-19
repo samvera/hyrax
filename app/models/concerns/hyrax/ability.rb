@@ -37,6 +37,7 @@ module Hyrax
       self.registered_group_name = Hyrax.config.registered_user_group_name
       self.public_group_name = Hyrax.config.public_user_group_name
       self.ability_logic += [:admin_permissions,
+                             :edit_resources,
                              :curation_concerns_permissions,
                              :operation_abilities,
                              :add_to_collection,
@@ -105,6 +106,16 @@ module Hyrax
       can :download, SolrDocument do |obj|
         cache.put(obj.id, obj)
         test_download(obj.id)
+      end
+    end
+
+    ##
+    # @api public
+    #
+    # Allows
+    def edit_resources
+      can [:edit, :update, :destroy], Hyrax::Resource do |resource|
+        test_edit(resource.id)
       end
     end
 
