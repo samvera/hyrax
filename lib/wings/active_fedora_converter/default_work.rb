@@ -106,6 +106,10 @@ module Wings
       class << self
         delegate :human_readable_type, to: :valkyrie_class
 
+        def _to_partial_path
+          "hyrax/#{valkyrie_class.model_name.collection}/#{valkyrie_class.model_name.element}"
+        end
+
         def model_name(*)
           Hyrax::Name.new(valkyrie_class)
         end
