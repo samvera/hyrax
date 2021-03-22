@@ -103,6 +103,50 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  describe '#in_works_ids' do
+    context 'without membership' do
+      it 'is an empty array' do
+        form.prepopulate!
+
+        expect(form.in_works_ids).to eq []
+      end
+    end
+
+    context 'as a member of works' do
+      let(:work)   { Hyrax.query_service.find_by(id: parent.member_ids.first) }
+      let(:parent) { FactoryBot.valkyrie_create(:hyrax_work, :with_member_works) }
+
+      it 'lists the parent works' do
+        form.prepopulate!
+
+        expect(form.in_works_ids).to contain_exactly(parent.id)
+      end
+    end
+
+    context 'as a member of works and collections' do
+      let(:work)   { FactoryBot.valkyrie_create(:hyrax_work, :as_collection_member) }
+      let(:parent) { FactoryBot.valkyrie_create(:hyrax_work, :with_member_works, members: [work]) }
+
+      before { parent } # parent must be saved
+
+      it 'lists the parent works' do
+        form.prepopulate!
+
+        expect(form.in_works_ids).to contain_exactly(parent.id)
+      end
+    end
+
+    context 'as a member of collections' do
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :as_member_of_multiple_collections) }
+
+      it 'is empty' do
+        form.prepopulate!
+
+        expect(form.in_works_ids).to eq []
+      end
+    end
+  end
+
   describe '#lease_expiration_date' do
     context 'without a lease' do
       it 'is nil' do
