@@ -28,12 +28,11 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
     context 'and requesting original file' do
       subject { described_class.call(file_set: file_set, file: pdf_file, type: original_file_use) }
       it "builds and uses the association's target" do
-        ids = subject.original_file_ids
-        expect(ids.size).to eq 1
-        expect(ids.first).to be_a Valkyrie::ID
-        expect(ids.first.to_s).to start_with "#{file_set.id}/files/"
+        id = subject.original_file_id
+        expect(id).to be_a Valkyrie::ID
+        expect(id.to_s).to start_with "#{file_set.id}/files/"
 
-        file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: ids.first)
+        file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: id)
         expect(file_metadata.mime_type).to eq pdf_mimetype
       end
     end
@@ -41,25 +40,24 @@ RSpec.describe Wings::Works::AddFileToFileSet, :clean_repo do
     context 'and requesting extracted text' do
       subject { described_class.call(file_set: file_set, file: text_file, type: [extracted_text_use]) }
       it "builds and uses the association's target" do
-        ids = subject.extracted_text_ids
-        expect(ids.size).to eq 1
-        expect(ids.first).to be_a Valkyrie::ID
-        expect(ids.first.to_s).to start_with "#{file_set.id}/files/"
+        id = subject.extracted_text_id
+        expect(id).to be_a Valkyrie::ID
+        expect(id.to_s).to start_with "#{file_set.id}/files/"
 
-        file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: ids.first)
+        file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: id)
         expect(file_metadata.mime_type).to eq text_mimetype
       end
     end
 
     context 'and requesting thumbnail' do
       subject { described_class.call(file_set: file_set, file: image_file, type: thumbnail_use) }
-      it "builds and uses the association's target" do
-        ids = subject.thumbnail_ids
-        expect(ids.size).to eq 1
-        expect(ids.first).to be_a Valkyrie::ID
-        expect(ids.first.to_s).to start_with "#{file_set.id}/files/"
 
-        file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: ids.first)
+      it "builds and uses the association's target" do
+        id = subject.thumbnail_id
+        expect(id).to be_a Valkyrie::ID
+        expect(id.to_s).to start_with "#{file_set.id}/files/"
+
+        file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: id)
         expect(file_metadata.mime_type).to eq image_mimetype
       end
     end

@@ -191,9 +191,9 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
       it 'has the correct reflection ids' do
         resource = described_class.new(pcdm_object: file_set).build
         expect(resource.file_ids).to match_valkyrie_ids_with_active_fedora_ids(file_set.files.map(&:id))
-        expect(resource.original_file_ids).to match_valkyrie_ids_with_active_fedora_ids([file_set.original_file.id])
-        expect(resource.thumbnail_ids).to match_valkyrie_ids_with_active_fedora_ids([file_set.thumbnail.id])
-        expect(resource.extracted_text_ids).to match_valkyrie_ids_with_active_fedora_ids([file_set.extracted_text.id])
+        expect(resource.original_file_id).to eq file_set.original_file.id
+        expect(resource.thumbnail_id).to eq file_set.thumbnail.id
+        expect(resource.extracted_text_id).to eq file_set.extracted_text.id
       end
     end
 
@@ -324,14 +324,14 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
           .to have_attributes title: book.title,
                               contributor: book.contributor,
                               description: book.description
-        expect(subject.build.active_fedora_page_ids).to match_valkyrie_ids_with_active_fedora_ids(['pg1', 'pg2'])
+        expect(subject.build.active_fedora_page_ids).to eq(['pg1', 'pg2'])
       end
     end
   end
 
   context 'build for file' do
     let(:id)       { '123' }
-    let(:file_set) { create(:file_set, id: id) }
+    let(:file_set) { FactoryBot.create(:file_set, id: id) }
     let(:file) { file_set.build_original_file }
     let(:pcdm_object) { file_set }
 
@@ -341,7 +341,7 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
       end
 
       it 'sets file id in file set resource' do
-        expect(subject.build.original_file_ids).to match_valkyrie_ids_with_active_fedora_ids([file.id])
+        expect(subject.build.original_file_id).to eq file.id
       end
     end
 
@@ -351,7 +351,7 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
       end
 
       it 'sets file id in file set resource' do
-        expect(subject.build.original_file_ids).to match_valkyrie_ids_with_active_fedora_ids([file.id])
+        expect(factory.build.original_file_id).to eq file.id
       end
     end
 
@@ -359,7 +359,7 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
       let(:file_set) { create(:file_set) }
 
       it 'does not set file id in file set resource' do
-        expect(subject.build.original_file_ids).to eq []
+        expect(factory.build.original_file_id).to be_empty
       end
     end
   end

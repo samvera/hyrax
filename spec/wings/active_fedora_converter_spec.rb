@@ -504,7 +504,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
           binary = StringIO.new("hey")
           Hydra::Works::AddFileToFileSet.call(fileset1, binary, :original_file)
           expect(fileset1.original_file).not_to be_nil
-          expect(resource.original_file_ids.first.to_s).to eq file_id
+          expect(resource.original_file_id.to_s).to eq file_id
 
           converted_file_set = converter.convert
 
