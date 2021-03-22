@@ -17,17 +17,19 @@ module Hyrax
     # @since 2.4.0
     #
     # @see https://dry-rb.org/gems/dry-container/
-    class Container
+    class Container # rubocop:disable Metrics/ClassLength
       require 'hyrax/transactions/apply_change_set'
       require 'hyrax/transactions/create_work'
       require 'hyrax/transactions/destroy_work'
       require 'hyrax/transactions/work_create'
+      require 'hyrax/transactions/work_destroy'
       require 'hyrax/transactions/update_work'
       require 'hyrax/transactions/steps/add_file_sets'
       require 'hyrax/transactions/steps/add_to_collections'
       require 'hyrax/transactions/steps/apply_collection_permission_template'
       require 'hyrax/transactions/steps/apply_permission_template'
       require 'hyrax/transactions/steps/apply_visibility'
+      require 'hyrax/transactions/steps/delete_resource'
       require 'hyrax/transactions/steps/destroy_work'
       require 'hyrax/transactions/steps/ensure_admin_set'
       require 'hyrax/transactions/steps/ensure_permission_template'
@@ -93,6 +95,14 @@ module Hyrax
       namespace 'work_resource' do |ops| # valkyrie works
         ops.register 'add_file_sets' do
           Steps::AddFileSets.new
+        end
+
+        ops.register 'delete' do
+          Steps::DeleteResource.new
+        end
+
+        ops.register 'destroy' do
+          WorkDestroy.new
         end
 
         ops.register 'save_acl' do

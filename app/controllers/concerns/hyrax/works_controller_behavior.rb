@@ -113,10 +113,21 @@ module Hyrax
     end
 
     def destroy
-      title = curation_concern.to_s
-      env = Actors::Environment.new(curation_concern, current_ability, {})
-      return unless actor.destroy(env)
-      Hyrax.config.callback.run(:after_destroy, curation_concern.id, current_user, warn: false)
+      case curation_concern
+      when ActiveFedora::Base
+        title = curation_concern.to_s
+        env = Actors::Environment.new(curation_concern, current_ability, {})
+        return unless actor.destroy(env)
+        Hyrax.config.callback.run(:after_destroy, curation_concern.id, current_user, warn: false)
+      else
+        transactions['work_resource.destroy']
+          .with_step_args('work_resource.delete' => { user: current_user })
+          .call(curation_concern)
+          .value!
+
+        title = Array(curation_concern.title).first
+      end
+
       after_destroy_response(title)
     end
 
@@ -380,7 +391,7 @@ module Hyrax
 
     def after_destroy_response(title)
       respond_to do |wants|
-        wants.html { redirect_to my_works_path, notice: "Deleted #{title}" }
+        wants.html { redirect_to hyrax.my_works_path, notice: "Deleted #{title}" }
         wants.json { render_json_response(response_type: :deleted, message: "Deleted #{curation_concern.id}") }
       end
     end

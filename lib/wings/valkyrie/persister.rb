@@ -53,6 +53,7 @@ module Wings
         af_object = ActiveFedora::Base.new
         af_object.id = resource.alternate_ids.first.to_s
         af_object.delete
+        resource
       end
 
       # Deletes all resources from Fedora and Solr
