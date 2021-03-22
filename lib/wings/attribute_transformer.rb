@@ -15,14 +15,17 @@ module Wings
       end
     end
 
-    def self.run(obj, keys)
-      # TODO: There is an open question about whether we want to treat all these relationships the same.  See Issue #3904.
+    def self.run(obj, extra_keys = [])
+      reflections = OrmConverter.relationship_keys_for(reflections: obj.try(:reflections))
+      keys = (obj.class.delegated_attributes.keys + obj.class.association_attributes + reflections + extra_keys).uniq
+
       attrs = keys.select { |k| k.to_s.end_with? '_ids' }.each_with_object({}) do |attr_name, mem|
         mem[attr_name.to_sym] =
           TransformerValueMapper.for(obj.try(attr_name)).result ||
           TransformerValueMapper.for(attribute_ids_for(name: attr_name.chomp('_ids'), obj: obj)).result ||
           TransformerValueMapper.for(attribute_ids_for(name: attr_name.chomp('_ids').pluralize, obj: obj)).result || []
       end
+
       keys.each_with_object(attrs) do |attr_name, mem|
         next unless obj.respond_to?(attr_name) && !mem.key?(attr_name.to_sym)
         mem[attr_name.to_sym] = TransformerValueMapper.for(obj.public_send(attr_name)).result
@@ -37,14 +40,12 @@ module Wings
   end
 
   class FileAttributeTransformer
-    KEYMAP = {}.freeze
+    def run(obj, extra_keys = [])
+      keys = obj.metadata_node.class.fields + extra_keys
 
-    def run(obj, keys)
       attributes = keys.each_with_object({}) do |attr_name, mem|
         next unless obj.respond_to?(attr_name) && !mem.key?(attr_name.to_sym)
-        valkyrie_attribute = KEYMAP.fetch(attr_name.to_sym) { attr_name.to_sym }
-
-        mem[valkyrie_attribute] = TransformerValueMapper.for(obj.public_send(attr_name)).result
+        mem[attr_name.to_sym] = TransformerValueMapper.for(obj.public_send(attr_name)).result
       end
 
       attributes[:original_filename] = obj.original_name
