@@ -15,9 +15,9 @@ module Wings
       end
     end
 
-    def self.run(obj, extra_keys = [])
+    def self.run(obj)
       reflections = OrmConverter.relationship_keys_for(reflections: obj.try(:reflections))
-      keys = (obj.class.delegated_attributes.keys + obj.class.association_attributes + reflections + extra_keys).uniq
+      keys = (obj.class.delegated_attributes.keys + obj.class.association_attributes + reflections).uniq
 
       attrs = keys.select { |k| k.to_s.end_with? '_ids' }.each_with_object({}) do |attr_name, mem|
         mem[attr_name.to_sym] =
@@ -40,8 +40,8 @@ module Wings
   end
 
   class FileAttributeTransformer
-    def run(obj, extra_keys = [])
-      keys = obj.metadata_node.class.fields + extra_keys
+    def run(obj)
+      keys = obj.metadata_node.class.fields
 
       attributes = keys.each_with_object({}) do |attr_name, mem|
         next unless obj.respond_to?(attr_name) && !mem.key?(attr_name.to_sym)
