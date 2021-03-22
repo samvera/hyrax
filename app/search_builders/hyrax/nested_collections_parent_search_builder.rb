@@ -2,7 +2,7 @@
 module Hyrax
   ##
   # Searches for all collections that are parents of a given collection.
-  class NestedCollectionsParentSearchBuilder < ::SearchBuilder
+  class NestedCollectionsParentSearchBuilder < ::Hyrax::CollectionSearchBuilder
     include Hyrax::FilterByType
     attr_reader :child, :page, :limit
 
