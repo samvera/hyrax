@@ -15,36 +15,46 @@ module Wings
       end
     end
 
-    def self.run(obj, keys)
-      # TODO: There is an open question about whether we want to treat all these relationships the same.  See Issue #3904.
-      attrs = keys.select { |k| k.to_s.end_with? '_ids' }.each_with_object({}) do |attr_name, mem|
-        mem[attr_name.to_sym] =
-          TransformerValueMapper.for(obj.try(attr_name)).result ||
-          TransformerValueMapper.for(attribute_ids_for(name: attr_name.chomp('_ids'), obj: obj)).result ||
-          TransformerValueMapper.for(attribute_ids_for(name: attr_name.chomp('_ids').pluralize, obj: obj)).result || []
+    def self.run(obj) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
+      attrs = obj.reflections.each_with_object({}) do |(key, reflection), mem|
+        case reflection
+        when ActiveFedora::Reflection::HasManyReflection,
+             ActiveFedora::Reflection::HasAndBelongsToManyReflection,
+             ActiveFedora::Reflection::IndirectlyContainsReflection
+          mem[:"#{key.to_s.singularize}_ids"] =
+            obj.association(key).ids_reader
+        when ActiveFedora::Reflection::DirectlyContainsReflection
+          mem[:"#{key.to_s.singularize}_ids"] =
+            Array(obj.public_send(reflection.name)).map(&:id)
+        when ActiveFedora::Reflection::FilterReflection,
+             ActiveFedora::Reflection::OrdersReflection,
+             ActiveFedora::Reflection::HasSubresourceReflection,
+             ActiveFedora::Reflection::BelongsToReflection,
+             ActiveFedora::Reflection::BasicContainsReflection
+          :noop
+        when ActiveFedora::Reflection::DirectlyContainsOneReflection
+          mem[:"#{key.to_s.singularize}_id"] =
+            obj.public_send(reflection.name)&.id
+        else
+          mem[reflection.foreign_key.to_sym] =
+            obj.public_send(reflection.foreign_key.to_sym)
+        end
       end
-      keys.each_with_object(attrs) do |attr_name, mem|
+
+      obj.class.delegated_attributes.keys.each_with_object(attrs) do |attr_name, mem|
         next unless obj.respond_to?(attr_name) && !mem.key?(attr_name.to_sym)
         mem[attr_name.to_sym] = TransformerValueMapper.for(obj.public_send(attr_name)).result
       end
     end
-
-    def self.attribute_ids_for(name:, obj:)
-      attribute_value = obj.try(name)
-      return if attribute_value.nil?
-      Array(attribute_value).map(&:id)
-    end
   end
 
   class FileAttributeTransformer
-    KEYMAP = {}.freeze
+    def run(obj)
+      keys = obj.metadata_node.class.fields
 
-    def run(obj, keys)
       attributes = keys.each_with_object({}) do |attr_name, mem|
         next unless obj.respond_to?(attr_name) && !mem.key?(attr_name.to_sym)
-        valkyrie_attribute = KEYMAP.fetch(attr_name.to_sym) { attr_name.to_sym }
-
-        mem[valkyrie_attribute] = TransformerValueMapper.for(obj.public_send(attr_name)).result
+        mem[attr_name.to_sym] = TransformerValueMapper.for(obj.public_send(attr_name)).result
       end
 
       attributes[:original_filename] = obj.original_name

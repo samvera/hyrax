@@ -2,20 +2,10 @@
 
 module Wings
   ##
+  # @api private
+  #
   # Transform AF object class to Valkyrie::Resource class representation.
   class OrmConverter
-    ##
-    # @param reflections [Hash<Symbol, Object>]
-    #
-    # @return [Array<Symbol>]
-    def self.relationship_keys_for(reflections:)
-      Hash(reflections).keys.map do |k|
-        key_string = k.to_s
-        next if key_string.include?('id') || key_string.include?('proxies')
-        key_string.singularize + '_ids'
-      end.compact
-    end
-
     ##
     # Selects an existing base class for the generated valkyrie class
     #
@@ -39,9 +29,6 @@ module Wings
     # rubocop:disable Metrics/MethodLength because metaprogramming a class
     #   results in long methods
     def self.to_valkyrie_resource_class(klass:)
-      relationship_keys = klass.respond_to?(:reflections) ? relationship_keys_for(reflections: klass.reflections) : []
-      reflection_id_keys = klass.respond_to?(:reflections) ? klass.reflections.keys.select { |k| k.to_s.end_with? '_id' } : []
-
       Class.new(base_for(klass: klass)) do
         # store a string we can resolve to the internal resource
         @internal_resource = klass.try(:to_rdf_representation) || klass.name
@@ -74,14 +61,30 @@ module Wings
           end
         end
 
-        relationship_keys.each do |linked_property_name|
-          next if fields.include?(linked_property_name.to_sym)
-          attribute linked_property_name.to_sym, ::Valkyrie::Types::Set.of(::Valkyrie::Types::ID)
+        # add reflection associations
+        ldp_reflections = (klass.try(:reflections) || []).select do |_key, reflection|
+          case reflection
+          when ActiveFedora::Reflection::FilterReflection,
+               ActiveFedora::Reflection::OrdersReflection,
+               ActiveFedora::Reflection::BasicContainsReflection,
+               ActiveFedora::Reflection::HasSubresourceReflection
+            false
+          else
+            true
+          end
         end
 
-        reflection_id_keys.each do |property_name|
-          next if fields.include?(property_name.to_sym)
-          attribute property_name, ::Valkyrie::Types::ID
+        ldp_reflections.each do |reflection_key, reflection|
+          if reflection.collection?
+            type           = ::Valkyrie::Types::Set.of(::Valkyrie::Types::ID)
+            attribute_name = (reflection_key.to_s.singularize + '_ids').to_sym
+          else
+            type           = ::Valkyrie::Types::ID.optional
+            attribute_name = (reflection_key.to_s.singularize + '_id').to_sym
+          end
+
+          next if fields.include?(attribute_name)
+          attribute attribute_name, type
         end
 
         def internal_resource

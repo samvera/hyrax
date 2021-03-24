@@ -2,10 +2,8 @@
 require 'wings/attribute_transformer'
 
 RSpec.describe Wings::AttributeTransformer do
-  let(:pcdm_object) { work }
-  let(:id)          { 'moomin123' }
-  let(:work)        { GenericWork.new(id: id, **attributes) }
-  let(:keys)        { attributes.keys }
+  let(:id)   { 'moomin123' }
+  let(:work) { GenericWork.new(id: id, **attributes) }
 
   let(:attributes) do
     {
@@ -15,16 +13,10 @@ RSpec.describe Wings::AttributeTransformer do
     }
   end
 
-  let(:uris) do
-    [RDF::URI('http://example.com/fake1'),
-     RDF::URI('http://example.com/fake2')]
-  end
-
-  subject { described_class.run(pcdm_object, keys) }
-
   it "transform the attributes" do
-    expect(subject).to include title: work.title,
-                               contributor: work.contributor.first,
-                               description: work.description.first
+    expect(described_class.run(work))
+      .to include title: work.title,
+                  contributor: work.contributor.first,
+                  description: work.description.first
   end
 end
