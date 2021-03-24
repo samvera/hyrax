@@ -45,6 +45,20 @@ module Hyrax
 
       ##
       # @api private
+      InWorksPopulator = lambda do |_options|
+        self.in_works_ids =
+          if persisted?
+            Hyrax.query_service
+                 .find_inverse_references_by(resource: model, property: :member_ids)
+                 .select(&:work?)
+                 .map(&:id)
+          else
+            []
+          end
+      end
+
+      ##
+      # @api private
       #
       # @note includes special handling for Wings, to support compatibility
       #   with `etag`-driven, application-side lock checks. for non-wings adapters
@@ -90,6 +104,7 @@ module Hyrax
 
       # pcdm relationships
       property :admin_set_id, prepopulator: ->(_opts) { self.admin_set_id = AdminSet::DEFAULT_ID }
+      property :in_works_ids, virtual: true, prepopulator: InWorksPopulator
       property :member_ids, default: [], type: Valkyrie::Types::Array
       property :member_of_collection_ids, default: [], type: Valkyrie::Types::Array
 
