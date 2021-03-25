@@ -1,4 +1,13 @@
 <% if (can?(:download, file_set.id) || can?(:destroy, file_set.id) || can?(:edit, file_set.id)) && !workflow_restriction?(file_set.parent) %>
+  <% if can?(:download, file_set.id) && !(can?(:edit, file_set.id) || can?(:destroy, file_set.id)) %>
+  <%= link_to t('.download'),
+              hyrax.download_path(file_set),
+              class: 'btn btn-default btn-sm',
+              title: t('.download_title', file_set: file_set),
+              target: "_blank",
+              id: "file_download",
+              data: { label: file_set.id } %>
+  <% else %>
   <div class="btn-group">
     <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button" id="dropdownMenu_<%= file_set.id %>" aria-haspopup="true" aria-expanded="false">
       <span class="sr-only"><%= t('.press_to') %> </span>
@@ -40,4 +49,5 @@
 
     </ul>
   </div>
+  <% end %>
 <% end %>
