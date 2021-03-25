@@ -37,9 +37,9 @@ RSpec.describe 'Deleting a valkyrie work', type: :feature do
       .to include(id: work.id.to_s, user: user)
 
     # deletes all members
-    # work.member_ids.each do |file_set_id|
-    #   expect { Hyrax.query_service.find_by(id: file_set_id) }
-    #     .to raise_error Hyrax::ObjectNotFoundError
-    # end
+    work.member_ids.each do |file_set_id|
+      expect { Hyrax.query_service.find_by(id: file_set_id) }
+        .to raise_error Hyrax::ObjectNotFoundError
+    end
   end
 end
