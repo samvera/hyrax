@@ -104,7 +104,7 @@ For more information, see [our documentation on developing your Hyrax-based appl
 Steps to deploy a Hyrax-based application to production will vary depending on your particular ecosystem but here are some methods and things to consider:
 
  * [Samvera Community Knowledge Base: Running in Production](https://samvera.github.io/service-stack.html)
- * [Helm Chart](./CONTAINERS.md#deploying-to-production) (for cloud-based Kubernetes-style deployments)
+ * [Helm Chart](./chart/hyrax/README.md) (for cloud-based Kubernetes-style deployments)
 
 ## Acknowledgments
 
