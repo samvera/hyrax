@@ -195,7 +195,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         delete :destroy, params: { id: work.id }
 
         expect { Hyrax.query_service.find_by(id: work.id) }
-          .to raise_error Hyrax::ObjectNotFoundError
+          .to raise_error Valkyrie::Persistence::ObjectNotFoundError
       end
 
       it 'tells the user what they deleted' do

@@ -69,7 +69,8 @@ module Hyrax
       {
         "id": resource.id.to_s,
         "created_at_dtsi": resource.created_at,
-        "updated_at_dtsi": resource.updated_at
+        "updated_at_dtsi": resource.updated_at,
+        "has_model_ssim": resource.internal_resource
       }
     end
 
