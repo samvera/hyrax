@@ -2,6 +2,7 @@
 
 Hyrax.publisher.subscribe(Hyrax::Listeners::AclIndexListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::ActiveFedoraAclIndexListener.new)
+Hyrax.publisher.subscribe(Hyrax::Listeners::MemberCleanupListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::MetadataIndexListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::BatchNotificationListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::ObjectLifecycleListener.new)
