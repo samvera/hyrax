@@ -8,6 +8,7 @@ Hyrax.publisher.subscribe(Hyrax::Listeners::ObjectLifecycleListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::FileSetLifecycleListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::FileSetLifecycleNotificationListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::ProxyDepositListener.new)
+Hyrax.publisher.subscribe(Hyrax::Listeners::TrophyCleanupListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::WorkflowListener.new)
 
 # Publish events from old style Hyrax::Callbacks to trigger the listeners
