@@ -203,6 +203,16 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
 
         expect(flash[:notice]).to include work.title.first
       end
+
+      context 'with trophies' do
+        before { 3.times { Trophy.create(work_id: work.id) } }
+
+        it 'deletes the trophies' do
+          delete :destroy, params: { id: work.id }
+
+          expect(Trophy.where(work_id: work.id.to_s)).to be_empty
+        end
+      end
     end
   end
 
