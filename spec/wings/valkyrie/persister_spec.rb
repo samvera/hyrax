@@ -31,7 +31,7 @@ RSpec.describe Wings::Valkyrie::Persister do
     let(:resource_class) { Wings::OrmConverter.to_valkyrie_resource_class(klass: af_resource_class) }
     let(:resource) { resource_class.new(title: ['Foo']) }
 
-    # it_behaves_like "a Valkyrie::Persister", :no_deep_nesting, :no_mixed_nesting
+    # it_behaves_like "a Valkyrie::Persister"
 
     it { is_expected.to respond_to(:save).with_keywords(:resource) }
     it { is_expected.to respond_to(:save_all).with_keywords(:resources) }

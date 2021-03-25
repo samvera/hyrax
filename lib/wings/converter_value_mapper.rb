@@ -73,7 +73,7 @@ module Wings
     end
 
     def result
-      collections = value.last.map { |id| ActiveFedora::Base.find(id.id) }
+      collections = value.last.map { |id| ActiveFedora::Base.find(id.to_s) }
       [:member_of_collections, collections]
     end
   end
@@ -86,7 +86,7 @@ module Wings
     end
 
     def result
-      members = value.last.map { |id| ActiveFedora::Base.find(id.id) }
+      members = value.last.map { |id| ActiveFedora::Base.find(id.to_s) }
       [:members, members]
     end
   end
