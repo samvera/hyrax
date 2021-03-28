@@ -43,21 +43,8 @@ ONBUILD COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 ONBUILD RUN bundle install --jobs "$(nproc)"
 ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
 
-FROM hyrax-base as hyrax-engine-dev
 
-ARG APP_PATH=.dassie
-ARG BUNDLE_WITHOUT=
-
-ENV HYRAX_ENGINE_PATH /app/samvera/hyrax-engine
-
-COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
-COPY --chown=1001:101 . /app/samvera/hyrax-engine
-
-RUN cd /app/samvera/hyrax-engine && bundle install --jobs "$(nproc)"
-RUN RAILS_ENV=production SECRET_KEY_BASE='fakesecret1234' DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
-
-
-FROM hyrax-engine-dev as hyrax-engine-dev-worker
+FROM hyrax-base as hyrax-worker
 
 ENV MALLOC_ARENA_MAX=2
 
@@ -77,4 +64,37 @@ RUN mkdir -p /app/fits && \
     chmod a+x /app/fits/fits.sh
 ENV PATH="${PATH}:/app/fits"
 
+ARG APP_PATH=.
+ARG BUNDLE_WITHOUT="development test"
+
+ONBUILD COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
+ONBUILD RUN bundle install --jobs "$(nproc)"
+
 CMD bundle exec sidekiq
+
+
+FROM hyrax-base as hyrax-engine-dev
+
+ARG APP_PATH=.dassie
+ARG BUNDLE_WITHOUT=
+
+ENV HYRAX_ENGINE_PATH /app/samvera/hyrax-engine
+
+COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
+COPY --chown=1001:101 . /app/samvera/hyrax-engine
+
+RUN cd /app/samvera/hyrax-engine && bundle install --jobs "$(nproc)"
+RUN RAILS_ENV=production SECRET_KEY_BASE='fakesecret1234' DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
+
+
+FROM hyrax-worker as hyrax-engine-dev-worker
+
+ARG APP_PATH=.dassie
+ARG BUNDLE_WITHOUT=
+
+ENV HYRAX_ENGINE_PATH /app/samvera/hyrax-engine
+
+COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
+COPY --chown=1001:101 . /app/samvera/hyrax-engine
+
+RUN cd /app/samvera/hyrax-engine && bundle install --jobs "$(nproc)"
