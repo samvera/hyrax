@@ -166,3 +166,11 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- define "hyrax.zk.fullname" -}}
 {{- printf "%s-%s" .Release.Name "zookeeper" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{- define "hyrax.redis.host" -}}
+{{- printf "%s-master" (include "hyrax.redis.fullname" .) -}}
+{{- end -}}
+
+{{- define "hyrax.redis.url" -}}
+{{- printf "redis://:%s@%s:%s" .Values.redis.password (include "hyrax.redis.host" .) "6379/0" -}}
+{{- end -}}
