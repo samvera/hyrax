@@ -45,6 +45,39 @@ spec:
                 name: {{ include "hyrax.fullname" . }}-env
             - secretRef:
                 name: {{ template "hyrax.fullname" . }}
+          volumeMounts:
+            - name: derivatives
+              mountPath: /app/samvera/derivatives
+            - name: uploads
+              subPath: file_cache
+              mountPath: /app/samvera/file_cache
+            - name: uploads
+              subPath: uploads
+              mountPath: /app/samvera/uploads
+          resources:
+            {{- toYaml .Values.worker.resources | nindent 12 }}
+      volumes:
+        - name: "derivatives"
+          {{- if and .Values.derivativesVolume.enabled .Values.derivativesVolume.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.derivativesVolume.existingClaim }}
+          {{- else if .Values.derivativesVolume.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ template "hyrax.fullname" . }}-derivatives
+          {{ else }}
+          emptyDir: {}
+          {{ end }}
+        - name: "uploads"
+          {{- if and .Values.uploadsVolume.enabled .Values.uploadsVolume.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.uploadsVolume.existingClaim }}
+          {{- else if .Values.uploadsVolume.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ template "hyrax.fullname" . }}-uploads
+          {{ else }}
+          emptyDir: {}
+          {{ end }}
+
       {{- with .Values.worker.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

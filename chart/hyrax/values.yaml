@@ -19,6 +19,24 @@ externalSolrUser: ""
 externalSolrPassword: ""
 externalSolrCollection: "hyrax"
 
+brandingVolume:
+  enabled: true
+  existingClaim: ""
+  size: 2Gi
+  storageClass: ""
+
+derivativesVolume:
+  enabled: true
+  existingClaim: ""
+  size: 10Gi
+  storageClass: ""
+
+uploadsVolume:
+  enabled: true
+  existingClaim: ""
+  size: 20Gi
+  storageClass: ""
+
 # configuration for an external/existing fcrepo service;
 #   ignored if `fcrepo.enabled` is true
 externalFcrepoHost: ""
@@ -109,6 +127,7 @@ worker:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  resources: {}
 
 fcrepo:
   enabled: true
