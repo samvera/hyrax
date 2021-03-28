@@ -98,6 +98,18 @@ readinessProbe:
 
 resources: {}
 
+worker:
+  replicaCount: 1
+  image:
+    repository: samveralabs/dassie-worker
+    pullPolicy: IfNotPresent
+    tag: ""
+  imagePullSecrets: []
+  podSecurityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
 fcrepo:
   enabled: true
   externalDatabaseUsername: "hyrax"
