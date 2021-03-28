@@ -95,8 +95,50 @@ spec:
               path: {{ .Values.readinessProbe.path | default "/" }}
               port: 3000
           {{- end }}
+          volumeMounts:
+            - name: branding
+              mountPath: /app/samvera/branding
+            - name: derivatives
+              mountPath: /app/samvera/derivatives
+            - name: uploads
+              subPath: file_cache
+              mountPath: /app/samvera/file_cache
+            - name: uploads
+              subPath: uploads
+              mountPath: /app/samvera/uploads
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: "branding"
+          {{- if and .Values.brandingVolume.enabled .Values.brandingVolume.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.brandingVolume.existingClaim }}
+          {{- else if .Values.brandingVolume.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ template "hyrax.fullname" . }}-branding
+          {{ else }}
+          emptyDir: {}
+          {{ end }}
+        - name: "derivatives"
+          {{- if and .Values.derivativesVolume.enabled .Values.derivativesVolume.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.derivativesVolume.existingClaim }}
+          {{- else if .Values.derivativesVolume.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ template "hyrax.fullname" . }}-derivatives
+          {{ else }}
+          emptyDir: {}
+          {{ end }}
+        - name: "uploads"
+          {{- if and .Values.uploadsVolume.enabled .Values.uploadsVolume.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.uploadsVolume.existingClaim }}
+          {{- else if .Values.uploadsVolume.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ template "hyrax.fullname" . }}-uploads
+          {{ else }}
+          emptyDir: {}
+          {{ end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

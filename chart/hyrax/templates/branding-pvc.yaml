@@ -1,0 +1,14 @@
+{{- if and .Values.brandingVolume.enabled (not .Values.brandingVolume.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "hyrax.fullname" . }}-branding
+  labels:
+    {{- include "hyrax.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.brandingVolume.size }}
+{{- end }}

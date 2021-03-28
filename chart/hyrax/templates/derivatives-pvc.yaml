@@ -1,0 +1,14 @@
+{{- if and .Values.derivativesVolume.enabled (not .Values.derivativesVolume.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "hyrax.fullname" . }}-derivatives
+  labels:
+    {{- include "hyrax.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.derivativesVolume.size }}
+{{- end }}

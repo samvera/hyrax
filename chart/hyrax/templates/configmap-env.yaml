@@ -13,6 +13,12 @@ data:
   {{- if .Values.memcached.enabled }}
   MEMCACHED_HOST: {{ template "hyrax.memcached.fullname" . }}
   {{- end }}
+  {{- if .Values.derivativesVolume.enabled }}
+  HYRAX_BRANDING_PATH: "/app/samvera/branding"
+  HYRAX_DERIVATIVES_PATH: "/app/samvera/derivatives"
+  HYRAX_CACHE_PATH: "/app/samvera/file_cache"
+  HYRAX_UPLOAD_PATH: "/app/samvera/uploads"
+  {{- end }}
   RACK_ENV: production
   RAILS_ENV: production
   {{- if .Values.redis.enabled }}
