@@ -386,6 +386,18 @@ module Hyrax
     # @!group Valkyrie
 
     ##
+    # @return [Valkyrie::StorageAdapter]
+    def branding_storage_adapter
+      @branding_storage_adapter ||= Valkyrie::StorageAdapter.find(:branding_disk)
+    end
+
+    ##
+    # @param [#to_sym] adapter
+    def branding_storage_adapter=(adapter)
+      @branding_storage_adapter = Valkyrie::StorageAdapter.find(adapter.to_sym)
+    end
+
+    ##
     # @return [#save, #save_all, #delete, #wipe!] an indexing adapter
     def index_adapter
       @index_adapter ||= Valkyrie::IndexingAdapter.find(:null_index)
