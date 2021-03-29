@@ -257,83 +257,68 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
     end
 
     context "updating a collections branding metadata" do
+      let(:uploaded) { FactoryBot.create(:uploaded_file) }
+
       it "saves banner metadata" do
-        val = double("/public/banner.gif")
-        allow(val).to receive(:file_url).and_return("/public/banner.gif")
-        allow(Hyrax::UploadedFile).to receive(:find).with(["1"]).and_return([val])
+        put :update, params: { id: collection, banner_files: [uploaded.id], collection: { creator: ['Emily'] }, update_collection: true }
 
-        allow(File).to receive(:split).with(any_args).and_return(["banner.gif"])
-        allow(FileUtils).to receive(:cp).with(any_args).and_return(nil)
-
-        put :update, params: { id: collection, banner_files: [1], collection: { creator: ['Emily'] }, update_collection: true }
-        collection.reload
-        expect(CollectionBrandingInfo.where(collection_id: collection.id, role: "banner").where("local_path LIKE '%banner.gif'")).to exist
+        expect(CollectionBrandingInfo
+                 .where(collection_id: collection.id, role: "banner")
+                 .where("local_path LIKE '%#{uploaded.file.filename}'"))
+          .to exist
       end
 
       it "don't save banner metadata" do
-        val = double("/public/banner.gif")
-        allow(val).to receive(:file_url).and_return("/public/banner.gif")
-        allow(Hyrax::UploadedFile).to receive(:find).with(["1"]).and_return([val])
-
-        allow(File).to receive(:split).with(any_args).and_return(["banner.gif"])
-        allow(FileUtils).to receive(:cp).with(any_args).and_return(nil)
-
-        put :update, params: { id: collection, banner_files: [1], collection: { creator: ['Emily'] } }
-        collection.reload
-        expect(CollectionBrandingInfo.where(collection_id: collection.id, role: "banner").where("local_path LIKE '%banner.gif'")).not_to exist
+        put :update, params: { id: collection, banner_files: [uploaded.id], collection: { creator: ['Emily'] } }
+        expect(CollectionBrandingInfo
+                 .where(collection_id: collection.id, role: "banner")
+                 .where("local_path LIKE '%#{uploaded.file.filename}'"))
+          .not_to exist
       end
 
       it "saves logo metadata" do
-        val = double(["/public/logo.gif"])
-        allow(val).to receive(:file_url).and_return("/public/logo.gif")
-        allow(Hyrax::UploadedFile).to receive(:find).with("1").and_return(val)
+        put :update, params: { id: collection,
+                               logo_files: [uploaded.id],
+                               alttext: ["Logo alt Text"],
+                               linkurl: ["http://abc.com"],
+                               collection: { creator: ['Emily'] },
+                               update_collection: true }
 
-        allow(File).to receive(:split).with(any_args).and_return(["logo.gif"])
-        allow(FileUtils).to receive(:cp).with(any_args).and_return(nil)
-
-        put :update, params: { id: collection, logo_files: [1], alttext: ["Logo alt Text"], linkurl: ["http://abc.com"], collection: { creator: ['Emily'] }, update_collection: true }
-        collection.reload
-
-        expect(CollectionBrandingInfo.where(collection_id: collection.id, role: "logo", alt_text: "Logo alt Text", target_url: "http://abc.com").where("local_path LIKE '%logo.gif'")).to exist
+        expect(CollectionBrandingInfo
+                 .where(collection_id: collection.id, role: "logo", alt_text: "Logo alt Text", target_url: "http://abc.com")
+                 .where("local_path LIKE '%#{uploaded.file.filename}'"))
+          .to exist
       end
 
       context 'where the linkurl is not a valid http|http link' do
+        let(:uploaded) { FactoryBot.create(:uploaded_file) }
+
         it "does not save linkurl containing html; target_url is empty" do
-          val = double(["/public/logo.gif"])
-          allow(val).to receive(:file_url).and_return("/public/logo.gif")
-          allow(Hyrax::UploadedFile).to receive(:find).with("1").and_return(val)
-
-          allow(File).to receive(:split).with(any_args).and_return(["logo.gif"])
-          allow(FileUtils).to receive(:cp).with(any_args).and_return(nil)
-
-          put :update, params: { id: collection, logo_files: [1], alttext: ["Logo alt Text"], linkurl: ["<script>remove_me</script>"], collection: { creator: ['Emily'] }, update_collection: true }
-          collection.reload
+          put :update, params: { id: collection,
+                                 logo_files: [uploaded.id],
+                                 alttext: ["Logo alt Text"], linkurl: ["<script>remove_me</script>"],
+                                 collection: { creator: ['Emily'] },
+                                 update_collection: true }
 
           expect(
             CollectionBrandingInfo.where(
               collection_id: collection.id,
-              role: "logo",
-              alt_text: "Logo alt Text",
               target_url: "<script>remove_me</script>"
             ).where("target_url LIKE '%remove_me%)'")
           ).not_to exist
         end
 
         it "does not save linkurl containing dodgy protocol; target_url is empty" do
-          val = double(["/public/logo.gif"])
-          allow(val).to receive(:file_url).and_return("/public/logo.gif")
-          allow(Hyrax::UploadedFile).to receive(:find).with("1").and_return(val)
+          put :update, params: { id: collection,
+                                 logo_files: [uploaded.id],
+                                 alttext: ["Logo alt Text"],
+                                 linkurl: ['javascript:alert("remove_me")'],
+                                 collection: { creator: ['Emily'] },
+                                 update_collection: true }
 
-          allow(File).to receive(:split).with(any_args).and_return(["logo.gif"])
-          allow(FileUtils).to receive(:cp).with(any_args).and_return(nil)
-
-          put :update, params: { id: collection, logo_files: [1], alttext: ["Logo alt Text"], linkurl: ['javascript:alert("remove_me")'], collection: { creator: ['Emily'] }, update_collection: true }
-          collection.reload
           expect(
             CollectionBrandingInfo.where(
               collection_id: collection.id,
-              role: "logo",
-              alt_text: "Logo alt Text",
               target_url: 'javascript:alert("remove_me")'
             ).where("target_url LIKE '%remove_me%)'")
           ).not_to exist
