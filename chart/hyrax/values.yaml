@@ -117,7 +117,7 @@ readinessProbe:
 resources: {}
 
 worker:
-  replicaCount: 1
+  replicaCount: 3
   image:
     repository: samveralabs/dassie-worker
     pullPolicy: IfNotPresent
