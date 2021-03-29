@@ -30,7 +30,7 @@ RSpec.describe 'Deleting a valkyrie work', type: :feature do
     expect(page).to have_content 'Deleted babys first monograph'
 
     expect { Hyrax.query_service.find_by(id: work.id) }
-      .to raise_error Hyrax::ObjectNotFoundError
+      .to raise_error Valkyrie::Persistence::ObjectNotFoundError
 
     # publishes object.deleted
     expect(listener.object_deleted&.payload)
@@ -39,7 +39,7 @@ RSpec.describe 'Deleting a valkyrie work', type: :feature do
     # deletes all members
     work.member_ids.each do |file_set_id|
       expect { Hyrax.query_service.find_by(id: file_set_id) }
-        .to raise_error Hyrax::ObjectNotFoundError
+        .to raise_error Valkyrie::Persistence::ObjectNotFoundError
     end
   end
 end
