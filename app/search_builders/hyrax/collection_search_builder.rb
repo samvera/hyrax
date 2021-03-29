@@ -23,6 +23,11 @@ module Hyrax
       "title_si"
     end
 
+    # This overrides the models in FilterByType
+    def models
+      collection_classes
+    end
+
     def with_access(access)
       @access = access
       super(access)

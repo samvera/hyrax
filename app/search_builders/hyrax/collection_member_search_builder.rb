@@ -41,6 +41,11 @@ module Hyrax
       solr_parameters[:fq] << "#{collection_membership_field}:#{collection.id}"
     end
 
+    # This overrides the models in FilterByType
+    def models
+      work_classes + collection_classes
+    end
+
     private
 
     def only_works?
