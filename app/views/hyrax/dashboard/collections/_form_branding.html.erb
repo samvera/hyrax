@@ -60,7 +60,7 @@
             <div class="banner-image">
               <i><%= image_tag(f.object.banner_info[:relative_path],
                                size: "800x100",
-                               alt: "Unable to display banner: #{f.object.banner_info[:file]}") %></i>
+                               alt: f.object.banner_info[:alttext].presence || f.object.banner_info[:file]) %></i>
             </div>
             <% end %>
           </div> <!-- end banner -->
