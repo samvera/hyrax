@@ -353,18 +353,15 @@ RSpec.describe Hyrax::CollectionPresenter do
       )
     end
 
-    before do
-      allow(CollectionBrandingInfo).to receive(:where).with(collection_id: '123', role: 'banner').and_return([banner_info])
-      allow(banner_info).to receive(:local_path).and_return("/temp/public/branding/123/banner/banner.gif")
-      allow(CollectionBrandingInfo).to receive(:where).with(collection_id: '123', role: 'logo').and_return([logo_info])
-      allow(logo_info).to receive(:local_path).and_return("/temp/public/branding/123/logo/logo.gif")
-    end
-
     it "banner check" do
+      tempfile = Tempfile.new('my_file')
+      banner_info.save(tempfile.path)
       expect(presenter.banner_file).to eq("/branding/123/banner/banner.gif")
     end
 
     it "logo check" do
+      tempfile = Tempfile.new('my_file')
+      logo_info.save(tempfile.path)
       expect(presenter.logo_record).to eq([{ file: "logo.gif", file_location: "/branding/123/logo/logo.gif", alttext: "This is the logo", linkurl: "http://logo.com" }])
     end
   end

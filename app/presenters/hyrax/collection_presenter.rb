@@ -119,25 +119,21 @@ module Hyrax
       Hyrax::Engine.routes.url_helpers.dashboard_collection_path(id, locale: I18n.locale)
     end
 
+    ##
+    # @return [#to_s, nil] a download path for the banner file
     def banner_file
-      # Find Banner filename
-      ci = CollectionBrandingInfo.where(collection_id: id, role: "banner")
-      "/" + ci[0].local_path.split("/")[-4..-1].join("/") unless ci.empty?
+      banner = CollectionBrandingInfo.find_by(collection_id: id, role: "banner")
+      "/" + banner.local_path.split("/")[-4..-1].join("/") if banner
     end
 
     def logo_record
-      logo_info = []
-      # Find Logo filename, alttext, linktext
-      cis = CollectionBrandingInfo.where(collection_id: id, role: "logo")
-      return if cis.empty?
-      cis.each do |coll_info|
-        logo_file = File.split(coll_info.local_path).last
-        file_location = "/" + coll_info.local_path.split("/")[-4..-1].join("/") unless logo_file.empty?
-        alttext = coll_info.alt_text
-        linkurl = coll_info.target_url
-        logo_info << { file: logo_file, file_location: file_location, alttext: alttext, linkurl: linkurl }
+      CollectionBrandingInfo.where(collection_id: id, role: "logo")
+                            .select(:local_path, :alt_text, :target_url).map do |logo|
+        { alttext: logo.alt_text,
+          file: File.split(logo.local_path).last,
+          file_location: "/#{logo.local_path.split('/')[-4..-1].join('/')}",
+          linkurl: logo.target_url }
       end
-      logo_info
     end
 
     # A presenter for selecting a work type to create
