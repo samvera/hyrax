@@ -82,9 +82,10 @@ module Hyrax
           # Find Banner filename
           banner_info = CollectionBrandingInfo.where(collection_id: id).where(role: "banner")
           banner_file = File.split(banner_info.first.local_path).last unless banner_info.empty?
+          alttext = banner_info.first.alt_text unless banner_info.empty?
           file_location = banner_info.first.local_path unless banner_info.empty?
           relative_path = "/" + banner_info.first.local_path.split("/")[-4..-1].join("/") unless banner_info.empty?
-          { file: banner_file, full_path: file_location, relative_path: relative_path }
+          { file: banner_file, full_path: file_location, relative_path: relative_path, alttext: alttext }
         end
       end
 
