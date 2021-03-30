@@ -18,7 +18,6 @@ module Hyrax
     # Open the output file to write and yield the block to the
     # file. It makes the directories in the path if necessary.
     def self.output_file(directives, &blk)
-      # name = derivative_path_factory.derivative_path_for_reference(object, destination_name)
       raise ArgumentError, "No :url was provided in the transcoding directives" unless directives.key?(:url)
       uri = URI(directives.fetch(:url))
       raise ArgumentError, "Must provide a file uri" unless uri.scheme == 'file'
@@ -27,7 +26,10 @@ module Hyrax
       File.open(uri.path, 'wb', &blk)
     end
 
+    ##
+    # @deprecated
     def self.derivative_path_factory
+      Deprecation.warn("Use 'Hyrax::DerivativePath' instead.")
       DerivativePath
     end
   end
