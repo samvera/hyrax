@@ -82,7 +82,7 @@ module Hyrax
 
     initializer 'requires' do
       require 'power_converters'
-      require 'wings'
+      require 'wings' unless Hyrax.config.disable_wings
     end
 
     initializer 'routing' do

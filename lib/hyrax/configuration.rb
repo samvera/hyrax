@@ -367,6 +367,14 @@ module Hyrax
       @banner_image ||= 'https://user-images.githubusercontent.com/101482/29949206-ffa60d2c-8e67-11e7-988d-4910b8787d56.jpg'
     end
 
+    ##
+    # @return [Boolean]
+    def disable_wings
+      return @disable_wings unless @disable_wings.nil?
+      ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_SKIP_WINGS', false))
+    end
+    attr_writer :disable_wings
+
     attr_writer :display_media_download_link
     # @return [Boolean]
     def display_media_download_link?
