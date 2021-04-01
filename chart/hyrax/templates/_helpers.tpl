@@ -174,3 +174,13 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- define "hyrax.redis.url" -}}
 {{- printf "redis://:%s@%s:%s" .Values.redis.password (include "hyrax.redis.host" .) "6379/0" -}}
 {{- end -}}
+
+{{- define "hyrax.sharedPvcAccessModes" -}}
+{{- if .Values.worker.enabled }}
+accessModes:
+  - ReadWriteMany
+{{- else }}
+accessModes:
+  - ReadWriteOnce
+{{- end }}
+{{- end -}}

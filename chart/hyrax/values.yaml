@@ -19,20 +19,27 @@ externalSolrUser: ""
 externalSolrPassword: ""
 externalSolrCollection: "hyrax"
 
+# an existing volume containing a Hyrax-based application
+# must be a ReadWriteMany volume if worker is enabled
+applicationExistingClaim: ""
+
 brandingVolume:
   enabled: true
+  # the name of an existing volume claim; must be an ReadWriteMany volume
   existingClaim: ""
   size: 2Gi
   storageClass: ""
 
 derivativesVolume:
   enabled: true
+  # the name of an existing volume claim; must be an ReadWriteMany volume
   existingClaim: ""
   size: 10Gi
   storageClass: ""
 
 uploadsVolume:
   enabled: true
+  # the name of an existing volume claim; must be an ReadWriteMany volume
   existingClaim: ""
   size: 20Gi
   storageClass: ""
@@ -117,6 +124,7 @@ readinessProbe:
 resources: {}
 
 worker:
+  enabled: true
   replicaCount: 3
   image:
     repository: samveralabs/dassie-worker
