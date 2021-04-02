@@ -28,6 +28,8 @@ spec:
                 name: {{ include "hyrax.fullname" . }}-env
             - secretRef:
                 name: {{ template "hyrax.fullname" . }}
+          env:
+            {{- toYaml .Values.worker.extraEnvVars | nindent 12 }}
           command:
             - sh
             - -c
@@ -46,6 +48,8 @@ spec:
                 name: {{ include "hyrax.fullname" . }}-env
             - secretRef:
                 name: {{ template "hyrax.fullname" . }}
+          env:
+            {{- toYaml .Values.worker.extraEnvVars | nindent 12 }}
           volumeMounts:
             - name: derivatives
               mountPath: /app/samvera/derivatives

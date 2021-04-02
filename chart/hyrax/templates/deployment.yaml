@@ -30,6 +30,8 @@ spec:
                 name: {{ include "hyrax.fullname" . }}-env
             - secretRef:
                 name: {{ include "hyrax.fullname" . }}
+          env:
+            {{- toYaml .Values.extraEnvVars | nindent 12 }}
           command:
             - sh
             - -c
@@ -45,6 +47,8 @@ spec:
                 name: {{ include "hyrax.fullname" . }}-env
             - secretRef:
                 name: {{ template "hyrax.fullname" . }}
+          env:
+            {{- toYaml .Values.extraEnvVars | nindent 12 }}
           command:
             - sh
             - -c
@@ -67,6 +71,8 @@ spec:
                 name: {{ include "hyrax.fullname" . }}-env
             - secretRef:
                 name: {{ template "hyrax.fullname" . }}
+          env:
+            {{- toYaml .Values.extraEnvVars | nindent 12 }}
           ports:
             - name: http
               containerPort: 3000
