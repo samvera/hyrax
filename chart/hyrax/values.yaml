@@ -44,6 +44,19 @@ uploadsVolume:
   size: 20Gi
   storageClass: ""
 
+# additional volumes and volume mounts, evaluated as a template, e.g.
+#
+#  extraVolumeMounts
+#    - name: local-app
+#      mountPath: /app/samvera/hyrax-webapp
+#  extraVolumes:
+#    - name: local-app
+#      hostPath:
+#        path: /src
+#        type: DirectoryOrCreate
+extraVolumeMounts: []
+extraVolumes: []
+
 # configuration for an external/existing fcrepo service;
 #   ignored if `fcrepo.enabled` is true
 externalFcrepoHost: ""
@@ -130,6 +143,8 @@ worker:
     repository: samveralabs/dassie-worker
     pullPolicy: IfNotPresent
     tag: ""
+  extraVolumeMounts: []
+  extraVolumes: []
   imagePullSecrets: []
   podSecurityContext: {}
   nodeSelector: {}
