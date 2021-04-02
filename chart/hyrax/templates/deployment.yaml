@@ -110,6 +110,9 @@ spec:
             - name: application
               mountPath: /app/samvera/hyrax-webapp
             {{- end }}
+            {{- with .Values.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -147,6 +150,9 @@ spec:
         - name: "application"
           persistentVolumeClaim:
             claimName: {{ .Values.applicationExistingClaim }}
+        {{- end }}
+        {{- with .Values.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
