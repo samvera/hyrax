@@ -19,6 +19,15 @@ externalSolrUser: ""
 externalSolrPassword: ""
 externalSolrCollection: "hyrax"
 
+# additional environment variables, evaluated as a template. e.g.
+#
+#  extraEnvVars:
+#    - name: RAILS_SERVE_STATIC_FILES
+#      value: "1"
+#    - name: GOOGLE_OAUTH_APP_NAME
+#      value: "my_hyrax_app"
+extraEnvVars: []
+
 # an existing volume containing a Hyrax-based application
 # must be a ReadWriteMany volume if worker is enabled
 applicationExistingClaim: ""
