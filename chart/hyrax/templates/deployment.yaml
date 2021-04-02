@@ -106,6 +106,10 @@ spec:
             - name: uploads
               subPath: uploads
               mountPath: /app/samvera/uploads
+            {{- if .Values.applicationExistingClaim }}
+            - name: application
+              mountPath: /app/samvera/hyrax-webapp
+            {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
@@ -139,6 +143,11 @@ spec:
           {{ else }}
           emptyDir: {}
           {{ end }}
+        {{- if .Values.applicationExistingClaim }}
+        - name: "application"
+          persistentVolumeClaim:
+            claimName: {{ .Values.applicationExistingClaim }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

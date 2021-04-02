@@ -1,3 +1,4 @@
+{{- if .Values.worker.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -54,6 +55,10 @@ spec:
             - name: uploads
               subPath: uploads
               mountPath: /app/samvera/uploads
+            {{- if .Values.applicationExistingClaim }}
+            - name: application
+              mountPath: /app/samvera/hyrax-webapp
+            {{- end }}
           resources:
             {{- toYaml .Values.worker.resources | nindent 12 }}
       volumes:
@@ -77,7 +82,11 @@ spec:
           {{ else }}
           emptyDir: {}
           {{ end }}
-
+        {{- if .Values.applicationExistingClaim }}
+        - name: "application"
+          persistentVolumeClaim:
+            claimName: {{ .Values.applicationExistingClaim }}
+        {{- end }}
       {{- with .Values.worker.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -90,3 +99,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- end }}
