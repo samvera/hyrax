@@ -74,13 +74,11 @@ services:
       - db:/var/lib/postgresql/data
 
   fcrepo:
-    image: cbeer/fcrepo4:4.7
+    image: samvera/fcrepo4:4.7.5
     volumes:
-      - fcrepo:/data
+      - fcrepo:/data:cached
     ports:
       - 8080:8080
-    environment:
-      - JAVA_OPTS=${JAVA_OPTS} -Dfcrepo.modeshape.configuration="classpath:/config/file-simple/repository.json" -Dfcrepo.object.directory="/data/objects" -Dfcrepo.binary.directory="/data/binaries"
 
   memcached:
     image: bitnami/memcached
