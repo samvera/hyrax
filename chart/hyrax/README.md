@@ -43,6 +43,7 @@ The chart populates the following environment variables:
 | FCREPO_HOST       | Fedora Commons host            | n/a                    |
 | FCREPO_PORT       | Fedora Commons port            | n/a                    |
 | FCREPO_REST_PATH  | Fedora Commons REST endpoint   | n/a                    |
+| SKIP_HYRAX_ENGINE_SEED   | Flag to load Hyrax engine seed file | n/a                    |
 | SOLR_ADMIN_USER   | Solr user for basic auth       | n/a                    |
 | SOLR_ADMIN_PASSWORD | Solr password for basic auth | n/a                    |
 | SOLR_COLLECTION_NAME | The name of the solr collection to use | n/a         |

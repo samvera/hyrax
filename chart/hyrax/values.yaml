@@ -10,6 +10,9 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+# use true to skip loading Hyrax engine database seed file
+skipHyraxEngineSeed: false
+
 # use false to skip the configset management init container
 loadSolrConfigSet: true
 # the host and auth details for an external solr service;

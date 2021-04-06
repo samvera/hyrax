@@ -6,7 +6,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-Hyrax::Engine.load_seed
+Hyrax::Engine.load_seed unless ActiveModel::Type::Boolean.new.cast(ENV["SKIP_HYRAX_ENGINE_SEED"])
 
 puts "\n== Loading users"
 User.where(email: 'admin@example.com').first_or_create do |f|
