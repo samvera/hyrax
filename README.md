@@ -1,4 +1,16 @@
-# Hyrax: A Digital Repository Framework
+# This is the Oregon Digital Analytics for Hyrax project page
+
+Here you will find information about the project, the issue board, and code.
+
+We will be working to implement some of the work from the Hyrax Analytics Working Group (HAWG).  We want to thank everyone who participated in that working group for all of their effort and for the users stories, use cases, mockups, and priorities thay created. Information about the group as well as the artifacts from their works can be found at https://wiki.lyrasis.org/pages/viewpage.action?pageId=87461330
+
+# Contacts:
+
+For questions on this project please contact:
+- Franny Gaede  - mfgaede@uoregon.edu
+- Margaret Mellinger - margaret.mellinger@oregonstate.edu
+- Kevin Kochanski - kevin@notch8.com
+- Crystal Richardson - crystal@notch8.com
 
 ![Samvera's Hyrax Logo](https://raw.githubusercontent.com/samvera/hyrax/gh-pages/assets/images/hyrax_logo_horizontal_white_background.png)
 
