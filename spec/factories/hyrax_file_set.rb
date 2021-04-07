@@ -43,5 +43,16 @@ FactoryBot.define do
         files { [valkyrie_create(:hyrax_file_metadata), valkyrie_create(:hyrax_file_metadata)] }
       end
     end
+
+    trait :in_work do
+      transient do
+        work { build(:hyrax_work) }
+      end
+
+      after(:create) do |file_set, evaluator|
+        evaluator.work.member_ids += [file_set.id]
+        Hyrax.persister.save(resource: evaluator.work)
+      end
+    end
   end
 end

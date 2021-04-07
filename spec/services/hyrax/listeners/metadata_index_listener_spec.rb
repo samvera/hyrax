@@ -12,6 +12,25 @@ RSpec.describe Hyrax::Listeners::MetadataIndexListener do
     allow(Hyrax).to receive(:index_adapter).and_return(fake_adapter)
   end
 
+  describe '#on_object_deleted' do
+    let(:event_type) { :on_object_delted }
+
+    it 'reindexes the object on the configured adapter' do
+      expect { listener.on_object_deleted(event) }
+        .to change { fake_adapter.deleted_resources }
+        .to contain_exactly(resource)
+    end
+
+    context 'when it gets a non-resource as payload' do
+      let(:resource) { ActiveFedora::Base.new }
+
+      it 'returns as a no-op' do
+        expect { listener.on_object_deleted(event) }
+          .not_to change { fake_adapter.deleted_resources }
+      end
+    end
+  end
+
   describe '#on_object_metadata_updated' do
     let(:event_type) { :on_object_metadata_updated }
 

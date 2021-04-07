@@ -44,6 +44,17 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     before { sign_in user }
   end
 
+  shared_context 'with a user with edit access' do
+    include_context 'with a logged in user'
+
+    let(:work) do
+      FactoryBot.valkyrie_create(:hyrax_work,
+                                 alternate_ids: [id],
+                                 title: title,
+                                 edit_users: [user])
+    end
+  end
+
   describe '#create' do
     it 'redirects to new user login' do
       get :create, params: {}
@@ -156,6 +167,55 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     end
   end
 
+  describe '#destroy' do
+    it 'redirect to user login' do
+      delete :destroy, params: { id: work.id }
+      expect(response).to redirect_to paths.new_user_session_path(locale: :en)
+    end
+
+    context 'with a logged in user' do
+      include_context 'with a logged in user'
+
+      it 'gives 401 unauthorized' do
+        delete :destroy, params: { id: work.id }
+        expect(response.status).to eq 401
+      end
+    end
+
+    context 'when the user has edit access' do
+      include_context 'with a user with edit access'
+
+      it 'is a success' do
+        delete :destroy, params: { id: work.id }
+
+        expect(response.status).to eq 302 # redirect on success
+      end
+
+      it 'deletes the work' do
+        delete :destroy, params: { id: work.id }
+
+        expect { Hyrax.query_service.find_by(id: work.id) }
+          .to raise_error Valkyrie::Persistence::ObjectNotFoundError
+      end
+
+      it 'tells the user what they deleted' do
+        delete :destroy, params: { id: work.id }
+
+        expect(flash[:notice]).to include work.title.first
+      end
+
+      context 'with trophies' do
+        before { 3.times { Trophy.create(work_id: work.id) } }
+
+        it 'deletes the trophies' do
+          delete :destroy, params: { id: work.id }
+
+          expect(Trophy.where(work_id: work.id.to_s)).to be_empty
+        end
+      end
+    end
+  end
+
   describe '#edit' do
     it 'gives a 404 for a missing object' do
       expect { get :edit, params: { id: 'missing_id' } }
@@ -179,14 +239,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     end
 
     context 'when the user has edit access' do
-      include_context 'with a logged in user'
-
-      before do
-        allow(controller.current_ability)
-          .to receive(:can?)
-          .with(any_args)
-          .and_return true
-      end
+      include_context 'with a user with edit access'
 
       it 'is a success' do
         get :edit, params: { id: work.id }
@@ -328,16 +381,9 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     end
 
     context 'when the user has edit access' do
-      include_context 'with a logged in user'
+      include_context 'with a user with edit access'
 
-      before do
-        AdminSet.find_or_create_default_admin_set_id
-
-        allow(controller.current_ability)
-          .to receive(:can?)
-          .with(any_args)
-          .and_return true
-      end
+      before { AdminSet.find_or_create_default_admin_set_id }
 
       it 'redirects to updated work' do
         patch :update, params: { id: id, test_simple_work: { title: 'new title' } }

@@ -30,7 +30,7 @@ A Hyrax-based application includes lots of dependencies. We provide a [Docker im
 You can also try [Running Hyrax-based application in local VM](https://github.com/samvera/hyrax/wiki/Hyrax-Development-Guide#running-hyrax-based-application-in-local-vm) which uses Ubuntu.
 
 This document contains instructions specific to setting up an app with __Hyrax
-v3.0.0-rc4__. If you are looking for instructions on installing a different
+v3.0.1__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
@@ -48,7 +48,7 @@ Hyrax requires the following software to work:
 1. A SQL RDBMS (MySQL, PostgreSQL), though **note** that SQLite will be used by default if you're looking to get up and running quickly
 1. [Redis](http://redis.io/), a key-value store
 1. [ImageMagick](http://www.imagemagick.org/) with JPEG-2000 support
-1. [FITS](#characterization) version 1.0.x (1.0.5 is known to be good, 1.1.0 is known to be bad: https://github.com/harvard-lts/fits/issues/140)
+1. [FITS](#characterization) (tested up to version 1.5.0 -- avoid version 1.1.0)
 1. [LibreOffice](#derivatives)
 1. [ffmpeg](#transcoding)
 
@@ -105,11 +105,11 @@ Starting up Redis will depend on your operating system, and may in fact already 
 
 ## Rails
 
-Hyrax requires Rails 5. We recommend the latest Rails 5.2 release.
+Hyrax requires Rails 5. We recommend the latest Rails 5.2.5 release.
 
 ```
 # If you don't already have Rails at your disposal...
-gem install rails -v 5.2.4.4
+gem install rails -v 5.2.5
 ```
 
 ### JavaScript runtime
@@ -125,7 +125,7 @@ NOTE: The steps need to be done in order to create a new Hyrax based app.
 Generate a new Rails application using the template.
 
 ```
-rails _5.2.4.4_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v3.0.0-rc4/template.rb
+rails _5.2.5_ new my_app -m https://raw.githubusercontent.com/samvera/hyrax/v3.0.1/template.rb
 ```
 
 Generating a new Rails application using Hyrax's template above takes cares of a number of steps for you, including:

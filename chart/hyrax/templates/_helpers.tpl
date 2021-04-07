@@ -70,6 +70,14 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" .Release.Name "fcrepo" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "hyrax.fcrepo.host" -}}
+{{- if .Values.fcrepo.enabled }}
+{{- include "hyrax.fcrepo.fullname" . }}
+{{- else }}
+{{- .Values.externalFcrepoHost }}
+{{- end }}
+{{- end -}}
+
 {{- define "hyrax.memcached.fullname" -}}
 {{- printf "%s-%s" .Release.Name "memcached" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -78,6 +86,37 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" .Release.Name "postgresql" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "hyrax.postgresql.host" -}}
+{{- if .Values.postgresql.enabled }}
+{{- include "hyrax.postgresql.fullname" . }}
+{{- else }}
+{{- .Values.externalPostgresql.host }}
+{{- end }}
+{{- end -}}
+
+{{- define "hyrax.postgresql.database" -}}
+{{- if .Values.postgresql.enabled }}
+{{- .Values.postgresql.postgresqlDatabase }}
+{{- else }}
+{{- .Values.externalPostgresql.database | default ( include "hyrax.fullname" . ) }}
+{{- end }}
+{{- end -}}
+
+{{- define "hyrax.postgresql.username" -}}
+{{- if .Values.postgresql.enabled }}
+{{- .Values.postgresql.postgresqlUsername }}
+{{- else }}
+{{- .Values.externalPostgresql.username | default "postgres" }}
+{{- end }}
+{{- end -}}
+
+{{- define "hyrax.postgresql.password" -}}
+{{- if .Values.postgresql.enabled }}
+{{- .Values.postgresql.postgresqlPassword }}
+{{- else }}
+{{- .Values.externalPostgresql.password }}
+{{- end }}
+{{- end -}}
 
 {{- define "hyrax.redis.fullname" -}}
 {{- printf "%s-%s" .Release.Name "redis" | trunc 63 | trimSuffix "-" -}}
@@ -126,4 +165,22 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 
 {{- define "hyrax.zk.fullname" -}}
 {{- printf "%s-%s" .Release.Name "zookeeper" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "hyrax.redis.host" -}}
+{{- printf "%s-master" (include "hyrax.redis.fullname" .) -}}
+{{- end -}}
+
+{{- define "hyrax.redis.url" -}}
+{{- printf "redis://:%s@%s:%s" .Values.redis.password (include "hyrax.redis.host" .) "6379/0" -}}
+{{- end -}}
+
+{{- define "hyrax.sharedPvcAccessModes" -}}
+{{- if .Values.worker.enabled }}
+accessModes:
+  - ReadWriteMany
+{{- else }}
+accessModes:
+  - ReadWriteOnce
+{{- end }}
 {{- end -}}

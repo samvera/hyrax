@@ -11,6 +11,32 @@ RSpec.describe Hyrax::SolrDocumentBehavior do
     end
   end
 
+  describe '#to_partial_path' do
+    context 'with an ActiveFedora model name' do
+      let(:solr_hash) { { 'has_model_ssim' => 'GenericWork' } }
+
+      it 'resolves the correct model name' do
+        expect(solr_document.to_model.to_partial_path).to eq 'hyrax/generic_works/generic_work'
+      end
+    end
+
+    context 'with a Valkyrie model name' do
+      let(:solr_hash) { { 'has_model_ssim' => 'Monograph' } }
+
+      it 'resolves the correct model name' do
+        expect(solr_document.to_model.to_partial_path).to eq 'hyrax/monographs/monograph'
+      end
+    end
+
+    context 'with a Wings model name' do
+      let(:solr_hash) { { 'has_model_ssim' => 'Wings(Monograph)' } }
+
+      it 'gives an appropriate generated ActiveFedora class' do
+        expect(solr_document.to_model.to_partial_path).to eq 'hyrax/monographs/monograph'
+      end
+    end
+  end
+
   describe '#hydra_model' do
     it 'gives ActiveFedora::Base by default' do
       expect(solr_document.hydra_model).to eq ActiveFedora::Base

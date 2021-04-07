@@ -121,6 +121,18 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
             .to contain_exactly(an_instance_of(Hyrax::Test::SimpleWorkLegacy),
                                 an_instance_of(Hyrax::Test::SimpleWorkLegacy))
         end
+
+        it 'does not increase proxy count' do
+          expect { converter.convert }
+            .not_to change { ActiveFedora::Aggregation::Proxy.count }
+        end
+
+        it 'does not increase object count' do
+          converter.convert
+
+          expect { converter.convert }
+            .not_to change { ActiveFedora::Base.count }
+        end
       end
 
       context 'with a custom, unmapped resource class' do
@@ -492,7 +504,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
           binary = StringIO.new("hey")
           Hydra::Works::AddFileToFileSet.call(fileset1, binary, :original_file)
           expect(fileset1.original_file).not_to be_nil
-          expect(resource.original_file_ids.first.to_s).to eq file_id
+          expect(resource.original_file_id.to_s).to eq file_id
 
           converted_file_set = converter.convert
 

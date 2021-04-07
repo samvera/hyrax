@@ -194,7 +194,7 @@ RSpec.describe Hyrax::GenericWorksController do
     end
 
     context 'when I am a repository manager' do
-      before { allow(::User.group_service).to receive(:byname).and_return(user.user_key => ['admin']) }
+      before { ::User.group_service.add(user: user, groups: ['admin']) }
       let(:work) { create(:private_generic_work) }
 
       it 'someone elses private work should show me the page' do
@@ -436,7 +436,8 @@ RSpec.describe Hyrax::GenericWorksController do
     end
 
     context 'when I am a repository manager' do
-      before { allow(::User.group_service).to receive(:byname).and_return(user.user_key => ['admin']) }
+      before { ::User.group_service.add(user: user, groups: ['admin']) }
+
       let(:work) { create(:private_generic_work) }
 
       it 'someone elses private work should show me the page' do
@@ -520,8 +521,7 @@ RSpec.describe Hyrax::GenericWorksController do
     end
 
     context 'when I am a repository manager' do
-      before { allow(::User.group_service).to receive(:byname).and_return(user.user_key => ['admin']) }
-
+      before { ::User.group_service.add(user: user, groups: ['admin']) }
       let(:work) { create(:private_generic_work) }
 
       it 'someone elses private work should update the work' do
@@ -578,7 +578,8 @@ RSpec.describe Hyrax::GenericWorksController do
     context 'when I am a repository manager' do
       let(:work_to_be_deleted) { create(:private_generic_work) }
 
-      before { allow(::User.group_service).to receive(:byname).and_return(user.user_key => ['admin']) }
+      before { ::User.group_service.add(user: user, groups: ['admin']) }
+
       it 'someone elses private work should delete the work' do
         delete :destroy, params: { id: work_to_be_deleted }
         expect(GenericWork).not_to exist(work_to_be_deleted.id)

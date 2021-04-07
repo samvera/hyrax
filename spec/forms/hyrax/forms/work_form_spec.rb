@@ -21,6 +21,15 @@ RSpec.describe Hyrax::Forms::WorkForm do
     it { is_expected.to eq '123456' }
   end
 
+  describe '#in_works_ids' do
+    let(:work)   { parent.members.first }
+    let(:parent) { FactoryBot.create(:work_with_one_child) }
+
+    it 'gives the ids for parent works' do
+      expect(form.in_works_ids).to contain_exactly(parent.id)
+    end
+  end
+
   describe "#select_files" do
     let(:work) { create(:work_with_one_file) }
     let(:title) { work.file_sets.first.title.first }

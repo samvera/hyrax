@@ -1,0 +1,112 @@
+{{- if .Values.worker.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hyrax.fullname" . }}-worker
+  labels:
+    {{- include "hyrax.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.worker.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "hyrax.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "hyrax.selectorLabels" . | nindent 8 }}
+    spec:
+      initContainers:
+        - name: db-wait
+          image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "hyrax.fullname" . }}-env
+            - secretRef:
+                name: {{ template "hyrax.fullname" . }}
+          env:
+            {{- toYaml .Values.worker.extraEnvVars | nindent 12 }}
+          command:
+            - sh
+            - -c
+            - db-wait.sh "$DB_HOST:$DB_PORT"
+            - db-wait.sh "$FCREPO_HOST:$FCREPO_PORT"
+            - db-wait.sh "$SOLR_HOST:$SOLR_PORT"
+      serviceAccountName: {{ include "hyrax.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-worker
+          image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "hyrax.fullname" . }}-env
+            - secretRef:
+                name: {{ template "hyrax.fullname" . }}
+          env:
+            {{- toYaml .Values.worker.extraEnvVars | nindent 12 }}
+          volumeMounts:
+            - name: derivatives
+              mountPath: /app/samvera/derivatives
+            - name: uploads
+              subPath: file_cache
+              mountPath: /app/samvera/file_cache
+            - name: uploads
+              subPath: uploads
+              mountPath: /app/samvera/uploads
+            {{- if .Values.applicationExistingClaim }}
+            - name: application
+              mountPath: /app/samvera/hyrax-webapp
+            {{- end }}
+            {{- with .Values.worker.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.worker.resources | nindent 12 }}
+      volumes:
+        - name: "derivatives"
+          {{- if and .Values.derivativesVolume.enabled .Values.derivativesVolume.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.derivativesVolume.existingClaim }}
+          {{- else if .Values.derivativesVolume.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ template "hyrax.fullname" . }}-derivatives
+          {{ else }}
+          emptyDir: {}
+          {{ end }}
+        - name: "uploads"
+          {{- if and .Values.uploadsVolume.enabled .Values.uploadsVolume.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.uploadsVolume.existingClaim }}
+          {{- else if .Values.uploadsVolume.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ template "hyrax.fullname" . }}-uploads
+          {{ else }}
+          emptyDir: {}
+          {{ end }}
+        {{- if .Values.applicationExistingClaim }}
+        - name: "application"
+          persistentVolumeClaim:
+            claimName: {{ .Values.applicationExistingClaim }}
+        {{- end }}
+        {{- with .Values.worker.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.worker.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.worker.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.worker.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

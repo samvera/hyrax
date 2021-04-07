@@ -1,0 +1,24 @@
+{{- if .Values.embargoRelease.enabled }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+metadata:
+  name: {{ include "hyrax.fullname" . }}-embargo-task
+  labels:
+    {{- include "hyrax.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.embargoRelease.schedule | default "*0 0 * * *" | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: embargo-release
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            command:
+            - /bin/sh
+            - -c
+            - bundle exec rake hyrax:embargo:deactivate_expired
+          restartPolicy: OnFailure
+{{- end }}

@@ -74,13 +74,11 @@ services:
       - db:/var/lib/postgresql/data
 
   fcrepo:
-    image: cbeer/fcrepo4:4.7
+    image: samvera/fcrepo4:4.7.5
     volumes:
-      - fcrepo:/data
+      - fcrepo:/data:cached
     ports:
       - 8080:8080
-    environment:
-      - JAVA_OPTS=${JAVA_OPTS} -Dfcrepo.modeshape.configuration="classpath:/config/file-simple/repository.json" -Dfcrepo.object.directory="/data/objects" -Dfcrepo.binary.directory="/data/binaries"
 
   memcached:
     image: bitnami/memcached
@@ -116,7 +114,7 @@ services:
       - "-c"
       - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf; precreate-core hyrax-valkyrie-test /opt/solr/server/configsets/hyraxconf; solr-precreate hyrax /opt/solr/server/configsets/hyraxconf"
     volumes:
-      - solr_home:/opt/solr/server/solr
+      - solr_home:/var/solr/data:cached
       - .dassie/solr/conf:/opt/solr/server/configsets/hyraxconf
 
 volumes:

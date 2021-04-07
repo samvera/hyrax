@@ -7,6 +7,7 @@ module Hyrax
   class ResourceName < Name
     def initialize(klass, namespace = nil, name = nil)
       super
+      return unless defined?(Wings::ModelRegistry)
 
       legacy_model = Wings::ModelRegistry.lookup(klass)
       return unless legacy_model

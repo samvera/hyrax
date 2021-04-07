@@ -56,7 +56,7 @@ module Hyrax
       # @see Samvera::NestingIndexer.reindex_all!(extent: FULL_REINDEX)
       def self.each_perservation_document_id_and_parent_ids(&block) # rubocop:disable Lint/UnusedMethodArgument
         ActiveFedora::Base.descendant_uris(ActiveFedora.fedora.base_uri, exclude_uri: true).each do |uri|
-          id = Hyrax::Base.uri_to_id(uri)
+          id = Hyrax.config.translate_uri_to_id.call(uri)
           object = ActiveFedora::Base.find(id)
           parent_ids = object.try(:member_of_collection_ids) || []
 

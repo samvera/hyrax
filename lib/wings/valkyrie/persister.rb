@@ -41,9 +41,10 @@ module Wings
       # @param [Valkyrie::Resource] resource
       # @return [Valkyrie::Resource] the persisted/updated resource
       def save_all(resources:)
-        resources.map do |resource|
-          save(resource: resource)
-        end
+        resources.map { |resource| save(resource: resource) }
+      rescue ::Valkyrie::Persistence::StaleObjectError => _err
+        raise(::Valkyrie::Persistence::StaleObjectError,
+              "One or more resources have been updated by another process.")
       end
 
       # Deletes a resource persisted using ActiveFedora
@@ -51,8 +52,9 @@ module Wings
       # @return [Valkyrie::Resource] the deleted resource
       def delete(resource:)
         af_object = ActiveFedora::Base.new
-        af_object.id = resource.alternate_ids.first.to_s
+        af_object.id = resource.id
         af_object.delete
+        resource
       end
 
       # Deletes all resources from Fedora and Solr
@@ -83,7 +85,8 @@ module Wings
           etag_lock_token_valid?(af_object: af_object, resource: resource) &&
           last_modified_lock_token_valid?(af_object: af_object, resource: resource)
 
-        raise(::Valkyrie::Persistence::StaleObjectError, resource.id.to_s)
+        raise(::Valkyrie::Persistence::StaleObjectError,
+              "The object #{resource.id} has been updated by another process.")
       end
 
       ##

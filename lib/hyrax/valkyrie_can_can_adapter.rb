@@ -20,6 +20,8 @@ module Hyrax
     # @raise Hyrax::ObjectNotFoundError
     def self.find(_model_class, id)
       Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: id)
+    rescue Valkyrie::Persistence::ObjectNotFoundError => err
+      raise Hyrax::ObjectNotFoundError, err.message
     end
   end
 end

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 class CollectionBrandingInfo < ApplicationRecord
-  # i = ColectionImageInfo.new()
-
   def initialize(collection_id:,
                  filename:,
                  role:,
@@ -13,20 +11,32 @@ class CollectionBrandingInfo < ApplicationRecord
     self.role = role
     self.alt_text = alt_txt
     self.target_url = target_url
-
-    self.local_path = find_local_filename(collection_id, role, filename)
+    self.local_path = File.join(role, filename)
   end
 
   def save(file_location, copy_file = true)
-    local_dir = find_local_dir_name(collection_id, role)
-    FileUtils.mkdir_p local_dir
-    FileUtils.cp file_location, local_path unless file_location == local_path || !copy_file
+    filename = File.split(local_path).last
+    role_and_filename = File.join(role, filename)
+
+    storage.upload(resource: Hyrax::PcdmCollection.new(id: collection_id),
+                   file: File.open(file_location),
+                   original_filename: role_and_filename)
+    self.local_path = find_local_filename(collection_id, role, filename)
+
     FileUtils.remove_file(file_location) if File.exist?(file_location) && copy_file
     super()
   end
 
-  def delete(location_path)
-    FileUtils.remove_file(location_path) if File.exist?(location_path)
+  def delete(location_path = nil)
+    id = if location_path
+           Deprecation.warn('Passing an explict location path is ' \
+                            'deprecated. Call without arguments instead.')
+           location_path
+         else
+           local_path
+         end
+
+    storage.delete(id: id)
   end
 
   def find_local_filename(collection_id, role, filename)
@@ -36,5 +46,11 @@ class CollectionBrandingInfo < ApplicationRecord
 
   def find_local_dir_name(collection_id, role)
     File.join(Hyrax.config.branding_path, collection_id.to_s, role.to_s)
+  end
+
+  private
+
+  def storage
+    Hyrax.config.branding_storage_adapter
   end
 end

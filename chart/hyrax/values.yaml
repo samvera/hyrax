@@ -19,6 +19,72 @@ externalSolrUser: ""
 externalSolrPassword: ""
 externalSolrCollection: "hyrax"
 
+# additional environment variables, evaluated as a template. e.g.
+#
+#  extraEnvVars:
+#    - name: RAILS_SERVE_STATIC_FILES
+#      value: "1"
+#    - name: GOOGLE_OAUTH_APP_NAME
+#      value: "my_hyrax_app"
+extraEnvVars: []
+
+# an existing volume containing a Hyrax-based application
+# must be a ReadWriteMany volume if worker is enabled
+applicationExistingClaim: ""
+
+brandingVolume:
+  enabled: true
+  # the name of an existing volume claim; must be an ReadWriteMany volume
+  existingClaim: ""
+  size: 2Gi
+  storageClass: ""
+
+derivativesVolume:
+  enabled: true
+  # the name of an existing volume claim; must be an ReadWriteMany volume
+  existingClaim: ""
+  size: 10Gi
+  storageClass: ""
+
+uploadsVolume:
+  enabled: true
+  # the name of an existing volume claim; must be an ReadWriteMany volume
+  existingClaim: ""
+  size: 20Gi
+  storageClass: ""
+
+# additional volumes and volume mounts, evaluated as a template, e.g.
+#
+#  extraVolumeMounts
+#    - name: local-app
+#      mountPath: /app/samvera/hyrax-webapp
+#  extraVolumes:
+#    - name: local-app
+#      hostPath:
+#        path: /src
+#        type: DirectoryOrCreate
+extraVolumeMounts: []
+extraVolumes: []
+
+# configuration for an external/existing fcrepo service;
+#   ignored if `fcrepo.enabled` is true
+externalFcrepoHost: ""
+fcrepoBasePathOverride: ""
+
+# database configuration for an external postgresql;
+#   ignored if `postgresql.enabled` is true
+externalPostgresql: {}
+#  username:
+#  password:
+#  database:
+
+embargoRelease:
+  enabled: true
+  schedule: "0 0 * * *"
+leaseRelease:
+  enabled: true
+  schedule: "0 0 * * *"
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -79,9 +145,24 @@ readinessProbe:
 
 resources: {}
 
+worker:
+  enabled: true
+  replicaCount: 3
+  image:
+    repository: samveralabs/dassie-worker
+    pullPolicy: IfNotPresent
+    tag: ""
+  extraVolumeMounts: []
+  extraVolumes: []
+  imagePullSecrets: []
+  podSecurityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources: {}
+
 fcrepo:
   enabled: true
-  fcrepoSecretName: "hyrax.fcrepo.fullname"
   externalDatabaseUsername: "hyrax"
   servicePort: 8080
   postgresql:
@@ -109,6 +190,7 @@ postgresql:
 
 redis:
   enabled: true
+  password: mysecret
 
 solr:
   enabled: true
@@ -136,6 +218,11 @@ autoscaling:
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+
+global:
+  postgresql:
+    postgresqlUsername: hyrax
+    postgresqlPassword: hyrax_pass
 
 nodeSelector: {}
 

@@ -39,9 +39,10 @@ The chart populates the following environment variables:
 | RACK_ENV          | app environment ('production') | n/a                    |
 | RAILS_ENV         | app environment ('production') | n/a                    |
 | REDIS_HOST        | Redis service host             | `redis.enabled`        |
-| FCREPO_HOST       | Fedora Commons host            | `fcrepo.enabled`       |
-| FCREPO_PORT       | Fedora Commons port            | `fcrepo.enabled`       |
-| FCREPO_REST_PATH  | Fedora Commons REST endpoint   | `fcrepo.enabled`       |
+| FCREPO_BASE_PATH  | Fedora Commons root path       | n/a                    |
+| FCREPO_HOST       | Fedora Commons host            | n/a                    |
+| FCREPO_PORT       | Fedora Commons port            | n/a                    |
+| FCREPO_REST_PATH  | Fedora Commons REST endpoint   | n/a                    |
 | SOLR_ADMIN_USER   | Solr user for basic auth       | n/a                    |
 | SOLR_ADMIN_PASSWORD | Solr password for basic auth | n/a                    |
 | SOLR_COLLECTION_NAME | The name of the solr collection to use | n/a         |
@@ -53,21 +54,34 @@ The chart populates the following environment variables:
 
 ## With an external SolrCloud
 
+By default, this chart deploys and manages an internal SolrCloud deployment,
+complete with its own ZooKeeper service.
+
 To use an existing or externally managed SolrCloud, use the chart values:
 
-  - `solr.enabled`: true
-  - `solr.externalSolrHost`: "mySolr.hostname.example.com"
-  - `solr.externalSolrUser`: "admin"
-  - `solr.externalSolrPassword`: "the_admin_password"
-  - `solr.externalSolrCollection`: "a_collection_name"
+  - `solr.enabled`: false
+  - `externalSolrHost`: "mySolr.hostname.example.com"
+  - `externalSolrUser`: "admin"
+  - `externalSolrPassword`: "the_admin_password"
+  - `externalSolrCollection`: "a_collection_name"
 
-By default, the chart will attempt to upload a ConfigSet for Hyrax matching the
-deployment's `hyrax.fullname` and assign it to the collection. This is achieved
-through the Solr Collections API, and authentication _must_ be enabled in the
-external Solr for this to work.
+The chart will attempt to upload a ConfigSet for Hyrax matching the deployment's
+"fullname" and assign it to the collection. This is achieved through the Solr
+Collections API, and authentication _must_ be enabled in the external Solr for
+this to work.
 
 If you want to manage your ConfigSet manually, disable this behavior with
 `--set loadSolrConfigSet=false`.
+
+## With an external Fedora Commons Repository
+
+By default, this chart deploys a local Fedora Repository, backed by the
+application's Postgresql system.
+
+To use an existing or external `fcrepo` instance, use the chart values:
+
+  - `fcrepo.enabled`: false
+  - `externalFcrepoHost`: "myfedora.hostname.example.com"
 
 ## For DevOps:
 

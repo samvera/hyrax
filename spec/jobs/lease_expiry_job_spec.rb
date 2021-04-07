@@ -21,8 +21,9 @@ RSpec.describe LeaseExpiryJob, :clean_repo do
   describe '#records_with_expired_leases' do
     it 'returns all records with expired leases' do
       records = described_class.new.records_with_expired_leases
-      expect(records).to include work_with_expired_lease.id, file_set_with_expired_lease.id
-      expect(records).not_to include leased_work.id
+      expect(records.map(&:id))
+        .to contain_exactly(work_with_expired_lease.id,
+                            file_set_with_expired_lease.id)
     end
   end
 

@@ -3,7 +3,7 @@
   <div class="row hyc-header">
     <div class="col-md-12">
 
-      <% unless @presenter.banner_file.blank? %>
+      <% if @presenter.banner_file.present? %>
           <div class="hyc-banner" style="background-image:url(<%= @presenter.banner_file %>)">
       <% else %>
           <div class="hyc-generic">

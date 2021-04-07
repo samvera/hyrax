@@ -63,7 +63,7 @@ class JobIoWrapper < ApplicationRecord
     nil # unable to determine
   end
 
-  def file_set(use_valkyrie: false)
+  def file_set(use_valkyrie: Hyrax.config.query_index_from_valkyrie)
     return FileSet.find(file_set_id) unless use_valkyrie
     Hyrax.query_service.find_by(id: Valkyrie::ID.new(file_set_id))
   end

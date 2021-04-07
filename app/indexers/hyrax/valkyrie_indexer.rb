@@ -69,7 +69,8 @@ module Hyrax
       {
         "id": resource.id.to_s,
         "created_at_dtsi": resource.created_at,
-        "updated_at_dtsi": resource.updated_at
+        "updated_at_dtsi": resource.updated_at,
+        "has_model_ssim": resource.internal_resource
       }
     end
 
@@ -95,7 +96,12 @@ module Hyrax
       # @example
       #     ValkyrieIndexer.for(resource: Book.new) # => #<BookIndexer ...>
       def for(resource:)
-        indexer_class_for(resource).new(resource: resource)
+        case resource
+        when Hyrax::FileSet
+          Hyrax::ValkyrieFileSetIndexer.new(resource: resource)
+        else
+          indexer_class_for(resource).new(resource: resource)
+        end
       end
 
       private

@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 RSpec.describe 'Editing a work', type: :feature do
-  let(:user) { create(:user, groups: 'librarians') }
-  let(:user_admin) { create(:user, groups: 'admin') }
-  let(:work) { build(:work, user: user, admin_set: another_admin_set) }
+  let(:user) { FactoryBot.create(:user, groups: 'librarians') }
+  let(:user_admin) { FactoryBot.create(:user, groups: 'admin') }
+  let(:work) { FactoryBot.build(:work, user: user, admin_set: another_admin_set) }
   let(:default_admin_set) do
-    create(:admin_set, id: AdminSet::DEFAULT_ID,
-                       title: ["Default Admin Set"],
-                       description: ["A description"],
-                       edit_users: [user.user_key])
+    FactoryBot.create(:admin_set, id: AdminSet::DEFAULT_ID,
+                                  title: ["Default Admin Set"],
+                                  description: ["A description"],
+                                  edit_users: [user.user_key])
   end
   let(:another_admin_set) do
-    create(:admin_set, title: ["Another Admin Set"],
-                       description: ["A description"],
-                       edit_users: [user.user_key])
+    FactoryBot.create(:admin_set, title: ["Another Admin Set"],
+                                  description: ["A description"],
+                                  edit_users: [user.user_key])
   end
 
   before do
@@ -71,9 +71,11 @@ RSpec.describe 'Editing a work', type: :feature do
     end
 
     it 'selects group all available groups' do
+      FactoryBot.create(:user, groups: 'donor')
+
       visit edit_hyrax_generic_work_path(work)
       click_link "Sharing" # switch tab
-      expect(page).to have_selector('#new_group_name_skel', text: 'archivist admin_policy_object_editor donor researcher patron')
+      expect(page).to have_selector('#new_group_name_skel', text: 'librarians admin donor')
     end
   end
 end

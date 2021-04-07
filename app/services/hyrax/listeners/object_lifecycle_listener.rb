@@ -8,7 +8,7 @@ module Hyrax
       ##
       # @param event [Dry::Event]
       def on_object_deleted(event)
-        ContentDeleteEventJob.perform_later(event[:id], event[:user])
+        ContentDeleteEventJob.perform_later(event[:id].to_s, event[:user])
       end
 
       ##

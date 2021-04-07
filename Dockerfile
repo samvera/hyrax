@@ -43,6 +43,36 @@ ONBUILD COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 ONBUILD RUN bundle install --jobs "$(nproc)"
 ONBUILD RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
 
+
+FROM hyrax-base as hyrax-worker
+
+ENV MALLOC_ARENA_MAX=2
+
+USER root
+RUN apk --no-cache add bash \
+  ffmpeg \
+  mediainfo \
+  openjdk11-jre \
+  perl
+USER app
+
+RUN mkdir -p /app/fits && \
+    cd /app/fits && \
+    wget https://github.com/harvard-lts/fits/releases/download/1.5.0/fits-1.5.0.zip -O fits.zip && \
+    unzip fits.zip && \
+    rm fits.zip && \
+    chmod a+x /app/fits/fits.sh
+ENV PATH="${PATH}:/app/fits"
+
+ARG APP_PATH=.
+ARG BUNDLE_WITHOUT="development test"
+
+ONBUILD COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
+ONBUILD RUN bundle install --jobs "$(nproc)"
+
+CMD bundle exec sidekiq
+
+
 FROM hyrax-base as hyrax-engine-dev
 
 ARG APP_PATH=.dassie
@@ -57,23 +87,14 @@ RUN cd /app/samvera/hyrax-engine && bundle install --jobs "$(nproc)"
 RUN RAILS_ENV=production SECRET_KEY_BASE='fakesecret1234' DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
 
 
-FROM hyrax-engine-dev as hyrax-engine-dev-worker
+FROM hyrax-worker as hyrax-engine-dev-worker
 
-ENV MALLOC_ARENA_MAX=2
+ARG APP_PATH=.dassie
+ARG BUNDLE_WITHOUT=
 
-USER root
-RUN apk --no-cache add bash \
-  openjdk11-jre \
-  perl \
-  mediainfo
-USER app
+ENV HYRAX_ENGINE_PATH /app/samvera/hyrax-engine
 
-RUN mkdir -p /app/fits && \
-    cd /app/fits && \
-    wget https://github.com/harvard-lts/fits/releases/download/1.5.0/fits-1.5.0.zip -O fits.zip && \
-    unzip fits.zip && \
-    rm fits.zip && \
-    chmod a+x /app/fits/fits.sh
-ENV PATH="${PATH}:/app/fits"
+COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
+COPY --chown=1001:101 . /app/samvera/hyrax-engine
 
-CMD bundle exec sidekiq
+RUN cd /app/samvera/hyrax-engine && bundle install --jobs "$(nproc)"

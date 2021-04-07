@@ -14,9 +14,11 @@ module Hyrax
     autoload :BatchNotificationListener
     autoload :FileSetLifecycleListener
     autoload :FileSetLifecycleNotificationListener
+    autoload :MemberCleanupListener
     autoload :MetadataIndexListener
     autoload :ObjectLifecycleListener
     autoload :ProxyDepositListener
+    autoload :TrophyCleanupListener
     autoload :WorkflowListener
   end
 end

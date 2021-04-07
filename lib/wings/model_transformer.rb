@@ -116,16 +116,8 @@ module Wings
     end
 
     def attributes
-      attribute_source = pcdm_object.try(:metadata_node) || pcdm_object
-
-      all_keys =
-        attribute_source.attributes.keys +
-        OrmConverter.relationship_keys_for(reflections: pcdm_object.try(:reflections))
-
-      result = AttributeTransformer.for(pcdm_object)
-                                   .run(pcdm_object, all_keys)
-                                   .merge(reflection_ids)
-                                   .merge(additional_attributes)
+      transformer = AttributeTransformer.for(pcdm_object)
+      result = transformer.run(pcdm_object).merge(additional_attributes)
 
       append_embargo(result)
       append_lease(result)
@@ -133,16 +125,9 @@ module Wings
       result
     end
 
-    def reflection_ids
-      keys = pcdm_object.try(:reflections)&.keys || []
-
-      keys.select { |k| k.to_s.end_with? '_id' }.each_with_object({}) do |k, mem|
-        mem[k] = pcdm_object.try(k)
-      end
-    end
-
     def additional_attributes
-      { :created_at => pcdm_object.try(:create_date),
+      { :id => pcdm_object.id,
+        :created_at => pcdm_object.try(:create_date),
         :updated_at => pcdm_object.try(:modified_date),
         :member_ids => member_ids,
         ::Valkyrie::Persistence::Attributes::OPTIMISTIC_LOCK => lock_token }

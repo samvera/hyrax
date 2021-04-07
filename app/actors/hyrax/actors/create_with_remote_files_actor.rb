@@ -61,9 +61,18 @@ module Hyrax
         true
       end
 
+      def create_file_from_url(env, uri, file_name, auth_header)
+        case env.curation_concern
+        when Valkyrie::Resource
+          create_file_from_url_through_valkyrie(env, uri, file_name, auth_header)
+        else
+          create_file_from_url_through_active_fedora(env, uri, file_name, auth_header)
+        end
+      end
+
       # Generic utility for creating FileSet from a URL
       # Used in to import files using URLs from a file picker like browse_everything
-      def create_file_from_url(env, uri, file_name, auth_header = {})
+      def create_file_from_url_through_active_fedora(env, uri, file_name, auth_header)
         import_url = URI.decode_www_form_component(uri.to_s)
         ::FileSet.new(import_url: import_url, label: file_name) do |fs|
           actor = Hyrax::Actors::FileSetActor.new(fs, env.user)
@@ -77,6 +86,23 @@ module Hyrax
           else
             ImportUrlJob.perform_later(fs, operation_for(user: actor.user), auth_header)
           end
+        end
+      end
+
+      # Generic utility for creating Hyrax::FileSet from a URL
+      # Used in to import files using URLs from a file picker like browse_everything
+      def create_file_from_url_through_valkyrie(env, uri, file_name, auth_header)
+        import_url = URI.decode_www_form_component(uri.to_s)
+        fs = Hyrax.persister.save(resource: Hyrax::FileSet.new(import_url: import_url, label: file_name))
+        actor = Hyrax::Actors::FileSetActor.new(fs, env.user, use_valkyrie: true)
+        actor.create_metadata(visibility: env.curation_concern.visibility)
+        actor.attach_to_work(env.curation_concern)
+        if uri.scheme == 'file'
+          # Turn any %20 into spaces.
+          file_path = CGI.unescape(uri.path)
+          IngestLocalFileJob.perform_later(fs, file_path, env.user)
+        else
+          ImportUrlJob.perform_later(fs, operation_for(user: actor.user), auth_header)
         end
       end
 

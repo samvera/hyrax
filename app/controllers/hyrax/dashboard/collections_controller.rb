@@ -69,10 +69,8 @@ module Hyrax
       end
 
       def show
-        if @collection.collection_type.brandable?
-          banner_info = CollectionBrandingInfo.where(collection_id: @collection.id.to_s).where(role: "banner")
-          @banner_file = "/" + banner_info.first.local_path.split("/")[-4..-1].join("/") unless banner_info.empty?
-        end
+        # @todo: remove this unused assignment in 4.0.0
+        @banner_file = presenter.banner_file if @collection.collection_type.brandable?
 
         presenter
         query_collection_members
