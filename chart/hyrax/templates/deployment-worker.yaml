@@ -33,9 +33,7 @@ spec:
           command:
             - sh
             - -c
-            - db-wait.sh "$DB_HOST:$DB_PORT"
-            - db-wait.sh "$FCREPO_HOST:$FCREPO_PORT"
-            - db-wait.sh "$SOLR_HOST:$SOLR_PORT"
+            - db-worker-wait.sh
       serviceAccountName: {{ include "hyrax.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
