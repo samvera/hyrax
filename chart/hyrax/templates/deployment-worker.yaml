@@ -33,7 +33,7 @@ spec:
           command:
             - sh
             - -c
-            - db-worker-wait.sh
+            - db-wait.sh "$REDIS_HOST:6379"
       serviceAccountName: {{ include "hyrax.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
