@@ -30,11 +30,12 @@ production environments.
 
 The chart populates the following environment variables:
 
-|-------------------|--------------------------------|------------------------|
 | Variable          | Description                    | Condition              |
 |-------------------|--------------------------------|------------------------|
-| DB_HOST           | Postgresql hostname            | `postgresql.enabled`   |
-| DB_PORT           | Postgresql service port        | `postgresql.enabled`   |
+| DB_PASSWORD       | Postgresql password            | n/a                    |
+| DB_PORT           | Postgresql service port        | n/a                    |
+| DB_HOST           | Postgresql hostname            | n/a                    |
+| DB_USERNAME       | Postgresql username            | n/a                    |
 | MEMCACHED_HOST    | Memcached host                 | `memcached.enabled`    |
 | RACK_ENV          | app environment ('production') | n/a                    |
 | RAILS_ENV         | app environment ('production') | n/a                    |
@@ -51,7 +52,6 @@ The chart populates the following environment variables:
 | SOLR_HOST         | Solr service host              | n/a                    |
 | SOLR_PORT         | Solr service port              | n/a                    |
 | SOLR_URL          | Solr service full URL          | n/a                    |
-|----------------- -|--------------------------------|------------------------|
 
 ## With an external SolrCloud
 

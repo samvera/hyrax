@@ -10,6 +10,7 @@ metadata:
 data:
   DB_HOST: {{ template "hyrax.postgresql.host" . }}
   DB_PORT: "5432"
+  DB_USERNAME: {{ template "hyrax.postgresql.database" . }}
   {{- if .Values.memcached.enabled }}
   MEMCACHED_HOST: {{ template "hyrax.memcached.fullname" . }}
   {{- end }}
