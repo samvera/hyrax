@@ -20,6 +20,9 @@ spec:
         {{- include "hyrax.selectorLabels" . | nindent 8 }}
     spec:
       initContainers:
+        {{- if .Values.worker.extraInitContainers }}
+        {{- toYaml .Values.worker.extraInitContainers | nindent 8 }}
+        {{- end }}
         - name: db-wait
           image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
