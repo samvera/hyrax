@@ -31,6 +31,16 @@ externalSolrCollection: "hyrax"
 #      value: "my_hyrax_app"
 extraEnvVars: []
 
+## Extra init containers
+## Example
+##
+## extraInitContainers:
+##   - name: do-something
+##     image: busybox
+##     command: ['echo', 'Hello, Hyrax.']
+##
+extraInitContainers: []
+
 # an existing volume containing a Hyrax-based application
 # must be a ReadWriteMany volume if worker is enabled
 applicationExistingClaim: ""
@@ -155,6 +165,7 @@ worker:
     repository: samveralabs/dassie-worker
     pullPolicy: IfNotPresent
     tag: ""
+  extraInitContainers: []
   extraVolumeMounts: []
   extraVolumes: []
   imagePullSecrets: []
