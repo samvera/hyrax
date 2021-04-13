@@ -188,6 +188,15 @@ fcrepo:
 memcached:
   enabled: false
 
+minio:
+  enabled: false
+  accessKey:
+    password: hyrax-access-key
+  secretKey:
+    password: hyrax-secret-key
+  persistence:
+    enabled: false
+
 postgresql:
   enabled: true
   image:
