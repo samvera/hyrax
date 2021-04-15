@@ -135,7 +135,9 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: hyrax.local
-      paths: []
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
   tls: []
 
 livenessProbe:
