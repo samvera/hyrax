@@ -17,6 +17,7 @@ skipHyraxEngineSeed: false
 loadSolrConfigSet: true
 # the host and auth details for an external solr service;
 #   ignored if `solr.enabled` is true
+solrExistingSecret: ""
 externalSolrHost: ""
 externalSolrUser: ""
 externalSolrPassword: ""
