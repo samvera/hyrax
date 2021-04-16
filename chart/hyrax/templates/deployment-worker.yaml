@@ -53,6 +53,10 @@ spec:
                 name: {{ include "hyrax.fullname" . }}-env
             - secretRef:
                 name: {{ template "hyrax.fullname" . }}
+            {{- if .Values.solrExistingSecret }}
+            - secretRef:
+                name: {{ include .Values.solrExistingSecret . }}
+            {{- end }}
           env:
             {{- toYaml .Values.worker.extraEnvVars | nindent 12 }}
           volumeMounts:
