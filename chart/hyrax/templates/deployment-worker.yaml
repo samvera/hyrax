@@ -55,7 +55,7 @@ spec:
                 name: {{ template "hyrax.fullname" . }}
             {{- if .Values.solrExistingSecret }}
             - secretRef:
-                name: {{ include .Values.solrExistingSecret . }}
+                name: {{ .Values.solrExistingSecret }}
             {{- end }}
           env:
             {{- toYaml .Values.worker.extraEnvVars | nindent 12 }}
