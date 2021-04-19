@@ -35,7 +35,7 @@ spec:
                 name: {{ include "hyrax.fullname" . }}
             {{- if .Values.solrExistingSecret }}
             - secretRef:
-                name: {{ include .Values.solrExistingSecret . }}
+                name: {{ .Values.solrExistingSecret }}
             {{- end }}
           env:
             {{- toYaml .Values.extraEnvVars | nindent 12 }}
@@ -56,7 +56,7 @@ spec:
                 name: {{ template "hyrax.fullname" . }}
             {{- if .Values.solrExistingSecret }}
             - secretRef:
-                name: {{ include .Values.solrExistingSecret . }}
+                name: {{ .Values.solrExistingSecret }}
             {{- end }}
           env:
             {{- toYaml .Values.extraEnvVars | nindent 12 }}
@@ -84,7 +84,7 @@ spec:
                 name: {{ template "hyrax.fullname" . }}
             {{- if .Values.solrExistingSecret }}
             - secretRef:
-                name: {{ include .Values.solrExistingSecret . }}
+                name: {{ .Values.solrExistingSecret }}
             {{- end }}
           env:
             {{- toYaml .Values.extraEnvVars | nindent 12 }}
