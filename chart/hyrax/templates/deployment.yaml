@@ -58,6 +58,9 @@ spec:
             - secretRef:
                 name: {{ .Values.solrExistingSecret }}
             {{- end }}
+            {{- with .Values.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           env:
             {{- toYaml .Values.extraEnvVars | nindent 12 }}
           command:
@@ -85,6 +88,9 @@ spec:
             {{- if .Values.solrExistingSecret }}
             - secretRef:
                 name: {{ .Values.solrExistingSecret }}
+            {{- end }}
+            {{- with .Values.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
             {{- end }}
           env:
             {{- toYaml .Values.extraEnvVars | nindent 12 }}
