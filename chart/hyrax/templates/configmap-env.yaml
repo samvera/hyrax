@@ -32,6 +32,9 @@ data:
   FCREPO_REST_PATH: {{ .Values.fcrepo.restPath | default "rest" }}
   {{- end }}
   REDIS_PROVIDER: SIDEKIQ_REDIS_URL
+  {{- if .Values.minio.enabled }}
+  MINIO_ENDPOINT: {{ template "hyrax.minio.fullname" . }}
+  {{- end }}
   SKIP_HYRAX_ENGINE_SEED: {{  .Values.skipHyraxEngineSeed | default 0 | quote }}
   SOLR_ADMIN_USER: {{ template "hyrax.solr.username" . }}
   SOLR_COLLECTION_NAME: {{ template "hyrax.solr.collectionName" . }}
