@@ -57,6 +57,9 @@ spec:
             - secretRef:
                 name: {{ .Values.solrExistingSecret }}
             {{- end }}
+            {{- with .Values.worker.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           env:
             {{- toYaml .Values.worker.extraEnvVars | nindent 12 }}
           volumeMounts:

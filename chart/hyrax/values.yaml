@@ -42,6 +42,17 @@ extraEnvVars: []
 ##
 extraInitContainers: []
 
+# Extra envFrom (secrets/configmaps)
+# Example
+#
+# extraEnvFrom:
+#   - configMapRef:
+#       name: existingConfigMap
+#   - secretRef:
+#       name: existingSecret
+#
+extraEnvFrom: []
+
 # an existing volume containing a Hyrax-based application
 # must be a ReadWriteMany volume if worker is enabled
 applicationExistingClaim: ""
