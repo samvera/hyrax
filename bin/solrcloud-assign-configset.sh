@@ -16,6 +16,11 @@ while [ $COUNTER -lt 30 ]; do
       echo $solr_collection_modify_url
       curl $solr_user_settings "$solr_collection_modify_url"
       exit
+    else
+      echo "-- Collection ${SOLR_COLLECTION_NAME} does not exist; creating and setting ${SOLR_CONFIGSET_NAME} ConfigSet ..."
+      solr_collection_create_url="$SOLR_HOST:$SOLR_PORT/solr/admin/collections?action=CREATE&name=$SOLR_COLLECTION_NAME&collection.configName=$SOLR_CONFIGSET_NAME&numShards=1"
+      curl $solr_user_settings "$solr_collection_create_url"
+      exit
     fi
   fi
   echo "-- Looking for Solr (${SOLR_HOST}:${SOLR_PORT})..."
