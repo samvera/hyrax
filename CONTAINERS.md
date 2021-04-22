@@ -107,6 +107,26 @@ I (Jeremy) find myself wanting to debug the application.  This requires a somewh
 
 This advice comes from [Debugging Rails App With Docker Compose: How to use Byebug in a dockerized rails app](https://medium.com/gogox-technology/debugging-rails-app-with-docker-compose-39a3767962f4).
 
+### Troubleshooting
+
+#### Bad Address SOLR
+
+With `docker-compose up` running, if you see the following, then there may be issues with file permissions:
+
+```
+db_migrate_1  | waiting for solr:8983
+db_migrate_1  | nc: bad address 'solr'
+```
+
+Check the Docker application logs and look for permission errors:
+
+```
+Executing /opt/docker-solr/scripts/precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf
+cp: cannot create directory '/var/solr/data/hyrax_test': Permission denied
+```
+
+The solution that appears to work is to `docker-compose down --volumes`; This will tear down the docker instance, and remove the volumes.  You can then run `docker-compose up` to get back to work.  _**Note:** the `--volumes` switch will remove all custom data._
+
 <!-- NOTE: This title is referenced in the top-level documentation/developing-your-hyrax-based-app.md. Keep that in mind if you change it. -->
 ## Docker Image for Hyrax-based Applications
 
