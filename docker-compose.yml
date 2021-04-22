@@ -97,6 +97,13 @@ services:
     env_file:
       - .env
       - .dassie/.env
+    depends_on:
+      - db_migrate
+      - fcrepo
+      - memcached
+      - postgres
+      - redis
+      - solr
     volumes:
       - .dassie:/app/samvera/hyrax-webapp:cached
       - .:/app/samvera/hyrax-engine:cached
