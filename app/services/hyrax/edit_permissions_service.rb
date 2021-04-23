@@ -170,7 +170,7 @@ module Hyrax
     # @todo Refactor code to remove explicit ActiveFedora::Base call (see method implementation for details)
     def object_unauthorized_collection_ids
       @object_unauthorized_collection_ids ||= begin
-                                                limited_access = []
+                                                limited_access_ids = []
                                                 unauthorized_collection_ids = object_member_of_ids - object_managed_collection_ids
                                                 unauthorized_collection_ids.each do |id|
                                                   # TODO: Refactor to remove ActiveFedora::Base
@@ -193,9 +193,9 @@ module Hyrax
                                                   #           object to the collection type); We'd also need to account for AdminSet and
                                                   #           Hyrax::AdministrativeSet.
                                                   collection = ActiveFedora::Base.find(id)
-                                                  limited_access << id if (collection.instance_of? AdminSet) || collection.share_applies_to_new_works?
+                                                  limited_access_ids << id if (collection.instance_of? AdminSet) || collection.share_applies_to_new_works?
                                                 end
-                                                limited_access
+                                                limited_access_ids
                                               end
     end
 
