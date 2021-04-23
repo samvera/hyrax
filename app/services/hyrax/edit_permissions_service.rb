@@ -183,13 +183,7 @@ module Hyrax
     # find all of the collection ids an object is a member of
     # @return [Array] array of collection ids
     def object_member_of_ids
-      @object_member_of_ids ||= begin
-                              belongs_to = []
-                              # get all of work's collection ids from the form
-                              belongs_to += @object.member_of_collection_ids
-                              belongs_to << @object.admin_set_id if @object.admin_set_id.present?
-                              belongs_to
-                            end
+      @object_member_of_ids ||= (@object.member_of_collection_ids + [@object.admin_set_id]).select(&:present?)
     end
 
     # The list of all collections this user has manage rights on
