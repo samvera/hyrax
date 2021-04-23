@@ -167,35 +167,33 @@ module Hyrax
     #
     # @return [Array] of collection ids with limited access
     #
-    # @todo Refactor code to remove explicit ActiveFedora::Base call (see method implementation for details)
+    # @todo Refactor inner working of code as there's lots of branching logic with potential hidden assumptions.
     def object_unauthorized_collection_ids
       @object_unauthorized_collection_ids ||= begin
-                                                limited_access_ids = []
                                                 unauthorized_collection_ids = object_member_of_ids - object_managed_collection_ids
-                                                unauthorized_collection_ids.each do |id|
-                                                  # TODO: Refactor to remove ActiveFedora::Base
-                                                  #
-                                                  # Option 1: use `Hyrax.query_service.find_many_by_ids`.  This requires
-                                                  #           some further adjustments.
-                                                  #
-                                                  #           A) The collection.share_applies_to_new_works? is a delegate method
-                                                  #              on the Collection object to the associated Collection Type.  That does not exist on the
-                                                  #              Valkyrie resource
-                                                  #              (see https://github.com/samvera/hyrax/blob/696da5db/spec/models/collection_spec.rb#L189)
-                                                  #           B) The `instance_of? AdminSet` will not work because there is an AdminSet object and a
-                                                  #              Hyrax::AdministrativeSet class.
-                                                  #
-                                                  #           (Jeremy here) I had attempted this refactor, but I think that I need to discuss this with the
-                                                  #           tech lead regarding approach.
-                                                  #
-                                                  # Option 2: use a Solr query; we would need to verify that the SOLR object for the collection has the
-                                                  #           share_applies_to_new_works property (again, this is a delegate method from the collection
-                                                  #           object to the collection type); We'd also need to account for AdminSet and
-                                                  #           Hyrax::AdministrativeSet.
-                                                  collection = ActiveFedora::Base.find(id)
-                                                  limited_access_ids << id if (collection.instance_of? AdminSet) || collection.share_applies_to_new_works?
-                                                end
-                                                limited_access_ids
+                                                Hyrax.query_service.find_many_by_ids(ids: unauthorized_collection_ids).select do |resource|
+                                                  case resource
+                                                  when AdminSet, Hyrax::AdministrativeSet
+                                                    # Prior to this refactor, we looked at AdminSet only; However with the advent of the
+                                                    # Hyrax::AdministrativeSet, we need to test both cases.
+                                                    true
+                                                  else
+                                                    if resource.respond_to?(:share_applies_to_new_works?)
+                                                      # The Collection model has traditionally delegated #share_applies_to_new_works? to
+                                                      # the underlying collection_type
+                                                      # (see https://github.com/samvera/hyrax/blob/696da5db/spec/models/collection_spec.rb#L189)
+                                                      resource.share_applies_to_new_works?
+                                                    elsif resource.respond_to?(:collection_type_gid)
+                                                      # This is likely a Hyrax::PcdmCollection object, which means we don't have the delegation
+                                                      # behavior.  Instead we'll query the collection type directly.
+                                                      collection_type = CollectionType.find_by_gid(resource.collection_type_gid)
+                                                      collection_type&.share_applies_to_new_works?
+                                                    else
+                                                      # How might we get here?
+                                                      false
+                                                    end
+                                                  end
+                                                end.map { |resource| resource.id.to_s }
                                               end
     end
 
