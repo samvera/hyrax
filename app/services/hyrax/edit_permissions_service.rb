@@ -168,13 +168,11 @@ module Hyrax
       @object_unauthorized_collection_ids ||= begin
                                                 limited_access = []
                                                 unauthorized_collection_ids = object_member_of_ids - object_managed_collection_ids
-                                                if unauthorized_collection_ids.any?
-                                                  unauthorized_collection_ids.each do |id|
-                                                    # TODO: Can we instead use a SOLR query?  This seems to be somewhat expensive.  However, as this is
-                                                    # used in administration instead of user front-end displays, I'm not as concerned.
-                                                    collection = ActiveFedora::Base.find(id)
-                                                    limited_access << id if (collection.instance_of? AdminSet) || collection.share_applies_to_new_works?
-                                                  end
+                                                unauthorized_collection_ids.each do |id|
+                                                  # TODO: Can we instead use a SOLR query?  This seems to be somewhat expensive.  However, as this is
+                                                  # used in administration instead of user front-end displays, I'm not as concerned.
+                                                  collection = ActiveFedora::Base.find(id)
+                                                  limited_access << id if (collection.instance_of? AdminSet) || collection.share_applies_to_new_works?
                                                 end
                                                 limited_access
                                               end
