@@ -161,16 +161,37 @@ module Hyrax
       @object_managed_collection_ids ||= object_member_of_ids & managed_collection_ids
     end
 
-    # find all of the work's collections a user cannot manage
-    # note: if the collection type doesn't include "sharing_applies_to_new_works", we don't limit access
+    # find all of the work's collections a user cannot manage note: if
+    # the collection type doesn't include
+    # "sharing_applies_to_new_works", we don't limit access
+    #
     # @return [Array] of collection ids with limited access
+    #
+    # @todo Refactor code to remove explicit ActiveFedora::Base call (see method implementation for details)
     def object_unauthorized_collection_ids
       @object_unauthorized_collection_ids ||= begin
                                                 limited_access = []
                                                 unauthorized_collection_ids = object_member_of_ids - object_managed_collection_ids
                                                 unauthorized_collection_ids.each do |id|
-                                                  # TODO: Can we instead use a SOLR query?  This seems to be somewhat expensive.  However, as this is
-                                                  # used in administration instead of user front-end displays, I'm not as concerned.
+                                                  # TODO: Refactor to remove ActiveFedora::Base
+                                                  #
+                                                  # Option 1: use `Hyrax.query_service.find_many_by_ids`.  This requires
+                                                  #           some further adjustments.
+                                                  #
+                                                  #           A) The collection.share_applies_to_new_works? is a delegate method
+                                                  #              on the Collection object to the associated Collection Type.  That does not exist on the
+                                                  #              Valkyrie resource
+                                                  #              (see https://github.com/samvera/hyrax/blob/696da5db/spec/models/collection_spec.rb#L189)
+                                                  #           B) The `instance_of? AdminSet` will not work because there is an AdminSet object and a
+                                                  #              Hyrax::AdministrativeSet class.
+                                                  #
+                                                  #           (Jeremy here) I had attempted this refactor, but I think that I need to discuss this with the
+                                                  #           tech lead regarding approach.
+                                                  #
+                                                  # Option 2: use a Solr query; we would need to verify that the SOLR object for the collection has the
+                                                  #           share_applies_to_new_works property (again, this is a delegate method from the collection
+                                                  #           object to the collection type); We'd also need to account for AdminSet and
+                                                  #           Hyrax::AdministrativeSet.
                                                   collection = ActiveFedora::Base.find(id)
                                                   limited_access << id if (collection.instance_of? AdminSet) || collection.share_applies_to_new_works?
                                                 end
