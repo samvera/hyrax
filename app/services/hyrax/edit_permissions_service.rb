@@ -166,35 +166,50 @@ module Hyrax
     # "sharing_applies_to_new_works", we don't limit access
     #
     # @return [Array] of collection ids with limited access
-    #
-    # @todo Refactor inner working of code as there's lots of branching logic with potential hidden assumptions.
     def object_unauthorized_collection_ids
       @object_unauthorized_collection_ids ||= begin
                                                 unauthorized_collection_ids = object_member_of_ids - object_managed_collection_ids
-                                                Hyrax.query_service.find_many_by_ids(ids: unauthorized_collection_ids).select do |resource|
-                                                  case resource
-                                                  when AdminSet, Hyrax::AdministrativeSet
-                                                    # Prior to this refactor, we looked at AdminSet only; However with the advent of the
-                                                    # Hyrax::AdministrativeSet, we need to test both cases.
-                                                    true
-                                                  else
-                                                    if resource.respond_to?(:share_applies_to_new_works?)
-                                                      # The Collection model has traditionally delegated #share_applies_to_new_works? to
-                                                      # the underlying collection_type
-                                                      # (see https://github.com/samvera/hyrax/blob/696da5db/spec/models/collection_spec.rb#L189)
-                                                      resource.share_applies_to_new_works?
-                                                    elsif resource.respond_to?(:collection_type_gid)
-                                                      # This is likely a Hyrax::PcdmCollection object, which means we don't have the delegation
-                                                      # behavior.  Instead we'll query the collection type directly.
-                                                      collection_type = CollectionType.find_by_gid(resource.collection_type_gid)
-                                                      collection_type&.share_applies_to_new_works?
-                                                    else
-                                                      # How might we get here?
-                                                      false
-                                                    end
-                                                  end
-                                                end.map { |resource| resource.id.to_s }
+                                                qualified_resources = Hyrax.query_service.find_many_by_ids(ids: unauthorized_collection_ids).select do |resource|
+                                                  qualifies_as_unauthorized_collection?(resource: resource)
+                                                end
+                                                qualified_resources.map { |resource| resource.id.to_s }
                                               end
+    end
+
+    # Does the given resource qualify as a collection the current user cannot manage.
+    #
+    # @see {#object_unauthorized_collection_ids}
+    #
+    # @param resource [Valkyrie::Resource, AdminSet, Collection, #collection_type_gid, #share_applies_to_new_works?]
+    #     the given resource, hopefully a collection-like thing
+    #     (e.g. AdminSet, Hyrax::AdminSet, Hyrax::PcdmCollection,
+    #     Collection)
+    #
+    # @return [Boolean]
+    #
+    # @todo Refactor inner working of code as there's lots of branching logic with potential hidden assumptions.
+    def qualifies_as_unauthorized_collection?(resource:)
+      case resource
+      when AdminSet, Hyrax::AdministrativeSet
+        # Prior to this refactor, we looked at AdminSet only; However with the advent of the
+        # Hyrax::AdministrativeSet, we need to test both cases.
+        true
+      else
+        if resource.respond_to?(:share_applies_to_new_works?)
+          # The Collection model has traditionally delegated #share_applies_to_new_works? to
+          # the underlying collection_type
+          # (see https://github.com/samvera/hyrax/blob/696da5db/spec/models/collection_spec.rb#L189)
+          resource.share_applies_to_new_works?
+        elsif resource.respond_to?(:collection_type_gid)
+          # This is likely a Hyrax::PcdmCollection object, which means we don't have the delegation
+          # behavior.  Instead we'll query the collection type directly.
+          collection_type = CollectionType.find_by_gid(resource.collection_type_gid)
+          collection_type&.share_applies_to_new_works?
+        else
+          # How might we get here?
+          false
+        end
+      end
     end
 
     # find all of the collection ids an object is a member of
