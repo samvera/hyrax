@@ -158,7 +158,7 @@ module Hyrax
     # find all of the work's collections a user can manage
     # @return [Array] of collection ids
     def object_managed_collection_ids
-      @object_managed_collection_ids ||= object_member_of & managed_collection_ids
+      @object_managed_collection_ids ||= object_member_of_ids & managed_collection_ids
     end
 
     # find all of the work's collections a user cannot manage
@@ -167,7 +167,7 @@ module Hyrax
     def object_unauthorized_collection_ids
       @object_unauthorized_collection_ids ||= begin
                                                 limited_access = []
-                                                unauthorized_collection_ids = object_member_of - object_managed_collection_ids
+                                                unauthorized_collection_ids = object_member_of_ids - object_managed_collection_ids
                                                 if unauthorized_collection_ids.any?
                                                   unauthorized_collection_ids.each do |id|
                                                     # TODO: Can we instead use a SOLR query?  This seems to be somewhat expensive.  However, as this is
@@ -182,8 +182,8 @@ module Hyrax
 
     # find all of the collection ids an object is a member of
     # @return [Array] array of collection ids
-    def object_member_of
-      @object_member_of ||= begin
+    def object_member_of_ids
+      @object_member_of_ids ||= begin
                               belongs_to = []
                               # get all of work's collection ids from the form
                               belongs_to += @object.member_of_collection_ids
