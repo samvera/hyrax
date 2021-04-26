@@ -26,6 +26,10 @@ while [ $COUNTER -lt 30 ]; do
         (cd "$CONFDIR" && zip -r - *) | curl -X POST $solr_user_settings --header "Content-Type:application/octet-stream" --data-binary @- "$solr_config_upload_url"
       fi
       exit
+    else
+      echo "-- Solr at $solr_config_list_url is accepting unauthorized connections; we can't upload a trusted ConfigSet."
+      echo "--   It's possible SolrCloud is bootstrapping its configuration, so this process will retry."
+      echo "--   see: https://solr.apache.org/guide/8_6/configsets-api.html#configsets-upload"
     fi
   fi
   COUNTER=$(( COUNTER+1 ));
