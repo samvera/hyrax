@@ -1,6 +1,6 @@
-<% if embargo_enforced?(f.object) %>
+<% if embargo_enforced?(f.object) && !f.object.new_record? %>
   <%= render 'form_permission_under_embargo', f: f %>
-<% elsif lease_enforced?(f.object) %>
+<% elsif lease_enforced?(f.object) && !f.object.new_record? %>
   <%= render 'form_permission_under_lease', f: f %>
 <% else %>
     <fieldset>
