@@ -17,6 +17,17 @@ RSpec.describe Hyrax::VisibilityIntention do
       end
     end
 
+    context 'when an embargo is requested with a release date that is not a date' do
+      let(:attributes) do
+        { visibility: described_class::EMBARGO_REQUEST,
+          release_date: "you can't parse this (as a date)" }
+      end
+
+      it 'raises an error' do
+        expect { intention.embargo_params }.to raise_error ArgumentError
+      end
+    end
+
     context 'when an embargo is requested with valid release date' do
       let(:attributes) do
         { visibility: described_class::EMBARGO_REQUEST, release_date: date }
@@ -54,6 +65,17 @@ RSpec.describe Hyrax::VisibilityIntention do
 
     context 'when an lease is requested with no release date' do
       let(:attributes) { { visibility: described_class::LEASE_REQUEST } }
+
+      it 'raises an error' do
+        expect { intention.lease_params }.to raise_error ArgumentError
+      end
+    end
+
+    context 'when a lease is requested with a release date that is not a date' do
+      let(:attributes) do
+        { visibility: described_class::LEASE_REQUEST,
+          release_date: "you can't parse this (as a date)" }
+      end
 
       it 'raises an error' do
         expect { intention.lease_params }.to raise_error ArgumentError

@@ -54,7 +54,7 @@ module Hyrax
     ##
     # @return [Boolean]
     def valid_embargo?
-      wants_embargo? && release_date.present?
+      wants_embargo? && release_date.present? && a_valid_date?(release_date)
     end
 
     ##
@@ -66,13 +66,31 @@ module Hyrax
     ##
     # @return [Boolean]
     def valid_lease?
-      wants_lease? && release_date.present?
+      wants_lease? && release_date.present? && a_valid_date?(release_date)
     end
 
     ##
     # @return [Boolean]
     def wants_lease?
       visibility == LEASE_REQUEST
+    end
+
+    private
+
+    ##
+    # @param date [Object]
+    # @return [Boolean]
+    # @note If we don't have a valid date, we really can't have a
+    # valid release_date
+    def a_valid_date?(date)
+      return true if date.is_a?(Date)
+      return true if date.is_a?(Time)
+      Date.parse(date)
+      # In Ruby 2.7.x, Date::Error descends from ArgumentError; Once
+      # we stop supporting pre-2.7, we can switch this to the more
+      # narrow Date::Error
+    rescue ArgumentError
+      false
     end
   end
 end
