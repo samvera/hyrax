@@ -158,38 +158,64 @@ module Hyrax
     # find all of the work's collections a user can manage
     # @return [Array] of collection ids
     def object_managed_collection_ids
-      @object_managed_collection_ids ||= object_member_of & managed_collection_ids
+      @object_managed_collection_ids ||= object_member_of_ids & managed_collection_ids
     end
 
-    # find all of the work's collections a user cannot manage
-    # note: if the collection type doesn't include "sharing_applies_to_new_works", we don't limit access
+    # find all of the work's collections a user cannot manage note: if
+    # the collection type doesn't include
+    # "sharing_applies_to_new_works", we don't limit access
+    #
     # @return [Array] of collection ids with limited access
     def object_unauthorized_collection_ids
       @object_unauthorized_collection_ids ||= begin
-                                                limited_access = []
-                                                unauthorized_collection_ids = object_member_of - object_managed_collection_ids
-                                                if unauthorized_collection_ids.any?
-                                                  unauthorized_collection_ids.each do |id|
-                                                    # TODO: Can we instead use a SOLR query?  This seems to be somewhat expensive.  However, as this is
-                                                    # used in administration instead of user front-end displays, I'm not as concerned.
-                                                    collection = ActiveFedora::Base.find(id)
-                                                    limited_access << id if (collection.instance_of? AdminSet) || collection.share_applies_to_new_works?
-                                                  end
+                                                unauthorized_collection_ids = object_member_of_ids - object_managed_collection_ids
+                                                qualified_resources = Hyrax.query_service.find_many_by_ids(ids: unauthorized_collection_ids).select do |resource|
+                                                  qualifies_as_unauthorized_collection?(resource: resource)
                                                 end
-                                                limited_access
+                                                qualified_resources.map { |resource| resource.id.to_s }
                                               end
+    end
+
+    # Does the given resource qualify as a collection the current user cannot manage.
+    #
+    # @see {#object_unauthorized_collection_ids}
+    #
+    # @param resource [Valkyrie::Resource, AdminSet, Collection, #collection_type_gid, #share_applies_to_new_works?]
+    #     the given resource, hopefully a collection-like thing
+    #     (e.g. AdminSet, Hyrax::AdminSet, Hyrax::PcdmCollection,
+    #     Collection)
+    #
+    # @return [Boolean]
+    #
+    # @todo Refactor inner working of code as there's lots of branching logic with potential hidden assumptions.
+    def qualifies_as_unauthorized_collection?(resource:)
+      case resource
+      when AdminSet, Hyrax::AdministrativeSet
+        # Prior to this refactor, we looked at AdminSet only; However with the advent of the
+        # Hyrax::AdministrativeSet, we need to test both cases.
+        true
+      else
+        if resource.respond_to?(:share_applies_to_new_works?)
+          # The Collection model has traditionally delegated #share_applies_to_new_works? to
+          # the underlying collection_type
+          # (see https://github.com/samvera/hyrax/blob/696da5db/spec/models/collection_spec.rb#L189)
+          resource.share_applies_to_new_works?
+        elsif resource.respond_to?(:collection_type_gid)
+          # This is likely a Hyrax::PcdmCollection object, which means we don't have the delegation
+          # behavior.  Instead we'll query the collection type directly.
+          collection_type = CollectionType.find_by_gid(resource.collection_type_gid)
+          collection_type&.share_applies_to_new_works?
+        else
+          # How might we get here?
+          false
+        end
+      end
     end
 
     # find all of the collection ids an object is a member of
     # @return [Array] array of collection ids
-    def object_member_of
-      @object_member_of ||= begin
-                              belongs_to = []
-                              # get all of work's collection ids from the form
-                              belongs_to += @object.member_of_collection_ids
-                              belongs_to << @object.admin_set_id if @object.admin_set_id.present?
-                              belongs_to
-                            end
+    def object_member_of_ids
+      @object_member_of_ids ||= (@object.member_of_collection_ids + [@object.admin_set_id]).select(&:present?)
     end
 
     # The list of all collections this user has manage rights on
