@@ -7,7 +7,7 @@ services:
       target: hyrax-engine-dev
       args:
         - EXTRA_APK_PACKAGES=git less
-    image: hyrax-engine-dev
+    image: ghcr.io/samvera/dassie
     stdin_open: true
     tty: true
     user: root
@@ -46,7 +46,7 @@ services:
       - "5959:5900"
 
   db_migrate:
-    image: hyrax-engine-dev
+    image: ghcr.io/samvera/dassie
     user: root
     env_file:
       - .env
@@ -74,7 +74,7 @@ services:
       - db:/var/lib/postgresql/data
 
   fcrepo:
-    image: samvera/fcrepo4:4.7.5
+    image: ghcr.io/samvera/fcrepo4:4.7.5
     volumes:
       - fcrepo:/data:cached
     ports:
@@ -94,6 +94,7 @@ services:
     build:
       context: .
       target: hyrax-engine-dev-worker
+    image: ghcr.io/samvera/dassie-worker
     env_file:
       - .env
       - .dassie/.env
