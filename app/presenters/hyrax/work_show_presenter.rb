@@ -94,7 +94,7 @@ module Hyrax
       return nil if representative_id.blank?
       @representative_presenter ||=
         begin
-          result = member_presenters_for([representative_id]).first
+          result = member_presenters([representative_id]).first
           return nil if result.try(:id) == id
           result.try(:representative_presenter) || result
         end
@@ -181,9 +181,13 @@ module Hyrax
       paginated_item_list(page_array: authorized_item_ids)
     end
 
+    ##
+    # @deprecated use `#member_presenters(ids)` instead
+    #
     # @param [Array<String>] ids a list of ids to build presenters for
     # @return [Array<presenter_class>] presenters for the array of ids (not filtered by class)
     def member_presenters_for(an_array_of_ids)
+      Deprecation.warn("Use `#member_presenters` instead.")
       member_presenters(an_array_of_ids)
     end
 
