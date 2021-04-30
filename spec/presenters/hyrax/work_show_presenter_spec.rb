@@ -239,19 +239,6 @@ RSpec.describe Hyrax::WorkShowPresenter do
     end
   end
 
-  describe "#member_presenters_for" do
-    let(:obj) { create(:work_with_file_and_work) }
-    let(:attributes) { obj.to_solr }
-    let(:items) { presenter.ordered_ids }
-    let(:subject) { presenter.member_presenters_for(items) }
-
-    it "returns appropriate classes for each item" do
-      expect(subject.size).to eq 2
-      expect(subject.first).to be_instance_of(Hyrax::FileSetPresenter)
-      expect(subject.last).to be_instance_of(described_class)
-    end
-  end
-
   describe "#list_of_item_ids_to_display" do
     let(:subject) { presenter.list_of_item_ids_to_display }
     let(:items_list) { (0..9).map { |i| "item#{i}" } }
