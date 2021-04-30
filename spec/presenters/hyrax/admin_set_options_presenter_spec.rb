@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::AdminSetOptionsPresenter do
   let(:service) { instance_double(Hyrax::AdminSetService) }
-  let(:presenter) { described_class.new(service) }
+  let(:current_ability) { double('an abilitiy', can?: false) }
+  let(:presenter) { described_class.new(service, current_ability: current_ability) }
 
   describe "#select_options" do
     subject { presenter.select_options }
@@ -26,6 +27,30 @@ RSpec.describe Hyrax::AdminSetOptionsPresenter do
       it do
         is_expected.to eq [['Public Set', '123', { 'data-sharing' => false, 'data-visibility' => 'open' }],
                            ['Private Set', '345', { 'data-sharing' => false, 'data-visibility' => 'restricted' }]]
+      end
+    end
+
+    context "with permission_template and workflow" do
+      let(:solr_doc) { instance_double(SolrDocument, id: '123', to_s: 'Doc') }
+      let(:results) { [solr_doc] }
+
+      let(:workflow) { instance_double(Sipity::Workflow, allows_access_grant?: allow_access_grant) }
+      let(:permission_template) { build(:permission_template, source_id: solr_doc.id, visibility: 'open') }
+      before do
+        expect(Hyrax::PermissionTemplate).to receive(:find_by).and_return(permission_template)
+        allow(presenter).to receive(:workflow) { workflow }
+        allow(permission_template).to receive(:active_workflow).and_return(true)
+      end
+
+      context 'current ability can manage the workflow though the the template does not allow access grants' do
+        let(:allow_access_grant) { false }
+        before do
+          expect(current_ability).to receive(:can?).with(:manage, permission_template).and_return(true)
+        end
+
+        it 'allows sharing' do
+          is_expected.to eq [[solr_doc.to_s, solr_doc.id, { 'data-sharing' => true, 'data-visibility' => 'open' }]]
+        end
       end
     end
 
