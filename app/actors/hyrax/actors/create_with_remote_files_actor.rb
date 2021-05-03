@@ -94,7 +94,7 @@ module Hyrax
       def create_file_from_url_through_valkyrie(env, uri, file_name, auth_header)
         import_url = URI.decode_www_form_component(uri.to_s)
         fs = Hyrax.persister.save(resource: Hyrax::FileSet.new(import_url: import_url, label: file_name))
-        actor = Hyrax::Actors::FileSetActor.new(fs, env.user, use_valkyrie: true)
+        actor = Hyrax::Actors::FileSetActor.new(fs, env.user, use_valkyrie: !Hyrax.config.use_valkryie?)
         actor.create_metadata(visibility: env.curation_concern.visibility)
         actor.attach_to_work(env.curation_concern)
         if uri.scheme == 'file'

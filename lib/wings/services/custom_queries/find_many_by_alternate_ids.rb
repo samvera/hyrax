@@ -22,7 +22,7 @@ module Wings
       # @param alternate_ids [Enumerator<#to_s>] list of ids
       # @param use_valkyrie [boolean] defaults to true; optionally return ActiveFedora::Base objects if false
       # @return [Array<Valkyrie::Resource>, Array<ActiveFedora::Base>]
-      def find_many_by_alternate_ids(alternate_ids:, use_valkyrie: true)
+      def find_many_by_alternate_ids(alternate_ids:, use_valkyrie: Hyrax.config.use_valkryie?)
         af_objects = ActiveFedora::Base.find(alternate_ids.map(&:to_s))
         return af_objects unless use_valkyrie == true
 

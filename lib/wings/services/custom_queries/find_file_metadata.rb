@@ -32,7 +32,7 @@ module Wings
       #   true, returns FileMetadata resource; otherwise, returns ActiveFedora PCDM::File
       #
       # @raise [Hyrax::ObjectNotFoundError]
-      def find_file_metadata_by(id:, use_valkyrie: true)
+      def find_file_metadata_by(id:, use_valkyrie: Hyrax.config.use_valkryie?)
         find_file_metadata_by_alternate_identifier(alternate_identifier: id, use_valkyrie: use_valkyrie)
       end
 
@@ -47,7 +47,7 @@ module Wings
       #   true, returns FileMetadata resource; otherwise, returns ActiveFedora PCDM::File
       #
       # @raise [Hyrax::ObjectNotFoundError]
-      def find_file_metadata_by_alternate_identifier(alternate_identifier:, use_valkyrie: true)
+      def find_file_metadata_by_alternate_identifier(alternate_identifier:, use_valkyrie: Hyrax.config.use_valkryie?)
         alternate_identifier = ::Valkyrie::ID.new(alternate_identifier)
         object = Hydra::PCDM::File.find(alternate_identifier.to_s)
         raise Hyrax::ObjectNotFoundError if object.new_record?
@@ -71,7 +71,7 @@ module Wings
       #
       # @return [Array<Hyrax::FileMetadata, Hydra::PCDM::File>] or empty array
       #   if there are no ids or none of the ids map to Hyrax::FileMetadata
-      def find_many_file_metadata_by_ids(ids:, use_valkyrie: true)
+      def find_many_file_metadata_by_ids(ids:, use_valkyrie: Hyrax.config.use_valkryie?)
         ids.each_with_object([]) do |alt_id, results|
           begin
             results << find_file_metadata_by_alternate_identifier(alternate_identifier: alt_id, use_valkyrie: use_valkyrie)
@@ -95,7 +95,7 @@ module Wings
       # @example
       #   Hyrax.query_service.find_file_metadata_by_use(use: ::RDF::URI("http://pcdm.org/ExtractedText"))
       #
-      def find_many_file_metadata_by_use(resource:, use:, use_valkyrie: true)
+      def find_many_file_metadata_by_use(resource:, use:, use_valkyrie: Hyrax.config.use_valkryie?)
         pcdm_files = find_many_file_metadata_by_ids(ids: resource.file_ids, use_valkyrie: false)
         pcdm_files.select! { |pcdm_file| pcdm_file.metadata_node.type.include?(use) }
 

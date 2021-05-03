@@ -27,7 +27,7 @@ class ImportUrlJob < Hyrax::ApplicationJob
   # @param [Boolean] use_valkyrie - a switch on whether or not to use Valkyrie processing
   #
   # @todo At present, this job works for ActiveFedora objects. The use_valkyrie is not complete.
-  def perform(file_set, operation, headers = {}, use_valkyrie: false)
+  def perform(file_set, operation, headers = {}, use_valkyrie: Hyrax.config.use_valkryie?)
     @file_set = file_set
     @operation = operation
     @headers = headers

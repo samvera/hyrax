@@ -51,7 +51,7 @@ module Hyrax
       obj.attributes = work_params(admin_set_id: obj.admin_set_id).except(*visibility_params)
       obj.date_modified = Time.current.ctime
 
-      InheritPermissionsJob.perform_now(obj, use_valkyrie: false)
+      InheritPermissionsJob.perform_now(obj, use_valkyrie: Hyrax.config.use_valkryie?)
       VisibilityCopyJob.perform_now(obj)
 
       obj.save
@@ -61,7 +61,7 @@ module Hyrax
       case params["update_type"]
       when "update"
         batch.each do |doc_id|
-          update_document(Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: doc_id, use_valkyrie: false))
+          update_document(Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: doc_id, use_valkyrie: Hyrax.config.use_valkryie?))
         end
         flash[:notice] = "Batch update complete"
         after_update
@@ -83,7 +83,7 @@ module Hyrax
     end
 
     def destroy_batch
-      batch.each { |id| Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: id, use_valkyrie: false).destroy }
+      batch.each { |id| Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: id, use_valkyrie: Hyrax.config.use_valkryie?).destroy }
       after_update
     end
 

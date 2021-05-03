@@ -17,7 +17,7 @@ module Hyrax
     private
 
     def curation_concern
-      @curation_concern ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id], use_valkyrie: false)
+      @curation_concern ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id], use_valkyrie: Hyrax.config.use_valkryie?)
     end
 
     def workflow_action_form
