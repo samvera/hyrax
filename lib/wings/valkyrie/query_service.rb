@@ -103,7 +103,7 @@ module Wings
       #
       # @return [Valkyrie::Resource]
       # @raise [Valkyrie::Persistence::ObjectNotFoundError]
-      def find_by_alternate_identifier(alternate_identifier:, use_valkyrie: Hyrax.config.use_valkryie?)
+      def find_by_alternate_identifier(alternate_identifier:, use_valkyrie: true)
         raise(ArgumentError, 'id must be a Valkyrie::ID') unless
           alternate_identifier.respond_to?(:to_str)
 
