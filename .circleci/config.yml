@@ -22,6 +22,17 @@ jobs:
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
     steps:
       - samvera/cached_checkout
+
+      - run:
+          name: Check for a branch named 'master'
+          command: |
+            git fetch --all --quiet --prune --prune-tags
+            if [[ -n "$(git branch --all --list master */master)" ]]; then
+              echo "A branch named 'master' was found. Please remove it."
+              echo "$(git branch --all --list master */master)"
+            fi
+            [[ -z "$(git branch --all --list master */master)" ]]
+
       - samvera/bundle_for_gem:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
