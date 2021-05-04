@@ -91,7 +91,12 @@ module Hyrax
       property :date_uploaded, readable: false
       property :agreement_accepted, virtual: true, default: false, prepopulator: ->(_opts) { self.agreement_accepted = !model.new_record }
 
-      collection :permissions, virtual: true, default: [], form: Permission, prepopulator: ->(_opts) { self.permissions = Hyrax::AccessControl.for(resource: model).permissions }
+      collection(:permissions,
+                 virtual: true,
+                 default: [],
+                 form: Permission,
+                 populator: :permission_populator,
+                 prepopulator: ->(_opts) { self.permissions = Hyrax::AccessControl.for(resource: model).permissions })
 
       # virtual properties for embargo/lease;
       property :embargo_release_date, virtual: true, prepopulator: ->(_opts) { self.embargo_release_date = model.embargo&.embargo_release_date }
@@ -200,6 +205,11 @@ module Hyrax
       end
 
       private
+
+      # https://trailblazer.to/2.1/docs/reform.html#reform-populators-populator-collections
+      def permission_populator(collection:, index:, **)
+        Permission.new(collection[index])
+      end
 
       def _form_field_definitions
         self.class.definitions
