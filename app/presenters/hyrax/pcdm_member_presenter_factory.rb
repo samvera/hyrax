@@ -30,8 +30,14 @@ module Hyrax
     def file_set_presenters
       return enum_for(:file_set_presenters) unless block_given?
 
-      query_docs(generic_type: "FileSet").each do |result|
-        yield presenter_for(document: ::SolrDocument.new(result), ability: ability)
+      results = query_docs(generic_type: "FileSet")
+
+      object.member_ids.each do |id|
+        id = id.to_s
+        indx = results.index { |doc| id == doc['id'] }
+        next if indx.nil?
+        hash = results.delete_at(indx)
+        yield presenter_for(document: ::SolrDocument.new(hash), ability: ability)
       end
     end
 
@@ -40,8 +46,13 @@ module Hyrax
     def member_presenters
       return enum_for(:member_presenters) unless block_given?
 
-      query_docs.each do |result|
-        yield presenter_for(document: ::SolrDocument.new(result), ability: ability)
+      results = query_docs
+
+      object.member_ids.each do |id|
+        id = id.to_s
+        indx = results.index { |doc| id == doc['id'] }
+        hash = results.delete_at(indx)
+        yield presenter_for(document: ::SolrDocument.new(hash), ability: ability)
       end
     end
 
@@ -50,8 +61,14 @@ module Hyrax
     def work_presenters
       return enum_for(:work_presenters) unless block_given?
 
-      query_docs(generic_type: "Work").each do |result|
-        yield presenter_for(document: ::SolrDocument.new(result), ability: ability)
+      results = query_docs(generic_type: "Work")
+
+      object.member_ids.each do |id|
+        id = id.to_s
+        indx = results.index { |doc| id == doc['id'] }
+        next if indx.nil?
+        hash = results.delete_at(indx)
+        yield presenter_for(document: ::SolrDocument.new(hash), ability: ability)
       end
     end
 

@@ -8,8 +8,9 @@ RSpec.describe Hyrax::PcdmMemberPresenterFactory, index_adapter: :solr_index, va
 
   RSpec::Matchers.define :be_presenter_for do |expected|
     match do |actual|
-      (actual.solr_document['has_model_ssim'].first == expected.model_name.name) &&
-        actual.id == expected.id
+      actual.id == expected.id &&
+        (actual.solr_document['has_model_ssim'].first ==
+         expected.model_name.name)
     end
   end
 
@@ -44,6 +45,10 @@ RSpec.describe Hyrax::PcdmMemberPresenterFactory, index_adapter: :solr_index, va
         expect(factory.file_set_presenters)
           .to contain_exactly(*file_sets.map { |fs| be_presenter_for(fs) })
       end
+
+      it 'gives members in order' do
+        expect(factory.file_set_presenters.map(&:id)).to eq file_sets.map(&:id)
+      end
     end
   end
 
@@ -69,6 +74,10 @@ RSpec.describe Hyrax::PcdmMemberPresenterFactory, index_adapter: :solr_index, va
                               an_instance_of(Hyrax::FileSetPresenter),
                               an_instance_of(Hyrax::FileSetPresenter))
       end
+
+      it 'gives members in order' do
+        expect(factory.member_presenters.map(&:id)).to eq ids
+      end
     end
   end
 
@@ -83,6 +92,10 @@ RSpec.describe Hyrax::PcdmMemberPresenterFactory, index_adapter: :solr_index, va
       it 'builds only work presenters' do
         expect(factory.work_presenters)
           .to contain_exactly(*works.map { |fs| be_presenter_for(fs) })
+      end
+
+      it 'gives members in order' do
+        expect(factory.work_presenters.map(&:id)).to eq works.map(&:id)
       end
     end
   end
