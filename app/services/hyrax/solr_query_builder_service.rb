@@ -14,9 +14,9 @@ module Hyrax
       end
 
       # Construct a solr query from a list of pairs (e.g. [field name, values])
-      # @param [Array<Array>] field_pairs a list of pairs of property name and values
-      # @param [String] join_with ('AND') the value we're joining the clauses with
-      # @param [String] type ('field') The type of query to run. Either 'raw' or 'field'
+      # @param [Hash] field_pairs a list of pairs of property name and values
+      # @param [String] join_with the value we're joining the clauses with (default: ' AND ')
+      # @param [String] type of query to run. Either 'raw' or 'field' (default: 'field')
       # @return [String] a solr query
       # @example
       #   construct_query([['library_id_ssim', '123'], ['owner_ssim', 'Fred']])
@@ -30,6 +30,20 @@ module Hyrax
 
       def default_join_with
         ' AND '
+      end
+
+      # Construct a solr query from a list of pairs (e.g. [field name, values]) including the model (e.g. Collection, Monograph)
+      # @param [Class] model class
+      # @param [Hash] field_pairs a list of pairs of property name and values
+      # @param [String] join_with the value we're joining the clauses with (default: ' AND ')
+      # @param [String] type of query to run. Either 'raw' or 'field' (default: 'field')
+      # @return [String] a solr query
+      # @example
+      #   construct_query(Collection, [['library_id_ssim', '123'], ['owner_ssim', 'Fred']])
+      #   # => "_query_:\"{!field f=has_model_ssim}Collection\" AND _query_:\"{!field f=library_id_ssim}123\" AND _query_:\"{!field f=owner_ssim}Fred\""
+      def construct_query_for_model(model, field_pairs, join_with = default_join_with, type = 'field')
+        field_pairs["has_model_ssim"] = model.to_s
+        construct_query(field_pairs, join_with, type)
       end
 
       private
