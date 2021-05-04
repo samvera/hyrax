@@ -57,6 +57,19 @@ RSpec.describe Hyrax::PcdmMemberPresenterFactory, index_adapter: :solr_index, va
       expect(factory.member_presenters.to_a).to be_empty
     end
 
+    it 'accepts bespoke member ids' do
+      fs = FactoryBot.valkyrie_create(:hyrax_file_set)
+      Hyrax.index_adapter.save(resource: fs)
+
+      expect(factory.member_presenters([fs.id]).to_a)
+        .to contain_exactly(be_presenter_for(fs))
+    end
+
+    it 'raises an error if given an unindexed id' do
+      expect { factory.member_presenters(['FAKE_ID']).to_a }
+        .to raise_error ArgumentError
+    end
+
     context 'with members' do
       include_context 'with members'
 
@@ -78,6 +91,16 @@ RSpec.describe Hyrax::PcdmMemberPresenterFactory, index_adapter: :solr_index, va
       it 'gives members in order' do
         expect(factory.member_presenters.map(&:id)).to eq ids
       end
+    end
+  end
+
+  describe '#ordered_ids' do
+    its(:ordered_ids) { is_expected.to eq ids }
+
+    context 'with members' do
+      include_context 'with members'
+
+      its(:ordered_ids) { is_expected.to eq ids }
     end
   end
 

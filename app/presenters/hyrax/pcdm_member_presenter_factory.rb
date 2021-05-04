@@ -42,18 +42,36 @@ module Hyrax
     end
 
     ##
-    # @return [Enumerator<FileSetPresenter, WorkShowPresenter>]
-    def member_presenters
-      return enum_for(:member_presenters) unless block_given?
+    # @note defaults to using `object.member_ids`. passing a specific set of
+    #   ids is supported for compatibility with {MemberPresenterFactory}, but
+    #   we recommend making sparing use of this feature.
+    #
+    # @overload member_presenters
+    #   @return [Enumerator<FileSetPresenter, WorkShowPresenter>]
+    #   @raise [ArgumentError] if an unindexed id is passed
+    # @overload member_presenters
+    #   @param [Array<#to_s>] ids
+    #   @return [Enumerator<FileSetPresenter, WorkShowPresenter>]
+    #   @raise [ArgumentError] if an unindexed id is passed
+    def member_presenters(ids = object.member_ids)
+      return enum_for(:member_presenters, ids) unless block_given?
 
-      results = query_docs
+      results = query_docs(ids: ids)
 
-      object.member_ids.each do |id|
+      ids.each do |id|
         id = id.to_s
         indx = results.index { |doc| id == doc['id'] }
+        raise(ArgumentError, "Could not find an indexed document for id: #{id}") if
+          indx.nil?
         hash = results.delete_at(indx)
         yield presenter_for(document: ::SolrDocument.new(hash), ability: ability)
       end
+    end
+
+    ##
+    # @return [Array<#to_s>]
+    def ordered_ids
+      object.member_ids
     end
 
     ##
@@ -88,8 +106,8 @@ module Hyrax
 
     private
 
-    def query_docs(generic_type: nil)
-      query = "{!terms f=id}#{object.member_ids.join(',')}"
+    def query_docs(generic_type: nil, ids: object.member_ids)
+      query = "{!terms f=id}#{ids.join(',')}"
       query += "{!term f=generic_type_si}#{generic_type}" if generic_type
 
       Hyrax::SolrService
