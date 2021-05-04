@@ -278,6 +278,11 @@ RSpec.configure do |config|
       .and_return(Valkyrie::IndexingAdapter.find(adapter_name))
   end
 
+  config.after(:example, :index_adapter) do |example|
+    adapter_name = example.metadata[:index_adapter]
+    Valkyrie::IndexingAdapter.find(adapter_name).wipe!
+  end
+
   config.before(:example, :valkyrie_adapter) do |example|
     adapter_name = example.metadata[:valkyrie_adapter]
 
