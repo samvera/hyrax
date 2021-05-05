@@ -6,6 +6,12 @@ class IngestLocalFileJob < Hyrax::ApplicationJob
   # @param [String] path
   # @param [User] user
   def perform(file_set, path, user)
+    perform_af(file_set, path, user)
+  end
+
+  private
+
+  def perform_af(file_set, path, user)
     file_set.label ||= File.basename(path)
 
     actor = Hyrax::Actors::FileSetActor.new(file_set, user)
