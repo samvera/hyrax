@@ -20,13 +20,13 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
     let(:field_pairs) do
       {
         id: collection_ids,
-        collection_type_gid_ssim: collection_type_gids.map(&:to_s)
+        collection_type_gid_ssim: collection_type_gids
       }
     end
     let(:field_pairs_for_col2) do
       {
         id: [collection2.id],
-        collection_type_gid_ssim: collection_type_gids.map(&:to_s)
+        collection_type_gid_ssim: collection_type_gids
       }
     end
     let(:use_valkyrie) { true }

@@ -61,7 +61,7 @@ module Hyrax
     end
 
     def collection_type_gids_that_disallow_multiple_membership
-      Hyrax::CollectionType.gids_that_do_not_allow_multiple_membership.map(&:to_s)
+      Hyrax::CollectionType.gids_that_do_not_allow_multiple_membership
     end
 
     def build_error_message(problematic_collections)
