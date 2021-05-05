@@ -15,9 +15,9 @@ require 'capybara/rspec'
 require 'capybara/rails'
 require 'capybara-screenshot/rspec'
 require 'selenium-webdriver'
-require 'webdrivers'
+require 'webdrivers' unless ENV['IN_DOCKER'].present? || ENV['HUB_URL'].present?
 
-if ENV['IN_DOCKER'].present?
+if ENV['IN_DOCKER'].present? || ENV['HUB_URL'].present?
   args = %w[disable-gpu no-sandbox whitelisted-ips window-size=1400,1400]
   args.push('headless') if ActiveModel::Type::Boolean.new.cast(ENV['CHROME_HEADLESS_MODE'])
 
