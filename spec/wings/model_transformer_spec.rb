@@ -363,4 +363,23 @@ RSpec.describe Wings::ModelTransformer, :clean_repo do
       end
     end
   end
+
+  context 'build for access control' do
+    let(:af_object) { ActiveFedora::Base.create }
+    let(:permission) { { name: "admin@example.com", access: :edit.to_s, type: :person } }
+    let(:access_control) do
+      Hydra::AccessControl.create.tap do |ac|
+        ac.owner = af_object
+        ac.permissions.create(permission)
+      end
+    end
+    let(:pcdm_object) { access_control }
+    subject(:resource) { factory.build }
+
+    it 'sets permissions' do
+      expect(resource.permissions.first.access_to).to eq pcdm_object.permissions.first.access_to_id
+      expect(resource.permissions.first.mode.to_s).to eq pcdm_object.permissions.first.access
+      expect(resource.permissions.first.agent).to eq pcdm_object.permissions.first.agent_name
+    end
+  end
 end

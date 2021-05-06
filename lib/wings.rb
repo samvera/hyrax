@@ -98,27 +98,6 @@ require 'wings/valkyrie/persister'
 require 'wings/valkyrie/storage'
 require 'wings/valkyrie/query_service'
 
-Hydra::AccessControl.send(:define_method, :valkyrie_resource) do
-  attrs = attributes.symbolize_keys
-  attrs[:new_record]  = new_record?
-  attrs[:created_at]  = create_date
-  attrs[:updated_at]  = modified_date
-
-  attrs[:permissions] = permissions.map do |permission|
-    agent = permission.type == 'group' ? "group/#{permission.agent_name}" : permission.agent_name
-
-    Hyrax::Permission.new(id: permission.id,
-                          mode: permission.access.to_sym,
-                          agent: agent,
-                          access_to: Valkyrie::ID.new(permission.access_to_id),
-                          new_record: permission.new_record?)
-  end
-
-  attrs[:access_to] = attrs[:permissions].find { |p| p.access_to&.id&.present? }&.access_to
-
-  Hyrax::AccessControl.new(**attrs)
-end
-
 begin
   require 'wings/setup'
 rescue NameError, Hyrax::SimpleSchemaLoader::UndefinedSchemaError => err
