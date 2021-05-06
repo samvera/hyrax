@@ -4,6 +4,14 @@ RSpec.describe IngestLocalFileJob do
   let(:user) { create(:user) }
   let(:path) { File.join(fixture_path, 'world.png') }
 
+  context 'when passing a Valkyrie::Resource' do
+    let(:file_set) { FactoryBot.build(:hyrax_file_set) }
+    it 'attach successfully attachs a file' do
+      expect(Hyrax.config.callback).to receive(:run).with(:after_import_local_file_success, file_set, user, path, warn: false).and_return(true)
+      described_class.perform_now(file_set, path, user)
+    end
+  end
+
   context 'when use_valkyrie is false' do
     let(:file_set) { FileSet.new }
 
