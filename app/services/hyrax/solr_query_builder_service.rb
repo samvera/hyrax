@@ -3,33 +3,22 @@ module Hyrax
   ##
   # Methods in this class are from/based on ActiveFedora::SolrQueryBuilder
   class SolrQueryBuilderService
-    attr_reader :query
-
-    def initialize(query: '')
-      @query = query
-    end
-
-    ##
-    # @return [SolrQueryBuilderService] the existing service with id query
-    #   appended.
-    def with_ids(ids: [])
-      @query += self.class.construct_query_for_ids(ids)
-      self
-    end
-
-    def build
-      @query
-    end
-
     class << self
       # Construct a solr query for a list of ids
       # This is used to get a solr response based on the list of ids in an object's RELS-EXT relationhsips
       # If the id_array is empty, defaults to a query of "id:NEVER_USE_THIS_ID", which will return an empty solr response
       # @param [Array] id_array the ids that you want included in the query
+      # @return [String] a solr query
+      # @example
+      #   construct_query_for_ids(['a1', 'b2'])
+      #   # => "{!terms f=id}a1,b2"
+      # @deprecated
       def construct_query_for_ids(id_array)
+        Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
+                         "Instead, use 'Hyrax::SolrQueryService.new.with_ids'.")
         ids = id_array.reject(&:blank?)
         return "id:NEVER_USE_THIS_ID" if ids.empty?
-        "{!terms f=#{Hyrax.config.id_field}}#{ids.join(',')}"
+        Hyrax::SolrQueryService.new.with_ids(ids: id_array).build
       end
 
       # Construct a solr query from a list of pairs (e.g. [field name, values])
@@ -40,14 +29,19 @@ module Hyrax
       # @example
       #   construct_query([['library_id_ssim', '123'], ['owner_ssim', 'Fred']])
       #   # => "_query_:\"{!field f=library_id_ssim}123\" AND _query_:\"{!field f=owner_ssim}Fred\""
+      # @deprecated
       def construct_query(field_pairs, join_with = default_join_with, type = 'field')
-        clauses = pairs_to_clauses(field_pairs, type)
-        return "" if clauses.count.zero?
-        return clauses.first if clauses.count == 1
-        "(#{clauses.join(join_with)})"
+        Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
+                         "Instead, use 'Hyrax::SolrQueryService.new.with_field_pairs'.")
+        Hyrax::SolrQueryService.new.with_field_pairs(field_pairs: field_pairs,
+                                                     join_with: join_with,
+                                                     type: type).build
       end
 
+      # @deprecated
       def default_join_with
+        Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
+                         "There will not be a replacement for this method.")
         ' AND '
       end
 
@@ -60,9 +54,14 @@ module Hyrax
       # @example
       #   construct_query(Collection, [['library_id_ssim', '123'], ['owner_ssim', 'Fred']])
       #   # => "_query_:\"{!field f=has_model_ssim}Collection\" AND _query_:\"{!field f=library_id_ssim}123\" AND _query_:\"{!field f=owner_ssim}Fred\""
+      # @deprecated
       def construct_query_for_model(model, field_pairs, join_with = default_join_with, type = 'field')
+        Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
+                         "Instead, use 'Hyrax::SolrQueryService.new.with_model'.")
         field_pairs["has_model_ssim"] = model.to_s
-        construct_query(field_pairs, join_with, type)
+        Hyrax::SolrQueryService.new.with_field_pairs(field_pairs: field_pairs,
+                                                     join_with: join_with,
+                                                     type: type).build
       end
 
       private

@@ -39,6 +39,11 @@ Hyrax.config do |config|
   ##
   # Set the system-wide virus scanner
   config.virus_scanner = Hyrax::VirusScanner
+
+  ##
+  # To index to the Valkyrie core, uncomment the following two lines.
+  # config.query_index_from_valkyrie = true
+  # config.index_adapter = :solr_index
 end
 
 Date::DATE_FORMATS[:standard] = "%m/%d/%Y"
