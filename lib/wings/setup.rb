@@ -2,6 +2,7 @@
 
 ActiveFedora::Base.include Wings::Valkyrizable
 ActiveFedora::File.include Wings::Valkyrizable
+Hydra::AccessControl.include Wings::Valkyrizable
 
 module ActiveTriples
   class NodeConfig
