@@ -14,7 +14,7 @@ module Hyrax
       def show_only_resources_deposited_by_current_user(solr_parameters)
         solr_parameters[:fq] ||= []
         solr_parameters[:fq] += [
-          ActiveFedora::SolrQueryBuilder.construct_query_for_rel(depositor: current_user_key)
+          Hyrax::SolrQueryBuilderService.construct_query_for_rel(depositor: current_user_key)
         ]
       end
     end

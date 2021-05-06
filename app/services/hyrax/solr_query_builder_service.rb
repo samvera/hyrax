@@ -13,6 +13,19 @@ module Hyrax
         "{!terms f=#{Hyrax.config.id_field}}#{ids.join(',')}"
       end
 
+      # Create a raw query with a clause for each key, value
+      # @param [Hash, Array<Array<String>>] field_pairs key is the predicate, value is the target_uri
+      # @param [String] join_with ('AND') the value we're joining the clauses with
+      # @example
+      #   construct_query_for_rel [[:has_model, "ComplexCollection"], [:has_model, "ActiveFedora_Base"]], 'OR'
+      #   # => _query_:"{!raw f=has_model_ssim}ComplexCollection" OR _query_:"{!raw f=has_model_ssim}ActiveFedora_Base"
+      #
+      #   construct_query_for_rel [[Book._reflect_on_association(:library), "foo/bar/baz"]]
+      def construct_query_for_rel(field_pairs, join_with = default_join_with)
+        field_pairs = field_pairs.to_a if field_pairs.is_a? Hash
+        construct_query(property_values_to_solr(field_pairs), join_with, 'raw')
+      end
+
       # Construct a solr query from a list of pairs (e.g. [field name, values])
       # @param [Hash] field_pairs a list of pairs of property name and values
       # @param [String] join_with the value we're joining the clauses with (default: ' AND ')
@@ -71,6 +84,30 @@ module Hyrax
             # Check that the field is not present. In SQL: "WHERE field IS NULL"
             "-#{field}:[* TO *]"
           end
+        end
+      end
+
+      # Given a list of pairs (e.g. [field name, values]), convert the field names
+      # to solr names
+      # @param [Array<Array>] pairs a list of pairs of property name and values
+      # @return [Hash] map of solr fields to values
+      # @example
+      #   property_values_to_solr([['library_id', '123'], ['owner', 'Fred']])
+      #   # => [['library_id_ssim', '123'], ['owner_ssim', 'Fred']]
+      def property_values_to_solr(pairs)
+        pairs.map do |(property, value)|
+          [solr_field(property), value]
+        end
+      end
+
+      # @param [String, ActiveFedora::Relation] field
+      # @return [String] the corresponding solr field for the string
+      def solr_field(field)
+        case field
+        when ActiveFedora::Reflection::AssociationReflection
+          field.solr_key
+        else
+          Hyrax.config.index_field_mapper.solr_name(field, :symbol)
         end
       end
 

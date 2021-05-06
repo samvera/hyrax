@@ -15,7 +15,7 @@ module Hyrax
 
     def search_model_clause
       clauses = allowable_types.map do |k|
-        ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: k.to_s)
+        Hyrax::SolrQueryBuilderService.construct_query_for_rel(has_model: k.to_s)
       end
       # empty array returns nil, AF finder method handles it properly, see hyrax issue #2844
       clauses.size <= 1 ? clauses.first : "(#{clauses.join(' OR ')})"

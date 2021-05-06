@@ -5,7 +5,7 @@ RSpec.describe Hyrax::My::SharesSearchBuilder do
   let(:scope) { FakeSearchBuilderScope.new(current_user: me) }
 
   before do
-    allow(ActiveFedora::SolrQueryBuilder).to receive(:construct_query_for_rel)
+    allow(Hyrax::SolrQueryBuilderService).to receive(:construct_query_for_rel)
       .with(depositor: me.user_key)
       .and_return("depositor")
   end
