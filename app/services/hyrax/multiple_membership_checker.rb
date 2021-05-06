@@ -53,7 +53,11 @@ module Hyrax
     def single_membership_collections(collection_ids)
       return [] if collection_ids.blank?
 
-      ::Collection.where(:id => collection_ids, Hyrax.config.collection_type_index_field.to_sym => collection_type_gids_that_disallow_multiple_membership)
+      field_pairs = {
+        :id => collection_ids,
+        Hyrax.config.collection_type_index_field.to_sym => collection_type_gids_that_disallow_multiple_membership
+      }
+      Hyrax::FindObjectsViaSolrService.find_for_model_by_field_pairs(model: ::Collection, field_pairs: field_pairs, use_valkyrie: true)
     end
 
     def collection_type_gids_that_disallow_multiple_membership
@@ -74,7 +78,7 @@ module Hyrax
     end
 
     def collection_titles_from_list(collection_list)
-      collection_list.each do |collection|
+      collection_list.map do |collection|
         collection.title.first
       end.to_sentence
     end
