@@ -28,15 +28,24 @@ module Hyrax
       filter_docs_with_edit_access!
       copy_visibility = []
       copy_visibility = params[:embargoes].values.map { |h| h[:copy_visibility] } if params[:embargoes]
-      af_objects = Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie: false)
-      af_objects.each do |curation_concern|
-        Hyrax::Actors::EmbargoActor.new(curation_concern).destroy
-        # if the concern is a FileSet, set its visibility and visibility propagation
-        if curation_concern.file_set?
-          curation_concern.visibility = curation_concern.to_solr["visibility_after_embargo_ssim"]
-          curation_concern.save!
-        elsif copy_visibility.include?(curation_concern.id)
-          Hyrax::VisibilityPropagator.for(source: curation_concern).propagate
+      af_objects = Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie: Hyrax.config.use_valkyrie?)
+      if Hyrax.config.use_valkyrie? 
+        af_objects.each do |valkyrie_object|
+          manager = EmbargoManager.new(resource: valkyrie_object)
+          manager.release!
+          af = Wings::Valkyrie::ResourceFactory.new(adapter: Wings::Valkyrie::MetadataAdapter).from_resource(resource: valkyrie_object)
+          Hyrax::Actors::EmbargoActor.new(af).destroy
+        end
+      else
+        af_objects.each do |curation_concern|
+          Hyrax::Actors::EmbargoActor.new(curation_concern).destroy
+          # if the concern is a FileSet, set its visibility and visibility propagation
+          if curation_concern.file_set?
+            curation_concern.visibility = curation_concern.to_solr["visibility_after_embargo_ssim"]
+            curation_concern.save!
+          elsif copy_visibility.include?(curation_concern.id)
+            Hyrax::VisibilityPropagator.for(source: curation_concern).propagate
+          end
         end
       end
       redirect_to embargoes_path, notice: t('.embargo_deactivated')
