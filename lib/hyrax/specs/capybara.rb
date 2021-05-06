@@ -18,7 +18,7 @@ require 'selenium-webdriver'
 require 'webdrivers' unless ENV['IN_DOCKER'].present? || ENV['HUB_URL'].present?
 
 if ENV['IN_DOCKER'].present? || ENV['HUB_URL'].present?
-  args = %w[disable-gpu no-sandbox allowed-ips window-size=1400,1400]
+  args = %w[disable-gpu no-sandbox whitelisted-ips window-size=1400,1400]
   args.push('headless') if ActiveModel::Type::Boolean.new.cast(ENV['CHROME_HEADLESS_MODE'])
 
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(chromeOptions: { args: args })
