@@ -31,10 +31,9 @@ module Hyrax
           # hand. Do this because we don't have the underlying UploadedFile instance
           file_actor = build_file_actor(relation)
           file_actor.ingest_file(wrapper!(file: file, relation: relation))
-          # Copy visibility and permissions from parent (work) to
-          # FileSets even if they come in from BrowseEverything
-          VisibilityCopyJob.perform_later(file_set.parent)
-          InheritPermissionsJob.perform_later(file_set.parent)
+          parent = parent_for(file_set: file_set)
+          VisibilityCopyJob.perform_later(parent)
+          InheritPermissionsJob.perform_later(parent)
         else
           IngestJob.perform_later(wrapper!(file: file, relation: relation))
         end
@@ -138,6 +137,12 @@ module Hyrax
         @ability ||= ::Ability.new(user)
       end
 
+      # @param file_set [FileSet]
+      # @return [ActiveFedora::Base]
+      def parent_for(file_set:)
+        file_set.parent
+      end
+
       def build_file_actor(relation)
         fs = use_valkyrie ? file_set.valkyrie_resource : file_set
         file_actor_class.new(fs, relation, user, use_valkyrie: use_valkyrie)
@@ -179,7 +184,7 @@ module Hyrax
       # Although ActiveFedora clears the children nodes it leaves those fields in Solr populated.
       # rubocop:disable Metrics/CyclomaticComplexity
       def unlink_from_work
-        work = file_set.parent
+        work = parent_for(file_set: file_set)
         return unless work && (work.thumbnail_id == file_set.id || work.representative_id == file_set.id || work.rendering_ids.include?(file_set.id))
         work.thumbnail = nil if work.thumbnail_id == file_set.id
         work.representative = nil if work.representative_id == file_set.id
