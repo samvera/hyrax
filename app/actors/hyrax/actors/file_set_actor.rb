@@ -140,11 +140,16 @@ module Hyrax
       # @param file_set [FileSet]
       # @return [ActiveFedora::Base]
       def parent_for(file_set:)
-        file_set.parent
+        case file_set
+        when ActiveFedora::Base
+          file_set.parent
+        else
+          Hyrax.query_service.find_parents(resource: file_set).first
+        end
       end
 
       def build_file_actor(relation)
-        fs = use_valkyrie ? file_set.valkyrie_resource : file_set
+        fs = object_to_act_on(file_set)
         file_actor_class.new(fs, relation, user, use_valkyrie: use_valkyrie)
       end
 

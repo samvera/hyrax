@@ -32,7 +32,7 @@ RSpec.describe ImportUrlJob do
   context 'when using a Valkyrie::Resource file_set' do
     context 'happy path' do
       let(:file_set) do
-        build(:hyrax_file_set, label: label, import_url: import_url)
+        FactoryBot.valkyrie_create(:hyrax_file_set, label: label, import_url: import_url, depositor: user.user_key)
       end
 
       it 'notifies the operation of success' do
@@ -72,7 +72,7 @@ RSpec.describe ImportUrlJob do
 
       before do
         file_set.id = 'abc123'
-        allow(file_set).to receive(:reload)
+        allow(file_set).to receive(:reload).and_return(file_set)
 
         FileUtils.mkdir_p(tmpdir)
         allow(Dir).to receive(:mktmpdir).and_return(tmpdir)
@@ -83,7 +83,6 @@ RSpec.describe ImportUrlJob do
       end
 
       it 'creates the content and updates the associated operation' do
-        # expect(actor).to receive(:create_content).with(File, from_url: true).and_return(true)
         described_class.perform_now(file_set, operation)
         expect(operation).to be_success
       end
