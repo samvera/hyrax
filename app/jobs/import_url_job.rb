@@ -57,14 +57,14 @@ class ImportUrlJob < Hyrax::ApplicationJob
 
     # @todo Use Hydra::Works::AddExternalFileToFileSet instead of manually
     #       copying the file here. This will be gnarly.
-    copy_remote_file(name) do |f|
+    copy_remote_file(name) do |io_stream|
       # reload the FileSet once the data is copied since this is a long running task
       file_set.reload
 
       # FileSetActor operates synchronously so that this tempfile is available.
       # If asynchronous, the job might be invoked on a machine that did not have this temp file on its file system!
       # NOTE: The return status may be successful even if the content never attaches.
-      log_import_status(f)
+      log_import_status(io_stream)
     end
   end
 
@@ -101,14 +101,14 @@ class ImportUrlJob < Hyrax::ApplicationJob
   end
 
   # Write file to the stream
-  # @param f [IO] the stream to write to
-  def write_file(f)
+  # @param io_stream [IO] the stream to write to
+  def write_file(io_stream)
     retriever = BrowseEverything::Retriever.new
     uri_spec = ActiveSupport::HashWithIndifferentAccess.new(url: uri, headers: headers)
     retriever.retrieve(uri_spec) do |chunk|
-      f.write(chunk)
+      io_stream.write(chunk)
     end
-    f.rewind
+    io_stream.rewind
   end
 
   # Set the import operation status
