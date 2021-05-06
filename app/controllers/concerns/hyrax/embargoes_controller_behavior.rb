@@ -46,14 +46,6 @@ module Hyrax
           elsif copy_visibility.include?(curation_concern.id)
             Hyrax::VisibilityPropagator.for(source: curation_concern).propagate
           end
-      af_objects.each do |curation_concern|
-        Hyrax::Actors::EmbargoActor.new(curation_concern).destroy
-        # if the concern is a FileSet, set its visibility and visibility propagation
-        if curation_concern.file_set?
-          curation_concern.visibility = curation_concern.to_solr["visibility_after_embargo_ssim"]
-          curation_concern.save!
-        elsif copy_visibility.include?(curation_concern.id)
-          Hyrax::VisibilityPropagator.for(source: curation_concern).propagate
         end
       end
       redirect_to embargoes_path, notice: t('.embargo_deactivated')
