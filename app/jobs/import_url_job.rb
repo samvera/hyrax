@@ -24,10 +24,9 @@ class ImportUrlJob < Hyrax::ApplicationJob
   # @param [FileSet] file_set
   # @param [Hyrax::BatchCreateOperation] operation
   # @param [Hash] headers - header data to use in interaction with remote url
-  # @param [Boolean] use_valkyrie - a switch on whether or not to use Valkyrie processing
   #
   # @todo At present, this job works for ActiveFedora objects. The use_valkyrie is not complete.
-  def perform(file_set, operation, headers = {}, use_valkyrie: false)
+  def perform(file_set, operation, headers = {})
     @file_set = file_set
     @operation = operation
     @headers = headers
@@ -37,10 +36,11 @@ class ImportUrlJob < Hyrax::ApplicationJob
 
     return false unless can_retrieve_remote?
 
-    if use_valkyrie
-      # TODO
-    else
+    case file_set
+    when ActiveFedora::Base
       perform_af
+    else
+      # TODO
     end
   end
 

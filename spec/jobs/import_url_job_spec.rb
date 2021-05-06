@@ -5,6 +5,7 @@ RSpec.describe ImportUrlJob do
   let(:file_path) { fixture_path + '/world.png' }
   let(:file_hash) { '/673467823498723948237462429793840923582' }
   let(:label) { file_path }
+  let(:import_url) { "http://example.org#{file_hash}" }
   let(:operation) { create(:operation) }
   let(:mock_retriever) { double }
   let(:inbox) { user.mailbox.inbox }
@@ -28,17 +29,30 @@ RSpec.describe ImportUrlJob do
     allow(mock_retriever).to receive(:retrieve)
   end
 
-  context 'when use_valkyrie is false' do
+  context 'when using a Valkyrie::Resource file_set' do
+    context 'happy path' do
+      let(:file_set) do
+        build(:hyrax_file_set, label: label, import_url: import_url)
+      end
+
+      it 'notifies the operation of success' do
+        expect(operation).to receive(:success!).and_call_original
+        described_class.perform_now(file_set, operation, {})
+      end
+    end
+  end
+
+  context 'when using an ActiveFedora::Base file_set' do
     let(:file_set) do
       FileSet.new(import_url: "http://example.org#{file_hash}",
                   label: label) do |f|
         f.apply_depositor_metadata(user.user_key)
       end
     end
-    let(:actor) { instance_double(Hyrax::Actors::FileSetActor, create_content: true) }
-    before do
-      allow(Hyrax::Actors::FileSetActor).to receive(:new).with(file_set, user).and_return(actor)
-    end
+    # let(:actor) { instance_double(Hyrax::Actors::FileSetActor, create_content: true) }
+    # before do
+    #   allow(Hyrax::Actors::FileSetActor).to receive(:new).with(file_set, user).and_return(actor)
+    # end
 
     context 'before enqueueing the job' do
       before do
@@ -69,7 +83,7 @@ RSpec.describe ImportUrlJob do
       end
 
       it 'creates the content and updates the associated operation' do
-        expect(actor).to receive(:create_content).with(File, from_url: true).and_return(true)
+        # expect(actor).to receive(:create_content).with(File, from_url: true).and_return(true)
         described_class.perform_now(file_set, operation)
         expect(operation).to be_success
       end
