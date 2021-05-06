@@ -114,7 +114,7 @@ module Hyrax
 
         return indexer_class if indexer_class.is_a?(Class) &&
                                 indexer_class.instance_methods.include?(:to_solr)
-        ValkyrieIndexer
+        resource.try(:work?) ? Hyrax::ValkyrieWorkIndexer : ValkyrieIndexer
       end
     end
   end
