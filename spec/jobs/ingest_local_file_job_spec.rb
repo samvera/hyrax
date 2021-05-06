@@ -5,20 +5,16 @@ RSpec.describe IngestLocalFileJob do
   let(:path) { File.join(fixture_path, 'world.png') }
 
   context 'when use_valkyrie is false' do
-    let(:actor) { double }
     let(:file_set) { FileSet.new }
-
-    before do
-      allow(Hyrax::Actors::FileSetActor).to receive(:new).with(file_set, user).and_return(actor)
-    end
 
     it 'has attached a file' do
       expect(FileUtils).not_to receive(:rm)
-      expect(actor).to receive(:create_content).and_return(true)
+      expect(Hyrax.config.callback).to receive(:run).with(:after_import_local_file_success, file_set, user, path, warn: false).and_return(true)
       described_class.perform_now(file_set, path, user)
     end
 
     context 'when an error is encountered when trying to save the file to disk' do
+      let(:actor) { double }
       let(:callback) do
         instance_double(Hyrax::Callbacks::Registry)
       end
@@ -27,6 +23,7 @@ RSpec.describe IngestLocalFileJob do
       end
 
       before do
+        allow(Hyrax::Actors::FileSetActor).to receive(:new).with(file_set, user, use_valkyrie: false).and_return(actor)
         allow(callback).to receive(:run)
         allow(config).to receive(:callback).and_return(callback)
         allow(Hyrax).to receive(:config).and_return(config)
