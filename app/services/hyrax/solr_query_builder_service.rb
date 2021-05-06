@@ -1,7 +1,26 @@
 # frozen_string_literal: true
 module Hyrax
+  ##
   # Methods in this class are from/based on ActiveFedora::SolrQueryBuilder
   class SolrQueryBuilderService
+    attr_reader :query
+
+    def initialize(query: '')
+      @query = query
+    end
+
+    ##
+    # @return [SolrQueryBuilderService] the existing service with id query
+    #   appended.
+    def with_ids(ids: [])
+      @query += self.class.construct_query_for_ids(ids)
+      self
+    end
+
+    def build
+      @query
+    end
+
     class << self
       # Construct a solr query for a list of ids
       # This is used to get a solr response based on the list of ids in an object's RELS-EXT relationhsips
