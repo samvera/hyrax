@@ -59,6 +59,39 @@ RSpec.describe GenericWork do
     end
   end
 
+  describe "embargo" do
+    subject(:work) { described_class.new(title: ['a title'], embargo_release_date: embargo_release_date) }
+    let(:embargo_release_date) { Time.zone.today + 10 }
+
+    it { is_expected.to be_valid }
+
+    context 'with a past date' do
+      let(:embargo_release_date) { Time.zone.today - 10 }
+
+      it { is_expected.not_to be_valid }
+
+      it 'has errors related to the date' do
+        expect { work.valid? }
+          .to change { work.errors.to_a }
+          .from(be_empty)
+          .to include("Embargo release date Must be a future date")
+      end
+    end
+
+    context 'with a saved embargo' do
+      let(:past) { Time.zone.today - 10 }
+
+      before { work.save! }
+
+      it 'can update the embargo with any date' do
+        work.embargo_release_date = past
+
+        expect(work).to be_valid
+        expect{ work.save! }.not_to raise_error
+      end
+    end
+  end
+
   describe "delegations" do
     let(:work) { described_class.new { |gw| gw.apply_depositor_metadata("user") } }
     let(:proxy_depositor) { create(:user) }

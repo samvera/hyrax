@@ -2,10 +2,9 @@
 module Hyrax
   module Embargoable
     extend ActiveSupport::Concern
+    include Hydra::AccessControls::Embargoable
 
     included do
-      include Hydra::AccessControls::Embargoable
-
       validates :lease_expiration_date, 'hydra/future_date': true, on: :create
       validates :embargo_release_date, 'hydra/future_date': true, on: :create
     end
