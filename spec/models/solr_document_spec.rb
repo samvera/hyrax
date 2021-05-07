@@ -196,6 +196,14 @@ RSpec.describe ::SolrDocument, type: :model do
     it { is_expected.to be_collection }
   end
 
+  describe "#work?" do
+    let(:attributes) { { 'has_model_ssim' => 'GenericWork' } }
+
+    subject { document }
+
+    it { is_expected.to be_work }
+  end
+
   describe "#collection_type_gid?" do
     let(:attributes) { { 'collection_type_gid_ssim' => 'gid://internal/hyrax-collectiontype/5' } }
 
