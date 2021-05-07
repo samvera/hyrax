@@ -34,7 +34,7 @@ module Hyrax
       resources.each do |resource|
         if Hyrax.config.use_valkyrie?
           EmbargoManager.new(resource: resource).release!
-          Hyrax.persister.save(resource: resource)
+          Hyrax::AccessControlList(resource: resource).save
         else
           Hyrax::Actors::EmbargoActor.new(resource).destroy
           # if the concern is a FileSet, set its visibility and visibility propagation
