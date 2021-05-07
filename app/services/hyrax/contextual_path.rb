@@ -11,7 +11,7 @@ module Hyrax
 
     def show
       if parent_presenter
-        polymorphic_path([:hyrax, :parent, presenter.model_name.singular],
+        polymorphic_path([:hyrax, :parent, presenter.model_name.singular.to_sym],
                          parent_id: parent_presenter.id,
                          id: presenter.id)
       else
