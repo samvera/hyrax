@@ -87,7 +87,7 @@ RSpec.describe GenericWork do
         work.embargo_release_date = past
 
         expect(work).to be_valid
-        expect{ work.save! }.not_to raise_error
+        expect { work.save! }.not_to raise_error
       end
     end
   end
