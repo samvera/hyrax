@@ -30,7 +30,7 @@ module Hyrax
       resources = Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie: true)
       resources.each do |resource|
         if true
-          EmbargoManager.new(resource: resource).release!
+          LeaseManager.new(resource: resource).release!
           Hyrax.persister.save(resource: resource)
         else
           Hyrax::Actors::LeaseActor.new(resource).destroy
