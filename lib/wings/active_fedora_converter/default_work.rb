@@ -100,6 +100,9 @@ module Wings
       include Hydra::AccessControls::Embargoable
       property :nested_resource, predicate: ::RDF::URI("http://example.com/nested_resource"), class_name: "Wings::ActiveFedoraConverter::NestedResource"
 
+      validates :lease_expiration_date, 'hydra/future_date': true, on: :create
+      validates :embargo_release_date, 'hydra/future_date': true, on: :create
+
       class_attribute :valkyrie_class
       self.valkyrie_class = Hyrax::Resource
 
@@ -119,6 +122,18 @@ module Wings
         end
         alias inspect to_rdf_representation
         alias to_s inspect
+      end
+
+      ##
+      # Override aggressive Hydra::AccessControls validation
+      def enforce_future_date_for_embargo?
+        false
+      end
+
+      ##
+      # Override aggressive Hydra::AccessControls validation
+      def enforce_future_date_for_lease?
+        false
       end
 
       def indexing_service

@@ -14,7 +14,7 @@ module Hyrax
     include Naming
     include CoreMetadata
     include InAdminSet
-    include Hydra::AccessControls::Embargoable
+    include Hyrax::Embargoable
     include GlobalID::Identification
     include NestedWorks
     include Suppressible
