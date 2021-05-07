@@ -46,11 +46,9 @@ RSpec.describe Hyrax::HomepageController, type: :controller do
       expect(titles).not_to include('Test Private Document')
     end
 
-    it "includes only GenericWork objects in recent documents" do
+    it "includes only Work objects in recent documents" do
       get :index
-      assigns(:recent_documents).each do |doc|
-        expect(doc["has_model_ssim"]).to eql ["GenericWork"]
-      end
+      expect(assigns(:recent_documents).all?(&:work?)).to eq true
     end
 
     context "with a document not created this second", clean_repo: true do

@@ -117,6 +117,12 @@ module Hyrax
       hydra_model == ::AdminSet
     end
 
+    ##
+    # @return [Boolean]
+    def work?
+      Hyrax.config.curation_concerns.include? hydra_model
+    end
+
     # Method to return the model
     def hydra_model(classifier: ActiveFedora.model_mapper)
       "::#{first('has_model_ssim')}".safe_constantize ||
