@@ -7,7 +7,7 @@
   <% provide :files_tab do %>
     <p class="instructions"><%= t("hyrax.batch_uploads.files.instructions") %></p>
     <p class="switch-upload-type"><%= t("hyrax.batch_uploads.files.upload_type_instructions") %>
-      <%= link_to t("hyrax.batch_uploads.files.button_label"), [main_app, :new, Hyrax.primary_work_type.model_name.singular_route_key] %>
+      <%= link_to t("hyrax.batch_uploads.files.button_label"), [main_app, :new, Hyrax.primary_work_type.model_name.singular_route_key.to_sym] %>
     </p>
   <% end %>
   <%= render 'hyrax/base/guts4form', f: f, tabs: form_tabs_for(form: f.object) %>

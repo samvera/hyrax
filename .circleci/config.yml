@@ -12,7 +12,7 @@ jobs:
         default: 1.17.3
       rails_version:
         type: string
-        default: '5.2.4.3'
+        default: '5.2.6'
     executor:
       name: 'samvera/ruby'
       ruby_version: << parameters.ruby_version >>
@@ -57,7 +57,7 @@ jobs:
         default: 1.17.3
       rails_version:
         type: string
-        default: '5.2.4.3'
+        default: '5.2.6'
     executor:
       name: 'samvera/ruby'
       ruby_version: << parameters.ruby_version >>
@@ -136,10 +136,10 @@ workflows:
     jobs:
       - bundle:
           ruby_version: "2.5.8"
-          rails_version: "5.2.4.3"
+          rails_version: "5.2.6"
       - build:
           ruby_version: "2.5.8"
-          rails_version: "5.2.4.3"
+          rails_version: "5.2.6"
           requires:
             - bundle
       - test:
@@ -151,10 +151,10 @@ workflows:
     jobs:
       - bundle:
           ruby_version: "2.6.6"
-          rails_version: "5.2.4.3"
+          rails_version: "5.2.6"
       - build:
           ruby_version: "2.6.6"
-          rails_version: "5.2.4.3"
+          rails_version: "5.2.6"
           requires:
             - bundle
       - test:
@@ -166,11 +166,11 @@ workflows:
     jobs:
       - bundle:
           ruby_version: "2.7.1"
-          rails_version: "5.2.4.3"
+          rails_version: "5.2.6"
           bundler_version: "2.1.2"
       - build:
           ruby_version: "2.7.1"
-          rails_version: "5.2.4.3"
+          rails_version: "5.2.6"
           bundler_version: "2.1.2"
           requires:
             - bundle

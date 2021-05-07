@@ -15,7 +15,7 @@
             <ul class="dropdown-menu">
               <% presenter.valid_child_concerns.each do |concern| %>
                 <li>
-                  <%= link_to "Attach #{concern.human_readable_type}", polymorphic_path([main_app, :new, :hyrax, :parent, concern.model_name.singular], parent_id: presenter.id) %>
+                  <%= link_to "Attach #{concern.human_readable_type}", polymorphic_path([main_app, :new, :hyrax, :parent, concern.model_name.singular.to_sym], parent_id: presenter.id) %>
                 </li>
               <% end %>
             </ul>
