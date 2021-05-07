@@ -27,11 +27,16 @@ module Hyrax
       filter_docs_with_edit_access!
       copy_visibility = []
       copy_visibility = params[:leases].values.map { |h| h[:copy_visibility] } if params[:leases]
-      af_objects = Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie: false)
-      af_objects.each do |curation_concern|
-        Hyrax::Actors::LeaseActor.new(curation_concern).destroy
-        Hyrax::VisibilityPropagator.for(source: curation_concern).propagate if
-          copy_visibility.include?(curation_concern.id)
+      resources = Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie: true)
+      resources.each do |resource|
+        if true
+          EmbargoManager.new(resource: resource).release!
+          Hyrax.persister.save(resource: resource)
+        else
+          Hyrax::Actors::LeaseActor.new(resource).destroy
+          Hyrax::VisibilityPropagator.for(source: resource).propagate if
+            copy_visibility.include?(resource.id)
+        end
       end
       redirect_to leases_path
     end
