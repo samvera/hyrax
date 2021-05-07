@@ -32,18 +32,21 @@ module Hyrax
       copy_visibility = params[:embargoes].values.map { |h| h[:copy_visibility] } if params[:embargoes]
       resources = Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie: Hyrax.config.use_valkyrie?)
       resources.each do |resource|
-        EmbargoManager.new(resource: resource).release! if Hyrax.config.use_valkyrie?
-        resource = Wings::Valkyrie::ResourceFactory.new(adapter: Wings::Valkyrie::MetadataAdapter).from_resource(resource: resource) if Hyrax.config.use_valkyrie?
-        Hyrax::Actors::EmbargoActor.new(resource).destroy
-        # if the concern is a FileSet, set its visibility and visibility propagation
-        if resource.file_set?
-          resource.visibility = resource.to_solr["visibility_after_embargo_ssim"]
-          resource.save!
-        elsif copy_visibility.include?(resource.id)
-          Hyrax::VisibilityPropagator.for(source: resource).propagate
+        if Hyrax.config.use_valkyrie?
+          EmbargoManager.new(resource: resource).release!
+          Hyrax.persister.save(resource: resource)
+        else
+          Hyrax::Actors::EmbargoActor.new(resource).destroy
+          # if the concern is a FileSet, set its visibility and visibility propagation
+          if resource.file_set?
+            resource.visibility = resource.to_solr["visibility_after_embargo_ssim"]
+            resource.save!
+          elsif copy_visibility.include?(resource.id)
+            Hyrax::VisibilityPropagator.for(source: resource).propagate
+          end
         end
+        redirect_to embargoes_path, notice: t('.embargo_deactivated')
       end
-      redirect_to embargoes_path, notice: t('.embargo_deactivated')
     end
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
