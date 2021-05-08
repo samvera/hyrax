@@ -41,6 +41,13 @@ module Hyrax
       class Permission < Hyrax::ChangeSet
         property :agent_name, virtual: true, prepopulator: ->(_opts) { self.agent_name = model.agent }
         property :access, virtual: true, prepopulator: ->(_opts) { self.access = model.mode }
+
+        ##
+        # @note support a {#to_hash} method for compatibility with
+        #   {Hydra::AccessControl::Permissions}
+        def to_hash
+          { name: agent_name, access: access }
+        end
       end
 
       ##
