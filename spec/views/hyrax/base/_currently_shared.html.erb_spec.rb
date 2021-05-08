@@ -30,4 +30,19 @@ RSpec.describe 'hyrax/base/_currently_shared.html.erb', type: :view do
     # the EditPermissionsService (is it?!)
     expect(rendered).to have_content("Depositor")
   end
+
+  context "with ResourceForm", valkyrie_adapter: :test_adapter do
+    let(:form) { Hyrax::Forms::ResourceForm.for(work).prepopulate! }
+    let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :public) }
+
+    let(:file_set_form) do
+      view.simple_form_for(form, url: '/update') { |form| return form }
+    end
+
+    it "includes permissions" do
+      render partial: "hyrax/base/currently_shared", locals: { f: file_set_form }
+
+      expect(rendered).to include "group/public"
+    end
+  end
 end
