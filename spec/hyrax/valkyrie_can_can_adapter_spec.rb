@@ -13,6 +13,24 @@ RSpec.describe Hyrax::ValkyrieCanCanAdapter do
       expect(described_class.find(work.class, work.id).id)
         .to eq work.id
     end
+
+    context 'with assigned ids, noids disabled', valkyrie_adapter: :test_adapter do
+      it 'finds the work' do
+        expect(described_class.find(work.class, work.id).id).to eq work.id
+      end
+    end
+
+    context 'with assigned ids, noids enabled', valkyrie_adapter: :test_adapter do
+      let(:work) do
+        FactoryBot.valkyrie_create(:hyrax_work, alternate_ids: ['a_noid'])
+      end
+
+      before { allow(Hyrax.config).to receive(:enable_noids?).and_return(true) }
+
+      it 'finds the work' do
+        expect(described_class.find(work.class, 'a_noid').id).to eq work.id
+      end
+    end
   end
 
   describe '.for_class' do
