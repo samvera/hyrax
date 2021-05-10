@@ -30,12 +30,12 @@ module Hyrax
       filter_docs_with_edit_access!
       copy_visibility = []
       copy_visibility = params[:embargoes].values.map { |h| h[:copy_visibility] } if params[:embargoes]
-      resources = Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie: true)
+      resources = Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie:  Hyrax.config.use_valkyrie?)
       resources.each do |resource|
-        if true
+        if Hyrax.config.use_valkyrie?
           EmbargoManager.new(resource: resource).release!
           Hyrax::AccessControlList(resource).save
-          Hyrax::VisibilityPropagator.for(source: resource).propagate
+          Hyrax::VisibilityPropagator.for(source: resource).propagate if copy_visibility.include?(resource.id)
         else
           Hyrax::Actors::EmbargoActor.new(resource).destroy
           # if the concern is a FileSet, set its visibility and visibility propagation
