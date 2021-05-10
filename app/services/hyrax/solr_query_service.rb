@@ -41,7 +41,6 @@ module Hyrax
     # @param ids [Array] id_array the ids that you want included in the query
     # @return [Hyrax::SolrQueryService] the existing service with id query appended
     def with_ids(ids: [])
-      raise ArgumentError, "Expected [Array] for ids:, but received <#{ids.class}>" unless ids.is_a? Array
       ids = ids.reject(&:blank?)
       raise ArgumentError, "Expected there to be at least one non-blank id." if ids.blank?
       id_query = construct_query_for_ids(ids)
@@ -50,10 +49,9 @@ module Hyrax
     end
 
     ##
-    # @param model [Class|String] a class from the model (e.g. Hyrax::Work, Hyrax::FileSet, etc.)
+    # @param model [#to_s] a class from the model (e.g. Hyrax::Work, Hyrax::FileSet, etc.)
     # @return [SolrQueryService] the existing service with model query appended
     def with_model(model:)
-      raise ArgumentError, "Expected <Class> or <String> for model:, but received <#{model.class}>" unless model.is_a?(Class) || model.respond_to?(String)
       model_query = construct_query_for_model(model)
       @query += [model_query]
       self
