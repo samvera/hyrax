@@ -44,5 +44,24 @@ module Hyrax
     def form_progress_sections_for(*)
       []
     end
+
+    ##
+    # Constructs a hash for a form `select`.
+    #
+    # @param form [Object]
+    #
+    # @return [Array<Hash{String => String}>] a map from file set labels to ids for
+    #   the parent object
+    def form_file_set_select_for(parent:)
+      return parent.select_files if parent.respond_to?(:select_files)
+      return {} unless parent.respond_to?(:member_ids)
+
+      file_sets =
+        Hyrax::PcdmMemberPresenterFactory.new(parent, nil).file_set_presenters
+
+      file_sets.each_with_object({}) do |presenter, hash|
+        hash[presenter.title_or_label] = presenter.id
+      end
+    end
   end
 end
