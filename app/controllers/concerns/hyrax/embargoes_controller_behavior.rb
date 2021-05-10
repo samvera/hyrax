@@ -26,11 +26,12 @@ module Hyrax
     # Updates a batch of embargos
     # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/PerceivedComplexity
     def update
       filter_docs_with_edit_access!
       copy_visibility = []
       copy_visibility = params[:embargoes].values.map { |h| h[:copy_visibility] } if params[:embargoes]
-      resources = Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie:  Hyrax.config.use_valkyrie?)
+      resources = Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie: Hyrax.config.use_valkyrie?)
       resources.each do |resource|
         if Hyrax.config.use_valkyrie?
           EmbargoManager.new(resource: resource).release!
@@ -51,6 +52,7 @@ module Hyrax
     end
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/PerceivedComplexity
 
     # This allows us to use the unauthorized template in curation_concerns/base
     def self.local_prefixes
