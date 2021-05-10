@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 module Hyrax
   ##
+  # @deprecated
+  # This class is being replaced by Hyrax::SolrQueryService.
+  #
   # Methods in this class are from/based on ActiveFedora::SolrQueryBuilder
+  #
+  # @see Hyrax::SolrQueryService
   class SolrQueryBuilderService
     class << self
       # Construct a solr query for a list of ids
@@ -41,7 +46,7 @@ module Hyrax
       # @deprecated
       def default_join_with
         Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
-                         "There will not be a replacement for this method.")
+                         "There will not be a replacement for this method. See Hyrax::SolrQueryService which is replacing this class.")
         ' AND '
       end
 
