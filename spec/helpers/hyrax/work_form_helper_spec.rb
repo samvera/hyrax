@@ -64,6 +64,41 @@ RSpec.describe Hyrax::WorkFormHelper do
   end
 
   describe '.form_file_set_select_for' do
+    context 'with a ChangeSet form' do
+      let(:form) { Valkyrie::ChangeSet.new(work) }
+      let(:work) { FactoryBot.build(:hyrax_work) }
+
+      it 'gives an empty hash' do
+        expect(form_file_set_select_for(parent: form)).to eq({})
+      end
+    end
+
+    context 'with a ChangeSet-style ResourceForm' do
+      let(:form) { Hyrax::Forms::ResourceForm.for(work) }
+      let(:work) { FactoryBot.build(:hyrax_work) }
+
+      it 'gives an empty hash' do
+        expect(form_file_set_select_for(parent: form)).to eq({})
+      end
+
+      context 'with file_set members', index_adapter: :solr_index, valkyrie_adapter: :test_adapter do
+        let(:work) { FactoryBot.build(:hyrax_work, member_ids: file_sets.map(&:id)) }
+
+        let(:file_sets) do
+          [FactoryBot.valkyrie_create(:hyrax_file_set, title: 'moominpapa.jpg'),
+           FactoryBot.valkyrie_create(:hyrax_file_set, title: 'snorkmaiden.jpg')]
+        end
+
+        before { file_sets.each { |fs| Hyrax.index_adapter.save(resource: fs) } }
+
+        it 'gives labels => ids' do
+          expect(form_file_set_select_for(parent: form))
+            .to include('moominpapa.jpg' => an_instance_of(String),
+                        'snorkmaiden.jpg' => an_instance_of(String))
+        end
+      end
+    end
+
     context 'with a legacy GenericWork form' do
       let(:work) { stub_model(GenericWork, id: '456', member_ids: file_set_ids) }
       let(:ability) { double }
