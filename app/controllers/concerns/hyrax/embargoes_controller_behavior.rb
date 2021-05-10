@@ -45,8 +45,8 @@ module Hyrax
             Hyrax::VisibilityPropagator.for(source: resource).propagate
           end
         end
-        redirect_to embargoes_path, notice: t('.embargo_deactivated')
       end
+      redirect_to embargoes_path, notice: t('.embargo_deactivated')
     end
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
