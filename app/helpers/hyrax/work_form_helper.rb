@@ -44,5 +44,16 @@ module Hyrax
     def form_progress_sections_for(*)
       []
     end
+
+    ##
+    # Constructs a hash for a form `select`.
+    #
+    # @param form [Object]
+    #
+    # @return [Hash{String => String}] a map from file set labels to ids for
+    #   the parent object
+    def form_file_set_select_for(parent:)
+      parent.select_files
+    end
   end
 end
