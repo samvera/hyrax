@@ -31,26 +31,34 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
       allow(presenter).to receive(:show_deposit_for?).with(anything).and_return(true)
       allow(presenter).to receive(:editor?).and_return(true)
     end
+
     context "when the work does not contain children" do
       before do
-        allow(presenter).to receive(:member_presenters).and_return([])
-        render 'hyrax/base/show_actions', presenter: presenter
+        allow(presenter).to receive(:member_presenters).and_return([].to_enum)
       end
+
       it "does not show file manager link" do
+        render 'hyrax/base/show_actions', presenter: presenter
+
         expect(rendered).not_to have_link 'File Manager'
       end
+
       it "shows edit / delete / Add to collection links" do
+        render 'hyrax/base/show_actions', presenter: presenter
+
         expect(rendered).to have_link 'Edit'
         expect(rendered).to have_link 'Delete'
         expect(rendered).to have_button 'Add to collection'
       end
     end
+
     context "when the work contains 1 child" do
       before do
-        allow(presenter).to receive(:member_presenters).and_return([member])
-        render 'hyrax/base/show_actions', presenter: presenter
+        allow(presenter).to receive(:member_presenters).and_return([member].to_enum)
       end
+
       it "does not show file manager link" do
+        render 'hyrax/base/show_actions', presenter: presenter
         expect(rendered).not_to have_link 'File Manager'
       end
     end
@@ -61,10 +69,11 @@ RSpec.describe 'hyrax/base/_show_actions.html.erb', type: :view do
       let(:file_attributes) { { id: '1234' } }
 
       before do
-        allow(presenter).to receive(:member_presenters).and_return([member, file_member])
-        render 'hyrax/base/show_actions', presenter: presenter
+        allow(presenter).to receive(:member_presenters).and_return([member, file_member].to_enum)
       end
+
       it "shows file manager link" do
+        render 'hyrax/base/show_actions', presenter: presenter
         expect(rendered).to have_link 'File Manager'
       end
     end
