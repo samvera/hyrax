@@ -59,11 +59,11 @@ RSpec.describe Hyrax::ValkyrieIndexer do
   describe "#to_solr" do
     let(:resource) { FactoryBot.valkyrie_create(:hyrax_work) }
 
-    it "provides id, created_at_dtsi, and updated_at_dtsi" do
+    it "provides id, date_uploaded_dtsi, and date_modified_dtsi" do
       expect(indexer.to_solr).to match a_hash_including(
         id: resource.id.to_s,
-        created_at_dtsi: resource.created_at,
-        updated_at_dtsi: resource.updated_at
+        date_uploaded_dtsi: resource.created_at,
+        date_modified_dtsi: resource.updated_at
       )
     end
   end
