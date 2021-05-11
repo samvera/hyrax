@@ -223,8 +223,25 @@ RSpec.describe Hyrax::WorkShowPresenter do
     let(:attributes) { obj.to_solr }
 
     it "filters out members that are file sets" do
-      expect(presenter.work_presenters.size).to eq 1
+      expect(presenter.work_presenters.count).to eq 1
       expect(presenter.work_presenters.first).to be_instance_of(described_class)
+    end
+  end
+
+  describe "#member_count" do
+    let(:obj) { FactoryBot.create(:work_with_file_and_work) }
+    let(:attributes) { obj.to_solr }
+
+    it "returns the member count" do
+      expect(presenter.member_count).to eq 2
+    end
+
+    context "with empty members" do
+      let(:obj) { FactoryBot.create(:work) }
+
+      it "returns 0" do
+        expect(presenter.member_count).to eq 0
+      end
     end
   end
 
@@ -233,7 +250,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
     let(:attributes) { obj.to_solr }
 
     it "returns appropriate classes for each" do
-      expect(presenter.member_presenters.size).to eq 2
+      expect(presenter.member_presenters.count).to eq 2
       expect(presenter.member_presenters.first).to be_instance_of(Hyrax::FileSetPresenter)
       expect(presenter.member_presenters.last).to be_instance_of(described_class)
     end

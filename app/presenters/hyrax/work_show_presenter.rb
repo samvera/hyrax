@@ -223,6 +223,12 @@ module Hyrax
       end
     end
 
+    ##
+    # @return [Integer]
+    def member_count
+      @member_count ||= member_presenters.count
+    end
+
     # determine if the user can add this work to a collection
     # @param collections [Array<::Collection>] list of collections to which this user can deposit
     # @return true if the user can deposit to at least one collection OR if the user can create a collection; otherwise, false
