@@ -23,6 +23,8 @@ module Hyrax
       end
     end
 
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     def update
       filter_docs_with_edit_access!
       copy_visibility = []
@@ -35,11 +37,13 @@ module Hyrax
         else
           Hyrax::Actors::LeaseActor.new(resource).destroy
         end
-        Hyrax::VisibilityPropagator.for(source: resource).propagate if 
+        Hyrax::VisibilityPropagator.for(source: resource).propagate if
           copy_visibility.include?(resource.id)
       end
       redirect_to leases_path
     end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
 
     # This allows us to use the unauthorized template in curation_concerns/base
     def self.local_prefixes
