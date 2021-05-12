@@ -1215,7 +1215,7 @@ de:
         subject: Stapelweises Hochladen abgeschlossen
         title: Dateien erfolgreich hochgeladen
     models:
-      hyrax/file_set: Dateisatz
+      file_set: Dateisatz
       hyrax/pcdm_collection: Sammlung
       hyrax/work: Arbeit
     my:
