@@ -10,7 +10,7 @@ RSpec.describe Hyrax::PcdmMemberPresenterFactory, index_adapter: :solr_index, va
     match do |actual|
       actual.id == expected.id &&
         (actual.solr_document['has_model_ssim'].first ==
-         expected.model_name.name)
+         expected.class.name)
     end
   end
 

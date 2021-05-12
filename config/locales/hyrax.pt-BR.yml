@@ -1215,7 +1215,7 @@ pt-BR:
         subject: Carga em lote completo
         title: Arquivos carregados com sucesso
     models:
-      hyrax/file_set: Conjunto de arquivos
+      file_set: Conjunto de arquivos
       hyrax/pcdm_collection: Coleção
       hyrax/work: Trabalhar
     my:

@@ -9,6 +9,12 @@ module Hyrax
     include Hyrax::Schema(:core_metadata)
     include Hyrax::Schema(:basic_metadata)
 
+    def self.model_name(name_class: Hyrax::Name)
+      @_model_name ||= begin
+        name_class.new(self, nil, 'FileSet')
+      end
+    end
+
     attribute :file_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID) # id for FileMetadata resources
     attribute :original_file_id, Valkyrie::Types::ID # id for FileMetadata resource
     attribute :thumbnail_id, Valkyrie::Types::ID # id for FileMetadata resource
