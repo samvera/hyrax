@@ -20,13 +20,25 @@ RSpec.describe Hyrax::SingleUseLinksViewerController do
     let(:download_link_hash) { download_link.download_key }
 
     describe "GET 'download'" do
-      let(:expected_content) { Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: file.id, use_valkyrie: false).original_file.content }
-      it "downloads the file and deletes the link from the database" do
-        expect(controller).to receive(:send_file_headers!).with(filename: 'world.png', disposition: 'attachment', type: 'image/png')
-        get :download, params: { id: download_link_hash }
-        expect(response.body).to eq expected_content
-        expect(response).to be_successful
-        expect { SingleUseLink.find_by_download_key!(download_link_hash) }.to raise_error ActiveRecord::RecordNotFound
+      context "when valkyrie is false" do
+        let(:expected_content) { Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: file.id, use_valkyrie: false).original_file.content }
+        it "downloads the file and deletes the link from the database" do
+          expect(controller).to receive(:send_file_headers!).with(filename: 'world.png', disposition: 'attachment', type: 'image/png')
+          get :download, params: { id: download_link_hash }
+          expect(response.body).to eq expected_content
+          expect(response).to be_successful
+          expect { SingleUseLink.find_by_download_key!(download_link_hash) }.to raise_error ActiveRecord::RecordNotFound
+        end
+      end
+      context "when valkyrie is true" do
+        let(:expected_content) { Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: file.id, use_valkyrie: true).original_file.content }
+        it "downloads the file and deletes the link from the database" do
+          expect(controller).to receive(:send_file_headers!).with(filename: 'world.png', disposition: 'attachment', type: 'image/png')
+          get :download, params: { id: download_link_hash }
+          expect(response.body).to eq expected_content
+          expect(response).to be_successful
+          expect { SingleUseLink.find_by_download_key!(download_link_hash) }.to raise_error ActiveRecord::RecordNotFound
+        end
       end
 
       context "when the key is not found" do

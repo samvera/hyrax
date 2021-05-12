@@ -18,6 +18,7 @@ module Hyrax
     end
 
     def download
+      byebug
       raise not_found_exception unless single_use_link.path == hyrax.download_path(id: @asset)
       send_content
     end
@@ -66,7 +67,7 @@ module Hyrax
     end
 
     def asset
-      @asset ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: single_use_link.item_id, use_valkyrie: true)
+      @asset ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: single_use_link.item_id, use_valkyrie: Hyrax.config.use_valkyrie?)
     end
 
     def current_ability
