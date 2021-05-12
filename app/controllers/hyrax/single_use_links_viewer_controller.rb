@@ -18,7 +18,6 @@ module Hyrax
     end
 
     def download
-      byebug
       raise not_found_exception unless single_use_link.path == hyrax.download_path(id: @asset)
       send_content
     end
