@@ -76,6 +76,15 @@ function toggleCollapse(input){
         }
     }
 
+    if (type === "collapseReports"){
+        const isCollapsedReports = getCollapsedReports();
+        if(isCollapsedReports){
+            localStorage.setItem('collapsedReports', 'un-collapsed');
+        }else{
+            localStorage.setItem('collapsedReports', 'collapsed');
+        }
+    }
+
     if (type === "collapseSettings"){
         const isCollapsedSettings = getCollapsedSettings();
         if(isCollapsedSettings){
