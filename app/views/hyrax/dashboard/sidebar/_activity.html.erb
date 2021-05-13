@@ -32,4 +32,30 @@
     <% end %>
   <% end %>
 
+  <%# TODO: Add logic here so that if someone does not have access to any
+  of the dropdown items from the dropdown menu that it will just show the
+  Reports link (vanilla hyrax 3) on the sidebar versus a dropdown menu %>
+
+  <% if can? :read, :admin_dashboard %>
+    <li>
+      <%= menu.collapsable_section t('hyrax.admin.sidebar.statistics'),
+                                        icon_class: "fa fa-bar-chart",
+                                        id: 'collapseReports',
+                                        open: menu.analytics_reporting_section? do %>
+
+        <li><%# April TODO: We will need to add these in dynamically but need to see about creating a path for each with coresponding controller %>
+          <a onclick="dontChangeAccordion(event);" href="#">
+            <span class="fa fa-folder-open" aria-hidden="true"></span> <span class="sidebar-action-text">Collections</span>
+          </a>
+        </li>
+        <li>
+          <a onclick="dontChangeAccordion(event);" href="#">
+            <span class="fa fa-file" aria-hidden="true"></span> <span class="sidebar-action-text">Works</span>
+          </a>
+        </li>
+
+      <% end %>
+    </li>
+  <% end %>
+
   <%= render 'hyrax/dashboard/sidebar/menu_partials', menu: menu, section: :activity %>
