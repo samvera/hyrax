@@ -5,6 +5,12 @@ RSpec.describe Hyrax::SingleUseLinksViewerController do
   let(:file) do
     create(:file_set, label: 'world.png', user: user)
   end
+  let(:hyrax_file) do
+    uploaded_file = fixture_file_upload('/world.png', 'image/png')
+    file_set = FactoryBot.valkyrie_create(:hyrax_file_set)
+    Hyrax.storage_adapter.upload(resource: file_set, file: uploaded_file, original_filename: "content.txt")
+    file_set
+  end
 
   describe "retrieval links" do
     let :show_link do
@@ -14,6 +20,10 @@ RSpec.describe Hyrax::SingleUseLinksViewerController do
     let :download_link do
       Hydra::Works::AddFileToFileSet.call(file, File.open(fixture_path + '/world.png'), :original_file)
       SingleUseLink.create item_id: file.id, path: Hyrax::Engine.routes.url_helpers.download_path(id: file, locale: 'en')
+    end
+
+    let :hyrax_download_link do
+      SingleUseLink.create item_id: hyrax_file.id, path: Hyrax::Engine.routes.url_helpers.download_path(id: hyrax_file, locale: 'en')
     end
 
     let(:show_link_hash) { show_link.download_key }
@@ -31,8 +41,10 @@ RSpec.describe Hyrax::SingleUseLinksViewerController do
         end
       end
       context "when valkyrie is true" do
-        let(:expected_content) { Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: file.id, use_valkyrie: true).original_file.content }
+        let(:retrieved_file) { Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: hyrax_file.id, use_valkyrie: true) }
+        let(:file_metadata) { Hyrax.custom_queries.find_file_metadata_by(id: retrieved_file.file_ids.first.id) }
         it "downloads the file and deletes the link from the database" do
+          byebug
           expect(controller).to receive(:send_file_headers!).with(filename: 'world.png', disposition: 'attachment', type: 'image/png')
           get :download, params: { id: download_link_hash }
           expect(response.body).to eq expected_content
