@@ -65,4 +65,25 @@ RSpec.describe Hyrax::Ability do
       its(:registered_user?) { is_expected.to be false }
     end
   end
+
+  context 'with a WorkShowPresenter' do
+    # we want to stub the object under test here, because we want to ensure it
+    # is calling another method on itself to resolve these authorizations
+    # rubocop:disable RSpec/SubjectStub
+    let(:attributes)    { { id: 'my_solr_doc_id' } }
+    let(:presenter)     { Hyrax::WorkShowPresenter.new(solr_document, ability, :NULL_REQUEST) }
+    let(:solr_document) { SolrDocument.new(attributes) }
+
+    describe 'can?(:edit)' do
+      it 'defers strictly to the presenter solr_document ' do
+        expect(ability)
+          .to receive(:test_edit)
+          .with('my_solr_doc_id')
+          .and_return(true)
+
+        expect(ability.can?(:edit, presenter)).to eq true
+      end
+    end
+    # rubocop:enable RSpec/SubjectStub
+  end
 end

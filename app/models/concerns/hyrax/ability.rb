@@ -417,8 +417,10 @@ module Hyrax
 
     def extract_subjects(subject)
       case subject
+      when Hyrax::WorkShowPresenter, FileSetPresenter
+        extract_subjects(subject.solr_document)
       when Draper::Decorator
-        super(subject.model)
+        extract_subjects(subject.model)
       else
         super
       end
