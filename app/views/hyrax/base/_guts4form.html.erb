@@ -11,14 +11,14 @@
             <li role="presentation">
           <% end %>
               <a href="#<%= tab %>" aria-controls="<%= tab %>" role="tab" data-toggle="tab">
-                <%= t("hyrax.works.form.tab.#{tab}") %>
+                <%= form_tab_label_for(form: f.object, tab: tab) %>
               </a>
             </li>
         <% end %>
 
         <li role="presentation" id="tab-share" class="hidden">
           <a href="#share" aria-controls="share" role="tab" data-toggle="tab">
-            <%= t("hyrax.works.form.tab.share") %>
+            <%= form_tab_label_for(form: f.object, tab: 'share') %>
           </a>
         </li>
       </ul>

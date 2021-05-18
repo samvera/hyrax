@@ -32,6 +32,15 @@ RSpec.describe Hyrax::WorkFormHelper do
     end
   end
 
+  describe '.form_tab_label_for' do
+    let(:form) { double('form') }
+    let(:tab) { 'metadata' }
+
+    it 'returns the label' do
+      expect(form_tab_label_for(form: form, tab: tab)).to eq "Descriptions"
+    end
+  end
+
   describe '.form_progress_sections_for' do
     context 'with a change set style form' do
       let(:work) { build(:hyrax_work) }
