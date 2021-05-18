@@ -27,8 +27,6 @@ if File.exist?(test_app_gemfile)
     Bundler.ui.warn e.message
   end
 else
-  Bundler.ui.warn "[Hyrax] Unable to find test application dependencies in #{test_app_gemfile}, using placeholder dependencies"
-
   # rubocop:disable Bundler/DuplicatedGem
   if ENV['RAILS_VERSION']
     if ENV['RAILS_VERSION'] == 'edge'
@@ -39,6 +37,4 @@ else
     end
   end
   # rubocop:enable Bundler/DuplicatedGem
-
-  eval_gemfile File.expand_path('spec/test_app_templates/Gemfile.extra', File.dirname(__FILE__))
 end
