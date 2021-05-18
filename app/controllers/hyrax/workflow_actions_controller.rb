@@ -5,27 +5,16 @@ module Hyrax
 
     before_action :authenticate_user!
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def update
-      case curation_concern
-      when ActiveFedora::Base
-        if workflow_action_form.save
-          after_update_response
-        else
-          respond_to do |wants|
-            wants.html { render 'hyrax/base/unauthorized', status: :unauthorized }
-            wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
-          end
-        end
-      when Valkyrie::Resource
-        Hyrax.publisher.publish('object.deposited', object: curation_concern, user: current_user)
+      if workflow_action_form.save
+        after_update_response
+      else
         respond_to do |wants|
-          wants.html { redirect_to main_app.hyrax_generic_work_path(curation_concern, locale: 'en'), notice: "The #{curation_concern.human_readable_type} has been updated." }
-          wants.json { render 'hyrax/base/show', status: :ok, location: polymorphic_path([main_app, curation_concern]) }
+          wants.html { render 'hyrax/base/unauthorized', status: :unauthorized }
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
         end
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     private
 
@@ -47,7 +36,7 @@ module Hyrax
 
     def after_update_response
       respond_to do |wants|
-        wants.html { redirect_to main_app.hyrax_generic_work_path(curation_concern, locale: 'en'), notice: "The #{curation_concern.human_readable_type} has been updated." }
+        wants.html { redirect_to [main_app, curation_concern], notice: "The #{curation_concern.human_readable_type} has been updated." }
         wants.json { render 'hyrax/base/show', status: :ok, location: polymorphic_path([main_app, curation_concern]) }
       end
     end
