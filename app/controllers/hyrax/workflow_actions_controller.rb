@@ -5,21 +5,32 @@ module Hyrax
 
     before_action :authenticate_user!
 
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def update
-      if workflow_action_form.save
-        after_update_response
-      else
+      case curation_concern
+      when ActiveFedora::Base
+        if workflow_action_form.save
+          after_update_response
+        else
+          respond_to do |wants|
+            wants.html { render 'hyrax/base/unauthorized', status: :unauthorized }
+            wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
+          end
+        end
+      when Valkyrie::Resource
+        Hyrax.publisher.publish('object.deposited', object: curation_concern, user: current_user)
         respond_to do |wants|
-          wants.html { render 'hyrax/base/unauthorized', status: :unauthorized }
-          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
+          wants.html { redirect_to main_app.hyrax_generic_work_path(curation_concern, locale: 'en'), notice: "The #{curation_concern.human_readable_type} has been updated." }
+          wants.json { render 'hyrax/base/show', status: :ok, location: polymorphic_path([main_app, curation_concern]) }
         end
       end
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     private
 
     def curation_concern
-      @curation_concern ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id], use_valkyrie: true)
+      @curation_concern ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id], use_valkyrie: Hyrax.config.use_valkyrie?)
     end
 
     def workflow_action_form
@@ -36,7 +47,7 @@ module Hyrax
 
     def after_update_response
       respond_to do |wants|
-        wants.html { redirect_to [main_app, curation_concern], notice: "The #{curation_concern.human_readable_type} has been updated." }
+        wants.html { redirect_to main_app.hyrax_generic_work_path(curation_concern, locale: 'en'), notice: "The #{curation_concern.human_readable_type} has been updated." }
         wants.json { render 'hyrax/base/show', status: :ok, location: polymorphic_path([main_app, curation_concern]) }
       end
     end
