@@ -229,9 +229,19 @@ module Hyrax
       @member_count ||= member_presenters.count
     end
 
-    # determine if the user can add this work to a collection
-    # @param collections [Array<::Collection>] list of collections to which this user can deposit
-    # @return true if the user can deposit to at least one collection OR if the user can create a collection; otherwise, false
+    ##
+    # Given a set of collections, which the caller asserts the current ability
+    # can deposit to, decide whether to display actions to add this work to a
+    # collection.
+    #
+    # By default, this returns `true` if any collections are passed in OR the
+    # current ability can create a collection.
+    #
+    # @param collections [Enumerable<::Collection>, nil] list of collections to
+    #   which the current ability can deposit
+    #
+    # @return [Boolean] a flag indicating whether to display collection deposit
+    #   options.
     def show_deposit_for?(collections:)
       collections.present? || current_ability.can?(:create_any, ::Collection)
     end

@@ -567,8 +567,6 @@ RSpec.describe Hyrax::WorkShowPresenter do
   end
 
   describe "#show_deposit_for?" do
-    subject { presenter }
-
     context "when user has depositable collections" do
       let(:user_collections) { double }
 
