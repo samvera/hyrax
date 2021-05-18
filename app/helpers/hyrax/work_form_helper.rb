@@ -27,6 +27,29 @@ module Hyrax
     end
 
     ##
+    # This helper allows downstream applications and engines to change the label of tabs to be
+    # rendered on the work form.
+    #
+    # @example passing information from the form into the translations
+    #  Override this helper and ensure that it loads after Hyrax's helpers.
+    #  module WorksHelper
+    #    def form_tab_label_for(form:, tab:)
+    #      if tab == 'metadata'
+    #        t("hyrax.works.form.tab.#{tab}", title: form.model.title.first)
+    #      else
+    #        super
+    #      end
+    #    end
+    #  end
+    #
+    # @param form [Hyrax::Forms::WorkForm]
+    # @param tab [String]
+    # @return [String] the label of the tab to be rendered in the form
+    def form_tab_label_for(form:, tab:) # rubocop:disable Lint/UnusedMethodArgument
+      t("hyrax.works.form.tab.#{tab}")
+    end
+
+    ##
     # This helper allows downstream applications and engines to add additional sections to be
     # rendered after the visibility section in the Save Work panel on the work form.
     #
