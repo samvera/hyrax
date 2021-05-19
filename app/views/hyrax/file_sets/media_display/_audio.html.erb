@@ -1,4 +1,4 @@
-<% if Hyrax.config.display_media_download_link? && !workflow_restriction?(file_set.try(:parent)) %>
+<% if display_media_download_link?(file_set: file_set) %>
   <div>
       <h2 class="sr-only"><%= t('hyrax.file_set.show.downloadable_content.heading') %></h2>
       <audio controls="controls" class="audiojs" style="width:100%" controlsList="nodownload" preload="auto">

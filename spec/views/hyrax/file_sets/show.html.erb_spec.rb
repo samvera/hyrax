@@ -26,8 +26,10 @@ RSpec.describe 'hyrax/file_sets/show.html.erb', type: :view do
   let(:parent_presenter) { Hyrax::WorkShowPresenter.new(work_solr_document, ability) }
 
   before do
+    allow(controller).to receive(:current_ability).and_return(ability)
     allow(view).to receive(:workflow_restriction?).and_return(false)
     view.lookup_context.prefixes.push 'hyrax/base'
+    allow(ability).to receive(:can?).with(:download, presenter).and_return(true)
     allow(ability).to receive(:can?).with(:edit, presenter).and_return(false)
     allow(presenter).to receive(:fixity_status).and_return(mock_metadata)
     assign(:presenter, presenter)
