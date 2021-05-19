@@ -10,6 +10,11 @@ module Hyrax
     end
 
     ##
+    # @deprecated use `Hyrax::ResourceStatus` instead. in most cases,
+    #   {#suppressed?} is being called on a {SolrDocumentBehavior}. we continue
+    #   to index `suppressed_bsi` and expose its value as an attribute on solr
+    #   document objects.
+    #
     # Used to restrict visibility on search results for a work that is inactive. If the state is not set, the
     # default behavior is to consider the work not to be suppressed.
     #
