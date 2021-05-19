@@ -37,7 +37,7 @@ module Hyrax
     def after_update_response
       respond_to do |wants|
         wants.html { redirect_to main_app.hyrax_generic_work_url(curation_concern, locale: 'en'), notice: "The #{curation_concern.human_readable_type} has been updated." }
-        wants.json { render 'hyrax/base/show', status: :ok, location: polymorphic_path([main_app, curation_concern]) }
+        wants.json { render 'hyrax/base/show', status: :ok, location: main_app.hyrax_generic_work_url(curation_concern, locale: 'en') }
       end
     end
   end
