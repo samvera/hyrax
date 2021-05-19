@@ -213,5 +213,4 @@ workflows:
           filters:
             branches:
               only:
-                - deploy_to_nurax # remove this once deploy is successful
                 - main
