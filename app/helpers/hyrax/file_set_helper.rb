@@ -1,5 +1,18 @@
 # frozen_string_literal: true
 module Hyrax::FileSetHelper
+  ##
+  # @todo inline the "workflow restriction" into the `can?(:download)` check.
+  #
+  # @param file_set [#id]
+  #
+  # @return [Boolean] whether to display the download link for the given file
+  #   set
+  def display_media_download_link?(file_set:)
+    Hyrax.config.display_media_download_link? &&
+      can?(:download, file_set) &&
+      !workflow_restriction?(file_set.try(:parent))
+  end
+
   def parent_path(parent)
     if parent.is_a?(::Collection)
       main_app.collection_path(parent)
