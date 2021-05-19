@@ -28,13 +28,11 @@ if File.exist?(test_app_gemfile)
   end
 else
   # rubocop:disable Bundler/DuplicatedGem
-  if ENV['RAILS_VERSION']
-    if ENV['RAILS_VERSION'] == 'edge'
-      gem 'rails', github: 'rails/rails', source: 'https://rubygems.org'
-      ENV['ENGINE_CART_RAILS_OPTIONS'] = '--edge --skip-turbolinks'
-    else
-      gem 'rails', ENV['RAILS_VERSION'], source: 'https://rubygems.org'
-    end
+  if ENV['RAILS_VERSION'] == 'edge'
+    gem 'rails', github: 'rails/rails', source: 'https://rubygems.org'
+    ENV['ENGINE_CART_RAILS_OPTIONS'] = '--edge --skip-turbolinks'
+  elsif ENV['RAILS_VERSION']
+    gem 'rails', ENV['RAILS_VERSION'], source: 'https://rubygems.org'
   end
   # rubocop:enable Bundler/DuplicatedGem
 end
