@@ -107,7 +107,7 @@ module Sipity
   module_function :handle_conversion
 
   def hyrax_or_valkyrie_global_id(input)
-    Entity.find_by(proxy_for_global_id: Hyrax::GlobalID(input).to_s).nil? ? Hyrax::GlobalID(ActiveFedora::Base.find(input.id.id)) : Hyrax::GlobalID(input) 
+    Entity.find_by(proxy_for_global_id: Hyrax::GlobalID(input).to_s).nil? ? Hyrax::GlobalID(ActiveFedora::Base.find(input.id.id)) : Hyrax::GlobalID(input)
   end
   module_function :hyrax_or_valkyrie_global_id
 end
