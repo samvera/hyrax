@@ -47,6 +47,10 @@ module Wings
           end
         end
 
+        def to_global_id
+          URI::GID.build([GlobalID.app, internal_resource, id, {}])
+        end
+
         def self.to_s
           internal_resource
         end

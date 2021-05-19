@@ -46,6 +46,8 @@ module Hyrax
   def self.GlobalID(input) # rubocop:disable Naming/MethodName
     case input
     when Valkyrie::Resource
+      return input.to_global_id if input.respond_to?(:to_global_id)
+
       ValkyrieGlobalIdProxy.new(resource: input).to_global_id
     else
       input.to_global_id if input.respond_to?(:to_global_id)
