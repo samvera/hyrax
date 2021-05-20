@@ -37,7 +37,7 @@ module Wings
           attr_reader :internal_resource
 
           def name
-            internal_resource
+            _canonical_valkyrie_model&.name
           end
 
           ##
