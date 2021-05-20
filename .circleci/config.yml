@@ -136,6 +136,21 @@ jobs:
           command: bundle exec rake app:db:migrate
       - samvera/parallel_rspec
 
+# Trigger a workflow on the nurax repository that will deploy the most recent hyrax gem code to https://nurax-dev.curationexperts.com/
+  deploy:
+    docker:
+      - image: ubuntu
+    steps:
+      - run:
+          name: Install curl
+          command: apt-get update && apt-get install -y curl
+      - run:
+          name: "Trigger Nurax deploy"
+          command: |
+            curl -X POST https://circleci.com/api/v2/project/gh/curationexperts/nurax/pipeline \
+            --header "Circle-Token: $NURAX_CIRCLECI_TOKEN" \
+            --header 'Accept: text/plain'    \
+            --header 'Content-Type: application/json'
 workflows:
   version: 2
   ruby2-5-8:
@@ -192,3 +207,10 @@ workflows:
           bundler_version: "2.1.4"
           requires:
             - build
+  nurax-dev_deploy:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only:
+                - main
