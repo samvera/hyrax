@@ -56,7 +56,7 @@ module Wings
         end
 
         def to_model
-          Wings::ActiveFedoraConverter.convert(resource: self)
+          Hyrax::SolrDocumentBehavior::ModelWrapper.new(self, id)
         end
 
         klass.properties.each_key do |property_name|
