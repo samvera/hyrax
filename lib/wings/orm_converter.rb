@@ -37,7 +37,7 @@ module Wings
           attr_reader :internal_resource
 
           def name
-            _canonical_valkyrie_model&.name
+            internal_resource
           end
 
           ##
@@ -53,10 +53,6 @@ module Wings
 
         def self.to_s
           internal_resource
-        end
-
-        def to_model
-          Hyrax::SolrDocumentBehavior::ModelWrapper.new(self, id)
         end
 
         klass.properties.each_key do |property_name|

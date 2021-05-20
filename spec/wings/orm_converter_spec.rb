@@ -21,11 +21,11 @@ RSpec.describe Wings::OrmConverter do
         end
 
         it 'has a name' do
-          expect(klass.name).to eq 'Hyrax::Work'
+          expect(klass.name).to eq 'GenericWork'
         end
 
         it 'includes name in instance inspect' do
-          expect(klass.new.inspect).to start_with '#<Hyrax::Work'
+          expect(klass.new.inspect).to start_with '#<GenericWork'
         end
       end
 
@@ -37,11 +37,11 @@ RSpec.describe Wings::OrmConverter do
         end
 
         it 'has a name' do
-          expect(klass.name).to eq 'Hyrax::Test::BookResource'
+          expect(klass.name).to eq 'Hyrax::Test::Book'
         end
 
         it 'includes name in instance inspect' do
-          expect(klass.new.inspect).to start_with '#<Hyrax::Test::BookResource'
+          expect(klass.new.inspect).to start_with '#<Hyrax::Test::Book'
         end
       end
     end
