@@ -59,6 +59,10 @@ module Wings
           Wings::ActiveFedoraConverter.convert(resource: self)
         end
 
+        def errors
+          @errors ||= ActiveModel::Errors.new(self)
+        end
+
         klass.properties.each_key do |property_name|
           next if fields.include?(property_name.to_sym)
 
