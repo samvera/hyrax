@@ -390,7 +390,7 @@ module Hyrax
             work.member_of_collections.delete @collection
             work.save!
           when Valkyrie::Resource
-            work.member_of_collections_ids.delete @collection.id
+            work.member_of_collection_ids.delete @collection.id
             Hyrax.persister.save(resource: work)
           end
         end
