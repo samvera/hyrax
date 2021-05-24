@@ -20,8 +20,9 @@ module Hyrax
     end
 
     def committer
-      vc = Hyrax::VersionCommitter.where(version_id: @version.uri)
-      vc.empty? ? nil : vc.first.committer_login
+      Hyrax::VersionCommitter
+        .find_by(version_id: @version.uri)
+        &.committer_login
     end
   end
 end
