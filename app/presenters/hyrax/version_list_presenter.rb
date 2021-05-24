@@ -17,7 +17,7 @@ module Hyrax
     # @return [Enumerable<Hyrax::VersionPresenter>] an enumerable of presenters
     #   for the relevant file versions.
     #
-    # @raise [ArugumentError] if we can't build an enu
+    # @raise [ArgumentError] if we can't build an enu
     def self.for(file_set:)
       new(file_set.original_file&.versions&.all.to_a)
     rescue NoMethodError
