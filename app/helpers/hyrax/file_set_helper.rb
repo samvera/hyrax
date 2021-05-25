@@ -36,20 +36,26 @@ module Hyrax::FileSetHelper
     render(media_display_partial(presenter), locals.merge(file_set: presenter))
   end
 
-  def media_display_partial(file_set)
-    'hyrax/file_sets/media_display/' +
-      if file_set.image?
-        'image'
-      elsif file_set.video?
-        'video'
-      elsif file_set.audio?
-        'audio'
-      elsif file_set.pdf?
-        'pdf'
-      elsif file_set.office_document?
-        'office_document'
-      else
-        'default'
-      end
+  def media_display_partial(file_set) # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+    slug = case file_set
+           when ActiveFedora::Base
+             return media_display_partial(CatalogController.new.fetch(file_set.id).last)
+           else
+             if file_set.image?
+               'image'
+             elsif file_set.video?
+               'video'
+             elsif file_set.audio?
+               'audio'
+             elsif file_set.pdf?
+               'pdf'
+             elsif file_set.office_document?
+               'office_document'
+             else
+               'default'
+             end
+           end
+
+    "hyrax/file_sets/media_display/#{slug}"
   end
 end

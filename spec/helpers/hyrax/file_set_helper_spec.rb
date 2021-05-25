@@ -46,42 +46,50 @@ RSpec.describe Hyrax::FileSetHelper do
   describe '#media_display_partial' do
     subject { helper.media_display_partial(file_set) }
 
-    let(:file_set) { SolrDocument.new(mime_type_ssi: mime_type) }
-
-    context "with an image" do
-      let(:mime_type) { 'image/tiff' }
+    context 'with an ActiveFedora file set' do
+      let(:file_set) { FactoryBot.create(:file_set, :image) }
 
       it { is_expected.to eq 'hyrax/file_sets/media_display/image' }
     end
 
-    context "with a video" do
-      let(:mime_type) { 'video/webm' }
+    context 'with a solr document' do
+      let(:file_set) { SolrDocument.new(mime_type_ssi: mime_type) }
 
-      it { is_expected.to eq 'hyrax/file_sets/media_display/video' }
-    end
+      context "with an image" do
+        let(:mime_type) { 'image/tiff' }
 
-    context "with an audio" do
-      let(:mime_type) { 'audio/wav' }
+        it { is_expected.to eq 'hyrax/file_sets/media_display/image' }
+      end
 
-      it { is_expected.to eq 'hyrax/file_sets/media_display/audio' }
-    end
+      context "with a video" do
+        let(:mime_type) { 'video/webm' }
 
-    context "with a pdf" do
-      let(:mime_type) { 'application/pdf' }
+        it { is_expected.to eq 'hyrax/file_sets/media_display/video' }
+      end
 
-      it { is_expected.to eq 'hyrax/file_sets/media_display/pdf' }
-    end
+      context "with an audio" do
+        let(:mime_type) { 'audio/wav' }
 
-    context "with a word document" do
-      let(:mime_type) { 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }
+        it { is_expected.to eq 'hyrax/file_sets/media_display/audio' }
+      end
 
-      it { is_expected.to eq 'hyrax/file_sets/media_display/office_document' }
-    end
+      context "with a pdf" do
+        let(:mime_type) { 'application/pdf' }
 
-    context "with anything else" do
-      let(:mime_type) { 'application/binary' }
+        it { is_expected.to eq 'hyrax/file_sets/media_display/pdf' }
+      end
 
-      it { is_expected.to eq 'hyrax/file_sets/media_display/default' }
+      context "with a word document" do
+        let(:mime_type) { 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }
+
+        it { is_expected.to eq 'hyrax/file_sets/media_display/office_document' }
+      end
+
+      context "with anything else" do
+        let(:mime_type) { 'application/binary' }
+
+        it { is_expected.to eq 'hyrax/file_sets/media_display/default' }
+      end
     end
   end
 end

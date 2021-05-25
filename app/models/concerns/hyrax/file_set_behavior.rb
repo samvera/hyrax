@@ -33,8 +33,17 @@ module Hyrax
       to_param
     end
 
+    ##
+    # @deprecated
+    #
     # Cast to a SolrDocument by querying from Solr
     def to_presenter
+      Deprecation.warn "#to_presenter makes duplicative calls to Solr. " \
+                       "if you are reaching this message from a custom " \
+                       "file_sets/edit template, we recommend calling " \
+                       "media_display_partial directly on the " \
+                       "`curation_concern` local."
+
       CatalogController.new.fetch(id).last
     end
   end
