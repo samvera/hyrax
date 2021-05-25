@@ -21,12 +21,19 @@ module Hyrax::FileSetHelper
     end
   end
 
-  # REVIEW: Since this media display could theoretically work for
-  #         any object that inplements to_s and the Mime Type methos (image? audio? ...),
-  #         Should this really be in file_set or could it be in it's own helper class like media_helper?
+  ##
+  # @deprecated use render(media_display_partial(file_set), file_set: file_set)
+  #   instead
+  #
+  # @param presenter [Object]
+  # @param locals [Hash{Symbol => Object}]
   def media_display(presenter, locals = {})
-    render media_display_partial(presenter),
-           locals.merge(file_set: presenter)
+    Deprecation.warn("the helper `media_display` renders a partial name " \
+                     "provided by `media_display_partial`. Callers " \
+                     "should render `media_display_partial(file_set) directly
+                     instead.")
+
+    render(media_display_partial(presenter), locals.merge(file_set: presenter))
   end
 
   def media_display_partial(file_set)
@@ -45,5 +52,4 @@ module Hyrax::FileSetHelper
         'default'
       end
   end
-  # rubocop:enable Metrics/MethodLength
 end
