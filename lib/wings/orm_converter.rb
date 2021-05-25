@@ -53,8 +53,18 @@ module Wings
           end
         end
 
+        ##
+        # @return [URI::GID]
         def to_global_id
           URI::GID.build([GlobalID.app, internal_resource, id, {}])
+        end
+
+        ##
+        # @return [ActiveModel::Base]
+        def to_model
+          model_class = internal_resource.safe_constantize || self
+
+          Hyrax::ActiveFedoraDummyModel.new(model_class, id)
         end
 
         klass.properties.each_key do |property_name|

@@ -27,6 +27,12 @@ RSpec.describe Wings::OrmConverter do
         it 'includes name in instance inspect' do
           expect(klass.new.inspect).to start_with '#<Hyrax::Work'
         end
+
+        it 'has a to_model for route resolution' do
+          expect(klass.new.to_model)
+            .to have_attributes(model_name: an_instance_of(Hyrax::Name),
+                                to_partial_path: 'hyrax/generic_works/generic_work')
+        end
       end
 
       context 'for a custom class' do
@@ -42,6 +48,12 @@ RSpec.describe Wings::OrmConverter do
 
         it 'includes name in instance inspect' do
           expect(klass.new.inspect).to start_with '#<Hyrax::Test::BookResource'
+        end
+
+        it 'has a to_model for route resolution' do
+          expect(klass.new.to_model)
+            .to have_attributes(model_name: an_instance_of(ActiveModel::Name),
+                                to_partial_path: 'hyrax/test/books/book')
         end
       end
     end
