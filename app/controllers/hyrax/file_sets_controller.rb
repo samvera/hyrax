@@ -86,7 +86,11 @@ module Hyrax
 
     private
 
-    # this is provided so that implementing application can override this behavior and map params to different attributes
+    ##
+    # @api public
+    #
+    # @note this is provided so that implementing application can override this
+    #   behavior and map params to different attributes
     def update_metadata
       file_attributes = form_class.model_attributes(attributes)
       actor.update_metadata(file_attributes)
