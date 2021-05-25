@@ -41,6 +41,12 @@ module Wings
           end
 
           ##
+          # @return [String]
+          def to_s
+            internal_resource
+          end
+
+          ##
           # @api private
           def _canonical_valkyrie_model
             ancestors[1..-1].find { |parent| parent < ::Valkyrie::Resource }
@@ -49,10 +55,6 @@ module Wings
 
         def to_global_id
           URI::GID.build([GlobalID.app, internal_resource, id, {}])
-        end
-
-        def self.to_s
-          internal_resource
         end
 
         klass.properties.each_key do |property_name|
