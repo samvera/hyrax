@@ -156,9 +156,10 @@ module Hyrax
     end
 
     def initialize_edit_form
-      @parent = @file_set.in_objects.first
+      @form = form_class.new(curation_concern).prepopulate!
+      @parent = @form.parent
       guard_for_workflow_restriction_on!(parent: @parent)
-      @version_list = Hyrax::VersionListPresenter.for(file_set: @file_set)
+      @version_list = @form.versions
       @groups = current_user.groups
     end
 

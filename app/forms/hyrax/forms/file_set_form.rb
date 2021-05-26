@@ -38,6 +38,12 @@ module Hyrax
       property :lease_expiration_date, virtual: true
       property :visibility_after_lease, virtual: true
       property :visibility_during_lease, virtual: true
+
+      # virtual properties for pcdm membership
+      property :parent, virtual: true, prepopulator: ->(_opts) { self.parent = Hyrax.query_service.find_parents(resource: model).first }
+
+      # virtual properties for versions
+      property :versions, virtual: true, prepopulator: ->(_opts) { self.versions = Hyrax::VersionListPresenter.for(file_set: model) }
     end
   end
 end

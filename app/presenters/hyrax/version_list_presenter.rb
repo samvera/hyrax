@@ -19,6 +19,7 @@ module Hyrax
     #
     # @raise [ArgumentError] if we can't build an enu
     def self.for(file_set:)
+      return new([]) if file_set.is_a?(Valkyrie::Resource)
       new(file_set.original_file&.versions&.all.to_a)
     rescue NoMethodError
       raise ArgumentError
