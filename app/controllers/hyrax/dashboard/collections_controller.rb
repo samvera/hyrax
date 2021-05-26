@@ -384,9 +384,15 @@ module Hyrax
 
       def remove_members_from_collection
         batch.each do |pid|
-          work = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: pid, use_valkyrie: false)
-          work.member_of_collections.delete @collection
-          work.save!
+          work = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: pid, use_valkyrie: Hyrax.config.use_valkyrie?)
+          case work
+          when ActiveFedora::Base
+            work.member_of_collections.delete @collection
+            work.save!
+          when Valkyrie::Resource
+            work.member_of_collection_ids.delete @collection.id
+            Hyrax.persister.save(resource: work)
+          end
         end
       end
 
