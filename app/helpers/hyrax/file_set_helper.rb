@@ -37,25 +37,21 @@ module Hyrax::FileSetHelper
   end
 
   def media_display_partial(file_set) # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
-    slug = case file_set
-           when ActiveFedora::Base
-             return media_display_partial(CatalogController.new.fetch(file_set.id).last)
-           else
-             if file_set.image?
-               'image'
-             elsif file_set.video?
-               'video'
-             elsif file_set.audio?
-               'audio'
-             elsif file_set.pdf?
-               'pdf'
-             elsif file_set.office_document?
-               'office_document'
-             else
-               'default'
-             end
-           end
+    type = Hyrax::FileSetTypeService.for(file_set: file_set)
 
-    "hyrax/file_sets/media_display/#{slug}"
+    "hyrax/file_sets/media_display/" +
+      if type.image?
+        'image'
+      elsif type.video?
+        'video'
+      elsif type.audio?
+        'audio'
+      elsif type.pdf?
+        'pdf'
+      elsif type.office_document?
+        'office_document'
+      else
+        'default'
+      end
   end
 end

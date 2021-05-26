@@ -4,7 +4,7 @@ module Hyrax::Forms
     include HydraEditor::Form
     include HydraEditor::Form::Permissions
 
-    delegate :depositor, :permissions, to: :model
+    delegate :depositor, :id, :permissions, to: :model
 
     self.required_fields = [:title, :creator, :license]
 
