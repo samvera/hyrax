@@ -3,6 +3,7 @@ module Hyrax::Forms
   class FileSetEditForm
     include HydraEditor::Form
     include HydraEditor::Form::Permissions
+    include Hydra::Works::MimeTypes
 
     delegate :depositor, :id, :permissions, to: :model
 
@@ -22,9 +23,19 @@ module Hyrax::Forms
     end
 
     ##
-    # @note for compatibility with Valkyrie::ChangeSet
+    # Frontload queries for supplementary data, avoiding database calls from
+    # views.
+    #
+    # @note "#prepopulate!" is named for compatibility with Valkyrie::ChangeSet.
     def prepopulate!
+      @mime_type = CatalogController.new.fetch(model.id).last.mime_type
       self
+    end
+
+    ##
+    # @return [String]
+    def mime_type
+      @mime_type || ""
     end
 
     def versions

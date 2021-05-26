@@ -50,9 +50,13 @@ module Hyrax
     # @return [#audio?, #image?, #office_document?, #pdf?, #video?]
     def self.for(file_set:, characterization_proxy: ::FileSet.characterization_proxy, **opts)
       case file_set
-      when ActiveFedora::Base, HydraEditor::Form
+      when ActiveFedora::Base
+        Deprecation.warn("Resolving FileSet mime type from an" \
+                         "ActiveFedora::Base requires a Solr query. " \
+                         "Pass in a SolrDocument or form object to avoid " \
+                         "triggering this query unnecessarily.")
         CatalogController.new.fetch(file_set.id).last
-      when SolrDocument
+      when HydraEditor::Form, SolrDocument
         file_set
       else
         new(file_set: file_set, characterization_proxy: characterization_proxy, **opts)
