@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'hyrax/specs/spy_listener'
+
 RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
   routes { Hyrax::Engine.routes }
   let(:user)  { create(:user) }
@@ -145,7 +147,14 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
   end
 
   describe "#update" do
-    before { sign_in user }
+    let(:listener) { Hyrax::Specs::SpyListener.new }
+
+    before do
+      Hyrax.publisher.subscribe(listener)
+      sign_in user
+    end
+
+    after { Hyrax.publisher.unsubscribe(listener) }
 
     context 'collection members' do
       before do
@@ -177,13 +186,22 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       end
 
       it "removes members from the collection" do
-        # TODO: Using size until count is fixed https://github.com/projecthydra-labs/activefedora-aggregation/issues/78
         expect do
           put :update, params: { id: collection,
                                  collection: { members: 'remove' },
                                  batch_document_ids: [asset2] }
         end.to change { asset2.reload.member_of_collections.size }.by(-1)
         expect(assigns[:collection].member_objects).to match_array [asset1]
+      end
+
+      it "publishes object.metadata.updated for removed objects" do
+        expect do
+          put :update, params: { id: collection,
+                                 collection: { members: 'remove' },
+                                 batch_document_ids: [asset2] }
+        end
+          .to change { listener.object_metadata_updated&.payload }
+          .to match(object: have_attributes(id: asset2.id), user: user)
       end
     end
 
