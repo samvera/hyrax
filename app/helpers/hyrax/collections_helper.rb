@@ -2,6 +2,14 @@
 module Hyrax
   module CollectionsHelper
     ##
+    # @since 3.1.0
+    # @return [Array<SolrDocument>]
+    def available_child_collections(collection:)
+      Hyrax::Collections::NestedCollectionQueryService
+        .available_child_collections(parent: collection, scope: controller, limit_to_id: nil)
+    end
+
+    ##
     # @since 3.0.0
     # @return [#to_s]
     def collection_metadata_label(collection, field)

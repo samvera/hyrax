@@ -14,10 +14,9 @@
         <input type="hidden" name="source" value="<%= source %>" />
         <select name="child_id">
           <option value="none"><%= t("hyrax.dashboard.my.action.select") %></option>
-          <% colls = Hyrax::Collections::NestedCollectionQueryService.available_child_collections(parent: collection, scope: controller, limit_to_id: nil) %>
-          <% colls.each {|coll| %>
+          <% available_child_collections(collection: collection).each do |coll| %>
             <option value="<%= coll.id %>"><%= coll.title.first %></option>
-          <% } %>
+          <% end %>
         </select>
       </div>
 
