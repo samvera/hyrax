@@ -78,7 +78,7 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
   describe '#save' do
     describe 'when not valid' do
       it 'does not even attempt to persist the relationship' do
-        expect(form).to receive(:valid?).and_return(false)
+        expect(form).to receive(:valid?).and_return(false) # rubocop:disable RSpec/SubjectStub
         expect(persistence_service).not_to receive(:persist_nested_collection_for)
 
         expect(form.save).to be_falsey
@@ -86,7 +86,7 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
     end
 
     describe 'when valid' do
-      before { expect(form).to receive(:valid?).and_return(true) }
+      before { expect(form).to receive(:valid?).and_return(true) } # rubocop:disable RSpec/SubjectStub
 
       it "returns the result of the given persistence_service's call to persist_nested_collection_for" do
         expect(persistence_service)
