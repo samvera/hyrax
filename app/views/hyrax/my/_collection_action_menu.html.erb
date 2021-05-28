@@ -6,7 +6,6 @@
     <span class="sr-only"><%= t("hyrax.dashboard.my.sr.press_to") %> </span>
     <%= t("hyrax.dashboard.my.action.select") %> <span class="caret" aria-hidden="true"></span>
   </button>
-
   <ul role="menu" id="<%= ul_id %>" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu_<%= id %>">
     <li role="menuitem" tabindex="-1">
       <%= link_to hyrax.dashboard_collection_path(id),
@@ -43,7 +42,7 @@
       <% end %>
     </li>
 
-    <% if Hyrax::CollectionType.any_nestable? %>
+    <% if collection_presenter.collection_type_is_nestable? %>
       <% # The user should have deposit access to the parent we are adding, and read access to the child (the collection we are linking here). %>
       <li role="menuitem" tabindex="-1">
         <%= link_to "#",

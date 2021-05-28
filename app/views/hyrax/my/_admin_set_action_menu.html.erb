@@ -41,16 +41,5 @@
         <%= t("hyrax.dashboard.my.action.delete_admin_set") %>
       <% end %>
     </li>
-    <% if Hyrax::CollectionType.any_nestable? %>
-        <li role="menuitem" tabindex="-1">
-          <%= link_to "#",
-                      class: 'itemicon add-to-collection',
-                      title: t("hyrax.dashboard.my.action.add_to_collection"),
-                      data: { nestable: false,
-                              hasaccess: (can?(:deposit, admin_set_presenter.solr_document)) } do %>
-              <%= t("hyrax.dashboard.my.action.add_to_collection") %>
-          <% end %>
-        </li>
-    <% end %>
   </ul>
 </div>
