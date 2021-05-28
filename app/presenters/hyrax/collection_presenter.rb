@@ -28,6 +28,7 @@ module Hyrax
              :to_s, to: :solr_document
 
     delegate(*Hyrax::CollectionType.settings_attributes, to: :collection_type, prefix: :collection_type_is)
+    alias nestable? collection_type_is_nestable?
 
     def collection_type
       @collection_type ||= Hyrax::CollectionType.find_by_gid!(collection_type_gid)
