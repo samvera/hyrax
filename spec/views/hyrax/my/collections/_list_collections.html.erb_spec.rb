@@ -37,7 +37,11 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
       allow(collection_presenter).to receive(:total_items).and_return(0)
       allow(collection_presenter).to receive(:collection_type_is_require_membership?).and_return(true)
       allow(collection_presenter).to receive(:collection_type_is_nestable?).and_return(true)
-      allow(collection_presenter).to receive(:available_parent_collections).and_return([mock_model(Collection)])
+
+      allow(view)
+        .to receive(:available_parent_collections_data)
+        .with(collection: collection_presenter)
+        .and_return([mock_model(Collection)])
 
       view.lookup_context.prefixes.push 'hyrax/my'
       render 'hyrax/my/collections/list_collections', collection_presenter: collection_presenter, is_admin_set: doc.admin_set?
