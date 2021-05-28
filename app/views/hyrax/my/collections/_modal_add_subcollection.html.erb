@@ -1,5 +1,4 @@
 <div class="modal fade disable-unless-selected" id="add-subcollection-modal-<%= id %>" tabindex="-1" role="dialog" aria-labelledby="add-subcollection-label">
-<% collection = ::Collection.find id %>
   <div class="modal-dialog" role="document">
     <div class="modal-content">
 
@@ -14,7 +13,7 @@
         <input type="hidden" name="source" value="<%= source %>" />
         <select name="child_id">
           <option value="none"><%= t("hyrax.dashboard.my.action.select") %></option>
-          <% available_child_collections(collection: collection).each do |coll| %>
+          <% available_child_collections(collection: presenter).each do |coll| %>
             <option value="<%= coll.id %>"><%= coll.title.first %></option>
           <% end %>
         </select>
@@ -27,7 +26,7 @@
           disabled
           type="button"
           class="btn btn-primary modal-add-button modal-submit-button"
-          data-post-url="<%= dashboard_create_nest_collection_under_path(collection.id) %>"
+          data-post-url="<%= dashboard_create_nest_collection_under_path(presenter.id) %>"
           data-source="<%= source %>">
           <%= t('hyrax.collection.actions.nest_collections.button_label') %>
         </button>

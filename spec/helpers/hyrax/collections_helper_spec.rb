@@ -33,6 +33,21 @@ RSpec.describe Hyrax::CollectionsHelper do
       expect(helper.available_child_collections(collection: current_collection))
         .not_to be_empty
     end
+
+    context 'with a presenter' do
+      let(:collection) { FactoryBot.create(:collection) }
+      let(:presenter)  { Hyrax::CollectionPresenter.new(solr_doc, ability) }
+      let(:solr_doc)   { SolrDocument.new(collection.to_solr) }
+
+      before do
+        FactoryBot.create(:collection) # other collection
+      end
+
+      it 'gives a list of available collections' do
+        expect(helper.available_child_collections(collection: presenter))
+          .not_to be_empty
+      end
+    end
   end
 
   describe '#render_collection_links' do
