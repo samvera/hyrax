@@ -44,22 +44,22 @@ RSpec.describe 'hyrax/my/_collection_action_menu.html.erb' do
     end
   end
 
-  context "when any_nestable?" do
+  context "when nestable" do
     before do
-      allow(Hyrax::CollectionType).to receive(:any_nestable?).and_return(true)
-      render 'hyrax/my/collection_action_menu', collection: collection_doc
+      allow(collection_presenter)
+        .to receive(:collection_type_is_nestable?)
+        .and_return(true)
     end
+
     it "shows add to collection action " do
+      render 'hyrax/my/collection_action_menu', collection: collection_doc
       expect(rendered).to have_link 'Add to collection'
     end
   end
 
-  context "when not any_nestable?" do
-    before do
-      allow(Hyrax::CollectionType).to receive(:any_nestable?).and_return(false)
-      render 'hyrax/my/collection_action_menu', collection: collection_doc
-    end
+  context "when not nestable" do
     it "hides add to collection action " do
+      render 'hyrax/my/collection_action_menu', collection: collection_doc
       expect(rendered).not_to have_link 'Add to collection'
     end
   end
