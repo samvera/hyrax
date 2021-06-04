@@ -23,16 +23,16 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
     user = User.find_by_user_key(depositor)
 
     work, work_permissions = create_permissions work, depositor
-    metadata = visibility_attributes(work_attributes)
     uploaded_files.each do |uploaded_file|
       next if uploaded_file.file_set_uri.present?
 
       actor = Hyrax::Actors::FileSetActor.new(FileSet.create, user)
+      metadata = visibility_attributes(work_attributes, uploaded_file)
       uploaded_file.add_file_set!(actor.file_set)
       actor.file_set.permissions_attributes = work_permissions
       actor.create_metadata(metadata)
       actor.create_content(uploaded_file)
-      actor.attach_to_work(work)
+      actor.attach_to_work(work, metadata)
     end
   end
 
@@ -44,8 +44,9 @@ class AttachFilesToWorkJob < Hyrax::ApplicationJob
   end
 
   # The attributes used for visibility - sent as initial params to created FileSets.
-  def visibility_attributes(attributes)
-    attributes.slice(:visibility, :visibility_during_lease,
+  def visibility_attributes(attributes, uploaded_file = nil)
+    file_set_attributes = Array(attributes[:file_set]).find { |fs| fs[:uploaded_file_id] == uploaded_file&.id }
+    attributes.merge(Hash(file_set_attributes)).slice(:visibility, :visibility_during_lease,
                      :visibility_after_lease, :lease_expiration_date,
                      :embargo_release_date, :visibility_during_embargo,
                      :visibility_after_embargo)
