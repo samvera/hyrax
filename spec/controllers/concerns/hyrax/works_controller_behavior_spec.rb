@@ -147,6 +147,17 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
 
           expect(response.status).to eq 422
         end
+
+        it 'sets the file visibility' do
+          params = { test_simple_work: { title: 'comet in moominland',
+                                         file_set: [{ uploaded_file_id: uploads.first.id, visibility: 'open' },
+                                                    { uploaded_file_id: uploads.second.id, visibility: 'open' }] },
+                     uploaded_files: uploads.map(&:id) }
+
+          get :create, params: params
+
+          expect(assigns(:curation_concern)).to have_file_set_members(have_attributes(visibility: 'open'), have_attributes(visibility: 'open'))
+        end
       end
 
       context 'with invalid form data' do
@@ -408,6 +419,17 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
 
           get :update, params: params
           expect(assigns(:curation_concern)).to have_file_set_members(be_persisted, be_persisted)
+        end
+
+        it 'sets the file visibility' do
+          params = { id: id,
+                     test_simple_work: { title: 'comet in moominland',
+                                         file_set: [{ uploaded_file_id: uploads.first.id, visibility: 'open' },
+                                                    { uploaded_file_id: uploads.second.id, visibility: 'open' }] },
+                     uploaded_files: uploads.map(&:id) }
+
+          get :update, params: params
+          expect(assigns(:curation_concern)).to have_file_set_members(have_attributes(visibility: 'open'), have_attributes(visibility: 'open'))
         end
       end
 

@@ -48,7 +48,9 @@ module Hyrax
     #   @return [Enumberable<Hyrax::UploadedFile>]
     # @!attribute [r] work
     #   @return [Hyrax::Work]
-    attr_reader :files, :work
+    # @!attribute [r] file_set_params
+    #   @return [Enumerable<Hash>]
+    attr_reader :files, :work, :file_set_params
 
     ##
     # @param [Hyrax::Work] work
@@ -71,9 +73,10 @@ module Hyrax
     # @return [WorkFileSetManager] self
     # @raise [ArgumentError] if any of the uploaded files are not an
     #   `UploadedFile`
-    def add(files:)
+    def add(files:, file_set_params: [])
       validate_files(files) &&
         @files = Array.wrap(files).reject { |f| f.file_set_uri.present? }
+      @file_set_params = file_set_params
       self
     end
 
@@ -105,6 +108,10 @@ module Hyrax
 
       # copy ACLs; should we also be propogating embargo/lease?
       Hyrax::AccessControlList.copy_permissions(source: target_permissions, target: file_set)
+
+      # set visibility from params and save
+      file_set.visibility = file_set_extra_params(file)[:visibility] if file_set_extra_params(file)[:visibility].present?
+      file_set.permission_manager.acl.save if file_set.permission_manager.acl.pending_changes?
       append_to_work(file_set)
 
       IngestJob.perform_later(wrap_file(file, file_set))
@@ -133,6 +140,14 @@ module Hyrax
         date_modified: Hyrax::TimeService.time_in_utc,
         label: file.uploader.filename,
         title: file.uploader.filename }
+    end
+
+    ##
+    # @api private
+    #
+    # return [Hash(Symbol => Object)]
+    def file_set_extra_params(file)
+      file_set_params&.find { |fs| fs[:uploaded_file_id] == file.id.to_s } || {}
     end
 
     ##
