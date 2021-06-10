@@ -56,7 +56,7 @@ module Hyrax
     def destroy
       guard_for_workflow_restriction_on!(parent: parent)
 
-      actor.destroy
+      delete(file_set: curation_concern)
       redirect_to [main_app, parent],
                   notice: view_context.t('hyrax.file_sets.asset_deleted_flash.message')
     end
@@ -85,6 +85,21 @@ module Hyrax
     def citation; end
 
     private
+
+    ##
+    # @api public
+    def delete(file_set:)
+      case file_set
+      when Valkyrie::Resource
+        transactions['file_set.destroy']
+          .with_step_args('file_set.remove_from_work' => { user: current_user },
+                          'file_set.delete' => { user: current_user })
+          .call(curation_concern)
+          .value!
+      else
+        actor.destroy
+      end
+    end
 
     ##
     # @api public
