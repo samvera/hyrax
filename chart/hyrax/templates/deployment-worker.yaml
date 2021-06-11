@@ -82,6 +82,9 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.worker.resources | nindent 12 }}
+          {{- with .Values.extraContainerConfiguration }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
       volumes:
         - name: "derivatives"
           {{- if and .Values.derivativesVolume.enabled .Values.derivativesVolume.existingClaim }}
