@@ -53,6 +53,15 @@ extraInitContainers: []
 #
 extraEnvFrom: []
 
+# Extra container spec configuration
+# Example: (enabling pry debugging for local development)
+# Note: with this enabled, one can `kubectl attach` to a running container with a binding.pry breakpoint
+#
+#extraContainerConfiguration:
+# stdin: true
+# tty: true
+extraContainerConfiguration: []
+
 # an existing volume containing a Hyrax-based application
 # must be a ReadWriteMany volume if worker is enabled
 applicationExistingClaim: ""

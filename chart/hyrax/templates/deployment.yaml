@@ -142,6 +142,9 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- with .Values.extraContainerConfiguration }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
       volumes:
         - name: "branding"
           {{- if and .Values.brandingVolume.enabled .Values.brandingVolume.existingClaim }}
