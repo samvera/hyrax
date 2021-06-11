@@ -87,20 +87,19 @@ RSpec.describe Hyrax::FileSetsController do
 
       context "when updating metadata" do
         it "spawns a content update event job" do
-          expect(ContentUpdateEventJob)
-            .to receive(:perform_later)
-            .with(file_set, user)
-
-          post :update, params: {
-            id: file_set,
-            file_set: {
-              title: ['new_title'],
-              keyword: [''],
-              permissions_attributes: [{ type: 'person',
-                                         name: 'archivist1',
-                                         access: 'edit' }]
+          expect do
+            post :update, params: {
+              id: file_set,
+              file_set: {
+                title: ['new_title'],
+                keyword: [''],
+                permissions_attributes: [{ type: 'person',
+                                           name: 'archivist1',
+                                           access: 'edit' }]
+              }
             }
-          }
+          end.to have_enqueued_job(ContentUpdateEventJob).exactly(:once)
+
           expect(response)
             .to redirect_to main_app.hyrax_file_set_path(file_set, locale: 'en')
           expect(assigns[:file_set].modified_date)
@@ -150,7 +149,8 @@ RSpec.describe Hyrax::FileSetsController do
 
           expect(assigns[:file_set].modified_date)
             .not_to be file_set.modified_date
-          expect(assigns[:file_set].title).to eq file_set.title
+          expect(assigns[:file_set].title)
+            .to contain_exactly(*file_set.title)
         end
       end
 
@@ -230,7 +230,7 @@ RSpec.describe Hyrax::FileSetsController do
                       ] }
         }
 
-        expect(assigns[:file_set].read_groups).to eq(["group3"])
+        expect(assigns[:file_set].read_groups).to contain_exactly("group3")
       end
 
       context "when there's an error saving" do

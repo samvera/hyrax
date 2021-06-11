@@ -107,8 +107,16 @@ module Hyrax
     # @note this is provided so that implementing application can override this
     #   behavior and map params to different attributes
     def update_metadata
-      file_attributes = form_class.model_attributes(attributes)
-      actor.update_metadata(file_attributes)
+      case file_set
+      when Hyrax::Resource
+        change_set = Hyrax::Forms::ResourceForm.for(file_set)
+
+        change_set.validate(attributes) &&
+          transactions['change_set.apply'].call(change_set).value_or { false }
+      else
+        file_attributes = form_class.model_attributes(attributes)
+        actor.update_metadata(file_attributes)
+      end
     end
 
     def parent(file_set: curation_concern)

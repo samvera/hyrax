@@ -5,6 +5,8 @@ module Hyrax
     ##
     # @api public
     class FileSetForm < Hyrax::ChangeSet
+      include Hyrax::FormFields(:core_metadata)
+
       class << self
         ##
         # @return [Array<Symbol>] list of required field names as symbols
@@ -15,7 +17,6 @@ module Hyrax
         end
       end
 
-      property :title, required: true
       property :creator, required: true
       property :license, required: true
 
@@ -29,6 +30,8 @@ module Hyrax
       property :publisher
       property :related_url
       property :subject
+
+      property :permissions, virtual: true
       property :visibility, default: VisibilityIntention::PRIVATE
 
       # virtual properties for embargo/lease;
