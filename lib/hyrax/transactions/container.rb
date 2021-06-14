@@ -21,6 +21,7 @@ module Hyrax
       require 'hyrax/transactions/apply_change_set'
       require 'hyrax/transactions/create_work'
       require 'hyrax/transactions/destroy_work'
+      require 'hyrax/transactions/file_set_destroy'
       require 'hyrax/transactions/work_create'
       require 'hyrax/transactions/work_destroy'
       require 'hyrax/transactions/update_work'
@@ -33,6 +34,7 @@ module Hyrax
       require 'hyrax/transactions/steps/destroy_work'
       require 'hyrax/transactions/steps/ensure_admin_set'
       require 'hyrax/transactions/steps/ensure_permission_template'
+      require 'hyrax/transactions/steps/remove_file_set_from_work'
       require 'hyrax/transactions/steps/save'
       require 'hyrax/transactions/steps/save_work'
       require 'hyrax/transactions/steps/save_access_control'
@@ -89,6 +91,20 @@ module Hyrax
 
         ops.register 'validate' do
           Steps::Validate.new
+        end
+      end
+
+      namespace 'file_set' do |ops| # Hyrax::FileSet
+        ops.register 'delete' do
+          Steps::DeleteResource.new
+        end
+
+        ops.register 'destroy' do
+          FileSetDestroy.new
+        end
+
+        ops.register 'remove_from_work' do
+          Steps::RemoveFileSetFromWork.new
         end
       end
 

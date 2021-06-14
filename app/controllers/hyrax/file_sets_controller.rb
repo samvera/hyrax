@@ -44,8 +44,7 @@ module Hyrax
 
     # GET /concern/parent/:parent_id/file_sets/:id
     def show
-      presenter
-      guard_for_workflow_restriction_on!(parent: presenter.parent)
+      guard_for_workflow_restriction_on!(parent: parent(file_set: presenter))
       respond_to do |wants|
         wants.html
         wants.json
@@ -55,16 +54,17 @@ module Hyrax
 
     # DELETE /concern/file_sets/:id
     def destroy
-      parent = curation_concern.parent
       guard_for_workflow_restriction_on!(parent: parent)
-      actor.destroy
-      redirect_to [main_app, parent], notice: view_context.t('hyrax.file_sets.asset_deleted_flash.message')
+
+      delete(file_set: curation_concern)
+      redirect_to [main_app, parent],
+                  notice: view_context.t('hyrax.file_sets.asset_deleted_flash.message')
     end
 
     # PATCH /concern/file_sets/:id
     def update
-      parent = curation_concern.parent
       guard_for_workflow_restriction_on!(parent: parent)
+
       if attempt_update
         after_update_response
       else
@@ -88,12 +88,45 @@ module Hyrax
 
     ##
     # @api public
+    def delete(file_set:)
+      case file_set
+      when Valkyrie::Resource
+        transactions['file_set.destroy']
+          .with_step_args('file_set.remove_from_work' => { user: current_user },
+                          'file_set.delete' => { user: current_user })
+          .call(curation_concern)
+          .value!
+      else
+        actor.destroy
+      end
+    end
+
+    ##
+    # @api public
     #
     # @note this is provided so that implementing application can override this
     #   behavior and map params to different attributes
     def update_metadata
-      file_attributes = form_class.model_attributes(attributes)
-      actor.update_metadata(file_attributes)
+      case file_set
+      when Hyrax::Resource
+        change_set = Hyrax::Forms::ResourceForm.for(file_set)
+
+        change_set.validate(attributes) &&
+          transactions['change_set.apply'].call(change_set).value_or { false }
+      else
+        file_attributes = form_class.model_attributes(attributes)
+        actor.update_metadata(file_attributes)
+      end
+    end
+
+    def parent(file_set: curation_concern)
+      @parent ||=
+        case file_set
+        when Hyrax::Resource
+          Hyrax.query_service.find_parents(resource: file_set).first
+        else
+          file_set.parent
+        end
     end
 
     def attempt_update
@@ -156,8 +189,8 @@ module Hyrax
     end
 
     def initialize_edit_form
-      @parent = @file_set.in_objects.first
-      guard_for_workflow_restriction_on!(parent: @parent)
+      guard_for_workflow_restriction_on!(parent: parent)
+
       @version_list = Hyrax::VersionListPresenter.for(file_set: @file_set)
       @groups = current_user.groups
     end
