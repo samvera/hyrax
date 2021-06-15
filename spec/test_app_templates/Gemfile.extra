@@ -1,6 +1,7 @@
 # Use this file to reference specific commits of gems.
 
 group :development do
+  gem 'okcomputer'
   gem 'better_errors'
   gem 'binding_of_caller'
 end

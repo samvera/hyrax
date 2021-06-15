@@ -7,7 +7,6 @@ source 'https://rubygems.org' do
     gem 'benchmark-ips'
     gem 'easy_translate'
     gem 'i18n-tasks'
-    gem 'okcomputer'
     gem 'pry' unless ENV['CI']
     gem 'pry-byebug' unless ENV['CI']
     gem 'ruby-prof', require: false
