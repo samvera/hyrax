@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'spec_helper'
+require 'hyrax/specs/shared_specs/valkyrie_storage_versions'
 require 'valkyrie/specs/shared_specs'
 
 RSpec.describe Wings::Valkyrie::Storage, :clean_repo do
@@ -7,6 +8,40 @@ RSpec.describe Wings::Valkyrie::Storage, :clean_repo do
   let(:file) { fixture_file_upload('/world.png', 'image/png') }
 
   it_behaves_like "a Valkyrie::StorageAdapter"
+  it_behaves_like "a Valkyrie::StorageAdapter with versioning support"
+
+  context 'when accessing an existing AF file' do
+    let(:content)  { StringIO.new("test content") }
+    let(:file_set) { FactoryBot.create(:file_set) }
+
+    before do
+      Hydra::Works::AddFileToFileSet
+        .call(file_set, content, :original_file, versioning: true)
+    end
+
+    describe '#find_versions' do
+      let(:new_content) { StringIO.new("new content") }
+
+      it 'lists versioned ids' do
+        id = Hyrax::Base.id_to_uri(file_set.original_file.id)
+
+        expect { Hydra::Works::AddFileToFileSet.call(file_set, new_content, :original_file, versioning: true) }
+          .to change { storage_adapter.find_versions(id: id).size }
+          .from(1)
+          .to(2)
+      end
+
+      it 'can retrieve versioned content' do
+        id = Hyrax::Base.id_to_uri(file_set.original_file.id)
+
+        Hydra::Works::AddFileToFileSet
+          .call(file_set, new_content, :original_file, versioning: true)
+
+        expect(storage_adapter.find_versions(id: id).last.io.read)
+          .to eq "new content"
+      end
+    end
+  end
 
   context 'when uploading with a file_set' do
     let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
@@ -67,6 +102,48 @@ RSpec.describe Wings::Valkyrie::Storage, :clean_repo do
           .to change { Hyrax.query_service.find_by(id: file_set.id).file_ids.count }
           .from(1)
           .to(2)
+      end
+    end
+
+    describe '#find_versions' do
+      it 'gives an empty set when the id does not resolve' do
+        expect(storage_adapter.find_versions(id: 'not_a_real_id'))
+          .to be_empty
+      end
+
+      context 'with existing versions' do
+        let(:another_file) { fixture_file_upload('/hyrax_generic_stub.txt') }
+        let(:new_use) { RDF::URI('http://example.com/ns/supplemental_file') }
+
+        let(:uploaded) do
+          storage_adapter.upload(resource: file_set,
+                                 file: file,
+                                 original_filename: file.original_filename)
+        end
+
+        it 'finds existing versions' do
+          uploaded
+
+          expect(storage_adapter.find_versions(id: uploaded.id))
+            .to contain_exactly(have_attributes(id: uploaded.id.to_s + '/fcr:versions/version1'))
+        end
+
+        it 'adds new versions for existing files' do
+          uploaded
+
+          expect { storage_adapter.upload(resource: file_set, file: another_file, original_filename: 'filenew.txt') }
+            .to change { storage_adapter.find_versions(id: uploaded.id) }
+            .to contain_exactly(have_attributes(id: uploaded.id.to_s + '/fcr:versions/version1'),
+                                have_attributes(id: uploaded.id.to_s + '/fcr:versions/version2'))
+        end
+
+        it 'does not add a version when uploading with a different use argument' do
+          uploaded
+
+          expect { storage_adapter.upload(resource: file_set, file: another_file, original_filename: 'filenew.txt', use: new_use) }
+            .not_to change { storage_adapter.find_versions(id: uploaded.id) }
+            .from contain_exactly(have_attributes(id: uploaded.id.to_s + '/fcr:versions/version1'))
+        end
       end
     end
   end
