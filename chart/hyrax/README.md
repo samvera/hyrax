@@ -90,11 +90,57 @@ For those interested in trying out or contributing to this Chart, it's helpful
 to setup a simple cluster locally. Various projects exist to make this easy; we
 recommend [`k3d`][k3d] or [minikube][minikube].
 
-For example, with `k3d`:
+### Getting Started with K3D
+
+Make sure you have `docker`, `k3d`, and `helm` installed (e.g., for OSX run `brew install k3d` and `brew install helm`; and install `Docker Desktop`).
+
+Make sure you have Docker up and running.
+
+In the Hyrax directory, run the following command; it will pull images and when finished you'll have a Docker container runninig.
 
 ```sh
 k3d cluster create dev-cluster --api-port 6550 -p 80:80@loadbalancer --agents 3
 ```
+
+When it's done, you should see something like the following output:
+
+```sh
+INFO[0251] You can now use it like this:
+kubectl config use-context k3d-dev-cluster
+kubectl cluster-info
+```
+
+Then update the helm charts with the following:
+
+```sh
+HELM_EXPERIMENTAL_OCI=1 helm dependency update chart/hyrax
+```
+
+Without the `HELM_EXPERIMENTAL_OCI=1` switch you might see the following error:
+
+```sh
+repository oci://ghcr.io/samvera is an OCI registry: this feature has been marked as experimental and is not enabled by default. Please set HELM_EXPERIMENTAL_OCI=1 in your environment to use this feature”
+```
+
+With the following command, you'll next want to install hyrax into a namespace.  The namespace directive helps convey the meaning of the kubernetes cluster; and helps you manage all of the resources for that namespace (e.g., "production" or "testing").
+
+```sh
+helm install --create-namespace --namespace hyrax dassie chart/hyrax
+```
+
+This creates the Helm release named `dassie`, in the namespace `hyrax`.  This command will echo instructions for exposing the running application URL.
+
+You'll be downloading a lot of packages, and this will take quite a bit of time (depending on your bandwidth, and depending on how your ISP allocates resources, you may experience network connectivity issues that are VERY hard to troubleshoot; at least that was Jeremy's experience as he kept getting `ImagePullBackOff` errors.  The recommendation, find a different network to install Kubernetes).
+
+You can check the status by running `kubectl --namespace hyrax get pods --watch`.  To learn more about a failed pod, you can run `kubectl describe pod <named pod> --namespace hyrax`.  The events section (at the bottom of the output) will be useful for troubleshooting.
+
+Some shell commands of house cleaning and destruction:
+
+*  To stop the cluster: `k3d cluster stop dev-cluster`.
+*  To delete the cluster: `k3d cluster delete dev-cluster`.
+*  Remove existing docker instances: `docker rm $(docker ps -q -f status=exited)`
+*  Remove hanging docker instances: `docker rm $(docker ps -a -q) -f`
+*  Removing dangling docker images: `docker rmi $(docker images -f "dangling=true" -q)`
 
 [containers]: ../../CONTAINERS.md#hyrax-image
 [dassie]: ../../.dassie/README.md
