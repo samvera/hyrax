@@ -10,6 +10,21 @@ module Hyrax
     end
 
     ##
+    # @since 3.1.0
+    #
+    # @note provides data for handleAddToCollection javascript
+    #
+    # @return [String] JSON document containing id/title pairs for eligible
+    #   parent collections to be displayed in an "Add to Collection" dropdown
+    def available_parent_collections_data(collection:)
+      Hyrax::Collections::NestedCollectionQueryService
+        .available_parent_collections(child: collection, scope: controller, limit_to_id: nil)
+        .map do |result|
+        { "id" => result.id, "title_first" => result.title.first }
+      end.to_json
+    end
+
+    ##
     # @since 3.0.0
     # @return [#to_s]
     def collection_metadata_label(collection, field)
