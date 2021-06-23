@@ -96,7 +96,7 @@ Make sure you have `docker`, `k3d`, and `helm` installed (e.g., for OSX run `bre
 
 Make sure you have Docker up and running.
 
-In the Hyrax directory, run the following command; it will pull images and when finished you'll have a Docker container runninig.
+Run the following command; it will pull images and when finished you'll have a Kubernetes cluster running across a number of Docker containers.
 
 ```sh
 k3d cluster create dev-cluster --api-port 6550 -p 80:80@loadbalancer --agents 3
