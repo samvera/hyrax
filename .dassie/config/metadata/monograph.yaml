@@ -1,0 +1,55 @@
+# Simple yaml config-driven schema which is used to define model attributes,
+# index key names, and form properties.
+#
+# Attributes must have a type but all other configuration options are optional.
+#
+# attributes:
+#   attribute_name:
+#     type: string
+#     multiple: false
+#     index_keys:
+#       - "attribute_name_sim"
+#     form:
+#       required: true
+#       primary: true
+#       multiple: false
+#
+# @see config/metadata/basic_metadata.yaml for an example configuration
+#
+# Generated via
+#  `rails generate hyrax:work_resource Monograph`
+
+---
+attributes:
+  monograph_title:
+    type: string
+  record_info:
+    type: string
+    form:
+      required: true
+      primary: true
+    index_keys:
+      - "record_info_tesim"
+  place_of_publication:
+    type: string
+    form:
+      required: false
+      primary: true
+  genre:
+    type: string
+    form:
+      primary: true
+  series_title:
+    type: string
+    form:
+      primary: false
+  target_audience:
+    type: string
+    form:
+      multiple: true
+  table_of_contents:
+    type: string
+    form:
+      multiple: false
+  date_of_issuance:
+    type: string
