@@ -8,14 +8,14 @@ ActiveSupport::Reloader.to_prepare do
 
     # Capture everything before the first slash
     fs_id = id.sub(/\A([^\/]*)\/.*/, '\1')
-    resp = Hyrax::SolrService.get("id:#{fs_id}")
+    resp = ActiveFedora::SolrService.get("id:#{fs_id}")
     doc = resp['response']['docs'].first
     raise "Unable to find solr document with id:#{fs_id}" unless doc
     { height: doc['height_is'], width: doc['width_is'], format: doc['mime_type_ssi'], channels: doc['alpha_channels_ssi'] }
   end
 
   Riiif::Image.file_resolver.id_to_uri = lambda do |id|
-    Hyrax::Base.id_to_uri(CGI.unescape(id)).tap do |url|
+    ActiveFedora::Base.id_to_uri(CGI.unescape(id)).tap do |url|
       Rails.logger.info "Riiif resolved #{id} to #{url}"
     end
   end
