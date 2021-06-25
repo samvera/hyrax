@@ -1,4 +1,6 @@
-ENV["RAILS_ENV"] ||= 'test'
+$VERBOSE = nil unless ENV['RUBY_LOUD'] # silence loud Ruby 2.7 deprecations
+ENV["RAILS_ENV"] = 'test'
+ENV['DATABASE_URL'] = ENV['DATABASE_TEST_URL'] if ENV['DATABASE_TEST_URL']
 require "bundler/setup"
 
 def coverage_needed?
@@ -26,8 +28,21 @@ if coverage_needed?
 end
 
 require 'factory_bot'
-require 'engine_cart'
-EngineCart.load_application!
+
+if ENV['IN_DOCKER']
+  require File.expand_path("config/environment", '../hyrax-webapp')
+  db_config = ActiveRecord::Base.configurations[ENV['RAILS_ENV']]
+  ActiveRecord::Tasks::DatabaseTasks.create(db_config)
+
+  ActiveRecord::Migrator.migrations_paths = [Pathname.new(ENV['RAILS_ROOT']).join('db', 'migrate').to_s]
+  ActiveRecord::Tasks::DatabaseTasks.migrate
+  ActiveRecord::Base.descendants.each(&:reset_column_information)
+else
+  require 'engine_cart'
+  EngineCart.load_application!
+end
+
+ActiveRecord::Migration.maintain_test_schema!
 
 require 'devise'
 require 'devise/version'
@@ -62,7 +77,8 @@ end
 Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each { |f| require f }
 
 require 'webmock/rspec'
-WebMock.disable_net_connect!(allow_localhost: true, allow: 'chromedriver.storage.googleapis.com')
+allowed_hosts = %w[chrome chromedriver.storage.googleapis.com fcrepo solr]
+WebMock.disable_net_connect!(allow_localhost: true, allow: allowed_hosts)
 
 require 'i18n/debug' if ENV['I18N_DEBUG']
 require 'byebug' unless ci_build?
@@ -200,7 +216,7 @@ RSpec.configure do |config|
   end
 
   config.after(:each, type: :view) do
-    WebMock.disable_net_connect!(allow_localhost: true, allow: 'chromedriver.storage.googleapis.com')
+    WebMock.disable_net_connect!(allow_localhost: true, allow: allowed_hosts)
   end
 
   config.before(:all, type: :feature) do
