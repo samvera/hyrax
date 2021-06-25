@@ -99,11 +99,18 @@ RSpec.describe GenericWorkIndexer do
   end
 
   describe "with a remote resource (based near)" do
+    # You can get the original RDF+XML here:
+    # https://sws.geonames.org/5037649/about.rdf Note: in this RDF+XML
+    # document, the only "English readable" identifying attributes are
+    # the nodes: `gn:name` and `gn:countryCode`.  In other words the
+    # helpful administrative container (e.g. Minnesota) is not in this
+    # document.
     mpls = <<RDFXML.strip_heredoc
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
           <rdf:RDF xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:gn="http://www.geonames.org/ontology#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
           <gn:Feature rdf:about="http://sws.geonames.org/5037649/">
           <gn:name>Minneapolis</gn:name>
+          <gn:countryCode>US</gn:countryCode>
           </gn:Feature>
           </rdf:RDF>
 RDFXML
