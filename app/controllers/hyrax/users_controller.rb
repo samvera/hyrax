@@ -29,7 +29,8 @@ module Hyrax
       # @param query [String] the query string
       def search(query)
         base = ::User
-        clause = query.blank? ? nil : "%#{base.sanitize_sql_like(query.downcase)}%"
+        # TODO: Remove send wrapping of sanitize_sql_like when support for Rails 5.1 is dropped.
+        clause = query.blank? ? nil : "%#{base.send(:sanitize_sql_like, query.downcase)}%"
         base = base.where(*Array.wrap(base_query))
         # This may have some DB adapter specific behavior, which is
         # definitely logic I'd like to keep out of a controller.
