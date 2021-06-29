@@ -4,13 +4,10 @@ source 'https://rubygems.org' do
   gemspec
 
   group :development, :test do
-    gem 'benchmark-ips'
-    gem 'easy_translate'
+    gem 'coveralls', require: false
     gem 'i18n-tasks'
-    gem 'okcomputer'
     gem 'pry' unless ENV['CI']
     gem 'pry-byebug' unless ENV['CI']
-    gem 'ruby-prof', require: false
     gem "simplecov", require: false
   end
 end
