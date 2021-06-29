@@ -86,16 +86,16 @@ require 'byebug' unless ci_build?
 require 'webdrivers' unless ENV['IN_DOCKER'].present? || ENV['HUB_URL'].present?
 
 if ENV['IN_DOCKER'].present? || ENV['HUB_URL'].present?
-  args = %w[disable-gpu no-sandbox whitelisted-ips window-size=1400,1400]
-  args.push('headless') if ActiveModel::Type::Boolean.new.cast(ENV['CHROME_HEADLESS_MODE'])
+  driver_args = %w[disable-gpu no-sandbox whitelisted-ips window-size=1400,1400]
+  driver_args.push('headless') if ActiveModel::Type::Boolean.new.cast(ENV['CHROME_HEADLESS_MODE'])
 
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(chromeOptions: { args: args })
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(chromeOptions: { args: driver_args })
 
   Capybara.register_driver :selenium_chrome_headless_sandboxless do |app|
     driver = Capybara::Selenium::Driver.new(app,
-                                       browser: :remote,
-                                       desired_capabilities: capabilities,
-                                       url: ENV['HUB_URL'])
+                                            browser: :remote,
+                                            desired_capabilities: capabilities,
+                                            url: ENV['HUB_URL'])
 
     # Fix for capybara vs remote files. Selenium handles this for us
     driver.browser.file_detector = lambda do |args|
