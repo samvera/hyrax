@@ -74,7 +74,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- if .Values.fcrepo.enabled }}
 {{- include "hyrax.fcrepo.fullname" . }}
 {{- else }}
-{{- .Values.externalFcrepoHost }}
+{{- .Values.externalFcrepoHost | default "NO_FCREPO_HOST_DEFINED" }}
 {{- end }}
 {{- end -}}
 
