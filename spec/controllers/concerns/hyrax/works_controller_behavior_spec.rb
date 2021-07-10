@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'hyrax/specs/spy_listener'
+
 RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
   let(:paths) { controller.main_app }
   let(:title) { ['Comet in Moominland'] }
@@ -161,16 +163,29 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
       end
 
       context 'and a parent work' do
-        let(:parent) { FactoryBot.valkyrie_create(:hyrax_work) }
+        let(:listener) { Hyrax::Specs::AppendingSpyListener.new }
+        let(:parent)   { FactoryBot.valkyrie_create(:hyrax_work) }
+
+        let(:params) do
+          { test_simple_work: { title: 'comet in moominland' },
+            parent_id: parent.id }
+        end
+
+        before { Hyrax.publisher.subscribe(listener) }
+        after  { Hyrax.publisher.unsubscribe(listener) }
 
         it 'adds the new work as a member of the parent' do
-          params = { test_simple_work: { title: 'comet in moominland' },
-                     parent_id: parent.id }
-
           post :create, params: params
 
           expect(Hyrax.query_service.find_by(id: parent.id).member_ids)
             .to contain_exactly(assigns(:curation_concern).id)
+        end
+
+        it 'publishes a metadata change event for the parent ' do
+          expect { post :create, params: params }
+            .to change { listener.object_metadata_updated.map(&:payload) }
+            .from(be_empty)
+            .to include(match(object: have_attributes(id: parent.id), user: user))
         end
       end
 
