@@ -14,7 +14,8 @@ module Hyrax
                        'change_set.add_to_collections',
                        'change_set.apply',
                        'work_resource.save_acl',
-                       'work_resource.add_file_sets'].freeze
+                       'work_resource.add_file_sets',
+                       'work_resource.add_to_parent'].freeze
 
       ##
       # @see Hyrax::Transactions::Transaction

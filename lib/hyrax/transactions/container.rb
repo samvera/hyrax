@@ -27,6 +27,7 @@ module Hyrax
       require 'hyrax/transactions/update_work'
       require 'hyrax/transactions/steps/add_file_sets'
       require 'hyrax/transactions/steps/add_to_collections'
+      require 'hyrax/transactions/steps/add_to_parent'
       require 'hyrax/transactions/steps/apply_collection_permission_template'
       require 'hyrax/transactions/steps/apply_permission_template'
       require 'hyrax/transactions/steps/apply_visibility'
@@ -111,6 +112,10 @@ module Hyrax
       namespace 'work_resource' do |ops| # valkyrie works
         ops.register 'add_file_sets' do
           Steps::AddFileSets.new
+        end
+
+        ops.register 'add_to_parent' do
+          Steps::AddToParent.new
         end
 
         ops.register 'delete' do
