@@ -160,6 +160,20 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         end
       end
 
+      context 'and a parent work' do
+        let(:parent) { FactoryBot.valkyrie_create(:hyrax_work) }
+
+        it 'adds the new work as a member of the parent' do
+          params = { test_simple_work: { title: 'comet in moominland' },
+                     parent_id: parent.id }
+
+          post :create, params: params
+
+          expect(Hyrax.query_service.find_by(id: parent.id).member_ids)
+            .to contain_exactly(assigns(:curation_concern).id)
+        end
+      end
+
       context 'with invalid form data' do
         let(:work) { FactoryBot.build(:hyrax_work) }
 
