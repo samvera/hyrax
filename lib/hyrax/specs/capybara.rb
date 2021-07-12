@@ -40,7 +40,9 @@ if ENV['IN_DOCKER'].present? || ENV['HUB_URL'].present?
 
   Capybara.server_host = '0.0.0.0'
   Capybara.server_port = 3010
-  Capybara.app_host = ENV['CAPYBARA_SERVER'] || 'http://127.0.0.1:3010'
+
+  ip = IPSocket.getaddress(Socket.gethostname)
+  Capybara.app_host = "http://#{ip}:#{Capybara.server_port}"
 else
   TEST_HOST = 'localhost:3000'.freeze
   # @note In January 2018, TravisCI disabled Chrome sandboxing in its Linux
