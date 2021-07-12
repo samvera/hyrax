@@ -19,7 +19,7 @@ test_app_path = ENV['RAILS_ROOT'] ||
 test_app_gemfile = File.expand_path('Gemfile', test_app_path)
 
 # rubocop:disable Bundler/DuplicatedGem
-if File.exist?(test_app_gemfile)
+if File.exist?(test_app_gemfile) && !ENV.fetch('IN_DASSIE_DOCKER_COMPOSE', false)
   begin
     Bundler.ui.info "[Hyrax] Including test application dependencies from #{test_app_gemfile}"
     eval_gemfile test_app_gemfile

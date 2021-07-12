@@ -83,6 +83,7 @@ ARG APP_PATH=.dassie
 ARG BUNDLE_WITHOUT=
 
 ENV HYRAX_ENGINE_PATH /app/samvera/hyrax-engine
+ENV IN_DASSIE_DOCKER_COMPOSE true
 
 COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 COPY --chown=1001:101 . /app/samvera/hyrax-engine
