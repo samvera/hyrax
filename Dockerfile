@@ -20,7 +20,8 @@ RUN addgroup -S --gid 101 app && \
   adduser -S -G app -u 1001 -s /bin/sh -h /app app
 USER app
 
-RUN gem update bundler
+# temporarily locked to 2.1 as 2.2 introduces bundle install issues
+RUN gem install bundler -v 2.1
 
 RUN mkdir -p /app/samvera/hyrax-webapp
 WORKDIR /app/samvera/hyrax-webapp
