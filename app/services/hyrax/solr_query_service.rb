@@ -4,6 +4,9 @@ module Hyrax
   # Methods in this class are providing functionality previously supported by ActiveFedora::SolrQueryBuilder.
   # It includes methods to build and execute a query.
   class SolrQueryService
+    class_attribute :query_service
+    self.query_service = Hyrax.query_service
+
     attr_reader :query, :solr_service
 
     def initialize(query: [], solr_service: Hyrax::SolrService)
@@ -15,6 +18,21 @@ module Hyrax
     # @return [Hash] the results returned from solr for the current query
     def get
       solr_service.get(build)
+    end
+
+    ##
+    # @return [Array<String>] ids of documents matching the current query
+    def get_ids # rubocop:disable Naming/AccessorMethodName
+      results = get
+      results['response']['docs'].map { |doc| doc['id'] }
+    end
+
+    ##
+    # @return [Array<Valkyrie::Resource|ActiveFedora::Base>] objects matching the current query
+    def get_objects(use_valkyrie: Hyrax.config.use_valkyrie?)
+      ids = get_ids
+      return ids.map { |id| ActiveFedora::Base.find(id) }.to_a unless use_valkyrie
+      query_service.find_many_by_ids(ids: ids).to_a
     end
 
     ##
