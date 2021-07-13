@@ -25,6 +25,48 @@ RSpec.describe Hyrax::SolrQueryService do
     end
   end
 
+  describe '#get_ids' do
+    let!(:work1) { create(:work, id: 'wk1', creator: ['Mark']) }
+    let!(:work2) { create(:work, id: 'wk2', creator: ['Fred']) }
+    let!(:work3) { create(:work, id: 'wk3', creator: ['Mark']) }
+    subject(:solr_query_service) { described_class.new }
+
+    before { solr_query_service.with_field_pairs(field_pairs: { creator_tesim: 'Mark' }) }
+
+    it 'get ids for solr document matching the query' do
+      ids = solr_query_service.get_ids
+      expect(ids.count).to eq 2
+      expect(ids).to match_array ['wk1', 'wk3']
+    end
+  end
+
+  describe '#get_objects' do
+    let!(:work1) { create(:work, id: 'wk1', creator: ['Mark']) }
+    let!(:work2) { create(:work, id: 'wk2', creator: ['Fred']) }
+    let!(:work3) { create(:work, id: 'wk3', creator: ['Mark']) }
+    subject(:solr_query_service) { described_class.new }
+
+    before { solr_query_service.with_field_pairs(field_pairs: { creator_tesim: 'Mark' }) }
+
+    context "when use_valkyrie is false" do
+      it 'get ActiveFedora::Base objects matching the query' do
+        objects = solr_query_service.get_objects(use_valkyrie: false)
+        expect(objects.count).to eq 2
+        expect(objects.first).to be_kind_of ActiveFedora::Base
+        expect(objects.map(&:id)).to match_array ['wk1', 'wk3']
+      end
+    end
+
+    context "when use_valkyrie is true" do
+      it 'get Valkyrie::Resource objects matching the query' do
+        objects = solr_query_service.get_objects(use_valkyrie: true)
+        expect(objects.count).to eq 2
+        expect(objects.first).to be_kind_of Valkyrie::Resource
+        expect(objects.map(&:id)).to match_array ['wk1', 'wk3']
+      end
+    end
+  end
+
   describe '#count' do
     let!(:work1) { create(:work, id: 'wk1', creator: ['Mark']) }
     let!(:work2) { create(:work, id: 'wk2', creator: ['Fred']) }

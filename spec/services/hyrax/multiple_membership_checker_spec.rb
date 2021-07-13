@@ -20,13 +20,13 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
     let(:field_pairs) do
       {
         id: collection_ids,
-        collection_type_gid_ssim: collection_type_gids
+        collection_type_gid_ssim: collection_type_gids.map(&:to_s)
       }
     end
     let(:field_pairs_for_col2) do
       {
         id: [collection2.id],
-        collection_type_gid_ssim: collection_type_gids
+        collection_type_gid_ssim: collection_type_gids.map(&:to_s)
       }
     end
     let(:use_valkyrie) { true }
@@ -49,7 +49,7 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
 
       it 'returns nil' do
         expect(checker).to receive(:single_membership_collections).with(collection_ids).once.and_call_original
-        expect(Hyrax::FindObjectsViaSolrService).not_to receive(:find_for_model_by_field_pairs)
+        expect(Hyrax::SolrQueryService).not_to receive(:new)
         expect(subject).to be nil
       end
     end
@@ -57,7 +57,7 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
     context 'when there are no single-membership collection instances' do
       it 'returns nil' do
         expect(checker).to receive(:single_membership_collections).with(collection_ids).once.and_return([])
-        expect(Hyrax::FindObjectsViaSolrService).not_to receive(:find_for_model_by_field_pairs)
+        expect(Hyrax::SolrQueryService).not_to receive(:new)
         expect(subject).to be nil
       end
     end
@@ -69,8 +69,10 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
 
       it 'returns nil' do
         expect(checker).to receive(:single_membership_collections).with(collection_ids).once.and_call_original
-        expect(Hyrax::FindObjectsViaSolrService).to receive(:find_for_model_by_field_pairs)
-          .with(model: ::Collection, field_pairs: field_pairs, use_valkyrie: true).once.and_return(collections)
+        expect(Hyrax::SolrQueryService).to receive(:new).and_return(inst = double)
+        expect(inst).to receive(:with_model).with(model: ::Collection).once.and_return(inst_with_model = double)
+        expect(inst_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs, join_with: ' OR ').once.and_return(inst_with_full_query = double)
+        expect(inst_with_full_query).to receive(:get_objects).with(use_valkyrie: true).once.and_return(collections)
         expect(subject).to be nil
       end
     end
@@ -84,8 +86,10 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
       it 'returns an error' do
         expect(item).not_to receive(:member_of_collection_ids)
         expect(checker).to receive(:single_membership_collections).with(collection_ids).once.and_call_original
-        expect(Hyrax::FindObjectsViaSolrService).to receive(:find_for_model_by_field_pairs)
-          .with(model: ::Collection, field_pairs: field_pairs, use_valkyrie: true).once.and_return(collections)
+        expect(Hyrax::SolrQueryService).to receive(:new).and_return(inst = double)
+        expect(inst).to receive(:with_model).with(model: ::Collection).once.and_return(inst_with_model = double)
+        expect(inst_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs, join_with: ' OR ').once.and_return(inst_with_full_query = double)
+        expect(inst_with_full_query).to receive(:get_objects).with(use_valkyrie: true).once.and_return(collections)
         expect(subject).to eq 'Error: You have specified more than one of the same single-membership collection type (type: Greedy, collections: Foo and Bar)'
       end
 
@@ -96,8 +100,10 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
         it 'returns an error' do
           expect(item).not_to receive(:member_of_collection_ids)
           expect(checker).to receive(:single_membership_collections).with(collection_ids).once.and_call_original
-          expect(Hyrax::FindObjectsViaSolrService).to receive(:find_for_model_by_field_pairs)
-            .with(model: ::Collection, field_pairs: field_pairs, use_valkyrie: true).once.and_return(collections)
+          expect(Hyrax::SolrQueryService).to receive(:new).and_return(inst = double)
+          expect(inst).to receive(:with_model).with(model: ::Collection).once.and_return(inst_with_model = double)
+          expect(inst_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs, join_with: ' OR ').once.and_return(inst_with_full_query = double)
+          expect(inst_with_full_query).to receive(:get_objects).with(use_valkyrie: true).once.and_return(collections)
           expect(subject).to eq 'Error: You have specified more than one of the same single-membership collection type (type: Greedy, collections: Foo and Bar)'
         end
       end
@@ -116,10 +122,13 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
 
       it 'returns an error' do
         expect(item).to receive(:member_of_collection_ids)
-        expect(Hyrax::FindObjectsViaSolrService).to receive(:find_for_model_by_field_pairs)
-          .with(model: ::Collection, field_pairs: field_pairs, use_valkyrie: true).once.and_return(collections)
-        expect(Hyrax::FindObjectsViaSolrService).to receive(:find_for_model_by_field_pairs)
-          .with(model: ::Collection, field_pairs: field_pairs_for_col2, use_valkyrie: true).once.and_return([collection2])
+        expect(Hyrax::SolrQueryService).to receive(:new).and_return(inst1 = double, inst2 = double)
+        expect(inst1).to receive(:with_model).with(model: ::Collection).and_return(inst1_with_model = double)
+        expect(inst1_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs, join_with: ' OR ').and_return(inst1_with_full_query = double)
+        expect(inst1_with_full_query).to receive(:get_objects).with(use_valkyrie: true).and_return(collections)
+        expect(inst2).to receive(:with_model).with(model: ::Collection).and_return(inst2_with_model = double)
+        expect(inst2_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs_for_col2, join_with: ' OR ').and_return(inst2_with_full_query = double)
+        expect(inst2_with_full_query).to receive(:get_objects).with(use_valkyrie: true).and_return([collection2])
         expect(subject).to eq 'Error: You have specified more than one of the same single-membership collection type (type: Greedy, collections: Foo and Bar)'
       end
 
@@ -129,10 +138,13 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
 
         it 'returns an error' do
           expect(item).to receive(:member_of_collection_ids)
-          expect(Hyrax::FindObjectsViaSolrService).to receive(:find_for_model_by_field_pairs)
-            .with(model: ::Collection, field_pairs: field_pairs, use_valkyrie: true).once.and_return(collections)
-          expect(Hyrax::FindObjectsViaSolrService).to receive(:find_for_model_by_field_pairs)
-            .with(model: ::Collection, field_pairs: field_pairs_for_col2, use_valkyrie: true).once.and_return([collection2])
+          expect(Hyrax::SolrQueryService).to receive(:new).and_return(inst1 = double, inst2 = double)
+          expect(inst1).to receive(:with_model).with(model: ::Collection).and_return(inst1_with_model = double)
+          expect(inst1_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs, join_with: ' OR ').and_return(inst1_with_full_query = double)
+          expect(inst1_with_full_query).to receive(:get_objects).with(use_valkyrie: true).and_return(collections)
+          expect(inst2).to receive(:with_model).with(model: ::Collection).and_return(inst2_with_model = double)
+          expect(inst2_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs_for_col2, join_with: ' OR ').and_return(inst2_with_full_query = double)
+          expect(inst2_with_full_query).to receive(:get_objects).with(use_valkyrie: true).and_return([collection2])
           expect(subject).to eq 'Error: You have specified more than one of the same single-membership collection type (type: Greedy, collections: Foo and Bar)'
         end
       end
@@ -149,8 +161,10 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
       it 'returns nil' do
         expect(item).not_to receive(:member_of_collection_ids)
         expect(checker).to receive(:single_membership_collections).with(collection_ids).once.and_call_original
-        expect(Hyrax::FindObjectsViaSolrService).to receive(:find_for_model_by_field_pairs)
-          .with(model: ::Collection, field_pairs: field_pairs, use_valkyrie: true).once.and_return(collections)
+        expect(Hyrax::SolrQueryService).to receive(:new).and_return(inst = double)
+        expect(inst).to receive(:with_model).with(model: ::Collection).once.and_return(inst_with_model = double)
+        expect(inst_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs, join_with: ' OR ').once.and_return(inst_with_full_query = double)
+        expect(inst_with_full_query).to receive(:get_objects).with(use_valkyrie: true).once.and_return(collections)
         expect(subject).to be nil
       end
 
@@ -164,10 +178,13 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
 
         it 'returns nil' do
           expect(item).to receive(:member_of_collection_ids)
-          expect(Hyrax::FindObjectsViaSolrService).to receive(:find_for_model_by_field_pairs)
-            .with(model: ::Collection, field_pairs: field_pairs, use_valkyrie: true).once.and_return(collections)
-          expect(Hyrax::FindObjectsViaSolrService).to receive(:find_for_model_by_field_pairs)
-            .with(model: ::Collection, field_pairs: field_pairs_for_col2, use_valkyrie: true).once.and_return([collection2])
+          expect(Hyrax::SolrQueryService).to receive(:new).and_return(inst1 = double, inst2 = double)
+          expect(inst1).to receive(:with_model).with(model: ::Collection).and_return(inst1_with_model = double)
+          expect(inst1_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs, join_with: ' OR ').and_return(inst1_with_full_query = double)
+          expect(inst1_with_full_query).to receive(:get_objects).with(use_valkyrie: true).and_return(collections)
+          expect(inst2).to receive(:with_model).with(model: ::Collection).and_return(inst2_with_model = double)
+          expect(inst2_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs_for_col2, join_with: ' OR ').and_return(inst2_with_full_query = double)
+          expect(inst2_with_full_query).to receive(:get_objects).with(use_valkyrie: true).and_return([collection2])
           expect(subject).to be nil
         end
       end

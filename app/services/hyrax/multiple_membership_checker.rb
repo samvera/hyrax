@@ -55,9 +55,12 @@ module Hyrax
 
       field_pairs = {
         :id => collection_ids,
-        Hyrax.config.collection_type_index_field.to_sym => collection_type_gids_that_disallow_multiple_membership
+        Hyrax.config.collection_type_index_field.to_sym => collection_type_gids_that_disallow_multiple_membership&.map(&:to_s)
       }
-      Hyrax::FindObjectsViaSolrService.find_for_model_by_field_pairs(model: ::Collection, field_pairs: field_pairs, use_valkyrie: true)
+      Hyrax::SolrQueryService.new
+                             .with_model(model: ::Collection)
+                             .with_field_pairs(field_pairs: field_pairs, join_with: ' OR ')
+                             .get_objects(use_valkyrie: true)
     end
 
     def collection_type_gids_that_disallow_multiple_membership
