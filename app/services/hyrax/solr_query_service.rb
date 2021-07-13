@@ -3,7 +3,7 @@ module Hyrax
   ##
   # Methods in this class are providing functionality previously supported by ActiveFedora::SolrQueryBuilder.
   # It includes methods to build and execute a query.
-  class SolrQueryService
+  class SolrQueryService < ::SearchBuilder # rubocop:disable Metrics/ClassLength
     class_attribute :query_service
     self.query_service = Hyrax.query_service
 
@@ -99,6 +99,16 @@ module Hyrax
       self
     end
 
+    ##
+    # @param ability [???] the user's abilities
+    # @param action [Symbol] the action the user is taking (e.g. :index, :edit, :show, etc.) (default: :index)
+    # @return [SolrQueryService] the existing service with access filters query appended
+    def accessible_by(ability:, action: :index)
+      access_filters_query = construct_query_for_ability(ability, action)
+      @query += [access_filters_query] if access_filters_query.present?
+      self
+    end
+
     private
 
     # Construct a solr query for a list of ids
@@ -135,6 +145,25 @@ module Hyrax
     def construct_query_for_model(model)
       field_pairs = { "has_model_ssim" => model.to_s }
       construct_query_for_pairs(field_pairs)
+    end
+
+    # Construct a solr query based on a User's abilities and the action they taking
+    # @param ability [???] the user's abilities
+    # @param action [Symbol] the action the user is taking (e.g. :index, :edit, :show, etc.) (default: :index)
+    # @return [String] a solr query
+    # @example
+    #   construct_query_for_ability(user, :edit)
+    #   # => "(({!terms f=edit_access_group_ssim}public,user_group_A}) OR " \
+    #           "edit_access_person_ssim:#{user@example.com})"
+    def construct_query_for_ability(ability, action)
+      permission_types = case action
+                         when :index then [:discover, :read, :edit]
+                         when :show, :read then [:read, :edit]
+                         when :update, :edit, :create, :new, :destroy then [:edit]
+                         end
+      filters = gated_discovery_filters(permission_types, ability).join(' OR ')
+      return "" if filters.blank?
+      "(#{filters})"
     end
 
     def default_join_with
