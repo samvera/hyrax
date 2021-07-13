@@ -12,7 +12,7 @@ module Hyrax
     def number_of_works(user = current_user, where: { generic_type_sim: "Work" })
       field_pairs = field_pairs(user)
       field_pairs.merge!(where)
-      count(Hyrax::SolrQueryBuilderService.construct_query(field_pairs))
+      Hyrax::SolrQueryService.new.with_field_pairs(field_pairs: field_pairs).count
     rescue RSolr::Error::ConnectionRefused
       'n/a'
     end
@@ -20,7 +20,7 @@ module Hyrax
     # @param user [User]
     # @return [Integer] number of FileSets the user deposited
     def number_of_files(user = current_user)
-      count(Hyrax::SolrQueryBuilderService.construct_query_for_model(::FileSet, field_pairs(user)))
+      Hyrax::SolrQueryService.new.with_field_pairs(field_pairs: field_pairs(user)).count
     rescue RSolr::Error::ConnectionRefused
       'n/a'
     end
@@ -28,7 +28,7 @@ module Hyrax
     # @param user [User]
     # @return [Integer] number of Collections the user created
     def number_of_collections(user = current_user)
-      count(Hyrax::SolrQueryBuilderService.construct_query_for_model(::Collection, field_pairs(user)))
+      Hyrax::SolrQueryService.new.with_field_pairs(field_pairs: field_pairs(user)).count
     rescue RSolr::Error::ConnectionRefused
       'n/a'
     end
@@ -37,10 +37,6 @@ module Hyrax
 
     def field_pairs(user)
       { DepositSearchBuilder.depositor_field => user.user_key }
-    end
-
-    def count(query)
-      Hyrax::SolrService.count(query)
     end
   end
 end
