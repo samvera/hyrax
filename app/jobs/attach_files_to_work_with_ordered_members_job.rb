@@ -11,21 +11,22 @@ class AttachFilesToWorkWithOrderedMembersJob < AttachFilesToWorkJob
     @ordered_members = work.ordered_members.to_a # Build array of ordered members
     depositor = proxy_or_depositor(work)
     user = User.find_by_user_key(depositor)
-    metadata = visibility_attributes(work_attributes)
-    add_uploaded_files(user, metadata, work)
+    add_uploaded_files(user, work_attributes, work)
     add_ordered_members(user, work)
   end
 
   private
 
-  def add_uploaded_files(user, metadata, work)
+  def add_uploaded_files(user, work_attributes, work)
     work_permissions = work.permissions.map(&:to_hash)
     uploaded_files.each do |uploaded_file|
+      file_set_attributes = file_set_attrs(work_attributes, uploaded_file)
+      metadata = visibility_attributes(work_attributes, file_set_attributes)
       actor = file_set_actor_class.new(FileSet.create, user)
+      actor.file_set.permissions_attributes = work_permissions
       actor.create_metadata(metadata)
       actor.create_content(uploaded_file)
-      actor.attach_to_work(work)
-      actor.file_set.permissions_attributes = work_permissions
+      actor.attach_to_work(work, metadata)
       ordered_members << actor.file_set
       uploaded_file.update(file_set_uri: actor.file_set.uri)
     end

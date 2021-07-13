@@ -179,7 +179,7 @@ module Hyrax
           },
           {
             file_set: [:visibility, :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo,
-                     :visibility_during_lease, :lease_expiration_date, :visibility_after_lease, :uploaded_file_id]
+                       :visibility_during_lease, :lease_expiration_date, :visibility_after_lease, :uploaded_file_id]
           }
         ]
       end
