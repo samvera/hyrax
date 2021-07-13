@@ -147,6 +147,7 @@
 <!-- Simpler display of files available for download. Originally from hyrax/base/_form_files -->
 <!-- TODO: further consolidate with template-download above -->
 <script id="template-download" type="text/x-tmpl">
+{% var curation_concern = $('form').data('param-key'); %}
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-download <%= fade_class_if_not_test %>">
         <td>
