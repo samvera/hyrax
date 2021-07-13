@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 module Hyrax
+  ##
+  # @api public
+  #
   # Encapsulates the logic to determine which object permissions may be edited by a given user
-  #  - user is permitted to update any work permissions coming ONLY from collections they manage
-  #  - user is not permitted to update a work permission if it comes from a collection they do not manage, even if also from a managed collection
-  #  - user is permitted to update only non-manager permissions from any Collections
-  #  - user is permitted to update any non-collection permissions
+  # * user is permitted to update any work permissions coming ONLY from collections they manage
+  # * user is not permitted to update a work permission if it comes from a collection they do not manage, even if also from a managed collection
+  # * user is permitted to update only non-manager permissions from any Collections
+  # * user is permitted to update any non-collection permissions
   class EditPermissionsService
+    ##
     # @api public
     # @since v3.0.0
     #
@@ -14,15 +18,15 @@ module Hyrax
     # @return [Hyrax::EditPermissionService]
     #
     # @note
-    #   form object.class = SimpleForm::FormBuilder
-    #     For works (i.e. GenericWork):
-    #     - form object.object = Hyrax::GenericWorkForm
-    #     - form object.object.model = GenericWork
-    #     - use the work itself
-    #     For file_sets:
-    #     - form object.object.class = FileSet
-    #     - use work the file_set is in
-    #     No other object types are supported by this view. %>
+    #   +form object.class = SimpleForm::FormBuilder+
+    #    For works (i.e. GenericWork):
+    #    * form object.object = Hyrax::GenericWorkForm
+    #    * form object.object.model = GenericWork
+    #    * use the work itself
+    #    For file_sets:
+    #    * form object.object.class = FileSet
+    #    * use work the file_set is in
+    #    No other object types are supported by this view.
     def self.build_service_object_from(form:, ability:)
       if form.object.respond_to?(:model) && form.object.model.work?
         new(object: form.object, ability: ability)
@@ -33,7 +37,9 @@ module Hyrax
 
     attr_reader :depositor, :unauthorized_collection_managers
 
-    # @param object [#depositor, #admin_set_id, #member_of_collection_ids] GenericWorkForm (if called for object) or GenericWork (if called for file set)
+    ##
+    # @param object [#depositor, #admin_set_id, #member_of_collection_ids]
+    #   +GenericWorkForm+ (if called for object) or +GenericWork+ (if called for file set)
     # @param ability [Ability] user's current_ability
     def initialize(object:, ability:)
       @object = object
@@ -47,7 +53,7 @@ module Hyrax
     # @api private
     # @todo refactor this code to use "can_edit?"; Thinking in negations can be challenging.
     #
-    # @param permission_hash [Hash] one set of permission fields for object {:name, :access}
+    # @param permission_hash [Hash] one set of permission fields for object +:name+, :access}
     # @return [Boolean] true if user cannot edit the given permissions
     def cannot_edit_permissions?(permission_hash)
       permission_hash.fetch(:access) == "edit" && @unauthorized_managers.include?(permission_hash.fetch(:name))
@@ -55,7 +61,7 @@ module Hyrax
 
     # @api private
     #
-    # @param permission_hash [Hash] one set of permission fields for object {:name, :access}
+    # @param permission_hash [Hash] one set of permission fields for object +:name+, +:access+
     # @return [Boolean] true if given permissions are one of fixed exclusions
     def excluded_permission?(permission_hash)
       exclude_from_display.include? permission_hash.fetch(:name).downcase
@@ -68,9 +74,10 @@ module Hyrax
     # * returns false if the given permission_hash is part of the fixed exclusions.
     # * yields a PermissionPresenter to provide additional logic and text for rendering
     #
-    # @param permission_hash [Hash<:name, :access>]
-    # @return false if the given permission_hash is a fixed exclusion
-    # @yield PermissionPresenter
+    # @param permission_hash [Hash{Symbol => Object}]
+    #
+    # @return [Boolean] +false+ if the given +permission_hash+ is a fixed exclusion
+    # @yield [PermissionPresenter]
     #
     # @see #excluded_permission?
     def with_applicable_permission(permission_hash:)
@@ -81,7 +88,7 @@ module Hyrax
     # @api private
     #
     # A helper class to contain specific presentation logic related to
-    # the EditPermissionsService
+    # the {EditPermissionsService}
     class PermissionPresenter
       # @param service [Hyrax::EditPermissionsService]
       # @param permission_hash [Hash]

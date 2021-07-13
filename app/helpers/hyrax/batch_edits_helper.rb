@@ -1,6 +1,8 @@
 # frozen_string_literal: true
-# View Helpers for Hydra Batch Edit functionality
+
 module Hyrax
+  ##
+  # View Helpers for Hydra Batch Edit functionality
   module BatchEditsHelper
     # Displays the delete button for batch editing
     def batch_delete

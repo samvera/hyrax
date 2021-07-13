@@ -1,9 +1,8 @@
 # frozen_string_literal: true
-# rubocop:disable Metrics/ClassLength
 module Hyrax
   module Forms
     # @abstract
-    class WorkForm
+    class WorkForm # rubocop:disable Metrics/ClassLength
       include HydraEditor::Form
       include HydraEditor::Form::Permissions
       attr_accessor :current_ability
