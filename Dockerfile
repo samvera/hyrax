@@ -20,7 +20,7 @@ RUN addgroup -S --gid 101 app && \
   adduser -S -G app -u 1001 -s /bin/sh -h /app app
 USER app
 
-RUN gem update bundler
+RUN gem install bundler -v 2.1
 
 RUN mkdir -p /app/samvera/hyrax-webapp
 WORKDIR /app/samvera/hyrax-webapp
@@ -83,7 +83,6 @@ ARG APP_PATH=.dassie
 ARG BUNDLE_WITHOUT=
 
 ENV HYRAX_ENGINE_PATH /app/samvera/hyrax-engine
-ENV IN_DASSIE_DOCKER_COMPOSE true
 
 COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 COPY --chown=1001:101 . /app/samvera/hyrax-engine
