@@ -160,4 +160,62 @@ RSpec.describe Hyrax::SolrQueryService do
         .to match_array [initial_query, '(_query_:"{!field f=title_tesim}Learn Science" OR _query_:"{!field f=depositor_ssim}a_user@example.com")']
     end
   end
+
+  describe "#accessible_by" do
+    let(:user) { FactoryBot.build(:user) }
+    let(:user_groups) { ["faculty", "africana-faculty"] }
+    let(:ability) { Ability.new(user) }
+    let(:action) { :index }
+
+    before do
+      expect(user).to receive(:groups).at_most(:once).and_return(user_groups)
+      solr_query_service.accessible_by(ability: ability, action: action)
+    end
+
+    context "when index action" do
+      let(:expected_query) do
+        [
+          initial_query,
+          "(({!terms f=discover_access_group_ssim}public,#{user_groups.join(',')}) OR " \
+          "({!terms f=read_access_group_ssim}public,#{user_groups.join(',')}) OR " \
+          "({!terms f=edit_access_group_ssim}public,#{user_groups.join(',')}) OR " \
+          "discover_access_person_ssim:#{user.email} OR " \
+          "read_access_person_ssim:#{user.email} OR " \
+          "edit_access_person_ssim:#{user.email})"
+        ]
+      end
+      it "returns a query limiting all rights to public, the user's groups, and the user" do
+        expect(solr_query_service.query).to eq expected_query
+      end
+    end
+
+    context "when edit action" do
+      let(:action) { :edit }
+      let(:expected_query) do
+        [
+          initial_query,
+          "(({!terms f=edit_access_group_ssim}public,#{user_groups.join(',')}) OR " \
+          "edit_access_person_ssim:#{user.email})"
+        ]
+      end
+      it "returns a query limiting edit rights the user's groups and the user" do
+        expect(solr_query_service.query).to eq expected_query
+      end
+    end
+
+    context "when user has no abilities" do
+      let(:ability) { Ability.new(nil) }
+      let(:expected_query) do
+        [
+          initial_query,
+          "(({!terms f=discover_access_group_ssim}public) OR " \
+          "({!terms f=read_access_group_ssim}public) OR " \
+          "({!terms f=edit_access_group_ssim}public))"
+        ]
+      end
+      it "returns a query limiting all rights to public only" do
+        expect(solr_query_service.query).to eq expected_query
+      end
+    end
+  end
 end
