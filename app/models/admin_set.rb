@@ -78,12 +78,7 @@ class AdminSet < ActiveFedora::Base
   # Calculate and update who should have edit access based on who
   # has "manage" access in the PermissionTemplateAccess
   def reset_access_controls!
-    # NOTE: This is different from Collections in that it doesn't update read access based on visibility.
-    #       See also app/models/concerns/hyrax/collection_behavior.rb#reset_access_controls!
-    update!(edit_users: permission_template.edit_users,
-            edit_groups: permission_template.edit_groups,
-            read_users: permission_template.read_users,
-            read_groups: permission_template.read_groups)
+    permission_template.reset_access_controls_for(collection: self)
   end
 
   private
