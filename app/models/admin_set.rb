@@ -75,9 +75,14 @@ class AdminSet < ActiveFedora::Base
     Sipity::Workflow.find_active_workflow_for(admin_set_id: id)
   end
 
+  ##
+  # @deprecated use PermissionTemplate#reset_access_controls instead
+  #
   # Calculate and update who should have edit access based on who
   # has "manage" access in the PermissionTemplateAccess
   def reset_access_controls!
+    Deprecation.warn("reset_access_controls! is deprecated; use PermissionTemplate#reset_access_controls instead.")
+
     permission_template.reset_access_controls_for(collection: self)
   end
 
