@@ -24,7 +24,7 @@ module Hyrax
         solr_query_builder.new
                           .with_model(model: model)
                           .with_field_pairs(field_pairs: field_pairs, join_with: join_with, type: type)
-                          .get_objects(use_valkyrie: use_valkyrie)
+                          .get_objects(use_valkyrie: use_valkyrie).to_a
       end
     end
   end

@@ -31,8 +31,8 @@ module Hyrax
     # @return [Array<Valkyrie::Resource|ActiveFedora::Base>] objects matching the current query
     def get_objects(use_valkyrie: Hyrax.config.use_valkyrie?)
       ids = get_ids
-      return ids.map { |id| ActiveFedora::Base.find(id) }.to_a unless use_valkyrie
-      query_service.find_many_by_ids(ids: ids).to_a
+      return ids.map { |id| ActiveFedora::Base.find(id) } unless use_valkyrie
+      query_service.find_many_by_ids(ids: ids)
     end
 
     ##
