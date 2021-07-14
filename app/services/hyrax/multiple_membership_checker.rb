@@ -60,7 +60,7 @@ module Hyrax
       Hyrax::SolrQueryService.new
                              .with_model(model: ::Collection)
                              .with_field_pairs(field_pairs: field_pairs, join_with: ' OR ')
-                             .get_objects(use_valkyrie: true)
+                             .get_objects(use_valkyrie: true).to_a
     end
 
     def collection_type_gids_that_disallow_multiple_membership
