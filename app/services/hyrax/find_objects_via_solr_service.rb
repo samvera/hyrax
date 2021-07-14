@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Hyrax
-  # This class is being replaced by Hyrax::SolrQueryService #get_objects method.
+  # @deprecated This class is being replaced by Hyrax::SolrQueryService #get_objects method.
   #
   # Methods in this class search solr to get the ids and then use the query service to find the objects.
   class FindObjectsViaSolrService
