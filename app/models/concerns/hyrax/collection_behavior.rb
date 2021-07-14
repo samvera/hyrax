@@ -128,19 +128,11 @@ module Hyrax
     # Calculate and update who should have read/edit access to the collections based on who
     # has access in PermissionTemplateAccess
     def reset_access_controls!
-      update!(edit_users: permission_template.edit_users,
-              edit_groups: permission_template.edit_groups,
-              read_users: permission_template.read_users,
-              read_groups: (permission_template.read_groups + visibility_group).uniq)
+      permission_template
+        .reset_access_controls_for(collection: self, interpret_visibility: true)
     end
 
     private
-
-    def visibility_group
-      return [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC] if visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
-      return [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED] if visibility == Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
-      []
-    end
 
     # Solr field name works use to index member ids
     def member_ids_field
