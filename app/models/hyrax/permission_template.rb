@@ -172,6 +172,21 @@ module Hyrax
         [::Ability.registered_group_name, ::Ability.public_group_name]
     end
 
+    def reset_access_controls_for(collection:, interpret_visibility: false)
+      interpreted_read_groups = read_groups
+
+      if interpret_visibility
+        visibilities = Hyrax::VisibilityMap.instance
+        interpreted_read_groups -= visibilities.deletions_for(visibility: collection.visibility)
+        interpreted_read_groups += visibilities.additions_for(visibility: collection.visibility)
+      end
+
+      collection.update!(edit_users: edit_users,
+                         edit_groups: edit_groups,
+                         read_users: read_users,
+                         read_groups: interpreted_read_groups.uniq)
+    end
+
     private
 
     # If template requires no delays, check if date is exactly today
