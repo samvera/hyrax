@@ -73,10 +73,10 @@ RSpec.describe Hyrax::AdminSetCreateService do
 
         it "creates an AdminSet, PermissionTemplate, Workflows, activates the default workflow, and sets access" do
           expect(Sipity::Workflow).to receive(:activate!).with(permission_template: kind_of(Hyrax::PermissionTemplate), workflow_name: Hyrax.config.default_active_workflow_name)
+
           expect { expect(service.create).to be true }
-            .to change { admin_set.persisted? }
-            .from(false)
-            .to(true)
+            .to change { AdminSet.count }
+            .by(1)
             .and change { Sipity::WorkflowResponsibility.count }
             .by(12)
           # 12 responsibilities because:

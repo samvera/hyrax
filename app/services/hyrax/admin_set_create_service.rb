@@ -17,7 +17,7 @@ module Hyrax
     # @return [TrueClass]
     # @see AdminSet
     def self.create_default_admin_set(admin_set_id:, title:)
-      admin_set = AdminSet.new(id: admin_set_id, title: Array.wrap(title))
+      admin_set = Hyrax::AdministrativeSet.new(id: admin_set_id, title: Array.wrap(title))
       begin
         new(admin_set: admin_set, creating_user: nil).create
       rescue ActiveFedora::IllegalOperation
@@ -44,7 +44,15 @@ module Hyrax
     # @param creating_user [User] the user who created the admin set (if any).
     # @param workflow_importer [#call] imports the workflow
     def initialize(admin_set:, creating_user:, workflow_importer: default_workflow_importer)
-      @admin_set = admin_set
+      @admin_set =
+        case admin_set
+        when Valkyrie::Resource
+          admin_set
+        else
+          Hyrax.logger.info("Casting #{admin_set} to valkyrie.")
+          admin_set.valkyrie_resource
+        end
+
       @creating_user = creating_user
       @workflow_importer = workflow_importer
     end
@@ -55,15 +63,18 @@ module Hyrax
     # @return [TrueClass, FalseClass] true if it was successful
     def create
       admin_set.creator = [creating_user.user_key] if creating_user
-      admin_set.save.tap do |result|
-        if result
-          ActiveRecord::Base.transaction do
-            permission_template = create_permission_template
-            workflow = create_workflows_for(permission_template: permission_template)
-            create_default_access_for(permission_template: permission_template, workflow: workflow) if admin_set.default_set?
-          end
-        end
+      Hyrax.persister.save(resource: admin_set)
+
+      ActiveRecord::Base.transaction do
+        permission_template = create_permission_template
+        workflow = create_workflows_for(permission_template: permission_template)
+        create_default_access_for(permission_template: permission_template, workflow: workflow) if
+          AdminSet.default_set?(admin_set.id)
       end
+      true
+    rescue RuntimeError => err
+      Hyrax.logger.error "Failed to create Admin Set #{admin_set}: #{err.message}"
+      false
     end
 
     private
@@ -83,7 +94,7 @@ module Hyrax
 
     def create_permission_template
       permission_template = PermissionTemplate.create!(source_id: admin_set.id, access_grants_attributes: access_grants_attributes)
-      admin_set.reset_access_controls!
+      # admin_set.reset_access_controls!
       permission_template
     end
 
