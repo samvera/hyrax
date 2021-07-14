@@ -153,25 +153,42 @@ module Hyrax
       visibility == value
     end
 
+    ##
+    # @return [Array<String>]
     def edit_users
       agent_ids_for(access: 'manage', agent_type: 'user')
     end
 
+    ##
+    # @return [Array<String>]
     def edit_groups
       agent_ids_for(access: 'manage', agent_type: 'group')
     end
 
+    ##
+    # @return [Array<String>]
     def read_users
       (agent_ids_for(access: 'view', agent_type: 'user') +
         agent_ids_for(access: 'deposit', agent_type: 'user')).uniq
     end
 
+    ##
+    # @return [Array<String>]
     def read_groups
       (agent_ids_for(access: 'view', agent_type: 'group') +
         agent_ids_for(access: 'deposit', agent_type: 'group')).uniq -
         [::Ability.registered_group_name, ::Ability.public_group_name]
     end
 
+    ##
+    # @return [Boolean]
+    def reset_access_controls(interpret_visibility: false)
+      reset_access_controls_for(collection:           source_model,
+                                interpret_visibility: interpret_visibility)
+    end
+
+    ##
+    # @return [Boolean]
     def reset_access_controls_for(collection:, interpret_visibility: false)
       interpreted_read_groups = read_groups
       if interpret_visibility && [Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_AUTHENTICATED, Hydra::AccessControls::AccessRight::PERMISSION_TEXT_VALUE_PUBLIC].include?(collection.visibility)
