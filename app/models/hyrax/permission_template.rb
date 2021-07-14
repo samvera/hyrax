@@ -153,6 +153,25 @@ module Hyrax
       visibility == value
     end
 
+    def edit_users
+      agent_ids_for(access: 'manage', agent_type: 'user')
+    end
+
+    def edit_groups
+      agent_ids_for(access: 'manage', agent_type: 'group')
+    end
+
+    def read_users
+      (agent_ids_for(access: 'view', agent_type: 'user') +
+        agent_ids_for(access: 'deposit', agent_type: 'user')).uniq
+    end
+
+    def read_groups
+      (agent_ids_for(access: 'view', agent_type: 'group') +
+        agent_ids_for(access: 'deposit', agent_type: 'group')).uniq -
+        [::Ability.registered_group_name, ::Ability.public_group_name]
+    end
+
     private
 
     # If template requires no delays, check if date is exactly today
