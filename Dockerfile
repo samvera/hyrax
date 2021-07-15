@@ -83,12 +83,13 @@ ARG APP_PATH=.dassie
 ARG BUNDLE_WITHOUT=
 
 ENV HYRAX_ENGINE_PATH /app/samvera/hyrax-engine
-ENV IN_DASSIE_DOCKER_COMPOSE true
 
 COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 COPY --chown=1001:101 . /app/samvera/hyrax-engine
 
-RUN bundle install --jobs "$(nproc)" ; cd $HYRAX_ENGINE_PATH ; bundle install --jobs "$(nproc)"
+RUN gem update bundler && gem cleanup bundler && bundle -v && \
+  bundle install --jobs "$(nproc)" && \
+  cd $HYRAX_ENGINE_PATH && bundle install --jobs "$(nproc)"
 RUN RAILS_ENV=production SECRET_KEY_BASE='fakesecret1234' DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
 
 
@@ -102,4 +103,5 @@ ENV HYRAX_ENGINE_PATH /app/samvera/hyrax-engine
 COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 COPY --chown=1001:101 . /app/samvera/hyrax-engine
 
-RUN bundle install --jobs "$(nproc)"
+RUN gem update bundler && gem cleanup bundler && bundle -v && \
+  bundle install --jobs "$(nproc)"
