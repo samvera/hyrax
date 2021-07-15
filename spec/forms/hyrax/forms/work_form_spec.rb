@@ -99,6 +99,8 @@ RSpec.describe Hyrax::Forms::WorkForm do
                                :version,
                                :on_behalf_of,
                                { permissions_attributes: [:type, :name, :access, :id, :_destroy] },
+                               { file_set: [:visibility, :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo,
+                                            :visibility_during_lease, :lease_expiration_date, :visibility_after_lease, :uploaded_file_id] },
                                based_near_attributes: [:id, :_destroy],
                                member_of_collections_attributes: [:id, :_destroy],
                                work_members_attributes: [:id, :_destroy])

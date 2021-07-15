@@ -95,7 +95,7 @@ module Hyrax
       def clean_attributes(attributes)
         attributes[:license] = Array(attributes[:license]) if attributes.key? :license
         attributes[:rights_statement] = Array(attributes[:rights_statement]) if attributes.key? :rights_statement
-        remove_blank_attributes!(attributes)
+        remove_blank_attributes!(attributes).except('file_set')
       end
 
       # If any attributes are blank remove them
