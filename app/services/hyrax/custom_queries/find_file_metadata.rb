@@ -1,11 +1,13 @@
 # frozen_string_literal: true
-# Provide custom queries for finding Hyrax::FileMetadata
-# @example
-#   Hyrax.custom_queries.find_file_metadata_by(id: valkyrie_id)
-#   Hyrax.custom_queries.find_file_metadata_by_alternate_identifier(alternate_identifier: alt_id)
-#   Hyrax.custom_queries.find_many_file_metadata_by_ids(ids: [valkyrie_id, valkyrie_id])
 module Hyrax
   module CustomQueries
+    ##
+    # Provide custom queries for finding Hyrax::FileMetadata
+    #
+    # @example
+    #   Hyrax.custom_queries.find_file_metadata_by(id: valkyrie_id)
+    #   Hyrax.custom_queries.find_file_metadata_by_alternate_identifier(alternate_identifier: alt_id)
+    #   Hyrax.custom_queries.find_many_file_metadata_by_ids(ids: [valkyrie_id, valkyrie_id])
     class FindFileMetadata
       def self.queries
         [:find_file_metadata_by,

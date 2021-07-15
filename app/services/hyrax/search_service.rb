@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-# SearchService returns search results from the repository
 module Hyrax
-  # Copied from Blacklight 7
+  ##
+  # Returns search results from the repository.
+  #
+  # @note Adapted from Blacklight 7
   class SearchService
     def initialize(config:, user_params: nil, search_builder_class: config.search_builder_class, **context)
       @blacklight_config = config

@@ -1,23 +1,28 @@
 # frozen_string_literal: true
-# The default virus scanner Hyrax::Works, ported from hydra_works.
-# If ClamAV is present, it will be used to check for the presence of a virus. If ClamAV is not
-# installed or otherwise not available to your application, Hyrax::Works does no virus checking
-# add assumes files have no viruses.
-#
-# @example to use a virus checker other than Hyrax::VirusScanner:
-#   class MyScanner < Hyrax::Works::VirusScanner
-#     def infected?
-#       my_result = Scanner.check_for_viruses(file)
-#       [return true or false]
-#     end
-#   end
-#
-#   # Then set Hyrax::Works to use your scanner either in a config file or initializer:
-#   Hyrax.config.virus_scanner = MyScanner
+
 module Hyrax
+  ##
+  # The default virus scanner ported from +Hyrax::Works+.
+  #
+  # If ClamAV is present, it will be used to check for the presence of a virus.
+  # If ClamAV is not installed or otherwise not available to your application,
+  # +Hyrax::Works+ does no virus checking add assumes files have no viruses.
+  #
+  # @example to use a virus checker other than Hyrax::VirusScanner:
+  #   class MyScanner < Hyrax::Works::VirusScanner
+  #     def infected?
+  #       my_result = Scanner.check_for_viruses(file)
+  #       [return true or false]
+  #     end
+  #   end
+  #
+  #   # Then set Hyrax::Works to use your scanner either in a config file or initializer:
+  #   Hyrax.config.virus_scanner = MyScanner
+  #
   class VirusScanner
     attr_reader :file
 
+    ##
     # @api public
     # @param file [String]
     def self.infected?(file)
@@ -28,7 +33,9 @@ module Hyrax
       @file = file
     end
 
-    # Override this method to use your own virus checking software
+    ##
+    # @note Override this method to use your own virus checking software
+    #
     # @return [Boolean]
     def infected?
       defined?(ClamAV) ? clam_av_scanner : null_scanner
@@ -41,8 +48,10 @@ module Hyrax
       true
     end
 
-    # Always return zero if there's nothing available to check for viruses. This means that
-    # we assume all files have no viruses because we can't conclusively say if they have or not.
+    ##
+    # Always return zero if there's nothing available to check for viruses.
+    # This means that we assume all files have no viruses because we can't
+    # conclusively say if they have or not.
     def null_scanner
       warning "Unable to check #{file} for viruses because no virus scanner is defined" unless
         Rails.env.test?

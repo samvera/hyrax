@@ -25,6 +25,13 @@ require 'valkyrie/indexing_adapter'
 require 'valkyrie/indexing/solr/indexing_adapter'
 require 'valkyrie/indexing/null_indexing_adapter'
 
+##
+# Hyrax is a Ruby on Rails Engine built by the Samvera community. The engine
+# provides a foundation for creating many different digital repository
+# applications.
+#
+# @see https://samvera.org Samvera Community
+# @see https://guides.rubyonrails.org/engines.html Rails Guides: Getting Started with Engines
 module Hyrax
   extend ActiveSupport::Autoload
 
