@@ -14,7 +14,7 @@ module Hyrax
       delegate :id, to: :source_model, prefix: :source
 
       ##
-      # @deprecated
+      # @deprecated  use PermissionTemplate#reset_access_controls instead.
       def reset_access_controls!
         Deprecation.warn("reset_access_controls! is deprecated; use PermissionTemplate#reset_access_controls instead.")
         source_model.reset_access_controls!
