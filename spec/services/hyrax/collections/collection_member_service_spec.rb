@@ -198,6 +198,23 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
         end
       end
     end
+    context 'when single-membership collection error' do
+      let(:collection_type) { create(:collection_type, title: 'Greedy', allow_multiple_membership: false) }
+      let!(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, title: ['Col-1'], collection_type_gid: collection_type.to_global_id) }
+      let!(:collection2) { FactoryBot.valkyrie_create(:hyrax_collection, title: ['Col-2'], collection_type_gid: collection_type.to_global_id) }
+      let(:collections) { [collection, collection2] }
+      let(:collection_ids) { collections.map(&:id) }
+
+      before do
+        allow(Hyrax::CollectionType).to receive(:gids_that_do_not_allow_multiple_membership).and_return([collection_type.to_global_id])
+      end
+
+      it 'raises an error' do
+        errmsg = 'Error: You have specified more than one of the same single-membership collection type (type: Greedy, collections: Col-2 and Col-1)'
+        expect { described_class.add_member(collection: collection2, new_member: new_member, user: user) }
+          .to raise_error Hyrax::SingleMembershipError, errmsg
+      end
+    end
   end
 
   describe '.remove_members_by_ids' do
