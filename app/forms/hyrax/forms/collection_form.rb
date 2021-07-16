@@ -11,14 +11,14 @@ module Hyrax
       delegate :id, :depositor, :permissions, :human_readable_type, :member_ids, :nestable?,
                :alternative_title, to: :model
 
-      class_attribute :membership_service_class
+      class_attribute :membership_search_service_class
 
       # Required for search builder (FIXME)
       alias collection model
 
       self.model_class = ::Collection
 
-      self.membership_service_class = Collections::CollectionMemberService
+      self.membership_search_service_class = Collections::CollectionMemberSearchService
 
       delegate :blacklight_config, to: Hyrax::CollectionsController
 
@@ -120,7 +120,7 @@ module Hyrax
       end
 
       def list_child_collections
-        collection_member_service.available_member_subcollections.documents
+        collection_member_search_service.available_member_subcollections.documents
       end
 
       ##
@@ -146,12 +146,12 @@ module Hyrax
 
       # Override this method if you have a different way of getting the member's ids
       def member_work_ids
-        response = collection_member_service.available_member_work_ids.response
+        response = collection_member_search_service.available_member_work_ids.response
         response.fetch('docs').map { |doc| doc['id'] }
       end
 
-      def collection_member_service
-        @collection_member_service ||= membership_service_class.new(scope: scope, collection: collection, params: blacklight_config.default_solr_params)
+      def collection_member_search_service
+        @collection_member_search_service ||= membership_search_service_class.new(scope: scope, collection: collection, params: blacklight_config.default_solr_params)
       end
 
       def member_presenters(member_ids)
