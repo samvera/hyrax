@@ -108,14 +108,11 @@ module Hyrax
         # @param new_member [Hyrax::Resource] the new child collection or child work
         # @return [Hyrax::Resource] updated member resource
         def add_member(collection:, new_member:, user:)
-          message = Hyrax::MultipleMembershipChecker.new(item: new_member).check(collection_ids: collection.id, include_current_members: true)
-          if message
-            new_member.errors.add(:collections, message)
-          else
-            new_member.member_of_collection_ids += [collection.id] # only populate this direction
-            new_member = Hyrax.persister.save(resource: new_member)
-            Hyrax.publisher.publish('object.metadata.updated', object: new_member, user: user)
-          end
+          message = Hyrax::MultipleMembershipChecker.new(item: new_member).check(collection_ids: [collection.id], include_current_members: true)
+          raise Hyrax::SingleMembershipError, message if message
+          new_member.member_of_collection_ids += [collection.id] # only populate this direction
+          new_member = Hyrax.persister.save(resource: new_member)
+          Hyrax.publisher.publish('object.metadata.updated', object: new_member, user: user)
           new_member
         end
 
