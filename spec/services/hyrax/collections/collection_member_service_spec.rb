@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'hyrax/specs/spy_listener'
+
 RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
   subject(:builder) do
     described_class.new(scope: scope, collection: nestable_collection, params: { "id" => nestable_collection.id.to_s })
@@ -39,6 +41,10 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
 
   let(:custom_query_service) { Hyrax.custom_queries }
   let(:user) { create(:user) }
+  let(:listener) { Hyrax::Specs::SpyListener.new }
+
+  before { Hyrax.publisher.subscribe(listener) }
+  after { Hyrax.publisher.unsubscribe(listener) }
 
   describe '.member?' do
     let(:non_member) { FactoryBot.valkyrie_create(:hyrax_work) }
@@ -184,6 +190,11 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
       context 'and the new member does not exist in the member set' do
         it "updates the collection member set adding the new member" do
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array existing_member_ids + [new_member.id]
+        end
+        it "publishes metadata updated event for member" do
+          updated_work = described_class.add_member(collection: collection, new_member: new_member, user: user)
+          expect(listener.object_metadata_updated&.payload)
+            .to eq object: updated_work, user: user
         end
       end
     end
@@ -334,6 +345,11 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array existing_member_ids
           described_class.remove_member(collection: collection, member: member_to_remove, user: user)
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array [work2.id]
+        end
+        it "publishes metadata updated event for member" do
+          updated_work = described_class.remove_member(collection: collection, member: member_to_remove, user: user)
+          expect(listener.object_metadata_updated&.payload)
+            .to eq object: updated_work, user: user
         end
       end
     end
