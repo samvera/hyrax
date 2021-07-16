@@ -26,11 +26,11 @@ def create_resource(user, id, resource)
 end
 
 default_admin_set_id = "admin_set%2Fdefault"
+default_user = "admin@example.com"
 
 last_collection_id=nil
 
 5.times do |i|
-    user = "" # TODO: fix user
 	title = "Collection #{i}"
     custom_id = "collection_#{i}"
     collection = Hyrax::PcdmCollection.new(id: custom_id)
@@ -45,13 +45,10 @@ last_collection_id=nil
     collection.collection_type_gid = collection_type
     collection.creator = ["user1"]
     #pp collection
-    create_resource(user, custom_id, collection)
+    create_resource(default_user, custom_id, collection)
 end
 
-puts "LAST COLLECTION ID  #{last_collection_id}"
-
 13.times do |i|
-    user = "" # TODO: fix user
 	title = "Work #{i}"
     custom_id = "work_#{i}"
     work = Monograph.new(id: custom_id)
@@ -61,9 +58,10 @@ puts "LAST COLLECTION ID  #{last_collection_id}"
     work.creator = ["user1"]
     work.depositor = ["user1"]
     work.admin_set_id = default_admin_set_id
+    existing_member_ids = work.member_of_collection_ids
     work.member_of_collection_ids = [last_collection_id] if !last_collection_id.nil?
     work.rights_statement = ["http://rightsstatements.org/vocab/CNE/2.0/"]
-    pp work
-    create_resource(user, custom_id, work)
+    create_resource(default_user, custom_id, work)
 
 end
+
