@@ -32,7 +32,7 @@ module Hyrax
       class_attribute :presenter_class,
                       :form_class,
                       :single_item_search_builder_class,
-                      :membership_service_class
+                      :membership_service_search_class
 
       self.presenter_class = Hyrax::CollectionPresenter
 
@@ -41,7 +41,7 @@ module Hyrax
       # The search builder to find the collection
       self.single_item_search_builder_class = SingleCollectionSearchBuilder
       # The search builder to find the collections' members
-      self.membership_service_class = Collections::CollectionMemberService
+      self.membership_service_search_class = Collections::CollectionMemberSearchService
 
       load_and_authorize_resource except: [:index, :create], instance_name: :collection
 
@@ -434,18 +434,18 @@ module Hyrax
       end
 
       # Instantiate the membership query service
-      def collection_member_service
-        @collection_member_service ||= membership_service_class.new(scope: self, collection: collection, params: params_for_query)
+      def collection_member_search_service
+        @collection_member_search_service ||= membership_service_search_class.new(scope: self, collection: collection, params: params_for_query)
       end
 
       def member_works
-        @response = collection_member_service.available_member_works
+        @response = collection_member_search_service.available_member_works
         @member_docs = @response.documents
         @members_count = @response.total
       end
 
       def member_subcollections
-        results = collection_member_service.available_member_subcollections
+        results = collection_member_search_service.available_member_subcollections
         @subcollection_solr_response = results
         @subcollection_docs = results.documents
         @subcollection_count = @presenter.nil? ? 0 : @subcollection_count = @presenter.subcollection_count = results.total
