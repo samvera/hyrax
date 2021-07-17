@@ -52,9 +52,8 @@ module Hyrax
 
     def single_membership_collections(collection_ids)
       return [] if collection_ids.blank?
-
       field_pairs = {
-        :id => collection_ids,
+        :id => Array(collection_ids).map(&:to_s),
         Hyrax.config.collection_type_index_field.to_sym => collection_type_gids_that_disallow_multiple_membership&.map(&:to_s)
       }
       Hyrax::SolrQueryService.new
