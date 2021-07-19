@@ -7,6 +7,8 @@ module Sipity
   # Cast a given input (e.g. a +::User+ or {Hyrax::Group} to a {Sipity::Agent}).
   #
   # @param input [Object]
+  #
+  # @return [Sipity::Agent]
   def Agent(input, &block) # rubocop:disable Naming/MethodName
     result = case input
              when Sipity::Agent
@@ -19,6 +21,10 @@ module Sipity
 
   ##
   # Cast an object to an Entity
+  #
+  # @param input [Object]
+  #
+  # @return [Sipity::Entity]
   # rubocop:disable Naming/MethodName, Metrics/CyclomaticComplexity, Metrics/MethodLength
   def Entity(input, &block)
     result = case input
