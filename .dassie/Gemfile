@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # Attempts to determine if a global gem source has ready been added by another Gemfile
 if @sources.global_rubygems_source == Bundler::SourceList.new.global_rubygems_source
-  Bundler.ui.warn '[Dassie] Adding global rubygems source.'
+  Bundler.ui.info '[Dassie] Adding global rubygems source.'
   source 'https://rubygems.org'
 else
   Bundler.ui.warn "[Dassie] Global rubygems source already set: #{@sources.global_rubygems_source.inspect}"
