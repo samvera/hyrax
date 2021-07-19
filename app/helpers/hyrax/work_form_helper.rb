@@ -4,7 +4,7 @@ module Hyrax
     ##
     # @todo this implementation hits database backends (solr) and is invoked
     #   from views. refactor to avoid
-    # @return  [???]
+    # @return  [Array<Array<String, String, Hash>] options for the admin set drop down.
     def admin_set_options
       service = Hyrax::AdminSetService.new(controller)
 
