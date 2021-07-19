@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 module Sipity
+  ##
   # A proxy for something that can take an action.
   #
   # * A User can be an agent

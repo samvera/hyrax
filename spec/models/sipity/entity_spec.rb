@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Sipity
   RSpec.describe Entity, type: :model do
+    subject(:entity) { described_class.new }
+
     describe 'database configuration' do
       subject { described_class }
 
@@ -9,16 +11,14 @@ module Sipity
       its(:column_names) { is_expected.to include("workflow_state_id") }
     end
 
-    subject { described_class.new }
-
     describe 'delegations' do
       it { is_expected.to delegate_method(:workflow_state_name).to(:workflow_state).as(:name) }
       it { is_expected.to delegate_method(:workflow_name).to(:workflow).as(:name) }
     end
 
     describe '#proxy_for' do
-      let(:work) { create(:generic_work) }
-      let(:entity) { described_class.new(proxy_for_global_id: work.to_global_id) }
+      subject(:entity) { described_class.new(proxy_for_global_id: work.to_global_id) }
+      let(:work)       { FactoryBot.create(:generic_work) }
 
       it 'will retrieve based on a GlobalID of the object' do
         expect(entity.proxy_for).to eq(work)
