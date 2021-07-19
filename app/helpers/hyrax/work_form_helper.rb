@@ -2,6 +2,16 @@
 module Hyrax
   module WorkFormHelper
     ##
+    # @todo this implementation hits database backends (solr) and is invoked
+    #   from views. refactor to avoid
+    # @return  [???]
+    def admin_set_options
+      service = Hyrax::AdminSetService.new(controller)
+
+      Hyrax::AdminSetOptionsPresenter.new(service).select_options
+    end
+
+    ##
     # This helper allows downstream applications and engines to add/remove/reorder the tabs to be
     # rendered on the work form.
     #
