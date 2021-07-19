@@ -4,7 +4,7 @@ if @sources.global_rubygems_source == Bundler::SourceList.new.global_rubygems_so
   Bundler.ui.info '[Dassie] Adding global rubygems source.'
   source 'https://rubygems.org'
 else
-  Bundler.ui.warn "[Dassie] Global rubygems source already set: #{@sources.global_rubygems_source.inspect}"
+  Bundler.ui.info "[Dassie] Global rubygems source already set: #{@sources.global_rubygems_source.inspect}"
 end
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
