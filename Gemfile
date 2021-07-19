@@ -21,7 +21,7 @@ test_app_gemfile = File.expand_path('Gemfile', test_app_path)
 # rubocop:disable Bundler/DuplicatedGem
 if File.exist?(test_app_gemfile)
   begin
-    Bundler.ui.warn "[Hyrax] Including test application dependencies from #{test_app_gemfile}"
+    Bundler.ui.info "[Hyrax] Including test application dependencies from #{test_app_gemfile}"
     eval_gemfile test_app_gemfile
   rescue Bundler::GemfileError => e
     Bundler.ui.warn '[Hyrax] Skipping Rails application dependencies:'
