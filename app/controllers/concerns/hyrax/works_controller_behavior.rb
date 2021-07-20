@@ -48,6 +48,9 @@ module Hyrax
 
     def new
       # TODO: move these lines to the work form builder in Hyrax
+      admin_sets = Hyrax.query_service.find_all_of_model(model: Hyrax::AdministrativeSet)
+      @admin_set_options_presenter =
+        Hyrax::AdminSetSelectionPresenter.new(admin_sets: admin_sets, ability: current_ability)
       curation_concern.depositor = current_user.user_key
       curation_concern.admin_set_id = admin_set_id_for_new
       build_form

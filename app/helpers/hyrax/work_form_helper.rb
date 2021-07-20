@@ -8,7 +8,12 @@ module Hyrax
     def admin_set_options
       service = Hyrax::AdminSetService.new(controller)
 
-      Hyrax::AdminSetOptionsPresenter.new(service).select_options
+      # if defined presenter from controller, use, otherwise this fallback
+      if @admin_set_options_presenter
+        @admin_set_options_presenter.select_options
+      else
+        Hyrax::AdminSetOptionsPresenter.new(service).select_options
+      end
     end
 
     ##

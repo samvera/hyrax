@@ -14,8 +14,9 @@ module Hyrax
   class AdminSetSelectionPresenter
     ##
     # @param [Array<#id>]
-    def initialize(admin_sets:)
+    def initialize(admin_sets:, ability:)
       @admin_sets = admin_sets
+      @current_ability = ability
     end
 
     ##
@@ -66,8 +67,57 @@ module Hyrax
       ##
       # @return [Hash{}]
       def data
-        {}
+        permission_template = PermissionTemplate.find_by(source_id: id)
+        return {} unless permission_template
+        return PermissionTemplateData.new(
+          permission_template: permission_template,
+          current_ability: @current_ability).attributes
       end
     end
+
+    class PermissionTemplateData
+      def initialize(permission_template:, current_ability:)
+        @permission_template = permission_template
+        @current_ability = current_ability
+      end
+      # all PermissionTemplate release & visibility data attributes (if not blank or false)
+        def attributes
+        {}.tap do |attrs|
+          attrs['data-sharing'] = sharing?(permission_template: permission_template)
+          # Either add "no-delay" (if immediate release) or a specific release date, but not both.
+          if permission_template.release_no_delay?
+            attrs['data-release-no-delay'] = true
+          elsif permission_template.release_date.present?
+            attrs['data-release-date'] = permission_template.release_date
+          end
+          attrs['data-release-before-date'] = true if permission_template.release_before_date?
+          attrs['data-visibility'] = permission_template.visibility if permission_template.visibility.present?
+        end
+      end
+
+      # Does the workflow for the currently selected permission template allow sharing?
+      def sharing?(permission_template:)
+        # This short-circuit builds on a stated "promise" in the UI of
+        # editing an admin set:
+        #
+        # > Managers of this administrative set can edit the set
+        # > metadata, participants, and release and visibility
+        # > settings. Managers can also edit work metadata, add to or
+        # > remove files from a work, and add new works to the set.
+        return true if @current_ability.can?(:manage, permission_template)
+
+        # Otherwise, we check if the workflow was setup, active, and
+        # allows_access_grants.
+        wf = workflow(permission_template: permission_template)
+        return false unless wf
+        wf.allows_access_grant?
+      end
+
+      def workflow(permission_template:)
+        return unless permission_template.active_workflow
+        Sipity::Workflow.find_by!(id: permission_template.active_workflow.id)
+      end
+    end
+
   end
 end
