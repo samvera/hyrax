@@ -49,8 +49,17 @@ module Hyrax
     def new
       # TODO: move these lines to the work form builder in Hyrax
       admin_sets = Hyrax.query_service.find_all_of_model(model: Hyrax::AdministrativeSet)
+      admin_sets_with_permission_templates =
+        admin_sets.map do |admin_set|
+          {
+            admin_set: admin_set,
+            permission_template: PermissionTemplate.find_by(source_id: admin_set.id.to_s)
+          }
+        end
       @admin_set_options_presenter =
-        Hyrax::AdminSetSelectionPresenter.new(admin_sets: admin_sets, ability: current_ability)
+        Hyrax::AdminSetSelectionPresenter.new(
+          admin_sets: admin_sets_with_permission_templates,
+          ability: current_ability)
       curation_concern.depositor = current_user.user_key
       curation_concern.admin_set_id = admin_set_id_for_new
       build_form

@@ -67,10 +67,9 @@ module Hyrax
       ##
       # @return [Hash{}]
       def data
-        permission_template = PermissionTemplate.find_by(source_id: id)
-        return {} unless permission_template
+        return {} unless admin_set.permission_template
         return PermissionTemplateData.new(
-          permission_template: permission_template,
+          permission_template: admin_set.permission_template,
           current_ability: @current_ability).attributes
       end
     end
