@@ -109,6 +109,7 @@ services:
       context: .
       target: hyrax-engine-dev-worker
     image: ghcr.io/samvera/dassie-worker
+    user: root
     env_file:
       - .env
       - .dassie/.env
