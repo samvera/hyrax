@@ -5,6 +5,14 @@ FactoryBot.define do
     # with a unique index on the source_id, I don't want to have duplication in source_id
     sequence(:source_id) { |n| format("%010d", n) }
 
+    trait :with_immediate_release do
+      release_period { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY }
+    end
+
+    trait :with_delayed_release do
+      release_period { Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_6_MONTHS }
+    end
+
     before(:create) do |permission_template, evaluator|
       if evaluator.with_admin_set
         source_id = permission_template.source_id

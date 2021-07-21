@@ -28,10 +28,40 @@ RSpec.describe Hyrax::AdminSetSelectionPresenter do
     its(:id) { is_expected.to eq admin_set.id }
 
     describe '#data' do
-      it 'is a hash' do
+      it 'is a hash with no releose delay and restricted visibility' do
         expect(entry.data)
-          .to include 'data-release-no-delay' => true,
-                      'data-visibility' => 'restricted'
+          .to include 'data-release-no-delay' => true
+      end
+
+      context 'with a permission template' do
+        subject(:entry) do
+          described_class
+            .new(admin_set: admin_set, permission_template: permission_template)
+        end
+
+        let(:permission_template) do
+          FactoryBot.create(:permission_template,
+                            :with_immediate_release,
+                            source_id: admin_set.id.to_s)
+        end
+
+        it 'indicates no release delay' do
+          expect(entry.data).to include 'data-release-no-delay' => true
+        end
+
+        context 'and delayed release' do
+          let(:permission_template) do
+            FactoryBot.create(:permission_template,
+                              :with_delayed_release,
+                              source_id: admin_set.id.to_s)
+          end
+
+          it 'indicates a release delay' do
+            expect(entry.data)
+              .to include 'data-release-before-date' => true,
+                          'data-release-date' => permission_template.release_date
+          end
+        end
       end
     end
 
