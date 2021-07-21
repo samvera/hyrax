@@ -103,5 +103,4 @@ ENV HYRAX_ENGINE_PATH /app/samvera/hyrax-engine
 COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 COPY --chown=1001:101 . /app/samvera/hyrax-engine
 
-RUN gem update bundler && gem cleanup bundler && bundle -v && \
-  bundle install --jobs "$(nproc)"
+RUN bundle install --jobs "$(nproc)"
