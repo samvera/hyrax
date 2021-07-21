@@ -6,6 +6,13 @@ module Hyrax
   #
   # Presents select options for admin sets.
   #
+  # Each entry in the {#select_options} return value provides a label for
+  # display, an id to serve as the value, and a data hash which is used as HTML5
+  # data entries. The data entries can be used as hooks for Javascript
+  # to control input validation taking into account the Admin Set and
+  # `PermissionTemplate` rules (`visibility_component.es6` does this, for
+  # example).
+  #
   # @note this supersedes the older +Hyrax::AdminSetOptionsPresenter+, which
   #   actied more like a "service" sending database queries to Solr and
   #   ActiveRecord.  this version seeks only to present the input data and
@@ -38,12 +45,16 @@ module Hyrax
       ##
       # @!attribute [rw] admin_set
       #   @return [AdministrativeSet, SolrDocument]
-      attr_accessor :admin_set
+      # @!attribute [rw] permission_template
+      #   @return [PermissionTemplate]
+      attr_accessor :admin_set, :permission_template
 
       ##
       # @param [AdministrativeSet, SolrDocument] admin_set
-      def initialize(admin_set:)
+      # @param [PermissionTemplate] permission_template
+      def initialize(admin_set:, permission_template: nil)
         @admin_set = admin_set
+        @permission_template = permission_template
       end
 
       ##
@@ -68,8 +79,30 @@ module Hyrax
       # @return [Hash{String => Object}]
       def data
         {}.tap do |data|
-          data['data-release-no-delay'] = true
-          data['data-visibility'] = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+          if permission_template
+            data.merge!(data_for(permission_template))
+          else
+            data['data-release-no-delay'] = true
+          end
+        end
+      end
+
+      private
+
+      ##
+      # @api private
+      def data_for(template)
+        {}.tap do |data|
+          if template.release_no_delay?
+            data['data-release-no-delay'] = true
+          elsif template.release_date.present?
+            data['data-release-date'] = template.release_date
+          end
+
+          data['data-release-before-date'] = true if
+            template.release_before_date?
+          data['data-visibility'] = template.visibility if
+            template.visibility.present?
         end
       end
     end
