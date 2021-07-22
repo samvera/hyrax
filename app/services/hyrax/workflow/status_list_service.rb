@@ -5,7 +5,7 @@ module Hyrax
     # Finds a list of works that we can perform a workflow action on
     class StatusListService
       ##
-      # @param context [#current_user, #logger]
+      # @param context [#current_user]
       # @param filter_condition [String] a solr filter
       def initialize(context, filter_condition)
         @context = context
@@ -22,6 +22,7 @@ module Hyrax
       # @return [Enumerable<StatusRow>] a list of results that the given user can take action on.
       def each
         return enum_for(:each) unless block_given?
+
         solr_documents.each do |doc|
           yield doc
         end
@@ -37,8 +38,6 @@ module Hyrax
 
       private
 
-      delegate :logger, to: :context
-
       # @return [Hash<String,SolrDocument>] a hash of id to solr document
       def solr_documents
         search_solr.map { |result| ::SolrDocument.new(result) }
@@ -46,7 +45,7 @@ module Hyrax
 
       def search_solr
         actionable_roles = roles_for_user
-        logger.debug("Actionable roles for #{context.current_user.user_key} are #{actionable_roles}")
+        Hyrax.logger.debug("Actionable roles for #{context.current_user.user_key} are #{actionable_roles}")
         return [] if actionable_roles.empty?
         WorkRelation.new.search_with_conditions(query(actionable_roles), method: :post)
       end
