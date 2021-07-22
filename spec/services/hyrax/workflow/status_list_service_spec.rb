@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Workflow::StatusListService do
   subject(:service) { described_class.new(user, "workflow_state_name_ssim:initial") }
-  let!(:sipity_entity) { FactoryBot.create(:sipity_entity) }
   let(:user) { FactoryBot.create(:user) }
 
   context 'using valkyrie models',
