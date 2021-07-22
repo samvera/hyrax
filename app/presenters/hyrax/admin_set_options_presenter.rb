@@ -59,8 +59,7 @@ module Hyrax
       # > remove files from a work, and add new works to the set.
       return true if @current_ability.can?(:manage, permission_template)
 
-      # Otherwise, we check if the workflow active workflow allows access
-      # grants.
+      # Otherwise, we check if the active workflow allows access grants
       !!permission_template.active_workflow&.allows_access_grant?
     end
   end
