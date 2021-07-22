@@ -2,20 +2,34 @@
 module Hyrax
   module Workflow
     ##
-    # Finds a list of works that we can perform a workflow action on
+    # Finds a list of works that a given user can perform a workflow action on.
     class StatusListService
       ##
-      # @param context [#current_user]
+      # @param context_or_user [::User, #current_user]
       # @param filter_condition [String] a solr filter
-      def initialize(context, filter_condition)
-        @context = context
+      #
+      # @raise [ArgumentError] if th caller fails to provide a user
+      def initialize(context_or_user, filter_condition)
+        case context_or_user
+        when ::User
+          @user = context_or_user
+        when nil
+          raise ArgumentError, "A current user MUST be provided."
+        else
+          Deprecation.warn('Initializing StatusListService with a controller ' \
+                           '"context" is deprecated. Pass in a user instead.')
+          @context = context_or_user
+          @user = @context.current_user
+        end
         @filter_condition = filter_condition
       end
 
       ##
       # @!attribute [r] context
+      #   @deprecated
       #   @return [#current_user]
       attr_reader :context
+      deprecation_deprecate :context
 
       ##
       # @todo We will want to paginate this
@@ -33,11 +47,12 @@ module Hyrax
       def user
         Deprecation.warn('This method was always intended to be private. ' \
                          'It will be removed in Hyrax 4.0')
-        context.current_user
+        @user
       end
 
       private
 
+      ##
       # @return [Hash<String,SolrDocument>] a hash of id to solr document
       def solr_documents
         search_solr.map { |result| ::SolrDocument.new(result) }
@@ -45,7 +60,7 @@ module Hyrax
 
       def search_solr
         actionable_roles = roles_for_user
-        Hyrax.logger.debug("Actionable roles for #{context.current_user.user_key} are #{actionable_roles}")
+        Hyrax.logger.debug("Actionable roles for #{@user.user_key} are #{actionable_roles}")
         return [] if actionable_roles.empty?
         WorkRelation.new.search_with_conditions(query(actionable_roles), method: :post)
       end
@@ -67,7 +82,7 @@ module Hyrax
       # @param workflow [Sipity::Workflow]
       # @return [ActiveRecord::Relation<Sipity::WorkflowRole>]
       def workflow_roles_for_user_and_workflow(workflow)
-        Hyrax::Workflow::PermissionQuery.scope_processing_workflow_roles_for_user_and_workflow(user: context.current_user, workflow: workflow)
+        Hyrax::Workflow::PermissionQuery.scope_processing_workflow_roles_for_user_and_workflow(user: @user, workflow: workflow)
       end
     end
   end

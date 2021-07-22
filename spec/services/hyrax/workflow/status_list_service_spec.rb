@@ -1,14 +1,19 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Workflow::StatusListService do
-  subject(:service) { described_class.new(context, "workflow_state_name_ssim:initial") }
-  let(:context) { double(current_user: user, logger: double(debug: nil)) }
+  subject(:service) { described_class.new(user, "workflow_state_name_ssim:initial") }
   let!(:sipity_entity) { FactoryBot.create(:sipity_entity) }
   let(:user) { FactoryBot.create(:user) }
 
-  context 'using valkyrie models' do
+  context 'using valkyrie models',
+          index_adapter: :solr_index,
+          valkyrie_adapter: :test_adapter do
     let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
 
-    it 'without any roles is empty'
+    before { Hyrax.index_adapter.save(resource: work) }
+
+    it 'without any roles is empty' do
+      expect(service.each).to be_none
+    end
   end
 
   describe "#each" do
