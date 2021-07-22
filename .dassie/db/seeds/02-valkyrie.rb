@@ -25,8 +25,11 @@ def create_resource(user, id, resource)
   resource
 end
 
-default_admin_set_id = "admin_set%2Fdefault"
-default_user = "admin@example.com"
+#default_admin_set_id = "admin_set%2Fdefault"
+default_admin_set_id = AdminSet.find_or_create_default_admin_set_id
+puts "Default admin set id: #{default_admin_set_id}"
+default_admin_user = "admin@example.com"
+default_user = "basic_user@example.com"
 
 last_collection_id=nil
 
@@ -43,20 +46,27 @@ last_collection_id=nil
     # collection.member_ids = ["work_#{i}"]
     collection_type = "gid://dassie/Hyrax::CollectionType/1"
     collection.collection_type_gid = collection_type
-    collection.creator = ["user1"]
+    collection.creator = [default_user]
     #pp collection
+    #
+    if i == 2 then
+      collection.member_ids=["collection_1"]
+      #collection.member_of_collection_ids=["collection_1"]
+    end
     create_resource(default_user, custom_id, collection)
 end
 
 13.times do |i|
 	title = "Work #{i}"
     custom_id = "work_#{i}"
-    work = Monograph.new(id: custom_id)
+    #work = Monograph.new(id: custom_id)
+    afWork = GenericWork.new(title: [title], id: custom_id)
+    work = afWork.valkyrie_resource
     work.title = title
     work.description = ["A description for Work #{i}"]
     work.visibility = "restricted"
-    work.creator = ["user1"]
-    work.depositor = ["user1"]
+    work.creator = [default_user]
+    work.depositor = [default_user]
     work.admin_set_id = default_admin_set_id
     existing_member_ids = work.member_of_collection_ids
     work.member_of_collection_ids = [last_collection_id] if !last_collection_id.nil?
