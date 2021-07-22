@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Admin::WorkflowsController do
   describe "#index" do
-    before do
-      expect(controller).to receive(:authorize!).with(:review, :submissions).and_return(true)
-    end
+    let(:user) { FactoryBot.create(:admin) }
+
+    before { sign_in user }
+
     it "is successful" do
       expect(controller).to receive(:add_breadcrumb).with('Home', root_path)
       expect(controller).to receive(:add_breadcrumb).with('Dashboard', dashboard_path)
