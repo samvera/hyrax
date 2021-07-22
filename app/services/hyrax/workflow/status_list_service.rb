@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 module Hyrax
   module Workflow
+    ##
     # Finds a list of works that we can perform a workflow action on
     class StatusListService
+      ##
       # @param context [#current_user, #logger]
       # @param filter_condition [String] a solr filter
       def initialize(context, filter_condition)
@@ -10,10 +12,14 @@ module Hyrax
         @filter_condition = filter_condition
       end
 
+      ##
+      # @!attribute [r] context
+      #   @return [#current_user]
       attr_reader :context
 
-      # TODO: We will want to paginate this
-      # @return [Array<StatusRow>] a list of results that the given user can take action on.
+      ##
+      # @todo We will want to paginate this
+      # @return [Enumerable<StatusRow>] a list of results that the given user can take action on.
       def each
         return enum_for(:each) unless block_given?
         solr_documents.each do |doc|
@@ -21,8 +27,11 @@ module Hyrax
         end
       end
 
-      # TODO: Make this private for version 1.0
+      ##
+      # @deprecated
       def user
+        Deprecation.warn('This method was always intended to be private. ' \
+                         'It will be removed in Hyrax 4.0')
         context.current_user
       end
 
@@ -37,7 +46,7 @@ module Hyrax
 
       def search_solr
         actionable_roles = roles_for_user
-        logger.debug("Actionable roles for #{user.user_key} are #{actionable_roles}")
+        logger.debug("Actionable roles for #{context.current_user.user_key} are #{actionable_roles}")
         return [] if actionable_roles.empty?
         WorkRelation.new.search_with_conditions(query(actionable_roles), method: :post)
       end
@@ -59,7 +68,7 @@ module Hyrax
       # @param workflow [Sipity::Workflow]
       # @return [ActiveRecord::Relation<Sipity::WorkflowRole>]
       def workflow_roles_for_user_and_workflow(workflow)
-        Hyrax::Workflow::PermissionQuery.scope_processing_workflow_roles_for_user_and_workflow(user: user, workflow: workflow)
+        Hyrax::Workflow::PermissionQuery.scope_processing_workflow_roles_for_user_and_workflow(user: context.current_user, workflow: workflow)
       end
     end
   end
