@@ -14,8 +14,24 @@ module Hyrax
   # - an embargo configuration ({#release_date} {#release_period}) for default
   #   embargo behavior.
   #
+  # Additionally, the {PermissionTemplate} grants authority to perform actions
+  # that relate to the Administrative Set/Collection itself. Rules for who can
+  # deposit to, view(?!), or manage the admin set are governed by related
+  # {PermissionTemplateAccess} records. Administrat Sets should have a manager
+  # granted by some such record.
+  #
   # @todo write up what "default embargo behavior", when it is applied, and how
   #   it interacts with embargoes specified by user input.
+  #
+  # @example cerating a permission template and manager for an admin set
+  #   admin_set = Hyrax::AdministrativeSet.new(title: 'My Admin Set')
+  #   admin_set = Hyrax.persister.save(resource: admin_set)
+  #
+  #   template = PermissionTemplate.create!(source_id: admin_set.id.to_s)
+  #   Hyrax::PermissionTemplateAccess.create!(permission_template: template,
+  #                                          agent_type: Hyrax::PermissionTemplateAccess::USER,
+  #                                          agent_id: user.user_key,
+  #                                          access: Hyrax::PermissionTemplateAccess::MANAGE)
   #
   # @see Hyrax::AdministrativeSet
   class PermissionTemplate < ActiveRecord::Base # rubocop:disable Metrics/ClassLength
