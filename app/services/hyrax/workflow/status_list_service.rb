@@ -2,6 +2,10 @@
 module Hyrax
   module Workflow
     ##
+    # @deprecated use the Hyrax::Workflow::ActionableObjects enumerator instead.
+    #   that service is designed as a more efficient and ergonomic replacement
+    #   for this one, and has fewer dependencies on specific indexing behavior.
+    #
     # Finds a list of works that a given user can perform a workflow action on.
     class StatusListService
       ##
@@ -10,6 +14,9 @@ module Hyrax
       #
       # @raise [ArgumentError] if th caller fails to provide a user
       def initialize(context_or_user, filter_condition)
+        Deprecation
+          .warn("Use the Hyrax::Workflow::ActionableObjects enumerator instead.")
+
         case context_or_user
         when ::User
           @user = context_or_user

@@ -13,8 +13,8 @@ RSpec.describe Hyrax::Admin::WorkflowsController do
 
       get :index
       expect(response).to be_successful
-      expect(assigns[:status_list]).to be_kind_of Hyrax::Workflow::StatusListService
-      expect(assigns[:published_list]).to be_kind_of Hyrax::Workflow::StatusListService
+      expect(assigns[:status_list]).to respond_to(:each)
+      expect(assigns[:published_list]).to respond_to(:each)
     end
   end
 end
