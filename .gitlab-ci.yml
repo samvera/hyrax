@@ -1,41 +1,41 @@
+---
 stages:
-- build
-- test
-- deploy
+  - build
+  - test
+  - review
+  - staging
+  - production
 
 before_script:
-- export TAG=${CI_COMMIT_SHORT_SHA}
-- export BRANCH=${CI_COMMIT_REF_NAME}
-- export REGISTRY_HOST=${CI_REGISTRY}
-- export REGISTRY_URI="/${CI_PROJECT_PATH}"
+  - export TAG=${CI_COMMIT_SHA}
+  - export BRANCH=${CI_COMMIT_REF_NAME}
+  - export REGISTRY_HOST=${CI_REGISTRY}
+  - export REGISTRY_URI="/${CI_PROJECT_PATH}"
 
 build:
   stage: build
   script:
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
-    - sc build --service app
-    - sc push --service app
-    - docker tag $CI_REGISTRY_IMAGE:$TAG $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - docker build --target hyrax-engine-dev --tag $CI_REGISTRY_IMAGE:$TAG .
+    - docker push $CI_REGISTRY_IMAGE:$TAG
   tags:
     - local
 
 lint:
-  stage: go
-  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-  variables:
-    PRONTO_GITLAB_API_ENDPOINT: "https://gitlab.com/api/v4"
-  before_script:
-    - export PRONTO_GITLAB_API_PRIVATE_TOKEN=$GITLAB_API_TOKEN
+  stage: test
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
   script:
-    - cd /home/app/webapp && bundle exec pronto run -f gitlab
+    - bundle check || bundle
+    - bundle exec rubocop
   tags:
     - docker
 
 test:
   stage: test
-  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
   services:
+    - name: selenium/standalone-chrome:3.141
+      alias: chrome
     - name: bitnami/postgresql:12.6.0
       alias: db
     - name: samvera/fcrepo4:4.7.5
@@ -44,16 +44,32 @@ test:
       alias: redis
     - name: solr:8.7
       alias: solr
-    - name: selenium/standalone-chrome:3.141
-      alias: chrome
+      command: [ "sh", "-c", "precreate-core", "hyrax_test", "/opt/solr/server/configsets/hyraxconf" ]
   variables:
-    TEST_DB: od_analytics
+    DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL: "true"
+    DATABASE_URL: "postgres://postgres:postgres@db/hyku"
+    FCREPO_HOST: "fcrepo"
+    FCREPO_PORT: 8080
+    FCREPO_REST_PATH: "rest"
+    POSTGRES_DB: "hyku"
+    POSTGRES_HOST: "db"
+    POSTGRES_PASSWORD: "postgres"
+    POSTGRES_USER: "postgres"
+    REDIS_HOST: "redis"
+    REDIS_PORT: 6379
+    GIT_STRATEGY: none
+    SOLR_HOST: solr
+    SOLR_PORT: 8983
+    SOLR_TEST_CORE: hyrax_test
+    SOLR_TEST_URL: http://solr:8983/solr/hyrax_test
+    SOLR_CORE_NAME: "hyrax_test"
+    SOLR_CONFIG_DIR: "solr/config"
+    SOLR_CONFIGSET: blacklight-core
+    SOLR_CONFIGSET_SOURCE_PATH: solr/config
   script:
-    - cd /home/app/webapp && bundle exec rake db:create db:schema:load spec
+    - cd /app/samvera/hyrax-engine && bundle exec rspec
   tags:
     - docker
-  variables:
-    GIT_STRATEGY: none
 
 review:
   stage: review
@@ -70,22 +86,23 @@ review:
     - echo "deploying"
     - sleep 10
     - echo "totally fake deploy"
- tags:
+  tags:
     - local
 
 stop_review:
   stage: review
   script:
-
+    - echo "STOP"
   when: manual
   environment:
-    name: $CI_PROJECT_NAME-$CI_BUILD_REF_SLUG
+    name: $CI_COMMIT_REF_SLUG
     action: stop
 
 staging:
   stage: staging
   type: deploy
   script:
+    - echo "stage!"
   only:
     - master
   tags:
@@ -95,6 +112,7 @@ production:
   stage: production
   type: deploy
   script:
+    - echo "prod!"
   when: manual
   only:
     - master
