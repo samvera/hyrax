@@ -2,71 +2,32 @@
   <h1><%= t("hyrax.dashboard.title") %></h1>
 <% end %>
 
-<div class="row">
-  <div class="col-md-3">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h2 class="panel-title text-center"><%= t('.registered_users') %></h2>
-      </div>
-      <div class="panel-body text-center">
-        <%= t('.current_registered_users') %>
-        <div class="h3"><%= @presenter.user_count %></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-3">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h2 class="panel-title text-center"><%= t('.total_visitors') %></h2>
-      </div>
-      <div class="panel-body text-center"><%= t('.past_30_days') %>
-        <div class="h3">n/a</div>
-      </div>
-    </div>
-  </div>
-
-    <div class="col-md-3">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h2 class="panel-title text-center"><%= t('.returning_visitors') %></h2>
-        </div>
-        <div class="panel-body text-center"><%= t('.past_30_days') %>
-          <div class="h3">n/a</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-3">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h2 class="panel-title text-center"><%= t('.new_visitors') %></h2>
-        </div>
-        <div class="panel-body text-center"><%= t('.past_30_days') %>
-          <div class="h3">n/a</div>
-        </div>
-      </div>
-    </div>
-</div>
-
-<%= render 'admin_sets' %>
+<%# April TODO:
+- the most recewntly updated and pinned clickable transition is glitchy - investigate
+- Figure out how to make star pinned icon clickable and filled with color
+%>
 
 <div class="row">
-  <div class="col-md-4">
+  <div class="col-md-12">
     <div class="panel panel-default">
       <%= render 'user_activity' %>
     </div>
   </div>
+</div>
 
-  <div class="col-md-4">
+<div class="row">
+
+  <div class="col-md-6">
     <div class="panel panel-default">
       <%= render 'repository_growth' %>
     </div>
   </div>
 
-  <div class="col-md-4">
+  <div class="col-md-6">
     <div class="panel panel-default">
       <%= render 'repository_objects' %>
     </div>
   </div>
 </div>
+
+<%= render 'tabs' %>

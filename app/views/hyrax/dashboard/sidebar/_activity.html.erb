@@ -38,21 +38,20 @@
 
   <% if can? :read, :admin_dashboard %>
     <li>
-      <%= menu.collapsable_section t('hyrax.admin.sidebar.statistics'),
+      <%= menu.collapsable_section t('hyrax.admin.sidebar.analytics'),
                                         icon_class: "fa fa-bar-chart",
                                         id: 'collapseReports',
                                         open: menu.analytics_reporting_section? do %>
 
-        <li><%# April TODO: We will need to add these in dynamically but need to see about creating a path for each with coresponding controller %>
-          <a onclick="dontChangeAccordion(event);" href="#">
-            <span class="fa fa-folder-open" aria-hidden="true"></span> <span class="sidebar-action-text">Collections</span>
-          </a>
-        </li>
-        <li>
-          <a onclick="dontChangeAccordion(event);" href="#">
-            <span class="fa fa-file" aria-hidden="true"></span> <span class="sidebar-action-text">Works</span>
-          </a>
-        </li>
+        <%= menu.nav_link(hyrax.admin_analytics_collection_reports_path,
+                          onclick: "dontChangeAccordion(event);") do %>
+          <span class="fa fa-folder-open" aria-hidden="true"></span> <span class="sidebar-action-text">Collections</span>
+        <% end %>
+
+        <%= menu.nav_link(hyrax.admin_analytics_work_reports_path,
+                          onclick: "dontChangeAccordion(event);") do %>
+          <span class="fa fa-file" aria-hidden="true"></span> <span class="sidebar-action-text">Works</span>
+        <% end %>
 
       <% end %>
     </li>

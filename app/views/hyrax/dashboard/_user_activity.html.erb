@@ -4,7 +4,7 @@
 </div>
 <div class="panel-body text-center">
   <% user_activity = @presenter.user_activity.to_json %>
-  <div id="user-activity" aria-hidden="true" style="height: 200px"><script>
+  <div id="user-activity" class="col-md-9" aria-hidden="true" style="height: 200px"><script>
 //<![CDATA[
 Hyrax.statistics.userActivity = <%== user_activity %>
 //]]>
@@ -25,4 +25,19 @@ Hyrax.statistics.userActivity = <%== user_activity %>
       <% end %>
     </tbody>
   </table>
+
+
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h2 class="panel-title text-center">User Summary<%#= t('.registered_users') %></h2>
+      </div>
+      <div class="panel-body text-center">
+        <p><%= t('.registered_users') %>: <%= @presenter.user_count %></p>
+        <p><%= t('.new_visitors') %>: n/a</p>
+        <p><%= t('.returning_visitors') %>: n/a</p>
+        <p><%= t('.total_visitors') %>: n/a</p>
+      </div>
+    </div>
+  </div>
 </div>

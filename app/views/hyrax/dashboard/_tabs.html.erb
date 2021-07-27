@@ -1,0 +1,20 @@
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+  <li role="presentation" class="active"><a href="#admin_sets" aria-selected="true" role="tab" data-toggle="tab">Admin Sets</a></li>
+  <li role="presentation"><a href="#collections_most_recent" aria-selected="false"role="tab" data-toggle="tab">Collections</a></li>
+  <li role="presentation"><a href="#collections_pinned" aria-selected="false"role="tab" data-toggle="tab">Pinned Collections</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div role="tabpanel" class="tab-pane active" id="admin_sets">
+    <%= render 'admin_sets' %>
+  </div>
+  <div role="tabpanel" class="tab-pane" id="collections_most_recent">
+    <%= render 'collections_most_recent' %>
+  </div>
+  <div role="tabpanel" class="tab-pane" id="collections_pinned">
+    <%= render 'collections_pinned' %>
+  </div>
+
+</div>
