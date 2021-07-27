@@ -274,7 +274,8 @@ en:
         profile: Profile
         repository_objects: Repository Contents
         settings: Settings
-        statistics: Reports
+        statistics: Statistics
+        analytics: Reports
         tasks: Tasks
         technical: Features
         transfers: Transfers
@@ -982,7 +983,11 @@ en:
       user_activity:
         date: Date
         new_users: New Users
+        registered_users: Registered Users
+        returning_visitors: Returning Visitors
+        new_visitors: New Visitors
         subtitle: New user signups
+        total_visitors: Total Visitors
         title: User Activity
       user_notifications: User Notifications
       view_files: View Files

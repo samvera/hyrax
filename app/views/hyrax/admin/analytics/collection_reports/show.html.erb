@@ -1,0 +1,52 @@
+<% provide :page_title, "Collection Report" %>
+
+<% provide :page_header do %>
+  <h1><span class="fa fa-bar-chart" aria-hidden="true"></span> <%= "Collection Report" %></h1>
+  <%# TODO: Dynamic %>
+  <button class="btn btn-primary pull-right" href="#"><%#= return to collection reports path %>Return to Collection Reports</button>
+<% end %>
+
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="collection-reports">
+
+      <div class="panel panel-default">
+        <%# TODO: Dynamic %>
+        <div class="panel-heading">
+          <div class="col-sm-10">
+            <h3>Theses and Dissertations<%#= collection title %></h3>
+          </div>
+          <div class="col-sm-2">
+            <button class="btn btn-default pull-right" href="#"><%#= view collection path %>View Collection</button>
+          </div>
+        </div>
+
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12 col-md-5">
+              <p>Created by <b>repo-admin@institution.edu</b> <%#= user.email %> on <b>2015-05-14</b><%#= report creation date %></p>
+              <p>Collection type: <b>Administrative Set</b><%#= collection type %></p>
+            </div>
+            <div class="col-xs-12 col-md-5">
+              <p>Last updated on <b>2017-09-14</b><%#= last updated date %></p>
+              <p>Visibility: <b>Public</b><%#= visibility status aka Public/Private/etc. %></p>
+            </div>
+            <div class="col-xs-12 col-md-2">
+              <button class="btn btn-primary pull-right" href="#"><%#= download button for report %>Export Report</button>
+            </div>
+          </div>
+          <hr />
+
+          <%= render "summary_user_activity" %>
+          <%= render "monthly" %>
+          <%= render "collection_works" %>
+          <%= render "collection_files" %>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
