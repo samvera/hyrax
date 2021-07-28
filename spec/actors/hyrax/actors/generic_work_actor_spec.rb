@@ -156,6 +156,34 @@ RSpec.describe Hyrax::Actors::GenericWorkActor do
             expect(file_set).to be_authenticated_only_access
           end
         end
+
+        context 'setting file set visibility different than work' do
+          let(:attributes) do
+            attributes_for(:generic_work, admin_set_id: admin_set.id, visibility: work_visibility).tap do |a|
+              a[:uploaded_files] = [uploaded_file.id]
+              a[:file_set] = [{ visibility: file_set_visibility, uploaded_file_id: uploaded_file.id }]
+            end
+          end
+          let(:file_actor) { double }
+          let(:work_visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC }
+          let(:file_set_visibility) { Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE }
+
+          before do
+            allow(Hyrax::TimeService).to receive(:time_in_utc) { xmas }
+            allow(Hyrax::Actors::FileActor).to receive(:new).and_return(file_actor)
+          end
+
+          it 'sets file set with requested access rights' do
+            expect(file_actor).to receive(:ingest_file).and_return(true)
+            expect(middleware.create(env)).to be true
+            curation_concern.reload
+            expect(curation_concern).to be_persisted
+            expect(curation_concern.file_sets.size).to eq 1
+            expect(curation_concern).to be_open_access
+            file_set = curation_concern.file_sets.first
+            expect(file_set).to be_private_access
+          end
+        end
       end
 
       context 'with multiple files' do

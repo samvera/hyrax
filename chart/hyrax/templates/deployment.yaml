@@ -21,6 +21,9 @@ spec:
         {{- include "hyrax.selectorLabels" . | nindent 8 }}
     spec:
       initContainers:
+        {{- if .Values.extraInitContainers }}
+        {{- toYaml .Values.extraInitContainers | nindent 8 }}
+        {{- end }}
         {{- if .Values.loadSolrConfigSet }}
         - name: load-solr-config
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -30,6 +33,10 @@ spec:
                 name: {{ include "hyrax.fullname" . }}-env
             - secretRef:
                 name: {{ include "hyrax.fullname" . }}
+            {{- if .Values.solrExistingSecret }}
+            - secretRef:
+                name: {{ .Values.solrExistingSecret }}
+            {{- end }}
           env:
             {{- toYaml .Values.extraEnvVars | nindent 12 }}
           command:
@@ -47,6 +54,13 @@ spec:
                 name: {{ include "hyrax.fullname" . }}-env
             - secretRef:
                 name: {{ template "hyrax.fullname" . }}
+            {{- if .Values.solrExistingSecret }}
+            - secretRef:
+                name: {{ .Values.solrExistingSecret }}
+            {{- end }}
+            {{- with .Values.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           env:
             {{- toYaml .Values.extraEnvVars | nindent 12 }}
           command:
@@ -71,6 +85,13 @@ spec:
                 name: {{ include "hyrax.fullname" . }}-env
             - secretRef:
                 name: {{ template "hyrax.fullname" . }}
+            {{- if .Values.solrExistingSecret }}
+            - secretRef:
+                name: {{ .Values.solrExistingSecret }}
+            {{- end }}
+            {{- with .Values.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           env:
             {{- toYaml .Values.extraEnvVars | nindent 12 }}
           ports:
@@ -121,6 +142,9 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- with .Values.extraContainerConfiguration }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
       volumes:
         - name: "branding"
           {{- if and .Values.brandingVolume.enabled .Values.brandingVolume.existingClaim }}

@@ -2,17 +2,21 @@ apiVersion: v2
 name: hyrax
 description: An open-source, Samvera-powered digital repository system
 type: application
-version: 0.8.1
-appVersion: 3.0.1
+version: 0.21.1
+appVersion: 3.0.2
 dependencies:
   - name: fcrepo
-    version: 0.6.0
-    repository: https://samvera-labs.github.com/fcrepo-charts
+    version: 0.8.0
+    repository: oci://ghcr.io/samvera
     condition: fcrepo.enabled
   - name: memcached
     version: 4.2.21
     repository: https://charts.bitnami.com/bitnami
     condition: memcached.enabled
+  - name: minio
+    version: 6.7.2
+    repository: https://charts.bitnami.com/bitnami
+    condition: minio.enabled
   - name: postgresql
     version: 10.3.13
     repository: https://charts.bitnami.com/bitnami
@@ -22,6 +26,6 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     condition: redis.enabled
   - name: solr
-    version: 0.2.2
+    version: 1.0.1
     repository: https://charts.bitnami.com/bitnami
     condition: solr.enabled

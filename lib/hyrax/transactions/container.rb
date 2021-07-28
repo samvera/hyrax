@@ -21,11 +21,13 @@ module Hyrax
       require 'hyrax/transactions/apply_change_set'
       require 'hyrax/transactions/create_work'
       require 'hyrax/transactions/destroy_work'
+      require 'hyrax/transactions/file_set_destroy'
       require 'hyrax/transactions/work_create'
       require 'hyrax/transactions/work_destroy'
       require 'hyrax/transactions/update_work'
       require 'hyrax/transactions/steps/add_file_sets'
       require 'hyrax/transactions/steps/add_to_collections'
+      require 'hyrax/transactions/steps/add_to_parent'
       require 'hyrax/transactions/steps/apply_collection_permission_template'
       require 'hyrax/transactions/steps/apply_permission_template'
       require 'hyrax/transactions/steps/apply_visibility'
@@ -33,6 +35,7 @@ module Hyrax
       require 'hyrax/transactions/steps/destroy_work'
       require 'hyrax/transactions/steps/ensure_admin_set'
       require 'hyrax/transactions/steps/ensure_permission_template'
+      require 'hyrax/transactions/steps/remove_file_set_from_work'
       require 'hyrax/transactions/steps/save'
       require 'hyrax/transactions/steps/save_work'
       require 'hyrax/transactions/steps/save_access_control'
@@ -92,9 +95,27 @@ module Hyrax
         end
       end
 
+      namespace 'file_set' do |ops| # Hyrax::FileSet
+        ops.register 'delete' do
+          Steps::DeleteResource.new
+        end
+
+        ops.register 'destroy' do
+          FileSetDestroy.new
+        end
+
+        ops.register 'remove_from_work' do
+          Steps::RemoveFileSetFromWork.new
+        end
+      end
+
       namespace 'work_resource' do |ops| # valkyrie works
         ops.register 'add_file_sets' do
           Steps::AddFileSets.new
+        end
+
+        ops.register 'add_to_parent' do
+          Steps::AddToParent.new
         end
 
         ops.register 'delete' do

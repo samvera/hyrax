@@ -1,10 +1,11 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "hyrax.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
-{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- $beta := semverCompare "<1.19-0" (default .Capabilities.KubeVersion.Version .Values.kubeVersion) -}}
+{{- if $beta }}
 apiVersion: networking.k8s.io/v1beta1
-{{- else -}}
-apiVersion: extensions/v1beta1
+{{- else }}
+apiVersion: networking.k8s.io/v1
 {{- end }}
 kind: Ingress
 metadata:
@@ -32,10 +33,18 @@ spec:
       http:
         paths:
           {{- range .paths }}
-          - path: {{ . }}
+          - path: {{ .path  }}
+            pathType: {{ .pathType | default "ImplementationSpecific" }}
             backend:
+              {{- if $beta }}
               serviceName: {{ $fullName }}
               servicePort: {{ $svcPort }}
+              {{- else }}
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: {{ $svcPort }}
+              {{- end }}
           {{- end }}
     {{- end }}
   {{- end }}

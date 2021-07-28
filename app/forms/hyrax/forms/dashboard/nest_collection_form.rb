@@ -35,15 +35,37 @@ module Hyrax
           persistence_service.persist_nested_collection_for(parent: parent, child: child)
         end
 
+        ##
+        # @deprecated this method is unused by hyrax, and is effectively a
+        #   delegation to `Hyrax::Collections::NestedCollectionQueryService`.
+        #   if you want to be sure to use nested indexing to generate this list,
+        #   use the query service directly.
+        #
         # For the given parent, what are all of the available collections that
         # can be added as sub-collection of the parent.
         def available_child_collections
+          Deprecation.warn "#{self.class}#available_child_collections " \
+                           "is deprecated. the helper of the same name or " \
+                           "Hyrax::Collections::NestedCollectionQueryService " \
+                           "instead."
+
           query_service.available_child_collections(parent: parent, scope: context)
         end
 
+        ##
+        # @deprecated this method is unused by hyrax, and is effectively a
+        #   delegation to `Hyrax::Collections::NestedCollectionQueryService`.
+        #   if you want to be sure to use nested indexing to generate this list,
+        #   use the query service directly.
+        #
         # For the given child, what are all of the available collections to
         # which the child can be added as a sub-collection.
         def available_parent_collections
+          Deprecation.warn "#{self.class}#available_parent_collections " \
+                           "is deprecated. the helper of the same name or " \
+                           "Hyrax::Collections::NestedCollectionQueryService " \
+                           "instead."
+
           query_service.available_parent_collections(child: child, scope: context)
         end
 

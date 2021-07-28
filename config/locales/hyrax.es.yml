@@ -1222,7 +1222,7 @@ es:
         subject: Subida en lote completa
         title: Archivos cargados satisfactoriamente
     models:
-      hyrax/file_set: Conjunto de archivos
+      file_set: Conjunto de archivos
       hyrax/pcdm_collection: Colección
       hyrax/work: Trabaja
     my:

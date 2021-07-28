@@ -1,6 +1,44 @@
 # frozen_string_literal: true
 
+##
+# {Sipity} is a workflow/state engine.
+#
+# This module and the classes namespaced within it provide a domain model and
+# implementation for managing the movement of repository objects through a
+# defined workflow. The workflows themselves are configured using JSON documents
+# and loaded into the database/domain model as {Sipity::Workflow}. Each workflow
+# can be understood as finite sets of {Sipity::WorkflowState},
+# {Sipity::WorkflowAction} (transitions from state to state), and {Sipity::Role}
+# authorized to carry out each action.
+#
+# Any uniquely identifiable object can be managed by a {Sipity::Workflow}.
+# Normally Hyrax uses workflows to handle the deposit process and maintenance
+# lifecycle of repository objects at the level of the Work (within the Hydra
+# Works model). Objects are represented within the Sipity engine's domain model
+# by a {Sipity::Entity}. Each object has at most one {Sipity::Entity}, is
+# governed by one {Sipity::Workflow}, and in one {Sipity::WorkflowState} at any
+# given time.
+#
+# Some use cases for Sipity workflows include:
+#
+# * Simple unmediated deposit with on-deposit notifications and actions;
+# * Mediated deposit with one or more review steps;
+# * Publication workflows requiring multiple levels of editorial approval
+#   and/or peer review;
+# * Preservation processes involving post-deposit selection of objects for
+#   replication to external preservation platforms and/or required action
+#   in case of failed fixity checks;
+# * Electronic Thesis & Dissertation submission processes involving (e.g.)
+#   student deposit, committee and/or departmental approval, centralized/
+#   graduate school review, and a final graduation step.
+#
 module Sipity
+  ##
+  # Cast a given input (e.g. a +::User+ or {Hyrax::Group} to a {Sipity::Agent}).
+  #
+  # @param input [Object]
+  #
+  # @return [Sipity::Agent]
   def Agent(input, &block) # rubocop:disable Naming/MethodName
     result = case input
              when Sipity::Agent
@@ -13,6 +51,10 @@ module Sipity
 
   ##
   # Cast an object to an Entity
+  #
+  # @param input [Object]
+  #
+  # @return [Sipity::Entity]
   # rubocop:disable Naming/MethodName, Metrics/CyclomaticComplexity, Metrics/MethodLength
   def Entity(input, &block)
     result = case input

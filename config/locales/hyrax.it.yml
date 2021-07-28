@@ -1220,7 +1220,7 @@ it:
         subject: Caricamento batch completato
         title: I file sono stati caricati correttamente
     models:
-      hyrax/file_set: Set di file
+      file_set: Set di file
       hyrax/pcdm_collection: Collezione
       hyrax/work: Opera
     my:

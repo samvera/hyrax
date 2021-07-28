@@ -1,9 +1,8 @@
 # frozen_string_literal: true
-# rubocop:disable Metrics/ClassLength
 module Hyrax
   module Forms
     # @abstract
-    class WorkForm
+    class WorkForm # rubocop:disable Metrics/ClassLength
       include HydraEditor::Form
       include HydraEditor::Form::Permissions
       attr_accessor :current_ability
@@ -176,6 +175,10 @@ module Hyrax
             based_near_attributes: [:id, :_destroy],
             member_of_collections_attributes: [:id, :_destroy],
             work_members_attributes: [:id, :_destroy]
+          },
+          {
+            file_set: [:visibility, :visibility_during_embargo, :embargo_release_date, :visibility_after_embargo,
+                       :visibility_during_lease, :lease_expiration_date, :visibility_after_lease, :uploaded_file_id]
           }
         ]
       end

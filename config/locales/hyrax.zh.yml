@@ -1218,7 +1218,7 @@ zh:
         subject: 批量上传完成
         title: 文件上传成功
     models:
-      hyrax/file_set: 文件集
+      file_set: 文件集
       hyrax/pcdm_collection: 收藏
       hyrax/work: 工作
     my:

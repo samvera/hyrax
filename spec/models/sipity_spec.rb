@@ -24,6 +24,18 @@ RSpec.describe Sipity do
       it { expect(described_class.Entity(object)).to eq object }
     end
 
+    context "with a Sipity::Entity that doesn't match the globalID for a valkyrie object" do
+      let(:object) { FactoryBot.create(:generic_work, id: '9999').valkyrie_resource }
+      let(:workflow_state) { create(:workflow_state) }
+      let!(:entity) do
+        Sipity::Entity.create(proxy_for_global_id: "gid://#{GlobalID.app}/GenericWork/9999",
+                              workflow_state: workflow_state,
+                              workflow: workflow_state.workflow)
+      end
+
+      it { expect(described_class.Entity(object)).to eq entity }
+    end
+
     context "with a Sipity::Comment" do
       let(:object) { Sipity::Comment.new(entity: entity) }
       let(:entity) { Sipity::Entity.new }

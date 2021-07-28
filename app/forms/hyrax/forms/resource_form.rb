@@ -32,18 +32,6 @@ module Hyrax
     # This form wraps `Hyrax::ChangeSet` in the `HydraEditor::Form` interface.
     class ResourceForm < Hyrax::ChangeSet
       ##
-      # Nested form for permissions.
-      #
-      # @note due to historical oddities with Hydra::AccessControls and Hydra
-      #   Editor, Hyrax's views rely on `agent_name` and `access` as field
-      #   names. we provide these as virtual fields and prepopulate these from
-      #   `Hyrax::Permission`.
-      class Permission < Hyrax::ChangeSet
-        property :agent_name, virtual: true, prepopulator: ->(_opts) { self.agent_name = model.agent }
-        property :access, virtual: true, prepopulator: ->(_opts) { self.access = model.mode }
-      end
-
-      ##
       # @api private
       InWorksPopulator = lambda do |_options|
         self.in_works_ids =
@@ -91,7 +79,12 @@ module Hyrax
       property :date_uploaded, readable: false
       property :agreement_accepted, virtual: true, default: false, prepopulator: ->(_opts) { self.agreement_accepted = !model.new_record }
 
-      collection :permissions, virtual: true, default: [], form: Permission, prepopulator: ->(_opts) { self.permissions = Hyrax::AccessControl.for(resource: model).permissions }
+      collection(:permissions,
+                 virtual: true,
+                 default: [],
+                 form: Hyrax::Forms::Permission,
+                 populator: :permission_populator,
+                 prepopulator: ->(_opts) { self.permissions = Hyrax::AccessControl.for(resource: model).permissions })
 
       # virtual properties for embargo/lease;
       property :embargo_release_date, virtual: true, prepopulator: ->(_opts) { self.embargo_release_date = model.embargo&.embargo_release_date }
@@ -131,10 +124,15 @@ module Hyrax
         # @example
         #   monograph  = Monograph.new
         #   change_set = Hyrax::Forms::ResourceForm.for(monograph)
-        def for(work)
-          "#{work.class}Form".constantize.new(work)
+        def for(resource)
+          "#{resource.class.name}Form".constantize.new(resource)
         rescue NameError => _err
-          Hyrax::Forms::ResourceForm(work.class).new(work)
+          case resource
+          when Hyrax::FileSet
+            Hyrax::Forms::FileSetForm.new(resource)
+          else
+            Hyrax::Forms::ResourceForm(resource.class).new(resource)
+          end
         end
 
         ##
@@ -200,6 +198,11 @@ module Hyrax
       end
 
       private
+
+      # https://trailblazer.to/2.1/docs/reform.html#reform-populators-populator-collections
+      def permission_populator(collection:, index:, **)
+        Hyrax::Forms::Permission.new(collection[index])
+      end
 
       def _form_field_definitions
         self.class.definitions

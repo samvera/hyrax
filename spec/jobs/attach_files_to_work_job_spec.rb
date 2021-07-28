@@ -81,6 +81,27 @@ RSpec.describe AttachFilesToWorkJob, perform_enqueued: [AttachFilesToWorkJob] do
         end
       end
     end
+
+    context "with visibility different from parent work" do
+      let(:attributes) { { file_set: [{ uploaded_file_id: uploaded_file2.id, visibility: 'restricted' }] } }
+
+      before do
+        # Ensure uploaded files have ids
+        uploaded_file1.save
+        uploaded_file2.save
+      end
+
+      it "overrides the work's visibility", perform_enqueued: [described_class, IngestJob] do
+        expect(CharacterizeJob).to receive(:perform_later).twice
+        described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2], attributes)
+        generic_work.reload
+        expect(generic_work.file_sets.count).to eq 2
+        expect(generic_work.file_sets.find { |fs| fs.label == uploaded_file1.file.filename }.visibility).to eq 'open'
+        expect(generic_work.file_sets.find { |fs| fs.label == uploaded_file2.file.filename }.visibility).to eq 'restricted'
+        expect(uploaded_file1.reload.file_set_uri).not_to be_nil
+        expect(ImportUrlJob).not_to have_been_enqueued
+      end
+    end
   end
 
   context "when use_valkyrie is true" do

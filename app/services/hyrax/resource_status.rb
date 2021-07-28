@@ -37,6 +37,13 @@ module Hyrax
     end
 
     ##
+    # @param [#state] resource
+    # @return [Boolean]
+    def self.inactive?(resource:)
+      new(resource: resource).inactive?
+    end
+
+    ##
     # @return [Boolean]
     # @raise [NoMethodError] if the resource doesn't have a state attribute
     def active?

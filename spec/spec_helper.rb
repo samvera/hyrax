@@ -266,6 +266,23 @@ RSpec.configure do |config|
     ActiveJob::Base.queue_adapter.perform_enqueued_at_jobs = false
   end
 
+  config.before(:example, :index_adapter) do |example|
+    allow(Hyrax.config)
+      .to receive(:query_index_from_valkyrie)
+      .and_return(true)
+
+    adapter_name = example.metadata[:index_adapter]
+
+    allow(Hyrax)
+      .to receive(:index_adapter)
+      .and_return(Valkyrie::IndexingAdapter.find(adapter_name))
+  end
+
+  config.after(:example, :index_adapter) do |example|
+    adapter_name = example.metadata[:index_adapter]
+    Valkyrie::IndexingAdapter.find(adapter_name).wipe!
+  end
+
   config.before(:example, :valkyrie_adapter) do |example|
     adapter_name = example.metadata[:valkyrie_adapter]
 

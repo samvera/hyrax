@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'hyrax/specs/spy_listener'
+
 RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
   let(:paths) { controller.main_app }
   let(:title) { ['Comet in Moominland'] }
@@ -146,6 +148,44 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
           get :create, params: params
 
           expect(response.status).to eq 422
+        end
+
+        it 'sets the file visibility' do
+          params = { test_simple_work: { title: 'comet in moominland',
+                                         file_set: [{ uploaded_file_id: uploads.first.id, visibility: 'open' },
+                                                    { uploaded_file_id: uploads.second.id, visibility: 'open' }] },
+                     uploaded_files: uploads.map(&:id) }
+
+          get :create, params: params
+
+          expect(assigns(:curation_concern)).to have_file_set_members(have_attributes(visibility: 'open'), have_attributes(visibility: 'open'))
+        end
+      end
+
+      context 'and a parent work' do
+        let(:listener) { Hyrax::Specs::AppendingSpyListener.new }
+        let(:parent)   { FactoryBot.valkyrie_create(:hyrax_work) }
+
+        let(:params) do
+          { test_simple_work: { title: 'comet in moominland' },
+            parent_id: parent.id }
+        end
+
+        before { Hyrax.publisher.subscribe(listener) }
+        after  { Hyrax.publisher.unsubscribe(listener) }
+
+        it 'adds the new work as a member of the parent' do
+          post :create, params: params
+
+          expect(Hyrax.query_service.find_by(id: parent.id).member_ids)
+            .to contain_exactly(assigns(:curation_concern).id)
+        end
+
+        it 'publishes a metadata change event for the parent ' do
+          expect { post :create, params: params }
+            .to change { listener.object_metadata_updated.map(&:payload) }
+            .from(be_empty)
+            .to include(match(object: have_attributes(id: parent.id), user: user))
         end
       end
 
@@ -302,6 +342,16 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
 
         expect(controller).to render_template('hyrax/base/new')
       end
+
+      it 'populates allowed admin sets' do
+        admin_set = AdminSet.find_or_create_default_admin_set_id
+        FactoryBot.valkyrie_create(:hyrax_admin_set) # one without deposit access
+
+        get :new
+
+        expect(assigns['admin_set_options'].select_options)
+          .to contain_exactly(["Default Admin Set", admin_set, { "data-release-no-delay" => true, "data-sharing" => false }])
+      end
     end
   end
 
@@ -408,6 +458,17 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
 
           get :update, params: params
           expect(assigns(:curation_concern)).to have_file_set_members(be_persisted, be_persisted)
+        end
+
+        it 'sets the file visibility' do
+          params = { id: id,
+                     test_simple_work: { title: 'comet in moominland',
+                                         file_set: [{ uploaded_file_id: uploads.first.id, visibility: 'open' },
+                                                    { uploaded_file_id: uploads.second.id, visibility: 'open' }] },
+                     uploaded_files: uploads.map(&:id) }
+
+          get :update, params: params
+          expect(assigns(:curation_concern)).to have_file_set_members(have_attributes(visibility: 'open'), have_attributes(visibility: 'open'))
         end
       end
 

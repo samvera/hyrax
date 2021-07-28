@@ -6,7 +6,7 @@
 
 <div class="row">
   <div class="col-xs-12 col-sm-4">
-    <%= media_display curation_concern.to_presenter %>
+    <%= render media_display_partial(curation_concern.to_presenter), file_set: curation_concern.to_presenter %>
   </div>
   <div class="col-xs-12 col-sm-8">
     <div class="panel panel-default tabs">

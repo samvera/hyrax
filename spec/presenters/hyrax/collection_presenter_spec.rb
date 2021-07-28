@@ -112,7 +112,11 @@ RSpec.describe Hyrax::CollectionPresenter do
 
   describe "#total_items", :clean_repo do
     context "empty collection" do
+      let(:ability) { double(::Ability, user_groups: ['public'], current_user: user) }
+      let(:user) { create(:user) }
       let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection) }
+
+      before { allow(ability).to receive(:admin?).and_return(false) }
 
       it 'returns 0' do
         expect(presenter.total_items).to eq 0
@@ -143,6 +147,8 @@ RSpec.describe Hyrax::CollectionPresenter do
     let(:user) { create(:user) }
     let(:collection) { FactoryBot.create(:collection_lw) }
     let(:solr_hash) { collection.to_solr }
+
+    before { allow(ability).to receive(:admin?).and_return(false) }
 
     context "empty collection" do
       it { is_expected.to eq 0 }
@@ -193,6 +199,8 @@ RSpec.describe Hyrax::CollectionPresenter do
     let(:collection) { FactoryBot.create(:collection_lw) }
     let(:solr_hash) { collection.to_solr }
 
+    before { allow(ability).to receive(:admin?).and_return(false) }
+
     context "empty collection" do
       it { is_expected.to eq 0 }
     end
@@ -229,6 +237,8 @@ RSpec.describe Hyrax::CollectionPresenter do
     let(:user) { create(:user) }
     let(:collection) { FactoryBot.create(:collection_lw) }
     let(:solr_hash) { collection.to_solr }
+
+    before { allow(ability).to receive(:admin?).and_return(false) }
 
     context "empty collection" do
       it { is_expected.to eq 0 }

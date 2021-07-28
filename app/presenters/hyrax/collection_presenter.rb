@@ -28,6 +28,7 @@ module Hyrax
              :to_s, to: :solr_document
 
     delegate(*Hyrax::CollectionType.settings_attributes, to: :collection_type, prefix: :collection_type_is)
+    alias nestable? collection_type_is_nestable?
 
     def collection_type
       @collection_type ||= Hyrax::CollectionType.find_by_gid!(collection_type_gid)
@@ -77,19 +78,36 @@ module Hyrax
     end
 
     def total_items
-      Hyrax::SolrService.new.count("member_of_collection_ids_ssim:#{id}")
+      field_pairs = { "member_of_collection_ids_ssim" => id.to_s }
+      SolrQueryService.new
+                      .with_field_pairs(field_pairs: field_pairs)
+                      .count
     end
 
     def total_viewable_items
-      ActiveFedora::Base.where("member_of_collection_ids_ssim:#{id}").accessible_by(current_ability).count
+      field_pairs = { "member_of_collection_ids_ssim" => id.to_s }
+      SolrQueryService.new
+                      .with_field_pairs(field_pairs: field_pairs)
+                      .accessible_by(ability: current_ability)
+                      .count
     end
 
     def total_viewable_works
-      ActiveFedora::Base.where("member_of_collection_ids_ssim:#{id} AND generic_type_sim:Work").accessible_by(current_ability).count
+      field_pairs = { "member_of_collection_ids_ssim" => id.to_s }
+      SolrQueryService.new
+                      .with_field_pairs(field_pairs: field_pairs)
+                      .with_generic_type(generic_type: "Work")
+                      .accessible_by(ability: current_ability)
+                      .count
     end
 
     def total_viewable_collections
-      ActiveFedora::Base.where("member_of_collection_ids_ssim:#{id} AND generic_type_sim:Collection").accessible_by(current_ability).count
+      field_pairs = { "member_of_collection_ids_ssim" => id.to_s }
+      SolrQueryService.new
+                      .with_field_pairs(field_pairs: field_pairs)
+                      .with_generic_type(generic_type: "Collection")
+                      .accessible_by(ability: current_ability)
+                      .count
     end
 
     def collection_type_badge
@@ -154,14 +172,21 @@ module Hyrax
       create_work_presenter.first_model
     end
 
+    ##
+    # @deprecated this implementation requires an extra db round trip, had a
+    #   buggy cacheing mechanism, and was largely duplicative of other code.
+    #   all versions of this code are replaced by
+    #   {CollectionsHelper#available_parent_collections_data}.
     def available_parent_collections(scope:)
+      Deprecation.warn("#{self.class}#available_parent_collections is " \
+                       "deprecated. Use available_parent_collections_data " \
+                       "helper instead.")
       return @available_parents if @available_parents.present?
       collection = ::Collection.find(id)
       colls = Hyrax::Collections::NestedCollectionQueryService.available_parent_collections(child: collection, scope: scope, limit_to_id: nil)
       @available_parents = colls.map do |col|
         { "id" => col.id, "title_first" => col.title.first }
-      end
-      @available_parents.to_json
+      end.to_json
     end
 
     def subcollection_count=(total)

@@ -8,6 +8,28 @@ RSpec.describe Wings::Valkyrie::Persister do
   let(:adapter) { Wings::Valkyrie::MetadataAdapter.new }
   let(:query_service) { adapter.query_service }
 
+  context "When an AF work exists with an embargo" do
+    let(:release_date) { Time.zone.today - 1 }
+    let(:a_work) { create(:generic_work, user: user) }
+    let(:user) { create(:user) }
+
+    before do
+      a_work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+      a_work.visibility_during_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED
+      a_work.visibility_after_embargo = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
+      a_work.embargo_release_date = release_date.to_s
+      a_work.embargo.save(validate: false)
+      a_work.save(validate: false)
+    end
+
+    it "can save a resource with an embargo" do
+      resources = Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: [a_work.id], use_valkyrie: true)
+      saved = persister.save(resource: resources.first)
+      expect(saved).to be_persisted
+      expect(saved.id).not_to be_blank
+    end
+  end
+
   context "When passing a Valkyrie::Resource converted from an ActiveFedora::Base" do
     before do
       module Hyrax::Test

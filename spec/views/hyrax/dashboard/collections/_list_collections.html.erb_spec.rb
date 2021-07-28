@@ -21,6 +21,11 @@ RSpec.describe 'hyrax/dashboard/collections/_list_collections.html.erb', type: :
     allow(presenter).to receive(:total_viewable_items).and_return(3)
     allow(ability).to receive(:can?).with(:edit, solr_document).and_return(false)
 
+    allow(view)
+      .to receive(:available_parent_collections_data)
+      .with(collection: presenter)
+      .and_return([mock_model(Collection)])
+
     stub_template 'hyrax/my/_collection_action_menu.html.erb' => 'actions'
   end
 

@@ -9,6 +9,15 @@ RSpec.describe Hyrax::ValkyrieIndexer do
         .to eq described_class
     end
 
+    context 'for a work' do
+      let(:resource) { FactoryBot.valkyrie_create(:hyrax_work) }
+
+      it 'gives an instance of ValkyrieWorkIndexer' do
+        expect(described_class.for(resource: resource))
+          .to be_a Hyrax::ValkyrieWorkIndexer
+      end
+    end
+
     context 'for a collection' do
       let(:resource) { build(:hyrax_collection) }
 
@@ -50,11 +59,11 @@ RSpec.describe Hyrax::ValkyrieIndexer do
   describe "#to_solr" do
     let(:resource) { FactoryBot.valkyrie_create(:hyrax_work) }
 
-    it "provides id, created_at_dtsi, and updated_at_dtsi" do
+    it "provides id, date_uploaded_dtsi, and date_modified_dtsi" do
       expect(indexer.to_solr).to match a_hash_including(
         id: resource.id.to_s,
-        created_at_dtsi: resource.created_at,
-        updated_at_dtsi: resource.updated_at
+        date_uploaded_dtsi: resource.created_at,
+        date_modified_dtsi: resource.updated_at
       )
     end
   end

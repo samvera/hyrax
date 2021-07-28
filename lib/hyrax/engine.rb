@@ -22,6 +22,7 @@ module Hyrax
     require 'valkyrie'
 
     require 'hydra/derivatives'
+    require 'hyrax/active_fedora_dummy_model'
     require 'hyrax/controller_resource'
     require 'hyrax/form_fields'
     require 'hyrax/indexer'

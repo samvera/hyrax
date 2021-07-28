@@ -119,6 +119,7 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
     subject { indexer.generate_solr_document }
 
     it 'has fields' do # rubocop:disable RSpec/ExampleLength
+      expect(subject['generic_type_si']).to eq 'FileSet'
       # from core metadata
       expect(subject['title_sim']).to eq ['Ramona Quimby, age 8']
       expect(subject['title_tesim']).to eq ['Ramona Quimby, age 8']

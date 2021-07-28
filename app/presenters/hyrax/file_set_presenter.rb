@@ -57,8 +57,13 @@ module Hyrax
       current_ability.can?(:read, id) ? first_title : 'File'
     end
 
+    ##
+    # @deprecated use `::Ability.can?(:edit, presenter)`. Hyrax views calling
+    #   presenter {#editor} methods will continue to call them until Hyrax
+    #   4.0.0. The deprecation time horizon for the presenter methods themselves
+    #   is 5.0.0.
     def editor?
-      current_ability.can?(:edit, solr_document)
+      current_ability.can?(:edit, self)
     end
 
     def tweeter

@@ -10,10 +10,14 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+# use true to skip loading Hyrax engine database seed file
+skipHyraxEngineSeed: false
+
 # use false to skip the configset management init container
 loadSolrConfigSet: true
 # the host and auth details for an external solr service;
 #   ignored if `solr.enabled` is true
+solrExistingSecret: ""
 externalSolrHost: ""
 externalSolrUser: ""
 externalSolrPassword: ""
@@ -27,6 +31,36 @@ externalSolrCollection: "hyrax"
 #    - name: GOOGLE_OAUTH_APP_NAME
 #      value: "my_hyrax_app"
 extraEnvVars: []
+
+## Extra init containers
+## Example
+##
+## extraInitContainers:
+##   - name: do-something
+##     image: busybox
+##     command: ['echo', 'Hello, Hyrax.']
+##
+extraInitContainers: []
+
+# Extra envFrom (secrets/configmaps)
+# Example
+#
+# extraEnvFrom:
+#   - configMapRef:
+#       name: existingConfigMap
+#   - secretRef:
+#       name: existingSecret
+#
+extraEnvFrom: []
+
+# Extra container spec configuration
+# Example: (enabling pry debugging for local development)
+# Note: with this enabled, one can `kubectl attach` to a running container with a binding.pry breakpoint
+#
+#extraContainerConfiguration:
+# stdin: true
+# tty: true
+extraContainerConfiguration: []
 
 # an existing volume containing a Hyrax-based application
 # must be a ReadWriteMany volume if worker is enabled
@@ -122,7 +156,9 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: hyrax.local
-      paths: []
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
   tls: []
 
 livenessProbe:
@@ -152,6 +188,7 @@ worker:
     repository: samveralabs/dassie-worker
     pullPolicy: IfNotPresent
     tag: ""
+  extraInitContainers: []
   extraVolumeMounts: []
   extraVolumes: []
   imagePullSecrets: []
@@ -173,6 +210,16 @@ fcrepo:
 
 memcached:
   enabled: false
+
+minio:
+  enabled: false
+  accessKey:
+    password: hyrax-access-key
+  secretKey:
+    password: hyrax-secret-key
+  persistence:
+    enabled: false
+  # defaultBuckets: bucketOne;bucketTwo
 
 postgresql:
   enabled: true

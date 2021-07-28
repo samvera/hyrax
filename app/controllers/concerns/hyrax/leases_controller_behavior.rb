@@ -23,18 +23,27 @@ module Hyrax
       end
     end
 
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
     def update
       filter_docs_with_edit_access!
       copy_visibility = []
       copy_visibility = params[:leases].values.map { |h| h[:copy_visibility] } if params[:leases]
-      af_objects = Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie: false)
-      af_objects.each do |curation_concern|
-        Hyrax::Actors::LeaseActor.new(curation_concern).destroy
-        Hyrax::VisibilityPropagator.for(source: curation_concern).propagate if
-          copy_visibility.include?(curation_concern.id)
+      resources = Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie: Hyrax.config.use_valkyrie?)
+      resources.each do |resource|
+        if Hyrax.config.use_valkyrie?
+          LeaseManager.new(resource: resource).release!
+          Hyrax::AccessControlList(resource).save
+        else
+          Hyrax::Actors::LeaseActor.new(resource).destroy
+        end
+        Hyrax::VisibilityPropagator.for(source: resource).propagate if
+          copy_visibility.include?(resource.id)
       end
       redirect_to leases_path
     end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
 
     # This allows us to use the unauthorized template in curation_concerns/base
     def self.local_prefixes

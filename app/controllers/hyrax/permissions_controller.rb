@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 module Hyrax
   class PermissionsController < ApplicationController
+    load_resource class: ActiveFedora::Base, instance_name: :curation_concern
+
+    attr_reader :curation_concern
     helper_method :curation_concern
 
     def confirm
@@ -27,10 +30,6 @@ module Hyrax
       # copy permissions
       InheritPermissionsJob.perform_later(curation_concern)
       redirect_to [main_app, curation_concern], notice: I18n.t("hyrax.upload.change_access_flash_message")
-    end
-
-    def curation_concern
-      @curation_concern ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id], use_valkyrie: false)
     end
   end
 end

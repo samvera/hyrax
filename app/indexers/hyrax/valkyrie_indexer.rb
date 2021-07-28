@@ -68,8 +68,8 @@ module Hyrax
     def to_solr
       {
         "id": resource.id.to_s,
-        "created_at_dtsi": resource.created_at,
-        "updated_at_dtsi": resource.updated_at,
+        "date_uploaded_dtsi": resource.created_at,
+        "date_modified_dtsi": resource.updated_at,
         "has_model_ssim": resource.internal_resource
       }
     end
@@ -114,7 +114,7 @@ module Hyrax
 
         return indexer_class if indexer_class.is_a?(Class) &&
                                 indexer_class.instance_methods.include?(:to_solr)
-        ValkyrieIndexer
+        resource.try(:work?) ? Hyrax::ValkyrieWorkIndexer : ValkyrieIndexer
       end
     end
   end

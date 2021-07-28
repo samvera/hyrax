@@ -20,10 +20,11 @@ module Hyrax
         ##
         # @param [Hyrax::Work] obj
         # @param [Enumerable<UploadedFile>] uploaded_files
+        # @param [Enumerable<Hash>] file_set_params
         #
         # @return [Dry::Monads::Result]
-        def call(obj, uploaded_files: [])
-          if @handler.new(work: obj).add(files: uploaded_files).attach
+        def call(obj, uploaded_files: [], file_set_params: [])
+          if @handler.new(work: obj).add(files: uploaded_files, file_set_params: file_set_params).attach
             Success(obj)
           else
             Failure[:failed_to_attach_file_sets, uploaded_files]

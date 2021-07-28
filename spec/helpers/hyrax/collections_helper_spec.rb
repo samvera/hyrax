@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::CollectionsHelper do
-  let(:user) { create(:user, groups: ['admin']) }
+  let(:user) { FactoryBot.create(:user, groups: ['admin']) }
   let(:ability) { Ability.new(user) }
 
   before do
@@ -9,6 +9,44 @@ RSpec.describe Hyrax::CollectionsHelper do
     allow(view).to receive(:collection_path) do |collection|
       id = collection.respond_to?(:id) ? collection.id : collection
       "/collections/#{id}"
+    end
+  end
+
+  describe '#available_child_collections' do
+    let(:repository) { Blacklight::Solr::Repository.new(bl_config) }
+    let(:bl_config) { CatalogController.blacklight_config }
+
+    before do
+      allow(controller).to receive(:blacklight_config).and_return(bl_config)
+      allow(controller).to receive(:repository).and_return(repository)
+      allow(controller).to receive(:current_ability).and_return(ability)
+    end
+
+    it 'gives an empty set for a missing collection' do
+      expect(helper.available_child_collections(collection: nil)).to be_empty
+    end
+
+    it 'gives a list of available collections' do
+      FactoryBot.create(:collection) # other collection
+      current_collection = FactoryBot.create(:collection)
+
+      expect(helper.available_child_collections(collection: current_collection))
+        .not_to be_empty
+    end
+
+    context 'with a presenter' do
+      let(:collection) { FactoryBot.create(:collection) }
+      let(:presenter)  { Hyrax::CollectionPresenter.new(solr_doc, ability) }
+      let(:solr_doc)   { SolrDocument.new(collection.to_solr) }
+
+      before do
+        FactoryBot.create(:collection) # other collection
+      end
+
+      it 'gives a list of available collections' do
+        expect(helper.available_child_collections(collection: presenter))
+          .not_to be_empty
+      end
     end
   end
 

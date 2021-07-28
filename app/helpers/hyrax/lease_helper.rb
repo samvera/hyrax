@@ -25,6 +25,10 @@ module Hyrax
     #   holder until we switch to Valkyrie::ChangeSet instead of Form
     #   objects
     def lease_enforced?(resource)
+      # This is a guard; from the UI rendering perspective, there's no
+      # active lease enforcement until the object is saved.
+      return false unless resource.persisted?
+
       case resource
       when Hydra::AccessControls::Embargoable
         !resource.lease_expiration_date.nil?

@@ -8,7 +8,6 @@ FactoryBot.define do
     collection_type_gid { Hyrax::CollectionType.find_or_create_default_collection_type.to_global_id }
 
     transient do
-      collection_type { nil }
       edit_groups { [] }
       edit_users { [] }
       read_groups { [] }
@@ -17,8 +16,6 @@ FactoryBot.define do
     end
 
     after(:build) do |collection, evaluator|
-      collection.collection_type_gid ||= evaluator.collection_type.to_global_id if evaluator.collection_type&.id.present?
-      collection.member_ids = evaluator.members.map(&:id) if evaluator.members
       collection.permission_manager.edit_groups = evaluator.edit_groups
       collection.permission_manager.edit_users = evaluator.edit_users
       collection.permission_manager.read_groups = evaluator.read_groups
@@ -26,6 +23,12 @@ FactoryBot.define do
     end
 
     after(:create) do |collection, evaluator|
+      if evaluator.members.present?
+        evaluator.members.map do |member|
+          member.member_of_collection_ids += [collection.id]
+          Hyrax.persister.save(resource: member)
+        end
+      end
       collection.permission_manager.edit_groups = evaluator.edit_groups
       collection.permission_manager.edit_users = evaluator.edit_users
       collection.permission_manager.read_groups = evaluator.read_groups

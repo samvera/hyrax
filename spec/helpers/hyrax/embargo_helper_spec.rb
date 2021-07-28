@@ -4,6 +4,21 @@ RSpec.describe Hyrax::EmbargoHelper do
   let(:resource) { build(:monograph) }
 
   describe 'embargo_enforced?' do
+    # Including this stub to preserve the spec structure before the #4845 change
+    before { allow(resource).to receive(:persisted?).and_return(true) }
+
+    context 'with a non-persisted object' do
+      let(:resource) { build(:hyrax_work, :under_embargo) }
+
+      before { Hyrax::EmbargoManager.apply_embargo_for!(resource: resource) }
+
+      it 'returns false' do
+        # Note: This spec echoes "embargo_enforced? with a Hyrax::Work when an embargo is enforced on the resource"
+        allow(resource).to receive(:persisted?).and_return false
+        expect(embargo_enforced?(resource)).to be false
+      end
+    end
+
     context 'with a Hyrax::Work' do
       let(:resource) { build(:hyrax_work) }
 
@@ -94,7 +109,8 @@ RSpec.describe Hyrax::EmbargoHelper do
     end
 
     context 'with a HydraEditor::Form' do
-      let(:resource) { Hyrax::GenericWorkForm.new(build(:work), ability, form_controller) }
+      let(:resource) { Hyrax::GenericWorkForm.new(model, ability, form_controller) }
+      let(:model) { build(:work) }
       let(:ability) { :FAKE_ABILITY }
       let(:form_controller) { :FAKE_CONTROLLER }
 
@@ -103,9 +119,12 @@ RSpec.describe Hyrax::EmbargoHelper do
       end
 
       context 'when the wrapped work is under embargo' do
-        let(:resource) { Hyrax::GenericWorkForm.new(build(:embargoed_work), ability, form_controller) }
+        let(:model) { build(:embargoed_work) }
 
         it 'returns true' do
+          # This allow call is a tweak to preserve spec for pre #4845 patch
+          allow(model).to receive(:persisted?).and_return(true)
+
           expect(embargo_enforced?(resource)).to be true
         end
       end
@@ -113,7 +132,8 @@ RSpec.describe Hyrax::EmbargoHelper do
 
     context 'with a Hyrax::Forms::FailedSubmissionFormWrapper' do
       let(:resource) { Hyrax::Forms::FailedSubmissionFormWrapper.new(form: form, input_params: {}, permitted_params: {}) }
-      let(:form) { Hyrax::GenericWorkForm.new(build(:work), ability, form_controller) }
+      let(:form) { Hyrax::GenericWorkForm.new(model, ability, form_controller) }
+      let(:model) { build(:work) }
       let(:ability) { :FAKE_ABILITY }
       let(:form_controller) { :FAKE_CONTROLLER }
 
@@ -122,9 +142,11 @@ RSpec.describe Hyrax::EmbargoHelper do
       end
 
       context 'when the wrapped work is under embargo' do
-        let(:form) { Hyrax::GenericWorkForm.new(build(:embargoed_work), ability, form_controller) }
+        let(:model) { build(:embargoed_work) }
 
         it 'returns true' do
+          # This allow call is a tweak to preserve spec for pre #4845 patch
+          allow(model).to receive(:persisted?).and_return(true)
           expect(embargo_enforced?(resource)).to be true
         end
       end

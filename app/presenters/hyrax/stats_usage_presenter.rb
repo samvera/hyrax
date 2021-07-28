@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module Hyrax
-  # Methods used by both WorkUsage and FileUsage
+  ##
+  # @abstract methods used by both {WorkUsage} and {FileUsage}
   class StatsUsagePresenter
     attr_accessor :id, :model
 

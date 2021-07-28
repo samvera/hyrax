@@ -15,9 +15,9 @@ require 'capybara/rspec'
 require 'capybara/rails'
 require 'capybara-screenshot/rspec'
 require 'selenium-webdriver'
-require 'webdrivers'
+require 'webdrivers' unless ENV['IN_DOCKER'].present? || ENV['HUB_URL'].present?
 
-if ENV['IN_DOCKER'].present?
+if ENV['IN_DOCKER'].present? || ENV['HUB_URL'].present?
   args = %w[disable-gpu no-sandbox whitelisted-ips window-size=1400,1400]
   args.push('headless') if ActiveModel::Type::Boolean.new.cast(ENV['CHROME_HEADLESS_MODE'])
 
@@ -40,7 +40,9 @@ if ENV['IN_DOCKER'].present?
 
   Capybara.server_host = '0.0.0.0'
   Capybara.server_port = 3010
-  Capybara.app_host = ENV['CAPYBARA_SERVER'] || 'http://127.0.0.1:3010'
+
+  ip = IPSocket.getaddress(Socket.gethostname)
+  Capybara.app_host = "http://#{ip}:#{Capybara.server_port}"
 else
   TEST_HOST = 'localhost:3000'.freeze
   # @note In January 2018, TravisCI disabled Chrome sandboxing in its Linux

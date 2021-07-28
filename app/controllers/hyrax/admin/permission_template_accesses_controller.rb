@@ -30,10 +30,6 @@ module Hyrax
         false
       end
 
-      def update_access(manage_changed:)
-        permission_template_form.update_access(manage_changed: manage_changed)
-      end
-
       def after_destroy_success
         if source.admin_set?
           redirect_to hyrax.edit_admin_admin_set_path(source_id,

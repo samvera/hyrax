@@ -41,14 +41,30 @@ module Wings
           end
 
           ##
+          # @return [String]
+          def to_s
+            internal_resource
+          end
+
+          ##
           # @api private
           def _canonical_valkyrie_model
             ancestors[1..-1].find { |parent| parent < ::Valkyrie::Resource }
           end
         end
 
-        def self.to_s
-          internal_resource
+        ##
+        # @return [URI::GID]
+        def to_global_id
+          URI::GID.build([GlobalID.app, internal_resource, id, {}])
+        end
+
+        ##
+        # @return [ActiveModel::Base]
+        def to_model
+          model_class = internal_resource.safe_constantize || self
+
+          Hyrax::ActiveFedoraDummyModel.new(model_class, id)
         end
 
         klass.properties.each_key do |property_name|
