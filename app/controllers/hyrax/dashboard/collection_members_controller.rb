@@ -21,21 +21,25 @@ module Hyrax
         end
       end
 
-      def update_members
+      def update_members # rubocop:disable Metrics/MethodLength
         err_msg = validate
         after_update_error(err_msg) if err_msg.present?
         return if err_msg.present?
 
         collection.reindex_extent = Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX
-        members = collection.add_member_objects batch_ids
-        messages = members.collect { |member| member.errors.full_messages }.flatten
-        if messages.size == members.size
-          after_update_error(messages.uniq.join(', '))
-        elsif messages.present?
-          flash[:error] = messages.uniq.join(', ')
+        begin
+          Hyrax::Collections::CollectionMemberService.add_members_by_ids(collection: collection.valkyrie_resource,
+                                                                         new_member_ids: batch_ids,
+                                                                         user: current_user)
           after_update
-        else
-          after_update
+        rescue Hyrax::SingleMembershipError => err
+          messages = JSON.parse(err.message)
+          if messages.size == batch_ids.size
+            after_update_error(messages.uniq.join(', '))
+          elsif messages.present?
+            flash[:error] = messages.uniq.join(', ')
+            after_update
+          end
         end
       end
 
