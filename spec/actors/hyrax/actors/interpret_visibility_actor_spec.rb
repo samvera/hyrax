@@ -94,6 +94,20 @@ RSpec.describe Hyrax::Actors::InterpretVisibilityActor do
           expect(attributes).to eq(visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE)
         end
       end
+
+      context 'when lease_expiration_date is not a parseable date' do
+        let(:attributes) do
+          { visibility: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE,
+            visibility_during_lease: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE,
+            visibility_after_lease: Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC,
+            lease_expiration_date: "you can't parse this (as a date)" }
+        end
+
+        it 'sets error on curation_concern and return false' do
+          expect(subject.create(env)).to be false
+          expect(curation_concern.errors[:visibility].first).to eq 'When setting visibility to "lease" you must also specify lease expiration date.'
+        end
+      end
     end
   end
 

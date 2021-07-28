@@ -1,8 +1,27 @@
 # frozen_string_literal: true
 module Hyrax
+  ##
+  # @api public
   class VersionListPresenter
+    include Enumerable
+
+    ##
+    # @param version_list [Array<#created>]
     def initialize(version_list)
       @raw_list = version_list
+    end
+
+    ##
+    # @param [Object] an object representing the File Set
+    #
+    # @return [Enumerable<Hyrax::VersionPresenter>] an enumerable of presenters
+    #   for the relevant file versions.
+    #
+    # @raise [ArgumentError] if we can't build an enu
+    def self.for(file_set:)
+      new(file_set.original_file&.versions&.all.to_a)
+    rescue NoMethodError
+      raise ArgumentError
     end
 
     delegate :each, to: :wrapped_list

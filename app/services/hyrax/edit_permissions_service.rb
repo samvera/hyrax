@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 module Hyrax
+  ##
+  # @api public
+  #
   # Encapsulates the logic to determine which object permissions may be edited by a given user
-  #  - user is permitted to update any work permissions coming ONLY from collections they manage
-  #  - user is not permitted to update a work permission if it comes from a collection they do not manage, even if also from a managed collection
-  #  - user is permitted to update only non-manager permissions from any Collections
-  #  - user is permitted to update any non-collection permissions
+  # * user is permitted to update any work permissions coming ONLY from collections they manage
+  # * user is not permitted to update a work permission if it comes from a collection they do not manage, even if also from a managed collection
+  # * user is permitted to update only non-manager permissions from any Collections
+  # * user is permitted to update any non-collection permissions
   class EditPermissionsService
+    ##
     # @api public
     # @since v3.0.0
     #
@@ -14,15 +18,15 @@ module Hyrax
     # @return [Hyrax::EditPermissionService]
     #
     # @note
-    #   form object.class = SimpleForm::FormBuilder
-    #     For works (i.e. GenericWork):
-    #     - form object.object = Hyrax::GenericWorkForm
-    #     - form object.object.model = GenericWork
-    #     - use the work itself
-    #     For file_sets:
-    #     - form object.object.class = FileSet
-    #     - use work the file_set is in
-    #     No other object types are supported by this view. %>
+    #   +form object.class = SimpleForm::FormBuilder+
+    #    For works (i.e. GenericWork):
+    #    * form object.object = Hyrax::GenericWorkForm
+    #    * form object.object.model = GenericWork
+    #    * use the work itself
+    #    For file_sets:
+    #    * form object.object.class = FileSet
+    #    * use work the file_set is in
+    #    No other object types are supported by this view.
     def self.build_service_object_from(form:, ability:)
       if form.object.respond_to?(:model) && form.object.model.work?
         new(object: form.object, ability: ability)
@@ -33,7 +37,9 @@ module Hyrax
 
     attr_reader :depositor, :unauthorized_collection_managers
 
-    # @param object [#depositor, #admin_set_id, #member_of_collection_ids] GenericWorkForm (if called for object) or GenericWork (if called for file set)
+    ##
+    # @param object [#depositor, #admin_set_id, #member_of_collection_ids]
+    #   +GenericWorkForm+ (if called for object) or +GenericWork+ (if called for file set)
     # @param ability [Ability] user's current_ability
     def initialize(object:, ability:)
       @object = object
@@ -47,7 +53,7 @@ module Hyrax
     # @api private
     # @todo refactor this code to use "can_edit?"; Thinking in negations can be challenging.
     #
-    # @param permission_hash [Hash] one set of permission fields for object {:name, :access}
+    # @param permission_hash [Hash] one set of permission fields for object +:name+, :access}
     # @return [Boolean] true if user cannot edit the given permissions
     def cannot_edit_permissions?(permission_hash)
       permission_hash.fetch(:access) == "edit" && @unauthorized_managers.include?(permission_hash.fetch(:name))
@@ -55,7 +61,7 @@ module Hyrax
 
     # @api private
     #
-    # @param permission_hash [Hash] one set of permission fields for object {:name, :access}
+    # @param permission_hash [Hash] one set of permission fields for object +:name+, +:access+
     # @return [Boolean] true if given permissions are one of fixed exclusions
     def excluded_permission?(permission_hash)
       exclude_from_display.include? permission_hash.fetch(:name).downcase
@@ -68,9 +74,10 @@ module Hyrax
     # * returns false if the given permission_hash is part of the fixed exclusions.
     # * yields a PermissionPresenter to provide additional logic and text for rendering
     #
-    # @param permission_hash [Hash<:name, :access>]
-    # @return false if the given permission_hash is a fixed exclusion
-    # @yield PermissionPresenter
+    # @param permission_hash [Hash{Symbol => Object}]
+    #
+    # @return [Boolean] +false+ if the given +permission_hash+ is a fixed exclusion
+    # @yield [PermissionPresenter]
     #
     # @see #excluded_permission?
     def with_applicable_permission(permission_hash:)
@@ -81,7 +88,7 @@ module Hyrax
     # @api private
     #
     # A helper class to contain specific presentation logic related to
-    # the EditPermissionsService
+    # the {EditPermissionsService}
     class PermissionPresenter
       # @param service [Hyrax::EditPermissionsService]
       # @param permission_hash [Hash]
@@ -158,38 +165,64 @@ module Hyrax
     # find all of the work's collections a user can manage
     # @return [Array] of collection ids
     def object_managed_collection_ids
-      @object_managed_collection_ids ||= object_member_of & managed_collection_ids
+      @object_managed_collection_ids ||= object_member_of_ids & managed_collection_ids
     end
 
-    # find all of the work's collections a user cannot manage
-    # note: if the collection type doesn't include "sharing_applies_to_new_works", we don't limit access
+    # find all of the work's collections a user cannot manage note: if
+    # the collection type doesn't include
+    # "sharing_applies_to_new_works", we don't limit access
+    #
     # @return [Array] of collection ids with limited access
     def object_unauthorized_collection_ids
       @object_unauthorized_collection_ids ||= begin
-                                                limited_access = []
-                                                unauthorized_collection_ids = object_member_of - object_managed_collection_ids
-                                                if unauthorized_collection_ids.any?
-                                                  unauthorized_collection_ids.each do |id|
-                                                    # TODO: Can we instead use a SOLR query?  This seems to be somewhat expensive.  However, as this is
-                                                    # used in administration instead of user front-end displays, I'm not as concerned.
-                                                    collection = ActiveFedora::Base.find(id)
-                                                    limited_access << id if (collection.instance_of? AdminSet) || collection.share_applies_to_new_works?
-                                                  end
+                                                unauthorized_collection_ids = object_member_of_ids - object_managed_collection_ids
+                                                qualified_resources = Hyrax.query_service.find_many_by_ids(ids: unauthorized_collection_ids).select do |resource|
+                                                  qualifies_as_unauthorized_collection?(resource: resource)
                                                 end
-                                                limited_access
+                                                qualified_resources.map { |resource| resource.id.to_s }
                                               end
+    end
+
+    # Does the given resource qualify as a collection the current user cannot manage.
+    #
+    # @see {#object_unauthorized_collection_ids}
+    #
+    # @param resource [Valkyrie::Resource, AdminSet, Collection, #collection_type_gid, #share_applies_to_new_works?]
+    #     the given resource, hopefully a collection-like thing
+    #     (e.g. AdminSet, Hyrax::AdminSet, Hyrax::PcdmCollection,
+    #     Collection)
+    #
+    # @return [Boolean]
+    #
+    # @todo Refactor inner working of code as there's lots of branching logic with potential hidden assumptions.
+    def qualifies_as_unauthorized_collection?(resource:)
+      case resource
+      when AdminSet, Hyrax::AdministrativeSet
+        # Prior to this refactor, we looked at AdminSet only; However with the advent of the
+        # Hyrax::AdministrativeSet, we need to test both cases.
+        true
+      else
+        if resource.respond_to?(:share_applies_to_new_works?)
+          # The Collection model has traditionally delegated #share_applies_to_new_works? to
+          # the underlying collection_type
+          # (see https://github.com/samvera/hyrax/blob/696da5db/spec/models/collection_spec.rb#L189)
+          resource.share_applies_to_new_works?
+        elsif resource.respond_to?(:collection_type_gid)
+          # This is likely a Hyrax::PcdmCollection object, which means we don't have the delegation
+          # behavior.  Instead we'll query the collection type directly.
+          collection_type = CollectionType.find_by_gid(resource.collection_type_gid)
+          collection_type&.share_applies_to_new_works?
+        else
+          # How might we get here?
+          false
+        end
+      end
     end
 
     # find all of the collection ids an object is a member of
     # @return [Array] array of collection ids
-    def object_member_of
-      @object_member_of ||= begin
-                              belongs_to = []
-                              # get all of work's collection ids from the form
-                              belongs_to += @object.member_of_collection_ids
-                              belongs_to << @object.admin_set_id if @object.admin_set_id.present?
-                              belongs_to
-                            end
+    def object_member_of_ids
+      @object_member_of_ids ||= (@object.member_of_collection_ids + [@object.admin_set_id]).select(&:present?)
     end
 
     # The list of all collections this user has manage rights on

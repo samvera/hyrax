@@ -13,6 +13,8 @@ module Hyrax
   #
   # @see https://github.com/projectblacklight/blacklight/wiki/Understanding-Rails-and-Blacklight#models
   module SolrDocumentBehavior
+    ModelWrapper = ActiveFedoraDummyModel # alias for backward compatibility
+
     extend ActiveSupport::Concern
     include Hydra::Works::MimeTypes
     include Hyrax::Permissions::Readable
@@ -40,63 +42,12 @@ module Hyrax
     end
 
     ##
-    # Given a model class and an +id+, provides +ActiveModel+ style model methods.
-    #
-    # @note access this via {SolrDocumentBehavior#to_model}.
-    class ModelWrapper
-      ##
-      # @api private
-      #
-      # @param [Class] model
-      # @param [String, nil] id
-      def initialize(model, id)
-        @model = model
-        @id = id
-      end
-
-      ##
-      # @api public
-      def persisted?
-        true
-      end
-
-      ##
-      # @api public
-      def to_param
-        @id
-      end
-
-      ##
-      # @api public
-      def model_name
-        @model.model_name
-      end
-
-      ##
-      # @api public
-      #
-      # @note uses the @model's `._to_partial_path` if implemented, otherwise
-      #   constructs a default
-      def to_partial_path
-        return @model._to_partial_path if
-          @model.respond_to?(:_to_partial_path)
-
-        "hyrax/#{model_name.collection}/#{model_name.element}"
-      end
-
-      ##
-      # @api public
-      def to_global_id
-        URI::GID.build app: GlobalID.app, model_name: model_name.name, model_id: @id
-      end
-    end
-    ##
     # Offer the source model to Rails for some of the Rails methods (e.g. link_to).
     #
     # @example
     #   link_to '...', SolrDocument(:id => 'bXXXXXX5').new => <a href="/dams_object/bXXXXXX5">...</a>
     def to_model
-      @model ||= ModelWrapper.new(hydra_model, id)
+      @model ||= ActiveFedoraDummyModel.new(hydra_model, id)
     end
 
     ##
@@ -115,6 +66,12 @@ module Hyrax
     # @return [Boolean]
     def admin_set?
       hydra_model == ::AdminSet
+    end
+
+    ##
+    # @return [Boolean]
+    def work?
+      Hyrax.config.curation_concerns.include? hydra_model
     end
 
     # Method to return the model

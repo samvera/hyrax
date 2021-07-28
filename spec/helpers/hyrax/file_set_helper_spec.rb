@@ -1,5 +1,26 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::FileSetHelper do
+  describe '#display_media_download_link?' do
+    let(:ability)  { double(Ability) }
+    let(:file_set) { FactoryBot.create(:file_set) }
+
+    before do
+      allow(controller).to receive(:current_ability).and_return(ability)
+    end
+
+    it 'does not allow download when permissions restrict it' do
+      allow(ability).to receive(:can?).with(:download, file_set).and_return(false)
+
+      expect(helper.display_media_download_link?(file_set: file_set)).to eq false
+    end
+
+    it 'allows download when permissions allow it ' do
+      allow(ability).to receive(:can?).with(:download, file_set).and_return(true)
+
+      expect(helper.display_media_download_link?(file_set: file_set)).to eq true
+    end
+  end
+
   describe '#media_display' do
     let(:file_set) { SolrDocument.new(mime_type_ssi: mime_type) }
     let(:mime_type) { 'image/tiff' }

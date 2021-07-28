@@ -11,7 +11,7 @@ module Hyrax
 
     def to_solr # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
       super.tap do |solr_doc|
-        solr_doc['generic_type_sim'] = ['Work']
+        solr_doc['generic_type_si'] = 'Work'
         solr_doc['suppressed_bsi'] = suppressed?(resource)
         solr_doc['admin_set_id_ssim'] = [resource.admin_set_id.to_s]
         solr_doc['member_of_collection_ids_ssim'] = resource.member_of_collection_ids.map(&:to_s)

@@ -20,6 +20,9 @@ spec:
         {{- include "hyrax.selectorLabels" . | nindent 8 }}
     spec:
       initContainers:
+        {{- if .Values.worker.extraInitContainers }}
+        {{- toYaml .Values.worker.extraInitContainers | nindent 8 }}
+        {{- end }}
         - name: db-wait
           image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
@@ -33,14 +36,18 @@ spec:
           command:
             - sh
             - -c
-            - db-wait.sh "$DB_HOST:$DB_PORT"
-            - db-wait.sh "$FCREPO_HOST:$FCREPO_PORT"
-            - db-wait.sh "$SOLR_HOST:$SOLR_PORT"
+            - db-wait.sh "$REDIS_HOST:6379"
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ include "hyrax.serviceAccountName" . }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.worker.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}-worker
+          securityContext:
+            {{- toYaml .Values.worker.securityContext | nindent 12 }}
           image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
           envFrom:
@@ -48,6 +55,13 @@ spec:
                 name: {{ include "hyrax.fullname" . }}-env
             - secretRef:
                 name: {{ template "hyrax.fullname" . }}
+            {{- if .Values.solrExistingSecret }}
+            - secretRef:
+                name: {{ .Values.solrExistingSecret }}
+            {{- end }}
+            {{- with .Values.worker.extraEnvFrom }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
           env:
             {{- toYaml .Values.worker.extraEnvVars | nindent 12 }}
           volumeMounts:
@@ -68,6 +82,9 @@ spec:
             {{- end }}
           resources:
             {{- toYaml .Values.worker.resources | nindent 12 }}
+          {{- with .Values.extraContainerConfiguration }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
       volumes:
         - name: "derivatives"
           {{- if and .Values.derivativesVolume.enabled .Values.derivativesVolume.existingClaim }}

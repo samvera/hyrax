@@ -7,7 +7,7 @@ services:
       target: hyrax-engine-dev
       args:
         - EXTRA_APK_PACKAGES=git less
-    image: hyrax-engine-dev
+    image: ghcr.io/samvera/dassie
     stdin_open: true
     tty: true
     user: root
@@ -33,6 +33,8 @@ services:
       - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
       - rails-public:/app/samvera/hyrax-webapp/public
       - rails-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - hyrax
 
   chrome:
     image: selenium/standalone-chrome:3.141
@@ -44,9 +46,11 @@ services:
     ports:
       - "4444:4444"
       - "5959:5900"
+    networks:
+      - hyrax
 
   db_migrate:
-    image: hyrax-engine-dev
+    image: ghcr.io/samvera/dassie
     user: root
     env_file:
       - .env
@@ -59,6 +63,8 @@ services:
       - .:/app/samvera/hyrax-engine:cached
       - rails-public:/app/samvera/hyrax-webapp/public
       - rails-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - hyrax
 
   postgres:
     image: postgres:latest
@@ -72,31 +78,48 @@ services:
       - "5432:5432"
     volumes:
       - db:/var/lib/postgresql/data
+    networks:
+      - hyrax
 
   fcrepo:
-    image: samvera/fcrepo4:4.7.5
+    image: ghcr.io/samvera/fcrepo4:4.7.5
     volumes:
       - fcrepo:/data:cached
     ports:
       - 8080:8080
+    networks:
+      - hyrax
 
   memcached:
     image: bitnami/memcached
     ports:
       - '11211:11211'
+    networks:
+      - hyrax
 
   redis:
     image: redis:5-alpine
     volumes:
       - redis:/data
+    networks:
+      - hyrax
 
   sidekiq:
     build:
       context: .
       target: hyrax-engine-dev-worker
+    image: ghcr.io/samvera/dassie-worker
+    user: root
     env_file:
       - .env
       - .dassie/.env
+    depends_on:
+      - db_migrate
+      - fcrepo
+      - memcached
+      - postgres
+      - redis
+      - solr
     volumes:
       - .dassie:/app/samvera/hyrax-webapp:cached
       - .:/app/samvera/hyrax-engine:cached
@@ -104,6 +127,8 @@ services:
       - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
       - sidekiq-public:/app/samvera/hyrax-webapp/public
       - sidekiq-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - hyrax
 
   solr:
     image: solr:8.7
@@ -112,10 +137,12 @@ services:
     command:
       - sh
       - "-c"
-      - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf; precreate-core hyrax-valkyrie-test /opt/solr/server/configsets/hyraxconf; solr-precreate hyrax /opt/solr/server/configsets/hyraxconf"
+      - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf; precreate-core hyrax-valkyrie-test /opt/solr/server/configsets/hyraxconf; precreate-core hyrax-valkyrie-dev /opt/solr/server/configsets/hyraxconf; solr-precreate hyrax /opt/solr/server/configsets/hyraxconf"
     volumes:
       - solr_home:/var/solr/data:cached
       - .dassie/solr/conf:/opt/solr/server/configsets/hyraxconf
+    networks:
+      - hyrax
 
 volumes:
   db:
@@ -128,3 +155,9 @@ volumes:
   sidekiq-public:
   sidekiq-tmp:
   solr_home:
+
+networks:
+  hyrax:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-hyrax

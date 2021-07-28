@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 RSpec.describe InheritPermissionsJob do
-  let(:user) { create(:user) }
-  let(:work) { create(:work_with_one_file, user: user) }
+  let(:user) { FactoryBot.create(:user) }
+  let(:work) { FactoryBot.create(:work_with_one_file, user: user) }
 
-  context "when use_valkyrie is false" do
+  context "when using a legacy AF resource" do
     before do
       work.permissions.build(name: name, type: type, access: access)
       work.save
@@ -18,7 +18,7 @@ RSpec.describe InheritPermissionsJob do
         # files have the depositor as the edit user to begin with
         expect(work.file_sets.first.edit_users).to eq [user.to_s]
 
-        described_class.perform_now(work, use_valkyrie: false)
+        described_class.perform_now(work)
 
         file_sets = work.reload.file_sets
         expect(file_sets.count).to eq 1
@@ -36,7 +36,7 @@ RSpec.describe InheritPermissionsJob do
           # files have the depositor as the edit user to begin with
           expect(work.file_sets.first.edit_users).to eq [user.to_s, "remove_me"]
 
-          described_class.perform_now(work, use_valkyrie: false)
+          described_class.perform_now(work)
 
           file_sets = work.reload.file_sets
           expect(file_sets.count).to eq 1
@@ -54,7 +54,7 @@ RSpec.describe InheritPermissionsJob do
         # files have no read users to begin with
         expect(work.file_sets.first.read_users).to eq []
 
-        described_class.perform_now(work, use_valkyrie: false)
+        described_class.perform_now(work)
 
         file_sets = work.reload.file_sets
         expect(file_sets.count).to eq 1
@@ -72,7 +72,7 @@ RSpec.describe InheritPermissionsJob do
         # files have no read groups to begin with
         expect(work.file_sets.first.read_groups).to eq []
 
-        described_class.perform_now(work, use_valkyrie: false)
+        described_class.perform_now(work)
 
         file_sets = work.reload.file_sets
         expect(file_sets.count).to eq 1
@@ -90,7 +90,7 @@ RSpec.describe InheritPermissionsJob do
         # files have the depositor as the edit user to begin with
         expect(work.file_sets.first.read_groups).to eq []
 
-        described_class.perform_now(work, use_valkyrie: false)
+        described_class.perform_now(work)
 
         file_sets = work.reload.file_sets
         expect(file_sets.count).to eq 1
@@ -100,10 +100,10 @@ RSpec.describe InheritPermissionsJob do
     end
   end
 
-  context "when use_valkyrie is true" do
-    let(:resource) { valkyrie_create(:hyrax_work, edit_users: [user]) }
-    let(:file_set) { valkyrie_create(:hyrax_file_set) }
-    let(:user2) { create(:user) }
+  context "when passed a valkyrie model", valkyrie_adapter: :test_adapter do
+    let(:resource) { FactoryBot.valkyrie_create(:hyrax_work, edit_users: [user]) }
+    let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
+    let(:user2) { FactoryBot.create(:user) }
 
     before do
       resource.member_ids = Array(file_set.id)
@@ -120,7 +120,7 @@ RSpec.describe InheritPermissionsJob do
         expect(file_sets.count).to eq 1
         expect(file_sets[0].edit_users).to match_array [user.to_s]
 
-        described_class.perform_now(resource, use_valkyrie: true)
+        described_class.perform_now(resource)
 
         # files have both edit users from parent resource
         file_sets = Hyrax.query_service.custom_queries.find_child_filesets(resource: resource)
@@ -130,24 +130,22 @@ RSpec.describe InheritPermissionsJob do
     end
 
     context "when people should be removed" do
-      context "when use_valkyrie is true" do
-        it 'copies permissions to its contained files' do
-          file_set.permission_manager.acl.grant(:edit).to(user2).save
-          # work has the depositor as the edit user to begin with
-          expect(resource.edit_users).to match_array [user.to_s]
+      it 'copies permissions to its contained files' do
+        file_set.permission_manager.acl.grant(:edit).to(user2).save
+        # work has the depositor as the edit user to begin with
+        expect(resource.edit_users).to match_array [user.to_s]
 
-          # files have the depositor and extra user as the edit users to begin with
-          file_sets = Hyrax.query_service.custom_queries.find_child_filesets(resource: resource)
-          expect(file_sets.count).to eq 1
-          expect(file_sets[0].edit_users).to match_array [user.to_s, user2.to_s]
+        # files have the depositor and extra user as the edit users to begin with
+        file_sets = Hyrax.query_service.custom_queries.find_child_filesets(resource: resource)
+        expect(file_sets.count).to eq 1
+        expect(file_sets[0].edit_users).to match_array [user.to_s, user2.to_s]
 
-          described_class.perform_now(resource, use_valkyrie: true)
+        described_class.perform_now(resource)
 
-          # files have single edit user from parent resource
-          file_sets = Hyrax.query_service.custom_queries.find_child_filesets(resource: resource)
-          expect(file_sets.count).to eq 1
-          expect(file_sets[0].edit_users).to match_array [user.to_s]
-        end
+        # files have single edit user from parent resource
+        file_sets = Hyrax.query_service.custom_queries.find_child_filesets(resource: resource)
+        expect(file_sets.count).to eq 1
+        expect(file_sets[0].edit_users).to match_array [user.to_s]
       end
     end
 
@@ -161,7 +159,7 @@ RSpec.describe InheritPermissionsJob do
         expect(file_sets.count).to eq 1
         expect(file_sets[0].read_users.to_a).to be_empty
 
-        described_class.perform_now(resource, use_valkyrie: true)
+        described_class.perform_now(resource)
 
         # files have the specified read user
         file_sets = Hyrax.query_service.custom_queries.find_child_filesets(resource: resource)
@@ -179,7 +177,7 @@ RSpec.describe InheritPermissionsJob do
         # work has the specified read group to begin with
         expect(resource.read_groups).to match_array ["my_read_group"]
 
-        described_class.perform_now(resource, use_valkyrie: true)
+        described_class.perform_now(resource)
 
         # files have the specified read group
         file_sets = Hyrax.query_service.custom_queries.find_child_filesets(resource: resource)
@@ -198,7 +196,7 @@ RSpec.describe InheritPermissionsJob do
         # work has the specified edit group to begin with
         expect(resource.edit_groups).to match_array ["my_edit_group"]
 
-        described_class.perform_now(resource, use_valkyrie: true)
+        described_class.perform_now(resource)
 
         # files have the specified edit group
         file_sets = Hyrax.query_service.custom_queries.find_child_filesets(resource: resource)

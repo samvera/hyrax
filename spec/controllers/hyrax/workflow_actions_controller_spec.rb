@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::WorkflowActionsController, type: :controller do
-  let(:user) { create(:user) }
-  let(:generic_work) { stub_model(GenericWork, id: '123') }
-  let(:form) { instance_double(Hyrax::Forms::WorkflowActionForm) }
+  let(:user) { FactoryBot.create(:user) }
+  let(:generic_work) { FactoryBot.create(:work) }
+  let(:form) { instance_double(described_class::DEFAULT_FORM_CLASS) }
 
   routes { Rails.application.routes }
 
   before do
-    allow(ActiveFedora::Base).to receive(:find).with(generic_work.to_param).and_return(generic_work)
-    allow(generic_work).to receive(:persisted?).and_return(true)
-    allow(Hyrax::Forms::WorkflowActionForm).to receive(:new).and_return(form)
+    allow(described_class::DEFAULT_FORM_CLASS).to receive(:new).and_return(form)
   end
 
   describe '#update' do

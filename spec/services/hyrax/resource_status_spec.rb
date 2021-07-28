@@ -16,6 +16,18 @@ RSpec.describe Hyrax::ResourceStatus do
     end
   end
 
+  describe '.inactive?' do
+    let(:resource) { fake_with_status.new(Hyrax::ResourceStatus::ACTIVE) }
+
+    it { expect(described_class.inactive?(resource: resource)).to eq false }
+
+    context 'when inactive' do
+      let(:resource) { fake_with_status.new(Hyrax::ResourceStatus::INACTIVE) }
+
+      it { expect(described_class.inactive?(resource: resource)).to eq true }
+    end
+  end
+
   describe '#active?' do
     it { is_expected.not_to be_active }
 

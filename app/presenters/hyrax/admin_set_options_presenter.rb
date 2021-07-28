@@ -4,8 +4,9 @@ module Hyrax
   class AdminSetOptionsPresenter
     ##
     # @param [Hyrax::AdminSetService] service
-    def initialize(service)
+    def initialize(service, current_ability: service.context.current_ability)
       @service = service
+      @current_ability = current_ability
     end
 
     # Return AdminSet selectbox options based on access type
@@ -49,14 +50,17 @@ module Hyrax
 
     # Does the workflow for the currently selected permission template allow sharing?
     def sharing?(permission_template:)
-      wf = workflow(permission_template: permission_template)
-      return false unless wf
-      wf.allows_access_grant?
-    end
+      # This short-circuit builds on a stated "promise" in the UI of
+      # editing an admin set:
+      #
+      # > Managers of this administrative set can edit the set
+      # > metadata, participants, and release and visibility
+      # > settings. Managers can also edit work metadata, add to or
+      # > remove files from a work, and add new works to the set.
+      return true if @current_ability.can?(:manage, permission_template)
 
-    def workflow(permission_template:)
-      return unless permission_template.active_workflow
-      Sipity::Workflow.find_by!(id: permission_template.active_workflow.id)
+      # Otherwise, we check if the active workflow allows access grants
+      !!permission_template.active_workflow&.allows_access_grant?
     end
   end
 end

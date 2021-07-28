@@ -110,7 +110,7 @@ module Wings
     private
 
     def mint_id
-      id = pcdm_object.assign_id
+      id = pcdm_object.try(:assign_id)
 
       pcdm_object.id = id if id.present?
     end
@@ -121,6 +121,7 @@ module Wings
 
       append_embargo(result)
       append_lease(result)
+      append_permissions(result)
 
       result
     end
@@ -167,6 +168,21 @@ module Wings
       lease_attrs[:id] = ::Valkyrie::ID.new(lease_attrs[:id]) if lease_attrs[:id]
 
       attrs[:lease] = Hyrax::Lease.new(**lease_attrs)
+    end
+
+    def append_permissions(attrs)
+      return unless pcdm_object.try(:permissions)
+      attrs[:permissions] = pcdm_object.permissions.map do |permission|
+        agent = permission.type == 'group' ? "group/#{permission.agent_name}" : permission.agent_name
+
+        Hyrax::Permission.new(id: permission.id,
+                              mode: permission.access.to_sym,
+                              agent: agent,
+                              access_to: ::Valkyrie::ID.new(permission.access_to_id),
+                              new_record: permission.new_record?)
+      end
+
+      attrs[:access_to] = attrs[:permissions].find { |p| p.access_to&.id&.present? }&.access_to
     end
   end
 end

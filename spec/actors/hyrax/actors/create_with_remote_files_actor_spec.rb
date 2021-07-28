@@ -97,7 +97,6 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
       let(:file) { "file:///local/otherdir/test.txt" }
 
       it "doesn't attach files" do
-        expect(actor).to receive(:validate_remote_url).and_call_original
         expect(IngestLocalFileJob).not_to receive(:perform_later)
         expect(actor.create(environment)).to be false
       end
@@ -113,25 +112,27 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
     end
   end
 
-  describe "#validate_remote_url" do
+  describe "IngestRemoteFilesService.validate_remote_url" do
     before do
       allow(Hyrax.config).to receive(:registered_ingest_dirs).and_return(['/test/', '/local/file/'])
     end
 
+    let(:service_class) { described_class::IngestRemoteFilesService }
+
     it "accepts file: urls in registered directories" do
-      expect(actor.send(:validate_remote_url, URI('file:///local/file/test.txt'))).to be true
-      expect(actor.send(:validate_remote_url, URI('file:///local/file/subdirectory/test.txt'))).to be true
-      expect(actor.send(:validate_remote_url, URI('file:///test/test.txt'))).to be true
+      expect(service_class.validate_remote_url(URI('file:///local/file/test.txt'))).to be true
+      expect(service_class.validate_remote_url(URI('file:///local/file/subdirectory/test.txt'))).to be true
+      expect(service_class.validate_remote_url(URI('file:///test/test.txt'))).to be true
     end
 
     it "rejects file: urls outside registered directories" do
-      expect(actor.send(:validate_remote_url, URI('file:///tmp/test.txt'))).to be false
-      expect(actor.send(:validate_remote_url, URI('file:///test/../tmp/test.txt'))).to be false
-      expect(actor.send(:validate_remote_url, URI('file:///test/'))).to be false
+      expect(service_class.validate_remote_url(URI('file:///tmp/test.txt'))).to be false
+      expect(service_class.validate_remote_url(URI('file:///test/../tmp/test.txt'))).to be false
+      expect(service_class.validate_remote_url(URI('file:///test/'))).to be false
     end
 
     it "accepts other types of urls" do
-      expect(actor.send(:validate_remote_url, URI('https://example.com/test.txt'))).to be true
+      expect(service_class.validate_remote_url(URI('https://example.com/test.txt'))).to be true
     end
   end
 
@@ -206,7 +207,6 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
         let(:file) { "file:///local/otherdir/test.txt" }
 
         it "doesn't attach files" do
-          expect(actor).to receive(:validate_remote_url).and_call_original
           expect(IngestLocalFileJob).not_to receive(:perform_later)
           expect(actor.create(environment)).to be false
         end
@@ -227,20 +227,22 @@ RSpec.describe Hyrax::Actors::CreateWithRemoteFilesActor do
         allow(Hyrax.config).to receive(:registered_ingest_dirs).and_return(['/test/', '/local/file/'])
       end
 
+      let(:service_class) { described_class::IngestRemoteFilesService }
+
       it "accepts file: urls in registered directories" do
-        expect(actor.send(:validate_remote_url, URI('file:///local/file/test.txt'))).to be true
-        expect(actor.send(:validate_remote_url, URI('file:///local/file/subdirectory/test.txt'))).to be true
-        expect(actor.send(:validate_remote_url, URI('file:///test/test.txt'))).to be true
+        expect(service_class.validate_remote_url(URI('file:///local/file/test.txt'))).to be true
+        expect(service_class.validate_remote_url(URI('file:///local/file/subdirectory/test.txt'))).to be true
+        expect(service_class.validate_remote_url(URI('file:///test/test.txt'))).to be true
       end
 
       it "rejects file: urls outside registered directories" do
-        expect(actor.send(:validate_remote_url, URI('file:///tmp/test.txt'))).to be false
-        expect(actor.send(:validate_remote_url, URI('file:///test/../tmp/test.txt'))).to be false
-        expect(actor.send(:validate_remote_url, URI('file:///test/'))).to be false
+        expect(service_class.validate_remote_url(URI('file:///tmp/test.txt'))).to be false
+        expect(service_class.validate_remote_url(URI('file:///test/../tmp/test.txt'))).to be false
+        expect(service_class.validate_remote_url(URI('file:///test/'))).to be false
       end
 
       it "accepts other types of urls" do
-        expect(actor.send(:validate_remote_url, URI('https://example.com/test.txt'))).to be true
+        expect(service_class.validate_remote_url(URI('https://example.com/test.txt'))).to be true
       end
     end
   end

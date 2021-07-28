@@ -11,12 +11,14 @@ module Hyrax
 
       attr_reader :field, :values, :options
 
+      ##
       # @param [Symbol] field
       # @param [Array] values
       # @param [Hash] options
       # @option options [String] :label The field label to render
       # @option options [String] :include_empty Do we render if if the values are empty?
       # @option options [String] :work_type Used for some I18n logic
+      # @option options [Boolean] :sort sort the values with +Array#sort+ if truthy
       def initialize(field, values, options = {})
         @field = field
         @values = values
@@ -31,7 +33,10 @@ module Hyrax
 
         attributes = microdata_object_attributes(field).merge(class: "attribute attribute-#{field}")
 
-        markup += Array(values).map do |value|
+        values_array = Array(values)
+        values_array = values_array.sort if options[:sort]
+
+        markup += values_array.map do |value|
           "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value.to_s)}</li>"
         end.join
 
@@ -48,7 +53,10 @@ module Hyrax
 
         attributes = microdata_object_attributes(field).merge(class: "attribute attribute-#{field}")
 
-        markup += Array(values).map do |value|
+        values_array = Array(values)
+        values_array.sort! if options[:sort]
+
+        markup += values_array.map do |value|
           "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value.to_s)}</li>"
         end.join
         markup += %(</ul></dd>)

@@ -94,7 +94,7 @@ module Hyrax
       return nil if representative_id.blank?
       @representative_presenter ||=
         begin
-          result = member_presenters_for([representative_id]).first
+          result = member_presenters([representative_id]).first
           return nil if result.try(:id) == id
           result.try(:representative_presenter) || result
         end
@@ -132,8 +132,13 @@ module Hyrax
       graph.dump(:ttl)
     end
 
+    ##
+    # @deprecated use `::Ability.can?(:edit, presenter)`. Hyrax views calling
+    #   presenter {#editor} methods will continue to call them until Hyrax
+    #   4.0.0. The deprecation time horizon for the presenter methods themselves
+    #   is 5.0.0.
     def editor?
-      current_ability.can?(:edit, solr_document)
+      current_ability.can?(:edit, self)
     end
 
     def tweeter
@@ -181,9 +186,13 @@ module Hyrax
       paginated_item_list(page_array: authorized_item_ids)
     end
 
+    ##
+    # @deprecated use `#member_presenters(ids)` instead
+    #
     # @param [Array<String>] ids a list of ids to build presenters for
     # @return [Array<presenter_class>] presenters for the array of ids (not filtered by class)
     def member_presenters_for(an_array_of_ids)
+      Deprecation.warn("Use `#member_presenters` instead.")
       member_presenters(an_array_of_ids)
     end
 
@@ -219,9 +228,25 @@ module Hyrax
       end
     end
 
-    # determine if the user can add this work to a collection
-    # @param collections [Array<::Collection>] list of collections to which this user can deposit
-    # @return true if the user can deposit to at least one collection OR if the user can create a collection; otherwise, false
+    ##
+    # @return [Integer]
+    def member_count
+      @member_count ||= member_presenters.count
+    end
+
+    ##
+    # Given a set of collections, which the caller asserts the current ability
+    # can deposit to, decide whether to display actions to add this work to a
+    # collection.
+    #
+    # By default, this returns `true` if any collections are passed in OR the
+    # current ability can create a collection.
+    #
+    # @param collections [Enumerable<::Collection>, nil] list of collections to
+    #   which the current ability can deposit
+    #
+    # @return [Boolean] a flag indicating whether to display collection deposit
+    #   options.
     def show_deposit_for?(collections:)
       collections.present? || current_ability.can?(:create_any, ::Collection)
     end

@@ -1,57 +1,51 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::PermissionsController do
-  let(:user) { create(:user) }
+  let(:user) { FactoryBot.create(:user) }
 
-  before do
-    sign_in user
-    allow(ActiveFedora::Base).to receive(:find).with(work.id).and_return(work)
-  end
+  before { sign_in user }
 
-  describe '#confirm' do
-    let(:work) { build(:generic_work, user: user, id: 'abc') }
+  context 'with legacy AF models' do
+    describe '#confirm_access' do
+      let(:work) { FactoryBot.create(:generic_work, user: user) }
 
-    before do
-      # https://github.com/samvera/active_fedora/issues/1251
-      allow(work).to receive(:persisted?).and_return(true)
+      it 'draws the page' do
+        get :confirm_access, params: { id: work }
+        expect(response).to be_successful
+      end
     end
 
-    it 'draws the page' do
-      get :confirm, params: { id: work }
-      expect(response).to be_successful
+    describe '#copy' do
+      let(:work) { FactoryBot.create(:generic_work, user: user) }
+
+      it 'adds a worker to the queue' do
+        expect { post :copy, params: { id: work } }
+          .to have_enqueued_job(VisibilityCopyJob)
+          .with(work)
+
+        expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
+        expect(flash[:notice]).to eq 'Updating file permissions. This may take a few minutes. You may want to refresh your browser or return to this record later to see the updated file permissions.'
+      end
     end
-  end
 
-  describe '#copy' do
-    let(:work) { create(:generic_work, user: user) }
+    describe '#copy_access' do
+      let(:work) { FactoryBot.create(:work_with_one_file, user: user) }
 
-    it 'adds a worker to the queue' do
-      expect(VisibilityCopyJob).to receive(:perform_later).with(work)
-      post :copy, params: { id: work }
-      expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
-      expect(flash[:notice]).to eq 'Updating file permissions. This may take a few minutes. You may want to refresh your browser or return to this record later to see the updated file permissions.'
-    end
-  end
+      it 'adds VisibilityCopyJob to the queue' do
+        expect { post :copy_access, params: { id: work } }
+          .to have_enqueued_job(VisibilityCopyJob)
+          .with(work)
 
-  describe '#confirm_access' do
-    let(:work) { create(:work_with_one_file, user: user) }
+        expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
+        expect(flash[:notice]).to eq 'Updating file access levels. This may take a few minutes. ' \
+                                     'You may want to refresh your browser or return to this record ' \
+                                     'later to see the updated file access levels.'
+      end
 
-    it 'draws the page' do
-      get :confirm_access, params: { id: work }
-      expect(response).to be_successful
-    end
-  end
-
-  describe '#copy_access' do
-    let(:work) { create(:work_with_one_file, user: user) }
-
-    it 'adds a worker to the queue' do
-      expect(VisibilityCopyJob).to receive(:perform_later).with(work)
-      expect(InheritPermissionsJob).to receive(:perform_later).with(work)
-      post :copy_access, params: { id: work }
-      expect(response).to redirect_to main_app.hyrax_generic_work_path(work, locale: 'en')
-      expect(flash[:notice]).to eq 'Updating file access levels. This may take a few minutes. ' \
-                                   'You may want to refresh your browser or return to this record ' \
-                                   'later to see the updated file access levels.'
+      it 'adds InheritPermisionsJob to the queue' do
+        expect { post :copy_access, params: { id: work } }
+          .to have_enqueued_job(InheritPermissionsJob)
+          .with(work)
+      end
     end
   end
 end

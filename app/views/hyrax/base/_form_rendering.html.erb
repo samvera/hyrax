@@ -7,7 +7,7 @@
       <div class="form-group">
         <span class="help-block"><%= t("hyrax.base.form_rendering.help_html") %></span>
         <%= f.select :rendering_ids,
-                    f.object.select_files,
+                    form_file_set_select_for(parent: f.object),
                     { include_blank: true },
                     { class: 'form-control', multiple: true } %>
       </div>

@@ -24,6 +24,25 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
   end
 
   describe '#convert' do
+    context 'with an invalid GenericWork object' do
+      it 'round trip converts to an GenericWork object this is also invalid' do
+        work = GenericWork.new(title: nil)
+        expect(work).not_to be_valid
+        converted_work = described_class.new(resource: work.valkyrie_resource).convert
+        expect(converted_work).not_to be_valid
+        expect(work.errors.full_messages).to eq(converted_work.errors.full_messages)
+      end
+    end
+    context 'with an invalid FileSet object' do
+      it 'round trip converts to an FileSet object this is also invalid' do
+        file_set = ::FileSet.new(lease_expiration_date: 1.day.ago)
+        expect(file_set).not_to be_valid
+        converted_file_set = described_class.new(resource: file_set.valkyrie_resource).convert
+        expect(converted_file_set).not_to be_valid
+        expect(file_set.errors.full_messages).to eq(converted_file_set.errors.full_messages)
+      end
+    end
+
     it 'returns the ActiveFedora model' do
       expect(converter.convert).to eq work
     end

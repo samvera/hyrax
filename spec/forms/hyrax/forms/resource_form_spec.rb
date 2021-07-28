@@ -204,6 +204,15 @@ RSpec.describe Hyrax::Forms::ResourceForm do
         .from(be_empty)
     end
 
+    # Github Issue #4900
+    it 'validates an empty nested value' do
+      form.validate(
+        "permissions_attributes" => {
+          "1" => { "type" => "person", "name" => "basic_user@example.com", "access" => "edit" }
+        }
+      )
+    end
+
     context 'with existing permissions' do
       let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :public) }
 

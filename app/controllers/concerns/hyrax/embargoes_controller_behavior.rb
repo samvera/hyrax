@@ -24,23 +24,35 @@ module Hyrax
     end
 
     # Updates a batch of embargos
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/PerceivedComplexity
     def update
       filter_docs_with_edit_access!
       copy_visibility = []
       copy_visibility = params[:embargoes].values.map { |h| h[:copy_visibility] } if params[:embargoes]
-      af_objects = Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie: false)
-      af_objects.each do |curation_concern|
-        Hyrax::Actors::EmbargoActor.new(curation_concern).destroy
-        # if the concern is a FileSet, set its visibility and visibility propagation
-        if curation_concern.file_set?
-          curation_concern.visibility = curation_concern.to_solr["visibility_after_embargo_ssim"]
-          curation_concern.save!
-        elsif copy_visibility.include?(curation_concern.id)
-          Hyrax::VisibilityPropagator.for(source: curation_concern).propagate
+      resources = Hyrax.custom_queries.find_many_by_alternate_ids(alternate_ids: batch, use_valkyrie: Hyrax.config.use_valkyrie?)
+      resources.each do |resource|
+        if Hyrax.config.use_valkyrie?
+          EmbargoManager.new(resource: resource).release!
+          Hyrax::AccessControlList(resource).save
+          Hyrax::VisibilityPropagator.for(source: resource).propagate if copy_visibility.include?(resource.id)
+        else
+          Hyrax::Actors::EmbargoActor.new(resource).destroy
+          # if the concern is a FileSet, set its visibility and visibility propagation
+          if resource.file_set?
+            resource.visibility = resource.to_solr["visibility_after_embargo_ssim"]
+            resource.save!
+          elsif copy_visibility.include?(resource.id)
+            Hyrax::VisibilityPropagator.for(source: resource).propagate
+          end
         end
       end
       redirect_to embargoes_path, notice: t('.embargo_deactivated')
     end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/PerceivedComplexity
 
     # This allows us to use the unauthorized template in curation_concerns/base
     def self.local_prefixes

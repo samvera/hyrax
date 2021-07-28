@@ -3,6 +3,7 @@ RSpec.describe "work show view" do
   include Selectors::Dashboard
 
   let(:work_path) { "/concern/generic_works/#{work.id}" }
+  let(:app_host) { Capybara.app_host || 'http://www.example.com' }
 
   before do
     FactoryBot.create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s)
@@ -50,13 +51,11 @@ RSpec.describe "work show view" do
         expect(page).to have_selector '.attribute-filename', text: 'A Contained FileSet'
       end
 
-      server_host = ENV.fetch('CAPYBARA_SERVER', 'http://www.example.com')
-
       # IIIF manifest does not include locale query param
       expect(find('div.viewer-wrapper iframe')['src']).to eq(
-        "#{server_host}/uv/uv.html#?manifest=" \
-        "#{server_host}/concern/generic_works/#{work.id}/manifest&" \
-        "config=#{server_host}/uv/uv-config.json"
+        "#{app_host}/uv/uv.html#?manifest=" \
+        "#{app_host}/concern/generic_works/#{work.id}/manifest&" \
+        "config=#{app_host}/uv/uv-config.json"
       )
     end
 
@@ -142,7 +141,7 @@ RSpec.describe "work show view" do
       expect(page).not_to have_selector "form#fileupload"
 
       # has some social media buttons
-      expect(page).to have_link '', href: "https://twitter.com/intent/tweet/?#{page_title}&url=http%3A%2F%2Fwww.example.com%2Fconcern%2Fgeneric_works%2F#{work.id}"
+      expect(page).to have_link '', href: "https://twitter.com/intent/tweet/?#{page_title}&url=#{CGI.escape(app_host)}%2Fconcern%2Fgeneric_works%2F#{work.id}"
 
       # exports EndNote
       expect(page).to have_link 'EndNote'

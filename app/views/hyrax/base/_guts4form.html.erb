@@ -4,21 +4,21 @@
     <div class="panel panel-default tabs" role="main">
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
-        <% tabs.each_with_index do | tab, i | %>
+        <% (tabs - ['share']).each_with_index do | tab, i | %>
           <% if i == 0 %>
             <li role="presentation" class="active">
           <% else %>
             <li role="presentation">
           <% end %>
               <a href="#<%= tab %>" aria-controls="<%= tab %>" role="tab" data-toggle="tab">
-                <%= t("hyrax.works.form.tab.#{tab}") %>
+                <%= form_tab_label_for(form: f.object, tab: tab) %>
               </a>
             </li>
         <% end %>
 
         <li role="presentation" id="tab-share" class="hidden">
           <a href="#share" aria-controls="share" role="tab" data-toggle="tab">
-            <%= t("hyrax.works.form.tab.share") %>
+            <%= form_tab_label_for(form: f.object, tab: 'share') %>
           </a>
         </li>
       </ul>

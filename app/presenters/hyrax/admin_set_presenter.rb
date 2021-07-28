@@ -12,7 +12,11 @@ module Hyrax
     end
 
     def total_viewable_items
-      ActiveFedora::Base.where("isPartOf_ssim:#{id}").accessible_by(current_ability).count
+      field_pairs = { "isPartOf_ssim" => id.to_s }
+      SolrQueryService.new
+                      .with_field_pairs(field_pairs: field_pairs)
+                      .accessible_by(ability: current_ability)
+                      .count
     end
 
     # AdminSet cannot be deleted if default set or non-empty

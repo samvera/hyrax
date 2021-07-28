@@ -14,6 +14,8 @@ module Hyrax
 
     def to_solr # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
       super.tap do |solr_doc| # rubocop:disable Metrics/BlockLength
+        solr_doc['generic_type_si'] = 'FileSet'
+
         # Metadata from the FileSet
         solr_doc['file_ids_ssim']         = resource.file_ids&.map(&:to_s)
         solr_doc['original_file_id_ssi']  = resource.original_file_id.to_s

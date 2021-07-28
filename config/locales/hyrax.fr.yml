@@ -1221,7 +1221,7 @@ fr:
         subject: Téléchargement par lots complet
         title: Fichiers téléchargés avec succès
     models:
-      hyrax/file_set: Ensemble de fichiers
+      file_set: Ensemble de fichiers
       hyrax/pcdm_collection: Collection
       hyrax/work: Travailler
     my:

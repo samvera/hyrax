@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Hyrax
   class WorkflowActionsController < ApplicationController
+    DEFAULT_FORM_CLASS = Hyrax::Forms::WorkflowActionForm
+
     before_action :authenticate_user!
 
     def update
@@ -21,7 +23,7 @@ module Hyrax
     end
 
     def workflow_action_form
-      @workflow_action_form ||= Hyrax::Forms::WorkflowActionForm.new(
+      @workflow_action_form ||= DEFAULT_FORM_CLASS.new(
         current_ability: current_ability,
         work: curation_concern,
         attributes: workflow_action_params

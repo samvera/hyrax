@@ -7,25 +7,36 @@ module Hyrax
 
     # @param user [User]
     # @param where [Hash] applied as the where clause when querying the Hyrax::WorkRelation
-    #
+    # @return [Integer] number of works matching the where that the user deposited
     # @see Hyrax::WorkRelation
     def number_of_works(user = current_user, where: { generic_type_sim: "Work" })
-      where_clause = where.merge(DepositSearchBuilder.depositor_field => user.user_key)
-      Hyrax::WorkRelation.new.where(where_clause).count
+      field_pairs = field_pairs(user)
+      field_pairs.merge!(where)
+      Hyrax::SolrQueryService.new.with_field_pairs(field_pairs: field_pairs).count
     rescue RSolr::Error::ConnectionRefused
       'n/a'
     end
 
+    # @param user [User]
+    # @return [Integer] number of FileSets the user deposited
     def number_of_files(user = current_user)
-      ::FileSet.where(DepositSearchBuilder.depositor_field => user.user_key).count
+      Hyrax::SolrQueryService.new.with_field_pairs(field_pairs: field_pairs(user)).count
     rescue RSolr::Error::ConnectionRefused
       'n/a'
     end
 
+    # @param user [User]
+    # @return [Integer] number of Collections the user created
     def number_of_collections(user = current_user)
-      ::Collection.where(DepositSearchBuilder.depositor_field => user.user_key).count
+      Hyrax::SolrQueryService.new.with_field_pairs(field_pairs: field_pairs(user)).count
     rescue RSolr::Error::ConnectionRefused
       'n/a'
+    end
+
+    private
+
+    def field_pairs(user)
+      { DepositSearchBuilder.depositor_field => user.user_key }
     end
   end
 end

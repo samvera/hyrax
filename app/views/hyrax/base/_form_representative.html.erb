@@ -6,7 +6,7 @@
         </legend>
         <div class="form-group">
           <span class="help-block"><%= t("hyrax.base.form_representative.help_html") %></span>
-          <%= f.select :representative_id, @form.select_files, {}, { class: 'form-control' } %>
+          <%= f.select :representative_id, form_file_set_select_for(parent: @form), {}, { class: 'form-control' } %>
         </div>
       </fieldset>
     </div>

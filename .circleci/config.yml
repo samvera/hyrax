@@ -12,7 +12,7 @@ jobs:
         default: 1.17.3
       rails_version:
         type: string
-        default: '5.2.2'
+        default: '5.2.6'
     executor:
       name: 'samvera/ruby'
       ruby_version: << parameters.ruby_version >>
@@ -22,6 +22,17 @@ jobs:
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
     steps:
       - samvera/cached_checkout
+
+      - run:
+          name: Check for a branch named 'master'
+          command: |
+            git fetch --all --quiet --prune --prune-tags
+            if [[ -n "$(git branch --all --list master */master)" ]]; then
+              echo "A branch named 'master' was found. Please remove it."
+              echo "$(git branch --all --list master */master)"
+            fi
+            [[ -z "$(git branch --all --list master */master)" ]]
+
       - samvera/bundle_for_gem:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
@@ -63,7 +74,7 @@ jobs:
         default: 1.17.3
       rails_version:
         type: string
-        default: '5.2.2'
+        default: '5.2.6'
     executor:
       name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
@@ -125,16 +136,31 @@ jobs:
           command: bundle exec rake app:db:migrate
       - samvera/parallel_rspec
 
+# Trigger a workflow on the nurax repository that will deploy the most recent hyrax gem code to https://nurax-dev.curationexperts.com/
+  deploy:
+    docker:
+      - image: ubuntu
+    steps:
+      - run:
+          name: Install curl
+          command: apt-get update && apt-get install -y curl
+      - run:
+          name: "Trigger Nurax deploy"
+          command: |
+            curl -X POST https://circleci.com/api/v2/project/gh/curationexperts/nurax/pipeline \
+            --header "Circle-Token: $NURAX_CIRCLECI_TOKEN" \
+            --header 'Accept: text/plain'    \
+            --header 'Content-Type: application/json'
 workflows:
   version: 2
   ruby2-5-8:
     jobs:
       - bundle:
           ruby_version: "2.5.8"
-          rails_version: "5.2.4.3"
+          rails_version: "5.2.6"
       - build:
           ruby_version: "2.5.8"
-          rails_version: "5.2.4.3"
+          rails_version: "5.2.6"
           requires:
             - bundle
       - test:
@@ -146,10 +172,10 @@ workflows:
     jobs:
       - bundle:
           ruby_version: "2.6.6"
-          rails_version: "5.2.4.3"
+          rails_version: "5.2.6"
       - build:
           ruby_version: "2.6.6"
-          rails_version: "5.2.4.3"
+          rails_version: "5.2.6"
           requires:
             - bundle
       - test:
@@ -167,11 +193,11 @@ workflows:
     jobs:
       - bundle:
           ruby_version: "2.7.2"
-          rails_version: "5.2.4.3"
+          rails_version: "5.2.6"
           bundler_version: "2.1.4"
       - build:
           ruby_version: "2.7.2"
-          rails_version: "5.2.4.3"
+          rails_version: "5.2.6"
           bundler_version: "2.1.4"
           requires:
             - bundle
@@ -181,3 +207,10 @@ workflows:
           bundler_version: "2.1.4"
           requires:
             - build
+  nurax-dev_deploy:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only:
+                - main
