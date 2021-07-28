@@ -197,6 +197,25 @@ RSpec.describe Hyrax::SolrService do
     end
   end
 
+  describe ".wipe!" do
+    it "calls solr" do
+      expect(mock_conn).to receive(:delete_by_query).with("*:*", params: {})
+      allow(described_class).to receive(:instance).and_return(double("instance", conn: mock_conn))
+      expect(mock_conn).to receive(:commit)
+      described_class.wipe!
+    end
+
+    context "when use_valkyrie: true" do
+      let(:service) { described_class.new(use_valkyrie: true) }
+
+      it "uses valkyrie solr based on config query_index_from_valkyrie" do
+        expect(mock_conn).to receive(:delete_by_query).with("*:*", params: {})
+        expect(mock_conn).to receive(:commit)
+        service.wipe!
+      end
+    end
+  end
+
   describe '.instance' do
     let(:mock_instance) { double("instance", conn: mock_conn) }
 

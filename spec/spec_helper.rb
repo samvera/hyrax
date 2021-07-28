@@ -108,7 +108,6 @@ def clean_active_fedora_repository
   # The JS is executed in a different thread, so that other thread
   # may think the root path has already been created:
   ActiveFedora.fedora.connection.send(:init_base_path)
-  Hyrax.persister.wipe! if Hyrax.config.query_index_from_valkyrie
 end
 
 RSpec.configure do |config|
@@ -236,6 +235,10 @@ RSpec.configure do |config|
   config.before(:example, :clean_repo) do
     clean_active_fedora_repository
     Hyrax::RedisEventStore.instance.redis.flushdb
+
+    # Not needed to clean the Solr core used by ActiveFedora since
+    # clean_active_fedora_repository will wipe that core
+    Hyrax::SolrService.wipe! if Hyrax.config.query_index_from_valkyrie
   end
 
   # Use this example metadata when you want to perform jobs inline during testing.
