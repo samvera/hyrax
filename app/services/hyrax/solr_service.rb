@@ -37,7 +37,8 @@ module Hyrax
                                    'Use `Hyrax.config.solr_select_path` instead'
       end
 
-      delegate :add, :commit, :count, :delete, :get, :instance, :ping, :post, :query, :delete_by_query, :search_by_id, to: :new
+      delegate :add, :commit, :count, :delete, :get, :instance, :ping, :post,
+               :query, :delete_by_query, :search_by_id, :wipe!, to: :new
     end
 
     # Wraps rsolr get
@@ -98,6 +99,12 @@ module Hyrax
     # Wraps rsolr delete
     def delete(id)
       connection.delete_by_id(id, params: COMMIT_PARAMS)
+    end
+
+    # Deletes all solr documents
+    def wipe!
+      delete_by_query("*:*")
+      commit
     end
 
     # Wraps rsolr add
