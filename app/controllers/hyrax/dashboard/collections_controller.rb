@@ -112,10 +112,10 @@ module Hyrax
         @collection.collection_type_gid = params[:collection_type_gid].presence || default_collection_type.to_global_id
         @collection.attributes = collection_params.except(:members, :parent_id, :collection_type_gid)
         @collection.apply_depositor_metadata(current_user.user_key)
-        add_members_to_collection unless batch.empty?
         @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
         if @collection.save
           after_create
+          add_members_to_collection unless batch.empty?
         else
           after_create_error
         end
@@ -379,7 +379,9 @@ module Hyrax
 
       def add_members_to_collection(collection = nil)
         collection ||= @collection
-        collection.add_member_objects batch
+        Hyrax::Collections::CollectionMemberService.add_members_by_ids(collection: collection.valkyrie_resource,
+                                                                       new_member_ids: batch,
+                                                                       user: current_user)
       end
 
       def remove_members_from_collection

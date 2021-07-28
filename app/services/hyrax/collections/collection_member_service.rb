@@ -81,7 +81,15 @@ module Hyrax
         # @param new_members [Enumerable<Hyrax::Resource>] the new child collections and/or child works
         # @return [Enumerable<Hyrax::Resource>] updated member resources
         def add_members(collection:, new_members:, user:)
-          new_members.map { |new_member| add_member(collection: collection, new_member: new_member, user: user) }
+          messages = []
+          new_members.map do |new_member|
+            begin
+              add_member(collection: collection, new_member: new_member, user: user)
+            rescue Hyrax::SingleMembershipError => err
+              messages += [err.message]
+            end
+          end
+          raise Hyrax::SingleMembershipError, messages if messages.present?
         end
 
         # Add a work or collection as a member of a collection
@@ -99,7 +107,7 @@ module Hyrax
         # @return [Hyrax::Resource] updated member resource
         def add_member(collection:, new_member:, user:)
           message = Hyrax::MultipleMembershipChecker.new(item: new_member).check(collection_ids: [collection.id], include_current_members: true)
-          raise Hyrax::SingleMembershipError, message if message
+          raise Hyrax::SingleMembershipError, message if message.present?
           new_member.member_of_collection_ids += [collection.id] # only populate this direction
           new_member = Hyrax.persister.save(resource: new_member)
           Hyrax.publisher.publish('object.metadata.updated', object: new_member, user: user)

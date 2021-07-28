@@ -4,7 +4,7 @@ require 'hyrax/specs/spy_listener'
 RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
   routes { Hyrax::Engine.routes }
   let(:user)  { create(:user) }
-  let(:other) { build(:user) }
+  let(:other) { create(:user) }
   let(:collection_type_gid) { FactoryBot.create(:user_collection_type).to_global_id.to_s }
 
   let(:collection) do

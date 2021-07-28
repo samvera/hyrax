@@ -40,12 +40,18 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
 
     before { described_class.add_members_by_ids(collection: collection, new_member_ids: new_member_ids, user: user) }
 
-    context 'when no members' do
+    context 'when ids is empty' do
+      let(:new_member_ids) { [] }
+      it "returns without making changes" do
+        expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array new_member_ids
+      end
+    end
+    context 'when collection currently has no members' do
       it "updates the collection member set to contain only the new members" do
         expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array new_member_ids
       end
     end
-    context 'when has members' do
+    context 'when collection already has members' do
       let(:existing_work) { FactoryBot.valkyrie_create(:hyrax_work) }
       let(:existing_members) { [existing_work] }
       context 'and one of the new members already exists in the member set' do
@@ -169,13 +175,16 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
       let(:collection_ids) { collections.map(&:id) }
 
       before do
+        Hyrax.publisher.publish('object.metadata.updated', object: collection, user: user)
+        Hyrax.publisher.publish('object.metadata.updated', object: collection2, user: user)
         allow(Hyrax::CollectionType).to receive(:gids_that_do_not_allow_multiple_membership).and_return([collection_type.to_global_id])
       end
 
       it 'raises an error' do
-        errmsg = 'Error: You have specified more than one of the same single-membership collection type (type: Greedy, collections: Col-2 and Col-1)'
+        base_errmsg = "Error: You have specified more than one of the same single-membership collection type"
+        regexp = /#{base_errmsg} \(type: Greedy, collections: (Col-1 and Col-2|Col-2 and Col-1)\)/
         expect { described_class.add_member(collection: collection2, new_member: new_member, user: user) }
-          .to raise_error Hyrax::SingleMembershipError, errmsg
+          .to raise_error Hyrax::SingleMembershipError, regexp
       end
     end
   end
