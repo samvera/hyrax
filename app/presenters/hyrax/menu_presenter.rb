@@ -43,8 +43,7 @@ module Hyrax
       end
     end
 
-    def analytics_reporting_section?
-    end
+    def analytics_reporting_section?; end
 
     # Draw a collaspable menu section. The passed block should contain <li> items.
     def collapsable_section(text, id:, icon_class:, open:, &block)

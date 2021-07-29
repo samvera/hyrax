@@ -1,7 +1,4 @@
-<%
-if Hyrax.config.google_analytics_id?
-tracking_id = Hyrax.config.google_analytics_id
-%>
+<% tracking_id = Hyrax.config.analytics_id %>
 <script type="text/javascript">
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', '<%= tracking_id %>']);
@@ -17,4 +14,3 @@ tracking_id = Hyrax.config.google_analytics_id
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
 </script>
-<% end %>

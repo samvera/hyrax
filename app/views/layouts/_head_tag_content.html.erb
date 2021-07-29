@@ -25,8 +25,15 @@ signed in %>
 
 <%= render 'shared/appearance_styles' %>
 
-<!-- Google Analytics -->
-<%= render partial: '/ga', formats: [:html] %>
+<% if Hyrax.config.analytics_provider == 'google' %>
+  <!-- Google Analytics -->
+  <%= render partial: '/ga', formats: [:html]  %>
+  <!-- End Google Analytics -->
+<% elsif Hyrax.config.analytics_provider == 'matomo' %>
+  <!-- Matomo Analytics -->
+  <%= render partial: '/matomo', formats: [:html] %>
+  <!-- End Matomo Analytics -->
+<% end %>
 
 <!-- for extras, e.g., a favicon -->
 <%= render partial: '/head_tag_extras', formats: [:html] %>

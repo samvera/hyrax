@@ -5,12 +5,9 @@ module Hyrax
       class WorkReportsController < ApplicationController
         layout 'hyrax/dashboard'
 
-        def index
-        end
+        def index; end
 
-        def show
-        end
-
+        def show; end
       end
     end
   end
