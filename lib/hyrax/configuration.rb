@@ -112,11 +112,30 @@ module Hyrax
         ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_ANALYTICS', false))
     end
 
-    attr_writer :google_analytics_id
+    # Currently supports 'google' or 'matomo'
+    # google is default for backward compatability
+    attr_writer :analytics_provider
+    def analytics_provider
+      @analytics_provider ||=
+        ENV.fetch('HYRAX_ANALYTICS_PROVIDER', 'google')
+    end
+
+    def google_analtyics_id=(value)
+      Deprecation.warn("google_analytics_id is deprecated; use analytics_id instead.")
+      self.analytics_id = value
+    end
+
     def google_analytics_id
-      @google_analytics_id ||= nil
+      Deprecation.warn("google_analytics_id is deprecated; use analytics_id instead.")
+      analytics_id
     end
     alias google_analytics_id? google_analytics_id
+
+    attr_writer :analytics_id
+    def analytics_id
+      @analytics_id ||= ENV.fetch('HYRAX_ANALYTICS_ID', nil)
+    end
+    alias analytics_id? analytics_id
 
     # Defaulting analytic start date to whenever the file was uploaded by leaving it blank
     attr_writer :analytic_start_date
