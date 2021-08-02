@@ -49,6 +49,7 @@ Hyrax.config do |config|
 
   # Analytics provider type - select one of google or matomo
   # config.analytics_provider = 'google'
+  # config.analytics_provider = 'matomo'
 
   # Analytics tracking ID to gather usage statistics
   #  GA version, only v3 UA codes work. v4 G- codes are not supported yet.

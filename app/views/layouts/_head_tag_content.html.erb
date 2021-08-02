@@ -27,11 +27,11 @@ signed in %>
 
 <% if Hyrax.config.analytics_provider == 'google' %>
   <!-- Google Analytics -->
-  <%= render partial: '/ga', formats: [:html]  %>
+  <%= render partial: 'shared/ga', formats: [:html]  %>
   <!-- End Google Analytics -->
 <% elsif Hyrax.config.analytics_provider == 'matomo' %>
   <!-- Matomo Analytics -->
-  <%= render partial: '/matomo', formats: [:html] %>
+  <%= render partial: 'shared/matomo', formats: [:html] %>
   <!-- End Matomo Analytics -->
 <% end %>
 
