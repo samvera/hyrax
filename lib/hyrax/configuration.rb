@@ -120,6 +120,21 @@ module Hyrax
         ENV.fetch('HYRAX_ANALYTICS_PROVIDER', 'google')
     end
 
+    def matomo_site_id
+      @matomo_site_id ||=
+        ENV.fetch('MATOMO_SITE_ID', nil)
+    end
+
+    def matomo_base_url
+      @matomo_base_url ||=
+        ENV.fetch('MATOMO_BASE_URL', nil)
+    end
+
+    def matomo_auth_token
+      @matomo_auth_token ||=
+      ENV.fetch('MATOMO_AUTH_TOKEN', nil)
+    end
+    
     def google_analtyics_id=(value)
       Deprecation.warn("google_analytics_id is deprecated; use analytics_id instead.")
       self.analytics_id = value

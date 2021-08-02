@@ -34,9 +34,9 @@ Hyrax.statistics.userActivity = <%== user_activity %>
       </div>
       <div class="panel-body text-center">
         <p><%= t('.registered_users') %>: <%= @presenter.user_count %></p>
-        <p><%= t('.new_visitors') %>: n/a</p>
-        <p><%= t('.returning_visitors') %>: n/a</p>
-        <p><%= t('.total_visitors') %>: n/a</p>
+        <p><%= t('.new_visitors') %>: <%= Hyrax::Analytics.new_visitors %></p>
+        <p><%= t('.returning_visitors') %>: <%= Hyrax::Analytics.returning_visitors %></p>
+        <p><%= t('.total_visitors') %>: <%= Hyrax::Analytics.total_visitors %></p>
       </div>
     </div>
   </div>
