@@ -137,7 +137,7 @@ module Hyrax
 
     def matomo_auth_token
       @matomo_auth_token ||=
-      ENV.fetch('MATOMO_AUTH_TOKEN', nil)
+        ENV.fetch('MATOMO_AUTH_TOKEN', nil)
     end
 
     # Defaulting analytic start date to whenever the file was uploaded by leaving it blank

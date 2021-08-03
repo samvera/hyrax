@@ -94,27 +94,19 @@ module Hyrax
           end
         end
 
-        def pageviews_monthly(period, date)
-        end
+        def pageviews_monthly(period, date); end
 
-        def pageviews(period, date)
-        end
+        def pageviews(period, date); end
 
-        def new_visitors(period, date)
-        end
+        def new_visitors(period = nil, date = nil); end
 
-        def returning_visitors(period, date)
-        end
+        def returning_visitors(period = nil, date = nil); end
 
-        def total_visitors(period, date)
-        end
+        def total_visitors(period = nil, date = nil); end
 
-        def unique_visitors(period, date)
-        end
+        def unique_visitors(period, date); end
 
-        def pageviews_by_url(period, date, url)
-        end
-
+        def pageviews_by_url(period, date, url); end
       end
       # rubocop:enable Metrics/BlockLength
     end
