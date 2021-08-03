@@ -18,8 +18,7 @@
             <div class="panel-heading">Customize Report</div>
             <div class="panel-body">
               <%# TODO: Dynamic %>
-              <p>Add the date field pickers here Start and end (default end is current)</p>
-              <%#= render "hyrax/admin/analytics/date_form" %>
+              <%= render 'date_range_form' %>
               <hr />
               <div class="row text-center">
                 <div class="nav nav-pills btn-group" role="group">
@@ -33,13 +32,11 @@
               </div>
               <div class="tab-content">
                 <h3 class="text-center">Custom Work Report</h3>
-                <%# TODO: Dynamic date from picker %>
-
                 <div class="tab-pane active" id="summary">
                   <%= render "summary" %>
                 </div>
                 <div class="tab-pane" id="monthly">
-                  <h4 class="text-center">Month-by-month status for last 12 months through August 2017</h4>
+                  <h4 class="text-center">Month-by-month status for last 12 months through <%= Date.today.strftime("%B %Y") %></h4>
                   <%= render "monthly" %>
                 </div>
               </div>
@@ -48,7 +45,7 @@
 
           </div>
           <%# TODO: Dynamic %>
-          <p class="text-center">This report was generated on <b>2017-09-20</b> at <b>3:06 pm</b></p>
+          <p class="text-center">This report was generated on <b><%= Date.today.strftime("%B %d, %Y") %></b></p>
 
         </div>
 

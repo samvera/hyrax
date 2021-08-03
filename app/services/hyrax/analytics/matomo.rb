@@ -7,6 +7,12 @@ module Hyrax
       MATOMO_BASE_URL = Hyrax.config.matomo_base_url
       MATOMO_SITE_ID = Hyrax.config.matomo_site_id 
       MATOMO_AUTH_TOKEN = Hyrax.config.matomo_auth_token
+    
+      def self.pageviews_monthly(period, date)
+        method = 'VisitsSummary.getActions' 
+        response = api_params(method, period, date, nil)
+        response
+      end
       
       def self.pageviews(period, date)
         method = 'Actions.get'
@@ -64,15 +70,6 @@ module Hyrax
             token_auth: MATOMO_AUTH_TOKEN
           }
           response = self.get(params)
-        end
-
-        def self.date_range(start_date, end_date)
-          date_format = "%Y-%m-%d"
-          end_date = end_date || Date.today
-          start_date = start_date || end_date - 30.days
-          {
-            date: start_date.strftime(date_format) + "," + end_date.strftime(date_format)
-          }
         end
       
     end 

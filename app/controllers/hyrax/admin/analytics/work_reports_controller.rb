@@ -5,7 +5,11 @@ module Hyrax
       class WorkReportsController < ApplicationController
         layout 'hyrax/dashboard'
 
-        def index; end
+        def index
+          @start_date = params[:start_date] || Date.today - 1.month
+          @end_date = params[:end_date] || Date.today 
+          @last_twelve_months = Hyrax::Analytics.pageviews_monthly("month", "last12")
+        end
 
         def show; end
       end

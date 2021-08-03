@@ -6,9 +6,16 @@ module Hyrax
     end
        
     # Period Options = "day, week, month, year, range"
-    
+    # Date Format = "2021-01-01,2021-01-31"
+    # Date "magic keywords" = "today, yesterday, lastX (number), lastWeek, lastMonth or lastYear"
+    # Example:  Last 6 weeks:   period: week, date: last6
+
     def self.pageviews(period = 'day', date = 'today')
       provider.pageviews(period, date)
+    end
+
+    def self.pageviews_monthly(period = 'day', date = 'today')
+      provider.pageviews_monthly(period, date)
     end
   
     def self.new_visitors(period = 'day', date = 'today')
