@@ -120,6 +120,11 @@ module Hyrax
         ENV.fetch('HYRAX_ANALYTICS_PROVIDER', 'google')
     end
 
+    def google_analytics_id
+      @google_analytics_id ||=
+        ENV.fetch('GOOGLE_ANALYTICS_ID', nil)
+    end
+
     def matomo_site_id
       @matomo_site_id ||=
         ENV.fetch('MATOMO_SITE_ID', nil)
@@ -134,23 +139,6 @@ module Hyrax
       @matomo_auth_token ||=
       ENV.fetch('MATOMO_AUTH_TOKEN', nil)
     end
-    
-    def google_analtyics_id=(value)
-      Deprecation.warn("google_analytics_id is deprecated; use analytics_id instead.")
-      self.analytics_id = value
-    end
-
-    def google_analytics_id
-      Deprecation.warn("google_analytics_id is deprecated; use analytics_id instead.")
-      analytics_id
-    end
-    alias google_analytics_id? google_analytics_id
-
-    attr_writer :analytics_id
-    def analytics_id
-      @analytics_id ||= ENV.fetch('HYRAX_ANALYTICS_ID', nil)
-    end
-    alias analytics_id? analytics_id
 
     # Defaulting analytic start date to whenever the file was uploaded by leaving it blank
     attr_writer :analytic_start_date
