@@ -1,7 +1,7 @@
 analytics:
   google:
-    app_name: notch8-qa
-    app_version: 0.0.1
-    privkey_path: /notch8-qa-057daeb77b4d.p12
-    privkey_secret: notasecret
-    client_email: server-account@notch8-qa.iam.gserviceaccount.com
+    app_name: <%= ENV['GOOGLE_OAUTH_APP_NAME'] %>
+    app_version: <%= ENV['GOOGLE_OAUTH_APP_VERSION'] %>
+    privkey_path: <%= ENV['GOOGLE_OAUTH_PRIVATE_KEY_PATH'] %>
+    privkey_secret: <%= ENV['GOOGLE_OAUTH_PRIVATE_KEY_SECRET'] %>
+    client_email: <%= ENV['GOOGLE_OAUTH_CLIENT_EMAIL'] %>

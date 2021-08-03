@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Analytics do
   before do
+    ENV['GOOGLE_OAUTH_APP_NAME'] = "My App Name"
+    ENV['GOOGLE_OAUTH_APP_VERSION'] = "0.0.1"
+    ENV['GOOGLE_OAUTH_PRIVATE_KEY_PATH'] = "/tmp/privkey.p12"
+    ENV['GOOGLE_OAUTH_PRIVATE_KEY_SECRET'] = "s00pers3kr1t"
+    ENV['GOOGLE_OAUTH_CLIENT_EMAIL'] = "oauth@example.org"
+
     described_class.send(:remove_instance_variable, :@config) if described_class.send(:instance_variable_defined?, :@config)
   end
 
