@@ -51,43 +51,48 @@ module Hyrax
           end
         end
 
-        def pageviews_monthly(period, date)
+        # Period Options = "day, week, month, year, range"
+        # Date Format = "2021-01-01,2021-01-31"
+        # Date "magic keywords" = "today, yesterday, lastX (number), lastWeek, lastMonth or lastYear"
+        # Example:  Last 6 weeks: period: week, date: last6
+
+        def pageviews_monthly(period='month', date='today')
           method = 'VisitsSummary.getActions'
           response = api_params(method, period, date, nil)
           response
         end
 
-        def pageviews(period, date)
+        def pageviews(period='month', date='today')
           method = 'Actions.get'
           response = api_params(method, period, date, nil)
           response['nb_pageviews']
         end
 
-        def new_visitors(period, date)
+        def new_visitors(period='month', date='today')
           method = 'VisitFrequency.get'
           response = api_params(method, period, date, nil)
           response["nb_visits_new"]
         end
 
-        def returning_visitors(period, date)
+        def returning_visitors(period='month', date='today')
           method = 'VisitFrequency.get'
           response = api_params(method, period, date, nil)
           response["nb_visits_returning"]
         end
 
-        def total_visitors(period, date)
+        def total_visitors(period='month', date='today')
           method = 'VisitFrequency.get'
           response = api_params(method, period, date, nil)
           response["nb_visits_returning"].to_i + response["nb_visits_new"].to_i
         end
 
-        def unique_visitors(period, date)
+        def unique_visitors(period='month', date='today')
           method = 'VisitsSummary.getUniqueVisitors'
           response = api_params(method, period, date, nil)
           response['value']
         end
 
-        def pageviews_by_url(period, date, _url)
+        def pageviews_by_url(period='month', date='today', url=nil)
           method = 'Actions.getPageUrl'
           response = api_params(method, period, date, nil)
           response.count.zero? ? 0 : response.first["nb_visits"]
@@ -110,6 +115,7 @@ module Hyrax
             format: "JSON",
             token_auth: config.auth_token
           }
+          byebug
           get(params)
         end
       end
