@@ -23,9 +23,6 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:admin_set_predicate=) }
   it { is_expected.to respond_to(:analytic_start_date) }
   it { is_expected.to respond_to(:analytics?) }
-  it { is_expected.to respond_to(:analytics_id) }
-  it { is_expected.to respond_to(:analytics_id=) }
-  it { is_expected.to respond_to(:analytics_id?) }
   it { is_expected.to respond_to(:analytics_provider) }
   it { is_expected.to respond_to(:analytics_provider=) }
   it { is_expected.to respond_to(:arkivo_api=) }

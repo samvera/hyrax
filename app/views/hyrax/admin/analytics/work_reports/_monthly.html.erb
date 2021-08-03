@@ -2,6 +2,7 @@
 <h4>Monthly user activity (past 12 months)</h4>
 <hr />
 
+<% if @last_twelve_months %>
 <table class="table table-striped">
 <%# TODO: Dynamic %>
   <thead>
@@ -36,3 +37,4 @@
     </tr>
   </tbody>
 </table>
+<% end %>
