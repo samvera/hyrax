@@ -6,6 +6,7 @@ analytics:
     privkey_secret: <%= ENV['GOOGLE_OAUTH_PRIVATE_KEY_SECRET'] %>
     client_email: <%= ENV['GOOGLE_OAUTH_CLIENT_EMAIL'] %>
   matomo: 
-    base_url: <%= ENV['MATOMO_BASE_URL']
-    site_id: <%= ENV['MATOMO_SITE_ID']
-    auth_token: <%= ENV[MATOMO_AUTH_TOKEN']
+    base_url: <%= ENV['MATOMO_BASE_URL'] %>
+    site_id: <%= ENV['MATOMO_SITE_ID'] %>
+    auth_token: <%= ENV['MATOMO_AUTH_TOKEN'] %>
+    

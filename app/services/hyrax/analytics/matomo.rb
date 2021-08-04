@@ -115,7 +115,6 @@ module Hyrax
             format: "JSON",
             token_auth: config.auth_token
           }
-          byebug
           get(params)
         end
       end

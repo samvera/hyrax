@@ -32,7 +32,7 @@
       <td><%= Hyrax::Analytics.pageviews("week") %></td>
       <td><%= Hyrax::Analytics.pageviews("month") %></td>
       <td><%= Hyrax::Analytics.pageviews("year") %></td>
-      <td>To-Do</td>
+      <td><%= Hyrax::Analytics.pageviews("range", "#{Date.today-10.years},#{Date.today}") %></td>
     </tr>
 
   </tbody>
