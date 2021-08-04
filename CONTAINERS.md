@@ -8,7 +8,7 @@ providing better guidance around deployment.
 Where are we at?  It's complicated.  What we have below is experimental support, but one that we want to push
 towards.  We need your help to keep pushing in this direction.  So dig in and prepare to get your hands dirty.
 
-The [Hyrax Engine Development](#hyrax-engine-development) is further along than the [Docker Image for Hyrax-based Applications](docker-image-for-hyrax-based-applications) which is further along than [Deploying to Production](#deploying-to-production).
+The [Hyrax Engine Development](#hyrax-engine-development) is further along than the [Docker Image for Hyrax-based Applications](#docker-image-for-hyrax-based-applications) which is further along than [Deploying to Production](#deploying-to-production).
 
 <!-- NOTE: This title is referenced in the top-level README.md. Keep that in mind if you change it. -->
 ## Hyrax Engine Development
