@@ -11,7 +11,7 @@ module Hyrax
           PageviewsMonthly.results(profile,
                             :start_date => start_date,
                             :end_date => end_date, 
-                            :sort => ['-year', '-month'])
+                            :sort => ['year', 'month'])
         end
 
       end

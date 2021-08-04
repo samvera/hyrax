@@ -7,11 +7,11 @@ module Hyrax
     module Google
       extend ActiveSupport::Concern
      
-      # included do
-      #   private_class_method :config
-      #   private_class_method :token
-      #   private_class_method :user
-      # end
+      included do
+        private_class_method :config
+        private_class_method :token
+        private_class_method :user
+      end
 
       # rubocop:disable Metrics/BlockLength
       class_methods do
@@ -122,19 +122,34 @@ module Hyrax
             date = date
           end
         end
+
+        def date_format
+          
+        end
+        
         
         def pageviews_monthly(period = 'range', date = "#{Date.today-11.months},#{Date.today}")
           date = keyword_conversion(date)
           date = date.split(",")
           start_date = date[0]
           end_date = date[1]
-          x = PageviewsMonthly.query(profile, start_date, end_date)
-          y = []
-          x.to_a.each do |y| 
-            puts y[:month]
-            puts y[:year]
-            puts y[:pageviews]
-          end
+          results = PageviewsMonthly.query(profile, start_date, end_date)
+          results_hash = {}
+          results.each do |result| 
+            month_year = "#{result.year}-#{result.month}"
+            # p month_year
+            results_hash[month_year] = result.pageviews
+            # results_hash[:key] << result.pageviews
+            # p results_hash
+            # results_hash[result[:month]]
+
+            # h[:key] = ""
+# h[:key] << "bar"
+            # puts y[:month]
+            # puts y[:year]
+            # puts y[:pageviews]
+           end
+          p results_hash
         end
 
         def pageviews(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
