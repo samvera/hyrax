@@ -11,20 +11,12 @@ module Hyrax
 
         # filter(:by_index_in_path_level_1) {|page_path_level1| contains(:pagePathLevel1, 'works')}
 
-        # def self.query(profile, start_date, end_date)
-        #   Pageviews.results(profile,
-        #                     :start_date => start_date,
-        #                     :end_date => end_date
-        #   )
-        #   # Just for reference, sorting descending by pageviews is done by:   :sort => '-pageviews'
-        # end
-
-        # def self.query_index(profile, start_date, end_date)
-        #   Pageviews.by_index_in_path_level_1.results(profile,
-        #                                              :start_date => start_date,
-        #                                              :end_date => end_date
-        #   )
-        # end
+        def self.query(profile, start_date, end_date)
+          x = Pageviews.results(profile,
+            :start_date => start_date,
+            :end_date => end_date)
+          x.count.zero? ? 0 : x.to_a.first.pageviews.to_i
+        end
 
       end
     end

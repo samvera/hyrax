@@ -109,7 +109,7 @@ module Hyrax
             start_date = Date.today-1.year
             end_date = Date.today
           end
-          date = "#{start_date},#{end_date}"
+          date = [start_date, end_date]
         end
 
         def keyword_conversion(date)
@@ -117,70 +117,43 @@ module Hyrax
           when "last12"
             start_date = Date.today-11.months
             end_date = Date.today
-            date = "#{start_date},#{end_date}"
+            date = [start_date, end_date]
           else
-            date = date
+            date.split(",")
           end
         end
 
-        def date_format
-          
+        def date_period(period, date)
+          if period == "range" 
+            date.split(",")
+          else
+            to_date_range(period)
+          end
         end
-        
         
         def pageviews_monthly(period = 'range', date = "#{Date.today-11.months},#{Date.today}")
           date = keyword_conversion(date)
-          date = date.split(",")
-          start_date = date[0]
-          end_date = date[1]
-          results = PageviewsMonthly.query(profile, start_date, end_date)
-          results_hash = {}
-          results.each do |result| 
-            month_year = "#{result.year}-#{result.month}"
-            # p month_year
-            results_hash[month_year] = result.pageviews
-            # results_hash[:key] << result.pageviews
-            # p results_hash
-            # results_hash[result[:month]]
-
-            # h[:key] = ""
-# h[:key] << "bar"
-            # puts y[:month]
-            # puts y[:year]
-            # puts y[:pageviews]
-           end
-          p results_hash
+          PageviewsMonthly.query(profile, date[0], date[1])
         end
 
         def pageviews(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
-          date = to_date_range(period) unless period == 'range'
-          date = date.split(",")
-          start_date = date[0]
-          end_date = date[1]
-          x = Pageviews.results(profile,
-            :start_date => start_date,
-            :end_date => end_date)
-          x.count.zero? ? 0 : x.to_a.first.pageviews.to_i
+          date = date_period(period, date)
+          Pageviews.query(profile, date[0], date[1])
         end
 
-        def test
-          # profile.web_property
-          # Legato.results(profile).each {|result| p result}
-          # Exit.results(profile).to_a
-          Page.results(profile).each do |result| 
-            p result.try(:pagePath)
-            p result.try(:pageviews)
-          end
-          # Pageviews.results(profile).by_index_in_path_level_1.each do |result| 
-          #   p result
-          # end
-          # Pageviews.query(profile, Date.yesterday, Date.today).each do |result|
-          #   # Just print the pageviews & unique-pageviews, for example
-          #   puts result.try(:pagePathLevel1)
-          #   puts result.try(:pageviews)
-          #   puts result.try(:uniquePageviews)
-          # end
-          # Pageviews.results(profile).each {|result| p result}
+         def new_visitors(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+          date = date_period(period, date)
+          Visits.new_visits(profile, date[0], date[1])
+        end
+
+        def returning_visitors(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+          date = date_period(period, date)
+          Visits.return_visits(profile, date[0], date[1])
+        end
+
+        def total_visitors(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+          date = date_period(period, date)
+          Visits.return_visits(profile, date[0], date[1])
         end
 
         def works_pageviews
@@ -189,39 +162,6 @@ module Hyrax
             p result.try(:pageviews)
             p result.try(:pageTitle)
           end
-        end
-        
-        # Date Format = "2021-01-01,2021-08-31"
-        def new_visitors(period = nil, date = "#{Date.today-1.month},#{Date.today}")
-          date = date.split(",")
-          start_date = date[0]
-          end_date = date[1]
-          x = Visits.results(profile,
-            :start_date => start_date,
-            :end_date => end_date).to_a
-          x.first.sessions.to_i
-        end
-
-        def returning_visitors(period = nil, date = "#{Date.today-1.month},#{Date.today}")
-          date = date.split(",")
-          start_date = date[0]
-          end_date = date[1]
-          x = Visits.results(profile,
-            :start_date => start_date,
-            :end_date => end_date).to_a 
-          x.last.sessions.to_i
-        end
-
-        def total_visitors(period = nil, date = "#{Date.today-1.month},#{Date.today}")
-          date = date.split(",")
-          start_date = date[0]
-          end_date = date[1]
-          x = Visits.results(profile,
-            :start_date => start_date,
-            :end_date => end_date).to_a
-          new_visits = x.first.sessions.to_i 
-          returning_visits = x.last.sessions.to_i 
-          new_visits + returning_visits
         end
 
         def unique_visitors(period, date); end
