@@ -6,7 +6,7 @@ module Hyrax
   module Analytics
     module Google
       extend ActiveSupport::Concern
-
+     
       included do
         private_class_method :config
         private_class_method :token
@@ -80,7 +80,7 @@ module Hyrax
         end
 
         # Return a user object linked to a Google Analytics account
-        # @return [Legato::User] A user account wit GA access
+        # @return [Legato::User] A user account with GA access
         def user
           Legato::User.new(token)
         end
@@ -94,15 +94,75 @@ module Hyrax
           end
         end
 
-        def pageviews_monthly(period, date); end
+        def to_date_range(period)
+          case period
+          when "day"
+            start_date = Date.today
+            end_date = Date.today
+          when "week"
+            start_date = Date.today-7.days
+            end_date = Date.today
+          when "month"
+            start_date = Date.today-1.month
+            end_date = Date.today
+          when "year"
+            start_date = Date.today-1.year
+            end_date = Date.today
+          end
+          date = [start_date, end_date]
+        end
 
-        def pageviews(period, date); end
+        def keyword_conversion(date)
+          case date
+          when "last12"
+            start_date = Date.today-11.months
+            end_date = Date.today
+            date = [start_date, end_date]
+          else
+            date.split(",")
+          end
+        end
 
-        def new_visitors(period = nil, date = nil); end
+        def date_period(period, date)
+          if period == "range" 
+            date.split(",")
+          else
+            to_date_range(period)
+          end
+        end
+        
+        def pageviews_monthly(period = 'range', date = "#{Date.today-11.months},#{Date.today}")
+          date = keyword_conversion(date)
+          PageviewsMonthly.query(profile, date[0], date[1])
+        end
 
-        def returning_visitors(period = nil, date = nil); end
+        def pageviews(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+          date = date_period(period, date)
+          Pageviews.query(profile, date[0], date[1])
+        end
 
-        def total_visitors(period = nil, date = nil); end
+         def new_visitors(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+          date = date_period(period, date)
+          Visits.new_visits(profile, date[0], date[1])
+        end
+
+        def returning_visitors(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+          date = date_period(period, date)
+          Visits.return_visits(profile, date[0], date[1])
+        end
+
+        def total_visitors(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+          date = date_period(period, date)
+          Visits.return_visits(profile, date[0], date[1])
+        end
+
+        def works_pageviews
+          Page.results(profile).works.each do |result| 
+            p result.try(:pagePath)
+            p result.try(:pageviews)
+            p result.try(:pageTitle)
+          end
+        end
 
         def unique_visitors(period, date); end
 
