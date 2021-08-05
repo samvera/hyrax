@@ -6,8 +6,8 @@ module Hyrax
         layout 'hyrax/dashboard'
 
         def index
-          @start_date = params[:start_date] || Date.today - 1.month
-          @end_date = params[:end_date] || Date.today
+          @start_date = params[:start_date] || Time.zone.today - 1.month
+          @end_date = params[:end_date] || Time.zone.today
           @last_twelve_months = Hyrax::Analytics.collections_pageviews_monthly("month", "last12")
           @collections = Hyrax::Analytics.top_collections("range", "#{@start_date},#{@end_date}")
         end
