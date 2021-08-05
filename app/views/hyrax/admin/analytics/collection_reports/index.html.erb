@@ -17,9 +17,7 @@
           <div class="panel panel-default">
             <div class="panel-heading">Customize Report</div>
             <div class="panel-body">
-              <%# TODO: Dynamic %>
-              <p>Add the date field pickers here Start and end (default end is current)</p>
-              <%#= render "hyrax/admin/analytics/date_form" %>
+             <%= render 'date_range_form' %>
               <hr />
               <div class="row text-center">
                 <div class="nav nav-pills btn-group" role="group">
@@ -37,8 +35,10 @@
                   <%= render "summary" %>
                 </div>
                 <div class="tab-pane" id="monthly">
-                  <h4 class="text-center">Month-by-month status for last 12 months through August 2017</h4>
-                  <%= render "monthly" %>
+                  <h4 class="text-center">Month-by-month status for last 12 months through <%= Date.today.month %> <%= Date.today.year %></h4>
+                  <% if @last_twelve_months %> 
+                    <%= render 'hyrax/admin/analytics/monthly_pageviews' %>
+                  <% end %>
                 </div>
               </div>
 

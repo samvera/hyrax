@@ -27,12 +27,12 @@
     </tr>
     <tr>
       <td><b>Page Views</b></td>
-      <td><%= Hyrax::Analytics.pageviews("range", "#{@start_date},#{@end_date}") %></td>
-      <td><%= Hyrax::Analytics.pageviews("day") %></td>
-      <td><%= Hyrax::Analytics.pageviews("week") %></td>
-      <td><%= Hyrax::Analytics.pageviews("month") %></td>
-      <td><%= Hyrax::Analytics.pageviews("year") %></td>
-      <td><%= Hyrax::Analytics.pageviews("range", "#{Date.today-10.years},#{Date.today}") %></td>
+      <td><%= Hyrax::Analytics.works_pageviews("range", "#{@start_date},#{@end_date}") %></td>
+      <td><%= Hyrax::Analytics.works_pageviews("day") %></td>
+      <td><%= Hyrax::Analytics.works_pageviews("week") %></td>
+      <td><%= Hyrax::Analytics.works_pageviews("month") %></td>
+      <td><%= Hyrax::Analytics.works_pageviews("year") %></td>
+      <td><%= Hyrax::Analytics.works_pageviews("range", "#{Date.today-10.years},#{Date.today}") %></td>
     </tr>
 
   </tbody>
@@ -52,23 +52,15 @@
   </tr>
   </thead>
   <tbody>
+  <% if @works.any? %>
+    <% @works.each do |work| %>
     <tr>
-      <td>Long Term monitoring of Harbor Seals on the West Beach of...</td>
-      <td>982</td>
-      <td>164</td>
-      <td>658</td>
+      <td><%= work.try(:pageTitle) %></td>
+      <td><%= work.try(:pageviews) %></td>
+      <td></td>
+      <td></td>
     </tr>
-    <tr>
-      <td>Butterfly Research</td>
-      <td>1905</td>
-      <td>230</td>
-      <td>1654</td>
-    </tr>
-    <tr>
-      <td>Old-Timey Baseball Photographs</td>
-      <td>441</td>
-      <td>230</td>
-      <td>306</td>
-    </tr>
+    <% end %>
+  <% end %>
   </tbody>
 </table>

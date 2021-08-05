@@ -3,10 +3,12 @@ module Hyrax
     module Google
       module Visits
         extend Legato::Model
-        # metrics :visitors, :new_visits
-        # dimensions :session_count, :date
+
         dimensions :user_type
-        metrics :sessions
+        metrics :sessions, :page_path, :page_path_level1 
+
+        filter(:collections) {|page_path_level1| contains(:pagePathLevel1, 'collections')}
+        filter(:works) {|page_path_level1| contains(:pagePathLevel1, 'concern')}
 
         def self.new_visits(profile, start_date, end_date)
           x = Visits.results(profile,
