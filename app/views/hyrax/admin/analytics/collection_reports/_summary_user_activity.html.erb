@@ -27,7 +27,7 @@
       <td><%= Hyrax::Analytics.collections_pageviews("week") %></td>
       <td><%= Hyrax::Analytics.collections_pageviews("month") %></td>
       <td><%= Hyrax::Analytics.collections_pageviews("year") %></td>
-      <td><%= Hyrax::Analytics.collections_pageviews("range", "#{Date.today-10.years},#{Date.today}") %></td>
+      <td><%= Hyrax::Analytics.collections_pageviews("range", "#{Time.zone.today-10.years},#{Time.zone.today}") %></td>
     </tr>
 
   </tbody>
