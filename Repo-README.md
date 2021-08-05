@@ -5,9 +5,12 @@
     * [Important URL's](#important-urls)
     * [Install Docker](#install-docker)
     * [Start the server](#start-the-server)
-    * [Seed the database](#seed-the-database)
     * [Admin User](#admin-user)
     * [Access the container](#access-the-container)
+      * [Seed the database](#seed-the-database)
+      * [Run migrations](#run-migrations)
+      * [Access the rails Console](#access-the-rails-console)
+      * [Run rubocop](#run-rubocop)
     * [RSpec](#rspec)
     * [Rubocop](#rubocop)
     * [Stop the app and services](#stop-the-app-and-services)
@@ -36,11 +39,6 @@ sc up -s app
 ```
 This command starts the web container, allowing Rails to be started or stopped independent of the other services. Once that starts (you'll see the line `Listening on tcp://0.0.0.0:3000` to indicate a successful boot), you can view your app at the [dev URL](#important-urls) above.
 
-### Seed the database
-TODO(alishaevn): how to seed the db?
-<!-- ```bash
-``` -->
-
 ### Admin User
 - Local:
   - email: admin@example.com
@@ -55,11 +53,34 @@ TODO(alishaevn): how to seed the db?
   docker-compose exec app sh
   ```
 
-### Rails console
-[Access the container](#access-the-container).
-``` bash
-rails c
-```
+- You must be inside the container to:
+  #### Seed the database
+  ``` bash
+  rails db:seed
+  ```
+
+  #### Run migrations
+  ``` bash
+  rails db:migrate
+  ```
+
+  #### Access the rails console
+  ``` bash
+  rails c
+  ```
+
+  #### Run rubocop
+  (The [`-a` flag](https://docs.rubocop.org/rubocop/usage/basic_usage.html#auto-correcting-offenses) is optional)
+
+  All files:
+    ```bash
+    sc exec rubocop -a
+    ```
+
+  One file:
+    ```bash
+    rubocop -a path/to/file.rb
+    ```
 
 ### RSpec
 Run rspec in a separate terminal window or tab than the running server.
@@ -79,20 +100,6 @@ One spec file:
 One test in one spec file:
   ``` bash
   docker-compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rspec spec/path/to/spec.rb:18"
-  ```
-
-### Rubocop
-[Access the container](#access-the-container).
-(The [`-a` flag](https://docs.rubocop.org/rubocop/usage/basic_usage.html#auto-correcting-offenses) is optional)
-
-All files:
-  ```bash
-  sc exec rubocop -a
-  ```
-
-One file:
-  ```bash
-  rubocop -a path/to/file.rb
   ```
 
 ### Stop the app and services
