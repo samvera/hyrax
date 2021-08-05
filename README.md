@@ -4,7 +4,7 @@ Here you will find information about the project, the issue board, and code.
 
 We will be working to implement some of the work from the Hyrax Analytics Working Group (HAWG).  We want to thank everyone who participated in that working group for all of their effort and for the users stories, use cases, mockups, and priorities thay created. Information about the group as well as the artifacts from their works can be found at https://wiki.lyrasis.org/pages/viewpage.action?pageId=87461330
 
-# Contacts:
+## Contacts:
 
 For questions on this project please contact:
 - Franny Gaede  - mfgaede@uoregon.edu
@@ -39,6 +39,8 @@ Jump in: [![Slack Status](http://slack.samvera.org/badge.svg)](http://slack.samv
   * [Deploying your Hyrax\-based Application to production](#deploying-your-hyrax-based-application-to-production)
 * [Acknowledgments](#acknowledgments)
 * [License](#license)
+* [Docker development setup](#docker-development-setup)
+* [Deploy a new release](#deploy-a-new-release)
 
 <aside>Table of contents created by <a href="https://github.com/ekalinin/github-markdown-toc.go">gh-md-toc</a></aside>
 
@@ -129,7 +131,8 @@ This software has been developed by and is brought to you by the Samvera communi
 
 Hyrax is available under [the Apache 2.0 license](LICENSE).
 
-# Docker development setup
+## Docker development setup
+#### Refer to [Repo-README](./Repo-README.md) for repository specific instructions
 
 1) Install Docker.app
 
@@ -144,7 +147,7 @@ gem install stack_car
 sc up --service app
 ```
 
-# Deploy a new release
+## Deploy a new release
 
 ``` bash
 sc release {staging | production} # creates and pushes the correct tags
