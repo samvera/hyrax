@@ -45,7 +45,7 @@ module Hyrax
           results.each do |result| 
             month_year = "#{result.year}-#{result.month}"
             results_hash[month_year] = result.pageviews
-            end
+          end
           results_hash
         end
         
