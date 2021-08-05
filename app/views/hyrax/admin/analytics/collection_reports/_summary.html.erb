@@ -19,8 +19,14 @@
   </tr>
   </thead>
   <tbody>
-    <%#= arr.each do |a| %>
-      <%#= render partial: 'collection_table', :collection, analytics: a %>
-    <%# end %>
+  <% if @collections.any? %>
+    <% @collections.each do |collection| %>
+    <tr>
+      <td><%= collection.try(:pageTitle) %></td>
+      <td><%= collection.try(:pageviews) %></td>
+      <td></td>
+    </tr>
+    <% end %>
+  <% end %>
   </tbody>
 </table>

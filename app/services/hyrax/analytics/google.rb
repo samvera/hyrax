@@ -136,9 +136,29 @@ module Hyrax
           PageviewsMonthly.query(profile, date[0], date[1])
         end
 
+        def collections_pageviews_monthly(period = 'range', date = "#{Date.today-11.months},#{Date.today}")
+          date = keyword_conversion(date)
+          PageviewsMonthly.collections(profile, date[0], date[1])
+        end
+
+        def works_pageviews_monthly(period = 'range', date = "#{Date.today-11.months},#{Date.today}")
+          date = keyword_conversion(date)
+          PageviewsMonthly.works(profile, date[0], date[1])
+        end
+        
         def pageviews(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
           date = date_period(period, date)
-          Pageviews.query(profile, date[0], date[1])
+          Pageviews.query(profile, date[0], date[1]) 
+        end
+
+        def works_pageviews(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+          date = date_period(period, date)
+          Pageviews.works(profile, date[0], date[1])
+        end
+
+        def collections_pageviews(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+          date = date_period(period, date)
+          Pageviews.collections(profile, date[0], date[1])
         end
 
          def new_visitors(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
@@ -156,14 +176,16 @@ module Hyrax
           Visits.return_visits(profile, date[0], date[1])
         end
 
-        def works_pageviews
-          Page.results(profile).works.each do |result| 
-            p result.try(:pagePath)
-            p result.try(:pageviews)
-            p result.try(:pageTitle)
-          end
+        def top_collections(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+          date = date_period(period, date)
+          Page.collections(profile, date[0], date[1])   
         end
 
+        def top_works(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+          date = date_period(period, date)
+          Page.works(profile, date[0], date[1])
+        end
+        
         def unique_visitors(period, date); end
 
         def pageviews_by_url(period, date, url); end

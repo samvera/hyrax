@@ -6,13 +6,10 @@ module Hyrax
         layout 'hyrax/dashboard'
 
         def index
-          # TODO: Dynamic
-          # today = Time.current
-          # this_week = (DateTime.now.beginning_of_week..DateTime.now)
-          # ! config.beginning_of_week = :monday <--- add to config
-          # this_month = (today.beginning_of_month..DateTime.now)
-          # this_year = (today.beginning_of_year..DateTime.now)
-          # ! all_time = sum of all <--- need to add
+          @start_date = params[:start_date] || Date.today - 1.month
+          @end_date = params[:end_date] || Date.today
+          @last_twelve_months = Hyrax::Analytics.collections_pageviews_monthly("month", "last12")
+          @collections = Hyrax::Analytics.top_collections("range", "#{@start_date},#{@end_date}")
         end
 
         def show; end
