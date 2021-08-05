@@ -6,7 +6,6 @@ module Hyrax
 
         metrics :pageviews
         dimensions :month, :year, :page_path_level1
-        # dimensions :month, :year
 
         filter(:collections) {|page_path_level1| contains(:pagePathLevel1, 'collections')}
         filter(:works) {|page_path_level1| contains(:pagePathLevel1, 'concern')}
