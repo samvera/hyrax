@@ -10,6 +10,7 @@ module Hyrax
           @end_date = params[:end_date] || Time.zone.today
           @last_twelve_months = Hyrax::Analytics.works_pageviews_monthly("month", "last12")
           @works = Hyrax::Analytics.top_works("range", "#{@start_date},#{@end_date}")
+          @downloads = Hyrax::Analytics.works_downloads("range", "#{@start_date},#{@end_date}")
         end
 
         def show; end

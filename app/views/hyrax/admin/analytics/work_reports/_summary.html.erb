@@ -4,7 +4,6 @@
 <hr />
 
 <table class="table table-striped">
-<%# TODO: Dynamic %>
   <thead>
   <tr>
     <th>&nbsp;</th>
@@ -19,11 +18,12 @@
   <tbody>
     <tr>
       <td><b>Downloads</b></td>
-      <td>7</td>
-      <td>94</td>
-      <td>401</td>
-      <td>9,537</td>
-      <td>47,391</td>
+      <td><%= Hyrax::Analytics.works_downloads("range", "#{@start_date},#{@end_date}").count %></td>
+      <td><%= Hyrax::Analytics.works_downloads("day").count %></td>
+      <td><%= Hyrax::Analytics.works_downloads("week").count %></td>
+      <td><%= Hyrax::Analytics.works_downloads("month").count %></td>
+      <td><%= Hyrax::Analytics.works_downloads("year").count %></td>
+      <td><%= Hyrax::Analytics.works_downloads("range", "#{Time.zone.today-10.years},#{Time.zone.today}").count %></td>
     </tr>
     <tr>
       <td><b>Page Views</b></td>
@@ -38,17 +38,14 @@
   </tbody>
 </table>
 
-<h4>Repository Works by User Activity</h4>
+<h4>Works</h4>
 <hr />
 
 <table class="table table-striped">
-<%# TODO: Dynamic %>
   <thead>
   <tr>
     <th>Work Title</th>
     <th>Views</th>
-    <th>Downloads</th>
-    <th>Unique visitors</th>
   </tr>
   </thead>
   <tbody>
@@ -57,8 +54,29 @@
     <tr>
       <td><%= work.try(:pageTitle) %></td>
       <td><%= work.try(:pageviews) %></td>
-      <td></td>
-      <td></td>
+
+    </tr>
+    <% end %>
+  <% end %>
+  </tbody>
+</table>
+
+<h4>Files</h4>
+<hr />
+
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>File Name</th>
+    <th>Downloads</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if @downloads.any? %>
+    <% @downloads.each do |download| %>
+    <tr>
+      <td><% file = FileSet.find(download[:eventLabel]) %> <%= file %></td>
+      <td><%= download.try(:totalEvents) %></td>
     </tr>
     <% end %>
   <% end %>
