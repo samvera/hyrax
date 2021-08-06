@@ -14,14 +14,16 @@ module Hyrax
           x = Page.results(profile,
             :start_date => start_date,
             :end_date => end_date,
-            :sort => '-pageviews').collections
+            :sort => '-pageviews',
+            :limit => 5).collections
         end
 
         def self.works(profile, start_date, end_date)
           x = Page.results(profile,
             :start_date => start_date,
             :end_date => end_date,
-            :sort => '-pageviews').works
+            :sort => '-pageviews',
+            :limit => 5).works
         end
 
       end

@@ -130,7 +130,12 @@ module Hyrax
             to_date_range(period)
           end
         end
-        
+
+        def works_downloads(period = 'range', date = "#{Time.zone.today-11.months},#{Time.zone.today}")
+          date = date_period(period, date)
+          Downloads.query(profile, date[0], date[1])
+        end
+
         def pageviews_monthly(period = 'range', date = "#{Time.zone.today-11.months},#{Time.zone.today}")
           date = keyword_conversion(date)
           PageviewsMonthly.query(profile, date[0], date[1])
