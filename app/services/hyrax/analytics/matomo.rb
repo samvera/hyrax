@@ -4,11 +4,6 @@ module Hyrax
   module Analytics
     module Matomo
       extend ActiveSupport::Concern
-      included do
-        private_class_method :config
-        private_class_method :get
-        private_class_method :api_params
-      end
 
       # rubocop:disable Metrics/BlockLength
       class_methods do
@@ -55,6 +50,16 @@ module Hyrax
         # Date Format = "2021-01-01,2021-01-31"
         # Date "magic keywords" = "today, yesterday, lastX (number), lastWeek, lastMonth or lastYear"
         # Example: Last 6 weeks: period: week, date: last6
+
+        def works_downloads(period = 'month', date = 'today')
+          # TODO(alishaevn): fill out this method with the correct code!!
+          # this code is just a copy of other code on the page
+          # so the report pages will load
+
+          method = 'VisitsSummary.getActions'
+          response = api_params(method, period, date)
+          response
+        end
 
         def pageviews_monthly(period = 'month', date = 'today')
           method = 'VisitsSummary.getActions'
