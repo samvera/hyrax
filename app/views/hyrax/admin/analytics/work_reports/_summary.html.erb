@@ -72,7 +72,12 @@
   </tr>
   </thead>
   <tbody>
-  <% if @downloads.any? %>
+  <%
+=begin%>
+  TODO(alishaevn): update this code to display for matomo too
+<%
+=end%>
+  <% if ENV['HYRAX_ANALYTICS_PROVIDER']== 'google' && @downloads.any? %>
     <% @downloads.each do |download| %>
     <tr>
       <td><% file = FileSet.find(download[:eventLabel]) %> <%= file %></td>
