@@ -54,47 +54,107 @@ module Hyrax
         # Period Options = "day, week, month, year, range"
         # Date Format = "2021-01-01,2021-01-31"
         # Date "magic keywords" = "today, yesterday, lastX (number), lastWeek, lastMonth or lastYear"
-        # Example:  Last 6 weeks: period: week, date: last6
+        # Example: Last 6 weeks: period: week, date: last6
 
-        def pageviews_monthly(period='month', date='today')
+        def pageviews_monthly(period = 'month', date = 'today')
           method = 'VisitsSummary.getActions'
-          response = api_params(method, period, date, nil)
+          response = api_params(method, period, date)
           response
         end
 
-        def pageviews(period='month', date='today')
+        def collections_pageviews_monthly(period = 'month', date = 'today')
+          # TODO(alishaevn): fill out this method with the correct code!!
+          # this code is just a copy of other code on the page
+          # so the report pages will load
+
+          method = 'Actions.getPageUrl'
+          response = api_params(method, period, date)
+          response
+        end
+
+        def works_pageviews_monthly(period = 'month', date = 'today')
+          # TODO(alishaevn): fill out this method with the correct code!!
+          # this code is just a copy of other code on the page
+          # so the report pages will load
+
+          method = 'VisitsSummary.getActions'
+          response = api_params(method, period, date)
+          response
+        end
+
+        def pageviews(period = 'month', date = 'today')
           method = 'Actions.get'
-          response = api_params(method, period, date, nil)
+          response = api_params(method, period, date)
           response['nb_pageviews']
         end
 
-        def new_visitors(period='month', date='today')
+        def works_pageviews(period = 'month', date = 'today')
+          # TODO(alishaevn): fill out this method with the correct code!!
+          # this code is just a copy of other code on the page
+          # so the report pages will load
+
+          method = 'Actions.get'
+          response = api_params(method, period, date)
+          response['nb_pageviews']
+        end
+
+        def collections_pageviews(period = 'month', date = 'today')
+          # TODO(alishaevn): fill out this method with the correct code!!
+          # this code is just a copy of other code on the page
+          # so the report pages will load
+
+          method = 'Actions.get'
+          response = api_params(method, period, date)
+          response['nb_pageviews']
+        end
+
+        def new_visitors(period = 'month', date = 'today')
           method = 'VisitFrequency.get'
-          response = api_params(method, period, date, nil)
+          response = api_params(method, period, date)
           response["nb_visits_new"]
         end
 
-        def returning_visitors(period='month', date='today')
+        def returning_visitors(period = 'month', date = 'today')
           method = 'VisitFrequency.get'
-          response = api_params(method, period, date, nil)
+          response = api_params(method, period, date)
           response["nb_visits_returning"]
         end
 
-        def total_visitors(period='month', date='today')
+        def total_visitors(period = 'month', date = 'today')
           method = 'VisitFrequency.get'
-          response = api_params(method, period, date, nil)
+          response = api_params(method, period, date)
           response["nb_visits_returning"].to_i + response["nb_visits_new"].to_i
         end
 
-        def unique_visitors(period='month', date='today')
+        def unique_visitors(period = 'month', date = 'today')
           method = 'VisitsSummary.getUniqueVisitors'
-          response = api_params(method, period, date, nil)
+          response = api_params(method, period, date)
           response['value']
         end
 
-        def pageviews_by_url(period='month', date='today', url=nil)
+        def top_collections(period = 'month', date = 'today')
+          # TODO(alishaevn): fill out this method with the correct code!!
+          # this code is just a copy of other code on the page
+          # so the report pages will load
+
           method = 'Actions.getPageUrl'
-          response = api_params(method, period, date, nil)
+          response = api_params(method, period, date)
+          response
+        end
+
+        def top_works(period = 'month', date = 'today')
+          # TODO(alishaevn): fill out this method with the correct code!!
+          # this code is just a copy of other code on the page
+          # so the report pages will load
+
+          method = 'Actions.getPageTitles'
+          response = api_params(method, period, date)
+          response
+        end
+
+        def pageviews_by_url(period = 'month', date = 'today', url=nil)
+          method = 'Actions.getPageUrl'
+          response = api_params(method, period, date)
           response.count.zero? ? 0 : response.first["nb_visits"]
         end
 
@@ -104,7 +164,7 @@ module Hyrax
           JSON.parse(response.body)
         end
 
-        def api_params(method, period, date, url)
+        def api_params(method, period, date, url = nil)
           params = {
             module: "API",
             idSite: config.site_id,
