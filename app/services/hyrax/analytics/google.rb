@@ -7,11 +7,11 @@ module Hyrax
     module Google
       extend ActiveSupport::Concern
      
-      included do
-        private_class_method :config
-        private_class_method :token
-        private_class_method :user
-      end
+      # included do
+      #   private_class_method :config
+      #   private_class_method :token
+      #   private_class_method :user
+      # end
 
       # rubocop:disable Metrics/BlockLength
       class_methods do
@@ -39,7 +39,7 @@ module Hyrax
             new yaml.fetch('analytics')&.fetch('google')
           end
 
-          REQUIRED_KEYS = %w[app_name app_version privkey_path privkey_secret client_email].freeze
+          REQUIRED_KEYS = %w[analytics_id app_name app_version privkey_path privkey_secret client_email].freeze
 
           def initialize(config)
             @config = config
@@ -90,24 +90,24 @@ module Hyrax
         def profile
           return unless config.valid?
           user.profiles.detect do |profile|
-            profile.web_property_id == Hyrax.config.google_analytics_id
+            profile.web_property_id == config.analytics_id
           end
         end
 
         def to_date_range(period)
           case period
           when "day"
-            start_date = Date.today
-            end_date = Date.today
+            start_date = Time.zone.today
+            end_date = Time.zone.today
           when "week"
-            start_date = Date.today-7.days
-            end_date = Date.today
+            start_date = Time.zone.today-7.days
+            end_date = Time.zone.today
           when "month"
-            start_date = Date.today-1.month
-            end_date = Date.today
+            start_date = Time.zone.today-1.month
+            end_date = Time.zone.today
           when "year"
-            start_date = Date.today-1.year
-            end_date = Date.today
+            start_date = Time.zone.today-1.year
+            end_date = Time.zone.today
           end
           date = [start_date, end_date]
         end
@@ -115,8 +115,8 @@ module Hyrax
         def keyword_conversion(date)
           case date
           when "last12"
-            start_date = Date.today-11.months
-            end_date = Date.today
+            start_date = Time.zone.today-11.months
+            end_date = Time.zone.today
             date = [start_date, end_date]
           else
             date.split(",")
@@ -130,58 +130,63 @@ module Hyrax
             to_date_range(period)
           end
         end
-        
-        def pageviews_monthly(period = 'range', date = "#{Date.today-11.months},#{Date.today}")
+
+        def works_downloads(period = 'range', date = "#{Time.zone.today-11.months},#{Time.zone.today}")
+          date = date_period(period, date)
+          Downloads.query(profile, date[0], date[1])
+        end
+
+        def pageviews_monthly(period = 'range', date = "#{Time.zone.today-11.months},#{Time.zone.today}")
           date = keyword_conversion(date)
           PageviewsMonthly.query(profile, date[0], date[1])
         end
 
-        def collections_pageviews_monthly(period = 'range', date = "#{Date.today-11.months},#{Date.today}")
+        def collections_pageviews_monthly(period = 'range', date = "#{Time.zone.today-11.months},#{Time.zone.today}")
           date = keyword_conversion(date)
           PageviewsMonthly.collections(profile, date[0], date[1])
         end
 
-        def works_pageviews_monthly(period = 'range', date = "#{Date.today-11.months},#{Date.today}")
+        def works_pageviews_monthly(period = 'range', date = "#{Time.zone.today-11.months},#{Time.zone.today}")
           date = keyword_conversion(date)
           PageviewsMonthly.works(profile, date[0], date[1])
         end
         
-        def pageviews(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+        def pageviews(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Pageviews.query(profile, date[0], date[1]) 
         end
 
-        def works_pageviews(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+        def works_pageviews(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Pageviews.works(profile, date[0], date[1])
         end
 
-        def collections_pageviews(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+        def collections_pageviews(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Pageviews.collections(profile, date[0], date[1])
         end
 
-         def new_visitors(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+         def new_visitors(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Visits.new_visits(profile, date[0], date[1])
         end
 
-        def returning_visitors(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+        def returning_visitors(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Visits.return_visits(profile, date[0], date[1])
         end
 
-        def total_visitors(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+        def total_visitors(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Visits.return_visits(profile, date[0], date[1])
         end
 
-        def top_collections(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+        def top_collections(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Page.collections(profile, date[0], date[1])   
         end
 
-        def top_works(period = 'month', date = "#{Date.today-1.month},#{Date.today}")
+        def top_works(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Page.works(profile, date[0], date[1])
         end

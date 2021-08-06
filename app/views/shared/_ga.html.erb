@@ -1,7 +1,6 @@
-<% tracking_id = Hyrax.config.google_analytics_id %>
 <script type="text/javascript">
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', '<%= tracking_id %>']);
+  _gaq.push(['_setAccount', '<%= Hyrax::Analytics.config.analytics_id %>']);
   <% if Rails.env.development? %>
     // This allows us to look at GA data live from locahost
     _gaq.push(['_setDomainName', 'none']);

@@ -5,10 +5,7 @@ module Hyrax
         extend Legato::Model
 
         dimensions :user_type
-        metrics :sessions, :page_path, :page_path_level1 
-
-        filter(:collections) {|page_path_level1| contains(:pagePathLevel1, 'collections')}
-        filter(:works) {|page_path_level1| contains(:pagePathLevel1, 'concern')}
+        metrics :sessions
 
         def self.new_visits(profile, start_date, end_date)
           x = Visits.results(profile,

@@ -35,7 +35,7 @@
                   <%= render "summary" %>
                 </div>
                 <div class="tab-pane" id="monthly">
-                  <h4 class="text-center">Month-by-month status for last 12 months through <%= Date.today.strftime("%B %Y") %></h4>
+                  <h4 class="text-center">Month-by-month status for last 12 months through <%= Time.zone.today.strftime("%B %Y") %></h4>
                   <%= render "hyrax/admin/analytics/monthly_pageviews" %>
                 </div>
               </div>
@@ -44,7 +44,7 @@
 
           </div>
           <%# TODO: Dynamic %>
-          <p class="text-center">This report was generated on <b><%= Date.today.strftime("%B %d, %Y") %></b></p>
+          <p class="text-center">This report was generated on <b><%= Time.zone.today.strftime("%B %d, %Y") %></b></p>
 
         </div>
 
