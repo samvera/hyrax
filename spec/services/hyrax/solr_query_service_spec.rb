@@ -189,12 +189,100 @@ RSpec.describe Hyrax::SolrQueryService do
       end
     end
 
+    context "when update action" do
+      let(:action) { :update }
+      let(:expected_query) do
+        [
+          initial_query,
+          "(({!terms f=edit_access_group_ssim}public,#{user_groups.join(',')}) OR " \
+          "edit_access_person_ssim:#{user.email})"
+        ]
+      end
+      it "returns a query limiting edit rights the user's groups and the user" do
+        expect(solr_query_service.query).to eq expected_query
+      end
+    end
+
     context "when edit action" do
       let(:action) { :edit }
       let(:expected_query) do
         [
           initial_query,
           "(({!terms f=edit_access_group_ssim}public,#{user_groups.join(',')}) OR " \
+          "edit_access_person_ssim:#{user.email})"
+        ]
+      end
+      it "returns a query limiting edit rights the user's groups and the user" do
+        expect(solr_query_service.query).to eq expected_query
+      end
+    end
+
+    context "when create action" do
+      let(:action) { :create }
+      let(:expected_query) do
+        [
+          initial_query,
+          "(({!terms f=edit_access_group_ssim}public,#{user_groups.join(',')}) OR " \
+          "edit_access_person_ssim:#{user.email})"
+        ]
+      end
+      it "returns a query limiting edit rights the user's groups and the user" do
+        expect(solr_query_service.query).to eq expected_query
+      end
+    end
+
+    context "when new action" do
+      let(:action) { :new }
+      let(:expected_query) do
+        [
+          initial_query,
+          "(({!terms f=edit_access_group_ssim}public,#{user_groups.join(',')}) OR " \
+          "edit_access_person_ssim:#{user.email})"
+        ]
+      end
+      it "returns a query limiting edit rights the user's groups and the user" do
+        expect(solr_query_service.query).to eq expected_query
+      end
+    end
+
+    context "when destroy action" do
+      let(:action) { :destroy }
+      let(:expected_query) do
+        [
+          initial_query,
+          "(({!terms f=edit_access_group_ssim}public,#{user_groups.join(',')}) OR " \
+          "edit_access_person_ssim:#{user.email})"
+        ]
+      end
+      it "returns a query limiting edit rights the user's groups and the user" do
+        expect(solr_query_service.query).to eq expected_query
+      end
+    end
+
+    context "when show action" do
+      let(:action) { :show }
+      let(:expected_query) do
+        [
+          initial_query,
+          "(({!terms f=read_access_group_ssim}public,#{user_groups.join(',')}) OR " \
+          "({!terms f=edit_access_group_ssim}public,#{user_groups.join(',')}) OR " \
+          "read_access_person_ssim:#{user.email} OR " \
+          "edit_access_person_ssim:#{user.email})"
+        ]
+      end
+      it "returns a query limiting edit rights the user's groups and the user" do
+        expect(solr_query_service.query).to eq expected_query
+      end
+    end
+
+    context "when read action" do
+      let(:action) { :read }
+      let(:expected_query) do
+        [
+          initial_query,
+          "(({!terms f=read_access_group_ssim}public,#{user_groups.join(',')}) OR " \
+          "({!terms f=edit_access_group_ssim}public,#{user_groups.join(',')}) OR " \
+          "read_access_person_ssim:#{user.email} OR " \
           "edit_access_person_ssim:#{user.email})"
         ]
       end
