@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hyrax::Workflow::ActionableObjects, :clean_repo do
+RSpec.describe Hyrax::Workflow::ActionableObjects do
   subject(:service) { described_class.new(user: user) }
   let(:user) { FactoryBot.create(:user) }
 
@@ -77,8 +77,8 @@ RSpec.describe Hyrax::Workflow::ActionableObjects, :clean_repo do
           agent = Sipity::Agent(user)
 
           Sipity::WorkflowRole.where(workflow_id: workflow.id).each do |wf_role|
-            Sipity::WorkflowResponsibility.find_or_create_by!(agent_id: agent.id, workflow_role_id: wf_role.role_id)
-            Sipity::WorkflowResponsibility.find_or_create_by!(agent_id: agent.id, workflow_role_id: wf_role.role_id)
+            Sipity::WorkflowResponsibility.find_or_create_by!(agent_id: agent.id, workflow_role_id: wf_role.id)
+            Sipity::WorkflowResponsibility.find_or_create_by!(agent_id: agent.id, workflow_role_id: wf_role.id)
           end
         end
 
