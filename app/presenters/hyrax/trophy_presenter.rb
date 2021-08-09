@@ -36,9 +36,10 @@ module Hyrax
     # @return [Array<TrophyPresenter>] a list of all the trophy presenters for the user
     def self.find_by_user(user)
       work_ids = user.trophies.pluck(:work_id)
-      query = Hyrax::SolrQueryBuilderService.construct_query_for_ids(work_ids)
-      results = Hyrax::WorkRelation.new.search_with_conditions(query)
-      results.map { |result| TrophyPresenter.new(document_model.new(result)) }
+      query    = Hyrax::SolrQueryBuilderService.construct_query_for_ids(work_ids)
+      results  = Hyrax::WorkRelation.new.search_with_conditions(query)
+
+      results.map { |result| new(document_model.new(result)) }
     rescue RSolr::Error::ConnectionRefused
       []
     end
