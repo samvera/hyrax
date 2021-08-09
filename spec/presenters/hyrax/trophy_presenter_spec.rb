@@ -1,54 +1,39 @@
 # frozen_string_literal: true
+
 RSpec.describe Hyrax::TrophyPresenter do
-  let(:presenter) { described_class.new(solr_document) }
-  let(:solr_document) { SolrDocument.new(id: '123456', has_model_ssim: 'GenericWork', title_tesim: ['A Title']) }
+  subject(:presenter) { described_class.new(solr_document) }
 
-  describe "find_by_user" do
-    let(:user) { create(:user) }
-    let(:work1) { create(:work, user: user) }
-    let(:work2) { create(:work, user: user) }
-    let(:work3) { create(:work, user: user) }
-    let!(:trophy1) { user.trophies.create!(work_id: work1.id) }
-    let!(:trophy2) { user.trophies.create!(work_id: work2.id) }
-    let!(:trophy3) { user.trophies.create!(work_id: work3.id) }
+  let(:solr_document) do
+    SolrDocument.new(id: '123456',
+                     has_model_ssim: 'GenericWork',
+                     title_tesim: ['A Title'],
+                     thumbnail_path_ss: '/foo/bar.png')
+  end
 
-    subject { described_class.find_by_user(user) }
+  its(:id) { is_expected.to eq '123456' }
+  its(:model_name) { is_expected.to eq GenericWork.model_name }
+  its(:thumbnail_path) { is_expected.to eq '/foo/bar.png' }
+  its(:to_param) { is_expected.to eq '123456' }
+  its(:to_s) { is_expected.to eq("A Title") }
 
-    it "returns a list of generic works" do
-      expect(subject.size).to eq 3
-      expect(subject).to all(be_kind_of described_class)
+  describe ".find_by_user" do
+    let(:user)  { FactoryBot.create(:user) }
+    let(:work1) { FactoryBot.create(:work, user: user) }
+    let(:work2) { FactoryBot.create(:work, user: user) }
+    let(:work3) { FactoryBot.create(:work, user: user) }
+
+    before do
+      user.trophies.create!(work_id: work1.id)
+      user.trophies.create!(work_id: work2.id)
+      user.trophies.create!(work_id: work3.id)
+      user.trophies.create!(work_id: 'fake_id')
     end
-  end
 
-  describe "id" do
-    subject { presenter.id }
-
-    it { is_expected.to eq '123456' }
-  end
-
-  describe "to_param" do
-    subject { presenter.to_param }
-
-    it { is_expected.to eq '123456' }
-  end
-
-  describe "model_name" do
-    subject { presenter.model_name }
-
-    it { is_expected.to eq GenericWork.model_name }
-  end
-
-  describe 'thumbnail_path' do
-    let(:solr_document) { SolrDocument.new(thumbnail_path_ss: '/foo/bar.png') }
-
-    subject { presenter.thumbnail_path }
-
-    it { is_expected.to eq '/foo/bar.png' }
-  end
-
-  describe '#to_s' do
-    subject { presenter.to_s }
-
-    it { is_expected.to eq("A Title") }
+    it "returns presenters for trophied works" do
+      expect(described_class.find_by_user(user))
+        .to contain_exactly(be_kind_of(described_class),
+                            be_kind_of(described_class),
+                            be_kind_of(described_class))
+    end
   end
 end
