@@ -18,22 +18,28 @@ RSpec.describe Hyrax::TrophyPresenter do
 
   describe ".find_by_user" do
     let(:user)  { FactoryBot.create(:user) }
-    let(:work1) { FactoryBot.create(:work, user: user) }
-    let(:work2) { FactoryBot.create(:work, user: user) }
-    let(:work3) { FactoryBot.create(:work, user: user) }
+    let(:work1) { FactoryBot.valkyrie_create(:hyrax_work, depositor: user.user_key) }
+    let(:work2) { FactoryBot.valkyrie_create(:hyrax_work, depositor: user.user_key) }
+    let(:work3) { FactoryBot.valkyrie_create(:hyrax_work, depositor: user.user_key) }
 
-    before do
-      user.trophies.create!(work_id: work1.id)
-      user.trophies.create!(work_id: work2.id)
-      user.trophies.create!(work_id: work3.id)
-      user.trophies.create!(work_id: 'fake_id')
+    it 'is empty' do
+      expect(described_class.find_by_user(user)).to be_empty
     end
 
-    it "returns presenters for trophied works" do
-      expect(described_class.find_by_user(user))
-        .to contain_exactly(be_kind_of(described_class),
-                            be_kind_of(described_class),
-                            be_kind_of(described_class))
+    context 'with trophies' do
+      before do
+        user.trophies.create!(work_id: work1.id)
+        user.trophies.create!(work_id: work2.id)
+        user.trophies.create!(work_id: work3.id)
+        user.trophies.create!(work_id: 'fake_id')
+      end
+
+      it "returns presenters for trophied works" do
+        expect(described_class.find_by_user(user))
+          .to contain_exactly(be_kind_of(described_class),
+                              be_kind_of(described_class),
+                              be_kind_of(described_class))
+      end
     end
   end
 end

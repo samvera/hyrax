@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 module Hyrax
   ##
-  # Methods in this class are providing functionality previously supported by ActiveFedora::SolrQueryBuilder.
-  # It includes methods to build and execute a query.
+  # Supports building and executing a solr query.
+  #
+  # @note Methods in this class are providing functionality previously supported by
+  #   ActiveFedora::SolrQueryBuilder.
   class SolrQueryService < ::SearchBuilder # rubocop:disable Metrics/ClassLength
     class_attribute :query_service
     self.query_service = Hyrax.query_service
@@ -15,6 +17,15 @@ module Hyrax
     end
 
     ##
+    # @api private
+    # @see Blacklight::Configuration#document_model
+    #
+    # @return [Class] the model class to use for solr documents
+    def self.document_model
+      CatalogController.blacklight_config.document_model
+    end
+
+    ##
     # @return [Hash] the results returned from solr for the current query
     def get
       solr_service.get(build)
@@ -23,7 +34,7 @@ module Hyrax
     ##
     # @return [Enumerable<SolrDocument>]
     def solr_documents
-      get['response']['docs'].map { |doc| ::SolrDocument.new(doc) }
+      get['response']['docs'].map { |doc| self.class.document_model.new(doc) }
     end
 
     ##
