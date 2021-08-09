@@ -35,18 +35,22 @@ module Hyrax
     #
     # @return [Array<TrophyPresenter>] a list of all the trophy presenters for the user
     def self.find_by_user(user)
-      work_ids = user.trophies.pluck(:work_id)
-      query    = Hyrax::SolrQueryBuilderService.construct_query_for_ids(work_ids)
-      results  = Hyrax::WorkRelation.new.search_with_conditions(query)
+      ids = user.trophies.pluck(:work_id)
+      return ids if ids.empty?
 
-      results.map { |result| new(document_model.new(result)) }
+      documents = Hyrax::SolrQueryService.new.with_ids(ids: ids).solr_documents
+
+      documents.map { |doc| new(doc) }
     rescue RSolr::Error::ConnectionRefused
       []
     end
 
     ##
     # @api private
+    # @deprecated use CatalogController.blacklight_config.document_model instead
     def self.document_model
+      Deprecation
+        .warn("Use CatalogController.blacklight_config.document_model instead.")
       CatalogController.blacklight_config.document_model
     end
     private_class_method :document_model

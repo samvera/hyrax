@@ -7,9 +7,9 @@ RSpec.describe Hyrax::UserProfilePresenter do
   its(:current_user?) { is_expected.to be true }
 
   describe "#trophies" do
-    let(:work1) { FactoryBot.create(:work, user: user) }
-    let(:work2) { FactoryBot.create(:work, user: user) }
-    let(:work3) { FactoryBot.create(:work, user: user) }
+    let(:work1) { FactoryBot.valkyrie_create(:hyrax_work, depositor: user.user_key) }
+    let(:work2) { FactoryBot.valkyrie_create(:hyrax_work, depositor: user.user_key) }
+    let(:work3) { FactoryBot.valkyrie_create(:hyrax_work, depositor: user.user_key) }
 
     before do
       user.trophies.create!(work_id: work1.id)
