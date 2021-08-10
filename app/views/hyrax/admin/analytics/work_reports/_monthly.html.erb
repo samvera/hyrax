@@ -2,39 +2,56 @@
 <h4>Monthly user activity (past 12 months)</h4>
 <hr />
 
-<% if @last_twelve_months %>
 <table class="table table-striped">
 <%# TODO: Dynamic %>
   <thead>
   <tr>
     <th>&nbsp;</th>
-    <% @last_twelve_months.reverse_each do |month| %>
-        <th><%= month[0] %></th>
-    <% end %>
+    <th>Sep</th>
+    <th>Oct</th>
+    <th>Nov</th>
+    <th>Dec</th>
+    <th>Jan</th>
+    <th>Feb</th>
+    <th>Mar</th>
+    <th>Apr</th>
+    <th>May</th>
+    <th>Jun</th>
+    <th>Jul</th>
+    <th>Aug</th>
   </tr>
   </thead>
   <tbody>
     <tr>
       <td><b>Downloads</b></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>9</td>
+      <td>99</td>
+      <td>99</td>
+      <td>99</td>
+      <td>99</td>
+      <td>99</td>
+      <td>99</td>
+      <td>99</td>
+      <td>99</td>
+      <td>401</td>
+      <td>401</td>
+      <td>401</td>
     </tr>
     <tr>
       <td><b>Views</b></td>
-      <% @last_twelve_months.reverse_each do |month| %>
-        <td><%= month[1] %></td>
-      <% end %>
+      <td>23</td>
+      <td>387</td>
+      <td>387</td>
+      <td>387</td>
+      <td>387</td>
+      <td>387</td>
+      <td>387</td>
+      <td>387</td>
+      <td>387</td>
+      <td>1299</td>
+      <td>1299</td>
+      <td>1299</td>
     </tr>
+
   </tbody>
 </table>
-<% end %>

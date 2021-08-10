@@ -1,0 +1,13 @@
+<% if Hyrax.config.analytics_provider == 'google' %>
+  // Callbacks for tracking events using Google Analytics
+  $(document).on('click', '#file_download', function(e) {
+    _gaq.push(['_trackEvent', 'Files', 'Downloaded', $(this).data('label')]);    
+  });
+<% elsif Hyrax.config.analytics_provider == 'matomo' %>
+  // Callbacks for tracking events using Matomo
+  $(document).on('click', '#file_download', function(e) {
+    _paq.push(['trackEvent', 'Files', 'Downloaded', $(this).data('label')]);
+    _paq.push(['enableLinkTracking']);
+    _paq.push(['setDownloadClasses', "download"]);
+  });
+<% end %>
