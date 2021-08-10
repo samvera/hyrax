@@ -4,7 +4,7 @@ module Hyrax
   module Workflow
     ##
     # Decorates objects with attributes with their workflow state.
-    class ObjectInWorkflowDecorator < Draper::Decorator
+    class ObjectInWorkflowDecorator < Hyrax::ModelDecorator
       delegate_all
 
       ##
