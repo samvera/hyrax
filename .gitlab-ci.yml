@@ -41,9 +41,9 @@ test:
       alias: fcrepo
     - name: redis:5-alpine
       alias: redis
-    - name: solr:8.7
+    - name: registry.gitlab.com/notch8/rutgers-vdc/solr:latest
       alias: solr
-      command: [ "sh", "-c", "precreate-core", "hyrax_test", "/opt/solr/server/configsets/hyraxconf" ]
+      entrypoint: ["docker-entrypoint.sh", "solr-precreate", "hyrax-test", "/opt/config"]
   variables:
     DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL: "true"
     DATABASE_URL: "postgres://postgres:postgres@db/hyku"
