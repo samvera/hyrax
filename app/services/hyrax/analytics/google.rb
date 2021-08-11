@@ -131,9 +131,17 @@ module Hyrax
           end
         end
 
+        def downloads_count(period = 'range', date = "#{Time.zone.today-11.months},#{Time.zone.today}")
+          date = date_period(period, date)
+          Downloads.query(profile, date[0], date[1]).count
+        end
+        
         def works_downloads(period = 'range', date = "#{Time.zone.today-11.months},#{Time.zone.today}")
           date = date_period(period, date)
           Downloads.query(profile, date[0], date[1])
+        end
+
+        def downloads_monthly(period = 'month', date = 'today')
         end
 
         def pageviews_monthly(period = 'range', date = "#{Time.zone.today-11.months},#{Time.zone.today}")

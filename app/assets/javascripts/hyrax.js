@@ -56,7 +56,7 @@
 //= require hyrax/search
 //= require hyrax/content_blocks
 //= require hyrax/nav_safety
-//= require hyrax/ga_events
+//= require hyrax/analytics_events
 //= require hyrax/select_submit
 //= require hyrax/tabs
 //= require hyrax/user_search

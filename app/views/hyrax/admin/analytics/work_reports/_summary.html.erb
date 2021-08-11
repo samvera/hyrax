@@ -18,12 +18,12 @@
   <tbody>
     <tr>
       <td><b>Downloads</b></td>
-      <td><%= Hyrax::Analytics.works_downloads("range", "#{@start_date},#{@end_date}").count %></td>
-      <td><%= Hyrax::Analytics.works_downloads("day").count %></td>
-      <td><%= Hyrax::Analytics.works_downloads("week").count %></td>
-      <td><%= Hyrax::Analytics.works_downloads("month").count %></td>
-      <td><%= Hyrax::Analytics.works_downloads("year").count %></td>
-      <td><%= Hyrax::Analytics.works_downloads("range", "#{Time.zone.today-10.years},#{Time.zone.today}").count %></td>
+      <td><%= Hyrax::Analytics.downloads_count("range", "#{@start_date},#{@end_date}") %></td>
+      <td><%= Hyrax::Analytics.downloads_count("day") %></td>
+      <td><%= Hyrax::Analytics.downloads_count("week") %></td>
+      <td><%= Hyrax::Analytics.downloads_count("month") %></td>
+      <td><%= Hyrax::Analytics.downloads_count("year") %></td>
+      <td><%= Hyrax::Analytics.downloads_count("range", "#{Time.zone.today-10.years},#{Time.zone.today}") %></td>
     </tr>
     <tr>
       <td><b>Page Views</b></td>
@@ -38,6 +38,7 @@
   </tbody>
 </table>
 
+ <% if @works&.any? %>
 <h4>Works</h4>
 <hr />
 
@@ -49,18 +50,17 @@
   </tr>
   </thead>
   <tbody>
-  <% if @works.any? %>
     <% @works.each do |work| %>
     <tr>
       <td><%= work.try(:pageTitle) %></td>
       <td><%= work.try(:pageviews) %></td>
-
     </tr>
     <% end %>
-  <% end %>
   </tbody>
 </table>
+<% end %>
 
+ <% if @downloads&.any? %>
 <h4>Files</h4>
 <hr />
 
@@ -72,18 +72,17 @@
   </tr>
   </thead>
   <tbody>
-  <%
-=begin%>
-  TODO(alishaevn): update this code to display for matomo too
-<%
-=end%>
-  <% if ENV['HYRAX_ANALYTICS_PROVIDER']== 'google' && @downloads.any? %>
-    <% @downloads.each do |download| %>
-    <tr>
-      <td><% file = FileSet.find(download[:eventLabel]) %> <%= file %></td>
-      <td><%= download.try(:totalEvents) %></td>
-    </tr>
+      <% @downloads.each do |download| %>
+      <tr>
+       <% if ENV['HYRAX_ANALYTICS_PROVIDER']== 'google' %>
+        <td><% file = FileSet.find(download[:eventLabel]) %> <%= file %></td>
+        <td><%= download.try(:totalEvents) %></td>
+       <% elsif ENV['HYRAX_ANALYTICS_PROVIDER']== 'matomo' %>
+         <td><% file = FileSet.find(download['label']) %> <%= file %></td>
+         <td><%= download['nb_events'] %></td>
+        <% end %>
+      </tr>
     <% end %>
-  <% end %>
   </tbody>
 </table>
+ <% end %>
