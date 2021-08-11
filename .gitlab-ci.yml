@@ -43,7 +43,7 @@ test:
       alias: redis
     - name: registry.gitlab.com/notch8/od_analytics/solr:latest
       alias: solr
-      command: [ "sh", "-c", "solr-precreate", "hyrax_test", "/opt/solr/server/configsets/hyraxconf" ]
+      command: [ "sh", "-c", "solr-precreate", "hyrax_test", "/opt/solr/server/solr/configsets/hyraxconf" ]
   variables:
     DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL: "true"
     DATABASE_URL: "postgres://postgres:postgres@db/hyku"
