@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# This script wraps up helm deployment. It is meant as a clear starting point for
+# commandline deployment or CI based deployment. It requires the following ENV vars be set
+#
+# CHART_VERSION: this is the version of the hyrax chart you want to deploy. default - 0.22.0
+# DEPLOY_IMAGE: this is the build image that runs the rails application. Typically this would run puma or passenger. eg: samvera/hyrax or ghcr.io/samvera/hyku. Defaults to gcrh.io/samvera/hyku
+# WORKER_IMAGE: this is the worker target, usually built from the same Dockerfile as DEPLOY_IMAGE. eg: samvera/hyrax/worker or ghcr.io/samvera/hyku/worker. Defaults to gcrh.io/samvera/hyku/worker
+# DEPLOY_TAG: name of of the tag you want to deploy for deploy image. eg: "latest" or "v3.0.1" or "f123asdf1". Defaults to latest
+# WORKER_TAG: name of of the tag you want to deploy for deploy image. eg: "latest" or "v3.0.1" or "f123asdf1". Defaults to DEPLOY_TAG
+# HELM_EXTRA_ARGS: any additional arguments you'd like passed to helm upgrade directly. can be blank.
+
+if [ -z "$1" ] || [ -z "$2" ]
+then
+    echo './bin/deploy RELEASE_NAME NAMESPACE'
+    exit 1
+fi
+release_name="${1}"
+namespace="${2}"
+
+CHART_VERSION="${CHART_VERSION:-0.22.0}"
+
+DEPLOY_IMAGE="${DEPLOY_IMAGE}:ghcr.io/samvera/hyku"
+WORKER_IMAGE="${WORKER_IMAGE}:ghcr.io/samvera/hyku/worker"
+DEPLOY_TAG="${DEPLOY_TAG:-latest}"
+WORKER_TAG="${WORKER_TAG:-$DEPLOY_TAG}"
+
+helm chart pull ghcr.io/samvera/hyrax/hyrax-helm:$CHART_VERSION
+helm chart export ghcr.io/samvera/hyrax/hyrax-helm:$CHART_VERSION
+
+helm repo update
+
+helm upgrade \
+    --install \
+    --atomic \
+    --timeout 15m0s \
+    --set image.repository="$DEPLOY_IMAGE" \
+    --set image.tag="$DEPLOY_TAG" \
+    --set worker.image.repository="$WORKER_IMAGE" \
+    --set worker.image.tag="$DEPLOY_TAG" \
+    $HELM_EXTRA_ARGS \
+    --namespace="$namespace" \
+    --create-namespace \
+    "$release_name" \
+    hyrax

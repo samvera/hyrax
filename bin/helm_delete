@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# This script wraps up helm deletion. It is meant as a clear starting point for
+# commandline deployment or CI based deployment.
+#
+
+if [ -z "$1" ] || [ -z "$2" ]
+then
+    echo './bin/delete RELEASE_NAME NAMESPACE'
+    exit 1
+fi
+release_name="${1}"
+namespace="${2}"
+
+echo "Deleting release: $release_name..."
+helm --namespace "$namespace" delete "$release_name"

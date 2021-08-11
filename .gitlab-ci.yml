@@ -1,10 +1,7 @@
 ---
 stages:
   - build
-  - test
-  - review
-  - staging
-  - production
+  - go
 
 before_script:
   - export TAG=${CI_COMMIT_SHA}
@@ -18,6 +15,8 @@ build:
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
     - docker build --target hyrax-engine-dev --tag $CI_REGISTRY_IMAGE:$TAG .
     - docker push $CI_REGISTRY_IMAGE:$TAG
+    - docker build --target hyrax-engine-dev-worker --tag $CI_REGISTRY_IMAGE/worker:$TAG .
+    - docker push $CI_REGISTRY_IMAGE/worker:$TAG
   tags:
     - local
 
@@ -31,7 +30,7 @@ lint:
     - docker
 
 test:
-  stage: test
+  stage: go
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
   services:
     - name: selenium/standalone-chrome:3.141
@@ -67,54 +66,94 @@ test:
     SOLR_CONFIGSET: blacklight-core
     SOLR_CONFIGSET_SOURCE_PATH: solr/config
   script:
+    - sleep 20m
     - cd /app/samvera/hyrax-engine && bundle exec rspec
   tags:
     - docker
 
-review:
-  stage: review
-  type: deploy
+ga.staging:
+  stage: go
+  extends:
+    - .deploy
   environment:
-    name: $CI_COMMIT_REF_SLUG
-    url: http://web.$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG.staging.$SITE_URI_BASE
-    on_stop: stop_review
+    name: ga.staging
+    url: http://hyrax-ga.samvera-community.notch8.cloud
+    on_stop: ga.staging.stop
   only:
-    - branches
-  except:
-    - master
+    refs:
+      - main
+  when: manual
+  variables:
+    DEPLOY_IMAGE: $CI_REGISTRY_IMAGE
+    DEPLOY_TAG: $CI_COMMIT_SHORT_SHA
+    WORKER_IMAGE: $CI_REGISTRY_IMAGE/worker
+    HELM_EXPERIMENTAL_OCI: 1
+    HELM_EXTRA_ARGS: >
+      --values ops/ga-deploy.yaml
   script:
-    - echo "deploying"
-    - sleep 10
-    - echo "totally fake deploy"
+    - export KUBECONFIG=$KUBECONFIG_ADVENTIST
+    - envsubst < ops/ga-deploy.tmpl.yaml > ops/ga-deploy.yaml
+    - ./bin/deploy ga-test hyrax-analytics
   tags:
     - local
 
-stop_review:
-  stage: review
-  script:
-    - echo "STOP"
-  when: manual
+ga.staging.stop:
+  stage: go
+  extends:
+    - .deploy
   environment:
-    name: $CI_COMMIT_REF_SLUG
+    name: ga.staging
+    url: http://hyrax-ga.samvera-community.notch8.cloud
     action: stop
-
-staging:
-  stage: staging
-  type: deploy
-  script:
-    - echo "stage!"
-  only:
-    - master
-  tags:
-    - local
-
-production:
-  stage: production
-  type: deploy
-  script:
-    - echo "prod!"
   when: manual
-  only:
-    - master
+  allow_failure: true
+  script:
+    - export KUBECONFIG=$KUBECONFIG_ADVENTIST
+    - ./bin/delete ga-test hyrax-analytics
   tags:
     - local
+
+matomo.staging:
+  stage: go
+  extends:
+    - .deploy
+  environment:
+    name: matomo.staging
+    url: http://hyrax-matomo.samvera-community.notch8.cloud
+    on_stop: matomo.staging.stop
+  only:
+    refs:
+      - main
+  when: manual
+  variables:
+    DEPLOY_IMAGE: $CI_REGISTRY_IMAGE
+    DEPLOY_TAG: $CI_COMMIT_SHORT_SHA
+    WORKER_IMAGE: $CI_REGISTRY_IMAGE/worker
+    HELM_EXPERIMENTAL_OCI: 1
+    HELM_EXTRA_ARGS: >
+      --values ops/matomo-deploy.yaml
+  script:
+    - export KUBECONFIG=$KUBECONFIG_ADVENTIST
+    - envsubst < ops/matomo-deploy.tmpl.yaml > ops/matomo-deploy.yaml
+    - ./bin/deploy matomo-test hyrax-analytics
+  tags:
+    - local
+
+matomo.staging.stop:
+  stage: go
+  extends:
+    - .deploy
+  environment:
+    name: matomo.staging
+    url: http://hyrax-matomo.samvera-community.notch8.cloud
+    action: stop
+  when: manual
+  allow_failure: true
+  script:
+    - export KUBECONFIG=$KUBECONFIG_ADVENTIST
+    - ./bin/delete matomo-test hyrax-analytics
+  tags:
+    - local
+
+.deploy:
+  image: dtzar/helm-kubectl:3.5.3
