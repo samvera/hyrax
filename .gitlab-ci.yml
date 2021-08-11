@@ -21,7 +21,7 @@ build:
     - local
 
 lint:
-  stage: test
+  stage: go
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
   script:
     - bundle check || bundle
