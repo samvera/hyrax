@@ -79,9 +79,6 @@ ga.staging:
     name: ga.staging
     url: http://hyrax-ga.samvera-community.notch8.cloud
     on_stop: ga.staging.stop
-  only:
-    refs:
-      - main
   when: manual
   variables:
     DEPLOY_IMAGE: $CI_REGISTRY_IMAGE
@@ -121,9 +118,6 @@ matomo.staging:
     name: matomo.staging
     url: http://hyrax-matomo.samvera-community.notch8.cloud
     on_stop: matomo.staging.stop
-  only:
-    refs:
-      - main
   when: manual
   variables:
     DEPLOY_IMAGE: $CI_REGISTRY_IMAGE
