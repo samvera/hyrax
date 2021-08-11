@@ -74,10 +74,7 @@ test:
 
 ga.staging:
   stage: go
-  environment:
-    name: ga.staging
-    url: http://hyrax-ga.samvera-community.notch8.cloud
-    on_stop: ga.staging.stop
+  type: deploy
   when: manual
   variables:
     DEPLOY_IMAGE: $CI_REGISTRY_IMAGE
@@ -92,25 +89,9 @@ ga.staging:
   tags:
     - local
 
-ga.staging.stop:
-  stage: go
-  environment:
-    name: ga.staging
-    url: http://hyrax-ga.samvera-community.notch8.cloud
-    action: stop
-  when: manual
-  allow_failure: true
-  script:
-    - ./bin/delete ga-test hyrax-analytics
-  tags:
-    - local
-
 matomo.staging:
   stage: go
-  environment:
-    name: matomo.staging
-    url: http://hyrax-matomo.samvera-community.notch8.cloud
-    on_stop: matomo.staging.stop
+  type: deploy
   when: manual
   variables:
     DEPLOY_IMAGE: $CI_REGISTRY_IMAGE
@@ -122,18 +103,5 @@ matomo.staging:
   script:
     - envsubst < ops/matomo-deploy.tmpl.yaml > ops/matomo-deploy.yaml
     - ./bin/deploy matomo-test hyrax-analytics
-  tags:
-    - local
-
-matomo.staging.stop:
-  stage: go
-  environment:
-    name: matomo.staging
-    url: http://hyrax-matomo.samvera-community.notch8.cloud
-    action: stop
-  when: manual
-  allow_failure: true
-  script:
-    - ./bin/delete matomo-test hyrax-analytics
   tags:
     - local
