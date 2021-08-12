@@ -1,4 +1,10 @@
-USER-SUPPLIED VALUES:
+brandingVolume:
+  storageClass: nfs
+derivativesVolume:
+  storageClass: nfs
+uploadsVolume:
+  storageClass: nfs
+
 externalFcrepoHost: fcrepo.staging-fcrepo.svc.cluster.local
 externalPostgresql:
   host: pg-postgresql.staging-postgres.svc.cluster.local

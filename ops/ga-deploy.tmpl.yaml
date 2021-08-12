@@ -1,4 +1,10 @@
-USER-SUPPLIED VALUES:
+brandingVolume:
+  storageClass: nfs
+derivativesVolume:
+  storageClass: nfs
+uploadsVolume:
+  storageClass: nfs
+
 externalFcrepoHost: fcrepo.staging-fcrepo.svc.cluster.local
 externalPostgresql:
   host: pg-postgresql.staging-postgres.svc.cluster.local
@@ -16,6 +22,7 @@ ingress:
   - host: hyrax-ga.samvera-community.notch8.cloud
     paths:
       - path: /
+
 livenessProbe:
   initialDelaySeconds: 30
 postgresql:
