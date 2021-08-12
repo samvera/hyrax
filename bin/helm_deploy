@@ -24,6 +24,7 @@ DEPLOY_IMAGE="${DEPLOY_IMAGE}:ghcr.io/samvera/hyku"
 WORKER_IMAGE="${WORKER_IMAGE}:ghcr.io/samvera/hyku/worker"
 DEPLOY_TAG="${DEPLOY_TAG:-latest}"
 WORKER_TAG="${WORKER_TAG:-$DEPLOY_TAG}"
+HELM_EXPERIMENTAL_OCI=1
 
 helm chart pull ghcr.io/samvera/hyrax/hyrax-helm:$CHART_VERSION
 helm chart export ghcr.io/samvera/hyrax/hyrax-helm:$CHART_VERSION

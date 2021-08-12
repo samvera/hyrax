@@ -67,7 +67,6 @@ test:
     SOLR_CONFIGSET: blacklight-core
     SOLR_CONFIGSET_SOURCE_PATH: solr/config
   script:
-    - sleep 20m
     - cd /app/samvera/hyrax-engine && bundle exec rspec
   tags:
     - docker

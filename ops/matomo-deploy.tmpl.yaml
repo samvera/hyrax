@@ -15,7 +15,7 @@ ingress:
   hosts:
   - host: hyrax-ga.samvera-community.notch8.cloud
     paths:
-    - /
+      - path: /
 livenessProbe:
   initialDelaySeconds: 30
 postgresql:
