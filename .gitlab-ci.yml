@@ -13,8 +13,10 @@ build:
   script:
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
     - docker build --target hyrax-engine-dev --tag $CI_REGISTRY_IMAGE:$TAG .
+    - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
     - docker push $CI_REGISTRY_IMAGE:$TAG
     - docker build --target hyrax-engine-dev-worker --tag $CI_REGISTRY_IMAGE/worker:$TAG .
+    - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
     - docker push $CI_REGISTRY_IMAGE/worker:$TAG
   tags:
     - local
