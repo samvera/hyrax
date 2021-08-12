@@ -30,6 +30,27 @@ RSpec.describe 'Creating a new Hyrax::Work Resource', :js, :workflow, :clean_rep
       click_button 'Create work'
     end
 
+    it 'can create a work' do
+      click_link "Files" # switch tab
+
+      within('div#add-files') do
+        attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/image.jp2", visible: false)
+        attach_file("files[]", "#{Hyrax::Engine.root}/spec/fixtures/jp2_fits.xml", visible: false)
+      end
+
+      click_link "Descriptions" # switch tab
+      fill_in('Title', with: 'My Test Monograph')
+      fill_in('Creator', with: 'Moe, Lane')
+      fill_in('Record info', with: 'A digitized monograph.')
+
+      find('body').click
+      choose('monograph_visibility_open')
+      check('agreement')
+
+      click_on('Save')
+      expect(page).to have_content('My Test Monograph')
+    end
+
     it 'generates the form based on the metadata yaml configs' do
       # test required=true fields are marked with an asterisk (e.g. monograph record_info)
       expect(page.find('div.monograph_record_info label', text: 'Record info')[:class]).to include('required')
