@@ -68,9 +68,13 @@ test:
     SOLR_CONFIGSET: blacklight-core
     SOLR_CONFIGSET_SOURCE_PATH: solr/config
   script:
-    - cd /app/samvera/hyrax-engine && bundle exec rspec
+    - cd /app/samvera/hyrax-engine
+    - gem install semaphore_test_boosters
+    - rspec_booster --job $CI_NODE_INDEX/$CI_NODE_TOTAL
   tags:
     - docker
+  parallel: 6
+
 
 ga.staging:
   stage: go
