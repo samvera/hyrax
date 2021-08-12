@@ -85,7 +85,7 @@ ga.staging:
       --values ops/ga-deploy.yaml
   script:
     - envsubst < ops/ga-deploy.tmpl.yaml > ops/ga-deploy.yaml
-    - ./bin/deploy ga-test hyrax-analytics
+    - ./bin/helm_deploy ga-test hyrax-analytics
   tags:
     - local
 
@@ -102,6 +102,6 @@ matomo.staging:
       --values ops/matomo-deploy.yaml
   script:
     - envsubst < ops/matomo-deploy.tmpl.yaml > ops/matomo-deploy.yaml
-    - ./bin/deploy matomo-test hyrax-analytics
+    - ./bin/helm_deploy matomo-test hyrax-analytics
   tags:
     - local
