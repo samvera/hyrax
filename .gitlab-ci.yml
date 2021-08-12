@@ -4,8 +4,7 @@ stages:
   - go
 
 before_script:
-  - export TAG=${CI_COMMIT_SHA}
-  - export BRANCH=${CI_COMMIT_REF_NAME}
+  - export TAG=${CI_COMMIT_SHORT_SHA}
   - export REGISTRY_HOST=${CI_REGISTRY}
   - export REGISTRY_URI="/${CI_PROJECT_PATH}"
 
@@ -22,7 +21,7 @@ build:
 
 lint:
   stage: go
-  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
   script:
     - cd /app/samvera/hyrax-engine
     - bundle check || bundle
@@ -32,7 +31,7 @@ lint:
 
 test:
   stage: go
-  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
   services:
     - name: selenium/standalone-chrome:3.141
       alias: chrome

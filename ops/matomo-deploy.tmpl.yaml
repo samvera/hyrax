@@ -1,3 +1,6 @@
+imagePullSecrets:
+  - name: gitlab-registry
+
 brandingVolume:
   storageClass: nfs
 derivativesVolume:

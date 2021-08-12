@@ -20,8 +20,8 @@ namespace="${2}"
 
 CHART_VERSION="${CHART_VERSION:-0.22.0}"
 
-DEPLOY_IMAGE="${DEPLOY_IMAGE}:ghcr.io/samvera/hyku"
-WORKER_IMAGE="${WORKER_IMAGE}:ghcr.io/samvera/hyku/worker"
+DEPLOY_IMAGE="${DEPLOY_IMAGE:-ghcr.io/samvera/hyku}"
+WORKER_IMAGE="${WORKER_IMAGE:-ghcr.io/samvera/hyku/worker}"
 DEPLOY_TAG="${DEPLOY_TAG:-latest}"
 WORKER_TAG="${WORKER_TAG:-$DEPLOY_TAG}"
 HELM_EXPERIMENTAL_OCI=1
