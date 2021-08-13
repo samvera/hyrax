@@ -50,7 +50,7 @@ solr:
 
 extraEnvVars:
   - name: GOOGLE_ANALYTICS_ID
-    value: UA-8635145-7
+    value: UA-8635145-8
   - name: GOOGLE_OAUTH_APP_NAME
     value: notch8-qa
   - name: GOOGLE_OAUTHAPP_VERSION

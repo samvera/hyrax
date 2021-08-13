@@ -22,7 +22,7 @@ fcrepo:
 ingress:
   enabled: true
   hosts:
-  - host: hyrax-ga.samvera-community.notch8.cloud
+  - host: hyrax-matomo.samvera-community.notch8.cloud
     paths:
       - path: /
 livenessProbe:
@@ -39,7 +39,20 @@ solr:
 
 extraEnvVars:
   - name: MATOMO_SITE_ID
-    value: 2
+    value: 3
+  - name: MATOMO_BASE_URL
+    value: https://matomo.notch8.cloud/
+  - name: MATOMO_AUTH_TOKEN
+    value: $MATOMO_AUTH_TOKEN
+  - name: HYRAX_ANALYTICS_PROVIDER
+    value: matomo
+  - name: HYRAX_ANALYTICS
+    value: 'true'
+
+worker:
+  extraEnvVars:
+  - name: MATOMO_SITE_ID
+    value: 3
   - name: MATOMO_BASE_URL
     value: https://matomo.notch8.cloud/
   - name: MATOMO_AUTH_TOKEN
