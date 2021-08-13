@@ -67,6 +67,10 @@ test:
     SOLR_CONFIG_DIR: "solr/config"
     SOLR_CONFIGSET: blacklight-core
     SOLR_CONFIGSET_SOURCE_PATH: solr/config
+    VALKYRIE_SOLR_HOST: solr
+    VALKYRIE_SOLR_PORT: 8983
+    VALKYRIE_SOLR_CORE: hyrax-valkyrie-test
+
   script:
     - cd /app/samvera/hyrax-engine
     - gem install semaphore_test_boosters
