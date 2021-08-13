@@ -8,6 +8,16 @@ derivativesVolume:
 uploadsVolume:
   storageClass: nfs
 
+extraVolumeMounts:
+  - mountPath: /ga
+    name: ga-pkey
+extraVolumes:
+  - name: ga-pkey
+    secret:
+      defaultMode: 292
+      optional: true
+      secretName: ga-pkey
+
 externalFcrepoHost: fcrepo.staging-fcrepo.svc.cluster.local
 externalPostgresql:
   host: pg-postgresql.staging-postgres.svc.cluster.local
@@ -46,7 +56,7 @@ extraEnvVars:
   - name: GOOGLE_OAUTHAPP_VERSION
     value: 0.0.1
   - name: GOOGLE_OAUTH_PRIVATE_KEY_PATH
-    value: /app/samvera/hyrax-engine/notch8-qa-057daeb77b4d.p12
+    value: /ga/ga-pkey.p12
   - name: GOOGLE_OAUTH_PRIVATE_KEY_SECRET
     value: notasecret
   - name: GOOGLE_OAUTH_CLIENT_EMAIL
