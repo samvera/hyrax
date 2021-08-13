@@ -51,6 +51,7 @@ test:
     DATABASE_URL: "postgres://postgres:postgres@db/hyku"
     FCREPO_HOST: "fcrepo"
     FCREPO_PORT: 8080
+    IN_DOCKER: "true"
     FCREPO_REST_PATH: "rest"
     POSTGRES_DB: "hyku"
     POSTGRES_HOST: "db"
