@@ -83,7 +83,7 @@ module Hyrax
           # so the report pages will load
 
           method = 'Actions.getPageUrls'
-          additional_params = {label: "concern"}
+          additional_params = { label: "concern" }
           response = api_params(method, period, date, additional_params)
           response
         end
@@ -96,14 +96,14 @@ module Hyrax
 
         def works_pageviews(period = 'month', date = 'today')
           method = 'Actions.getPageUrls'
-          additional_params = {label: 'concern'}
+          additional_params = { label: 'concern' }
           response = api_params(method, period, date, additional_params)
           response.count.zero? ? 0 : response.first['nb_hits'].to_i
         end
 
         def collections_pageviews(period = 'month', date = 'today')
           method = 'Actions.getPageUrls'
-          additional_params = {label: 'collections'}
+          additional_params = { label: 'collections' }
           response = api_params(method, period, date, additional_params)
           response.count.zero? ? 0 : response.first['nb_hits'].to_i
         end
@@ -152,9 +152,9 @@ module Hyrax
           response
         end
 
-        def pageviews_by_url(period = 'month', date = 'today', url=nil)
+        def pageviews_by_url(period = 'month', date = 'today', url = nil)
           method = 'Actions.getPageUrl'
-          additional_params = {url: url}
+          additional_params = { url: url }
           response = api_params(method, period, date, nil)
           response.count.zero? ? 0 : response.first["nb_visits"]
         end
@@ -163,7 +163,7 @@ module Hyrax
           response = Faraday.get(config.base_url, params)
           return [] if response.status != 200
           JSON.parse(response.body)
-        end    
+        end
 
         def api_params(method, period, date, additional_params)
           params = {

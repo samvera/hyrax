@@ -6,7 +6,7 @@ module Hyrax
   module Analytics
     module Google
       extend ActiveSupport::Concern
-     
+
       # included do
       #   private_class_method :config
       #   private_class_method :token
@@ -100,13 +100,13 @@ module Hyrax
             start_date = Time.zone.today
             end_date = Time.zone.today
           when "week"
-            start_date = Time.zone.today-7.days
+            start_date = Time.zone.today - 7.days
             end_date = Time.zone.today
           when "month"
-            start_date = Time.zone.today-1.month
+            start_date = Time.zone.today - 1.month
             end_date = Time.zone.today
           when "year"
-            start_date = Time.zone.today-1.year
+            start_date = Time.zone.today - 1.year
             end_date = Time.zone.today
           end
           date = [start_date, end_date]
@@ -115,7 +115,7 @@ module Hyrax
         def keyword_conversion(date)
           case date
           when "last12"
-            start_date = Time.zone.today-11.months
+            start_date = Time.zone.today - 11.months
             end_date = Time.zone.today
             date = [start_date, end_date]
           else
@@ -124,73 +124,73 @@ module Hyrax
         end
 
         def date_period(period, date)
-          if period == "range" 
+          if period == "range"
             date.split(",")
           else
             to_date_range(period)
           end
         end
 
-        def works_downloads(period = 'range', date = "#{Time.zone.today-11.months},#{Time.zone.today}")
+        def works_downloads(period = 'range', date = "#{Time.zone.today - 11.months},#{Time.zone.today}")
           date = date_period(period, date)
           Downloads.query(profile, date[0], date[1])
         end
 
-        def pageviews_monthly(period = 'range', date = "#{Time.zone.today-11.months},#{Time.zone.today}")
+        def pageviews_monthly(_period = 'range', date = "#{Time.zone.today - 11.months},#{Time.zone.today}")
           date = keyword_conversion(date)
           PageviewsMonthly.query(profile, date[0], date[1])
         end
 
-        def collections_pageviews_monthly(period = 'range', date = "#{Time.zone.today-11.months},#{Time.zone.today}")
+        def collections_pageviews_monthly(_period = 'range', date = "#{Time.zone.today - 11.months},#{Time.zone.today}")
           date = keyword_conversion(date)
           PageviewsMonthly.collections(profile, date[0], date[1])
         end
 
-        def works_pageviews_monthly(period = 'range', date = "#{Time.zone.today-11.months},#{Time.zone.today}")
+        def works_pageviews_monthly(_period = 'range', date = "#{Time.zone.today - 11.months},#{Time.zone.today}")
           date = keyword_conversion(date)
           PageviewsMonthly.works(profile, date[0], date[1])
         end
-        
-        def pageviews(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
+
+        def pageviews(period = 'month', date = "#{Time.zone.today - 1.month},#{Time.zone.today}")
           date = date_period(period, date)
-          Pageviews.query(profile, date[0], date[1]) 
+          Pageviews.query(profile, date[0], date[1])
         end
 
-        def works_pageviews(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
+        def works_pageviews(period = 'month', date = "#{Time.zone.today - 1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Pageviews.works(profile, date[0], date[1])
         end
 
-        def collections_pageviews(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
+        def collections_pageviews(period = 'month', date = "#{Time.zone.today - 1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Pageviews.collections(profile, date[0], date[1])
         end
 
-         def new_visitors(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
+        def new_visitors(period = 'month', date = "#{Time.zone.today - 1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Visits.new_visits(profile, date[0], date[1])
-        end
+       end
 
-        def returning_visitors(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
+        def returning_visitors(period = 'month', date = "#{Time.zone.today - 1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Visits.return_visits(profile, date[0], date[1])
         end
 
-        def total_visitors(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
+        def total_visitors(period = 'month', date = "#{Time.zone.today - 1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Visits.return_visits(profile, date[0], date[1])
         end
 
-        def top_collections(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
+        def top_collections(period = 'month', date = "#{Time.zone.today - 1.month},#{Time.zone.today}")
           date = date_period(period, date)
-          Page.collections(profile, date[0], date[1])   
+          Page.collections(profile, date[0], date[1])
         end
 
-        def top_works(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
+        def top_works(period = 'month', date = "#{Time.zone.today - 1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Page.works(profile, date[0], date[1])
         end
-        
+
         def unique_visitors(period, date); end
 
         def pageviews_by_url(period, date, url); end
