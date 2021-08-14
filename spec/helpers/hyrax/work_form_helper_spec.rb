@@ -105,6 +105,17 @@ RSpec.describe Hyrax::WorkFormHelper do
             .to include('moominpapa.jpg' => an_instance_of(String),
                         'snorkmaiden.jpg' => an_instance_of(String))
         end
+
+        context 'and work members' do
+          let(:work) { FactoryBot.build(:hyrax_work, member_ids: member_ids) }
+          let(:member_ids) { file_sets.map(&:id) + [member_work.id] }
+          let(:member_work) { FactoryBot.build(:hyrax_work) }
+
+          it 'gives labels => ids for file_sets only' do
+            expect(form_file_set_select_for(parent: form).values)
+              .not_to include member_work.id.to_s
+          end
+        end
       end
     end
 
