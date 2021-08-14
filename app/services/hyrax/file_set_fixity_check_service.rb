@@ -5,12 +5,12 @@ module Hyrax
   # files each with multiple versions in the +FileSet+.
   #
   # The fixity check itself is performed by {FixityCheckJob}, which
-  # just uses the fedora service to ask for fixity verification.
-  # The outcome will be some created {ChecksumAuditLog} (ActiveRecord)
-  # objects, recording the checks and their results.
+  # uses a the service configured by +Hyrax.config.fixity_service+ for
+  # verification. The outcome will be some created {ChecksumAuditLog}
+  # (ActiveRecord) objects, recording the checks and their results.
   #
   # By default this runs the checks async using +ActiveJob+, so
-  # returns no useful info -- the checks are still going Use
+  # returns no useful info -- the checks are still going. Use
   # {ChecksumAuditLog.latest_for_file_set_id} to retrieve the latest
   # machine-readable checks.
   #
