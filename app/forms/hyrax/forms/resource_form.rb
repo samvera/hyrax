@@ -95,6 +95,11 @@ module Hyrax
       property :visibility_after_lease, virtual: true, prepopulator: ->(_opts) { self.visibility_after_lease = model.lease&.visibility_after_lease }
       property :visibility_during_lease, virtual: true, prepopulator: ->(_opts) { self.visibility_during_lease = model.lease&.visibility_during_lease }
 
+      # virtual properties for members
+      property :representative_id, virtual: true
+      property :rendering_ids, virtual: true
+      property :thumbnail_id, virtual: true
+
       # pcdm relationships
       property :admin_set_id, prepopulator: ->(_opts) { self.admin_set_id = AdminSet::DEFAULT_ID }
       property :in_works_ids, virtual: true, prepopulator: InWorksPopulator
