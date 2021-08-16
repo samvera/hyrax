@@ -28,7 +28,7 @@ RSpec.describe Hyrax::CollectionsController, clean_repo: true do
       before do
         sign_in user
         if collection.is_a? Valkyrie::Resource
-          Hyrax::Collections::CollectionMemberService.add_members(collection: collection,
+          Hyrax::Collections::CollectionMemberService.add_members(collection_id: collection.id,
                                                                   new_members: [asset1, asset2, asset3, asset4, asset5],
                                                                   user: user)
         else

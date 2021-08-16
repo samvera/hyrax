@@ -60,7 +60,7 @@ RSpec.describe ::Collection, type: :model do
       let(:work3) { valkyrie_create(:hyrax_work, title: 'Work 3') }
 
       it "allows multiple works to be added" do
-        Hyrax::Collections::CollectionMemberService.add_members(collection: collection.valkyrie_resource,
+        Hyrax::Collections::CollectionMemberService.add_members(collection_id: collection.id,
                                                                 new_members: [work1, work2],
                                                                 user: nil)
         expect(collection.reload.member_objects.map(&:id)).to match_array [work1.id.to_s, work2.id.to_s]
@@ -81,7 +81,7 @@ RSpec.describe ::Collection, type: :model do
 
         it 'fails to add the member' do
           begin
-            Hyrax::Collections::CollectionMemberService.add_members(collection: collection.valkyrie_resource,
+            Hyrax::Collections::CollectionMemberService.add_members(collection_id: collection.id,
                                                                     new_members: [work1, work2, work3],
                                                                     user: nil)
           rescue; end # rubocop:disable Lint/SuppressedException
@@ -92,11 +92,11 @@ RSpec.describe ::Collection, type: :model do
   end
 
   describe "#destroy", clean_repo: true do
-    let(:collection) { build(:collection_lw) }
+    let(:collection) { create(:collection_lw) }
     let(:work1) { valkyrie_create(:hyrax_work) }
 
     before do
-      Hyrax::Collections::CollectionMemberService.add_members(collection: collection.valkyrie_resource,
+      Hyrax::Collections::CollectionMemberService.add_members(collection_id: collection.id,
                                                               new_members: [work1],
                                                               user: nil)
       collection.destroy
@@ -117,7 +117,7 @@ RSpec.describe ::Collection, type: :model do
         include Hydra::Works::WorkBehavior
       end
 
-      Hyrax::Collections::CollectionMemberService.add_members(collection: collection.valkyrie_resource,
+      Hyrax::Collections::CollectionMemberService.add_members(collection_id: collection.id,
                                                               new_members: [member.valkyrie_resource],
                                                               user: nil)
     end

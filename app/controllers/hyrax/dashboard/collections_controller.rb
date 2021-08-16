@@ -379,18 +379,15 @@ module Hyrax
 
       def add_members_to_collection(collection = nil)
         collection ||= @collection
-        Hyrax::Collections::CollectionMemberService.add_members_by_ids(collection: collection.valkyrie_resource,
+        Hyrax::Collections::CollectionMemberService.add_members_by_ids(collection_id: collection.id,
                                                                        new_member_ids: batch,
                                                                        user: current_user)
       end
 
       def remove_members_from_collection
-        batch.each do |member_id|
-          work = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: member_id)
-          work.member_of_collection_ids.delete @collection.id
-          Hyrax.persister.save(resource: work) &&
-            Hyrax.publisher.publish('object.metadata.updated', object: work, user: current_user)
-        end
+        Hyrax::Collections::CollectionMemberService.remove_members_by_ids(collection_id: @collection.id,
+                                                                          member_ids: batch,
+                                                                          user: current_user)
       end
 
       def move_members_between_collections
