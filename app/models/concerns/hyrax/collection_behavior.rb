@@ -54,7 +54,7 @@ module Hyrax
     def add_members(new_member_ids)
       Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
                          "Instead, use Hyrax::Collections::CollectionMemberService.add_members_by_ids.")
-      Hyrax::Collections::CollectionMemberService.add_members_by_ids(collection: valkyrie_resource,
+      Hyrax::Collections::CollectionMemberService.add_members_by_ids(collection_id: id,
                                                                      new_member_ids: new_member_ids,
                                                                      user: nil)
     end
@@ -64,7 +64,7 @@ module Hyrax
     def add_member_objects(new_member_ids)
       Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
                          "Instead, use Hyrax::Collections::CollectionMemberService.add_members_by_ids.")
-      Hyrax::Collections::CollectionMemberService.add_members_by_ids(collection: valkyrie_resource,
+      Hyrax::Collections::CollectionMemberService.add_members_by_ids(collection_id: id,
                                                                      new_member_ids: new_member_ids,
                                                                      user: nil)
     end

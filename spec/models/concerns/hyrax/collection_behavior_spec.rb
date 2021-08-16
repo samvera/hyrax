@@ -6,7 +6,7 @@ RSpec.describe Hyrax::CollectionBehavior, clean_repo: true do
 
   describe "#destroy" do
     it "removes the collection id from associated members" do
-      Hyrax::Collections::CollectionMemberService.add_members(collection: collection.valkyrie_resource,
+      Hyrax::Collections::CollectionMemberService.add_members(collection_id: collection.id,
                                                               new_members: [work],
                                                               user: nil)
       collection.save
