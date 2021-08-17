@@ -326,7 +326,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
 
   describe 'nesting attributes object', with_nested_reindexing: true do
     let(:user) { create(:user) }
-    let(:parent) { FactoryBot.build(:collection_lw, id: 'Parent_Coll', collection_type: collection_type, user: user) }
+    let(:parent) { FactoryBot.create(:collection_lw, id: 'Parent_Coll', collection_type: collection_type, user: user) }
     let(:child) { FactoryBot.create(:collection_lw, id: 'Child_Coll', collection_type: collection_type, user: user) }
     let(:nesting_attributes) { Hyrax::Collections::NestedCollectionQueryService::NestingAttributes.new(id: child.id, scope: scope) }
 
