@@ -89,13 +89,13 @@ RSpec.describe Hyrax::Forms::CollectionForm do
     describe "#list_parent_collections" do
       subject { form.list_parent_collections }
 
-      it { is_expected.to eq([parent_collection]) }
+      it { is_expected.to contain_exactly(parent_collection) }
     end
 
     describe "#list_child_collections" do
       subject { form.list_child_collections }
 
-      it { is_expected.to eq([child_collection]) }
+      it { is_expected.to contain_exactly(child_collection) }
     end
   end
 

@@ -50,10 +50,12 @@ module Hyrax
       ##
       # when the add_works_to_collection parameter is set, they mean to create
       # a new work and add it to that collection.
-      def member_of_collections
-        base = model.member_of_collections
-        return base unless @controller.params[:add_works_to_collection]
-        base + [::Collection.find(@controller.params[:add_works_to_collection])]
+      def member_of_collections(use_valkyrie: Hyrax.config.use_valkyrie?)
+        parents = Hyrax.custom_queries.find_parent_collections(resource: model_resource)
+        if @controller.params[:add_works_to_collection] # rubocop:disable Style/IfUnlessModifier
+          parents += [Hyrax.query_service.find_by(id: @controller.params[:add_works_to_collection])]
+        end
+        use_valkyrie ? parents : parents.map { |col| Wings::ActiveFedoraConverter.new(resource: col).convert }
       end
 
       # @return [String] an etag representing the current version of this form
@@ -66,7 +68,7 @@ module Hyrax
       def find_child_work; end
 
       def member_of_collections_json
-        member_of_collections.map do |coll|
+        member_of_collections(use_valkyrie: true).map do |coll|
           {
             id: coll.id,
             label: coll.to_s,
@@ -76,7 +78,7 @@ module Hyrax
       end
 
       def work_members_json
-        work_members.map do |child|
+        work_members(use_valkyrie: true).map do |child|
           {
             id: child.id,
             label: child.to_s,
@@ -149,8 +151,9 @@ module Hyrax
       end
 
       # @return [Array] a list of works that are members of the primary work on this form.
-      def work_members
-        model.works
+      def work_members(use_valkyrie: Hyrax.config.use_valkyrie?)
+        works = Hyrax.custom_queries.find_child_works(resource: model_resource)
+        use_valkyrie ? works : works.map { |work| Wings::ActiveFedoraConverter.new(resource: work).convert }
       end
 
       # Sanitize the parameters coming from the form. This ensures that the client
@@ -205,6 +208,10 @@ module Hyrax
           Hyrax::PresenterFactory.build_for(ids: model.member_ids,
                                             presenter_class: FileSetPresenter,
                                             presenter_args: current_ability)
+      end
+
+      def model_resource
+        @model_resource ||= model.respond_to?(:valkyrie_resource) ? model.valkyrie_resource : model
       end
     end
   end

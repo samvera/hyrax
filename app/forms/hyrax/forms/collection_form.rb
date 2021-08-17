@@ -116,10 +116,14 @@ module Hyrax
       end
 
       def list_parent_collections
+        Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
+                         "Instead, use Hyrax.custom_queries.find_parent_collections().")
         collection.member_of_collections
       end
 
       def list_child_collections
+        Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
+                         "Instead, use Hyrax.custom_queries.find_child_collections().")
         collection_member_service.available_member_subcollections.documents
       end
 

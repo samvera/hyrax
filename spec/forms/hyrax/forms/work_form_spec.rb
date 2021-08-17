@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Forms::WorkForm do
-  let(:work) { GenericWork.new }
+  let(:work) { GenericWork.new(title: ['The Generic Work of Focus']) }
   let(:form) { described_class.new(work, nil, controller) }
-  let(:works) { [GenericWork.new, FileSet.new, GenericWork.new] }
   let(:controller) { instance_double(Hyrax::GenericWorksController) }
 
   # This class is an abstract class, so we have to set model_class
@@ -41,7 +40,7 @@ RSpec.describe Hyrax::Forms::WorkForm do
   end
 
   describe '#member_of_collections' do
-    subject { form.member_of_collections }
+    subject { form.member_of_collections(use_valkyrie: false) }
 
     before do
       allow(controller).to receive(:params).and_return(add_works_to_collection: collection_id)
@@ -63,12 +62,19 @@ RSpec.describe Hyrax::Forms::WorkForm do
     context 'when member of other collections' do
       let(:collection) { create(:collection) }
       let(:collection_id) { collection.id }
+      let(:collection2) { create(:collection) }
+      let(:collection2_id) { collection2.id }
+      let(:user) { create(:user) }
 
       before do
-        allow(work).to receive(:member_of_collections).and_return(['foo'])
+        work.save
+        Hyrax::Collections::CollectionMemberService.add_member(collection_id: collection2_id,
+                                                               new_member: work.valkyrie_resource,
+                                                               user: user)
+        work.reload
       end
 
-      it { is_expected.to match_array(['foo', collection]) }
+      it { is_expected.to match_array([collection, collection2]) }
     end
   end
 
@@ -79,10 +85,21 @@ RSpec.describe Hyrax::Forms::WorkForm do
   end
 
   describe "#work_members" do
-    subject { form.work_members }
+    subject { form.work_members(use_valkyrie: false) }
+    let(:work1) { GenericWork.new(title: ['Generic Work 1']) }
+    let(:work2) { GenericWork.new(title: ['Generic Work 2']) }
+    let(:fileset) { FileSet.new }
+    let(:members) { [work1, fileset, work2] }
 
     before do
-      allow(work).to receive(:members).and_return(works)
+      work.save
+      work1.save
+      work2.save
+      fileset.save
+      resource = work.valkyrie_resource
+      resource.member_ids = members.map(&:id)
+      Hyrax.persister.save(resource: resource)
+      work.reload
     end
 
     it "expects members that are works" do
