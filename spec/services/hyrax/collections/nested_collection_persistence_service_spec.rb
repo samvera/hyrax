@@ -23,7 +23,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionPersistenceService, with_nest
     it 'removes the relationship between parent and child' do
       subject
       expect(Hyrax.custom_queries.find_parent_collection_ids(resource: child)).to be_empty
-      expect(Hyrax.custom_queries.find_child_collection_ids(resource: parent)).to eq []
+      expect(Hyrax.custom_queries.find_child_collection_ids(resource: parent)).to be_empty
     end
   end
 end
