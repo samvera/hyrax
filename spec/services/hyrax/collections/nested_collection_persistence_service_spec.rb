@@ -8,7 +8,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionPersistenceService, with_nest
 
     it 'creates the relationship between parent and child' do
       subject
-      expect(Hyrax.custom_queries.find_parent_collection_ids(resource: child)).to eq [parent.id]
+      expect(Hyrax.custom_queries.find_parent_collection_ids(resource: child)).to contain_exactly(parent.id)
       expect(Hyrax.custom_queries.find_child_collection_ids(resource: parent)).to eq [child.id]
     end
   end
