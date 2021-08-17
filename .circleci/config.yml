@@ -44,7 +44,7 @@ jobs:
       - restore_cache:
           name: Restore rubocop cache
           keys:
-            - v1-ruby<< parameters.ruby_version >>-bundle{{ checksum "Gemfile.lock" }}
+            - v1-ruby<< parameters.ruby_version >>-bundle{{ checksum "Gemfile.lock" }}-{{ checksum ".regen" }}
             - v1-ruby<< parameters.ruby_version >>
             - v1
 
@@ -54,7 +54,7 @@ jobs:
 
       - save_cache:
           name: Save rubocop cache
-          key: v1-ruby<< parameters.ruby_version >>-bundle{{ checksum "Gemfile.lock" }}
+          key: v1-ruby<< parameters.ruby_version >>-bundle{{ checksum "Gemfile.lock" }}-{{ checksum ".regen" }}
           paths:
             - ~/.cache
 
