@@ -34,7 +34,7 @@ module Hyrax
           Rails.logger.error("Google Analytics profile has not been established. Unable to fetch statistics.")
           return []
         end
-        profile.hyrax__pageview(sort: 'date',
+        profile.hyrax__analytics__google__pageviews(sort: 'date',
                                 start_date: start_date,
                                 end_date: Date.yesterday,
                                 limit: 10_000)

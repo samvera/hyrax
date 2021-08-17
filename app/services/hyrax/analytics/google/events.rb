@@ -7,9 +7,9 @@ module Hyrax
         metrics :total_events
         dimensions :date, :event_category, :event_action, :event_label 
 
-        filter(:downloads) {|event_category| contains(:eventCategory, 'Files')}
-        filter(:works) {|event_category| contains(:eventCategory, 'Works')}
-        filter(:collections) {|event_category| contains(:eventCategory, 'Collections')}
+        filter(:downloads) {|event_category| matches(:eventCategory, 'Files')}
+        filter(:works) {|event_category| matches(:eventCategory, 'Works')}
+        filter(:collections) {|event_category| matches(:eventCategory, 'Collections')}
         filter(:views) {|event_action| contains(:eventAction, 'Views')}
         filter :for_file, &->(file) { contains(:eventLabel, file) }
 
