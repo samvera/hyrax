@@ -1,11 +1,49 @@
+
 <% if Hyrax.config.analytics_provider == 'google' %>
-  // Callbacks for tracking events using Google Analytics
+ 
+  function trackGooglePageView() {
+    window._gaq.push(['_trackPageview']);
+  }
+
+  function trackGoogleEvents() {
+    $('span.analytics-event').each(function(){
+      var eventSpan = $(this)
+      window._gaq.push(['_trackEvent', eventSpan.data('category'), eventSpan.data('action'), eventSpan.data('name')]); 
+    })
+  }
+
+  if (typeof Turbolinks !== 'undefined') {
+    $(document).on('turbolinks:load', function() {
+      trackGooglePageView()
+      trackGoogleEvents()
+    })
+  } else {
+      $(document).on('ready', function() {
+      trackGooglePageView()
+      trackGoogleEvents()
+    })
+  }
+
   $(document).on('click', '#file_download', function(e) {
-    _gaq.push(['_trackEvent', 'Files', 'Downloaded', $(this).data('label')]); 
+    _gaq.push(['_trackEvent', 'Files', 'Downloaded', $(this).data('label')]);
+    trackGoogleEvents()
   });
+
 <% elsif Hyrax.config.analytics_provider == 'matomo' %>
-  // Callbacks for tracking events using Matomo
+  
+   function trackMatomoPageView() {
+    window.paq.push(['trackPageview']);
+  }
+
+  function trackMatomoEvents() {
+    $('span.analytics-event').each(function(){
+      var eventSpan = $(this)
+      window._paq.push(['trackEvent', eventSpan.data('category'), eventSpan.data('action'), eventSpan.data('name')]); 
+    })
+  }
+
   $(document).on('click', '#file_download', function(e) {
     _paq.push(['trackEvent', 'Files', 'Downloaded', $(this).data('label')]);
+    trackMatomoEvents()
   });
 <% end %>

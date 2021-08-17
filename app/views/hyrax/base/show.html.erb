@@ -53,15 +53,11 @@
     <%# = render 'sharing_with', presenter: @presenter %>
     <%# = render 'user_activity', presenter: @presenter %>
 
+<span class='hide analytics-event' data-category="Works" data-action="Views" data-name="<%= @presenter.id %>" >
+<% @presenter.member_of_collection_ids.each do |collection_id| %>
+  <span class='hide analytics-event' data-category="Work in Collection" data-action="Views" data-name="<%= collection_id %>" >
+<% end %>
+
   </div>
 </div>
 
-<script>
-  $( document ).on('turbolinks:load', function() {
-    <% if Hyrax.config.analytics_provider == 'google' %>
-      _gaq.push(['_trackEvent', 'Works', 'Views', '<%= @presenter.id %>']);
-    <% elsif Hyrax.config.analytics_provider == 'matomo' %>
-      _paq.push(['trackEvent', 'Works', 'Views', '<%= @presenter.id %>']);
-    <% end %>
-  });
-</script>
