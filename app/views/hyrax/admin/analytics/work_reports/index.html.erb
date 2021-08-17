@@ -17,7 +17,7 @@
           <div class="panel panel-default">
             <div class="panel-heading">Customize Report</div>
             <div class="panel-body">
-             <%= render 'date_range_form' %>
+             <%= render "hyrax/admin/analytics/date_range_form", redirect_path: hyrax.admin_analytics_work_reports_path %>
               <hr />
               <div class="row text-center">
                 <div class="nav nav-pills btn-group" role="group">
@@ -32,7 +32,7 @@
               <div class="tab-content">
                 <h3 class="text-center">Custom Work Report</h3>
                 <div class="tab-pane active" id="summary">
-                  <%= render "summary" %>
+                  <%= render "hyrax/admin/analytics/summary" %>
                 </div>
                 <div class="tab-pane" id="monthly">
                   <h4 class="text-center">Month-by-month status for last 12 months through <%= Time.zone.today.strftime("%B %Y") %></h4>
@@ -40,10 +40,17 @@
                 </div>
               </div>
 
+              <% if @top_works %>
+                <div><%= render 'top_works' %></div>
+              <% end %>
+
+              <% if @top_downloads %>
+                <div><%= render 'top_downloads' %></div>
+              <% end %>
+
             </div>
 
           </div>
-          <%# TODO: Dynamic %>
           <p class="text-center">This report was generated on <b><%= Time.zone.today.strftime("%B %d, %Y") %></b></p>
 
         </div>

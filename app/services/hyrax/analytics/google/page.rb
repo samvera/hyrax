@@ -10,21 +10,28 @@ module Hyrax
         filter(:collections) {|page_path_level1| contains(:pagePathLevel1, 'collections')}
         filter(:works) {|page_path_level1| contains(:pagePathLevel1, 'concern')}
 
+        def self.results_array(response)
+          results = []
+          response.to_a.each do |result|
+            results.push([result.date.to_date, result.pageviews.to_i])
+          end
+          Hyrax::Analytics::Results.new(results)
+        end
+
         def self.collections(profile, start_date, end_date)
-          x = Page.results(profile,
+          response = Page.results(profile,
             :start_date => start_date,
             :end_date => end_date,
-            :sort => '-pageviews',
-            :limit => 5).collections
+            :sort => '-pageviews').collections
         end
 
         def self.works(profile, start_date, end_date)
-          x = Page.results(profile,
+          response = Page.results(profile,
             :start_date => start_date,
             :end_date => end_date,
-            :sort => '-pageviews',
-            :limit => 5).works
+            :sort => '-pageviews').works
         end
+      
 
       end
     end

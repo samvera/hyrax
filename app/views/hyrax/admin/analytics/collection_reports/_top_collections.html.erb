@@ -1,0 +1,21 @@
+<h4>Top Collections</h4>
+<hr />
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Collection Title</th>
+      <th>Views</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @top_collections.each do |collection| %>
+      <% document = ::SolrDocument.find(collection[0]) rescue document = nil %>
+      <% if document %>
+        <tr>
+          <td><%= link_to document, admin_analytics_collection_report_path(collection[0]) %></td>
+          <td><%= collection[1] %></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

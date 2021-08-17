@@ -51,67 +51,67 @@ module Hyrax
         # Date "magic keywords" = "today, yesterday, lastX (number), lastWeek, lastMonth or lastYear"
         # Example: Last 6 weeks: period: week, date: last6
 
-        def downloads_count(period = 'month', date = 'today')
-          method = 'Events.getAction'
-          response = api_params(method, period, date)
+        def downloads(date = 'last500')
+          method = 'Events.getName'
+          segment = 'eventCategory==Files;eventAction==Downloaded'
+          response = api_params(method, 'day', date, nil, nil, segment)
+          results_array(response, 'nb_events')
+        end
+
+        def top_downloads(date = 'last500')
+          method = 'Events.getName'
+          segment = "eventCategory==Files;eventAction==Downloaded"
+          response = api_params(method, 'range', date, nil, nil, segment)
+          results_array_with_ids(response, 'nb_events')
+        end
+
+        def downloads_for_file(file, period = 'range', date = "last12")
+          method = 'Events.getName'
+          segment = "eventName==#{file}"
+          response = api_params(method, period, date, nil, nil, segment)
           response.count.zero? ? 0 : response.first['nb_events'].to_i
         end
 
-        def works_downloads(period = 'month', date = 'today')
+        def top_pages(ref="collections", date='last12')
           method = 'Events.getName'
-          response = api_params(method, period, date)
-          response
+          segment = "eventCategory==#{ref.titleize};eventAction==Views"
+          response = api_params(method, 'range', date, nil, nil, segment)
+          results_array_with_ids(response, 'nb_events')
         end
 
-        def downloads_monthly(period = 'month', date = 'today')
-          method = 'Actions.getDownloads'
-          response = api_params(method, period, date)
-          response
+        def pageviews(ref='all', date='last500')
+          if ref == 'all' 
+            method = 'Actions.get'
+            response = api_params(method, 'day', date)
+            results_array(response, 'nb_pageviews')
+          else
+            send(:pageviews_filtered, ref, date)
+          end 
+        end
+
+         def pageviews_filtered(ref, date)
+          label = ref
+          response = api_params('Actions.getPageUrls', 'day', date, label)
+          results_array(response, 'nb_hits')
+        end
+
+        def pageviews_for_url(url, date = "#{Time.zone.today-5.years},#{Time.zone.today}")
+          method = 'Actions.getPageUrl'
+          response = api_params(method, 'day', date, nil, url)
+          results_array(response, 'nb_hits')
         end
         
-        def pageviews_monthly(period = 'month', date = 'today')
-          method = 'VisitsSummary.getVisits'
-          response = api_params(method, period, date)
-          response
+        def unique_visitors(date='last500')
+          results = []
+          method = 'Actions.get'
+          response = api_params(method, 'day', date)
+          results_array(response, 'nb_uniq_pageviews')
         end
 
-        def collections_pageviews_monthly(period = 'month', date = 'today')
-          # TODO(alishaevn): fill out this method with the correct code!!
-          # this code is just a copy of other code on the page
-          # so the report pages will load
-
+        def unique_visitors_for_url(url, date = "#{Time.zone.today-5.years},#{Time.zone.today}")
           method = 'Actions.getPageUrl'
-          response = api_params(method, period, date)
-          response
-        end
-
-        def works_pageviews_monthly(period = 'month', date = 'today')
-          # TODO(alishaevn): fill outworks_pageviews_monthly this method with the correct code!!
-          # this code is just a copy of other code on the page
-          # so the report pages will load
-          method = 'Actions.get'
-          response = api_params(method, period, date)
-          response
-        end
-
-        def pageviews(period = 'month', date = 'today')
-          method = 'Actions.get'
-          response = api_params(method, period, date)
-          response['nb_pageviews']
-        end
-
-        def works_pageviews(period = 'month', date = 'today')
-          method = 'Actions.getPageUrls'
-          label = 'concern'
-          response = api_params(method, period, date, label)
-          response.count.zero? ? 0 : response.first['nb_hits'].to_i
-        end
-
-        def collections_pageviews(period = 'month', date = 'today')
-          method = 'Actions.getPageUrls'
-          label = 'collections'
-          response = api_params(method, period, date, label)
-          response.count.zero? ? 0 : response.first['nb_hits'].to_i
+          response = api_params(method, 'day', date, nil, url)
+          results_array(response, 'nb_uniq_visitors')
         end
 
         def new_visitors(period = 'month', date = 'today')
@@ -132,37 +132,29 @@ module Hyrax
           response["nb_visits_returning"].to_i + response["nb_visits_new"].to_i
         end
 
-        def unique_visitors(period = 'month', date = 'today')
-          method = 'VisitsSummary.getUniqueVisitors'
-          response = api_params(method, period, date)
-          response['value']
+        def results_array(response, metric)
+          results = []
+          response.each do |result|
+            if result[1].empty?
+              results.push([result[0].to_date,0]) 
+            else
+              if result[1].kind_of?(Array)
+               results.push([result[0].to_date,result[1].first[metric]]) 
+              else
+               results.push([result[0].to_date,result[1][metric]]) 
+              end
+            end
+          end
+          Hyrax::Analytics::Results.new(results)
         end
 
-        def top_collections(period = 'month', date = 'today')
-          # TODO(alishaevn): fill out this method with the correct code!!
-          # this code is just a copy of other code on the page
-          # so the report pages will load
-
-          method = 'Actions.getPageUrl'
-          response = api_params(method, period, date)
-          response
-        end
-
-        def top_works(period = 'month', date = 'today')
-          # TODO(alishaevn): fill out this method with the correct code!!
-          # this code is just a copy of other code on the page
-          # so the report pages will load
-
-          # method = 'Actions.getPageTitles'
-          # response = api_params(method, period, date, nil)
-          # response
-        end
-
-        def pageviews_by_url(period = 'month', date = 'today', url=nil)
-          method = 'Actions.getPageUrl'
-          response = api_params(method, period, date, url)
-          response.count.zero? ? 0 : response.first["nb_visits"]
-        end
+        def results_array_with_ids(response, metric)
+          results = []
+          response.each do |result| 
+            results.push([result['label'], result[metric]])
+          end
+          return results.sort_by { |el| -el[1] }
+        end 
 
         def get(params)
           response = Faraday.get(config.base_url, params)
@@ -170,19 +162,19 @@ module Hyrax
           JSON.parse(response.body)
         end    
 
-        def api_params(method, period, date, label = nil, url = nil)
+        def api_params(method, period, date, label = nil, url = nil, segment = nil)
           params = {
             module: "API",
+            pageUrl: url,
             idSite: config.site_id,
             method: method,
             period: period,
             date: date,
             label: label, 
-            url: url,
+            segment: segment,
             format: "JSON",
             token_auth: config.auth_token
           }
-          # params.merge!(additional_params) 
           get(params)
         end
       end

@@ -7,12 +7,6 @@ module Hyrax
     module Google
       extend ActiveSupport::Concern
      
-      # included do
-      #   private_class_method :config
-      #   private_class_method :token
-      #   private_class_method :user
-      # end
-
       # rubocop:disable Metrics/BlockLength
       class_methods do
         # Loads configuration options from config/analytics.yml. Expected structure:
@@ -131,49 +125,45 @@ module Hyrax
           end
         end
 
-        def downloads_count(period = 'range', date = "#{Time.zone.today-11.months},#{Time.zone.today}")
-          date = date_period(period, date)
-          Downloads.query(profile, date[0], date[1]).count
+        def downloads(ref='all', date="#{Time.zone.today-5.years},#{Time.zone.today}")
+          date = date.split(",")
+          Downloads.send(ref, profile, date[0], date[1])
+        end
+
+        def top_downloads(date="#{Time.zone.today-5.years},#{Time.zone.today}")
+          date = date.split(",")
+          Events.downloads(profile, date[0], date[1])
+        end
+
+        def downloads_for_file(file, date = "#{Time.zone.today-11.months},#{Time.zone.today}")
+          date = date.split(",")
+          Downloads.file_downloads(profile, date[0], date[1], file)
+        end
+
+        # Filter top pages by either "works" or "collections"
+        def top_pages(ref='works', date="#{Time.zone.today-5.years},#{Time.zone.today}")
+          date = date.split(",")
+          Events.send(ref, profile, date[0], date[1])
+        end
+
+        # Filter pageviews by either "all", "works", or "collections"
+        def pageviews(ref='all', date="#{Time.zone.today-5.years},#{Time.zone.today}")
+          date = date.split(",")
+          Pageviews.send(ref, profile, date[0], date[1])
+        end
+
+        def pageviews_for_url(path, date = "#{Time.zone.today-5.years},#{Time.zone.today}")
+          date = date.split(",")
+          path = path[/[^?]+/]
+          Pageviews.page(profile, date[0], date[1], path)
+        end
+
+        def unique_visitors(date="#{Time.zone.today-5.years},#{Time.zone.today}")
+        end
+
+        def unique_visitors_for_url(url, date="#{Time.zone.today-5.years},#{Time.zone.today}")
         end
         
-        def works_downloads(period = 'range', date = "#{Time.zone.today-11.months},#{Time.zone.today}")
-          date = date_period(period, date)
-          Downloads.query(profile, date[0], date[1])
-        end
-
-        def downloads_monthly(period = 'month', date = 'today')
-        end
-
-        def pageviews_monthly(period = 'range', date = "#{Time.zone.today-11.months},#{Time.zone.today}")
-          date = keyword_conversion(date)
-          PageviewsMonthly.query(profile, date[0], date[1])
-        end
-
-        def collections_pageviews_monthly(period = 'range', date = "#{Time.zone.today-11.months},#{Time.zone.today}")
-          date = keyword_conversion(date)
-          PageviewsMonthly.collections(profile, date[0], date[1])
-        end
-
-        def works_pageviews_monthly(period = 'range', date = "#{Time.zone.today-11.months},#{Time.zone.today}")
-          date = keyword_conversion(date)
-          PageviewsMonthly.works(profile, date[0], date[1])
-        end
-        
-        def pageviews(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
-          date = date_period(period, date)
-          Pageviews.query(profile, date[0], date[1]) 
-        end
-
-        def works_pageviews(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
-          date = date_period(period, date)
-          Pageviews.works(profile, date[0], date[1])
-        end
-
-        def collections_pageviews(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
-          date = date_period(period, date)
-          Pageviews.collections(profile, date[0], date[1])
-        end
-
          def new_visitors(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Visits.new_visits(profile, date[0], date[1])
@@ -188,20 +178,7 @@ module Hyrax
           date = date_period(period, date)
           Visits.return_visits(profile, date[0], date[1])
         end
-
-        def top_collections(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
-          date = date_period(period, date)
-          Page.collections(profile, date[0], date[1])   
-        end
-
-        def top_works(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
-          date = date_period(period, date)
-          Page.works(profile, date[0], date[1])
-        end
-        
-        def unique_visitors(period, date); end
-
-        def pageviews_by_url(period, date, url); end
+   
       end
       # rubocop:enable Metrics/BlockLength
     end

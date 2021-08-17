@@ -1,31 +1,31 @@
 <h4>Monthly user activity (past 12 months)</h4>
 <hr />
 
-<% if @pageviews_last_twelve_months %>
 <table class="table table-striped">
   <thead>
   <tr>
     <th>&nbsp;</th>
-    <% @pageviews_last_twelve_months.reverse_each do |month| %>
-        <th><%= month[0] %></th>
+    <% @month_names.each do |name| %>
+       <th><%= name %></th>
     <% end %>
   </tr>
   </thead>
   <tbody>
-    <% if @downloads_last_twelve_months %>
+  <% if @downloads %>
     <tr>
       <td><b>Downloads</b></td>
-      <% @downloads_last_twelve_months.reverse_each do |month| %>
-        <td><%= month %></td>
-      <% end %>
+        <% @month_names.each do |name| %>
+         <td><%= @downloads.month(name.to_date) %></td>
+       <% end %>
     </tr>
-    <% end %>
+  <% end %>
+  <% if @pageviews %>    
     <tr>
       <td><b>Views</b></td>
-      <% @pageviews_last_twelve_months.reverse_each do |month| %>
-        <td><%= month[1] %></td>
-      <% end %>
+       <% @month_names.each do |name| %>
+         <td><%= @pageviews.month(name.to_date) %></td>
+       <% end %>
     </tr>
+  <% end %>
   </tbody>
 </table>
-<% end %>

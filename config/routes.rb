@@ -225,8 +225,8 @@ Hyrax::Engine.routes.draw do
 
   namespace :admin do
     namespace :analytics do
-      resources :collection_reports
-      resources :work_reports
+      resources :collection_reports, only: [:index, :show]
+      resources :work_reports, only: [:index, :show]
     end
     resources :admin_sets do
       member do

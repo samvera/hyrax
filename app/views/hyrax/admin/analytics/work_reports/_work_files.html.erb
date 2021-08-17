@@ -1,18 +1,34 @@
+<br>
 <hr />
-<h4>Files (Note: Top 10 versus standard 5 view*)</h4>
+<h4>Files</h4>
 
 <table class="table table-striped">
   <thead>
   <tr>
     <th>&nbsp;</th>
-    <th>Total downloads</th>
+    <th>Total downloads (YTD)</th>
+    <th></th>
   </tr>
   </thead>
   <tbody>
-    <%# TODO Dynamic %>
-    <%#= arr.each do |a| %>
-      <%#= render partial: 'collection_table', :collection, analytics: a %>
-    <%# end %>
+
+   <% @files.each do |file| %>
+    <% @file_sizes = [] %>
+    <% f = SolrDocument.find(file) %>
+    <% if f %>
+      <% @file_sizes.push(f.file_size) %>
+      <tr>
+        <td><%= f %></td>
+        <td><%= Hyrax::Analytics.downloads_for_file(f.id) %></td>
+      </tr>
+    <% end %>
+  <% end %>
   </tbody>
 </table>
+
 <%#= add pagination %>
+
+
+
+
+

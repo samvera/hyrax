@@ -1,0 +1,21 @@
+<h4>Works</h4>
+  <hr />
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Work Title</th>
+        <th>Views</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @top_works.each do |work| %>
+        <% document = ::SolrDocument.find(work[0]) rescue document = nil %>
+        <% if document %>
+          <tr>
+            <td><%= link_to document, admin_analytics_work_report_path(work[0]) %></td>
+            <td><%= work[1] %></td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>

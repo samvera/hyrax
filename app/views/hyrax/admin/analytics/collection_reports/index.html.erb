@@ -32,15 +32,17 @@
               <div class="tab-content">
                 <h3 class="text-center">Custom Collection Report</h3>
                 <div class="tab-pane active" id="summary">
-                  <%= render "summary" %>
+                  <%= render "hyrax/admin/analytics/summary" %>
                 </div>
                 <div class="tab-pane" id="monthly">
                   <h4 class="text-center">Month-by-month status for last 12 months through <%= Time.zone.today.strftime("%B %Y") %></h4>
-                  <% if @last_twelve_months %> 
-                    <%= render 'hyrax/admin/analytics/monthly_pageviews' %>
-                  <% end %>
+                    <%= render 'hyrax/admin/analytics/monthly_activity' %>
                 </div>
               </div>
+
+              <% if @top_collections %>
+                <%= render 'top_collections' %>
+              <% end %>
 
             </div>
 
