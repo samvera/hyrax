@@ -10,8 +10,8 @@ module Hyrax
         def index
           @pageviews = Hyrax::Analytics.pageviews("works")
           @downloads = Hyrax::Analytics.downloads
-          @top_works = paginate(Hyrax::Analytics.top_pages("works"), rows: 5)
-          @top_downloads = paginate(Hyrax::Analytics.top_downloads, rows: 5)
+          @top_works = paginate(Hyrax::Analytics.top_pages("works"), rows: 10)
+          @top_downloads = paginate(Hyrax::Analytics.top_downloads, rows: 10)
           respond_to do |format|
             format.html
             format.csv do export_data end
@@ -27,7 +27,7 @@ module Hyrax
           @pageviews = Hyrax::Analytics.pageviews_for_url(@path)
           @uniques = Hyrax::Analytics.unique_visitors_for_url(@path)
           @downloads = Hyrax::Analytics.downloads
-          @files = paginate(@document._source["file_set_ids_ssim"], rows: 10)
+          @files = paginate(@document._source["file_set_ids_ssim"], rows: 5)
           respond_to do |format|
             format.html
             format.csv do export_data end
