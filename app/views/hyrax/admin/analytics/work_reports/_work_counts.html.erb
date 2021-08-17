@@ -1,15 +1,17 @@
 <div class="row">
   <div class="col-xs-12 work-counts">
     <div class="work-count-border col-sm-2 col-sm-offset-3 pull-left text-center">
-      <h4 class="work-count-title">1.2MB</p>
+       <% @file_sizes_total_bytes = @file_sizes.inject(0, :+) %>
+       <% @file_size_total = (@file_sizes_total_bytes / 1.0.megabyte).round(2) %>
+      <h4 class="work-count-title"><%= @file_size_total %>MB</p>
       <p>total size</p>
     </div>
     <div class="work-count-border col-sm-2 pull-left text-center">
-      <h4 class="work-count-title">2</p>
+      <h4 class="work-count-title"></p>
       <p>child works</p>
     </div>
     <div class="work-count-border col-sm-2 pull-left text-center">
-      <h4 class="work-count-title">4</p>
+      <h4 class="work-count-title"><%= @files.count unless @files.nil? %></p>
       <p>files</p>
     </div>
   </div>

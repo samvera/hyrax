@@ -124,3 +124,11 @@
       </div>
   <% end # if @members_count > 0 %>
 </div>
+
+<% if Hyrax.config.analytics_provider == 'matomo' %>
+  <script>
+  $( document ).on('turbolinks:load', function() {
+     _paq.push(['trackEvent', 'Collections', 'Views', '<%= @presenter.id %>']);
+    });
+  </script>
+<% end %>
