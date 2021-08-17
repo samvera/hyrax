@@ -5,5 +5,6 @@ module Hyrax
       "Hyrax::Analytics::#{Hyrax.config.analytics_provider.to_s.capitalize}"
     end
     include provider_parser.constantize
+
   end
 end

@@ -1,6 +1,7 @@
 module Hyrax
   module Analytics
     class Results
+      require 'csv'
 
       attr_accessor :results
 
@@ -68,6 +69,10 @@ module Hyrax
           end
         end
         range_results.inject(0) {|sum, a| sum + a[1]}
+      end
+
+      def to_csv  
+        results.inject([]) { |csv, row|  csv << CSV.generate_line(row) }.join("")
       end
       
     end
