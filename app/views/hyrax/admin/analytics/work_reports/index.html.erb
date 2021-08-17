@@ -12,7 +12,19 @@
         <%# TODO: Dynamic %>
         <div class="panel-heading">The repository contains <b>56 works</b>, which collectively have had <b>98,348 views</b> and <b>47,391 downloads</b>.</div>
         <div class="panel-body">
-          <h2>Activity</h2>
+          <h2>Activity
+            <div class="btn-group pull-right">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Export <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><%= link_to "Downloads", admin_analytics_work_reports_path(format: :csv, format_data: 'downloads', disposition: "attachment") %></li>
+                <li><%= link_to "Pageviews", admin_analytics_work_reports_path(format: :csv, format_data: 'pageviews', disposition: "attachment") %></li>
+                <li><%= link_to "Top Downloads", admin_analytics_work_reports_path(format: :csv, format_data: 'top_downloads', disposition: "attachment") %></li>
+                <li><%= link_to "Top Works", admin_analytics_work_reports_path(format: :csv, format_data: 'top_works', disposition: "attachment") %></li>
+              </ul>
+            </div>
+          </h2>
 
           <div class="panel panel-default">
             <div class="panel-heading">Customize Report</div>

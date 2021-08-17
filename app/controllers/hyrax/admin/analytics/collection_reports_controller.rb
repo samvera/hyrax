@@ -11,6 +11,10 @@ module Hyrax
           @pageviews = Hyrax::Analytics.pageviews("collections")
           @downloads = Hyrax::Analytics.downloads 
           @top_collections = Hyrax::Analytics.top_pages("collections", "#{@start_date},#{@end_date}")
+          respond_to do |format|
+            format.html
+            format.csv do export_data end
+          end
         end
 
         def show 
@@ -21,6 +25,10 @@ module Hyrax
           end
           @pageviews = Hyrax::Analytics.pageviews_for_url(@path)
           @uniques = Hyrax::Analytics.unique_visitors_for_url(@path)
+          respond_to do |format|
+            format.html
+            format.csv do export_data end
+          end
         end
 
         private 
@@ -29,6 +37,20 @@ module Hyrax
           @start_date = params[:start_date] || Time.zone.today - 1.month
           @end_date = params[:end_date] || Time.zone.today + 1.day
           @month_names = 12.downto(1).map { |n| DateTime::MONTHNAMES.drop(1)[(Date.today.month - n) % 12] }.reverse
+        end
+
+        def export_data
+          if (params[:format_data] == 'downloads')
+            send_data @downloads.to_csv, filename: "#{@start_date}-#{@end_date}-downloads.csv"
+          elsif (params[:format_data] == 'pageviews')
+            send_data @pageviews.to_csv, filename: "#{@start_date}-#{@end_date}-pageviews.csv"
+          elsif (params[:format_data] == 'uniques')
+            send_data  @uniques.to_csv, filename: "#{@start_date}-#{@end_date}-uniques.csv"
+          elsif (params[:format_data] == 'top_collections')
+            send_data @top_collections.map(&:to_csv).join, filename: "#{@start_date}-#{@end_date}-top_collections.csv"
+          elsif (params[:format_data] == 'top_downloads')
+            send_data @top_downloads.map(&:to_csv).join, filename: "#{@start_date}-#{@end_date}-top_downloads.csv"
+          end
         end
         
       end

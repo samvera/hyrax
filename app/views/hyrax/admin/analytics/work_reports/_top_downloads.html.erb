@@ -1,6 +1,6 @@
 <h4>Files</h4>
 <hr />
-
+ 
 <table class="table table-striped">
   <thead>
   <tr>
@@ -9,14 +9,14 @@
   </tr>
   </thead>
   <tbody>
-    <% @top_downloads.each do |download| %>
-      <% file = FileSet.find(download[0]) rescue file = nil %>
-      <% if file %>
+      <% @top_downloads.each do |download| %>
+        <% file = FileSet.find(download[0]) rescue document = nil %> 
+        <% if file %>
         <tr>
-          <td><%= file %></td>
-          <td><%= download[1] %></td>
+        <td><%= file %></td>   
+        <td><%= download[1] %></td>
         </tr>
+        <% end %>
       <% end %>
-    <% end %>
   </tbody>
 </table>

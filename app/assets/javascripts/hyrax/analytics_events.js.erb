@@ -32,7 +32,7 @@
 <% elsif Hyrax.config.analytics_provider == 'matomo' %>
   
    function trackMatomoPageView() {
-    window.paq.push(['trackPageview']);
+    window._paq.push(['trackPageView']);
   }
 
   function trackMatomoEvents() {
@@ -42,8 +42,20 @@
     })
   }
 
-  $(document).on('click', '#file_download', function(e) {
-    _paq.push(['trackEvent', 'Files', 'Downloaded', $(this).data('label')]);
-    trackMatomoEvents()
-  });
+    if (typeof Turbolinks !== 'undefined') {
+      $(document).on('turbolinks:load', function() {
+          trackMatomoEvents()
+          trackMatomoPageView()
+      })
+    } else {
+          $(document).on('ready', function() {
+            trackMatomoEvents()
+            trackMatomoPageView()
+        })
+    }
+
+    $(document).on('click', '#file_download', function(e) {
+      _paq.push(['trackEvent', 'Files', 'Downloaded', $(this).data('label')]);
+      trackMatomoEvents()
+    });
 <% end %>
