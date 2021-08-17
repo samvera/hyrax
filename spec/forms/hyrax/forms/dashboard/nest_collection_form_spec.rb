@@ -9,9 +9,10 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
   end
 
   let(:child)                { FactoryBot.create(:collection) }
-  let(:context)              { double('Context') }
+  let(:context)              { double('Context', current_user: user) }
   let(:nesting_depth_result) { true }
   let(:parent)               { FactoryBot.create(:collection) }
+  let(:user)                 { create(:user) }
 
   let(:persistence_service) do
     double(Hyrax::Collections::NestedCollectionPersistenceService,
@@ -91,7 +92,7 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
       it "returns the result of the given persistence_service's call to persist_nested_collection_for" do
         expect(persistence_service)
           .to receive(:persist_nested_collection_for)
-          .with(parent: parent, child: child)
+          .with(parent: parent, child: child, user: user)
           .and_return(:persisted)
 
         expect(form.save).to eq :persisted
@@ -173,7 +174,10 @@ RSpec.describe Hyrax::Forms::Dashboard::NestCollectionForm, type: :form do
       end
 
       it "returns the result of the given persistence_service's call to remove_nested_relationship_for" do
-        expect(persistence_service).to receive(:remove_nested_relationship_for).with(parent: parent, child: child).and_return(:persisted)
+        expect(persistence_service)
+          .to receive(:remove_nested_relationship_for)
+          .with(parent: parent, child: child, user: user)
+          .and_return(:persisted)
 
         expect(form.remove).to eq :persisted
       end

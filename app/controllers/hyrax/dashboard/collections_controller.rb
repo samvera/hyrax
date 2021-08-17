@@ -202,8 +202,10 @@ module Hyrax
       end
 
       def link_parent_collection(parent_id)
-        parent = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: parent_id, use_valkyrie: false)
-        Hyrax::Collections::NestedCollectionPersistenceService.persist_nested_collection_for(parent: parent, child: @collection)
+        child = collection.respond_to?(:valkyrie_resource) ? collection.valkyrie_resource : collection
+        Hyrax::Collections::CollectionMemberService.add_member(collection_id: parent_id,
+                                                               new_member: child,
+                                                               user: current_user)
       end
 
       def uploaded_files(uploaded_file_ids)
