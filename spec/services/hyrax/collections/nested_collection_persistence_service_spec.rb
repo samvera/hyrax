@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Collections::NestedCollectionPersistenceService, with_nested_reindexing: true do
-  let(:parent) { build(:collection_lw) }
-  let(:child) { create(:collection) }
+  let(:parent) { FactoryBot.valkyrie_create(:hyrax_collection) }
+  let(:child) { FactoryBot.valkyrie_create(:hyrax_collection) }
 
   describe '.persist_nested_collection_for' do
     subject { described_class.persist_nested_collection_for(parent: parent, child: child) }
 
     it 'creates the relationship between parent and child' do
       subject
-      expect(parent.member_objects).to eq([child])
-      expect(child.member_of_collections).to eq([parent])
+      expect(Hyrax.custom_queries.find_parent_collection_ids(resource: child)).to eq [parent.id]
+      expect(Hyrax.custom_queries.find_child_collection_ids(resource: parent)).to eq [child.id]
     end
   end
 
@@ -22,8 +22,8 @@ RSpec.describe Hyrax::Collections::NestedCollectionPersistenceService, with_nest
 
     it 'removes the relationship between parent and child' do
       subject
-      expect(parent.member_objects).to eq([])
-      expect(child.member_of_collections).to eq([])
+      expect(Hyrax.custom_queries.find_parent_collection_ids(resource: child)).to eq []
+      expect(Hyrax.custom_queries.find_child_collection_ids(resource: parent)).to eq []
     end
   end
 end

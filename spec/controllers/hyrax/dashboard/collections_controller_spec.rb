@@ -125,7 +125,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
             collection: collection_attrs, parent_id: parent_collection.id
           }
         end.to change { Collection.count }.by(1)
-        expect(assigns[:collection].member_of_collections).to eq [parent_collection]
+        expect(assigns[:collection].reload.member_of_collections).to eq [parent_collection]
       end
     end
 
