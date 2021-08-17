@@ -10,7 +10,7 @@ module Hyrax
         def index
           @pageviews = Hyrax::Analytics.pageviews("collections")
           @downloads = Hyrax::Analytics.downloads 
-          @top_collections = Hyrax::Analytics.top_pages("collections", "#{@start_date},#{@end_date}")
+          @top_collections = paginate(Hyrax::Analytics.top_pages("collections"), rows: 10)
           respond_to do |format|
             format.html
             format.csv do export_data end
@@ -50,6 +50,15 @@ module Hyrax
             send_data @top_collections.map(&:to_csv).join, filename: "#{@start_date}-#{@end_date}-top_collections.csv"
           elsif (params[:format_data] == 'top_downloads')
             send_data @top_downloads.map(&:to_csv).join, filename: "#{@start_date}-#{@end_date}-top_downloads.csv"
+          end
+        end
+
+        def paginate(results_array, rows: 2)
+          unless results_array.nil?
+            total_pages = (results_array.size.to_f / rows.to_f).ceil
+            page = request.params[:page].nil? ? 1 : request.params[:page].to_i
+            current_page = page > total_pages ? total_pages : page
+            Kaminari.paginate_array(results_array, total_count: results_array.size).page(current_page).per(rows)
           end
         end
         

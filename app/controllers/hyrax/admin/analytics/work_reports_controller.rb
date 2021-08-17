@@ -10,8 +10,8 @@ module Hyrax
         def index
           @pageviews = Hyrax::Analytics.pageviews("works")
           @downloads = Hyrax::Analytics.downloads
-          @top_works = Hyrax::Analytics.top_pages("works")
-          @top_downloads = Hyrax::Analytics.top_downloads
+          @top_works = paginate(Hyrax::Analytics.top_pages("works"), rows: 10)
+          @top_downloads = paginate(Hyrax::Analytics.top_downloads, rows: 10)
           respond_to do |format|
             format.html
             format.csv do export_data end
@@ -27,7 +27,7 @@ module Hyrax
           @pageviews = Hyrax::Analytics.pageviews_for_url(@path)
           @uniques = Hyrax::Analytics.unique_visitors_for_url(@path)
           @downloads = Hyrax::Analytics.downloads
-          @files = @document._source["file_set_ids_ssim"]
+          @files = paginate(@document._source["file_set_ids_ssim"], rows: 5)
           respond_to do |format|
             format.html
             format.csv do export_data end
@@ -53,6 +53,15 @@ module Hyrax
             send_data @top_works.map(&:to_csv).join, filename: "#{@start_date}-#{@end_date}-top_works.csv"
           elsif (params[:format_data] == 'top_downloads')
             send_data @top_downloads.map(&:to_csv).join, filename: "#{@start_date}-#{@end_date}-top_downloads.csv"
+          end
+        end
+ 
+        def paginate(results_array, rows: 2)
+          unless results_array.nil?
+            total_pages = (results_array.size.to_f / rows.to_f).ceil
+            page = request.params[:page].nil? ? 1 : request.params[:page].to_i
+            current_page = page > total_pages ? total_pages : page
+            Kaminari.paginate_array(results_array, total_count: results_array.size).page(current_page).per(rows)
           end
         end
         
