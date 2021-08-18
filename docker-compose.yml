@@ -15,6 +15,7 @@ services:
     user: root
     env_file:
       - .env
+      - .env.development
       - .dassie/.env
     environment:
       - RAILS_ROOT=/app/samvera/hyrax-webapp
