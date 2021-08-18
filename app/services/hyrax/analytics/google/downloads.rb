@@ -8,9 +8,9 @@ module Hyrax
         metrics :total_events
         dimensions :date, :event_category, :event_action, :event_label
 
-        filter(:downloads) {|event_action| contains(:eventAction, 'Download')}
-        filter(:works) {|event_category| matches(:eventCategory, 'Works')}
-        filter(:collections) {|event_category| matches(:eventCategory, 'Collections')}
+        filter(:downloads) { |_event_action| contains(:eventAction, 'Download') }
+        filter(:works) { |_event_category| matches(:eventCategory, 'Works') }
+        filter(:collections) { |_event_category| matches(:eventCategory, 'Collections') }
         filter :for_file, &->(file) { contains(:eventLabel, file) }
 
         def self.results_array(response)
@@ -23,48 +23,48 @@ module Hyrax
 
         def self.file_downloads(profile, start_date, end_date, file)
           results = Downloads.results(profile,
-            :start_date => start_date,
-            :end_date => end_date).for_file(file)
+            start_date: start_date,
+            end_date: end_date).for_file(file)
           results.first['totalEvents'].to_i
         end
 
         def self.all(profile, start_date, end_date)
           response = Downloads.results(profile,
-            :start_date => start_date,
-            :end_date => end_date,
-            :sort => "-totalEvents").downloads
+            start_date: start_date,
+            end_date: end_date,
+            sort: "-totalEvents").downloads
           results_array(response)
         end
 
         def self.collections(profile, start_date, end_date)
           response = Downloads.results(profile,
-            :start_date => start_date,
-            :end_date => end_date,
-            :sort => "-totalEvents").collections.downloads
+            start_date: start_date,
+            end_date: end_date,
+            sort: "-totalEvents").collections.downloads
           results_array(response)
         end
 
         def self.works(profile, start_date, end_date)
           response = Downloads.results(profile,
-            :start_date => start_date,
-            :end_date => end_date,
-            :sort => "-totalEvents").works.downloads
+            start_date: start_date,
+            end_date: end_date,
+            sort: "-totalEvents").works.downloads
           results_array(response)
         end
 
         def self.collections(profile, start_date, end_date)
           response = Downloads.results(profile,
-            :start_date => start_date,
-            :end_date => end_date,
-            :sort => "-totalEvents").collections.downloads
+            start_date: start_date,
+            end_date: end_date,
+            sort: "-totalEvents").collections.downloads
           results_array(response)
         end
 
         def self.works(profile, start_date, end_date)
           response = Downloads.results(profile,
-            :start_date => start_date,
-            :end_date => end_date,
-            :sort => "-totalEvents").works.downloads
+            start_date: start_date,
+            end_date: end_date,
+            sort: "-totalEvents").works.downloads
           results_array(response)
         end
       end

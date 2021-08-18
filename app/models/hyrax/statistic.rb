@@ -35,9 +35,9 @@ module Hyrax
           return []
         end
         profile.hyrax__analytics__google__pageviews(sort: 'date',
-                                start_date: start_date,
-                                end_date: Date.yesterday,
-                                limit: 10_000)
+                                                    start_date: start_date,
+                                                    end_date: Date.yesterday,
+                                                    limit: 10_000)
                .for_path(path)
       end
 

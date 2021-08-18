@@ -10,7 +10,7 @@
       * [Seed the database](#seed-the-database)
       * [Run migrations](#run-migrations)
       * [Access the rails Console](#access-the-rails-console)
-      * [Run rubocop](#run-rubocop)
+    * [Rubocop](#rubocop)
     * [RSpec](#rspec)
     * [Rubocop](#rubocop)
     * [Stop the app and services](#stop-the-app-and-services)
@@ -69,18 +69,14 @@ This command starts the web container, allowing Rails to be started or stopped i
   rails c
   ```
 
-  #### Run rubocop
-  (The [`-a` flag](https://docs.rubocop.org/rubocop/usage/basic_usage.html#auto-correcting-offenses) is optional)
+### Rubocop
+(The [`-a` flag](https://docs.rubocop.org/rubocop/usage/basic_usage.html#auto-correcting-offenses) is optional)
 
-  All files:
-    ```bash
-    sc exec rubocop -a
-    ```
-
-  One file:
-    ```bash
-    rubocop -a path/to/file.rb
-    ```
+```bash
+docker-compose exec -w /app/samvera/hyrax-engine app sh
+rubocop -a # all files
+rubocop -a path/to/file.rb # one file
+```
 
 ### RSpec
 Run rspec in a separate terminal window or tab than the running server.

@@ -125,58 +125,54 @@ module Hyrax
           end
         end
 
-        def downloads(ref='all', date="#{Time.zone.today-5.years},#{Time.zone.today}")
+        def downloads(ref = 'all', date = "#{Time.zone.today - 5.years},#{Time.zone.today}")
           date = date.split(",")
           Downloads.send(ref, profile, date[0], date[1])
         end
 
-        def top_downloads(ref='works', date="#{Time.zone.today-5.years},#{Time.zone.today}")
+        def top_downloads(ref = 'works', date = "#{Time.zone.today - 5.years},#{Time.zone.today}")
           date = date.split(",")
           Events.send("#{ref}_downloads", profile, date[0], date[1])
         end
 
-        def downloads_for_file(file, date = "#{Time.zone.today-11.months},#{Time.zone.today}")
+        def downloads_for_file(file, date = "#{Time.zone.today - 11.months},#{Time.zone.today}")
           date = date.split(",")
           Downloads.file_downloads(profile, date[0], date[1], file)
         end
 
         # Filter top pages by either "works" or "collections"
-        def top_pages(ref='works', date="#{Time.zone.today-5.years},#{Time.zone.today}")
+        def top_pages(ref = 'works', date = "#{Time.zone.today - 5.years},#{Time.zone.today}")
           date = date.split(",")
           Events.send(ref, profile, date[0], date[1])
         end
 
         # Filter pageviews by either "all", "works", or "collections"
-        def pageviews(ref='all', date="#{Time.zone.today-5.years},#{Time.zone.today}")
+        def pageviews(ref = 'all', date = "#{Time.zone.today - 5.years},#{Time.zone.today}")
           date = date.split(",")
           Pageviews.send(ref, profile, date[0], date[1])
         end
 
-        def pageviews_for_url(path, date = "#{Time.zone.today-5.years},#{Time.zone.today}")
+        def pageviews_for_url(path, date = "#{Time.zone.today - 5.years},#{Time.zone.today}")
           date = date.split(",")
           path = path[/[^?]+/]
           Pageviews.page(profile, date[0], date[1], path)
         end
 
-        def unique_visitors(date="#{Time.zone.today-5.years},#{Time.zone.today}")
-        end
+        def unique_visitors(date = "#{Time.zone.today - 5.years},#{Time.zone.today}"); end
 
-        def unique_visitors_for_url(url, date="#{Time.zone.today-5.years},#{Time.zone.today}")
-        end
+        def unique_visitors_for_url(url, date = "#{Time.zone.today - 5.years},#{Time.zone.today}"); end
 
-         def new_visitors(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
+        def new_visitors(period = 'month', date = "#{Time.zone.today - 1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Visits.new_visits(profile, date[0], date[1])
-        end
+       end
 
-        def unique_visitors_for_url(url, date="#{Time.zone.today-5.years},#{Time.zone.today}")
-        end
+        def unique_visitors_for_url(url, date = "#{Time.zone.today - 5.years},#{Time.zone.today}"); end
 
-         def new_visitors(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
+        def new_visitors(period = 'month', date = "#{Time.zone.today - 1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Visits.total_visits(profile, date[0], date[1])
-        end
-
+       end
       end
       # rubocop:enable Metrics/BlockLength
     end

@@ -13,25 +13,23 @@ module Hyrax
           @top_collections = paginate(Hyrax::Analytics.top_pages("collections"), rows: 10)
           respond_to do |format|
             format.html
-            format.csv do export_data end
+            format.csv { export_data }
           end
         end
 
-        def show 
+        def show
           @document = ::SolrDocument.find(params[:id])
           @path = collection_path(params[:id])
-          if Hyrax.config.analytics_provider == 'matomo'
-            @path = request.base_url + @path
-          end
+          @path = request.base_url + @path if Hyrax.config.analytics_provider == 'matomo'
           @pageviews = Hyrax::Analytics.pageviews_for_url(@path)
           @uniques = Hyrax::Analytics.unique_visitors_for_url(@path)
           respond_to do |format|
             format.html
-            format.csv do export_data end
+            format.csv { export_data }
           end
         end
 
-        private 
+        private
 
         def set_defaults
           @start_date = params[:start_date] || Time.zone.today - 1.month
@@ -40,15 +38,15 @@ module Hyrax
         end
 
         def export_data
-          if (params[:format_data] == 'downloads')
+          if params[:format_data] == 'downloads'
             send_data @downloads.to_csv, filename: "#{@start_date}-#{@end_date}-downloads.csv"
-          elsif (params[:format_data] == 'pageviews')
+          elsif params[:format_data] == 'pageviews'
             send_data @pageviews.to_csv, filename: "#{@start_date}-#{@end_date}-pageviews.csv"
-          elsif (params[:format_data] == 'uniques')
-            send_data  @uniques.to_csv, filename: "#{@start_date}-#{@end_date}-uniques.csv"
-          elsif (params[:format_data] == 'top_collections')
+          elsif params[:format_data] == 'uniques'
+            send_data @uniques.to_csv, filename: "#{@start_date}-#{@end_date}-uniques.csv"
+          elsif params[:format_data] == 'top_collections'
             send_data @top_collections.map(&:to_csv).join, filename: "#{@start_date}-#{@end_date}-top_collections.csv"
-          elsif (params[:format_data] == 'top_downloads')
+          elsif params[:format_data] == 'top_downloads'
             send_data @top_downloads.map(&:to_csv).join, filename: "#{@start_date}-#{@end_date}-top_downloads.csv"
           end
         end
@@ -61,7 +59,6 @@ module Hyrax
             Kaminari.paginate_array(results_array, total_count: results_array.size).page(current_page).per(rows)
           end
         end
-        
       end
     end
   end

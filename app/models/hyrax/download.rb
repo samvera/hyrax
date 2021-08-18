@@ -5,8 +5,7 @@ module Hyrax
 
     metrics :totalEvents
     dimensions :eventCategory, :eventAction, :eventLabel, :date
-    
-    filter :for_file, &->(id) { matches(:eventLabel, id) }
 
+    filter :for_file, &->(id) { matches(:eventLabel, id) }
   end
 end
