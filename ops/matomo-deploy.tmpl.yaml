@@ -25,6 +25,7 @@ ingress:
   - host: hyrax-matomo.samvera-community.notch8.cloud
     paths:
       - path: /
+
 livenessProbe:
   initialDelaySeconds: 30
 postgresql:
@@ -39,7 +40,7 @@ solr:
 
 extraEnvVars:
   - name: MATOMO_SITE_ID
-    value: 3
+    value: "3"
   - name: MATOMO_BASE_URL
     value: https://matomo.notch8.cloud/
   - name: MATOMO_AUTH_TOKEN
@@ -52,7 +53,7 @@ extraEnvVars:
 worker:
   extraEnvVars:
   - name: MATOMO_SITE_ID
-    value: 3
+    value: "3"
   - name: MATOMO_BASE_URL
     value: https://matomo.notch8.cloud/
   - name: MATOMO_AUTH_TOKEN
