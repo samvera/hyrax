@@ -6,7 +6,6 @@ module Hyrax
   module Analytics
     module Google
       extend ActiveSupport::Concern
-
       # rubocop:disable Metrics/BlockLength
       class_methods do
         # Loads configuration options from config/analytics.yml. Expected structure:
@@ -165,14 +164,17 @@ module Hyrax
         def new_visitors(period = 'month', date = "#{Time.zone.today - 1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Visits.new_visits(profile, date[0], date[1])
-       end
+      end
 
-        def unique_visitors_for_url(url, date = "#{Time.zone.today - 5.years},#{Time.zone.today}"); end
+        def returning_visitors(period = 'month', date = "#{Time.zone.today - 1.month},#{Time.zone.today}")
+          date = date_period(period, date)
+          Visits.return_visits(profile, date[0], date[1])
+        end
 
-        def new_visitors(period = 'month', date = "#{Time.zone.today - 1.month},#{Time.zone.today}")
+        def total_visitors(period = 'month', date = "#{Time.zone.today - 1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Visits.total_visits(profile, date[0], date[1])
-       end
+        end
       end
       # rubocop:enable Metrics/BlockLength
     end
