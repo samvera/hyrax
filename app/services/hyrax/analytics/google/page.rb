@@ -19,6 +19,14 @@ module Hyrax
           Hyrax::Analytics::Results.new(results)
         end
 
+        def self.results_array(response)
+          results = []
+          response.to_a.each do |result|
+            results.push([result.date.to_date, result.pageviews.to_i])
+          end
+          Hyrax::Analytics::Results.new(results)
+        end
+
         def self.collections(profile, start_date, end_date)
           response = Page.results(profile,
             :start_date => start_date,
@@ -32,6 +40,7 @@ module Hyrax
             :end_date => end_date,
             :sort => '-pageviews').works
         end
+      
 
 
       end
