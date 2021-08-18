@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Analytics
     module Google
@@ -7,8 +8,16 @@ module Hyrax
         metrics :pageviews
         dimensions :page_path, :page_path_level1, :page_title
 
-        filter(:collections) {|page_path_level1| contains(:pagePathLevel1, 'collections')}
-        filter(:works) {|page_path_level1| contains(:pagePathLevel1, 'concern')}
+        filter(:collections) { |_page_path_level1| contains(:pagePathLevel1, 'collections') }
+        filter(:works) { |_page_path_level1| contains(:pagePathLevel1, 'concern') }
+
+        def self.results_array(response)
+          results = []
+          response.to_a.each do |result|
+            results.push([result.date.to_date, result.pageviews.to_i])
+          end
+          Hyrax::Analytics::Results.new(results)
+        end
 
         def self.results_array(response)
           results = []
@@ -32,6 +41,7 @@ module Hyrax
             :sort => '-pageviews').works
         end
       
+
 
       end
     end

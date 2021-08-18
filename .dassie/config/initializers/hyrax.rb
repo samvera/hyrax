@@ -5,6 +5,8 @@ Hyrax.config do |config|
   # Defaults to false.  See README for more info
   config.arkivo_api = true
 
+  config.analytics = ENV.fetch('HYRAX_ANALYTICS', 'false') == 'true'
+  config.analytics_provider = ENV.fetch('HYRAX_ANALYTICS_PROVIDER', 'google')
   # Injected via `rails g hyrax:work GenericWork`
   config.register_curation_concern :generic_work
   # Injected via `rails g hyrax:work NamespacedWorks::NestedWork`

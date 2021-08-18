@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Analytics
     module Google
@@ -5,7 +6,7 @@ module Hyrax
         extend Legato::Model
 
         metrics :pageviews
-        dimensions :page_path_level1, :page_path, :date 
+        dimensions :page_path_level1, :page_path, :date
 
         filter(:collections) {|page_path_level1| contains(:pagePathLevel1, 'collections')}
         filter(:works) {|page_path_level1| contains(:pagePathLevel1, 'concern')}
@@ -22,7 +23,7 @@ module Hyrax
         def self.all(profile, start_date, end_date)
           response = Pageviews.results(profile,
             :start_date => start_date,
-            :end_date => end_date, 
+            :end_date => end_date,
             :sort => ['-date'])
           results_array(response)
         end
@@ -30,7 +31,7 @@ module Hyrax
         def self.collections(profile, start_date, end_date)
           response = Pageviews.results(profile,
             :start_date => start_date,
-            :end_date => end_date, 
+            :end_date => end_date,
             :sort => ['-date']).collections
             results_array(response)
         end
@@ -38,7 +39,7 @@ module Hyrax
         def self.works(profile, start_date, end_date)
           response = Pageviews.results(profile,
             :start_date => start_date,
-            :end_date => end_date, 
+            :end_date => end_date,
             :sort => ['-date']).works
             results_array(response)
         end
@@ -49,8 +50,8 @@ module Hyrax
             :end_date => end_date,
             :sort => ['-date']).for_path(path)
             results_array(response)
-        end 
-       
+        end
+
       end
     end
   end

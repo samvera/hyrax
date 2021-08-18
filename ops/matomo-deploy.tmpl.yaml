@@ -1,0 +1,63 @@
+imagePullSecrets:
+  - name: gitlab-registry
+
+brandingVolume:
+  storageClass: nfs
+derivativesVolume:
+  storageClass: nfs
+uploadsVolume:
+  storageClass: nfs
+
+externalFcrepoHost: fcrepo.staging-fcrepo.svc.cluster.local
+externalPostgresql:
+  host: pg-postgresql.staging-postgres.svc.cluster.local
+  password: $POSTGRES_PASSWORD
+  username: postgres
+externalSolrCollection: hyrax-ga
+externalSolrHost: solr.staging-solr.svc.cluster.local
+externalSolrPassword: $SOLR_PASSWORD
+externalSolrUser: admin
+fcrepo:
+  enabled: false
+ingress:
+  enabled: true
+  hosts:
+  - host: hyrax-matomo.samvera-community.notch8.cloud
+    paths:
+      - path: /
+livenessProbe:
+  initialDelaySeconds: 30
+postgresql:
+  enabled: false
+readinessProbe:
+  initialDelaySeconds: 30
+redis:
+  enabled: true
+  password: aSecretMoomin
+solr:
+  enabled: false
+
+extraEnvVars:
+  - name: MATOMO_SITE_ID
+    value: 3
+  - name: MATOMO_BASE_URL
+    value: https://matomo.notch8.cloud/
+  - name: MATOMO_AUTH_TOKEN
+    value: $MATOMO_AUTH_TOKEN
+  - name: HYRAX_ANALYTICS_PROVIDER
+    value: matomo
+  - name: HYRAX_ANALYTICS
+    value: 'true'
+
+worker:
+  extraEnvVars:
+  - name: MATOMO_SITE_ID
+    value: 3
+  - name: MATOMO_BASE_URL
+    value: https://matomo.notch8.cloud/
+  - name: MATOMO_AUTH_TOKEN
+    value: $MATOMO_AUTH_TOKEN
+  - name: HYRAX_ANALYTICS_PROVIDER
+    value: matomo
+  - name: HYRAX_ANALYTICS
+    value: 'true'

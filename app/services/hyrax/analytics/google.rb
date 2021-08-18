@@ -6,7 +6,7 @@ module Hyrax
   module Analytics
     module Google
       extend ActiveSupport::Concern
-     
+
       # rubocop:disable Metrics/BlockLength
       class_methods do
         # Loads configuration options from config/analytics.yml. Expected structure:
@@ -94,13 +94,13 @@ module Hyrax
             start_date = Time.zone.today
             end_date = Time.zone.today
           when "week"
-            start_date = Time.zone.today-7.days
+            start_date = Time.zone.today - 7.days
             end_date = Time.zone.today
           when "month"
-            start_date = Time.zone.today-1.month
+            start_date = Time.zone.today - 1.month
             end_date = Time.zone.today
           when "year"
-            start_date = Time.zone.today-1.year
+            start_date = Time.zone.today - 1.year
             end_date = Time.zone.today
           end
           date = [start_date, end_date]
@@ -109,7 +109,7 @@ module Hyrax
         def keyword_conversion(date)
           case date
           when "last12"
-            start_date = Time.zone.today-11.months
+            start_date = Time.zone.today - 11.months
             end_date = Time.zone.today
             date = [start_date, end_date]
           else
@@ -118,7 +118,7 @@ module Hyrax
         end
 
         def date_period(period, date)
-          if period == "range" 
+          if period == "range"
             date.split(",")
           else
             to_date_range(period)
@@ -163,22 +163,20 @@ module Hyrax
 
         def unique_visitors_for_url(url, date="#{Time.zone.today-5.years},#{Time.zone.today}")
         end
-        
+
          def new_visitors(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Visits.new_visits(profile, date[0], date[1])
         end
 
-        def returning_visitors(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
-          date = date_period(period, date)
-          Visits.return_visits(profile, date[0], date[1])
+        def unique_visitors_for_url(url, date="#{Time.zone.today-5.years},#{Time.zone.today}")
         end
 
-        def total_visitors(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
+         def new_visitors(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Visits.total_visits(profile, date[0], date[1])
         end
-   
+
       end
       # rubocop:enable Metrics/BlockLength
     end

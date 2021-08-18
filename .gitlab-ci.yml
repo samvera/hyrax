@@ -1,14 +1,10 @@
 ---
 stages:
   - build
-  - test
-  - review
-  - staging
-  - production
+  - go
 
 before_script:
-  - export TAG=${CI_COMMIT_SHA}
-  - export BRANCH=${CI_COMMIT_REF_NAME}
+  - export TAG=${CI_COMMIT_SHORT_SHA}
   - export REGISTRY_HOST=${CI_REGISTRY}
   - export REGISTRY_URI="/${CI_PROJECT_PATH}"
 
@@ -17,22 +13,27 @@ build:
   script:
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
     - docker build --target hyrax-engine-dev --tag $CI_REGISTRY_IMAGE:$TAG .
+    - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
     - docker push $CI_REGISTRY_IMAGE:$TAG
+    - docker build --target hyrax-engine-dev-worker --tag $CI_REGISTRY_IMAGE/worker:$TAG .
+    - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" $CI_REGISTRY
+    - docker push $CI_REGISTRY_IMAGE/worker:$TAG
   tags:
     - local
 
 lint:
-  stage: test
-  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  stage: go
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
   script:
+    - cd /app/samvera/hyrax-engine
     - bundle check || bundle
     - bundle exec rubocop
   tags:
     - docker
 
 test:
-  stage: test
-  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  stage: go
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
   services:
     - name: selenium/standalone-chrome:3.141
       alias: chrome
@@ -42,14 +43,15 @@ test:
       alias: fcrepo
     - name: redis:5-alpine
       alias: redis
-    - name: solr:8.7
+    - name: registry.gitlab.com/notch8/od_analytics/solr:latest
+      command: [ "/bin/sh", "-c", "solr-precreate", "hyrax_test", "/opt/solr/server/solr/configsets/hyraxconf" ]
       alias: solr
-      command: [ "sh", "-c", "precreate-core", "hyrax_test", "/opt/solr/server/configsets/hyraxconf" ]
   variables:
     DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL: "true"
     DATABASE_URL: "postgres://postgres:postgres@db/hyku"
     FCREPO_HOST: "fcrepo"
     FCREPO_PORT: 8080
+    IN_DOCKER: "true"
     FCREPO_REST_PATH: "rest"
     POSTGRES_DB: "hyku"
     POSTGRES_HOST: "db"
@@ -66,55 +68,49 @@ test:
     SOLR_CONFIG_DIR: "solr/config"
     SOLR_CONFIGSET: blacklight-core
     SOLR_CONFIGSET_SOURCE_PATH: solr/config
+    VALKYRIE_SOLR_HOST: solr
+    VALKYRIE_SOLR_PORT: 8983
+    VALKYRIE_SOLR_CORE: hyrax-valkyrie-test
+
   script:
-    - cd /app/samvera/hyrax-engine && bundle exec rspec
+    - cd /app/samvera/hyrax-engine
+    - gem install semaphore_test_boosters
+    - rspec_booster --job $CI_NODE_INDEX/$CI_NODE_TOTAL
   tags:
     - docker
+  parallel: 6
 
-review:
-  stage: review
+
+ga.staging:
+  stage: go
   type: deploy
-  environment:
-    name: $CI_COMMIT_REF_SLUG
-    url: http://web.$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG.staging.$SITE_URI_BASE
-    on_stop: stop_review
-  only:
-    - branches
-  except:
-    - master
+  when: manual
+  variables:
+    DEPLOY_IMAGE: $CI_REGISTRY_IMAGE
+    DEPLOY_TAG: $CI_COMMIT_SHORT_SHA
+    WORKER_IMAGE: $CI_REGISTRY_IMAGE/worker
+    HELM_EXPERIMENTAL_OCI: 1
+    HELM_EXTRA_ARGS: >
+      --values ops/ga-deploy.yaml
   script:
-    - echo "deploying"
-    - sleep 10
-    - echo "totally fake deploy"
+    - envsubst < ops/ga-deploy.tmpl.yaml > ops/ga-deploy.yaml
+    - ./bin/helm_deploy ga-test hyrax-analytics
   tags:
     - local
 
-stop_review:
-  stage: review
-  script:
-    - echo "STOP"
-  when: manual
-  environment:
-    name: $CI_COMMIT_REF_SLUG
-    action: stop
-
-staging:
-  stage: staging
+matomo.staging:
+  stage: go
   type: deploy
-  script:
-    - echo "stage!"
-  only:
-    - master
-  tags:
-    - local
-
-production:
-  stage: production
-  type: deploy
-  script:
-    - echo "prod!"
   when: manual
-  only:
-    - master
+  variables:
+    DEPLOY_IMAGE: $CI_REGISTRY_IMAGE
+    DEPLOY_TAG: $CI_COMMIT_SHORT_SHA
+    WORKER_IMAGE: $CI_REGISTRY_IMAGE/worker
+    HELM_EXPERIMENTAL_OCI: 1
+    HELM_EXTRA_ARGS: >
+      --values ops/matomo-deploy.yaml
+  script:
+    - envsubst < ops/matomo-deploy.tmpl.yaml > ops/matomo-deploy.yaml
+    - ./bin/helm_deploy matomo-test hyrax-analytics
   tags:
     - local

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Hyrax
   module Analytics
     module Google
@@ -5,7 +6,7 @@ module Hyrax
         extend Legato::Model
 
         metrics :total_events
-        dimensions :date, :event_category, :event_action, :event_label 
+        dimensions :date, :event_category, :event_action, :event_label
 
         filter(:downloads) {|event_action| contains(:eventAction, 'Download')}
         filter(:works) {|event_category| matches(:eventCategory, 'Works')}
@@ -26,7 +27,7 @@ module Hyrax
             :end_date => end_date).for_file(file)
           results.first['totalEvents'].to_i
         end
-        
+
         def self.all(profile, start_date, end_date)
           response = Downloads.results(profile,
             :start_date => start_date,
@@ -51,6 +52,21 @@ module Hyrax
           results_array(response)
         end
 
+        def self.collections(profile, start_date, end_date)
+          response = Downloads.results(profile,
+            :start_date => start_date,
+            :end_date => end_date,
+            :sort => "-totalEvents").collections.downloads
+          results_array(response)
+        end
+
+        def self.works(profile, start_date, end_date)
+          response = Downloads.results(profile,
+            :start_date => start_date,
+            :end_date => end_date,
+            :sort => "-totalEvents").works.downloads
+          results_array(response)
+        end
       end
     end
   end

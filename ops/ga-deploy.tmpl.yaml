@@ -1,0 +1,86 @@
+imagePullSecrets:
+  - name: gitlab-registry
+
+brandingVolume:
+  storageClass: nfs
+derivativesVolume:
+  storageClass: nfs
+uploadsVolume:
+  storageClass: nfs
+
+extraVolumeMounts:
+  - mountPath: /ga
+    name: ga-pkey
+extraVolumes:
+  - name: ga-pkey
+    secret:
+      defaultMode: 292
+      optional: true
+      secretName: ga-pkey
+
+externalFcrepoHost: fcrepo.staging-fcrepo.svc.cluster.local
+externalPostgresql:
+  host: pg-postgresql.staging-postgres.svc.cluster.local
+  password: $POSTGRES_PASSWORD
+  username: postgres
+externalSolrCollection: hyrax-ga
+externalSolrHost: solr.staging-solr.svc.cluster.local
+externalSolrPassword: $SOLR_PASSWORD
+externalSolrUser: admin
+fcrepo:
+  enabled: false
+ingress:
+  enabled: true
+  hosts:
+  - host: hyrax-ga.samvera-community.notch8.cloud
+    paths:
+      - path: /
+
+livenessProbe:
+  initialDelaySeconds: 30
+postgresql:
+  enabled: false
+readinessProbe:
+  initialDelaySeconds: 30
+redis:
+  enabled: true
+  password: aSecretMoomin
+solr:
+  enabled: false
+
+extraEnvVars:
+  - name: GOOGLE_ANALYTICS_ID
+    value: UA-8635145-8
+  - name: GOOGLE_OAUTH_APP_NAME
+    value: notch8-qa
+  - name: GOOGLE_OAUTHAPP_VERSION
+    value: 0.0.1
+  - name: GOOGLE_OAUTH_PRIVATE_KEY_PATH
+    value: /ga/ga-pkey.p12
+  - name: GOOGLE_OAUTH_PRIVATE_KEY_SECRET
+    value: notasecret
+  - name: GOOGLE_OAUTH_CLIENT_EMAIL
+    value: server-account@notch8-qa.iam.gserviceaccount.com
+  - name: HYRAX_ANALYTICS_PROVIDER
+    value: google
+  - name: HYRAX_ANALYTICS
+    value: 'true'
+
+worker:
+  extraEnvVars:
+  - name: GOOGLE_ANALYTICS_ID
+    value: UA-8635145-8
+  - name: GOOGLE_OAUTH_APP_NAME
+    value: notch8-qa
+  - name: GOOGLE_OAUTHAPP_VERSION
+    value: 0.0.1
+  - name: GOOGLE_OAUTH_PRIVATE_KEY_PATH
+    value: /ga/ga-pkey.p12
+  - name: GOOGLE_OAUTH_PRIVATE_KEY_SECRET
+    value: notasecret
+  - name: GOOGLE_OAUTH_CLIENT_EMAIL
+    value: server-account@notch8-qa.iam.gserviceaccount.com
+  - name: HYRAX_ANALYTICS_PROVIDER
+    value: google
+  - name: HYRAX_ANALYTICS
+    value: 'true'
