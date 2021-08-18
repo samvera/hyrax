@@ -1,0 +1,31 @@
+<h4>Monthly user activity (past 12 months)</h4>
+<hr />
+
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>&nbsp;</th>
+    <% @month_names.each do |name| %>
+       <th><%= name %></th>
+    <% end %>
+  </tr>
+  </thead>
+  <tbody>
+  <% if @downloads %>
+    <tr>
+      <td><b>Downloads</b></td>
+        <% @month_names.each do |name| %>
+         <td><%= @downloads.month(name.to_date) %></td>
+       <% end %>
+    </tr>
+  <% end %>
+  <% if @pageviews %>    
+    <tr>
+      <td><b>Views</b></td>
+       <% @month_names.each do |name| %>
+         <td><%= @pageviews.month(name.to_date) %></td>
+       <% end %>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

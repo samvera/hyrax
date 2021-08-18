@@ -1,4 +1,4 @@
-<%= form_tag(hyrax.admin_analytics_work_reports_path, method: :get, class: "form-inline") do %>
+<%= form_tag(redirect_path, method: :get, class: "form-inline") do %>
   Start Date: <%= date_field_tag :start_date, "", class: 'datepicker form-control', placeholder: 'mm/dd/yyyy'   %>
   End Date: <%= date_field_tag :end_date, "", class: 'datepicker form-control', placeholder: 'mm/dd/yyyy'   %>
   <%= submit_tag 'Set Report Date Range', class: 'btn btn-primary' %>

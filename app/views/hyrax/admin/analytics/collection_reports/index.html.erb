@@ -9,11 +9,18 @@
     <div class="collection-reports">
 
       <div class="panel panel-default">
-        <%# TODO: Dynamic %>
-        <div class="panel-heading">The repository contains <b><%#= AnalyticsCollections.count %> collections</b>, which collectively have had <b><%#= AnalyticsCollectionsViews.count %> views</b> and <b><%#= AnalyticsCollectionsDownloads.count %>  downloads</b>.</div>
+        <div class="panel-heading">The repository contains <b><%= Collection.count %> collections</b>, which collectively have had <b><%= @pageviews.all %> views</b> and <b><%= @downloads.all %> downloads</b>.</div>
         <div class="panel-body">
-          <h2>Activity</h2>
-
+          <h2>Activity
+          <div class="btn-group pull-right">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Export <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><%= link_to "Pageviews", admin_analytics_collection_reports_path(format: :csv, format_data: 'pageviews', disposition: "attachment") %></li>
+                <li><%= link_to "Top Collections", admin_analytics_collection_reports_path(format: :csv, format_data: 'top_collections', disposition: "attachment") %></li>
+              </ul>
+          </div></h2>
           <div class="panel panel-default">
             <div class="panel-heading">Customize Report</div>
             <div class="panel-body">
@@ -32,15 +39,17 @@
               <div class="tab-content">
                 <h3 class="text-center">Custom Collection Report</h3>
                 <div class="tab-pane active" id="summary">
-                  <%= render "summary" %>
+                  <%= render "hyrax/admin/analytics/summary" %>
                 </div>
                 <div class="tab-pane" id="monthly">
                   <h4 class="text-center">Month-by-month status for last 12 months through <%= Time.zone.today.strftime("%B %Y") %></h4>
-                  <% if @last_twelve_months %> 
-                    <%= render 'hyrax/admin/analytics/monthly_pageviews' %>
-                  <% end %>
+                    <%= render 'hyrax/admin/analytics/monthly_activity' %>
                 </div>
               </div>
+
+              <% if @top_collections %>
+                <%= render 'top_collections' %>
+              <% end %>
 
             </div>
 

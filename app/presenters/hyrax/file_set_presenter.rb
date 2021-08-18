@@ -34,6 +34,8 @@ module Hyrax
              :original_file_id,
              to: :solr_document
 
+    delegate :member_of_collection_ids, to: :parent
+
     def workflow
       nil
     end
@@ -102,7 +104,7 @@ module Hyrax
       Deprecation.warn("We're removing Hyrax::FileSetPresenter.user_can_perform_any_action? in Hyrax 4.0.0; Instead use can? in view contexts.")
       current_ability.can?(:edit, id) || current_ability.can?(:destroy, id) || current_ability.can?(:download, id)
     end
-
+    
     private
 
     def link_presenter_class
