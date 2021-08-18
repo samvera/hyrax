@@ -9,7 +9,7 @@ module Hyrax
 
         def index
           @pageviews = Hyrax::Analytics.pageviews("collections")
-          @downloads = Hyrax::Analytics.downloads 
+          @downloads = Hyrax::Analytics.downloads("collections")
           @top_collections = paginate(Hyrax::Analytics.top_pages("collections"), rows: 10)
           respond_to do |format|
             format.html

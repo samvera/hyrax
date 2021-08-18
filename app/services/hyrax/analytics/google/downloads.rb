@@ -5,8 +5,11 @@ module Hyrax
         extend Legato::Model
 
         metrics :total_events
-        dimensions :date, :event_label
+        dimensions :date, :event_category, :event_action, :event_label 
 
+        filter(:downloads) {|event_action| contains(:eventAction, 'Download')}
+        filter(:works) {|event_category| matches(:eventCategory, 'Works')}
+        filter(:collections) {|event_category| matches(:eventCategory, 'Collections')}
         filter :for_file, &->(file) { contains(:eventLabel, file) }
 
         def self.results_array(response)
@@ -28,7 +31,7 @@ module Hyrax
           response = Downloads.results(profile,
             :start_date => start_date,
             :end_date => end_date,
-            :sort => "-totalEvents")
+            :sort => "-totalEvents").downloads
           results_array(response)
         end
 
@@ -36,7 +39,7 @@ module Hyrax
           response = Downloads.results(profile,
             :start_date => start_date,
             :end_date => end_date,
-            :sort => "-totalEvents")
+            :sort => "-totalEvents").collections.downloads
           results_array(response)
         end
 
@@ -44,7 +47,7 @@ module Hyrax
           response = Downloads.results(profile,
             :start_date => start_date,
             :end_date => end_date,
-            :sort => "-totalEvents")
+            :sort => "-totalEvents").works.downloads
           results_array(response)
         end
 

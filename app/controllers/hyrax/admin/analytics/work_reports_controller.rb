@@ -9,9 +9,11 @@ module Hyrax
 
         def index
           @pageviews = Hyrax::Analytics.pageviews("works")
-          @downloads = Hyrax::Analytics.downloads
+          @downloads = Hyrax::Analytics.downloads("works")
           @top_works = paginate(Hyrax::Analytics.top_pages("works"), rows: 10)
-          @top_downloads = paginate(Hyrax::Analytics.top_downloads, rows: 10)
+          @top_downloads = paginate(Hyrax::Analytics.top_downloads("works"), rows: 10)
+          models = Hyrax.config.curation_concerns.map {|m| "\"#{m.to_s}\"" }
+          @works_count = ActiveFedora::SolrService.query("has_model_ssim:(#{models.join(' OR ')})",fl: "id").count
           respond_to do |format|
             format.html
             format.csv do export_data end
