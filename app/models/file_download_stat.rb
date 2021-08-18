@@ -13,9 +13,9 @@ class FileDownloadStat < Hyrax::Statistic
         return []
       end
       profile.hyrax__analytics__google__download(sort: 'date',
-                              start_date: start_date,
-                              end_date: Date.yesterday,
-                              limit: 10_000)
+                                                 start_date: start_date,
+                                                 end_date: Date.yesterday,
+                                                 limit: 10_000)
              .for_file(file.id)
     end
 

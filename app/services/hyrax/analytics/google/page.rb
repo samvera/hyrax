@@ -29,20 +29,17 @@ module Hyrax
 
         def self.collections(profile, start_date, end_date)
           response = Page.results(profile,
-            :start_date => start_date,
-            :end_date => end_date,
-            :sort => '-pageviews').collections
+            start_date: start_date,
+            end_date: end_date,
+            sort: '-pageviews').collections
         end
 
         def self.works(profile, start_date, end_date)
           response = Page.results(profile,
-            :start_date => start_date,
-            :end_date => end_date,
-            :sort => '-pageviews').works
+            start_date: start_date,
+            end_date: end_date,
+            sort: '-pageviews').works
         end
-      
-
-
       end
     end
   end
