@@ -21,11 +21,11 @@
 ### Important URL's
 - Local site: localhost:3000
 - Staging sites:
-  - With Google Analytics:
-  - With Matomo:
+  - With Google Analytics: http://hyrax-ga.samvera-community.notch8.cloud/
+  - With Matomo: http://hyrax-matomo.samvera-community.notch8.cloud/
 - Production site:
 - Solr:
-- Sidekiq:
+- Sidekiq: http://localhost:3000/sidekiq
 
 
 ### If this is your first time working in this repo or the Dockerfile has been updated you will need to update your services first
@@ -44,8 +44,8 @@ This command starts the web container, allowing Rails to be started or stopped i
   - email: admin@example.com
   - password: admin_password
 - Staging:
-  - email:
-  - password:
+  - email: check 1password
+  - password: check 1password
 
 ### Access the container
 - In a separate terminal window or tab than the running server, run:
@@ -70,6 +70,7 @@ This command starts the web container, allowing Rails to be started or stopped i
   ```
 
 ### Rubocop
+Run rspec in a separate terminal window or tab than the running server.
 (The [`-a` flag](https://docs.rubocop.org/rubocop/usage/basic_usage.html#auto-correcting-offenses) is optional)
 
 ```bash
@@ -84,20 +85,12 @@ Learn about [general rspec commands here](https://github.com/rspec/rspec-rails/t
 Learn about rspec commands for a [Dassie app here](https://github.com/samvera/hyrax/wiki/FAQ-for-Dassie-Docker-Test-App#how-do-i-run-tests).
 
 All tests:
-  ``` bash
-  docker-compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rspec"
-  ```
-
-One spec file:
-  ``` bash
-  docker-compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rspec spec/path/to/spec.rb"
-  ```
-
-One test in one spec file:
-  ``` bash
-  docker-compose exec -w /app/samvera/hyrax-engine app sh -c "bundle exec rspec spec/path/to/spec.rb:18"
-  ```
-
+``` bash
+docker-compose exec -w /app/samvera/hyrax-engine app sh
+rspec # all spec files
+rspec spec/path/to/spec.rb # one spec file
+rspec spec/path/to/spec.rb:18 # one test in a spec file
+```
 ### Stop the app and services
 - Press `Ctrl + C` in the window where `sc up -s app` is running
 - When that's done `sc stop` shuts down the running containers
