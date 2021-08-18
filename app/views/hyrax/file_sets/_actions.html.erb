@@ -6,7 +6,7 @@
               title: t('.download_title', file_set: file_set),
               target: "_blank",
               id: "file_download",
-              data: { label: file_set.id } %>
+              data: { label: file_set.id, work_id: @presenter.id, collection_ids: @presenter.member_of_collection_ids } %>
   <% else %>
   <div class="btn-group">
     <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button" id="dropdownMenu_<%= file_set.id %>" aria-haspopup="true" aria-expanded="false">
@@ -44,16 +44,11 @@
                     target: "_blank",
                     id: "file_download",
                     class: "download",
-                    data: { label: file_set.id } %>
+                    data: { label: file_set.id, work_id: @presenter.id, collection_ids: @presenter.member_of_collection_ids } %>
       </li>
     <% end %>
 
     </ul>
   </div>
   <% end %>
-<% end %>
-
-<span class='hide analytics-event' data-category="Works" data-action="Downloads" data-name="<%= @presenter.id %>" >
-<% @presenter.member_of_collection_ids.each do |collection_id| %>
-  <span class='hide analytics-event' data-category="Work in Collection" data-action="Downloads" data-name="<%= collection_id %>" >
 <% end %>

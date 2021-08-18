@@ -7,7 +7,7 @@ module Hyrax
         metrics :total_events
         dimensions :date, :event_category, :event_action, :event_label 
 
-        filter(:downloads) {|event_category| matches(:eventCategory, 'Files')}
+        filter(:downloads) {|event_category| contains(:eventAction, 'Download')}
         filter(:works) {|event_category| matches(:eventCategory, 'Works')}
         filter(:collections) {|event_category| matches(:eventCategory, 'Collections')}
         filter(:views) {|event_action| contains(:eventAction, 'Views')}
@@ -42,6 +42,22 @@ module Hyrax
             :start_date => start_date,
             :end_date => end_date,
             :sort => "-totalEvents").works.views
+          results_array(response)
+        end
+
+        def self.works_downloads(profile, start_date, end_date)
+          response = Events.results(profile,
+            :start_date => start_date,
+            :end_date => end_date,
+            :sort => "-totalEvents").works.downloads
+          results_array(response)
+        end
+
+        def self.collections_downloads(profile, start_date, end_date)
+          response = Events.results(profile,
+            :start_date => start_date,
+            :end_date => end_date,
+            :sort => "-totalEvents").collections.downloads
           results_array(response)
         end
 

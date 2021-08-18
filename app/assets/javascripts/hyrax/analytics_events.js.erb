@@ -26,7 +26,11 @@
 
   $(document).on('click', '#file_download', function(e) {
     _gaq.push(['_trackEvent', 'Files', 'Downloaded', $(this).data('label')]);
-    trackGoogleEvents()
+    _gaq.push(['_trackEvent', 'Works', 'Downloads', $(this).data('work-id')]);
+    collection_ids.forEach(function (collection) {
+      _gaq.push(['_trackEvent', 'Collections', 'Downloads', collection]);
+      _gaq.push(['_trackEvent', 'Work in Collection', 'Downloads', collection]);
+    });
   });
 
 <% elsif Hyrax.config.analytics_provider == 'matomo' %>
@@ -44,18 +48,23 @@
 
     if (typeof Turbolinks !== 'undefined') {
       $(document).on('turbolinks:load', function() {
-          trackMatomoEvents()
           trackMatomoPageView()
+          trackMatomoEvents()
       })
     } else {
           $(document).on('ready', function() {
-            trackMatomoEvents()
             trackMatomoPageView()
+            trackMatomoEvents()
         })
     }
 
     $(document).on('click', '#file_download', function(e) {
       _paq.push(['trackEvent', 'Files', 'Downloaded', $(this).data('label')]);
-      trackMatomoEvents()
+      _paq.push(['trackEvent', 'Works', 'Downloads', $(this).data('work-id')]);
+      const collection_ids = $(this).data('collection-ids');
+      collection_ids.forEach(function (collection) {
+        _paq.push(['trackEvent', 'Collections', 'Downloads', collection]);
+        _paq.push(['trackEvent', 'Work in Collection', 'Downloads', collection]);
+      });
     });
 <% end %>

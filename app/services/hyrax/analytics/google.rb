@@ -130,9 +130,9 @@ module Hyrax
           Downloads.send(ref, profile, date[0], date[1])
         end
 
-        def top_downloads(date="#{Time.zone.today-5.years},#{Time.zone.today}")
+        def top_downloads(ref='works', date="#{Time.zone.today-5.years},#{Time.zone.today}")
           date = date.split(",")
-          Events.downloads(profile, date[0], date[1])
+          Events.send("#{ref}_downloads", profile, date[0], date[1])
         end
 
         def downloads_for_file(file, date = "#{Time.zone.today-11.months},#{Time.zone.today}")
@@ -176,7 +176,7 @@ module Hyrax
 
         def total_visitors(period = 'month', date = "#{Time.zone.today-1.month},#{Time.zone.today}")
           date = date_period(period, date)
-          Visits.return_visits(profile, date[0], date[1])
+          Visits.total_visits(profile, date[0], date[1])
         end
    
       end
