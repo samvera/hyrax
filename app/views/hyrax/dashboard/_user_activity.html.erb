@@ -4,11 +4,13 @@
 </div>
 <div class="panel-body text-center">
   <% user_activity = @presenter.user_activity.to_json %>
-  <div id="user-activity" class="col-md-9" aria-hidden="true" style="height: 200px"><script>
-//<![CDATA[
-Hyrax.statistics.userActivity = <%== user_activity %>
-//]]>
-</script></div>
+  <div id="user-activity" class="col-md-9" aria-hidden="true" style="height: 200px">
+    <script>
+      //<![CDATA[
+      Hyrax.statistics.userActivity = <%== user_activity %>
+      //]]>
+    </script>
+  </div>
   <table aria-label="<%= t('.title') %>, <%= t('.subtitle') %>" class="table table-striped sr-only text-left">
     <thead>
       <tr>
@@ -25,7 +27,6 @@ Hyrax.statistics.userActivity = <%== user_activity %>
       <% end %>
     </tbody>
   </table>
-
 
   <div class="col-md-3">
     <div class="panel panel-default">
