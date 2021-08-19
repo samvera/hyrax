@@ -17,7 +17,8 @@ module Hyrax
       private
 
       def new_users
-        Hyrax::Statistics::Users::OverTime.new(x_min: @x_min,
+        Hyrax::Statistics::Users::OverTime.new(delta_x: 1,
+                                               x_min: @x_min,
                                                x_max: @x_max,
                                                x_output: @date_format).points
       end
