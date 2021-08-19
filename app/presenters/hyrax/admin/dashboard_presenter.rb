@@ -15,8 +15,8 @@ module Hyrax
         @repository_growth ||= Admin::RepositoryGrowthPresenter.new
       end
 
-      def user_activity
-        @user_activity ||= Admin::UserActivityPresenter.new
+      def user_activity(start_date, end_date)
+        @user_activity ||= Admin::UserActivityPresenter.new(start_date, end_date)
       end
     end
   end

@@ -3,7 +3,9 @@
   <div><%= t('.subtitle') %></div>
 </div>
 <div class="panel-body text-center">
-  <% user_activity = @presenter.user_activity.to_json %>
+  <% start_date = Time.zone.today - 14.days %>
+  <% end_date = Time.zone.today - 7.days %>
+  <% user_activity = @presenter.user_activity(start_date, end_date).to_json %>
   <div id="user-activity" class="col-md-9" aria-hidden="true" style="height: 200px">
     <script>
       //<![CDATA[
