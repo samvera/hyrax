@@ -28,7 +28,7 @@ export default class {
              // labels: ['New Users', 'Returning'],
              ykeys: ['a'],
              labels: ['New Users', 'Returning'],
-             barColors: ['#33414E', '#3FBAE4'],
+             barColors: ['#001219','#005f73','#0a9396','#94d2bd','#e9d8a6','#ee9b00','#ca6702','#bb3e03','#ae2012','#9b2226'],
              gridTextSize: '12px',
              hideHover: true,
              resize: true,
@@ -42,7 +42,7 @@ export default class {
         Morris.Donut({
             element: this.statusSelector,
             data: data,
-            colors: ['#33414E', '#3FBAE4', '#FEA223'],
+            colors: ['#001219','#005f73','#0a9396','#94d2bd','#e9d8a6','#ee9b00','#ca6702','#bb3e03','#ae2012','#9b2226'],
             gridTextSize: '12px',
             resize: true
         });
@@ -61,7 +61,7 @@ export default class {
            hideHover: true,
            xLabels: 'day',
            gridTextSize: '12px',
-           lineColors: ['#3FBAE4','#33414E'],
+           lineColors: ['#001219','#005f73','#0a9396','#94d2bd','#e9d8a6','#ee9b00','#ca6702','#bb3e03','#ae2012','#9b2226'],
            gridLineColor: '#E5E5E5'
         });
     }
