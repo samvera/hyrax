@@ -1,31 +1,58 @@
-function trackGooglePageView() {
-  window._gaq.push(['_trackPageview']);
+class TrackingTags {
+  constructor(provider) {
+    this.provider = provider
+  }
+
+  pageView() {
+    if(this.provider == "matomo") {
+      return 'trackPageView'
+    } else {
+      return '_trackPageview'
+    }
+  }
+
+  trackEvent() {
+    if(this.provider == "matomo") {
+      return 'trackEvent'
+    } else {
+      return '_trackEvent'
+    }
+  }
 }
 
-function trackGoogleEvents() {
+function trackPageView() {
+  window.analytics.push([window.trackingTags.pageView()]);
+}
+
+function trackAnalyticsEvents() {
   $('span.analytics-event').each(function(){
     var eventSpan = $(this)
-    window._gaq.push(['_trackEvent', eventSpan.data('category'), eventSpan.data('action'), eventSpan.data('name')]);
+    window.analytics.push([window.trackingTags.trackEvent(), eventSpan.data('category'), eventSpan.data('action'), eventSpan.data('name')]);
   })
+}
+
+function setupTracking() {
+    var provider = $('meta[name="analytics-provider"]').prop('content')
+    window.trackingTags = new TrackingTags(provider)
+    trackPageView()
+    trackAnalyticsEvents()
 }
 
 if (typeof Turbolinks !== 'undefined') {
   $(document).on('turbolinks:load', function() {
-    trackGooglePageView()
-    trackGoogleEvents()
+    setupTracking()
   })
 } else {
   $(document).on('ready', function() {
-    trackGooglePageView()
-    trackGoogleEvents()
+    setupTracking()
   })
 }
 
 $(document).on('click', '#file_download', function(e) {
-  window._gaq.push(['_trackEvent', 'Files', 'Downloaded', $(this).data('label')]);
-  window._gaq.push(['_trackEvent', 'Works', 'Downloads', $(this).data('work-id')]);
+  window.analytics.push([window.trackingTags.trackEvent(), 'Files', 'Downloaded', $(this).data('label')]);
+  window.analytics.push([window.trackingTags.trackEvent(), 'Works', 'Downloads', $(this).data('work-id')]);
   collection_ids.forEach(function (collection) {
-    window._gaq.push(['_trackEvent', 'Collections', 'Downloads', collection]);
-    window._gaq.push(['_trackEvent', 'Work in Collection', 'Downloads', collection]);
+    window.analytics.push([window.trackingTags.trackEvent(), 'Collections', 'Downloads', collection]);
+    window.analytics.push([window.trackingTags.trackEvent(), 'Work in Collection', 'Downloads', collection]);
   });
 });
