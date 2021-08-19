@@ -14,6 +14,16 @@ RSpec.describe Hyrax::CollectionsControllerBehavior, :clean_repo, type: :control
   end
 
   describe '#show' do
+    context 'with a private collection' do
+      let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection) }
+
+      it 'redirects to sign-in' do
+        get :show, params: { id: collection }
+
+        expect(response).to be_redirect
+      end
+    end
+
     context 'with a public collection' do
       let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, :public) }
 
