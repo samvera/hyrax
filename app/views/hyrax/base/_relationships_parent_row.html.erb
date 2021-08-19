@@ -10,6 +10,7 @@
           </li>
           <script>
             $( document ).on('turbolinks:load', function() {
+              <%# TODO CHANGE CODE TO SPANS %>
               <% if Hyrax.config.analytics_provider == 'google' %>
                 _gaq.push(['_trackEvent', 'Collections', 'Views', '<%= item.id %>']);
               <% elsif Hyrax.config.analytics_provider == 'matomo' %>
@@ -21,4 +22,3 @@
       </ul>
     <% end %>
   </dd>
-  
