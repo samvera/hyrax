@@ -11,9 +11,9 @@ module Hyrax
       def as_json(*)
         new_users.to_a.zip(
                     returning_users.to_a,
-                    new_visitors.to_a,
-                    returning_visitors.to_a,
-                    total_visitors.to_a
+                    visitors_analytics('new_visitors').to_a,
+                    visitors_analytics('returning_visitors').to_a,
+                    visitors_analytics('total_visitors').to_a
                   )
                  .map do |e|
           {
@@ -40,35 +40,12 @@ module Hyrax
       def returning_users
         []
       end
-      def new_visitors
+
+      def visitors_analytics(method)
         visitors_array = []
         x = @x_min
         while x <= @x_max
-          visitor_count = Hyrax::Analytics.new_visitors('day', x)
-          visitors_array << visitor_count
-          x += 1.day
-        end
-
-        visitors_array
-      end
-
-      def returning_visitors
-        visitors_array = []
-        x = @x_min
-        while x <= @x_max
-          visitor_count = Hyrax::Analytics.returning_visitors('day', x)
-          visitors_array << visitor_count
-          x += 1.day
-        end
-
-        visitors_array
-      end
-
-      def total_visitors
-        visitors_array = []
-        x = @x_min
-        while x <= @x_max
-          visitor_count = Hyrax::Analytics.new_visitors('day', x)
+          visitor_count = Hyrax::Analytics.send("#{method}", *['day', x])
           visitors_array << visitor_count
           x += 1.day
         end
