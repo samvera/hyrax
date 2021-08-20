@@ -8,9 +8,8 @@ module Hyrax
           Enumerator.new(size) do |y|
             x = @x_min
             while x <= @x_max
-              bottom = x
+              y.yield [@x_output.call(x), point(x)]
               x += @delta_x.days
-              y.yield [@x_output.call(x), point(bottom, x)]
             end
           end
         end
@@ -21,9 +20,13 @@ module Hyrax
           ::User.registered
         end
 
-        # Override to make an activerecord date range query
-        def query(min, max)
-          { created_at: min..max }
+        # Overridden to search one day at a time
+        def query(date_string)
+          { created_at: date_string.to_date.beginning_of_day..date_string.to_date.end_of_day }
+        end
+
+        def point(date_string)
+          relation.where(query(date_string)).count
         end
       end
     end

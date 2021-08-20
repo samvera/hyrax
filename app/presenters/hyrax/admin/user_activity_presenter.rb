@@ -2,8 +2,9 @@
 module Hyrax
   module Admin
     class UserActivityPresenter
-      def initialize
-        @x_min = 90.days.ago.beginning_of_day
+      def initialize(start_date, end_date)
+        @x_min = start_date
+        @x_max = end_date
         @date_format = ->(x) { x.strftime('%b %-d') }
       end
 
@@ -16,7 +17,9 @@ module Hyrax
       private
 
       def new_users
-        Hyrax::Statistics::Users::OverTime.new(x_min: @x_min,
+        Hyrax::Statistics::Users::OverTime.new(delta_x: 1,
+                                               x_min: @x_min,
+                                               x_max: @x_max,
                                                x_output: @date_format).points
       end
 

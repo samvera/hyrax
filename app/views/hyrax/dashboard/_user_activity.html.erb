@@ -3,12 +3,16 @@
   <div><%= t('.subtitle') %></div>
 </div>
 <div class="panel-body text-center">
-  <% user_activity = @presenter.user_activity.to_json %>
-  <div id="user-activity" class="col-md-9" aria-hidden="true" style="height: 200px"><script>
-//<![CDATA[
-Hyrax.statistics.userActivity = <%== user_activity %>
-//]]>
-</script></div>
+  <% start_date = params[:start_date]&.to_date || Time.zone.today - 1.month %>
+  <% end_date = params[:end_date]&.to_date || Time.zone.today %>
+  <% user_activity = @presenter.user_activity(start_date, end_date).to_json %>
+  <div id="user-activity" class="col-md-9" aria-hidden="true" style="height: 200px">
+    <script>
+      //<![CDATA[
+      Hyrax.statistics.userActivity = <%== user_activity %>
+      //]]>
+    </script>
+  </div>
   <table aria-label="<%= t('.title') %>, <%= t('.subtitle') %>" class="table table-striped sr-only text-left">
     <thead>
       <tr>
@@ -26,17 +30,16 @@ Hyrax.statistics.userActivity = <%== user_activity %>
     </tbody>
   </table>
 
-
   <div class="col-md-3">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h2 class="panel-title text-center">User Summary</h2>
       </div>
       <div class="panel-body text-center">
-        <p><%= t('.registered_users') %>: <%= @presenter.user_count %></p>
-        <p><%= t('.new_visitors') %>: <%= Hyrax::Analytics.new_visitors %></p>
-        <p><%= t('.returning_visitors') %>: <%= Hyrax::Analytics.returning_visitors %></p>
-        <p><%= t('.total_visitors') %>: <%= Hyrax::Analytics.total_visitors %></p>
+        <p><%= t('.registered_users') %>: <%= @presenter.user_count(start_date, end_date) %></p>
+        <p><%= t('.new_visitors') %>: <%= Hyrax::Analytics.new_visitors('range', "#{start_date},#{end_date}") %></p>
+        <p><%= t('.returning_visitors') %>: <%= Hyrax::Analytics.returning_visitors('range', "#{start_date},#{end_date}") %></p>
+        <p><%= t('.total_visitors') %>: <%= Hyrax::Analytics.total_visitors('range', "#{start_date},#{end_date}") %></p>
       </div>
     </div>
   </div>
