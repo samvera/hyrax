@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Admin::UserActivityPresenter do
-  let(:instance) { described_class.new }
+  start_date = Time.zone.today - 6.days
+  end_date = Time.zone.today
+  let(:instance) { described_class.new(start_date, end_date) }
 
   describe "#to_json" do
     subject { instance.to_json }
 
     let(:users) do
       instance_double(Hyrax::Statistics::Users::OverTime,
-                      points: [['2017-02-16', '12']])
+                      points: [[Time.zone.today - 3.days, '12']])
     end
 
     before do
@@ -15,7 +17,7 @@ RSpec.describe Hyrax::Admin::UserActivityPresenter do
     end
 
     it "returns points" do
-      expect(subject).to eq "[{\"y\":\"2017-02-16\",\"a\":\"12\",\"b\":null}]"
+      expect(subject).to eq "[{\"y\":\"#{Time.zone.today - 3.days}\",\"a\":\"12\",\"b\":null}]"
     end
   end
 end
