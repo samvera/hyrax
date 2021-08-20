@@ -10,7 +10,7 @@ RSpec.describe Hyrax::Statistics::Users::OverTime do
   let(:instance) do
     described_class.new(delta_x: 1,
                         x_min: 2.weeks.ago,
-                        x_max: 1.weeks.ago,
+                        x_max: 1.week.ago,
                         x_output: ->(x) { x.strftime('%b %-d') })
   end
 
