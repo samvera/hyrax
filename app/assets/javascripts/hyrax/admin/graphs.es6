@@ -22,16 +22,17 @@ export default class {
             element: this.userSelector,
             data: data,
             xkey: 'y',
-            // TODO: when we add returning users:
-            // ykeys: ['a', 'b'],
-            // labels: ['New Users', 'Returning'],
-            ykeys: ['a'],
-            labels: ['New Users', 'Returning'],
-            barColors: ['#001219','#005f73','#0a9396','#94d2bd','#e9d8a6','#ee9b00','#ca6702','#bb3e03','#ae2012','#9b2226'],
+            ykeys: ['new_users', 'returning_users', 'new_visitors', 'returning_visitors', 'total_visitors'],
+            labels: ['New Users', 'Returning Users', 'New Visitors', 'Returning Visitors', 'Total Visitors'],
+            barColors: [
+                '#001219','#005f73','#0a9396','#94d2bd','#e9d8a6',
+                '#ee9b00','#ca6702','#bb3e03','#ae2012','#9b2226'
+            ],
             gridTextSize: '12px',
             hideHover: true,
             resize: true,
-            gridLineColor: '#E5E5E5'
+            gridLineColor: '#E5E5E5',
+            stacked: true
         });
     }
     // Draws a donut chart of active/inactive objects

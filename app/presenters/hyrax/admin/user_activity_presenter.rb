@@ -9,8 +9,21 @@ module Hyrax
       end
 
       def as_json(*)
-        new_users.to_a.zip(returning_users.to_a).map do |e|
-          { y: e.first.first, a: e.first.last, b: e.last.try(:last) }
+        new_users.to_a.zip(
+                    returning_users.to_a,
+                    new_visitors.to_a,
+                    returning_visitors.to_a,
+                    total_visitors.to_a
+                  )
+                 .map do |e|
+          {
+            y: e.first.first,
+            new_users: e.first.last,
+            returning_users: e.second.try(:last),
+            new_visitors: e.third,
+            returning_visitors: e.fourth,
+            total_visitors: e.fifth
+          }
         end
       end
 
@@ -26,6 +39,41 @@ module Hyrax
       # TODO: using google analytics
       def returning_users
         []
+      end
+      def new_visitors
+        visitors_array = []
+        x = @x_min
+        while x <= @x_max
+          visitor_count = Hyrax::Analytics.new_visitors('day', x)
+          visitors_array << visitor_count
+          x += 1.day
+        end
+
+        visitors_array
+      end
+
+      def returning_visitors
+        visitors_array = []
+        x = @x_min
+        while x <= @x_max
+          visitor_count = Hyrax::Analytics.returning_visitors('day', x)
+          visitors_array << visitor_count
+          x += 1.day
+        end
+
+        visitors_array
+      end
+
+      def total_visitors
+        visitors_array = []
+        x = @x_min
+        while x <= @x_max
+          visitor_count = Hyrax::Analytics.new_visitors('day', x)
+          visitors_array << visitor_count
+          x += 1.day
+        end
+
+        visitors_array
       end
     end
   end
