@@ -22,8 +22,12 @@ export default class {
             element: this.userSelector,
             data: data,
             xkey: 'y',
-            ykeys: ['new_users', 'returning_users', 'new_visitors', 'returning_visitors', 'total_visitors'],
-            labels: ['New Users', 'Returning Users', 'New Visitors', 'Returning Visitors', 'Total Visitors'],
+            ykeys: ['new_users', 'new_visitors', 'returning_visitors', 'total_visitors'],
+            labels: ['New Users', 'New Visitors', 'Returning Visitors', 'Total Visitors'],
+            // TODO: use the ykeys and labels below when the returning_users method in
+            // user_activity_presenter.rb returns data
+            // ykeys: ['new_users', 'returning_users', 'new_visitors', 'returning_visitors', 'total_visitors'],
+            // labels: ['New Users', 'Returning Users', 'New Visitors', 'Returning Visitors', 'Total Visitors'],
             barColors: [
                 '#001219','#005f73','#0a9396','#94d2bd','#e9d8a6',
                 '#ee9b00','#ca6702','#bb3e03','#ae2012','#9b2226'

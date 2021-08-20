@@ -11,9 +11,9 @@ module Hyrax
       def as_json(*)
         new_users.to_a.zip(
                     returning_users.to_a,
-                    visitors_analytics('new_visitors').to_a,
-                    visitors_analytics('returning_visitors').to_a,
-                    visitors_analytics('total_visitors').to_a
+                    visitors_analytics('new_visitors'),
+                    visitors_analytics('returning_visitors'),
+                    visitors_analytics('total_visitors')
                   )
                  .map do |e|
           {
