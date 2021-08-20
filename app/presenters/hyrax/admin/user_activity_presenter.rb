@@ -45,7 +45,7 @@ module Hyrax
         visitors_array = []
         x = @x_min
         while x <= @x_max
-          visitor_count = Hyrax::Analytics.send("#{method}", *['day', x])
+          visitor_count = Hyrax::Analytics.send(method.to_s, 'day', x)
           visitors_array << visitor_count
           x += 1.day
         end
