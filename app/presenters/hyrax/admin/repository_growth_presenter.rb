@@ -2,8 +2,9 @@
 module Hyrax
   module Admin
     class RepositoryGrowthPresenter
-      def initialize
-        @x_min = 90.days.ago.beginning_of_day
+      def initialize(start_date, end_date)
+        @x_min = start_date
+        @x_max = end_date
         @date_format = ->(x) { x.strftime('%F') }
       end
 
@@ -16,12 +17,16 @@ module Hyrax
       private
 
       def works
-        Hyrax::Statistics::Works::OverTime.new(x_min: @x_min,
+        Hyrax::Statistics::Works::OverTime.new(delta_x: 1,
+                                               x_min: @x_min,
+                                               x_max: @x_max,
                                                x_output: @date_format).points
       end
 
       def collections
-        Hyrax::Statistics::Collections::OverTime.new(x_min: @x_min,
+        Hyrax::Statistics::Collections::OverTime.new(delta_x: 1,
+                                                     x_min: @x_min,
+                                                     x_max: @x_max,
                                                      x_output: @date_format).points
       end
     end
