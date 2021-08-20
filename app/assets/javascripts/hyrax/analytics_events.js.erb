@@ -1,70 +1,58 @@
-
-<% if Hyrax.config.analytics_provider == 'google' %>
- 
-  function trackGooglePageView() {
-    window._gaq.push(['_trackPageview']);
+class TrackingTags {
+  constructor(provider) {
+    this.provider = provider
   }
 
-  function trackGoogleEvents() {
-    $('span.analytics-event').each(function(){
-      var eventSpan = $(this)
-      window._gaq.push(['_trackEvent', eventSpan.data('category'), eventSpan.data('action'), eventSpan.data('name')]); 
-    })
-  }
-
-  if (typeof Turbolinks !== 'undefined') {
-    $(document).on('turbolinks:load', function() {
-      trackGooglePageView()
-      trackGoogleEvents()
-    })
-  } else {
-      $(document).on('ready', function() {
-      trackGooglePageView()
-      trackGoogleEvents()
-    })
-  }
-
-  $(document).on('click', '#file_download', function(e) {
-    _gaq.push(['_trackEvent', 'Files', 'Downloaded', $(this).data('label')]);
-    _gaq.push(['_trackEvent', 'Works', 'Downloads', $(this).data('work-id')]);
-    collection_ids.forEach(function (collection) {
-      _gaq.push(['_trackEvent', 'Collections', 'Downloads', collection]);
-      _gaq.push(['_trackEvent', 'Work in Collection', 'Downloads', collection]);
-    });
-  });
-
-<% elsif Hyrax.config.analytics_provider == 'matomo' %>
-  
-   function trackMatomoPageView() {
-    window._paq.push(['trackPageView']);
-  }
-
-  function trackMatomoEvents() {
-    $('span.analytics-event').each(function(){
-      var eventSpan = $(this)
-      window._paq.push(['trackEvent', eventSpan.data('category'), eventSpan.data('action'), eventSpan.data('name')]); 
-    })
-  }
-
-    if (typeof Turbolinks !== 'undefined') {
-      $(document).on('turbolinks:load', function() {
-          trackMatomoPageView()
-          trackMatomoEvents()
-      })
+  pageView() {
+    if(this.provider == "matomo") {
+      return 'trackPageView'
     } else {
-          $(document).on('ready', function() {
-            trackMatomoPageView()
-            trackMatomoEvents()
-        })
+      return '_trackPageview'
     }
+  }
 
-    $(document).on('click', '#file_download', function(e) {
-      _paq.push(['trackEvent', 'Files', 'Downloaded', $(this).data('label')]);
-      _paq.push(['trackEvent', 'Works', 'Downloads', $(this).data('work-id')]);
-      const collection_ids = $(this).data('collection-ids');
-      collection_ids.forEach(function (collection) {
-        _paq.push(['trackEvent', 'Collections', 'Downloads', collection]);
-        _paq.push(['trackEvent', 'Work in Collection', 'Downloads', collection]);
-      });
-    });
-<% end %>
+  trackEvent() {
+    if(this.provider == "matomo") {
+      return 'trackEvent'
+    } else {
+      return '_trackEvent'
+    }
+  }
+}
+
+function trackPageView() {
+  window.analytics.push([window.trackingTags.pageView()]);
+}
+
+function trackAnalyticsEvents() {
+  $('span.analytics-event').each(function(){
+    var eventSpan = $(this)
+    window.analytics.push([window.trackingTags.trackEvent(), eventSpan.data('category'), eventSpan.data('action'), eventSpan.data('name')]);
+  })
+}
+
+function setupTracking() {
+    var provider = $('meta[name="analytics-provider"]').prop('content')
+    window.trackingTags = new TrackingTags(provider)
+    trackPageView()
+    trackAnalyticsEvents()
+}
+
+if (typeof Turbolinks !== 'undefined') {
+  $(document).on('turbolinks:load', function() {
+    setupTracking()
+  })
+} else {
+  $(document).on('ready', function() {
+    setupTracking()
+  })
+}
+
+$(document).on('click', '#file_download', function(e) {
+  window.analytics.push([window.trackingTags.trackEvent(), 'Files', 'Downloaded', $(this).data('label')]);
+  window.analytics.push([window.trackingTags.trackEvent(), 'Works', 'Downloads', $(this).data('work-id')]);
+  collection_ids.forEach(function (collection) {
+    window.analytics.push([window.trackingTags.trackEvent(), 'Collections', 'Downloads', collection]);
+    window.analytics.push([window.trackingTags.trackEvent(), 'Work in Collection', 'Downloads', collection]);
+  });
+});

@@ -8,17 +8,7 @@
           <li class='attribute attribute-title'>
             <%= link_to item.title.first, url_for_document(item) %>
           </li>
-          <script>
-            $( document ).on('turbolinks:load', function() {
-              <% if Hyrax.config.analytics_provider == 'google' %>
-                _gaq.push(['_trackEvent', 'Collections', 'Views', '<%= item.id %>']);
-              <% elsif Hyrax.config.analytics_provider == 'matomo' %>
-                _paq.push(['trackEvent', 'Collections', 'Views', '<%= item.id %>']);
-              <% end %>
-            });
-          </script>
         <% end %>
       </ul>
     <% end %>
   </dd>
-  

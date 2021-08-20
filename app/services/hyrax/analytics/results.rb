@@ -65,6 +65,16 @@ module Hyrax
       def to_csv
         results.inject([]) { |csv, row| csv << CSV.generate_line(row) }.join("")
       end
+
+      def list
+        results.inject([]) { |line, row| line << row }.reverse
+      end
+
+      def to_flot
+        fields = [:date, :pageviews]
+        results.map {|row| fields.zip(row).to_h }
+      end
+    
     end
   end
 end

@@ -82,9 +82,11 @@ module Hyrax
         # @ return [Legato::Management::Profile] A user profile associated with GA
         def profile
           return unless config.valid?
-          user.profiles.detect do |profile|
+          @profile = user.profiles.detect do |profile|
             profile.web_property_id == config.analytics_id
           end
+          raise 'User does not have access to this property' unless @profile
+          @profile
         end
 
         def to_date_range(period)
