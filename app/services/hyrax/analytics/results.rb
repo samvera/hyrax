@@ -14,7 +14,7 @@ module Hyrax
         results.inject(0) { |sum, a| sum + a[1] }
       end
 
-      def day(date = Date.today)
+      def day(date = Time.zone.today)
         start_date = date.at_beginning_of_day
         end_date = date.at_end_of_day
         range_results = []
@@ -24,7 +24,7 @@ module Hyrax
         range_results.inject(0) { |sum, a| sum + a[1] }
       end
 
-      def week(date = Date.today)
+      def week(date = Time.zone.today)
         start_date = date.at_beginning_of_week
         end_date = date.at_end_of_week
         range_results = []
@@ -34,7 +34,7 @@ module Hyrax
         range_results.inject(0) { |sum, a| sum + a[1] }
       end
 
-      def month(date = Date.today)
+      def month(date = Time.zone.today)
         start_date = date.at_beginning_of_month
         end_date = date.at_end_of_month
         range_results = []
@@ -44,7 +44,7 @@ module Hyrax
         range_results.inject(0) { |sum, a| sum + a[1] }
       end
 
-      def year(date = Date.today)
+      def year(date = Time.zone.today)
         start_date = date.at_beginning_of_year
         end_date = date.at_end_of_year
         range_results = []
@@ -72,9 +72,8 @@ module Hyrax
 
       def to_flot
         fields = [:date, :pageviews]
-        results.map {|row| fields.zip(row).to_h }
+        results.map { |row| fields.zip(row).to_h }
       end
-    
     end
   end
 end

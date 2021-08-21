@@ -38,6 +38,20 @@ Metrics/BlockLength:
     - 'spec/**/*.rb'
     - 'tasks/benchmark.rake'
 
+Metrics/MethodLength:
+  Exclude:
+    - 'app/services/hyrax/analytics/google.rb'
+
+Metrics/ModuleLength:
+  Exclude:
+    - 'app/models/concerns/hyrax/ability.rb'
+    - 'app/controllers/concerns/hyrax/works_controller_behavior.rb'
+    - 'app/helpers/hyrax/hyrax_helper_behavior.rb'
+    - 'app/services/hyrax/analytics/google.rb'
+    - 'app/services/hyrax/analytics/matomo.rb'
+    - 'app/services/hyrax/workflow/permission_query.rb'
+    - 'spec/services/hyrax/workflow/permission_query_spec.rb'
+
 Style/AsciiComments:
   Enabled: false
 

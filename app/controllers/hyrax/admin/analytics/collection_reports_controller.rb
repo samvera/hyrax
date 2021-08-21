@@ -34,7 +34,7 @@ module Hyrax
         def set_defaults
           @start_date = params[:start_date] || Time.zone.today - 1.month
           @end_date = params[:end_date] || Time.zone.today + 1.day
-          @month_names = 12.downto(1).map { |n| DateTime::MONTHNAMES.drop(1)[(Date.today.month - n) % 12] }.reverse
+          @month_names = 12.downto(1).map { |n| DateTime::MONTHNAMES.drop(1)[(Time.zone.today.month - n) % 12] }.reverse
         end
 
         def export_data
@@ -52,12 +52,12 @@ module Hyrax
         end
 
         def paginate(results_array, rows: 2)
-          unless results_array.nil?
-            total_pages = (results_array.size.to_f / rows.to_f).ceil
-            page = request.params[:page].nil? ? 1 : request.params[:page].to_i
-            current_page = page > total_pages ? total_pages : page
-            Kaminari.paginate_array(results_array, total_count: results_array.size).page(current_page).per(rows)
-          end
+          return if results_array.nil?
+
+          total_pages = (results_array.size.to_f / rows.to_f).ceil
+          page = request.params[:page].nil? ? 1 : request.params[:page].to_i
+          current_page = page > total_pages ? total_pages : page
+          Kaminari.paginate_array(results_array, total_count: results_array.size).page(current_page).per(rows)
         end
       end
     end

@@ -104,7 +104,8 @@ module Hyrax
             start_date = Time.zone.today - 1.year
             end_date = Time.zone.today
           end
-          date = [start_date, end_date]
+
+          [start_date, end_date]
         end
 
         def keyword_conversion(date)
@@ -112,7 +113,8 @@ module Hyrax
           when "last12"
             start_date = Time.zone.today - 11.months
             end_date = Time.zone.today
-            date = [start_date, end_date]
+
+            [start_date, end_date]
           else
             date.split(",")
           end
@@ -166,7 +168,7 @@ module Hyrax
         def new_visitors(period = 'month', date = "#{Time.zone.today - 1.month},#{Time.zone.today}")
           date = date_period(period, date)
           Visits.new_visits(profile, date[0], date[1])
-      end
+        end
 
         def returning_visitors(period = 'month', date = "#{Time.zone.today - 1.month},#{Time.zone.today}")
           date = date_period(period, date)

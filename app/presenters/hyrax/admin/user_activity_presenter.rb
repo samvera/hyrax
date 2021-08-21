@@ -9,12 +9,10 @@ module Hyrax
       end
 
       def as_json(*)
-        new_users.to_a.zip(
-                    returning_users.to_a,
-                    visitors_analytics('new_visitors'),
-                    visitors_analytics('returning_visitors'),
-                    visitors_analytics('total_visitors')
-                  )
+        new_users.to_a.zip(returning_users.to_a,
+                           visitors_analytics('new_visitors'),
+                           visitors_analytics('returning_visitors'),
+                           visitors_analytics('total_visitors'))
                  .map do |e|
           {
             y: e.first.first,
