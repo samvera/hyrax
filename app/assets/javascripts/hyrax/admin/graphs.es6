@@ -59,7 +59,7 @@ export default class {
             element: this.growthSelector,
             data: data,
             xkey: 'y',
-            ykeys: ['a','b'],
+            ykeys: ['works','collections'],
             labels: ['Objects','Collections'],
             resize: true,
             hideHover: true,

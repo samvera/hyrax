@@ -10,7 +10,7 @@ module Hyrax
 
       def as_json(*)
         works.to_a.zip(collections.to_a).map do |e|
-          { y: e.first.first, a: e.first.last, b: e.last.last }
+          { y: e.first.first, works: e.first.last, collections: e.last.last }
         end
       end
 
