@@ -1,9 +1,10 @@
 <div class="panel-heading">
   <h3 class="panel-title"><%= t('.title') %></h3>
-  <div><%= t('.subtitle') %></div>
 </div>
 <div class="panel-body text-center">
-  <% repository_growth = @presenter.repository_growth.to_json %>
+  <% start_date = params[:start_date]&.to_datetime || (Time.zone.today - 1.month).to_datetime %>
+  <% end_date = params[:end_date]&.to_datetime || Time.zone.today.to_datetime %>
+  <% repository_growth = @presenter.repository_growth(start_date, end_date).to_json %>
   <div id="dashboard-growth" aria-hidden="true" style="height: 200px"><script>
 //<![CDATA[
 Hyrax.statistics.repositoryGrowth = <%== repository_growth %>
