@@ -72,9 +72,8 @@ module Hyrax
 
       def to_flot
         fields = [:date, :pageviews]
-        results.map {|row| fields.zip(row).to_h }
+        results.map { |row| fields.zip(row).to_h }
       end
-    
     end
   end
 end
