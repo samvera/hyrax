@@ -51,22 +51,6 @@ module Hyrax
             sort: "-totalEvents").works.downloads
           results_array(response)
         end
-
-        def self.collections(profile, start_date, end_date)
-          response = Downloads.results(profile,
-            start_date: start_date,
-            end_date: end_date,
-            sort: "-totalEvents").collections.downloads
-          results_array(response)
-        end
-
-        def self.works(profile, start_date, end_date)
-          response = Downloads.results(profile,
-            start_date: start_date,
-            end_date: end_date,
-            sort: "-totalEvents").works.downloads
-          results_array(response)
-        end
       end
     end
   end
