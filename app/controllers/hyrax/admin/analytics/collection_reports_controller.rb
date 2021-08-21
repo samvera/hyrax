@@ -34,7 +34,7 @@ module Hyrax
         def set_defaults
           @start_date = params[:start_date] || Time.zone.today - 1.month
           @end_date = params[:end_date] || Time.zone.today + 1.day
-          @month_names = 12.downto(1).map { |n| DateTime::MONTHNAMES.drop(1)[(Date.today.month - n) % 12] }.reverse
+          @month_names = 12.downto(1).map { |n| DateTime::MONTHNAMES.drop(1)[(Time.zone.today.month - n) % 12] }.reverse
         end
 
         def export_data
