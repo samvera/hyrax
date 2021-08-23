@@ -51,7 +51,7 @@ class AdminSet < ActiveFedora::Base
 
   # Creates the default AdminSet and an associated PermissionTemplate with workflow
   def self.find_or_create_default_admin_set_id
-    Hyrax::AdminSetCreateService.create_default_admin_set(admin_set_id: DEFAULT_ID, title: DEFAULT_TITLE) unless exists?(DEFAULT_ID)
+    Hyrax::AdminSetCreateService.find_or_create_default_admin_set
     DEFAULT_ID
   end
 

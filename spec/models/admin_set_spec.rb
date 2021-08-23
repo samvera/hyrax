@@ -143,19 +143,9 @@ RSpec.describe AdminSet, type: :model do
   describe ".find_or_create_default_admin_set_id" do
     subject { described_class.find_or_create_default_admin_set_id }
 
-    describe 'if it already exists' do
-      before { expect(described_class).to receive(:exists?).and_return(true) }
-      it 'returns the DEFAULT_ID without creating the admin set' do
-        expect(Hyrax::AdminSetCreateService).not_to receive(:create_default_admin_set)
-        expect(subject).to eq(described_class::DEFAULT_ID)
-      end
-    end
-    describe 'if it does not already exist' do
-      before { expect(described_class).to receive(:exists?).and_return(false) }
-      it 'returns the DEFAULT_ID and creates the admin set' do
-        expect(Hyrax::AdminSetCreateService).to receive(:create_default_admin_set).with(admin_set_id: described_class::DEFAULT_ID, title: described_class::DEFAULT_TITLE)
-        expect(subject).to eq(described_class::DEFAULT_ID)
-      end
+    it 'gets the default admin set from the create service and returns the DEFAULT_ID' do
+      expect(Hyrax::AdminSetCreateService).to receive(:find_or_create_default_admin_set)
+      expect(subject).to eq(described_class::DEFAULT_ID)
     end
   end
 
