@@ -22,8 +22,8 @@ class AdminSet < ActiveFedora::Base
   include Hyrax::HumanReadableType
   include Hyrax::HasRepresentative
 
-  DEFAULT_ID = 'admin_set/default'
-  DEFAULT_TITLE = ['Default Admin Set'].freeze
+  DEFAULT_ID = Hyrax::AdminSetCreateService::DEFAULT_ID
+  DEFAULT_TITLE = Hyrax::AdminSetCreateService::DEFAULT_TITLE
   DEFAULT_WORKFLOW_NAME = Hyrax.config.default_active_workflow_name
 
   validates_with Hyrax::HasOneTitleValidator
@@ -42,7 +42,7 @@ class AdminSet < ActiveFedora::Base
   after_destroy :destroy_permission_template
 
   def self.default_set?(id)
-    id == DEFAULT_ID
+    Hyrax::AdminSetCreateService.default_admin_set?(id: id)
   end
 
   def default_set?
