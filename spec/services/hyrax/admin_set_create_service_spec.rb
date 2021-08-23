@@ -1,52 +1,127 @@
 # frozen_string_literal: true
+require 'hyrax/specs/spy_listener'
+
 RSpec.describe Hyrax::AdminSetCreateService do
   let(:user) { create(:user) }
+  let(:query_service) { Hyrax.query_service }
+  let(:persister) { Hyrax.persister }
+
+  describe '.find_or_create_default_admin_set', :clean_repo do
+    subject(:admin_set) { described_class.find_or_create_default_admin_set }
+
+    context "when default admin set doesn't exist yet" do
+      it "is a convenience method for .create_default_admin_set!" do
+        expect(query_service).to receive(:find_by).with(id: described_class::DEFAULT_ID)
+                                                  .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
+        expect(described_class).to receive(:create_default_admin_set!).and_call_original
+        expect(admin_set.title).to eq described_class::DEFAULT_TITLE
+      end
+    end
+
+    context "when default admin set already exists" do
+      let(:default_admin_set) { FactoryBot.valkyrie_create(:default_hyrax_admin_set) }
+
+      it "returns existing default admin set" do
+        expect(query_service).to receive(:find_by).with(id: described_class::DEFAULT_ID)
+                                                  .and_return(default_admin_set)
+        expect(described_class).not_to receive(:create_default_admin_set)
+        expect(admin_set.title).to eq described_class::DEFAULT_TITLE
+      end
+    end
+  end
 
   describe '.create_default_admin_set', :clean_repo do
-    let(:admin_set) { AdminSet.find(AdminSet::DEFAULT_ID) }
+    subject(:status) { described_class.create_default_admin_set }
 
-    # It is important to test the side-effects as a default admin set is a fundamental assumption for Hyrax.
-    it 'creates AdminSet, Hyrax::PermissionTemplate, Sipity::Workflow(s), and activates a Workflow', slow: true do
-      described_class.create_default_admin_set(admin_set_id: AdminSet::DEFAULT_ID, title: AdminSet::DEFAULT_TITLE)
-      expect(admin_set.permission_template).to be_persisted
-      expect(admin_set.active_workflow).to be_persisted
-      # 7 responsibilities because:
-      #  * 1 agent (admin group), multiplied by
-      #  * 2 available workflows, multiplied by
-      #  * 3 roles (from Hyrax::RoleRegistry), plus
-      #  * 1 depositing role for the registered group in the default workflow, equals
-      #  * 7
-      expect(Sipity::WorkflowResponsibility.count).to eq 7
-      expect(admin_set.read_groups).not_to include('public')
-      expect(admin_set.edit_groups).to eq ['admin']
-      # 2 access grants because:
-      #  * 1 providing deposit access to registered group
-      #  * 1 providing manage access to admin group
-      expect(admin_set.permission_template.access_grants.count).to eq 2
-      # Agents should be created for both the 'admin' and 'registered' groups
-      expect(Sipity::Agent.distinct.pluck(:proxy_for_id)).to include('admin', 'registered')
-      expect(Sipity::Agent.distinct.pluck(:proxy_for_type)).to include('Hyrax::Group')
+    context "when new admin set persists" do
+      it "is a convenience method for .create_default_admin_set!" do
+        expect(described_class).to receive(:create_default_admin_set!).and_call_original
+        expect(status).to eq true
+      end
+    end
+
+    context "when new admin set fails to persist" do
+      before do
+        allow(persister).to receive(:save).and_call_original
+        allow(persister).to receive(:save).with(resource: instance_of(Hyrax::AdministrativeSet)).and_raise(RuntimeError)
+      end
+
+      it "returns false" do
+        expect(described_class).to receive(:create_default_admin_set!).and_call_original
+        expect(status).to eq false
+      end
+    end
+  end
+
+  describe ".default_admin_set?" do
+    let(:admin_set) { build(:default_hyrax_admin_set) }
+    context "when admin_set is the default" do
+      it "returns true" do
+        expect(described_class.default_admin_set?(id: admin_set.id)).to eq true
+      end
+    end
+
+    context "when admin_set isn't the default" do
+      let(:admin_set) { build(:hyrax_admin_set, title: ['test']) }
+      it "returns false" do
+        expect(described_class.default_admin_set?(id: admin_set.id)).to eq false
+      end
     end
   end
 
   describe ".call" do
-    subject { described_class.call(admin_set: admin_set, creating_user: user) }
+    let(:admin_set) { build(:hyrax_admin_set, title: ['test']) }
 
-    let(:admin_set) { AdminSet.new(title: ['test']) }
+    subject(:status) { described_class.call(admin_set: admin_set, creating_user: user) }
+
+    context "when new admin set persists" do
+      it "is a convenience method for call!" do
+        expect(described_class).to receive(:call!).with(admin_set: admin_set, creating_user: user).and_call_original
+        expect(status).to eq true
+      end
+    end
+
+    context "when new admin set is invalid" do
+      let(:admin_set) { build(:invalid_hyrax_admin_set) }
+
+      it "returns false" do
+        expect(described_class).to receive(:call!).with(admin_set: admin_set, creating_user: user).and_call_original
+        expect(status).to eq false
+      end
+    end
+  end
+
+  describe ".call!" do
+    subject { described_class.call!(admin_set: admin_set, creating_user: user) }
+
+    let(:admin_set) { build(:hyrax_admin_set, title: ['test']) }
 
     context "when using the default admin set", :clean_repo do
-      let(:admin_set) { AdminSet.new(id: AdminSet::DEFAULT_ID) }
+      let(:admin_set) { build(:default_hyrax_admin_set, title: ['test']) }
 
       it 'will raise ActiveFedora::IllegalOperation if you attempt to a default admin set' do
         expect { subject }.to raise_error(RuntimeError)
       end
     end
 
-    it "is a convenience method for .new#create" do
-      service = instance_double(described_class)
-      expect(described_class).to receive(:new).and_return(service)
-      expect(service).to receive(:create)
-      subject
+    context "when new admin set persists" do
+      it "is a convenience method for .new#create" do
+        service = instance_double(described_class)
+        expect(described_class).to receive(:new).and_return(service)
+        expect(service).to receive(:create!)
+        subject
+      end
+    end
+
+    context "when new admin set is invalid" do
+      let(:admin_set) { build(:invalid_hyrax_admin_set) }
+
+      it "raises RuntimeError" do
+        service = instance_double(described_class)
+        expect(described_class).to receive(:new).and_return(service)
+        expect(service).to receive(:create!).and_raise(RuntimeError)
+        expect { subject }.to raise_error RuntimeError
+      end
     end
   end
 
@@ -54,16 +129,17 @@ RSpec.describe Hyrax::AdminSetCreateService do
     subject { service }
 
     let(:workflow_importer) { double(call: true) }
-    let(:admin_set) { AdminSet.new(title: ['test']) }
+    let(:admin_set) { FactoryBot.build(:hyrax_admin_set, title: ['test']) }
     let(:service) { described_class.new(admin_set: admin_set, creating_user: user, workflow_importer: workflow_importer) }
 
     its(:default_workflow_importer) { is_expected.to respond_to(:call) }
 
     describe "#create" do
-      subject { service.create }
+      let(:admin_set) { build(:hyrax_admin_set, title: ['test']) }
+      let(:status) { subject.create }
 
-      context "when the admin_set is valid" do
-        let(:permission_template) { Hyrax::PermissionTemplate.find_by(source_id: admin_set.id) }
+      context "when new admin set persists" do
+        let(:permission_template) { Hyrax::PermissionTemplate.find_by(source_id: admin_set.id.to_s) }
         let(:grants) { permission_template.access_grants }
         let(:available_workflows) { [create(:workflow), create(:workflow)] }
 
@@ -75,22 +151,59 @@ RSpec.describe Hyrax::AdminSetCreateService do
         end
         # rubocop:enable RSpec/AnyInstance
 
+        it "is a convenience method for create!" do
+          expect(Sipity::Workflow).to receive(:activate!).with(permission_template: kind_of(Hyrax::PermissionTemplate), workflow_name: Hyrax.config.default_active_workflow_name)
+          expect(service).to receive(:create!).and_call_original
+          expect(status).to eq true
+        end
+      end
+
+      context "when new admin set is invalid" do
+        let(:admin_set) { build(:invalid_hyrax_admin_set) }
+
+        it "returns false" do
+          expect(service).to receive(:create!).and_call_original
+          expect(status).to eq false
+        end
+      end
+    end
+
+    describe "#create!" do
+      let(:updated_admin_set) { subject.create! }
+
+      context "when the admin_set is valid" do
+        let(:permission_template) { Hyrax::PermissionTemplate.find_by(source_id: admin_set.id.to_s) }
+        let(:grants) { permission_template.access_grants }
+        let(:available_workflows) { [create(:workflow), create(:workflow)] }
+        let(:listener) { Hyrax::Specs::SpyListener.new }
+
+        # rubocop:disable RSpec/AnyInstance
+        before do
+          allow_any_instance_of(Hyrax::PermissionTemplate).to receive(:available_workflows).and_return(available_workflows)
+          # Load expected Sipity roles, which were likely cleaned by DatabaseCleaner
+          Hyrax.config.persist_registered_roles!
+          Hyrax.publisher.subscribe(listener)
+        end
+        # rubocop:enable RSpec/AnyInstance
+
+        after { Hyrax.publisher.unsubscribe(listener) }
+
         it "creates an AdminSet, PermissionTemplate, Workflows, activates the default workflow, and sets access" do
           expect(Sipity::Workflow).to receive(:activate!).with(permission_template: kind_of(Hyrax::PermissionTemplate), workflow_name: Hyrax.config.default_active_workflow_name)
+          expect(admin_set.persisted?).to be false
           expect do
-            expect(subject).to be true
-          end.to change { admin_set.persisted? }.from(false).to(true)
-                                                .and change { Sipity::WorkflowResponsibility.count }.by(12)
+            expect(updated_admin_set.persisted?).to be true
+          end.to change { Sipity::WorkflowResponsibility.count }.by(12)
           # 12 responsibilities because:
           #  * 2 agents (user + admin group), multiplied by
           #  * 2 available workflows, multiplied by
           #  * 3 roles (from Hyrax::RoleRegistry), equals
           #  * 12
-          expect(admin_set.edit_users).to match_array([user.user_key])
-          expect(admin_set.edit_groups).to match_array(['admin'])
-          expect(admin_set.read_users).to match_array([])
-          expect(admin_set.read_groups).not_to include('public')
-          expect(admin_set.creator).to eq [user.user_key]
+          expect(permission_template.edit_users).to match_array([user.user_key])
+          expect(permission_template.edit_groups).to match_array(['admin'])
+          expect(permission_template.read_users).to match_array([])
+          expect(permission_template.read_groups).not_to include('public')
+          expect(updated_admin_set.creator).to eq [user.user_key]
 
           expect(workflow_importer).to have_received(:call).with(permission_template: permission_template)
           expect(permission_template).to be_persisted
@@ -98,16 +211,22 @@ RSpec.describe Hyrax::AdminSetCreateService do
           expect(grants.pluck(:agent_type)).to include('group', 'user')
           expect(grants.pluck(:agent_id)).to include('admin', user.user_key)
           expect(grants.pluck(:access)).to include('manage')
+
+          expect(listener.object_metadata_updated&.payload)
+            .to eq object: updated_admin_set, user: user
         end
+        #
+        # it 'publishes metadata update' do
+        #   allow(Sipity::Workflow).to receive(:activate!).with(permission_template: kind_of(Hyrax::PermissionTemplate), workflow_name: Hyrax.config.default_active_workflow_name)
+        # end
       end
 
-      context "when the admin_set is invalid" do
-        let(:admin_set) { AdminSet.new } # Missing title
+      context "when new admin set is invalid" do
+        let(:admin_set) { build(:invalid_hyrax_admin_set) }
 
-        it { is_expected.to be false }
-        it 'will not call the workflow_importer' do
-          subject
-          expect(workflow_importer).not_to have_received(:call)
+        it 'will not call the workflow_importer and raises RuntimeError' do
+          expect(workflow_importer).not_to receive(:call)
+          expect { service.create! }.to raise_error RuntimeError
         end
       end
     end

@@ -23,7 +23,7 @@ module Hyrax
   # @todo write up what "default embargo behavior", when it is applied, and how
   #   it interacts with embargoes specified by user input.
   #
-  # @example cerating a permission template and manager for an admin set
+  # @example creating a permission template and manager for an admin set
   #   admin_set = Hyrax::AdministrativeSet.new(title: 'My Admin Set')
   #   admin_set = Hyrax.persister.save(resource: admin_set)
   #
