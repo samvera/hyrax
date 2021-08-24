@@ -32,10 +32,6 @@
     <% end %>
   <% end %>
 
-  <%# TODO: Add logic here so that if someone does not have access to any
-  of the dropdown items from the dropdown menu that it will just show the
-  Reports link (vanilla hyrax 3) on the sidebar versus a dropdown menu %>
-
   <% if can? :read, :admin_dashboard %>
     <li>
       <%= menu.collapsable_section t('hyrax.admin.sidebar.analytics'),

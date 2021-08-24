@@ -8,6 +8,8 @@ module Hyrax
         layout 'hyrax/dashboard'
 
         def index
+          return unless Hyrax.config.analytics == true
+
           @pageviews = Hyrax::Analytics.pageviews("works")
           @downloads = Hyrax::Analytics.downloads("works")
           @top_works = paginate(Hyrax::Analytics.top_pages("works"), rows: 10)

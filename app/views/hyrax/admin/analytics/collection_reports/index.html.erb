@@ -8,6 +8,7 @@
   <div class="col-sm-12">
     <div class="collection-reports">
 
+<% if Hyrax.config.analytics == true %>
       <div class="panel panel-default">
         <div class="panel-heading">The repository contains <b><%= Collection.count %> collections</b>, which collectively have had <b><%= @pageviews.all %> views</b> and <b><%= @downloads.all %> downloads</b>.</div>
         <div class="panel-body">
@@ -55,6 +56,11 @@
           <p class="text-center">This report was generated on <b><%= Time.current %></b>.</p>
         </div>
       </div>
+  <% else %>
+    <div class="alert alert-warning" role="alert">
+      Enable Analytics To View Reports
+    </div>
+  <% end %>
     </div>
   </div>
 </div>
