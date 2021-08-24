@@ -90,7 +90,7 @@ module Hyrax
       #       longer be required.
       def create_default_admin_set!(admin_set_id: DEFAULT_ID, title: DEFAULT_TITLE)
         admin_set = Hyrax::AdministrativeSet.new(id: admin_set_id, title: Array.wrap(title))
-        new(admin_set: admin_set, creating_user: nil).create!
+        new(admin_set: admin_set, creating_user: ::User.system_user).create!
       end
     end
 
