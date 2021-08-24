@@ -75,7 +75,7 @@ module Hyrax
 
     def create
       if create_admin_set
-        redirect_to hyrax.edit_admin_admin_set_path(@admin_set), notice: I18n.t('new_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
+        redirect_to hyrax.edit_admin_admin_set_path(admin_set_id), notice: I18n.t('new_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
       else
         setup_form
         render :new
@@ -86,7 +86,7 @@ module Hyrax
       if @admin_set.destroy
         after_delete_success
       else
-        redirect_to hyrax.admin_admin_set_path(@admin_set), alert: @admin_set.errors.full_messages.to_sentence
+        redirect_to hyrax.admin_admin_set_path(admin_set_id), alert: @admin_set.errors.full_messages.to_sentence
       end
     end
 
@@ -103,14 +103,14 @@ module Hyrax
     private
 
     def update_referer
-      hyrax.edit_admin_admin_set_path(@admin_set) + (params[:referer_anchor] || '')
+      hyrax.edit_admin_admin_set_path(admin_set_id) + (params[:referer_anchor] || '')
     end
 
     def ensure_manager!
       # TODO: Review for possible removal.  Doesn't appear to apply anymore.
       # Even though the user can view this admin set, they may not be able to view
       # it on the admin page.
-      authorize! :manage_any, AdminSet
+      authorize! :manage_any, Hyrax::AdministrativeSet
     end
 
     def ensure_viewer!
@@ -120,7 +120,9 @@ module Hyrax
     end
 
     def create_admin_set
-      admin_set_create_service.call(admin_set: @admin_set, creating_user: current_user)
+      # TODO: Should be able to remove the valkryie_resource check when create/edit form is updated
+      admin_set = @admin_set.respond_to?(:valkyrie_resource) ? @admin_set.valkyrie_resource : @admin_set
+      admin_set_create_service.call(admin_set: admin_set, creating_user: current_user)
     end
 
     def setup_form
@@ -161,6 +163,10 @@ module Hyrax
       else
         redirect_to hyrax.my_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
       end
+    end
+
+    def admin_set_id
+      @admin_set&.id.to_s
     end
   end
 end

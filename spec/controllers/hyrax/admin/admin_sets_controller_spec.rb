@@ -146,12 +146,12 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
           end
         end
 
-        it 'creates file sets' do
+        it 'creates admin set' do
           post :create, params: { admin_set: { title: 'Test title',
                                                description: 'test description',
                                                workflow_name: 'default' } }
           admin_set = assigns(:admin_set)
-          expect(response).to redirect_to(edit_admin_admin_set_path(admin_set))
+          expect(response).to redirect_to(edit_admin_admin_set_path(admin_set.id.to_s))
         end
       end
 

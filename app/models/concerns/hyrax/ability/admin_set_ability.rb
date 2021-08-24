@@ -4,24 +4,24 @@ module Hyrax
     module AdminSetAbility
       def admin_set_abilities # rubocop:disable Metrics/MethodLength
         if admin?
-          can :manage, AdminSet
-          can :manage_any, AdminSet
-          can :create_any, AdminSet
-          can :view_admin_show_any, AdminSet
+          can :manage, [AdminSet, Hyrax::AdministrativeSet]
+          can :manage_any, [AdminSet, Hyrax::AdministrativeSet]
+          can :create_any, [AdminSet, Hyrax::AdministrativeSet]
+          can :view_admin_show_any, [AdminSet, Hyrax::AdministrativeSet]
         else
-          can :manage_any, AdminSet if Hyrax::Collections::PermissionsService.can_manage_any_admin_set?(ability: self)
-          can [:create_any, :create], AdminSet if Hyrax::CollectionTypes::PermissionsService.can_create_admin_set_collection_type?(ability: self)
-          can :view_admin_show_any, AdminSet if Hyrax::Collections::PermissionsService.can_view_admin_show_for_any_admin_set?(ability: self)
+          can :manage_any, [AdminSet, Hyrax::AdministrativeSet] if Hyrax::Collections::PermissionsService.can_manage_any_admin_set?(ability: self)
+          can [:create_any, :create], [AdminSet, Hyrax::AdministrativeSet] if Hyrax::CollectionTypes::PermissionsService.can_create_admin_set_collection_type?(ability: self)
+          can :view_admin_show_any, [AdminSet, Hyrax::AdministrativeSet] if Hyrax::Collections::PermissionsService.can_view_admin_show_for_any_admin_set?(ability: self)
 
-          can [:edit, :update, :destroy], AdminSet do |admin_set| # for test by solr_doc, see solr_document_ability.rb
+          can [:edit, :update, :destroy], [AdminSet, Hyrax::AdministrativeSet] do |admin_set| # for test by solr_doc, see solr_document_ability.rb
             test_edit(admin_set.id)
           end
 
-          can :deposit, AdminSet do |admin_set| # for test by solr_doc, see collection_ability.rb
+          can :deposit, [AdminSet, Hyrax::AdministrativeSet] do |admin_set| # for test by solr_doc, see collection_ability.rb
             Hyrax::Collections::PermissionsService.can_deposit_in_collection?(ability: self, collection_id: admin_set.id)
           end
 
-          can :view_admin_show, AdminSet do |admin_set| # admin show page # for test by solr_doc, see collection_ability.rb
+          can :view_admin_show, [AdminSet, Hyrax::AdministrativeSet] do |admin_set| # admin show page # for test by solr_doc, see collection_ability.rb
             Hyrax::Collections::PermissionsService.can_view_admin_show_for_collection?(ability: self, collection_id: admin_set.id)
           end
         end
