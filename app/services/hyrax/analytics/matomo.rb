@@ -51,7 +51,11 @@ module Hyrax
         # Date "magic keywords" = "today, yesterday, lastX (number), lastWeek, lastMonth or lastYear"
         # Example: Last 6 weeks: period: week, date: last6
 
-        def downloads(ref = 'all', date = 'last500')
+        def default_date_range
+          "#{Hyrax.config.analytics_start_date},#{Time.zone.today}"
+        end
+
+        def downloads(ref = 'all', date = default_date_range)
           if ref == 'all'
             segment = 'eventCategory==Files;eventAction==Downloaded'
             additional_params = { segment: segment }
@@ -71,7 +75,7 @@ module Hyrax
           results_array(response, 'nb_events')
         end
 
-        def top_downloads(ref = 'all', date = 'last500')
+        def top_downloads(ref = 'all', date = default_date_range)
           if ref == 'all'
             additional_params = { segment: "eventCategory==Files;eventAction==Downloaded" }
             response = api_params('Events.getName', 'range', date, additional_params)
@@ -89,14 +93,14 @@ module Hyrax
           results_array_with_ids(response, 'nb_events')
         end
 
-        def downloads_for_file(file, period = 'range', date = "last12")
+        def downloads_for_file(file, period = 'range', date = default_date_range)
           additional_params = { segment: "eventName==#{file}" }
           response = api_params('Events.getName', period, date, additional_params)
 
           response.count.zero? ? 0 : response.first['nb_events'].to_i
         end
 
-        def top_pages(ref = "collections", date = 'last12')
+        def top_pages(ref = "collections", date = default_date_range)
           segment = "eventCategory==#{ref.titleize};eventAction==Views"
           additional_params = { segment: segment }
           response = api_params('Events.getName', 'range', date, additional_params)
@@ -104,7 +108,7 @@ module Hyrax
           results_array_with_ids(response, 'nb_events')
         end
 
-        def pageviews(ref = 'all', date = 'last500')
+        def pageviews(ref = 'all', date = default_date_range)
           if ref == 'all'
             response = api_params('Actions.get', 'day', date)
             results_array(response, 'nb_pageviews')
@@ -120,19 +124,19 @@ module Hyrax
           results_array(response, 'nb_hits')
         end
 
-        def pageviews_for_url(url, date = 'last500')
+        def pageviews_for_url(url, date = default_date_range)
           additional_params = { pageUrl: url }
           response = api_params('Actions.getPageUrl', 'day', date, additional_params)
 
           results_array(response, 'nb_hits')
         end
 
-        def unique_visitors(date = 'last500')
+        def unique_visitors(date = default_date_range)
           response = api_params('Actions.get', 'day', date)
           results_array(response, 'nb_uniq_pageviews')
         end
 
-        def unique_visitors_for_url(url, date = 'last500')
+        def unique_visitors_for_url(url, date = default_date_range)
           additional_params = { pageUrl: url }
           response = api_params('Actions.getPageUrl', 'day', date, additional_params)
 

@@ -120,6 +120,12 @@ module Hyrax
         ENV.fetch('HYRAX_ANALYTICS_PROVIDER', 'google')
     end
 
+    attr_writer :analytics_start_date
+    def analytics_start_date
+      @analytics_start_date ||=
+        ENV.fetch('ANALYTICS_START_DATE', Time.zone.today - 1.year)
+    end
+
     # Defaulting analytic start date to whenever the file was uploaded by leaving it blank
     attr_writer :analytic_start_date
     attr_reader :analytic_start_date

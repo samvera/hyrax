@@ -8,6 +8,8 @@ module Hyrax
         layout 'hyrax/dashboard'
 
         def index
+          return unless Hyrax.config.analytics == true
+
           @pageviews = Hyrax::Analytics.pageviews("collections")
           @downloads = Hyrax::Analytics.downloads("collections")
           @top_collections = paginate(Hyrax::Analytics.top_pages("collections"), rows: 10)
@@ -20,6 +22,8 @@ module Hyrax
         def show
           @document = ::SolrDocument.find(params[:id])
           @path = collection_path(params[:id])
+          return unless Hyrax.config.analytics == true
+
           @path = request.base_url + @path if Hyrax.config.analytics_provider == 'matomo'
           @pageviews = Hyrax::Analytics.pageviews_for_url(@path)
           @uniques = Hyrax::Analytics.unique_visitors_for_url(@path)
