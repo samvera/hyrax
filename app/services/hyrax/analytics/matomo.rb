@@ -60,18 +60,23 @@ module Hyrax
             segment = 'eventCategory==Files;eventAction==Downloaded'
             additional_params = { segment: segment }
             response = api_params('Events.getName', 'day', date, additional_params)
-
             results_array(response, 'nb_events')
           else
             send(:downloads_filtered, ref, date)
           end
         end
-
+        
         def downloads_filtered(ref, date)
           segment = "eventCategory==#{ref.titleize};eventAction==Downloads"
           additional_params = { segment: segment }
           response = api_params('Events.getName', 'day', date, additional_params)
+          results_array(response, 'nb_events')
+        end
 
+        def downloads_for_id(id, date = default_date_range)
+          segment = "eventAction==Downloads;eventName==#{id}"
+          additional_params = { segment: segment }
+          response = api_params('Events.getAction', 'day', date, additional_params)
           results_array(response, 'nb_events')
         end
 
@@ -89,14 +94,12 @@ module Hyrax
         def top_downloads_filtered(ref, date)
           additional_params = { segment: "eventCategory==#{ref.titleize};eventAction==Downloads" }
           response = api_params('Events.getName', 'range', date, additional_params)
-
           results_array_with_ids(response, 'nb_events')
         end
 
         def downloads_for_file(file, period = 'range', date = default_date_range)
           additional_params = { segment: "eventName==#{file}" }
           response = api_params('Events.getName', period, date, additional_params)
-
           response.count.zero? ? 0 : response.first['nb_events'].to_i
         end
 
@@ -104,7 +107,6 @@ module Hyrax
           segment = "eventCategory==#{ref.titleize};eventAction==Views"
           additional_params = { segment: segment }
           response = api_params('Events.getName', 'range', date, additional_params)
-
           results_array_with_ids(response, 'nb_events')
         end
 
@@ -120,14 +122,12 @@ module Hyrax
         def pageviews_filtered(ref, date)
           additional_params = { label: ref }
           response = api_params('Actions.getPageUrls', 'day', date, additional_params)
-
           results_array(response, 'nb_hits')
         end
 
         def pageviews_for_url(url, date = default_date_range)
           additional_params = { pageUrl: url }
           response = api_params('Actions.getPageUrl', 'day', date, additional_params)
-
           results_array(response, 'nb_hits')
         end
 
@@ -139,7 +139,6 @@ module Hyrax
         def unique_visitors_for_url(url, date = default_date_range)
           additional_params = { pageUrl: url }
           response = api_params('Actions.getPageUrl', 'day', date, additional_params)
-
           results_array(response, 'nb_uniq_visitors')
         end
 
@@ -184,7 +183,6 @@ module Hyrax
         def get(params)
           response = Faraday.get(config.base_url, params)
           return [] if response.status != 200
-
           JSON.parse(response.body)
         end
 
@@ -198,7 +196,6 @@ module Hyrax
             format: "JSON",
             token_auth: config.auth_token
           }
-
           params.merge!(additional_params)
           get(params)
         end

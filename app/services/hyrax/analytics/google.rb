@@ -148,6 +148,11 @@ module Hyrax
           Downloads.file_downloads(profile, date[0], date[1], file)
         end
 
+        def downloads_for_id(id, date = default_date_range)
+          date = date.split(",")
+          Downloads.by_id(profile, date[0], date[1], id)
+        end
+        
         # Filter top pages by either "works" or "collections"
         def top_pages(ref = 'works', date = default_date_range)
           date = date.split(",")
