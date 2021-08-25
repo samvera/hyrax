@@ -643,6 +643,14 @@ module Hyrax
       @show_work_item_rows ||= 10 # rows on show view
     end
 
+    # This user is logged as the acting user for jobs and other processes that
+    # run without being attributed to a specific user (e.g. creation of the
+    # default admin set).
+    attr_writer :system_user_key
+    def system_user_key
+      @system_user_key ||= 'systemuser@example.com'
+    end
+
     attr_writer :batch_user_key
     def batch_user_key
       @batch_user_key ||= 'batchuser@example.com'

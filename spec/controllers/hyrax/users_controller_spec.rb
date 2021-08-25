@@ -29,12 +29,13 @@ RSpec.describe Hyrax::UsersController, type: :controller do
     describe "requesting html" do
       before do
         # These user types are excluded:
+        User.system_user
         User.audit_user
         User.batch_user
         create(:user, :guest)
       end
 
-      it "excludes the audit_user and batch_user" do
+      it "excludes the system_user, audit_user, and batch_user" do
         get :index
         expect(assigns[:users].to_a).to match_array [user, u1, u2]
         expect(response).to be_successful

@@ -3,6 +3,7 @@ RSpec.describe Hyrax::Admin::UsersPresenter do
   let(:instance) { described_class.new }
   let!(:user) { create(:user) }
   let!(:admin_user) { create(:user, groups: 'admin') }
+  let!(:system_user) { User.system_user }
   let!(:audit_user) { User.audit_user }
   let!(:batch_user) { User.batch_user }
 
@@ -13,7 +14,7 @@ RSpec.describe Hyrax::Admin::UsersPresenter do
   end
 
   describe "#user_count" do
-    it "counts users excluding batch_user and audit_user" do
+    it "counts users excluding system_user, batch_user, and audit_user" do
       expect(instance.user_count).to eq 2
     end
   end

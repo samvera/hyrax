@@ -31,7 +31,7 @@ module Hyrax::User
 
     scope :guests, ->() { where(guest: true) }
     scope :registered, ->() { where(guest: false) }
-    scope :without_system_accounts, -> { where("#{::User.user_key_field} not in (?)", [::User.batch_user_key, ::User.audit_user_key]) }
+    scope :without_system_accounts, -> { where("#{::User.user_key_field} not in (?)", [::User.batch_user_key, ::User.audit_user_key, ::User.system_user_key]) }
 
     # Validate and normalize ORCIDs
     validates_with OrcidValidator
@@ -145,6 +145,15 @@ module Hyrax::User
   end
 
   module ClassMethods
+    # Override this method if you aren't using email/password
+    def system_user
+      find_or_create_system_user(system_user_key)
+    end
+
+    def system_user_key
+      Hyrax.config.system_user_key
+    end
+
     # Override this method if you aren't using email/password
     def audit_user
       find_or_create_system_user(audit_user_key)

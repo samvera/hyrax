@@ -68,7 +68,7 @@
       "file": "app/controllers/hyrax/users_controller.rb",
       "line": 38,
       "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "::User.where(*base_query).where(\"#{Hydra.config.user_key_field} like lower(?) OR display_name like lower(?)\", (nil or ((\"%\" + query.downcase) + \"%\")), (nil or ((\"%\" + query.downcase) + \"%\"))).registered.where(\"#{Hydra.config.user_key_field} not in (?)\", [::User.batch_user_key, ::User.audit_user_key])",
+      "code": "::User.where(*base_query).where(\"#{Hydra.config.user_key_field} like lower(?) OR display_name like lower(?)\", (nil or ((\"%\" + query.downcase) + \"%\")), (nil or ((\"%\" + query.downcase) + \"%\"))).registered.where(\"#{Hydra.config.user_key_field} not in (?)\", [::User.system_user_key, ::User.batch_user_key, ::User.audit_user_key])",
       "render_path": null,
       "location": {
         "type": "method",
@@ -88,7 +88,7 @@
       "file": "app/models/concerns/hyrax/user.rb",
       "line": 27,
       "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "where(\"#{Hydra.config.user_key_field} not in (?)\", [::User.batch_user_key, ::User.audit_user_key])",
+      "code": "where(\"#{Hydra.config.user_key_field} not in (?)\", [::User.system_user_key, ::User.batch_user_key, ::User.audit_user_key])",
       "render_path": null,
       "location": {
         "type": "method",
