@@ -145,7 +145,6 @@ module Hyrax::User
   end
 
   module ClassMethods
-    # Override this method if you aren't using email/password
     def system_user
       find_or_create_system_user(system_user_key)
     end
@@ -154,7 +153,6 @@ module Hyrax::User
       Hyrax.config.system_user_key
     end
 
-    # Override this method if you aren't using email/password
     def audit_user
       find_or_create_system_user(audit_user_key)
     end
@@ -167,7 +165,6 @@ module Hyrax::User
       Hydra.config.user_key_field
     end
 
-    # Override this method if you aren't using email/password
     def batch_user
       find_or_create_system_user(batch_user_key)
     end
