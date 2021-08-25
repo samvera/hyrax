@@ -14,13 +14,23 @@ module Hyrax
       ##
       # @param event [Dry::Event]
       def on_object_deposited(event)
+        return unless run_jobs(event)
         ContentDepositEventJob.perform_later(event[:object], event[:user])
       end
 
       ##
       # @param event [Dry::Event]
       def on_object_metadata_updated(event)
+        return unless run_jobs(event)
         ContentUpdateEventJob.perform_later(event[:object], event[:user])
+      end
+
+      private
+
+      def run_jobs(event)
+        # TODO: Jobs should run for all model types, but currently fails for
+        #       anything but works and file sets. Pending resolution of PR #5085
+        event[:object].work? || event[:object].file_set?
       end
     end
   end
