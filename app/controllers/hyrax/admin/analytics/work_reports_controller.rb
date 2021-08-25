@@ -5,6 +5,7 @@ module Hyrax
       class WorkReportsController < ApplicationController
         include Hyrax::SingularSubresourceController
         before_action :set_defaults
+        before_action :set_document, only: [:show]
         layout 'hyrax/dashboard'
 
         def index
@@ -23,7 +24,6 @@ module Hyrax
         end
 
         def show
-          @document = ::SolrDocument.find(params[:id])
           @path = main_app.send("hyrax_#{@document._source['has_model_ssim'].first.underscore}s_path", params[:id]).sub('.', '/')
           @path = request.base_url + @path if Hyrax.config.analytics_provider == 'matomo'
           @pageviews = Hyrax::Analytics.pageviews_for_url(@path)
@@ -37,6 +37,10 @@ module Hyrax
         end
 
         private
+
+        def set_document
+          @document = ::SolrDocument.find(params[:id])
+        end
 
         def set_defaults
           @start_date = params[:start_date] || Time.zone.today - 1.month

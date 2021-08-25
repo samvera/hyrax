@@ -24,24 +24,30 @@
 <div class="row">
   <div class="col-md-12">
     <div class="panel panel-default">
-      <%= render 'user_activity' %>
+      <%#= render 'user_activity' %>
     </div>
   </div>
 </div>
 
 <div class="row">
-
-  <div class="col-md-6">
+  <div class="col-md-12">
     <div class="panel panel-default">
       <%= render 'repository_growth' %>
     </div>
   </div>
-
-  <div class="col-md-6">
-    <div class="panel panel-default">
-      <%= render 'repository_objects' %>
-    </div>
-  </div>
 </div>
 
+<div class="row">
+  <div class="col-md-4">
+   <%= render 'visibility_graph' %>
+  </div>
+  <div class="col-md-4">
+    <%= render 'work_type_graph' %>
+  </div>
+  <div class="col-md-4">
+    <%= render "resource_type_graph" %>
+  </div>
+</div>
+<br>
+<br>
 <%= render 'tabs' %>

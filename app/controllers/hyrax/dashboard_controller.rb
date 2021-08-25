@@ -28,12 +28,11 @@ module Hyrax
       end
     end
 
-    private 
+    private
 
-      def set_date_range
-        @start_date = params[:start_date] || Time.zone.today - 1.month
-        @end_date = params[:end_date] || Time.zone.today + 1.day
-      end
-      
+    def set_date_range
+      @start_date = params[:start_date] || Time.zone.today - 1.month
+      @end_date = params[:end_date] || Time.zone.today + 1.day
+    end
   end
 end

@@ -65,7 +65,7 @@ module Hyrax
             send(:downloads_filtered, ref, date)
           end
         end
-        
+
         def downloads_filtered(ref, date)
           segment = "eventCategory==#{ref.titleize};eventAction==Downloads"
           additional_params = { segment: segment }
