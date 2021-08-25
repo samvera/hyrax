@@ -28,7 +28,7 @@ module Hyrax
           @path = request.base_url + @path if Hyrax.config.analytics_provider == 'matomo'
           @pageviews = Hyrax::Analytics.pageviews_for_url(@path)
           @uniques = Hyrax::Analytics.unique_visitors_for_url(@path)
-          @downloads = Hyrax::Analytics.downloads
+          @downloads = Hyrax::Analytics.downloads_for_id(@document.id)
           @files = paginate(@document._source["file_set_ids_ssim"], rows: 5)
           respond_to do |format|
             format.html

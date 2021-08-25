@@ -28,6 +28,13 @@ module Hyrax
           results.first['totalEvents'].to_i
         end
 
+        def self.by_id(profile, start_date, end_date, id)
+          response = Downloads.results(profile,
+            start_date: start_date,
+            end_date: end_date).for_file(id)
+          results_array(response)
+        end
+        
         def self.all(profile, start_date, end_date)
           response = Downloads.results(profile,
             start_date: start_date,

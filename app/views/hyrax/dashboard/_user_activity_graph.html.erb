@@ -1,0 +1,24 @@
+  <% user_activity = @presenter.user_activity(start_date, end_date).to_json %>
+  <div id="user-activity" class="col-md-9" aria-hidden="true" style="height: 200px">
+    <script>
+      //<![CDATA[
+      Hyrax.statistics.userActivity = <%== user_activity %>
+      //]]>
+    </script>
+  </div>
+  <table aria-label="<%= t('.title') %>, <%= t('.subtitle') %>" class="table table-striped sr-only text-left">
+    <thead>
+      <tr>
+        <th><%= t('.date') %></th>
+        <th><%= t('.new_users') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% JSON.parse(user_activity).each do |row| %>
+        <tr>
+          <td><%= row["y"] %></td>
+          <td><%= row["a"] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

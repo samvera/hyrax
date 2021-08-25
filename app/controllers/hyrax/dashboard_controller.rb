@@ -6,6 +6,7 @@ module Hyrax
     with_themed_layout 'dashboard'
     before_action :authenticate_user!
     before_action :build_breadcrumbs, only: [:show]
+    before_action :set_date_range
 
     ##
     # @!attribute [rw] sidebar_partials
@@ -26,5 +27,13 @@ module Hyrax
         render 'show_user'
       end
     end
+
+    private 
+
+      def set_date_range
+        @start_date = params[:start_date] || Time.zone.today - 1.month
+        @end_date = params[:end_date] || Time.zone.today + 1.day
+      end
+      
   end
 end
