@@ -34,7 +34,7 @@ module Hyrax
             end_date: end_date).for_file(id)
           results_array(response)
         end
-        
+
         def self.all(profile, start_date, end_date)
           response = Downloads.results(profile,
             start_date: start_date,
