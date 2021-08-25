@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Hyrax
   module Collections
+    ##
+    # A query service handling nested collection queries.
     module NestedCollectionQueryService
       ##
       # @api private

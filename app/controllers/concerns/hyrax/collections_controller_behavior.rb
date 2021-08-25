@@ -15,7 +15,8 @@ module Hyrax
       class_attribute :presenter_class,
                       :form_class,
                       :single_item_search_builder_class,
-                      :membership_service_class
+                      :membership_service_class,
+                      :parent_collection_query_service
 
       self.presenter_class = Hyrax::CollectionPresenter
 
@@ -23,6 +24,8 @@ module Hyrax
       self.single_item_search_builder_class = SingleCollectionSearchBuilder
       # The search builder to find the collections' members
       self.membership_service_class = Collections::CollectionMemberSearchService
+      # A search service to use in finding parent collections
+      self.parent_collection_query_service = Collections::NestedCollectionQueryService
     end
 
     def show
@@ -74,9 +77,9 @@ module Hyrax
     end
 
     def query_collection_members
-      member_works
-      member_subcollections if collection.collection_type.nestable?
-      parent_collections if collection.collection_type.nestable? && action_name == 'show'
+      load_member_works
+      load_member_subcollections if collection.collection_type.nestable?
+      load_parent_collections if collection.collection_type.nestable? && action_name == 'show'
     end
 
     # Instantiate the membership query service
@@ -89,12 +92,20 @@ module Hyrax
       @member_docs = @response.documents
       @members_count = @response.total
     end
+    alias load_member_works member_works
 
-    def parent_collections
+    ##
+    # Handles paged loading for parent collections.
+    #
+    # @param the query service to use when searching for the parent collections.
+    #   uses the class attribute +parent_collection_query_service+ by default.
+    def parent_collections(query_service: self.class.parent_collection_query_service)
       page = params[:parent_collection_page].to_i
-      query = Hyrax::Collections::NestedCollectionQueryService
-      collection.parent_collections = query.parent_collections(child: collection_object, scope: self, page: page)
+      collection.parent_collections = query_service.parent_collections(
+        child: collection_object, scope: self, page: page
+      )
     end
+    alias load_parent_collections parent_collections
 
     def collection_object
       action_name == 'show' ? Collection.find(collection.id) : collection
@@ -106,6 +117,7 @@ module Hyrax
       @subcollection_docs = results.documents
       @subcollection_count = @presenter.subcollection_count = results.total
     end
+    alias load_member_subcollections member_subcollections
 
     # You can override this method if you need to provide additional inputs to the search
     # builder. For example:
