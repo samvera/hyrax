@@ -26,6 +26,7 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:analytics) }
   it { is_expected.to respond_to(:arkivo_api?) }
   it { is_expected.to respond_to(:arkivo_api=) }
+  it { is_expected.to respond_to(:system_user_key) }
   it { is_expected.to respond_to(:audit_user_key) }
   it { is_expected.to respond_to(:batch_user_key) }
   it { is_expected.to respond_to(:browse_everything?) }

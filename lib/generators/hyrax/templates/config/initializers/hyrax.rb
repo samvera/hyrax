@@ -159,6 +159,11 @@ Hyrax.config do |config|
   # Should a button with "Share my work" show on the front page to all users (even those not logged in)?
   # config.display_share_button_when_not_logged_in = true
 
+  # This user is logged as the acting user for jobs and other processes that
+  # run without being attributed to a specific user (e.g. creation of the
+  # default admin set).
+  # config.system_user_key = 'systemuser@example.com'
+
   # The user who runs batch jobs. Update this if you aren't using emails
   # config.batch_user_key = 'batchuser@example.com'
 
