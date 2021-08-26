@@ -104,4 +104,4 @@ COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
 COPY --chown=1001:101 . /app/samvera/hyrax-engine
 
 RUN bundle install --jobs "$(nproc)"
-RUN RAILS_ENV=production SECRET_KEY_BASE=`bin/rake secret` DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
+RUN RAILS_ENV=production SECRET_KEY_BASE='fakesecret1234' DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
