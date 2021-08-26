@@ -8,6 +8,14 @@ module Hyrax
         dimensions :user_type
         metrics :sessions
 
+        def self.results_array(response)
+          results = []
+          response.to_a.each do |result|
+            results.push([result.date.to_date, result.result.sessions.to_i])
+          end
+          Hyrax::Analytics::Results.new(results)
+        end
+
         def self.new_visits(profile, start_date, end_date)
           x = Visits.results(profile,
             start_date: start_date,

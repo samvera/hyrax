@@ -147,9 +147,19 @@ module Hyrax
           response["nb_visits_new"]
         end
 
+        def new_visits_by_day(date = default_date_range, period = 'day')
+          result = api_params('VisitFrequency.get', period, date)
+          results_array(result, 'nb_visits_new')
+        end
+
         def returning_visitors(period = 'month', date = 'today')
           response = api_params('VisitFrequency.get', period, date)
           response["nb_visits_returning"]
+        end
+
+        def returning_visits_by_day(date = default_date_range, period = 'day')
+          result = api_params('VisitFrequency.get', period, date)
+          results_array(result, 'nb_visits_returning')
         end
 
         def total_visitors(period = 'month', date = 'today')
@@ -165,7 +175,7 @@ module Hyrax
             elsif result[1].is_a?(Array)
               results.push([result[0].to_date, result[1].first[metric]])
             else
-              results.push([result[0].to_date, result[1][metric]])
+              results.push([result[0].to_date, result[1][metric].presence || 0])
             end
           end
           Hyrax::Analytics::Results.new(results)
