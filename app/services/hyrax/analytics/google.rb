@@ -180,9 +180,19 @@ module Hyrax
           Visits.new_visits(profile, date[0], date[1])
         end
 
+        def new_visits_by_day(date = default_date_range, _period = 'day')
+          date = date.split(",")
+          VisitsDaily.new_visits(profile, date[0], date[1])
+        end
+
         def returning_visitors(period = 'month', date = default_date_range)
           date = date_period(period, date)
           Visits.return_visits(profile, date[0], date[1])
+        end
+
+        def returning_visits_by_day(date = default_date_range, _period = 'day')
+          date = date.split(",")
+          VisitsDaily.return_visits(profile, date[0], date[1])
         end
 
         def total_visitors(period = 'month', date = default_date_range)

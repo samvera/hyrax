@@ -69,11 +69,6 @@ module Hyrax
       def list
         results.inject([]) { |line, row| line << row }.reverse
       end
-
-      def to_flot
-        fields = [:date, :pageviews]
-        results.map { |row| fields.zip(row).to_h }
-      end
     end
   end
 end

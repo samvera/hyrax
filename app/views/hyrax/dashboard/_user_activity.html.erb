@@ -1,10 +1,14 @@
-<% if Hyrax.config.analytics == true %>
-<div class="panel-heading">
-  <h3 class="panel-title"><%= t('.title') %></h3>
-  <div><%= t('.subtitle') %></div>
+<div class="col-md-8">
+  <div class="panel-heading">
+    <h3 class="panel-title"><%= t('.title') %></h3>
+    <div><%= t('.subtitle') %></div>
+  </div>
+   <% if Hyrax.config.analytics == true %>
+    <%= render 'user_activity_graph' %>
 </div>
-<div class="panel-body text-center">
-  <div class="col-md-3">
+  
+<div class="col-md-4">
+  <div class="panel-body text-center">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h2 class="panel-title text-center">User Summary</h2>
@@ -17,5 +21,5 @@
       </div>
     </div>
   </div>
+  <% end %>
 </div>
-<% end %>
