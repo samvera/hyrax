@@ -65,6 +65,14 @@ extraEnvVars:
     value: google
   - name: HYRAX_ANALYTICS
     value: 'true'
+  - name: HYRAX_BRANDING_PATH
+    value: "/app/samvera/branding/"
+  - name: HYRAX_DERIVATIVES_PATH
+    value: "/app/samvera/derivatives/"
+  - name: HYRAX_CACHE_PATH
+    value: "/app/samvera/file_cache/"
+  - name: HYRAX_UPLOAD_PATH
+    value: "/app/samvera/uploads/"
 
 worker:
   extraEnvVars:
@@ -84,3 +92,11 @@ worker:
     value: google
   - name: HYRAX_ANALYTICS
     value: 'true'
+  - name: HYRAX_BRANDING_PATH
+    value: "/app/samvera/branding/"
+  - name: HYRAX_DERIVATIVES_PATH
+    value: "/app/samvera/derivatives/"
+  - name: HYRAX_CACHE_PATH
+    value: "/app/samvera/file_cache/"
+  - name: HYRAX_UPLOAD_PATH
+    value: "/app/samvera/uploads/"

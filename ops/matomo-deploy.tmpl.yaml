@@ -13,7 +13,7 @@ externalPostgresql:
   host: pg-postgresql.staging-postgres.svc.cluster.local
   password: $POSTGRES_PASSWORD
   username: postgres
-externalSolrCollection: hyrax-ga
+externalSolrCollection: hyrax-matomo
 externalSolrHost: solr.staging-solr.svc.cluster.local
 externalSolrPassword: $SOLR_PASSWORD
 externalSolrUser: admin
@@ -49,6 +49,14 @@ extraEnvVars:
     value: matomo
   - name: HYRAX_ANALYTICS
     value: 'true'
+  - name: HYRAX_BRANDING_PATH
+    value: "/app/samvera/branding/"
+  - name: HYRAX_DERIVATIVES_PATH
+    value: "/app/samvera/derivatives/"
+  - name: HYRAX_CACHE_PATH
+    value: "/app/samvera/file_cache/"
+  - name: HYRAX_UPLOAD_PATH
+    value: "/app/samvera/uploads/"
 
 worker:
   extraEnvVars:
@@ -62,3 +70,11 @@ worker:
     value: matomo
   - name: HYRAX_ANALYTICS
     value: 'true'
+  - name: HYRAX_BRANDING_PATH
+    value: "/app/samvera/branding/"
+  - name: HYRAX_DERIVATIVES_PATH
+    value: "/app/samvera/derivatives/"
+  - name: HYRAX_CACHE_PATH
+    value: "/app/samvera/file_cache/"
+  - name: HYRAX_UPLOAD_PATH
+    value: "/app/samvera/uploads/"
