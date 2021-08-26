@@ -1,0 +1,48 @@
+<div class="row">
+  <div class="col-md-12">
+    <div id="accordion">
+      <div class="panel panel-default">
+
+        <div class="panel-heading">
+          <h2 class="panel-title">Collections</h2>
+          <div>Recent activity</div>
+        </div>
+
+        <div class="panel-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Collection title</th>
+                <th>Last updated</th>
+                <th>Works</th>
+                <th>Files</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+            <% collections.each do |collection| %>
+                <tr>
+                  <td><%= collection %></td>
+                  <td><%= collection.modified_date.strftime("%Y-%m-%d") %></td>
+                  <td><%= collection.member_works.count %></td>
+                  <td><%= collection.total_file_sets %></td>
+                  <td>
+                   <% if collection.is_pinned?(current_user.id) %>
+                    <%= link_to "" do  %>
+                     <i id='unpin-collection' class="fa fa-star fa-2x" aria-hidden="true"></i> 
+                    <% end %>
+                  <% else %>
+                    <%= link_to "" do  %>
+                    <i id='pin-collection' class="fa fa-star-o fa-2x" aria-hidden="true"></i>
+                    <% end %>
+                   <% end %> 
+                  </td>
+                </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

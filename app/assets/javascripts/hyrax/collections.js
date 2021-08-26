@@ -325,4 +325,39 @@ Blacklight.onLoad(function () {
     $('#add-subcollection-modal-' + $(this).data('presenterId')).modal('show');
   });
 
-});
+  // Pin or unpin a collection to a user
+  // $('#pin-collection').on('click', function(event) {
+    // event.preventDefault();
+  //   console.log('event:', event)
+  //   anchor = $(this);
+  //   console.log('anchor:', anchor)
+  //   $.ajax({
+  //       url: '/user_pinned_collections',
+  //       // /user_pinned_collections
+  //       type: "post",
+  //       success: function(data) {
+  //         console.log('success!')
+  //         // anchor.addClass('collapse');
+  //         // $('a[data-behavior="unfeature"]').removeClass('collapse')
+  //         anchor.removeClass('fa-star-o')
+  //         anchor.addClass('fa-star')
+  //       }
+  //   });
+  // });
+
+//   $('#unpin-collection').on('click', function(event) {
+//     // event.preventDefault();
+//     console.log('event:', event)
+//     anchor = $(this);
+//     console.log('anchor:', anchor)
+//     // $.ajax({
+//     //     url: anchor.attr('href'),  /user_pinned_collections/:id
+//     //     type: "post",
+//     //     data: {"_method":"delete"},
+//     //     success: function(data) {
+//     //       anchor.addClass('collapse');
+//     //       $('a[data-behavior="feature"]').removeClass('collapse')
+//     //     }
+//     // });
+//   });
+// });
