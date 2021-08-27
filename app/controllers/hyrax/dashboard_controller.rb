@@ -21,6 +21,8 @@ module Hyrax
       if can? :read, :admin_dashboard
         @presenter = Hyrax::Admin::DashboardPresenter.new
         @admin_set_rows = Hyrax::AdminSetService.new(self).search_results_with_work_count(:read)
+        @collections = Collection.order(date_modified: :desc)
+        @pinned_collections = UserPinnedCollection.where(user_id: current_user)
         render 'show_admin'
       else
         @presenter = Dashboard::UserPresenter.new(current_user, view_context, params[:since])

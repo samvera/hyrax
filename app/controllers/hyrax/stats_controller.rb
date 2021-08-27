@@ -12,6 +12,7 @@ module Hyrax
       path = main_app.send("hyrax_#{@document._source['has_model_ssim'].first.underscore}s_path", params[:id]).sub('.', '/')
       path = request.base_url + path if Hyrax.config.analytics_provider == 'matomo'
       @pageviews = Hyrax::Analytics.pageviews_for_url(path)
+      @downloads = Hyrax::Analytics.downloads_for_id(params[:id])
     end
 
     def file

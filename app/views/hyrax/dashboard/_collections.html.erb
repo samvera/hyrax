@@ -1,15 +1,14 @@
-<!-- Start Pinned -->
 <div class="row">
   <div class="col-md-12">
     <div id="accordion">
       <div class="panel panel-default">
 
         <div class="panel-heading">
-          <h2 class="panel-title">Pinned Collections</h2>
+          <h2 class="panel-title">Collections</h2>
+          <div>Recent activity</div>
         </div>
 
         <div class="panel-body">
-         <div class="panel-body">
           <table class="table table-striped">
             <thead>
               <tr>
@@ -21,21 +20,19 @@
               </tr>
             </thead>
             <tbody>
-          <div id="pinned-collections">
-             <% @pinned_collections.each do |pinned| %>
+             <% @collections.each do |collection| %>
                 <tr>
-                  <% collection = Collection.find(pinned.collection_id) %>
                   <td><%= collection %></td>
                   <td><%= collection.modified_date.strftime("%Y-%m-%d") %></td>
                   <td><%= collection.member_works.count %></td>
                   <td><%= collection.total_file_sets %></td>
                   <td>
                    <% if collection.is_pinned?(current_user.id) %>
-                    <%= link_to user_pinned_collection_path(collection.id), method: :delete, id: "unpin-#{collection.id}" do %>
+                    <%= link_to user_pinned_collection_path(collection.id, user_id: current_user.id), method: :delete, id: "unpin-#{collection.id}" do %>
                      <i class="fa fa-star fa-2x" aria-hidden="true"></i> 
                     <% end %>
                   <% else %>
-                    <%= link_to user_pinned_collections_path(collection_id: collection.id), method: :post, id: "pin-#{collection.id}" do %>
+                    <%= link_to user_pinned_collections_path(collection_id: collection.id, user_id: current_user.id), method: :post, id: "pin-#{collection.id}" do %>
                       <i class="fa fa-star-o fa-2x" aria-hidden="true"></i>
                     <% end %>
                   <% end %> 
@@ -49,4 +46,3 @@
     </div>
   </div>
 </div>
-<!-- End Pinned -->

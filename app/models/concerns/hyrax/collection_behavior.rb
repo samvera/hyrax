@@ -90,6 +90,14 @@ module Hyrax
       title.present? ? title.join(' | ') : 'No Title'
     end
 
+    def total_file_sets
+      files = []
+      member_works.each do |work|
+        files.push(work.file_sets.count)
+      end
+      files.sum
+    end
+
     module ClassMethods
       # This governs which partial to draw when you render this type of object
       def _to_partial_path #:nodoc:
