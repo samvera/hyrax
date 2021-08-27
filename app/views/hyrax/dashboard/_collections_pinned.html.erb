@@ -9,27 +9,39 @@
         </div>
 
         <div class="panel-body">
+         <div class="panel-body">
           <table class="table table-striped">
             <thead>
               <tr>
-                <th>Collection Title</th>
-                <th>Last Updated</th>
+                <th>Collection title</th>
+                <th>Last updated</th>
                 <th>Works</th>
                 <th>Files</th>
-                <th>Pinned</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
+          <div id="pinned-collections">
+             <% @pinned_collections.each do |pinned| %>
                 <tr>
-                  <td>Butterfly images from the Stanford Digital Repository</td>
-                  <td>2017-09-14</td>
-                  <td>63</td>
-                  <td>63</td>
+                  <% collection = Collection.find(pinned.collection_id) %>
+                  <td><%= collection %></td>
+                  <td><%= collection.modified_date.strftime("%Y-%m-%d") %></td>
+                  <td><%= collection.member_works.count %></td>
+                  <td><%= collection.total_file_sets %></td>
                   <td>
-                    <i class="fa fa-star-o fa-2x" aria-hidden="true"></i>
-                    <i class="fa fa-star fa-2x" aria-hidden="true"></i>
+                   <% if collection.is_pinned?(current_user.id) %>
+                    <%= link_to user_pinned_collection_path(collection.id), method: :delete, id: "unpin-#{collection.id}" do %>
+                     <i class="fa fa-star fa-2x" aria-hidden="true"></i> 
+                    <% end %>
+                  <% else %>
+                    <%= link_to user_pinned_collections_path(collection_id: collection.id), method: :post, id: "pin-#{collection.id}" do %>
+                      <i class="fa fa-star-o fa-2x" aria-hidden="true"></i>
+                    <% end %>
+                  <% end %> 
                   </td>
                 </tr>
+              <% end %>
             </tbody>
           </table>
         </div>

@@ -74,7 +74,6 @@ module Hyrax
         fields = [:date, :pageviews]
         results.map { |row| fields.zip(row).to_h }
       end
-
     end
   end
 end

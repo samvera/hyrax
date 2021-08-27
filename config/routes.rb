@@ -88,6 +88,8 @@ Hyrax::Engine.routes.draw do
 
   resources :featured_work_lists, path: 'featured_works', only: :create
 
+  resources :user_pinned_collections, only: [:create, :destroy]
+
   # Messages
   resources :notifications, only: [:destroy, :index] do
     collection do

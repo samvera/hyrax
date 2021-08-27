@@ -485,10 +485,12 @@ ActiveRecord::Schema.define(version: 2021_08_26_183950) do
   end
 
   create_table "user_pinned_collections", force: :cascade do |t|
-    t.integer "user_id"
-    t.string "collection_id"
+    t.integer "user_id", null: false
+    t.string "collection_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["collection_id"], name: "index_user_pinned_collections_on_collection_id"
+    t.index ["user_id"], name: "index_user_pinned_collections_on_user_id"
   end
 
   create_table "user_stats", force: :cascade do |t|

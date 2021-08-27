@@ -95,9 +95,9 @@ module Hyrax
       member_works.each do |work|
         files.push(work.file_sets.count)
       end
-      return files.sum
+      files.sum
     end
-    
+
     module ClassMethods
       # This governs which partial to draw when you render this type of object
       def _to_partial_path #:nodoc:

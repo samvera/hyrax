@@ -12,12 +12,19 @@
     <%= content_tag :h2, "Work Analytics" %>
     <div class="alert alert-info">
       <span class="glyphicon glyphicon-signal large-icon"></span>
-      <%= content_tag :strong, @pageviews.year %> views in the <b>last 30 days</b>
+      <%= content_tag :strong, pluralize(@pageviews.range(Time.zone.today-30.days, Time.zone.today), 'view') %> and 
+      <%= content_tag :strong, pluralize(@downloads.range(Time.zone.today-30.days, Time.zone.today), 'download') %> in the <b>last 30 days</b>
     </div>
 
     <div class="stats-container">
       <div id="pageviews">
         <%= render 'pageviews' %>
+      </div>
+    </div>
+
+    <div class="stats-container">
+      <div id="downloads">
+        <%= render 'downloads' %>
       </div>
     </div>
 

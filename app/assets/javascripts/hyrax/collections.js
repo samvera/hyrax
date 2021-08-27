@@ -319,45 +319,42 @@ Blacklight.onLoad(function () {
     submitModalAjax(url, 'POST', data, $(this));
   });
 
-
   // Handle add a subcollection button click on the collections show page
   $('.sub-collections-wrapper button.add-subcollection').on('click', function (e) {
     $('#add-subcollection-modal-' + $(this).data('presenterId')).modal('show');
   });
 
-  // Pin or unpin a collection to a user
-  // $('#pin-collection').on('click', function(event) {
-    // event.preventDefault();
-  //   console.log('event:', event)
-  //   anchor = $(this);
-  //   console.log('anchor:', anchor)
-  //   $.ajax({
-  //       url: '/user_pinned_collections',
-  //       // /user_pinned_collections
-  //       type: "post",
-  //       success: function(data) {
-  //         console.log('success!')
-  //         // anchor.addClass('collapse');
-  //         // $('a[data-behavior="unfeature"]').removeClass('collapse')
-  //         anchor.removeClass('fa-star-o')
-  //         anchor.addClass('fa-star')
-  //       }
-  //   });
-  // });
+//   Pin a collection to a user
+  $("a[id^='pin']").on('click', function(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    anchor = $(this);
+    let i = $(anchor).children('i');
+    $.ajax({
+        url: anchor.attr('href'),
+        type: "post",
+        success: function(data) {
+          i.removeClass('fa-star-o');
+          i.addClass('fa-star');
+        }
+    });
+  });
 
-//   $('#unpin-collection').on('click', function(event) {
-//     // event.preventDefault();
-//     console.log('event:', event)
-//     anchor = $(this);
-//     console.log('anchor:', anchor)
-//     // $.ajax({
-//     //     url: anchor.attr('href'),  /user_pinned_collections/:id
-//     //     type: "post",
-//     //     data: {"_method":"delete"},
-//     //     success: function(data) {
-//     //       anchor.addClass('collapse');
-//     //       $('a[data-behavior="feature"]').removeClass('collapse')
-//     //     }
-//     // });
-//   });
-// });
+//   Remove a Pinned collection from user
+    $("a[id^='unpin']").on('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      anchor = $(this);
+      let i = $(anchor).children('i');
+    $.ajax({
+        url: anchor.attr('href'),
+        type: "post",
+        data: {"_method":"delete"},
+        success: function(data) {
+          i.removeClass('fa-star');
+          i.addClass('fa-star-o');
+        }
+    });
+  });
+
+});

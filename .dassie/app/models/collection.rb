@@ -5,10 +5,8 @@ class Collection < ActiveFedora::Base
   # You can replace these metadata if they're not suitable
   include Hyrax::BasicMetadata
   self.indexer = Hyrax::CollectionWithBasicMetadataIndexer 
-  has_many :user_pinned_collections
 
   def is_pinned?(user_id)
     UserPinnedCollection.where(user_id: user_id, collection_id: id).first
   end
-  
 end
