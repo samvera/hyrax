@@ -33,6 +33,11 @@
   sc build -s app
   ```
 
+### Decrypt/encrypt secrets
+Go through the "Install dependencies" and "Install team key" steps on [this Notch8 playbook article](https://playbook-staging.notch8.com/en/devops/keybase/helm-secrets-with-sops).
+- Decrypt: `./bin/decrypt-secrets`
+- Encrypt: `./bin/encrypt-secrets`
+
 ### Start the server
 ```bash
 sc up -s app
