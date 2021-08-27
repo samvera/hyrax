@@ -4,6 +4,7 @@
   <table class="table table-striped">
     <thead>
       <tr>
+        <th>ID</th>
         <th>Work Title</th>
         <th>Views</th>
         <th>Downloads</th>
@@ -14,9 +15,10 @@
         <% document = ::SolrDocument.find(work[0]) rescue document = nil %>
         <% if document %>
           <tr>
+            <td><%= work[0] %></td>
             <td><%= link_to document, admin_analytics_work_report_path(work[0]) %></td>
             <td><%= work[1] %></td>
-            <td></td>
+            <td><%= Hyrax::Analytics.downloads_for_id(work[0]).range(@start_date, @end_date) %></td>
           </tr>
         <% end %>
       <% end %>

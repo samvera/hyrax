@@ -336,6 +336,9 @@ Blacklight.onLoad(function () {
         success: function(data) {
           i.removeClass('fa-star-o');
           i.addClass('fa-star');
+          anchor.addClass('hide');
+          sibling = anchor.attr('id').replace('pin', 'unpin');
+          $(`a[id=${sibling}]`).removeClass('hide');
         }
     });
   });
@@ -353,6 +356,9 @@ Blacklight.onLoad(function () {
         success: function(data) {
           i.removeClass('fa-star');
           i.addClass('fa-star-o');
+          anchor.addClass('hide');
+          sibling = anchor.attr('id').replace('unpin', 'pin');
+          $(`a[id=${sibling}]`).removeClass('hide');
         }
     });
   });

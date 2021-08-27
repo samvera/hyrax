@@ -27,15 +27,13 @@
                   <td><%= collection.member_works.count %></td>
                   <td><%= collection.total_file_sets %></td>
                   <td>
-                   <% if collection.is_pinned?(current_user.id) %>
-                    <%= link_to user_pinned_collection_path(collection.id, user_id: current_user.id), method: :delete, id: "unpin-#{collection.id}" do %>
+                    <% pinned = collection.is_pinned?(current_user.id) %>
+                    <%= link_to user_pinned_collection_path(collection.id, user_id: current_user.id), method: :delete, id: "unpin-#{collection.id}", class: "#{pinned ? '' : 'hide'}" do %>
                      <i class="fa fa-star fa-2x" aria-hidden="true"></i> 
                     <% end %>
-                  <% else %>
-                    <%= link_to user_pinned_collections_path(collection_id: collection.id, user_id: current_user.id), method: :post, id: "pin-#{collection.id}" do %>
+                    <%= link_to user_pinned_collections_path(collection_id: collection.id, user_id: current_user.id), method: :post, id: "pin-#{collection.id}", class: "#{pinned ? 'hide' : '' }" do %>
                       <i class="fa fa-star-o fa-2x" aria-hidden="true"></i>
                     <% end %>
-                  <% end %> 
                   </td>
                 </tr>
               <% end %>
