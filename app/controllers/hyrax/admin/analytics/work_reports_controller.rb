@@ -65,9 +65,13 @@ module Hyrax
         def paginate(results_array, rows: 2)
           return if results_array.nil?
 
+          # only return the works that currently exist
+          # the rescue is needed to bypass the "RecordNotFound" error on nonexisting works
+          results_array = results_array.select { |work| work << ::SolrDocument.find(work) rescue next }
           total_pages = (results_array.size.to_f / rows.to_f).ceil
           page = request.params[:page].nil? ? 1 : request.params[:page].to_i
           current_page = page > total_pages ? total_pages : page
+
           Kaminari.paginate_array(results_array, total_count: results_array.size).page(current_page).per(rows)
         end
       end
