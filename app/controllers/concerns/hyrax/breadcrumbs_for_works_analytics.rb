@@ -15,7 +15,7 @@ module Hyrax
     def add_breadcrumb_for_action
       case action_name
       when 'show'
-        add_breadcrumb "#{params[:id]}", hyrax.admin_analytics_work_reports_path(params[:id]), mark_active_action
+        add_breadcrumb params[:id].to_s, hyrax.admin_analytics_work_reports_path(params[:id]), mark_active_action
       end
     end
 
