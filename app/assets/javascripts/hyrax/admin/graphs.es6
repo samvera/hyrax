@@ -60,7 +60,7 @@ export default class {
             data: data,
             xkey: 'y',
             ykeys: ['works','collections'],
-            labels: ['Objects','Collections'],
+            labels: ['Works','Collections'],
             resize: true,
             hideHover: true,
             xLabels: 'day',

@@ -953,8 +953,7 @@ en:
       repository_growth:
         collections: Collections
         date: Date
-        objects: Objects
-        subtitle: Past 90 days
+        works: Works
         title: Repository Growth
       repository_objects:
         status: Current Status
