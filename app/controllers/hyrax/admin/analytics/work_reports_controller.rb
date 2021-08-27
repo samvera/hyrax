@@ -4,9 +4,10 @@ module Hyrax
     module Analytics
       class WorkReportsController < ApplicationController
         include Hyrax::SingularSubresourceController
+        include Hyrax::BreadcrumbsForWorksAnalytics
         before_action :set_defaults
         before_action :set_document, only: [:show]
-        layout 'hyrax/dashboard'
+        with_themed_layout 'dashboard'
 
         def index
           return unless Hyrax.config.analytics == true
