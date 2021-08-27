@@ -73,12 +73,29 @@ module Hyrax
           Kaminari.paginate_array(results_array, total_count: results_array.size).page(current_page).per(rows)
         end
 
+        # rubocop:disable Metrics/MethodLength
         def filter_results(data_type, results_array)
           # only return the results that currently exist
 
-          return results_array.select { |work| work << ::SolrDocument.find(work) rescue next } if data_type === 'works'
-          return results_array.select { |download| download << FileSet.find(download) rescue next } if data_type === 'downloads'
+          if data_type == 'works'
+            return results_array.select do |work|
+              begin
+                work << ::SolrDocument.find(work)
+              rescue
+                next
+              end
+            end
+          end
+
+          results_array.select do |download|
+            begin
+              download << FileSet.find(download)
+            rescue
+              next
+            end
+          end
         end
+        # rubocop:enable Metrics/MethodLength
       end
     end
   end
