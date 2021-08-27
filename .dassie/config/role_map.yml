@@ -24,3 +24,4 @@ test:
 production:
   admin:
     - admin@example.com
+    - another_admin@example.com
