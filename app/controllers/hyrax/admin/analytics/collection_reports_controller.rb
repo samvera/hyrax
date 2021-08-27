@@ -4,8 +4,9 @@ module Hyrax
     module Analytics
       class CollectionReportsController < ApplicationController
         include Hyrax::SingularSubresourceController
+        include Hyrax::BreadcrumbsForCollectionAnalytics
         before_action :set_defaults
-        layout 'hyrax/dashboard'
+        with_themed_layout 'dashboard'
 
         def index
           return unless Hyrax.config.analytics == true

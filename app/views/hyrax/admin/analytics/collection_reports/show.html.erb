@@ -26,7 +26,7 @@
               <p>Collection type: <b><%= @document.collection_type_gid %></b></p>
             </div>
             <div class="col-xs-12 col-md-5">
-              <p>Last updated on <b><%= @document.date_modified %></b></p>
+              <p>Last updated on <b><%= @document.modified_date.strftime("%B %d, %Y") %></b></p>
               <p>Visibility: <b><%= @document.read_groups.join(",") %></b></p>
             </div>
             <div class="col-xs-12 col-md-2">

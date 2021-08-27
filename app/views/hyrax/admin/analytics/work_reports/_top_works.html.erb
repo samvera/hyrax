@@ -1,4 +1,4 @@
-<h4>Works</h4>
+<h4>Top Works</h4>
  <hr />
  
   <table class="table table-striped">
@@ -6,6 +6,7 @@
       <tr>
         <th>Work Title</th>
         <th>Views</th>
+        <th>Downloads</th>
       </tr>
     </thead>
     <tbody>
@@ -15,6 +16,7 @@
           <tr>
             <td><%= link_to document, admin_analytics_work_report_path(work[0]) %></td>
             <td><%= work[1] %></td>
+            <td></td>
           </tr>
         <% end %>
       <% end %>
