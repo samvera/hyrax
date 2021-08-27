@@ -13,8 +13,8 @@ module Hyrax
 
           @pageviews = Hyrax::Analytics.pageviews("works")
           @downloads = Hyrax::Analytics.downloads("works")
-          @top_works = paginate(Hyrax::Analytics.top_pages("works"), rows: 10)
-          @top_downloads = paginate(Hyrax::Analytics.top_downloads("works"), rows: 10)
+          @top_works = paginate('works', Hyrax::Analytics.top_pages("works"), rows: 10)
+          @top_downloads = paginate('downloads', Hyrax::Analytics.top_downloads("works"), rows: 10)
           models = Hyrax.config.curation_concerns.map { |m| "\"#{m}\"" }
           @works_count = ActiveFedora::SolrService.query("has_model_ssim:(#{models.join(' OR ')})", fl: "id").count
           respond_to do |format|
@@ -62,17 +62,22 @@ module Hyrax
           end
         end
 
-        def paginate(results_array, rows: 2)
+        def paginate(data_type, results_array, rows: 2)
           return if results_array.nil?
 
-          # only return the works that currently exist
-          # the rescue is needed to bypass the "RecordNotFound" error on nonexisting works
-          results_array = results_array.select { |work| work << ::SolrDocument.find(work) rescue next }
+          results_array = filter_results(data_type, results_array)
           total_pages = (results_array.size.to_f / rows.to_f).ceil
           page = request.params[:page].nil? ? 1 : request.params[:page].to_i
           current_page = page > total_pages ? total_pages : page
 
           Kaminari.paginate_array(results_array, total_count: results_array.size).page(current_page).per(rows)
+        end
+
+        def filter_results(data_type, results_array)
+          # only return the results that currently exist
+
+          return results_array.select { |work| work << ::SolrDocument.find(work) rescue next } if data_type === 'works'
+          return results_array.select { |download| download << FileSet.find(download) rescue next } if data_type === 'downloads'
         end
       end
     end
