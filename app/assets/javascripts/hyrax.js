@@ -107,6 +107,7 @@
 //= require hyrax/i18n_helper
 //= require hyrax/collapse
 //= require hyrax/skip_to_content
+//= require hyrax/reports-buttons
 
 // this needs to be after batch_select so that the form ids get setup correctly
 //= require hyrax/batch_edit
