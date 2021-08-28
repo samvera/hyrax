@@ -12,10 +12,11 @@ module Hyrax
         def index
           return unless Hyrax.config.analytics == true
 
-          @pageviews = Hyrax::Analytics.pageviews("works")
-          @downloads = Hyrax::Analytics.downloads("works")
-          @top_works = paginate('works', Hyrax::Analytics.top_pages("works"), rows: 10)
-          @top_downloads = paginate('downloads', Hyrax::Analytics.top_downloads("works"), rows: 10)
+          @pageviews = Hyrax::Analytics.pageviews('work-view')
+          @downloads = Hyrax::Analytics.downloads('file-set-download')
+          @top_works = paginate(Hyrax::Analytics.top_pages('work-view'), rows: 10)
+          @top_downloads = Hyrax::Analytics.top_downloads('file-set-in-work-download')
+          @top_file_set_downloads = paginate(Hyrax::Analytics.top_downloads('file-set-download'), rows: 10)
           models = Hyrax.config.curation_concerns.map { |m| "\"#{m}\"" }
           @works_count = ActiveFedora::SolrService.query("has_model_ssim:(#{models.join(' OR ')})", fl: "id").count
           respond_to do |format|
@@ -50,53 +51,33 @@ module Hyrax
         end
 
         def export_data
-          if params[:format_data] == 'downloads'
-            send_data @downloads.to_csv, filename: "#{@start_date}-#{@end_date}-downloads.csv"
-          elsif params[:format_data] == 'pageviews'
-            send_data @pageviews.to_csv, filename: "#{@start_date}-#{@end_date}-pageviews.csv"
-          elsif params[:format_data] == 'uniques'
-            send_data @uniques.to_csv, filename: "#{@start_date}-#{@end_date}-uniques.csv"
-          elsif params[:format_data] == 'top_works'
-            send_data @top_works.map(&:to_csv).join, filename: "#{@start_date}-#{@end_date}-top_works.csv"
-          elsif params[:format_data] == 'top_downloads'
-            send_data @top_downloads.map(&:to_csv).join, filename: "#{@start_date}-#{@end_date}-top_downloads.csv"
-          end
-        end
-
-        def paginate(data_type, results_array, rows: 2)
-          return if results_array.nil?
-
-          results_array = filter_results(data_type, results_array)
-          total_pages = (results_array.size.to_f / rows.to_f).ceil
-          page = request.params[:page].nil? ? 1 : request.params[:page].to_i
-          current_page = page > total_pages ? total_pages : page
-
-          Kaminari.paginate_array(results_array, total_count: results_array.size).page(current_page).per(rows)
-        end
-
-        # rubocop:disable Metrics/MethodLength
-        def filter_results(data_type, results_array)
-          # only return the results that currently exist
-
-          if data_type == 'works'
-            return results_array.select do |work|
-              begin
-                work << ::SolrDocument.find(work)
-              rescue
-                next
+          csv_row = CSV.generate do |csv|
+            # insert the headers
+            csv << ["Name", "ID", "Work Page Views", "Total Downloads of File Sets In Work"]
+            # run through the transactions
+            @top_works.each do |work|
+              # Check to make sure this work exists as a Solr document
+              document = ::SolrDocument.find(work[0]) rescue document = nil
+              if document 
+                # Look for a matching collection ID in the top downloads report (to get the downloads count)
+                match = @top_works.detect {|a,b| a == work[0]}
+                # each of transactions is inserted into the csv file
+                csv << [document, work[0], work[1], match[1] || 0]
               end
             end
           end
-
-          results_array.select do |download|
-            begin
-              download << FileSet.find(download)
-            rescue
-              next
-            end
-          end
+          send_data csv_row, filename: "#{@start_date}-#{@end_date}-works.csv"
         end
-        # rubocop:enable Metrics/MethodLength
+
+        def paginate(results_array, rows: 10)
+          return if results_array.nil?
+
+          total_pages = (results_array.size.to_f / rows.to_f).ceil
+          page = request.params[:page].nil? ? 1 : request.params[:page].to_i
+          current_page = page > total_pages ? total_pages : page
+          Kaminari.paginate_array(results_array, total_count: results_array.size).page(current_page).per(rows)
+        end
+
       end
     end
   end

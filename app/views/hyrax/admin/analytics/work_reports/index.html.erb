@@ -13,21 +13,13 @@
         <div class="panel-heading">The repository contains <b><%= @works_count %> works</b>, which collectively have had <b><%= @pageviews.all %> views</b> and <b><%= @downloads.all %> downloads</b>.</div>
         <div class="panel-body">
           <h2>Activity
-            <div class="btn-group pull-right">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Export <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu">
-                <li><%= link_to "Downloads", admin_analytics_work_reports_path(format: :csv, format_data: 'downloads', disposition: "attachment") %></li>
-                <li><%= link_to "Pageviews", admin_analytics_work_reports_path(format: :csv, format_data: 'pageviews', disposition: "attachment") %></li>
-                <li><%= link_to "Top Downloads", admin_analytics_work_reports_path(format: :csv, format_data: 'top_downloads', disposition: "attachment") %></li>
-                <li><%= link_to "Top Works", admin_analytics_work_reports_path(format: :csv, format_data: 'top_works', disposition: "attachment") %></li>
-              </ul>
-            </div>
+          <div class="btn-group pull-right">
+            <%= link_to "Export", admin_analytics_work_reports_path(format: :csv, disposition: "attachment"), class: "btn btn-default" %>
+          </div></h2>
           </h2>
 
           <div class="panel panel-default">
-            <div class="panel-heading">Customize Report</div>
+            <div class="panel-heading">Customize Report <%= @test %></div>
             <div class="panel-body">
               <%= render "hyrax/admin/analytics/date_range_form", redirect_path: hyrax.admin_analytics_work_reports_path %>
               <hr />
@@ -44,11 +36,11 @@
               <div class="tab-content">
                 <h3 class="text-center">Custom Work Report</h3>
                 <div class="tab-pane active" id="summary">
-                  <%= render "hyrax/admin/analytics/summary" %>
+                  <%= render "summary" %>
                 </div>
                 <div class="tab-pane" id="monthly">
                   <h4 class="text-center">Month-by-month status for last 12 months through <%= Time.zone.today.strftime("%B %Y") %></h4>
-                  <%= render "hyrax/admin/analytics/monthly_activity" %>
+                  <%= render "monthly_summary" %>
                 </div>
               </div>
 
@@ -56,8 +48,8 @@
                 <div><%= render 'top_works' %></div>
               <% end %>
 
-              <% if @top_downloads %>
-                <div><%= render 'top_downloads' %></div>
+              <% if @top_file_set_downloads %>
+                <div><%= render 'top_file_set_downloads' %></div>
               <% end %>
 
             </div>

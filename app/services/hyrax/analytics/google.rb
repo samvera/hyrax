@@ -133,14 +133,26 @@ module Hyrax
           "#{Hyrax.config.analytics_start_date},#{Time.zone.today}"
         end
 
-        def downloads(ref = 'all', date = default_date_range)
+        def downloads(ref = 'works', date = default_date_range)
           date = date.split(",")
-          Downloads.send(ref, profile, date[0], date[1])
+          if ref == 'work-in-collection-download'
+            EventsDaily.send('work_in_collection_downloads', profile, date[0], date[1])
+          elsif ref == 'file-set-download'
+            EventsDaily.send('file_set_downloads', profile, date[0], date[1])
+          else 
+            EventsDaily.send("#{ref}_downloads", profile, date[0], date[1])
+          end
         end
-
-        def top_downloads(ref = 'works', date = default_date_range)
+        
+        def top_downloads(ref = 'file-set-download', date = default_date_range)
           date = date.split(",")
-          Events.send("#{ref}_downloads", profile, date[0], date[1])
+          if ref == 'file-set-download'
+            Events.send('file_set_downloads', profile, date[0], date[1])
+          elsif ref == 'file-set-in-work-download'
+            Events.send('file_set_in_work_downloads', profile, date[0], date[1])
+          else 
+            Events.send("#{ref}_downloads", profile, date[0], date[1])
+          end
         end
 
         def downloads_for_file(file, date = default_date_range)
@@ -154,15 +166,31 @@ module Hyrax
         end
 
         # Filter top pages by either "works" or "collections"
-        def top_pages(ref = 'works', date = default_date_range)
+        def top_pages(ref = 'work-view', date = default_date_range)
           date = date.split(",")
-          Events.send(ref, profile, date[0], date[1])
+          if ref == 'work-view'
+            Events.send("works_views", profile, date[0], date[1])
+          elsif ref == 'work-in-collection-view'
+            Events.send('work_in_collection_views', profile, date[0], date[1])
+          elsif ref == 'collection-page-view'
+            Events.send('collection_page_views', profile, date[0], date[1])
+          else 
+            Events.send(ref, profile, date[0], date[1])
+          end
         end
 
-        # Filter pageviews by either "all", "works", or "collections"
-        def pageviews(ref = 'all', date = default_date_range)
+        # Filter pageviews events by either "all", "works", or "collections"
+        def pageviews(ref = 'work-view', date = default_date_range)
           date = date.split(",")
-          Pageviews.send(ref, profile, date[0], date[1])
+          if ref == 'work-view'
+            EventsDaily.send("works_views", profile, date[0], date[1])
+          elsif ref == 'collection-page-view'
+            EventsDaily.send('collection_page_views', profile, date[0], date[1])
+          elsif ref == 'work-in-collection-view'
+            EventsDaily.send('work_in_collection_views', profile, date[0], date[1])
+          else 
+            EventsDaily.send(ref, profile, date[0], date[1])
+          end
         end
 
         def pageviews_for_url(path, date = default_date_range)

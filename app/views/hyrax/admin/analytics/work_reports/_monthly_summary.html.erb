@@ -13,7 +13,7 @@
   <tbody>
   <% if @downloads %>
     <tr>
-      <td><b>Downloads</b></td>
+      <td><b>File Sets in Works Downloads</b></td>
         <% @month_names.each do |name| %>
          <td><%= @downloads.month(name.to_date) %></td>
        <% end %>
