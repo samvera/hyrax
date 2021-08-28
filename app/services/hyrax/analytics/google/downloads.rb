@@ -7,11 +7,14 @@ module Hyrax
 
         metrics :total_events
         dimensions :date, :event_category, :event_action, :event_label
-
+       
         filter(:downloads) { |_event_action| contains(:eventAction, 'Download') }
         filter(:works) { |_event_category| matches(:eventCategory, 'Works') }
         filter(:collections) { |_event_category| matches(:eventCategory, 'Collections') }
-        filter :for_file, &->(file) { contains(:eventLabel, file) }
+
+        filter(:collection_file_downloads) { |_event_action| matches(:eventAction, 'file-set-in-collection-download') }
+        filter :for_id, &->(id) { contains(:eventLabel, id) }
+        filter :for_file, &->(id) { contains(:eventLabel, file) }
 
         def self.results_array(response)
           results = []
@@ -25,13 +28,24 @@ module Hyrax
           results = Downloads.results(profile,
             start_date: start_date,
             end_date: end_date).for_file(file)
-          results.first['totalEvents'].to_i
+            if results.nil? || results.first.nil?
+              0
+            else
+              results.first['totalEvents'].to_i
+            end
         end
 
         def self.by_id(profile, start_date, end_date, id)
           response = Downloads.results(profile,
             start_date: start_date,
-            end_date: end_date).for_file(id)
+            end_date: end_date).for_id(id)
+          results_array(response)
+        end
+
+        def self.by_collection_id(profile, start_date, end_date, id)
+          response = Downloads.results(profile,
+            start_date: start_date,
+            end_date: end_date).collection_file_downloads.for_id(id)
           results_array(response)
         end
 

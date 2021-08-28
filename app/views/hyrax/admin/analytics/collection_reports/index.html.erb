@@ -10,17 +10,11 @@
 
 <% if Hyrax.config.analytics == true %>
       <div class="panel panel-default">
-        <div class="panel-heading">The repository contains <b><%= Collection.count %> collections</b>, which collectively have had <b><%= @pageviews.all %> views</b> and <b><%= @downloads.all %> downloads</b>.</div>
+        <div class="panel-heading">The repository contains <b><%= Collection.count %> collections</b>, which collectively have had <b><%= @pageviews.all %> page views</b> and <b><%= @downloads.all %> downloads</b> in the collection.</div>
         <div class="panel-body">
           <h2>Activity
           <div class="btn-group pull-right">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Export <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu">
-                <li><%= link_to "Pageviews", admin_analytics_collection_reports_path(format: :csv, format_data: 'pageviews', disposition: "attachment") %></li>
-                <li><%= link_to "Top Collections", admin_analytics_collection_reports_path(format: :csv, format_data: 'top_collections', disposition: "attachment") %></li>
-              </ul>
+            <%= link_to "Export", admin_analytics_collection_reports_path(format: :csv, disposition: "attachment"), class: "btn btn-default" %>
           </div></h2>
           <div class="panel panel-default">
             <div class="panel-heading">Customize Report</div>
@@ -40,11 +34,11 @@
               <div class="tab-content">
                 <h3 class="text-center">Custom Collection Report</h3>
                 <div class="tab-pane active" id="summary">
-                  <%= render "hyrax/admin/analytics/summary" %>
+                  <%= render "summary" %>
                 </div>
                 <div class="tab-pane" id="monthly">
                   <h4 class="text-center">Month-by-month status for last 12 months through <%= Time.zone.today.strftime("%B %Y") %></h4>
-                    <%= render 'hyrax/admin/analytics/monthly_activity' %>
+                    <%= render 'monthly_summary' %>
                 </div>
               </div>
 

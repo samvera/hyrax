@@ -1,0 +1,28 @@
+<h4>Top File Downloads</h4>
+<hr />
+ 
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>File Name</th>
+    <th>File ID</th>
+    <th>File Downloads</th>
+  </tr>
+  </thead>
+  <tbody>
+      <% @top_file_set_downloads.each do |download| %>
+        <% file = FileSet.find(download[0]) rescue document = nil %> 
+        <% if file %>
+        <tr>
+        <td><%= file %></td> 
+        <td><%= file.id %></td>  
+        <td><%= download[1] %></td>
+        </tr>
+        <% end %>
+      <% end %>
+  </tbody>
+</table>
+
+<div class="pull-right">
+  <%= paginate @top_file_set_downloads %>
+</div>

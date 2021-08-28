@@ -1,0 +1,53 @@
+<h4 class="text-center"><%= @start_date.to_date.strftime("%B %d, %Y") %> through <%= @end_date.to_date.strftime("%B %d, %Y") %></h4>
+<br>
+<h4>Summary of user activity</h4>
+<hr />
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>&nbsp;</th>
+      <th>Date Range</th>
+      <th>Today</th>
+      <th>This week</th>
+      <th>This month</th>
+      <th>This year</th>
+      <th>All time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if @pageviews %>
+      <tr>
+        <td><b>Collection Page Views</b></td>
+        <td><%= @pageviews.range(@start_date.to_date, @end_date.to_date) %></td>
+        <td><%= @pageviews.day %></td>
+        <td><%= @pageviews.week %></td>
+        <td><%= @pageviews.month %></td>
+        <td><%= @pageviews.year %></td>
+        <td><%= @pageviews.all %></td>
+      </tr>
+    <% end %>
+    <% if @work_page_views %>
+      <tr>
+        <td><b>Works in This Collection Views</b></td>
+        <td><%= @work_page_views.range(@start_date.to_date, @end_date.to_date) %></td>
+        <td><%= @work_page_views.day %></td>
+        <td><%= @work_page_views.week %></td>
+        <td><%= @work_page_views.month %></td>
+        <td><%= @work_page_views.year %></td>
+        <td><%= @work_page_views.all %></td>
+      </tr>
+    <% end %>
+    <% if @downloads %>
+      <tr>
+        <td><b>File Set Downloads In This Collection</b></td>
+        <td><%= @downloads.range(@start_date.to_date, @end_date.to_date) %></td>
+        <td><%= @downloads.day %></td>
+        <td><%= @downloads.week %></td>
+        <td><%= @downloads.month %></td>
+        <td><%= @downloads.year %></td>
+        <td><%= @downloads.all %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

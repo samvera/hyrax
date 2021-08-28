@@ -1,9 +1,0 @@
-<% @top_pages.each do |page| %>
-  <% document = ::SolrDocument.find(page[0]) %>
-  <% if document %>
-    <tr>
-      <td><%= link_to document, link_path(page[0]) %></td>
-      <td><%= page[1] %></td>
-    </tr>
-  <% end %>
-<% end %>

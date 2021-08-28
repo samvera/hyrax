@@ -55,74 +55,57 @@ module Hyrax
           "#{Hyrax.config.analytics_start_date},#{Time.zone.today}"
         end
 
-        def downloads(ref = 'all', date = default_date_range)
-          if ref == 'all'
-            segment = 'eventCategory==Files;eventAction==Downloaded'
-            additional_params = { segment: segment }
-            response = api_params('Events.getName', 'day', date, additional_params)
-            results_array(response, 'nb_events')
-          else
-            send(:downloads_filtered, ref, date)
-          end
+        def downloads(ref, date = default_date_range)
+          additional_params = { label: ref.to_s }
+          response = api_params('Events.getAction', 'day', date, additional_params).to_a
+          results = response.map { |res| [res[0].to_date, res[1].empty? ? 0 : res[1].first['nb_events']] }
+          Hyrax::Analytics::Results.new(results)
         end
 
-        def downloads_filtered(ref, date)
-          segment = "eventCategory==#{ref.titleize};eventAction==Downloads"
-          additional_params = { segment: segment }
-          response = api_params('Events.getName', 'day', date, additional_params)
-          results_array(response, 'nb_events')
+        def pageviews(ref, date = default_date_range)
+          additional_params = { label: ref.to_s }
+          response = api_params('Events.getAction', 'day', date, additional_params).to_a
+          results = response.map { |res| [res[0].to_date, res[1].empty? ? 0 : res[1].first['nb_events']] }
+          Hyrax::Analytics::Results.new(results)
         end
 
         def downloads_for_id(id, date = default_date_range)
-          segment = "eventAction==Downloads;eventName==#{id}"
+          segment = "eventAction==file-set-in-work-download;eventName==#{id}"
           additional_params = { segment: segment }
           response = api_params('Events.getAction', 'day', date, additional_params)
           results_array(response, 'nb_events')
         end
 
-        def top_downloads(ref = 'all', date = default_date_range)
-          if ref == 'all'
-            additional_params = { segment: "eventCategory==Files;eventAction==Downloaded" }
-            response = api_params('Events.getName', 'range', date, additional_params)
-
-            results_array_with_ids(response, 'nb_events')
-          else
-            send(:top_downloads_filtered, ref, date)
-          end
-        end
-
-        def top_downloads_filtered(ref, date)
-          additional_params = { segment: "eventCategory==#{ref.titleize};eventAction==Downloads" }
-          response = api_params('Events.getName', 'range', date, additional_params)
-          results_array_with_ids(response, 'nb_events')
-        end
-
-        def downloads_for_file(file, period = 'range', date = default_date_range)
-          additional_params = { segment: "eventName==#{file}" }
-          response = api_params('Events.getName', period, date, additional_params)
-          response.count.zero? ? 0 : response.first['nb_events'].to_i
-        end
-
-        def top_pages(ref = "collections", date = default_date_range)
-          segment = "eventCategory==#{ref.titleize};eventAction==Views"
+        def downloads_for_collection_id(id, date = default_date_range)
+          segment = "eventAction==file-set-in-collection-download;eventName==#{id}"
           additional_params = { segment: segment }
+          response = api_params('Events.getAction', 'day', date, additional_params)
+          results_array(response, 'nb_events')
+        end
+
+        def top_downloads(ref = 'work-in-collection-download', date = default_date_range)
+          additional_params = {
+            flat: '1',
+            filter_column: 'Events_EventAction',
+            filter_pattern: ref.to_s,
+            filter_sort_column: 'nb_events',
+            filter_sort_order: 'desc',
+          }
           response = api_params('Events.getName', 'range', date, additional_params)
-          results_array_with_ids(response, 'nb_events')
+          response.map { |res| [res['Events_EventName'], res['nb_events']] } 
         end
 
-        def pageviews(ref = 'all', date = default_date_range)
-          if ref == 'all'
-            response = api_params('Actions.get', 'day', date)
-            results_array(response, 'nb_pageviews')
-          else
-            send(:pageviews_filtered, ref, date)
-          end
-        end
+        def top_pages(ref, date = default_date_range)
+          additional_params = {
+            flat: '1',
+            filter_column: 'Events_EventAction',
+            filter_pattern: ref.to_s,
+            filter_sort_column: 'nb_events',
+            filter_sort_order: 'desc',
+          }
+          response = api_params('Events.getName', 'range', date, additional_params)
 
-        def pageviews_filtered(ref, date)
-          additional_params = { label: ref }
-          response = api_params('Actions.getPageUrls', 'day', date, additional_params)
-          results_array(response, 'nb_hits')
+          response.map { |res| [res['Events_EventName'], res['nb_events']] }
         end
 
         def pageviews_for_url(url, date = default_date_range)
@@ -213,3 +196,4 @@ module Hyrax
     end
   end
 end
+

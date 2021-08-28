@@ -11,9 +11,12 @@ module Hyrax
         def index
           return unless Hyrax.config.analytics == true
 
-          @pageviews = Hyrax::Analytics.pageviews("collections")
-          @downloads = Hyrax::Analytics.downloads("collections")
-          @top_collections = paginate(Hyrax::Analytics.top_pages("collections"), rows: 10)
+          @pageviews = Hyrax::Analytics.pageviews('collection-page-view')
+          @work_page_views = Hyrax::Analytics.pageviews('work-in-collection-view')
+          @downloads = Hyrax::Analytics.downloads('work-in-collection-download')
+          @top_collections = paginate(Hyrax::Analytics.top_pages('work-in-collection-view'), rows: 10)
+          @top_downloads = Hyrax::Analytics.top_downloads('work-in-collection-download')
+          @top_collection_pages = Hyrax::Analytics.top_pages('collection-page-view')
           respond_to do |format|
             format.html
             format.csv { export_data }
@@ -28,6 +31,7 @@ module Hyrax
           @path = request.base_url + @path if Hyrax.config.analytics_provider == 'matomo'
           @pageviews = Hyrax::Analytics.pageviews_for_url(@path)
           @uniques = Hyrax::Analytics.unique_visitors_for_url(@path)
+          @downloads = Hyrax::Analytics.downloads_for_collection_id(@document.id)
           respond_to do |format|
             format.html
             format.csv { export_data }
@@ -43,18 +47,23 @@ module Hyrax
         end
 
         def export_data
-          if params[:format_data] == 'downloads'
-            send_data @downloads.to_csv, filename: "#{@start_date}-#{@end_date}-downloads.csv"
-          elsif params[:format_data] == 'pageviews'
-            send_data @pageviews.to_csv, filename: "#{@start_date}-#{@end_date}-pageviews.csv"
-          elsif params[:format_data] == 'uniques'
-            send_data @uniques.to_csv, filename: "#{@start_date}-#{@end_date}-uniques.csv"
-          elsif params[:format_data] == 'top_collections'
-            send_data @top_collections.map(&:to_csv).join, filename: "#{@start_date}-#{@end_date}-top_collections.csv"
-          elsif params[:format_data] == 'top_downloads'
-            send_data @top_downloads.map(&:to_csv).join, filename: "#{@start_date}-#{@end_date}-top_downloads.csv"
+          csv_row = CSV.generate do |csv|
+            # insert the headers
+            csv << ["Name", "ID", "Collection Page Views", "View of Works In Collection", "Downloads of Works In Collection"]
+            # run all over the transactions
+            @top_collections.each do |collection|
+              # Check to make sure this collection exists as a Solr document
+              document = ::SolrDocument.find(collection[0]) rescue document = nil
+              if document 
+                # Look for a matching collection ID in the top downloads report (to get the downloads count)
+                match = @top_downloads.detect {|a,b| a == collection[0]}
+                # each of transactions is inserted into the csv file
+                csv << [document, collection[0], collection[1], match[1] || 0]
+              end
+            end
           end
-        end
+          send_data csv_row, filename: "#{@start_date}-#{@end_date}-collections.csv"
+        end         
 
         def paginate(results_array, rows: 2)
           return if results_array.nil?

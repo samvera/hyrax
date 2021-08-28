@@ -4,8 +4,9 @@
   <thead>
     <tr>
       <th>Collection Title</th>
-      <th>Views</th>
-      <th>Downloads</th>
+      <th>Works In This Collection Views</th>
+      <th>File Set Downloads In This Collection</th>
+      <th>Collection Page Views</th>
     </tr>
   </thead>
   <tbody>
@@ -15,7 +16,14 @@
         <tr>
           <td><%= link_to document, admin_analytics_collection_report_path(collection[0]) %></td>
           <td><%= collection[1] %></td>
-          <td></td>
+          <td>
+              <% match = @top_downloads.detect {|a,b| a == collection[0]} %>
+            <%= match ? match[1] : 0 %>
+          </td>
+          <td>
+              <% match = @top_collection_pages.detect {|a,b| a == collection[0]} %>
+              <%= match ? match[1] : 0 %>
+          </td>
         </tr>
       <% end %>
     <% end %>

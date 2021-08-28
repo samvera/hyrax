@@ -47,8 +47,8 @@
           <%= render "hyrax/admin/analytics/date_range_form", redirect_path: hyrax.admin_analytics_collection_report_path(@document.id) %>
           <br>
           <h3 class="text-center"> Collection Report</h3>
-          <%= render "hyrax/admin/analytics/summary" %>
-          <%= render 'hyrax/admin/analytics/monthly_activity' %>
+          <%= render 'summary' %>
+          <%= render 'monthly_summary' %>
          
           <% if @files&.any? %>
            <%= render "collection_files" %>

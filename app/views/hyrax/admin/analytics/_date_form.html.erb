@@ -1,8 +1,0 @@
-<%= form_for "analytics_filters", url: hyrax.admin_stats_path, method: "GET" do |f| %>
-  <input type='hidden' name='locale' value="<%= params[:locale] %>" />
-  <%= f.label "Start *" %>
-  <input type="date" name="analytics_filters[start_date]" value="<%= @presenter.analytics_filters[:start_date] %>" placeholder="yyyy-mm-dd"></input>
-  <%= f.label "End" %>
-  <input type="date" name="analytics_filters[end_date]" value="<%= @presenter.analytics_filters[:end_date] %>" placeholder="<%= Time.zone.today %>"></input>
-  <%= f.submit "Load Analytics" %>
-<%- end %>

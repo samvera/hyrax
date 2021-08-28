@@ -19,7 +19,7 @@
       <% @file_sizes.push(f.file_size) %>
       <tr>
         <td><%= f %></td>
-        <td><%= Hyrax::Analytics.downloads_for_file(f.id) %></td>
+        <td><%= Hyrax::Analytics.downloads_for_id(@document.id).all %></td>
       </tr>
     <% end %>
   <% end %>
