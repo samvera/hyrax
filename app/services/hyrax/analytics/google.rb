@@ -130,9 +130,19 @@ module Hyrax
 
         # Configure analytics_start_date in ENV file
         def default_date_range
-          "#{Hyrax.config.analytics_start_date},#{Time.zone.today}"
+          "#{Hyrax.config.analytics_start_date},#{Time.zone.today + 1.day}"
         end
 
+        def pageviews_for_id(id, date = default_date_range)
+          date = date.split(",")
+          PageviewsDaily.by_id(profile, date[0], date[1], id)
+        end
+
+        def downloads_for_id(id, date = default_date_range)
+          date = date.split(",")
+          DownloadsDaily.by_id(profile, date[0], date[1], id)
+        end
+        
         def downloads(ref = 'works', date = default_date_range)
           date = date.split(",")
           if ref == 'work-in-collection-download'
@@ -160,10 +170,7 @@ module Hyrax
           Downloads.file_downloads(profile, date[0], date[1], file)
         end
 
-        def downloads_for_id(id, date = default_date_range)
-          date = date.split(",")
-          Downloads.by_id(profile, date[0], date[1], id)
-        end
+
 
         # Filter top pages by either "works" or "collections"
         def top_pages(ref = 'work-view', date = default_date_range)

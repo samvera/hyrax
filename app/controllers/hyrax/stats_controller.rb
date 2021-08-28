@@ -7,13 +7,9 @@ module Hyrax
     before_action :build_breadcrumbs, only: [:work, :file]
 
     def work
-      # @stats = Hyrax::WorkUsage.new(params[:id])
       @document = ::SolrDocument.find(params[:id])
-      # path = main_app.send("hyrax_#{@document._source['has_model_ssim'].first.underscore}s_path", params[:id]).sub('.', '/')
-      # path = request.base_url + path if Hyrax.config.analytics_provider == 'matomo'
-      @pageviews = Hyrax::Analytics.pageviews_for_id(params[:id])
-      # @pageviews = Hyrax::Analytics.pageviews_for_url(path)
-      @downloads = Hyrax::Analytics.downloads_for_id(params[:id])
+      @pageviews = Hyrax::Analytics.pageviews_for_id(@document.id)
+      @downloads = Hyrax::Analytics.downloads_for_id(@document.id)
     end
 
     def file
