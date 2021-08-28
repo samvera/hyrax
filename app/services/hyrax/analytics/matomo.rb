@@ -69,6 +69,13 @@ module Hyrax
           Hyrax::Analytics::Results.new(results)
         end
 
+        def pageviews_for_id(id, date = default_date_range)
+          segment = "eventAction==work-view;eventName==#{id}"
+          additional_params = { segment: segment }
+          response = api_params('Events.getAction', 'day', date, additional_params)
+          results_array(response, 'nb_events')
+        end
+
         def downloads_for_id(id, date = default_date_range)
           segment = "eventAction==file-set-in-work-download;eventName==#{id}"
           additional_params = { segment: segment }
