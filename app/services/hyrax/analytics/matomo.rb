@@ -126,10 +126,10 @@ module Hyrax
           results_array(response, 'nb_uniq_pageviews')
         end
 
-        def unique_visitors_for_url(url, date = default_date_range)
-          additional_params = { pageUrl: url }
-          response = api_params('Actions.getPageUrl', 'day', date, additional_params)
-          results_array(response, 'nb_uniq_visitors')
+        def unique_visitors_for_id(url, date = default_date_range)
+          # additional_params = { pageUrl: url }
+          # response = api_params('Actions.getPageUrl', 'day', date, additional_params)
+          # results_array(response, 'nb_uniq_visitors')
         end
 
         def new_visitors(period = 'month', date = 'today')

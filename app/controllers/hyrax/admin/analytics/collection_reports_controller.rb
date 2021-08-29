@@ -25,12 +25,10 @@ module Hyrax
 
         def show
           @document = ::SolrDocument.find(params[:id])
-          @path = collection_path(params[:id])
           return unless Hyrax.config.analytics == true
-
-          @path = request.base_url + @path if Hyrax.config.analytics_provider == 'matomo'
-          @pageviews = Hyrax::Analytics.pageviews_for_url(@path)
-          @uniques = Hyrax::Analytics.unique_visitors_for_url(@path)
+          # @path = request.base_url + @path if Hyrax.config.analytics_provider == 'matomo'
+          @pageviews = Hyrax::Analytics.pageviews_for_id(@document.id)
+          @uniques = Hyrax::Analytics.unique_visitors_for_id(@document.id)
           @downloads = Hyrax::Analytics.downloads_for_collection_id(@document.id)
           respond_to do |format|
             format.html
@@ -48,17 +46,13 @@ module Hyrax
 
         def export_data
           csv_row = CSV.generate do |csv|
-            # insert the headers
-            csv << ["Name", "ID", "Collection Page Views", "View of Works In Collection", "Downloads of Works In Collection"]
-            # run all over the transactions
+            csv << ["Name", "ID", "View of Works In Collection", "Downloads of Works In Collection", "Collection Page Views"]
             @top_collections.each do |collection|
-              # Check to make sure this collection exists as a Solr document
               document = ::SolrDocument.find(collection[0]) rescue document = nil
               if document 
-                # Look for a matching collection ID in the top downloads report (to get the downloads count)
-                match = @top_downloads.detect {|a,b| a == collection[0]}
-                # each of transactions is inserted into the csv file
-                csv << [document, collection[0], collection[1], match[1] || 0]
+                download_match = @top_downloads.detect {|a,b| a == collection[0]}
+                collection_match = @top_collection_pages.detect {|a,b| a == collection[0]}
+                csv << [document, collection[0], collection[1], download_match[1], collection_match[1] || 0]
               end
             end
           end
