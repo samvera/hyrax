@@ -54,8 +54,9 @@ module Hyrax
             @top_works.each do |work|
               document = ::SolrDocument.find(work[0]) rescue document = nil
               if document 
-                match = @top_works.detect {|a,b| a == work[0]}
-                csv << [document, work[0], work[1], match[1] || 0]
+                match = @top_downloads.detect {|a,b| a == work[0]}
+                download_count = match ? match[1] : 0
+                csv << [document, work[0], work[1], download_count]
               end
             end
           end
