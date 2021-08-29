@@ -8,7 +8,11 @@ module Hyrax
         metrics :total_events
         dimensions :date, :event_category, :event_action
         
+        filter(:file_set_download) { |_event_action| matches(:eventAction, 'file-set-download') }
         filter(:file_set_in_work_downloads) { |_event_action| matches(:eventAction, 'file-set-in-work-download') }
+        filter(:file_set_in_collection_download) { |_event_action| matches(:eventAction, 'file-set-in-collection-download') }
+        filter(:work_in_collection_download) { |_event_action| matches(:eventAction, 'work-in-collection-download') }
+        
         filter :for_id, &->(id) { contains(:eventLabel, id) }
   
         # returns daily number of downloads for a work
@@ -16,6 +20,25 @@ module Hyrax
           response = DownloadsDaily.results(profile,
             start_date: start_date,
             end_date: end_date).for_id(id).file_set_in_work_downloads
+          dates = (start_date.to_date...end_date.to_date)
+          results_array(response, dates)
+        end
+
+        # returns daily number of downloads for a collection
+        def self.by_collection_id(profile, start_date, end_date, id)
+          response = DownloadsDaily.results(profile,
+            start_date: start_date,
+            end_date: end_date).for_id(id).file_set_in_collection_download
+          dates = (start_date.to_date...end_date.to_date)
+          results_array(response, dates)
+        end
+
+        def self.downloads(profile, start_date, end_date, ref)
+          ref = ref.underscore
+          results = []
+          response = DownloadsDaily.results(profile,
+            start_date: start_date,
+            end_date: end_date).send(ref)
           dates = (start_date.to_date...end_date.to_date)
           results_array(response, dates)
         end

@@ -29,17 +29,6 @@
               <p>Last updated on <b><%= @document.modified_date.strftime("%B %d, %Y") %></b></p>
               <p>Visibility: <b><%= @document.read_groups.join(",") %></b></p>
             </div>
-            <div class="col-xs-12 col-md-2">
-               <div class="btn-group pull-right">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Export <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu">
-                <li><%= link_to "Pageviews", admin_analytics_collection_report_path(@document.id, format: :csv, format_data: 'pageviews', disposition: "attachment") %></li>
-                <li><%= link_to "Unique Visitors", admin_analytics_collection_report_path(@document.id, format: :csv, format_data: 'uniques', disposition: "attachment") %></li>
-              </ul>
-          </div>
-            </div>
           </div>
           <hr />
 

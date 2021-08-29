@@ -26,10 +26,8 @@ module Hyrax
         end
 
         def show
-          @path = main_app.send("hyrax_#{@document._source['has_model_ssim'].first.underscore}s_path", params[:id]).sub('.', '/')
-          @path = request.base_url + @path if Hyrax.config.analytics_provider == 'matomo'
-          @pageviews = Hyrax::Analytics.pageviews_for_url(@path)
-          @uniques = Hyrax::Analytics.unique_visitors_for_url(@path)
+          @pageviews = Hyrax::Analytics.pageviews_for_id(@document.id)
+          @uniques = Hyrax::Analytics.unique_visitors_for_id(@document.id)
           @downloads = Hyrax::Analytics.downloads_for_id(@document.id)
           @files = paginate(@document._source["file_set_ids_ssim"], rows: 5)
           respond_to do |format|
@@ -52,16 +50,11 @@ module Hyrax
 
         def export_data
           csv_row = CSV.generate do |csv|
-            # insert the headers
             csv << ["Name", "ID", "Work Page Views", "Total Downloads of File Sets In Work"]
-            # run through the transactions
             @top_works.each do |work|
-              # Check to make sure this work exists as a Solr document
               document = ::SolrDocument.find(work[0]) rescue document = nil
               if document 
-                # Look for a matching collection ID in the top downloads report (to get the downloads count)
                 match = @top_works.detect {|a,b| a == work[0]}
-                # each of transactions is inserted into the csv file
                 csv << [document, work[0], work[1], match[1] || 0]
               end
             end
