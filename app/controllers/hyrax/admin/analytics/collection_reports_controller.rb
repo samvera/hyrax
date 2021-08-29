@@ -51,8 +51,10 @@ module Hyrax
               document = ::SolrDocument.find(collection[0]) rescue document = nil
               if document 
                 download_match = @top_downloads.detect {|a,b| a == collection[0]}
+                download_count = download_match ? download_match[1] : 0
                 collection_match = @top_collection_pages.detect {|a,b| a == collection[0]}
-                csv << [document, collection[0], collection[1], download_match[1], collection_match[1] || 0]
+                collection_count = collection_match ? collection_match[1] : 0
+                csv << [document, collection[0], collection[1], download_count, collection_count]
               end
             end
           end
