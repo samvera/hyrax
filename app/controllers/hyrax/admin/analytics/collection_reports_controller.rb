@@ -14,9 +14,10 @@ module Hyrax
           @pageviews = Hyrax::Analytics.pageviews('collection-page-view')
           @work_page_views = Hyrax::Analytics.pageviews('work-in-collection-view')
           @downloads = Hyrax::Analytics.downloads('work-in-collection-download')
-          @top_collections = paginate(Hyrax::Analytics.top_pages('work-in-collection-view'), rows: 10)
-          @top_downloads = Hyrax::Analytics.top_downloads('work-in-collection-download')
-          @top_collection_pages = Hyrax::Analytics.top_pages('collection-page-view')
+          @all_top_collections = Hyrax::Analytics.top_pages('work-in-collection-view', "#{@start_date},#{@end_date}")
+          @top_collections = paginate(@all_top_collections, rows: 10)
+          @top_downloads = Hyrax::Analytics.top_downloads('work-in-collection-download', "#{@start_date},#{@end_date}")
+          @top_collection_pages = Hyrax::Analytics.top_pages('collection-page-view', "#{@start_date},#{@end_date}")
           respond_to do |format|
             format.html
             format.csv { export_data }
@@ -44,22 +45,26 @@ module Hyrax
           @month_names = 12.downto(1).map { |n| DateTime::MONTHNAMES.drop(1)[(Time.zone.today.month - n) % 12] }.reverse
         end
 
+        # rubocop:disable Metrics/MethodLength
         def export_data
           csv_row = CSV.generate do |csv|
             csv << ["Name", "ID", "View of Works In Collection", "Downloads of Works In Collection", "Collection Page Views"]
-            @top_collections.each do |collection|
-              document = ::SolrDocument.find(collection[0]) rescue document = nil
-              if document 
-                download_match = @top_downloads.detect {|a,b| a == collection[0]}
-                download_count = download_match ? download_match[1] : 0
-                collection_match = @top_collection_pages.detect {|a,b| a == collection[0]}
-                collection_count = collection_match ? collection_match[1] : 0
-                csv << [document, collection[0], collection[1], download_count, collection_count]
-              end
+            @all_top_collections.each do |collection|
+              document = begin
+                           ::SolrDocument.find(collection[0])
+                         rescue
+                           "Collection deleted"
+                         end
+              download_match = @top_downloads.detect { |a, _b| a == collection[0] }
+              download_count = download_match ? download_match[1] : 0
+              collection_match = @top_collection_pages.detect { |a, _b| a == collection[0] }
+              collection_count = collection_match ? collection_match[1] : 0
+              csv << [document, collection[0], collection[1], download_count, collection_count]
             end
           end
           send_data csv_row, filename: "#{@start_date}-#{@end_date}-collections.csv"
-        end         
+        end
+        # rubocop:enable Metrics/MethodLength
 
         def paginate(results_array, rows: 2)
           return if results_array.nil?

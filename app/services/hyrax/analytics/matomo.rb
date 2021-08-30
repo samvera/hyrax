@@ -96,10 +96,10 @@ module Hyrax
             filter_column: 'Events_EventAction',
             filter_pattern: ref.to_s,
             filter_sort_column: 'nb_events',
-            filter_sort_order: 'desc',
+            filter_sort_order: 'desc'
           }
           response = api_params('Events.getName', 'range', date, additional_params)
-          response.map { |res| [res['Events_EventName'], res['nb_events']] } 
+          response.map { |res| [res['Events_EventName'], res['nb_events']] }
         end
 
         def top_pages(ref, date = default_date_range)
@@ -108,7 +108,7 @@ module Hyrax
             filter_column: 'Events_EventAction',
             filter_pattern: ref.to_s,
             filter_sort_column: 'nb_events',
-            filter_sort_order: 'desc',
+            filter_sort_order: 'desc'
           }
           response = api_params('Events.getName', 'range', date, additional_params)
 
@@ -203,4 +203,3 @@ module Hyrax
     end
   end
 end
-

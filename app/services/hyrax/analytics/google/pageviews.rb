@@ -23,15 +23,15 @@ module Hyrax
         def self.page_list(profile, start_date, end_date, ref)
           ref = ref.underscore
           results = []
-          response = Pageviews.results(profile,
+          Pageviews.results(profile,
             start_date: start_date,
             end_date: end_date,
             sort: ['-totalEvents']).send(ref).each do |result|
               results.push([result.eventLabel, result.totalEvents.to_i])
             end
-          return results
+          results
         end
-                
+
         def self.results_array(response)
           results = []
           response.to_a.each do |result|
@@ -39,7 +39,6 @@ module Hyrax
           end
           Hyrax::Analytics::Results.new(results)
         end
-        
       end
     end
   end

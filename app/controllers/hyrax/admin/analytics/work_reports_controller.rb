@@ -14,9 +14,10 @@ module Hyrax
 
           @pageviews = Hyrax::Analytics.pageviews('work-view')
           @downloads = Hyrax::Analytics.downloads('file-set-download')
-          @top_works = paginate(Hyrax::Analytics.top_pages('work-view'), rows: 10)
-          @top_downloads = Hyrax::Analytics.top_downloads('file-set-in-work-download')
-          @top_file_set_downloads = paginate(Hyrax::Analytics.top_downloads('file-set-download'), rows: 10)
+          @all_top_works = Hyrax::Analytics.top_pages('work-view', "#{@start_date},#{@end_date}")
+          @top_works = paginate(@all_top_works, rows: 10)
+          @top_downloads = Hyrax::Analytics.top_downloads('file-set-in-work-download', "#{@start_date},#{@end_date}")
+          @top_file_set_downloads = paginate(Hyrax::Analytics.top_downloads('file-set-download', "#{@start_date},#{@end_date}"), rows: 10)
           models = Hyrax.config.curation_concerns.map { |m| "\"#{m}\"" }
           @works_count = ActiveFedora::SolrService.query("has_model_ssim:(#{models.join(' OR ')})", fl: "id").count
           respond_to do |format|
@@ -51,13 +52,15 @@ module Hyrax
         def export_data
           csv_row = CSV.generate do |csv|
             csv << ["Name", "ID", "Work Page Views", "Total Downloads of File Sets In Work"]
-            @top_works.each do |work|
-              document = ::SolrDocument.find(work[0]) rescue document = nil
-              if document 
-                match = @top_downloads.detect {|a,b| a == work[0]}
-                download_count = match ? match[1] : 0
-                csv << [document, work[0], work[1], download_count]
-              end
+            @all_top_works.each do |work|
+              document = begin
+                           ::SolrDocument.find(work[0])
+                         rescue
+                           "Work deleted"
+                         end
+              match = @top_downloads.detect { |a, _b| a == work[0] }
+              download_count = match ? match[1] : 0
+              csv << [document, work[0], work[1], download_count]
             end
           end
           send_data csv_row, filename: "#{@start_date}-#{@end_date}-works.csv"
@@ -71,7 +74,6 @@ module Hyrax
           current_page = page > total_pages ? total_pages : page
           Kaminari.paginate_array(results_array, total_count: results_array.size).page(current_page).per(rows)
         end
-
       end
     end
   end

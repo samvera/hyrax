@@ -12,9 +12,12 @@
   <tbody>
     <% @top_collections.each do |collection| %>
       <% document = ::SolrDocument.find(collection[0]) rescue document = nil %>
-      <% if document %>
         <tr>
+        <% if document %>
           <td><%= link_to document, admin_analytics_collection_report_path(collection[0]) %></td>
+        <% else %>
+          <td><i>Collection deleted</i></td>
+        <% end %>
           <td><%= collection[1] %></td>
           <td>
               <% match = @top_downloads.detect {|a,b| a == collection[0]} %>
@@ -25,7 +28,6 @@
               <%= match ? match[1] : 0 %>
           </td>
         </tr>
-      <% end %>
     <% end %>
   </tbody>
 </table>

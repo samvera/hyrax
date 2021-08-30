@@ -13,17 +13,19 @@
     <tbody>
       <% @top_works.each do |work| %>
         <% document = ::SolrDocument.find(work[0]) rescue document = nil %>
-        <% if document %>
           <tr>
+           <% if document %>
             <td><%= link_to document, admin_analytics_work_report_path(work[0]) %></td>
+           <% else %>
+            <td><i>Work deleted</i></td>
+           <% end %>
             <td><%= work[0] %></td>
             <td><%= work[1] %></td>
             <td>
               <% match = @top_downloads.detect {|a,b| a == work[0]} %>
               <%= match ? match[1] : 0 %>
             </td>
-          </tr>
-        <% end %>
+          </tr>       
       <% end %>
     </tbody>
   </table>
