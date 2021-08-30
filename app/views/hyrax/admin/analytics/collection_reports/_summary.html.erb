@@ -18,7 +18,7 @@
   <tbody>
     <% if @pageviews %>
       <tr>
-        <td><b>Collection Page Views</b></td>
+        <td><b>Collection Home Page Views</b></td>
         <td><%= @pageviews.range(@start_date.to_date, @end_date.to_date) %></td>
         <td><%= @pageviews.day %></td>
         <td><%= @pageviews.week %></td>
@@ -29,7 +29,7 @@
     <% end %>
     <% if @work_page_views %>
       <tr>
-        <td><b>Works in This Collection Views</b></td>
+        <td><b>Views of Works</b></td>
         <td><%= @work_page_views.range(@start_date.to_date, @end_date.to_date) %></td>
         <td><%= @work_page_views.day %></td>
         <td><%= @work_page_views.week %></td>
@@ -40,7 +40,7 @@
     <% end %>
     <% if @downloads %>
       <tr>
-        <td><b>File Set Downloads In This Collection</b></td>
+        <td><b>Downloads of Works</b></td>
         <td><%= @downloads.range(@start_date.to_date, @end_date.to_date) %></td>
         <td><%= @downloads.day %></td>
         <td><%= @downloads.week %></td>
