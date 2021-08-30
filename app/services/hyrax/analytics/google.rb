@@ -147,12 +147,12 @@ module Hyrax
           date = date.split(",")
           DownloadsDaily.by_collection_id(profile, date[0], date[1], id)
         end
-               
+
         def top_downloads(ref = 'file-set-download', date = default_date_range)
           date = date.split(",")
           Downloads.send('download_list', profile, date[0], date[1], ref)
         end
-        
+
         def top_pages(ref = 'work-view', date = default_date_range)
           date = date.split(",")
           Pageviews.send('page_list', profile, date[0], date[1], ref)
@@ -167,7 +167,7 @@ module Hyrax
           date = date.split(",")
           DownloadsDaily.send("downloads", profile, date[0], date[1], ref)
         end
-      
+
         def pageviews_for_url(path, date = default_date_range)
           date = date.split(",")
           path = path[/[^?]+/]
