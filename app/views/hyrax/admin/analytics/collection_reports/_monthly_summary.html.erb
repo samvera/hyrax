@@ -13,27 +13,28 @@
   <tbody>
   <% if @pageviews %>    
     <tr>
-      <td><b>Collection Page Views</b></td>
+      <td><b>Collection Home Page Views</b></td>
        <% @month_names.each do |name| %>
          <td><%= @pageviews.month(name.to_date) %></td>
        <% end %>
     </tr>
   <% end %>
-   <% if @downloads %>
-    <tr>
-      <td><b>File Set Downloads In This Collection</b></td>
-        <% @month_names.each do |name| %>
-         <td><%= @downloads.month(name.to_date) %></td>
-       <% end %>
-    </tr>
-  <% end %>
   <% if @work_page_views %>
     <tr>
-      <td><b>Works in This Collection Views</b></td>
+      <td><b>Views of Works</b></td>
         <% @month_names.each do |name| %>
          <td><%= @work_page_views.month(name.to_date) %></td>
        <% end %>
     </tr>
   <% end %>
+   <% if @downloads %>
+    <tr>
+      <td><b>Downloads of Works</b></td>
+        <% @month_names.each do |name| %>
+         <td><%= @downloads.month(name.to_date) %></td>
+       <% end %>
+    </tr>
+  <% end %>
+  
   </tbody>
 </table>

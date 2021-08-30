@@ -11,19 +11,19 @@
   </tr>
   </thead>
   <tbody>
-  <% if @downloads %>
+   <% if @pageviews %>    
     <tr>
-      <td><b>File Sets in Works Downloads</b></td>
-        <% @month_names.each do |name| %>
-         <td><%= @downloads.month(name.to_date) %></td>
+      <td><b>Page Views</b></td>
+       <% @month_names.each do |name| %>
+         <td><%= @pageviews.month(name.to_date) %></td>
        <% end %>
     </tr>
   <% end %>
-  <% if @pageviews %>    
+  <% if @downloads %>
     <tr>
-      <td><b>Views</b></td>
-       <% @month_names.each do |name| %>
-         <td><%= @pageviews.month(name.to_date) %></td>
+      <td><b>File Downloads</b></td>
+        <% @month_names.each do |name| %>
+         <td><%= @downloads.month(name.to_date) %></td>
        <% end %>
     </tr>
   <% end %>

@@ -12,8 +12,8 @@
     <%= content_tag :h2, "Work Analytics" %>
     <div class="alert alert-info">
       <span class="glyphicon glyphicon-signal large-icon"></span>
-      <%= content_tag :strong, pluralize(@pageviews.range(Time.zone.today-30.days, Time.zone.today), 'view') %> and
-      <%= content_tag :strong, pluralize(@downloads.range(Time.zone.today-30.days, Time.zone.today), 'download') %> in the <b>last 30 days</b>
+      <%= content_tag :strong, pluralize(@pageviews.range(Hyrax.config.analytics_start_date.to_date, Time.zone.today), 'total view') %> and
+      <%= content_tag :strong, pluralize(@downloads.range(Hyrax.config.analytics_start_date.to_date, Time.zone.today), 'download') %> 
     </div>
 
     <div class="stats-container">
