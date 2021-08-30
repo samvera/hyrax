@@ -146,7 +146,6 @@ Hyrax is available under [the Apache 2.0 license](LICENSE).
 gem install stack_car
 sc up --service app
 ```
-
 ## Deploy a new release
 
 ``` bash
@@ -155,3 +154,40 @@ sc deploy {staging | production} # deployes those tags to the server
 ```
 
 Releaese and Deployment are handled by the gitlab ci by default. See ops/deploy-app to deploy from locally, but note all Rancher install pull the currently tagged registry image
+
+### Installing Analytics
+
+Hyrax supports your choice of either Google Analytics or Matomo.  To enable analytics tracking and reporting features, follow the directions below.
+
+Enable Analytics Features
+
+In your .env file, set HYRAX_ANALYTICS to true, set either 'google' or 'matomo' for  HYRAX_ANALYTICS_PROVIDER, and set the date you would like reporting to start (ANALYTICS_START_DATE).  
+
+```
+HYRAX_ANALYTICS=true
+HYRAX_ANALYTICS_PROVIDER=google
+ANALYTICS_START_DATE=2021-08-21
+```
+
+If using google, you'll also need the following ENV variables:
+
+```
+GOOGLE_ANALYTICS_ID=UA-111111-1  # Universal ID (Currently Hyrax Analytics only works with Univeral (UA) accounts)
+GOOGLE_OAUTH_APP_NAME=  
+GOOGLE_OAUTHAPP_VERSION=
+GOOGLE_OAUTH_PRIVATE_KEY_PATH= # store the .p12 file in the root of your application
+GOOGLE_OAUTH_PRIVATE_KEY_SECRET=
+GOOGLE_OAUTH_CLIENT_EMAIL=
+```
+
+Add these ENV variables if using Matomo:
+
+```
+MATOMO_SITE_ID=
+MATOMO_BASE_URL=
+MATOMO_AUTH_TOKEN=
+``` 
+
+Analytics Features
+
+Once analytics is enabled, Hyrax will automatically install the JS tracking code.  Page views and downloads of a file set are recorded and sent to the selected analytics provider.  Admin users will have access to an expanded dashboard with details about how many vistors viewed a page, and how many visitors downloaded a file.  Easily find the top works by views, and most popular file downloads!
