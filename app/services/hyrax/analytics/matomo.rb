@@ -48,53 +48,51 @@ module Hyrax
 
         # Period Options = "day, week, month, year, range"
         # Date Format = "2021-01-01,2021-01-31"
-        # Date "magic keywords" = "today, yesterday, lastX (number), lastWeek, lastMonth or lastYear"
-        # Example: Last 6 weeks: period: week, date: last6
 
         def default_date_range
           "#{Hyrax.config.analytics_start_date},#{Time.zone.today}"
         end
 
-        def downloads(ref, date = default_date_range)
-          additional_params = { label: ref.to_s }
-          response = api_params('Events.getAction', 'day', date, additional_params).to_a
-          results = response.map { |res| [res[0].to_date, res[1].empty? ? 0 : res[1].first['nb_events']] }
-          Hyrax::Analytics::Results.new(results)
+        # Returns a total count of an event action over a date range
+        def total_events(action, date = default_date_range)
+          additional_params = { label: action }
+          response = api_params('Events.getAction', 'range', date, additional_params)
+          response&.first ? response.first["nb_events"] : 0
         end
 
-        def pageviews(ref, date = default_date_range)
-          additional_params = { label: ref.to_s }
-          response = api_params('Events.getAction', 'day', date, additional_params).to_a
-          results = response.map { |res| [res[0].to_date, res[1].empty? ? 0 : res[1].first['nb_events']] }
-          Hyrax::Analytics::Results.new(results)
+        # Returns a total count of an event action for an id over a date range
+        def total_events_for_id(id, action, date = default_date_range)
+          additional_params = {
+            flat: 1,
+            label: "#{id} - #{action}"
+          }
+          response = api_params('Events.getName', 'range', date, additional_params)
+          response&.first ? response.first["nb_events"] : 0
         end
 
-        def pageviews_for_id(id, date = default_date_range)
-          segment = "eventAction==work-view;eventName==#{id}"
-          additional_params = { segment: segment }
+        def daily_events(action, date = default_date_range)
+          additional_params = { label: action }
           response = api_params('Events.getAction', 'day', date, additional_params)
           results_array(response, 'nb_events')
         end
 
-        def downloads_for_id(id, date = default_date_range)
-          segment = "eventAction==file-set-in-work-download;eventName==#{id}"
-          additional_params = { segment: segment }
-          response = api_params('Events.getAction', 'day', date, additional_params)
+        # Pass in an action name and an id and get back the daily count of events for that id. [date, event_count]
+        def daily_events_for_id(id, action, date = default_date_range)
+          additional_params = {
+            flat: 1,
+            label: "#{id} - #{action}"
+          }
+          response = api_params('Events.getName', 'day', date, additional_params)
           results_array(response, 'nb_events')
         end
 
-        def downloads_for_collection_id(id, date = default_date_range)
-          segment = "eventAction==file-set-in-collection-download;eventName==#{id}"
-          additional_params = { segment: segment }
-          response = api_params('Events.getAction', 'day', date, additional_params)
-          results_array(response, 'nb_events')
-        end
-
-        def top_downloads(ref = 'work-in-collection-download', date = default_date_range)
+        #  Returns a list of the total of events by id in the format of [["id", event_count]]
+        def top_events(action, date = default_date_range)
           additional_params = {
             flat: '1',
             filter_column: 'Events_EventAction',
-            filter_pattern: ref.to_s,
+            filter_pattern: action.to_s,
+            filter_limit: '-1',
             filter_sort_column: 'nb_events',
             filter_sort_order: 'desc'
           }
@@ -102,23 +100,20 @@ module Hyrax
           response.map { |res| [res['Events_EventName'], res['nb_events']] }
         end
 
-        def top_pages(ref, date = default_date_range)
-          additional_params = {
-            flat: '1',
-            filter_column: 'Events_EventAction',
-            filter_pattern: ref.to_s,
-            filter_sort_column: 'nb_events',
-            filter_sort_order: 'desc'
-          }
-          response = api_params('Events.getName', 'range', date, additional_params)
-
-          response.map { |res| [res['Events_EventName'], res['nb_events']] }
-        end
-
-        def pageviews_for_url(url, date = default_date_range)
-          additional_params = { pageUrl: url }
-          response = api_params('Actions.getPageUrl', 'day', date, additional_params)
-          results_array(response, 'nb_hits')
+        # Filter the daily events by a specific action and get back the daily count of number of events.
+        # TODO(geezy): NOT IN USE BUT SAVING FOR POTENTIAL REFACTOR
+        def filter_by_action(action, response)
+          results = []
+          response.each do |result|
+            if result[1].empty?
+              results.push([result[0].to_date, 0])
+            elsif result[1].is_a?(Array)
+              result[1].each do |subtable|
+                results.push([result[0].to_date, subtable["nb_events"].to_i]) if subtable["label"] == action
+              end
+            end
+          end
+          Hyrax::Analytics::Results.new(results)
         end
 
         def unique_visitors(date = default_date_range)
@@ -169,15 +164,6 @@ module Hyrax
             end
           end
           Hyrax::Analytics::Results.new(results)
-        end
-
-        def results_array_with_ids(response, metric)
-          results = []
-          response.each do |result|
-            results.push([result['label'], result[metric]])
-          end
-
-          results.sort_by { |el| -el[1] }
         end
 
         def get(params)

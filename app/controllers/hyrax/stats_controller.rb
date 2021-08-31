@@ -8,8 +8,8 @@ module Hyrax
 
     def work
       @document = ::SolrDocument.find(params[:id])
-      @pageviews = Hyrax::Analytics.pageviews_for_id(@document.id)
-      @downloads = Hyrax::Analytics.downloads_for_id(@document.id)
+      @pageviews = Hyrax::Analytics.daily_events_for_id(@document.id, 'work-view')
+      @downloads = Hyrax::Analytics.daily_events_for_id(@document.id, 'file-set-in-work-download')
     end
 
     def file

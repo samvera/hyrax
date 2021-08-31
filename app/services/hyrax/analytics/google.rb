@@ -133,45 +133,22 @@ module Hyrax
           "#{Hyrax.config.analytics_start_date},#{Time.zone.today + 1.day}"
         end
 
-        def pageviews_for_id(id, date = default_date_range)
+        # The number of events by day for an action
+        def daily_events(action, date = default_date_range)
           date = date.split(",")
-          PageviewsDaily.by_id(profile, date[0], date[1], id)
+          EventsDaily.summary(profile, date[0], date[1], action)
         end
 
-        def downloads_for_id(id, date = default_date_range)
+        # The number of events by day for an action and ID
+        def daily_events_for_id(id, action, date = default_date_range)
           date = date.split(",")
-          DownloadsDaily.by_id(profile, date[0], date[1], id)
+          EventsDaily.by_id(profile, date[0], date[1], id, action)
         end
 
-        def downloads_for_collection_id(id, date = default_date_range)
+        # A list of events sorted by highest event count
+        def top_events(action, date = default_date_range)
           date = date.split(",")
-          DownloadsDaily.by_collection_id(profile, date[0], date[1], id)
-        end
-
-        def top_downloads(ref = 'file-set-download', date = default_date_range)
-          date = date.split(",")
-          Downloads.send('download_list', profile, date[0], date[1], ref)
-        end
-
-        def top_pages(ref = 'work-view', date = default_date_range)
-          date = date.split(",")
-          Pageviews.send('page_list', profile, date[0], date[1], ref)
-        end
-
-        def pageviews(ref = 'work-view', date = default_date_range)
-          date = date.split(",")
-          PageviewsDaily.send("pageviews", profile, date[0], date[1], ref)
-        end
-
-        def downloads(ref = 'work-in-collection-download', date = default_date_range)
-          date = date.split(",")
-          DownloadsDaily.send("downloads", profile, date[0], date[1], ref)
-        end
-
-        def pageviews_for_url(path, date = default_date_range)
-          date = date.split(",")
-          path = path[/[^?]+/]
-          Pageviews.page(profile, date[0], date[1], path)
+          Events.send('list', profile, date[0], date[1], action)
         end
 
         def unique_visitors(date = default_date_range); end
