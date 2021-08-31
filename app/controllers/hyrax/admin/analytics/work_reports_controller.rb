@@ -2,7 +2,7 @@
 module Hyrax
   module Admin
     module Analytics
-      class WorkReportsController < ApplicationController
+      class WorkReportsController < MyController
         include Hyrax::SingularSubresourceController
         include Hyrax::BreadcrumbsForWorksAnalytics
         before_action :set_defaults
@@ -19,7 +19,8 @@ module Hyrax
           @top_downloads = Hyrax::Analytics.top_downloads('file-set-in-work-download', "#{@start_date},#{@end_date}")
           @top_file_set_downloads = paginate(Hyrax::Analytics.top_downloads('file-set-download', "#{@start_date},#{@end_date}"), rows: 10)
           models = Hyrax.config.curation_concerns.map { |m| "\"#{m}\"" }
-          @works_count = ActiveFedora::SolrService.query("has_model_ssim:(#{models.join(' OR ')})", fl: "id").count
+          @works_count = managed_works_count
+          super
           respond_to do |format|
             format.html
             format.csv { export_data }
@@ -73,6 +74,10 @@ module Hyrax
           page = request.params[:page].nil? ? 1 : request.params[:page].to_i
           current_page = page > total_pages ? total_pages : page
           Kaminari.paginate_array(results_array, total_count: results_array.size).page(current_page).per(rows)
+        end
+
+        def managed_works_count
+          @managed_works_count = Hyrax::Works::ManagedWorksService.managed_works_count(scope: self)
         end
       end
     end
