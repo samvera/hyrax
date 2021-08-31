@@ -37,6 +37,8 @@ module Hyrax
         @collection_type = new_collection_type
         collection_type_gid
       end
+
+      after_destroy :destroy_user_pinned_collection
     end
 
     delegate(*Hyrax::CollectionType.settings_attributes, to: :collection_type)
@@ -98,6 +100,10 @@ module Hyrax
       files.sum
     end
 
+    def is_pinned?(user_id)
+      UserPinnedCollection.where(user_id: user_id, collection_id: id).first
+    end
+
     module ClassMethods
       # This governs which partial to draw when you render this type of object
       def _to_partial_path #:nodoc:
@@ -150,6 +156,10 @@ module Hyrax
     # Solr field name works use to index member ids
     def member_ids_field
       "member_ids_ssim"
+    end
+
+    def destroy_user_pinned_collection
+      UserPinnedCollection.where(collection_id: self.id).destroy_all
     end
 
     def destroy_permission_template
