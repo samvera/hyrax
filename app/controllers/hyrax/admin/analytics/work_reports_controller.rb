@@ -51,16 +51,19 @@ module Hyrax
 
         def export_data
           csv_row = CSV.generate do |csv|
-            csv << ["Name", "ID", "Work Page Views", "Total Downloads of File Sets In Work"]
+            csv << ["Name", "ID", "Work Page Views", "Total Downloads of File Sets In Work", "Collections"]
             @all_top_works.each do |work|
               document = begin
                            ::SolrDocument.find(work[0])
                          rescue
-                           "Work deleted"
+                           document = nil
                          end
+              title = document ? document : "Work deleted"
+              collections = document ? document.member_of_collections : nil
               match = @top_downloads.detect { |a, _b| a == work[0] }
               download_count = match ? match[1] : 0
-              csv << [document, work[0], work[1], download_count]
+              collections = 
+              csv << [title, work[0], work[1], download_count, collections ]
             end
           end
           send_data csv_row, filename: "#{@start_date}-#{@end_date}-works.csv"

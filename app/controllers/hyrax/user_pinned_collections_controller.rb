@@ -12,6 +12,7 @@ module Hyrax
     def destroy
       @pin = UserPinnedCollection.where(collection_id: params[:id], user_id: current_user.id).first
       @pin&.destroy
+      redirect_to dashboard_path
       respond_to do |format|
         format.json { head :no_content }
         format.html { redirect_to dashboard_path }
