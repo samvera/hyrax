@@ -2,22 +2,17 @@
 module Hyrax
   module Admin
     module Analytics
-      class CollectionReportsController < ApplicationController
-        include Hyrax::SingularSubresourceController
-        include Hyrax::BreadcrumbsForCollectionAnalytics
-        before_action :set_defaults
-        with_themed_layout 'dashboard'
-
+      class CollectionReportsController < AnalyticsController
         def index
           return unless Hyrax.config.analytics == true
 
-          @pageviews = Hyrax::Analytics.pageviews('collection-page-view')
-          @work_page_views = Hyrax::Analytics.pageviews('work-in-collection-view')
-          @downloads = Hyrax::Analytics.downloads('work-in-collection-download')
-          @all_top_collections = Hyrax::Analytics.top_pages('work-in-collection-view', "#{@start_date},#{@end_date}")
+          @pageviews = Hyrax::Analytics.daily_events('collection-page-view')
+          @work_page_views = Hyrax::Analytics.daily_events('work-in-collection-view')
+          @downloads = Hyrax::Analytics.daily_events('work-in-collection-download')
+          @all_top_collections = Hyrax::Analytics.top_events('work-in-collection-view', date_range)
           @top_collections = paginate(@all_top_collections, rows: 10)
-          @top_downloads = Hyrax::Analytics.top_downloads('work-in-collection-download', "#{@start_date},#{@end_date}")
-          @top_collection_pages = Hyrax::Analytics.top_pages('collection-page-view', "#{@start_date},#{@end_date}")
+          @top_downloads = Hyrax::Analytics.top_events('work-in-collection-download', date_range)
+          @top_collection_pages = Hyrax::Analytics.top_events('collection-page-view', date_range)
           respond_to do |format|
             format.html
             format.csv { export_data }
@@ -28,22 +23,17 @@ module Hyrax
           @document = ::SolrDocument.find(params[:id])
           return unless Hyrax.config.analytics == true
           # @path = request.base_url + @path if Hyrax.config.analytics_provider == 'matomo'
-          @pageviews = Hyrax::Analytics.pageviews_for_id(@document.id)
+          @pageviews = Hyrax::Analytics.daily_events_for_id(@document.id, 'collection-page-view')
+          @work_page_views = Hyrax::Analytics.daily_events_for_id(@document.id, 'work-in-collection-view')
           @uniques = Hyrax::Analytics.unique_visitors_for_id(@document.id)
-          @downloads = Hyrax::Analytics.downloads_for_collection_id(@document.id)
+          @downloads = Hyrax::Analytics.daily_events_for_id(@document.id, 'work-in-collection-download')
           respond_to do |format|
             format.html
             format.csv { export_data }
           end
         end
 
-        private
-
-        def set_defaults
-          @start_date = params[:start_date] || Time.zone.today - 1.month
-          @end_date = params[:end_date] || Time.zone.today + 1.day
-          @month_names = 12.downto(1).map { |n| DateTime::MONTHNAMES.drop(1)[(Time.zone.today.month - n) % 12] }.reverse
-        end
+       private
 
         # rubocop:disable Metrics/MethodLength
         def export_data
@@ -65,15 +55,6 @@ module Hyrax
           send_data csv_row, filename: "#{@start_date}-#{@end_date}-collections.csv"
         end
         # rubocop:enable Metrics/MethodLength
-
-        def paginate(results_array, rows: 2)
-          return if results_array.nil?
-
-          total_pages = (results_array.size.to_f / rows.to_f).ceil
-          page = request.params[:page].nil? ? 1 : request.params[:page].to_i
-          current_page = page > total_pages ? total_pages : page
-          Kaminari.paginate_array(results_array, total_count: results_array.size).page(current_page).per(rows)
-        end
       end
     end
   end
