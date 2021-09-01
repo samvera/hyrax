@@ -4,7 +4,6 @@ module Hyrax
     include Hyrax::CollectionsControllerBehavior
 
     before_action :authenticate_user!
-    before_action :ensure_manager!, except: [:show]
     load_and_authorize_resource
     before_action :ensure_viewer!, only: [:show]
 
@@ -104,13 +103,6 @@ module Hyrax
 
     def update_referer
       hyrax.edit_admin_admin_set_path(admin_set_id) + (params[:referer_anchor] || '')
-    end
-
-    def ensure_manager!
-      # TODO: Review for possible removal.  Doesn't appear to apply anymore.
-      # Even though the user can view this admin set, they may not be able to view
-      # it on the admin page.
-      authorize! :manage_any, Hyrax::AdministrativeSet
     end
 
     def ensure_viewer!
