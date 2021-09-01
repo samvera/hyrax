@@ -42,10 +42,14 @@ class AdminSet < ActiveFedora::Base
   after_destroy :destroy_permission_template
 
   def self.default_set?(id)
+    Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
+                     "Instead, use the same method in 'Hyrax::AdminSetCreateService.default_admin_set?(id:)'.")
     Hyrax::AdminSetCreateService.default_admin_set?(id: id)
   end
 
   def default_set?
+    Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
+                     "Instead, use the same method in 'Hyrax::AdminSetCreateService.default_admin_set?(id:)'.")
     self.class.default_set?(id)
   end
 

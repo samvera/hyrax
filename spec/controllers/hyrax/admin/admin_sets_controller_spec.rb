@@ -137,13 +137,16 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
       end
 
       context "when it's successful" do
-        let(:service) do
-          lambda do |admin_set:, **_kargs|
-            admin_set.id = 123
-            # https://github.com/samvera/active_fedora/issues/1251
-            allow(admin_set).to receive(:persisted?).and_return(true)
-            true
-          end
+        let(:service) { double Hyrax::AdminSetCreateService }
+        let(:updated_admin_set) do
+          FactoryBot.valkyrie_create(:hyrax_admin_set, id: '123',
+                                                       title: ['Test title'])
+        end
+
+        before do
+          allow(service).to receive(:call!).with(admin_set: anything, creating_user: user)
+                                           .and_return(updated_admin_set)
+          allow(updated_admin_set).to receive(:persisted?).and_return(true)
         end
 
         it 'creates admin set' do
@@ -151,12 +154,16 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
                                                description: 'test description',
                                                workflow_name: 'default' } }
           admin_set = assigns(:admin_set)
-          expect(response).to redirect_to(edit_admin_admin_set_path(admin_set.id.to_s))
+          expect(response).to redirect_to(edit_admin_admin_set_path(admin_set))
         end
       end
 
       context "when it fails" do
-        let(:service) { ->(**_kargs) { false } }
+        let(:service) { double Hyrax::AdminSetCreateService }
+        before do
+          allow(service).to receive(:call!).with(admin_set: anything, creating_user: user)
+                                           .and_raise(RuntimeError)
+        end
 
         it 'shows the new form' do
           post :create, params: { admin_set: { title: 'Test title',

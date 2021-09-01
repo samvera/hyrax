@@ -112,9 +112,11 @@ module Hyrax
     end
 
     def create_admin_set
-      # TODO: Should be able to remove the valkryie_resource check when create/edit form is updated
-      admin_set = @admin_set.respond_to?(:valkyrie_resource) ? @admin_set.valkyrie_resource : @admin_set
-      admin_set_create_service.call(admin_set: admin_set, creating_user: current_user)
+      updated_admin_set = admin_set_create_service.call!(admin_set: admin_set_resource, creating_user: current_user)
+      update_admin_set(updated_admin_set)
+      true
+    rescue RuntimeError
+      false
     end
 
     def setup_form
@@ -158,7 +160,19 @@ module Hyrax
     end
 
     def admin_set_id
-      @admin_set&.id.to_s
+      @admin_set&.id&.to_s
+    end
+
+    def admin_set_resource
+      @admin_set.respond_to?(:valkyrie_resource) ? @admin_set.valkyrie_resource : @admin_set
+    end
+
+    def update_admin_set(updated_admin_set)
+      @admin_set = if @admin_set.respond_to?(:valkyrie_resource)
+                     Wings::ActiveFedoraConverter.convert(resource: updated_admin_set)
+                   else
+                     updated_admin_set
+                   end
     end
   end
 end
