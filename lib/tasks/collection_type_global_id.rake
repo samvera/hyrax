@@ -2,7 +2,7 @@
 namespace :hyrax do
   namespace :collections do
     desc 'Update CollectionType global id references for Hyrax 3.0.0'
-    task :update_collection_type_global_ids do
+    task update_collection_type_global_ids: :environment do
       puts 'Updating collection -> collection type GlobalId references.'
 
       count = 0
