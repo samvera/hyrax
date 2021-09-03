@@ -5,7 +5,8 @@ module Hyrax
       class AnalyticsController < ApplicationController
         include Hyrax::SingularSubresourceController
         include Hyrax::BreadcrumbsForWorksAnalytics
-        before_action :set_defaults
+        before_action :set_months
+        before_action :set_date_range
         before_action :set_document, only: [:show]
         with_themed_layout 'dashboard'
 
@@ -13,10 +14,13 @@ module Hyrax
           @document = ::SolrDocument.find(params[:id])
         end
 
-        def set_defaults
+        def set_months
+          @month_names = 12.downto(1).map { |n| DateTime::MONTHNAMES.drop(1)[(Time.zone.today.month - n) % 12] }.reverse
+        end
+
+        def set_date_range
           @start_date = params[:start_date] || Time.zone.today - 1.month
           @end_date = params[:end_date] || Time.zone.today + 1.day
-          @month_names = 12.downto(1).map { |n| DateTime::MONTHNAMES.drop(1)[(Time.zone.today.month - n) % 12] }.reverse
         end
 
         def date_range

@@ -14,7 +14,7 @@
         <div class="panel-body">
           <h2>Activity
           <div class="btn-group pull-right">
-            <%= link_to "Export", admin_analytics_collection_reports_path(format: :csv, disposition: "attachment"), class: "btn btn-default" %>
+            <%= link_to "Export", admin_analytics_collection_reports_path(start_date: @start_date, end_date: @end_date, format: :csv, disposition: "attachment"), class: "btn btn-default" %>
           </div></h2>
           <div class="panel panel-default">
             <div class="panel-heading">Customize Report</div>

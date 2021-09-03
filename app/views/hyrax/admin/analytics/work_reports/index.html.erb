@@ -10,11 +10,15 @@
 
     <% if Hyrax.config.analytics == true %>
       <div class="panel panel-default">
-        <div class="panel-heading">The repository contains <b><%= @works_count %> works</b>, which collectively have had <b><%= @pageviews.all %> views</b> and <b><%= @downloads.all %> downloads</b>.</div>
+      <% if current_user.ability.admin? %>
+        <div class="panel-heading"><b><%= @works_count %> works</b> in this repository which collectively have had <b><%= @pageviews.all if @pageviews %> views</b> and <b><%= @downloads.all if @downloads %> downloads</b>.</div>
+      <% else %>
+        <div class="panel-heading">You have access to <b><%= @works_count %> works</b>.</div>
+      <% end %>
         <div class="panel-body">
           <h2>Activity
           <div class="btn-group pull-right">
-            <%= link_to "Export", admin_analytics_work_reports_path(format: :csv, disposition: "attachment"), class: "btn btn-default" %>
+            <%= link_to "Export", admin_analytics_work_reports_path(start_date: @start_date, end_date: @end_date, format: :csv, disposition: "attachment"), class: "btn btn-default" %>
           </div></h2>
           </h2>
 
@@ -23,6 +27,7 @@
             <div class="panel-body">
               <%= render "hyrax/admin/analytics/date_range_form", redirect_path: hyrax.admin_analytics_work_reports_path %>
               <hr />
+              <% if current_user.ability.admin? %>
               <div class="row text-center">
                 <div class="nav nav-pills btn-group" role="group">
                   <a button id='summary-btn' class="btn btn-primary nav-link" type="button" href="#summary" data-toggle="pill">
@@ -43,6 +48,7 @@
                   <%= render "monthly_summary" %>
                 </div>
               </div>
+              <% end %>
 
               <% if @top_works %>
                 <div><%= render 'top_works' %></div>
