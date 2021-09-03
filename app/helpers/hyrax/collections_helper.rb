@@ -120,6 +120,24 @@ module Hyrax
       single_item_action_form_fields(form, document, 'remove')
     end
 
+    ##
+    # @param [Object] collection
+    def collection_type_label_for(collection:)
+      case collection
+      when Valkyrie::Resource
+        CollectionType
+          .find_by_gid!(collection.collection_type_gid)
+          .title
+      else
+        collection.collection_type.title
+      end
+    end
+
+    ##
+    # @note this helper is primarily intended for use with blacklight facet
+    #   fields. it assumes we index a `collection_type_gid` and the helper
+    #   can be passed as as a `helper_method:` to `add_facet_field`.
+    #
     # @param collection_type_gid [String] The gid of the CollectionType to be looked up
     # @return [String] The CollectionType's title if found, else the gid
     def collection_type_label(collection_type_gid)
