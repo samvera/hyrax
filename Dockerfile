@@ -1,6 +1,5 @@
-ARG RUBY_VERSION=2.7.2
-# lock at alpine3.12 because 3.13 has dns resolver problems
-FROM ruby:$RUBY_VERSION-alpine3.12 as hyrax-base
+ARG RUBY_VERSION=2.7.4
+FROM ruby:$RUBY_VERSION-alpine3.14 as hyrax-base
 
 ARG DATABASE_APK_PACKAGE="postgresql-dev"
 ARG EXTRA_APK_PACKAGES="git"
