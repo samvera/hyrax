@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Hyrax
-  module CollectionsHelper
+  module CollectionsHelper # rubocop:disable Metrics/ModuleLength
     ##
     # @since 3.1.0
     # @return [Array<SolrDocument>]
@@ -121,7 +121,7 @@ module Hyrax
     end
 
     ##
-    # @param [Object] collection
+    # @param collection [Object]
     def collection_type_label_for(collection:)
       case collection
       when Valkyrie::Resource
@@ -130,6 +130,51 @@ module Hyrax
           .title
       else
         collection.collection_type.title
+      end
+    end
+
+    ##
+    # @param collection [Object]
+    #
+    # @return [Boolean]
+    def collection_brandable?(collection:)
+      case collection
+      when Valkyrie::Resource
+        CollectionType
+          .find_by_gid!(collection.collection_type_gid)
+          .brandable?
+      else
+        collection.try(:brandable?)
+      end
+    end
+
+    ##
+    # @param collection [Object]
+    #
+    # @return [Boolean]
+    def collection_discoverable?(collection:)
+      case collection
+      when Valkyrie::Resource
+        CollectionType
+          .find_by_gid!(collection.collection_type_gid)
+          .discoverable?
+      else
+        collection.try(:discoverable?)
+      end
+    end
+
+    ##
+    # @param collection [Object]
+    #
+    # @return [Boolean]
+    def collection_sharable?(collection:)
+      case collection
+      when Valkyrie::Resource
+        CollectionType
+          .find_by_gid!(collection.collection_type_gid)
+          .sharable?
+      else
+        collection.try(:sharable?)
       end
     end
 
@@ -153,4 +198,4 @@ module Hyrax
       render 'hyrax/dashboard/collections/single_item_action_fields', form: form, document: document, action: action
     end
   end
-end
+end # rubocop:enable Metrics/ModuleLength
