@@ -30,7 +30,7 @@
                   <td><%= collection.member_works.count %></td>
                   <td><%= collection.total_file_sets %></td>
                   <td>
-                   <% if collection.is_pinned?(current_user.id) %>
+                   <% if collection.pinned?(current_user.id) %>
                     <%= link_to user_pinned_collection_path(collection.id), method: :delete, id: "unpin-#{collection.id}" do %>
                      <i class="fa fa-star fa-2x" aria-hidden="true"></i> 
                     <% end %>

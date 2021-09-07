@@ -11,14 +11,11 @@
   </thead>
   <tbody>
       <% @top_file_set_downloads.each do |download| %>
-        <% file = FileSet.find(download[0]) rescue document = nil %> 
-        <% if file %>
         <tr>
-        <td><%= file %></td> 
-        <td><%= file.id %></td>  
-        <td><%= download[1] %></td>
+          <td><%= download[1] %></td> 
+          <td><%= download[0] %></td>  
+          <td><%= download[2] %></td>
         </tr>
-        <% end %>
       <% end %>
   </tbody>
 </table>

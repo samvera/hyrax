@@ -37,7 +37,6 @@ module Hyrax
         @collection_type = new_collection_type
         collection_type_gid
       end
-
       after_destroy :destroy_user_pinned_collection
     end
 
@@ -94,14 +93,12 @@ module Hyrax
 
     def total_file_sets
       files = []
-      member_works.each do |work|
-        files.push(work.file_sets.count)
-      end
+      member_works.map { |work| files.push(work.file_sets.count) }
       files.sum
     end
 
-    def is_pinned?(user_id)
-      UserPinnedCollection.where(user_id: user_id, collection_id: id).first
+    def pinned?(user_id)
+      UserPinnedCollection.find_by(user_id: user_id, collection_id: id)
     end
 
     module ClassMethods
@@ -159,7 +156,7 @@ module Hyrax
     end
 
     def destroy_user_pinned_collection
-      UserPinnedCollection.where(collection_id: self.id).destroy_all
+      UserPinnedCollection.where(collection_id: id).destroy_all
     end
 
     def destroy_permission_template
