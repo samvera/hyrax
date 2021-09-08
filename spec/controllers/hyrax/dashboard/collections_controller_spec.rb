@@ -4,7 +4,7 @@ require 'hyrax/specs/spy_listener'
 RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
   routes { Hyrax::Engine.routes }
   let(:user)  { create(:user) }
-  let(:other) { build(:user) }
+  let(:other) { create(:user) }
   let(:collection_type_gid) { FactoryBot.create(:user_collection_type).to_global_id.to_s }
 
   let(:collection) do
@@ -125,7 +125,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
             collection: collection_attrs, parent_id: parent_collection.id
           }
         end.to change { Collection.count }.by(1)
-        expect(assigns[:collection].member_of_collections).to eq [parent_collection]
+        expect(assigns[:collection].reload.member_of_collections).to eq [parent_collection]
       end
     end
 

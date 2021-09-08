@@ -14,7 +14,7 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
     context 'when no members' do
       let!(:collection) { FactoryBot.valkyrie_create(:hyrax_collection) }
       it 'returns false' do
-        expect(described_class.member?(collection: collection, member: non_member)).to eq false
+        expect(described_class.member?(collection_id: collection.id, member: non_member)).to eq false
       end
     end
     context 'when has members' do
@@ -22,10 +22,10 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
       let(:work2) { FactoryBot.valkyrie_create(:hyrax_work) }
       let!(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, members: [work1, work2]) }
       it "returns false if member isn't in member set" do
-        expect(described_class.member?(collection: collection, member: non_member)).to eq false
+        expect(described_class.member?(collection_id: collection.id, member: non_member)).to eq false
       end
       it "returns true if member is in member set" do
-        expect(described_class.member?(collection: collection, member: work1)).to eq true
+        expect(described_class.member?(collection_id: collection.id, member: work1)).to eq true
       end
     end
   end
@@ -38,14 +38,20 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
     let(:existing_member_ids) { existing_members.map(&:id) }
     let(:new_member_ids) { [work1.id, work2.id] }
 
-    before { described_class.add_members_by_ids(collection: collection, new_member_ids: new_member_ids, user: user) }
+    before { described_class.add_members_by_ids(collection_id: collection.id, new_member_ids: new_member_ids, user: user) }
 
-    context 'when no members' do
+    context 'when ids is empty' do
+      let(:new_member_ids) { [] }
+      it "returns without making changes" do
+        expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array new_member_ids
+      end
+    end
+    context 'when collection currently has no members' do
       it "updates the collection member set to contain only the new members" do
         expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array new_member_ids
       end
     end
-    context 'when has members' do
+    context 'when collection already has members' do
       let(:existing_work) { FactoryBot.valkyrie_create(:hyrax_work) }
       let(:existing_members) { [existing_work] }
       context 'and one of the new members already exists in the member set' do
@@ -71,7 +77,7 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
     let(:new_members) { [work1, work2] }
     let(:new_member_ids) { [work1.id, work2.id] }
 
-    before { described_class.add_members(collection: collection, new_members: new_members, user: user) }
+    before { described_class.add_members(collection_id: collection.id, new_members: new_members, user: user) }
 
     context 'when no members' do
       it "updates the collection member set to contain only the new members" do
@@ -103,7 +109,7 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
     let(:existing_member_ids) { existing_members.map(&:id) }
     let(:new_member_id) { work1.id }
 
-    before { described_class.add_member_by_id(collection: collection, new_member_id: new_member_id, user: user) }
+    before { described_class.add_member_by_id(collection_id: collection.id, new_member_id: new_member_id, user: user) }
 
     context 'when no members' do
       it "updates the collection member set to contain only the new members" do
@@ -134,7 +140,7 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
     let(:existing_member_ids) { existing_members.map(&:id) }
     let(:new_member) { work1 }
 
-    before { described_class.add_member(collection: collection, new_member: new_member, user: user) }
+    before { described_class.add_member(collection_id: collection.id, new_member: new_member, user: user) }
 
     context 'when no members' do
       it "updates the collection member set to contain only the new members" do
@@ -155,7 +161,7 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array existing_member_ids + [new_member.id]
         end
         it "publishes metadata updated event for member" do
-          updated_work = described_class.add_member(collection: collection, new_member: new_member, user: user)
+          updated_work = described_class.add_member(collection_id: collection.id, new_member: new_member, user: user)
           expect(listener.object_metadata_updated&.payload)
             .to eq object: updated_work, user: user
         end
@@ -169,13 +175,16 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
       let(:collection_ids) { collections.map(&:id) }
 
       before do
+        Hyrax.publisher.publish('object.metadata.updated', object: collection, user: user)
+        Hyrax.publisher.publish('object.metadata.updated', object: collection2, user: user)
         allow(Hyrax::CollectionType).to receive(:gids_that_do_not_allow_multiple_membership).and_return([collection_type.to_global_id])
       end
 
       it 'raises an error' do
-        errmsg = 'Error: You have specified more than one of the same single-membership collection type (type: Greedy, collections: Col-2 and Col-1)'
-        expect { described_class.add_member(collection: collection2, new_member: new_member, user: user) }
-          .to raise_error Hyrax::SingleMembershipError, errmsg
+        base_errmsg = "Error: You have specified more than one of the same single-membership collection type"
+        regexp = /#{base_errmsg} \(type: Greedy, collections: (Col-1 and Col-2|Col-2 and Col-1)\)/
+        expect { described_class.add_member(collection_id: collection2.id, new_member: new_member, user: user) }
+          .to raise_error Hyrax::SingleMembershipError, regexp
       end
     end
   end
@@ -192,7 +201,7 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
       let(:existing_members) { [] }
       it "collection member remains empty" do
         expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to eq []
-        described_class.remove_members_by_ids(collection: collection, member_ids: members_to_remove_ids, user: user)
+        described_class.remove_members_by_ids(collection_id: collection.id, member_ids: members_to_remove_ids, user: user)
         expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to eq []
       end
     end
@@ -203,7 +212,7 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
         let(:members_to_remove_ids) { [non_existing_work1.id, non_existing_work2.id] }
         it "collection members remain unchanged" do
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array existing_member_ids
-          described_class.remove_members_by_ids(collection: collection, member_ids: members_to_remove_ids, user: user)
+          described_class.remove_members_by_ids(collection_id: collection.id, member_ids: members_to_remove_ids, user: user)
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array existing_member_ids
         end
       end
@@ -212,7 +221,7 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
         let(:existing_members) { [work1, work2, work3] }
         it "updates the collection member set removing the members" do
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array existing_member_ids
-          described_class.remove_members_by_ids(collection: collection, member_ids: members_to_remove_ids, user: user)
+          described_class.remove_members_by_ids(collection_id: collection.id, member_ids: members_to_remove_ids, user: user)
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array [work3.id]
         end
       end
@@ -230,7 +239,7 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
         let(:existing_members) { [] }
         it "collection member remains empty" do
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to eq []
-          described_class.remove_members(collection: collection, members: members_to_remove, user: user)
+          described_class.remove_members(collection_id: collection.id, members: members_to_remove, user: user)
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to eq []
         end
       end
@@ -241,7 +250,7 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
           let(:members_to_remove) { [non_existing_work1, non_existing_work2] }
           it "collection members remain unchanged" do
             expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array existing_member_ids
-            described_class.remove_members(collection: collection, members: members_to_remove, user: user)
+            described_class.remove_members(collection_id: collection.id, members: members_to_remove, user: user)
             expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array existing_member_ids
           end
         end
@@ -250,7 +259,7 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
           let(:existing_members) { [work1, work2, work3] }
           it "updates the collection member set removing the members" do
             expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array existing_member_ids
-            described_class.remove_members(collection: collection, members: members_to_remove, user: user)
+            described_class.remove_members(collection_id: collection.id, members: members_to_remove, user: user)
             expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array [work3.id]
           end
         end
@@ -270,7 +279,7 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
       let(:existing_members) { [] }
       it "collection member remains empty" do
         expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to eq []
-        described_class.remove_member_by_id(collection: collection, member_id: member_to_remove_id, user: user)
+        described_class.remove_member_by_id(collection_id: collection.id, member_id: member_to_remove_id, user: user)
         expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to eq []
       end
     end
@@ -280,14 +289,14 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
         let(:member_to_remove_id) { non_existing_work1.id }
         it "collection members remain unchanged" do
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array existing_member_ids
-          described_class.remove_member_by_id(collection: collection, member_id: member_to_remove_id, user: user)
+          described_class.remove_member_by_id(collection_id: collection.id, member_id: member_to_remove_id, user: user)
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array existing_member_ids
         end
       end
       context 'and the member to remove exists in the member set' do
         it "updates the collection member set removing the members" do
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array existing_member_ids
-          described_class.remove_member_by_id(collection: collection, member_id: member_to_remove_id, user: user)
+          described_class.remove_member_by_id(collection_id: collection.id, member_id: member_to_remove_id, user: user)
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array [work2.id]
         end
       end
@@ -306,7 +315,7 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
       let(:existing_members) { [] }
       it "collection member remains empty" do
         expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to eq []
-        described_class.remove_member(collection: collection, member: member_to_remove, user: user)
+        described_class.remove_member(collection_id: collection.id, member: member_to_remove, user: user)
         expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to eq []
       end
     end
@@ -316,18 +325,18 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
         let(:member_to_remove) { non_existing_work1 }
         it "collection members remain unchanged" do
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array existing_member_ids
-          described_class.remove_member(collection: collection, member: member_to_remove, user: user)
+          described_class.remove_member(collection_id: collection.id, member: member_to_remove, user: user)
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array existing_member_ids
         end
       end
       context 'and the member to remove exists in the member set' do
         it "updates the collection member set removing the members" do
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array existing_member_ids
-          described_class.remove_member(collection: collection, member: member_to_remove, user: user)
+          described_class.remove_member(collection_id: collection.id, member: member_to_remove, user: user)
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array [work2.id]
         end
         it "publishes metadata updated event for member" do
-          updated_work = described_class.remove_member(collection: collection, member: member_to_remove, user: user)
+          updated_work = described_class.remove_member(collection_id: collection.id, member: member_to_remove, user: user)
           expect(listener.object_metadata_updated&.payload)
             .to eq object: updated_work, user: user
         end

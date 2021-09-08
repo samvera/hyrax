@@ -1,29 +1,32 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::UserProfilePresenter do
-  let(:user) { create(:user) }
-  let(:ability) { Ability.new(user) }
-  let(:presenter) { described_class.new(user, ability) }
+  subject(:presenter) { described_class.new(user, ability) }
+  let(:ability)       { Ability.new(user) }
+  let(:user)          { FactoryBot.create(:user) }
 
-  describe "current_user?" do
-    subject { presenter.current_user? }
+  its(:current_user?) { is_expected.to be true }
 
-    it { is_expected.to be true }
-  end
+  describe "#trophies" do
+    let(:work1) { FactoryBot.valkyrie_create(:hyrax_work, depositor: user.user_key) }
+    let(:work2) { FactoryBot.valkyrie_create(:hyrax_work, depositor: user.user_key) }
+    let(:work3) { FactoryBot.valkyrie_create(:hyrax_work, depositor: user.user_key) }
 
-  describe "trophies" do
-    let(:work1) { create(:work, user: user) }
-    let(:work2) { create(:work, user: user) }
-    let(:work3) { create(:work, user: user) }
-    let!(:trophy1) { user.trophies.create!(work_id: work1.id) }
-    let!(:trophy2) { user.trophies.create!(work_id: work2.id) }
-    let!(:trophy3) { user.trophies.create!(work_id: work3.id) }
-    let!(:badtrophy) { user.trophies.create!(work_id: 'not_a_generic_work') }
-
-    subject { presenter.trophies }
+    before do
+      user.trophies.create!(work_id: work1.id)
+      user.trophies.create!(work_id: work2.id)
+      user.trophies.create!(work_id: work3.id)
+      user.trophies.create!(work_id: 'not_a_generic_work')
+    end
 
     it "has an array of presenters" do
-      expect(subject).to all(be_kind_of Hyrax::TrophyPresenter)
-      expect(subject.map(&:id)).to match_array [work1.id, work2.id, work3.id]
+      expect(presenter.trophies).to all(be_kind_of Hyrax::TrophyPresenter)
+    end
+
+    it "matches only the trophied works" do
+      FactoryBot.create(:work, user: user) # not trophied
+
+      expect(presenter.trophies.map(&:id))
+        .to match_array [work1.id, work2.id, work3.id]
     end
   end
 end

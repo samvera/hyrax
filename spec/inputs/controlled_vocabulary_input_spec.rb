@@ -17,11 +17,18 @@ RSpec.describe 'ControlledVocabularyInput', type: :input do
   end
 
   describe '#collection' do
-    let(:work) { GenericWork.new(based_near: [::RDF::URI('http://example.org/1')]) }
+    let(:location) { Hyrax::ControlledVocabularies::Location.new(::RDF::URI('http://example.org/1')) }
+    let(:work) { GenericWork.new(based_near: [location]) }
 
-    subject { input.send(:collection) }
+    subject { input }
 
-    it { is_expected.to all(be_an(Hyrax::ControlledVocabularies::Location)) }
+    its(:collection) { is_expected.to all(be_an(Hyrax::ControlledVocabularies::Location)) }
+
+    context 'with a single valued input' do
+      let(:work) { FactoryBot.build(:monograph, based_near: [location]) }
+
+      its(:collection) { is_expected.to all(be_an(Hyrax::ControlledVocabularies::Location)) }
+    end
   end
 
   describe '#build_field' do

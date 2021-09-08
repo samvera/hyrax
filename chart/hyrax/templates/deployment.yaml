@@ -21,9 +21,6 @@ spec:
         {{- include "hyrax.selectorLabels" . | nindent 8 }}
     spec:
       initContainers:
-        {{- if .Values.extraInitContainers }}
-        {{- toYaml .Values.extraInitContainers | nindent 8 }}
-        {{- end }}
         {{- if .Values.loadSolrConfigSet }}
         - name: load-solr-config
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -46,6 +43,7 @@ spec:
               solrcloud-upload-configset.sh /app/samvera/hyrax-webapp/solr/conf &&
               solrcloud-assign-configset.sh
         {{- end }}
+        {{- if not .Values.skipDbMigrateSeed }}
         - name: db-setup
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -67,6 +65,10 @@ spec:
             - sh
             - -c
             - db-migrate-seed.sh
+        {{- end }}
+        {{- if .Values.extraInitContainers }}
+        {{- toYaml .Values.extraInitContainers | nindent 8 }}
+        {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

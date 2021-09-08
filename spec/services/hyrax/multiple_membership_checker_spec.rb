@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
-  let(:item) { double }
+  let(:item) { create(:work, id: 'work-1', user: user) }
+  let(:user) { create(:user) }
 
   describe '#initialize' do
     subject { described_class.new(item: item) }
@@ -11,35 +12,26 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
   end
 
   describe '#check' do
+    let(:base_errmsg) { "Error: You have specified more than one of the same single-membership collection type" }
+
     let(:checker) { described_class.new(item: item) }
     let(:collection_ids) { ['foobar'] }
     let(:included) { false }
     let!(:collection_type) { create(:collection_type, title: 'Greedy', allow_multiple_membership: false) }
     let(:collection_types) { [collection_type] }
     let(:collection_type_gids) { [collection_type.to_global_id] }
-    let(:field_pairs) do
-      {
-        id: collection_ids,
-        collection_type_gid_ssim: collection_type_gids.map(&:to_s)
-      }
-    end
-    let(:field_pairs_for_col2) do
-      {
-        id: [collection2.id],
-        collection_type_gid_ssim: collection_type_gids.map(&:to_s)
-      }
-    end
-    let(:use_valkyrie) { true }
 
     before do
-      allow(Hyrax::CollectionType).to receive(:gids_that_do_not_allow_multiple_membership).and_return(collection_type_gids)
+      allow(Hyrax::CollectionType).to receive(:gids_that_do_not_allow_multiple_membership)
+        .and_return(collection_type_gids)
     end
 
     subject { checker.check(collection_ids: collection_ids, include_current_members: included) }
 
     context 'when there are no single-membership collection types' do
       it 'returns nil' do
-        expect(Hyrax::CollectionType).to receive(:gids_that_do_not_allow_multiple_membership).and_return([])
+        expect(Hyrax::CollectionType).to receive(:gids_that_do_not_allow_multiple_membership)
+          .and_return([])
         expect(subject).to be nil
       end
     end
@@ -48,7 +40,8 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
       let(:collection_ids) { [] }
 
       it 'returns nil' do
-        expect(checker).to receive(:single_membership_collections).with(collection_ids).once.and_call_original
+        expect(checker).to receive(:filter_to_single_membership_collections)
+          .with(collection_ids).once.and_call_original
         expect(Hyrax::SolrQueryService).not_to receive(:new)
         expect(subject).to be nil
       end
@@ -56,136 +49,173 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
 
     context 'when there are no single-membership collection instances' do
       it 'returns nil' do
-        expect(checker).to receive(:single_membership_collections).with(collection_ids).once.and_return([])
+        expect(checker).to receive(:filter_to_single_membership_collections)
+          .with(collection_ids).once.and_return([])
         expect(Hyrax::SolrQueryService).not_to receive(:new)
         expect(subject).to be nil
       end
     end
 
-    context 'when multiple single-membership collection instances are not in the list' do
-      let(:collection) { create(:collection_lw, id: 'collection0', collection_type: collection_type, with_solr_document: true) }
-      let(:collections) { [collection] }
-      let(:collection_ids) { collections.map(&:id) }
+    context 'when called from actor stack' do
+      # actor stack passes in all parent collections, existing and new; do not
+      # want to include item's existing collections or they will be in the checked
+      # list twice causing the check to always fail if the item is already in a
+      # single membership collection
+      let(:included) { false }
 
-      it 'returns nil' do
-        expect(checker).to receive(:single_membership_collections).with(collection_ids).once.and_call_original
-        expect(Hyrax::SolrQueryService).to receive(:new).and_return(inst = double)
-        expect(inst).to receive(:with_model).with(model: ::Collection).once.and_return(inst_with_model = double)
-        expect(inst_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs, join_with: ' OR ').once.and_return(inst_with_full_query = double)
-        expect(inst_with_full_query).to receive(:get_objects).with(use_valkyrie: true).once.and_return(collections)
-        expect(subject).to be nil
-      end
-    end
-
-    context 'when multiple single-membership collection instances are in the list, not including current members' do
-      let(:collection1) { create(:collection_lw, id: 'collection1', title: ['Foo'], collection_type: collection_type, with_solr_document: true) }
-      let(:collection2) { create(:collection_lw, id: 'collection2', title: ['Bar'], collection_type: collection_type, with_solr_document: true) }
-      let(:collections) { [collection1, collection2] }
-      let(:collection_ids) { collections.map(&:id) }
-
-      it 'returns an error' do
-        expect(item).not_to receive(:member_of_collection_ids)
-        expect(checker).to receive(:single_membership_collections).with(collection_ids).once.and_call_original
-        expect(Hyrax::SolrQueryService).to receive(:new).and_return(inst = double)
-        expect(inst).to receive(:with_model).with(model: ::Collection).once.and_return(inst_with_model = double)
-        expect(inst_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs, join_with: ' OR ').once.and_return(inst_with_full_query = double)
-        expect(inst_with_full_query).to receive(:get_objects).with(use_valkyrie: true).once.and_return(collections)
-        expect(subject).to eq 'Error: You have specified more than one of the same single-membership collection type (type: Greedy, collections: Foo and Bar)'
-      end
-
-      context 'with multiple single membership collection types' do
-        let!(:collection_type_2) { create(:collection_type, title: 'Doc', allow_multiple_membership: false) }
-        let(:collection_type_gids) { [collection_type.to_global_id, collection_type_2.to_global_id] }
-
-        it 'returns an error' do
-          expect(item).not_to receive(:member_of_collection_ids)
-          expect(checker).to receive(:single_membership_collections).with(collection_ids).once.and_call_original
-          expect(Hyrax::SolrQueryService).to receive(:new).and_return(inst = double)
-          expect(inst).to receive(:with_model).with(model: ::Collection).once.and_return(inst_with_model = double)
-          expect(inst_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs, join_with: ' OR ').once.and_return(inst_with_full_query = double)
-          expect(inst_with_full_query).to receive(:get_objects).with(use_valkyrie: true).once.and_return(collections)
-          expect(subject).to eq 'Error: You have specified more than one of the same single-membership collection type (type: Greedy, collections: Foo and Bar)'
+      context 'and multiple single-membership collections of the same type exist' do
+        let(:collection1) do
+          create(:collection_lw, id: 'collection1', title: ['Foo'],
+                                 collection_type: collection_type,
+                                 with_solr_document: true)
         end
-      end
-    end
-
-    context 'when multiple single-membership collection instances are in the list, including current members' do
-      let(:collection1) { create(:collection_lw, id: 'collection1', title: ['Foo'], collection_type: collection_type, with_solr_document: true) }
-      let(:collection2) { create(:collection_lw, id: 'collection2', title: ['Bar'], collection_type: collection_type, with_solr_document: true) }
-      let(:collections) { [collection1] }
-      let(:collection_ids) { collections.map(&:id) }
-      let(:included) { true }
-
-      before do
-        allow(item).to receive(:member_of_collection_ids).once.and_return([collection2.id])
-      end
-
-      it 'returns an error' do
-        expect(item).to receive(:member_of_collection_ids)
-        expect(Hyrax::SolrQueryService).to receive(:new).and_return(inst1 = double, inst2 = double)
-        expect(inst1).to receive(:with_model).with(model: ::Collection).and_return(inst1_with_model = double)
-        expect(inst1_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs, join_with: ' OR ').and_return(inst1_with_full_query = double)
-        expect(inst1_with_full_query).to receive(:get_objects).with(use_valkyrie: true).and_return(collections)
-        expect(inst2).to receive(:with_model).with(model: ::Collection).and_return(inst2_with_model = double)
-        expect(inst2_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs_for_col2, join_with: ' OR ').and_return(inst2_with_full_query = double)
-        expect(inst2_with_full_query).to receive(:get_objects).with(use_valkyrie: true).and_return([collection2])
-        expect(subject).to eq 'Error: You have specified more than one of the same single-membership collection type (type: Greedy, collections: Foo and Bar)'
-      end
-
-      context 'with multiple single membership collection types' do
-        let!(:collection_type_2) { create(:collection_type, title: 'Doc', allow_multiple_membership: false) }
-        let(:collection_type_gids) { [collection_type.to_global_id, collection_type_2.to_global_id] }
-
-        it 'returns an error' do
-          expect(item).to receive(:member_of_collection_ids)
-          expect(Hyrax::SolrQueryService).to receive(:new).and_return(inst1 = double, inst2 = double)
-          expect(inst1).to receive(:with_model).with(model: ::Collection).and_return(inst1_with_model = double)
-          expect(inst1_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs, join_with: ' OR ').and_return(inst1_with_full_query = double)
-          expect(inst1_with_full_query).to receive(:get_objects).with(use_valkyrie: true).and_return(collections)
-          expect(inst2).to receive(:with_model).with(model: ::Collection).and_return(inst2_with_model = double)
-          expect(inst2_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs_for_col2, join_with: ' OR ').and_return(inst2_with_full_query = double)
-          expect(inst2_with_full_query).to receive(:get_objects).with(use_valkyrie: true).and_return([collection2])
-          expect(subject).to eq 'Error: You have specified more than one of the same single-membership collection type (type: Greedy, collections: Foo and Bar)'
+        let(:collection2) do
+          create(:collection_lw, id: 'collection2', title: ['Bar'],
+                                 collection_type: collection_type,
+                                 with_solr_document: true)
         end
-      end
-    end
-
-    context 'when multiple single-membership collection instances are in the list, but are different collection types' do
-      let(:collection1) { create(:collection_lw, title: ['Foo'], collection_type: collection_type, with_solr_document: true) }
-      let(:collection2) { create(:collection_lw, title: ['Bar'], collection_type: collection_type_2, with_solr_document: true) }
-      let(:collections) { [collection1, collection2] }
-      let(:collection_ids) { collections.map(&:id) }
-      let(:collection_type_2) { create(:collection_type, title: 'Doc', allow_multiple_membership: false) }
-      let(:collection_type_gids) { [collection_type.to_global_id, collection_type_2.to_global_id] }
-
-      it 'returns nil' do
-        expect(item).not_to receive(:member_of_collection_ids)
-        expect(checker).to receive(:single_membership_collections).with(collection_ids).once.and_call_original
-        expect(Hyrax::SolrQueryService).to receive(:new).and_return(inst = double)
-        expect(inst).to receive(:with_model).with(model: ::Collection).once.and_return(inst_with_model = double)
-        expect(inst_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs, join_with: ' OR ').once.and_return(inst_with_full_query = double)
-        expect(inst_with_full_query).to receive(:get_objects).with(use_valkyrie: true).once.and_return(collections)
-        expect(subject).to be nil
-      end
-
-      context 'when including current members' do
-        let(:collections) { [collection1] }
-        let(:included) { true }
 
         before do
-          allow(item).to receive(:member_of_collection_ids).once.and_return([collection2.id])
+          Hyrax.publisher.publish('object.metadata.updated',
+                                  object: item.valkyrie_resource, user: user)
+          Hyrax.publisher.publish('object.metadata.updated',
+                                  object: collection1.valkyrie_resource, user: user)
+          Hyrax.publisher.publish('object.metadata.updated',
+                                  object: collection2.valkyrie_resource, user: user)
         end
 
-        it 'returns nil' do
-          expect(item).to receive(:member_of_collection_ids)
-          expect(Hyrax::SolrQueryService).to receive(:new).and_return(inst1 = double, inst2 = double)
-          expect(inst1).to receive(:with_model).with(model: ::Collection).and_return(inst1_with_model = double)
-          expect(inst1_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs, join_with: ' OR ').and_return(inst1_with_full_query = double)
-          expect(inst1_with_full_query).to receive(:get_objects).with(use_valkyrie: true).and_return(collections)
-          expect(inst2).to receive(:with_model).with(model: ::Collection).and_return(inst2_with_model = double)
-          expect(inst2_with_model).to receive(:with_field_pairs).with(field_pairs: field_pairs_for_col2, join_with: ' OR ').and_return(inst2_with_full_query = double)
-          expect(inst2_with_full_query).to receive(:get_objects).with(use_valkyrie: true).and_return([collection2])
-          expect(subject).to be nil
+        context 'and only one is in the list' do
+          let(:collections) { [collection1] }
+          let(:collection_ids) { collections.map(&:id) }
+
+          it 'returns nil' do
+            expect(subject).to be nil
+          end
+        end
+
+        context 'and both are in the list' do
+          let(:collections) { [collection1, collection2] }
+          let(:collection_ids) { collections.map(&:id) }
+
+          it 'returns an error' do
+            regexp = /#{base_errmsg} \(type: Greedy, collections: (Foo and Bar|Bar and Foo)\)/
+            expect(subject).to match regexp
+          end
+        end
+      end
+
+      context 'and multiple single-membership collection instances of different types exist' do
+        let!(:collection_type_2) { create(:collection_type, title: 'Doc', allow_multiple_membership: false) }
+        let(:collection1) { create(:collection_lw, title: ['Foo'], collection_type: collection_type, with_solr_document: true) }
+        let(:collection2) { create(:collection_lw, title: ['Bar'], collection_type: collection_type, with_solr_document: true) }
+        let(:collection3) { create(:collection_lw, title: ['Baz'], collection_type: collection_type_2, with_solr_document: true) }
+
+        before do
+          Hyrax.publisher.publish('object.metadata.updated', object: collection1.valkyrie_resource, user: user)
+          Hyrax.publisher.publish('object.metadata.updated', object: collection2.valkyrie_resource, user: user)
+          Hyrax.publisher.publish('object.metadata.updated', object: collection3.valkyrie_resource, user: user)
+        end
+
+        context 'and collections of both types are passed in' do
+          let(:collections) { [collection1, collection3] }
+          let(:collection_ids) { collections.map(&:id) }
+
+          it 'returns nil' do
+            expect(subject).to be nil
+          end
+        end
+
+        context 'and collections of the same type are passed in' do
+          let(:collections) { [collection1, collection2] }
+          let(:collection_ids) { collections.map(&:id) }
+
+          it 'returns an error' do
+            regexp = /#{base_errmsg} \(type: Greedy, collections: (Foo and Bar|Bar and Foo)\)/
+            expect(subject).to match regexp
+          end
+        end
+      end
+    end
+
+    context 'when incrementally adding collections' do
+      # for incremental add, the proposed collection list only includes the new collections, so need to include the existing collections
+      # in the checked list to catch the case where the item is already in a single membership collection of the same collection type
+      let(:included) { true }
+
+      context 'and multiple single-membership collections of the same type exist' do
+        let(:collection1) { create(:collection_lw, id: 'collection1', title: ['Foo'], collection_type: collection_type, with_solr_document: true) }
+        let(:collection2) { create(:collection_lw, id: 'collection2', title: ['Bar'], collection_type: collection_type, with_solr_document: true) }
+        let(:item_2) { create(:work, id: 'work-2', user: user) }
+
+        context 'and only one is in the list' do
+          let(:collections) { [collection1] }
+          let(:collection_ids) { collections.map(&:id) }
+
+          context 'and the member is already in the other single membership collection' do
+            before do
+              [item, item_2].each do |work|
+                work.member_of_collections << collection2
+                work.save!
+                Hyrax.publisher.publish('object.metadata.updated', object: work.valkyrie_resource, user: user)
+              end
+              Hyrax.publisher.publish('object.metadata.updated', object: collection1.valkyrie_resource, user: user)
+              Hyrax.publisher.publish('object.metadata.updated', object: collection2.valkyrie_resource, user: user)
+            end
+
+            it 'returns an error' do
+              regexp = /#{base_errmsg} \(type: Greedy, collections: (Foo and Bar|Bar and Foo)\)/
+              expect(subject).to match regexp
+            end
+          end
+
+          context 'and the member is not already in the other single membership collection' do
+            before do
+              [item_2].each do |work|
+                work.member_of_collections << collection2
+                work.save!
+                Hyrax.publisher.publish('object.metadata.updated', object: work.valkyrie_resource, user: user)
+              end
+              Hyrax.publisher.publish('object.metadata.updated', object: item.valkyrie_resource, user: user)
+              Hyrax.publisher.publish('object.metadata.updated', object: collection1.valkyrie_resource, user: user)
+              Hyrax.publisher.publish('object.metadata.updated', object: collection2.valkyrie_resource, user: user)
+            end
+
+            it 'returns nil' do
+              expect(subject).to be nil
+            end
+          end
+        end
+      end
+
+      context 'and multiple single-membership collection instances of different types exist' do
+        let!(:collection_type_2) { create(:collection_type, title: 'Doc', allow_multiple_membership: false) }
+        let(:collection1) { create(:collection_lw, title: ['Foo'], collection_type: collection_type, with_solr_document: true) }
+        let(:collection2) { create(:collection_lw, title: ['Bar'], collection_type: collection_type, with_solr_document: true) }
+        let(:collection3) { create(:collection_lw, title: ['Baz'], collection_type: collection_type_2, with_solr_document: true) }
+
+        before do
+          Hyrax.publisher.publish('object.metadata.updated', object: collection1.valkyrie_resource, user: user)
+          Hyrax.publisher.publish('object.metadata.updated', object: collection2.valkyrie_resource, user: user)
+          Hyrax.publisher.publish('object.metadata.updated', object: collection3.valkyrie_resource, user: user)
+        end
+
+        context 'and collections of both types are passed in' do
+          let(:collections) { [collection1, collection3] }
+          let(:collection_ids) { collections.map(&:id) }
+
+          it 'returns nil' do
+            expect(subject).to be nil
+          end
+        end
+
+        context 'and collections of the same type are passed in' do
+          let(:collections) { [collection1, collection2] }
+          let(:collection_ids) { collections.map(&:id) }
+
+          it 'returns an error' do
+            regexp = /#{base_errmsg} \(type: Greedy, collections: (Foo and Bar|Bar and Foo)\)/
+            expect(subject).to match regexp
+          end
         end
       end
     end

@@ -112,10 +112,10 @@ module Hyrax
         @collection.collection_type_gid = params[:collection_type_gid].presence || default_collection_type.to_global_id
         @collection.attributes = collection_params.except(:members, :parent_id, :collection_type_gid)
         @collection.apply_depositor_metadata(current_user.user_key)
-        add_members_to_collection unless batch.empty?
         @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
         if @collection.save
           after_create
+          add_members_to_collection unless batch.empty?
         else
           after_create_error
         end
@@ -202,8 +202,10 @@ module Hyrax
       end
 
       def link_parent_collection(parent_id)
-        parent = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: parent_id, use_valkyrie: false)
-        Hyrax::Collections::NestedCollectionPersistenceService.persist_nested_collection_for(parent: parent, child: @collection)
+        child = collection.respond_to?(:valkyrie_resource) ? collection.valkyrie_resource : collection
+        Hyrax::Collections::CollectionMemberService.add_member(collection_id: parent_id,
+                                                               new_member: child,
+                                                               user: current_user)
       end
 
       def uploaded_files(uploaded_file_ids)
@@ -379,16 +381,15 @@ module Hyrax
 
       def add_members_to_collection(collection = nil)
         collection ||= @collection
-        collection.add_member_objects batch
+        Hyrax::Collections::CollectionMemberService.add_members_by_ids(collection_id: collection.id,
+                                                                       new_member_ids: batch,
+                                                                       user: current_user)
       end
 
       def remove_members_from_collection
-        batch.each do |member_id|
-          work = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: member_id)
-          work.member_of_collection_ids.delete @collection.id
-          Hyrax.persister.save(resource: work) &&
-            Hyrax.publisher.publish('object.metadata.updated', object: work, user: current_user)
-        end
+        Hyrax::Collections::CollectionMemberService.remove_members_by_ids(collection_id: @collection.id,
+                                                                          member_ids: batch,
+                                                                          user: current_user)
       end
 
       def move_members_between_collections

@@ -32,7 +32,7 @@ module Hyrax
 
         def save
           return false unless valid?
-          persistence_service.persist_nested_collection_for(parent: parent, child: child)
+          persistence_service.persist_nested_collection_for(parent: parent, child: child, user: context.current_user)
         end
 
         ##
@@ -83,7 +83,7 @@ module Hyrax
 
         def remove
           if context.can? :edit, parent
-            persistence_service.remove_nested_relationship_for(parent: parent, child: child)
+            persistence_service.remove_nested_relationship_for(parent: parent, child: child, user: context.current_user)
           else
             errors.add(:parent, :cannot_remove_relationship)
             false

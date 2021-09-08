@@ -5,17 +5,19 @@ RSpec.describe Hyrax::CollectionsController, clean_repo: true do
   let(:other) { build(:user) }
 
   let(:collection) do
-    create(:public_collection_lw, title: ["My collection"],
-                                  description: ["My incredibly detailed description of the collection"],
-                                  user: user)
+    FactoryBot.valkyrie_create(:hyrax_collection,
+                               :public,
+                               title: ["My collection"],
+                               description: ["My incredibly detailed description of the collection"],
+                               edit_users: [user.user_key], read_users: [user.user_key])
   end
 
-  let(:asset1)         { create(:work, title: ["First of the Assets"], user: user) }
-  let(:asset2)         { create(:work, title: ["Second of the Assets"], user: user) }
-  let(:asset3)         { create(:work, title: ["Third of the Assets"], user: user) }
-  let(:asset4)         { build(:collection_lw, title: ["First subcollection"], user: user) }
-  let(:asset5)         { build(:collection_lw, title: ["Second subcollection"], user: user) }
-  let(:unowned_asset)  { create(:work, user: other) }
+  let(:asset1)        { FactoryBot.valkyrie_create(:monograph, title: ["First of the Assets"], edit_users: [user.user_key], read_users: [user.user_key]) }
+  let(:asset2)        { FactoryBot.valkyrie_create(:monograph, title: ["Second of the Assets"], edit_users: [user.user_key], read_users: [user.user_key]) }
+  let(:asset3)        { FactoryBot.valkyrie_create(:monograph, title: ["Third of the Assets"], edit_users: [user.user_key], read_users: [user.user_key]) }
+  let(:asset4)        { FactoryBot.valkyrie_create(:hyrax_collection, title: ["First subcollection"], edit_users: [user.user_key], read_users: [user.user_key]) }
+  let(:asset5)        { FactoryBot.valkyrie_create(:hyrax_collection, title: ["Second subcollection"], edit_users: [user.user_key], read_users: [user.user_key]) }
+  let(:unowned_asset) { FactoryBot.valkyrie_create(:work, user: other) }
 
   let(:collection_attrs) do
     { title: ['My First Collection'], description: ["The Description\r\n\r\nand more"] }
@@ -25,9 +27,15 @@ RSpec.describe Hyrax::CollectionsController, clean_repo: true do
     context "when signed in" do
       before do
         sign_in user
-        [asset1, asset2, asset3, asset4, asset5].each do |asset|
-          asset.member_of_collections = [collection]
-          asset.save
+        if collection.is_a? Valkyrie::Resource
+          Hyrax::Collections::CollectionMemberService.add_members(collection_id: collection.id,
+                                                                  new_members: [asset1, asset2, asset3, asset4, asset5],
+                                                                  user: user)
+        else
+          [asset1, asset2, asset3, asset4, asset5].each do |asset|
+            asset.member_of_collections = [collection]
+            asset.save
+          end
         end
       end
 

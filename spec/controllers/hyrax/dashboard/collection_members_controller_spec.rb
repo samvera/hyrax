@@ -2,7 +2,7 @@
 RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
   routes { Hyrax::Engine.routes }
   let(:user)  { create(:user) }
-  let(:other) { build(:user) }
+  let(:other) { create(:user) }
 
   let(:work_1_own) { create(:work, id: 'work-1-own', title: ['First of the Assets'], user: user) }
   let(:work_2_own) { create(:work, id: 'work-2-own', title: ['Second of the Assets'], user: user) }
@@ -406,6 +406,36 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
           expect(response).to redirect_to routes.url_helpers.dashboard_collections_path(locale: 'en')
           expect(coll_4_view.member_objects).to match_array [work_1_own, work_2_own]
         end
+      end
+    end
+
+    context 'when members violate the multi-membership checker for single membership collections' do
+      let!(:sm_collection_type) { create(:collection_type, title: 'Single Membership', allow_multiple_membership: false) }
+      let(:coll_1_sm) { create(:collection_lw, id: 'coll_1_sm', title: ['SM1'], collection_type: sm_collection_type, user: user) }
+      let!(:coll_2_sm) { create(:collection_lw, id: 'coll_2_sm', title: ['SM2'], collection_type: sm_collection_type, user: user) }
+      let(:base_errmsg) { "Error: You have specified more than one of the same single-membership collection type" }
+      let(:regexp) { /#{base_errmsg} \(type: Single Membership, collections: (SM1 and SM2|SM2 and SM1)\)/ }
+
+      before do
+        sign_in user
+        [work_1_own, work_2_own].each do |asset|
+          asset.member_of_collections << coll_1_sm
+          asset.save!
+          Hyrax.publisher.publish('object.metadata.updated', object: asset.valkyrie_resource, user: user)
+        end
+        Hyrax.publisher.publish('object.metadata.updated', object: coll_1_sm.valkyrie_resource, user: user)
+        Hyrax.publisher.publish('object.metadata.updated', object: coll_2_sm.valkyrie_resource, user: user)
+      end
+
+      it "displays error message and deposits works not in violation" do
+        expect do
+          post :update_members, params: { id: coll_2_sm,
+                                          collection: { members: 'add' },
+                                          batch_document_ids: [work_1_own.id, work_2_own.id, work_3_own.id] }
+        end.to change { coll_2_sm.reload.member_objects.size }.by(1)
+        expect(flash[:error]).to match regexp
+        expect(response).to redirect_to routes.url_helpers.dashboard_collection_path(coll_2_sm, locale: 'en')
+        expect(coll_2_sm.member_objects).to match_array [work_3_own]
       end
     end
   end
