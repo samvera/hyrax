@@ -4,9 +4,7 @@ module Hyrax
     include Hyrax::CollectionsControllerBehavior
 
     before_action :authenticate_user!
-    before_action :ensure_manager!, except: [:show]
     load_and_authorize_resource
-    before_action :ensure_viewer!, only: [:show]
 
     # Catch permission errors
     rescue_from Hydra::AccessDenied, CanCan::AccessDenied, with: :deny_adminset_access
@@ -43,10 +41,8 @@ module Hyrax
     end
 
     def index
-      add_breadcrumb t(:'hyrax.controls.home'), root_path
-      add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
-      add_breadcrumb t(:'hyrax.admin.sidebar.admin_sets'), hyrax.admin_admin_sets_path
-      @admin_sets = Hyrax::AdminSetService.new(self).search_results(:edit)
+      # admin sets are listed with collections
+      redirect_to hyrax.my_collections_url
     end
 
     def new
@@ -104,19 +100,6 @@ module Hyrax
 
     def update_referer
       hyrax.edit_admin_admin_set_path(@admin_set) + (params[:referer_anchor] || '')
-    end
-
-    def ensure_manager!
-      # TODO: Review for possible removal.  Doesn't appear to apply anymore.
-      # Even though the user can view this admin set, they may not be able to view
-      # it on the admin page.
-      authorize! :manage_any, AdminSet
-    end
-
-    def ensure_viewer!
-      # Even though the user can view this admin set, they may not be able to view
-      # it on the admin page if access is granted as a public or registered user only.
-      authorize! :view_admin_show, @admin_set
     end
 
     def create_admin_set

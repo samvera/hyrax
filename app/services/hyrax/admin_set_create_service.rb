@@ -74,7 +74,21 @@ module Hyrax
       ].tap do |attribute_list|
         # Grant manage access to the creating_user if it exists. Should exist for all but default Admin Set
         attribute_list << { agent_type: 'user', agent_id: creating_user.user_key, access: Hyrax::PermissionTemplateAccess::MANAGE } if creating_user
+      end + managers_of_admin_set
+    end
+
+    def managers_of_admin_set
+      admin_set_type = Hyrax::CollectionType.find_or_create_admin_set_type
+      attribute_list = []
+      user_managers = Hyrax::CollectionTypes::PermissionsService.user_edit_grants_for_collection_of_type(collection_type: admin_set_type)
+      user_managers.each do |user|
+        attribute_list << { agent_type: 'user', agent_id: user, access: Hyrax::PermissionTemplateAccess::MANAGE }
       end
+      group_managers = Hyrax::CollectionTypes::PermissionsService.group_edit_grants_for_collection_of_type(collection_type: admin_set_type)
+      group_managers.each do |group|
+        attribute_list << { agent_type: 'group', agent_id: group, access: Hyrax::PermissionTemplateAccess::MANAGE }
+      end
+      attribute_list
     end
 
     def admin_group_name
@@ -84,7 +98,8 @@ module Hyrax
     ##
     # @return [PermissionTemplate]
     def create_permission_template
-      permission_template = PermissionTemplate.create!(source_id: admin_set.id, access_grants_attributes: access_grants_attributes)
+      permission_template = PermissionTemplate.create!(source_id: admin_set.id,
+                                                       access_grants_attributes: access_grants_attributes.uniq)
       permission_template.reset_access_controls_for(collection: admin_set)
       permission_template
     end
