@@ -23,7 +23,7 @@ RSpec.describe FileDownloadStat, type: :model do
     end
     context "when a profile is available" do
       let(:views) { double }
-      let(:profile) { double(hyrax__download: views) }
+      let(:profile) { double(hyrax__analytics__google__download: views) }
 
       it "calls the Legato method with the correct path" do
         expect(views).to receive(:for_file).with(99)

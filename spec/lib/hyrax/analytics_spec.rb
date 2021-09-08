@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Analytics do
   before do
+    ENV['GOOGLE_ANALYTICS_ID'] = 'UA-XXXXXXXX'
     ENV['GOOGLE_OAUTH_APP_NAME'] = "My App Name"
     ENV['GOOGLE_OAUTH_APP_VERSION'] = "0.0.1"
     ENV['GOOGLE_OAUTH_PRIVATE_KEY_PATH'] = "/tmp/privkey.p12"
@@ -19,6 +20,7 @@ RSpec.describe Hyrax::Analytics do
       end
 
       it 'reads its config from a yaml file' do
+        expect(config.analytics_id).to eql 'UA-XXXXXXXX'
         expect(config.app_name).to eql 'My App Name'
         expect(config.app_version).to eql '0.0.1'
         expect(config.privkey_path).to eql '/tmp/privkey.p12'
