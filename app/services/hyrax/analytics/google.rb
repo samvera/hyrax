@@ -29,6 +29,7 @@ module Hyrax
               Rails.logger.error("Unable to fetch any keys from #{filename}.")
               return new({})
             end
+            debugger
             new yaml.fetch('analytics')&.fetch('google')
           end
 
