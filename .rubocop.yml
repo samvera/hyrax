@@ -13,6 +13,8 @@ AllCops:
     - 'spec/test_app_templates/**/*'
     - 'vendor/**/*'
     - 'lib/hyrax/specs/**/*'
+    - 'lib/generators/hyrax/templates/db/migrate/**/*'
+
 
 Lint/ImplicitStringConcatenation:
   Exclude:
