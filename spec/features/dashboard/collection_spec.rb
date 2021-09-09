@@ -232,7 +232,6 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
       before do
         collection_type
         user_collection_type
-debugger
         sign_in user
         visit '/dashboard/my/collections'
       end
