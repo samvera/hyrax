@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Admin::DashboardPresenter do
   let(:instance) { described_class.new }
+  let(:start_date) { 2.days.ago }
+  let(:end_date) { Time.now }
 
   describe "#user_count" do
     before do
@@ -9,7 +11,7 @@ RSpec.describe Hyrax::Admin::DashboardPresenter do
       create(:user, :guest)
     end
 
-    subject { instance.user_count }
+    subject { instance.user_count(start_date, end_date) }
 
     it { is_expected.to eq 2 }
   end
@@ -21,13 +23,13 @@ RSpec.describe Hyrax::Admin::DashboardPresenter do
   end
 
   describe "#repository_growth" do
-    subject { instance.repository_growth }
+    subject { instance.repository_growth(start_date, end_date) }
 
     it { is_expected.to be_kind_of Hyrax::Admin::RepositoryGrowthPresenter }
   end
 
   describe "#user_activity" do
-    subject { instance.user_activity }
+    subject { instance.user_activity(start_date, end_date) }
 
     it { is_expected.to be_kind_of Hyrax::Admin::UserActivityPresenter }
   end

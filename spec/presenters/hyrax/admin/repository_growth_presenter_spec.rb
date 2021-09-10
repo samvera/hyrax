@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Admin::RepositoryGrowthPresenter do
-  let(:instance) { described_class.new }
+  let(:start_date) { 2.days.ago }
+  let(:end_date) { Time.now }
+  let(:instance) { described_class.new(start_date, end_date) }
 
   describe "#to_json" do
     subject { instance.to_json }
@@ -20,7 +22,7 @@ RSpec.describe Hyrax::Admin::RepositoryGrowthPresenter do
     end
 
     it "returns points" do
-      expect(subject).to eq "[{\"y\":\"2017-02-16\",\"a\":\"12\",\"b\":\"3\"}]"
+      expect(subject).to eq "[{\"y\":\"2017-02-16\",\"works\":\"12\",\"collections\":\"3\"}]"
     end
   end
 end
