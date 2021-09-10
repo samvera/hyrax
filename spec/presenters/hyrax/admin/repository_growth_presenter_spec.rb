@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Admin::RepositoryGrowthPresenter do
   let(:start_date) { 2.days.ago }
-  let(:end_date) { Time.now }
+  let(:end_date) { Time.zone.now }
   let(:instance) { described_class.new(start_date, end_date) }
 
   describe "#to_json" do

@@ -2,7 +2,7 @@
 RSpec.describe Hyrax::Admin::DashboardPresenter do
   let(:instance) { described_class.new }
   let(:start_date) { 2.days.ago }
-  let(:end_date) { Time.now }
+  let(:end_date) { Time.zone.now }
 
   describe "#user_count" do
     before do
