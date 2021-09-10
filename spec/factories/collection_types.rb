@@ -23,37 +23,7 @@ FactoryBot.define do
     end
 
     after(:create) do |collection_type, evaluator|
-      if evaluator.creator_user
-        attributes = { hyrax_collection_type_id: collection_type.id,
-                       access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS,
-                       agent_id: evaluator.creator_user,
-                       agent_type: Hyrax::CollectionTypeParticipant::USER_TYPE }
-        create(:collection_type_participant, attributes)
-      end
-
-      if evaluator.creator_group
-        attributes = { hyrax_collection_type_id: collection_type.id,
-                       access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS,
-                       agent_id: evaluator.creator_group,
-                       agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
-        create(:collection_type_participant, attributes)
-      end
-
-      if evaluator.manager_user
-        attributes = { hyrax_collection_type_id: collection_type.id,
-                       access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS,
-                       agent_id: evaluator.manager_user,
-                       agent_type: Hyrax::CollectionTypeParticipant::USER_TYPE }
-        create(:collection_type_participant, attributes)
-      end
-
-      if evaluator.manager_group
-        attributes = { hyrax_collection_type_id: collection_type.id,
-                       access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS,
-                       agent_id: evaluator.manager_group,
-                       agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
-        create(:collection_type_participant, attributes)
-      end
+      CollectionTypeFactoryHelper.process_access(collection_type, evaluator)
     end
 
     trait :nestable do
@@ -110,5 +80,60 @@ FactoryBot.define do
 
   factory :admin_set_collection_type, class: Hyrax::CollectionType do
     initialize_with { Hyrax::CollectionType.find_or_create_admin_set_type }
+
+    transient do
+      creator_user { nil }
+      creator_group { nil }
+      manager_user { nil }
+      manager_group { nil }
+    end
+
+    after(:create) do |collection_type, evaluator|
+      CollectionTypeFactoryHelper.process_access(collection_type, evaluator)
+    end
+  end
+
+  class CollectionTypeFactoryHelper
+    def self.process_access(collection_type, evaluator) # rubocop:disable Metrics/MethodLength
+      if evaluator.creator_user
+        Array(evaluator.creator_user).each do |user|
+          attributes = { hyrax_collection_type_id: collection_type.id,
+                         access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS,
+                         agent_id: user,
+                         agent_type: Hyrax::CollectionTypeParticipant::USER_TYPE }
+          FactoryBot.create(:collection_type_participant, attributes)
+        end
+      end
+
+      if evaluator.creator_group
+        Array(evaluator.creator_group).each do |group|
+          attributes = { hyrax_collection_type_id: collection_type.id,
+                         access: Hyrax::CollectionTypeParticipant::CREATE_ACCESS,
+                         agent_id: group,
+                         agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
+          FactoryBot.create(:collection_type_participant, attributes)
+        end
+      end
+
+      if evaluator.manager_user
+        Array(evaluator.manager_user).each do |user|
+          attributes = { hyrax_collection_type_id: collection_type.id,
+                         access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS,
+                         agent_id: user,
+                         agent_type: Hyrax::CollectionTypeParticipant::USER_TYPE }
+          FactoryBot.create(:collection_type_participant, attributes)
+        end
+      end
+
+      return unless evaluator.manager_group
+
+      Array(evaluator.manager_group).each do |group|
+        attributes = { hyrax_collection_type_id: collection_type.id,
+                       access: Hyrax::CollectionTypeParticipant::MANAGE_ACCESS,
+                       agent_id: group,
+                       agent_type: Hyrax::CollectionTypeParticipant::GROUP_TYPE }
+        FactoryBot.create(:collection_type_participant, attributes)
+      end
+    end
   end
 end
