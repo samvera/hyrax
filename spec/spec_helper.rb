@@ -133,6 +133,8 @@ RSpec.configure do |config|
     Hyrax.config.nested_relationship_reindexer = ->(id:, extent:) {}
     # setup a test group service
     User.group_service = TestHydraGroupService.new
+    # Make sure the key file exists
+    FileUtils.touch(Hyrax::Analytics.config.privkey_path)
   end
 
   config.before do |example|
