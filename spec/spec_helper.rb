@@ -136,9 +136,11 @@ RSpec.configure do |config|
     # disable analytics except for specs which will have proper api mocks
   end
 
-  config.before do |example|
+  config.before :all do
     Hyrax.config.analytics = false
+  end
 
+  config.before do |example|
     if example.metadata[:type] == :feature && Capybara.current_driver != :rack_test
       DatabaseCleaner.strategy = :truncation
     else
