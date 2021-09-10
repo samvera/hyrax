@@ -98,6 +98,12 @@ RSpec.describe "work show view" do
     let(:multi_membership_type_1) { create(:collection_type, :allow_multiple_membership, title: 'Multi-membership 1') }
     let!(:collection) { FactoryBot.create(:collection_lw, user: viewer, collection_type: multi_membership_type_1) }
 
+    around do |example|
+      Hyrax.config.analytics = true
+      example.run
+      Hyrax.config.analytics = false
+    end
+
     before do
       sign_in viewer
       visit work_path
