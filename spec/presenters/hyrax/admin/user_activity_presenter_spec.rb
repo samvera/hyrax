@@ -17,7 +17,6 @@ RSpec.describe Hyrax::Admin::UserActivityPresenter do
     end
 
     it "returns points" do
-
       expect(subject).to eq "[[\"#{Time.zone.today - 3.days}\",\"12\"]]"
     end
   end
