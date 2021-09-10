@@ -134,10 +134,11 @@ RSpec.configure do |config|
     # setup a test group service
     User.group_service = TestHydraGroupService.new
     # disable analytics except for specs which will have proper api mocks
-    Hyrax.config.analytics = false
   end
 
   config.before do |example|
+    Hyrax.config.analytics = false
+
     if example.metadata[:type] == :feature && Capybara.current_driver != :rack_test
       DatabaseCleaner.strategy = :truncation
     else

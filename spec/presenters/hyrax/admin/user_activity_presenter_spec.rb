@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Admin::UserActivityPresenter do
-  start_date = Time.zone.today - 6.days
-  end_date = Time.zone.today
+  let(:start_date) { Time.zone.today - 6.days }
+  let(:end_date) { Time.zone.today }
   let(:instance) { described_class.new(start_date, end_date) }
 
   describe "#to_json" do

@@ -34,6 +34,12 @@ RSpec.describe "work show view" do
       visit work_path
     end
 
+    around do |example|
+      Hyrax.config.analytics = true
+      example.run
+      Hyrax.config.analytics = false
+    end
+
     it "shows work content and all editor buttons and links" do
       expect(page).to have_selector 'h1', text: 'Magnificent splendor'
       expect(page).to have_selector 'h1', text: 'Happy little trees'
