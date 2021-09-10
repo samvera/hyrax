@@ -3,6 +3,7 @@ module Hyrax
   module Admin
     module Analytics
       class CollectionReportsController < AnalyticsController
+        include Hyrax::BreadcrumbsForCollectionAnalytics
         def index
           return unless Hyrax.config.analytics == true
 

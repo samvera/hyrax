@@ -62,6 +62,21 @@ function getStatusSettings(){
     }
 }
 
+function getStatusAnalytics(){
+    const resultDiv = document.getElementById('collapseAnalytics');
+    const isCollapsed = getCollapsedSettings();
+    if (resultDiv === null) {
+        return;
+    }
+    else if(isCollapsed){
+        resultDiv.classList.remove("in");
+        resultDiv.setAttribute("aria-expanded", "false");
+    }else{
+        resultDiv.classList.add("in");
+        resultDiv.setAttribute("aria-expanded", "true");
+    }
+}
+
 function toggleCollapse(input){
     var type = input.href;
     var start = type.indexOf("#");

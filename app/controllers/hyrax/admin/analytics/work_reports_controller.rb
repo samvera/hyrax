@@ -3,6 +3,8 @@ module Hyrax
   module Admin
     module Analytics
       class WorkReportsController < AnalyticsController
+        include Hyrax::BreadcrumbsForWorksAnalytics
+
         def index
           return unless Hyrax.config.analytics == true
 
@@ -39,11 +41,9 @@ module Hyrax
         def accessible_works
           models = Hyrax.config.curation_concerns.map { |m| "\"#{m}\"" }
           if current_user.ability.admin?
-            ActiveFedora::SolrService.query(
-              "has_model_ssim:(#{models.join(' OR ')})",
+            ActiveFedora::SolrService.query("has_model_ssim:(#{models.join(' OR ')})",
               fl: 'title_tesim, id, member_of_collections',
-              rows: 50_000
-            )
+              rows: 50_000)
           else
             ActiveFedora::SolrService.query(
               "edit_access_person_ssim:#{current_user} AND has_model_ssim:(#{models.join(' OR ')})",

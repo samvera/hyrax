@@ -1,7 +1,7 @@
-<% provide :page_title, "Collection Reports" %>
+<% provide :page_title, "Collections Reports" %>
 
 <% provide :page_header do %>
-  <h1><span class="fa fa-bar-chart" aria-hidden="true"></span> <%= "Collection Reports" %></h1>
+  <h1><span class="fa fa-bar-chart" aria-hidden="true"></span>Collections Reports</h1>
 <% end %>
 
 <div class="row">
@@ -10,7 +10,7 @@
 
 <% if Hyrax.config.analytics == true %>
       <div class="panel panel-default">
-        <div class="panel-heading">The repository contains <b><%= Collection.count %> collections</b>, which collectively have had <b><%= @pageviews.all %> page views</b> and <b><%= @downloads.all %> downloads</b> in the collection.</div>
+        <div class="panel-heading">The repository contains <b><%= pluralize(Collection.count, "collection") %></b>, which collectively have had <b><%= @pageviews.all %> page views</b> and <b><%= @downloads.all %> downloads</b>.</div>
         <div class="panel-body">
           <h2>Activity
           <div class="btn-group pull-right">
