@@ -9,7 +9,7 @@ module Hyrax
     end
 
     def add_breadcrumb_for_controller
-      add_breadcrumb 'Collection Report', hyrax.admin_analytics_collection_reports_path
+      add_breadcrumb 'Collections Report', hyrax.admin_analytics_collection_reports_path
     end
 
     def add_breadcrumb_for_action

@@ -36,18 +36,18 @@
     <li>
       <%= menu.collapsable_section t('hyrax.admin.sidebar.analytics'),
                                         icon_class: "fa fa-bar-chart",
-                                        id: 'collapseReports',
+                                        id: 'collapseAnalytics',
                                         open: menu.analytics_reporting_section? do %>
         <% if can? :read, :admin_dashboard %>
           <%= menu.nav_link(hyrax.admin_analytics_collection_reports_path,
                             onclick: "dontChangeAccordion(event);") do %>
-            <span class="fa fa-folder-open" aria-hidden="true"></span> <span class="sidebar-action-text">Collections</span>
+            <span class="fa fa-folder-open" aria-hidden="true"></span> <span class="sidebar-action-text">Collections Report</span>
           <% end %>
         <% end %>
 
         <%= menu.nav_link(hyrax.admin_analytics_work_reports_path,
                           onclick: "dontChangeAccordion(event);") do %>
-          <span class="fa fa-file" aria-hidden="true"></span> <span class="sidebar-action-text">Works</span>
+          <span class="fa fa-file" aria-hidden="true"></span> <span class="sidebar-action-text">Works Report</span>
         <% end %>
 
       <% end %>
