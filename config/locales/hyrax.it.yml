@@ -178,6 +178,89 @@ it:
           item_list_header: Funziona in questo set
         show_actions:
           confirm_delete: Sei sicuro di voler eliminare questo set amministrativo? Questa azione non può essere annullata.
+      analytics:
+        collection_reports:
+          index:
+            activity: Attività
+            and: e
+            date_range_heading: Personalizza rapporto
+            downloads: download
+            enable_analytics: Abilita Analytics per visualizzare i report
+            export: Esportare
+            monthly: Mensile
+            repo_summary: Il repository contiene
+            repo_summary_2: che collettivamente hanno avuto
+            report_header: Report collezioni personalizzate
+            summary: Riepilogo
+            title: Report collezioni
+            views: visualizzazioni di pagina
+          monthly_summary:
+            collection_views: Visualizzazioni della home page della raccolta
+            monthly_subtitle: Stato mese per mese per gli ultimi 12 mesi fino a
+            work_downloads: Download di opere
+            work_views: Viste delle opere
+          summary:
+            all_time: Sempre
+            collection_home_page_views: Visualizzazioni della home page della raccolta
+            date_range: Intervallo di date
+            subtitle: Riepilogo dell'attività dell'utente
+            this_month: Questo mese
+            this_week: Questa settimana
+            this_year: Quest'anno
+            today: Oggi
+            work_downloads: Download di opere
+            work_views: Viste delle opere
+          top_collections:
+            collection_page_views: Visualizzazioni della pagina della raccolta
+            collection_title: Titolo della raccolta
+            deleted: Raccolta eliminata
+            file_downloads_in_collection: Download di set di file in questa raccolta
+            top_collections: Collezioni migliori
+            works_in_collection_views: Funziona in questa collezione Viste
+        date_range_form:
+          end_date: Data di fine
+          reset_date_range: Reimposta intervallo di date
+          set_date_range: Imposta l'intervallo di date del rapporto
+          start_date: Data d'inizio
+        work_reports:
+          index:
+            access_to: Hai accesso a
+            activity: Attività
+            and: e
+            date_range_heading: Personalizza rapporto
+            downloads: download
+            enable_analytics: Abilita Analytics per visualizzare i report
+            export: Esportare
+            monthly: Mensile
+            repo_summary: in questo deposito che collettivamente hanno avuto
+            report_generated_on: Questo rapporto è stato generato il
+            report_header: Rapporto sui lavori personalizzati
+            summary: Riepilogo
+            title: Relazione sui lavori
+            views: visualizzazioni
+            works: lavori
+          monthly_summary:
+            file_downloads: Download di file
+            monthly_subtitle: Stato mese per mese per gli ultimi 12 mesi fino a
+            page_views: Visualizzazioni di pagina
+          summary:
+            all_time: Sempre
+            date_range: Intervallo di date
+            subtitle: Riepilogo dell'attività dell'utente
+            this_month: Questo mese
+            this_week: Questa settimana
+            this_year: Quest'anno
+            today: Oggi
+          top_file_set_downloads:
+            file: File
+            file_downloads: Download di file
+            file_name: Nome del file
+            top_downloads: Download di file principali
+          top_works:
+            file_downloads: Download di file
+            top_works: I migliori lavori
+            work_title: Titolo del lavoro
+            work_views: Visualizzazioni della pagina di lavoro
       appearances:
         show:
           header: Aspetto
@@ -263,11 +346,14 @@ it:
           header: Caratteristiche
       sidebar:
         activity: Attività
+        analytics: Analisi
         appearance: Aspetto
         collection_types: Tipi di raccolta
         collections: collezioni
+        collections_report: Report collezioni
         configuration: Configurazione
         content_blocks: Blocchi di contenuti
+        dashboard: Pannello di controllo
         delete_all: Cancella tutto
         notifications: notifiche
         pages: pagine
@@ -284,6 +370,7 @@ it:
         workflow_roles: Ruoli di flusso di lavoro
         works: Lavori
         works_listing: Elenco delle opere
+        works_report: Relazione sui lavori
       stats:
         deposited_form:
           end_label: Fine [impostazione predefinita]
@@ -692,13 +779,17 @@ it:
       authorize_proxies: Autorizzare i Proxy
       breadcrumbs:
         admin: Amministrazione
+        collections_report: Report collezioni
+        works_report: Relazione sui lavori
       collection_type_actions:
         close: Vicino
         create_collection: Crea raccolta
         select_type_of_collection: Seleziona il tipo di collezione
       collections:
+        collection_title: Titolo della raccolta
         edit:
           header: 'Modifica collezione: %{title}'
+        files: File
         form:
           permission_update_errors:
             error: Opzione di aggiornamento non valida per modello di autorizzazione.
@@ -789,6 +880,7 @@ it:
             remove: Rimuovere
             title: Gli spettatori
             type: genere
+        last_updated: Ultimo aggiornamento
         new:
           header: Crea nuova collezione
         show:
@@ -819,6 +911,7 @@ it:
         sort_and_per_page:
           show_par_page_html: Mostra %{select} per pagina
           sort_by: 'Ordina Per:'
+        title: Collezioni
         work_action_menu:
           delete_work: Elimina lavoro
           deleting_from_work: L'eliminazione di un'opera da %{application_name} è permanente. Fai clic su OK per eliminare quest'opera da %{application_name} o Annulla per annullare questa operazione
@@ -827,6 +920,13 @@ it:
           remove_from_collection: Rimuovi dalla raccolta
           select_an_action: Seleziona un'azione
           transfer_ownership_of_work: Trasferimento della proprietà del lavoro
+        works: Lavori
+      collections_pinned:
+        collection_title: Titolo della raccolta
+        files: File
+        last_updated: Ultimo aggiornamento
+        title: Raccolte appuntate
+        works: Lavori
       create_work: Crea lavoro
       current_proxies: Proxy attuali
       delete_notification: Elimina notifica
@@ -886,6 +986,7 @@ it:
             view: vista
           users: 'utenti:'
         collections: Le tue collezioni
+        collections_report: Report collezioni
         facet_label:
           collections: 'Collezioni filtro:'
           highlighted: 'Filtra i punti salienti:'
@@ -921,6 +1022,7 @@ it:
           show_label: Visualizza tutti i dettagli di
           thumbnail: miniatura
         works: Le tue opere
+        works_report: Relazione sui lavori
         your_collections: Le tue collezioni
         your_works: I tuoi lavori
       nest_collections_form:
@@ -954,12 +1056,18 @@ it:
         objects: Oggetti
         subtitle: Ultimi 90 giorni
         title: Crescita del repository
+        works: Lavori
       repository_objects:
         status: Stato attuale
         subtitle: Stato attuale
         title: Oggetti del repository
+      resource_type_graph:
+        count: Contare
+        resource_type: Tipo di risorsa
+        title: Tipi di risorse
       show_admin:
         current_registered_users: Corrente
+        graph_reports: Rapporti grafici personalizzati
         new_visitors: Nuovi visitatori
         past_30_days: Ultimi 30 giorni
         registered_users: Utente registrato
@@ -981,10 +1089,19 @@ it:
       user_activity:
         date: Data
         new_users: Nuovi utenti
+        new_visitors: Nuovi visitatori
+        registered_users: utente registrato
+        returning_visitors: Visitatori di ritorno
         subtitle: Nuove iscrizioni utente
         title: Attività dell'utente
+        total_visitors: Visitatori totali
+        user_summary: Riepilogo utente
       user_notifications: Notifiche utente
       view_files: Vedi files
+      work_type_graph:
+        count: Contare
+        title: Tipi di lavoro
+        work_type: Tipo di lavoro
     document_language: it
     edit_profile: Modifica Profilo
     embargoes:

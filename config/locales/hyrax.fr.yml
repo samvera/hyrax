@@ -178,6 +178,89 @@ fr:
           item_list_header: Fonctionne dans cet ensemble
         show_actions:
           confirm_delete: Êtes-vous sûr de vouloir supprimer cet ensemble administratif? Cette action ne peut pas être annulée.
+      analytics:
+        collection_reports:
+          index:
+            activity: Activité
+            and: et
+            date_range_heading: Personnaliser le rapport
+            downloads: téléchargements
+            enable_analytics: Activer Analytics pour afficher les rapports
+            export: Exportation
+            monthly: Mensuel
+            repo_summary: Le référentiel contient
+            repo_summary_2: qui ont collectivement eu
+            report_header: Rapport sur les collections personnalisées
+            summary: Sommaire
+            title: Rapport de recouvrement
+            views: pages vues
+          monthly_summary:
+            collection_views: Vues de la page d'accueil de la collection
+            monthly_subtitle: Statut mensuel des 12 derniers mois jusqu'au
+            work_downloads: Téléchargements d'oeuvres
+            work_views: Vues des travaux
+          summary:
+            all_time: Tout le temps
+            collection_home_page_views: Vues de la page d'accueil de la collection
+            date_range: Plage de dates
+            subtitle: Résumé de l'activité de l'utilisateur
+            this_month: Ce mois-ci
+            this_week: Cette semaine
+            this_year: Cette année
+            today: Aujourd'hui
+            work_downloads: Téléchargements d'oeuvres
+            work_views: Vues des travaux
+          top_collections:
+            collection_page_views: Vues des pages de collection
+            collection_title: Titre de la collection
+            deleted: Collection supprimée
+            file_downloads_in_collection: Téléchargements d'ensembles de fichiers dans cette collection
+            top_collections: Meilleures Collections
+            works_in_collection_views: uvres dans cette collection Vues
+        date_range_form:
+          end_date: Date de fin
+          reset_date_range: Réinitialiser la plage de dates
+          set_date_range: Définir la plage de dates du rapport
+          start_date: Date de début
+        work_reports:
+          index:
+            access_to: Vous avez accès à
+            activity: Activité
+            and: et
+            date_range_heading: Personnaliser le rapport
+            downloads: téléchargements
+            enable_analytics: Activer Analytics pour afficher les rapports
+            export: Exportation
+            monthly: Mensuel
+            repo_summary: dans ce référentiel qui ont collectivement eu
+            report_generated_on: Ce rapport a été généré le
+            report_header: Rapport de travaux personnalisés
+            summary: Sommaire
+            title: Rapport des travaux
+            views: vues
+            works: travaux
+          monthly_summary:
+            file_downloads: Téléchargements de fichiers
+            monthly_subtitle: Statut mensuel des 12 derniers mois jusqu'au
+            page_views: Pages vues
+          summary:
+            all_time: Tout le temps
+            date_range: Plage de dates
+            subtitle: Résumé de l'activité de l'utilisateur
+            this_month: Ce mois-ci
+            this_week: Cette semaine
+            this_year: Cette année
+            today: Aujourd'hui
+          top_file_set_downloads:
+            file: Déposer
+            file_downloads: Téléchargements de fichiers
+            file_name: Nom de fichier
+            top_downloads: Meilleurs téléchargements de fichiers
+          top_works:
+            file_downloads: Téléchargements de fichiers
+            top_works: Meilleurs travaux
+            work_title: Titre du travail
+            work_views: Vues de la page de travail
       appearances:
         show:
           header: Apparence
@@ -263,11 +346,14 @@ fr:
           header: Caractéristiques
       sidebar:
         activity: Activité
+        analytics: Analytique
         appearance: Apparence
         collection_types: Types de collection
         collections: Collections
+        collections_report: Rapport de recouvrement
         configuration: Configuration
         content_blocks: Blocs de contenu
+        dashboard: Tableau de bord
         delete_all: Supprimer tout
         notifications: Notifications
         pages: Pages
@@ -284,6 +370,7 @@ fr:
         workflow_roles: Rôles de workflow
         works: Travaux
         works_listing: Liste des travaux
+        works_report: Rapport des travaux
       stats:
         deposited_form:
           end_label: Fin [par défaut pour maintenant]
@@ -693,13 +780,17 @@ fr:
       authorize_proxies: Autoriser les procurations
       breadcrumbs:
         admin: Administration
+        collections_report: Rapport de recouvrement
+        works_report: Rapport des travaux
       collection_type_actions:
         close: Fermer
         create_collection: Créer une collection
         select_type_of_collection: Sélectionnez le type de collection
       collections:
+        collection_title: Titre de la collection
         edit:
           header: 'Modifier la collection: %{title}'
+        files: Des dossiers
         form:
           permission_update_errors:
             error: Option de mise à jour non valide pour le modèle d'autorisation.
@@ -790,6 +881,7 @@ fr:
             remove: Retirer
             title: Les spectateurs
             type: Type
+        last_updated: Dernière mise à jour
         new:
           header: Créer une nouvelle collection
         show:
@@ -820,6 +912,7 @@ fr:
         sort_and_per_page:
           show_par_page_html: Afficher %{select} collections par page
           sort_by: 'Trier par:'
+        title: Collections
         work_action_menu:
           delete_work: Supprimer le travail
           deleting_from_work: Supprimer un travail de %{application_name} est permanent. Cliquez sur OK pour supprimer ce travail de %{application_name} ou sur Annuler pour annuler cette opération.
@@ -828,6 +921,13 @@ fr:
           remove_from_collection: Retirer de la collection
           select_an_action: Sélectionnez une action
           transfer_ownership_of_work: Transfert de la propriété du travail
+        works: Travaux
+      collections_pinned:
+        collection_title: Titre de la collection
+        files: Des dossiers
+        last_updated: Dernière mise à jour
+        title: Collections épinglées
+        works: Travaux
       create_work: Créer un travail
       current_proxies: Proxies actuelles
       delete_notification: Supprimer la notification
@@ -887,6 +987,7 @@ fr:
             view: Vue
           users: 'Utilisateurs:'
         collections: Vos collections
+        collections_report: Rapport de recouvrement
         facet_label:
           collections: 'Collections de filtre:'
           highlighted: 'Faits saillants du filtre:'
@@ -922,6 +1023,7 @@ fr:
           show_label: Afficher tous les détails de
           thumbnail: la vignette
         works: Vos travaux
+        works_report: Rapport des travaux
         your_collections: Vos collections
         your_works: Vos œuvres
       nest_collections_form:
@@ -955,12 +1057,18 @@ fr:
         objects: Objets
         subtitle: 90 derniers jours
         title: Croissance du dépôt
+        works: Travaux
       repository_objects:
         status: Statut actuel
         subtitle: Statut actuel
         title: Objets de référentiel
+      resource_type_graph:
+        count: Compter
+        resource_type: Type de ressource
+        title: Types de ressources
       show_admin:
         current_registered_users: Actuellement
+        graph_reports: Rapports graphiques personnalisés
         new_visitors: Nouveaux visiteurs
         past_30_days: Ces 30 derniers jours
         registered_users: Utilisateurs enregistrés
@@ -982,10 +1090,19 @@ fr:
       user_activity:
         date: Rendez-vous amoureux
         new_users: Nouveaux utilisateurs
+        new_visitors: Nouveaux visiteurs
+        registered_users: Utilisateurs enregistrés
+        returning_visitors: Visiteurs de retour
         subtitle: Nouvelles inscriptions d'utilisateurs
         title: Activité de l'utilisateur
+        total_visitors: Nombre total de visiteurs
+        user_summary: Résumé de l'utilisateur
       user_notifications: Notifications de l'utilisateur
       view_files: Afficher les fichiers
+      work_type_graph:
+        count: Compter
+        title: Types de travail
+        work_type: Type de travail
     document_language: fr
     edit_profile: Editer le profil
     embargoes:

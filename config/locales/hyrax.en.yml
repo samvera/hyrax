@@ -178,6 +178,89 @@ en:
           item_list_header: Works in This Set
         show_actions:
           confirm_delete: Are you sure you wish to delete this Administrative Set? This action cannot be undone.
+      analytics:
+        collection_reports:
+          index:
+            title: Collections Report
+            repo_summary: The repository contains
+            repo_summary_2: which collectively have had
+            activity: Activity
+            views: page views
+            and: and
+            summary: Summary
+            monthly: Monthly
+            downloads: downloads
+            export: Export
+            date_range_heading: Customize Report
+            report_header: Custom Collections Report
+            enable_analytics: Enable Analytics To View Reports
+          summary:
+            subtitle: Summary of user activity
+            collection_home_page_views: Collection home page views
+            work_views: Views of works
+            work_downloads: Downloads of works
+            date_range: Date range
+            today: Today
+            this_week: This week
+            this_month: This month
+            this_year: This year
+            all_time: All time
+          monthly_summary: 
+            monthly_subtitle: Month-by-month status for last 12 months through
+            collection_views: Collection home page views
+            work_views: Views of works
+            work_downloads: Downloads of works
+          top_collections:
+            top_collections: Top Collections
+            collection_title: Collection Title
+            works_in_collection_views: Works In This Collection Views
+            file_downloads_in_collection: File Set Downloads In This Collection
+            collection_page_views: Collection Page Views
+            deleted: Collection deleted
+        work_reports:
+          index:
+            title: Works Report
+            activity: Activity
+            repo_summary: in this repository which collectively have had
+            works: works 
+            views: views
+            and: and
+            access_to: You have access to
+            summary: Summary
+            monthly: Monthly
+            downloads: downloads
+            export: Export
+            date_range_heading: Customize Report
+            report_header: Custom Works Report
+            enable_analytics: Enable Analytics To View Reports
+            report_generated_on: This report was generated on 
+          summary:
+            subtitle: Summary of user activity
+            date_range: Date range
+            today: Today
+            this_week: This week
+            this_month: This month
+            this_year: This year
+            all_time: All time
+          monthly_summary: 
+            monthly_subtitle: Month-by-month status for last 12 months through
+            page_views: Page Views
+            file_downloads: File Downloads
+          top_works: 
+            top_works: Top Works
+            work_title: Work Title
+            work_views: Work Page Views
+            file_downloads: File Downloads
+          top_file_set_downloads: 
+            top_downloads: Top File Downloads
+            file_name: File Name
+            file: File
+            file_downloads: File Downloads
+        date_range_form:
+            start_date: Start Date
+            end_date: End Date
+            set_date_range: Set Report Date Range
+            reset_date_range: Reset Date Range
       appearances:
         show:
           header: Appearance
@@ -277,6 +360,8 @@ en:
         settings: Settings
         statistics: Statistics
         analytics: Analytics
+        works_report: Works Report
+        collections_report: Collections Report
         tasks: Tasks
         technical: Features
         transfers: Transfers
@@ -695,6 +780,8 @@ en:
       authorize_proxies: Authorize Proxies
       breadcrumbs:
         admin: Dashboard
+        collections_report: Collections Report
+        works_report: Works Report
       collection_type_actions:
         close: Close
         create_collection: Create collection
@@ -960,6 +1047,26 @@ en:
         status: Current Status
         subtitle: Current Status
         title: Repository Objects
+      resource_type_graph:
+        resource_type: Resource Type
+        title: Resource Types
+        count:  Count
+      work_type_graph:
+        work_type: Work Type
+        title: Work Types
+        count: Count
+      collections_pinned:
+        title: Pinned Collections
+        collection_title: Collection title
+        last_updated: Last updated
+        works: Works
+        files: Files
+      collections:
+        title: Collections
+        collection_title: Collection title
+        last_updated: Last updated
+        works: Works
+        files: Files
       show_admin:
         current_registered_users: Current
         new_visitors: New Visitors
@@ -967,6 +1074,7 @@ en:
         registered_users: Registered Users
         returning_visitors: Returning Visitors
         total_visitors: Total Visitors
+        graph_reports: Customized Graph Reports
       stats:
         collections: Collections created
         file_downloads: Download
@@ -989,6 +1097,7 @@ en:
         subtitle: New user signups
         total_visitors: Total Visitors
         title: User Activity
+        user_summary: User Summary
       user_notifications: User Notifications
       view_files: View Files
     document_language: en

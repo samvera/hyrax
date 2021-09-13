@@ -1,6 +1,6 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">Resource Types</h3>
+    <h3 class="panel-title"><%= t('.title') %></h3>
   </div>
   <div class="panel-body">
     <div id="dashboard-resource-types" aria-hidden="true" style="height: 200px">
@@ -20,11 +20,11 @@
       </script>
     </div>
                       
-    <table aria-label="Resource Type" class="table table-striped sr-only text-left">
+    <table aria-label="<%= t('.title') %>" class="table table-striped sr-only text-left">
       <thead>
         <tr>
-          <th>Resource Type</th>
-          <th>Count</th>
+          <th><%= t('.resource_type') %></th>
+          <th><%= t('.count') %></th>
         </tr>
       </thead>
       <tbody>

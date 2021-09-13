@@ -14,7 +14,7 @@ module Hyrax
         end
 
         def set_months
-          @month_names = 12.downto(1).map { |n| DateTime::MONTHNAMES.drop(1)[(Time.zone.today.month - n) % 12] }.reverse
+          @month_names = 12.downto(1).map { |n| DateTime::ABBR_MONTHNAMES.drop(1)[(Time.zone.today.month - n) % 12] }.reverse
         end
 
         def set_date_range

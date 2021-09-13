@@ -1,4 +1,4 @@
-<h4>Monthly user activity (past 12 months)</h4>
+<h4 class="text-center"><%= t('.monthly_subtitle') %> <%= Time.zone.today.strftime("%B %Y") %></h4>
 <hr />
 
 <table class="table table-striped">
@@ -13,7 +13,7 @@
   <tbody>
    <% if @pageviews %>    
     <tr>
-      <td><b>Page Views</b></td>
+      <td><b><%= t('.page_views') %></b></td>
        <% @month_names.each do |name| %>
          <td><%= @pageviews.month(name.to_date) %></td>
        <% end %>
@@ -21,7 +21,7 @@
   <% end %>
   <% if @downloads %>
     <tr>
-      <td><b>File Downloads</b></td>
+      <td><b><%= t('.file_downloads') %></b></td>
         <% @month_names.each do |name| %>
          <td><%= @downloads.month(name.to_date) %></td>
        <% end %>

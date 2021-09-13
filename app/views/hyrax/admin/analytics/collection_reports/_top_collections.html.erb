@@ -1,12 +1,12 @@
-<h4>Top Collections</h4>
+<h4><%= t('.top_collections') %></h4>
 <hr />
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>Collection Title</th>
-      <th>Works In This Collection Views</th>
-      <th>File Set Downloads In This Collection</th>
-      <th>Collection Page Views</th>
+      <th><%= t('.collection_title') %></th>
+      <th><%= t('.works_in_collection_views') %></th>
+      <th><%= t('.file_downloads_in_collection') %></th>
+      <th><%= t('.collection_page_views') %></th>
     </tr>
   </thead>
   <tbody>
@@ -16,7 +16,7 @@
         <% if document %>
           <td><%= link_to document, admin_analytics_collection_report_path(collection[0]) %></td>
         <% else %>
-          <td><i>Collection deleted</i></td>
+          <td><i><%= t('.deleted') %></i></td>
         <% end %>
           <td><%= collection[1] %></td>
           <td>

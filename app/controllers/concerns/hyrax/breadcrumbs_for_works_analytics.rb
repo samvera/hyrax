@@ -9,7 +9,7 @@ module Hyrax
     end
 
     def add_breadcrumb_for_controller
-      add_breadcrumb 'Works Report', hyrax.admin_analytics_work_reports_path
+      add_breadcrumb I18n.t('hyrax.dashboard.breadcrumbs.works_report'), hyrax.admin_analytics_work_reports_path
     end
 
     def add_breadcrumb_for_action
