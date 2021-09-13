@@ -165,6 +165,8 @@ module Hyrax
         elsif file_set.import_url.present?
           # This path is taken when file is a Tempfile (e.g. from ImportUrlJob)
           File.basename(Addressable::URI.unencode(file.file_url))
+        elsif file.respond_to?(:original_filename) # e.g. Rack::Test::UploadedFile
+          file.original_filename
         else
           File.basename(file)
         end
