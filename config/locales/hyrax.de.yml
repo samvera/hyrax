@@ -178,6 +178,89 @@ de:
           item_list_header: Arbeiten in diesem Admin-Set
         show_actions:
           confirm_delete: Möchten Sie dieses Admin-Set wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.
+      analytics:
+        collection_reports:
+          index:
+            activity: Aktivität
+            and: und
+            date_range_heading: Bericht anpassen
+            downloads: Downloads
+            enable_analytics: Aktivieren Sie Analytics, um Berichte anzuzeigen
+            export: Export
+            monthly: Monatlich
+            repo_summary: Das Repository enthält
+            repo_summary_2: die kollektiv hatten
+            report_header: Bericht zu benutzerdefinierten Sammlungen
+            summary: Zusammenfassung
+            title: Sammlungsbericht
+            views: Seitenaufrufe
+          monthly_summary:
+            collection_views: Aufrufe der Sammlungs-Startseite
+            monthly_subtitle: Monat für Monat Status für die letzten 12 Monate bis
+            work_downloads: Downloads von Werken
+            work_views: Werkansichten
+          summary:
+            all_time: Alle Zeit
+            collection_home_page_views: Aufrufe der Sammlungs-Startseite
+            date_range: Datumsbereich
+            subtitle: Zusammenfassung der Benutzeraktivität
+            this_month: Diesen Monat
+            this_week: In dieser Woche
+            this_year: Dieses Jahr
+            today: Heute
+            work_downloads: Downloads von Werken
+            work_views: Werkansichten
+          top_collections:
+            collection_page_views: Seitenaufrufe der Sammlung
+            collection_title: Sammlungstitel
+            deleted: Sammlung gelöscht
+            file_downloads_in_collection: Dateiset-Downloads in dieser Sammlung
+            top_collections: Top-Kollektionen
+            works_in_collection_views: Funktioniert in dieser Sammlungsansichten
+        date_range_form:
+          end_date: Endtermin
+          reset_date_range: Datumsbereich zurücksetzen
+          set_date_range: Berichtszeitraum festlegen
+          start_date: Startdatum
+        work_reports:
+          index:
+            access_to: Sie haben Zugriff auf
+            activity: Aktivität
+            and: und
+            date_range_heading: Bericht anpassen
+            downloads: Downloads
+            enable_analytics: Aktivieren Sie Analytics, um Berichte anzuzeigen
+            export: Export
+            monthly: Monatlich
+            repo_summary: in diesem Repository, die kollektiv hatten
+            report_generated_on: Dieser Bericht wurde erstellt am
+            report_header: Bericht über benutzerdefinierte Arbeiten
+            summary: Zusammenfassung
+            title: Werksbericht
+            views: Ansichten
+            works: funktioniert
+          monthly_summary:
+            file_downloads: Datei-Downloads
+            monthly_subtitle: Monat für Monat Status für die letzten 12 Monate bis
+            page_views: Seitenaufrufe
+          summary:
+            all_time: Alle Zeit
+            date_range: Datumsbereich
+            subtitle: Zusammenfassung der Benutzeraktivität
+            this_month: Diesen Monat
+            this_week: In dieser Woche
+            this_year: Dieses Jahr
+            today: Heute
+          top_file_set_downloads:
+            file: Datei
+            file_downloads: Datei-Downloads
+            file_name: Dateiname
+            top_downloads: Top-Datei-Downloads
+          top_works:
+            file_downloads: Datei-Downloads
+            top_works: Top-Werke
+            work_title: Arbeitstitel
+            work_views: Arbeitsseitenaufrufe
       appearances:
         show:
           header: Design
@@ -263,11 +346,14 @@ de:
           header: Funktionen
       sidebar:
         activity: Aktivität
+        analytics: Analytik
         appearance: Design
         collection_types: Sammlungstypen
         collections: Sammlungen
+        collections_report: Sammlungsbericht
         configuration: Konfiguration
         content_blocks: Inhaltsblöcke
+        dashboard: Armaturenbrett
         delete_all: Alles löschen
         notifications: Benachrichtigungen
         pages: Seiten
@@ -284,6 +370,7 @@ de:
         workflow_roles: Workflow-Rollen
         works: Arbeiten
         works_listing: Auflistung der Arbeiten
+        works_report: Werksbericht
       stats:
         deposited_form:
           end_label: Ende [Voreinstellung]
@@ -687,13 +774,17 @@ de:
       authorize_proxies: Vertreter autorisieren
       breadcrumbs:
         admin: Verwaltung
+        collections_report: Sammlungsbericht
+        works_report: Werksbericht
       collection_type_actions:
         close: Schließen
         create_collection: Sammlung erstellen
         select_type_of_collection: Wählen Sie den Typ der Sammlung aus
       collections:
+        collection_title: Sammlungstitel
         edit:
           header: 'Bearbeiten von %{type_title}: %{title}'
+        files: Dateien
         form:
           permission_update_errors:
             error: Ungültige Update-Option für die Berechtigungsvorlage
@@ -784,6 +875,7 @@ de:
             remove: Entfernen
             title: Betrachter
             type: Typ
+        last_updated: Letzte Aktualisierung
         new:
           header: Neue Sammlung erstellen
         show:
@@ -814,6 +906,7 @@ de:
         sort_and_per_page:
           show_par_page_html: Zeige %{select} pro Seite
           sort_by: 'Sortieren nach:'
+        title: Kollektionen
         work_action_menu:
           delete_work: Arbeit löschen
           deleting_from_work: Das Löschen einer Arbeit aus %{application_name} ist dauerhaft. Klicken Sie auf OK, um diese Arbeit von %{application_name} zu löschen, oder auf Abbrechen, um diesen Vorgang abzubrechen
@@ -822,6 +915,13 @@ de:
           remove_from_collection: Aus der Sammlung entfernen
           select_an_action: Wählen Sie eine Aktion aus
           transfer_ownership_of_work: Übertragen Sie das Eigentum an der Arbeit
+        works: Funktioniert
+      collections_pinned:
+        collection_title: Sammlungstitel
+        files: Dateien
+        last_updated: Letzte Aktualisierung
+        title: Angepinnte Sammlungen
+        works: Funktioniert
       create_work: Arbeiten erstellen
       current_proxies: Aktuelle Vertreter
       delete_notification: Benachrichtigung löschen
@@ -881,6 +981,7 @@ de:
             view: Ansicht
           users: 'Benutzer:'
         collections: Ihre Sammlungen
+        collections_report: Sammlungsbericht
         facet_label:
           collections: 'Filter Sammlungen:'
           highlighted: 'Filter Hervorhebungen:'
@@ -916,6 +1017,7 @@ de:
           show_label: Zeige alle Details von
           thumbnail: Miniaturansicht
         works: Ihre Arbeiten
+        works_report: Werksbericht
         your_collections: Ihre Sammlungen
         your_works: Ihre Werke
       nest_collections_form:
@@ -949,12 +1051,18 @@ de:
         objects: Objekte
         subtitle: Die letzten 90 Tage
         title: Repository-Wachstum
+        works: Funktioniert
       repository_objects:
         status: Aktueller Status
         subtitle: Aktueller Status
         title: Repository-Objekte
+      resource_type_graph:
+        count: Zählen
+        resource_type: Ressourcentyp
+        title: Ressourcentypen
       show_admin:
         current_registered_users: Aktuelle
+        graph_reports: Benutzerdefinierte Diagrammberichte
         new_visitors: Neue Besucher
         past_30_days: Letzten 30 Tage
         registered_users: Registrierte Benutzer
@@ -976,10 +1084,19 @@ de:
       user_activity:
         date: Datum
         new_users: Neue Nutzer
+        new_visitors: Neue Besucher
+        registered_users: Registrierte Benutzer
+        returning_visitors: Wiederkehrende Besucher
         subtitle: Neue Benutzeranmeldungen
         title: Benutzeraktivität
+        total_visitors: Gesamtbesucher
+        user_summary: Benutzerzusammenfassung
       user_notifications: Benutzerbenachrichtigungen
       view_files: Dateien ansehen
+      work_type_graph:
+        count: Zählen
+        title: Arbeitstypen
+        work_type: Arbeitstyp
     document_language: de
     edit_profile: Profil bearbeiten
     embargoes:

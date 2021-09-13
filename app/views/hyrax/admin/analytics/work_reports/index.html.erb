@@ -1,7 +1,7 @@
-<% provide :page_title, "Works Reports" %>
+<% provide :page_title, "#{t('.title')}" %>
 
 <% provide :page_header do %>
-  <h1><span class="fa fa-bar-chart" aria-hidden="true"></span>Works Reports</h1>
+  <h1><span class="fa fa-bar-chart" aria-hidden="true"></span><%= t('.title') %></h1>
 <% end %>
 
 <div class="row">
@@ -11,19 +11,19 @@
     <% if Hyrax.config.analytics == true %>
       <div class="panel panel-default">
       <% if current_user.ability.admin? %>
-        <div class="panel-heading"><b><%= @works_count %> works</b> in this repository which collectively have had <b><%= @pageviews.all if @pageviews %> views</b> and <b><%= @downloads.all if @downloads %> downloads</b>.</div>
+        <div class="panel-heading"><b><%= @works_count %> <%= t('.works') %></b> <%= t('.repo_summary') %> <b><%= @pageviews.all if @pageviews %> <%= t('.views') %></b> <%= t('.and') %> <b><%= @downloads.all if @downloads %> <%= t('.downloads') %></b>.</div>
       <% else %>
-        <div class="panel-heading">You have access to <b><%= @works_count %> works</b>.</div>
+        <div class="panel-heading"><%= t('.access_to') %> <b><%= @works_count %> <%= t('.works') %></b>.</div>
       <% end %>
         <div class="panel-body">
-          <h2>Activity
+          <h2><%= t('.activity') %>
           <div class="btn-group pull-right">
-            <%= link_to "Export", admin_analytics_work_reports_path(start_date: @start_date, end_date: @end_date, format: :csv, disposition: "attachment"), class: "btn btn-default" %>
+            <%= link_to "#{t('.export')}", admin_analytics_work_reports_path(start_date: @start_date, end_date: @end_date, format: :csv, disposition: "attachment"), class: "btn btn-default" %>
           </div></h2>
           </h2>
 
           <div class="panel panel-default">
-            <div class="panel-heading">Customize Report <%= @test %></div>
+            <div class="panel-heading"><%= t('.date_range_heading') %></div>
             <div class="panel-body">
               <%= render "hyrax/admin/analytics/date_range_form", redirect_path: hyrax.admin_analytics_work_reports_path %>
               <hr />
@@ -31,20 +31,19 @@
               <div class="row text-center">
                 <div class="nav nav-pills btn-group" role="group">
                   <a button id='summary-btn' class="btn btn-primary nav-link" type="button" href="#summary" data-toggle="pill">
-                    Summary
+                    <%= t('.summary') %>
                   </a>
                   <a button id='monthly-btn' class="btn btn-default nav-link" type="button" href="#monthly" data-toggle="pill">
-                      Monthly
+                      <%= t('.monthly') %>
                   </a>
                 </div>
               </div>
               <div class="tab-content">
-                <h3 class="text-center">Custom Work Report</h3>
+                <h3 class="text-center"><%= t('.report_header') %></h3>
                 <div class="tab-pane active" id="summary">
                   <%= render "summary" %>
                 </div>
                 <div class="tab-pane" id="monthly">
-                  <h4 class="text-center">Month-by-month status for last 12 months through <%= Time.zone.today.strftime("%B %Y") %></h4>
                   <%= render "monthly_summary" %>
                 </div>
               </div>
@@ -61,14 +60,14 @@
             </div>
 
           </div>
-          <p class="text-center">This report was generated on <b><%= Time.zone.today.strftime("%B %d, %Y") %></b></p>
+          <p class="text-center"><%= t('.report_generated_on') %> <b><%= Time.zone.today.strftime("%B %d, %Y") %></b></p>
 
         </div>
 
       </div>
       <% else %>
         <div class="alert alert-warning" role="alert">
-          Enable Analytics To View Reports
+          <%= t('.enable_analytics') %>
         </div>
      <% end %>
     </div>
