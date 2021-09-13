@@ -34,7 +34,7 @@ module Hyrax
 
     def run_required_generators
       say_status('info', '[Hyrax] GENERATING BLACKLIGHT', :blue)
-      generate 'blacklight:install --devise'
+      generate 'blacklight:install --devise --skip-solr'
       say_status('info', '[Hyrax] GENERATING HYDRA-HEAD', :blue)
       generate 'hydra:head -f'
       generate "hyrax:models#{options[:force] ? ' -f' : ''}"

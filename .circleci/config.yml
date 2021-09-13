@@ -101,7 +101,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - samvera/install_solr_core:
-          solr_config_path: .internal_test_app/solr/config
+          solr_config_path: .internal_test_app/solr/conf
       # Rerun bundler in case this is a different ruby version than bundle and build steps
       - samvera/bundle_for_gem:
           ruby_version: << parameters.ruby_version >>
