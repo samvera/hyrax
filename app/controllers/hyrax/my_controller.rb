@@ -36,9 +36,7 @@ module Hyrax
 
     def index
       @user = current_user
-      Deprecation.silence(Hyrax::MyController) do
-        (@response, @document_list) = query_solr
-      end
+      (@response, @document_list) = search_service.search_results
       prepare_instance_variables_for_batch_control_display
 
       respond_to do |format|
