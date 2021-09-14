@@ -1,53 +1,55 @@
-<h4 class="text-center"><%= @start_date.to_date.strftime("%B %d, %Y") %> through <%= @end_date.to_date.strftime("%B %d, %Y") %></h4>
-<br>
-<h4><%= t('.subtitle')%></h4>
-<hr />
+<div class="panel panel-default">
+  <div class="panel-heading">
+  <h4><%= t('.subtitle')%></h4>
+  </div>
+  <div class="panel-body">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th><%= t('.today') %></th>
+          <th><%= t('.this_week') %></th>
+          <th><%= t('.this_month') %></th>
+          <th><%= t('.this_year') %></th>
+          <th><%= t('.all_time') %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @pageviews %>
+          <tr>
+            <td><b><%= t('.collection_home_page_views') %></b></td>
+            <td><%= @pageviews.day %></td>
+            <td><%= @pageviews.week %></td>
+            <td><%= @pageviews.month %></td>
+            <td><%= @pageviews.year %></td>
+            <td><%= @pageviews.all %></td>
+          </tr>
+        <% end %>
+        <% if @work_page_views %>
+          <tr>
+            <td><b><%= t('.work_views') %></b></td>
+            <td><%= @work_page_views.day %></td>
+            <td><%= @work_page_views.week %></td>
+            <td><%= @work_page_views.month %></td>
+            <td><%= @work_page_views.year %></td>
+            <td><%= @work_page_views.all %></td>
+          </tr>
+        <% end %>
+        <% if @downloads %>
+          <tr>
+            <td><b><%= t('.work_downloads') %></b></td>
+            <td><%= @downloads.day %></td>
+            <td><%= @downloads.week %></td>
+            <td><%= @downloads.month %></td>
+            <td><%= @downloads.year %></td>
+            <td><%= @downloads.all %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>&nbsp;</th>
-      <th><%= t('.date_range') %></th>
-      <th><%= t('.today') %></th>
-      <th><%= t('.this_week') %></th>
-      <th><%= t('.this_month') %></th>
-      <th><%= t('.this_year') %></th>
-      <th><%= t('.all_time') %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% if @pageviews %>
-      <tr>
-        <td><b><%= t('.collection_home_page_views') %></b></td>
-        <td><%= @pageviews.range(@start_date.to_date, @end_date.to_date) %></td>
-        <td><%= @pageviews.day %></td>
-        <td><%= @pageviews.week %></td>
-        <td><%= @pageviews.month %></td>
-        <td><%= @pageviews.year %></td>
-        <td><%= @pageviews.all %></td>
-      </tr>
-    <% end %>
-    <% if @work_page_views %>
-      <tr>
-        <td><b><%= t('.work_views') %></b></td>
-        <td><%= @work_page_views.range(@start_date.to_date, @end_date.to_date) %></td>
-        <td><%= @work_page_views.day %></td>
-        <td><%= @work_page_views.week %></td>
-        <td><%= @work_page_views.month %></td>
-        <td><%= @work_page_views.year %></td>
-        <td><%= @work_page_views.all %></td>
-      </tr>
-    <% end %>
-    <% if @downloads %>
-      <tr>
-        <td><b><%= t('.work_downloads') %></b></td>
-        <td><%= @downloads.range(@start_date.to_date, @end_date.to_date) %></td>
-        <td><%= @downloads.day %></td>
-        <td><%= @downloads.week %></td>
-        <td><%= @downloads.month %></td>
-        <td><%= @downloads.year %></td>
-        <td><%= @downloads.all %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<% if @top_collections %>
+  <%= render 'top_collections' %>
+<% end %>

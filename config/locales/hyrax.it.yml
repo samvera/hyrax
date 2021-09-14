@@ -180,9 +180,16 @@ it:
           confirm_delete: Sei sicuro di voler eliminare questo set amministrativo? Questa azione non può essere annullata.
       analytics:
         collection_reports:
+          custom_range:
+            collection_home_page_views: Visualizzazioni della home page della raccolta
+            date_range_heading: Personalizza intervallo di date
+            summary_heading: Riepilogo dell'attività dell'utente
+            work_downloads: Download di opere
+            work_views: Viste delle opere
           index:
             activity: Attività
             and: e
+            custom_range: Gamma personalizzata
             date_range_heading: Personalizza rapporto
             downloads: download
             enable_analytics: Abilita Analytics per visualizzare i report
@@ -190,6 +197,7 @@ it:
             monthly: Mensile
             repo_summary: Il repository contiene
             repo_summary_2: che collettivamente hanno avuto
+            report_generated_on: Questo rapporto è stato generato il
             report_header: Report collezioni personalizzate
             summary: Riepilogo
             title: Report collezioni
@@ -224,10 +232,17 @@ it:
           set_date_range: Imposta l'intervallo di date del rapporto
           start_date: Data d'inizio
         work_reports:
+          custom_range:
+            date_range_heading: Personalizza intervallo di date
+            file_downloads: Download di file
+            page_views: Visualizzazioni di pagina
+            summary_heading: Riepilogo dell'attività dell'utente
+            unique_visitors: visitatori Singoli
           index:
             access_to: Hai accesso a
             activity: Attività
             and: e
+            custom_range: Gamma personalizzata
             date_range_heading: Personalizza rapporto
             downloads: download
             enable_analytics: Abilita Analytics per visualizzare i report
@@ -236,6 +251,7 @@ it:
             repo_summary: in questo deposito che collettivamente hanno avuto
             report_generated_on: Questo rapporto è stato generato il
             report_header: Rapporto sui lavori personalizzati
+            subtitle: Riepilogo dell'attività dell'utente
             summary: Riepilogo
             title: Relazione sui lavori
             views: visualizzazioni
@@ -247,11 +263,14 @@ it:
           summary:
             all_time: Sempre
             date_range: Intervallo di date
+            file_downloads: Download di file
+            page_views: Visualizzazioni di pagina
             subtitle: Riepilogo dell'attività dell'utente
             this_month: Questo mese
             this_week: Questa settimana
             this_year: Quest'anno
             today: Oggi
+            unique_visitors: visitatori Singoli
           top_file_set_downloads:
             file: File
             file_downloads: Download di file

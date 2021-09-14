@@ -180,9 +180,16 @@ fr:
           confirm_delete: Êtes-vous sûr de vouloir supprimer cet ensemble administratif? Cette action ne peut pas être annulée.
       analytics:
         collection_reports:
+          custom_range:
+            collection_home_page_views: Vues de la page d'accueil de la collection
+            date_range_heading: Personnaliser la plage de dates
+            summary_heading: Résumé de l'activité de l'utilisateur
+            work_downloads: Téléchargements d'oeuvres
+            work_views: Vues des travaux
           index:
             activity: Activité
             and: et
+            custom_range: Gamme personnalisée
             date_range_heading: Personnaliser le rapport
             downloads: téléchargements
             enable_analytics: Activer Analytics pour afficher les rapports
@@ -190,6 +197,7 @@ fr:
             monthly: Mensuel
             repo_summary: Le référentiel contient
             repo_summary_2: qui ont collectivement eu
+            report_generated_on: Ce rapport a été généré le
             report_header: Rapport sur les collections personnalisées
             summary: Sommaire
             title: Rapport de recouvrement
@@ -224,10 +232,17 @@ fr:
           set_date_range: Définir la plage de dates du rapport
           start_date: Date de début
         work_reports:
+          custom_range:
+            date_range_heading: Personnaliser la plage de dates
+            file_downloads: Téléchargements de fichiers
+            page_views: Pages vues
+            summary_heading: Résumé de l'activité de l'utilisateur
+            unique_visitors: visiteurs uniques
           index:
             access_to: Vous avez accès à
             activity: Activité
             and: et
+            custom_range: Gamme personnalisée
             date_range_heading: Personnaliser le rapport
             downloads: téléchargements
             enable_analytics: Activer Analytics pour afficher les rapports
@@ -236,6 +251,7 @@ fr:
             repo_summary: dans ce référentiel qui ont collectivement eu
             report_generated_on: Ce rapport a été généré le
             report_header: Rapport de travaux personnalisés
+            subtitle: Résumé de l'activité de l'utilisateur
             summary: Sommaire
             title: Rapport des travaux
             views: vues
@@ -247,11 +263,14 @@ fr:
           summary:
             all_time: Tout le temps
             date_range: Plage de dates
+            file_downloads: Téléchargements de fichiers
+            page_views: Pages vues
             subtitle: Résumé de l'activité de l'utilisateur
             this_month: Ce mois-ci
             this_week: Cette semaine
             this_year: Cette année
             today: Aujourd'hui
+            unique_visitors: visiteurs uniques
           top_file_set_downloads:
             file: Déposer
             file_downloads: Téléchargements de fichiers
