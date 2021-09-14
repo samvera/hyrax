@@ -214,6 +214,7 @@ de:
             collection_page_views: Seitenaufrufe der Sammlung
             collection_title: Sammlungstitel
             deleted: Sammlung gelöscht
+            export: Export
             file_downloads_in_collection: Dateiset-Downloads in dieser Sammlung
             top_collections: Top-Kollektionen
             works_in_collection_views: Funktioniert in dieser Sammlungsansichten
@@ -257,6 +258,7 @@ de:
             file_name: Dateiname
             top_downloads: Top-Datei-Downloads
           top_works:
+            export: Export
             file_downloads: Datei-Downloads
             top_works: Top-Werke
             work_title: Arbeitstitel

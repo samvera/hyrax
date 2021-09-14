@@ -214,6 +214,7 @@ fr:
             collection_page_views: Vues des pages de collection
             collection_title: Titre de la collection
             deleted: Collection supprimée
+            export: Exportation
             file_downloads_in_collection: Téléchargements d'ensembles de fichiers dans cette collection
             top_collections: Meilleures Collections
             works_in_collection_views: uvres dans cette collection Vues
@@ -257,6 +258,7 @@ fr:
             file_name: Nom de fichier
             top_downloads: Meilleurs téléchargements de fichiers
           top_works:
+            export: Exportation
             file_downloads: Téléchargements de fichiers
             top_works: Meilleurs travaux
             work_title: Titre du travail

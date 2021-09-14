@@ -16,12 +16,8 @@
         <div class="panel-heading"><%= t('.access_to') %> <b><%= @works_count %> <%= t('.works') %></b>.</div>
       <% end %>
         <div class="panel-body">
-          <h2><%= t('.activity') %>
-          <div class="btn-group pull-right">
-            <%= link_to "#{t('.export')}", admin_analytics_work_reports_path(start_date: @start_date, end_date: @end_date, format: :csv, disposition: "attachment"), class: "btn btn-default" %>
-          </div></h2>
-          </h2>
-
+          <h2><%= t('.activity') %></h2>
+        
           <div class="panel panel-default">
             <div class="panel-heading"><%= t('.date_range_heading') %></div>
             <div class="panel-body">
