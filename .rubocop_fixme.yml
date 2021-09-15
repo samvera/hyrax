@@ -2,6 +2,10 @@ Security/MarshalLoad:
   Exclude:
     - 'app/models/concerns/hyrax/user.rb'
 
+Metrics/AbcSize:
+  Exclude:
+    - 'app/models/sipity.rb'
+
 Metrics/ClassLength:
   Exclude:
     - 'app/controllers/hyrax/dashboard/collections_controller.rb'
