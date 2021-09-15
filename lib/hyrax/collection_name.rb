@@ -7,7 +7,7 @@ module Hyrax
   class CollectionName < Name
     def initialize(klass, namespace = nil, name = nil)
       super
-
+      return if @name == 'Collection'
       @route_key          = Collection.model_name.route_key
       @singular_route_key = Collection.model_name.singular_route_key
     end
