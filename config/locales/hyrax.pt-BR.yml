@@ -180,9 +180,16 @@ pt-BR:
           confirm_delete: Tem certeza de que deseja excluir este conjunto administrativo? Essa ação não pode ser revertida.
       analytics:
         collection_reports:
+          custom_range:
+            collection_home_page_views: Visualizações da página inicial da coleção
+            date_range_heading: Personalizar intervalo de datas
+            summary_heading: Resumo da atividade do usuário
+            work_downloads: Downloads de obras
+            work_views: Vistas de obras
           index:
             activity: Atividade
             and: e
+            custom_range: Faixa Personalizada
             date_range_heading: Relatório Personalizado
             downloads: Transferências
             enable_analytics: Habilite o Analytics para visualizar relatórios
@@ -190,6 +197,7 @@ pt-BR:
             monthly: Por mês
             repo_summary: O repositório contém
             repo_summary_2: que coletivamente tiveram
+            report_generated_on: Este relatório foi gerado em
             report_header: Relatório de coleções personalizadas
             summary: Resumo
             title: Relatório de cobranças
@@ -224,10 +232,17 @@ pt-BR:
           set_date_range: Definir intervalo de datas do relatório
           start_date: Data de início
         work_reports:
+          custom_range:
+            date_range_heading: Personalizar intervalo de datas
+            file_downloads: Downloads de arquivos
+            page_views: Visualizações de página
+            summary_heading: Resumo da atividade do usuário
+            unique_visitors: visitantes únicos
           index:
             access_to: Você tem acesso a
             activity: Atividade
             and: e
+            custom_range: Faixa Personalizada
             date_range_heading: Relatório Personalizado
             downloads: Transferências
             enable_analytics: Habilite o Analytics para visualizar relatórios
@@ -236,6 +251,7 @@ pt-BR:
             repo_summary: neste repositório que coletivamente tiveram
             report_generated_on: Este relatório foi gerado em
             report_header: Relatório de trabalhos personalizados
+            subtitle: Resumo da atividade do usuário
             summary: Resumo
             title: Relatório de Obras
             views: Visualizações
@@ -247,11 +263,14 @@ pt-BR:
           summary:
             all_time: Tempo todo
             date_range: Intervalo de datas
+            file_downloads: Downloads de arquivos
+            page_views: Visualizações de página
             subtitle: Resumo da atividade do usuário
             this_month: Este mês
             this_week: Esta semana
             this_year: Este ano
             today: Hoje
+            unique_visitors: visitantes únicos
           top_file_set_downloads:
             file: Arquivo
             file_downloads: Downloads de arquivos

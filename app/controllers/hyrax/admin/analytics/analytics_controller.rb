@@ -18,7 +18,7 @@ module Hyrax
         end
 
         def set_date_range
-          @start_date = params[:start_date] || Time.zone.today - 1.month
+          @start_date = params[:start_date] || Hyrax.config.analytics_start_date
           @end_date = params[:end_date] || Time.zone.today + 1.day
         end
 

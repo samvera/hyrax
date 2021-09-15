@@ -184,14 +184,14 @@ en:
             title: Collections Report
             repo_summary: The repository contains
             repo_summary_2: which collectively have had
-            activity: Activity
             views: page views
             and: and
             summary: Summary
             monthly: Monthly
+            custom_range:  Custom Range
             downloads: downloads
-            date_range_heading: Customize Report
             report_header: Custom Collections Report
+            report_generated_on: This report was generated on
             enable_analytics: Enable Analytics To View Reports
           summary:
             subtitle: Summary of user activity
@@ -209,6 +209,12 @@ en:
             collection_views: Collection home page views
             work_views: Views of works
             work_downloads: Downloads of works
+          custom_range: 
+            date_range_heading: Customize Date Range
+            summary_heading: Summary of user activity
+            collection_home_page_views: Collection home page views
+            work_views: Views of works
+            work_downloads: Downloads of works
           top_collections:
             top_collections: Top Collections
             collection_title: Collection Title
@@ -220,7 +226,7 @@ en:
         work_reports:
           index:
             title: Works Report
-            activity: Activity
+            subtitle: Summary of user activity
             repo_summary: in this repository which collectively have had
             works: works 
             views: views
@@ -228,13 +234,15 @@ en:
             access_to: You have access to
             summary: Summary
             monthly: Monthly
+            custom_range:  Custom Range
             downloads: downloads
-            date_range_heading: Customize Report
-            report_header: Custom Works Report
             enable_analytics: Enable Analytics To View Reports
             report_generated_on: This report was generated on 
           summary:
             subtitle: Summary of user activity
+            unique_visitors: Unique Visitors
+            page_views: Page Views
+            file_downloads: File Downloads
             date_range: Date range
             today: Today
             this_week: This week
@@ -242,7 +250,7 @@ en:
             this_year: This year
             all_time: All time
           monthly_summary: 
-            monthly_subtitle: Month-by-month status for last 12 months through
+            monthly_subtitle: Month-by-month status for the last 12 months through
             page_views: Page Views
             file_downloads: File Downloads
           top_works: 
@@ -255,6 +263,12 @@ en:
             top_downloads: Top File Downloads
             file_name: File Name
             file: File
+            file_downloads: File Downloads
+          custom_range: 
+            date_range_heading: Customize Date Range
+            summary_heading: Summary of user activity
+            unique_visitors: Unique Visitors
+            page_views: Page Views
             file_downloads: File Downloads
         date_range_form:
             start_date: Start Date

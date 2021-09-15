@@ -180,9 +180,16 @@ zh:
           confirm_delete: 您确定要删除此管理集？此操作无法撤消。
       analytics:
         collection_reports:
+          custom_range:
+            collection_home_page_views: 馆藏主页浏览量
+            date_range_heading: 自定义日期范围
+            summary_heading: 用户活动摘要
+            work_downloads: 作品下载
+            work_views: 作品观
           index:
             activity: 活动
             and: 和
+            custom_range: 自定义范围
             date_range_heading: 自定义报告
             downloads: 下载
             enable_analytics: 启用分析以查看报告
@@ -190,6 +197,7 @@ zh:
             monthly: 每月
             repo_summary: 存储库包含
             repo_summary_2: 共同拥有
+            report_generated_on: 此报告生成于
             report_header: 自定义集合报告
             summary: 概括
             title: 收藏报告
@@ -224,10 +232,17 @@ zh:
           set_date_range: 设置报告日期范围
           start_date: 开始日期
         work_reports:
+          custom_range:
+            date_range_heading: 自定义日期范围
+            file_downloads: 文件下载
+            page_views: 页面浏览量
+            summary_heading: 用户活动摘要
+            unique_visitors: 独立访客
           index:
             access_to: 您可以访问
             activity: 活动
             and: 和
+            custom_range: 自定义范围
             date_range_heading: 自定义报告
             downloads: 下载
             enable_analytics: 启用分析以查看报告
@@ -236,6 +251,7 @@ zh:
             repo_summary: 在这个存储库中，它们共同拥有
             report_generated_on: 此报告生成于
             report_header: 定制作品报告
+            subtitle: 用户活动摘要
             summary: 概括
             title: 作品报告
             views: 意见
@@ -247,11 +263,14 @@ zh:
           summary:
             all_time: 整天
             date_range: 日期范围
+            file_downloads: 文件下载
+            page_views: 页面浏览量
             subtitle: 用户活动摘要
             this_month: 这个月
             this_week: 本星期
             this_year: 今年
             today: 今天
+            unique_visitors: 独立访客
           top_file_set_downloads:
             file: 文件
             file_downloads: 文件下载

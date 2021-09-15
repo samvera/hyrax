@@ -180,9 +180,16 @@ es:
           confirm_delete: "¿Estás seguro de que deseas eliminar este conjunto administrativo? Esta acción no se puede deshacer."
       analytics:
         collection_reports:
+          custom_range:
+            collection_home_page_views: Vistas de la página de inicio de la colección
+            date_range_heading: Personalizar intervalo de fechas
+            summary_heading: Resumen de la actividad del usuario
+            work_downloads: Descargas de obras
+            work_views: Vistas de obras
           index:
             activity: Actividad
             and: y
+            custom_range: Rango personalizado
             date_range_heading: Personalizar informe
             downloads: descargas
             enable_analytics: Habilitar Analytics para ver informes
@@ -190,6 +197,7 @@ es:
             monthly: Mensual
             repo_summary: El repositorio contiene
             repo_summary_2: que colectivamente han tenido
+            report_generated_on: Este informe se generó el
             report_header: Informe de cobros personalizados
             summary: Resumen
             title: Informe de cobros
@@ -224,10 +232,17 @@ es:
           set_date_range: Establecer intervalo de fechas del informe
           start_date: Fecha de inicio
         work_reports:
+          custom_range:
+            date_range_heading: Personalizar intervalo de fechas
+            file_downloads: Descargas de archivos
+            page_views: Vistas de página
+            summary_heading: Resumen de la actividad del usuario
+            unique_visitors: Visitantes únicos
           index:
             access_to: Tienes acceso a
             activity: Actividad
             and: y
+            custom_range: Rango personalizado
             date_range_heading: Personalizar informe
             downloads: descargas
             enable_analytics: Habilitar Analytics para ver informes
@@ -236,6 +251,7 @@ es:
             repo_summary: en este repositorio que colectivamente han tenido
             report_generated_on: Este informe se generó el
             report_header: Informe de trabajos personalizados
+            subtitle: Resumen de la actividad del usuario
             summary: Resumen
             title: Informe de obras
             views: puntos de vista
@@ -247,11 +263,14 @@ es:
           summary:
             all_time: Todo el tiempo
             date_range: Rango de fechas
+            file_downloads: Descargas de archivos
+            page_views: Vistas de página
             subtitle: Resumen de la actividad del usuario
             this_month: Este mes
             this_week: Esta semana
             this_year: Este año
             today: Hoy dia
+            unique_visitors: Visitantes únicos
           top_file_set_downloads:
             file: Expediente
             file_downloads: Descargas de archivos

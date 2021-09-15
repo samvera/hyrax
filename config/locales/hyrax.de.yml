@@ -180,9 +180,16 @@ de:
           confirm_delete: Möchten Sie dieses Admin-Set wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.
       analytics:
         collection_reports:
+          custom_range:
+            collection_home_page_views: Aufrufe der Sammlungs-Startseite
+            date_range_heading: Datumsbereich anpassen
+            summary_heading: Zusammenfassung der Benutzeraktivität
+            work_downloads: Downloads von Werken
+            work_views: Werkansichten
           index:
             activity: Aktivität
             and: und
+            custom_range: Benutzerdefinierten Bereich
             date_range_heading: Bericht anpassen
             downloads: Downloads
             enable_analytics: Aktivieren Sie Analytics, um Berichte anzuzeigen
@@ -190,6 +197,7 @@ de:
             monthly: Monatlich
             repo_summary: Das Repository enthält
             repo_summary_2: die kollektiv hatten
+            report_generated_on: Dieser Bericht wurde erstellt am
             report_header: Bericht zu benutzerdefinierten Sammlungen
             summary: Zusammenfassung
             title: Sammlungsbericht
@@ -224,10 +232,17 @@ de:
           set_date_range: Berichtszeitraum festlegen
           start_date: Startdatum
         work_reports:
+          custom_range:
+            date_range_heading: Datumsbereich anpassen
+            file_downloads: Datei-Downloads
+            page_views: Seitenaufrufe
+            summary_heading: Zusammenfassung der Benutzeraktivität
+            unique_visitors: einzigartige Besucher
           index:
             access_to: Sie haben Zugriff auf
             activity: Aktivität
             and: und
+            custom_range: Benutzerdefinierten Bereich
             date_range_heading: Bericht anpassen
             downloads: Downloads
             enable_analytics: Aktivieren Sie Analytics, um Berichte anzuzeigen
@@ -236,6 +251,7 @@ de:
             repo_summary: in diesem Repository, die kollektiv hatten
             report_generated_on: Dieser Bericht wurde erstellt am
             report_header: Bericht über benutzerdefinierte Arbeiten
+            subtitle: Zusammenfassung der Benutzeraktivität
             summary: Zusammenfassung
             title: Werksbericht
             views: Ansichten
@@ -247,11 +263,14 @@ de:
           summary:
             all_time: Alle Zeit
             date_range: Datumsbereich
+            file_downloads: Datei-Downloads
+            page_views: Seitenaufrufe
             subtitle: Zusammenfassung der Benutzeraktivität
             this_month: Diesen Monat
             this_week: In dieser Woche
             this_year: Dieses Jahr
             today: Heute
+            unique_visitors: einzigartige Besucher
           top_file_set_downloads:
             file: Datei
             file_downloads: Datei-Downloads
