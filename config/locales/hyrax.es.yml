@@ -214,6 +214,7 @@ es:
             collection_page_views: Vistas de la página de la colección
             collection_title: Título de la colección
             deleted: Colección eliminada
+            export: Exportar
             file_downloads_in_collection: Descargas de conjuntos de archivos en esta colección
             top_collections: Colecciones principales
             works_in_collection_views: Obras en esta colección Vistas
@@ -257,6 +258,7 @@ es:
             file_name: Nombre del archivo
             top_downloads: Descargas de archivos principales
           top_works:
+            export: Exportar
             file_downloads: Descargas de archivos
             top_works: Obras Top
             work_title: Título de trabajo

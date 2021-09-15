@@ -214,6 +214,7 @@ zh:
             collection_page_views: 收藏页面浏览量
             collection_title: 馆藏名称
             deleted: 集合已删除
+            export: 出口
             file_downloads_in_collection: 此集合中的文件集下载
             top_collections: 热门收藏
             works_in_collection_views: 在此集合视图中的作品
@@ -257,6 +258,7 @@ zh:
             file_name: 文档名称
             top_downloads: 热门文件下载
           top_works:
+            export: 出口
             file_downloads: 文件下载
             top_works: 热门作品
             work_title: 作品名称

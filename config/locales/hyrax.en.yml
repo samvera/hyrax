@@ -190,7 +190,6 @@ en:
             summary: Summary
             monthly: Monthly
             downloads: downloads
-            export: Export
             date_range_heading: Customize Report
             report_header: Custom Collections Report
             enable_analytics: Enable Analytics To View Reports
@@ -217,6 +216,7 @@ en:
             file_downloads_in_collection: File Set Downloads In This Collection
             collection_page_views: Collection Page Views
             deleted: Collection deleted
+            export: Export
         work_reports:
           index:
             title: Works Report
@@ -229,7 +229,6 @@ en:
             summary: Summary
             monthly: Monthly
             downloads: downloads
-            export: Export
             date_range_heading: Customize Report
             report_header: Custom Works Report
             enable_analytics: Enable Analytics To View Reports
@@ -251,6 +250,7 @@ en:
             work_title: Work Title
             work_views: Work Page Views
             file_downloads: File Downloads
+            export: Export
           top_file_set_downloads: 
             top_downloads: Top File Downloads
             file_name: File Name
