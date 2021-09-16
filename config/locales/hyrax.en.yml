@@ -193,6 +193,17 @@ en:
             report_header: Custom Collections Report
             report_generated_on: This report was generated on
             enable_analytics: Enable Analytics To View Reports
+          show: 
+            title: Collection Report
+            summary: Summary
+            monthly: Monthly
+            custom_range:  Custom Range
+            return_to_btn: Return to Collections Report
+            view_collection_btn: View Collection
+            created_by:  Created by
+            last_updated: Last updated on
+            collection_type: Collection type
+            visibility: Visibility
           summary:
             subtitle: Summary of user activity
             collection_home_page_views: Collection home page views
@@ -238,6 +249,21 @@ en:
             downloads: downloads
             enable_analytics: Enable Analytics To View Reports
             report_generated_on: This report was generated on 
+          show: 
+            title: Work Report
+            summary: Summary
+            monthly: Monthly
+            custom_range:  Custom Range
+            return_to_btn: Return to Works Report
+            view_work_btn: View Work
+            deposited_by:  Deposited by
+            work_type: Work type
+            resource_type: Resource type
+            status: Status
+            visibility: Visibility
+          work_files:
+            title: Files
+            total_downloads: Total Downloads
           summary:
             subtitle: Summary of user activity
             unique_visitors: Unique Visitors
@@ -265,12 +291,12 @@ en:
             file: File
             file_downloads: File Downloads
           custom_range: 
-            date_range_heading: Customize Date Range
             summary_heading: Summary of user activity
             unique_visitors: Unique Visitors
             page_views: Page Views
             file_downloads: File Downloads
         date_range_form:
+            date_range_heading: Customize Date Range
             start_date: Start Date
             end_date: End Date
             set_date_range: Set Report Date Range

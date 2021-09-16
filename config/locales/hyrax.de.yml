@@ -207,6 +207,17 @@ de:
             monthly_subtitle: Monat für Monat Status für die letzten 12 Monate bis
             work_downloads: Downloads von Werken
             work_views: Werkansichten
+          show:
+            collection_type: Sammlungstyp
+            created_by: Erstellt von
+            custom_range: Benutzerdefinierten Bereich
+            last_updated: Zuletzt aktualisiert am
+            monthly: Monatlich
+            return_to_btn: Zurück zum Sammlungsbericht
+            summary: Zusammenfassung
+            title: Sammlungsbericht
+            view_collection_btn: Kollektion ansehen
+            visibility: Sichtweite
           summary:
             all_time: Alle Zeit
             collection_home_page_views: Aufrufe der Sammlungs-Startseite
@@ -227,6 +238,7 @@ de:
             top_collections: Top-Kollektionen
             works_in_collection_views: Funktioniert in dieser Sammlungsansichten
         date_range_form:
+          date_range_heading: Datumsbereich anpassen
           end_date: Endtermin
           reset_date_range: Datumsbereich zurücksetzen
           set_date_range: Berichtszeitraum festlegen
@@ -260,6 +272,18 @@ de:
             file_downloads: Datei-Downloads
             monthly_subtitle: Monat für Monat Status für die letzten 12 Monate bis
             page_views: Seitenaufrufe
+          show:
+            custom_range: Benutzerdefinierten Bereich
+            deposited_by: Hinterlegt von
+            monthly: Monatlich
+            resource_type: Ressourcentyp
+            return_to_btn: Zurück zum Werksbericht
+            status: Status
+            summary: Zusammenfassung
+            title: Arbeitsbericht
+            view_work_btn: Arbeit ansehen
+            visibility: Sichtweite
+            work_type: Arbeitstyp
           summary:
             all_time: Alle Zeit
             date_range: Datumsbereich
@@ -282,6 +306,9 @@ de:
             top_works: Top-Werke
             work_title: Arbeitstitel
             work_views: Arbeitsseitenaufrufe
+          work_files:
+            title: Dateien
+            total_downloads: Downloads insgesamt
       appearances:
         show:
           header: Design
