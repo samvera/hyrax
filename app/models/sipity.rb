@@ -56,7 +56,7 @@ module Sipity
   #
   # @return [Sipity::Entity]
   # rubocop:disable Naming/MethodName, Metrics/CyclomaticComplexity, Metrics/MethodLength
-  def Entity(input, &block)
+  def Entity(input, &block) # rubocop:disable Metrics/AbcSize
     Rails.logger.debug("Trying to make an Entity for #{input.inspect}")
 
     result = case input
@@ -86,7 +86,7 @@ module Sipity
     handle_conversion(input, result, :to_sipity_entity, &block)
   rescue URI::GID::MissingModelIdError
     Entity(nil)
-  end
+  end # rubocop:enable Metrics/AbcSize
   module_function :Entity
   # rubocop:enable Naming/MethodName, Metrics/CyclomaticComplexity, Metrics/MethodLength
 
