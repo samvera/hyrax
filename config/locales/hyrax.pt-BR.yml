@@ -207,6 +207,17 @@ pt-BR:
             monthly_subtitle: Status mês a mês dos últimos 12 meses até
             work_downloads: Downloads de obras
             work_views: Vistas de obras
+          show:
+            collection_type: Tipo de coleção
+            created_by: Criado por
+            custom_range: Faixa Personalizada
+            last_updated: Última atualização em
+            monthly: Por mês
+            return_to_btn: Retornar ao relatório de cobranças
+            summary: Resumo
+            title: Relatório de coleção
+            view_collection_btn: Ver coleção
+            visibility: Visibilidade
           summary:
             all_time: Tempo todo
             collection_home_page_views: Visualizações da página inicial da coleção
@@ -227,6 +238,7 @@ pt-BR:
             top_collections: Top Coleções
             works_in_collection_views: Funciona nesta coleção de visualizações
         date_range_form:
+          date_range_heading: Personalizar intervalo de datas
           end_date: Data final
           reset_date_range: Redefinir intervalo de datas
           set_date_range: Definir intervalo de datas do relatório
@@ -260,6 +272,18 @@ pt-BR:
             file_downloads: Downloads de arquivos
             monthly_subtitle: Status mês a mês dos últimos 12 meses até
             page_views: Visualizações de página
+          show:
+            custom_range: Faixa Personalizada
+            deposited_by: Depositado por
+            monthly: Por mês
+            resource_type: Tipo de recurso
+            return_to_btn: Relatório de Retorno ao Trabalho
+            status: Status
+            summary: Resumo
+            title: Relatório de trabalho
+            view_work_btn: Ver Trabalho
+            visibility: Visibilidade
+            work_type: Tipo de trabalho
           summary:
             all_time: Tempo todo
             date_range: Intervalo de datas
@@ -282,6 +306,9 @@ pt-BR:
             top_works: Principais obras
             work_title: Título de Trabalho
             work_views: Exibições da página de trabalho
+          work_files:
+            title: arquivos
+            total_downloads: Total de downloads
       appearances:
         show:
           header: Aparência

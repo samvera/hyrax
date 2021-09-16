@@ -207,6 +207,17 @@ zh:
             monthly_subtitle: 过去 12 个月的逐月状态
             work_downloads: 作品下载
             work_views: 作品观
+          show:
+            collection_type: 收藏类型
+            created_by: 由...制作
+            custom_range: 自定义范围
+            last_updated: 最后更新于
+            monthly: 每月
+            return_to_btn: 返回收藏报告
+            summary: 概括
+            title: 收款报告
+            view_collection_btn: 查看收藏
+            visibility: 能见度
           summary:
             all_time: 整天
             collection_home_page_views: 馆藏主页浏览量
@@ -227,6 +238,7 @@ zh:
             top_collections: 热门收藏
             works_in_collection_views: 在此集合视图中的作品
         date_range_form:
+          date_range_heading: 自定义日期范围
           end_date: 结束日期
           reset_date_range: 重置日期范围
           set_date_range: 设置报告日期范围
@@ -260,6 +272,18 @@ zh:
             file_downloads: 文件下载
             monthly_subtitle: 过去 12 个月的逐月状态
             page_views: 页面浏览量
+          show:
+            custom_range: 自定义范围
+            deposited_by: 存款人
+            monthly: 每月
+            resource_type: 资源类型
+            return_to_btn: 复工报告
+            status: 地位
+            summary: 概括
+            title: 工作报告
+            view_work_btn: 查看工作
+            visibility: 能见度
+            work_type: 工作类型
           summary:
             all_time: 整天
             date_range: 日期范围
@@ -282,6 +306,9 @@ zh:
             top_works: 热门作品
             work_title: 作品名称
             work_views: 工作页面浏览量
+          work_files:
+            title: 文件
+            total_downloads: 总下载量
       appearances:
         show:
           header: 表面

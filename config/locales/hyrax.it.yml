@@ -207,6 +207,17 @@ it:
             monthly_subtitle: Stato mese per mese per gli ultimi 12 mesi fino a
             work_downloads: Download di opere
             work_views: Viste delle opere
+          show:
+            collection_type: Tipo di raccolta
+            created_by: Creato da
+            custom_range: Gamma personalizzata
+            last_updated: Ultimo aggiornamento il
+            monthly: Mensile
+            return_to_btn: Torna al rapporto sulle collezioni
+            summary: Riepilogo
+            title: Rapporto di raccolta
+            view_collection_btn: Visualizza raccolta
+            visibility: Visibilità
           summary:
             all_time: Sempre
             collection_home_page_views: Visualizzazioni della home page della raccolta
@@ -227,6 +238,7 @@ it:
             top_collections: Collezioni migliori
             works_in_collection_views: Funziona in questa collezione Viste
         date_range_form:
+          date_range_heading: Personalizza intervallo di date
           end_date: Data di fine
           reset_date_range: Reimposta intervallo di date
           set_date_range: Imposta l'intervallo di date del rapporto
@@ -260,6 +272,18 @@ it:
             file_downloads: Download di file
             monthly_subtitle: Stato mese per mese per gli ultimi 12 mesi fino a
             page_views: Visualizzazioni di pagina
+          show:
+            custom_range: Gamma personalizzata
+            deposited_by: Depositato da
+            monthly: Mensile
+            resource_type: Tipo di risorsa
+            return_to_btn: Ritorno al resoconto dei lavori
+            status: Stato
+            summary: Riepilogo
+            title: Rapporto di lavoro
+            view_work_btn: Visualizza lavoro
+            visibility: Visibilità
+            work_type: Tipo di lavoro
           summary:
             all_time: Sempre
             date_range: Intervallo di date
@@ -282,6 +306,9 @@ it:
             top_works: I migliori lavori
             work_title: Titolo del lavoro
             work_views: Visualizzazioni della pagina di lavoro
+          work_files:
+            title: File
+            total_downloads: Download totali
       appearances:
         show:
           header: Aspetto
