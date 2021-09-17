@@ -8,8 +8,9 @@ module Hyrax
     def initialize(klass, namespace = nil, name = nil)
       super
 
-      @route_key          = Collection.model_name.route_key
-      @singular_route_key = Collection.model_name.singular_route_key
+      @human              = 'Collection'
+      @route_key          = 'collections'
+      @singular_route_key = 'collection'
     end
   end
 end
