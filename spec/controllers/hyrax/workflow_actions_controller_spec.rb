@@ -2,7 +2,7 @@
 RSpec.describe Hyrax::WorkflowActionsController, type: :controller do
   let(:user) { FactoryBot.create(:user) }
   let(:generic_work) { FactoryBot.create(:work) }
-  let(:form) { instance_double(described_class::DEFAULT_FORM_CLASS) }
+  let(:form) { instance_double(described_class::DEFAULT_FORM_CLASS, errors: {}) }
 
   routes { Rails.application.routes }
 
