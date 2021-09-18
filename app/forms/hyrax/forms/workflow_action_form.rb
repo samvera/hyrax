@@ -17,6 +17,10 @@ module Hyrax
       include ActiveModel::Validations
       extend ActiveModel::Translation
 
+      ##
+      # @param current_ability [::Ability]
+      # @param work [ActiveFedora::Base, Valkyrie::Resource]
+      # @param attributes [Hash{Symbol => String}]
       def initialize(current_ability:, work:, attributes: {})
         @current_ability = current_ability
         @work = work
