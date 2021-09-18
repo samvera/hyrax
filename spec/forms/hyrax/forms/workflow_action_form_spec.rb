@@ -7,7 +7,7 @@ RSpec.describe Hyrax::Forms::WorkflowActionForm do
   end
 
   let(:user) { FactoryBot.create(:user) }
-  let(:work) { FactoryBot.create(:work) }
+  let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
 
   let(:sipity_entity) do
     FactoryBot
