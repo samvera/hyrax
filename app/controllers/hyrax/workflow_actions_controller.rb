@@ -11,7 +11,7 @@ module Hyrax
       else
         respond_to do |wants|
           wants.html { render 'hyrax/base/unauthorized', status: :unauthorized }
-          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: workflow_action_form.errors }) }
         end
       end
     end
@@ -19,7 +19,8 @@ module Hyrax
     private
 
     def curation_concern
-      @curation_concern ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id], use_valkyrie: false)
+      @curation_concern ||=
+        Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id])
     end
 
     def workflow_action_form
