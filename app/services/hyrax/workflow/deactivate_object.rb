@@ -12,7 +12,7 @@ module Hyrax
     # @see Hyrax::ResourceStatus
     module DeactivateObject
       def self.call(target:, **)
-        target.state = Hyrax::ResourceStatus::ACTIVE
+        target.state = Hyrax::ResourceStatus::INACTIVE
       end
     end
   end
