@@ -14,7 +14,7 @@ module Hyrax
       end
 
       def users_to_notify
-        user_key = Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: work_id).depositor
+        user_key = Hyrax::ValkyrieCanCanAdapter.find(nil, work_id).depositor
         super << ::User.find_by(email: user_key)
       end
     end
