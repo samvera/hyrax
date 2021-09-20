@@ -63,14 +63,14 @@ module Hyrax
         @collection.collection_type_gid = CollectionType.find(collection_type_id).to_global_id
         add_breadcrumb t(:'hyrax.controls.home'), root_path
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
-        add_breadcrumb t('.header', type_title: @collection.collection_type.title), request.path
+        add_breadcrumb t('.header', type_title: collection_type.title), request.path
         @collection.apply_depositor_metadata(current_user.user_key)
         form
       end
 
       def show
         # @todo: remove this unused assignment in 4.0.0
-        @banner_file = presenter.banner_file if @collection.collection_type.brandable?
+        @banner_file = presenter.banner_file if collection_type.brandable?
 
         presenter
         query_collection_members
@@ -199,6 +199,10 @@ module Hyrax
 
       def default_collection_type
         Hyrax::CollectionType.find_or_create_default_collection_type
+      end
+
+      def collection_type
+        @collection_type ||= CollectionType.find_by_gid!(collection.collection_type_gid)
       end
 
       def link_parent_collection(parent_id)
@@ -430,8 +434,8 @@ module Hyrax
 
       def query_collection_members
         member_works
-        member_subcollections if collection.collection_type.nestable?
-        parent_collections if collection.collection_type.nestable? && action_name == 'show'
+        member_subcollections if collection_type.nestable?
+        parent_collections if collection_type.nestable? && action_name == 'show'
       end
 
       # Instantiate the membership query service
