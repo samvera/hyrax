@@ -10,12 +10,14 @@ module Hyrax
       # @return void
       def self.call(target:, **)
         return true unless target.try(:depositor)
-        target.read_users = target.read_users.to_a + Array.wrap(target.depositor) # += works in Ruby 2.6+
-        target.try(:permission_manager)&.acl&.save
+
+        model = target.try(:model) || target # get the model if target is a ChangeSet
+        model.read_users = model.read_users.to_a + Array.wrap(target.depositor) # += works in Ruby 2.6+
+        model.try(:permission_manager)&.acl&.save
 
         # If there are a lot of members, granting access to each could take a
         # long time. Do this work in the background.
-        GrantReadToMembersJob.perform_later(target, target.depositor)
+        GrantReadToMembersJob.perform_later(model, target.depositor)
       end
     end
   end

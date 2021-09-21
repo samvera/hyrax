@@ -3,6 +3,7 @@ require 'hyrax/specs/shared_specs'
 
 RSpec.describe Hyrax::Workflow::RevokeEditFromDepositor do
   subject(:workflow_method) { described_class }
+  let(:change_set) { Hyrax::ChangeSet.for(work) }
   let(:depositor) { FactoryBot.create(:user) }
   let(:editors) { [depositor.user_key] }
   let(:user) { User.new }
@@ -18,7 +19,7 @@ RSpec.describe Hyrax::Workflow::RevokeEditFromDepositor do
   describe ".call" do
     context "with no additional editors" do
       it "removes edit access" do
-        expect { described_class.call(target: work, comment: "A pleasant read", user: user) }
+        expect { workflow_method.call(target: change_set, comment: "A pleasant read", user: user) }
           .to change { Hyrax::PermissionManager.new(resource: work).edit_users }
           .from(contain_exactly(depositor.user_key))
           .to be_none
@@ -30,7 +31,7 @@ RSpec.describe Hyrax::Workflow::RevokeEditFromDepositor do
       let(:editors) { [depositor, editor].map(&:user_key) }
 
       it "removes edit access" do
-        expect { described_class.call(target: work, comment: "A pleasant read", user: user) }
+        expect { workflow_method.call(target: change_set, comment: "A pleasant read", user: user) }
           .to change { Hyrax::PermissionManager.new(resource: work).edit_users }
           .from(contain_exactly(*editors))
           .to contain_exactly(editor.user_key)
@@ -50,7 +51,7 @@ RSpec.describe Hyrax::Workflow::RevokeEditFromDepositor do
       end
 
       it "removes edit access" do
-        expect { described_class.call(target: work, comment: "A pleasant read", user: user) }
+        expect { workflow_method.call(target: change_set, comment: "A pleasant read", user: user) }
           .to change { Hyrax::PermissionManager.new(resource: file_set).edit_users }
           .from(contain_exactly(depositor.user_key))
           .to be_none
