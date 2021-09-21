@@ -14,7 +14,14 @@ module Hyrax
       end
 
       def initialize(target:, action:, comment:, user:)
-        @target = target
+        @target =
+          case target
+          when Valkyrie::Resource
+            Hyrax::ChangeSet.for(target)
+          else
+            target
+          end
+
         @action = action
         @comment = comment
         @user = user
@@ -70,10 +77,15 @@ module Hyrax
       # @api private
       def save_target
         case target
-        when ActiveFedora::Base
-          target.save
+        when Valkyrie::ChangeSet
+          return target.model unless target.changed?
+
+          Hyrax::Transactions::Container['change_set.apply']
+            .with_step_args('change_set.save' => { user: user })
+            .call(target)
+            .value!
         else
-          Hyrax.persister.save(resource: target)
+          target.save
         end
       end
     end

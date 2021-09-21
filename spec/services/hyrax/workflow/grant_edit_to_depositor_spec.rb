@@ -2,10 +2,10 @@
 require 'hyrax/specs/shared_specs'
 
 RSpec.describe Hyrax::Workflow::GrantEditToDepositor do
-  let(:depositor) { create(:user) }
+  subject(:workflow_method) { described_class }
+  let(:change_set) { Hyrax::ChangeSet.for(work) }
+  let(:depositor) { FactoryBot.create(:user) }
   let(:user) { User.new }
-
-  let(:workflow_method) { described_class }
 
   it_behaves_like 'a Hyrax workflow method'
 
@@ -20,7 +20,7 @@ RSpec.describe Hyrax::Workflow::GrantEditToDepositor do
       let(:work) { FactoryBot.valkyrie_create(:hyrax_work, depositor: nil) }
 
       it 'does not change edit access' do
-        expect { described_class.call(target: work, comment: "A pleasant read", user: user) }
+        expect { workflow_method.call(target: change_set, comment: "A pleasant read", user: user) }
           .not_to change { work.edit_users.to_a }
           .from(be_empty)
       end
