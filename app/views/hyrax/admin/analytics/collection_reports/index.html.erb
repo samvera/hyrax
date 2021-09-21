@@ -51,6 +51,7 @@
                 <% else %>
                   <div class="tab-pane" id="custom-range">
                 <% end %>
+                  <%= render "hyrax/admin/analytics/date_range_form", redirect_path: hyrax.admin_analytics_collection_reports_path %>
                   <%= render "custom_range" %></div>
               </div>
             
