@@ -9,35 +9,68 @@ module Hyrax
   # @see AdminSet
   # @see Hyrax::PermissionTemplate
   # @see Sipity::Workflow
-  class AdminSetCreateService
-    # @api public
-    # Creates the default AdminSet and corresponding data
-    # @param admin_set_id [String] The default admin set ID
-    # @param title [Array<String>] The title of the default admin set
-    # @return [TrueClass]
-    # @see AdminSet
-    def self.create_default_admin_set(admin_set_id:, title:)
-      admin_set = AdminSet.new(id: admin_set_id, title: Array.wrap(title))
-      begin
-        new(admin_set: admin_set, creating_user: nil).create
-      rescue ActiveFedora::IllegalOperation
-        # It is possible that another thread created the AdminSet just before this method
-        # was called, so ActiveFedora will raise IllegalOperation. In this case we can safely
-        # ignore the error.
-        Rails.logger.error("AdminSet ID=#{AdminSet::DEFAULT_ID} may or may not have been created due to threading issues.")
-      end
-    end
+  class AdminSetCreateService # rubocop:disable Metrics/ClassLength
+    DEFAULT_ID = 'admin_set/default'
+    DEFAULT_TITLE = ['Default Admin Set'].freeze
 
-    # @api public
-    # Creates a non-default AdminSet and corresponding data
-    # @param admin_set [AdminSet] the admin set to operate on
-    # @param creating_user [User] the user who created the admin set
-    # @return [TrueClass, FalseClass] true if it was successful
-    # @see AdminSet
-    # @raise [RuntimeError] if you attempt to create a default admin set via this mechanism
-    def self.call(admin_set:, creating_user:, **kwargs)
-      raise "Use .create_default_admin_set to create a default admin set" if admin_set.default_set?
-      new(admin_set: admin_set, creating_user: creating_user, **kwargs).create
+    class << self
+      # @api public
+      # Creates the default AdminSet and corresponding data
+      # @param admin_set_id [String] The default admin set ID
+      # @param title [Array<String>] The title of the default admin set
+      # @return [TrueClass]
+      # @see AdminSet
+      # @deprecated
+      def create_default_admin_set(admin_set_id: DEFAULT_ID, title: DEFAULT_TITLE)
+        Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
+                         "Instead, use 'Hyrax::AdminSetCreateService.find_or_create_default_admin_set'.")
+        admin_set = AdminSet.new(id: admin_set_id, title: Array.wrap(title))
+        begin
+          new(admin_set: admin_set, creating_user: nil).create
+        rescue ActiveFedora::IllegalOperation
+          # It is possible that another thread created the AdminSet just before this method
+          # was called, so ActiveFedora will raise IllegalOperation. In this case we can safely
+          # ignore the error.
+          Rails.logger.error("AdminSet ID=#{AdminSet::DEFAULT_ID} may or may not have been created due to threading issues.")
+        end
+      end
+
+      # @api public
+      # Finds the default AdminSet if it exists; otherwise, creates it and corresponding data
+      # @return [Hyrax::AdministrativeSet] The default admin set.
+      # @see Hyrax::AdministrativeSet
+      # @raise [RuntimeError] if admin set cannot be persisted
+      def find_or_create_default_admin_set
+        Hyrax.query_service.find_by(id: DEFAULT_ID)
+      rescue Valkyrie::Persistence::ObjectNotFoundError
+        create_default_admin_set!
+      end
+
+      # @api public
+      # Is the admin_set the default Hyrax::AdministrativeSet
+      # @param id [#to_s] the id of the admin set to check
+      def default_admin_set?(id:)
+        id.to_s == DEFAULT_ID
+      end
+
+      # @api public
+      # Creates a non-default AdminSet and corresponding data
+      # @param admin_set [AdminSet] the admin set to operate on
+      # @param creating_user [User] the user who created the admin set
+      # @return [TrueClass, FalseClass] true if it was successful
+      # @see AdminSet
+      # @raise [RuntimeError] if you attempt to create a default admin set via this mechanism
+      def call(admin_set:, creating_user:, **kwargs)
+        raise "Use .find_or_create_default_admin_set to create a default admin set" if default_admin_set?(id: admin_set.id)
+        new(admin_set: admin_set, creating_user: creating_user, **kwargs).create
+      end
+
+      private
+
+      def create_default_admin_set!
+        create_default_admin_set
+        Hyrax.query_service.find_by(id: DEFAULT_ID)
+      end
     end
 
     # @param admin_set [AdminSet] the admin set to operate on
@@ -60,13 +93,17 @@ module Hyrax
           ActiveRecord::Base.transaction do
             permission_template = create_permission_template
             workflow = create_workflows_for(permission_template: permission_template)
-            create_default_access_for(permission_template: permission_template, workflow: workflow) if admin_set.default_set?
+            create_default_access_for(permission_template: permission_template, workflow: workflow) if default_admin_set?(id: admin_set.id)
           end
         end
       end
     end
 
     private
+
+    def default_admin_set?(id:)
+      self.class.default_admin_set?(id: id)
+    end
 
     def access_grants_attributes
       [

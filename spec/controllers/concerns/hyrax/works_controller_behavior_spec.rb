@@ -67,7 +67,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     context 'with a logged in user' do
       include_context 'with a logged in user'
 
-      before { AdminSet.find_or_create_default_admin_set_id }
+      before { Hyrax::AdminSetCreateService.find_or_create_default_admin_set }
 
       it 'redirects to a new work' do
         get :create, params: { test_simple_work: { title: 'comet in moominland' } }
@@ -344,13 +344,13 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
       end
 
       it 'populates allowed admin sets' do
-        admin_set = AdminSet.find_or_create_default_admin_set_id
+        admin_set_id = Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s
         FactoryBot.valkyrie_create(:hyrax_admin_set) # one without deposit access
 
         get :new
 
         expect(assigns['admin_set_options'].select_options)
-          .to contain_exactly(["Default Admin Set", admin_set, { "data-release-no-delay" => true, "data-sharing" => false }])
+          .to contain_exactly(["Default Admin Set", admin_set_id, { "data-release-no-delay" => true, "data-sharing" => false }])
       end
     end
   end
@@ -433,7 +433,7 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
     context 'when the user has edit access' do
       include_context 'with a user with edit access'
 
-      before { AdminSet.find_or_create_default_admin_set_id }
+      before { Hyrax::AdminSetCreateService.find_or_create_default_admin_set }
 
       it 'redirects to updated work' do
         patch :update, params: { id: id, test_simple_work: { title: 'new title' } }

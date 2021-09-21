@@ -8,7 +8,7 @@ RSpec.describe Hyrax::Transactions::Steps::SetDefaultAdminSet do
   let(:change_set) { Hyrax::ChangeSet.for(work) }
 
   describe '#call' do
-    let(:admin_set_id) { AdminSet.find_or_create_default_admin_set_id }
+    let(:admin_set_id) { Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s }
 
     it 'is success' do
       expect(step.call(change_set)).to be_success

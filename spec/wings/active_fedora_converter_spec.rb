@@ -199,7 +199,7 @@ RSpec.describe Wings::ActiveFedoraConverter, :clean_repo do
       end
 
       context 'as Admin Set member' do
-        let(:admin_set_id) { AdminSet.find_or_create_default_admin_set_id }
+        let(:admin_set_id) { Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id }
 
         before { resource.admin_set_id = admin_set_id }
 

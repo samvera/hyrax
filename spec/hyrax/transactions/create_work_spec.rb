@@ -10,7 +10,7 @@ RSpec.describe Hyrax::Transactions::CreateWork do
 
   before do
     Hyrax::PermissionTemplate
-      .find_or_create_by(source_id: AdminSet.find_or_create_default_admin_set_id)
+      .find_or_create_by(source_id: Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s)
   end
 
   describe '#call' do
@@ -49,7 +49,7 @@ RSpec.describe Hyrax::Transactions::CreateWork do
     it 'sets the default admin set' do
       expect { transaction.call(work) }
         .to change { work.admin_set&.id }
-        .to AdminSet.find_or_create_default_admin_set_id
+        .to Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s
     end
 
     it 'sets the modified time using Hyrax::TimeService' do

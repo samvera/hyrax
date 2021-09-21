@@ -29,6 +29,52 @@ RSpec.describe Hyrax::AdminSetCreateService do
     end
   end
 
+  describe '.find_or_create_default_admin_set', :clean_repo do
+    let(:query_service) { Hyrax.query_service }
+    let(:persister) { Hyrax.persister }
+    let(:default_admin_set) { build(:default_hyrax_admin_set) }
+
+    subject(:admin_set) { described_class.find_or_create_default_admin_set }
+
+    context "when default admin set doesn't exist yet" do
+      it "is a convenience method for .create_default_admin_set!" do
+        expect(query_service).to receive(:find_by).with(id: described_class::DEFAULT_ID)
+                                                  .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
+        expect(described_class).to receive(:create_default_admin_set!).and_call_original
+        expect(query_service).to receive(:find_by).with(id: described_class::DEFAULT_ID)
+                                                  .and_return(default_admin_set)
+        expect(admin_set.title).to eq described_class::DEFAULT_TITLE
+      end
+    end
+
+    context "when default admin set already exists" do
+      let(:default_admin_set) { FactoryBot.valkyrie_create(:default_hyrax_admin_set) }
+
+      it "returns existing default admin set" do
+        expect(query_service).to receive(:find_by).with(id: described_class::DEFAULT_ID)
+                                                  .and_return(default_admin_set)
+        expect(described_class).not_to receive(:create_default_admin_set)
+        expect(admin_set.title).to eq described_class::DEFAULT_TITLE
+      end
+    end
+  end
+
+  describe ".default_admin_set?" do
+    let(:admin_set) { build(:default_hyrax_admin_set) }
+    context "when admin_set is the default" do
+      it "returns true" do
+        expect(described_class.default_admin_set?(id: admin_set.id)).to eq true
+      end
+    end
+
+    context "when admin_set isn't the default" do
+      let(:admin_set) { build(:hyrax_admin_set, title: ['test']) }
+      it "returns false" do
+        expect(described_class.default_admin_set?(id: admin_set.id)).to eq false
+      end
+    end
+  end
+
   describe ".call" do
     subject { described_class.call(admin_set: admin_set, creating_user: user) }
 
