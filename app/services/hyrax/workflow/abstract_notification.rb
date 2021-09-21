@@ -39,9 +39,9 @@ module Hyrax
       # @option recipients [Array<Hyrax::User>] :to a list of users to which to send the notification
       # @option recipients [Array<Hyrax::User>] :cc a list of users to which to copy on the notification
       def initialize(entity, comment, user, recipients)
-        @work_id = entity.proxy_for_global_id.sub(/.*\//, '')
+        @work_id = entity.proxy_for.id
         @title = entity.proxy_for.title.first
-        @comment = comment.respond_to?(:comment) ? comment.comment.to_s : ''
+        @comment = comment&.comment.to_s
         # Convert to hash with indifferent access to allow both string and symbol keys
         @recipients = recipients.with_indifferent_access
         @user = user
