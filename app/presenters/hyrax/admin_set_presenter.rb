@@ -21,13 +21,12 @@ module Hyrax
 
     # AdminSet cannot be deleted if default set or non-empty
     def disable_delete?
-      AdminSet.default_set?(id) || any_items?
+      default_set? || any_items?
     end
 
     # Message to display if deletion is disabled
     def disabled_message
-      return I18n.t('hyrax.admin.admin_sets.delete.error_default_set') if AdminSet.default_set?(id)
-
+      return I18n.t('hyrax.admin.admin_sets.delete.error_default_set') if default_set?
       I18n.t('hyrax.admin.admin_sets.delete.error_not_empty') if any_items?
     end
 
@@ -62,6 +61,12 @@ module Hyrax
     def allow_batch?
       return false unless current_ability.can?(:edit, solr_document)
       !disable_delete?
+    end
+
+    private
+
+    def default_set?
+      Hyrax::AdminSetCreateService.default_admin_set?(id: id)
     end
   end
 end
