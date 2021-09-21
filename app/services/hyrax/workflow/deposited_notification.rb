@@ -9,13 +9,17 @@ module Hyrax
       end
 
       def message
-        I18n.t('hyrax.notifications.workflow.deposited.message', title: title, link: (link_to work_id, document_path),
-               user: user.user_key, comment: comment)
+        I18n.t('hyrax.notifications.workflow.deposited.message',
+               title: title,
+               link: (link_to work_id, document_path),
+               user: user.user_key,
+               comment: comment)
       end
 
       def users_to_notify
-        user_key = Hyrax.query_service.find_by(id: work_id).depositor
-        super << ::User.find_by(email: user_key)
+        user_key = @entity.proxy_for.depositor
+
+        super << ::User.find_by_user_key(user_key)
       end
     end
   end

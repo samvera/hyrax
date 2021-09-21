@@ -10,7 +10,7 @@ RSpec.describe Hyrax::Workflow::DepositedNotification do
   let(:recipients) { { 'to' => [to_user], 'cc' => [cc_user] } }
 
   describe ".send_notification" do
-    it 'sends a message to all users' do
+    it 'sends a message to all users' do # rubocop:disable RSpec/ExampleLength
       expect(approver)
         .to receive(:send_message)
         .with(anything,
