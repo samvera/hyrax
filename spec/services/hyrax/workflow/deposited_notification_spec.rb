@@ -4,8 +4,8 @@ RSpec.describe Hyrax::Workflow::DepositedNotification do
   let(:depositor) { FactoryBot.create(:user) }
   let(:to_user) { FactoryBot.create(:user) }
   let(:cc_user) { FactoryBot.create(:user) }
-  let(:work) { FactoryBot.create(:generic_work, user: depositor) }
-  let(:entity) { FactoryBot.create(:sipity_entity, proxy_for_global_id: work.to_global_id.to_s) }
+  let(:work) { FactoryBot.create(:work, user: depositor) }
+  let(:entity) { FactoryBot.create(:sipity_entity, proxy_for: work) }
   let(:comment) { double("comment", comment: 'A pleasant read') }
   let(:recipients) { { 'to' => [to_user], 'cc' => [cc_user] } }
 
