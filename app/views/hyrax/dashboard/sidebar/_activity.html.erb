@@ -35,7 +35,7 @@
   <% if current_ability.can_create_any_work? %>
     <li>
       <%= menu.collapsable_section t('hyrax.admin.sidebar.analytics'),
-                                        icon_class: "fa fa-bar-chart",
+                                        icon_class: "fa fa-pie-chart",
                                         id: 'collapseAnalytics',
                                         open: menu.analytics_reporting_section? do %>
         <% if can? :read, :admin_dashboard %>
