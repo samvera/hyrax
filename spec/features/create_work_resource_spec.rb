@@ -1,6 +1,7 @@
 # frozen_string_literal: true
-RSpec.describe 'Creating a new Hyrax::Work Resource', :js, :workflow, :feature do
+RSpec.describe 'Creating a new Hyrax::Work Resource', :js, :workflow, :clean_repo, :feature do
   let(:user) { create(:user) }
+  let!(:ability) { ::Ability.new(user) }
   let(:file1) { File.open(fixture_path + '/world.png') }
   let(:file2) { File.open(fixture_path + '/image.jp2') }
   let!(:uploaded_file1) { Hyrax::UploadedFile.create(file: file1, user: user) }

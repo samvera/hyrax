@@ -103,12 +103,6 @@ FactoryBot.define do
     end
 
     factory :monograph, class: 'Monograph' do
-      factory :comet_in_moominland do
-        title { 'Comet in Moominland' }
-        creator { 'Tove Jansson' }
-        record_info { 'An example monograph with enough metadata fill in required fields.' }
-      end
-
       trait :with_member_works do
         transient do
           members { [valkyrie_create(:monograph), valkyrie_create(:monograph)] }
