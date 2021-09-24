@@ -29,7 +29,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
     it 'assigns @collection' do
       get :new
-      expect(assigns(:collection)).to be_kind_of(Collection)
+      expect(assigns(:collection)).to be_kind_of(Hyrax::PcdmCollection)
     end
   end
 

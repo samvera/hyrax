@@ -2,15 +2,20 @@
 module Hyrax
   module Ability
     module CollectionAbility
-      def collection_abilities # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+      def collection_abilities # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         if admin?
           can :manage, [::Collection, Hyrax::PcdmCollection]
-          can :manage_any, [::Collection, Hyrax::PcdmCollection]
-          can :create_any, [::Collection, Hyrax::PcdmCollection]
-          can :view_admin_show_any, [::Collection, Hyrax::PcdmCollection]
+          can :manage_any, ::Collection
+          can :manage_any, Hyrax::PcdmCollection
+          can :create_any, ::Collection
+          can :create_any, Hyrax::PcdmCollection
+          can :view_admin_show_any, ::Collection
+          can :view_admin_show_any, Hyrax::PcdmCollection
         else
-          can :manage_any, [::Collection, Hyrax::PcdmCollection] if Hyrax::Collections::PermissionsService.can_manage_any_collection?(ability: self)
-          can :create_any, [::Collection, Hyrax::PcdmCollection] if Hyrax::CollectionTypes::PermissionsService.can_create_any_collection_type?(ability: self)
+          can :manage_any, ::Collection if Hyrax::Collections::PermissionsService.can_manage_any_collection?(ability: self)
+          can :manage_any, Hyrax::PcdmCollection if Hyrax::Collections::PermissionsService.can_manage_any_collection?(ability: self)
+          can :create_any, ::Collection if Hyrax::CollectionTypes::PermissionsService.can_create_any_collection_type?(ability: self)
+          can :create_any, Hyrax::PcdmCollection if Hyrax::CollectionTypes::PermissionsService.can_create_any_collection_type?(ability: self)
           can :view_admin_show_any, ::Collection if Hyrax::Collections::PermissionsService.can_view_admin_show_for_any_collection?(ability: self)
 
           can [:edit, :update, :destroy], ::Collection do |collection| # for test by solr_doc, see solr_document_ability.rb
