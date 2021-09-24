@@ -15,6 +15,7 @@ begin
   require 'hyrax/health_checks'
 
   OkComputer::Registry.register 'solr', Hyrax::HealthChecks::SolrCheck.new
+  OkComputer::Registry.register 'migrations', OkComputer::ActiveRecordMigrationsCheck.new
 
   # check cache
   if ENV['MEMCACHED_HOST']
