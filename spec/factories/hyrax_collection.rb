@@ -8,18 +8,14 @@ FactoryBot.define do
     collection_type_gid { Hyrax::CollectionType.find_or_create_default_collection_type.to_global_id }
 
     transient do
+      with_permission_template { true }
+      user { create(:user) }
       edit_groups { [] }
       edit_users { [] }
       read_groups { [] }
       read_users { [] }
       members { nil }
-    end
-
-    after(:build) do |collection, evaluator|
-      collection.permission_manager.edit_groups = evaluator.edit_groups
-      collection.permission_manager.edit_users = evaluator.edit_users
-      collection.permission_manager.read_groups = evaluator.read_groups
-      collection.permission_manager.read_users = evaluator.read_users
+      access_grants { [] }
     end
 
     after(:create) do |collection, evaluator|
@@ -29,11 +25,20 @@ FactoryBot.define do
           Hyrax.persister.save(resource: member)
         end
       end
-      collection.permission_manager.edit_groups = evaluator.edit_groups
-      collection.permission_manager.edit_users = evaluator.edit_users
-      collection.permission_manager.read_groups = evaluator.read_groups
-      collection.permission_manager.read_users = evaluator.read_users
-      collection.permission_manager.acl.save
+      if evaluator.with_permission_template
+        Hyrax::Collections::PermissionsCreateService.create_default(collection: collection,
+                                                                    creating_user: evaluator.user,
+                                                                    grants: evaluator.access_grants)
+        collection.permission_manager.edit_groups = collection.permission_manager.edit_groups.to_a +
+                                                    evaluator.edit_groups
+        collection.permission_manager.edit_users = collection.permission_manager.edit_users.to_a +
+                                                   evaluator.edit_users
+        collection.permission_manager.read_groups = collection.permission_manager.read_groups.to_a +
+                                                    evaluator.read_groups
+        collection.permission_manager.read_users = collection.permission_manager.read_users.to_a +
+                                                   evaluator.read_users
+        collection.permission_manager.acl.save
+      end
     end
 
     trait :public do

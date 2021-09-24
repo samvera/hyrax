@@ -7,7 +7,8 @@ RSpec.describe Hyrax::Transactions::Steps::ApplyCollectionTypePermissions do
   let(:collection) do
     FactoryBot.valkyrie_create(:hyrax_collection,
                                title: "My Resource",
-                               collection_type_gid: collection_type_gid)
+                               collection_type_gid: collection_type_gid,
+                               with_permission_template: false)
   end
 
   let(:collection_type) { create(:collection_type) }
