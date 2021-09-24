@@ -74,12 +74,12 @@ module Hyrax
           Steps::EnsureAdminSet.new
         end
 
-        ops.register 'set_collection_type_gid' do
-          Steps::SetCollectionTypeGid.new
-        end
-
         ops.register 'save' do
           Steps::Save.new
+        end
+
+        ops.register 'set_collection_type_gid' do
+          Steps::SetCollectionTypeGid.new
         end
 
         ops.register 'set_default_admin_set' do
@@ -96,10 +96,6 @@ module Hyrax
 
         ops.register 'set_user_as_depositor' do
           Steps::SetUserAsDepositor.new
-        end
-
-        ops.register 'set_user_as_editor' do
-          Steps::SetUserAsEditor.new
         end
 
         ops.register 'update_work' do
@@ -132,6 +128,10 @@ module Hyrax
 
         ops.register 'save_acl' do
           Steps::SaveAccessControl.new
+        end
+
+        ops.register 'set_user_as_editor' do
+          Steps::SetUserAsEditor.new
         end
       end
 

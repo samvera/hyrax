@@ -14,28 +14,18 @@ module Hyrax
         include Dry::Monads[:result]
 
         ##
-        # @param [Hyrax::ChangeSet] change_set
+        # @param [Hyrax::Resource] obj
         # @param [#user_key] user
         #
         # @return [Dry::Monads::Result]
-        def call(change_set, user: NullUser.new)
-          # TODO: This doesn't work.  Need to figure out how to set
-          #       permissions on a changeset
-          change_set.edit_users += [user.user_key] if user.user_key
+        def call(obj, user:)
+          # ignore empty user
+          return Success(obj) if user&.user_key.blank?
+          obj.permission_manager.edit_users += [user.user_key]
 
-          Success(change_set)
+          Success(obj)
         rescue NoMethodError => err
-          Failure([err.message, change_set])
-        end
-
-        ##
-        # @api private
-        class NullUser
-          ##
-          # @return [nil]
-          def user_key
-            nil
-          end
+          Failure([err.message, obj])
         end
       end
     end

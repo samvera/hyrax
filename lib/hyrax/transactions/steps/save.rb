@@ -36,7 +36,7 @@ module Hyrax
           # we want to resync changes that we had in progress so we can persist them later.
           saved.permission_manager.acl.permissions = unsaved.permission_manager.acl.permissions if
             unsaved.respond_to?(:permission_manager)
-
+byebug
           user ||= ::User.find_by_user_key(saved.depositor)
           if saved.collection?
             Hyrax.publisher.publish('collection.metadata.updated', collection: saved, user: user)

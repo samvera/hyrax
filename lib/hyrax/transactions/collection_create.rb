@@ -9,10 +9,10 @@ module Hyrax
     # @since 3.0.0
     class CollectionCreate < Transaction
       DEFAULT_STEPS = ['change_set.set_user_as_depositor',
-                       # 'change_set.set_user_as_editor',
                        'change_set.set_collection_type_gid',
                        'change_set.apply',
                        'collection_resource.apply_collection_type_permissions',
+                       'collection_resource.set_user_as_editor',
                        'collection_resource.save_acl'].freeze
 
       ##

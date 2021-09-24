@@ -80,37 +80,38 @@ module Hyrax
         form
         # if we are creating the new collection as a subcollection (via the nested collections controller),
         # we pass the parent_id through a hidden field in the form and link the two after the create.
-        link_parent_collection(params[:parent_id]) unless params[:parent_id].nil?
         respond_to do |format|
-          Hyrax::SolrService.commit
           format.html { redirect_to edit_dashboard_collection_path(@collection), notice: t('hyrax.dashboard.my.action.collection_create_success') }
           format.json { render json: @collection, status: :created, location: dashboard_collection_path(@collection) }
         end
       end
 
-      def after_create_error
-        form
+      def after_create_error(err_msg:)
+        # form
         respond_to do |format|
           format.html { render action: 'new' }
-          format.json { render json: @collection.errors, status: :unprocessable_entity }
+          format.json { render json: err_msg, status: :unprocessable_entity }
         end
       end
 
       def create
         authorize! :create_collection_of_type, collection_type
-        form
-        @collection =
-          @form.validate(collection_params) &&
-          transactions['change_set.create_collection']
-          .with_step_args(
-            'change_set.set_collection_type_gid' => { collection_type_gid: collection_type.gid },
-            # 'change_set.set_user_as_editor' => { user: current_user },
-            'change_set.set_user_as_depositor' => { user: current_user }
-          )
-          .call(form).value!
-
-        redirect_to(my_collections_path,
-                    notice: t("hyrax.dashboard.my.action.collection_create_success"))
+        begin
+          form
+          @collection =
+            @form.validate(collection_params) &&
+            transactions['change_set.create_collection']
+            .with_step_args(
+              'change_set.set_collection_type_gid' => { collection_type_gid: collection_type.gid },
+              'change_set.set_user_as_depositor' => { user: current_user },
+              'collection_resource.set_user_as_editor' => { user: current_user }
+            )
+            .call(form).value!
+          link_parent_collection(params[:parent_id]) unless params[:parent_id].nil?
+          after_create
+        rescue Exception => ex
+          after_create_error(err_msg: ex.message)
+        end
       end
 
       def after_update

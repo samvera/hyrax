@@ -49,4 +49,23 @@ RSpec.describe Hyrax::Listeners::MetadataIndexListener do
       end
     end
   end
+
+  describe '#on_collection_metadata_updated' do
+    let(:event_type) { :on_collection_metadata_updated }
+
+    it 'reindexes the collection on the configured adapter' do
+      expect { listener.on_collection_metadata_updated(event) }
+        .to change { fake_adapter.saved_resources }
+        .to contain_exactly(resource)
+    end
+
+    context 'when it gets a non-resource as payload' do
+      let(:resource) { ActiveFedora::Base.new }
+
+      it 'returns as a no-op' do
+        expect { listener.on_collection_metadata_updated(event) }
+          .not_to change { fake_adapter.saved_resources }
+      end
+    end
+  end
 end

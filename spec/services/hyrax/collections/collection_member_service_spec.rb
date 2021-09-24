@@ -160,10 +160,22 @@ RSpec.describe Hyrax::Collections::CollectionMemberService, clean_repo: true do
         it "updates the collection member set adding the new member" do
           expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array existing_member_ids + [new_member.id]
         end
-        it "publishes metadata updated event for member" do
+        it "publishes object metadata updated event for work member" do
           updated_work = described_class.add_member(collection_id: collection.id, new_member: new_member, user: user)
           expect(listener.object_metadata_updated&.payload)
             .to eq object: updated_work, user: user
+        end
+      end
+      context 'and the new member is a collection' do
+        let(:child_collection) { FactoryBot.valkyrie_create(:hyrax_collection) }
+        let(:new_member) { child_collection }
+        it "updates the collection member set adding the child collection" do
+          expect(custom_query_service.find_members_of(collection: collection).map(&:id)).to match_array existing_member_ids + [new_member.id]
+        end
+        it "publishes collection metadata updated event for collection member" do
+          updated_collection = described_class.add_member(collection_id: collection.id, new_member: new_member, user: user)
+          expect(listener.collection_metadata_updated&.payload)
+            .to eq collection: updated_collection, user: user
         end
       end
     end
