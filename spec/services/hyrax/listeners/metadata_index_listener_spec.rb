@@ -7,15 +7,18 @@ RSpec.describe Hyrax::Listeners::MetadataIndexListener do
   let(:fake_adapter) { FakeIndexingAdapter.new }
   let(:resource)     { FactoryBot.valkyrie_create(:hyrax_resource) }
 
+  let(:skipping_message) { /Skipping (object|collection) reindex because the (object|collection) .*/ }
+
   # the listener should always use the currently configured Hyrax Index Adapter
   before do
     allow(Hyrax).to receive(:index_adapter).and_return(fake_adapter)
   end
 
   describe '#on_object_deleted' do
-    let(:event_type) { :on_object_delted }
+    let(:event_type) { :on_object_deleted }
 
     it 'reindexes the object on the configured adapter' do
+      expect(Hyrax.logger).not_to receive(:info).with(skipping_message)
       expect { listener.on_object_deleted(event) }
         .to change { fake_adapter.deleted_resources }
         .to contain_exactly(resource)
@@ -25,6 +28,7 @@ RSpec.describe Hyrax::Listeners::MetadataIndexListener do
       let(:resource) { ActiveFedora::Base.new }
 
       it 'returns as a no-op' do
+        expect(Hyrax.logger).to receive(:info).with(skipping_message)
         expect { listener.on_object_deleted(event) }
           .not_to change { fake_adapter.deleted_resources }
       end
@@ -35,6 +39,7 @@ RSpec.describe Hyrax::Listeners::MetadataIndexListener do
     let(:event_type) { :on_object_metadata_updated }
 
     it 'reindexes the object on the configured adapter' do
+      expect(Hyrax.logger).not_to receive(:info).with(skipping_message)
       expect { listener.on_object_metadata_updated(event) }
         .to change { fake_adapter.saved_resources }
         .to contain_exactly(resource)
@@ -44,6 +49,7 @@ RSpec.describe Hyrax::Listeners::MetadataIndexListener do
       let(:resource) { ActiveFedora::Base.new }
 
       it 'returns as a no-op' do
+        expect(Hyrax.logger).to receive(:info).with(skipping_message)
         expect { listener.on_object_metadata_updated(event) }
           .not_to change { fake_adapter.saved_resources }
       end
@@ -55,6 +61,7 @@ RSpec.describe Hyrax::Listeners::MetadataIndexListener do
     let(:data)       { { collection: resource } }
 
     it 'reindexes the collection on the configured adapter' do
+      expect(Hyrax.logger).not_to receive(:info).with(skipping_message)
       expect { listener.on_collection_metadata_updated(event) }
         .to change { fake_adapter.saved_resources }
         .to contain_exactly(resource)
@@ -64,6 +71,7 @@ RSpec.describe Hyrax::Listeners::MetadataIndexListener do
       let(:resource) { ActiveFedora::Base.new }
 
       it 'returns as a no-op' do
+        expect(Hyrax.logger).to receive(:info).with(skipping_message)
         expect { listener.on_collection_metadata_updated(event) }
           .not_to change { fake_adapter.saved_resources }
       end

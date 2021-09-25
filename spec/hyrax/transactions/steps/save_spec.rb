@@ -36,13 +36,30 @@ RSpec.describe Hyrax::Transactions::Steps::Save do
     end
 
     context 'when the caller passes a user' do
-      let(:resource) { build(:hyrax_work) }
-      let(:user)     { create(:user) }
+      let(:user) { create(:user) }
 
-      it 'publishes an event with a user' do
-        expect { step.call(change_set, user: user) }
-          .to change { listener.object_metadata_updated&.payload }
-          .to match object: an_instance_of(resource.class), user: user
+      context 'and resource is a hyrax work' do
+        let(:resource) { build(:hyrax_work) }
+        it 'publishes object.metadata.updated with a user' do
+          expect { step.call(change_set, user: user) }
+            .to change { listener.object_metadata_updated&.payload }
+            .to match object: an_instance_of(resource.class), user: user
+        end
+
+        it 'publishes object.deposited with a user' do
+          expect { step.call(change_set, user: user) }
+            .to change { listener.object_deposited&.payload }
+            .to match object: an_instance_of(resource.class), user: user
+        end
+      end
+
+      context 'and resource is a hyrax pcdm collection' do
+        let(:resource) { build(:hyrax_collection) }
+        it 'publishes collection.metadata.updated with a user' do
+          expect { step.call(change_set, user: user) }
+            .to change { listener.collection_metadata_updated&.payload }
+            .to match collection: an_instance_of(resource.class), user: user
+        end
       end
     end
 
