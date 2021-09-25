@@ -19,6 +19,7 @@ module Hyrax
     # @see https://dry-rb.org/gems/dry-container/
     class Container # rubocop:disable Metrics/ClassLength
       require 'hyrax/transactions/apply_change_set'
+      require 'hyrax/transactions/collection_create'
       require 'hyrax/transactions/create_work'
       require 'hyrax/transactions/destroy_work'
       require 'hyrax/transactions/file_set_destroy'
@@ -29,11 +30,13 @@ module Hyrax
       require 'hyrax/transactions/steps/add_to_collections'
       require 'hyrax/transactions/steps/add_to_parent'
       require 'hyrax/transactions/steps/apply_collection_permission_template'
+      require 'hyrax/transactions/steps/apply_collection_type_permissions'
       require 'hyrax/transactions/steps/apply_permission_template'
       require 'hyrax/transactions/steps/apply_visibility'
       require 'hyrax/transactions/steps/delete_resource'
       require 'hyrax/transactions/steps/destroy_work'
       require 'hyrax/transactions/steps/ensure_admin_set'
+      require 'hyrax/transactions/steps/set_collection_type_gid'
       require 'hyrax/transactions/steps/ensure_permission_template'
       require 'hyrax/transactions/steps/remove_file_set_from_work'
       require 'hyrax/transactions/steps/save'
@@ -58,6 +61,10 @@ module Hyrax
           ApplyChangeSet.new
         end
 
+        ops.register 'create_collection' do
+          CollectionCreate.new
+        end
+
         ops.register 'create_work' do
           WorkCreate.new
         end
@@ -68,6 +75,10 @@ module Hyrax
 
         ops.register 'save' do
           Steps::Save.new
+        end
+
+        ops.register 'set_collection_type_gid' do
+          Steps::SetCollectionTypeGid.new
         end
 
         ops.register 'set_default_admin_set' do
@@ -106,6 +117,16 @@ module Hyrax
 
         ops.register 'remove_from_work' do
           Steps::RemoveFileSetFromWork.new
+        end
+      end
+
+      namespace 'collection_resource' do |ops| # valkyrie collection
+        ops.register 'apply_collection_type_permissions' do
+          Steps::ApplyCollectionTypePermissions.new
+        end
+
+        ops.register 'save_acl' do
+          Steps::SaveAccessControl.new
         end
       end
 

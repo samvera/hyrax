@@ -42,5 +42,16 @@ RSpec.describe Hyrax::Transactions::Steps::AddToCollections do
           .to have_attributes(member_of_collection_ids: contain_exactly(*expected))
       end
     end
+
+    context 'when work already belongs to a single membership collection' do
+      before do
+        allow_any_instance_of(Hyrax::MultipleMembershipChecker) # rubocop:disable RSpec/AnyInstance
+          .to receive(:check).with(any_args).and_return('VIOLATION')
+      end
+
+      it 'is a failure' do
+        expect(step.call(change_set, collection_ids: collection_ids)).to be_failure
+      end
+    end
   end
 end

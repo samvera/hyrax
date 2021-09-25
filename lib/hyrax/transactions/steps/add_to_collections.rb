@@ -26,9 +26,21 @@ module Hyrax
         #
         # @return [Dry::Monads::Result]
         def call(change_set, collection_ids: [])
-          change_set.member_of_collection_ids += collection_ids
+          multi_membership_messages = check_multi_membership(change_set, collection_ids)
+          return Failure(multi_membership_messages) if multi_membership_messages.present?
 
+          change_set.member_of_collection_ids += collection_ids
           Success(change_set)
+        end
+
+        private
+
+        def check_multi_membership(change_set, collection_ids)
+          return if change_set.is_a? Hyrax::Forms::PcdmCollectionForm
+
+          Hyrax::MultipleMembershipChecker
+            .new(item: change_set)
+            .check(collection_ids: [collection_ids], include_current_members: true)
         end
       end
     end
