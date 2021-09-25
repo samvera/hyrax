@@ -155,8 +155,7 @@ module Hyrax
         private
 
         def publish_metadata_updated(member, user)
-          case member
-          when Hyrax::PcdmCollection
+          if member.collection?
             Hyrax.publisher.publish('collection.metadata.updated', collection: member, user: user)
           else
             Hyrax.publisher.publish('object.metadata.updated', object: member, user: user)

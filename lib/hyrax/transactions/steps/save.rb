@@ -38,12 +38,22 @@ module Hyrax
             unsaved.respond_to?(:permission_manager)
 
           user ||= ::User.find_by_user_key(saved.depositor)
-          Hyrax.publisher.publish('object.deposited', object: saved, user: user) if unsaved.new_record
-          Hyrax.publisher.publish('object.metadata.updated', object: saved, user: user)
 
+          publish_changes(unsaved, saved, user)
           Success(saved)
         rescue StandardError => err
           Failure([err.message, change_set.resource])
+        end
+
+        private
+
+        def publish_changes(unsaved, saved, user)
+          if saved.collection?
+            Hyrax.publisher.publish('collection.metadata.updated', collection: saved, user: user)
+          else
+            Hyrax.publisher.publish('object.deposited', object: saved, user: user) if unsaved.new_record
+            Hyrax.publisher.publish('object.metadata.updated', object: saved, user: user)
+          end
         end
       end
     end
