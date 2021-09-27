@@ -6,7 +6,7 @@ module Hyrax
     ##
     # Creates a Collection from a ChangeSet
     #
-    # @since 3.0.0
+    # @since 3.2.0
     class CollectionCreate < Transaction
       DEFAULT_STEPS = ['change_set.set_user_as_depositor',
                        'change_set.set_collection_type_gid',
