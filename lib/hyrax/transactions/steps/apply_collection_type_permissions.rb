@@ -6,9 +6,9 @@ module Hyrax
       # A `dry-transcation` step that applies permission templates from a
       # collection type on a given collection.
       #
-      # @since 3.0.0
+      # @since 3.2.0
       class ApplyCollectionTypePermissions
-        include Dry::Transaction::Operation
+        include Dry::Monads[:result]
 
         ##
         # @param [Hyrax::PcdmCollection] collection with a collection type gid

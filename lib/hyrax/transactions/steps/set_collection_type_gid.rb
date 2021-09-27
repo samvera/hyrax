@@ -5,7 +5,7 @@ module Hyrax
       ##
       # A step that sets the `#collection_type_gid` in the change set.
       #
-      # @since 2.4.0
+      # @since 3.2.0
       class SetCollectionTypeGid
         include Dry::Monads[:result]
 
