@@ -3,6 +3,13 @@ module Hyrax
   class WorkflowActionsController < ApplicationController
     DEFAULT_FORM_CLASS = Hyrax::Forms::WorkflowActionForm
 
+    ##
+    # @!attribute [r] curation_concern
+    #   @api private
+    #   @return [Hyrax::Resource]
+    attr_reader :curation_concern
+
+    load_resource class: Hyrax::Resource, instance_name: :curation_concern
     before_action :authenticate_user!
 
     def update
@@ -17,11 +24,6 @@ module Hyrax
     end
 
     private
-
-    def curation_concern
-      @curation_concern ||=
-        Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id])
-    end
 
     def workflow_action_form
       @workflow_action_form ||= DEFAULT_FORM_CLASS.new(
