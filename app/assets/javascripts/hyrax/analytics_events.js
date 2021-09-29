@@ -4,7 +4,7 @@ class TrackingTags {
   }
 
   analytics() {
-    if(this.provider == "matomo") {
+    if(this.provider === "matomo") {
       return _paq;
     }
     else {
@@ -13,7 +13,7 @@ class TrackingTags {
   }
 
   pageView() {
-    if(this.provider == "matomo") {
+    if(this.provider === "matomo") {
       return 'trackPageView'
     } else {
       return '_trackPageview'
@@ -21,7 +21,7 @@ class TrackingTags {
   }
 
   trackEvent() {
-    if(this.provider == "matomo") {
+    if(this.provider === "matomo") {
       return 'trackEvent'
     } else {
       return '_trackEvent'
