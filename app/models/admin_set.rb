@@ -21,6 +21,7 @@ class AdminSet < ActiveFedora::Base
   include Hyrax::Noid
   include Hyrax::HumanReadableType
   include Hyrax::HasRepresentative
+  include Hyrax::Permissions
 
   DEFAULT_ID = Hyrax::AdminSetCreateService::DEFAULT_ID
   DEFAULT_TITLE = Hyrax::AdminSetCreateService::DEFAULT_TITLE
