@@ -8,15 +8,6 @@ RSpec.describe Hyrax::Ability, :clean_repo do
   let(:user) { create(:user, email: 'user@example.com') }
   let(:current_user) { user }
 
-  context 'when user who created the admin set' do
-    context 'and admin set is an ActiveFedora::Base' do
-      let(:admin_set) { create(:adminset_lw, user: user, with_permission_template: true) }
-
-      it { is_expected.to be_able_to(:read, admin_set) }
-      it { is_expected.to be_able_to(:edit, admin_set) }
-    end
-  end
-
   context 'when admin user' do
     let(:current_user) { admin }
     let(:admin) { FactoryBot.create(:admin, email: 'admin@example.com') }
@@ -41,7 +32,32 @@ RSpec.describe Hyrax::Ability, :clean_repo do
         it { is_expected.to be_able_to(:deposit, solr_document) }
         it { is_expected.to be_able_to(:view_admin_show, admin_set) }
         it { is_expected.to be_able_to(:view_admin_show, solr_document) }
-        it { is_expected.to be_able_to(:read, admin_set) } # admins can do everything
+        it { is_expected.to be_able_to(:read, admin_set) }
+        it { is_expected.to be_able_to(:read, solr_document) } # defined in solr_document_ability.rb
+      end
+    end
+
+    context 'and admin set is a valkyrie resource' do
+      let!(:admin_set) { FactoryBot.valkyrie_create(:hyrax_admin_set, user: user, with_permission_template: true) }
+      let!(:solr_document) { SolrDocument.new(Hyrax::AdministrativeSetIndexer.new(resource: admin_set).to_solr) }
+
+      context 'for abilities open to admins' do
+        it { is_expected.to be_able_to(:manage, Hyrax::AdministrativeSet) }
+        it { is_expected.to be_able_to(:manage_any, Hyrax::AdministrativeSet) }
+        it { is_expected.to be_able_to(:create_any, Hyrax::AdministrativeSet) }
+        it { is_expected.to be_able_to(:create, Hyrax::AdministrativeSet) }
+        it { is_expected.to be_able_to(:view_admin_show_any, Hyrax::AdministrativeSet) }
+        it { is_expected.to be_able_to(:edit, admin_set) }
+        it { is_expected.to be_able_to(:edit, solr_document) } # defined in solr_document_ability.rb
+        it { is_expected.to be_able_to(:update, admin_set) }
+        it { is_expected.to be_able_to(:update, solr_document) } # defined in solr_document_ability.rb
+        it { is_expected.to be_able_to(:destroy, admin_set) }
+        it { is_expected.to be_able_to(:destroy, solr_document) } # defined in solr_document_ability.rb
+        it { is_expected.to be_able_to(:deposit, admin_set) }
+        it { is_expected.to be_able_to(:deposit, solr_document) }
+        it { is_expected.to be_able_to(:view_admin_show, admin_set) }
+        it { is_expected.to be_able_to(:view_admin_show, solr_document) }
+        it { is_expected.to be_able_to(:read, admin_set) }
         it { is_expected.to be_able_to(:read, solr_document) } # defined in solr_document_ability.rb
       end
     end
@@ -67,24 +83,62 @@ RSpec.describe Hyrax::Ability, :clean_repo do
       context 'for abilities open to managers' do
         it { is_expected.to be_able_to(:manage_any, AdminSet) }
         it { is_expected.to be_able_to(:view_admin_show_any, AdminSet) }
-        it { is_expected.to be_able_to(:edit, admin_set) } # defined in solr_document_ability.rb
-        it { is_expected.to be_able_to(:edit, solr_document) }
-        it { is_expected.to be_able_to(:update, admin_set) } # defined in solr_document_ability.rb
-        it { is_expected.to be_able_to(:update, solr_document) }
-        it { is_expected.to be_able_to(:destroy, admin_set) } # defined in solr_document_ability.rb
-        it { is_expected.to be_able_to(:destroy, solr_document) }
+        it { is_expected.to be_able_to(:edit, admin_set) }
+        it { is_expected.to be_able_to(:edit, solr_document) } # defined in solr_document_ability.rb
+        it { is_expected.to be_able_to(:update, admin_set) }
+        it { is_expected.to be_able_to(:update, solr_document) } # defined in solr_document_ability.rb
+        it { is_expected.to be_able_to(:destroy, admin_set) }
+        it { is_expected.to be_able_to(:destroy, solr_document) } # defined in solr_document_ability.rb
         it { is_expected.to be_able_to(:deposit, admin_set) }
         it { is_expected.to be_able_to(:deposit, solr_document) }
         it { is_expected.to be_able_to(:view_admin_show, admin_set) }
         it { is_expected.to be_able_to(:view_admin_show, solr_document) }
-        it { is_expected.to be_able_to(:read, admin_set) } # edit access grants read and write
-        it { is_expected.to be_able_to(:read, solr_document) } # edit access grants read and write # defined in solr_document_ability.rb
+        it { is_expected.to be_able_to(:read, admin_set) }
+        it { is_expected.to be_able_to(:read, solr_document) } # defined in solr_document_ability.rb
       end
 
       context 'for abilities NOT open to managers' do
         it { is_expected.not_to be_able_to(:manage, AdminSet) }
         it { is_expected.not_to be_able_to(:create_any, AdminSet) } # granted by collection type, not collection
         it { is_expected.not_to be_able_to(:create, AdminSet) }
+      end
+    end
+
+    context 'and admin set is a valkyrie resource' do
+      let!(:admin_set) { FactoryBot.valkyrie_create(:hyrax_admin_set, user: user, access_grants: grants, with_permission_template: true) }
+      let!(:solr_document) { SolrDocument.new(Hyrax::AdministrativeSetIndexer.new(resource: admin_set).to_solr) }
+
+      let(:grants) do
+        [
+          {
+            agent_type: Hyrax::PermissionTemplateAccess::USER,
+            agent_id: manager.user_key,
+            access: Hyrax::PermissionTemplateAccess::MANAGE
+          }
+        ]
+      end
+
+      context 'for abilities open to managers' do
+        it { is_expected.to be_able_to(:manage_any, Hyrax::AdministrativeSet) }
+        it { is_expected.to be_able_to(:view_admin_show_any, Hyrax::AdministrativeSet) }
+        it { is_expected.to be_able_to(:edit, admin_set) }
+        it { is_expected.to be_able_to(:edit, solr_document) } # defined in solr_document_ability.rb
+        it { is_expected.to be_able_to(:update, admin_set) }
+        it { is_expected.to be_able_to(:update, solr_document) } # defined in solr_document_ability.rb
+        it { is_expected.to be_able_to(:destroy, admin_set) }
+        it { is_expected.to be_able_to(:destroy, solr_document) } # defined in solr_document_ability.rb
+        it { is_expected.to be_able_to(:deposit, admin_set) }
+        it { is_expected.to be_able_to(:deposit, solr_document) }
+        it { is_expected.to be_able_to(:view_admin_show, admin_set) }
+        it { is_expected.to be_able_to(:view_admin_show, solr_document) }
+        it { is_expected.to be_able_to(:read, admin_set) }
+        it { is_expected.to be_able_to(:read, solr_document) } # defined in solr_document_ability.rb
+      end
+
+      context 'for abilities NOT open to managers' do
+        it { is_expected.not_to be_able_to(:manage, Hyrax::AdministrativeSet) }
+        it { is_expected.not_to be_able_to(:create_any, Hyrax::AdministrativeSet) } # granted by collection type, not collection
+        it { is_expected.not_to be_able_to(:create, Hyrax::AdministrativeSet) }
       end
     end
   end
@@ -116,7 +170,7 @@ RSpec.describe Hyrax::Ability, :clean_repo do
         # There isn't a public show page for admin_sets, but since the user has
         # permission to view the admin show page, they have permission to view
         # the non-existent public show page.
-        it { is_expected.to be_able_to(:read, admin_set) } # no public page for admin sets
+        it { is_expected.to be_able_to(:read, admin_set) }
         it { is_expected.to be_able_to(:read, solr_document) } # defined in solr_document_ability.rb
       end
 
@@ -125,6 +179,48 @@ RSpec.describe Hyrax::Ability, :clean_repo do
         it { is_expected.not_to be_able_to(:manage_any, AdminSet) }
         it { is_expected.not_to be_able_to(:create_any, AdminSet) } # granted by collection type, not collection
         it { is_expected.not_to be_able_to(:create, AdminSet) }
+        it { is_expected.not_to be_able_to(:edit, admin_set) }
+        it { is_expected.not_to be_able_to(:edit, solr_document) } # defined in solr_document_ability.rb
+        it { is_expected.not_to be_able_to(:update, admin_set) }
+        it { is_expected.not_to be_able_to(:update, solr_document) } # defined in solr_document_ability.rb
+        it { is_expected.not_to be_able_to(:destroy, admin_set) }
+        it { is_expected.not_to be_able_to(:destroy, solr_document) } # defined in solr_document_ability.rb
+      end
+    end
+
+    context 'and admin set is a valkyrie resource' do
+      let!(:admin_set) { FactoryBot.valkyrie_create(:hyrax_admin_set, user: user, access_grants: grants, with_permission_template: true) }
+      let!(:solr_document) { SolrDocument.new(Hyrax::AdministrativeSetIndexer.new(resource: admin_set).to_solr) }
+
+      let(:grants) do
+        [
+          {
+            agent_type: Hyrax::PermissionTemplateAccess::USER,
+            agent_id: depositor.user_key,
+            access: Hyrax::PermissionTemplateAccess::DEPOSIT
+          }
+        ]
+      end
+
+      context 'for abilities open to depositor' do
+        it { is_expected.to be_able_to(:view_admin_show_any, Hyrax::AdministrativeSet) }
+        it { is_expected.to be_able_to(:deposit, admin_set) }
+        it { is_expected.to be_able_to(:deposit, solr_document) }
+        it { is_expected.to be_able_to(:view_admin_show, admin_set) }
+        it { is_expected.to be_able_to(:view_admin_show, solr_document) }
+
+        # There isn't a public show page for admin_sets, but since the user has
+        # permission to view the admin show page, they have permission to view
+        # the non-existent public show page.
+        it { is_expected.to be_able_to(:read, admin_set) }
+        it { is_expected.to be_able_to(:read, solr_document) } # defined in solr_document_ability.rb
+      end
+
+      context 'for abilities NOT open to depositor' do
+        it { is_expected.not_to be_able_to(:manage, Hyrax::AdministrativeSet) }
+        it { is_expected.not_to be_able_to(:manage_any, Hyrax::AdministrativeSet) }
+        it { is_expected.not_to be_able_to(:create_any, Hyrax::AdministrativeSet) } # granted by collection type, not collection
+        it { is_expected.not_to be_able_to(:create, Hyrax::AdministrativeSet) }
         it { is_expected.not_to be_able_to(:edit, admin_set) }
         it { is_expected.not_to be_able_to(:edit, solr_document) } # defined in solr_document_ability.rb
         it { is_expected.not_to be_able_to(:update, admin_set) }
@@ -159,7 +255,7 @@ RSpec.describe Hyrax::Ability, :clean_repo do
         # There isn't a public show page for admin_sets, but since the user has
         # permission to view the admin show page, they have permission to view
         # the non-existent public show page.
-        it { is_expected.to be_able_to(:read, admin_set) } # no public page for admin sets
+        it { is_expected.to be_able_to(:read, admin_set) }
         it { is_expected.to be_able_to(:read, solr_document) } # defined in solr_document_ability.rb
       end
 
@@ -168,6 +264,47 @@ RSpec.describe Hyrax::Ability, :clean_repo do
         it { is_expected.not_to be_able_to(:manage_any, AdminSet) }
         it { is_expected.not_to be_able_to(:create_any, AdminSet) } # granted by collection type, not collection
         it { is_expected.not_to be_able_to(:create, AdminSet) }
+        it { is_expected.not_to be_able_to(:edit, admin_set) }
+        it { is_expected.not_to be_able_to(:edit, solr_document) } # defined in solr_document_ability.rb
+        it { is_expected.not_to be_able_to(:update, admin_set) }
+        it { is_expected.not_to be_able_to(:update, solr_document) } # defined in solr_document_ability.rb
+        it { is_expected.not_to be_able_to(:destroy, admin_set) }
+        it { is_expected.not_to be_able_to(:destroy, solr_document) } # defined in solr_document_ability.rb
+        it { is_expected.not_to be_able_to(:deposit, admin_set) }
+        it { is_expected.not_to be_able_to(:deposit, solr_document) }
+      end
+    end
+
+    context 'and admin set is a valkyrie resource' do
+      let!(:admin_set) { FactoryBot.valkyrie_create(:hyrax_admin_set, user: user, access_grants: grants, with_permission_template: true) }
+      let!(:solr_document) { SolrDocument.new(Hyrax::AdministrativeSetIndexer.new(resource: admin_set).to_solr) }
+
+      let(:grants) do
+        [
+          {
+            agent_type: Hyrax::PermissionTemplateAccess::USER,
+            agent_id: viewer.user_key,
+            access: Hyrax::PermissionTemplateAccess::VIEW
+          }
+        ]
+      end
+
+      context 'for abilities open to viewer' do
+        it { is_expected.to be_able_to(:view_admin_show_any, Hyrax::AdministrativeSet) }
+        it { is_expected.to be_able_to(:view_admin_show, admin_set) }
+
+        # There isn't a public show page for admin_sets, but since the user has
+        # permission to view the admin show page, they have permission to view
+        # the non-existent public show page.
+        it { is_expected.to be_able_to(:read, admin_set) } # no public page for admin sets
+        it { is_expected.to be_able_to(:read, solr_document) }
+      end
+
+      context 'for abilities NOT open to viewer' do
+        it { is_expected.not_to be_able_to(:manage, Hyrax::AdministrativeSet) }
+        it { is_expected.not_to be_able_to(:manage_any, Hyrax::AdministrativeSet) }
+        it { is_expected.not_to be_able_to(:create_any, Hyrax::AdministrativeSet) } # granted by collection type, not collection
+        it { is_expected.not_to be_able_to(:create, Hyrax::AdministrativeSet) }
         it { is_expected.not_to be_able_to(:edit, admin_set) }
         it { is_expected.not_to be_able_to(:edit, solr_document) } # defined in solr_document_ability.rb
         it { is_expected.not_to be_able_to(:update, admin_set) }
@@ -201,10 +338,35 @@ RSpec.describe Hyrax::Ability, :clean_repo do
         it { is_expected.not_to be_able_to(:destroy, admin_set) }
         it { is_expected.not_to be_able_to(:destroy, solr_document) } # defined in solr_document_ability.rb
         it { is_expected.not_to be_able_to(:deposit, admin_set) }
-        it { is_expected.not_to be_able_to(:deposit, solr_document) } # defined in solr_document_ability.rb
+        it { is_expected.not_to be_able_to(:deposit, solr_document) }
         it { is_expected.not_to be_able_to(:view_admin_show, admin_set) }
         it { is_expected.not_to be_able_to(:view_admin_show, solr_document) }
-        it { is_expected.not_to be_able_to(:read, admin_set) } # no public page for admin sets
+        it { is_expected.not_to be_able_to(:read, admin_set) }
+        it { is_expected.not_to be_able_to(:read, solr_document) } # defined in solr_document_ability.rb
+      end
+    end
+
+    context 'and admin set is a valkyrie resource' do
+      let!(:admin_set) { FactoryBot.valkyrie_create(:hyrax_admin_set, user: user, with_permission_template: true) }
+      let!(:solr_document) { SolrDocument.new(Hyrax::AdministrativeSetIndexer.new(resource: admin_set).to_solr) }
+
+      context 'for abilities NOT open to general user' do
+        it { is_expected.not_to be_able_to(:manage, Hyrax::AdministrativeSet) }
+        it { is_expected.not_to be_able_to(:manage_any, Hyrax::AdministrativeSet) }
+        it { is_expected.not_to be_able_to(:create_any, Hyrax::AdministrativeSet) } # granted by collection type, not collection
+        it { is_expected.not_to be_able_to(:create, Hyrax::AdministrativeSet) }
+        it { is_expected.not_to be_able_to(:view_admin_show_any, Hyrax::AdministrativeSet) }
+        it { is_expected.not_to be_able_to(:edit, admin_set) }
+        it { is_expected.not_to be_able_to(:edit, solr_document) } # defined in solr_document_ability.rb
+        it { is_expected.not_to be_able_to(:update, admin_set) }
+        it { is_expected.not_to be_able_to(:update, solr_document) } # defined in solr_document_ability.rb
+        it { is_expected.not_to be_able_to(:destroy, admin_set) }
+        it { is_expected.not_to be_able_to(:destroy, solr_document) } # defined in solr_document_ability.rb
+        it { is_expected.not_to be_able_to(:deposit, admin_set) }
+        it { is_expected.not_to be_able_to(:deposit, solr_document) }
+        it { is_expected.not_to be_able_to(:view_admin_show, admin_set) }
+        it { is_expected.not_to be_able_to(:view_admin_show, solr_document) }
+        it { is_expected.not_to be_able_to(:read, admin_set) }
         it { is_expected.not_to be_able_to(:read, solr_document) } # defined in solr_document_ability.rb
       end
     end
