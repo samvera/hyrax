@@ -57,4 +57,9 @@ FactoryBot.define do
       end
     end
   end
+
+  factory :invalid_hyrax_collection, class: 'Hyrax::PcdmCollection' do
+    # Title and collection_type_gid are required based on core and basic collection
+    # metadata definitions. Without either of these fields, the collection is invalid.
+  end
 end

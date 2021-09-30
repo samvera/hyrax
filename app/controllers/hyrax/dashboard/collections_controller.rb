@@ -43,7 +43,7 @@ module Hyrax
       # The search builder to find the collections' members
       self.membership_service_class = Collections::CollectionMemberSearchService
 
-      load_and_authorize_resource except: [:index, :create],
+      load_and_authorize_resource except: [:index, :create, :new],
                                   instance_name: :collection,
                                   class: Hyrax.config.collection_class
 
@@ -59,14 +59,10 @@ module Hyrax
       end
 
       def new
-        # Coming from the UI, a collection type id should always be present.  Coming from the API, if a collection type id is not specified,
-        # use the default collection type (provides backward compatibility with versions < Hyrax 2.1.0)
-        collection_type_id = params[:collection_type_id].presence || default_collection_type.id
-        @collection.collection_type_gid = CollectionType.find(collection_type_id).to_global_id
+        authorize! :create_collection_of_type, collection_type
         add_breadcrumb t(:'hyrax.controls.home'), root_path
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
         add_breadcrumb t('.header', type_title: collection_type.title), request.path
-        @collection.apply_depositor_metadata(current_user.user_key)
         form
       end
 
@@ -84,42 +80,33 @@ module Hyrax
 
       def after_create
         form
-        set_default_permissions
         # if we are creating the new collection as a subcollection (via the nested collections controller),
         # we pass the parent_id through a hidden field in the form and link the two after the create.
-        link_parent_collection(params[:parent_id]) unless params[:parent_id].nil?
         respond_to do |format|
-          Hyrax::SolrService.commit
           format.html { redirect_to edit_dashboard_collection_path(@collection), notice: t('hyrax.dashboard.my.action.collection_create_success') }
           format.json { render json: @collection, status: :created, location: dashboard_collection_path(@collection) }
         end
       end
 
-      def after_create_error
-        form
+      def after_create_error(err_msg:)
+        flash[:error] = err_msg
         respond_to do |format|
           format.html { render action: 'new' }
-          format.json { render json: @collection.errors, status: :unprocessable_entity }
+          format.json { render json: err_msg, status: :unprocessable_entity }
         end
       end
 
       def create
-        # Manual load and authorize necessary because Cancan will pass in all
-        # form attributes. When `permissions_attributes` are present the
-        # collection is saved without a value for `has_model.`
-        @collection = ::Collection.new
-        authorize! :create, @collection
-        # Coming from the UI, a collection type gid should always be present.  Coming from the API, if a collection type gid is not specified,
-        # use the default collection type (provides backward compatibility with versions < Hyrax 2.1.0)
-        @collection.collection_type_gid = params[:collection_type_gid].presence || default_collection_type.to_global_id
-        @collection.attributes = collection_params.except(:members, :parent_id, :collection_type_gid)
-        @collection.apply_depositor_metadata(current_user.user_key)
-        @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
-        if @collection.save
+        authorize! :create_collection_of_type, collection_type
+        form
+        result = create_collection(form: @form,
+                                   user: current_user,
+                                   collection_type_gid: collection_type.to_global_id,
+                                   parent_id: params[:parent_id])
+        if result == true
           after_create
-          add_members_to_collection unless batch.empty?
         else
-          after_create_error
+          after_create_error(err_msg: result)
         end
       end
 
@@ -148,7 +135,7 @@ module Hyrax
         @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
         # we don't have to reindex the full graph when updating collection
         @collection.reindex_extent = Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX
-        if @collection.update(collection_params.except(:members))
+        if @collection.update(collection_params_without_permissions.except(:members))
           after_update
         else
           after_update_error
@@ -199,12 +186,66 @@ module Hyrax
 
       private
 
+      # @return <true | String> true if collection creation successful; otherwise, returns error message
+      def create_collection(form:, user:, collection_type_gid:, parent_id:)
+        result = create_form_validation(form: form)
+        return result unless result == true
+        create_form_result(form: form, user: user,
+                           collection_type_gid: collection_type_gid,
+                           parent_id: parent_id)
+      end
+
+      # @return <true | String> true if the form is valid; otherwise, returns validation error message
+      def create_form_validation(form:)
+        return true if @form.validate(collection_params)
+        err_msgs = []
+        form.errors.messages.each do |field, err|
+          err_msgs << "#{field.to_s.capitalize} #{err.first}."
+        end
+        err_msgs.join(' ')
+      end
+
+      # Process create form and set collection to results
+      # @return <true | String> true if the form is valid; otherwise, returns validation error message
+      def create_form_result(form:, user:, collection_type_gid:, parent_id:)
+        result = transactions['change_set.create_collection']
+                 .with_step_args(
+                   'change_set.set_user_as_depositor' => { user: user },
+                   'change_set.set_collection_type_gid' => { collection_type_gid: collection_type_gid },
+                   'change_set.add_to_collections' => { collection_ids: Array(parent_id) },
+                   'collection_resource.apply_collection_type_permissions' => { user: user }
+                 )
+                 .call(form)
+        return result.failure.first if result.failure?
+        @collection = result.value!
+        true
+      end
+
       def default_collection_type
         Hyrax::CollectionType.find_or_create_default_collection_type
       end
 
+      # The collection_type can be identified in several ways listed in order of precedence:
+      # * get id from @collection if it exists
+      # * get id from params[:collection_type_id], if it exists
+      # * get gid from params[:collection_type_gid], if it exists
+      # * otherwise, use default_collection_type
       def collection_type
-        @collection_type ||= CollectionType.find_by_gid!(collection.collection_type_gid)
+        return @collection_type if @collection_type
+        type_id = collection_type_id
+        @collection_type ||= Hyrax::CollectionType.find(type_id) if type_id
+        @collection_type ||= collection_type_from_gid
+      end
+
+      def collection_type_id
+        type_id = collection&.collection_type&.id || params[:collection_type_id]
+        type_id = default_collection_type.id if type_id.blank? && params[:collection_type_gid].blank?
+        type_id
+      end
+
+      def collection_type_from_gid
+        gid = params[:collection_type_gid]
+        Hyrax::CollectionType.find_by_gid!(gid) if gid
       end
 
       def link_parent_collection(parent_id)
@@ -347,6 +388,12 @@ module Hyrax
       deprecation_deprecate :single_item_search_builder
 
       def collection_params
+        # For backward compatibility, need to support params[:collection] for existing APIs
+        @collection_params = params[:collection]
+        @collection_params ||= params[:pcdm_collection]
+      end
+
+      def collection_params_without_permissions
         @participants = extract_old_style_permission_attributes(params[:collection])
         form_class.model_attributes(params[:collection])
       end
@@ -426,12 +473,13 @@ module Hyrax
       end
 
       def form
-        @form ||= form_class.new(@collection, current_ability, repository)
-      end
-
-      def set_default_permissions
-        additional_grants = @participants # Grants converted from older versions (< Hyrax 2.1.0) where share was edit or read access instead of managers, depositors, and viewers
-        Collections::PermissionsCreateService.create_default(collection: @collection, creating_user: current_user, grants: additional_grants)
+        @collection ||= Hyrax::PcdmCollection.new(collection_type_gid: collection_type.to_global_id)
+        @form ||= case collection
+                  when Hyrax::PcdmCollection
+                    Hyrax::Forms::PcdmCollectionForm.new(collection)
+                  else
+                    form_class.new(collection, current_ability, repository)
+                  end
       end
 
       def query_collection_members
