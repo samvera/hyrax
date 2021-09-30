@@ -227,6 +227,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   describe 'create collection' do
     let(:title) { "Test Collection" }
     let(:description) { "Description for collection we are testing." }
+    let(:creator) { "Skippyjon Jones" }
 
     context 'when user can create collections of multiple types' do
       before do
@@ -252,6 +253,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
         fill_in('Title', with: title)
         fill_in('Description', with: description)
+        fill_in('Creator', with: creator)
         fill_in('Related URL', with: 'http://example.com/')
 
         click_button("Save")
@@ -283,6 +285,7 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
 
         fill_in('Title', with: title)
         fill_in('Description', with: description)
+        fill_in('Creator', with: creator)
         fill_in('Related URL', with: 'http://example.com/')
 
         click_button("Save")

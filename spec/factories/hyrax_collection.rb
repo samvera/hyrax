@@ -6,6 +6,7 @@ FactoryBot.define do
   factory :hyrax_collection, class: 'Hyrax::PcdmCollection' do
     title               { ['The Tove Jansson Collection'] }
     collection_type_gid { Hyrax::CollectionType.find_or_create_default_collection_type.to_global_id }
+    creator             { 'Skippyjon Jones' }
 
     transient do
       with_permission_template { true }
@@ -56,5 +57,10 @@ FactoryBot.define do
         members { [valkyrie_create(:hyrax_collection), valkyrie_create(:hyrax_collection)] }
       end
     end
+  end
+
+  factory :invalid_hyrax_collection, class: 'Hyrax::PcdmCollection' do
+    # Title and creator are required based on core and basic metadata definitions.
+    # Without title and creator, the collection is invalid.
   end
 end

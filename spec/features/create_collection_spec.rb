@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
+RSpec.describe 'Creating a new Collection', :js, :workflow, :clean_repo do
   let(:admin) { create(:admin, email: 'admin@example.com') }
   let(:manager) { create(:user, email: 'manager@example.com') }
   let(:creator) { create(:user, email: 'creator@example.com') }
@@ -18,14 +18,14 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
   end
 
   context "when the user is not an admin" do
-    context "and user does not have permissions to create managed collection type" do
+    context "and user does not have permissions to create Managed Collection type" do
       before do
         sign_in user
         click_link 'Collections'
       end
 
       it 'user is not offered the option to create that type of collection' do
-        # try and create the new admin set
+        # try and create the new collection
         click_button "New Collection"
         expect(page).to have_xpath("//h4", text: "User Collection")
         expect(page).to have_xpath("//h4", text: "Other")
@@ -33,7 +33,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
       end
     end
 
-    context "and user is a creator for managed collection type" do
+    context "and user is a creator for Managed Collection type" do
       before do
         sign_in creator
         click_link 'Collections'
@@ -48,6 +48,8 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
         choose "collection_type", option: "ManagedCollection"
         click_button 'Create collection'
         fill_in('Title', with: 'A Managed Collection')
+        fill_in('Creator', with: 'Skippyjon Jones')
+        click_link 'Additional fields'
         fill_in('Description', with: "This collection was created by #{creator.user_key}")
         click_on('Save')
         expect(page).to have_content("Collection was successfully created.")
@@ -84,7 +86,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
       end
     end
 
-    context "and user is a manager for managed collection type" do
+    context "and user is a manager for Managed Collection type" do
       before do
         sign_in manager
         click_link 'Collections'
@@ -99,6 +101,8 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
         choose "collection_type", option: "ManagedCollection"
         click_button 'Create collection'
         fill_in('Title', with: 'A Managed Collection')
+        fill_in('Creator', with: 'Skippyjon Jones')
+        click_link 'Additional fields'
         fill_in('Description', with: "This collection was created by #{manager.user_key}")
         click_on('Save')
         expect(page).to have_content("Collection was successfully created.")
@@ -148,6 +152,8 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
       choose "collection_type", option: "ManagedCollection"
       click_button 'Create collection'
       fill_in('Title', with: 'A Managed Collection')
+      fill_in('Creator', with: 'Skippyjon Jones')
+      click_link 'Additional fields'
       fill_in('Description', with: "This collection was created by #{admin.user_key}")
       click_on('Save')
       expect(page).to have_content("Collection was successfully created.")

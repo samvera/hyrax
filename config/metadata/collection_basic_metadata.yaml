@@ -1,0 +1,86 @@
+attributes:
+  description:
+    type: string
+    multiple: true
+    form:
+      primary: true
+  alternative_title:
+    type: string
+    multiple: true
+    form:
+      primary: false
+  creator:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "creator_tesim"
+  contributor:
+    type: string
+    multiple: true
+    form:
+      primary: false
+  keyword:
+    type: string
+    multiple: true
+    index_keys:
+      - "keyword_sim"
+      - "keyword_tesim"
+    form:
+      primary: false
+  license:
+    type: string
+    multiple: true
+    form:
+      primary: false
+  publisher:
+    type: string
+    multiple: true
+    form:
+      primary: false
+  date_created:
+    type: date_time
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "date_created_tesim"
+  subject:
+    type: string
+    multiple: true
+    index_keys:
+      - "subject_sim"
+      - "subject_tesim"
+    form:
+      primary: false
+  language:
+    type: string
+    multiple: true
+    form:
+      primary: false
+  identifier:
+    type: string
+    multiple: true
+    form:
+      primary: false
+  location:
+    type: string
+    multiple: true
+    form:
+      primary: false
+  related_url:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "related_url_tesim"
+  resource_type:
+    type: string
+    multiple: true
+    form:
+      primary: false
+    index_keys:
+      - "resource_type_sim"
+      - "resource_type_tesim"

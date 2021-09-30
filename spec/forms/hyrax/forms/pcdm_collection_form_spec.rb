@@ -7,13 +7,13 @@ RSpec.describe Hyrax::Forms::PcdmCollectionForm do
   describe '.required_fields' do
     it 'lists required fields' do
       expect(described_class.required_fields)
-        .to contain_exactly :title
+        .to contain_exactly(:title, :collection_type_gid, :creator, :depositor)
     end
   end
 
   describe '#primary_terms' do
     it 'gives "title" as a primary term' do
-      expect(form.primary_terms).to contain_exactly(:title)
+      expect(form.primary_terms).to contain_exactly(:title, :creator, :rights_statement)
     end
   end
 end
