@@ -64,11 +64,14 @@ attributes:
     multiple: true
     form:
       primary: false
-  location:
+  based_near:
     type: string
     multiple: true
     form:
       primary: false
+    index_keys:
+      - "based_near_sim"
+      - "based_near_tesim"
   related_url:
     type: string
     multiple: true

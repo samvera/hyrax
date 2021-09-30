@@ -1566,6 +1566,21 @@ en:
         resource_type: Pre-defined categories to describe the type of content being uploaded, such as &quot;article&quot; or &quot;dataset.&quot;  More than one type may be selected.
         subject: Headings or index terms describing what the collection is about; these do need to conform to an existing vocabulary.
         title: A name to aid in identifying a collection.
+      pcdm_collection:
+        based_near: A place name related to the collection, such as its site of publication, or the city, state, or country the collection contents are about. Calls upon the <a href='http://www.geonames.org'>GeoNames web service</a>.
+        contributor: A person or group you want to recognize for playing a role in the creation of the collection, but not the primary role.
+        creator: 'The person or group responsible for the collection. Usually this is the author of the content. Personal names should be entered with the last name first: Smith, John'
+        date_created: The date on which the collection was created.
+        description: Free-text notes about the collection. Examples include abstracts of a paper or citation information for a journal article.
+        identifier: A unique handle identifying the collection. An example would be a DOI for a journal article, or an ISBN or OCLC number for a book.
+        keyword: Words or phrases you select to describe what the collection is about. These are used to search for content.
+        language: The language of the collection's content.
+        license: Licensing and distribution information governing access to the collection. Select from the provided drop-down list.
+        publisher: The person or group making the collection available. Generally this is the institution.
+        related_url: A link to a website or other specific content (audio, video, PDF document) related to the collection. An example is the URL of a research project from which the collection was derived.
+        resource_type: Pre-defined categories to describe the type of content being uploaded, such as &quot;article&quot; or &quot;dataset.&quot;  More than one type may be selected.
+        subject: Headings or index terms describing what the collection is about; these do need to conform to an existing vocabulary.
+        title: A name to aid in identifying a collection.
       collection_type:
         allow_multiple_membership: Allow works to belong to multiple collections of this type
         assigns_visibility: Allow collections of this type to assign initial visibility settings to a new work
