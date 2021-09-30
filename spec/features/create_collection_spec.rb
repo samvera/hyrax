@@ -48,8 +48,6 @@ RSpec.describe 'Creating a new Collection', :js, :workflow, :clean_repo do
         choose "collection_type", option: "ManagedCollection"
         click_button 'Create collection'
         fill_in('Title', with: 'A Managed Collection')
-        fill_in('Creator', with: 'Skippyjon Jones')
-        click_link 'Additional fields'
         fill_in('Description', with: "This collection was created by #{creator.user_key}")
         click_on('Save')
         expect(page).to have_content("Collection was successfully created.")
@@ -101,8 +99,6 @@ RSpec.describe 'Creating a new Collection', :js, :workflow, :clean_repo do
         choose "collection_type", option: "ManagedCollection"
         click_button 'Create collection'
         fill_in('Title', with: 'A Managed Collection')
-        fill_in('Creator', with: 'Skippyjon Jones')
-        click_link 'Additional fields'
         fill_in('Description', with: "This collection was created by #{manager.user_key}")
         click_on('Save')
         expect(page).to have_content("Collection was successfully created.")
@@ -152,8 +148,6 @@ RSpec.describe 'Creating a new Collection', :js, :workflow, :clean_repo do
       choose "collection_type", option: "ManagedCollection"
       click_button 'Create collection'
       fill_in('Title', with: 'A Managed Collection')
-      fill_in('Creator', with: 'Skippyjon Jones')
-      click_link 'Additional fields'
       fill_in('Description', with: "This collection was created by #{admin.user_key}")
       click_on('Save')
       expect(page).to have_content("Collection was successfully created.")

@@ -21,12 +21,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
   let(:unowned_asset)  { create(:work, user: other) }
 
   let(:collection_attrs) do
-    {
-      title: ['My First Collection'],
-      description: ["The Description\r\n\r\nand more"],
-      creator: ["Skippyjon Jones"],
-      collection_type_gid: [collection_type_gid]
-    }
+    { title: ['My First Collection'], description: ["The Description\r\n\r\nand more"], collection_type_gid: [collection_type_gid] }
   end
 
   let(:listener) { Hyrax::Specs::SpyListener.new }
