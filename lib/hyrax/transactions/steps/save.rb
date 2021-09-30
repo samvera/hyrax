@@ -43,18 +43,18 @@ module Hyrax
 
           user ||= ::User.find_by_user_key(saved.depositor)
 
-          publish_changes(unsaved, saved, user)
+          publish_changes(resource: saved, user: user, new: unsaved.new_record)
           Success(saved)
         end
 
         private
 
-        def publish_changes(unsaved, saved, user)
-          if saved.collection?
-            Hyrax.publisher.publish('collection.metadata.updated', collection: saved, user: user)
+        def publish_changes(resource:, user:, new: false)
+          if resource.collection?
+            Hyrax.publisher.publish('collection.metadata.updated', collection: resource, user: user)
           else
-            Hyrax.publisher.publish('object.deposited', object: saved, user: user) if unsaved.new_record
-            Hyrax.publisher.publish('object.metadata.updated', object: saved, user: user)
+            Hyrax.publisher.publish('object.deposited', object: resource, user: user) if new
+            Hyrax.publisher.publish('object.metadata.updated', object: resource, user: user)
           end
         end
       end
