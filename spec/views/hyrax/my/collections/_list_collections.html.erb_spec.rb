@@ -3,6 +3,10 @@ RSpec.describe 'hyrax/my/collections/_list_collections.html.erb', type: :view do
   let(:id) { "3197z511f" }
   let(:modified_date) {  DateTime.new(2014, 1, 1).iso8601 }
 
+  before do
+    allow(Flipflop).to receive(:read_only?).and_return(false)
+  end
+
   def check_tr_data_attributes
     expect(rendered).to have_selector('tr[data-source="my"]')
     expect(rendered).to have_selector("tr[data-id='#{id}']")

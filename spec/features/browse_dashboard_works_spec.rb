@@ -9,6 +9,8 @@ RSpec.describe "Browse Dashboard", type: :feature do
   end
 
   before do
+    allow(Flipflop).to receive(:read_only?).and_return(false)
+
     # Grant the user access to deposit into an admin set.
     create(:permission_template_access,
            :deposit,

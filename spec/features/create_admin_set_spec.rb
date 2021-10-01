@@ -20,6 +20,10 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
                       manager_user: manager.user_key, creator_user: creator.user_key)
   end
 
+  before do
+    allow(Flipflop).to receive(:read_only?).and_return(false)
+  end
+
   context "when the user is not an admin" do
     context "and user does not have permissions to create admin sets" do
       before do

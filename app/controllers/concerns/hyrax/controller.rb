@@ -98,7 +98,6 @@ module Hyrax::Controller
     redirect_back(
       fallback_location: root_path,
       alert: t('hyrax.read_only')
-    # alert: "The Repository is in read-only mode for maintenance. No submissions or edits can be made at this time."
     )
   end
 end

@@ -14,8 +14,8 @@
         <%= t("hyrax.dashboard.my.action.view_admin_set") %>
       <% end %>
     </li>
-    <% unless Flipflop.read_only? %>
-      <% if can? :edit, admin_set_presenter.solr_document %>
+
+      <% if can?(:edit, admin_set_presenter.solr_document) && !Flipflop.read_only? %>
         <li role="menuitem" tabindex="-1">
           <%= link_to hyrax.edit_admin_admin_set_path(id),
                       class: 'itemicon itemedit',
@@ -42,6 +42,5 @@
           <%= t("hyrax.dashboard.my.action.delete_admin_set") %>
         <% end %>
       </li>
-    <% end %>
   </ul>
 </div>

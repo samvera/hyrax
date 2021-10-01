@@ -13,6 +13,7 @@ RSpec.describe 'hyrax/my/_collection_action_menu.html.erb' do
     allow(collection_presenter).to receive(:total_items).and_return(0)
     allow(collection_presenter).to receive(:collection_type_is_require_membership?).and_return(false)
     allow(collection_presenter).to receive(:collection_type_is_nestable?).and_return(false)
+    allow(Flipflop).to receive(:read_only?).and_return(false)
 
     allow(view).to receive(:can?).with(:read, collection_doc).and_return(true)
     allow(view).to receive(:can?).with(:edit, collection_doc).and_return(true)

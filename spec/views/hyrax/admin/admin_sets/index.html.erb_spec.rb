@@ -4,6 +4,7 @@ require "spec_helper"
 RSpec.describe "hyrax/admin/admin_sets/index.html.erb", type: :view do
   before do
     allow(controller).to receive(:can?).with(:create, AdminSet).and_return(false)
+    allow(Flipflop).to receive(:read_only?).and_return(false)
   end
 
   context "when no admin sets exists" do
