@@ -9,12 +9,6 @@ attributes:
       required: true
       primary: true
       multiple: true
-  date_modified:
-    type: date_time
-  date_uploaded:
-    type: date_time
-  depositor:
-    type: string
   description:
     type: string
     multiple: true

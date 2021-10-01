@@ -6,6 +6,7 @@ module Hyrax
   ##
   # Valkyrie model for Collection domain objects in the Hydra Works model.
   class PcdmCollection < Hyrax::Resource
+    include Hyrax::Schema(:core_metadata)
     include Hyrax::Schema(:collection_basic_metadata)
     include Hyrax::Schema(:collection_metadata)
 
