@@ -13,7 +13,7 @@ RSpec.describe Hyrax::Forms::PcdmCollectionForm do
 
   describe '#primary_terms' do
     it 'gives "title" as a primary term' do
-      expect(form.primary_terms).to contain_exactly(:title)
+      expect(form.primary_terms).to contain_exactly(:title, :description)
     end
   end
 

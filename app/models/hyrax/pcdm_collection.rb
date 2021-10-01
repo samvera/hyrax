@@ -40,8 +40,8 @@ module Hyrax
   # @see Hyrax::CustomQueries::Navigators::CollectionMembers#find_members_of
   #
   class PcdmCollection < Hyrax::Resource
-    include Hyrax::Schema(:core_metadata)
-    include Hyrax::Schema(:basic_metadata)
+    include Hyrax::Schema(:collection_basic_metadata)
+    include Hyrax::Schema(:collection_metadata)
 
     attribute :collection_type_gid, Valkyrie::Types::String
     attribute :member_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID).meta(ordered: true)
