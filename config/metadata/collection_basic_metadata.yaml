@@ -87,3 +87,8 @@ attributes:
     index_keys:
       - "resource_type_sim"
       - "resource_type_tesim"
+  source:
+    type: string
+    multiple: true
+    form:
+      primary: false

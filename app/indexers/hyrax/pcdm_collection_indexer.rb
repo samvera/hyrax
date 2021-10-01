@@ -9,6 +9,7 @@ module Hyrax
     include Hyrax::VisibilityIndexer
     include Hyrax::Indexer(:collection_core_metadata)
     include Hyrax::Indexer(:collection_basic_metadata)
+    include Hyrax::Indexer(:collection_metadata)
 
     def to_solr
       super.tap do |index_document|

@@ -8,6 +8,7 @@ module Hyrax
     class PcdmCollectionForm < Valkyrie::ChangeSet # rubocop:disable Metrics/ClassLength
       include Hyrax::FormFields(:collection_core_metadata)
       include Hyrax::FormFields(:collection_basic_metadata)
+      include Hyrax::FormFields(:collection_metadata)
 
       property :human_readable_type, writable: false
       property :date_modified, readable: false

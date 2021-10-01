@@ -8,6 +8,7 @@ module Hyrax
   class PcdmCollection < Hyrax::Resource
     include Hyrax::Schema(:collection_core_metadata)
     include Hyrax::Schema(:collection_basic_metadata)
+    include Hyrax::Schema(:collection_metadata)
 
     attribute :collection_type_gid, Valkyrie::Types::String
     attribute :member_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID).meta(ordered: true)

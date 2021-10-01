@@ -7,7 +7,7 @@ RSpec.describe Hyrax::Forms::PcdmCollectionForm do
   describe '.required_fields' do
     it 'lists required fields' do
       expect(described_class.required_fields)
-        .to contain_exactly(:title)
+        .to contain_exactly(:title, :collection_type_gid, :depositor)
     end
   end
 
