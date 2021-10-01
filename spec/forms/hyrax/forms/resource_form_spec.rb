@@ -311,6 +311,31 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  describe '#valid?' do
+    subject(:form) { form_class.new(work) }
+
+    let(:form_class) do
+      Class.new(Hyrax::Forms::ResourceForm(work.class)) do
+        property :non_required, virtual: true
+      end
+    end
+
+    context 'when any required field is missing' do
+      before { form.title = [] }
+      it 'fails validation' do
+        expect(form.valid?).to be false
+      end
+    end
+
+    context 'when all required fields are present' do
+      # ResourceForm only includes core_metadata which has only title as a required field
+      before { form.title = ['My Title'] }
+      it 'passes validation' do
+        expect(form.valid?).to be true
+      end
+    end
+  end
+
   describe '#secondary_terms' do
     it 'is empty with only core metadata' do
       expect(form.secondary_terms)
