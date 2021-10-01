@@ -1,6 +1,6 @@
 <% provide :page_title, application_name %>
 
-<% if @presenter.display_share_button? %>
+<% if @presenter.display_share_button? && !Flipflop.read_only? %>
 <div class="home-share-work text-center">
   <% if signed_in? %>
     <% if @presenter.create_many_work_types? %>

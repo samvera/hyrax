@@ -1,7 +1,9 @@
 <%# button for updating a collections %>
 <%# collection_id -- collection to be updated (use 'collection_replace_id' if you wish the form to be updated by a form value) %>
 <%# label -- button label %>
+<% unless Flipflop.read_only? %>
 <%= button_to label, hyrax.dashboard_collection_path(collection_id),
               method: :post,
               class: "btn btn-primary submits-batches",
               data: { behavior: 'updates-collection' } %>
+<% end %>

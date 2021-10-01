@@ -27,6 +27,7 @@
         <% end %>
 
           <a name="skip-to-content" id="skip-to-content"></a>
+          <%= render 'shared/read_only' if Flipflop.read_only? %>
           <%= content_for?(:content) ? yield(:content) : yield %>
 
       </div>

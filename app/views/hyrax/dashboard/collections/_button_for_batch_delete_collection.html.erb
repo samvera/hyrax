@@ -1,4 +1,6 @@
+<% unless Flipflop.read_only? %>
 <%= button_to label, hyrax.batch_edits_path,
               method: :delete,
               class: "btn btn-primary submits-batches",
               data: { behavior: 'deletes-collection'} %>
+<% end %>

@@ -14,7 +14,7 @@
         <%= t("hyrax.dashboard.my.action.view_collection") %>
       <% end %>
     </li>
-    <% if can? :edit, collection_presenter.solr_document %>
+    <% if can? :edit, collection_presenter.solr_document && !Flipflop.read_only? %>
       <li role="menuitem" tabindex="-1">
         <%= link_to hyrax.edit_dashboard_collection_path(id),
                     class: 'itemicon itemedit',

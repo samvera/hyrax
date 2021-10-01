@@ -20,20 +20,21 @@
   <section class="tabs-row">
     <!-- Page tabs -->
     <nav><%= render 'tabs' if @managed_collection_count > 0 %></nav>
-
-    <% if can?(:create_any, Collection) && @collection_type_list_presenter.any? %>
-      <% if @collection_type_list_presenter.many? %>
-        <% # modal to select type %>
-        <button type="button"
-          class="btn btn-primary"
-          data-toggle="modal"
-          data-target="#collectiontypes-to-create"
-          data-behavior="select-collection">
-          <%= t(:'helpers.action.collection.new') %>
-        </button>
-      <% else @collection_type_list_presenter.any? %>
-        <% # link directly to create collection form with type %>
-        <%= link_to(t('helpers.action.collection.new'), append_collection_type_url(new_dashboard_collection_path, @collection_type_list_presenter.first_collection_type.id), class: 'btn btn-primary') %>
+    <% unless Flipflop.read_only? %>
+      <% if can?(:create_any, Collection) && @collection_type_list_presenter.any? %>
+        <% if @collection_type_list_presenter.many? %>
+          <% # modal to select type %>
+          <button type="button"
+            class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#collectiontypes-to-create"
+            data-behavior="select-collection">
+            <%= t(:'helpers.action.collection.new') %>
+          </button>
+        <% else @collection_type_list_presenter.any? %>
+          <% # link directly to create collection form with type %>
+          <%= link_to(t('helpers.action.collection.new'), append_collection_type_url(new_dashboard_collection_path, @collection_type_list_presenter.first_collection_type.id), class: 'btn btn-primary') %>
+        <% end %>
       <% end %>
     <% end %>
   </section>

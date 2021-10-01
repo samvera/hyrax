@@ -26,19 +26,20 @@
           <%= render 'hyrax/base/form_permission_lease', curation_concern: curation_concern, f: f  %>
         </div>
       </fieldset>
-
-      <div class="row">
-        <div class="col-md-12 form-actions">
-          <% if curation_concern.lease_expiration_date %>
-            <%= f.submit t('.lease_update'), class: 'btn btn-primary' %>
-            <%= link_to t('.lease_deactivate'), lease_path(curation_concern), method: :delete, class: 'btn btn-danger' %>
-          <% else %>
-            <%= f.submit t('.lease_apply'), class: 'btn btn-primary' %>
-          <% end %>
-          <%= link_to t('.lease_cancel'), leases_path, class: 'btn btn-default' %>
-          <%= link_to t('.lease_return', cc: cc_type), edit_polymorphic_path([main_app, curation_concern]), class: 'btn btn-default' %>
+      <% unless Flipflop.read_only? %>
+        <div class="row">
+          <div class="col-md-12 form-actions">
+            <% if curation_concern.lease_expiration_date %>
+              <%= f.submit t('.lease_update'), class: 'btn btn-primary' %>
+              <%= link_to t('.lease_deactivate'), lease_path(curation_concern), method: :delete, class: 'btn btn-danger' %>
+            <% else %>
+              <%= f.submit t('.lease_apply'), class: 'btn btn-primary' %>
+            <% end %>
+            <%= link_to t('.lease_cancel'), leases_path, class: 'btn btn-default' %>
+            <%= link_to t('.lease_return', cc: cc_type), edit_polymorphic_path([main_app, curation_concern]), class: 'btn btn-default' %>
+          </div>
         </div>
-      </div>
+      <% end %>
     <% end %>
   </div>
 </div>
