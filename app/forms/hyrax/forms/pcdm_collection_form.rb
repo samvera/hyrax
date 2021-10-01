@@ -5,11 +5,18 @@ module Hyrax
     ##
     # @api public
     # @see https://github.com/samvera/valkyrie/wiki/ChangeSets-and-Dirty-Tracking
-    class PcdmCollectionForm < Valkyrie::ChangeSet
-      property :title, required: true, primary: true
+    class PcdmCollectionForm < Valkyrie::ChangeSet # rubocop:disable Metrics/ClassLength
+      include Hyrax::FormFields(:collection_basic_metadata)
+      include Hyrax::FormFields(:collection_metadata)
 
-      property :depositor
-      property :collection_type_gid
+      property :human_readable_type, writable: false
+      property :date_modified, readable: false
+      property :date_uploaded, readable: false
+
+      property :depositor, required: true
+      property :collection_type_gid, required: true
+
+      property :member_of_collection_ids, default: [], type: Valkyrie::Types::Array
 
       class << self
         def model_class

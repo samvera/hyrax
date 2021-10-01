@@ -92,3 +92,91 @@ RSpec.shared_examples 'a model with core metadata' do
       .to contain_exactly('title')
   end
 end
+
+RSpec.shared_examples 'a model with collection basic metadata' do
+  subject(:resource) { described_class.new }
+  let(:date)         { Time.zone.today }
+
+  # from core metadata included in collection basic metadata
+  it 'has a date_modified' do
+    expect { resource.date_modified = date }
+      .to change { resource.date_modified }
+            .to eq date
+  end
+
+  # from core metadata included in collection basic metadata
+  it 'has a date_uploaded' do
+    expect { resource.date_uploaded = date }
+      .to change { resource.date_uploaded }
+            .to eq date
+  end
+
+  # from core metadata included in collection basic metadata
+  it 'has a depositor' do
+    expect { resource.depositor = 'userid' }
+      .to change { resource.depositor }
+            .to eq 'userid'
+  end
+
+  # from core metadata included in collection basic metadata
+  # with multiple title override
+  it 'has a title' do
+    expect { resource.title = ['title', 'title 2'] }
+      .to change { resource.title }
+            .to contain_exactly 'title', 'title 2'
+  end
+
+  it 'description' do
+    expect { resource.description = ['lorem ipsum', 'another description'] }
+      .to change { resource.description }
+            .to contain_exactly 'lorem ipsum', 'another description'
+  end
+
+  it 'has alternative title' do
+    expect { resource.alternative_title = ['lorem ipsum', 'a story about moomins'] }
+      .to change { resource.alternative_title }
+            .to contain_exactly 'lorem ipsum', 'a story about moomins'
+  end
+
+  it 'has a creator' do
+    expect { resource.creator = ['Creator, Joe', 'Creator, Jane'] }
+      .to change { resource.creator }
+            .to contain_exactly 'Creator, Joe', 'Creator, Jane'
+  end
+
+  it 'has licenses' do
+    expect { resource.license = ['http://example.com/li1', 'http://example.com/li2'] }
+      .to change { resource.license }
+            .to contain_exactly 'http://example.com/li1', 'http://example.com/li2'
+  end
+
+  it 'has subjects' do
+    expect { resource.subject = ['moomin', 'snork'] }
+      .to change { resource.subject }
+            .to contain_exactly 'moomin', 'snork'
+  end
+
+  it 'has language' do
+    expect { resource.language = ['en', 'fi'] }
+      .to change { resource.language }
+            .to contain_exactly 'en', 'fi'
+  end
+
+  it 'has based near' do
+    expect { resource.based_near = ['Ithaca (US)', 'New York (US)'] }
+      .to change { resource.based_near }
+            .to contain_exactly 'Ithaca (US)', 'New York (US)'
+  end
+
+  it 'has a related url' do
+    expect { resource.related_url = ['http://example.com/info', 'http://example.com/contact'] }
+      .to change { resource.related_url }
+            .to contain_exactly 'http://example.com/info', 'http://example.com/contact'
+  end
+
+  it 'has resource types' do
+    expect { resource.resource_type = ['book', 'image'] }
+      .to change { resource.resource_type }
+            .to contain_exactly 'book', 'image'
+  end
+end
