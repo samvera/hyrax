@@ -30,7 +30,7 @@ module Hyrax
     # @api public
     #
     # This form wraps `Hyrax::ChangeSet` in the `HydraEditor::Form` interface.
-    class ResourceForm < Hyrax::ChangeSet
+    class ResourceForm < Hyrax::ChangeSet # rubocop:disable Metrics/ClassLength
       ##
       # @api private
       InWorksPopulator = lambda do |_options|
@@ -100,6 +100,10 @@ module Hyrax
       property :in_works_ids, virtual: true, prepopulator: InWorksPopulator
       property :member_ids, default: [], type: Valkyrie::Types::Array
       property :member_of_collection_ids, default: [], type: Valkyrie::Types::Array
+
+      property :representative_id, type: Valkyrie::Types::String
+      property :thumbnail_id, type: Valkyrie::Types::String
+      property :rendering_ids, default: [], type: Valkyrie::Types::Array
 
       # provide a lock token for optimistic locking; we name this `version` for
       # backwards compatibility

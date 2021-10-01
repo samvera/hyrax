@@ -305,6 +305,32 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
         expect(assigns[:form])
           .to have_attributes(title: work.title.first, version: an_instance_of(String))
       end
+
+      context 'and the work has member FileSets' do
+        include_context 'with a user with edit access'
+
+        let(:work) do
+          FactoryBot.valkyrie_create(:hyrax_work,
+                                     :with_member_file_sets,
+                                     :with_representative,
+                                     :with_thumbnail,
+                                     edit_users: [user])
+        end
+
+        it 'is successful' do
+          get :edit, params: { id: work.id }
+
+          expect(response).to be_successful
+        end
+
+        it 'populates the form with a file ids' do
+          get :edit, params: { id: work.id }
+
+          expect(assigns[:form])
+            .to have_attributes(representative_id: work.member_ids.first,
+                                thumbnail_id: work.member_ids.first)
+        end
+      end
     end
   end
 

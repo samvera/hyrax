@@ -14,6 +14,7 @@ module Hyrax
     attribute :on_behalf_of,             Valkyrie::Types::String
     attribute :proxy_depositor,          Valkyrie::Types::String
     attribute :state,                    Valkyrie::Types::URI.default(Hyrax::ResourceStatus::ACTIVE)
+    attribute :rendering_ids,            Valkyrie::Types::Array.of(Valkyrie::Types::ID).meta(ordered: true)
     attribute :representative_id,        Valkyrie::Types::ID
     attribute :thumbnail_id,             Valkyrie::Types::ID
 
