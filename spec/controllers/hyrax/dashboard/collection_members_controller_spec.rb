@@ -6,18 +6,17 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
   before { sign_in(user) }
 
   describe '#update_members' do
-    let(:other_user) { FactoryBot.create(:user) }
     let(:owned_work_1) { FactoryBot.create(:work, user: user) }
     let(:owned_work_2) { FactoryBot.create(:work, user: user) }
     let(:owned_work_3) { FactoryBot.create(:work, user: user) }
-    let(:private_work) { FactoryBot.create(:work, user: other_user) }
+    let(:private_work) { FactoryBot.create(:work) }
 
     let(:editable_work) do
-      FactoryBot.create(:work, user: other_user, edit_users: [user])
+      FactoryBot.create(:work, edit_users: [user])
     end
 
     let(:readable_work) do
-      FactoryBot.create(:work, user: other_user, read_users: [user])
+      FactoryBot.create(:work, read_users: [user])
     end
 
     let(:owned_collection) do
@@ -33,20 +32,16 @@ RSpec.describe Hyrax::Dashboard::CollectionMembersController, :clean_repo do
 
     let(:depositable_collection) do
       FactoryBot.create(:private_collection_lw,
-                        user: other_user,
                         with_permission_template: { deposit_users: [user] })
     end
 
     let(:viewable_collection) do
       FactoryBot.create(:private_collection_lw,
-                        user: other_user,
                         with_permission_template: { view_users: [user] })
     end
 
     let(:private_collection) do
-      FactoryBot.create(:private_collection_lw,
-                        user: other_user,
-                        with_permission_template: true)
+      FactoryBot.create(:private_collection_lw, with_permission_template: true)
     end
 
     let(:parameters) do
