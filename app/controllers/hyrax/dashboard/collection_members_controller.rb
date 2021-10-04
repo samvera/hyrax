@@ -28,7 +28,7 @@ module Hyrax
 
         collection.reindex_extent = Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX
         begin
-          Hyrax::Collections::CollectionMemberService.add_members_by_ids(collection_id: collection.id,
+          Hyrax::Collections::CollectionMemberService.add_members_by_ids(collection_id: collection_id,
                                                                          new_member_ids: batch_ids,
                                                                          user: current_user)
           after_update
