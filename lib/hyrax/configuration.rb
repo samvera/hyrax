@@ -668,7 +668,7 @@ module Hyrax
 
     attr_writer :collection_class
     def collection_class
-      @collection_class = '::Collection'
+      @collection_class ||= '::Collection'
     end
 
     attr_writer :id_field

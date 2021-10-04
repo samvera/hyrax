@@ -29,7 +29,7 @@ module Hyrax
     end
 
     def show
-      @curation_concern ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id])
+      @curation_concern = @collection # we must populate curation_concern
       presenter
       query_collection_members
     end
@@ -101,14 +101,22 @@ module Hyrax
     #   uses the class attribute +parent_collection_query_service+ by default.
     def parent_collections(query_service: self.class.parent_collection_query_service)
       page = params[:parent_collection_page].to_i
-      collection.parent_collections = query_service.parent_collections(
-        child: collection_object, scope: self, page: page
-      )
+
+      collection.parent_collections =
+        query_service.parent_collections(child: collection_object,
+                                         scope: self,
+                                         page: page)
     end
     alias load_parent_collections parent_collections
 
+    ##
+    # @note this is here because, though we want to load and authorize the real
+    #   collection for show views, for apparently historical reasons,
+    #   {#collection} is overridden to access `@presenter`. this should probably
+    #   be deprecated and callers encouraged to use `@collection` but the scope
+    #   and impact of that change needs more evaluation.
     def collection_object
-      action_name == 'show' ? Collection.find(collection.id) : collection
+      action_name == 'show' ? @collection : collection
     end
 
     def member_subcollections

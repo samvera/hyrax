@@ -4,7 +4,7 @@ module Hyrax
     include CollectionsControllerBehavior
     include BreadcrumbsForCollections
     with_themed_layout :decide_layout
-    load_and_authorize_resource except: [:index, :show, :create],
+    load_and_authorize_resource except: [:index, :create],
                                 instance_name: :collection,
                                 class: Hyrax.config.collection_class
 
