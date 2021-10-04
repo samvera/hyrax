@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'hyrax/specs/spy_listener'
 
+# rubocop:disable RSpec/ExampleLength
 RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
   routes { Hyrax::Engine.routes }
   let(:user)  { create(:user) }
@@ -41,7 +42,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
   describe '#create' do
     before { sign_in user }
 
-    it 'creates a Collection with metadata' do # rubocop:disable RSpec/ExampleLength
+    it 'creates a Collection with metadata' do
       expect do
         post :create, params: {
           collection_type_gid: collection_type_gid,
@@ -66,7 +67,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         .to match(collection: be_kind_of(Hyrax::PcdmCollection), user: user)
     end
 
-    # # rubocop:disable RSpec/ExampleLength
     # it "creates a Collection with extra settings not supported in the form" do
     #   expect do
     #     post :create, params: {
@@ -579,4 +579,5 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       expect(response).to be_successful
     end
   end
+# rubocop:enable RSpec/ExampleLength
 end
