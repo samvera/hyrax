@@ -666,6 +666,11 @@ module Hyrax
       @collection_type_index_field ||= 'collection_type_gid_ssim'
     end
 
+    attr_writer :collection_class
+    def collection_class
+      @collection_class = '::Collection'
+    end
+
     attr_writer :id_field
     def id_field
       @id_field || index_field_mapper.id_field

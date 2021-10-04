@@ -43,7 +43,9 @@ module Hyrax
       # The search builder to find the collections' members
       self.membership_service_class = Collections::CollectionMemberSearchService
 
-      load_and_authorize_resource except: [:index, :create], instance_name: :collection
+      load_and_authorize_resource except: [:index, :create],
+                                  instance_name: :collection,
+                                  class: Hyrax.config.collection_class
 
       def deny_collection_access(exception)
         if exception.action == :edit
