@@ -248,7 +248,8 @@ module Hyrax
     # @return [Boolean] a flag indicating whether to display collection deposit
     #   options.
     def show_deposit_for?(collections:)
-      collections.present? || current_ability.can?(:create_any, ::Collection)
+      collections.present? ||
+        current_ability.can?(:create_any, Hyrax.config.collection_class.constantize)
     end
 
     ##

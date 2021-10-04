@@ -131,7 +131,7 @@ module Hyrax
       def available_parent_collections(scope:)
         return @available_parents if @available_parents.present?
 
-        collection = ::Collection.find(id)
+        collection = model_class.find(id)
         colls = Hyrax::Collections::NestedCollectionQueryService.available_parent_collections(child: collection, scope: scope, limit_to_id: nil)
         @available_parents = colls.map do |col|
           { "id" => col.id, "title_first" => col.title.first }
