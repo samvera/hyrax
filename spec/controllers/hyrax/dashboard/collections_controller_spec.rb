@@ -3,25 +3,29 @@ require 'hyrax/specs/spy_listener'
 
 RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
   routes { Hyrax::Engine.routes }
-  let(:user)  { create(:user) }
-  let(:other) { create(:user) }
   let(:collection_type_gid) { FactoryBot.create(:user_collection_type).to_global_id.to_s }
+  let(:queries) { Hyrax.custom_queries }
+  let(:user) { FactoryBot.create(:user) }
+
+  let(:asset1) { FactoryBot.valkyrie_create(:monograph, title: ["First of the Assets"], edit_users: [user]) }
+  let(:asset2) { FactoryBot.valkyrie_create(:monograph, title: ["Second of the Assets"], edit_users: [user]) }
+  let(:asset3) { FactoryBot.valkyrie_create(:monograph, title: ["Third of the Assets"], edit_users: [user]) }
+  let(:asset4) { FactoryBot.valkyrie_create(:hyrax_collection, title: ["First subcollection"], edit_users: [user]) }
+  let(:asset5) { FactoryBot.valkyrie_create(:hyrax_collection, title: ["Second subcollection"], edit_users: [user]) }
+  let(:unowned_asset) { FactoryBot.valkyrie_create(:monograph) }
 
   let(:collection) do
-    create(:public_collection_lw, title: ["My collection"],
-                                  description: ["My incredibly detailed description of the collection"],
-                                  user: user)
+    FactoryBot.valkyrie_create(:hyrax_collection,
+                               :public,
+                               title: ["My collection"],
+                               depositor: user.user_key,
+                               edit_users: [user])
   end
 
-  let(:asset1)         { create(:work, title: ["First of the Assets"], user: user) }
-  let(:asset2)         { create(:work, title: ["Second of the Assets"], user: user) }
-  let(:asset3)         { create(:work, title: ["Third of the Assets"], user: user) }
-  let(:asset4)         { build(:collection_lw, title: ["First subcollection"], user: user) }
-  let(:asset5)         { build(:collection_lw, title: ["Second subcollection"], user: user) }
-  let(:unowned_asset)  { create(:work, user: other) }
-
   let(:collection_attrs) do
-    { title: ['My First Collection'], description: ["The Description\r\n\r\nand more"], collection_type_gid: [collection_type_gid] }
+    { title: ['My First Collection'],
+      description: ["The Description\r\n\r\nand more"],
+      collection_type_gid: [collection_type_gid.to_s] }
   end
 
   describe '#new' do
@@ -29,6 +33,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
     it 'assigns @collection' do
       get :new
+
       expect(assigns(:collection)).to be_kind_of(Collection)
     end
   end
@@ -51,40 +56,38 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
           )
         }
       end.to change { Collection.count }.by(1)
+
       expect(assigns[:collection].visibility).to eq 'open'
       expect(assigns[:collection].edit_users).to contain_exactly "archivist1", user.email
       expect(flash[:notice]).to eq "Collection was successfully created."
     end
 
     it "removes blank strings from params before creating Collection" do
-      expect do
-        post :create, params: {
-          collection: collection_attrs.merge(creator: [''])
-        }
-      end.to change { Collection.count }.by(1)
+      expect { post :create, params: { collection: collection_attrs.merge(creator: ['']) } }
+        .to change { Collection.count }.by(1)
+
       expect(assigns[:collection].title).to eq ["My First Collection"]
       expect(assigns[:collection].creator).to eq []
     end
 
     context "with files I can access" do
       it "creates a collection using only the accessible files" do
-        expect do
-          post :create, params: {
-            collection: collection_attrs,
-            batch_document_ids: [asset1.id, asset2.id, unowned_asset.id]
-          }
-        end.to change { Collection.count }.by(1)
+        parameters = { collection: collection_attrs,
+                       batch_document_ids: [asset1.id, asset2.id, unowned_asset.id] }
+
+        expect { post :create, params: parameters }
+          .to change { Collection.count }.by(1)
+
         collection = assigns(:collection)
-        expect(collection.member_objects).to match_array [asset1, asset2]
+        expect(queries.find_members_of(collection: collection.valkyrie_resource).map(&:id))
+          .to contain_exactly(asset1.id, asset2.id)
       end
 
       it "adds docs to the collection and adds the collection id to the documents in the collection" do
-        post :create, params: {
-          batch_document_ids: [asset1.id, unowned_asset.id],
-          collection: collection_attrs
-        }
+        post :create, params: { batch_document_ids: [asset1.id, unowned_asset.id],
+                                collection: collection_attrs }
 
-        expect(assigns[:collection].member_objects).to eq [asset1]
+        expect(assigns[:collection].member_objects.map(&:id)).to contain_exactly(asset1.id)
         asset_results = Hyrax::SolrService.get(fq: ["id:\"#{asset1.id}\""], fl: ['id', "collection_tesim"])
         expect(asset_results["response"]["numFound"]).to eq 1
         doc = asset_results["response"]["docs"].first
@@ -93,39 +96,41 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
     end
 
     context 'when setting collection type' do
-      let(:collection_type) { create(:collection_type) }
+      let(:collection_type) { FactoryBot.create(:collection_type) }
 
       it "creates a Collection of default type when type is nil" do
-        expect do
-          post :create, params: {
-            collection: collection_attrs
-          }
-        end.to change { Collection.count }.by(1)
-        expect(assigns[:collection].collection_type.machine_id).to eq Hyrax::CollectionType::USER_COLLECTION_MACHINE_ID
+        expect { post :create, params: { collection: collection_attrs } }
+          .to change { Collection.count }.by(1)
+
+        expect(assigns[:collection].collection_type.machine_id)
+          .to eq Hyrax::CollectionType::USER_COLLECTION_MACHINE_ID
       end
 
       it "creates a Collection of specified type" do
-        expect do
-          post :create, params: {
-            collection: collection_attrs, collection_type_gid: collection_type.to_global_id.to_s
-          }
-        end.to change { Collection.count }.by(1)
+        parameters = { collection: collection_attrs,
+                       collection_type_gid: collection_type.to_global_id.to_s }
 
-        expect(assigns[:collection].collection_type_gid).to eq collection_type.to_global_id.to_s
+        expect { post :create, params: parameters }
+          .to change { Collection.count }.by(1)
+
+        expect(assigns[:collection].collection_type_gid)
+          .to eq collection_type.to_global_id.to_s
       end
     end
 
     context "when params includes parent_id" do
-      let(:parent_collection) { create(:collection_lw, title: ['Parent']) }
+      let(:parent_collection) { FactoryBot.valkyrie_create(:hyrax_collection, title: ['Parent']) }
 
       it "creates a collection as a subcollection of parent" do
-        parent_collection
-        expect do
-          post :create, params: {
-            collection: collection_attrs, parent_id: parent_collection.id
-          }
-        end.to change { Collection.count }.by(1)
-        expect(assigns[:collection].reload.member_of_collections).to eq [parent_collection]
+        parameters = { collection: collection_attrs, parent_id: parent_collection.id }
+
+        expect { post :create, params: parameters }
+          .to change { Collection.count }.by(1)
+
+        collection = assigns[:collection].try(:reload)&.valkyrie_resource ||
+                     assigns[:collection]
+        expect(queries.find_collections_for(resource: collection).map(&:id))
+          .to contain_exactly(parent_collection.id)
       end
     end
 
@@ -140,6 +145,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
       it "renders the form again" do
         post :create, params: { collection: collection_attrs }
+
         expect(response).to be_successful
         expect(response).to render_template(:new)
       end
@@ -158,84 +164,110 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
     context 'collection members' do
       before do
-        [asset1, asset2].each do |asset|
-          asset.member_of_collections << collection
-          asset.save!
+        if collection.is_a? Valkyrie::Resource
+          Hyrax::Collections::CollectionMemberService.add_members(collection_id: collection.id,
+                                                                  new_members: [asset1, asset2],
+                                                                  user: user)
+        else
+          [asset1, asset2].each do |asset|
+            asset.member_of_collections << collection
+            asset.save!
+          end
         end
       end
 
       it "adds members to the collection from edit form" do
-        expect do
-          put :update, params: { id: collection,
-                                 collection: { members: 'add' },
-                                 batch_document_ids: [asset3.id],
-                                 stay_on_edit: true }
-        end.to change { collection.reload.member_objects.size }.by(1)
+        parameters = { id: collection,
+                       collection: { members: 'add' },
+                       batch_document_ids: [asset3.id],
+                       stay_on_edit: true }
+
+        expect { put :update, params: parameters }
+          .to change { queries.find_members_of(collection: collection).map(&:id) }
+          .to contain_exactly(asset1.id, asset2.id, asset3.id)
+
         expect(response).to redirect_to routes.url_helpers.edit_dashboard_collection_path(collection, locale: 'en')
-        expect(assigns[:collection].member_objects).to match_array [asset1, asset2, asset3]
       end
 
       it "adds members to the collection from other than the edit form" do
-        expect do
-          put :update, params: { id: collection,
-                                 collection: { members: 'add' },
-                                 batch_document_ids: [asset3.id] }
-        end.to change { collection.reload.member_objects.size }.by(1)
+        parameters = { id: collection,
+                       collection: { members: 'add' },
+                       batch_document_ids: [asset3.id] }
+        expect { put :update, params: parameters }
+          .to change { queries.find_members_of(collection: collection).map(&:id) }
+          .to contain_exactly(asset1.id, asset2.id, asset3.id)
+
         expect(response).to redirect_to routes.url_helpers.dashboard_collection_path(collection, locale: 'en')
-        expect(assigns[:collection].member_objects).to match_array [asset1, asset2, asset3]
       end
 
       it "removes members from the collection" do
-        expect do
-          put :update, params: { id: collection,
-                                 collection: { members: 'remove' },
-                                 batch_document_ids: [asset2] }
-        end.to change { asset2.reload.member_of_collections.size }.by(-1)
-        expect(assigns[:collection].member_objects).to match_array [asset1]
+        parameters = { id: collection,
+                       collection: { members: 'remove' },
+                       batch_document_ids: [asset2] }
+
+        expect { put :update, params: parameters }
+          .to change { queries.find_members_of(collection: collection).map(&:id) }
+          .to contain_exactly(asset1.id)
       end
 
       it "publishes object.metadata.updated for removed objects" do
-        expect do
-          put :update, params: { id: collection,
-                                 collection: { members: 'remove' },
-                                 batch_document_ids: [asset2] }
-        end
+        parameters = { id: collection,
+                       collection: { members: 'remove' },
+                       batch_document_ids: [asset2] }
+
+        expect { put :update, params: parameters }
           .to change { listener.object_metadata_updated&.payload }
           .to match(object: have_attributes(id: asset2.id), user: user)
       end
     end
 
     context 'when moving members between collections' do
-      let(:asset1) { create(:generic_work, user: user) }
-      let(:asset2) { create(:generic_work, user: user) }
-      let(:asset3) { create(:generic_work, user: user) }
-      let(:collection2) { create(:collection_lw, title: ['Some Collection'], user: user) }
+      let(:asset1) { FactoryBot.valkyrie_create(:monograph, edit_users: [user]) }
+      let(:asset2) { FactoryBot.valkyrie_create(:monograph, edit_users: [user]) }
+      let(:asset3) { FactoryBot.valkyrie_create(:monograph, edit_users: [user]) }
+
+      let(:collection2) do
+        FactoryBot.valkyrie_create(:hyrax_collection,
+                                   title: ['Some Collection'],
+                                   edit_users: [user])
+      end
 
       before do
-        [asset1, asset2, asset3].each do |asset|
-          asset.member_of_collections << collection
-          asset.save
+        if collection.is_a? Valkyrie::Resource
+          Hyrax::Collections::CollectionMemberService
+            .add_members(collection_id: collection.id,
+                         new_members: [asset1, asset2, asset3],
+                         user: user)
+        else
+          [asset1, asset2, asset3].each do |asset|
+            asset.member_of_collections << collection
+            asset.save
+          end
         end
       end
 
       it 'moves the members' do
-        put :update,
-            params: {
-              id: collection,
-              collection: { members: 'move' },
-              destination_collection_id: collection2,
-              batch_document_ids: [asset2, asset3]
-            }
-        expect(collection.reload.member_objects).to eq [asset1]
-        expect(collection2.reload.member_objects).to match_array [asset2, asset3]
+        parameters = { id: collection,
+                       collection: { members: 'move' },
+                       destination_collection_id: collection2,
+                       batch_document_ids: [asset2, asset3] }
+
+        expect { put :update, params: parameters }
+          .to change { queries.find_members_of(collection: collection).map(&:id) }
+          .from(contain_exactly(asset1.id, asset2.id, asset3.id))
+          .to(contain_exactly(asset1.id))
+          .and change { queries.find_members_of(collection: collection2).map(&:id) }
+          .from(be_none)
+          .to(contain_exactly(asset2.id, asset3.id))
       end
     end
 
     context "updating a collections metadata" do
       it "saves the metadata" do
-        put :update, params: { id: collection, collection: { creator: ['Emily'] } }
-        collection.reload
-        expect(collection.creator).to eq ['Emily']
+        expect { put :update, params: { id: collection, collection: { creator: ['Emily'] } } }
+          .to change { Hyrax.query_service.find_by(id: collection.id).creator }
+          .to eq ['Emily']
+
         expect(flash[:notice]).to eq "Collection was successfully updated."
       end
 
@@ -247,13 +279,14 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
             creator: [""]
           }
         }
+
         expect(assigns[:collection].title).to eq ["My Next Collection "]
         expect(assigns[:collection].creator).to eq []
       end
     end
 
     context "when update fails" do
-      let(:collection) { build(:collection_lw, id: '12345') }
+      let(:collection) { FactoryBot.build(:collection_lw, id: '12345') }
       let(:repository) { instance_double(Blacklight::Solr::Repository, search: result) }
       let(:result) { double(documents: [], total: 0) }
 
@@ -278,18 +311,24 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       let(:uploaded) { FactoryBot.create(:uploaded_file) }
 
       it "saves banner metadata" do
-        put :update, params: { id: collection, banner_files: [uploaded.id], collection: { creator: ['Emily'] }, update_collection: true }
+        put :update, params: { id: collection,
+                               banner_files: [uploaded.id],
+                               collection: { creator: ['Emily'] },
+                               update_collection: true }
 
         expect(CollectionBrandingInfo
-                 .where(collection_id: collection.id, role: "banner")
+                 .where(collection_id: collection.id.to_s, role: "banner")
                  .where("local_path LIKE '%#{uploaded.file.filename}'"))
           .to exist
       end
 
       it "don't save banner metadata" do
-        put :update, params: { id: collection, banner_files: [uploaded.id], collection: { creator: ['Emily'] } }
+        put :update, params: { id: collection,
+                               banner_files: [uploaded.id],
+                               collection: { creator: ['Emily'] } }
+
         expect(CollectionBrandingInfo
-                 .where(collection_id: collection.id, role: "banner")
+                 .where(collection_id: collection.id.to_s, role: "banner")
                  .where("local_path LIKE '%#{uploaded.file.filename}'"))
           .not_to exist
       end
@@ -303,7 +342,10 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
                                update_collection: true }
 
         expect(CollectionBrandingInfo
-                 .where(collection_id: collection.id, role: "logo", alt_text: "Logo alt Text", target_url: "http://abc.com")
+                 .where(collection_id: collection.id.to_s,
+                        role: "logo",
+                        alt_text: "Logo alt Text",
+                        target_url: "http://abc.com")
                  .where("local_path LIKE '%#{uploaded.file.filename}'"))
           .to exist
       end
@@ -320,7 +362,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
           expect(
             CollectionBrandingInfo.where(
-              collection_id: collection.id,
+              collection_id: collection.id.to_s,
               target_url: "<script>remove_me</script>"
             ).where("target_url LIKE '%remove_me%)'")
           ).not_to exist
@@ -336,7 +378,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
           expect(
             CollectionBrandingInfo.where(
-              collection_id: collection.id,
+              collection_id: collection.id.to_s,
               target_url: 'javascript:alert("remove_me")'
             ).where("target_url LIKE '%remove_me%)'")
           ).not_to exist
@@ -349,18 +391,36 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
     context "when signed in" do
       before do
         sign_in user
-        [asset1, asset2, asset3, asset4, asset5].each do |asset|
-          asset.member_of_collections = [collection]
-          asset.save
+
+        if collection.is_a? Valkyrie::Resource
+          Hyrax::Collections::CollectionMemberService
+            .add_members(collection_id: collection.id,
+                         new_members: [asset1, asset2, asset3, asset4, asset5],
+                         user: user)
+        else
+          [asset1, asset2, asset3, asset4, asset5].each do |asset|
+            asset.member_of_collections << collection
+            asset.save!
+          end
         end
       end
 
       it "returns the collection and its members" do
-        expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
-        expect(controller).to receive(:add_breadcrumb).with('My collection', collection_path(collection.id, locale: 'en'), "aria-current" => "page")
+        expect(controller)
+          .to receive(:add_breadcrumb)
+          .with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+        expect(controller)
+          .to receive(:add_breadcrumb)
+          .with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+        expect(controller)
+          .to receive(:add_breadcrumb)
+          .with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
+        expect(controller)
+          .to receive(:add_breadcrumb)
+          .with('My collection', collection_path(collection.id, locale: 'en'), "aria-current" => "page")
+
         get :show, params: { id: collection }
+
         expect(response).to be_successful
         expect(assigns[:presenter]).to be_kind_of Hyrax::CollectionPresenter
         expect(assigns[:presenter].title).to match_array collection.title
@@ -420,20 +480,20 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
     context 'with admin user and private collection' do
       let(:collection) do
-        create(:private_collection,
-               title: ["My collection"],
-               description: ["My incredibly detailed description of the collection"],
-               user: user)
+        FactoryBot.create(:private_collection,
+                          title: ["My collection"],
+                          description: ["My incredibly detailed description of the collection"],
+                          user: user)
       end
-      let(:admin) { create(:admin) }
 
       before do
-        sign_in admin
+        sign_in FactoryBot.create(:admin)
         allow(controller.current_ability).to receive(:can?).with(:show, collection).and_return(true)
       end
 
       it "returns successfully" do
         get :show, params: { id: collection }
+
         expect(response).to be_successful
       end
     end
@@ -441,6 +501,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
     context "when not signed in" do
       it "redirects to sign in page" do
         get :show, params: { id: collection }
+
         expect(response).to redirect_to('/users/sign_in')
       end
     end
@@ -448,9 +509,11 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
   describe "#delete" do
     before { sign_in user }
+
     context "when it succeeds" do
       it "redirects to My Collections" do
         delete :destroy, params: { id: collection }
+
         expect(response).to have_http_status(:found)
         expect(response).to redirect_to(Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
         expect(flash[:notice]).to eq "Collection was successfully deleted"
@@ -486,6 +549,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
     it "is successful" do
       get :edit, params: { id: collection }
+
       expect(response).to be_successful
       expect(assigns[:form]).to be_instance_of Hyrax::Forms::CollectionForm
       expect(flash[:notice]).to be_nil
@@ -503,16 +567,16 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
     end
 
     context "with a referer" do
-      before do
-        request.env['HTTP_REFERER'] = 'http://test.host/foo'
-      end
+      before { request.env['HTTP_REFERER'] = 'http://test.host/foo' }
 
       it "sets breadcrumbs" do
         expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with(I18n.t("hyrax.collection.edit_view"), collection_path(collection.id, locale: 'en'), "aria-current" => "page")
+
         get :edit, params: { id: collection }
+
         expect(response).to be_successful
       end
     end
@@ -523,6 +587,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
     it 'shows a list of member files' do
       get :files, params: { id: collection }, format: :json
+
       expect(response).to be_successful
     end
   end
