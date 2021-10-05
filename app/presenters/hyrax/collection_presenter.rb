@@ -116,13 +116,13 @@ module Hyrax
 
     # The total number of parents that this collection belongs to, visible or not.
     def total_parent_collections
-      parent_collections.nil? ? 0 : parent_collections.response['numFound']
+      parent_collections.blank? ? 0 : parent_collections.response['numFound']
     end
 
     # The number of parent collections shown on the current page. This will differ from total_parent_collections
     # due to pagination.
     def parent_collection_count
-      parent_collections.nil? ? 0 : parent_collections.documents.size
+      parent_collections.blank? ? 0 : parent_collections.documents.size
     end
 
     def user_can_nest_collection?
