@@ -64,28 +64,28 @@ module Hyrax
       private
 
       def build_within_form
-        child = ::Collection.find(params.fetch(:child_id))
+        child = Hyrax.config.collection_class.find(params.fetch(:child_id))
         authorize! :read, child
-        parent = params.key?(:parent_id) ? ::Collection.find(params[:parent_id]) : nil
+        parent = params.key?(:parent_id) ? Hyrax.config.collection_class.find(params[:parent_id]) : nil
         form_class.new(child: child, parent: parent, context: self)
       end
 
       def build_under_form
-        parent = ::Collection.find(params.fetch(:parent_id))
+        parent = Hyrax.config.collection_class.find(params.fetch(:parent_id))
         authorize! :deposit, parent
-        child = params.key?(:child_id) ? ::Collection.find(params[:child_id]) : nil
+        child = params.key?(:child_id) ? Hyrax.config.collection_class.find(params[:child_id]) : nil
         form_class.new(child: child, parent: parent, context: self)
       end
 
       def build_create_collection_form
-        parent = ::Collection.find(params.fetch(:parent_id))
+        parent = Hyrax.config.collection_class.find(params.fetch(:parent_id))
         authorize! :deposit, parent
         form_class.new(child: nil, parent: parent, context: self)
       end
 
       def build_remove_form
-        child = ::Collection.find(params.fetch(:child_id))
-        parent = ::Collection.find(params.fetch(:parent_id))
+        child = Hyrax.config.collection_class.find(params.fetch(:child_id))
+        parent = Hyrax.config.collection_class.find(params.fetch(:parent_id))
         authorize! :edit, parent
         form_class.new(child: child, parent: parent, context: self)
       end

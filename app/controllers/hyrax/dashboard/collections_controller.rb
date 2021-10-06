@@ -45,7 +45,7 @@ module Hyrax
 
       load_and_authorize_resource except: [:index, :create],
                                   instance_name: :collection,
-                                  class: Hyrax.config.collection_class
+                                  class: Hyrax.config.collection_model
 
       def deny_collection_access(exception)
         if exception.action == :edit
@@ -107,7 +107,7 @@ module Hyrax
         # Manual load and authorize necessary because Cancan will pass in all
         # form attributes. When `permissions_attributes` are present the
         # collection is saved without a value for `has_model.`
-        @collection = ::Collection.new
+        @collection = Hyrax.config.collection_class.new
         authorize! :create, @collection
         # Coming from the UI, a collection type gid should always be present.  Coming from the API, if a collection type gid is not specified,
         # use the default collection type (provides backward compatibility with versions < Hyrax 2.1.0)
@@ -399,7 +399,7 @@ module Hyrax
       end
 
       def move_members_between_collections
-        destination_collection = ::Collection.find(params[:destination_collection_id])
+        destination_collection = Hyrax.config.collection_class.find(params[:destination_collection_id])
         remove_members_from_collection
         add_members_to_collection(destination_collection)
         if destination_collection.save
@@ -465,7 +465,7 @@ module Hyrax
       end
 
       def collection_object
-        action_name == 'show' ? ::Collection.find(collection.id) : collection
+        action_name == 'show' ? Hyrax.config.collection_class.find(collection.id) : collection
       end
 
       # You can override this method if you need to provide additional

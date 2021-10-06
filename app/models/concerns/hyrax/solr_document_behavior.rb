@@ -53,7 +53,8 @@ module Hyrax
     ##
     # @return [Boolean]
     def collection?
-      hydra_model == ::Collection || hydra_model.try(:collection?)
+      hydra_model.try(:collection?) ||
+        hydra_model == Hyrax.config.collection_class
     end
 
     ##
