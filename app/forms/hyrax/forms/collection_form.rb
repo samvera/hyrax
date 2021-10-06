@@ -16,7 +16,7 @@ module Hyrax
       # Required for search builder (FIXME)
       alias collection model
 
-      self.model_class = ::Collection
+      self.model_class = Hyrax.config.collection_class
 
       self.membership_service_class = Collections::CollectionMemberSearchService
 

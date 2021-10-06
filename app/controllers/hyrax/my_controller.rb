@@ -29,7 +29,7 @@ module Hyrax
     before_action :authenticate_user!
     load_and_authorize_resource only: :show,
                                 instance_name: :collection,
-                                class: Hyrax.config.collection_class
+                                class: Hyrax.config.collection_model
 
     # include the render_check_all view helper method
     helper Hyrax::BatchEditsHelper

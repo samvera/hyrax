@@ -666,9 +666,18 @@ module Hyrax
       @collection_type_index_field ||= 'collection_type_gid_ssim'
     end
 
-    attr_writer :collection_class
+    attr_writer :collection_model
+    ##
+    # @return [#constantize] a string representation of the collection
+    #   model
+    def collection_model
+      @collection_model ||= '::Collection'
+    end
+
+    ##
+    # @return [Class] the configured collection model class
     def collection_class
-      @collection_class ||= '::Collection'
+      collection_model.constantize
     end
 
     attr_writer :id_field

@@ -6,7 +6,7 @@ module Hyrax
         private
 
         def relation
-          ::Collection
+          Hyrax.config.collection_class
         end
       end
     end

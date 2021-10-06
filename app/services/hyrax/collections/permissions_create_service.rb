@@ -31,7 +31,7 @@ module Hyrax
       #       access: Hyrax::PermissionTemplateAccess::DEPOSIT } ]
       # @see Hyrax::PermissionTemplateAccess for valid values for agent_type and access
       def self.add_access(collection_id:, grants:)
-        collection = ::Collection.find(collection_id)
+        collection = Hyrax.config.collection_class.find(collection_id)
         template = Hyrax::PermissionTemplate.find_by!(source_id: collection_id)
         grants.each do |grant|
           Hyrax::PermissionTemplateAccess.find_or_create_by(permission_template_id: template.id,

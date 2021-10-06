@@ -64,7 +64,7 @@ module Hyrax
       end
 
       def collection
-        @collection ||= ::Collection.find(collection_id)
+        @collection ||= Hyrax.config.collection_class.find(collection_id)
       end
 
       def batch_ids

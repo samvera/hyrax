@@ -21,6 +21,6 @@ class Hyrax::My::CollectionsSearchBuilder < ::Hyrax::CollectionSearchBuilder
   # This overrides the models in FilterByType
   # @return [Array<Class>] a list of classes to include
   def models
-    [::AdminSet, ::Collection, Hyrax::AdministrativeSet]
+    [::AdminSet, Hyrax::AdministrativeSet, Hyrax.config.collection_model.safe_constantize].compact
   end
 end

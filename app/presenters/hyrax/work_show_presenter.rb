@@ -249,7 +249,7 @@ module Hyrax
     #   options.
     def show_deposit_for?(collections:)
       collections.present? ||
-        current_ability.can?(:create_any, Hyrax.config.collection_class.constantize)
+        current_ability.can?(:create_any, Hyrax.config.collection_class)
     end
 
     ##
