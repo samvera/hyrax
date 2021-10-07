@@ -13,7 +13,7 @@ RSpec.describe Hyrax::AdminAdminSetMemberSearchBuilder do
 
     it 'searches for valid work types' do
       expect(builder.filter_models(solr_params))
-        .to contain_exactly('{!terms f=has_model_ssim}Monograph,Collection')
+        .to contain_exactly("{!terms f=has_model_ssim}Monograph,#{Hyrax.config.collection_class}")
     end
 
     it 'does not limit to active only' do
