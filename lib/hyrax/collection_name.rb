@@ -9,6 +9,7 @@ module Hyrax
       super
 
       @human              = 'Collection'
+      @i18n_key           = :collection
       @route_key          = 'collections'
       @singular_route_key = 'collection'
     end
