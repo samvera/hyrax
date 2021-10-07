@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 module Hyrax
   class AbstractTypeRelation < ActiveFedora::Relation
-    def initialize(opts = {})
+    def initialize(allowable_types: nil, **opts)
+      @allowable_types = allowable_types
       super(DummyModel, opts)
     end
 
     def allowable_types
-      raise NotImplementedException, "Implement allowable_types in a subclass"
+      @allowable_types ||
+        raise(NotImplementedException, "Implement allowable_types in a subclass")
     end
 
     def equivalent_class?(klass)
