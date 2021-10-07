@@ -8,6 +8,16 @@ RSpec.describe Hyrax::PcdmCollection do
 
   it_behaves_like 'a Hyrax::PcdmCollection'
 
+  describe '#name' do
+    it 'uses a Collection-like name' do
+      expect(subject.model_name)
+        .to have_attributes(human: "Collection",
+                            i18n_key: :collection,
+                            route_key: "collections",
+                            singular_route_key: "collection")
+    end
+  end
+
   describe '#human_readable_type' do
     it 'has a human readable type' do
       expect(collection.human_readable_type).to eq 'Collection'
