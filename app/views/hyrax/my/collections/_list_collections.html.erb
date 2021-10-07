@@ -48,7 +48,7 @@
         <p>
           <strong><%= t("hyrax.dashboard.my.collection_list.edit_access") %></strong>
           <br />
-          <% if collection_presenter.edit_groups.present? && !Flipflop.read_only? %>
+          <% if collection_presenter.edit_groups.present? %>
             <%= t("hyrax.dashboard.my.collection_list.groups") %> <%= collection_presenter.edit_groups.join(', ') %>
             <br />
           <% end %>

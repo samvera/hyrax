@@ -26,20 +26,19 @@
           <%= render 'hyrax/base/form_permission_embargo', curation_concern: curation_concern, f: f  %>
         </div>
       </fieldset>
-      <% unless Flipflop.read_only? %>
-        <div class="row">
-          <div class="col-md-12 form-actions">
-            <% if curation_concern.embargo_release_date %>
-              <%= f.submit t('.embargo_update'), class: 'btn btn-primary' %>
-              <%= link_to t('.embargo_deactivate'), embargo_path(curation_concern), method: :delete, class: 'btn btn-danger' %>
-            <% else %>
-              <%= f.submit t('.embargo_apply'), class: 'btn btn-primary' %>
-            <% end %>
-            <%= link_to t('.embargo_cancel'), embargoes_path, class: 'btn btn-default' %>
-            <%= link_to t('.embargo_return', cc: cc_type), edit_polymorphic_path([main_app, curation_concern]), class: 'btn btn-default' %>
-          </div>
+
+      <div class="row">
+        <div class="col-md-12 form-actions">
+          <% if curation_concern.embargo_release_date %>
+            <%= f.submit t('.embargo_update'), class: 'btn btn-primary' %>
+            <%= link_to t('.embargo_deactivate'), embargo_path(curation_concern), method: :delete, class: 'btn btn-danger' %>
+          <% else %>
+            <%= f.submit t('.embargo_apply'), class: 'btn btn-primary' %>
+          <% end %>
+          <%= link_to t('.embargo_cancel'), embargoes_path, class: 'btn btn-default' %>
+          <%= link_to t('.embargo_return', cc: cc_type), edit_polymorphic_path([main_app, curation_concern]), class: 'btn btn-default' %>
         </div>
-      <% end %>
+      </div>
     <% end %>
   </div>
 </div>

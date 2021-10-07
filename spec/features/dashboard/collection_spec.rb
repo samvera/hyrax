@@ -17,10 +17,6 @@ RSpec.describe 'collection', type: :feature, clean_repo: true do
   let(:collection3) { FactoryBot.create(:public_collection_lw, user: admin_user, collection_type: collection_type, with_permission_template: true) }
   let(:collection4) { FactoryBot.create(:public_collection_lw, user: admin_user, collection_type: user_collection_type, with_permission_template: true) }
 
-  before do
-    allow(Flipflop).to receive(:read_only?).and_return(false)
-  end
-
   describe 'Your Collections tab' do
     context 'when non-admin user' do
       before do

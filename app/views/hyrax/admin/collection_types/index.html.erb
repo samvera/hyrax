@@ -9,10 +9,8 @@
       <span class="panel-heading-message">
         <strong><%= pluralize(@collection_types.size, 'collection type') %> </strong> in this repository
       </span>
-      <% unless Flipflop.read_only? %>
-        <%= link_to hyrax.new_admin_collection_type_path, class: 'btn btn-primary' do %>
-          <%= t('.create_new_button') %>
-        <% end %>
+      <%= link_to hyrax.new_admin_collection_type_path, class: 'btn btn-primary' do %>
+        <%= t('.create_new_button') %>
       <% end %>
     </div>
     <div class="panel-body">
@@ -36,21 +34,17 @@
              <tr>
                <td><%= collection_type.title %></td>
                <td>
-                 <% if Flipflop.read_only? %>
-                   &mdash;
-                 <% else %>
-                   <%= link_to hyrax.edit_admin_collection_type_path(collection_type), class: 'btn btn-primary btn-sm' do %>
-                    <%= t('helpers.action.edit') %>
-                   <% end %>
-                   <% unless collection_type.admin_set? || collection_type.user_collection? %>
-                    <button class="btn btn-danger btn-sm delete-collection-type"
-                            data-collection-type="<%= collection_type.to_json %>"
-                            data-collection-type-index="<%= hyrax.dashboard_collections_path({ 'f[collection_type_gid_ssim][]' => collection_type.to_global_id.to_s, 'f[has_model_ssim][]' => 'Collection' }) %>"
-                            data-has-collections="<%= collection_type.collections? %>">
-                      <%= t('helpers.action.delete') %>
-                    </button>
-                    <% end %>
+                 <%= link_to hyrax.edit_admin_collection_type_path(collection_type), class: 'btn btn-primary btn-sm' do %>
+                  <%= t('helpers.action.edit') %>
                  <% end %>
+                 <% unless collection_type.admin_set? || collection_type.user_collection? %>
+                  <button class="btn btn-danger btn-sm delete-collection-type"
+                          data-collection-type="<%= collection_type.to_json %>"
+                          data-collection-type-index="<%= hyrax.dashboard_collections_path({ 'f[collection_type_gid_ssim][]' => collection_type.to_global_id.to_s, 'f[has_model_ssim][]' => 'Collection' }) %>"
+                          data-has-collections="<%= collection_type.collections? %>">
+                    <%= t('helpers.action.delete') %>
+                  </button>
+                  <% end %>
                </td>
              </tr>
            <% end %>

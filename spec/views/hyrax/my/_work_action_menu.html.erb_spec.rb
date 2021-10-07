@@ -7,7 +7,6 @@ RSpec.describe 'hyrax/my/_work_action_menu.html.erb' do
   before do
     allow(view).to receive(:current_user).and_return(user)
     allow(view).to receive(:display_trophy_link).and_return("Highlight Work on Profile")
-    allow(Flipflop).to receive(:read_only?).and_return(false)
   end
 
   context "When the user can transfer and edit works" do

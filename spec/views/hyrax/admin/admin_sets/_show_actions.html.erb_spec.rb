@@ -7,7 +7,6 @@ RSpec.describe 'hyrax/admin/admin_sets/_show_actions.html.erb', type: :view do
   before do
     allow(controller).to receive(:current_ability).and_return(ability)
     allow(view).to receive(:presenter).and_return(presenter)
-    allow(Flipflop).to receive(:read_only?).and_return(false)
 
     # Stub route because view specs don't handle engine routes
     allow(view).to receive(:edit_admin_admin_set_path).with(presenter).and_return("/admin/admin_sets/123/edit")

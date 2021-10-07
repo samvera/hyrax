@@ -1,17 +1,16 @@
 <% provide :page_header do %>
   <h1><span class="fa fa-arrows-h" aria-hidden="true"></span><%= t(:'.title', work_title: @proxy_deposit_request.to_s) %></h1>
 <% end %>
-<% unless Flipflop.read_only? %>
-  <span class="sr-only"><%= t(:'.sr_only_description', work_title: @proxy_deposit_request.to_s) %></span>
 
-  <%= simple_form_for @proxy_deposit_request,
-               url: hyrax.work_transfers_path(@work) do |f| %>
-    <%= f.input :transfer_to,
-          placeholder: t(:'.placeholder') %>
-    <%= f.input :sender_comment %>
+<span class="sr-only"><%= t(:'.sr_only_description', work_title: @proxy_deposit_request.to_s) %></span>
 
-    <div class="form-actions">
-      <%= f.submit class: 'btn btn-primary', data: { confirm: t('.confirm') } %>
-    </div>
-  <% end %>
+<%= simple_form_for @proxy_deposit_request,
+             url: hyrax.work_transfers_path(@work) do |f| %>
+  <%= f.input :transfer_to,
+        placeholder: t(:'.placeholder') %>
+  <%= f.input :sender_comment %>
+
+  <div class="form-actions">
+    <%= f.submit class: 'btn btn-primary', data: { confirm: t('.confirm') } %>
+  </div>
 <% end %>
