@@ -14,7 +14,11 @@ RSpec.describe Hyrax::My::CollectionsSearchBuilder do
   describe '#models' do
     subject { builder.models }
 
-    it { is_expected.to contain_exactly(AdminSet, Collection, Hyrax::AdministrativeSet) }
+    it do
+      is_expected.to contain_exactly(AdminSet,
+                                     Hyrax::AdministrativeSet,
+                                     Hyrax.config.collection_class)
+    end
   end
 
   describe ".default_processor_chain" do
