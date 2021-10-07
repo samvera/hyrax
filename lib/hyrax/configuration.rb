@@ -705,7 +705,12 @@ module Hyrax
     # @return [#constantize] a string representation of the collection
     #   model
     def collection_model
-      @collection_model ||= '::Collection'
+      @collection_model ||=
+        if use_valkyrie?
+          'Hyrax::PcdmCollection'
+        else
+          '::Collection'
+        end
     end
 
     ##
