@@ -689,7 +689,7 @@ module Hyrax
     end
 
     ##
-    # @return [Class] the configured collection model class
+    # @return [Class] the configured admin set model class
     def admin_set_class
       admin_set_model.constantize
     end
