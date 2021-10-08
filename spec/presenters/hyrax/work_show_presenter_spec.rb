@@ -582,7 +582,7 @@ RSpec.describe Hyrax::WorkShowPresenter do
         before do
           allow(ability)
             .to receive(:can?)
-            .with(:create_any, Hyrax.collection.collection_class)
+            .with(:create_any, Hyrax.config.collection_class)
             .and_return(true)
         end
 
