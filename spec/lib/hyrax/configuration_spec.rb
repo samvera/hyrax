@@ -19,6 +19,9 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:active_deposit_agreement_acceptance?) }
   it { is_expected.to respond_to(:active_deposit_agreement_acceptance=) }
   it { is_expected.to respond_to(:activity_to_show_default_seconds_since_now) }
+  it { is_expected.to respond_to(:admin_set_class) }
+  it { is_expected.to respond_to(:admin_set_model) }
+  it { is_expected.to respond_to(:admin_set_model=) }
   it { is_expected.to respond_to(:admin_set_predicate) }
   it { is_expected.to respond_to(:admin_set_predicate=) }
   it { is_expected.to respond_to(:analytic_start_date) }
@@ -34,6 +37,9 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:cache_path) }
   it { is_expected.to respond_to(:citations?) }
   it { is_expected.to respond_to(:citations=) }
+  it { is_expected.to respond_to(:collection_class) }
+  it { is_expected.to respond_to(:collection_model) }
+  it { is_expected.to respond_to(:collection_model=) }
   it { is_expected.to respond_to(:contact_email) }
   it { is_expected.to respond_to(:default_nested_relationship_reindexer) }
   it { is_expected.to respond_to(:display_media_download_link?) }
