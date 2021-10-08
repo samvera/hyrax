@@ -682,7 +682,7 @@ module Hyrax
 
     attr_writer :admin_set_model
     ##
-    # @return [#constantize] a string representation of the collection
+    # @return [#constantize] a string representation of the admin set
     #   model
     def admin_set_model
       @admin_set_model ||= 'AdminSet'
