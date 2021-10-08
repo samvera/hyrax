@@ -6,7 +6,7 @@ RSpec.describe 'hyrax/dashboard/collections/_sort_and_per_page.html.erb', type: 
   before do
     allow(view).to receive(:show_sort_and_per_page?).and_return(true)
     allow(view).to receive(:dashboard_collection_path).and_return("collection/path")
-    stub_template('_view_type_group.erb' => "")
+    allow(view).to receive(:collection_path).and_return("collection/path")
   end
 
   context "when there are multiple sort fields" do
