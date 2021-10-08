@@ -1,38 +1,38 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
+  include(Devise::Test::ControllerHelpers)
   let(:document) do
     SolrDocument.new(id: 'xyz123z4',
                      'title_tesim' => ['Make Collections Great Again'],
                      'rights_tesim' => ["http://creativecommons.org/licenses/by-sa/3.0/us/"])
   end
-  let(:ability) { double }
+
+  let(:ability) { ::Ability.new(user) }
   let(:collection) { mock_model(::Collection) }
   let(:presenter) { Hyrax::CollectionPresenter.new(document, ability) }
-  let(:collection_type) { double }
+  let(:user) { FactoryBot.create(:user) }
+
+  let(:collection_type) do
+    double(Hyrax::CollectionType,
+           nestable?: true,
+           title: "User Collection",
+           badge_color: "#ffa510")
+  end
 
   before do
-    user = stub_model(User)
-    allow(document).to receive(:hydra_model).and_return(::Collection)
-    allow(view).to receive(:current_user).and_return(user)
-    allow(view).to receive(:can?).with(:edit, document).and_return(true)
-    allow(view).to receive(:can?).with(:destroy, document).and_return(true)
-    allow(view).to receive(:current_ability).and_return(ability)
-    allow(ability).to receive(:current_user).and_return(user)
+    assign(:presenter, presenter)
+    assign(:parent_collection_count, 0)
+    assign(:members_count, 0)
 
-    allow(Collection).to receive(:find).with(document.id).and_return(collection)
+    allow(controller).to receive(:current_ability).and_return(ability)
+
+    allow(ability).to receive(:can?).with(:read, presenter).and_return(true)
+    allow(view).to receive(:available_parent_collections_data).and_return({}.to_s)
 
     allow(presenter).to receive(:total_items).and_return(0)
     allow(presenter).to receive(:collection_type).and_return(collection_type)
     allow(presenter).to receive(:subcollection_count).and_return(0)
-    assign(:parent_collection_count, 0)
-    assign(:members_count, 0)
 
-    allow(collection_type).to receive(:nestable?).and_return(true)
-    allow(collection_type).to receive(:title).and_return("User Collection")
-    allow(collection_type).to receive(:badge_color).and_return("#ffa510")
-
-    assign(:presenter, presenter)
-    # Stub route because view specs don't handle engine routes
     allow(view).to receive(:edit_dashboard_collection_path).and_return("/dashboard/collection/123/edit")
     allow(view).to receive(:dashboard_collection_path).and_return("/dashboard/collection/123")
     allow(view).to receive(:collection_path).and_return("/collection/123")
