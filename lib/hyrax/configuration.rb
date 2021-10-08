@@ -680,6 +680,20 @@ module Hyrax
       collection_model.constantize
     end
 
+    attr_writer :admin_set_model
+    ##
+    # @return [#constantize] a string representation of the collection
+    #   model
+    def admin_set_model
+      @admin_set_model ||= 'AdminSet'
+    end
+
+    ##
+    # @return [Class] the configured collection model class
+    def admin_set_class
+      admin_set_model.constantize
+    end
+
     attr_writer :id_field
     def id_field
       @id_field || index_field_mapper.id_field
