@@ -580,7 +580,10 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
       context "and user can create a collection" do
         before do
-          allow(ability).to receive(:can?).with(:create_any, Collection).and_return(true)
+          allow(ability)
+            .to receive(:can?)
+            .with(:create_any, Hyrax.collection.collection_class)
+            .and_return(true)
         end
 
         it "returns true" do
@@ -590,11 +593,15 @@ RSpec.describe Hyrax::WorkShowPresenter do
 
       context "and user can NOT create a collection" do
         before do
-          allow(ability).to receive(:can?).with(:create_any, Collection).and_return(false)
+          allow(ability)
+            .to receive(:can?)
+            .with(:create_any, Hyrax.collection.collection_class)
+            .and_return(false)
         end
 
         it "returns false" do
-          expect(subject.show_deposit_for?(collections: user_collections)).to be false
+          expect(subject.show_deposit_for?(collections: user_collections))
+            .to be false
         end
       end
     end
