@@ -385,28 +385,36 @@ module Hyrax
         end
       end
 
-      def add_members_to_collection(collection = nil)
-        collection ||= @collection
-        Hyrax::Collections::CollectionMemberService.add_members_by_ids(collection_id: collection.id,
-                                                                       new_member_ids: batch,
-                                                                       user: current_user)
+      def add_members_to_collection(collection = nil, collection_id: nil)
+        collection_id ||= (collection.try(:id) || @collection.id)
+
+        Hyrax::Collections::CollectionMemberService
+          .add_members_by_ids(collection_id: collection_id,
+                              new_member_ids: batch,
+                              user: current_user)
       end
 
       def remove_members_from_collection
-        Hyrax::Collections::CollectionMemberService.remove_members_by_ids(collection_id: @collection.id,
-                                                                          member_ids: batch,
-                                                                          user: current_user)
+        Hyrax::Collections::CollectionMemberService
+          .remove_members_by_ids(collection_id: @collection.id,
+                                 member_ids: batch,
+                                 user: current_user)
       end
 
       def move_members_between_collections
-        destination_collection = Hyrax.config.collection_class.find(params[:destination_collection_id])
         remove_members_from_collection
-        add_members_to_collection(destination_collection)
-        if destination_collection.save
-          flash[:notice] = "Successfully moved #{batch.count} files to #{destination_collection.title} Collection."
-        else
-          flash[:error] = "An error occured. Files were not moved to #{destination_collection.title} Collection."
-        end
+        add_members_to_collection(collection_id: params[:destination_collection_id])
+
+        destination_title =
+          Hyrax.query_service.find_by(id: params[:destination_collection_id]).title.first ||
+          params[:destination_collection_id]
+        flash[:notice] = "Successfully moved #{batch.count} files to #{destination_title} Collection."
+      rescue StandardError => err
+        Rails.logger.error(err)
+        destination_title =
+          Hyrax.query_service.find_by(id: params[:destination_collection_id]).title.first ||
+          destination_id
+        flash[:error] = "An error occured. Files were not moved to #{destination_title} Collection."
       end
 
       # Include 'catalog' and 'hyrax/base' in the search path for views, while prefering
