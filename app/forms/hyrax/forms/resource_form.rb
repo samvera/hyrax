@@ -134,6 +134,8 @@ module Hyrax
           case resource
           when Hyrax::FileSet
             Hyrax::Forms::FileSetForm.new(resource)
+          when Hyrax::PcdmCollection
+            Hyrax::Forms::PcdmCollectionForm.new(resource)
           else
             Hyrax::Forms::ResourceForm(resource.class).new(resource)
           end
