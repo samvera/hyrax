@@ -69,7 +69,7 @@ module Hyrax
         add_breadcrumb t(:'hyrax.controls.home'), root_path
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
         add_breadcrumb t('.header', type_title: collection_type.title), request.path
-        @collection.apply_depositor_metadata(current_user.user_key)
+        @collection.try(:apply_depositor_metadata, current_user.user_key)
         form
       end
 
@@ -107,6 +107,7 @@ module Hyrax
       end
 
       def create
+        return valkyrie_create if @collection.is_a?(Valkyrie::Resource)
         # Manual load and authorize necessary because Cancan will pass in all
         # form attributes. When `permissions_attributes` are present the
         # collection is saved without a value for `has_model.`
@@ -148,6 +149,9 @@ module Hyrax
         end
 
         process_member_changes
+
+        return valkyrie_update if @collection.is_a?(Valkyrie::Resource)
+
         @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
         # we don't have to reindex the full graph when updating collection
         @collection.reindex_extent = Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX
@@ -180,11 +184,20 @@ module Hyrax
       end
 
       def destroy
-        if @collection.destroy
+        case @collection
+        when Valkyrie::Resource
+          Hyrax.persister.delete(resource: @collection)
           after_destroy(params[:id])
         else
-          after_destroy_error(params[:id])
+          if @collection.destroy
+            after_destroy(params[:id])
+          else
+            after_destroy_error(params[:id])
+          end
         end
+      rescue StandardError => err
+        Rails.logger.error(err)
+        after_destroy_error(params[:id])
       end
 
       def collection
@@ -201,6 +214,24 @@ module Hyrax
       end
 
       private
+
+      def valkyrie_create
+        form.validate(collection_params) &&
+          @collection = transactions['change_set.create_collection']
+                        .call(form)
+                        .value_or { return after_create_error }
+
+        add_members_to_collection unless batch.empty?
+        @collection
+      end
+
+      def valkyrie_update
+        form.validate(collection_params) &&
+          @collection = transactions['change_set.update_collection']
+                        .call(form)
+                        .value_or { return after_update_error }
+        after_update
+      end
 
       def default_collection_type
         Hyrax::CollectionType.find_or_create_default_collection_type
@@ -350,8 +381,14 @@ module Hyrax
       deprecation_deprecate :single_item_search_builder
 
       def collection_params
-        @participants = extract_old_style_permission_attributes(params[:collection])
-        form_class.model_attributes(params[:collection])
+        if Hyrax.config.collection_class < ActiveFedora::Base
+          @participants = extract_old_style_permission_attributes(params[:collection])
+          form_class.model_attributes(params[:collection])
+        else
+          params.permit(collection: {})[:collection]
+                .merge(params.permit(:collection_type_gid))
+                .merge(member_of_collection_ids: Array(params[:parent_id]))
+        end
       end
 
       def extract_old_style_permission_attributes(attributes)
@@ -437,7 +474,13 @@ module Hyrax
       end
 
       def form
-        @form ||= form_class.new(@collection, current_ability, repository)
+        @form ||=
+          case @collection
+          when Valkyrie::Resource
+            Hyrax::Forms::ResourceForm.for(@collection)
+          else
+            form_class.new(@collection, current_ability, repository)
+          end
       end
 
       def set_default_permissions
@@ -476,7 +519,7 @@ module Hyrax
       end
 
       def collection_object
-        action_name == 'show' ? Hyrax.config.collection_class.find(collection.id) : collection
+        @collection
       end
 
       # You can override this method if you need to provide additional

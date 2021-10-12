@@ -42,7 +42,9 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
     before { sign_in user }
 
     # rubocop:disable RSpec/ExampleLength
-    it "creates a Collection" do
+    it "creates a Collection with old style parameters" do
+      skip("these parameters are deprecated for AF models, and not supported for Valkyrie") if
+        Hyrax.config.collection_class < Valkyrie::Resource
       expect do
         post :create, params: {
           collection: collection_attrs.merge(
@@ -78,8 +80,10 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         expect { post :create, params: parameters }
           .to change { Collection.count }.by(1)
 
-        collection = assigns(:collection)
-        expect(queries.find_members_of(collection: collection.valkyrie_resource).map(&:id))
+        collection = assigns(:collection).try(:valkyrie_resource) ||
+                     assigns(:collection)
+
+        expect(queries.find_members_of(collection: collection).map(&:id))
           .to contain_exactly(asset1.id, asset2.id)
       end
 
@@ -87,7 +91,11 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         post :create, params: { batch_document_ids: [asset1.id, unowned_asset.id],
                                 collection: collection_attrs }
 
-        expect(assigns[:collection].member_objects.map(&:id)).to contain_exactly(asset1.id)
+        collection = assigns(:collection).try(:valkyrie_resource) ||
+                     assigns(:collection)
+
+        expect(queries.find_members_of(collection: collection).map(&:id))
+          .to contain_exactly(asset1.id)
         asset_results = Hyrax::SolrService.get(fq: ["id:\"#{asset1.id}\""], fl: ['id', "collection_tesim"])
         expect(asset_results["response"]["numFound"]).to eq 1
         doc = asset_results["response"]["docs"].first
@@ -102,7 +110,9 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         expect { post :create, params: { collection: collection_attrs } }
           .to change { Collection.count }.by(1)
 
-        expect(assigns[:collection].collection_type.machine_id)
+        type = GlobalID::Locator.locate(assigns[:collection].collection_type_gid)
+
+        expect(type.machine_id)
           .to eq Hyrax::CollectionType::USER_COLLECTION_MACHINE_ID
       end
 
@@ -141,6 +151,11 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         allow(controller).to receive(:authorize!)
         allow(Collection).to receive(:new).and_return(collection)
         allow(collection).to receive(:save).and_return(false)
+
+        allow(Hyrax.persister)
+          .to receive(:save)
+          .with(any_args)
+          .and_raise(StandardError, 'Failed to save collection')
       end
 
       it "renders the form again" do
@@ -264,9 +279,9 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
     context "updating a collections metadata" do
       it "saves the metadata" do
-        expect { put :update, params: { id: collection, collection: { creator: ['Emily'] } } }
-          .to change { Hyrax.query_service.find_by(id: collection.id).creator }
-          .to eq ['Emily']
+        expect { put :update, params: { id: collection, collection: { title: ['New Collection Title'] } } }
+          .to change { Hyrax.query_service.find_by(id: collection.id).title }
+          .to contain_exactly('New Collection Title')
 
         expect(flash[:notice]).to eq "Collection was successfully updated."
       end
@@ -286,7 +301,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
     end
 
     context "when update fails" do
-      let(:collection) { FactoryBot.build(:collection_lw, id: '12345') }
+      let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection) }
       let(:repository) { instance_double(Blacklight::Solr::Repository, search: result) }
       let(:result) { double(documents: [], total: 0) }
 
@@ -295,6 +310,10 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         allow(Collection).to receive(:find).and_return(collection)
         allow(collection).to receive(:update).and_return(false)
         allow(controller).to receive(:repository).and_return(repository)
+        allow(Hyrax.persister)
+          .to receive(:save)
+          .with(any_args)
+          .and_raise(StandardError, 'Failed to save collection')
       end
 
       it "renders the form again" do
@@ -491,7 +510,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
         allow(controller.current_ability)
           .to receive(:can?)
-          .with(:show, instance_of(Hyrax.config.collection_class))
+          .with(:show, anything)
           .and_return(true)
       end
 
@@ -533,7 +552,13 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       before do
         # rubocop:disable RSpec/AnyInstance
         allow_any_instance_of(Collection).to receive(:destroy).and_return(nil)
+        allow(Hyrax.persister)
+          .to receive(:delete)
+          .with(any_args)
+          .and_raise(StandardError, "Failed to delete collection.")
+        # rubocop:enable RSpec/AnyInstance
       end
+
       it "renders the edit view" do
         delete :destroy, params: { id: collection }
         expect(response).to have_http_status(:unprocessable_entity)
@@ -555,6 +580,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       get :edit, params: { id: collection }
 
       expect(response).to be_successful
+      expect(flash[:notice]).to be_nil
     end
 
     context "without a referer" do

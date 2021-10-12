@@ -20,6 +20,7 @@ module Hyrax
     class Container # rubocop:disable Metrics/ClassLength
       require 'hyrax/transactions/apply_change_set'
       require 'hyrax/transactions/collection_create'
+      require 'hyrax/transactions/collection_update'
       require 'hyrax/transactions/create_work'
       require 'hyrax/transactions/destroy_work'
       require 'hyrax/transactions/file_set_destroy'
@@ -63,6 +64,10 @@ module Hyrax
 
         ops.register 'create_collection' do
           CollectionCreate.new
+        end
+
+        ops.register 'update_collection' do
+          CollectionUpdate.new
         end
 
         ops.register 'create_work' do
