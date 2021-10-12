@@ -17,9 +17,10 @@ module Hyrax
         def call(change_set, collection_type_gid: default_collection_type_gid)
           return Failure[:no_collection_type_gid, collection] unless
             change_set.respond_to?(:collection_type_gid=)
+          return Success(change_set) if
+            change_set.collection_type_gid.present?
 
           change_set.collection_type_gid = collection_type_gid
-
           Success(change_set)
         end
 
