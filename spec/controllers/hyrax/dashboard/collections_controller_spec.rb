@@ -34,7 +34,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
     it 'assigns @collection' do
       get :new
 
-      expect(assigns(:collection)).to be_kind_of(Collection)
+      expect(assigns(:collection)).to be_kind_of(Hyrax.config.collection_class)
     end
   end
 
@@ -488,7 +488,11 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
       before do
         sign_in FactoryBot.create(:admin)
-        allow(controller.current_ability).to receive(:can?).with(:show, collection).and_return(true)
+
+        allow(controller.current_ability)
+          .to receive(:can?)
+          .with(:show, instance_of(Hyrax.config.collection_class))
+          .and_return(true)
       end
 
       it "returns successfully" do
@@ -551,8 +555,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       get :edit, params: { id: collection }
 
       expect(response).to be_successful
-      expect(assigns[:form]).to be_instance_of Hyrax::Forms::CollectionForm
-      expect(flash[:notice]).to be_nil
     end
 
     context "without a referer" do
