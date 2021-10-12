@@ -43,9 +43,12 @@ module Hyrax
       # The search builder to find the collections' members
       self.membership_service_class = Collections::CollectionMemberSearchService
 
-      load_and_authorize_resource except: [:index, :create],
+      load_and_authorize_resource except: [:index],
                                   instance_name: :collection,
                                   class: Hyrax.config.collection_model
+
+      skip_load_resource only: :create if
+        Hyrax.config.collection_class < ActiveFedora::Base
 
       def deny_collection_access(exception)
         if exception.action == :edit
