@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 RSpec.describe ::SolrDocument, type: :model do
-  let(:document) { described_class.new(attributes) }
+  subject(:document) { described_class.new(attributes) }
   let(:attributes) { {} }
 
   describe "#itemtype" do
@@ -94,8 +94,6 @@ RSpec.describe ::SolrDocument, type: :model do
   describe "#suppressed?" do
     let(:attributes) { { 'suppressed_bsi' => suppressed_value } }
 
-    subject { document }
-
     context 'when true' do
       let(:suppressed_value) { true }
 
@@ -116,8 +114,6 @@ RSpec.describe ::SolrDocument, type: :model do
       context "when mime-type is #{type}" do
         let(:attributes) { { 'mime_type_ssi' => type } }
 
-        subject { document }
-
         it { is_expected.to be_office_document }
       end
     end
@@ -125,8 +121,6 @@ RSpec.describe ::SolrDocument, type: :model do
     Mimes.video_mime_types.each do |type|
       context "when mime-type is #{type}" do
         let(:attributes) { { 'mime_type_ssi' => type } }
-
-        subject { document }
 
         it { is_expected.to be_video }
       end
@@ -183,23 +177,17 @@ RSpec.describe ::SolrDocument, type: :model do
   describe "#admin_set?" do
     let(:attributes) { { 'has_model_ssim' => 'AdminSet' } }
 
-    subject { document }
-
     it { is_expected.to be_admin_set }
   end
 
   describe "#collection?" do
     let(:attributes) { { 'has_model_ssim' => 'Collection' } }
 
-    subject { document }
-
     it { is_expected.to be_collection }
   end
 
   describe "#work?" do
     let(:attributes) { { 'has_model_ssim' => 'GenericWork' } }
-
-    subject { document }
 
     it { is_expected.to be_work }
   end
