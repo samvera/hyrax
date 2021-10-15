@@ -1,14 +1,21 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Dashboard::NestCollectionsController do
   routes { Hyrax::Engine.routes }
-  let(:child) { FactoryBot.create(:public_collection_lw, title: ["Awesome Child"], id: 'child1') }
-  let(:parent) { FactoryBot.create(:collection_lw, id: 'parent1', collection_type_settings: :nestable, title: ["Uncool Parent"], user: user) }
   let(:user) { FactoryBot.create(:user) }
+  let(:parameters) { { child_id: child.id, parent_id: parent.id } }
+
+  let(:child) do
+    FactoryBot.valkyrie_create(:hyrax_collection, :public)
+  end
+
+  let(:parent) do
+    FactoryBot.create(:collection_lw, collection_type_settings: :nestable, user: user)
+  end
+
+  before { sign_in(user) }
 
   its(:blacklight_config) { is_expected.to be_a(Blacklight::Configuration) }
   its(:repository) { is_expected.to be_a(Blacklight::Solr::Repository) }
-
-  before { sign_in(user) }
 
   let(:form_class_base) do
     Class.new do
@@ -84,11 +91,15 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
   end
 
   describe 'POST #create_relationship_within' do
+    let(:parameters) do
+      { child_id: child.id, parent_id: parent.id, source: 'my' }
+    end
+
     describe 'when save fails' do
       before { controller.form_class = form_class_with_failed_save }
 
       it 'authorizes then renders the form again' do
-        post 'create_relationship_within', params: { child_id: child.id, parent_id: parent.id, source: 'my' }
+        post 'create_relationship_within', params: parameters
 
         expect(response).to redirect_to(my_collections_path)
       end
@@ -98,7 +109,7 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
       before { controller.form_class = form_class_with_successful_save }
 
       it 'authorizes, flashes a notice, and redirects' do
-        post 'create_relationship_within', params: { child_id: child.id, parent_id: parent.id, source: 'my' }
+        post 'create_relationship_within', params: parameters
 
         expect(response).to redirect_to(my_collections_path)
         expect(flash[:notice]).to be_a(String)
@@ -107,11 +118,15 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
   end
 
   describe 'GET #create_collection_under' do
+    let(:parameters) do
+      { child_id: child.id, parent_id: parent.id, source: 'show' }
+    end
+
     describe 'when validation fails' do
       before { controller.form_class = form_class_with_failed_validation }
 
       it 'authorizes then renders the form again' do
-        get 'create_collection_under', params: { child_id: nil, parent_id: parent.id, source: 'show' }
+        get 'create_collection_under', params: parameters
 
         expect(response).to redirect_to(dashboard_collection_path(parent.id))
       end
@@ -121,19 +136,25 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
       before { controller.form_class = form_class_with_successful_validation }
 
       it 'authorizes, flashes a notice, and redirects' do
-        get 'create_collection_under', params: { child_id: nil, parent_id: parent.id, source: 'show' }
+        get 'create_collection_under', params: parameters
 
-        expect(response).to redirect_to new_dashboard_collection_path(collection_type_id: parent.collection_type.id, parent_id: parent.id)
+        expect(response)
+          .to redirect_to new_dashboard_collection_path(collection_type_id: parent.collection_type.id,
+                                                        parent_id: parent.id)
       end
     end
   end
 
   describe 'POST #create_relationship_under' do
+    let(:parameters) do
+      { child_id: child.id, parent_id: parent.id, source: 'show' }
+    end
+
     describe 'when save fails' do
       before { controller.form_class = form_class_with_failed_save }
 
       it 'authorizes then renders the form again' do
-        post 'create_relationship_under', params: { child_id: child.id, parent_id: parent.id, source: 'show' }
+        post 'create_relationship_under', params: parameters
 
         expect(response).to redirect_to(dashboard_collection_path(parent))
       end
@@ -143,7 +164,7 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
       before { controller.form_class = form_class_with_successful_save }
 
       it 'authorizes, flashes a notice, and redirects' do
-        post 'create_relationship_under', params: { child_id: child.id, parent_id: parent.id, source: 'show' }
+        post 'create_relationship_under', params: parameters
 
         expect(response).to redirect_to(dashboard_collection_path(parent))
         expect(flash[:notice]).to be_a(String)
@@ -156,7 +177,7 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
       before { controller.form_class = form_class_remove_fails }
 
       it 'authorizes then renders the form again' do
-        post 'remove_relationship_above', params: { child_id: child.id, parent_id: parent.id }
+        post 'remove_relationship_above', params: parameters
 
         expect(response).to redirect_to(dashboard_collection_path(child))
       end
@@ -166,7 +187,7 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
       before { controller.form_class = form_class_removed }
 
       it 'authorizes, flashes a notice, and redirects' do
-        post 'remove_relationship_above', params: { child_id: child.id, parent_id: parent.id }
+        post 'remove_relationship_above', params: parameters
 
         expect(response).to redirect_to(dashboard_collection_path(child))
         expect(flash[:notice]).to be_a(String)
@@ -179,7 +200,7 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
       before { controller.form_class = form_class_remove_fails }
 
       it 'authorizes then renders the form again' do
-        post 'remove_relationship_under', params: { child_id: child.id, parent_id: parent.id }
+        post 'remove_relationship_under', params: parameters
 
         expect(response).to redirect_to(dashboard_collection_path(parent))
       end
@@ -189,7 +210,7 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
       before { controller.form_class = form_class_removed }
 
       it 'authorizes, flashes a notice, and redirects' do
-        post 'remove_relationship_under', params: { child_id: child.id, parent_id: parent.id }
+        post 'remove_relationship_under', params: parameters
 
         expect(response).to redirect_to(dashboard_collection_path(parent))
         expect(flash[:notice]).to be_a(String)
