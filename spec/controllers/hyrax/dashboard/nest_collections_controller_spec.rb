@@ -13,9 +13,9 @@ RSpec.describe Hyrax::Dashboard::NestCollectionsController do
   let(:form_class_base) do
     Class.new do
       attr_reader :child, :parent
-      def initialize(parent:, child:, context:)
-        @parent = parent
-        @child = child
+      def initialize(parent: nil, parent_id: nil, child: nil, child_id: nil, context:)
+        @parent = parent || (parent_id.present? && Hyrax.config.collection_class.find(parent_id))
+        @child = child || (child_id.present? && Hyrax.config.collection_class.find(child_id))
         @context = context
       end
     end
