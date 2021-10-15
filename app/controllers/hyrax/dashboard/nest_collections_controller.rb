@@ -64,36 +64,33 @@ module Hyrax
       private
 
       def build_within_form
-        child = Hyrax.config.collection_class.find(params.fetch(:child_id))
-        authorize! :read, child
-        parent = params.key?(:parent_id) ? Hyrax.config.collection_class.find(params[:parent_id]) : nil
-        form_class.new(child: child, parent: parent, context: self)
+        authorize! :read, form_params[:child_id]
+        form_class.new(context: self, **form_params.to_h.symbolize_keys)
       end
 
       def build_under_form
-        parent = Hyrax.config.collection_class.find(params.fetch(:parent_id))
-        authorize! :deposit, parent
-        child = params.key?(:child_id) ? Hyrax.config.collection_class.find(params[:child_id]) : nil
-        form_class.new(child: child, parent: parent, context: self)
+        authorize! :read, form_params[:parent_id]
+        form_class.new(context: self, **form_params.to_h.symbolize_keys)
       end
 
       def build_create_collection_form
-        parent = Hyrax.config.collection_class.find(params.fetch(:parent_id))
-        authorize! :deposit, parent
-        form_class.new(child: nil, parent: parent, context: self)
+        authorize! :deposit, form_params[:parent_id]
+        form_class.new(context: self, **form_params.to_h.symbolize_keys)
       end
 
       def build_remove_form
-        child = Hyrax.config.collection_class.find(params.fetch(:child_id))
-        parent = Hyrax.config.collection_class.find(params.fetch(:parent_id))
-        authorize! :edit, parent
-        form_class.new(child: child, parent: parent, context: self)
+        authorize! :edit, form_params[:parent_id]
+        form_class.new(context: self, **form_params.to_h.symbolize_keys)
       end
 
       # determine appropriate redirect location depending on specified source
       def redirect_path(item:)
         return my_collections_path if params[:source] == 'my'
         dashboard_collection_path(item)
+      end
+
+      def form_params
+        params.slice(:child_id, :parent_id).permit!
       end
     end
   end
