@@ -95,9 +95,6 @@ module Hyrax::Controller
     return unless Flipflop.read_only?
     # Allows feature to be turned off
     return if self.class.to_s == Hyrax::Admin::StrategiesController.to_s
-    redirect_back(
-      fallback_location: root_path,
-      alert: t('hyrax.read_only')
-    )
+    redirect_to root_path, flash: { error: t('hyrax.read_only') }
   end
 end
