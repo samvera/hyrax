@@ -27,7 +27,7 @@ module Hyrax
         authorize! :deposit, form_params[:parent_id]
 
         if form.validate_add
-          redirect_to new_dashboard_collection_path(collection_type_id: form.parent.collection_type.id, parent_id: form.parent)
+          redirect_to new_dashboard_collection_path(collection_type_id: parent_type_id_for(form), parent_id: form.parent)
         else
           redirect_to redirect_path(item: form.parent), flash: { error: form.errors.full_messages }
         end
@@ -124,6 +124,12 @@ module Hyrax
       def redirect_path(item:)
         return my_collections_path if params[:source] == 'my'
         dashboard_collection_path(item)
+      end
+
+      ##
+      # @api private
+      def parent_type_id_for(form)
+        URI::GID.parse(form.parent.collection_type_gid).model_id
       end
     end
   end
