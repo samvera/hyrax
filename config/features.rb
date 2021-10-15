@@ -44,6 +44,9 @@ Flipflop.configure do
     feature :cache_work_iiif_manifest,
             default: false,
             description: "Use Rails.cache to cache the JSON document for IIIF manifests"
+    feature :read_only,
+            default: false,
+            description: "Put the system into read-only mode. Deposits, edits, approvals and anything that makes a change to the data will be disabled."
   rescue Flipflop::StrategyError, Flipflop::FeatureError => err
     Rails.logger.warn "Ignoring #{err}: #{err.message}"
   end

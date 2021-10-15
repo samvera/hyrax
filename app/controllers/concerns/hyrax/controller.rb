@@ -16,6 +16,7 @@ module Hyrax::Controller
     include Hydra::Controller::ControllerBehavior
     helper_method :create_work_presenter
     before_action :set_locale
+    before_action :check_read_only, except: [:show, :index]
   end
 
   # Provide a place for Devise to send the user to after signing in
@@ -87,5 +88,13 @@ module Hyrax::Controller
       wants.html { redirect_to main_app.new_user_session_path, alert: exception.message }
       wants.json { render_json_response(response_type: :unauthorized, message: json_message) }
     end
+  end
+
+  # Redirect all deposit and edit requests with warning message when in read only mode
+  def check_read_only
+    return unless Flipflop.read_only?
+    # Allows feature to be turned off
+    return if self.class.to_s == Hyrax::Admin::StrategiesController.to_s
+    redirect_to root_path, flash: { error: t('hyrax.read_only') }
   end
 end
