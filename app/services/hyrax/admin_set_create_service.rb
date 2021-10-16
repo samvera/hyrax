@@ -13,6 +13,9 @@ module Hyrax
     DEFAULT_ID = 'admin_set/default'
     DEFAULT_TITLE = ['Default Admin Set'].freeze
 
+    class_attribute :permissions_create_service
+    self.permissions_create_service = Hyrax::Collections::PermissionsCreateService
+
     class << self
       # @api public
       # Creates the default AdminSet and corresponding data
@@ -91,7 +94,8 @@ module Hyrax
       admin_set.save.tap do |result|
         if result
           ActiveRecord::Base.transaction do
-            permission_template = create_permission_template
+            permission_template = permissions_create_service.create_default(collection: admin_set,
+                                                                            creating_user: creating_user)
             workflow = create_workflows_for(permission_template: permission_template)
             create_default_access_for(permission_template: permission_template, workflow: workflow) if default_admin_set?(id: admin_set.id)
           end
@@ -105,40 +109,8 @@ module Hyrax
       self.class.default_admin_set?(id: id)
     end
 
-    def access_grants_attributes
-      [
-        { agent_type: 'group', agent_id: admin_group_name, access: Hyrax::PermissionTemplateAccess::MANAGE }
-      ].tap do |attribute_list|
-        # Grant manage access to the creating_user if it exists. Should exist for all but default Admin Set
-        attribute_list << { agent_type: 'user', agent_id: creating_user.user_key, access: Hyrax::PermissionTemplateAccess::MANAGE } if creating_user
-      end + managers_of_admin_set
-    end
-
-    def managers_of_admin_set
-      admin_set_type = Hyrax::CollectionType.find_or_create_admin_set_type
-      attribute_list = []
-      user_managers = Hyrax::CollectionTypes::PermissionsService.user_edit_grants_for_collection_of_type(collection_type: admin_set_type)
-      user_managers.each do |user|
-        attribute_list << { agent_type: 'user', agent_id: user, access: Hyrax::PermissionTemplateAccess::MANAGE }
-      end
-      group_managers = Hyrax::CollectionTypes::PermissionsService.group_edit_grants_for_collection_of_type(collection_type: admin_set_type)
-      group_managers.each do |group|
-        attribute_list << { agent_type: 'group', agent_id: group, access: Hyrax::PermissionTemplateAccess::MANAGE }
-      end
-      attribute_list
-    end
-
     def admin_group_name
       ::Ability.admin_group_name
-    end
-
-    ##
-    # @return [PermissionTemplate]
-    def create_permission_template
-      permission_template = PermissionTemplate.create!(source_id: admin_set.id,
-                                                       access_grants_attributes: access_grants_attributes.uniq)
-      permission_template.reset_access_controls_for(collection: admin_set)
-      permission_template
     end
 
     def create_workflows_for(permission_template:)
