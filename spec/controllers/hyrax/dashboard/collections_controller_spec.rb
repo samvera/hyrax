@@ -133,6 +133,28 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
         expect(assigns[:collection].collection_type_gid)
           .to eq collection_type.to_global_id.to_s
       end
+
+      context "and collection type has permissions" do
+        describe ".create_default" do
+          let(:manager) { create(:user, email: 'manager@example.com') }
+          let!(:collection_type) { create(:collection_type, manager_user: manager.user_key) }
+
+          it "copies collection type permissions to collection" do
+            parameters = { collection: collection_attrs,
+                           collection_type_gid: collection_type.to_global_id.to_s }
+
+            # adds admin group, depositing user, and manager from collection type
+            expect { post :create, params: parameters }
+              .to change { Hyrax::PermissionTemplate.count }
+              .by(1)
+              .and change { Hyrax::PermissionTemplateAccess.count }
+              .by(3)
+
+            expect(assigns[:collection].edit_users).to contain_exactly manager.user_key, user.user_key
+            expect(assigns[:collection].edit_groups).to contain_exactly 'admin'
+          end
+        end
+      end
     end
 
     context "when params includes parent_id" do
