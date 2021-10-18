@@ -218,6 +218,9 @@ module Hyrax
       def valkyrie_create
         form.validate(collection_params) &&
           @collection = transactions['change_set.create_collection']
+                        .with_step_args(
+                          'change_set.set_user_as_depositor' => { user: current_user }
+                        )
                         .call(form)
                         .value_or { return after_create_error }
 
