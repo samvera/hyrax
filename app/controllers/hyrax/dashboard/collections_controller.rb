@@ -219,7 +219,8 @@ module Hyrax
         form.validate(collection_params) &&
           @collection = transactions['change_set.create_collection']
                         .with_step_args(
-                          'change_set.set_user_as_depositor' => { user: current_user }
+                          'change_set.set_user_as_depositor' => { user: current_user },
+                          'collection_resource.apply_collection_type_permissions' => { user: current_user }
                         )
                         .call(form)
                         .value_or { return after_create_error }
