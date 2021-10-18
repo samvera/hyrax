@@ -72,6 +72,13 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       expect(assigns[:collection].creator).to eq []
     end
 
+    it "sets current user as the depositor" do
+      expect { post :create, params: { collection: collection_attrs } }
+        .to change { Collection.count }.by(1)
+
+      expect(assigns[:collection].depositor).to eq user.user_key
+    end
+
     context "with files I can access" do
       it "creates a collection using only the accessible files" do
         parameters = { collection: collection_attrs,
