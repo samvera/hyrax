@@ -10,6 +10,21 @@ RSpec.describe Hyrax::Ability, :clean_repo do
   let(:collection_type) { FactoryBot.create(:collection_type) }
   let(:collection_type_gid) { collection_type.to_global_id }
 
+  # rubocop:disable RSpec/InstanceVariable
+  before :all do
+    @current_collection_model = Hyrax.config.collection_model
+
+    # abilities always test Hyrax::PcdmCollection, but only test Collection
+    # if it is configured as the collection_model
+    Hyrax.config.collection_model = 'Collection'
+  end
+
+  after :all do
+    Hyrax.config.collection_model = @current_collection_model
+  end
+  # rubocop:enable RSpec/InstanceVariable
+
+  # rubocop:disable RSpec/ExampleLength
   context 'when admin user' do
     let(:current_user) { admin }
     let(:admin) { FactoryBot.create(:admin, email: 'admin@example.com') }
@@ -23,23 +38,23 @@ RSpec.describe Hyrax::Ability, :clean_repo do
       end
       let!(:solr_document) { SolrDocument.new(collection.to_solr) }
 
-      context 'for abilities open to admins' do
-        it { is_expected.to be_able_to(:manage, Collection) }
-        it { is_expected.to be_able_to(:manage_any, Collection) }
-        it { is_expected.to be_able_to(:create_any, Collection) }
-        it { is_expected.to be_able_to(:view_admin_show_any, Collection) }
-        it { is_expected.to be_able_to(:edit, collection) }
-        it { is_expected.to be_able_to(:edit, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.to be_able_to(:update, collection) }
-        it { is_expected.to be_able_to(:update, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.to be_able_to(:destroy, collection) }
-        it { is_expected.to be_able_to(:destroy, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.to be_able_to(:deposit, collection) }
-        it { is_expected.to be_able_to(:deposit, solr_document) }
-        it { is_expected.to be_able_to(:view_admin_show, collection) }
-        it { is_expected.to be_able_to(:view_admin_show, solr_document) }
-        it { is_expected.to be_able_to(:read, collection) }
-        it { is_expected.to be_able_to(:read, solr_document) } # defined in solr_document_ability.rb
+      it 'can do everything' do
+        is_expected.to be_able_to(:manage, Collection)
+        is_expected.to be_able_to(:manage_any, Collection)
+        is_expected.to be_able_to(:create_any, Collection)
+        is_expected.to be_able_to(:view_admin_show_any, Collection)
+        is_expected.to be_able_to(:edit, collection)
+        is_expected.to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb
+        is_expected.to be_able_to(:update, collection)
+        is_expected.to be_able_to(:update, solr_document) # defined in solr_document_ability.rb
+        is_expected.to be_able_to(:destroy, collection)
+        is_expected.to be_able_to(:destroy, solr_document) # defined in solr_document_ability.rb
+        is_expected.to be_able_to(:deposit, collection)
+        is_expected.to be_able_to(:deposit, solr_document)
+        is_expected.to be_able_to(:view_admin_show, collection)
+        is_expected.to be_able_to(:view_admin_show, solr_document)
+        is_expected.to be_able_to(:read, collection)
+        is_expected.to be_able_to(:read, solr_document) # defined in solr_document_ability.rb
       end
     end
 
@@ -51,23 +66,23 @@ RSpec.describe Hyrax::Ability, :clean_repo do
       end
       let!(:solr_document) { SolrDocument.new(Hyrax::PcdmCollectionIndexer.new(resource: collection).to_solr) }
 
-      context 'for abilities open to admins' do
-        it { is_expected.to be_able_to(:manage, Hyrax::PcdmCollection) }
-        it { is_expected.to be_able_to(:manage_any, Hyrax::PcdmCollection) }
-        it { is_expected.to be_able_to(:create_any, Hyrax::PcdmCollection) }
-        it { is_expected.to be_able_to(:view_admin_show_any, Collection) }
-        it { is_expected.to be_able_to(:edit, collection) }
-        it { is_expected.to be_able_to(:edit, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.to be_able_to(:update, collection) }
-        it { is_expected.to be_able_to(:update, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.to be_able_to(:destroy, collection) }
-        it { is_expected.to be_able_to(:destroy, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.to be_able_to(:deposit, collection) }
-        it { is_expected.to be_able_to(:deposit, solr_document) }
-        it { is_expected.to be_able_to(:view_admin_show, collection) }
-        it { is_expected.to be_able_to(:view_admin_show, solr_document) }
-        it { is_expected.to be_able_to(:read, collection) }
-        it { is_expected.to be_able_to(:read, solr_document) } # defined in solr_document_ability.rb
+      it 'can do everything' do
+        is_expected.to be_able_to(:manage, Hyrax::PcdmCollection)
+        is_expected.to be_able_to(:manage_any, Hyrax::PcdmCollection)
+        is_expected.to be_able_to(:create_any, Hyrax::PcdmCollection)
+        is_expected.to be_able_to(:view_admin_show_any, Hyrax::PcdmCollection)
+        is_expected.to be_able_to(:edit, collection)
+        is_expected.to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb
+        is_expected.to be_able_to(:update, collection)
+        is_expected.to be_able_to(:update, solr_document) # defined in solr_document_ability.rb
+        is_expected.to be_able_to(:destroy, collection)
+        is_expected.to be_able_to(:destroy, solr_document) # defined in solr_document_ability.rb
+        is_expected.to be_able_to(:deposit, collection)
+        is_expected.to be_able_to(:deposit, solr_document)
+        is_expected.to be_able_to(:view_admin_show, collection)
+        is_expected.to be_able_to(:view_admin_show, solr_document)
+        is_expected.to be_able_to(:read, collection)
+        is_expected.to be_able_to(:read, solr_document) # defined in solr_document_ability.rb
       end
     end
   end
@@ -94,25 +109,25 @@ RSpec.describe Hyrax::Ability, :clean_repo do
         collection.reset_access_controls!
       end
 
-      context 'for abilities open to managers' do
-        it { is_expected.to be_able_to(:manage_any, Collection) }
-        it { is_expected.to be_able_to(:view_admin_show_any, Collection) }
-        it { is_expected.to be_able_to(:edit, collection) }
-        it { is_expected.to be_able_to(:edit, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.to be_able_to(:update, collection) }
-        it { is_expected.to be_able_to(:update, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.to be_able_to(:destroy, collection) }
-        it { is_expected.to be_able_to(:destroy, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.to be_able_to(:deposit, collection) }
-        it { is_expected.to be_able_to(:deposit, solr_document) }
-        it { is_expected.to be_able_to(:view_admin_show, collection) }
-        it { is_expected.to be_able_to(:view_admin_show, solr_document) }
-        it { is_expected.to be_able_to(:read, collection) } # edit access grants read and write
-        it { is_expected.to be_able_to(:read, solr_document) } # defined in solr_document_ability.rb
+      it 'can do everything for the collection they manage' do
+        is_expected.to be_able_to(:manage_any, Collection)
+        is_expected.to be_able_to(:view_admin_show_any, Collection)
+        is_expected.to be_able_to(:edit, collection)
+        is_expected.to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb
+        is_expected.to be_able_to(:update, collection)
+        is_expected.to be_able_to(:update, solr_document) # defined in solr_document_ability.rb
+        is_expected.to be_able_to(:destroy, collection)
+        is_expected.to be_able_to(:destroy, solr_document) # defined in solr_document_ability.rb
+        is_expected.to be_able_to(:deposit, collection)
+        is_expected.to be_able_to(:deposit, solr_document)
+        is_expected.to be_able_to(:view_admin_show, collection)
+        is_expected.to be_able_to(:view_admin_show, solr_document)
+        is_expected.to be_able_to(:read, collection) # edit access grants read and write
+        is_expected.to be_able_to(:read, solr_document) # defined in solr_document_ability.rb
       end
 
-      context 'for abilities NOT open to managers' do
-        it { is_expected.not_to be_able_to(:manage, Collection) }
+      it 'cannot manage all collections' do
+        is_expected.not_to be_able_to(:manage, Collection)
       end
     end
 
@@ -135,25 +150,25 @@ RSpec.describe Hyrax::Ability, :clean_repo do
         ]
       end
 
-      context 'for abilities open to managers' do
-        it { is_expected.to be_able_to(:manage_any, Hyrax::PcdmCollection) }
-        it { is_expected.to be_able_to(:view_admin_show_any, Hyrax::PcdmCollection) }
-        it { is_expected.to be_able_to(:edit, collection) }
-        it { is_expected.to be_able_to(:edit, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.to be_able_to(:update, collection) }
-        it { is_expected.to be_able_to(:update, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.to be_able_to(:destroy, collection) }
-        it { is_expected.to be_able_to(:destroy, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.to be_able_to(:deposit, collection) }
-        it { is_expected.to be_able_to(:deposit, solr_document) }
-        it { is_expected.to be_able_to(:view_admin_show, collection) }
-        it { is_expected.to be_able_to(:view_admin_show, solr_document) }
-        it { is_expected.to be_able_to(:read, collection) } # edit access grants read and write
-        it { is_expected.to be_able_to(:read, solr_document) } # defined in solr_document_ability.rb
+      it 'can do everything for the collection they manage' do
+        is_expected.to be_able_to(:manage_any, Hyrax::PcdmCollection)
+        is_expected.to be_able_to(:view_admin_show_any, Hyrax::PcdmCollection)
+        is_expected.to be_able_to(:edit, collection)
+        is_expected.to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb
+        is_expected.to be_able_to(:update, collection)
+        is_expected.to be_able_to(:update, solr_document) # defined in solr_document_ability.rb
+        is_expected.to be_able_to(:destroy, collection)
+        is_expected.to be_able_to(:destroy, solr_document) # defined in solr_document_ability.rb
+        is_expected.to be_able_to(:deposit, collection)
+        is_expected.to be_able_to(:deposit, solr_document)
+        is_expected.to be_able_to(:view_admin_show, collection)
+        is_expected.to be_able_to(:view_admin_show, solr_document)
+        is_expected.to be_able_to(:read, collection) # edit access grants read and write
+        is_expected.to be_able_to(:read, solr_document) # defined in solr_document_ability.rb
       end
 
-      context 'for abilities NOT open to managers' do
-        it { is_expected.not_to be_able_to(:manage, Hyrax::PcdmCollection) }
+      it 'cannot manage all collections' do
+        is_expected.not_to be_able_to(:manage, Hyrax::PcdmCollection)
       end
     end
   end
@@ -180,25 +195,25 @@ RSpec.describe Hyrax::Ability, :clean_repo do
         collection.reset_access_controls!
       end
 
-      context 'for abilities open to depositor' do
-        it { is_expected.to be_able_to(:view_admin_show_any, Collection) }
-        it { is_expected.to be_able_to(:deposit, collection) }
-        it { is_expected.to be_able_to(:deposit, solr_document) }
-        it { is_expected.to be_able_to(:view_admin_show, collection) }
-        it { is_expected.to be_able_to(:view_admin_show, solr_document) }
-        it { is_expected.to be_able_to(:read, collection) }
-        it { is_expected.to be_able_to(:read, solr_document) } # defined in solr_document_ability.rb
+      it 'can view and deposit in the collection where they are a depositor' do
+        is_expected.to be_able_to(:view_admin_show_any, Collection)
+        is_expected.to be_able_to(:deposit, collection)
+        is_expected.to be_able_to(:deposit, solr_document)
+        is_expected.to be_able_to(:view_admin_show, collection)
+        is_expected.to be_able_to(:view_admin_show, solr_document)
+        is_expected.to be_able_to(:read, collection)
+        is_expected.to be_able_to(:read, solr_document) # defined in solr_document_ability.rb
       end
 
-      context 'for abilities NOT open to depositor' do
-        it { is_expected.not_to be_able_to(:manage, Collection) }
-        it { is_expected.not_to be_able_to(:manage_any, Collection) }
-        it { is_expected.not_to be_able_to(:edit, collection) }
-        it { is_expected.not_to be_able_to(:edit, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.not_to be_able_to(:update, collection) }
-        it { is_expected.not_to be_able_to(:update, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.not_to be_able_to(:destroy, collection) }
-        it { is_expected.not_to be_able_to(:destroy, solr_document) } # defined in solr_document_ability.rb
+      it 'cannot edit or update collections where they are a depositor' do
+        is_expected.not_to be_able_to(:manage, Collection)
+        is_expected.not_to be_able_to(:manage_any, Collection)
+        is_expected.not_to be_able_to(:edit, collection)
+        is_expected.not_to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb
+        is_expected.not_to be_able_to(:update, collection)
+        is_expected.not_to be_able_to(:update, solr_document) # defined in solr_document_ability.rb
+        is_expected.not_to be_able_to(:destroy, collection)
+        is_expected.not_to be_able_to(:destroy, solr_document) # defined in solr_document_ability.rb
       end
     end
 
@@ -221,25 +236,25 @@ RSpec.describe Hyrax::Ability, :clean_repo do
         ]
       end
 
-      context 'for abilities open to depositor' do
-        it { is_expected.to be_able_to(:view_admin_show_any, Collection) }
-        it { is_expected.to be_able_to(:deposit, collection) }
-        it { is_expected.to be_able_to(:deposit, solr_document) }
-        it { is_expected.to be_able_to(:view_admin_show, collection) }
-        it { is_expected.to be_able_to(:view_admin_show, solr_document) }
-        it { is_expected.to be_able_to(:read, collection) }
-        it { is_expected.to be_able_to(:read, solr_document) } # defined in solr_document_ability.rb
+      it 'can view and deposit in the collection where they are a depositor' do
+        is_expected.to be_able_to(:view_admin_show_any, Hyrax::PcdmCollection)
+        is_expected.to be_able_to(:deposit, collection)
+        is_expected.to be_able_to(:deposit, solr_document)
+        is_expected.to be_able_to(:view_admin_show, collection)
+        is_expected.to be_able_to(:view_admin_show, solr_document)
+        is_expected.to be_able_to(:read, collection)
+        is_expected.to be_able_to(:read, solr_document) # defined in solr_document_ability.rb
       end
 
-      context 'for abilities NOT open to depositor' do
-        it { is_expected.not_to be_able_to(:manage, Collection) }
-        it { is_expected.not_to be_able_to(:manage_any, Collection) }
-        it { is_expected.not_to be_able_to(:edit, collection) }
-        it { is_expected.not_to be_able_to(:edit, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.not_to be_able_to(:update, collection) }
-        it { is_expected.not_to be_able_to(:update, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.not_to be_able_to(:destroy, collection) }
-        it { is_expected.not_to be_able_to(:destroy, solr_document) } # defined in solr_document_ability.rb
+      it 'cannot edit or update collections where they are a depositor' do
+        is_expected.not_to be_able_to(:manage, Hyrax::PcdmCollection)
+        is_expected.not_to be_able_to(:manage_any, Hyrax::PcdmCollection)
+        is_expected.not_to be_able_to(:edit, collection)
+        is_expected.not_to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb
+        is_expected.not_to be_able_to(:update, collection)
+        is_expected.not_to be_able_to(:update, solr_document) # defined in solr_document_ability.rb
+        is_expected.not_to be_able_to(:destroy, collection)
+        is_expected.not_to be_able_to(:destroy, solr_document) # defined in solr_document_ability.rb
       end
     end
   end
@@ -266,25 +281,25 @@ RSpec.describe Hyrax::Ability, :clean_repo do
         collection.reset_access_controls!
       end
 
-      context 'for abilities open to viewer' do
-        it { is_expected.to be_able_to(:view_admin_show_any, Collection) }
-        it { is_expected.to be_able_to(:view_admin_show, collection) }
-        it { is_expected.to be_able_to(:view_admin_show, solr_document) }
-        it { is_expected.to be_able_to(:read, collection) }
-        it { is_expected.to be_able_to(:read, solr_document) }
+      it 'can view the collection where they are a viewer' do
+        is_expected.to be_able_to(:view_admin_show_any, Collection)
+        is_expected.to be_able_to(:view_admin_show, collection)
+        is_expected.to be_able_to(:view_admin_show, solr_document)
+        is_expected.to be_able_to(:read, collection)
+        is_expected.to be_able_to(:read, solr_document)
       end
 
-      context 'for abilities NOT open to viewer' do
-        it { is_expected.not_to be_able_to(:manage, Collection) }
-        it { is_expected.not_to be_able_to(:manage_any, Collection) }
-        it { is_expected.not_to be_able_to(:edit, collection) }
-        it { is_expected.not_to be_able_to(:edit, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.not_to be_able_to(:update, collection) }
-        it { is_expected.not_to be_able_to(:update, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.not_to be_able_to(:destroy, collection) }
-        it { is_expected.not_to be_able_to(:destroy, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.not_to be_able_to(:deposit, collection) }
-        it { is_expected.not_to be_able_to(:deposit, solr_document) }
+      it 'cannot modify in any way collections where they are a viewer' do
+        is_expected.not_to be_able_to(:manage, Collection)
+        is_expected.not_to be_able_to(:manage_any, Collection)
+        is_expected.not_to be_able_to(:edit, collection)
+        is_expected.not_to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb
+        is_expected.not_to be_able_to(:update, collection)
+        is_expected.not_to be_able_to(:update, solr_document) # defined in solr_document_ability.rb
+        is_expected.not_to be_able_to(:destroy, collection)
+        is_expected.not_to be_able_to(:destroy, solr_document) # defined in solr_document_ability.rb
+        is_expected.not_to be_able_to(:deposit, collection)
+        is_expected.not_to be_able_to(:deposit, solr_document)
       end
     end
 
@@ -307,25 +322,25 @@ RSpec.describe Hyrax::Ability, :clean_repo do
         ]
       end
 
-      context 'for abilities open to viewer' do
-        it { is_expected.to be_able_to(:view_admin_show_any, Hyrax::PcdmCollection) }
-        it { is_expected.to be_able_to(:view_admin_show, collection) }
-        it { is_expected.to be_able_to(:view_admin_show, solr_document) }
-        it { is_expected.to be_able_to(:read, collection) }
-        it { is_expected.to be_able_to(:read, solr_document) }
+      it 'can view the collection where they are a viewer' do
+        is_expected.to be_able_to(:view_admin_show_any, Hyrax::PcdmCollection)
+        is_expected.to be_able_to(:view_admin_show, collection)
+        is_expected.to be_able_to(:view_admin_show, solr_document)
+        is_expected.to be_able_to(:read, collection)
+        is_expected.to be_able_to(:read, solr_document)
       end
 
-      context 'for abilities NOT open to viewer' do
-        it { is_expected.not_to be_able_to(:manage, Hyrax::PcdmCollection) }
-        it { is_expected.not_to be_able_to(:manage_any, Hyrax::PcdmCollection) }
-        it { is_expected.not_to be_able_to(:edit, collection) }
-        it { is_expected.not_to be_able_to(:edit, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.not_to be_able_to(:update, collection) }
-        it { is_expected.not_to be_able_to(:update, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.not_to be_able_to(:destroy, collection) }
-        it { is_expected.not_to be_able_to(:destroy, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.not_to be_able_to(:deposit, collection) }
-        it { is_expected.not_to be_able_to(:deposit, solr_document) }
+      it 'cannot modify in any way collections where they are a viewer' do
+        is_expected.not_to be_able_to(:manage, Hyrax::PcdmCollection)
+        is_expected.not_to be_able_to(:manage_any, Hyrax::PcdmCollection)
+        is_expected.not_to be_able_to(:edit, collection)
+        is_expected.not_to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb
+        is_expected.not_to be_able_to(:update, collection)
+        is_expected.not_to be_able_to(:update, solr_document) # defined in solr_document_ability.rb
+        is_expected.not_to be_able_to(:destroy, collection)
+        is_expected.not_to be_able_to(:destroy, solr_document) # defined in solr_document_ability.rb
+        is_expected.not_to be_able_to(:deposit, collection)
+        is_expected.not_to be_able_to(:deposit, solr_document)
       end
     end
   end
@@ -343,22 +358,22 @@ RSpec.describe Hyrax::Ability, :clean_repo do
       end
       let!(:solr_document) { SolrDocument.new(collection.to_solr) }
 
-      context 'for abilities NOT open to general user' do
-        it { is_expected.not_to be_able_to(:manage, Collection) }
-        it { is_expected.not_to be_able_to(:manage_any, Collection) }
-        it { is_expected.not_to be_able_to(:view_admin_show_any, Collection) }
-        it { is_expected.not_to be_able_to(:edit, collection) }
-        it { is_expected.not_to be_able_to(:edit, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.not_to be_able_to(:update, collection) }
-        it { is_expected.not_to be_able_to(:update, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.not_to be_able_to(:destroy, collection) }
-        it { is_expected.not_to be_able_to(:destroy, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.not_to be_able_to(:deposit, collection) }
-        it { is_expected.not_to be_able_to(:deposit, solr_document) }
-        it { is_expected.not_to be_able_to(:view_admin_show, collection) }
-        it { is_expected.not_to be_able_to(:view_admin_show, solr_document) }
-        it { is_expected.not_to be_able_to(:read, collection) }
-        it { is_expected.not_to be_able_to(:read, solr_document) } # defined in solr_document_ability.rb
+      it 'cannot view or modify in any way collections with restricted access' do
+        is_expected.not_to be_able_to(:manage, Collection)
+        is_expected.not_to be_able_to(:manage_any, Collection)
+        is_expected.not_to be_able_to(:view_admin_show_any, Collection)
+        is_expected.not_to be_able_to(:edit, collection)
+        is_expected.not_to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb
+        is_expected.not_to be_able_to(:update, collection)
+        is_expected.not_to be_able_to(:update, solr_document) # defined in solr_document_ability.rb
+        is_expected.not_to be_able_to(:destroy, collection)
+        is_expected.not_to be_able_to(:destroy, solr_document) # defined in solr_document_ability.rb
+        is_expected.not_to be_able_to(:deposit, collection)
+        is_expected.not_to be_able_to(:deposit, solr_document)
+        is_expected.not_to be_able_to(:view_admin_show, collection)
+        is_expected.not_to be_able_to(:view_admin_show, solr_document)
+        is_expected.not_to be_able_to(:read, collection)
+        is_expected.not_to be_able_to(:read, solr_document) # defined in solr_document_ability.rb
       end
     end
 
@@ -370,22 +385,22 @@ RSpec.describe Hyrax::Ability, :clean_repo do
       end
       let!(:solr_document) { SolrDocument.new(Hyrax::PcdmCollectionIndexer.new(resource: collection).to_solr) }
 
-      context 'for abilities NOT open to general user' do
-        it { is_expected.not_to be_able_to(:manage, Collection) }
-        it { is_expected.not_to be_able_to(:manage_any, Collection) }
-        it { is_expected.not_to be_able_to(:view_admin_show_any, Collection) }
-        it { is_expected.not_to be_able_to(:edit, collection) }
-        it { is_expected.not_to be_able_to(:edit, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.not_to be_able_to(:update, collection) }
-        it { is_expected.not_to be_able_to(:update, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.not_to be_able_to(:destroy, collection) }
-        it { is_expected.not_to be_able_to(:destroy, solr_document) } # defined in solr_document_ability.rb
-        it { is_expected.not_to be_able_to(:deposit, collection) }
-        it { is_expected.not_to be_able_to(:deposit, solr_document) }
-        it { is_expected.not_to be_able_to(:view_admin_show, collection) }
-        it { is_expected.not_to be_able_to(:view_admin_show, solr_document) }
-        it { is_expected.not_to be_able_to(:read, collection) }
-        it { is_expected.not_to be_able_to(:read, solr_document) } # defined in solr_document_ability.rb
+      it 'cannot view or modify in any way collections with restricted access' do
+        is_expected.not_to be_able_to(:manage, Hyrax::PcdmCollection)
+        is_expected.not_to be_able_to(:manage_any, Hyrax::PcdmCollection)
+        is_expected.not_to be_able_to(:view_admin_show_any, Hyrax::PcdmCollection)
+        is_expected.not_to be_able_to(:edit, collection)
+        is_expected.not_to be_able_to(:edit, solr_document) # defined in solr_document_ability.rb
+        is_expected.not_to be_able_to(:update, collection)
+        is_expected.not_to be_able_to(:update, solr_document) # defined in solr_document_ability.rb
+        is_expected.not_to be_able_to(:destroy, collection)
+        is_expected.not_to be_able_to(:destroy, solr_document) # defined in solr_document_ability.rb
+        is_expected.not_to be_able_to(:deposit, collection)
+        is_expected.not_to be_able_to(:deposit, solr_document)
+        is_expected.not_to be_able_to(:view_admin_show, collection)
+        is_expected.not_to be_able_to(:view_admin_show, solr_document)
+        is_expected.not_to be_able_to(:read, collection)
+        is_expected.not_to be_able_to(:read, solr_document) # defined in solr_document_ability.rb
       end
     end
   end
@@ -418,4 +433,5 @@ RSpec.describe Hyrax::Ability, :clean_repo do
       end
     end
   end
+  # rubocop:enable RSpec/ExampleLength
 end
