@@ -53,7 +53,7 @@ module Hyrax
 
     def collection_classes
       return [] if only_works?
-      [::Collection, Hyrax.config.collection_class].uniq
+      Hyrax.collection_classes
     end
   end
 end

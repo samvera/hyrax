@@ -285,7 +285,7 @@ module Hyrax
 
     # Used by the gallery view
     def collection_thumbnail(_document, _image_options = {}, _url_options = {})
-      tag.span("", class: [Hyrax::ModelIcon.css_class_for(::Collection), "collection-icon-search"])
+      tag.span("", class: [Hyrax::ModelIcon.css_class_for(Hyrax.config.collection_class), "collection-icon-search"])
     end
 
     def collection_title_by_id(id)

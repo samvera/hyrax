@@ -4,5 +4,5 @@
                 alt: "",
                 role: "presentation" %>
 <% else %>
-  <span class="<%= Hyrax::ModelIcon.css_class_for(::Collection) %> collection-icon-search" aria-hidden="true"></span>
+  <span class="<%= Hyrax::ModelIcon.css_class_for(Hyrax.config.collection_class) %> collection-icon-search" aria-hidden="true"></span>
 <% end %>

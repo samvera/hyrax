@@ -21,7 +21,7 @@
     <div class="thumbnail-title-wrapper">
       <div class="thumbnail-wrapper">
         <% if (collection_presenter.thumbnail_path == nil) %>
-          <span class="<%= Hyrax::ModelIcon.css_class_for(::Collection) %> collection-icon-small"></span>
+          <span class="<%= Hyrax::ModelIcon.css_class_for(Hyrax.config.collection_class) %> collection-icon-small"></span>
         <% else %>
           <%= image_tag(collection_presenter.thumbnail_path, alt: "#{collection_presenter.title_or_label} #{t('hyrax.dashboard.my.sr.thumbnail')}") %>
         <% end %>

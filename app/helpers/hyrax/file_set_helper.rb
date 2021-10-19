@@ -14,7 +14,7 @@ module Hyrax::FileSetHelper
   end
 
   def parent_path(parent)
-    if parent.is_a?(::Collection)
+    if parent.collection?
       main_app.collection_path(parent)
     else
       polymorphic_path([main_app, parent])
