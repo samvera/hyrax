@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ModuleLength
 module Hyrax
   module Analytics
     module Matomo
@@ -189,3 +190,4 @@ module Hyrax
     end
   end
 end
+# rubocop:enable Metrics/ModuleLength
