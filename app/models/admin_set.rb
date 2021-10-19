@@ -61,6 +61,11 @@ class AdminSet < ActiveFedora::Base
     Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s
   end
 
+  def collection_type_gid
+    # allow AdminSet to behave more like a regular Collection
+    Hyrax::CollectionType.find_or_create_admin_set_type.to_global_id
+  end
+
   def to_s
     title.presence || 'No Title'
   end

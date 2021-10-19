@@ -12,7 +12,7 @@ module Hyrax
         # @param grants [Array<Hash>] additional grants to apply to the new collection
         # @return [Hyrax::PermissionTemplate]
         def create_default(collection:, creating_user:, grants: [])
-          collection_type = collection_type(collection: collection)
+          collection_type = Hyrax::CollectionType.find_by_gid!(collection.collection_type_gid)
           access_grants = access_grants_attributes(collection_type: collection_type, creating_user: creating_user, grants: grants)
           template = PermissionTemplate.create!(source_id: collection.id.to_s,
                                                 access_grants_attributes: access_grants.uniq)
@@ -90,20 +90,6 @@ module Hyrax
         # @return [String] a string representation of the admin group name
         def admin_group_name
           ::Ability.admin_group_name
-        end
-
-        # @api private
-        #
-        # The collection_type for the collection
-        # @param collection [#collection_type_gid || Hyrax::AdministrativeSet] the collection or admin set the new permissions will act on
-        # @return [Hyrax::CollectionType] a string representation of the admin group name
-        def collection_type(collection:)
-          return Hyrax::CollectionType.find_or_create_admin_set_type if admin_set? collection
-          Hyrax::CollectionType.find_by_gid!(collection.collection_type_gid)
-        end
-
-        def admin_set?(collection)
-          collection.is_a?(Hyrax::AdministrativeSet) || collection.is_a?(AdminSet)
         end
       end
     end
