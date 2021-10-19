@@ -137,7 +137,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       context "and collection type has permissions" do
         describe ".create_default" do
           let(:manager) { create(:user, email: 'manager@example.com') }
-          let!(:collection_type) { create(:collection_type, manager_user: manager.user_key) }
+          let(:collection_type) { FactoryBot.create(:collection_type, manager_user: manager.user_key) }
 
           it "copies collection type permissions to collection" do
             parameters = { collection: collection_attrs,
