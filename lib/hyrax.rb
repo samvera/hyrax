@@ -140,4 +140,12 @@ module Hyrax
   def self.custom_queries
     query_service.custom_queries
   end
+
+  ##
+  # @return [Array<Class>] all possible collection classes
+  def self.collection_classes
+    klasses = [Hyrax.config.collection_class, Hyrax::PcdmCollection]
+    klasses << ::Collection if defined? ::Collection
+    klasses.uniq
+  end
 end
