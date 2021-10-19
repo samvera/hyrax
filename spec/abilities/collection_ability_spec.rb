@@ -5,7 +5,7 @@ RSpec.describe Hyrax::Ability, :clean_repo do
   subject { ability }
 
   let(:ability) { Ability.new(current_user) }
-  let(:user) { create(:user, email: 'user@example.com') }
+  let(:user) { FactoryBot.create(:user, email: 'user@example.com') }
   let(:current_user) { user }
   let(:collection_type) { FactoryBot.create(:collection_type) }
   let(:collection_type_gid) { collection_type.to_global_id }
@@ -89,7 +89,7 @@ RSpec.describe Hyrax::Ability, :clean_repo do
 
   context 'when collection manager' do
     let(:current_user) { manager }
-    let(:manager) { create(:user, email: 'manager@example.com') }
+    let(:manager) { FactoryBot.create(:user, email: 'manager@example.com') }
 
     context 'and collection is an ActiveFedora::Base' do
       let!(:collection) do
@@ -101,11 +101,11 @@ RSpec.describe Hyrax::Ability, :clean_repo do
       let!(:solr_document) { SolrDocument.new(collection.to_solr) }
 
       before do
-        create(:permission_template_access,
-                 :manage,
-                 permission_template: collection.permission_template,
-                 agent_type: 'user',
-                 agent_id: manager.user_key)
+        FactoryBot.create(:permission_template_access,
+                          :manage,
+                          permission_template: collection.permission_template,
+                          agent_type: 'user',
+                          agent_id: manager.user_key)
         collection.reset_access_controls!
       end
 
@@ -175,7 +175,7 @@ RSpec.describe Hyrax::Ability, :clean_repo do
 
   context 'when collection depositor' do
     let(:current_user) { depositor }
-    let(:depositor) { create(:user, email: 'depositor@example.com') }
+    let(:depositor) { FactoryBot.create(:user, email: 'depositor@example.com') }
 
     context 'and collection is an ActiveFedora::Base' do
       let!(:collection) do
@@ -187,11 +187,11 @@ RSpec.describe Hyrax::Ability, :clean_repo do
       let!(:solr_document) { SolrDocument.new(collection.to_solr) }
 
       before do
-        create(:permission_template_access,
-               :deposit,
-               permission_template: collection.permission_template,
-               agent_type: 'user',
-               agent_id: depositor.user_key)
+        FactoryBot.create(:permission_template_access,
+                          :deposit,
+                          permission_template: collection.permission_template,
+                          agent_type: 'user',
+                          agent_id: depositor.user_key)
         collection.reset_access_controls!
       end
 
@@ -261,7 +261,7 @@ RSpec.describe Hyrax::Ability, :clean_repo do
 
   context 'when collection viewer' do
     let(:current_user) { viewer }
-    let(:viewer) { create(:user, email: 'viewer@example.com') }
+    let(:viewer) { FactoryBot.create(:user, email: 'viewer@example.com') }
 
     context 'and collection is an ActiveFedora::Base' do
       let!(:collection) do
@@ -273,11 +273,11 @@ RSpec.describe Hyrax::Ability, :clean_repo do
       let!(:solr_document) { SolrDocument.new(collection.to_solr) }
 
       before do
-        create(:permission_template_access,
-               :view,
-               permission_template: collection.permission_template,
-               agent_type: 'user',
-               agent_id: viewer.user_key)
+        FactoryBot.create(:permission_template_access,
+                          :view,
+                          permission_template: collection.permission_template,
+                          agent_type: 'user',
+                          agent_id: viewer.user_key)
         collection.reset_access_controls!
       end
 
@@ -347,7 +347,7 @@ RSpec.describe Hyrax::Ability, :clean_repo do
 
   context 'when user has no special access' do
     let(:current_user) { other_user }
-    let(:other_user) { create(:user, email: 'other_user@example.com') }
+    let(:other_user) { FactoryBot.create(:user, email: 'other_user@example.com') }
 
     context 'and collection is an ActiveFedora::Base' do
       let!(:collection) do
@@ -426,7 +426,7 @@ RSpec.describe Hyrax::Ability, :clean_repo do
     end
 
     context 'when there are collection types that have create access' do
-      before { create(:user_collection_type) }
+      before { FactoryBot.create(:user_collection_type) }
 
       it 'allows create_any' do
         is_expected.to be_able_to(:create_any, Collection)
