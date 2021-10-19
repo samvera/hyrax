@@ -10,9 +10,20 @@ module Hyrax
     attribute :creator,           Valkyrie::Types::Set.of(Valkyrie::Types::String)
     attribute :description,       Valkyrie::Types::Set.of(Valkyrie::Types::String)
 
+    ##
+    # @note all admin sets have the same collection type, so we don't store
+    #   this data. however, we want a reader so type lookup behaves the same
+    #   as for other collections.
+    # @return [GlobalID]
     def collection_type_gid
-      # allow AdministrativeSet to behave more like a regular PcdmCollection
-      Hyrax::CollectionType.find_or_create_admin_set_type.to_global_id
+      self.class.collection_type_gid
+    end
+
+    def self.collection_type_gid
+      GlobalID.new(URI::GID.build([GlobalID.app,
+                                   Hyrax::CollectionType.name,
+                                   Hyrax.admin_set_collection_type_id,
+                                   {}]))
     end
   end
 end

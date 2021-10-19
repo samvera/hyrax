@@ -105,6 +105,7 @@ ActiveJob::Base.queue_adapter = :test
 
 def clean_active_fedora_repository
   ActiveFedora::Cleaner.clean!
+  Hyrax.instance_variable_set(:@_admin_set_collection_type_id, nil)
   # The JS is executed in a different thread, so that other thread
   # may think the root path has already been created:
   ActiveFedora.fedora.connection.send(:init_base_path)

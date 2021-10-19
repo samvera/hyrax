@@ -140,4 +140,11 @@ module Hyrax
   def self.custom_queries
     query_service.custom_queries
   end
+
+  ##
+  # @return [String] the primary key for the admin set collection type
+  def self.admin_set_collection_type_id
+    @_admin_set_collection_type_id ||=
+      Hyrax::CollectionType.find_or_create_admin_set_type.id
+  end
 end
