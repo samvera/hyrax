@@ -1107,19 +1107,6 @@ en:
         work_type: Work Type
         title: Work Types
         count: Count
-      collections_pinned:
-        title: Pinned Collections
-        collection_title: Collection title
-        last_updated: Last updated
-        works: Works
-        files: Files
-      collections:
-        title: Collections
-        collection_title: Collection title
-        last_updated: Last updated
-        recent_activity: Recent activity
-        works: Works
-        files: Files
       show_admin:
         current_registered_users: Current
         new_visitors: New Visitors
