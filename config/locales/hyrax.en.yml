@@ -415,16 +415,6 @@ en:
         workflow_roles: Workflow Roles
         works: Works
         works_listing: Works listing
-    stats: 
-      work:
-        header: Work Analytics
-        pageviews: Pageviews
-        downloads: Downloads
-        and: and
-      pageviews: 
-        pageviews: Page Views
-      downloads:
-        downloads: Downloads
       stats:
         deposited_form:
           end_label: end [defaults to now]
@@ -470,6 +460,16 @@ en:
           tabs:
             published: Published
             under_review: Under Review
+    stats: 
+      work:
+        header: Work Analytics
+        pageviews: Pageviews
+        downloads: Downloads
+        and: and
+      pageviews: 
+        pageviews: Page Views
+      downloads:
+        downloads: Downloads
     api:
       accepted:
         default: Your request has been accepted for processing, but processing is not complete. See job for more info.
