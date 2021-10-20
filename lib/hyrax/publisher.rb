@@ -102,6 +102,10 @@ module Hyrax
     # @macro a_registered_event
     register_event('collection.membership.updated')
 
+    # @since 3.3.0
+    # @macro a_registered_event
+    register_event('file.downloaded')
+
     # @since 3.0.0
     # @macro a_registered_event
     register_event('file.set.audited')
