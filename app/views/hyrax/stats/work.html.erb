@@ -9,22 +9,22 @@
 
 <div class="row">
   <div class="col-sm-12">
-    <%= content_tag :h2, "Work Analytics" %>
+    <%= content_tag :h2, "#{t('.header')}" %>
     <div class="alert alert-info">
       <span class="glyphicon glyphicon-signal large-icon"></span>
-      <%= content_tag :strong, pluralize(@pageviews.range(Hyrax.config.analytics_start_date.to_date, Time.zone.today), 'total view') %> and
+      <%= content_tag :strong, pluralize(@pageviews.range(Hyrax.config.analytics_start_date.to_date, Time.zone.today), 'total view') %> <%= t('.and') %>
       <%= content_tag :strong, pluralize(@downloads.range(Hyrax.config.analytics_start_date.to_date, Time.zone.today), 'download') %> 
     </div>
 
     <div class="stats-container">
-      <h3 class="text-center">Pageviews</h3>
+      <h3 class="text-center"><%= t('.pageviews') %></h3>
       <div id="pageviews">
         <%= render 'pageviews' %>
       </div>
     </div>
 
     <div class="stats-container">
-      <h3 class="text-center">Downloads</h3>
+      <h3 class="text-center"><%= t('.downloads') %></h3>
       <div id="downloads">
         <%= render 'downloads' %>
       </div>

@@ -15,7 +15,7 @@
         ],
         xkey: 'date',
         ykeys: ['total_visits', 'new_visits', 'return_visits', 'users'],
-        labels: ['Total Visits', 'New Visits', 'Return Visits', 'Users'],
+        labels: ['<%= t('.total_visits') %>', '<%= t('.new_visits') %>', '<%= t('.return_visits') %>', '<%= t('.new_users') %>'],
         barColors: [
             '#005f73','#0a9396','#94d2bd','#e9d8a6',
             '#ee9b00','#ca6702','#bb3e03','#ae2012','#9b2226'
@@ -32,11 +32,11 @@
 <table aria-label="User Activity" class="table table-striped sr-only text-left">
   <thead>
     <tr>
-      <th>Date</th>
-      <th>Total Visits</th>
-      <th>New Visits</th>
-      <th>Return Visits</th>
-      <th>New Users</th>
+      <th><%= t('.date') %></th>
+      <th><%= t('.total_visits') %></th>
+      <th><%= t('.new_visits') %></th>
+      <th><%= t('.return_visits') %></th>
+      <th><%= t('.new_users') %></th>
     </tr>
   </thead>
   <tbody>
