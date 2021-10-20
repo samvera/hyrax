@@ -1,31 +1,66 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::AdminSetCreateService do
-  let(:user) { create(:user) }
+  let(:user) { FactoryBot.create(:user) }
 
   describe '.create_default_admin_set', :clean_repo do
-    let(:admin_set) { AdminSet.find(AdminSet::DEFAULT_ID) }
+    let(:admin_set) { FactoryBot.valkyrie_create(:default_hyrax_admin_set) }
 
-    # It is important to test the side-effects as a default admin set is a fundamental assumption for Hyrax.
-    it 'creates AdminSet, Hyrax::PermissionTemplate, Sipity::Workflow(s), and activates a Workflow', slow: true do
-      described_class.create_default_admin_set(admin_set_id: AdminSet::DEFAULT_ID, title: AdminSet::DEFAULT_TITLE)
-      expect(admin_set.permission_template).to be_persisted
-      expect(admin_set.active_workflow).to be_persisted
+    it 'creates the admin set' do
+      expect { Hyrax.query_service.find_by(id: AdminSet::DEFAULT_ID) }
+        .to raise_error(Valkyrie::Persistence::ObjectNotFoundError)
+
+      described_class.create_default_admin_set
+
+      expect(Hyrax.query_service.find_by(id: AdminSet::DEFAULT_ID))
+        .to have_attributes(edit_groups: contain_exactly('admin'))
+    end
+
+    it 'does not grant access to public' do
+      described_class.create_default_admin_set
+
+      expect(Hyrax.query_service.find_by(id: AdminSet::DEFAULT_ID).read_groups)
+        .not_to include('public')
+    end
+
+    it 'sets up an active workflow' do
+      described_class.create_default_admin_set
+
+      expect(Sipity::Workflow.find_active_workflow_for(admin_set_id: AdminSet::DEFAULT_ID))
+        .to be_persisted
+    end
+
+    it 'sets up a permission template' do
+      described_class.create_default_admin_set
+
+      expect(Hyrax::PermissionTemplate.find_by(source_id: AdminSet::DEFAULT_ID))
+        .to be_persisted
+    end
+
+    it 'gives permission template access grants to admin and registered' do
+      described_class.create_default_admin_set
+      template = Hyrax::PermissionTemplate.find_by(source_id: AdminSet::DEFAULT_ID)
+      expect(template.access_grants)
+        .to contain_exactly(have_attributes(agent_type: 'group', agent_id: 'admin', access: 'manage'),
+                            have_attributes(agent_type: 'group', agent_id: 'registered', access: 'deposit'))
+    end
+
+    it 'sets up workflow responsibilities' do
       # 7 responsibilities because:
       #  * 1 agent (admin group), multiplied by
       #  * 2 available workflows, multiplied by
       #  * 3 roles (from Hyrax::RoleRegistry), plus
       #  * 1 depositing role for the registered group in the default workflow, equals
       #  * 7
-      expect(Sipity::WorkflowResponsibility.count).to eq 7
-      expect(admin_set.read_groups).not_to include('public')
-      expect(admin_set.edit_groups).to eq ['admin']
-      # 2 access grants because:
-      #  * 1 providing deposit access to registered group
-      #  * 1 providing manage access to admin group
-      expect(admin_set.permission_template.access_grants.count).to eq 2
-      # Agents should be created for both the 'admin' and 'registered' groups
-      expect(Sipity::Agent.distinct.pluck(:proxy_for_id)).to include('admin', 'registered')
-      expect(Sipity::Agent.distinct.pluck(:proxy_for_type)).to include('Hyrax::Group')
+      expect { described_class.create_default_admin_set }
+        .to change { Sipity::WorkflowResponsibility.count }
+        .to eq 7
+    end
+
+    it 'creates Sipity::Agents for the admin and registered groups' do
+      described_class.create_default_admin_set
+
+      expect(Sipity::Agent.where(proxy_for_type: 'Hyrax::Group').pluck(:proxy_for_id))
+        .to include('admin', 'registered')
     end
   end
 
@@ -60,18 +95,12 @@ RSpec.describe Hyrax::AdminSetCreateService do
   end
 
   describe ".default_admin_set?" do
-    let(:admin_set) { build(:default_hyrax_admin_set) }
-    context "when admin_set is the default" do
-      it "returns true" do
-        expect(described_class.default_admin_set?(id: admin_set.id)).to eq true
-      end
+    it "is true for the default admin set id" do
+      expect(described_class.default_admin_set?(id: AdminSet::DEFAULT_ID)).to eq true
     end
 
-    context "when admin_set isn't the default" do
-      let(:admin_set) { build(:hyrax_admin_set, title: ['test']) }
-      it "returns false" do
-        expect(described_class.default_admin_set?(id: admin_set.id)).to eq false
-      end
+    it "is false for anything else" do
+      expect(described_class.default_admin_set?(id: 'anythingelse')).to eq false
     end
   end
 
@@ -84,7 +113,8 @@ RSpec.describe Hyrax::AdminSetCreateService do
       let(:admin_set) { AdminSet.new(id: AdminSet::DEFAULT_ID) }
 
       it 'will raise ActiveFedora::IllegalOperation if you attempt to a default admin set' do
-        expect { subject }.to raise_error(RuntimeError)
+        expect { described_class.call(admin_set: admin_set, creating_user: user) }
+          .to raise_error(RuntimeError)
       end
     end
 
@@ -92,22 +122,23 @@ RSpec.describe Hyrax::AdminSetCreateService do
       service = instance_double(described_class)
       expect(described_class).to receive(:new).and_return(service)
       expect(service).to receive(:create)
-      subject
+
+      described_class.call(admin_set: admin_set, creating_user: user)
     end
   end
 
   describe "an instance" do
-    subject { service }
+    subject(:service) do
+      described_class.new(admin_set: admin_set,
+                          creating_user: user,
+                          workflow_importer: workflow_importer)
+    end
 
     let(:workflow_importer) { double(call: true) }
     let(:admin_set) { AdminSet.new(title: ['test']) }
-    let(:service) { described_class.new(admin_set: admin_set, creating_user: user, workflow_importer: workflow_importer) }
-
     its(:default_workflow_importer) { is_expected.to respond_to(:call) }
 
     describe "#create" do
-      subject { service.create }
-
       context "when the admin_set is valid" do
         let(:permission_template) { Hyrax::PermissionTemplate.find_by(source_id: admin_set.id) }
         let(:grants) { permission_template.access_grants }
@@ -123,10 +154,12 @@ RSpec.describe Hyrax::AdminSetCreateService do
 
         it "creates an AdminSet, PermissionTemplate, Workflows, activates the default workflow, and sets access" do
           expect(Sipity::Workflow).to receive(:activate!).with(permission_template: kind_of(Hyrax::PermissionTemplate), workflow_name: Hyrax.config.default_active_workflow_name)
-          expect do
-            expect(subject).to be true
-          end.to change { admin_set.persisted? }.from(false).to(true)
-                                                .and change { Sipity::WorkflowResponsibility.count }.by(12)
+          expect { service.create }
+            .to change { admin_set.persisted? }
+            .from(false)
+            .to(true)
+            .and change { Sipity::WorkflowResponsibility.count }
+            .by(12)
           # 12 responsibilities because:
           #  * 2 agents (user + admin group), multiplied by
           #  * 2 available workflows, multiplied by
@@ -150,9 +183,10 @@ RSpec.describe Hyrax::AdminSetCreateService do
       context "when the admin_set is invalid" do
         let(:admin_set) { AdminSet.new } # Missing title
 
-        it { is_expected.to be false }
+        it { expect(service.create).to be false }
+
         it 'will not call the workflow_importer' do
-          subject
+          service.create
           expect(workflow_importer).not_to have_received(:call)
         end
       end
