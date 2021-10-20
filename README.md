@@ -1,17 +1,3 @@
-# This is the Oregon Digital Analytics for Hyrax project page
-
-Here you will find information about the project, the issue board, and code.
-
-We will be working to implement some of the work from the Hyrax Analytics Working Group (HAWG).  We want to thank everyone who participated in that working group for all of their effort and for the users stories, use cases, mockups, and priorities thay created. Information about the group as well as the artifacts from their works can be found at https://wiki.lyrasis.org/pages/viewpage.action?pageId=87461330
-
-## Contacts:
-
-For questions on this project please contact:
-- Franny Gaede  - mfgaede@uoregon.edu
-- Margaret Mellinger - margaret.mellinger@oregonstate.edu
-- Kevin Kochanski - kevin@notch8.com
-- Crystal Richardson - crystal@notch8.com
-
 ![Samvera's Hyrax Logo](https://raw.githubusercontent.com/samvera/hyrax/gh-pages/assets/images/hyrax_logo_horizontal_white_background.png)
 
 Code: [![Version](https://badge.fury.io/rb/hyrax.png)](http://badge.fury.io/rb/hyrax)
@@ -119,43 +105,7 @@ Steps to deploy a Hyrax-based application to production will vary depending on y
 
  * [Samvera Community Knowledge Base: Running in Production](https://samvera.github.io/service-stack.html)
  * [Helm Chart](./CONTAINERS.md#deploying-to-production) (for cloud-based Kubernetes-style deployments)
-
-## Acknowledgments
-
-This software has been developed by and is brought to you by the Samvera community.  Learn more at the
-[Samvera website](http://samvera.org/).
-
-![Samvera Logo](https://wiki.lyrasis.org/download/thumbnails/87459292/samvera-fall-font2-200w.png?version=1&modificationDate=1498550535816&api=v2)
-
-## License
-
-Hyrax is available under [the Apache 2.0 license](LICENSE).
-
-## Docker development setup
-#### Refer to [Repo-README](./Repo-README.md) for repository specific instructions
-
-1) Install Docker.app
-
-2) gem install stack_car
-
-3) We recommend committing .env to your repo with good defaults. .env.development, .env.production etc can be used for local overrides and should not be in the repo.
-
-4) sc up
-
-``` bash
-gem install stack_car
-sc up --service app
-```
-## Deploy a new release
-
-``` bash
-sc release {staging | production} # creates and pushes the correct tags
-sc deploy {staging | production} # deployes those tags to the server
-```
-
-Releaese and Deployment are handled by the gitlab ci by default. See ops/deploy-app to deploy from locally, but note all Rancher install pull the currently tagged registry image
-
-### Installing Analytics
+## Installing Analytics
 
 Hyrax supports your choice of either Google Analytics or Matomo.  To enable analytics tracking and reporting features, follow the directions below.
 
@@ -188,6 +138,18 @@ MATOMO_BASE_URL=
 MATOMO_AUTH_TOKEN=
 ``` 
 
-Analytics Features
+## Analytics Features
 
 Once analytics is enabled, Hyrax will automatically install the JS tracking code.  Page views and downloads of a file set are recorded and sent to the selected analytics provider.  Admin users will have access to an expanded dashboard with details about how many vistors viewed a page, and how many visitors downloaded a file.  Easily find the top works by views, and most popular file downloads!
+
+## Acknowledgments
+
+This software has been developed by and is brought to you by the Samvera community.  Learn more at the
+[Samvera website](http://samvera.org/).
+
+![Samvera Logo](https://wiki.lyrasis.org/download/thumbnails/87459292/samvera-fall-font2-200w.png?version=1&modificationDate=1498550535816&api=v2)
+
+## License
+
+Hyrax is available under [the Apache 2.0 license](LICENSE).
+

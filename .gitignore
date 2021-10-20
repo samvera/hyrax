@@ -5,7 +5,6 @@ ruby-version
 ruby-gemset
 .rvmrc
 Gemfile.lock
-notch8-qa-057daeb77b4d.p12
 
 # don't push around data files (for dev envs only)
 fcrepo4-data

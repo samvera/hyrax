@@ -22,8 +22,8 @@ $pagination-disabled-color: #4c4c4c;
 // Date picker on safari placeholder text was misaligned
 @media screen {
   @media screen and (-webkit-min-device-pixel-ratio: 0) {
-      input[type="date"].form-control {
-        line-height: 16px !important;
-      }
+    input[type="date"].form-control {
+      line-height: 16px;
+    }
   }
 }

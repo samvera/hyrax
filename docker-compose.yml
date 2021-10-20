@@ -8,14 +8,11 @@ services:
       args:
         - EXTRA_APK_PACKAGES=git less
     image: ghcr.io/samvera/dassie
-    # TODO(alishaevn): remove this command when the bug that causes errors while building is fixed
-    # command: sh -l -c "bundle && bundle exec puma -v -b tcp://0.0.0.0:3000"
     stdin_open: true
     tty: true
     user: root
     env_file:
       - .env
-      - .env.development
       - .dassie/.env
     environment:
       - RAILS_ROOT=/app/samvera/hyrax-webapp
@@ -112,8 +109,6 @@ services:
       context: .
       target: hyrax-engine-dev-worker
     image: ghcr.io/samvera/dassie-worker
-    # TODO(alishaevn): remove this command when the bug that causes errors while building is fixed
-    # command: sh -l -c "bundle && bundle install --jobs 4"
     user: root
     env_file:
       - .env
