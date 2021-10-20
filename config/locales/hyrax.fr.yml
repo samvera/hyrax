@@ -31,6 +31,9 @@ fr:
       filters:
         title: 'Filtrage par:'
       start_over: Effacer les filtres
+  download:
+    one: et 1 téléchargement
+    other: et zxzxxx0 téléchargements
   errors:
     messages:
       carrierwave_download_error: Impossible de télécharger l'image.
@@ -306,6 +309,10 @@ fr:
             top_works: Meilleurs travaux
             work_title: Titre du travail
             work_views: Vues de la page de travail
+          work_counts:
+            child_works: enfant travaille
+            files: des dossiers
+            total_size: taille totale
           work_files:
             title: Des dossiers
             total_downloads: Téléchargements totaux
@@ -431,6 +438,10 @@ fr:
             unpublished: Non publié
         user_deposits:
           end_label: Terminer [par défaut pour le moment]
+          headers:
+            main: Statistiques de travail
+            total: 'Total des travaux :'
+            visibility: Totaux par visibilité
           heading: Afficher les fichiers déposés par les utilisateurs
           start_label: Départ
         works:
@@ -932,6 +943,7 @@ fr:
         last_updated: Dernière mise à jour
         new:
           header: Créer une nouvelle collection
+        recent_activity: Activité récente
         show:
           header: Collection
           item_count: Travaux
@@ -1130,6 +1142,10 @@ fr:
         heading: Vos statistiques
         joined_on: Créé le
         works: Travaux créés
+      tabs:
+        admin_sets: Ensembles d'administrateurs
+        collections: Collections
+        pinned_collections: Collections épinglées
       title: Mon tableau de bord
       transfer_of_ownership: Transfert de propriété
       transfer_works_link: Sélectionnez les travaux à transférer
@@ -1145,8 +1161,16 @@ fr:
         title: Activité de l'utilisateur
         total_visitors: Nombre total de visiteurs
         user_summary: Résumé de l'utilisateur
+      user_activity_graph:
+        date: Date
+        new_users: Nouveaux utilisateurs
+        new_visits: Nouvelles visites
+        return_visits: Visites de retour
+        total_visits: Nombre total de visites
       user_notifications: Notifications de l'utilisateur
       view_files: Afficher les fichiers
+      visibility_graph:
+        visibility: Visibilité
       work_type_graph:
         count: Compter
         title: Types de travail
@@ -1531,6 +1555,16 @@ fr:
         contact_form: Formulaire de contact
         export_to_zotero: Exporter vers Zotero
         export_to_zotero_details: L'exportation vers Zotero est prise en charge via des métadonnées intégrées. Si Zotero ne récupère pas automatiquement les métadonnées des fichiers déposés, veuillez signaler le problème via le
+    stats:
+      downloads:
+        downloads: Téléchargements
+      pageviews:
+        pageviews: Pages vues
+      work:
+        and: et
+        downloads: Téléchargements
+        header: Analyse du travail
+        pageviews: Pages vues
     toolbar:
       dashboard:
         menu: Tableau de bord
@@ -1809,3 +1843,6 @@ fr:
         member_of_collection_ids: Sélectionnez une collection ...
     required:
       html: <span class="label label-info required-tag">Champs obligatoires</span>
+  total_view:
+    one: Ce travail a 1 vue totale
+    other: Ce travail a zxzxxx0 vues au total
