@@ -31,6 +31,9 @@ it:
       filters:
         title: 'Filtro per:'
       start_over: Cancellare i filtri
+  download:
+    one: e 1 download
+    other: e %{count} download
   errors:
     messages:
       carrierwave_download_error: Impossibile scaricare l'immagine.
@@ -306,6 +309,10 @@ it:
             top_works: I migliori lavori
             work_title: Titolo del lavoro
             work_views: Visualizzazioni della pagina di lavoro
+          work_counts:
+            child_works: bambino lavora
+            files: File
+            total_size: dimensione totale
           work_files:
             title: File
             total_downloads: Download totali
@@ -431,6 +438,10 @@ it:
             unpublished: inedito
         user_deposits:
           end_label: Fine [impostazione predefinita]
+          headers:
+            main: Statistiche di lavoro
+            total: 'Opere totali:'
+            visibility: Totali per visibilità
           heading: Visualizza file depositati dagli utenti
           start_label: Di partenza
         works:
@@ -931,6 +942,7 @@ it:
         last_updated: Ultimo aggiornamento
         new:
           header: Crea nuova collezione
+        recent_activity: Attività Recente
         show:
           header: Collezione
           item_count: Lavori
@@ -1129,6 +1141,10 @@ it:
         heading: Le tue statistiche
         joined_on: Unito
         works: Opere create
+      tabs:
+        admin_sets: Set di amministrazione
+        collections: Collezioni
+        pinned_collections: Raccolte appuntate
       title: la mia scrivania
       transfer_of_ownership: Trasferimenti di proprietà
       transfer_works_link: Seleziona le opere da trasferire
@@ -1144,8 +1160,16 @@ it:
         title: Attività dell'utente
         total_visitors: Visitatori totali
         user_summary: Riepilogo utente
+      user_activity_graph:
+        date: Data
+        new_users: Nuovi utenti
+        new_visits: Nuove visite
+        return_visits: Visite di ritorno
+        total_visits: Visite totali
       user_notifications: Notifiche utente
       view_files: Vedi files
+      visibility_graph:
+        visibility: Visibilità
       work_type_graph:
         count: Contare
         title: Tipi di lavoro
@@ -1530,6 +1554,16 @@ it:
         contact_form: Modulo di Contatto
         export_to_zotero: Esporta in Zotero
         export_to_zotero_details: L'esportazione in Zotero è supportata tramite metadati incorporati. Se Zotero non raccoglie automaticamente i metadati per i file depositati, segnala il problema tramite il
+    stats:
+      downloads:
+        downloads: Download
+      pageviews:
+        pageviews: Visualizzazioni di pagina
+      work:
+        and: e
+        downloads: Download
+        header: Analisi del lavoro
+        pageviews: Visualizzazioni di pagina
     toolbar:
       dashboard:
         menu: Cruscotto
@@ -1808,3 +1842,6 @@ it:
         member_of_collection_ids: Seleziona una collezione ...
     required:
       html: <span class="label label-info required-tag">necessario</span>
+  total_view:
+    one: Quest'opera ha 1 vista totale
+    other: Questo lavoro ha %{count} visualizzazioni totali

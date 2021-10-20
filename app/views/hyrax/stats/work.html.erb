@@ -12,8 +12,8 @@
     <%= content_tag :h2, "#{t('.header')}" %>
     <div class="alert alert-info">
       <span class="glyphicon glyphicon-signal large-icon"></span>
-      <%= content_tag :strong, pluralize(@pageviews.range(Hyrax.config.analytics_start_date.to_date, Time.zone.today), 'total view') %> <%= t('.and') %>
-      <%= content_tag :strong, pluralize(@downloads.range(Hyrax.config.analytics_start_date.to_date, Time.zone.today), 'download') %> 
+        <%= t('total_view', count: @pageviews.range(Hyrax.config.analytics_start_date.to_date, Time.zone.today)) %>
+        <%= t('download', count: @downloads.range(Hyrax.config.analytics_start_date.to_date, Time.zone.today)) %>
     </div>
 
     <div class="stats-container">

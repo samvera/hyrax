@@ -31,6 +31,9 @@ zh:
       filters:
         title: '筛选:'
       start_over: 清除筛选
+  download:
+    one: 和 1 个下载
+    other: 和 %{count} 下载
   errors:
     messages:
       carrierwave_download_error: 图片不能下载。
@@ -306,6 +309,10 @@ zh:
             top_works: 热门作品
             work_title: 作品名称
             work_views: 工作页面浏览量
+          work_counts:
+            child_works: 儿童作品
+            files: 档案
+            total_size: 总尺寸
           work_files:
             title: 文件
             total_downloads: 总下载量
@@ -431,6 +438,10 @@ zh:
             unpublished: 非出版品
         user_deposits:
           end_label: 结束 [默认到此刻]
+          headers:
+            main: 工作统计
+            total: 总作品：
+            visibility: 可见性总计
           heading: 展示用户存储的文件
           start_label: 开始
         works:
@@ -929,6 +940,7 @@ zh:
         last_updated: 最近更新时间
         new:
           header: 创建新收藏集
+        recent_activity: 近期活动
         show:
           header: 采集
           item_count: 作品
@@ -1127,6 +1139,10 @@ zh:
         heading: 您的【下载？】统计
         joined_on: 加入上
         works: 已建立的作品
+      tabs:
+        admin_sets: 管理集
+        collections: 收藏
+        pinned_collections: 固定收藏
       title: 我的控件板
       transfer_of_ownership: 转让所有权
       transfer_works_link: 选择作品转让
@@ -1142,8 +1158,16 @@ zh:
         title: 用户活动
         total_visitors: 访客总数
         user_summary: 用户摘要
+      user_activity_graph:
+        date: 日期
+        new_users: 新用户
+        new_visits: 新访问
+        return_visits: 回访
+        total_visits: 总访问量
       user_notifications: 用户通知
       view_files: 阅览文件
+      visibility_graph:
+        visibility: 能见度
       work_type_graph:
         count: 数数
         title: 工作类型
@@ -1528,6 +1552,16 @@ zh:
         contact_form: 联系表
         export_to_zotero: 导出到Zotero
         export_to_zotero_details: 通过嵌入式元数据支持导出到Zotero。如果Zotero没有自动获取存放文件的元数据，请通过以下方式报告问题
+    stats:
+      downloads:
+        downloads: 下载
+      pageviews:
+        pageviews: 页面浏览量
+      work:
+        and: 和
+        downloads: 下载
+        header: 工作分析
+        pageviews: 浏览量
     toolbar:
       dashboard:
         menu: 控件板
@@ -1806,3 +1840,6 @@ zh:
         member_of_collection_ids: 选择一个集合...
     required:
       html: <span class="label label-info required-tag">需要的</span>
+  total_view:
+    one: 该作品共有 1 次浏览
+    other: 此作品总浏览量为 %{count}

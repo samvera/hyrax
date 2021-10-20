@@ -465,7 +465,6 @@ en:
         header: Work Analytics
         pageviews: Pageviews
         downloads: Downloads
-        and: and
       pageviews: 
         pageviews: Page Views
       downloads:
@@ -1824,3 +1823,9 @@ en:
         member_of_collection_ids: Select a collection…
     required:
       html: <span class="label label-info required-tag">required</span>
+  total_view:
+    one: This work has 1 total view
+    other: This work has %{count} total views
+  download: 
+    one: and 1 download
+    other: and %{count} downloads
