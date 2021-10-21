@@ -164,7 +164,7 @@ RSpec.describe ::SolrDocument, type: :model do
   end
 
   describe "#collection?" do
-    let(:attributes) { { 'has_model_ssim' => 'Collection' } }
+    let(:attributes) { { 'has_model_ssim' => Hyrax.config.collection_model } }
 
     it { is_expected.to be_collection }
   end
