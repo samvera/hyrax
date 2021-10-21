@@ -14,7 +14,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsSearchBuilder do
   describe '#models' do
     subject { builder.models }
 
-    it { is_expected.to eq([AdminSet, Hyrax.config.collection_class]) }
+    it { is_expected.to eq([AdminSet, ::Collection, Hyrax.config.collection_class].uniq) }
   end
 
   describe ".default_processor_chain" do
