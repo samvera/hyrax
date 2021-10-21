@@ -460,15 +460,6 @@ en:
           tabs:
             published: Published
             under_review: Under Review
-    stats: 
-      work:
-        header: Work Analytics
-        pageviews: Pageviews
-        downloads: Downloads
-      pageviews: 
-        pageviews: Page Views
-      downloads:
-        downloads: Downloads
     api:
       accepted:
         default: Your request has been accepted for processing, but processing is not complete. See job for more info.
@@ -839,6 +830,11 @@ en:
         create_collection: Create collection
         select_type_of_collection: Select type of collection
       collections:
+        collection_title: Collection Title
+        title: Collections
+        last_updated: Last updated
+        works: Works
+        files: Files
         edit:
           header: 'Edit %{type_title}: %{title}'
         form:
@@ -958,6 +954,8 @@ en:
           creator: 'Creator:'
           depositor: 'Depositor:'
           edit_access: 'Edit Access:'
+        title: 'Collections'
+        recent_activity: Recent activity
         sort_and_per_page:
           show_par_page_html: Show %{select} per page
           sort_by: 'Sort By:'
@@ -969,6 +967,12 @@ en:
           remove_from_collection: Remove from collection
           select_an_action: Select an action
           transfer_ownership_of_work: Transfer Ownership of Work
+      collections_pinned:
+        title: Pinned Collections
+        collection_title: Collection title
+        last_updated: Last updated
+        works: Works
+        files: Files
       create_work: Create Work
       current_proxies: Current Proxies
       delete_notification: Delete Notification
@@ -1027,7 +1031,6 @@ en:
             manage: Manage
             view: View
           users: 'Users:'
-        collections: Collections
         facet_label:
           collections: 'Filter collections:'
           highlighted: 'Filter highlights:'
@@ -1107,19 +1110,6 @@ en:
         work_type: Work Type
         title: Work Types
         count: Count
-      collections_pinned:
-        title: Pinned Collections
-        collection_title: Collection title
-        last_updated: Last updated
-        works: Works
-        files: Files
-      collections:
-        title: Collections
-        collection_title: Collection title
-        last_updated: Last updated
-        recent_activity: Recent activity
-        works: Works
-        files: Files
       show_admin:
         current_registered_users: Current
         new_visitors: New Visitors
@@ -1536,6 +1526,15 @@ en:
         link_expired_not_found: Single Use Link Expired or Not Found
         link_not_found: Single use link Not Found
     sort_label: Sort the listing of items
+    stats: 
+      work:
+        header: Work Analytics
+        pageviews: Pageviews
+        downloads: Downloads
+      pageviews: 
+        pageviews: Page Views
+      downloads:
+        downloads: Downloads
     static:
       mendeley:
         contact_form: Contact Form
