@@ -13,6 +13,8 @@ RSpec.describe Hyrax::PcdmCollection do
       expect(subject.model_name)
         .to have_attributes(human: "Collection",
                             i18n_key: :collection,
+                            param_key: "collection",
+                            plural: "collections",
                             route_key: "collections",
                             singular_route_key: "collection")
     end

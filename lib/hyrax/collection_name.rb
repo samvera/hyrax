@@ -10,6 +10,8 @@ module Hyrax
 
       @human              = 'Collection'
       @i18n_key           = :collection
+      @param_key          = 'collection'
+      @plural             = 'collections'
       @route_key          = 'collections'
       @singular_route_key = 'collection'
     end
