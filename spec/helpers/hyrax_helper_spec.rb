@@ -388,4 +388,32 @@ RSpec.describe HyraxHelper, type: :helper do
       expect(helper.collection_title_by_id("bad-id")).to eq nil
     end
   end
+
+  describe "#thumbnail_label_for" do
+    it "gives a string even if no thumbnail label can be found" do
+      expect(helper.thumbnail_label_for(object: Object.new)).to be_a String
+    end
+
+    it 'interoperates with CollectionForm' do
+      collection = ::Collection.new
+      collection.thumbnail = ::FileSet.create(title: ["thumbnail"])
+
+      form = Hyrax::Forms::CollectionForm.new(collection,
+                                              :FAKE_ABILITY,
+                                              :FAKE_BLACKLIGHT_REPOSITORY)
+
+      expect(helper.thumbnail_label_for(object: form)).to eq 'thumbnail'
+    end
+
+    it 'interoperates with AdminSetForm' do
+      admin_set = AdminSet.new
+      admin_set.thumbnail = ::FileSet.create(title: ["thumbnail"])
+
+      form = Hyrax::Forms::AdminSetForm.new(admin_set,
+                                            :FAKE_ABILITY,
+                                            :FAKE_BLACKLIGHT_REPOSITORY)
+
+      expect(helper.thumbnail_label_for(object: form)).to eq 'thumbnail'
+    end
+  end
 end
