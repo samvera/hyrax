@@ -37,4 +37,8 @@ class FakeSearchBuilderScope
     @params = params
     @repository = Blacklight::Solr::Repository.new(blacklight_config)
   end
+
+  def can?(*args)
+    current_ability.can?(*args)
+  end
 end
