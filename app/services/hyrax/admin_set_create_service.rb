@@ -95,7 +95,7 @@ module Hyrax
       end
     end
 
-    # @param admin_set [AdminSet] the admin set to operate on
+    # @param admin_set [Hyrax::AdministrativeSet | AdminSet] the admin set to operate on
     # @param creating_user [User] the user who created the admin set (if any).
     # @param workflow_importer [#call] imports the workflow
     def initialize(admin_set:, creating_user:, workflow_importer: default_workflow_importer)
@@ -118,7 +118,7 @@ module Hyrax
     # @return [Hyrax::AdministrativeSet] The fully created admin set.
     # @raise [RuntimeError] if admin set cannot be persisted
     def create!
-      active_fedora_create!
+      admin_set.respond_to?(:valkyrie_resource) ? active_fedora_create! : valkyrie_create!
     end
 
     private
@@ -129,6 +129,25 @@ module Hyrax
 
     def admin_group_name
       ::Ability.admin_group_name
+    end
+
+    # Creates an admin set, setting the creator and the default access controls.
+    # @return [Hyrax::AdministrativeSet] The fully created admin set.
+    # @raise [RuntimeError] if admin set cannot be persisted
+    def valkyrie_create!
+      admin_set.creator = [creating_user.user_key] if creating_user
+      updated_admin_set = Hyrax.persister.save(resource: admin_set).tap do |result|
+        if result
+          ActiveRecord::Base.transaction do
+            permission_template = permissions_create_service.create_default(collection: admin_set,
+                                                                            creating_user: creating_user)
+            workflow = create_workflows_for(permission_template: permission_template)
+            create_default_access_for(permission_template: permission_template, workflow: workflow) if default_admin_set?(id: admin_set.id)
+          end
+        end
+      end
+      Hyrax.publisher.publish('collection.metadata.updated', collection: updated_admin_set, user: creating_user)
+      updated_admin_set
     end
 
     # Creates an admin set, setting the creator and the default access controls.
