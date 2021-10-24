@@ -126,51 +126,18 @@ RSpec.describe Hyrax::AdminSetCreateService do
       subject { service.create }
 
       context "when the admin_set is valid" do
-        let(:permission_template) { Hyrax::PermissionTemplate.find_by(source_id: admin_set.id) }
-        let(:grants) { permission_template.access_grants }
-        let(:available_workflows) { [create(:workflow), create(:workflow)] }
+        let(:updated_admin_set) { FactoryBot.valkyrie_create(:hyrax_admin_set) }
 
-        # rubocop:disable RSpec/AnyInstance
-        before do
-          allow_any_instance_of(Hyrax::PermissionTemplate).to receive(:available_workflows).and_return(available_workflows)
-          # Load expected Sipity roles, which were likely cleaned by DatabaseCleaner
-          Hyrax.config.persist_registered_roles!
-        end
-        # rubocop:enable RSpec/AnyInstance
-
-        it "creates an AdminSet, PermissionTemplate, Workflows, activates the default workflow, and sets access" do
-          expect(Sipity::Workflow).to receive(:activate!).with(permission_template: kind_of(Hyrax::PermissionTemplate), workflow_name: Hyrax.config.default_active_workflow_name)
-          expect do
-            expect(subject).to be true
-          end.to change { admin_set.persisted? }.from(false).to(true)
-                                                .and change { Sipity::WorkflowResponsibility.count }.by(12)
-          # 12 responsibilities because:
-          #  * 2 agents (user + admin group), multiplied by
-          #  * 2 available workflows, multiplied by
-          #  * 3 roles (from Hyrax::RoleRegistry), equals
-          #  * 12
-          expect(admin_set.edit_users).to match_array([user.user_key])
-          expect(admin_set.edit_groups).to match_array(['admin'])
-          expect(admin_set.read_users).to match_array([])
-          expect(admin_set.read_groups).not_to include('public')
-          expect(admin_set.creator).to eq [user.user_key]
-
-          expect(workflow_importer).to have_received(:call).with(permission_template: permission_template)
-          expect(permission_template).to be_persisted
-          expect(grants.count).to eq 2
-          expect(grants.pluck(:agent_type)).to include('group', 'user')
-          expect(grants.pluck(:agent_id)).to include('admin', user.user_key)
-          expect(grants.pluck(:access)).to include('manage')
+        it "is a convenience method for #create! that returns true" do
+          expect(service).to receive(:create!).and_return(updated_admin_set)
+          expect(subject).to eq true
         end
       end
 
       context "when the admin_set is invalid" do
-        let(:admin_set) { AdminSet.new } # Missing title
-
-        it { is_expected.to be false }
-        it 'will not call the workflow_importer' do
-          subject
-          expect(workflow_importer).not_to have_received(:call)
+        it "is a convenience method for #create! that returns false" do
+          expect(service).to receive(:create!).and_raise { RuntimeError.new }
+          expect(subject).to eq false
         end
       end
     end
