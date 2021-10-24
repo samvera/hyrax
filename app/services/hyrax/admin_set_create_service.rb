@@ -118,6 +118,23 @@ module Hyrax
     # @return [Hyrax::AdministrativeSet] The fully created admin set.
     # @raise [RuntimeError] if admin set cannot be persisted
     def create!
+      active_fedora_create!
+    end
+
+    private
+
+    def default_admin_set?(id:)
+      self.class.default_admin_set?(id: id)
+    end
+
+    def admin_group_name
+      ::Ability.admin_group_name
+    end
+
+    # Creates an admin set, setting the creator and the default access controls.
+    # @return [Hyrax::AdministrativeSet] The fully created admin set.
+    # @raise [RuntimeError] if admin set cannot be persisted
+    def active_fedora_create!
       admin_set.creator = [creating_user.user_key] if creating_user
       admin_set.save.tap do |result|
         if result
@@ -131,16 +148,6 @@ module Hyrax
       end
       raise 'Admin set failed to persist.' unless admin_set.persisted?
       admin_set.valkyrie_resource
-    end
-
-    private
-
-    def default_admin_set?(id:)
-      self.class.default_admin_set?(id: id)
-    end
-
-    def admin_group_name
-      ::Ability.admin_group_name
     end
 
     def create_workflows_for(permission_template:)
