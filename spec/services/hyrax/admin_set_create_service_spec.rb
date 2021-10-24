@@ -3,29 +3,24 @@ RSpec.describe Hyrax::AdminSetCreateService do
   let(:user) { create(:user) }
 
   describe '.create_default_admin_set', :clean_repo do
-    let(:admin_set) { AdminSet.find(AdminSet::DEFAULT_ID) }
+    subject(:status) { described_class.create_default_admin_set }
 
-    # It is important to test the side-effects as a default admin set is a fundamental assumption for Hyrax.
-    it 'creates AdminSet, Hyrax::PermissionTemplate, Sipity::Workflow(s), and activates a Workflow', slow: true do
-      described_class.create_default_admin_set(admin_set_id: AdminSet::DEFAULT_ID, title: AdminSet::DEFAULT_TITLE)
-      expect(admin_set.permission_template).to be_persisted
-      expect(admin_set.active_workflow).to be_persisted
-      # 7 responsibilities because:
-      #  * 1 agent (admin group), multiplied by
-      #  * 2 available workflows, multiplied by
-      #  * 3 roles (from Hyrax::RoleRegistry), plus
-      #  * 1 depositing role for the registered group in the default workflow, equals
-      #  * 7
-      expect(Sipity::WorkflowResponsibility.count).to eq 7
-      expect(admin_set.read_groups).not_to include('public')
-      expect(admin_set.edit_groups).to eq ['admin']
-      # 2 access grants because:
-      #  * 1 providing deposit access to registered group
-      #  * 1 providing manage access to admin group
-      expect(admin_set.permission_template.access_grants.count).to eq 2
-      # Agents should be created for both the 'admin' and 'registered' groups
-      expect(Sipity::Agent.distinct.pluck(:proxy_for_id)).to include('admin', 'registered')
-      expect(Sipity::Agent.distinct.pluck(:proxy_for_type)).to include('Hyrax::Group')
+    context "when new admin set persists" do
+      it "is a convenience method for .create_default_admin_set!" do
+        expect(described_class).to receive(:create_default_admin_set!).and_call_original
+        expect(status).to eq true
+      end
+    end
+
+    context "when new admin set fails to persist" do
+      # rubocop:disable RSpec/AnyInstance
+      before { allow_any_instance_of(ActiveFedora::Base).to receive(:persisted?).and_return(false) }
+      # rubocop:enable RSpec/AnyInstance
+
+      it "returns false" do
+        expect(described_class).to receive(:create_default_admin_set!).and_call_original
+        expect(status).to eq false
+      end
     end
   end
 
