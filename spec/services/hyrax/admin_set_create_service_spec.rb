@@ -41,6 +41,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
         expect(query_service).to receive(:find_by).with(id: described_class::DEFAULT_ID)
                                                   .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
         expect(described_class).to receive(:create_default_admin_set!).and_call_original
+        expect(query_service).to receive(:find_by).with(id: anything).and_call_original # permission template
         expect(query_service).to receive(:find_by).with(id: described_class::DEFAULT_ID)
                                                   .and_return(default_admin_set)
         expect(admin_set.title).to eq described_class::DEFAULT_TITLE
@@ -83,7 +84,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
     context "when using the default admin set", :clean_repo do
       let(:admin_set) { AdminSet.new(id: AdminSet::DEFAULT_ID) }
 
-      it 'will raise ActiveFedora::IllegalOperation if you attempt to a default admin set' do
+      it 'will raise RuntimeError if you attempt to a default admin set' do
         expect { subject }.to raise_error(RuntimeError)
       end
     end
@@ -91,7 +92,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
     it "is a convenience method for .new#create" do
       service = instance_double(described_class)
       expect(described_class).to receive(:new).and_return(service)
-      expect(service).to receive(:create)
+      expect(service).to receive(:create!)
       subject
     end
   end

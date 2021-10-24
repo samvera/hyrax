@@ -60,8 +60,23 @@ module Hyrax
       # @see AdminSet
       # @raise [RuntimeError] if you attempt to create a default admin set via this mechanism
       def call(admin_set:, creating_user:, **kwargs)
+        call!(admin_set: admin_set, creating_user: creating_user, **kwargs).present?
+      rescue RuntimeError => err
+        raise err if default_admin_set?(id: admin_set.id)
+        false
+      end
+
+      # @api public
+      # Creates a non-default Hyrax::AdministrativeSet and corresponding data
+      # @param admin_set [Hyrax::AdministrativeSet] the admin set to operate on
+      # @param creating_user [User] the user who created the admin set
+      # @return [Hyrax::AdministrativeSet] The fully created admin set.
+      # @see Hyrax::AdministrativeSet
+      # @raise [RuntimeError] if you attempt to create a default admin set via this mechanism
+      # @raise [RuntimeError] if admin set cannot be persisted
+      def call!(admin_set:, creating_user:, **kwargs)
         raise "Use .find_or_create_default_admin_set to create a default admin set" if default_admin_set?(id: admin_set.id)
-        new(admin_set: admin_set, creating_user: creating_user, **kwargs).create
+        new(admin_set: admin_set, creating_user: creating_user, **kwargs).create!
       end
 
       private
@@ -69,7 +84,7 @@ module Hyrax
       def create_default_admin_set!(admin_set_id: DEFAULT_ID, title: DEFAULT_TITLE)
         admin_set = AdminSet.new(id: admin_set_id, title: Array.wrap(title))
         begin
-          new(admin_set: admin_set, creating_user: nil).create
+          new(admin_set: admin_set, creating_user: nil).create!
         rescue ActiveFedora::IllegalOperation
           # It is possible that another thread created the AdminSet just before this method
           # was called, so ActiveFedora will raise IllegalOperation. In this case we can safely
@@ -94,6 +109,15 @@ module Hyrax
     # Creates an admin set, setting the creator and the default access controls.
     # @return [TrueClass, FalseClass] true if it was successful
     def create
+      create!.persisted?
+    rescue RuntimeError => _err
+      false
+    end
+
+    # Creates an admin set, setting the creator and the default access controls.
+    # @return [Hyrax::AdministrativeSet] The fully created admin set.
+    # @raise [RuntimeError] if admin set cannot be persisted
+    def create!
       admin_set.creator = [creating_user.user_key] if creating_user
       admin_set.save.tap do |result|
         if result
@@ -105,6 +129,8 @@ module Hyrax
           end
         end
       end
+      raise 'Admin set failed to persist.' unless admin_set.persisted?
+      admin_set.valkyrie_resource
     end
 
     private
