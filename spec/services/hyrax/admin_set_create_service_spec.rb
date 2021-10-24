@@ -53,7 +53,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
       it "returns existing default admin set" do
         expect(query_service).to receive(:find_by).with(id: described_class::DEFAULT_ID)
                                                   .and_return(default_admin_set)
-        expect(described_class).not_to receive(:create_default_admin_set)
+        expect(described_class).not_to receive(:create_default_admin_set!)
         expect(admin_set.title).to eq described_class::DEFAULT_TITLE
       end
     end

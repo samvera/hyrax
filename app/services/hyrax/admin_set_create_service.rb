@@ -24,18 +24,14 @@ module Hyrax
       # @return [TrueClass]
       # @see AdminSet
       # @deprecated
+      # TODO: When this deprecated method is removed, update private method
+      #       .create_default_admin_set! to remove the parameters.
       def create_default_admin_set(admin_set_id: DEFAULT_ID, title: DEFAULT_TITLE)
         Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
                          "Instead, use 'Hyrax::AdminSetCreateService.find_or_create_default_admin_set'.")
-        admin_set = AdminSet.new(id: admin_set_id, title: Array.wrap(title))
-        begin
-          new(admin_set: admin_set, creating_user: nil).create
-        rescue ActiveFedora::IllegalOperation
-          # It is possible that another thread created the AdminSet just before this method
-          # was called, so ActiveFedora will raise IllegalOperation. In this case we can safely
-          # ignore the error.
-          Rails.logger.error("AdminSet ID=#{AdminSet::DEFAULT_ID} may or may not have been created due to threading issues.")
-        end
+        create_default_admin_set!(admin_set_id: admin_set_id, title: title).present?
+      rescue RuntimeError => _err
+        false
       end
 
       # @api public
@@ -70,8 +66,16 @@ module Hyrax
 
       private
 
-      def create_default_admin_set!
-        create_default_admin_set
+      def create_default_admin_set!(admin_set_id: DEFAULT_ID, title: DEFAULT_TITLE)
+        admin_set = AdminSet.new(id: admin_set_id, title: Array.wrap(title))
+        begin
+          new(admin_set: admin_set, creating_user: nil).create
+        rescue ActiveFedora::IllegalOperation
+          # It is possible that another thread created the AdminSet just before this method
+          # was called, so ActiveFedora will raise IllegalOperation. In this case we can safely
+          # ignore the error.
+          Rails.logger.error("AdminSet ID=#{AdminSet::DEFAULT_ID} may or may not have been created due to threading issues.")
+        end
         Hyrax.query_service.find_by(id: DEFAULT_ID)
       end
     end
