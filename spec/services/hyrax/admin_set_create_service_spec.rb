@@ -73,10 +73,10 @@ RSpec.describe Hyrax::AdminSetCreateService do
   describe ".call" do
     subject { described_class.call(admin_set: admin_set, creating_user: user) }
 
-    let(:admin_set) { AdminSet.new(title: ['test']) }
+    let(:admin_set) { FactoryBot.build(:hyrax_admin_set, title: ['test']) }
 
     context "when using the default admin set", :clean_repo do
-      let(:admin_set) { AdminSet.new(id: AdminSet::DEFAULT_ID) }
+      let(:admin_set) { FactoryBot.build(:hyrax_admin_set, id: described_class::DEFAULT_ID) }
 
       it 'will raise RuntimeError if you attempt to a default admin set' do
         expect { subject }.to raise_error(RuntimeError)
@@ -94,10 +94,10 @@ RSpec.describe Hyrax::AdminSetCreateService do
   describe ".call!" do
     subject { described_class.call!(admin_set: admin_set, creating_user: user) }
 
-    let(:admin_set) { AdminSet.new(title: ['test']) }
+    let(:admin_set) { FactoryBot.build(:hyrax_admin_set, title: ['test']) }
 
     context "when using the default admin set", :clean_repo do
-      let(:admin_set) { AdminSet.new(id: AdminSet::DEFAULT_ID) }
+      let(:admin_set) { FactoryBot.build(:hyrax_admin_set, id: described_class::DEFAULT_ID) }
 
       it 'will raise RuntimeError if you attempt to a default admin set' do
         expect { subject }.to raise_error(RuntimeError)
@@ -116,7 +116,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
     subject { service }
 
     let(:workflow_importer) { double(call: true) }
-    let(:admin_set) { AdminSet.new(title: ['test']) }
+    let(:admin_set) { FactoryBot.build(:hyrax_admin_set, title: ['test']) }
     let(:service) { described_class.new(admin_set: admin_set, creating_user: user, workflow_importer: workflow_importer) }
 
     its(:default_workflow_importer) { is_expected.to respond_to(:call) }
@@ -142,6 +142,8 @@ RSpec.describe Hyrax::AdminSetCreateService do
     end
 
     describe "#create!" do
+      let(:admin_set) { AdminSet.new(title: ['test']) }
+
       subject { service.create! }
 
       context "when the admin_set is valid" do
@@ -157,7 +159,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
         end
         # rubocop:enable RSpec/AnyInstance
 
-        it "creates an AdminSet, PermissionTemplate, Workflows, activates the default workflow, and sets access" do
+        it "creates an AdministrativeSet, PermissionTemplate, Workflows, activates the default workflow, and sets access" do
           expect(Sipity::Workflow).to receive(:activate!).with(permission_template: kind_of(Hyrax::PermissionTemplate), workflow_name: Hyrax.config.default_active_workflow_name)
           expect do
             expect(subject).to be_kind_of Hyrax::AdministrativeSet
@@ -184,7 +186,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
       end
 
       context "when the admin_set is invalid" do
-        let(:admin_set) { AdminSet.new } # Missing title
+        let(:admin_set) { FactoryBot.build(:invalid_hyrax_admin_set) } # Missing title
 
         it 'will not call the workflow_importer' do
           expect { subject }.to raise_error(RuntimeError)
