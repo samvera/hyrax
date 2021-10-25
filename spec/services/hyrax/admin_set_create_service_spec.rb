@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::AdminSetCreateService do
-  let(:user) { create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   let(:persister) { Hyrax.persister }
   let(:query_service) { Hyrax.query_service }
 
@@ -28,7 +28,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
   end
 
   describe '.find_or_create_default_admin_set', :clean_repo do
-    let(:default_admin_set) { build(:default_hyrax_admin_set) }
+    let(:default_admin_set) { FactoryBot.build(:default_hyrax_admin_set) }
 
     subject(:admin_set) { described_class.find_or_create_default_admin_set }
 
@@ -55,7 +55,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
   end
 
   describe ".default_admin_set?" do
-    let(:admin_set) { build(:default_hyrax_admin_set) }
+    let(:admin_set) { FactoryBot.build(:default_hyrax_admin_set) }
     context "when admin_set is the default" do
       it "returns true" do
         expect(described_class.default_admin_set?(id: admin_set.id)).to eq true
@@ -63,7 +63,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
     end
 
     context "when admin_set isn't the default" do
-      let(:admin_set) { build(:hyrax_admin_set, title: ['test']) }
+      let(:admin_set) { FactoryBot.build(:hyrax_admin_set, title: ['test']) }
       it "returns false" do
         expect(described_class.default_admin_set?(id: admin_set.id)).to eq false
       end
