@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 module Hyrax
-  # Responsible for creating an AdminSet and its corresponding data:
+  # Responsible for creating a Hyrax::AdministrativeSet and its corresponding data.
   #
   # * An associated permission template
   # * Available workflows
   # * An active workflow
   #
-  # @see AdminSet
+  # @see Hyrax::AdministrativeSet
   # @see Hyrax::PermissionTemplate
   # @see Sipity::Workflow
   class AdminSetCreateService # rubocop:disable Metrics/ClassLength
@@ -18,11 +18,11 @@ module Hyrax
 
     class << self
       # @api public
-      # Creates the default AdminSet and corresponding data
+      # Creates the default Hyrax::AdministrativeSet and corresponding data
       # @param admin_set_id [String] The default admin set ID
       # @param title [Array<String>] The title of the default admin set
       # @return [TrueClass]
-      # @see AdminSet
+      # @see Hyrax::AdministrativeSet
       # @deprecated
       # TODO: When this deprecated method is removed, update private method
       #       .create_default_admin_set! to remove the parameters.
@@ -35,7 +35,7 @@ module Hyrax
       end
 
       # @api public
-      # Finds the default AdminSet if it exists; otherwise, creates it and corresponding data
+      # Finds the default AdministrativeSet if it exists; otherwise, creates it and corresponding data
       # @return [Hyrax::AdministrativeSet] The default admin set.
       # @see Hyrax::AdministrativeSet
       # @raise [RuntimeError] if admin set cannot be persisted
@@ -53,11 +53,11 @@ module Hyrax
       end
 
       # @api public
-      # Creates a non-default AdminSet and corresponding data
-      # @param admin_set [AdminSet] the admin set to operate on
+      # Creates a non-default Hyrax::AdministrativeSet and corresponding data
+      # @param admin_set [Hyrax::AdministrativeSet | AdminSet] the admin set to operate on
       # @param creating_user [User] the user who created the admin set
       # @return [TrueClass, FalseClass] true if it was successful
-      # @see AdminSet
+      # @see Hyrax::AdministrativeSet
       # @raise [RuntimeError] if you attempt to create a default admin set via this mechanism
       def call(admin_set:, creating_user:, **kwargs)
         call!(admin_set: admin_set, creating_user: creating_user, **kwargs).present?
@@ -81,10 +81,11 @@ module Hyrax
 
       private
 
+      # TODO: Parameters admin_set_id and title are defined to support .create_default_admin_set
+      #       which is deprecated.  When it is removed, the parameters will no longer be required.
       def create_default_admin_set!(admin_set_id: DEFAULT_ID, title: DEFAULT_TITLE)
         admin_set = Hyrax::AdministrativeSet.new(id: admin_set_id, title: Array.wrap(title))
         new(admin_set: admin_set, creating_user: nil).create!
-        # Hyrax.query_service.find_by(id: DEFAULT_ID)
       end
     end
 
@@ -194,7 +195,7 @@ module Hyrax
       end
     end
 
-    # Gives deposit access to registered users to default AdminSet
+    # Give registered users deposit access to default admin set
     def create_default_access_for(permission_template:, workflow:)
       permission_template.access_grants.create(agent_type: 'group', agent_id: ::Ability.registered_group_name, access: Hyrax::PermissionTemplateAccess::DEPOSIT)
       deposit = Sipity::Role[Hyrax::RoleRegistry::DEPOSITING]
