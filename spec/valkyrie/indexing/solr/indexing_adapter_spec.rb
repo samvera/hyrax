@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'valkyrie/indexing/solr/indexing_adapter'
 
-RSpec.describe Valkyrie::Indexing::Solr::IndexingAdapter, :clean_index do
+RSpec.describe Valkyrie::Indexing::Solr::IndexingAdapter, :clean_index, index_adapter: :solr_index do
   subject(:adapter) { Valkyrie::IndexingAdapter.find(:solr_index) }
   let(:persister) { Wings::Valkyrie::Persister.new(adapter: metadata_adapter) }
   let(:metadata_adapter) { Wings::Valkyrie::MetadataAdapter.new }
@@ -13,13 +13,6 @@ RSpec.describe Valkyrie::Indexing::Solr::IndexingAdapter, :clean_index do
     it "returns connection" do
       expect(adapter.connection.uri.to_s).to include 'valkyrie-test'
     end
-  end
-
-  before do
-    Hyrax.config.query_index_from_valkyrie = true
-  end
-  after do
-    Hyrax.config.query_index_from_valkyrie = false
   end
 
   it "can save a resource" do

@@ -140,7 +140,7 @@ module Hyrax
     # valkyrie indexers used here would, at minimum, need to provide a
     # functioning `rsolr` connection.
     def valkyrie_index
-      Valkyrie::IndexingAdapter.find(:solr_index)
+      Hyrax.index_adapter
     end
 
     ##

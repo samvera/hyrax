@@ -3,12 +3,7 @@ RSpec.describe Hyrax::SolrService do
   let(:mock_conn) { instance_double(RSolr::Client) }
   let(:valkyrie_index) { double("valkyrie_index", connection: mock_conn) }
 
-  before do
-    allow(Valkyrie::IndexingAdapter)
-      .to receive(:find)
-      .with(:solr_index)
-      .and_return(valkyrie_index)
-  end
+  before { allow(Hyrax).to receive(:index_adapter).and_return(valkyrie_index) }
 
   describe '.select_path' do
     it 'raises NotImplementedError' do
