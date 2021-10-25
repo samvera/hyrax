@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::AdminSetCreateService do
   let(:user) { create(:user) }
+  let(:persister) { Hyrax.persister }
+  let(:query_service) { Hyrax.query_service }
 
   describe '.create_default_admin_set', :clean_repo do
     subject(:status) { described_class.create_default_admin_set }
@@ -13,9 +15,10 @@ RSpec.describe Hyrax::AdminSetCreateService do
     end
 
     context "when new admin set fails to persist" do
-      # rubocop:disable RSpec/AnyInstance
-      before { allow_any_instance_of(ActiveFedora::Base).to receive(:persisted?).and_return(false) }
-      # rubocop:enable RSpec/AnyInstance
+      before do
+        allow(persister).to receive(:save).with(resource: instance_of(Hyrax::AdministrativeSet))
+                                          .and_raise(RuntimeError)
+      end
 
       it "returns false" do
         expect(described_class).to receive(:create_default_admin_set!).and_call_original
@@ -25,8 +28,6 @@ RSpec.describe Hyrax::AdminSetCreateService do
   end
 
   describe '.find_or_create_default_admin_set', :clean_repo do
-    let(:query_service) { Hyrax.query_service }
-    let(:persister) { Hyrax.persister }
     let(:default_admin_set) { build(:default_hyrax_admin_set) }
 
     subject(:admin_set) { described_class.find_or_create_default_admin_set }
@@ -37,8 +38,6 @@ RSpec.describe Hyrax::AdminSetCreateService do
                                                   .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
         expect(described_class).to receive(:create_default_admin_set!).and_call_original
         expect(query_service).to receive(:find_by).with(id: anything).and_call_original # permission template
-        expect(query_service).to receive(:find_by).with(id: described_class::DEFAULT_ID)
-                                                  .and_return(default_admin_set)
         expect(admin_set.title).to eq described_class::DEFAULT_TITLE
       end
     end
@@ -136,7 +135,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
 
       context "when the admin_set is invalid" do
         it "is a convenience method for #create! that returns false" do
-          expect(service).to receive(:create!).and_raise { RuntimeError.new }
+          expect(service).to receive(:create!).and_raise(RuntimeError)
           expect(subject).to eq false
         end
       end
