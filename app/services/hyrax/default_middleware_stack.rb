@@ -1,5 +1,16 @@
 # frozen_string_literal: true
 module Hyrax
+  ##
+  # Defines the Hyrax "Actor Stack", used in creation of works when using
+  # +ActiveFedora+.
+  #
+  # @note this stack, and the Actor classes it calls, is not used when
+  #   +Valkyrie+ models are defined by the application. in that context,
+  #   this behavior is replaced by `Hyrax::Transactions::Container`.
+  #
+  # @see Hyrax::CurationConcern.actor
+  # @see Hyrax::WorksControllerBehavior#create
+  # @see Hyrax::WorksControllerBehavior#update
   class DefaultMiddlewareStack
     # rubocop:disable Metrics/MethodLength
     def self.build_stack
