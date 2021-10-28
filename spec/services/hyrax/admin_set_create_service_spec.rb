@@ -35,6 +35,12 @@ RSpec.describe Hyrax::AdminSetCreateService do
         admin_set = described_class.find_or_create_default_admin_set
         expect(admin_set.title).to eq described_class::DEFAULT_TITLE
       end
+
+      it 'sets up an active workflow' do
+        described_class.find_or_create_default_admin_set
+        expect(Sipity::Workflow.find_active_workflow_for(admin_set_id: AdminSet::DEFAULT_ID))
+          .to be_persisted
+      end
     end
 
     context "when default admin set already exists" do
@@ -137,40 +143,70 @@ RSpec.describe Hyrax::AdminSetCreateService do
 
         # rubocop:disable RSpec/AnyInstance
         before do
-          allow_any_instance_of(Hyrax::PermissionTemplate).to receive(:available_workflows).and_return(available_workflows)
+          allow_any_instance_of(Hyrax::PermissionTemplate)
+            .to receive(:available_workflows).and_return(available_workflows)
+          allow(Sipity::Workflow)
+            .to receive(:activate!)
+            .with(permission_template: kind_of(Hyrax::PermissionTemplate), workflow_name: Hyrax.config.default_active_workflow_name)
           # Load expected Sipity roles, which were likely cleaned by DatabaseCleaner
           Hyrax.config.persist_registered_roles!
         end
         # rubocop:enable RSpec/AnyInstance
 
-        it "creates an AdministrativeSet, PermissionTemplate, Workflows, activates the default workflow, and sets access" do
-          expect(Sipity::Workflow).to receive(:activate!).with(permission_template: kind_of(Hyrax::PermissionTemplate), workflow_name: Hyrax.config.default_active_workflow_name)
-          expect do
-            expect(service.create!).to be_kind_of Hyrax::AdministrativeSet
-          end
-            .to change { admin_set.persisted? }
-            .from(false)
-            .to(true)
-            .and change { Sipity::WorkflowResponsibility.count }
-            .by(12)
+        it 'creates the admin set' do
+          updated_admin_set = service.create!
+          expect(updated_admin_set).to be_kind_of Hyrax::AdministrativeSet
+          expect(updated_admin_set.persisted?).to be true
+        end
+
+        it 'sets creator' do
+          updated_admin_set = service.create!
+          expect(updated_admin_set.creator).to eq [user.user_key]
+        end
+
+        it 'grants edit access to creator and admins' do
+          updated_admin_set = service.create!
+          expect(updated_admin_set.edit_users).to match_array([user.user_key])
+          expect(updated_admin_set.edit_groups).to match_array(['admin'])
+        end
+
+        it 'does not grant any read access' do
+          updated_admin_set = service.create!
+          expect(updated_admin_set.read_users).to match_array([])
+          expect(updated_admin_set.read_groups).to match_array([])
+        end
+
+        it 'creates Sipity::Agents for the admin group and creator user' do
+          service.create!
+          expect(Sipity::Agent.where(proxy_for_type: 'Hyrax::Group').pluck(:proxy_for_id))
+            .to include('admin')
+          expect(Sipity::Agent.where(proxy_for_type: 'User').pluck(:proxy_for_id))
+            .to include(user.id.to_s)
+        end
+
+        it 'sets up a permission template' do
+          updated_admin_set = service.create!
+          expect(Hyrax::PermissionTemplate.find_by(source_id: updated_admin_set.id.to_s))
+            .to be_persisted
+        end
+
+        it 'gives permission template access grants to admin and depositor' do
+          updated_admin_set = service.create!
+          template = Hyrax::PermissionTemplate.find_by(source_id: updated_admin_set.id.to_s)
+          expect(template.access_grants)
+            .to contain_exactly(have_attributes(agent_type: 'group', agent_id: 'admin', access: 'manage'),
+                                have_attributes(agent_type: 'user', agent_id: user.user_key, access: 'manage'))
+        end
+
+        it 'sets up workflow responsibilities' do
           # 12 responsibilities because:
           #  * 2 agents (user + admin group), multiplied by
           #  * 2 available workflows, multiplied by
           #  * 3 roles (from Hyrax::RoleRegistry), equals
           #  * 12
-
-          expect(admin_set.edit_users).to match_array([user.user_key])
-          expect(admin_set.edit_groups).to match_array(['admin'])
-          expect(admin_set.read_users).to match_array([])
-          expect(admin_set.read_groups).not_to include('public')
-          expect(admin_set.creator).to eq [user.user_key]
-
-          expect(workflow_importer).to have_received(:call).with(permission_template: permission_template)
-          expect(permission_template).to be_persisted
-          expect(grants.count).to eq 2
-          expect(grants.pluck(:agent_type)).to include('group', 'user')
-          expect(grants.pluck(:agent_id)).to include('admin', user.user_key)
-          expect(grants.pluck(:access)).to include('manage')
+          expect do
+            expect(service.create!).to be_kind_of Hyrax::AdministrativeSet
+          end.to change { Sipity::WorkflowResponsibility.count }.by(12)
         end
       end
 
