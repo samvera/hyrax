@@ -35,12 +35,14 @@ module Hyrax::Controller
   # @api public
   #
   # @return [#[]] a resolver for Hyrax's Transactions; this *should* be a
-  #   thread-safe Dry::Container, but callers to this method should strictly
-  #   use #[] for access
+  #   thread-safe {Dry::Container}, but callers to this method should strictly
+  #   use +#[]+ for access.
   #
   # @example
   #   transactions['change_set.create_work'].call(my_form)
   #
+  # @see Hyrax::Transactions::Container
+  # @see Hyrax::Transactions::Transaction
   # @see https://dry-rb.org/gems/dry-container
   def transactions
     Hyrax::Transactions::Container
