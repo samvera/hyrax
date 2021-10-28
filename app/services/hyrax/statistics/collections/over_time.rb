@@ -7,7 +7,7 @@ module Hyrax
 
         def relation
           AbstractTypeRelation
-            .new(allowable_types: [Hyrax.config.collection_class])
+            .new(allowable_types: [::Collection, Hyrax.config.collection_class].uniq)
         end
       end
     end
