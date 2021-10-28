@@ -59,7 +59,11 @@ module Hyrax
       # @return [TrueClass, FalseClass] true if it was successful
       # @see Hyrax::AdministrativeSet
       # @raise [RuntimeError] if you attempt to create a default admin set via this mechanism
+      # @deprecated
       def call(admin_set:, creating_user:, **kwargs)
+        Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
+                         "Warning: This method may hide runtime errors.  " \
+                         "Instead, use 'Hyrax::AdminSetCreateService.call!'.  ")
         call!(admin_set: admin_set, creating_user: creating_user, **kwargs).present?
       rescue RuntimeError => err
         raise err if default_admin_set?(id: admin_set.id)
@@ -102,7 +106,11 @@ module Hyrax
 
     # Creates an admin set, setting the creator and the default access controls.
     # @return [TrueClass, FalseClass] true if it was successful
+    # @deprecated
     def create
+      Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
+                         "Warning: This method may hide runtime errors.  " \
+                         "Instead, use 'Hyrax::AdminSetCreateService.create!'.  ")
       create!.persisted?
     rescue RuntimeError => _err
       false
