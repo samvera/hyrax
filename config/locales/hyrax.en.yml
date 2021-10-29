@@ -429,6 +429,7 @@ en:
           end_label: Ending [defaults to now]
           heading: Display files deposited by users
           start_label: Starting
+        works:
           headers:
             main: Work Statistics
             total: 'Total Works:'
@@ -752,13 +753,6 @@ en:
         select_heading: 'Select the collection to add your files to:'
         title: Add to collection
         update: Save changes
-    collection_type:
-      admin_set_title: Admin Set
-      default_title: User Collection
-    collection_types:
-      create_service:
-        admin_set_description: An aggregation of works that is intended to help with administrative control. Admin Sets provide a way of defining behaviors and policies around a set of works.
-        default_description: A User Collection can be created by any user to organize their works.
     collections:
       search_form:
         button_label: Go
@@ -780,6 +774,13 @@ en:
         number_of_results_to_display_per_page: Number of results to display per page
         results_per_page: 'Results per page:'
         sort_by_html: "<span>Sort by:</span>"
+    collection_type:
+      admin_set_title: Admin Set
+      default_title: User Collection
+    collection_types:
+      create_service:
+        admin_set_description: An aggregation of works that is intended to help with administrative control. Admin Sets provide a way of defining behaviors and policies around a set of works.
+        default_description: A User Collection can be created by any user to organize their works.
     contact_form:
       button_label: Send
       email_label: Your Email
@@ -1022,6 +1023,7 @@ en:
           view_admin_set: View collection
           view_collection: View collection
           work_confirmation: Deleting a work from %{application_name} is permanent. Click OK to delete this work from %{application_name}, or Cancel to cancel this operation
+        collections: Collections
         collection_list:
           description: 'Description:'
           edit_access: 'Edit Access:'
