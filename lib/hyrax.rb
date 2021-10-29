@@ -140,4 +140,17 @@ module Hyrax
   def self.custom_queries
     query_service.custom_queries
   end
+
+  ##
+  # The default admin set
+  def self.default_admin_set
+    @default_admin_set ||= Hyrax::AdminSetCreateService.find_or_create_default_admin_set
+  end
+
+  ##
+  # @param admin_set [#to_s] the id of the admin set to test
+  # @return [Boolean] true if it is the default admin set; otherwise, false
+  def self.default_admin_set_id?(id:)
+    id.to_s == default_admin_set.id.to_s
+  end
 end
