@@ -14,8 +14,9 @@ RSpec.describe Hyrax::AdminSetCreateService do
 
     context "when new admin set fails to persist" do
       before do
-        allow(persister).to receive(:save).with(resource: instance_of(Hyrax::AdministrativeSet))
-                                          .and_raise(RuntimeError)
+        allow(persister).to receive(:save)
+          .with(resource: instance_of(Hyrax::AdministrativeSet))
+          .and_raise(RuntimeError)
       end
 
       it "returns false" do
@@ -28,17 +29,21 @@ RSpec.describe Hyrax::AdminSetCreateService do
   describe '.find_or_create_default_admin_set', :clean_repo do
     context "when default admin set doesn't exist yet" do
       it "is a convenience method for .create_default_admin_set!" do
-        expect(query_service).to receive(:find_by).with(id: described_class::DEFAULT_ID)
-                                                  .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
+        expect(query_service).to receive(:find_by_alternate_identifier)
+          .with(alternate_identifier: described_class::DEFAULT_ID)
+          .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
         expect(described_class).to receive(:create_default_admin_set!).and_call_original
-        expect(query_service).to receive(:find_by).with(id: anything).and_call_original # permission template
+        expect(query_service).to receive(:find_by_alternate_identifier) # permission template
+          .with(alternate_identifier: anything)
+          .and_call_original
         admin_set = described_class.find_or_create_default_admin_set
         expect(admin_set.title).to eq described_class::DEFAULT_TITLE
+        expect(admin_set.alternate_ids).to match_array [described_class::DEFAULT_ID]
       end
 
       it 'sets up an active workflow' do
-        described_class.find_or_create_default_admin_set
-        expect(Sipity::Workflow.find_active_workflow_for(admin_set_id: AdminSet::DEFAULT_ID))
+        admin_set = described_class.find_or_create_default_admin_set
+        expect(Sipity::Workflow.find_active_workflow_for(admin_set_id: admin_set.id))
           .to be_persisted
       end
     end
@@ -47,23 +52,14 @@ RSpec.describe Hyrax::AdminSetCreateService do
       let(:default_admin_set) { FactoryBot.valkyrie_create(:default_hyrax_admin_set) }
 
       it "returns existing default admin set" do
-        expect(query_service).to receive(:find_by).with(id: described_class::DEFAULT_ID)
-                                                  .and_return(default_admin_set)
+        expect(query_service).to receive(:find_by_alternate_identifier)
+          .with(alternate_identifier: described_class::DEFAULT_ID)
+          .and_return(default_admin_set)
         expect(described_class).not_to receive(:create_default_admin_set!)
         admin_set = described_class.find_or_create_default_admin_set
         expect(admin_set.title).to eq described_class::DEFAULT_TITLE
+        expect(admin_set.alternate_ids).to match_array [described_class::DEFAULT_ID]
       end
-    end
-  end
-
-  describe ".default_admin_set?" do
-    it "is true for the default admin set id" do
-      expect(described_class.default_admin_set?(id: described_class::DEFAULT_ID))
-        .to eq true
-    end
-
-    it "is false for anything else" do
-      expect(described_class.default_admin_set?(id: 'anythingelse')).to eq false
     end
   end
 
@@ -134,7 +130,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
     end
 
     describe "#create!" do
-      let(:admin_set) { AdminSet.new(title: ['test']) }
+      let(:admin_set) { FactoryBot.build(:hyrax_admin_set) }
 
       context "when the admin_set is valid" do
         let(:permission_template) { Hyrax::PermissionTemplate.find_by(source_id: admin_set.id) }
@@ -161,7 +157,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
 
         it 'sets creator' do
           updated_admin_set = service.create!
-          expect(updated_admin_set.creator).to eq [user.user_key]
+          expect(updated_admin_set.creator).to match_array([user.user_key])
         end
 
         it 'grants edit access to creator and admins' do

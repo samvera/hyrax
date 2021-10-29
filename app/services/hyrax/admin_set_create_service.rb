@@ -40,16 +40,9 @@ module Hyrax
       # @see Hyrax::AdministrativeSet
       # @raise [RuntimeError] if admin set cannot be persisted
       def find_or_create_default_admin_set
-        Hyrax.query_service.find_by(id: DEFAULT_ID)
+        Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: DEFAULT_ID)
       rescue Valkyrie::Persistence::ObjectNotFoundError
         create_default_admin_set!
-      end
-
-      # @api public
-      # Is the admin_set the default Hyrax::AdministrativeSet
-      # @param id [#to_s] the id of the admin set to check
-      def default_admin_set?(id:)
-        id.to_s == DEFAULT_ID
       end
 
       # @api public
@@ -66,7 +59,7 @@ module Hyrax
                          "Instead, use 'Hyrax::AdminSetCreateService.call!'.  ")
         call!(admin_set: admin_set, creating_user: creating_user, **kwargs).present?
       rescue RuntimeError => err
-        raise err if default_admin_set?(id: admin_set.id)
+        raise err if Hyrax.default_admin_set_id?(id: admin_set.id)
         false
       end
 
@@ -79,7 +72,8 @@ module Hyrax
       # @raise [RuntimeError] if you attempt to create a default admin set via this mechanism
       # @raise [RuntimeError] if admin set cannot be persisted
       def call!(admin_set:, creating_user:, **kwargs)
-        raise "Use .find_or_create_default_admin_set to create a default admin set" if default_admin_set?(id: admin_set.id)
+        raise "Use .find_or_create_default_admin_set to create a default admin set" if
+          Hyrax.default_admin_set_id?(id: admin_set.id)
         new(admin_set: admin_set, creating_user: creating_user, **kwargs).create!
       end
 
@@ -88,7 +82,7 @@ module Hyrax
       # TODO: Parameters admin_set_id and title are defined to support .create_default_admin_set
       #       which is deprecated.  When it is removed, the parameters will no longer be required.
       def create_default_admin_set!(admin_set_id: DEFAULT_ID, title: DEFAULT_TITLE)
-        admin_set = Hyrax::AdministrativeSet.new(id: admin_set_id, title: Array.wrap(title))
+        admin_set = Hyrax::AdministrativeSet.new(alternate_ids: [admin_set_id], title: Array.wrap(title))
         new(admin_set: admin_set, creating_user: nil).create!
       end
     end
@@ -125,8 +119,15 @@ module Hyrax
 
     private
 
-    def default_admin_set?(id:)
-      self.class.default_admin_set?(id: id)
+    # WARNING: Can't use Hyrax.default_admin_set? during creation of an admin set.
+    #          If the admin set being created is the default admin set, then a call
+    #          to Hyrax.default_admin_set? would try to create it again leading to
+    #          an infinite loop.
+    def default_admin_set?
+      # For Wings and ActiveFedora, the id will be the DEFAULT_ID.  For any other
+      # Valkyrie Adapter, the DEFAULT_ID will be an alternate id.
+      return admin_set.id == Hyrax::AdminSetCreateService::DEFAULT_ID if admin_set.is_a? AdminSet
+      admin_set.alternate_ids == [Hyrax::AdminSetCreateService::DEFAULT_ID]
     end
 
     def admin_group_name
@@ -141,10 +142,10 @@ module Hyrax
       updated_admin_set = Hyrax.persister.save(resource: admin_set).tap do |result|
         if result
           ActiveRecord::Base.transaction do
-            permission_template = permissions_create_service.create_default(collection: admin_set,
+            permission_template = permissions_create_service.create_default(collection: result,
                                                                             creating_user: creating_user)
             workflow = create_workflows_for(permission_template: permission_template)
-            create_default_access_for(permission_template: permission_template, workflow: workflow) if default_admin_set?(id: admin_set.id)
+            create_default_access_for(permission_template: permission_template, workflow: workflow) if default_admin_set?
           end
         end
       end
@@ -163,7 +164,7 @@ module Hyrax
             permission_template = permissions_create_service.create_default(collection: admin_set,
                                                                             creating_user: creating_user)
             workflow = create_workflows_for(permission_template: permission_template)
-            create_default_access_for(permission_template: permission_template, workflow: workflow) if default_admin_set?(id: admin_set.id)
+            create_default_access_for(permission_template: permission_template, workflow: workflow) if default_admin_set?
           end
         end
       end
