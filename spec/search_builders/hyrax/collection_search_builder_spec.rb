@@ -12,7 +12,7 @@ RSpec.describe Hyrax::CollectionSearchBuilder do
   describe '#models' do
     its(:models) do
       is_expected
-        .to contain_exactly(*[::Collection, Hyrax.config.collection_class].uniq)
+        .to contain_exactly(*Hyrax.collection_classes)
     end
   end
 
