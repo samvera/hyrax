@@ -142,6 +142,25 @@ RSpec.describe Hyrax::AccessControlList do
           .to change { listener.object_acl_updated&.payload }
           .to include(result: :success)
       end
+
+      context 'when resource is not saved' do
+        context 'and resource is :hyrax_resource' do
+          let(:resource) { FactoryBot.build(:hyrax_resource) }
+          it 'does not save the permission policies' do
+            expect { acl.save }
+              .not_to change { Hyrax::AccessControl.for(resource: resource, query_service: acl.query_service).permissions }
+          end
+        end
+
+        context 'and resource is any other model' do
+          let(:resource) { FactoryBot.build(:hyrax_admin_set) } # same error for :hyrax_collection
+          it 'does not save the permission policies' do
+            pending 'error occurs when the resource is a :hyrax_work, :hyrax_collection, or :hyrax_admin_set'
+            expect { acl.save }
+              .not_to change { Hyrax::AccessControl.for(resource: resource, query_service: acl.query_service).permissions }
+          end
+        end
+      end
     end
 
     context 'with deletions' do
