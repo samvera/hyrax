@@ -25,6 +25,13 @@ module Hyrax
     end
 
     ##
+    # @since 3.1.0
+    # @return [String] the css class for the collection model icon
+    def collection_model_icon
+      Hyrax::ModelIcon.css_class_for(Hyrax.config.collection_class)
+    end
+
+    ##
     # @since 3.0.0
     # @return [#to_s]
     def collection_metadata_label(collection, field)
