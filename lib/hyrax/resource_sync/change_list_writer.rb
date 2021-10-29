@@ -62,7 +62,8 @@ module Hyrax
       def build_resources(xml, doc_set)
         doc_set.each do |doc|
           model = doc.fetch('has_model_ssim', []).first.safe_constantize
-          if model.try(:collection?) || model == Hyrax.config.collection_class
+
+          if model == Hyrax.config.collection_class || model == ::Collection
             build_resource(xml, doc, model, hyrax_routes)
           else
             build_resource(xml, doc, model, main_app_routes)
@@ -76,6 +77,7 @@ module Hyrax
       def build_resource(xml, doc, model, routes)
         modified_date = doc.fetch("system_modified_dtsi")
         created_date = doc.fetch("system_create_dtsi")
+
         xml.url do
           key = model.model_name.singular_route_key
           xml.loc routes.send(key + "_url", doc['id'], host: resource_host)
