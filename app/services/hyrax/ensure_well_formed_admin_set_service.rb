@@ -19,7 +19,7 @@ module Hyrax
     #
     # @see Hyrax::AdminSetCreateService.find_or_create_default_admin_set
     def self.call(admin_set_id: nil)
-      admin_set_id = admin_set_id.presence&.to_s || Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s
+      admin_set_id = admin_set_id.presence&.to_s || Hyrax::AdminSetCreateService.default_admin_set_id.to_s
       Hyrax::PermissionTemplate.find_or_create_by!(source_id: admin_set_id)
       admin_set_id
     end

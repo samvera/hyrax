@@ -44,21 +44,23 @@ class AdminSet < ActiveFedora::Base
 
   def self.default_set?(id)
     Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
-                     "Instead, use 'Hyrax::AdminSetCreateService.default_admin_set?(id:)'.")
-    Hyrax::AdminSetCreateService.default_admin_set?(id: id)
+                     "Instead, use 'Hyrax::AdminSetCreateService.default_admin_set_id?(id:)' or " \
+                     "'Hyrax::AdminSetCreateService.default_admin_set?(admin_set:)'")
+    Hyrax::AdminSetCreateService.default_admin_set_id?(id: id)
   end
 
   def default_set?
     Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
-                     "Instead, use 'Hyrax::AdminSetCreateService.default_admin_set?(id:)'.")
+                     "Instead, use 'Hyrax::AdminSetCreateService.default_admin_set_id?(id:)' or " \
+                     "'Hyrax::AdminSetCreateService.default_admin_set?(admin_set:)'")
     self.class.default_set?(id)
   end
 
   # Creates the default AdminSet and an associated PermissionTemplate with workflow
   def self.find_or_create_default_admin_set_id
     Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
-                     "Instead, use 'Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id'.")
-    Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s
+                     "Instead, use 'Hyrax::AdminSetCreateService.default_admin_set_id'.")
+    Hyrax::AdminSetCreateService.default_admin_set_id
   end
 
   def collection_type_gid
