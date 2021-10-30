@@ -66,7 +66,7 @@ module Hyrax
     private
 
     def default_set?
-      Hyrax::AdminSetCreateService.default_admin_set?(id: id)
+      Hyrax::AdminSetCreateService.default_admin_set_id?(id: id)
     end
   end
 end
