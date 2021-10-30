@@ -37,6 +37,7 @@ FactoryBot.define do
 
   factory :default_hyrax_admin_set, class: 'Hyrax::AdministrativeSet' do
     id { Hyrax::AdminSetCreateService::DEFAULT_ID }
+    alternate_ids { [Hyrax::AdminSetCreateService::DEFAULT_ID] }
     title { Hyrax::AdminSetCreateService::DEFAULT_TITLE }
   end
 end
