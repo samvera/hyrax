@@ -80,6 +80,10 @@ module Hyrax
         message += "It is UNEXPECTED if you are booting up a Hyrax powered application via `rails server'"
         Rails.logger.info(message)
       end
+
+      # preload default admin set so it is available for use
+      # NOTE: If it does not exist, it will be created.  This will only happen once.
+      Hyrax.default_admin_set
     end
 
     initializer 'requires' do
