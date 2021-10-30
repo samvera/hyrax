@@ -59,7 +59,7 @@ module Hyrax
                          "Instead, use 'Hyrax::AdminSetCreateService.call!'.  ")
         call!(admin_set: admin_set, creating_user: creating_user, **kwargs).present?
       rescue RuntimeError => err
-        raise err if Hyrax.default_admin_set_id?(id: admin_set.id)
+        raise err if default_admin_set?(admin_set)
         false
       end
 
@@ -72,12 +72,23 @@ module Hyrax
       # @raise [RuntimeError] if you attempt to create a default admin set via this mechanism
       # @raise [RuntimeError] if admin set cannot be persisted
       def call!(admin_set:, creating_user:, **kwargs)
-        raise "Use .find_or_create_default_admin_set to create a default admin set" if
-          Hyrax.default_admin_set_id?(id: admin_set.id)
+        raise "Use Hyrax.default_admin_set to get an instance of the default admin set" if
+          default_admin_set?(admin_set)
         new(admin_set: admin_set, creating_user: creating_user, **kwargs).create!
       end
 
       private
+
+      # WARNING: Can't use Hyrax.default_admin_set? during creation of an admin set.
+      #          If the admin set being created is the default admin set, then a call
+      #          to Hyrax.default_admin_set? would try to create it again leading to
+      #          an infinite loop.
+      def default_admin_set?(admin_set)
+        # For ActiveFedora, the id will be the DEFAULT_ID.
+        return admin_set.id == DEFAULT_ID if admin_set.is_a? AdminSet
+        # For Valkyrie adapters, the alternate_ids will include the DEFAULT_ID.
+        admin_set.alternate_ids.include? DEFAULT_ID
+      end
 
       # TODO: Parameters admin_set_id and title are defined to support .create_default_admin_set
       #       which is deprecated.  When it is removed, the parameters will no longer be required.
@@ -119,15 +130,8 @@ module Hyrax
 
     private
 
-    # WARNING: Can't use Hyrax.default_admin_set? during creation of an admin set.
-    #          If the admin set being created is the default admin set, then a call
-    #          to Hyrax.default_admin_set? would try to create it again leading to
-    #          an infinite loop.
     def default_admin_set?
-      # For Wings and ActiveFedora, the id will be the DEFAULT_ID.  For any other
-      # Valkyrie Adapter, the DEFAULT_ID will be an alternate id.
-      return admin_set.id == Hyrax::AdminSetCreateService::DEFAULT_ID if admin_set.is_a? AdminSet
-      admin_set.alternate_ids == [Hyrax::AdminSetCreateService::DEFAULT_ID]
+      self.class.send(:default_admin_set?, admin_set)
     end
 
     def admin_group_name
