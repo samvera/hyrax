@@ -14,8 +14,8 @@ module Hyrax
         def create_default(collection:, creating_user:, grants: [])
           collection_type = Hyrax::CollectionType.find_by_gid!(collection.collection_type_gid)
           access_grants = access_grants_attributes(collection_type: collection_type, creating_user: creating_user, grants: grants)
-          template = Hyrax::PermissionTemplate.create!(source_id: collection.id.to_s,
-                                                       access_grants_attributes: access_grants.uniq)
+          template = PermissionTemplate.create!(source_id: collection.id.to_s,
+                                                access_grants_attributes: access_grants.uniq)
 
           template.reset_access_controls_for(collection: collection, interpret_visibility: true)
           template
