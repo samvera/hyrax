@@ -6,7 +6,7 @@ module Hyrax
         include Hyrax::BreadcrumbsForWorksAnalytics
 
         def index
-          return unless Hyrax.config.analytics == true
+          return unless Hyrax.config.analytics == 'true'
 
           @accessible_works ||= accessible_works
           @accessible_file_sets ||= accessible_file_sets

@@ -9,7 +9,7 @@
     <div class="work-reports">
 
     <div class="panel panel-default">
-    <% if Hyrax.config.analytics == true %>
+    <% if Hyrax.config.analytics == 'true' %>
       <% if current_user.ability.admin? %>
         <div class="panel-heading"><b><%= @works_count %> <%= t('.works') %></b> <%= t('.repo_summary') %> <b><%= @pageviews.all if @pageviews %> <%= t('.views') %></b> <%= t('.and') %> <b><%= @downloads.all if @downloads %> <%= t('.downloads') %></b>.</div>
       <% else %>

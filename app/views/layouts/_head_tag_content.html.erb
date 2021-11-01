@@ -25,7 +25,7 @@ signed in %>
 
 <%= render 'shared/appearance_styles' %>
 
-<% unless Hyrax.config.analytics == false %>
+<% unless Hyrax.config.analytics == 'false' %>
   <% if Hyrax.config.analytics_provider == 'google' %>
     <%= render partial: 'shared/ga', formats: [:html]  %>
   <% elsif Hyrax.config.analytics_provider == 'matomo' %>
