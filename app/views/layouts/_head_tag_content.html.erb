@@ -25,14 +25,12 @@ signed in %>
 
 <%= render 'shared/appearance_styles' %>
 
-<% if Hyrax.config.analytics_provider == 'google' %>
-  <!-- Google Analytics -->
-  <%= render partial: 'shared/ga', formats: [:html]  %>
-  <!-- End Google Analytics -->
-<% elsif Hyrax.config.analytics_provider == 'matomo' %>
-  <!-- Matomo Analytics -->
-  <%= render partial: 'shared/matomo', formats: [:html] %>
-  <!-- End Matomo Analytics -->
+<% unless Hyrax.config.analytics == false %>
+  <% if Hyrax.config.analytics_provider == 'google' %>
+    <%= render partial: 'shared/ga', formats: [:html]  %>
+  <% elsif Hyrax.config.analytics_provider == 'matomo' %>
+    <%= render partial: 'shared/matomo', formats: [:html] %>
+  <% end %>
 <% end %>
 
 <!-- for extras, e.g., a favicon -->

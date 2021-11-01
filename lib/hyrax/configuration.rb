@@ -130,7 +130,7 @@ module Hyrax
     attr_writer :analytic_start_date
     attr_reader :analytic_start_date
 
-    def google_analtyics_id=(value)
+    def google_analytics_id=(value)
       Deprecation.warn("google_analytics_id is deprecated; use analytics_id from config/analytics.yml instead.")
       Hyrax::Analytics.config.analytics_id = value
     end
