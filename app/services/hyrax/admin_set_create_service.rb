@@ -141,7 +141,7 @@ module Hyrax
       updated_admin_set = Hyrax.persister.save(resource: admin_set).tap do |result|
         if result
           ActiveRecord::Base.transaction do
-            permission_template = permissions_create_service.create_default(collection: admin_set,
+            permission_template = permissions_create_service.create_default(collection: result,
                                                                             creating_user: creating_user)
             workflow = create_workflows_for(permission_template: permission_template)
             create_default_access_for(permission_template: permission_template, workflow: workflow) if default_admin_set?(id: admin_set.id)
