@@ -134,7 +134,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
     end
 
     describe "#create!" do
-      let(:admin_set) { AdminSet.new(title: ['test']) }
+      let(:admin_set) { FactoryBot.build(:hyrax_admin_set) }
 
       context "when the admin_set is valid" do
         let(:permission_template) { Hyrax::PermissionTemplate.find_by(source_id: admin_set.id) }
@@ -147,7 +147,8 @@ RSpec.describe Hyrax::AdminSetCreateService do
             .to receive(:available_workflows).and_return(available_workflows)
           allow(Sipity::Workflow)
             .to receive(:activate!)
-            .with(permission_template: kind_of(Hyrax::PermissionTemplate), workflow_name: Hyrax.config.default_active_workflow_name)
+            .with(permission_template: kind_of(Hyrax::PermissionTemplate),
+                  workflow_name: Hyrax.config.default_active_workflow_name)
           # Load expected Sipity roles, which were likely cleaned by DatabaseCleaner
           Hyrax.config.persist_registered_roles!
         end
