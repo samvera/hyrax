@@ -3,6 +3,9 @@ $VERBOSE = nil unless ENV['RUBY_LOUD'] # silence loud Ruby 2.7 deprecations
 ENV['RAILS_ENV'] = 'test'
 ENV['DATABASE_URL'] = ENV['DATABASE_TEST_URL'] if ENV['DATABASE_TEST_URL']
 
+# Analytics is turned off by default
+ENV['HYRAX_ANALYTICS'] = 'false'
+
 require "bundler/setup"
 
 def ci_build?
