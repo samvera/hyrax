@@ -9,7 +9,11 @@ RSpec.describe Hyrax::WorkSearchBuilder do
     allow(builder).to receive(:gated_discovery_filters).and_return(["access_filter1", "access_filter2"])
 
     # This prevents any generated classes from interfering with this test:
-    allow(builder).to receive(:work_classes).and_return([GenericWork])
+    allow(builder).to receive(:work_classes).and_return([Monograph])
+  end
+
+  let(:class_filter_string) do
+    [Monograph, Collection, Hyrax.config.collection_class].uniq.join(',')
   end
 
   describe "#query" do
@@ -32,7 +36,7 @@ RSpec.describe Hyrax::WorkSearchBuilder do
 
         it "filters for id, access, suppressed and type" do
           expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
-                                      "{!terms f=has_model_ssim}GenericWork,Collection",
+                                      "{!terms f=has_model_ssim}#{class_filter_string}",
                                       "{!raw f=id}123abc"]
         end
       end
@@ -46,7 +50,7 @@ RSpec.describe Hyrax::WorkSearchBuilder do
 
           it "filters for id, access, suppressed and type" do
             expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
-                                        "{!terms f=has_model_ssim}GenericWork,Collection",
+                                        "{!terms f=has_model_ssim}#{class_filter_string}",
                                         "-suppressed_bsi:true",
                                         "{!raw f=id}123abc"]
           end
@@ -59,7 +63,7 @@ RSpec.describe Hyrax::WorkSearchBuilder do
 
           it "filters for id, access, suppressed and type" do
             expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
-                                        "{!terms f=has_model_ssim}GenericWork,Collection",
+                                        "{!terms f=has_model_ssim}#{class_filter_string}",
                                         "{!raw f=id}123abc"]
           end
         end
@@ -79,7 +83,7 @@ RSpec.describe Hyrax::WorkSearchBuilder do
 
         it "filters for id, access, suppressed and type" do
           expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
-                                      "{!terms f=has_model_ssim}GenericWork,Collection",
+                                      "{!terms f=has_model_ssim}#{class_filter_string}",
                                       "-suppressed_bsi:true",
                                       "{!raw f=id}123abc"]
         end
@@ -92,7 +96,7 @@ RSpec.describe Hyrax::WorkSearchBuilder do
 
         it "filters for id, access, suppressed and type" do
           expect(subject[:fq]).to eq ["access_filter1 OR access_filter2",
-                                      "{!terms f=has_model_ssim}GenericWork,Collection",
+                                      "{!terms f=has_model_ssim}#{class_filter_string}",
                                       "{!raw f=id}123abc"]
         end
       end

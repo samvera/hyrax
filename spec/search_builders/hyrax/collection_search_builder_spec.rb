@@ -10,7 +10,10 @@ RSpec.describe Hyrax::CollectionSearchBuilder do
   end
 
   describe '#models' do
-    its(:models) { is_expected.to eq([Collection]) }
+    its(:models) do
+      is_expected
+        .to contain_exactly(*[::Collection, Hyrax.config.collection_class].uniq)
+    end
   end
 
   describe '#discovery_permissions' do

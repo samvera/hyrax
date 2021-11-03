@@ -1476,6 +1476,7 @@ en:
       owner:
         edit: Edit access
       read: View/Download
+    read_only: The repository is in read-only mode for maintenance. No submissions or edits can be made at this time.
     search:
       button:
         html: <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Go

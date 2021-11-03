@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::WorkflowActionsController, type: :controller do
   let(:user) { FactoryBot.create(:user) }
-  let(:generic_work) { FactoryBot.create(:work) }
-  let(:form) { instance_double(described_class::DEFAULT_FORM_CLASS) }
+  let(:work) { FactoryBot.valkyrie_create(:monograph) }
+  let(:form) { instance_double(described_class::DEFAULT_FORM_CLASS, errors: {}) }
 
   routes { Rails.application.routes }
 
@@ -12,7 +12,7 @@ RSpec.describe Hyrax::WorkflowActionsController, type: :controller do
 
   describe '#update' do
     it 'will redirect to login path if user not authenticated' do
-      put :update, params: { id: generic_work.to_param, workflow_action: { name: 'advance', comment: '' } }
+      put :update, params: { id: work.to_param, workflow_action: { name: 'advance', comment: '' } }
       expect(response).to redirect_to(main_app.user_session_path)
     end
 
@@ -20,7 +20,7 @@ RSpec.describe Hyrax::WorkflowActionsController, type: :controller do
       expect(form).to receive(:save).and_return(false)
       sign_in(user)
 
-      put :update, params: { id: generic_work.to_param, workflow_action: { name: 'advance', comment: '' } }
+      put :update, params: { id: work.to_param, workflow_action: { name: 'advance', comment: '' } }
       expect(response).to be_unauthorized
     end
 
@@ -28,8 +28,8 @@ RSpec.describe Hyrax::WorkflowActionsController, type: :controller do
       expect(form).to receive(:save).and_return(true)
       sign_in(user)
 
-      put :update, params: { id: generic_work.to_param, workflow_action: { name: 'advance', comment: '' } }
-      expect(response).to redirect_to(main_app.hyrax_generic_work_path(generic_work, locale: 'en'))
+      put :update, params: { id: work.to_param, workflow_action: { name: 'advance', comment: '' } }
+      expect(response).to redirect_to(main_app.hyrax_monograph_path(work, locale: 'en'))
     end
 
     context 'when responding to json' do
@@ -37,7 +37,7 @@ RSpec.describe Hyrax::WorkflowActionsController, type: :controller do
         expect(form).to receive(:save).and_return(true)
         sign_in(user)
 
-        put :update, params: { id: generic_work.to_param, workflow_action: { name: 'advance', comment: '' } }, format: :json
+        put :update, params: { id: work.to_param, workflow_action: { name: 'advance', comment: '' } }, format: :json
         expect(response.status).to eq 200
       end
 
@@ -45,7 +45,7 @@ RSpec.describe Hyrax::WorkflowActionsController, type: :controller do
         expect(form).to receive(:save).and_return(false)
         sign_in(user)
 
-        put :update, params: { id: generic_work.to_param, workflow_action: { name: 'advance', comment: '' } }, format: :json
+        put :update, params: { id: work.to_param, workflow_action: { name: 'advance', comment: '' } }, format: :json
         expect(response.status).to eq 422
       end
     end

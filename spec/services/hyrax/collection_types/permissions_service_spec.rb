@@ -259,6 +259,50 @@ RSpec.describe Hyrax::CollectionTypes::PermissionsService do
     end
   end
 
+  describe '.can_create_collection_of_type?' do
+    let(:ability) { instance_double(Ability, admin?: false, current_user: user, user_groups: []) }
+    let(:user) { create(:user) }
+    let(:collection_type) { create(:collection_type) }
+
+    context 'when user has no priviledges for the collection type' do
+      it 'returns false' do
+        expect(described_class.can_create_collection_of_type?(collection_type: collection_type, user: user)).to be false
+      end
+
+      context 'and identity is passed as an ability' do
+        it 'returns false' do
+          expect(described_class.can_create_collection_of_type?(collection_type: collection_type, ability: ability)).to be false
+        end
+      end
+    end
+
+    context 'when user is a manager for the collection type' do
+      let(:collection_type) { create(:collection_type, manager_user: user) }
+      it 'returns true' do
+        expect(described_class.can_create_collection_of_type?(collection_type: collection_type, user: user)).to be true
+      end
+
+      context 'and identity is passed as an ability' do
+        it 'returns true' do
+          expect(described_class.can_create_collection_of_type?(collection_type: collection_type, ability: ability)).to be true
+        end
+      end
+    end
+
+    context 'when user is a creator for the collection type' do
+      let(:collection_type) { create(:collection_type, creator_user: user) }
+      it 'returns true' do
+        expect(described_class.can_create_collection_of_type?(collection_type: collection_type, user: user)).to be true
+      end
+
+      context 'and identity is passed as an ability' do
+        it 'returns true' do
+          expect(described_class.can_create_collection_of_type?(collection_type: collection_type, ability: ability)).to be true
+        end
+      end
+    end
+  end
+
   describe '.user_edit_grants_for_collection_of_type' do
     it 'is empty for user collection type' do
       expect(described_class.user_edit_grants_for_collection_of_type(collection_type: user_collection_type))

@@ -110,7 +110,7 @@ module Hyrax
           raise Hyrax::SingleMembershipError, message if message.present?
           new_member.member_of_collection_ids << collection_id # only populate this direction
           new_member = Hyrax.persister.save(resource: new_member)
-          Hyrax.publisher.publish('object.metadata.updated', object: new_member, user: user)
+          publish_metadata_updated(new_member, user)
           new_member
         end
 
@@ -148,8 +148,18 @@ module Hyrax
           return member unless member?(collection_id: collection_id, member: member)
           member.member_of_collection_ids.delete(collection_id)
           member = Hyrax.persister.save(resource: member)
-          Hyrax.publisher.publish('object.metadata.updated', object: member, user: user)
+          publish_metadata_updated(member, user)
           member
+        end
+
+        private
+
+        def publish_metadata_updated(member, user)
+          if member.collection?
+            Hyrax.publisher.publish('collection.metadata.updated', collection: member, user: user)
+          else
+            Hyrax.publisher.publish('object.metadata.updated', object: member, user: user)
+          end
         end
       end
     end

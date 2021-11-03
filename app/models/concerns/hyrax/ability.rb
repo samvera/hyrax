@@ -397,7 +397,7 @@ module Hyrax
     end
 
     def curation_concerns_models
-      [::FileSet, ::Collection] + Hyrax.config.curation_concerns
+      [::FileSet, Hyrax.config.collection_class] + Hyrax.config.curation_concerns
     end
 
     def can_review_submissions?

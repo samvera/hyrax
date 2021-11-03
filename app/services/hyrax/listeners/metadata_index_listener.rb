@@ -15,10 +15,17 @@ module Hyrax
       # Re-index the resource.
       #
       # @param event [Dry::Event]
-      def on_object_metadata_updated(event)
-        log_non_resource(event) && return unless
-          event[:object].is_a?(Valkyrie::Resource)
+      def on_collection_metadata_updated(event)
+        return unless resource? event[:collection]
+        Hyrax.index_adapter.save(resource: event[:collection])
+      end
 
+      ##
+      # Re-index the resource.
+      #
+      # @param event [Dry::Event]
+      def on_object_metadata_updated(event)
+        return unless resource? event[:object]
         Hyrax.index_adapter.save(resource: event[:object])
       end
 
@@ -27,17 +34,26 @@ module Hyrax
       #
       # @param event [Dry::Event]
       def on_object_deleted(event)
-        log_non_resource(event.payload) && return unless
-          event.payload[:object].is_a?(Valkyrie::Resource)
-
+        return unless resource?(event.payload[:object])
         Hyrax.index_adapter.delete(resource: event[:object])
       end
 
       private
 
-      def log_non_resource(event)
-        Hyrax.logger.info('Skipping object reindex because the object ' \
-                          "#{event[:object]} was not a Valkyrie::Resource.")
+      def resource?(resource)
+        return true if resource.is_a? Valkyrie::Resource
+        log_non_resource(resource)
+        false
+      end
+
+      def log_non_resource(resource)
+        generic_type = resource_generic_type(resource)
+        Hyrax.logger.info("Skipping #{generic_type} reindex because the " \
+                          "#{generic_type} #{resource} was not a Valkyrie::Resource.")
+      end
+
+      def resource_generic_type(resource)
+        resource.try(:collection?) ? 'collection' : 'object'
       end
     end
   end

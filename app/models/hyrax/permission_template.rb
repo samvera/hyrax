@@ -216,6 +216,8 @@ module Hyrax
     end
 
     ##
+    # @param interpret_visibility [Boolean] whether to retain the existing
+    #   visibility when applying permission template ACLs
     # @return [Boolean]
     def reset_access_controls(interpret_visibility: false)
       reset_access_controls_for(collection: source_model,
@@ -223,8 +225,11 @@ module Hyrax
     end
 
     ##
+    # @param collection [::Collection, Hyrax::Resource]
+    # @param interpret_visibility [Boolean] whether to retain the existing
+    #   visibility when applying permission template ACLs
     # @return [Boolean]
-    def reset_access_controls_for(collection:, interpret_visibility: false)
+    def reset_access_controls_for(collection:, interpret_visibility: false) # rubocop:disable Metrics/MethodLength
       interpreted_read_groups = read_groups
 
       if interpret_visibility
@@ -233,10 +238,19 @@ module Hyrax
         interpreted_read_groups += visibilities.additions_for(visibility: collection.visibility)
       end
 
-      collection.update!(edit_users: edit_users,
-                         edit_groups: edit_groups,
-                         read_users: read_users,
-                         read_groups: interpreted_read_groups.uniq)
+      case collection
+      when Valkyrie::Resource
+        collection.permission_manager.edit_groups = edit_groups
+        collection.permission_manager.edit_users  = edit_users
+        collection.permission_manager.read_groups = interpreted_read_groups
+        collection.permission_manager.read_users  = read_users
+        collection.permission_manager.acl.save
+      else
+        collection.update!(edit_users: edit_users,
+                           edit_groups: edit_groups,
+                           read_users: read_users,
+                           read_groups: interpreted_read_groups.uniq)
+      end
     end
 
     private

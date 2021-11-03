@@ -29,8 +29,12 @@ module Hyrax
         #   applied and the resource is saved;
         #   `Failure([#to_s, change_set.resource])`, otherwise.
         def call(change_set, user: nil)
-          unsaved = change_set.sync
-          saved = @persister.save(resource: unsaved)
+          begin
+            unsaved = change_set.sync
+            saved = @persister.save(resource: unsaved)
+          rescue StandardError => err
+            return Failure(["Failed save on #{change_set}\n\t#{err.message}", change_set.resource])
+          end
 
           # if we have a permission manager, it's acting as a local cache of another resource.
           # we want to resync changes that we had in progress so we can persist them later.
@@ -38,12 +42,20 @@ module Hyrax
             unsaved.respond_to?(:permission_manager)
 
           user ||= ::User.find_by_user_key(saved.depositor)
-          Hyrax.publisher.publish('object.deposited', object: saved, user: user) if unsaved.new_record
-          Hyrax.publisher.publish('object.metadata.updated', object: saved, user: user)
 
+          publish_changes(resource: saved, user: user, new: unsaved.new_record)
           Success(saved)
-        rescue StandardError => err
-          Failure([err.message, change_set.resource])
+        end
+
+        private
+
+        def publish_changes(resource:, user:, new: false)
+          if resource.collection?
+            Hyrax.publisher.publish('collection.metadata.updated', collection: resource, user: user)
+          else
+            Hyrax.publisher.publish('object.deposited', object: resource, user: user) if new
+            Hyrax.publisher.publish('object.metadata.updated', object: resource, user: user)
+          end
         end
       end
     end

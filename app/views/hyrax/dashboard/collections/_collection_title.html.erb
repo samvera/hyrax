@@ -3,7 +3,7 @@
 <section class="collection-title-row-wrapper"
   data-source="my"
   data-id="<%= id %>"
-  data-colls-hash="<%= presenter.available_parent_collections(scope: controller) %>"
+  data-colls-hash="<%= available_parent_collections_data(collection: presenter) %>"
   data-post-url="<%= hyrax.dashboard_create_nest_collection_within_path(id) %>"
   data-post-delete-url="<%= hyrax.dashboard_collection_path(id) %>">
 

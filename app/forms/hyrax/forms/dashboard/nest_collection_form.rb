@@ -10,18 +10,28 @@ module Hyrax
         self.default_query_service = Hyrax::Collections::NestedCollectionQueryService
         self.default_persistence_service = Hyrax::Collections::NestedCollectionPersistenceService
 
+        ##
         # @param parent [::Collection, NilClass]
         # @param child [::Collection, NilClass]
+        # @param parent_id [String, nil]
+        # @param child_id [String, nil]
         # @param context [#can?,#repository,#blacklight_config]
         # @param query_service [Hyrax::Collections::NestedCollectionQueryService]
         # @param persistence_service [Hyrax::Collections::NestedCollectionPersistenceService] responsible for persisting the parent/child relationship
-        def initialize(parent: nil, child: nil, context:, query_service: default_query_service, persistence_service: default_persistence_service)
-          self.parent = parent
-          self.child = child
+        # rubocop:disable Metrics/ParameterLists
+        def initialize(parent: nil,
+                       child: nil,
+                       parent_id: nil,
+                       child_id: nil,
+                       context:,
+                       query_service: default_query_service,
+                       persistence_service: default_persistence_service)
+          self.parent = parent || (parent_id.present? && Hyrax.config.collection_class.find(parent_id))
+          self.child = child || (child_id.present? && Hyrax.config.collection_class.find(child_id))
           self.context = context
           self.query_service = query_service
           self.persistence_service = persistence_service
-        end
+        end # rubocop:enable Metrics/ParameterLists
 
         attr_accessor :parent, :child
 

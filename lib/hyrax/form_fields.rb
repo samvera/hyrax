@@ -49,6 +49,7 @@ module Hyrax
 
       form_field_definitions.each do |field_name, options|
         descendant.property field_name.to_sym, options.merge(display: true, default: [])
+        descendant.validates field_name.to_sym, presence: true if options.fetch(:required, false)
       end
     end
   end

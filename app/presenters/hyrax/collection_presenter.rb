@@ -116,13 +116,13 @@ module Hyrax
 
     # The total number of parents that this collection belongs to, visible or not.
     def total_parent_collections
-      parent_collections.nil? ? 0 : parent_collections.response['numFound']
+      parent_collections.blank? ? 0 : parent_collections.response['numFound']
     end
 
     # The number of parent collections shown on the current page. This will differ from total_parent_collections
     # due to pagination.
     def parent_collection_count
-      parent_collections.nil? ? 0 : parent_collections.documents.size
+      parent_collections.blank? ? 0 : parent_collections.documents.size
     end
 
     def user_can_nest_collection?
@@ -182,7 +182,7 @@ module Hyrax
                        "deprecated. Use available_parent_collections_data " \
                        "helper instead.")
       return @available_parents if @available_parents.present?
-      collection = ::Collection.find(id)
+      collection = Hyrax.config.collection_class.find(id)
       colls = Hyrax::Collections::NestedCollectionQueryService.available_parent_collections(child: collection, scope: scope, limit_to_id: nil)
       @available_parents = colls.map do |col|
         { "id" => col.id, "title_first" => col.title.first }

@@ -662,6 +662,14 @@ module Hyrax
       @show_work_item_rows ||= 10 # rows on show view
     end
 
+    # This user is logged as the acting user for jobs and other processes that
+    # run without being attributed to a specific user (e.g. creation of the
+    # default admin set).
+    attr_writer :system_user_key
+    def system_user_key
+      @system_user_key ||= 'systemuser@example.com'
+    end
+
     attr_writer :batch_user_key
     def batch_user_key
       @batch_user_key ||= 'batchuser@example.com'
@@ -675,6 +683,34 @@ module Hyrax
     attr_writer :collection_type_index_field
     def collection_type_index_field
       @collection_type_index_field ||= 'collection_type_gid_ssim'
+    end
+
+    attr_writer :collection_model
+    ##
+    # @return [#constantize] a string representation of the collection
+    #   model
+    def collection_model
+      @collection_model ||= '::Collection'
+    end
+
+    ##
+    # @return [Class] the configured collection model class
+    def collection_class
+      collection_model.constantize
+    end
+
+    attr_writer :admin_set_model
+    ##
+    # @return [#constantize] a string representation of the admin set
+    #   model
+    def admin_set_model
+      @admin_set_model ||= 'AdminSet'
+    end
+
+    ##
+    # @return [Class] the configured admin set model class
+    def admin_set_class
+      admin_set_model.constantize
     end
 
     attr_writer :id_field

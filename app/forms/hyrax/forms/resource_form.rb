@@ -30,7 +30,7 @@ module Hyrax
     # @api public
     #
     # This form wraps `Hyrax::ChangeSet` in the `HydraEditor::Form` interface.
-    class ResourceForm < Hyrax::ChangeSet
+    class ResourceForm < Hyrax::ChangeSet # rubocop:disable Metrics/ClassLength
       ##
       # @api private
       InWorksPopulator = lambda do |_options|
@@ -101,6 +101,10 @@ module Hyrax
       property :member_ids, default: [], type: Valkyrie::Types::Array
       property :member_of_collection_ids, default: [], type: Valkyrie::Types::Array
 
+      property :representative_id, type: Valkyrie::Types::String
+      property :thumbnail_id, type: Valkyrie::Types::String
+      property :rendering_ids, default: [], type: Valkyrie::Types::Array
+
       # provide a lock token for optimistic locking; we name this `version` for
       # backwards compatibility
       #
@@ -130,6 +134,8 @@ module Hyrax
           case resource
           when Hyrax::FileSet
             Hyrax::Forms::FileSetForm.new(resource)
+          when Hyrax::PcdmCollection
+            Hyrax::Forms::PcdmCollectionForm.new(resource)
           else
             Hyrax::Forms::ResourceForm(resource.class).new(resource)
           end

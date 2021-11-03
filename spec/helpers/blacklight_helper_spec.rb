@@ -42,10 +42,9 @@ RSpec.describe BlacklightHelper, type: :helper do
       let(:field_name) { 'description_tesim' }
 
       it do
-        pending 'need a different way to test description'
-        is_expected.to eq '<span itemprop="description">This links to ' \
+        is_expected.to eq 'This links to ' \
                           '<a href="http://example.com/"><span class="glyphicon glyphicon-new-window"></span>' \
-                          ' http://example.com/</a> What about that?</span>'
+                          ' http://example.com/</a> What about that?'
       end
     end
 

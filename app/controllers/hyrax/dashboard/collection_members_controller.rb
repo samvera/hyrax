@@ -7,6 +7,10 @@ module Hyrax
 
       include Hyrax::Collections::AcceptsBatches
 
+      load_resource only: :update_members,
+                    instance_name: :collection,
+                    class: Hyrax.config.collection_model
+
       def after_update
         respond_to do |format|
           format.html { redirect_to success_return_path, notice: t('hyrax.dashboard.my.action.collection_update_success') }
@@ -26,9 +30,9 @@ module Hyrax
         after_update_error(err_msg) if err_msg.present?
         return if err_msg.present?
 
-        collection.reindex_extent = Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX
+        @collection.try(:reindex_extent=, Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX)
         begin
-          Hyrax::Collections::CollectionMemberService.add_members_by_ids(collection_id: collection.id,
+          Hyrax::Collections::CollectionMemberService.add_members_by_ids(collection_id: collection_id,
                                                                          new_member_ids: batch_ids,
                                                                          user: current_user)
           after_update
@@ -46,9 +50,12 @@ module Hyrax
       private
 
       def validate
-        return t('hyrax.dashboard.my.action.members_no_access') if batch_ids.blank?
-        return t('hyrax.dashboard.my.action.collection_deny_add_members') unless current_ability.can?(:deposit, collection)
-        return t('hyrax.dashboard.my.action.add_to_collection_only') unless member_action == "add" # should never happen
+        return t('hyrax.dashboard.my.action.members_no_access') if
+          batch_ids.blank?
+        return t('hyrax.dashboard.my.action.collection_deny_add_members') unless
+          current_ability.can?(:deposit, @collection)
+        return t('hyrax.dashboard.my.action.add_to_collection_only') unless
+          member_action == "add" # should never happen
       end
 
       def success_return_path
@@ -61,10 +68,6 @@ module Hyrax
 
       def collection_id
         params[:id]
-      end
-
-      def collection
-        @collection ||= ::Collection.find(collection_id)
       end
 
       def batch_ids

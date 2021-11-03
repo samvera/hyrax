@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Actors::CollectionsMembershipActor do
+RSpec.describe Hyrax::Actors::CollectionsMembershipActor, skip: !(Hyrax.config.collection_class < ActiveFedora::Base) do
   let(:user) { create(:user) }
   let(:ability) { ::Ability.new(user) }
   let(:curation_concern) { build(:work, user: user) }

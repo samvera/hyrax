@@ -73,6 +73,62 @@ RSpec.describe Hyrax::PermissionTemplate, valkyrie_adapter: :test_adapter do
     end
   end
 
+  describe "#reset_access_controls_for" do
+    subject(:permission_template) { FactoryBot.create(:permission_template) }
+
+    let(:read_user) { FactoryBot.create(:user) }
+
+    before do
+      permission_template.access_grants.create!(agent_type: 'user', access: 'view', agent_id: read_user.user_key)
+      permission_template.access_grants.create!(agent_type: 'group', access: 'manage', agent_id: '789')
+    end
+
+    context "with a Valkyrie based collection" do
+      let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection, :public) }
+
+      it "sets access controls to template settings" do
+        expect { permission_template.reset_access_controls_for(collection: collection) }
+          .to change { Hyrax::AccessControlList.new(resource: collection).permissions }
+          .to contain_exactly(have_attributes(mode: :read, agent: read_user.user_key),
+                              have_attributes(mode: :edit, agent: 'group/789'))
+      end
+
+      it "retains visibility when asked" do
+        expect { permission_template.reset_access_controls_for(collection: collection, interpret_visibility: true) }
+          .to change { Hyrax::AccessControlList.new(resource: collection).permissions }
+          .to contain_exactly(have_attributes(mode: :read, agent: read_user.user_key),
+                              have_attributes(mode: :edit, agent: 'group/789'),
+                              have_attributes(mode: :read, agent: 'group/public'))
+      end
+    end
+
+    context "with an ActiveFedora ::Collection" do
+      let(:collection) { FactoryBot.create(:collection) }
+
+      it "sets access controls to template settings" do
+        expect { permission_template.reset_access_controls_for(collection: collection) }
+          .to change { collection.edit_groups }
+          .to contain_exactly('789')
+      end
+
+      it "does not apply collection visibility by default" do
+        collection.visibility = "open"
+
+        expect { permission_template.reset_access_controls_for(collection: collection) }
+          .to change { collection.read_groups }
+          .from(contain_exactly('public'))
+          .to be_empty
+      end
+
+      it "applies collection visibility when asked" do
+        collection.visibility = "open"
+
+        expect { permission_template.reset_access_controls_for(collection: collection, interpret_visibility: true) }
+          .not_to change { collection.read_groups }
+      end
+    end
+  end
+
   describe "#release_fixed_date?" do
     context "with release_period='fixed'" do
       let(:attributes) { { source_id: admin_set.id, release_period: Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED } }

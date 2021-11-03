@@ -243,7 +243,7 @@ module Hyrax
       # @note Several checks get the user's groups from the user's ability.  The same values can be retrieved directly from a passed in ability.
       def self.access_to_collection?(collection_id:, access:, ability:, exclude_groups: [])
         return false unless collection_id
-        template = Hyrax::PermissionTemplate.find_by!(source_id: collection_id)
+        template = Hyrax::PermissionTemplate.find_by!(source_id: collection_id.to_s)
         return true if ([ability.current_user.user_key] & template.agent_ids_for(agent_type: 'user', access: access)).present?
         return true if (ability.user_groups & (template.agent_ids_for(agent_type: 'group', access: access) - exclude_groups)).present?
         false

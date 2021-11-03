@@ -1,7 +1,9 @@
-<% provide :page_title, construct_page_title( t('.header', type_title: @collection.collection_type.title, title: @form.title.first) ) %>
+<% type_title = collection_type_label_for(collection: @collection) %>
+
+<% provide :page_title, construct_page_title( t('.header', type_title: type_title, title: @form.title.first) ) %>
 
 <% provide :page_header do %>
-  <h1><span class="fa fa-edit" aria-hidden="true"></span><%= t('.header', type_title: @collection.collection_type.title, title: @form.title.first) %></h1>
+  <h1><span class="fa fa-edit" aria-hidden="true"></span><%= t('.header', type_title: type_title, title: @form.title.first) %></h1>
 <% end %>
 
 <div class="row">

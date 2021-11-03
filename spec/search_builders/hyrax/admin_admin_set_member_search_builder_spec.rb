@@ -13,7 +13,17 @@ RSpec.describe Hyrax::AdminAdminSetMemberSearchBuilder do
 
     it 'searches for valid work types' do
       expect(builder.filter_models(solr_params))
-        .to contain_exactly('{!terms f=has_model_ssim}Monograph,Collection')
+        .to contain_exactly(include("{!terms f=has_model_ssim}Monograph"))
+    end
+
+    it 'searches for collections indexed as ActiveFedora' do
+      expect(builder.filter_models(solr_params))
+        .to contain_exactly(include("Collection"))
+    end
+
+    it 'searches for collections indexed as valkyrie' do
+      expect(builder.filter_models(solr_params))
+        .to contain_exactly(include(Hyrax.config.collection_class.to_s))
     end
 
     it 'does not limit to active only' do

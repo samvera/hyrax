@@ -90,6 +90,22 @@ FactoryBot.define do
       end
     end
 
+    trait :with_thumbnail do
+      thumbnail_id do
+        file_set = members.find(&:file_set?) ||
+                   valkyrie_create(:hyrax_file_set)
+        file_set.id
+      end
+    end
+
+    trait :with_representative do
+      representative_id do
+        file_set = members.find(&:file_set?) ||
+                   valkyrie_create(:hyrax_file_set)
+        file_set.id
+      end
+    end
+
     trait :as_collection_member do
       member_of_collection_ids { [valkyrie_create(:hyrax_collection).id] }
     end
@@ -103,6 +119,12 @@ FactoryBot.define do
     end
 
     factory :monograph, class: 'Monograph' do
+      factory :comet_in_moominland do
+        title { 'Comet in Moominland' }
+        creator { 'Tove Jansson' }
+        record_info { 'An example monograph with enough metadata fill in required fields.' }
+      end
+
       trait :with_member_works do
         transient do
           members { [valkyrie_create(:monograph), valkyrie_create(:monograph)] }

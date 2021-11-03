@@ -11,6 +11,20 @@ module Selectors
     # and granting them permission to an object.
     # @param [User] user to select
     # @param [String] role granting the user permission (e.g. 'Manager' | 'Depositor' | 'Viewer')
+    def select_user_for_admin_set(user, role = 'Depositor')
+      first('a.select2-choice').click
+      find('.select2-input').set(user.user_key)
+      first('div.select2-result-label').click
+      within('form.add-users') do
+        select(role)
+        click_button('Add')
+      end
+    end
+
+    # For use with javascript user selector that allows for searching for an existing user
+    # and granting them permission to an object.
+    # @param [User] user to select
+    # @param [String] role granting the user permission (e.g. 'Manager' | 'Depositor' | 'Viewer')
     def select_user(user, role = 'Depositor')
       first('a.select2-choice').click
       find('.select2-input').set(user.user_key)

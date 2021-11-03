@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Forms::CollectionForm do
+RSpec.describe Hyrax::Forms::CollectionForm, skip: !(Hyrax.config.collection_class < ActiveFedora::Base) do
   let(:collection) { build(:collection_lw) }
   let(:ability) { Ability.new(create(:user)) }
   let(:repository) { double }

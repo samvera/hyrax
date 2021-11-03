@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Collections::PermissionsCreateService do
-  let(:user) { create(:user) }
-  let(:user2) { create(:user) }
+  let(:user) { FactoryBot.create(:user) }
+  let(:user2) { FactoryBot.create(:user) }
 
   describe ".create_default" do
-    subject { described_class.create_default(collection: collection, creating_user: user) }
+    let(:collection_type) { FactoryBot.create(:collection_type) }
 
-    let(:collection_type) { create(:collection_type) }
     let(:user_manage_attributes) do
       {
         hyrax_collection_type_id: collection_type.id,
@@ -15,6 +14,7 @@ RSpec.describe Hyrax::Collections::PermissionsCreateService do
         agent_type: 'user'
       }
     end
+
     let(:group_manage_attributes) do
       {
         hyrax_collection_type_id: collection_type.id,
@@ -23,42 +23,92 @@ RSpec.describe Hyrax::Collections::PermissionsCreateService do
         agent_type: 'group'
       }
     end
-    let!(:collection_type_participant) { create(:collection_type_participant, user_manage_attributes) }
-    let!(:collection_type_participant2) { create(:collection_type_participant, group_manage_attributes) }
-    let(:collection) { FactoryBot.build(:collection_lw, id: 'collection1', collection_type: collection_type) }
 
     before do
-      subject
+      FactoryBot.create(:collection_type_participant, user_manage_attributes)
+      FactoryBot.create(:collection_type_participant, group_manage_attributes)
     end
 
-    it "creates the default permission template for the collection" do
-      expect(Hyrax::PermissionTemplate.find_by_source_id(collection.id)).to be_persisted
+    context "for collection" do
+      let(:collection) do
+        FactoryBot.valkyrie_create(:hyrax_collection,
+                                   collection_type_gid: collection_type.to_global_id,
+                                   with_permission_template: false)
+      end
+
+      it "creates the default permission template and access entries" do
+        expect { described_class.create_default(collection: collection, creating_user: user) }
+          .to change { Hyrax::PermissionTemplate.count }
+          .by(1)
+          .and change { Hyrax::PermissionTemplateAccess.count }
+          .by(4)
+      end
     end
 
-    it "creates the default permission template access entries for the collection" do
-      expect(Hyrax::PermissionTemplate.find_by_source_id(collection.id).access_grants.count).to eq 4
+    context "for administrative set" do
+      let(:collection_type) { FactoryBot.create(:admin_set_collection_type) }
+      let(:admin_set) do
+        FactoryBot.valkyrie_create(:hyrax_admin_set,
+                                   with_permission_template: false)
+      end
+
+      it "creates the default permission template and access entries" do
+        expect { described_class.create_default(collection: admin_set, creating_user: user) }
+          .to change { Hyrax::PermissionTemplate.count }
+          .by(1)
+          .and change { Hyrax::PermissionTemplateAccess.count }
+          .by(4)
+      end
     end
   end
 
   describe ".add_access" do
-    subject { described_class.add_access(collection_id: collection.id, grants: grants) }
-    let(:collection) { FactoryBot.create(:collection_lw, with_permission_template: true) }
     let(:grants) do
-      [{ agent_type: Hyrax::PermissionTemplateAccess::GROUP,
-         agent_id: 'archivist',
-         access: Hyrax::PermissionTemplateAccess::DEPOSIT }]
-    end
-    let(:depositor_grants) { collection.permission_template.access_grants.deposit }
-    let(:array) { [] }
-
-    before do
-      allow(ActiveFedora::Base).to receive(:find).with(collection.id).and_return(collection)
-      subject
-      depositor_grants.each { |agent| array << agent.agent_id }
+      [
+        {
+          agent_type: Hyrax::PermissionTemplateAccess::GROUP,
+          agent_id: 'archivist',
+          access: Hyrax::PermissionTemplateAccess::DEPOSIT
+        }
+      ]
     end
 
-    it 'gives deposit access to archivist group' do
-      expect(array.include?("archivist")).to eq true
+    context "for collection" do
+      let!(:collection) do
+        FactoryBot.valkyrie_create(:hyrax_collection,
+                                   with_permission_template: true)
+      end
+
+      it 'gives deposit access to archivist group' do
+        expect { described_class.add_access(collection_id: collection.id, grants: grants) }
+          .to change { Hyrax::PermissionTemplate.count }
+          .by(0)
+          .and change { Hyrax::PermissionTemplateAccess.count }
+          .by(1)
+
+        # collection depositors are granted read access to the collection
+        expect(collection.permission_manager.read_groups)
+          .to include 'archivist'
+      end
+    end
+
+    context "for administrative set" do
+      let!(:admin_set) do
+        FactoryBot.valkyrie_create(:hyrax_admin_set,
+                                   with_permission_template: true)
+      end
+
+      it 'gives deposit access to archivist group' do
+        expect { described_class.add_access(collection_id: admin_set.id, grants: grants) }
+          .to change { Hyrax::PermissionTemplate.count }
+          .by(0)
+          .and change { Hyrax::PermissionTemplateAccess.count }
+          .by(1)
+
+        # collection depositors are granted read access to the collection
+        expect(admin_set.permission_manager.read_groups)
+          .to include 'archivist'
+      end
     end
   end
 end

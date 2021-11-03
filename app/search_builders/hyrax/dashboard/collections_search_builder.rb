@@ -9,7 +9,7 @@ module Hyrax
 
       # This overrides the models in FilterByType
       def models
-        [::AdminSet, ::Collection]
+        [::AdminSet, ::Collection, Hyrax.config.collection_model.safe_constantize].uniq.compact
       end
 
       # adds a filter to exclude collections and admin sets created by the

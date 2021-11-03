@@ -35,7 +35,7 @@ module Hyrax
           redirect_to hyrax.edit_admin_admin_set_path(source_id,
                                                       anchor: 'participants'),
                       notice: translate('participants', scope: 'hyrax.admin.admin_sets.form.permission_update_notices')
-        elsif source.collection?
+        else
           redirect_to hyrax.edit_dashboard_collection_path(source_id,
                                                            anchor: 'sharing'),
                       notice: translate('sharing', scope: 'hyrax.dashboard.collections.form.permission_update_notices')
@@ -47,7 +47,7 @@ module Hyrax
           redirect_to hyrax.edit_admin_admin_set_path(source_id,
                                                       anchor: 'participants'),
                       alert: @permission_template_access.errors.full_messages.to_sentence
-        elsif source.collection?
+        else
           redirect_to hyrax.edit_dashboard_collection_path(source_id,
                                                            anchor: 'sharing'),
                       alert: @permission_template_access.errors.full_messages.to_sentence
@@ -56,6 +56,9 @@ module Hyrax
 
       delegate :source_id, to: :permission_template
 
+      ##
+      # @todo can we avoid querying solr to deciede where to redirect? we
+      #   otherwise don't need this data at all.
       def source
         @source ||= ::SolrDocument.find(source_id)
       end

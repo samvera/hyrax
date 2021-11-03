@@ -31,7 +31,8 @@ module Hyrax
       end
 
       def create_sipity_comment
-        return true if comment_text.blank?
+        return Sipity::NullComment.new(entity: subject.entity, agent: subject.agent) if
+          comment_text.blank?
         Sipity::Comment.create!(entity: subject.entity, agent: subject.agent, comment: comment_text)
       end
 
@@ -44,7 +45,9 @@ module Hyrax
         )
       end
 
+      ##
       # Run any configured custom methods
+      #
       def handle_additional_sipity_workflow_action_processing(comment:)
         Hyrax::Workflow::ActionTakenService.handle_action_taken(
           target: subject.work,

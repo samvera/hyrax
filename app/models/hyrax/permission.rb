@@ -14,6 +14,6 @@ module Hyrax
 
     attribute :access_to, Valkyrie::Types::ID
     attribute :agent,     Valkyrie::Types::String
-    attribute :mode,      Valkyrie::Types::String
+    attribute :mode,      Valkyrie::Types::Coercible::Symbol
   end
 end

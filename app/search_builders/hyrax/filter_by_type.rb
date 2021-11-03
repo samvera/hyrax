@@ -53,8 +53,7 @@ module Hyrax
 
     def collection_classes
       return [] if only_works?
-      # to_class_uri is deprecated in AF 11
-      [::Collection]
+      [::Collection, Hyrax.config.collection_class].uniq
     end
   end
 end

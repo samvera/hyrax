@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Hyrax
-  module CollectionsHelper
+  module CollectionsHelper # rubocop:disable Metrics/ModuleLength
     ##
     # @since 3.1.0
     # @return [Array<SolrDocument>]
@@ -120,6 +120,69 @@ module Hyrax
       single_item_action_form_fields(form, document, 'remove')
     end
 
+    ##
+    # @param collection [Object]
+    def collection_type_label_for(collection:)
+      case collection
+      when Valkyrie::Resource
+        CollectionType
+          .find_by_gid!(collection.collection_type_gid)
+          .title
+      else
+        collection.collection_type.title
+      end
+    end
+
+    ##
+    # @param collection [Object]
+    #
+    # @return [Boolean]
+    def collection_brandable?(collection:)
+      case collection
+      when Valkyrie::Resource
+        CollectionType
+          .find_by_gid!(collection.collection_type_gid)
+          .brandable?
+      else
+        collection.try(:brandable?)
+      end
+    end
+
+    ##
+    # @param collection [Object]
+    #
+    # @return [Boolean]
+    def collection_discoverable?(collection:)
+      case collection
+      when Valkyrie::Resource
+        CollectionType
+          .find_by_gid!(collection.collection_type_gid)
+          .discoverable?
+      else
+        collection.try(:discoverable?)
+      end
+    end
+
+    ##
+    # @param collection [Object]
+    #
+    # @return [Boolean]
+    def collection_sharable?(collection:)
+      case collection
+      when Valkyrie::Resource
+        CollectionType
+          .find_by_gid!(collection.collection_type_gid)
+          .sharable?
+      else
+        collection.try(:sharable?)
+      end
+    end
+
+    ##
+    # @note this helper is primarily intended for use with blacklight facet
+    #   fields. it assumes we index a `collection_type_gid` and the helper
+    #   can be passed as as a `helper_method:` to `add_facet_field`.
+    #
     # @param collection_type_gid [String] The gid of the CollectionType to be looked up
     # @return [String] The CollectionType's title if found, else the gid
     def collection_type_label(collection_type_gid)
@@ -135,4 +198,4 @@ module Hyrax
       render 'hyrax/dashboard/collections/single_item_action_fields', form: form, document: document, action: action
     end
   end
-end
+end # rubocop:enable Metrics/ModuleLength

@@ -27,7 +27,9 @@ module Hyrax
     configure_facets
 
     before_action :authenticate_user!
-    load_and_authorize_resource only: :show, instance_name: :collection
+    load_and_authorize_resource only: :show,
+                                instance_name: :collection,
+                                class: Hyrax.config.collection_model
 
     # include the render_check_all view helper method
     helper Hyrax::BatchEditsHelper
@@ -36,9 +38,7 @@ module Hyrax
 
     def index
       @user = current_user
-      Deprecation.silence(Hyrax::MyController) do
-        (@response, @document_list) = query_solr
-      end
+      (@response, @document_list) = search_service.search_results
       prepare_instance_variables_for_batch_control_display
 
       respond_to do |format|

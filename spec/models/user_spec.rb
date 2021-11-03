@@ -264,22 +264,23 @@ RSpec.describe User, type: :model do
   describe "scope Users" do
     let!(:basic_user) { create(:user) }
     let!(:guest_user) { create(:user, :guest) }
+    let!(:system_user) { described_class.system_user }
     let!(:audit_user) { described_class.audit_user }
     let!(:batch_user) { described_class.batch_user }
 
     context "without_system_accounts" do
       subject { described_class.without_system_accounts }
 
-      it "omits audit_user and batch_user" do
+      it "omits system_user, audit_user, and batch_user" do
         is_expected.to include(basic_user, guest_user)
-        is_expected.not_to include(audit_user, batch_user)
+        is_expected.not_to include(system_user, audit_user, batch_user)
       end
     end
     context "registered" do
       subject { described_class.registered }
 
       it "omits guest_user" do
-        is_expected.to include(basic_user, audit_user, batch_user)
+        is_expected.to include(basic_user, system_user, audit_user, batch_user)
         is_expected.not_to include(guest_user)
       end
     end
@@ -287,7 +288,7 @@ RSpec.describe User, type: :model do
       subject { described_class.guests }
 
       it "includes only guest_user" do
-        is_expected.not_to include(basic_user, audit_user, batch_user)
+        is_expected.not_to include(basic_user, system_user, audit_user, batch_user)
         is_expected.to include(guest_user)
       end
     end

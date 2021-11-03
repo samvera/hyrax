@@ -5,17 +5,17 @@
       <a href="#description" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.description') %></a>
     </li>
     <% if @form.persisted? %>
-      <% if @collection.brandable? %>
+      <% if collection_brandable?(collection: @collection) %>
       <li>
         <a href="#branding" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.branding') %></a>
       </li>
       <% end %>
-      <% if @collection.discoverable? %>
+      <% if collection_discoverable?(collection: @collection) %>
       <li>
         <a href="#discovery" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.discovery') %></a>
       </li>
       <% end %>
-      <% if @collection.sharable? %>
+      <% if collection_sharable?(collection: @collection) %>
       <li>
         <a href="#sharing" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.sharing') %></a>
       </li>
@@ -37,7 +37,7 @@
               <% if f.object.persisted? %>
                 <%# we're loading these values dynamically to speed page load %>
                 <%= f.input :thumbnail_id,
-                            input_html: { data: { text: f.object.thumbnail_title } } %>
+                    input_html: { data: { text: thumbnail_label_for(object: f.object) } } %>
               <% end %>
             </div>
             <% if f.object.display_additional_fields? %>

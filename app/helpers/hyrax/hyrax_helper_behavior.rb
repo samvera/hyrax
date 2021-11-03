@@ -296,6 +296,15 @@ module Hyrax
       solr_field.first
     end
 
+    ##
+    # @param [Object] an object that might have a thumbnail
+    #
+    # @return [String] a label for the object's thumbnail
+    def thumbnail_label_for(object:)
+      object.try(:thumbnail_title).presence ||
+        ""
+    end
+
     private
 
     def user_agent

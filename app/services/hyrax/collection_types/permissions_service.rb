@@ -159,7 +159,7 @@ module Hyrax
       #   If calling from Abilities, pass the ability.  If you try to get the ability from the user, you end up in an infinit loop.
       def self.access_to_collection_type?(collection_type:, access:, user: nil, ability: nil) # rubocop:disable Metrics/CyclomaticComplexity
         return false unless user.present? || ability.present?
-        return false unless user && collection_type
+        return false unless collection_type
         return true if ([user_id(user, ability)] & agent_ids_for(collection_type: collection_type, agent_type: 'user', access: access)).present?
         return true if (user_groups(user, ability) & agent_ids_for(collection_type: collection_type, agent_type: 'group', access: access)).present?
         false

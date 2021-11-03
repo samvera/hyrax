@@ -14,12 +14,12 @@ module Hyrax
     #
     # @param admin_set_id [String, nil]
     #
-    # @return [String] an admin_set_id; if you provide a "present"
+    # @return [#to_s] an admin_set_id; if you provide a "present"
     #   admin_set_id, this service will return that.
     #
-    # @see AdminSet.find_or_create_default_admin_set_id
+    # @see Hyrax::AdminSetCreateService.find_or_create_default_admin_set
     def self.call(admin_set_id: nil)
-      admin_set_id = admin_set_id.presence || AdminSet.find_or_create_default_admin_set_id
+      admin_set_id = admin_set_id.presence&.to_s || Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s
       Hyrax::PermissionTemplate.find_or_create_by!(source_id: admin_set_id)
       admin_set_id
     end

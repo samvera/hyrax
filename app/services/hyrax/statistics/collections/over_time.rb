@@ -6,7 +6,8 @@ module Hyrax
         private
 
         def relation
-          ::Collection
+          AbstractTypeRelation
+            .new(allowable_types: [Hyrax.config.collection_class])
         end
       end
     end

@@ -11,7 +11,7 @@ RSpec.describe Hyrax::Workflow::MethodGenerator do
         subject
         expect(workflow_action.triggered_methods).to all(be_kind_of Sipity::Method)
         expect(workflow_action.triggered_methods.count).to eq 2
-        expect(workflow_action.triggered_methods.map(&:weight)).to eq [0, 1]
+        expect(workflow_action.triggered_methods.map(&:weight)).to contain_exactly(0, 1)
       end
     end
 
@@ -24,8 +24,8 @@ RSpec.describe Hyrax::Workflow::MethodGenerator do
 
       it "removes the old methods" do
         expect { subject }.to change { workflow_action.triggered_methods.count }.from(3).to(2)
-        expect(workflow_action.triggered_methods.map(&:weight)).to eq [0, 1]
-        expect(workflow_action.triggered_methods.map(&:service_name)).to eq ['one', 'two']
+        expect(workflow_action.triggered_methods.map(&:weight)).to contain_exactly(0, 1)
+        expect(workflow_action.triggered_methods.map(&:service_name)).to contain_exactly('one', 'two')
       end
     end
 
@@ -35,8 +35,8 @@ RSpec.describe Hyrax::Workflow::MethodGenerator do
       end
       it "adds the new methods" do
         expect { subject }.to change { workflow_action.triggered_methods.count }.from(1).to(2)
-        expect(workflow_action.triggered_methods.map(&:weight)).to eq [0, 1]
-        expect(workflow_action.triggered_methods.map(&:service_name)).to eq ['one', 'two']
+        expect(workflow_action.triggered_methods.map(&:weight)).to contain_exactly(0, 1)
+        expect(workflow_action.triggered_methods.map(&:service_name)).to contain_exactly('one', 'two')
       end
     end
   end

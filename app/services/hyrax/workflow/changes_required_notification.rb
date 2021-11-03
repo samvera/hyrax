@@ -9,14 +9,15 @@ module Hyrax
       end
 
       def message
-        I18n.t('hyrax.notifications.workflow.changes_required.message', title: title,
-                                                                        link: (link_to work_id, document_path),
-                                                                        comment: comment)
+        I18n.t('hyrax.notifications.workflow.changes_required.message',
+               title: title,
+               link: (link_to work_id, document_path),
+               comment: comment)
       end
 
       def users_to_notify
         user_key = document.depositor
-        super << ::User.find_by(email: user_key)
+        super << ::User.find_by_user_key(user_key)
       end
     end
   end

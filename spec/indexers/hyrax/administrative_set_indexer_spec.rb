@@ -15,7 +15,7 @@ RSpec.describe Hyrax::AdministrativeSetIndexer do
   describe '#to_solr' do
     it 'includes default attributes ' do
       expect(subject.to_solr)
-        .to include 'generic_type_si' => 'Admin Set', 'title_tesim' => [admin_set_title]
+        .to include generic_type_si: 'Admin Set', title_tesim: [admin_set_title]
     end
   end
 end

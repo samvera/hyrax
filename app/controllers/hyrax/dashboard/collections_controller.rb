@@ -43,7 +43,12 @@ module Hyrax
       # The search builder to find the collections' members
       self.membership_service_class = Collections::CollectionMemberSearchService
 
-      load_and_authorize_resource except: [:index, :create], instance_name: :collection
+      load_and_authorize_resource except: [:index],
+                                  instance_name: :collection,
+                                  class: Hyrax.config.collection_model
+
+      skip_load_resource only: :create if
+        Hyrax.config.collection_class < ActiveFedora::Base
 
       def deny_collection_access(exception)
         if exception.action == :edit
@@ -63,14 +68,14 @@ module Hyrax
         @collection.collection_type_gid = CollectionType.find(collection_type_id).to_global_id
         add_breadcrumb t(:'hyrax.controls.home'), root_path
         add_breadcrumb t(:'hyrax.dashboard.breadcrumbs.admin'), hyrax.dashboard_path
-        add_breadcrumb t('.header', type_title: @collection.collection_type.title), request.path
-        @collection.apply_depositor_metadata(current_user.user_key)
+        add_breadcrumb t('.header', type_title: collection_type.title), request.path
+        @collection.try(:apply_depositor_metadata, current_user.user_key)
         form
       end
 
       def show
         # @todo: remove this unused assignment in 4.0.0
-        @banner_file = presenter.banner_file if @collection.collection_type.brandable?
+        @banner_file = presenter.banner_file if collection_type.brandable?
 
         presenter
         query_collection_members
@@ -102,10 +107,11 @@ module Hyrax
       end
 
       def create
+        return valkyrie_create if @collection.is_a?(Valkyrie::Resource)
         # Manual load and authorize necessary because Cancan will pass in all
         # form attributes. When `permissions_attributes` are present the
         # collection is saved without a value for `has_model.`
-        @collection = ::Collection.new
+        @collection = Hyrax.config.collection_class.new
         authorize! :create, @collection
         # Coming from the UI, a collection type gid should always be present.  Coming from the API, if a collection type gid is not specified,
         # use the default collection type (provides backward compatibility with versions < Hyrax 2.1.0)
@@ -143,6 +149,9 @@ module Hyrax
         end
 
         process_member_changes
+
+        return valkyrie_update if @collection.is_a?(Valkyrie::Resource)
+
         @collection.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE unless @collection.discoverable?
         # we don't have to reindex the full graph when updating collection
         @collection.reindex_extent = Hyrax::Adapters::NestingIndexAdapter::LIMITED_REINDEX
@@ -175,11 +184,20 @@ module Hyrax
       end
 
       def destroy
-        if @collection.destroy
+        case @collection
+        when Valkyrie::Resource
+          Hyrax.persister.delete(resource: @collection)
           after_destroy(params[:id])
         else
-          after_destroy_error(params[:id])
+          if @collection.destroy
+            after_destroy(params[:id])
+          else
+            after_destroy_error(params[:id])
+          end
         end
+      rescue StandardError => err
+        Rails.logger.error(err)
+        after_destroy_error(params[:id])
       end
 
       def collection
@@ -197,8 +215,34 @@ module Hyrax
 
       private
 
+      def valkyrie_create
+        form.validate(collection_params) &&
+          @collection = transactions['change_set.create_collection']
+                        .with_step_args(
+                          'change_set.set_user_as_depositor' => { user: current_user },
+                          'collection_resource.apply_collection_type_permissions' => { user: current_user }
+                        )
+                        .call(form)
+                        .value_or { return after_create_error }
+
+        add_members_to_collection unless batch.empty?
+        @collection
+      end
+
+      def valkyrie_update
+        form.validate(collection_params) &&
+          @collection = transactions['change_set.update_collection']
+                        .call(form)
+                        .value_or { return after_update_error }
+        after_update
+      end
+
       def default_collection_type
         Hyrax::CollectionType.find_or_create_default_collection_type
+      end
+
+      def collection_type
+        @collection_type ||= CollectionType.find_by_gid!(collection.collection_type_gid)
       end
 
       def link_parent_collection(parent_id)
@@ -341,8 +385,14 @@ module Hyrax
       deprecation_deprecate :single_item_search_builder
 
       def collection_params
-        @participants = extract_old_style_permission_attributes(params[:collection])
-        form_class.model_attributes(params[:collection])
+        if Hyrax.config.collection_class < ActiveFedora::Base
+          @participants = extract_old_style_permission_attributes(params[:collection])
+          form_class.model_attributes(params[:collection])
+        else
+          params.permit(collection: {})[:collection]
+                .merge(params.permit(:collection_type_gid))
+                .merge(member_of_collection_ids: Array(params[:parent_id]))
+        end
       end
 
       def extract_old_style_permission_attributes(attributes)
@@ -379,28 +429,36 @@ module Hyrax
         end
       end
 
-      def add_members_to_collection(collection = nil)
-        collection ||= @collection
-        Hyrax::Collections::CollectionMemberService.add_members_by_ids(collection_id: collection.id,
-                                                                       new_member_ids: batch,
-                                                                       user: current_user)
+      def add_members_to_collection(collection = nil, collection_id: nil)
+        collection_id ||= (collection.try(:id) || @collection.id)
+
+        Hyrax::Collections::CollectionMemberService
+          .add_members_by_ids(collection_id: collection_id,
+                              new_member_ids: batch,
+                              user: current_user)
       end
 
       def remove_members_from_collection
-        Hyrax::Collections::CollectionMemberService.remove_members_by_ids(collection_id: @collection.id,
-                                                                          member_ids: batch,
-                                                                          user: current_user)
+        Hyrax::Collections::CollectionMemberService
+          .remove_members_by_ids(collection_id: @collection.id,
+                                 member_ids: batch,
+                                 user: current_user)
       end
 
       def move_members_between_collections
-        destination_collection = ::Collection.find(params[:destination_collection_id])
         remove_members_from_collection
-        add_members_to_collection(destination_collection)
-        if destination_collection.save
-          flash[:notice] = "Successfully moved #{batch.count} files to #{destination_collection.title} Collection."
-        else
-          flash[:error] = "An error occured. Files were not moved to #{destination_collection.title} Collection."
-        end
+        add_members_to_collection(collection_id: params[:destination_collection_id])
+
+        destination_title =
+          Hyrax.query_service.find_by(id: params[:destination_collection_id]).title.first ||
+          params[:destination_collection_id]
+        flash[:notice] = "Successfully moved #{batch.count} files to #{destination_title} Collection."
+      rescue StandardError => err
+        Rails.logger.error(err)
+        destination_title =
+          Hyrax.query_service.find_by(id: params[:destination_collection_id]).title.first ||
+          destination_id
+        flash[:error] = "An error occured. Files were not moved to #{destination_title} Collection."
       end
 
       # Include 'catalog' and 'hyrax/base' in the search path for views, while prefering
@@ -420,7 +478,13 @@ module Hyrax
       end
 
       def form
-        @form ||= form_class.new(@collection, current_ability, repository)
+        @form ||=
+          case @collection
+          when Valkyrie::Resource
+            Hyrax::Forms::ResourceForm.for(@collection)
+          else
+            form_class.new(@collection, current_ability, repository)
+          end
       end
 
       def set_default_permissions
@@ -430,8 +494,8 @@ module Hyrax
 
       def query_collection_members
         member_works
-        member_subcollections if collection.collection_type.nestable?
-        parent_collections if collection.collection_type.nestable? && action_name == 'show'
+        member_subcollections if collection_type.nestable?
+        parent_collections if collection_type.nestable? && action_name == 'show'
       end
 
       # Instantiate the membership query service
@@ -459,7 +523,7 @@ module Hyrax
       end
 
       def collection_object
-        action_name == 'show' ? ::Collection.find(collection.id) : collection
+        @collection
       end
 
       # You can override this method if you need to provide additional

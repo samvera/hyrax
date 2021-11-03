@@ -3,6 +3,13 @@ module Hyrax
   class WorkflowActionsController < ApplicationController
     DEFAULT_FORM_CLASS = Hyrax::Forms::WorkflowActionForm
 
+    ##
+    # @!attribute [r] curation_concern
+    #   @api private
+    #   @return [Hyrax::Resource]
+    attr_reader :curation_concern
+
+    load_resource class: Hyrax::Resource, instance_name: :curation_concern
     before_action :authenticate_user!
 
     def update
@@ -11,16 +18,12 @@ module Hyrax
       else
         respond_to do |wants|
           wants.html { render 'hyrax/base/unauthorized', status: :unauthorized }
-          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
+          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: workflow_action_form.errors }) }
         end
       end
     end
 
     private
-
-    def curation_concern
-      @curation_concern ||= Hyrax.query_service.find_by_alternate_identifier(alternate_identifier: params[:id], use_valkyrie: false)
-    end
 
     def workflow_action_form
       @workflow_action_form ||= DEFAULT_FORM_CLASS.new(

@@ -11,4 +11,21 @@ module Sipity
       agent.proxy_for.to_s
     end
   end
+
+  ##
+  # A comment without a database record; always returns an empty string
+  class NullComment
+    attr_reader :agent, :entity
+
+    def initialize(agent:, entity:)
+      @agent = agent
+      @entity = entity
+    end
+
+    ##
+    # @return [String]
+    def comment
+      ''
+    end
+  end
 end

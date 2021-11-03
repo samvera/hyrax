@@ -13,6 +13,7 @@ module Hyrax
       #
       # @param event [Dry::Event]
       def on_object_acl_updated(event)
+        return if Hyrax.config.disable_wings
         return unless event[:result] == :success # do nothing on failure
 
         if Hyrax.metadata_adapter.is_a?(Wings::Valkyrie::MetadataAdapter)

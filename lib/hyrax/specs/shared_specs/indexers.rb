@@ -188,5 +188,11 @@ RSpec.shared_examples 'a Collection indexer' do
       expect(indexer.to_solr)
         .to include(thumbnail_path_ss: include('assets/collection', '.png'))
     end
+
+    it 'indexes depositor' do
+      expect(indexer.to_solr)
+        .to include(depositor_ssim: [resource.depositor],
+                    depositor_tesim: [resource.depositor])
+    end
   end
 end
