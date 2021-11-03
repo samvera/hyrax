@@ -109,7 +109,7 @@ module Hyrax
     attr_reader :analytics
     def analytics?
       @analytics ||=
-        ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_ANALYTICS', false))
+        ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_ANALYTICS', 'false'))
     end
 
     # Currently supports 'google' or 'matomo'
