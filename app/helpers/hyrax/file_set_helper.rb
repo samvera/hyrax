@@ -9,7 +9,7 @@ module Hyrax::FileSetHelper
   #   set
   def display_media_download_link?(file_set:)
     Hyrax.config.display_media_download_link? &&
-      can?(:download, file_set) &&
+      can?(:download, file_set.id) &&
       !workflow_restriction?(file_set.try(:parent))
   end
 
