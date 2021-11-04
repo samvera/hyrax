@@ -1,5 +1,4 @@
-# frozen_string_literal: true
-class CreateUserPinnedCollections < ActiveRecord::Migration<%= migration_version %>
+class CreateUserPinnedCollections < ActiveRecord::Migration[4.2]
   def change
     create_table :user_pinned_collections do |t|
       t.integer :user_id, null: false
