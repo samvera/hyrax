@@ -53,16 +53,15 @@ module Hyrax
       #   we want to move away from application side lock validation and rely
       #   on the adapter/database features instead.
       LockKeyPopulator = lambda do |_options|
-        self.version =
-          case Hyrax.metadata_adapter
-          when Wings::Valkyrie::MetadataAdapter
+        if Hyrax.config.disable_wings || !Hyrax.metadata_adapter.is_a?(Wings::Valkyrie::MetadataAdapter)
+          Hyrax.logger.info "trying to prepopulate a lock token for " \
+                            "#{self.class.inspect}, but optimistic locking isn't " \
+                            "supported for the configured adapter: #{Hyrax.metadata_adapter.class}"
+          self.version = ''
+        else
+          self.version =
             model.persisted? ? Wings::ActiveFedoraConverter.convert(resource: model).etag : ''
-          else
-            Hyrax.logger.info 'trying to prepopulate a lock token for ' \
-                              "#{self.class.inspect}, but optimistic locking isn't " \
-                              "supported for the configured adapter: #{Hyrax.metadata_adapter.class}"
-            ''
-          end
+        end
       end
 
       class_attribute :model_class

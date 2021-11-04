@@ -384,7 +384,13 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
 
     context 'when using a generic valkyrie adapter', valkyrie_adapter: :test_adapter do
+      before do
+        allow(Hyrax).to receive_message_chain(:config, :disable_wings).and_return(true) # rubocop:disable RSpec/MessageChain
+        hide_const("Wings") # disable_wings=true removes the Wings constant
+      end
       it 'prepopulates as empty before save' do
+        expect(Hyrax.logger).to receive(:info)
+          .with(starting_with("trying to prepopulate a lock token for"))
         form.prepopulate!
         expect(form.version).to eq ''
       end
@@ -393,8 +399,9 @@ RSpec.describe Hyrax::Forms::ResourceForm do
         let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
 
         it 'prepopulates empty' do
+          expect(Hyrax.logger).to receive(:info)
+            .with(starting_with("trying to prepopulate a lock token for"))
           form.prepopulate!
-
           expect(form.version).to eq ''
         end
       end
