@@ -62,7 +62,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
 
         # navigate to show page for the new admin set
         visit '/dashboard'
-        click_on('Collections')
+        click_link('Collections', match: :first)
         click_on('Display all details of An Admin Set')
 
         # confirm creating user can view and edit the new admin set
@@ -156,7 +156,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
 
         # navigate to show page for the new admin set
         visit '/dashboard'
-        click_on('Collections')
+        click_link('Collections', match: :first)
         click_on('Display all details of An Admin Set')
 
         # confirm creating user can view and edit the new admin set
@@ -212,7 +212,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
 
       # navigate to show page for the new admin set
       visit '/dashboard'
-      click_on('Collections')
+      click_link('Collections', match: :first)
       click_on('Display all details of An Admin Set')
 
       # confirm creating user can view and edit the new admin set
