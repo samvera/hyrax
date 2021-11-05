@@ -60,6 +60,8 @@ Hyrax::Schema # rubocop:disable Lint/Void
 
 Valkyrie::MetadataAdapter
   .register(Valkyrie::Persistence::Memory::MetadataAdapter.new, :test_adapter)
+Valkyrie::MetadataAdapter
+  .register(Valkyrie::Persistence::Postgres::MetadataAdapter.new, :postgres_adapter)
 
 # Require supporting ruby files from spec/support/ and subdirectories.  Note: engine, not Rails.root context.
 Dir[File.join(File.dirname(__FILE__), "support/**/*.rb")].each { |f| require f }
