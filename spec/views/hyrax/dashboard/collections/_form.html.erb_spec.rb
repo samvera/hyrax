@@ -6,28 +6,23 @@ RSpec.describe 'hyrax/dashboard/collections/_form.html.erb', type: :view do
   let(:logo_info) { [{ file: "logo.gif", alttext: "Logo alt text", linkurl: "http://abc.com" }] }
 
   before do
-    allow(collection).to receive(:open_access?).and_return(true)
-    allow(collection).to receive(:authenticated_only_access?).and_return(false)
-    allow(collection).to receive(:private_access?).and_return(false)
     controller.request.path_parameters[:id] = 'j12345'
     assign(:form, collection_form)
     assign(:collection, collection)
     assign(:banner_info, banner_info)
     assign(:logo_info, logo_info)
-    # Stub route because view specs don't handle engine routes
-    allow(view).to receive(:collections_path).and_return("/collections")
-    allow(controller).to receive(:current_user).and_return(stub_model(User))
-    allow(collection_form).to receive(:display_additional_fields?).and_return(additional_fields)
-    allow(collection_form).to receive(:discovery).and_return([])
   end
 
   context 'with secondary terms' do
-    let(:additional_fields) { true }
-
     before do
-      render
+      allow(collection_form)
+        .to receive(:display_additional_fields?)
+        .and_return(true)
     end
+
     it "draws the metadata fields for collection" do
+      render
+
       expect(rendered).to have_selector("input#collection_title")
       expect(rendered).to have_selector("span.required-tag", text: "required")
       expect(rendered).not_to have_selector("div#additional_title.multi_value")
@@ -48,13 +43,16 @@ RSpec.describe 'hyrax/dashboard/collections/_form.html.erb', type: :view do
       expect(rendered).to have_content('Additional fields')
     end
   end
-  context 'with no secondary terms' do
-    let(:additional_fields) { false }
 
+  context 'with no secondary terms' do
     before do
-      render
+      allow(collection_form)
+        .to receive(:display_additional_fields?)
+        .and_return(false)
     end
+
     it 'does not render additional fields button' do
+      render
       expect(rendered).not_to have_content('Additional fields')
     end
   end
