@@ -103,7 +103,7 @@ module Hyrax
         test_download(id)
       end
 
-      can :download, SolrDocument do |obj|
+      can :download, ::SolrDocument do |obj|
         cache.put(obj.id, obj)
         test_download(obj.id)
       end

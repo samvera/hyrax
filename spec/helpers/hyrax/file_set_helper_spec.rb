@@ -19,6 +19,19 @@ RSpec.describe Hyrax::FileSetHelper do
 
       expect(helper.display_media_download_link?(file_set: file_set)).to eq true
     end
+
+    context 'with a FileSetPresenter' do
+      let(:ability) { Ability.new(user) }
+      let(:file_set) { FactoryBot.create(:file_set, user: user) }
+      let(:presenter) { Hyrax::FileSetPresenter.new(solr_document, ability) }
+      let(:solr_document) { SolrDocument.new(file_set.to_solr) }
+      let(:user) { FactoryBot.create(:user) }
+
+      it 'resolves permissions based on the solr document' do
+        expect(helper.display_media_download_link?(file_set: presenter))
+          .to eq true
+      end
+    end
   end
 
   describe '#media_display' do
