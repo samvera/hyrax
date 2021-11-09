@@ -13,10 +13,6 @@ User.where(email: 'admin@example.com').first_or_create do |f|
   f.password = 'admin_password'
 end
 
-User.where(email: 'another_admin@example.com').first_or_create do |f|
-  f.password = 'admin_password'
-end
-
 User.where(email: 'basic_user@example.com').first_or_create do |f|
   f.password = 'password'
 end

@@ -66,4 +66,4 @@ module Hyrax
 end
 ```
 
-There is no point having the other `filter_models` methods apply `:fq`s that we then try to undo or overwrite.  In general, directly overwriting the whole `default_processor_chain` or solr parameters like `:fq` is less flexible than appending constraints sufficient for your use case.  In particular, you might find that you have overwritten components that implement access controls, thereby making your SearchBuilder less useful and less secure.  When in doubt, examine the actual solr queries produced.  
+There is no point having the other `filter_models` methods apply `:fq`s that we then try to undo or overwrite.  In general, directly overwriting the whole `default_processor_chain` or solr parameters like `:fq` is less flexible than appending constraints sufficient for your use case.  In particular, you might find that you have overwritten components that implement access controls, thereby making your SearchBuilder less useful and less secure.  When in doubt, examine the actual solr queries produced.
