@@ -22,7 +22,7 @@ module Hyrax
 
         def show
           @document = ::SolrDocument.find(params[:id])
-          return unless Hyrax.config.analytics == 'true'
+          return unless Hyrax.config.analytics?
           # @path = request.base_url + @path if Hyrax.config.analytics_provider == 'matomo'
           @pageviews = Hyrax::Analytics.daily_events_for_id(@document.id, 'collection-page-view')
           @work_page_views = Hyrax::Analytics.daily_events_for_id(@document.id, 'work-in-collection-view')
