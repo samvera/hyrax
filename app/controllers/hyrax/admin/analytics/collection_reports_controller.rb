@@ -5,7 +5,7 @@ module Hyrax
       class CollectionReportsController < AnalyticsController
         include Hyrax::BreadcrumbsForCollectionAnalytics
         def index
-          return unless Hyrax.config.analytics == 'true'
+          return unless Hyrax.config.analytics?
 
           @pageviews = Hyrax::Analytics.daily_events('collection-page-view')
           @work_page_views = Hyrax::Analytics.daily_events('work-in-collection-view')
