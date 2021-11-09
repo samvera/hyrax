@@ -93,7 +93,7 @@ module Hyrax
     end
 
     def pinned?(user_id)
-      UserPinnedCollection.find_by(user_id: user_id, collection_id: id)
+      UserPinnedCollection.exists?(user_id: user_id, collection_id: id)
     end
 
     module ClassMethods
