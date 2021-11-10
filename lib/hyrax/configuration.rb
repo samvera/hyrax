@@ -120,6 +120,9 @@ module Hyrax
         ENV.fetch('HYRAX_ANALYTICS_PROVIDER', 'google')
     end
 
+    # Date you wish to start collecting analytics for
+    # This is used to compute the "all-time" metrics
+    # Set this in your .env file
     attr_writer :analytics_start_date
     def analytics_start_date
       @analytics_start_date ||=
