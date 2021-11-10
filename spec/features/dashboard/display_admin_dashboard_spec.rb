@@ -7,7 +7,6 @@ RSpec.describe "The dashboard as viewed by a admin user", type: :feature do
   context "upon sign-in" do
     it "shows the admin user's information" do
       expect(page).to have_content "Dashboard"
-      expect(page).to have_content "User Activity"
       expect(page).to have_content "Repository Growth"
       expect(page).to have_content "Visibility"
       expect(page).to have_content "Work Types"
