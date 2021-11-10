@@ -41,7 +41,7 @@ module Hyrax
 
     def fetch_with_persistence(resource)
       old_label = resource.rdf_label.first
-      return unless old_label == resource.rdf_subject.to_s || old_label.nil?
+      return unless old_label == resource.rdf_subject.to_s
       fetch_value(resource)
       return if old_label == resource.rdf_label.first || resource.rdf_label.first == resource.rdf_subject.to_s
       resource.persist! # Stores the fetched values into our marmotta triplestore
