@@ -982,12 +982,6 @@ fr:
           select_an_action: Sélectionnez une action
           transfer_ownership_of_work: Transfert de la propriété du travail
         works: Travaux
-      collections_pinned:
-        collection_title: Titre de la collection
-        files: Des dossiers
-        last_updated: Dernière mise à jour
-        title: Collections épinglées
-        works: Travaux
       create_work: Créer un travail
       current_proxies: Proxies actuelles
       delete_notification: Supprimer la notification
@@ -1144,8 +1138,6 @@ fr:
         works: Travaux créés
       tabs:
         admin_sets: Ensembles d'administrateurs
-        collections: Collections
-        pinned_collections: Collections épinglées
       title: Mon tableau de bord
       transfer_of_ownership: Transfert de propriété
       transfer_works_link: Sélectionnez les travaux à transférer

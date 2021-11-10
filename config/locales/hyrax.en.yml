@@ -968,12 +968,6 @@ en:
           remove_from_collection: Remove from collection
           select_an_action: Select an action
           transfer_ownership_of_work: Transfer Ownership of Work
-      collections_pinned:
-        title: Pinned Collections
-        collection_title: Collection title
-        last_updated: Last updated
-        works: Works
-        files: Files
       create_work: Create Work
       current_proxies: Current Proxies
       delete_notification: Delete Notification
@@ -1130,8 +1124,6 @@ en:
         works: Works created
       tabs:
         admin_sets: Admin Sets
-        collections: Collections
-        pinned_collections: Pinned Collections
       title: Dashboard
       transfer_of_ownership: Transfers of Ownership
       transfer_works_link: Select works to transfer

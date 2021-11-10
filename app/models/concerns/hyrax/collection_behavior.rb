@@ -37,7 +37,6 @@ module Hyrax
         @collection_type = new_collection_type
         collection_type_gid
       end
-      after_destroy :destroy_user_pinned_collection
     end
 
     delegate(*Hyrax::CollectionType.settings_attributes, to: :collection_type)
@@ -84,16 +83,6 @@ module Hyrax
 
     def to_s
       title.present? ? title.join(' | ') : 'No Title'
-    end
-
-    def total_file_sets
-      files = []
-      member_works.map { |work| files.push(work.file_sets.count) }
-      files.sum
-    end
-
-    def pinned?(user_id)
-      UserPinnedCollection.exists?(user_id: user_id, collection_id: id)
     end
 
     module ClassMethods
@@ -148,10 +137,6 @@ module Hyrax
     # Solr field name works use to index member ids
     def member_ids_field
       "member_ids_ssim"
-    end
-
-    def destroy_user_pinned_collection
-      UserPinnedCollection.where(collection_id: id).destroy_all
     end
 
     def destroy_permission_template

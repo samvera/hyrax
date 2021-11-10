@@ -981,12 +981,6 @@ it:
           select_an_action: Seleziona un'azione
           transfer_ownership_of_work: Trasferimento della proprietà del lavoro
         works: Lavori
-      collections_pinned:
-        collection_title: Titolo della raccolta
-        files: File
-        last_updated: Ultimo aggiornamento
-        title: Raccolte appuntate
-        works: Lavori
       create_work: Crea lavoro
       current_proxies: Proxy attuali
       delete_notification: Elimina notifica
@@ -1143,8 +1137,6 @@ it:
         works: Opere create
       tabs:
         admin_sets: Set di amministrazione
-        collections: Collezioni
-        pinned_collections: Raccolte appuntate
       title: la mia scrivania
       transfer_of_ownership: Trasferimenti di proprietà
       transfer_works_link: Seleziona le opere da trasferire

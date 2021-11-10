@@ -979,12 +979,6 @@ zh:
           select_an_action: 选择一个动作
           transfer_ownership_of_work: 转移工作所有权
         works: 作品
-      collections_pinned:
-        collection_title: 藏品名称
-        files: 文件
-        last_updated: 最近更新时间
-        title: 固定收藏
-        works: 作品
       create_work: 创建作品
       current_proxies: 目前代理
       delete_notification: 删除通知
@@ -1141,8 +1135,6 @@ zh:
         works: 已建立的作品
       tabs:
         admin_sets: 管理集
-        collections: 收藏
-        pinned_collections: 固定收藏
       title: 我的控件板
       transfer_of_ownership: 转让所有权
       transfer_works_link: 选择作品转让

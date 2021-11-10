@@ -324,43 +324,4 @@ Blacklight.onLoad(function () {
     $('#add-subcollection-modal-' + $(this).data('presenterId')).modal('show');
   });
 
-//   Pin a collection to a user
-  $("a[id^='pin']").on('click', function(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    anchor = $(this);
-    let i = $(anchor).children('i');
-    $.ajax({
-        url: anchor.attr('href'),
-        type: "post",
-        success: function(data) {
-          i.removeClass('fa-star-o');
-          i.addClass('fa-star');
-          anchor.addClass('hide');
-          sibling = anchor.attr('id').replace('pin', 'unpin');
-          $(`a[id=${sibling}]`).removeClass('hide');
-        }
-    });
-  });
-
-//   Remove a Pinned collection from user
-    $("a[id^='unpin']").on('click', function(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      anchor = $(this);
-      let i = $(anchor).children('i');
-    $.ajax({
-        url: anchor.attr('href'),
-        type: "post",
-        data: {"_method":"delete"},
-        success: function(data) {
-          i.removeClass('fa-star');
-          i.addClass('fa-star-o');
-          anchor.addClass('hide');
-          sibling = anchor.attr('id').replace('unpin', 'pin');
-          $(`a[id=${sibling}]`).removeClass('hide');
-        }
-    });
-  });
-
 });

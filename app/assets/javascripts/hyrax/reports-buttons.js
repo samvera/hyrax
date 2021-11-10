@@ -3,7 +3,7 @@ Blacklight.onLoad(function() {
   var monthlyButton = $('#monthly-btn');
   var rangeButton = $('#range-btn');
 
-  $('#monthly-btn').click(function() {  
+  $('#monthly-btn').on('click', function() {
     $(this).addClass('btn-primary');
     $(this).removeClass('btn-default');
     summaryButton.removeClass('btn-primary');
@@ -12,7 +12,7 @@ Blacklight.onLoad(function() {
     rangeButton.addClass('btn-default');
   });
 
-  $('#summary-btn').click(function() {
+  $('#summary-btn').on('click', function() {
     
     $(this).addClass('btn-primary');
     $(this).removeClass('btn-default');
@@ -22,7 +22,7 @@ Blacklight.onLoad(function() {
     rangeButton.addClass('btn-default');
   });
 
-  $('#range-btn').click(function() {
+  $('#range-btn').on('click', function() {
     $(this).addClass('btn-primary');
     $(this).removeClass('btn-default');
     monthlyButton.removeClass('btn-primary');

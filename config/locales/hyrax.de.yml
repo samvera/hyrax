@@ -976,12 +976,6 @@ de:
           select_an_action: Wählen Sie eine Aktion aus
           transfer_ownership_of_work: Übertragen Sie das Eigentum an der Arbeit
         works: Funktioniert
-      collections_pinned:
-        collection_title: Sammlungstitel
-        files: Dateien
-        last_updated: Letzte Aktualisierung
-        title: Angepinnte Sammlungen
-        works: Funktioniert
       create_work: Arbeiten erstellen
       current_proxies: Aktuelle Vertreter
       delete_notification: Benachrichtigung löschen
@@ -1138,8 +1132,6 @@ de:
         works: Arbeiten erstellt
       tabs:
         admin_sets: Admin-Sets
-        collections: Kollektionen
-        pinned_collections: Angepinnte Sammlungen
       title: Mein Dashboard
       transfer_of_ownership: Eigentumsübertragungen
       transfer_works_link: Wählen Sie die zu übertragenden Arbeiten aus

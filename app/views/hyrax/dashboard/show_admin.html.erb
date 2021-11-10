@@ -2,6 +2,7 @@
   <h1><%= t("hyrax.dashboard.title") %></h1>
 <% end %>
 
+<% if Hyrax.config.analytics? %>
 <div class="row">
   <div class="col-md-12">
     <div class="panel panel-default">
@@ -24,6 +25,7 @@
     </div>
   </div>
 </div>
+<% end %>
 
 <div class="row">
   <div class="col-md-12">
