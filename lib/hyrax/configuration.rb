@@ -122,7 +122,7 @@ module Hyrax
 
     # Date you wish to start collecting analytics for
     # This is used to compute the "all-time" metrics
-    # Set this in your .env file
+    # Set this in your .env file (format is YYYY-MM-DD)
     attr_writer :analytics_start_date
     def analytics_start_date
       @analytics_start_date ||=
