@@ -31,11 +31,13 @@ RSpec.feature 'Create a <%= class_name %>', js: false do
     end
 
     scenario do
+      pending 'Changes may be required for this test to pass.  See TODO in test.'
+
       visit '/dashboard'
       click_link "Works"
       click_link "Add new work"
 
-      # If you generate more than one work uncomment these lines
+      # TODO: If you generate more than one work uncomment these lines
       # choose "payload_concern", option: "<%= class_name %>"
       # click_button "Create work"
 
