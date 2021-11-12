@@ -50,7 +50,7 @@ The Samvera community is here to help. Please see our [support guide](./.github/
 # Getting started
 
 This document contains instructions specific to setting up an app with __Hyrax
-v3.1.0__. If you are looking for instructions on installing a different
+v3.2.0__. If you are looking for instructions on installing a different
 version, be sure to select the appropriate branch or tag from the drop-down
 menu above.
 
