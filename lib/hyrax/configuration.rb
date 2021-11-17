@@ -144,6 +144,8 @@ module Hyrax
       Hyrax::Analytics.config.analytics_id = value
     end
 
+    ##
+    # @deprecated use analytics_id from config/analytics.yml instead
     def google_analytics_id
       Deprecation.warn("google_analytics_id is deprecated; use analytics_id from config/analytics.yml instead.")
       Hyrax::Analytics.config.analytics_id
