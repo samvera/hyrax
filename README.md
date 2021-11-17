@@ -83,7 +83,7 @@ Hyrax supports your choice of either Google Analytics or Matomo.  To enable anal
 
 Enable Analytics Features
 
-In your .env file, set HYRAX_ANALYTICS to true, set either 'google' or 'matomo' for  HYRAX_ANALYTICS_PROVIDER, and set the date you would like reporting to start (ANALYTICS_START_DATE).
+Analytics can be enabled and configured using environment variables. Set HYRAX_ANALYTICS to true, set either 'google' or 'matomo' for  HYRAX_ANALYTICS_PROVIDER, and set the date you would like reporting to start (ANALYTICS_START_DATE).
 
 ```
 HYRAX_ANALYTICS=true

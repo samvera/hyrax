@@ -109,7 +109,7 @@ module Hyrax
     attr_reader :analytics
     def analytics?
       @analytics ||=
-        ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_ANALYTICS', 'false'))
+        ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_ANALYTICS', false))
     end
 
     # Currently supports 'google' or 'matomo'
@@ -123,7 +123,7 @@ module Hyrax
     ##
     # @!attribute [w] analytics_start_date
     #   @note this can be set using the +ANALITICS_START_DATE+ environment variable (format is YYYY-MM-DD)
-    #   @return [String] date you wish to start collecting analytics for. used to compute the 
+    #   @return [String] date you wish to start collecting analytics for. used to compute the
     #     "all-time" metrics.
     # This is used to compute the "all-time" metrics
     # Set this in your .env file (format is YYYY-MM-DD)

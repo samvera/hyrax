@@ -23,7 +23,6 @@ module Hyrax
         def show
           return unless Hyrax.config.analytics?
           @document = ::SolrDocument.find(params[:id])
-          # @path = request.base_url + @path if Hyrax.config.analytics_provider == 'matomo'
           @pageviews = Hyrax::Analytics.daily_events_for_id(@document.id, 'collection-page-view')
           @work_page_views = Hyrax::Analytics.daily_events_for_id(@document.id, 'work-in-collection-view')
           @uniques = Hyrax::Analytics.unique_visitors_for_id(@document.id)
