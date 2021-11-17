@@ -120,7 +120,11 @@ module Hyrax
         ENV.fetch('HYRAX_ANALYTICS_PROVIDER', 'google')
     end
 
-    # Date you wish to start collecting analytics for
+    ##
+    # @!attribute [w] analytics_start_date
+    #   @note this can be set using the +ANALITICS_START_DATE+ environment variable (format is YYYY-MM-DD)
+    #   @return [String] date you wish to start collecting analytics for. used to compute the 
+    #     "all-time" metrics.
     # This is used to compute the "all-time" metrics
     # Set this in your .env file (format is YYYY-MM-DD)
     attr_writer :analytics_start_date
