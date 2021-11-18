@@ -11,7 +11,9 @@ module Hyrax
       ##
       # Re-index the resource for the updated ACL.
       #
-      # @param event [Dry::Event]
+      # Called when 'object.acl.updated' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
       def on_object_acl_updated(event)
         return if Hyrax.config.disable_wings
         return unless event[:result] == :success # do nothing on failure

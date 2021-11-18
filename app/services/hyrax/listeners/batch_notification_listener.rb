@@ -8,7 +8,9 @@ module Hyrax
       ##
       # Notify requesting users of batch success/failure
       #
-      # @param event [Dry::Event]
+      # Called when 'batch.created' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
       def on_batch_created(event)
         case event[:result]
         when :success

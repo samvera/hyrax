@@ -14,7 +14,9 @@ module Hyrax
       ##
       # Re-index the resource.
       #
-      # @param event [Dry::Event]
+      # Called when 'collection.metadata.updated' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
       def on_collection_metadata_updated(event)
         return unless resource? event[:collection]
         Hyrax.index_adapter.save(resource: event[:collection])
@@ -23,7 +25,9 @@ module Hyrax
       ##
       # Re-index the resource.
       #
-      # @param event [Dry::Event]
+      # Called when 'object.metadata.updated' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
       def on_object_metadata_updated(event)
         return unless resource? event[:object]
         Hyrax.index_adapter.save(resource: event[:object])
@@ -32,7 +36,9 @@ module Hyrax
       ##
       # Remove the resource from the index.
       #
-      # @param event [Dry::Event]
+      # Called when 'object.deleted' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
       def on_object_deleted(event)
         return unless resource?(event.payload[:object])
         Hyrax.index_adapter.delete(resource: event[:object])

@@ -7,7 +7,9 @@ module Hyrax
     # deposits an item `on_behalf_of` another, ensures transfer is handled.
     class ProxyDepositListener
       ##
-      # @param event [Dry::Event]
+      # Called when 'object.deposited' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
       def on_object_deposited(event)
         return if event[:object].try(:on_behalf_of).blank? ||
                   (event[:object].on_behalf_of == event[:object].depositor)
