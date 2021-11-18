@@ -5,6 +5,9 @@ module Hyrax
     ##
     # Listens for object deleted events and cleans up associated members
     class TrophyCleanupListener
+      # Called when 'object.deleted' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
       def on_object_deleted(event)
         Trophy.where(work_id: event[:id]).destroy_all
       rescue StandardError => err

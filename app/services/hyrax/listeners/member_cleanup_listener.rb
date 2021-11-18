@@ -5,6 +5,9 @@ module Hyrax
     ##
     # Listens for object deleted events and cleans up associated members
     class MemberCleanupListener
+      # Called when 'object.deleted' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
       def on_object_deleted(event)
         return unless event.payload.key?(:object) # legacy callback
         return if event[:object].is_a?(ActiveFedora::Base) # handled by legacy code

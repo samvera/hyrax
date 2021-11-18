@@ -9,7 +9,9 @@ module Hyrax
       ##
       # Send a notification to the depositor for failed checksum audits.
       #
-      # @param event [Dry::Event]
+      # Called when 'file.set.audited' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
       def on_file_set_audited(event)
         return unless event[:result] == :failure # do nothing on success
 
@@ -24,7 +26,9 @@ module Hyrax
       # Send a notification to the depositing user for FileSet url import
       # failures.
       #
-      # @param event [Dry::Event]
+      # Called when 'file.set.url.imported' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
       def on_file_set_url_imported(event)
         Hyrax::ImportUrlFailureService.new(event[:file_set], event[:user]).call if
           event[:result] == :failure

@@ -21,7 +21,9 @@ module Hyrax
       end
 
       ##
-      # @param event [Dry::Event]
+      # Called when 'object.deposited' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
       def on_object_deposited(event)
         return Rails.logger.warn("Skipping workflow initialization for #{event[:object]}; no user is given\n\t#{event}") if
           event[:user].blank?
