@@ -13,6 +13,10 @@ class TestAppGenerator < Rails::Generators::Base
     generate "browse_everything:install --skip-assets"
   end
 
+  def add_valkyrie_migrations
+    rake 'valkyrie_engine:install:migrations'
+  end
+
   def create_generic_work
     generate 'hyrax:work GenericWork'
   end
