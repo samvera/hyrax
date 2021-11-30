@@ -1,7 +1,30 @@
 # frozen_string_literal: true
 module Hyrax
   ##
-  # Provides Hyrax's engine level user/group permissions.
+  # Provides Hyrax's engine level user/group authorizations.
+  #
+  # Authorization (allow or deny) of the following actions is managed by the
+  # rules defined here:
+  #
+  #   - read:
+  #   - show:
+  #   - edit:
+  #   - update:
+  #   - create:
+  #   - discover:
+  #   - manage:
+  #   - download:
+  #   - destroy:
+  #   - collect:
+  #   - toggle_trophy:
+  #   - transfer:
+  #   - accept:
+  #   - reject:
+  #   - manage_any:
+  #   - create_any:
+  #   - view_admin_show_any:
+  #   - review:
+  #   - create_collection_type:
   #
   # @note This is intended as a mixin layered over
   #   +Blacklight::AccessControls::Ability+ and +Hydra::AccessControls+. Its
