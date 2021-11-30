@@ -1,8 +1,31 @@
 # frozen_string_literal: true
 module Hyrax
   module Ability
+    ##
+    # Adds methods to the Hyrax ability logic library for authorizing actions
+    # related  to Admin Sets ({AdminSet} in ActiveFedora, {Hyrax::AdministrativeSet},
+    # for Valkyrie apps).
+    #
+    # @note this is intended for use with {Hyrax::Ability}, which provides a number of
+    #   other ability logic methods, as well as some core behaviors that are needed
+    #   here. impartantly {hyrax::Ability#admin?} is expected, as well as some
+    #   behavior provided by {{Blacklight::AccessControls::Ability}}.
+    #
+    # @see Hyrax::Ability
+    # @see https://www.rubydoc.info/github/CanCanCommunity/cancancan
+    # @see https://www.rubydoc.info/gems/blacklight-access_controls/
     module AdminSetAbility
-      def admin_set_abilities # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+      # @!group Ability Logic Library
+
+      ##
+      # @api public
+      #
+      # Grant broad access to admin sets for admin users.
+      #
+      # @note admin status for the current user is defined by `#admin?`.
+      #   applications may override this method locally to provide a different
+      #   implementation. by default +User#admin?+ is NOT respected here.
+      def allow_admins_to_manage_admin_sets
         if admin?
           can :manage, [AdminSet, Hyrax::AdministrativeSet]
           can :manage_any, AdminSet
@@ -11,7 +34,15 @@ module Hyrax
           can :create_any, Hyrax::AdministrativeSet
           can :view_admin_show_any, AdminSet
           can :view_admin_show_any, Hyrax::AdministrativeSet
-        else
+        end
+      end
+
+      ##
+      # @api public
+      def admin_set_abilities # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+        allow_admins_to_manage_admin_sets
+
+        unless admin?
           if Hyrax::Collections::PermissionsService.can_manage_any_admin_set?(ability: self)
             can :manage_any, AdminSet
             can :manage_any, Hyrax::AdministrativeSet
@@ -56,5 +87,7 @@ module Hyrax
         end
       end
     end
+
+    # @!endgroup
   end
 end

@@ -2,10 +2,8 @@
 require 'cancan/matchers'
 
 RSpec.describe Hyrax::Ability, :clean_repo do
-  subject { ability }
-
-  let(:ability) { Ability.new(current_user) }
-  let(:user) { create(:user, email: 'user@example.com') }
+  subject(:ability) { Ability.new(current_user) }
+  let(:user) { FactoryBot.create(:user, email: 'user@example.com') }
   let(:current_user) { user }
 
   context 'when admin user' do
