@@ -1,14 +1,11 @@
 Hyrax-in-a-Container
 ====================
 
-Our goal is to provide a practical, reusable "reference environment for applications.  The first step is providing
-on on-ramp for Hyrax engine development.  Then providing help with Hyrax-based application development.  Finally,
-providing better guidance around deployment.
-
-Where are we at?  It's complicated.  What we have below is experimental support, but one that we want to push
-towards.  We need your help to keep pushing in this direction.  So dig in and prepare to get your hands dirty.
+Our goal is to provide a practical, reusable reference environment for applications.  The first step is providing on on-ramp for Hyrax engine development. Then providing help with Hyrax-based application development. Finally, providing better guidance around deployment.
 
 The [Hyrax Engine Development](#hyrax-engine-development) is further along than the [Docker Image for Hyrax-based Applications](#docker-image-for-hyrax-based-applications) which is further along than [Deploying to Production](#deploying-to-production).
+
+See the [Troubleshooting](#troubleshooting) section if you encounter any issues.
 
 <!-- NOTE: This title is referenced in the top-level README.md. Keep that in mind if you change it. -->
 ## Hyrax Engine Development
@@ -41,8 +38,6 @@ It also runs database migrations. This will also bring up a development applicat
 To stop the containers for the Hyrax-based application, type <kbd>Ctrl</kbd>+<kbd>c</kbd>. To restart the containers you need only run `docker-compose up`.
 
 _**Note:** Starting and stopping Docker in this way will preserve your data between restarts._
-
-_**Note:** I (Jeremy) encountered a problem using `docker-compose build`. I ran `bundle update` in `./hyrax` as well as within `./hyrax/.dassie`. That appeared to clear up the problem of a failure to build a gem._
 
 ### Code Changes and Testing
 
@@ -99,7 +94,7 @@ In the two examples, note the difference in the `-w` switch. In the first case, 
 
 ### Debugging
 
-I (Jeremy) find myself wanting to debug the application.  This requires a somewhat different approach than running Hyrax bare-metal.  You need to use `docker attach` to debug the running docker instance.
+If you are interested in running Hyrax in debug mode, this requires a somewhat different approach than running Hyrax bare-metal.  You need to use `docker attach` to debug the running docker instance.
 
 1. With `docker-compose up` running open a new Terminal session.
 2. In that new Terminal session, using `docker container ls` find the "CONTAINER ID" for the `hyrax-engine-dev`.
@@ -126,6 +121,14 @@ cp: cannot create directory '/var/solr/data/hyrax_test': Permission denied
 ```
 
 The solution that appears to work is to `docker-compose down --volumes`; This will tear down the docker instance, and remove the volumes.  You can then run `docker-compose up` to get back to work.  _**Note:** the `--volumes` switch will remove all custom data._
+
+#### Errors building the Docker image
+
+If you encounter errors running `docker-compose build`, try running `bundle update` in `./hyrax` as well as within `./hyrax/.dassie`. That can help clear up the problem of a failure to build a particular gem.
+
+#### Containers do not all start
+
+If any of the services fail to start on `docker-compose up`, try clearing out any `Gemfile.lock` files that might exist in `./hyrax` or `./hyrax/.dassie` and run `docker-compose build` again, then `docker-compose up` again.
 
 <!-- NOTE: This title is referenced in the top-level documentation/developing-your-hyrax-based-app.md. Keep that in mind if you change it. -->
 ## Docker Image for Hyrax-based Applications
