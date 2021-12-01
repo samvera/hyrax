@@ -38,5 +38,14 @@ FactoryBot.define do
   factory :default_hyrax_admin_set, class: 'Hyrax::AdministrativeSet' do
     id { Hyrax::AdminSetCreateService::DEFAULT_ID }
     title { Hyrax::AdminSetCreateService::DEFAULT_TITLE }
+
+    transient do
+      with_persisted_default_id { true }
+    end
+
+    after(:create) do |admin_set, evaluator|
+      Hyrax::DefaultAdministrativeSet.update(default_admin_set_id: admin_set.id) if
+        evaluator.with_persisted_default_id
+    end
   end
 end
