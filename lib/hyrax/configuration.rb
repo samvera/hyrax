@@ -694,6 +694,27 @@ module Hyrax
       admin_set_model.constantize
     end
 
+    ##
+    # @return [String] the default admin set id
+    def default_admin_set_id
+      default_admin_set.id.to_s
+    end
+
+    ##
+    # @return [Hyrax::AdministrativeSet] the default admin set
+    # @see Hyrax::AdminSetCreateService.find_or_create_default_admin_set
+    def default_admin_set
+      @default_admin_set ||= Hyrax::AdminSetCreateService.find_or_create_default_admin_set
+    end
+
+    ##
+    # If the default admin set is changed, call reset.  The next time one of the default
+    # admin set configs is checked, the default_admin_set variable will be updated.
+    # @see Hyrax::DefaultAdministrativeSet.update
+    def reset_default_admin_set
+      @default_admin_set = nil
+    end
+
     attr_writer :id_field
     def id_field
       @id_field || index_field_mapper.id_field
