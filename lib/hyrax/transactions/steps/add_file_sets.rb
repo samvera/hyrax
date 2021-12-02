@@ -13,7 +13,7 @@ module Hyrax
 
         ##
         # @param [Class] handler
-        def initialize(handler: Hyrax::WorkUploadsHandler)
+        def initialize(handler: Hyrax::ValkyrieUploadsHandler)
           @handler = handler
         end
 
