@@ -112,7 +112,8 @@ RSpec.describe AdminSet, type: :model do
     end
   end
 
-  describe ".default_set?" do
+  describe ".default_set?", :clean_repo do
+    before { FactoryBot.valkyrie_create(:default_hyrax_admin_set) }
     context "with default AdminSet ID" do
       it "returns true" do
         expect(described_class.default_set?(described_class::DEFAULT_ID)).to be true
@@ -127,8 +128,12 @@ RSpec.describe AdminSet, type: :model do
   end
 
   describe "#default_set?", :clean_repo do
+    let(:default_admin_set) do
+      administrative_set = FactoryBot.valkyrie_create(:default_hyrax_admin_set)
+      Wings::ActiveFedoraConverter.new(resource: administrative_set).convert
+    end
     context "with default AdminSet ID" do
-      subject { described_class.new(id: described_class::DEFAULT_ID).default_set? }
+      subject { default_admin_set.default_set? }
 
       it { is_expected.to be_truthy }
     end
