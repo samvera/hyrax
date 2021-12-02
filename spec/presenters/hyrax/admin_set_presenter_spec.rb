@@ -44,18 +44,14 @@ RSpec.describe Hyrax::AdminSetPresenter do
     end
 
     context "default admin set" do
-      let(:admin_set) do
-        build(:admin_set, id: AdminSet::DEFAULT_ID)
-      end
+      let(:admin_set) { FactoryBot.create(:default_adminset) }
 
       it { is_expected.to be true }
     end
   end
 
   describe '#collection_type' do
-    let(:admin_set) do
-      build(:admin_set, id: AdminSet::DEFAULT_ID)
-    end
+    let(:admin_set) { FactoryBot.create(:default_adminset) }
 
     subject { presenter.collection_type }
 

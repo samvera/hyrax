@@ -89,9 +89,15 @@ FactoryBot.define do
           }
         end
         with_solr_document { true }
+        with_persisted_default_id { true }
       end
       id { AdminSet::DEFAULT_ID }
       title { AdminSet::DEFAULT_TITLE }
+
+      after(:create) do |admin_set, evaluator|
+        Hyrax::DefaultAdministrativeSet.update(default_admin_set_id: admin_set.id) if
+          evaluator.with_persisted_default_id
+      end
     end
   end
 
