@@ -207,6 +207,24 @@ workflows:
           bundler_version: "2.1.4"
           requires:
             - build
+  ruby2-7-4-rails-6-0:
+    jobs:
+      - bundle:
+          ruby_version: "2.7.4"
+          rails_version: "6.0.4.1"
+          bundler_version: "2.1.4"
+      - build:
+          ruby_version: "2.7.4"
+          rails_version: "6.0.4.1"
+          bundler_version: "2.1.4"
+          requires:
+            - bundle
+      - test:
+          name: "ruby2-7-4"
+          ruby_version: "2.7.4"
+          bundler_version: "2.1.4"
+          requires:
+            - build
   nurax-dev_deploy:
     jobs:
       - deploy:
