@@ -19,7 +19,7 @@ module Hyrax
     ##
     # @param [#member_ids] object
     # @param [::Ability] ability
-    def initialize(object, ability)
+    def initialize(object, ability, _request = nil)
       @object = object
       @ability = ability
     end

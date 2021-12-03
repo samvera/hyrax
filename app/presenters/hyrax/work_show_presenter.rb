@@ -10,10 +10,11 @@ module Hyrax
     attr_writer :member_presenter_factory
     attr_accessor :solr_document, :current_ability, :request
 
-    class_attribute :collection_presenter_class
+    class_attribute :collection_presenter_class, :presenter_factory_class
 
     # modify this attribute to use an alternate presenter class for the collections
     self.collection_presenter_class = CollectionPresenter
+    self.presenter_factory_class = MemberPresenterFactory
 
     # Methods used by blacklight helpers
     delegate :has?, :first, :fetch, :export_formats, :export_as, to: :solr_document
@@ -304,7 +305,9 @@ module Hyrax
 
     def member_presenter_factory
       @member_presenter_factory ||=
-        MemberPresenterFactory.new(solr_document, current_ability, request)
+        self.class
+            .presenter_factory_class
+            .new(solr_document, current_ability, request)
     end
 
     def graph
