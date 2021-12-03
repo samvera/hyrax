@@ -18,3 +18,12 @@ $brand-warning: #565653 !default;
 // * Darkens the text for disabled pagination buttons on every page.
 $breadcrumb-active-color: #4c4c4c;
 $pagination-disabled-color: #4c4c4c;
+
+// Date picker on safari placeholder text was misaligned
+@media screen {
+  @media screen and (-webkit-min-device-pixel-ratio: 0) {
+    input[type="date"].form-control {
+      line-height: 16px;
+    }
+  }
+}

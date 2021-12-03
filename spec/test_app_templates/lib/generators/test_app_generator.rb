@@ -90,7 +90,7 @@ class TestAppGenerator < Rails::Generators::Base
     type: string
     form:
       primary: false
-  target_audience: 
+  target_audience:
     type: string
     form:
       multiple: true
@@ -103,7 +103,7 @@ class TestAppGenerator < Rails::Generators::Base
 YAML
     end
   end
-  
+
   def banner
     say_status("info", "ADDING OVERRIDES FOR TEST ENVIRONMENT", :blue)
   end
@@ -117,11 +117,17 @@ YAML
     append_file 'config/analytics.yml' do
       <<-EOS.strip_heredoc
         analytics:
-          app_name: My App Name
-          app_version: 0.0.1
-          privkey_path: /tmp/privkey.p12
-          privkey_secret: s00pers3kr1t
-          client_email: oauth@example.org
+          google:
+            analytics_id: UA-XXXXXXXX
+            app_name: My App Name
+            app_version: 0.0.1
+            privkey_path: /tmp/privkey.p12
+            privkey_secret: s00pers3kr1t
+            client_email: oauth@example.org
+          matomo:
+            base_url: https://fake.example.com
+            site_id: 5
+            auth_token: 3123c4e9c98860aa240ffadcb98
       EOS
     end
   end

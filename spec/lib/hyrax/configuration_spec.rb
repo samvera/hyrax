@@ -16,8 +16,8 @@ RSpec.describe Hyrax::Configuration do
     it { is_expected.to eq('default') }
   end
 
-  it { is_expected.to respond_to(:active_deposit_agreement_acceptance?) }
   it { is_expected.to respond_to(:active_deposit_agreement_acceptance=) }
+  it { is_expected.to respond_to(:active_deposit_agreement_acceptance?) }
   it { is_expected.to respond_to(:activity_to_show_default_seconds_since_now) }
   it { is_expected.to respond_to(:admin_set_class) }
   it { is_expected.to respond_to(:admin_set_model) }
@@ -26,16 +26,15 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:admin_set_predicate=) }
   it { is_expected.to respond_to(:analytic_start_date) }
   it { is_expected.to respond_to(:analytics?) }
-  it { is_expected.to respond_to(:analytics) }
-  it { is_expected.to respond_to(:arkivo_api?) }
+  it { is_expected.to respond_to(:analytics_provider) }
+  it { is_expected.to respond_to(:analytics_provider=) }
   it { is_expected.to respond_to(:arkivo_api=) }
   it { is_expected.to respond_to(:system_user_key) }
   it { is_expected.to respond_to(:audit_user_key) }
   it { is_expected.to respond_to(:batch_user_key) }
-  it { is_expected.to respond_to(:browse_everything?) }
   it { is_expected.to respond_to(:browse_everything=) }
+  it { is_expected.to respond_to(:browse_everything?) }
   it { is_expected.to respond_to(:cache_path) }
-  it { is_expected.to respond_to(:citations?) }
   it { is_expected.to respond_to(:citations=) }
   it { is_expected.to respond_to(:collection_class) }
   it { is_expected.to respond_to(:collection_model) }
@@ -43,36 +42,36 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:contact_email) }
   it { is_expected.to respond_to(:default_admin_set_id) }
   it { is_expected.to respond_to(:default_nested_relationship_reindexer) }
-  it { is_expected.to respond_to(:display_media_download_link?) }
   it { is_expected.to respond_to(:display_media_download_link=) }
+  it { is_expected.to respond_to(:display_media_download_link?) }
   it { is_expected.to respond_to(:display_microdata?) }
-  it { is_expected.to respond_to(:display_share_button_when_not_logged_in?) }
   it { is_expected.to respond_to(:display_share_button_when_not_logged_in=) }
+  it { is_expected.to respond_to(:display_share_button_when_not_logged_in?) }
   it { is_expected.to respond_to(:enable_noids?) }
   it { is_expected.to respond_to(:extract_full_text?) }
   it { is_expected.to respond_to(:feature_config_path) }
-  it { is_expected.to respond_to(:google_analytics_id?) }
   it { is_expected.to respond_to(:google_analytics_id) }
+  it { is_expected.to respond_to(:google_analytics_id?) }
   it { is_expected.to respond_to(:identifier_registrars) }
   it { is_expected.to respond_to(:iiif_image_compliance_level_uri) }
   it { is_expected.to respond_to(:iiif_image_compliance_level_uri=) }
-  it { is_expected.to respond_to(:iiif_image_server?) }
   it { is_expected.to respond_to(:iiif_image_server=) }
+  it { is_expected.to respond_to(:iiif_image_server?) }
   it { is_expected.to respond_to(:iiif_image_size_default) }
   it { is_expected.to respond_to(:iiif_image_size_default=) }
   it { is_expected.to respond_to(:iiif_image_url_builder) }
   it { is_expected.to respond_to(:iiif_image_url_builder=) }
   it { is_expected.to respond_to(:iiif_info_url_builder) }
   it { is_expected.to respond_to(:iiif_info_url_builder=) }
-  it { is_expected.to respond_to(:iiif_metadata_fields) }
-  it { is_expected.to respond_to(:iiif_metadata_fields=) }
   it { is_expected.to respond_to(:iiif_manifest_cache_duration) }
   it { is_expected.to respond_to(:iiif_manifest_cache_duration=) }
+  it { is_expected.to respond_to(:iiif_metadata_fields) }
+  it { is_expected.to respond_to(:iiif_metadata_fields=) }
   it { is_expected.to respond_to(:libreoffice_path) }
   it { is_expected.to respond_to(:license_service_class) }
   it { is_expected.to respond_to(:license_service_class=) }
-  it { is_expected.to respond_to(:max_days_between_fixity_checks=) }
   it { is_expected.to respond_to(:max_days_between_fixity_checks) }
+  it { is_expected.to respond_to(:max_days_between_fixity_checks=) }
   it { is_expected.to respond_to(:max_notifications_for_dashboard) }
   it { is_expected.to respond_to(:nested_relationship_reindexer) }
   it { is_expected.to respond_to(:owner_permission_levels) }

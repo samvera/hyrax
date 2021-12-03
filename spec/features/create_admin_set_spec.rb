@@ -24,7 +24,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
     context "and user does not have permissions to create admin sets" do
       before do
         sign_in user
-        click_link 'Collections'
+        click_link('Collections', match: :first)
       end
 
       it 'user is not offered the option to create an admin set' do
@@ -39,7 +39,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
     context "and has permissions to create admin sets" do
       before do
         sign_in creator
-        click_link 'Collections'
+        click_link('Collections', match: :first)
       end
 
       it 'creates the admin set' do
@@ -62,7 +62,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
 
         # navigate to show page for the new admin set
         visit '/dashboard'
-        click_on('Collections')
+        click_link('Collections', match: :first)
         click_on('Display all details of An Admin Set')
 
         # confirm creating user can view and edit the new admin set
@@ -76,7 +76,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
         # confirm admin can view and edit the new admin set
         logout
         sign_in admin
-        click_link 'Collections'
+        click_link('Collections', match: :first)
         click_link 'All Collections'
         click_on('Display all details of An Admin Set')
         expect(page).to have_xpath('//h2', text: 'An Admin Set')
@@ -89,7 +89,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
         # confirm a collection type manager can view and edit the new admin set
         logout
         sign_in manager
-        click_link 'Collections'
+        click_link('Collections', match: :first)
         click_link 'Managed Collections'
         click_on('Display all details of An Admin Set')
         expect(page).to have_xpath('//h2', text: 'An Admin Set')
@@ -102,7 +102,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
         # confirm a viewer can view, but not edit the new admin set
         logout
         sign_in viewer
-        click_link 'Collections'
+        click_link('Collections', match: :first)
         click_link 'Managed Collections'
         click_on('Display all details of An Admin Set')
         expect(page).to have_xpath('//h2', text: 'An Admin Set')
@@ -139,7 +139,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
     context "and has permissions to manage admin sets" do
       before do
         sign_in manager
-        click_link 'Collections'
+        click_link('Collections', match: :first)
       end
 
       it 'creates the admin set' do
@@ -156,7 +156,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
 
         # navigate to show page for the new admin set
         visit '/dashboard'
-        click_on('Collections')
+        click_link('Collections', match: :first)
         click_on('Display all details of An Admin Set')
 
         # confirm creating user can view and edit the new admin set
@@ -170,7 +170,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
         # confirm admin can view and edit the new admin set
         logout
         sign_in admin
-        click_link 'Collections'
+        click_link('Collections', match: :first)
         click_link 'All Collections'
         click_on('Display all details of An Admin Set')
         expect(page).to have_xpath('//h2', text: 'An Admin Set')
@@ -183,7 +183,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
         # confirm a collection type creator can not view the new admin set
         logout
         sign_in creator
-        click_link 'Collections'
+        click_link('Collections', match: :first)
         expect(page).not_to have_content('Managed Collections')
         expect(page).not_to have_content('An Admin Set')
       end
@@ -195,7 +195,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
 
     before do
       sign_in admin
-      click_link 'Collections'
+      click_link('Collections', match: :first)
     end
 
     it 'creates the admin set' do
@@ -212,7 +212,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
 
       # navigate to show page for the new admin set
       visit '/dashboard'
-      click_on('Collections')
+      click_link('Collections', match: :first)
       click_on('Display all details of An Admin Set')
 
       # confirm creating user can view and edit the new admin set
@@ -226,7 +226,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
       # confirm a collection type manager can view and edit the new admin set
       logout
       sign_in manager
-      click_link 'Collections'
+      click_link('Collections', match: :first)
       click_link 'Managed Collections'
       click_on('Display all details of An Admin Set')
       expect(page).to have_xpath('//h2', text: 'An Admin Set')
@@ -239,7 +239,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
       # confirm a collection type creator can not view the new admin set
       logout
       sign_in creator
-      click_link 'Collections'
+      click_link('Collections', match: :first)
       expect(page).not_to have_content('Managed Collections')
       expect(page).not_to have_content('An Admin Set')
     end

@@ -56,7 +56,7 @@
 //= require hyrax/search
 //= require hyrax/content_blocks
 //= require hyrax/nav_safety
-//= require hyrax/ga_events
+//= require hyrax/analytics_events
 //= require hyrax/select_submit
 //= require hyrax/tabs
 //= require hyrax/user_search
@@ -107,6 +107,7 @@
 //= require hyrax/i18n_helper
 //= require hyrax/collapse
 //= require hyrax/skip_to_content
+//= require hyrax/reports-buttons
 
 // this needs to be after batch_select so that the form ids get setup correctly
 //= require hyrax/batch_edit

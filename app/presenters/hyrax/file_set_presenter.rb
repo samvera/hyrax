@@ -34,6 +34,8 @@ module Hyrax
              :original_file_id,
              to: :solr_document
 
+    delegate :member_of_collection_ids, to: :parent
+
     def workflow
       nil
     end

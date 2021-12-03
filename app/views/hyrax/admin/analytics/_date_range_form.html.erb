@@ -1,0 +1,11 @@
+<div class="panel panel-default">
+  <div class="panel-heading"><h4><%= t('.date_range_heading') %></h4></div>
+  <div class="panel-body">
+    <%= form_tag(redirect_path, method: :get, class: "form-inline") do %>
+      <%= t('.start_date') %>: <%= date_field_tag :start_date, "", class: 'datepicker form-control', placeholder: 'mm/dd/yyyy', required: true %>
+      <%= t('.end_date') %>: <%= date_field_tag :end_date, "", class: 'datepicker form-control', placeholder: 'mm/dd/yyyy', required: true %>
+      <%= submit_tag "#{t('.set_date_range')}", class: 'btn btn-primary' %>
+      <%= link_to "#{t('.reset_date_range')}", redirect_path if params[:start_date] %>
+    <% end %>
+  </div>
+</div>

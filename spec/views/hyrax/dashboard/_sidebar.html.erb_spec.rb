@@ -9,6 +9,7 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
   let(:manage_feature) { false }
   let(:manage_workflow) { false }
   let(:manage_collection_types) { false }
+  let(:ability) { double('current ability', can_create_any_work?: false) }
 
   before do
     allow(view).to receive(:signed_in?).and_return(true)
@@ -22,6 +23,7 @@ RSpec.describe 'hyrax/dashboard/_sidebar.html.erb', type: :view do
     allow(view).to receive(:can?).with(:manage, Hyrax::Feature).and_return(manage_feature)
     allow(view).to receive(:can?).with(:manage, Sipity::WorkflowResponsibility).and_return(manage_workflow)
     allow(view).to receive(:can?).with(:manage, :collection_types).and_return(manage_collection_types)
+    allow(view).to receive(:current_ability).and_return(ability)
   end
 
   context 'with any user' do

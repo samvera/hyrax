@@ -12,7 +12,10 @@
         </div>
       </div>
     </li>
-
+    <li><%= link_to hyrax.dashboard_path do %>
+          <span class="fa fa-home" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.dashboard') %></span>
+        <% end %>
+    </li>
     <%= render 'hyrax/dashboard/sidebar/activity', menu: menu %>
     <%= render 'hyrax/dashboard/sidebar/repository_content', menu: menu %>
     <%= render 'hyrax/dashboard/sidebar/tasks', menu: menu %>

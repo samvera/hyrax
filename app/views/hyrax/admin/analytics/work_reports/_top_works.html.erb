@@ -1,0 +1,40 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+   <h4><%= t('.top_works') %>
+      <div class="btn-group pull-right">
+        <%= link_to "#{t('.export')}", admin_analytics_work_reports_path(start_date: @start_date, end_date: @end_date, format: :csv, disposition: "attachment"), class: "btn btn-default" %>
+      </div>
+  </h4>
+  </div>
+
+  <div class="panel-body">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><%= t('.work_title')%></th>
+          <th>ID</th>
+          <th><%= t('.work_views')%></th>
+          <th><%= t('.file_downloads')%></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @top_works.each do |work| %>
+            <tr>
+              <td><%= link_to work[1], admin_analytics_work_report_path(work[0]) %></td>
+              <td><%= work[0] %></td>
+              <td><%= work[2] %></td>
+              <td><%= work[3] %></td>
+            </tr>       
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  
+
+  <div class="panel-footer">
+    <div class="pull-right">
+      <%= paginate @top_works %>
+    </div>
+  </div>
+
+</div>

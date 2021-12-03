@@ -1,0 +1,41 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4><%= t('.title') %></h4>
+  </div>
+  <div class="panel-body">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>&nbsp;</th>
+        <th></th>
+        <th><%= t('.total_downloads') %> (YTD)</th>
+      </tr>
+      </thead>
+      <tbody>
+
+      <% @files.each do |file| %>
+        <% @file_sizes = [] %>
+        <% f = SolrDocument.find(file) %>
+        <% if f %>
+          <% @file_sizes.push(f.file_size) %>
+          <tr>
+            <td><%= f %></td>
+            <td><%= f.id %></td>
+            <td><%= Hyrax::Analytics.daily_events_for_id(@document.id, 'file_set_in_work_download').all %></td>
+          </tr>
+        <% end %>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="panel-footer">
+    <div class="pull-right">
+     <%= paginate @files %> 
+    </div>
+  </div>
+</div>
+
+
+
+
+

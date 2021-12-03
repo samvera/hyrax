@@ -319,7 +319,6 @@ Blacklight.onLoad(function () {
     submitModalAjax(url, 'POST', data, $(this));
   });
 
-
   // Handle add a subcollection button click on the collections show page
   $('.sub-collections-wrapper button.add-subcollection').on('click', function (e) {
     $('#add-subcollection-modal-' + $(this).data('presenterId')).modal('show');

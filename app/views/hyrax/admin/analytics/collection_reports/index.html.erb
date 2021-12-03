@@ -1,0 +1,70 @@
+<% provide :page_title, "#{t('.title')}" %>
+
+<% provide :page_header do %>
+  <h1><span class="fa fa-bar-chart" aria-hidden="true"></span> <%= t('.title') %></h1>
+<% end %>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="collection-reports">
+
+<% if Hyrax.config.analytics? %>
+      <div class="panel panel-default">
+        <div class="panel-heading"><%= t('.repo_summary') %> <b><%= pluralize(Collection.count, "collection") %></b>, <%= t('.repo_summary_2') %> <b><%= @pageviews.all %> <%= t('.views') %></b> <%= t('.and') %> <b><%= @downloads.all %> <%= t('.downloads') %></b>.</div>
+        <div class="panel-body">
+      
+               <div class="row text-center">
+                <div class="nav nav-pills btn-group" role="group">
+                    <% if params[:start_date] %>
+                     <a button id='summary-btn' class="btn btn-default nav-link" type="button" href="#summary" data-toggle="pill">
+                    <% else %>
+                     <a button id='summary-btn' class="btn btn-primary nav-link" type="button" href="#summary" data-toggle="pill">
+                    <% end %>
+                        <%= t('.summary') %>
+                     </a>
+                      <a button id='monthly-btn' class="btn btn-default nav-link" type="button" href="#monthly" data-toggle="pill">
+                        <%= t('.monthly') %>
+                      </a>
+                    <% if params[:start_date] %>
+                      <a button id='range-btn' class="btn btn-primary nav-link" type="button" href="#custom-range" data-toggle="pill">
+                    <% else %>
+                      <a button id='range-btn' class="btn btn-default nav-link" type="button" href="#custom-range" data-toggle="pill">
+                    <% end %>
+                        <%= t('.custom_range') %>
+                      </a>
+                </div>
+              </div>
+              <br>
+              <div class="tab-content">
+              <% if params[:start_date] %>
+                <div class="tab-pane" id="summary">
+              <% else %>
+                <div class="tab-pane active" id="summary">
+              <% end %>
+                  <%= render "summary" %>
+                </div>
+                <div class="tab-pane" id="monthly">
+                  <%= render "monthly_summary" %>
+                </div>
+                 <% if params[:start_date] %>
+                  <div class="tab-pane active" id="custom-range">
+                <% else %>
+                  <div class="tab-pane" id="custom-range">
+                <% end %>
+                  <%= render "hyrax/admin/analytics/date_range_form", redirect_path: hyrax.admin_analytics_collection_reports_path %>
+                  <%= render "custom_range" %></div>
+              </div>
+            
+            </div>
+          </div>
+          <p class="text-center"><%= t('.report_generated_on') %> <b><%= Time.current %></b>.</p>
+        </div>
+      </div>
+  <% else %>
+    <div class="alert alert-warning" role="alert">
+      <%= t('.enable_analytics') %>
+    </div>
+  <% end %>
+    </div>
+  </div>
+</div>

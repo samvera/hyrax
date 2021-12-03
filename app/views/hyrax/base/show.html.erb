@@ -53,5 +53,11 @@
     <%# = render 'sharing_with', presenter: @presenter %>
     <%# = render 'user_activity', presenter: @presenter %>
 
+<span class='hide analytics-event' data-category="work" data-action="work-view" data-name="<%= @presenter.id %>" >
+<% @presenter.member_of_collection_ids.each do |collection_id| %>
+  <span class='hide analytics-event' data-category="work-in-collection" data-action="work-in-collection-view" data-name="<%= collection_id %>" >
+<% end %>
+
   </div>
 </div>
+

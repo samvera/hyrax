@@ -6,6 +6,7 @@ module Hyrax
     with_themed_layout 'dashboard'
     before_action :authenticate_user!
     before_action :build_breadcrumbs, only: [:show]
+    before_action :set_date_range
 
     ##
     # @!attribute [rw] sidebar_partials
@@ -20,11 +21,19 @@ module Hyrax
       if can? :read, :admin_dashboard
         @presenter = Hyrax::Admin::DashboardPresenter.new
         @admin_set_rows = Hyrax::AdminSetService.new(self).search_results_with_work_count(:read)
+        @collections = Collection.order(date_modified: :desc)
         render 'show_admin'
       else
         @presenter = Dashboard::UserPresenter.new(current_user, view_context, params[:since])
         render 'show_user'
       end
+    end
+
+    private
+
+    def set_date_range
+      @start_date = params[:start_date] || Time.zone.today - 1.month
+      @end_date = params[:end_date] || Time.zone.today + 1.day
     end
   end
 end

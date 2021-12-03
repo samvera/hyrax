@@ -1,0 +1,41 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><%= t('.title') %></h3>
+  </div>
+  <div class="panel-body">
+    <div id="dashboard-resource-types" aria-hidden="true" style="height: 200px">
+      <% @resource_types = Hyrax::Statistic.resource_types %>
+      <script>
+        Morris.Donut({
+            element: 'dashboard-resource-types',
+            data: [
+              <% @resource_types.each do |row| %>
+                { label: "<%= row[0] %>", value: <%= row[1].to_i %> },
+              <% end %>
+            ],  
+            colors: ['#001219','#005f73','#0a9396','#94d2bd','#e9d8a6','#ee9b00','#ca6702','#bb3e03','#ae2012','#9b2226'],
+            gridTextSize: '12px',
+            resize: true
+          });
+      </script>
+    </div>
+                      
+    <table aria-label="<%= t('.title') %>" class="table table-striped sr-only text-left">
+      <thead>
+        <tr>
+          <th><%= t('.resource_type') %></th>
+          <th><%= t('.count') %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @resource_types.each do |row| %>
+          <tr>
+            <td><%= row[0] %></td>
+            <td><%= row[1] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+

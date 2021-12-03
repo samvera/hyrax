@@ -1,0 +1,31 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><%= t('.visibility') %></h3>
+  </div>
+  <div class="panel-body">
+      <% repository_objects = @presenter.repository_objects.to_json %>
+      <div id="dashboard-repository-objects" aria-hidden="true" style="height: 200px">
+      <script>
+        //<![CDATA[
+        Hyrax.statistics.repositoryObjects = <%== repository_objects %>
+        //]]>
+      </script>
+      </div>
+      <table class="table table-striped sr-only text-left">
+        <thead>
+          <tr>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% JSON.parse(repository_objects).each do |row| %>
+            <tr>
+              <td><%= row["label"] %></td>
+              <td><%= row["value"] %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+  </div>
+</div>

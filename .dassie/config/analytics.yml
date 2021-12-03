@@ -1,6 +1,13 @@
 analytics:
-  app_name: My App Name
-  app_version: 0.0.1
-  privkey_path: /tmp/privkey.p12
-  privkey_secret: s00pers3kr1t
-  client_email: oauth@example.org
+  google:
+    analytics_id: <%= ENV['GOOGLE_ANALYTICS_ID'] %>
+    app_name: <%= ENV['GOOGLE_OAUTH_APP_NAME'] %>
+    app_version: <%= ENV['GOOGLE_OAUTH_APP_VERSION'] %>
+    privkey_path: <%= ENV['GOOGLE_OAUTH_PRIVATE_KEY_PATH'] %>
+    privkey_secret: <%= ENV['GOOGLE_OAUTH_PRIVATE_KEY_SECRET'] %>
+    client_email: <%= ENV['GOOGLE_OAUTH_CLIENT_EMAIL'] %>
+  matomo: 
+    base_url: <%= ENV['MATOMO_BASE_URL'] %>
+    site_id: <%= ENV['MATOMO_SITE_ID'] %>
+    auth_token: <%= ENV['MATOMO_AUTH_TOKEN'] %>
+    

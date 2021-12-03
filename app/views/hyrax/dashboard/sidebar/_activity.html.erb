@@ -32,4 +32,26 @@
     <% end %>
   <% end %>
 
+  <% if current_ability.can_create_any_work? %>
+    <li>
+      <%= menu.collapsable_section t('hyrax.admin.sidebar.analytics'),
+                                        icon_class: "fa fa-pie-chart",
+                                        id: 'collapseAnalytics',
+                                        open: menu.analytics_reporting_section? do %>
+        <% if can? :read, :admin_dashboard %>
+          <%= menu.nav_link(hyrax.admin_analytics_collection_reports_path,
+                            onclick: "dontChangeAccordion(event);") do %>
+            <span class="fa fa-folder-open" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.collections_report') %></span>
+          <% end %>
+        <% end %>
+
+        <%= menu.nav_link(hyrax.admin_analytics_work_reports_path,
+                          onclick: "dontChangeAccordion(event);") do %>
+          <span class="fa fa-file" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.works_report') %></span>
+        <% end %>
+
+      <% end %>
+    </li>
+  <% end %>
+
   <%= render 'hyrax/dashboard/sidebar/menu_partials', menu: menu, section: :activity %>

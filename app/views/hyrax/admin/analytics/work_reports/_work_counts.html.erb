@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-xs-12 work-counts">
+    <div class="work-count-border col-sm-2 col-sm-offset-3 pull-left text-center">
+       <% @file_sizes_total_bytes = @file_sizes.inject(0, :+) %>
+       <% @file_size_total = (@file_sizes_total_bytes / 1.0.megabyte).round(2) %>
+      <h4 class="work-count-title"><%= @file_size_total %>MB</p>
+      <p><%= t('.total_size') %></p>
+    </div>
+    <div class="work-count-border col-sm-2 pull-left text-center">
+      <h4 class="work-count-title"></p>
+      <p><%= t('.child_works') %></p>
+    </div>
+    <div class="work-count-border col-sm-2 pull-left text-center">
+      <h4 class="work-count-title"><%= @files.count %></p>
+      <p><%= t('.files') %></p>
+    </div>
+  </div>
+</div>

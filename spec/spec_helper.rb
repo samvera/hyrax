@@ -3,6 +3,9 @@ $VERBOSE = nil unless ENV['RUBY_LOUD'] # silence loud Ruby 2.7 deprecations
 ENV['RAILS_ENV'] = 'test'
 ENV['DATABASE_URL'] = ENV['DATABASE_TEST_URL'] if ENV['DATABASE_TEST_URL']
 
+# Analytics is turned off by default
+ENV['HYRAX_ANALYTICS'] = 'false'
+
 require "bundler/setup"
 
 def ci_build?
@@ -135,6 +138,11 @@ RSpec.configure do |config|
     Hyrax.config.nested_relationship_reindexer = ->(id:, extent:) {}
     # setup a test group service
     User.group_service = TestHydraGroupService.new
+    # disable analytics except for specs which will have proper api mocks
+  end
+
+  config.before :all do
+    Hyrax.config.analytics = false
   end
 
   config.before do |example|

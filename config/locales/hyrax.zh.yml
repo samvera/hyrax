@@ -31,6 +31,9 @@ zh:
       filters:
         title: '筛选:'
       start_over: 清除筛选
+  download:
+    one: 和 1 个下载
+    other: 和 %{count} 下载
   errors:
     messages:
       carrierwave_download_error: 图片不能下载。
@@ -178,6 +181,141 @@ zh:
           item_list_header: 集内作品
         show_actions:
           confirm_delete: 您确定要删除此管理集？此操作无法撤消。
+      analytics:
+        collection_reports:
+          custom_range:
+            collection_home_page_views: 馆藏主页浏览量
+            date_range_heading: 自定义日期范围
+            summary_heading: 用户活动摘要
+            work_downloads: 作品下载
+            work_views: 作品观
+          index:
+            activity: 活动
+            and: 和
+            custom_range: 自定义范围
+            date_range_heading: 自定义报告
+            downloads: 下载
+            enable_analytics: 启用分析以查看报告
+            export: 出口
+            monthly: 每月
+            repo_summary: 存储库包含
+            repo_summary_2: 共同拥有
+            report_generated_on: 此报告生成于
+            report_header: 自定义集合报告
+            summary: 概括
+            title: 收藏报告
+            views: 页面浏览量
+          monthly_summary:
+            collection_views: 馆藏主页浏览量
+            monthly_subtitle: 过去 12 个月的逐月状态
+            work_downloads: 作品下载
+            work_views: 作品观
+          show:
+            collection_type: 收藏类型
+            created_by: 由...制作
+            custom_range: 自定义范围
+            last_updated: 最后更新于
+            monthly: 每月
+            return_to_btn: 返回收藏报告
+            summary: 概括
+            title: 收款报告
+            view_collection_btn: 查看收藏
+            visibility: 能见度
+          summary:
+            all_time: 整天
+            collection_home_page_views: 馆藏主页浏览量
+            date_range: 日期范围
+            subtitle: 用户活动摘要
+            this_month: 这个月
+            this_week: 本星期
+            this_year: 今年
+            today: 今天
+            work_downloads: 作品下载
+            work_views: 作品观
+          top_collections:
+            collection_page_views: 收藏页面浏览量
+            collection_title: 馆藏名称
+            deleted: 集合已删除
+            export: 出口
+            file_downloads_in_collection: 此集合中的文件集下载
+            top_collections: 热门收藏
+            works_in_collection_views: 在此集合视图中的作品
+        date_range_form:
+          date_range_heading: 自定义日期范围
+          end_date: 结束日期
+          reset_date_range: 重置日期范围
+          set_date_range: 设置报告日期范围
+          start_date: 开始日期
+        work_reports:
+          custom_range:
+            date_range_heading: 自定义日期范围
+            file_downloads: 文件下载
+            page_views: 页面浏览量
+            summary_heading: 用户活动摘要
+            unique_visitors: 独立访客
+          index:
+            access_to: 您可以访问
+            activity: 活动
+            and: 和
+            custom_range: 自定义范围
+            date_range_heading: 自定义报告
+            downloads: 下载
+            enable_analytics: 启用分析以查看报告
+            export: 出口
+            monthly: 每月
+            repo_summary: 在这个存储库中，它们共同拥有
+            report_generated_on: 此报告生成于
+            report_header: 定制作品报告
+            subtitle: 用户活动摘要
+            summary: 概括
+            title: 作品报告
+            views: 意见
+            works: 作品
+          monthly_summary:
+            file_downloads: 文件下载
+            monthly_subtitle: 过去 12 个月的逐月状态
+            page_views: 页面浏览量
+          show:
+            custom_range: 自定义范围
+            deposited_by: 存款人
+            monthly: 每月
+            resource_type: 资源类型
+            return_to_btn: 复工报告
+            status: 地位
+            summary: 概括
+            title: 工作报告
+            view_work_btn: 查看工作
+            visibility: 能见度
+            work_type: 工作类型
+          summary:
+            all_time: 整天
+            date_range: 日期范围
+            file_downloads: 文件下载
+            page_views: 页面浏览量
+            subtitle: 用户活动摘要
+            this_month: 这个月
+            this_week: 本星期
+            this_year: 今年
+            today: 今天
+            unique_visitors: 独立访客
+          top_file_set_downloads:
+            file: 文件
+            file_downloads: 文件下载
+            file_name: 文档名称
+            top_downloads: 热门文件下载
+          top_works:
+            export: 出口
+            file_downloads: 文件下载
+            top_works: 热门作品
+            work_title: 作品名称
+            work_views: 工作页面浏览量
+          work_counts:
+            child_works: 儿童作品
+            files: 档案
+            total_size: 总尺寸
+          work_files:
+            title: 文件
+            total_downloads: 总下载量
       appearances:
         show:
           header: 表面
@@ -263,11 +401,14 @@ zh:
           header: 特征
       sidebar:
         activity: 活动
+        analytics: 分析
         appearance: 表面
         collection_types: 集合类型
         collections: 收藏
+        collections_report: 收藏报告
         configuration: 配置
         content_blocks: 内容块
+        dashboard: 仪表盘
         delete_all: 删除所有
         notifications: 通知
         pages: 网页
@@ -284,6 +425,7 @@ zh:
         workflow_roles: 工作流程角色
         works: 作品
         works_listing: 作品清单
+        works_report: 作品报告
       stats:
         deposited_form:
           end_label: 结束 [默认到此刻]
@@ -296,6 +438,10 @@ zh:
             unpublished: 非出版品
         user_deposits:
           end_label: 结束 [默认到此刻]
+          headers:
+            main: 工作统计
+            total: 总作品：
+            visibility: 可见性总计
           heading: 展示用户存储的文件
           start_label: 开始
         works:
@@ -690,13 +836,17 @@ zh:
       authorize_proxies: 授权代理
       breadcrumbs:
         admin: 管理
+        collections_report: 收藏报告
+        works_report: 作品报告
       collection_type_actions:
         close: 关
         create_collection: 创建集合
         select_type_of_collection: 选择收集类型
       collections:
+        collection_title: 藏品名称
         edit:
           header: 编辑收藏集：%{title}
+        files: 文件
         form:
           permission_update_errors:
             error: 无效的权限模板更新选项。
@@ -787,8 +937,10 @@ zh:
             remove: 去掉
             title: 观众
             type: 类型
+        last_updated: 最近更新时间
         new:
           header: 创建新收藏集
+        recent_activity: 近期活动
         show:
           header: 采集
           item_count: 作品
@@ -817,6 +969,7 @@ zh:
         sort_and_per_page:
           show_par_page_html: 显示%{select}每页
           sort_by: 排序：
+        title: 收藏
         work_action_menu:
           delete_work: 删除工作
           deleting_from_work: 从%{application_name}删除作品是永久性的。单击“确定”从%{application_name}中删除此工作，或单击“取消”取消此操作
@@ -825,6 +978,7 @@ zh:
           remove_from_collection: 从收藏中删除
           select_an_action: 选择一个动作
           transfer_ownership_of_work: 转移工作所有权
+        works: 作品
       create_work: 创建作品
       current_proxies: 目前代理
       delete_notification: 删除通知
@@ -884,6 +1038,7 @@ zh:
             view: 视图
           users: '用户:'
         collections: 你的收藏集
+        collections_report: 收藏报告
         facet_label:
           collections: '筛选您的收藏集:'
           highlighted: '筛选您的收藏精品:'
@@ -919,6 +1074,7 @@ zh:
           show_label: 展示所有细节
           thumbnail: 缩图
         works: 您的作品
+        works_report: 作品报告
         your_collections: 你的收藏
         your_works: 你的作品
       nest_collections_form:
@@ -952,12 +1108,18 @@ zh:
         objects: 对象
         subtitle: 过去90天
         title: 存储库增长
+        works: 作品
       repository_objects:
         status: 当前状态
         subtitle: 当前状态
         title: 存储库对象
+      resource_type_graph:
+        count: 数数
+        resource_type: 资源类型
+        title: 资源类型
       show_admin:
         current_registered_users: 电流
+        graph_reports: 自定义图表报告
         new_visitors: 新访问者
         past_30_days: 过去30天
         registered_users: 注册用户
@@ -971,6 +1133,8 @@ zh:
         heading: 您的【下载？】统计
         joined_on: 加入上
         works: 已建立的作品
+      tabs:
+        admin_sets: 管理集
       title: 我的控件板
       transfer_of_ownership: 转让所有权
       transfer_works_link: 选择作品转让
@@ -979,10 +1143,27 @@ zh:
       user_activity:
         date: 日期
         new_users: 新用户
+        new_visitors: 新访客
+        registered_users: 注册用户
+        returning_visitors: 回访者
         subtitle: 新用户注册
         title: 用户活动
+        total_visitors: 访客总数
+        user_summary: 用户摘要
+      user_activity_graph:
+        date: 日期
+        new_users: 新用户
+        new_visits: 新访问
+        return_visits: 回访
+        total_visits: 总访问量
       user_notifications: 用户通知
       view_files: 阅览文件
+      visibility_graph:
+        visibility: 能见度
+      work_type_graph:
+        count: 数数
+        title: 工作类型
+        work_type: 工作类型
     document_language: zh
     edit_profile: 编辑个人资料
     embargoes:
@@ -1363,6 +1544,16 @@ zh:
         contact_form: 联系表
         export_to_zotero: 导出到Zotero
         export_to_zotero_details: 通过嵌入式元数据支持导出到Zotero。如果Zotero没有自动获取存放文件的元数据，请通过以下方式报告问题
+    stats:
+      downloads:
+        downloads: 下载
+      pageviews:
+        pageviews: 页面浏览量
+      work:
+        and: 和
+        downloads: 下载
+        header: 工作分析
+        pageviews: 浏览量
     toolbar:
       dashboard:
         menu: 控件板
@@ -1641,3 +1832,6 @@ zh:
         member_of_collection_ids: 选择一个集合...
     required:
       html: <span class="label label-info required-tag">需要的</span>
+  total_view:
+    one: 该作品共有 1 次浏览
+    other: 此作品总浏览量为 %{count}

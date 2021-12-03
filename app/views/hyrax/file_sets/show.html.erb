@@ -17,3 +17,9 @@
     </div><!-- /columns second -->
   </div> <!-- /.row -->
 </div><!-- /.container-fluid -->
+
+<% @presenter.member_of_collection_ids.each do |collection_id| %>
+  <span class='hide analytics-event' data-category="file-set-in-collection" data-action="file-set-in-collection-view" data-name="<%= collection_id %>" >
+<% end %>
+<span class='hide analytics-event' data-category="file-set-in-work" data-action="file-set-in-work-view" data-name="<%= @presenter.parent.id %>" >
+<span class='hide analytics-event' data-category="file-set" data-action="file-set-view" data-name="<%= @presenter.id %>" >

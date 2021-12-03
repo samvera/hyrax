@@ -34,11 +34,38 @@ module Hyrax
           Rails.logger.error("Google Analytics profile has not been established. Unable to fetch statistics.")
           return []
         end
-        profile.hyrax__pageview(sort: 'date',
-                                start_date: start_date,
-                                end_date: Date.yesterday,
-                                limit: 10_000)
+        profile.hyrax__analytics__google__pageviews(sort: 'date',
+                                                    start_date: start_date,
+                                                    end_date: Date.yesterday,
+                                                    limit: 10_000)
                .for_path(path)
+      end
+
+      def query_works(query)
+        models = Hyrax.config.curation_concerns.map { |m| "\"#{m}\"" }
+        ActiveFedora::SolrService.query("has_model_ssim:(#{models.join(' OR ')})", fl: query, rows: 100_000)
+      end
+
+      def work_types
+        results = query_works("human_readable_type_tesim")
+        results.group_by { |result| result['human_readable_type_tesim'].join('') }.transform_values(&:count)
+      end
+
+      def resource_types
+        results = query_works("resource_type_tesim")
+        resource_types = []
+        results.each do |y|
+          if y["resource_type_tesim"].nil? || (y["resource_type_tesim"] == [""])
+            resource_types.push("Unknown")
+          elsif y["resource_type_tesim"].count > 1
+            y["resource_type_tesim"].each do |t|
+              resource_types.push(t)
+            end
+          else
+            resource_types.push(y["resource_type_tesim"].join(""))
+          end
+        end
+        resource_types.group_by { |rt| rt }.transform_values(&:count)
       end
 
       private

@@ -34,6 +34,12 @@ RSpec.describe "work show view" do
       visit work_path
     end
 
+    around do |example|
+      Hyrax.config.analytics = true
+      example.run
+      Hyrax.config.analytics = false
+    end
+
     it "shows work content and all editor buttons and links" do
       expect(page).to have_selector 'h1', text: 'Magnificent splendor'
       expect(page).to have_selector 'h1', text: 'Happy little trees'
@@ -91,6 +97,12 @@ RSpec.describe "work show view" do
     let(:file) { File.open(fixture_path + '/world.png') }
     let(:multi_membership_type_1) { create(:collection_type, :allow_multiple_membership, title: 'Multi-membership 1') }
     let!(:collection) { FactoryBot.create(:collection_lw, user: viewer, collection_type: multi_membership_type_1) }
+
+    around do |example|
+      Hyrax.config.analytics = true
+      example.run
+      Hyrax.config.analytics = false
+    end
 
     before do
       sign_in viewer

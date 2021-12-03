@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Hyrax
+  # TODO: - Analytics do we still need this?
   # Follows the model established by {FileUsage}.
   #
   # Called by the stats controller, it finds cached work pageview data,

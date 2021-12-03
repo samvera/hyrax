@@ -1,0 +1,18 @@
+<script>
+  Morris.Bar({
+      element: 'pageviews',
+      data: [
+        <% @pageviews.list.take(30).reverse.each do |result| %>
+          { date: "<%= result[0] %>", metric: <%= result[1] %>},
+        <% end %>
+      ],  
+      xkey: 'date',
+      ykeys: ['metric'],
+      labels: ["<%= t('.pageviews') %>"],
+      gridTextSize: '12px',
+      gridLineColor: '#E5E5E5',
+      gridIntegers: true,
+      ymin: 0,
+      resize: true
+    });
+</script>

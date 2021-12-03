@@ -7,7 +7,9 @@ module Hyrax
     before_action :build_breadcrumbs, only: [:work, :file]
 
     def work
-      @stats = Hyrax::WorkUsage.new(params[:id])
+      @document = ::SolrDocument.find(params[:id])
+      @pageviews = Hyrax::Analytics.daily_events_for_id(@document.id, 'work-view')
+      @downloads = Hyrax::Analytics.daily_events_for_id(@document.id, 'file-set-in-work-download')
     end
 
     def file

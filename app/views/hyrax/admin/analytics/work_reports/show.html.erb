@@ -1,0 +1,90 @@
+<% provide :page_title, "#{t('.title')}" %>
+
+<% provide :page_header do %>
+  <h1><span class="fa fa-bar-chart" aria-hidden="true"></span> <%= t('.title') %>
+  <%= link_to "#{t('.return_to_btn')}", admin_analytics_work_reports_path, class: "btn btn-primary pull-right" %>
+  </h1>
+  <br>
+<% end %>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="work-reports">
+    
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="col-sm-10">
+            <h3><%= @document %></h3>
+          </div>
+          <div class="col-sm-2">
+            <%= link_to "#{t('.view_work_btn')}", [main_app, @document], class: "btn btn-default pull-right" %>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12 col-md-5">
+              <p><%= t('.deposited_by') %> <b><%= @document.depositor %></b> on <b><%= @document.date_uploaded.strftime("%Y-%m-%d") %></b></p>
+              <p><%= t('.work_type') %> <b><%= @document.human_readable_type %></b></p>
+              <p><%= t('.resource_type') %> <b><%= @document.resource_type.join(", ") %></b></p>
+            </div>
+            <div class="col-xs-12 col-md-5">
+              <p><%= t('.status') %> <b><%= @document.workflow_state %></b></p>
+              <p><%= t('.visibility') %> <b><%= @document.visibility %></b></p>
+            </div>
+          </div>
+        </div>
+      </div>
+          
+      <div class="row text-center">
+        <div class="nav nav-pills btn-group" role="group">
+            <% if params[:start_date] %>
+              <a button id='summary-btn' class="btn btn-default nav-link" type="button" href="#summary" data-toggle="pill">
+            <% else %>
+              <a button id='summary-btn' class="btn btn-primary nav-link" type="button" href="#summary" data-toggle="pill">
+            <% end %>
+                <%= t('.summary') %>
+              </a>
+              <a button id='monthly-btn' class="btn btn-default nav-link" type="button" href="#monthly" data-toggle="pill">
+                <%= t('.monthly') %>
+              </a>
+            <% if params[:start_date] %>
+              <a button id='range-btn' class="btn btn-primary nav-link" type="button" href="#custom-range" data-toggle="pill">
+            <% else %>
+              <a button id='range-btn' class="btn btn-default nav-link" type="button" href="#custom-range" data-toggle="pill">
+            <% end %>
+                <%= t('.custom_range') %>
+              </a>
+        </div>
+      </div>
+  <br>
+       <div class="tab-content">
+          <% if params[:start_date] %>
+            <div class="tab-pane" id="summary">
+          <% else %>
+            <div class="tab-pane active" id="summary">
+          <% end %>
+              <%= render "summary" %>
+            </div>
+
+            <div class="tab-pane" id="monthly">
+              <%= render "monthly_summary" %>
+            </div>
+            
+          <% if params[:start_date] %>
+            <div class="tab-pane active" id="custom-range">
+          <% else %>
+            <div class="tab-pane" id="custom-range">
+          <% end %>
+              <%= render "hyrax/admin/analytics/date_range_form", redirect_path: hyrax.admin_analytics_work_report_path(@document) %>
+              <%= render "custom_range" %>
+            </div>
+        </div>
+         
+          <% unless @files.nil? %>
+            <%= render "work_files" %>
+            <%= render "work_counts" %>
+         <% end %>
+         
+    </div>
+  </div>
+</div>

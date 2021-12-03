@@ -1,0 +1,33 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4><%= t('.top_downloads')%></h4>
+  </div>
+  <div class="panel-body">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th><%= t('.file_name')%></th>
+        <th><%= t('.file') %> ID</th>
+        <th><%= t('.file_downloads')%></th>
+      </tr>
+      </thead>
+      <tbody>
+          <% @top_file_set_downloads.each do |download| %>
+            <tr>
+              <td><%= download[1] %></td> 
+              <td><%= download[0] %></td>  
+              <td><%= download[2] %></td>
+            </tr>
+          <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="panel-footer">
+    <div class="pull-right">
+     <%= paginate @top_file_set_downloads %> 
+    </div>
+  </div>
+</div>
+ 
+
+

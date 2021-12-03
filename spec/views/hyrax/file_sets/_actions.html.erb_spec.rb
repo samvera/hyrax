@@ -4,9 +4,16 @@ RSpec.describe 'hyrax/file_sets/_actions.html.erb', type: :view do
   let(:user) { build(:user) }
   let(:ability) { Ability.new(user) }
   let(:file_set) { Hyrax::FileSetPresenter.new(solr_document, ability) }
+  let(:work_solr_document) do
+    SolrDocument.new(id: '900', title_tesim: ['My Title'])
+  end
+  let(:parent_presenter) { Hyrax::WorkShowPresenter.new(work_solr_document, ability) }
+
   before do
     allow(controller).to receive(:current_ability).and_return(ability)
     allow(file_set).to receive(:parent).and_return(:parent)
+    allow(file_set).to receive(:id).and_return('fake')
+    assign(:presenter, parent_presenter)
   end
 
   context 'with download permission' do

@@ -21,7 +21,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
     context "and user does not have permissions to create managed collection type" do
       before do
         sign_in user
-        click_link 'Collections'
+        click_link('Collections', match: :first)
       end
 
       it 'user is not offered the option to create that type of collection' do
@@ -36,7 +36,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
     context "and user is a creator for managed collection type" do
       before do
         sign_in creator
-        click_link 'Collections'
+        click_link('Collections', match: :first)
       end
 
       it 'creates the collection' do
@@ -54,7 +54,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
 
         # navigate to show page for the new collection
         visit '/dashboard'
-        click_on('Collections')
+        click_link('Collections', match: :first)
         click_on('Display all details of A Managed Collection')
 
         # confirm creating user can view and edit the new collection
@@ -65,7 +65,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
         # confirm admin can view and edit the new collection
         logout
         sign_in admin
-        click_link 'Collections'
+        click_link('Collections', match: :first)
         click_link 'All Collections'
         click_on('Display all details of A Managed Collection')
         expect(page).to have_xpath('//h2', text: 'A Managed Collection')
@@ -75,7 +75,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
         # confirm a collection type manager can view and edit the new collection
         logout
         sign_in manager
-        click_link 'Collections'
+        click_link('Collections', match: :first)
         click_link 'Managed Collections'
         click_on('Display all details of A Managed Collection')
         expect(page).to have_xpath('//h2', text: 'A Managed Collection')
@@ -87,7 +87,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
     context "and user is a manager for managed collection type" do
       before do
         sign_in manager
-        click_link 'Collections'
+        click_link('Collections', match: :first)
       end
 
       it 'creates the collection' do
@@ -105,7 +105,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
 
         # navigate to show page for the new collection
         visit '/dashboard'
-        click_on('Collections')
+        click_link('Collections', match: :first)
         click_on('Display all details of A Managed Collection')
 
         # confirm creating user can view and edit the new collection
@@ -116,7 +116,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
         # confirm admin can view and edit the new collection
         logout
         sign_in admin
-        click_link 'Collections'
+        click_link('Collections', match: :first)
         click_link 'All Collections'
         click_on('Display all details of A Managed Collection')
         expect(page).to have_xpath('//h2', text: 'A Managed Collection')
@@ -126,7 +126,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
         # confirm a collection type creator can not view the new collection
         logout
         sign_in creator
-        click_link 'Collections'
+        click_link('Collections', match: :first)
         expect(page).not_to have_content('Managed Collections')
         expect(page).not_to have_content('A Managed Collection')
       end
@@ -136,7 +136,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
   context "when user is an admin" do
     before do
       sign_in admin
-      click_link 'Collections'
+      click_link('Collections', match: :first)
     end
 
     it 'creates the collection' do
@@ -154,7 +154,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
 
       # navigate to show page for the new collection
       visit '/dashboard'
-      click_on('Collections')
+      click_link('Collections', match: :first)
       click_on('Display all details of A Managed Collection')
 
       # confirm creating user can view and edit the new collection
@@ -165,7 +165,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
       # confirm a collection type manager can view and edit the new collection
       logout
       sign_in manager
-      click_link 'Collections'
+      click_link('Collections', match: :first)
       click_link 'Managed Collections'
       click_on('Display all details of A Managed Collection')
       expect(page).to have_xpath('//h2', text: 'A Managed Collection')
@@ -175,7 +175,7 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
       # confirm a collection type creator can not view the new collection
       logout
       sign_in creator
-      click_link 'Collections'
+      click_link('Collections', match: :first)
       expect(page).not_to have_content('Managed Collections')
       expect(page).not_to have_content('A Managed Collection')
     end

@@ -1,26 +1,34 @@
 <!-- Adapted from jquery-flot examples https://github.com/flot/flot/blob/master/examples/visitors/index.html -->
 <script>
 //<![CDATA[
-
-  var hyrax_item_stats = <%= raw json_escape @stats.to_flot.to_json %>;
-
+  var hyrax_item_stats = <%= raw json_escape @pageviews.to_flot.to_json %>;
 //]]>
 </script>
 
-<%= content_tag :h1, @stats, class: "lower" %>
+<%= content_tag :h1, @document, class: "lower" %>
 
 <div class="row">
   <div class="col-sm-12">
-    <%= content_tag :h2, "Work Analytics" %>
+    <%= content_tag :h2, "#{t('.header')}" %>
     <div class="alert alert-info">
       <span class="glyphicon glyphicon-signal large-icon"></span>
-      <%= content_tag :strong, @stats.total_pageviews %> views since <%= @stats.created.strftime("%B %-d, %Y") %>
+        <%= t('total_view', count: @pageviews.range(Hyrax.config.analytics_start_date.to_date, Time.zone.today)) %>
+        <%= t('download', count: @downloads.range(Hyrax.config.analytics_start_date.to_date, Time.zone.today)) %>
     </div>
+
     <div class="stats-container">
-      <div id="usage-stats" class="stats-placeholder"></div>
+      <h3 class="text-center"><%= t('.pageviews') %></h3>
+      <div id="pageviews">
+        <%= render 'pageviews' %>
+      </div>
     </div>
-    <div class="stats-container" style="height:150px;">
-      <div id="overview" class="stats-placeholder"></div>
+
+    <div class="stats-container">
+      <h3 class="text-center"><%= t('.downloads') %></h3>
+      <div id="downloads">
+        <%= render 'downloads' %>
+      </div>
     </div>
+
   </div>
 </div>

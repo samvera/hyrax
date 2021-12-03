@@ -25,7 +25,7 @@ RSpec.describe WorkViewStat, type: :model do
     end
     context "when a profile is available" do
       let(:views) { double }
-      let(:profile) { double(hyrax__pageview: views) }
+      let(:profile) { double(hyrax__analytics__google__pageviews: views) }
 
       it "calls the Legato method with the correct path" do
         expect(views).to receive(:for_path).with(expected_path)

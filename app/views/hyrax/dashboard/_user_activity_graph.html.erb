@@ -1,0 +1,55 @@
+<div id="user-activity" class="col-md-9" aria-hidden="true" style="height: 200px">
+  <% users = Hyrax::Admin::UserActivityPresenter.new(@start_date.to_date,@end_date.to_date).as_json %>
+  <% return_visits = Hyrax::Analytics.returning_visits_by_day("#{@start_date},#{@end_date}").list.reverse %>
+  <% new_visits = Hyrax::Analytics.new_visits_by_day("#{@start_date},#{@end_date}").list.reverse %>
+  <script>
+    //Draws a bar chart of new user signups, and visitors from analytics
+    Morris.Bar({
+        element: 'user-activity',
+        data: [
+          <% users.zip(return_visits, new_visits).each do |e| %>
+            <% unless e[1].nil? or e[2].nil? %>
+              { date: "<%= e[0][0] %>", users: <%= e[0][1] %>, return_visits: <%= e[1][1] %>, new_visits: <%= e[2][1] %>, total_visits: <%= e[1][1] + e[2][1] %>},
+            <% end %>
+          <% end %>
+        ],
+        xkey: 'date',
+        ykeys: ['total_visits', 'new_visits', 'return_visits', 'users'],
+        labels: ['<%= t('.total_visits') %>', '<%= t('.new_visits') %>', '<%= t('.return_visits') %>', '<%= t('.new_users') %>'],
+        barColors: [
+            '#005f73','#0a9396','#94d2bd','#e9d8a6',
+            '#ee9b00','#ca6702','#bb3e03','#ae2012','#9b2226'
+        ],
+        gridTextSize: '12px',
+        hideHover: true,
+        resize: true,
+        gridLineColor: '#E5E5E5',
+        stacked: true
+    });
+  </script>
+</div>
+
+<table aria-label="User Activity" class="table table-striped sr-only text-left">
+  <thead>
+    <tr>
+      <th><%= t('.date') %></th>
+      <th><%= t('.total_visits') %></th>
+      <th><%= t('.new_visits') %></th>
+      <th><%= t('.return_visits') %></th>
+      <th><%= t('.new_users') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% users.zip(return_visits, new_visits).each do |e| %>
+      <% unless e[1].nil? or e[2].nil? %>
+      <tr>
+        <td><%= e[0][0] %></td>
+        <td><%= e[1][1] + e[2][1] %></td>
+        <td><%= e[2][1] %></td>
+        <td><%= e[1][1] %></td>
+        <td><%= e[0][1] %></td>
+      </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

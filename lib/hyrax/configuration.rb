@@ -112,15 +112,45 @@ module Hyrax
         ActiveModel::Type::Boolean.new.cast(ENV.fetch('HYRAX_ANALYTICS', false))
     end
 
-    attr_writer :google_analytics_id
-    def google_analytics_id
-      @google_analytics_id ||= nil
+    # Currently supports 'google' or 'matomo'
+    # google is default for backward compatability
+    attr_writer :analytics_provider
+    def analytics_provider
+      @analytics_provider ||=
+        ENV.fetch('HYRAX_ANALYTICS_PROVIDER', 'google')
     end
-    alias google_analytics_id? google_analytics_id
+
+    ##
+    # @!attribute [w] analytics_start_date
+    #   @note this can be set using the +ANALITICS_START_DATE+ environment variable (format is YYYY-MM-DD)
+    #   @return [String] date you wish to start collecting analytics for. used to compute the
+    #     "all-time" metrics.
+    # This is used to compute the "all-time" metrics
+    # Set this in your .env file (format is YYYY-MM-DD)
+    attr_writer :analytics_start_date
+    def analytics_start_date
+      @analytics_start_date ||=
+        ENV.fetch('ANALYTICS_START_DATE', Time.zone.today - 1.year)
+    end
 
     # Defaulting analytic start date to whenever the file was uploaded by leaving it blank
     attr_writer :analytic_start_date
     attr_reader :analytic_start_date
+
+    ##
+    # @deprecated use analytics_id from config/analytics.yml instead
+    def google_analytics_id=(value)
+      Deprecation.warn("google_analytics_id is deprecated; use analytics_id from config/analytics.yml instead.")
+      Hyrax::Analytics.config.analytics_id = value
+    end
+
+    ##
+    # @deprecated use analytics_id from config/analytics.yml instead
+    def google_analytics_id
+      Deprecation.warn("google_analytics_id is deprecated; use analytics_id from config/analytics.yml instead.")
+      Hyrax::Analytics.config.analytics_id
+    end
+    alias google_analytics_id? google_analytics_id
 
     # @!endgroup
     # @!group Groups

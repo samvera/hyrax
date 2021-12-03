@@ -1,0 +1,55 @@
+<div class="panel panel-default">
+  
+  <div class="panel-heading">
+    <h4><%= t('.top_collections') %>
+    <div class="btn-group pull-right">
+      <%= link_to "#{t('.export')}", admin_analytics_collection_reports_path(start_date: @start_date, end_date: @end_date, format: :csv, disposition: "attachment"), class: "btn btn-default" %>
+    </div>
+    </h4>
+  </div>
+
+  <div class="panel-body">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><%= t('.collection_title') %></th>
+          <th><%= t('.works_in_collection_views') %></th>
+          <th><%= t('.file_downloads_in_collection') %></th>
+          <th><%= t('.collection_page_views') %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @top_collections.each do |collection| %>
+          <% document = ::SolrDocument.find(collection[0]) rescue document = nil %>
+            <tr>
+            <% if document %>
+              <td><%= link_to document, admin_analytics_collection_report_path(collection[0]) %></td>
+            <% else %>
+              <td><i><%= t('.deleted') %></i></td>
+            <% end %>
+              <td><%= collection[1] %></td>
+              <td>
+                  <% match = @top_downloads.detect {|a,b| a == collection[0]} %>
+                <%= match ? match[1] : 0 %>
+              </td>
+              <td>
+                  <% match = @top_collection_pages.detect {|a,b| a == collection[0]} %>
+                  <%= match ? match[1] : 0 %>
+              </td>
+            </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="panel-footer">
+    <div class="pull-right">
+      <%= paginate @top_collections %>
+    </div>
+  </div>
+
+</div>
+
+
+
+

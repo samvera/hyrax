@@ -1,0 +1,35 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4><%= t('.monthly_subtitle') %> <%= Time.zone.today.strftime("%B %Y") %></h4>
+  </div>
+  <div class="panel-body">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>&nbsp;</th>
+        <% @month_names.each do |name| %>
+          <th><%= name %></th>
+        <% end %>
+      </tr>
+      </thead>
+      <tbody>
+      <% if @pageviews %>    
+        <tr>
+          <td><b><%= t('.page_views') %></b></td>
+          <% @month_names.each do |name| %>
+            <td><%= @pageviews.month(name.to_date) %></td>
+          <% end %>
+        </tr>
+      <% end %>
+      <% if @downloads %>
+        <tr>
+          <td><b><%= t('.file_downloads') %></b></td>
+            <% @month_names.each do |name| %>
+            <td><%= @downloads.month(name.to_date) %></td>
+          <% end %>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -31,6 +31,9 @@ pt-BR:
       filters:
         title: 'Filtragem por:'
       start_over: Remover filtros
+  download:
+    one: e 1 download
+    other: e downloads %{count}
   errors:
     messages:
       carrierwave_download_error: Não foi possível baixar a imagem.
@@ -178,6 +181,141 @@ pt-BR:
           item_list_header: Obras neste conjunto
         show_actions:
           confirm_delete: Tem certeza de que deseja excluir este conjunto administrativo? Essa ação não pode ser revertida.
+      analytics:
+        collection_reports:
+          custom_range:
+            collection_home_page_views: Visualizações da página inicial da coleção
+            date_range_heading: Personalizar intervalo de datas
+            summary_heading: Resumo da atividade do usuário
+            work_downloads: Downloads de obras
+            work_views: Vistas de obras
+          index:
+            activity: Atividade
+            and: e
+            custom_range: Faixa Personalizada
+            date_range_heading: Relatório Personalizado
+            downloads: Transferências
+            enable_analytics: Habilite o Analytics para visualizar relatórios
+            export: Exportar
+            monthly: Por mês
+            repo_summary: O repositório contém
+            repo_summary_2: que coletivamente tiveram
+            report_generated_on: Este relatório foi gerado em
+            report_header: Relatório de coleções personalizadas
+            summary: Resumo
+            title: Relatório de cobranças
+            views: visualizações de página
+          monthly_summary:
+            collection_views: Visualizações da página inicial da coleção
+            monthly_subtitle: Status mês a mês dos últimos 12 meses até
+            work_downloads: Downloads de obras
+            work_views: Vistas de obras
+          show:
+            collection_type: Tipo de coleção
+            created_by: Criado por
+            custom_range: Faixa Personalizada
+            last_updated: Última atualização em
+            monthly: Por mês
+            return_to_btn: Retornar ao relatório de cobranças
+            summary: Resumo
+            title: Relatório de coleção
+            view_collection_btn: Ver coleção
+            visibility: Visibilidade
+          summary:
+            all_time: Tempo todo
+            collection_home_page_views: Visualizações da página inicial da coleção
+            date_range: Intervalo de datas
+            subtitle: Resumo da atividade do usuário
+            this_month: Este mês
+            this_week: Esta semana
+            this_year: Este ano
+            today: Hoje
+            work_downloads: Downloads de obras
+            work_views: Vistas de obras
+          top_collections:
+            collection_page_views: Exibições de página da coleção
+            collection_title: Título da coleção
+            deleted: Coleção excluída
+            export: Exportar
+            file_downloads_in_collection: Downloads de conjuntos de arquivos nesta coleção
+            top_collections: Top Coleções
+            works_in_collection_views: Funciona nesta coleção de visualizações
+        date_range_form:
+          date_range_heading: Personalizar intervalo de datas
+          end_date: Data final
+          reset_date_range: Redefinir intervalo de datas
+          set_date_range: Definir intervalo de datas do relatório
+          start_date: Data de início
+        work_reports:
+          custom_range:
+            date_range_heading: Personalizar intervalo de datas
+            file_downloads: Downloads de arquivos
+            page_views: Visualizações de página
+            summary_heading: Resumo da atividade do usuário
+            unique_visitors: visitantes únicos
+          index:
+            access_to: Você tem acesso a
+            activity: Atividade
+            and: e
+            custom_range: Faixa Personalizada
+            date_range_heading: Relatório Personalizado
+            downloads: Transferências
+            enable_analytics: Habilite o Analytics para visualizar relatórios
+            export: Exportar
+            monthly: Por mês
+            repo_summary: neste repositório que coletivamente tiveram
+            report_generated_on: Este relatório foi gerado em
+            report_header: Relatório de trabalhos personalizados
+            subtitle: Resumo da atividade do usuário
+            summary: Resumo
+            title: Relatório de Obras
+            views: Visualizações
+            works: trabalho
+          monthly_summary:
+            file_downloads: Downloads de arquivos
+            monthly_subtitle: Status mês a mês dos últimos 12 meses até
+            page_views: Visualizações de página
+          show:
+            custom_range: Faixa Personalizada
+            deposited_by: Depositado por
+            monthly: Por mês
+            resource_type: Tipo de recurso
+            return_to_btn: Relatório de Retorno ao Trabalho
+            status: Status
+            summary: Resumo
+            title: Relatório de trabalho
+            view_work_btn: Ver Trabalho
+            visibility: Visibilidade
+            work_type: Tipo de trabalho
+          summary:
+            all_time: Tempo todo
+            date_range: Intervalo de datas
+            file_downloads: Downloads de arquivos
+            page_views: Visualizações de página
+            subtitle: Resumo da atividade do usuário
+            this_month: Este mês
+            this_week: Esta semana
+            this_year: Este ano
+            today: Hoje
+            unique_visitors: visitantes únicos
+          top_file_set_downloads:
+            file: Arquivo
+            file_downloads: Downloads de arquivos
+            file_name: Nome do arquivo
+            top_downloads: Principais downloads de arquivos
+          top_works:
+            export: Exportar
+            file_downloads: Downloads de arquivos
+            top_works: Principais obras
+            work_title: Título de Trabalho
+            work_views: Exibições da página de trabalho
+          work_counts:
+            child_works: criança trabalha
+            files: arquivos
+            total_size: tamanho total
+          work_files:
+            title: arquivos
+            total_downloads: Total de downloads
       appearances:
         show:
           header: Aparência
@@ -263,11 +401,14 @@ pt-BR:
           header: Características
       sidebar:
         activity: Atividade
+        analytics: Analytics
         appearance: Aparência
         collection_types: Tipos de Coleção
         collections: Coleções
+        collections_report: Relatório de cobranças
         configuration: Configuração
         content_blocks: Blocos de Conteúdo
+        dashboard: Painel
         delete_all: Excluir tudo
         notifications: Notificações
         pages: Páginas
@@ -284,6 +425,7 @@ pt-BR:
         workflow_roles: Funções do Fluxo de Trabalho
         works: Obra
         works_listing: Lista de obras
+        works_report: Relatório de Obras
       stats:
         deposited_form:
           end_label: 'Encerrar [valor padrão: agora]'
@@ -296,6 +438,10 @@ pt-BR:
             unpublished: Inéditos
         user_deposits:
           end_label: 'Encerrando [valor padrão: agora]'
+          headers:
+            main: Estatísticas de trabalho
+            total: 'Total de obras:'
+            visibility: Totais por visibilidade
           heading: Exibir arquivos depositados pelos usuários
           start_label: Iniciando
         works:
@@ -687,13 +833,17 @@ pt-BR:
       authorize_proxies: Autorizar suplentes
       breadcrumbs:
         admin: Painel de Ferramentas
+        collections_report: Relatório de cobranças
+        works_report: Relatório de Trabalhos
       collection_type_actions:
         close: Fechar
         create_collection: Criar coleção
         select_type_of_collection: Selecionar o tipo de coleção
       collections:
+        collection_title: Título da coleção
         edit:
           header: 'Editar %{type_title}: %{title}'
+        files: arquivos
         form:
           permission_update_errors:
             error: Opção de atualização inválida para o modelo de permissão.
@@ -784,8 +934,10 @@ pt-BR:
             remove: Remover
             title: Usuários com permissão de acesso
             type: Tipo
+        last_updated: Ultima atualização
         new:
           header: Nova coleção do tipo %{type_title}
+        recent_activity: Atividade recente
         show:
           header: Coleção
           item_count: Obras
@@ -814,6 +966,7 @@ pt-BR:
         sort_and_per_page:
           show_par_page_html: Mostrar %{select} por página
           sort_by: 'Ordenar Por:'
+        title: Coleções
         work_action_menu:
           delete_work: Excluir trabalho
           deleting_from_work: A exclusão de um trabalho de %{application_name} é permanente. Clique em OK para excluir este trabalho de %{application_name} ou em Cancelar para cancelar esta operação
@@ -822,6 +975,7 @@ pt-BR:
           remove_from_collection: Remover da coleção
           select_an_action: Selecione uma ação
           transfer_ownership_of_work: Transferir propriedade do trabalho
+        works: Trabalho
       create_work: Criar obra
       current_proxies: Suplentes correntes
       delete_notification: Eliminar Notificação
@@ -881,6 +1035,7 @@ pt-BR:
             view: Acesso
           users: 'Usuários:'
         collections: Coleções
+        collections_report: Relatório de cobranças
         facet_label:
           collections: 'Filtrar Coleções:'
           highlighted: 'Filtrar Destaques:'
@@ -916,6 +1071,7 @@ pt-BR:
           show_label: Exibir todos os detalhes de
           thumbnail: miniatura
         works: Obras
+        works_report: Relatório de Obras
         your_collections: Suas coleções
         your_works: Suas obras
       nest_collections_form:
@@ -949,12 +1105,18 @@ pt-BR:
         objects: Objetos
         subtitle: Últimos 90 dias
         title: Crescimento do Repositório
+        works: Trabalho
       repository_objects:
         status: Status atual
         subtitle: Status atual
         title: Objetos de Repositório
+      resource_type_graph:
+        count: Contar
+        resource_type: Tipo de recurso
+        title: Tipos de recursos
       show_admin:
         current_registered_users: Corrente
+        graph_reports: Relatórios gráficos personalizados
         new_visitors: Novos visitantes
         past_30_days: Últimos 30 dias
         registered_users: Usuários cadastrados
@@ -968,6 +1130,8 @@ pt-BR:
         heading: Suas estatísticas
         joined_on: Ingressou no
         works: Obras criadas
+      tabs:
+        admin_sets: Conjuntos de administradores
       title: Painel de Controle
       transfer_of_ownership: Transferências de propriedade
       transfer_works_link: Selecione as obras a transferir
@@ -976,10 +1140,27 @@ pt-BR:
       user_activity:
         date: Encontro
         new_users: Novos usuários
+        new_visitors: Novos Visitantes
+        registered_users: Usuários registrados
+        returning_visitors: Visitantes recorrentes
         subtitle: Novas inscrições de usuários
         title: Atividade do usuário
+        total_visitors: Total de visitantes
+        user_summary: Resumo do usuário
+      user_activity_graph:
+        date: Encontro
+        new_users: Novos usuários
+        new_visits: Novas Visitas
+        return_visits: Visitas de retorno
+        total_visits: Visitas totais
       user_notifications: Notificações do usuário
       view_files: Ver arquivos
+      visibility_graph:
+        visibility: Visibilidade
+      work_type_graph:
+        count: Contar
+        title: Tipos de Trabalho
+        work_type: Tipo de trabalho
     document_language: pt-BR
     edit_profile: Editar Perfil
     embargoes:
@@ -1360,6 +1541,16 @@ pt-BR:
         contact_form: Formulário de Contato
         export_to_zotero: Exportar para Zotero
         export_to_zotero_details: A exportação para o Zotero é suportada por metadados incorporados. Se o Zotero não coletar automaticamente os metadados dos arquivos depositados, relate o problema através do
+    stats:
+      downloads:
+        downloads: Transferências
+      pageviews:
+        pageviews: Visualizações de página
+      work:
+        and: e
+        downloads: Transferências
+        header: Analítica de Trabalho
+        pageviews: Visualizações de página
     toolbar:
       dashboard:
         menu: Painel de controle
@@ -1638,3 +1829,6 @@ pt-BR:
         member_of_collection_ids: Selecione uma coleção ...
     required:
       html: <span class="label label-info required-tag">obrigatórios</span>
+  total_view:
+    one: Este trabalho tem 1 visualização total
+    other: Este trabalho tem %{count} visualizações totais
