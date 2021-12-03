@@ -1,6 +1,15 @@
 # frozen_string_literal: true
 require 'hyrax/specs/spy_listener'
-
+##
+# Test the Hyrax::Dashboard::CollectionsController with a collection with the
+# class configured in `Hyrax.config.collection_model`.  At the time of writing,
+# the configuration is set to ::Collection which is a ActiveFedora::Base class.
+# Tests are written to verify behaviors for the ActiveFedora version of collection.
+#
+# @note These are the same tests run in `spec/controllers/dashboard/collections_controller_with_resource_spec.rb`
+#       which runs the tests using `Hyrax::PcdmCollection` which is a `Valkyrie::Resource`.
+# @see spec/controllers/dashboard/collections_controller_with_resource_spec.rb
+#
 RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
   routes { Hyrax::Engine.routes }
   let(:collection_type_gid) { FactoryBot.create(:user_collection_type).to_global_id.to_s }

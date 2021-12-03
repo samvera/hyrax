@@ -220,6 +220,7 @@ module Hyrax
           @collection = transactions['change_set.create_collection']
                         .with_step_args(
                           'change_set.set_user_as_depositor' => { user: current_user },
+                          'change_set.add_to_collections' => { collection_ids: Array(params[:parent_id]) },
                           'collection_resource.apply_collection_type_permissions' => { user: current_user }
                         )
                         .call(form)
@@ -239,6 +240,10 @@ module Hyrax
 
       def default_collection_type
         Hyrax::CollectionType.find_or_create_default_collection_type
+      end
+
+      def default_collection_type_gid
+        default_collection_type.to_global_id.to_s
       end
 
       def collection_type
@@ -390,7 +395,8 @@ module Hyrax
           form_class.model_attributes(params[:collection])
         else
           params.permit(collection: {})[:collection]
-                .merge(params.permit(:collection_type_gid))
+                .merge(params.permit(:collection_type_gid)
+                             .with_defaults(collection_type_gid: default_collection_type_gid))
                 .merge(member_of_collection_ids: Array(params[:parent_id]))
         end
       end
