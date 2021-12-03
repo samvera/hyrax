@@ -35,32 +35,6 @@ class Hyrax::ValkyrieUploadsHandler < Hyrax::WorkUploadsHandler
   ##
   # @api private
   #
-  # @return [void]
-  def ingest(files:)
-    files.map do |file|
-      uploader = file.uploader
-      file_metadata = Hyrax::FileMetadata.for(file: uploader.file)
-      file_metadata.file_set_id = file.file_set_uri
-      file_metadata = Hyrax.persister.save(resource: file_metadata)
-
-      file_set = Hyrax.query_service.find_by(id: file.file_set_uri)
-      file_set.file_ids << file_metadata.id
-      Hyrax.persister.save(resource: file_set)
-
-      uploaded = Hyrax.storage_adapter
-        .upload(resource: file_metadata,
-          file: File.open(uploader.file.file),
-          original_filename: file_metadata.original_filename)
-      file_metadata.file_identifier = uploaded.id
-      file_metadata.size = uploaded.size
-      Hyrax.persister.save(resource: file_metadata)
-
-      Hyrax.publisher.publish("object.file.uploaded", metadata: file_metadata)
-    end
-  end
-
-  ##
-  # @api private
   # @return [Hash{Symbol => Object}] event payloads for `file.set.attached`
   #   events. we want to publish these after updating the work metadata
   def attach_member(file:)
@@ -72,6 +46,50 @@ class Hyrax::ValkyrieUploadsHandler < Hyrax::WorkUploadsHandler
     append_to_work(file_set)
     Hyrax.publisher.publish("object.metadata.updated", object: file_set, user: file.user)
 
-    {file_set: file_set, user: file.user}
+    { file_set: file_set, user: file.user }
+  end
+
+  ##
+  # @api private
+  #
+  # @return [void]
+  def ingest(files:)
+    files.map do |file|
+      file_metadata = add_file_to_file_set(file: file)
+      upload_file(file: file, file_metadata: file_metadata)
+    end
+  end
+
+  ##
+  # @api private
+  #
+  # @return Hyrax::FileMetadata object added to file set
+  def add_file_to_file_set(file:)
+    uploader = file.uploader
+    file_metadata = Hyrax::FileMetadata.for(file: uploader.file)
+    file_metadata.file_set_id = file.file_set_uri
+    file_metadata = Hyrax.persister.save(resource: file_metadata)
+
+    file_set = Hyrax.query_service.find_by(id: file.file_set_uri)
+    file_set.file_ids << file_metadata.id
+    Hyrax.persister.save(resource: file_set)
+
+    file_metadata
+  end
+
+  ##
+  # @api private
+  #
+  # @return void
+  def upload_file(file:, file_metadata:)
+    uploader = file.uploader
+    uploaded = Hyrax.storage_adapter
+                    .upload(resource: file_metadata,
+                            file: File.open(uploader.file.file),
+                            original_filename: file_metadata.original_filename)
+    file_metadata.file_identifier = uploaded.id
+    file_metadata.size = uploaded.size
+    Hyrax.persister.save(resource: file_metadata)
+    Hyrax.publisher.publish("object.file.uploaded", metadata: file_metadata)
   end
 end
