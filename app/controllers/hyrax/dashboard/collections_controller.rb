@@ -82,6 +82,7 @@ module Hyrax
       end
 
       def edit
+        byebug
         form
       end
 
@@ -143,6 +144,7 @@ module Hyrax
       end
 
       def update
+        # byebug
         unless params[:update_collection].nil?
           process_banner_input
           process_logo_input
@@ -207,10 +209,10 @@ module Hyrax
       # Renders a JSON response with a list of files in this collection
       # This is used by the edit form to populate the thumbnail_id dropdown
       def files
-        result = form.select_files.map do |label, id|
-          { id: id, text: label }
-        end
-        render json: result
+        #result = form.select_files.map do |label, id|
+        #  { id: id, text: label }
+        #end
+        #render json: result
       end
 
       private
@@ -478,6 +480,9 @@ module Hyrax
       end
 
       def form
+
+#byebug around here ?
+#byebug
         @form ||=
           case @collection
           when Valkyrie::Resource
