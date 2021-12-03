@@ -43,7 +43,7 @@ module Hyrax
       # The search builder to find the collections' members
       self.membership_service_class = Collections::CollectionMemberSearchService
 
-      load_and_authorize_resource except: [:index],
+      load_and_authorize_resource except: [:index, :create],
                                   instance_name: :collection,
                                   class: Hyrax.config.collection_model
 
@@ -107,12 +107,12 @@ module Hyrax
       end
 
       def create
-        return valkyrie_create if @collection.is_a?(Valkyrie::Resource)
         # Manual load and authorize necessary because Cancan will pass in all
         # form attributes. When `permissions_attributes` are present the
         # collection is saved without a value for `has_model.`
         @collection = Hyrax.config.collection_class.new
         authorize! :create, @collection
+        return valkyrie_create if @collection.is_a?(Valkyrie::Resource)
         # Coming from the UI, a collection type gid should always be present.  Coming from the API, if a collection type gid is not specified,
         # use the default collection type (provides backward compatibility with versions < Hyrax 2.1.0)
         @collection.collection_type_gid = params[:collection_type_gid].presence || default_collection_type.to_global_id

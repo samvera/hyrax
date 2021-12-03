@@ -24,8 +24,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
 
   let(:collection_attrs) do
     { title: ['My First Collection'],
-      description: ["The Description\r\n\r\nand more"],
-      collection_type_gid: [collection_type_gid.to_s] }
+      description: ["The Description\r\n\r\nand more"] }
   end
 
   describe '#new' do
@@ -111,33 +110,104 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
     end
 
     context 'when setting collection type' do
-      let(:collection_type) { FactoryBot.create(:collection_type) }
+      let(:user_collection_type) { FactoryBot.create(:user_collection_type) }
+      let!(:user_collection_type_gid) { user_collection_type.to_global_id.to_s }
 
-      it "creates a Collection of default type when type is nil" do
-        expect { post :create, params: { collection: collection_attrs } }
-          .to change { Collection.count }.by(1)
+      context 'and collection type is not passed in' do
+        let(:collection_type_gid) { user_collection_type_gid }
 
-        type = GlobalID::Locator.locate(assigns[:collection].collection_type_gid)
+        it 'assigns the default User Collection' do
+          expect { post :create, params: { collection: collection_attrs } }
+            .to change { Collection.count }.by(1)
 
-        expect(type.machine_id)
-          .to eq Hyrax::CollectionType::USER_COLLECTION_MACHINE_ID
+          type = GlobalID::Locator.locate(assigns[:collection].collection_type_gid)
+          expect(type.to_global_id.to_s).to eq user_collection_type_gid
+        end
       end
 
-      it "creates a Collection of specified type" do
-        parameters = { collection: collection_attrs,
-                       collection_type_gid: collection_type.to_global_id.to_s }
+      context 'and collection type is passed in' do
+        let(:collection_type) { FactoryBot.create(:collection_type, creator_user: user) }
+        let(:collection_type_gid) { collection_type.to_global_id.to_s }
+        let(:parameters) do
+          { collection: collection_attrs,
+            collection_type_gid: collection_type_gid }
+        end
 
-        expect { post :create, params: parameters }
-          .to change { Collection.count }.by(1)
+        context 'and creating active fedora collection' do
+          # rubocop:disable RSpec/InstanceVariable
+          before do
+            @collection_model = Hyrax.config.collection_model
+            Hyrax.config.collection_model = "::Collection"
+          end
+          after { Hyrax.config.collection_model = @collection_class }
+          # rubocop:enable RSpec/InstanceVariable
 
-        expect(assigns[:collection].collection_type_gid)
-          .to eq collection_type.to_global_id.to_s
+          it "creates a Collection of specified type" do
+            expect { post :create, params: parameters }
+              .to change { Collection.count }.by(1)
+
+            type = GlobalID::Locator.locate(assigns[:collection].collection_type_gid)
+            expect(type.to_global_id.to_s).to eq collection_type_gid
+          end
+        end
+
+        context 'when creating valkyrie resource collection' do
+          # rubocop:disable RSpec/InstanceVariable
+          before do
+            @collection_model = Hyrax.config.collection_model
+            Hyrax.config.collection_model = "Hyrax::PcdmCollection"
+          end
+          after { Hyrax.config.collection_model = @collection_class }
+          # rubocop:enable RSpec/InstanceVariable
+
+          it "creates a Collection of specified type" do
+            expect { post :create, params: parameters }
+              .to change { Hyrax.query_service.count_all_of_model(model: Hyrax::PcdmCollection) }
+              .by(1)
+
+            type = GlobalID::Locator.locate(assigns[:collection].collection_type_gid)
+            expect(type.to_global_id.to_s).to eq collection_type_gid
+          end
+        end
       end
 
       context "and collection type has permissions" do
-        describe ".create_default" do
-          let(:manager) { FactoryBot.create(:user, email: 'manager@example.com') }
-          let(:collection_type) { FactoryBot.create(:collection_type, manager_user: manager.user_key) }
+        let(:manager) { FactoryBot.create(:user, email: 'manager@example.com') }
+        let(:collection_type) { FactoryBot.create(:collection_type, manager_user: manager.user_key) }
+
+        context 'and creating active fedora collection' do
+          # rubocop:disable RSpec/InstanceVariable
+          before do
+            @collection_model = Hyrax.config.collection_model
+            Hyrax.config.collection_model = "::Collection"
+          end
+          after { Hyrax.config.collection_model = @collection_class }
+          # rubocop:enable RSpec/InstanceVariable
+
+          it "copies collection type permissions to collection" do
+            parameters = { collection: collection_attrs,
+                           collection_type_gid: collection_type.to_global_id.to_s }
+
+            # adds admin group, depositing user, and manager from collection type
+            expect { post :create, params: parameters }
+              .to change { Hyrax::PermissionTemplate.count }
+              .by(1)
+              .and change { Hyrax::PermissionTemplateAccess.count }
+              .by(3)
+
+            expect(assigns[:collection].edit_users).to contain_exactly manager.user_key, user.user_key
+            expect(assigns[:collection].edit_groups).to contain_exactly 'admin'
+          end
+        end
+
+        context 'and creating valkyrie resource collection' do
+          # rubocop:disable RSpec/InstanceVariable
+          before do
+            @collection_model = Hyrax.config.collection_model
+            Hyrax.config.collection_model = "Hyrax::PcdmCollection"
+          end
+          after { Hyrax.config.collection_model = @collection_class }
+          # rubocop:enable RSpec/InstanceVariable
 
           it "copies collection type permissions to collection" do
             parameters = { collection: collection_attrs,
@@ -160,38 +230,103 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
     context "when params includes parent_id" do
       let(:parent_collection) { FactoryBot.valkyrie_create(:hyrax_collection, title: ['Parent']) }
 
-      it "creates a collection as a subcollection of parent" do
-        parameters = { collection: collection_attrs, parent_id: parent_collection.id }
+      context 'and creating active fedora collection' do
+        # rubocop:disable RSpec/InstanceVariable
+        before do
+          @collection_model = Hyrax.config.collection_model
+          Hyrax.config.collection_model = "::Collection"
+        end
+        after { Hyrax.config.collection_model = @collection_class }
+        # rubocop:enable RSpec/InstanceVariable
 
-        expect { post :create, params: parameters }
-          .to change { Collection.count }.by(1)
+        it "creates a collection as a subcollection of parent" do
+          parameters = { collection: collection_attrs, parent_id: parent_collection.id }
 
-        collection = assigns[:collection].try(:reload)&.valkyrie_resource ||
-                     assigns[:collection]
-        expect(queries.find_collections_for(resource: collection).map(&:id))
-          .to contain_exactly(parent_collection.id)
+          expect { post :create, params: parameters }
+            .to change { Collection.count }.by(1)
+
+          collection = assigns[:collection].try(:reload)&.valkyrie_resource ||
+                       assigns[:collection]
+          expect(queries.find_collections_for(resource: collection).map(&:id))
+            .to contain_exactly(parent_collection.id)
+        end
+      end
+
+      context 'and creating valkyrie resource collection' do
+        # rubocop:disable RSpec/InstanceVariable
+        before do
+          @collection_model = Hyrax.config.collection_model
+          Hyrax.config.collection_model = "Hyrax::PcdmCollection"
+        end
+        after { Hyrax.config.collection_model = @collection_class }
+        # rubocop:enable RSpec/InstanceVariable
+
+        it "creates a collection as a subcollection of parent" do
+          parameters = { collection: collection_attrs, parent_id: parent_collection.id }
+
+          expect { post :create, params: parameters }
+            .to change { Collection.count }.by(1)
+
+          collection = assigns[:collection].try(:reload)&.valkyrie_resource ||
+                       assigns[:collection]
+          expect(queries.find_collections_for(resource: collection).map(&:id))
+            .to contain_exactly(parent_collection.id)
+        end
       end
     end
 
     context "when create fails" do
-      let(:collection) { Collection.new }
+      context 'and creating active fedora collection' do
+        # rubocop:disable RSpec/InstanceVariable
+        before do
+          @collection_model = Hyrax.config.collection_model
+          Hyrax.config.collection_model = "::Collection"
 
-      before do
-        allow(controller).to receive(:authorize!)
-        allow(Collection).to receive(:new).and_return(collection)
-        allow(collection).to receive(:save).and_return(false)
+          allow(controller).to receive(:authorize!)
+          allow(Collection).to receive(:new).and_return(collection)
+          allow(collection).to receive(:save).and_return(false)
+          allow(Hyrax.persister)
+            .to receive(:save)
+            .with(any_args)
+            .and_raise(StandardError, 'Failed to save collection')
+        end
+        after { Hyrax.config.collection_model = @collection_class }
+        # rubocop:enable RSpec/InstanceVariable
 
-        allow(Hyrax.persister)
-          .to receive(:save)
-          .with(any_args)
-          .and_raise(StandardError, 'Failed to save collection')
+        let(:collection) { Collection.new }
+
+        it "renders the form again" do
+          post :create, params: { collection: collection_attrs }
+
+          expect(response).to be_successful
+          expect(response).to render_template(:new)
+        end
       end
 
-      it "renders the form again" do
-        post :create, params: { collection: collection_attrs }
+      context 'and creating valkyrie resource collection' do
+        # rubocop:disable RSpec/InstanceVariable
+        before do
+          @collection_model = Hyrax.config.collection_model
+          Hyrax.config.collection_model = "Hyrax::PcdmCollection"
 
-        expect(response).to be_successful
-        expect(response).to render_template(:new)
+          allow(controller).to receive(:authorize!)
+          allow(Hyrax::PcdmCollection).to receive(:new).and_return(collection)
+          allow(Hyrax.persister)
+            .to receive(:save)
+            .with(resource: collection)
+            .and_raise(StandardError, 'Failed to save collection')
+        end
+        after { Hyrax.config.collection_model = @collection_class }
+        # rubocop:enable RSpec/InstanceVariable
+
+        let(:collection) { Hyrax::PcdmCollection.new }
+
+        it "renders the form again" do
+          post :create, params: { collection: collection_attrs }
+
+          expect(response).to be_successful
+          expect(response).to render_template(:new)
+        end
       end
     end
   end
