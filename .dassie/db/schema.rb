@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_26_183950) do
+ActiveRecord::Schema.define(version: 2021_11_30_181150) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -137,6 +137,12 @@ ActiveRecord::Schema.define(version: 2021_08_26_183950) do
     t.boolean "brandable", default: true, null: false
     t.string "badge_color", default: "#663333"
     t.index ["machine_id"], name: "index_hyrax_collection_types_on_machine_id", unique: true
+  end
+
+  create_table "hyrax_default_administrative_set", force: :cascade do |t|
+    t.string "default_admin_set_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "hyrax_features", force: :cascade do |t|
@@ -482,15 +488,6 @@ ActiveRecord::Schema.define(version: 2021_08_26_183950) do
     t.datetime "updated_at", null: false
     t.index ["file_set_uri"], name: "index_uploaded_files_on_file_set_uri"
     t.index ["user_id"], name: "index_uploaded_files_on_user_id"
-  end
-
-  create_table "user_pinned_collections", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.string "collection_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["collection_id"], name: "index_user_pinned_collections_on_collection_id"
-    t.index ["user_id"], name: "index_user_pinned_collections_on_user_id"
   end
 
   create_table "user_stats", force: :cascade do |t|
