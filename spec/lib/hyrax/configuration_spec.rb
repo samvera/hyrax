@@ -41,6 +41,7 @@ RSpec.describe Hyrax::Configuration do
   it { is_expected.to respond_to(:collection_model) }
   it { is_expected.to respond_to(:collection_model=) }
   it { is_expected.to respond_to(:contact_email) }
+  it { is_expected.to respond_to(:default_admin_set_id) }
   it { is_expected.to respond_to(:default_nested_relationship_reindexer) }
   it { is_expected.to respond_to(:display_media_download_link?) }
   it { is_expected.to respond_to(:display_media_download_link=) }

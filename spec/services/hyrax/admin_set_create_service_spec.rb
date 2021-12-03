@@ -43,20 +43,78 @@ RSpec.describe Hyrax::AdminSetCreateService do
       end
     end
 
-    context "when default admin set already exists" do
-      let(:default_admin_set) { FactoryBot.valkyrie_create(:default_hyrax_admin_set) }
+    context "when default admin set id is NOT saved in the database" do
+      before { allow(Hyrax::DefaultAdministrativeSet).to receive(:count).and_return(0) }
+      context "but default admin set does exist" do
+        let(:default_admin_set) do
+          FactoryBot.valkyrie_create(:default_hyrax_admin_set,
+                                     with_persisted_default_id: false)
+        end
+        let(:new_record) do
+          instance_double(Hyrax::DefaultAdministrativeSet,
+                          id: 1,
+                          default_admin_set_id: default_admin_set.id)
+        end
 
-      it "returns existing default admin set" do
-        expect(query_service).to receive(:find_by).with(id: described_class::DEFAULT_ID)
-                                                  .and_return(default_admin_set)
-        expect(described_class).not_to receive(:create_default_admin_set!)
-        admin_set = described_class.find_or_create_default_admin_set
-        expect(admin_set.title).to eq described_class::DEFAULT_TITLE
+        it "saves the id of the existing default_admin_set and returns existing default admin set" do
+          expect(described_class).not_to receive(:create_default_admin_set!)
+          expect(Hyrax::DefaultAdministrativeSet)
+            .to receive(:new)
+            .with(default_admin_set_id: default_admin_set.id.to_s)
+            .and_return(new_record)
+          expect(new_record).to receive(:save)
+          expect(described_class.find_or_create_default_admin_set).to eq default_admin_set
+        end
+      end
+
+      context "and default admin set doesn't exist" do
+        before do
+          allow(query_service).to receive(:find_by)
+            .with(id: described_class::DEFAULT_ID)
+            .and_raise(Valkyrie::Persistence::ObjectNotFoundError)
+          allow(query_service).to receive(:find_by)
+            .with(id: anything).and_call_original # permission template
+        end
+        let(:collection_type) { FactoryBot.create(:admin_set_collection_type) }
+        let(:new_default_admin_set) do
+          FactoryBot.build(:hyrax_admin_set,
+                           id: Valkyrie::ID.new('123'),
+                           title: described_class::DEFAULT_TITLE)
+        end
+        let(:new_record) do
+          instance_double(Hyrax::DefaultAdministrativeSet,
+                          id: 1,
+                          default_admin_set_id: new_default_admin_set.id)
+        end
+
+        it "creates a default admin set and saves the id and returns new default admin set" do
+          expect(described_class).to receive(:create_admin_set)
+            .with(suggested_id: described_class::DEFAULT_ID, title: described_class::DEFAULT_TITLE)
+            .and_return(new_default_admin_set)
+          expect(Hyrax::DefaultAdministrativeSet).to receive(:new)
+            .with(default_admin_set_id: new_default_admin_set.id)
+            .and_return(new_record)
+          expect(new_record).to receive(:save)
+          expect(described_class.find_or_create_default_admin_set.id).to eq '123'
+        end
+      end
+    end
+
+    context "when default admin set id is saved in the database" do
+      let!(:default_admin_set) do
+        FactoryBot.valkyrie_create(:default_hyrax_admin_set,
+                                   id: Valkyrie::ID.new('234'),
+                                   title: described_class::DEFAULT_TITLE)
+      end
+
+      it "returns admin set for saved id" do
+        expect(described_class.find_or_create_default_admin_set.id).to eq '234'
       end
     end
   end
 
   describe ".default_admin_set?" do
+    let!(:admin_set) { FactoryBot.valkyrie_create(:default_hyrax_admin_set) }
     it "is true for the default admin set id" do
       expect(described_class.default_admin_set?(id: described_class::DEFAULT_ID))
         .to eq true
@@ -69,7 +127,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
 
   describe ".call" do
     context "when passing in the default admin set", :clean_repo do
-      let(:admin_set) { FactoryBot.build(:default_hyrax_admin_set) }
+      let(:admin_set) { FactoryBot.valkyrie_create(:default_hyrax_admin_set) }
       it 'will raise RuntimeError' do
         expect { described_class.call(admin_set: admin_set, creating_user: user) }
           .to raise_error(RuntimeError)
@@ -89,7 +147,7 @@ RSpec.describe Hyrax::AdminSetCreateService do
 
   describe ".call!" do
     context "when passing in the default admin set", :clean_repo do
-      let(:admin_set) { FactoryBot.build(:default_hyrax_admin_set) }
+      let(:admin_set) { FactoryBot.valkyrie_create(:default_hyrax_admin_set) }
       it 'will raise RuntimeError' do
         expect { described_class.call!(admin_set: admin_set, creating_user: user) }
           .to raise_error(RuntimeError)
