@@ -55,36 +55,31 @@ class Hyrax::ValkyrieUploadsHandler < Hyrax::WorkUploadsHandler
   # @return [void]
   def ingest(files:)
     files.map do |file|
-      file_metadata = add_file_to_file_set(file: file)
-      upload_file(file: file, file_metadata: file_metadata)
+      file_set = Hyrax.query_service.find_by(id: file.file_set_uri)
+      file_metadata = upload_file(file: file, file_metadata: file_metadata, file_set: file_set)
+      add_file_to_file_set(file_metadata: file_metadata)
     end
   end
 
   ##
   # @api private
   #
-  # @return Hyrax::FileMetadata object added to file set
-  def add_file_to_file_set(file:)
-    uploader = file.uploader
-    file_metadata = Hyrax::FileMetadata.for(file: uploader.file)
-    file_metadata.file_set_id = file.file_set_uri
-    file_metadata = Hyrax.persister.save(resource: file_metadata)
-
-    file_set = Hyrax.query_service.find_by(id: file.file_set_uri)
+  # @return FileSet updated file set
+  def add_file_to_file_set(file_metadata:)
     file_set.file_ids << file_metadata.id
     Hyrax.persister.save(resource: file_set)
-
-    file_metadata
   end
 
   ##
   # @api private
   #
-  # @return void
-  def upload_file(file:, file_metadata:)
+  # @return Hyrax::FileMetadata uploaded file
+  def upload_file(file:, file_metadata:, file_set:)
     uploader = file.uploader
+    file_metadata = Hyrax::FileMetadata.for(file: uploader.file)
+    file_metadata.file_set_id = file.file_set_uri
     uploaded = Hyrax.storage_adapter
-                    .upload(resource: file_metadata,
+                    .upload(resource: file_set,
                             file: File.open(uploader.file.file),
                             original_filename: file_metadata.original_filename)
     file_metadata.file_identifier = uploaded.id

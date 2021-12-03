@@ -160,6 +160,7 @@ module Wings
       new_type = (resource.type - af_object.metadata_node.type.to_a).first
       af_object.metadata_node.type = new_type if new_type
       af_object.mime_type = resource.mime_type
+      af_object.content = resource.content unless resource.content.nil?
     end
   end
 end
