@@ -19,17 +19,36 @@ RSpec.describe 'Creating a new Admin Set', :js, :workflow, :clean_repo do
 
   context "when the user is not an admin" do
     context "and user does not have permissions to create managed collection type" do
-      before do
-        sign_in user
-        click_link('Collections', match: :first)
+      context "and collection model is an ActiveFedora::Base" do
+        before do
+          allow(Hyrax.config).to receive(:collection_model).and_return('::Collection')
+          sign_in user
+          click_link('Collections', match: :first)
+        end
+
+        it 'user is not offered the option to create that type of collection' do
+          # try and create the new admin set
+          click_button "New Collection"
+          expect(page).to have_xpath("//h4", text: "User Collection")
+          expect(page).to have_xpath("//h4", text: "Other")
+          expect(page).not_to have_xpath("//h4", text: "Managed Collection")
+        end
       end
 
-      it 'user is not offered the option to create that type of collection' do
-        # try and create the new admin set
-        click_button "New Collection"
-        expect(page).to have_xpath("//h4", text: "User Collection")
-        expect(page).to have_xpath("//h4", text: "Other")
-        expect(page).not_to have_xpath("//h4", text: "Managed Collection")
+      context "and collection model is a Valkyrie::Resource" do
+        before do
+          allow(Hyrax.config).to receive(:collection_model).and_return('Hyrax::PcdmCollection')
+          sign_in user
+          click_link('Collections', match: :first)
+        end
+
+        it 'user is not offered the option to create that type of collection' do
+          # try and create the new admin set
+          click_button "New Collection"
+          expect(page).to have_xpath("//h4", text: "User Collection")
+          expect(page).to have_xpath("//h4", text: "Other")
+          expect(page).not_to have_xpath("//h4", text: "Managed Collection")
+        end
       end
     end
 

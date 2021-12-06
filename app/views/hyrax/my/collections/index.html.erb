@@ -21,7 +21,7 @@
     <!-- Page tabs -->
     <nav><%= render 'tabs' if @managed_collection_count > 0 %></nav>
 
-    <% if can?(:create_any, Collection) && @collection_type_list_presenter.any? %>
+    <% if can?(:create_any, Hyrax.config.collection_class) && @collection_type_list_presenter.any? %>
       <% if @collection_type_list_presenter.many? %>
         <% # modal to select type %>
         <button type="button"
