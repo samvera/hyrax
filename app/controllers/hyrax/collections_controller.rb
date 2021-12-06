@@ -15,7 +15,7 @@ module Hyrax
     #    { id: id, text: label }
     #  end
     #  render json: result
-    end
+    #end
 
     private
 
