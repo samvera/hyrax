@@ -1,6 +1,26 @@
 # frozen_string_literal: true
+
+##
+# a +ActiveJob+ job to process file characterization.
+#
+# the characterization process is handled by a service object, which is
+# configurable via {CharacterizeJob.characterization_service}.
+#
+# @example setting a custom characterization service
+#   class MyCharacterizer
+#     def run(file, path)
+#       # do custom characterization
+#     end
+#   end
+#
+#   # in a Rails initializer
+#   CharacterizeJob.characterization_service = MyCharacterizer.new
+# end
 class CharacterizeJob < Hyrax::ApplicationJob
   queue_as Hyrax.config.ingest_queue_name
+
+  class_attribute :characterization_service
+  self.characterization_service = Hydra::Works::CharacterizationService
 
   # Characterizes the file at 'filepath' if available, otherwise, pulls a copy from the repository
   # and runs characterization on that file.
@@ -17,7 +37,7 @@ class CharacterizeJob < Hyrax::ApplicationJob
   private
 
   def characterize(file_set, _file_id, filepath)
-    Hydra::Works::CharacterizationService.run(file_set.characterization_proxy, filepath)
+    characterization_service.run(file_set.characterization_proxy, filepath)
     Rails.logger.debug "Ran characterization on #{file_set.characterization_proxy.id} (#{file_set.characterization_proxy.mime_type})"
     file_set.characterization_proxy.alpha_channels = channels(filepath) if file_set.image? && Hyrax.config.iiif_image_server?
     file_set.characterization_proxy.save!
@@ -30,5 +50,12 @@ class CharacterizeJob < Hyrax::ApplicationJob
       cmd << filepath
     end
     [ch]
+  end
+
+  ##
+  # @api public
+  # @return [#run]
+  def characterization_service
+    self.class.characterization_service
   end
 end
