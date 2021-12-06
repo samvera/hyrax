@@ -12,7 +12,7 @@ module Hyrax
       def on_object_file_uploaded(event)
         md = event[:metadata]
 
-        Hydra::Works::CharacterizationService.run(md, md.file)
+        Hyrax::Characterization::ValkyrieCharacterizationService.run(md, md.file)
         Hyrax.persister.save(resource: md)
       end
     end
