@@ -16,4 +16,50 @@ RSpec.describe Hyrax::Forms::PcdmCollectionForm do
       expect(form.primary_terms).to contain_exactly(:title)
     end
   end
+
+  describe '.validate' do
+    let(:collection_type_gid) { FactoryBot.create(:user_collection_type).to_global_id.to_s }
+
+    context 'when all required fields are present' do
+      let(:valid_params) do
+        { title: 'My title', collection_type_gid: collection_type_gid }
+      end
+      it 'returns true' do
+        expect(form.validate(valid_params)).to eq true
+      end
+    end
+
+    context 'when title is missing' do
+      let(:params_missing_title) do
+        { collection_type_gid: collection_type_gid }
+      end
+      it 'returns error messages for missing field' do
+        expect(form.validate(params_missing_title)).to eq false
+        expect(form.errors.messages).to include(title: ["can't be blank"])
+        expect(form.errors.messages).not_to include(collection_type_gid: ["can't be blank"])
+      end
+    end
+
+    context 'when collection_type_gid is missing' do
+      let(:params_missing_type) do
+        { title: 'My title' }
+      end
+      it 'returns error message for field' do
+        expect(form.validate(params_missing_type)).to eq false
+        expect(form.errors.messages).to include(collection_type_gid: ["can't be blank"])
+        expect(form.errors.messages).not_to include(title: ["can't be blank"])
+      end
+    end
+
+    context 'when all required fields are missing' do
+      let(:params_missing_all_required) do
+        { description: 'A description of the collection.' }
+      end
+      it 'returns error messages for all missing required fields' do
+        expect(form.validate(params_missing_all_required)).to eq false
+        expect(form.errors.messages).to include(title: ["can't be blank"])
+        expect(form.errors.messages).to include(collection_type_gid: ["can't be blank"])
+      end
+    end
+  end
 end
