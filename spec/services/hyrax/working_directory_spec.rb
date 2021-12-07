@@ -6,8 +6,8 @@ RSpec.describe Hyrax::WorkingDirectory do
   describe "#full_filename" do
     it "generates unique filenames for different files" do
       expect(path1).not_to eq(path2)
-      expect(path1).to match(/\/tmp\/uploads\/ab\/cd\/ef\/gh\/abcdefghijklmnop1\/foo.tif$/)
-      expect(path2).to match(/\/tmp\/uploads\/ab\/cd\/ef\/gh\/abcdefghijklmnop2\/foo.tif$/)
+      expect(path1).to eq("#{ Hyrax.config.working_path }ab/cd/ef/gh/abcdefghijklmnop1/foo.tif")
+      expect(path2).to eq("#{ Hyrax.config.working_path }ab/cd/ef/gh/abcdefghijklmnop2/foo.tif")
     end
   end
 end
