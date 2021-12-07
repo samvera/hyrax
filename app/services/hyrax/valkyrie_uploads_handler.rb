@@ -57,7 +57,7 @@ class Hyrax::ValkyrieUploadsHandler < Hyrax::WorkUploadsHandler
     files.map do |file|
       file_set = Hyrax.query_service.find_by(id: file.file_set_uri)
       file_metadata = upload_file(file: file, file_metadata: file_metadata, file_set: file_set)
-      add_file_to_file_set(file_metadata: file_metadata)
+      add_file_to_file_set(file_set: file_set, file_metadata: file_metadata)
     end
   end
 
@@ -65,7 +65,7 @@ class Hyrax::ValkyrieUploadsHandler < Hyrax::WorkUploadsHandler
   # @api private
   #
   # @return FileSet updated file set
-  def add_file_to_file_set(file_metadata:)
+  def add_file_to_file_set(file_set:, file_metadata:)
     file_set.file_ids << file_metadata.id
     Hyrax.persister.save(resource: file_set)
   end
@@ -86,5 +86,7 @@ class Hyrax::ValkyrieUploadsHandler < Hyrax::WorkUploadsHandler
     file_metadata.size = uploaded.size
     Hyrax.persister.save(resource: file_metadata)
     Hyrax.publisher.publish("object.file.uploaded", metadata: file_metadata)
+
+    file_metadata
   end
 end
