@@ -17,6 +17,9 @@ module Hyrax
 
       property :member_of_collection_ids, default: [], type: Valkyrie::Types::Array
 
+      validates :title, presence: true
+      validates :collection_type_gid, presence: true
+
       class << self
         def model_class
           Hyrax::PcdmCollection
