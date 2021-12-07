@@ -4,7 +4,7 @@ require 'hyrax/transactions/transaction'
 module Hyrax
   module Transactions
     ##
-    # Creates a Collection from a ChangeSet
+    # Creates a Hyrax::AdministrativeSet from a ChangeSet
     #
     # @since 3.2.0
     class AdminSetCreate < Transaction
