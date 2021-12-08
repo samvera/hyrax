@@ -1,7 +1,7 @@
 Hyrax-in-a-Container
 ====================
 
-Our goal is to provide a practical, reusable reference environment for applications.  The first step is providing on on-ramp for Hyrax engine development. Then providing help with Hyrax-based application development. Finally, providing better guidance around deployment.
+Our goal is to provide a practical, reusable reference environment for applications.  The first step is providing an on-ramp for Hyrax engine development. Then providing help with Hyrax-based application development. Finally, providing better guidance around deployment.
 
 The [Hyrax Engine Development](#hyrax-engine-development) is further along than the [Docker Image for Hyrax-based Applications](#docker-image-for-hyrax-based-applications) which is further along than [Deploying to Production](#deploying-to-production).
 
