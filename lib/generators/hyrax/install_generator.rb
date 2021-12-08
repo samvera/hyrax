@@ -184,15 +184,5 @@ module Hyrax
     def universalviewer_files
       rake('hyrax:universal_viewer:install')
     end
-
-    # Blacklight::Controller will by default add an after_action filter to discard all flash messages on xhr requests.
-    # This has caused problems when we perform a post-redirect-get cycle using xhr and turbolinks.
-    # This injector will modify the generated ApplicationController to skip this action.
-    # TODO: This may be removed in Blacklight 7.x, so we'll likely need to remove this after updating.
-    def inject_skip_blacklilght_flash_discarding
-      insert_into_file "app/controllers/application_controller.rb", after: "include Blacklight::Controller\n" do
-        "  skip_after_action :discard_flash_if_xhr\n"
-      end
-    end
   end
 end
