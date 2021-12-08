@@ -52,7 +52,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gemspec name: 'hyrax', path: ENV.fetch('HYRAX_ENGINE_PATH', '..')
 
-gem 'bootstrap-sass', '~> 3.0'
+gem 'bootstrap', '~> 4.0'
 gem 'devise'
 gem 'devise-guests', '~> 0.6'
 gem 'jquery-rails'

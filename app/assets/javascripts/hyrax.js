@@ -16,8 +16,6 @@
 // Popover requires that tooltip be loaded first
 //= require bootstrap/popover
 //= require bootstrap/tab
-// Affix is used for the file manager
-//= require bootstrap/affix
 
 //= require select2
 //= require fixedsticky
