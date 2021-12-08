@@ -13,8 +13,9 @@ module Hyrax
     DEFAULT_ID = 'admin_set/default'
     DEFAULT_TITLE = ['Default Admin Set'].freeze
 
-    class_attribute :permissions_create_service
+    class_attribute :permissions_create_service, :default_admin_set_persister
     self.permissions_create_service = Hyrax::Collections::PermissionsCreateService
+    self.default_admin_set_persister = Hyrax::DefaultAdministrativeSet
 
     class << self
       # @api public
@@ -89,8 +90,12 @@ module Hyrax
       def create_default_admin_set!(admin_set_id: DEFAULT_ID, title: DEFAULT_TITLE)
         admin_set = create_admin_set(suggested_id: admin_set_id, title: title)
         admin_set = new(admin_set: admin_set, creating_user: nil, default_admin_set: true).create!
-        Hyrax::DefaultAdministrativeSet.update(default_admin_set_id: admin_set.id)
+        default_admin_set_persister.update(default_admin_set_id: admin_set.id) if save_default?
         admin_set
+      end
+
+      def save_default?
+        default_admin_set_persister.save_supported?
       end
 
       # Create an instance of `Hyrax::AdministrativeSet` with the suggested_id if supported.
@@ -128,7 +133,7 @@ module Hyrax
       # @return [Hyrax::AdministrativeSet] the default admin set; nil if not found
       def find_unsaved_default_admin_set
         admin_set = Hyrax.query_service.find_by(id: DEFAULT_ID)
-        Hyrax::DefaultAdministrativeSet.update(default_admin_set_id: DEFAULT_ID)
+        default_admin_set_persister.update(default_admin_set_id: DEFAULT_ID) if save_default?
         admin_set
       rescue Valkyrie::Persistence::ObjectNotFoundError
         # a default admin set hasn't been created yet
@@ -137,7 +142,8 @@ module Hyrax
       # @return [String | nil] the default admin set id; returns nil if not set
       # @note For general use, it is better to use `Hyrax.config.default_admin_set_id`.
       def default_admin_set_id
-        id = Hyrax::DefaultAdministrativeSet.first&.default_admin_set_id
+        DEFAULT_ID unless save_default?
+        id = default_admin_set_persister.first&.default_admin_set_id
         id = find_unsaved_default_admin_set&.id&.to_s if id.blank?
         id
       end

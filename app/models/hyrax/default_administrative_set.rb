@@ -25,6 +25,10 @@ module Hyrax
         existing.save
       end
 
+      def save_supported?
+        ActiveRecord::Base.connection.table_exists? table_name
+      end
+
       private
 
       def validate_id(id)
