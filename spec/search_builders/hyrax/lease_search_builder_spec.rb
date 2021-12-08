@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::LeaseSearchBuilder do
-  let(:context) { double }
+  let(:context) { FakeSearchBuilderScope.new }
   let(:search_builder) { described_class.new(context) }
 
   describe "#processor_chain" do
