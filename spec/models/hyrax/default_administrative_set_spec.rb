@@ -20,4 +20,30 @@ RSpec.describe Hyrax::DefaultAdministrativeSet, type: :model do
       end
     end
   end
+
+  describe 'save_supported?' do
+    context 'when table exists' do
+      before do
+        allow(ActiveRecord::Base.connection)
+          .to receive(:table_exists?)
+          .with(described_class.table_name)
+          .and_return(true)
+      end
+      it 'returns true' do
+        expect(described_class.save_supported?).to eq true
+      end
+    end
+
+    context 'when table does not exist' do
+      before do
+        allow(ActiveRecord::Base.connection)
+          .to receive(:table_exists?)
+          .with(described_class.table_name)
+          .and_return(false)
+      end
+      it 'returns false' do
+        expect(described_class.save_supported?).to eq false
+      end
+    end
+  end
 end
