@@ -1,33 +1,29 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::Stats::WorkStatusSearchBuilder do
+  subject(:instance) { described_class.new(context) }
+
   let(:context) do
     double(blacklight_config: CatalogController.blacklight_config,
            current_ability: ability)
   end
+
   let(:ability) do
     instance_double(Ability, admin?: true)
   end
-  let(:instance) { described_class.new(context) }
 
   describe "#query" do
-    subject { instance.query }
-
     it "sets required parameters" do
-      expect(subject['facet.field']).to eq ["suppressed_bsi"]
-      expect(subject['facet.missing']).to eq true
-      expect(subject['rows']).to eq 0
+      expect(instance.query['facet.field']).to eq ["suppressed_bsi"]
+      expect(instance.query['facet.missing']).to eq true
+      expect(instance.query['rows']).to eq 0
     end
   end
 
   describe "#only_works?" do
-    subject { instance.send(:only_works?) }
-
-    it { is_expected.to be true }
+    it { expect(instance.send(:only_works?)).to be true }
   end
 
   describe "::default_processor_chain" do
-    subject { described_class.default_processor_chain }
-
-    it { is_expected.to include(:filter_models) }
+    it { expect(described_class.default_processor_chain).to include(:filter_models) }
   end
 end
