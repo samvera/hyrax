@@ -7,9 +7,9 @@ RSpec.describe Hyrax::My::FindWorksSearchBuilder do
   let(:params) { ActionController::Parameters.new(q: q, id: work.id, user: user.email, controller: "qa/terms", action: "search", vocab: "find_works") }
 
   let(:context) do
-    double(current_ability: ability,
-           current_user: user,
-           params: params)
+    FakeSearchBuilderScope.new(current_ability: ability,
+                               current_user: user,
+                               params: params)
   end
   let!(:work) { create(:generic_work, :public, title: ['foo'], user: user) }
 

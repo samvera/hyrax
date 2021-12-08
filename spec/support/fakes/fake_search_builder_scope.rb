@@ -30,11 +30,11 @@ class FakeSearchBuilderScope
   # @param [Blacklight::Configuration] blacklight_config
   # @param [::Ability, nil] current_ability
   # @param [::User, nil] current_user
-  def initialize(blacklight_config: CatalogController.blacklight_config, current_ability: nil, current_user: nil)
+  def initialize(blacklight_config: CatalogController.blacklight_config, current_ability: nil, current_user: nil, params: {})
     @blacklight_config = blacklight_config
     @current_user = current_user
     @current_ability = current_ability || ::Ability.new(current_user)
-    @params = {} # all existing tests explitly pass in an empty hash, real controller params are used in practice?
+    @params = params
     @repository = Blacklight::Solr::Repository.new(blacklight_config)
   end
 end
