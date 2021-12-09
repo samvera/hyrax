@@ -5,7 +5,6 @@ module Hyrax
   # Returns a list of solr documents for collections the item is a part of
   class CollectionMemberService
     include Blacklight::Configurable
-    include Blacklight::SearchHelper
 
     attr_reader :item, :current_ability
 

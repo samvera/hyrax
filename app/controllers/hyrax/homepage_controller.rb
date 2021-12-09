@@ -2,7 +2,6 @@
 class Hyrax::HomepageController < ApplicationController
   # Adds Hydra behaviors into the application controller
   include Blacklight::SearchContext
-  include Blacklight::SearchHelper
   include Blacklight::AccessControls::Catalog
 
   class_attribute :presenter_class
