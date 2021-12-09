@@ -2,8 +2,6 @@
 module Hyrax
   module Admin
     class RepositoryObjectPresenter
-      include Blacklight::SearchHelper
-
       def as_json(*)
         counts.map do |k, v|
           { label: I18n.translate(k, scope: 'hyrax.admin.stats.repository_objects.series'),
