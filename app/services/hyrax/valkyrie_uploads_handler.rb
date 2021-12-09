@@ -84,8 +84,15 @@ class Hyrax::ValkyrieUploadsHandler < Hyrax::WorkUploadsHandler
                             original_filename: file_metadata.original_filename)
     file_metadata.file_identifier = uploaded.id
     file_metadata.size = uploaded.size
-    Hyrax.persister.save(resource: file_metadata)
-    Hyrax.publisher.publish("object.file.uploaded", metadata: file_metadata)
+
+    # characterization is run on the Hyrax::FileMetadata, but re-indexing is
+    # only triggered when the FileSet is persisted, so we need to pass that
+    # through as well
+    Hyrax.publisher.publish(
+      "object.file.uploaded",
+      file_set: file_set,
+      metadata: file_metadata
+    )
 
     file_metadata
   end

@@ -14,6 +14,7 @@ module Hyrax
 
         Hyrax::Characterization::ValkyrieCharacterizationService.run(md, md.file)
         Hyrax.persister.save(resource: md)
+        Hyrax.index_adapter.save(resource: event[:file_set])
       end
     end
   end
