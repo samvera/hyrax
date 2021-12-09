@@ -5,8 +5,6 @@ module Hyrax
       ##
       # Gather information about the depositors who have contributed to the repository
       class Summary
-        include Blacklight::SearchHelper
-
         # @api public
         # @param [Time] start_date optionally specify the start date to gather the stats from
         # @param [Time] end_date optionally specify the end date to gather the stats from
