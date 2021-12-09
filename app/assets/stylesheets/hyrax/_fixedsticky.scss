@@ -1,4 +1,4 @@
-@media (min-width: $screen-sm-min) {
+@media (min-width: map-get($grid-breakpoints, "md")) {
   .fixedsticky {
     position: -webkit-sticky;
     position: -moz-sticky;
