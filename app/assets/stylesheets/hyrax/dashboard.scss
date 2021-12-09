@@ -37,7 +37,7 @@ $admin-panel-border-color: #dedede !default;
 
 body.dashboard {
   background-color: $body-background-color;
-  padding-top: $navbar-height;
+  padding-top: $navbar-brand-height + 2 * $navbar-padding-y;
 
   @media only screen and (max-width : 767px) {
     padding-top: 0;
@@ -103,19 +103,19 @@ body.dashboard {
     margin-top: 0;
 
     h1 {
-      font-size: $font-size-h2;
-      margin-left: $padding-xs-horizontal;
-      margin-top: $padding-base-vertical;
+      font-size: $h2-font-size;
+      margin-left: $table-cell-padding-sm;
+      margin-top: $input-btn-padding-y;
 
       .fa {
         color: $gray;
-        margin-right: $padding-xs-horizontal;
+        margin-right: $table-cell-padding-sm;
       }
     }
 
 
     .btn {
-      margin-bottom: $padding-base-vertical;
+      margin-bottom: $input-btn-padding-y;
     }
   }
 
@@ -126,7 +126,7 @@ body.dashboard {
   }
 
   .constraints-container {
-    padding: $panel-heading-padding;
+    padding: $card-spacer-y $card-spacer-x;
 
     .start-over {
       padding: 4px 6px;
@@ -141,9 +141,9 @@ body.dashboard {
   }
 
   .list-filters {
-    background-color: $panel-default-heading-bg;
+    background-color: $card-cap-bg;
     margin-bottom: 20px;
-    padding: $panel-heading-padding;
+    padding: $card-spacer-y $card-spacer-x;
 
     .btn-group > .facet-values {
       display: none;
@@ -246,7 +246,7 @@ body.dashboard {
   }
 
   .panel.panel-default.labels {
-    border-top: 1px solid $panel-default-border;
+    border-top: 1px solid $card-border-color;
     margin-bottom: 0;
   }
 
