@@ -5,8 +5,6 @@ class CatalogController < ApplicationController
 
   # This filter applies the hydra access controls
   before_action :enforce_show_permissions, only: :show
-  # Allow all search options when in read-only mode
-  skip_before_action :check_read_only
 
   def self.uploaded_field
     "system_create_dtsi"
