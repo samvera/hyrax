@@ -3,7 +3,6 @@ module Hyrax
   module Collections
     class SearchService
       include Blacklight::Configurable
-      include Blacklight::SearchHelper
 
       def initialize(session, user_key)
         @session = session
