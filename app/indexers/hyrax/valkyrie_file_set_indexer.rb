@@ -23,7 +23,6 @@ module Hyrax
         solr_doc['extracted_text_id_ssi'] = resource.extracted_text_id.to_s
 
         # Add in metadata from the original file.
-        file_metadata = original_file
         return solr_doc unless file_metadata
 
         # Label is the actual file name. It's not editable by the user.
@@ -98,6 +97,16 @@ module Hyrax
     end
 
     private
+
+    def file_metadata
+      return @meta if @meta.present?
+
+      @meta = Hyrax.query_service.find_all_of_model(model: Hyrax::FileMetadata).select do |fm|
+        fm.file_set_id.to_s == resource.id
+      end
+
+      @meta
+    end
 
     def original_file
       Hyrax.custom_queries.find_original_file(file_set: resource)
