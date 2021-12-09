@@ -86,11 +86,13 @@ module Hyrax
       end
 
       def after_create
-        form
-        set_default_permissions
-        # if we are creating the new collection as a subcollection (via the nested collections controller),
-        # we pass the parent_id through a hidden field in the form and link the two after the create.
-        link_parent_collection(params[:parent_id]) unless params[:parent_id].nil?
+        if @collection.is_a?(ActiveFedora::Base)
+          form
+          set_default_permissions
+          # if we are creating the new collection as a subcollection (via the nested collections controller),
+          # we pass the parent_id through a hidden field in the form and link the two after the create.
+          link_parent_collection(params[:parent_id]) unless params[:parent_id].nil?
+        end
         respond_to do |format|
           Hyrax::SolrService.commit
           format.html { redirect_to edit_dashboard_collection_path(@collection), notice: t('hyrax.dashboard.my.action.collection_create_success') }
@@ -225,6 +227,7 @@ module Hyrax
                         .call(form)
                         .value_or { return after_create_error }
 
+        after_create
         add_members_to_collection unless batch.empty?
         @collection
       end
