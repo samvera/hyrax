@@ -26,7 +26,7 @@ RSpec.describe Hyrax::Dashboard::WorksSearchBuilder do
   describe "#show_only_managed_works_for_non_admins" do
     let(:solr_params) { Blacklight::Solr::Request.new }
 
-    before(:example) do
+    before do
       builder.show_only_managed_works_for_non_admins(solr_params)
     end
 

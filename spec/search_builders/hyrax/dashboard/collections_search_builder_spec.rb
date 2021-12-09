@@ -32,7 +32,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsSearchBuilder do
   describe "#show_only_managed_collections_for_non_admins" do
     let(:solr_params) { Blacklight::Solr::Request.new }
 
-    before(:example) do
+    before do
       builder.show_only_managed_collections_for_non_admins(solr_params)
     end
 
