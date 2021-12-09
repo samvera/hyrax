@@ -1,4 +1,3 @@
-@import 'hydra-editor/multi_value_fields';
 @import 'hyrax/variables', 'hyrax/file_sets', 'hyrax/settings', 'hyrax/header',
   'hyrax/styles', 'hyrax/file-listing', 'hyrax/browse_everything_overrides',
   'hyrax/nestable', 'hyrax/collections', 'hyrax/collection_types',
@@ -10,6 +9,7 @@
   'hyrax/footer', 'hyrax/select_work_type', 'hyrax/users', 'hyrax/dashboard',
   'hyrax/sidebar', 'hyrax/controlled_vocabulary', 'hyrax/accessibility',
   'hyrax/recent', 'hyrax/viewer', 'hyrax/breadcrumbs';
+@import 'hydra-editor/multi_value_fields';
 @import 'typeahead';
 @import 'sharing_buttons';
 

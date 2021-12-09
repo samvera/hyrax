@@ -20,23 +20,23 @@
   ul {
     list-style-type: none;
     &.grid li {
-      @extend .col-xs-4;
+      @extend .col-4;
       .thumbnail {
         height: 150px;
-        @extend .col-xs-12;
+        @extend .col-12;
         img {
           max-height: 140px;
         }
       }
 
       .spacer {
-        @extend .col-xs-12;
+        @extend .col-12;
       }
       .attributes {
-        @extend .col-xs-12;
+        @extend .col-12;
       }
       .member_resource_options {
-        @extend .col-xs-12;
+        @extend .col-12;
         float: none;
         input[type=radio] {
           margin-left: 1px;
@@ -53,21 +53,21 @@
       }
     }
     li {
-      @extend .col-xs-12;
+      @extend .col-12;
       .text {
         display: inline-block;
       }
       .thumbnail {
-        @extend .col-xs-3;
+        @extend .col-3;
       }
       .spacer {
-        @extend .col-xs-3;
+        @extend .col-3;
       }
       .attributes {
-        @extend .col-xs-6;
+        @extend .col-6;
       }
       .member_resource_options {
-        @extend .col-xs-12;
+        @extend .col-12;
         float: none;
         span.radio:first-of-type {
           margin-top: 50px;
@@ -113,18 +113,18 @@
     }
   }
   #file-manager-tools {
-    @media (max-width: $screen-md-min) {
+    @media (max-width: map-get($grid-breakpoints, "lg")) {
       &.affix {
         position: inherit;
       }
     }
-    @media (min-width: $screen-md-min) {
+    @media (min-width: map-get($grid-breakpoints, "lg")) {
       &.affix {
         top: -50px;
         width: 235px;
       }
     }
-    @media (min-width: $screen-lg-min) {
+    @media (min-width: map-get($grid-breakpoints, "xl")) {
       &.affix {
         width: 285px;
       }

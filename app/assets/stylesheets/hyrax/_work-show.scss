@@ -6,7 +6,7 @@
 
 .no-preview,
 .social-media {
-  padding: $panel-body-padding;
+  padding: $card-img-overlay-padding;
 }
 
 header > h1 .label {
@@ -15,7 +15,7 @@ header > h1 .label {
 }
 
 .citations {
-  padding: $panel-body-padding;
+  padding: $card-img-overlay-padding;
 }
 
 .ensure-wrapped {
@@ -50,8 +50,8 @@ ul.tabular {
   color: #808080;
   font-size: 24px;
   font-weight: 500;
-  margin-bottom: $padding-large-vertical;
-  margin-top: $padding-large-vertical * 2;
+  margin-bottom: $input-btn-padding-y;
+  margin-top: $input-btn-padding-y * 2;
 }
 
 .work-type {
@@ -67,15 +67,15 @@ ul.tabular {
 
   // Button row which sits below the title, and above panel content for a page
   .button-row-top-two-column {
-    margin-bottom: $padding-large-vertical;
-    margin-top: $padding-large-vertical;
+    margin-bottom: $btn-block-spacing-y;
+    margin-top: $btn-block-spacing-y;
 
     @media screen and (max-width: 767px) {
       > div {
         text-align: center;
 
         &:first-child {
-          padding-bottom: $padding-small-vertical;
+          padding-bottom: $btn-padding-y-sm;
         }
       }
     }
@@ -83,7 +83,7 @@ ul.tabular {
 }
 
 .work-title-wrapper {
-  margin-bottom: $padding-large-vertical * 2;
+  margin-bottom: $input-btn-padding-y * 2;
 
   .title-with-badges {
     align-items: center;

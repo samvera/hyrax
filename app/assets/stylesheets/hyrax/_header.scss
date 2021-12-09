@@ -3,16 +3,11 @@
 }
 
 #masthead {
-  z-index: $zindex-navbar + 1;
+  z-index: 1;
 }
 
 header > .navbar {
   margin-bottom: 0;
-}
-
-.navbar + .navbar,
-.navbar + .image-masthead {
-  margin-top: -1 * $navbar-margin-bottom;
 }
 
 .searchbar-right {
