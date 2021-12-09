@@ -1,10 +1,10 @@
-@media (min-width: $screen-xs-min) {
+@media (min-width: map-get($grid-breakpoints, "sm")) {
   .fixedsticky {
     margin-top: 1em;
   }
 }
 
-@media (min-width: $screen-sm-min) {
+@media (min-width: map-get($grid-breakpoints, "md")) {
   .fixedsticky {
     margin-top: 0;
     top: 0; /* Required to get consistent results in Safari and Chrome */
