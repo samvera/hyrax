@@ -19,6 +19,16 @@ RSpec.describe Hyrax::My::CollectionsSearchBuilder do
                                      Hyrax::AdministrativeSet,
                                      Hyrax.config.collection_class)
     end
+
+    context 'when collection class is something other than ::Collection' do
+      before { allow(Hyrax.config).to receive(:collection_model).and_return('Hyrax::PcdmCollection') }
+      it do
+        is_expected.to contain_exactly(AdminSet,
+                                       Hyrax::AdministrativeSet,
+                                       ::Collection,
+                                       Hyrax::PcdmCollection)
+      end
+    end
   end
 
   describe ".default_processor_chain" do

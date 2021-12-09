@@ -14,6 +14,14 @@ RSpec.describe Hyrax::CollectionSearchBuilder do
       is_expected
         .to contain_exactly(*[::Collection, Hyrax.config.collection_class].uniq)
     end
+
+    context 'when collection class is not ::Collection' do
+      before { allow(Hyrax.config).to receive(:collection_model).and_return('Hyrax::PcdmCollection') }
+      its(:models) do
+        is_expected
+          .to contain_exactly(*[::Collection, Hyrax::PcdmCollection].uniq)
+      end
+    end
   end
 
   describe '#discovery_permissions' do
