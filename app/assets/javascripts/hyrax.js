@@ -7,15 +7,9 @@
 //= require jquery-ui/effects/effect-highlight
 //= require jquery-ui/widgets/sortable
 
-//= require bootstrap/alert
-//= require bootstrap/button
-//= require bootstrap/collapse
-//= require bootstrap/dropdown
-//= require bootstrap/modal
-//= require bootstrap/tooltip
-// Popover requires that tooltip be loaded first
-//= require bootstrap/popover
-//= require bootstrap/tab
+//= require jquery3
+//= require popper
+//= require bootstrap
 
 //= require select2
 //= require fixedsticky
