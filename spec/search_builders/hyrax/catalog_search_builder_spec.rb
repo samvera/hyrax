@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 RSpec.describe Hyrax::CatalogSearchBuilder do
-  let(:context) { double }
+  let(:context) { FakeSearchBuilderScope.new }
   let(:builder) { described_class.new(context).with(blacklight_params) }
   let(:solr_params) { Blacklight::Solr::Request.new }
   let(:blacklight_params) { { q: user_query, search_field: 'all_fields' } }
@@ -53,7 +53,7 @@ RSpec.describe Hyrax::CatalogSearchBuilder do
   describe "#filter_collection_facet_for_access" do
     let(:user) { build(:user) }
     let(:ability) { Ability.new(user) }
-    let(:context) { double(current_ability: ability) }
+    let(:context) { FakeSearchBuilderScope.new(current_ability: ability) }
 
     subject { builder.filter_collection_facet_for_access(solr_params) }
 
