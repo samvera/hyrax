@@ -1,7 +1,7 @@
 // Styles for the user index and show page
 
 .views-downloads-dashboard {
-  padding-left: $padding-large-horizontal;
+  padding-left: $input-btn-padding-x-lg;
 }
 
 .panel-user {
@@ -10,7 +10,7 @@
 
 #user_info {
   dt {
-    margin-top: $padding-small-vertical;
+    margin-top: $input-btn-padding-y-sm;
   }
 }
 
