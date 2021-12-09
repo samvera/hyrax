@@ -88,7 +88,7 @@ header {
 }
 
 .dropdown-menu .edit_collection {
-  margin-top: 2 * $padding-large-vertical;
+  margin-top: 2 * $input-btn-padding-y-lg;
 }
 
 div.view-type {
@@ -404,7 +404,7 @@ button.branding-banner-remove:hover {
     padding-bottom: 40px;
 
     .sharing-row-form {
-      margin-bottom: $padding-large-vertical;
+      margin-bottom: $input-btn-padding-y-lg;
     }
   }
 
