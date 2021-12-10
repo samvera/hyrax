@@ -707,7 +707,7 @@ module Hyrax
     ##
     # @return [Class] the configured collection model class
     def collection_class
-      collection_model.constantize
+      collection_model.safe_constantize
     end
 
     attr_writer :admin_set_model
