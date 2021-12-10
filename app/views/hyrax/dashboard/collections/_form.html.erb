@@ -34,7 +34,8 @@
                 <%= render_edit_field_partial(term, f: f) %>
               <% end %>
 
-              <% if f.object.persisted? %>
+              <% # TODO: Remove check for PcdmCollection when Issue #5286 is resolved. %>
+              <% if f.object.persisted? && Hyrax.config.collection_class != Hyrax::PcdmCollection %>
                 <%# we're loading these values dynamically to speed page load %>
                 <%= f.input :thumbnail_id,
                     input_html: { data: { text: thumbnail_label_for(object: f.object) } } %>
