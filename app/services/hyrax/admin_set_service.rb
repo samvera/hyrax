@@ -7,7 +7,7 @@ module Hyrax
     class_attribute :default_search_builder
     self.default_search_builder = Hyrax::AdminSetSearchBuilder
 
-    # @param [#repository,#blacklight_config,#current_ability] context
+    # @param [#blacklight_config,#current_ability] context
     def initialize(context, search_builder = default_search_builder)
       @context = context
       @search_builder = search_builder
@@ -15,7 +15,7 @@ module Hyrax
 
     # @param [Symbol] access :deposit, :read or :edit
     def search_results(access)
-      response = context.repository.search(builder(access))
+      response = context.blacklight_config.repository.search(builder(access))
       response.documents
     end
 
