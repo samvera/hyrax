@@ -6,7 +6,7 @@ module Hyrax
     # zero to just get the facet information
     # @param solr_parameters the current solr parameters
     def include_depositor_facet(solr_parameters)
-      solr_parameters[:"facet.field"].concat([DepositSearchBuilder.depositor_field])
+      solr_parameters.append_facet_fields(DepositSearchBuilder.depositor_field)
 
       # default facet limit is 10, which will only show the top 10 users.
       # As we want to show all user deposits, so set the facet.limit to the
