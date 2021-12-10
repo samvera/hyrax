@@ -66,7 +66,7 @@ RSpec.describe CatalogController, type: :controller do
       let(:objects) { [rocks, clouds] }
 
       before do
-        get :index, params: { 'f' => { 'contributor_tesim' => ['frodo'] } }
+        get :index, params: { 'f' => { 'contributor_sim' => ['frodo'] } }
       end
 
       it 'finds faceted works' do
