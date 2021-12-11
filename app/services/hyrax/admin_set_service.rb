@@ -15,7 +15,7 @@ module Hyrax
 
     # @param [Symbol] access :deposit, :read or :edit
     def search_results(access)
-      response = context.repository.search(builder(access))
+      response = repository.search(builder(access))
       response.documents
     end
 
@@ -57,6 +57,10 @@ module Hyrax
         file_counts[admin_set.id] = file_results['response']['numFound']
       end
       file_counts
+    end
+
+    def repository
+      context.try(:repository) || context.blacklight_config.repository
     end
   end
 end
