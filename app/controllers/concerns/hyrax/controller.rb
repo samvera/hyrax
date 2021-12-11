@@ -29,6 +29,17 @@ module Hyrax::Controller
     super.merge(locale: I18n.locale)
   end
 
+  ##
+  # @deprecated provides short-term compatibility with Blacklight 6
+  # @return [Blacklight::AbstractRepository]
+  def repository
+    return super if defined?(super)
+    Deprecation.warn("Avoid direct calls to `#repository`; this method" \
+                     " provides short-term compatibility to Blacklight 6 " \
+                     " clients.")
+    blacklight_config.repository
+  end
+
   private
 
   ##
