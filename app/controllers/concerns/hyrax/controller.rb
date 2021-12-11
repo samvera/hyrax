@@ -17,6 +17,9 @@ module Hyrax::Controller
     helper_method :create_work_presenter
     before_action :set_locale
     before_action :check_read_only, except: [:show, :index]
+
+    class_attribute :search_service_class
+    self.search_service_class = Hyrax::SearchService
   end
 
   # Provide a place for Devise to send the user to after signing in
@@ -49,6 +52,24 @@ module Hyrax::Controller
                      " provides short-term compatibility to Blacklight 6 " \
                      " clients.")
     blacklight_config.repository
+  end
+
+  # @note for Blacklight 6/7 compatibility
+  def search_results(*args)
+    return super if defined?(super) # use the upstream if present (e.g. in BL 6)
+
+    search_service(*args).search_results
+  end
+
+  ##
+  # @note for Blacklight 6/7 compatibility
+  def search_service(**search_params)
+    return super if defined?(super) && search_params.empty?
+
+    search_service_class.new(config: blacklight_config,
+                             scope: self,
+                             user_params: search_params,
+                             search_builder_class: search_builder_class)
   end
 
   private
