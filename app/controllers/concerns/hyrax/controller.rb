@@ -31,6 +31,17 @@ module Hyrax::Controller
 
   ##
   # @deprecated provides short-term compatibility with Blacklight 6
+  # @return [Class<Blacklight::SearchBuilder>]
+  def search_builder_class
+    return super if defined?(super)
+    Deprecation.warn("Avoid direct calls to `#search_builder_class`; this" \
+                     " method provides short-term compatibility to" \
+                     " Blacklight 6 clients.")
+    blacklight_config.search_builder_class
+  end
+
+  ##
+  # @deprecated provides short-term compatibility with Blacklight 6
   # @return [Blacklight::AbstractRepository]
   def repository
     return super if defined?(super)
