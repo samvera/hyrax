@@ -11,7 +11,7 @@ RSpec.describe Hyrax::DownloadsController do
     it 'raises an error if the object does not exist' do
       expect do
         get :show, params: { id: '8675309' }
-      end.to raise_error Blacklight::Exceptions::InvalidSolrID
+      end.to raise_error Blacklight::Exceptions::RecordNotFound
     end
 
     context "when user doesn't have access" do
