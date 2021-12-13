@@ -8,7 +8,7 @@ module Hyrax
     end
 
     def find_one(solr_parameters)
-      solr_parameters[:fq] << "{!raw f=id}#{blacklight_params.fetch(:id)}"
+      solr_parameters.append_filter_query("{!raw f=id}#{blacklight_params.fetch(:id)}")
     end
   end
 end
