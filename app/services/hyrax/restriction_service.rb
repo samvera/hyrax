@@ -2,6 +2,10 @@
 module Hyrax
   class RestrictionService
     class << self
+      ##
+      # @note needed to construct SearchBuilders using self in Blacklight 7+
+      delegate :blacklight_config, to: :config
+
       private
 
       def presenter_class
