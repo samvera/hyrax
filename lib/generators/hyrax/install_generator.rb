@@ -45,7 +45,7 @@ module Hyrax
     end
 
     def replace_blacklight_layout
-      gsub_file 'app/controllers/application_controller.rb', /layout 'blacklight'/,
+      gsub_file 'app/controllers/application_controller.rb', /layout :determine_layout.+$/,
                 "include Hyrax::ThemedLayoutController\n  with_themed_layout '1_column'\n"
     end
 
