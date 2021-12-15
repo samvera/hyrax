@@ -4,9 +4,7 @@ module Hyrax
     class << self
       ##
       # @note needed to construct SearchBuilders using self in Blacklight 7+
-      def blacklight_config
-        config.blacklight_config
-      end
+      delegate :blacklight_config, to: :config
 
       private
 

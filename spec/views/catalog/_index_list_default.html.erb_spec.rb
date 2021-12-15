@@ -5,10 +5,10 @@ RSpec.describe 'catalog/_index_list_default', type: :view do
       'depositor_tesim' => ['Test depositor_tesim'],
       'proxy_depositor_ssim' => ['Test proxy_depositor_ssim'],
       'description_tesim' => ['Test description_tesim'],
-      'date_uploaded_dtsi' => Date.today.to_s,
-      'date_modified_dtsi' => Date.today.to_s,
-      'embargo_release_date_dtsi' => Date.today.to_s,
-      'lease_expiration_date_dtsi' => Date.today.to_s,
+      'date_uploaded_dtsi' => Time.zone.today.to_s,
+      'date_modified_dtsi' => Time.zone.today.to_s,
+      'embargo_release_date_dtsi' => Time.zone.today.to_s,
+      'lease_expiration_date_dtsi' => Time.zone.today.to_s,
       'has_model_ssim' => 'GenericWork' }
   end
   let(:document) { SolrDocument.new(attributes) }
