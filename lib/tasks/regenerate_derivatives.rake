@@ -5,7 +5,7 @@ namespace :hyrax do
     desc 'Regenerate derivatives for all FileSets in the repository'
     task regenerate_derivatives: :environment do
       FileSet.all.each do |fs|
-        fs.files.each { |fi| CreateDerivativesJob.perform_later(fs, fi) }
+        fs.files.each { |fi| CreateDerivativesJob.perform_later(fs, fi.id) }
       end
     end
   end
