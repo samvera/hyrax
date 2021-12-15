@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 Hyrax.publisher.subscribe(Hyrax::Listeners::AclIndexListener.new)
-Hyrax.publisher.subscribe(Hyrax::Listeners::ActiveFedoraAclIndexListener.new) unless
-  Hyrax.config.disable_wings
-Hyrax.publisher.subscribe(Hyrax::Listeners::MemberCleanupListener.new)
-Hyrax.publisher.subscribe(Hyrax::Listeners::MetadataIndexListener.new)
+Hyrax.publisher.subscribe(Hyrax::Listeners::ActiveFedoraAclIndexListener.new) unless Hyrax.config.disable_wings
 Hyrax.publisher.subscribe(Hyrax::Listeners::BatchNotificationListener.new)
-Hyrax.publisher.subscribe(Hyrax::Listeners::ObjectLifecycleListener.new)
+Hyrax.publisher.subscribe(Hyrax::Listeners::FileMetadataListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::FileSetLifecycleListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::FileSetLifecycleNotificationListener.new)
+Hyrax.publisher.subscribe(Hyrax::Listeners::MemberCleanupListener.new)
+Hyrax.publisher.subscribe(Hyrax::Listeners::MetadataIndexListener.new)
+Hyrax.publisher.subscribe(Hyrax::Listeners::ObjectLifecycleListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::ProxyDepositListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::TrophyCleanupListener.new)
 Hyrax.publisher.subscribe(Hyrax::Listeners::WorkflowListener.new)
