@@ -31,8 +31,11 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
   let(:file_name) { 'mock_file.jpg' }
   let(:original_file_id) { 'mf1' }
   let(:mock_file) do
-    # attributes as defined in Hyrax::FileMetadata
-    mock_file_metadata_factory(
+    Hyrax::FileMetadata.new(metadata_attrs)
+  end
+
+  let(:metadata_attrs) do
+    {
       file_identifier: 'VALFILEID1',
       alternate_ids: ['AFFILEID1'],
       file_set_id: fileset_id,
@@ -92,14 +95,14 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
       color_map: ['autumn'],
       image_producer: ['MemoryImageSource'],
       capture_device: ['Nikon 35mm'],
-      scanning_software: [''],
+      scanning_software: ['scanningsoftwareREAL'],
       gps_timestamp: ['2021:03:11 09:35:02'],
       latitude: ['38.8951'],
       longitude: ['-77.0365'],
 
       # attributes set by fits for video
       aspect_ratio: ['5:4']
-    )
+    }
   end
 
   let(:mock_text) do
