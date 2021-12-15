@@ -42,6 +42,10 @@ module ActiveFedora
     def self.properties
       metadata.properties
     end
+
+    def self.default_sort_params
+      ["system_create_dtsi asc"]
+    end
   end
 
   module Associations
