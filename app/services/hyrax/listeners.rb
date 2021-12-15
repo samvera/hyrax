@@ -19,6 +19,7 @@ module Hyrax
 
     autoload :AclIndexListener
     autoload :BatchNotificationListener
+    autoload :FileMetadataListener
     autoload :FileSetLifecycleListener
     autoload :FileSetLifecycleNotificationListener
     autoload :MemberCleanupListener

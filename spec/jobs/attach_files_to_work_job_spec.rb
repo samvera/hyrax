@@ -110,7 +110,7 @@ RSpec.describe AttachFilesToWorkJob, perform_enqueued: [AttachFilesToWorkJob] do
     shared_examples 'a file attacher', perform_enqueued: [described_class, IngestJob] do
       it 'attaches files, copies visibility and permissions and updates the uploaded files' do
         id = generic_work.id
-        expect(CharacterizeJob).to receive(:perform_later).twice
+        expect(ValkyrieIngestJob).to receive(:perform_later).twice
         described_class.perform_now(generic_work, [uploaded_file1, uploaded_file2])
         generic_work = Hyrax.query_service.find_by(id: id)
         file_sets = Hyrax.custom_queries.find_child_filesets(resource: generic_work)

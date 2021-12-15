@@ -114,8 +114,11 @@ module Hyrax
       file_set.permission_manager.acl.save if file_set.permission_manager.acl.pending_changes?
       append_to_work(file_set)
 
-      IngestJob.perform_later(wrap_file(file, file_set))
+      ValkyrieIngestJob.perform_later(file)
+
+      # this triggers the re-index
       Hyrax.publisher.publish('object.metadata.updated', object: file_set, user: file.user)
+
       { file_set: file_set, user: file.user }
     end
 
