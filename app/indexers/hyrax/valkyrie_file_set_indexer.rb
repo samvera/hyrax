@@ -37,7 +37,7 @@ module Hyrax
         solr_doc['file_format_tesim']       = file_format(file_metadata)
         solr_doc['file_format_sim']         = file_format(file_metadata)
         solr_doc['file_size_lts']           = file_metadata.size[0]
-        solr_doc['type_tesim']              = file_metadata.type if file_metadata.type.present?
+        solr_doc['type_tesim']              = file_metadata.type.map(&:to_s) if file_metadata.type.present?
 
         # attributes set by fits
         solr_doc['format_label_tesim']      = file_metadata.format_label if file_metadata.format_label.present?

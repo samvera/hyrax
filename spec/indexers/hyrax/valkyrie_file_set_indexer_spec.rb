@@ -43,7 +43,7 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
       label: [file_name],
       original_filename: file_name,
       mime_type: 'image/jpeg',
-      type: ['jpg'],
+      type: [Hyrax::FileMetadata::Use::ORIGINAL_FILE],
 
       # attributes set by fits
       format_label: ['JPEG Image'],
@@ -154,7 +154,7 @@ RSpec.describe Hyrax::ValkyrieFileSetIndexer do
       expect(subject['file_format_tesim']).to eq 'jpeg (JPEG Image)'
       expect(subject['file_format_sim']).to eq 'jpeg (JPEG Image)'
       expect(subject['file_size_lts']).to eq mock_file.size[0]
-      expect(subject['type_tesim']).to eq mock_file['type']
+      expect(subject['type_tesim']).to eq ['http://pcdm.org/use#OriginalFile']
 
       # attributes set by fits
       expect(subject['format_label_tesim']).to eq mock_file['format_label']
