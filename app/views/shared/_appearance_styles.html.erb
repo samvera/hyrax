@@ -2,17 +2,17 @@
 <style>
 <% appearance = Hyrax::Forms::Admin::Appearance.new %>
 a { color: <%= appearance.link_color %>; }
-.navbar-inverse .navbar-link { color: <%= appearance.footer_link_color %>; }
+.navbar-dark.bg-dark .navbar-link { color: <%= appearance.footer_link_color %>; }
 
-.navbar-inverse { background-color: <%= appearance.header_background_color %>; }
+.navbar-dark.bg-dark { background-color: <%= appearance.header_background_color %>; }
 
-.navbar-inverse .navbar-nav > .open > a,
-.navbar-inverse .navbar-nav > .open > a:hover,
-.navbar-inverse .navbar-nav > .open > a:focus { background-color: <%= appearance.header_background_color %>; }
+.navbar-dark.bg-dark .navbar-nav > .open > a,
+.navbar-dark.bg-dark .navbar-nav > .open > a:hover,
+.navbar-dark.bg-dark .navbar-nav > .open > a:focus { background-color: <%= appearance.header_background_color %>; }
 
-.navbar-inverse .navbar-nav > li > a,
-.navbar-inverse .navbar-text,
-.navbar-inverse .navbar-brand { color: <%= appearance.header_text_color %>; }
+.navbar-dark.bg-dark .navbar-nav > li > a,
+.navbar-dark.bg-dark .navbar-text,
+.navbar-dark.bg-dark .navbar-brand { color: <%= appearance.header_text_color %>; }
 
 .btn-primary {
   background-color: <%= appearance.primary_button_background_color %>;
