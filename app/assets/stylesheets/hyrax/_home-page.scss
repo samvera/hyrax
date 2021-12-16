@@ -44,7 +44,12 @@
     margin-bottom: 0;
 
     .navbar-nav {
+      align-self: stretch;
+
       a {
+        display: flex;
+        align-items: center;
+        height: 100%;
         color: $navbar-transparent-link-color;
         text-transform: uppercase;
 
