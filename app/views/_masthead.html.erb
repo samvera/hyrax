@@ -1,21 +1,16 @@
 <header aria-label="header">
-  <nav id="masthead" class="navbar navbar-inverse navbar-static-top" role="navigation" aria-label="masthead">
+  <nav id="masthead" class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation" aria-label="masthead">
     <h1 class="sr-only"><%= application_name %></h1>
-    <div class="container-fluid">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-navbar-collapse" aria-expanded="false">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <%= render '/logo' %>
-      </div>
+    <%= render '/logo' %>
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top-navbar-collapse" aria-expanded="false">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
 
-      <div class="collapse navbar-collapse" id="top-navbar-collapse">
-        <%= render '/user_util_links' %>
-      </div>
+    <div class="collapse navbar-collapse" id="top-navbar-collapse">
+      <%= render '/user_util_links' %>
     </div>
   </nav>
 </header>
