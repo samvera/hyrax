@@ -131,7 +131,7 @@ services:
       - hyrax
 
   solr:
-    image: solr:8.7
+    image: solr:8.11.1
     ports:
       - 8983:8983
     command:
