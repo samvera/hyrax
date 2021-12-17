@@ -3,10 +3,9 @@ require 'hydra-file_characterization'
 require 'nokogiri'
 
 class Hyrax::Characterization::ValkyrieCharacterizationService
-  # @param [Hyrax::FileMetadata] object which has properties to recieve characterization values.
+  # @param [Hyrax::FileMetadata] object which has properties to recieve characterization values
   # @param [Valkyrie::StorageAdapter::StreamFile] source for characterization to
-  # be run on.  File object or path on disk.  If none is provided, it will
-  # assume the binary content already present on the object.
+  # be run on
   # @param [Hash] options to be passed to characterization.  parser_mapping:, parser_class:, tools:
   #
   # @return [Hash]
@@ -40,11 +39,7 @@ class Hyrax::Characterization::ValkyrieCharacterizationService
 
   protected
 
-  # @return content of object if source is nil; otherwise, return a File or the source
   def source_to_content
-    return object.file if source.nil?
-    # do not read the file into memory It could be huge...
-    return File.open(source) if source.is_a? String
     source.rewind
     source.read
   end
