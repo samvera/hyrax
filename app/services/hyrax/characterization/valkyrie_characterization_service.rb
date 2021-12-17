@@ -3,11 +3,14 @@ require 'hydra-file_characterization'
 require 'nokogiri'
 
 class Hyrax::Characterization::ValkyrieCharacterizationService
-  # @param [Hyrax::FileMetadata] object which has properties to recieve characterization values.
-  # @param [Valkyrie::StorageAdapter::StreamFile] source for characterization to
-  # be run on.  File object or path on disk.  If none is provided, it will
-  # assume the binary content already present on the object.
-  # @param [Hash] options to be passed to characterization.  parser_mapping:, parser_class:, tools:
+  ##
+  # @param [Hyrax::FileMetadata] object which has properties to recieve characterization values
+  # @param [Valkyrie::StorageAdapter::StreamFile] source to run characterization against
+  # @param [Hash] options the options pass to characterization
+  # @option options [Hash{Symbol => Symbol}] parser_mapping
+  # @option options [Class] parser_class
+  # @option options [Object] fits
+  # @option options [Object] ch12n_tool
   #
   # @return [Hash]
   def self.run(object, source = nil, options = {})
@@ -17,15 +20,17 @@ class Hyrax::Characterization::ValkyrieCharacterizationService
 
   attr_accessor :object, :source, :mapping, :parser_class, :tools
 
-  def initialize(object, source, options)
-    @object       = object
-    @source       = source
-    @mapping      = options.fetch(:parser_mapping, Hydra::Works::Characterization.mapper)
-    @parser_class = options.fetch(:parser_class, Hydra::Works::Characterization::FitsDocument)
-    @tools        = options.fetch(:ch12n_tool, :fits)
+  def initialize(object, source, characterizer: Hydra::FileCharacterization, **options)
+    @characterizer = characterizer
+    @object        = object
+    @source        = source
+    @mapping       = options.fetch(:parser_mapping, Hydra::Works::Characterization.mapper)
+    @parser_class  = options.fetch(:parser_class, Hydra::Works::Characterization::FitsDocument)
+    @tools         = options.fetch(:ch12n_tool, :fits)
   end
 
-  # Get given source into form that can be passed to Hydra::FileCharacterization
+  ##
+  # Coerce given source into a type that can be passed to Hydra::FileCharacterization
   # Use Hydra::FileCharacterization to extract metadata (an OM XML document)
   # Get the terms (and their values) from the extracted metadata
   # Assign the values of the terms to the properties of the object
@@ -40,17 +45,13 @@ class Hyrax::Characterization::ValkyrieCharacterizationService
 
   protected
 
-  # @return content of object if source is nil; otherwise, return a File or the source
   def source_to_content
-    return object.file if source.nil?
-    # do not read the file into memory It could be huge...
-    return File.open(source) if source.is_a? String
     source.rewind
     source.read
   end
 
   def extract_metadata(content)
-    Hydra::FileCharacterization.characterize(content, file_name, tools) do |cfg|
+    @characterizer.characterize(content, file_name, tools) do |cfg|
       cfg[:fits] = Hydra::Derivatives.fits_path
     end
   end
@@ -105,7 +106,7 @@ class Hyrax::Characterization::ValkyrieCharacterizationService
 
   def append_property_value(property, value)
     # We don't want multiple mime_types; this overwrites each time to accept last value
-    value = object.send(property) + [value] unless property == :mime_type
+    value = Array(object.public_send(property)) + [value] unless property == :mime_type
     # We don't want multiple heights / widths, pick the max
     value = value.map(&:to_i).max.to_s if property == :height || property == :width
     object.send("#{property}=", value)
