@@ -246,7 +246,7 @@ solr:
   enabled: true
   image:
     repository: bitnami/solr
-    tag: 8.8.1
+    tag: 8.11.1
   authentication:
     enabled: true
     adminUsername: admin
@@ -261,10 +261,6 @@ solr:
     enabled: true
     persistence:
       enabled: true
-  extraEnvVars:
-    - name: SOLR_OPTS
-      value: "-Dlog4j2.formatMsgNoLookups=true"
-
 
 autoscaling:
   enabled: false
