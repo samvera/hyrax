@@ -33,7 +33,7 @@ module Qa::Authorities
       access = controller.params[:access] || 'read'
 
       search_service(controller).search_results do |builder|
-        builder.where(controller.params[:q])
+        builder.with({ q: controller.params[:q] })
                .with_access(access)
                .rows(100)
       end
