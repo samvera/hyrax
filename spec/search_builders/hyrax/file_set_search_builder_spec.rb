@@ -4,7 +4,7 @@ RSpec.describe Hyrax::FileSetSearchBuilder do
   let(:ability) { double('ability') }
   let(:context) { FakeSearchBuilderScope.new }
   let(:user) { double('user') }
-  let(:solr_params) { { fq: [] } }
+  let(:solr_params) { Blacklight::Solr::Request.new({ fq: [] }) }
 
   subject { described_class.new(context) }
 
