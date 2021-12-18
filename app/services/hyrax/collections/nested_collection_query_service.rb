@@ -111,6 +111,9 @@ module Hyrax
       def self.clean_lucene_error(builder:)
         # TODO: Need to investigate further to understand why these particular queries
         # using the where cause fail when others in the app apparently work
+        #
+        # Perhaps see <https://github.com/projectblacklight/blacklight/blob/064302f73eee4baae4d2abf863c68317d3efb5b7/lib/blacklight/solr/search_builder_behavior.rb#L84-L102>.
+        # This can be averted by using #with in at least some cases?
         query = builder.query.to_hash
         query['q'] = query['q'].gsub('{!lucene}', '') if query.key?('q')
         query
@@ -175,9 +178,11 @@ module Hyrax
         # => 1) First we find all the collections with this child in the path, sort the results in descending order, and take the first result.
         # note: We need to include works in this search. They are included in the depth validations in
         # the indexer, so we do NOT use collection search builder here.
-        builder = Hyrax::SearchBuilder.new(scope).where("#{Samvera::NestingIndexer.configuration.solr_field_name_for_storing_pathnames}:/.*#{child.id}.*/")
-        builder.query[:sort] = "#{Samvera::NestingIndexer.configuration.solr_field_name_for_deepest_nested_depth} desc"
-        builder.query[:rows] = 1
+        builder = Hyrax::SearchBuilder.new(scope).with({
+                                                         q: "#{Samvera::NestingIndexer.configuration.solr_field_name_for_storing_pathnames}:/.*#{child.id}.*/",
+                                                         sort: "#{Samvera::NestingIndexer.configuration.solr_field_name_for_deepest_nested_depth} desc"
+                                                       })
+        builder.rows = 1
         query = clean_lucene_error(builder: builder)
         response = scope.repository.search(query).documents.first
 
