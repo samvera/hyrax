@@ -7,7 +7,7 @@ module Qa::Authorities
     def search(_q, controller)
       # The Hyrax::CollectionSearchBuilder expects a current_user
       return [] unless controller.current_user
-      response, _ = search_response(controller)
+      response, = search_response(controller)
       docs = response.documents
 
       docs.map do |doc|
