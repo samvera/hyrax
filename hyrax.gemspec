@@ -91,8 +91,6 @@ SUMMARY
   spec.add_development_dependency "equivalent-xml", '~> 0.5'
   spec.add_development_dependency "factory_bot", '~> 4.4'
   spec.add_development_dependency 'fcrepo_wrapper', '~> 0.5', '>= 0.5.1'
-  spec.add_development_dependency "jasmine", '~> 2.3', '< 2.99'
-  spec.add_development_dependency "jasmine-core", '~> 2.3', '< 2.99'
   spec.add_development_dependency 'mida', '~> 0.3'
   spec.add_development_dependency 'okcomputer'
   spec.add_development_dependency 'pg', '~> 1.2'
@@ -100,7 +98,8 @@ SUMMARY
   spec.add_development_dependency 'rspec-its', '~> 1.1'
   spec.add_development_dependency 'rspec-rails', '~> 3.1'
   spec.add_development_dependency 'rspec_junit_formatter'
-  spec.add_development_dependency "selenium-webdriver"
+  spec.add_development_dependency 'selenium-webdriver'
+  spec.add_development_dependency 'teaspoon-jasmine', '~> 2.9'
   spec.add_development_dependency 'i18n-debug'
   spec.add_development_dependency 'i18n_yaml_sorter'
   spec.add_development_dependency 'rails-controller-testing', '~> 1'
