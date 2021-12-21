@@ -12,22 +12,23 @@
     <div class="collection-type-share-applies-to">
       <div id="sharable-applies-to-new-works-setting-checkbox-container"
            class="form-group boolean optional collection_type_share_applies_to_new_works <%= 'disabled' if f.object.share_options_disabled? %>">
-        <div class="checkbox">
+        <div class="form-check">
           <input value="0"
                  name="collection_type[share_applies_to_new_works]"
                  type="hidden"
                  <%= "disabled=\"disabled\"".html_safe if f.object.share_options_disabled? %> />
+          <input id="collection_type_share_applies_to_new_works" <%= "disabled=\"disabled\"".html_safe if f.object.share_options_disabled? %>
+                 class="form-check-input boolean optional <%= 'disabled' if f.object.share_options_disabled? %>"
+                 value="1"
+                 <%= "checked=\"checked\"".html_safe if f.object.share_applies_to_new_works %>"
+                 name="collection_type[share_applies_to_new_works]"
+                 type="checkbox" />
           <label id="sharable-applies-to-new-works-setting-label"
-                 class="boolean optional <%= 'disabled' if f.object.share_options_disabled? %>"
+                 class="form-check-label boolean optional <%= 'disabled' if f.object.share_options_disabled? %>"
                  for="collection_type_share_applies_to_new_works">
-            <input id="collection_type_share_applies_to_new_works" <%= "disabled=\"disabled\"".html_safe if f.object.share_options_disabled? %>
-                   class="boolean optional <%= 'disabled' if f.object.share_options_disabled? %>"
-                   value="1"
-                   <%= "checked=\"checked\"".html_safe if f.object.share_applies_to_new_works %>"
-                   name="collection_type[share_applies_to_new_works]"
-                   type="checkbox" />
             APPLY TO NEW WORKS
           </label>
+        </div>
         </div>
         <p class="form-text"><%= t('simple_form.hints.collection_type.share_applies_to_new_works') %></p>
       </div>

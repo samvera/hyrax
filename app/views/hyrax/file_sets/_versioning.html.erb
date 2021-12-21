@@ -52,9 +52,9 @@
                html: { class: 'edit_file_set_previous_version nav-safety' } do |f| %>
     <h3><%= t('.restore') %></h3>
     <% @version_list.each do |version| %>
-      <div class="radio">
-        <label class="radio <%= version.current? ? 'disabled' : '' %>">
-          <%= radio_button_tag(:revision, version.label, false, disabled: version.current?, required: 'required') %>
+      <div class="form-check">
+        <label class="form-check-label <%= version.current? ? 'disabled' : '' %>">
+          <%= radio_button_tag(:revision, version.label, false, class: 'form-check-input', disabled: version.current?, required: 'required') %>
           <%= version.current? ? t('.current') : t('.restore_from') %>
           <%= version.created %> [by <%= version.committer %>]
         </label>
