@@ -8,14 +8,15 @@
       <% if presenter.valid_child_concerns.length > 0 %>
         <div class="btn-group">
           <button type="button" class="btn btn-secondary dropdown-toggle" type="button" id="dropdown-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <%= t('.attach_child') %> <span class="caret"></span></button>
-            <ul class="dropdown-menu">
-              <% presenter.valid_child_concerns.each do |concern| %>
-                <li>
-                  <%= link_to t(".attach", type: concern.human_readable_type), polymorphic_path([main_app, :new, :hyrax, :parent, concern.model_name.singular.to_sym], parent_id: presenter.id) %>
-                </li>
-              <% end %>
-            </ul>
+            <%= t('.attach_child') %>
+          </button>
+          <ul class="dropdown-menu">
+            <% presenter.valid_child_concerns.each do |concern| %>
+              <li class="dropdown-item">
+                <%= link_to t(".attach", type: concern.human_readable_type), polymorphic_path([main_app, :new, :hyrax, :parent, concern.model_name.singular.to_sym], parent_id: presenter.id) %>
+              </li>
+            <% end %>
+          </ul>
         </div>
       <% end %>
       <%= link_to t(".delete"), [main_app, presenter], class: 'btn btn-danger', data: { confirm: t(".delete_type", type: {presenter.human_readable_type}) }, method: :delete %>

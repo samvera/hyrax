@@ -5,7 +5,6 @@
   <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" type="button" id="dropdownMenu_<%= document.id %>" aria-haspopup="true" aria-expanded="false" aria-controls="<%= ul_id %>">
     <span class="sr-only"><%= t("hyrax.dashboard.my.sr.press_to") %> </span>
     <%= t("hyrax.dashboard.my.action.select") %>
-    <span class="caret" aria-hidden="true"></span>
   </button>
 
   <ul role="menu" id="<%= ul_id %>" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu_<%= document.id %>">
@@ -18,7 +17,7 @@
         <% end %>
       </li>
 
-      <li role="menuitem" tabindex="-1">
+      <li class="dropdown-item" role="menuitem" tabindex="-1">
         <%= link_to [main_app, document],
                     method: :delete,
                     id: 'action-delete-work',
@@ -29,7 +28,7 @@
       </li>
     <% end %>
 
-    <li role="menuitem" tabindex="-1">
+    <li class="dropdown-item" role="menuitem" tabindex="-1">
       <%= display_trophy_link(current_user, document.id) do |text| %>
         <%= text %>
       <% end %>
