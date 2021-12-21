@@ -7,43 +7,43 @@
                   <p><%= t('.page_description') %></p>
                   <h3><%= t('.release.title') %></h3>
                   <p><%= t('.release.description') %></p>
-                  <div id="release-no-delay" class="radio">
-                    <label>
-                      <%= f.radio_button :release_period, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY %>
+                  <div id="release-no-delay" class="form-check">
+                    <label class="form-check-label">
+                      <%= f.radio_button :release_period, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_NO_DELAY, class: 'form-check-input' %>
                       <%= t('.release.no_delay') %>
                     </label>
                   </div>
-                  <div id="release-varies" class="radio">
-                    <label>
-                      <%= f.radio_button :release_period, '', checked: f.object.release_period.blank? || !f.object.release_varies.blank? %>
+                  <div id="release-varies" class="form-check">
+                    <label class="form-check-label">
+                      <%= f.radio_button :release_period, '', checked: f.object.release_period.blank? || !f.object.release_varies.blank?, class: 'form-check-input' %>
                       <%= t('.release.varies.description') %>
                     </label>
                     <ul>
-                      <li class="radio form-inline">
-                        <label>
-                          <%= f.radio_button :release_varies, '' %>
+                      <li class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <%= f.radio_button :release_varies, '', class: 'form-check-input' %>
                           <%= t('.release.varies.any') %>
                         </label>
                       </li>
-                      <li class="radio form-inline">
-                        <label>
-                          <%= f.radio_button :release_varies, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE %>
+                      <li class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <%= f.radio_button :release_varies, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_BEFORE_DATE, class: 'form-check-input' %>
                           <%= t('.release.varies.between') %>
                         </label>
                         <%= f.date_field :release_date, wrapper: :inline, class: 'datepicker form-control', placeholder: 'mm/dd/yyyy' %>
                       </li>
-                      <li class="radio form-inline">
-                        <label>
-                          <%= f.radio_button :release_varies, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO %>
+                      <li class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <%= f.radio_button :release_varies, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_EMBARGO, class: 'form-check-input' %>
                           <%= t('.release.varies.period') %>
                           <%= f.collection_select :release_embargo, f.object.embargo_options, :first, :last, prompt: t('.release.varies.embargo.select') %>
                         </label>
                       </li>
                     </ul>
                   </div>
-                  <div id="release-fixed" class="radio form-inline">
-                    <label>
-                      <%= f.radio_button :release_period, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED %>
+                  <div id="release-fixed" class="form-check form-check-inline">
+                    <label class="form-check-label">
+                      <%= f.radio_button :release_period, Hyrax::PermissionTemplate::RELEASE_TEXT_VALUE_FIXED, class: 'form-check-input' %>
                       <%= t('.release.fixed') %>
                     </label>
                     <%= f.date_field :release_date, wrapper: :inline, class: 'datepicker form-control', placeholder: 'mm/dd/yyyy' %>
@@ -51,9 +51,9 @@
                   <h3><%= t('.visibility.title') %></h3>
                   <p><%= t('.visibility.description') %></p>
                   <%# List each option in a <div class='radio'> tag %>
-                  <%= f.collection_radio_buttons :visibility, f.object.visibility_options, :first, :last, item_wrapper_tag: :div, item_wrapper_class: 'radio' do |b| %>
+                  <%= f.collection_radio_buttons :visibility, f.object.visibility_options, :first, :last, item_wrapper_tag: :div, item_wrapper_class: 'form-check' do |b| %>
                     <%# NOTE: Bug in simple_form causes nested labels: https://github.com/plataformatec/simple_form/issues/1190 This block is a workaround. %>
-                    <% b.radio_button + b.text %>
+                    <% b.label(class: 'form-check-label') { b.radio_button(class: 'form-check-input') + b.text } %>
                   <% end %>
                 </div>
                 <div class="card-footer">
