@@ -35,8 +35,8 @@
           <% else %>
             <%= f.submit t('.lease_apply'), class: 'btn btn-primary' %>
           <% end %>
-          <%= link_to t('.lease_cancel'), leases_path, class: 'btn btn-default' %>
-          <%= link_to t('.lease_return', cc: cc_type), edit_polymorphic_path([main_app, curation_concern]), class: 'btn btn-default' %>
+          <%= link_to t('.lease_cancel'), leases_path, class: 'btn btn-secondary' %>
+          <%= link_to t('.lease_return', cc: cc_type), edit_polymorphic_path([main_app, curation_concern]), class: 'btn btn-secondary' %>
         </div>
       </div>
     <% end %>
