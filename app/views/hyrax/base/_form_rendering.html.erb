@@ -5,7 +5,7 @@
         <%= t("hyrax.base.form_rendering.legend_html") %>
       </legend>
       <div class="form-group">
-        <span class="help-block"><%= t("hyrax.base.form_rendering.help_html") %></span>
+        <span class="form-text"><%= t("hyrax.base.form_rendering.help_html") %></span>
         <%= f.select :rendering_ids,
                     form_file_set_select_for(parent: f.object),
                     { include_blank: true },
