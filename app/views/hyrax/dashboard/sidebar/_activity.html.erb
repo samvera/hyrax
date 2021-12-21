@@ -1,25 +1,26 @@
-  <li class="h5"><%= t('hyrax.admin.sidebar.activity') %></li>
+  <li class="h5 nav-item"><%= t('hyrax.admin.sidebar.activity') %></li>
 
-  <li>
+  <li class="nav-item">
     <%= menu.collapsable_section t('hyrax.admin.sidebar.user_activity'),
                                  icon_class: "fa fa-line-chart",
                                  id: 'collapseUserActivity',
                                  open: menu.user_activity_section? do %>
       <%= menu.nav_link(hyrax.dashboard_profile_path(current_user),
+                        class: "nav-link",
                         also_active_for: hyrax.edit_dashboard_profile_path(current_user)) do %>
         <span class="fa fa-id-card" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.profile') %></span>
       <% end %>
 
-      <%= menu.nav_link(hyrax.notifications_path) do %>
+      <%= menu.nav_link(hyrax.notifications_path, class: "nav-link") do %>
         <span class="fa fa-bell" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.notifications') %></span>
       <% end %>
 
-      <%= menu.nav_link(hyrax.transfers_path) do %>
+      <%= menu.nav_link(hyrax.transfers_path, class: "nav-link") do %>
         <span class="fa fa-arrows-h" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.transfers') %></span>
       <% end %>
 
       <% if Flipflop.proxy_deposit? %>
-        <%= menu.nav_link(hyrax.depositors_path) do %>
+        <%= menu.nav_link(hyrax.depositors_path, class: "nav-link") do %>
           <span class="fa fa-users" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.dashboard.manage_proxies') %></span>
         <% end %>
       <% end %>
@@ -33,7 +34,7 @@
   <% end %>
 
   <% if current_ability.can_create_any_work? %>
-    <li>
+    <li class="nav-item">
       <%= menu.collapsable_section t('hyrax.admin.sidebar.analytics'),
                                         icon_class: "fa fa-pie-chart",
                                         id: 'collapseAnalytics',

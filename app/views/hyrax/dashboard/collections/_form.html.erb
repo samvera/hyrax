@@ -1,23 +1,23 @@
 <%= render "shared/nav_safety_modal" %>
 <div class="card tabs" id="collection-edit-controls">
   <ul class="nav nav-tabs" role="tablist">
-    <li class="active">
-      <a href="#description" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.description') %></a>
+    <li class="nav-item active">
+      <a href="#description" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('.tabs.description') %></a>
     </li>
     <% if @form.persisted? %>
       <% if collection_brandable?(collection: @collection) %>
-      <li>
-        <a href="#branding" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.branding') %></a>
+      <li class="nav-item">
+        <a href="#branding" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('.tabs.branding') %></a>
       </li>
       <% end %>
       <% if collection_discoverable?(collection: @collection) %>
-      <li>
-        <a href="#discovery" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.discovery') %></a>
+      <li class="nav-item">
+        <a href="#discovery" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('.tabs.discovery') %></a>
       </li>
       <% end %>
       <% if collection_sharable?(collection: @collection) %>
-      <li>
-        <a href="#sharing" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.sharing') %></a>
+      <li class="nav-item">
+        <a href="#sharing" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('.tabs.sharing') %></a>
       </li>
       <% end %>
     <% end %>
