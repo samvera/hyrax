@@ -1,18 +1,18 @@
     <%= render 'shared/nav_safety_modal' %>
     <div class="card tabs" id="admin-set-controls">
       <ul class="nav nav-tabs" role="tablist">
-        <li class="active">
-          <a href="#description" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.description') %></a>
+        <li class="nav-item active">
+          <a href="#description" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('.tabs.description') %></a>
         </li>
         <% if @form.persisted? %>
-          <li>
-            <a href="#participants" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.participants') %></a>
+          <li class="nav-item">
+            <a href="#participants" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('.tabs.participants') %></a>
           </li>
-          <li>
-            <a href="#visibility" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.visibility') %></a>
+          <li class="nav-item">
+            <a href="#visibility" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('.tabs.visibility') %></a>
           </li>
-          <li>
-            <a href="#workflow" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.workflow') %></a>
+          <li class="nav-item">
+            <a href="#workflow" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('.tabs.workflow') %></a>
           </li>
         <% end %>
       </ul>
