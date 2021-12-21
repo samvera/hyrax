@@ -1,12 +1,12 @@
 <% provide :page_title, @presenter.page_title %>
 <div class="container-fluid">
   <div class="row">
-    <div class="col-xs-12 col-sm-4">
+    <div class="col-12 col-sm-4">
       <%= render media_display_partial(@presenter), file_set: @presenter %>
       <%= render 'show_actions', presenter: @presenter %>
       <%= render 'single_use_links', presenter: @presenter if @presenter.editor? %>
     </div>
-    <div itemscope itemtype="<%= @presenter.itemtype %>" class="col-xs-12 col-sm-8">
+    <div itemscope itemtype="<%= @presenter.itemtype %>" class="col-12 col-sm-8">
       <header>
         <%= render 'file_set_title', presenter: @presenter %>
       </header>

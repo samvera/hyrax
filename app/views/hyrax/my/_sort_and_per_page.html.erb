@@ -2,7 +2,7 @@
   <div class="sort-toggle">
       <%= form_tag search_action_for_dashboard, method: :get, class: 'per_page form-inline' do %>
         <div class="form-group">
-          <fieldset class="col-xs-12">
+          <fieldset class="col-12">
             <legend class="sr-only"><%= t('hyrax.dashboard.my.sr.results_per_page') %></legend>
             <%= label_tag :per_page do %>
                 Show <%= select_tag :per_page, options_for_select(Hyrax.config.range_for_number_of_results_to_display_per_page.map(&:to_s), h(params[:per_page])),
