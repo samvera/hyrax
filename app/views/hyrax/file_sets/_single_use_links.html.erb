@@ -1,5 +1,5 @@
 <h3><%= t('hyrax.single_use_links.title') %></h3>
-<table class="table table-striped table-condensed <%= dom_class(presenter) %> single-use-links">
+<table class="table table-striped table-sm <%= dom_class(presenter) %> single-use-links">
   <tbody data-url="<%= hyrax.generated_single_use_links_path(presenter) %>">
     <% if presenter.single_use_links.empty? %>
       <tr><td><%= t('hyrax.single_use_links.table.no_links') %></td></tr>
