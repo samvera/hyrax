@@ -5,7 +5,7 @@
                                                          time: presenter.human_readable_expiration) %>
     </td>
     <td>
-      <button class="btn btn-xs btn-secondary copy-single-use-link"
+      <button class="btn btn-sm btn-secondary copy-single-use-link"
               data-clipboard-text="<%= hyrax.send(presenter.url_helper, presenter.download_key) %>"
               data-toggle="tooltip" data-placement="bottom"
               title="<%= t('hyrax.single_use_links.copy.tooltip') %>">
@@ -13,7 +13,7 @@
       </button>
       <%= link_to t('hyrax.single_use_links.delete'),
                   hyrax.delete_single_use_link_path(params[:id], presenter),
-                  class: 'btn btn-xs btn-danger delete-single-use-link' %>
+                  class: 'btn btn-sm btn-danger delete-single-use-link' %>
     </td>
   </tr>
 <% end %>

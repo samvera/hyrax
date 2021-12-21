@@ -13,7 +13,7 @@
         <%= link_to document.title_or_label, [hyrax, :dashboard, document], id: "src_copy_link_#{document.id}" %>
       </div>
       <% if can? :edit, id %>
-      <button class="btn btn-xs btn-danger remove-subcollection-button"><%= t('hyrax.collections.show.buttons.remove_this_sub_collection') %></button>
+      <button class="btn btn-sm btn-danger remove-subcollection-button"><%= t('hyrax.collections.show.buttons.remove_this_sub_collection') %></button>
       <% end %>
     </div>
   </li>
