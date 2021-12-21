@@ -1,8 +1,8 @@
 <ul class="nav nav-tabs" id="my_nav" role="list">
-  <li<%= ' class="active"'.html_safe if current_page?(hyrax.dashboard_works_path(locale: nil)) %>>
-    <%= link_to t("hyrax.dashboard.#{current_ability.admin? ? 'all' : 'managed'}.works"), hyrax.dashboard_works_path %>
+  <li<%= ' class="nav-item active"'.html_safe if current_page?(hyrax.dashboard_works_path(locale: nil)) %>>
+    <%= link_to t("hyrax.dashboard.#{current_ability.admin? ? 'all' : 'managed'}.works"), hyrax.dashboard_works_path, class: "nav-link" %>
   </li>
-  <li<%= ' class="active"'.html_safe if current_page?(hyrax.my_works_path(locale: nil)) %>>
-    <%= link_to t('hyrax.dashboard.my.your_works'), hyrax.my_works_path %>
+  <li<%= ' class="nav-item active"'.html_safe if current_page?(hyrax.my_works_path(locale: nil)) %>>
+    <%= link_to t('hyrax.dashboard.my.your_works'), hyrax.my_works_path, class: "nav-link" %>
   </li>
 </ul>
