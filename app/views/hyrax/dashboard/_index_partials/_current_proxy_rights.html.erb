@@ -1,6 +1,6 @@
 <div class="row proxy-rights">
   <div class="col-xs-6">
-    <table class="table table-condensed table-striped" id="authorizedProxies">
+    <table class="table table-sm table-striped" id="authorizedProxies">
       <tbody>
       <% if user.can_receive_deposits_from.count == 0 %>
         <%= t('hyrax.dashboard.no_proxies') %>
