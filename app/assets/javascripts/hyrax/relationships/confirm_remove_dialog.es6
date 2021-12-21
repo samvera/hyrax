@@ -25,7 +25,7 @@ export default class ConfirmRemoveDialog {
               <div class="modal-content">
               <div class="modal-body">${this.text}</div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">${this.cancel}</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">${this.cancel}</button>
                 <button type="button" class="btn btn-danger" data-behavior="submit">${this.remove}</button>
               </div>
               </div>
