@@ -2,7 +2,6 @@
   <legend class="sr-only"><%= facet_field_label(facet_field.field) %></legend>
   <button class="btn btn-secondary dropdown-toggle" type="button" id="<%= facet_field.field.parameterize %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" aria-controls="<%= facet_field.field.parameterize + '-dropdown-options' %>">
     <%= facet_field_label(facet_field.field) %>
-    <span class="caret"></span>
   </button>
   <%= yield %>
 </fieldset>
