@@ -4,12 +4,12 @@
     <% end %>
     <div class="btn-group">
       <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <%= t('.header') %> <span class="caret"></span>
+        <%= t('.header') %>
       </button>
       <ul class="dropdown-menu">
-        <li><%= link_to t('.endnote'), polymorphic_path([main_app, presenter], format: 'endnote') %></li>
-        <li><%= link_to t('.zotero'), hyrax.zotero_path, id: 'zoteroLink', name: 'zotero' %></li>
-        <li><%= link_to t('.mendeley'), hyrax.mendeley_path, id: 'mendeleyLink', name: 'mendeley' %></li>
+        <li class="dropdown-item"><%= link_to t('.endnote'), polymorphic_path([main_app, presenter], format: 'endnote') %></li>
+        <li class="dropdown-item"><%= link_to t('.zotero'), hyrax.zotero_path, id: 'zoteroLink', name: 'zotero' %></li>
+        <li class="dropdown-item"><%= link_to t('.mendeley'), hyrax.mendeley_path, id: 'mendeleyLink', name: 'mendeley' %></li>
       </ul>
     </div>
 </div>
