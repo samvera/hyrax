@@ -4,10 +4,10 @@
 <div class="btn-group">
   <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" type="button" id="dropdownMenu_<%= id %>" aria-haspopup="true" aria-expanded="false" aria-controls="<%= ul_id %>">
     <span class="sr-only"><%= t("hyrax.dashboard.my.sr.press_to") %> </span>
-    <%= t("hyrax.dashboard.my.action.select") %> <span class="caret" aria-hidden="true"></span>
+    <%= t("hyrax.dashboard.my.action.select") %>
   </button>
   <ul role="menu" id="<%= ul_id %>" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu_<%= id %>">
-    <li role="menuitem" tabindex="-1">
+    <li class="dropdown-item" role="menuitem" tabindex="-1">
       <%= link_to hyrax.dashboard_collection_path(id),
                   class: 'itemicon itemedit',
                   title: t("hyrax.dashboard.my.action.view_collection") do %>
@@ -15,7 +15,7 @@
       <% end %>
     </li>
     <% if can? :edit, collection_presenter.solr_document %>
-      <li role="menuitem" tabindex="-1">
+      <li class="dropdown-item" role="menuitem" tabindex="-1">
         <%= link_to hyrax.edit_dashboard_collection_path(id),
                     class: 'itemicon itemedit',
                     title: t("hyrax.dashboard.my.action.edit_collection")  do %>
@@ -23,7 +23,7 @@
         <% end %>
       </li>
     <% else %>
-      <li role="menuitem" tabindex="-1">
+      <li class="dropdown-item" role="menuitem" tabindex="-1">
         <%= link_to "#",
                     class: 'itemicon itemedit edit-collection-deny-button',
                     title: t("hyrax.dashboard.my.action.edit_collection") do %>
@@ -31,7 +31,7 @@
         <% end %>
       </li>
     <% end %>
-    <li role="menuitem" tabindex="-1">
+    <li class="dropdown-item" role="menuitem" tabindex="-1">
       <%= link_to "#",
                   class: 'itemicon itemtrash delete-collection-button',
                   title: t("hyrax.dashboard.my.action.delete_collection"),
@@ -44,7 +44,7 @@
 
     <% if collection_presenter.collection_type_is_nestable? %>
       <% # The user should have deposit access to the parent we are adding, and read access to the child (the collection we are linking here). %>
-      <li role="menuitem" tabindex="-1">
+      <li class="dropdown-item" role="menuitem" tabindex="-1">
         <%= link_to "#",
                     class: 'itemicon add-to-collection',
                     title: t("hyrax.dashboard.my.action.add_to_collection"),
