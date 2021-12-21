@@ -25,12 +25,12 @@
                                   html: { id: "form_#{term.to_s}",
                                           class: "ajax-form" },
                                   data: { model: @form.model_name.param_key } do |f| %>
-                <div class="col-xs-12 col-sm-4">
+                <div class="col-12 col-sm-4">
                   <a class="accordion-toggle grey glyphicon-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_<%= term %>" id="expand_link_<%=term.to_s%>">
                     <%= f.input_label term %> <span class="chevron"></span>
                   </a>
                 </div>
-                <div id="collapse_<%= term %>" class="collapse scrolly col-xs-12 col-sm-7">
+                <div id="collapse_<%= term %>" class="collapse scrolly col-12 col-sm-7">
                   <%= hidden_field_tag('update_type', 'update') %>
                   <%= hidden_field_tag('key', term.to_s) %>
                   <%# TODO we don't need to show required %>
@@ -58,12 +58,12 @@
                                 builder: Hyrax::FormBuilder,
                                 html: { id: "form_permissions_visibility", class: "ajax-form"},
                                 data: { 'param-key' => @form.model_name.param_key } do |f| %>
-              <div class="col-xs-12 col-sm-4">
+              <div class="col-12 col-sm-4">
                 <a class="accordion-toggle grey glyphicon-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_permissions_visibility" id="expand_link_permissions_visibility">
                   <%= f.input_label t(".visibility") %> <span class="chevron"></span>
                 </a>
               </div>
-              <div id="collapse_permissions_visibility" class="collapse scrolly col-xs-12 col-sm-7">
+              <div id="collapse_permissions_visibility" class="collapse scrolly col-12 col-sm-7">
                 <%= hidden_field_tag('update_type', 'update') %>
                 <%= hidden_field_tag('key', 'permissions') %>
                 <%= render "hyrax/base/form_permission", f: f %>
@@ -88,12 +88,12 @@
                                 builder: Hyrax::FormBuilder,
                                 html: { id: "form_permissions", class: "ajax-form"},
                                 data: { 'param-key' => @form.model_name.param_key } do |f| %>
-              <div class="col-xs-12 col-sm-4">
+              <div class="col-12 col-sm-4">
                 <a class="accordion-toggle grey glyphicon-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_permissions_sharing" id="expand_link_permissions_sharing">
                   <%= f.input_label t(".sharing") %> <span class="chevron"></span>
                 </a>
               </div>
-              <div id="collapse_permissions_sharing" class="collapse scrolly col-xs-12 col-sm-7">
+              <div id="collapse_permissions_sharing" class="collapse scrolly col-12 col-sm-7">
                 <%= hidden_field_tag('update_type', 'update') %>
                 <%= hidden_field_tag('key', 'permissions') %>
                 <%= render "hyrax/base/form_share", f: f %>
