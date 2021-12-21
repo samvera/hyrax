@@ -3,7 +3,7 @@
 <% end %>
 
   <% display_facet.items.each do |item| -%>
-    <li>
+    <li class="dropdown-item">
       <span class="facet-values">
         <% # This prevents model Collection from being shown as a second filter along with the collection type. %>
         <% item.fq= {} if subfacet %>

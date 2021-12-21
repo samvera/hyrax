@@ -12,24 +12,23 @@
     <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" type="button" id="dropdownMenu_<%= file_set.id %>" aria-haspopup="true" aria-expanded="false">
       <span class="sr-only"><%= t('.press_to') %> </span>
       <%= t('.header') %>
-      <span class="caret" aria-hidden="true"></span>
     </button>
 
     <ul role="menu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu_<%= file_set.id %>">
     <% if can?(:edit, file_set.id) %>
-      <li role="menuitem" tabindex="-1">
+      <li class="dropdown-item" role="menuitem" tabindex="-1">
         <%= link_to t('.edit'), edit_polymorphic_path([main_app, file_set]),
           { title: t('.edit_title', file_set: file_set) } %>
       </li>
 
-      <li role="menuitem" tabindex="-1">
+      <li class="dropdown-item" role="menuitem" tabindex="-1">
         <%= link_to t('.versions'),  edit_polymorphic_path([main_app, file_set], anchor: 'versioning_display'),
           { title: t('.versions_title') } %>
       </li>
     <% end %>
 
     <% if can?(:destroy, file_set.id) %>
-      <li role="menuitem" tabindex="-1">
+      <li class="dropdown-item" role="menuitem" tabindex="-1">
         <%= link_to t('.delete'), polymorphic_path([main_app, file_set]),
           method: :delete, title: t('.delete_title', file_set: file_set),
           data: { confirm: t('.delete_confirm', file_set: file_set, application_name: application_name) } %>
@@ -37,7 +36,7 @@
     <% end %>
 
     <% if can?(:download, file_set.id) %>
-      <li role="menuitem" tabindex="-1">
+      <li class="dropdown-item" role="menuitem" tabindex="-1">
         <%= link_to t('.download'),
                     hyrax.download_path(file_set),
                     title: t('.download_title', file_set: file_set),

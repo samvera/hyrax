@@ -33,10 +33,10 @@
       <% if presenter.valid_child_concerns.length > 0 %>
         <div class="btn-group">
           <button type="button" class="btn btn-secondary dropdown-toggle" type="button" id="dropdown-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <%= t('.attach_child') %> <span class="caret"></span></button>
+            <%= t('.attach_child') %>
             <ul class="dropdown-menu">
               <% presenter.valid_child_concerns.each do |concern| %>
-                <li>
+                <li class="dropdown-item">
                   <%= link_to "Attach #{concern.human_readable_type}", polymorphic_path([main_app, :new, :hyrax, :parent, concern.model_name.singular.to_sym], parent_id: presenter.id) %>
                 </li>
               <% end %>
