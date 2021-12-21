@@ -16,7 +16,7 @@
 
     <div class="col-xs-6">
       <h2><%= t("hyrax.dashboard.current_proxies") %></h2>
-      <table class="table table-condensed table-striped" id="authorizedProxies">
+      <table class="table table-sm table-striped" id="authorizedProxies">
         <tbody>
         <% user.can_receive_deposits_from.each do |depositor| %>
             <tr><td class="depositor-name"><%= depositor.name %></td>
