@@ -20,19 +20,19 @@
               <div class="row text-center">
                 <div class="nav nav-pills btn-group" role="group">
                     <% if params[:start_date] %>
-                     <a button id='summary-btn' class="btn btn-default nav-link" type="button" href="#summary" data-toggle="pill">
+                     <a button id='summary-btn' class="btn btn-secondary nav-link" type="button" href="#summary" data-toggle="pill">
                     <% else %>
                      <a button id='summary-btn' class="btn btn-primary nav-link" type="button" href="#summary" data-toggle="pill">
                     <% end %>
                         <%= t('.summary') %>
                      </a>
-                      <a button id='monthly-btn' class="btn btn-default nav-link" type="button" href="#monthly" data-toggle="pill">
+                      <a button id='monthly-btn' class="btn btn-secondary nav-link" type="button" href="#monthly" data-toggle="pill">
                         <%= t('.monthly') %>
                       </a>
                     <% if params[:start_date] %>
                       <a button id='range-btn' class="btn btn-primary nav-link" type="button" href="#custom-range" data-toggle="pill">
                     <% else %>
-                      <a button id='range-btn' class="btn btn-default nav-link" type="button" href="#custom-range" data-toggle="pill">
+                      <a button id='range-btn' class="btn btn-secondary nav-link" type="button" href="#custom-range" data-toggle="pill">
                     <% end %>
                         <%= t('.custom_range') %>
                       </a>

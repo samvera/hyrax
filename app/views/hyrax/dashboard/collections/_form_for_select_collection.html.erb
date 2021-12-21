@@ -31,7 +31,7 @@
           <% end %> <!-- else -->
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("hyrax.collection.select_form.close") %></button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= t("hyrax.collection.select_form.close") %></button>
           <% if user_collections.blank? %>
               <% # TODO: Uncomment the following line when errors with adding works to a new collection are resolved.  See Issue hyrax#3088 %>
               <% # = render 'hyrax/dashboard/collections/button_create_collection', label: t("hyrax.collection.select_form.create") %>

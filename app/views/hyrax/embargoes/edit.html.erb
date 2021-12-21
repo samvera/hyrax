@@ -35,8 +35,8 @@
           <% else %>
             <%= f.submit t('.embargo_apply'), class: 'btn btn-primary' %>
           <% end %>
-          <%= link_to t('.embargo_cancel'), embargoes_path, class: 'btn btn-default' %>
-          <%= link_to t('.embargo_return', cc: cc_type), edit_polymorphic_path([main_app, curation_concern]), class: 'btn btn-default' %>
+          <%= link_to t('.embargo_cancel'), embargoes_path, class: 'btn btn-secondary' %>
+          <%= link_to t('.embargo_return', cc: cc_type), edit_polymorphic_path([main_app, curation_concern]), class: 'btn btn-secondary' %>
         </div>
       </div>
     <% end %>

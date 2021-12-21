@@ -22,7 +22,7 @@
     <label for="new_group_permission_skel" class="sr-only"><%= t(".access_type_to_grant") %></label>
     <%= select_tag 'new_group_permission_skel', options_for_select(configured_permission_options), class: 'form-control' %>
 
-    <button class="btn btn-default" id="add_new_group_skel">
+    <button class="btn btn-secondary" id="add_new_group_skel">
       <span><%= t(".add_this_group_html") %></span>
     </button>
     <br /><span id="directory_group_result"></span>
@@ -38,7 +38,7 @@
     <%= text_field_tag 'new_user_name_skel', nil %>
     <label for="new_user_permission_skel" class="sr-only"><%= t('.access_type_to_grant') %></label>
     <%= select_tag 'new_user_permission_skel', options_for_select(configured_permission_options), class: 'form-control' %>
-    <button class="btn btn-default" id="add_new_user_skel">
+    <button class="btn btn-secondary" id="add_new_user_skel">
       <span>Add<span class="sr-only"> this <%= t('hyrax.account_label') %></span></span>
     </button>
     <br /> <span id="directory_user_result"></span>
