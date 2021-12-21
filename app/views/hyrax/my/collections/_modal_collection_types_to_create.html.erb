@@ -10,9 +10,9 @@
 
         <div class="modal-body">
           <% @collection_type_list_presenter.each do |row_presenter| %>
-            <div class="radio radio-button-list">
-              <label>
-                <input type="radio" name="collection_type" value="<%= row_presenter.title.gsub(/\s+/, '') %>"
+            <div class="form-check radio-button-list">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio" name="collection_type" value="<%= row_presenter.title.gsub(/\s+/, '') %>"
                 <% if row_presenter.admin_set? %>
                   data-path="<%= new_admin_admin_set_path %>"
                 <% else %>
