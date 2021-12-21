@@ -10,8 +10,8 @@
 
   <% if show_sort_and_per_page? && collection_member_sort_fields.many? %>
     <div class="sort-toggle">
-      <%= form_tag dashboard_collection_path(collection), method: :get, class: 'per_page form-horizontal' do %>
-         <div class="form-group form-control-lg">
+      <%= form_tag dashboard_collection_path(collection), method: :get, class: 'per_page' do %>
+         <div class="form-group row form-control-lg">
            <fieldset class="col-sm-9">
              <legend class="sr-only"><%= t('hyrax.sort_label') %></legend>
              <%= label_tag(:sort, t(".sort_by")) %>

@@ -1,7 +1,7 @@
 <%= form_for @user,
              url: hyrax.dashboard_profile_path(@user.to_param),
-             html: { multipart: true, class: 'form-horizontal' } do |f| %>
-  <div class="form-group">
+             html: { multipart: true } do |f| %>
+  <div class="form-group row">
     <%= f.label :avatar, t(".change_picture").html_safe, class: "col-xs-4 col-form-label" %>
     <div class="col-xs-8">
       <%= image_tag @user.avatar.url(:thumb) if @user.avatar? %>
@@ -23,7 +23,7 @@
     <%= render partial: 'zotero', locals: { f: f, user: @user } %>
   <% end %>
 
-  <div class="form-group">
+  <div class="form-group row">
     <%= f.label :orcid, class: 'col-xs-4 col-form-label' do %>
       <%= orcid_label %>
     <% end %>
@@ -32,21 +32,21 @@
     </div>
   </div><!-- .form-group -->
 
-  <div class="form-group">
+  <div class="form-group row">
     <%= f.label :twitter_handle, t(".twitter_handle").html_safe, class: 'col-xs-4 col-form-label' %>
     <div class="col-xs-8">
        <%= f.text_field :twitter_handle, class: "form-control" %>
     </div>
   </div><!-- .form-group -->
 
-  <div class="form-group">
+  <div class="form-group row">
     <%= f.label :facebook_handle, t(".facebook_handle").html_safe, class: 'col-xs-4 col-form-label' %>
     <div class="col-xs-8">
        <%= f.text_field :facebook_handle, class: "form-control" %>
     </div>
   </div><!-- .form-group -->
 
-  <div class="form-group">
+  <div class="form-group row">
     <%= f.label :googleplus_handle, t(".google_handle").html_safe, class: 'col-xs-4 col-form-label' %>
     <div class="col-xs-8">
        <%= f.text_field :googleplus_handle, class: "form-control" %>

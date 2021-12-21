@@ -16,32 +16,31 @@
   <% em = '' %>
 <% end %>
 
-<%= form_for @contact_form, url: hyrax.contact_form_index_path,
-                            html: { class: 'form-horizontal' } do |f| %>
+<%= form_for @contact_form, url: hyrax.contact_form_index_path do |f| %>
   <%= f.text_field :contact_method, class: 'hide' %>
-  <div class="form-group">
+  <div class="form-group row">
     <%= f.label :category, t('hyrax.contact_form.type_label'), class: "col-sm-2 col-form-label" %>
     <div class="col-sm-10">
       <%= f.select 'category', options_for_select(contact_form_issue_type_options), { include_blank: t('hyrax.contact_form.select_type') }, {class: 'form-control', required: true } %>
     </div>
   </div>
 
-  <div class="form-group">
+  <div class="form-group row">
     <%= f.label :name, t('hyrax.contact_form.name_label'), class: "col-sm-2 col-form-label" %>
     <div class="col-sm-10"><%= f.text_field :name, value: nm, class: 'form-control', required: true %></div>
   </div>
 
-  <div class="form-group">
+  <div class="form-group row">
     <%= f.label :email, t('hyrax.contact_form.email_label'), class: "col-sm-2 col-form-label" %>
     <div class="col-sm-10"><%= f.text_field :email, value: em, class: 'form-control', required: true %></div>
   </div>
 
-  <div class="form-group">
+  <div class="form-group row">
     <%= f.label :subject, t('hyrax.contact_form.subject_label'), class: "col-sm-2 col-form-label" %>
     <div class="col-sm-10"><%= f.text_field :subject, class: 'form-control', required: true %></div>
   </div>
 
-  <div class="form-group">
+  <div class="form-group row">
     <%= f.label :message, t('hyrax.contact_form.message_label'), class: "col-sm-2 col-form-label" %>
     <div class="col-sm-10"><%= f.text_area :message, rows: 4, class: 'form-control', required: true %></div>
   </div>
