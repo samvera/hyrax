@@ -3,7 +3,7 @@
   </button>
   <ul class="dropdown-menu dropdown-menu-right">
     <% if can?( :edit, document ) && !workflow_restriction?(@presenter) %>
-      <li>
+      <li class="dropdown-item">
         <%= link_to [main_app, :edit, document],
                     class: "itemicon itemedit",
                     title: t('hyrax.collection.document_list.edit'),
@@ -12,7 +12,7 @@
         <% end %>
       </li>
     <% end %>
-    <li>
+    <li class="dropdown-item">
       <%= display_trophy_link(current_user, document.id) do |text| %>
         <i class="glyphicon glyphicon-star" aria-hidden="true"></i> <%= text %>
       <% end %>

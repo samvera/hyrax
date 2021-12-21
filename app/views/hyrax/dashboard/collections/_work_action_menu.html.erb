@@ -3,35 +3,35 @@
   <button class="btn btn-sm dropdown-toggle" data-toggle="dropdown" type="button" id="dropdownMenu_<%= document.id %>" aria-haspopup="true">
     <span class="sr-only"><%= t('.press_to') %> </span>
     <%= t('.select_an_action') %>
-    <span class="caret" aria-hidden="true"></span>
   </button>
 
   <ul role="menu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu_<%= document.id %>">
 
-    <li role="menuitem" tabindex="-1">
+    <li class="dropdown-item" role="menuitem" tabindex="-1">
       <%= button_for_remove_from_collection(@collection, document, label: t('.remove_from_collection')) %>
     </li>
 
-    <li role="menuitem" tabindex="-1">
+    <li class="dropdown-item" role="menuitem" tabindex="-1">
       <%= link_to [main_app, :edit, document] do %>
         <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
         <span> <%= t('.edit_work') %> </span>
       <% end %>
     </li>
 
-    <li role="menuitem" tabindex="-1">
+    <li class="dropdown-item" role="menuitem" tabindex="-1">
       <%= link_to [main_app, document], method: :delete, data: { confirm: t(".deleting_from_work", application_name: application_name) } do %>
         <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
         <span><%= t('.delete_work') %></span>
       <% end %>
     </li>
 
-    <li role="menuitem" tabindex="-1">
+    <li class="dropdown-item" role="menuitem" tabindex="-1">
       <%= display_trophy_link @user, document.id do |text| %>
         <i class="glyphicon glyphicon-star" aria-hidden="true"></i> <%= text %>
       <% end %>
     </li>
-    <li role="menuitem" tabindex="-1">
+
+    <li class="dropdown-item" role="menuitem" tabindex="-1">
       <%= link_to(hyrax.new_work_transfer_path(document.id), class: 'itemicon itemtransfer', title: t('.transfer_ownership_of_work')) do %>
         <i aria-hidden="true" class="glyphicon glyphicon-transfer"></i>
         <span> <%=t('.transfer_ownership_of_work') %> </span>
