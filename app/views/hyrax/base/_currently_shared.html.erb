@@ -9,7 +9,7 @@
   </tr>
   <tr id="file_permissions">
     <td>
-      <%= label_tag :owner_access, class: "control-label" do %>
+      <%= label_tag :owner_access, class: "col-form-label" do %>
         Depositor (<span id="file_owner" data-depositor="<%= permission_service.depositor %>"><%= link_to_profile permission_service.depositor %></span>)
       <% end %>
     </td>
@@ -23,7 +23,7 @@
     <% permission_service.with_applicable_permission(permission_hash: permission_fields.object.to_hash) do |permission| %>
     <tr>
       <td>
-        <%= permission_fields.label :agent_name, class: "control-label" do %>
+        <%= permission_fields.label :agent_name, class: "col-form-label" do %>
           <%= user_display_name_and_key(permission.name) %>
           <%= permission.granted_by_html_hint %>
         <% end %>

@@ -2,7 +2,7 @@
 
   <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:q, :search_field, :qt, :page, :utf8)) %>
   <div class="form-group">
-    <label class="control-label col-sm-3" for="search-field-header">
+    <label class="col-form-label col-sm-3" for="search-field-header">
       <%= t("hyrax.search.form.q.label", application_name: application_name) %>
     </label>
 

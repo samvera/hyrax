@@ -11,7 +11,7 @@
   <div class="panel-body">
     <%= simple_form_for [main_app, curation_concern] do |f| %>
       <fieldset class="set-access-controls">
-        <section class="help-block">
+        <section class="form-text">
           <p>
             <% if curation_concern.embargo_release_date %>
               <%= t('.embargo_true_html',  cc: cc_type) %>

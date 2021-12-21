@@ -84,11 +84,11 @@
           <div class="row">
             <div class="col-sm-12 form-horizontal">
               <div class="form-group">
-                <label for="title_{%=file.id%}" class="col-sm-5 control-label"><%= t('.display_label') %></label>
+                <label for="title_{%=file.id%}" class="col-sm-5 col-form-label"><%= t('.display_label') %></label>
                 <div class="col-sm-7 padding-bottom">
                   <input type="text" class="form-control" name="title[{%=file.id%}]" id="title_{%=file.id%}" value="{%=file.name%}">
                 </div>
-                <label for="resource_type_{%=file.id%}" class="col-sm-5 control-label">Resource Type</label>
+                <label for="resource_type_{%=file.id%}" class="col-sm-5 col-form-label">Resource Type</label>
                 <div class="col-sm-7 padding-bottom">
                   <select class="form-control resource_type_dropdown"
                           multiple="multiple"
