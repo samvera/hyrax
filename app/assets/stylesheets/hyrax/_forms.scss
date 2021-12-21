@@ -44,7 +44,7 @@ form {
 
   label { margin-bottom: 7px; }
 
-  .help-block {
+  .form-text {
     margin-top: 0;
     margin-bottom: 10px;
   }
@@ -87,14 +87,14 @@ form {
   }
 
   .form-inline {
-    .control-label, label {
+    .col-form-label, label {
       padding-left: 0;
       display: inline;
       &:after {
         content: ' ';
       }
     }
-    .help-block {
+    .form-text {
       display: inline;
       &:before {
         content: ' ';
@@ -114,7 +114,7 @@ form {
       }
     }
 
-    .control-label,
+    .col-form-label,
     label {
       display: inline;
       padding-left: 0;
@@ -124,7 +124,7 @@ form {
       }
     }
 
-    .help-block {
+    .form-text {
       display: inline;
 
       &::before {
@@ -134,7 +134,7 @@ form {
   }
 }
 
-.control-label.required {
+.col-form-label.required {
   abbr {
     font-weight: bold;
   }
