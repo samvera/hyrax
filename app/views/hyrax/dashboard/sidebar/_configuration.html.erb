@@ -1,28 +1,28 @@
   <% if menu.show_configuration? %>
-    <li class="h5"><%= t('hyrax.admin.sidebar.configuration') %></li>
-    <li>
+    <li class="h5 nav-item"><%= t('hyrax.admin.sidebar.configuration') %></li>
+    <li class="nav-item">
       <%= menu.collapsable_section t('hyrax.admin.sidebar.settings'),
                                    icon_class: "fa fa-cog",
                                    id: 'collapseSettings',
                                    open: menu.settings_section? do %>
         <% if can?(:update, :appearance) %>
-          <%= menu.nav_link(hyrax.admin_appearance_path) do %>
+          <%= menu.nav_link(hyrax.admin_appearance_path, class: "nav-link") do %>
             <span class="fa fa-paint-brush" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.appearance') %></span>
           <% end %>
         <% end %>
         <% if can?(:manage, :collection_types) %>
-          <%= menu.nav_link(hyrax.admin_collection_types_path) do %>
+          <%= menu.nav_link(hyrax.admin_collection_types_path, class: "nav-link") do %>
             <span class="fa fa-folder-open" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.collection_types') %></span>
           <% end %>
         <% end %>
         <% if can?(:manage, Hyrax::Feature) %>
-          <%= menu.nav_link(hyrax.edit_pages_path) do %>
+          <%= menu.nav_link(hyrax.edit_pages_path, class: "nav-link") do %>
             <span class="fa fa-file-text-o" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.pages') %></span>
           <% end %>
-          <%= menu.nav_link(hyrax.edit_content_blocks_path) do %>
+          <%= menu.nav_link(hyrax.edit_content_blocks_path, class: "nav-link") do %>
             <span class="fa fa-square-o" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.content_blocks') %></span>
           <% end %>
-          <%= menu.nav_link(hyrax.admin_features_path) do %>
+          <%= menu.nav_link(hyrax.admin_features_path, class: "nav-link") do %>
             <span class="fa fa-wrench" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.technical') %></span>
           <% end %>
         <% end %>
@@ -30,7 +30,7 @@
     </li>
 
     <% if can?(:manage, Sipity::WorkflowResponsibility) %>
-      <%= menu.nav_link(hyrax.admin_workflow_roles_path) do %>
+      <%= menu.nav_link(hyrax.admin_workflow_roles_path, class: "nav-link") do %>
         <span class="fa fa-users" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.workflow_roles') %></span>
       <% end %>
     <% end %>
