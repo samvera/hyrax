@@ -1,8 +1,8 @@
   <div class="form-group">
-    <%= f.label :zotero, class: 'col-xs-4 col-form-label' do %>
+    <%= f.label :zotero, class: 'col-4 col-form-label' do %>
       <%= zotero_label %>
     <% end %>
-    <div class="col-xs-8">
+    <div class="col-8">
     <% if user.zotero_userid.present? %>
        <%= link_to t('hyrax.user_profile.zotero.connected'), zotero_profile_url(user.zotero_userid), class: "form-control" %>
     <% else %>
