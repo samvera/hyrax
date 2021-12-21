@@ -84,7 +84,7 @@
                   <select class="form-control resource_type_dropdown" multiple="multiple" size="6" name="resource_type[{%=file.id%}][]" id="resource_type_{%=file.id%}" value="{%=file.name%}">
                     <%= options_for_select(Hyrax::ResourceTypesService.select_options) %>
                   </select>
-                  <button class="btn btn-default pull-right resource_type_button" onClick="setAllResourceTypes({%= file.id %}); return false;"><%= t('.set_all_to_this_resource_type') %></button>
+                  <button class="btn btn-secondary pull-right resource_type_button" onClick="setAllResourceTypes({%= file.id %}); return false;"><%= t('.set_all_to_this_resource_type') %></button>
                 </div>
               </div>
             </div>
