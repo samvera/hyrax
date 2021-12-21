@@ -22,7 +22,7 @@ module Hyrax
     # @param also_active_for [Hash, String] a hash or string with alternative paths that should be 'active'
     def nav_link(options, also_active_for: nil, **link_html_options)
       active_urls = [options, also_active_for].compact
-      list_options = active_urls.any? { |url| current_page?(url) } ? { class: 'active' } : {}
+      list_options = active_urls.any? { |url| current_page?(url) } ? { class: 'active nav-item' } : { class: 'nav-item' }
       tag.li(list_options) do
         link_to(options, link_html_options) do
           yield
