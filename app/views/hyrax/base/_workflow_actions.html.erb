@@ -10,9 +10,9 @@
         <h3><%= t('.actions') %></h3>
 
         <% presenter.workflow.actions.each do |key, label| %>
-          <div class="radio">
-            <label>
-              <%= radio_button_tag 'workflow_action[name]', key, key == 'comment_only' %>
+          <div class="form-check">
+            <label class="form-check-label">
+              <%= radio_button_tag 'workflow_action[name]', key, key == 'comment_only', class: 'form-check-input' %>
               <%= label %>
             </label>
           </div>
