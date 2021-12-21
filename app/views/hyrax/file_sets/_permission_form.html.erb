@@ -37,7 +37,7 @@
       <%= select_tag 'new_user_permission_skel', options_for_select(configured_permission_options), class: 'form-control' %>
     </div>
     <div class="col-sm-3">
-      <button class="btn btn-default" id="add_new_user_skel">
+      <button class="btn btn-secondary" id="add_new_user_skel">
         <span class="sr-only"><%= t('.add_new_user_skel', account_label: t('hyrax.account_label')) %></span>
         <span aria-hidden="true"><i class="glyphicon glyphicon-plus"></i></span>
       </button>
@@ -59,7 +59,7 @@
     </div>
     <div class="col-sm-3">
       <span class="sr-only"><%= t('.add_new_group_skel') %></span>
-      <button class="btn btn-default" id="add_new_group_skel"><i class="glyphicon glyphicon-plus"></i></button>
+      <button class="btn btn-secondary" id="add_new_group_skel"><i class="glyphicon glyphicon-plus"></i></button>
       <br /><span id="directory_group_result"></span>
     </div>
   </div>
