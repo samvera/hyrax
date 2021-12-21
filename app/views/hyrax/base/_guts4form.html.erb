@@ -6,18 +6,18 @@
       <ul class="nav nav-tabs" role="tablist">
         <% (tabs - ['share']).each_with_index do | tab, i | %>
           <% if i == 0 %>
-            <li role="presentation" class="active">
+            <li role="presentation" class="nav-item active">
           <% else %>
-            <li role="presentation">
+            <li role="presentation" class="nav-item">
           <% end %>
-              <a href="#<%= tab %>" aria-controls="<%= tab %>" role="tab" data-toggle="tab">
+              <a class="nav-link" href="#<%= tab %>" aria-controls="<%= tab %>" role="tab" data-toggle="tab">
                 <%= form_tab_label_for(form: f.object, tab: tab) %>
               </a>
             </li>
         <% end %>
 
-        <li role="presentation" id="tab-share" class="hidden">
-          <a href="#share" aria-controls="share" role="tab" data-toggle="tab">
+        <li role="presentation" id="tab-share" class="hidden nav-item">
+          <a class="nav-link" href="#share" aria-controls="share" role="tab" data-toggle="tab">
             <%= form_tab_label_for(form: f.object, tab: 'share') %>
           </a>
         </li>
