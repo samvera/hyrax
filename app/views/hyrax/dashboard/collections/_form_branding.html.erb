@@ -11,28 +11,28 @@
 
     <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
     <div class="row fileupload-buttonbar">
-      <div class="col-xs-4">
+      <div class="col-4">
         <!-- The fileinput-button span is used to style the file input field as button -->
         <span class="btn btn-success fileinput-button">
           <span class="glyphicon glyphicon-plus"></span>
           <span><%= t('.choose_file') %></span>
           <input type="file" name="files[]" single />
         </span>
-      </div> <!-- end col-xs-4 -->
+      </div> <!-- end col-4 -->
 
       <!-- The global progress state -->
-      <div class="col-xs-8 fileupload-progress branding-banner-progress fade">
+      <div class="col-8 fileupload-progress branding-banner-progress fade">
         <!-- The global progress bar -->
         <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
           <div class="progress-bar progress-bar-success" style="width:0%;"></div>
         </div>
         <!-- The extended global progress state -->
         <div class="progress-extended">&nbsp;</div>
-      </div> <!-- end col-xs-5 fileupload-progress fade -->
+      </div> <!-- end col-8 fileupload-progress fade -->
     </div> <!-- end row fileupload-buttonbar -->
 
     <div class="row branding-banner-list">
-      <div class="col-xs-12">
+      <div class="col-12">
         <div class="container">
         <% if f.object.banner_info[:file] %>
           <div id="banner">
@@ -88,28 +88,28 @@
 
     <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
     <div class="row fileupload-buttonbar">
-      <div class="col-xs-4">
+      <div class="col-4">
         <!-- The fileinput-button span is used to style the file input field as button -->
         <span class="btn btn-success fileinput-button">
           <span class="glyphicon glyphicon-plus"></span>
           <span><%= t('.choose_file') %></span>
           <input type="file" name="files[]" single />
         </span>
-      </div> <!-- end col-xs-4 -->
+      </div> <!-- end col-4 -->
 
       <!-- The global progress state -->
-      <div class="col-xs-8 fileupload-progress branding-logo-progress fade">
+      <div class="col-8 fileupload-progress branding-logo-progress fade">
         <!-- The global progress bar -->
         <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
           <div class="progress-bar progress-bar-success" style="width:0%;"></div>
         </div>
         <!-- The extended global progress state -->
         <div class="progress-extended">&nbsp;</div>
-      </div> <!-- end col-xs-8 fileupload-progress branding-logo-progress fade -->
+      </div> <!-- end col-8 fileupload-progress branding-logo-progress fade -->
     </div> <!-- end row fileupload-buttonbar -->
 
     <div class="row branding-logo-list">
-      <div class="col-xs-12">
+      <div class="col-12">
         <div class="container">
           <% i = 0 %>
           <% f.object.logo_info.each_with_index do |linfo, i| %>
@@ -147,7 +147,7 @@
 
         <!-- The global file processing state -->
         <span class="fileupload-process"></span>
-      </div> <!-- end col-xs-12 -->
+      </div> <!-- end col-12 -->
     </div> <!-- end row branding-logo-list -->
   </div> <!-- end fileuploadlogo -->
 </div> <!-- end set-access-controls -->
