@@ -1,6 +1,6 @@
 <%= simple_form_for [main_app, curation_concern], html: { multipart: true, class: 'nav-safety' } do |f| %>
   <fieldset class="required">
-    <span class="control-label">
+    <span class="col-form-label">
       <%= label_tag 'file_set[title][]', t('.title'),  class: "string optional" %>
     </span>
     <%= text_field_tag 'file_set[title][]', curation_concern.title.first, class: 'form-control', required: true %>
