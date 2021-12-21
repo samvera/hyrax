@@ -26,7 +26,7 @@
   </td>
   <% if current_user and can? :edit, @collection %>
     <td class="text-center">
-      <%= button_for_remove_from_collection @collection, document, label: "Remove", btn_class: "btn-danger btn-xs" %>
+      <%= button_for_remove_from_collection @collection, document, label: "Remove", btn_class: "btn-danger btn-sm" %>
     </td>
   <% end %>
 </tr>
