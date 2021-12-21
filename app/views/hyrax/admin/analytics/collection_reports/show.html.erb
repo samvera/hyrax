@@ -23,11 +23,11 @@
 
         <div class="panel-body">
           <div class="row">
-            <div class="col-xs-12 col-md-5">
+            <div class="col-12 col-md-5">
               <p><%= t('.created_by') %> <b><%= @document.depositor %></b> on <b><%= @document.create_date %></b></p>
               <p><%= t('.collection_type') %> <b><%= @document.collection_type_gid %></b></p>
             </div>
-            <div class="col-xs-12 col-md-5">
+            <div class="col-12 col-md-5">
               <p><%= t('.last_updated') %> <b><%= @document.modified_date.strftime("%B %d, %Y") %></b></p>
               <p><%= t('.visibility') %> <b><%= @document.read_groups.join(",") %></b></p>
             </div>
