@@ -2,7 +2,7 @@
 <div class="sidebar-toggle"><span class="fa fa-chevron-circle-right"></span></div>
 <nav aria-label="sidebar-nav">
   <ul class="nav nav-pills nav-stacked">
-    <li>
+    <li class="nav-item">
       <div class="profile">
         <div class="profile-image">
           <%= image_tag current_user.avatar.url(:thumb), width: 100 if current_user.avatar.present? %>
@@ -12,7 +12,7 @@
         </div>
       </div>
     </li>
-    <li><%= link_to hyrax.dashboard_path do %>
+    <li class="nav-item"><%= link_to hyrax.dashboard_path, class: "nav-link" do %>
           <span class="fa fa-home" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.dashboard') %></span>
         <% end %>
     </li>
