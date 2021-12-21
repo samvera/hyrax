@@ -98,7 +98,7 @@
                            value="{%=file.name%}">
                     <%= options_for_select(Hyrax::ResourceTypesService.select_options) %>
                   </select>
-                  <button class="btn btn-default pull-right resource_type_button"
+                  <button class="btn btn-secondary pull-right resource_type_button"
                           onClick="setAllResourceTypesVersioning({%= file.id %}); return false;">
                           <%= t('.set_all_to_this_resource_type') %>
                   </button>
