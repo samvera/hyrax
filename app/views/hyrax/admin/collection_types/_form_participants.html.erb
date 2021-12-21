@@ -11,7 +11,7 @@
                           html: { id: 'group-participants-form' },
                           as: :collection_type_participant do |f| %>
             <div class="form-inline add-participants-form">
-            <label class="col-md-2 col-xs-4 control-label"><%= t('.add_group') %>:</label>
+            <label class="col-md-2 col-xs-4 col-form-label"><%= t('.add_group') %>:</label>
 
             <div class="col-md-10 col-xs-8 form-group">
               <%= f.hidden_field :hyrax_collection_type_id, value: @collection_type_participant.hyrax_collection_type_id %>
@@ -38,7 +38,7 @@
                           html: { id: 'user-participants-form' },
                           as: :collection_type_participant do |f| %>
             <div class="form-inline add-participants-form">
-              <label class="col-md-2 col-xs-4 control-label"><%= t('.add_user') %>:</label>
+              <label class="col-md-2 col-xs-4 col-form-label"><%= t('.add_user') %>:</label>
 
               <div class="col-md-10 col-xs-8 form-group">
                 <%= f.hidden_field :hyrax_collection_type_id, value: @collection_type_participant.hyrax_collection_type_id %>
