@@ -29,9 +29,9 @@ legend small {
   padding-left:1.2em;
 }
 
-.form-group.has-error input,
-.form-group.has-error option,
-.form-group.has-error textarea {
+.form-group:invalid input,
+.form-group:invalid option,
+.form-group:invalid textarea {
   color:$gray-dark;
 }
 
