@@ -8,14 +8,14 @@
   <div class="col-sm-12">
     <div class="work-reports">
 
-    <div class="panel panel-default">
+    <div class="card">
     <% if Hyrax.config.analytics? %>
       <% if current_user.ability.admin? %>
-        <div class="panel-heading"><b><%= @works_count %> <%= t('.works') %></b> <%= t('.repo_summary') %> <b><%= @pageviews.all if @pageviews %> <%= t('.views') %></b> <%= t('.and') %> <b><%= @downloads.all if @downloads %> <%= t('.downloads') %></b>.</div>
+        <div class="card-header"><b><%= @works_count %> <%= t('.works') %></b> <%= t('.repo_summary') %> <b><%= @pageviews.all if @pageviews %> <%= t('.views') %></b> <%= t('.and') %> <b><%= @downloads.all if @downloads %> <%= t('.downloads') %></b>.</div>
       <% else %>
-        <div class="panel-heading"><%= t('.access_to') %> <b><%= @works_count %> <%= t('.works') %></b>.</div>
+        <div class="card-header"><%= t('.access_to') %> <b><%= @works_count %> <%= t('.works') %></b>.</div>
       <% end %>
-        <div class="panel-body">
+        <div class="card-body">
               <% if current_user.ability.admin? %>
               <div class="row text-center">
                 <div class="nav nav-pills btn-group" role="group">

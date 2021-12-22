@@ -1,5 +1,5 @@
-<div class="panel panel-default panel-user">
-  <div class="panel-heading">
+<div class="card panel-user">
+  <div class="card-header">
     <%= image_tag user.avatar.url(:thumb), width: 100 if user.avatar.present? %>
     <h3>
       <%= user.name %>
@@ -14,7 +14,7 @@
     </div>
   </div>
 
-  <div class="panel-footer clearfix">
+  <div class="card-footer clearfix">
     <% if can? :edit, user %>
       <%= link_to hyrax.edit_dashboard_profile_path(user), class: "btn btn-secondary pull-right" do %>
         <span class="glyphicon glyphicon-edit"></span> <%= t("hyrax.edit_profile") %>

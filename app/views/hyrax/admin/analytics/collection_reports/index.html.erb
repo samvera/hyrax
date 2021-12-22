@@ -9,9 +9,9 @@
     <div class="collection-reports">
 
 <% if Hyrax.config.analytics? %>
-      <div class="panel panel-default">
-        <div class="panel-heading"><%= t('.repo_summary') %> <b><%= pluralize(Collection.count, "collection") %></b>, <%= t('.repo_summary_2') %> <b><%= @pageviews.all %> <%= t('.views') %></b> <%= t('.and') %> <b><%= @downloads.all %> <%= t('.downloads') %></b>.</div>
-        <div class="panel-body">
+      <div class="card">
+        <div class="card-header"><%= t('.repo_summary') %> <b><%= pluralize(Collection.count, "collection") %></b>, <%= t('.repo_summary_2') %> <b><%= @pageviews.all %> <%= t('.views') %></b> <%= t('.and') %> <b><%= @downloads.all %> <%= t('.downloads') %></b>.</div>
+        <div class="card-body">
       
                <div class="row text-center">
                 <div class="nav nav-pills btn-group" role="group">
