@@ -22,7 +22,7 @@ HTML Properties:
                         } %>
       <a href="#" onclick="return false;" class="btn btn-primary" data-behavior="add-relationship"><%= t('.add') %></a>
   </div>
-  <div class="message has-warning hidden"></div>
+  <div class="message has-warning" hidden=""></div>
   <div style="margin-top: 10px">
     <%= link_to t('.attach_new_work'), polymorphic_path([main_app, :new, :hyrax, :parent, curation_concern.model_name.singular.to_sym], parent_id: curation_concern.id), target: "_blank", class: 'btn btn-primary' %>
   </div>

@@ -1,4 +1,4 @@
-<%= form_tag(hyrax.batch_edits_path, method: :delete, class: "batch-select-all hidden button_to-inline", "data-behavior" => 'batch-select-all') do -%>
+<%= form_tag(hyrax.batch_edits_path, method: :delete, class: "batch-select-all button_to-inline", hidden: '', "data-behavior" => 'batch-select-all') do -%>
     <%= hidden_field_tag('update_type', 'delete_all') %>
     <%= hidden_field_tag('return_controller', params[:controller]) %>
   <%= submit_tag(t('.button_label'), class: 'batch-all-button btn btn-danger submits-batches', data: { confirm: t(".deleting_file_from", application_name: application_name) }) %>

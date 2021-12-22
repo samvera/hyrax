@@ -38,7 +38,7 @@ export default class RegistryEntry {
     removeResource(evt) {
        evt.preventDefault();
        let button = $(evt.target);
-       this.view.addClass('hidden'); // do not show the block
+       this.view.prop('hidden', true); // do not show the block
        this.destroyed = true
        this.registry.showSaveNote();
     }

@@ -115,6 +115,6 @@
   </div>
 
 <!-- Ajax call to clear the batch before page uload. -->
-<%= button_to t(".clear_batch"), hyrax.clear_batch_edits_path, form_class: 'hidden', remote: true, id: 'clear_batch' %>
+<%= button_to t(".clear_batch"), hyrax.clear_batch_edits_path, form: { hidden: true }, remote: true, id: 'clear_batch' %>
 
 </div><!-- descriptions_display -->

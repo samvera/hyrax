@@ -100,11 +100,11 @@ export default class SaveWorkControl {
     const $cancelBtn = this.uploads.form.find('#file-upload-cancel-btn');
 
     $uploadsEl.bind('fileuploadstart', () => {
-      $cancelBtn.removeClass('hidden');
+      $cancelBtn.prop('hidden', false);
     });
 
     $uploadsEl.bind('fileuploadstop', () => {
-      $cancelBtn.addClass('hidden');
+      $cancelBtn.prop('hidden', true);
     });
   }
 

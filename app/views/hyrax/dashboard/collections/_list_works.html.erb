@@ -8,7 +8,7 @@
   <td>
     <div class='media'>
       <%= link_to [main_app, document], class: 'media-left', 'aria-hidden': true do %>
-        <%= render_thumbnail_tag document, { class: 'hidden-xs file_listing_thumbnail' }, { suppress_link: true } %>
+        <%= render_thumbnail_tag document, { class: 'd-none d-md-block file_listing_thumbnail' }, { suppress_link: true } %>
       <% end %>
 
       <div class='media-body'>

@@ -4,7 +4,7 @@
   <div class="batch-toggle">
     <% session[:batch_edit_state] = "on" %>
     <div class="button_to-inline">
-      <%= button_to t('hyrax.dashboard.my.action.edit_selected'), hyrax.edit_batch_edits_path, method: :get, class: "btn btn-update btn-primary hidden submits-batches", data: { behavior: 'batch-edit' }, id: 'batch-edit' %>
+      <%= button_to t('hyrax.dashboard.my.action.edit_selected'), hyrax.edit_batch_edits_path, method: :get, class: "btn btn-update btn-primary submits-batches", hidden: '', data: { behavior: 'batch-edit' }, id: 'batch-edit' %>
     </div>
     <%= batch_delete %>
     <%= button_tag t('hyrax.dashboard.my.action.add_to_collection'),

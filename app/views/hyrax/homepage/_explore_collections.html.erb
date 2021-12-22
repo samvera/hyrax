@@ -7,7 +7,7 @@
             <div class="media-body">
               <div class="media-heading">
                 <%= link_to [hyrax, collection] do %>
-                  <%= render_thumbnail_tag(collection, { class: 'hidden-xs file_listing_thumbnail', alt: "#{collection.title_or_label} #{ t('hyrax.homepage.admin_sets.thumbnail')}" },
+                  <%= render_thumbnail_tag(collection, { class: 'd-none d-md-block file_listing_thumbnail', alt: "#{collection.title_or_label} #{ t('hyrax.homepage.admin_sets.thumbnail')}" },
                                            { suppress_link: true }) + collection.title_or_label %>
                 <% end %>
               </div>
