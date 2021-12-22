@@ -1,16 +1,16 @@
-<div class="panel-heading">
-  <h3 class="panel-title"><%= t('.title') %></h3>
+<div class="card-header">
+  <h3 class="card-title"><%= t('.title') %></h3>
 </div>
-<div class="panel-body text-center">
+<div class="card-body text-center">
   <% if Hyrax.config.analytics? %>
     <%= render 'user_activity_graph' %>
 
     <div class="col-md-3">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h2 class="panel-title text-center"><%= t('.user_summary') %></h2>
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title text-center"><%= t('.user_summary') %></h2>
         </div>
-        <div class="panel-body text-center">
+        <div class="card-body text-center">
           <p><%= t('.registered_users') %>: <%= @presenter.user_count(@start_date.to_date, @end_date.to_date) %></p>
           <p><%= t('.new_visitors') %>: <%= Hyrax::Analytics.new_visitors('range', "#{@start_date},#{@end_date}") %></p>
           <p><%= t('.returning_visitors') %>: <%= Hyrax::Analytics.returning_visitors('range', "#{@start_date},#{@end_date}") %></p>

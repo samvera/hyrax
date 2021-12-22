@@ -9,7 +9,7 @@
     <%= render media_display_partial(curation_concern.to_presenter), file_set: curation_concern.to_presenter %>
   </div>
   <div class="col-12 col-sm-8">
-    <div class="panel panel-default tabs">
+    <div class="card tabs">
       <ul class="nav nav-tabs" role="tablist">
         <li id="edit_descriptions_link" class="active">
           <a href="#descriptions_display" data-toggle="tab" class="nav-safety-confirm"><i class="fa fa-tags" aria-hidden="true"></i></span> <%= t('.descriptions') %></a>
@@ -21,7 +21,7 @@
           <a href="#permissions_display" data-toggle="tab" class="nav-safety-confirm"><i class="fa fa-key" aria-hidden="true"></i> <%= t('.permissions') %></a>
         </li>
       </ul>
-      <div class="panel-body">
+      <div class="card-body">
         <div class="tab-content">
           <div id="descriptions_display" class="tab-pane active">
             <h2><%= t('.descriptions') %></h2>
