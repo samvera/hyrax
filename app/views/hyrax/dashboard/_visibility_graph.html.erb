@@ -1,8 +1,8 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title"><%= t('.visibility') %></h3>
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title"><%= t('.visibility') %></h3>
   </div>
-  <div class="panel-body">
+  <div class="card-body">
       <% repository_objects = @presenter.repository_objects.to_json %>
       <div id="dashboard-repository-objects" aria-hidden="true" style="height: 200px">
       <script>
