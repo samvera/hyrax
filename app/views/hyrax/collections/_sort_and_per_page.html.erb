@@ -1,7 +1,7 @@
 <% if show_sort_and_per_page? && collection_member_sort_fields.many? %>
   <%= form_tag collection_path(collection), method: :get, class: 'per_page form-horizontal' do %>
     <%= render 'view_type_group' %>
-    <fieldset class="pull-left">
+    <fieldset class="float-left">
       <legend class="sr-only"><%= t('hyrax.sort_label') %></legend>
       <%= label_tag(:sort, t('.sort_by_html')) %>
       <%= select_tag(:sort, options_from_collection_for_select(collection_member_sort_fields, 'first', lambda {|field| field.last.label}, h(params[:sort]))) %>

@@ -1,7 +1,7 @@
 <div class="card">
   <div class="card-header">
    <h4><%= t('.top_works') %>
-      <div class="btn-group pull-right">
+      <div class="btn-group float-right">
         <%= link_to "#{t('.export')}", admin_analytics_work_reports_path(start_date: @start_date, end_date: @end_date, format: :csv, disposition: "attachment"), class: "btn btn-secondary" %>
       </div>
   </h4>
@@ -32,7 +32,7 @@
   
 
   <div class="card-footer">
-    <div class="pull-right">
+    <div class="float-right">
       <%= paginate @top_works %>
     </div>
   </div>

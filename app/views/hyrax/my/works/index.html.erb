@@ -16,7 +16,7 @@
 <% provide :page_header do %>
   <h1><span class="fa fa-file" aria-hidden="true"></span> <%= t("hyrax.admin.sidebar.works") %></h1>
   <% if current_ability.can_create_any_work? %>
-    <div class="pull-right">
+    <div class="float-right">
       <% if @create_work_presenter.many? %>
         <% if Flipflop.batch_upload? %>
           <%= link_to(

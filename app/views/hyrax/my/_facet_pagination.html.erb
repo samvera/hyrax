@@ -12,7 +12,7 @@
     <% end %>
   </div>
 
-  <div class="sort_options btn-group pull-right">
+  <div class="sort_options btn-group float-right">
     <% if @pagination.sort == 'index' -%>
       <span class="active az btn btn-secondary"><%= t('blacklight.search.facets.sort.index') %></span><%= link_to_unless(@pagination.sort == 'count', t('blacklight.search.facets.sort.count'),
         Hyrax::Engine.routes.url_for(@pagination.params_for_resort_url('count', search_state.to_h).symbolize_keys.merge(only_path: true)),

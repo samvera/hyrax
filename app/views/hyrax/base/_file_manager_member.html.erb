@@ -5,7 +5,7 @@
           <div class="order-title">
             <%= f.input :title, as: :string, input_html: { name: "#{f.object.model_name.singular}[title][]", class: "title" }, value: node.to_s, label: false, hint: false %>
           </div>
-          <div class="file-set-link pull-right">
+          <div class="file-set-link float-right">
             <%= link_to contextual_path(node, @presenter), title: "Edit file" do %>
               <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
             <% end %>

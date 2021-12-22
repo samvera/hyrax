@@ -33,8 +33,8 @@
 
               <div class="card-footer">
                 <% cancel_path = f.object.persisted? ? hyrax.admin_admin_set_path(f.object) : hyrax.dashboard_collections_path %>
-                <%= link_to t('.cancel'), cancel_path, class: 'btn btn-secondary pull-right' %>
-                <%= f.button :submit, class: 'btn btn-primary pull-right' %>
+                <%= link_to t('.cancel'), cancel_path, class: 'btn btn-secondary float-right' %>
+                <%= f.button :submit, class: 'btn btn-primary float-right' %>
               </div>
             <% end %>
           </div>

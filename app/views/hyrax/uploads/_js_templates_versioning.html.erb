@@ -72,7 +72,7 @@
                   <div><span class="badge badge-danger">Error</span> {%=file.error%}</div>
               {% } %}
               <span class="size">{%=o.formatFileSize(file.size)%}</span>
-              <button class="btn btn-sm btn-danger delete pull-right"
+              <button class="btn btn-sm btn-danger delete float-right"
                       data-type="{%=file.deleteType%}"
                       data-url="{%=file.deleteUrl%}"
                       {% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
@@ -98,7 +98,7 @@
                            value="{%=file.name%}">
                     <%= options_for_select(Hyrax::ResourceTypesService.select_options) %>
                   </select>
-                  <button class="btn btn-secondary pull-right resource_type_button"
+                  <button class="btn btn-secondary float-right resource_type_button"
                           onClick="setAllResourceTypesVersioning({%= file.id %}); return false;">
                           <%= t('.set_all_to_this_resource_type') %>
                   </button>

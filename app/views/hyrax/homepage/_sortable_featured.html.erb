@@ -7,7 +7,7 @@
     <div class="main row">
       <div class="col-sm-12">
         <% if can? :destroy, FeaturedWork %>
-          <h3 class="pull-right">
+          <h3 class="float-right">
             <%= link_to hyrax.featured_work_path(presenter, format: :json),
               title: "Remove work from feature section",
               data: {behavior: 'unfeature'} do %>
