@@ -312,7 +312,7 @@ module Hyrax
     end
 
     def count_classes_for(unread_count)
-      classes = unread_count.zero? ? 'invisible label-default' : 'label-danger'
+      classes = unread_count.zero? ? 'invisible badge-secondary' : 'badge-danger'
 
       "count label #{classes}"
     end
