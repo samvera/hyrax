@@ -1,8 +1,8 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
+<div class="card">
+  <div class="card-header">
     <h4><%= t('.top_downloads')%></h4>
   </div>
-  <div class="panel-body">
+  <div class="card-body">
     <table class="table table-striped">
       <thead>
       <tr>
@@ -22,7 +22,7 @@
       </tbody>
     </table>
   </div>
-  <div class="panel-footer">
+  <div class="card-footer">
     <div class="pull-right">
      <%= paginate @top_file_set_downloads %> 
     </div>

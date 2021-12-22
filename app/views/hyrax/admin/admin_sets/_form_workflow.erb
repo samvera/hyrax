@@ -4,19 +4,19 @@
                       url: [hyrax, :admin, @form, :permission_template],
                       html: { id: 'form_workflows', class: 'nav-safety' } do |f| %>
                       <% if f.object.available_workflows.any? %>
-                        <div class="panel-body">
+                        <div class="card-body">
                           <p><%= t('.page_description') %></p>
                               <%= f.collection_radio_buttons :workflow_id, f.object.available_workflows, :id, :label, item_wrapper_tag: :div, item_wrapper_class: "radio" do |b| %>
                                 <span><%= b.radio_button + b.object.label %></span>
                                 <p><%= b.object.description %></p>
                               <% end %>
                         </div>
-                        <div class="panel-footer">
+                        <div class="card-footer">
                           <%= link_to t('.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-secondary pull-right'%>
                           <%= f.button :submit, class: 'btn btn-primary pull-right'%>
                         </div>
                       <% else %>
-                        <div class="panel-body">
+                        <div class="card-body">
                           <p><%= t('.no_workflows') %></p>
                         </div>
                       <% end %>

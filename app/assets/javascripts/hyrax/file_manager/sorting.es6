@@ -9,7 +9,7 @@ export default class SortManager {
   }
 
   initialize_sort() {
-    this.element.sortable({handle: ".panel-heading"})
+    this.element.sortable({handle: ".card-header"})
     this.element.on("sortstop", this.stopped_sorting)
     this.element.on("sortstart", this.started_sorting)
   }

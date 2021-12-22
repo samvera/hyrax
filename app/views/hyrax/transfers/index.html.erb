@@ -4,11 +4,11 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h2 class="panel-title h2"><%= t("hyrax.dashboard.transfers_sent") %></h2>
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title h2"><%= t("hyrax.dashboard.transfers_sent") %></h2>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         <%= @presenter.render_sent_transfers %>
       </div>
     </div>
@@ -17,11 +17,11 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h2 class="panel-title h2"><%= t("hyrax.dashboard.transfers_received") %></h2>
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title h2"><%= t("hyrax.dashboard.transfers_received") %></h2>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         <%= @presenter.render_received_transfers %>
       </div>
     </div>

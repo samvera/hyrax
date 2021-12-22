@@ -3,7 +3,7 @@
               <%= simple_form_for collection_permission_template_form_for(form: @form),
                                   url: [hyrax, :admin, @form, :permission_template],
                                   html: { class: 'nav-safety' } do |f| %>
-                <div class="panel-body">
+                <div class="card-body">
                   <p><%= t('.page_description') %></p>
                   <h3><%= t('.release.title') %></h3>
                   <p><%= t('.release.description') %></p>
@@ -56,7 +56,7 @@
                     <% b.radio_button + b.text %>
                   <% end %>
                 </div>
-                <div class="panel-footer">
+                <div class="card-footer">
                   <%= link_to t('.cancel'), hyrax.admin_admin_sets_path, class: 'btn btn-secondary pull-right' %>
                   <%= f.button :submit, class: 'btn btn-primary pull-right' %>
                 </div>

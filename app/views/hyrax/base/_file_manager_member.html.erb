@@ -1,7 +1,7 @@
 <li data-reorder-id='<%= node.id %>'>
-    <div class="panel panel-default">
+    <div class="card">
       <%= simple_form_for [main_app, node], remote: true, html: {'data-type': 'json'} do |f| %>
-        <div class="panel-heading">
+        <div class="card-header">
           <div class="order-title">
             <%= f.input :title, as: :string, input_html: { name: "#{f.object.model_name.singular}[title][]", class: "title" }, value: node.to_s, label: false, hint: false %>
           </div>
@@ -16,7 +16,7 @@
             </div>
           <% end %>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
           <div class="text-center thumbnail">
             <%= render "file_manager_thumbnail", node: node %>
           </div>

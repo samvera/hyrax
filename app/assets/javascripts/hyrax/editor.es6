@@ -31,7 +31,7 @@ export default class {
   // Immediate feedback after work creation, editing.
   formInProgress() {
     $('[data-behavior~=work-form]').on('submit', function(event){
-      $('.panel-footer').toggleClass('hidden');
+      $('.card-footer').toggleClass('hidden');
     });
   }
   

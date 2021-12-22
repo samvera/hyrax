@@ -9,8 +9,8 @@
   <div itemscope itemtype="http://schema.org/CreativeWork" class="col-12">
     <%= render 'work_title', presenter: @presenter %>
     <%= render 'show_actions', presenter: @presenter %>
-    <div class="panel panel-default">
-      <div class="panel-body">
+    <div class="card">
+      <div class="card-body">
         <div class="row">
           <%= render 'workflow_actions_widget', presenter: @presenter %>
           <% if @presenter.iiif_viewer? %>
@@ -29,22 +29,22 @@
           </div>
         </div>
       </div>
-    </div><!-- /panel -->
+    </div><!-- /.card -->
 
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h1 class="panel-title"><%= t('hyrax.base.show.relationships') %></h1>
+    <div class="card">
+      <div class="card-header">
+        <h1 class="card-title"><%= t('hyrax.base.show.relationships') %></h1>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         <%= render 'relationships', presenter: @presenter %>
       </div>
     </div>
 
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h1 class="panel-title"><%= t('.items') %></h1>
+    <div class="card">
+      <div class="card-header">
+        <h1 class="card-title"><%= t('.items') %></h1>
       </div>
-      <div class="panel-body">
+      <div class="card-body">
         <%= render 'items', presenter: @presenter %>
       </div>
     </div>

@@ -1,6 +1,6 @@
           <div id="participants" class="tab-pane">
-            <div class="panel panel-default labels edit-sharing-tab">
-              <div class="panel-body">
+            <div class="card labels edit-sharing-tab">
+              <div class="card-body">
                 <section class="section-add-sharing clearfix">
                   <h3><%= t('.add_participants') %></h3>
                   <% access_options = options_for_select([['Manager', 'manage'], ['Depositor', 'deposit'], ['Viewer', 'view']]) %>
@@ -68,6 +68,6 @@
                   <%= render 'form_participant_table', access: 'viewers', filter: :view? %>
                 </fieldset>
 
-              </div><!-- /.panel-body -->
+              </div><!-- /.card-body -->
             </div>
           </div>

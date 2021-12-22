@@ -2,8 +2,8 @@
   <h1><span class="fa fa-paint-brush" aria-hidden="true"></span> <%= t('.header') %></h1>
 <% end %>
 
-<div class="panel panel-default">
-  <div class="panel-body">
+<div class="card">
+  <div class="card-body">
     <%= simple_form_for @form, url: admin_appearance_path do |f| %>
       <%= f.input :header_background_color, required: false, input_html: { type: 'color' } %>
       <%= f.input :header_text_color, required: false, input_html: { type: 'color' } %>

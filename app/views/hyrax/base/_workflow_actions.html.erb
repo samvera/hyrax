@@ -1,11 +1,11 @@
-<div id="workflow_controls" class="panel panel-workflow">
-  <div class="panel-heading">
+<div id="workflow_controls" class="card panel-workflow">
+  <div class="card-header">
     <a data-toggle="collapse" href="#workflow_controls_collapse">
-      <h2 class="panel-title"><%= t('.title') %> <span class="fa fa-chevron-right pull-right"></span></h2>
+      <h2 class="card-title"><%= t('.title') %> <span class="fa fa-chevron-right pull-right"></span></h2>
     </a>
   </div>
   <%= form_tag main_app.hyrax_workflow_action_path(presenter), method: :put do %>
-    <div id="workflow_controls_collapse" class="panel-body panel-collapse collapse">
+    <div id="workflow_controls_collapse" class="card-body collapse">
       <div class="col-sm-3 workflow-actions">
         <h3><%= t('.actions') %></h3>
 

@@ -58,7 +58,7 @@ ul.tabular {
   margin-bottom: 18px;
   margin-top: -8px;
 
-  .panel-body {
+  .card-body {
     .work_description,
     li.attribute {
       word-break: break-word;
@@ -108,7 +108,7 @@ ul.tabular {
   background: #fff;
   border-color: #e0e0e0;
 
-  .panel-heading {
+  .card-header {
     background-color: #e6ab5f;
     color: #ffffff;
 
@@ -117,7 +117,7 @@ ul.tabular {
     }
   }
 
-  .panel-body {
+  .card-body {
     background-color: #f2f1eb;
   }
 }

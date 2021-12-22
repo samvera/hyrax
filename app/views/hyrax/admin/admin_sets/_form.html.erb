@@ -1,5 +1,5 @@
     <%= render 'shared/nav_safety_modal' %>
-    <div class="panel panel-default tabs" id="admin-set-controls">
+    <div class="card tabs" id="admin-set-controls">
       <ul class="nav nav-tabs" role="tablist">
         <li class="active">
           <a href="#description" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.description') %></a>
@@ -18,9 +18,9 @@
       </ul>
       <div class="tab-content">
         <div id="description" class="tab-pane active">
-          <div class="panel panel-default labels">
+          <div class="card labels">
             <%= simple_form_for @form, url: [hyrax, :admin, @form], html: { class: 'nav-safety' } do |f| %>
-              <div class="panel-body">
+              <div class="card-body">
                 <%= render 'form_metadata', f: f %>
 
                 <% if f.object.persisted? && f.object.member_ids.present? %>
@@ -31,7 +31,7 @@
 
               </div>
 
-              <div class="panel-footer">
+              <div class="card-footer">
                 <% cancel_path = f.object.persisted? ? hyrax.admin_admin_set_path(f.object) : hyrax.dashboard_collections_path %>
                 <%= link_to t('.cancel'), cancel_path, class: 'btn btn-secondary pull-right' %>
                 <%= f.button :submit, class: 'btn btn-primary pull-right' %>

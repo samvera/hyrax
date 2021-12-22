@@ -2,12 +2,12 @@
   <h1><span class="fa fa-user" aria-hidden="true"></span> <%= t('hyrax.admin.users.index.title') %></h1>
 <% end %>
 
-<div class="panel panel-default users-listing">
-  <div class="panel-heading">
+<div class="card users-listing">
+  <div class="card-header">
       <%= t('hyrax.admin.users.index.describe_users_html', count: @presenter.user_count) %>
   </div>
 
-  <div class="panel-body">
+  <div class="card-body">
     <div class="table-responsive">
       <table class="table table-striped datatable">
         <thead>

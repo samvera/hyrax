@@ -128,8 +128,8 @@ button.branding-banner-remove:hover {
 }
 
 .dashboard .collections-wrapper {
-  .panel {
-    .panel-title {
+  .card {
+    .card-title {
       font-weight: 300;
     }
   }
@@ -276,7 +276,7 @@ button.branding-banner-remove:hover {
 // Admin show page
 .admin-show-page {
 
-  .panel-body > section {
+  .card-body > section {
     border-top: 1px solid #efefef;
     margin-bottom: 40px;
 
@@ -285,7 +285,7 @@ button.branding-banner-remove:hover {
     }
   }
 
-  .panel-heading {
+  .card-header {
     vertical-align: middle;
 
     .btn {

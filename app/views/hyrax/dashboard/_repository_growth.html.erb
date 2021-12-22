@@ -1,7 +1,7 @@
-<div class="panel-heading">
-  <h3 class="panel-title"><%= t('.title') %></h3>
+<div class="card-header">
+  <h3 class="card-title"><%= t('.title') %></h3>
 </div>
-<div class="panel-body text-center">
+<div class="card-body text-center">
   <div id="dashboard-growth" aria-hidden="true" style="height: 200px">
   <% repository_growth = @presenter.repository_growth(@start_date.to_datetime, @end_date.to_datetime).to_json %>
   <script>
