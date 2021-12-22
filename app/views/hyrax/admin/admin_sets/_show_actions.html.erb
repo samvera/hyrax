@@ -6,7 +6,7 @@
           </div>
           <% if can? :edit, presenter.solr_document %>
           <div class="col-sm-4">
-            <div class="pull-right">
+            <div class="float-right">
               <%= link_to edit_admin_admin_set_path(presenter), class: 'btn btn-primary' do %>
                 <span class="fa fa-edit" aria-hidden="true"></span> <%= t(:'helpers.action.edit') %>
               <% end %>
