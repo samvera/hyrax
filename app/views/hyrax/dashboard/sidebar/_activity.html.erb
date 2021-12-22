@@ -11,16 +11,16 @@
         <span class="fa fa-id-card" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.profile') %></span>
       <% end %>
 
-      <%= menu.nav_link(hyrax.notifications_path), class: "nav-link" do %>
+      <%= menu.nav_link(hyrax.notifications_path, class: "nav-link") do %>
         <span class="fa fa-bell" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.notifications') %></span>
       <% end %>
 
-      <%= menu.nav_link(hyrax.transfers_path), class: "nav-link" do %>
+      <%= menu.nav_link(hyrax.transfers_path, class: "nav-link") do %>
         <span class="fa fa-arrows-h" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.transfers') %></span>
       <% end %>
 
       <% if Flipflop.proxy_deposit? %>
-        <%= menu.nav_link(hyrax.depositors_path), class: "nav-link" do %>
+        <%= menu.nav_link(hyrax.depositors_path, class: "nav-link") do %>
           <span class="fa fa-users" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.dashboard.manage_proxies') %></span>
         <% end %>
       <% end %>
