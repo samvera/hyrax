@@ -1,6 +1,6 @@
-<div class="panel panel-default">
+<div class="card">
   
-  <div class="panel-heading">
+  <div class="card-header">
     <h4><%= t('.top_collections') %>
     <div class="btn-group pull-right">
       <%= link_to "#{t('.export')}", admin_analytics_collection_reports_path(start_date: @start_date, end_date: @end_date, format: :csv, disposition: "attachment"), class: "btn btn-secondary" %>
@@ -8,7 +8,7 @@
     </h4>
   </div>
 
-  <div class="panel-body">
+  <div class="card-body">
     <table class="table table-striped">
       <thead>
         <tr>
@@ -42,7 +42,7 @@
     </table>
   </div>
   
-  <div class="panel-footer">
+  <div class="card-footer">
     <div class="pull-right">
       <%= paginate @top_collections %>
     </div>

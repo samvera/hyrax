@@ -4,11 +4,11 @@
     <h1><%= t('.manage_leases_html', cc: curation_concern, cc_type: cc_type) %></h1>
 <% end %>
 
-<div class="panel panel-default tabs">
-  <div class="panel-heading">
-    <h2 class="panel-title"><%= t('.header.current') %></h2>
+<div class="card tabs">
+  <div class="card-header">
+    <h2 class="card-title"><%= t('.header.current') %></h2>
   </div>
-  <div class="panel-body">
+  <div class="card-body">
     <%= simple_form_for [main_app, curation_concern] do |f| %>
       <fieldset class="set-access-controls">
         <section class="form-text">
@@ -43,11 +43,11 @@
   </div>
 </div>
 
-<div class="panel panel-default tabs">
-  <div class="panel-heading">
-    <h2 class="panel-title"><%= t('.header.past') %></h2>
+<div class="card tabs">
+  <div class="card-header">
+    <h2 class="card-title"><%= t('.header.past') %></h2>
   </div>
-  <div class="panel-body">
+  <div class="card-body">
     <% if curation_concern.lease_history.empty? %>
       <%= t('.history_empty', cc: cc_type) %>
     <% else %>

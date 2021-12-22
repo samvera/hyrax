@@ -7,12 +7,12 @@
 
 <div>
   <h3><%= t('.descriptions_title') %></h3>
-  <div class="panel panel-default tabs">
+  <div class="card tabs">
     <ul class="nav nav-tabs">
       <li id="edit_descriptions_link" class="active"><a href="#descriptions_display" data-toggle="tab"><span class="glyphicon glyphicon-tags"></span> <%= t('.descriptions') %></a></li>
       <li id="edit_permissions_link"><a href="#permissions_display" data-toggle="tab"><span class="glyphicon glyphicon-lock"></span> <%= t('.permissions') %></a></li>
     </ul>
-    <div class="panel-body">
+    <div class="card-body">
       <div class="tab-content">
         <div class="tab-pane active" id="descriptions_display">
           <% @form.terms.each do |term| %>

@@ -179,7 +179,7 @@ body.dashboard {
     padding: 0;
   }
 
-  .user-activity .panel-body {
+  .user-activity .card-body {
     overflow: scroll;
     max-height: 20em;
   }
@@ -219,20 +219,20 @@ body.dashboard {
     }
   }
 
-  .panel {
+  .card {
     border: 1px solid $admin-panel-border-color;
     float: left;
     width: 100%;
 
-    .panel-heading,
-    .panel-footer,
-    .panel-body,
+    .card-header,
+    .card-footer,
+    .card-body,
     .list-group-item {
       float: left;
       width: 100%;
     }
 
-    .panel-title {
+    .card-title {
       color: $title-text-color;
       display: block;
       font-size: 18px;
@@ -245,7 +245,7 @@ body.dashboard {
     }
   }
 
-  .panel.panel-default.labels {
+  .card.labels {
     border-top: 1px solid $card-border-color;
     margin-bottom: 0;
   }
