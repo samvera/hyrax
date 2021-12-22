@@ -1,7 +1,7 @@
 <% presenter = f.object.presenter %>
 <li class="dd-item dd3-item featured-item" data-id="<%= presenter.id %>">
   <div class="dd-handle dd3-handle"><%= t 'hyrax.homepage.featured_works.drag' %></div>
-  <div class="dd3-content panel panel-default">
+  <div class="dd3-content card">
     <%= f.hidden_field :id %>
     <%= f.hidden_field :order, data: { property: "order" } %>
     <div class="main row">

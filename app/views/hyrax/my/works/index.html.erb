@@ -54,9 +54,9 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="panel panel-default <%= 'tabs' if current_page?(hyrax.dashboard_works_path(locale: nil)) || @managed_works_count > 0 %>">
+    <div class="card <%= 'tabs' if current_page?(hyrax.dashboard_works_path(locale: nil)) || @managed_works_count > 0 %>">
       <%= render 'tabs' if current_page?(hyrax.dashboard_works_path(locale: nil)) || @managed_works_count > 0 %>
-      <div class="panel-heading">
+      <div class="card-header">
         <% if current_page?(hyrax.my_works_path(locale: nil)) %>
           <span class="count-display"><%= I18n.t('hyrax.my.count.works.you_own', total_count: @response.total_count).html_safe %></span>
         <% elsif current_page?(hyrax.dashboard_works_path(locale: nil)) && !current_ability.admin? %>
