@@ -6,7 +6,7 @@
   <td>
     <div class='media'>
       <%= link_to [main_app, document], class: 'media-left' do %>
-        <%= render_thumbnail_tag document, { class: 'hidden-xs file_listing_thumbnail', alt: "#{document.title_or_label} #{t('hyrax.homepage.admin_sets.thumbnail')}" }, { suppress_link: true } %>
+        <%= render_thumbnail_tag document, { class: 'd-none d-md-block file_listing_thumbnail', alt: "#{document.title_or_label} #{t('hyrax.homepage.admin_sets.thumbnail')}" }, { suppress_link: true } %>
       <% end %>
 
       <div class='media-body'>
