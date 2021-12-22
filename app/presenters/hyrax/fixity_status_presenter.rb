@@ -25,9 +25,9 @@ module Hyrax
         if relevant_log_records.empty?
           "Fixity checks have not yet been run on this object"
         elsif failing_checks.empty?
-          tag.span("passed", class: "label label-success") + ' ' + render_existing_check_summary
+          tag.span("passed", class: "badge badge-success") + ' ' + render_existing_check_summary
         else
-          tag.span("FAIL", class: "label label-danger") + ' ' + render_existing_check_summary + render_failed_compact
+          tag.span("FAIL", class: "badge badge-danger") + ' ' + render_existing_check_summary + render_failed_compact
         end
     end
 
