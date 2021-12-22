@@ -66,7 +66,7 @@
                   <div><span class="badge badge-danger">Error</span> {%=file.error%}</div>
               {% } %}
               <span class="size">{%=o.formatFileSize(file.size)%}</span>
-              <button class="btn btn-sm btn-danger delete pull-right" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+              <button class="btn btn-sm btn-danger delete float-right" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
                   <span class="glyphicon glyphicon-trash"></span>
                   <span><%= t('helpers.action.delete') %></span>
               </button>
@@ -84,7 +84,7 @@
                   <select class="form-control resource_type_dropdown" multiple="multiple" size="6" name="resource_type[{%=file.id%}][]" id="resource_type_{%=file.id%}" value="{%=file.name%}">
                     <%= options_for_select(Hyrax::ResourceTypesService.select_options) %>
                   </select>
-                  <button class="btn btn-secondary pull-right resource_type_button" onClick="setAllResourceTypes({%= file.id %}); return false;"><%= t('.set_all_to_this_resource_type') %></button>
+                  <button class="btn btn-secondary float-right resource_type_button" onClick="setAllResourceTypes({%= file.id %}); return false;"><%= t('.set_all_to_this_resource_type') %></button>
                 </div>
               </div>
             </div>
