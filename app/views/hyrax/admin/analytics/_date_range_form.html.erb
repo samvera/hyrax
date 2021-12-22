@@ -1,6 +1,6 @@
-<div class="panel panel-default">
-  <div class="panel-heading"><h4><%= t('.date_range_heading') %></h4></div>
-  <div class="panel-body">
+<div class="card">
+  <div class="card-header"><h4><%= t('.date_range_heading') %></h4></div>
+  <div class="card-body">
     <%= form_tag(redirect_path, method: :get, class: "form-inline") do %>
       <%= t('.start_date') %>: <%= date_field_tag :start_date, "", class: 'datepicker form-control', placeholder: 'mm/dd/yyyy', required: true %>
       <%= t('.end_date') %>: <%= date_field_tag :end_date, "", class: 'datepicker form-control', placeholder: 'mm/dd/yyyy', required: true %>
