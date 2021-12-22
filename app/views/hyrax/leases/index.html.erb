@@ -2,13 +2,13 @@
   <h1><span class="fa fa-sitemap"></span><%= t('.manage_leases') %></h1>
 <% end %>
 
-<div class="panel panel-default tabs">
+<div class="card tabs">
   <ul class="nav nav-tabs">
     <li class="active"><a href="#active" data-toggle="tab"><%= t('.active') %></a></li>
     <li><a href="#expired" data-toggle="tab"><%= t('.expired') %></a></li>
     <li><a href="#deactivated" data-toggle="tab"><%= t('.deactivated') %></a></li>
   </ul>
-  <div class="panel-body">
+  <div class="card-body">
     <div class="tab-content">
       <div class="tab-pane active" id="active">
         <%= render "list_active_leases" %>

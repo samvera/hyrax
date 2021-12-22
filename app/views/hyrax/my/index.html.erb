@@ -19,9 +19,9 @@
 
 <div class="row">
   <div class="col-md-12">
-    <div class="panel panel-default<%= ' tabs' if can?(:read, :admin_dashboard) %>">
+    <div class="card<%= ' tabs' if can?(:read, :admin_dashboard) %>">
       <%= render 'tabs' if can?(:read, :admin_dashboard) %>
-      <div class="panel-body">
+      <div class="card-body">
         <%= render 'search_header' %>
         <h2 class="sr-only"><%= t('hyrax.admin.sidebar.works_listing') %></h2>
         <%= render 'document_list' %>
