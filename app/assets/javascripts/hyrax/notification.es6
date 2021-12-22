@@ -19,7 +19,7 @@ export default class Notification {
     }
     else {
       this.counter.removeClass('invisible')
-      this.counter.addClass('label-danger').removeClass('label-default')
+      this.counter.addClass('badge-danger').removeClass('badge-secondary')
     }
   }
 }

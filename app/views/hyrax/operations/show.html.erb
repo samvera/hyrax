@@ -3,7 +3,7 @@
   <h1><%= @operation.operation_type %> status</h1>
 <% end %>
 
-<p><strong>Status:</strong> <span class="label <%= @operation.status == 'failure' ? 'label-danger' : 'label-success' %>"><%= @operation.status %></span></p>
+<p><strong>Status:</strong> <span class="badge <%= @operation.status == 'failure' ? 'badge-danger' : 'badge-success' %>"><%= @operation.status %></span></p>
 <p><strong>Message:</strong> <span class="message"><%= @operation.message %></span></p>
 
 <% if @operation.children.any? %>
@@ -19,7 +19,7 @@
           <% @operation.children.each do |op| %>
             <tr>
               <td><%= link_to op.operation_type, hyrax.user_operation_path(params[:user_id], op) %></td>
-              <td><span class="label <%= op.status == 'failure' ? 'label-danger' : 'label-success' %>"><%= op.status %></span></td>
+              <td><span class="badge <%= op.status == 'failure' ? 'badge-danger' : 'badge-success' %>"><%= op.status %></span></td>
               <td><%= op.message %></td>
             </tr>
           <% end %>
