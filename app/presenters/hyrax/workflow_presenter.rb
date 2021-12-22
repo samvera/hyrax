@@ -33,7 +33,7 @@ module Hyrax
 
     def badge
       return unless state
-      tag.span(state_label, class: "state state-#{state} label label-primary")
+      tag.span(state_label, class: "state state-#{state} badge badge-primary")
     end
 
     private

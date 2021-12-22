@@ -9,7 +9,7 @@
   padding: $card-img-overlay-padding;
 }
 
-header > h1 .label {
+header > h1 .badge {
   font-size: $font-size-base;
   vertical-align: middle;
 }
@@ -94,7 +94,7 @@ ul.tabular {
       margin: 0;
     }
 
-    .label {
+    .badge {
       margin-left: 5px;
 
       &:first-of-type {

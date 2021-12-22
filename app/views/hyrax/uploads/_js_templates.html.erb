@@ -63,7 +63,7 @@
             </div>
             <div class="col-sm-6">
               {% if (file.error) { %}
-                  <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+                  <div><span class="badge badge-danger">Error</span> {%=file.error%}</div>
               {% } %}
               <span class="size">{%=o.formatFileSize(file.size)%}</span>
               <button class="btn btn-sm btn-danger delete pull-right" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
@@ -116,7 +116,7 @@
                 <input type="hidden" name="uploaded_files[]" value="{%=file.id%}">
             </p>
             {% if (file.error) { %}
-                <div><span class="label label-danger"><%= t('.error') %></span> {%=file.error%}</div>
+                <div><span class="badge badge-danger"><%= t('.error') %></span> {%=file.error%}</div>
             {% } %}
         </td>
         <td>

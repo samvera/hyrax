@@ -69,7 +69,7 @@
             </div>
             <div class="col-sm-6">
               {% if (file.error) { %}
-                  <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+                  <div><span class="badge badge-danger">Error</span> {%=file.error%}</div>
               {% } %}
               <span class="size">{%=o.formatFileSize(file.size)%}</span>
               <button class="btn btn-sm btn-danger delete pull-right"
@@ -125,7 +125,7 @@
                   <input type="hidden" name="files_files[]" value="{%=file.id%}">
                 </span>
                 {% if (file.error) { %}
-                  <span><span class="label label-danger"><%= t('.error') %></span> {%=file.error%}</span>
+                  <span><span class="badge badge-danger"><%= t('.error') %></span> {%=file.error%}</span>
                 {% } %}
               </div>
 

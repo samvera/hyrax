@@ -8,7 +8,6 @@ td.status {
   font-size: 1.1rem;
 
   span {
-    @extend .label;
     @extend .badge;
     &.on { @extend .badge-success; }
     &.off { @extend .badge-secondary; }
