@@ -2,42 +2,42 @@
   <h1><%= t("hyrax.dashboard.title") %></h1>
 <% end %>
 
-<div class="panel panel-default user-activity">
-  <div class="panel-heading">
-    <h2 class="panel-title "><%= t("hyrax.dashboard.user_activity.title") %></h2>
+<div class="card user-activity">
+  <div class="card-header">
+    <h2 class="card-title "><%= t("hyrax.dashboard.user_activity.title") %></h2>
   </div>
-  <div class="panel-body">
+  <div class="card-body">
     <%= @presenter.render_recent_activity %>
   </div>
 </div>
 
-<div class="panel panel-default" id="notifications">
-  <div class="panel-heading">
-    <h2 class="panel-title "><%= t("hyrax.dashboard.user_notifications") %></h2>
+<div class="card" id="notifications">
+  <div class="card-header">
+    <h2 class="card-title "><%= t("hyrax.dashboard.user_notifications") %></h2>
   </div>
-  <div class="panel-body">
+  <div class="card-body">
     <%= @presenter.render_recent_notifications %>
     <%= @presenter.link_to_additional_notifications %>
   </div>
 </div>
 
 <% if Flipflop.proxy_deposit? %>
-  <div class="panel panel-default" id="proxy_management">
-    <div class="panel-heading">
-      <h2 class="panel-title "><%= t("hyrax.dashboard.current_proxies") %></h2>
+  <div class="card" id="proxy_management">
+    <div class="card-header">
+      <h2 class="card-title "><%= t("hyrax.dashboard.current_proxies") %></h2>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
       <%= render 'hyrax/dashboard/_index_partials/current_proxy_rights', user: current_user %>
       <%= @presenter.link_to_manage_proxies %>
     </div>
   </div>
 <% end %>
 
-<div class="panel panel-default transfers">
-  <div class="panel-heading">
-    <h2 class="panel-title "><%= t("hyrax.dashboard.transfer_of_ownership") %></h2>
+<div class="card transfers">
+  <div class="card-header">
+    <h2 class="card-title "><%= t("hyrax.dashboard.transfer_of_ownership") %></h2>
   </div>
-  <div class="panel-body">
+  <div class="card-body">
     <%= render 'hyrax/dashboard/_index_partials/transfers', presenter: @presenter.transfers %>
   </div>
 </div>

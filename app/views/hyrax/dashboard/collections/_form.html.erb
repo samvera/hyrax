@@ -1,5 +1,5 @@
 <%= render "shared/nav_safety_modal" %>
-<div class="panel panel-default tabs" id="collection-edit-controls">
+<div class="card tabs" id="collection-edit-controls">
   <ul class="nav nav-tabs" role="tablist">
     <li class="active">
       <a href="#description" role="tab" data-toggle="tab" class="nav-safety-confirm"><%= t('.tabs.description') %></a>
@@ -26,8 +26,8 @@
   <%= simple_form_for @form, url: [hyrax, :dashboard, @form], html: { class: 'editor nav-safety' } do |f| %>
     <div class="tab-content">
       <div id="description" class="tab-pane active">
-        <div class="panel panel-default labels">
-          <div class="panel-body">
+        <div class="card labels">
+          <div class="card-body">
 
             <div id="base-terms">
               <% f.object.primary_terms.each do |term| %>
@@ -73,31 +73,31 @@
 
       <% if @form.persisted? %>
         <div id="branding" class="tab-pane">
-          <div class="panel panel-default labels">
-            <div class="panel-body">
+          <div class="card labels">
+            <div class="card-body">
               <%= render 'form_branding', f: f %>
             </div>
           </div>
         </div>
 
         <div id="discovery" class="tab-pane">
-          <div class="panel panel-default labels">
-            <div class="panel-body">
+          <div class="card labels">
+            <div class="card-body">
               <%= render 'form_discovery', f: f %>
             </div>
           </div>
         </div>
 
         <div id="sharing" class="tab-pane">
-          <div class="panel panel-default labels" id="collection_permissions" data-param-key="<%= f.object.model_name.param_key %>">
-            <div class="panel-body">
+          <div class="card labels" id="collection_permissions" data-param-key="<%= f.object.model_name.param_key %>">
+            <div class="card-body">
               <%= render 'form_share', f: f %>
             </div>
           </div>
         </div>
       <% end %>
 
-      <div class="panel-footer">
+      <div class="card-footer">
         <% if @collection.persisted? %>
           <%= f.submit t(:'hyrax.collection.select_form.update'), class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "update_submit", name: "update_collection" %>
           <%= link_to t(:'helpers.action.cancel'), hyrax.dashboard_collection_path(@collection), class: 'btn btn-link' %>
