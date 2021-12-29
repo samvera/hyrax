@@ -97,6 +97,35 @@ jobs:
           - project/*
           - project/**/*
 
+  bundle-deno:
+    parameters:
+      deno_version:
+        type: string
+        default: '1.17.1'
+    environment:
+      DENO_DIR: ./.deno-cache
+    docker:
+      - image: denoland/deno:<< parameters.deno_version >>
+    steps:
+      - attach_workspace:
+          at: ~/
+      - restore_cache:
+          name: Restore Deno cache
+          key: deno<< parameters.deno_version >>-{{ checksum "app/scripts/hyrax/deps.js" }}.app-{{ checksum "app/scripts/hyrax/dev-deps.js" }}.app.dev-{{ checksum "lib/scripts/dev-deps.js" }}.lib.dev
+      - run:
+          name: Bundle
+          command: deno bundle --config deno.json --no-check=remote app/scripts/hyrax/mod.js .internal_test_app/public/scripts/hyrax.js
+      - save_cache:
+          name: Save Deno cache
+          key: deno<< parameters.deno_version >>-{{ checksum "app/scripts/hyrax/deps.js" }}.app-{{ checksum "app/scripts/hyrax/dev-deps.js" }}.app.dev-{{ checksum "lib/scripts/dev-deps.js" }}.lib.dev
+          paths:
+            - ./.deno-cache
+      - persist_to_workspace:
+          root: ~/
+          paths:
+          - project/*
+          - project/**/*
+
   test:
     parameters:
       ruby_version:
@@ -133,6 +162,35 @@ jobs:
           command: bundle exec rake app:db:migrate
       - samvera/parallel_rspec
 
+  test-deno:
+    parameters:
+      deno_version:
+        type: string
+        default: '1.17.1'
+    environment:
+      DENO_DIR: ./.deno-cache
+    docker:
+      - image: denoland/deno:<< parameters.deno_version >>
+    steps:
+      - samvera/cached_checkout
+      - restore_cache:
+          name: Restore Deno cache
+          key: deno<< parameters.deno_version >>-{{ checksum "app/scripts/hyrax/deps.js" }}.app-{{ checksum "app/scripts/hyrax/dev-deps.js" }}.app.dev-{{ checksum "lib/scripts/dev-deps.js" }}.lib.dev
+      - run:
+          name: Check if scripts are formatted according to Deno conventions
+          command: deno fmt --config deno.json --check
+      - run:
+          name: Scan scripts for syntax errors and style issues
+          command: deno lint --config deno.json
+      - run:
+          name: Run all script tests
+          command: deno test --config deno.json --no-check=remote --allow-read=app/scripts,lib/scripts app/scripts lib/scripts
+      - save_cache:
+          name: Save Deno cache
+          key: deno<< parameters.deno_version >>-{{ checksum "app/scripts/hyrax/deps.js" }}.app-{{ checksum "app/scripts/hyrax/dev-deps.js" }}.app.dev-{{ checksum "lib/scripts/dev-deps.js" }}.lib.dev
+          paths:
+            - ./.deno-cache
+
 # Trigger a workflow on the nurax repository that will deploy the most recent hyrax gem code to https://nurax-dev.curationexperts.com/
   deploy:
     docker:
@@ -150,6 +208,11 @@ jobs:
             --header 'Content-Type: application/json'
 workflows:
   version: 2
+  deno1-17-1:
+    jobs:
+      - test-deno:
+          name: "deno1-17-1"
+          deno_version: "1.17.1"
   ruby2-5-8:
     jobs:
       - bundle:
@@ -160,11 +223,15 @@ workflows:
           rails_version: "5.2.6"
           requires:
             - bundle
+      - bundle-deno:
+          deno_version: "1.17.1"
+          requires:
+            - build
       - test:
           name: "ruby2-5-8"
           ruby_version: "2.5.8"
           requires:
-            - build
+            - bundle-deno
   ruby2-6-6:
     jobs:
       - bundle:
@@ -175,17 +242,21 @@ workflows:
           rails_version: "5.2.6"
           requires:
             - bundle
+      - bundle-deno:
+          deno_version: "1.17.1"
+          requires:
+            - build
       - test:
           name: "ruby2-6-6"
           ruby_version: "2.6.6"
           requires:
-            - build
+            - bundle-deno
       - test:
           name: "ruby2-6-6-valkyrie"
           ruby_version: "2.6.6"
           hyrax_valkyrie: "true"
           requires:
-            - build
+            - bundle-deno
   ruby2-7-4:
     jobs:
       - bundle:
@@ -198,12 +269,16 @@ workflows:
           bundler_version: "2.1.4"
           requires:
             - bundle
+      - bundle-deno:
+          deno_version: "1.17.1"
+          requires:
+            - build
       - test:
           name: "ruby2-7-4"
           ruby_version: "2.7.4"
           bundler_version: "2.1.4"
           requires:
-            - build
+            - bundle-deno
   nurax-dev_deploy:
     jobs:
       - deploy:
