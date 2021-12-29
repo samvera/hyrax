@@ -185,6 +185,10 @@ module Hyrax
       rake('hyrax:universal_viewer:install')
     end
 
+    def deno_files
+      rake('hyrax:deno:install')
+    end
+
     # Blacklight::Controller will by default add an after_action filter to discard all flash messages on xhr requests.
     # This has caused problems when we perform a post-redirect-get cycle using xhr and turbolinks.
     # This injector will modify the generated ApplicationController to skip this action.

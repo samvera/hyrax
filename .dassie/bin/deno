@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+APP_ROOT = File.expand_path('..', __dir__)
+Dir.chdir(APP_ROOT) do
+  begin
+    exec "deno", *ARGV
+  rescue Errno::ENOENT
+    $stderr.puts "Deno executable was not detected in the system."
+    $stderr.puts "Download Deno at <https://github.com/denoland/deno_install>."
+    exit 1
+  end
+end

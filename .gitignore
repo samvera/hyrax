@@ -10,6 +10,9 @@ Gemfile.lock
 fcrepo4-data
 fcrepo4-test-data
 
+# don't commit bundled javascripts
+public/scripts/hyrax.js
+
 ## MAC OS
 .DS_Store
 
