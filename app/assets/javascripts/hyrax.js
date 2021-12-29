@@ -47,7 +47,6 @@
 //= require hyrax/notification
 //= require hyrax/app
 //= require hyrax/config
-//= require hyrax/initialize
 //= require hyrax/trophy
 //= require hyrax/facets
 //= require hyrax/featured_works

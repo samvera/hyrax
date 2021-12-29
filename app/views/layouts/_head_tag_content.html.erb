@@ -20,8 +20,11 @@ signed in %>
 <!-- application css -->
 <%= stylesheet_link_tag 'application' %>
 
+<!-- hyrax public js -->
+<%= javascript_include_tag '/scripts/hyrax', type: 'module' %>
+
 <!-- application js -->
-<%= javascript_include_tag 'application' %>
+<%= javascript_include_tag 'application', defer: '' %>
 
 <%= render 'shared/appearance_styles' %>
 

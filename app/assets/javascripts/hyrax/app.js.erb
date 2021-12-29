@@ -1,28 +1,7 @@
 // Once, javascript is written in a modular format, all initialization
 // code should be called from here.
-Hyrax = {
-    initialize: function () {
-        this.popovers();
-        this.permissions();
-        this.notifications();
-        this.transfers();
-        this.workEditor();
-        this.fileManager();
-        this.selectWorkType();
-        this.selectCollectionType();
-        this.datatable();
-        this.adminSetEditor();
-        this.collectionEditor();
-        this.collectionsV2();
-        this.collectionTypes();
-        this.collectionTypeEditor();
-        this.collectionUtilities();
-        this.adminStatisticsGraphs();
-        this.sortAndPerPage();
-        this.sidebar();
-        this.batchSelect();
-        this.internationalizationHelper();
-    },
+Object.defineProperty(Hyrax, 'initializers', {
+  value: {
 
     // The AdminSet edit page
     adminSetEditor: function() {
@@ -173,15 +152,11 @@ Hyrax = {
         });
     },
 
-    // Saved so that inline javascript can put data somewhere.
-    statistics: {},
-
-    // initialized in hyrax/config.js
-    config: {},
-
     // Adds selected items to the batch before any batch operation is performed
     batchSelect: function () {
         var BatchSelect = require('hyrax/batch_select');
         BatchSelect.initialize_batch_selected();
     }
-};
+
+  }
+});
