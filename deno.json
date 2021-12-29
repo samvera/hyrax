@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "lib": ["dom", "dom.iterable", "dom.asynciterable", "deno.ns"],
+    "strict": true
+  },
+  "lint": {
+    "files": {
+      "include": [
+        "app/scripts/",
+        "lib/scripts/"
+      ],
+      "exclude": []
+    }
+  },
+  "fmt": {
+    "files": {
+      "include": [
+        "app/scripts/",
+        "lib/scripts/"
+      ],
+      "exclude": []
+    }
+  }
+}
