@@ -21,6 +21,13 @@
         "lib/scripts/"
       ],
       "exclude": []
+    },
+    "options": {
+      "useTabs": false,
+      "lineWidth": 71,
+      "indentWidth": 2,
+      "singleQuote": false,
+      "proseWrap": "always"
     }
   }
 }
