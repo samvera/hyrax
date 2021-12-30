@@ -187,6 +187,7 @@ module Hyrax
 
     def deno_files
       rake('hyrax:deno:install')
+      copy_file 'public/scripts/hyrax.js'
     end
 
     # Blacklight::Controller will by default add an after_action filter to discard all flash messages on xhr requests.
