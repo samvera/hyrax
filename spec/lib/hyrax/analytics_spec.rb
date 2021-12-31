@@ -31,6 +31,32 @@ RSpec.describe Hyrax::Analytics do
 
     context "When the yaml file has no values" do
       before do
+        allow(File).to receive(:read).and_return <<-FILE
+          analytics:
+            app_name: My App Name
+            app_version: 0.0.1
+            privkey_path: /tmp/privkey.p12
+            privkey_secret: s00pers3kr1t
+            client_email: oauth@example.org
+        FILE
+      end
+
+      it 'reads its config from a yaml file' do
+        expect(Rails.logger).to receive(:info)
+          .with(starting_with("Deprecated analytics format found. Please update your yaml file."))
+        Hyrax.config.google_analytics_id = "UA-XXXXXXXX"
+        expect(config.app_name).to eql 'My App Name'
+        expect(config.app_version).to eql '0.0.1'
+        expect(config.privkey_path).to eql '/tmp/privkey.p12'
+        expect(config.privkey_secret).to eql 's00pers3kr1t'
+        expect(config.client_email).to eql 'oauth@example.org'
+        # In the previous version analytics id was set ny Hyrax.config
+        expect(config.analytics_id).to eql 'UA-XXXXXXXX'
+      end
+    end
+
+    context "When the yaml file has no values" do
+      before do
         allow(File).to receive(:read).and_return("# Just comments\n# and comments\n")
       end
 
