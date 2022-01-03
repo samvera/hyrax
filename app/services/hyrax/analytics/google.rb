@@ -32,7 +32,7 @@ module Hyrax
             end
             config = yaml.fetch('analytics')&.fetch('google', nil)
             unless config
-              Rails.logger.info("Deprecated analytics format found. Please update your yaml file.")
+              Deprecation.warn("Deprecated analytics configuration format found. Please update config/analytics.yml.")
               config = yaml.fetch('analytics')
               # this has to exist here with a placeholder so it can be set in the Hyrax initializer
               # it is only for backward compatibility
