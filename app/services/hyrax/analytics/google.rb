@@ -58,7 +58,7 @@ module Hyrax
           end
 
           # This method allows setting the analytics id in the initializer
-          # which is deprecated
+          # @deprecated set the analytics id in either ENV['GOOGLE_ANALYTICS_ID'] or config/analytics.yaml
           def analytics_id=(value)
             @config['analytics_id'] = value
           end
