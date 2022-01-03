@@ -29,7 +29,7 @@ RSpec.describe Hyrax::Analytics do
       end
     end
 
-    context "When the yaml file has no values" do
+    context "When the yaml file has a deprecated format" do
       before do
         allow(File).to receive(:read).and_return <<-FILE
           analytics:
