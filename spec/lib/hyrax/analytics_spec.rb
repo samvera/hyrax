@@ -42,8 +42,6 @@ RSpec.describe Hyrax::Analytics do
       end
 
       it 'reads its config from a yaml file' do
-        expect(Rails.logger).to receive(:info)
-          .with(starting_with("Deprecated analytics format found. Please update your yaml file."))
         Hyrax.config.google_analytics_id = "UA-XXXXXXXX"
         expect(config.app_name).to eql 'My App Name'
         expect(config.app_version).to eql '0.0.1'
