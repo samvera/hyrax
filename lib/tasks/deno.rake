@@ -41,9 +41,9 @@ namespace :hyrax do
       deno_lib_scripts = File.join(hyrax_path, 'lib', 'scripts').to_s
       deno_config = File.join(hyrax_path, 'deno.json').to_s
       if args.reload && !%w[0 no false].include?(args.reload)
-        system 'bin/deno', 'test', '--config', deno_config, '-r', '--no-check=remote', deno_scripts, deno_lib_scripts, exception: true
+        system 'bin/deno', 'test', '--config', deno_config, '-r', "--allow-read=#{deno_scripts},#{deno_lib_scripts}", '--no-check=remote', deno_scripts, deno_lib_scripts, exception: true
       else
-        system 'bin/deno', 'test', '--config', deno_config, '--no-check=remote', deno_scripts, deno_lib_scripts, exception: true
+        system 'bin/deno', 'test', '--config', deno_config, "--allow-read=#{deno_scripts},#{deno_lib_scripts}", '--no-check=remote', deno_scripts, deno_lib_scripts, exception: true
       end
     end
   end
