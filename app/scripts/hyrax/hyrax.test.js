@@ -1,9 +1,8 @@
 import { assert } from "./dev-deps.js";
-import { waitForWindow } from "../../../lib/scripts/window.js";
+import "../../../lib/scripts/window.js";
 
-// Modules which depend on the DOM must be imported *after* the window
-// is set up.
-await waitForWindow();
+// Modules which depend on the DOM at runtime must be imported *after*
+// the window is set up.
 const Hyrax = await import("./hyrax.js");
 
 Deno.test({
