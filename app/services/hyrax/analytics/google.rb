@@ -30,7 +30,15 @@ module Hyrax
               Rails.logger.error("Unable to fetch any keys from #{filename}.")
               return new({})
             end
-            new yaml.fetch('analytics')&.fetch('google')
+            config = yaml.fetch('analytics')&.fetch('google', nil)
+            unless config
+              Deprecation.warn("Deprecated analytics configuration format found. Please update config/analytics.yml.")
+              config = yaml.fetch('analytics')
+              # this has to exist here with a placeholder so it can be set in the Hyrax initializer
+              # it is only for backward compatibility
+              config['analytics_id'] = '-'
+            end
+            new config
           end
 
           REQUIRED_KEYS = %w[analytics_id app_name app_version privkey_path privkey_secret client_email].freeze
@@ -47,6 +55,12 @@ module Hyrax
 
           REQUIRED_KEYS.each do |key|
             class_eval %{ def #{key};  @config.fetch('#{key}'); end }
+          end
+
+          # This method allows setting the analytics id in the initializer
+          # @deprecated set the analytics id in either ENV['GOOGLE_ANALYTICS_ID'] or config/analytics.yaml
+          def analytics_id=(value)
+            @config['analytics_id'] = value
           end
         end
 

@@ -8,6 +8,7 @@ services:
       args:
         - EXTRA_APK_PACKAGES=git less
     image: ghcr.io/samvera/dassie
+    command: sh -l -c 'bundle && bundle exec puma -v -b tcp://0.0.0.0:3000'
     stdin_open: true
     tty: true
     user: root
@@ -109,6 +110,7 @@ services:
       context: .
       target: hyrax-engine-dev-worker
     image: ghcr.io/samvera/dassie-worker
+    command: sh -l -c 'bundle && bundle exec sidekiq'
     user: root
     env_file:
       - .env
