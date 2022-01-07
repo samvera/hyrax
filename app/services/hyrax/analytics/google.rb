@@ -32,7 +32,7 @@ module Hyrax
             end
             config = yaml.fetch('analytics')&.fetch('google', nil)
             unless config
-              Rails.logger.info("Deprecated analytics format found. Please update your yaml file.")
+              Deprecation.warn("Deprecated analytics configuration format found. Please update config/analytics.yml.")
               config = yaml.fetch('analytics')
               # this has to exist here with a placeholder so it can be set in the Hyrax initializer
               # it is only for backward compatibility
@@ -58,7 +58,7 @@ module Hyrax
           end
 
           # This method allows setting the analytics id in the initializer
-          # which is deprecated
+          # @deprecated set the analytics id in either ENV['GOOGLE_ANALYTICS_ID'] or config/analytics.yaml
           def analytics_id=(value)
             @config['analytics_id'] = value
           end
