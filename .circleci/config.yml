@@ -33,10 +33,9 @@ jobs:
             fi
             [[ -z "$(git branch --all --list master */master)" ]]
 
-      - samvera/bundle_for_gem:
+      - samvera/bundle:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
-          project: hyrax
 
       # Run rubocop in parallel with caching
       # This should get added to the orb once proven here
@@ -89,10 +88,9 @@ jobs:
           at: ~/
       - samvera/engine_cart_generate:
           cache_key: v1-internal-test-app-{{ checksum "hyrax.gemspec" }}-{{ checksum ".regen" }}-{{ checksum ".circleci/config.yml" }}-<< parameters.rails_version >>-<< parameters.ruby_version >>
-      - samvera/bundle_for_gem:
+      - samvera/bundle:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
-          project: hyrax
       - persist_to_workspace:
           root: ~/
           paths:
@@ -128,10 +126,9 @@ jobs:
           solr_config_path: .internal_test_app/solr/conf
           core_name: hyrax-valkyrie-test
       # Rerun bundler in case this is a different ruby version than bundle and build steps
-      - samvera/bundle_for_gem:
+      - samvera/bundle:
           ruby_version: << parameters.ruby_version >>
           bundler_version: << parameters.bundler_version >>
-          project: hyrax
       - run:
           command: bundle exec rake app:db:migrate
       - samvera/parallel_rspec
