@@ -34,8 +34,8 @@ module Wings
 
         resource_factory.to_resource(object: af_object)
       rescue ActiveFedora::RecordInvalid, RuntimeError => err
-        raise "more serious and helpful error message" if
-          err.message == "Save file first"
+        raise MissingOrUnsavedFileError.new(err.message, obj: af_object) if
+          err.message == 'Save the file first'
 
         raise FailedSaveError.new(err.message, obj: af_object)
       end
@@ -72,7 +72,20 @@ module Wings
 
         def initialize(msg = nil, obj:)
           self.obj = obj
+          msg = "Failed to save object {obj}.\n" + msg
           super(msg)
+        end
+      end
+
+      class MissingOrUnsavedFileError < FailedSaveError
+        def initialize(msg = nil, obj:)
+          msg = "Wings tried to save metadata for a file which has not " \
+                "been saved. Fedora creates a metadata node when the file is " \
+                "created, so it's not possible to add metadata for a file " \
+                "until the file contents are persisted.\n  Use the " \
+                "Hyrax.storage_adapter to save the file before trying to " \
+                "save metadata.\n" + msg
+          super(msg, obj: obj)
         end
       end
 
