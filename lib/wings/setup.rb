@@ -48,6 +48,17 @@ module ActiveFedora
     end
   end
 
+  module WithMetadata
+    class MetadataNode
+      ##
+      # @note fcrepo rejects `:file_hash` updates. the attribute is managed by
+      #   the data store. always drop it from changed attributes.
+      def changed_attributes
+        super.except(:file_hash)
+      end
+    end
+  end
+
   module Associations
     class ContainerProxy
       delegate :build_or_set, to: :@association

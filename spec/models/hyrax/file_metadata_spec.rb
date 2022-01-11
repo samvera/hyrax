@@ -24,6 +24,24 @@ RSpec.describe Hyrax::FileMetadata do
                           type: contain_exactly(described_class::Use::ORIGINAL_FILE))
   end
 
+  context 'when saved with a file' do
+    subject(:file_metadata) { Hyrax.custom_queries.find_file_metadata_by(id: file.id) }
+    let(:file_set) { FactoryBot.valkyrie_create(:hyrax_file_set) }
+
+    let(:file) do
+      Hyrax.storage_adapter.upload(resource: file_set,
+                                   file: Tempfile.new('blah'),
+                                   original_filename: 'blah.txt')
+    end
+
+    it 'can be changed and saved' do
+      file_metadata.creator = 'Tove'
+
+      expect(Hyrax.persister.save(resource: file_metadata).creator)
+        .to contain_exactly('Tove')
+    end
+  end
+
   describe '#original_file?' do
     context 'when use says file is the original file' do
       before do
