@@ -34,6 +34,9 @@ module Wings
 
         resource_factory.to_resource(object: af_object)
       rescue ActiveFedora::RecordInvalid, RuntimeError => err
+        raise "more serious and helpful error message" if
+          err.message == "Save file first"
+
         raise FailedSaveError.new(err.message, obj: af_object)
       end
 

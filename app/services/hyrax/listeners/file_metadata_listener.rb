@@ -10,8 +10,8 @@ module Hyrax
       # @param [Dry::Events::Event] event
       # @return [void]
       def on_object_file_uploaded(event)
-        md = event[:metadata]
-        Hyrax::Characterization::ValkyrieCharacterizationService.run(md, md.file)
+        Hyrax::Characterization::ValkyrieCharacterizationService
+          .run(metadata: event[:metadata], file: event[:metadata])
       end
     end
   end
