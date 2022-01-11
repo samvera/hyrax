@@ -2,21 +2,15 @@
 class ValkyrieIngestJob < Hyrax::ApplicationJob
   queue_as Hyrax.config.ingest_queue_name
 
-  # after_perform do |job|
-  #   # We want the lastmost Hash, if any.
-  #   opts = job.arguments.reverse.detect { |x| x.is_a? Hash } || {}
-  #   wrapper = job.arguments.first
-  #   ContentNewVersionEventJob.perform_later(wrapper.file_set, wrapper.user) if opts[:notification]
-  # end
-
+  ##
   # @param [Valkyrie::StorageAdapter::StreamFile] file
-  # @param [Boolean] notification send the user a notification, used in after_perform callback
-  # @see 'config/initializers/hyrax_callbacks.rb'
-  def perform(file, _notification: false)
+  def perform(file)
     ingest(file: file)
   end
 
+  ##
   # @param [Valkyrie::StorageAdapter::StreamFile] file
+  #
   # @return [void]
   def ingest(file:)
     file_set = Hyrax.query_service.find_by(id: file.file_set_uri)
@@ -26,7 +20,14 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
     add_file_to_file_set(file_set: file_set, file_metadata: updated_metadata)
   end
 
-  # @return FileSet updated file set
+  ##
+  # @todo this should publish something to allow the fileset
+  #   to reindex its membership
+  # @param [Hyrax::FileSet] file_set the file set to add to
+  # @param [Hyrax::FileMetadata] file_metadata the metadata object representing
+  #   the file to add
+  #
+  # @return [Hyrax::FileSet] updated file set
   def add_file_to_file_set(file_set:, file_metadata:)
     file_set.file_ids << file_metadata.id
     Hyrax.persister.save(resource: file_set)
