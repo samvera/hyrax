@@ -15,56 +15,66 @@ RSpec.describe Hyrax::FileMetadata do
   let(:pcdm_file_uri) { RDF::URI('http://pcdm.org/models#File') }
 
   it 'sets the proper attributes' do
-    expect(subject.id.to_s).to eq 'test_id'
-    expect(subject.label).to contain_exactly('world.png')
-    expect(subject.original_filename).to eq 'world.png'
-    expect(subject.mime_type).to eq('image/png')
-    expect(subject.format_label).to contain_exactly('test_format_label')
-    expect(subject.type).to contain_exactly(described_class::Use::ORIGINAL_FILE)
+    expect(file_metadata)
+      .to have_attributes(id: 'test_id',
+                          format_label: contain_exactly('test_format_label'),
+                          label: contain_exactly('world.png'),
+                          mime_type: 'image/png',
+                          original_filename: 'world.png',
+                          type: contain_exactly(described_class::Use::ORIGINAL_FILE))
   end
 
   describe '#original_file?' do
     context 'when use says file is the original file' do
-      before { subject.type = [described_class::Use::ORIGINAL_FILE, pcdm_file_uri] }
-      it 'returns true' do
-        expect(subject).to be_original_file
+      before do
+        file_metadata.type = [described_class::Use::ORIGINAL_FILE, pcdm_file_uri]
       end
+
+      it { is_expected.to be_original_file }
     end
+
     context 'when use does not say file is the original file' do
-      before { subject.type = [described_class::Use::THUMBNAIL, pcdm_file_uri] }
-      it 'returns false' do
-        expect(subject).not_to be_original_file
+      before do
+        file_metadata.type = [described_class::Use::THUMBNAIL, pcdm_file_uri]
       end
+
+      it { is_expected.not_to be_original_file }
     end
   end
 
   describe '#thumbnail_file?' do
     context 'when use says file is the thumbnail file' do
-      before { subject.type = [described_class::Use::THUMBNAIL, pcdm_file_uri] }
-      it 'returns true' do
-        expect(subject).to be_thumbnail_file
+      before do
+        file_metadata.type = [described_class::Use::THUMBNAIL, pcdm_file_uri]
       end
+
+      it { is_expected.to be_thumbnail_file }
     end
+
     context 'when use does not say file is the thumbnail file' do
-      before { subject.type = [described_class::Use::ORIGINAL_FILE, pcdm_file_uri] }
-      it 'returns false' do
-        expect(subject).not_to be_thumbnail_file
+      before do
+        file_metadata.type = [described_class::Use::ORIGINAL_FILE, pcdm_file_uri]
       end
+
+      it { is_expected.not_to be_thumbnail_file }
     end
   end
 
   describe '#extracted_file?' do
     context 'when use says file is the extracted file' do
-      before { subject.type = [described_class::Use::EXTRACTED_TEXT, pcdm_file_uri] }
-      it 'returns true' do
-        expect(subject).to be_extracted_file
+      before do
+        file_metadata.type = [described_class::Use::EXTRACTED_TEXT, pcdm_file_uri]
       end
+
+      it { is_expected.to be_extracted_file }
     end
+
     context 'when use does not say file is the extracted file' do
-      before { subject.type = [described_class::Use::ORIGINAL_FILE, pcdm_file_uri] }
-      it 'returns false' do
-        expect(subject).not_to be_extracted_file
+      before do
+        file_metadata.type = [described_class::Use::ORIGINAL_FILE, pcdm_file_uri]
       end
+
+      it { is_expected.not_to be_extracted_file }
     end
   end
 
