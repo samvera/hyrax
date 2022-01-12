@@ -79,6 +79,25 @@ RSpec.describe Hyrax::WorkUploadsHandler, valkyrie_adapter: :test_adapter do
                               have_attributes(payload: include(object: be_file_set)),
                               have_attributes(payload: include(object: be_file_set)))
       end
+
+      # we can't use the memory based test_adapter to test asynch,
+      context 'when running background jobs', perform_enqueued: [ValkyrieIngestJob], valkyrie_adapter: :wings_adapter do
+        before do
+          # stub out  characterization to avoid system calls
+          characterize = double(run: true)
+          allow(Hyrax.config)
+            .to receive(:characterization_service)
+            .and_return(characterize)
+        end
+
+        it 'persists the uploaded files asynchronously' do
+          expect { service.attach }
+            .to change { Hyrax.query_service.find_members(resource: work) }
+            .to contain_exactly(have_attached_files,
+                                have_attached_files,
+                                have_attached_files)
+        end
+      end
     end
 
     context 'with existing file_sets' do
