@@ -484,6 +484,17 @@ module Hyrax
     # Override characterization runner
     attr_accessor :characterization_runner
 
+    ##
+    # @!attribute [rw] characterization_service
+    #   @return [#run] the service to use for charactaerization for Valkyrie
+    #     objects
+    #   @ see Hyrax::Characterization::ValkyrieCharacterizationService
+    attr_writer :characterization_service
+    def characterization_service
+      @characterization_service ||=
+        Hyrax::Characterization::ValkyrieCharacterizationService
+    end
+
     # Attributes for the lock manager which ensures a single process/thread is mutating a ore:Aggregation at once.
     # @!attribute [w] lock_retry_count
     #   How many times to retry to acquire the lock before raising UnableToAcquireLockError
