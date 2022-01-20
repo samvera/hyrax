@@ -118,7 +118,12 @@ module Hyrax
         return if id.blank?
         Hyrax.query_service.find_by(id: id)
       rescue Valkyrie::Persistence::ObjectNotFoundError
-        # id is saved but doesn't exist
+        # The default ID is DEFAULT_ID when saving is not supported.  It is ok
+        # for this default id to be known but not found.  The admin set will be
+        # created with DEFAULT_ID by find_or_create_default_admin_set.
+        return unless save_default?
+
+        # id is saved in the default_admin_set_persister's table but doesn't exist
         # NOTE: This is a corrupt state and shouldn't happen.  Manual intervention
         #       is required to determine the correct value for the default admin
         #       set id.  The saved id either needs to be updated to the correct
@@ -142,7 +147,7 @@ module Hyrax
       # @return [String | nil] the default admin set id; returns nil if not set
       # @note For general use, it is better to use `Hyrax.config.default_admin_set_id`.
       def default_admin_set_id
-        DEFAULT_ID unless save_default?
+        return DEFAULT_ID unless save_default?
         id = default_admin_set_persister.first&.default_admin_set_id
         id = find_unsaved_default_admin_set&.id&.to_s if id.blank?
         id
