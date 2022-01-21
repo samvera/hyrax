@@ -43,6 +43,14 @@ RSpec.describe Hyrax::AdminSetCreateService do
       end
     end
 
+    context "and Hyrax::DefaultAdministrativeSet table does not exist" do
+      before { allow(Hyrax::DefaultAdministrativeSet).to receive(:save_supported?).and_return(false) }
+      it "creates a default admin set with the DEFAULT_ID" do
+        expect(Hyrax::DefaultAdministrativeSet).not_to receive(:first)
+        expect(described_class.find_or_create_default_admin_set.id).to eq described_class::DEFAULT_ID
+      end
+    end
+
     context "when default admin set id is NOT saved in the database" do
       before { allow(Hyrax::DefaultAdministrativeSet).to receive(:count).and_return(0) }
       context "but default admin set does exist" do
