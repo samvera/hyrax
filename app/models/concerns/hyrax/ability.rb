@@ -413,10 +413,8 @@ module Hyrax
     # Returns true if the current user is the depositor of the specified work
     # @param document_id [String] the id of the document.
     def user_is_depositor?(document_id)
-      Hyrax::WorkRelation.new.search_with_conditions(
-        id: document_id,
-        DepositSearchBuilder.depositor_field => current_user.user_key
-      ).any?
+      doc = Hyrax::SolrService.search_by_id(document_id, fl: 'depositor_ssim')
+      current_user.user_key == doc.fetch('depositor_ssim').first
     end
 
     def curation_concerns_models
