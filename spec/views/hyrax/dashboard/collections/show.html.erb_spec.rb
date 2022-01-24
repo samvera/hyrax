@@ -23,6 +23,7 @@ RSpec.describe 'hyrax/dashboard/collections/show.html.erb', type: :view do
     assign(:presenter, presenter)
     assign(:parent_collection_count, 0)
     assign(:members_count, 0)
+    assign(:member_docs, [])
 
     allow(controller).to receive(:current_ability).and_return(ability)
 
