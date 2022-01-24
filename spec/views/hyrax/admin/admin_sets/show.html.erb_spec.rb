@@ -12,6 +12,7 @@ RSpec.describe "hyrax/admin/admin_sets/show.html.erb", type: :view do
     stub_template '_document_list.html.erb' => 'document list'
     stub_template '_paginate.html.erb' => 'paginate'
 
+    assign(:member_docs, [])
     assign(:presenter, presenter)
     render
   end
