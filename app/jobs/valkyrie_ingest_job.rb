@@ -44,7 +44,7 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
                             file: carrier_wave_sanitized_file,
                             original_filename: carrier_wave_sanitized_file.original_filename)
 
-    file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: uploaded.id)
+    file_metadata = find_or_create_metadata(id: uploaded.id, file: carrier_wave_sanitized_file)
     file_metadata.file_set_id = file.file_set_uri
     file_metadata.file_identifier = uploaded.id
     file_metadata.size = uploaded.size
@@ -52,5 +52,14 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
     Hyrax.publisher.publish("object.file.uploaded", metadata: file_metadata)
 
     file_metadata
+  end
+
+  def find_or_create_metadata(id:, file:)
+    Hyrax.custom_queries.find_file_metadata_by(id: id)
+  rescue Valkyrie::Persistence::ObjectNotFoundError => e
+    Hyrax.logger.warn "Failed to find existing metadata for #{id}:"
+    Hyrax.logger.warn e.message
+    Hyrax.logger.warn "Creating Hyrax::FileMetadata now"
+    Hyrax::FileMetadata.for(file: file)
   end
 end
