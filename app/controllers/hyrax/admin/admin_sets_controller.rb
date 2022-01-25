@@ -71,7 +71,7 @@ module Hyrax
 
     def create
       if create_admin_set
-        redirect_to hyrax.edit_admin_admin_set_path(@admin_set), notice: I18n.t('new_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
+        redirect_to hyrax.edit_admin_admin_set_path(admin_set_id), notice: I18n.t('new_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
       else
         setup_form
         render :new
@@ -82,7 +82,7 @@ module Hyrax
       if @admin_set.destroy
         after_delete_success
       else
-        redirect_to hyrax.admin_admin_set_path(@admin_set), alert: @admin_set.errors.full_messages.to_sentence
+        redirect_to hyrax.admin_admin_set_path(admin_set_id), alert: @admin_set.errors.full_messages.to_sentence
       end
     end
 
@@ -99,11 +99,15 @@ module Hyrax
     private
 
     def update_referer
-      hyrax.edit_admin_admin_set_path(@admin_set) + (params[:referer_anchor] || '')
+      hyrax.edit_admin_admin_set_path(admin_set_id) + (params[:referer_anchor] || '')
     end
 
     def create_admin_set
-      admin_set_create_service.call(admin_set: @admin_set, creating_user: current_user)
+      updated_admin_set = admin_set_create_service.call!(admin_set: admin_set_resource, creating_user: current_user)
+      update_admin_set(updated_admin_set)
+      true
+    rescue RuntimeError
+      false
     end
 
     def setup_form
@@ -144,6 +148,28 @@ module Hyrax
       else
         redirect_to hyrax.my_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
       end
+    end
+
+    def admin_set_id
+      @admin_set&.id&.to_s
+    end
+
+    def admin_set_resource
+      case @admin_set
+      when Valkyrie::Resource
+        @admin_set
+      else
+        @admin_set.valkyrie_resource
+      end
+    end
+
+    def update_admin_set(updated_admin_set)
+      @admin_set = case @admin_set
+                   when Valkyrie::Resource
+                     updated_admin_set
+                   else
+                     Wings::ActiveFedoraConverter.convert(resource: updated_admin_set)
+                   end
     end
   end
 end
