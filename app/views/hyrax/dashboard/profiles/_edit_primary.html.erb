@@ -10,8 +10,8 @@
       <span class="form-text"><%= t('.help_change_picture_type') %></span>
 
       <div class="form-check">
-        <%= f.label class: 'form-check-label', :remove_avatar do %>
-          <%= f.check_box class: 'form-check-input', :remove_avatar %>
+        <%= f.label :remove_avatar, class: 'form-check-label' do %>
+          <%= f.check_box :remove_avatar, class: 'form-check-input' %>
           <%= t(".delete_picture") %>
           <a href="#" id="delete_picture_help" data-toggle="popover" data-content="<%= t('.delete_picture_data_content') %>" data-original-title="<%= t('.delete_picture_data_original_title') %>"><i class="glyphicon glyphicon-question-sign"></i></a>
         <% end %>
