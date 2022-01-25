@@ -17,8 +17,9 @@ module Hyrax
 
         ##
         # @params [#save] persister
-        def initialize(persister: Hyrax.persister)
+        def initialize(persister: Hyrax.persister, publisher: Hyrax.publisher)
           @persister = persister
+          @publisher = publisher
         end
 
         ##
@@ -30,6 +31,7 @@ module Hyrax
         #   `Failure([#to_s, change_set.resource])`, otherwise.
         def call(change_set, user: nil)
           begin
+            new_collections = changed_collection_membership(change_set)
             unsaved = change_set.sync
             saved = @persister.save(resource: unsaved)
           rescue StandardError => err
@@ -43,18 +45,34 @@ module Hyrax
 
           user ||= ::User.find_by_user_key(saved.depositor)
 
-          publish_changes(resource: saved, user: user, new: unsaved.new_record)
+          publish_changes(resource: saved, user: user, new: unsaved.new_record, new_collections: new_collections)
           Success(saved)
         end
 
         private
 
-        def publish_changes(resource:, user:, new: false)
+        ##
+        # @param [Hyrax::ChangeSet] change_set
+        #
+        # @return [Array<Valkyrie::ID>]
+        def changed_collection_membership(change_set)
+          return [] unless change_set.changed?(:member_of_collection_ids)
+
+          change_set.member_of_collection_ids - change_set.model.member_of_collection_ids
+        end
+
+        def publish_changes(resource:, user:, new: false, new_collections: [])
           if resource.collection?
-            Hyrax.publisher.publish('collection.metadata.updated', collection: resource, user: user)
+            @publisher.publish('collection.metadata.updated', collection: resource, user: user)
           else
-            Hyrax.publisher.publish('object.deposited', object: resource, user: user) if new
-            Hyrax.publisher.publish('object.metadata.updated', object: resource, user: user)
+            @publisher.publish('object.deposited', object: resource, user: user) if new
+            @publisher.publish('object.metadata.updated', object: resource, user: user)
+          end
+
+          new_collections.each do |collection_id|
+            @publisher.publish('collection.membership.updated',
+                               collection_id: collection_id,
+                               user: user)
           end
         end
       end
