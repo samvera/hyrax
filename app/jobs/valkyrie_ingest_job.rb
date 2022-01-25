@@ -22,7 +22,7 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
 
     add_file_to_file_set(file_set: file_set,
                          file_metadata: updated_metadata,
-                         user:file.user)
+                         user: file.user)
   end
 
   ##
