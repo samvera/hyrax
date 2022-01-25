@@ -96,6 +96,12 @@ module Hyrax
 
     # @since 3.0.0
     # @macro a_registered_event
+    #   @note this event SHOULD be published whevener the metadata is saved
+    #     for a PCDM Collection. the payload for each published event MUST
+    #     include an `:collection` (the updated Collection) AND a `:user` (the
+    #     {::User} responsible for the update). the event SHOULD NOT be
+    #     published for changes that only impact membership properties
+    #     (`#member_of_ids`, `#member_of_collection_ids`, and `#member_ids`)
     register_event('collection.metadata.updated')
 
     # @since 3.0.0
@@ -140,6 +146,13 @@ module Hyrax
 
     # @since 3.0.0
     # @macro a_registered_event
+    #   @note this event SHOULD be published whevener the metadata is saved
+    #     for a PCDM Object (including a Hydra Works FileSet). the payload for
+    #     each published event MUST include an `:object` (the updated Object),
+    #     AND a `:user` (the ::User responsible for the update). the event
+    #     SHOULD NOT be published for changes that only impact membership
+    #     properties (`#member_of_ids`, `#member_of_collection_ids`, and
+    #     `#member_ids`)
     register_event('object.metadata.updated')
 
     # @since 3.2.0
