@@ -153,6 +153,7 @@ RSpec.shared_examples 'a Hyrax::AdministrativeSet' do
   subject(:admin_set) { described_class.new }
 
   it_behaves_like 'a model with core metadata'
+  it_behaves_like 'has members'
 
   it 'has an #alternative_title' do
     expect { admin_set.alternative_title = ['Moomin'] }

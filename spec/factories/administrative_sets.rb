@@ -5,8 +5,9 @@ FactoryBot.define do
 
     transient do
       with_permission_template { false }
-      user { create(:user) }
+      user          { create(:user) }
       access_grants { [] }
+      members       { nil }
     end
 
     after(:build) do |adminset, evaluator|
@@ -27,6 +28,14 @@ FactoryBot.define do
                                                           agent_id: evaluator.user.user_key,
                                                           access: Hyrax::PermissionTemplateAccess::MANAGE)
         template.reset_access_controls_for(collection: admin_set)
+      end
+    end
+
+    trait :with_member_works do
+      transient do
+        members do
+          [valkyrie_create(:hyrax_work), valkyrie_create(:hyrax_work)]
+        end
       end
     end
   end

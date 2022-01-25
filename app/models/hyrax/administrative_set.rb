@@ -8,6 +8,8 @@ module Hyrax
   class AdministrativeSet < Hyrax::Resource
     include Hyrax::Schema(:core_metadata)
 
+    attribute :member_ids, Valkyrie::Types::Array.of(Valkyrie::Types::ID).meta(ordered: true)
+
     attribute :alternative_title, Valkyrie::Types::Set.of(Valkyrie::Types::String)
     attribute :creator,           Valkyrie::Types::Set.of(Valkyrie::Types::String)
     attribute :description,       Valkyrie::Types::Set.of(Valkyrie::Types::String)

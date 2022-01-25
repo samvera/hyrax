@@ -9,6 +9,8 @@ module Hyrax
       property :title, required: true, primary: true
       property :description, primary: true
 
+      property :member_ids, default: [], type: Valkyrie::Types::Array
+
       property :human_readable_type, writable: false
       property :date_modified, readable: false
       property :date_uploaded, readable: false
