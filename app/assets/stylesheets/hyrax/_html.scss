@@ -1,0 +1,11 @@
+/*
+ * Bootstrap 4 has increased global font-size from 14px to 1rem, computed 
+ * by modern browsers as 16px. This can be reset by overriding the html
+ * selector and adding the property/value of `font-size: 14px;`.
+ *
+ * See https://getbootstrap.com/docs/4.0/migration/ for more information.
+ */
+
+html {
+  font-size: inherit;
+}
