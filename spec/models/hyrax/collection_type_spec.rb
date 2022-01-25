@@ -170,16 +170,28 @@ RSpec.describe Hyrax::CollectionType, type: :model do
   end
 
   describe "collections" do
-    let!(:collection) { FactoryBot.create(:collection_lw, collection_type_gid: collection_type.gid.to_s) }
     let(:collection_type) { FactoryBot.create(:collection_type) }
 
-    it 'returns collections of this collection type' do
-      expect(collection_type.collections.to_a).to include collection
-    end
-
     it 'returns empty array if gid is nil' do
+      valkyrie_create(:hyrax_collection, collection_type_gid: collection_type.to_global_id.to_s)
       expect(Collection.count).not_to be_zero
       expect(build(:collection_type).collections).to eq []
+    end
+
+    context 'when use_valkyrie is true' do
+      let!(:pcdm_collection) { valkyrie_create(:hyrax_collection, collection_type_gid: collection_type.to_global_id.to_s) }
+
+      it 'returns pcdm collections of this collection type' do
+        expect(collection_type.collections(use_valkyrie: true).to_a).to include pcdm_collection
+      end
+    end
+
+    context 'when use_valkyrie is false' do
+      let!(:collection) { FactoryBot.create(:collection_lw, collection_type_gid: collection_type.to_global_id.to_s) }
+
+      it 'returns collections of this collection type' do
+        expect(collection_type.collections(use_valkyrie: false).to_a).to include collection
+      end
     end
   end
 
