@@ -28,6 +28,15 @@ RSpec.describe ValkyrieIngestJob do
         .to have_attached_files(be_original_file)
     end
 
+    it 'makes original_file queryable by use' do
+      described_class.perform_now(upload)
+
+      resource = Hyrax.query_service.find_by(id: file_set.id)
+
+      expect(Hyrax.custom_queries.find_original_file(file_set: resource))
+        .to be_a Hyrax::FileMetadata
+    end
+
     it 'publishes object.file.uploaded with a FileMetadata' do
       expect { described_class.perform_now(upload) }
         .to change { listener.object_file_uploaded.map(&:payload) }
