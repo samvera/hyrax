@@ -15,7 +15,9 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
   #
   # @return [void]
   def ingest(file:)
-    file_set = Hyrax.query_service.find_by(id: file.file_set_uri)
+    file_set_uri = Valkyrie::ID.new(file.file_set_uri)
+    file_set = Hyrax.query_service.find_by(id: file_set_uri)
+
     updated_metadata = upload_file(file: file, file_set: file_set)
 
     add_file_to_file_set(file_set: file_set, file_metadata: updated_metadata)
@@ -41,9 +43,10 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
   #
   # @param [Hyrax::UploadedFile] file
   # @param [Hyrax::FileSet] file_set
+  # @param [RDF::URI] pcdm_use  the use/type to apply to the created FileMetadata
   #
   # @return [Hyrax::FileMetadata] the metadata representing the uploaded file
-  def upload_file(file:, file_set:)
+  def upload_file(file:, file_set:, pcdm_use: Hyrax::FileMetadata::Use::ORIGINAL_FILE)
     carrier_wave_sanitized_file = file.uploader.file
     uploaded = Hyrax.storage_adapter
                     .upload(resource: file_set,
@@ -51,13 +54,16 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
                             original_filename: carrier_wave_sanitized_file.original_filename)
 
     file_metadata = find_or_create_metadata(id: uploaded.id, file: carrier_wave_sanitized_file)
+
+    file_metadata.type << pcdm_use
     file_metadata.file_set_id = file.file_set_uri
     file_metadata.file_identifier = uploaded.id
     file_metadata.size = uploaded.size
 
+    saved_metadata = Hyrax.persister.save(resource: file_metadata)
     Hyrax.publisher.publish("object.file.uploaded", metadata: file_metadata)
 
-    file_metadata
+    saved_metadata
   end
 
   ##
