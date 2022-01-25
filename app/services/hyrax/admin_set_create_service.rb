@@ -64,7 +64,7 @@ module Hyrax
         Deprecation.warn("'##{__method__}' will be removed in Hyrax 4.0.  " \
                          "Warning: This method may hide runtime errors.  " \
                          "Instead, use 'Hyrax::AdminSetCreateService.call!'.  ")
-        call!(admin_set: admin_set, creating_user: creating_user, **kwargs).present?
+        call!(admin_set: admin_set_resource(admin_set), creating_user: creating_user, **kwargs).present?
       rescue RuntimeError => err
         raise err if default_admin_set?(id: admin_set.id)
         false
@@ -152,13 +152,22 @@ module Hyrax
         id = find_unsaved_default_admin_set&.id&.to_s if id.blank?
         id
       end
+
+      def admin_set_resource(admin_set)
+        case admin_set
+        when Valkyrie::Resource
+          admin_set
+        else
+          admin_set.valkyrie_resource
+        end
+      end
     end
 
     # @param admin_set [Hyrax::AdministrativeSet | AdminSet] the admin set to operate on
     # @param creating_user [User] the user who created the admin set (if any).
     # @param workflow_importer [#call] imports the workflow
     def initialize(admin_set:, creating_user:, workflow_importer: default_workflow_importer, default_admin_set: false)
-      @admin_set = admin_set
+      @admin_set = Hyrax::AdminSetCreateService.send(:admin_set_resource, admin_set)
       @creating_user = creating_user
       @workflow_importer = workflow_importer
       @default_admin_set = default_admin_set
@@ -182,23 +191,6 @@ module Hyrax
     # @return [Hyrax::AdministrativeSet] The fully created admin set.
     # @raise [RuntimeError] if admin set cannot be persisted
     def create!
-      admin_set.respond_to?(:valkyrie_resource) ? active_fedora_create! : valkyrie_create!
-    end
-
-    private
-
-    def default_admin_set?
-      @default_admin_set
-    end
-
-    def admin_group_name
-      ::Ability.admin_group_name
-    end
-
-    # Creates an admin set, setting the creator and the default access controls.
-    # @return [Hyrax::AdministrativeSet] The fully created admin set.
-    # @raise [RuntimeError] if admin set cannot be persisted
-    def valkyrie_create!
       admin_set.creator = [creating_user.user_key] if creating_user
       updated_admin_set = Hyrax.persister.save(resource: admin_set).tap do |result|
         if result
@@ -214,23 +206,14 @@ module Hyrax
       updated_admin_set
     end
 
-    # Creates an admin set, setting the creator and the default access controls.
-    # @return [Hyrax::AdministrativeSet] The fully created admin set.
-    # @raise [RuntimeError] if admin set cannot be persisted
-    def active_fedora_create!
-      admin_set.creator = [creating_user.user_key] if creating_user
-      admin_set.save.tap do |result|
-        if result
-          ActiveRecord::Base.transaction do
-            permission_template = permissions_create_service.create_default(collection: admin_set,
-                                                                            creating_user: creating_user)
-            workflow = create_workflows_for(permission_template: permission_template)
-            create_default_access_for(permission_template: permission_template, workflow: workflow) if default_admin_set?
-          end
-        end
-      end
-      raise 'Admin set failed to persist.' unless admin_set.persisted?
-      admin_set.valkyrie_resource
+    private
+
+    def default_admin_set?
+      @default_admin_set
+    end
+
+    def admin_group_name
+      ::Ability.admin_group_name
     end
 
     def create_workflows_for(permission_template:)
