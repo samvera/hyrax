@@ -9,7 +9,8 @@
         <% item.fq= {} if subfacet %>
 
         <% # The unless prevents Collection from being included in the select list for the Collection Type filter. %>
-        <%= render_facet_item(item.field, item) unless subfacet != true && item.value == "Collection" %>
+        <% facet_config= facet_configuration_for_field(item.field) %>
+        <%= (facet_config.item_presenter || Blacklight::FacetItemPresenter).new(item, facet_config, self, item.field).label unless subfacet != true && item.value == "Collection" %>
       </span>
 
       <% unless item.items.blank? %>
