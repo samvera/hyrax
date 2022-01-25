@@ -3,13 +3,15 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
   queue_as Hyrax.config.ingest_queue_name
 
   ##
-  # @param [Valkyrie::StorageAdapter::StreamFile] file
+  # @param [Hyrax::UploadedFile] file
   def perform(file)
     ingest(file: file)
   end
 
   ##
-  # @param [Valkyrie::StorageAdapter::StreamFile] file
+  # @api private
+  #
+  # @param [Hyrax::UploadedFile] file
   #
   # @return [void]
   def ingest(file:)
@@ -20,6 +22,8 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
   end
 
   ##
+  # @api private
+  #
   # @todo this should publish something to allow the fileset
   #   to reindex its membership
   # @param [Hyrax::FileSet] file_set the file set to add to
@@ -33,6 +37,8 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
   end
 
   ##
+  # @api private
+  #
   # @param [Hyrax::UploadedFile] file
   # @param [Hyrax::FileSet] file_set
   #
@@ -54,6 +60,8 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
     file_metadata
   end
 
+  ##
+  # @api private
   def find_or_create_metadata(id:, file:)
     Hyrax.custom_queries.find_file_metadata_by(id: id)
   rescue Valkyrie::Persistence::ObjectNotFoundError => e
