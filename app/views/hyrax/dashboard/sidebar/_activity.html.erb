@@ -40,8 +40,7 @@
                                         id: 'collapseAnalytics',
                                         open: menu.analytics_reporting_section? do %>
         <% if can? :read, :admin_dashboard %>
-          <%= menu.nav_link(hyrax.admin_analytics_collection_reports_path,
-                            onclick: "dontChangeAccordion(event);") do %>
+          <%= menu.nav_link(hyrax.admin_analytics_collection_reports_path, class: "nav-link", onclick: "dontChangeAccordion(event);") do %>
             <span class="fa fa-folder-open" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.collections_report') %></span>
           <% end %>
         <% end %>
