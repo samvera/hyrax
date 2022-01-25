@@ -1,17 +1,18 @@
-@import 'hyrax/variables', 'hyrax/file_sets', 'hyrax/settings', 'hyrax/header',
-  'hyrax/styles', 'hyrax/file-listing', 'hyrax/browse_everything_overrides',
-  'hyrax/nestable', 'hyrax/collections', 'hyrax/collection_types',
-  'hyrax/batch-edit', 'hyrax/home-page', 'hyrax/featured', 'hyrax/usage-stats',
-  'hyrax/catalog', 'hyrax/buttons', 'hyrax/tinymce', 'hyrax/proxy-rights',
-  'hyrax/file-show', 'hyrax/work-show', 'hyrax/modal', 'hyrax/forms',
-  'hyrax/form', 'hyrax/file_manager', 'hyrax/form-progress', 'hyrax/positioning',
-  'hyrax/fixedsticky', 'hyrax/file_upload', 'hyrax/representative-media',
-  'hyrax/footer', 'hyrax/select_work_type', 'hyrax/users', 'hyrax/dashboard',
-  'hyrax/sidebar', 'hyrax/controlled_vocabulary', 'hyrax/accessibility',
-  'hyrax/recent', 'hyrax/viewer', 'hyrax/breadcrumbs';
-@import 'hydra-editor/multi_value_fields';
-@import 'typeahead';
-@import 'sharing_buttons';
+@import "hyrax/variables", "hyrax/file_sets", "hyrax/settings", "hyrax/html",
+  "hyrax/header", "hyrax/styles", "hyrax/file-listing",
+  "hyrax/browse_everything_overrides", "hyrax/nestable", "hyrax/collections",
+  "hyrax/collection_types", "hyrax/batch-edit", "hyrax/home-page",
+  "hyrax/featured", "hyrax/usage-stats", "hyrax/catalog", "hyrax/buttons",
+  "hyrax/tinymce", "hyrax/proxy-rights", "hyrax/file-show", "hyrax/work-show",
+  "hyrax/modal", "hyrax/forms", "hyrax/form", "hyrax/file_manager",
+  "hyrax/form-progress", "hyrax/positioning", "hyrax/fixedsticky",
+  "hyrax/file_upload", "hyrax/representative-media", "hyrax/footer",
+  "hyrax/select_work_type", "hyrax/users", "hyrax/dashboard", "hyrax/sidebar",
+  "hyrax/controlled_vocabulary", "hyrax/accessibility", "hyrax/recent",
+  "hyrax/viewer", "hyrax/breadcrumbs";
+@import "hydra-editor/multi_value_fields";
+@import "typeahead";
+@import "sharing_buttons";
 
 /* This class is to workaround an issue in which Bootstrap requires a div to display a tooltip
  * on a disabled button. Using a span instead of a div would be ideal but unfortunately it does
