@@ -1,4 +1,10 @@
 # frozen_string_literal: true
+
+##
+# Ingests a {Hyrax::UploadedFile} as file member of a {Hyrax::FileSet}.
+#
+# The {Hyrax::UploadedFile} is passed into {#perform}, and should have a
+# {Hyrax::UploadedFile#file_set_uri} identifying an existing {Hyrax::FileSet}.
 class ValkyrieIngestJob < Hyrax::ApplicationJob
   queue_as Hyrax.config.ingest_queue_name
 
@@ -28,8 +34,6 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
   ##
   # @api private
   #
-  # @todo this should publish something to allow the fileset
-  #   to reindex its membership
   # @param [Hyrax::FileSet] file_set the file set to add to
   # @param [Hyrax::FileMetadata] file_metadata the metadata object representing
   #   the file to add
