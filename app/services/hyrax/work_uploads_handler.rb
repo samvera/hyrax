@@ -165,13 +165,6 @@ module Hyrax
 
     ##
     # @api private
-    # @return [JobIoWrapper]
-    def wrap_file(file, file_set)
-      JobIoWrapper.create_with_varied_file_handling!(user: file.user, file: file, relation: :original_file, file_set: file_set)
-    end
-
-    ##
-    # @api private
     #
     # @note ported from AttachFilesToWorkJob. do we need this? maybe we should
     #   validate something other than type?
