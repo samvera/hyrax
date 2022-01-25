@@ -106,7 +106,8 @@ module Hyrax
       updated_admin_set = admin_set_create_service.call!(admin_set: admin_set_resource, creating_user: current_user)
       update_admin_set(updated_admin_set)
       true
-    rescue RuntimeError
+    rescue RuntimeError => err
+      Rails.logger.error("Failed to create admin set through valkyrie: #{err.message}")
       false
     end
 

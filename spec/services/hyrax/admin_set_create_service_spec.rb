@@ -213,8 +213,6 @@ RSpec.describe Hyrax::AdminSetCreateService do
         # rubocop:disable RSpec/AnyInstance
         before do
           Hyrax.publisher.subscribe(listener)
-          allow_any_instance_of(Hyrax::Listeners::MetadataIndexListener)
-            .to receive(:on_collection_metadata_updated).and_return(available_workflows)
           allow_any_instance_of(Hyrax::PermissionTemplate)
             .to receive(:available_workflows).and_return(available_workflows)
           allow(Sipity::Workflow)
