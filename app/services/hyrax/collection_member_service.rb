@@ -24,7 +24,7 @@ module Hyrax
 
     def list_collections
       query = collection_search_builder.rows(1000)
-      resp = repository.search(query)
+      resp = blacklight_config.repository.search(query)
       resp.documents
     end
 
