@@ -35,6 +35,31 @@ RSpec.describe Hyrax::Transactions::Steps::Save do
         .to eq object: created, user: nil
     end
 
+    context 'when the change_set changes collection membership' do
+      let(:listener) { Hyrax::Specs::AppendingSpyListener.new }
+
+      let(:change_set_class) do
+        Class.new(Hyrax::ChangeSet) { self.fields = [:title, :member_of_collection_ids] }
+      end
+
+      let(:collections) do
+        [FactoryBot.valkyrie_create(:hyrax_collection),
+         FactoryBot.valkyrie_create(:hyrax_collection)]
+      end
+
+      before do
+        change_set.member_of_collection_ids += collections.map(&:id)
+      end
+
+      it 'publishes membership change messages for collections' do
+        step.call(change_set).value!
+
+        expect(listener.collection_membership_updated.map(&:payload))
+          .to contain_exactly(match(collection_id: collections[0].id, user: nil),
+                              match(collection_id: collections[1].id, user: nil))
+      end
+    end
+
     context 'when the caller passes a user' do
       let(:user) { create(:user) }
 
