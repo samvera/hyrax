@@ -18,16 +18,18 @@ $gutter-width: $grid-gutter-width/2;
 // .sidebar is a class on the div
 .sidebar {
   background-color: $admin-sidebar-background-color;
-  padding-top: $admin-vertical-padding;
+  min-height: 100vh;
+  padding-bottom: 2rem;
   position: absolute;
-  transition: width .1s;
+  transition: width 0.1s;
   width: $drawer-small;
   z-index: 1000;
-  min-height: 600px;
-  min-height: 100vh;
 
   &.maximized {
-    .h5, .sidebar-action-text, .profile, .collapse-toggle::after {
+    .h5,
+    .sidebar-action-text,
+    .profile,
+    .collapse-toggle::after {
       opacity: 1;
     }
     width: $drawer-large;
@@ -113,7 +115,6 @@ $gutter-width: $grid-gutter-width/2;
 
   .nav-pills > li > a {
     border-radius: 0;
-    padding: 12px 10px 12px 12px;
 
     &:focus {
       background-color: transparent;
