@@ -12,7 +12,7 @@ RSpec::Matchers.define :have_attached_files do |*expected_files|
     @actual_files = Hyrax.custom_queries.find_files(file_set: actual_file_set)
 
     (expected_files.empty? && @actual_files.any?) ||
-      @actual_files == expected_files
+      values_match?(expected_files, @actual_files)
   end
 
   failure_message_for_should do |actual_file_set|
