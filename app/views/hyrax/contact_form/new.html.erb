@@ -17,7 +17,7 @@
 <% end %>
 
 <%= form_for @contact_form, url: hyrax.contact_form_index_path do |f| %>
-  <%= f.text_field :contact_method, class: 'hide' %>
+  <%= f.text_field :contact_method, class: 'd-none' %>
   <div class="form-group row">
     <%= f.label :category, t('hyrax.contact_form.type_label'), class: "col-sm-2 col-form-label" %>
     <div class="col-sm-10">
