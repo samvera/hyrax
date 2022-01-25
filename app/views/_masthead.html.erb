@@ -2,14 +2,10 @@
   <nav id="masthead" class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation" aria-label="masthead">
     <h1 class="sr-only"><%= application_name %></h1>
     <%= render '/logo' %>
-    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top-navbar-collapse" aria-expanded="false">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top-navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
     </button>
-
-    <div class="collapse navbar-collapse" id="top-navbar-collapse">
+    <div class="collapse navbar-collapse justify-content-end" id="top-navbar-collapse">
       <%= render '/user_util_links' %>
     </div>
   </nav>

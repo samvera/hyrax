@@ -5,23 +5,22 @@
       <%= render_notifications(user: current_user) %>
     </li>
     <li class="nav-item dropdown">
-      <%= link_to hyrax.dashboard_profile_path(current_user), role: 'button', class: 'nav-link dropdown-toggle', data: { toggle: 'dropdown' }, aria: { haspopup: true, expanded: false, controls: 'user-util-links' } do %>
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="sr-only"><%= t("hyrax.toolbar.profile.sr_action") %></span>
-        <span class="d-none d-md-block">&nbsp;<%= current_user.name %></span>
+        <span><%= current_user.name %></span>
         <span class="sr-only"> <%= t("hyrax.toolbar.profile.sr_target") %></span>
-        <span class="fa fa-user" aria-hidden="true"></span>
-      <% end %>
-      <ul id="user-util-links" class="dropdown-menu" role="menu">
-        <li class="dropdown-item"><%= link_to t("hyrax.toolbar.dashboard.menu"), hyrax.dashboard_path %></li>
-
-        <li class="dropdown-divider"></li>
-        <li class="dropdown-item"><%= link_to t("hyrax.toolbar.profile.logout"), main_app.destroy_user_session_path %></li>
-      </ul>
-    </li><!-- /.btn-group -->
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <%= link_to "My Profile", hyrax.dashboard_profile_path(current_user), class: 'dropdown-item' %>
+        <%= link_to t("hyrax.toolbar.dashboard.menu"), hyrax.dashboard_path, class: "dropdown-item" %>
+        <div class="dropdown-divider"></div>
+        <%= link_to t("hyrax.toolbar.profile.logout"), main_app.destroy_user_session_path, class: "dropdown-item" %>
+      </div>
+    </li>
   <% else %>
     <li class="nav-item">
       <%= link_to main_app.new_user_session_path, class: 'nav-link' do %>
-        <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> <%= t("hyrax.toolbar.profile.login") %>
+        <span class="fa fa-sign-in" aria-hidden="true"></span> <%= t("hyrax.toolbar.profile.login") %>
       <% end %>
     </li>
   <% end %>

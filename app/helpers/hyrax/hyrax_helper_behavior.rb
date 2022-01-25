@@ -69,7 +69,7 @@ module Hyrax
       unread_notifications = mailbox.unread_count
       link_to(hyrax.notifications_path,
               'aria-label' => mailbox.label(params[:locale]),
-              class: 'notify-number') do
+              class: 'notify-number nav-link') do
         capture do
           concat tag.span('', class: 'fa fa-bell')
           concat "\n"
