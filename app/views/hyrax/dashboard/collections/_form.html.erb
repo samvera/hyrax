@@ -72,29 +72,35 @@
       </div> <!-- end description -->
 
       <% if @form.persisted? %>
-        <div id="branding" class="tab-pane">
-          <div class="panel panel-default labels">
-            <div class="panel-body">
-              <%= render 'form_branding', f: f %>
+        <% if collection_brandable?(collection: @collection) %>
+          <div id="branding" class="tab-pane">
+            <div class="panel panel-default labels">
+              <div class="panel-body">
+                <%= render 'form_branding', f: f %>
+              </div>
             </div>
           </div>
-        </div>
+        <% end %>
 
-        <div id="discovery" class="tab-pane">
-          <div class="panel panel-default labels">
-            <div class="panel-body">
-              <%= render 'form_discovery', f: f %>
+        <% if collection_discoverable?(collection: @collection) %>
+          <div id="discovery" class="tab-pane">
+            <div class="panel panel-default labels">
+              <div class="panel-body">
+                <%= render 'form_discovery', f: f %>
+              </div>
             </div>
           </div>
-        </div>
+        <% end %>
 
-        <div id="sharing" class="tab-pane">
-          <div class="panel panel-default labels" id="collection_permissions" data-param-key="<%= f.object.model_name.param_key %>">
-            <div class="panel-body">
-              <%= render 'form_share', f: f %>
+        <% if collection_sharable?(collection: @collection) %>
+          <div id="sharing" class="tab-pane">
+            <div class="panel panel-default labels" id="collection_permissions" data-param-key="<%= f.object.model_name.param_key %>">
+              <div class="panel-body">
+                <%= render 'form_share', f: f %>
+              </div>
             </div>
           </div>
-        </div>
+        <% end %>
       <% end %>
 
       <div class="panel-footer">
