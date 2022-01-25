@@ -45,6 +45,14 @@ RSpec.describe ValkyrieIngestJob do
                                                             original_filename: upload.file.filename)))
     end
 
+    it 'publishes object.membership.updated for the changed file set' do
+      expect { described_class.perform_now(upload) }
+        .to change { listener.object_membership_updated.map(&:payload) }
+        .from(be_empty)
+        .to contain_exactly(match(object: have_attributes(id: file_set.id),
+                                  user: upload.user))
+    end
+
     context 'with no file_set_uri' do
       let(:upload) { FactoryBot.create(:uploaded_file) }
 

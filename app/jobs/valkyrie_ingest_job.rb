@@ -20,7 +20,9 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
 
     updated_metadata = upload_file(file: file, file_set: file_set)
 
-    add_file_to_file_set(file_set: file_set, file_metadata: updated_metadata)
+    add_file_to_file_set(file_set: file_set,
+                         file_metadata: updated_metadata,
+                         user:file.user)
   end
 
   ##
@@ -31,11 +33,13 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
   # @param [Hyrax::FileSet] file_set the file set to add to
   # @param [Hyrax::FileMetadata] file_metadata the metadata object representing
   #   the file to add
+  # @param [::User] user  the user performing the add
   #
   # @return [Hyrax::FileSet] updated file set
-  def add_file_to_file_set(file_set:, file_metadata:)
+  def add_file_to_file_set(file_set:, file_metadata:, user:)
     file_set.file_ids << file_metadata.id
     Hyrax.persister.save(resource: file_set)
+    Hyrax.publisher.publish('object.membership.updated', object: file_set, user: user)
   end
 
   ##

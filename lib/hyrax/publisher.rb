@@ -106,6 +106,13 @@ module Hyrax
 
     # @since 3.0.0
     # @macro a_registered_event
+    #   @note this event SHOULD be published whevener the membership is changed
+    #     for a PCDM Collection. this includes changes to the Collection's
+    #     `#member_ids` attribute, as well as inverse membership changes via
+    #     another Collection/Object's `#member_of_ids` or
+    #     `#member_of_collection_ids` attribute. the event payload MUST include
+    #     either a `:collection` OR a `:collection_id` (the Collection OR its
+    #     unique id), AND a `:user` (the ::User responsible for the update).
     register_event('collection.membership.updated')
 
     # @since 3.3.0
@@ -143,6 +150,17 @@ module Hyrax
     # @since 3.0.0
     # @macro a_registered_event
     register_event('object.acl.updated')
+
+    # @since 3.4.0
+    # @macro a_registered_event
+    #   @note this event SHOULD be published whevener the membership is changed
+    #     for a PCDM Object (including a Hydra Works FileSet). this includes
+    #     changes to the Object's `#member_ids` attribute, as well as inverse
+    #     membership changes via another Object's `#member_of_ids` attribute.
+    #     the event payload MUST include either an `:object` OR an `:object_id`
+    #     (the Object OR its unique id), AND a `:user` (the ::User responsible
+    #     for the update).
+    register_event('object.membership.updated')
 
     # @since 3.0.0
     # @macro a_registered_event
