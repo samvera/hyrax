@@ -2,8 +2,9 @@
   margin-top: $search-bar-margin-top;
 }
 
-#masthead {
-  z-index: 1;
+.top-header,
+.top-header > .navbar {
+  min-height: 4rem;
 }
 
 header > .navbar {

@@ -1,5 +1,5 @@
-@import 'morris.js/0.5.1/morris';
-@import 'bootstrap/variables';
+@import "morris.js/0.5.1/morris";
+@import "bootstrap/variables";
 $tab-margin: 44px !default;
 $title-text-color: #4e4a42 !default;
 $body-background-color: #f0f0f0 !default;
@@ -37,9 +37,9 @@ $admin-panel-border-color: #dedede !default;
 
 body.dashboard {
   background-color: $body-background-color;
-  padding-top: $navbar-brand-height + 2 * $navbar-padding-y;
+  //padding-top: $navbar-brand-height + 2 * $navbar-padding-y;
 
-  @media only screen and (max-width : 767px) {
+  @media only screen and (max-width: 767px) {
     padding-top: 0;
   }
 }
@@ -80,7 +80,7 @@ body.dashboard {
     right: 0;
     top: 0;
 
-    @media only screen and (max-width : 767px) {
+    @media only screen and (max-width: 767px) {
       position: initial;
     }
   }
@@ -113,14 +113,14 @@ body.dashboard {
       }
     }
 
-
     .btn {
       margin-bottom: $input-btn-padding-y;
     }
   }
 
   // the span selector is required because Blacklight is using it.
-  .list-filters-label, span.constraints-label {
+  .list-filters-label,
+  span.constraints-label {
     font-weight: bold;
     margin-right: 2em;
   }
@@ -134,8 +134,8 @@ body.dashboard {
   }
 
   .table {
-     .date,
-     .action {
+    .date,
+    .action {
       width: 13ch;
     }
   }
