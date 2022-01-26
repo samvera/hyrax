@@ -14,7 +14,7 @@ class Hyrax::Characterization::ValkyrieCharacterizationService
   def self.run(metadata:, file:, user: ::User.system_user, **options)
     new(metadata: metadata, file: file, **options).characterize
     saved = Hyrax.persister.save(resource: metadata)
-    Hyrax.publisher.publish('object.metadata.updated', object: saved, user: user)
+    Hyrax.publisher.publish('file.metadata.updated', metadata: saved, user: user)
   end
 
   ##
