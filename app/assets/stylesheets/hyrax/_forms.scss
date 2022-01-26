@@ -1,5 +1,5 @@
 legend small {
-  margin-left: 0.5em;
+  margin-left:.5em;
   color: #999999;
   font-size: 15px;
 }
@@ -7,15 +7,16 @@ legend small {
 .label-large {
   font-size: 110%;
   line-height: 1.2;
-  padding: 0.3em 0.6em;
+  padding: .3em .6em;
   white-space: normal;
   position: relative;
 
-  input[type="checkbox"] {
-    margin: -2px 0 0;
+
+  input[type="checkbox"]{
+    margin:-2px 0 0;
     position: absolute;
-    left: 0.5em;
-    top: 38%;
+    left:.5em;
+    top:38%;
   }
 }
 
@@ -24,14 +25,14 @@ legend small {
 }
 
 .label-checkbox .label-text {
-  display: block;
-  padding-left: 1.2em;
+  display:block;
+  padding-left:1.2em;
 }
 
 .form-group:invalid input,
 .form-group:invalid option,
 .form-group:invalid textarea {
-  color: $gray-dark;
+  color:$gray-dark;
 }
 
 .form-actions {
@@ -58,9 +59,7 @@ form {
 }
 
 .set-access-controls {
-  label {
-    font-weight: normal;
-  }
+  label { font-weight: normal; }
   & .form-group {
     padding: 0 1.75em;
 
@@ -96,24 +95,24 @@ form {
   }
 
   .form-inline {
-    .col-form-label,
-    label {
+    .col-form-label, label {
       padding-left: 0;
       display: inline;
       &:after {
-        content: " ";
+        content: ' ';
       }
     }
     .form-text {
       display: inline;
       &:before {
-        content: " ";
+        content: ' ';
       }
     }
   }
 }
 
 .collection-types-settings {
+
   .form-inline {
     label {
       font-weight: bold;
@@ -129,7 +128,7 @@ form {
       padding-left: 0;
 
       &::after {
-        content: " ";
+        content: ' ';
       }
     }
 
@@ -137,7 +136,7 @@ form {
       display: inline;
 
       &::before {
-        content: " ";
+        content: ' ';
       }
     }
   }
@@ -150,7 +149,7 @@ form {
 }
 
 form.button-to {
-  margin: 0 0.3em;
+  margin:0 .3em;
 }
 
 .required-tag {
@@ -173,6 +172,7 @@ form.button-to {
 }
 
 .search-form {
+
   .form-group {
     margin: 0;
   }
