@@ -1,8 +1,8 @@
 <%= render "shared/nav_safety_modal" %>
 <div class="card tabs" id="collection-types-controls">
   <ul class="nav nav-tabs" role="tablist">
-    <li class="active nav-item">
-      <a href="#metadata" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('hyrax.admin.collection_types.form.tab.metadata') %></a>
+    <li class="nav-item">
+      <a href="#metadata" role="tab" data-toggle="tab" class="nav-link active nav-safety-confirm"><%= t('hyrax.admin.collection_types.form.tab.metadata') %></a>
     </li>
     <% if @form.persisted? %>
       <li class="nav-item">
@@ -20,7 +20,7 @@
   <%= simple_form_for @form, url: form_url, as: :collection_type, html: {class: 'nav-safety'} do |f| %>
     <div class="tab-content">
       <% if @collection_type.admin_set? %>
-        <div id="metadata" class="tab-pane active">
+        <div id="metadata" class="tab-pane show active">
           <div class="card labels">
             <div class="card-body">
               <%= render 'form_metadata_admin_set', f: f %>
@@ -28,7 +28,7 @@
           </div>
         </div>
       <% else %>
-        <div id="metadata" class="tab-pane active">
+        <div id="metadata" class="tab-pane show active">
           <div class="card labels">
             <div class="card-body">
               <%= render 'form_metadata', f: f %>
