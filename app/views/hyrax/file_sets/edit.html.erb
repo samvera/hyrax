@@ -11,19 +11,25 @@
   <div class="col-12 col-sm-8">
     <div class="card tabs">
       <ul class="nav nav-tabs" role="tablist">
-        <li id="edit_descriptions_link" class="nav-item active">
-          <a href="#descriptions_display" data-toggle="tab" class="nav-link nav-safety-confirm"><i class="fa fa-tags" aria-hidden="true"></i></span> <%= t('.descriptions') %></a>
+        <li id="edit_descriptions_link" class="nav-item">
+          <a href="#descriptions_display" data-toggle="tab" class="nav-link active nav-safety-confirm">
+            <i class="fa fa-tags" aria-hidden="true"></i> <%= t('.descriptions') %>
+          </a>
         </li>
         <li id="edit_versioning_link" class="nav-item">
-          <a href="#versioning_display" data-toggle="tab" class="nav-link nav-safety-confirm"><i class="fa fa-sitemap" aria-hidden="true"></i> <%= t('.versions') %></a>
+          <a href="#versioning_display" data-toggle="tab" class="nav-link nav-safety-confirm">
+            <i class="fa fa-sitemap" aria-hidden="true"></i> <%= t('.versions') %>
+          </a>
         </li>
         <li id="edit_permissions_link" class="nav-item">
-          <a href="#permissions_display" data-toggle="tab" class="nav-link nav-safety-confirm"><i class="fa fa-key" aria-hidden="true"></i> <%= t('.permissions') %></a>
+          <a href="#permissions_display" data-toggle="tab" class="nav-link nav-safety-confirm">
+            <i class="fa fa-key" aria-hidden="true"></i> <%= t('.permissions') %>
+          </a>
         </li>
       </ul>
       <div class="card-body">
         <div class="tab-content">
-          <div id="descriptions_display" class="tab-pane active">
+          <div id="descriptions_display" class="tab-pane show active">
             <h2><%= t('.descriptions') %></h2>
             <%= render "form" %>
           </div>

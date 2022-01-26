@@ -1,8 +1,8 @@
     <%= render 'shared/nav_safety_modal' %>
     <div class="card tabs" id="admin-set-controls">
       <ul class="nav nav-tabs" role="tablist">
-        <li class="nav-item active">
-          <a href="#description" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('.tabs.description') %></a>
+        <li class="nav-item">
+          <a href="#description" role="tab" data-toggle="tab" class="nav-link active nav-safety-confirm"><%= t('.tabs.description') %></a>
         </li>
         <% if @form.persisted? %>
           <li class="nav-item">
@@ -17,7 +17,7 @@
         <% end %>
       </ul>
       <div class="tab-content">
-        <div id="description" class="tab-pane active">
+        <div id="description" class="tab-pane show active">
           <div class="card labels">
             <%= simple_form_for @form, url: [hyrax, :admin, @form], html: { class: 'nav-safety' } do |f| %>
               <div class="card-body">

@@ -5,15 +5,11 @@
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
         <% (tabs - ['share']).each_with_index do | tab, i | %>
-          <% if i == 0 %>
-            <li role="presentation" class="nav-item active">
-          <% else %>
-            <li role="presentation" class="nav-item">
-          <% end %>
-              <a class="nav-link" href="#<%= tab %>" aria-controls="<%= tab %>" role="tab" data-toggle="tab">
-                <%= form_tab_label_for(form: f.object, tab: tab) %>
-              </a>
-            </li>
+          <li role="presentation" class="nav-item">
+            <a class="nav-link <% if i == 0 %>active<% end %>" href="#<%= tab %>" aria-controls="<%= tab %>" role="tab" data-toggle="tab">
+              <%= form_tab_label_for(form: f.object, tab: tab) %>
+            </a>
+          </li>
         <% end %>
 
         <li role="presentation" id="tab-share" class="nav-item" hidden="">
@@ -26,11 +22,7 @@
       <!-- Tab panes -->
       <div class="tab-content">
         <% (tabs - ['share']).each_with_index do | tab, i | %>
-          <% if i == 0 %>
-            <div role="tabpanel" class="tab-pane active" id="<%= tab %>">
-          <% else %>
-            <div role="tabpanel" class="tab-pane" id="<%= tab %>">
-          <% end %>
+          <div role="tabpanel" class="tab-pane <% if i == 0 %>show active<% end %>" id="<%= tab %>">
             <div class="form-tab-content">
               <% # metadata_tab is sometimes provided %>
               <%= yield "#{tab}_tab".to_sym if content_for? "#{tab}_tab".to_sym %>
