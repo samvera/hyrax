@@ -6,6 +6,20 @@ module Hyrax
     # @api public
     # @see https://github.com/samvera/valkyrie/wiki/ChangeSets-and-Dirty-Tracking
     class AdministrativeSetForm < Valkyrie::ChangeSet
+      ##
+      # @api private
+      AdminSetMembersPopulator = lambda do |_options|
+        self.member_ids =
+          if model.new_record
+            []
+          else
+            Hyrax
+              .query_service
+              .find_inverse_references_by(property: :admin_set_id, resource: model)
+              .map(&:id)
+          end
+      end
+
       property :title, required: true, primary: true
       property :description, primary: true
 
@@ -14,6 +28,8 @@ module Hyrax
       property :date_uploaded, readable: false
 
       property :depositor
+
+      property :member_ids, virtual: true, default: [], prepopulator: AdminSetMembersPopulator
 
       class << self
         def model_class

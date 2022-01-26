@@ -168,9 +168,10 @@ module Wings
         id ||= resource.id
         raise ArgumentError, "Resource has no id; is it persisted?" unless id
 
+        property = Hyrax.config.admin_set_predicate.qname.last if property.to_sym == :admin_set_id
         active_fedora_model = model ? model_class_for(model) : ActiveFedora::Base
-
         uri = active_fedora_model.id_to_uri(id.to_s)
+
         active_fedora_model.where("+(#{property}_ssim: \"#{uri}\" OR #{property}_ssim: \"#{id}\")").map do |obj|
           resource_factory.to_resource(object: obj)
         end
