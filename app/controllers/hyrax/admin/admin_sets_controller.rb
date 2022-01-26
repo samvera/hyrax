@@ -4,7 +4,8 @@ module Hyrax
     include Hyrax::CollectionsControllerBehavior
 
     before_action :authenticate_user!
-    load_and_authorize_resource
+    load_and_authorize_resource instance_name: :admin_set,
+                                class: Hyrax.config.admin_set_model
 
     # Catch permission errors
     rescue_from Hydra::AccessDenied, CanCan::AccessDenied, with: :deny_adminset_access
@@ -121,7 +122,13 @@ module Hyrax
 
     # initialize the form object
     def form
-      @form ||= form_class.new(@admin_set, current_ability, repository)
+      @form ||=
+        case @admin_set
+        when Valkyrie::Resource
+          Hyrax::Forms::ResourceForm.for(@admin_set)
+        else
+          form_class.new(@admin_set, current_ability, repository)
+        end
     end
 
     def action_breadcrumb
@@ -134,7 +141,11 @@ module Hyrax
     end
 
     def admin_set_params
-      form_class.model_attributes(params[:admin_set])
+      if Hyrax.config.admin_set_class < ActiveFedora::Base
+        form_class.model_attributes(params[:admin_set])
+      else
+        params.permit(admin_set: {})[:admin_set]
+      end
     end
 
     def repository_class

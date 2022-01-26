@@ -3,7 +3,7 @@ module Hyrax
   module UrlHelper
     # generated models get registered as curation concerns and need a
     # track_model_path to render Blacklight-related views
-    (['FileSet', 'Collection'] + Hyrax.config.registered_curation_concern_types).each do |concern|
+    (['FileSet', 'Collection', 'Hyrax::AdministrativeSet'] + Hyrax.config.registered_curation_concern_types).each do |concern|
       model = concern.safe_constantize
       model_name = model.respond_to?(:model_name) && model.model_name
       next unless model_name

@@ -131,6 +131,8 @@ module Hyrax
           "#{resource.class.name}Form".constantize.new(resource)
         rescue NameError => _err
           case resource
+          when Hyrax::AdministrativeSet
+            Hyrax::Forms::AdministrativeSetForm.new(resource)
           when Hyrax::FileSet
             Hyrax::Forms::FileSetForm.new(resource)
           when Hyrax::PcdmCollection
