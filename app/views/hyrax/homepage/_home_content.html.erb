@@ -1,27 +1,41 @@
 <div class="col-sm-6">
   <ul id="homeTabs" class="nav nav-tabs" role="list">
-    <li class="nav-itemactive"><a class="nav-link" href="#featured_container" data-toggle="tab" id="featureTab"><%= t('hyrax.homepage.featured_works.tab_label') %></a></li>
-    <li class="nav-item"><a class="nav-link" href="#recently_uploaded" data-toggle="tab" id="recentTab"><%= t('hyrax.homepage.recently_uploaded.tab_label') %></a></li>
+    <li class="nav-item">
+      <a class="nav-link active" href="#featured_container" data-toggle="tab" id="featureTab">
+        <%= t('hyrax.homepage.featured_works.tab_label') %>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#recently_uploaded" data-toggle="tab" id="recentTab">
+        <%= t('hyrax.homepage.recently_uploaded.tab_label') %>
+      </a>
+    </li>
   </ul>
   <div class="tab-content">
-    <div class="tab-pane fade in active" id="featured_container" role="tabpanel" aria-labelledby="featureTab">
+    <div class="tab-pane show active" id="featured_container" role="tabpanel" aria-labelledby="featureTab">
       <%= render 'featured_works' %>
     </div>
-    <div class="tab-pane fade" id="recently_uploaded" role="tabpanel" aria-labelledby="recentTab">
+    <div class="tab-pane" id="recently_uploaded" role="tabpanel" aria-labelledby="recentTab">
       <%= render 'recently_uploaded', recent_documents: @recent_documents %>
     </div>
   </div>
-</div><!-- /.col-sm-6 -->
+</div>
 
 <div class="col-sm-6">
-
   <ul class="nav nav-tabs" role="list">
-    <li class="nav-item active"><a class="nav-item" aria-expanded="true" href="#tab-col2-first" data-toggle="tab"><%= t('hyrax.homepage.admin_sets.title') %></a></li>
-    <li class="nav-item"><a class="nav-item" aria-expanded="false" href="#tab-col2-second" data-toggle="tab"><%= t('hyrax.homepage.featured_researcher.tab_label') %></a></li>
+    <li class="nav-item">
+      <a class="nav-link active" aria-expanded="true" href="#tab-col2-first" data-toggle="tab">
+        <%= t('hyrax.homepage.admin_sets.title') %>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" aria-expanded="false" href="#tab-col2-second" data-toggle="tab">
+        <%= t('hyrax.homepage.featured_researcher.tab_label') %>
+      </a>
+    </li>
   </ul>
-
   <div class="tab-content">
-    <div class="tab-pane active" id="tab-col2-first">
+    <div class="tab-pane show active" id="tab-col2-first">
       <h2 class="sr-only"><%= t('hyrax.homepage.admin_sets.title') %></h2>
       <%= render 'explore_collections', collections: @presenter.collections %>
     </div>
