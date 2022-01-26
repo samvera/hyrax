@@ -14,6 +14,7 @@ module Hyrax
 
       property :depositor, required: true
       property :collection_type_gid, required: true
+      property :visibility, default: VisibilityIntention::PRIVATE
 
       property :member_of_collection_ids, default: [], type: Valkyrie::Types::Array
 

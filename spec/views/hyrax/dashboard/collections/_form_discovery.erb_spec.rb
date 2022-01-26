@@ -1,68 +1,69 @@
 # frozen_string_literal: true
 RSpec.describe 'hyrax/dashboard/collections/_form_discovery.html.erb', type: :view do
   let(:collection) { Collection.new }
-  let(:collection_form) { Hyrax::Forms::CollectionForm.new(collection, double, double) }
-
-  let(:form) do
-    view.simple_form_for(collection, url: '/update') do |fs_form|
+  let(:form) { Hyrax::Forms::CollectionForm.new(collection, double, double) }
+  let(:f) do
+    view.simple_form_for(form, url: '/update') do |fs_form|
       return fs_form
     end
   end
 
+  before do
+    allow(form).to receive(:visibility).and_return(visibility)
+    allow(view).to receive(:f).and_return(f)
+    render
+  end
+
   context "collection has open access" do
-    before do
-      allow(collection).to receive(:open_access?).and_return(true)
-      allow(collection).to receive(:authenticated_only_access?).and_return(false)
-      allow(collection).to receive(:private_access?).and_return(false)
-      controller.request.path_parameters[:id] = 'j12345'
-      assign(:form, collection_form)
-      assign(:collection, collection)
-      allow(view).to receive(:f).and_return(form)
-      render
-    end
+    let(:visibility) { 'open' }
 
     it "check open access is set" do
-      expect(rendered).to have_selector('input[type=radio][name="collection[visibility]"][value=open][checked=true]')
-      expect(rendered).to have_selector('input[type=radio][name="collection[visibility]"][value=authenticated]')
-      expect(rendered).to have_selector('input[type=radio][name="collection[visibility]"][value=restricted]')
+      expect(rendered).to have_selector('input[type=radio][name="collection[visibility]"][value=open][checked]')
     end
   end
 
   context "collection has authenticated access" do
-    before do
-      allow(collection).to receive(:open_access?).and_return(false)
-      allow(collection).to receive(:authenticated_only_access?).and_return(true)
-      allow(collection).to receive(:private_access?).and_return(false)
-      controller.request.path_parameters[:id] = 'j12345'
-      assign(:form, collection_form)
-      assign(:collection, collection)
-      allow(view).to receive(:f).and_return(form)
-      render
-    end
+    let(:visibility) { 'authenticated' }
 
     it "check authenticated access is set" do
-      expect(rendered).to have_selector('input[type=radio][name="collection[visibility]"][value=open]')
-      expect(rendered).to have_selector('input[type=radio][name="collection[visibility]"][value=authenticated][checked=true]')
-      expect(rendered).to have_selector('input[type=radio][name="collection[visibility]"][value=restricted]')
+      expect(rendered).to have_selector('input[type=radio][name="collection[visibility]"][value=authenticated][checked]')
     end
   end
 
   context "collection has restricted access" do
-    before do
-      allow(collection).to receive(:open_access?).and_return(false)
-      allow(collection).to receive(:authenticated_only_access?).and_return(false)
-      allow(collection).to receive(:private_access?).and_return(true)
-      controller.request.path_parameters[:id] = 'j12345'
-      assign(:form, collection_form)
-      assign(:collection, collection)
-      allow(view).to receive(:f).and_return(form)
-      render
+    let(:visibility) { 'restricted' }
+
+    it "restricted access is set" do
+      expect(rendered).to have_selector('input[type=radio][name="collection[visibility]"][value=restricted][checked]')
+    end
+  end
+
+  context "with PcdmCollection" do
+    let(:collection) { Hyrax::PcdmCollection.new }
+    let(:form) { Hyrax::Forms::PcdmCollectionForm.new(collection) }
+
+    context "collection has open access" do
+      let(:visibility) { 'open' }
+
+      it "check open access is set" do
+        expect(rendered).to have_selector('input[type=radio][name="collection[visibility]"][value=open][checked]')
+      end
     end
 
-    it "check restricted access is set" do
-      expect(rendered).to have_selector('input[type=radio][name="collection[visibility]"][value=open]')
-      expect(rendered).to have_selector('input[type=radio][name="collection[visibility]"][value=authenticated]')
-      expect(rendered).to have_selector('input[type=radio][name="collection[visibility]"][value=restricted][checked=true]')
+    context "collection has authenticated access" do
+      let(:visibility) { 'authenticated' }
+
+      it "check authenticated access is set" do
+        expect(rendered).to have_selector('input[type=radio][name="collection[visibility]"][value=authenticated][checked]')
+      end
+    end
+
+    context "collection has restricted access" do
+      let(:visibility) { 'restricted' }
+
+      it "restricted access is set" do
+        expect(rendered).to have_selector('input[type=radio][name="collection[visibility]"][value=restricted][checked]')
+      end
     end
   end
 end
