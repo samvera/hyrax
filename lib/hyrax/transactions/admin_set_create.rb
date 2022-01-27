@@ -8,7 +8,8 @@ module Hyrax
     #
     # @since 3.2.0
     class AdminSetCreate < Transaction
-      DEFAULT_STEPS = ['change_set.apply',
+      DEFAULT_STEPS = ['change_set.set_user_as_creator',
+                       'change_set.apply',
                        'admin_set_resource.apply_collection_type_permissions',
                        'admin_set_resource.save_acl'].freeze
 

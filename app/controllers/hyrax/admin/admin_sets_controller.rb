@@ -70,12 +70,28 @@ module Hyrax
       end
     end
 
+    def after_create
+      Hyrax::SolrService.commit
+      redirect_to hyrax.edit_admin_admin_set_path(admin_set_id),
+                  notice: I18n.t('new_admin_set',
+                                 scope: 'hyrax.admin.admin_sets.form.permission_update_notices',
+                                 name: @admin_set.title.first)
+    end
+
+    def after_create_error(err_msg: "")
+      msg = "Failed to create admin set: #{err_msg}"
+      setup_form
+      flash[:error] = msg
+      Rails.logger.error(msg)
+      render :new
+    end
+
     def create
-      if create_admin_set
-        redirect_to hyrax.edit_admin_admin_set_path(admin_set_id), notice: I18n.t('new_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
+      case @admin_set
+      when Valkyrie::Resource
+        valkyrie_create
       else
-        setup_form
-        render :new
+        active_fedora_create
       end
     end
 
@@ -103,13 +119,28 @@ module Hyrax
       hyrax.edit_admin_admin_set_path(admin_set_id) + (params[:referer_anchor] || '')
     end
 
-    def create_admin_set
-      updated_admin_set = admin_set_create_service.call!(admin_set: admin_set_resource, creating_user: current_user)
-      update_admin_set(updated_admin_set)
-      true
+    def valkyrie_create
+      form.validate(admin_set_params) &&
+        @admin_set = transactions['change_set.create_admin_set']
+                     .with_step_args(
+                       'change_set.set_user_as_creator' => { user: current_user }
+                     )
+                     .call(form).value_or do |_failure|
+                       setup_form # probably should do some real error handling here
+                       render :edit
+                     end
+      @admin_set = admin_set_create_service.call!(admin_set: @admin_set, creating_user: current_user)
+      after_create
     rescue RuntimeError => err
-      Rails.logger.error("Failed to create admin set through valkyrie: #{err.message}")
-      false
+      after_create_error(err_msg: err.message)
+    end
+
+    def active_fedora_create
+      updated_admin_set = admin_set_create_service.call!(admin_set: admin_set_resource, creating_user: current_user)
+      @admin_set = Wings::ActiveFedoraConverter.convert(resource: updated_admin_set)
+      after_create
+    rescue RuntimeError => err
+      after_create_error(err_msg: err.message)
     end
 
     def setup_form
@@ -173,15 +204,6 @@ module Hyrax
       else
         @admin_set.valkyrie_resource
       end
-    end
-
-    def update_admin_set(updated_admin_set)
-      @admin_set = case @admin_set
-                   when Valkyrie::Resource
-                     updated_admin_set
-                   else
-                     Wings::ActiveFedoraConverter.convert(resource: updated_admin_set)
-                   end
     end
   end
 end
