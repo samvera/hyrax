@@ -64,8 +64,7 @@ module Hyrax
     def update
       case @admin_set
       when Valkyrie::Resource
-        @admin_set = form.validate(admin_set_params) &&
-                     transactions['admin_set_resource.update'].call(form).value_or do |err|
+        @admin_set = form.validate(admin_set_params) && transactions['admin_set_resource.update'].call(form).value_or do |_failure|
           setup_form # probably should do some real error handling here
           render :edit
         end
@@ -91,10 +90,18 @@ module Hyrax
     end
 
     def destroy
-      if @admin_set.destroy
+      case @admin_set
+      when Valkyrie::Resource
+        transactions['admin_set_resource.destroy'].call(@admin_set).value_or do |failure|
+          redirect_to hyrax.admin_admin_set_path(admin_set_id), alert: failure.first
+        end
         after_delete_success
       else
-        redirect_to hyrax.admin_admin_set_path(admin_set_id), alert: @admin_set.errors.full_messages.to_sentence
+        if @admin_set.destroy
+          after_delete_success
+        else
+          redirect_to hyrax.admin_admin_set_path(admin_set_id), alert: @admin_set.errors.full_messages.to_sentence
+        end
       end
     end
 
@@ -164,9 +171,9 @@ module Hyrax
     end
 
     def after_delete_success
-      if request.referer.include? "my/collections"
+      if request.referer&.include? "my/collections"
         redirect_to hyrax.my_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
-      elsif request.referer.include? "collections"
+      elsif request.referer&.include? "collections"
         redirect_to hyrax.dashboard_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
       else
         redirect_to hyrax.my_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
