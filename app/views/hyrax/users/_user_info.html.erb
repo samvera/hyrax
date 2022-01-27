@@ -34,12 +34,12 @@
   <dd><%= mail_to user.email %></dd>
 
   <% if user.chat_id %>
-    <dt><span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span> Chat ID</dt>
+    <dt><span class="fa fa-bullhorn" aria-hidden="true"></span> Chat ID</dt>
     <dd><%= user.chat_id %></dd>
   <% end %>
 
   <% if user.website %>
-    <dt><span class="glyphicon glyphicon-globe" aria-hidden="true"></span> Website(s)</dt>
+    <dt><span class="fa fa-globe" aria-hidden="true"></span> Website(s)</dt>
     <dd><%= iconify_auto_link(user.website) %></dd>
   <% end %>
 
@@ -64,7 +64,7 @@
   <% end %>
 
   <% if user.address %>
-    <dt><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Address</dt>
+    <dt><span class="fa fa-map-marker" aria-hidden="true"></span> Address</dt>
     <dd><%= user.address %></dd>
   <% end %>
 
@@ -74,7 +74,7 @@
   <% end %>
 
   <% if user.telephone %>
-    <dt><span class="glyphicon glyphicon-earphone" aria-hidden="true"></span> Telephone</dt>
+    <dt><span class="fa fa-phone" aria-hidden="true"></span> Telephone</dt>
     <dd><%= link_to_telephone(user) %></dd>
   <% end %>
 

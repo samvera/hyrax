@@ -14,21 +14,21 @@ Blacklight.onLoad(function() {
     if (array.length > 1) {
       var docId = array[1];
       $("#detail_" + docId + " .expanded-details").slideToggle();
-      $(item).toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
+      $(item).toggleClass('fa-chevron-right fa-chevron-down');
     }
   }
 
   // show/hide more information on the dashboard when clicking
   // plus/minus
-  $('.glyphicon-chevron-right').on('click', function() {
+  $('.fa-chevron-right').on('click', function() {
     show_details(this);
     return false;
   });
 
   $('a').filter( function() {
-      return $(this).find('.glyphicon-chevron-right').length === 1;
+      return $(this).find('.fa-chevron-right').length === 1;
    }).on('click', function() {
-    show_details($(this).find(".glyphicon-chevron-right")[0]);
+    show_details($(this).find(".fa-chevron-right")[0]);
     return false;
   });
 
