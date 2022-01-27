@@ -25,7 +25,7 @@ RSpec.describe Wings::FileConverterService, :clean_repo do
     it 'copies attributes to resource' do
       expect(subject.id.to_s).to eq af_file_id
       expect(subject.alternate_ids).to match_valkyrie_ids_with_active_fedora_ids [af_file_id]
-      expect(subject.file_identifier).to eq af_file_id
+      expect(subject.file_identifier.to_s).to end_with af_file_id
       expect(subject.created_at).to eq af_file.create_date
       expect(subject.updated_at).to eq af_file.modified_date
       expect(subject.type).to match_array af_file.metadata_node.type
@@ -73,6 +73,7 @@ RSpec.describe Wings::FileConverterService, :clean_repo do
     it 'copies attributes to af_file' do
       file_metadata = described_class.af_file_to_resource(af_file: af_file)
       subject = described_class.resource_to_af_file(metadata_resource: file_metadata)
+
       expect(subject.id.to_s).to eq af_file_id
       expect(subject.create_date).to eq af_file.create_date
       expect(subject.modified_date).not_to eq af_file.modified_date

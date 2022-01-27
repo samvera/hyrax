@@ -29,6 +29,12 @@ module Wings
       end
 
       ##
+      # @api private
+      def self.cast_to_valkyrie_id(id)
+        ::Valkyrie::ID.new(id.to_s.sub(/^.+\/\//, PROTOCOL))
+      end
+
+      ##
       # @param key [Symbol] the key for plugin behavior to check support for
       #
       # @return [Boolean] whether
@@ -140,7 +146,7 @@ module Wings
       end
 
       def cast_to_valkyrie_id(id)
-        ::Valkyrie::ID.new(id.to_s.sub(/^.+\/\//, PROTOCOL))
+        self.class.cast_to_valkyrie_id(id)
       end
     end
   end
