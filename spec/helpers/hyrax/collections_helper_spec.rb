@@ -196,4 +196,51 @@ RSpec.describe Hyrax::CollectionsHelper do
       end
     end
   end
+
+  describe "#collection_permission_template_form" do
+    subject { helper.collection_permission_template_form_for(form: form) }
+    context "when receiving an admin_set_form" do
+      let(:ability)    { Ability.new(create(:user)) }
+      let(:repository) { double }
+      let(:model)      { build(:admin_set, description: ['one']) }
+      let(:form)       { Hyrax::Forms::AdminSetForm.new(model, ability, repository) }
+
+      it 'returns the permission_template_form' do
+        expect(subject).to be_instance_of Hyrax::Forms::PermissionTemplateForm
+        expect(subject.model).to be_instance_of Hyrax::PermissionTemplate
+      end
+    end
+
+    context "when receiving an administrative_set_form" do
+      let(:form)      { Hyrax::Forms::AdministrativeSetForm.new(admin_set) }
+      let(:admin_set) { Hyrax::AdministrativeSet.new }
+
+      it 'returns the permission_template_form' do
+        expect(subject).to be_instance_of Hyrax::Forms::PermissionTemplateForm
+        expect(subject.model).to be_instance_of Hyrax::PermissionTemplate
+      end
+    end
+
+    context "when receiving an collection_form" do
+      let(:ability)    { Ability.new(create(:user)) }
+      let(:repository) { double }
+      let(:model)      { build(:collection_lw) }
+      let(:form)       { Hyrax::Forms::CollectionForm.new(model, ability, repository) }
+
+      it 'returns the permission_template_form' do
+        expect(subject).to be_instance_of Hyrax::Forms::PermissionTemplateForm
+        expect(subject.model).to be_instance_of Hyrax::PermissionTemplate
+      end
+    end
+
+    context "when receiving an pcdm_collection_form" do
+      let(:form)      { Hyrax::Forms::PcdmCollectionForm.new(admin_set) }
+      let(:admin_set) { Hyrax::PcdmCollection.new }
+
+      it 'returns the permission_template_form' do
+        expect(subject).to be_instance_of Hyrax::Forms::PermissionTemplateForm
+        expect(subject.model).to be_instance_of Hyrax::PermissionTemplate
+      end
+    end
+  end
 end

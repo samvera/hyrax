@@ -191,6 +191,20 @@ module Hyrax
       CollectionType.find_or_create_default_collection_type.title
     end
 
+    ##
+    # @param collection [Object]
+    #
+    # @return [PermissionTemplateForm]
+    def collection_permission_template_form_for(form:)
+      case form
+      when Valkyrie::ChangeSet
+        template_model = Hyrax::PermissionTemplate.find_or_create_by(source_id: form.id.to_s)
+        Hyrax::Forms::PermissionTemplateForm.new(template_model)
+      else
+        form.permission_template
+      end
+    end
+
     private
 
     # add hidden fields to a form for performing an action on a single document on a collection
