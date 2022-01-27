@@ -24,6 +24,27 @@ RSpec.describe Hyrax::Forms::AdministrativeSetForm do
         .from be_empty
     end
 
+    describe '.validate' do
+      context 'when all required fields are present' do
+        let(:valid_params) do
+          { title: 'My title' }
+        end
+        it 'returns true' do
+          expect(form.validate(valid_params)).to eq true
+        end
+      end
+
+      context 'when title is missing' do
+        let(:params_missing_title) do
+          { description: 'a description' }
+        end
+        it 'returns error messages for missing field' do
+          expect(form.validate(params_missing_title)).to eq false
+          expect(form.errors.messages).to include(title: ["can't be blank"])
+        end
+      end
+    end
+
     context 'when the admin set is persisted' do
       let(:admin_set) { FactoryBot.valkyrie_create(:hyrax_admin_set) }
 

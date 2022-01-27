@@ -202,10 +202,11 @@ RSpec.describe Hyrax::Admin::AdminSetsController, :clean_repo do
           end
 
           it 'shows the new form' do
-            expect(Rails.logger).to receive(:error).with(/Failed to create admin set through valkyrie:/)
+            expect(Hyrax.logger).to receive(:error).with(/Failed to create admin set:/)
             post :create, params: { admin_set: { title: 'Test title',
                                                  description: 'test description' } }
             expect(response).to render_template 'new'
+            expect(flash[:error]).to match(/Failed to create admin set:/)
           end
         end
       end

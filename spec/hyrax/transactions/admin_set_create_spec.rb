@@ -6,15 +6,25 @@ require 'dry/container/stub'
 RSpec.describe Hyrax::Transactions::AdminSetCreate, :clean_repo do
   subject(:tx)     { described_class.new }
   let(:change_set) { Hyrax::ChangeSet.for(resource) }
-  let(:resource)   { Hyrax::AdministrativeSet.new(title: "My Resource") }
+  let(:resource)   { FactoryBot.build(:hyrax_admin_set) }
 
   describe '#call' do
     it 'is a success' do
       expect(tx.call(change_set)).to be_success
     end
 
-    it 'wraps a saved collection' do
+    it 'wraps a saved admin_set' do
       expect(tx.call(change_set).value!).to be_persisted
+    end
+
+    context 'when providing a creator' do
+      let(:user) { FactoryBot.create(:user) }
+
+      it 'sets the given user as the creator' do
+        tx.with_step_args('change_set.set_user_as_creator' => { user: user })
+
+        expect(tx.call(change_set).value!).to have_attributes creator: [user.user_key]
+      end
     end
 
     context 'when collection type has permissions' do

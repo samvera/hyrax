@@ -27,7 +27,9 @@ module Hyrax
       property :date_modified, readable: false
       property :date_uploaded, readable: false
 
-      property :depositor
+      property :creator
+
+      validates :title, presence: true
 
       property :member_ids, virtual: true, default: [], prepopulator: AdminSetMembersPopulator
 
