@@ -7,6 +7,7 @@ ARG EXTRA_APK_PACKAGES="git"
 RUN apk --no-cache upgrade && \
   apk --no-cache add build-base \
   curl \
+  gcompat \
   imagemagick \
   tzdata \
   nodejs \
