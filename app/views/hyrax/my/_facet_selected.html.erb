@@ -5,7 +5,7 @@
       <% link_options = remove_facet_params(k, selected_facet, params).merge(action: :index) %>
       <div class="alert alert-warning">
         <%= link_to "X", hyrax.url_for(link_options), { class: "close", data: { dismiss: "alert" } } %>
-        <i class="glyphicon glyphicon-ok"></i> <strong><%= selected_facet %></strong>
+        <i class="fa fa-check"></i> <strong><%= selected_facet %></strong>
       </div>
     <% end %>
   <% end %>
