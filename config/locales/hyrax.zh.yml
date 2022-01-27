@@ -1089,14 +1089,14 @@ zh:
       no_transfers: 您没有转让任何作品
       profiles:
         edit_primary:
-          change_picture: "<i class =“glyphicon glyphicon-camera”> </ i>更改图片"
+          change_picture: "<i class =“fa fa-camera”> </ i>更改图片"
           delete_picture: 删除图片
           delete_picture_data_content: 如果您想完全删除图片，请选中相应复选框并保存您的个人资料。
           delete_picture_data_original_title: 删除图片
           facebook_handle: "<i class =“fa fa-facebook”aria-hidden =“true”> </ i> Facebook句柄"
           google_handle: "<i class =“fa fa-google-plus”> </ i> Google+处理"
           help_change_picture_type: JPG，GIF或PNG（小于2MB）
-          save_profile: "<i class =“glyphicon glyphicon-save”> </ i>保存个人资料"
+          save_profile: "<i class =“fa fa-floppy-o”> </ i>保存个人资料"
           twitter_handle: "<i class =“fa fa-twitter”aria-hidden =“true”> </ i> Twitter句柄"
       proxy_activity: 代理活动
       proxy_add_deny: 你不能让自己成为代理人
@@ -1452,7 +1452,7 @@ zh:
         changes_required:
           message: |-
             %{title}（%{link}）在批准之前需要进行其他更改。
-             '%{comment}'
+             '%{comment}'
           subject: 您的存款需要更改
         deposited:
           message: zxzxzxx（%{link}）被%{user}批准。 %{comment}
@@ -1486,7 +1486,7 @@ zh:
       read: 查看/下载
     search:
       button:
-        html: <span class="glyphicon glyphicon-search"></span> 转到
+        html: <span class="fa fa-search"></span> 转到
         text: 搜索
       form:
         option:
