@@ -76,6 +76,8 @@ module Hyrax
       end
 
       def perform_ingest_file_through_valkyrie(io) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+        Deprecation.warn "FileActor support for Valkyrie was experimental and " \
+                         "is slated to be removed in favor of WorkUploadsHandler."
         file =
           begin
             Hyrax.storage_adapter.upload(resource: file_set, file: io, original_filename: io.original_name, use: relation)
@@ -85,12 +87,12 @@ module Hyrax
           end
         file_metadata = Hyrax.custom_queries.find_file_metadata_by(id: file.id)
         create_version(file_metadata, user)
-        id = file_metadata.file_identifier
-        file_set.file_ids << id
-        file_set.original_file_id = id
+
+        file_set.file_ids << file_metadata.id
+        file_set.original_file_id = file_metadata.id
         Hyrax.persister.save(resource: file_set)
         Hyrax.publisher.publish('object.metadata.updated', object: file_set, user: user)
-        CharacterizeJob.perform_later(file_set, id.to_s, pathhint(io))
+        CharacterizeJob.perform_later(file_set, file_metadata.id.to_s, pathhint(io))
         file_metadata
       end
 
