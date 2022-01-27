@@ -1835,7 +1835,7 @@ fr:
         find_child_work: Rechercher un travail ...
         member_of_collection_ids: Sélectionnez une collection ...
     required:
-      html: <span class="label label-info required-tag">Champs obligatoires</span>
+      html: <span class="badge badge-info required-tag">Champs obligatoires</span>
   total_view:
     one: Ce travail a 1 vue totale
     other: Ce travail a zxzxxx0 vues au total

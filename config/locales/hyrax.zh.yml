@@ -1832,7 +1832,7 @@ zh:
         find_child_work: 搜索工作...
         member_of_collection_ids: 选择一个集合...
     required:
-      html: <span class="label label-info required-tag">需要的</span>
+      html: <span class="badge badge-info required-tag">需要的</span>
   total_view:
     one: 该作品共有 1 次浏览
     other: 此作品总浏览量为 %{count}

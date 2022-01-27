@@ -1818,7 +1818,7 @@ en:
         find_child_work: Search for a work…
         member_of_collection_ids: Select a collection…
     required:
-      html: <span class="label label-info required-tag">required</span>
+      html: <span class="badge badge-info required-tag">required</span>
   total_view:
     one: This work has 1 total view
     other: This work has %{count} total views
