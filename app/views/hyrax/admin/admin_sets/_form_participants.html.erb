@@ -5,7 +5,7 @@
                   <h3><%= t('.add_participants') %></h3>
                   <% access_options = options_for_select([['Manager', 'manage'], ['Depositor', 'deposit'], ['Viewer', 'view']]) %>
                   <div class="sharing-row-form">
-                    <%= simple_form_for @form.permission_template,
+                    <%= simple_form_for collection_permission_template_form_for(form: @form),
                         url: [hyrax, :admin, @form, :permission_template],
                         html: { id: 'group-participants-form', class: 'form-inline' } do |f| %>
 
@@ -33,7 +33,7 @@
                   </div>
 
                   <div class="sharing-row-form">
-                    <%= simple_form_for @form.permission_template,
+                    <%= simple_form_for collection_permission_template_form_for(form: @form),
                         url: [hyrax, :admin, @form, :permission_template],
                         html: { id: 'user-participants-form', class: 'form-inline add-users' } do |f| %>
 

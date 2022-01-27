@@ -1,7 +1,7 @@
                   <h3><%= t(".#{access}.title") %></h3>
                   <p><%= t(".#{access}.help") %></p>
                   <p><%= t(".#{access}.help_with_works", type_title: @collection.collection_type.title) if @collection.share_applies_to_new_works? && access != 'depositors' %></p>
-                  <% if @form.permission_template.access_grants.select(&filter).any? %>
+                  <% if collection_permission_template_form_for(form: @form).access_grants.select(&filter).any? %>
                     <table class="table table-striped share-status">
                       <thead>
                         <tr>
@@ -11,7 +11,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                      <% @form.permission_template.access_grants.select(&filter).each do |g| %>
+                      <% collection_permission_template_form_for(form: @form).access_grants.select(&filter).each do |g| %>
                         <tr>
                           <td data-agent="<%= g.agent_id %>"><%= g.label %></td>
                           <td><%= g.agent_type.titleize %></td>
