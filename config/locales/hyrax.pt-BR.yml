@@ -1829,7 +1829,7 @@ pt-BR:
         find_child_work: Procure uma obra ...
         member_of_collection_ids: Selecione uma coleção ...
     required:
-      html: <span class="label label-info required-tag">obrigatórios</span>
+      html: <span class="badge badge-info required-tag">obrigatórios</span>
   total_view:
     one: Este trabalho tem 1 visualização total
     other: Este trabalho tem %{count} visualizações totais
