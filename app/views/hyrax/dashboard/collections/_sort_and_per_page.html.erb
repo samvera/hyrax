@@ -20,7 +20,7 @@
                <%= t(".show_par_page_html", select: select_tag(:per_page, options_for_select(Hyrax.config.range_for_number_of_results_to_display_per_page, params[:per_page]), title: t('hyrax.dashboard.my.sr.results_per_page'))) %>
              <% end %>
              <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:per_page, :sort)) %>
-             <button class="btn btn-info"><span class="glyphicon glyphicon-refresh"></span> <%= t('helpers.action.refresh') %></button>
+             <button class="btn btn-info"><span class="fa fa-refresh"></span> <%= t('helpers.action.refresh') %></button>
            </fieldset>
            <div class="col-sm-3">
              <%= render 'hyrax/collections/view_type_group' %>

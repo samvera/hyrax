@@ -27,7 +27,7 @@ RSpec.describe "Browse Dashboard", type: :feature do
     expect(page).to have_content("Fake PDF Title")
     within(".constraints-container") do
       expect(page).to have_content("Filtering by:")
-      expect(page).to have_css("span.glyphicon-remove")
+      expect(page).to have_css("span.fa-times")
       find(".dropdown-toggle").click
     end
     expect(page).to have_content("Fake Wav File")

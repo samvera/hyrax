@@ -7,18 +7,18 @@
       <%= link_to '#',
         class: "btn btn-primary btn-lg",
         data: { behavior: 'select-work', target: '#worktypes-to-create', 'create-type' => 'single' } do %>
-        <i class="glyphicon glyphicon-upload" aria-hidden="true"></i> <%= t('hyrax.share_button') %>
+        <i class="fa fa-upload" aria-hidden="true"></i> <%= t('hyrax.share_button') %>
       <% end %>
     <% else # simple link to the first work type %>
       <%= link_to new_polymorphic_path([main_app, @presenter.first_work_type]),
             class: 'btn btn-primary btn-lg' do %>
-        <i class="glyphicon glyphicon-upload" aria-hidden="true"></i> <%= t('hyrax.share_button') %>
+        <i class="fa fa-upload" aria-hidden="true"></i> <%= t('hyrax.share_button') %>
       <% end %>
     <% end %>
   <% else %>
     <%= link_to hyrax.my_works_path,
       class: "btn btn-primary btn-lg" do %>
-      <i class="glyphicon glyphicon-upload" aria-hidden="true"></i> <%= t('hyrax.share_button') %>
+      <i class="fa fa-upload" aria-hidden="true"></i> <%= t('hyrax.share_button') %>
     <% end %>
   <% end %>
   <p class="terms-of-use"><%= link_to t(:'hyrax.pages.tabs.terms_page'), hyrax.terms_path %></p>

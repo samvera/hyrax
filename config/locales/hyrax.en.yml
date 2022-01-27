@@ -1077,14 +1077,14 @@ en:
       no_transfers: You haven't transferred any work
       profiles:
         edit_primary:
-          change_picture: <i class="glyphicon glyphicon-camera"></i> Change picture
+          change_picture: <i class="fa fa-camera"></i> Change picture
           delete_picture: Delete picture
           delete_picture_data_content: If you would like to remove your picture entirely, check the box and save your profile.
           delete_picture_data_original_title: Delete Picture
           facebook_handle: <i class="fa fa-facebook" aria-hidden="true"></i> Facebook Handle
           google_handle: <i class="fa fa-google-plus"></i> Google+ Handle
           help_change_picture_type: JPG, GIF, or PNG (less than 2MB)
-          save_profile: <i class="glyphicon glyphicon-save"></i> Save Profile
+          save_profile: <i class="fa fa-floppy-o"></i> Save Profile
           twitter_handle: <i class="fa fa-twitter" aria-hidden="true"></i> Twitter Handle
       proxy_activity: Proxy Activity
       proxy_add_deny: You cannot make yourself a proxy
@@ -1473,7 +1473,7 @@ en:
     read_only: The repository is in read-only mode for maintenance. No submissions or edits can be made at this time.
     search:
       button:
-        html: <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Go
+        html: <span class="fa fa-search" aria-hidden="true"></span> Go
         text: Search
       form:
         option:

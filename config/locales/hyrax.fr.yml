@@ -440,7 +440,7 @@ fr:
           end_label: Terminer [par défaut pour le moment]
           headers:
             main: Statistiques de travail
-            total: 'Total des travaux :'
+            total: 'Total des travaux :'
             visibility: Totaux par visibilité
           heading: Afficher les fichiers déposés par les utilisateurs
           start_label: Départ
@@ -1092,14 +1092,14 @@ fr:
       no_transfers: Vous n'avez transféré aucun travail
       profiles:
         edit_primary:
-          change_picture: <i class = "glyphicon glyphicon-camera"> </ i> Changer photo
+          change_picture: <i class = "fa fa-camera"> </ i> Changer photo
           delete_picture: Supprimer la photo
           delete_picture_data_content: Si vous souhaitez supprimer entièrement votre image, cochez la case et enregistrez votre profil.
           delete_picture_data_original_title: Supprimer l'image
           facebook_handle: <i class = "fa fa-facebook" aria-hidden = "true"> </ i> Poignée Facebook
           google_handle: <i class = "fa fa-google-plus"> </ i> Poignée Google+
           help_change_picture_type: JPG, GIF ou PNG (moins de 2 Mo)
-          save_profile: <i class = "glyphicon glyphicon-save"> </ i> Enregistrer le profil
+          save_profile: <i class = "fa fa-floppy-o"> </ i> Enregistrer le profil
           twitter_handle: <i class = "fa fa-twitter" aria-hidden = "true"> </ i> Poignée Twitter
       proxy_activity: Activité de procuration
       proxy_add_deny: Vous ne pouvez pas vous faire un proxy
@@ -1455,7 +1455,7 @@ fr:
         changes_required:
           message: |-
             %{title} (%{link}) nécessite des modifications supplémentaires avant d'être approuvé.
-             '%{comment}'
+             '%{comment}'
           subject: Votre dépôt nécessite des modifications
         deposited:
           message: "%{title} (%{link}) a été approuvé par %{user}. %{comment}"
@@ -1489,7 +1489,7 @@ fr:
       read: Voir le téléchargement
     search:
       button:
-        html: <span class="glyphicon glyphicon-search"></span> Aller
+        html: <span class="fa fa-search"></span> Aller
         text: Chercher
       form:
         option:

@@ -10,7 +10,7 @@
         <%= select_tag(:per_page, options_for_select(Hyrax.config.range_for_number_of_results_to_display_per_page, h(params[:per_page])), title: t('.number_of_results_to_display_per_page')) %>
       <% end %>
       <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:per_page, :sort)) %>
-      &nbsp;<button class="btn btn-sm btn-secondary tiny-nudge"><span class="glyphicon glyphicon-refresh"></span> <%= t('helpers.action.refresh') %></button>
+      &nbsp;<button class="btn btn-sm btn-secondary tiny-nudge"><span class="fa fa-refresh"></span> <%= t('helpers.action.refresh') %></button>
     </fieldset>
   <% end %>
 <% end %>

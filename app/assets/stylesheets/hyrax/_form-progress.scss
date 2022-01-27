@@ -29,6 +29,7 @@
   padding-left: 8px;
 }
 
+// FIXME: There should be a better way to implement these with FontAwesome direct in the markup?
 aside.form-progress {
   .incomplete::before {
     content: "\e101";

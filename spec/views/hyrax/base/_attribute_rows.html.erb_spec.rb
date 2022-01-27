@@ -21,7 +21,7 @@ RSpec.describe 'hyrax/base/_attribute_rows.html.erb', type: :view do
   end
 
   it 'shows external link with icon for related url field' do
-    expect(page).to have_selector '.glyphicon-new-window'
+    expect(page).to have_selector '.fa-external-link'
     expect(page).to have_link(url)
   end
 

@@ -1091,14 +1091,14 @@ es:
       no_transfers: No ha transferido ningún trabajo
       profiles:
         edit_primary:
-          change_picture: <i class = "glyphicon glyphicon-camera"> </i> Cambiar imagen
+          change_picture: <i class = "fa fa-camera"> </i> Cambiar imagen
           delete_picture: Eliminar foto
           delete_picture_data_content: Si desea eliminar su imagen por completo, marque la casilla y guarde su perfil.
           delete_picture_data_original_title: Eliminar imagen
           facebook_handle: <i class = "fa fa-facebook" aria-hidden = "true"> </i> Asa de Facebook
           google_handle: <i class = "fa fa-google-plus"> </i> Manija de Google+
           help_change_picture_type: JPG, GIF o PNG (menos de 2 MB)
-          save_profile: <i class = "glyphicon glyphicon-save"> </i> Guardar perfil
+          save_profile: <i class = "fa fa-floppy-o"> </i> Guardar perfil
           twitter_handle: <i class = "fa fa-twitter" aria-hidden = "true"> </i> Twitter Handle
       proxy_activity: Actividad de Proxy
       proxy_add_deny: No puedes hacerte un proxy
@@ -1456,7 +1456,7 @@ es:
         changes_required:
           message: |-
             %{title} (%{link}) requiere cambios adicionales antes de la aprobación.
-             '%{comment}'
+             '%{comment}'
           subject: Su depósito requiere cambios
         deposited:
           message: "%{title} (%{link}) fue aprobado por %{user}. %{comment}"
@@ -1490,7 +1490,7 @@ es:
       read: Ver descarga
     search:
       button:
-        html: <span class="glyphicon glyphicon-search"></span> Ir
+        html: <span class="fa fa-search"></span> Ir
         text: Buscar
       form:
         option:

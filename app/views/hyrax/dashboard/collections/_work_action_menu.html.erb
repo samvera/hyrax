@@ -13,27 +13,27 @@
 
     <li class="dropdown-item" role="menuitem" tabindex="-1">
       <%= link_to [main_app, :edit, document] do %>
-        <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
+        <i class="fa fa-pencil" aria-hidden="true"></i>
         <span> <%= t('.edit_work') %> </span>
       <% end %>
     </li>
 
     <li class="dropdown-item" role="menuitem" tabindex="-1">
       <%= link_to [main_app, document], method: :delete, data: { confirm: t(".deleting_from_work", application_name: application_name) } do %>
-        <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+        <i class="fa fa-trash" aria-hidden="true"></i>
         <span><%= t('.delete_work') %></span>
       <% end %>
     </li>
 
     <li class="dropdown-item" role="menuitem" tabindex="-1">
       <%= display_trophy_link @user, document.id do |text| %>
-        <i class="glyphicon glyphicon-star" aria-hidden="true"></i> <%= text %>
+        <i class="fa fa-star" aria-hidden="true"></i> <%= text %>
       <% end %>
     </li>
 
     <li class="dropdown-item" role="menuitem" tabindex="-1">
       <%= link_to(hyrax.new_work_transfer_path(document.id), class: 'itemicon itemtransfer', title: t('.transfer_ownership_of_work')) do %>
-        <i aria-hidden="true" class="glyphicon glyphicon-transfer"></i>
+        <i aria-hidden="true" class="fa fa-exchange"></i>
         <span> <%=t('.transfer_ownership_of_work') %> </span>
       <% end %>
     </li>

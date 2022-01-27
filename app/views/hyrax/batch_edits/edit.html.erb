@@ -11,12 +11,12 @@
     <ul class="nav nav-tabs">
       <li id="edit_descriptions_link" class="nav-item">
         <a class="nav-link active" href="#descriptions_display" data-toggle="tab">
-          <span class="glyphicon glyphicon-tags"></span> <%= t('.descriptions') %>
+          <span class="fa fa-tags"></span> <%= t('.descriptions') %>
         </a>
       </li>
       <li id="edit_permissions_link" class="nav-item">
         <a class="nav-link" href="#permissions_display" data-toggle="tab">
-          <span class="glyphicon glyphicon-lock"></span> <%= t('.permissions') %>
+          <span class="fa fa-lock"></span> <%= t('.permissions') %>
         </a>
       </li>
     </ul>
@@ -34,7 +34,7 @@
                                           class: "ajax-form" },
                                   data: { model: @form.model_name.param_key } do |f| %>
                 <div class="col-12 col-sm-4">
-                  <a class="accordion-toggle grey glyphicon-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_<%= term %>" id="expand_link_<%=term.to_s%>">
+                  <a class="accordion-toggle grey fa-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_<%= term %>" id="expand_link_<%=term.to_s%>">
                     <%= f.input_label term %> <span class="chevron"></span>
                   </a>
                 </div>
@@ -67,7 +67,7 @@
                                 html: { id: "form_permissions_visibility", class: "ajax-form"},
                                 data: { 'param-key' => @form.model_name.param_key } do |f| %>
               <div class="col-12 col-sm-4">
-                <a class="accordion-toggle grey glyphicon-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_permissions_visibility" id="expand_link_permissions_visibility">
+                <a class="accordion-toggle grey fa-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_permissions_visibility" id="expand_link_permissions_visibility">
                   <%= f.input_label t(".visibility") %> <span class="chevron"></span>
                 </a>
               </div>
@@ -97,7 +97,7 @@
                                 html: { id: "form_permissions", class: "ajax-form"},
                                 data: { 'param-key' => @form.model_name.param_key } do |f| %>
               <div class="col-12 col-sm-4">
-                <a class="accordion-toggle grey glyphicon-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_permissions_sharing" id="expand_link_permissions_sharing">
+                <a class="accordion-toggle grey fa-chevron-right-helper collapsed" data-toggle="collapse" href="#collapse_permissions_sharing" id="expand_link_permissions_sharing">
                   <%= f.input_label t(".sharing") %> <span class="chevron"></span>
                 </a>
               </div>

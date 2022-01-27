@@ -1086,14 +1086,14 @@ de:
       no_transfers: Sie haben keine Arbeit übertragen
       profiles:
         edit_primary:
-          change_picture: <i class = "glyphicon glyphicon-camera"> </ i> Bild ändern
+          change_picture: <i class = "fa fa-camera"> </ i> Bild ändern
           delete_picture: Bild löschen
           delete_picture_data_content: Wenn Sie Ihr Bild vollständig entfernen möchten, aktivieren Sie das Kontrollkästchen und speichern Sie Ihr Profil.
           delete_picture_data_original_title: Bild löschen
           facebook_handle: <i class = "fa fa-facebook" aria-hidden = "true"> </ i> Facebook-Handle
           google_handle: <i class = "fa-fa-google-plus"> </ i> Google+ Handle
           help_change_picture_type: JPG, GIF oder PNG (weniger als 2 MB)
-          save_profile: <i class = "glyphicon glyphicon-save"> </ i> Profil speichern
+          save_profile: <i class = "fa fa-floppy-o"> </ i> Profil speichern
           twitter_handle: <i class = "fa fa-twitter" aria-hidden = "true"> </ i> Twitter-Handle
       proxy_activity: Vertreter-Aktivität
       proxy_add_deny: Sie können sich nicht selbst zum Stellvertreter machen
@@ -1483,7 +1483,7 @@ de:
       read: Lesen/Download
     search:
       button:
-        html: <span class="glyphicon glyphicon-search"></span> Suchen
+        html: <span class="fa fa-search"></span> Suchen
         text: Suche
       form:
         option:

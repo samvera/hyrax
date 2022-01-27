@@ -3,7 +3,7 @@
 <tr id="document_<%= id %>">
   <td>&nbsp;
     <% if current_user and document.depositor != current_user.user_key %>
-      <i class="glyphicon glyphicon-share-alt" />
+      <i class="fa fa-share" />
     <% end %>
   </td>
   <td>
@@ -14,7 +14,7 @@
       <div class="media-body">
         <p class="media-heading">
           <strong><%= link_to document.title_or_label, [main_app, document], id: "src_copy_link#{id}", class: "#{'document-title' if document.title_or_label == document.label}" %></strong>
-          <a href="#" class="small" title="Click for more details"><span id="expand_<%= id %>" class="glyphicon glyphicon-chevron-right"></span></a>
+          <a href="#" class="small" title="Click for more details"><span id="expand_<%= id %>" class="fa fa-chevron-right"></span></a>
         </p>
         <%= render_collection_links(document) %>
       </div>

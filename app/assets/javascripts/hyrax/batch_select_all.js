@@ -26,10 +26,10 @@
   function toggleStateBool (obj, state) {
     if (state){
       obj.attr("data-state", 'on');
-      obj.find('a i').addClass('glyphicon glyphicon-ok');
+      obj.find('a i').addClass('fa fa-check');
     }else {
       obj.attr("data-state", 'off');
-      obj.find('a i').removeClass('glyphicon glyphicon-ok');
+      obj.find('a i').removeClass('fa fa-check');
     }
 
   }

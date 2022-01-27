@@ -278,7 +278,7 @@ RSpec.describe HyraxHelper, type: :helper do
 
   describe "#iconify_auto_link" do
     let(:text)              { 'Foo < http://www.example.com. & More text' }
-    let(:linked_text)       { 'Foo &lt; <a href="http://www.example.com"><span class="glyphicon glyphicon-new-window"></span> http://www.example.com</a>. &amp; More text' }
+    let(:linked_text)       { 'Foo &lt; <a href="http://www.example.com"><span class="fa fa-external-link"></span> http://www.example.com</a>. &amp; More text' }
     let(:document)          { SolrDocument.new(has_model_ssim: ['GenericWork'], id: 512, title_tesim: text, description_tesim: text) }
     let(:blacklight_config) { CatalogController.blacklight_config }
 
@@ -300,7 +300,7 @@ RSpec.describe HyraxHelper, type: :helper do
         expect(subject).to include('<a href="http://www.example.com">')
       end
       it "adds icons" do
-        expect(subject).to include('class="glyphicon glyphicon-new-window"')
+        expect(subject).to include('class="fa fa-external-link"')
       end
     end
 
