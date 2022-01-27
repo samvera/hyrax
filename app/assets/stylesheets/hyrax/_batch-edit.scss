@@ -1,6 +1,6 @@
 .help-icon {
-  @extend .glyphicon !optional; // FIXME: not supported in bootstrap 4
-  @extend .glyphicon-question-sign !optional; // FIXME: not supported in bootstrap 4
+  @extend .fa !optional;
+  @extend .fa-question !optional;
   @extend .large-icon;
   top: 5px;
 }
@@ -17,10 +17,10 @@
   margin-bottom: $input-btn-padding-y-lg;
 }
 
-.glyphicon-chevron-right-helper.collapsed .chevron {
-  @extend .glyphicon-chevron-right !optional; // FIXME: not supported in bootstrap 4
+.fa-chevron-right-helper.collapsed .chevron {
+  @extend .fa-chevron-right !optional;
 }
-.glyphicon-chevron-right-helper .chevron {
-  @extend .glyphicon !optional; // FIXME: not supported in bootstrap 4
-  @extend .glyphicon-chevron-down !optional; // FIXME: not supported in bootstrap 4
+.fa-chevron-right-helper .chevron {
+  @extend .fa !optional;
+  @extend .fa-chevron-down !optional;
 }
