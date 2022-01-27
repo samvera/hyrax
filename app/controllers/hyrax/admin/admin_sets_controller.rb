@@ -82,7 +82,7 @@ module Hyrax
       msg = "Failed to create admin set: #{err_msg}"
       setup_form
       flash[:error] = msg
-      Rails.logger.error(msg)
+      Hyrax.logger.error(msg)
       render :new
     end
 
