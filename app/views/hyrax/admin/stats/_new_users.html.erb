@@ -1,7 +1,7 @@
 <h3>Newest Users (<%= @presenter.date_filter_string %>)</h3>
 <h4>
 <%- if !@presenter.start_date.blank? %>
-  Total: <%= @presenter.recent_users.count %></div>
+  Total: <%= @presenter.recent_users.count %>
 <%- else %>
     <%= @presenter.recent_users.count %> most recent users:
 <%- end %>
