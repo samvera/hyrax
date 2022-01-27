@@ -19,6 +19,7 @@ module Hyrax
     # @see https://dry-rb.org/gems/dry-container/
     class Container # rubocop:disable Metrics/ClassLength
       require 'hyrax/transactions/admin_set_create'
+      require 'hyrax/transactions/admin_set_update'
       require 'hyrax/transactions/apply_change_set'
       require 'hyrax/transactions/collection_create'
       require 'hyrax/transactions/collection_update'
@@ -127,6 +128,10 @@ module Hyrax
       end
 
       namespace 'admin_set_resource' do |ops| # valkyrie administrative set
+        ops.register 'update' do
+          AdminSetUpdate.new
+        end
+
         ops.register 'apply_collection_type_permissions' do
           Steps::ApplyCollectionTypePermissions.new
         end

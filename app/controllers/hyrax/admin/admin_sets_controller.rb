@@ -62,11 +62,22 @@ module Hyrax
     end
 
     def update
-      if @admin_set.update(admin_set_params)
+      case @admin_set
+      when Valkyrie::Resource
+        @admin_set = form.validate(admin_set_params) &&
+                     transactions['admin_set_resource.update'].call(form).value_or do |err|
+          setup_form # probably should do some real error handling here
+          render :edit
+        end
+
         redirect_to update_referer, notice: I18n.t('updated_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
       else
-        setup_form
-        render :edit
+        if @admin_set.update(admin_set_params)
+          redirect_to update_referer, notice: I18n.t('updated_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
+        else
+          setup_form
+          render :edit
+        end
       end
     end
 
