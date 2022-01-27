@@ -1836,7 +1836,7 @@ es:
         find_child_work: Busque un trabajo ...
         member_of_collection_ids: Seleccione una colección ...
     required:
-      html: <span class="label label-info required-tag">obligatorio</span>
+      html: <span class="badge badge-info required-tag">obligatorio</span>
   total_view:
     one: Este trabajo tiene 1 vista total
     other: Este trabajo tiene un total de %{count} visualizaciones
