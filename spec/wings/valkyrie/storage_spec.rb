@@ -59,8 +59,18 @@ RSpec.describe Wings::Valkyrie::Storage, :clean_repo do
       expect(Hyrax.custom_queries.find_file_metadata_by(id: upload.id))
         .to have_attributes original_filename: file.original_filename,
                             mime_type: 'image/png',
-                            file_identifier: Hyrax::Base.uri_to_id(upload.id),
+                            file_identifier: upload.id,
                             size: [file.size]
+    end
+
+    it 'can find content from its metadata node ' do
+      upload = storage_adapter.upload(resource: file_set,
+                                      file: file,
+                                      original_filename: file.original_filename)
+      metadata = Hyrax.custom_queries.find_file_metadata_by(id: upload.id)
+
+      expect(storage_adapter.find_by(id: metadata.file_identifier).id)
+        .to eq upload.id
     end
 
     it 'adds the file to the /files (LDP) container for the file set' do

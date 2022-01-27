@@ -58,7 +58,11 @@ module Wings
       end
 
       attributes[:original_filename] = obj.original_name
-      attributes[:file_identifier] = obj.id if obj.id.present?
+
+      if obj.id.present?
+        uri = Hyrax.config.translate_id_to_uri.call(obj.id)
+        attributes[:file_identifier] = Wings::Valkyrie::Storage.cast_to_valkyrie_id(uri)
+      end
       attributes[:type] = obj.metadata_node.type.to_a
       attributes[:size] = obj.size
       attributes
