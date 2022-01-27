@@ -14,8 +14,9 @@ module Hyrax
 
         ##
         # @params [#save] persister
-        def initialize(persister: Hyrax.persister)
+        def initialize(persister: Hyrax.persister, publisher: Hyrax.publisher)
           @persister = persister
+          @publisher = publisher
         end
 
         ##
@@ -27,10 +28,25 @@ module Hyrax
           return Failure(:resource_not_persisted) unless resource.persisted?
 
           @persister.delete(resource: resource)
-          Hyrax.publisher
-               .publish('object.deleted', object: resource, id: resource.id.id, user: user)
+          publish_changes(resource: resource, user: user)
 
           Success(resource)
+        end
+
+        private
+
+        def publish_changes(resource:, user:)
+          if resource.collection?
+            @publisher.publish('collection.deleted',
+                               collection: resource,
+                               id: resource.id.id,
+                               user: user)
+          else
+            @publisher.publish('object.deleted',
+                               object: resource,
+                               id: resource.id.id,
+                               user: user)
+          end
         end
       end
     end

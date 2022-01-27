@@ -62,11 +62,11 @@ module Hyrax
     end
 
     def update
-      if @admin_set.update(admin_set_params)
-        redirect_to update_referer, notice: I18n.t('updated_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
+      case @admin_set
+      when Valkyrie::Resource
+        valkyrie_update
       else
-        setup_form
-        render :edit
+        active_fedora_update
       end
     end
 
@@ -80,10 +80,18 @@ module Hyrax
     end
 
     def destroy
-      if @admin_set.destroy
+      case @admin_set
+      when Valkyrie::Resource
+        transactions['admin_set_resource.destroy'].call(@admin_set).value_or do |failure|
+          redirect_to hyrax.admin_admin_set_path(admin_set_id), alert: failure.first
+        end
         after_delete_success
       else
-        redirect_to hyrax.admin_admin_set_path(admin_set_id), alert: @admin_set.errors.full_messages.to_sentence
+        if @admin_set.destroy
+          after_delete_success
+        else
+          redirect_to hyrax.admin_admin_set_path(admin_set_id), alert: @admin_set.errors.full_messages.to_sentence
+        end
       end
     end
 
@@ -98,6 +106,23 @@ module Hyrax
     end
 
     private
+
+    def valkyrie_update
+      @admin_set = form.validate(admin_set_params) && transactions['admin_set_resource.update'].call(form).value_or do |_failure|
+        setup_form # probably should do some real error handling here
+        render :edit
+      end
+      redirect_to update_referer, notice: I18n.t('updated_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
+    end
+
+    def active_fedora_update
+      if @admin_set.update(admin_set_params)
+        redirect_to update_referer, notice: I18n.t('updated_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
+      else
+        setup_form
+        render :edit
+      end
+    end
 
     def update_referer
       hyrax.edit_admin_admin_set_path(admin_set_id) + (params[:referer_anchor] || '')
@@ -153,9 +178,9 @@ module Hyrax
     end
 
     def after_delete_success
-      if request.referer.include? "my/collections"
+      if request.referer&.include? "my/collections"
         redirect_to hyrax.my_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
-      elsif request.referer.include? "collections"
+      elsif request.referer&.include? "collections"
         redirect_to hyrax.dashboard_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
       else
         redirect_to hyrax.my_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')

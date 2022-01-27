@@ -94,6 +94,10 @@ module Hyrax
     # @macro a_registered_event
     register_event('batch.created')
 
+    # @since 3.4.0
+    # @macro a_registered_event
+    register_event('collection.deleted')
+
     # @since 3.0.0
     # @macro a_registered_event
     #   @note this event SHOULD be published whevener the metadata is saved

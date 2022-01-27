@@ -1,17 +1,18 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Admin::AdminSetsController do
+RSpec.describe Hyrax::Admin::AdminSetsController, :clean_repo do
   routes { Hyrax::Engine.routes }
-  let(:admin)   { create(:admin, email: 'admin@example.com') }
-  let(:manager) { create(:user, email: 'manager@example.com') }
-  let(:creator) { create(:user, email: 'creator@example.com') }
-  let(:user)    { create(:user, email: 'user@example.com') }
+  let(:admin)   { FactoryBot.create(:admin, email: 'admin@example.com') }
+  let(:manager) { FactoryBot.create(:user, email: 'manager@example.com') }
+  let(:creator) { FactoryBot.create(:user, email: 'creator@example.com') }
+  let(:user)    { FactoryBot.create(:user, email: 'user@example.com') }
   let(:ability) { ::Ability.new(manager) }
   let(:ability) { ::Ability.new(creator) }
   let(:ability) { ::Ability.new(user) }
 
   let!(:admin_set_type) do
     FactoryBot.create(:admin_set_collection_type,
-                      manager_user: manager.user_key, creator_user: creator.user_key)
+                      manager_user: manager.user_key,
+                      creator_user: creator.user_key)
   end
 
   context "a guest" do
@@ -190,8 +191,7 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
             post :create, params: { admin_set: { title: 'Test title',
                                                  description: 'test description',
                                                  workflow_name: 'default' } }
-            updated_admin_set = assigns(:admin_set)
-            expect(response).to redirect_to(edit_admin_admin_set_path(updated_admin_set))
+            expect(response).to redirect_to(edit_admin_admin_set_path(assigns(:admin_set)))
           end
         end
 

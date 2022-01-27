@@ -12,6 +12,12 @@ module Hyrax
     attribute :creator,           Valkyrie::Types::Set.of(Valkyrie::Types::String)
     attribute :description,       Valkyrie::Types::Set.of(Valkyrie::Types::String)
 
+    ##
+    # @return [Boolean] true
+    def collection?
+      true
+    end
+
     def collection_type_gid
       # allow AdministrativeSet to behave more like a regular PcdmCollection
       Hyrax::CollectionType.find_or_create_admin_set_type.to_global_id
