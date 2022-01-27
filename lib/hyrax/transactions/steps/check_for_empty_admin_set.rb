@@ -19,13 +19,13 @@ module Hyrax
         end
 
         ##
-        # @param [Hyrax::AdministrativeSet] obj
+        # @param [Hyrax::AdministrativeSet] admin_set
         #
         # @return [Dry::Monads::Result]
         def call(admin_set)
           members = @query_service
-                      .find_inverse_references_by(property: :admin_set_id,
-                                                  resource: admin_set)
+                    .find_inverse_references_by(property: :admin_set_id,
+                                                resource: admin_set)
           return Failure[:admin_set_has_members, members] if members.any?
 
           Success(admin_set)
