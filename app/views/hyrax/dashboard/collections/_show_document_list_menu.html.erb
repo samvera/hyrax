@@ -8,13 +8,13 @@
                     class: "itemicon itemedit",
                     title: t('hyrax.collection.document_list.edit'),
                     id: "edit_work_link_#{document.id}" do %>
-          <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i> <%= t('hyrax.collection.document_list.edit') %>
+          <i class="fa fa-pencil" aria-hidden="true"></i> <%= t('hyrax.collection.document_list.edit') %>
         <% end %>
       </li>
     <% end %>
     <li class="dropdown-item">
       <%= display_trophy_link(current_user, document.id) do |text| %>
-        <i class="glyphicon glyphicon-star" aria-hidden="true"></i> <%= text %>
+        <i class="fa fa-star" aria-hidden="true"></i> <%= text %>
       <% end %>
     </li>
   </ul>
