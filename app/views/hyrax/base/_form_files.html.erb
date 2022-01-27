@@ -15,14 +15,14 @@
                 <div class="fileinput-button" id="add-files">
                   <input id="addfiles" type="file" style="display:none;"  name="files[]" multiple />
                   <button type="button" class="btn btn-success" onclick="document.getElementById('addfiles').click();">
-                    <span class="glyphicon glyphicon-plus"></span>
+                    <span class="fa fa-plus"></span>
                     <span><%=  t(".add_files") %></span>
                   </button>
                 </div>
                 <div class="fileinput-button">
                   <input id="addfolder" type="file" style="display:none;"  name="files[]" multiple directory webkitdirectory />
                   <button type="button" class="btn btn-success" onclick="document.getElementById('addfolder').click();">
-                    <span class="glyphicon glyphicon-plus"></span>
+                    <span class="fa fa-plus"></span>
                     <span><%=  t(".add_folder") %></span>
                   </button>
                 </div>
@@ -30,12 +30,12 @@
                   <%= button_tag(type: 'button', class: 'btn btn-success', id: "browse-btn",
                     'data-toggle' => 'browse-everything', 'data-route' => browse_everything_engine.root_path,
                     'data-target' => "#{f.object.persisted? ? "#edit_#{f.object.model.model_name.param_key}_#{f.object.model.id}" : "#new_#{f.object.model.model_name.param_key}"}" ) do %>
-                    <span class="glyphicon glyphicon-plus"></span>
+                    <span class="fa fa-plus"></span>
                     <%= t('hyrax.upload.browse_everything.browse_files_button') %>
                   <% end %>
                 <% end %>
                 <button type="reset" id="file-upload-cancel-btn" class="btn btn-warning cancel" hidden="">
-                    <span class="glyphicon glyphicon-ban-circle"></span>
+                    <span class="fa fa-ban"></span>
                     <span><%= t('.cancel_upload') %></span>
                 </button>
                 <!-- The global file processing state -->
