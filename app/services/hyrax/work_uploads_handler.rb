@@ -116,9 +116,6 @@ module Hyrax
 
       ValkyrieIngestJob.perform_later(file)
 
-      # this triggers the re-index
-      Hyrax.publisher.publish('object.metadata.updated', object: file_set, user: file.user)
-
       { file_set: file_set, user: file.user }
     end
 
