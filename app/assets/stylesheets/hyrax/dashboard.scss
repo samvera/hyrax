@@ -37,11 +37,7 @@ $admin-panel-border-color: #dedede !default;
 
 body.dashboard {
   background-color: $body-background-color;
-  //padding-top: $navbar-brand-height + 2 * $navbar-padding-y;
-
-  @media only screen and (max-width: 767px) {
-    padding-top: 0;
-  }
+  padding-top: 3.5rem;
 }
 
 .dashboard {
@@ -68,21 +64,6 @@ body.dashboard {
   .nav-tabs > li.active > a,
   .nav-tabs > li.active > a:hover {
     border-top: 2px solid $tab-active-accent-color;
-  }
-
-  /* The #masthead selector below could (and ideally, should) be removed if we can
-   * replace the "navbar-static-top" class with "navbar-fixed-top" for the Admin UI only
-   */
-  #masthead {
-    border: 0;
-    left: 0;
-    position: fixed;
-    right: 0;
-    top: 0;
-
-    @media only screen and (max-width: 767px) {
-      position: initial;
-    }
   }
 
   /* This is needed in Chrome for the admin/admin_sets edit view AND the collection
