@@ -3,13 +3,11 @@
         <span class="sr-only"><%= t('hyrax.toolbar.language_switch') %></span>
         <span title="<%= t('hyrax.toolbar.language_switch') %>"><%= available_translations[I18n.locale.to_s] %></span>
     </a>
-    <ul id="language-dropdown-menu" class="dropdown-menu" role="menu">
-        <li role="presentation" class="dropdown-header"><%= t('hyrax.toolbar.language_switch') %></li>
-        <li role="presentation" class="dropdown-divider"></li>
+    <div id="language-dropdown-menu" class="dropdown-menu" role="menu">
+        <div role="presentation" class="dropdown-header"><%= t('hyrax.toolbar.language_switch') %></div>
+        <div role="presentation" class="dropdown-divider"></div>
         <% available_translations.each do |language, label| %>
-            <li class="dropdown-item" role="presentation" lang="<%= language %>">
-                <%= link_to label, "?locale=#{language}", class: 'dropdown-item', role: 'menuitem', tabindex: '-1', data: { locale: language } %>
-            </li>
+            <%= link_to label, "?locale=#{language}", class: 'dropdown-item', role: 'menuitem', lang: language, tabindex: '-1', data: { locale: language } %>
         <% end %>
-    </ul>
+    </div>
 </li>
