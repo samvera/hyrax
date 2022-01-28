@@ -39,6 +39,7 @@ module Hyrax
       require 'hyrax/transactions/steps/apply_permission_template'
       require 'hyrax/transactions/steps/apply_visibility'
       require 'hyrax/transactions/steps/check_for_empty_admin_set'
+      require 'hyrax/transactions/steps/delete_access_control'
       require 'hyrax/transactions/steps/delete_resource'
       require 'hyrax/transactions/steps/destroy_work'
       require 'hyrax/transactions/steps/ensure_admin_set'
@@ -160,6 +161,10 @@ module Hyrax
           Steps::ApplyCollectionTypePermissions.new
         end
 
+        ops.register 'delete_acl' do
+          Steps::DeleteAccessControl.new
+        end
+
         ops.register 'save_acl' do
           Steps::SaveAccessControl.new
         end
@@ -176,6 +181,10 @@ module Hyrax
 
         ops.register 'destroy' do
           CollectionDestroy.new
+        end
+
+        ops.register 'delete_acl' do
+          Steps::DeleteAccessControl.new
         end
 
         ops.register 'save_acl' do
@@ -198,6 +207,10 @@ module Hyrax
 
         ops.register 'destroy' do
           WorkDestroy.new
+        end
+
+        ops.register 'delete_acl' do
+          Steps::DeleteAccessControl.new
         end
 
         ops.register 'save_acl' do

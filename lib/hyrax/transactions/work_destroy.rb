@@ -8,7 +8,8 @@ module Hyrax
     #
     # @since 3.0.0
     class WorkDestroy < Transaction
-      DEFAULT_STEPS = ['work_resource.delete'].freeze
+      DEFAULT_STEPS = ['work_resource.delete',
+                       'work_resource.delete_acl'].freeze
 
       ##
       # @see Hyrax::Transactions::Transaction

@@ -174,6 +174,20 @@ module Hyrax
       true
     end
 
+    ##
+    # @api public
+    #
+    # Deletes the ACL for the resource
+    #
+    # @return [Boolean]
+    def destroy
+      persister.delete(resource: change_set.resource)
+      Hyrax.publisher.publish('object.acl.updated', acl: self, result: :success)
+      @change_set = nil
+
+      true
+    end
+
     private
 
     ##

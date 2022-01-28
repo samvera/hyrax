@@ -9,7 +9,8 @@ module Hyrax
     # @since 3.4.0
     class AdminSetDestroy < Transaction
       DEFAULT_STEPS = ['admin_set_resource.check_empty',
-                       'admin_set_resource.delete'].freeze
+                       'admin_set_resource.delete',
+                       'admin_set_resource.delete_acl'].freeze
 
       ##
       # @see Hyrax::Transactions::Transaction
