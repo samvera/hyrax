@@ -6,7 +6,7 @@
     <%= hidden_field_tag :sort, params[:sort], id: 'user_sort' %>
     <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:uq, :sort, :qt, :page, :utf8)) %>
     <button type="submit" class="btn btn-primary" id="user_submit">
-      <span class="glyphicon glyphicon-search"></span><%= t('.go') %>
+      <span class="fa fa-search"></span><%= t('.go') %>
     </button>
   <% end %>
 </div>

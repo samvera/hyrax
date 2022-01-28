@@ -43,7 +43,7 @@ RSpec.describe BlacklightHelper, type: :helper do
 
       it do
         is_expected.to eq 'This links to ' \
-                          '<a href="http://example.com/"><span class="glyphicon glyphicon-new-window"></span>' \
+                          '<a href="http://example.com/"><span class="fa fa-external-link"></span>' \
                           ' http://example.com/</a> What about that?'
       end
     end

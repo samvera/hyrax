@@ -17,13 +17,13 @@
         <td class="text-right">
             {% if (!i && !o.options.autoUpload) { %}
                 <button class="btn btn-primary start" disabled>
-                    <span class="glyphicon glyphicon-upload"></span>
+                    <span class="fa fa-upload"></span>
                     <span><%= t('.start') %></span>
                 </button>
             {% } %}
             {% if (!i) { %}
                 <button class="btn btn-sm btn-warning cancel">
-                    <span class="glyphicon glyphicon-ban-circle"></span>
+                    <span class="fa fa-ban"></span>
                     <span><%= t('helpers.action.cancel') %></span>
                 </button>
             {% } %}
@@ -67,7 +67,7 @@
               {% } %}
               <span class="size">{%=o.formatFileSize(file.size)%}</span>
               <button class="btn btn-sm btn-danger delete float-right" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
-                  <span class="glyphicon glyphicon-trash"></span>
+                  <span class="fa fa-trash"></span>
                   <span><%= t('helpers.action.delete') %></span>
               </button>
             </div>
@@ -124,7 +124,7 @@
         </td>
         <td class="text-right">
             <button class="btn btn-sm btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
-                <span class="glyphicon glyphicon-trash"></span>
+                <span class="fa fa-trash"></span>
                 <%= t('helpers.action.delete') %>
             </button>
         </td>
