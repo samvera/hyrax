@@ -17,6 +17,22 @@ RSpec.describe Hyrax::Forms::AdministrativeSetForm do
     end
   end
 
+  describe '#description' do
+    it 'is a single value' do
+      form.description = 'moomin'
+
+      expect { form.sync }
+        .to change { admin_set.description }
+        .to eq 'moomin'
+    end
+
+    it 'is a single value on repopulate' do
+      admin_set.description = 'moomin'
+
+      expect(form).to have_attributes(description: 'moomin')
+    end
+  end
+
   describe '#member_ids' do
     it 'populates as empty' do
       expect { form.prepopulate! }

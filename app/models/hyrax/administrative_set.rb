@@ -10,7 +10,7 @@ module Hyrax
 
     attribute :alternative_title, Valkyrie::Types::Set.of(Valkyrie::Types::String)
     attribute :creator,           Valkyrie::Types::Set.of(Valkyrie::Types::String)
-    attribute :description,       Valkyrie::Types::Set.of(Valkyrie::Types::String)
+    attribute :description,       Valkyrie::Types::String
 
     ##
     # @return [Boolean] true
