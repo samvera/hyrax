@@ -4,7 +4,7 @@ module Hyrax
   # Holds policy data about the workflow and permissions applied objects when
   # they are deposited through an Administrative Set or a Collection. Each
   # template record has a {#source} (through {#source_id}); the template's
-  # rules inform the behavior of objects deposited through that {#source_model}.
+  # rules inform the behavior of objects deposited through that {#source}.
   #
   # The {PermissionTemplate} specifies:
   #
@@ -81,6 +81,10 @@ module Hyrax
     # A bit of an analogue for a `belongs_to :source_model` as it crosses from Fedora to the DB
     # @return [AdminSet, ::Collection]
     # @raise [Hyrax::ObjectNotFoundError] when neither an AdminSet or Collection is found
+    # @note This method will eventually be replaced by #source which returns a Hyrax::Resource
+    #   object.  Many methods are equally able to process both Hyrax::Resource and
+    #   ActiveFedora::Base.  Only call this method if you need the ActiveFedora::Base object.
+    # @see #source
     def source_model
       ActiveFedora::Base.find(source_id)
     rescue ActiveFedora::ObjectNotFoundError
@@ -88,11 +92,11 @@ module Hyrax
     end
 
     # A bit of an analogue for a `belongs_to :admin_set` as it crosses from Fedora to the DB
-    # @deprecated Use #source_model instead
+    # @deprecated Use #source instead
     # @return [AdminSet]
     # @raise [Hyrax::ObjectNotFoundError] when the we cannot find the AdminSet
     def admin_set
-      Deprecation.warn('Use #source_model instead')
+      Deprecation.warn("#admin_set is deprecated; use #source instead.")
       return AdminSet.find(source_id) if AdminSet.exists?(source_id)
       raise Hyrax::ObjectNotFoundError
     rescue ActiveFedora::ActiveFedoraError # TODO: remove the rescue when active_fedora issue #1276 is fixed
@@ -100,11 +104,11 @@ module Hyrax
     end
 
     # A bit of an analogue for a `belongs_to :collection` as it crosses from Fedora to the DB
-    # @deprecated Use #source_model instead
+    # @deprecated Use #source instead
     # @return [Collection]
     # @raise [Hyrax::ObjectNotFoundError] when the we cannot find the Collection
     def collection
-      Deprecation.warn('Use #source_model instead')
+      Deprecation.warn("#collection is deprecated; use #source instead.")
       return ::Collection.find(source_id) if ::Collection.exists?(source_id)
       raise Hyrax::ObjectNotFoundError
     rescue ActiveFedora::ActiveFedoraError # TODO: remove the rescue when active_fedora issue #1276 is fixed
@@ -216,10 +220,12 @@ module Hyrax
     end
 
     ##
+    # @deprecated Use #reset_access_controls_for instead
     # @param interpret_visibility [Boolean] whether to retain the existing
     #   visibility when applying permission template ACLs
     # @return [Boolean]
     def reset_access_controls(interpret_visibility: false)
+      Deprecation.warn("#reset_access_controls is deprecated; use #reset_access_controls_for instead.")
       reset_access_controls_for(collection: source_model,
                                 interpret_visibility: interpret_visibility)
     end
