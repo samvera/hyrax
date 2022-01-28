@@ -23,6 +23,7 @@ module Hyrax
       require 'hyrax/transactions/admin_set_update'
       require 'hyrax/transactions/apply_change_set'
       require 'hyrax/transactions/collection_create'
+      require 'hyrax/transactions/collection_destroy'
       require 'hyrax/transactions/collection_update'
       require 'hyrax/transactions/create_work'
       require 'hyrax/transactions/destroy_work'
@@ -167,6 +168,14 @@ module Hyrax
       namespace 'collection_resource' do |ops| # valkyrie collection
         ops.register 'apply_collection_type_permissions' do
           Steps::ApplyCollectionTypePermissions.new
+        end
+
+        ops.register 'delete' do
+          Steps::DeleteResource.new
+        end
+
+        ops.register 'destroy' do
+          CollectionDestroy.new
         end
 
         ops.register 'save_acl' do

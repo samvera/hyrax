@@ -61,6 +61,17 @@ module Hyrax
         Hyrax.index_adapter.delete(resource: event[:object])
       end
 
+      ##
+      # Remove the resource from the index.
+      #
+      # Called when 'collection.deleted' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
+      def on_collection_deleted(event)
+        return unless resource?(event.payload[:collection])
+        Hyrax.index_adapter.delete(resource: event[:collection])
+      end
+
       private
 
       def resource?(resource)
