@@ -175,5 +175,14 @@ form.button-to {
 
   .form-group {
     margin: 0;
+    flex-wrap: nowrap;
+
+    @media (max-width: 768px) {
+      flex-wrap: wrap;
+    }
+  }
+
+  label {
+    word-wrap: initial;
   }
 }
