@@ -58,7 +58,7 @@ USER app
 
 RUN mkdir -p /app/fits && \
     cd /app/fits && \
-    wget https://github.com/harvard-lts/fits/releases/download/1.5.0/fits-1.5.0.zip -O fits.zip && \
+    wget https://github.com/harvard-lts/fits/releases/download/1.5.1/fits-1.5.1.zip -O fits.zip && \
     unzip fits.zip && \
     rm fits.zip && \
     chmod a+x /app/fits/fits.sh
