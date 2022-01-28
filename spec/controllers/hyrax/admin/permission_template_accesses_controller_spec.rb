@@ -4,6 +4,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
   let(:hyrax) { Hyrax::Engine.routes.url_helpers }
   let(:permission_template_access) { FactoryBot.create(:permission_template_access) }
   let(:source_id) { permission_template_access.permission_template.source_id }
+  let(:user_liz) { FactoryBot.create(:user, email: 'liz@example.com') }
 
   before { sign_in FactoryBot.create(:user) }
 
@@ -36,7 +37,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
       it 'can remove admin group from viewers'
 
       context 'when source is an admin set' do
-        let(:admin_set) { FactoryBot.create(:admin_set, edit_users: ['Liz']) }
+        let(:admin_set) { FactoryBot.create(:admin_set, edit_users: [user_liz.user_key]) }
 
         let(:permission_template) do
           FactoryBot.create(:permission_template, source_id: admin_set.id)
@@ -81,7 +82,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
 
         context 'with deleting any agent other than the admin users group' do
           let(:agent_type) { 'user' }
-          let(:agent_id) { 'Liz' }
+          let(:agent_id) { user_liz.user_key }
 
           before do
             allow(controller)
@@ -113,7 +114,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
 
           it "empties the admin set's edit users" do
             expect { delete :destroy, params: { id: permission_template_access } }
-              .to change { admin_set.reload.edit_users.to_a }
+              .to change { Hyrax.query_service.find_by(id: admin_set.id).permission_manager.edit_users.to_a }
               .to be_empty
           end
         end
@@ -121,7 +122,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
 
       context 'when source is a collection' do
         let(:permission_template) { create(:permission_template, source_id: collection.id) }
-        let(:collection) { create(:collection, edit_users: ['Liz']) }
+        let(:collection) { create(:collection, edit_users: [user_liz.user_key]) }
 
         context 'when deleting the admin users group' do
           let(:agent_type) { 'group' }
@@ -163,7 +164,7 @@ RSpec.describe Hyrax::Admin::PermissionTemplateAccessesController do
 
         context 'as an agent not in the admin users group' do
           let(:agent_type) { 'user' }
-          let(:agent_id) { 'Liz' }
+          let(:agent_id) { user_liz.user_key }
 
           before do
             allow(controller)
