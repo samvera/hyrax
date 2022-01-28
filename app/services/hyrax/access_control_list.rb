@@ -181,8 +181,10 @@ module Hyrax
     #
     # @return [Boolean]
     def destroy
-      persister.delete(resource: change_set.resource)
-      Hyrax.publisher.publish('object.acl.updated', acl: self, result: :success)
+      if change_set.resource.persisted?
+        persister.delete(resource: change_set.resource)
+        Hyrax.publisher.publish('object.acl.deleted', acl: self)
+      end
       @change_set = nil
 
       true

@@ -35,6 +35,29 @@ RSpec.describe Hyrax::Listeners::MetadataIndexListener do
     end
   end
 
+  describe '#on_collection_deleted' do
+    let(:event_type) { :on_collection_deleted }
+    let(:resource)   { FactoryBot.valkyrie_create(:hyrax_collection) }
+    let(:data)       { { collection: resource } }
+
+    it 'reindexes the collection on the configured adapter' do
+      expect(Hyrax.logger).not_to receive(:info).with(skipping_message)
+      expect { listener.on_collection_deleted(event) }
+        .to change { fake_adapter.deleted_resources }
+        .to contain_exactly(resource)
+    end
+
+    context 'when it gets a non-resource as payload' do
+      let(:resource) { ActiveFedora::Base.new }
+
+      it 'returns as a no-op' do
+        expect(Hyrax.logger).to receive(:info).with(skipping_message)
+        expect { listener.on_collection_deleted(event) }
+          .not_to change { fake_adapter.deleted_resources }
+      end
+    end
+  end
+
   describe '#on_object_membership_updated' do
     let(:event_type) { :on_object_membership_updated }
 

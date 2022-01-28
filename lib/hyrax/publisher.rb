@@ -157,6 +157,10 @@ module Hyrax
 
     # @since 3.4.0
     # @macro a_registered_event
+    register_event('object.acl.deleted')
+
+    # @since 3.4.0
+    # @macro a_registered_event
     #   @note this event SHOULD be published whevener the membership is changed
     #     for a PCDM Object (including a Hydra Works FileSet). this includes
     #     changes to the Object's `#member_ids` attribute, as well as inverse

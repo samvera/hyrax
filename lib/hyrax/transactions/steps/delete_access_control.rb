@@ -18,8 +18,11 @@ module Hyrax
         # @return [Dry::Monads::Result]
         def call(obj)
           return Success(obj) unless obj.respond_to?(:permission_manager)
-          obj.permission_manager&.acl&.destroy ||
-            (return Failure[:failed_to_delete_acl, acl])
+
+          acl = obj.permission_manager&.acl
+          return Success(obj) if acl.nil?
+
+          acl.destroy || (return Failure[:failed_to_delete_acl, acl])
 
           Success(obj)
         end
