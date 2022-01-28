@@ -116,7 +116,7 @@ Then update the helm charts with the following:
 HELM_EXPERIMENTAL_OCI=1 helm dependency update chart/hyrax
 ```
 
-Without the `HELM_EXPERIMENTAL_OCI=1` switch you might see the following error:
+If your `helm` version is before 3.8, without the `HELM_EXPERIMENTAL_OCI=1` switch you might see the following error:
 
 ```sh
 repository oci://ghcr.io/samvera is an OCI registry: this feature has been marked as experimental and is not enabled by default. Please set HELM_EXPERIMENTAL_OCI=1 in your environment to use this feature”
@@ -141,6 +141,27 @@ Some shell commands of house cleaning and destruction:
 *  Remove existing docker instances: `docker rm $(docker ps -q -f status=exited)`
 *  Remove hanging docker instances: `docker rm $(docker ps -a -q) -f`
 *  Removing dangling docker images: `docker rmi $(docker images -f "dangling=true" -q)`
+
+## Building and Pushing the Chart Package
+
+We currently build and push new chart versions manually. This needs to happen
+any time the chart version in [`Chart.yaml`](./Chart.yaml) is incremented.
+
+To publish the Hyrax chart, you'll need to be in one of the GitHub groups with
+push permissions. These groups are:
+
+  - `@samvera/admins`
+  - `@samvera/hyrax` (and all its subgroups)
+
+To build the package, it's helpful to have a clean checkout of the current
+`main` branch, then:
+
+```sh
+HELM_EXPERIMENTAL_OCI=1 helm dependency update chart/hyrax
+HELM_EXPERIMENTAL_OCI=1 helm package chart/hyrax
+HELM_EXPERIMENTAL_OCI=1 helm push hyrax-[VERSION].tgz oci://ghcr.io/samvera/charts
+```
+
 
 [containers]: ../../CONTAINERS.md#hyrax-image
 [dassie]: ../../.dassie/README.md
