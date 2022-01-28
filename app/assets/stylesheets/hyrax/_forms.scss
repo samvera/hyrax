@@ -182,6 +182,11 @@ form.button-to {
     }
   }
 
+  button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
   label {
     word-wrap: initial;
   }
