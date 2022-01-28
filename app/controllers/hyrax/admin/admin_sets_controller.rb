@@ -148,7 +148,8 @@ module Hyrax
       form.validate(admin_set_params) &&
         @admin_set = transactions['change_set.create_admin_set']
                      .with_step_args(
-                       'change_set.set_user_as_creator' => { user: current_user }
+                       'change_set.set_user_as_creator' => { user: current_user },
+                       'admin_set_resource.apply_collection_type_permissions' => { user: current_user }
                      )
                      .call(form).value_or do |_failure|
                        setup_form # probably should do some real error handling here
