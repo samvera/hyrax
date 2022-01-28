@@ -1,8 +1,8 @@
 <header aria-label="header" class="top-header">
-  <nav id="masthead" class="navbar navbar-expand-lg navbar-dark bg-dark flex-column flex-md-row fixed-top" role="navigation" aria-label="masthead">
+  <nav id="masthead" class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between <%= placement_class %>" role="navigation" aria-label="masthead">
     <h1 class="sr-only"><%= application_name %></h1>
     <%= render '/logo' %>
-    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top-navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#top-navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="top-navbar-collapse">
@@ -10,4 +10,3 @@
     </div>
   </nav>
 </header>
-

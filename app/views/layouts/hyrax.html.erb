@@ -9,7 +9,7 @@
     <div class="skip-to-content">
       <%= link_to "Skip to Content", "#skip-to-content" %>
     </div>
-    <%= render '/masthead' %>
+    <%= render '/masthead', placement_class: nil %>
     <%= content_for(:navbar) %>
     <%= content_for(:precontainer_content) %>
     <div id="content-wrapper" class="container" role="main">
