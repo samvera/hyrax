@@ -3,19 +3,17 @@
 require 'hyrax/specs/shared_specs'
 
 RSpec.describe Hyrax::AdministrativeSetIndexer do
+  let(:resource) { FactoryBot.valkyrie_create(:hyrax_admin_set) }
+  let(:indexer_class) { described_class }
+
+  it_behaves_like 'an Administrative Set indexer'
+
   subject(:service) { described_class.new(resource: admin_set) }
   let(:admin_set) { FactoryBot.valkyrie_create(:hyrax_admin_set, title: [admin_set_title]) }
   let(:admin_set_title) { 'An Admin Set' }
 
   it 'is resolved from an admin set' do
-    expect(Hyrax::ValkyrieIndexer.for(resource: admin_set))
+    expect(Hyrax::ValkyrieIndexer.for(resource: resource))
       .to be_a described_class
-  end
-
-  describe '#to_solr' do
-    it 'includes default attributes ' do
-      expect(subject.to_solr)
-        .to include generic_type_si: 'Admin Set', title_tesim: [admin_set_title]
-    end
   end
 end
