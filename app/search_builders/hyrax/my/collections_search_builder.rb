@@ -12,7 +12,7 @@ class Hyrax::My::CollectionsSearchBuilder < ::Hyrax::CollectionSearchBuilder
   def show_only_collections_deposited_by_current_user(solr_parameters)
     clauses = [
       ActiveFedora::SolrQueryBuilder.construct_query_for_rel(depositor: current_user_key),
-      ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: ::AdminSet.to_s, creator: current_user_key)
+      ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: Hyrax.config.admin_set_model, creator: current_user_key)
     ]
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] += ["(#{clauses.join(' OR ')})"]
