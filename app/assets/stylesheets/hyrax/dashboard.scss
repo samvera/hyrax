@@ -200,32 +200,6 @@ body.dashboard {
     }
   }
 
-  .card {
-    border: 1px solid $admin-panel-border-color;
-    float: left;
-    width: 100%;
-
-    .card-header,
-    .card-footer,
-    .card-body,
-    .list-group-item {
-      float: left;
-      width: 100%;
-    }
-
-    .card-title {
-      color: $title-text-color;
-      display: block;
-      font-size: 18px;
-      font-weight: 600;
-      line-height: 30px;
-
-      &.h2 {
-        font-size: 22px;
-      }
-    }
-  }
-
   .card.labels {
     border-top: 1px solid $card-border-color;
     margin-bottom: 0;
