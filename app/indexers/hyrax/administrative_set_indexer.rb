@@ -11,6 +11,7 @@ module Hyrax
 
     def to_solr # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
       super.tap do |solr_doc|
+        solr_doc[Hyrax.config.collection_type_index_field.to_sym] = Array(resource.try(:collection_type_gid)&.to_s)
         solr_doc[:alternative_title_tesim] = resource.alternative_title
         solr_doc[:creator_ssim]            = [resource.creator]
         solr_doc[:creator_tesim]           = [resource.creator]

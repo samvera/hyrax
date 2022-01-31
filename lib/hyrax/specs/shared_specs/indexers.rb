@@ -211,6 +211,11 @@ RSpec.shared_examples 'an Administrative Set indexer' do
   it_behaves_like 'a visibility indexer'
 
   describe '#to_solr' do
+    it 'indexes collection type gid' do
+      expect(indexer.to_solr)
+        .to include(collection_type_gid_ssim: a_collection_containing_exactly(an_instance_of(String)))
+    end
+
     it 'indexes generic type' do
       expect(indexer.to_solr)
         .to include(generic_type_sim: a_collection_containing_exactly('Admin Set'))

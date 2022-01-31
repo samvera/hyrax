@@ -172,10 +172,12 @@ RSpec.shared_examples 'a Hyrax::AdministrativeSet' do
       .to contain_exactly('lorem ipsum')
   end
 
-  it 'has an #title' do
-    expect { admin_set.title = ['Moomin'] }
-      .to change { admin_set.title }
-      .to contain_exactly('Moomin')
+  describe '#collection_type_gid' do
+    let(:gid) { Hyrax::CollectionType.find_or_create_admin_set_type.to_global_id }
+
+    it 'has a GlobalID for a collection type' do
+      expect(admin_set.collection_type_gid).to eq gid
+    end
   end
 end
 
