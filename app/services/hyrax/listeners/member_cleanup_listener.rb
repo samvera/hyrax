@@ -16,7 +16,7 @@ module Hyrax
           begin
             Hyrax.persister.delete(resource: file_set)
             Hyrax.publisher
-                 .publish('object.deleted', object: file_set, id: file_set.id, user: user)
+                 .publish('object.deleted', object: file_set, id: file_set.id, user: event[:user])
           rescue StandardError # we don't uncaught errors looping filesets
             Hyrax.logger.warn "Failed to delete #{file_set.class}:#{file_set.id} " \
                               "during cleanup for resource: #{event[:object]}. " \
