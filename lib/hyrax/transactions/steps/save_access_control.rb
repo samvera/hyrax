@@ -18,8 +18,8 @@ module Hyrax
         # @return [Dry::Monads::Result]
         def call(obj)
           return Success(obj) unless obj.respond_to?(:permission_manager)
-          obj.permission_manager&.acl&.save ||
-            (return Failure[:failed_to_save_acl, acl])
+          acl = obj.permission_manager&.acl
+          acl&.save || (return Failure[:failed_to_save_acl, acl])
 
           Success(obj)
         end
