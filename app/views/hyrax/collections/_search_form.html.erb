@@ -1,8 +1,8 @@
   <%= form_for presenter, url: url, method: :get, class: "well form-search" do |f| %>
       <label for="collection_search" class="sr-only"><%= t('hyrax.collections.search_form.label', title: presenter.to_s) %></label>
-      <div class="input-group">
+      <div class="input-group mb-sm-auto">
         <%= text_field_tag :cq, params[:cq], class: "collection-query form-control", placeholder: t('hyrax.collections.search_form.placeholder'), size: '30', type: "search", id: "collection_search" %>
-        <div class="input-group-btn">
+        <div class="input-group-append">
           <button type="submit" class="btn btn-primary" id="collection_submit"><span class="fa fa-search"></span> <%= t('hyrax.collections.search_form.button_label') %></button>
         </div>
       </div>

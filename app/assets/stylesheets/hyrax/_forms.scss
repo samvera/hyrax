@@ -175,19 +175,5 @@ form.button-to {
 
   .form-group {
     margin: 0;
-    flex-wrap: nowrap;
-
-    @media (max-width: 768px) {
-      flex-wrap: wrap;
-    }
-  }
-
-  button {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-
-  label {
-    word-wrap: initial;
   }
 }
