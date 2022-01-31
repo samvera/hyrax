@@ -67,3 +67,12 @@ label.disabled {
   font-size: 1.2em;
   margin: 0 0 10px;
 }
+
+
+// Bootstrap 4 has no default row margins, so this helper
+// class will wrap rows giving some margin between
+.spaced-rows {
+  .row > .col {
+    margin-bottom: 1rem;
+  }
+}

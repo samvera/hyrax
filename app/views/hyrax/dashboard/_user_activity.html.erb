@@ -1,22 +1,25 @@
-<div class="card-header">
-  <h3 class="card-title"><%= t('.title') %></h3>
-</div>
-<div class="card-body text-center">
-  <% if Hyrax.config.analytics? %>
-    <%= render 'user_activity_graph' %>
+<div class="card">
+  <div class="card-header">
+    <%= t('.title') %>
+  </div>
+  <div class="card-body d-flex justify-content-center">
+    <% if Hyrax.config.analytics? %>
+      <%= render 'user_activity_graph' %>
 
-    <div class="col-md-3">
-      <div class="card">
-        <div class="card-header">
-          <h2 class="card-title text-center"><%= t('.user_summary') %></h2>
-        </div>
-        <div class="card-body text-center">
-          <p><%= t('.registered_users') %>: <%= @presenter.user_count(@start_date.to_date, @end_date.to_date) %></p>
-          <p><%= t('.new_visitors') %>: <%= Hyrax::Analytics.new_visitors('range', "#{@start_date},#{@end_date}") %></p>
-          <p><%= t('.returning_visitors') %>: <%= Hyrax::Analytics.returning_visitors('range', "#{@start_date},#{@end_date}") %></p>
-          <p><%= t('.total_visitors') %>: <%= Hyrax::Analytics.total_visitors('range', "#{@start_date},#{@end_date}") %></p>
+      <!-- FIXME: This is like embedded a card in a card...seems odd -->
+      <div class="col-md-3">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title text-center"><%= t('.user_summary') %></h2>
+          </div>
+          <div class="card-body text-center">
+            <p><%= t('.registered_users') %>: <%= @presenter.user_count(@start_date.to_date, @end_date.to_date) %></p>
+            <p><%= t('.new_visitors') %>: <%= Hyrax::Analytics.new_visitors('range', "#{@start_date},#{@end_date}") %></p>
+            <p><%= t('.returning_visitors') %>: <%= Hyrax::Analytics.returning_visitors('range', "#{@start_date},#{@end_date}") %></p>
+            <p><%= t('.total_visitors') %>: <%= Hyrax::Analytics.total_visitors('range', "#{@start_date},#{@end_date}") %></p>
+          </div>
         </div>
       </div>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 </div>
