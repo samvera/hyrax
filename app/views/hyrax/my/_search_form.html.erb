@@ -2,18 +2,17 @@
 
   <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:q, :search_field, :qt, :page, :utf8)) %>
   <div class="form-group row">
-    <label class="col-form-label col-sm-3" for="search-field-header">
+    <label class="col-form-label col-sm-3 text-right" for="search-field-header">
       <%= t("hyrax.search.form.q.label", application_name: application_name) %>
     </label>
 
-    <div class="input-group">
+    <div class="input-group mb-sm-auto col-sm-9">
       <%= text_field_tag :q, current_search_parameters , class: "q form-control", id: "search-field-header", placeholder: t("hyrax.search.form.q.placeholder") %>
-
-      <div class="input-group-btn">
+      <div class="input-group-append">
         <button type="submit" class="btn btn-primary" id="search-submit-header">
           <%= t('hyrax.search.button.html') %>
         </button>
       </div>
     </div><!-- /.input-group -->
-  </div><!-- /.form-group -->
+  </div><!-- /.form-row -->
 <% end %>

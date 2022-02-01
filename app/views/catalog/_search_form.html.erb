@@ -7,10 +7,10 @@
       <%= t("hyrax.search.form.q.label", application_name: application_name) %>
     </label>
 
-    <div class="input-group col-sm-9">
+    <div class="input-group mb-2 col-sm-9">
       <%= text_field_tag :q, current_search_parameters , class: "q form-control", id: "search-field-header", placeholder: t("hyrax.search.form.q.placeholder") %>
 
-      <div class="input-group-btn">
+      <div class="input-group-append">
         <button type="submit" class="btn btn-primary" id="search-submit-header">
           <%= t('hyrax.search.button.html') %>
         </button>
@@ -21,7 +21,7 @@
             <span aria-hidden="true"><%= t("hyrax.search.form.option.all.label_short") %></span>
           </button>
 
-          <ul class="dropdown-menu float-right">
+          <ul class="dropdown-menu dropdown-menu-right">
             <li class="dropdown-item">
               <%= link_to t("hyrax.search.form.option.all.label_long", application_name: application_name), "#",
                   data: { "search-option" => main_app.search_catalog_path, "search-label" => t("hyrax.search.form.option.all.label_short") } %>
@@ -34,9 +34,8 @@
               <%= link_to t("hyrax.search.form.option.my_collections.label_long"), "#",
                   data: { "search-option" => hyrax.my_collections_path, "search-label" => t("hyrax.search.form.option.my_collections.label_short") } %>
             </li>
-          <% end %>
-
-        </ul>
+          </ul>
+        <% end %>
       </div><!-- /.input-group-btn -->
     </div><!-- /.input-group -->
     
