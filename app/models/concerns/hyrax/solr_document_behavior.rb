@@ -65,7 +65,7 @@ module Hyrax
     ##
     # @return [Boolean]
     def admin_set?
-      hydra_model == ::AdminSet
+      hydra_model == Hyrax.config.admin_set_class
     end
 
     ##
