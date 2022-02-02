@@ -59,10 +59,11 @@ module Hyrax
     end
 
     ##
+    # @param join_with [String] the connector (eg. 'AND', 'OR') used to join each clause (default: 'AND')
     # @return [String] the combined query that can be submitted to solr
-    def build
+    def build(join_with: 'AND')
       return 'id:NEVER_USE_THIS_ID' if @query.blank? # forces this method to always return a valid solr query
-      @query.join(' AND ')
+      @query.join(padded_join_with(join_with))
     end
 
     ##
@@ -106,8 +107,8 @@ module Hyrax
 
     ##
     # @param field_pairs [Hash] a list of pairs of property name and values (e.g. { field1: values, field2: values })
-    # @param join_with [String] the connector used to join the field pairs (default: ' AND ')
-    # @param type [String] type of query to run. Either 'raw' or 'field' (default: 'field')
+    # @param join_with [String] the connector (eg. 'AND', 'OR') used to join the field pairs (default: 'AND')
+    # @param type [String] type of query to run (e.g. 'raw', 'field', 'terms') (default: 'field')
     # @return [SolrQueryService] the existing service with field_pair query appended
     def with_field_pairs(field_pairs: {}, join_with: default_join_with, type: 'field')
       pairs_query = construct_query_for_pairs(field_pairs, join_with, type)
@@ -140,7 +141,7 @@ module Hyrax
 
     # Construct a solr query from a list of pairs (e.g. { field1: values, field2: values })
     # @param [Hash] field_pairs a list of pairs of property name and values
-    # @param [String] join_with the value we're joining the clauses with (default: ' AND ')
+    # @param [String] join_with the value (e.g. 'AND', 'OR') we're joining the clauses with (default: 'AND')
     # @param [String] type of query to run. Either 'raw' or 'field' (default: 'field')
     # @return [String] a solr query
     # @example
@@ -150,7 +151,7 @@ module Hyrax
       clauses = pairs_to_clauses(field_pairs, type)
       return "" if clauses.count.zero?
       return clauses.first if clauses.count == 1
-      "(#{clauses.join(join_with)})"
+      "(#{clauses.join(padded_join_with(join_with))})"
     end
 
     # Construct a solr query from the model (e.g. Collection, Monograph)
@@ -184,7 +185,11 @@ module Hyrax
     end
 
     def default_join_with
-      ' AND '
+      'AND'
+    end
+
+    def padded_join_with(join_with)
+      " #{join_with.strip} "
     end
 
     # @param [Array<Array>] pairs a list of (key, value) pairs. The value itself may
