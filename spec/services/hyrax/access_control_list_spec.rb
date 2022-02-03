@@ -164,4 +164,25 @@ RSpec.describe Hyrax::AccessControlList do
       end
     end
   end
+
+  describe "#destroy" do
+    let(:listener) { Hyrax::Specs::SpyListener.new }
+
+    before do
+      acl << permission
+      acl.save
+
+      # Subscribe to events after acl has been persisted
+      Hyrax.publisher.subscribe(listener)
+    end
+
+    after { Hyrax.publisher.unsubscribe(listener) }
+
+    it 'deletes the acl resource' do
+      expect { acl.destroy }
+        .to change { Hyrax::AccessControl.for(resource: resource, query_service: acl.query_service).persisted? }
+        .from(true)
+        .to(false)
+    end
+  end
 end
