@@ -570,7 +570,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
 
     context "when it succeeds" do
       it "redirects to My Collections" do
-        pending 'update of test to work with Hyrax::PcdmCollection'
         delete :destroy, params: { id: collection }
 
         expect(response).to have_http_status(:found)
@@ -581,6 +580,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       it "returns json" do
         delete :destroy, params: { format: :json, id: collection }
         expect(response).to have_http_status(:no_content)
+        expect(response.location).to eq Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en')
       end
     end
 
