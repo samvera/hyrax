@@ -168,10 +168,10 @@ module Hyrax
         # leaving id to avoid changing the method's parameters prior to release
         respond_to do |format|
           format.html do
-            redirect_to my_collections_path,
+            redirect_to hyrax.my_collections_path,
                         notice: t('hyrax.dashboard.my.action.collection_delete_success')
           end
-          format.json { head :no_content, location: my_collections_path }
+          format.json { head :no_content, location: hyrax.my_collections_path }
         end
       end
 
@@ -188,8 +188,7 @@ module Hyrax
       def destroy
         case @collection
         when Valkyrie::Resource
-          Hyrax.persister.delete(resource: @collection)
-          after_destroy(params[:id])
+          valkyrie_destroy
         else
           if @collection.destroy
             after_destroy(params[:id])
@@ -239,6 +238,14 @@ module Hyrax
                         .call(form)
                         .value_or { return after_update_error }
         after_update
+      end
+
+      def valkyrie_destroy
+        if transactions['collection_resource.destroy'].call(@collection).success?
+          after_destroy(params[:id])
+        else
+          after_destroy_error(params[:id])
+        end
       end
 
       def default_collection_type
