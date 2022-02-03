@@ -31,4 +31,15 @@ RSpec.describe Hyrax::Listeners::AclIndexListener do
       end
     end
   end
+
+  describe '#on_object_acl_deleted' do
+    let(:data)       { { acl: acl } }
+    let(:event_type) { :on_object_acl_deleted }
+
+    it 'removes the acl from the configured adapter' do
+      expect { listener.on_object_acl_deleted(event) }
+        .to change { fake_adapter.deleted_resources }
+        .to contain_exactly(acl)
+    end
+  end
 end
