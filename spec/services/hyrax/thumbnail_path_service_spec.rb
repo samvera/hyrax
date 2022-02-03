@@ -79,7 +79,7 @@ RSpec.describe Hyrax::ThumbnailPathService do
     context 'when it has a missing thumbnail' do
       let(:object) { GenericWork.new(thumbnail_id: 'very_fake') }
 
-      it { is_expected.to be_nil }
+      it { is_expected.to match %r{/assets/default-.+.png} }
     end
 
     context "that doesn't have a representative" do
