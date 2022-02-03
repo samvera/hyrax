@@ -20,6 +20,17 @@ RSpec.describe Hyrax::Transactions::Steps::SaveAccessControl, valkyrie_adapter: 
         .to change { Hyrax::AccessControlList.new(resource: work).permissions }
         .to contain_exactly(have_attributes(mode: :read, agent: user.user_key))
     end
+
+    context 'when it fails to update' do
+      before { allow_any_instance_of(Hyrax::AccessControlList).to receive(:save).and_return(false) }
+
+      it 'returns a Failure' do
+        result = step.call(work)
+
+        expect(result).to be_failure
+        expect(result.failure).to contain_exactly(Symbol, Hyrax::AccessControlList)
+      end
+    end
   end
 
   context 'when the resource has no permission_manager' do
