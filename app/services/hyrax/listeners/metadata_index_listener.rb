@@ -25,6 +25,17 @@ module Hyrax
       ##
       # Re-index the resource.
       #
+      # Called when 'file.metadata.updated' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
+      def on_file_metadata_updated(event)
+        return unless resource? event[:metadata]
+        Hyrax.index_adapter.save(resource: event[:metadata])
+      end
+
+      ##
+      # Re-index the resource.
+      #
       # Called when 'object.membership.updated' event is published
       # @param [Dry::Events::Event] event
       # @return [void]

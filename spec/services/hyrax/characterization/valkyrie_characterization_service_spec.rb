@@ -37,9 +37,9 @@ RSpec.describe Hyrax::Characterization::ValkyrieCharacterizationService do
         described_class
           .run(metadata: metadata, file: file, characterizer: characterizer)
 
-        expect(listener.object_metadata_updated&.payload)
+        expect(listener.file_metadata_updated&.payload)
           .to include(user: ::User.system_user,
-                      object: metadata)
+                      metadata: metadata)
       end
     end
   end

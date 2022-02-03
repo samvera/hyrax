@@ -123,6 +123,12 @@ module Hyrax
     # @macro a_registered_event
     register_event('file.downloaded')
 
+    # @since 3.4.0
+    # @macro a_registered_event
+    #   @note this event SHOULD be published when the metadata is changed for a
+    #     file via its `FileMetadata` model. the event payload MUST include a
+    register_event('file.metadata.updated')
+
     # @since 3.0.0
     # @macro a_registered_event
     register_event('file.set.audited')
