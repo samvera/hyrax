@@ -44,7 +44,9 @@ RSpec.describe Hyrax::My::CollectionsSearchBuilder do
 
     it "has filter that excludes depositor" do
       subject
-      expect(solr_params[:fq]).to eq ["(_query_:\"{!raw f=depositor_ssim}#{user.user_key}\" OR (_query_:\"{!raw f=has_model_ssim}AdminSet\" AND _query_:\"{!raw f=creator_ssim}#{user.user_key}\"))"]
+      expect(solr_params[:fq]).to eq ["(_query_:\"{!terms f=depositor_ssim}#{user.user_key}\" " \
+                                      "OR (_query_:\"{!terms f=has_model_ssim}AdminSet\" " \
+                                      "AND _query_:\"{!terms f=creator_ssim}#{user.user_key}\"))"]
     end
   end
 end

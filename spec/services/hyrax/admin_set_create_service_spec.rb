@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'hyrax/specs/spy_listener'
+
 RSpec.describe Hyrax::AdminSetCreateService do
   let(:user) { FactoryBot.create(:user) }
   let(:persister) { Hyrax.persister }
@@ -203,12 +205,14 @@ RSpec.describe Hyrax::AdminSetCreateService do
       let(:admin_set) { FactoryBot.build(:hyrax_admin_set) }
 
       context "when the admin_set is valid" do
+        let(:listener) { Hyrax::Specs::SpyListener.new }
         let(:permission_template) { Hyrax::PermissionTemplate.find_by(source_id: admin_set.id) }
         let(:grants) { permission_template.access_grants }
         let(:available_workflows) { [create(:workflow), create(:workflow)] }
 
         # rubocop:disable RSpec/AnyInstance
         before do
+          Hyrax.publisher.subscribe(listener)
           allow_any_instance_of(Hyrax::PermissionTemplate)
             .to receive(:available_workflows).and_return(available_workflows)
           allow(Sipity::Workflow)
@@ -220,10 +224,17 @@ RSpec.describe Hyrax::AdminSetCreateService do
         end
         # rubocop:enable RSpec/AnyInstance
 
+        after { Hyrax.publisher.unsubscribe(listener) }
+
         it 'creates the admin set' do
           updated_admin_set = service.create!
           expect(updated_admin_set).to be_kind_of Hyrax::AdministrativeSet
           expect(updated_admin_set.persisted?).to be true
+        end
+
+        it 'publishes a change to collection metadata' do
+          expect { service.create! }
+            .to change { listener.collection_metadata_updated&.payload }
         end
 
         it 'sets creator' do

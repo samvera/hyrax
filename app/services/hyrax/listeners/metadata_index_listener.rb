@@ -25,6 +25,34 @@ module Hyrax
       ##
       # Re-index the resource.
       #
+      # Called when 'file.metadata.updated' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
+      def on_file_metadata_updated(event)
+        return unless resource? event[:metadata]
+        Hyrax.index_adapter.save(resource: event[:metadata])
+      end
+
+      ##
+      # Re-index the resource.
+      #
+      # Called when 'object.membership.updated' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
+      def on_object_membership_updated(event)
+        resource = event.to_h.fetch(:object) { Hyrax.query_service.find_by(id: event[:object_id]) }
+        return unless resource?(resource)
+
+        Hyrax.index_adapter.save(resource: resource)
+      rescue Valkyrie::Persistence::ObjectNotFoundError => err
+        Hyrax.logger.error("Tried to index for an #{event.id} event with " \
+                           "payload #{event.payload}, but failed due to error:\n"\
+                           "\t#{err.message}")
+      end
+
+      ##
+      # Re-index the resource.
+      #
       # Called when 'object.metadata.updated' event is published
       # @param [Dry::Events::Event] event
       # @return [void]
@@ -42,6 +70,17 @@ module Hyrax
       def on_object_deleted(event)
         return unless resource?(event.payload[:object])
         Hyrax.index_adapter.delete(resource: event[:object])
+      end
+
+      ##
+      # Remove the resource from the index.
+      #
+      # Called when 'collection.deleted' event is published
+      # @param [Dry::Events::Event] event
+      # @return [void]
+      def on_collection_deleted(event)
+        return unless resource?(event.payload[:collection])
+        Hyrax.index_adapter.delete(resource: event[:collection])
       end
 
       private

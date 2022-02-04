@@ -1,17 +1,18 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::Admin::AdminSetsController do
+RSpec.describe Hyrax::Admin::AdminSetsController, :clean_repo do
   routes { Hyrax::Engine.routes }
-  let(:admin)   { create(:admin, email: 'admin@example.com') }
-  let(:manager) { create(:user, email: 'manager@example.com') }
-  let(:creator) { create(:user, email: 'creator@example.com') }
-  let(:user)    { create(:user, email: 'user@example.com') }
+  let(:admin)   { FactoryBot.create(:admin, email: 'admin@example.com') }
+  let(:manager) { FactoryBot.create(:user, email: 'manager@example.com') }
+  let(:creator) { FactoryBot.create(:user, email: 'creator@example.com') }
+  let(:user)    { FactoryBot.create(:user, email: 'user@example.com') }
   let(:ability) { ::Ability.new(manager) }
   let(:ability) { ::Ability.new(creator) }
   let(:ability) { ::Ability.new(user) }
 
   let!(:admin_set_type) do
     FactoryBot.create(:admin_set_collection_type,
-                      manager_user: manager.user_key, creator_user: creator.user_key)
+                      manager_user: manager.user_key,
+                      creator_user: creator.user_key)
   end
 
   context "a guest" do
@@ -174,36 +175,38 @@ RSpec.describe Hyrax::Admin::AdminSetsController do
       end
 
       describe "#create" do
-        before do
-          controller.admin_set_create_service = service
-        end
-
         context "when it's successful" do
-          let(:service) do
-            lambda do |admin_set:, **_kargs|
-              admin_set.id = 123
-              # https://github.com/samvera/active_fedora/issues/1251
-              allow(admin_set).to receive(:persisted?).and_return(true)
-              true
-            end
+          before do
+            allow(Hyrax::AdminSetCreateService)
+              .to receive(:call!).with(any_args).and_return(saved_admin_set)
+          end
+          let(:admin_set) { FactoryBot.build(:hyrax_admin_set) }
+          let(:saved_admin_set) do
+            FactoryBot.valkyrie_create(:hyrax_admin_set,
+                                       title: 'Test title',
+                                       description: 'test description')
           end
 
-          it 'creates file sets' do
+          it 'creates admin set' do
             post :create, params: { admin_set: { title: 'Test title',
                                                  description: 'test description',
                                                  workflow_name: 'default' } }
-            admin_set = assigns(:admin_set)
-            expect(response).to redirect_to(edit_admin_admin_set_path(admin_set))
+            expect(response).to redirect_to(edit_admin_admin_set_path(assigns(:admin_set)))
           end
         end
 
         context "when it fails" do
-          let(:service) { ->(**_kargs) { false } }
+          before do
+            allow(Hyrax::AdminSetCreateService)
+              .to receive(:call!).with(any_args).and_raise(RuntimeError)
+          end
 
           it 'shows the new form' do
+            expect(Hyrax.logger).to receive(:error).with(/Failed to create admin set:/)
             post :create, params: { admin_set: { title: 'Test title',
                                                  description: 'test description' } }
             expect(response).to render_template 'new'
+            expect(flash[:error]).to match(/Failed to create admin set:/)
           end
         end
       end

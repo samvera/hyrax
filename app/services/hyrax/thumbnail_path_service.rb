@@ -9,7 +9,7 @@ module Hyrax
 
         thumb = fetch_thumbnail(object)
 
-        return unless thumb
+        return default_image unless thumb
         return call(thumb) unless thumb.file_set?
         if audio?(thumb)
           audio_image

@@ -174,6 +174,19 @@ module Hyrax
       true
     end
 
+    ##
+    # @api public
+    #
+    # Deletes the ACL for the resource
+    #
+    # @return [Boolean]
+    def destroy
+      persister.delete(resource: change_set.resource) if change_set.resource.persisted?
+      @change_set = nil
+
+      true
+    end
+
     private
 
     ##

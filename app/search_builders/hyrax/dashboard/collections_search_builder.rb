@@ -9,7 +9,7 @@ module Hyrax
 
       # This overrides the models in FilterByType
       def models
-        [::AdminSet, ::Collection, Hyrax.config.collection_class].uniq.compact
+        [::AdminSet, Hyrax::AdministrativeSet, ::Collection, Hyrax.config.collection_class].uniq.compact
       end
 
       # adds a filter to exclude collections and admin sets created by the
@@ -19,7 +19,7 @@ module Hyrax
         return if current_ability.admin?
         clauses = [
           '-' + ActiveFedora::SolrQueryBuilder.construct_query_for_rel(depositor: current_user_key),
-          '-' + ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: ::AdminSet.to_s, creator: current_user_key)
+          '-' + ActiveFedora::SolrQueryBuilder.construct_query_for_rel(has_model: Hyrax.config.admin_set_model, creator: current_user_key)
         ]
         solr_parameters[:fq] ||= []
         solr_parameters[:fq] += ["(#{clauses.join(' OR ')})"]

@@ -13,15 +13,10 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
   routes { Hyrax::Engine.routes }
 
   controller described_class do
-    before_action :find_collection
     load_and_authorize_resource except: [:index],
                                 instance_name: :collection,
-                                prepend: :find_collection,
+                                prepend: true,
                                 class: Hyrax::PcdmCollection
-
-    def find_collection
-      @collection = Hyrax::PcdmCollection.new(collection_params)
-    end
   end
 
   before { allow(Hyrax.config).to receive(:collection_model).and_return('Hyrax::PcdmCollection') }
@@ -53,7 +48,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
     before { sign_in user }
 
     it 'assigns @collection' do
-      pending 'update of test to work with Hyrax::PcdmCollection'
       get :new
 
       expect(assigns(:collection)).to be_kind_of(Hyrax.config.collection_class)
@@ -253,7 +247,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       end
 
       it "removes members from the collection" do
-        pending 'update of test to work with Hyrax::PcdmCollection'
         parameters = { id: collection,
                        collection: { members: 'remove' },
                        batch_document_ids: [asset2] }
@@ -264,7 +257,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       end
 
       it "publishes object.metadata.updated for removed objects" do
-        pending 'update of test to work with Hyrax::PcdmCollection'
         parameters = { id: collection,
                        collection: { members: 'remove' },
                        batch_document_ids: [asset2] }
@@ -301,7 +293,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       end
 
       it 'moves the members' do # rubocop:disable RSpec/ExampleLength
-        pending 'update of test to work with Hyrax::PcdmCollection'
         parameters = { id: collection,
                        collection: { members: 'move' },
                        destination_collection_id: collection2,
@@ -319,7 +310,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
 
     context "updating a collections metadata" do
       it "saves the metadata" do
-        pending 'update of test to work with Hyrax::PcdmCollection'
         expect { put :update, params: { id: collection, collection: { title: ['New Collection Title'] } } }
           .to change { Hyrax.query_service.find_by(id: collection.id).title }
           .to contain_exactly('New Collection Title')
@@ -341,16 +331,20 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       end
     end
 
-    context "when update fails" do
-      let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection) }
-      let(:repository) { instance_double(Blacklight::Solr::Repository, search: result) }
-      let(:result) { double(documents: [], total: 0) }
+    context "updating a collection's visibility" do
+      it "saves the visibility" do
+        expect { put :update, params: { id: collection, collection: { title: ['Moomin in Space'], visibility: 'restricted' } } }
+          .to change { Hyrax.query_service.find_by(id: collection.id).visibility }
+          .from('open')
+          .to('restricted')
 
+        expect(flash[:notice]).to eq "Collection was successfully updated."
+      end
+    end
+
+    context "when update fails" do
       before do
-        allow(controller).to receive(:authorize!)
-        allow(Collection).to receive(:find).and_return(collection)
-        allow(collection).to receive(:update).and_return(false)
-        allow(controller).to receive(:repository).and_return(repository)
+        collection # ensure the collection is loaded before we stub the persister save
         allow(Hyrax.persister)
           .to receive(:save)
           .with(any_args)
@@ -371,7 +365,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       let(:uploaded) { FactoryBot.create(:uploaded_file) }
 
       it "saves banner metadata" do
-        pending 'update of test to work with Hyrax::PcdmCollection'
         put :update, params: { id: collection,
                                banner_files: [uploaded.id],
                                collection: { creator: ['Emily'] },
@@ -395,7 +388,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       end
 
       it "saves logo metadata" do # rubocop:disable RSpec/ExampleLength
-        pending 'update of test to work with Hyrax::PcdmCollection'
         put :update, params: { id: collection,
                                logo_files: [uploaded.id],
                                alttext: ["Logo alt Text"],
@@ -416,7 +408,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
         let(:uploaded) { FactoryBot.create(:uploaded_file) }
 
         it "does not save linkurl containing html; target_url is empty" do # rubocop:disable RSpec/ExampleLength
-          pending 'update of test to work with Hyrax::PcdmCollection'
           put :update, params: { id: collection,
                                  logo_files: [uploaded.id],
                                  alttext: ["Logo alt Text"], linkurl: ["<script>remove_me</script>"],
@@ -432,7 +423,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
         end
 
         it "does not save linkurl containing dodgy protocol; target_url is empty" do # rubocop:disable RSpec/ExampleLength
-          pending 'update of test to work with Hyrax::PcdmCollection'
           put :update, params: { id: collection,
                                  logo_files: [uploaded.id],
                                  alttext: ["Logo alt Text"],
@@ -470,7 +460,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       end
 
       it "returns the collection and its members" do # rubocop:disable RSpec/ExampleLength
-        pending 'update of test to work with Hyrax::PcdmCollection'
         expect(controller)
           .to receive(:add_breadcrumb)
           .with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
@@ -497,7 +486,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
 
       context "and searching" do
         it "returns some works and collections" do
-          pending 'update of test to work with Hyrax::PcdmCollection'
           # "/dashboard/collections/4m90dv529?utf8=%E2%9C%93&cq=King+Louie&sort="
           get :show, params: { id: collection, cq: "Second" }
           expect(assigns[:presenter]).to be_kind_of Hyrax::CollectionPresenter
@@ -510,7 +498,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
 
       context 'when the page parameter is passed' do
         it 'loads the collection (paying no attention to the page param)' do
-          pending 'update of test to work with Hyrax::PcdmCollection'
           get :show, params: { id: collection, page: '2' }
           expect(response).to be_successful
           expect(assigns[:presenter]).to be_kind_of Hyrax::CollectionPresenter
@@ -520,7 +507,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
 
       context "without a referer" do
         it "sets breadcrumbs" do
-          pending 'update of test to work with Hyrax::PcdmCollection'
           expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
@@ -536,7 +522,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
         end
 
         it "sets breadcrumbs" do
-          pending 'update of test to work with Hyrax::PcdmCollection'
           expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
           expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
@@ -565,7 +550,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       end
 
       it "returns successfully" do
-        pending 'update of test to work with Hyrax::PcdmCollection'
         get :show, params: { id: collection }
 
         expect(response).to be_successful
@@ -586,7 +570,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
 
     context "when it succeeds" do
       it "redirects to My Collections" do
-        pending 'update of test to work with Hyrax::PcdmCollection'
         delete :destroy, params: { id: collection }
 
         expect(response).to have_http_status(:found)
@@ -595,25 +578,21 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       end
 
       it "returns json" do
-        pending 'update of test to work with Hyrax::PcdmCollection'
         delete :destroy, params: { format: :json, id: collection }
         expect(response).to have_http_status(:no_content)
+        expect(response.location).to eq Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en')
       end
     end
 
     context "when an error occurs" do
       before do
-        # rubocop:disable RSpec/AnyInstance
-        allow_any_instance_of(Collection).to receive(:destroy).and_return(nil)
         allow(Hyrax.persister)
           .to receive(:delete)
           .with(any_args)
           .and_raise(StandardError, "Failed to delete collection.")
-        # rubocop:enable RSpec/AnyInstance
       end
 
       it "renders the edit view" do
-        pending 'update of test to work with Hyrax::PcdmCollection'
         delete :destroy, params: { id: collection }
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response).to render_template(:edit)
@@ -621,7 +600,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       end
 
       it "returns json" do
-        pending 'update of test to work with Hyrax::PcdmCollection'
         delete :destroy, params: { format: :json, id: collection }
         expect(response).to have_http_status(:unprocessable_entity)
       end
@@ -632,7 +610,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
     before { sign_in user }
 
     it "is successful" do
-      pending 'update of test to work with Hyrax::PcdmCollection'
       get :edit, params: { id: collection }
 
       expect(response).to be_successful
@@ -641,7 +618,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
 
     context "without a referer" do
       it "sets breadcrumbs" do
-        pending 'update of test to work with Hyrax::PcdmCollection'
         expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))
@@ -655,7 +631,6 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       before { request.env['HTTP_REFERER'] = 'http://test.host/foo' }
 
       it "sets breadcrumbs" do
-        pending 'update of test to work with Hyrax::PcdmCollection'
         expect(controller).to receive(:add_breadcrumb).with('Home', Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with('Dashboard', Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
         expect(controller).to receive(:add_breadcrumb).with('Collections', Hyrax::Engine.routes.url_helpers.my_collections_path(locale: 'en'))

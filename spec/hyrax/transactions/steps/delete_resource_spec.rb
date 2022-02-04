@@ -23,6 +23,36 @@ RSpec.describe Hyrax::Transactions::Steps::DeleteResource, valkyrie_adapter: :te
         .to include(id: work.id, object: work, user: nil)
     end
 
+    context 'with an admin set' do
+      let(:admin_set) { FactoryBot.valkyrie_create(:hyrax_admin_set) }
+
+      it 'deletes the admin set' do
+        expect(step.call(admin_set)).to be_success
+      end
+
+      it 'publishes collection.deleted' do
+        step.call(admin_set)
+
+        expect(listener.collection_deleted&.payload)
+          .to include(id: admin_set.id, collection: admin_set, user: nil)
+      end
+    end
+
+    context 'with a collection' do
+      let(:collection) { FactoryBot.valkyrie_create(:hyrax_collection) }
+
+      it 'deletes the collection' do
+        expect(step.call(collection)).to be_success
+      end
+
+      it 'publishes collection.deleted' do
+        step.call(collection)
+
+        expect(listener.collection_deleted&.payload)
+          .to include(id: collection.id, collection: collection, user: nil)
+      end
+    end
+
     context 'with a resource that is not saved' do
       let(:work) { FactoryBot.build(:hyrax_work) }
 

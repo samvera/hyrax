@@ -19,8 +19,11 @@ module Hyrax
     # @see https://dry-rb.org/gems/dry-container/
     class Container # rubocop:disable Metrics/ClassLength
       require 'hyrax/transactions/admin_set_create'
+      require 'hyrax/transactions/admin_set_destroy'
+      require 'hyrax/transactions/admin_set_update'
       require 'hyrax/transactions/apply_change_set'
       require 'hyrax/transactions/collection_create'
+      require 'hyrax/transactions/collection_destroy'
       require 'hyrax/transactions/collection_update'
       require 'hyrax/transactions/create_work'
       require 'hyrax/transactions/destroy_work'
@@ -35,6 +38,8 @@ module Hyrax
       require 'hyrax/transactions/steps/apply_collection_type_permissions'
       require 'hyrax/transactions/steps/apply_permission_template'
       require 'hyrax/transactions/steps/apply_visibility'
+      require 'hyrax/transactions/steps/check_for_empty_admin_set'
+      require 'hyrax/transactions/steps/delete_access_control'
       require 'hyrax/transactions/steps/delete_resource'
       require 'hyrax/transactions/steps/destroy_work'
       require 'hyrax/transactions/steps/ensure_admin_set'
@@ -47,6 +52,7 @@ module Hyrax
       require 'hyrax/transactions/steps/set_default_admin_set'
       require 'hyrax/transactions/steps/set_modified_date'
       require 'hyrax/transactions/steps/set_uploaded_date_unless_present'
+      require 'hyrax/transactions/steps/set_user_as_creator'
       require 'hyrax/transactions/steps/set_user_as_depositor'
       require 'hyrax/transactions/steps/validate'
 
@@ -61,6 +67,10 @@ module Hyrax
 
         ops.register 'apply' do
           ApplyChangeSet.new
+        end
+
+        ops.register 'create_admin_set' do
+          AdminSetCreate.new
         end
 
         ops.register 'create_collection' do
@@ -99,6 +109,10 @@ module Hyrax
           Steps::SetUploadedDateUnlessPresent.new
         end
 
+        ops.register 'set_user_as_creator' do
+          Steps::SetUserAsCreator.new
+        end
+
         ops.register 'set_user_as_depositor' do
           Steps::SetUserAsDepositor.new
         end
@@ -127,8 +141,28 @@ module Hyrax
       end
 
       namespace 'admin_set_resource' do |ops| # valkyrie administrative set
+        ops.register 'check_empty' do
+          Steps::CheckForEmptyAdminSet.new
+        end
+
+        ops.register 'delete' do
+          Steps::DeleteResource.new
+        end
+
+        ops.register 'destroy' do
+          AdminSetDestroy.new
+        end
+
+        ops.register 'update' do
+          AdminSetUpdate.new
+        end
+
         ops.register 'apply_collection_type_permissions' do
           Steps::ApplyCollectionTypePermissions.new
+        end
+
+        ops.register 'delete_acl' do
+          Steps::DeleteAccessControl.new
         end
 
         ops.register 'save_acl' do
@@ -139,6 +173,18 @@ module Hyrax
       namespace 'collection_resource' do |ops| # valkyrie collection
         ops.register 'apply_collection_type_permissions' do
           Steps::ApplyCollectionTypePermissions.new
+        end
+
+        ops.register 'delete' do
+          Steps::DeleteResource.new
+        end
+
+        ops.register 'destroy' do
+          CollectionDestroy.new
+        end
+
+        ops.register 'delete_acl' do
+          Steps::DeleteAccessControl.new
         end
 
         ops.register 'save_acl' do
@@ -161,6 +207,10 @@ module Hyrax
 
         ops.register 'destroy' do
           WorkDestroy.new
+        end
+
+        ops.register 'delete_acl' do
+          Steps::DeleteAccessControl.new
         end
 
         ops.register 'save_acl' do

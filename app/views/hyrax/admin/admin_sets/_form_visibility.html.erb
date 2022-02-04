@@ -1,6 +1,6 @@
           <div id="visibility" class="tab-pane">
             <div class="panel panel-default labels">
-              <%= simple_form_for @form.permission_template,
+              <%= simple_form_for collection_permission_template_form_for(form: @form),
                                   url: [hyrax, :admin, @form, :permission_template],
                                   html: { class: 'nav-safety' } do |f| %>
                 <div class="panel-body">

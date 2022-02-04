@@ -28,10 +28,59 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - .dassie:/app/samvera/hyrax-webapp:cached
-      - .:/app/samvera/hyrax-engine:cached
+      - .dassie:/app/samvera/hyrax-webapp
+      - .:/app/samvera/hyrax-engine
       - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
       - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - hyrax
+
+  sidekiq:
+    build:
+      context: .
+      target: hyrax-engine-dev-worker
+    image: ghcr.io/samvera/dassie-worker
+    command: sh -l -c 'bundle && bundle exec sidekiq'
+    user: root
+    env_file:
+      - .env
+      - .dassie/.env
+    depends_on:
+      - db_migrate
+      - fcrepo
+      - memcached
+      - postgres
+      - redis
+      - solr
+    volumes:
+      - .dassie:/app/samvera/hyrax-webapp
+      - .:/app/samvera/hyrax-engine
+      - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
+      - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
+      - sidekiq-public:/app/samvera/hyrax-webapp/public
+      - sidekiq-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - hyrax
+
+  db_migrate:
+    build:
+      context: .
+      target: hyrax-engine-dev
+      args:
+        - EXTRA_APK_PACKAGES=git less
+    image: ghcr.io/samvera/dassie
+    user: root
+    env_file:
+      - .env
+    entrypoint: ["sh", "-c"]
+    command: db-migrate-seed.sh
+    depends_on:
+      - postgres
+    volumes:
+      - .dassie:/app/samvera/hyrax-webapp
+      - .:/app/samvera/hyrax-engine
       - rails-public:/app/samvera/hyrax-webapp/public
       - rails-tmp:/app/samvera/hyrax-webapp/tmp
     networks:
@@ -47,23 +96,6 @@ services:
     ports:
       - "4444:4444"
       - "5959:5900"
-    networks:
-      - hyrax
-
-  db_migrate:
-    image: ghcr.io/samvera/dassie
-    user: root
-    env_file:
-      - .env
-    entrypoint: ["sh", "-c"]
-    command: db-migrate-seed.sh
-    depends_on:
-      - postgres
-    volumes:
-      - .dassie:/app/samvera/hyrax-webapp:cached
-      - .:/app/samvera/hyrax-engine:cached
-      - rails-public:/app/samvera/hyrax-webapp/public
-      - rails-tmp:/app/samvera/hyrax-webapp/tmp
     networks:
       - hyrax
 
@@ -102,33 +134,6 @@ services:
     image: redis:5-alpine
     volumes:
       - redis:/data
-    networks:
-      - hyrax
-
-  sidekiq:
-    build:
-      context: .
-      target: hyrax-engine-dev-worker
-    image: ghcr.io/samvera/dassie-worker
-    command: sh -l -c 'bundle && bundle exec sidekiq'
-    user: root
-    env_file:
-      - .env
-      - .dassie/.env
-    depends_on:
-      - db_migrate
-      - fcrepo
-      - memcached
-      - postgres
-      - redis
-      - solr
-    volumes:
-      - .dassie:/app/samvera/hyrax-webapp:cached
-      - .:/app/samvera/hyrax-engine:cached
-      - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
-      - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
-      - sidekiq-public:/app/samvera/hyrax-webapp/public
-      - sidekiq-tmp:/app/samvera/hyrax-webapp/tmp
     networks:
       - hyrax
 

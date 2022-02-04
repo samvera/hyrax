@@ -305,9 +305,13 @@ module Hyrax
 
     def member_presenter_factory
       @member_presenter_factory ||=
-        self.class
-            .presenter_factory_class
-            .new(solr_document, current_ability, request)
+        if solr_document.hydra_model < Valkyrie::Resource
+          PcdmMemberPresenterFactory.new(solr_document, current_ability)
+        else
+          self.class
+              .presenter_factory_class
+              .new(solr_document, current_ability, request)
+        end
     end
 
     def graph

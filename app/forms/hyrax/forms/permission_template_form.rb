@@ -7,16 +7,12 @@ module Hyrax
       self.model_class = PermissionTemplate
       self.terms = []
       delegate :access_grants, :access_grants_attributes=, :release_date, :release_period, :visibility, to: :model
-      delegate :available_workflows, :active_workflow, :source_model, to: :model
-
-      # @return [#to_s] the primary key of the associated admin_set or collection
-      # def source_id (because you might come looking for this method)
-      delegate :id, to: :source_model, prefix: :source
+      delegate :available_workflows, :active_workflow, :source, :source_id, to: :model
 
       ##
-      # @deprecated  use PermissionTemplate#reset_access_controls instead.
+      # @deprecated  use PermissionTemplate#reset_access_controls_for instead.
       def reset_access_controls!
-        Deprecation.warn("reset_access_controls! is deprecated; use PermissionTemplate#reset_access_controls instead.")
+        Deprecation.warn("reset_access_controls! is deprecated; use PermissionTemplate#reset_access_controls_for instead.")
         source_model.reset_access_controls!
       end
 
@@ -73,8 +69,8 @@ module Hyrax
       # Copy this access to the permissions of the Admin Set or Collection and to
       # the WorkflowResponsibilities of the active workflow if this is an Admin Set
       def update_access(remove_agent: false)
-        source_model.reset_access_controls!
-        update_workflow_responsibilities(remove_agent: remove_agent) if source_model.is_a?(AdminSet)
+        model.reset_access_controls_for(collection: source)
+        update_workflow_responsibilities(remove_agent: remove_agent) if source.is_a?(Hyrax::AdministrativeSet)
       end
 
       # This method is used to revoke access to a Collection or Admin Set and its workflows
@@ -83,6 +79,18 @@ module Hyrax
       def remove_access!(permission_template_access)
         construct_attributes_from_template_access!(permission_template_access)
         update_access(remove_agent: true)
+      end
+
+      ##
+      # A bit of an analogue for a `belongs_to :source_model` as it crosses from Fedora to the DB
+      # @return [AdminSet, ::Collection]
+      # @raise [Hyrax::ObjectNotFoundError] when neither an AdminSet or Collection is found
+      # @note This method will eventually be replaced by #source which returns a Hyrax::Resource
+      #   object.  Many methods are equally able to process both Hyrax::Resource and
+      #   ActiveFedora::Base.  Only call this method if you need the ActiveFedora::Base object.
+      # @see #source
+      def source_model # rubocop:disable Rails/Delegate
+        model.source_model
       end
 
       private

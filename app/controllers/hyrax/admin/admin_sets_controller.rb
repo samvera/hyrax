@@ -4,7 +4,8 @@ module Hyrax
     include Hyrax::CollectionsControllerBehavior
 
     before_action :authenticate_user!
-    load_and_authorize_resource
+    load_and_authorize_resource instance_name: :admin_set,
+                                class: Hyrax.config.admin_set_model
 
     # Catch permission errors
     rescue_from Hydra::AccessDenied, CanCan::AccessDenied, with: :deny_adminset_access
@@ -61,28 +62,52 @@ module Hyrax
     end
 
     def update
-      if @admin_set.update(admin_set_params)
-        redirect_to update_referer, notice: I18n.t('updated_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
+      case @admin_set
+      when Valkyrie::Resource
+        valkyrie_update
       else
-        setup_form
-        render :edit
+        active_fedora_update
       end
     end
 
+    def after_create
+      Hyrax::SolrService.commit
+      redirect_to hyrax.edit_admin_admin_set_path(admin_set_id),
+                  notice: I18n.t('new_admin_set',
+                                 scope: 'hyrax.admin.admin_sets.form.permission_update_notices',
+                                 name: @admin_set.title.first)
+    end
+
+    def after_create_error(err_msg: "")
+      msg = "Failed to create admin set: #{err_msg}"
+      setup_form
+      flash[:error] = msg
+      Hyrax.logger.error(msg)
+      render :new
+    end
+
     def create
-      if create_admin_set
-        redirect_to hyrax.edit_admin_admin_set_path(@admin_set), notice: I18n.t('new_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
+      case @admin_set
+      when Valkyrie::Resource
+        valkyrie_create
       else
-        setup_form
-        render :new
+        active_fedora_create
       end
     end
 
     def destroy
-      if @admin_set.destroy
+      case @admin_set
+      when Valkyrie::Resource
+        transactions['admin_set_resource.destroy'].call(@admin_set).value_or do |failure|
+          redirect_to hyrax.admin_admin_set_path(admin_set_id), alert: failure.first
+        end
         after_delete_success
       else
-        redirect_to hyrax.admin_admin_set_path(@admin_set), alert: @admin_set.errors.full_messages.to_sentence
+        if @admin_set.destroy
+          after_delete_success
+        else
+          redirect_to hyrax.admin_admin_set_path(admin_set_id), alert: @admin_set.errors.full_messages.to_sentence
+        end
       end
     end
 
@@ -98,12 +123,50 @@ module Hyrax
 
     private
 
-    def update_referer
-      hyrax.edit_admin_admin_set_path(@admin_set) + (params[:referer_anchor] || '')
+    def valkyrie_update
+      @admin_set = form.validate(admin_set_params) && transactions['admin_set_resource.update'].call(form).value_or do |_failure|
+        setup_form # probably should do some real error handling here
+        render :edit
+      end
+      redirect_to update_referer, notice: I18n.t('updated_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
     end
 
-    def create_admin_set
-      admin_set_create_service.call(admin_set: @admin_set, creating_user: current_user)
+    def active_fedora_update
+      if @admin_set.update(admin_set_params)
+        redirect_to update_referer, notice: I18n.t('updated_admin_set', scope: 'hyrax.admin.admin_sets.form.permission_update_notices', name: @admin_set.title.first)
+      else
+        setup_form
+        render :edit
+      end
+    end
+
+    def update_referer
+      hyrax.edit_admin_admin_set_path(admin_set_id) + (params[:referer_anchor] || '')
+    end
+
+    def valkyrie_create
+      form.validate(admin_set_params) &&
+        @admin_set = transactions['change_set.create_admin_set']
+                     .with_step_args(
+                       'change_set.set_user_as_creator' => { user: current_user },
+                       'admin_set_resource.apply_collection_type_permissions' => { user: current_user }
+                     )
+                     .call(form).value_or do |_failure|
+                       setup_form # probably should do some real error handling here
+                       render :edit
+                     end
+      @admin_set = admin_set_create_service.call!(admin_set: @admin_set, creating_user: current_user)
+      after_create
+    rescue RuntimeError => err
+      after_create_error(err_msg: err.message)
+    end
+
+    def active_fedora_create
+      updated_admin_set = admin_set_create_service.call!(admin_set: admin_set_resource, creating_user: current_user)
+      @admin_set = Wings::ActiveFedoraConverter.convert(resource: updated_admin_set)
+      after_create
+    rescue RuntimeError => err
+      after_create_error(err_msg: err.message)
     end
 
     def setup_form
@@ -116,7 +179,13 @@ module Hyrax
 
     # initialize the form object
     def form
-      @form ||= form_class.new(@admin_set, current_ability, repository)
+      @form ||=
+        case @admin_set
+        when Valkyrie::Resource
+          Hyrax::Forms::ResourceForm.for(@admin_set)
+        else
+          form_class.new(@admin_set, current_ability, repository)
+        end
     end
 
     def action_breadcrumb
@@ -129,7 +198,11 @@ module Hyrax
     end
 
     def admin_set_params
-      form_class.model_attributes(params[:admin_set])
+      if Hyrax.config.admin_set_class < ActiveFedora::Base
+        form_class.model_attributes(params[:admin_set])
+      else
+        params.permit(admin_set: {})[:admin_set]
+      end
     end
 
     def repository_class
@@ -137,12 +210,25 @@ module Hyrax
     end
 
     def after_delete_success
-      if request.referer.include? "my/collections"
+      if request.referer&.include? "my/collections"
         redirect_to hyrax.my_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
-      elsif request.referer.include? "collections"
+      elsif request.referer&.include? "collections"
         redirect_to hyrax.dashboard_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
       else
         redirect_to hyrax.my_collections_path, notice: t(:'hyrax.admin.admin_sets.delete.notification')
+      end
+    end
+
+    def admin_set_id
+      @admin_set&.id&.to_s
+    end
+
+    def admin_set_resource
+      case @admin_set
+      when Valkyrie::Resource
+        @admin_set
+      else
+        @admin_set.valkyrie_resource
       end
     end
   end

@@ -121,12 +121,12 @@ module Hyrax
     end
 
     ##
-    # @deprecated use PermissionTemplate#reset_access_controls instead
+    # @deprecated use PermissionTemplate#reset_access_controls_for instead
     #
     # Calculate and update who should have read/edit access to the collections based on who
     # has access in PermissionTemplateAccess
     def reset_access_controls!
-      Deprecation.warn("reset_access_controls! is deprecated; use PermissionTemplate#reset_access_controls instead.")
+      Deprecation.warn("reset_access_controls! is deprecated; use PermissionTemplate#reset_access_controls_for instead.")
 
       permission_template
         .reset_access_controls_for(collection: self, interpret_visibility: true)

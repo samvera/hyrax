@@ -1,4 +1,4 @@
-<% if (can?(:download, file_set.id) || can?(:destroy, file_set.id) || can?(:edit, file_set.id)) && !workflow_restriction?(file_set.parent) %>
+<% if (can?(:download, file_set.id) || can?(:destroy, file_set.id) || can?(:edit, file_set.id)) && !workflow_restriction?(@parent) %>
   <% if can?(:download, file_set.id) && !(can?(:edit, file_set.id) || can?(:destroy, file_set.id)) %>
   <%= link_to t('.download'),
               hyrax.download_path(file_set),

@@ -196,3 +196,40 @@ RSpec.shared_examples 'a Collection indexer' do
     end
   end
 end
+
+RSpec.shared_examples 'an Administrative Set indexer' do
+  before do
+    raise 'indexer_class must be set with `let(:indexer_class)`' unless defined? indexer_class
+    # NOTE: resource must be persisted for permission tests to pass
+    raise 'resource must be set with `let(:resource)` and is expected to be a kind of Hyrax::AdministrativeSet' unless defined?(resource) && resource.kind_of?(Hyrax::AdministrativeSet)
+  end
+  subject(:indexer) { indexer_class.new(resource: resource) }
+
+  it_behaves_like 'a Hyrax::Resource indexer'
+  it_behaves_like 'a Core metadata indexer'
+  it_behaves_like 'a permission indexer'
+  it_behaves_like 'a visibility indexer'
+
+  describe '#to_solr' do
+    it 'indexes collection type gid' do
+      expect(indexer.to_solr)
+        .to include(collection_type_gid_ssim: a_collection_containing_exactly(an_instance_of(String)))
+    end
+
+    it 'indexes generic type' do
+      expect(indexer.to_solr)
+        .to include(generic_type_sim: a_collection_containing_exactly('Admin Set'))
+    end
+
+    it 'indexes thumbnail' do
+      expect(indexer.to_solr)
+        .to include(thumbnail_path_ss: include('assets/collection', '.png'))
+    end
+
+    it 'indexes creator' do
+      expect(indexer.to_solr)
+        .to include(creator_ssim: [resource.creator],
+                    creator_tesim: [resource.creator])
+    end
+  end
+end

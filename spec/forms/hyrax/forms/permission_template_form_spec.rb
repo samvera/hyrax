@@ -10,9 +10,10 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
 
   it { is_expected.to delegate_method(:available_workflows).to(:model) }
   it { is_expected.to delegate_method(:active_workflow).to(:model) }
+  it { is_expected.to delegate_method(:source).to(:model) }
   it { is_expected.to delegate_method(:source_model).to(:model) }
+  it { is_expected.to delegate_method(:source_id).to(:model) }
   it { is_expected.to delegate_method(:visibility).to(:model) }
-  it { is_expected.to delegate_method(:id).to(:source_model).with_prefix(:source) }
   it { is_expected.to delegate_method(:reset_access_controls!).to(:source_model) }
 
   it 'is expected to delegate method #active_workflow_id to #active_workflow#id' do
@@ -201,9 +202,10 @@ RSpec.describe Hyrax::Forms::PermissionTemplateForm do
     end
 
     context "without a manager" do
+      let(:user_bob) { FactoryBot.create(:user, email: "bob@example.com") }
       let(:grant_attributes) do
         [ActionController::Parameters.new(agent_type: "user",
-                                          agent_id: "bob",
+                                          agent_id: user_bob.user_key,
                                           access: "view").permit!]
       end
 

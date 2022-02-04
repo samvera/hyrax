@@ -4,11 +4,12 @@ require 'hyrax/transactions/transaction'
 module Hyrax
   module Transactions
     ##
-    # Creates a Collection from a ChangeSet
+    # Updates a Collection from a ChangeSet
     #
     # @since 3.2.0
     class CollectionUpdate < Transaction
-      DEFAULT_STEPS = ['change_set.apply'].freeze
+      DEFAULT_STEPS = ['change_set.apply',
+                       'collection_resource.save_acl'].freeze
 
       ##
       # @see Hyrax::Transactions::Transaction

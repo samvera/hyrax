@@ -114,6 +114,8 @@ RSpec/AnyInstance:
     - 'spec/controllers/hyrax/batch_edits_controller_spec.rb'
     - 'spec/controllers/hyrax/stats_controller_spec.rb'
     - 'spec/controllers/hyrax/users_controller_spec.rb'
+    - 'spec/hyrax/transactions/steps/delete_access_control_spec.rb'
+    - 'spec/hyrax/transactions/steps/save_access_control_spec.rb'
     - 'spec/jobs/content_restored_version_event_job_spec.rb'
     - 'spec/jobs/file_set_attached_event_job_spec.rb'
     - 'spec/jobs/hyrax/grant_edit_to_members_job_spec.rb'

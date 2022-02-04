@@ -69,7 +69,7 @@ class ValkyrieIngestJob < Hyrax::ApplicationJob
     file_metadata.size = uploaded.size
 
     saved_metadata = Hyrax.persister.save(resource: file_metadata)
-    Hyrax.publisher.publish("object.file.uploaded", metadata: file_metadata)
+    Hyrax.publisher.publish("object.file.uploaded", metadata: saved_metadata)
 
     saved_metadata
   end
