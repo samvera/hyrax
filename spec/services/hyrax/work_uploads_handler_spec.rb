@@ -74,10 +74,7 @@ RSpec.describe Hyrax::WorkUploadsHandler, valkyrie_adapter: :test_adapter do
       it 'publishes object.metadata.updated event for work' do
         expect { service.attach }
           .to change { listener.object_metadata_updated }
-          .to contain_exactly(have_attributes(payload: include(object: be_work)),
-                              have_attributes(payload: include(object: be_file_set)),
-                              have_attributes(payload: include(object: be_file_set)),
-                              have_attributes(payload: include(object: be_file_set)))
+          .to contain_exactly(have_attributes(payload: include(object: be_work)))
       end
 
       # we can't use the memory based test_adapter to test asynch,
