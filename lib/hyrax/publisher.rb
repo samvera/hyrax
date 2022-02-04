@@ -125,8 +125,12 @@ module Hyrax
 
     # @since 3.4.0
     # @macro a_registered_event
-    #   @note this event SHOULD be published when the metadata is changed for a
-    #     file via its `FileMetadata` model. the event payload MUST include a
+    #   @note this event SHOULD be published whenever a {Hyrax::FileMetadata}
+    #     object is updated; i.e. whenever the metadata directly associated with
+    #     a file changes. the event payload MUST include a `:metadata` (the
+    #     {Hyrax::FileMetadata} that has been updated) AND a `:user`. note that
+    #     the `:user` responsible for {FileMetadata} changes may frequently be
+    #     a system user.
     register_event('file.metadata.updated')
 
     # @since 3.0.0
