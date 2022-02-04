@@ -39,6 +39,7 @@ RSpec.describe Hyrax::Listeners::FileMetadataListener, valkyrie_adapter: :test_a
         expect(Hyrax.logger)
           .to receive(:warn)
           .with(/#{metadata.id}/)
+        listener.on_file_metadata_updated(event)
       end
     end
 
