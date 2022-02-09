@@ -8,7 +8,7 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
   let(:coll_a) do
     FactoryBot.build(:public_collection,
                      id: 'Collection_A',
-                    collection_type: collection_type,
+                     collection_type: collection_type,
                      with_nesting_attributes:
                        { ancestors: [],
                          parent_ids: [],
@@ -130,10 +130,10 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
 
       describe 'and can deposit to the parent' do
         before do
-            allow(scope)
-              .to receive(:can?)
-              .with(:deposit, coll_c)
-              .and_return(true)
+          allow(scope)
+            .to receive(:can?)
+            .with(:deposit, coll_c)
+            .and_return(true)
         end
 
         describe 'it prevents circular nesting' do
@@ -257,7 +257,6 @@ RSpec.describe Hyrax::Collections::NestedCollectionQueryService, clean_repo: tru
                             user: user,
                             with_permission_template: true)
         end
-
 
         it 'is true' do
           expect(described_class.parent_and_child_can_nest?(parent: collection, child: member, scope: scope))
