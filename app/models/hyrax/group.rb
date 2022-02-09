@@ -7,11 +7,25 @@ module Hyrax
       DEFAULT_NAME_PREFIX
     end
 
+    ##
+    # @return [Hyrax::Group]
+    def self.from_key(key)
+      new(key.slice!(name_prefix))
+    end
+
     def initialize(name)
       @name = name
     end
 
     attr_reader :name
+
+    ##
+    # @return [String] a local identifier for this group; for use (e.g.) in ACL
+    #   data
+    def group_key
+      self.class.name_prefix + name
+    end
+    alias user_key group_key
 
     def to_sipity_agent
       sipity_agent || create_sipity_agent!
