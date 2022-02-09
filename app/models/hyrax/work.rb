@@ -25,7 +25,7 @@ module Hyrax
   #   relationship to the collection is defined in the work's attribute `:member_of_collection_ids`.
   #   * Add a work to a collection using Hyrax::CollectionMemberService (multiple method options)
   #     * <code>Hyrax::CollectionMemberService.add_members(collection_id: col.id, members: works, user: current_user)</code>
-  #   * Get admin set resource using: <code>collections = Hyrax.custom_queries.find_collections_for(resource: work)</code>
+  #   * Get collection resources using: <code>collections = Hyrax.custom_queries.find_collections_for(resource: work)</code>
   #   * See 'a Hyrax::Work' behaves_like 'belongs to collections' in
   #     /lib/hyrax/specs/shared_specs/hydra_works.rb for tests of this relationship.
   # @note Some collection types limit a work to belong to one and only one collection of that type.
