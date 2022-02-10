@@ -5,6 +5,27 @@ require_dependency 'hyrax/collection_name'
 module Hyrax
   ##
   # Valkyrie model for Collection domain objects in the Hydra Works model.
+  #
+  # *Relationships:*
+  #
+  # Collection and Collection (TBA)
+  #
+  # Collection and Work
+  # * Collection to Work (0..m):  A collection can have many works.  This relationship
+  #   is defined by the inverse relationship stored in the work.
+  #   * See Hyrax::Work for code to set the relationship.
+  #   * Get works using: <code>works = Hyrax.custom_queries.find_members_of(collection: collection)</code>
+  #   * See 'a Hyrax::Work' behaves_like 'belongs to collections' in
+  #     /lib/hyrax/specs/shared_specs/hydra_works.rb for tests of this relationship.
+  # * Work to Collection (0..m):  A work can be in many collections.  The
+  #   relationship to the collection is defined in the work.
+  #   * See Hyrax::Work for code to get and set collections for the work.
+  # @note Some collection types limit a work to belong to one and only one collection of that type.
+  #
+  # @see Hyrax::Work
+  # @see Hyrax::CustomQueries::Navigators::CollectionMembers#find_members_of
+  # @see /lib/hyrax/specs/shared_specs/hydra_works.rb
+  #
   class PcdmCollection < Hyrax::Resource
     include Hyrax::Schema(:core_metadata)
     include Hyrax::Schema(:basic_metadata)
