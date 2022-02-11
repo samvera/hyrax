@@ -7,7 +7,7 @@ module Hyrax
       # Navigate from a resource to it's parent work.
       #
       # @see https://github.com/samvera/valkyrie/wiki/Queries#custom-queries
-      # @since 3.0.0
+      # @since 3.4.0
       class ParentWorkNavigator
         # Define the queries that can be fulfilled by this navigator.
         def self.queries
