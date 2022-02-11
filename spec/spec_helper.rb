@@ -97,6 +97,7 @@ query_registration_target =
 [Hyrax::CustomQueries::Navigators::CollectionMembers,
  Hyrax::CustomQueries::Navigators::ChildFilesetsNavigator,
  Hyrax::CustomQueries::Navigators::ChildWorksNavigator,
+ Hyrax::CustomQueries::Navigators::ParentWorkNavigator,
  Hyrax::CustomQueries::FindAccessControl,
  Hyrax::CustomQueries::FindCollectionsByType,
  Hyrax::CustomQueries::FindManyByAlternateIds,
