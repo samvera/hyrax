@@ -9,19 +9,18 @@ module Hyrax
   # *Relationships:*
   #
   # Administrative Set and Work
-  # * Administrative Set to Work (1..m): An admin set can have many works.  This relationship
-  #   is defined by the inverse relationship stored in the work.
-  #   * See Hyrax::Work for code to set the relationship.
-  #   * Get works using: <code>works = Hyrax.query_service.find_inverse_references_by(id: admin_set.id, property: :admin_set_id)</code>
-  #   * See 'a Hyrax::Work #admin_set_id' in /lib/hyrax/specs/shared_specs/hydra_works.rb
-  #     for tests of this relationship.
-  # * Work to Administrative Set (1..1):  A work must be in one and only one admin set.  The
-  #   relationship to the admin set is defined in the work.
+  #
+  # * <b>Defined:</b> The relationship is defined by the inverse relationship stored in the
+  #   work's `:admin_set_id` attribute.
+  # * <b>Tested:</b> The work tests the relationship.
+  # * <b>Administrative Set to Work:</b> (1..m)  An admin set can have many works.
+  #   * Get works in an admin set using:
+  #       works = Hyrax.query_service.find_inverse_references_by(id: admin_set.id, property: :admin_set_id)
+  # * <b>Work to Administrative Set:</b> (1..1)  A work must be in one and only one admin set.
   #   * See Hyrax::Work for code to get and set the admin set for the work.
   #
   # @see Hyrax::Work
   # @see Valkyrie query adapter's #find_inverse_references_by
-  # @see /lib/hyrax/specs/shared_specs/hydra_works.rb
   #
   class AdministrativeSet < Hyrax::Resource
     include Hyrax::Schema(:core_metadata)

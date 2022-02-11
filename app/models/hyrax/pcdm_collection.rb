@@ -11,20 +11,29 @@ module Hyrax
   # Collection and Collection (TBA)
   #
   # Collection and Work
-  # * Collection to Work (0..m):  A collection can have many works.  This relationship
-  #   is defined by the inverse relationship stored in the work.
-  #   * See Hyrax::Work for code to set the relationship.
-  #   * Get works using: <code>works = Hyrax.custom_queries.find_members_of(collection: collection)</code>
-  #   * See 'a Hyrax::Work' behaves_like 'belongs to collections' in
-  #     /lib/hyrax/specs/shared_specs/hydra_works.rb for tests of this relationship.
-  # * Work to Collection (0..m):  A work can be in many collections.  The
-  #   relationship to the collection is defined in the work.
+  #
+  # * <b>Defined:</b> The relationship is defined by the inverse relationship stored in the
+  #   work's `:member_of_collection_ids` attribute.
+  # * <b>Tested:</b> The work tests the relationship.
+  # * <b>Collection to Work:</b> (0..m)  A collection can have many works.
+  #   * Get works in a collection using:
+  #       works = Hyrax.custom_queries.find_child_works(resource: collection)
+  # * <b>Work to Collection:</b> (0..m)  A work can be in many collections.
   #   * See Hyrax::Work for code to get and set collections for the work.
   # @note Some collection types limit a work to belong to one and only one collection of that type.
   #
+  # All children
+  #
+  # * There are additional methods for finding all children without respect to
+  #   the child's type.
+  #   * Get works and child collections in a collection using:
+  #       members = Hyrax.custom_queries.find_members_of(resource: collection)
+  #
   # @see Hyrax::Work
+  #
+  # @see Hyrax::CustomQueries::Navigators::ChildCollectionsNavigator#find_child_collections
+  # @see Hyrax::CustomQueries::Navigators::ChildWorksNavigator#find_child_works
   # @see Hyrax::CustomQueries::Navigators::CollectionMembers#find_members_of
-  # @see /lib/hyrax/specs/shared_specs/hydra_works.rb
   #
   class PcdmCollection < Hyrax::Resource
     include Hyrax::Schema(:core_metadata)
