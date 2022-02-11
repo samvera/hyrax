@@ -83,6 +83,7 @@ module Hyrax
 
       def edit
         form
+        collection_type
       end
 
       def after_create
