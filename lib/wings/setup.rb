@@ -95,6 +95,7 @@ custom_queries = [Hyrax::CustomQueries::Navigators::CollectionMembers,
                   Hyrax::CustomQueries::Navigators::ParentCollectionsNavigator,
                   Hyrax::CustomQueries::Navigators::ChildFilesetsNavigator,
                   Hyrax::CustomQueries::Navigators::ChildWorksNavigator,
+                  Hyrax::CustomQueries::Navigators::ParentWorkNavigator,
                   Hyrax::CustomQueries::Navigators::FindFiles,
                   Wings::CustomQueries::FindAccessControl, # override Hyrax::CustomQueries::FindAccessControl
                   Wings::CustomQueries::FindCollectionsByType,
