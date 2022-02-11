@@ -76,5 +76,13 @@ RSpec.describe Hyrax::CustomQueries::Navigators::ParentWorkNavigator, valkyrie_a
         expect(custom_query_service.find_parent_work_id(resource: fileset1)).to eq parent_work.id
       end
     end
+
+    context 'when no parents' do
+      let(:member_ids) { [] }
+      it 'returns nil' do
+        expect(custom_query_service.find_parent_work_id(resource: child_work1)).to be_nil
+        expect(custom_query_service.find_parent_work_id(resource: fileset1)).to be_nil
+      end
+    end
   end
 end
