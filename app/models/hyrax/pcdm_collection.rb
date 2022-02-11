@@ -6,27 +6,31 @@ module Hyrax
   ##
   # Valkyrie model for Collection domain objects in the Hydra Works model.
   #
-  # *Relationships:*
+  # ## Relationships
   #
-  # Collection and Collection (TBA)
+  # ### Collection and Collection (TBA)
   #
-  # Collection and Work
+  # ### Collection and Work
   #
-  # * <b>Defined:</b> The relationship is defined by the inverse relationship stored in the
+  # * Defined: The relationship is defined by the inverse relationship stored in the
   #   work's `:member_of_collection_ids` attribute.
-  # * <b>Tested:</b> The work tests the relationship.
-  # * <b>Collection to Work:</b> (0..m)  A collection can have many works.
-  #   * Get works in a collection using:
+  # * Tested: The work tests the relationship.
+  # * Collection to Work: (0..m)  A collection can have many works.
+  #
+  # @example Get works in a collection:
   #       works = Hyrax.custom_queries.find_child_works(resource: collection)
-  # * <b>Work to Collection:</b> (0..m)  A work can be in many collections.
+  #
+  # * Work to Collection: (0..m)  A work can be in many collections.
   #   * See Hyrax::Work for code to get and set collections for the work.
+  #
   # @note Some collection types limit a work to belong to one and only one collection of that type.
   #
-  # All children
+  # ### All children
   #
   # * There are additional methods for finding all children without respect to
   #   the child's type.
-  #   * Get works and child collections in a collection using:
+  #
+  # @example Get works and child collections in a collection using:
   #       members = Hyrax.custom_queries.find_members_of(resource: collection)
   #
   # @see Hyrax::Work

@@ -6,17 +6,19 @@ module Hyrax
   ##
   # Valkyrie model for Admin Set domain objects.
   #
-  # *Relationships:*
+  # ## Relationships
   #
-  # Administrative Set and Work
+  # ### Administrative Set and Work
   #
-  # * <b>Defined:</b> The relationship is defined by the inverse relationship stored in the
+  # * Defined: The relationship is defined by the inverse relationship stored in the
   #   work's `:admin_set_id` attribute.
-  # * <b>Tested:</b> The work tests the relationship.
-  # * <b>Administrative Set to Work:</b> (1..m)  An admin set can have many works.
-  #   * Get works in an admin set using:
+  # * Tested: The work tests the relationship.
+  # * Administrative Set to Work: (1..m)  An admin set can have many works.
+  #
+  # @example Get works in an admin set:
   #       works = Hyrax.query_service.find_inverse_references_by(id: admin_set.id, property: :admin_set_id)
-  # * <b>Work to Administrative Set:</b> (1..1)  A work must be in one and only one admin set.
+  #
+  # * Work to Administrative Set: (1..1)  A work must be in one and only one admin set.
   #   * See Hyrax::Work for code to get and set the admin set for the work.
   #
   # @see Hyrax::Work

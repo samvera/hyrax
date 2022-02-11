@@ -4,52 +4,59 @@ module Hyrax
   ##
   # Valkyrie model for `Work` domain objects in the Hydra Works model.
   #
-  # *Relationships:*
+  # ## Relationships
   #
-  # Administrative Set and Work
+  # ### Administrative Set and Work
   #
-  # * <b>Defined:</b> The relationship is defined by the work's `:admin_set_id` attribute.
-  # * <b>Tested:</b> The relationship is tested in shared spec 'a Hyrax::Work' by testing
+  # * Defined: The relationship is defined by the work's `:admin_set_id` attribute.
+  # * Tested: The relationship is tested in shared spec `'a Hyrax::Work'` by testing
   #   `#admin_set_id`.  Shared specs are defined in /lib/hyrax/specs/shared_specs/hydra_works.rb.
-  # * <b>Administrative Set to Work:</b> (1..m) An admin set can have many works.
+  # * Administrative Set to Work: (1..m) An admin set can have many works.
   #   * See Hyrax::AdministrativeSet for code to get works in an admin set.
-  # * <b>Work to Administrative Set:</b> (1..1)  A work must be in one and only one admin set.
-  #   * Set admin set for a work using:
+  # * Work to Administrative Set: (1..1)  A work must be in one and only one admin set.
+  #
+  # @example Set admin set for a work:
   #       work.admin_set_id = admin_set.id
-  #   * Get admin set a work is in using:
+  # @example Get admin set a work is in:
   #       admin_set = Hyrax.query_service.find_by(id: work.admin_set_id)
   #
-  # Collection and Work
+  # ### Collection and Work
   #
-  # * <b>Defined:</b> The relationship is defined by the work's `:member_of_collection_ids` attribute.
-  # * <b>Tested:</b> The relationship is tested in shared spec 'a Hyrax::Work' by testing
+  # * Defined: The relationship is defined by the work's `:member_of_collection_ids` attribute.
+  # * Tested: The relationship is tested in shared spec `'a Hyrax::Work'` by testing
   #   `it_behaves_like 'belongs to collections'`.  Shared specs are defined in /lib/hyrax/specs/shared_specs/hydra_works.rb.
-  # * <b>Collection to Work:</b> (0..m)  A collection can have many works.
+  # * Collection to Work: (0..m)  A collection can have many works.
   #   * See Hyrax::PcdmCollection for code to get works in a collection.
-  # * <b>Work to Collection:</b> (0..m)  A work can be in many collections.
-  #   * Add a work to a collection using Hyrax::CollectionMemberService (multiple method options)
+  # * Work to Collection: (0..m)  A work can be in many collections.
+  #
+  # @example Add a work to a collection using Hyrax::CollectionMemberService (multiple method options)
   #       Hyrax::CollectionMemberService.add_members(collection_id: col.id, members: works, user: current_user)
-  #   * Get collections a work is in using:
+  # @example Get collections a work is in:
   #       collections = Hyrax.custom_queries.find_collections_for(resource: work)
+  #
   # @note Some collection types limit a work to belong to one and only one collection of that type.
   #
-  # Work and Work
+  # ### Work and Work
   #
-  # * <b>Defined:</b> The relationship is defined in the parent work's `:member_ids` attribute.
-  # * <b>Tested:</b> The relationship is tested in shared spec 'a Hyrax::Work' by testing
+  # * Defined: The relationship is defined in the parent work's `:member_ids` attribute.
+  # * Tested: The relationship is tested in shared spec `'a Hyrax::Work'` by testing
   #   `it_behaves_like 'has_members'`.  Shared specs are defined in /lib/hyrax/specs/shared_specs/hydra_works.rb.
-  # * <b>Work to child Work:</b> (0..m)  A work can have many child works.
-  #   * Add a child work to a work using:
+  # * Work to child Work: (0..m)  A work can have many child works.
+  #
+  # @example Add a child work to a work:
   #       Hyrax::Transactions::Container['work_resource.add_to_parent']
   #         .call(child_work, parent_id: parent_work.id, user: current_user)
-  #   * Get child works using:
+  # @example Get child works:
   #       works = Hyrax.custom_queries.find_child_works(resource: parent_work)
-  # * <b>Work to parent Work:</b> (0..1)  A work can be in at most one parent work.
-  #   * Get parent work using:
+  #
+  # * Work to parent Work: (0..1)  A work can be in at most one parent work.
+  #
+  # @example Get parent work:
   #       parent_work = Hyrax.custom_queries.find_parent_work(resource: child_work)
+  #
   # @note `:member_ids` holds ids of child works and file sets.
   #
-  # Work and File Set (TBD)
+  # ### Work and File Set (TBD)
   #
   # @see Hyrax::AdministrativeSet
   # @see Hyrax::PcdmCollection
