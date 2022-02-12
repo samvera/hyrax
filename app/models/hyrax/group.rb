@@ -20,6 +20,13 @@ module Hyrax
     attr_reader :name
 
     ##
+    # @return [Boolean]
+    def ==(other)
+      other.class == self.class &&
+        other.name == self.name
+    end
+
+    ##
     # @return [String] a local identifier for this group; for use (e.g.) in ACL
     #   data
     def group_key
