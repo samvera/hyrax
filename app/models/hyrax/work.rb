@@ -62,13 +62,12 @@ module Hyrax
   # * Tested: The relationship is tested in shared spec `'a Hyrax::Work'` by testing
   #   `it_behaves_like 'has_members'`.  Shared specs are defined in /lib/hyrax/specs/shared_specs/hydra_works.rb.
   # * Work to File Set: (0..m)  A work can have many file sets.
-  #   * Add a file set to a work -- This is a multi-step process.  A good place to
-  #     start exploring the code is the calling of the transaction that creates
-  #     a work in Hyrax::WorksControllerBehavior #create_work.  Transaction step
-  #     Hyrax::Transactions::Steps::AddFileSets calls a file handler service that
-  #     creates a fileset for each uploaded file and attaches the fileset to the work.
-  #     Several steps happen before the transaction is called to upload the files.
-  #
+  # @example Add a file set to a work (code from Hyrax::WorkUploadsHandler#append_to_work)
+  #       work.member_ids << file_set.id
+  #       work.representative_id = file_set.id if work.respond_to?(:representative_id) && work.representative_id.blank?
+  #       work.thumbnail_id = file_set.id if work.respond_to?(:thumbnail_id) && work.thumbnail_id.blank?
+  #       Hyrax.persister.save(resource: work)
+  #       Hyrax.publisher.publish('object.metadata.updated', object: work, user: files.first.user)
   # @example Get file sets:
   #       file_sets = Hyrax.custom_queries.find_child_file_sets(resource: work)
   #
@@ -83,6 +82,7 @@ module Hyrax
   # @see Hyrax::Transactions::Steps::AddToParent
   # @see Hyrax::Transactions::Steps::AddFileSets
   # @see Hyrax::WorksControllerBehavior
+  # @see Hyrax::WorkUploadsHandler#append_to_work
   #
   # @see Valkyrie query adapter's #find_by
   # @see Hyrax::CustomQueries::Navigators::CollectionMembers#find_collections_for
