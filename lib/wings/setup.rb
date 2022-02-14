@@ -93,7 +93,8 @@ Valkyrie.config.storage_adapter = :active_fedora
 custom_queries = [Hyrax::CustomQueries::Navigators::CollectionMembers,
                   Hyrax::CustomQueries::Navigators::ChildCollectionsNavigator,
                   Hyrax::CustomQueries::Navigators::ParentCollectionsNavigator,
-                  Hyrax::CustomQueries::Navigators::ChildFilesetsNavigator,
+                  Hyrax::CustomQueries::Navigators::ChildFileSetsNavigator,
+                  Hyrax::CustomQueries::Navigators::ChildFilesetsNavigator, # deprecated; use ChildFileSetsNavigator
                   Hyrax::CustomQueries::Navigators::ChildWorksNavigator,
                   Hyrax::CustomQueries::Navigators::ParentWorkNavigator,
                   Hyrax::CustomQueries::Navigators::FindFiles,

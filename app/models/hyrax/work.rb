@@ -67,7 +67,7 @@ module Hyrax
   #
   # @see Valkyrie query adapter's #find_by
   # @see Hyrax::CustomQueries::Navigators::CollectionMembers#find_collections_for
-  # @see Hyrax::CustomQueries::Navigators::CollectionMembers#find_parent_work
+  # @see Hyrax::CustomQueries::Navigators::ParentWorkNavigator#find_parent_work
   #
   # @see /lib/hyrax/specs/shared_specs/hydra_works.rb
   #

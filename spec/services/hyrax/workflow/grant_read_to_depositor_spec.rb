@@ -46,7 +46,7 @@ RSpec.describe Hyrax::Workflow::GrantReadToDepositor do
 
       let(:file_set) do
         queries = Hyrax.query_service.custom_queries
-        queries.find_child_filesets(resource: work).first
+        queries.find_child_file_sets(resource: work).first
       end
 
       it "grants read access" do

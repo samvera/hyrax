@@ -16,7 +16,7 @@ RSpec.describe VisibilityCopyJob do
       resource.visibility = 'open'
 
       expect { described_class.perform_now(resource) }
-        .to change { queries.find_child_filesets(resource: resource).map(&:visibility) }
+        .to change { queries.find_child_file_sets(resource: resource).map(&:visibility) }
         .to ['open', 'open']
     end
 
@@ -27,7 +27,7 @@ RSpec.describe VisibilityCopyJob do
         release_date = resource.embargo.embargo_release_date
 
         expect { described_class.perform_now(resource) }
-          .to change { queries.find_child_filesets(resource: resource).map(&:embargo) }
+          .to change { queries.find_child_file_sets(resource: resource).map(&:embargo) }
           .to contain_exactly(have_attributes(embargo_release_date: release_date),
                               have_attributes(embargo_release_date: release_date))
       end
@@ -40,7 +40,7 @@ RSpec.describe VisibilityCopyJob do
         release_date = resource.lease.lease_expiration_date
 
         expect { described_class.perform_now(resource) }
-          .to change { queries.find_child_filesets(resource: resource).map(&:lease) }
+          .to change { queries.find_child_file_sets(resource: resource).map(&:lease) }
           .to contain_exactly(have_attributes(lease_expiration_date: release_date),
                               have_attributes(lease_expiration_date: release_date))
       end

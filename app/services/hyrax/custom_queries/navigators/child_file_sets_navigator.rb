@@ -6,13 +6,12 @@ module Hyrax
       ##
       # Navigate from a resource to the child filesets in the resource.
       #
-      # @deprecated use Hyrax::CustomQueries::Navigators::ChildFileSetsNavigator instead
       # @see https://github.com/samvera/valkyrie/wiki/Queries#custom-queries
-      # @since 3.0.0
-      class ChildFilesetsNavigator
+      # @since 3.4.0
+      class ChildFileSetsNavigator
         # Define the queries that can be fulfilled by this navigator.
         def self.queries
-          [:find_child_filesets, :find_child_fileset_ids]
+          [:find_child_file_sets, :find_child_file_set_ids]
         end
 
         attr_reader :query_service
@@ -27,10 +26,8 @@ module Hyrax
         # @param [Valkyrie::Resource] resource
         #
         # @return [Array<Valkyrie::Resource>]
-        # @deprecated
-        def find_child_filesets(resource:)
-          Deprecation.warn("Custom query find_child_filesets is deprecated; use find_child_file_sets instead.")
-          Hyrax.custom_queries.find_child_file_sets(resource: resource)
+        def find_child_file_sets(resource:)
+          query_service.find_members(resource: resource).select(&:file_set?)
         end
 
         ##
@@ -39,10 +36,8 @@ module Hyrax
         # @param [Valkyrie::Resource] resource
         #
         # @return [Array<Valkyrie::ID>]
-        # @deprecated
-        def find_child_fileset_ids(resource:)
-          Deprecation.warn("Custom query find_child_fileset_ids is deprecated; use find_child_file_set_ids instead.")
-          Hyrax.custom_queries.find_child_file_set_ids(resource: resource)
+        def find_child_file_set_ids(resource:)
+          find_child_file_sets(resource: resource).map(&:id)
         end
       end
     end

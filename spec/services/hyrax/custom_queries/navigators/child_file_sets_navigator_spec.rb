@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::CustomQueries::Navigators::ChildFilesetsNavigator, :clean_repo do
+RSpec.describe Hyrax::CustomQueries::Navigators::ChildFileSetsNavigator, :clean_repo do
   subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
   let(:resource) { subject.build }
   let(:custom_query_service) { Hyrax.custom_queries }
