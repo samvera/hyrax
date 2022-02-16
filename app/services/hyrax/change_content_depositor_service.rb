@@ -61,7 +61,7 @@ module Hyrax
     private_class_method :apply_depositor_metadata
 
     def self.apply_valkyrie_changes_to_file_sets(work:, user:, reset:)
-      Hyrax.custom_queries.find_child_filesets(resource: work).each do |f|
+      Hyrax.custom_queries.find_child_file_sets(resource: work).each do |f|
         if reset
           f.permission_manager.acl.permissions = []
           f.permission_manager.acl.save

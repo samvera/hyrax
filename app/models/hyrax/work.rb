@@ -56,7 +56,23 @@ module Hyrax
   #
   # @note `:member_ids` holds ids of child works and file sets.
   #
-  # ### Work and File Set (TBD)
+  # ### Work and File Set
+  #
+  # * Defined: The relationship is defined in the parent work's `:member_ids` attribute.
+  # * Tested: The relationship is tested in shared spec `'a Hyrax::Work'` by testing
+  #   `it_behaves_like 'has_members'`.  Shared specs are defined in /lib/hyrax/specs/shared_specs/hydra_works.rb.
+  # * Work to File Set: (0..m)  A work can have many file sets.
+  # @example Add a file set to a work (code from Hyrax::WorkUploadsHandler#append_to_work)
+  #       work.member_ids << file_set.id
+  #       work.representative_id = file_set.id if work.respond_to?(:representative_id) && work.representative_id.blank?
+  #       work.thumbnail_id = file_set.id if work.respond_to?(:thumbnail_id) && work.thumbnail_id.blank?
+  #       Hyrax.persister.save(resource: work)
+  #       Hyrax.publisher.publish('object.metadata.updated', object: work, user: files.first.user)
+  # @example Get file sets:
+  #       file_sets = Hyrax.custom_queries.find_child_file_sets(resource: work)
+  #
+  # * File Set to Work: (1..1)  A file set must be in one and only one work.
+  #   * See Hyrax::FileSet for code to get the work a file set is in.
   #
   # @see Hyrax::AdministrativeSet
   # @see Hyrax::PcdmCollection
@@ -64,10 +80,14 @@ module Hyrax
   #
   # @see Hyrax::CollectionMemberService
   # @see Hyrax::Transactions::Steps::AddToParent
+  # @see Hyrax::Transactions::Steps::AddFileSets
+  # @see Hyrax::WorksControllerBehavior
+  # @see Hyrax::WorkUploadsHandler#append_to_work
   #
   # @see Valkyrie query adapter's #find_by
   # @see Hyrax::CustomQueries::Navigators::CollectionMembers#find_collections_for
-  # @see Hyrax::CustomQueries::Navigators::CollectionMembers#find_parent_work
+  # @see Hyrax::CustomQueries::Navigators::ParentWorkNavigator#find_parent_work
+  # @see Hyrax::CustomQueries::Navigators::ChildFileSetsNavigator#find_child_file_sets
   #
   # @see /lib/hyrax/specs/shared_specs/hydra_works.rb
   #

@@ -4,6 +4,30 @@ module Hyrax
   ##
   # Valkyrie model for `FileSet` domain objects in the Hydra Works model.
   #
+  # ## Relationships
+  #
+  # ### File Set and Work
+  #
+  # * Defined: The relationship is defined by the inverse relationship stored in the
+  #   work's `:member_ids` attribute.
+  # * Tested: The work tests the relationship.
+  # * File Set to Work: (1..1)  A file set must be in one and only one work.
+  #
+  # @example Get work for a file set:
+  #       work = Hyrax.custom_queries.find_parent_work(resource: file_set)
+  #
+  # * Work to File Set: (0..m)  A work can have many file sets.
+  #   * See Hyrax::Work for code to get and set file sets for the work.
+  #
+  # ### File Set and File (TBD)
+  #
+  # @see Hyrax::Work
+  # @see Hyrax::CustomQueries::Navigators::ParentWorkNavigator#find_parent_work
+  #
+  # @todo The description in Hydra::Works Shared Modeling is out of date and uses
+  #   terminology to describe the relationships that is no longer used in code.
+  #   Update the model and link to it.  This can be a simple relationship diagram
+  #   with a link to the original Works Shared Modeling for historical perspective.
   # @see https://wiki.duraspace.org/display/samvera/Hydra%3A%3AWorks+Shared+Modeling
   class FileSet < Hyrax::Resource
     include Hyrax::Schema(:core_metadata)

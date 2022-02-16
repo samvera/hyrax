@@ -116,14 +116,14 @@ RSpec.describe InheritPermissionsJob do
         expect(resource.edit_users).to match_array [user.to_s, user2.to_s]
 
         # files have the depositor as the edit user to begin with
-        file_sets = Hyrax.query_service.custom_queries.find_child_filesets(resource: resource)
+        file_sets = Hyrax.query_service.custom_queries.find_child_file_sets(resource: resource)
         expect(file_sets.count).to eq 1
         expect(file_sets[0].edit_users).to match_array [user.to_s]
 
         described_class.perform_now(resource)
 
         # files have both edit users from parent resource
-        file_sets = Hyrax.query_service.custom_queries.find_child_filesets(resource: resource)
+        file_sets = Hyrax.query_service.custom_queries.find_child_file_sets(resource: resource)
         expect(file_sets.count).to eq 1
         expect(file_sets[0].edit_users).to match_array [user.to_s, user2.to_s]
       end
@@ -136,14 +136,14 @@ RSpec.describe InheritPermissionsJob do
         expect(resource.edit_users).to match_array [user.to_s]
 
         # files have the depositor and extra user as the edit users to begin with
-        file_sets = Hyrax.query_service.custom_queries.find_child_filesets(resource: resource)
+        file_sets = Hyrax.query_service.custom_queries.find_child_file_sets(resource: resource)
         expect(file_sets.count).to eq 1
         expect(file_sets[0].edit_users).to match_array [user.to_s, user2.to_s]
 
         described_class.perform_now(resource)
 
         # files have single edit user from parent resource
-        file_sets = Hyrax.query_service.custom_queries.find_child_filesets(resource: resource)
+        file_sets = Hyrax.query_service.custom_queries.find_child_file_sets(resource: resource)
         expect(file_sets.count).to eq 1
         expect(file_sets[0].edit_users).to match_array [user.to_s]
       end
@@ -155,14 +155,14 @@ RSpec.describe InheritPermissionsJob do
         expect(resource.read_users).to match_array [user2.to_s]
 
         # files have no read users to begin with
-        file_sets = Hyrax.query_service.custom_queries.find_child_filesets(resource: resource)
+        file_sets = Hyrax.query_service.custom_queries.find_child_file_sets(resource: resource)
         expect(file_sets.count).to eq 1
         expect(file_sets[0].read_users.to_a).to be_empty
 
         described_class.perform_now(resource)
 
         # files have the specified read user
-        file_sets = Hyrax.query_service.custom_queries.find_child_filesets(resource: resource)
+        file_sets = Hyrax.query_service.custom_queries.find_child_file_sets(resource: resource)
         expect(file_sets.count).to eq 1
         expect(file_sets[0].read_users.to_a).to match_array [user2.to_s]
       end
@@ -180,7 +180,7 @@ RSpec.describe InheritPermissionsJob do
         described_class.perform_now(resource)
 
         # files have the specified read group
-        file_sets = Hyrax.query_service.custom_queries.find_child_filesets(resource: resource)
+        file_sets = Hyrax.query_service.custom_queries.find_child_file_sets(resource: resource)
         expect(file_sets.count).to eq 1
         expect(file_sets[0].edit_users).to match_array [user.to_s]
         expect(file_sets[0].read_groups).to match_array ["my_read_group"]
@@ -199,7 +199,7 @@ RSpec.describe InheritPermissionsJob do
         described_class.perform_now(resource)
 
         # files have the specified edit group
-        file_sets = Hyrax.query_service.custom_queries.find_child_filesets(resource: resource)
+        file_sets = Hyrax.query_service.custom_queries.find_child_file_sets(resource: resource)
         expect(file_sets.count).to eq 1
         expect(file_sets[0].edit_users).to match_array [user.to_s]
         expect(file_sets[0].edit_groups).to match_array ["my_edit_group"]

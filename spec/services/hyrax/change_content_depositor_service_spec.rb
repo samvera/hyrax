@@ -55,7 +55,7 @@ RSpec.describe Hyrax::ChangeContentDepositorService do
     let!(:base_work) { valkyrie_create(:hyrax_work, :with_member_file_sets, title: ['SoonToBeSomeoneElses'], depositor: depositor.user_key, edit_users: [depositor]) }
     before do
       work_acl = Hyrax::AccessControlList.new(resource: base_work)
-      Hyrax.custom_queries.find_child_filesets(resource: base_work).each do |file_set|
+      Hyrax.custom_queries.find_child_file_sets(resource: base_work).each do |file_set|
         Hyrax::AccessControlList.copy_permissions(source: work_acl, target: file_set)
       end
     end
@@ -71,7 +71,7 @@ RSpec.describe Hyrax::ChangeContentDepositorService do
 
       it "changes the depositor of the child file sets" do
         described_class.call(base_work, receiver, false)
-        file_sets = Hyrax.custom_queries.find_child_filesets(resource: base_work)
+        file_sets = Hyrax.custom_queries.find_child_file_sets(resource: base_work)
         expect(file_sets.size).not_to eq 0 # A quick check to make sure our each block works
 
         file_sets.each do |file_set|
@@ -92,7 +92,7 @@ RSpec.describe Hyrax::ChangeContentDepositorService do
 
       it "changes the depositor of the child file sets" do
         described_class.call(base_work, receiver, true)
-        file_sets = Hyrax.custom_queries.find_child_filesets(resource: base_work)
+        file_sets = Hyrax.custom_queries.find_child_file_sets(resource: base_work)
         expect(file_sets.size).not_to eq 0 # A quick check to make sure our each block works
 
         file_sets.each do |file_set|

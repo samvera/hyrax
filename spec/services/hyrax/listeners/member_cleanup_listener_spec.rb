@@ -20,7 +20,7 @@ RSpec.describe Hyrax::Listeners::MemberCleanupListener do
 
     it 'removes child file set objects' do
       expect { listener.on_object_deleted(event) }
-        .to change { Hyrax.custom_queries.find_child_filesets(resource: event[:object]).size }
+        .to change { Hyrax.custom_queries.find_child_file_sets(resource: event[:object]).size }
         .from(1)
         .to(0)
     end

@@ -4,7 +4,7 @@ RSpec.describe Hyrax::ResourceVisibilityPropagator do
   subject(:propagator) { described_class.new(source: work) }
   let(:queries)        { Hyrax.custom_queries }
   let(:work)           { FactoryBot.create(:work_with_files).valkyrie_resource }
-  let(:file_sets)      { queries.find_child_filesets(resource: work) }
+  let(:file_sets)      { queries.find_child_file_sets(resource: work) }
 
   context 'a public work' do
     before { work.visibility = 'open' }
@@ -14,7 +14,7 @@ RSpec.describe Hyrax::ResourceVisibilityPropagator do
       expect(file_sets.first.visibility).to eq 'restricted'
 
       expect { propagator.propagate }
-        .to change { queries.find_child_filesets(resource: work).map(&:visibility) }
+        .to change { queries.find_child_file_sets(resource: work).map(&:visibility) }
         .to contain_exactly(work.visibility, work.visibility)
     end
   end
@@ -30,7 +30,7 @@ RSpec.describe Hyrax::ResourceVisibilityPropagator do
 
     it 'copies visibility' do
       expect { propagator.propagate }
-        .to change { queries.find_child_filesets(resource: work).map(&:visibility) }
+        .to change { queries.find_child_file_sets(resource: work).map(&:visibility) }
         .to contain_exactly(work.visibility, work.visibility)
     end
 
@@ -38,7 +38,7 @@ RSpec.describe Hyrax::ResourceVisibilityPropagator do
       release_date = work.embargo.embargo_release_date
 
       expect { propagator.propagate }
-        .to change { queries.find_child_filesets(resource: work).map(&:embargo) }
+        .to change { queries.find_child_file_sets(resource: work).map(&:embargo) }
         .to contain_exactly(have_attributes(embargo_release_date: release_date),
                             have_attributes(embargo_release_date: release_date))
     end
@@ -55,7 +55,7 @@ RSpec.describe Hyrax::ResourceVisibilityPropagator do
 
     it 'copies visibility' do
       expect { propagator.propagate }
-        .to change { queries.find_child_filesets(resource: work).map(&:visibility) }
+        .to change { queries.find_child_file_sets(resource: work).map(&:visibility) }
         .to contain_exactly(work.visibility, work.visibility)
     end
 
@@ -63,7 +63,7 @@ RSpec.describe Hyrax::ResourceVisibilityPropagator do
       release_date = work.lease.lease_expiration_date
 
       expect { propagator.propagate }
-        .to change { queries.find_child_filesets(resource: work).map(&:lease) }
+        .to change { queries.find_child_file_sets(resource: work).map(&:lease) }
         .to contain_exactly(have_attributes(lease_expiration_date: release_date),
                             have_attributes(lease_expiration_date: release_date))
     end

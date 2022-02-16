@@ -12,7 +12,7 @@ module Hyrax
         return unless event.payload.key?(:object) # legacy callback
         return if event[:object].is_a?(ActiveFedora::Base) # handled by legacy code
 
-        Hyrax.custom_queries.find_child_filesets(resource: event[:object]).each do |file_set|
+        Hyrax.custom_queries.find_child_file_sets(resource: event[:object]).each do |file_set|
           begin
             Hyrax.persister.delete(resource: file_set)
             Hyrax.publisher

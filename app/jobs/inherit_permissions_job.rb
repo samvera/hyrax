@@ -24,7 +24,7 @@ class InheritPermissionsJob < Hyrax::ApplicationJob
   # @param work [Resource]
   # @return [Array<Hyrax::File_Set>]
   def file_sets_for(work)
-    Hyrax.custom_queries.find_child_filesets(resource: work)
+    Hyrax.custom_queries.find_child_file_sets(resource: work)
   end
 
   # Perform the copy from the work to the contained filesets

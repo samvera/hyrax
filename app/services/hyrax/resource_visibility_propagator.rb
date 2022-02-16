@@ -39,7 +39,7 @@ module Hyrax
     #
     # @raise [RuntimeError] if visibility propagation fails
     def propagate
-      queries.find_child_filesets(resource: source).each do |file_set|
+      queries.find_child_file_sets(resource: source).each do |file_set|
         file_set.visibility = source.visibility
         embargo_manager.copy_embargo_to(target: file_set)
         lease_manager.copy_lease_to(target: file_set)

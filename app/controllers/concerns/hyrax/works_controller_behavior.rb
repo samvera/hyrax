@@ -432,7 +432,7 @@ module Hyrax
       when ActiveFedora::Common
         curation_concern.file_sets.present?
       else
-        Hyrax.custom_queries.find_child_fileset_ids(resource: curation_concern).any?
+        Hyrax.custom_queries.find_child_file_set_ids(resource: curation_concern).any?
       end
     end
 

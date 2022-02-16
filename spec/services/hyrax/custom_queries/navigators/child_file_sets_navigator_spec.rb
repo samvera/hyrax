@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-RSpec.describe Hyrax::CustomQueries::Navigators::ChildFilesetsNavigator, :clean_repo do
+RSpec.describe Hyrax::CustomQueries::Navigators::ChildFileSetsNavigator, :clean_repo do
   subject(:factory) { Wings::ModelTransformer.new(pcdm_object: pcdm_object) }
   let(:resource) { subject.build }
   let(:custom_query_service) { Hyrax.custom_queries }
@@ -10,7 +10,7 @@ RSpec.describe Hyrax::CustomQueries::Navigators::ChildFilesetsNavigator, :clean_
   let(:fileset1) { build(:file_set, id: 'fs1', title: ['Child File Set 1']) }
   let(:fileset2) { build(:file_set, id: 'fs2', title: ['Child File Set 2']) }
 
-  describe '#find_child_filesets' do
+  describe '#find_child_file_sets' do
     let(:pcdm_object) { work1 }
     let(:work1_resource) { resource }
 
@@ -20,12 +20,12 @@ RSpec.describe Hyrax::CustomQueries::Navigators::ChildFilesetsNavigator, :clean_
     end
 
     it 'returns only child filesets as Valkyrie resources' do
-      child_filesets = custom_query_service.find_child_filesets(resource: work1_resource)
+      child_filesets = custom_query_service.find_child_file_sets(resource: work1_resource)
       expect(child_filesets.map(&:id)).to match_valkyrie_ids_with_active_fedora_ids([fileset1.id, fileset2.id])
     end
   end
 
-  describe '#find_child_fileset_ids' do
+  describe '#find_child_file_set_ids' do
     let(:pcdm_object) { work1 }
     let(:work1_resource) { resource }
 
@@ -35,7 +35,7 @@ RSpec.describe Hyrax::CustomQueries::Navigators::ChildFilesetsNavigator, :clean_
     end
 
     it 'returns Valkyrie ids for child filesets only' do
-      child_fileset_ids = custom_query_service.find_child_fileset_ids(resource: work1_resource)
+      child_fileset_ids = custom_query_service.find_child_file_set_ids(resource: work1_resource)
       expect(child_fileset_ids).to match_valkyrie_ids_with_active_fedora_ids([fileset1.id, fileset2.id])
     end
   end
