@@ -56,7 +56,24 @@ module Hyrax
   #
   # @note `:member_ids` holds ids of child works and file sets.
   #
-  # ### Work and File Set (TBD)
+  # ### Work and File Set
+  #
+  # * Defined: The relationship is defined in the parent work's `:member_ids` attribute.
+  # * Tested: The relationship is tested in shared spec `'a Hyrax::Work'` by testing
+  #   `it_behaves_like 'has_members'`.  Shared specs are defined in /lib/hyrax/specs/shared_specs/hydra_works.rb.
+  # * Work to File Set: (0..m)  A work can have many file sets.
+  #   * Add a file set to a work -- This is a multi-step process.  A good place to
+  #     start exploring the code is the calling of the transaction that creates
+  #     a work in Hyrax::WorksControllerBehavior #create_work.  Transaction step
+  #     Hyrax::Transactions::Steps::AddFileSets calls a file handler service that
+  #     creates a fileset for each uploaded file and attaches the fileset to the work.
+  #     Several steps happen before the transaction is called to upload the files.
+  #
+  # @example Get file sets:
+  #       file_sets = Hyrax.custom_queries.find_child_file_sets(resource: work)
+  #
+  # * File Set to Work: (1..1)  A file set must be in one and only one work.
+  #   * See Hyrax::FileSet for code to get the work a file set is in.
   #
   # @see Hyrax::AdministrativeSet
   # @see Hyrax::PcdmCollection
@@ -64,10 +81,13 @@ module Hyrax
   #
   # @see Hyrax::CollectionMemberService
   # @see Hyrax::Transactions::Steps::AddToParent
+  # @see Hyrax::Transactions::Steps::AddFileSets
+  # @see Hyrax::WorksControllerBehavior
   #
   # @see Valkyrie query adapter's #find_by
   # @see Hyrax::CustomQueries::Navigators::CollectionMembers#find_collections_for
   # @see Hyrax::CustomQueries::Navigators::ParentWorkNavigator#find_parent_work
+  # @see Hyrax::CustomQueries::Navigators::ChildFileSetsNavigator#find_child_file_sets
   #
   # @see /lib/hyrax/specs/shared_specs/hydra_works.rb
   #
