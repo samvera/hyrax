@@ -190,6 +190,58 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     end
   end
 
+  describe '#member_of_collection_ids' do
+    it 'for a new object has empty membership' do
+      expect(form.member_of_collection_ids).to be_empty
+    end
+
+    context 'when collection membership is updated' do
+      context 'from none to one' do
+        let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
+        let(:member_of_collections_attributes) do
+          { "0" => { "id" => "123", "_destroy" => "false" } }
+        end
+
+        it 'is populated from member_of_collections_attributes' do
+          expect { form.validate(member_of_collections_attributes: member_of_collections_attributes) }
+            .to change { form.member_of_collection_ids&.map(&:id) }
+            .to contain_exactly('123')
+        end
+      end
+
+      context 'from 3 down to 2' do
+        let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
+        let(:col1) { FactoryBot.valkyrie_create(:hyrax_collection) }
+        let(:col2) { FactoryBot.valkyrie_create(:hyrax_collection) }
+        let(:col3) { FactoryBot.valkyrie_create(:hyrax_collection) }
+        let(:before_collection_ids) { [col1.id, col2.id, col3.id] }
+        let(:after_collection_ids) { [col1.id.to_s, col2.id.to_s] }
+
+        before do
+          work.member_of_collection_ids = before_collection_ids
+        end
+        let(:member_of_collections_attributes) do
+          { "0" => { "id" => col3.id.to_s, "_destroy" => "true" } }
+        end
+
+        it 'is populated from member_of_collections_attributes' do
+          expect { form.validate(member_of_collections_attributes: member_of_collections_attributes) }
+            .to change { form.member_of_collection_ids }
+            .to contain_exactly(*after_collection_ids)
+        end
+      end
+    end
+
+    context 'when the work is a member of collections' do
+      let(:work) { FactoryBot.valkyrie_create(:hyrax_work, :as_member_of_multiple_collections) }
+
+      it 'gives collection ids' do
+        expect(form.member_of_collection_ids)
+          .to contain_exactly(*work.member_of_collection_ids.map(&:id))
+      end
+    end
+  end
+
   describe '#model_class' do
     it 'is the class of the model' do
       expect(form.model_class).to eq work.class

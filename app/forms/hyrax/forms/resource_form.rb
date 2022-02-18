@@ -99,6 +99,8 @@ module Hyrax
       property :in_works_ids, virtual: true, prepopulator: InWorksPrepopulator
       property :member_ids, default: [], type: Valkyrie::Types::Array
       property :member_of_collection_ids, default: [], type: Valkyrie::Types::Array
+      property :member_of_collections_attributes, virtual: true
+      validates_with CollectionMembershipValidator
 
       property :representative_id, type: Valkyrie::Types::String
       property :thumbnail_id, type: Valkyrie::Types::String
