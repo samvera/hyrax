@@ -210,16 +210,12 @@ RSpec.describe Hyrax::Forms::ResourceForm do
       end
 
       context 'from 3 down to 2' do
-        let(:work) { FactoryBot.valkyrie_create(:hyrax_work) }
+        let(:work) { FactoryBot.valkyrie_create(:hyrax_work, member_of_collection_ids: before_collection_ids) }
         let(:col1) { FactoryBot.valkyrie_create(:hyrax_collection) }
         let(:col2) { FactoryBot.valkyrie_create(:hyrax_collection) }
         let(:col3) { FactoryBot.valkyrie_create(:hyrax_collection) }
         let(:before_collection_ids) { [col1.id, col2.id, col3.id] }
         let(:after_collection_ids) { [col1.id.to_s, col2.id.to_s] }
-
-        before do
-          work.member_of_collection_ids = before_collection_ids
-        end
         let(:member_of_collections_attributes) do
           { "0" => { "id" => col3.id.to_s, "_destroy" => "true" } }
         end
