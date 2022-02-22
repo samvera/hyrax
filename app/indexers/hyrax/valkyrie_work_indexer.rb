@@ -31,7 +31,7 @@ module Hyrax
     end
 
     def admin_set_label(resource)
-      return "" if resource.admin_set_id.blank?
+      return if resource.admin_set_id.blank?
       admin_set = Hyrax.query_service.find_by(id: resource.admin_set_id)
       admin_set.title
     end
