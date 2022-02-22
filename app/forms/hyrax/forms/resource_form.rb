@@ -95,7 +95,7 @@ module Hyrax
       property :visibility_during_lease, virtual: true, prepopulator: ->(_opts) { self.visibility_during_lease = model.lease&.visibility_during_lease }
 
       # pcdm relationships
-      property :admin_set_id, prepopulator: ->(_opts) { self.admin_set_id = AdminSet::DEFAULT_ID }
+      property :admin_set_id, prepopulator: ->(_opts) { self.admin_set_id = Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s }
       property :in_works_ids, virtual: true, prepopulator: InWorksPopulator
       property :member_ids, default: [], type: Valkyrie::Types::Array
       property :member_of_collection_ids, default: [], type: Valkyrie::Types::Array

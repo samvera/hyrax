@@ -52,6 +52,9 @@ RSpec.describe Hyrax::Forms::ResourceForm do
   end
 
   describe '#admin_set_id' do
+    let(:default_admin_set) { instance_double(Hyrax::AdministrativeSet, title: "DEFAULT_ADMINSET", id: "DEFAULT_ADMINSET_ID") }
+    before { allow(Hyrax::AdminSetCreateService).to receive(:find_or_create_default_admin_set).and_return(default_admin_set) }
+
     it 'is nil' do
       expect(form.admin_set_id).to be_nil
     end
@@ -59,7 +62,7 @@ RSpec.describe Hyrax::Forms::ResourceForm do
     it 'prepopulates to the default admin set' do
       expect { form.prepopulate! }
         .to change { form.admin_set_id }
-        .to AdminSet::DEFAULT_ID
+        .to Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s
     end
   end
 
