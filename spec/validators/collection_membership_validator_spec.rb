@@ -85,7 +85,6 @@ RSpec.describe Hyrax::CollectionMembershipValidator, :clean_repo do
             let(:mem_of_cols_attrs) do
               { "0" => { "id" => sm_col2.id.to_s, "_destroy" => "false" } }
             end
-            # before { work.member_of_collection_ids += [sm_col1.id] }
 
             it 'fails validating and sets errors' do
               validator.validate(form)
