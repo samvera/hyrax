@@ -33,7 +33,7 @@ module Hyrax
     class ResourceForm < Hyrax::ChangeSet # rubocop:disable Metrics/ClassLength
       ##
       # @api private
-      InWorksPopulator = lambda do |_options|
+      InWorksPrepopulator = lambda do |_options|
         self.in_works_ids =
           if persisted?
             Hyrax.query_service
@@ -52,7 +52,7 @@ module Hyrax
       #   with `etag`-driven, application-side lock checks. for non-wings adapters
       #   we want to move away from application side lock validation and rely
       #   on the adapter/database features instead.
-      LockKeyPopulator = lambda do |_options|
+      LockKeyPrepopulator = lambda do |_options|
         if Hyrax.config.disable_wings || !Hyrax.metadata_adapter.is_a?(Wings::Valkyrie::MetadataAdapter)
           Hyrax.logger.info "trying to prepopulate a lock token for " \
                             "#{self.class.inspect}, but optimistic locking isn't " \
@@ -95,8 +95,8 @@ module Hyrax
       property :visibility_during_lease, virtual: true, prepopulator: ->(_opts) { self.visibility_during_lease = model.lease&.visibility_during_lease }
 
       # pcdm relationships
-      property :admin_set_id, prepopulator: ->(_opts) { self.admin_set_id = AdminSet::DEFAULT_ID }
-      property :in_works_ids, virtual: true, prepopulator: InWorksPopulator
+      property :admin_set_id, prepopulator: ->(_opts) { self.admin_set_id = Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s }
+      property :in_works_ids, virtual: true, prepopulator: InWorksPrepopulator
       property :member_ids, default: [], type: Valkyrie::Types::Array
       property :member_of_collection_ids, default: [], type: Valkyrie::Types::Array
 
@@ -112,7 +112,7 @@ module Hyrax
       # the model is disabled
       #
       # @see https://github.com/samvera/valkyrie/wiki/Optimistic-Locking
-      property :version, virtual: true, prepopulator: LockKeyPopulator
+      property :version, virtual: true, prepopulator: LockKeyPrepopulator
 
       # backs the child work search element;
       # @todo: look for a way for the view template not to depend on this

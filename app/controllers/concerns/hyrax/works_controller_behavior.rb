@@ -176,13 +176,7 @@ module Hyrax
     end
 
     def admin_set_id_for_new
-      # admin_set_id is required on the client, otherwise simple_form renders a blank option.
-      # however it isn't a required field for someone to submit via json.
-      # Set the default admin set if it exists; otherwise, set to first admin_set they have access to.
-      admin_sets = Hyrax::AdminSetService.new(self).search_results(:deposit)
-      return nil if admin_sets.blank? # shouldn't happen
-      return AdminSet::DEFAULT_ID if admin_sets.map(&:id).include?(AdminSet::DEFAULT_ID)
-      admin_sets.first.id
+      Hyrax::AdminSetCreateService.find_or_create_default_admin_set.id.to_s
     end
 
     def build_form
