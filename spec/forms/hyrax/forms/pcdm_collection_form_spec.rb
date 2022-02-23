@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Hyrax::Forms::PcdmCollectionForm do
+  let(:collection) { Hyrax::PcdmCollection.new(id: "123") }
   subject(:form)   { described_class.new(collection) }
-  let(:collection) { Hyrax::PcdmCollection.new }
 
   describe '.required_fields' do
     it 'lists required fields' do
@@ -14,6 +14,41 @@ RSpec.describe Hyrax::Forms::PcdmCollectionForm do
   describe '#primary_terms' do
     it 'gives "title" as a primary term' do
       expect(form.primary_terms).to contain_exactly(:title)
+    end
+  end
+
+  describe '#banner_info' do
+    let(:banner_info) do
+      CollectionBrandingInfo.new(
+        collection_id: "123",
+        filename: "abc/123/banner.gif",
+        role: "banner",
+        target_url: ""
+      )
+    end
+
+    it 'gives the banner info' do
+      banner_info.save!
+      form.prepopulate!
+      expect(form.banner_info).to contain_exactly([:alttext, ""], [:file, "banner.gif"], [:full_path, "banner/abc/123/banner.gif"], [:relative_path, "/banner/abc/123/banner.gif"])
+    end
+  end
+
+  describe '#logo_info' do
+    let(:banner_info) do
+      CollectionBrandingInfo.new(
+        collection_id: "123",
+        filename: "abc/123/logo.gif",
+        role: "logo",
+        alt_txt: "Logo alt Text",
+        target_url: "http://abc.com"
+      )
+    end
+
+    it 'gives the logo info' do
+      banner_info.save!
+      form.prepopulate!
+      expect(form.logo_info).to contain_exactly({ alttext: "Logo alt Text", file: "logo.gif", full_path: "logo/abc/123/logo.gif", linkurl: "http://abc.com", relative_path: "/logo/abc/123/logo.gif" })
     end
   end
 

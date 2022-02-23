@@ -9,6 +9,8 @@ module Hyrax
     # @since 3.2.0
     class CollectionUpdate < Transaction
       DEFAULT_STEPS = ['change_set.apply',
+                       'collection_resource.save_collection_banner',
+                       'collection_resource.save_collection_logo',
                        'collection_resource.save_acl'].freeze
 
       ##

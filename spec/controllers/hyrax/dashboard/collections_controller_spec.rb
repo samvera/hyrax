@@ -344,6 +344,17 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       end
     end
 
+    context "updating a collection's visibility" do
+      it "saves the visibility" do
+        expect { put :update, params: { id: collection, collection: { title: ['Moomin in Space'], visibility: 'restricted' } } }
+          .to change { Hyrax.query_service.find_by(id: collection.id).visibility }
+          .from('open')
+          .to('restricted')
+
+        expect(flash[:notice]).to eq "Collection was successfully updated."
+      end
+    end
+
     context "when update fails" do
       let(:collection) { FactoryBot.create(:collection_lw) }
       let(:repository) { instance_double(Blacklight::Solr::Repository, search: result) }
@@ -386,8 +397,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
       it "saves banner metadata" do
         put :update, params: { id: collection,
                                banner_files: [uploaded.id],
-                               collection: { creator: ['Emily'] },
-                               update_collection: true }
+                               collection: { creator: ['Emily'] } }
 
         expect(CollectionBrandingInfo
                  .where(collection_id: collection.id.to_s, role: "banner")
@@ -395,24 +405,12 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
           .to exist
       end
 
-      it "don't save banner metadata" do
-        put :update, params: { id: collection,
-                               banner_files: [uploaded.id],
-                               collection: { creator: ['Emily'] } }
-
-        expect(CollectionBrandingInfo
-                 .where(collection_id: collection.id.to_s, role: "banner")
-                 .where("local_path LIKE '%#{uploaded.file.filename}'"))
-          .not_to exist
-      end
-
       it "saves logo metadata" do
         put :update, params: { id: collection,
                                logo_files: [uploaded.id],
                                alttext: ["Logo alt Text"],
                                linkurl: ["http://abc.com"],
-                               collection: { creator: ['Emily'] },
-                               update_collection: true }
+                               collection: { creator: ['Emily'] } }
 
         expect(CollectionBrandingInfo
                  .where(collection_id: collection.id.to_s,
@@ -430,8 +428,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
           put :update, params: { id: collection,
                                  logo_files: [uploaded.id],
                                  alttext: ["Logo alt Text"], linkurl: ["<script>remove_me</script>"],
-                                 collection: { creator: ['Emily'] },
-                                 update_collection: true }
+                                 collection: { creator: ['Emily'] } }
 
           expect(
             CollectionBrandingInfo.where(
@@ -446,8 +443,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, :clean_repo do
                                  logo_files: [uploaded.id],
                                  alttext: ["Logo alt Text"],
                                  linkurl: ['javascript:alert("remove_me")'],
-                                 collection: { creator: ['Emily'] },
-                                 update_collection: true }
+                                 collection: { creator: ['Emily'] } }
 
           expect(
             CollectionBrandingInfo.where(

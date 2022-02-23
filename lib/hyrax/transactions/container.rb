@@ -42,6 +42,8 @@ module Hyrax
       require 'hyrax/transactions/steps/remove_file_set_from_work'
       require 'hyrax/transactions/steps/save'
       require 'hyrax/transactions/steps/save_access_control'
+      require 'hyrax/transactions/steps/save_collection_banner'
+      require 'hyrax/transactions/steps/save_collection_logo'
       require 'hyrax/transactions/steps/set_default_admin_set'
       require 'hyrax/transactions/steps/set_modified_date'
       require 'hyrax/transactions/steps/set_uploaded_date_unless_present'
@@ -194,6 +196,14 @@ module Hyrax
 
         ops.register 'save_acl' do
           Steps::SaveAccessControl.new
+        end
+
+        ops.register 'save_collection_banner' do
+          Steps::SaveCollectionBanner.new
+        end
+
+        ops.register 'save_collection_logo' do
+          Steps::SaveCollectionLogo.new
         end
       end
 

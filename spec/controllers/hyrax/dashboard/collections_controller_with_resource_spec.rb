@@ -213,6 +213,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
           allow(controller).to receive(:authorize!)
           allow(Hyrax::Forms::ResourceForm).to receive(:for).with(collection).and_return(form)
           allow(form).to receive(:validate).with(any_args).and_return(false)
+          allow(form).to receive(:prepopulate!).with(any_args).and_return(true)
         end
 
         let(:collection) { Hyrax::PcdmCollection.new }
@@ -433,6 +434,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
         before do
           allow(Hyrax::Forms::ResourceForm).to receive(:for).with(collection).and_return(form)
           allow(form).to receive(:validate).with(any_args).and_return(false)
+          allow(form).to receive(:prepopulate!).with(any_args).and_return(true)
         end
 
         it "renders the form again" do
@@ -467,8 +469,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
       it "saves banner metadata" do
         put :update, params: { id: collection,
                                banner_files: [uploaded.id],
-                               collection: { creator: ['Emily'] },
-                               update_collection: true }
+                               collection: { creator: ['Emily'] } }
 
         expect(CollectionBrandingInfo
                  .where(collection_id: collection.id.to_s, role: "banner")
@@ -476,24 +477,12 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
           .to exist
       end
 
-      it "don't save banner metadata when `update_collection` param is missing" do
-        put :update, params: { id: collection,
-                               banner_files: [uploaded.id],
-                               collection: { creator: ['Emily'] } }
-
-        expect(CollectionBrandingInfo
-                 .where(collection_id: collection.id.to_s, role: "banner")
-                 .where("local_path LIKE '%#{uploaded.file.filename}'"))
-          .not_to exist
-      end
-
       it "saves logo metadata" do # rubocop:disable RSpec/ExampleLength
         put :update, params: { id: collection,
                                logo_files: [uploaded.id],
                                alttext: ["Logo alt Text"],
                                linkurl: ["http://abc.com"],
-                               collection: { creator: ['Emily'] },
-                               update_collection: true }
+                               collection: { creator: ['Emily'] } }
 
         expect(CollectionBrandingInfo
                  .where(collection_id: collection.id.to_s,
@@ -511,8 +500,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
           put :update, params: { id: collection,
                                  logo_files: [uploaded.id],
                                  alttext: ["Logo alt Text"], linkurl: ["<script>remove_me</script>"],
-                                 collection: { creator: ['Emily'] },
-                                 update_collection: true }
+                                 collection: { creator: ['Emily'] } }
 
           expect(
             CollectionBrandingInfo.where(
@@ -527,8 +515,7 @@ RSpec.describe Hyrax::Dashboard::CollectionsController, type: :controller, clean
                                  logo_files: [uploaded.id],
                                  alttext: ["Logo alt Text"],
                                  linkurl: ['javascript:alert("remove_me")'],
-                                 collection: { creator: ['Emily'] },
-                                 update_collection: true }
+                                 collection: { creator: ['Emily'] } }
 
           expect(
             CollectionBrandingInfo.where(
