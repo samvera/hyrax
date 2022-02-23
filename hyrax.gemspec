@@ -72,6 +72,7 @@ SUMMARY
   spec.add_dependency 'power_converter', '~> 0.1', '>= 0.1.2'
   spec.add_dependency 'qa', '~> 5.5', '>= 5.5.1' # questioning_authority
   spec.add_dependency 'rails_autolink', '~> 1.1'
+  spec.add_dependency 'rdf', '=3.2.5'
   spec.add_dependency 'rdf-rdfxml' # controlled vocabulary importer
   spec.add_dependency 'rdf-vocab', '~> 3.0'
   spec.add_dependency 'redis-namespace', '~> 1.5'
