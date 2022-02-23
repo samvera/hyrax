@@ -217,7 +217,9 @@ RSpec.describe Hyrax::Forms::ResourceForm do
         let(:before_collection_ids) { [col1.id, col2.id, col3.id] }
         let(:after_collection_ids) { [col1.id.to_s, col2.id.to_s] }
         let(:member_of_collections_attributes) do
-          { "0" => { "id" => col3.id.to_s, "_destroy" => "true" } }
+          { "0" => { "id" => col1.id.to_s, "_destroy" => "false" },
+            "1" => { "id" => col2.id.to_s, "_destroy" => "false" },
+            "2" => { "id" => col3.id.to_s, "_destroy" => "true" } }
         end
 
         it 'is populated from member_of_collections_attributes' do

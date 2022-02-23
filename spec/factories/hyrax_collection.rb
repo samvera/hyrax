@@ -9,6 +9,7 @@ FactoryBot.define do
 
     transient do
       with_permission_template { true }
+      with_index { true }
       user { create(:user) }
       edit_groups { [] }
       edit_users { [] }
@@ -22,7 +23,8 @@ FactoryBot.define do
       if evaluator.members.present?
         evaluator.members.map do |member|
           member.member_of_collection_ids += [collection.id]
-          Hyrax.persister.save(resource: member)
+          member = Hyrax.persister.save(resource: member)
+          Hyrax.index_adapter.save(resource: member) if evaluator.with_index
         end
       end
       if evaluator.with_permission_template
@@ -39,6 +41,7 @@ FactoryBot.define do
                                                    evaluator.read_users
         collection.permission_manager.acl.save
       end
+      Hyrax.index_adapter.save(resource: collection) if evaluator.with_index
     end
 
     trait :public do
@@ -54,6 +57,18 @@ FactoryBot.define do
     trait :with_member_collections do
       transient do
         members { [valkyrie_create(:hyrax_collection), valkyrie_create(:hyrax_collection)] }
+      end
+    end
+
+    trait :as_collection_member do
+      member_of_collection_ids { [valkyrie_create(:hyrax_collection).id] }
+    end
+
+    trait :as_member_of_multiple_collections do
+      member_of_collection_ids do
+        [valkyrie_create(:hyrax_collection).id,
+         valkyrie_create(:hyrax_collection).id,
+         valkyrie_create(:hyrax_collection).id]
       end
     end
   end

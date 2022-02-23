@@ -220,4 +220,106 @@ RSpec.describe Hyrax::MultipleMembershipChecker, :clean_repo do
       end
     end
   end
+
+  describe '#validate' do
+    let(:base_errmsg) { "Error: You have specified more than one of the same single-membership collection type" }
+
+    let(:checker) { described_class.new(item: item) }
+    let(:collection_ids) { ['foobar'] }
+    let!(:collection_type) { FactoryBot.create(:collection_type, title: 'Greedy', allow_multiple_membership: false) }
+    let(:collection_types) { [collection_type] }
+    let(:collection_type_gids) { [collection_type.to_global_id] }
+
+    subject(:validation) { checker.validate }
+
+    context 'when the item has 0 collections' do
+      let(:item) { FactoryBot.build(:hyrax_work) }
+      it 'returns true' do
+        expect(validation).to be true
+      end
+    end
+
+    context 'when the item has 1 collection' do
+      let(:item) { FactoryBot.build(:hyrax_work, :as_collection_member) }
+      it 'returns true' do
+        expect(validation).to be true
+      end
+    end
+
+    context 'when there are no single-membership collection types' do
+      before { allow(Hyrax::CollectionType).to receive(:gids_that_do_not_allow_multiple_membership).and_return([]) }
+      it 'returns true' do
+        expect(validation).to be true
+      end
+    end
+
+    context 'when there are no single-membership collection instances' do
+      let(:item) { FactoryBot.build(:hyrax_work, :as_member_of_multiple_collections) }
+      let(:collection_ids) { item.member_of_collection_ids }
+      it 'returns true' do
+        expect(validation).to be true
+      end
+    end
+
+    context 'when there are single-membership collection instances' do
+      let!(:sm_collection_type1) { FactoryBot.create(:collection_type, title: 'Single Membership 1', allow_multiple_membership: false) }
+      let!(:sm_collection_type2) { FactoryBot.create(:collection_type, title: 'Single Membership 2', allow_multiple_membership: false) }
+
+      context 'and the collections are of different single-membership types' do
+        let(:item) { FactoryBot.build(:hyrax_work, member_of_collection_ids: collection_ids) }
+        let(:col1) do
+          FactoryBot.valkyrie_create(:hyrax_collection,
+                                     title: ['Foo'],
+                                     collection_type_gid: sm_collection_type1.to_global_id,
+                                     with_index: true)
+        end
+        let(:col2) do
+          FactoryBot.valkyrie_create(:hyrax_collection,
+                                     title: ['Bar'],
+                                     collection_type_gid: sm_collection_type2.to_global_id,
+                                     with_index: true)
+        end
+        let(:collection_ids) { [col1.id, col2.id] }
+
+        it 'returns true' do
+          expect(validation).to be true
+        end
+      end
+
+      context 'and the collections are of same single-membership types' do
+        let(:item) { FactoryBot.build(:hyrax_work, member_of_collection_ids: collection_ids) }
+        let(:col1) do
+          FactoryBot.valkyrie_create(:hyrax_collection,
+                                     title: ['Foo'],
+                                     collection_type_gid: sm_collection_type1.to_global_id,
+                                     with_index: true)
+        end
+        let(:col2) do
+          FactoryBot.valkyrie_create(:hyrax_collection,
+                                     title: ['Bar'],
+                                     collection_type_gid: sm_collection_type1.to_global_id,
+                                     with_index: true)
+        end
+        let(:collection_ids) { [col1.id, col2.id] }
+
+        it 'returns an error' do
+          regexp = /#{base_errmsg} \(type: Single Membership 1, collections: (Foo and Bar|Bar and Foo)\)/
+          expect(validation).to match regexp
+        end
+      end
+
+      context 'and some collections are of same single-membership types' do
+        let(:item) { FactoryBot.build(:hyrax_work, member_of_collection_ids: collection_ids) }
+        let(:col1) { FactoryBot.valkyrie_create(:hyrax_collection, title: ['Foo'], collection_type_gid: sm_collection_type1.to_global_id) }
+        let(:col2) { FactoryBot.valkyrie_create(:hyrax_collection, title: ['Bar'], collection_type_gid: sm_collection_type1.to_global_id) }
+        let(:col3) { FactoryBot.valkyrie_create(:hyrax_collection, title: ['Baz']) }
+        let(:collection_ids) { [col1.id, col2.id, col3.id] }
+
+        it 'returns an error' do
+          regexp = /#{base_errmsg} \(type: Single Membership 1, collections: (Foo and Bar|Bar and Foo)\)/
+          expect(validation).to match regexp
+        end
+      end
+    end
+  end
 end
