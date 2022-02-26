@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Hyrax
-  # validates that the title has at least one title
+  # Validates that the record passes the multiple membership checker
   class CollectionMembershipValidator < ActiveModel::Validator
     def validate(record)
       update_collections(record)
