@@ -43,22 +43,6 @@ RSpec.describe Hyrax::Transactions::WorkCreate, :clean_repo do
       end
     end
 
-    context 'when adding to collections' do
-      let(:collections) do
-        [FactoryBot.valkyrie_create(:hyrax_collection),
-         FactoryBot.valkyrie_create(:hyrax_collection)]
-      end
-
-      let(:collection_ids) { collections.map(&:id) }
-
-      it 'adds to the collections' do
-        tx.with_step_args('change_set.add_to_collections' => { collection_ids: collection_ids })
-
-        expect(tx.call(change_set).value!)
-          .to have_attributes member_of_collection_ids: contain_exactly(*collection_ids)
-      end
-    end
-
     context 'when attaching uploaded files' do
       let(:uploaded_files) { FactoryBot.create_list(:uploaded_file, 4) }
 

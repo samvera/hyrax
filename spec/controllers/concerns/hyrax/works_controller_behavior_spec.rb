@@ -514,6 +514,44 @@ RSpec.describe Hyrax::WorksControllerBehavior, :clean_repo, type: :controller do
             .to include(have_attributes(mode: :read, agent: 'group/public'))
         end
       end
+
+      context 'and error occurs' do
+        let(:update_params) { { title: 'new title', visibility: 'open' } }
+
+        context 'in form validation' do
+          let(:error_msg) { 'FORM VALIDATION FAILED' }
+          before do
+            allow_any_instance_of(Hyrax::Forms::ResourceForm).to receive(:validate).and_return(false) # rubocop:disable RSpec/AnyInstance
+            allow_any_instance_of(Hyrax::Forms::ResourceForm) # rubocop:disable RSpec/AnyInstance
+              .to receive_message_chain(:errors, :messages, :values).and_return([error_msg]) # rubocop:disable RSpec/MessageChain
+          end
+
+          it 'stays on the edit form and flashes an error message' do
+            patch :update, params: { id: id, test_simple_work: update_params }
+
+            expect(flash[:error]).to eq error_msg
+            expect(response).to render_template(:edit)
+          end
+        end
+
+        context 'in transactions' do
+          let(:error_msg) { 'TRANSACTION FAILED' }
+          let(:failure) { Dry::Monads::Failure([error_msg, fake_new_work]) }
+          let(:fake_new_work) { instance_double(Hyrax::Test::SimpleWork) }
+
+          before do
+            allow_any_instance_of(Hyrax::Transactions::Steps::Save) # rubocop:disable RSpec/AnyInstance
+              .to receive(:call).with(any_args).and_return(failure)
+          end
+
+          it 'stays on the edit form and flashes an error message' do
+            patch :update, params: { id: id, test_simple_work: update_params }
+
+            expect(flash[:error]).to eq error_msg
+            expect(response).to render_template(:edit)
+          end
+        end
+      end
     end
   end
 end

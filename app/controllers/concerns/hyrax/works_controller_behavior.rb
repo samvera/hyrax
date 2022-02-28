@@ -55,21 +55,12 @@ module Hyrax
     end
 
     def create
-      # Caching the original input params in case the form is not valid
-      original_input_params_for_form = params[hash_key_for_curation_concern].deep_dup
-      if create_work
-        after_create_response
+      case curation_concern
+      when ActiveFedora::Base
+        original_input_params_for_form = params[hash_key_for_curation_concern].deep_dup
+        actor.create(actor_environment) ? after_create_response : after_create_error(curation_concern.errors, original_input_params_for_form)
       else
-        respond_to do |wants|
-          wants.html do
-            build_form
-            # Creating a form object that can re-render most of the
-            # submitted parameters
-            @form = Hyrax::Forms::FailedSubmissionFormWrapper.new(form: @form, input_params: original_input_params_for_form)
-            render 'new', status: :unprocessable_entity
-          end
-          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
-        end
+        create_valkyrie_work
       end
     end
 
@@ -101,16 +92,11 @@ module Hyrax
     end
 
     def update
-      if update_work
-        after_update_response
+      case curation_concern
+      when ActiveFedora::Base
+        actor.update(actor_environment) ? after_update_response : after_update_error(curation_concern.errors)
       else
-        respond_to do |wants|
-          wants.html do
-            build_form
-            render 'edit', status: :unprocessable_entity
-          end
-          wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: curation_concern.errors }) }
-        end
+        update_valkyrie_work
       end
     end
 
@@ -189,36 +175,38 @@ module Hyrax
 
     ##
     # @return [#errors]
-    def create_work
-      case curation_concern
-      when ActiveFedora::Base
-        actor.create(actor_environment)
-      else
-        form = build_form
+    def create_valkyrie_work
+      form = build_form
+      return after_create_error(form_err_msg(form)) unless form.validate(params[hash_key_for_curation_concern])
 
-        @curation_concern =
-          form.validate(params[hash_key_for_curation_concern]) &&
-          transactions['change_set.create_work']
-          .with_step_args('work_resource.add_to_parent' => { parent_id: params[:parent_id], user: current_user },
-                          'work_resource.add_file_sets' => { uploaded_files: uploaded_files, file_set_params: params[hash_key_for_curation_concern][:file_set] },
-                          'change_set.set_user_as_depositor' => { user: current_user })
-          .call(form).value!
-      end
+      result =
+        transactions['change_set.create_work']
+        .with_step_args('work_resource.add_to_parent' => { parent_id: params[:parent_id], user: current_user },
+                        'work_resource.add_file_sets' => { uploaded_files: uploaded_files, file_set_params: params[hash_key_for_curation_concern][:file_set] },
+                        'change_set.set_user_as_depositor' => { user: current_user })
+        .call(form)
+      @curation_concern = result.value_or { return after_create_error(transaction_err_msg(result)) }
+      after_create_response
     end
 
-    def update_work
-      case curation_concern
-      when ActiveFedora::Base
-        actor.update(actor_environment)
-      else
-        form = build_form
+    def update_valkyrie_work
+      form = build_form
+      return after_update_error(form_err_msg(form)) unless form.validate(params[hash_key_for_curation_concern])
 
-        @curation_concern =
-          form.validate(params[hash_key_for_curation_concern]) &&
-          transactions['change_set.update_work']
-          .with_step_args('work_resource.add_file_sets' => { uploaded_files: uploaded_files, file_set_params: params[hash_key_for_curation_concern][:file_set] })
-          .call(form).value!
-      end
+      result =
+        transactions['change_set.update_work']
+        .with_step_args('work_resource.add_file_sets' => { uploaded_files: uploaded_files, file_set_params: params[hash_key_for_curation_concern][:file_set] })
+        .call(form)
+      @curation_concern = result.value_or { return after_update_error(transaction_err_msg(result)) }
+      after_update_response
+    end
+
+    def form_err_msg(form)
+      form.errors.messages.values.flatten.to_sentence
+    end
+
+    def transaction_err_msg(result)
+      result.failure.first
     end
 
     def presenter
@@ -377,12 +365,43 @@ module Hyrax
       end
     end
 
+    def after_create_error(errors, original_input_params_for_form = nil)
+      respond_to do |wants|
+        wants.html do
+          flash[:error] = errors.to_s
+          rebuild_form(original_input_params_for_form) if original_input_params_for_form.present?
+          render 'new', status: :unprocessable_entity
+        end
+        wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: errors }) }
+      end
+    end
+
+    # Creating a form object that can re-render most of the submitted parameters.
+    # Required for ActiveFedora::Base objects only.
+    def rebuild_form(original_input_params_for_form)
+      build_form
+      @form = Hyrax::Forms::FailedSubmissionFormWrapper
+              .new(form: @form,
+                   input_params: original_input_params_for_form)
+    end
+
     def after_update_response
       return redirect_to hyrax.confirm_access_permission_path(curation_concern) if permissions_changed? && concern_has_file_sets?
 
       respond_to do |wants|
         wants.html { redirect_to [main_app, curation_concern], notice: "Work \"#{curation_concern}\" successfully updated." }
         wants.json { render :show, status: :ok, location: polymorphic_path([main_app, curation_concern]) }
+      end
+    end
+
+    def after_update_error(errors)
+      respond_to do |wants|
+        wants.html do
+          flash[:error] = errors.to_s
+          build_form unless @form.is_a? Hyrax::ChangeSet
+          render 'edit', status: :unprocessable_entity
+        end
+        wants.json { render_json_response(response_type: :unprocessable_entity, options: { errors: errors }) }
       end
     end
 

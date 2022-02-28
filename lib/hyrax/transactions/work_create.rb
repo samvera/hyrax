@@ -11,7 +11,6 @@ module Hyrax
       DEFAULT_STEPS = ['change_set.set_default_admin_set',
                        'change_set.ensure_admin_set',
                        'change_set.set_user_as_depositor',
-                       'change_set.add_to_collections',
                        'change_set.apply',
                        'work_resource.save_acl',
                        'work_resource.add_file_sets',
