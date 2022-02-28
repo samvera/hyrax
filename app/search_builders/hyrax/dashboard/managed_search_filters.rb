@@ -16,22 +16,22 @@ module Hyrax
         return search_terms if groups.empty?
         permission_types.each do |type|
           field = solr_field_for(type, 'group')
-          user_groups = type == 'read' ? groups - [::Ability.public_group_name,
-                                                   ::Ability.registered_group_name] : groups
+          delete_groups = [::Ability.public_group_name, ::Ability.registered_group_name]
+          user_groups = type == 'read' ? groups - delete_groups : groups
           next if user_groups.empty?
           # parens required to properly OR the clauses together:
           search_terms << "({!terms f=#{field}}#{user_groups.join(',')})"
         end
-        return search_terms
+        search_terms
       end
 
-      def add_managing_role_search_filter( ability:, search_terms: [] )
+      def add_managing_role_search_filter(ability:, search_terms: [])
         search_terms ||= []
         # Look for managing role assignement
         managing_role = Sipity::Role.find_by(name: Hyrax::RoleRegistry::MANAGING)
-        return search_terms unless managing_role.present?
+        return search_terms if managing_role.blank?
         agent = ability.current_user.to_sipity_agent
-        return search_terms unless agent.workflow_responsibilities.present?
+        return search_terms if agent.workflow_responsibilities.blank?
         managing_workflow_roles = []
         agent.workflow_responsibilities.each do |workflow_responsibility|
           wfr = Sipity::WorkflowRole.find_by(id: workflow_responsibility.workflow_role_id)
@@ -49,10 +49,8 @@ module Hyrax
         admin_set_ids.each do |id|
           search_terms << "isPartOf_ssim:#{id}"
         end
-        return search_terms
+        search_terms
       end
-
     end
-
   end
 end
