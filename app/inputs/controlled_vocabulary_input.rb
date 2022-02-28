@@ -62,10 +62,12 @@ class ControlledVocabularyInput < MultiValueInput
 
   def build_options_for_new_row(_attribute_name, _index, options)
     options[:value] = ''
+    options[:data][:label] = ''
   end
 
   def build_options_for_existing_row(_attribute_name, _index, value, options)
     options[:value] = value.rdf_label.first || "Unable to fetch label for #{value.rdf_subject}"
+    options[:data][:label] = value.full_label || value.rdf_label
     options[:readonly] = true
   end
 

@@ -118,14 +118,19 @@ RDFXML
     before do
       allow(service).to receive(:rdf_service).and_return(Hyrax::DeepIndexingService)
       work.based_near_attributes = [{ id: 'http://sws.geonames.org/5037649/' }]
+
       stub_request(:get, "http://sws.geonames.org/5037649/")
         .to_return(status: 200, body: mpls,
                    headers: { 'Content-Type' => 'application/rdf+xml;charset=UTF-8' })
+
+      stub_request(:get, 'http://www.geonames.org/getJSON')
+        .with(query: hash_including({ 'geonameId': '5037649' }))
+        .to_return(status: 200, body: File.open(File.join(fixture_path, 'geonames.json')))
     end
 
     it "indexes id and label" do
       expect(solr_document.fetch('based_near_sim')).to eq ["http://sws.geonames.org/5037649/"]
-      expect(solr_document.fetch('based_near_label_sim')).to eq ["Minneapolis"]
+      expect(solr_document.fetch('based_near_label_sim')).to eq ["Minneapolis, Minnesota, United States"]
     end
   end
 end

@@ -9,7 +9,7 @@ RSpec.describe Hyrax::DeepIndexingService do
           <rdf:RDF xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:gn="http://www.geonames.org/ontology#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
           <gn:Feature rdf:about="http://sws.geonames.org/5037649/">
           <rdfs:label>an RDFS Label</gn:name>
-          <gn:name>Newberg</gn:name>
+          <gn:name>Minneapolis</gn:name>
           </gn:Feature>
           </rdf:RDF>
 RDFXML
@@ -17,6 +17,10 @@ RDFXML
     stub_request(:get, "http://sws.geonames.org/5037649/")
       .to_return(status: 200, body: newberg,
                  headers: { 'Content-Type' => 'application/rdf+xml;charset=UTF-8' })
+
+    stub_request(:get, 'http://www.geonames.org/getJSON')
+      .with(query: hash_including({ 'geonameId': '5037649' }))
+      .to_return(status: 200, body: File.open(File.join(fixture_path, 'geonames.json')))
   end
 
   describe '#add_assertions' do
@@ -25,7 +29,7 @@ RDFXML
 
       expect { service.add_assertions(nil) }
         .to change { work.based_near.map(&:rdf_label).flatten }
-        .to contain_exactly(["Newberg"])
+        .to contain_exactly(["Minneapolis"])
     end
   end
 end
