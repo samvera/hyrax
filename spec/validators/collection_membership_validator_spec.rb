@@ -84,6 +84,7 @@ RSpec.describe Hyrax::CollectionMembershipValidator, :clean_repo do
               validator.validate(form)
 
               expect(form.errors).not_to be_blank
+              expect(form.member_of_collection_ids).to contain_exactly(sm_col1.id, sm_col2.id)
             end
           end
         end
@@ -168,6 +169,47 @@ RSpec.describe Hyrax::CollectionMembershipValidator, :clean_repo do
 
             expect(form.errors).to be_blank
             expect(form.member_of_collection_ids).to contain_exactly(col1.id, col2.id)
+          end
+        end
+
+        context 'and collection type of parent collection does not allow multiple membership' do
+          let(:single_mem_col_type) { FactoryBot.create(:collection_type, allow_multiple_membership: false) }
+
+          context 'and collection is in another collection of a different collection type' do
+            let(:col) { FactoryBot.build(:hyrax_collection, :as_collection_member) }
+            let(:col_id) { col.member_of_collection_ids.first.id }
+            let(:sm_col) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id) }
+            let(:mem_of_cols_attrs) do
+              { "0" => { "id" => col_id.to_s, "_destroy" => "false" },
+                "1" => { "id" => sm_col.id.to_s, "_destroy" => "false" } }
+            end
+
+            it 'validates and appends new collections to member_of_collection_ids' do
+              validator.validate(form)
+
+              expect(form.errors).to be_blank
+              expect(form.member_of_collection_ids).to contain_exactly(col_id, sm_col.id)
+            end
+          end
+
+          context 'and collection is in another collection of the same single membership type' do
+            let(:col) { FactoryBot.build(:hyrax_collection, member_of_collection_ids: [sm_col1.id]) }
+            let(:sm_col1) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id) }
+            let(:sm_col2) { FactoryBot.valkyrie_create(:hyrax_collection, collection_type_gid: single_mem_col_type.to_global_id) }
+            let(:mem_of_cols_attrs) do
+              { "0" => { "id" => sm_col1.id.to_s, "_destroy" => "false" },
+                "1" => { "id" => sm_col2.id.to_s, "_destroy" => "false" } }
+            end
+
+            it 'validates and appends new collections to member_of_collection_ids' do
+              # @note This passes because collections are always allowed in any other collection
+              #   as long as all collections involved support nesting.  As nesting is not validated
+              #   by this validator, it is not tested here.
+              validator.validate(form)
+
+              expect(form.errors).to be_blank
+              expect(form.member_of_collection_ids).to contain_exactly(sm_col1.id, sm_col2.id)
+            end
           end
         end
       end
