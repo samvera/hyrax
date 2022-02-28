@@ -55,6 +55,11 @@ RSpec.describe Hyrax::Dashboard::CollectionsSearchBuilder do
 
     subject { builder.gated_discovery_filters }
 
+    before do
+      user.save!
+      user2.save!
+    end
+
     context "user has manage access" do
       let(:permissions) { { manage_users: [user] } }
 

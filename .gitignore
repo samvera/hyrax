@@ -49,6 +49,8 @@ coverage
 rdoc
 /.bundle
 tmp
+/.idea
+
 
 *.log
 *~
