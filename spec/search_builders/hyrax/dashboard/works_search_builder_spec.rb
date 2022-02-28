@@ -44,7 +44,7 @@ RSpec.describe Hyrax::Dashboard::WorksSearchBuilder do
   end
 
   describe "#apply_group_permissions" do
-    subject { builder.apply_group_permissions(permission_types,ability) }
+    subject { builder.apply_group_permissions(permission_types, ability) }
     let(:permission_types) { ["edit", "read"] }
 
     context 'default user' do
@@ -62,7 +62,7 @@ RSpec.describe Hyrax::Dashboard::WorksSearchBuilder do
     end
 
     context 'user with managing role' do
-      let(:role) { Sipity::Role.find_or_create_by( name: Hyrax::RoleRegistry::MANAGING ) }
+      let(:role) { Sipity::Role.find_or_create_by(name: Hyrax::RoleRegistry::MANAGING) }
       let(:agent) { Sipity::Agent(user) }
       let(:one_step_workflow) do
         {

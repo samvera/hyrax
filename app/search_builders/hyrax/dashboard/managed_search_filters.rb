@@ -25,6 +25,12 @@ module Hyrax
         search_terms
       end
 
+      # Look for a user's managing role and add filters for all admin sets that have permission
+      # templates that include managing roles.
+      #
+      # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/PerceivedComplexity
+      # rubocop:disable Metrics/CyclomaticComplexity
       def add_managing_role_search_filter(ability:, search_terms: [])
         search_terms ||= []
         # Look for managing role assignement
@@ -51,6 +57,9 @@ module Hyrax
         end
         search_terms
       end
+      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/PerceivedComplexity
+      # rubocop:enable Metrics/CyclomaticComplexity
     end
   end
 end
