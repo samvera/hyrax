@@ -87,7 +87,7 @@ module Hyrax
 
     module ClassMethods
       # This governs which partial to draw when you render this type of object
-      def _to_partial_path #:nodoc:
+      def _to_partial_path # :nodoc:
         @_to_partial_path ||= begin
           element = ActiveSupport::Inflector.underscore(ActiveSupport::Inflector.demodulize(name))
           collection = ActiveSupport::Inflector.tableize(name)

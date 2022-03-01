@@ -83,11 +83,9 @@ module Hyrax
         def add_members(collection_id:, new_members:, user:)
           messages = []
           new_members.map do |new_member|
-            begin
-              add_member(collection_id: collection_id, new_member: new_member, user: user)
-            rescue Hyrax::SingleMembershipError => err
-              messages += [err.message]
-            end
+            add_member(collection_id: collection_id, new_member: new_member, user: user)
+          rescue Hyrax::SingleMembershipError => err
+            messages += [err.message]
           end
           raise Hyrax::SingleMembershipError, messages if messages.present?
         end

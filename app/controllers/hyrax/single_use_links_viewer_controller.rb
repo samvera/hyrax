@@ -75,7 +75,7 @@ module Hyrax
 
     def render_single_use_error(exception)
       logger.error("Rendering PAGE due to exception: #{exception.inspect} - #{exception.backtrace if exception.respond_to? :backtrace}")
-      render 'single_use_error', layout: "error", status: 404
+      render 'single_use_error', layout: "error", status: :not_found
     end
 
     def _prefixes

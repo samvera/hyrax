@@ -80,12 +80,10 @@ class ImportUrlJob < Hyrax::ApplicationJob
     Rails.logger.debug("ImportUrlJob: Copying <#{uri}> to #{dir}")
 
     File.open(File.join(dir, filename), 'wb') do |f|
-      begin
-        write_file(f)
-        yield f
-      rescue StandardError => e
-        send_error(e.message)
-      end
+      write_file(f)
+      yield f
+    rescue StandardError => e
+      send_error(e.message)
     end
     Rails.logger.debug("ImportUrlJob: Closing #{File.join(dir, filename)}")
   end

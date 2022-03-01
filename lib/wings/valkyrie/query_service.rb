@@ -86,12 +86,10 @@ module Wings
         return enum_for(:find_many_by_ids, ids: ids) unless block_given?
 
         ids.map(&:to_s).uniq.each do |id|
-          begin
-            af_object = ActiveFedora::Base.find(id)
-            yield resource_factory.to_resource(object: af_object)
-          rescue ::ActiveFedora::ObjectNotFoundError, Ldp::Gone
-            next
-          end
+          af_object = ActiveFedora::Base.find(id)
+          yield resource_factory.to_resource(object: af_object)
+        rescue ::ActiveFedora::ObjectNotFoundError, Ldp::Gone
+          next
         end
       end
 

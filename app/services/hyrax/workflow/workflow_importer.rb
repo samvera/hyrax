@@ -128,16 +128,14 @@ module Hyrax
       def call
         self.errors = []
         Array.wrap(data.fetch(:workflows)).map do |configuration|
-          begin
-            find_or_create_from(configuration: configuration)
-          rescue InvalidStateRemovalException => e
-            e.states.each do |state|
-              error = I18n.t('hyrax.workflow.load.state_error', workflow_name: state.workflow.name, state_name: state.name, entity_count: state.entities.count)
-              Rails.logger.error(error)
-              errors << error
-            end
-            Sipity::Workflow.find_by(name: configuration[:name])
+          find_or_create_from(configuration: configuration)
+        rescue InvalidStateRemovalException => e
+          e.states.each do |state|
+            error = I18n.t('hyrax.workflow.load.state_error', workflow_name: state.workflow.name, state_name: state.name, entity_count: state.entities.count)
+            Rails.logger.error(error)
+            errors << error
           end
+          Sipity::Workflow.find_by(name: configuration[:name])
         end
       end
 

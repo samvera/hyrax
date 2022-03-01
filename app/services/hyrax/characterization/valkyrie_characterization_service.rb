@@ -91,11 +91,9 @@ class Hyrax::Characterization::ValkyrieCharacterizationService
     h = {}
 
     doc.class.terminology.terms.each_pair do |key, _target|
-      begin
-        h[key] = doc.public_send(key)
-      rescue NoMethodError
-        next
-      end
+      h[key] = doc.public_send(key)
+    rescue NoMethodError
+      next
     end
 
     h.compact

@@ -94,7 +94,7 @@ class JobIoWrapper < ApplicationRecord
 
   def extracted_original_name
     eon = uploaded_file.uploader.filename if uploaded_file
-    eon ||= File.basename(path) if path.present? # note: uploader.filename is `nil` with uncached remote files (e.g. AWSFile)
+    eon ||= File.basename(path) if path.present? # NOTE: uploader.filename is `nil` with uncached remote files (e.g. AWSFile)
     eon
   end
 

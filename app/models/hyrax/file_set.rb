@@ -34,9 +34,7 @@ module Hyrax
     include Hyrax::Schema(:basic_metadata)
 
     def self.model_name(name_class: Hyrax::Name)
-      @_model_name ||= begin
-        name_class.new(self, nil, 'FileSet')
-      end
+      @_model_name ||= name_class.new(self, nil, 'FileSet')
     end
 
     class_attribute :characterization_proxy

@@ -13,7 +13,7 @@ RSpec.describe Hyrax::LeaseHelper do
       before { Hyrax::LeaseManager.apply_lease_for!(resource: resource) }
 
       it 'returns false' do
-        # Note: This spec echoes "lease_enforced? with a Hyrax::Work when a lease is enforced on the resource"
+        # NOTE: This spec echoes "lease_enforced? with a Hyrax::Work when a lease is enforced on the resource"
         allow(resource).to receive(:persisted?).and_return false
         expect(lease_enforced?(resource)).to be false
       end

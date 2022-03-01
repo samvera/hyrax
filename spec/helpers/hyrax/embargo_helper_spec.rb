@@ -13,7 +13,7 @@ RSpec.describe Hyrax::EmbargoHelper do
       before { Hyrax::EmbargoManager.apply_embargo_for!(resource: resource) }
 
       it 'returns false' do
-        # Note: This spec echoes "embargo_enforced? with a Hyrax::Work when an embargo is enforced on the resource"
+        # NOTE: This spec echoes "embargo_enforced? with a Hyrax::Work when an embargo is enforced on the resource"
         allow(resource).to receive(:persisted?).and_return false
         expect(embargo_enforced?(resource)).to be false
       end
