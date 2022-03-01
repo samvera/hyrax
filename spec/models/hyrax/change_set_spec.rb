@@ -75,14 +75,14 @@ RSpec.describe Hyrax::ChangeSet do
           book
         end
         it 'passes validation' do
-          # NOTE isbn has validation presence: true
+          # NOTE: isbn has validation presence: true
           expect(subject.valid?).to eq true
         end
       end
 
       context 'and value for custom validation is incorrect' do
         it 'passes validation' do
-          # NOTE isbn has validation presence: true
+          # NOTE: isbn has validation presence: true
           expect(subject.valid?).to eq false
         end
       end

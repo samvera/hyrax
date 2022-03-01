@@ -20,11 +20,9 @@ module Hyrax
         include Dry::Types()
 
         Constant = Types::Class.constructor do |v|
-          begin
-            v.constantize
-          rescue NameError => _err
-            v
-          end
+          v.constantize
+        rescue NameError => _err
+          v
         end
       end
 

@@ -171,14 +171,31 @@ RSpec/RepeatedDescription:
     - 'spec/models/sipity/workflow_state_action_spec.rb'
     - 'spec/models/sipity/workflow_state_spec.rb'
 
-# Offense count: 1
+# Offense count: 2
 # Configuration parameters: Include.
 # Include: app/models/**/*.rb
 Rails/HasManyOrHasOneDependent:
   Exclude:
     - 'app/models/admin_set.rb'
+    - 'app/models/hyrax/permission_template.rb'
 
 # Offense count: 1
-Style/MethodMissingSuper:
+Rails/SkipsModelValidations:
   Exclude:
+    - 'app/services/hyrax/works/migration_service.rb'
+
+# Offense count: 12
+Lint/MissingSuper:
+  Exclude:
+    - 'app/actors/hyrax/actors/interpret_visibility_actor.rb'
+    - 'app/actors/hyrax/actors/ordered_members_actor.rb'
     - 'app/models/concerns/hyrax/file_set/characterization.rb'
+    - 'app/presenters/hyrax/file_usage.rb'
+    - 'app/presenters/hyrax/work_usage.rb'
+    - 'app/services/hyrax/batch_create_failure_service.rb'
+    - 'app/services/hyrax/batch_create_success_service.rb'
+    - 'app/services/hyrax/collection_types/create_service.rb'
+    - 'app/services/hyrax/solr_query_service.rb'
+    - 'lib/hyrax/form_fields.rb'
+    - 'lib/hyrax/health_checks/solr_check.rb'
+    - 'lib/hyrax/schema.rb'

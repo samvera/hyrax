@@ -34,12 +34,10 @@ module Hyrax::Strategies
 
     def yaml_file
       @yaml_file ||=
-        begin
-          if File.exist?(@config_file)
-            YAML.load_file(@config_file)
-          else
-            {}
-          end
+        if File.exist?(@config_file)
+          YAML.load_file(@config_file)
+        else
+          {}
         end
     end
   end

@@ -36,6 +36,7 @@ RSpec.describe Hyrax::ValkyrieWorkIndexer do
           class Work < Hyrax::Work
             attribute :broader, Valkyrie::Types::Array.of(Valkyrie::Types::String)
           end
+
           class WorkIndexer < Hyrax::ValkyrieWorkIndexer
             def to_solr
               super.tap do |solr_doc|

@@ -41,9 +41,7 @@ module Hyrax
     private
 
     def presenter
-      @presenter ||= begin
-        presenter_class.new(curation_concern, current_ability)
-      end
+      @presenter ||= presenter_class.new(curation_concern, current_ability)
     end
 
     def curation_concern

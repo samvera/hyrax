@@ -60,7 +60,7 @@ module Hyrax
           object = ActiveFedora::Base.find(id)
           parent_ids = object.try(:member_of_collection_ids) || []
 
-          # note: we do not yield when the object has parents. Calling the nested indexer for the
+          # NOTE: we do not yield when the object has parents. Calling the nested indexer for the
           # top id will reindex all descendants as well.
           if object.try(:use_nested_reindexing?)
             yield(id, parent_ids) if parent_ids.empty?
@@ -119,11 +119,11 @@ module Hyrax
       # @yield Samvera::NestingIndexer::Documents::IndexDocument
       #
       # @return [void]
-      def self.each_child_document_of(document:, extent:, &block)
+      def self.each_child_document_of(document:, extent:, &block) # rubocop:disable Lint/UnusedMethodArgument
         raw_child_solr_documents_of(parent_document: document).each do |solr_document|
           child_document = coerce_solr_document_to_index_document(original_solr_document: solr_document, id: solr_document.fetch('id'))
           # during light reindexing, we want to reindex the child only if fields aren't already there
-          block.call(child_document) if full_reindex?(extent: extent) || child_document.pathnames.empty?
+          yield(child_document) if full_reindex?(extent: extent) || child_document.pathnames.empty?
         end
       end
 

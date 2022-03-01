@@ -116,11 +116,9 @@ RSpec.describe Hyrax::CollectionTypes::CreateService do
 
       it 'does not add participants' do
         expect do
-          begin
-            described_class.add_participants(coltype.id, participants)
-          rescue described_class::InvalidParticipantError
-            nil
-          end
+          described_class.add_participants(coltype.id, participants)
+        rescue described_class::InvalidParticipantError
+          nil
         end.not_to change { Hyrax::CollectionType.find(coltype.id).collection_type_participants.to_a }
       end
     end

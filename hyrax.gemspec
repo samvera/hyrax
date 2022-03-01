@@ -26,7 +26,7 @@ SUMMARY
 
   spec.required_ruby_version = '>= 2.5'
 
-  # Note: rails does not follow sem-ver conventions, it's
+  # NOTE: rails does not follow sem-ver conventions, it's
   # minor version releases can include breaking changes; see
   # http://guides.rubyonrails.org/maintenance_policy.html
   spec.add_dependency 'rails', '~> 5.0'
@@ -106,7 +106,7 @@ SUMMARY
   spec.add_development_dependency 'i18n_yaml_sorter'
   spec.add_development_dependency 'rails-controller-testing', '~> 1'
   # the hyrax style guide is based on `bixby`. see `.rubocop.yml`
-  spec.add_development_dependency 'bixby', '~> 3.0', ">= 3.0.2"
+  spec.add_development_dependency 'bixby', '~> 4.0'
   spec.add_development_dependency 'shoulda-callback-matchers', '~> 1.1.1'
   spec.add_development_dependency 'shoulda-matchers', '~> 3.1'
   spec.add_development_dependency 'webdrivers', '~> 4.4'

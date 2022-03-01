@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Note: this is a direct copy of the corresponding test in Blacklight
+# NOTE: this is a direct copy of the corresponding test in Blacklight
 # with changes for "views/my" instead of "views/catalog"
 
 RSpec.describe "hyrax/my/facet.html.erb", type: :view do

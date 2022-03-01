@@ -73,11 +73,9 @@ module Wings
       #   if there are no ids or none of the ids map to Hyrax::FileMetadata
       def find_many_file_metadata_by_ids(ids:, use_valkyrie: true)
         ids.each_with_object([]) do |alt_id, results|
-          begin
-            results << find_file_metadata_by_alternate_identifier(alternate_identifier: alt_id, use_valkyrie: use_valkyrie)
-          rescue Hyrax::ObjectNotFoundError
-            next
-          end
+          results << find_file_metadata_by_alternate_identifier(alternate_identifier: alt_id, use_valkyrie: use_valkyrie)
+        rescue Hyrax::ObjectNotFoundError
+          next
         end
       end
 
