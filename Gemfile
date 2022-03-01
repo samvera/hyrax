@@ -3,6 +3,10 @@ source 'https://rubygems.org'
 # Please see hyrax.gemspec for dependency information.
 gemspec
 
+# Force these versions for testing purposes
+gem 'rdf', '=3.2.5'
+gem 'active-fedora', '=13.2.6'
+
 group :development, :test do
   gem 'benchmark-ips'
   gem 'easy_translate'
