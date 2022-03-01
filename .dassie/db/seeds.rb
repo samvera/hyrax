@@ -1,13 +1,12 @@
 wipe_data = ActiveModel::Type::Boolean.new.cast(ENV.fetch('WIPE_DATA', false))
-wipe_and_seed_release_testing = ActiveModel::Type::Boolean.new.cast(ENV.fetch('WIPE_AND_SEED_RELEASE_TESTING', false))
 seed_release_testing = ActiveModel::Type::Boolean.new.cast(ENV.fetch('SEED_RELEASE_TESTING', false))
 
-unless wipe_data || wipe_and_seed_release_testing || seed_release_testing
+unless wipe_data || seed_release_testing
   puts 'NAME'
   puts '     rails db:seed (Hyrax)'
   puts
   puts 'SYNOPSIS'
-  puts '     bundle exec rails db:seed [wipe_data=true|false] [seed_release_testing=true|false] [wipe_and_seed_release_testing=true|false]'
+  puts '     bundle exec rails db:seed [WIPE_DATA=true|false] [SEED_RELEASE_TESTING=true|false]'
   puts
   puts 'DESCRIPTION'
   puts '     Hyrax defined db:seed provides a means to clear repository metadata from the datastore (e.g. Fedora, Postgres) and from Solr.'
@@ -30,11 +29,6 @@ unless wipe_data || wipe_and_seed_release_testing || seed_release_testing
   puts '             test users, collection types, collections, and works with and without files.  See Hyrax::TestDataSeeder for more information'
   puts '             on what data will be created by this process.'
   puts
-  puts '     WIPE_AND_SEED_RELEASE_TESTING'
-  puts '             USE WITH CAUTION - Deleted data cannot be recovered.'
-  puts
-  puts '             When true, it perform both the wipe_data and seed_release_testing options.  See those options for more information.'
-  puts
   puts '     ALLOW_RELEASE_SEEDING_IN_PRODUCTION'
   puts '             USE WITH EXTERME CAUTION WHEN USED IN PRODUCTION - Deleted data cannot be recovered.  Attempts are made to not overwrite'
   puts '             existing data, but use in production is not recommended.'
@@ -50,7 +44,7 @@ if Rails.env == 'production' && !allow_release_seeding_in_production
   exit
 end
 
-if wipe_and_seed_release_testing || wipe_data
+if wipe_data
   puts '####################################################################################'
   puts
   puts 'WARNING: You are about to clear all repository metadata from the datastore and solr.'
@@ -66,10 +60,6 @@ if wipe_and_seed_release_testing || wipe_data
   Hyrax::RequiredDataSeeder.new.generate_seed_data
 end
 
-if wipe_and_seed_release_testing || seed_release_testing
+if seed_release_testing
   Hyrax::TestDataSeeder.new.generate_seed_data
 end
-
-puts
-puts 'seed process complete'
-puts '---------------------'
