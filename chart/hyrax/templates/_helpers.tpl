@@ -179,6 +179,14 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "redis://:%s@%s:%s" .Values.redis.password (include "hyrax.redis.host" .) "6379/0" -}}
 {{- end -}}
 
+{{- define "hyrax.hyrax.host" -}}
+  {{- include "hyrax.fullname" . }}
+{{- end -}}
+
+{{- define "hyrax.nginx.host" -}}
+{{- printf "%s-%s" .Release.Name "nginx" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
 {{- define "hyrax.sharedPvcAccessModes" -}}
 {{- if .Values.worker.enabled }}
 accessModes:

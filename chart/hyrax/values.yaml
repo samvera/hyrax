@@ -238,6 +238,144 @@ postgresql:
   # persistence:
   #   size: 10Gi
 
+
+## Nginx proxy is used to keep puma from having to serve static assets
+## and to act as an auth proxy for Cantelope
+nginx:
+  enabled: false
+  # The set up below does malicious bot / ip blocking and mounts
+  # vaolumes to allow nginx to server assets and other public directory items
+  # image:
+  #   registry: registry.gitlab.com
+  #   repository: notch8/scripts/bitnami-nginx
+  #   tag: 1.21.5-debian-10-r4
+  # extraVolumes:
+  #   - name: "uploads"
+  #     persistentVolumeClaim:
+  #       claimName: dev-nnp-uploads
+  # extraVolumeMounts:
+  #   - name: uploads
+  #     mountPath: /app/samvera/hyrax-webapp/public/system
+  #     subPath: public-system
+  #   - name: uploads
+  #     mountPath: /app/samvera/hyrax-webapp/public/uploads
+  #     subPath: public-uploads
+  #   - name: uploads
+  #     mountPath: /app/samvera/hyrax-webapp/public/uv
+  #     subPath: public-uv
+  #   - name: uploads
+  #     mountPath: /app/samvera/hyrax-webapp/public/assets
+  #     subPath: public-assets
+  # serverBlock: |-
+  #   upstream rails_app {
+  #     server {{ .Values.global.hyraxName }};
+  #   }
+
+  #   map $status $loggable {
+  #       ~^444  0;
+  #       default 1;
+  #   }
+
+  #   log_format loki 'host=$host ip=$http_x_forwarded_for remote_user=$remote_user [$time_local] '
+  #                     'request="$request" status=$status bytes=$body_bytes_sent '
+  #                     'referer="$http_referer" agent="$http_user_agent" request_time=$request_time upstream_response_time=$upstream_response_time upstream_response_length=$upstream_response_length';
+
+  #   error_log  /opt/bitnami/nginx/logs/error.log warn;
+  #   #tcp_nopush     on;
+
+  #   # Cloudflare ips see for refresh
+  #   # https://support.cloudflare.com/hc/en-us/articles/200170786-Restoring-original-visitor-IPs-logging-visitor-IP-addresses
+  #   # update list https://www.cloudflare.com/ips/
+  #   set_real_ip_from 103.21.244.0/22;
+  #   set_real_ip_from 103.22.200.0/22;
+  #   set_real_ip_from 103.31.4.0/22;
+  #   set_real_ip_from 104.16.0.0/13;
+  #   set_real_ip_from 104.24.0.0/14;
+  #   set_real_ip_from 108.162.192.0/18;
+  #   set_real_ip_from 131.0.72.0/22;
+  #   set_real_ip_from 141.101.64.0/18;
+  #   set_real_ip_from 162.158.0.0/15;
+  #   set_real_ip_from 172.64.0.0/13;
+  #   set_real_ip_from 173.245.48.0/20;
+  #   set_real_ip_from 188.114.96.0/20;
+  #   set_real_ip_from 190.93.240.0/20;
+  #   set_real_ip_from 197.234.240.0/22;
+  #   set_real_ip_from 198.41.128.0/17;
+  #   set_real_ip_from 2400:cb00::/32;
+  #   set_real_ip_from 2606:4700::/32;
+  #   set_real_ip_from 2803:f800::/32;
+  #   set_real_ip_from 2405:b500::/32;
+  #   set_real_ip_from 2405:8100::/32;
+  #   set_real_ip_from 2a06:98c0::/29;
+  #   set_real_ip_from 2c0f:f248::/32;
+
+  #   real_ip_header X-Forwarded-For;
+  #   real_ip_recursive on;
+  #   include /opt/bitnami/nginx/conf/conf.d/*.conf;
+  #   server {
+  #       listen 8080;
+  #       server_name _;
+  #       root /app/samvera/hyrax-webapp/public;
+  #       index index.html;
+
+  #       client_body_in_file_only clean;
+  #       client_body_buffer_size 32K;
+  #       client_max_body_size 0;
+  #       access_log /opt/bitnami/nginx/logs/access.log loki;
+  #       # if=$loggable;
+
+  #       sendfile on;
+  #       send_timeout 300s;
+
+  #       include /opt/bitnami/nginx/conf/bots.d/ddos.conf;
+  #       include /opt/bitnami/nginx/conf/bots.d/blockbots.conf;
+
+  #       location ~ (\.php|\.aspx|\.asp) {
+  #       	return 404;
+  #       }
+
+  #       # deny requests for files that should never be accessed
+  #       location ~ /\. {
+  #         deny all;
+  #       }
+
+  #       location ~* ^.+\.(rb|log)$ {
+  #         deny all;
+  #       }
+
+  #       # serve static (compiled) assets directly if they exist (for rails production)
+  #       location ~ ^/(assets|packs|fonts|images|javascripts|stylesheets|swfs|system)/ {
+  #         try_files $uri @rails;
+
+  #         # access_log off;
+  #         gzip_static on; # to serve pre-gzipped version
+
+  #         expires max;
+  #         add_header Cache-Control public;
+
+  #         # Some browsers still send conditional-GET requests if there's a
+  #         # Last-Modified header or an ETag header even if they haven't
+  #         # reached the expiry date sent in the Expires header.
+  #         add_header Last-Modified "";
+  #         add_header ETag "";
+  #         break;
+  #       }
+
+  #       # send non-static file requests to the app server
+  #       location / {
+  #         try_files $uri @rails;
+  #       }
+
+  #       location @rails {
+  #         proxy_set_header  X-Real-IP  $remote_addr;
+  #         proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+  #         proxy_set_header Host $http_host;
+  #         proxy_redirect off;
+  #         proxy_pass http://rails_app;
+  #       }
+  #   }
+
+
 redis:
   enabled: true
   password: mysecret
@@ -273,6 +411,7 @@ global:
   postgresql:
     postgresqlUsername: hyrax
     postgresqlPassword: hyrax_pass
+  hyraxName: hyrax
 
 nodeSelector: {}
 

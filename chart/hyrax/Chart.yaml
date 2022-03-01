@@ -29,3 +29,7 @@ dependencies:
     version: 1.0.1
     repository: https://charts.bitnami.com/bitnami
     condition: solr.enabled
+  - name: nginx
+    version: 9.8.0
+    repository: https://charts.bitnami.com/bitnami
+    condition: nginx.enabled
