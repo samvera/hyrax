@@ -30,7 +30,13 @@ RSpec.describe Hyrax::BatchUploadsController do
   end
 
   describe "#new" do
+    let(:curation_concern) { double(human_readable_type: 'Works by Batch') }
+
     it "is successful" do
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.controls.home'), Hyrax::Engine.routes.url_helpers.root_path(locale: 'en'))
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.title'), Hyrax::Engine.routes.url_helpers.dashboard_path(locale: 'en'))
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.dashboard.my.works'), Hyrax::Engine.routes.url_helpers.my_works_path(locale: 'en'))
+      expect(controller).to receive(:add_breadcrumb).with(I18n.t('hyrax.batch_uploads.new.breadcrumb'), Hyrax::Engine.routes.url_helpers.new_batch_upload_path)
       get :new
       expect(response).to be_successful
       expect(assigns[:form]).to be_kind_of Hyrax::Forms::BatchUploadForm

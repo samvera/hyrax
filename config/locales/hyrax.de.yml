@@ -701,6 +701,7 @@ de:
         instructions: Jede Datei wird in eine separate, neue Arbeit hochgeladen, d.h. somit wird eine Arbeit pro hochgeladener Datei erstellt.
         upload_type_instructions: Um eine einzelne Arbeit für alle Dateien zu erstellen, gehen Sie zu
       new:
+        breadcrumb: Deponieren von Arbeiten mittels stapelweisem Hochladen
         header: Stapelweises Hochladen neuer Arbeiten
         in_collections: Diese Arbeiten in Sammlungen
         in_other_works: Diese Arbeit in anderen Arbeiten

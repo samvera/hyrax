@@ -701,6 +701,7 @@ pt-BR:
         instructions: Cada arquivo fará parte de um nova obra, resultando em uma obra por arquivo.
         upload_type_instructions: Para criar uma única obra para todos os arquivos, vá para
       new:
+        breadcrumb: Criar lote de obras
         header: Criar novas obras em lotes
         in_collections: Estas obras em Coleções
         in_other_works: Esta obra em outras obras

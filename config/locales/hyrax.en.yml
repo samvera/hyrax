@@ -692,6 +692,7 @@ en:
         instructions: Each file will be uploaded to a separate new work resulting in one work per uploaded file.
         upload_type_instructions: To create a single work for all the files, go to
       new:
+        breadcrumb: Create Batch of Works
         header: Batch Create New Works
         in_collections: These Works in Collections
         in_other_works: This Work in Other Works
